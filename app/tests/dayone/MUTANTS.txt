@@ -1,0 +1,69 @@
+Planted mutants for day one's schema step and its pacing simulator, each applied alone to a copy of the tree and run
+against the [bracketed] tests. All must go red. Results as of the commit that adds this file.
+
+The schema and the engine questions
+chapter_replaces_unheld  chapters.py: a chapter's Camp level replaces a level that is not held   [opening/test_chapters]   killed
+camp_cap_ignores_lift    convert.camp_cap: the last level's at_items despite a lifted level       [test_chapters, loader]   killed
+lift_one_short           convert.camp_lifts: the raise one basis point short of the lifted level  [test_chapters]           killed
+rising_card_any_tap      checks: an at_least order card may tap a card that does not take its store [test_chapters, loader] killed
+lift_by_uncapped         checks: lifted_by may name a card with no cap                            [test_chapters]           killed
+trigger_no_eval          engine handlers: a trigger firing does not make orders and the queue evaluate [engine/test_dayone_questions] killed
+completion_no_eval       engine handlers: a capped card's completion does not evaluate            [test_dayone_questions]   killed
+count_not_solved         engine conditions: CardCount's rise time not solved off the work segment [test_dayone_questions]   killed
+lane_xp_zero             engine rates: a card off HANDS trains nothing                            [test_dayone_questions]   killed
+
+The simulator
+compare_blind            parity.compare finds nothing                                             [test_dayone_two_am]      killed
+never_queues             policy: When ready never used                                            [test_dayone_two_am]      killed
+seen_when_landed         player: what lands away is seen at its own time, not at the return       [test_dayone_routes]      killed
+idle_blind               checks.longest_idle is always 0                                          [test_dayone_probes]      killed
+absence_blind            checks.absence_unlocks ignores triggers                                  [test_dayone_probes]      killed
+flatcheck_blind          story.flatcheck drops every flag                                         [test_dayone_probes]      killed
+near_blind               checks.near_promise finds nothing                                        [test_dayone_probes]      killed
+queueable_blind          checks.boosts_shown_unready never reports a return                       [test_dayone_probes]      killed
+story_order_blind        checks.story_order reads the authored order, not the landing times       [test_dayone_probes]      killed
+
+The corrected checks (B3 held to the babysitter's, idle to a visit's last activity, the 2 AM glance)
+relative_blind           bands.b3_relative: the bound is out of reach                             [test_dayone_probes]      killed
+steps_none               bands.presence_steps finds no step                                       [test_dayone_probes]      killed
+ways_union               bands._every: a store's makers' steps united, not shared                 [test_dayone_probes]      killed
+idle_to_end              checks.longest_idle: measured to the schedule's visit end again          [test_dayone_probes]      killed
+glance_any_visit         parity._glanced: waits for a tap made in any later visit                 [test_dayone_two_am]      killed
+glance_never             parity._glanced: the babysitter never waits for a glance                 [test_dayone_two_am]      killed
+retune_past_cap          policy.retuned_roots: the roots rule raised past the roots cap           [test_dayone_routes]      killed (typical stalls: the play times out)
+
+D-63 (A14 opens the builds, the rack on the first catch, the roots card "until 15")
+reopen_counts            checks.opens: a card already open counts as opened again                 [test_dayone_probes]      killed
+offer_any_cap            opening.refs.offer_cap: every store's cap modifiers raise this one       [opening/test_chapters]   killed
+offer_counts_none        opening.refs._counted: the makers a count waits on raise nothing         [opening/test_chapters]   killed
+stock_never_taken        player: the roots card "until 15" is never taken                          [test_dayone_routes]      equivalent: the mix's forage share fills roots past P0.4's 15 by itself once the larder holds 16: no verdict on the typical route moves (seed 0)
+stray_counts             checks._moments: a level landing long after the last act is activity    [test_dayone_probes]      killed
+b3_visit_lumped          verdicts: the visit B3 is seen in checked with the others again          [test_dayone_routes]      killed
+decision_blind           checks.per_visit: the decision rule never fires                          [test_dayone_probes]      killed
+
+Lost to caps (caploss.py)
+lost_below_cap           caploss.stretch: lost counted whether or not the store is at its cap       [test_dayone_caploss, daytwo/test_daytwo_caps]  killed
+cap_never_reached        caploss.at_cap: always False                                              [test_dayone_caploss, daytwo/test_daytwo_caps]  killed
+lost_half_stretch        caploss.stretch: lost counts half the stretch                             [test_dayone_caploss]     killed
+nothing_sampled_passes   caploss.Tally.losses: no assert on an empty tally                         [test_dayone_caploss]     killed
+made_counts_costs        caploss.stretch: made sums costs with the makes                            [daytwo/test_daytwo_caps] killed
+one_stretch              caploss.run: the whole span as one stretch, next_event ignored            [test_dayone_caploss]     killed
+
+The cap-loss check (capcheck.py)
+trip_draws_nothing       fixture: the trip's inputs a tiny fraction of the maker's making          [test_dayone_capcheck]    killed
+limit_never_exceeded     capcheck.failing: a share over 100% instead of over LIMIT                  [test_dayone_capcheck]    killed
+one_absence              capcheck.HOURS: 8 h only                                                   [test_dayone_capcheck]    killed
+rules_alone              verdicts._cap_loss: day two's rules alone (caps.cap_loss_failing), not the shipped play  [daytwo/test_daytwo_routes] killed
+
+Week one's fight checks (weekone/fights.py; planted in the engine, one at a time, restored with `git checkout -- <file>`)
+odds_at_call_start       gates._with_odds: a fight's odds built off the stack as it stood when the advance call began   [weekone/test_weekone_fights]   killed (the sharp and whenever schedules; lazy's daily stops fall where the odds do not move)
+side_entries_ignored     strengthmath.explain_over: no entry aimed at a SideStrength counts                            [weekone/test_weekone_fights]   killed (the gear's hunt loses 5 of 15 as without it)
+
+The checks past the fights (fightchecks.py; combat-plan item 10)
+fight_lands_early        engine view: a fight card's drawn completes_at one second early                         [test_dayone_fight_checks]   killed (6 red: the landing is drawn at 3599, the check names it)
+fight_lands_late         fightchecks.landing_kept's advance one second short of the drawn landing                [test_dayone_fight_checks]   killed (monkeypatched, tapped and mixed)
+feeds_ignores_makes      engine cure_reading.feeds: the stores a card's lines make left out                       [test_dayone_fight_checks]   killed (the threat's emptied store reads as unreached)
+raid_store_no_maker      fixture: the gatherer makes nothing, so nothing puts the raided store up                [test_dayone_fight_checks]   killed
+wound_no_cure            fixture: the card that tends the wound left out, the chip shows with no cure on offer    [test_dayone_fight_checks]   killed
+fight_shown_in_night     fixture: the fight card shown after the only visit, so no queue could wait on it        [test_dayone_two_am]         killed (the babysitter starts it, the whenever player cannot)
+fight_replay_no_queue    the whenever player's fight card with no queue                                           [test_dayone_two_am]         killed

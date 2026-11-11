@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+# The client's bundles (app/client/build.mjs): build/ ships, build-dev/ is the fixture page for screenshots.
+app/client/build/
+app/client/build-dev/
+# Research by-products (docs/open-work.md): a `pip install --target lib fonttools`, and intermediate renders.
+docs/research/sketch-test/lib/
+docs/research/sketch-test/rounds/
+# Written by CI at build time (.github/workflows/ci.yml); never hand-edited.
+app/ashfall_app/build/
+# The saved ends CI builds and caches (.github/workflows/ci.yml, chapter-saves); locally they are written outside the tree.
+chapter-saves/
+chapter-saves-cache/

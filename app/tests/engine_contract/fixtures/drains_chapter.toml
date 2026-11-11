@@ -1,0 +1,112 @@
+# A test chapter, merged onto the opening alone (tests/engine_contract/test_drains_loader_contract.py): the loader's
+# every_hours, every and drains. The slots written between two @ signs are filled by the test (its default is the plain shape that loads);
+# each refusal is the fixture with one slot edited. Not story: the ids and words are the tests' own.
+version = 1
+
+[[skills]]
+id = "t_k"
+label_key = "t_skill_k"
+
+[[stores]]
+id = "t_x"
+label_key = "t_s_x"
+cap_items = 20
+initial_items = 5
+
+[[stores]]
+id = "t_y"
+label_key = "t_s_y"
+cap_items = 100
+
+[[stores]]
+id = "t_heat"
+label_key = "t_s_heat"
+cap_items = 10
+initial_items = 10
+
+[[stores]]
+id = "t_tally"
+label_key = "t_s_tally"
+cap_items = 100
+tally = true
+
+[[standing]]
+id = "t_src"
+label_key = "t_a_src"
+makes = [{ store = "t_y", @SRC_MAKE@ }]
+costs = [{ store = "t_x", @SRC_COST@ }]
+
+[[standing]]
+id = "t_chill"
+label_key = "t_a_chill"
+costs = [{ store = "t_heat", items_per_hour = 4 }]
+
+[[lanes]]
+id = "t_helper"
+label_key = "t_l_helper"
+ruled = true
+
+# Every flow shape in one hands card (it also gets the camp's make flow); xp_per_hour is 6 whatever the flows say.
+[[cards]]
+id = "t_flows"
+presentation = "action"
+label_key = "t_c_flows"
+work_s = 60
+skill = "t_k"
+xp_per_hour = 6
+makes = [{ store = "t_y", @CARD_MAKE@ }]
+costs = [{ store = "t_x", @CARD_COST@ }]
+@FLOWS_EXTRA@
+
+[[cards]]
+id = "t_cure"
+presentation = "action"
+label_key = "t_c_cure"
+work_s = 60
+drains = [@DRAIN@]
+
+[[cards]]
+id = "t_stoke"
+lane = "t_helper"
+presentation = "action"
+label_key = "t_c_stoke"
+work_s = 60
+makes = [{ store = "t_heat", items_per_hour = 20 }]
+
+[[chips]]
+id = "t_warm"
+label_key = "t_ch_warm"
+tone = "cold"
+when = @CHIP_WHEN@
+
+[[chips]]
+id = "t_cold"
+label_key = "t_ch_cold"
+tone = "cold"
+when = @COLD_CHIP_WHEN@
+
+[[order_cards]]
+store = "t_heat"
+tap_card = "t_stoke"
+chip = "t_cold"
+when = @ORDER_WHEN@
+
+[[triggers]]
+id = "t_trig"
+when = @TRIGGER_WHEN@
+outcome = { unlocks = [{ unlock_kind = "action", id = "t_chill" }, { unlock_kind = "card", id = "t_stoke" }, { unlock_kind = "chip", id = "t_cold" }] }
+
+[text]
+t_skill_k = "Knack"
+t_s_x = "Stock"
+t_s_y = "Yield"
+t_s_heat = "Warmth"
+t_s_tally = "Count"
+t_a_src = "Source"
+t_a_chill = "Chill"
+t_l_helper = "Helper"
+t_c_flows = "Flows"
+t_c_cure = "Cure"
+t_c_stoke = "Stoke"
+t_ch_warm = "Warm"
+t_ch_cold = "Cold"

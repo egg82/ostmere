@@ -1,0 +1,57 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_leaves_loader.py): two people join the town, and
+# later the first leaves, stopping a standing action that came with them. Not story: the ids and words are the tests'
+# own. The planted variants are edits of this file.
+version = 1
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[lanes]]
+id = "t_p1"
+label_key = "t_l_p1"
+ruled = true
+
+[[lanes]]
+id = "t_p2"
+label_key = "t_l_p2"
+ruled = true
+
+[[standing]]
+id = "t_tend"
+label_key = "t_a_tend"
+makes = [{ store = "t_heap", items_per_hour = 1 }]
+
+[[cards]]
+id = "t_p1_work"
+lane = "t_p1"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_p2_work"
+lane = "t_p2"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[triggers]]
+id = "t_arrive"
+when = { test = "after_time", value = 100 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "t_p1_work" }, { unlock_kind = "card", id = "t_p2_work" }, { unlock_kind = "action", id = "t_tend" }], joins = [{ lane = "t_p1", mix = "town:main", card = "t_p1_work" }, { lane = "t_p2", mix = "town:main", card = "t_p2_work" }] }
+
+[[triggers]]
+id = "t_depart"
+when = { test = "after_time", value = 5000 }
+outcome = { leaves = [{ lane = "t_p1", stops = ["t_tend"] }] }
+
+[text]
+t_s_heap = "Heap"
+t_l_p1 = "First"
+t_l_p2 = "Second"
+t_a_tend = "Tending"
+t_c_work = "Work"

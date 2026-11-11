@@ -1,0 +1,77 @@
+# Motivation and pacing: first session, first week
+
+Evidence labels: developer, research, verbatim, practitioner, opinion, snippet (only seen in a search result). Every claim names what was actually read. Sources are in `motivation-notes.jsonl`. About 14 searches and 6 fetches were spent.
+
+Biggest limit up front: nothing found measures what brings a player back on day 2 to 7 of a game without notifications or daily rewards. The first-week part below is inference from theory plus designer testimony, and says so.
+
+---
+
+# Part A: General
+
+## A1. **Players return to games that make them feel capable and self-directed, and hours played is a poor proxy for either.**
+- research: Ryan, Rigby and Przybylski (2006), four studies, correlational and self-report. In-game autonomy and competence predicted enjoyment and preference for future play. In the online-multiplayer study, relatedness predicted both independently. Read in full.
+- research: intuitive controls mattered only as a gatekeeper. Their effect on wanting to play again was fully mediated by felt autonomy and competence, mostly competence. Clear controls are the price of admission, not the pull.
+- research: Przybylski et al. (2009), n=1324 online-community players, correlational. Low need satisfaction went with obsessive play (more hours, more post-play tension, less enjoyment). High need satisfaction went with harmonious play (more enjoyment and energy) and did not predict hours. Heavy play hurt well-being only for the obsessive group; once daily-life need satisfaction was controlled, the unique passion-to-well-being link was small. Full abstract read; the paper body is paywalled (unverified beyond the abstract). Samples are young adult male, self-selected.
+- Transferable test: a design is healthy if the player reports "I chose this and it worked", not if they play long. Time-in-game rewards the wrong thing.
+
+## A2. **Rewards used as feedback strengthen interest; rewards used as a lever to get behaviour weaken it.**
+- research: Deci, Koestner and Ryan (1999), meta-analysis of 128 experiments, read in full. Expected tangible rewards given for doing, finishing or performing a task reduced later free-choice interest (d = -0.40, -0.36, -0.28). Unexpected rewards and task-noncontingent rewards had no effect. Positive feedback raised free-choice behaviour (d = +0.33) and self-reported interest (d = +0.31).
+- research: Ryan et al. (2006) frame the same split: rewards as informational feedback support autonomy, rewards used to control behaviour undermine it.
+- Caveat: these are mostly lab tasks that were interesting to begin with, so they bound a risk rather than predict a game's outcome. The review of 819 gamification studies (Koivisto and Hamari 2019, snippet) says results lean positive but "mixed results are remarkable" and depend on context and user.
+- Transferable test: ask of each reward "is this telling the player how they are doing, or paying them to keep going?" The first is safe. The second is where overjustification lives, especially when it is promised in advance for a repeated action.
+
+## A3. **A visible gap between what the player knows and what they want to know pulls them forward, and the pull grows with how much they already know (the "important and recently opened" refinement is later work, unverified).**
+- research: Loewenstein (1994), information-gap theory, read in full (scanned PDF, OCR'd). Curiosity arises when attention focuses on a gap between what one knows and wants to know. Curiosity is greater toward information that more nearly closes the gap, greater for insight problems than incremental ones, and rises with how much one already knows, because a person who knows 47 of 50 items frames it as the 3 missing. Loewenstein's lab evidence here is small (for example about 70% chose to learn the rule behind the longer list).
+- snippet: the claim that gaps work best when important and recently opened comes from later work (Golman and Loewenstein), not the 1994 paper; seen as a snippet only. A 2025 review notes not every gap produces curiosity (snippet).
+- developer: Sid Meier (GDC write-up, read): "Like cliffhangers in series, tease the player enough so that he wants to see the next turn/level/corner" and "Reward him for getting there, but focus your attention on the next thing to do."
+- Transferable test: at the moment a reward lands, is the next question already on screen? A gap that is only discovered later is not pulling anything.
+- NULL: no controlled study was found that interrupted or open-loop game sessions raise return rates. The Zeigarnik effect is cited everywhere in design blogs; a 2025 meta-analysis (Ghibellini & Meier, 59 publications, read in full) finds no memory advantage for unfinished tasks but a reliable tendency to resume them (67% against 50% chance; student lab tasks, no games). Treat the cliffhanger as a mechanism story, not a measurement.
+
+## A4. **Effort speeds up as the goal gets close, and a head start on a bar counts as progress.**
+- research: Kivetz, Urminsky and Zheng (2006), goal-gradient in a coffee loyalty card and a song-rating site. Effort rose with the proportion of distance already covered; engagement dipped right after a reward and rose again toward the next; a 12-stamp card with 2 bonus stamps already applied (same 10 purchases needed) was completed in 12.7 days against 15.6 for a plain 10-stamp card, about 20% faster (field experiment, n=108, p<.05). Café interpurchase times fell about 20% from the first to the last purchase. The paper calls the head-start effect "illusionary goal progress". Full paper read.
+- Transferable: show progress as a fraction of a goal, never start a bar from nothing right after the last one filled, and expect a dip right after each completion. The effect is documented for purchases and ratings; for games it is an extrapolation.
+
+## A5. **Interest over a session is a shape to be drawn and checked, not a level to be held high.**
+- opinion/practitioner: Schell's interest curve (a hook at the start, then a rise with peaks and valleys to a climax). Seen only through a secondary note (snippet); Schell's text was not obtained (unverified: the lecture slides found show only a graph, and the book chapter is not open). Use it as a drawing exercise: sketch the curve for minute 0 to 30 and for day 1 to 7, and look for long flats.
+- Flow (Csikszentmihalyi) is the standard "challenge matches skill" frame. Critiques seen as snippets only (unverified: none read; Soderman's book, per its listing, argues flow can be used to manipulate players for profit): it is not a sufficient theory of what makes games good (Juul, Soderman), and Csikszentmihalyi himself objected to applying it to games. It is useful as a vocabulary for "too hard / too easy" and weak as a pacing rule, since it names no cadence.
+
+## A6. **Layered goals (seconds, minutes, hours, days) are universal advice, but no source found states numbers for them.**
+- practitioner: itch.io reviewers and an idle-design guide (snippets): the first upgrade taking long to save for is the classic early failure; a visible next-unlock condition and a "fill this, something happens" bar keep early players; pacing drags when gains are tiny against waiting; most players leave in the opening minutes. No source gave "a new thing every N minutes". NULL confirmed by the existing `pacing-math-notes.txt`, which also found none.
+- Meier's write-up does not give the short/medium/long formulation attributed to him in folklore; do not cite him for it.
+
+## A7. **In idle games the return visit is the reward moment, so it must be built, not left as a number change.**
+- developer (press write-up of Pecorella's GDC talk, read): constant positive growth means no need to play constantly; a quick check-in shifts the growth curve and makes "a celebratory moment every time that you return"; "the longer you're away from the game, the greater your incentive to return"; idle games act as a "natural energy system" without an energy currency. Slides (GDC Europe 2016 talk, read in full) add: the speaker calls Egg Inc's 2-hour cap on offline earning "a mistake" and says he churned largely because of it, which backs the return-reward point; players of the genre are motivated mainly by Completion and Power (Quantic Foundry survey of three idle games).
+- practitioner (snippets): daily-login and streak mechanics are described by their own advocates as pressure ("missed days resetting progress adds pressure"); player forum threads describe losing a long streak after days away as burn-out and ask for modest rewards so nobody feels obligated. No peer-reviewed study on streak loss and churn was found. Anecdotal, consistent with A1: obligation is the "having to" pole.
+- Transferable: without notifications or streaks the pulls left are (a) a gap left open (A3), (b) a goal visibly near (A4), (c) a return that pays more the longer the absence, and (d) the sense of having made a choice that is still working (A1).
+
+## A8. **"One more turn" comes from decisions with consequence plus the next thing already visible, not from compulsion loops.**
+- developer: Meier (read): "A game is a series of interesting decisions"; a decision needs impact, "or at least the player should believe it has".
+- research (indirect): A1 says the healthy version tracks need satisfaction and does not raise hours; the unhealthy one tracks low need satisfaction and raises hours. A dark-pattern check follows: does the pull weaken when the player is satisfied, or only when they stop? A healthy pull weakens at satisfaction.
+
+---
+
+# Part B: What it means for Ostmere
+
+Read: `decisions.md`, `core-loop.md`, `design/opening-screen.md`, and the two research notes on pacing. Nothing under `content/`.
+
+## Already agrees
+- **"Fun, but never vying for attention":** no daily resets, no offline cap, nothing finishing into idleness, no push by default. This is A2 and A7 done at the rule level: no promised repeat reward, no streak. The "shown in the design" paragraph (no badges, no shop-shaped elements, red lines with their answer beside them) is A2's informational-feedback test written as a visual rule.
+- **"Rewarding at any moment":** "Something is ready at every timescale: cheap buys in seconds to minutes, choices in hours, unlocks and big steps in days" is the layered-goals advice (A6) stated as a rule, and "taps play out content that idle time produced, never raw per-tap currency" avoids the performance-contingent reward trap.
+- **"Coming back" (opening-screen):** the unwrap in order, each new thing getting its turn, is Pecorella's celebratory return (A7) with the player's attention paced.
+- **"The end" and "A feature's card":** a docked card saying the next morning is a real-time wait is an open gap (A3) with a stated length, after the galaxy review showed it read as the end.
+- **Camp bar with a "next marker" stating what the next level pays** (opening-screen, "One column of attention") is a goal-gradient bar with the information gap labelled (A3, A4).
+
+## Gaps and tensions
+- **The pull for the long absence is not designed.** The rules say time away earns full rate and nothing is capped, which removes the penalty for leaving, but nothing yet states that a longer absence produces a bigger or richer unwrap. Pecorella's "longer away, greater incentive" is a claim about the visit, not just the rate. Also, "Coming back" caps the whole unwrap display at 4 s and shows the rest together, which is the opposite of a celebratory moment for the largest returns.
+- **No written rule for what sits open when the player leaves.** The player's last view before closing is what A3 says works as the gap. The design has the ledger's "runs 7 h" and the next marker, but no decision says the departing screen should always have one named, nearby, important thing pending.
+- **Dip after completion (A4) is unaddressed.** When a camp level or a feature lands, the design says what the next level pays, not how much of it is already done. Starting at zero is the case where Kivetz et al. saw engagement dip.
+- **Autonomy and competence are asserted, not measured.** The mix editor and rules carry both (Part A1), but the cold-tester debriefs in `human-player.md` and `galaxy-review.md` are about comprehension and leaving, not "did I feel I chose this and it worked".
+- **Relatedness is thin in a single-player game.** The town's people are the only candidate. A1's relatedness finding is from multiplayer and nothing found says NPC relatedness substitutes. Hypothesis only.
+- **Not a conflict:** the "2 AM test" and "watching earns nothing extra" rules fit A1: they remove the optimiser's reason to obsess.
+
+## Proposals to test
+1. **Endowed next markers.** When a bar completes, seed the next camp or feature marker with a share of the surplus work, and measure in the pacing simulator how often a random visit finds at least one visible marker past two thirds full. Pass: it is the usual case at every point in days 1 to 7. Cheap, because the simulator exists. Risk: a seeded bar can read as a fake head start; seed only from real carried-over work.
+2. **Absence ladder audit.** Simulate returns after 1 h, 8 h, 24 h, 3 days and 7 days and print what the unwrap holds (count of milestone-class lines, not text). Check that the longer absences contain a recognisably bigger moment and that the 4 s display cap does not flatten it. This tests A7's claim against the rules as written, and the answer may be that it already holds.
+3. **Three-question debrief for cold testers.** After a first session, ask: did you feel you chose what the camp did, did it work, and would you come back without being told to. This puts A1 into the test already run for galaxy.click-style cold reads. Keep it to three questions; PENS is the instrument behind them but the full scale is not needed for one tester at a time.
+
+Not proposed: a Zeigarnik-style cliffhanger mechanic (A3 null) and any new daily-style cadence (A7, against `decisions.md` "Fun, but never vying for attention").

@@ -1,0 +1,150 @@
+# Playtesting and reading players
+
+Scope of the evidence: about ten searches and ten fetches. Primary sources on playtest method are thin and partly paywalled
+(Hodent's book and the Microsoft Games User Research chapters were not readable; Valve's 2009 slides and the RITE paper
+were read in full in a second pass); much of what circulates is unsourced practitioner advice repeating itself. Findings below say what was
+actually seen. Source list: `playtesting-notes.jsonl`.
+
+# Part A. General
+
+**1. Watching what a tester does is the signal; what they say afterwards is a lead to be checked against it.**
+- developer: Valve's 2009 playtesting slides list direct observation as the core method, with "importance of what people
+  do, not what they say" as its plus and "presence of observers can bias results" and "behavior requires interpretation" as
+  its minuses; Q&A is marked "people don't know why they do what they do"; think-aloud is good for "why" questions
+  but "interferes with gameplay" and is "inaccurate and biased" (Ambinder, GDC 2009 slides, read in full).
+- practitioner: guides converge on staying silent, logging hesitations and stuck points, and not explaining mid-session,
+  because an explanation gives the tester information the shipped game will not (bugnet.io guides; snippet-level).
+- practitioner: testers cannot always say why they feel something and propose fixes from a flawed model of the design,
+  so take the problem they report and discard the remedy (same guides; "problems yes, solutions no" is the common
+  phrasing, but no primary source for it was found).
+- practitioner: Bromley's methods page calls think-aloud "an unnatural task" with cognitive load that "may lead people to the
+  right answer", best in co-op games where players explain to each other; a moderator should stay neutral but not sit
+  silent (gamesuserresearch.com, read in full). RITE sessions themselves used think-aloud (Medlock et al.).
+- developer: Valve's Faliszek says the team first blamed outside testers and by the third or fourth round accepted "it's our
+  fault" (Game Developer; read in full).
+- developer: Valve's own slide names "lots of biases in current playtesting procedures" as the reason to add
+  physiological measures, and pairs them with survey answers rather than replacing them (Ambinder, GDC 2011 slides).
+- opinion: the observer effect is real (testers act bolder or more careful when watched); keep the observer's presence
+  small, or record and watch later.
+
+**2. "Five users" is a rule about iterating, not about sufficiency, and it is weaker than its reputation.**
+- research: Nielsen's model is problems found = N(1-(1-L)^n) with L about 31%; his stated conditions are that the
+  five are followed by a fix and a fresh five, that users are comparable, and that each distinct user group gets 3-4
+  (nngroup.com).
+- research: critics found far less on the web: the first five caught about 35% of a larger set's problems (Spool &
+  Schroeder; unverified: the CHI abstract's own text was not retrievable, the abstract via snippet says 49 users on four
+  sites while a secondary page says 18 users, so the figures are second-hand), and testers 6-18 each still found 5+ new ones (Perfetti & Landesman). Virzi's own spread was 55% to
+  nearly 100% for a five-person sample (humanfactors.com newsletter; snippet; web sites, not games).
+- research: RITE (Medlock et al., Microsoft, UPA 2002, primary paper read in full) turns this into a loop: fix the moment
+  one tester exposes a problem and the fix is clear, then keep testing. AoE II tutorial: 16 testers, none had played a
+  real-time strategy game; changes between testers 1, 2, 5, 8, 9 and 10, then 6 more with no regression. After those 6
+  the authors put it at 88% likely that every fixed problem was fixed if it hit 30% of users, 47% if it hit 10%.
+  31 problems found, 30 fixed; 6 of 36 fixes had to be redone (one wording fix failed on the next tester). Unclear-cause
+  issues get more testers before any fix. Preconditions the paper states: must-pass tasks agreed before the test, fixes in
+  under 2 hours or by the next test day, decision makers present, an experienced researcher. A stopping rule is the
+  part most teams drop. After 1 change-free tester you have only ruled out problems that hit
+  80% or more of users, after 6 about a quarter, after 10 about 15% (measuringu.com, citing the RITE authors). (unverified: no study
+  comparing RITE against ordinary rapid testing was found; absence only from search.) It needs fixes that take hours, not days.
+- verdict for a small team: few testers, many rounds, a fix between each, and "no one stumbled on the last N" as the
+  stop. A single tester proves little; one session's accident (a tester who misread once) is not a finding until a
+  second tester repeats it or you can see the cause.
+
+**3. Usability testing and fun testing are different studies with different sample sizes; do not run them as one.**
+- practitioner: usability asks "could they do it, where did they stall" and works with a handful watched closely; appreciation
+  asks "did they like it" and needs enough players to count, via surveys and longitudinal diaries. Mixing the aims in
+  one session gets muddled (PlaytestCloud methods page).
+- opinion/practitioner: because games intend challenge, task speed is not a pass criterion; a stall that the player
+  enjoys is not a defect.
+
+**4. For games played in short sittings across days, the session shape of the test must match the play.**
+- developer: Kolibri tested Idle Miner Tycoon with 7 remote players over three 15-minute sessions separated by two hours,
+  to match idle play. It exposed a stall that a single sitting would not: players poured upgrades into one part
+  and ignored the part that moved resources, so progress slowed. Contextual teaching at that point fixed it (vendor
+  case study; effect sizes not given).
+- verdict: for idle and incremental games one long observed session answers the opening; it cannot answer the
+  return visit. A test with gaps is a different, cheaper instrument than a live session.
+
+**5. Telemetry says where people leave; only a watched session says why, so use each for what it can do.**
+- practitioner: funnels and time-to-first-churn locate exits; analysts pair them with qualitative sessions
+  (adriancrook.com, vgm.co; snippet).
+- research (weak): deltaDNA's 275 games had 31% D1 retention when the first session exceeded the 9-minute mean against 20%
+  below; the author concedes short sessions may be the result of churn, not its cause (Game Developer 2016). Do
+  not set a session-length target from it.
+- practitioner: benchmark retention figures for mobile are vendor-reported and conflict (D1 21-27%); no idle-specific
+  drop-off source was found. A single-player game with a handful of players has no usable funnel statistics; its
+  telemetry is a log read as a story (what did this one person tap, in what order, when did they return).
+
+**6. The developer is a poor judge of whether the game is clear, and a genre-literate developer is worst.**
+- developer: Hodent names it the "curse of knowledge": "You know your design, so it's really hard to have objective
+  knowledge of it, because you can't step back"; her remedy is to bring in the target audience and watch them (DigiPen
+  talk report; secondhand, not her own text).
+- opinion: once you know something you cannot imagine not knowing it; designers see where objectives are and what the
+  intended strategy is (student reflection, wayline.io; no primary study found).
+- research: the RITE tutorial test recruited only players with no experience of the genre, because that was the tutorial's
+  audience (Medlock et al.).
+- practitioner: the common remedy is to test with players new to the genre alongside fans, since the contrast shows
+  both the strengths and the gaps. A genre-literate tester supplies motive and vocabulary the newcomer lacks and so
+  hides exactly the gaps the first minutes must close.
+- verdict: treat the developer's own play as a smoke test (does it run, is the pacing plausible), never as a clarity test.
+
+**7. A survey is a weak instrument; keep it short, piloted, and about the one thing the session did not show.**
+- practitioner: completion falls after about five minutes and past ten only a self-selected subset finish; one idea per
+  question; include a "never" option; pilot it as a qualitative test; end with a broad open question because
+  players use different words from the team (Games User Research expert tips).
+- opinion: after a watched session, a recognition check ("which of these lines did you see?") with invented lines
+  mixed in measures what was seen without asking anyone to remember or flatter. Not found in a source; it is standard
+  signal-detection practice applied here.
+
+**8. Remote and recorded sessions show behaviour but not the room; the cost is the quiet signals.**
+- practitioner: unmoderated and recorded sessions scale and remove the observer effect, but you cannot ask "what were you
+  thinking" at the moment, and you lose posture, hesitation off-screen and the glance away (PlaytestCloud methods
+  page, bugnet guides; thin evidence). Asking after the fact is, per one developer blog, "vastly inferior" to seeing the
+  play (gamedev.net; snippet).
+
+**Gaps.** Not found: Hodent's own text, the Pagulayan et al. chapter (academia 403, game studies host refused), the Spool
+& Schroeder full text, a Valve or Portal commentary transcript on "never help the tester" (a search found nothing citing
+it), Riot method writing beyond a 2XKO post that names no procedure, Bromley on developers watching sessions (his
+pages do not address it), and any solo or small-team multi-session idle-game playtest account. Said plainly rather than filled.
+
+# Part B. What it means for Ostmere
+
+Practice already agrees with Part A on several points; two gaps are worth a test.
+
+**Where practice agrees**
+- **Cold tester, not the author.** The open-work item on teaching the mix says it is "judged by a cold tester who doesn't play
+  idle games, never the owner", and `decisions.md`, "Shown in the design, not claimed" and the opening-screen doc's four
+  fixes all come from cold testers' stalls (eyes split, type small, first card lost, front page unclear). That is finding 6 applied
+  correctly; the owner being genre-literate says the same.
+- **Behaviour over report.** The "was it seen" probe (`app/tools/seen/`) plus the planned "pick the seen lines from
+  real and invented ones" step is the recognition check of finding 7. Keep it as the instrument for story-line
+  reach rather than asking testers whether they noticed.
+- **Return visits.** `docs/open-work.md` holds day two until day one is shared and testers' feedback is in, and says to
+  judge notifications from the returns in the telemetry. That is the right order for finding 4.
+- **Fix, then retest.** Small lines ship unreviewed and the game is developed live (`decisions.md`, "Developed live,
+  forward-only by preference"); fast fixes are the condition RITE needs.
+
+**Gaps and conflicts**
+- **No stopping rule.** Testers arrive as "one tester session per change" with no statement of when a lesson is
+  done. Without a stop, either one tester's accident is treated as a finding or a lesson is never called finished.
+- **No gap session.** Every probe described is a single sitting (the simulated player, the seen probe, the cold tester
+  watched live). The game's own design is short visits across days ("Something to watch, any time, for hours", the pacing
+  docs), and the new mix and rule lessons teach on a trigger from repeated behaviour (the strip offering a card after
+  repeated hand taps). Whether that trigger fires on a person returning after hours is untested by anyone except the owner.
+- **Telemetry is read as a count, not a story.** With a few testers, the decision log is best read per person in order.
+
+**Proposals to test**
+1. **A RITE-style stop for the mix and rule lessons.** Cold testers one at a time; fix what a tester stalled on before the
+   next; stop after three consecutive testers who reach the first built mix and first built rule without help, and
+   report it as "no problem hitting more than about half of testers found" rather than "verified". Cheap because
+   lessons are data (open-work, "Teach the mix system where it is first needed"). Pass condition stated before the
+   first session, and the observer says nothing.
+2. **A gapped cold-tester pair.** Two or three cold testers, each playing two short sittings a few hours apart (the
+   Kolibri shape), with the second sitting opened from the return screen. Read from the decision log and screen
+   recording: do the repeated-tap and repeated-switch offers appear on the return, are the offers taken, and what
+   does the tester do first. Answers the day-two question without waiting for the public build.
+3. **A per-person decision-log read after each tester,** as a short fixed table (time to first tap, first idle gap
+   over a minute and what the screen showed then, offers shown versus taken, last action before leaving), written
+   by the session before any fix. The point is the drop-off point of one person, not an average. Pair each leave
+   point with a one-line question to that tester afterwards ("what were you about to do?"), not a rating.
+
+Do not use survey ratings to decide lesson changes at this sample size; use them only for the open "anything else" question.

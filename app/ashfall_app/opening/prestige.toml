@@ -1,0 +1,208 @@
+# Prestige: the rules numbers every skill's phases read, and each skill's track of nodes, as data merged after the
+# last shipped chapter (schema.Chapter, chapters.merge). Mechanics: docs/design/prestige-phases.md.
+version = 1
+
+# A phase tops out at level 22: the lowest level whose span (54,980 items of XP) a full share of the fastest card
+# (900 an hour) cannot cross inside the ordinary absence (opening/prestige.check_phase_spans).
+[prestige]
+top_level = 22
+carry_window_s = 172800
+menu_size = 3
+
+# ---------- nodes ----------
+# Each node acts outside its skill. A rank adds 2500 bp (+25%), about two and a half of the skill's x1.1 level pays.
+# A track is sized so a typical game fills about two thirds of it: typical clicks woodcutting 5 times and scavenging 4 by
+# day 90 with its mix left as at S4 (docs/design/prestige-phases.md, "Size each skill's track"), so woodcutting holds
+# seven nodes and scavenging six, and a pick leaves the rest unfinished. The other skills do not reach a click by then:
+# two one-rank nodes each, the least a choice needs.
+
+[[nodes]]
+id = "wc_lever"
+skill = "woodcutting"
+label_key = "node_wc_lever"
+changes = { target = "work", id = "scavenge" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "wc_stake_rack"
+skill = "woodcutting"
+label_key = "node_wc_stake_rack"
+changes = { target = "cap", id = "stakes" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "wc_digging_stick"
+skill = "woodcutting"
+label_key = "node_wc_digging_stick"
+changes = { target = "work", id = "forage" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "wc_hauling_sledge"
+skill = "woodcutting"
+label_key = "node_wc_hauling_sledge"
+changes = { target = "work", id = "field_track" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "wc_rotting_log"
+skill = "woodcutting"
+label_key = "node_wc_rotting_log"
+changes = { target = "cap", id = "fungus" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "wc_plank_pits"
+skill = "woodcutting"
+label_key = "node_wc_plank_pits"
+changes = { target = "cap", id = "clay" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "wc_hooked_pole"
+skill = "woodcutting"
+label_key = "node_wc_hooked_pole"
+changes = { target = "work", id = "pick_fungus" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "sc_whetstone"
+skill = "scavenging"
+label_key = "node_sc_whetstone"
+changes = { target = "work", id = "woodcutting" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "sc_cairn"
+skill = "scavenging"
+label_key = "node_sc_cairn"
+changes = { target = "cap", id = "stones" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "sc_scraper"
+skill = "scavenging"
+label_key = "node_sc_scraper"
+changes = { target = "work", id = "dig_clay" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "sc_rack_stones"
+skill = "scavenging"
+label_key = "node_sc_rack_stones"
+changes = { target = "make", id = "smoke_catch", store = "smoked" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "sc_bone_pegs"
+skill = "scavenging"
+label_key = "node_sc_bone_pegs"
+changes = { target = "cap", id = "cord" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "sc_scrap_tarp"
+skill = "scavenging"
+label_key = "node_sc_scrap_tarp"
+changes = { target = "cap", id = "damp_wood" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "fo_bark_twine"
+skill = "foraging"
+label_key = "node_fo_bark_twine"
+changes = { target = "work", id = "cut_stakes" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "fo_herb_bundle"
+skill = "foraging"
+label_key = "node_fo_herb_bundle"
+changes = { target = "work", id = "smoke_roots" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "ck_trail_food"
+skill = "cooking"
+label_key = "node_ck_trail_food"
+changes = { target = "work", id = "hunt_wolf" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "ck_cold_pit"
+skill = "cooking"
+label_key = "node_ck_cold_pit"
+changes = { target = "cap", id = "catch" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "ar_warm_pot"
+skill = "arcana"
+label_key = "node_ar_warm_pot"
+changes = { target = "work", id = "stew" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "ar_dry_shelf"
+skill = "arcana"
+label_key = "node_ar_dry_shelf"
+changes = { target = "cap", id = "dry_wood" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "me_hide_sack"
+skill = "melee"
+label_key = "node_me_hide_sack"
+changes = { target = "cap", id = "roots" }
+ranks = 1
+per_rank_bp = 2500
+
+[[nodes]]
+id = "me_sinew_ties"
+skill = "melee"
+label_key = "node_me_sinew_ties"
+changes = { target = "work", id = "smoke_catch" }
+ranks = 1
+per_rank_bp = 2500
+
+[text]
+node_wc_lever = "A birch lever"
+node_wc_stake_rack = "A stake rack"
+node_wc_digging_stick = "A digging stick"
+node_wc_hauling_sledge = "A hauling sledge"
+node_wc_rotting_log = "A rotting log"
+node_wc_plank_pits = "Plank-lined pits"
+node_wc_hooked_pole = "A hooked pole"
+node_sc_whetstone = "A whetstone"
+node_sc_cairn = "A cairn"
+node_sc_scraper = "A flint scraper"
+node_sc_rack_stones = "Stones under the rack"
+node_sc_bone_pegs = "Bone pegs"
+node_sc_scrap_tarp = "A scrap tarp"
+node_fo_bark_twine = "Bark twine"
+node_fo_herb_bundle = "A herb bundle"
+node_ck_trail_food = "Trail food"
+node_ck_cold_pit = "A cold pit"
+node_ar_warm_pot = "A hot stone in the pot"
+node_ar_dry_shelf = "A dry shelf"
+node_me_hide_sack = "A hide sack"
+node_me_sinew_ties = "Sinew ties"

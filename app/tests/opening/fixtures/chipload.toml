@@ -1,0 +1,56 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_chip_card_high.py): a chip shown while a store is
+# high, cured by a ruled lane's card that takes the store, and the chip's at_least order card tapping it. Not story: the
+# ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_load"
+label_key = "t_s_load"
+cap_items = 20
+
+[[standing]]
+id = "t_settle"
+label_key = "t_a_settle"
+makes = [{ store = "t_load", items_per_hour = 4 }]
+
+[[lanes]]
+id = "t_helper"
+label_key = "t_l_helper"
+ruled = true
+
+[[cards]]
+id = "t_shovel"
+lane = "t_helper"
+presentation = "action"
+label_key = "t_c_shovel"
+work_s = 600
+inputs = [{ store = "t_load", items = 8 }]
+failed_line_key = "t_l_shovel_fail"
+
+[[chips]]
+id = "t_laden"
+label_key = "t_ch_laden"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "t_load", value = 8 }
+
+[[order_cards]]
+store = "t_load"
+tap_card = "t_shovel"
+chip = "t_laden"
+when = { test = "at_least", subject_kind = "store", id = "t_load", value = 8 }
+
+[[triggers]]
+id = "t_start"
+when = { test = "after_time", value = 0 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "t_settle" }, { unlock_kind = "card", id = "t_shovel" }, { unlock_kind = "chip", id = "t_laden" }] }
+
+[line_kinds]
+t_l_shovel_fail = "story"
+
+[text]
+t_s_load = "Load"
+t_a_settle = "Settling"
+t_l_helper = "Helper"
+t_c_shovel = "Shovel"
+t_ch_laden = "Laden"
+t_l_shovel_fail = "Nothing to shovel."

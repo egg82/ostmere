@@ -1,0 +1,11 @@
+[
+  {"kind": "caption", "text": ["Boar, Coldwater wood. 2nd wk, by the wallow"]},
+  {"kind": "crossed", "text": ["too pig-like.", "more weight in front"]},
+  {"kind": "study", "id": "tusk", "text": ["lower tusk, skull at", "the wallow. ~4 in."]},
+  {"kind": "study", "id": "print", "text": ["print - 2 toes +", "dewclaws (soft mud)"]},
+  {"kind": "study", "id": "bristle", "text": ["bristle tips split", "into 3. coarse"]},
+  {"kind": "label", "anchor": [300, 236], "text": ["bristles stand up", "along the spine"]},
+  {"kind": "label", "anchor": [110, 340], "text": ["head kept low", "the whole time"]},
+  {"kind": "label", "anchor": [214, 446], "text": ["legs short. fast", "over 20 yds or so"]},
+  {"kind": "label", "anchor": [430, 330], "text": ["did not run from", "the dogs"]}
+]

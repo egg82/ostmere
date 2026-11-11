@@ -1,0 +1,113 @@
+# A test chapter, merged after the shipped ones: a ruled lane and its cards, with a later label, and the trigger
+# that brings them and installs the lane's always rule; an offer whose answers set a one-off on that lane or queue
+# one on the hands, and a trigger gated on its being answered. Not story: the
+# ids and words are the tests' own (tests/opening/test_townsfolk_loader.py).
+version = 1
+end_feature = "t_after"
+
+[[lanes]]
+id = "t_helper"
+label_key = "t_l_helper"
+ruled = true
+later_labels = [{ after = { unlock_kind = "feature", id = "t_named" }, label_key = "t_l_helper_named" }]
+
+[[cards]]
+id = "t_help_gather"
+lane = "t_helper"
+presentation = "action"
+label_key = "t_c_help_gather"
+work_s = 60
+makes = [{ store = "damp_wood", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_help_rest"
+lane = "t_helper"
+presentation = "action"
+label_key = "t_c_help_rest"
+work_s = 30
+
+[[cards]]
+id = "t_help_fetch"
+lane = "t_helper"
+presentation = "narrative"
+label_key = "t_c_help_fetch"
+work_s = 90
+cap = 1
+
+[[cards]]
+id = "t_one_off"
+presentation = "narrative"
+label_key = "t_c_one_off"
+work_s = 40
+cap = 1
+
+[[features]]
+id = "t_named"
+
+[[features]]
+id = "t_after"
+
+[[offers]]
+id = "t_ask"
+text_key = "t_o_ask"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "t_named", value = 1 }
+line_keys = ["t_l_asked"]
+
+[[offers.answers]]
+id = "t_yes"
+label_key = "t_a_yes"
+cost_key = "t_a_yes_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "t_help_fetch" }]
+orders = [{ tap_card = "t_help_fetch", first = true }]
+line_keys = ["t_l_yes"]
+
+[[offers.answers]]
+id = "t_no"
+label_key = "t_a_no"
+cost_key = "t_a_no_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "t_one_off" }]
+queues = ["t_one_off"]
+
+[[triggers]]
+id = "t_answered"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "t_ask", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "t_after" }] }
+
+[[triggers]]
+id = "t_rule_set"
+when = { test = "at_least", subject_kind = "lane_rules", id = "t_helper", value = 1 }
+outcome = { line_keys = ["t_l_rule"] }
+
+[[triggers]]
+id = "t_helper_arrives"
+when = { test = "after_time", value = 100 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "t_help_gather" },
+  { unlock_kind = "card", id = "t_help_rest" },
+  { unlock_kind = "feature", id = "t_named" },
+]
+orders = [{ tap_card = "t_help_gather" }]
+
+[line_kinds]
+t_l_asked = "story"
+t_l_yes = "story"
+t_l_rule = "story"
+
+[text]
+t_l_helper = "Helper"
+t_l_helper_named = "The helper"
+t_c_help_gather = "Gather"
+t_c_help_rest = "Rest"
+t_c_help_fetch = "Fetch"
+t_c_one_off = "Look"
+t_o_ask = "A question"
+t_l_asked = "Someone asks."
+t_l_yes = "Yes, then."
+t_l_rule = "A rule."
+t_a_yes = "Yes"
+t_a_yes_cost = "takes {d}"
+t_a_no = "No"
+t_a_no_cost = "takes {d}"

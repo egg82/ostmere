@@ -1,0 +1,47 @@
+{
+ "app/ashfall_app/api/requestlog.py": {
+  "cast": 1
+ },
+ "app/ashfall_app/engine/codec.py": {
+  "cast": 1
+ },
+ "app/ashfall_app/opening/lock.py": {
+  "cast": 1
+ },
+ "app/ashfall_app/opening/lock_checks.py": {
+  "cast": 1
+ },
+ "app/client/test/arrivals.test.ts": {
+  "as-unknown-as": 1
+ },
+ "app/client/test/chipoffer.test.ts": {
+  "as-unknown-as": 2
+ },
+ "app/client/test/glows.test.ts": {
+  "as-unknown-as": 2
+ },
+ "app/client/test/lines.test.ts": {
+  "as-unknown-as": 3
+ },
+ "app/client/test/rulestab.test.ts": {
+  "as-unknown-as": 14
+ },
+ "app/tests/cards_contract/conftest.py": {
+  "cast": 1
+ },
+ "app/tests/engine_contract/conftest.py": {
+  "cast": 1
+ },
+ "app/tests/engine_contract/test_rebase.py": {
+  "cast": 2
+ },
+ "app/tests/opening/playthrough.py": {
+  "cast": 1
+ },
+ "app/tools/engine_bench.py": {
+  "noqa": 2
+ },
+ "tools/scene/kit.py": {
+  "pyright-ignore": 2
+ }
+}

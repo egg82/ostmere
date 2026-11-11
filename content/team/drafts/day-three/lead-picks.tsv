@@ -1,0 +1,64 @@
+key	source	why
+l_edge_1	B	B#alt tightened; "easy to find" carries the ridge's view unsaid
+l_edge_2	B	B#alt; the hook left to a gesture, never explained
+l_track_fail	new	every draft named wood, but the run also takes stones and roots; true whichever is short
+l_track_first	B	B's job, said as the round trip, off the spec's "where the fog closes"
+l_stream	B	B#alt tightened; drops "soft" and keeps clear of hands
+l_field_1	A	A tightened; wry about the walk, not the dead ground
+l_field_2	A	A#alt tightened; keeps the wry, drops the spec's "rusted to a lump"
+l_floor_fail	combined	C's track_fail shape; true for stone or wood short, unlike drafts naming stone only
+l_larder_1	A	A tightened; the only draft not lifting "course by course"
+l_larder_2	B	B; plain, ties the course to what it is for
+l_larder_3	B	B tightened; dry about the player's own work
+l_larder_done	combined	A's act, reworded off the spec's "roots in rows on a stone floor"
+l_roof_fail	new	drafts assumed poles in hand; the card needs damp and dry wood, either may be short
+l_roof_1	B	A and B identical; short and plain
+l_roof_2	combined	B's dry turn, off the spec's "what's to hand"
+l_roof_done	new	all three drafts were the spec's fact line verbatim; rephrased
+l_hearth_fail	new	the card fails on clay, stone, dry wood or an uncured course; drafts named clay only
+l_cure_fail	new	the cure fails only with no course laid; drafts read it as a soft course or short clay
+l_hearth_1	combined	C's fact with B's dry "mud ring"
+l_hearth_2	combined	C's act; avoids a second "a second course," opener beside l_larder_2
+l_hearth_3	A	A tightened; the hearth in the camp's life, "everyone" for two or three
+l_hearth_done	B	B tightened off the spec's "whole on the stone"; no time of day, true on return
+l_stew_fail	new	drafts said "nothing"; the card fails on roots or smoked short, or no course laid
+l_stew_first	C	C; a turn in her own act
+l_night_3a	combined	A's facts with B's two, off the spec's "nearer than the first night"; the night precedes the stew on the typical route, so C's pot line is out
+l_night_3b	combined	A#alt's cost, off the spec's "banks the fire higher"
+l_morning_4	new	every draft lifted "frost greys everything"; the fact only
+l_watch_1	combined	A's added act, short, off the spec's "ring of stones"
+l_watch_2	new	fires with l_watch_1 at morning 4, before the fire is lit (t_watch_lit), so every draft's lit fire was false here
+l_watch_fail	new	shared by her card and the player's; drafts said "you" or named stone only
+l_watch_lit	combined	all drafts lifted "a stick at a time" and "back to the camp"; her name, since the line lands long after l_watch_2
+l_watch_dry	combined	C's short form; C's "sticks are damp" assumed damp wood on hand
+l_night_4	combined	C tightened; the cost shared three ways; fires once night 4 has begun, so no "as the light goes"
+l_bank_hearth_fail	new	the card fails on night or skill, never on stuff; drafts named wood or ash
+l_b5_1	A	A tightened; the melt shown, the warmth left to b5_2
+l_b5_2	A	A#alt's act, reworded off day one's "on warm ground"
+l_b5_3	B	B#alt tightened; follows b5_2's sitting
+l_stay_1	combined	B/C's "nose toward the pot", off day one's "where the light"; draws him without naming the smell
+l_stay_2	combined	C's facts with "alone", the ask as his question off the spec's wording; neither answer favoured
+l_bay_go	B	B tightened off the spec's "against the lean-to"
+l_bay_his	B	B; a small turn in his act
+l_bay_fail	B	B tightened; true for wood or stone short, shared by his card
+l_join_1	C	C#alt tightened; off the spec's "looks him over once"
+l_join_2	C	C; the sum, never a worry; the brief's {n2} slot fails checks.py's no-digit rule and the contract has no name slot, so the name is said, not shown
+l_his_first	new	fires with the join lines (t_joins), before any task of his finishes, so A's "a job done" was false when you built the bay; names no store and no task
+l_scrap_ask	combined	B/C's acts off the spec's wording; scrap and spear in separate sentences, no link
+l_bank_1	combined	two habits, neither judged, off the spec's wording; the waste-wood dispute left to the answer lines
+l_bank_hers	combined	C's frame, made a mirror of l_bank_his so neither answer reads as right
+l_bank_his	combined	C's frame, the mirror of l_bank_hers
+l_camp_9	B	B reworded off day one's "fit on the wall", the opening's "the wall holds" and the spec's "the wall takes"
+l_camp_10	combined	A's tie to the three, in words as day two's camp lines
+l_clay_seam	C	C; plain, no hands
+l_lee_lichen	C	C tightened
+l_buckle	B	B; dry about the keep
+l_thick_pot	C	C; plain
+l_stack_fail	new	drafts named stone or damp wood; the card also waits on its last stage
+l_stack_1	B	B; short, plain
+l_stack_2	A	A; the one exact detail
+l_stack_3	C	C tightened
+l_shelf_fail	combined	B/C's result, true whatever is short
+l_shelf_1	B	B; plain
+l_shelf_2	B	B; puts the damp wood in, as the card does
+l_shelf_3	A	A tightened

@@ -1,0 +1,90 @@
+# Day-eleven keys manifest: every key in day_eleven.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it) | journal note (its own batch, after this one).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 84
+key	kind	limit	alt	brief
+store_stranger_clock	store label	n/a	-	-
+action_stranger_clock	action label	n/a	-	-
+o_family	offer label	n/a	-	-
+l_family_1	line	line<=75; set median<=45,p90<=75	-	-
+l_family_2	line	line<=75; set median<=45,p90<=75	-	-
+a_family_room	offer answer label	n/a	-	-
+a_family_room_cost	offer answer label	n/a	-	-
+a_family_theirs	offer answer label	n/a	-	-
+a_family_theirs_cost	offer answer label	n/a	-	-
+l_hut_go	line	line<=75; set median<=45,p90<=75	-	-
+l_hut_theirs	line	line<=75; set median<=45,p90<=75	-	-
+c_make_hut	card label	n/a	-	-
+c_n5_build_hut	card label	n/a	-	-
+l_hut_fail	fail	line<=75; set median<=45,p90<=75	-	-
+store_hut	store label	n/a	-	-
+lane_n5	lane label	n/a	-	-
+name_n5	label	n/a	-	-
+lane_n6	lane label	n/a	-	-
+name_n6	label	n/a	-	-
+lane_n7	lane label	n/a	-	-
+name_n7	label	n/a	-	-
+l_join3_1	line	line<=75; set median<=45,p90<=75	H	-
+l_join3_2	line	line<=75; set median<=45,p90<=75	H	-
+action_n5_eating	action label	n/a	-	-
+action_n6_eating	action label	n/a	-	-
+action_n7_eating	action label	n/a	-	-
+store_z1_clock	store label	n/a	-	-
+action_z1_clock	action label	n/a	-	-
+o_guard	offer label	n/a	-	-
+l_guard_ask	line	line<=75; set median<=45,p90<=75	-	-
+a_guard_n2	offer answer label	n/a	-	-
+a_guard_n2_cost	offer answer label	n/a	-	-
+a_guard_n7	offer answer label	n/a	-	-
+a_guard_n7_cost	offer answer label	n/a	-	-
+c_arm_n2	card label	n/a	-	-
+c_arm_n7	card label	n/a	-	-
+l_arm_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_n2_guard	card label	n/a	-	-
+c_n7_guard	card label	n/a	-	-
+up_guard	upside label	n/a	-	-
+l_guard_n2_1	line	line<=75; set median<=45,p90<=75	H	-
+l_guard_n2_2	line	line<=75; set median<=45,p90<=75	H	-
+l_guard_n7_1	line	line<=75; set median<=45,p90<=75	H	-
+l_guard_n7_2	line	line<=75; set median<=45,p90<=75	H	-
+l_leaning_posts	line	line<=75; set median<=45,p90<=75	-	l_posts
+c_n6_posts	card label	n/a	-	-
+up_n6_posts	upside label	n/a	-	-
+l_n6_posts_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_n6_posts_done	line	line<=75; set median<=45,p90<=75	-	-
+l_count	line	line<=75; set median<=45,p90<=75	H	-
+store_night_12	store label	n/a	-	-
+action_night_12	action label	n/a	-	-
+l_night_12	line	line<=75; set median<=45,p90<=75	-	-
+c_keep_vigil	card label	n/a	-	-
+l_vigil_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_b11_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b11_2	line	line<=75; set median<=45,p90<=75	H	-
+l_b11_3	line	line<=75; set median<=45,p90<=75	H	-
+aim_hut	aim label	n/a	-	-
+c_lane_watch	card label	n/a	-	-
+l_lane_watch_dry	fail	line<=75; set median<=45,p90<=75	-	-
+store_guard_made	store label	n/a	-	-
+action_guard_made	action label	n/a	-	-
+o_door	offer label	n/a	-	-
+a_door_fire	offer answer label	n/a	-	-
+a_door_fire_cost	offer answer label	n/a	-	-
+a_door_gate	offer answer label	n/a	-	-
+a_door_gate_cost	offer answer label	n/a	-	-
+feature_door_gate	label	n/a	-	-
+o_pot	offer label	n/a	-	-
+a_pot_hang	offer answer label	n/a	-	-
+a_pot_hang_cost	offer answer label	n/a	-	-
+a_pot_trade	offer answer label	n/a	-	-
+a_pot_trade_cost	offer answer label	n/a	-	-
+o_ditch	offer label	n/a	-	-
+a_ditch_dig	offer answer label	n/a	-	-
+a_ditch_dig_cost	offer answer label	n/a	-	-
+a_ditch_bank	offer answer label	n/a	-	-
+a_ditch_bank_cost	offer answer label	n/a	-	-
+feature_ditch_dug	label	n/a	-	-
+aim_gap	aim label	n/a	-	-
+n_day_z1	journal note	n/a	-	-
+n_day_z3	journal note	n/a	-	-
+n_day_b11	journal note	n/a	-	-

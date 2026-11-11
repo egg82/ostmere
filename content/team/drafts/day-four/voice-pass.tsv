@@ -1,0 +1,10 @@
+key	reason
+l_his_watch	not true in a state: t_his_watch requires only n2_joined, and the watch fire (watch_done 2) is an optional build, so "lucy's watch" can name a fire that was never built; the gap is there on every save. "lucy's watch" also read as an object
+l_his_watch_dry	not true in a state: n2_watch fails on its requires (watch_done 2) as well as on dry wood, so a line about a damp stick is false at an unbuilt fire; now true whichever is short
+l_stack4_2	cliché: the twitching mouth is a stock fiction gesture; her stopping at the last row carries the turn without it
+l_b6_2	a hand with no owner reads as someone else's, and l_b6_3's scrubbing and Lucy's move both need it to be the player's; "your" keeps the wonder (still no verb, no choice)
+l_b6_3	lead's judgement checked: l_b6_2 placed the hand but nothing placed the grey, so "the grey" read as the ash everywhere; naming the fingers places it
+dayend4_1	label: day three's line would echo verbatim, and naming builds (woodshed, watch fire) is false on a save that skipped them; B6 needs neither
+chip_fogbound	label: "foggy" follows the shipped chips' one-adjective form (cold, hungry, tired)
+l_his_watch	name slot: the design names him here; t_his_watch requires n2_joined, so he has joined in every state
+l_stack4_1	name slot: the woodshed has no gate after day four, so a late build plays its stage 2 with the old man in camp and "he" could be either; naming him in the first line keeps l_stack4_2's "he" his. l_his_watch_dry stays "he": it is a card on his own lane

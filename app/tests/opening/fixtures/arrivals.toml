@@ -1,0 +1,77 @@
+# A test chapter, merged after the shipped ones: a tally store for arrivals, three people, and the gates on it. The
+# first arrival brings no join (a trigger seeds the tally from its feature, so a save already past it gets the same
+# trigger at rebase); the second and third each join and add one. Not story: the ids and words are the tests' own
+# (tests/opening/test_arrivals_tally.py).
+version = 1
+end_feature = "t_two_here"
+
+[[stores]]
+id = "t_arrivals"
+label_key = "t_s_arrivals"
+cap_items = 100
+tally = true
+
+[[lanes]]
+id = "t_p2"
+label_key = "t_l_p2"
+ruled = true
+
+[[lanes]]
+id = "t_p3"
+label_key = "t_l_p3"
+ruled = true
+
+[[cards]]
+id = "t_p2_work"
+lane = "t_p2"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+
+[[cards]]
+id = "t_p3_work"
+lane = "t_p3"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+
+[[features]]
+id = "t_first_here"
+
+[[features]]
+id = "t_two_here"
+
+[[triggers]]
+id = "t_first_arrives"
+when = { test = "after_time", value = 100 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "t_first_here" }] }
+
+[[triggers]]
+id = "t_first_counted"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "t_first_here", value = 1 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
+
+[[triggers]]
+id = "t_second_arrives"
+when = { test = "after_time", value = 300 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "t_p2_work" }] }
+
+[[triggers]]
+id = "t_third_arrives"
+when = { test = "after_time", value = 500 }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p3_work" }], joins = [{ lane = "t_p3", mix = "town:main", card = "t_p3_work" }] }
+
+[[triggers]]
+id = "t_gate_on_two"
+when = { test = "at_least", subject_kind = "store", id = "t_arrivals", value = 2 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "t_two_here" }] }
+
+[line_kinds]
+t_c_fail = "tap"
+
+[text]
+t_s_arrivals = "Arrivals"
+t_l_p2 = "Second"
+t_l_p3 = "Third"
+t_c_work = "Work"
+t_c_fail = "Nothing to take."

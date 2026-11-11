@@ -1,0 +1,13 @@
+beats whenever (pace_scale 1): B10 day 10.23, target_day 11
+  away V36->V37: 1 ['trigger t_gap_fire']
+  away V37->V38: 2 ['trigger t_old_wire', 'trigger t_open_side']
+  away V38->V39: 2 ['trigger offer_o_fed', 'card set_snare_4']
+  away V39->V40: 0 []
+  away V40->V41: 1 ['trigger offer_o_gate']
+  away V41->V42: 1 ['trigger t_ring_closed']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1      26      11       0       5       1      17       2     62
+  2      19       4       3       2       0       5       2     35
+  3      11       0       0       0       0       0       4     15
+  4      20       3       0       0       0       2       1     26

@@ -1,0 +1,72 @@
+# A test chapter, merged after the shipped chapters (tests/opening/test_second_skill.py): a second skill that arrives with a
+# trigger's outcome together with its first card, a cure for a chip the first cure's card also answers, and an order
+# card for each beside the other. The skill's row (its levels) and the triggers paying them are added by the test, one per level to the curve's top.
+# Not story: the ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_heat"
+label_key = "t_s_heat"
+cap_items = 10
+initial_items = 10
+
+[[standing]]
+id = "t_chill"
+label_key = "t_a_chill"
+costs = [{ store = "t_heat", items_per_hour = 4 }]
+
+[[cards]]
+id = "t_stoke"
+presentation = "action"
+label_key = "t_c_stoke"
+work_s = 60
+makes = [{ store = "t_heat", items_per_hour = 20 }]
+
+[[cards]]
+id = "t_charm"
+presentation = "action"
+label_key = "t_c_charm"
+work_s = 60
+skill = "t_lore"
+xp_per_hour = 60
+makes = [{ store = "t_heat", items_per_hour = 30 }]
+
+[[chips]]
+id = "t_cold"
+label_key = "t_ch_cold"
+tone = "cold"
+when = { test = "at_most", subject_kind = "store", id = "t_heat", value = 3, release = 6 }
+
+[[order_cards]]
+store = "t_heat"
+tap_card = "t_stoke"
+chip = "t_cold"
+when = { test = "at_most", subject_kind = "store", id = "t_heat", value = 3, release = 6 }
+
+[[order_cards]]
+store = "t_heat"
+tap_card = "t_charm"
+chip = "t_cold"
+when = { test = "at_most", subject_kind = "store", id = "t_heat", value = 3, release = 6 }
+
+[[triggers]]
+id = "t_start"
+when = { test = "at_least", subject_kind = "store", id = "t_heat", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "t_chill" }, { unlock_kind = "card", id = "t_stoke" }, { unlock_kind = "chip", id = "t_cold" }] }
+
+[[triggers]]
+id = "t_lore_arrives"
+when = { test = "at_most", subject_kind = "store", id = "t_heat", value = 5 }
+outcome = { unlocks = [{ unlock_kind = "skill", id = "t_lore" }, { unlock_kind = "card", id = "t_charm" }] }
+
+[line_kinds]
+t_pays_lore = "find"
+
+[text]
+t_s_heat = "Warmth"
+t_a_chill = "Chill"
+t_k_lore = "Lore"
+t_c_stoke = "Stoke"
+t_c_charm = "Charm"
+t_ch_cold = "Cold"
+t_pays_lore = "faster"

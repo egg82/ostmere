@@ -1,0 +1,67 @@
+Wrong implementations of entries held while a card runs (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS",
+invariants 110-118), to plant one at a time in a scratch copy of the engine; a test written blind from DESIGN.txt and
+api/CONTRACT.txt must go red for each. "Guard" is a card with while_running on side g; "fight" is a fight runner on g
+(a standing fight unless a row says otherwise, so its odds are live). Rows 1-5 are plan item 3's; the rest follow from
+the rules. Record each run below the list as MUTANTS.txt does (planted, red, survived, equivalent with the reason).
+
+ 1 no share        the entry is held at its whole amount_bp whatever h(c) is: a town share of 5000 raises g as
+                   much as a tap.                                                                  [110, 111, 112]
+ 2 stays           the entry outlives the task: kept after a tap lands, after the always rule moves the lane to
+                   another card, after a SaveMix sets the share to 0, after the town mix stops running; g stays
+                   raised and the fight's loss_bp does not move back at that instant.            [110, 112]
+ 3 threat          the entry also (or instead) lands on ThreatStrength, e.g. on a threat whose id equals g's, or
+                   validation accepts a WhileRunning naming a threat's id.                           [114, 116]
+ 4 unlocked        the entry is held while the card is unlocked, running or not: an unlocked guard in no running
+                   mix and untapped raises g.                                                       [110, 111]
+ 5 rounds up       a * h // BP replaced by ceil_div(a * h, BP), or round-to-nearest.                 [110]
+ 6 yield kept      a share keeps its entry while a tap holds its lane (a rule's tap on a joined lane, a HANDS tap
+                   over the hands' mix).                                                            [111]
+ 7 counted twice   a card tapped while in the running mix holds BP plus its mix share.               [111]
+ 8 paused kept     a mix card paused on a dry store keeps its entry until it resumes.               [111]
+ 9 waiting kept    a mix card waiting on a false requires keeps its entry.                           [111]
+10 greyed kept     a greyed running hands mix (a capped card in it completed) keeps its cards' entries.  [111]
+12 cut-in kept     a task interrupted with its work kept (a glowing step's or a cure's cut-in) keeps its entry
+                   until it is tapped again; or the cutting-in card's own entry is not held.          [110, 111]
+13 save.active     h(c) read from save.active instead of the running mix: an order's mix holding the guard runs
+                   and g does not rise, or the player's switched-away mix still counts.               [111]
+14 stored          the entry is appended to save.modifiers when the card starts and removed when it stops (the
+                   same strengths, a different save: equality with a by-hand twin, encode, invariant 4 on view).
+                                                                                                    [114]
+15 nested twice    a nested share rounded twice: floor(floor(a * outer / BP) * inner / BP) instead of one floor on
+                   the flattened share (pick outer, inner and a where the two differ).               [110]
+16 live kept odds  a HANDS fight tap re-reads its odds while it runs, so a held entry yielded by the tap (or one
+                   added mid-tap) moves its loss_bp before it lands; or the kept odds are read on the save with
+                   the tap running, so a guard share in the hands' mix is missing from them.          [115]
+17 bare source     the held entry is sourced by the bare card id, or the wire's share_bp is null on it, or set on
+                   a permanent entry the same card's outcome landed.                                 [118]
+18 view            View.held lists a card with h(c) = 0, omits one running, or serves the declared amount_bp
+                   instead of the held one.                                                         [118]
+19 validation      accepted: an undeclared side, amount_bp 0 or negative, one side twice in one card, a rules
+                   Modifier sourced "held:x".                                                       [116]
+20 digest          the rules encoding writes `while_running: []` for every card, so rules without the field
+                   change digest and every live save's text changes (compare encode under a released opening
+                   with the text a pinned fixture holds, as tests/engine/test_pre_fights_save.py does).  [114]
+21 stale dry       the dry rule reads the stack from before its first pause at the instant: a guard paused on a
+                   store that the fight's loses also drain does not raise the drain for the next pause decision
+                   (world: one store s at 0, the guard costs s, the fight loses s; with the stale stack the
+                   fight's drain stays at the guarded rate after the guard pauses).                   [110, 112]
+22 between events  the entry is scaled by a share sampled at the read time from a rate (a work speed) rather than
+                   discrete state, so g moves between two instants with no event.  [112, 113]
+23 lock red        the release lock counts while_running as part of a released card (a field in ids.json, or the
+                   card's outcome compared with it), so adding an entry to a released card reports forbidden or
+                   needs_mapping instead of out_of_date alone, and --write refuses.                     [117]
+24 rebase writes   the manifest carries each card's while_running, or rebase writes the held entries into
+                   s2.modifiers: rebasing a save from rules without the entry into rules with it raises
+                   (StateFormatError, RebaseError), or returns a save whose modifiers differ from s's.  [117, 114]
+
+RUNS
+- Suite tests/engine_contract/test_held_*.py (blind, written from DESIGN.txt and CONTRACT.txt alone). Run: python -m tools.mutate_suite held --run
+  (specs tools/held_mutants/mNN.py, each a list of (path, old, new) edits against the implementation, one per row).
+  `--check` fails unless every row is claimed by a test marked @kills(row).
+- Against a reference model written from DESIGN.txt in a scratch copy (not the implementation): rows 1-22 all red, and 16 single-clause
+  variants of rows 12, 16, 17, 18, 19 and 20 red; no survivors, no equivalent mutants. Against the implementation (engine/heldentries.py and its callers): rows 1-24 all KILLED, each with a test that claims it
+  red; no survivors, no equivalent mutants.
+- Since the shipped content holds while_running cards, row 23 is red before any test: the release-lock session fixture
+  refuses the shipped content (forbidden: the watch cards' caps went down), so the runner scores it BROKEN and its own
+  tests never run. Row 20 moves every digest and rewrites the copy's lock (RELOCK); row 23's plant makes --write refuse,
+  so it cannot.

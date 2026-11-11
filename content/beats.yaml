@@ -1,0 +1,492 @@
+# Beat schedule for the pacing simulator. Numbers and system terms only: no story text.
+# This is the one file in content/ a spoiler-safe tool reads.
+#
+# target_day: the day a typical route should land the beat (sharp ~0.83x, lazy ~1.17x).
+# weekly: the bigger beat of its week.
+# clock: true = lands on world time (a season turn), gates nothing downstream.
+#
+# Gate vocabulary (all conditions the engine can solve for):
+#   start: true
+#   project: <P or A id>                     project or one-off action complete
+#   needs: {item}                            an action that fails, every time, until the item is held (no chance)
+#   repeats: n                               an action done in n short pushes, a log line each
+#   skill_level: {skill, level}              placeholder skill names from docs/core-loop.md
+#   arrivals: n                              cumulative arrivals
+#   tier: survival|safety|belonging|esteem|self_actualization
+#   region_open: <R id>
+#   region_days: {region, days}              days since the region opened
+#   expeditions: {region, count}             expeditions completed to a region
+#   journal_entries: n
+#   season: still|drift|clear                first turn to it after the other gates hold
+#   beat: <B id>                             another beat has landed
+#   days_after: {beat, days}
+#   hours_after: {beat|event, hours}        game hours after a beat lands, or after event: end
+#   save_hours: n                            save time at least n hours (an engine after_time): a floor beside a play-driven gate
+#   event: end                               the opening's end (feature keeps_going)
+#   store_at_least: {store, n}               a store's level (an engine at_least on a store)
+#   completions: {card, n}                   a card completed n times (the engine's card_count; n is a step, never a grind)
+#   building_maxed: <building id>
+#   any: [gates...]                          day_one only: the first of several steps
+#   all: [gates...]
+#
+# unlocks: the system, skill or offer a beat makes available.
+# Shape fields (docs/research/flat-story.md; checked by content/team/flatcheck.py):
+#   turn: up|down                    which way the beat leaves the player's situation
+#   outcome: yes|yes_but|no|no_and   only where something is attempted (quoted: YAML 1.1 reads bare yes/no as booleans)
+#   opens / advances / pays: [C-promise-n]   ids in canon.jsonl, area promise
+#   cost: none|time|people|stores|option|trust
+#   moves: [PC, N-ids]               whose state changes
+#   thread: {id, at: start|middle|end}
+#   register: dread|wry|warm|grim|wonder
+
+# pace_scale: the one number landing bands scale by. A spine beat from B5 on lands on the typical route in
+# [(target_day - 1) * pace_scale, target_day * pace_scale] days from the save's start, sharp no sooner than
+# 0.83 * (target_day - 0.5) * pace_scale days (content/team/day-three-numbers.md, D-93).
+pace_scale: 1.0
+
+season_cycle:
+  length_days: 21
+  order: [still, drift, clear]   # 7 days each; day 1 is still day 1
+
+regions:
+  - {id: R1, open_day: 1}
+  - {id: R2, open_day: 20}
+  - {id: R3, open_day: 36}
+  - {id: R4, open_day: 55}
+  - {id: R5, open_day: 70}
+
+projects:   # kind: action | personal | joint | outpost
+  # action: a one-off narrative action (tiny inputs, a log line, the next unlock), run once. Day 1 opens on these.
+  - {id: A1,  region: R1, kind: action,   target_day: 1, gate: {start: true}, repeats: 3}
+  - {id: A2,  region: R1, kind: action,   target_day: 1, gate: {project: A1}, unlocks: {skill: scavenging, status: cold}}
+  - {id: A3,  region: R1, kind: action,   target_day: 1, gate: {project: A2}, unlocks: {system: journal}}
+  - {id: A4,  region: R1, kind: action,   target_day: 1, gate: {project: A2}, unlocks: {action: gather_by_hand}}
+  - {id: A5,  region: R1, kind: action,   target_day: 1, gate: {project: A4}, unlocks: {system: mix}}
+  - {id: A6,  region: R1, kind: action,   target_day: 1, gate: {project: A2}, repeats: 2}
+  - {id: A7,  region: R1, kind: action,   target_day: 1, gate: {project: A6}}
+  - {id: A8,  region: R1, kind: action,   target_day: 1, gate: {all: [{skill_level: {skill: scavenging, level: 3}}, {project: A7}]}, needs: {item: dry_wood}, unlocks: {system: orders}}
+  - {id: A9,  region: R1, kind: action,   target_day: 1, gate: {beat: B2}, unlocks: {skill: woodcutting}}
+  - {id: A10, region: R1, kind: action,   target_day: 1, gate: {beat: B2}}   # Cooking's row opens with P0.3 (D-61)
+  - {id: P0,  region: R1, kind: personal, target_day: 2}
+  - {id: P1,  region: R1, kind: joint,    target_day: 11, opens: {tier: safety}}
+  - {id: P2,  region: R1, kind: joint,    target_day: 16, opens: {tier: belonging}}
+  - {id: P3,  region: R1, kind: joint,    target_day: 20, opens: {region: R2}}
+  - {id: P4,  region: R2, kind: outpost,  target_day: 29}
+  - {id: P5,  region: R2, kind: joint,    target_day: 33}
+  - {id: P6,  region: R2, kind: joint,    target_day: 36, opens: {region: R3}}
+  - {id: P7,  region: R1, kind: joint,    target_day: 41, opens: {tier: esteem}}
+  - {id: P8,  region: R1, kind: joint,    target_day: 48, opens: {tier: self_actualization}}
+  - {id: P9,  region: R3, kind: outpost,  target_day: 51}
+  - {id: P10, region: R3, kind: joint,    target_day: 54, opens: {region: R4}}
+  - {id: P11, region: R4, kind: outpost,  target_day: 64}
+  - {id: P12, region: R4, kind: joint,    target_day: 70, opens: {region: R5}}
+  - {id: P13, region: R5, kind: outpost,  target_day: 74}
+  - {id: P14, region: R1, kind: joint,    target_day: 81}
+
+beats:
+  # week 1
+  - {id: B1, region: R1, target_day: 1, weekly: false, gate: {start: true},
+     turn: down, opens: [C-promise-1, C-promise-5], cost: none, moves: [PC], thread: {id: th-survive, at: start}, register: grim}
+  - {id: B2, region: R1, target_day: 1, weekly: false, gate: {project: A8},
+     turn: up, outcome: "yes_but", opens: [C-promise-6, C-promise-8], cost: time, moves: [PC], thread: {id: th-survive, at: middle}, register: wry}
+  - {id: B3, region: R1, target_day: 2, weekly: true, gate: {project: P0},
+     turn: up, outcome: "yes", pays: [C-promise-16], cost: stores, moves: [PC, N1], thread: {id: th-survive, at: middle}, register: warm}
+  - {id: B4, region: R1, target_day: 3, weekly: false, unlocks: {system: offers}, gate: {project: A19},
+     turn: down, outcome: "no_and", opens: [C-promise-7], pays: [C-promise-18], cost: time, moves: [N1, PC], thread: {id: th-yes, at: start}, register: grim}
+  # B5 waits on day three's A20 (banking the clay hearth in night 4), B6 on the B5-B6 chapter's A21, each beside a level
+  # the routes reach: the levels are placeholders the simulator sets (day-two.md, Open 1; day-three-numbers.md).
+  # B7 waits on A29 (banking the fire in night 6) and B6 as well as the arrivals, so it lands at night (D-101).
+  - {id: B5, region: R1, target_day: 4, weekly: false, gate: {all: [{project: A20}, {skill_level: {skill: foraging, level: 5}}, {beat: B4}]},
+     turn: up, outcome: "yes", opens: [C-promise-4], advances: [C-promise-6], pays: [C-promise-19], cost: none, moves: [PC], thread: {id: th-burn, at: start}, register: wonder}
+  - {id: B6, region: R1, target_day: 5, weekly: false, unlocks: {skill: arcana}, gate: {all: [{project: A21}, {skill_level: {skill: scavenging, level: 18}}, {beat: B5}]},
+     turn: down, outcome: "yes_but", advances: [C-promise-1], pays: [C-promise-20], cost: trust, moves: [PC, N1], thread: {id: th-magic, at: start}, register: wonder}
+  - {id: B7, region: R1, target_day: 6, weekly: false, unlocks: {system: combat}, gate: {all: [{arrivals: 3}, {beat: B6}, {project: A29}]},
+     turn: down, outcome: "yes_but", advances: [C-promise-6], pays: [C-promise-21], cost: stores, moves: [PC], thread: {id: th-survive, at: middle}, register: grim}
+  # week 2
+  - {id: B8, region: R1, target_day: 8, weekly: false, clock: true, gate: {season: drift},
+     turn: up, outcome: "yes_but", advances: [C-promise-4], cost: time, moves: [PC], thread: {id: th-burn, at: middle}, register: dread}
+  - {id: B9, region: R1, target_day: 9, weekly: false, gate: {all: [{journal_entries: 3}, {beat: B7}]},
+     turn: down, opens: [C-promise-2], advances: [C-promise-5], pays: [C-promise-23], cost: none, moves: [PC], thread: {id: th-past, at: start}, register: dread}
+  - {id: B10, region: R1, target_day: 11, weekly: true, gate: {all: [{project: P1}, {save_hours: 210}]},
+     turn: up, outcome: "yes_but", advances: [C-promise-6], pays: [C-promise-24], cost: people, moves: [PC], thread: {id: th-survive, at: middle}, register: warm}
+  - {id: B11, region: R1, target_day: 12, weekly: false, unlocks: {system: guards}, gate: {all: [{tier: safety}, {project: A31}, {beat: Z2}]},
+     turn: down, outcome: "yes_but", pays: [C-promise-25], cost: people, moves: [PC, N1], thread: {id: th-survive, at: middle}, register: grim}
+  - {id: B12, region: R1, target_day: 13, weekly: false, gate: {all: [{skill_level: {skill: scavenging, level: 15}}, {beat: B9}, {completions: {card: dig_cellar, n: 4}}, {save_hours: 250}]},
+     turn: down, outcome: "no", advances: [C-promise-2, C-promise-5], pays: [C-promise-8, C-promise-26], cost: time, moves: [PC], thread: {id: th-past, at: middle}, register: wry}
+  # week 3
+  - {id: B13, region: R1, target_day: 15, weekly: false, clock: true, gate: {season: clear},
+     turn: up, opens: [C-promise-3], advances: [C-promise-4], cost: none, moves: [PC], thread: {id: th-burn, at: middle}, register: wonder}
+  - {id: B14, region: R1, target_day: 16, weekly: false, gate: {project: P2},
+     turn: down, outcome: "yes_but", advances: [C-promise-7], pays: [C-promise-6, C-promise-28], cost: stores, moves: [N1, N2, PC], thread: {id: th-survive, at: end}, register: warm}
+  - {id: B15, region: R1, target_day: 18, weekly: false, unlocks: {skill: spellcraft}, gate: {all: [{skill_level: {skill: arcana, level: 15}}, {beat: B13}]},
+     turn: up, outcome: "no", advances: [C-promise-1], cost: time, moves: [PC], thread: {id: th-magic, at: middle}, register: wonder}
+  - {id: B16, region: R1, target_day: 19, weekly: false, gate: {all: [{arrivals: 15}, {tier: belonging}]},
+     turn: down, advances: [C-promise-2, C-promise-5], cost: trust, moves: [PC], thread: {id: th-past, at: middle}, register: dread}
+  - {id: B17, region: R1, target_day: 20, weekly: true, gate: {project: P3},
+     turn: down, outcome: "yes_but", opens: [C-promise-9], cost: people, moves: [PC], thread: {id: th-network, at: start}, register: grim}
+  # week 4
+  - {id: B18, region: R2, target_day: 22, weekly: false, gate: {region_open: R2},
+     turn: up, outcome: "yes_but", advances: [C-promise-3, C-promise-9], cost: stores, moves: [PC], thread: {id: th-network, at: middle}, register: wonder}
+  - {id: B19, region: R2, target_day: 23, weekly: false, gate: {all: [{region_days: {region: R2, days: 2}}, {beat: B18}]},
+     turn: down, outcome: "no", opens: [C-promise-10], advances: [C-promise-1], cost: none, moves: [N3, PC], thread: {id: th-stranger, at: start}, register: warm}
+  - {id: B20, region: R2, target_day: 25, weekly: true, gate: {all: [{expeditions: {region: R2, count: 3}}, {beat: B19}]},
+     turn: down, outcome: "no", advances: [C-promise-1], cost: time, moves: [PC, N1], thread: {id: th-self, at: start}, register: wry}
+  - {id: B21, region: R1, target_day: 27, weekly: false, gate: {all: [{tier: belonging}, {arrivals: 25}]},
+     turn: up, advances: [C-promise-3, C-promise-4, C-promise-10], cost: trust, moves: [N4, N3], thread: {id: th-faith, at: start}, register: dread}
+  # week 5
+  - {id: B22, region: R2, target_day: 29, weekly: false, unlocks: {system: supply_lines}, gate: {project: P4},
+     turn: down, outcome: "no_and", advances: [C-promise-7], cost: stores, moves: [N1, N5, PC], thread: {id: th-yes, at: middle}, register: grim}
+  - {id: B23, region: R2, target_day: 31, weekly: false, gate: {all: [{skill_level: {skill: arcana, level: 25}}, {beat: B22}]},
+     turn: up, outcome: "yes_but", cost: time, moves: [PC], thread: {id: th-magic, at: end}, register: wonder}
+  - {id: B24, region: R2, target_day: 33, weekly: true, gate: {project: P5},
+     turn: down, outcome: "yes_but", opens: [C-promise-11], advances: [C-promise-2, C-promise-3, C-promise-5, C-promise-10], pays: [C-promise-9], cost: time, moves: [PC, N3], thread: {id: th-network, at: end}, register: dread}
+  - {id: B25, region: R2, target_day: 35, weekly: false, unlocks: {system: skill_prestige}, gate: {all: [{beat: B24}, {skill_level: {skill: wayfinding, level: 25}}]},
+     turn: up, outcome: "yes", advances: [C-promise-1, C-promise-2], cost: none, moves: [PC], thread: {id: th-self, at: middle}, register: dread}
+  # week 6
+  - {id: B26, region: R3, target_day: 36, weekly: true, gate: {project: P6},
+     turn: up, outcome: "yes_but", advances: [C-promise-7], cost: option, moves: [PC], thread: {id: th-seams, at: start}, register: wonder}
+  - {id: B27, region: R3, target_day: 38, weekly: false, gate: {region_open: R3},
+     turn: down, outcome: "no", opens: [C-promise-17], advances: [C-promise-3, C-promise-4, C-promise-11], cost: time, moves: [PC, N4], thread: {id: th-seams, at: middle}, register: wonder}
+  - {id: B28, region: R3, target_day: 39, weekly: false, gate: {all: [{region_days: {region: R3, days: 2}}, {beat: B27}]},
+     turn: down, outcome: "no_and", advances: [C-promise-1], cost: people, moves: [PC], thread: {id: th-self, at: middle}, register: dread}
+  - {id: B29, region: R1, target_day: 41, weekly: false, gate: {project: P7},
+     turn: up, outcome: "yes_but", opens: [C-promise-12], advances: [C-promise-1, C-promise-2, C-promise-10], cost: stores, moves: [N6, N7, N1, N3, PC], thread: {id: th-mentor, at: start}, register: warm}
+  # week 7
+  - {id: B30, region: R3, target_day: 43, weekly: true, gate: {all: [{region_days: {region: R3, days: 6}}, {skill_level: {skill: wayfinding, level: 35}}]},
+     turn: down, outcome: "yes_but", advances: [C-promise-1, C-promise-5, C-promise-11], cost: time, moves: [PC], thread: {id: th-self, at: middle}, register: dread}
+  - {id: B31, region: R1, target_day: 45, weekly: false, gate: {all: [{beat: B29}, {skill_level: {skill: arcana, level: 40}}]},
+     turn: up, outcome: "yes_but", advances: [C-promise-12], pays: [C-promise-1], cost: trust, moves: [N6, PC], thread: {id: th-self, at: end}, register: grim}
+  - {id: B32, region: R3, target_day: 46, weekly: false, gate: {beat: B31},
+     turn: down, outcome: "no_and", opens: [C-promise-13], advances: [C-promise-3, C-promise-4, C-promise-7], pays: [C-promise-11], cost: people, moves: [PC, N1, N4], thread: {id: th-burn, at: end}, register: grim}
+  - {id: B33, region: R1, target_day: 48, weekly: false, gate: {project: P8},
+     turn: up, outcome: "yes", advances: [C-promise-3, C-promise-10], cost: stores, moves: [N8, N3], thread: {id: th-chequer, at: start}, register: warm}
+  # week 8
+  - {id: B34, region: R1, target_day: 50, weekly: true, gate: {all: [{arrivals: 45}, {beat: B30}]},
+     turn: down, outcome: "no", advances: [C-promise-2], cost: trust, moves: [N9, PC], thread: {id: th-past, at: middle}, register: warm}
+  - {id: B35, region: R3, target_day: 51, weekly: false, unlocks: {offer: O-price}, gate: {project: P9},
+     turn: up, outcome: "yes_but", advances: [C-promise-13, C-promise-17], cost: stores, moves: [PC], thread: {id: th-seams, at: end}, register: wry}
+  - {id: B36, region: R1, target_day: 53, weekly: false, gate: {all: [{beat: B34}, {skill_level: {skill: scavenging, level: 50}}]},
+     turn: down, outcome: "yes_but", advances: [C-promise-5], pays: [C-promise-2], cost: time, moves: [PC, N9, N1, N4], thread: {id: th-past, at: end}, register: dread}
+  - {id: B37, region: R3, target_day: 55, weekly: false, gate: {project: P10},
+     turn: up, outcome: "yes_but", advances: [C-promise-7, C-promise-10], cost: time, moves: [N3, N1], thread: {id: th-stranger, at: middle}, register: grim}
+  # week 9
+  - {id: B38, region: R4, target_day: 57, weekly: false, gate: {all: [{region_days: {region: R4, days: 1}}, {beat: B37}]},
+     turn: down, outcome: "no_and", advances: [C-promise-3, C-promise-4], cost: people, moves: [PC, N4], thread: {id: th-chequer, at: middle}, register: dread}
+  - {id: B39, region: R4, target_day: 59, weekly: false, gate: {all: [{beat: B36}, {region_days: {region: R4, days: 3}}]},
+     turn: up, advances: [C-promise-17], pays: [C-promise-12], cost: trust, moves: [N6], thread: {id: th-mentor, at: middle}, register: grim}
+  - {id: B40, region: R4, target_day: 61, weekly: true, gate: {all: [{beat: B33}, {skill_level: {skill: arcana, level: 55}}, {expeditions: {region: R4, count: 3}}]},
+     turn: down, outcome: "yes_but", advances: [C-promise-5], pays: [C-promise-7], cost: option, moves: [PC, N8, N9], thread: {id: th-yes, at: middle}, register: wry}
+  - {id: B41, region: R4, target_day: 62, weekly: false, gate: {beat: B40},
+     turn: up, outcome: "yes", advances: [C-promise-13], cost: none, moves: [PC], thread: {id: th-chequer, at: middle}, register: wry}
+  # week 10
+  - {id: B42, region: R4, target_day: 64, weekly: true, gate: {all: [{project: P11}, {beat: B40}]},
+     turn: down, outcome: "yes_but", opens: [C-promise-14], pays: [C-promise-3, C-promise-10], cost: trust, moves: [N3, N8], thread: {id: th-chequer, at: end}, register: grim}
+  - {id: B43, region: R1, target_day: 66, weekly: false, gate: {beat: B42},
+     turn: up, outcome: "yes_but", advances: [C-promise-14], cost: none, moves: [N3, PC], thread: {id: th-stranger, at: end}, register: warm}
+  - {id: B44, region: R1, target_day: 68, weekly: false, gate: {all: [{beat: B42}, {skill_level: {skill: arcana, level: 62}}]},
+     turn: down, outcome: "no", opens: [C-promise-15], advances: [C-promise-13, C-promise-17], cost: option, moves: [N6, N1, N4, N9, PC], thread: {id: th-mentor, at: end}, register: grim}
+  - {id: B45, region: R4, target_day: 70, weekly: false, gate: {project: P12},
+     turn: up, outcome: "yes_but", advances: [C-promise-5], cost: people, moves: [N1, PC], thread: {id: th-yes, at: end}, register: wry}
+  # week 11
+  - {id: B46, region: R5, target_day: 71, weekly: false, gate: {all: [{region_days: {region: R5, days: 1}}, {beat: B45}]},
+     turn: down, outcome: "no_and", advances: [C-promise-4], cost: stores, moves: [PC], thread: {id: th-dark, at: start}, register: dread}
+  - {id: B47, region: R5, target_day: 73, weekly: true, gate: {all: [{region_days: {region: R5, days: 3}}, {beat: B46}]},
+     turn: down, pays: [C-promise-4], cost: trust, moves: [N4, PC], thread: {id: th-faith, at: end}, register: dread}
+  - {id: B48, region: R5, target_day: 74, weekly: false, gate: {project: P13},
+     turn: up, outcome: "yes_but", cost: time, moves: [PC], thread: {id: th-dark, at: end}, register: grim}
+  - {id: B49, region: R5, target_day: 76, weekly: false, gate: {all: [{beat: B48}, {expeditions: {region: R5, count: 3}}]},
+     turn: down, outcome: "yes_but", advances: [C-promise-13, C-promise-15], pays: [C-promise-5], cost: option, moves: [PC, N9, N8], thread: {id: th-hearth, at: start}, register: wonder}
+  # week 12
+  - {id: B50, region: R1, target_day: 78, weekly: false, unlocks: {offer: O-final}, gate: {all: [{beat: B49}, {beat: B44}]},
+     turn: down, outcome: "no", advances: [C-promise-13, C-promise-14, C-promise-15], pays: [C-promise-17], cost: option, moves: [PC, N6, N3], thread: {id: th-hearth, at: middle}, register: grim}
+  - {id: B51, region: R1, target_day: 81, weekly: true, gate: {project: P14},
+     turn: up, outcome: "yes_but", advances: [C-promise-13], pays: [C-promise-14], cost: people, moves: [PC, N1, N2, N3, N4, N5, N6, N8, N9], thread: {id: th-hearth, at: middle}, register: wonder}
+  - {id: B52, region: R1, target_day: 82, weekly: false, gate: {days_after: {beat: B51, days: 1}},
+     turn: down, pays: [C-promise-15], cost: people, moves: [PC, N1], thread: {id: th-hearth, at: middle}, register: warm}
+  - {id: B53, region: R1, target_day: 84, weekly: false, ending: true, gate: {days_after: {beat: B51, days: 3}},
+     turn: up, pays: [C-promise-13], cost: none, moves: [PC, N1], thread: {id: th-hearth, at: end}, register: wry}
+
+# Day one: from the opening's end (story dusk, day 1) through the night and story day 2 to B3. Spec, and what each id
+# is: content/team/day-one.md. Ids only, no story text, like the rest of this file.
+#   kind: beat (a day-one beat, shape fields as for beats:) | action (a one-off step) | stage (a stage of P0) |
+#         ref (a spine beat placed in the day; its fields stay in beats:). The first ref opens the day, the last closes it.
+#   visit: the session a typical player meets it in (V1 is the session the opening ends in; a beat that lands while
+#          the player is away is met on the next visit, played in full).
+#   target_hour: game hours after the opening's end on the typical route, where it lands in the engine. Provisional
+#          until the simulator's routes replace them (flatcheck.py --route, keys "hours" and "visits").
+# flatcheck.py checks: gates land before what they gate; the day's beats keep their authored order; turn, yes and
+# register runs over B2, the H beats and B3; the near promise below is opened, advanced on every visit, and paid by
+# the closing beat.
+day_one_near_promise: C-promise-16
+day_one:
+  - {id: B2,   kind: ref,    visit: opening, target_hour: 0}
+  - {id: H1,   kind: beat,   region: R1, target_day: 1, weekly: false, visit: V1, target_hour: 0, gate: {event: end},
+     turn: down, opens: [C-promise-16], cost: none, moves: [PC], thread: {id: th-ridge, at: start}, register: dread}
+  - {id: A11,  kind: action, visit: V1, target_hour: 0.1, gate: {beat: H1}}                       # optional; opens nothing
+  - {id: H2,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V2, target_hour: 1, gate: {hours_after: {event: end, hours: 1}},
+     turn: up, cost: time, moves: [PC], thread: {id: th-survive, at: middle}, register: wry}
+  - {id: A12,  kind: action, visit: V2, target_hour: 3, gate: {beat: H2}}
+  - {id: H3,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V2, target_hour: 3, gate: {project: A12},
+     turn: up, outcome: "yes", advances: [C-promise-16], cost: none, moves: [PC], thread: {id: th-ridge, at: middle}, register: wonder}
+  - {id: A13,  kind: action, visit: V2, target_hour: 3.1, gate: {project: A12}, needs: {item: wire}}
+  - {id: H4,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V2, target_hour: 3.1, gate: {project: A13},
+     turn: down, outcome: "yes_but", cost: none, moves: [PC], thread: {id: th-survive, at: middle}, register: dread}
+  - {id: A14,  kind: action, visit: V2, target_hour: 3.1, gate: {project: A13}}                     # the camp by daylight (D-63)
+  - {id: H5,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V2, target_hour: 3.1, gate: {project: A14},
+     turn: up, outcome: "yes_but", advances: [C-promise-16], cost: option, moves: [PC], thread: {id: th-survive, at: middle}, register: wry}
+  - {id: P0.1, kind: stage,  visit: V2, target_hour: 3.2, gate: {beat: H5}}
+  - {id: P0.2, kind: stage,  visit: V2, target_hour: 3.3, gate: {beat: H5}}
+  - {id: P0.3, kind: stage,  visit: V3, target_hour: 7.1, gate: {all: [{beat: H5}, {store_at_least: {store: catch, n: 1}}]}, needs: {item: tinder_fungus}, unlocks: {skill: cooking}}
+  - {id: H6,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V3, target_hour: 7.2,
+     gate: {all: [{project: P0.3}, {completions: {card: smoke_catch, n: 1}}]},
+     turn: up, outcome: "yes_but", advances: [C-promise-16], cost: time, moves: [PC], thread: {id: th-ridge, at: middle}, register: wry}
+  - {id: H7,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V4, target_hour: 8.7,
+     gate: {all: [{hours_after: {beat: H6, hours: 1.5}}, {store_at_least: {store: roots, n: 3}}]},
+     turn: down, outcome: "no_and", advances: [C-promise-16], cost: stores, moves: [N1, PC], thread: {id: th-ridge, at: end}, register: dread}
+  - {id: P0.4, kind: stage,  visit: V4, target_hour: 14,
+     gate: {all: [{project: P0.2}, {project: P0.3}, {beat: H7}, {store_at_least: {store: smoked, n: 6}}, {store_at_least: {store: roots, n: 15}}]}}
+  - {id: B3,   kind: ref,    visit: V4, target_hour: 14}
+
+# Day two: from B3 through the evening, the second night and story day 3 to B4. Spec: content/team/day-two.md. Ids only.
+# Canon leaves B3 to B4 empty, so the day's own beats (J ids), steps (A15-A19) and its one offer are added here.
+#   kind: as day_one:, plus offer (an offer the player answers; not a beat, carries promise and thread fields).
+#   gate offer: <O id> = that offer answered, either answer (the endings' {offer, state} without a state).
+#   target_hour: game hours after B3 lands, on the typical route. Provisional until the simulator's day-two routes.
+# B4 (the closing ref) lands at A19 and pays day_two_near_promise (its spine entry, above).
+day_two_near_promise: C-promise-18
+day_two:
+  - {id: B3,   kind: ref,    visit: V1, target_hour: 0}
+  - {id: A15,  kind: action, visit: V1, target_hour: 0.05, gate: {beat: B3}}                       # starts the evening's clock (D-84)
+  - {id: J1,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V1, target_hour: 0.05, gate: {project: A15},
+     turn: up, opens: [C-promise-18], advances: [C-promise-8], cost: none, moves: [N1, PC], thread: {id: th-cart, at: start}, register: wry}
+  - {id: J2,   kind: beat,   region: R1, target_day: 2, weekly: false, visit: V2, target_hour: 0.35, gate: {hours_after: {beat: J1, hours: 0.3}},
+     turn: down, advances: [C-promise-18], cost: none, moves: [PC, N1], thread: {id: th-cart, at: middle}, register: dread}
+  - {id: J3,   kind: beat,   region: R1, target_day: 3, weekly: false, visit: V2, target_hour: 1.3, gate: {hours_after: {beat: J1, hours: 1.25}},
+     turn: up, cost: time, moves: [PC, N1], thread: {id: th-survive, at: middle}, register: wry}
+  - {id: A16,  kind: action, visit: V2, target_hour: 4, gate: {beat: J3}}                          # make room for two
+  - {id: J4,   kind: beat,   region: R1, target_day: 3, weekly: false, visit: V2, target_hour: 4, gate: {project: A16},
+     turn: up, outcome: "yes_but", cost: option, moves: [PC, N1], thread: {id: th-survive, at: middle}, register: warm}
+  - {id: A17,  kind: action, visit: V2, target_hour: 4.2, gate: {beat: J4}}                        # her shelter; opens O-cart
+  - {id: A18,  kind: action, visit: V3, target_hour: 9, gate: {beat: J4}}                          # the woodstack
+  - {id: O-cart, kind: offer, visit: V3, target_hour: 9, gate: {project: A17},
+     advances: [C-promise-18], moves: [N1], thread: {id: th-cart, at: end}}
+  - {id: A19,  kind: action, visit: V3, target_hour: 9.1, gate: {offer: O-cart}}                   # the walk, whoever walks
+  - {id: B4,   kind: ref,    visit: V4, target_hour: 16}
+
+# Day three: from B4 through story day 3's evening, the third night and story day 4 to B5 (night 4). Spec:
+# content/team/day-three.md. Ids only. Kinds as day_two:. target_hour: game hours after B4 lands, typical route,
+# provisional until the simulator's day-three routes. B5 (the closing ref) lands at A20 and pays day_three_near_promise.
+day_three_near_promise: C-promise-19
+day_three:
+  - {id: B4,   kind: ref,    visit: V1, target_hour: 0}
+  - {id: A22,  kind: action, visit: V1, target_hour: 0.05, gate: {beat: B4}}                       # walk the edge; starts the evening's clock
+  - {id: K1,   kind: beat,   region: R1, target_day: 3, weekly: false, visit: V1, target_hour: 0.05, gate: {project: A22},
+     turn: down, cost: none, opens: [C-promise-19], moves: [PC], thread: {id: th-burn, at: start}, register: grim}
+  - {id: K2,   kind: beat,   region: R1, target_day: 3, weekly: false, visit: V1, target_hour: 0.1, gate: {completions: {card: field_track, n: 1}},
+     turn: up, cost: none, advances: [C-promise-19], moves: [PC], thread: {id: th-burn, at: middle}, register: wonder}
+  - {id: K3,   kind: beat,   region: R1, target_day: 3, weekly: false, visit: V2, target_hour: 0.35, gate: {hours_after: {beat: K1, hours: 0.3}},
+     turn: down, cost: none, advances: [C-promise-19], moves: [PC, N1], thread: {id: th-survive, at: middle}, register: dread}
+  - {id: K4,   kind: beat,   region: R1, target_day: 3, weekly: false, visit: V4, target_hour: 20, gate: {completions: {card: field_track, n: 540}},
+     turn: down, outcome: "no", cost: time, advances: [C-promise-19], moves: [PC], thread: {id: th-survive, at: middle}, register: wry}
+  - {id: O-stay, kind: offer, visit: V5, target_hour: 28, gate: {store_at_least: {store: stew, n: 6}},
+     moves: [PC], thread: {id: th-town, at: start}}
+  - {id: A23,  kind: action, visit: V5, target_hour: 28, gate: {offer: O-stay}}                    # the bay, either answer (A24 on his lane)
+  - {id: K5,   kind: beat,   region: R1, target_day: 4, weekly: false, visit: V6, target_hour: 34, gate: {all: [{arrivals: 2}, {offer: O-stay}]},
+     turn: up, outcome: "yes_but", cost: stores, advances: [C-promise-19], moves: [PC, N1], thread: {id: th-town, at: middle}, register: warm}
+  - {id: A20,  kind: action, visit: V9, target_hour: 60, gate: {beat: K5}}                         # bank the hearth, night 4
+  - {id: B5,   kind: ref,    visit: V9, target_hour: 60}
+
+# Day four: from B5 through story day 5 (the fog) to B6 in night 5. Spec: content/team/days-four-to-seven.md, "Day
+# four". Ids only. Kinds as day_two:. target_hour: game hours after B5 lands, typical route, from a scratch probe of the
+# day-three routes played on past B5 (provisional until days-four-to-seven plan item 1's simulator). B6 (the closing
+# ref) lands at A21 and pays day_four_near_promise.
+day_four_near_promise: C-promise-20
+day_four:
+  - {id: B5,   kind: ref,    visit: W1, target_hour: 0}
+  - {id: L1,   kind: beat,   region: R1, target_day: 5, weekly: false, visit: W1, target_hour: 1, gate: {hours_after: {beat: B5, hours: 1}},
+     turn: down, cost: time, opens: [C-promise-20], moves: [PC], thread: {id: th-survive, at: middle}, register: dread}
+  - {id: L2,   kind: beat,   region: R1, target_day: 5, weekly: false, visit: W2, target_hour: 3, gate: {all: [{completions: {card: field_track, n: 215}}, {hours_after: {beat: L1, hours: 2}}]},
+     turn: down, cost: none, moves: [PC], thread: {id: th-survive, at: middle}, register: dread}
+  - {id: L3,   kind: beat,   region: R1, target_day: 5, weekly: false, visit: W3, target_hour: 13, gate: {completions: {card: woodshed, n: 2}},
+     turn: up, cost: none, advances: [C-promise-20], moves: [N1, PC], thread: {id: th-town, at: middle}, register: warm}
+  - {id: A21,  kind: action, visit: W4, target_hour: 20, gate: {beat: B5}}                         # sit up with the fire, night 5
+  - {id: B6,   kind: ref,    visit: W4, target_hour: 20}
+
+# Day five: from B6 through story day 6 (the ridge, the pair) to night 6, B7's eve. Spec: content/team/days-four-to-
+# seven.md, "Day five". Ids only. Kinds as day_two:. target_hour: game hours after B6 lands, typical route, the design's
+# estimate (provisional until days-four-to-seven plan item 1's simulator). B7 (the closing ref) lands at A29, b7.toml's
+# card, and pays day_five_near_promise.
+day_five_near_promise: C-promise-21
+day_five:
+  - {id: B6,   kind: ref,    visit: X1, target_hour: 0}
+  - {id: M2,   kind: beat,   region: R1, target_day: 6, weekly: false, visit: X2, target_hour: 3, gate: {hours_after: {beat: B6, hours: 3}},
+     turn: down, cost: none, opens: [C-promise-21], moves: [PC, N1], thread: {id: th-survive, at: middle}, register: dread}
+  - {id: O-pair, kind: offer, visit: X3, target_hour: 9, gate: {store_at_least: {store: stew, n: 9}},
+     moves: [PC], thread: {id: th-town, at: middle}}
+  - {id: A25,  kind: action, visit: X3, target_hour: 9, gate: {offer: O-pair}}                    # the second bay, either answer (A26 on her lane)
+  - {id: M1,   kind: beat,   region: R1, target_day: 6, weekly: false, visit: X4, target_hour: 15, gate: {all: [{arrivals: 4}, {offer: O-pair}]},
+     turn: up, outcome: "yes_but", cost: stores, advances: [C-promise-21], moves: [PC, N1], thread: {id: th-town, at: middle}, register: warm}
+  - {id: A29,  kind: action, visit: X5, target_hour: 20, gate: {beat: B6}}                         # bank the fire, night 6 (b7.toml)
+  - {id: B7,   kind: ref,    visit: X5, target_hour: 20}
+
+# Day six: from B7 through story day 7 (the hunt, the pelts) to night 7, the end of week 1, held to the calendar. Spec:
+# content/team/days-four-to-seven.md, "Day six". Ids only. Kinds as day_two:. target_hour: game hours after B7 lands,
+# typical route, the design's estimate (provisional until combat-plan item 9's simulator). No closing ref: G2 is the
+# last week-1 beat and pays day_six_near_promise itself.
+day_six_near_promise: C-promise-22
+day_six:
+  - {id: B7,   kind: ref,    visit: Y1, target_hour: 0}
+  - {id: A27,  kind: action, visit: Y1, target_hour: 0.05, gate: {beat: B7}}                       # drive them off (b7.toml's b7_stand); opens combat
+  - {id: G1,   kind: beat,   region: R1, target_day: 7, weekly: false, visit: Y3, target_hour: 15, gate: {store_at_least: {store: pelt, n: 1}},
+     turn: down, outcome: "yes_but", cost: time, opens: [C-promise-22], moves: [PC], thread: {id: th-survive, at: middle}, register: grim}
+  - {id: A30,  kind: action, visit: Y6, target_hour: 35, gate: {beat: B7}}                         # sit the fire, night 7 (day_six.toml's sit_fire_7)
+  - {id: G2,   kind: beat,   region: R1, target_day: 7, weekly: false, visit: Y6, target_hour: 35, gate: {all: [{project: A30}, {store_at_least: {store: smoked, n: 18}}]},
+     turn: up, outcome: "yes", cost: none, pays: [C-promise-22], moves: [PC, N1], thread: {id: th-survive, at: middle}, register: warm}
+
+# Day eight: from B8 (the season's turn at 168 h) to B9, the journal at the first pack fight. Spec:
+# content/team/week-two.md, "Day eight". Ids only. Kinds as day_two:. target_hour: game hours after B8 lands, typical
+# route: U1 on its clock, B9 measured (week-two-numbers.md, "Measured (day eight)"), U2 and U3 the design's estimates.
+# B9 (the closing ref) pays day_eight_near_promise.
+day_eight_near_promise: C-promise-23
+day_eight:
+  - {id: B8,   kind: ref,    visit: 8a, target_hour: 0}
+  - {id: U1,   kind: beat,   region: R1, target_day: 8, weekly: false, visit: 8a, target_hour: 6, gate: {hours_after: {beat: B8, hours: 6}},
+     turn: down, cost: none, opens: [C-promise-23], moves: [PC], thread: {id: th-survive, at: middle}, register: dread}
+  - {id: U2,   kind: beat,   region: R1, target_day: 8, weekly: false, visit: 8b, target_hour: 12, gate: {completions: {card: fungus_stew, n: 1}},
+     turn: up, outcome: "yes", cost: none, moves: [PC], thread: {id: th-town, at: middle}, register: warm}
+  - {id: U3,   kind: beat,   region: R1, target_day: 9, weekly: false, visit: 8d, target_hour: 30, gate: {all: [{store_at_least: {store: r1_clock, n: 70}}, {store_at_least: {store: drift_clock, n: 12}}]},
+     turn: down, outcome: "yes_but", cost: stores, advances: [C-promise-23], moves: [PC, N1], thread: {id: th-survive, at: middle}, register: grim}
+  - {id: B9,   kind: ref,    visit: 8d, target_hour: 31.8}
+
+# Day nine: from B9 (the journal) to B10, the palisade's last stage held to a save-time floor. Spec:
+# content/team/week-two.md, "Day nine". Ids only. Kinds as day_two:. target_hour: game hours after B9 lands, typical
+# route, measured by the week-two simulator (tests/weektwo/report.py --nine). B10 (the closing ref) pays
+# day_nine_near_promise.
+day_nine_near_promise: C-promise-24
+day_nine:
+  - {id: B9,   kind: ref,    visit: 9a, target_hour: 0}
+  - {id: E1,   kind: beat,   region: R1, target_day: 9, weekly: false, visit: 9a, target_hour: 2.8, gate: {hours_after: {beat: B9, hours: 2}},
+     turn: up, cost: time, opens: [C-promise-24], moves: [N1, PC], thread: {id: th-survive, at: middle}, register: warm}
+  - {id: E2,   kind: beat,   region: R1, target_day: 10, weekly: false, visit: 9d, target_hour: 12.5, gate: {all: [{completions: {card: palisade, n: 6}}, {hours_after: {beat: B9, hours: 5}}]},
+     turn: down, outcome: "no", cost: stores, advances: [C-promise-24], moves: [PC], thread: {id: th-survive, at: middle}, register: grim}
+  - {id: E3,   kind: beat,   region: R1, target_day: 10, weekly: false, visit: 9f, target_hour: 34.7, gate: {completions: {card: palisade, n: 9}},
+     turn: up, cost: none, advances: [C-promise-24], moves: [PC, N1], thread: {id: th-town, at: middle}, register: wonder}
+  - {id: B10,  kind: ref,    visit: 9g, target_hour: 60.7}
+
+# Day eleven: from B10 (the ring closed, the family at the gate) to B11, the vigil in night 12 once a guard is made.
+# Spec: content/team/week-two.md, "Day eleven". Ids only. Kinds as day_two:. target_hour: game hours after B10 lands,
+# typical route, measured by the week-two simulator (tests/weektwo/report.py --eleven). B11 (the closing ref) pays
+# day_eleven_near_promise.
+day_eleven_near_promise: C-promise-25
+day_eleven:
+  - {id: B10,  kind: ref,    visit: 11a, target_hour: 0}
+  - {id: O-family, kind: offer, target_day: 11, visit: 11a, target_hour: 0, gate: {beat: B10},
+     moves: [PC], thread: {id: th-town, at: middle}}
+  - {id: A33,  kind: action, visit: 11b, target_hour: 10, gate: {offer: O-family}}                  # the hut, either answer (A34 on her lane)
+  - {id: Z1,   kind: beat,   region: R1, target_day: 12, weekly: false, visit: 11b, target_hour: 10, gate: {all: [{arrivals: 9}, {offer: O-family}]},
+     turn: down, cost: none, opens: [C-promise-25], moves: [PC, N1], thread: {id: th-town, at: middle}, register: grim}
+  - {id: O-guard, kind: offer, visit: 11b, target_hour: 10, gate: {beat: Z1},
+     moves: [PC], thread: {id: th-survive, at: middle}}
+  - {id: Z2,   kind: beat,   region: R1, target_day: 12, weekly: false, visit: 11c, target_hour: 11.6, gate: {offer: O-guard},
+     turn: up, outcome: "yes", cost: none, moves: [PC], thread: {id: th-survive, at: middle}, register: warm}
+  - {id: Z3,   kind: beat,   region: R1, target_day: 12, weekly: false, visit: 11d, target_hour: 20, gate: {hours_after: {beat: B10, hours: 20}},
+     turn: down, cost: none, advances: [C-promise-25], moves: [PC, N1], thread: {id: th-town, at: middle}, register: dread}
+  - {id: A31,  kind: action, visit: 11e, target_hour: 22.25, gate: {all: [{hours_after: {beat: B10, hours: 22.25}}, {beat: Z2}]}}   # keep the vigil, night 12
+  - {id: B11,  kind: ref,    visit: 11e, target_hour: 22.25}
+
+# Day twelve: from B11 (the vigil kept, the dig open) to night 14, held to the calendar. Spec: content/team/week-two.md,
+# "Day twelve". Ids only. Kinds as day_two:. target_hour: game hours after the list's opening ref lands, typical route,
+# measured by the week-two simulator (tests/weektwo/report.py --twelve). Two lists, one a near question each: day_twelve
+# closes at B12 (the closing ref pays day_twelve_near_promise), and day_twelve_night runs from B12 to S4, week 2's last
+# beat, which pays its own near promise (no closing ref, as day_six:).
+day_twelve_near_promise: C-promise-26
+day_twelve:
+  - {id: B11,  kind: ref,    visit: 11e, target_hour: 0}
+  - {id: S1,   kind: beat,   region: R1, target_day: 13, weekly: false, visit: 12a, target_hour: 3.3, gate: {all: [{beat: B11}, {completions: {card: dig_cellar, n: 1}}]},
+     turn: up, outcome: "yes", cost: time, opens: [C-promise-26], moves: [PC], thread: {id: th-past, at: middle}, register: wry}
+  - {id: S2,   kind: beat,   region: R1, target_day: 13, weekly: false, visit: 12c, target_hour: 11.4, gate: {completions: {card: dig_cellar, n: 3}},
+     turn: up, outcome: "yes_but", cost: none, advances: [C-promise-26], moves: [PC], thread: {id: th-past, at: middle}, register: wonder}
+  - {id: B12,  kind: ref,    visit: 12d, target_hour: 15.8}
+day_twelve_night_near_promise: C-promise-27
+day_twelve_night:
+  - {id: B12,  kind: ref,    visit: 12d, target_hour: 0}
+  - {id: S3,   kind: beat,   region: R1, target_day: 14, weekly: false, visit: 12g, target_hour: 22.4, gate: {save_hours: 318},
+     turn: down, cost: none, opens: [C-promise-27], advances: [C-promise-2], moves: [PC], thread: {id: th-past, at: middle}, register: dread}
+  - {id: A32,  kind: action, visit: 12h, target_hour: 35.4, gate: {all: [{save_hours: 331}, {beat: S3}]}}   # sit the last night, night 14
+  - {id: S4,   kind: beat,   region: R1, target_day: 14, weekly: false, visit: 12h, target_hour: 35.4, gate: {all: [{project: A32}, {beat: S3}]},
+     turn: up, outcome: "yes", cost: none, pays: [C-promise-27], moves: [PC, N1], thread: {id: th-survive, at: middle}, register: warm}
+
+# Day fifteen: from B13 (the season's turn at 336 h) to B14, the hall's last stage. Spec: content/team/week-three.md, "Day
+# fifteen". Ids only. Kinds as day_two:. target_hour: game hours after B13 lands, typical route, measured on a scripted
+# play from day twelve's end (week-three-numbers.md, "Applied and measured") until the week-three simulator replaces
+# it. The hall's fourth stage lands before the deer's clock on typical and sharp, so T3 comes before T2. B14 (the
+# closing ref) pays day_fifteen_near_promise.
+day_fifteen_near_promise: C-promise-28
+day_fifteen:
+  - {id: B13,  kind: ref,    visit: 15a, target_hour: 0}
+  - {id: T1,   kind: beat,   region: R1, target_day: 15, weekly: false, visit: 15b, target_hour: 10, gate: {hours_after: {beat: B13, hours: 10}},
+     turn: down, cost: none, opens: [C-promise-28], moves: [PC, N1], thread: {id: th-town, at: middle}, register: grim}
+  - {id: T3,   kind: beat,   region: R1, target_day: 15, weekly: false, visit: 15c, target_hour: 14.8, gate: {completions: {card: hall, n: 4}},
+     turn: up, outcome: "yes", cost: none, advances: [C-promise-28], moves: [PC], thread: {id: th-town, at: middle}, register: warm}
+  - {id: T2,   kind: beat,   region: R1, target_day: 15, weekly: false, visit: 15d, target_hour: 18, gate: {hours_after: {beat: B13, hours: 18}},
+     turn: up, cost: none, moves: [PC], thread: {id: th-survive, at: middle}, register: wonder}
+  - {id: B14,  kind: ref,    visit: 15f, target_hour: 36.1}
+
+# The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
+# "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.
+#   kind: find | trip | arc | comfort | thread;  offers: decision | spend | both
+side_layer:
+  - {id: SL1, kind: arc,     chapter: day_three, thread: th-survive, offers: both,     gate: {hours_after: {beat: K1, hours: 1.25}}}
+  - {id: SL2, kind: comfort, chapter: day_three, thread: th-survive, offers: decision, gate: {completions: {card: larder_floor, n: 3}}}
+  - {id: SL3, kind: arc,     chapter: day_three, thread: th-survive, offers: decision, gate: {store_at_least: {store: watch_done, n: 2}}}
+  - {id: SL4, kind: arc,     chapter: day_three, thread: th-town,    offers: spend,    gate: {hours_after: {beat: K5, hours: 1}}}
+  - {id: SL5, kind: comfort, chapter: day_three, thread: th-survive, offers: decision, gate: {completions: {card: rack_roof, n: 2}}}
+  - {id: SL6, kind: arc,     chapter: day_three, thread: th-town,    offers: decision, gate: {completions: {card: clay_hearth, n: 3}}}
+  - {id: SL7, kind: comfort, chapter: day_four,  thread: th-survive, offers: decision, gate: {completions: {card: woodshed, n: 3}}}
+  - {id: SL8, kind: arc,     chapter: day_four,  thread: th-town,    offers: decision, gate: {hours_after: {beat: L2, hours: 2}}}
+  - {id: SL9,  kind: find,  chapter: day_five,  thread: th-magic,   offers: decision, gate: {skill_level: {skill: arcana, level: 2}}}
+  - {id: SL10, kind: arc,   chapter: day_five,  thread: th-town,    offers: both,     gate: {hours_after: {beat: M1, hours: 1}}}
+  - {id: SL11, kind: arc,   chapter: day_five,  thread: th-survive, offers: decision, gate: {hours_after: {beat: M1, hours: 3}}}
+  - {id: SL12, kind: thread,  chapter: day_six, thread: th-town,    offers: spend,    gate: {completions: {card: make_spear, n: 1}}}
+  - {id: SL13, kind: arc,     chapter: day_six, thread: th-town,    offers: decision, gate: {all: [{hours_after: {beat: G1, hours: 2}}, {completions: {card: n3_dig_bed, n: 3}}]}}  # or G1 + 6 h without the bed
+  - {id: SL14, kind: comfort, chapter: day_six, thread: th-survive, offers: decision, gate: {completions: {card: pelt_bedding, n: 3}}}
+  - {id: SL17, kind: find,    chapter: day_nine, thread: th-past,    offers: decision, gate: {completions: {card: field_track, n: 6750}}}
+  - {id: SL18, kind: comfort, chapter: day_nine, thread: th-survive, offers: both,     gate: {hours_after: {beat: E1, hours: 3}}}
+  - {id: SL19, kind: arc,     chapter: day_eleven, thread: th-town,  offers: decision, gate: {all: [{hours_after: {beat: Z1, hours: 4}}, {beat: O-guard}]}}
+  - {id: SL20, kind: find,    chapter: day_twelve, thread: th-survive, offers: decision, gate: {all: [{hours_after: {beat: B11, hours: 5}}, {save_hours: 264}]}}
+  - {id: SL21, kind: comfort, chapter: day_twelve, thread: th-survive, offers: spend,    gate: {store_at_least: {store: tallow, n: 2}}}
+  - {id: SL22, kind: arc,     chapter: day_fifteen, thread: th-town,  offers: decision, gate: {hours_after: {beat: B13, hours: 2}}}
+  - {id: SL23, kind: find,    chapter: day_fifteen, thread: th-survive, offers: decision, gate: {completions: {card: pull_beams, n: 1}}}
+
+# Side beats: building falls (a maxed building's prestige) and season-gated set pieces. Not on the critical path;
+# each fires once when eligible. The simulator counts them toward "new things per week".
+side_beats:
+  - {id: F1, gate: {all: [{building_maxed: palisade}, {season: still}]}}
+  - {id: F2, gate: {all: [{building_maxed: hall}, {season: drift}]}}
+  - {id: F3, gate: {all: [{building_maxed: granary}, {region_open: R2}]}}
+  - {id: F4, gate: {all: [{building_maxed: forge}, {region_days: {region: R3, days: 10}}]}}
+  - {id: F5, gate: {all: [{building_maxed: watchtower}, {region_open: R4}]}}
+  - {id: SB-face, gate: {days_after: {beat: B35, days: 4}}}
+
+# Offers that feed the ending. Accepting or declining never moves progress.
+ending_offers:
+  - {id: O-tell,   gate: {beat: B43}}                # accepted / declined / unanswered
+  - {id: O-book,   gate: {beat: B19}}                # accepted / declined
+  - {id: O-pages,  gate: {beat: B49}}                # read now / keep sealed
+  - {id: O-price,  gate: {beat: SB-face}}            # ask them to stop / let it stand
+  - {id: O-final,  gate: {beat: B50}}                # one of E-d, E-b, E-c, each shown only when available
+
+# Ending variants and the save state each reads. No moral meter: one informed final choice, plus what was built.
+endings:
+  core:
+    - {id: E-d, requires: {all: [{tier: self_actualization}, {beat: B33}]}}
+    - {id: E-b, requires: {beat: B44}}               # always available by the time O-final opens
+    - {id: E-c, requires: {all: [{offer: O-tell, state: accepted}, {offer: O-book, state: accepted}]}}
+  strands:   # each varies the epilogue independently of the core variant
+    - {id: S-rim,       reads: outposts_supplied}     # which outposts fall inside the Rim
+    - {id: S-notables,  reads: notable_arc_states}
+    - {id: S-factions,  reads: emergent_quest_outcomes}
+    - {id: S-memory,    reads: {offer: O-pages}}
+    - {id: S-names,     reads: chronicle_deaths}      # count colours a line, never a variant
+    - {id: S-yes,       reads: offers_declined_share} # picks one closing line of three, never judges
+    - {id: S-seam,      reads: {offer: O-price}}

@@ -1,0 +1,7 @@
+[
+  {"kind": "study", "id": "paw", "required": true, "text": ["fore paw"]},
+  {"kind": "study", "id": "track", "required": true, "text": ["tracks, walking"]},
+  {"kind": "label", "anchor": [276, 330], "text": ["ribs show"]},
+  {"kind": "label", "anchor": [344, 320], "text": ["tucked up. no fat"]},
+  {"kind": "label", "anchor": [404, 278], "text": ["hip bones"]}
+]

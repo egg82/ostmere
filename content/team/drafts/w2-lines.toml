@@ -1,0 +1,155 @@
+[l_night_1]
+text = "the ridge light is still there, turned low."
+note = "true after any opening route or a rebased load: states only the light, kept low, not moving; no person, no echo of dusk wording."
+
+[l_night_2]
+text = "one howl, far off, on still air. nothing comes."
+note = "true straight after night_1 on every route: one howl only, distant, no wolves at camp; nothing comes holds all night."
+
+[l_sit_up]
+text = "you bank yours. so is the ridge light."
+note = "night only, tapped or not: minds the light, never a person; holds whatever the opening state."
+
+[l_morning]
+text = "morning, grey. the ridge is dark. the camp kept at it."
+note = "true present or on return, one hour or a day later, rest rule taken or not: no real-time claim, nothing about the player's absence."
+
+[l_look_out_1]
+text = "fog fills the bowl, steam rising through it. old fields, still in rows."
+note = "first tap of the return on every route, three wires held, no snare: pure daylight view, nothing built or seen on the ridge yet."
+
+[l_look_out_2]
+text = "on the ridge, dark and square: what the dusk hid."
+note = "straight after look_out_1: unnamed, no wheels, no person; true on all routes."
+
+[l_wire_1]
+text = "wire in the rubble. it would hold a loop."
+note = "night, snare card not on screen: use is an idea, not a plan, and no snare is named."
+
+[l_wire_2]
+text = "a second wire. you work the kinks out."
+note = "same night state; no use named, so true with no snare card visible."
+
+[l_wire_3]
+text = "a third wire, thin and brown."
+note = "night or morning, before any snare: names nothing it could be for."
+
+[l_tinder]
+text = "fungus on dead birch, dry inside."
+note = "night or day, present or on return: rack not on screen, so the use is only a property of the fungus."
+
+[l_snare_1]
+text = "a snare in the run you pick already, rusted through. same spot."
+note = "V2 right after looking out on every route: nothing about whose or how tied, no again, no knowing."
+
+[l_snare_2]
+text = "another run in the scrub. the wire holds."
+note = "within a minute of the first, every route: no extra old snares, plain."
+
+[l_snare_3]
+text = "a third run. loop, stem, done."
+note = "same minute, every route: short, no old snare, no memory implied."
+
+[l_snare_fail]
+text = "without wire, it's only crouching in the scrub."
+note = "one or two snares already set, daylight, no wire in hand: wry about the attempt and true either way."
+
+[l_camp_daylight]
+text = "ash on everything left out, you too. the roots have gone soft."
+note = "right after the snares, no build yet, roots held at any count: shows no cover and no cool place without naming a build; nothing about the ground."
+
+[l_lean_to]
+text = "birch poles, a scrub roof, the open side to the gap and the ridge."
+note = "present, larder built or not: says only the facing, not why; no order claim."
+
+[l_larder]
+text = "stacked stone, set off the ground. what goes in keeps."
+note = "present, lean-to built or not: no order claim, no warmth in the ground mentioned."
+
+[l_lean_to_fail]
+text = "you lean what you have. it won't stand."
+note = "true if wood or stones are short, other build done or not."
+
+[l_larder_fail]
+text = "you stack what you have. it leans."
+note = "true if stones or wood are short, other build done or not."
+
+[l_first_catch]
+text = "an ashrat in a snare, thin and ash-grey."
+note = "on return about 20 min after the snares, both builds done: plain record, one animal, no time claim."
+
+[l_rack_shown]
+text = "meat goes off by evening. it wants smoke."
+note = "same instant as first_catch, builds done: states need only, avoids the ground."
+
+[l_rack]
+text = "a birch rack over a smouldering knot of fungus."
+note = "V3 present, both builds done, catch held: describes the build only."
+
+[l_rack_fail]
+text = "the rack wants wood and a smoulder."
+note = "true whether wood is short, fungus is missing, or both."
+
+[l_cooking_open]
+text = "smoke is cooking, the kind that keeps."
+note = "same instant as l_rack: says smoking is cooking and that it keeps; no extra claims."
+
+[l_smoke_roots]
+text = "roots keep in the smoke, as something else."
+note = "same instant as the rack, Take stock just shown: makes the trade thinkable without weighing it, and does not mention the visitor."
+
+[l_smoke_1]
+text = "no wind. the smoke stands straight up, thin and tall. you could steer by it."
+note = "first smoke done by hand or by rule, both builds done: wry about the player's build, never mentions roots draining or a visitor."
+
+[l_smoke_fail]
+text = "not enough to smoke, or too little damp wood to do it."
+note = "true for either card and either shortage, V3 onward."
+
+[l_cooking_2]
+text = "a bigger batch off the same smoke."
+note = "before or after H7, any route: no story claim."
+
+[l_prints_1]
+text = "prints in the ash, in at the gap and straight to the larder."
+note = "on return or present, larder and rack built: no count of people and no time claim; sharpens the question."
+
+[l_prints_2]
+text = "three roots gone, and on the stone a strip of meat you didn't smoke."
+note = "same state: payment reads as a trade, with no mention of being away."
+
+[l_take_stock_fail]
+text = "you tally what's there. it isn't enough yet."
+note = "true for any blocker, before or after the prints; nothing about anyone coming."
+
+[l_b3_1]
+text = "you count the food twice. the count holds. you look up."
+note = "straight after the prints on return, by hand or present: the count is the player's own act, the look up is the hinge."
+
+[l_b3_2]
+text = "a figure walks out of the ash at the gap, alone."
+note = "no name, no description beyond a glance, does not claim the prints."
+
+[l_b3_3]
+text = "she looks over the larder, then sits on your side of the fire."
+note = "food to spare is shown by the look; her seat is near, not the far side."
+
+[l_b3_4]
+text = "she eats from the larder, and the count starts going down for two."
+note = "ends the day with no hook; warm with the cost in the count, nothing about her losses."
+
+[l_camp_3]
+text = "the wall takes more wood at a go."
+note = "any time after V1, before or after the snares or builds: no time or state claims."
+
+[l_camp_4]
+text = "a better way to hang the catch."
+note = "after the snares, before or after the rack: refers to catch only."
+
+[l_camp_5]
+text = "thinner strips. the rack takes more."
+note = "after the rack on every route that reaches it."
+
+[l_camp_6]
+text = "you restack the larder with two in mind."
+note = "with or after B3, she is there in every case: plain, no feeling named."

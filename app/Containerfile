@@ -1,0 +1,34 @@
+# The client (client/: TypeScript bundled by build.mjs). Its own stage so node and node_modules never reach the
+# app image; only the bundle is copied across.
+FROM docker.io/library/node:22-slim AS client
+WORKDIR /client
+COPY client/package.json client/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY client/build.mjs client/tsconfig.json ./
+COPY client/src ./src
+COPY client/generated ./generated
+RUN node build.mjs /built
+
+FROM docker.io/library/python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt \
+ && useradd --uid 1000 --user-group --no-create-home ashfall
+# The image's root filesystem is read-only at run time and PYTHONDONTWRITEBYTECODE keeps pip and the base image from
+# leaving bytecode, so every start recompiled every import. The stdlib and site-packages are compiled here, before the
+# app is copied, so the layer is rebuilt only when the requirements change.
+RUN python -m compileall -q "$(python -c 'import sysconfig; print(sysconfig.get_path("stdlib"))')" \
+      "$(python -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"
+COPY ashfall_app ./ashfall_app
+COPY --from=client /built ./ashfall_app/build/client
+RUN python -m compileall -q ashfall_app
+# The commit this image is built from (CI passes it); /healthz reports it.
+ARG BUILD_VERSION=dev
+ENV BUILD_VERSION=$BUILD_VERSION
+
+USER 1000
+EXPOSE 8080
+# The access log is on: logs.py rewrites it as logfmt without client addresses and drops /healthz.
+CMD ["uvicorn", "ashfall_app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8080", "--proxy-headers"]

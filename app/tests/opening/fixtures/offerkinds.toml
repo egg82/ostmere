@@ -1,0 +1,73 @@
+# A test chapter, merged after the shipped ones: two kinds of offer. k_ask's answers start a one-off; k_bank's answers
+# start nothing and each installs a modifier on one card's rate, the answer its source. Not story: the ids and words
+# are the tests' own (tests/opening/test_offer_kinds.py).
+version = 1
+
+[[cards]]
+id = "k_hearth"
+presentation = "action"
+label_key = "k_c_hearth"
+work_s = 60
+makes = [{ store = "damp_wood", items_per_hour = 30 }]
+
+[[cards]]
+id = "k_one_off"
+presentation = "narrative"
+label_key = "k_c_one_off"
+work_s = 40
+cap = 1
+
+[[offers]]
+id = "k_ask"
+text_key = "k_o_ask"
+gate = { test = "after_time", value = 100 }
+
+[[offers.answers]]
+id = "k_ask_yes"
+label_key = "k_a_yes"
+cost_key = "k_a_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "k_one_off" }]
+queues = ["k_one_off"]
+
+[[offers.answers]]
+id = "k_ask_no"
+label_key = "k_a_no"
+cost_key = "k_a_cost"
+
+[[offers]]
+id = "k_bank"
+text_key = "k_o_bank"
+gate = { test = "after_time", value = 100 }
+
+[[offers.answers]]
+id = "k_hers"
+label_key = "k_a_hers"
+cost_key = "k_a_hers_effect"
+[offers.answers.outcome]
+modifiers = [{ target = "rate", id = "k_hearth", flow = "make", store = "damp_wood", kind = "mul_bp", amount_bp = 11000, source = "k_hers" }]
+
+[[offers.answers]]
+id = "k_his"
+label_key = "k_a_his"
+cost_key = "k_a_his_effect"
+[offers.answers.outcome]
+modifiers = [{ target = "rate", id = "k_hearth", flow = "make", store = "damp_wood", kind = "mul_bp", amount_bp = 9000, source = "k_his" }]
+
+[[triggers]]
+id = "k_hearth_arrives"
+when = { test = "after_time", value = 50 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "k_hearth" }] }
+
+[text]
+k_c_hearth = "Hearth"
+k_c_one_off = "Look"
+k_o_ask = "A question"
+k_o_bank = "Whose way?"
+k_a_yes = "Yes"
+k_a_no = "No"
+k_a_cost = "takes {d}"
+k_a_hers = "Hers"
+k_a_his = "His"
+k_a_hers_effect = "More wood"
+k_a_his_effect = "Less wood"

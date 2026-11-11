@@ -1,0 +1,19 @@
+whenever: B3 20.5 h after the end; B4 25.23 h after B3; 5 day-two visits
+  V1       gap   8.6h  active  0.2m  new  13  bigger  9  first    0s  decisions  2  actions   3  idle    5s  run 1  effort  2  | spine 1 chapter 1 side 0 {}
+  V2       gap  11.2h  active  0.2m  new  14  bigger  7  first    0s  decisions  2  actions   3  idle    5s  run 1  effort  2  | spine 0 chapter 3 side 0 {}
+  V3       gap  10.0h  active  0.4m  new   5  bigger  4  first    0s  decisions  2  actions   2  idle   15s  run 0  effort  2  | spine 0 chapter 0 side 0 {}
+  V4       gap   2.6h  active  0.0m  new   1  bigger  0  first    0s  decisions  1  actions   1  idle    2s  run 0  effort  1  | spine 0 chapter 0 side 0 {}  [wait, 4 lines]
+  V5       gap   4.6h  active  0.0m  new   6  bigger  2  first    0s  decisions  0  actions   0  idle    0s  run 0  effort  0  | spine 1 chapter 0 side 0 {}  [edge]
+  landed (h after B3) {'B3': 0.0, 'P0.4': 0.0, 'A15': 0.0, 'J1': 0.0, 'J2': 0.3, 'J3': 1.25, 'A16': 11.2, 'J4': 11.2, 'A17': 11.7, 'O-cart': 11.7, 'A18': 12.7, 'A19': 25.23, 'B4': 25.23}
+  seen   (h after B3) {'B3': 0.0, 'P0.4': 0.0, 'A15': 0.0, 'J1': 0.0, 'J2': 11.2, 'J3': 11.2, 'A16': 11.2, 'J4': 11.2, 'A17': 21.22, 'O-cart': 21.22, 'A18': 21.22, 'A19': 28.48, 'B4': 28.48}
+  away V1->V2: 3 ['trigger t_dusk_2', 'trigger t_night_2', 'trigger t_morning_3']
+  away V2->V3: 3 ['trigger offer_o_cart', 'card build_shelter', 'card build_woodstack']
+  away V3->V4: 0 []
+  away V4->V5: 1 ['trigger t_b4_she_went']
+  flatcheck ['W1(B1-B7)        week_net_up          net +2 before the last region']
+  beats whenever: no beat from B5 reached (pace_scale 1)
+  lost to caps, whenever: share of each store's making dropped at its cap
+    played    all  68%  camp 55% damp_wood 100% roots 99% smoked 30% stones 100%
+    away 8 h  all 100%  camp 100% damp_wood 100% roots 99% smoked 46% stones 100%
+    away 24 h all 100%  camp 100% damp_wood 100% roots 99% smoked 46% stones 100%
+    away 72 h all 100%  camp 100% damp_wood 100% roots 99% smoked 46% stones 100%

@@ -1,0 +1,148 @@
+# Onboarding and teaching mechanics
+
+Scope: how games teach without (or with little) tutorial, and what research says about load. Sources are in
+`onboarding-notes.jsonl`, one row each with the URL and whether it was read in full or only seen as a snippet.
+Evidence labels: **developer**, **research**, **verbatim**, **practitioner**, **opinion**, **snippet**.
+Builds on, and does not repeat, `teach-automation.md` (Factorio's redesign, red dots, automation rules confusion).
+Searched about 14 queries and fetched about 12 pages; several of the best primary sources (Thorson's, Hempuli's,
+Blow's and Subset's talks) were unreachable or paywalled, so those games are covered by commentary only and flagged.
+
+# Part A. General
+
+## A1. Whether a tutorial pays depends on how discoverable the mechanics are
+
+**A tutorial earned its keep only in the complex game of three tested; in the two simpler ones it did nothing measurable.**
+- Andersen et al., CHI 2012: eight tutorial designs across three games, 45,000+ players. Tutorials raised play time by
+  up to 29% (progress up to 75%) in the most complex game (Foldit) and "did not significantly improve player
+  engagement" in the two simpler ones. Authors: tutorial investment "may not be justified for games with mechanics
+  that can be discovered through experimentation" (research, full PDF read). The four varied dimensions were tutorial presence,
+  context-sensitivity, freedom and on-demand help. Instructions given at the moment of need rather than in an up-front
+  manual raised play time 16% and progress 40% in Foldit and did nothing in the other two. Restricting player freedom to
+  focus attention showed no benefit. On-demand help helped Foldit, did nothing in Hello Worlds and had a negative
+  effect in Refraction. Authors: players of experimentable games "seem to learn more from experimentation than from
+  reading text".
+- Game Developer's survey of tutorial types, built on the same paper's four dimensions (presence, context sensitivity,
+  freedom, availability of help), adds: an active-learning tutorial fails if the player has no isolated place to
+  practise a complex skill; no single method fits all games (practitioner, read in full).
+- Implication: decide per mechanic, not per game. Simple mechanics get no teaching; the one hard one gets a
+  practice space.
+
+## A2. The level is the lesson when the order of encounters does the teaching
+
+**Classic no-tutorial teaching is an ordering discipline: safe first exposure, then a test, then a twist.**
+- Super Mario Bros. 1-1: the forced first mushroom exists, per the designers, because "we wanted to figure out a way for
+  players to be really satisfied with the bigger Mario. And so that's actually why we created this small Mario first"
+  (developer, quoted in BGR, read in full). The Iwata Asks page (New Super Mario Bros. Wii, vol. 1 part 4, read in
+  full) has programmer Nakago saying levels were not built from screen one: World 3 or 5 came first, beginners found
+  them incredibly difficult, and "our basic principle is to move easier features to the beginning of the level".
+  1-1 was built to guarantee the player gets the mushroom (the first pipe is placed because the mushroom bounces off
+  it), simulated on paper with fallback paths, made near the end and adjusted to the last minute; Iwata notes players
+  did not read the manual (developer). The earlier claim that Miyamoto said the forced mushroom shows how it differs
+  from a Goomba is not on that page (unverified).
+- Commentary on 1-1 (slow first Goomba, pits only after the means to cross them) is a reader's inference, not
+  Miyamoto's words (opinion, snippet).
+- Portal: Valve's own commentary calls the game "effectively an extended player training exercise" (Walker). The
+  method is "checklisting": break a new mechanic into the core components players must grasp, give "a very clean room
+  to safely experiment with it", and only then "take a previously learned rule and turn it on its head" (developer,
+  Game Informer read in full; commentary transcript read in full).
+- The Witness reviews describe teach, check, then expand and invert; Blow's own statements were not found (opinion,
+  snippet). Celeste and Hollow Knight: critics say they introduce one twist per chapter or teach by level design; no
+  designer statement was found for either, on a second search too (Celeste's level-design GDC page is members-only; Team Cherry material found covers area design, not teaching) (opinion, snippet; null).
+
+## A3. Playtests find the same teaching failures again and again
+
+**The recurring failures are wrong assumed models, missed cues, and too many new ideas in one step.**
+- Valve, from playtests: players assumed portals led to other dimensions (fixed by a memorable start room), assumed
+  orange portals were exit-only (puzzle added to correct it), "charge[d] down the stairs without noticing what was
+  creating the portals", and one puzzle "introduced too many new concepts at once". Jeep Barnett: "without some serious
+  prompting, players will rarely look up." (developer, commentary transcript, read in full).
+- The method is observe-and-patch: when testers miss a required element, make it more noticeable or change the
+  approach (developer, Game Informer).
+- Baba Is You players complain when a teaching level comes after the need for it, and when a solution needs an
+  interaction not yet shown (verbatim, Steam, snippets). Order errors are the visible complaint, not missing text.
+
+## A4. Players do not read; they want to touch
+
+**Text-heavy instruction is skipped; the measured numbers are informal.**
+- One author observed more than 80% of players clicking straight through the instruction screen of a demo at events
+  (practitioner, snippet; page 403).
+- A mobile developer reported from logs that instructions were barely read and that drop-out came from being made to wait
+  before touching controls (practitioner, snippet; article body unreachable).
+- One postmortem reports tutorial completion rising from 55% to 85% and early churn down 20% after splitting it into
+  chunks with a goal and an immediate reward each, plus tooltips triggered by action or inaction. No sample size or
+  control group, game unnamed; treat as an anecdote, not a rate (practitioner, read in full).
+- No controlled study of popup dismissal was found; a null, not a negative.
+
+## A5. Just in time, with supports that fade
+
+**Teach at the moment of first need, and thin the support as the player shows they have it.**
+- Braid reveals its rewind help after the first death, "when it is first necessary", while Hearts of Iron III teaches
+  everything before play; the survey sees merit in each for different audiences (practitioner, read in full).
+- Learning research: guidance that helps novices becomes redundant, and can hurt, for people who already know the
+  material (expertise reversal, Kalyuga); unguided search overloads novices' working memory; the remedy proposed is
+  to fade worked examples as expertise grows. One study of less-structured tasks found no reversal (research,
+  Kalyuga 2007 review read in full; no game study was found). The review's conclusion: the effect replicated across
+  many materials and 2,200+ students, as a full reversal or more often a partial one, with guidance to be provided at
+  the appropriate time and unnecessary support removed as learners progress; its limits are few studies of optimal
+  methods and mostly well-defined technical domains. So both unguided discovery and fixed full guidance have
+  documented costs, and the middle is guidance that shrinks.
+- Segmenting lessons into smaller pieces has a published effect in multimedia learning, but one software-tutorial study
+  found no gain in performance and another found fleeting transfer on delayed tests (research, snippets). Chunking
+  is a reasonable default, not a proven win.
+- Idle genre note: a developer of an idle title worried that 15 minutes shows the player a year of loop, so the game
+  must show what comes later (developer, snippet).
+
+# Part B. What it means for Ostmere
+
+Read: `decisions.md` ("Fun, but never vying for attention", "Automation is designed, not clicked"),
+`design/opening-screen.md` ("Lessons", "Dots and the one glow", "One thing at a time", "A feature's card").
+
+## B1. Agreements
+
+**The current design already follows the strongest findings: just-in-time, one system at a time, on the real controls, skippable.**
+- "Lessons": a system is taught on its real controls "the moment it first matters, and only then", never two at once,
+  with `Skip` at every step and nothing modal. This is Valve's practice area made of the live UI, and Braid's
+  teach-at-first-need (A5, A2).
+- "Lessons": the rule lesson is taught in terms of the mix, a previously learned rule extended. That matches "turn a
+  learned rule on its head" (A2).
+- "Fun, but never vying for attention", chip arrives "with its answer": the first status meets the player with its cure
+  already on screen, which is Valve's clean-room-first ordering for a problem (A2).
+- Simple things (first cards, taps) get no lesson, only the one glow. Consistent with A1.
+- The one-at-a-time arrival queue and a tap that skips to the next line answer A4: input is never held.
+
+## B2. Gaps and conflicts
+
+**The lessons are the full-guidance kind and never fade, and nothing reports where they fail.**
+- Both lessons are step-by-step instruction at the same density. The rule lesson re-teaches the editor's pattern (pick,
+  save, find the row) that the mix lesson just taught. A5 says guidance should thin; the second lesson is the natural
+  place and does not.
+- Several steps are "(read)" steps that end on a reading timer, with a line on the control's meaning. A4 says lines
+  are skimmed. Those steps teach the least and could be moved to the card or dropped where the screen already shows
+  the result.
+- "Done or skipped, a lesson is kept ... and never returns". A skip at step 1 and a completed lesson are treated the
+  same. Valve learns from where testers drop; here the drop point is not recorded in the findings I could see, so the
+  too-many-concepts failure (A3) could be present and invisible. I have not read the telemetry code; this may exist.
+- "Skip is available" and "never returns" together leave a player who skipped by reflex (A4) with no path back, which
+  is Andersen's "availability of help" dimension left at zero after the first encounter. The galaxy review's
+  91 hand-taps (`galaxy-review.md`) is a related miss: a lesson existed to prevent it only if the player took it.
+
+## B3. Proposals to test
+
+1. **Fade the rule lesson.** If the mix lesson was completed, the rule lesson drops the steps whose controls repeat the
+   editor's shape (the save step and the "where it lives" read) and keeps only what is new: the when/do pair. Test:
+   completion and Skip rates for the rule lesson, faded vs full, and whether players who saw the faded version
+   still build a working rule. This treats A5's fade as a tweak on the existing lesson data (`game/lessons.ts`), not a
+   new system.
+2. **Record the step each Skip lands on, and the step where a lesson waits longest.** One count per lesson step in the
+   existing decision log. If Skip clusters on one step or a "(read)" step, that is the Valve "too many ideas" or
+   "nobody reads it" signal (A3, A4) and the step is cut or converted to a visible result. The cost is a log field
+   and no UI; it also makes later fade decisions evidence-based.
+3. **Keep the lesson's offer reachable once, quietly, after a skip.** A skipped lesson (not a finished one) leaves the
+   original quiet dot on its trigger's Add entry or rules tab until the player does the thing it taught, rather than
+   vanishing. This reuses the dot's existing meaning ("one of the new things, not yet at work") and does not add a
+   modal, a glow or a counter, so it keeps the calm rule in "Fun, but never vying". Test: does it reduce the
+   hand-tap pattern the review reported without any complaint of nagging. If the dot is already doing this, the
+   proposal is moot and the finding is simply that a skip does not erase the offer.
+
+Not proposed: a pre-game tutorial, an upfront how-to-play screen, a glow on the lesson trigger beyond the existing
+rules. A1 and A4 argue against all three for a game this discoverable.

@@ -1,0 +1,6 @@
+beats typical (pace_scale 1): B8 day 7, target_day 8, B9 day 7.94, target_day 9
+  away V31->V32: 1 ['trigger t_b8']
+  away V32->V33: 2 ['trigger t_stakes_full', 'trigger t_roofs']
+  away V33->V34: 3 ['trigger t_roofs_first', 'trigger t_ash_ground', 'trigger offer_o_posts']
+  away V34->V35: 0 []
+  away V35->V36: 3 ['trigger t_pack_near', 'trigger t_b9', 'trigger t_wind']

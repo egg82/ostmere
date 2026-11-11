@@ -1,0 +1,167 @@
+# Game UI and UX: research notes
+
+Scope: game screens, not data pages. Sourcing is thinner than the brief hoped: no developer postmortem on how an idle
+game's screen grows was found. A second pass read the Apple and Android size guidance (via Apple's page JSON and
+developer.android.com), Hoober's correction, the Chalmers thesis itself and Hodent's own blog; those claims below carry
+real labels. Sources are in `game-ui-notes.jsonl`. Labels: developer, research, guideline, verbatim, practitioner,
+opinion, snippet.
+
+# Part A: General
+
+**1. Classify every piece of UI on two axes (in the fiction? in the world's space?) and treat plain, non-diegetic UI as
+the honest fallback, not a failure.**
+- Fagerholt and Lorentzon's 2009 thesis crosses fiction (does the element exist in the game's story world?) with
+  spatiality (is it in the game's 3D geometry?). The thesis dropped an earlier diegesis-by-spatiality chart because
+  diegesis proved "slightly ambiguous" (is blood splattered on the screen diegetic?). Its final map has six categories:
+  non-diegetic (the HUD), meta-perception, meta-representation, geometric, diegetic, and signifiers (subtle cues in the
+  world, such as smoke from a weapon about to break). The four-word version "diegetic, spatial, meta, non-diegetic" is
+  a later popular summary, not the thesis's own list. Label: research (thesis PDF read, sections 7-8; it covers
+  first-person shooters only). https://publications.lib.chalmers.se/records/fulltext/111921.pdf
+- What it concludes: the more competitive the game, the more a clear overlay HUD is reasonable ("ambiguous information
+  should be avoided" where fast strategic decisions are needed); the more a world resembles a plausible real one, the
+  more a stray non-diegetic element hurts; a world that does not hide being artificial tolerates them. Label: research.
+  Secondary summary for the "runs the risk of frustrating the player" wording: practitioner.
+  https://www.gamedeveloper.com/design/user-interface-design-in-video-games
+- Transferable use: ask, per element, whether bringing it into the world costs legibility. Where it does, keep it a
+  plain control and spend the fiction on its words and art. Game-genre caveat: the evidence is from shooters, not
+  management or idle games.
+
+**2. Separate "can they use it" from "do they want to": a screen can pass one and fail the other.**
+- Hodent's two pillars. Usability, in her words, is "removing or at least alleviating all the frustrations and
+  confusion the player could experience while playing the game, if they are not intended by design"; the second pillar
+  is about how enjoyable the game is. In her own blog posts that second pillar is called gameflow (after Sweetser and
+  Wyeth); "engage-ability" is the name her book (chapter 12) and later posts use for it. Usability "is not about
+  distorting the intended experience": a horror game may be meant to frighten. Label: practitioner (her own blog, read).
+  https://celiahodent.com/cognitive-psychology-applied-to-user-experience-in-video-games/ and
+  https://celiahodent.com/five-misconceptions-ux/
+- Transferable use: a cold-play failure ("I didn't know what to tap") and a motivation failure ("I knew and didn't
+  care") need different fixes; diagnose which before changing the screen.
+
+**3. Show the state and its consequence together, before commitment, in small numbers.**
+- Into the Breach is repeatedly credited with showing every enemy intent and previewing outcomes before the player
+  commits, with health and damage rarely above single digits, so one screenshot holds the whole battlefield state.
+  Label: opinion (reviewers; the GDC postmortem was seen only as a listing, and its video/slides were not available).
+  One developer line is verified: Matthew Davis, PC Gamer: "a push to be more deterministic in the moment-to-moment
+  gameplay"; the reporter adds the Vek "show you their intended attack" before executing it (label: practitioner,
+  https://www.pcgamer.com/into-the-breach-preview). https://blog.prototypr.io/into-the-breachs-ux-makes-you-feel-smart-a9cb03210757 (fetch blocked, claim from search snippets), https://gdcvault.com/play/1025772/-Into-the-Breach-Design
+- Transferable use: a number the player must compute from two others is a UI defect; precompute and print the result
+  beside the thing it affects.
+
+**4. An interface that grows should grow in one place at a time, and each addition should arrive with its reason.**
+- A Dark Room opens on a title, two lines of text and one button, and adds buttons and text slowly so the player learns
+  each element and the interface's growth mirrors the world's. The same analyses flag the cost: minimalism with no
+  direction loses some players. Label: opinion (critical analyses; no developer account found).
+  https://mediacommons.org/imr/node/3947
+- Idle-game developer posts (itch.io, Miner 2149 devlog) report: hiding sections until a threshold, pruning side panels
+  nobody used, players asking to see the next unlock so they can plan, and one player confused because a displayed
+  unlock requirement did not match when the content really appeared. Label: snippet. https://dev.to/aguier/i-built-7-idle-games-in-30-days-what-i-learned-about-incremental-design-5d3f
+- Academic grounding exists (CHI 2018 taxonomy of idle games lists user interface among the analysed features and
+  notes idle games' unusual use of player attention) but the abstract reports no interface findings. Label: research
+  (abstract only). https://research.monash.edu/en/publications/playing-to-wait-a-taxonomy-of-idle-games/
+- Null result: no primary source on how Cookie Clicker, Kittens Game or Antimatter Dimensions manage a screen that keeps
+  gaining panels turned up. The practical pattern (reveal on first relevance, show the next gate truthfully, retire
+  unused panels) is supported only by the snippets above.
+
+**5. Touch is a different device, not a small mouse: size by finger, place by task, and do not depend on hover.**
+- Hoober's field study (1,333 observations, 780 touching): 49% one-handed, 36% cradled, 15% two-handed; people change
+  grip, sometimes every few seconds, with the task. Label: research. https://www.uxmatters.com/mt/archives/2013/02/how-do-users-really-hold-mobile-devices.php
+  His correction, in a 2017 comment on that article, read: the reach drawings are "a bit of a lie because I
+  over-assumed. People touch the center of the screen. More, more quickly, more accurately, and by preference. Not the
+  corners or edges." and "Please, please everyone ignore those drawings." Label: verbatim (same URL, comments). His 2017
+  follow-up gives centre targets "as small as 7 millimeters" against "about 12 millimeters" in corners, sized to contain
+  95% of observed taps, and advises placing dangerous or unrelated items far from others. Label: research.
+  https://www.uxmatters.com/mt/archives/2017/03/design-for-fingers-touch-and-people-part-1.php
+  Consequence: a thumb-reach map is not where controls must live; put primary content and actions near the centre,
+  secondary actions along the top and bottom edges, keep dangerous actions away from common ones, and test on devices.
+  Hoober also calls pixel-based standards "useless" because device pixels bear no relation to human dimensions, and
+  says Apple's and Google's sizes seem based on platform convenience more than human factors; the numbers below are
+  floors set by platform owners, not measurements of fingers.
+- Target size, four primary figures. WCAG 2.2 (2.5.8): at least 24 by 24 CSS px, or a 24 px circle around each smaller
+  target that touches no other target; the stricter 2.5.5 is recommended for important controls. Label: guideline.
+  https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html Apple HIG: "a button needs a hit region of at
+  least 44x44 pt" (60x60 in visionOS); its control-size table gives iOS and iPadOS a 44x44 pt default and a 28x28 pt
+  minimum. Label: guideline (read from the JSON behind the HIG pages, e.g.
+  https://developer.apple.com/tutorials/data/design/human-interface-guidelines/accessibility.json). Android: "at least
+  48dpx48dp. Larger is even better", for touch; mouse and trackpad targets may be smaller; padding may count, so a 24dp
+  icon can carry a 48dp target; with small close buttons, 48dp targets "separated by 8dp of space or more". Label:
+  guideline. https://developer.android.com/guide/topics/ui/accessibility/apps and
+  https://support.google.com/accessibility/android/answer/7101858 (the m3.material.io page itself is JS-only and was
+  not read; Google's help page cites it). So 44 is a recommendation with a stated 28 pt floor on iOS, 48 is Android's
+  recommendation, 24 CSS px is the legal-style floor.
+- Game Accessibility Guidelines, basic tier: "Ensure interactive elements / virtual controls are large and well spaced,
+  particularly on small or touch screens". Label: guideline. https://gameaccessibilityguidelines.com/basic/
+- Hover: touch has no persistent hover, and tooltips triggered by it fire unreliably. Practitioner fixes: tap-to-toggle
+  dismissed by tapping elsewhere, long-press, or hiding hover-only content under a hover-capability media query. WCAG
+  1.4.13 (dismissible: closable "without moving pointer hover or keyboard focus"; hoverable; persistent until the
+  trigger is removed) is framed entirely around pointer and keyboard focus; the page never mentions touch. Label:
+  practitioner (Board Game Arena thread, snippet) and guideline (WCAG page read).
+  https://forum.boardgamearena.com/viewtopic.php?p=64452 https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html
+  Rule: anything that matters must be reachable with no hover; hover may only repeat it.
+- Browser chrome: `100vh` equals the large viewport, so a full-height layout overflows while the address bar is
+  showing; `dvh` tracks the live viewport, `svh` the smallest. A bottom-pinned bar needs `viewport-fit=cover` and
+  `env(safe-area-inset-bottom)`, else the inset is zero. Sources disagree on dvh vs svh for bottom bars; dvh can cause
+  layout shifts. Label: practitioner (snippet). https://blog.openreplay.com/fix-100vh-mobile-viewport/
+- A real-world accessibility report: a VoiceOver user found the browser build of a long-running idle game's mouseover
+  text and worker-assign links unusable. Label: verbatim (snippet). https://www.applevis.com/forum/ios-ipados-gaming/kittens-game-access
+
+**6. Accessibility basics that apply to any screen game, with no numbers invented.**
+- Basic-tier items most relevant to a menu-heavy game: readable default font size; high contrast between text/UI and
+  background; no essential information by fixed colour alone or by sound alone; text advanced at the player's own pace;
+  start without multiple menu levels; all UI reachable by the gameplay's input method; save all settings; avoid flicker.
+  The site gives no pixel sizes or ratios. The page footnote names remapping, text size, colourblindness and subtitles
+  as the most-complained-about issues. Label: guideline. https://gameaccessibilityguidelines.com/basic/
+
+Not found, so not claimed: Game UI Database pattern findings, developer accounts from Frostpunk, Darkest Dungeon,
+Slay the Spire (intent icons: the Giovannetti Gamasutra interview was read and never mentions them; (unverified: no
+developer source found for the reasoning)), Melvor Idle, Cookie Clicker.
+
+# Part B: What it means for Ostmere
+
+Read: decisions.md, systems.md headings, design/opening-screen.md (all section structure; Cards and Mix editor skimmed).
+
+**Where the design already agrees with Part A**
+- Non-diegetic plain controls over a living scene (finding 1): "What can be tapped looks tappable" keeps controls as
+  obvious controls; the fiction goes into lines and art. This is the fallback the taxonomy endorses.
+- Growth in one place with its reason (finding 4): "The screen arrives when it means something", "Taught by need, and
+  needed again", and opening-screen.md "One thing at a time" are a stricter version of the idle-game and A Dark Room
+  pattern, including reserved room so an arrival moves nothing ("Tapping never moves the layout"). Nothing to add here.
+- Consequence beside the thing (finding 3): chips carry their cost line, the Camp bar states what the next level pays,
+  rules say what they do. Agrees.
+- Touch and chrome (finding 5): the phone layout pins art and hands strip, sets 44 px targets in the condition editor
+  and pins Save under the thumb; "One type scale" is checked at 390x844 and 3840x2160. Agrees with the guideline
+  direction.
+- Accessibility: reduced motion is honoured throughout ("Coming back", "One thing at a time").
+
+**Gaps and conflicts**
+- **Hover is undocumented.** game.css styles `:hover` alongside `:focus-visible` (the pairing is fine), but neither
+  decisions.md nor opening-screen.md states a no-hover rule, and no tooltip mechanism is described. Anything meaningful
+  living only in a title attribute or hover would be invisible on a phone. Gap, not a conflict: the "looks tappable"
+  rule implies it but does not say it.
+- **Target size is stated once** (the editor's 44 px) and not as a rule for chips, tabs, the Log button, the strip's
+  Edit, or text-button rows in the panel's foot, which are "quiet text buttons" and the most likely to fall under 24 px
+  of height. The 0.9rem chip label is also the smallest text; at 16px root that is about 14px.
+- **Colour-only meaning.** The ledger's red line and "warm" ownership colour are the design's main signals. The docs say
+  red is information with its answer beside it, and chips carry an icon plus a word, but ledger severity, warm/cold
+  ownership and the dot/glow distinction are not stated to survive without colour. Not checked in the code.
+- **Pinned stage vs browser chrome.** "Phone" pins the scene at about 38vh and the strip under it. Whether the unit is
+  `vh`, `svh` or `dvh`, and whether the landscape-uses-desktop rule survives a short landscape viewport with the
+  keyboard open in the condition editor, is not documented. Not checked in the code.
+- **Single-column growth ceiling.** Findings 4's null result applies: nothing here says how the Tasks, Completed, Rules
+  tabs, hands strip, ledger, skills, map, town and combat coexist once all are unlocked. The opening screen doc is
+  explicitly the first fifteen minutes. The decisions on "The town", "A world map" and "Combat is a large pillar" add
+  surfaces with no stated screen budget.
+
+**Proposals to test**
+1. **Add a three-line rule to the screen doc and a mechanical check:** nothing is reachable only by hover; every
+   control's hit area is at least 44 CSS px in its short dimension (or has spacing that satisfies the WCAG 24 px circle
+   test); status meaning survives greyscale. Test: render the phone at 390x844 in a headless container, measure every
+   clickable's bounding box, and screenshot the opening in a greyscale filter; list failures. Cheap, and it finds which
+   of the gaps above are real before anything is designed.
+2. **Write a screen budget for the full game, not the opening:** which regions are always on screen, which are tabs, and
+   the rule for demoting a region when a new one arrives (A Dark Room and the Miner 2149 devlog both point at pruning
+   unused panels, not only adding). Test with a mock of the late-game state at phone width, played by a non-genre
+   reader, counting taps to reach the thing they were asked to find.
+3. **Test the phone pin against real browser chrome:** load the pinned-stage layout with the address bar showing and
+   hidden (or emulate `100vh` vs `100dvh` and a `safe-area-inset-bottom`), with the editor's keyboard open, and confirm
+   the strip and Save stay on screen and nothing jumps when the bar collapses. If it jumps, that violates "Tapping never
+   moves the layout" without a tap.

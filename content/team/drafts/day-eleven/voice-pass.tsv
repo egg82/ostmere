@@ -1,0 +1,18 @@
+key	reader	verdict	reason
+o_guard	first	changed	register: the need shown as the place's, so neither answer reads as the reply to a question
+l_guard_ask	first	checked, kept	the reader took the spear for not yet existing; the spear on the wall is the brief's fact (the answer's card beats a new head on it), and "the spear" names one already there
+up_guard	first	checked, kept	the reader asked for a {pct}; the guard card serves no change_bp (its gap hold is while_running, not a modifier), so a slot would fail the slot-count rule
+o_ditch	first	checked, kept	the reader placed the ash outside the ring; the design's ash is heaped against the posts inside it (week-two.md, o_ditch)
+a_family_theirs	second	changed	rule: "they" could take in the child, never a worker; the card is her lane's
+l_hut_theirs	second	changed	rule: as a_family_theirs
+l_guard_ask	second	changed	state: both readers took "the spear" for one not yet made; the lead wrote "the old spear" (the brief's spear on the wall, already there) in place of the reader's "the pile"
+o_guard	second	changed	state: "open" can be false once the gate closes the ring
+a_guard_n2	second	changed	state: the spear is made after the answer, so the answer is the standing, not the taking
+a_guard_n7	second	changed	state: mirrors a_guard_n2
+up_guard	second	checked, kept	as the first reader's: the card serves no change_bp, so a {pct} would break the slot-count rule
+o_ditch	second	changed	parse
+l_night_12	second	changed	state: the guard may be at the gap, not at the fire
+l_b11_2	second	changed	parse: the hand is someone's, as the brief has it
+n_day_z1	second	changed	state: "i put" was an act the player never chose
+n_day_z3	second	changed	rule: "of the day before" made the count too explicit
+n_day_b11	second	changed	rule: one ominous note a page; the lead kept "away from the stone", the fact no line now carries

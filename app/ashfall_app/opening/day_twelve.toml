@@ -1,0 +1,851 @@
+# Day twelve: B11 through the dig (S1, S2), SL20 and the bear, B12 (the cellar), SL21 and S3 to night 14 and S4, the
+# edge of week 2's content, as data merged after day_eleven.toml (schema.Chapter, chapters.merge). Story spoilers:
+# never shown to the owner. Spec: content/team/week-two.md, "Day twelve"; numbers: content/team/week-two-numbers.md.
+version = 1
+end_feature = "week_two_end"
+
+# ---------- the dig, with B11's moment ----------
+
+# The vigil kept (t_b11's condition, so one moment): the dig, its order card's feature and the chapter's clock.
+[[triggers]]
+id = "t_dig"
+when = { test = "at_least", subject_kind = "card_count", id = "keep_vigil", value = 1 }
+[triggers.outcome]
+line_keys = ["l_dig_open"]
+unlocks = [
+  { unlock_kind = "feature", id = "dig" },
+  { unlock_kind = "card", id = "dig_cellar" },
+  { unlock_kind = "action", id = "dig_clock" },
+]
+
+# Never drawn: game hours since the vigil was kept, for the chapter's steps.
+[[stores]]
+id = "dig_clock"
+label_key = "store_dig_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "dig_clock"
+label_key = "action_dig_clock"
+makes = [{ store = "dig_clock", items_per_hour = 1 }]
+
+# A staged comfort on the hands, run by its order card (below), so no stage is queued: stage 1 S1, stage 3 S2, stage 4
+# B12 with its floor. Each stage takes props and shoring. Finished, picking draws three quarters of a bloom a pick, so
+# typical leaves some bloom at night 14 (week-two.md, "Fungus as food").
+[[cards]]
+id = "dig_cellar"
+presentation = "craft"
+label_key = "c_dig_cellar"
+upside_key = "up_dig_cellar"
+work_s = 2400
+cap = 4
+failed_line_key = "l_dig_fail"
+inputs = [{ store = "stakes", items = 16 }, { store = "damp_wood", items = 6 }]
+line_keys = ["l_dig_stage_1", "l_dig_stage_2", "l_dig_stage_3", "l_dig_done"]
+[cards.finished]
+modifiers = [
+  { target = "cap", id = "roots", kind = "mul_bp", amount_bp = 15000, source = "dig_cellar" },
+  { target = "side", id = "larder", kind = "add_bp", amount_bp = 20000, source = "dig_cellar" },
+  { target = "rate", id = "pick_fungus", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
+  { target = "rate", id = "n3_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
+  { target = "rate", id = "n5_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
+  { target = "rate", id = "n6_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
+  { target = "rate", id = "n7_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
+]
+
+# "When stakes reach 16, dig": a stage whenever a stage's stakes are in, the shoring allowing; passed over at the cap.
+[[order_cards]]
+store = "stakes"
+tap_card = "dig_cellar"
+when = { test = "at_least", subject_kind = "store", id = "stakes", value = 16, release = 16 }
+offered_after = { unlock_kind = "feature", id = "dig" }
+
+# Morning 13, an hour after the vigil: the scene's night grade ends on this hidden clock.
+[[stores]]
+id = "morning_13"
+label_key = "store_morning_13"
+cap_items = 20
+hidden = true
+
+[[standing]]
+id = "morning_13"
+label_key = "action_morning_13"
+makes = [{ store = "morning_13", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_morning_13"
+when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 1 }
+outcome = { line_keys = ["l_morning_13"], unlocks = [{ unlock_kind = "action", id = "morning_13" }] }
+
+# S1: the dig's first stage.
+[[triggers]]
+id = "t_s1"
+when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 1 }
+outcome = { line_keys = ["l_dig_1", "l_dig_2"] }
+
+# S2: its third.
+[[triggers]]
+id = "t_s2"
+when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 3 }
+outcome = { line_keys = ["l_steps_1", "l_steps_2"] }
+
+# ---------- B12: the cellar ----------
+
+# B12 on the last stage. t_b12_floor and its clock are a released floor nothing reads now, as B10's.
+[[triggers]]
+id = "t_b12_floor"
+when = { test = "after_time", value = 900000 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "b12_floor" }] }
+
+# Never drawn: hours past the floor.
+[[stores]]
+id = "b12_floor"
+label_key = "store_b12_floor"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "b12_floor"
+label_key = "action_b12_floor"
+makes = [{ store = "b12_floor", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_b12"
+when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "b9", value = 1 },
+]
+outcome = { line_keys = ["l_b12_1", "l_b12_2", "l_b12_3"], unlocks = [{ unlock_kind = "feature", id = "cellar" }] }
+
+# ---------- SL20: the bear at the bloom ----------
+
+# Its season: ninety-six hours of the season's clock, a hidden clock's action (requires reads only unlocks).
+[[triggers]]
+id = "t_bear_season"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 96 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "bear_season" }] }
+
+# Never drawn: hours past the bear's season opening.
+[[stores]]
+id = "bear_season"
+label_key = "store_bear_season"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "bear_season"
+label_key = "action_bear_season"
+makes = [{ store = "bear_season", items_per_hour = 1 }]
+
+# Five hours after the vigil, in the bear's season: its sign at the bloom, a finite pool of hunts.
+[[triggers]]
+id = "t_bear_sign"
+when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "bear_season", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_bear_sign"]
+stores = [{ store = "bear_sign", items = 6 }]
+unlocks = [
+  { unlock_kind = "store", id = "bear_sign" },
+  { unlock_kind = "store", id = "tallow" },
+  { unlock_kind = "card", id = "hunt_bear" },
+  { unlock_kind = "feature", id = "combat" },
+]
+
+# The lamps' clock starts with the sign (t_bear_sign's condition, so one moment).
+[[triggers]]
+id = "t_sign_clock"
+when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "bear_season", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "action", id = "sign_clock" }] }
+
+# Never drawn: hours since the bear's sign (SL20), the lamps' clock.
+[[stores]]
+id = "sign_clock"
+label_key = "store_sign_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "sign_clock"
+label_key = "action_sign_clock"
+makes = [{ store = "sign_clock", items_per_hour = 1 }]
+
+# The hunts left this season: a pool nothing refills.
+[[stores]]
+id = "bear_sign"
+label_key = "store_bear_sign"
+cap_items = 6
+
+[[stores]]
+id = "tallow"
+label_key = "store_tallow"
+cap_items = 6
+
+[[stores]]
+id = "bear_lost"
+label_key = "store_bear_lost"
+cap_items = 20000
+
+[[threats]]
+id = "ash_bear"
+label_key = "threat_ash_bear"
+base = 16
+
+# A fight card on the hands whose pool ends it, as everything has a cap: the player's to seek, never a raid.
+[[cards]]
+id = "hunt_bear"
+presentation = "action"
+label_key = "c_hunt_bear"
+work_s = 2400
+skill = "melee"
+xp_per_hour = 2
+failed_line_key = "l_hunt_bear_fail"
+inputs = [{ store = "smoked", items = 2 }, { store = "bear_sign", items = 1 }]
+outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }, { store = "tallow", items = 2 }] }
+fight = { side = "hands", threat = "ash_bear", lost = "bear_lost", wounds = [{ store = "hurt", items = 2 }], won_line_keys = ["l_fight_bear_won_1", "l_fight_bear_won_2"], lost_line_keys = ["l_fight_bear_lost_1", "l_fight_bear_lost_2"] }
+
+# The bear's page, with its sign (t_bear_sign's condition, one moment): its odds read unknown until the first hunt.
+[[entries]]
+id = "e_bear"
+section = "creatures"
+sketch = "ash_bear"
+hand = "ink"
+runners = ["hunt_bear"]
+
+[[notes]]
+id = "n_bear_1"
+entry = "e_bear"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "bear_season", value = 1 }]
+hand = "ink"
+
+# Already there when the page is first written: the old hand's knot by the gutter.
+[[notes]]
+id = "n_gutter_1"
+entry = "e_bear"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "bear_season", value = 1 }]
+hand = "pencil"
+sketch = "gutter_knot"
+
+# ---------- SL21: lamps at the gate ----------
+
+# Fifteen hours after the bear's sign, on its clock.
+[[triggers]]
+id = "t_lamps"
+when = { test = "at_least", subject_kind = "store", id = "sign_clock", value = 15 }
+outcome = { line_keys = ["l_lamps"], unlocks = [{ unlock_kind = "card", id = "tallow_lamps" }] }
+
+# Three stages, the last holding the gap; run by its order card, as hide_flaps is.
+[[cards]]
+id = "tallow_lamps"
+presentation = "craft"
+label_key = "c_tallow_lamps"
+upside_key = "up_tallow_lamps"
+work_s = 600
+cap = 3
+failed_line_key = "l_lamps_fail"
+inputs = [{ store = "tallow", items = 2 }, { store = "stakes", items = 2 }]
+line_keys = ["l_lamps_1", "l_lamps_2", "l_lamps_done"]
+[cards.finished]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 10000, source = "tallow_lamps" }]
+
+[[order_cards]]
+store = "tallow"
+tap_card = "tallow_lamps"
+when = { test = "at_least", subject_kind = "store", id = "tallow", value = 2, release = 2 }
+offered_after = { unlock_kind = "card", id = "tallow_lamps" }
+
+# ---------- the camp's asks while the cellar goes down ----------
+
+# Day eleven's asks carried on (day_nine.toml, "the camp's asks"): offers of no kind, each on its own moment (a stage of
+# the dig, then the dig's clock every few hours to fifty) and after the last is answered, so they come in order at the
+# player's pace, one a return on the routes' usual gaps.
+[[offers]]
+id = "o_spoil"
+text_key = "o_spoil"
+gate = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_ditch", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "dig", value = 1 },
+]
+
+[[offers.answers]]
+id = "o_spoil_ring"
+label_key = "a_spoil_ring"
+cost_key = "a_spoil_ring_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "spoil_ring" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "spoil_ring" }]
+
+[[offers.answers]]
+id = "o_spoil_stones"
+label_key = "a_spoil_stones"
+cost_key = "a_spoil_stones_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
+
+[[offers]]
+id = "o_cradle"
+text_key = "o_cradle"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_spoil", value = 1 }]
+
+[[offers.answers]]
+id = "o_cradle_fire"
+label_key = "a_cradle_fire"
+cost_key = "a_cradle_fire_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_cradle_fire" }]
+
+[[offers.answers]]
+id = "o_cradle_hut"
+label_key = "a_cradle_hut"
+cost_key = "a_cradle_hut_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 10500, source = "o_cradle_hut" }]
+
+[[offers]]
+id = "o_shaft"
+text_key = "o_shaft"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 16 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cradle", value = 1 }]
+
+[[offers.answers]]
+id = "o_shaft_bind"
+label_key = "a_shaft_bind"
+cost_key = "a_shaft_bind_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "shaft_bound" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "hands", kind = "add_bp", amount_bp = 1000, source = "shaft_bound" }]
+
+[[offers.answers]]
+id = "o_shaft_plain"
+label_key = "a_shaft_plain"
+cost_key = "a_shaft_plain_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "scrap", items = 4 }]
+
+[[offers]]
+id = "o_cold_air"
+text_key = "o_cold_air"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_shaft", value = 1 }]
+
+[[offers.answers]]
+id = "o_cold_air_meat"
+label_key = "a_cold_air_meat"
+cost_key = "a_cold_air_meat_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "meat_below" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "larder", kind = "add_bp", amount_bp = 1000, source = "meat_below" }]
+
+[[offers.answers]]
+id = "o_cold_air_rack"
+label_key = "a_cold_air_rack"
+cost_key = "a_cold_air_rack_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "rack_kept" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "rack", kind = "add_bp", amount_bp = 1000, source = "rack_kept" }]
+
+[[offers]]
+id = "o_lean_to"
+text_key = "o_lean_to"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 24 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cold_air", value = 1 }]
+
+[[offers.answers]]
+id = "o_lean_to_wood"
+label_key = "a_lean_to_wood"
+cost_key = "a_lean_to_wood_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 11000, source = "o_lean_to_wood" }]
+
+[[offers.answers]]
+id = "o_lean_to_hides"
+label_key = "a_lean_to_hides"
+cost_key = "a_lean_to_hides_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "cap", id = "pelt", kind = "mul_bp", amount_bp = 15000, source = "o_lean_to_hides" }]
+
+[[offers]]
+id = "o_lye"
+text_key = "o_lye"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 33 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_lean_to", value = 1 }]
+
+[[offers.answers]]
+id = "o_lye_bedding"
+label_key = "a_lye_bedding"
+cost_key = "a_lye_bedding_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_lye_bedding" }]
+
+[[offers.answers]]
+id = "o_lye_pot"
+label_key = "a_lye_pot"
+cost_key = "a_lye_pot_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 10500, source = "o_lye_pot" }]
+
+[[offers]]
+id = "o_wet"
+text_key = "o_wet"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 38 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_lye", value = 1 }]
+
+[[offers.answers]]
+id = "o_wet_drain"
+label_key = "a_wet_drain"
+cost_key = "a_wet_drain_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_wet_drain" }]
+
+[[offers.answers]]
+id = "o_wet_pave"
+label_key = "a_wet_pave"
+cost_key = "a_wet_pave_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
+
+[[offers]]
+id = "o_crows"
+text_key = "o_crows"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 40 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_wet", value = 1 }]
+
+[[offers.answers]]
+id = "o_crows_off"
+label_key = "a_crows_off"
+cost_key = "a_crows_off_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "crows_off" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "rack", kind = "add_bp", amount_bp = 1000, source = "crows_off" }]
+
+[[offers.answers]]
+id = "o_crows_be"
+label_key = "a_crows_be"
+cost_key = "a_crows_be_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "crows_kept" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "crows_kept" }]
+
+[[offers]]
+id = "o_sag"
+text_key = "o_sag"
+gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 50 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_crows", value = 1 }]
+
+[[offers.answers]]
+id = "o_sag_prop"
+label_key = "a_sag_prop"
+cost_key = "a_sag_prop_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_sag_prop" }]
+
+[[offers.answers]]
+id = "o_sag_down"
+label_key = "a_sag_down"
+cost_key = "a_sag_down_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "dry_wood", items = 6 }]
+
+# ---------- S3 and night 14 ----------
+
+# S3 on the season's clock (B8 at 168 h on every route: 318 h), so it comes after B12 on typical and before dusk 14 on
+# every route. A32 shows with it, unready, its countdown the season's clock: queueable When ready.
+[[triggers]]
+id = "t_sitter"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 150 }
+outcome = { line_keys = ["l_sitter_1", "l_sitter_2"], unlocks = [{ unlock_kind = "feature", id = "sitter" }, { unlock_kind = "card", id = "sit_last_night" }] }
+
+# Dusk 14 at 330 h on the calendar, a hidden clock the scene's night grade reads, so it opens nothing to see.
+[[stores]]
+id = "night_14"
+label_key = "store_night_14"
+cap_items = 20
+hidden = true
+
+[[standing]]
+id = "night_14"
+label_key = "action_night_14"
+makes = [{ store = "night_14", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_night_14"
+when = { test = "after_time", value = 1188000 }
+outcome = { line_keys = ["l_night_14"], unlocks = [{ unlock_kind = "action", id = "night_14" }] }
+
+# A32, an hour into night 14 on the season's clock (B8 at 168 h on every route); S3 opens it, and its require reads
+# the clock itself, so its countdown shows from S3.
+[[cards]]
+id = "sit_last_night"
+presentation = "narrative"
+label_key = "c_sit_last_night"
+work_s = 5
+cap = 1
+glows = true
+failed_line_key = "l_sit_last_night_fail"
+requires = [{ test = "at_least", subject_kind = "store", id = "drift_clock", value = 163 }]
+
+# S4: the last night sat; week 2's last beat, the chapter's end feature.
+[[triggers]]
+id = "t_s4"
+when = { test = "at_least", subject_kind = "card_count", id = "sit_last_night", value = 1 }
+outcome = { line_keys = ["l_s4_1", "l_s4_2", "l_s4_3"], unlocks = [{ unlock_kind = "feature", id = "week_two_end" }] }
+
+# ---------- the slow skills' methods ----------
+
+# A method each for Cooking, Arcana and Melee (their rates: docs/decisions.md, "Finite, and the walls are the
+# world"), each
+# opened on a moment the chapter already has (o_cold_air's, the bear's sign, B12) whether or not an ask is answered;
+# never on a level ("No gate counts taps"). Melee's levels speed the hunt, and pelt has no sink in week two, so spar
+# runs only from night 14, with sit_last_night.
+[[triggers]]
+id = "t_broth_open"
+when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
+
+[[triggers]]
+id = "t_ring_open"
+when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "stone_ring" }] }
+
+[[triggers]]
+id = "t_spar_open"
+when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "spar" }] }
+
+[[cards]]
+id = "catch_broth"
+presentation = "action"
+label_key = "c_catch_broth"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 300
+skill = "cooking"
+xp_per_hour = 300
+failed_line_key = "l_broth_fail"
+inputs = [{ store = "catch", items = 2 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }] }
+
+[[cards]]
+id = "stone_ring"
+presentation = "action"
+label_key = "c_stone_ring"
+work_s = 60
+skill = "arcana"
+xp_per_hour = 300
+failed_line_key = "l_stone_ring_fail"
+inputs = [{ store = "damp_wood", items = 6 }]
+outcome = { stores = [{ store = "dry_wood", items = 1 }] }
+
+[[cards]]
+id = "spar"
+presentation = "action"
+label_key = "c_spar"
+work_s = 600
+skill = "melee"
+xp_per_hour = 300
+failed_line_key = "l_spar_fail"
+requires = [{ test = "at_least", subject_kind = "store", id = "drift_clock", value = 163 }]
+
+# ---------- levels and finds ----------
+
+# Melee 7 pays the hunt's speed alone; its find beside it, once the dig is open, so a save already past the level gets
+# it at B11's moment.
+[[skill_levels]]
+skill = "melee"
+levels = [{ level = 7, pays_key = "pays_find_melee_7" }]
+
+[[triggers]]
+id = "t_find_melee_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 7 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "dig", value = 1 }]
+outcome = { stores = [{ store = "pelt", items = 1 }], line_keys = ["l_find_gap_wolf"] }
+
+# ---------- the journal ----------
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[entries]]
+id = "e_days_6"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_day_b12"
+entry = "e_days_6"
+gate = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "b9", value = 1 },
+]
+beat = "B12"
+
+# ---------- the Camp ----------
+
+# Day nine's held marker filled in, lifted by the cellar's last stage.
+[[camp_levels]]
+at_items = 2100000
+pays_key = "camp_pays_15"
+pays_from = 24
+pays_to = 36
+held = true
+lifted_by = ["dig_cellar"]
+line_keys = ["l_camp_15"]
+modifiers = [{ target = "cap", id = "fungus", kind = "mul_bp", amount_bp = 15000, source = "camp_15" }]
+
+# Lifted by the last night sat.
+[[camp_levels]]
+at_items = 2700000
+pays_key = "camp_pays_16"
+pays_from = 45
+pays_to = 60
+held = true
+lifted_by = ["sit_last_night"]
+line_keys = ["l_camp_16"]
+modifiers = [{ target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 13334, source = "camp_16" }]
+
+# Held at a "?" past week 2's content, a goal on screen.
+[[camp_levels]]
+at_items = 3400000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- features ----------
+
+[[features]]
+id = "dig"
+
+[[features]]
+id = "cellar"
+
+[[features]]
+id = "sitter"
+
+[[features]]
+id = "spoil_ring"
+label_key = "feature_spoil_ring"
+
+[[features]]
+id = "shaft_bound"
+label_key = "feature_shaft_bound"
+
+[[features]]
+id = "meat_below"
+label_key = "feature_meat_below"
+
+[[features]]
+id = "rack_kept"
+label_key = "feature_rack_kept"
+
+[[features]]
+id = "crows_off"
+label_key = "feature_crows_off"
+
+[[features]]
+id = "crows_kept"
+label_key = "feature_crows_kept"
+
+[[features]]
+id = "week_two_end"
+
+# ---------- aims ----------
+
+# After day eleven's aim_gap: somewhere to keep it all from the dig, the wind seen out from the cellar.
+[[aims]]
+id = "aim_store"
+text_key = "aim_store"
+after = { unlock_kind = "feature", id = "dig" }
+
+[[aims]]
+id = "aim_wind"
+text_key = "aim_wind"
+after = { unlock_kind = "feature", id = "cellar" }
+
+# ---------- text ----------
+
+[line_kinds]
+l_dig_open = "story"
+l_dig_fail = "tap"
+l_dig_stage_1 = "story"
+l_dig_stage_2 = "story"
+l_dig_stage_3 = "story"
+l_dig_done = "story"
+l_morning_13 = "story"
+l_dig_1 = "story"
+l_dig_2 = "story"
+l_steps_1 = "story"
+l_steps_2 = "story"
+l_b12_1 = "story"
+l_b12_2 = "story"
+l_b12_3 = "story"
+l_bear_sign = "find"
+l_hunt_bear_fail = "tap"
+l_fight_bear_won_1 = "fight"
+l_fight_bear_won_2 = "fight"
+l_fight_bear_lost_1 = "fight"
+l_fight_bear_lost_2 = "fight"
+l_lamps = "story"
+l_lamps_fail = "tap"
+l_lamps_1 = "story"
+l_lamps_2 = "story"
+l_lamps_done = "story"
+l_sitter_1 = "story"
+l_sitter_2 = "story"
+l_night_14 = "story"
+l_sit_last_night_fail = "tap"
+l_s4_1 = "story"
+l_s4_2 = "story"
+l_s4_3 = "story"
+l_find_gap_wolf = "find"
+l_broth_fail = "tap"
+l_stone_ring_fail = "tap"
+l_spar_fail = "tap"
+l_camp_15 = "level"
+l_camp_16 = "level"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-twelve routes give each line its states and the writers'
+# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# release: replace each value, never the marker's spelling.
+l_dig_open = "the larder is full. the rest has nowhere to go."
+store_dig_clock = "clock"
+action_dig_clock = "Clock"
+c_dig_cellar = "Dig a storage pit"
+up_dig_cellar = "{pct} root capacity, {pct_b} larder strength, picks take less from the stumps"
+l_dig_fail = "the props need more than the pile gives."
+l_dig_stage_1 = "stakes go in to hold the sides."
+l_dig_stage_2 = "damp wood braces the driven stakes."
+l_dig_stage_3 = "the shoring is set firm."
+l_dig_done = "you set the last props. the walls hold."
+store_morning_13 = "clock"
+action_morning_13 = "Clock"
+l_morning_13 = "grey light. one mark on the board by the fire."
+l_dig_1 = "you dig at the ruin's north wall before anyone asks where."
+l_dig_2 = "only then do you look round. nobody minds."
+l_steps_1 = "under the ash, the spade rings on cut stone."
+l_steps_2 = "whole steps lead down. cold air comes up dry."
+store_b12_floor = "clock"
+action_b12_floor = "Clock"
+l_b12_1 = "square, dry, dug for food. not a crumb, not a mouse."
+l_b12_2 = "a board scored in fives. the last group has four."
+l_b12_3 = "a stool in the corner, short on the same leg as the fire's."
+store_bear_season = "clock"
+action_bear_season = "Clock"
+store_sign_clock = "clock"
+action_sign_clock = "Clock"
+l_bear_sign = "the bloom is eaten off the birch. claw marks above your reach."
+store_bear_sign = "bear sign"
+store_tallow = "tallow"
+store_bear_lost = "bear hunts lost"
+threat_ash_bear = "Bear"
+c_hunt_bear = "Hunt the bear"
+l_hunt_bear_fail = "you do not have what this hunt takes."
+l_fight_bear_won_1 = "the bear falls. you take meat, fat and a pelt."
+l_fight_bear_won_2 = "the bear goes down in the trees. meat and fat come home."
+l_fight_bear_lost_1 = "the bear is bigger than its sign. you come back with nothing."
+l_fight_bear_lost_2 = "the bear keeps the trail. you walk home empty."
+n_bear_1 = "fungus shelves torn off the dead birch and eaten. claw marks higher than i could reach. i guessed bear; nobody had seen it"
+n_gutter_1 = "knot near the gutter"
+l_lamps = "bear fat melts in the stew pot. you split stakes to take it."
+c_tallow_lamps = "Make tallow lamps"
+up_tallow_lamps = "{pct} strength at the gap"
+l_lamps_fail = "the lamps are short of what they take."
+l_lamps_1 = "the fat clouds as it cools in the stakes."
+l_lamps_2 = "a row of filled stakes, set out to firm."
+l_lamps_done = "lamps stand lit on the gate posts."
+o_spoil = "{n6} asks where the spoil should go."
+a_spoil_ring = "He banks it outside"
+a_spoil_ring_cost = "{pct} gap strength"
+a_spoil_stones = "He sieves it for stones"
+a_spoil_stones_cost = "stones now"
+o_cradle = "Their child won't sleep in the hut, {n5} says."
+a_cradle_fire = "She makes a bed by the fire"
+a_cradle_fire_cost = "{pct} rest"
+a_cradle_hut = "She moves the pot inside"
+a_cradle_hut_cost = "{pct} stew"
+o_shaft = "The spear's shaft has split. {n7} pulls iron from the scrap."
+a_shaft_bind = "He collars it in iron"
+a_shaft_bind_cost = "{pct} hunting strength"
+a_shaft_plain = "He cuts a plain shaft"
+a_shaft_plain_cost = "scrap now"
+o_cold_air = "Lucy thinks the cold at the bottom of the dig would keep meat."
+a_cold_air_meat = "She keeps it in the cold"
+a_cold_air_meat_cost = "{pct} larder strength"
+a_cold_air_rack = "She keeps it on the rack"
+a_cold_air_rack_cost = "{pct} drying wall strength"
+o_lean_to = "On the hut's side, {n2} has poles up for a lean-to."
+a_lean_to_wood = "He keeps wood under it"
+a_lean_to_wood_cost = "{pct} dry wood capacity"
+a_lean_to_hides = "He keeps hides under it"
+a_lean_to_hides_cost = "{pct} pelt capacity"
+o_lye = "Roof ash gives {n5} lye for one hard scrub."
+a_lye_bedding = "She scrubs the bedding"
+a_lye_bedding_cost = "{pct} rest"
+a_lye_pot = "She scrubs the stew pot"
+a_lye_pot_cost = "{pct} stew"
+o_wet = "{n2} finds a wet corner of the hut, where ash-water runs in."
+a_wet_drain = "He drains it to the ditch"
+a_wet_drain_cost = "{pct} rest"
+a_wet_pave = "He digs the corner out"
+a_wet_pave_cost = "stones now"
+o_crows = "The crows have come down off the ridge to the rack."
+o_sag = "Ash bows the hut roof. {n6} tests it by hand."
+a_sag_prop = "He props the roof up"
+a_sag_prop_cost = "{pct} rest"
+a_sag_down = "He lays the roof lower"
+a_sag_down_cost = "dry wood now"
+a_crows_off = "{n4} drives them off"
+a_crows_off_cost = "{pct} drying wall strength"
+a_crows_be = "{n4} lets them be"
+a_crows_be_cost = "{pct} gap strength"
+l_sitter_1 = "a grey wolf sits at the edge of the light, facing the fire."
+l_sitter_2 = "it sits on. the guard does not move, and neither does it."
+store_night_14 = "night"
+action_night_14 = "Night"
+l_night_14 = "the light drops. the wolf remains."
+c_sit_last_night = "Sit the night out"
+l_sit_last_night_fail = "you sit with the fire. nothing comes of it."
+l_s4_1 = "the wind drops at once. ash comes down lighter."
+l_s4_2 = "everyone is near the coals. the guard is at the gap."
+l_s4_3 = "the edge of the light is empty. no prints where it sat."
+pays_find_melee_7 = "a pelt, {pct} hunting speed"
+l_find_gap_wolf = "at the gap, an old wolf is dead. you skin it."
+c_catch_broth = "Stew the catch"
+l_broth_fail = "the catch won't stretch to a pot."
+c_stone_ring = "Stack damp wood round the stone to dry"
+l_stone_ring_fail = "too little damp wood to stack around the stone."
+c_spar = "Spar with spears"
+l_spar_fail = "not yet. there is other work first."
+n_day_b12 = "the dig went through into a cellar under the ruin, square and dry, dug for keeping stores. a board on the wall, scored in groups, the last group unfinished"
+camp_pays_15 = "fungus holds {to}, was {from}"
+l_camp_15 = "more fungus fits in the store."
+camp_pays_16 = "smoked holds {to}, was {from}"
+l_camp_16 = "there is space for more smoked meat."
+aim_store = "find somewhere to keep it all."
+aim_wind = "sit out the wind."
+feature_spoil_ring = "spoil banked against the ring"
+feature_shaft_bound = "spear collared in iron"
+feature_meat_below = "meat hung in the dig"
+feature_rack_kept = "meat kept on the rack"
+feature_crows_off = "crows kept off the rack"
+feature_crows_kept = "crows left at the rack"
+# ---------- end of lines ----------

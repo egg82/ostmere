@@ -1,0 +1,17 @@
+key	reason
+l_old_watch	not true in a state: t_old_watch requires only pair_3h, and the watch fire (watch_done 2) is an optional build, so "feeds the watch fire" names a fire some saves never built; the gap is there on every save (day four's l_his_watch fix). "settles", not "sits", to keep clear of l_his_watch's "sits at the gap"; "stands by" keeps Lucy there a while before she goes
+l_night_6	not true in a state: nothing gates t_night_6 on pair_joined, and the pair's bay can still be unanswered or unbuilt at night 6 (o_pair waits on screen; make_bay2 needs the damp wood store full), so "five" can be three; "everyone" holds at any count and keeps the day's sit thread
+l_seed	checked, kept: it stands alone when no rule ever taps n3_dig_bed (the bed is a ruled build), and reads stronger for it; after the stages, dig_bed_done's bare ground pairs with it
+l_ridge_1/l_ridge_2	checked, kept: the repeated "sit" is the carrier, and the narration's "nothing sits there" makes the shapes the player's alone; no other word in the pair repeats
+l_join2_1	checked, kept: linecheck flags "stool" from day two's and day three's must-nots, but day five's brief gives the stool as the beat's fact
+lane_n4	label: "His hands" is already day three's n2 lane, on screen at the same time; the old man's lane says whose it is. lane_n3 follows for symmetry, and Lucy's lane shows her name, so "Her hands" would also be free, but action_n1_eating is already "Her share"
+action_n3_eating	label: "Her share" and "His share" are taken by Lucy and the man (action_n1_eating, action_n2_eating) and would show twice in the ledger
+lane_n3_named	name slot: holds the unnamed label, as day three's lane_n2_named does, until the engine's name slot lands; same for lane_n4_named
+c_hand_on_stone	label: "Dry wood ..." reads as the store's name; "Dry damp wood" makes dry the verb and names the input. "Hold wood to the stone" would contradict l_stone_first, where the palm is on the stone and the stick in the other hand
+c_hearth_stones	label: "Ring the pot ..." would echo l_stones_fail's "ring the pot" and day one's "Ring the spot with stones"
+pays_dry_kindling	label: a find with no modifier, so no slot carries its dry wood amount; it names the find only, as pays_find does
+pays_stone_smoke	label: the modifier is on smoke_catch's work only, not smoke_roots, so "smoking speed" alone would overclaim
+dayend5_1	label: day four's line and day three's would echo; no count, since the pair may not have joined by night 6
+l_join2_2	name slot: the design's "both names"; the line keeps its own verb ("names them") and gives hers first, his second, as the lanes take them. The line itself unlocks pair_joined, so both have joined
+l_seed	name slot: the design names her; t_seed waits on pair_3h, which only t_pair_joins starts, so it always follows l_join2_2
+l_old_watch	name slot: the design names him; same gate as l_seed (pair_3h). l_dig_bed_done, l_n4_watch_dry and the eating labels keep "the woman" and "the old man": the design names no one there

@@ -1,0 +1,9 @@
+beats sharp (pace_scale 1): B8 day 7, target_day 8, B9 day 7.65, target_day 9
+  away V61->V62: 2 ['trigger t_stakes_full', 'trigger t_b8']
+  away V62->V63: 0 []
+  away V63->V64: 1 ['trigger offer_o_posts']
+  away V64->V65: 1 ['trigger t_roofs']
+  away V65->V66: 1 ['trigger t_roofs_first']
+  away V66->V67: 1 ['trigger t_ash_ground']
+  away V67->V68: 0 []
+  away V68->V69: 3 ['trigger t_pack_near', 'trigger t_b9', 'trigger t_gap_fire']

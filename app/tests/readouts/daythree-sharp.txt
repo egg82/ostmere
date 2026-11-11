@@ -1,0 +1,1 @@
+beats sharp (pace_scale 1): B5 day 3.08, target_day 4

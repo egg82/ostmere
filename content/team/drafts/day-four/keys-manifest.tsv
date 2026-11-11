@@ -1,0 +1,59 @@
+# Day-four keys manifest: every key in day_four.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 53
+key	kind	limit	alt	brief
+store_dawn_5	store label	n/a	-	-
+action_dawn_5	action label	n/a	-	-
+store_fog_lift	store label	n/a	-	-
+chip_fogbound	chip label	n/a	-	-
+chip_fogbound_cost	chip label	n/a	-	-
+store_day_5	store label	n/a	-	-
+action_day_5	action label	n/a	-	-
+store_sign_2h	store label	n/a	-	-
+action_sign_2h	action label	n/a	-	-
+c_n2_watch	card label	n/a	-	-
+c_woodshed	card label	n/a	-	-
+up_woodshed	upside label	n/a	-	-
+store_night_5	store label	n/a	-	-
+action_night_5	action label	n/a	-	-
+skill_arcana	skill label	n/a	-	-
+store_dawn_6	store label	n/a	-	-
+action_dawn_6	action label	n/a	-	-
+camp_pays_11	camp label	n/a	-	-
+dayend4_title	end card	n/a	-	-
+dayend4_1	end card	n/a	-	-
+dayend4_2	end card	n/a	-	-
+aim_dry	aim label	n/a	-	-
+aim_stone	aim label	n/a	-	-
+l_morning_5	line	line<=75; set median<=45,p90<=75	-	-
+l_fog_1	line	line<=75; set median<=45,p90<=75	H	-
+l_fog_roofed	line	line<=75; set median<=45,p90<=75	-	-
+l_fog_open	line	line<=75; set median<=45,p90<=75	-	-
+l_sign_1	line	line<=75; set median<=45,p90<=75	H	-
+l_sign_2	line	line<=75; set median<=45,p90<=75	H	-
+l_his_watch	line	line<=75; set median<=45,p90<=75	-	-
+l_his_watch_dry	fail	line<=75; set median<=45,p90<=75	-	-
+l_shed_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_shed_1	line	line<=75; set median<=45,p90<=75	-	-
+l_shed_2	line	line<=75; set median<=45,p90<=75	-	-
+l_shed_done	line	line<=75; set median<=45,p90<=75	-	-
+l_stack4_1	line	line<=75; set median<=45,p90<=75	H	l_stack_1
+l_stack4_2	line	line<=75; set median<=45,p90<=75	H	l_stack_2
+l_night_5	line	line<=75; set median<=45,p90<=75	-	-
+l_sit_up_5_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_b6_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b6_2	line	line<=75; set median<=45,p90<=75	H	-
+l_b6_3	line	line<=75; set median<=45,p90<=75	H	-
+l_camp_11	line	line<=75; set median<=45,p90<=75	-	-
+pays_find_for_11	pays label	n/a	-	-
+l_find_for_11	line	line<=75; set median<=45,p90<=75	-	l_find_ashroot_bank
+pays_find_scav_19	pays label	n/a	-	-
+l_find_scav_19	line	line<=75; set median<=45,p90<=75	-	l_find_pot_hook
+pays_find_scav_20	pays label	n/a	-	-
+l_find_scav_20	line	line<=75; set median<=45,p90<=75	-	l_find_hoop
+pays_find_wc_20	pays label	n/a	-	-
+l_find_wc_20	line	line<=75; set median<=45,p90<=75	-	l_find_dry_birch
+pays_find_cook_6	pays label	n/a	-	-
+l_find_cook_6	line	line<=75; set median<=45,p90<=75	-	l_find_thick_stew

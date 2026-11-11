@@ -1,0 +1,19 @@
+key	reason
+l_combat_first	not clear in a state: bank_fire_6 needs arrivals 3, which only the pair's two arrivals reach, so the old man is in camp at every reading and "he" after three wolf lines can be either man; only a day-three detail (the headless spear) says which. {n2} names him, joined since day four on every route, and keeps the shaft as day four's l_his_watch names it
+l_fight_rats_lost_2	not true in a state: "rolled off the stones" needs the larder floor, an optional build (larder_floor, day three), and the rats run on every save; "the ends dragged away" shows the loss with no floor assumed and repeats no word of the pool's other five lines
+l_b7_3	checked, kept: a present-only moment on every route, so everyone turning to the eyes is an event, not a claim about a state; the rack at their backs is what l_stand_3 pays off
+l_stand_3	checked, kept, data gap: the line is true once b7_clock runs out, but b7_stand (work 20 s) has no requirement, so a present player can finish it while the strip has taken a sliver of the hang; fix in data (b7_stand waits on b7_clock at most 0), not in the line
+l_bank_fire_6_fail	checked, kept: pairs with the card's new label; true whichever requirement is short
+c_bank_fire_6	label: day five's l_night_6 has already buried the coals, which is banking; "Bank the fire" would ask for it twice. "Tend the fire" reads after a banked fire and fits l_bank_fire_6_fail
+action_b7_strip	label: the drain line on smoked and catch while the strip runs; named for who takes it, as day one's "Losses" is, once l_b7_1..3 have shown them
+c_b7_stand	label: the design's "drive them off", with the wolves named since the card can sit on screen after its lines scroll
+side_rack	label: the rack is "the drying wall" in day three's labels (c_rack_roof); one name throughout
+threat_ashrats	label: the lines call them rats; the id is not a name
+up_make_spear	label: the spear's entry is on the hands side, which only the hunt fights; "hunting strength" says which fight it helps, and the fight panel's own words are only "yours" and "theirs"
+chip_hurt_cost	label: two values, the lane's (-15%) and the side's (-25%), in effects order; "hands speed" is day one's chip wording for the same lane
+pays_hunt_side	label: Melee 2 and 4 add to the same side as the spear, so the same words
+pays_hunt_faster	label: a work modifier on hunt_wolf alone; "hunting speed" as the other skills' "{skill} speed"
+pays_melee_find	label: a find with no modifier, so no slot; names the find only, as pays_dry_kindling does
+store_hunt_lost	label: never unlocked tallies (also the rat and crow ones); plain counts in case a debug view draws them
+aim_keep	label: aim voice, lowercase; stands from the strip until week 2, so it names what is still at stake and no beat
+ui.fight.since	label: now "{runner}: {won} won, {lost} lost". The summary stands in for one runner's window in the arrival queue, where hunt, rat and crow windows can show side by side with no heading; without {runner} two summaries read as the same line (the client test shows exactly that). "won" mirrors the single-fight entries it replaces ("{runner}: won"); {fought} goes, being the sum of the two. The ledger's ui.fight.tally sits under its threat's name, so it keeps "{fought} fought, {lost} lost"

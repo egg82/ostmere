@@ -1,0 +1,51 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_chip_card_ruled_lane.py): a ruled lane whose one
+# card cures a chip, and the chip's order card tapping it. Not story: the ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_heat"
+label_key = "t_s_heat"
+cap_items = 10
+initial_items = 10
+
+[[standing]]
+id = "t_chill"
+label_key = "t_a_chill"
+costs = [{ store = "t_heat", items_per_hour = 4 }]
+
+[[lanes]]
+id = "t_helper"
+label_key = "t_l_helper"
+ruled = true
+
+[[cards]]
+id = "t_stoke"
+lane = "t_helper"
+presentation = "action"
+label_key = "t_c_stoke"
+work_s = 60
+makes = [{ store = "t_heat", items_per_hour = 20 }]
+
+[[chips]]
+id = "t_cold"
+label_key = "t_ch_cold"
+tone = "cold"
+when = { test = "at_most", subject_kind = "store", id = "t_heat", value = 3, release = 6 }
+
+[[order_cards]]
+store = "t_heat"
+tap_card = "t_stoke"
+chip = "t_cold"
+when = { test = "at_most", subject_kind = "store", id = "t_heat", value = 3, release = 6 }
+
+[[triggers]]
+id = "t_start"
+when = { test = "at_least", subject_kind = "store", id = "t_heat", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "t_chill" }, { unlock_kind = "card", id = "t_stoke" }, { unlock_kind = "chip", id = "t_cold" }] }
+
+[text]
+t_s_heat = "Warmth"
+t_a_chill = "Chill"
+t_l_helper = "Helper"
+t_c_stoke = "Stoke"
+t_ch_cold = "Cold"

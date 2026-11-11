@@ -1,0 +1,318 @@
+# Day six: from B7 through story day 7 (morning 7, the first hunts, the pelts, dusk 7 on the calendar) to night 7, the
+# end of week 1, as data merged after b7.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner.
+# Spec: content/team/days-four-to-seven.md, "Day six"; numbers: content/team/days-four-to-seven-numbers.md. In
+# schema.IN_WRITING until its lines are written (days-four-to-seven plan, item 8).
+version = 1
+end_feature = "still_end"
+
+# ---------- morning 7, SL12, the pests' first counts ----------
+
+# The hour after A27 (b7.toml's b7_stand). Day six's moments key on morning 7's feature.
+[[triggers]]
+id = "t_dawn_7"
+when = { test = "at_least", subject_kind = "card_count", id = "b7_stand", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_7" }, { unlock_kind = "card", id = "sit_fire_7" }] }
+
+# Never unlocked: the hour after A27, in twentieths.
+[[stores]]
+id = "dawn_7"
+label_key = "store_dawn_7"
+cap_items = 20
+
+[[standing]]
+id = "dawn_7"
+label_key = "action_dawn_7"
+makes = [{ store = "dawn_7", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_morning_7"
+when = { test = "at_least", subject_kind = "store", id = "dawn_7", value = 20 }
+outcome = { line_keys = ["l_morning_7"], unlocks = [{ unlock_kind = "feature", id = "morning_7" }, { unlock_kind = "action", id = "day_7" }] }
+
+# SL12: the spear made.
+[[triggers]]
+id = "t_spear_made"
+when = { test = "at_least", subject_kind = "card_count", id = "make_spear", value = 1 }
+outcome = { line_keys = ["l_spear"] }
+
+[[triggers]]
+id = "t_rats_first"
+when = { test = "at_least", subject_kind = "store", id = "rats_fought", value = 1 }
+outcome = { line_keys = ["l_rats_first"] }
+
+[[triggers]]
+id = "t_crows_first"
+when = { test = "at_least", subject_kind = "store", id = "crows_fought", value = 1 }
+outcome = { line_keys = ["l_crows_first"] }
+
+# ---------- G1, the bedding, SL14 ----------
+
+# G1: the first hunt home. The bedding opens with it, one moment, and SL13's clock starts. It counts the hunt, not its
+# pelt: a fight pays by the share won, so a pelt can take more than one hunt (engine DESIGN.txt, a fighting trip's finds
+# read CardCount, won or lost; decisions.md, "No gate counts taps").
+[[triggers]]
+id = "t_first_pelt"
+when = { test = "at_least", subject_kind = "card_count", id = "hunt_wolf", value = 1 }
+[triggers.outcome]
+line_keys = ["l_hunt_1", "l_hunt_2"]
+unlocks = [
+  { unlock_kind = "feature", id = "first_pelt" },
+  { unlock_kind = "card", id = "pelt_bedding" },
+  { unlock_kind = "action", id = "pelt_6h" },
+]
+
+# Staged on the hands, queued When ready, a pelt a stage; its last stage (SL14) makes rest a fifth faster.
+[[cards]]
+id = "pelt_bedding"
+presentation = "craft"
+label_key = "c_pelt_bedding"
+upside_key = "up_pelt_bedding"
+work_s = 1800
+cap = 6
+failed_line_key = "l_bedding_fail"
+inputs = [{ store = "pelt", items = 1 }, { store = "damp_wood", items = 6 }]
+line_keys = ["l_bedding_1", "l_bedding_2", "l_bedding_3", "l_bedding_4", "l_bedding_5", "l_bedding_done"]
+[cards.finished]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 12000, source = "pelt_bedding" }]
+
+# ---------- SL13, o_pelt ----------
+
+# Never unlocked: the six game hours after G1, in twentieths.
+[[stores]]
+id = "pelt_6h"
+label_key = "store_pelt_6h"
+cap_items = 120
+
+[[standing]]
+id = "pelt_6h"
+label_key = "action_pelt_6h"
+makes = [{ store = "pelt_6h", items_per_hour = 20 }]
+
+# SL13's moment: two hours after G1 once her bed is dug (day five's n3_dig_bed, feature turned_ground), else six.
+[[triggers]]
+id = "t_pelt_ask_bed"
+when = { test = "at_least", subject_kind = "store", id = "pelt_6h", value = 40 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "turned_ground", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "feature", id = "pelt_ask" }] }
+
+[[triggers]]
+id = "t_pelt_ask_late"
+when = { test = "at_least", subject_kind = "store", id = "pelt_6h", value = 120 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "pelt_ask" }] }
+
+# An answer outcome cannot take a store (items are whole and positive), so giving is a one-off the answer queues: it
+# takes the pelt when there is one.
+[[offers]]
+id = "o_pelt"
+text_key = "o_pelt"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pelt_ask", value = 1 }
+line_keys = ["l_pelt_ask"]
+
+[[offers.answers]]
+id = "o_pelt_give"
+label_key = "a_pelt_give"
+cost_key = "a_pelt_give_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "give_pelt" }]
+queues = ["give_pelt"]
+
+[[offers.answers]]
+id = "o_pelt_keep"
+label_key = "a_pelt_keep"
+cost_key = "a_pelt_keep_cost"
+[offers.answers.outcome]
+line_keys = ["l_pelt_kept"]
+
+[[cards]]
+id = "give_pelt"
+presentation = "narrative"
+label_key = "c_give_pelt"
+work_s = 5
+cap = 1
+failed_line_key = "l_give_pelt_fail"
+inputs = [{ store = "pelt", items = 1 }]
+line_keys = ["l_pelt_given"]
+
+# ---------- the day's length, held to the calendar ----------
+
+# Game hours since morning 7, in twentieths; six hours is the day's least.
+[[stores]]
+id = "day_7"
+label_key = "store_day_7"
+cap_items = 120
+
+[[standing]]
+id = "day_7"
+label_key = "action_day_7"
+makes = [{ store = "day_7", items_per_hour = 20 }]
+
+# The calendar: dusk 7 never falls before 162 h of save time, the calendar's day 7 evening, so night 7 falls before
+# the season's turn at 168 h (beats.yaml, B8) on every route.
+[[triggers]]
+id = "t_floor_7"
+when = { test = "after_time", value = 583200 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "floor_7" }] }
+
+[[triggers]]
+id = "t_dusk_7"
+when = { test = "at_least", subject_kind = "store", id = "day_7", value = 120 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "floor_7", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "action", id = "night_7" }] }
+
+# The calendar wins: past 162 h of save time dusk 7 falls as soon as morning 7 has come, however short the day, so a
+# route whose morning comes late still has night 7 before the season's turn.
+[[triggers]]
+id = "t_late_7"
+when = { test = "after_time", value = 583200 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "late_7" }] }
+
+[[triggers]]
+id = "t_dusk_7_late"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "late_7", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_7", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "action", id = "night_7" }] }
+
+# Never unlocked: the seventh night, about an hour in twentieths.
+[[stores]]
+id = "night_7"
+label_key = "store_night_7"
+cap_items = 20
+
+[[standing]]
+id = "night_7"
+label_key = "action_night_7"
+makes = [{ store = "night_7", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_night_7"
+when = { test = "at_least", subject_kind = "store", id = "night_7", value = 5 }
+outcome = { line_keys = ["l_night_7"], unlocks = [{ unlock_kind = "feature", id = "night_7" }] }
+
+# ---------- G2, Camp 12 ----------
+
+# A30, G2: the fire sat in night 7 with the rack hung again. A card, not a trigger, because only a capped card's finish
+# lifts a held Camp level (camp_entries.CampLevelEntry.lifted_by). On the cards from A27, as bank_fire_6
+# with B6; its first hunt keeps G2 after G1. Its finish lifts Camp 12 and lands the chapter's end feature.
+[[cards]]
+id = "sit_fire_7"
+presentation = "narrative"
+label_key = "c_sit_fire_7"
+work_s = 5
+cap = 1
+glows = true
+failed_line_key = "l_sit_fire_7_fail"
+requires = [
+  { test = "at_least", subject_kind = "store", id = "night_7", value = 5 },
+  { test = "at_least", subject_kind = "store", id = "smoked", value = 18 },
+  { test = "at_least", subject_kind = "card_count", id = "hunt_wolf", value = 1 },
+]
+[cards.finished]
+line_keys = ["l_g2_1", "l_g2_2", "l_g2_3"]
+unlocks = [{ unlock_kind = "feature", id = "still_end" }]
+
+# Held at a "?" through day six, a goal on screen; G2 lifts it: smoked holds 36, was 27.
+[[camp_levels]]
+at_items = 900000
+pays_key = "pays_unknown"
+held = true
+lifted_by = ["sit_fire_7"]
+line_keys = ["l_camp_12"]
+modifiers = [{ target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 13334, source = "camp_12" }]
+
+# ---------- features ----------
+
+[[features]]
+id = "morning_7"
+
+[[features]]
+id = "first_pelt"
+
+[[features]]
+id = "pelt_ask"
+
+[[features]]
+id = "floor_7"
+
+[[features]]
+id = "late_7"
+
+[[features]]
+id = "night_7"
+
+# G2: aim_keep stands to B8.
+[[features]]
+id = "still_end"
+
+# ---------- text ----------
+
+[line_kinds]
+l_morning_7 = "story"
+l_spear = "story"
+l_rats_first = "story"
+l_crows_first = "story"
+l_hunt_1 = "story"
+l_hunt_2 = "story"
+l_bedding_fail = "tap"
+l_bedding_1 = "story"
+l_bedding_2 = "story"
+l_bedding_3 = "story"
+l_bedding_4 = "story"
+l_bedding_5 = "story"
+l_bedding_done = "story"
+l_pelt_ask = "story"
+l_pelt_kept = "story"
+l_give_pelt_fail = "tap"
+l_pelt_given = "story"
+l_night_7 = "story"
+l_sit_fire_7_fail = "tap"
+l_g2_1 = "story"
+l_g2_2 = "story"
+l_g2_3 = "story"
+l_camp_12 = "level"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-six routes give each line its states and the writers'
+# pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
+# shipping release: replace each value, never the marker's spelling.
+store_dawn_7 = "dawn"
+action_dawn_7 = "Dawn"
+l_morning_7 = "daylight through an empty rack. lips move, counting."
+l_spear = "iron lashed to the shaft. {n2} hefts it, hands it back."
+l_rats_first = "a big grey rat in the larder. it takes its time."
+l_crows_first = "a crow over the hanging strips, looking down."
+l_hunt_1 = "a wolf by itself, every rib showing, teeth worn down."
+l_hunt_2 = "the meat is lean. it had gone without too."
+c_pelt_bedding = "Lay pelt bedding"
+up_pelt_bedding = "{pct} rest recovery"
+l_bedding_fail = "what you have won't cover a floor."
+l_bedding_1 = "you lay damp wood flat across the bay floors."
+l_bedding_2 = "pelts over the wood, fur up. you knee out the lumps."
+l_bedding_3 = "another pelt down, in the second bay. it still smells of wolf."
+l_bedding_4 = "{n2} takes the pelt nearest the opening."
+l_bedding_5 = "the floors are mostly fur now."
+l_bedding_done = "{n4} lies down on the fur and sleeps through."
+store_pelt_6h = "clock"
+action_pelt_6h = "Clock"
+o_pelt = "Cover {n3}'s ground with a pelt or sacking?"
+l_pelt_ask = "{n3} holds out a hand for a pelt."
+a_pelt_give = "Pelt"
+a_pelt_give_cost = "a pelt"
+a_pelt_keep = "Sacking"
+a_pelt_keep_cost = "nothing"
+l_pelt_kept = "{n3} lays sacking over the ground and weights it."
+c_give_pelt = "Give {n3} a pelt"
+l_give_pelt_fail = "no pelt to hand over."
+l_pelt_given = "{n3} lays the pelt over the ground and weights it."
+store_day_7 = "day"
+action_day_7 = "Day"
+store_night_7 = "night"
+action_night_7 = "Night"
+l_night_7 = "dusk. the strips are already up."
+c_sit_fire_7 = "Sit at the fire"
+l_sit_fire_7_fail = "you stand by the coals. nobody sits."
+l_g2_1 = "the rack hangs heavy. you stop counting."
+l_g2_2 = "lucy sits facing the others, over the flames."
+l_g2_3 = "the smoke leans. beyond the light, nothing."
+l_camp_12 = "room for thirty-six strips, if none touch."
+# ---------- end of lines ----------

@@ -1,0 +1,54 @@
+Wrong implementations of drains and the loader's fractions (engine DESIGN.txt, "DRAINS ... AND FRACTIONS AT THE
+LOADER", invariants 121-132), to plant one at a time in a scratch copy; a test written blind from that part alone must go
+red for each. "Cure" is a card with a drain of A' on store x; "heal" is a standing action costing x; "wound" is a maker
+of x. Record each run below the list as MUTANTS_held.txt does (planted, red, survived, equivalent with the reason).
+
+ 1 plain input     a drain treated as an input: at x = 0 the cure pauses (mixed) or its tap ends interrupted, so a
+                   tap at a low level does not land.                                          [121, 124]
+ 2 pauses its card the drain store at 0 pauses or WAITs the cure in the mix (its other makes, XP and work stop).  [121]
+ 3 below 0         x goes negative under a drain (no clamp at 0), or the clamp is applied only at the next event.
+                                                                                               [121, 122]
+ 4 adds            the forgiven part is paid back to x (x rises by what the drain could not take), or a drain at
+                   0 adds anything.                                                            [122, 127]
+ 5 more than N     a completion takes more than A' (the drain is charged per tap as well as by work, or rounded
+                   up twice), or a drain keeps taking past its card's landing.                     [122]
+ 6 ready at 0      a tap with x = 0 starts (no failed tap, no blocker), or an order's tap acts at 0.  [123]
+ 7 lump at start   a tap takes min(x, A') at its start instant instead of paying by work.        [123, 122]
+ 8 forgives inputs forgiveness reaches the cure's other inputs or costs: an input store at 0 does not pause the cure,
+                   or a completion lands with an input unpaid.                                     [125]
+ 9 heal runs       the heal is not paused at x = 0 while a drain runs on x (the dry rule counts the drain as the
+                   store's only consumer, or skips x because a drain is on it).                     [126]
+10 heal starved    the dry rule counts the drain in its net, so at x = 0 a heal whose cost an inflow covers is
+                   paused anyway.                                                                  [126, 127]
+11 stuck at 0      at x = 0 with an inflow above the drain (n > d), x stays at 0 instead of rising at n - d.  [127]
+12 digest          drains left out of the rules encoding when non-empty: two rules differing only by a drain
+                   share a digest.                                                                 [128]
+13 digest moves    the rules encoding writes `drains: []` for every card, so rules without a drain change digest
+                   and every live save's text changes (compare with a pinned fixture, as
+                   tests/engine/test_pre_fights_save.py does).                                     [128]
+14 cure blind      cure_reading.takes ignores drains: a card that only drains x is not a cure for an at_least
+                   chip on x, and its tap does not cut in.                                         [129]
+15 repeats         a drain card on a declared lane is repeat-eligible: its landings are skipped while x is 0.  [130]
+16 split           the clamp at 0 is computed from the span's start, so advancing in two steps across x reaching 0
+                   differs from one step.                                                          [131]
+17 blocker order   the drain's blocker is read before the inputs' (a card short of an input and at x = 0 reports
+                   the drain), or at a whole A' instead of 1 unit.                                 [123]
+18 validation      accepted: a drain on an unknown store, quantity 0, a store also in the card's inputs, costs,
+                   makes, outcome stores or fight lines, one store drained twice.                  [DRAINS, Validation]
+19 fraction rounds an inexact every_hours or every is rounded (down or to nearest) instead of refused.     [132]
+20 every on value  `every` divides value but not release (or release but not value).                     [132]
+21 every anywhere  `every` accepted on after_time, a card count, a level or an unlock, or on an order card's
+                   `when`.                                                                         [132]
+22 every_hours     every_hours ignored (the rate stays items_per_hour an hour), or applied to XP or the camp's
+                   make flow.                                                                      [132]
+23 tally drain     a drain on a tally store accepted by the loader.                                  [132]
+24 odds on drain   a fight card's odds entries scale its drain (loss_bp or win_bp aimed at the drain's line).
+                                                                                     [DRAINS, "Paid as an input"]
+
+RUNS
+- Suite tests/engine_contract/test_drains_*.py (blind, written from DESIGN.txt's DRAINS part alone). Run: python -m
+  tools.mutate_suite drains --run (specs tools/drains_mutants/mNN.py, each a list of (path, old, new) edits against the
+  implementation, one per row). `--check` fails unless every row is claimed by a test marked @kills(row).
+- Against the implementation: rows 1-24 all KILLED, each with a test that claims it red; no survivors, no equivalent
+  mutants. Row 13 moves every rules digest, so the release-lock fixture would refuse the shipped content before any
+  test ran; its spec rewrites the copy's lock (RELOCK) and the pinned pre-drains fixture's test then goes red alone.

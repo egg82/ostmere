@@ -1,0 +1,7 @@
+{
+  "include": ["ashfall_app", "tests", "tools", "../tools/scene", "../tools/favicon.py", "../tools/ogcard.py", "../tools/galaxy_thumb.py"],
+  "extraPaths": ["tests/cards_contract", "../tools/scene"],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "strict",
+  "reportUnnecessaryTypeIgnoreComment": "error"
+}

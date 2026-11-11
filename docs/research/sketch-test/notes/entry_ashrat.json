@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "claw", "required": true, "text": ["fore claw, side"]},
+  {"kind": "study", "id": "gouges", "required": true, "text": ["root, clawed"]},
+  {"kind": "label", "anchor": [142, 470], "text": ["big front claws"]},
+  {"kind": "label", "anchor": [330, 360], "text": ["fat. grey all over"]},
+  {"kind": "label", "anchor": [536, 452], "text": ["tail bare, ringed"]}
+]

@@ -1,0 +1,63 @@
+key	source	why
+l_dig_open	edit	edit of writer-3: "to the door" cut (flourish)
+l_dig_fail	writer-2	the critic's best
+l_dig_stage_1	writer-1	A's "along the cut" adds nothing beside S1's two lines; shorter
+l_dig_stage_2	writer-1	the critic's best
+l_dig_stage_3	writer-1	C's "the sides keep their place" restates stage 1; shown beside S2's two lines
+l_dig_done	writer-2	the critic's best
+l_morning_13	edit	edit of writer-1: "has its one mark" to "one mark on the board"
+l_dig_1	edit	edit of writer-3: the ruin's wall named, "the spade is in ... ash" to "you dig"
+l_dig_2	edit	edit of writer-3: "to see who minds" cut, "nobody minds" lands it
+l_steps_1	edit	edit of writer-2: "dressed" to "cut", "beneath" to "under"; C's pair keeps the steps for l_steps_2, where A's main gave them twice
+l_steps_2	writer-2	the critic's best
+l_b12_1	writer-3	the critic's best
+l_b12_2	edit	edit of writer-3: "on one wall, marks in" to "scored in"
+l_b12_3	edit	edit of writer-3: "short in the leg like the one" to the brief's "same leg"
+l_bear_sign	edit	edit of writer-3: the birch named, "higher than you reach" to "above your reach"
+l_hunt_bear_fail	writer-2	the critic's best
+l_fight_bear_won_1	writer-1	the critic's best
+l_fight_bear_won_2	edit	edit of writer-3: the critic's B repeats won_1's list in the same pool
+l_fight_bear_lost_1	edit	edit of writer-3: "home" to "back", as lost_2 ends on "home"
+l_fight_bear_lost_2	writer-3	the critic's best
+l_lamps	writer-3	the critic's best
+l_lamps_fail	edit	edit of writer-3: true for either input; C's "you do not have" is l_hunt_bear_fail's, A's "more than the pile" is l_dig_fail's
+l_lamps_1	edit	edit of writer-3: the pour cut (l_lamps has it)
+l_lamps_2	writer-3	C's "fat sets in the cuts" says "fat" beside l_lamps_1
+l_lamps_done	writer-2	the critic's best
+l_sitter_1	edit	edit of writer-3: one sentence, "sitting. facing" to "sits ..., facing"
+l_sitter_2	edit	edit of writer-2: "stays longer than wolves do" states the turn; "sits on" leaves it
+l_night_14	writer-1	the critic's best
+l_sit_last_night_fail	writer-3	the critic's C ("nothing begins") rewords day eleven's l_vigil_fail ("do not begin")
+l_s4_1	writer-2	the critic's best
+l_s4_2	writer-2	the critic's A opens on "ash comes down lighter", l_s4_1's own words; B's "holds the gap" is day eleven's l_b11_1
+l_s4_3	edit	edit of writer-2: "rim" to the brief's "edge"
+l_find_gap_wolf	writer-2	the critic's best
+l_camp_15	writer-3	the critic's best
+l_camp_16	writer-1	the critic's best
+o_spoil	writer-3	true before the dig's first stage (it can share B11's moment); the critic's B alt says the earth is already loose
+a_spoil_ring	writer-1	the critic's best
+a_spoil_stones	edit	edit of writer-1: 
+o_cradle	writer-3	the name at the end, a shape no neighbour takes
+a_cradle_fire	edit	edit of writer-2: "makes room by fire" lacks its article; the child is not "it" (B) or "them" (A)
+a_cradle_hut	writer-1	the critic's best
+o_shaft	edit	edit of writer-3 alt: two sentences, the thing first; holds whoever has the spear
+a_shaft_bind	writer-3	the critic's best
+a_shaft_plain	writer-3	the critic's best
+o_cold_air	edit	edit of writer-3 alt: "dig's bottom" to "bottom of the dig"; the stake plain
+a_cold_air_meat	edit	edit of writer-3: "She hangs it" is day eleven's a_pot_hang; now mirrors a_cold_air_rack
+a_cold_air_rack	writer-3	the critic's best
+o_lean_to	edit	edit of writer-2 alt: the place first, the name mid-sentence, after two name-first texts
+a_lean_to_wood	writer-3	the critic's best
+a_lean_to_hides	writer-3	the critic's best
+o_lye	writer-2	unlike o_cradle in shape and stake, as the brief asks
+a_lye_bedding	writer-3/writer-1/writer-2	the critic's best
+a_lye_pot	writer-3/writer-1	the critic's best
+o_wet	edit	edit of writer-1 alt: "in the hut" is o_cradle's; the asker named, unlike B main
+a_wet_drain	writer-3/writer-1	the critic's best
+a_wet_pave	writer-3	C's "digs stones out" reads as a stone count, not a floor
+o_crows	edit	edit of writer-1: the situation alone (day eleven's o_ditch shape), {n4} in the answers; C's "in the dark" is not true at every showing
+a_crows_off	writer-2	the critic's best
+a_crows_be	writer-2	the critic's best
+o_sag	edit	edit of writer-3 alt: "on the hut's" is o_lean_to's; the critic's A main ends "{n6} says", o_cradle's ending
+a_sag_prop	edit	edit of writer-3/writer-1: mirrors a_sag_down
+a_sag_down	writer-3	the critic's best

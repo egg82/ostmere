@@ -1,0 +1,6 @@
+# The Breaking of Ostmere
+
+> The Breaking of Ostmere (Ostmere for short) is a story-driven idle game that runs in the browser, currently in alpha. The grey comes down all day, and nobody sweeps it.
+
+- [Play Ostmere](https://ostmere.yggdrasil.pub/): the game itself
+- [Privacy](https://ostmere.yggdrasil.pub/privacy): what the game keeps about you, why, and for how long

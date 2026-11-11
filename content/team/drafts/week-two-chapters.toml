@@ -1,0 +1,296 @@
+# Week two's chapter table for gen.py --week-two: what differs per chapter. The brief is week-two-lines-brief.md;
+# a chapter's `sections` are the brief headings (prefixes) whose bodies it takes, `h` the keys that also get an alternate,
+# `renames` maps a data-file key to the brief's name where they differ, `extra` is brief text the data file's keys need
+# beyond those sections.
+
+[chapters.day-eight]
+file = "day_eight"
+title = "day eight's lines (B8 to B9)"
+prev = "day-six"
+sections = ["### Week 1's last visit", "### Day eight"]
+h = ["l_b8_1", "l_b8_2", "l_b8_3", "l_howls", "l_caps_1", "l_caps_2", "l_pack_1", "l_pack_2", "l_b9_1", "l_b9_2"]
+extra = """
+### Fights and finds (this chapter's)
+
+**The fight pools.** The pack at the gap has a pool of lines for one fight won and one lost; the page shows one line per
+fight, the runner's lines drawn in a shuffled order (each once before any repeats), so any line may follow any other, the
+same line may come twice in a day, and the number of fights before it is anyone's. Write **three lines per pool**, as `_1`,
+`_2` and `_3`:
+- **l_fight_pack_won_1..3**, **l_fight_pack_lost_1..3**: the pack at the gap, one plain line each; a lost one says only
+  what is gone from the rack.
+
+A pool line is one fight, plain and short, never gory, never dwelling on how a beast dies. It carries no count, no
+"again", no "another", no "this time", no real-time word, and no name.
+
+**l_find_shelf** (Foraging 13), **l_find_pole** (Woodcutting 23), **l_find_hoe** (Scavenging 23), **l_find_pot**
+(Cooking 9), **l_find_fine_ash** (Arcana 11): one line each, by the mix, any visit. No find names a wolf sitting, the
+stone's heat past what the hand does, the cellar before B12, or anything of week 3.
+"""
+
+[chapters.day-nine]
+file = "day_nine"
+title = "day nine's lines (B9 to B10)"
+prev = "day-eight"
+sections = ["### Day nine"]
+h = ["l_ring_1", "l_ring_2", "l_open_side_1", "l_open_side_2", "l_road_smoke_1", "l_road_smoke_2", "l_b10_1", "l_b10_2", "l_b10_3"]
+renames = { l_smoke_1 = "l_road_smoke_1", l_smoke_2 = "l_road_smoke_2" }
+extra = """
+### Changes to the section above (the data file wins)
+
+- **l_family_1, l_family_2** and O-family are not in this chapter; **l_find_pole** shipped with day eight. Write neither.
+- **l_road_smoke_1, l_road_smoke_2** are the brief's l_smoke_1, l_smoke_2 (E3). "smoke" also names the camp's own
+  smoking rack and smoked meat; the road's smoke must not read as the rack's.
+- B10's people: the woman, her husband, her brother, and the man who came with them. No names, no slots, no count of
+  who they lost.
+
+### The gap fire (SL18): this chapter's
+
+The camp has kept a small watch fire at the gap since day three (shipped: "lucy lays stones at the gap. she brings
+more." / "room inside for a fire, facing down the track." / "{n2} sits at the gap, the shaft on his knees."). SL18 builds
+it up: a fire laid out in the gap itself, ringed with stones, so whoever sits the watch sits where the wolves come. Name
+it so it does not read as a second, separate fire, and never as the camp's hearth.
+- **l_gap_fire_1**: the moment it is shown (a trigger, with the card).
+- **l_gap_fire_2**, **l_gap_fire_done**: stage lines 1 and 2 of 2 (dry wood and stones each stage). Plain records.
+- **l_gap_fire_fail**: the failed-card line; short of dry wood, stones, or both.
+
+### The fourth snare (SL17's spend)
+
+- **l_snare_4**: the line when the fourth snare is set, from the old wire (two lengths of it) and dry wood. It never
+  says whose wire, and never "your knot" or "again".
+- **l_snare_4_fail**: the failed-card line; short of wire, dry wood, or both.
+
+### The wind at the hides (the season's second chore)
+
+The warm wind blows all through the season. It works the hide flaps over the bays' openings loose (day eight's flaps,
+shipped: "the flaps hang over the openings, stiffening."). Pegging them again takes pelts and stones to weigh the hems,
+done by the player or by Lucy on her lane.
+- **l_wind**: when the chore is shown: the wind has torn the flaps loose. Shows the same hour on every route.
+- **l_draughty**: the chip shows: the bays are draughty (rest is slower; the chip says so, the line does not).
+- **l_draughty_off**: the chip clears, because the flaps were pegged down (by the player or by Lucy). It never says who.
+- **l_peg_fail**: the failed-card line of both pegging cards (the player's and Lucy's): short of torn flaps to fix,
+  pelts or stones. No "you", no "she": the card is shared.
+
+### The Camp
+
+**l_camp_14** (the stew holds more, lifted by the palisade's last stage). A plain record, no number.
+
+### The camp's asks (offers): this chapter's main writing job after B10
+
+While the ring goes up the camp puts small questions to the player, one at a time, one per return. Each is an offer:
+a short text (the question, `o_*`) and two answers (`a_*`), each a button. Neither answer is judged, neither is the
+right one, and declining costs nothing. **Write the offer text and both answer labels for every offer below**, after the
+lines' keys in your output, as `o_rack = "..."`, `a_rack_high = "..."`, `a_rack_down = "..."`, and so on, in the order
+listed.
+
+Register: these are game UI with a person behind them, so sentence case with a capital first letter (unlike the lines),
+plain, one sentence, at most about 60 characters for the text and about 22 for an answer, no digit. A name is a slot,
+written exactly: `{n2}` (him), `{n3}` (the woman), `{n4}` (the old man); Lucy by name. Shipped offers, for the register
+only: "Who goes to the ridge for her cart?" (answers "You go" / "She goes"); "Bank the fire her way or his?" ("Her way" /
+"His way"); "Cover {n3}'s ground with a pelt or sacking?" ("Pelt" / "Sacking").
+
+**Read in a row they must not feel like a quiz or a form.** Ten of them come one after another across the chapter. So:
+- each has a different stake (what it costs, who it is for, what it risks), and the text makes that stake plain;
+- vary the shape of the sentence: not ten "X or Y?" questions. Some are someone asking ("{n3} asks if..."), some say
+  what someone wants or is doing and end on the choice, some are the choice alone; vary where the person's name sits;
+- vary who asks and why (the asker is given; keep it);
+- answers are short and active: a person doing a thing, in active voice ("You go", "She goes", "He sinks them"),
+  never a bare noun pair every time; the two answers of one offer mirror each other in frame and length.
+
+| Offer | Shows | Who asks, and the facts | Answer 1 (key, what happens) | Answer 2 (key, what happens) |
+|---|---|---|---|---|
+| o_posts | the palisade's second stage (late day eight), with its line l_posts | {n4} lashed the first stretch himself; the cord he twisted wet holds best of anyone's | a_posts_cord: he keeps twisting cord (his cord comes faster) | a_posts_fire: he goes back to sit the watch at the gap (the gap holds better) |
+| o_margin | B9's moment: the book has just shown a note in the margin of the wolf page, in the player's own hand | no one asks; the player, reading the margin, which marks where the wolves come to | a_margin_gap: the watch is set where the margin says (the gap holds better) | a_margin_fire: the watch stays by the fire (everyone rests better) |
+| o_rack | with E2, the morning after the pack stripped the rack's low rows | {n3}: what the pack left on the rack | a_rack_high: hang it high, inside the posts that stand (the rack holds more from now on) | a_rack_down: she smokes it down hard now (some smoked meat at once) |
+| o_deep | the next return | {n2}: the ground on the low side is soft | a_deep_sink: he sinks the posts a hand deeper there (the gap holds better; his stakes come slower) | a_deep_pace: he keeps the pace (nothing changes) |
+| o_bark | the next return | Lucy: the bark stripped off the poles is piling up | a_bark_tinder: dried for tinder (the fire burns less dry wood) | a_bark_cord: twisted into cord (some cord at once) |
+| o_footing | the next return | {n4}: stones turned up digging the post footings | a_footing_hearth: a ring of them round a hearth in the bays (better rest) | a_footing_keep: onto the stone pile (some stones at once) |
+| o_fed | the next return | {n3}: whoever sits the watch eats cold, out at the gap | a_fed_watch: a share of the pot carried out each night (the gap holds better; the stew comes slower) | a_fed_pot: the pot stays in the bays (nothing changes) |
+| o_lookout | the next return | {n2}: he wants someone up on the stacked stakes, watching the road beyond the ridge | a_lookout_up: one up there (the gap holds better; his stakes come slower) | a_lookout_wall: everyone stays on the wall (nothing changes) |
+| o_gate | the next return | Lucy: where the gate in the ring goes | a_gate_road: facing the road (a line follows: l_gate_road) | a_gate_track: facing the track (the track's run costs fewer roots) |
+| o_skin | the next return, the last before the ring closes | {n2}: a wolf the watch killed; its skin | a_skin_post: nailed up on the posts by the gap (the gap holds better) | a_skin_flaps: on the flaps over the bays (one pelt at once) |
+
+Must-nots for the asks: never "again"; no wolf sitting or waiting; o_margin never quotes the note, never says whose hand
+(the player has just read that), never "remember"; o_skin is plain about a dead wolf's skin, nothing about how it died;
+o_lookout and o_gate never say who is on the road, or that anyone is (the smoke on the road may not have been seen yet).
+
+**l_posts** (o_posts' line, shown with it): {n4} at the first stretch, lashing it himself with his own cord. One line.
+**l_gate_road** (when a_gate_road is given): the gate's place marked facing the road. One line; it never says who
+will come by it.
+
+Answer cost lines (`*_cost`), labels and the rest are the voice pass's, not the writers'.
+"""
+
+[chapters.day-eleven]
+file = "day_eleven"
+title = "day eleven's lines (B10 to B11)"
+prev = "day-nine"
+sections = ["### Day eleven"]
+h = ["l_join3_1", "l_join3_2", "l_guard_n2_1", "l_guard_n2_2", "l_guard_n7_1", "l_guard_n7_2", "l_count", "l_b11_1", "l_b11_2", "l_b11_3"]
+renames = { l_posts = "l_leaning_posts" }
+extra = """
+### Changes to the section above (the data file wins)
+
+- **l_posts** of this section is the data file's **l_leaning_posts** (SL19). Day nine has a shipped line of the same
+  brief name; write only the SL19 one.
+- **l_dig_open** has no key in this chapter: write nothing for it.
+- **l_family_1, l_family_2** are written here (the family arrives with B10's moment and these two are shown with
+  O-family, below).
+
+### The family at the gate (O-family's lines)
+
+**l_family_1, l_family_2** (on screen with the offer until it is answered). Facts: the woman does the talking; she asks
+if there is room inside the wall; the man who came behind them sits down outside the gate and waits, apart from the
+rest. Four figures are at the gate and the way they stand leaves room for a fifth; no line counts them, names a loss, or
+says who is missing. One of the four is their child: there, plainly, close to the woman, never working, never named,
+never in danger, never the one they are missing. They are "the woman", "her husband", "her brother", "their child" and
+"the man who came with them": no slots before l_join3_1.
+
+### Keys the brief spells differently or not at all
+
+- **l_hut_fail**: the failed-card line of both hut cards (the player's `make_hut` and her lane's `n5_build_hut`): short
+  of stakes, stones, or both. No "you", no "she": the card is shared.
+- **l_arm_fail**: the failed-card line of the spear's making (a one-off on the player's hands; the same card for either
+  guard): short of scrap, a stake, or both. Names neither {n2} nor {n7}.
+- **l_n6_posts_fail**: the failed-card line of her husband's own posts card: short of stakes. **l_n6_posts_done**: the
+  line on finishing: the three leaning posts set right with the stakes he asked for. No count, no "you".
+- **l_vigil_fail**: the failed-card line of the vigil card when it is tapped and cannot start yet. It does not say why,
+  does not name the night, and waits on nothing.
+- **l_lane_watch_dry**: the failed-card line of the family's watch card (the three newcomers' lanes share it): short of
+  dry wood. No "you", no name.
+- **l_night_12**: the light going, on the night after the count: everyone at the fire, him covered. A plain record.
+
+### The camp's asks (offers): this chapter's other writing job
+
+Five offers: the family's, the guard's, and three small asks that come one a return while the hut waits on its stakes.
+Each is a short text (the question, `o_*`) and two answers (`a_*`), each a button. Neither answer is judged, neither is
+the right one, and declining costs nothing. **Write the offer text and both answer labels for every offer below**, after
+the lines' keys in your output, in the order listed.
+
+Register: game UI with a person behind it, so sentence case with a capital first letter (unlike the lines), plain, one
+sentence, at most about 60 characters for the text and about 22 for an answer, no digit. A name is a slot, written
+exactly: `{n2}` (him), `{n3}` (the woman), `{n4}` (the old man); Lucy by name. `{n7}` (the family's young man) may be
+written in o_guard and its answer only, which show once the family has its names. Shipped offers, for the register only:
+"Who goes to the ridge for her cart?" (answers "You go" / "She goes"); "Bank the fire her way or his?" ("Her way" / "His
+way"); "Cover {n3}'s ground with a pelt or sacking?" ("Pelt" / "Sacking").
+
+**Read in a row they must not feel like a quiz or a form.** Five of them come across the chapter, after day nine's ten.
+So:
+- each has a different stake (what it costs, who it is for, what it risks), and the text makes that stake plain;
+- vary the shape of the sentence: not five "X or Y?" questions. Some are someone asking, some say what someone wants or
+  is doing and end on the choice, some are the choice alone; vary where the person's name sits;
+- vary who asks and why (the asker is given; keep it);
+- answers are short and active: a person doing a thing, in active voice, never a bare noun pair every time; the two
+  answers of one offer mirror each other in frame and length.
+
+| Offer | Shows | Who asks, and the facts | Answer 1 (key, what happens) | Answer 2 (key, what happens) |
+|---|---|---|---|---|
+| o_family | B10's moment, at the gate, with l_family_1 and l_family_2 | the family's woman, for all of them: room inside the wall; the hut costs the same stakes and stones either way and takes the same time | a_family_room: you build the hut with your own hands | a_family_theirs: they build it themselves, on her lane |
+| o_guard | with Z1, once the family has the hut and its names | Lucy, at the gap: a spear on the wall and nobody to stand the gap at night; it is made at the stone before it is handed over | a_guard_n2: {n2} takes it (he carried the shaft the first spear was made from) | a_guard_n7: {n7} takes it (the young man who wanted it) |
+| o_door | the next return after B10, while the hut goes up | {n2}: the hut's door, which way it faces | a_door_fire: facing the fire (everyone rests better) | a_door_gate: facing the gate (the gap holds better) |
+| o_pot | the next return | the woman: they carried a pot of their own | a_pot_hang: hung by the camp's pot (the stew comes faster) | a_pot_trade: traded for what {n2} can use (some scrap at once) |
+| o_ditch | the next return | Lucy: ash heaped against the posts inside the ring | a_ditch_dig: dug out to a ditch outside the ring (the gap holds better) | a_ditch_bank: banked up, taking the stones from under it (some stones at once) |
+
+Must-nots for the asks: never "again"; o_family says nothing of who the man behind them is or why he waits, and never
+counts or names a loss; o_family and o_guard never prefer an answer; o_guard names two people and neither may read as
+the right one, and it never says why that one; o_door, o_pot and o_ditch are about the hut, the pot and the ash only.
+
+Answer cost lines (`*_cost`), labels and the rest are the voice pass's, not the writers'.
+"""
+
+[chapters.day-twelve]
+file = "day_twelve"
+title = "day twelve's lines (B11 to night 14)"
+prev = "day-eleven"
+sections = ["### Day twelve"]
+h = ["l_dig_1", "l_dig_2", "l_steps_1", "l_steps_2", "l_b12_1", "l_b12_2", "l_b12_3", "l_sitter_1", "l_sitter_2", "l_s4_1", "l_s4_2", "l_s4_3"]
+renames = {}
+extra = """
+### Changes to the section above (the data file wins)
+
+- **No line counts people.** l_dig_open and S4 say "everyone", "all of them" or nothing, never a number of mouths or of
+  people at the fire: their child is never counted among mouths, and the guard is at the gap.
+- **l_sitter_1, l_sitter_2** land at the same hour on every route, which is not dusk: never say the time of day. The
+  guard is "the guard" in every line of this chapter, never a name: either {n2} or {n7} may hold the spear.
+- **l_b12_1 to l_b12_3**: the marks may be told as groups of five with the last group four, in words; never a total,
+  never "one short", and the board is never tied to the town's own board by the fire, by any word. The stool is tied to
+  the one at the fire, as the facts say; that is the day's one stool line.
+- The asks' cost lines (`*_cost`) are the voice pass's, not the writers'.
+
+### Keys the brief spells differently or not at all
+
+- **l_dig_open** (the brief's day eleven entry; its key is this chapter's). Shown in B11's moment, after day eleven's
+  shipped l_b11_3, with the dig's card. Facts: everyone to feed, the larder full, and nowhere to keep it. It never says
+  where anything would be kept, never that anyone digs or will, never ground, under, below or a cellar: S1 is the dig's
+  first word.
+- **The dig's stage lines** (`dig_cellar`, four stages on the player's hands, each taking stakes and damp wood for props
+  and shoring, run by its order card, so most land on return). **l_dig_stage_1** shows in S1's moment with l_dig_1 and
+  l_dig_2; **l_dig_stage_3** in S2's with l_steps_1 and l_steps_2; neither repeats its beat, each is the stage's plain
+  record (the props in, the shoring set). **l_dig_stage_2** shows alone. **l_dig_done**, the last stage: usually in
+  B12's moment, but on a fast route it lands before B12 and shows alone, so it says nothing of what is below or that
+  anything is open; the last props set.
+- **l_dig_fail**: the dig's failed-card line: short of stakes, damp wood, or both.
+- **l_hunt_bear_fail**: the hunt's failed-card line: short of smoked meat, or the bear's sign is spent (the hunts left
+  are used up). True for either; it says neither which nor why.
+- **l_fight_bear_won_1, l_fight_bear_won_2, l_fight_bear_lost_1, l_fight_bear_lost_2**: the bear hunt's pools, two
+  lines each (the brief's eight are the data file's two). The player goes out after the bear, from the bloom's sign; the
+  bear is never at the camp. Won: brought down; meat, a pelt and its fat carried home. Lost: the player comes back
+  hurt; the line does not say so. A pool line is one fight, plain and short, never gory, never dwelling on how a beast
+  dies; no count, no "again", no "another", no "this time", no real-time word, no name, no spear.
+- **The lamps** (SL21, `tallow_lamps`, three stages run by its order card, each taking tallow and stakes):
+  **l_lamps** is the moment the card shows (the bear's tallow rendered in the stew pot and poured into split stakes);
+  **l_lamps_1**, **l_lamps_2** are stage records; **l_lamps_done**, the last: lamps lit on the gate posts.
+  l_lamps can share a moment with a won bear hunt's pool line. **l_lamps_fail**: short of tallow, stakes, or both.
+- **l_sit_last_night_fail**: the failed-card line of the last night's card (A32), tapped before it is ready. It does
+  not say why, names no night and no wolf, waits on nothing, and is not day eleven's l_vigil_fail reworded.
+- **l_find_gap_wolf** (Melee 7, a find: a wolf dead at the gap, older than the pack's, a pelt off it). It can share
+  B11's moment. Week 1 shipped the nearest find, "a wolf lies stiff under the thorn. you take the pelt."; reuse no
+  phrase from it. Never a wolf sitting, never the guard's doing.
+- **l_camp_15** (fungus holds more, lifted by the dig's last stage: it can show before B12, so never the cellar or
+  what is below), **l_camp_16** (smoked meat holds more, lifted by the last night: it can follow l_s4_3 in S4's moment,
+  so nothing of the wolf, the wind or the night). Plain records, no number.
+- The journal's notes (n_bear_1, n_gutter_1, n_day_b12) are their own batch: write none.
+
+### The camp's asks (offers): this chapter's other writing job
+
+Nine offers, one a return, from B11's moment (the first can share it) to S4. Each is a short text (`o_*`) and two
+answers (`a_*`), each a button. Neither answer is judged, neither is the right one, and declining costs nothing.
+**Write the offer text and both answer labels for every offer below**, after the lines' keys in your output, in the
+order listed.
+
+Register: game UI with a person behind it, so sentence case with a capital first letter (unlike the lines), plain, one
+sentence, at most about 60 characters for the text and about 22 for an answer, no digit. A name is a slot, written
+exactly: `{n2}` (him), `{n4}` (the old man), `{n5}` (the woman), `{n6}` (her husband), `{n7}` (her brother); Lucy by
+name; their child as "their child" or "the child", never named. Shipped offers of day eleven, for the register only:
+"{n2} pegs a door together for the new hut." (answers "He hangs it fire side" / "He hangs it gate side"); "Among their
+things, the woman has a pot." ("She hangs it by ours" / "She trades it to {n2}"); "Ash lies thick against the posts
+inside the ring." ("Lucy digs it out" / "Lucy banks it up").
+
+**Read in a row they must not feel like a quiz or a form.** Nine come one after another, after day eleven's five. So:
+- each has a different stake (what it costs, who it is for, what it risks), and the text makes that stake plain;
+- vary the shape of the sentence: not nine "X or Y?" questions. Some are someone asking, some say what someone wants or
+  is doing and end on the choice, some are the choice alone; vary where the person's name sits;
+- vary who asks and why (the asker is given; keep it). o_cradle and o_lye share an asker and change the same two things:
+  their texts must differ most of any pair, in shape and in stake (the child's sleep; the work of scrubbing);
+- answers are short and active: a person doing a thing, in active voice, never a bare noun pair every time; the two
+  answers of one offer mirror each other in frame and length.
+
+| Offer | Who asks, and the facts | Answer 1 (key, what happens) | Answer 2 (key, what happens) |
+|---|---|---|---|
+| o_spoil | {n6}: the spoil the dig throws up, ash and earth | a_spoil_ring: banked against the ring, outside (the gap holds better) | a_spoil_stones: sieved for the stones in it (some stones at once) |
+| o_cradle | {n5}: their child won't sleep in the hut | a_cradle_fire: a place made for the child by the fire (everyone rests better) | a_cradle_hut: the pot moved into the hut, for the warmth (the stew comes faster) |
+| o_shaft | {n7}: the spear's shaft has split at the binding; he has pulled iron out of the scrap to mend it | a_shaft_bind: bound tighter, with an iron collar (the hands fight better) | a_shaft_plain: a plain new shaft cut from a stake, the head moved onto it, and the iron back on the scrap (some scrap at once) |
+| o_cold_air | Lucy: the dig keeps cold at the bottom | a_cold_air_meat: the meat hung down in the dig, in the cold (the larder keeps better) | a_cold_air_rack: the meat kept on the rack, where she can see it (the rack holds better) |
+| o_lean_to | {n2}: a lean-to on the hut's side | a_lean_to_wood: for the wood (dry wood holds more) | a_lean_to_hides: for the hides (pelts hold more) |
+| o_lye | {n5}: lye leached from the roof ash | a_lye_bedding: the bedding scrubbed with it (everyone rests better) | a_lye_pot: the pot scrubbed with it (the stew comes faster) |
+| o_wet | {n2}: the hut's floor is wet at one corner, where the ash-water runs in | a_wet_drain: drained to the ditch (everyone rests better) | a_wet_pave: the wet corner dug out, the stones it turns up to the pile (some stones at once) |
+| o_crows | {n4}: the crows have come down off the ridge to the rack | a_crows_off: driven off (the rack holds better) | a_crows_be: let be, since they cry at whatever comes near in the dark (the gap holds better) |
+| o_sag | {n6}: the hut's roof sags under the ash | a_sag_prop: propped with a pole (everyone rests better) | a_sag_down: the sagging poles taken down and burned, the roof laid lower (some dry wood at once) |
+
+Must-nots for the asks: never "again"; nothing of the man who came with them, the burning, the board or his mark;
+their child never working, never a cost, never in danger, and o_cradle never says why the child won't sleep; o_spoil
+can show before the dig's first stage, so it never says where the dig is, what it is for, or that it has begun; no ask
+names the cellar or anything in it; o_cold_air can show before S2 (the steps), so it never names steps, stone or
+air coming up, only the cold at the dig's bottom; o_crows never says the crows
+count, or what; no ask touches a wolf, the light's edge, the book or the margin; o_shaft holds whoever has the spear
+and names neither; o_sag never has the roof fall, or anyone under it.
+"""

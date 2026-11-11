@@ -1,0 +1,1196 @@
+# The opening: the first fifteen minutes, as data. Schema and units: schema.py (whole items, seconds, items per hour).
+# Everything the server and the page need to know about the opening is in this file; nothing else holds a number.
+# Every card is one card, tapped by hand or run in the mix (engine DESIGN.txt, "CARDS"); a told step is a card with a
+# cap. No gate counts taps (docs/decisions.md): what opens the next thing is a step the player takes (a first armful,
+# the wall's first batch, a cleared spot), a cost shown as have/need, a level that pays a find, or the body's clock.
+version = 1
+
+# The one card for the edge of the written content, out of the fiction (docs/decisions.md); the loader puts it on the
+# last shipped chapter's end_feature.
+end_card = { title_key = "end_title", line_keys = ["end_1", "end_2"], button_key = "end_button" }
+
+# Unlocked at the start of a new save. The standing actions run from the first second; the stores they work on
+# (warmth, fullness, energy) are never unlocked, so they stay out of the ledger and show only as chips.
+start = [
+  { unlock_kind = "card", id = "stand_up" },
+  { unlock_kind = "action", id = "chill" },
+  { unlock_kind = "action", id = "hunger" },
+  { unlock_kind = "action", id = "weariness" },
+  { unlock_kind = "chip", id = "hungry" },
+  { unlock_kind = "chip", id = "tired" },
+]
+start_line_keys = []
+
+# The label of the hands lane (never declared in [[lanes]]). The end moment is this feature unlocked (api/CONTRACT.txt,
+# "The end"); its lines are appended by the page then, since no engine event marks it.
+hands_label_key = "lane_hands"
+end_feature = "keeps_going"
+end_line_keys = ["l_dusk_1", "l_dusk_2"]
+
+# The first mix: offered once the spot is cleared, when stones for the ring and wood for the wall pull at once. The
+# player makes it with one tap; the page never does.
+first_mix = { feature = "mix", cards = ["gather_wood", "scavenge"] }
+
+# What the player keeps doing by hand becomes an offer. A hands card tapped `hand_taps` times within
+# `hand_taps_within_s` game seconds, while the hands ran a mix without it, is offered to the mix: hands taps take 3 to
+# 10 s, so five in fifteen minutes is a habit and not a one-off. The same switch of the player's mix made `switches`
+# times under one chip within `switches_within_s` is offered as a rule: chips come and go over hours, so three in a day.
+repeat_offers = { hand_taps = 5, hand_taps_within_s = 900, switches = 3, switches_within_s = 86400 }
+
+# XP thresholds in whole items of XP, for levels 2, 3, ... of every skill.
+curve_items = [6, 10, 20, 36]
+
+# The bar to work toward. Every hands card fills it by its work (one per second at a full share), tapped or mixed
+# alike, so taps count for no more than the time they take. Its bonuses never touch a mix card's rates, so no saved
+# mix changes under the player.
+[camp]
+store = "camp"
+items_per_hour = 3600
+
+[[camp.levels]]
+at_items = 150
+pays_key = "camp_pays_1"
+pays_from = 3
+pays_to = 5
+line_keys = ["l_camp_1"]
+# The warm wall takes 5 at a time instead of 3: the drying wall, earned. Five thirds has no exact basis-point factor,
+# so the cost is a hair under five (it never asks for more than five whole items) and the make a hair over.
+modifiers = [
+  { target = "rate", id = "lay_to_dry", flow = "cost", store = "damp_wood", kind = "mul_bp", amount_bp = 16666, source = "camp_1" },
+  { target = "rate", id = "lay_to_dry", flow = "make", store = "dry_wood", kind = "mul_bp", amount_bp = 16667, source = "camp_1" },
+]
+
+[[camp.levels]]
+at_items = 360
+pays_key = "camp_pays_2"
+pays_from = 12
+pays_to = 18
+line_keys = ["l_camp_2"]
+# Stores hold half again.
+modifiers = [
+  { target = "cap", id = "damp_wood", kind = "mul_bp", amount_bp = 15000, source = "camp_2" },
+  { target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 15000, source = "camp_2" },
+  { target = "cap", id = "stones", kind = "mul_bp", amount_bp = 15000, source = "camp_2" },
+  { target = "cap", id = "roots", kind = "mul_bp", amount_bp = 15000, source = "camp_2" },
+]
+
+# Past the opening: the bar fills to it and holds there, "?" on its marker, until a later step lifts it.
+[[camp.levels]]
+at_items = 1500
+pays_key = "pays_unknown"
+held = true
+
+# ---------- stores ----------
+
+[[stores]]
+id = "damp_wood"
+label_key = "store_damp_wood"
+cap_items = 12
+
+[[stores]]
+id = "dry_wood"
+label_key = "store_dry_wood"
+cap_items = 12
+
+[[stores]]
+id = "stones"
+label_key = "store_stones"
+cap_items = 12
+
+[[stores]]
+id = "nails"
+label_key = "store_nails"
+cap_items = 1
+
+[[stores]]
+id = "flint"
+label_key = "store_flint"
+cap_items = 2
+
+[[stores]]
+id = "roots"
+label_key = "store_roots"
+cap_items = 8
+
+[[stores]]
+id = "camp"
+label_key = "store_camp"
+cap_items = 1500
+
+# Never unlocked: counts the steps the end waits for (both crafts and the roast), whichever comes last.
+[[stores]]
+id = "settled"
+label_key = "store_settled"
+cap_items = 3
+
+# Never unlocked: the light going, filled by the evening action once the camp is settled. Dusk waits for it, so the
+# last step's lines get a quiet stretch to themselves before the end lines come; the scene's dusk grade comes on over
+# it (tools/scene/grades.py), keyed on the action.
+[[stores]]
+id = "evening"
+label_key = "store_evening"
+cap_items = 1
+
+[[stores]]
+id = "warmth"
+label_key = "store_warmth"
+cap_items = 10
+
+[[stores]]
+id = "fullness"
+label_key = "store_fullness"
+cap_items = 10
+initial_items = 10
+
+[[stores]]
+id = "energy"
+label_key = "store_energy"
+cap_items = 10
+initial_items = 10
+
+# ---------- skills ----------
+
+# Each row shows its next level and what it brings ("?" for a story unlock). Finds are triggers on the level below;
+# Woodcutting 2 is what the crafts require.
+[[skills]]
+id = "scavenging"
+label_key = "skill_scavenging"
+levels = [{ level = 2, pays_key = "pays_find" }, { level = 3, pays_key = "pays_find" }, { level = 4, pays_key = "pays_unknown" }]
+
+[[skills]]
+id = "woodcutting"
+label_key = "skill_woodcutting"
+levels = [{ level = 2, pays_key = "pays_crafts" }, { level = 3, pays_key = "pays_unknown" }]
+
+[[skills]]
+id = "foraging"
+label_key = "skill_foraging"
+levels = [{ level = 2, pays_key = "pays_unknown" }]
+
+# ---------- standing actions ----------
+
+# The cold takes warmth, the fire gives it (and eats dry wood), the body tires and hungers, and eats roots from the
+# first hunger on.
+[[standing]]
+id = "chill"
+label_key = "action_chill"
+costs = [{ store = "warmth", items_per_hour = 3600 }]
+
+[[standing]]
+id = "fire"
+label_key = "action_fire"
+makes = [{ store = "warmth", items_per_hour = 7200 }]
+costs = [{ store = "dry_wood", items_per_hour = 6 }]
+
+[[standing]]
+id = "weariness"
+label_key = "action_weariness"
+costs = [{ store = "energy", items_per_hour = 54 }]
+
+[[standing]]
+id = "hunger"
+label_key = "action_hunger"
+costs = [{ store = "fullness", items_per_hour = 60 }]
+
+[[standing]]
+id = "eating"
+label_key = "action_eating"
+costs = [{ store = "roots", items_per_hour = 2 }]
+
+# From the settled line to dusk: 45 s.
+[[standing]]
+id = "evening"
+label_key = "action_evening"
+makes = [{ store = "evening", items_per_hour = 80 }]
+
+# ---------- lanes ----------
+
+# The warm wall: wood laid against it dries on its own bar, tapped by hand or by an order, never mixed.
+[[lanes]]
+id = "rack"
+label_key = "lane_rack"
+
+# ---------- cards ----------
+
+# The story steps by hand: stand (three pushes, each moving the figure), look, the coat.
+[[cards]]
+id = "stand_up"
+presentation = "narrative"
+label_key = "c_stand_up"
+work_s = 3
+cap = 3
+glows = true
+line_keys = ["l_up_1", "l_up_2", "l_up_3"]
+finished = { unlocks = [{ unlock_kind = "card", id = "look_around" }] }
+
+[[cards]]
+id = "look_around"
+presentation = "narrative"
+label_key = "c_look_around"
+work_s = 4
+cap = 1
+line_keys = ["l_look"]
+finished = { unlocks = [{ unlock_kind = "card", id = "search_coat" }] }
+
+# Coat before wood: the book is always found, so later lines can rely on it.
+[[cards]]
+id = "search_coat"
+presentation = "narrative"
+label_key = "c_search_coat"
+work_s = 3
+cap = 1
+line_keys = ["l_coat"]
+[cards.finished]
+unlocks = [
+  { unlock_kind = "feature", id = "book" },
+  { unlock_kind = "card", id = "gather_wood" },
+  { unlock_kind = "card", id = "scavenge" },
+]
+
+# Bare hands gather; the flint edge retires this card (tools before skills), which greys any mix holding it.
+[[cards]]
+id = "gather_wood"
+presentation = "action"
+label_key = "c_gather_wood"
+work_s = 5
+outcome = { stores = [{ store = "damp_wood", items = 1 }] }
+
+[[cards]]
+id = "scavenge"
+presentation = "action"
+label_key = "c_scavenge"
+work_s = 6
+skill = "scavenging"
+xp_per_hour = 360
+outcome = { stores = [{ store = "stones", items = 1 }] }
+
+# With the edge: twice the wood, faster, and it trains a skill.
+[[cards]]
+id = "woodcutting"
+presentation = "action"
+label_key = "c_woodcutting"
+work_s = 4
+skill = "woodcutting"
+xp_per_hour = 900
+outcome = { stores = [{ store = "damp_wood", items = 2 }] }
+
+[[cards]]
+id = "forage"
+presentation = "action"
+label_key = "c_forage"
+work_s = 5
+skill = "foraging"
+xp_per_hour = 300
+outcome = { stores = [{ store = "roots", items = 1 }] }
+
+[[cards]]
+id = "rest"
+presentation = "action"
+label_key = "c_rest"
+work_s = 10
+# Tired halves it; a quarter share of the mix still clears tiredness in about a minute of mix time, one tap at once.
+makes = [{ store = "energy", items_per_hour = 2400 }]
+
+[[cards]]
+id = "lay_to_dry"
+lane = "rack"
+presentation = "action"
+label_key = "c_lay_to_dry"
+work_s = 45
+failed_line_key = "l_dry_fail"
+inputs = [{ store = "damp_wood", items = 3 }]
+outcome = { stores = [{ store = "dry_wood", items = 3 }] }
+
+# The fire plan, shown at the wall's first batch: clear, ring, strike. Ring and strike can be tried too early.
+[[cards]]
+id = "clear_spot"
+presentation = "narrative"
+label_key = "c_clear_spot"
+work_s = 3
+cap = 2
+line_keys = ["l_clear_1", "l_clear_2"]
+finished = { unlocks = [{ unlock_kind = "feature", id = "mix" }] }
+
+[[cards]]
+id = "ring_it"
+presentation = "narrative"
+label_key = "c_ring_it"
+work_s = 3
+cap = 1
+failed_line_key = "l_ring_fail"
+inputs = [{ store = "stones", items = 5 }]
+requires = [{ test = "at_least", subject_kind = "card_count", id = "clear_spot", value = 2 }]
+line_keys = ["l_ring"]
+finished = { unlocks = [{ unlock_kind = "feature", id = "ring" }] }
+
+[[cards]]
+id = "strike_fire"
+presentation = "narrative"
+label_key = "c_strike_fire"
+work_s = 4
+cap = 1
+glows = true
+failed_line_key = "l_strike_fail"
+inputs = [{ store = "dry_wood", items = 1 }]
+requires = [
+  { test = "at_least", subject_kind = "card_count", id = "ring_it", value = 1 },
+  { test = "at_least", subject_kind = "store", id = "flint", value = 1 },
+  { test = "at_least", subject_kind = "store", id = "nails", value = 1 },
+]
+line_keys = ["l_fire_takes"]
+[cards.finished]
+line_keys = ["l_fire_lit"]
+unlocks = [
+  { unlock_kind = "action", id = "fire" },
+  { unlock_kind = "chip", id = "cold" },
+  { unlock_kind = "feature", id = "ledger" },
+  { unlock_kind = "card", id = "knap_edge" },
+]
+
+# Two pushes, a flint each: the first flint is struck for the fire, so the second push waits on Scavenging 3's find.
+# The edge retires gathering by hand and brings woodcutting and the choice of two crafts, both in view at once.
+[[cards]]
+id = "knap_edge"
+presentation = "narrative"
+label_key = "c_knap_edge"
+work_s = 3
+cap = 2
+failed_line_key = "l_knap_fail"
+inputs = [{ store = "flint", items = 1 }]
+line_keys = ["l_knap_1", "l_knap_2"]
+[cards.finished]
+line_keys = ["l_retire"]
+unlocks = [
+  { unlock_kind = "retired", id = "gather_wood", replaced_by = "woodcutting" },
+  { unlock_kind = "card", id = "woodcutting" },
+  { unlock_kind = "skill", id = "woodcutting" },
+  { unlock_kind = "feature", id = "craft" },
+  { unlock_kind = "card", id = "make_stool" },
+  { unlock_kind = "card", id = "build_fireback" },
+]
+
+[[cards]]
+id = "roast_roots"
+presentation = "narrative"
+label_key = "c_roast_roots"
+work_s = 4
+cap = 1
+failed_line_key = "l_roast_fail"
+inputs = [{ store = "roots", items = 3 }]
+requires = [{ test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }]
+line_keys = ["l_roast"]
+outcome = { stores = [{ store = "fullness", items = 7 }] }
+[cards.finished]
+stores = [{ store = "settled", items = 1 }]
+modifiers = [{ target = "rate", id = "hunger", flow = "cost", store = "fullness", kind = "mul_bp", amount_bp = 1000, source = "roasted" }]
+
+# The choice: each names only its upside; the cost is what the other card's time now reads. Both get built before the
+# end; the order is the choice. The first built opens reading by the fire.
+[[cards]]
+id = "make_stool"
+presentation = "craft"
+label_key = "c_make_stool"
+upside_key = "up_stool"
+work_s = 10
+cap = 1
+failed_line_key = "l_stool_fail"
+inputs = [{ store = "dry_wood", items = 3 }]
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 2 }]
+line_keys = ["l_stool"]
+[cards.finished]
+stores = [{ store = "settled", items = 1 }]
+unlocks = [{ unlock_kind = "feature", id = "stool" }, { unlock_kind = "card", id = "read_by_fire" }]
+modifiers = [
+  { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 15000, source = "stool" },
+]
+
+[[cards]]
+id = "build_fireback"
+presentation = "craft"
+label_key = "c_build_fireback"
+upside_key = "up_fireback"
+work_s = 10
+cap = 1
+failed_line_key = "l_fireback_fail"
+inputs = [{ store = "dry_wood", items = 3 }, { store = "stones", items = 4 }]
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 2 }]
+line_keys = ["l_fireback"]
+[cards.finished]
+stores = [{ store = "settled", items = 1 }]
+unlocks = [{ unlock_kind = "feature", id = "fireback" }, { unlock_kind = "card", id = "read_by_fire" }]
+modifiers = [
+  { target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 6667, source = "fireback" },
+]
+
+[[cards]]
+id = "read_by_fire"
+presentation = "narrative"
+label_key = "c_read_by_fire"
+work_s = 6
+cap = 1
+line_keys = ["l_read"]
+
+# ---------- chips ----------
+
+[[chips]]
+id = "cold"
+label_key = "chip_cold"
+tone = "cold"
+when = { test = "at_most", subject_kind = "store", id = "warmth", value = 3, release = 5 }
+effects = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 8000, source = "cold" }]
+cost_key = "chip_cold_cost"
+
+[[chips]]
+id = "hungry"
+label_key = "chip_hungry"
+tone = "hungry"
+on_line_key = "l_hungry"
+when = { test = "at_most", subject_kind = "store", id = "fullness", value = 3, release = 6 }
+effects = [{ target = "rate", id = "weariness", flow = "cost", store = "energy", kind = "mul_bp", amount_bp = 15000, source = "hungry" }]
+cost_key = "chip_hungry_cost"
+
+[[chips]]
+id = "tired"
+label_key = "chip_tired"
+tone = "tired"
+on_line_key = "l_tired"
+when = { test = "at_most", subject_kind = "store", id = "energy", value = 3, release = 6 }
+effects = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 5000, source = "tired" }]
+cost_key = "chip_tired_cost"
+
+# ---------- triggers ----------
+
+# Each opens on a step the player takes (a first armful, a first find, the wall's first batch, both crafts built), a
+# level, or the body's clock. Only the clock's two (hunger, tiredness) can open anything with nobody there.
+
+[[triggers]]
+id = "t_first_wood"
+when = { test = "at_least", subject_kind = "card_count", id = "gather_wood", value = 1 }
+[triggers.outcome]
+line_keys = ["l_wood"]
+unlocks = [{ unlock_kind = "store", id = "damp_wood" }, { unlock_kind = "card", id = "lay_to_dry" }]
+
+[[triggers]]
+id = "t_nail"
+when = { test = "at_least", subject_kind = "card_count", id = "scavenge", value = 1 }
+[triggers.outcome]
+stores = [{ store = "nails", items = 1 }]
+line_keys = ["l_nail"]
+unlocks = [
+  { unlock_kind = "store", id = "nails" },
+  { unlock_kind = "store", id = "stones" },
+  { unlock_kind = "skill", id = "scavenging" },
+]
+
+[[triggers]]
+id = "t_wall"
+when = { test = "at_least", subject_kind = "card_count", id = "lay_to_dry", value = 1 }
+[triggers.outcome]
+line_keys = ["l_wall"]
+unlocks = [
+  { unlock_kind = "store", id = "dry_wood" },
+  { unlock_kind = "store", id = "camp" },
+  { unlock_kind = "card", id = "clear_spot" },
+  { unlock_kind = "card", id = "ring_it" },
+  { unlock_kind = "card", id = "strike_fire" },
+  { unlock_kind = "store", id = "flint" },
+]
+
+[[triggers]]
+id = "t_flint"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 2 }
+outcome = { stores = [{ store = "flint", items = 1 }], line_keys = ["l_flint"] }
+
+[[triggers]]
+id = "t_flint_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 3 }
+outcome = { stores = [{ store = "flint", items = 1 }], line_keys = ["l_flint_2"] }
+
+# In the wait for Woodcutting 2 after the edge: a line on the player's own first cut, tapped or mixed.
+[[triggers]]
+id = "t_stack"
+when = { test = "at_least", subject_kind = "card_count", id = "woodcutting", value = 1 }
+outcome = { line_keys = ["l_stack"] }
+
+[[triggers]]
+id = "t_woodcutting_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 2 }
+outcome = { line_keys = ["l_wc_2"] }
+
+# The clock: hunger brings its cure and the roast, which needs the fire. Eating starts with it, so the roots line goes
+# red with its order card: the hands' rule offer, mid-opening for a slow player, a step before the end for a quick one.
+[[triggers]]
+id = "t_hungry"
+when = { test = "at_most", subject_kind = "store", id = "fullness", value = 3 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "forage" },
+  { unlock_kind = "card", id = "roast_roots" },
+  { unlock_kind = "store", id = "roots" },
+  { unlock_kind = "skill", id = "foraging" },
+  { unlock_kind = "action", id = "eating" },
+]
+
+[[triggers]]
+id = "t_first_roots"
+when = { test = "at_least", subject_kind = "card_count", id = "forage", value = 1 }
+outcome = { line_keys = ["l_roots"] }
+
+[[triggers]]
+id = "t_tired"
+when = { test = "at_most", subject_kind = "store", id = "energy", value = 3 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "rest" }] }
+
+# The choice answered: when reading by the fire starts with one craft built and the other not, a line on what the
+# player put first. Reading is the first thing either craft opens, so a player who builds both before reading gets
+# neither line.
+[[triggers]]
+id = "t_stool_first"
+when = { test = "at_least", subject_kind = "running", id = "read_by_fire", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "stool", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "fireback", value = 0 },
+]
+outcome = { line_keys = ["l_stool_first"] }
+
+[[triggers]]
+id = "t_fireback_first"
+when = { test = "at_least", subject_kind = "running", id = "read_by_fire", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "fireback", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "stool", value = 0 },
+]
+outcome = { line_keys = ["l_fireback_first"] }
+
+# The last of the two crafts and the roast, whichever it is (for a newcomer the second craft; a quick player can build
+# both before hunger comes). The evening starts here; the end feature waits for it.
+[[triggers]]
+id = "t_settled"
+when = { test = "at_least", subject_kind = "store", id = "settled", value = 3 }
+[triggers.outcome]
+line_keys = ["l_settled"]
+unlocks = [{ unlock_kind = "action", id = "evening" }]
+
+[[triggers]]
+id = "t_evening"
+when = { test = "at_least", subject_kind = "store", id = "evening", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "keeps_going" }] }
+
+# ---------- the journal ----------
+
+[journal]
+feature = "book"
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[entries]]
+id = "e_days_1"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_day_b2"
+entry = "e_days_1"
+gate = { test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }
+beat = "B2"
+
+# ---------- features ----------
+
+[[features]]
+id = "book"
+label_key = "feature_book"
+
+[[features]]
+id = "mix"
+
+[[features]]
+id = "ring"
+
+[[features]]
+id = "ledger"
+
+[[features]]
+id = "craft"
+
+[[features]]
+id = "stool"
+
+[[features]]
+id = "fireback"
+
+[[features]]
+id = "keeps_going"
+
+# ---------- aims ----------
+
+# What each stretch is for, a felt goal in the story's voice, one line at the band's top (schema: feature_entries.AimEntry). An
+# aim holds from its `after` until the next aim's is unlocked; the first holds from the start.
+[[aims]]
+id = "aim_fire"
+text_key = "aim_fire"
+
+[[aims]]
+id = "aim_alive"
+text_key = "aim_alive"
+after = { unlock_kind = "action", id = "fire" }
+
+[[aims]]
+id = "aim_stay"
+text_key = "aim_stay"
+after = { unlock_kind = "feature", id = "craft" }
+
+# ---------- order cards ----------
+
+# Shown inline under the red line that needs them, pre-filled. Each lets go at its release, a few items above where it
+# comes on, so a rule's mix does not flip on and off at one level; the release stays under the store's cap.
+[[order_cards]]
+store = "dry_wood"
+tap_card = "lay_to_dry"
+when = { test = "at_most", subject_kind = "store", id = "dry_wood", value = 2, release = 6 }
+
+[[order_cards]]
+store = "roots"
+tap_card = "forage"
+when = { test = "at_most", subject_kind = "store", id = "roots", value = 3, release = 6 }
+offered_after = { unlock_kind = "action", id = "eating" }
+
+# The second mix, taught after the end (docs/design/opening-screen.md, the hands strip): offered in the strip while
+# tired, once the end lines have been read; its `when` is the chip's, so the rule reads as the chip.
+[[order_cards]]
+store = "energy"
+tap_card = "rest"
+chip = "tired"
+after_end = true
+when = { test = "at_most", subject_kind = "store", id = "energy", value = 3, release = 6 }
+
+# ---------- text ----------
+# Each line is true in every state it can fire in (content/team/opening-v2.md, "Line moments").
+
+[line_kinds]
+l_up_1 = "story"
+l_up_2 = "story"
+l_up_3 = "story"
+l_look = "story"
+l_coat = "story"
+l_wood = "story"
+l_nail = "find"
+l_dry_fail = "tap"
+l_clear_1 = "story"
+l_ring_fail = "tap"
+l_flint = "find"
+l_strike_fail = "tap"
+l_fire_takes = "story"
+l_fire_lit = "story"
+l_knap_fail = "tap"
+l_knap_2 = "story"
+l_roots = "story"
+l_roast_fail = "tap"
+l_roast = "story"
+l_stool_fail = "tap"
+l_stool = "story"
+l_fireback_fail = "tap"
+l_fireback = "story"
+l_wall = "story"
+l_clear_2 = "story"
+l_ring = "story"
+l_flint_2 = "find"
+l_camp_1 = "level"
+l_camp_2 = "level"
+l_hungry = "body"
+l_tired = "body"
+l_knap_1 = "story"
+l_retire = "story"
+l_wc_2 = "story"
+l_stack = "story"
+l_read = "story"
+l_settled = "story"
+l_stool_first = "story"
+l_fireback_first = "story"
+l_dusk_1 = "story"
+l_dusk_2 = "story"
+
+[text]
+end_title = "As far as it goes"
+end_1 = "The camp goes on while you're away."
+end_2 = "What comes next is still being written."
+end_button = "Back to the camp"
+store_damp_wood = "damp wood"
+store_dry_wood = "dry wood"
+store_stones = "stones"
+store_nails = "nails"
+store_flint = "flint"
+store_roots = "roots"
+store_camp = "Camp"
+store_settled = "settled"
+store_evening = "evening"
+store_warmth = "warmth"
+store_fullness = "fullness"
+store_energy = "energy"
+
+skill_scavenging = "Scavenging"
+skill_woodcutting = "Woodcutting"
+skill_foraging = "Foraging"
+pays_find = "a find"
+pays_crafts = "the crafts"
+pays_unknown = "something new"
+camp_pays_1 = "wall dries {to} wood at a time, was {from}"
+camp_pays_2 = "{pct} capacity for wood, stones and roots"
+
+action_chill = "The cold"
+action_fire = "The fire"
+action_weariness = "Weariness"
+action_hunger = "Hunger"
+action_eating = "Eating"
+action_evening = "Evening"
+
+lane_hands = "Hands"
+lane_rack = "Drying"
+
+c_stand_up = "Stand up"
+c_look_around = "Look around"
+c_search_coat = "Search your coat"
+c_gather_wood = "Gather dead wood"
+c_scavenge = "Scavenge"
+c_woodcutting = "Cut wood"
+c_forage = "Forage"
+c_rest = "Rest"
+c_lay_to_dry = "Lay wood to dry"
+c_clear_spot = "Clear a spot"
+c_ring_it = "Ring the spot with stones"
+c_strike_fire = "Strike a fire"
+c_knap_edge = "Chip an edge on the flint"
+c_roast_roots = "Roast roots"
+c_make_stool = "Make a stool"
+c_build_fireback = "Build a fireback"
+c_read_by_fire = "Read by the fire"
+
+up_stool = "{pct} rest recovery"
+up_fireback = "{pct} wood burned by the fire"
+
+chip_cold = "cold"
+chip_cold_cost = "{pct} hands speed"
+chip_hungry = "hungry"
+chip_hungry_cost = "{pct} energy drain"
+chip_tired = "tired"
+chip_tired_cost = "{pct} hands speed"
+feature_book = "book"
+
+
+"ui.duration.d" = "{days}d"
+"ui.duration.dh" = "{days}d {h}h"
+"ui.duration.h" = "{h}h"
+"ui.duration.hm" = "{h}h {m}m"
+"ui.duration.ms" = "{m}m {s}s"
+"ui.duration.s" = "{s}s"
+"ui.rate.per_minute" = "{n}/min"
+"ui.store.amount" = "{n} / {cap}"
+"ui.ledger.empties" = "empty in {d}"
+"ui.ledger.fills" = "full in {d}"
+"ui.skill.level" = "level {n}"
+"ui.skill.next_in" = "{pays} · {d}"
+"ui.skill.none" = "no more yet"
+"ui.prestige.tops_out" = "tops out in {d}"
+"ui.prestige.top" = "at its top"
+"ui.prestige.mastered" = "mastered"
+"ui.prestige.waiting" = "+{n} levels waiting"
+"ui.prestige.waiting_one" = "+{n} level waiting"
+"ui.prestige.button" = "Push past"
+"ui.prestige.choose" = "Choose"
+"ui.prestige.undo" = "Undo"
+"ui.prestige.heading" = "{skill}: past the top"
+"ui.prestige.starts" = "The top lifts from level {before} to {after}. The carried XP takes it to level {n}. Pick a bonus."
+"ui.prestige.owed" = "Pick the bonus for this push."
+"ui.prestige.begun" = "Past the old top, at level {n}."
+"ui.prestige.make" = "{store} from {runner}: {before} → {after}"
+"ui.prestige.work" = "{card}: one every {before} → {after}"
+"ui.prestige.cap" = "{store} holds {before} → {after}"
+"ui.prestige.picks" = "Picks"
+"ui.prestige.move" = "Move"
+"ui.prestige.move_to" = "{node} stops working until the push after next. Pick where its bonus goes."
+"ui.prestige.move_here" = "Move here"
+"ui.prestige.parked" = "{node} is off. It returns with push {n} from now."
+"ui.prestige.parked_one" = "{node} is off. It returns with the next push."
+"ui.prestige.reached" = "{skill} reached its top {d} ago."
+"ui.prestige.reached_now" = "{skill} reached its top."
+"ui.lesson.prestige" = "{skill} is at its top. Push past lifts the top. Its level and everything it gave you stay."
+"ui.next.unnamed" = "something new"
+"ui.mix.runs" = "runs {d}"
+"ui.mix.runs_indefinitely" = "runs on"
+"ui.mix.idle" = "idle"
+"ui.mix.default" = "Main"
+"ui.heading.ledger" = "Ledger"
+"ui.heading.craft" = "Craft"
+"ui.heading.orders" = "Rules"
+"ui.heading.mixes" = "Mixes"
+"ui.order.add" = "Add rule"
+"ui.order.change" = "Change"
+"ui.queue.when_ready" = "When ready"
+"ui.queue.queued" = "in Next"
+"ui.queue.running" = "under way"
+"ui.queue.heading" = "Next"
+"ui.queue.plan" = "Plan"
+"ui.queue.full" = "Next is full"
+"ui.hands.next" = "next: {card}"
+"ui.rule.otherwise" = "Otherwise"
+"ui.rule.on" = "on now"
+"ui.rule.up" = "Move up"
+"ui.rule.down" = "Move down"
+"ui.rule.new" = "New rule"
+"ui.rule.full" = "That is all the room there is for rules"
+"ui.rule.do" = "Do"
+"ui.rule.more_options" = "More options"
+"ui.rule.handle" = "Move or remove"
+"ui.rule.below" = "Under {n} {store}"
+"ui.rule.below_until" = "Under {n} {store}, until {m}"
+"ui.rule.reaches" = "{n} or more {store}"
+"ui.rule.reaches_until" = "{n} or more {store}, until under {m}"
+"ui.rule.falls_below" = "falls below"
+"ui.rule.reaches_label" = "reaches"
+"ui.rule.when" = "When"
+"ui.rule.until" = "Until"
+"ui.rule.less" = "less"
+"ui.rule.more" = "more"
+"ui.rule.heading" = "Run {mix} when…"
+"ui.rule.while_runs" = "while {mix} runs"
+"ui.rule.exists" = "a rule already does this"
+"ui.rule.chip" = "While {chip}"
+"ui.rule.done" = "Once {card} is done {n} times"
+"ui.rule.done_once" = "Once {card} is done"
+"ui.rule.reaches_level" = "Once {name} reaches level {n}"
+"ui.rule.levels" = "Levels"
+"ui.rule.tasks" = "Tasks"
+"ui.rule.times" = "Times"
+"ui.rule.level" = "Level"
+"ui.rule.needs_below" = "needs under {n} {store} · now {have}"
+"ui.rule.needs_reaches" = "needs {n} or more {store} · now {have}"
+"ui.rule.outranked" = "outranked by {rule}"
+"ui.rule.passed_over" = "passed over · a task it runs is done"
+"ui.rule.stuck" = "can't reach {n}: out of {store}"
+"ui.rule.unfed" = "nothing in this mix makes {store}; it may stop short of {n}"
+"ui.rule.lately" = "Lately"
+"ui.rule.ran_once" = "ran once"
+"ui.rule.ran" = "ran {n} times"
+"ui.rule.came_on" = "came on {ago} ago"
+"ui.rule.came_on_at" = "came on at {have} {store}, {ago} ago"
+"ui.rule.let_go" = "let go {ago} ago"
+"ui.rule.let_go_at" = "let go at {have} {store}, {ago} ago"
+"ui.rule.ended_season" = "{rule} · ended with the season"
+"ui.rule.ended_left" = "{rule} · ended when {person} left"
+"ui.order.remove" = "Remove"
+"ui.close" = "Close"
+"ui.card.needs" = "{store} {have}/{n}"
+"ui.card.needs_spent" = "{store} {have}/{n}, none left"
+"ui.card.needs_skill" = "{skill} level {have}/{n}"
+"ui.card.needs_step" = "{card} {have}/{n}"
+"ui.fight.odds" = "{lost} in {of} lost"
+"ui.fight.odds_pct" = "{pct}% lost"
+"ui.fight.odds_unknown" = "odds unknown until fought"
+"ui.fight.threat_unknown" = "unknown"
+"ui.fight.vs" = "{side_name} {power}, {threat_name} {threat}"
+"ui.fight.on_loss" = "a loss costs {costs}"
+"ui.fight.base" = "base"
+"ui.fight.tally" = "{fought} fought, {lost} lost"
+"ui.fight.since" = "{runner}: {won} won, {lost} lost"
+"ui.fight.won" = "{runner}: won"
+"ui.fight.lost" = "{runner}: lost"
+"ui.log.open" = "Log"
+"ui.log.away_m" = "Away {m}m"
+"ui.log.away_h" = "Away {h}h"
+"ui.log.away_hm" = "Away {h}h {m}m"
+"ui.log.away_d" = "Away {d}d"
+"ui.log.earlier" = "Earlier"
+"ui.log.now" = "Now"
+"ui.log.n_story" = "Story {n}"
+"ui.log.n_find" = "Finds {n}"
+"ui.log.n_tap" = "Taps {n}"
+"ui.log.n_level" = "Levels {n}"
+"ui.log.n_body" = "Body {n}"
+"ui.log.n_fight" = "Fights {n}"
+"ui.feedback.open" = "Feedback"
+"ui.feedback.prompt" = "What's working, what isn't, what confused you"
+"ui.feedback.note" = "Sent with your game's progress and this build. No name goes with it."
+"ui.feedback.send" = "Send"
+"ui.feedback.cancel" = "Not now"
+"ui.feedback.thanks" = "Sent. Thank you."
+"ui.feedback.later" = "That didn't go through. Try again later."
+"ui.tab.cards" = "Tasks"
+"ui.tab.completed" = "Completed"
+"ui.hands.idle" = "idle"
+"ui.lane.idle" = "idle"
+"ui.lane.change" = "Change"
+"ui.rule.always" = "{card}, always"
+"ui.town.title" = "Camp"
+"ui.town.change" = "Change"
+"ui.town.idle" = "{person}, idle"
+"ui.rule.town_always" = "{mix}, always"
+"ui.rule.answer" = "Answer: {answer}"
+"ui.rule.answers" = "Answers"
+"ui.rule.answer_next" = "Next time someone asks:"
+"ui.rule.answered" = "Answered: {answer}"
+"ui.hands.by_rule" = "while under {n} {store}"
+"ui.hands.until_up" = "until {m} {store}"
+"ui.hands.until_down" = "until under {m} {store}"
+"ui.hands.while_chip" = "while {chip}"
+"ui.mix.both" = "Both"
+"ui.lesson.tag" = "Tutorial"
+"ui.lesson.skip" = "Skip this lesson"
+"ui.lesson.next" = "Got it"
+"ui.lesson.show" = "Show me"
+"ui.lesson.mix_offer" = "A mix works two tasks at once, with no tapping."
+"ui.lesson.mix_add" = "Tap {card} to add it."
+"ui.lesson.mix_add_more" = "Now {card}."
+"ui.lesson.mix_bar" = "The bar splits your time between them. Drag the line to change the split."
+"ui.lesson.mix_save" = "Save, and the mix starts."
+"ui.lesson.mix_runs" = "The mix keeps going while you're away. Tapping a card pauses it."
+"ui.lesson.mix_list" = "You can keep more than one mix. They are listed here."
+"ui.lesson.rule_hands" = "A rule switches your hands to a task when something happens, then back to your mix."
+"ui.lesson.rule_lane" = "A rule starts a task when something happens. Your mix keeps going."
+"ui.lesson.rule_do" = "Pick {task}: what the rule does."
+"ui.lesson.rule_when" = "Pick {when}: what it waits for."
+"ui.lesson.rule_add" = "Add it to your rules."
+"ui.lesson.rule_kept" = "Your rules live here. This one runs by itself."
+"ui.lesson.rule_on" = "Your rule is on: {task}. When it lets go, your mix comes back."
+"ui.lesson.second_hint" = "You keep tapping {card} by hand. A second mix could run it for you."
+"ui.lesson.second_open" = "Open your mixes."
+"ui.lesson.second_new" = "Start a new mix."
+"ui.lesson.second_add" = "Tap the tasks you want in it."
+"ui.lesson.second_bar" = "Add as many as you like, then drag the lines on the bar to split your time."
+"ui.lesson.second_name" = "Give it a name."
+"ui.lesson.second_save" = "Save it. Your first mix keeps running until you switch."
+"ui.lesson.second_run" = "To switch, open your mixes and tap Run on the one you want."
+"ui.lesson.cap_full" = "{store} is full. What your hands make past the top is lost."
+"ui.lesson.cap_rules" = "A rule can switch your hands to something else when it fills. Open Rules."
+"ui.lesson.cap_new" = "Start a new rule."
+"ui.lesson.cap_more" = "More options lists every store."
+"ui.lesson.cap_levels" = "Set when the rule comes on and when it lets go."
+"ui.lesson.cap_reaches" = "Pick reaches. The rule comes on once {store} is full."
+"ui.lesson.cap_do" = "Pick what your hands do instead."
+"ui.lesson.dry_line" = "{store} ran dry, so {card} stopped. Nothing in this mix makes more."
+"ui.lesson.dry_edit" = "{task} makes {store}. Open Edit to add it to this mix."
+"ui.lesson.dry_save" = "Save. While {card} waits, its time goes to the rest of the mix, and {task} makes more {store}."
+"ui.lesson.dry_rule" = "A rule can also switch to another mix when something runs dry."
+"ui.lesson.town_change" = "Your people work in shares too. Open their mix."
+"ui.lesson.town_bar" = "Each person has their own time to split. Tap + and - to change a share."
+"ui.lesson.town_save" = "Save, and everyone works to this split."
+"ui.lesson.town_runs" = "Each person shows what they are doing now."
+"ui.lesson.stopped_edit" = "{card} is done, so this mix stopped. Open Edit."
+"ui.lesson.stopped_edit_with" = "{card} is done, so this mix stopped. {task} takes its place. Open Edit."
+"ui.lesson.stopped_add" = "Tap + {task} to add it."
+"ui.lesson.stopped_drop" = "Tap ✕ to take {card} out."
+"ui.lesson.stopped_save" = "Save, and the mix runs again."
+"ui.lesson.switch_mixes" = "{build} needs {store}. Your {mix} mix makes it. Open Mixes."
+"ui.lesson.switch_run" = "Tap {mix} to run it."
+"ui.lesson.switch_edit" = "{build} needs {store}. {task} makes it. Open Edit to add it to this mix."
+"ui.lesson.switch_save" = "Save, and the mix makes {store}."
+"ui.lesson.clock" = "A real-time wait: morning comes when it runs out. The camp keeps going meanwhile."
+"ui.lesson.journal_open" = "What you learn gets written in here."
+"ui.lesson.journal_notes" = "A dot on the button means a new note."
+"ui.lesson.journal_numbers" = "Exact numbers once you've fought it. Unknown until then."
+"ui.journal.heading" = "Journal"
+"ui.journal.prev" = "Prev"
+"ui.journal.next" = "Next"
+"ui.journal.days" = "Days"
+"ui.journal.creatures" = "Creatures"
+"ui.journal.places" = "Places"
+"ui.mix.edit" = "Edit"
+"ui.mix.edit_mix" = "Edit mix"
+"ui.mix.save" = "Save"
+"ui.mix.save_new" = "Save as new"
+"ui.mix.new" = "New mix"
+"ui.mix.full" = "That is all the room there is for mixes"
+"ui.mix.run" = "Run"
+"ui.mix.running" = "running"
+"ui.mix.name" = "Name"
+"ui.mix.add" = "Add"
+"ui.mix.per_minute" = "per minute"
+"ui.mix.now" = "now"
+"ui.mix.after" = "after"
+"ui.mix.if_run" = "if run"
+"ui.goal.head" = "goals"
+"ui.goal.store" = "{store} {n}"
+"ui.goal.level" = "{skill} {n}"
+"ui.goal.never" = "never"
+"ui.goal.limited" = "limited by {store}, {n}"
+"ui.goal.xp" = "XP {n}"
+"ui.stint.run" = "Run until…"
+"ui.stint.entry" = "{mix} until {goal}"
+"ui.stint.which" = "{mix} until…"
+"ui.stint.ran" = "ran {d}"
+"ui.stint.landed" = "goal landed {ago} ago"
+"ui.stint.made" = "made {n} {store}"
+"ui.stint.made_two" = "made {n} {store} and {m} {store_b}"
+"ui.mix.yielded" = "paused while busy"
+"ui.mix.spent" = "{store} is used up"
+"ui.mix.running_now" = "running now"
+"ui.mix.from" = "+{pct} from {card}"
+"ui.mix.waiting" = "{card} waiting"
+"ui.mix.stopped" = "stopped · {card} done"
+"ui.mix.delete" = "Delete mix"
+"ui.mix.used_by" = "used by {n} rules"
+"ui.mix.used_by_one" = "used by a rule"
+"ui.mix.delete_ask" = "Delete this mix?"
+"ui.yes" = "Yes"
+"ui.no" = "No"
+"ui.mix.named_by_order" = "a rule uses it"
+"ui.mix.nested" = "inside another mix"
+"ui.card.count" = "{n}/{cap}"
+"ui.card.retired" = "retired"
+"ui.ledger.full" = "full"
+"ui.camp.pays" = "level {level}: {pays}"
+"ui.goal.in" = "in {d}"
+"ui.goal.while" = "pauses if out of {store}"
+"ui.goal.paused" = "paused, out of {store}"
+"ui.ledger.starved" = "ran dry"
+"ui.ledger.unfed" = "ran dry · {pct} work speed off"
+"ui.devices.open" = "Another device"
+"ui.devices.heading" = "Another device"
+"ui.reminders.heading" = "Reminders"
+"ui.reminders.lead" = "Ostmere sends one notification after you've been away for the time you pick, then nothing until you're back."
+"ui.reminders.away" = "After you've been away"
+"ui.reminders.h12" = "{n} hours"
+"ui.reminders.h24" = "A day"
+"ui.reminders.h72" = "{n} days"
+"ui.reminders.h168" = "A week"
+"ui.reminders.window" = "Only between"
+"ui.reminders.from" = "From"
+"ui.reminders.until" = "Until"
+"ui.reminders.window_said" = "From {from} until {until}"
+"ui.reminders.any_time" = "Any time"
+"ui.reminders.turn_on" = "Turn on"
+"ui.reminders.turn_off" = "Turn off"
+"ui.reminders.is_on" = "On for this device."
+"ui.reminders.is_off" = "Reminders are off."
+"ui.reminders.unavailable" = "Reminders aren't available here."
+"ui.reminders.install" = "Add Ostmere to your Home Screen first, then this works."
+"ui.reminders.denied" = "Notifications are blocked for this site. Allow them in your browser's settings to use reminders."
+"ui.reminders.none" = "This browser can't show notifications."
+"ui.reminders.failed" = "That didn't go through. Try again."
+"ui.reminders.mention" = "If you'd like a nudge to come back, there's a setting for it."
+"ui.reminders.mention_open" = "Open settings"
+"ui.devices.code_lead" = "On your other device, open this site and enter the code, or scan the QR code."
+"ui.devices.code_note" = "Works once. Expires in {d}."
+"ui.devices.code_gone" = "This code has expired."
+"ui.devices.code_new" = "New code"
+"ui.devices.words_heading" = "Recovery words"
+"ui.devices.words_lead" = "Four words that restore this game on any device if you lose this one."
+"ui.devices.words_make" = "Make recovery words"
+"ui.devices.words_remake" = "Replace words"
+"ui.devices.words_replace_ask" = "Your old words will stop working. Tap again to confirm."
+"ui.devices.words_note" = "Write these down or save them. They're shown only once. Don't share them."
+"ui.devices.words_save" = "Save"
+"ui.devices.words_copy" = "Copy"
+"ui.devices.words_copied" = "Copied"
+"ui.devices.words_copy_failed" = "Couldn't copy. Write them down instead."
+"ui.devices.join_heading" = "Join from another device"
+"ui.devices.join_lead" = "Enter a code from your other device, or your recovery words."
+"ui.devices.join_code" = "Code"
+"ui.devices.join_words" = "Recovery words"
+"ui.devices.join" = "Join"
+"ui.devices.join_none" = "No match. Check the code or words and try again. Codes work once and expire after {minutes} minutes."
+"ui.devices.join_limited" = "Too many tries. Try again later."
+"ui.devices.join_full" = "One account keeps up to {max} games, and the two devices together have more. Delete some first, here or on the other device."
+"ui.devices.merge_ask" = "This device has games of its own. Move them into the other account? They'll be listed after its games, with new numbers. Or join without moving them: they stay on this device's old account, and its recovery words bring them back."
+"ui.devices.merge_words" = "If you move them, recovery words made on this device will stop working. The other account's words will restore all the games."
+"ui.devices.merge" = "Move my games"
+"ui.devices.keep" = "Join without moving"
+"ui.devices.merge_cancel" = "Cancel"
+"ui.devices.kept_heading" = "Your games stayed behind"
+"ui.devices.kept_new" = "You're in the other account now. The games from this device stayed on its old account, and these four words are the only way back to them."
+"ui.devices.kept_had" = "You're in the other account now. The games from this device stayed on its old account. The recovery words you made for it are the only way back to them, and they can't be shown again."
+"ui.devices.kept_done" = "Continue"
+"ui.devices.away" = "Can't reach the server. Try again in a moment."
+"ui.devices.list_heading" = "Your devices"
+"ui.devices.list_lead" = "Browsers signed in to this account. Remove one to sign it out."
+"ui.devices.list_this" = "This device"
+"ui.devices.list_seen" = "Last used {seen}"
+"ui.devices.list_remove" = "Remove"
+"ui.devices.list_remove_ask" = "Sign this browser out? Your games stay on the account. To get back in, use a code or recovery words."
+"ui.devices.list_remove_yes" = "Sign out"
+"ui.devices.list_remove_no" = "Cancel"
+"ui.games.open" = "Games"
+"ui.games.heading" = "Games"
+"ui.games.name" = "Game {number}"
+"ui.games.unnumbered" = "Game"
+"ui.games.camp" = "Camp level {level}"
+"ui.games.dates" = "Started {started} · Last played {played}"
+"ui.games.playing" = "Playing now"
+"ui.games.switch" = "Open"
+"ui.games.delete" = "Delete"
+"ui.games.delete_ask" = "Delete this game? You can restore it for {days} days."
+"ui.games.start_over" = "Start over"
+"ui.games.start_over_ask" = "Start a new game and delete this one? You can restore it for {days} days."
+"ui.games.cancel" = "Cancel"
+"ui.games.new" = "New game"
+"ui.games.full" = "You can keep up to {max} games. Delete one to start another."
+"ui.games.limited" = "Too many new games today. Try again later."
+"ui.games.deleted_heading" = "Deleted"
+"ui.games.kept" = "Kept until {until}"
+"ui.games.restore" = "Restore"
+"ui.games.straight" = "Skip the front page on this device"
+"ui.games.skip_lessons" = "Skip lessons in every game"
+"ui.games.played" = "Last played {when}"
+"ui.front.continue" = "Continue"
+"ui.front.begin" = "Begin"
+"ui.front.first" = "The world ended. The chores didn't."
+"ui.time.now" = "just now"
+"ui.time.minutes" = "{n} minutes ago"
+"ui.time.hour" = "an hour ago"
+"ui.time.hours" = "{n} hours ago"
+"ui.time.yesterday" = "yesterday"
+"ui.time.days" = "{n} days ago"
+"ui.frame.kept_out" = "This browser won't keep your game inside this page."
+"ui.frame.open" = "Play Ostmere in its own tab"
+"ui.catching_up" = "Catching up on the time away… {percent}%"
+
+# Kept: approved lines whose moment opening v2 keeps.
+l_up_1 = "you get an arm under you. it gives."
+l_up_2 = "knees under you this time. then not."
+l_up_3 = "up. the wall holds you there until the ground stops tilting."
+l_look = "walls, mostly. a roof over one corner. grey every way you look, nothing moving in it. your hands have been cold a long while."
+l_coat = "inside the coat, a book with its first pages gone at the stitching. wrapped with it, a charcoal stick worn short."
+l_wood = "dead birch, snapped off by hand, wet through."
+l_nail = "under a fallen beam, a bent nail. you keep it."
+l_dry_fail = "not enough wet wood to lay along the wall."
+l_clear_1 = "you scrape the ash back to stone with the side of your boot."
+l_ring_fail = "you set down what stones you have. it isn't a ring yet."
+l_flint = "a grey stone that sparks against the nail. you carry it back in your fist."
+l_strike_fail = "you strike at the dry wood for a good while. it stays wood."
+l_fire_takes = "it takes. you sit close enough to smell your sleeves."
+l_fire_lit = "fire lit. it eats a stick every ten minutes."
+l_knap_fail = "you knock two of the ring's stones together until your wrists ache. neither takes an edge."
+l_knap_2 = "with the edge, a birch comes down in four strokes."
+l_roots = "roots under the scrub, bitter and full of grit."
+l_roast_fail = "not enough roots, or no fire to put them in."
+l_roast = "roasted, they go soft enough to eat. you eat three."
+l_stool_fail = "you work at a seat and legs. none of it would hold you."
+l_stool = "four legs, one of them short. you sit on it anyway."
+l_fireback_fail = "you start on the fireback. halfway up, it comes down."
+l_fireback = "stones stacked at the fire's back. its heat comes off them onto your face."
+
+# New in opening v2: moments that are new or changed.
+l_wall = "the wood comes off the wall dry. the wall is warm, and clean of ash. nothing else here is."
+l_clear_2 = "the stone underneath is cut, and fitted, and warm as the wall. your boot found its edge before you thought to look."
+l_ring = "five stones in a ring on the cut stone. none of them rocks."
+l_flint_2 = "another flint, from further in under the rubble."
+l_camp_1 = "you've stopped tripping on the rubble."
+l_camp_2 = "you could find anything here in the dark. there isn't much to find."
+l_hungry = "you catch yourself chewing a birch splinter."
+l_tired = "your arms go heavy. you work at half the pace, and it wasn't much of one."
+l_knap_1 = "the flint splits wrong and opens two of your fingers. wiping the blood off, you find a mark inside your wrist, old and neater than a scar."
+l_retire = "no more snapping dead wood by hand. the edge does it better."
+l_wc_2 = "you split the birch where you mean to now."
+l_stack = "you stack the cut birch by the wall. the ash greys the top logs and stops at the stone."
+l_read = "by firelight, the first page after the torn ones isn't quite blank. something drawn on a page that's gone has pressed through: circles, round a circle."
+l_settled = "it's starting to look like somewhere to stay. you eat from the roots as you go, a little at a time."
+l_stool_first = "a seat first, then. the open fire eats wood while you sit."
+l_fireback_first = "the fire got a back to lean on first. you read on your knees."
+l_dusk_1 = "the grey goes to brown, and the brown to dark. then the cracks in the floor begin to glow, a dull red, in rings around the place you woke."
+l_dusk_2 = "far off on the ridge, a light comes up that isn't yours. it doesn't move. it doesn't go out."
+
+# Aims: each true for its whole stretch, a goal felt rather than a task named.
+aim_fire = "you're freezing. a fire, before dark."
+aim_alive = "keep the fire alive, and yourself."
+aim_stay = "make this somewhere you could stay."
+
+# The journal's notes (api/CONTRACT.txt, "JOURNAL").
+n_day_b2 = "fire, by my own hand. the first thing i've made, that i know of"

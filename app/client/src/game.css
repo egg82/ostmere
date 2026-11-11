@@ -1,0 +1,875 @@
+/* The front page and the game screen (docs/design/opening-screen.md). Tokens copied from the design canvas
+   (docs/design/canvas/Mix.dc.html) and the front page (static/index.html); new for v2: the root type scale, the hue
+   tokens shared by a card, its mix segment and its editor row, and the chip icons (ChipInfo.tone). */
+:root {
+  --bg: #0f0f14;
+  --panel: #18181f;
+  --line: #2a2932;
+  --track: #0b0b0f;
+  --ink: #d8d0c4;
+  --ink-bright: #e2d9cc;
+  --ink-head: #e8dfd2;
+  --ink-dim: #9a9187;
+  --ink-meta: #b9b0a3;
+  --ember: #c8743a;
+  --ember-hot: #e0954f;
+  --btn-bg: #2a1b14;
+  --btn-line: #6b3f22;
+  --btn-ink: #f0b27a;
+  --good: #a9c48a;
+  --alarm: #e0614a;
+  --alarm-bg: #2a1514;
+  --grey: #88807b;
+  /* frames at the scene's grain (the art draws at 2 CSS px a pixel on a desktop). Each frame is a 9-slice
+     border-image with notched corners; its colour is the element's declared border colour, which the contrast test reads.
+     A rim is a control's edge (3:1 on the ground); --rim-dim edges a container that is not a control. */
+  --rim: #6e6977;
+  --rim-ember: #a8642f;
+  --rim-dim: #34323c;
+  --bevel: inset 0 2px 0 rgba(255, 255, 255, .06), inset 0 -2px 0 rgba(0, 0, 0, .45);
+  --bevel-warm: inset 0 2px 0 rgba(240, 178, 122, .14), inset 0 -2px 0 rgba(0, 0, 0, .5);
+  --drop: 0 2px 0 #050407;
+  --px-stone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' shape-rendering='crispEdges'%3E%3Cpath fill='%236e6977' d='M1 0h3v1H1zM1 4h3v1H1zM0 1h1v3H0zM4 1h1v3H4z'/%3E%3C/svg%3E");
+  --px-ember: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' shape-rendering='crispEdges'%3E%3Cpath fill='%23a8642f' d='M1 0h3v1H1zM1 4h3v1H1zM0 1h1v3H0zM4 1h1v3H4z'/%3E%3C/svg%3E");
+  --px-hot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' shape-rendering='crispEdges'%3E%3Cpath fill='%23e0954f' d='M1 0h3v1H1zM1 4h3v1H1zM0 1h1v3H0zM4 1h1v3H4z'/%3E%3C/svg%3E");
+  --px-dim: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' shape-rendering='crispEdges'%3E%3Cpath fill='%2334323c' d='M1 0h3v1H1zM1 4h3v1H1zM0 1h1v3H0zM4 1h1v3H4z'/%3E%3C/svg%3E");
+  --px-btn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' shape-rendering='crispEdges'%3E%3Cpath fill='%236b3f22' d='M1 0h3v1H1zM1 4h3v1H1zM0 1h1v3H0zM4 1h1v3H4z'/%3E%3C/svg%3E");
+  --px-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' shape-rendering='crispEdges'%3E%3Cpath fill='%2388807b' d='M1 0h3v1H1zM1 4h3v1H1zM0 1h1v3H0zM4 1h1v3H4z'/%3E%3C/svg%3E");
+  --px2-stone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' shape-rendering='crispEdges'%3E%3Cpath fill='%2308070a' d='M2 0h5v1H2zM2 8h5v1H2zM0 2h1v5H0zM8 2h1v5H8zM1 1h1v1H1zM7 1h1v1H7zM1 7h1v1H1zM7 7h1v1H7z'/%3E%3Cpath fill='%234a4754' d='M2 1h5v1H2zM2 7h5v1H2zM1 2h1v5H1zM7 2h1v5H7z'/%3E%3C/svg%3E");
+  --px2-dim: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' shape-rendering='crispEdges'%3E%3Cpath fill='%2308070a' d='M2 0h5v1H2zM2 8h5v1H2zM0 2h1v5H0zM8 2h1v5H8zM1 1h1v1H1zM7 1h1v1H7zM1 7h1v1H1zM7 7h1v1H7z'/%3E%3Cpath fill='%2334323c' d='M2 1h5v1H2zM2 7h5v1H2zM1 2h1v5H1zM7 2h1v5H7z'/%3E%3C/svg%3E");
+  /* the journal's page and its hand (ui/journal.ts): the ink and parchment the sketch method draws with (docs/research/sketch-test/process.md);
+     the pencil is the ink lightened only as far as 4.5:1 on the parchment holds */
+  --parchment: #e6dcc6;
+  --hand-ink: #2b241c;
+  --hand-pencil: #645d52;
+  --head-bg: rgba(12, 10, 12, .86);
+  --panel-w: clamp(28rem, 30vw, 38rem);
+  --scene-vh: 38vh;   /* the pinned scene on a phone */
+  /* the failed tap's pulse (the Feedback system's effect, ui/cards.ts failed()): the card's red glow and the flash of
+     what stopped the tap, transform and colour only, so nothing moves */
+  --fail-ms: 400ms;
+  --fail-scale: 1.12;
+  --fail-glow: 0 0 0 2px var(--alarm), 0 0 1rem rgba(224, 97, 74, .55);
+  color-scheme: dark;
+}
+/* One type scale: everything is rem off a root that grows with the viewport (16px on a phone, ~20px at 1920, ~29px at
+   3840), so a 4K screen gets a larger page, not a wider one with tiny type. Story 1.15rem, card titles 1rem, chips and
+   bar labels .9rem (the smallest text on the page). */
+html { font-size: clamp(16px, calc(0.5vw + 10px), 30px); }
+
+.hue-0 { --hue: #c8743a; } .hue-1 { --hue: #8f9a6a; } .hue-2 { --hue: #6f8aa3; }
+.hue-3 { --hue: #c9a35c; } .hue-4 { --hue: #cf573e; } .hue-5 { --hue: #9a7aa0; }
+
+body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress; transition: opacity .6s; }   /* asking the server again, or catching up: quiet */
+.catching-up { position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100vw - 32px); pointer-events: none; margin: 0; padding: .4rem .8rem; background: var(--panel); color: var(--ink-bright); border: 2px solid var(--rim-dim); font: 400 1rem/1.35 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.catching-up[hidden] { display: none; }
+
+/* ---------- the game ---------- */
+.game {
+  /* a phone: one column that scrolls, the scene and the hands strip pinned while the cards scroll under them */
+  position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain; background: var(--bg);
+  font: 400 1rem/1.35 "Alegreya Sans", system-ui, sans-serif; color: var(--ink);
+  animation: arrive .9s ease-out backwards;   /* not "both": a held end state keeps the whole screen an animated layer (4K: 23 fps) */
+}
+.game [hidden] { display: none !important; }
+.game button { font: inherit; color: inherit; }
+
+.left { display: contents; }   /* a phone: the stage is pinned in the game's own scroll */
+.low { display: none; }
+.stage { position: sticky; top: 0; z-index: 4; height: var(--scene-vh); overflow: hidden; background: #0b0a0b; }
+.scene-box { position: absolute; inset: 0; box-sizing: border-box; padding: .5rem; display: flex; justify-content: center; align-items: center; }
+.scene-frame { position: relative; padding: 0; border: 4px solid #4a4754; border-image: var(--px2-stone) 2; background: #08070a; line-height: 0; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
+.scene-box.no-art .scene-art { visibility: hidden; }
+.scene-art { display: block; }
+
+/* the head: the Camp bar, chips and Log in one row just above the art, in its stage (ui/headseat.ts) */
+.scene-head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; padding: .4rem .75rem; line-height: 1.35; text-align: left; }
+/* the aim: what this stretch is for, in the story's voice; one line, its room there from the first screen (ui/aim.ts,
+   ui/headseat.ts): above the art, under the head's row on a phone */
+.aim { flex: none; box-sizing: content-box; height: 1.3em; margin: 0; padding: 0 .75rem .35rem; font-size: .95rem; font-style: italic; line-height: 1.3; color: var(--ink-bright); text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aim.aim-new { animation: arrive .9s ease-out; }
+.chips { display: flex; flex-wrap: wrap; gap: .9rem; margin-left: auto; }   /* after the Camp bar, against Log: a chip coming or going never moves the bar's left edge */
+/* a chip is a state, not a control: its words in its tone, no frame */
+.chip { font-size: .9rem; padding: .1rem 0; color: var(--ink-meta); text-shadow: 0 1px 3px #000; }
+.chip::before { margin-right: .3em; }
+.chip[data-tone="cold"] { color: #a9bfd8; }
+.chip[data-tone="cold"]::before { content: "❄"; }
+.chip[data-tone="hungry"] { color: #c9c48a; }
+.chip[data-tone="hungry"]::before { content: "◐"; }
+.chip[data-tone="tired"] { color: #b9a6d0; }
+.chip[data-tone="tired"]::before { content: "☾"; }
+.chip[data-tone="warm"] { color: var(--btn-ink); }
+.chip-cost { display: block; line-height: 1.15; color: var(--ink-meta); }   /* what the chip costs, under its word */
+.chip.keep { position: relative; }   /* a thing carried (FeatureInfo.label_key), with its dot */
+.chip.keep::before { content: "▤"; }
+
+/* the Camp bar: warm (it is the player's), not a control */
+.camp { flex: 1 1 8rem; min-width: 7rem; font-size: .9rem; color: var(--btn-ink); }
+.camp-head { display: flex; flex-wrap: wrap; gap: 0 .5rem; align-items: baseline; }
+.camp-level { font-weight: 700; white-space: nowrap; }
+.camp-next { color: var(--ink-meta); min-width: 0; }
+.camp-next::before { content: "▸ "; color: var(--ember); }
+.camp-track { display: block; height: 6px; margin-top: .25rem; background: #08070a padding-box; border: 2px solid var(--rim-dim); border-image: var(--px-dim) 1; overflow: hidden; }
+.camp-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, #a85a2a, var(--ember) 60%, var(--ember-hot)); box-shadow: inset 0 2px 0 rgba(255, 220, 170, .35); }
+.goal { margin-top: .3rem; }   /* a story beat's store with no line yet, under the Camp level (ui/goals.ts) */
+.camp-head:not([hidden]) ~ .goals .goal:first-child { margin-top: .4rem; }
+.goal-what { white-space: nowrap; }
+.goal .camp-track { height: 4px; }
+/* The story mark (game/story.ts): the Camp bar's next marker, before the name of what a story beat waits on. */
+.card.story .card-title::before, .line.story .line-name::before, .skill.story .skill-name::before { content: "▸ " / ""; color: var(--ember); }
+.wait-line { margin: 0; font-size: .9rem; color: var(--ink-meta); font-variant-numeric: tabular-nums; }   /* the wait (ui/waitline.ts): plain text, no card */
+
+/* the story strip (ui/story.ts), off the art in the panel's colours: the newest lines that fit, whole. Every line the
+   content can write sits unseen in the strip's one grid cell with them (.strip-room), so the cell is the tallest line's
+   height at this width; ui/story.ts keeps as many of the newest lines as fit in it, so none is cut and none arriving
+   moves anything. */
+.strip { display: grid; padding: .5rem .75rem .6rem; background: var(--bg); color: var(--ink-bright); border-top: 2px solid #08070a; box-shadow: inset 0 2px 0 var(--rim-dim); }
+.strip > .lines, .strip > .strip-room { grid-area: 1 / 1; min-width: 0; margin: 0; padding: 0; font-size: 1.15rem; line-height: 1.35; }
+.strip-room { display: grid; visibility: hidden; align-self: start; }   /* its own height, not the cell's: ui/story.ts measures it */
+.strip-room > span { grid-area: 1 / 1; }
+.lines { align-self: start; list-style: none; --line-from-x: 0; --line-from-y: .4rem; }
+/* the newest lines that have shown, oldest first, the older dimmer; one waiting its turn in the arrival queue takes no room */
+.lines li { animation: line-in .2s ease-out backwards; }
+.lines li + li { margin-top: .3rem; }
+.lines li.still { animation: none; }
+.lines li.held { display: none; }
+.lines li:not(:nth-last-child(1 of :not(.held))) { color: var(--ink-meta); }
+.lines li.arrive { animation: line-in .2s ease-out; }
+.log-open, .journal-open {   /* the Journal button (ui/journal.ts) is the Log button's twin: rim, bevel and tap size */
+  position: relative; flex: none; align-self: center; min-height: 1.9rem; padding: 0 .7rem; cursor: pointer; font-size: .9rem !important;
+  background: rgba(24, 24, 31, .92) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel); color: var(--ink-meta) !important;
+}
+.log-open { margin-left: auto; }
+.journal-open::before { content: "▤"; margin-right: .4em; }
+.log-open .new-dot, .journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
+.log-open:hover, .log-open:focus-visible, .journal-open:hover, .journal-open:focus-visible { color: var(--btn-ink) !important; border-color: var(--rim-ember); border-image: var(--px-ember) 1; outline: none; }
+.panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; margin-top: calc(var(--line-room) - 1rem); }   /* below the longest tap line a card can hang (.card-line), so a line never covers it; the 1rem is the panel's own gap */   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
+.feedback-open, .devices-open, .games-open {   /* words only until it is hovered */
+  flex: none; min-height: 2.4rem; padding: 0 .7rem; cursor: pointer; font-size: .9rem !important;
+  background: transparent; border: 2px solid transparent; color: var(--ink-meta) !important;
+}
+.feedback-open:hover, .feedback-open:focus-visible, .devices-open:hover, .devices-open:focus-visible, .games-open:hover, .games-open:focus-visible { color: var(--btn-ink) !important; border-color: var(--btn-line); border-image: var(--px-btn) 1; outline: none; }
+
+/* ---------- the panel ---------- */
+.panel { --line-room: 12.5rem; /* the tallest tap line (about 150 characters) on a phone's 2-column card, with its margin; 360px wide and up */ padding: 0 1rem calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 1rem; }
+.panel-top { position: sticky; top: var(--scene-vh); z-index: 3; margin: 0 -1rem; padding: .5rem 1rem; background: var(--bg); border-bottom: 2px solid #08070a; box-shadow: 0 2px 0 var(--rim-dim); }
+.panel-heading { margin: 0 0 .4rem; font: 400 1.1rem/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-head); letter-spacing: .02em; }
+.banners:empty { display: none; }
+.banners { position: sticky; top: .5rem; z-index: 5; height: 0; overflow: visible; }
+.banner { width: 100%; text-align: left; padding: .6rem .75rem; cursor: pointer; background: var(--btn-bg); border: 1px dashed var(--btn-line); color: var(--btn-ink); }
+
+/* the hands strip: takes no room until it arrives (ui/hands.ts) */
+.hands { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: .75rem; min-height: 4.6rem; }   /* the running mix's height, so it never grows */
+.hands-label { font-size: .9rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ember-hot); }
+.hands-body { min-width: 0; }
+.hands-text { color: var(--ink-bright); }
+.hands-text.idle { color: var(--grey); }
+.hands-offer { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.rule-pick { display: inline-flex; align-items: center; gap: .6rem; flex-wrap: wrap; }   /* one chip card's rule and its button, a pair beside the chip's other cards */
+.offer-buttons { display: inline-flex; gap: .6rem; }   /* two buttons wrap as one group, never one alone */
+.hands-rule-offer, .hands-mix-offer { margin-top: .4rem; }   /* a chip's rule offer, its own row under the mix */
+.offer-names { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+.offer-name { padding: .15rem .5rem; border-left: 4px solid var(--hue); background: var(--panel); color: var(--ink-bright); }
+.offer-plus { color: var(--ink-meta); }
+.offer-both, .hands-edit, .hands-name, .line-edit, .editor .primary, .editor .quiet, :is(.sheet, .rules) .primary, :is(.sheet, .rules) .quiet {
+  min-height: 2.4rem; padding: 0 .9rem; cursor: pointer;
+}
+.offer-both, .editor .primary, :is(.sheet, .rules) .primary, :is(.line-order, .skill-foot) .primary { background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm), var(--drop); color: var(--btn-ink) !important; font-weight: 500; }
+.hands-edit, .line-edit, .editor .quiet, :is(.sheet, .rules) .quiet { background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); color: var(--ink-meta) !important; }
+.hands-edit:hover, .line-edit:hover, .editor .quiet:hover, :is(.sheet, .rules) .quiet:hover { color: var(--btn-ink) !important; border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.hands-name { flex: none; background: transparent; border: 2px solid transparent; color: var(--ink-bright) !important; font-weight: 500; padding: 0 .3rem; display: inline-flex; align-items: center; white-space: nowrap; }   /* "Mixes ▾": never squeezed; the name beside it gives way */
+.hands-mix-name { flex: 0 1 auto; min-width: 0; max-width: 12rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-bright); font-weight: 500; }   /* the running mix's name, plain text; a long one truncates */
+.hands-row { display: flex; align-items: center; gap: .6rem; }
+.hands-plan { flex: none; margin-left: auto; font-size: .9rem; }
+/* three roles on the strip: the name ▾ is a picker (a sunk field), the rule a link to it, Edit the one raised button */
+.hands-name:not(:disabled) { gap: .5rem; padding: 0 .55rem 0 .65rem; border-color: var(--rim); border-image: var(--px-stone) 1; background: var(--track) padding-box; box-shadow: inset 0 2px 0 rgba(0, 0, 0, .6); cursor: pointer; }
+.hands-name:not(:disabled):hover { border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.hands-name:disabled { cursor: default; }
+.hands-meta { display: flex; align-items: center; gap: .6rem; margin-top: calc(.3rem + 4px); font-size: .9rem; }
+.hands-next { flex: 0 1000000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; color: var(--ink-meta); }   /* the queue's head: the first to give way */
+.hands-runs { flex: none; color: var(--ink-meta); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* "runs 1 h 29 m" never breaks mid-value */
+.hands-rule { flex: 0 1 auto; min-width: 0; min-height: 2.2rem; padding: 0 .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: inherit; font-size: .9rem; color: var(--ink-meta); background: transparent; border: 0; cursor: pointer; }   /* where the running rule lets go: a link to it in the Rules tab */
+.hands-status { flex: 1 1000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-dim); }   /* one line; the queue's head (.hands-next) shrinks before it, and it before the mix's name: shrink factors far apart in size, so the name, last to give way, loses not even a sub-pixel (that alone draws its ellipsis); hidden while covered, the status still holds its width */
+.hands.yielded .hands-status { flex: 1 0 auto; }   /* the short label never gives way: the name and the queue's head do */
+.hands.yielded :is(.hands-runs, .hands-rule) { display: none; }   /* a paused mix has nothing to run out: the name gets the room */
+.hands.yielded .share-bar, .hands.greyed .share-bar { filter: saturate(.15) brightness(.6); }
+.hands.greyed .hands-mix-name { color: var(--ink-dim); }
+.hands.greyed .hands-status { color: var(--ink-bright); }   /* why the mix stopped: plain, not dimmed with it */
+/* an offer (ui/offerrows.ts), on the mix offer's row: the question, then one button per answer with its time under it */
+.offer-row { margin-top: .4rem; }
+/* someone asking, not the strip's routine: a panel with an ember edge, the question larger; it has no Dismiss and waits */
+.offer-ask { padding: .6rem .75rem; background: var(--panel); border-left: 4px solid var(--ember-hot); box-shadow: var(--drop); }
+.offer-ask .offer-text { font-size: 1.05rem; }
+.offer-text { flex: 1 1 14rem; margin: 0; min-width: 0; color: var(--ink-bright); }
+.kind-rule { flex-wrap: wrap; }
+.kind-rule .kind-asked, .kind-rule .kind-answered, .kind-rule .kind-lead { flex-basis: 100%; margin: 0; }
+.kind-rule .kind-asked { color: var(--ink-meta); font-size: .9rem; }
+.kind-rule .kind-lead { color: var(--ink-dim, #a9a39a); font-size: .9rem; }
+.offer-answer { display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: .3rem .9rem; line-height: 1.2; text-align: left; }
+.offer-cost { font-size: .9rem; font-weight: 400; }
+/* the offer rows on a phone (ui/hands.ts seats them): under the pinned strip, scrolling with the cards, so a prompt does not cost the cards their room */
+.hands-rows:not(:has(> :not([hidden], :empty))) { display: none; }
+.hands-rows { padding: 0 0 .5rem; border-bottom: 2px solid var(--rim-dim); }
+.hands-rows > * { margin-top: .5rem; }
+/* a lane run by rules (ui/lanerows.ts): the strip's shape under it, one row per lane: who, what, its bar, Change */
+.lane-rows:not(:empty) { padding: .5rem 0; border-bottom: 2px solid var(--rim-dim); }   /* under the pinned strip, scrolling with the cards on a phone */
+.lane-row { min-height: 2.75rem; }
+.lane-row + .lane-row { margin-top: .5rem; }
+.lane-row .hands-row { justify-content: space-between; }
+.lane-row .lane-bar { margin-top: .35rem; }
+.lane-row .lane-fill { background: linear-gradient(90deg, #a85a2a, var(--ember) 60%, var(--ember-hot)); }
+
+/* a mix as one split bar */
+.share-bar { position: relative; touch-action: none; }
+.share-track { position: relative; height: 1.9rem; background: var(--track); box-shadow: 0 0 0 2px #08070a, 0 0 0 4px var(--rim-dim); }
+.share-bar.large .share-track { height: 3rem; }
+.share-seg { position: absolute; top: 0; bottom: 0; box-sizing: border-box; padding: 0 .5rem; display: flex; align-items: center; overflow: hidden; background: var(--hue); color: #140f0d; border-right: 2px solid #08070a; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .3), inset 0 -2px 0 rgba(0, 0, 0, .25); transition: left .2s ease, width .2s ease; }
+.share-seg:nth-last-child(1 of .share-seg) { border-right: 0; }
+.share-text { display: flex; gap: .3em; min-width: 0; font-size: .9rem; font-weight: 600; white-space: nowrap; }
+.share-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }   /* a narrow segment cuts the name, never the share beside it */
+.share-pct { flex: none; }
+.share-seg.struck { background: repeating-linear-gradient(135deg, #3a3236 0 6px, #2a2427 6px 12px); color: var(--ink-dim); }
+.share-seg.struck .share-text { text-decoration: line-through; }
+.share-bar.large .share-seg { cursor: grab; }
+.share-seg.leaving { opacity: .4; }
+.share-bar.dragging .share-seg { transition: none; }
+.share-divider { position: absolute; top: -.4rem; bottom: -.4rem; width: 1.8rem; transform: translateX(-50%); z-index: 2; cursor: ew-resize; touch-action: none; display: flex; align-items: center; justify-content: center; outline: none; }
+.share-divider::before { content: ""; width: 4px; height: calc(100% - .2rem); background: var(--ink-head); box-shadow: 0 0 0 2px var(--bg); transition: transform .15s, background .15s; }
+.share-divider:hover::before, .share-divider:focus-visible::before { background: #fff; }
+.share-divider.held::before { background: var(--btn-ink); transform: scaleX(1.4); }
+.share-divider.settle::before { animation: settle .35s ease; }
+
+/* tabs: Cards · Completed (no count) */
+.tabs { display: flex; gap: .3rem; margin-bottom: -.4rem; }
+.tab { background: transparent; border: 0; border-bottom: 4px solid transparent; padding: .3rem .5rem; min-height: 2.2rem; color: var(--ink-meta) !important; cursor: pointer; position: relative; }
+.tab.on { color: var(--ink-head) !important; border-bottom-color: var(--ember); }
+.tab .new-dot { top: .3rem; left: auto; right: .15rem; }   /* Tasks, when a card arrived while another tab was open */
+
+/* cards */
+[data-lane] { --lane: var(--ink-dim); }
+[data-lane="hands"] { --lane: var(--ember-hot); }
+[data-lane="rack"] { --lane: #a9bfd8; }
+.deck { display: flex; flex-direction: column; gap: .9rem; }
+.lane-tag { margin: 0 0 .35rem; font-size: .9rem; font-weight: 500; letter-spacing: .04em; color: var(--lane); }
+.lane-group:not([data-lane="hands"]) .lane-tag { text-transform: uppercase; }
+.card-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr)); gap: .6rem; }
+.card {
+  --foot-h: 2rem;   /* the foot's band: tall enough for When ready, so the button sits under the bar, never over it */
+  position: relative; display: flex; min-height: 5.6rem;
+  background: linear-gradient(var(--lane), var(--lane)) 0 0 / 4px 100% no-repeat padding-box var(--panel); border: 2px solid var(--rim-dim); border-image: var(--px-dim) 1; box-shadow: var(--bevel); color: var(--ink-meta);
+  transition: background-color .2s, border-color .2s, box-shadow .2s, opacity .3s;
+}
+.card-tap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; padding: .6rem .8rem .55rem .9rem; text-align: left; background: none; border: 0; border-radius: inherit; cursor: pointer; }
+.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; padding-right: 3.2rem; }
+.card-title { font-size: 1rem; font-weight: 500; color: var(--ink-head); min-width: 0; overflow-wrap: break-word; }
+.card-count { font-size: .9rem; color: var(--ink-meta); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.card-upside { font-size: .9rem; color: var(--good); }
+.card-needs { display: flex; flex-wrap: wrap; gap: .1rem .7rem; font-size: .9rem; color: var(--ink-meta); font-variant-numeric: tabular-nums; }
+.need-have { font-weight: 700; color: var(--ink-head); }   /* a short need: only the number it is short of stands out; red is the ledger's alarm */
+.card-track { display: block; height: 6px; margin-top: auto; background: var(--track); box-shadow: inset 0 2px 0 #050407; overflow: hidden; }
+.card-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: var(--ink-meta); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25); }
+.card.running .card-fill { background: linear-gradient(90deg, #a85a2a, var(--ember) 60%, var(--ember-hot)); }
+.card.by-mix .card-fill { background: var(--hue, var(--ember)); }
+.card-foot { display: flex; align-items: center; min-height: var(--foot-h); font-size: .9rem; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+/* ready: a warm button; unready: muted, its short number marked; busy: flat; done: dimmed, stays in its slot */
+.card.ready { background-color: var(--btn-bg); border-color: var(--btn-line); border-image: var(--px-btn) 1; box-shadow: var(--bevel-warm), var(--drop); }
+.card.ready .card-title { color: var(--btn-ink); }
+.card.ready:not(.busy):hover { box-shadow: var(--bevel-warm), 0 0 1.1rem rgba(224, 149, 79, .25); }
+.card.unready { border-color: #231e21; }
+.card.unready .card-title { color: var(--ink-dim); }
+.card.busy, .card.running { box-shadow: var(--bevel); }
+.card.busy { opacity: .62; background-color: var(--panel); border-color: var(--line); }
+.card.busy .card-title { color: var(--ink-dim); }
+.card.busy .card-tap, .card.running .card-tap { cursor: not-allowed; }
+.card.running { border-color: var(--btn-line); border-image: var(--px-btn) 1; background-color: var(--panel); }
+.card.done { opacity: .42; border-style: dashed; border-image: none; background-color: transparent; box-shadow: none; }
+.card.done .card-title { color: var(--ink-dim); }
+.card.retired .card-title { text-decoration: line-through; }
+.card.lit { box-shadow: 0 0 0 2px var(--ink-head); }   /* a short need's makers (makerlight.ts), as the ledger's .line.lit */
+.card-need.short { cursor: pointer; }
+.card.done .card-tap { cursor: default; }
+.card.done .card-track, .card.done .card-foot { visibility: hidden; }   /* the slot keeps its size */
+/* When ready (whenready.ts): beside the tap target, filling the foot band's right end (the card's padding above the border),
+   so the card keeps its size and the button never reaches the bar (two classes: the glow's position must not win) */
+.card .card-ready { position: absolute; right: .5rem; bottom: .55rem; z-index: 1; box-sizing: border-box; height: var(--foot-h); padding: 0 .7rem; font: inherit; font-size: .85rem; color: var(--btn-ink); background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm); cursor: pointer; }
+.card-ready.queued { color: var(--ink-meta); background: transparent; border-color: var(--rim-dim); border-image: var(--px-dim) 1; box-shadow: none; cursor: default; }
+.card.saying .card-ready { visibility: hidden; }   /* a line on the card has the foot */
+.card-tap:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 2px; }
+.card:not(.busy):not(.done) .card-tap:active { transform: scale(.98); }
+/* the first card: stand-alone, double width and about 1.5x height, the most obvious thing to tap at every size */
+.card.first { grid-column: span 2; min-height: 8.4rem; }
+.card.first .card-tap { padding: 1rem 1.2rem; justify-content: center; }
+.card.first .card-head { justify-content: center; padding-right: 0; }
+.card.first .card-title { font-size: 1.15rem; }
+.card.first .card-track { margin-top: .8rem; height: 8px; }
+/* until its first tap it is only its verb: no count, bar or time that would read as something already under way */
+.card.first.untapped :is(.card-count, .card-track, .card-foot) { visibility: hidden; }
+/* a line the player's tap wrote, hung from the card's foot over what is below for its reading time: out of the card's
+   flow, so the card and every row after it stay where they are (Tapping never moves the layout), and the card's own
+   needs and countdown stay in view (a failed tap's marks). It takes no taps, so what it covers is still tappable. */
+.card-line { position: absolute; top: 100%; left: 0; right: 0; z-index: 3; box-sizing: border-box; margin-top: .25rem; padding: .5rem .8rem .55rem .9rem; font-size: .95rem; line-height: 1.25; color: var(--ink-bright); background: var(--panel); border: 2px solid var(--rim-ember); box-shadow: var(--drop); pointer-events: none; }
+.card-line.held { display: none; }
+.card-line.arrive { animation: card-line-in .2s ease-out; }
+@keyframes card-line-in { from { opacity: 0; transform: translateY(.35rem); } }
+.card.saying:not(.saying-failed) .card-foot { visibility: hidden; }
+.card.done.saying { opacity: 1; }
+.card.done.saying .card-tap { opacity: .42; }
+.card.by-order::after { content: ""; position: absolute; bottom: .5rem; right: .6rem; width: 6px; height: 6px; background: var(--ember-hot); }
+.pop { position: absolute; right: 4.4rem; top: .5rem; pointer-events: none; font-weight: 700; color: var(--btn-ink); animation: pop 1.1s ease-out forwards; }
+@keyframes pop { 0% { opacity: 0; transform: translateY(.3rem) scale(.8); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-1.6rem); } }
+.completed .card { min-height: 3.2rem; padding: .6rem .9rem; }
+.completed .card-head { padding-right: 0; }
+
+/* new: a quiet dot until touched; the glow: one steady ring on the one obvious next step */
+.new-dot { position: absolute; top: .45rem; left: .45rem; width: 6px; height: 6px; box-shadow: 0 0 0 2px #08070a; pointer-events: none; background: var(--ember-hot); opacity: .85; z-index: 1; }
+.chip, .line { position: relative; }   /* the hint dot (game/hints.ts) sits at a chip's or a ledger line's end, still, so reduced motion changes nothing */
+.chip .new-dot { top: .35rem; left: auto; right: -.6rem; }
+.line .new-dot { top: .55rem; left: auto; right: .3rem; }   /* inside .line, which clips its overflow, in the right gutter its padding keeps for it, so it never covers the amount and nothing moves when it comes */
+.glow { position: relative; z-index: 1; }
+.glow::after { content: ""; position: absolute; inset: -4px; pointer-events: none; border: 2px solid var(--ember-hot); border-image: var(--px-hot) 1; box-shadow: 0 0 1.2rem rgba(224, 149, 79, .45); }
+.card-tap.glow::after { inset: -4px; }
+
+/* skills */
+.skills { display: flex; flex-direction: column; gap: .5rem; }
+.skill-head { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .2rem; flex-wrap: wrap; }
+.skill-name { color: var(--ink-bright); }
+.skill-level { color: var(--ink-meta); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.skill-next { color: var(--ink-meta); font-size: .9rem; flex: 1; text-align: right; font-variant-numeric: tabular-nums; }
+.skill-next::before { content: "▸ "; color: var(--ember); }
+/* a row with nothing ahead: no arrow, a grey bar, so it never reads as progress toward something */
+.skill.done-for-now .skill-next { color: var(--ink-dim); }
+.skill.done-for-now .skill-next::before { content: none; }
+.skill.done-for-now .bar-fill { background: var(--grey); }
+/* prestige (ui/skillrow.ts): at the top the bar is full and marked, and the foot holds what waits and the controls, set
+   off as a ledger line's order card (.line-order) is */
+.skill.at-top .skill-next { color: var(--btn-ink); }
+.skill.at-top .skill-next::before { content: "▲ "; color: var(--ember-hot); }
+.skill.at-top .bar-track { box-shadow: inset 0 2px 0 #050407, 0 0 0 1px var(--rim-ember); }
+.skill.at-top .bar-fill { background: linear-gradient(90deg, var(--ember), var(--ember-hot)); }
+.skill-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: .5rem .75rem; padding: .4rem 0 .2rem .75rem; margin: .3rem 0 0 .3rem; border-left: 2px solid var(--rim-dim); }
+.skill-foot[hidden], .skill-foot > [hidden] { display: none; }
+.skill-note { flex: 1 1 8rem; min-width: 0; overflow-wrap: anywhere; color: var(--ink-meta); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.skill.at-top .skill-note { color: var(--ink); }
+.bar-track { height: 6px; background: var(--track); box-shadow: inset 0 2px 0 #050407; overflow: hidden; }
+.bar-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, #a85a2a, var(--ember) 60%, var(--ember-hot)); box-shadow: inset 0 2px 0 rgba(255, 220, 170, .35); }
+.skill.burst, .camp.burst { animation: burst .9s ease-out; }   /* the ladder's level rung (ui/ladder.ts) */
+@keyframes burst { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .8); background: rgba(42, 27, 20, .8); } 100% { box-shadow: 0 0 0 .9rem rgba(240, 178, 122, 0); } }
+
+/* the ledger */
+.ledger-lines { display: flex; flex-direction: column; gap: 2px; }   /* a list: lines between grooves, not boxes (nothing in a line is tappable but its buttons) */
+.ledger-item { display: flex; flex-direction: column; gap: .4rem; }
+.ledger-asks:empty { display: none; }   /* a phone's red and full lines above the cards (ui/ledger.ts, `asks`); none, no room */
+.line {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name rate amount" "eta eta edit";
+  align-items: center; align-content: center; gap: 0 .75rem; min-height: 2.2rem; padding: .35rem 1rem .5rem .3rem; overflow: hidden;
+  border-bottom: 2px solid #08070a; box-shadow: 0 2px 0 var(--rim-dim); color: var(--ink-head); transition: color .3s, background .3s;
+}
+.line-name { grid-area: name; overflow-wrap: anywhere; }
+.line-rate { grid-area: rate; font-weight: 700; font-variant-numeric: tabular-nums; }
+.line-amount { grid-area: amount; color: var(--ink-meta); font-size: .9rem; font-variant-numeric: tabular-nums; text-align: right; }
+.line-eta-box { grid-area: eta; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; min-width: 0; }
+.line-eta { font-size: .9rem; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.line-eta:empty { display: none; }
+.line-edit { grid-area: edit; min-height: 2rem !important; font-size: .9rem; }
+/* a link to a rule: words underlined in ember, never a box */
+.hands-rule { text-decoration: underline 1px var(--ember); text-underline-offset: .25em; }
+.hands-rule:hover, .hands-rule:focus-visible { color: var(--btn-ink); text-decoration-color: var(--ember-hot); }
+.line-track { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--track); }
+.line-fill { display: block; height: 100%; background: var(--ink-meta); transform-origin: left; transform: scaleX(0); opacity: .6; }
+.line.alarm { color: var(--alarm); background: var(--alarm-bg); }
+.line.alarm .line-name { font-weight: 700; }
+.line.alarm .line-name::before { content: "▲ " / ""; }   /* red is not the only cue: bold name and a mark, as the chips carry a glyph */
+.line.alarm.story .line-name::before { content: "▲ ▸ " / ""; }   /* a red line a story beat waits on keeps both marks */
+.line.alarm .line-amount, .line.alarm .line-eta { color: #d08a7c; }
+.line.alarm .line-fill { background: var(--alarm); opacity: .9; }
+.line.lit { box-shadow: 0 0 0 2px var(--ink-head); }
+.line.settle { animation: settle .5s ease; }
+.line-order { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: .5rem .75rem; padding: .3rem 0 .5rem .75rem; margin-left: .3rem; border-left: 2px solid #6a2a22; }   /* under its line, set off by a rule at its edge, not a box */
+:is(.line-order, .skill-foot) .primary, :is(.line-order, .skill-foot) .quiet { min-height: 2.4rem; padding: 0 .9rem; cursor: pointer; }
+.offer-both, .editor .primary, :is(.sheet, .rules) .primary, :is(.line-order, .skill-foot) .primary { min-height: 2.75rem; }   /* Show me and Save are primary taps: 44 px (decisions.md, motion and reach rule) */
+.line-order.calm { border-left-color: var(--rim-dim); }   /* a rising line's or a re-tune's offer: no alarm */
+.line-order .quiet, .skill-foot .quiet { background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); color: var(--ink-meta) !important; }
+.rule-sentence { flex: 1 1 12rem; margin: 0; min-width: 0; overflow-wrap: anywhere; color: var(--ink); }
+.rule-action { font-weight: 500; color: var(--ink-bright); }
+.rule-action::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .3rem; background: var(--hue); box-shadow: 0 0 0 2px #08070a; }
+
+/* a rule that just fired (the Rules tab's side-lane rows); the offer's copy flying to the Rules tab */
+.rules-row.fired { animation: fired 1.2s ease-out; }
+@keyframes fired { 0% { background: var(--btn-bg); border-color: var(--ember-hot); color: var(--btn-ink); } }
+.order-flight { position: fixed; z-index: 30; margin: 0; box-sizing: border-box; pointer-events: none; transform-origin: top left; background: var(--panel) padding-box; border: 2px solid var(--btn-line); border-image: var(--px-btn) 1; }
+.order-flight .primary { visibility: hidden; }
+
+/* the mix editor: in the card area's place (desktop), a full-height sheet under the pinned strip (phone) */
+.editor { display: flex; flex-direction: column; gap: .9rem; padding: .9rem; background: var(--panel) padding-box; border: 4px solid var(--rim-dim); border-image: var(--px2-dim) 2; box-shadow: var(--bevel); }
+.editor-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.editor-buttons { display: flex; align-items: center; gap: .5rem; flex: none; }   /* Save, Save as new and ✕ stay together: on a phone the group wraps as one */
+.editor-label { flex: 1 1 0; min-width: 8rem; display: flex; align-items: center; gap: .5rem; color: var(--ink-meta); font-size: .9rem; }
+.editor-name { flex: 1; min-width: 0; min-height: 2.4rem; box-sizing: border-box; padding: 0 .6rem; font: inherit; font-size: 1rem; color: var(--ink-head); background: var(--track) padding-box; border: 2px solid var(--rim-dim); border-image: var(--px-dim) 1; box-shadow: inset 0 2px 0 rgba(0, 0, 0, .6); }
+.editor-name:focus { outline: none; border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.editor-close { min-width: 2.4rem; min-height: 2.4rem; background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); color: var(--ink-meta) !important; cursor: pointer; }
+.editor button:disabled { opacity: .45; cursor: not-allowed; }
+.editor-entries { display: flex; flex-direction: column; gap: .3rem; }
+.editor-entry { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-areas: "sw name share x" ". does does does"; gap: .1rem .6rem; align-items: center; padding: .35rem .5rem; background: rgba(255, 255, 255, .025); }
+.editor-entry .swatch { grid-area: sw; width: .7rem; height: .7rem; background: var(--hue); box-shadow: 0 0 0 2px #08070a; }
+.entry-name { grid-area: name; color: var(--ink-head); }
+.editor-entry.struck .entry-name { text-decoration: line-through; color: var(--ink-dim); }
+.entry-note { font-size: .9rem; }
+.entry-share { grid-area: share; font-weight: 700; font-variant-numeric: tabular-nums; }
+.entry-does { grid-area: does; font-size: .9rem; color: var(--ink-meta); font-variant-numeric: tabular-nums; min-height: 1.2em; }
+.entry-remove { grid-area: x; min-width: 2.2rem; min-height: 2.2rem; background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel); color: var(--ink-meta) !important; cursor: pointer; }
+.editor-totals:empty { display: none; }   /* nothing the edit changes yet */
+.editor-totals { display: flex; flex-direction: column; gap: .15rem; font-variant-numeric: tabular-nums; }
+.totals-row { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem 1.2rem 6.5rem; gap: .5rem; align-items: baseline; padding: .15rem .5rem; }
+.totals-row > :nth-child(n+2) { text-align: right; }
+.totals-head { font-size: .9rem; color: var(--ink-meta); border-bottom: 1px solid var(--line); }
+.totals-store { color: var(--ink-head); }
+.totals-arrow { color: var(--ink-dim); text-align: center !important; }
+.totals-after.changed { color: var(--ink-head); font-weight: 700; }
+.totals-after.unknown { color: var(--ink-dim); }
+.totals-runs { font-size: .9rem; color: var(--ink-meta); }
+.goal-binds { padding: 0 .5rem .2rem; font-size: .9rem; color: var(--ink-meta); }   /* the line that binds the goal row above */
+.editor-adds { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.editor-add-label { font-size: .9rem; color: var(--ink-meta); }
+.editor > .editor-adds { flex-direction: column; align-items: flex-start; }
+.editor-adds[hidden] { display: none; }
+.add-fold { min-height: 2.4rem; padding: 0 .9rem; position: relative; }
+.add-fold::before { content: "+ "; }
+.add-fold[aria-expanded="true"]::before { content: "− "; }
+.add-list { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.add-list[hidden] { display: none; }
+.add-card { min-height: 2.6rem; padding: 0 .8rem; cursor: grab; touch-action: none; background: linear-gradient(var(--hue), var(--hue)) 0 0 / 4px 100% no-repeat padding-box var(--btn-bg); border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm), var(--drop); color: var(--btn-ink) !important; position: relative; }
+.add-card::before { content: "+ "; color: var(--ink-meta); }
+/* goal stints (ui/stint.ts): "Run until…" under the totals, its goals as a column of taps with the time if run */
+.editor-stint { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+.editor-stint[hidden] { display: none; }
+.editor-stint > .quiet { min-height: 2.4rem; padding: 0 .9rem; }
+.stint-goals { display: flex; flex-direction: column; gap: .3rem; align-self: stretch; }
+.stint-goal { display: flex; justify-content: space-between; gap: .75rem; min-height: 2.6rem; padding: 0 .8rem; cursor: pointer; font-variant-numeric: tabular-nums; background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); color: var(--btn-ink); align-items: center; }
+.stint-goal:hover { border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.stint-time { color: var(--ink-meta); }
+.next-facts { display: block; font-size: .9rem; font-weight: 400; color: var(--ink-meta); }
+.editor-foot { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.editor-foot > .quiet { margin-right: auto; }   /* Save as new at the left, Delete at the right */
+.editor-delete { display: flex; justify-content: flex-end; align-items: center; gap: .5rem; min-height: 2.4rem; margin-left: auto; }
+.editor-note { font-size: .9rem; color: var(--ink-dim); }
+.danger { color: #d08a7c !important; }
+
+/* sheets */
+.sheet { max-height: calc(100dvh - 2rem); overflow-y: auto; max-width: min(30rem, calc(100vw - 2rem)); width: 100%; box-sizing: border-box; padding: 0 1.1rem; font: 400 1rem/1.4 "Alegreya Sans", system-ui, sans-serif; background: var(--panel) padding-box; color: var(--ink); border: 4px solid var(--rim-dim); border-image: var(--px2-dim) 2; box-shadow: var(--bevel), 0 1.1rem 4rem rgba(0, 0, 0, .7); }
+.sheet button { font: inherit; }
+.sheet[open] { animation: arrive .35s ease-out; }
+.sheet::backdrop { background: rgba(8, 7, 8, .62); }
+.sheet-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1rem; }
+.sheet > .panel-heading { position: sticky; top: 0; z-index: 1; background: var(--panel); padding: 1.1rem 0 .3rem; }   /* a sheet taller than the viewport scrolls between its heading and its actions */
+.sheet > .sheet-actions { position: sticky; bottom: 0; z-index: 1; background: var(--panel); padding: .5rem 0 1.1rem; }
+.sheet:not(:has(> .panel-heading)) { padding-top: 1.1rem; }
+.log-sheet { max-width: min(40rem, calc(100vw - 2rem)); }
+/* the Journal sheet (ui/journal.ts; docs/design/opening-screen.md, "The journal"). The page is parchment written in the
+   hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the sketch, the notes
+   and the numbers top to bottom, the sheet full height. Desktop: an open spread of two 600:780 pages, the sketch alone on
+   the left, the notes then the numbers on the right. */
+.journal-sheet { padding: 0 1.1rem; --page-h: min(calc(94dvh - 8.5rem), calc((96vw - 2.2rem) * .65)); width: fit-content; max-width: 96vw; max-height: 94dvh; }
+.journal-sheet .quiet { min-height: 2.75rem; }
+.journal-spread { background: var(--parchment); color: var(--hand-ink); display: flex; flex-direction: column; gap: .8rem; padding: 1rem; }
+.journal-page, .journal-notes { display: contents; }
+.journal-sketch-box { display: contents; }
+.journal-sketch { display: block; width: var(--sk-w); margin-left: calc((100% - var(--sk-w)) * var(--sk-x)); aspect-ratio: 1; object-fit: contain; }
+.journal-sketch.missing, .journal-note-sketch.missing { visibility: hidden; }   /* a sketch that failed to load leaves its room empty */
+.journal-spread[data-above="true"] .journal-note:first-child { order: -1; }   /* on a phone, a first note the seed puts above the sketch */
+.journal-note { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .3rem .8rem; margin: 0 0 .4rem var(--indent, 0); transform: rotate(var(--tilt, 0deg)); transform-origin: left center; font: 400 1.35rem/1.2 "Reenie Beanie", "Segoe Print", cursive; }
+.journal-note.hand-ink { color: var(--hand-ink); background: var(--parchment); }
+.journal-note.hand-pencil { color: var(--hand-pencil); background: var(--parchment); }
+.journal-words { flex: 1 1 55%; min-width: 0; margin: 0; }
+.journal-note-sketch { flex: none; display: block; max-width: 40%; max-height: 8rem; object-fit: contain; }
+.journal-numbers { display: flex; flex-direction: column; gap: .6rem; margin-top: .4rem; padding-top: .6rem; border-top: 1px solid var(--hand-pencil); font: 400 1rem/1.3 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-ink); background: var(--parchment); }
+.journal-notes:focus-visible { outline: 2px solid var(--hand-pencil); outline-offset: -2px; }   /* a scroller a keyboard reaches: its ring is the pencil's, not the browser's white */
+.journal-numbers[hidden] { display: none; }
+.journal-row { display: flex; flex-direction: column; }
+.journal-runner { font-weight: 500; }
+.journal-sheet .sheet-actions > :first-child { margin-right: auto; }
+.journal-bookmarks { margin: .4rem 0 .8rem; }
+.journal-left[hidden] { display: none; }   /* a page with no sketch is text alone */
+.journal-spread.turn-next { animation: journal-turn .15s ease-out; --turn-from: .5rem; }
+.journal-spread.turn-prev { animation: journal-turn .15s ease-out; --turn-from: -.5rem; }
+@keyframes journal-turn { from { opacity: 0; transform: translateX(var(--turn-from)); } }
+/* "Another device" (ui/devices.ts): a quiet text button at the panel's foot, and its sheet */
+.devices-open { position: relative; }   /* its dot (.new-dot) sits at the label's end */
+.devices-open .new-dot { top: .5rem; left: auto; right: .2rem; }
+.devices-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.devices-sheet .panel-heading { margin: 0 0 .2rem; }
+.devices-part { display: flex; flex-direction: column; gap: .55rem; padding: .9rem 0; border-top: 1px solid var(--line); }
+.devices-part:first-of-type { border-top: 0; padding-top: .3rem; }
+.devices-part[hidden], .devices-sheet > .sheet-actions[hidden] { display: none; }   /* the step after a join that left games behind hides the rest of the sheet */
+.devices-heading { margin: 0; font: 400 1.05rem/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-head); letter-spacing: .02em; }
+.devices-lead, .devices-note { margin: 0; color: var(--ink-meta); font-size: .95rem; }
+.devices-note:empty, .devices-code-text:empty { display: none; }
+.devices-code-text { margin: .2rem 0 0; text-align: center; font: 600 2.1rem/1.1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .14em; color: var(--btn-ink); }
+.devices-code .devices-note { text-align: center; }
+.qr-tile { align-self: center; width: min(12rem, 58vw); border-radius: .35rem; overflow: hidden; }
+.qr-tile[hidden] { display: none; }
+.qr { display: block; width: 100%; height: auto; }
+.qr-light { fill: #f6f1e7; }
+.qr-dark { fill: #121012; }
+.devices-code .quiet, .devices-words > .quiet { align-self: flex-start; }
+.devices-words-list { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; }
+.devices-words-list span { padding: .35rem .6rem; border-radius: .3rem; background: var(--bg); border: 1px solid var(--line); font: 600 1.1rem/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink-bright); }
+.devices-wordsform { display: flex; flex-direction: column; gap: .55rem; }
+.devices-wordsform .sheet-actions { margin-top: 0; }
+.devices-joinform { display: flex; gap: .5rem; align-items: flex-end; }
+/* Games (ui/games.ts): the account's games, the one played marked, the deleted ones held under them */
+.games-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.games-sheet .panel-heading { margin: 0 0 .2rem; }
+.games-choice { display: flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink-meta); }   /* each kept choice on its own row (as .front-keep) */
+/* the prestige sheet (ui/prestigesheet.ts): each node a row in the Mixes list's frame (.selector-run) */
+.prestige-sheet { max-width: min(30rem, calc(100vw - 2rem)); }
+.prestige-sheet .panel-heading { margin: 0 0 .2rem; }
+.prestige-intro { margin: 0 0 .4rem; color: var(--ink); }
+.prestige-parked { margin: 0 0 .4rem; color: var(--ink-dim); }
+.prestige-node { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "head pick" "change pick"; gap: .2rem .8rem; align-items: center; padding: .55rem .7rem; background: var(--bg) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel); }
+.prestige-head { grid-area: head; display: flex; align-items: baseline; gap: .6rem; }
+.prestige-name { color: var(--ink-bright); }
+.prestige-rank { color: var(--ink-meta); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.prestige-change { grid-area: change; color: var(--ink-meta); font-size: .9rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.prestige-node > .primary, .prestige-node > .quiet { grid-area: pick; }
+.prestige-undo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem .75rem; }
+.prestige-undo > .prestige-intro { margin: 0; }
+.games-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.games-row { display: flex; flex-direction: column; gap: .3rem; padding: .7rem 0; border-top: 1px solid var(--line); }
+.games-row:first-child { border-top: 0; }
+.games-what { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .7rem; }
+.games-name { color: var(--ink-bright); font-weight: 500; }
+.games-camp, .games-dates, .games-ask, .games-note, .games-playing { color: var(--ink-meta); font-size: .95rem; }
+.games-dates, .games-ask, .games-note { margin: 0; }
+.games-note:empty { display: none; }
+.games-note { margin-top: .6rem; }
+.games-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.games-row.playing .games-name { color: var(--btn-ink); }
+.games-held { margin-top: .9rem; border-top: 1px solid var(--line); padding-top: .9rem; }
+.games-held:empty { display: none; }
+.log-all { margin: 0; padding: 0 .3rem 0 0; list-style: none; max-height: 65vh; overflow-y: auto; color: var(--ink-bright); }   /* the diary: a stretch per visit, the newest open (ui/logsheet.ts) */
+.log-visit { position: relative; margin: 0; padding: 0 0 0 1.1rem; border-left: 2px solid var(--line); }
+.log-visit + .log-visit { margin-top: .15rem; }
+.log-visit::before { content: ""; position: absolute; left: -.38rem; top: .75rem; width: .6rem; height: .6rem; background: var(--bg); border: 2px solid var(--rim-dim); box-sizing: border-box; }
+.log-visit.newest { border-left-color: var(--rim-ember); }
+.log-visit.newest::before { background: var(--ember); border-color: var(--ember-hot); }   /* old reads dim, new reads ember: the spine and its square */
+.log-visit summary { list-style: none; display: grid; grid-template-columns: 1fr auto; column-gap: .8rem; align-items: baseline; align-content: center; box-sizing: border-box; min-height: 2.75rem; padding: .45rem .3rem .45rem 0; cursor: pointer; }
+.log-visit summary::-webkit-details-marker { display: none; }
+.log-visit summary:focus-visible { outline: 2px solid var(--rim-ember); outline-offset: 2px; }
+.v-title { font: 400 1.1rem/1.2 "IM Fell English SC", Georgia, serif; letter-spacing: .02em; color: var(--ink-dim); }
+.v-ago { font-size: .9rem; color: var(--ink-dim); }
+.v-sum { grid-column: 1 / -1; margin-top: .1rem; font-size: .9rem; line-height: 1.3; color: var(--ink-dim); }
+.log-visit details:not([open]) > summary .v-sum::after { content: "  ▸"; color: var(--ink-dim); }
+details[open] > summary .v-sum { display: none; }
+details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-head); }
+.log-visit.newest .v-ago { color: var(--btn-ink); }
+.log-visit summary:hover .v-title, .log-visit summary:focus-visible .v-title { color: var(--btn-ink); }
+.v-body { padding: 0 0 .8rem; }
+.log-story { margin: 0 0 .55rem; font-size: 1.15rem; line-height: 1.4; color: var(--ink-bright); }   /* the story, the only full-size text */
+.log-small { margin: -.3rem 0 .5rem; padding-left: .7rem; border-left: 2px solid var(--line); font-size: .92rem; line-height: 1.35; color: var(--ink-dim); }   /* taps, finds and levels: small, under the story line they follow */
+.log-small.level { font-style: italic; }
+.log-small[hidden] { display: none; }
+.log-foot { margin-top: .3rem; border-top: 1px solid var(--line); }
+.log-tally { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; box-sizing: border-box; width: 100%; min-height: 2.75rem; padding: .3rem 0 0; background: none; border: 0; cursor: pointer; text-align: left; }
+.log-chip { padding: .1rem .5rem; font-size: .9rem; line-height: 1.3; color: var(--ink-meta); background: #202029; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .05), inset 0 -2px 0 rgba(0, 0, 0, .45); }
+.log-tally[aria-expanded="true"] .log-chip, .log-tally:hover .log-chip, .log-tally:focus-visible .log-chip { color: var(--btn-ink); }
+.log-tally:focus-visible { outline: 2px solid var(--rim-ember); outline-offset: 2px; }
+.feedback-field { display: block; width: 100%; box-sizing: border-box; min-height: 7rem; max-height: 50vh; resize: vertical; padding: .6rem .7rem; background: var(--track) padding-box; border: 2px solid var(--rim-dim); border-image: var(--px-dim) 1; color: var(--ink-bright); font: inherit; font-size: 1.05rem; line-height: 1.4; }
+.feedback-field:focus-visible { outline: none; border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.feedback-note { margin: .6rem 0 0; color: var(--ink-meta); font-size: .9rem; }
+.feedback-result { margin: .4rem 0 0; min-height: 1.4em; }   /* its room is kept: Send does not jump when the line lands */
+.selector { max-width: min(44rem, calc(100vw - 2rem)); max-height: 85vh; overflow-y: auto; }
+.sheet-mixes, .rule-picker { display: flex; flex-direction: column; gap: .4rem; }
+.rule-picker .selector-run, .rules-list > .selector-run { flex: none; }   /* in a column (a rule's mix picker, Next's Plan), the row's 18rem basis would be its height */
+.selector .panel-heading { margin: 0 0 .2rem; }
+.rule-when { color: var(--ink-meta); font-size: .9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.selector-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.selector-run { flex: 1 1 18rem; display: grid; grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 6rem) auto; grid-template-areas: "dot name bar note"; gap: .6rem; align-items: center; min-height: 2.8rem; padding: 0 .7rem; background: var(--bg) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel); cursor: pointer; text-align: left; }
+.selector-row.active .selector-run { border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.selector-run:disabled { cursor: default; }
+.selector-row.greyed .selector-run { opacity: .55; }
+.selector-dot { grid-area: dot; color: var(--ember-hot); }
+.selector-run > .selector-name { grid-area: name; }
+.selector-run > .mini-bar { grid-area: bar; }
+.selector-run > .selector-note { grid-area: note; }
+.selector-run { align-content: center; }
+:is(.sheet, .rules) :is(.quiet, .primary):disabled { opacity: .35; cursor: default; }
+.selector-name { color: var(--ink-head); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-bar { display: flex; gap: 2px; height: .9rem; overflow: hidden; }
+.mini-seg { display: block; min-width: 0; overflow: hidden; padding-left: .2rem; background: var(--hue); color: #140f0d; font: 500 .7rem/.9rem "Alegreya Sans", system-ui, sans-serif; }   /* the task's initial: the hue is never the only cue */
+.selector-row.greyed .mini-seg { background: var(--grey); }
+.selector-note { font-size: .9rem; color: var(--ink-meta); white-space: nowrap; }
+.selector-tools { display: flex; gap: .4rem; align-items: center; }
+/* the condition editor (in the Rules tab) */
+.cond { display: flex; flex-direction: column; gap: .9rem; }
+.cond-body { display: flex; flex-direction: column; gap: .9rem; }
+.cond .rules-label { flex: 0 0 100%; margin: 0; font-size: .9rem; color: var(--ink-meta); }   /* "Mixes", "Tasks": a row's head, above its tiles */
+.cond .cond-subhead { margin-top: .5rem; }   /* Levels and Tasks under When: a head inside the group, a little apart from the tiles above */
+.cond-stores { padding-top: .9rem; border-top: 2px solid #08070a; box-shadow: inset 0 2px 0 var(--rim-dim); }   /* a carved groove between the groups */
+.cond-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-heading { margin: 0 !important; overflow-wrap: anywhere; }
+.cond-mixes, .cond-stores, .cond-tests { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+:is(.sheet, .rules) .cond-store, :is(.sheet, .rules) .cond-subject, :is(.sheet, .rules) .cond-mix, :is(.sheet, .rules) .cond-task, :is(.sheet, .rules) .cond-test { min-height: 2.75rem; padding: 0 .8rem; display: inline-flex; align-items: center; gap: .5rem;
+  background: #202029 padding-box; border-color: transparent; border-image: none; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .05), inset 0 -2px 0 rgba(0, 0, 0, .45); }   /* .quiet buttons, drawn as unframed tiles */
+:is(.sheet, .rules) :is(.cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test):hover { border-color: transparent; background-color: #2a2a35; }
+:is(.sheet, .rules) .cond-store[aria-pressed="true"], :is(.sheet, .rules) .cond-subject[aria-pressed="true"], :is(.sheet, .rules) .cond-mix[aria-pressed="true"], :is(.sheet, .rules) .cond-task[aria-pressed="true"], :is(.sheet, .rules) .cond-test[aria-pressed="true"] { color: var(--btn-ink) !important; background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm); }
+.cond-amount { font-size: .9rem; color: var(--ink-meta); font-variant-numeric: tabular-nums; }
+.cond-steppers { display: flex; flex-wrap: wrap; gap: .6rem 1rem; }   /* When and Until share a row where they fit */
+.cond-stepper { display: flex; align-items: center; gap: .5rem; }
+.cond-label { min-width: 3rem; font-size: .9rem; color: var(--ink-meta); }
+:is(.sheet, .rules) .cond-step { min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: 1.2rem; }   /* a .primary */
+:is(.sheet, .rules) .cond-step:disabled { opacity: .35; cursor: default; }
+.cond-value { min-width: 2.2rem; text-align: center; font-size: 1.2rem; font-weight: 700; color: var(--ink-head); font-variant-numeric: tabular-nums; }
+.cond-band { position: relative; height: 8px; background: var(--track); box-shadow: inset 0 2px 0 #050407; pointer-events: none; }   /* drawn, not a control */
+.cond-span { position: absolute; top: 0; bottom: 0; background: var(--ember); opacity: .75; box-shadow: inset 0 2px 0 rgba(255, 220, 170, .35); }
+.cond-now { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink-head); box-shadow: 0 0 0 2px #08070a; }
+.cond-sentence { flex: none; }   /* .rule-sentence's 12rem basis would be its height in this column */
+.cond-more { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }   /* the way to the full editor */
+.cond-fact { margin: 0; font-size: .9rem; color: var(--ink-meta); font-variant-numeric: tabular-nums; }
+.cond-fact:empty, .cond-note:empty { display: none; }
+.cond-note { margin: 0; }
+.cond-actions { margin-top: 0; }
+.cond-actions .primary:disabled { opacity: .45; cursor: not-allowed; }
+.cond-actions .danger { margin-right: auto; }
+/* the levels' fold (condlevels.ts): one row stating When and Until, which opens the levels in place */
+.cond-levels, .cond-fold-body { display: flex; flex-direction: column; gap: .9rem; }
+.cond-fold { display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: 0 .8rem; text-align: left; cursor: pointer; background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); color: var(--ink-meta); }
+.cond-fold:hover { border-color: var(--rim-ember); border-image: var(--px-ember) 1; }
+.cond-fold-value { margin-right: .8rem; color: var(--ink-head); font-variant-numeric: tabular-nums; }
+.cond-fold-mark { margin-left: auto; color: var(--ink-meta); }
+/* the foot: the rule as it reads and Save, pinned to the bottom of the scroll while the choices above it move */
+.cond-foot { position: sticky; bottom: 0; z-index: 2; display: flex; flex-direction: column; gap: .6rem; margin: 0 -1rem; padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background: var(--bg); border-top: 2px solid #08070a; box-shadow: inset 0 2px 0 var(--rim-dim); }
+
+/* the Rules tab: one line per rule (≡ ● condition → mix), Otherwise last */
+.rules { display: flex; flex-direction: column; gap: .8rem; padding-top: .7rem; }
+.rules-label { margin-right: .2rem; font-size: .9rem; color: var(--ink-meta); }
+.rules-list, .rules-lane { display: flex; flex-direction: column; gap: 2px; }
+.rules-lane .panel-heading { margin: .3rem 0 .1rem; }
+.rules-town .rules-new { margin-bottom: .5rem; }   /* the next section (a lane) starts under it, not against it */
+.rules-row { display: flex; align-items: center; gap: .3rem; min-height: 2.9rem; padding: .3rem .4rem .3rem .1rem; border-bottom: 2px solid #08070a; box-shadow: 0 2px 0 var(--rim-dim); }
+.rules-row.active { background: rgba(42, 27, 20, .45); }   /* the rule on now: a warm wash, its dot beside the condition */
+.rules-row.greyed .rule-slot, .rules-row.greyed .rule-slot-name, .rules-row.greyed .rule-when { opacity: .55; }
+.town-rule .rule-slot-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-bright); }
+.rules-row .selector-dot { flex: none; width: .8rem; }
+.rules-row .selector-dot:empty { display: none; }   /* only the rule on now carries it */
+.rule-handle { flex: none; width: 1.8rem; height: 2.75rem; padding: 0; font: inherit; font-size: 1.3rem; line-height: 1; color: var(--ink-meta); background: transparent; border: 0; cursor: grab; touch-action: none; }
+.rule-handle:hover, .rule-handle:focus-visible, .rule-handle[aria-expanded="true"] { color: var(--btn-ink); background: var(--btn-bg); }
+.rule-handle-gap { flex: none; width: 1.8rem; }
+.rule-cond { flex: 1 1 auto; min-width: 0; min-height: 2.4rem; display: inline-flex; align-items: center; gap: .4rem; padding: .2rem .65rem; font: inherit; font-size: .9rem; text-align: left; overflow-wrap: anywhere; color: var(--btn-ink); background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm); cursor: pointer; }   /* the condition: tap to edit */
+.rule-cond-text { flex: 1 1 auto; min-width: 0; }
+.rule-cond:hover { border-color: var(--ember-hot); border-image: var(--px-hot) 1; }
+.rule-edit-mark { flex: none; font-size: .85rem; opacity: .85; }
+.rule-arrow { flex: none; margin-left: auto; padding: 0 .1rem; color: var(--ink-meta); }
+.rules-row > .rule-when { flex: 0 1 auto; padding-left: .8rem; font-size: 1rem; }
+.rule-slot { flex: none; max-width: 9.5rem; min-height: 2.4rem; display: inline-flex; align-items: center; gap: .2rem; padding: 0 .55rem; font: inherit; font-size: .9rem; color: var(--ink-head); background: var(--track) padding-box; border: 2px dashed var(--grey); cursor: pointer; }   /* the mix slot: tap to pick, or drop a mix on it */
+.rule-slot-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-rule .rule-action { flex: 0 1 auto; min-width: 0; margin-right: .3rem; }
+/* Next: the queue's taps, between the hands rules and Otherwise (nextlist.ts) */
+.rules-next { margin: .3rem 0 0 2.1rem; font-size: .9rem; font-weight: 500; color: var(--ink-meta); }
+.next-row .rule-action { flex: 1 1 auto; min-width: 0; margin-right: .3rem; }
+.next-row .quiet { flex: none; min-height: 2.4rem; padding: 0 .8rem; }
+.next-running { flex: none; min-height: 2.4rem; padding: 0 .8rem; display: flex; align-items: center; font-size: .9rem; color: var(--ink-meta); }
+.rules-row.drop-before { box-shadow: 0 -3px 0 var(--ember-hot); }
+.rules-row.drop-after { box-shadow: 0 3px 0 var(--ember-hot); }
+.rules-row.lifted { opacity: .35; }
+.rules.dragging, .rules.dragging * { user-select: none; cursor: grabbing; }
+.drag-ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; font: 400 1rem/1.35 "Alegreya Sans", system-ui, sans-serif; color: var(--ink); opacity: .92; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
+.rule-menu { display: flex; flex-wrap: wrap; gap: .5rem; padding: .3rem .4rem .3rem 2.1rem; }
+.rules-row:has(+ .rule-why) { border-bottom: 0; box-shadow: none; }   /* the row and why it is off read as one line */
+.rule-why { padding: 0 .4rem .4rem 2.1rem; font-size: .9rem; color: var(--ink-dim); font-variant-numeric: tabular-nums; border-bottom: 2px solid #08070a; box-shadow: 0 2px 0 var(--rim-dim); }
+/* Lately (ui/rulelately.ts): the rule in plain ink, its facts quiet under it, as a rule's why line */
+.rules-lately { display: flex; flex-direction: column; }
+.rules-lately:empty { display: none; }
+.lately-rule { padding: .35rem .4rem 0 2.1rem; color: var(--ink); }
+.lately-facts { padding: 0 .4rem .35rem 2.1rem; font-size: .9rem; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.rules-new { align-self: flex-start; }
+.stint-plan { align-self: flex-start; }
+.rules-full { align-self: flex-start; margin: 0; color: var(--ink-dim); }
+.rules .rule-picker { margin-top: .4rem; }
+@media (max-width: 639px) {
+  .rules-row { gap: .25rem; }
+  .rule-slot { max-width: 7.5rem; padding: 0 .45rem; }
+  .rule-cond { padding-inline: .55rem; }
+  .goal-row, .goal-head { grid-template-columns: minmax(0, 1fr) 4.5rem 1rem 4.5rem; }   /* a goal and its level on one line: times stay under "47h 59m" (format.duration) */
+}
+.end-card { text-align: center; padding: 1.6rem 1.4rem 1.4rem; border-color: var(--btn-line); box-shadow: 0 0 5rem rgba(200, 116, 58, .22), 0 1.1rem 4rem rgba(0, 0, 0, .7); }
+/* A feature's card (ui/featurecard.ts) sits off the art, so the scene stays in view while it is up: it is not modal
+   (no backdrop dimming the page) and docks along the bottom edge on a phone, at the panel's foot on a desktop. */
+.end-dock { position: fixed; z-index: 20; margin: 0; left: 0; right: 0; bottom: 0; width: 100%; max-width: none; padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)); box-shadow: 0 -.5rem 2rem rgba(0, 0, 0, .55); }
+.end-card .sheet-actions { justify-content: center; }
+.end-title { margin: 0 0 .6rem; font: 400 1.75rem/1.15 "IM Fell English SC", Georgia, serif; color: var(--ink-head); }
+.end-body { margin: 0 0 .4rem; color: var(--ink-meta); font-size: 1.15rem; }
+
+/* juice: none of it moves the layout */
+.arrive { animation: arrive .5s ease-out backwards; }
+.held { visibility: hidden; }   /* arrived while away, waiting its turn (ui/reveal.ts): its room is already taken */
+.press { animation: press .22s ease; }
+.landed { animation: landed .7s ease; }
+@keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes line-in { from { opacity: 0; transform: translate(var(--line-from-x, .6rem), var(--line-from-y, 0)); } }
+@keyframes press { 40% { transform: scale(.97); } 100% { transform: none; } }
+@keyframes landed { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .7); } 100% { box-shadow: 0 0 0 .8rem rgba(240, 178, 122, 0); } }
+@keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(1.02); } 100% { transform: none; } }
+/* the tap and level rungs' calm forms (reduced motion): the same ring held still, fading, with no spread */
+@keyframes ring-still { 0%, 50% { box-shadow: 0 0 0 2px var(--ember-hot); } 100% { box-shadow: 0 0 0 2px transparent; } }
+@keyframes burst-still { 0%, 50% { box-shadow: 0 0 0 2px var(--ember-hot); background: rgba(42, 27, 20, .8); } 100% { box-shadow: 0 0 0 2px transparent; } }
+.card.tap-failed { animation: tap-failed var(--fail-ms) ease-out; }
+.fail-mark { transform-origin: left center; animation: fail-mark var(--fail-ms) ease-out; }
+.fail-mark .need-have { animation: fail-flash var(--fail-ms) ease-out; }
+@keyframes tap-failed { 35% { box-shadow: var(--fail-glow); } }
+@keyframes fail-mark { 35% { color: var(--alarm); transform: scale(var(--fail-scale)); } }
+@keyframes fail-flash { 35% { color: var(--alarm); } }
+
+/* phone editor: a full-height sheet under the pinned scene and strip; the Mixes list a bottom sheet */
+@media (max-width: 1023px) and (orientation: portrait), (max-width: 639px) {
+  .selector[open], .prestige-sheet[open] { margin: auto 0 0; max-width: none; width: 100%; padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
+  .journal-sheet { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; box-sizing: border-box; border: 0; border-image: none; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  .selector-run { grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 5rem); grid-template-areas: "dot name bar" "dot note note"; }
+  .selector-run > .selector-note:empty { display: none; }
+  .cond-steppers { flex-direction: column; }
+  .game { padding-bottom: var(--end-h, 0px); }   /* a docked card's measured height (ui/featurecard.ts), so the last rows scroll clear of it */
+  .game.editing .editor { position: fixed; z-index: 6; left: 0; right: 0; bottom: 0; top: calc(var(--scene-vh) + 6rem); overflow-y: auto; }
+  .cond { position: fixed; z-index: 6; left: 0; right: 0; bottom: 0; top: calc(var(--scene-vh) + 6rem); gap: 0; padding: 0 1rem; background: var(--bg); }   /* a rule's editor, as the mix editor: the choices scroll above the foot, never under it */
+  .cond-body { flex: 1 1 0; min-height: 0; overflow-y: auto; padding: .9rem 0; }
+  .cond-foot { position: static; }
+  .game:has(.rules .cond) .scene-box { display: none; }   /* while a rule is built the art gives its height to the choices: the head, the line and the hands strip stay pinned */
+  .card-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two cards a row, so the ledger sits nearer the tasks */
+  .card.first { grid-column: 1 / -1; }
+  .stage { height: auto; display: flex; flex-direction: column; }
+  .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right, under Log's place */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
+  .scene-box { position: relative; inset: auto; --by-width: 1; padding: 0 .5rem .5rem; }
+  .stage > .strip { flex: none; }
+  .log-open { margin-left: 0; }
+  .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, Log last, so nothing leaves the screen */
+  .chip { flex: none; white-space: nowrap; }
+  .chip::before { margin-right: .2em; }
+  .camp { min-width: 4.5rem; }
+}
+
+/* desktop (and a phone in landscape): the scene beside the panel, the head just above the art, the story strip at its foot */
+@media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
+  .game {
+    display: grid; grid-template-columns: minmax(0, 1fr) var(--panel-w); overflow: hidden;
+    margin: 0 auto; max-width: min(100rem, calc(var(--panel-w) + 160vh));   /* never past 100rem, and wider only while the art can grow with it */
+  }
+  .left { display: flex; flex-direction: column; height: 100vh; min-width: 0; }
+  .stage { position: relative; flex: 1 1 0; min-height: 0; height: auto; display: flex; flex-direction: column; }
+  .stage > .scene-head { padding: .6rem 1.75rem 0; }   /* above the art, never on it: its text in line with the aim's and the strip's */
+  .scene-box { position: relative; inset: auto; flex: 1 1 0; min-height: 0; align-items: center; padding: 1rem; }
+  .scene-head:not(:has(.chip, .camp:not([hidden]), .new-dot)) { display: none; }   /* an empty row stays off the art, but never a dotted Log */
+  .left > .aim { padding: .6rem 1.75rem 0; }   /* over the art's column, its text in line with the strip's */
+  .left > .strip { flex: none; padding: .55rem 1.75rem .65rem; }
+  .end-dock { position: absolute; left: auto; right: 1rem; bottom: 1rem; width: calc(var(--panel-w) - 2rem); padding-bottom: 1.4rem; box-shadow: 0 0 2rem rgba(200, 116, 58, .2), 0 .8rem 2rem rgba(0, 0, 0, .6); }
+  .panel { --line-room: 10rem; height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 0 1.2rem 1.6rem; border-left: 2px solid #08070a; box-shadow: inset 2px 0 0 var(--rim-dim); }
+  .panel-top { top: 0; margin: 0 -1.2rem; padding: .7rem 1.2rem; }
+  .panel.more { -webkit-mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); }   /* content runs past the foot (ui/morecue.ts): it fades out there, still under reduced motion */
+}
+
+@media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
+  .journal-spread { flex-direction: row; gap: 0; padding: 0; justify-content: center; }
+  .journal-page { display: flex; flex-direction: column; box-sizing: border-box; position: relative; width: calc(var(--page-h) * 600 / 780); height: var(--page-h); padding: 1.2rem; overflow: hidden; }
+  .journal-left { background: linear-gradient(to left, rgba(43, 36, 28, .12), transparent 3rem), var(--parchment); color: var(--hand-ink); }
+  .journal-right { background: linear-gradient(to right, rgba(43, 36, 28, .12), transparent 3rem), var(--parchment); color: var(--hand-ink); }
+  .journal-spread[data-bare="true"] .journal-right { background: var(--parchment); }   /* no facing page, so no gutter */
+  .journal-notes { display: block; flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: .7rem .3rem .3rem; }   /* room for a tilted first note, whose top the scroller would cut */
+  .journal-numbers { flex: none; margin-top: auto; }
+  .journal-sketch-box { display: block; position: relative; flex: 1 1 auto; min-height: 0; }
+  .journal-sketch { position: absolute; margin: 0; left: calc((100% - var(--sk-w)) * var(--sk-x)); top: calc((100% - var(--sk-w) * 600 / 780) * var(--sk-y)); }
+  .journal-sheet .sheet-actions > :first-child { margin-right: 0; }
+  .journal-sheet > .panel-heading { text-align: center; }
+}
+
+/* a desktop window tall enough (Screen's LOW_UNDER_SCENE): the skills and ledger fill the room under the art,
+   the cards and hands keep the panel. Its height is fixed, so the art never resizes when the ledger arrives. */
+@media (min-width: 1024px) and (min-height: 600px) {
+  .low {
+    display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: .8rem 1.4rem; align-items: start; flex: none;
+    height: min(22rem, 42vh); overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: .8rem 1.2rem 1.2rem; border-top: 2px solid #08070a; box-shadow: inset 0 2px 0 var(--rim-dim);
+  }
+  .stage { flex: none; height: auto; }   /* the stage takes the art's height; the art fills the column's width (Scene.fit caps it) */
+  .scene-box { position: relative; inset: auto; flex: none; --by-width: 1; --fill: 1; }
+  .low { flex: 1 1 auto; height: auto; min-height: max(8rem, min(22rem, 42vh) - var(--head-h, 0px)); }   /* the head above the art takes its room from here (ui/headseat.ts), so the art keeps its size */
+  .low > .ledger { grid-column: 1; grid-row: 1 / span 2; }
+  .low > .skills { grid-column: 2; grid-row: 1; }
+  .low .line { min-height: 2.4rem; padding-top: .3rem; padding-bottom: .45rem; }
+  .low .ledger-lines { display: grid; column-gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); grid-auto-flow: row dense; align-items: start; }
+  /* a rule offer spans the whole grid row under its line; dense flow lets the line's neighbour keep the cell beside it */
+  .low .ledger-item { display: contents; }
+  .low .line-order { grid-column: 1 / -1; flex-wrap: nowrap; justify-content: space-between; margin-left: 0; }
+  .low .rule-sentence { flex: 1 1 auto; }
+  .low .line-order button { flex: none; }
+  /* nothing to put under the art yet (before the fire brings the ledger): the block's room stays reserved (Scene.roomAbove
+     reads its min-height while it is hidden), so the art is the same size before and after it arrives and the strip sits
+     right under the art */
+  .low[hidden] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game, .game *, .game *::before, .game *::after { animation: none !important; transition: none !important; }
+  .game .card.tap-failed { animation: tap-failed var(--fail-ms) ease-out !important; }   /* colour, not motion */
+  .game .fail-mark, .game .fail-mark .need-have { animation: fail-flash var(--fail-ms) ease-out !important; }
+  .game .landed { animation: ring-still .7s ease-out !important; }   /* the ladder's calm forms ("+1" stays, held still) */
+  .game .burst { animation: burst-still .9s ease-out !important; }
+  .game .rules-row.fired { animation: fired 1.2s ease-out !important; }   /* colour, not motion */
+  body.reconnecting .game, body.catching-up .game { transition: none !important; }   /* a fade is an instant change */
+}
+
+/* the tutorial's look: everything the guide adds (the note, its Show me buttons) wears the hot frame and the "?" badge,
+   which no game control does. The note (ui/lessons.ts): a tag row (the label, and Skip as a small link at its far corner),
+   then one short line beside the control its step points at; fixed to the viewport so the layout never moves. Not
+   modal: only the note itself takes taps. */
+.lesson-note { position: fixed; z-index: 30; box-sizing: border-box; max-width: min(calc(22rem + 1.4rem + 4px), calc(100vw - 32px));   /* the line's 22rem plus the padding and border, so the note's own box never passes the gutters (ui/lessons.ts keeps 16px from the screen's edge) */ display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: .6rem; row-gap: .1rem; padding: .3rem .7rem .55rem; background: var(--panel); color: var(--ink-bright); border: 2px solid var(--ember-hot); border-image: var(--px-hot) 1; box-shadow: 0 .4rem 1.2rem rgba(0, 0, 0, .5); }
+.lesson-note[hidden] { display: none; }
+.lesson-tag { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ember-hot); }
+.lesson-tag::before, .lesson-go::before { content: "?"; display: inline-block; width: 1.25em; margin-right: .45em; text-align: center; background: var(--ember-hot); color: var(--bg); font-weight: 700; letter-spacing: 0; }
+.lesson-line { grid-column: 1 / -1; margin: 0; }
+.lesson-skip { min-height: 2rem; padding: 0 .1rem; background: none; border: 0; box-shadow: none; font: inherit; font-size: .8rem; color: var(--ink-dim); text-decoration: underline; cursor: pointer; }
+.lesson-skip:hover { color: var(--ink-bright); }
+.lesson-next { grid-column: 1 / -1; justify-self: end; min-height: 2rem; padding: 0 .7rem; background: var(--panel) padding-box; border: 2px solid var(--ember-hot); border-image: var(--px-hot) 1; box-shadow: var(--drop); font: inherit; font-size: .85rem; font-weight: 500; color: var(--ink-bright); cursor: pointer; }
+.lesson-next:hover { background: var(--btn-bg) padding-box; }
+.lesson-next[hidden] { display: none; }
+.lesson-note.reads { cursor: pointer; }
+.lesson-go.lesson-go { background: var(--panel) padding-box; border: 2px solid var(--ember-hot); border-image: var(--px-hot) 1; box-shadow: var(--drop); color: var(--ink-bright) !important; font-weight: 500; }
+.lesson-go.lesson-go:hover { background: var(--btn-bg) padding-box; }
+
+/* The town (ui/townstrip.ts, ui/townedit.ts): under the hands strip one block per person present: their time as a bar of
+   the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
+   .hands, .hands-label, .lane-bar, .card-fill; new: the person block and its segments. */
+.town { min-height: 0; align-items: start; }
+.town + .lane-row { margin-top: .5rem; }
+.town-people { margin-top: .35rem; display: grid; gap: .6rem; }
+.town-who { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; }
+.town-name { font-size: .95rem; font-weight: 500; color: var(--ink-bright); margin: 0; }
+.town-shares { display: flex; gap: 2px; margin-top: .25rem; height: .9rem; }
+.town-seg { flex: 1 1 0; min-width: 0; background: var(--hue); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25); }
+.town-seg.idle { background: var(--track); box-shadow: inset 0 2px 0 rgba(0, 0, 0, .6); }
+.town-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: .9rem; color: var(--ink-meta); }
+.town-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
+.town-key-item.idle::before { background: var(--track); border: 1px solid var(--rim); box-sizing: border-box; }
+.town .lane-bar { margin-top: .3rem; }
+.town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as .hands.greyed .share-bar */
+.town.greyed .town-name { color: var(--ink-dim); }
+.town.greyed .town-key-item::before { filter: saturate(.15) brightness(.6); }
+.town.greyed .town-status { color: var(--ink-bright); }   /* why it stopped: plain, not dimmed with it */
+.town .lane-fill { background: linear-gradient(90deg, #a85a2a, var(--ember) 60%, var(--ember-hot)); }
+.town-editor { display: grid; gap: .9rem; align-content: start; }
+.town-editor[hidden] { display: none; }
+.town-title { font-size: 1.1rem; font-weight: 500; color: var(--ink-bright); flex: 1 1 auto; }
+.town-split { display: grid; gap: 1rem; }
+.town-split .town-person { display: grid; gap: .5rem; }
+.town-split .town-shares { height: 1.4rem; }
+/* The split that runs now (ui/runningnow.ts): the town's split shapes, a stopped card's slice a greyed sliver; once
+   arrived its row keeps its room while the splits match, so nothing under a finger moves. */
+.running-now { margin-top: .3rem; }
+.running-now.matched { visibility: hidden; }
+.running-label { display: block; font-size: .8rem; color: var(--ink-meta); }
+.running-bar { height: .6rem; margin-top: .15rem; }
+.town-seg.stopped { flex: 0 0 .5rem; filter: saturate(.15) brightness(.6); }
+.town-key-item.stopped { color: var(--ink-dim); }
+.town-key-item.stopped::before { filter: saturate(.15) brightness(.6); }
+.town-cards { display: grid; gap: .35rem; }
+.town-card { display: flex; align-items: center; gap: .5rem; }
+.town-card-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-bright); }
+.town-card-share { min-width: 3.2rem; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink-bright); }
+.town-step, .town-drop { flex: none; min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: 1.2rem; }
+.town-step:disabled, .town-add:disabled { opacity: .45; cursor: default; }
+.town-add { min-height: 2.6rem; padding: 0 .8rem; border-left: 4px solid var(--hue); }

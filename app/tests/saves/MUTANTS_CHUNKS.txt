@@ -1,0 +1,49 @@
+Wrong implementations of the chunked catch-up (engine advance_logged(..., stop), PgSaves stop_for / Behind / Played.
+catching_up_to, Step.catching_up_to, the page's Session), each applied alone. All must go red. Suites: tests/saves/
+test_chunked_advance.py (engine), tests/saves/test_catching_up_contract.py (service), tests/test_catching_up_api.py (API),
+client/test/catchup.test.ts (page). "killed" below was observed against a scratch implementation written from the
+contract text, not against the real one; the same list is to be re-run on the real implementation. Mutants not
+run say so.
+
+ENGINE
+resume_shifts_to_t       api.py: a stopped call returns shift(save, t), so the next slice resumes at t      killed by chained_slices_equal_*, the progress asserts in chunks.chain
+stop_before_first        api.py: stop is asked before the first instant resolves: a stop that is always True makes no progress   killed by always_fires_*, chain's progress assert
+stop_line_dropped        api.py: the lines of the instant the stop fired on are left out of the Step         killed by chained_slices_equal_*
+stop_line_duplicated     api.py: the lines of the stopping instant are in this slice and again in the next   killed by chained_slices_equal_*
+rule_changes_dropped     api.py: a stopped Step returns no rule_changes (or the next slice forgets them)      killed by chained_slices_equal_*
+short_when_none_left     api.py: stopped_short is True when the stop fires on the last instant (nothing remains)   killed by stop_on_the_last_instant_*, always_fires_*
+flagged_when_caught_up   api.py: stopped_short True on a call that reached t                               killed by always_fires_*, stop_on_the_last_instant_*
+stop_asked_off_by_one    api.py: the stop is asked once per instant plus one, or every other instant        killed by a_slice_ends_at_the_instant_its_stop_fired_on
+
+SERVICE
+behind_applies_verb      service.py decide: on a behind save the verb is applied and logged anyway           killed by a_decision_on_a_save_that_is_behind_*
+behind_not_written       service.py decide: Behind is raised but the slice is rolled back with the transaction   killed by a_decision_on_a_save_that_is_behind_*
+catching_up_when_done    service.py: catching_up_to is set on the request that caught up                    killed by repeated_advances_end_*, a_request_that_catches_up_*
+was_after_slice          service.py open: `was` is the slice's save, not the save as last written           killed by open_does_the_first_slice_*
+open_not_sliced          service.py open: open advances unbounded                                            killed by open_does_the_first_slice_*
+advance_not_sliced       service.py advance: the stop is not asked                                           killed by an_advance_is_one_slice_*
+dry_run_not_refused      service.py dry_run: a behind save is advanced and dry-run anyway                    killed by a_dry_run_on_a_save_that_is_behind_*
+rule_runs_not_merged     write.py: a slice's rule runs replace the stored ones instead of adding to them      killed by repeated_advances_end_where_one_unbounded_advance_does
+stop_asked_twice         service.py: stop_for called twice a request (or not at all on decide)               killed by stop_for_is_asked_once_a_request
+rule_runs_pruned_each_slice  write.py: a slice that is not the last prunes the stored rule runs to KEPT, so a rule dropped mid-way loses its later let-go   killed by test_catching_up_rule_runs (observed on a copy of the merged code: only that test fails)
+
+API
+step_never_catching      api/service.py: Step.catching_up_to always null                                     killed by a_step_says_what_it_is_catching_up_to_*
+no_409_for_behind        save_routes.py: Behind falls through to a 500, or to stale                         killed by a_decision_on_a_save_that_is_behind_is_a_409_*
+409_without_step         save_routes.py: catching_up carries no step                                          killed by a_decision_on_a_save_that_is_behind_is_a_409_*
+forecast_writes_serves   save_routes.py: the forecast of a behind save advances and writes it, answers 200  killed by a_forecast_or_a_dry_run_on_a_save_that_is_behind_*
+
+PAGE
+stepped_per_slice        session.ts: stepped() called for every slice                                         killed by the first block
+slice_not_announced      session.ts: catchingUp() not called                                                  killed by the first block
+no_chase                 session.ts: the next advance is not asked after a slice                              killed by the first block
+slice_lines_lost         session.ts: only the last slice's lines (or all but the first's) are in the merged Step   killed by the first block
+prev_is_last_slice       session.ts: prev is the previous slice's view, not the view before the catch-up       killed by the first block, the advance block
+away_lost                session.ts: away is false for open / return-from-hidden once sliced                 killed by the first block, the advance block
+decision_dropped         session.ts: a decision made during catch-up is never sent                            killed by the held-decision blocks
+decision_not_held        session.ts: a decision made during catch-up is sent between slices                   killed by the held-decision blocks
+409_refused              session.ts: a catching_up 409 on a decision is drawn as a refusal                    killed by the 409 block
+forecast_while_catching  session.ts: a forecast is asked between slices                                       NOT RUN: the page's busy guard keeps askForecast unreachable mid-catch-up, so the forecast block only guards a change of that structure
+
+EQUIVALENT / NOT KILLABLE BY THESE SUITES
+rebase_rule_changes_dropped   service.py: loaded.rule_changes (changes a rebase made) not added to a slice's changes   needs a rebase mid-catch-up; the rebase suites (tests/saves/test_rebase_rule_changes.py) own it

@@ -1,0 +1,436 @@
+# Day four: from B5 through story day 5 (morning 5, the fog, dusk 5) to B6 in night 5, as data merged after
+# day_three.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec:
+# content/team/days-four-to-seven.md, "Day four"; numbers: content/team/days-four-to-seven-numbers.md. In
+# schema.IN_WRITING until its lines are written (days-four-to-seven plan, item 8).
+version = 1
+end_feature = "arcana"
+
+# ---------- morning 5 and L1 ----------
+
+# A20 + 1 h: B5's feature starts the dawn's clock, in twentieths of an hour, as day three's nights.
+[[triggers]]
+id = "t_dawn_5"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "warm_ground", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_5" }, { unlock_kind = "card", id = "sit_up_5" }] }
+
+# The rack's trim (day_two.toml, t_rack_lean) ends with B5: 16000 cancels its 6250.
+[[triggers]]
+id = "t_rack_lean_off"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "warm_ground", value = 1 }
+outcome = { modifiers = [{ target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 16000, source = "rack_lean_off" }] }
+
+# Never unlocked: the hour after B5.
+[[stores]]
+id = "dawn_5"
+label_key = "store_dawn_5"
+cap_items = 20
+
+[[standing]]
+id = "dawn_5"
+label_key = "action_dawn_5"
+makes = [{ store = "dawn_5", items_per_hour = 20 }]
+
+# Morning 5, L1 with it: the woodshed on the cards, the fog's chip (shown only while the rack has no roof), and the
+# day's clock started.
+[[triggers]]
+id = "t_morning_5"
+when = { test = "at_least", subject_kind = "store", id = "dawn_5", value = 20 }
+[triggers.outcome]
+line_keys = ["l_morning_5", "l_fog_1"]
+unlocks = [
+  { unlock_kind = "feature", id = "morning_5" },
+  { unlock_kind = "feature", id = "fog_5" },
+  { unlock_kind = "card", id = "woodshed" },
+  { unlock_kind = "chip", id = "fogbound" },
+  { unlock_kind = "action", id = "day_5" },
+]
+
+# L1's last line, chosen by the roof's state at morning 5 (never by text): the roof done adds roof_done; the open set
+# adds fog_open, so a roof finished later never plays the roofed set as well.
+[[triggers]]
+id = "t_fog_roofed"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "fog_5", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "roof_done", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "fog_open", value = 0 },
+]
+outcome = { line_keys = ["l_fog_roofed"] }
+
+[[triggers]]
+id = "t_fog_open"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "fog_5", value = 1 }
+requires = [{ test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "roof_done", value = 0 }]
+outcome = { line_keys = ["l_fog_open"], unlocks = [{ unlock_kind = "feature", id = "fog_open" }] }
+
+# ---------- the fog's chip ----------
+
+# Shows from morning 5 while fog_lift is 0: the rack roof's second stage and morning 6 each add one, so the chip is
+# off on a roofed save from the start and lifts at morning 6 on any save. Its cure, rack_roof, is a card since A22.
+[[stores]]
+id = "fog_lift"
+label_key = "store_fog_lift"
+cap_items = 2
+
+[[triggers]]
+id = "t_roof_done"
+when = { test = "at_least", subject_kind = "card_count", id = "rack_roof", value = 2 }
+outcome = { stores = [{ store = "fog_lift", items = 1 }], unlocks = [{ unlock_kind = "feature", id = "roof_done" }] }
+
+[[chips]]
+id = "fogbound"
+label_key = "chip_fogbound"
+tone = "cold"
+when = { test = "at_most", subject_kind = "store", id = "fog_lift", value = 0 }
+effects = [{ target = "lane", id = "rack", kind = "mul_bp", amount_bp = 5000, source = "fogbound" }]
+cost_key = "chip_fogbound_cost"
+
+# ---------- the day's length, with its floor in save time ----------
+
+# Never unlocked: game hours since morning 5, in twentieths; L5 is its cap (16 h). Two hours in is L2.
+[[stores]]
+id = "day_5"
+label_key = "store_day_5"
+cap_items = 320
+
+[[standing]]
+id = "day_5"
+label_key = "action_day_5"
+makes = [{ store = "day_5", items_per_hour = 20 }]
+
+# The floor: dusk 5 never falls before 90 h of save time (days-four-to-seven-numbers.md, "The chain that holds each
+# floor"), so a sharp setup moves B6 only by what its play gates move.
+[[triggers]]
+id = "t_floor_5"
+when = { test = "after_time", value = 324000 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "floor_5" }] }
+
+[[triggers]]
+id = "t_dusk_5"
+when = { test = "at_least", subject_kind = "store", id = "day_5", value = 320 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "floor_5", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "action", id = "night_5" }] }
+
+# ---------- L2, SL8: the sign on the track, his watch ----------
+
+# L2: L1 + 2 h, so it lands in day four on every route; never a count of the track's runs (decisions.md, "No gate
+# counts taps").
+[[triggers]]
+id = "t_sign"
+when = { test = "at_least", subject_kind = "store", id = "day_5", value = 40 }
+outcome = { line_keys = ["l_sign_1", "l_sign_2"], unlocks = [{ unlock_kind = "feature", id = "wolf_sign" }, { unlock_kind = "action", id = "sign_2h" }] }
+
+# Never unlocked: the two hours after L2, in twentieths.
+[[stores]]
+id = "sign_2h"
+label_key = "store_sign_2h"
+cap_items = 40
+
+[[standing]]
+id = "sign_2h"
+label_key = "action_sign_2h"
+makes = [{ store = "sign_2h", items_per_hour = 20 }]
+
+# SL8: his turn at the watch fire, once he is in the town's mix and the fire is built (its build cards retire at
+# watch_done 2, day_three.toml, the requires his card shares).
+[[triggers]]
+id = "t_his_watch"
+when = { test = "at_least", subject_kind = "store", id = "sign_2h", value = 40 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "retired", id = "watch_fire", value = 1 },
+]
+outcome = { line_keys = ["l_his_watch"], unlocks = [{ unlock_kind = "card", id = "n2_watch" }] }
+
+# His share at the watch fire against his woodcutting, as hers; it makes nothing yet (week 2's packs read it).
+[[cards]]
+id = "n2_watch"
+lane = "n2"
+presentation = "action"
+label_key = "c_n2_watch"
+failed_line_key = "l_his_watch_dry"
+work_s = 600
+requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
+inputs = [{ store = "dry_wood", items = 1 }]
+
+# ---------- the woodshed, L3, SL7 ----------
+
+# Staged on the hands, queued When ready; each stage up to a full store. Stage 2 is L3, stage 3 SL7.
+[[cards]]
+id = "woodshed"
+presentation = "craft"
+label_key = "c_woodshed"
+upside_key = "up_woodshed"
+work_s = 2400
+cap = 3
+failed_line_key = "l_shed_fail"
+inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 12 }]
+line_keys = ["l_shed_1", "l_shed_2", "l_shed_done"]
+[cards.finished]
+modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 15000, source = "woodshed" }]
+
+[[triggers]]
+id = "t_shed_stack"
+when = { test = "at_least", subject_kind = "card_count", id = "woodshed", value = 2 }
+outcome = { line_keys = ["l_stack4_1", "l_stack4_2"] }
+
+# ---------- dusk 5, night 5, A21 and B6 ----------
+
+# Never unlocked: the fifth night, about an hour in twentieths.
+[[stores]]
+id = "night_5"
+label_key = "store_night_5"
+cap_items = 20
+
+[[standing]]
+id = "night_5"
+label_key = "action_night_5"
+makes = [{ store = "night_5", items_per_hour = 20 }]
+
+# A quarter hour into the night.
+[[triggers]]
+id = "t_night_5"
+when = { test = "at_least", subject_kind = "store", id = "night_5", value = 5 }
+outcome = { line_keys = ["l_night_5"], unlocks = [{ unlock_kind = "feature", id = "night_5" }] }
+
+# A21, B6: sit up with the fire in night 5, at B6's Scavenging level (beats.yaml); day one's card of that name is
+# sit_up, whose label this one shares. Its finish opens Arcana and starts the clock to morning 6.
+[[cards]]
+id = "sit_up_5"
+presentation = "narrative"
+label_key = "c_sit_up"
+work_s = 5
+cap = 1
+glows = true
+failed_line_key = "l_sit_up_5_fail"
+requires = [
+  { test = "at_least", subject_kind = "store", id = "night_5", value = 5 },
+  { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 18 },
+]
+[cards.finished]
+line_keys = ["l_b6_1", "l_b6_2", "l_b6_3"]
+unlocks = [
+  { unlock_kind = "skill", id = "arcana" },
+  { unlock_kind = "feature", id = "arcana" },
+  { unlock_kind = "action", id = "dawn_6" },
+]
+
+# Declared here, where B6 opens it; its levels and cards are day five's.
+[[skills]]
+id = "arcana"
+label_key = "skill_arcana"
+
+# Never unlocked: the hour after B6. Morning 6 lifts the fog's chip; day five's moments key on its feature.
+[[stores]]
+id = "dawn_6"
+label_key = "store_dawn_6"
+cap_items = 20
+
+[[standing]]
+id = "dawn_6"
+label_key = "action_dawn_6"
+makes = [{ store = "dawn_6", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_morning_6"
+when = { test = "at_least", subject_kind = "store", id = "dawn_6", value = 20 }
+outcome = { stores = [{ store = "fog_lift", items = 1 }], unlocks = [{ unlock_kind = "feature", id = "morning_6" }] }
+
+# ---------- levels and finds ----------
+
+# Finds on levels whose shipped row pays speed alone, each beside that speed-up (its own trigger: additive under the
+# lock) and restating the level's row with a pays naming both. morning_5 is required so a save already past the level
+# gets the find inside the back half (content/team/days-four-to-seven.md, "Levels and finds"). Melee's is b7.toml's.
+
+[[skill_levels]]
+skill = "foraging"
+levels = [{ level = 11, pays_key = "pays_find_for_11" }]
+
+[[skill_levels]]
+skill = "scavenging"
+levels = [{ level = 19, pays_key = "pays_find_scav_19" }, { level = 20, pays_key = "pays_find_scav_20" }]
+
+[[skill_levels]]
+skill = "woodcutting"
+levels = [{ level = 20, pays_key = "pays_find_wc_20" }]
+
+[[skill_levels]]
+skill = "cooking"
+levels = [{ level = 6, pays_key = "pays_find_cook_6" }]
+
+[[triggers]]
+id = "t_find_for_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 11 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_5", value = 1 }]
+outcome = { stores = [{ store = "roots", items = 12 }], line_keys = ["l_find_for_11"] }
+
+[[triggers]]
+id = "t_find_scav_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 19 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_5", value = 1 }]
+outcome = { stores = [{ store = "scrap", items = 2 }], line_keys = ["l_find_scav_19"] }
+
+[[triggers]]
+id = "t_find_scav_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_5", value = 1 }]
+outcome = { stores = [{ store = "scrap", items = 4 }], line_keys = ["l_find_scav_20"] }
+
+[[triggers]]
+id = "t_find_wc_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 20 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_5", value = 1 }]
+outcome = { stores = [{ store = "dry_wood", items = 12 }], line_keys = ["l_find_wc_20"] }
+
+[[triggers]]
+id = "t_find_cook_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_5", value = 1 }]
+outcome = { stores = [{ store = "stew", items = 3 }], line_keys = ["l_find_cook_6"] }
+
+# ---------- the Camp ----------
+
+[[camp_levels]]
+at_items = 600000
+pays_key = "camp_pays_11"
+pays_from = 12
+pays_to = 18
+line_keys = ["l_camp_11"]
+modifiers = [{ target = "cap", id = "stew", kind = "mul_bp", amount_bp = 15000, source = "camp_11" }]
+
+# ---------- the journal ----------
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[notes]]
+id = "n_day_b6"
+entry = "e_days_2"
+gate = { test = "at_least", subject_kind = "card_count", id = "sit_up_5", value = 1 }
+beat = "B6"
+
+# ---------- features ----------
+
+[[features]]
+id = "morning_5"
+
+[[features]]
+id = "fog_5"
+
+[[features]]
+id = "roof_done"
+
+[[features]]
+id = "fog_open"
+
+[[features]]
+id = "floor_5"
+
+[[features]]
+id = "wolf_sign"
+
+[[features]]
+id = "night_5"
+
+[[features]]
+id = "morning_6"
+
+[[features]]
+id = "arcana"
+
+# ---------- aims ----------
+
+# After day three's aim_warm (feature warm_ground), which ends at L1.
+[[aims]]
+id = "aim_dry"
+text_key = "aim_dry"
+after = { unlock_kind = "feature", id = "fog_5" }
+
+[[aims]]
+id = "aim_stone"
+text_key = "aim_stone"
+after = { unlock_kind = "feature", id = "arcana" }
+
+# ---------- text ----------
+
+[line_kinds]
+l_morning_5 = "story"
+l_fog_1 = "story"
+l_fog_roofed = "story"
+l_fog_open = "story"
+l_sign_1 = "story"
+l_sign_2 = "story"
+l_his_watch = "story"
+l_his_watch_dry = "tap"
+l_shed_fail = "tap"
+l_shed_1 = "story"
+l_shed_2 = "story"
+l_shed_done = "story"
+l_stack4_1 = "story"
+l_stack4_2 = "story"
+l_night_5 = "story"
+l_sit_up_5_fail = "tap"
+l_b6_1 = "story"
+l_b6_2 = "story"
+l_b6_3 = "story"
+l_camp_11 = "level"
+l_find_for_11 = "find"
+l_find_scav_19 = "find"
+l_find_scav_20 = "find"
+l_find_wc_20 = "find"
+l_find_cook_6 = "find"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-four routes give each line its states and the writers'
+# pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
+# shipping release: replace each value, never the marker's spelling.
+store_dawn_5 = "dawn"
+action_dawn_5 = "Dawn"
+store_fog_lift = "fog"
+chip_fogbound = "foggy"
+chip_fogbound_cost = "{pct} drying speed"
+store_day_5 = "day"
+action_day_5 = "Day"
+store_sign_2h = "clock"
+action_sign_2h = "Clock"
+c_n2_watch = "Keep the fire at the gap"
+c_woodshed = "Build a woodshed"
+up_woodshed = "{pct} dry wood capacity"
+store_night_5 = "night"
+action_night_5 = "Night"
+skill_arcana = "Arcana"
+store_dawn_6 = "dawn"
+action_dawn_6 = "Dawn"
+camp_pays_11 = "stew holds {to}, was {from}"
+aim_dry = "keep the fire lit through the fog."
+aim_stone = "find out what the stone does."
+l_morning_5 = "first light. past the scrub, all white."
+l_fog_1 = "wood from the stack bends before it snaps."
+l_fog_roofed = "the hang under the roof is dry. you don't mention it."
+l_fog_open = "you wipe the hang dry. the drip comes back."
+l_sign_1 = "half a deer on the track. you count prints and run out of fingers."
+l_sign_2 = "the same prints ring the camp. none come in."
+l_his_watch = "{n2} sits at the gap, the shaft on his knees."
+l_his_watch_dry = "he crouches by the gap. nothing there will light."
+l_shed_fail = "the shed won't stand on what's here."
+l_shed_1 = "posts in a row. from the track, a fence."
+l_shed_2 = "rafters lashed down, slabs lapped over them."
+l_shed_done = "lucy thumbs a log from the middle and slides it back."
+l_stack4_1 = "{n2} lays the logs bark up. lucy turns them over."
+l_stack4_2 = "he laughs. she stops at the last row."
+l_night_5 = "the wet wood smokes. nobody moves back."
+l_sit_up_5_fail = "you warm your hands. that's all."
+l_b6_1 = "the coals sink to a red thread. a twig on them. nothing."
+l_b6_2 = "your hand on the stone. the twig steams, then catches."
+l_b6_3 = "you scrub your fingers. the grey stays. lucy moves to the far side."
+l_camp_11 = "the pot takes two hands now, and a cloth."
+pays_find_for_11 = "a soft root bank, {pct} foraging speed"
+l_find_for_11 = "a soft bank. the roots come up whole."
+pays_find_scav_19 = "a pot hook, {pct} scavenging speed"
+l_find_scav_19 = "a pot hook on a chain, in a ditch. the links turn."
+pays_find_scav_20 = "an iron hoop, {pct} scavenging speed"
+l_find_scav_20 = "you scrape ash off an iron hoop and roll it free."
+pays_find_wc_20 = "a dry birch, {pct} woodcutting speed"
+l_find_wc_20 = "you knock on a standing birch. it rings."
+pays_find_cook_6 = "a stew that keeps, {pct} cooking speed"
+l_find_cook_6 = "the spoon stands in the pot. you let go of it."
+n_day_b6 = "the fire nearly went out, and i fetched it back out of the stone. i wouldn't sit near that either"
+# ---------- end of lines ----------

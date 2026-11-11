@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "paw", "required": true, "text": ["fore print. claws", "well ahead of toes"]},
+  {"kind": "study", "id": "marks", "required": true, "text": ["marks in the bark"]},
+  {"kind": "label", "anchor": [262, 300], "text": ["hump over", "the shoulders"]},
+  {"kind": "label", "anchor": [180, 498], "text": ["claws ~4 in."]},
+  {"kind": "label", "anchor": [150, 356], "text": ["face dished"]}
+]

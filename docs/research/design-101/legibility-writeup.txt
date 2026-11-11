@@ -1,0 +1,57 @@
+# Making complex systems legible: notes
+
+Evidence is thin on primary sources. A second pass found and read the real Factorio Friday Facts posts, Tynan Sylvester's Game Developer interview, the PC Gamer Into the Breach interview and the FFXII developer interview. The GDC talks themselves (Slay the Spire metrics, RimWorld, Into the Breach) have no transcript available, and Klei's forums return 403 to scripted fetches. Where a claim rests on a search snippet it says so. Findings below are marked by what was actually read.
+
+## Part A: General
+
+**Show what the system will do before it does it, and let failure be traceable to the player's own choice.**
+- developer, Into the Breach (gamedeveloper.com IGF interview): telegraphed enemy attacks were adopted as "a core mechanic"; with every attack telegraphed and little chance, "it's very clear how or why you failed so that you can feel like you can improve."
+- practitioner, PC Gamer interview (read): Matthew Davis, "a push to be more deterministic in the moment-to-moment gameplay"; the writer notes "no fog of war and no percentages" and that the Vek "show you their intended attack and give you a chance to respond before they execute it"; Justin Ma, "We wanted to come up with something that would be fun regardless of the AI." The system is made simple enough to show, rather than deep and hidden. The GDC 2019 postmortem itself was not available (listing only); the Kotaku GDC podcast excerpt covers cutting systems, not telegraphing.
+- opinion, LessWrong review: Slay the Spire's "central innovation is enemy intents"; early play is learning patterns, later play is "all about having a plan". Seeing the next action moves attention from reacting to planning. Practitioner, a repost of an Ars Technica interview: the intents were not in place at the start and came out of Early Access playtesting.
+- practitioner, snippet (STS2 guide): intent is a small icon vocabulary (damage plus count, block, buff/debuff), and the sequel lays several intents side by side. Few symbols, quantities printed on them.
+- null: the Giovannetti Gamasutra interview (read in full) and the GDC 2019 metrics talk listing give no developer reasoning for intents. (unverified: the claim that intents were a deliberate legibility choice rests on the LessWrong review, not on Mega Crit.)
+
+**For a player-written rule list, the order on screen is the logic, so the display should make "which line is acting now" visible, and the genre's evidence for this is a gap, not a solved pattern.**
+- practitioner, FFXII gambits (dev.to): a numbered list, slot 1 highest priority, slot 12 lowest; offensive and defensive commands colour-coded red and blue. The article describes nothing that marks the line currently firing.
+- developer, FFXII (PlayStation Blog 2017, read): Hiroaki Kato says real-time combat added to command-based battles risked being "too fast-paced and difficult", "so to solve this problem we adopted the Gambit system"; it grew from a monster-AI mechanic in FFIV. The staff say it was hard to judge whether it worked until late. The interview says nothing about how the interface shows which gambit acted.
+- null (well supported for FFXII; unread for Dragon Age and Factorio circuits): no developer source on how these games show which rule fired. Treat "players can see why the AI did that" as unestablished. (unverified: Dragon Age tactics and Factorio circuit network display, no design account found.)
+- Inference (mine, unverified): because order is priority, a list that also marks "this one is on now" is the cheapest honest answer to "why did it do that".
+
+**Let the player choose how much of the overlay is on, because a single global toggle ends up always on or always off.**
+- verbatim, Factorio forum thread on alt mode: "Once you enable ALT mode you rarely disable it"; players ask for the F4/F5-debug style of per-layer choice; recipes on machines are wanted ("help them look different"), modules are clutter; one player switches the overlay off to spot idle machines because the bare machine reads as working or not.
+- developer, Factorio Friday Facts #351 (read): when the Beacon began drawing its modules on the entity, "we could remove Alt-mode from the Beacon"; the overlay "isn't really useful most of the time on Beacons", and removing it left "breathing room" for the producers. #361: the Alt-mode tip is "the iconic example" of a tip, because "playing without Alt-mode is painful, and even more painful to watch"; their rule is that items and entities should explain themselves through direct means like tooltips, with tips only for what players actually do not get. #426: the assembler's output slot tooltip showed the recipe and hid the item's spoilage, so recipe info and item info were split into separate hover targets. Lesson: put the information on the thing when it is always relevant, keep the overlay for what is sometimes relevant, and keep one tooltip to one question.
+- snippet, Klei forum on Oxygen Not Included: one overlay per concern, each on its own hotkey, and a complaint that one overlay (temperature) is nearly useless. The lesson I draw: an overlay answers one question; a mixed one answers none well. Single source, player opinion. (unverified: Klei's forums returned 403 to scripted fetches and no Klei developer statement on overlay design was found.)
+- Inference (mine): a debug-style overlay is a player feature when it is narrow and chosen, and wallpaper when it is all-in-one.
+
+**A readout of internal state is not an explanation of an action, and games mostly ship the former.**
+- practitioner, PCGamesN on Dwarf Fortress's Steam look panel (read): categories "Relations, Thoughts, Needs", an Overview tab giving "a nice snapshot of the highest priority information", and live updating, so you "view a dwarf's thoughts as they have them, in real time". CORRECTION: an earlier version of this note quoted the article as saying the panel "explains a dwarf's mental state, but not necessarily the reason behind an action". That sentence is not on the page; it came from a search-result summary and is dropped. The claim that state readouts are not explanations is now my inference only. Tarn Adams, Game Developer: a UX person reviewed the new UI "later than we should have" and that review produced the building menu and other fixes (developer).
+- developer, Tynan Sylvester, Game Developer (read): his theory was "to create a simulation that was not overly complex, and that a player can observe and comprehend"; RimWorld "shows enough that it constrains the imagination a little bit"; "the real engine of story is the gameplay systems themselves". The article does not discuss the mood or thought interface. A book quote relayed by a blog, "the human mind sees stories anyway, given the slightest of suggestions" (practitioner, habrador.com), concerns narrative inference, not explanation design.
+- null: nothing read from Sylvester on why a pawn did something or how the thoughts list was designed. (unverified: the GDC 2017 talk has no transcript available.)
+- Inference (mine): where a system acts for the player, the state ("tired, hungry") plus the line that matched ("because: hungry") closes the gap; state alone leaves the player to guess the link.
+
+**Let the player watch their own machine run, and let them share or compare the result.**
+- developer, Opus Magnum (gamedeveloper.com): "It's satisfying to watch factories work, and especially so when it's one of your own design"; animated GIF export for sharing; cost, area and cycles as separate metrics. The page does not mention a timeline or histograms; those appear only in a PC Gamer snippet (scores shown against others).
+- Inference (mine): watching is a reward for the author of the system, not just a debugging aid; separate numbers give the player more than one way to judge a solution.
+
+**Do not hand over a verdict where the player may want something different.** Not sourced here as a finding; it is a design stance already taken in the project below. Included only because Slay the Spire's intents show facts (damage 12 x 2), not advice.
+
+## Part B: What it means for Ostmere
+
+**The design already covers most of the "show what will happen" side; the gap is a record of what rules did.**
+
+Agreement:
+- "The mix: several actions at once": "The game states facts, never a verdict on the mix"; ledger lines show rate and how long the stock lasts ("Candles -4/h · 7 h left"). This is the intent-icon approach: quantities, no advice.
+- opening-screen.md, "The hands strip": a rule's mix running shows where the rule lets go ("until 8 dry wood"), as a button into the Rules tab. A greyed mix says why it stopped ("stopped · {card} done") and offers the fix in place. This answers "why did that happen" at the moment it matters.
+- opening-screen.md, "The Rules tab": a dot marks the rule on now, in priority order, with `Otherwise` as the default. That is the FFXII list plus the "which one is acting" mark I found missing in the genre.
+- opening-screen.md, "Ledger and rules": while a share is dragged, the lines the card feeds or draws on light up (a causal overlay on demand, not always on).
+- "Dots and the one glow": one highlight at a time, nothing pulses for urgency. Fits the Factorio finding that always-on overlays get left on and become wallpaper.
+
+Gaps (all my reading of the docs; I have not played the build):
+1. Away time. "Coming back" lists what arrived (cards, lines, skills) and puts a chip's repeat lines in the Log only. I found no place that says which rule fired while the player was away, in what order, or why the mix is what it is now. The strip shows the current state, not the sequence that led to it. Players who return to a mix that changed have the current reason but not the history.
+2. A rule that never fires. The Rules tab marks a rule that is on; I found nothing that says why a rule is off. In Factorio terms, the idle machine is visible only by its absence. For a player writing their own rules (taught late, after the first set) "why isn't this one doing anything" is the likeliest confusion.
+3. Where two rules both hold, the tab shows the one on, but I did not find the losing rule marked as "holds, but outranked by rule 1".
+
+Proposals to test (small, cold-read testable, none changes the 2 AM test):
+1. **Why-line on the strip.** When a rule's mix is running, add the matching condition in the rule's own words as the strip already does ("until 8 dry wood"), plus a one-tap "what ran while away" list from the Log: the last N rule starts and lets-go, with the store level at each. Test: show a returned player the current screen with and without the list, ask "why is this mix running?".
+2. **Off-rule reason in the Rules tab.** Under a rule that is not on, a quiet line stating why: "needs under 3 dry wood; now 5" or "outranked by {rule}". Facts only, same grammar as the ledger. Test: give a tester a rule that never fires and time how long they take to find out why.
+3. **Narrow lenses, not an all-in-one overlay.** If a causal overlay is ever added, build it as one question per lens ("what feeds this", "what draws on this"), extending the existing drag-time highlight so it can be held on, rather than a single master toggle. Test only if gaps 1 and 2 prove insufficient; per prefer-subtraction, do not build it speculatively.

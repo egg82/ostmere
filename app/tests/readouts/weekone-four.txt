@@ -1,0 +1,7 @@
+chapter four: 5 visits on typical
+   V15 gap   9.2 h  spend  8  decide  2
+   V16 gap   4.2 h  spend  8  decide  1
+   V17 gap   3.2 h  spend  7  decide  1
+   V18 gap   9.2 h  spend  7  decide  1
+   V19 gap   4.2 h  spend  6  decide  2
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 3 returns, spend 21, decide 4; 8h+: 2 returns, spend 15, decide 3

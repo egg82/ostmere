@@ -1,0 +1,713 @@
+# Day fifteen: week 2's last visit (the hall shown at S4), then B13, the season's turn at 336 h, through T1-T3, SL22 and
+# SL23 to B14 (the hall roofed), as data merged after day_twelve.toml (schema.Chapter, chapters.merge). Story spoilers:
+# never shown to the owner. Spec: content/team/week-three.md, "S4's visit" and "Day fifteen"; numbers:
+# content/team/week-three-numbers.md.
+version = 1
+end_feature = "belonging"
+
+# ---------- S4's visit: the hall shown ----------
+
+# On S4's condition (day_twelve.toml's t_s4, so one moment with it): the week's first goal, the ruin's beams its roof
+# takes, and the build's order, shown before the night that carries B13.
+[[triggers]]
+id = "t_hall_shown"
+when = { test = "at_least", subject_kind = "card_count", id = "sit_last_night", value = 1 }
+[triggers.outcome]
+line_keys = ["l_floor_paced"]
+stores = [{ store = "ruin_beams", items = 12 }]
+unlocks = [
+  { unlock_kind = "card", id = "hall" },
+  { unlock_kind = "card", id = "pull_beams" },
+  { unlock_kind = "store", id = "ruin_beams" },
+  { unlock_kind = "store", id = "beams" },
+]
+
+# The sound beams under the ruin's fallen roof: a pool nothing refills, drawn by labour (the bloom's shape), so
+# pull_beams is spent once the ruin is empty and its share goes to the rest of its mix.
+[[stores]]
+id = "ruin_beams"
+label_key = "store_ruin_beams"
+cap_items = 12
+
+[[stores]]
+id = "beams"
+label_key = "store_beams"
+cap_items = 8
+
+[[cards]]
+id = "pull_beams"
+presentation = "action"
+label_key = "c_pull_beams"
+work_s = 1200
+skill = "scavenging"
+xp_per_hour = 900
+failed_line_key = "l_pull_beams_fail"
+inputs = [{ store = "ruin_beams", items = 1 }]
+outcome = { stores = [{ store = "beams", items = 1 }] }
+
+# P2, the week's joint project on the hands: eight stages, each the same take (a card's inputs are one per stage), so
+# the totals are week-three.md's: 112 stakes, 24 stones, 16 cord, 8 beams, 4 pelts. Run by its order card (below), so
+# no stage is queued: stage 4 T3, stage 8 B14. No floor: the hall shows at S4 (331 h), past sharp's 308.8 h.
+[[cards]]
+id = "hall"
+presentation = "craft"
+label_key = "c_hall"
+upside_key = "up_hall"
+work_s = 2400
+cap = 8
+failed_line_key = "l_hall_fail"
+inputs = [
+  { store = "stakes", items = 16 },
+  { store = "stones", items = 3 },
+  { store = "cord", items = 2 },
+  { store = "beams", items = 1 },
+  { store = "pelt", items = 1, every = 2 },
+]
+line_keys = ["l_stage_hall_1", "l_stage_hall_2", "l_stage_hall_3", "l_stage_hall_4", "l_stage_hall_5",
+             "l_stage_hall_6", "l_stage_hall_7", "l_stage_hall_8"]
+[cards.finished]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 12000, source = "hall" }]
+
+# "When stakes reach 16, build the hall": a stage whenever a stage's stakes are in, the rest allowing; passed over at
+# the cap.
+[[order_cards]]
+store = "stakes"
+tap_card = "hall"
+when = { test = "at_least", subject_kind = "store", id = "stakes", value = 16, release = 16 }
+offered_after = { unlock_kind = "card", id = "hall" }
+
+# ---------- B13: the season's turn ----------
+
+# B13 at 336 h. What only the season brings draws a pool this turn fills (season_checks): the frost's hours, the beds'
+# growing hours, the wind off the roofs, the herd at the warm ground. No rate is raised. The last season's chore rules go
+# (D-126, retire_checks); their order cards come back while their chips show uncovered. The rime starts at 2, so it
+# reaches the chip's 12 at B13 + 10 h, T1's instant.
+[[triggers]]
+id = "t_b13"
+season = true
+when = { test = "after_time", value = 1209600 }
+[triggers.outcome]
+line_keys = ["l_b13_1", "l_b13_2", "l_b13_3"]
+stores = [
+  { store = "frost_left", items = 168 },
+  { store = "grow_left", items = 168 },
+  { store = "roof_wind_left", items = 1 },
+  { store = "deer_down", items = 12 },
+  { store = "rime", items = 2 },
+]
+unlocks = [
+  { unlock_kind = "feature", id = "clear" },
+  { unlock_kind = "action", id = "frost" },
+  { unlock_kind = "action", id = "roof_wind" },
+]
+retire_orders = ["clear_roofs", "n2_clear_roofs", "peg_flaps", "n1_peg_flaps"]
+
+# Never drawn: the season's hours of frost left. B13 fills it; the frost draws it, so it ends at 504 h.
+[[stores]]
+id = "frost_left"
+label_key = "store_frost_left"
+cap_items = 168
+hidden = true
+
+# Never drawn: the beds' growing hours left, the same span.
+[[stores]]
+id = "grow_left"
+label_key = "store_grow_left"
+cap_items = 168
+hidden = true
+
+# Never drawn: the hour of wind that blows the last season's ash off the roofs (the visitor's idiom).
+[[stores]]
+id = "roof_wind_left"
+label_key = "store_roof_wind_left"
+cap_items = 1
+hidden = true
+
+# Never drawn but by its cures: rime on the beds, the face of the chip below.
+[[stores]]
+id = "rime"
+label_key = "store_rime"
+cap_items = 24
+hidden = true
+
+[[standing]]
+id = "frost"
+label_key = "action_frost"
+costs = [{ store = "frost_left", items_per_hour = 1 }]
+makes = [{ store = "rime", items_per_hour = 1 }]
+
+[[standing]]
+id = "roof_wind"
+label_key = "action_roof_wind"
+costs = [{ store = "roof_wind_left", items_per_hour = 1 }, { store = "roof_ash", items_per_hour = 24 }]
+
+# Never drawn: game hours since the turn, for the season's own steps. A clock, not something the season brings, so its
+# own trigger opens it on the turn's feature and it runs on past the season.
+[[stores]]
+id = "clear_clock"
+label_key = "store_clear_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "clear_clock"
+label_key = "action_clear_clock"
+makes = [{ store = "clear_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_clear_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "clear_clock" }] }
+
+# ---------- SL22: her beds ----------
+
+# Two hours after the turn: her sowing, a staged card on her ruled lane run by its order card (week-three-plan item 8).
+[[triggers]]
+id = "t_sow"
+when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 2 }
+outcome = { line_keys = ["l_sow"], unlocks = [{ unlock_kind = "card", id = "n3_sow" }] }
+
+# Six beds, each taking her dark ground. Every finished bed raises the beds' growing a full base's worth (item 9), so
+# six beds grow seven halves an hour; the ground she made all week two sows the first five.
+[[cards]]
+id = "n3_sow"
+lane = "n3"
+presentation = "craft"
+label_key = "c_n3_sow"
+upside_key = "up_n3_sow"
+work_s = 1800
+cap = 6
+failed_line_key = "l_sow_fail"
+inputs = [{ store = "ashed_ground", items = 4 }]
+outcome = { modifiers = [{ target = "rate", id = "beds", flow = "make", store = "ripe", kind = "add_bp", amount_bp = 10000, source = "n3_sow" }] }
+
+# "When her ground reaches 4, she sows a bed": passed over at the cap, and her lane goes to its next rule.
+[[order_cards]]
+store = "ashed_ground"
+tap_card = "n3_sow"
+when = { test = "at_least", subject_kind = "store", id = "ashed_ground", value = 4, release = 4 }
+offered_after = { unlock_kind = "card", id = "n3_sow" }
+
+# The first bed sown: the beds grow from the season's pool, and the barley is cut and cooked.
+[[triggers]]
+id = "t_beds"
+when = { test = "at_least", subject_kind = "card_count", id = "n3_sow", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "action", id = "beds" },
+  { unlock_kind = "store", id = "ripe" },
+  { unlock_kind = "store", id = "barley" },
+  { unlock_kind = "card", id = "reap" },
+  { unlock_kind = "card", id = "n1_reap" },
+  { unlock_kind = "card", id = "n2_reap" },
+  { unlock_kind = "card", id = "n3_reap" },
+  { unlock_kind = "card", id = "n4_reap" },
+  { unlock_kind = "card", id = "n5_reap" },
+  { unlock_kind = "card", id = "n6_reap" },
+  { unlock_kind = "card", id = "n7_reap" },
+  { unlock_kind = "card", id = "barley_stew" },
+]
+
+# Barley standing in the beds; its cap is the cap-loss check's store for the beds.
+[[stores]]
+id = "ripe"
+label_key = "store_ripe"
+cap_items = 18
+
+[[stores]]
+id = "barley"
+label_key = "store_barley"
+cap_items = 24
+
+[[standing]]
+id = "beds"
+label_key = "action_beds"
+costs = [{ store = "grow_left", items_per_hour = 1 }]
+makes = [{ store = "ripe", items_per_hour = 1, every_hours = 2 }]
+
+[[cards]]
+id = "reap"
+presentation = "action"
+label_key = "c_reap"
+work_s = 300
+skill = "foraging"
+xp_per_hour = 300
+failed_line_key = "l_reap_fail"
+inputs = [{ store = "ripe", items = 3 }]
+outcome = { stores = [{ store = "barley", items = 2 }] }
+
+[[town_cards]]
+id = "{lane}_reap"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_lane_reap"
+work_s = 1200
+failed_line_key = "l_reap_fail"
+inputs = [{ store = "ripe", items = 3 }]
+outcome = { stores = [{ store = "barley", items = 2 }] }
+
+# "Over 12 ripe, {n3} reaps, until 3": a full field sends her back to her share instead of losing the crop (D-91's
+# shape).
+[[order_cards]]
+store = "ripe"
+tap_card = "n3_reap"
+when = { test = "at_least", subject_kind = "store", id = "ripe", value = 12, release = 3 }
+offered_after = { unlock_kind = "card", id = "n3_reap" }
+
+[[cards]]
+id = "barley_stew"
+presentation = "action"
+label_key = "c_barley_stew"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 600
+skill = "cooking"
+xp_per_hour = 900
+failed_line_key = "l_barley_stew_fail"
+inputs = [{ store = "barley", items = 4 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 4 }] }
+
+# ---------- T1: night 15, the frost ----------
+
+# The rime at the chip's 12, B13 + 10 h on every route: the night grade's clock, the chip and both its cures, its order
+# card offered with it (day eight's roofs card, on her lane). Left undone the beds grow three quarters: a cost that
+# stays small. A cover takes two pelts, the pelts' sink for the season.
+[[triggers]]
+id = "t_frost"
+when = { test = "at_least", subject_kind = "store", id = "rime", value = 12 }
+outcome = { line_keys = ["l_night_15", "l_frost_1", "l_frost_2"], unlocks = [{ unlock_kind = "action", id = "night_15" }, { unlock_kind = "chip", id = "frosted" }, { unlock_kind = "card", id = "cover_beds" }, { unlock_kind = "card", id = "n3_cover_beds" }] }
+
+# Night 15, a hidden clock the scene's night grade reads until morning 16 (clear_clock 18, T2's instant).
+[[stores]]
+id = "night_15"
+label_key = "store_night_15"
+cap_items = 20
+hidden = true
+
+[[standing]]
+id = "night_15"
+label_key = "action_night_15"
+makes = [{ store = "night_15", items_per_hour = 20 }]
+
+[[chips]]
+id = "frosted"
+label_key = "chip_frosted"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "rime", value = 12 }
+effects = [{ target = "rate", id = "beds", flow = "make", store = "ripe", kind = "mul_bp", amount_bp = 7500, source = "frosted" }]
+cost_key = "chip_frosted_cost"
+
+[[cards]]
+id = "cover_beds"
+presentation = "action"
+label_key = "c_cover_beds"
+work_s = 600
+failed_line_key = "l_cover_fail"
+inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
+
+[[cards]]
+id = "n3_cover_beds"
+lane = "n3"
+presentation = "action"
+label_key = "c_n3_cover_beds"
+work_s = 1800
+failed_line_key = "l_cover_fail"
+inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
+
+# "When frosted, {n3} covers the beds": its `when` the chip's.
+[[order_cards]]
+store = "rime"
+tap_card = "n3_cover_beds"
+chip = "frosted"
+when = { test = "at_least", subject_kind = "store", id = "rime", value = 12 }
+offered_after = { unlock_kind = "card", id = "n3_cover_beds" }
+
+# ---------- T2: the deer ----------
+
+# Morning 16, on the season's clock: the herd at the warm ground's edge, a fight card on the finite pool B13 filled (the
+# bear's shape), and its page, its odds unknown until the first hunt.
+[[triggers]]
+id = "t_deer"
+when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 18 }
+outcome = { line_keys = ["l_deer"], unlocks = [{ unlock_kind = "store", id = "deer_down" }, { unlock_kind = "card", id = "hunt_deer" }, { unlock_kind = "feature", id = "combat" }] }
+
+# The hunts left this season: a pool nothing refills.
+[[stores]]
+id = "deer_down"
+label_key = "store_deer_down"
+cap_items = 12
+
+[[stores]]
+id = "deer_lost"
+label_key = "store_deer_lost"
+cap_items = 20000
+
+[[threats]]
+id = "ash_deer"
+label_key = "threat_ash_deer"
+base = 10
+
+# The hands against a herd that runs: a loss is the deer getting away, no hurt, the smoked carried out spent.
+[[cards]]
+id = "hunt_deer"
+presentation = "action"
+label_key = "c_hunt_deer"
+work_s = 2400
+skill = "melee"
+xp_per_hour = 2
+failed_line_key = "l_hunt_deer_fail"
+inputs = [{ store = "smoked", items = 1 }, { store = "deer_down", items = 1 }]
+outcome = { stores = [{ store = "catch", items = 4 }, { store = "cord", items = 1 }] }
+fight = { side = "hands", threat = "ash_deer", lost = "deer_lost", won_line_keys = ["l_fight_deer_won_1", "l_fight_deer_won_2"], lost_line_keys = ["l_fight_deer_lost_1", "l_fight_deer_lost_2"] }
+
+[[entries]]
+id = "e_deer"
+section = "creatures"
+sketch = "ash_deer"
+hand = "ink"
+runners = ["hunt_deer"]
+
+[[notes]]
+id = "n_deer_1"
+entry = "e_deer"
+gate = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 18 }
+hand = "ink"
+
+# ---------- SL23: the ruin's beams ----------
+
+[[triggers]]
+id = "t_beams"
+when = { test = "at_least", subject_kind = "card_count", id = "pull_beams", value = 1 }
+outcome = { line_keys = ["l_beams"] }
+
+# ---------- T3 and B14: the hall ----------
+
+# T3: the walls to the eaves, rest a tenth faster (the wind kept off).
+[[triggers]]
+id = "t_walls"
+when = { test = "at_least", subject_kind = "card_count", id = "hall", value = 4 }
+outcome = { line_keys = ["l_walls_1", "l_walls_2"], modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 11000, source = "hall_walls" }] }
+
+# B14: the roof on, and the table it was built for. What the table draws is day sixteen's, keyed on belonging.
+[[triggers]]
+id = "t_b14"
+when = { test = "at_least", subject_kind = "card_count", id = "hall", value = 8 }
+outcome = { line_keys = ["l_b14_1", "l_b14_2", "l_b14_3"], unlocks = [{ unlock_kind = "feature", id = "belonging" }, { unlock_kind = "action", id = "table" }] }
+
+# The shared meal: meat on top of the everyday eating, so from B14 smoked has a sink while it runs. Dry, it pauses and
+# meals stop. Meals is a count nothing draws.
+[[stores]]
+id = "meals"
+label_key = "store_meals"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "table"
+label_key = "action_table"
+costs = [{ store = "smoked", items_per_hour = 2 }]
+makes = [{ store = "meals", items_per_hour = 1 }]
+
+# ---------- the camp's asks while the hall goes up ----------
+
+# Offers of no kind, as day twelve's asks, but not in its chain: each shows when its moment comes, whatever else is
+# open. The rack once the sun is out (the turn); the door the morning after the first hard frost (T2's clock).
+[[offers]]
+id = "o_door_ice"
+text_key = "o_door_ice"
+gate = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 18 }
+
+[[offers.answers]]
+id = "o_door_ice_shave"
+label_key = "a_door_ice_shave"
+cost_key = "a_door_ice_shave_cost"
+[offers.answers.outcome]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_door_ice_shave" }]
+
+[[offers.answers]]
+id = "o_door_ice_hide"
+label_key = "a_door_ice_hide"
+cost_key = "a_door_ice_hide_cost"
+[offers.answers.outcome]
+stores = [{ store = "dry_wood", items = 6 }]
+
+[[offers]]
+id = "o_sun_rack"
+text_key = "o_sun_rack"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }
+
+[[offers.answers]]
+id = "o_sun_rack_sun"
+label_key = "a_sun_rack_sun"
+cost_key = "a_sun_rack_sun_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "rack_sunned" }]
+modifiers = [{ target = "side", id = "rack", kind = "add_bp", amount_bp = 1000, source = "rack_sunned" }]
+
+[[offers.answers]]
+id = "o_sun_rack_fire"
+label_key = "a_sun_rack_fire"
+cost_key = "a_sun_rack_fire_cost"
+[offers.answers.outcome]
+modifiers = [{ target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 9500, source = "o_sun_rack_fire" }]
+
+# ---------- levels and finds ----------
+
+# Finds on the next speed-only level past week two's, each restating its row with a pays naming both; clear is
+# required, so a save already past the level gets the find at B13 (the barley's once the beds grow).
+[[skill_levels]]
+skill = "foraging"
+levels = [{ level = 14, pays_key = "pays_find_for_14" }]
+
+[[skill_levels]]
+skill = "woodcutting"
+levels = [{ level = 25, pays_key = "pays_find_wc_25" }]
+
+[[skill_levels]]
+skill = "scavenging"
+levels = [{ level = 25, pays_key = "pays_find_scav_25" }]
+
+[[skill_levels]]
+skill = "cooking"
+levels = [{ level = 11, pays_key = "pays_find_cook_11" }]
+
+[[skill_levels]]
+skill = "melee"
+levels = [{ level = 8, pays_key = "pays_find_melee_8" }]
+
+[[triggers]]
+id = "t_find_for_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 14 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
+outcome = { stores = [{ store = "barley", items = 6 }], line_keys = ["l_find_wild_barley"] }
+
+[[triggers]]
+id = "t_find_wc_25"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 25 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }]
+outcome = { stores = [{ store = "dry_wood", items = 12 }], line_keys = ["l_find_dead_birch"] }
+
+[[triggers]]
+id = "t_find_scav_25"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 25 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }]
+outcome = { stores = [{ store = "scrap", items = 4 }], line_keys = ["l_find_hinge"] }
+
+[[triggers]]
+id = "t_find_cook_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 11 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
+outcome = { stores = [{ store = "stew", items = 8 }], line_keys = ["l_find_thick_pot"] }
+
+[[triggers]]
+id = "t_find_melee_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }]
+outcome = { stores = [{ store = "cord", items = 2 }], line_keys = ["l_find_antler"] }
+
+# ---------- the journal ----------
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[entries]]
+id = "e_days_7"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_day_b13"
+entry = "e_days_7"
+gate = { test = "after_time", value = 1209600 }
+beat = "B13"
+
+[[notes]]
+id = "n_day_b14"
+entry = "e_days_7"
+gate = { test = "at_least", subject_kind = "card_count", id = "hall", value = 8 }
+beat = "B14"
+
+# ---------- the Camp ----------
+
+# Day twelve's held marker filled in, lifted by the hall's last stage.
+[[camp_levels]]
+at_items = 3400000
+pays_key = "camp_pays_17"
+pays_from = 24
+pays_to = 36
+held = true
+lifted_by = ["hall"]
+line_keys = ["l_camp_17"]
+modifiers = [{ target = "cap", id = "barley", kind = "mul_bp", amount_bp = 15000, source = "camp_17" }]
+
+# Held at a "?" past the chapter, a goal on screen.
+[[camp_levels]]
+at_items = 4200000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- features ----------
+
+[[features]]
+id = "clear"
+
+[[features]]
+id = "belonging"
+
+[[features]]
+id = "rack_sunned"
+label_key = "feature_rack_sunned"
+
+# ---------- aims ----------
+
+# After day twelve's aim_wind: everyone under one roof, from the turn.
+[[aims]]
+id = "aim_roof"
+text_key = "aim_roof"
+after = { unlock_kind = "feature", id = "clear" }
+
+# The roof on: keep the table it was built for supplied.
+[[aims]]
+id = "aim_table"
+text_key = "aim_table"
+after = { unlock_kind = "feature", id = "belonging" }
+
+# ---------- text ----------
+
+[line_kinds]
+l_floor_paced = "find"
+l_pull_beams_fail = "tap"
+l_hall_fail = "tap"
+l_stage_hall_1 = "story"
+l_stage_hall_2 = "story"
+l_stage_hall_3 = "story"
+l_stage_hall_4 = "story"
+l_stage_hall_5 = "story"
+l_stage_hall_6 = "story"
+l_stage_hall_7 = "story"
+l_stage_hall_8 = "story"
+l_b13_1 = "find"
+l_b13_2 = "find"
+l_b13_3 = "find"
+l_sow = "story"
+l_sow_fail = "tap"
+l_reap_fail = "tap"
+l_barley_stew_fail = "tap"
+l_night_15 = "story"
+l_frost_1 = "story"
+l_frost_2 = "story"
+l_cover_fail = "tap"
+l_deer = "story"
+l_hunt_deer_fail = "tap"
+l_fight_deer_won_1 = "fight"
+l_fight_deer_won_2 = "fight"
+l_fight_deer_lost_1 = "fight"
+l_fight_deer_lost_2 = "fight"
+l_beams = "story"
+l_walls_1 = "level"
+l_walls_2 = "level"
+l_b14_1 = "story"
+l_b14_2 = "story"
+l_b14_3 = "story"
+l_find_wild_barley = "find"
+l_find_dead_birch = "find"
+l_find_hinge = "find"
+l_find_thick_pot = "find"
+l_find_antler = "find"
+l_camp_17 = "level"
+
+[text]
+l_floor_paced = "Lucy paces the dark beside the bays, counting low. at nine she stops."
+store_ruin_beams = "beams in the ruin"
+store_beams = "beams"
+c_pull_beams = "Pull beams from the ruin"
+l_pull_beams_fail = "nothing sound is left under the fallen roof."
+c_hall = "Build the hall"
+up_hall = "{pct} rest"
+l_hall_fail = "the hall's next stage is short."
+l_stage_hall_1 = "four corner posts go up beside the bays."
+l_stage_hall_2 = "stakes are driven along the first wall."
+l_stage_hall_3 = "the long walls close in."
+l_stage_hall_4 = "the gable ends are stopped with stakes."
+l_stage_hall_5 = "two of you heave the first beam up."
+l_stage_hall_6 = "the ridge beam settles on the gables."
+l_stage_hall_7 = "cord lashes the roof down tight."
+l_stage_hall_8 = "hides hang at both doors."
+l_b13_1 = "the wind comes round in the night, cold off the far side."
+l_b13_2 = "a pale disc shows through the sky. the posts have shadows. so do you."
+l_b13_3 = "the family stand looking up. Lucy, {n2} and {n4} keep working."
+store_frost_left = "clock"
+store_grow_left = "clock"
+store_roof_wind_left = "clock"
+store_rime = "rime"
+action_frost = "Frost"
+action_roof_wind = "Wind"
+store_clear_clock = "clock"
+action_clear_clock = "Clock"
+l_sow = "{n3} thumbs seed into her dark ground in rows. the bag ends flat."
+c_n3_sow = "Sow a bed"
+up_n3_sow = "{pct} barley growth"
+l_sow_fail = "{n3} has too little dark ground for another bed."
+store_ripe = "ripe barley"
+store_barley = "barley"
+action_beds = "Beds"
+c_reap = "Reap"
+c_lane_reap = "Reap"
+l_reap_fail = "nothing in the beds is ready to cut."
+c_barley_stew = "Cook barley stew"
+l_barley_stew_fail = "the pot needs barley and dry wood."
+l_night_15 = "dusk, and the cold comes down after it."
+l_frost_1 = "rime on everything past the warm ground. {n3}'s beds are white."
+l_frost_2 = "the hut door is frozen in its frame. nine sit round one fire, three deep."
+store_night_15 = "night"
+action_night_15 = "Night"
+chip_frosted = "frosted"
+chip_frosted_cost = "{pct} barley growth"
+c_cover_beds = "Cover the beds"
+c_n3_cover_beds = "Cover the beds"
+l_cover_fail = "there are not the hides to cover the beds."
+l_deer = "four small deer graze the melt at the warm edge. {n2} stands; gone."
+store_deer_down = "deer near the warm ground"
+store_deer_lost = "deer hunts lost"
+threat_ash_deer = "Deer"
+c_hunt_deer = "Hunt deer"
+l_hunt_deer_fail = "no deer near, or no smoked meat to carry."
+l_fight_deer_won_1 = "a deer down. meat for the rack, sinew too."
+l_fight_deer_won_2 = "you carry a small deer home across your shoulders."
+l_fight_deer_lost_1 = "the deer hear you first."
+l_fight_deer_lost_2 = "they are over the rise before you are close."
+n_deer_1 = "small deer, short in the leg, heads low. grazing the rime where it melts along the warm edge. gone at any movement"
+l_beams = "under the char the beams are adzed square and sound. each takes two."
+l_walls_1 = "the walls stand to the eaves. the fire at the end looks small."
+l_walls_2 = "their child runs the hall's length and back, and sets off a second time."
+l_b14_1 = "roof on, door hung. everyone eats inside, at one table."
+l_b14_2 = "{n3} dishes out. the pot goes round once. Lucy's seat faces the door."
+l_b14_3 = "the pot's bottom shows from every seat."
+o_door_ice = "The hut door has frozen in its frame. {n6} looks it over."
+a_door_ice_shave = "He shaves the frame"
+a_door_ice_shave_cost = "{pct} rest"
+a_door_ice_hide = "He burns the door, hangs a hide"
+a_door_ice_hide_cost = "dry wood now"
+o_sun_rack = "{n3} says meat dries faster in sunlight than over the coals."
+a_sun_rack_sun = "She moves the rack into the sun"
+a_sun_rack_sun_cost = "{pct} drying wall strength"
+a_sun_rack_fire = "She keeps it by the fire"
+a_sun_rack_fire_cost = "{pct} wood burned"
+pays_find_for_14 = "wild barley, {pct} foraging speed"
+pays_find_wc_25 = "a dead birch, {pct} woodcutting speed"
+pays_find_scav_25 = "an iron hinge, {pct} scavenging speed"
+pays_find_cook_11 = "a thick pot, {pct} cooking speed"
+pays_find_melee_8 = "an antler, {pct} hunting speed"
+l_find_wild_barley = "barley gone wild in the last furrow of an old field."
+l_find_dead_birch = "a birch dead on its feet, its wood dry right through."
+l_find_hinge = "an iron hinge in the rubble, pin and all."
+l_find_thick_pot = "the barley sets in the pot like porridge, thick and grey."
+l_find_antler = "a shed antler at the warm edge. sinew winds well on it."
+n_day_b13 = "the wind came round in the night. by morning a pale disc behind the sky and a shadow under everything. the family stood and looked up a long time"
+n_day_b14 = "the hall roofed and the door hung. all of us at one table, the fire at the end. the pot went round once"
+camp_pays_17 = "barley holds {to}, was {from}"
+l_camp_17 = "a second barley bin goes under the eaves."
+aim_roof = "get everyone under one roof."
+aim_table = "keep the long table fed."
+feature_rack_sunned = "rack moved into the sun"
+store_meals = "meals"
+action_table = "The table"

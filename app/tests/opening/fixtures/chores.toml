@@ -1,0 +1,70 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_retired_chores_loader.py): a season's turn opens a
+# standing action that piles up a heap only it makes, a chip shows while the heap is high and a hands card clears it;
+# the next turn retires the clearing card's orders. Not story: the ids and words are the tests' own. The planted
+# variants are edits of this file.
+version = 1
+end_feature = "t_next"
+
+[[stores]]
+id = "t_pool"
+label_key = "t_s_pool"
+cap_items = 20
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[standing]]
+id = "t_pile"
+label_key = "t_a_pile"
+costs = [{ store = "t_pool", items_per_hour = 1 }]
+makes = [{ store = "t_heap", items_per_hour = 1 }]
+
+[[cards]]
+id = "t_clear"
+presentation = "action"
+label_key = "t_c_clear"
+work_s = 60
+costs = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_other"
+presentation = "action"
+label_key = "t_c_other"
+work_s = 60
+makes = [{ store = "dry_wood", items_per_hour = 30 }]
+
+[[chips]]
+id = "t_heaped"
+label_key = "t_ch_heaped"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "t_heap", value = 3, release = 1 }
+
+[[features]]
+id = "t_next"
+
+[[triggers]]
+id = "t_turn_1"
+season = true
+when = { test = "after_time", value = 36000 }
+outcome = { stores = [{ store = "t_pool", items = 4 }], unlocks = [{ unlock_kind = "action", id = "t_pile" }, { unlock_kind = "chip", id = "t_heaped" }] }
+
+[[triggers]]
+id = "t_open"
+when = { test = "after_time", value = 30000 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "t_clear" }, { unlock_kind = "card", id = "t_other" }] }
+
+[[triggers]]
+id = "t_turn_2"
+season = true
+when = { test = "after_time", value = 50400 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "t_next" }], retire_orders = ["t_clear"] }
+
+[text]
+t_s_pool = "Season stock"
+t_s_heap = "Heap"
+t_a_pile = "Piling up"
+t_c_clear = "Clear"
+t_c_other = "Other"
+t_ch_heaped = "Heaped"

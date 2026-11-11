@@ -1,0 +1,13 @@
+{
+  "name": "The Breaking of Ostmere",
+  "short_name": "Ostmere",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f0f14",
+  "theme_color": "#0f0f14",
+  "icons": [
+    {"src": "/icons/favicon.svg", "sizes": "any", "type": "image/svg+xml"},
+    {"src": "/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"}
+  ]
+}

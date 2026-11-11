@@ -1,0 +1,10 @@
+https://f-droid.org/packages/com.tristinbaker.idlefantasy/ : Idle Fantasy v1.15.7, offline OSRS-like idle RPG, 23 skills, 33 dungeons, 189 quests, pets; start session, close app, return up to 1h later to loot. No ads/accounts/internet.
+https://github.com/tristinbaker/IdleFantasy : "no stamina bar, no energy system, nothing that pressures you to stay in the app"; keeps training up to an hour offline; Inn workers queue sessions on your behalf.
+https://milkywayidle.wiki.gg/wiki/Action_Queue : queue runs offline until empty or limit (default 10h, extendable via paid store); skip action if materials missing.
+https://itemlevel.net/is-melvor-idle-online-only/ and Steam threads: Melvor offline cap sources conflict 18h vs 24h (unconfirmed).
+https://gamesbeat.com/this-clicker-game-lets-you-take-over-the-world-with-paper-clips/ : Paperclips phased, Lantz drew on Kittens Game.
+https://mechanicsofmagic.com/2026/05/13/critical-play-a-dark-room/ : A Dark Room unlocks one action at a time; wood gathering drags.
+https://steamcommunity.com/app/1593350/discussions/0/4626981776940619365 : Increlution queue; auto-pauses when queue empty; automation threshold complaint.
+https://www.tvtropes.org/pmwiki/pmwiki.php/VideoGame/KittensGame : Kittens accumulates temporal flux offline, spent on Tempus Fugit.
+https://dev.to/aguier/i-built-7-idle-games-in-30-days-what-i-learned-about-incremental-design-5d3f : (AI-assisted) reduced offline rate ~0.5x argued better.
+https://steamcommunity.com/app/346900/discussions/0/490121928363574590 : AdCap player: days offline didn't allow reset; Clicker Heroes offline more useful.

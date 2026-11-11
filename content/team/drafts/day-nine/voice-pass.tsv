@@ -1,0 +1,20 @@
+key	reader	verdict	reason
+o_margin	first	changed	register: read as a quiz question put to the player
+o_rack	first	changed	register: a person asking the player what to do reads as a form
+o_deep	first	changed	register: "wants" read as asking leave
+o_bark	first	changed	rule: Lucy says little; the situation is shown instead
+o_fed	first	changed	register: a literal question to the player
+o_skin	first	changed	register: asking the player what to do
+o_posts	second	changed	register: the text stated the two buttons; it shows the situation instead
+l_draughty_off	second	changed	parse
+l_open_side_1	second	changed	register: the narration's present tense
+a_rack_high	second	changed	parse: agrees with the offer's plural
+a_rack_down	second	changed	parse: agrees with the offer's plural
+a_rack_high_cost	second	changed	parse: too clipped
+a_fed_pot	second	changed	parse
+a_lookout_up	second	changed	register: the asker acting, not "one"
+a_lookout_wall	second	changed	register: mirrors a_lookout_up
+n_crow_2	both	checked, kept	both readers took the comparison with the camp for saying what the crows count; it is the note's designed fact (week-two.md, the journal table), a comparison of numbers that never says what is counted, and the readers were not shown the design
+l_old_wire	second	checked, kept	the reader took "without looking" for a hint of having been here; that hint is SL17's clue, left at the knot, and the line says neither "again" nor whose knot
+action_wind	second	checked, kept	the reader took "Wind" for naming the weather; the must-not is the season's name, and day eight's standing is "Falling ash"
+a_skin_flaps_cost	second	checked, kept	the reader proposed "stronger flaps", but the answer gives one pelt and installs nothing; "a pelt" is day six's o_pelt cost

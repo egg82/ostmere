@@ -1,0 +1,14 @@
+{
+  "about": "The condition each subject control writes, shared by the page's round trip (test/subjectrules.test.ts: the editor writes it and reads it back) and the engine's (tests/test_subject_rules_wire.py: a set_orders holding it is accepted). Ids are the fixture content's; the Python side swaps in shipped ids of the same kind, and a Camp level's `at` by camp_level.",
+  "cases": [
+    {"name": "a task done n times", "pick": "task:gather", "steps": 1,
+     "when": {"kind": "at_least", "watched": {"kind": "card_count", "card": "gather"}, "value": 2, "release": 2},
+     "words": "Once Gather by hand is done 2 times"},
+    {"name": "a skill's level", "pick": "level:foraging", "steps": 1,
+     "when": {"kind": "at_least", "watched": {"kind": "skill_level", "skill": "foraging"}, "value": 4, "release": 4},
+     "words": "Once Foraging reaches level 4"},
+    {"name": "the Camp's level", "pick": "camp", "steps": 0, "camp_level": 2,
+     "when": {"kind": "at_least", "watched": {"kind": "store_value", "store": "camp"}, "value": 720000000, "release": 720000000},
+     "words": "Once Camp reaches level 2"}
+  ]
+}

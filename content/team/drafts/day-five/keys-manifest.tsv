@@ -1,0 +1,68 @@
+# Day-five keys manifest: every key in day_five.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 62
+key	kind	limit	alt	brief
+c_hand_on_stone	card label	n/a	-	-
+l_stone_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_stone_first	line	line<=75; set median<=45,p90<=75	-	-
+c_hearth_stones	card label	n/a	-	-
+up_hearth_stones	upside label	n/a	-	-
+l_stones_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_stones_1	line	line<=75; set median<=45,p90<=75	-	-
+l_stones_2	line	line<=75; set median<=45,p90<=75	-	-
+l_stones_done	line	line<=75; set median<=45,p90<=75	-	l_stones_3
+pays_drying_wall	pays label	n/a	-	-
+pays_arc_faster	pays label	n/a	-	-
+pays_hearth_stones	pays label	n/a	-	-
+pays_dry_kindling	pays label	n/a	-	-
+pays_stone_smoke	pays label	n/a	-	-
+l_arcana_2	line	line<=75; set median<=45,p90<=75	-	-
+l_arcana_5	line	line<=75; set median<=45,p90<=75	-	l_find_dry_kindling
+l_arcana_6	line	line<=75; set median<=45,p90<=75	-	-
+l_morning_6	line	line<=75; set median<=45,p90<=75	-	-
+store_day_6	store label	n/a	-	-
+action_day_6	action label	n/a	-	-
+l_ridge_1	line	line<=75; set median<=45,p90<=75	H	-
+l_ridge_2	line	line<=75; set median<=45,p90<=75	H	-
+o_pair	offer label	n/a	-	-
+l_pair_1	line	line<=75; set median<=45,p90<=75	H	-
+l_pair_2	line	line<=75; set median<=45,p90<=75	H	-
+a_pair_room	offer answer label	n/a	-	-
+a_pair_room_cost	offer answer label	n/a	-	-
+a_pair_hers	offer answer label	n/a	-	-
+a_pair_hers_cost	offer answer label	n/a	-	-
+l_bay2_go	line	line<=75; set median<=45,p90<=75	-	-
+l_bay2_hers	line	line<=75; set median<=45,p90<=75	-	-
+c_make_bay2	card label	n/a	-	-
+l_bay2_fail	fail	line<=75; set median<=45,p90<=75	-	-
+lane_n3	lane label	n/a	-	-
+lane_n3_named	lane label	n/a	-	-
+lane_n4	lane label	n/a	-	-
+lane_n4_named	lane label	n/a	-	-
+c_n3_build_bay	card label	n/a	-	-
+store_bay2	store label	n/a	-	-
+c_n4_watch	card label	n/a	-	-
+l_n4_watch_dry	fail	line<=75; set median<=45,p90<=75	-	-
+c_n4_mend	card label	n/a	-	-
+l_join2_1	line	line<=75; set median<=45,p90<=75	H	-
+l_join2_2	line	line<=75; set median<=45,p90<=75	H	-
+action_n3_eating	action label	n/a	-	-
+action_n4_eating	action label	n/a	-	-
+store_pair_3h	store label	n/a	-	-
+action_pair_3h	action label	n/a	-	-
+l_seed	line	line<=75; set median<=45,p90<=75	-	-
+c_n3_dig_bed	card label	n/a	-	-
+l_dig_bed_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_dig_bed_1	line	line<=75; set median<=45,p90<=75	-	-
+l_dig_bed_2	line	line<=75; set median<=45,p90<=75	-	-
+l_dig_bed_done	line	line<=75; set median<=45,p90<=75	-	-
+l_old_watch	line	line<=75; set median<=45,p90<=75	-	-
+store_night_6	store label	n/a	-	-
+action_night_6	action label	n/a	-	-
+l_night_6	line	line<=75; set median<=45,p90<=75	-	-
+dayend5_title	end card	n/a	-	-
+dayend5_1	end card	n/a	-	-
+dayend5_2	end card	n/a	-	-
+aim_pair	aim label	n/a	-	-

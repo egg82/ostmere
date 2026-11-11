@@ -1,0 +1,65 @@
+# A test chapter, merged after the shipped ones: two offers of one kind, shown at different times, each with the kind's
+# two roles (the second lists its answers the other way round). Not story: the ids and words are the tests' own
+# (tests/opening/test_offer_kinds_loader.py).
+version = 1
+
+[[offers]]
+id = "q_first"
+text_key = "q_o_first"
+kind = "q_ask"
+gate = { test = "after_time", value = 100 }
+
+[[offers.answers]]
+id = "q_first_yes"
+role = "yes"
+label_key = "q_a_yes"
+cost_key = "q_a_cost"
+[offers.answers.outcome]
+line_keys = ["q_l_first_yes"]
+
+[[offers.answers]]
+id = "q_first_no"
+role = "no"
+label_key = "q_a_no"
+cost_key = "q_a_cost"
+[offers.answers.outcome]
+line_keys = ["q_l_first_no"]
+
+[[offers]]
+id = "q_second"
+text_key = "q_o_second"
+kind = "q_ask"
+gate = { test = "after_time", value = 200 }
+
+[[offers.answers]]
+id = "q_second_no"
+role = "no"
+label_key = "q_a_no"
+cost_key = "q_a_cost"
+[offers.answers.outcome]
+line_keys = ["q_l_second_no"]
+
+[[offers.answers]]
+id = "q_second_yes"
+role = "yes"
+label_key = "q_a_yes"
+cost_key = "q_a_cost"
+[offers.answers.outcome]
+line_keys = ["q_l_second_yes"]
+
+[line_kinds]
+q_l_first_yes = "story"
+q_l_first_no = "story"
+q_l_second_no = "story"
+q_l_second_yes = "story"
+
+[text]
+q_o_first = "A first question"
+q_o_second = "A second question"
+q_a_yes = "Yes"
+q_a_no = "No"
+q_a_cost = "takes nothing"
+q_l_first_yes = "First, yes."
+q_l_first_no = "First, no."
+q_l_second_yes = "Second, yes."
+q_l_second_no = "Second, no."

@@ -1,0 +1,123 @@
+# Day-twelve keys manifest: every key in day_twelve.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it) | journal note (its own batch, after this one).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 117
+key	kind	limit	alt	brief
+l_dig_open	line	line<=75; set median<=45,p90<=75	-	-
+store_dig_clock	store label	n/a	-	-
+action_dig_clock	action label	n/a	-	-
+c_dig_cellar	card label	n/a	-	-
+up_dig_cellar	upside label	n/a	-	-
+l_dig_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_dig_stage_1	line	line<=75; set median<=45,p90<=75	-	-
+l_dig_stage_2	line	line<=75; set median<=45,p90<=75	-	-
+l_dig_stage_3	line	line<=75; set median<=45,p90<=75	-	-
+l_dig_done	line	line<=75; set median<=45,p90<=75	-	-
+store_morning_13	store label	n/a	-	-
+action_morning_13	action label	n/a	-	-
+l_morning_13	line	line<=75; set median<=45,p90<=75	-	-
+l_dig_1	line	line<=75; set median<=45,p90<=75	H	-
+l_dig_2	line	line<=75; set median<=45,p90<=75	H	-
+l_steps_1	line	line<=75; set median<=45,p90<=75	H	-
+l_steps_2	line	line<=75; set median<=45,p90<=75	H	-
+store_b12_floor	store label	n/a	-	-
+action_b12_floor	action label	n/a	-	-
+l_b12_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b12_2	line	line<=75; set median<=45,p90<=75	H	-
+l_b12_3	line	line<=75; set median<=45,p90<=75	H	-
+store_bear_season	store label	n/a	-	-
+action_bear_season	action label	n/a	-	-
+l_bear_sign	line	line<=75; set median<=45,p90<=75	-	-
+store_bear_sign	store label	n/a	-	-
+store_tallow	store label	n/a	-	-
+store_bear_lost	store label	n/a	-	-
+threat_ash_bear	fight label	n/a	-	-
+c_hunt_bear	card label	n/a	-	-
+l_hunt_bear_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_fight_bear_won_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_bear_won_2	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_bear_lost_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_bear_lost_2	line	line<=75; set median<=45,p90<=75	-	-
+n_bear_1	journal note	n/a	-	-
+n_gutter_1	journal note	n/a	-	-
+l_lamps	line	line<=75; set median<=45,p90<=75	-	-
+c_tallow_lamps	card label	n/a	-	-
+up_tallow_lamps	upside label	n/a	-	-
+l_lamps_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_lamps_1	line	line<=75; set median<=45,p90<=75	-	-
+l_lamps_2	line	line<=75; set median<=45,p90<=75	-	-
+l_lamps_done	line	line<=75; set median<=45,p90<=75	-	-
+o_spoil	offer label	n/a	-	-
+a_spoil_ring	offer answer label	n/a	-	-
+a_spoil_ring_cost	offer answer label	n/a	-	-
+a_spoil_stones	offer answer label	n/a	-	-
+a_spoil_stones_cost	offer answer label	n/a	-	-
+o_cradle	offer label	n/a	-	-
+a_cradle_fire	offer answer label	n/a	-	-
+a_cradle_fire_cost	offer answer label	n/a	-	-
+a_cradle_hut	offer answer label	n/a	-	-
+a_cradle_hut_cost	offer answer label	n/a	-	-
+o_shaft	offer label	n/a	-	-
+a_shaft_bind	offer answer label	n/a	-	-
+a_shaft_bind_cost	offer answer label	n/a	-	-
+a_shaft_plain	offer answer label	n/a	-	-
+a_shaft_plain_cost	offer answer label	n/a	-	-
+o_cold_air	offer label	n/a	-	-
+a_cold_air_meat	offer answer label	n/a	-	-
+a_cold_air_meat_cost	offer answer label	n/a	-	-
+a_cold_air_rack	offer answer label	n/a	-	-
+a_cold_air_rack_cost	offer answer label	n/a	-	-
+o_lean_to	offer label	n/a	-	-
+a_lean_to_wood	offer answer label	n/a	-	-
+a_lean_to_wood_cost	offer answer label	n/a	-	-
+a_lean_to_hides	offer answer label	n/a	-	-
+a_lean_to_hides_cost	offer answer label	n/a	-	-
+o_lye	offer label	n/a	-	-
+a_lye_bedding	offer answer label	n/a	-	-
+a_lye_bedding_cost	offer answer label	n/a	-	-
+a_lye_pot	offer answer label	n/a	-	-
+a_lye_pot_cost	offer answer label	n/a	-	-
+o_wet	offer label	n/a	-	-
+a_wet_drain	offer answer label	n/a	-	-
+a_wet_drain_cost	offer answer label	n/a	-	-
+a_wet_pave	offer answer label	n/a	-	-
+a_wet_pave_cost	offer answer label	n/a	-	-
+o_crows	offer label	n/a	-	-
+o_sag	offer label	n/a	-	-
+a_sag_prop	offer answer label	n/a	-	-
+a_sag_prop_cost	offer answer label	n/a	-	-
+a_sag_down	offer answer label	n/a	-	-
+a_sag_down_cost	offer answer label	n/a	-	-
+a_crows_off	offer answer label	n/a	-	-
+a_crows_off_cost	offer answer label	n/a	-	-
+a_crows_be	offer answer label	n/a	-	-
+a_crows_be_cost	offer answer label	n/a	-	-
+l_sitter_1	line	line<=75; set median<=45,p90<=75	H	-
+l_sitter_2	line	line<=75; set median<=45,p90<=75	H	-
+store_night_14	store label	n/a	-	-
+action_night_14	action label	n/a	-	-
+l_night_14	line	line<=75; set median<=45,p90<=75	-	-
+c_sit_last_night	card label	n/a	-	-
+l_sit_last_night_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_s4_1	line	line<=75; set median<=45,p90<=75	H	-
+l_s4_2	line	line<=75; set median<=45,p90<=75	H	-
+l_s4_3	line	line<=75; set median<=45,p90<=75	H	-
+pays_find_melee_7	pays label	n/a	-	-
+l_find_gap_wolf	line	line<=75; set median<=45,p90<=75	-	-
+n_day_b12	journal note	n/a	-	-
+camp_pays_15	camp label	n/a	-	-
+l_camp_15	line	line<=75; set median<=45,p90<=75	-	-
+camp_pays_16	camp label	n/a	-	-
+l_camp_16	line	line<=75; set median<=45,p90<=75	-	-
+dayend14_title	end card	n/a	-	-
+dayend14_1	end card	n/a	-	-
+dayend14_2	end card	n/a	-	-
+aim_store	aim label	n/a	-	-
+aim_wind	aim label	n/a	-	-
+feature_spoil_ring	label	n/a	-	-
+feature_shaft_bound	label	n/a	-	-
+feature_meat_below	label	n/a	-	-
+feature_rack_kept	label	n/a	-	-
+feature_crows_off	label	n/a	-	-
+feature_crows_kept	label	n/a	-	-

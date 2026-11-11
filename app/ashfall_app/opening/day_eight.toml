@@ -1,0 +1,748 @@
+# Day eight: week 1's last visit (the long goal shown at G2) and B8, the season's turn at 168 h, through U1-U3, SL15
+# and SL16 to B9, as data merged after day_six.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to
+# the owner. Spec: content/team/week-two.md, "Week 1's last visit" and "Day eight"; numbers:
+# content/team/week-two-numbers.md.
+version = 1
+end_feature = "b9"
+
+# ---------- G2's visit: the long goal ----------
+
+# On still_end (G2, day_six.toml's sit_fire_7): the build, its materials and the pelts' sink, shown hours before the
+# turn so the town's split is set before the night that carries B8.
+[[triggers]]
+id = "t_ring_scored"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "still_end", value = 1 }
+[triggers.outcome]
+line_keys = ["l_ring_scored"]
+unlocks = [
+  { unlock_kind = "store", id = "stakes" },
+  { unlock_kind = "store", id = "cord" },
+  { unlock_kind = "card", id = "palisade" },
+  { unlock_kind = "card", id = "cut_stakes" },
+  { unlock_kind = "card", id = "n1_stakes" },
+  { unlock_kind = "card", id = "n2_stakes" },
+  { unlock_kind = "card", id = "twist_cord" },
+  { unlock_kind = "card", id = "n4_cord" },
+  { unlock_kind = "card", id = "hide_flaps" },
+]
+
+[[stores]]
+id = "stakes"
+label_key = "store_stakes"
+cap_items = 24
+
+[[stores]]
+id = "cord"
+label_key = "store_cord"
+cap_items = 12
+
+# P1, the week's joint project on the hands: twelve stages, each an entry on the gap's side. Run by
+# its order card (below), so no stage is queued; it lands B10 in day nine.
+[[cards]]
+id = "palisade"
+presentation = "craft"
+label_key = "c_palisade"
+upside_key = "up_palisade"
+work_s = 1800
+cap = 12
+failed_line_key = "l_palisade_fail"
+inputs = [{ store = "stakes", items = 16 }, { store = "cord", items = 4 }, { store = "stones", items = 6 }]
+outcome = { modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 5000, source = "palisade" }] }
+line_keys = ["l_stage_1", "l_stage_2", "l_stage_3", "l_stage_4", "l_stage_5", "l_stage_6", "l_stage_7", "l_stage_8",
+             "l_stage_9", "l_stage_10", "l_stage_11", "l_stage_12"]
+
+# The build's order, offered at the season's turn: a stage whenever a stage's stakes are in, cord and
+# stones allowing; passed over at the cap.
+[[triggers]]
+id = "t_stakes_full"
+when = { test = "at_least", subject_kind = "store", id = "stakes", value = 16 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "stakes_full" }] }
+
+[[order_cards]]
+store = "stakes"
+tap_card = "palisade"
+when = { test = "at_least", subject_kind = "store", id = "stakes", value = 16, release = 16 }
+offered_after = { unlock_kind = "feature", id = "stakes_full" }
+
+[[cards]]
+id = "cut_stakes"
+presentation = "action"
+label_key = "c_cut_stakes"
+work_s = 600
+skill = "woodcutting"
+xp_per_hour = 900
+failed_line_key = "l_cut_stakes_fail"
+inputs = [{ store = "damp_wood", items = 4 }]
+outcome = { stores = [{ store = "stakes", items = 1 }] }
+
+# Stakes on the townsfolk's lanes; the three who come in day eleven expand where their lanes are declared.
+[[town_cards]]
+id = "{lane}_stakes"
+lanes = ["n1", "n2", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_lane_stakes"
+work_s = 1200
+failed_line_key = "l_lane_stakes_fail"
+inputs = [{ store = "damp_wood", items = 4 }]
+outcome = { stores = [{ store = "stakes", items = 1 }] }
+
+[[cards]]
+id = "twist_cord"
+presentation = "action"
+label_key = "c_twist_cord"
+work_s = 600
+failed_line_key = "l_cord_fail"
+inputs = [{ store = "damp_wood", items = 2 }]
+outcome = { stores = [{ store = "cord", items = 1 }] }
+
+# The old man's cord: his share between this and the watch is SL16's decision. Its own card, since n4_mend shipped
+# making nothing and an earlier file cannot name a store this one declares.
+[[cards]]
+id = "n4_cord"
+lane = "n4"
+presentation = "action"
+label_key = "c_n4_cord"
+work_s = 900
+failed_line_key = "l_n4_cord_fail"
+inputs = [{ store = "damp_wood", items = 2 }]
+outcome = { stores = [{ store = "cord", items = 1 }] }
+
+# His cord by a rule: under a stage's worth twice over he twists until near full, so a full stack sends him back to his
+# share (the watch) instead of filling past the cap (week-two-numbers.md, "Cap loss": the stakes lanes' shape).
+[[order_cards]]
+store = "cord"
+tap_card = "n4_cord"
+when = { test = "at_most", subject_kind = "store", id = "cord", value = 7, release = 11 }
+offered_after = { unlock_kind = "card", id = "n4_cord" }
+
+# The pelts' sink after the bedding: four stages, its last making rest a tenth faster. Run by its order card, so no stage
+# is queued (one queue entry a stage let a babysitter land week 1's staged builds ahead of a player who queues).
+[[cards]]
+id = "hide_flaps"
+presentation = "craft"
+label_key = "c_hide_flaps"
+upside_key = "up_hide_flaps"
+work_s = 600
+cap = 4
+failed_line_key = "l_flaps_fail"
+inputs = [{ store = "pelt", items = 2 }, { store = "damp_wood", items = 4 }]
+line_keys = ["l_flaps_1", "l_flaps_2", "l_flaps_3", "l_flaps_done"]
+[cards.finished]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 11000, source = "hide_flaps" }]
+
+[[order_cards]]
+store = "pelt"
+tap_card = "hide_flaps"
+when = { test = "at_least", subject_kind = "store", id = "pelt", value = 2, release = 2 }
+offered_after = { unlock_kind = "card", id = "hide_flaps" }
+
+# ---------- B8: the season's turn ----------
+
+# B8 at 168 h. What only the season brings draws a pool this turn fills (season_checks): the bloom, the larder's
+# fungus, and the season's own clock, which the ash's standing draws to empty at 336 h exactly. No rate is raised.
+[[triggers]]
+id = "t_b8"
+season = true
+when = { test = "after_time", value = 604800 }
+[triggers.outcome]
+line_keys = ["l_b8_1", "l_b8_2", "l_b8_3"]
+stores = [{ store = "drift_left", items = 336 }, { store = "bloom", items = 2000 }, { store = "fungus", items = 24 }]
+unlocks = [
+  { unlock_kind = "feature", id = "drift" },
+  { unlock_kind = "store", id = "bloom" },
+  { unlock_kind = "store", id = "fungus" },
+  { unlock_kind = "action", id = "ashfall" },
+  { unlock_kind = "card", id = "pick_fungus" },
+  { unlock_kind = "card", id = "n3_pick" },
+  { unlock_kind = "card", id = "fungus_stew" },
+]
+
+# Never drawn: the season's hours left. B8 fills it; the ash draws it.
+[[stores]]
+id = "drift_left"
+label_key = "store_drift_left"
+cap_items = 336
+hidden = true
+
+# Never drawn: ash on the roofs, the chip's face.
+[[stores]]
+id = "roof_ash"
+label_key = "store_roof_ash"
+cap_items = 48
+hidden = true
+
+[[standing]]
+id = "ashfall"
+label_key = "action_ashfall"
+costs = [{ store = "drift_left", items_per_hour = 2 }]
+makes = [{ store = "roof_ash", items_per_hour = 2 }]
+
+# Never drawn: game hours since the turn, for the season's own steps. A clock, not something the season brings, so
+# its own trigger opens it on the turn's feature and it runs on past the season.
+[[stores]]
+id = "drift_clock"
+label_key = "store_drift_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "drift_clock"
+label_key = "action_drift_clock"
+makes = [{ store = "drift_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_drift_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "drift_clock" }] }
+
+# The bloom: a finite pool nothing refills, drawn by picking; sized so typical never empties it by night 14.
+[[stores]]
+id = "bloom"
+label_key = "store_bloom"
+cap_items = 2000
+
+[[stores]]
+id = "fungus"
+label_key = "store_fungus"
+cap_items = 24
+
+[[cards]]
+id = "pick_fungus"
+presentation = "action"
+label_key = "c_pick_fungus"
+work_s = 30
+skill = "foraging"
+xp_per_hour = 300
+failed_line_key = "l_pick_fail"
+inputs = [{ store = "bloom", items = 1 }]
+outcome = { stores = [{ store = "fungus", items = 2 }] }
+
+# Picking on her lane and on the three who come in day eleven, expanded where their lanes are declared.
+[[town_cards]]
+id = "{lane}_pick"
+lanes = ["n3", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_lane_pick"
+work_s = 120
+failed_line_key = "l_pick_fail"
+inputs = [{ store = "bloom", items = 1 }]
+outcome = { stores = [{ store = "fungus", items = 1 }] }
+
+[[cards]]
+id = "fungus_stew"
+presentation = "action"
+label_key = "c_fungus_stew"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 40
+skill = "cooking"
+xp_per_hour = 18
+failed_line_key = "l_fungus_stew_fail"
+inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 3 }] }
+
+# U1: six hours after the turn.
+[[triggers]]
+id = "t_howls"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 6 }
+outcome = { line_keys = ["l_howls"] }
+
+# U2: the first fungus stew, by tap or mix.
+[[triggers]]
+id = "t_caps"
+when = { test = "at_least", subject_kind = "card_count", id = "fungus_stew", value = 1 }
+outcome = { line_keys = ["l_caps_1", "l_caps_2"] }
+
+# ---------- the roofs: a chip with a rule-run cure ----------
+
+# The chip shows while the ash on the roofs is heavy. It opens with both its cures, on the hands and on his lane, the
+# first time it would show; its order card is offered with it.
+[[triggers]]
+id = "t_roofs"
+when = { test = "at_least", subject_kind = "store", id = "roof_ash", value = 16 }
+outcome = { unlocks = [{ unlock_kind = "chip", id = "ash_laden" }, { unlock_kind = "card", id = "clear_roofs" }, { unlock_kind = "card", id = "n2_clear_roofs" }, { unlock_kind = "store", id = "ash" }] }
+
+[[chips]]
+id = "ash_laden"
+label_key = "chip_ash_laden"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "roof_ash", value = 16 }
+effects = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 8500, source = "ash_laden" }]
+cost_key = "chip_ash_laden_cost"
+on_line_key = "l_ash_laden"
+off_line_key = "l_ash_cleared"
+
+[[stores]]
+id = "ash"
+label_key = "store_ash"
+cap_items = 24
+
+[[cards]]
+id = "clear_roofs"
+presentation = "action"
+label_key = "c_clear_roofs"
+work_s = 120
+failed_line_key = "l_clear_fail"
+inputs = [{ store = "roof_ash", items = 16 }]
+outcome = { stores = [{ store = "ash", items = 4 }] }
+
+[[cards]]
+id = "n2_clear_roofs"
+lane = "n2"
+presentation = "action"
+label_key = "c_n2_clear_roofs"
+work_s = 1200
+failed_line_key = "l_clear_fail"
+inputs = [{ store = "roof_ash", items = 16 }]
+outcome = { stores = [{ store = "ash", items = 4 }] }
+
+# "When ash-laden, he clears the roofs": day one's hunger card on his lane (D-91's shape), its `when` the chip's.
+[[order_cards]]
+store = "roof_ash"
+tap_card = "n2_clear_roofs"
+chip = "ash_laden"
+when = { test = "at_least", subject_kind = "store", id = "roof_ash", value = 16 }
+offered_after = { unlock_kind = "card", id = "n2_clear_roofs" }
+
+# The first clear, by either hand.
+[[triggers]]
+id = "t_roofs_first"
+when = { test = "at_least", subject_kind = "store", id = "ash", value = 4 }
+outcome = { line_keys = ["l_roofs_first"], unlocks = [{ unlock_kind = "feature", id = "roofs_cleared" }] }
+
+# SL15: the first clear and twelve hours after the turn. Her ground takes the ash.
+[[triggers]]
+id = "t_ash_ground"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 12 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "roofs_cleared", value = 1 }]
+outcome = { line_keys = ["l_ash_ground"], unlocks = [{ unlock_kind = "store", id = "ashed_ground" }, { unlock_kind = "card", id = "n3_ash_ground" }] }
+
+[[stores]]
+id = "ashed_ground"
+label_key = "store_ashed_ground"
+cap_items = 24
+
+[[cards]]
+id = "n3_ash_ground"
+lane = "n3"
+presentation = "action"
+label_key = "c_n3_ash_ground"
+work_s = 7200
+failed_line_key = "l_ash_ground_fail"
+inputs = [{ store = "ash", items = 4 }]
+outcome = { stores = [{ store = "ashed_ground", items = 1 }] }
+
+# SL16: twelve hours after the turn, the moment SL15 is, once the stakes are in: the build's order is offered then, with
+# his cord already made, so the two are one moment. Its line comes with SL15's, after the first clear.
+[[triggers]]
+id = "t_cord_first"
+when = { test = "at_least", subject_kind = "store", id = "stakes", value = 16 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "cord_made" }] }
+
+[[triggers]]
+id = "t_cord"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 12 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "cord_made", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "roofs_cleared", value = 1 },
+]
+outcome = { line_keys = ["l_cord"], unlocks = [{ unlock_kind = "feature", id = "cord_seen" }] }
+
+# ---------- the gap and the pack ----------
+
+[[sides]]
+id = "gap"
+label_key = "side_gap"
+base = 4
+
+[[threats]]
+id = "wolf_pack"
+label_key = "threat_wolf_pack"
+base = 8
+
+# The watch shares week 1 shipped, each held on the gap while it runs, at its share of its lane's time.
+[while_running]
+n1_watch = [{ side = "gap", amount_bp = 5000 }]
+n2_watch = [{ side = "gap", amount_bp = 5000 }]
+n4_watch = [{ side = "gap", amount_bp = 5000 }]
+
+# In the season the rats come indoors: a step on the season's clock (combat's ramp idiom).
+[[triggers]]
+id = "t_rats_drift"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 1 }
+outcome = { modifiers = [{ target = "threat", id = "ashrats", kind = "add_bp", amount_bp = 5000, source = "t_rats_drift" }] }
+
+# U3: seventy hours of combat's clock and twelve of the season's. requires reads only unlocks, so the first clock's
+# reach is a feature.
+[[triggers]]
+id = "t_pack_near"
+when = { test = "at_least", subject_kind = "store", id = "r1_clock", value = 70 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
+
+[[triggers]]
+id = "t_pack"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 12 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_near", value = 1 }]
+outcome = { line_keys = ["l_pack_1", "l_pack_2"], unlocks = [{ unlock_kind = "feature", id = "combat" }, { unlock_kind = "action", id = "pack" }] }
+
+# Tallies: made only by the fight's lines, never unlocked; caps over a year of its rate.
+[[stores]]
+id = "pack_fought"
+label_key = "store_pack_fought"
+cap_items = 10000
+
+[[stores]]
+id = "pack_lost"
+label_key = "store_pack_lost"
+cap_items = 10000
+
+[[standing]]
+id = "pack"
+label_key = "action_pack"
+fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_pack_won_1", "l_fight_pack_won_2", "l_fight_pack_won_3"], lost_line_keys = ["l_fight_pack_lost_1", "l_fight_pack_lost_2", "l_fight_pack_lost_3"] }
+
+# ---------- B9: the book comes out ----------
+
+# The creature pages come at the first pack fight (api/CONTRACT.txt, "JOURNAL"); the book is declared in the opening.
+# Each note is a trigger the loader makes; B9 waits on the three pages.
+[[entries]]
+id = "e_wolf"
+section = "creatures"
+sketch = "wolf"
+hand = "ink"
+runners = ["hunt_wolf", "pack"]
+
+[[entries]]
+id = "e_ashrat"
+section = "creatures"
+sketch = "ashrat"
+hand = "ink"
+runners = ["rats"]
+
+[[entries]]
+id = "e_crow"
+section = "creatures"
+sketch = "crow"
+hand = "ink"
+runners = ["crows"]
+
+[[notes]]
+id = "n_wolf_1"
+entry = "e_wolf"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+hand = "ink"
+
+# Already there when the page is first written: the old hand.
+[[notes]]
+id = "n_wolf_margin"
+entry = "e_wolf"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+hand = "pencil"
+
+[[notes]]
+id = "n_rat_1"
+entry = "e_ashrat"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+hand = "ink"
+
+# Written with the page's first, the season's rat step (t_rats_drift) having come before the book on every route.
+[[notes]]
+id = "n_rat_2"
+entry = "e_ashrat"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+hand = "ink"
+
+[[notes]]
+id = "n_crow_1"
+entry = "e_crow"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+hand = "ink"
+
+[[triggers]]
+id = "t_b9"
+when = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_ashrat", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_crow", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "wolves", value = 1 },
+]
+outcome = { line_keys = ["l_b9_1", "l_b9_2"], unlocks = [{ unlock_kind = "feature", id = "b9" }] }
+
+# ---------- levels and finds ----------
+
+# Finds on levels whose shipped row pays speed alone, each beside that speed-up and restating the row with a pays
+# naming both; drift is required, so a save already past the level gets the find at B8.
+[[skill_levels]]
+skill = "foraging"
+levels = [{ level = 13, pays_key = "pays_find_for_13" }]
+
+[[skill_levels]]
+skill = "woodcutting"
+levels = [{ level = 23, pays_key = "pays_find_wc_23" }]
+
+[[skill_levels]]
+skill = "scavenging"
+levels = [{ level = 23, pays_key = "pays_find_scav_23" }]
+
+[[skill_levels]]
+skill = "cooking"
+levels = [{ level = 9, pays_key = "pays_find_cook_9" }]
+
+[[skill_levels]]
+skill = "arcana"
+levels = [{ level = 9, pays_key = "pays_arc_9" }, { level = 11, pays_key = "pays_find_arc_11" }, { level = 12, pays_key = "pays_arc_12" }]
+
+[[triggers]]
+id = "t_find_for_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 13 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { stores = [{ store = "fungus", items = 12 }], line_keys = ["l_find_shelf"] }
+
+[[triggers]]
+id = "t_find_wc_23"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 23 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { stores = [{ store = "stakes", items = 8 }], line_keys = ["l_find_pole"] }
+
+[[triggers]]
+id = "t_find_scav_23"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 23 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { stores = [{ store = "scrap", items = 3 }], line_keys = ["l_find_hoe"] }
+
+[[triggers]]
+id = "t_find_cook_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 9 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { stores = [{ store = "stew", items = 6 }], line_keys = ["l_find_pot"] }
+
+# Arcana 9: the stone's heat moved into the bays' floors.
+[[triggers]]
+id = "t_arc_9_rest"
+when = { test = "at_least", subject_kind = "skill_level", id = "arcana", value = 9 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 11000, source = "arcana_9_rest" }] }
+
+[[triggers]]
+id = "t_find_arc_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "arcana", value = 11 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { stores = [{ store = "ash", items = 6 }], line_keys = ["l_find_fine_ash"] }
+
+[[triggers]]
+id = "t_arc_12_stone"
+when = { test = "at_least", subject_kind = "skill_level", id = "arcana", value = 12 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
+outcome = { modifiers = [{ target = "work", id = "hand_on_stone", kind = "mul_bp", amount_bp = 12000, source = "arcana_12_stone" }] }
+
+# ---------- the Camp ----------
+
+[[camp_levels]]
+at_items = 1200000
+pays_key = "camp_pays_13"
+pays_from = 24
+pays_to = 36
+line_keys = ["l_camp_13"]
+modifiers = [{ target = "cap", id = "stakes", kind = "mul_bp", amount_bp = 15000, source = "camp_13" }]
+
+# Held at a "?" past the chapter, a goal on screen; day nine lifts it.
+[[camp_levels]]
+at_items = 1600000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- features ----------
+
+[[features]]
+id = "drift"
+
+[[features]]
+id = "roofs_cleared"
+
+[[features]]
+id = "cord_made"
+
+[[features]]
+id = "cord_seen"
+
+[[features]]
+id = "stakes_full"
+
+[[features]]
+id = "pack_near"
+
+[[features]]
+id = "b9"
+
+# ---------- aims ----------
+
+# After week 1's aim_keep (feature wolves); stands until day nine's.
+[[aims]]
+id = "aim_wall"
+text_key = "aim_wall"
+after = { unlock_kind = "feature", id = "drift" }
+
+# ---------- text ----------
+
+[line_kinds]
+l_ring_scored = "story"
+l_palisade_fail = "tap"
+l_stage_1 = "story"
+l_stage_2 = "story"
+l_stage_3 = "story"
+l_stage_4 = "story"
+l_stage_5 = "story"
+l_stage_6 = "story"
+l_stage_7 = "story"
+l_stage_8 = "story"
+l_stage_9 = "story"
+l_stage_10 = "story"
+l_stage_11 = "story"
+l_stage_12 = "story"
+l_cut_stakes_fail = "tap"
+l_lane_stakes_fail = "tap"
+l_cord_fail = "tap"
+l_n4_cord_fail = "tap"
+l_flaps_fail = "tap"
+l_flaps_1 = "story"
+l_flaps_2 = "story"
+l_flaps_3 = "story"
+l_flaps_done = "story"
+l_b8_1 = "find"
+l_b8_2 = "find"
+l_b8_3 = "find"
+l_pick_fail = "tap"
+l_fungus_stew_fail = "tap"
+l_howls = "story"
+l_caps_1 = "story"
+l_caps_2 = "story"
+l_ash_laden = "body"
+l_ash_cleared = "body"
+l_clear_fail = "tap"
+l_roofs_first = "story"
+l_ash_ground = "story"
+l_ash_ground_fail = "tap"
+l_cord = "story"
+l_pack_1 = "story"
+l_pack_2 = "story"
+l_fight_pack_won_1 = "fight"
+l_fight_pack_won_2 = "fight"
+l_fight_pack_won_3 = "fight"
+l_fight_pack_lost_1 = "fight"
+l_fight_pack_lost_2 = "fight"
+l_fight_pack_lost_3 = "fight"
+l_b9_1 = "story"
+l_b9_2 = "story"
+l_find_shelf = "find"
+l_find_pole = "find"
+l_find_hoe = "find"
+l_find_pot = "find"
+l_find_fine_ash = "find"
+l_camp_13 = "level"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-eight routes give each line its states and the writers'
+# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# release: replace each value, never the marker's spelling.
+l_ring_scored = "lucy drags a stick through the ash in a wide circle. no word."
+store_stakes = "stakes"
+store_cord = "cord"
+c_palisade = "Build the palisade"
+up_palisade = "{pct} strength at the gap with each stretch"
+l_palisade_fail = "you sort the pile. not enough for a stretch."
+l_stage_1 = "the first posts go in along the scored line."
+l_stage_2 = "stones wedged round the foot of each post."
+l_stage_3 = "cord bound round the heads. the stretch stands."
+l_stage_4 = "you walk the new posts from first to last."
+l_stage_5 = "a post leans. you prop it with a stone."
+l_stage_6 = "you haul stakes to the next stretch."
+l_stage_7 = "{n2} puts his weight on a post. it doesn't give."
+l_stage_8 = "you shave the tops to points."
+l_stage_9 = "the loose posts are dug up and reset."
+l_stage_10 = "a slanted pole braces the weak stretch."
+l_stage_11 = "you trim the cord ends close."
+l_stage_12 = "the ring closes on itself."
+c_cut_stakes = "Cut stakes"
+l_cut_stakes_fail = "not enough wood to split into stakes."
+c_lane_stakes = "Cut stakes"
+l_lane_stakes_fail = "the wood runs out before the points do."
+c_twist_cord = "Twist cord"
+l_cord_fail = "there isn't enough to twist a cord from."
+c_n4_cord = "Twist cord"
+l_n4_cord_fail = "{n4} sorts through the sticks and sets them down."
+c_hide_flaps = "Hang hide flaps"
+up_hide_flaps = "{pct} rest recovery"
+l_flaps_fail = "held to the opening, it doesn't cover."
+l_flaps_1 = "poles bent into a frame to fit the opening."
+l_flaps_2 = "a pelt stretched on the frame, hair side out."
+l_flaps_3 = "tied down at the corners with thongs."
+l_flaps_done = "the flaps hang over the openings, stiffening."
+l_b8_1 = "the wind turns warm, all from one side. ash browns the noon."
+l_b8_2 = "the larder won't hold more. the rafters creak."
+l_b8_3 = "fungus juts from the stumps. up on the roof, crows call numbers."
+store_drift_left = "hours left"
+store_roof_ash = "ash on the roofs"
+action_ashfall = "Falling ash"
+store_drift_clock = "clock"
+action_drift_clock = "Clock"
+store_bloom = "fungus on the stumps"
+store_fungus = "fungus"
+c_pick_fungus = "Pick fungus"
+l_pick_fail = "every stump is picked bare."
+c_lane_pick = "Pick fungus"
+c_fungus_stew = "Cook fungus stew"
+l_fungus_stew_fail = "the pot stays on its hook. something is short."
+l_howls = "howls, answering each other. prints circle the rack, not the fire."
+l_caps_1 = "{n3} sorts the caps. half go in the fire."
+l_caps_2 = "the pot passes hand to hand, still not empty."
+chip_ash_laden = "ash-laden"
+chip_ash_laden_cost = "{pct} rest recovery"
+l_ash_laden = "the roof hangs low over where you sleep."
+l_ash_cleared = "the roof poles stop creaking."
+store_ash = "ash"
+c_clear_roofs = "Clear the roofs"
+l_clear_fail = "too little ash overhead to shovel."
+c_n2_clear_roofs = "Clear the roofs"
+l_roofs_first = "the roofs shed their ash in slabs under the shovel."
+l_ash_ground = "{n3} works ash in by hand, counts seed, and ties the bag shut."
+store_ashed_ground = "ash dug in"
+c_n3_ash_ground = "Work ash into the bed"
+l_ash_ground_fail = "{n3} looks in the sack. not enough ash in it."
+l_cord = "{n4} rolls bark into cord over one knee. fast."
+side_gap = "Gap"
+threat_wolf_pack = "Pack"
+l_pack_1 = "a handful of wolves gather near the gap. a brand turns the first."
+l_pack_2 = "the others wait out of reach. the low strips go with them."
+store_pack_fought = "pack fights"
+store_pack_lost = "pack fights lost"
+action_pack = "Pack"
+l_fight_pack_won_1 = "a brand swung low and the pack backs off."
+l_fight_pack_won_2 = "the wolves give the gap up and trot off."
+l_fight_pack_won_3 = "the pack noses up and finds you waiting."
+l_fight_pack_lost_1 = "the lowest strips on the rack are gone."
+l_fight_pack_lost_2 = "the bottom pegs are empty."
+l_fight_pack_lost_3 = "the lower poles are picked clean."
+l_b9_1 = "the book lies open in the firelight. rats first, then crows."
+l_b9_2 = "the wolves' page is empty. at its edge, a pencil note. your hand."
+pays_find_for_13 = "a fungus shelf, {pct} foraging speed"
+pays_find_wc_23 = "a barked pole, {pct} woodcutting speed"
+pays_find_scav_23 = "a hoe head, {pct} scavenging speed"
+pays_find_cook_9 = "a dented pot, {pct} cooking speed"
+pays_arc_9 = "{pct} arcana speed and rest recovery"
+pays_find_arc_11 = "fine ash, {pct} arcana speed"
+pays_arc_12 = "{pct} arcana speed, {pct_b} speed drying at the stone"
+l_find_shelf = "a fungus shelf on a birch, still firm."
+l_find_pole = "a straight birch pole, barked and dry."
+l_find_hoe = "the head of a hoe, rust-pitted but whole."
+l_find_pot = "a small pot with a dent. it holds water."
+l_find_fine_ash = "fine pale ash, sifted by wind into a hollow."
+camp_pays_13 = "stakes hold {to}, was {from}"
+l_camp_13 = "stakes stacked by the shed, points all one way."
+n_wolf_1 = "lean, ribs showing. one at first, then five or six. none came into the light"
+n_wolf_margin = "they sat at the edge of the light, facing the fire, like they wanted asking in"
+n_rat_1 = "fat, grey, big front claws. they nested in the roots. a stone floor seemed to stop them"
+n_rat_2 = "warm wind, and they came indoors"
+n_crow_1 = "lined up on the ridge. all morning they said numbers"
+aim_wall = "ring the whole camp with stakes."
+# ---------- end of lines ----------

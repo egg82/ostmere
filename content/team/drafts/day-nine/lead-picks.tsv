@@ -1,0 +1,54 @@
+key	source	why
+l_ring_1	writer-3	the critic's best
+l_ring_2	edit	writer-3 main, its order reversed: the fact's phrase was lifted verbatim
+l_gap_fire_1	writer-2	the critic's best
+l_gap_fire_fail	edit	writer-3 main with "watch fire", the one name the stage lines use
+l_gap_fire_2	writer-2	the critic's best
+l_gap_fire_done	writer-2	the critic's best
+l_old_wire	edit	writer-2 main bent the clue rule ("fits your thumb") and writer-3's did not parse; the clue moved into the hands undoing the knot
+l_snare_4_fail	writer-3	the critic's pick (writer-2) repeated l_peg_fail's "what is there"
+l_snare_4	writer-1	the critic's best
+l_open_side_1	writer-3	the critic's best
+l_open_side_2	writer-3 alt	the critic's best
+l_road_smoke_1	writer-3	the critic's best
+l_road_smoke_2	edit	writer-3 main with its simile cut (overwrought)
+l_b10_1	writer-3	the critic's best
+l_b10_2	edit	writer-2 main plus the family's gap shown, which no draft did
+l_b10_3	writer-2 alt	the critic's best
+l_wind	writer-2	the critic's best
+l_draughty	writer-2	the critic's best
+l_draughty_off	writer-2	the critic's best
+l_peg_fail	writer-2	the critic's best
+l_camp_14	writer-3	the critic's best
+l_posts	edit	writer-3 main without the spec's phrase
+l_gate_road	writer-3	the critic's best
+o_posts	writer-1 alt	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_posts_cord	writer-3 (also writer-2)	a person acting, mirroring its pair
+a_posts_fire	writer-3	a person acting, mirroring its pair
+o_margin	writer-2	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_margin_gap	writer-2	a person acting, mirroring its pair
+a_margin_fire	writer-2	a person acting, mirroring its pair
+o_rack	writer-3	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_rack_high	writer-3 (also writer-2)	a person acting, mirroring its pair
+a_rack_down	writer-3 (also writer-2)	a person acting, mirroring its pair
+o_deep	writer-3 alt	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_deep_sink	writer-3	a person acting, mirroring its pair
+a_deep_pace	writer-3	a person acting, mirroring its pair
+o_bark	writer-3	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_bark_tinder	writer-3	a person acting, mirroring its pair
+a_bark_cord	writer-3	a person acting, mirroring its pair
+o_footing	writer-3	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_footing_hearth	writer-1	a person acting, mirroring its pair
+a_footing_keep	writer-2	a person acting, mirroring its pair
+o_fed	writer-3 alt	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_fed_watch	edit	writer-1 main, reworded to mirror a_fed_pot
+a_fed_pot	edit	writer-1 main, reworded to mirror a_fed_watch
+o_lookout	writer-2	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_lookout_up	writer-2	a person acting, mirroring its pair
+a_lookout_wall	writer-2	a person acting, mirroring its pair
+o_gate	writer-3 alt	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_gate_road	edit	writer-1 main with a plainer verb
+a_gate_track	edit	writer-1 main with a plainer verb
+o_skin	writer-1	the lead's pick for a varied row of offers (shape, asker, stake), from the critic's offer diagnostics
+a_skin_post	writer-1	a person acting, mirroring its pair
+a_skin_flaps	writer-1	a person acting, mirroring its pair

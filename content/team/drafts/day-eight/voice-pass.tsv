@@ -1,0 +1,49 @@
+key	reason
+l_pick_fail	not true in a state: the card fails only when the bloom is empty, and the bloom is a pool nothing refills (no regrowth, and the season's end drains only drift_left), so "nothing has come up" tells the player to wait for something that never comes; "picked bare" is the one state the fail can be in
+l_ring_scored	checked, kept: the card beside it names the palisade, so the line leaves the circle unexplained as the brief asks; l_howls' "circle" is the pack answering it, a day later
+l_b8_2	checked, kept: B8 fills fungus to its cap of 24, so the larder is full at the turn on every route; the creaking rafters set up l_ash_laden and l_ash_cleared's "stop creaking"
+l_b8_3	checked, kept: the crows last, saying numbers, nothing of what they count
+l_ash_ground	checked, kept: three acts in a row, and the bag tied shut again is the turn; nothing of what for
+l_fight_pack_won_3	checked, kept: "you" waiting at the gap as the rats' and crows' won pools stand at their sides with "you" (l_fight_rats_won_2, l_fight_crows_won_1)
+l_b9_2	checked, kept: n_wolf_1 lands with the same first pack fight, but the line's moment is the page before the player writes on it, after b9_1's rats and crows
+store_stakes	label: the material, plural, so "24 or more stakes" reads in the rule
+store_cord	label: a mass noun, so "Under 7 cord" reads in his rule
+c_palisade	label: the card says what the scored circle is, as the brief asks; not "wall", which is the drying wall's word (c_rack_roof, side_rack, camp_pays_1)
+up_palisade	label, no figure: the stage's modifier is in outcome, not finished, so the card is served no change (change_bp []) and test_change_figures allows no {pct}; the brief's "Gap +50%" needs the service to serve a staged card's outcome changes first
+c_cut_stakes	label: "Cut wood"'s verb; the card is woodcutting
+c_lane_stakes	label: the town card takes the hands card's words, as c_n1_walk_ridge and c_n2_build_bay do
+c_twist_cord	label: the act l_cord shows
+c_n4_cord	label: as c_twist_cord, his lane's copy
+c_hide_flaps	label: where they go and what from; l_flaps_done shows them hanging
+up_hide_flaps	label: rest make energy, so up_stool's and up_pelt_bedding's "{pct} rest recovery"
+store_drift_left	label: never drawn; the season's hours left, plain in case a debug view draws it, no season name
+store_roof_ash	label: never drawn; what the chip reads
+action_ashfall	label: never drawn (both its stores are); the ash coming down, no season name
+store_drift_clock	label: never drawn clock, as store_pair_3h
+action_drift_clock	label: as action_pair_3h
+store_bloom	label: the brief's "fungus in the scrub" or the pass's; the stumps are where l_b8_3 shows it, so the row names what the player saw
+store_fungus	label: what is picked and kept
+c_pick_fungus	label: the act, the store's word
+c_lane_pick	label: as c_pick_fungus, her lane's copy
+c_fungus_stew	label: day three's "Cook stew" with what goes in, kept apart from it
+chip_ash_laden	label: one adjective as the other chips, and it reads in ui.rule.chip ("While ash-laden"), the brief's order card
+chip_ash_laden_cost	label: rest make energy at -15%, the stool's words for the same rate
+store_ash	label: the shovelled ash, kept apart from the roofs' by store_roof_ash's "on the roofs"
+c_clear_roofs	label: plain; l_roofs_first shows the shovel
+c_n2_clear_roofs	label: as c_clear_roofs, his lane's copy
+store_ashed_ground	label: a count of what she has worked in, which is all the store is; nothing of what for
+c_n3_ash_ground	label: "the bed" is the one she dug (day_five.toml's c_n3_dig_bed); never what for
+side_gap	label: one word as Hands and Larder; the gap is day four's name for it
+threat_wolf_pack	label: the lines call it the pack; kept apart from the hunt's "Wolf" in the fight panel and the journal's shared wolf page
+store_pack_fought	label: never unlocked tally, as store_rats_fought
+store_pack_lost	label: as store_rats_lost
+action_pack	label: the runner's name in ui.fight.since, as action_rats and action_crows match their threats
+pays_find_for_13	label: the find (l_find_shelf) and the row's speed, as pays_find_for_11
+pays_find_wc_23	label: the find (l_find_pole) and the row's speed; "barked" kept apart from pays_find_wc_20's "a dry birch" and pays_straight_poles' "straight birch"
+pays_find_scav_23	label: the find (l_find_hoe) and the row's speed
+pays_find_cook_9	label: the find (l_find_pot) and the row's speed; "dented" kept apart from pays_thick_pot's "a thick pot"
+pays_arc_9	label: the row's speed and the rest raise are both +10%, so one change is served (change_bp [1000]) and one slot names both
+pays_find_arc_11	label: the find (l_find_fine_ash) and the row's speed
+pays_arc_12	label: two changes served in authored order, the row's speed then the stone's card (+20%); c_hand_on_stone's "Dry damp wood at the stone" and pays_stone_smoke's "{pct} speed ..." form
+camp_pays_13	label: as camp_pays_11, the cap raise worded from and to
+aim_wall	label: aim voice, lowercase; "ring" is Lucy's scored circle, and no "wall" (the drying wall's word); not "build the palisade all the way round", which lifted week-two.md

@@ -1,0 +1,605 @@
+# Day eleven: B10 through O-family, Z1-Z3, O-guard, SL19 and night 12 to B11, the vigil (A31) once a guard is made,
+# as data merged after day_nine.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec:
+# content/team/week-two.md, "Day eleven"; numbers: content/team/week-two-numbers.md.
+version = 1
+end_feature = "ditch_dug"
+
+# ---------- the man behind them, with B10's moment ----------
+
+# He comes in with B10 (its condition and requires, so one moment), apart from the family's offer: an arrival with no
+# lane, a scene figure and a clock. Never drawn: game hours since he came, in twentieths; Z3, dusk 12 and the vigil read
+# it.
+[[stores]]
+id = "stranger_clock"
+label_key = "store_stranger_clock"
+cap_items = 960
+hidden = true
+
+[[standing]]
+id = "stranger_clock"
+label_key = "action_stranger_clock"
+makes = [{ store = "stranger_clock", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_stranger"
+when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+outcome = { stores = [{ store = "arrivals", items = 1 }], unlocks = [{ unlock_kind = "action", id = "stranger_clock" }] }
+
+# ---------- O-family: the hut ----------
+
+# Shown with B10, the arrival idiom (O-pair's): either answer builds the same hut in the same real time, by the hands or
+# on the woman's lane, and its completion joins the family.
+[[offers]]
+id = "o_family"
+text_key = "o_family"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+line_keys = ["l_family_1", "l_family_2"]
+kind = "arrival"
+
+[[offers.answers]]
+id = "o_family_room"
+label_key = "a_family_room"
+cost_key = "a_family_room_cost"
+role = "self"
+[offers.answers.outcome]
+line_keys = ["l_hut_go"]
+unlocks = [{ unlock_kind = "card", id = "make_hut" }]
+queues = ["make_hut"]
+
+[[offers.answers]]
+id = "o_family_theirs"
+label_key = "a_family_theirs"
+cost_key = "a_family_theirs_cost"
+role = "other"
+[offers.answers.outcome]
+line_keys = ["l_hut_theirs"]
+unlocks = [{ unlock_kind = "card", id = "n5_build_hut" }]
+orders = [{ tap_card = "n5_build_hut", first = true }]
+
+# A33 on the hands, the second bay's length.
+[[cards]]
+id = "make_hut"
+presentation = "craft"
+label_key = "c_make_hut"
+work_s = 10800
+cap = 1
+failed_line_key = "l_hut_fail"
+inputs = [{ store = "stakes", items = 16 }, { store = "stones", items = 12 }]
+outcome = { stores = [{ store = "hut", items = 1 }] }
+
+# The three who will work: townsfolk the player's rules set, as the pair. The fourth of the offer is a child, who has no
+# lane (decisions.md, "Never": never a worker, a cost or a fight outcome).
+[[lanes]]
+id = "n5"
+label_key = "lane_n5"
+ruled = true
+later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n5_named" }]
+name_key = "name_n5"
+
+[[lanes]]
+id = "n6"
+label_key = "lane_n6"
+ruled = true
+later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n6_named" }]
+name_key = "name_n6"
+
+[[lanes]]
+id = "n7"
+label_key = "lane_n7"
+ruled = true
+later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n7_named" }]
+name_key = "name_n7"
+
+# A34 on her lane, the same real time and stores as A33.
+[[cards]]
+id = "n5_build_hut"
+lane = "n5"
+presentation = "craft"
+label_key = "c_n5_build_hut"
+failed_line_key = "l_hut_fail"
+work_s = 10800
+cap = 1
+inputs = [{ store = "stakes", items = 16 }, { store = "stones", items = 12 }]
+outcome = { stores = [{ store = "hut", items = 1 }] }
+
+# Never unlocked: the hut built, by either lane.
+[[stores]]
+id = "hut"
+label_key = "store_hut"
+cap_items = 1
+
+# Their forage, gather, cut, stakes and picking cards are the town cards (days three and eight), expanded here where
+# their lanes are declared.
+
+# A share at the watch fire on each of their lanes, held on the gap while it runs as the first three watchers' are, at
+# half their dry wood: the split between gathering and the watch is the town's (Z1's seven-way split).
+[[town_cards]]
+id = "{lane}_watch"
+lanes = ["n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_lane_watch"
+failed_line_key = "l_lane_watch_dry"
+work_s = 1200
+inputs = [{ store = "dry_wood", items = 1 }]
+while_running = [{ side = "gap", amount_bp = 5000 }]
+
+# ---------- the camp's asks while the hut goes up ----------
+
+# Day nine's asks carried on (day_nine.toml, "the camp's asks"): offers of no kind, each on its own moment (five hours
+# on the stranger's clock, Z1, SL19) and after the last is answered, so they come in order at the player's pace. The
+# first waits past B10's own return, so the ring's last ask and this one never share a visit.
+[[offers]]
+id = "o_door"
+text_key = "o_door"
+gate = { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 100 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_skin", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "safety", value = 1 },
+]
+
+[[offers.answers]]
+id = "o_door_fire"
+label_key = "a_door_fire"
+cost_key = "a_door_fire_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_door_fire" }]
+
+[[offers.answers]]
+id = "o_door_gate"
+label_key = "a_door_gate"
+cost_key = "a_door_gate_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "door_gate" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "door_gate" }]
+
+[[offers]]
+id = "o_pot"
+text_key = "o_pot"
+gate = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_door", value = 1 }]
+
+[[offers.answers]]
+id = "o_pot_hang"
+label_key = "a_pot_hang"
+cost_key = "a_pot_hang_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 10500, source = "o_pot_hang" }]
+
+[[offers.answers]]
+id = "o_pot_trade"
+label_key = "a_pot_trade"
+cost_key = "a_pot_trade_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "scrap", items = 6 }]
+
+[[offers]]
+id = "o_ditch"
+text_key = "o_ditch"
+gate = { test = "at_least", subject_kind = "store", id = "z1_clock", value = 80 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_pot", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "n6_posts", value = 1 },
+]
+
+[[offers.answers]]
+id = "o_ditch_dig"
+label_key = "a_ditch_dig"
+cost_key = "a_ditch_dig_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "ditch_dug" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "ditch_dug" }]
+
+[[offers.answers]]
+id = "o_ditch_bank"
+label_key = "a_ditch_bank"
+cost_key = "a_ditch_bank_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
+
+# ---------- Z1: they take the hut ----------
+
+# The hut done, either answer: three join as lanes, each at a whole share in the town's mix (she forages, her husband
+# keeps the watch, her brother picks); his stakes are a rule's (below). What they carried is scrap.
+[[triggers]]
+id = "t_family_joins"
+when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
+[triggers.outcome]
+line_keys = ["l_join3_1", "l_join3_2"]
+stores = [{ store = "arrivals", items = 3 }, { store = "scrap", items = 6 }]
+unlocks = [
+  { unlock_kind = "feature", id = "family_joined" },
+  { unlock_kind = "card", id = "n5_forage" },
+  { unlock_kind = "card", id = "n5_gather" },
+  { unlock_kind = "card", id = "n5_cut" },
+  { unlock_kind = "card", id = "n5_stakes" },
+  { unlock_kind = "card", id = "n5_pick" },
+  { unlock_kind = "card", id = "n5_watch" },
+  { unlock_kind = "card", id = "n6_forage" },
+  { unlock_kind = "card", id = "n6_gather" },
+  { unlock_kind = "card", id = "n6_cut" },
+  { unlock_kind = "card", id = "n6_stakes" },
+  { unlock_kind = "card", id = "n6_pick" },
+  { unlock_kind = "card", id = "n6_watch" },
+  { unlock_kind = "card", id = "n7_forage" },
+  { unlock_kind = "card", id = "n7_gather" },
+  { unlock_kind = "card", id = "n7_cut" },
+  { unlock_kind = "card", id = "n7_stakes" },
+  { unlock_kind = "card", id = "n7_pick" },
+  { unlock_kind = "card", id = "n7_watch" },
+  { unlock_kind = "action", id = "n5_eating" },
+  { unlock_kind = "action", id = "n6_eating" },
+  { unlock_kind = "action", id = "n7_eating" },
+  { unlock_kind = "action", id = "z1_clock" },
+]
+joins = [
+  { lane = "n5", mix = "town:camp", card = "n5_forage" },
+  { lane = "n6", mix = "town:camp", card = "n6_watch" },
+  { lane = "n7", mix = "town:camp", card = "n7_pick" },
+]
+
+# The fourth of the offer, their child, comes in at the same instant with no lane: an arrival, never a worker. Arrivals
+# 9 with the man behind them.
+[[triggers]]
+id = "t_child_in"
+when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
+outcome = { stores = [{ store = "arrivals", items = 1 }] }
+
+[[standing]]
+id = "n5_eating"
+label_key = "action_n5_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n5", amount_bp = 1500 }]
+
+[[standing]]
+id = "n6_eating"
+label_key = "action_n6_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n6", amount_bp = 1500 }]
+
+[[standing]]
+id = "n7_eating"
+label_key = "action_n7_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n7", amount_bp = 1500 }]
+
+# His stakes by a rule: under the hut's and the posts' worth he cuts until near full, so a full stack sends him back to
+# his share instead of filling past the cap (the cord rule's shape).
+[[order_cards]]
+store = "stakes"
+tap_card = "n6_stakes"
+when = { test = "at_most", subject_kind = "store", id = "stakes", value = 15, release = 23 }
+offered_after = { unlock_kind = "card", id = "n6_stakes" }
+
+# Never unlocked: game hours since Z1, in twentieths.
+[[stores]]
+id = "z1_clock"
+label_key = "store_z1_clock"
+cap_items = 960
+hidden = true
+
+[[standing]]
+id = "z1_clock"
+label_key = "action_z1_clock"
+makes = [{ store = "z1_clock", items_per_hour = 20 }]
+
+# ---------- O-guard and Z2: the guard ----------
+
+# With Z1 (its condition, so one moment): who stands the gap. Each answer queues the spear's making on the hands
+# (o_pelt's idiom) and shows that lane's guard card; the spear's finish installs the lane's always rule on it, first, so
+# whoever guards stops gathering until the player edits the rule.
+[[offers]]
+id = "o_guard"
+text_key = "o_guard"
+gate = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
+line_keys = ["l_guard_ask"]
+
+[[offers.answers]]
+id = "o_guard_n2"
+label_key = "a_guard_n2"
+cost_key = "a_guard_n2_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "arm_n2" }, { unlock_kind = "card", id = "n2_guard" }]
+queues = ["arm_n2"]
+
+[[offers.answers]]
+id = "o_guard_n7"
+label_key = "a_guard_n7"
+cost_key = "a_guard_n7_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "arm_n7" }, { unlock_kind = "card", id = "n7_guard" }]
+queues = ["arm_n7"]
+
+[[cards]]
+id = "arm_n2"
+presentation = "narrative"
+label_key = "c_arm_n2"
+work_s = 600
+cap = 1
+failed_line_key = "l_arm_fail"
+inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
+
+[[cards]]
+id = "arm_n7"
+presentation = "narrative"
+label_key = "c_arm_n7"
+work_s = 600
+cap = 1
+failed_line_key = "l_arm_fail"
+inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
+
+# The guard at the gap: makes nothing, and holds the gap's entry while it runs, at its share of the lane's time.
+[[cards]]
+id = "n2_guard"
+lane = "n2"
+presentation = "action"
+label_key = "c_n2_guard"
+upside_key = "up_guard"
+work_s = 3600
+while_running = [{ side = "gap", amount_bp = 15000 }]
+
+[[cards]]
+id = "n7_guard"
+lane = "n7"
+presentation = "action"
+label_key = "c_n7_guard"
+upside_key = "up_guard"
+work_s = 3600
+while_running = [{ side = "gap", amount_bp = 15000 }]
+
+# Z2, either spear: lines and the install. A guard made is a hidden flag store, which A31 requires and which opens
+# nothing to see: the guard card was shown by the answer.
+[[stores]]
+id = "guard_made"
+label_key = "store_guard_made"
+cap_items = 1
+hidden = true
+
+[[triggers]]
+id = "t_guard_n2"
+when = { test = "at_least", subject_kind = "card_count", id = "arm_n2", value = 1 }
+outcome = { line_keys = ["l_guard_n2_1", "l_guard_n2_2"], stores = [{ store = "guard_made", items = 1 }], orders = [{ tap_card = "n2_guard", first = true }] }
+
+[[triggers]]
+id = "t_guard_n7"
+when = { test = "at_least", subject_kind = "card_count", id = "arm_n7", value = 1 }
+outcome = { line_keys = ["l_guard_n7_1", "l_guard_n7_2"], stores = [{ store = "guard_made", items = 1 }], orders = [{ tap_card = "n7_guard", first = true }] }
+
+# ---------- SL19: the posts that lean ----------
+
+# Four hours after Z1, once O-guard is answered, so it waits on a visit and no absence brings Z1 and SL19.
+# Her husband's own build on his lane, set going by a rule of the player's (a capped card is never a share), against the
+# stakes the next build will want.
+[[triggers]]
+id = "t_posts"
+when = { test = "at_least", subject_kind = "store", id = "z1_clock", value = 80 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_guard", value = 1 }]
+outcome = { line_keys = ["l_leaning_posts"], unlocks = [{ unlock_kind = "card", id = "n6_posts" }] }
+
+[[cards]]
+id = "n6_posts"
+lane = "n6"
+presentation = "craft"
+label_key = "c_n6_posts"
+upside_key = "up_n6_posts"
+work_s = 3600
+cap = 1
+failed_line_key = "l_n6_posts_fail"
+inputs = [{ store = "stakes", items = 12 }]
+line_keys = ["l_n6_posts_done"]
+[cards.finished]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 5000, source = "n6_posts" }]
+
+# ---------- Z3, night 12 and the vigil (A31) ----------
+
+# Z3: twenty hours after he came, once the family has the hut (Z1 first, however long the hut took). The vigil shows
+# with it, unready, its countdown the night's: queueable When ready.
+[[triggers]]
+id = "t_count"
+when = { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 400 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+outcome = { line_keys = ["l_count"], unlocks = [{ unlock_kind = "card", id = "keep_vigil" }] }
+
+# Dusk 12, a story night, after Z3: a hidden clock the scene's night grade reads, so it opens nothing to see.
+[[stores]]
+id = "night_12"
+label_key = "store_night_12"
+cap_items = 20
+hidden = true
+
+[[standing]]
+id = "night_12"
+label_key = "action_night_12"
+makes = [{ store = "night_12", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_night_12"
+when = { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 440 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "keep_vigil", value = 1 }]
+outcome = { line_keys = ["l_night_12"], unlocks = [{ unlock_kind = "action", id = "night_12" }] }
+
+# A31, a quarter hour into the night, once a guard stands the gap. Its requires read the clock itself, so its countdown
+# shows from Z3. B10's floor (210 h) keeps it past B11's sharp floor.
+[[cards]]
+id = "keep_vigil"
+presentation = "narrative"
+label_key = "c_keep_vigil"
+work_s = 5
+cap = 1
+glows = true
+failed_line_key = "l_vigil_fail"
+requires = [
+  { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 445 },
+  { test = "at_least", subject_kind = "store", id = "guard_made", value = 1 },
+]
+
+# B11: the vigil kept.
+[[triggers]]
+id = "t_b11"
+when = { test = "at_least", subject_kind = "card_count", id = "keep_vigil", value = 1 }
+outcome = { line_keys = ["l_b11_1", "l_b11_2", "l_b11_3"], unlocks = [{ unlock_kind = "feature", id = "b11" }] }
+
+# ---------- the journal ----------
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[entries]]
+id = "e_days_5"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_day_b11"
+entry = "e_days_5"
+gate = { test = "at_least", subject_kind = "card_count", id = "keep_vigil", value = 1 }
+beat = "B11"
+
+# ---------- features ----------
+
+[[features]]
+id = "b11"
+
+[[features]]
+id = "family_joined"
+
+[[features]]
+id = "door_gate"
+label_key = "feature_door_gate"
+
+[[features]]
+id = "ditch_dug"
+label_key = "feature_ditch_dug"
+
+# ---------- aims ----------
+
+# After day eight's aim_wall: room for them from B10 (O-family's moment), someone at the gap from Z1.
+[[aims]]
+id = "aim_hut"
+text_key = "aim_hut"
+after = { unlock_kind = "feature", id = "safety" }
+
+[[aims]]
+id = "aim_gap"
+text_key = "aim_gap"
+after = { unlock_kind = "feature", id = "family_joined" }
+
+# ---------- text ----------
+
+[line_kinds]
+l_family_1 = "story"
+l_family_2 = "story"
+l_hut_go = "story"
+l_hut_theirs = "story"
+l_hut_fail = "tap"
+l_join3_1 = "find"
+l_join3_2 = "find"
+l_guard_ask = "story"
+l_arm_fail = "tap"
+l_guard_n2_1 = "find"
+l_guard_n2_2 = "find"
+l_guard_n7_1 = "find"
+l_guard_n7_2 = "find"
+l_leaning_posts = "story"
+l_n6_posts_fail = "tap"
+l_n6_posts_done = "story"
+l_count = "story"
+l_night_12 = "story"
+l_vigil_fail = "tap"
+l_b11_1 = "story"
+l_b11_2 = "story"
+l_b11_3 = "story"
+l_lane_watch_dry = "tap"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-eleven routes give each line its states and the writers'
+# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# release: replace each value, never the marker's spelling.
+store_stranger_clock = "clock"
+action_stranger_clock = "Clock"
+o_family = "The woman asks for room inside the wall."
+l_family_1 = "the woman does the talking. the child keeps close."
+l_family_2 = "the man who came with them sits apart outside the gate."
+a_family_room = "You build the hut"
+a_family_room_cost = "{d} of your time"
+a_family_theirs = "She builds the hut"
+a_family_theirs_cost = "{d} of her time"
+l_hut_go = "the hut goes up under your hands."
+l_hut_theirs = "the hut goes up under her hands."
+c_make_hut = "Build a hut"
+c_n5_build_hut = "Build a hut"
+l_hut_fail = "the hut waits for what the pile lacks."
+store_hut = "hut"
+lane_n5 = "The woman's hands"
+lane_n5_named = "{n5}"
+name_n5 = "Thomasina"
+lane_n6 = "Her husband's hands"
+lane_n6_named = "{n6}"
+name_n6 = "Richard"
+lane_n7 = "Her brother's hands"
+lane_n7_named = "{n7}"
+name_n7 = "John"
+l_join3_1 = "the woman gives names: {n5}, {n6}, {n7}."
+l_join3_2 = "asked his name, the man who came with them looks at the fire."
+action_n5_eating = "{n5}'s share"
+action_n6_eating = "{n6}'s share"
+action_n7_eating = "{n7}'s share"
+store_z1_clock = "clock"
+action_z1_clock = "Clock"
+o_guard = "The gap needs a night watch."
+l_guard_ask = "lucy glances from the gap to the old spear."
+a_guard_n2 = "{n2} stands guard"
+a_guard_n2_cost = "{d} of your time, {n2} on guard"
+a_guard_n7 = "{n7} stands guard"
+a_guard_n7_cost = "{d} of your time, {n7} on guard"
+c_arm_n2 = "Make {n2} a spear"
+c_arm_n7 = "Make {n7} a spear"
+l_arm_fail = "there is not enough here to make the spear."
+c_n2_guard = "Guard the gap"
+c_n7_guard = "Guard the gap"
+up_guard = "{pct} strength at the gap while on guard"
+l_guard_n2_1 = "the head is hammered on the stone and lashed."
+l_guard_n2_2 = "{n2} takes it at the watch fire and faces the dark."
+l_guard_n7_1 = "the head is hammered on the stone and lashed."
+l_guard_n7_2 = "{n7} takes it at the watch fire and faces the dark."
+l_leaning_posts = "{n6} tries each post by hand. three lean. he asks for stakes."
+c_n6_posts = "Brace the leaning posts"
+up_n6_posts = "{pct} strength at the gap"
+l_n6_posts_fail = "there aren't stakes for the leaning posts."
+l_n6_posts_done = "{n6}'s stakes brace the leaning posts."
+l_count = "the crows count one short. lucy goes to wake him. he is dead."
+store_night_12 = "night"
+action_night_12 = "Night"
+l_night_12 = "people gather at the fire. he lies covered."
+c_keep_vigil = "Keep the vigil"
+l_vigil_fail = "you stand by him and do not begin."
+l_b11_1 = "the camp sits up with him. the guard holds the gap."
+l_b11_2 = "someone's hand lies flat on the warm ground while he burns."
+l_b11_3 = "lucy cuts his mark on a board. beside it, nothing."
+aim_hut = "build them a place inside the wall."
+c_lane_watch = "Keep the fire at the gap"
+l_lane_watch_dry = "the watch fire is short of dry wood."
+store_guard_made = "clock"
+o_door = "{n2} pegs a door together for the new hut."
+a_door_fire = "He hangs it fire side"
+a_door_fire_cost = "{pct} rest"
+a_door_gate = "He hangs it gate side"
+a_door_gate_cost = "{pct} gap strength"
+feature_door_gate = "hut door to the gate"
+o_pot = "Among their things, the woman has a pot."
+a_pot_hang = "She hangs it by ours"
+a_pot_hang_cost = "{pct} stew"
+a_pot_trade = "She trades it to {n2}"
+a_pot_trade_cost = "scrap now"
+o_ditch = "Ash lies thick against the posts inside the ring."
+a_ditch_dig = "Lucy digs it out"
+a_ditch_dig_cost = "{pct} gap strength"
+a_ditch_bank = "Lucy banks it up"
+a_ditch_bank_cost = "stones now"
+feature_ditch_dug = "ditch outside the posts"
+aim_gap = "keep someone at the gap at night."
+n_day_b11 = "sat up with him. burned him by the scrub, away from the stone. no name, so lucy cut a mark on a board"
+# ---------- end of lines ----------

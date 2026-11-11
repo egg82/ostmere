@@ -1,0 +1,10 @@
+babysitter: the end at 8.5m; B3 3.9h after it; 1 visits
+  opening  gap   0.0h  active  8.5m  new  47  bigger 17  first    0s  decisions  8  actions  35  idle   82s  run 3  effort  7
+  V1       gap   0.0h  active 4300.4m  new  84  bigger 32  first    0s  decisions  5  actions 134  idle 4200s  run 3  effort 101
+  landed (h) {'H1': 0.0, 'A11': 0.06, 'H2': 1.0, 'A12': 1.0, 'H3': 1.0, 'A13': 1.0, 'H4': 1.0, 'A14': 1.01, 'H5': 1.01, 'P0.2': 1.02, 'P0.1': 1.04, 'P0.3': 1.06, 'H6': 2.36, 'H7': 3.86, 'B3': 3.88, 'P0.4': 3.88}
+  seen (h)   {'H1': 0.0, 'A11': 0.06, 'H2': 1.0, 'A12': 1.0, 'H3': 1.0, 'A13': 1.0, 'H4': 1.0, 'A14': 1.01, 'H5': 1.01, 'P0.2': 1.02, 'P0.1': 1.04, 'P0.3': 1.06, 'H6': 2.36, 'H7': 3.86, 'B3': 3.88, 'P0.4': 3.88}
+  a day away from V1 opens 1 ['trigger t_floor_5']
+  near promise untouched in [] of 0 returns
+  flatcheck []
+  goals: 18 samples, 2 with a choice due, 0 of those with no goal the setup drives; weighting decides the order at 2 of 2 with a pair
+  leaves naming only a speed level []

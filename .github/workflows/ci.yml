@@ -1,0 +1,562 @@
+# CI for Ostmere: the suite, the playthroughs, pyright, the client and the engine and save checks on every pull request
+# and every push to main, while the app image builds beside them. On main, once everything is green, `release` tags the
+# image already pushed by digest: `dev` and `main-<sha8>-<commit-timestamp>`, the tag Flux image automation sorts on.
+# Pull requests build the image and push nothing. The nightly deep run is nightly.yml.
+#
+# Images go to Docker Hub (`docker.io/<vars.DOCKERHUB_USERNAME>/ostmere`, logged in with `secrets.DOCKERHUB_TOKEN`) and
+# GHCR (`ghcr.io/<owner>/ostmere`, logged in with GITHUB_TOKEN).
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # The owner stands in where the variable is unset (a fork's pull request), so the names still parse.
+  DOCKERHUB_REPO: docker.io/${{ vars.DOCKERHUB_USERNAME || github.repository_owner }}/ostmere
+  GHCR_REPO: ghcr.io/${{ github.repository_owner }}/ostmere
+  PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  PYTHON_VERSION: "3.12"
+  # Production's Postgres. Tests that need a database copy a template migrated once per run (app/tests/pg.py); the
+  # data is thrown away, so nothing is flushed.
+  PG_IMAGE: postgres:18.6
+
+jobs:
+  # Two shards (app/tools/shards.py): a is tests/saves, accounts and api_contract, the heaviest; b is everything else,
+  # so a new test directory runs in b. `shards-cover` fails if the two together are not the whole suite.
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [a, b]
+    env:
+      ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start Postgres
+        run: >
+          docker run -d --name postgres -p 5432:5432
+          -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_INITDB_ARGS="--locale=C --encoding=UTF8"
+          "$PG_IMAGE" -c fsync=off -c synchronous_commit=off -c full_page_writes=off
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Wait for Postgres
+        working-directory: app
+        run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
+      - name: Test (shard ${{ matrix.shard }})
+        working-directory: app
+        run: python -m tools.shards "${{ matrix.shard }}" -q -m "not playthrough" --durations=25 --durations-min=1
+
+  # Collection only (no database): the shards of `tests` together collect exactly what one unsharded run does.
+  shards-cover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - working-directory: app
+        run: python -m tools.shards --check
+
+  # The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays each
+  # representative route once per session and they share it), beside `tests` so neither waits on the other. Split by
+  # which session-scoped plays a test shares, so no job plays another's plays again; a directory added later runs in
+  # `everything-else` until it gets a job of its own. A readout whose text changed (app/tests/readout_snapshot.py) fails
+  # its test and leaves its new text in readouts-new/, uploaded on failure, to approve by committing it.
+  playthrough:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - part: everything-else
+            args: --ignore=tests/daytwo --ignore=tests/weekone --ignore=tests/weekone_saved --ignore=tests/weektwo
+          - part: day-two
+            args: tests/daytwo
+    env:
+      READOUTS_OUT: ${{ github.workspace }}/readouts-new
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Playthrough (${{ matrix.part }})
+        working-directory: app
+        run: python -m pytest -q -m playthrough ${{ matrix.args }} --durations=25 --durations-min=1
+      - name: Upload changed readouts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
+          path: readouts-new/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # The saved ends week two's chapters play on (app/tests/weektwo/ends.py), written by tools/chapter_saves.py (about 11
+  # minutes) and cached under their key (ends.key(): the rules, the engine's source, the play code), so a run whose key
+  # is cached unpacks it in seconds. The jobs that read the saves take them as an artifact and fail, not replay, when they
+  # are missing or stale (ASHFALL_REQUIRE_SAVED).
+  chapter-saves:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Key
+        id: key
+        working-directory: app
+        run: echo "key=$(PYTHONPATH=. python -c 'from tests.weektwo import ends; print(ends.key())')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: chapter-saves-cache
+          key: chapter-saves-v1-${{ steps.key.outputs.key }}
+      - name: Saves, from the cache or written
+        working-directory: app
+        run: |
+          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache"
+          test -s "$ASHFALL_SAVES_ROOT"/*/manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chapter-saves
+          path: chapter-saves/
+          retention-days: 1
+
+  # Week one's plays (tests/weekone/routes.py, days three to six on one player) and the tests that read them. It waits on
+  # nothing: the push routes' plays are left as an artifact (tests/weekone/test_weekone_export.py) for
+  # `playthrough-week-one-saved`.
+  playthrough-week-one:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      READOUTS_OUT: ${{ github.workspace }}/readouts-new
+      ASHFALL_WEEKONE_PLAYS: ${{ github.workspace }}/weekone-plays
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - working-directory: app
+        run: python -m pytest -q -m playthrough tests/weekone --durations=25 --durations-min=1
+      - name: Upload week one's plays
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekone-plays
+          path: weekone-plays/
+          retention-days: 1
+      - name: Upload changed readouts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
+          path: readouts-new/
+          if-no-files-found: ignore
+          retention-days: 7
+  # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
+  # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
+  playthrough-week-one-saved:
+    needs: [chapter-saves, playthrough-week-one]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      READOUTS_OUT: ${{ github.workspace }}/readouts-new
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      ASHFALL_WEEKONE_PLAYS: ${{ github.workspace }}/weekone-plays
+      ASHFALL_REQUIRE_SAVED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: chapter-saves
+          path: chapter-saves
+      - uses: actions/download-artifact@v4
+        with:
+          name: weekone-plays
+          path: weekone-plays
+      - working-directory: app
+        run: python -m pytest -q -m playthrough tests/weekone_saved --durations=10 --durations-min=1
+      - name: Upload changed readouts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
+          path: readouts-new/
+          if-no-files-found: ignore
+          retention-days: 7
+  # Week two's plays (tests/weektwo/routes.py), each chapter played on from the saved end of the one before
+  # (tests/weektwo/ends.py). A play and its readers share one xdist worker (tests/weektwo/conftest.py, `group_by_play`),
+  # so the workers split the job by (chapter, route).
+  playthrough-week-two:
+    needs: [chapter-saves]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      READOUTS_OUT: ${{ github.workspace }}/readouts-new
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      ASHFALL_REQUIRE_SAVED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: chapter-saves
+          path: chapter-saves
+      - working-directory: app
+        run: python -m pytest -q -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=25 --durations-min=1
+      - name: Upload changed readouts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
+          path: readouts-new/
+          if-no-files-found: ignore
+          retention-days: 7
+  # The engine's speed gate (tools/bench_ab.py): this tree's `reading` and `steps` against the base's, timed in turn in
+  # this one job, so the runner's CPU type and load cancel. The base is the merge-base with the target branch on a pull
+  # request, and the previous tip of main on a push. `steps` needs the Postgres.
+  engine-bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Start Postgres
+        run: >
+          docker run -d --name postgres -p 5432:5432
+          -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_INITDB_ARGS="--locale=C --encoding=UTF8"
+          "$PG_IMAGE" -c fsync=off -c synchronous_commit=off -c full_page_writes=off
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Find the base
+        id: base
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$BASE_REF" ]; then BASE=$(git merge-base "origin/$BASE_REF" HEAD)
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != 0000000000000000000000000000000000000000 ]; then BASE=$BEFORE
+          else BASE=$(git rev-parse HEAD~1); fi
+          echo "base $BASE"
+          echo "sha=$BASE" >> "$GITHUB_OUTPUT"
+          git worktree add -q /tmp/before "$BASE"
+      - name: Wait for Postgres
+        working-directory: app
+        run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
+      - working-directory: app
+        run: |
+          DATABASE_URL="$ASHFALL_TEST_PG" python -m ashfall_app.db migrate
+          DATABASE_URL="$ASHFALL_TEST_PG" python -m tools.bench_ab /tmp/before/app 4 3
+
+  # Saves written at the base (checkpoints of the scripted opening, as deep as its end: tools/save_corpus.py) load under
+  # this tree's code and rules and run 30 game days: a format upgrade or a rebase that breaks a save of that depth goes
+  # red before it deploys (engine DESIGN.txt, "Rebase"). The saves go the way a player's does: stored as rows in the
+  # job's Postgres, checked as the app's start checks them, and opened through the saves service.
+  saves-forward:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Start Postgres
+        run: >
+          docker run -d --name postgres -p 5432:5432
+          -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_INITDB_ARGS="--locale=C --encoding=UTF8"
+          "$PG_IMAGE" -c fsync=off -c synchronous_commit=off -c full_page_writes=off
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Find the base
+        id: base
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$BASE_REF" ]; then BASE=$(git merge-base "origin/$BASE_REF" HEAD)
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != 0000000000000000000000000000000000000000 ]; then BASE=$BEFORE
+          else BASE=$(git rev-parse HEAD~1); fi
+          echo "base $BASE"
+          echo "sha=$BASE" >> "$GITHUB_OUTPUT"
+          git worktree add -q /tmp/before "$BASE"
+      - name: Write the base's saves
+        run: |
+          if [ ! -f /tmp/before/app/tools/save_corpus.py ]; then echo "the base has no save corpus: nothing to carry"; exit 0; fi
+          cd /tmp/before/app && PYTHONPATH=. python tools/save_corpus.py /tmp/saves
+      - name: Wait for Postgres
+        working-directory: app
+        run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
+      - name: Load them under this tree
+        working-directory: app
+        run: |
+          if [ ! -d /tmp/saves ]; then exit 0; fi
+          DATABASE_URL="$ASHFALL_TEST_PG" PYTHONPATH=. python tools/save_corpus.py --load /tmp/saves
+
+  # Strict on every package, with no held count (app/pyrightconfig.json). It also covers tools/scene, whose imports
+  # (Pillow) are in requirements-dev.txt for its sake.
+  pyright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - working-directory: app
+        run: pyright
+
+  # The client (app/client/): its generated API types in step with the checked-in openapi.json (the spec's own match with
+  # the app is tests/test_openapi_spec.py, in `tests`), strict tsc over src/, fixtures/ and test/, the tests, and the
+  # bundle.
+  client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: app/client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/client/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - name: Generated types match openapi.json (on drift, run npm run types)
+        run: |
+          npx openapi-typescript generated/openapi.json -o "$RUNNER_TEMP/schema.d.ts"
+          diff generated/schema.d.ts "$RUNNER_TEMP/schema.d.ts"
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: test -s build/game.js && test -s build/game.css
+
+  # The app image, built beside the tests. On main it is pushed by digest alone, a tag Flux never sees; `release` names
+  # it once everything is green.
+  app-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 7
+
+      # The placeholder page's dev log shows the latest commit subjects (served at /changes; ashfall_app/main.py).
+      - name: Short sha and dev log
+        id: sha
+        run: |
+          echo "short=${GITHUB_SHA::8}" >> "$GITHUB_OUTPUT"
+          mkdir -p app/ashfall_app/build
+          git log -6 --format='%cs %s' > app/ashfall_app/build/changes.txt
+          test -s app/ashfall_app/build/changes.txt
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Log in to GHCR
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build, and on main push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: app
+          file: app/Containerfile
+          platforms: linux/amd64
+          build-args: |
+            BUILD_VERSION=${{ steps.sha.outputs.short }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          outputs: type=image,"name=${{ env.DOCKERHUB_REPO }},${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=${{ env.PUBLISH }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # The one check branch protection requires. A skipped required check counts as passed, and a job whose need failed is
+  # skipped, so this runs always and fails unless every job it needs succeeded.
+  ci-ok:
+    if: always()
+    needs:
+      - tests
+      - shards-cover
+      - playthrough
+      - chapter-saves
+      - playthrough-week-one
+      - playthrough-week-one-saved
+      - playthrough-week-two
+      - engine-bench
+      - saves-forward
+      - pyright
+      - client
+      - app-image
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS" | jq -r 'to_entries[] | "\(.key) \(.value.result)"'
+          echo "$NEEDS" | jq -e 'all(.[]; .result == "success")' > /dev/null
+
+  # The pushed digest under its deployable names: a manifest copy inside each repository, so no layer moves.
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [ci-ok, app-image]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      # Flux's ImagePolicy sorts tag strings, so the commit timestamp must not go backwards.
+      - name: Name the tag
+        id: tag
+        run: |
+          TS=$(git show -s --format=%ct HEAD)
+          PREV_TS=$(git show -s --format=%ct HEAD~1 2>/dev/null || echo 0)
+          if [ "$TS" -lt "$PREV_TS" ]; then
+            echo "REFUSING: commit timestamp $TS is older than its parent's $PREV_TS." >&2
+            echo "Image tags would sort backwards and Flux would not deploy this commit." >&2
+            exit 1
+          fi
+          echo "tag=main-${GITHUB_SHA::8}-$TS" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Log in to GHCR
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag dev and ${{ steps.tag.outputs.tag }}
+        env:
+          DIGEST: ${{ needs.app-image.outputs.digest }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          test -n "$DIGEST"
+          for repo in "$DOCKERHUB_REPO" "$GHCR_REPO"; do
+            docker buildx imagetools create -t "$repo:dev" -t "$repo:$TAG" "$repo@$DIGEST"
+          done
+          echo "released $TAG"
+
+  # After a push to main releases: is the scene art served live the art this sha's generator builds? Art is seeded by
+  # hand (app/tools/seed_assets.sh), so a merge that changes tools/scene changes nothing live until someone reseeds. The
+  # job only reports: exit 42 (stale or unstamped) and 43 (manifest unreadable) show as a warning, never a red run, and
+  # nothing here reseeds. tools/scene/drift.py has the comparison.
+  scene-art-drift:
+    if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: |
+          rc=0
+          python tools/scene/drift.py || rc=$?
+          case "$rc" in
+            0) ;;
+            42|43) echo "::warning title=Scene art drift::tools/scene/drift.py exited $rc: the live scene art is not what this commit builds" ;;
+            *) exit "$rc" ;;
+          esac

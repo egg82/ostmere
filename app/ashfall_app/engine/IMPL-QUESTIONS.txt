@@ -1,0 +1,21 @@
+IMPL-QUESTIONS: places the cards interface was ambiguous, and the reading the implementation took.
+
+1. Blocker quantity: an input's whole-completion amount is taken under the modifiers aimed at its own RateRef (not the
+   speed ones, which cancel), rounded up as costs are, then prorated to the work left in the current completion.
+2. SaveMix's locked/completed check applies to mixes that are new or changed relative to save.mixes
+   (checks.check_mixes has no "the mix being saved" argument).
+3. The dry rule passes over only a tapped card whose landing is still to be handled at the instant; a mix card's
+   completion counts by its work however the rule goes, so a capped and an uncapped card stay alike.
+4. New helper modules, not interface changes: counts (completions/cap/greyed, below rates), cardsides and sides (which
+   stores a runner makes/costs), plan (dead verbs, controlling queue entry, candidates), requires (first unmet
+   requires).
+5. [ANSWERED: validation refuses a chip effect aimed at a StoreCap; none in the content (DESIGN.txt, "Store caps").] A chip's effects aimed at StoreCap: a chip stops being shown when its latch releases, which would lower the cap
+   under a full store, against "may only raise, nothing is clamped". Allowed, and what then holds? Tests cover
+   raises from the starting stack, Outcome.modifiers (outcome, finished, trigger) only.
+6. [ANSWERED: every completion lands the outcome's modifiers, so the stack grows each time.] An `outcome` that carries a StoreCap modifier on a card with cap n lands it at each of the n completions: does the
+   stack grow each time ("appended ... for good"), or does one source count once? Tests use `finished`, or a cap of 1,
+   so the question never arises.
+7. [ANSWERED: refused (InvalidVerbError), like every rules placement.] A lowering StoreCap entry in the starting stack (new_save's modifiers): rejected like rules, or accepted unchecked?
+   Tests give new_save raising entries only.
+8. [ANSWERED: reach_time's answer, the start of the segment (the sample's time once carried forward).] LedgerLine.fills_at for a store sitting at its cap with rate 0 ("or at the cap"): which time? Tests read
+   "full" off segment.start_value == cap and assert fills_at only on a rising store.

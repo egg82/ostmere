@@ -1,0 +1,32 @@
+the opening ends at 10.9m; dead gap dead_gap_habit_s = 180s
+opening  +-0.18h (20:00)   10.9m   55 notable, first 0s
+    at +s: 0=card 0=chip 0=chip 25=card 36=card 50=card 50=card 50=feature 65=card 99=skill 137=card 137=card 137=card 179=feature 188 188 243=feature 280=level 299=level 312=action 312=card 312=chip 312=entry 312=feature 312=note 312=order_card 321 387=level 403=card 403=card 403=card 403=feature 403=skill 412 420=action 420=card 420=card 420=order_card 420=skill 431 456=card 487 491 502=card 508 544=level 557=level 576=card 576=feature 612=feature 631=level 657=beat:H1 657=card 657=card 657=feature
+V1       +0.00h (20:10)    0.3m    7 notable, first 0s
+    at +s: 0=beat:H1 0=card 0=card 0=feature 13 17 20
+    leave +0.01h (20:11): payoff named: card screen_fire in 145m, full damp_wood in 4m, full stones in 3m, full wattle in 145m, level scavenging in 4m, level woodcutting in 2m, level foraging in 56m; story question open: C-promise-16
+V2       +3.10h (23:16)    2.9m   29 notable, first 0s
+    at +s: 0=beat:H2 0=card 0=card 0=feature 0=feature 0=level 0=level 0=level 0=level 0=level 44=beat:H3 44=card 61=action 61=beat:H4 61=card 76=action 91=action 102=beat:H5 102=card 102=card 102=card 112 132=feature 168=card 168=feature 168=feature 168=order_card 168=skill 176
+    leave +3.14h (23:19): payoff named: card lay_to_dry in 1m, card smoke_catch in 78m, card screen_fire in 104m, full damp_wood in 2m, full stones in 6m, full wattle in 104m, level scavenging in 49m, level woodcutting in 46m, level foraging in 5m; story question open: C-promise-16
+V3       +4.93h (01:07)    1.8m   10 notable, first 0s
+    at +s: 0=action 0=beat:H6 0=card 0=level 0=level 0=level 21=control 25 28 52=feature
+    leave +4.96h (01:08): payoff named: card smoke_catch in 49m, card screen_fire in 141m, full damp_wood in 0m, full stones in 2m, full wattle in 141m, level scavenging in 77m, level woodcutting in 63m, level foraging in 176m; story question open: C-promise-16
+V4       +7.44h (03:37)    1.9m   16 notable, first 0s
+    at +s: 0=beat:H7 0=card 0=feature 0=level 0=level 15 20=level 84=action 84=beat:B3 84=card 84=card 84=card 84=card 84=card 84=feature 84=note
+    leave +7.47h (03:39): payoff named: card smoke_catch in 59m, card screen_fire in 136m, full damp_wood in 5m, full roots in 0m, full stones in 141m, full wattle in 136m, level scavenging in 134m, level woodcutting in 102m; story question open: C-promise-16
+0 dead stretches; 0 bored leaves of 4
+unlocks, earned (typical lands it sooner than by_hand) or fixed-time
+day 1: {'fixed': 4, 'earned': 6}
+  +0.05h (20:13) fixed   card:look_out card:sit_up feature:night
+  +1.00h (21:10) fixed   feature:morning retired:sit_up
+  +2.43h (22:36) earned  stage:screen_fire#1
+  +3.11h (23:17) fixed   card:set_snare action:snare_1 card:look_over_camp action:snare_2 action:snare_3 card:build_larder card:build_lean_to card:build_smoke_rack feature:larder card:smoke_catch feature:roots_to_stock feature:smoke_rack skill:cooking stage:set_snare#1 stage:set_snare#2 stage:set_snare#3
+  +4.47h (00:39) earned  action:visitor card:smoke_roots
+  +4.88h (01:03) earned  stage:screen_fire#2
+  +4.95h (01:07) fixed   feature:lean_to
+  +5.97h (02:09) earned  card:take_stock feature:prints
+  +7.32h (03:30) earned  stage:screen_fire#3
+  +7.47h (03:38) earned  action:n1_eating card:give_stool card:n1_cut card:n1_forage card:n1_gather card:n1_scavenge feature:n1 note:n_day_b3
+FLAG only fixed-time unlocks and stages land: 2 moments, +0.05h (20:13) to +1.00h (21:10)
+views stating no aim: 0 of 210
+mechanics drawn in the first 5 minutes: ['mix']
+leaves naming only a speed level []

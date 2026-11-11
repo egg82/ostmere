@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ashfall: standing orders</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=Alegreya+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#d9894a}a:hover{color:#f0a868}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #121012; color: #d8d0c4; font-family: 'Alegreya Sans', sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="padding: 16px 16px 0; display: flex; flex-direction: column; gap: 18px; flex-grow: 1; min-height: 0">
+
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <h1 style="margin: 0; font-family: 'IM Fell English SC', serif; font-weight: 400; font-size: 26px; color: #e8dfd2">Standing orders</h1>
+    </div>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9a9187">You</h2>
+      <sc-for list="{{mine}}" as="o" hint-placeholder-count="3">
+        <div style="background: #19161a; border: 1px solid #2c2629; border-radius: 8px; padding: 10px 12px; display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 2px 10px; font-size: 15px">
+          <span style="color: #9a9187; font-variant-numeric: tabular-nums">{{o.n}}</span>
+          <span><span style="color: #9a9187">When </span><span style="color: #e2d9cc">{{o.when}}</span></span>
+          <span></span>
+          <span><span style="color: #9a9187">→ </span><span style="color: #f0b27a">{{o.then}}</span></span>
+          <span></span>
+          <span style="font-size: 12px; color: #9a9187">{{o.meta}}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9a9187">The town</h2>
+      <sc-for list="{{town}}" as="o" hint-placeholder-count="3">
+        <div style="background: #19161a; border: 1px solid #2c2629; border-radius: 8px; padding: 10px 12px; display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 2px 10px; font-size: 15px">
+          <span style="color: #9a9187; font-variant-numeric: tabular-nums">{{o.n}}</span>
+          <span><span style="color: #9a9187">When </span><span style="color: #e2d9cc">{{o.when}}</span></span>
+          <span></span>
+          <span><span style="color: #9a9187">→ </span><span style="color: #f0b27a">{{o.then}}</span></span>
+          <span></span>
+          <span style="font-size: 12px; color: #9a9187">{{o.meta}}</span>
+        </div>
+      </sc-for>
+    </section>
+
+    <button style="min-height: 48px; border-radius: 6px; border: 1px dashed #3a3236; background: transparent; color: #d8d0c4; font: 500 15px 'Alegreya Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>New order
+    </button>
+  </div>
+
+  <nav aria-label="Main" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid #2c2629; background: #0e0c0e; flex-shrink: 0">
+    <a href="Main.dc.html" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 20V10l4-3 4 3v10"/><path d="M13 20v-6h6v6"/></svg>Town</a>
+    <a href="Mix.dc.html" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h10"/><path d="M4 12h14"/><path d="M4 17h7"/><circle cx="17" cy="7" r="2"/><circle cx="14" cy="17" r="2"/></svg>Mix</a>
+    <a href="#orders" aria-current="page" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #e0954f">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4 6l1 1 2-2"/><path d="M4 12l1 1 2-2"/><path d="M4 18l1 1 2-2"/></svg>Orders</a>
+    <a href="Map.dc.html" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>Map</a>
+    <a href="Journal.dc.html" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 8h6"/></svg>Journal</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mine = [
+      { n: '1', when: 'knowledge is full', then: 'run Stockpile', meta: 'ran 2 h ago' },
+      { n: '2', when: 'candles drop below 10', then: 'Scavenging +10%', meta: 'never ran' },
+      { n: '3', when: 'a mix stops', then: 'run Recover', meta: 'default' }
+    ];
+    const town = [
+      { n: '1', when: 'a threat comes', then: 'guards to the wall, others inside', meta: 'default · ran 6×' },
+      { n: '2', when: 'food store passes 60', then: 'cooks to the smokehouse', meta: 'needs Smokehouse' },
+      { n: '3', when: 'a building finishes', then: 'start the next in the queue', meta: 'default' }
+    ];
+    return { mine, town };
+  }
+}
+</script>
+</body>
+</html>

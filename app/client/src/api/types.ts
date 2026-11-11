@@ -1,0 +1,92 @@
+// Plain names for the generated schemas (../../generated/schema.d.ts, from openapi.json), so code says `View`, not
+// `components["schemas"]["View"]`. Add a line here when the page starts using another schema.
+import type { components } from "../../generated/schema";
+
+type S = components["schemas"];
+
+export type Account = S["Account"];
+export type AccountPresentation = S["AccountPresentation"];
+export type AccountSettings = S["AccountSettings"];
+export type AimInfo = S["AimInfo"];
+export type ApiError = S["ApiError"];
+export type CampInfo = S["CampInfo"];
+export type CampLevel = S["CampLevel"];
+export type Card = S["Card"];
+export type CardInfo = S["CardInfo"];
+export type CardShare = S["CardShare"];
+export type ChipInfo = S["ChipInfo"];
+export type CompletedCard = S["CompletedCard"];
+export type DeletedSave = S["DeletedSave"];
+export type Device = S["Device"];
+export type Devices = S["Devices"];
+export type Condition = S["Condition"];
+export type Subject = S["Subject"];
+export type Content = S["Content"];
+export type Decision = S["Decision"];
+export type ErrorCode = S["ErrorCode"];
+export type FeatureCard = S["FeatureCard"];
+export type FeedbackRequest = S["FeedbackRequest"];
+export type Fight = S["Fight"];
+export type Goal = S["Goal"];
+export type GoalRow = S["GoalRow"];
+export type FightInfo = S["FightInfo"];
+export type Games = S["Games"];
+export type EntryInfo = S["EntryInfo"];
+export type JoinRequest = S["JoinRequest"];
+export type Joined = S["Joined"];
+/** How a join treats this browser's own games: plain (ask first when it has some), move them, or keep them where they are. */
+export type JoinWay = "plain" | "move" | "keep";
+export type KeptGames = S["Kept"];
+export type JournalInfo = S["JournalInfo"];
+export type LaneBar = S["LaneBar"];
+export type LaneInfo = S["LaneInfo"];
+export type LedgerLine = S["LedgerLine"];
+export type LogLine = S["LogLine"];
+export type Me = S["Me"];
+export type MergeSummary = S["MergeSummary"];
+export type NoteInfo = S["NoteInfo"];
+export type Mix = S["Mix"];
+export type Need = S["Need"];
+export type NewSave = S["NewSave"];
+export type Opened = S["Opened"];
+export type Order = S["Order"];
+export type OrderCard = S["OrderCard"];
+export type OrderState = S["OrderState"];
+export type OrderVerb = S["OrderVerb"];
+export type Offer = S["Offer"];
+export type OfferInfo = S["OfferInfo"];
+export type OfferedSwitch = S["OfferedSwitch"];
+export type LessonEnd = S["LessonEnd"];
+export type PastLine = S["PastLine"];
+export type Visit = S["Visit"];
+export type QueueEntry = S["QueueEntry"];
+export type RecoveryWords = S["RecoveryWords"];
+export type RepeatedSwitch = S["RepeatedSwitch"];
+export type RepeatedTap = S["RepeatedTap"];
+export type Repeats = S["Repeats"];
+export type RuleDry = S["RuleDry"];
+export type RuleRun = S["RuleRun"];
+export type SaveInfo = S["SaveInfo"];
+export type SavePresentation = S["SavePresentation"];
+export type Scales = S["Scales"];
+export type Segment = S["Segment"];
+export type SkillBar = S["SkillBar"];
+export type SkillPrestige = S["SkillPrestige"];
+export type MenuNode = S["MenuNode"];
+export type NodeInfo = S["NodeInfo"];
+export type StandingInfo = S["StandingInfo"];
+export type Strength = S["Strength"];
+export type SkillInfo = S["SkillInfo"];
+export type SpentShare = S["SpentShare"];
+export type SideInfo = S["SideInfo"];
+export type ThreatInfo = S["ThreatInfo"];
+export type Step = Omit<S["Step"], "view"> & { view: View };   // the page-side View: it may hold a forecast
+export type TransferCode = S["TransferCode"];
+export type StoreInfo = S["StoreInfo"];
+export type SubMix = S["SubMix"];
+export type Unlock = S["Unlock"];
+export type Forecast = S["Forecast"];
+export type ForecastAnswer = S["ForecastAnswer"];
+/** The wire View, and on the page's side the forecast it holds for it (game/session.ts; CONTRACT.txt, "Forecast"):
+ * the server sends that by its own call, never inside a View. */
+export type View = S["View"] & { forecast?: Forecast | null };

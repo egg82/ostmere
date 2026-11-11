@@ -1,0 +1,20 @@
+{
+  "name": "ashfall-client",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "build:fixtures": "node build.mjs --fixtures build-dev",
+    "test": "node test.mjs",
+    "typecheck": "tsc --noEmit",
+    "types": "openapi-typescript generated/openapi.json -o generated/schema.d.ts"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

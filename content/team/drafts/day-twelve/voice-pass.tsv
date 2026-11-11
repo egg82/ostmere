@@ -1,0 +1,15 @@
+key	reader	verdict	reason
+up_dig_cellar	first	edited	plain: the reader was right that the lead's "picked slower" is false, but "fungus picking speed" is too: the finish makes each pick draw three quarters of a bloom for the same fungus, a cost change, not a speed one. The card is served three changes (+5000 roots, +20000 larder, -2500 bloom), and the slots stop at {pct_b} (CONTRACT "Text and numbers", test_change_figures), so the third is worded with no number or direction word
+pays_find_melee_7	first	edited	plain: Melee 7 is served one change, +1000, the hunting speed its neighbours' pays_hunt_faster names, and the find beside it gives a pelt; the lead's "an old wolf" was flavour, the reader's dropped the find; now the find's own gain first, as pays_melee_find's "a pelt" and the other finds' pays keys
+o_cradle	first	checked, kept	the reader's version opens on the name, as o_spoil before it does; the lead's ends on "{n5} says", a shape no other text in the row takes, and differs from o_lye's thing-first shape
+o_lye	first	checked, kept	"boils" is not the brief's leaching; the text already opens on the thing, unlike o_cradle
+l_b12_2	first	checked, kept	the groups of five and the last of four are B12's canon fact, which the brief allows in words; no total, no "one short", nothing compared
+l_b12_3	first	checked, kept	B12 is the wry beat, not a dark moment, and the brief makes this the day's one stool line; the reader's rubble is invented
+l_s4_1	first	checked, kept	"all at once" is S4's own fact about the wind; it is told as weather and promises nothing
+n_day_b12	first	checked, kept	follows the rejected l_b12_2 change; the note already gives no count ("the last group unfinished"), and the reader's "one group" puts in a number word the notes' brief forbids
+up_dig_cellar	second	changed	plain: "bloom cost per pick" names the changed thing (each pick's draw on the bloom) with no number and no direction word; the first reader's "part of a bloom" was a word-amount
+o_sag	second	changed	register: "wants it dealt with" read as form language; {n6} acting on the roof, two sentences, a shape the row lacks
+n_bear_1	second	edited	register: the journal's past tense; the lead kept "nobody had seen it", the brief's fact the reader dropped
+o_spoil	second	checked, kept	the reader's "spoil piles up" is false when o_spoil shares B11's moment, before the dig's first stage; "asks where the spoil should go" is indirect, not the choice put outright
+l_b12_2	second	checked, kept	the groups of five, the last of four, are B12's canon fact and the brief allows them in words; no total, nothing compared; the reader's "break off" loses the fact
+l_b12_3	second	checked, kept	the stool short on the same leg as the fire's is B12's canon fact; the stool rule bars naming a pattern, not the fact; the reader's "a short leg" loses the joke

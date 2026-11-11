@@ -1,0 +1,11 @@
+[
+  {"kind": "caption", "text": ["Unknown (2) - Coldwater mill, under the floor"]},
+  {"kind": "crossed", "text": ["not a bear -", "doesn't walk"]},
+  {"kind": "study", "id": "hand", "text": ["hand. 4 fingers,", "no thumb? nails long"]},
+  {"kind": "study", "id": "eyes", "text": ["6 eyes. 2 shut", "at a time?"]},
+  {"kind": "study", "id": "tracks", "text": ["drag mark + hand", "prints ~3 ft apart"]},
+  {"kind": "label", "anchor": [206, 214], "text": ["elbows above head", "(like the stilt one)"]},
+  {"kind": "label", "anchor": [380, 404], "text": ["body drags. skin", "loose, grey"]},
+  {"kind": "label", "anchor": [140, 392], "text": ["mouth wide, no lips.", "teeth small, many"]},
+  {"kind": "label", "anchor": [470, 446], "text": ["turned toward my voice,", "not the lamp"]}
+]

@@ -1,0 +1,240 @@
+// The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
+// The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
+// costs; each once its cure is on screen, game/shown.ts), what the player carries (a feature with a label, dotted
+// when it arrives) and the Log button, dotted when a line left the strip before the player touched anything after it
+// showed. The story strip, off the art: the newest lines that fit, whole and oldest first, the older dimmer, in room
+// kept for the tallest line the content can write (Content.line_infos, laid out unseen in the strip's one cell; ui/stripfit.ts
+// counts how many fit, at least the newest). The Feedback button (feedback.ts) opens the
+// tester's sheet from the panel's foot. The Log sheet (ui/logsheet.ts) keeps each line's game second and kind, so it can
+// split by visit and set the kinds apart. Lines arrive in (at, seq) order with each Step; their text is the content's.
+// The aim (ui/aim.ts) is the story's too. ui/headseat.ts seats the head, the aim and the strip.
+import type { LogLine, View } from "../api/types";
+import { awayLines, type Placement } from "../game/awaylines";
+import { entries, poolLine, type Window } from "../game/fights";
+import { toppedSince } from "../game/prestige";
+import { readingMs } from "../game/reading";
+import type { Catalog } from "../game/catalog";
+import { shownChips } from "../game/shown";
+import { UI } from "../game/text";
+import { AimLine } from "./aim";
+import { CampBar } from "./camp";
+import { el, keyed, tapFeedback } from "./dom";
+import { FeedbackSheet } from "./feedback";
+import { Journal } from "./journal";
+import { LogSheet } from "./logsheet";
+import { chipHints } from "../game/hints";
+import { markNew, unmark } from "./fresh";
+import { fitting } from "./stripfit";
+import type { Part, PartContext } from "./part";
+import type { LineKind, Past } from "../game/loggroups";
+
+const TOUCHES = ["pointerdown", "keydown"] as const;
+const KEEP = 200;
+
+export class Story implements Part {
+  /** The story strip: the newest lines that fit its room, whole (ui/headseat.ts seats it under the art). */
+  readonly root = el("section", "strip");
+  /** The Camp bar, chips and Log: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
+  readonly head = el("div", "scene-head");
+  private readonly chips = el("div", "chips");
+  private readonly aimLine: AimLine;
+  private readonly lines = el("ol", "lines");
+  private readonly roomCell = el("div", "strip-room");
+  /** The Feedback button: Screen seats it at the panel's foot. */
+  readonly feedbackButton: HTMLButtonElement;
+  private readonly camp: CampBar;
+  private readonly log: LogSheet;
+  private readonly journal: Journal;
+  private readonly logOpen: HTMLButtonElement;
+  /** When the player last touched the page (performance.now()). */
+  private touchedAt = -Infinity;
+  private chipRows = new Map<string, { node: HTMLElement }>();
+  /** Chips whose mark the player touched this page session. */
+  private readonly touchedChips = new Set<string>();
+  /** The game second of the latest view or line: what a line the page words itself is stamped with. */
+  private nowAt = 0;
+  /** When each line in the strip was first seen shown (performance.now()); a line drawn still, not new, has no entry. */
+  private readonly shownAt = new WeakMap<Element, number>();
+  /** The lines written so far with their game seconds, oldest first (KEEP at most): what a redrawn screen restores. */
+  readonly keys: Past[] = [];
+
+  constructor(private readonly ctx: PartContext) {
+    this.camp = new CampBar(ctx);
+    this.aimLine = new AimLine(ctx);
+    this.log = new LogSheet(ctx.catalog, ctx.keeps);
+    this.journal = new Journal(ctx);
+    this.lines.setAttribute("aria-live", "polite");
+    const open = el("button", "log-open", ctx.catalog.text.get(UI.log));
+    open.type = "button";
+    open.addEventListener("click", () => { tapFeedback(); this.log.show(); });
+    this.logOpen = open;
+    for (const t of TOUCHES) document.addEventListener(t, () => { this.touchedAt = performance.now(); }, { capture: true });
+    const feedback = new FeedbackSheet(ctx);
+    this.feedbackButton = feedback.button;
+    this.head.append(this.camp.root, this.chips, open);
+    this.root.append(this.room(), this.lines, this.log.root, this.journal.root, feedback.root);
+  }
+
+  /** Every line the content can write, unseen in the strip's one cell with the shown line: the cell is as tall as the
+   * tallest of them at the strip's width, so no line is cut and none arriving changes the strip's height. */
+  private room(): HTMLElement {
+    const room = this.roomCell;
+    room.setAttribute("aria-hidden", "true");
+    const texts = new Set(this.ctx.catalog.content.line_infos.map((l) => this.ctx.catalog.text.get(l.key)).filter((t) => t));
+    room.append(...[...texts].map((t) => el("span", "", t)));
+    return room;
+  }
+
+  update(view: View, prev: View | null): void {
+    const { catalog } = this.ctx;
+    this.nowAt = Math.max(this.nowAt, view.at);
+    this.log.seen(this.nowAt);
+    const carried = catalog.content.feature_infos.filter((f) => f.label_key && catalog.unlocked(view, "feature", f.feature));
+    this.journal.update(view);
+    const book = (f: string): string => (this.journal.shown && f === catalog.content.journal?.feature ? "journal" : "keep");
+    const items = [...shownChips(catalog, view).map((c) => `chip:${c}`), ...carried.map((f) => `${book(f.feature)}:${f.feature}`)];
+    this.chipRows = keyed(this.chips, items, (k) => k, this.chipRows, (k) => ({ node: this.item(k) }));
+    this.hintChips(view);
+    this.camp.update(view);
+    this.aimLine.update(view);
+    this.fightLines(view, prev);
+    this.topLines(view, prev);
+  }
+
+  /** A skill that reached its phase's top since the last view: one line, saying how long ago when that was a return
+   * (CONTRACT.txt, "PRESTIGE PHASES"), never what the wait missed. It takes its turn like the step's other lines. */
+  private topLines(view: View, prev: View | null): void {
+    const { text, format } = this.ctx.catalog;
+    for (const { skill, at } of toppedSince(prev, view)) {
+      const name = this.ctx.catalog.skillLabel(skill);
+      this.say(view.at - at >= 60 ? text.fill(UI.prestigeReached, { skill: name, d: format.duration(view.at - at) })
+        : text.fill(UI.prestigeReachedNow, { skill: name }), `top:${skill}:${at}`, "level");
+    }
+  }
+
+  /** What fights happened since the last view, as lines in the strip and the Log: each fight of a window its own entry
+   * (the shuffle-bag labels, each worded from its runner's pool when it has one), a long window one summary line
+   * (game/fights.ts). They take their turns in the arrival queue with the step's other lines. */
+  private fightLines(view: View, prev: View | null): void {
+    const { catalog } = this.ctx;
+    const { text } = catalog;
+    const save = this.ctx.saveId();
+    const standing = (runner: string) => catalog.content.standing_infos.find((a) => a.action === runner);
+    const name = (runner: string): string => catalog.cards.has(runner) ? catalog.cardLabel(runner) : catalog.label(standing(runner)?.label_key);
+    const fight = (runner: string) => catalog.cards.get(runner)?.fight ?? standing(runner)?.fight ?? null;
+    const one = (runner: string, kind: "won" | "lost", k: number): string => {
+      const pool = (kind === "won" ? fight(runner)?.won_line_keys : fight(runner)?.lost_line_keys) ?? [];
+      if (pool.length > 0) return text.get(poolLine(save, runner, kind, pool, k));
+      return text.fill(kind === "won" ? UI.fightWon : UI.fightLost, { runner: name(runner) });
+    };
+    const words = {
+      won: (runner: string, k: number) => one(runner, "won", k),
+      lost: (runner: string, k: number) => one(runner, "lost", k),
+      since: (w: Window) => text.fill(UI.fightSince,
+        { fought: String(w.fought), won: String(w.fought - w.lost), lost: String(w.lost), runner: name(w.runner) }),
+    };
+    entries(save, prev, view, words).forEach((said, i) => this.say(said, `fight:${view.at}:${i}`, "fight"));
+  }
+
+  /** A line the page words itself, in the strip and the Log, taking its turn in the arrival queue. */
+  private say(said: string, id: string, kind: LineKind): void {
+    this.log.add({ text: said, at: this.nowAt, kind });
+    const item = el("li", "", said);
+    this.lines.append(item);
+    this.ctx.arrivals.line([item], id, readingMs(said));
+  }
+
+  /** The aim's line: Screen seats it above the art. */
+  get aim(): HTMLElement {
+    return this.aimLine.root;
+  }
+
+  tick(t: number): void {
+    this.camp.tick(t);
+    this.trim();
+  }
+
+  /** Each line's node in the strip, in order (null: a key with no text, or a line not for the strip). `queued`: the
+   * arrival queue paces them. `away`: a return's lines, placed by game/awaylines.ts. */
+  append(lines: LogLine[], queued = false, away: { view: View; prev: View | null } | null = null): Array<HTMLElement | null> {
+    const where = away ? awayLines(this.ctx.catalog, lines, away.view, away.prev) : lines.map((): Placement => "band");
+    return this.place(lines.map((l) => l.key), true, queued, where, lines.map((l) => l.at));
+  }
+
+  appendKeys(keys: string[], animate = true, queued = false): Array<HTMLElement | null> {
+    return this.place(keys, animate, queued, keys.map((): Placement => "band"), keys.map(() => this.nowAt));
+  }
+
+  /** Lines drawn still before the first view, each at the second it landed at (a save opened, a screen redrawn). */
+  restore(past: Past[]): void {
+    this.place(past.map((p) => p.key), false, false, past.map((): Placement => "band"), past.map((p) => p.at));
+  }
+
+  private place(keys: string[], animate: boolean, queued: boolean, where: Placement[], ats: number[]): Array<HTMLElement | null> {
+    const nodes = keys.map((key, i) => {
+      const text = this.ctx.catalog.text.get(key);
+      if (!text || where[i] === "none") return null;
+      const at = ats[i]!;
+      this.log.add({ text, at, kind: this.ctx.catalog.lineKind(key) });
+      if (where[i] === "log") return null;
+      this.keys.push({ key, at });
+      const item = el("li", animate ? "" : "still", text);
+      this.lines.append(item);
+      return item;
+    });
+    if (!queued) this.trim();   // queued lines are not held yet: the trim waits for tick()
+    if (this.keys.length > KEEP) this.keys.splice(0, this.keys.length - KEEP);
+    return nodes;
+  }
+
+  /** The strip shows the newest lines that have shown, as many as fit its room whole: a line that no longer fits goes
+   * (the arrival queue held each back for the reading time of the one before); lines still waiting their turn stay. A
+   * line that goes with no touch from the player since it showed may not have been read: the Log gets its dot. */
+  private trim(): void {
+    const now = performance.now();
+    const shown = [...this.lines.children].filter((n) => !n.classList.contains("held"));
+    for (const n of shown) if (!this.shownAt.has(n) && !n.classList.contains("still")) this.shownAt.set(n, now);
+    const spans = shown.map((n) => n.getBoundingClientRect());
+    const keep = fitting(spans, this.roomCell.getBoundingClientRect().height);
+    for (const gone of shown.slice(0, shown.length - keep)) {
+      const since = this.shownAt.get(gone);
+      if (since !== undefined && this.touchedAt < since && !this.log.root.open) markNew(this.logOpen, () => {});
+      gone.remove();
+    }
+  }
+
+  /** A quiet mark on the chip a rule could answer (game/hints.ts), until it is touched: a switch's, once for the account; a
+   * chip card's, once a page session. */
+  private hintChips(view: View): void {
+    const { catalog, keeps } = this.ctx;
+    const hints = chipHints(catalog, view, keeps, this.ctx.lesson(), this.ctx.repeats().switches, this.ctx.endBehind());
+    for (const [key, row] of this.chipRows) {
+      if (!key.startsWith("chip:")) continue;   // the book's own dot is the journal's
+      const hint = hints.find((h) => `chip:${h.chip}` === key);
+      const chip = key.slice("chip:".length);
+      if (hint && !this.touchedChips.has(chip)) markNew(row.node, () => { this.touchedChips.add(chip); if (hint.switch) keeps.keepSwitchOffered(hint.switch); });
+      else unmark(row.node);
+    }
+  }
+
+  private item(key: string): HTMLElement {
+    const [kind, id = ""] = key.split(":");
+    const { catalog } = this.ctx;
+    if (kind === "chip") {
+      const info = catalog.chips.get(id);
+      const node = el("span", "chip", catalog.label(info?.label_key));
+      if (info?.cost_key) node.append(el("span", "chip-cost", catalog.text.fill(info.cost_key, catalog.format.figures(info.change_bp))));
+      node.dataset["tone"] = info?.tone ?? "";
+      this.ctx.arrivals.arrive(node, "chip", id);
+      return node;
+    }
+    if (kind === "journal") {   // the book once an entry is written: a button, in the place of the plain word
+      this.ctx.arrivals.arrive(this.journal.button, "feature", id);
+      return this.journal.button;
+    }
+    const node = el("span", "chip keep", catalog.label(catalog.content.feature_infos.find((f) => f.feature === id)?.label_key));
+    node.dataset["keep"] = id;
+    this.ctx.arrivals.arrive(node, "feature", id);
+    return node;
+  }
+}

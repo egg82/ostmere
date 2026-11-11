@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0e10">
+<title>Privacy · The Breaking of Ostmere</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<style>
+  /* Tokens and type are static/index.html's and app/client/src/game.css's: the same ground, ink, links and faces. */
+  :root {
+    --ink: #d9cfc0;
+    --ink-bright: #e2d9cc;
+    --ink-dim: #8f877c;
+    --night: #0d0e10;
+    --line: #2a2932;
+    color-scheme: dark;
+  }
+  html { font-size: clamp(16px, calc(0.5vw + 10px), 24px); }
+  body { margin: 0; background: var(--night); color: var(--ink); font: 400 1.15rem/1.6 "Alegreya Sans", system-ui, sans-serif; }
+  main { max-width: 38rem; margin: 0 auto; padding: max(6vh, 32px) 16px 56px; box-sizing: border-box; }
+  h1 { margin: 0; font: 400 clamp(2.2rem, 8vw, 3.6rem)/1.1 "IM Fell English SC", Georgia, serif; letter-spacing: .08em; }
+  h1 a { color: inherit; text-decoration: none; }
+  .lede { margin: 1rem 0 0; color: var(--ink-dim); }
+  h2 { margin: 2.4rem 0 0; padding-top: 1.2rem; border-top: 2px solid var(--line); font: 400 1.5rem/1.2 "IM Fell English SC", Georgia, serif; letter-spacing: .06em; }
+  p, ul { margin: .8rem 0 0; }
+  ul { padding-left: 1.3rem; }
+  li { margin-top: .4rem; }
+  a { color: var(--ink-bright); text-underline-offset: .2em; }
+  a:hover, a:focus-visible { color: #fff; }
+  em { font-style: italic; }
+  code { font: .9em ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink-bright); }
+</style>
+</head>
+<body>
+<main>
+  <h1><a href="/">The Breaking of Ostmere</a></h1>
+  <p class="lede">What the game keeps about you, why, and for how long.</p>
+
+  <h2>Your game</h2>
+  <p>Playing creates an anonymous account for you. There is no name, email address or password. Your browser gets one cookie,
+  <code>__Host-ashfall_session</code>, holding a random code that tells the server which account is yours. It is the only
+  cookie the game sets, it lasts up to 400 days, and it is renewed (at most once a day) whenever you play. The server keeps
+  only a scrambled copy of that code, so a copy of its database could not be used to sign in as you.</p>
+  <p>Your saves are kept on the server so your game is there when you come back, on any device you move it to. A save holds
+  the state of your game, when you began and last played, and the lines your game has written. Every move you make is
+  recorded with its game time and the clock time you made it. Moves are kept for 30 days, and so are the daily copies of
+  the save; the save itself and its lines stay as long as the save does.</p>
+  <p>A game you have not made a single move in, on an account unused for 30 days, is deleted automatically. A game with
+  moves in it is never deleted automatically. If your browser does not come back for 400 days its sign-in lapses, so keep
+  your recovery words if the game matters to you.</p>
+  <p>The account also remembers a few things about the screen, such as which panels you have opened. Your browser keeps a
+  couple of notes in its session storage so a page can reload cleanly after an update; they go when you close the tab.</p>
+
+  <h2>Moving to another device</h2>
+  <p>A transfer code is eight characters, works once, and expires after ten minutes. Recovery words are four words, shown
+  once. Both are stored only as scrambled values, so nobody, including whoever runs the game, can read them back. That also
+  means lost recovery words cannot be looked up for you.</p>
+
+  <h2>Limits on abuse</h2>
+  <p>New accounts, new games, transfer codes and similar are limited so one visitor cannot flood the game. To count them the
+  server keeps a keyed scramble of your IP address (for IPv6, of your whole network), never the address itself. Each entry is
+  dropped once its hour, or less, has passed; old entries are cleared out whenever a new one is counted.</p>
+
+  <h2>Server logs</h2>
+  <p>The server writes a line for each request: the time, the page asked for, whether it worked, and how long it took. For a
+  move it also notes the account and save numbers, the kind of move, the card it named, and how many seconds after you began
+  and after your last move it came. The logs hold no IP address, no cookie and nothing you typed. They are ordinary server
+  logs, kept for 60 days and then deleted.</p>
+
+  <h2>Statistics and error reports</h2>
+  <p>The page counts visits with Umami, run by the game's
+  owner on a server of their own: page views and a few events, such as beginning a game, starting, switching, deleting or
+  restoring a game (with the save's number), reaching a milestone, and reaching the end. Ids and counts only, never what
+  you read or typed. The page asks Umami to respect your browser's Do Not Track setting. If you block it, nothing about
+  playing changes.</p>
+  <p>The page also reports to the game's own server when something breaks (the error's message, where in the code it was,
+  which build you run) and when you leave: how long you played, the game clock, the last card you tapped, your number of
+  moves, and whether you reached the end. These go into the server logs above, not to Umami.</p>
+
+  <h2>Feedback you write</h2>
+  <p>When you send feedback, the game keeps your words (up to 2000 characters) with the build you run and, if the save is
+  yours, your account and save numbers, the game time, and which line your game had written last. The owner reads it.
+  It is kept for 180 days and then deleted. The text is never written to the logs.</p>
+
+  <h2>Who else carries the game</h2>
+  <p>The game's traffic passes through Cloudflare, so Cloudflare sees your IP address and what you ask for, as it does for
+  any site it serves. There are no ads, nothing is sold or shared, and the game loads no fonts or scripts from anyone else;
+  its only outside call is to the statistics tool above.</p>
+
+  <h2>Having your data removed</h2>
+  <p>In the game you can delete a game (the last one cannot be deleted). It is held for 30 days in case you change your mind,
+  then removed for good, with its moves and daily copies. The removal happens the next time any player deletes a game or
+  starts one, so it can come a little after the 30 days. For anything else, such as removing your account or a feedback
+  message, use the Feedback button in the game and say what you want removed.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,14 @@
+beats sharp (pace_scale 1): B11 day 9.59, target_day 12
+  away V76->V77: 0 []
+  away V77->V78: 1 ['trigger offer_o_door']
+  away V78->V79: 1 ['trigger t_family_joins']
+  away V79->V80: 0 []
+  away V80->V81: 1 ['trigger t_posts']
+  away V81->V82: 0 []
+  away V82->V83: 1 ['trigger t_count']
+  away V83->V84: 1 ['trigger t_b11']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1      12       7       0       4       0      10       3     36
+  2      32       5       2       2       0       7       2     50
+  3      24       4       0       0       0      21       4     53

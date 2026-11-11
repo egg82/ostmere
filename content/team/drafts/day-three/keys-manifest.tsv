@@ -1,0 +1,136 @@
+# Day three keys manifest: every key in day_three.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it).
+# limit: lines share a set limit, no per-key cap: median <= 45 chars, p90 <= 75 across all l_ keys (brief; no code check exists yet). Labels: none set.
+# alt: H = a proposer also writes key_alt. keys: 131
+key	kind	limit	alt
+store_arrivals	store label	n/a	-
+c_walk_edge	card label	n/a	-
+c_field_track	card label	n/a	-
+store_scrap	store label	n/a	-
+store_clay	store label	n/a	-
+c_dig_clay	card label	n/a	-
+c_larder_floor	card label	n/a	-
+up_larder_floor	upside label	n/a	-
+c_rack_roof	card label	n/a	-
+up_rack_roof	upside label	n/a	-
+c_clay_hearth	card label	n/a	-
+up_clay_hearth	upside label	n/a	-
+lane_hearth	lane label	n/a	-
+c_cure_hearth	card label	n/a	-
+store_hearth_wet	store label	n/a	-
+store_cure_done	store label	n/a	-
+store_hearth_dry	store label	n/a	-
+store_stew	store label	n/a	-
+c_stew	card label	n/a	-
+store_evening_3	store label	n/a	-
+action_evening_3	action label	n/a	-
+store_night_3	store label	n/a	-
+action_night_3	action label	n/a	-
+store_evening_4	store label	n/a	-
+action_evening_4	action label	n/a	-
+store_night_4	store label	n/a	-
+action_night_4	action label	n/a	-
+c_bank_hearth	card label	n/a	-
+c_watch_fire	card label	n/a	-
+c_n1_build_watch	card label	n/a	-
+store_watch_done	store label	n/a	-
+c_n1_watch	card label	n/a	-
+o_stay	offer label	n/a	-
+a_make_room	offer answer label	n/a	-
+a_make_room_cost	offer answer label	n/a	-
+a_let_him	offer answer label	n/a	-
+a_let_him_cost	offer answer label	n/a	-
+c_make_bay	card label	n/a	-
+lane_n2	lane label	n/a	-
+lane_n2_named	lane label	n/a	-
+c_n2_build_bay	card label	n/a	-
+store_bay	store label	n/a	-
+action_n2_eating	action label	n/a	-
+store_n2_hour	store label	n/a	-
+action_n2_hour	action label	n/a	-
+o_bank	offer label	n/a	-
+a_bank_hers	offer answer label	n/a	-
+a_bank_hers_cost	offer answer label	n/a	-
+a_bank_his	offer answer label	n/a	-
+a_bank_his_cost	offer answer label	n/a	-
+camp_pays_9	camp label	n/a	-
+pays_furrow_seam	pays label	n/a	-
+pays_lee_lichen	pays label	n/a	-
+pays_buckle	pays label	n/a	-
+pays_thick_pot	pays label	n/a	-
+c_wood_stack	card label	n/a	-
+up_wood_stack	upside label	n/a	-
+c_pot_shelf	card label	n/a	-
+up_pot_shelf	upside label	n/a	-
+store_stack_ready	store label	n/a	-
+store_shelf_ready	store label	n/a	-
+dayend3_title	end card	n/a	-
+dayend3_1	end card	n/a	-
+dayend3_2	end card	n/a	-
+aim_field	aim label	n/a	-
+aim_one_more	aim label	n/a	-
+aim_three	aim label	n/a	-
+aim_warm	aim label	n/a	-
+l_edge_1	line	set median<=45,p90<=75	H
+l_edge_2	line	set median<=45,p90<=75	H
+l_track_fail	fail	set median<=45,p90<=75	-
+l_track_first	line	set median<=45,p90<=75	-
+l_stream	line	set median<=45,p90<=75	H
+l_field_1	line	set median<=45,p90<=75	H
+l_field_2	line	set median<=45,p90<=75	H
+l_floor_fail	fail	set median<=45,p90<=75	-
+l_larder_1	line	set median<=45,p90<=75	-
+l_larder_2	line	set median<=45,p90<=75	-
+l_larder_3	line	set median<=45,p90<=75	-
+l_larder_done	line	set median<=45,p90<=75	-
+l_roof_fail	fail	set median<=45,p90<=75	-
+l_roof_1	line	set median<=45,p90<=75	-
+l_roof_2	line	set median<=45,p90<=75	-
+l_roof_done	line	set median<=45,p90<=75	-
+l_hearth_fail	fail	set median<=45,p90<=75	-
+l_cure_fail	fail	set median<=45,p90<=75	-
+l_hearth_1	line	set median<=45,p90<=75	-
+l_hearth_2	line	set median<=45,p90<=75	-
+l_hearth_3	line	set median<=45,p90<=75	-
+l_hearth_done	line	set median<=45,p90<=75	-
+l_stew_fail	fail	set median<=45,p90<=75	-
+l_stew_first	line	set median<=45,p90<=75	-
+l_night_3a	line	set median<=45,p90<=75	H
+l_night_3b	line	set median<=45,p90<=75	H
+l_morning_4	line	set median<=45,p90<=75	-
+l_watch_1	line	set median<=45,p90<=75	-
+l_watch_2	line	set median<=45,p90<=75	-
+l_watch_fail	fail	set median<=45,p90<=75	-
+l_watch_lit	line	set median<=45,p90<=75	-
+l_watch_dry	fail	set median<=45,p90<=75	-
+l_night_4	line	set median<=45,p90<=75	-
+l_bank_hearth_fail	fail	set median<=45,p90<=75	-
+l_b5_1	line	set median<=45,p90<=75	H
+l_b5_2	line	set median<=45,p90<=75	H
+l_b5_3	line	set median<=45,p90<=75	H
+l_stay_1	line	set median<=45,p90<=75	H
+l_stay_2	line	set median<=45,p90<=75	H
+l_bay_go	line	set median<=45,p90<=75	-
+l_bay_his	line	set median<=45,p90<=75	-
+l_bay_fail	fail	set median<=45,p90<=75	-
+l_join_1	line	set median<=45,p90<=75	H
+l_join_2	line	set median<=45,p90<=75	H
+l_his_first	line	set median<=45,p90<=75	-
+l_scrap_ask	line	set median<=45,p90<=75	-
+l_bank_1	line	set median<=45,p90<=75	-
+l_bank_hers	line	set median<=45,p90<=75	-
+l_bank_his	line	set median<=45,p90<=75	-
+l_camp_9	line	set median<=45,p90<=75	-
+l_camp_10	line	set median<=45,p90<=75	-
+l_clay_seam	line	set median<=45,p90<=75	-
+l_lee_lichen	line	set median<=45,p90<=75	-
+l_buckle	line	set median<=45,p90<=75	-
+l_thick_pot	line	set median<=45,p90<=75	-
+l_stack_fail	fail	set median<=45,p90<=75	-
+l_stack_1	line	set median<=45,p90<=75	-
+l_stack_2	line	set median<=45,p90<=75	-
+l_stack_3	line	set median<=45,p90<=75	-
+l_shelf_fail	fail	set median<=45,p90<=75	-
+l_shelf_1	line	set median<=45,p90<=75	-
+l_shelf_2	line	set median<=45,p90<=75	-
+l_shelf_3	line	set median<=45,p90<=75	-

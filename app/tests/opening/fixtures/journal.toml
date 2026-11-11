@@ -1,0 +1,138 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_journal_loader.py): the fights fixture's side, threat,
+# fight card and standing fight, with the journal on top: the book, two entries and three notes. Not story: the ids and
+# words are the tests' own. j_page_a runs both fights; its second note's gate holds before its first note's, and it
+# is pencil in an ink page. j_page_b is a pencil page with no runner. The planted variants are edits of this file.
+
+version = 1
+end_feature = "combat"
+
+[[sides]]
+id = "t_hands"
+label_key = "t_side_hands"
+base = 4
+
+[[threats]]
+id = "t_rats"
+label_key = "t_threat_rats"
+base = 3
+
+# Tallies: made only by their fight's lines, never unlocked.
+[[stores]]
+id = "t_lost_hunt"
+label_key = "t_s_lost_hunt"
+cap_items = 100000
+
+[[stores]]
+id = "t_lost_raid"
+label_key = "t_s_lost_raid"
+cap_items = 100000
+
+[[stores]]
+id = "t_fought_raid"
+label_key = "t_s_fought_raid"
+cap_items = 100000
+
+# Never unlocked: the region's clock, filled by a fight-free standing action.
+[[stores]]
+id = "t_clock"
+label_key = "t_s_clock"
+cap_items = 20
+
+# What a lost hunt adds, and what the cure takes.
+[[stores]]
+id = "t_bitten"
+label_key = "t_s_bitten"
+cap_items = 12
+
+[[standing]]
+id = "t_dusk"
+label_key = "t_a_dusk"
+makes = [{ store = "t_clock", items_per_hour = 2 }]
+
+[[standing]]
+id = "t_raid"
+label_key = "t_a_raid"
+fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_raid", fought = "t_fought_raid", fights_per_hour = 2, loses = [{ store = "stones", items = 1 }] }
+
+[[cards]]
+id = "t_hunt"
+presentation = "action"
+label_key = "t_c_hunt"
+work_s = 60
+makes = [{ store = "dry_wood", items_per_hour = 30 }]
+fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_hunt", loses = [{ store = "damp_wood", items = 1 }], wounds = [{ store = "t_bitten", items = 1 }] }
+
+[[cards]]
+id = "t_tend"
+presentation = "action"
+label_key = "t_c_tend"
+work_s = 30
+inputs = [{ store = "t_bitten", items = 1 }]
+failed_line_key = "t_l_tend_failed"
+
+[[features]]
+id = "combat"
+
+[[triggers]]
+id = "t_combat_on"
+when = { test = "at_least", subject_kind = "store", id = "damp_wood", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "combat" }, { unlock_kind = "card", id = "t_hunt" }, { unlock_kind = "action", id = "t_raid" }, { unlock_kind = "card", id = "t_tend" }] }
+
+[[triggers]]
+id = "t_ramp_1"
+when = { test = "at_least", subject_kind = "store", id = "t_clock", value = 5 }
+outcome = { modifiers = [{ target = "threat", id = "t_rats", kind = "mul_bp", amount_bp = 12000, source = "t_ramp_1" }] }
+
+[journal]
+feature = "book"
+
+[[entries]]
+id = "j_page_a"
+section = "creatures"
+sketch = "j_sketch_a"
+hand = "ink"
+runners = ["t_hunt", "t_raid"]
+
+[[entries]]
+id = "j_page_b"
+section = "places"
+sketch = "j_sketch_b"
+hand = "pencil"
+runners = []
+
+[[notes]]
+id = "j_note_a1"
+entry = "j_page_a"
+gate = { test = "after_time", value = 200 }
+
+[[notes]]
+id = "j_note_a2"
+entry = "j_page_a"
+gate = { test = "after_time", value = 100 }
+hand = "pencil"
+sketch = "j_note_sketch"
+
+[[notes]]
+id = "j_note_b1"
+entry = "j_page_b"
+gate = { test = "after_time", value = 300 }
+
+[line_kinds]
+t_l_tend_failed = "story"
+
+[text]
+j_note_a1 = "A first thing, set down in ink."
+j_note_a2 = "A later thing, in pencil, with a small drawing."
+j_note_b1 = "A page that is only words."
+t_side_hands = "The town"
+t_threat_rats = "Rats"
+t_s_lost_hunt = "Hunts lost"
+t_s_lost_raid = "Raids lost"
+t_s_fought_raid = "Raids fought"
+t_s_clock = "Dusk"
+t_s_bitten = "Bites"
+t_a_dusk = "Dusk falling"
+t_a_raid = "Rats at the stores"
+t_c_hunt = "Hunt"
+t_c_tend = "Tend bites"
+t_l_tend_failed = "Nothing to tend."

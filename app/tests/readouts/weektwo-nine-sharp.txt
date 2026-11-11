@@ -1,0 +1,12 @@
+beats sharp (pace_scale 1): B10 day 8.67, target_day 11
+  away V69->V70: 3 ['trigger t_old_wire', 'trigger t_open_side', 'trigger t_wind']
+  away V70->V71: 1 ['card set_snare_4']
+  away V71->V72: 1 ['trigger offer_o_bark']
+  away V72->V73: 0 []
+  away V73->V74: 1 ['trigger offer_o_footing']
+  away V74->V75: 1 ['trigger offer_o_fed']
+  away V75->V76: 2 ['trigger t_ring_closed', 'trigger offer_o_gate']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1      12       7       0       4       0      10       3     36
+  2      32       5       2       2       0       7       2     50

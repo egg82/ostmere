@@ -1,0 +1,308 @@
+# Later phases' level pays: what each level of every phase from 2 on pays, by its level within the phase, as data
+# merged after prestige.toml (schema.Chapter, chapters.merge; expanded by phase_pays.py). Story spoilers: never shown
+# to the owner. Mechanics: docs/design/prestige-phases.md, "Phases" and "The loop".
+version = 1
+
+# Every level adds 400 bp (+4%) to its skill's own work: a phase's levels add about what phase 1's compounding levels
+# came to, so production grows by about the same each phase. A find every third level, from level 2, so a new phase's
+# first level is one and no more than two levels in a row pay only speed.
+
+# A find is the skill's staple: a store one of its own training cards spends for the rest of the game (the loader
+# refuses any other), in an amount that grows by `items_per_phase` each phase, under a line from the pool that says the
+# skill is getting better, never a story object, since a later phase lands at a different moment of the story for each
+# player. `retired_finds` are what phases 2 up to `retired_through` once paid: released, so their triggers stay as they
+# were under their old ids, gated out of reach. Their lines stay below only because those triggers name them.
+
+[[phase_pays]]
+skill = "woodcutting"
+speed = [{ target = "work", id = "woodcutting", kind = "add_bp", amount_bp = 400 }]
+speed_key = "pays_wc_faster"
+retired_through = 4
+retired_finds = [
+  { level = 2, line_key = "l_pp_wc_2", store = "damp_wood", items = 6 },
+  { level = 5, line_key = "l_pp_wc_5", store = "dry_wood", items = 8 },
+  { level = 8, line_key = "l_pp_wc_8", store = "stakes", items = 8 },
+  { level = 11, line_key = "l_pp_wc_11", store = "dry_wood", items = 10 },
+  { level = 14, line_key = "l_pp_wc_14", store = "stones", items = 4 },
+  { level = 17, line_key = "l_pp_wc_17", store = "dry_wood", items = 8 },
+  { level = 20, line_key = "l_pp_wc_20", store = "damp_wood", items = 10 },
+]
+
+[phase_pays.find]
+levels = [2, 5, 8, 11, 14, 17, 20]
+store = "damp_wood"
+items = 4
+items_per_phase = 1
+pays_key = "pays_pf_wc"
+lines = ["l_pf_wc_a", "l_pf_wc_b", "l_pf_wc_c", "l_pf_wc_d"]
+
+[[phase_pays]]
+skill = "scavenging"
+speed = [{ target = "work", id = "scavenge", kind = "add_bp", amount_bp = 400 }]
+speed_key = "pays_scav_faster"
+retired_through = 5
+retired_finds = [
+  { level = 2, line_key = "l_pp_scav_2", store = "scrap", items = 2 },
+  { level = 5, line_key = "l_pp_scav_5", store = "wire", items = 2 },
+  { level = 8, line_key = "l_pp_scav_8", store = "stones", items = 5 },
+  { level = 11, line_key = "l_pp_scav_11", store = "scrap", items = 3 },
+  { level = 14, line_key = "l_pp_scav_14", store = "flint", items = 2 },
+  { level = 17, line_key = "l_pp_scav_17", store = "damp_wood", items = 5 },
+  { level = 20, line_key = "l_pp_scav_20", store = "scrap", items = 4 },
+]
+
+[phase_pays.find]
+levels = [2, 5, 8, 11, 14, 17, 20]
+store = "stones"
+items = 3
+items_per_phase = 1
+pays_key = "pays_pf_scav"
+lines = ["l_pf_scav_a", "l_pf_scav_b", "l_pf_scav_c", "l_pf_scav_d"]
+
+[[phase_pays]]
+skill = "foraging"
+speed = [{ target = "work", id = "forage", kind = "add_bp", amount_bp = 400 }]
+speed_key = "pays_for_faster"
+retired_through = 3
+retired_finds = [
+  { level = 2, line_key = "l_pp_for_2", store = "roots", items = 5 },
+  { level = 5, line_key = "l_pp_for_5", store = "fungus", items = 6 },
+  { level = 8, line_key = "l_pp_for_8", store = "roots", items = 6 },
+  { level = 11, line_key = "l_pp_for_11", store = "clay", items = 4 },
+  { level = 14, line_key = "l_pp_for_14", store = "roots", items = 6 },
+  { level = 17, line_key = "l_pp_for_17", store = "fungus", items = 6 },
+  { level = 20, line_key = "l_pp_for_20", store = "tinder_fungus", items = 1 },
+]
+
+[phase_pays.find]
+levels = [2, 5, 8, 11, 14, 17, 20]
+store = "roots"
+items = 3
+items_per_phase = 1
+pays_key = "pays_pf_for"
+lines = ["l_pf_for_a", "l_pf_for_b", "l_pf_for_c", "l_pf_for_d"]
+
+[[phase_pays]]
+skill = "cooking"
+speed = [
+  { target = "work", id = "smoke_catch", kind = "add_bp", amount_bp = 400 },
+  { target = "work", id = "smoke_roots", kind = "add_bp", amount_bp = 400 },
+  { target = "work", id = "stew", kind = "add_bp", amount_bp = 400 },
+]
+speed_key = "pays_cook_faster"
+retired_through = 3
+retired_finds = [
+  { level = 2, line_key = "l_pp_cook_2", store = "stew", items = 4 },
+  { level = 5, line_key = "l_pp_cook_5", store = "stew", items = 5 },
+  { level = 8, line_key = "l_pp_cook_8", store = "smoked", items = 2 },
+  { level = 11, line_key = "l_pp_cook_11", store = "stew", items = 6 },
+  { level = 14, line_key = "l_pp_cook_14", store = "smoked", items = 3 },
+  { level = 17, line_key = "l_pp_cook_17", store = "stew", items = 6 },
+  { level = 20, line_key = "l_pp_cook_20", store = "stew", items = 6 },
+]
+
+[phase_pays.find]
+levels = [2, 5, 8, 11, 14, 17, 20]
+store = "catch"
+items = 2
+items_per_phase = 1
+pays_key = "pays_pf_cook"
+lines = ["l_pf_cook_a", "l_pf_cook_b", "l_pf_cook_c", "l_pf_cook_d"]
+
+[[phase_pays]]
+skill = "arcana"
+speed = [
+  { target = "work", id = "hand_on_stone", kind = "add_bp", amount_bp = 400 },
+  { target = "work", id = "hearth_stones", kind = "add_bp", amount_bp = 400 },
+]
+speed_key = "pays_arc_faster"
+retired_through = 3
+retired_finds = [
+  { level = 2, line_key = "l_pp_arc_2", store = "ash", items = 6 },
+  { level = 5, line_key = "l_pp_arc_5", store = "dry_wood", items = 8 },
+  { level = 8, line_key = "l_pp_arc_8", store = "stones", items = 3 },
+  { level = 11, line_key = "l_pp_arc_11", store = "clay", items = 4 },
+  { level = 14, line_key = "l_pp_arc_14", store = "stones", items = 2 },
+  { level = 17, line_key = "l_pp_arc_17", store = "dry_wood", items = 10 },
+  { level = 20, line_key = "l_pp_arc_20", store = "ash", items = 8 },
+]
+
+[phase_pays.find]
+levels = [2, 5, 8, 11, 14, 17, 20]
+store = "damp_wood"
+items = 4
+items_per_phase = 1
+pays_key = "pays_pf_arc"
+lines = ["l_pf_arc_a", "l_pf_arc_b", "l_pf_arc_c", "l_pf_arc_d"]
+
+[[phase_pays]]
+skill = "melee"
+speed = [{ target = "work", id = "hunt_wolf", kind = "add_bp", amount_bp = 400 }]
+speed_key = "pays_hunt_faster"
+retired_through = 3
+retired_finds = [
+  { level = 2, line_key = "l_pp_melee_2", store = "pelt", items = 1 },
+  { level = 5, line_key = "l_pp_melee_5", store = "catch", items = 2 },
+  { level = 8, line_key = "l_pp_melee_8", store = "cord", items = 2 },
+  { level = 11, line_key = "l_pp_melee_11", store = "pelt", items = 1 },
+  { level = 14, line_key = "l_pp_melee_14", store = "catch", items = 2 },
+  { level = 17, line_key = "l_pp_melee_17", store = "pelt", items = 1 },
+  { level = 20, line_key = "l_pp_melee_20", store = "pelt", items = 1 },
+]
+
+[phase_pays.find]
+levels = [2, 5, 8, 11, 14, 17, 20]
+store = "smoked"
+items = 1
+items_per_phase = 1
+pays_key = "pays_pf_melee"
+lines = ["l_pf_melee_a", "l_pf_melee_b", "l_pf_melee_c", "l_pf_melee_d"]
+
+[line_kinds]
+l_pf_wc_a = "find"
+l_pf_wc_b = "find"
+l_pf_wc_c = "find"
+l_pf_wc_d = "find"
+l_pf_scav_a = "find"
+l_pf_scav_b = "find"
+l_pf_scav_c = "find"
+l_pf_scav_d = "find"
+l_pf_for_a = "find"
+l_pf_for_b = "find"
+l_pf_for_c = "find"
+l_pf_for_d = "find"
+l_pf_cook_a = "find"
+l_pf_cook_b = "find"
+l_pf_cook_c = "find"
+l_pf_cook_d = "find"
+l_pf_arc_a = "find"
+l_pf_arc_b = "find"
+l_pf_arc_c = "find"
+l_pf_arc_d = "find"
+l_pf_melee_a = "find"
+l_pf_melee_b = "find"
+l_pf_melee_c = "find"
+l_pf_melee_d = "find"
+l_pp_wc_2 = "find"
+l_pp_wc_5 = "find"
+l_pp_wc_8 = "find"
+l_pp_wc_11 = "find"
+l_pp_wc_14 = "find"
+l_pp_wc_17 = "find"
+l_pp_wc_20 = "find"
+l_pp_scav_2 = "find"
+l_pp_scav_5 = "find"
+l_pp_scav_8 = "find"
+l_pp_scav_11 = "find"
+l_pp_scav_14 = "find"
+l_pp_scav_17 = "find"
+l_pp_scav_20 = "find"
+l_pp_for_2 = "find"
+l_pp_for_5 = "find"
+l_pp_for_8 = "find"
+l_pp_for_11 = "find"
+l_pp_for_14 = "find"
+l_pp_for_17 = "find"
+l_pp_for_20 = "find"
+l_pp_cook_2 = "find"
+l_pp_cook_5 = "find"
+l_pp_cook_8 = "find"
+l_pp_cook_11 = "find"
+l_pp_cook_14 = "find"
+l_pp_cook_17 = "find"
+l_pp_cook_20 = "find"
+l_pp_arc_2 = "find"
+l_pp_arc_5 = "find"
+l_pp_arc_8 = "find"
+l_pp_arc_11 = "find"
+l_pp_arc_14 = "find"
+l_pp_arc_17 = "find"
+l_pp_arc_20 = "find"
+l_pp_melee_2 = "find"
+l_pp_melee_5 = "find"
+l_pp_melee_8 = "find"
+l_pp_melee_11 = "find"
+l_pp_melee_14 = "find"
+l_pp_melee_17 = "find"
+l_pp_melee_20 = "find"
+
+[text]
+pays_pf_wc = "a surer swing, {pct} woodcutting speed"
+l_pf_wc_a = "you read the grain before the axe falls. green wood comes away clean."
+l_pf_wc_b = "the swing is easy now. a tree drops in fewer strokes."
+l_pf_wc_c = "your arms know the work. green wood piles up while you think."
+l_pf_wc_d = "you learn the cut that drops a branch whole. you trim it and stack it."
+
+pays_pf_scav = "a sharper eye, {pct} scavenging speed"
+l_pf_scav_a = "you know where to look now. loose stones turn up under your hands."
+l_pf_scav_b = "your eye picks the useful out of the rubble. you fill your sack."
+l_pf_scav_c = "you stop walking past the good ground. the sack fills faster."
+l_pf_scav_d = "you turn a stone and know it is sound. you keep it, and the next."
+
+pays_pf_for = "a lighter touch, {pct} foraging speed"
+l_pf_for_a = "you spot the green tops from far off. the roots come up whole."
+l_pf_for_b = "your fingers find a root before the digging starts. you pull it clean."
+l_pf_for_c = "you know which ground is soft. the roots come up easy."
+l_pf_for_d = "you stop tearing roots and start lifting them. fewer break."
+
+pays_pf_cook = "a surer knife, {pct} cooking speed"
+l_pf_cook_a = "you trim a catch without waste. more of it is left for the pot."
+l_pf_cook_b = "your knife knows where the joints are. the meat comes away clean."
+l_pf_cook_c = "you judge the smoke by its smell now. less spoils, and the rest keeps."
+l_pf_cook_d = "you stop wasting what comes in. every scrap goes to the pot."
+
+pays_pf_arc = "a steadier hand, {pct} arcana speed"
+l_pf_arc_a = "your hand sits steady on the stone. less is burned, and the wood lasts."
+l_pf_arc_b = "you learn how the stone takes heat. you spend less wood on it."
+l_pf_arc_c = "the stone answers sooner now. you set a little wood by."
+l_pf_arc_d = "you stop forcing it. the work uses less, and you keep the rest."
+
+pays_pf_melee = "a quicker strike, {pct} hunting speed"
+l_pf_melee_a = "your strike lands where you meant it. the meat is clean to smoke."
+l_pf_melee_b = "you read a beast's weight before it moves. the hunt ends sooner."
+l_pf_melee_c = "you carry the kill home in one piece. there is more to smoke."
+l_pf_melee_d = "you stop chasing and start waiting. the hunt gives more."
+
+# Retired: the lines of the finds phases once paid (see retired_finds).
+l_pp_wc_2 = "the wind took a birch in the night. it lies ready for the axe."
+l_pp_wc_5 = "a stump gone grey and dry. it splits at a touch."
+l_pp_wc_8 = "saplings crowd a gap in the canopy. you thin them for poles."
+l_pp_wc_11 = "lightning split this birch to the root. the heartwood is dry."
+l_pp_wc_14 = "your axe rings on stone. the roots have grown right round it."
+l_pp_wc_17 = "the trunk is hollow at the heart, the shell sound and light."
+l_pp_wc_20 = "two birches grown into each other. one cut drops both."
+l_pp_scav_2 = "a keg rotted to its hoops. the nails inside have rusted to a lump."
+l_pp_scav_5 = "a fence line under the bracken. the wire lifts in coils."
+l_pp_scav_8 = "a cellar's top step, cut stone, under a skin of leaf mould."
+l_pp_scav_11 = "the iron back of a hearth, cracked in two. you take both halves."
+l_pp_scav_14 = "flint spilled from a sack that burst long ago. it is still sharp."
+l_pp_scav_17 = "a door lies flat in the nettles. the boards are sound."
+l_pp_scav_20 = "a plough share, left in the last furrow it cut."
+l_pp_for_2 = "molehills along the field edge, the earth soft and full of roots."
+l_pp_for_5 = "fungus in a ring on the turf. you take the outer ones."
+l_pp_for_8 = "the stream bank has slumped. its roots hang bare."
+l_pp_for_11 = "grey clay where the stream bends. it takes a thumbprint."
+l_pp_for_14 = "nettles over an old fire pit. the roots run white and thick."
+l_pp_for_17 = "a hollow log, soft inside and grown through with fungus."
+l_pp_for_20 = "hoof fungus on a dead birch, dry as paper."
+l_pp_cook_2 = "a marrow bone cracks clean. the pot goes rich and dark."
+l_pp_cook_5 = "wild garlic under the alders. the stew smells of it all day."
+l_pp_cook_8 = "you scrape the rack to bare wood. the smoke runs even."
+l_pp_cook_11 = "a flat stone fits the pot like a lid. less boils away."
+l_pp_cook_14 = "you bank the smoke and leave it overnight. it keeps."
+l_pp_cook_17 = "the pot has a black crust now. nothing sticks to it."
+l_pp_cook_20 = "you pull the pot back from the flame. it thickens slowly."
+l_pp_arc_2 = "the fire burns down to white ash, fine as flour."
+l_pp_arc_5 = "kindling dried on the hot stones, light as paper."
+l_pp_arc_8 = "one stone stays warm till morning. you set it at the heart."
+l_pp_arc_11 = "rain softens the bank by the hearth. the clay comes away in slabs."
+l_pp_arc_14 = "a hearth stone splits clean in the heat. now there are two."
+l_pp_arc_17 = "a log left on the warm stones overnight rings dry by morning."
+l_pp_arc_20 = "ash drifts in the lee of the hearth, deep enough to scoop."
+l_pp_melee_2 = "a wolf in its winter coat. the pelt is thick to the skin."
+l_pp_melee_5 = "something ate half a deer and left. you take the rest."
+l_pp_melee_8 = "sinew from the hunt, dried and twisted into cord."
+l_pp_melee_11 = "a lame wolf, slow to turn. it is over quickly."
+l_pp_melee_14 = "a carcass cached under stones. you lift them off one by one."
+l_pp_melee_17 = "a pelt off a young wolf, not a scar on it."
+l_pp_melee_20 = "an old den, empty. a pelt rots in it, but the back is good."

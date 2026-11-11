@@ -1,0 +1,4 @@
+# Local builds only: CI checks out clean. node_modules and bundles are rebuilt inside the image.
+client/node_modules
+client/build
+client/build-dev

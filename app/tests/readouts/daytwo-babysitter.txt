@@ -1,0 +1,11 @@
+babysitter: B3 3.9 h after the end; B4 5.76 h after B3; 1 day-two visits
+  V1       gap   0.0h  active 345.4m  new  33  bigger 20  first    0s  decisions 10  actions  19  idle 3762s  run 3  effort  9  | spine 2 chapter 4 side 0 {}  [edge]
+  landed (h after B3) {'B3': 0.0, 'P0.4': 0.0, 'A15': 0.0, 'J1': 0.0, 'J2': 0.3, 'J3': 1.25, 'A16': 1.25, 'J4': 1.25, 'A17': 1.75, 'O-cart': 1.75, 'A19': 5.76, 'B4': 5.76}
+  seen   (h after B3) {'B3': 0.0, 'P0.4': 0.0, 'A15': 0.0, 'J1': 0.0, 'J2': 0.3, 'J3': 1.25, 'A16': 1.25, 'J4': 1.25, 'A17': 1.75, 'O-cart': 1.75, 'A19': 5.76, 'B4': 5.76}
+  flatcheck ['W1(B1-B7)        week_net_up          net +2 before the last region']
+  beats babysitter: no beat from B5 reached (pace_scale 1)
+  lost to caps, babysitter: share of each store's making dropped at its cap
+    played    all  13%  damp_wood 92% roots 99% stones 95%
+    away 8 h  all  16%  catch 72% damp_wood 74% roots 100% stones 99% wattle 99%
+    away 24 h all  59%  camp 52% catch 85% damp_wood 78% roots 100% stones 100% wattle 100%
+    away 72 h all  86%  camp 84% catch 95% damp_wood 82% roots 100% stones 100% wattle 100%

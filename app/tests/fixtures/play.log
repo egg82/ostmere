@@ -1,0 +1,13 @@
+2026-10-11T10:00:00Z ts=2026-10-11T10:00:00.000Z level=info logger=ashfall.game event=game.request route=/api/saves decision=none status=200 ms=3
+2026-10-11T10:00:05Z ts=2026-10-11T10:00:05.000Z level=info logger=ashfall.game event=game.request route=/api/saves/{save_id}/decisions save=11 decision=tap_card target=gather after=0 status=200 ms=4 wall_s=5 gap_s=5 failed=0
+2026-10-11T10:00:05Z ts=2026-10-11T10:00:05.000Z level=info logger=ashfall.saves event=save.decision account=4 save=11 kind=tap_card target=gather n=1 game_at=0 result=ok lines=0 rebased=false ms=3
+2026-10-11T10:00:50Z ts=2026-10-11T10:00:50.000Z level=info logger=ashfall.game event=game.request route=/api/saves/{save_id}/decisions save=11 decision=tap_card target=build after=1 status=200 ms=4 wall_s=50 gap_s=45 failed=1
+2026-10-11T10:00:50Z ts=2026-10-11T10:00:50.000Z level=info logger=ashfall.saves event=save.decision account=4 save=11 kind=tap_card target=build n=2 game_at=60 result=ok lines=0 rebased=false ms=3
+2026-10-11T10:00:55Z ts=2026-10-11T10:00:55.000Z level=info logger=ashfall.game event=game.request route=/api/saves/{save_id}/decisions save=11 decision=tap_card target=build after=1 status=409 ms=2 error=stale
+2026-10-11T10:01:00Z ts=2026-10-11T10:01:00.000Z level=info logger=ashfall.game event=game.request route=/api/saves/{save_id}/decisions save=11 decision=tap_card target=build after=2 status=200 ms=4 wall_s=60 gap_s=10 failed=1
+2026-10-11T10:01:00Z ts=2026-10-11T10:01:00.000Z level=info logger=ashfall.saves event=save.advanced account=4 save=11 game_at=120 lines=1 rebased=false ms=2
+2026-10-11T10:00:02Z ts=2026-10-11T10:00:02.000Z level=info logger=ashfall.game event=game.request route=/api/saves decision=none status=200 ms=3
+2026-10-11T10:00:20Z ts=2026-10-11T10:00:20.000Z level=info logger=ashfall.game event=game.request route=/api/saves/{save_id}/decisions save=12 decision=tap_card target=gather after=0 status=200 ms=4 wall_s=18 gap_s=18 failed=0
+2026-10-11T10:01:30Z ts=2026-10-11T10:01:30.000Z level=info logger=ashfall.client event=game_leave since_begin_s=88 game_time=120 last_project=gather decisions=3 reached_end=0 version=abc
+2026-10-11T10:02:00Z ts=2026-10-11T10:02:00.000Z level=info logger=ashfall.client event=game_leave since_begin_s=300 game_time=900 last_project=ending decisions=12 reached_end=1 version=abc
+not a log line

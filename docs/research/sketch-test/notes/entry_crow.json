@@ -1,0 +1,7 @@
+[
+  {"kind": "study", "id": "row", "required": true, "text": ["on the ridge"]},
+  {"kind": "study", "id": "head", "text": ["bill, side"]},
+  {"kind": "study", "id": "foot", "text": ["foot. 3 fwd 1 back"]},
+  {"kind": "label", "anchor": [480, 430], "text": ["tail square-ended"]},
+  {"kind": "label", "anchor": [290, 350], "text": ["all black. sheen on the wing"]}
+]

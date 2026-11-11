@@ -1,0 +1,106 @@
+# Day-eight keys manifest: every key in day_eight.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it) | journal note (its own batch, after this one).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 100
+key	kind	limit	alt	brief
+l_ring_scored	line	line<=75; set median<=45,p90<=75	-	-
+store_stakes	store label	n/a	-	-
+store_cord	store label	n/a	-	-
+c_palisade	card label	n/a	-	-
+up_palisade	upside label	n/a	-	-
+l_palisade_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_stage_1	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_2	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_3	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_4	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_5	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_6	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_7	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_8	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_9	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_10	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_11	line	line<=75; set median<=45,p90<=75	-	-
+l_stage_12	line	line<=75; set median<=45,p90<=75	-	-
+c_cut_stakes	card label	n/a	-	-
+l_cut_stakes_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_lane_stakes	card label	n/a	-	-
+l_lane_stakes_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_twist_cord	card label	n/a	-	-
+l_cord_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_n4_cord	card label	n/a	-	-
+l_n4_cord_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_hide_flaps	card label	n/a	-	-
+up_hide_flaps	upside label	n/a	-	-
+l_flaps_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_flaps_1	line	line<=75; set median<=45,p90<=75	-	-
+l_flaps_2	line	line<=75; set median<=45,p90<=75	-	-
+l_flaps_3	line	line<=75; set median<=45,p90<=75	-	-
+l_flaps_done	line	line<=75; set median<=45,p90<=75	-	-
+l_b8_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b8_2	line	line<=75; set median<=45,p90<=75	H	-
+l_b8_3	line	line<=75; set median<=45,p90<=75	H	-
+store_drift_left	store label	n/a	-	-
+store_roof_ash	store label	n/a	-	-
+action_ashfall	action label	n/a	-	-
+store_drift_clock	store label	n/a	-	-
+action_drift_clock	action label	n/a	-	-
+store_bloom	store label	n/a	-	-
+store_fungus	store label	n/a	-	-
+c_pick_fungus	card label	n/a	-	-
+l_pick_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_lane_pick	card label	n/a	-	-
+c_fungus_stew	card label	n/a	-	-
+l_fungus_stew_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_howls	line	line<=75; set median<=45,p90<=75	H	-
+l_caps_1	line	line<=75; set median<=45,p90<=75	H	-
+l_caps_2	line	line<=75; set median<=45,p90<=75	H	-
+chip_ash_laden	chip label	n/a	-	-
+chip_ash_laden_cost	chip label	n/a	-	-
+l_ash_laden	line	line<=75; set median<=45,p90<=75	-	-
+l_ash_cleared	line	line<=75; set median<=45,p90<=75	-	-
+store_ash	store label	n/a	-	-
+c_clear_roofs	card label	n/a	-	-
+l_clear_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_n2_clear_roofs	card label	n/a	-	-
+l_roofs_first	line	line<=75; set median<=45,p90<=75	-	-
+l_ash_ground	line	line<=75; set median<=45,p90<=75	-	-
+store_ashed_ground	store label	n/a	-	-
+c_n3_ash_ground	card label	n/a	-	-
+l_ash_ground_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_cord	line	line<=75; set median<=45,p90<=75	-	-
+side_gap	fight label	n/a	-	-
+threat_wolf_pack	fight label	n/a	-	-
+l_pack_1	line	line<=75; set median<=45,p90<=75	H	-
+l_pack_2	line	line<=75; set median<=45,p90<=75	H	-
+store_pack_fought	store label	n/a	-	-
+store_pack_lost	store label	n/a	-	-
+action_pack	action label	n/a	-	-
+l_fight_pack_won_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_pack_won_2	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_pack_won_3	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_pack_lost_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_pack_lost_2	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_pack_lost_3	line	line<=75; set median<=45,p90<=75	-	-
+l_b9_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b9_2	line	line<=75; set median<=45,p90<=75	H	-
+pays_find_for_13	pays label	n/a	-	-
+pays_find_wc_23	pays label	n/a	-	-
+pays_find_scav_23	pays label	n/a	-	-
+pays_find_cook_9	pays label	n/a	-	-
+pays_arc_9	pays label	n/a	-	-
+pays_find_arc_11	pays label	n/a	-	-
+pays_arc_12	pays label	n/a	-	-
+l_find_shelf	line	line<=75; set median<=45,p90<=75	-	-
+l_find_pole	line	line<=75; set median<=45,p90<=75	-	-
+l_find_hoe	line	line<=75; set median<=45,p90<=75	-	-
+l_find_pot	line	line<=75; set median<=45,p90<=75	-	-
+l_find_fine_ash	line	line<=75; set median<=45,p90<=75	-	-
+camp_pays_13	camp label	n/a	-	-
+l_camp_13	line	line<=75; set median<=45,p90<=75	-	-
+n_wolf_1	journal note	n/a	-	-
+n_wolf_margin	journal note	n/a	-	-
+n_rat_1	journal note	n/a	-	-
+n_rat_2	journal note	n/a	-	-
+n_crow_1	journal note	n/a	-	-
+aim_wall	aim label	n/a	-	-

@@ -1,0 +1,9 @@
+beats whenever (pace_scale 1): B5 day 4.61, target_day 4, B6 day 5.36, target_day 5, B7 day 6.35, target_day 6
+days with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1      91      22       0      12       4      36       0    165
+  2      23       3       0       0       0       4       3     33
+  3      23       5       2       3       0      14       1     48
+  4      17       2       0       0       0       4       4     27
+  5      20       7       0       0       0       4       1     32
+  6      29       7       0       0       1       9       1     47

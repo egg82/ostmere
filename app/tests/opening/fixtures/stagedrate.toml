@@ -1,0 +1,52 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_staged_standing_rate.py): a standing action that
+# makes a store from a season pool, a three-stage card whose every stage raises that standing's make rate, and two season
+# turns that fill the pool, the first opening the standing. Not story: the ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_pool"
+label_key = "t_s_pool"
+cap_items = 20
+
+[[stores]]
+id = "t_stock"
+label_key = "t_s_stock"
+cap_items = 100
+initial_items = 1
+
+[[standing]]
+id = "t_forge"
+label_key = "t_a_forge"
+costs = [{ store = "t_pool", items_per_hour = 1 }]
+makes = [{ store = "t_stock", items_per_hour = 10 }]
+
+[[cards]]
+id = "t_stage"
+presentation = "craft"
+label_key = "t_c_stage"
+work_s = 60
+cap = 3
+outcome = { modifiers = [{ target = "rate", id = "t_forge", flow = "make", store = "t_stock", kind = "add_bp", amount_bp = 2000, source = "t_stage" }] }
+
+[[triggers]]
+id = "t_start"
+when = { test = "at_least", subject_kind = "store", id = "t_stock", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "t_stage" }] }
+
+[[triggers]]
+id = "t_turn_1"
+season = true
+when = { test = "after_time", value = 3600 }
+outcome = { stores = [{ store = "t_pool", items = 4 }], unlocks = [{ unlock_kind = "action", id = "t_forge" }] }
+
+[[triggers]]
+id = "t_turn_2"
+season = true
+when = { test = "after_time", value = 36000 }
+outcome = { stores = [{ store = "t_pool", items = 4 }] }
+
+[text]
+t_s_pool = "Season stock"
+t_s_stock = "Stock"
+t_a_forge = "Forge"
+t_c_stage = "Raise"

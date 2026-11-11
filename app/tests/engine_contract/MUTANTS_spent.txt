@@ -1,0 +1,70 @@
+Wrong implementations of SPENT (engine DESIGN.txt, "SPENT", invariants 133-141), to plant one at a time in a scratch copy;
+a test written blind from that part alone must go red for each. "EAT" is a mix card costing a pool p; "R1", "R2" are the
+other cards of its mix and lane; a pool is a store no unlocked, live card or standing action makes. Rows 1-6 are the
+plan's list (week-three-plan.md, item 2), row 1 rewritten when every paused card became a giver (docs/decisions.md, "A
+mix keeps going without a dry store"); 7-24 are the part's other clauses. Record each run below the list as
+MUTANTS_drains.txt does (planted, red, survived, equivalent with the reason). `@kills(row)` on a test claims the row.
+
+ 1 between hours   the yield follows the store, not the Pause: a card paused on a store a maker refills gives its
+                   share back once the store rises off 0, before its resume at an hour of its cost, so the split
+                   moves between the dry rule's instants.                                     [136, 139, "The hour"]
+ 2 across lanes    a town card's share is split over the whole town mix, or into another person's lane (a spent card
+                   with nothing else on its lane gives to the other lane).                                [134]
+ 3 across mixes    a spent hands card gives to the town mix's cards (or the reverse), or a saved mix that is not
+                   running gains.                                                                         [134]
+ 4 keeps on refill the yield stays after an outcome refills the pool to the resume level, or after an outcome
+                   unlocks a maker of the store (the card does not read FULL or PAUSED at that instant), or the
+                   other spent cards' gains are dropped with it.                                          [138]
+ 5 no fixpoint     the spent set is one pass: only stores with no maker at all are spent, so a store made only
+                   from a spent empty store (a chain) or from a ring of them is not; or the smallest set is taken,
+                   so a dry ring is called refillable.                                                    [133]
+ 6 rounds up       a gain is ceil, or rounded to nearest, instead of floor(s_k * s_r / Rsum).             [134, 141]
+ 7 stored          the yield or the spent set is written into the save (a field, a modifier, a mix edit, a
+                   pause), so the codec, the saved mix or Save's fields change.                           [140]
+ 8 running shares  the proportion is over the receivers' running shares: a waiting or held receiver is left out of
+                   Rsum and takes nothing, or a paused card is counted as a receiver rather than a giver.  [134]
+ 9 one rounding    each receiver floors the sum of its gains once (not once per spent card), so the gains do not
+                   sum to its effective share, or `gained` entries are merged or inexact.                 [134, 137]
+10 trigger maker   a trigger's or answer's outcome that will add to the store counts as a maker, so a season pool
+                   with a turn coming is never spent.                                                     [133]
+11 dead makers     a locked, completed or retired card counts as a maker, so its store is never spent.     [133]
+12 lags            the yield is applied at the next event rather than the instant the pool reaches 0 (or is
+                   removed late), so the rate before/at/after T is wrong, or a rate segment spans T.      [136]
+13 raw view        CardView.share_bp is served as the effective share, or a spent card reads PAUSED, GREYED or
+                   its run is not SPENT in the view, or spent_store is None for it.                       [View]
+14 still starved   a ledger line is starved by a spent card (invariant 41 not amended), or the amendment applies
+                   to a paused card whose store something still makes.                                    [41]
+15 running makers a maker must be running to count: an unlocked card nobody taps and no mix runs is not a maker,
+                   so its store reads spent.                                                              [133]
+16 take kinds     a maker's costs are not takes (only inputs), or its drains are takes, so a store made by a card
+                   that costs a spent empty store is not spent, or a draining maker's store is spent.     [133]
+17 unsourced      Explanation.gained is empty or lists the wrong card, or share_bp is the saved share, so
+                   share_bp != saved + sum(gained) and invariant 10 breaks on the fields.                [137]
+18 cached         the spent set or the gains are not recomputed when the player edits the running mix (SaveMix)
+                   while a card is spent, so the old gains stay.                                          [136]
+19 any refill     any outcome adding to a spent card's store lifts the spent reading (the Pause's resume level is
+                   ignored), so a one-item refill gives the share back to the card and it idles.           [138]
+20 empty rest     Rsum 0 moves or divides: a lane of only spent cards (or the rest at share 0) gives the share to a
+                   receiver of share 0, or raises.                                                        [134]
+21 repeats        a card flattened out of several components is read at its first share, not the sum, in Rsum and
+                   in its gain (a sub-mix share).                                                         [134]
+22 standing makers a standing action is not a maker, so a store only an unlocked standing action makes reads spent.
+                                                                                                          [133, 139]
+23 spent runs     the spent card still costs, makes or works at some fraction, or its store goes below 0.   [16, 134]
+24 yield in a tap while the hands run a tap, a receiver keeps running its gain (not YIELDED, per_hour not 0), or
+                   the spent card is read as YIELDED or its pause is dropped after the landing.            [19]
+
+RUNS
+- Suite tests/engine_contract/test_spent_*.py (blind, written from DESIGN.txt's SPENT part and api/CONTRACT.txt alone).
+  Run: python -m tools.mutate_suite spent --run (specs tools/spent_mutants/mNN.py, one per row, each a list of (path,
+  old, new) edits against the implementation). `--check` fails unless every row is claimed by a test marked @kills(row).
+- Against the implementation: rows 1-24 all KILLED, each with a test that claims it red or, where the planted wrong
+  implementation breaks one clause of a row, a sibling test of the same row; no survivors, no equivalent mutants.
+  Two rows have a second planted form that is not in the specs: 16 with the drains counted as takes (killed), and 21 with
+  a repeated direct component read at its first share, which survived until test_a_card_listed_twice_in_the_mix_counts_
+  with_its_shares_summed was added (killed).
+- Before the run: row 7 survived (no test made a receiver pause while it held a gain), and test_a_receivers_pause_takes_
+  its_resume_level_from_its_saved_share_not_its_gain now kills it.
+- Every paused card a giver (rows 1 and 8 replanted): rows 1-10 and 12-24 KILLED. Row 1 (between hours) is red on
+  test_the_share_stays_given_while_the_store_refills_below_the_hour_and_comes_back_at_the_resume, among 8. Row 11 is NOT
+  PLANTED: m11's anchor no longer occurs in spent._in_play (its standing branch for LEAVES came after the spec).

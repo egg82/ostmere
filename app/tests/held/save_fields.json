@@ -1,0 +1,23 @@
+{
+ "Save": {
+  "active": 1,
+  "cards": 1,
+  "cascade_count": 1,
+  "chips": 1,
+  "chips_seen": 1,
+  "ended_at": 1,
+  "fired": 1,
+  "lanes": 1,
+  "last_cascade": 1,
+  "latches": 1,
+  "mixes": 1,
+  "modifiers": 1,
+  "orders": 1,
+  "pauses": 1,
+  "queue": 1,
+  "skills": 1,
+  "stores": 1,
+  "time": 1,
+  "unlocked": 1
+ }
+}

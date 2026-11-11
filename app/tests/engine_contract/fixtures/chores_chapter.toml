@@ -1,0 +1,85 @@
+# A test chapter, merged onto the opening alone (tests/engine_contract/test_retire_loader_contract.py): a season whose
+# standing action fills a pool (t_pool) and a chip on that pool whose cure is t_scoop; and a second turn at the season's
+# end. The slots written between two @ signs are filled by the test (its default is the plain shape that loads). Not
+# story: the ids and words are the tests' own.
+version = 1
+
+[[stores]]
+id = "t_fuel"
+label_key = "t_s_fuel"
+cap_items = 20
+
+[[stores]]
+id = "t_pool"
+label_key = "t_s_pool"
+cap_items = 20
+
+[[stores]]
+id = "t_y"
+label_key = "t_s_y"
+cap_items = 100
+
+[[standing]]
+id = "t_burn"
+label_key = "t_a_burn"
+makes = [{ store = "t_pool", items_per_hour = 3 }]
+costs = [{ store = "t_fuel", items_per_hour = 1 }]
+
+[[lanes]]
+id = "t_helper"
+label_key = "t_l_helper"
+ruled = true
+
+[[cards]]
+id = "t_scoop"
+presentation = "action"
+label_key = "t_c_scoop"
+work_s = 60
+drains = [{ store = "t_pool", items = 3 }]
+
+[[cards]]
+id = "t_other"
+presentation = "action"
+label_key = "t_c_other"
+work_s = 60
+makes = [{ store = "t_y", items_per_hour = 3 }]
+@OTHER@
+
+[[cards]]
+id = "t_aide"
+lane = "t_helper"
+presentation = "action"
+label_key = "t_c_aide"
+work_s = 60
+makes = [{ store = "t_y", items_per_hour = 3 }]
+
+[[chips]]
+id = "t_pile"
+label_key = "t_ch_pile"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "t_pool", value = 3, release = 1 }
+
+[[triggers]]
+id = "t_open"
+season = true
+when = { test = "after_time", value = 100 }
+outcome = { stores = [{ store = "t_fuel", items = 10 }], unlocks = [{ unlock_kind = "action", id = "t_burn" }, { unlock_kind = "chip", id = "t_pile" }] }
+
+[[triggers]]
+id = "t_close"
+season = @SEASON@
+when = { test = "after_time", value = 500 }
+outcome = { @CLOSE@ }
+
+@EXTRA@
+
+[text]
+t_s_fuel = "Fuel"
+t_s_pool = "Pool"
+t_s_y = "Yield"
+t_a_burn = "Burn"
+t_l_helper = "Helper"
+t_c_scoop = "Scoop"
+t_c_other = "Other"
+t_c_aide = "Aide"
+t_ch_pile = "Pile"

@@ -1,0 +1,16 @@
+whenever: the end at 8.8m; B3 20.5h after it; 4 visits
+  opening  gap   0.0h  active  8.8m  new  47  bigger 17  first    0s  decisions  8  actions  35  idle   75s  run 3  effort  7
+  V1       gap   0.0h  active  3.8m  new  10  bigger  3  first    0s  decisions  3  actions   4  idle  169s  run 1  effort  3
+  V2       gap   9.4h  active  4.5m  new  29  bigger 17  first    0s  decisions  4  actions  11  idle  138s  run 3  effort  2
+  V3       gap   1.8h  active  0.1m  new   3  bigger  3  first    0s  decisions  1  actions   1  idle    4s  run 0  effort  1
+  V4       gap   8.6h  active  1.0m  new  16  bigger  9  first    0s  decisions  1  actions   2  idle   44s  run 1  effort  2
+  landed (h) {'H1': 0.0, 'A11': 0.06, 'H2': 1.0, 'A12': 9.69, 'H3': 9.69, 'A13': 9.69, 'H4': 9.69, 'A14': 9.7, 'H5': 9.7, 'P0.2': 9.71, 'P0.3': 9.72, 'P0.1': 9.72, 'H6': 11.05, 'H7': 12.55, 'B3': 20.49, 'P0.4': 20.49}
+  seen (h)   {'H1': 0.0, 'A11': 0.06, 'H2': 9.69, 'A12': 9.69, 'H3': 9.69, 'A13': 9.69, 'H4': 9.69, 'A14': 9.7, 'H5': 9.7, 'P0.2': 9.71, 'P0.3': 9.72, 'P0.1': 9.72, 'H6': 11.69, 'H7': 20.47, 'B3': 20.49, 'P0.4': 20.49}
+  a day away from V1 opens 2 ['trigger t_morning', 'card screen_fire']
+  a day away from V2 opens 2 ['trigger t_first_smoke', 'trigger t_prints']
+  a day away from V3 opens 1 ['trigger t_prints']
+  a day away from V4 opens 0 []
+  near promise untouched in [] of 3 returns
+  flatcheck []
+  goals: 9 samples, 6 with a choice due, 0 of those with no goal the setup drives; weighting decides the order at 2 of 2 with a pair
+  leaves naming only a speed level []

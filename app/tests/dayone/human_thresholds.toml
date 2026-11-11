@@ -1,0 +1,81 @@
+# Thresholds of the human-paced player model (human.py). Each `source` is `docs/research/<file>.md#<heading>` or exactly "design choice". Retune from tester data when there is some.
+
+[model]
+dead_gap = "dead_gap_habit_s"   # which threshold a stretch of play with nothing notable is held to
+
+[threshold.dead_gap_habit_s]
+value = 180
+unit = "s"
+source = "design choice"
+note = "An observed habit (docs/open-work.md, item 6): a few minutes of play with nothing notable and the player leaves; 3 min is the reading of 'a few'. Held within a visit, up to the leave; a leave whose screen names no payoff is flagged as bored"
+
+[threshold.dead_gap_research_s]
+value = 10
+unit = "s"
+source = "docs/research/human-player.md#### 3. Time without a meaningful event"
+note = "the research gives seconds, not minutes, and about waiting on a system; recorded, not used"
+
+[threshold.reading_wpm]
+value = 238
+unit = "words/min"
+source = "docs/research/human-player.md#### 1. Reading speed and decision latency"
+note = "Brysbaert 2019"
+
+[threshold.reaction_practised_s]
+value = 2.65
+unit = "s"
+source = "docs/research/human-player.md#### 1. Reading speed and decision latency"
+note = "Card, Moran & Newell 1980; M + P + 2B; the low end of the seeded reaction before a tap"
+
+[threshold.reaction_first_time_s]
+value = 3.73
+unit = "s"
+source = "docs/research/human-player.md#### 1. Reading speed and decision latency"
+note = "Sauro 2009; the high end of the seeded reaction before a tap"
+
+[threshold.first_session_s]
+value = 540
+unit = "s"
+source = "docs/research/human-player.md#### 2. Sessions, visit cadence, retention"
+note = "deltaDNA; the opening's session is held beside it in the report; the model does not cut it"
+
+[threshold.session_s]
+value = 480
+unit = "s"
+source = "docs/research/human-player.md#### 2. Sessions, visit cadence, retention"
+note = "GameAnalytics blog; the longest a visit after the opening lasts: the player leaves sooner once nothing is left to act on and nothing is unread"
+
+[threshold.visits_per_day]
+value = 5.3
+unit = "visits/day"
+source = "docs/research/human-player.md#### 2. Sessions, visit cadence, retention"
+note = "GameAnalytics blog"
+
+[threshold.waking_h]
+value = 16
+unit = "h"
+source = "design choice"
+
+[threshold.night_h]
+value = 8
+unit = "h"
+source = "design choice"
+note = "every round(visits_per_day)-th gap is a night; the others share the waking hours"
+
+[threshold.return_jitter]
+value = 0.5
+unit = "fraction"
+source = "design choice"
+note = "a waking gap is waking_h / visits_per_day times a seeded draw in 1 +- this"
+
+[threshold.unlock_margin_s]
+value = 60
+unit = "s"
+source = "design choice"
+note = "an unlock is earned when the poorer route lands it this much later, or never; unlocks within this of each other are one moment"
+
+[threshold.fixed_run_min]
+value = 2
+unit = "moments"
+source = "design choice"
+note = "this many unlock moments running, all fixed-time, make a stretch to flag"

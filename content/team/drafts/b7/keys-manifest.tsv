@@ -1,0 +1,73 @@
+# B7 keys manifest: every key in b7.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 67 (12 of them are pool entries not yet in the data file; the lead adds them)
+key	kind	limit	alt	brief
+c_bank_fire_6	card label	n/a	-	-
+l_bank_fire_6_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_b7_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b7_2	line	line<=75; set median<=45,p90<=75	H	-
+l_b7_3	line	line<=75; set median<=45,p90<=75	H	-
+store_b7_clock	store label	n/a	-	-
+action_b7_clock	action label	n/a	-	-
+action_b7_strip	action label	n/a	-	-
+c_b7_stand	card label	n/a	-	-
+l_stand_1	line	line<=75; set median<=45,p90<=75	-	-
+l_stand_2	line	line<=75; set median<=45,p90<=75	-	-
+l_stand_3	line	line<=75; set median<=45,p90<=75	-	-
+side_hands	fight label	n/a	-	-
+side_larder	fight label	n/a	-	-
+side_rack	fight label	n/a	-	-
+threat_lone_wolf	fight label	n/a	-	-
+threat_ashrats	fight label	n/a	-	-
+threat_crows	fight label	n/a	-	-
+store_hurt	store label	n/a	-	-
+store_pelt	store label	n/a	-	-
+store_hunt_lost	store label	n/a	-	-
+store_rats_fought	store label	n/a	-	-
+store_rats_lost	store label	n/a	-	-
+store_crows_fought	store label	n/a	-	-
+store_crows_lost	store label	n/a	-	-
+c_hunt_wolf	card label	n/a	-	-
+l_hunt_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_make_spear	card label	n/a	-	-
+up_make_spear	upside label	n/a	-	-
+l_spear_fail	fail	line<=75; set median<=45,p90<=75	-	-
+c_poultice	card label	n/a	-	-
+l_poultice_fail	fail	line<=75; set median<=45,p90<=75	-	-
+action_heal	action label	n/a	-	-
+chip_hurt	chip label	n/a	-	-
+chip_hurt_cost	chip label	n/a	-	-
+action_rats	action label	n/a	-	-
+action_crows	action label	n/a	-	-
+store_r1_clock	store label	n/a	-	-
+action_r1_clock	action label	n/a	-	-
+skill_melee	skill label	n/a	-	-
+pays_hunt_side	pays label	n/a	-	-
+pays_melee_find	pays label	n/a	-	-
+pays_hunt_faster	pays label	n/a	-	-
+l_melee_3	line	line<=75; set median<=45,p90<=75	-	l_find_old_wolf
+l_combat_first	line	line<=75; set median<=45,p90<=75	-	-
+l_hurt	line	line<=75; set median<=45,p90<=75	-	-
+l_healed	line	line<=75; set median<=45,p90<=75	-	-
+l_poultice	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_hunt_won_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_hunt_lost_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_rats_won_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_rats_lost_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_crows_won_1	line	line<=75; set median<=45,p90<=75	-	-
+l_fight_crows_lost_1	line	line<=75; set median<=45,p90<=75	-	-
+aim_keep	aim label	n/a	-	-
+l_fight_hunt_won_2	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_hunt_won_3	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_hunt_lost_2	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_hunt_lost_3	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_rats_won_2	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_rats_won_3	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_rats_lost_2	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_rats_lost_3	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_crows_won_2	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_crows_won_3	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_crows_lost_2	line	line<=75; set median<=45,p90<=75	-	new pool entry
+l_fight_crows_lost_3	line	line<=75; set median<=45,p90<=75	-	new pool entry

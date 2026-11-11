@@ -1,0 +1,1180 @@
+# Day one: from the opening's end (story dusk) through the night and the next day to the first arrival, as data merged
+# onto opening.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/day-one.md.
+# Every number is provisional until the pacing simulator (tests/dayone) has tuned it; every line is the lead's pick
+# from the writers' drafts (content/team/drafts/selection.md) until the voice pass reads them in player order.
+version = 1
+end_feature = "n1"
+
+# Levels 6 and 7 for every skill (Scavenging's wire for the third snare); levels 8 on are the taper's (below).
+curve_items = [60, 100, 160, 250, 385, 590, 900, 1370, 2080, 3150, 4760, 7180, 10800, 16250, 24400]
+
+# The opening's "?" rows pay their finds now; the rest of each row, to the curve's top, is the taper's (below): each
+# level its skill's work a tenth faster. Among the levels day one reaches, at least every third also pays a thing (a
+# find: "the named pays", below), so no row pays speed alone three levels running
+# (tests/dayone/test_dayone_level_pays.py).
+[[skill_levels]]
+skill = "scavenging"
+levels = [{ level = 4, pays_key = "pays_find" }, { level = 5, pays_key = "pays_find" }, { level = 6, pays_key = "pays_find" }, { level = 7, pays_key = "pays_scav_faster" }, { level = 8, pays_key = "pays_scav_faster" }, { level = 9, pays_key = "pays_roof_beam" }, { level = 10, pays_key = "pays_scav_faster" }, { level = 11, pays_key = "pays_lintel" }, { level = 12, pays_key = "pays_doorway" }, { level = 13, pays_key = "pays_scav_faster" }, { level = 14, pays_key = "pays_cut_stones" }, { level = 15, pays_key = "pays_chimney" }, { level = 16, pays_key = "pays_scav_faster" }, { level = 17, pays_key = "pays_scav_faster" }, { level = 18, pays_key = "pays_scav_faster" }, { level = 19, pays_key = "pays_scav_faster" }, { level = 20, pays_key = "pays_scav_faster" }]
+
+[[skill_levels]]
+skill = "woodcutting"
+levels = [{ level = 3, pays_key = "pays_builds" }, { level = 4, pays_key = "pays_wc_faster" }, { level = 5, pays_key = "pays_wc_faster" }, { level = 6, pays_key = "pays_deadfall" }, { level = 7, pays_key = "pays_wc_faster" }, { level = 8, pays_key = "pays_wc_faster" }, { level = 9, pays_key = "pays_tipped_birch" }, { level = 10, pays_key = "pays_wc_faster" }, { level = 11, pays_key = "pays_wc_faster" }, { level = 12, pays_key = "pays_green_birch" }, { level = 13, pays_key = "pays_hung_birch" }, { level = 14, pays_key = "pays_wc_faster" }, { level = 15, pays_key = "pays_clear_view" }, { level = 16, pays_key = "pays_wc_faster" }, { level = 17, pays_key = "pays_split_birch" }, { level = 18, pays_key = "pays_thick_birch" }, { level = 19, pays_key = "pays_wc_faster" }, { level = 20, pays_key = "pays_wc_faster" }]
+
+[[skill_levels]]
+skill = "foraging"
+levels = [{ level = 2, pays_key = "pays_find" }, { level = 3, pays_key = "pays_for_faster" }, { level = 4, pays_key = "pays_for_faster" }, { level = 5, pays_key = "pays_root_hollow" }, { level = 6, pays_key = "pays_furrow" }, { level = 7, pays_key = "pays_for_faster" }, { level = 8, pays_key = "pays_for_faster" }, { level = 9, pays_key = "pays_for_faster" }, { level = 10, pays_key = "pays_for_faster" }, { level = 11, pays_key = "pays_for_faster" }, { level = 12, pays_key = "pays_for_faster" }, { level = 13, pays_key = "pays_for_faster" }, { level = 14, pays_key = "pays_for_faster" }, { level = 15, pays_key = "pays_for_faster" }, { level = 16, pays_key = "pays_for_faster" }, { level = 17, pays_key = "pays_for_faster" }, { level = 18, pays_key = "pays_for_faster" }, { level = 19, pays_key = "pays_for_faster" }, { level = 20, pays_key = "pays_for_faster" }]
+
+# ---------- the Camp ----------
+
+# Fills the opening's held marker: the wall takes 7 instead of 5.
+[[camp_levels]]
+at_items = 1500
+pays_key = "camp_pays_1"
+pays_from = 5
+pays_to = 7
+line_keys = ["l_camp_3"]
+modifiers = [
+  { target = "rate", id = "lay_to_dry", flow = "cost", store = "damp_wood", kind = "mul_bp", amount_bp = 14000, source = "camp_3" },
+  { target = "rate", id = "lay_to_dry", flow = "make", store = "dry_wood", kind = "mul_bp", amount_bp = 14000, source = "camp_3" },
+]
+
+[[camp_levels]]
+at_items = 10800
+pays_key = "camp_pays_4"
+pays_from = 6
+pays_to = 9
+line_keys = ["l_camp_4"]
+modifiers = [{ target = "cap", id = "catch", kind = "mul_bp", amount_bp = 15000, source = "camp_4" }]
+
+[[camp_levels]]
+at_items = 28800
+pays_key = "camp_pays_5"
+pays_from = 2
+pays_to = 3
+line_keys = ["l_camp_5"]
+modifiers = [
+  { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "camp_5" },
+  { target = "rate", id = "smoke_roots", flow = "make", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "camp_5" },
+]
+
+# Held at a "?" until B3 lifts it (take_stock's finish raises the camp cap): room for two.
+[[camp_levels]]
+at_items = 54000
+pays_key = "pays_unknown"
+held = true
+lifted_by = ["take_stock"]
+line_keys = ["l_camp_6"]
+modifiers = [
+  { target = "cap", id = "roots", kind = "mul_bp", amount_bp = 15000, source = "camp_6" },
+  { target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 15000, source = "camp_6" },
+]
+
+# ---------- stores ----------
+
+# Holds all three finds: Scavenging 4-6 land in the night, before the first snare can take one.
+[[stores]]
+id = "wire"
+label_key = "store_wire"
+cap_items = 3
+
+[[stores]]
+id = "tinder_fungus"
+label_key = "store_tinder_fungus"
+cap_items = 1
+
+[[stores]]
+id = "catch"
+label_key = "store_catch"
+cap_items = 6
+
+# Never unlocked: the larder and the rack, each counted once built; both make the roots rule's offer.
+[[stores]]
+id = "stock_ready"
+label_key = "store_stock_ready"
+cap_items = 2
+
+[[stores]]
+id = "smoked"
+label_key = "store_smoked"
+cap_items = 4
+
+# Never unlocked: the night going, filled by the night action from the end. Morning waits for it.
+[[stores]]
+id = "night"
+label_key = "store_night"
+cap_items = 20
+
+# Never unlocked: what the visitor will take, drawn down with the roots it takes, so H7 lands only once three roots
+# are gone (always whole: a dry larder pauses the visitor, not the beat's truth).
+[[stores]]
+id = "h7_clock"
+label_key = "store_h7_clock"
+cap_items = 3
+initial_items = 3
+
+# ---------- skills ----------
+
+# The row opens with the smoking rack.
+[[skills]]
+id = "cooking"
+label_key = "skill_cooking"
+levels = [{ level = 2, pays_key = "pays_smoke_batch" }, { level = 3, pays_key = "pays_cook_faster" }, { level = 4, pays_key = "pays_cook_faster" }, { level = 5, pays_key = "pays_cook_faster" }, { level = 6, pays_key = "pays_cook_faster" }]
+
+# ---------- standing actions ----------
+
+# From the end to morning: about an hour, in twentieths (H1's lines at the first, three minutes in, so they come after
+# the dusk lines rather than on them).
+[[standing]]
+id = "night"
+label_key = "action_night"
+makes = [{ store = "night", items_per_hour = 20 }]
+
+[[standing]]
+id = "snare_1"
+label_key = "action_snare"
+makes = [{ store = "catch", items_per_hour = 1 }]
+
+[[standing]]
+id = "snare_2"
+label_key = "action_snare"
+makes = [{ store = "catch", items_per_hour = 1 }]
+
+[[standing]]
+id = "snare_3"
+label_key = "action_snare"
+makes = [{ store = "catch", items_per_hour = 1 }]
+
+# From the first smoke: three roots over about ninety minutes, then never again (h7_clock empty pauses it for good).
+[[standing]]
+id = "visitor"
+label_key = "action_visitor"
+costs = [{ store = "roots", items_per_hour = 2 }, { store = "h7_clock", items_per_hour = 2 }]
+
+# From B3: two eat.
+[[standing]]
+id = "n1_eating"
+label_key = "action_n1_eating"
+costs = [{ store = "smoked", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+
+# ---------- lanes ----------
+
+[[lanes]]
+id = "smoke"
+label_key = "lane_smoke"
+
+# ---------- cards ----------
+
+# A11: on offer through the night, retired at morning if untapped.
+[[cards]]
+id = "sit_up"
+presentation = "narrative"
+label_key = "c_sit_up"
+work_s = 20
+cap = 1
+line_keys = ["l_sit_up"]
+
+# A12: H3.
+[[cards]]
+id = "look_out"
+presentation = "narrative"
+label_key = "c_look_out"
+work_s = 5
+cap = 1
+failed_line_key = "l_look_out_fail"
+requires = [{ test = "at_least", subject_kind = "store", id = "night", value = 20 }]
+line_keys = ["l_look_out_1"]
+finished = { line_keys = ["l_look_out_2"], unlocks = [{ unlock_kind = "card", id = "set_snare" }] }
+
+# A13 and the two later snares: a wire each (Scavenging 4, 5, 6). The first is H4.
+[[cards]]
+id = "set_snare"
+presentation = "narrative"
+label_key = "c_set_snare"
+work_s = 8
+cap = 3
+failed_line_key = "l_snare_fail"
+inputs = [{ store = "wire", items = 1 }]
+line_keys = ["l_snare_1", "l_snare_2", "l_snare_3"]
+
+# A14, H5: the camp by daylight, after the first snare; it brings the two builds and the rack into view.
+[[cards]]
+id = "look_over_camp"
+presentation = "narrative"
+label_key = "c_look_over_camp"
+work_s = 5
+cap = 1
+line_keys = ["l_camp_daylight"]
+finished = { unlocks = [{ unlock_kind = "card", id = "build_lean_to" }, { unlock_kind = "card", id = "build_larder" }, { unlock_kind = "card", id = "build_smoke_rack" }] }
+
+# P0.1 and P0.2: each names only its upside; the order is the choice. They pull on different stores (the lean-to on dry
+# wood, more than the wall's rule keeps, the larder on stones), so the need is a mix switch. Each finished one counts
+# toward stock_ready, the roots rule's offer.
+[[cards]]
+id = "build_lean_to"
+presentation = "craft"
+label_key = "c_build_lean_to"
+upside_key = "up_lean_to"
+work_s = 20
+cap = 1
+failed_line_key = "l_lean_to_fail"
+inputs = [{ store = "dry_wood", items = 10 }, { store = "stones", items = 2 }]
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 3 }]
+line_keys = ["l_lean_to"]
+[cards.finished]
+unlocks = [{ unlock_kind = "feature", id = "lean_to" }]
+modifiers = [
+  { target = "rate", id = "weariness", flow = "cost", store = "energy", kind = "mul_bp", amount_bp = 7500, source = "lean_to" },
+]
+
+[[cards]]
+id = "build_larder"
+presentation = "craft"
+label_key = "c_build_larder"
+upside_key = "up_larder"
+work_s = 20
+cap = 1
+failed_line_key = "l_larder_fail"
+inputs = [{ store = "dry_wood", items = 4 }, { store = "stones", items = 12 }]
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 3 }]
+line_keys = ["l_larder"]
+[cards.finished]
+stores = [{ store = "stock_ready", items = 1 }]
+unlocks = [{ unlock_kind = "feature", id = "larder" }]
+modifiers = [
+  { target = "cap", id = "roots", kind = "mul_bp", amount_bp = 20000, source = "larder" },
+  { target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 30000, source = "larder" },
+]
+
+# P0.3: opened by A14, beside the builds, so the player builds it while there and its rule smokes the catch while
+# they are away: the smoke, H6 and what follows come as soon as the player's setup makes them, not at the next return.
+# Green poles, so damp wood (dry wood is for burning). It is shown while the player is there, and its A14 requires a
+# tap, so it never turns ready unseen (the 2 AM test). The Smoke lane with smoke_catch, Cooking, and the rising-line
+# rule's card.
+[[cards]]
+id = "build_smoke_rack"
+presentation = "craft"
+label_key = "c_build_smoke_rack"
+work_s = 30
+cap = 1
+failed_line_key = "l_rack_fail"
+inputs = [{ store = "damp_wood", items = 10 }, { store = "tinder_fungus", items = 1 }]
+requires = [{ test = "at_least", subject_kind = "card_count", id = "look_over_camp", value = 1 }]
+line_keys = ["l_rack"]
+[cards.finished]
+line_keys = ["l_cooking_open"]
+stores = [{ store = "stock_ready", items = 1 }]
+unlocks = [
+  { unlock_kind = "feature", id = "smoke_rack" },
+  { unlock_kind = "card", id = "smoke_catch" },
+  { unlock_kind = "store", id = "smoked" },
+  { unlock_kind = "skill", id = "cooking" },
+]
+
+[[cards]]
+id = "smoke_catch"
+lane = "smoke"
+presentation = "action"
+label_key = "c_smoke_catch"
+work_s = 80
+skill = "cooking"
+xp_per_hour = 18
+failed_line_key = "l_smoke_fail"
+inputs = [{ store = "catch", items = 4 }, { store = "damp_wood", items = 2 }]
+outcome = { stores = [{ store = "smoked", items = 2 }] }
+
+# Opened by the first smoke (t_smoke_roots): the what-to-smoke tradeoff (roots count toward Take stock too). Three
+# roots, the shipped roots rule's floor (under 3, until 6), so with that rule set a return while the visitor is taking
+# roots can always smoke some.
+[[cards]]
+id = "smoke_roots"
+lane = "smoke"
+presentation = "action"
+label_key = "c_smoke_roots"
+work_s = 80
+skill = "cooking"
+xp_per_hour = 18
+failed_line_key = "l_smoke_fail"
+inputs = [{ store = "roots", items = 3 }, { store = "damp_wood", items = 2 }]
+outcome = { stores = [{ store = "smoked", items = 2 }] }
+
+# The opening's roast, as often as hunger comes back: roots over the fire for fullness. Its label and failed line are
+# the roast's, so the step the player took once is the one they take again. Opened by t_cook.
+[[cards]]
+id = "cook_roots"
+presentation = "action"
+label_key = "c_roast_roots"
+work_s = 4
+failed_line_key = "l_roast_fail"
+inputs = [{ store = "roots", items = 3 }]
+requires = [{ test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }]
+outcome = { stores = [{ store = "fullness", items = 7 }] }
+
+# P0.4: spends nothing; its requires hold the day's conjunction. B3. Opened by t_stock_shown, so it is not shown before
+# the prints beat has happened. The store levels come first, so the card reads "smoked 0/6" (its first unmet requires
+# is its blocker) and When ready has a time to wait for.
+[[cards]]
+id = "take_stock"
+presentation = "narrative"
+label_key = "c_take_stock"
+work_s = 10
+cap = 1
+failed_line_key = "l_take_stock_fail"
+requires = [
+  { test = "at_least", subject_kind = "store", id = "smoked", value = 6 },
+  { test = "at_least", subject_kind = "store", id = "roots", value = 15 },
+  { test = "at_least", subject_kind = "card_count", id = "build_larder", value = 1 },
+  { test = "at_least", subject_kind = "card_count", id = "build_smoke_rack", value = 1 },
+]
+line_keys = ["l_b3_1"]
+[cards.finished]
+line_keys = ["l_b3_2", "l_b3_3", "l_b3_4"]
+unlocks = [{ unlock_kind = "feature", id = "n1" }, { unlock_kind = "action", id = "n1_eating" }]
+
+# ---------- triggers ----------
+
+# The night, from the end (t_evening, which unlocks keeps_going, is released and stays as it is).
+[[triggers]]
+id = "t_night"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "keeps_going", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "action", id = "night" },
+  { unlock_kind = "store", id = "wire" },
+  { unlock_kind = "store", id = "tinder_fungus" },
+]
+
+# H1: a little way into the night.
+[[triggers]]
+id = "t_h1"
+when = { test = "at_least", subject_kind = "store", id = "night", value = 1 }
+outcome = { line_keys = ["l_night_1", "l_night_2"], unlocks = [{ unlock_kind = "card", id = "sit_up" }] }
+
+# Nightfall for the scene: its night grade from the first of the night until morning (decisions.md, "Day and night run on
+# the story's clock"). The same moment as H1, but its own trigger, so H1's outcome stays as released.
+[[triggers]]
+id = "t_nightfall"
+when = { test = "at_least", subject_kind = "store", id = "night", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "night" }] }
+
+# H2: morning.
+[[triggers]]
+id = "t_morning"
+when = { test = "at_least", subject_kind = "store", id = "night", value = 20 }
+[triggers.outcome]
+line_keys = ["l_morning"]
+unlocks = [
+  { unlock_kind = "feature", id = "morning" },
+  { unlock_kind = "card", id = "look_out" },
+  { unlock_kind = "retired", id = "sit_up" },
+]
+
+# Finds behind the opening's "?" markers, and after them.
+[[triggers]]
+id = "t_wire_1"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 4 }
+outcome = { stores = [{ store = "wire", items = 1 }], line_keys = ["l_wire_1"] }
+
+[[triggers]]
+id = "t_wire_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 5 }
+outcome = { stores = [{ store = "wire", items = 1 }], line_keys = ["l_wire_2"] }
+
+[[triggers]]
+id = "t_wire_3"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 6 }
+outcome = { stores = [{ store = "wire", items = 1 }], line_keys = ["l_wire_3"] }
+
+[[triggers]]
+id = "t_tinder"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 2 }
+outcome = { stores = [{ store = "tinder_fungus", items = 1 }], line_keys = ["l_tinder"] }
+
+# Each snare set runs its own line of catch.
+[[triggers]]
+id = "t_snare_1"
+when = { test = "at_least", subject_kind = "card_count", id = "set_snare", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "snare_1" }, { unlock_kind = "store", id = "catch" }] }
+
+[[triggers]]
+id = "t_snare_2"
+when = { test = "at_least", subject_kind = "card_count", id = "set_snare", value = 2 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "snare_2" }] }
+
+[[triggers]]
+id = "t_snare_3"
+when = { test = "at_least", subject_kind = "card_count", id = "set_snare", value = 3 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "snare_3" }] }
+
+# The first catch's line (the builds are A14's).
+[[triggers]]
+id = "t_first_catch"
+when = { test = "at_least", subject_kind = "store", id = "catch", value = 1 }
+outcome = { line_keys = ["l_first_catch"] }
+
+# A14 after the first snare.
+[[triggers]]
+id = "t_look_over"
+when = { test = "at_least", subject_kind = "card_count", id = "set_snare", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "look_over_camp" }] }
+
+# P0.3 at the first catch, for a player who set a snare and left before A14 (the card waits on A14 by its
+# requires); a no-op once A14 has opened it.
+[[triggers]]
+id = "t_rack"
+when = { test = "at_least", subject_kind = "store", id = "catch", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "build_smoke_rack" }] }
+
+# The larder built: the roots rule "until 15" is offered.
+[[triggers]]
+id = "t_stock_ready"
+when = { test = "at_least", subject_kind = "store", id = "stock_ready", value = 2 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "roots_to_stock" }] }
+
+[[triggers]]
+id = "t_rack_shown"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "build_smoke_rack", value = 1 }
+outcome = { line_keys = ["l_rack_shown"] }
+
+# H6: the first smoke; the visitor comes to look.
+[[triggers]]
+id = "t_first_smoke"
+when = { test = "at_least", subject_kind = "card_count", id = "smoke_catch", value = 1 }
+outcome = { line_keys = ["l_smoke_1"], unlocks = [{ unlock_kind = "action", id = "visitor" }] }
+
+# The what-to-smoke choice once meat has hung in the smoke: roots can too. H6's condition, so one moment with it.
+[[triggers]]
+id = "t_smoke_roots"
+when = { test = "at_least", subject_kind = "card_count", id = "smoke_catch", value = 1 }
+outcome = { line_keys = ["l_smoke_roots"], unlocks = [{ unlock_kind = "card", id = "smoke_roots" }] }
+
+# H7: three roots gone, a strip left.
+[[triggers]]
+id = "t_prints"
+when = { test = "at_most", subject_kind = "store", id = "h7_clock", value = 0 }
+[triggers.outcome]
+stores = [{ store = "smoked", items = 1 }]
+line_keys = ["l_prints_1", "l_prints_2"]
+unlocks = [{ unlock_kind = "feature", id = "prints" }]
+
+# P0.4 with the prints: Take stock waits on that beat, so it is not shown before it. H7's condition, so the two are one
+# moment, also to an absence's count.
+[[triggers]]
+id = "t_stock_shown"
+when = { test = "at_most", subject_kind = "store", id = "h7_clock", value = 0 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "take_stock" }] }
+
+[[triggers]]
+id = "t_cooking_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 2 }
+[triggers.outcome]
+line_keys = ["l_cooking_2"]
+modifiers = [
+  { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "cooking_2" },
+]
+
+# Cooking opens as the roast is done: cook_roots carries the roast's label, so the card the player tapped once reads as
+# staying on the panel, there before hunger comes back and its rule offered with the chip. The opening's eating keeps
+# drawing roots: its drain is what the roots rule forages against while the player is away, and that Foraging is what
+# finds the tinder the rack needs.
+[[triggers]]
+id = "t_cook"
+when = { test = "at_least", subject_kind = "card_count", id = "roast_roots", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "cook_roots" }] }
+
+# ---------- the taper: something to build toward after the end ----------
+
+# First light on the clock: the morning's first step is on the cards from H1's moment, unready until morning,
+# its countdown the time-driven next beside the levels (never instead of them). The page draws a need on a store the
+# player has never been shown as its countdown alone, with no When ready (docs/design/opening-screen.md, "When ready"):
+# queued, the step would open the snares unseen (the 2 AM test). t_morning's own unlock of the card is then a no-op.
+[[triggers]]
+id = "t_first_light_shown"
+when = { test = "at_least", subject_kind = "store", id = "night", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "look_out" }] }
+
+# Every level past a row's finds pays its own skill's work a tenth faster (engine WorkRef: more made an hour, the same
+# XP), to the curve's top for the skills a hands card trains, so the mix always has a next level it drives and the
+# order the rows arrive in is the player's weighting (docs/decisions.md); Cooking, trained on the smoke lane, to 6,
+# then "no more yet". A level's step grows by half again each level (curve_items) while its pay is a tenth: time
+# per level never shrinks (tests/dayone/growth.py). Numbers provisional (tests/dayone, "goals").
+
+[[triggers]]
+id = "t_wc_4"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 4 }
+outcome = { line_keys = ["l_wc_faster"], modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_4" }] }
+
+[[triggers]]
+id = "t_wc_5"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 5 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_5" }] }
+
+[[triggers]]
+id = "t_wc_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 6 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_6" }] }
+
+[[triggers]]
+id = "t_wc_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 7 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_7" }] }
+
+[[triggers]]
+id = "t_wc_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 8 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_8" }] }
+
+[[triggers]]
+id = "t_wc_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 9 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_9" }] }
+
+[[triggers]]
+id = "t_wc_10"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 10 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_10" }] }
+
+[[triggers]]
+id = "t_wc_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_11" }] }
+
+[[triggers]]
+id = "t_wc_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_12" }] }
+
+[[triggers]]
+id = "t_wc_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_13" }] }
+
+[[triggers]]
+id = "t_wc_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_14" }] }
+
+[[triggers]]
+id = "t_wc_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_15" }] }
+
+[[triggers]]
+id = "t_wc_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_16" }] }
+
+[[triggers]]
+id = "t_wc_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_17" }] }
+
+[[triggers]]
+id = "t_wc_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_18" }] }
+
+[[triggers]]
+id = "t_wc_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_19" }] }
+
+[[triggers]]
+id = "t_wc_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "woodcutting", kind = "mul_bp", amount_bp = 11000, source = "wc_20" }] }
+
+[[triggers]]
+id = "t_scav_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 7 }
+outcome = { line_keys = ["l_scav_faster"], modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_7" }] }
+
+[[triggers]]
+id = "t_scav_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 8 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_8" }] }
+
+[[triggers]]
+id = "t_scav_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 9 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_9" }] }
+
+[[triggers]]
+id = "t_scav_10"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 10 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_10" }] }
+
+[[triggers]]
+id = "t_scav_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_11" }] }
+
+[[triggers]]
+id = "t_scav_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_12" }] }
+
+[[triggers]]
+id = "t_scav_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_13" }] }
+
+[[triggers]]
+id = "t_scav_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_14" }] }
+
+[[triggers]]
+id = "t_scav_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_15" }] }
+
+[[triggers]]
+id = "t_scav_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_16" }] }
+
+[[triggers]]
+id = "t_scav_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_17" }] }
+
+[[triggers]]
+id = "t_scav_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_18" }] }
+
+[[triggers]]
+id = "t_scav_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_19" }] }
+
+[[triggers]]
+id = "t_scav_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "scavenge", kind = "mul_bp", amount_bp = 11000, source = "scav_20" }] }
+
+[[triggers]]
+id = "t_for_3"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 3 }
+outcome = { line_keys = ["l_for_faster"], modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_3" }] }
+
+[[triggers]]
+id = "t_for_4"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 4 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_4" }] }
+
+[[triggers]]
+id = "t_for_5"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 5 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_5" }] }
+
+[[triggers]]
+id = "t_for_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 6 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_6" }] }
+
+[[triggers]]
+id = "t_for_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 7 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_7" }] }
+
+[[triggers]]
+id = "t_for_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 8 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_8" }] }
+
+[[triggers]]
+id = "t_for_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 9 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_9" }] }
+
+[[triggers]]
+id = "t_for_10"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 10 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_10" }] }
+
+[[triggers]]
+id = "t_for_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_11" }] }
+
+[[triggers]]
+id = "t_for_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_12" }] }
+
+[[triggers]]
+id = "t_for_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_13" }] }
+
+[[triggers]]
+id = "t_for_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_14" }] }
+
+[[triggers]]
+id = "t_for_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_15" }] }
+
+[[triggers]]
+id = "t_for_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_16" }] }
+
+[[triggers]]
+id = "t_for_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_17" }] }
+
+[[triggers]]
+id = "t_for_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_18" }] }
+
+[[triggers]]
+id = "t_for_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_19" }] }
+
+[[triggers]]
+id = "t_for_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "for_20" }] }
+
+[[triggers]]
+id = "t_cook_3"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 3 }
+outcome = { line_keys = ["l_cook_faster"], modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_3" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_3" }] }
+
+[[triggers]]
+id = "t_cook_4"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 4 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_4" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_4" }] }
+
+[[triggers]]
+id = "t_cook_5"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 5 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_5" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_5" }] }
+
+[[triggers]]
+id = "t_cook_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "cooking", value = 6 }
+outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp", amount_bp = 11000, source = "cook_6" }, { target = "work", id = "smoke_roots", kind = "mul_bp", amount_bp = 11000, source = "cook_6" }] }
+
+# ---------- the named pays: a thing at a level, beside its speed-up ----------
+
+# Each on a level its taper trigger speeds, as its own trigger (that one's outcome is released): a find the player's own
+# work earns, into a store the day already uses. None adds dry wood after the night, which could ready a build or the
+# rack unseen (the 2 AM test). Every line holds from the morning (the night, for Woodcutting 6 and 9) to after B3.
+# The levels most routes reach next after day one's end (Woodcutting 17, Scavenging 14, Foraging 6) pay one too, so the
+# rows name a thing to come back for when the day is done.
+
+[[triggers]]
+id = "t_deadfall"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 6 }
+outcome = { stores = [{ store = "dry_wood", items = 4 }], line_keys = ["l_deadfall"] }
+
+[[triggers]]
+id = "t_tipped_birch"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 9 }
+outcome = { stores = [{ store = "stones", items = 3 }], line_keys = ["l_tipped_birch"] }
+
+[[triggers]]
+id = "t_green_birch"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 12 }
+outcome = { stores = [{ store = "damp_wood", items = 5 }], line_keys = ["l_green_birch"] }
+
+[[triggers]]
+id = "t_hung_birch"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 13 }
+outcome = { stores = [{ store = "damp_wood", items = 4 }], line_keys = ["l_hung_birch"] }
+
+[[triggers]]
+id = "t_clear_view"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 15 }
+outcome = { stores = [{ store = "damp_wood", items = 3 }], line_keys = ["l_clear_view"] }
+
+[[triggers]]
+id = "t_thick_birch"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 18 }
+outcome = { stores = [{ store = "damp_wood", items = 6 }], line_keys = ["l_thick_birch"] }
+
+[[triggers]]
+id = "t_split_birch"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 17 }
+outcome = { stores = [{ store = "damp_wood", items = 4 }], line_keys = ["l_split_birch"] }
+
+[[triggers]]
+id = "t_roof_beam"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 9 }
+outcome = { stores = [{ store = "damp_wood", items = 4 }], line_keys = ["l_roof_beam"] }
+
+[[triggers]]
+id = "t_lintel"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 11 }
+outcome = { stores = [{ store = "stones", items = 3 }], line_keys = ["l_lintel"] }
+
+[[triggers]]
+id = "t_doorway"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 12 }
+outcome = { stores = [{ store = "stones", items = 3 }], line_keys = ["l_doorway"] }
+
+[[triggers]]
+id = "t_cut_stones"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 14 }
+outcome = { stores = [{ store = "stones", items = 3 }], line_keys = ["l_cut_stones"] }
+
+[[triggers]]
+id = "t_chimney"
+when = { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 15 }
+outcome = { stores = [{ store = "stones", items = 4 }], line_keys = ["l_chimney"] }
+
+[[triggers]]
+id = "t_root_hollow"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 5 }
+outcome = { stores = [{ store = "roots", items = 4 }], line_keys = ["l_root_hollow"] }
+
+[[triggers]]
+id = "t_furrow"
+when = { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 6 }
+outcome = { stores = [{ store = "roots", items = 4 }], line_keys = ["l_furrow"] }
+
+# ---------- the screen: somewhere for what the hands make while away ----------
+
+# From the end the hands make far more damp wood than its cap holds (docs/design/banked-time-plan.md). Weaving takes
+# it in the mix, held against the damp wood line like a trip (engine DESIGN.txt, "BANKED TIME"); the screen is a
+# comfort built from the weave by its order card, a stage whenever a stage's wattle is in, so a day away brings more
+# of it than a night away. Both are on the cards from the end, while the player is there: the screen shows unready,
+# with its wattle at 0, before it can be afforded (the 2 AM test).
+[[triggers]]
+id = "t_screen_open"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "keeps_going", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "weave_wattle" },
+  { unlock_kind = "card", id = "screen_fire" },
+  { unlock_kind = "store", id = "wattle" },
+]
+
+[[stores]]
+id = "wattle"
+label_key = "store_wattle"
+cap_items = 24
+
+[[cards]]
+id = "weave_wattle"
+presentation = "action"
+label_key = "c_weave_wattle"
+work_s = 180
+failed_line_key = "l_weave_fail"
+inputs = [{ store = "damp_wood", items = 18 }]
+outcome = { stores = [{ store = "wattle", items = 1 }] }
+
+# One stage a completion, each a full store of wattle, so its countdown is the wattle line's fill; the last pays. Tapped by its order card, so no stage is queued.
+[[cards]]
+id = "screen_fire"
+presentation = "craft"
+label_key = "c_screen_fire"
+upside_key = "up_screen_fire"
+work_s = 30
+cap = 4
+failed_line_key = "l_screen_fail"
+inputs = [{ store = "wattle", items = 24 }, { store = "stones", items = 12 }]
+line_keys = ["l_screen_1", "l_screen_2", "l_screen_3", "l_screen_4"]
+[cards.finished]
+unlocks = [{ unlock_kind = "feature", id = "screen" }]
+modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 7500, source = "screen" }]
+
+# ---------- the journal ----------
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[notes]]
+id = "n_day_b3"
+entry = "e_days_1"
+gate = { test = "at_least", subject_kind = "card_count", id = "take_stock", value = 1 }
+beat = "B3"
+
+# ---------- features ----------
+
+[[features]]
+id = "night"
+
+[[features]]
+id = "morning"
+
+[[features]]
+id = "lean_to"
+
+[[features]]
+id = "larder"
+
+[[features]]
+id = "smoke_rack"
+
+[[features]]
+id = "prints"
+
+[[features]]
+id = "n1"
+
+[[features]]
+id = "roots_to_stock"
+
+[[features]]
+id = "screen"
+
+# ---------- aims ----------
+
+# Day one's stretches, after the opening's (schema: feature_entries.AimEntry), each from the moment the story moves on.
+[[aims]]
+id = "aim_night"
+text_key = "aim_night"
+after = { unlock_kind = "feature", id = "keeps_going" }
+
+[[aims]]
+id = "aim_food"
+text_key = "aim_food"
+after = { unlock_kind = "feature", id = "morning" }
+
+[[aims]]
+id = "aim_hold"
+text_key = "aim_hold"
+after = { unlock_kind = "card", id = "build_larder" }
+
+[[aims]]
+id = "aim_worth"
+text_key = "aim_worth"
+after = { unlock_kind = "feature", id = "prints" }
+
+[[aims]]
+id = "aim_two"
+text_key = "aim_two"
+after = { unlock_kind = "feature", id = "n1" }
+
+# ---------- order cards ----------
+
+# The first rule on a rising line: offered under the catch line while it is full and the rack idle.
+[[order_cards]]
+store = "catch"
+tap_card = "smoke_catch"
+when = { test = "at_least", subject_kind = "store", id = "catch", value = 4, release = 4 }
+offered_after = { unlock_kind = "card", id = "smoke_catch" }
+
+# The screen's rule: a stage whenever a stage's wattle is in, stones allowing; passed over at the cap.
+[[order_cards]]
+store = "wattle"
+tap_card = "screen_fire"
+when = { test = "at_least", subject_kind = "store", id = "wattle", value = 24, release = 24 }
+offered_after = { unlock_kind = "card", id = "screen_fire" }
+
+# Take stock's roots need: the roots rule re-tuned (forage under 13, until 15), once the larder can hold it.
+[[order_cards]]
+store = "roots"
+tap_card = "forage"
+when = { test = "at_most", subject_kind = "store", id = "roots", value = 12, release = 15 }
+offered_after = { unlock_kind = "feature", id = "roots_to_stock" }
+
+# Hunger's rule, as the tired one is taught: offered in the hands strip while hungry, once day one's end is reached; its
+# `when` is the chip's, so the rule reads as the chip; offered once cooking is open (t_cook).
+[[order_cards]]
+store = "fullness"
+tap_card = "cook_roots"
+chip = "hungry"
+after_end = true
+when = { test = "at_most", subject_kind = "store", id = "fullness", value = 3, release = 6 }
+offered_after = { unlock_kind = "card", id = "cook_roots" }
+
+# ---------- text ----------
+# Labels and lines after the voice pass (content/team/drafts/voice-notes.md); picks in content/team/drafts/selection.md.
+
+[line_kinds]
+l_wc_faster = "level"
+l_scav_faster = "level"
+l_for_faster = "level"
+l_cook_faster = "level"
+l_deadfall = "find"
+l_tipped_birch = "find"
+l_green_birch = "find"
+l_clear_view = "find"
+l_thick_birch = "find"
+l_roof_beam = "find"
+l_doorway = "find"
+l_chimney = "find"
+l_split_birch = "find"
+l_cut_stones = "find"
+l_furrow = "find"
+l_hung_birch = "find"
+l_lintel = "find"
+l_root_hollow = "find"
+l_night_1 = "story"
+l_night_2 = "story"
+l_sit_up = "story"
+l_morning = "story"
+l_look_out_1 = "story"
+l_look_out_2 = "story"
+l_look_out_fail = "tap"
+l_wire_1 = "find"
+l_wire_2 = "find"
+l_wire_3 = "find"
+l_tinder = "find"
+l_snare_1 = "story"
+l_snare_2 = "story"
+l_snare_3 = "story"
+l_snare_fail = "tap"
+l_first_catch = "story"
+l_camp_daylight = "story"
+l_lean_to = "story"
+l_larder = "story"
+l_lean_to_fail = "tap"
+l_larder_fail = "tap"
+l_rack_shown = "story"
+l_rack = "story"
+l_rack_fail = "tap"
+l_cooking_open = "story"
+l_smoke_1 = "story"
+l_smoke_fail = "tap"
+l_cooking_2 = "level"
+l_prints_1 = "find"
+l_prints_2 = "find"
+l_smoke_roots = "story"
+l_take_stock_fail = "tap"
+l_b3_1 = "story"
+l_b3_2 = "story"
+l_b3_3 = "story"
+l_b3_4 = "story"
+l_camp_3 = "level"
+l_camp_4 = "level"
+l_camp_5 = "level"
+l_camp_6 = "level"
+l_weave_fail = "tap"
+l_screen_fail = "tap"
+l_screen_1 = "story"
+l_screen_2 = "story"
+l_screen_3 = "story"
+l_screen_4 = "story"
+
+[text]
+aim_night = "see the night out."
+n_day_b3 = "someone else is alive. she came in out of the grey and sat down like it was her fire"
+aim_food = "find food that isn't roots."
+aim_hold = "make the camp last, whoever's out there."
+aim_worth = "be worth coming back to."
+aim_two = "lay in enough for both of you."
+pays_wc_faster = "{pct} woodcutting speed"
+pays_scav_faster = "{pct} scavenging speed"
+pays_for_faster = "{pct} foraging speed"
+pays_cook_faster = "{pct} cooking speed"
+l_wc_faster = "you stop fighting the grain. the wood comes quicker."
+l_scav_faster = "you've learned which heaps are worth turning over."
+l_for_faster = "you can tell the good roots by their leaves now."
+l_cook_faster = "you learn how the rack draws. the smoke takes quicker."
+pays_deadfall = "deadfall, {pct} woodcutting speed"
+pays_tipped_birch = "a tipped birch, {pct} woodcutting speed"
+pays_green_birch = "a green birch, {pct} woodcutting speed"
+pays_clear_view = "a clear view, {pct} woodcutting speed"
+pays_thick_birch = "a thick birch, {pct} woodcutting speed"
+pays_roof_beam = "a roof beam, {pct} scavenging speed"
+pays_doorway = "a doorway, {pct} scavenging speed"
+pays_chimney = "a chimney, {pct} scavenging speed"
+pays_root_hollow = "a root hollow, {pct} foraging speed"
+pays_split_birch = "a split birch, {pct} woodcutting speed"
+pays_cut_stones = "cut stones, {pct} scavenging speed"
+pays_furrow = "a furrow, {pct} foraging speed"
+pays_hung_birch = "a hung birch, {pct} woodcutting speed"
+pays_lintel = "a lintel, {pct} scavenging speed"
+l_deadfall = "you cut into a birch long down. it's dry to the heart."
+l_tipped_birch = "a birch has tipped over. stones came up in its roots."
+l_green_birch = "you drop a green birch in one piece. it takes two trips."
+l_clear_view = "the near scrub is cut back. from the fire you can see the gap."
+l_thick_birch = "you fell a birch thicker than you are. the ground jumps when it lands."
+l_roof_beam = "you drag a roof beam from the rubble. under the rot, it's sound."
+l_doorway = "a doorframe stands on its own, no walls to it. you take the step."
+l_chimney = "a fallen chimney, its stones still squared, soot on one face."
+l_split_birch = "an old birch stands split down its length. half the work is done."
+l_cut_stones = "you clear the ash off a kerb of cut stone. the blocks lift out whole."
+l_furrow = "you follow a furrow under the ash. roots grow all along it."
+l_hung_birch = "a dead birch hangs in a live one. you cut the live one, and both come down."
+l_lintel = "you lever a lintel out of the rubble. the wall under it was holding nothing up."
+l_root_hollow = "a hollow full of roots, thick ones, clean of grit."
+store_wire = "wire"
+store_tinder_fungus = "tinder fungus"
+store_catch = "catch"
+store_smoked = "smoked"
+store_night = "night"
+store_h7_clock = "clock"
+store_stock_ready = "stock"
+skill_cooking = "Cooking"
+pays_builds = "the builds"
+pays_smoke_batch = "{pct} smoked from the catch"
+camp_pays_4 = "catch holds {to}, was {from}"
+camp_pays_5 = "rack smokes {to} at a time, was {from}"
+action_night = "Night"
+action_snare = "Snare"
+action_visitor = "Losses"
+action_n1_eating = "Her share"
+lane_smoke = "Smoking"
+c_sit_up = "Sit up with the fire"
+c_look_out = "Look out past the gap"
+c_set_snare = "Set a snare"
+c_build_lean_to = "Build a lean-to"
+c_build_larder = "Build a larder"
+c_build_smoke_rack = "Build a smoking rack"
+c_look_over_camp = "Walk round the camp"
+c_smoke_catch = "Smoke the catch"
+c_smoke_roots = "Smoke roots"
+c_take_stock = "Take stock"
+up_lean_to = "{pct} energy drain"
+up_larder = "{pct} root capacity, {pct_b} smoked capacity"
+
+l_night_1 = "no sound from the ridge. the light stays low."
+l_night_2 = "one howl, a long way off. the air is so still you hear it end."
+l_sit_up = "the light holds still. you keep yours low."
+l_morning = "morning. the ridge light is out. your fire lasted the night."
+l_look_out_1 = "fog fills the bowl, steam rising through it. old fields, still in rows."
+l_look_out_2 = "where the light was, something dark and square."
+l_look_out_fail = "past the gap it's all dark, but for the one light."
+l_wire_1 = "wire from the ruins. it rings when you flick it."
+l_wire_2 = "a second wire. you work the kinks out."
+l_wire_3 = "more wire, stiff with rust at one end."
+l_tinder = "bracket fungus on dead birch, dry inside."
+l_snare_1 = "the run you chose has a snare in it, rusted to flakes."
+l_snare_2 = "you set the second a stride from the first, along the same run."
+l_snare_3 = "the third goes in fast. you have the knot now."
+l_snare_fail = "without wire, it's only crouching in the scrub."
+l_first_catch = "an ashrat in a snare, gone quiet."
+l_camp_daylight = "ash on all you left out, you too. the roots are soft."
+l_lean_to = "birch poles, leaned. the open side faces the ridge."
+l_larder = "a larder of piled stone, a hand's width off the ground."
+l_lean_to_fail = "the poles clack together and won't stand."
+l_larder_fail = "you get the larder to knee height and no further."
+l_rack_shown = "meat goes off fast on warm ground. hung in smoke, it lasts."
+l_rack = "a birch rack over a smouldering knot of fungus."
+l_rack_fail = "it needs green poles and a smoulder."
+l_cooking_open = "cooking, the slow way: smoke and a long wait."
+l_smoke_1 = "no wind. the smoke stands straight up. you could steer by it."
+l_smoke_fail = "not enough to smoke. the rack sits cold."
+l_cooking_2 = "you get the knack of packing the rack. more fits."
+l_prints_1 = "one set of prints, from the gap to the larder."
+l_prints_2 = "three roots gone. smoked meat left, not yours."
+l_smoke_roots = "roots will smoke too. they come out like leather."
+l_take_stock_fail = "you tally the stores. there's nothing to spare yet."
+l_b3_1 = "you count the food twice. the count holds. you look up."
+l_b3_2 = "a figure comes out of the ash at the gap. alone."
+l_b3_3 = "she looks over the larder, then sits on your side of the fire."
+l_b3_4 = "she eats. you do sums for two."
+l_camp_3 = "seven fit on the wall. you know which seven."
+l_camp_4 = "a better way to hang the catch."
+l_camp_5 = "you cut the strips thinner. the same catch goes further."
+l_camp_6 = "more room, by half. you'll need it."
+store_wattle = "wattle"
+c_weave_wattle = "Weave wattle"
+c_screen_fire = "Build a screen round the fire"
+up_screen_fire = "{pct} warmth lost to the cold"
+l_weave_fail = "nothing green left to weave."
+l_screen_fail = "the screen won't go higher with what's here."
+l_screen_1 = "a wattle hurdle staked beside the fire. the heat stops at it."
+l_screen_2 = "a second hurdle, angled to the first. you sit in the corner they make."
+l_screen_3 = "a third hurdle. the firelight stays inside the screen now."
+l_screen_4 = "the screen rings the fire. the cold has to come over the top."

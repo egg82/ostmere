@@ -1,0 +1,32 @@
+key	reason
+l_bedding_1	not clear: "flat damp wood" reads as a kind of wood, and the stage has no act; "you lay ... flat" gives the act and puts "flat" on the laying, beside l_bedding_2's knee
+l_morning_7	checked, kept: "lips move" with no owner reads as several people counting, which is the fact; g2_1's "you stop counting" answers it
+l_crows_first	checked, kept: the crows' runner costs smoked and pauses while it is empty, so the first crow fight comes only once strips hang again (sharp V3 against the rats' V2); true after l_morning_7's empty rack
+l_hunt_1	checked, kept: pelt >= 1 could in principle come from Melee 3's find before a won hunt, but Melee xp comes only from hunting and Melee 3 lands far later on every route (sharp V22)
+l_bedding_done	checked, kept: two floors and {n4} hold, since pair_joined needs bay2 and names the pair before B7
+l_night_7	checked, kept: t_night_7 does not wait on smoked, but smoked regrows from the catch after B7's strip and has six game hours past morning 7; "already" reads as the evening's order, not a claim of being early
+l_pelt_kept	checked, kept: the deliberate mirror of l_pelt_given (linecheck's "and weights it" echo is the lead's choice); the answers now name pelt and sacking, which the lead's l_pelt_ask leaves to them
+l_camp_12	checked, kept: the camp series states its cap as a word in story voice (l_camp_9, l_camp_10); 27 x 1.3334 = 36
+store_dawn_7	label: never drawn; day four's dawn clocks
+action_dawn_7	label: as action_dawn_5/6
+c_pelt_bedding	label: a craft card, verb first as the other cards; "pelt bedding" names what the stages build, which l_bedding_1..done show
+up_pelt_bedding	label: the same modifier as the stool's (rate rest, make energy), so day one's wording, up_stool's "{pct} rest recovery"
+store_pelt_6h	label: never drawn clock, as store_pair_3h
+action_pelt_6h	label: as action_pair_3h
+o_pelt	label: an either-or question, o_bank's shape, so neither answer is a refusal; {n3} is named on every route (pair_joined), and the offer can sit across absences beside Lucy, so "her" alone would be unclear; "ground" holds whether or not her bed was dug (t_pelt_ask_late)
+a_pelt_give	label: the covering, answering the question; the cost line under it on the button says what it takes
+a_pelt_give_cost	label: the pelt give_pelt takes; no {d}, the card's 5 s is not the cost; an article, not a figure, as pays_melee_find
+a_pelt_keep	label: the covering l_pelt_kept shows, so keeping reads as choosing sacking, not as saying no
+a_pelt_keep_cost	label: the answer takes nothing
+c_give_pelt	label: the queued narrative card; "hand over" as l_give_pelt_fail
+store_day_7	label: never drawn, as store_day_5/6
+action_day_7	label: as action_day_5/6
+store_night_7	label: never drawn, as store_night_5/6
+action_night_7	label: as action_night_5/6
+c_sit_fire_7	label: the glowing card G2 waits on; "sit" pairs with l_sit_fire_7_fail; kept apart from day one's "Sit up with the fire"
+dayend6_title	label: the edge of week 1's content; titles count chapters ("The fifth day" ends story day 6), so "The sixth day" would sit after a night 7; the week is true on every count
+dayend6_1	label: day four's and day one's form; the camp runs on under the card
+dayend6_2	label: the out-of-fiction end-of-content line, as dayend3_2..dayend5_2; week 2's B8 is the next content
+l_bedding_3	new: the bedding went from three stages to six (a pelt a stage, so a stage a visit through day six), and each stage carries its own line; the second bay names the place, the smell is the pelt's, plain
+l_bedding_4	new, as l_bedding_3: an act by the slot, nothing he feels; the opening is the draughty side
+l_bedding_5	new, as l_bedding_3: true at five of six stages, so the floors are not yet all fur; l_bedding_done stays the last

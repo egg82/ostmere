@@ -1,0 +1,47 @@
+beats sharp (pace_scale 1): B12 day 9.94, target_day 13
+  away V84->V85: 1 ['trigger offer_o_spoil']
+  away V85->V86: 0 []
+  away V86->V87: 2 ['trigger t_ring_open', 'trigger offer_o_cradle']
+  away V87->V88: 0 []
+  away V88->V89: 0 []
+  away V89->V90: 1 ['trigger offer_o_shaft']
+  away V90->V91: 0 []
+  away V91->V92: 1 ['trigger t_broth_open']
+  away V92->V93: 0 []
+  away V93->V94: 1 ['trigger offer_o_lean_to']
+  away V94->V95: 0 []
+  away V95->V96: 0 []
+  away V96->V97: 2 ['trigger t_bear_sign', 'trigger offer_o_lye']
+  away V97->V98: 1 ['trigger offer_o_wet']
+  away V98->V99: 1 ['trigger offer_o_crows']
+  away V99->V100: 0 []
+  away V100->V101: 0 []
+  away V101->V102: 0 []
+  away V102->V103: 1 ['trigger t_lamps']
+  away V103->V104: 1 ['trigger offer_o_sag']
+  away V104->V105: 0 []
+  away V105->V106: 0 []
+  away V106->V107: 0 []
+  away V107->V108: 0 []
+  away V108->V109: 0 []
+  away V109->V110: 0 []
+  away V110->V111: 0 []
+  away V111->V112: 0 []
+  away V112->V113: 0 []
+  away V113->V114: 0 []
+  away V114->V115: 0 []
+  away V115->V116: 0 []
+  away V116->V117: 0 []
+  away V117->V118: 1 ['trigger t_sitter']
+  away V118->V119: 0 []
+  away V119->V120: 0 []
+  away V120->V121: 1 ['trigger t_s4']
+days after week one's 6 with no arrival but lines: [13]
+day    line feature    chip   store   skill    card   level  total
+  1      12       7       0       4       0      10       3     36
+  2      32       5       2       2       0       7       2     50
+  3      24       4       0       0       0      21       4     53
+  4      21       5       0       0       0       5       2     33
+  5       0       2       0       2       0       2       0      6
+  6       4       1       0       0       0       1       2      8
+  7       6       0       0       0       0       0       0      6

@@ -1,0 +1,1406 @@
+GAME API: the contract for the page. Models: models.py, saves_models.py, devices_models.py and error_models.py
+(generate the client's types from openapi.json). Every path is under /api.
+
+The server holds the game. An account is a browser (a session cookie); it owns saves; a save is one game, written by
+the server on every decision and advance, so the page never holds the only copy and keeps nothing itself. The
+server's clock decides game time: a save's game time is the wall seconds since it began (never before the time it was
+last written at), so the time away runs whether or not a page is open.
+
+Every answer that moves a game is a Step:
+  save_id        the save it belongs to.
+  decisions      how many decisions the save holds after this Step: send it as `after` with the next decision.
+  rules_digest   the rules the save is now under; equal to Content.rules_digest.
+  build          the server's build (/page-config.json's version).
+  view           what to draw now (View), read off the engine at view.at, the server's game time for the save.
+  lines          log lines the game wrote since the last time it was written, in (at, seq) order; (at, seq) is
+                 unique within one Step, and a later Step's lines follow an earlier one's. Text: Content.text_entries.
+  repeats        what the player keeps doing by hand, counted from the save's decision log (REPEATS below).
+  rule_runs      what the rules did lately (RULE RUNS below).
+  catching_up_to null, or the game time this request was advancing to when its time ran out short of it: view.at is
+                 behind now; ask advance again (CATCHING UP below).
+Every response, errors included, carries the header X-Ashfall-Build: the build that answered it. While a deploy
+rolls, two builds answer at once. X-Ashfall-Server says which server answered (app, or web for the page's files).
+
+ACCOUNTS AND SESSIONS
+  The session is the cookie __Host-ashfall_session (Secure, HttpOnly, SameSite=None, Partitioned, Path=/, Max-Age 400
+  days). The page never reads it; the browser sends it. Partitioned keeps one cookie per top-level site, so the game
+  embedded in another site's page has an account of its own there, apart from the one at this site; a browser that
+  refuses cookies in a cross-site frame (Safari) keeps no session there at all. Writes are held to this site by the
+  Origin check below, not by SameSite. It is renewed (cookie and last use) at most once a day, by a POST or PUT
+  that succeeds (never by a GET, nor by a refused write), so a browser that plays at least once in 400 days keeps
+  its account. A renewal that fails is logged (session.renew_failed) and never changes the answer to the write. An account keeps at most 20 sessions; making
+  another drops the one unused longest. An account is made only by POST /api/saves from a browser with no live
+  session; no GET makes or changes one. An account with no decision on any save, unused for 30 days, is deleted.
+  Every POST and PUT under /api must come from this site: an https Origin naming the request's Host (the gateway and
+  the tunnel keep the browser's), or, with no Origin, a Sec-Fetch-Site of same-origin or none; a write with neither
+  header, or with any other, is refused (403 cross_site). A body, when there is one, must be application/json (415
+  not_json), and at most 262144 bytes (413 too_large, refused before it is parsed, whether the length is declared or
+  the body streamed). The client address the account limit counts is the connection's as uvicorn's --proxy-headers leaves it
+  (X-Forwarded-For from a trusted proxy).
+
+ENDPOINTS
+  GET  /api/content                   Content. Static: text, labels, cards, Scales, limits. Fetch once per rules_digest. ETag names the build and the
+                                      rules; If-None-Match with it is a 304.
+  GET  /api/me                        Me {account: Account | null, saves: [SaveInfo]}: who this browser is, with its
+                                      live saves, the most recently played first. Never makes an account.
+  POST /api/saves                     NewSave {save: SaveInfo, presentation: SavePresentation, step: Step}: a new
+                                      save at game time 0, its first view and lines, and nothing kept about its
+                                      teaching. Makes the account (and sets the cookie) when the browser has none,
+                                      under a limit (429 rate_limited). On an account, under the limits of "Games on
+                                      one account" (409 too_many_saves, 429 rate_limited); the other saves are kept.
+  GET  /api/saves                     Games: the account's saves, live and deleted (GAMES ON ONE ACCOUNT). 401
+                                      no_account without an account.
+  A {save_id} below is 1 to 2^53; anything else is 422 invalid_decision before any lookup. In range but not this
+  account's is 404 not_found.
+  POST /api/saves/{save_id}/delete    Games: the save deleted (GAMES ON ONE ACCOUNT).
+  POST /api/saves/{save_id}/restore   Games: a deleted save live again (GAMES ON ONE ACCOUNT).
+  POST /api/saves/{save_id}/open      Opened {save, was, history, presentation, step}: the save as the player last saw
+                                      it (`was`, the View at the time it was last written), its last 200 lines before
+                                      this call (`history`, PastLine {n, at, key}, oldest first), what the page keeps
+                                      about its teaching (`presentation`, SavePresentation below), and `step`, the save
+                                      advanced to now with the lines that arrived while away. Writes like an advance.
+  POST /api/saves/{save_id}/advance   Step: a plain advance to now. Call it when the clock passes
+                                      view.next_event_at, and on the page being shown again.
+  POST /api/saves/{save_id}/decisions DecisionRequest {decision, after} -> Step: advance to now, then apply the
+                                      decision. `after` is the Step.decisions the page last saw (409 stale if the
+                                      save has had another decision since). A tap_card of a card that is not ready
+                                      is a failed tap: it takes no time and changes nothing, its failed line (if it
+                                      has one) is in lines at once, and Step.failed_tap names the card (null on every
+                                      other Step).
+  POST /api/saves/{save_id}/forecast  ForecastAnswer {decisions, forecast}: the save advanced to now and what lands
+                                      from there if the player changes nothing (FORECAST below).
+  POST /api/saves/{save_id}/dry-run   DryRunRequest {decisions} -> View: what the save would show after these
+                                      decisions, applied in order now. Nothing is written (the mix editor's "after").
+  GET  /api/saves/{save_id}/view      View: the save as last written, at its own time (rebased in memory if the rules
+                                      changed since), not advanced to now. Nothing is written: no played_at change, no
+                                      decision counted. Never 409 catching_up. 404 for a save the account does not
+                                      own; 503 save_unavailable for one this build cannot read. The front page's
+                                      picture of each save's camp, before any game is opened.
+  PUT  /api/me/presentation           AccountPresentation -> Account: what the page keeps about the player across
+                                      saves (the Rules tab opened, the ledger lines shown). Adds to what is kept,
+                                      never takes away (below); the answer's presentation is what is kept now. 401
+                                      without an account.
+  PUT  /api/me/settings               AccountSettings -> Account: the player's choices for every game of the account,
+                                      replaced whole (below). 401 without an account.
+  PUT  /api/saves/{save_id}/presentation  SavePresentation -> SavePresentation: what the page keeps about one save's
+                                      teaching (below). Adds to what the save keeps, never takes away, exactly as
+                                      the account's presentation does; the answer is what is kept now. 404 for a save
+                                      the account does not own or has deleted.
+  POST /api/feedback                  FeedbackRequest {text, save_id?} -> 204: a tester's words. `text` is trimmed and
+                                      must then be 1 to 2000 characters (422 invalid_decision). `save_id` is 1 to 2^53
+                                      (past that, 422 invalid_decision) and is kept only
+                                      when this browser's account owns that save; with it the server also records the
+                                      save's game time when last written and the key of its newest log line, beside the
+                                      build and release that answered and the account id. No account is needed (the
+                                      browser's client address is what is counted either way). At most 5 an hour
+                                      from one client address, 5 from one account, 15 from one IPv6 /48 and 50 an hour
+                                      in all, counted across pods; a limit that cannot be counted refuses (429
+                                      rate_limited).
+                                      Rows older than 180 days are deleted as new ones come in. The text is stored
+                                      and never logged. The owner reads them with `python -m ashfall_app.feedback list`.
+  POST /api/me/transfer-code          TransferCode: a code that joins another browser to this account (below,
+                                      "Moving to another device"). 401 no_account without an account.
+  POST /api/me/words                  RecoveryWords: new recovery words for this account. 401 no_account without
+                                      an account.
+  POST /api/join                      JoinRequest {typed, merge, keep} -> Joined {moved, account, kept}: this browser
+                                      joins the account a code or recovery words name.
+  GET /api/me/devices                 Devices: the account's browsers (below, "Your devices"). 401 no_account.
+  DELETE /api/me/devices/{device_id}  Devices: signs that browser out. 401 no_account; 404 not_found.
+  PUT /api/reminders                  ReminderOn -> Reminder: reminders on for this browser, or its keys refreshed
+                                      (below, "Reminders"). 401 no_account; 404 not_found; 422 invalid_decision.
+  DELETE /api/reminders               ReminderOff -> 204: reminders off for this browser. 401 no_account.
+  Decisions (discriminated by `kind`): tap_card (a tap, a craft, a story step), switch_mix, save_mix, delete_mix,
+  set_orders, set_queue, answer_offer (OFFERS below), prestige, undo_pick and move_pick (PRESTIGE PHASES). Orders and queue
+  entries take switch_mix, tap_card and answer_offer. Their conditions take no `running`
+  subject (the page never builds one): set_orders or set_queue with one is 422 invalid_decision. A view still
+  carries `running` subjects, in blockers and in saves that hold them.
+  SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
+  save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
+  answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.
+  AccountPresentation {rules_opened: bool, devices_opened: bool, reminder_mentioned: bool, ledger_lines: [str], mix_stopped: [str], switch_offered: [OfferedSwitch {chip, mix_id}], journal_read: [str]}, all false
+  and empty on a new account (devices_opened: the "Another device" sheet has been opened; reminder_mentioned: the one
+  row pointing at the reminders setting has been drawn, so it is never drawn again; ledger_lines: the stores whose
+  ledger line the page has shown; mix_stopped: kept for old accounts, no longer written (the stopped mix's fix
+  is gone); switch_offered: the repeated switches (a RepeatedSwitch's chip and mix_id) whose chip mark was touched;
+  journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
+  the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
+  before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
+  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}]},
+  all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
+  is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
+  seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
+  dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
+  ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
+  when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
+  second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
+  Log's entries begin at each `left`). A PUT from a page of the build before, which carries no visits, leaves them as stored.
+  Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
+  checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
+  a line by its kind and never by its key or words.
+  AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
+  game of the account; the page then starts no lesson and shows no hint that only a lesson gives (a guided offer is its
+  one tap), and on again, each save's lessons go on from what it keeps. A PUT replaces the settings whole.
+  Account {presentation: AccountPresentation, settings: AccountSettings, has_words: bool, words_due: bool}: has_words,
+  the account has recovery words; words_due, it has none, holds a decision on a save, and was made at least 3 days ago
+  (the page marks the way to make them with a dot).
+  A presentation only grows, so a PUT is merged into what the account (or the save) keeps, in one write under its row lock:
+  a flag is set if either has it, a list is the kept entries then the sent ones not yet there (a lesson_end is the
+  same entry as another naming the same lesson; the kept one stays), and a list stops growing at 512 entries, and every list at the byte limit (REQUEST LIMITS). A page
+  whose copy is older than what is kept (a second tab or device) so takes nothing away, and takes the answer as its
+  new copy. The lesson id in a lesson.end line is the page's own id for a lesson, logged as sent like a card id.
+
+CATCHING UP
+  A request advances a save for at most a few seconds of the server's time, so a long absence comes back in slices:
+  open, advance and decisions each advance one slice, write it, and answer it. A Step whose
+  catching_up_to is set stopped short (view.at is the last instant it resolved, before catching_up_to); its lines
+  are that slice's, and the next advance's lines follow them, so the slices' lines in order are what one advance to
+  now would have brought, and the save they end at is the same. A decision whose advance stops short is not applied:
+  409 catching_up, with the slice written as an advance in `step`. 
+  A forecast or a dry run that would stop short replays for the whole request budget, keeps none of it and writes
+  nothing (holding no database connection while it replays): 409 catching_up, whose `step` is the save as last written
+  (no lines); the page asks an advance, which is behind.
+
+REPEATS
+  Step.repeats {taps: [RepeatedTap {card, count}], switches: [RepeatedSwitch {chip, mix_id, count}]}: what the player
+  keeps doing by hand, counted by the server from the save's decision log as of view.at; each entry is there only once
+  its count reaches opening.toml's [repeat_offers], in the order its first counted decision was made.
+    taps       a tap_card of a hands-lane card while the hands ran a mix (View.running_mix_id) that did not hold it,
+               nested mixes flattened, counted per card over the last hand_taps_within_s game seconds; listed from
+               hand_taps.
+    switches   a switch_mix the player made while one or more chips showed (View.chips), unless the hands already ran
+               that mix, counted once per (chip, mix_id) over the last switches_within_s game seconds; listed from
+               switches.
+  Each decision's context (the mix the hands ran, whether a tap's card was in it, the chips shown) is kept in the log
+  as it is made, so the counts need no replay and a save rebuilt from its log counts the same. Decisions logged by a
+  build before this field count for nothing. The page offers each repeat once (AccountPresentation.mix_offered,
+  switch_offered); what it offers is the page's (docs/design/opening-screen.md, the hands strip).
+
+RULE RUNS
+  Step.rule_runs [RuleRun {order, starts, on_at, on_level, off_at, off_level, ended}]: what the rules did lately, one
+  entry per rule the save has now (`order` equals one of View.orders) or the game ended (below), the most recent change
+  first, at most 8. A rule is
+  known by its condition and verb, since rules have no id: moving it keeps its entry; editing it makes another rule,
+  whose entry starts the next time it comes on, and the old entry goes, as a removed rule's does.
+    starts     the times it came on (its latch turned true) since its entry began.
+    on_at      game time of its last start; on_level the amount of the store its condition reads then (quantity
+               units), null for a condition on no store.
+    off_at     game time of its last let-go, null until it has let go; off_level as on_level. A let-go before on_at
+               belongs to an earlier run.
+  Kept by the server across advances and decisions, so a rule that comes on and lets go while no page is open is there
+  on the next Step. A set_orders keeps the on or off of every rule it moves or keeps, so a rule running inside its
+  band goes on running; a new or edited rule starts from its `when` alone. Saves not written since this field start
+  empty.
+  Ended by the game: RuleRun gains ended, null, or season (a season's turn removed the rule: engine DESIGN.txt,
+  "Retired chores") or left (its person left the town: LEAVES). An ended entry is kept after its rule leaves
+  View.orders, with off_at the time it was removed and off_level as for a let-go, until 8 newer entries push it out;
+  it matches no rule in View.orders. A rule that never came on before it was removed gets an entry too, with starts 0
+  and on_at and on_level null (on_at is null only there). If the player sets an equal rule again, its next start
+  begins a fresh entry, ended null. Entries the server kept before this field read ended null.
+  THE CLIENT MAY word an ended entry in the Rules tab's Lately block as ui.rule.ended_season {rule} or
+  ui.rule.ended_left {rule}{person} ({person} the name_key of the lane of the card the rule taps), and draw it in
+  the order rule_runs gives. It never offers to edit an ended entry: the rule is gone.
+  New text keys (Content.text_entries): ui.rule.ended_season {rule} | ui.rule.ended_left {rule}{person}   a rule the
+                                    game removed, at a season's turn or when its person left
+  Ended stint: a goal stint (GOAL STINTS) that left view.queue with its until holding gets an entry with ended "stint",
+  order {when: the stint's until, then: its switch_mix}, on_at the instant it came to control (the first queue entry not
+  dead, its mix running; null when its goal already held then), off_at the instant it left. starts is 1 (0 with no
+  on_at); the levels are null. A stint the player removed before its goal held makes no entry. The entry is kept like
+  an ended rule's (8, newest first) and matches no rule in View.orders. The server keeps a stint that has begun to run
+  in the same record, off the wire until it ends.
+  THE CLIENT MAY word an ended stint in Lately as a line ui.stint.entry {mix} {goal} (the mix of `then`, the goal of
+  `when`, as Next words it) and under it the facts, joined by " · ": ui.stint.ran {d} (off_at - on_at, only with an
+  on_at) and ui.stint.landed {ago} (frame time - off_at).
+  New text keys (Content.text_entries): ui.stint.ran {d} | ui.stint.landed {ago}   an ended stint's facts.
+  Made: RuleRun gains made [Amount {store, quantity}], [] on every entry but an ended stint's. On one, what the save
+  gained while it ran: for each store that a card in the stint's mix (at a share above 0) makes, by its makes or its
+  outcome's stores, both at the instant the stint began to run and at the instant it popped, that store's amount at
+  the pop less its amount at the start, in quantity units. Net, not gross: what other work took from the store or its
+  cap threw away meanwhile is not counted back, and work on other lanes in the window is counted in, so it is the
+  save's gain in those stores, never a claim about what the mix alone did. Only gains of at least one whole item
+  (QUANTITY_SCALE) are listed, the goal's store first (the store the stint's until reads, when it reads one), then the
+  largest gains, ties in content store order, at most 2. An ended stint with no on_at has made []. Entries the server
+  kept before this field read [].
+  THE CLIENT MAY add the made fact last, after ui.stint.landed: ui.stint.made {n}{store} for one entry, and
+  ui.stint.made_two {n}{store}{m}{store_b} for two, {n} and {m} in whole items rounded down, {store} and {store_b}
+  the stores' labels as they stand in a sentence; nothing when made is [].
+  New text keys (Content.text_entries): ui.stint.made {n}{store} | ui.stint.made_two {n}{store}{m}{store_b}   what
+                                    an ended stint's save gained while it ran.
+
+GAMES ON ONE ACCOUNT
+  An account holds several saves, each its own game; the page plays one at a time and keeps the others.
+  GET /api/saves -> Games {saves, deleted, max_saves, kept_days}
+    saves          the live saves, the most recently played first (as GET /api/me).
+    deleted        DeletedSave {save: SaveInfo, deleted_at, purge_at}: the deleted saves still held, the most recently
+                   deleted first. purge_at is deleted_at + kept_days; from then on the save may be gone for good.
+    max_saves      5: the most live saves an account holds. Deleted saves do not count. GET /api/me carries it too.
+    kept_days      30: how long a deleted save is held. GET /api/me carries it too.
+  SaveInfo's fields beyond the save's clock:
+    number         the account's count of its games: 1 for the first begun, and for each later one the highest number
+                   the account holds (deleted saves included) plus one. Null for a save begun by the build before
+                   numbers, until it is next written.
+    started_at     the wall time it was begun; played_at the wall time it was last written (ISO 8601, UTC).
+    camp_level     how many Camp levels (Content.camp.camp_levels) the save had landed when last written; null for one
+                   not written since the build before this field.
+  POST /api/saves on an account makes another save and changes no other. 409 too_many_saves when the account already
+    holds max_saves live saves; at most 10 a day (24 hours) per account beyond its first save (which the limit on
+    new accounts counts), past which 429 rate_limited with Retry-After; a limit that cannot be counted refuses. Either refusal makes nothing.
+  POST /api/saves/{save_id}/delete -> Games. The save is deleted at once: gone from GET /api/me and Games.saves, held in
+    Games.deleted, and every call on it (open, advance, decisions, forecast, dry-run, feedback's save_id) answers as
+    for a save that does not exist until it is restored. 409 last_save when it is the account's only live save; 404
+    not_found when the account has no live save of that id. A page that has it open learns on its next call.
+  POST /api/saves/{save_id}/restore -> Games. A held deleted save is live again, as it was; its clock never stopped, so
+    opening it brings the time away since. 409 too_many_saves at max_saves; 404 not_found when the account holds no
+    deleted save of that id (never deleted, or gone for good).
+  A deleted save is deleted for good, with its lines, decision log and snapshots, only after purge_at, a small batch
+  at a time by the next delete or new game on any account; never by the request that deleted it. Making, deleting and
+  restoring saves of one account run one after another on any pod (each holds the account), so max_saves and the last
+  live save hold under any race; a delete waits for a call already running on that save. A join moves an account with
+  all its saves, deleted ones included, and a merge holds both accounts, so max_saves holds across it too.
+
+MOVING TO ANOTHER DEVICE
+  An account moves to another browser by a transfer code (or its QR code) made on a browser that has it, or by its
+  recovery words, typed on the other browser (or the code's link opened there). Every answer of the three routes
+  below, errors included, carries Cache-Control: no-store. Without a database, or without the server's join key
+  (ASHFALL_JOIN_KEY: 32 bytes written as 64 hex characters), all three answer 503 save_unavailable and change nothing.
+  POST /api/me/transfer-code -> TransferCode {transfer_code, expires_in_s, join_url, qr}
+    transfer_code  eight characters of ABCDEFGHJKLMNPQRSTUVWXYZ23456789, shown as two groups of four joined by a dash
+                   ("ABCD-EFGH"). It joins one browser, once, within expires_in_s of being made.
+    expires_in_s   600, as Content.transfer_code_s says. A code past it finds nothing, as if it had never been made.
+    join_url       ASHFALL_PUBLIC_URL (default https://ostmere.yggdrasil.pub) + "/#join=" + transfer_code, never built
+                   from the request's Host. The code rides in the fragment, which no request carries.
+    qr             join_url as a QR code: one string per row of modules, top row first, each character "1" (dark) or
+                   "0" (light), every row as long as there are rows (21 + 4k for some k >= 0), with no quiet zone
+                   (the page draws one around it, dark on light).
+    Making a code ends the account's previous one, used or not: an account has at most one live code. At most 10
+    codes an hour per account (429 rate_limited).
+  POST /api/me/words -> RecoveryWords {words, label}
+    words          four words of the BIP-39 English word list, lowercase, joined by single dashes. The server keeps
+                   only a slow hash and never answers them again. New words replace the old at once: from this answer
+                   on the old words find nothing. Words never expire and are not used up by a join.
+    label          "Ostmere": the name a browser's password manager files the words under.
+    At most 5 sets of words a day per account (429 rate_limited).
+  A browser already joined keeps its session: a new code or new words stop the old ones joining anything more, and
+  sign no browser out. Ending a browser's session is "Your devices", below.
+  POST /api/join  JoinRequest {typed, merge, keep} -> Joined {moved, account, kept}
+    typed          at most 200 characters: a transfer code in any case, with or without spaces and dashes, or a whole
+                   join_url; or recovery words in any case, separated by any run of spaces, dashes, dots, commas or
+                   underscores. Space before and after is ignored.
+    merge          false by default; true moves this browser's own games into the other account (below), after the
+                   page has asked the player (confirm_merge).
+    keep           false by default; true joins T and leaves this browser's own games where they are, on D (below),
+                   after the same question. merge and keep together are 422 invalid_decision.
+    With T the account `typed` names and D the account of this browser's live session, if it has one:
+      - nothing named: no such code (never made, used, expired, or ended by a newer one), no such words (never made,
+        or replaced), or `typed` is neither shape -> 404 no_such_code. Nothing changes.
+      - no live session: the browser joins T: a new session of T and its cookie (T keeps its 20 sessions used most
+        recently). moved 0.
+      - D is T: nothing changes, except that a code is used up. moved 0.
+      - D holds no decision on any save: D folds into T (below) and D's saves are deleted. moved 0.
+      - D holds a decision on a save, and D's live saves and T's together pass max_saves -> 409 too_many_saves, with
+        ApiError.merge, `merge` true or false. Nothing changes, and a code is not used up.
+      - D holds a decision on a save, merge false -> 409 confirm_merge, with ApiError.merge. Nothing changes, and a
+        code is not used up.
+      - D holds a decision on a save, merge true: every save of D, deleted ones included, becomes T's, and D folds into
+        T. A moved save keeps its id, clock and everything in it but takes a new number: on from the highest number
+        T holds (deleted saves included), in D's own order of numbers (unnumbered first). moved: D's saves.
+      - D holds a decision on a save, keep true: only the session that asked becomes T's (T keeps its 20 sessions used
+        most recently). D, its saves, its other sessions and T's saves are as they were, so D's games are still there
+        for any browser that holds a session of D, and for D's recovery words. D is not deleted, and a pruning of
+        empty accounts never takes it, since it holds a decision. The cap does not apply, as nothing moves. moved 0.
+        D's words: when D has none, the join makes them as POST /api/me/words would (this browser can no longer ask
+        for them) and answers them once, in `kept.words`; when D has some, they are left alone and `kept.words` is
+        null, since they cannot be shown again. `kept` is null for any other join, and for a keep from a browser
+        whose D holds no decision (that D folds into T as above).
+    ApiError.merge is a MergeSummary {here, there, there_newest_game_time, max_saves, words_replaced}: D's live saves,
+    T's live saves, the game_time of T's most recently played save (null when T has none), Games.max_saves, and
+    whether D and T both have recovery words (a merge then ends D's: the page says so in its question).
+    D folding into T: every session of D becomes T's (this browser keeps its cookie, which now names T; T keeps its 20
+    sessions used most recently), D's recovery words become T's when T has none (else they find nothing from then on),
+    T's presentation is kept, and D is deleted, with its code. All of a join is one transaction: everything moves or
+    nothing does. Only D's own saves move, D being the account of the session that asked; T's never move to D.
+    Kept {saves, words, label}: D's live saves left on D, D's new recovery words or null, and RecoveryWords.label.
+    `moved` is how many saves became T's. `account` is T's Account, as GET /api/me now answers it. A code is used up
+    only by a 200, never by a refusal.
+    Limits, each answered 429 rate_limited with Retry-After (seconds) and changing nothing: at most 10 joins per 15
+    minutes from one client address, every join the limit lets through counting, right or wrong (an IPv6 address
+    counts by its /64, and its /48 is held to 30 in the same 15 minutes); and at most 300 joins an hour, from every address together, whose code or words (of either
+    shape) found nothing: past that, every join is refused until the hour moves on. A limit that cannot be counted
+    refuses. Recovery words are slow to check: when the server has been unable to start on them for 3 seconds, 429
+    with Retry-After 3.
+
+YOUR DEVICES
+  A device is a browser that holds a session of the account (one row per session; a join folds a browser's session
+  into the account, so it lists there). Both routes answer Devices {devices: [Device]}, and every answer, errors
+  included, carries Cache-Control: no-store. Neither renews a session. Without a database, 503 save_unavailable.
+  Device {device_id, label, created_at, last_seen_at, this_device}
+    device_id      the session's id, the {device_id} of DELETE. The session's token and its hash are never answered.
+    label          browser and system read from the User-Agent when the session was made ("Firefox on Linux",
+                   "Safari on iPhone"; "Chrome" or "Linux" alone when only one is told); "A browser" when neither
+                   is, and for a session made before labels. The User-Agent itself is not kept.
+    created_at     when the browser got its session.
+    last_seen_at   when it was last used, stored at most once a day.
+    this_device    true for the browser that asked; exactly one row of a list asked by a live session.
+  GET /api/me/devices -> Devices: the account's sessions, this browser first, then the rest by last_seen_at, latest
+    first. An account keeps at most 20 sessions, so at most 20 rows.
+  DELETE /api/me/devices/{device_id} (device_id >= 1) -> Devices: the session ends at once, so that browser's next
+    request has no account (GET /api/me answers account null, a route that needs one 401 no_account), and the list
+    is what is left. Removing this_device signs the asking browser out too: the answer ends its session cookie
+    (Set-Cookie with Max-Age 0) and lists the other rows, none of them this_device. A device_id that is not one of
+    this account's sessions, another account's included, answers 404 not_found exactly as one that does not exist,
+    and changes nothing. A write, so csrf.py's rules hold (403 cross_site, 415 not_json), and, like any DELETE, it does not
+    renew the session. The page offers the removal on every row, this one included, and asks first for this one.
+
+REMINDERS
+  Off until the player turns them on. A browser with reminders on is one row, keyed by its Web Push endpoint, and gets
+  one notification once it has been away the hours it picked, then none until it comes back. Both routes are writes
+  (csrf.py's rules hold), carry the endpoint only in the body, and answer Cache-Control: no-store; without a database,
+  503 save_unavailable.
+  /page-config.json names `reminders`: {public_key, after_hours: [int]} when the server can send them, null when it
+  cannot (the page says reminders are not available here). A page that finds no `reminders` key at all is on a build
+  from before reminders and offers no setting.
+  ReminderOn {endpoint, p256dh, auth, tz, window: ReminderWindow | null}
+    endpoint, p256dh, auth  PushSubscription.toJSON()'s endpoint and keys. The endpoint must be https on a browser push
+                   service (FCM, Mozilla, Apple, Windows), or 422.
+    tz             the device's IANA time zone, or 422: the window's hours are local to it.
+    window         ReminderWindow {after_hours, send_from_hour, send_until_hour}: after_hours one of page-config's
+                   reminders.after_hours; the hours 0-23, from up to until, past midnight when from is later, any hour
+                   when they are equal. Null refreshes a browser already on (its keys and zone) and answers its window;
+                   404 not_found when it is not on, so the page shows the setting off.
+  PUT /api/reminders -> Reminder {window}: the browser's row, made or changed; it becomes this account's whichever
+    account held it, and counts as a visit.
+  DELETE /api/reminders, ReminderOff {endpoint} -> 204, whether or not it was on; another account's row is untouched.
+  POST /api/saves/{id}/open and /advance mark the account's browsers visited (at most once per ten minutes); a
+  reminder is due from the latest visit.
+
+SAVES ACROSS RELEASES AND PODS
+  A save written under older rules (a deploy changed the content) is carried over, never refused: the server rebases
+  it when it is next read (engine DESIGN.txt, "Rebase") and answers under the current rules, with any lines new
+  content landed at the save's own time first. Each decision, advance and open is one transaction holding the save's
+  row, so two requests on one save run one after the other, on any pod. Builds are ordered by content release: a
+  number the release lock (opening/released/ids.json) raises by one whenever the content's rules change, so a later
+  content always has a higher one, even one that changes only numbers. Each save records the release it was last
+  written under. A pod answers 503 save_unavailable (Retry-After) for a save of a later release than its own, and for
+  one it cannot rebase, and writes nothing: mid-deploy the next try reaches a pod of the later release. A save of the
+  pod's own release or an earlier one is read exactly, or rebased forward, and written. A 4xx or 5xx answer writes
+  nothing, except a 409, whose Step is written as an advance; so a decision is applied once, and a 409 or 5xx means
+  it was not, bar one 503: a database switchover that loses the COMMIT (below, ERRORS).
+
+REQUEST LIMITS
+  A request body is at most 262144 bytes (413 too_large, ERRORS). Within it, a request past a bound below does not fit
+  the models: 422 invalid_decision, and nothing is applied.
+  A dry run takes at most 8 decisions.
+  A string a request stores (a feedback text, a mix's id or name) holds no U+0000: 422 invalid_decision, before any
+  limit is counted.
+  A save takes at most 120 decisions a minute and 3600 an hour (each is a stored row), counted across pods: past
+  either, POST /api/saves/{save_id}/decisions is 429 rate_limited with Retry-After (seconds), and nothing is applied or
+  written. Only a decision that would be applied counts: a stale, catching_up or invalid one does not, and neither does
+  a refused one. The hardest legitimate play is repeated taps on the shortest card, 20 a minute. The page treats it as
+  any refused decision: redraws the save as it has it and goes on advancing it.
+  PUT /api/me/presentation and PUT /api/saves/{save_id}/presentation: each list at most 512 items, each string in it (a lesson, a chip, a card) 1 to 64 ASCII
+  letters, digits and `_ . : -`, except an offered switch's mix_id, a mix's own name, at most 64 characters. What an
+  account (or a save) keeps weighs at most 262144 bytes of JSON: past that a PUT adds nothing more to the lists (answered 200,
+  as at 512 entries).
+  save_mix: at most 64 components; a save holds at most Content.limits.max_mixes (64) mixes, and a save_mix
+  of a new id past that is 422 invalid_decision (replacing a saved mix is always allowed).
+  set_orders: at most Content.limits.max_orders (64) orders. set_queue: at most Content.limits.max_queue (64) entries.
+  The page's rules editor and "When ready" stop offering another at those, and say so in one plain line (ui.rule.full,
+  ui.queue.full); the mix lists and the mix editor stop offering a new mix at max_mixes, the same way (ui.mix.full); its ledger, chip and repeated-switch rule offers stop at the rules' bound, quietly.
+
+ERRORS: body ApiError {code, message, step, merge}. The message is for the console, never the player, and never
+holds a code, words or a session. step is null except on stale and catching_up; merge is null except on confirm_merge and on a
+join's too_many_saves.
+  401 no_account        no live session: the browser has no account (start one with POST /api/saves).
+  403 cross_site | 415 not_json   a write from another site, or a body that is not JSON (above).
+  413 too_large         a request body over 262144 bytes (above). Nothing was read past the limit or applied.
+  404 not_found         no such save on this account; no such device (Your devices).
+  404 no_such_code      POST /api/join: the code or words name no account (above).
+  409 stale             `after` is not the save's decisions: another page decided since. Nothing of the decision
+                        was applied; `step` is the save advanced to now (written as an advance): draw it.
+  409 catching_up       the save is still catching up on time away (CATCHING UP): nothing of the decision was applied
+                        (a forecast and a dry run write nothing); `step` is the save as this request left it.
+  409 confirm_merge     POST /api/join from a browser whose account holds a decision on a save (above).
+  409 too_many_saves    POST /api/saves or a restore on an account holding max_saves live saves (Games on one account);
+                        POST /api/join whose two accounts' live saves together would pass it (above).
+  409 last_save         deleting the account's only live save.
+  422 invalid_decision  a busy lane (unless Card.cuts_in), a locked, completed or retired card, a tap_card of a card on a ruled lane (A LANE
+                        RUN BY RULES), an answer_offer the offer cannot take (OFFERS), a bad mix, deleting a mix something
+                        still names, an order or queue condition watching `running`, a feedback text empty or over 2000 characters, or a request that does not
+                        fit the models.
+  429 rate_limited      too many new accounts just now: at most 10 an hour from one client address (an IPv6
+                        address counts by its /64, and its /48 is held to 30 an hour) and 200 an hour in all; a limit that cannot be counted refuses. On POST /api/saves only when it would make an
+                        account; the page shows one plain line and leaves Begin to be tried later.
+                        POST /api/feedback answers it too, past its own limits (above); the page says to try later.
+                        Also the limits of "Moving to another device", and new games on an account (Games on one
+                        account), with Retry-After; and POST /api/saves/{save_id}/decisions past the decisions a
+                        save takes (Request limits), with Retry-After.
+  503 save_unavailable  retryable (Retry-After, seconds): no database (any endpoint that needs to know the account or
+                        a save, Begin included), a save of a later release, a rebase that failed, or the database
+                        switching over (its writable member changed or is unreachable). A request that meets the
+                        switchover runs once more on a fresh connection, unless a write of its own may already have
+                        committed; one not run again, or that meets it again, answers 503 with Retry-After 3. A 503
+                        from a lost COMMIT may have taken effect: asking again then answers 409 stale for a decision.
+                        The page retries with backoff and a quiet "reconnecting" state, keeping its view.
+                        Also the three routes of "Moving to another device" without the join key.
+
+THE CLIENT MAY
+  - on load, ask GET /api/me: with a save, open the first (no front page); without, show the front page, whose
+    Begin is POST /api/saves. Draw `was` and `history` at once, then `step` as a return (what arrived while away is
+    revealed in turn). A Step whose rules_digest differs from the content the page holds means a deploy: fetch the
+    content again and redraw.
+  - keep the save a tab plays in its address as #game=ID: on load, open the save it names when it is in /me's saves,
+    else the first. Switching opens another and writes its id there; New game is POST /api/saves, drawn as Begin
+    draws a new game, and writes its id. A deleted save is never opened; a 404 on the open save starts again from
+    GET /api/me.
+  - on load, read a join link's fragment (#join=CODE) and remove it from the address bar before anything else runs
+    (analytics included), then put the code in the join box: a link never joins by itself, the player's tap does.
+    With a save on this browser, open it as usual with the join box shown over it. On confirm_merge, ask the player
+    whether to move this browser's games or join without moving them, and send the same join again with merge true or
+    keep true only on their tap. After a keep that answers `kept`, show its words (or, with none, say that the words
+    D already had are what bring those games back) before reloading. After a
+    join answers 200, reload and start again from GET /api/me.
+  - reload itself when a Step's build, or /page-config.json's version asked every few minutes while idle, is not the
+    build it booted with: at a quiet moment (no input for twenty seconds, no sheet open), behind a fade to its
+    background, backing off a build that is still served after a reload. The game resumes from the server.
+  - send one request at a time per save, and on 409 stale draw the Step it carries and carry on from it.
+  - ask a request again, with backoff and the quiet "reconnecting" state, when it got no answer or a 5xx that the app
+    did not answer (no X-Ashfall-Server: app: a gateway's, while a deploy or a pod restart leaves no ready app), without
+    bound. A 5xx that carries X-Ashfall-Server: app and no ApiError body is the app's own failure and may repeat on every
+    try: ask it again at most 3 times, then refuse it like any refused request, so the save's queue goes on.
+  - on a Step with catching_up_to, ask advance again at once, keeping each slice's lines, and draw them as one Step
+    once catching_up_to is null; hold the player's decisions and the forecast ask until then. On 409 catching_up,
+    carry on catching up from its `step`, then send the decision again. While catching up, say so plainly where the
+    reconnecting state shows, with how far through the time away it is if shown at all (view.at against
+    catching_up_to).
+  - sample any Segment at its clock: value = start_value + rate*(t-start), clamped at limit; divide by
+    Scales.quantity_per_item to show items. A store's Segment is exact at its start; a card's per-completion amounts
+    move a store by the card's work, a slope the integer rate rounds down, so between events the sample may trail the
+    engine by under one unit per second, and it is exact again at next_event_at. Bars: Card.bar against bar_total;
+    skills: SkillBar.xp.
+  - show what the view says is there: only unlocked stores, skills, cards, chips, and the lanes in view.lanes (free
+    ones too, labelled by LaneInfo). A chip whose ChipInfo has an offered_after is drawn only once view.unlocked
+    holds it (its cure is on screen). A chip with a cost_key draws that text with its word, wherever it is drawn.
+    Just above the art, one line: the aim, the text of the last of Content.aim_infos whose `after` view.unlocked
+    holds (the first has none, so there is always one). Content.line_infos lists every key a story line can carry
+    (any LogLine.key, and end_line_keys), each once, so the page can keep room for the tallest before any arrives.
+  - draw one card panel from view.cards and a Completed tab from view.completed; a card moves between them only
+    when the view says so. Each card is drawn the same whether tapped, mixed or idle: its completions against its
+    cap ("3 of 5"; no cap, the count alone), its share and run in the running mix, and its one bar: Card.bar sampled
+    and taken modulo bar_total, whoever runs it (Card.by: tap, mix, or null and still). Card.completes_at is a tap's
+    landing, drawn as its countdown; a share's is null: a rule that takes the hands yields the mix, so no landing is
+    claimed for it.
+    A card is ready iff blocker is null, else show blocker.ready_at as a countdown (null: no countdown), except while
+    an at_most order on the blocker's store is on (view.orders_on) and its release + 1 is below the blocker's value:
+    that order lets go first, so the time cannot be kept and no countdown shows. It can be tapped iff it is ready and
+    its lane's LaneBar has no running_card; its time is Card.tap_s. A blocker on a store the view has not unlocked
+    (a clock the player never sees, the night) shows as its countdown alone: no have/need and no When ready.
+    On a Step whose failed_tap names a card, pulse that card red and mark what its blocker names: the need of its
+    store (or, for a store the view has not unlocked, its countdown), skill level or step; a blocker with nothing
+    of its own on the card (a time) marks the countdown, and with no countdown either, the card alone.
+  - draw a time for a skill's next level, a store's "full in" or its "empty in" only from the forecast it holds
+    (FORECAST below), never from SkillBar.next_level_at, LedgerLine.fills_at or empties_at, which hold only until the
+    next event.
+  - draw a card in view.completed as retired, not done, when view.unlocked holds it as a `retired` unlock (a newer
+    card replaced it); in the mix editor it is struck through until removed.
+  - list a card's Card.needs on it, ready or not, each as ui.card.needs (what one completion takes, the same while
+    its bar runs), and draw one short (the ledger's red) while the card is unready (blocker not null) and its
+    segment's sample is below its quantity. A need whose Need.gate is set draws the gate in its place, never naming
+    its store, whether or not the view has unlocked the store: a skill_level gate as ui.card.needs_skill and a
+    card_count one as ui.card.needs_step, read as below. The server sets it while the need is short, nothing makes the
+    store, and a trigger that grants it has not fired, to the first such trigger's condition a need row can show. A
+    need whose Need.spent is set (short, no card or standing in play can make the store again, every trigger granting
+    it fired) draws as ui.card.needs_spent instead of ui.card.needs. A tap
+    of a short need's row lights its Need.makers (the cards in view.cards and standing actions in view.standing that
+    make it: their cards and the ledger lines they feed) until the next press, adds no words and does not tap the card.
+    List each of CardInfo.skill_needs too, as ui.card.needs_skill, short while that
+    skill's SkillBar.level is below its level (a skill not in view.skills reads as level one), and each of
+    CardInfo.step_needs as ui.card.needs_step, short while that card's completions (view.cards or view.completed;
+    absent, none) are below its count.
+  - show on each skill row its next level and what it pays, from SkillInfo.levels (the first entry above
+    SkillBar.level); a pays_key is words, "?" for a story unlock. Its {pct} slot (and {pct_b}) is LevelPays.change_bp.
+  - draw the Camp bar from the ledger line of Content.camp.store, which is never drawn as a ledger line: its
+    level is how many of camp.camp_levels' `at` the line's sample has reached, its next marker the next level's
+    pays_key (its {from} and {to} slots filled from pays_from and pays_to, {pct} from change_bp) in ui.camp.pays, shown only once
+    every one of its `names` is in view.unlocked. A `held` level is not counted as reached while none of its
+    lifted_by cards (a list of card ids, any one of which lifts it; empty, nothing does) is in view.completed: the
+    bar fills to it and holds, its marker still showing.
+    It shows once view.unlocked holds that store and its first level is reached, and is not tappable.
+  - fill a text entry's slots, and only that, and format numbers by the one rule below (Text and numbers).
+  - offer to add to a mix any card in view.cards whose CardInfo.lane is "hands"; show a mix by its id (its name).
+    A mix in view.greyed_mix_ids (it holds a completed or retired card) is drawn grey and offers only edit
+    (save_mix without those cards) and delete_mix.
+    A retired card's CardInfo.replaced_by, when set, is the card that takes its place: a lesson can say to add it.
+  - draw the hands from view.running_mix_id, the mix that runs now. view.active_mix_id is the player's own mix; while
+    view.mix_order is not null, orders[mix_order]'s mix runs over it, and the player's own comes back once that
+    order's condition stops holding (view.orders_on[i]: orders[i]'s condition holds now). A switch_mix while a
+    rule's mix runs sets only the player's own. Order sequence is priority among the orders that switch a mix; an
+    order that taps a card never competes with them.
+  - say why a rule is off from view.order_states[i], never from its own reading of the stores:
+    waiting (its condition does not hold), outranked (its condition holds and an earlier rule has the hands or the
+    lane: orders[mix_order] for a mix rule, orders[LaneBar.order] of its card's lane for a rule that taps a card),
+    passed_over (its mix is greyed, its task completed, or its offer answered, whatever its condition). on is not off.
+  - offer the first mix: once view.unlocked holds the feature Content.first_mix.feature and view.mixes is
+    empty, offer first_mix.card_ids (those in view.cards) as one control. The player's tap on it sends save_mix with the
+    id from text `ui.mix.default`, those cards in that order at an even split of Scales.bp (the remainder to the
+    first), then switch_mix to it. The offer stays until used; the page never makes a mix by itself.
+  - show the order_card whose store matches a ledger line that is red and not covered (falling, or starved), once
+    view.unlocked holds its offered_after (if any), inline under that line, unprompted (a tap on the line offers it
+    too). Accepting it sends set_orders (the current orders plus one new order on the card's `when`, at the end, or
+    for a card on a ruled lane where A LANE RUN BY RULES places it): for a card on
+    another lane, the card's tap_card; for a hands card, a switch_mix to a saved mix of that card alone at Scales.bp,
+    reused when one exists (same components), else first saved (save_mix) under the card's label. On the hands a
+    rule always runs a mix, so the player's mixes and rules are one list. The card goes away when the line turns
+    white. Also offer it, as an offer the player may
+    ignore, once the player has started by hand, twice in a row, the card that order taps (a player who keeps laying wood
+    to dry never lets the store fall); it then stays until set. A rule already set on the card's store and test (at
+    whatever levels) answers the card: the offer then shows that rule, and Change edits it.
+  - an order_card with a `chip` is never shown under a ledger line: it is offered in the hands strip once that chip
+    is in view.chips and no rule is set on the card's store and test, and then stays until such a rule is set (not
+    when the chip clears). One with after_end waits for view.ended_at and for the end lines to have been read in that
+    page (below, "The end"). Accepting it is the same as above. A chip with several order_cards offers each, side by
+    side, in content order; a rule set on the chip's store and test answers them all.
+  - word a rule whose `when` equals a ChipInfo's `when` as that chip: ui.rule.chip in a rule's condition,
+    ui.hands.while_chip on the hands strip while it runs; never by its numbers. Offer a chip's rule in the full
+    condition editor from the chip's first showing on: every chip in view.chips_seen that would be drawn (its
+    offered_after, if any, in view.unlocked), whether or not it shows now and whatever task the rule then does.
+  - build, read back and word a store rule (an order whose `when` watches a StoreValue), with Q =
+    Scales.quantity_per_item and n, m whole items:
+      "Under {n} {store}, until {m}"                   at_most, value n*Q - 1, release m*Q - 1; 1 <= n < m <= cap
+      "{n} or more {store}, until under {m}"           at_least, value n*Q, release m*Q;       1 <= m < n <= cap
+    so each crossing falls on the amount the page shows. Read back: at_most n = floor((value+1)/Q), m =
+    floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule read back with no band (m == n:
+    an order card with no release) is worded without "until" (ui.rule.below, ui.rule.reaches). The page builds only
+    rules with a band of at least one item, inside the store's cap (LedgerLine.cap), so never one that is always true
+    or flips at one level, and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
+    the store of the rule being edited even without a ledger line (its cap from StoreInfo). It may
+    write rules once it has seen one of the player's rules come on and then let go (view.orders_on), and draws no
+    rule whose `when` is not on a StoreValue or one of the subject rules below, except a lane's always rule (A LANE
+    RUN BY RULES), which it draws, builds and edits from the first time the lane is in view.
+  - build, read back and word a subject rule, one threshold with no band (counts and levels only go up):
+      "Once {card} is done {n} times"                  at_least(CardCount), value = release = n; ui.rule.done_once at 1
+      "Once {name} reaches level {n}"                  at_least(SkillLevel), value = release = n; or at_least on the
+                                                       Content.camp store, value = release = camp_levels[n-1].at, n
+                                                       below the first held level not yet lifted
+    on a card in view.cards, a skill in view.skills, and the Camp store once its line is in and unlocked. It writes
+    none on an Unlocked (unlocks only grow, so one the save holds is always true) or a Running (422 invalid_decision, above).
+  - never draw a ledger line for a store whose StoreInfo.hidden is true (the engine's bookkeeping: a clock, a countdown),
+    whatever it would ask; AnswerInfo.gains holds no hidden store.
+  - draw a store's ledger line from when it first asks something (red, or carrying an order card's offer) or is
+    falling by something other than the hands' tap, full while something feeds it, or covered; once drawn it stays,
+    kept in AccountPresentation.ledger_lines.
+  - build nothing for the player after the first mix's and first rule's lessons (the page walks those on the real
+    editor): a card the player's own mix could take (mixable, in play, doable again, not in the mix, Step.repeats.taps),
+    a chip whose mix switch the player keeps making or whose order card has no rule, and a red ledger line whose order
+    card has no rule each carry the quiet dot until touched. The dot opens and highlights nothing, has no sentence, and
+    a card's is kept once in AccountPresentation.mix_offered, a switch's in switch_offered.
+  - draw a ledger line white when it is not starved and is either not falling or covered; otherwise red (a starved
+    line is dry while something waits on it, covered or not). Its amount is against LedgerLine.cap. A red line with
+    no order card to offer names its largest drain (unless that is the hands' tap, which ends by itself) and offers
+    Edit mix, as a full line that something still feeds does. There is no banner text: "everything keeps itself
+    going" shows only as every line white. A store whose StoreInfo.bonus_bp is set only feeds a bonus (the standing
+    actions that take from it hold a lane speed while they run: engine DESIGN.txt, "HELD SPEED"), so its line is
+    always white, names no drain, and once starved reads ui.ledger.unfed, {pct} from bonus_bp, in ui.ledger.starved's
+    place: running low on it misses the bonus and asks nothing.
+  - mark what is new with a quiet dot (no number, no pulse), cleared once seen or tapped, and put the one glow on at
+    most one control at a time: on a card whose CardInfo.glows is true, the first time it is ready with its lane
+    free or Card.cuts_in true, and on the first-mix offer. Show a feature with a label_key, once unlocked, with the chips.
+THE CLIENT MAY NOT
+  - simulate: no rule, rate, cap, completion or unlock is computed on the page (a mix bar's modulo is sampling, not
+    a completion: the count is Card.completions). Past next_event_at, ask again.
+  - decide what exists, readiness, chip state or what a line says: all of it is in the view or the content. When
+    something that exists is first drawn follows the rules above (a chip's offered_after, the Camp bar's first level,
+    a ledger line's first meaning).
+  - write a number or an id into text other than through a slot: no text entry holds one. A mix's id is the
+    player's name for it and is shown as it is.
+  - send a decision it thinks will fail to save a request; the server's 422 is the answer.
+
+TEXT AND NUMBERS (one rule)
+  A number lives once, in the rules or the view; text never repeats it. Text entries hold words and named slots
+  ({name}), never a digit (the opening's checks fail one). The page fills a slot only from the served value named
+  below, formatted this way and no other:
+    {n} as an amount   whole items: floor(quantity / Scales.quantity_per_item)
+    {n} as a rate      items per minute: rate / Scales.rate_per_item_hour / 60, toward zero, no trailing zeros, two decimals at most (more only under 0.01, down to the first digit), sign unless zero
+    {have}             a store's amount now in whole items, sampled from the segment beside it
+    {cap}              a store's cap in whole items
+    {h} {m} {s}        a duration in seconds, rounded up to the second: ui.duration.h on a whole hour, ui.duration.hm
+                       from 1 h, ui.duration.ms from 1 min, else ui.duration.s; {d} is a whole duration formatted that way
+    {m}                a rule's other level, in whole items (as {n})
+    {store} {card} {skill} {chip}   the label of that store, card, skill or chip
+    {<lane>}           a person's name: the text of that lane's LaneInfo.name_key (the slot is the lane id, "{n2}"),
+                       filled in every text entry, labels and lines alike; in a line (a key of Content.line_infos) it is
+                       lowercased, as the lines' voice writes every word. A slot naming a lane with no name_key fails
+                       the opening's checks; a slot's name may hold a digit, the text around it may not
+    {found}            the amount a find found, in whole items (as {n} as an amount), filled in the one line its FindInfo
+                       {line_key, store, quantity} (Content.find_infos) names; the opening's checks hold that line to
+                       exactly one {found} and no other text to any
+    {mix}              a mix's id, as it is; for a rule that taps a card, that card's label
+    {pct} {pct_b}      the first and second of a served change_bp (LevelPays, CampLevel, CardInfo, ChipInfo: a modifier's
+                       signed change in basis points, +1000 for a tenth more; a CardInfo's include the entries it holds
+                       while it runs, at its full share, then those of the standing action its content names as
+                       upside_of, the runner whose held entries its upside describes: a recipe whose make another
+                       runner eats names that eater, and the page draws the eater's change on the recipe) as a signed
+                       percent: change / Scales.bp * 100
+                       toward zero, no trailing zeros, two decimals at most (a change that is not zero never reads as
+                       zero), sign unless zero ("+10%", "-33.33%"). The text names what changes and carries no direction
+                       word the sign already says; a text holds exactly as many of these slots as its change_bp has values
+    {gain} {gain_b}    the first and second of an AnswerInfo's gains, each in whole items (as {n} as an amount), in an
+                       answer's cost_key text only. {found} is a find line's alone, so an answer's amount has no
+                       slot there; the text names the store itself
+    {minutes}          how long a transfer code works, in whole minutes: floor(Content.transfer_code_s / 60)
+    {number} {level}   a save's SaveInfo.number and camp_level, as they are
+    {max} {days}       Games.max_saves (on a join's refusal, MergeSummary.max_saves) and Games.kept_days, as they are
+    {started} {played} {until} {seen}   SaveInfo.started_at, played_at, DeletedSave.purge_at and Device.last_seen_at as a date in the browser's
+                       own locale and zone: Intl.DateTimeFormat with day numeric and month short
+  A text holds only the slots above that its key's kind is filled with (a person's, {found} on a find line, {pct} where a
+  change is served, a ui key's own); any other fails the opening's checks, naming the key and the slot.
+  Fixed UI text, all in Content.text_entries (a missing key fails the opening's checks):
+    ui.duration.h {h} | ui.duration.hm {h}{m} | ui.duration.ms {m}{s} | ui.duration.s {s}    a duration
+    ui.rate.per_minute {n}          a ledger line's or contribution's rate
+    ui.store.amount {n}{cap}        a store's amount
+    ui.ledger.empties {d} | ui.ledger.fills {d}   until a falling line empties / a rising one fills
+    ui.skill.level {n}              a skill's level (a plain count)
+    ui.card.needs {store}{have}{n}  a card's need: its store, what there is, its quantity (amounts; {n} rounded up,
+                                    so a need never reads as less than it takes)
+    ui.card.needs_spent {store}{have}{n}  the same, for a Need.spent need: nothing will bring the store again
+    ui.card.needs_step {card}{have}{n}   a card's step need: the other card, its completions, the count wanted
+    ui.card.needs_skill {skill}{have}{n}  a card's skill-level need: the skill's label, its level, the level wanted
+    ui.mix.runs {d} | ui.mix.runs_indefinitely   the running mix's header (view.runs_out_at)
+    ui.mix.idle                     the unassigned share
+    ui.mix.default                  the id of the first mix the player makes (save_mix, then switch_mix)
+    ui.heading.ledger | ui.heading.craft | ui.heading.orders | ui.heading.mixes | ui.order.remove | ui.close
+    ui.order.add | ui.order.change   a rule offer's controls
+    ui.rule.below {store}{n} | ui.rule.below_until {store}{n}{m} | ui.rule.reaches {store}{n} |
+    ui.rule.reaches_until {store}{n}{m}   a store rule's condition, with no band and with one
+    ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
+    ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
+    ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits
+                                    for under n / n or more, and the store holds `have` now (amounts, sampled)
+    ui.rule.stuck {n}{store} | ui.rule.unfed {store}{n}   a store rule that cannot let go, or whose mix may stop short
+                                    (DRY RULES)
+    ui.rule.outranked {rule} | ui.rule.passed_over   why a rule is off: an earlier rule has the hands (its condition's
+                                    words), or what it runs is done
+    ui.rule.otherwise | ui.rule.on | ui.rule.up | ui.rule.down | ui.rule.handle   the Rules tab's default row, a rule on
+                                    now, reordering (ui.rule.handle: the accessible name of a rule's drag handle)
+    ui.mix.used_by {n} | ui.mix.used_by_one   the Mixes list's note on a mix rules run (several, one)
+    ui.hands.by_rule {store}{n} | ui.hands.until_up {store}{m} | ui.hands.until_down {store}{m}   the hands strip while
+                                    a rule's mix or task runs: with no band, until a "below" rule lets go, until a
+                                    "reaches" one does
+    ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
+    ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
+    ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
+    ui.log.open | ui.tab.cards | ui.tab.completed   the Log button and the Cards / Completed tabs
+    ui.log.away_m {m} | away_h {h} | away_hm {h} {m} | away_d {d}   the title of a Log stretch that began with a return: how long the player was away
+    ui.log.earlier | ui.log.now     the title of the stretch before the first return kept, and of the newest when no return is kept
+    ui.log.n_story | n_find | n_tap | n_level | n_body | n_fight {n}   how many lines of that kind a Log stretch holds
+    ui.feedback.open | ui.feedback.prompt | ui.feedback.note | ui.feedback.send | ui.feedback.cancel |
+    ui.feedback.thanks | ui.feedback.later   the Feedback button and its sheet: the button, the field's placeholder, the
+                                    line saying what is sent along, Send, Not now, the thank-you, and the line when a send
+                                    was not kept (limited, or no answer)
+    ui.hands.idle | ui.mix.yielded   the hands strip's states
+    ui.games.open | ui.games.heading | ui.games.name {number} | ui.games.unnumbered | ui.games.camp {level} |
+    ui.games.dates {started}{played} | ui.games.playing | ui.games.switch | ui.games.delete |
+    ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited |
+    ui.games.deleted_heading | ui.games.kept {until} | ui.games.restore |
+    ui.games.straight | ui.games.skip_lessons
+                                    the Games button and its sheet: a save's name (and one with no number), how far,
+                                    its dates, the open one's mark, Open, Delete and its confirmation, New game, the
+                                    lines for the cap, the new-game limit and the last live save, and the deleted saves
+                                    with Restore, the checkbox that skips the front page on this device (shown in
+                                    this sheet and on the front page), and the checkbox that turns lessons off in every
+                                    game of the account (AccountSettings.lessons, checked when it is false)
+    ui.games.played {when}          the front page's list of games: a row's last-played line, {when} one of the ui.time.*
+                                    words (the list's heading is ui.games.heading, the phone's button ui.games.open)
+    ui.front.continue               the front page's button, in Begin's place, on a browser that has games
+    ui.front.begin                  the front page's button on a first visit, and while New game is the one selected
+    ui.front.first                  the front page's line under the title on a first visit, and while New game is selected
+    ui.time.now | ui.time.minutes {n} | ui.time.hour | ui.time.hours {n} | ui.time.yesterday |
+    ui.time.days {n}                how long ago a game was last played, as a time after "Last played"
+    ui.devices.list_heading | ui.devices.list_lead | ui.devices.list_this | ui.devices.list_seen {seen} |
+    ui.devices.list_remove | ui.devices.list_remove_ask | ui.devices.list_remove_yes | ui.devices.list_remove_no
+                                    the Another device sheet's list of the account's browsers: its heading and lead, the
+                                    mark on the asking browser's row, a row's last use, Remove, and the question before
+                                    this browser is signed out with its yes and no
+    ui.frame.kept_out | ui.frame.open
+                                    the front page's note when a browser keeps no game inside the page that frames it,
+                                    and the link that plays it in its own tab
+    ui.mix.both | ui.mix.edit | ui.mix.edit_mix | ui.mix.save | ui.mix.save_new | ui.mix.new | ui.mix.full | ui.mix.name |
+    ui.mix.add | ui.mix.per_minute | ui.mix.now | ui.mix.after | ui.mix.delete | ui.mix.delete_ask | ui.yes | ui.no
+                                    the mix's controls and editor
+    ui.mix.named_by_order | ui.mix.nested   why a mix cannot be deleted
+    ui.card.count {n}{cap} | ui.card.retired   a capped card's count; a retired card
+    ui.ledger.full | ui.ledger.covered | ui.ledger.starved | ui.ledger.unfed {pct}   a ledger line's states
+  A content order card marked `default` is not served: the loader makes it a trigger that installs its order, on a ruled
+  lane's card, once its offered_after (and, with after_end, the end) is unlocked (RuleInstall.when); the player edits or
+  removes it as any rule. Order cards carry no text: `when` is an at_most on the card's store, worded as a store rule (above) or, for a
+  card with a `chip`, as that chip, and `then` taps a card, worded by its label. Content order cards only tap cards; a mix is the player's, so no order card names one.
+
+FORECAST
+  POST /api/saves/{save_id}/forecast answers ForecastAnswer {decisions, forecast}: the save advanced to now in memory (it
+  writes nothing, so it carries no lines; a later advance brings them), and every level-up of every skill and every fill (reaching its cap from below) and emptying of
+  each unlocked store that happens if the player changes nothing, by forecast.horizon_at (six game hours on, or less
+  where the replay stopped: after 400 instants, or once the request has spent the time an advance may, as a long absence's
+  catch-up is cut): orders, the queue and everything running are played out instant by instant as the engine
+  would (engine DESIGN.txt, "Forecast"). So a time drawn from it comes true by itself. Nothing past horizon_at is
+  known: the page draws no time for it, never an estimate. It is the save's own future while nobody decides, so it
+  holds for every later view of the save while Step.decisions is still its `decisions`. It costs hours of replay, so
+  it has its own call, kept off every View: the page asks when it holds none that holds (an open, a decision since,
+  new rules) or its horizon is under an hour away (or, for one cut short, half its span), and only after a few quiet seconds with no decision of its own and
+  at most once a minute, so a run of taps costs one forecast, not one each.
+  forecast.tops_out lists, for each skill below its phase's top and not mastered, the instant it reaches that top
+  ("tops out in"), by horizon_at; level_ups stop at a phase's top (PRESTIGE PHASES). Empty without prestige.
+
+PRESTIGE PHASES (engine DESIGN.txt, "PRESTIGE PHASES")
+  SkillBar.prestige is null when the content has no prestige, and SkillBar is then the curve's alone. Otherwise a
+  skill climbs one XP segment through phases; SkillBar.level is its shown level, counting from 1 in each phase and
+  stopping at the phase's top, level_xp and next_level_xp the bar's ends within the phase (next_level_xp null at the
+  top), and SkillPrestige says, at view.at: the phase; level_counted, the level a skill-level condition reads, which
+  never falls at a click; at_top, when the skill waits for the player's click and its XP still accrues for the carry
+  window; waiting_levels, the levels a click now would land above the new phase's level 1 (it rises while the carry
+  runs, so read it again at the next view); menu_nodes, the nodes the next pick may go into, in track order and the
+  same all phase, each with ranks_taken of ranks and its target's before_value and after_value one more rank (at a
+  full share: a make per hour, a card's work per second, or a cap, in the engine's units); undo_open, the last pick
+  can be taken back; mastered, every node finished, so no click ever waits at its top; pick_owed, an undo took the
+  last pick back and the next prestige fills it; topped_at, when the skill reached its current phase's top; picked, the
+  nodes its picks hold in click order; and parked, the ranks a move parked, each {node, due}: out of play until phase
+  `due` begins.
+  Content.node_infos names every node: its skill, its label_key and what it changes (make, work or cap, with the ids
+  the page labels it by).
+  Two decisions act on it, by hand only (never an order's or a queue entry's verb): prestige {skill, node}, the click
+  at the top (or the owed pick), undo_pick {skill} while undo_open, and move_pick {skill, node, to}, which moves the rank a picked node holds to a node
+  on menu_nodes and parks it until the phase after next (not while a pick is owed). A refused one is 422 invalid_decision, its
+  message naming why (engine PrestigeRefusal); the page redraws the save as it has it.
+  Text keys (Content.text_entries): ui.prestige.tops_out {d} | ui.prestige.top | ui.prestige.mastered   the row's state
+                                    ui.prestige.waiting {n} | ui.prestige.waiting_one {n}   levels waiting at the top
+                                    ui.prestige.button | ui.prestige.choose | ui.prestige.undo   the controls
+                                    ui.prestige.heading {skill} | ui.prestige.starts {before}{after}{n} | ui.prestige.owed |
+                                    ui.prestige.picks | ui.prestige.move | ui.prestige.move_to {node} | ui.prestige.move_here |
+                                    ui.prestige.parked {node}{n} | ui.prestige.parked_one {node}   moving a pick |
+                                    ui.prestige.begun {n}   the sheet's heading and its line
+                                    ui.prestige.make {store}{runner}{before}{after} | ui.prestige.work {card}{before}{after}
+                                    | ui.prestige.cap {store}{before}{after}   a node's change, before and after one rank
+                                    ui.prestige.reached {skill}{d} | ui.prestige.reached_now {skill}   a return's line
+                                    ui.lesson.prestige {skill}   the Push past control's lesson
+
+THE END
+  view.ended_at is the game time the end happened: the first instant the content's end feature was unlocked, as the
+  engine recorded it (engine DESIGN.txt, "The end"). Null before; once
+  set it never clears, so the page never decides the end from live fields. The scene is at dusk while it is set. When
+  the page first sees it, it appends Content.end_line_keys to the log as ordinary lines, and play goes on: nothing
+  covers the screen. What waits on the end (an order card with after_end) comes once those lines have had twenty
+  seconds to be read. A page reopened on a game whose end it had already shown (Opened.was carries ended_at) replays
+  the lines only if the end was under thirty game seconds ago; an older end replays nothing, and what waits on it
+  comes at once. An end that happened while the page was shut was never shown, so it plays in full. The content
+  unlocks the feature a quiet stretch after its last step, so the end lines never land on that step's own; that step
+  is a goal the page states (view.goals). all_covered is no part of the end.
+
+GOALS (docs/decisions.md, "Progress is stated, never hinted")
+  view.goals is what the open story beats wait on (app/ashfall_app/opening/goals.py: a beat unlocks something, brings
+  or takes someone, or tells lines with no find on them): each store (store, target, value), card (card, target; 0 for
+  the card running) and skill level (skill, target) an open beat waits on that is in play, a require on an unlock
+  standing for what the earliest open trigger giving it waits on; then at most one clock, the soonest wait on the clock
+  alone with a time (at), else one stopped on a dry store, with `feeds`, the shown stores whose running dry stops it
+  (or any clock landing at that same time).
+  The page puts the story mark (the Camp bar's ember ▸, no words) on each such card, ledger line (drawn from then on)
+  and skill row, and on nothing else, so a bar without it is progress no beat waits on; a store with no line yet is a
+  row in the Camp bar's box (its label, value against target, a bar, "something new"), the cards that make it marked;
+  the clock is the wait line, plain text at the top of the deck and no card or control: "Something new", the time left,
+  and the store it runs while there is some, or that store alone while it is dry. Nothing names a beat. `at` holds until next_event_at.
+
+GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/fun-from-choice.md, proposal 1)
+  view.goal_rows is each goal a mix can move: every store and level goal of view.goals, in that order, then each skill
+  in view.skills whose next_level_xp is set, at its next shown level (level + 1), skipping one a story level goal
+  already holds. A card's count and the clock are never rows, nor is a skill at its top: no next level, and a story
+  level goal no XP in the skill's phase reaches. Each row is read at the rates as set: the engine's own
+  shares and lines with a tap of the hands set aside, so the hands' mix runs at its shares and a card that yielded to
+  the tap runs in full (app/ashfall_app/api/setrates.py). Rates are read at view.at; nothing projects an input running
+  dry later, an order taking the hands, or a level speeding the work.
+  - lands_at: view.at plus what is left over per_hour, rounded up; view.at when already met; null when per_hour is not
+    above 0 or a store goal's target is over its LedgerLine.cap.
+  - per_hour: the store's net (unclamped, and a tap of the hands set aside, so it can differ from its LedgerLine), or
+    the XP per hour every runner training the skill gives. Each runner runs at its effective share: a paused or spent
+    card's share is already handed to the rest of its mix (engine DESIGN.txt, "SPENT"), as is in_per_hour's.
+  - limit: the first store, in running order, that a runner moving the goal (a maker of the store, a runner training
+    the skill) is paused or spent on, among the stores view.ledger draws, with in_per_hour, its makers' lines alone;
+    null when none is, and the goal's own line binds it, and null for a goal already met. Running order is the
+    engine's: standing actions in rules order, then the hands' mix in its flattened card order, then the town's mix;
+    never ledger order. A fact read off the runs, never a guess at what to change.
+  - until: at_least {watched, value, release}, value == release, the condition that holds once the goal lands. A store
+    row: watched store_value {store: row.store}, value row.target. A level row: watched skill_level {skill: row.skill},
+    value the level counted across prestige phases, (phase - 1) * (top_level - 1) + row.target for the skill's phase
+    (row.target in phase 1 and when the rules have no prestige), which is what a skill_level condition reads (engine
+    DESIGN.txt, "PRESTIGE PHASES"). While the rates as set hold, the condition is false before lands_at and true from
+    lands_at on; it is the `until` of a goal stint (GOAL STINTS below).
+  THE CLIENT MAY, in the mix editor and the condition editor, compare a dry run's goal_rows with the live view's by
+  (kind, store, skill, target) and list each row whose shown time or limit the edit changes: the goal (ui.goal.store,
+  ui.goal.level), the time left now and after (each from its own view's `at`; ui.goal.never for null), and under it
+  the after row's line: ui.goal.limited with the limit's store and in_per_hour per minute, else the store's label or
+  ui.goal.xp with per_hour per minute. Never better, best, faster or any other verdict.
+
+DRY RULES (docs/decisions.md, "A rule that cannot let go says so"; api/ruledry.py)
+  view.order_dry[i] is null or {store, holding} for orders[i]; the server decides, the client only words it. It is set
+  only for a rule whose `when` is at_most on a store_value and whose `then` is a switch_mix (a rule releases when the
+  store rises above `release`), by the rates as set (GOAL ROWS above):
+  - holding true, "can't reach": order_states[i] is on (the rule has the hands with its mix) AND the watched store's
+    per_hour as set is not above 0 (the net the goal row of a store reads: GoalRow.per_hour) AND a runner making the
+    watched store is paused or spent on a shown store: `store` is the first such, in running order (GoalRow.limit's
+    computation, the same function). Nothing releases the rule: no auto-release, no change to a rule's defaults.
+  - holding false, "may stop short": the rule's mix, flattened, has a card that makes the watched store and a card that
+    costs a shown store that no card of the mix makes; `store` is the first such, in card order. It is read off the mix
+    and the rule alone, so a rule that is off, outranked or not yet saved has it, and it never says the rule is stuck.
+  - null otherwise, a falling-toward-release (at_least) rule and a skill or count subject included: unproven, not "fine".
+  THE CLIENT MAY: on the Rules tab, under a rule with order_dry[i].holding true, one quiet line ui.rule.stuck {n}{store}
+  (n the rule's release as the rule's own words give it, store the label); in the condition editor, beside Save, one line
+  from a dry run of the decisions Save would send, read at the rule's index in that view's order_dry: ui.rule.stuck when
+  holding, else ui.rule.unfed {store}{n}. Save is never blocked and no default changes. The line states a fact; it names
+  no fix.
+
+GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine DESIGN.txt, "Queue mix")
+  A goal stint is a queue entry {verb: switch_mix {mix_id}, until: a GoalRow's until}: "run {mix} until {goal}". The
+  server holds no stint type: set_queue takes it as any entry (a hands mix the save holds, at most
+  Content.limits.max_queue entries; a town mix is 422 invalid_decision), and every rule below holds for any queue
+  entry whose verb is a switch_mix, whatever its until.
+  - Controlling: the first entry of view.queue whose verb is not dead (a switch_mix to a mix in view.greyed_mix_ids, a
+    tap_card of a completed card) controls. While a switch_mix entry controls and no order's mix runs (view.mix_order
+    null), view.running_mix_id is that entry's mix_id; view.active_mix_id, the player's own mix, is never written by
+    the queue. An order whose mix runs takes the hands over the stint (view.mix_order set), and the stint's mix runs
+    again when that order lets go.
+  - Popping: the controlling entry leaves view.queue at the first instant its until holds, also while an order's mix
+    runs, and at once when it already holds as the entry comes to control (a set_queue whose stint's goal is already
+    met pops it in that same decision). The next live entry then controls: its mix runs if it is a switch_mix; else
+    view.running_mix_id is view.active_mix_id again (the order's mix aside) and a tap_card entry taps when it can.
+    A goal stint on a GoalRow whose lands_at is t, set while the rates as set stay unchanged until t, pops at exactly
+    t.
+  - The player's switch_mix while a stint's mix runs changes view.active_mix_id alone: the stint's mix keeps running
+    and the switched-to mix runs once the queue gives the hands back. delete_mix of the active mix leaves
+    active_mix_id null and the stint's mix running; delete_mix of a mix a queue entry names is 422 (as before).
+  - Unreachable: an until that never holds (its goal row's lands_at null: nothing moves the goal at the rates as set,
+    the store falls, or a store target over its cap) is not an error, and nothing in the server passes the entry over,
+    pops it or removes it: it controls and its mix runs until the until holds (the rates change and the goal lands)
+    or the player sends set_queue without it, and every entry behind it waits. A skill that has reached its phase's
+    top cannot reach a higher counted level until the player's prestige click, so a skill_level until above that level
+    does not hold before the click. A stint whose mix greys is dead: passed over, the entry behind it controlling, and
+    kept, except that it leaves view.queue at the instant its until holds and cannot fall (an at_least on a skill_level,
+    as every level row's until is); a dead stint on a store until is kept even while that until holds (engine
+    DESIGN.txt, "Greyed mix").
+  THE CLIENT MAY:
+  - in the mix editor, offer ui.stint.run under the goal rows, never while Save is unavailable, the queue is at
+    max_queue, or the editor makes a mix for a rule. Pressed, it lists each row of the edit's dry run whose lands_at
+    is not the dry run's `at` (a met goal would pop at once): the goal (ui.goal.store, ui.goal.level) and its time
+    left in the dry run (ui.goal.never for null), never sorted or marked as better. Picking a row sends save_mix
+    (with saveDecisions' renames) when the edit differs from the saved mix, then set_queue with view.queue and the
+    stint {switch_mix {mix id}, until: row.until} at its end, and closes the editor.
+  - in Next (the Rules tab's queue), word a switch_mix entry ui.stint.entry {mix} {goal}: the goal from the row of
+    view.goal_rows whose until equals the entry's (kind, subject, value, release), else from the until itself (a store
+    at value, a skill at the counted level). On the controlling entry while its mix runs, add the row's time left
+    (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
+    store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
+  - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed): pressed, it lists the saved
+    mixes; a mix picked is worded ui.stint.which {mix}, with the goals of the dry run of switch_mix to it (the live
+    view's when it already runs) listed as the mix editor lists them. Picking a goal sends set_queue with view.queue
+    and the stint at its end. New text keys: ui.queue.plan | ui.stint.which {mix}.
+
+A FEATURE'S CARD
+  A FeatureInfo with a feature_card is shown as that card once, when the page first sees the feature unlocked: a View
+  after one without it, live or on a return (Opened.was without it, the step with it). It waits until what arrived with
+  that View has been revealed and its lines read, then docks at the panel's foot (along the bottom edge on a phone),
+  with nothing dimming the scene: the title, each of line_keys, and one button (button_key) that puts it away. Nothing
+  else waits on it, and play goes on under it. A page whose first View already holds the feature (a reopen, a redraw
+  for a deploy) never shows it, so a card put away stays away and nothing is kept for it. The content's end card is one.
+
+A LANE RUN BY RULES
+  A townsperson who works is a lane whose LaneInfo.ruled is true: its task is set by the player's rules, never by
+  their tap (engine DESIGN.txt, "Ruled lane"). Content: LaneInfo {lane, label_key, ruled, later_labels: [LaneLabel
+  {after: Unlock, label_key}], name_key}, name_key the person's name or null (Text and numbers, {<lane>}); the lane's label is the label_key of the last of later_labels whose `after`
+  view.unlocked holds, else label_key (for every lane, ruled or not). View: LaneBar {lane, running_card,
+  completes_at, order}, `order` the index into view.orders of the rule whose task the lane runs now: the first i
+  with view.orders_on[i] true, view.order_states[i] not passed_over, and a tap_card of running_card; null while the
+  lane is free or no rule taps what it runs. completes_at is when the running tap ends; null while the lane is free
+  and while it repeats its task (a rule that would start the same card again at each completion: engine DESIGN.txt,
+  "REPEATING TAPS"), when the running card's Card.bar has no limit and is sampled modulo bar_total as a mix bar is.
+  - tap_card from the player of a card whose CardInfo.lane is a ruled lane: 422 invalid_decision, nothing written.
+    Rules may tap it; a queue entry may not (set_queue with one is 422: the queue is the hands' plan).
+  - The lane's always rule: an order {when: after_time {time: 0}, then: tap_card c}, c a card on that lane. It is on
+    from the moment it is set and never lets go. Rules on a lane act first match: at each of the lane's landings the
+    first rule that is on and whose card is ready starts it, so a rule below the always rule acts only while the
+    always rule's card cannot.
+  - A story moment may set a rule (an installed rule, engine DESIGN.txt, "Installed rule"), and only one shape: an
+    always rule on a ruled lane, which the page draws and edits as below. It arrives in view.orders at the top or
+    the end, like a rule the player set, and is theirs to edit, move or remove; once removed that moment never sets
+    it again. rule_runs lists it from the moment it arrives, on at once (also when it arrives at a load that carried
+    the save to new content). A rule whose one-off task has completed stays in view.orders as passed_over until the
+    player removes it.
+  - An answer may also put a one-off of the hands at the front of view.queue, as the page's own When ready entry
+    (tap_card c until c's card_count reaches its next completion): drawn as Next like any entry, removable the same
+    way, gone once c completes.
+  - In Next, a tap_card entry whose card is some view.lanes entry's running_card is drawn with ui.queue.running in
+    place of Remove: it stays in view.queue until that tap completes, and set_queue without it would not stop the work.
+  THE CLIENT MAY, for each lane in view.lanes whose LaneInfo.ruled is true:
+  - draw it as a row under the hands strip, the hands strip's shape: its label, what it does (the label of
+    running_card, or ui.lane.idle while free), the running card's bar (its Card in view.cards, sampled as any bar),
+    and ui.lane.change, which opens the rule editor's simple view scoped to that lane on orders[LaneBar.order], else
+    on the lane's first always rule that is not passed_over (the one that acts next), else on a new always rule. The
+    simple view picks the task: a card in view.cards on that lane. Saving sends set_orders with that rule's tap_card
+    changed in place (or the new always rule appended).
+  - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that
+    lane's tasks.
+  - in the Rules tab, list the rules that tap a card on that lane under the lane's label, in their view.orders order;
+    word an always rule as ui.rule.always {card}. A new rule on that lane (from the editor or an order card's
+    Accept) goes immediately before the lane's first always rule, or at the end when it has none, so it can act.
+  - say a lane rule is outranked with ui.rule.outranked, {rule} the words of orders[LaneBar.order]'s condition, or,
+    when that rule is an always rule, its ui.rule.always words.
+
+OFFERS
+  Someone asks the player something, with two or more answers; it waits until answered and never expires (engine
+  DESIGN.txt, "Offers"). Content.offer_infos: [OfferInfo {offer, text_key, kind, line_keys, answers: [AnswerInfo {answer,
+  label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}]}] in content order, kind the group of offers that ask the same question and role what
+  an answer means in it (both null on an offer outside any kind; a kinded offer has a role on every answer, and every
+  offer of a kind has the same roles), line_keys the lines written when the offer shows. View: offers [Offer
+  {offer, answer, answers: [OfferAnswer {answer, card, takes_s}]}], every offer shown so far, in content order:
+  answer null while it is open, else the answer given; per answer, the card it sets running (null for none) and
+  takes_s, the seconds one completion of that card would take started now (null without a card).
+  AnswerInfo.change_bp is the answer's modifiers as signed changes in basis points, each distinct value once in
+  authored order, as LevelPays.change_bp; AnswerInfo.gains the stores its outcome puts in, one entry per authored
+  store line in authored order, quantity in quantity units. Both are empty for an answer without any.
+  Unlock categories gain offer (shown), answered (answered, by any answer; its id is the offer's) and answer (its id
+  is the answer given); gates read them as any unlock.
+  POST /api/saves/{save_id}/decisions with answer_offer {offer, answer}: advance to now, then answer. The answer's
+  lines are in Step.lines at once; what it starts or sets is in the view. 422 invalid_decision, nothing written, when
+  the answer is not one of the offer's, the offer is not shown, or it is already answered (a rule may have answered it
+  since the page's last view: the page then asks advance and draws that). An order or queue entry may hold
+  answer_offer: an order answers at the first instant its `when` holds while the offer is open, a queue entry when it
+  is the controlling entry while the offer is open (it is gone once the offer is answered), so an offer can arrive
+  already answered on a return; set_orders or set_queue with an answer not of its offer is 422.
+  An order may also hold answer_kind {offer_kind, role} (never a decision, never a queue entry's: both 422): at each
+  instant its `when` holds it answers the first open offer of the kind with that offer's answer of the role, so one
+  rule answers every offer of the kind as each shows. It is never passed over. set_orders with a kind no offer
+  declares, or a role the kind does not have, is 422 invalid_decision and writes nothing. The wire's field is
+  offer_kind because `kind` is the verb's tag.
+  THE CLIENT MAY:
+  - draw an offer row for each view.offers entry whose answer is null, in the hands strip where the mix offer sits,
+    revealed as an arrival: after the last of the Step's lines whose key is in its OfferInfo.line_keys, or at once
+    when this Step holds none of them (it showed before the page's last view). It holds OfferInfo.text_key and one
+    control per answer, its label_key and its cost_key with {d} filled from takes_s (a cost text with {d} left out
+    while takes_s is null; one without it, the effect of an answer that starts nothing and installs a modifier, drawn
+    as it stands), {pct} and {pct_b} from AnswerInfo.change_bp and {gain} and {gain_b} from AnswerInfo.gains. A tap
+    sends answer_offer. The row has no dismiss and stays until answered.
+  - draw no row for an offer that arrives already answered: its lines say what happened.
+  - list the answer order in the Rules tab: every always rule (after_time 0) that answers an offer, in list order, under
+    ui.rule.answers, each as ui.rule.answer with no arrow.
+  - build one answer rule per offer kind, in the Rules tab's answers section, once an offer of that kind has been
+    answered in the view (an open offer is not enough): a row with that offer's question (set apart from an open
+    offer's), ui.rule.answered {answer} with the label of the answer that offer was given, the line
+    ui.rule.answer_next (the buttons answer the kind's later offers), and one button per role,
+    each worded by the label of the answer that offer gave under the role. A tap sets the kind's rule to that role
+    (an always rule, appended; a rule already set for the kind is changed in place), and Remove takes it away. The
+    rule reads as ui.rule.answer with the label of the role's answer in the kind's first offer that has it.
+  THE CLIENT MAY NOT build an answer_offer rule (no editor offers one; the order is set by a story moment or a tool),
+  nor offer the answer rule for a kind before an offer of it has been answered.
+
+  New text keys (Content.text_entries): ui.lane.idle | ui.lane.change   a lane row's free state and its Change
+                                    ui.rule.always {card}   a lane's always rule
+                                    ui.rule.answer {answer} | ui.rule.answers | ui.rule.answer_next   a rule or queue entry that answers an
+                                    offer (the answer's label), and the Rules tab's heading over such rules
+                                    ui.rule.answered {answer}   the answer rule builder's word of the answer given
+                                    ui.queue.running   a Next entry whose tap a lane already runs
+
+CUT-IN
+  A glowing step the hands have not done yet (CardInfo.glows, completions 0) is tappable while the hands run a task
+  that the queue or a rule would start again once the step lands: Card.cuts_in is true, and a tap_card of it pauses
+  that task where it stands (its work is kept) and runs the step; when the step lands the queue or the rule takes the
+  task up again. A glowing step never cuts into a task the player tapped by hand (Card.cuts_in false, the tap 422s as
+  on any busy lane).
+  A cure for a chip shown now (a card that puts up the store the chip watches) cuts in on any task of the hands that
+  is not itself a cure: Card.cuts_in is true and a tap_card of it pauses the task the same way (a rule on the cure
+  waits for the task to land). A task no rule or queue entry would start again (one the player tapped by hand) goes to the front of view.queue as a When ready entry for its current completion, so it is taken up
+  again once the cure lands.
+  THE CLIENT MAY draw such a card ready and tappable while its lane is busy, and give a glowing step the glow.
+
+FIGHTS
+  A fight is a card the player runs (a hunt) or a standing action that runs on its own (a threat at the stores), with
+  odds on it: what a won fight brings, what a lost one costs, and the share lost, set by the side's strength against
+  the threat's (engine DESIGN.txt, "FIGHTS"). Nothing on the wire is chance: the odds are exact and every pay is a
+  rate. Content.side_infos: [SideInfo {side, label_key}]; Content.threat_infos: [ThreatInfo {threat, label_key}];
+  CardInfo and StandingInfo gain fight: FightInfo {side, threat, loses: [Amount], wounds: [Amount], won_line_keys,
+  lost_line_keys} or null; the two lists are the runner's pools of lines for one fight won and one lost (keys of
+  Content.line_infos), words only.
+  View.fights: [Fight {runner, side, threat, power: Strength, threat_strength: Strength, loss_bp, fought, lost}], one
+  per unlocked fight card or standing action, cards first, each in content order. Strength {value, sources:
+  [StrengthEntry {source, form, amount_bp, share_bp}]}: value is what the engine uses; sources are every source behind
+  it, the base first as {source: null, form: "base", amount_bp: the base}, then the sums (add_bp), then the factors
+  (mul_bp), each in stack order. share_bp is set only on an entry a card holds while it runs (engine DESIGN.txt,
+  "ENTRIES HELD WHILE A CARD RUNS"): source is that card's id, share_bp its share of its lane's time now (10000 for a
+  tap, its town or hands mix share otherwise), amount_bp what that share gives (the card's whole amount times
+  share_bp / 10000, rounded down); null on every other entry, so a held entry and a permanent one from the same card
+  are told apart by it. The page draws a held entry's source label and its share from these fields alone and never
+  multiplies a share itself. A standing action may hold one too (engine DESIGN.txt, "HELD SPEED"): its source is the
+  action's id (cards and standing actions share one namespace) and its share_bp 10000 while the action runs, the
+  entry absent while it is paused. loss_bp is the share of fights
+  lost now, 1 to 10000; for a running tap, the share it was started at and pays to its end. fought and lost count since
+  the runner first ran; lost <= fought.
+  A fight's pay is in the ledger like any line: its makes already scaled by the share won, its loses and wounds by the
+  share lost, so the ledger's numbers are the fight's numbers. A card's Card.needs and takes_s are as for any card.
+  Content.side_infos and threat_infos carry only the words (the strengths are View.fights). CardInfo.fight and
+  StandingInfo.fight name the side and threat and what one lost fight takes (loses) and adds (wounds).
+  The feature `combat` (FeatureInfo, a FEATURE unlock) switches the page's fight parts on; a fight runner is only ever
+  unlocked with or after it.
+  THE CLIENT MAY:
+  - on a fight card, under its makes, draw its odds as ui.fight.odds {lost}{of} with the smallest whole pair for which
+    loss_bp * of == 10000 * lost and of <= 20 ("1 in 5" for 2000), else as ui.fight.odds_pct {pct} (loss_bp / 100, one
+    decimal below 10%), with the side's and the threat's values beside it as ui.fight.vs {side_name}{power}{threat_name}{threat}; and, under the
+    card's makes, what a lost fight costs (each of loses and wounds) as one ui.fight.on_loss {costs}, the list "3 wood, 1 energy" (each a whole number and the store's label).
+  - open a strength's entries, from a tap on its number, as the ledger opens a line's: each entry's source label and
+    amount, the base first. Reachable without hover.
+  - draw a threat that runs on its own (a standing fight) in the ledger's threats group, under the feature: its label,
+    its odds as above, and fought and lost as ui.fight.tally {fought}{lost}.
+  - tell what fights happened since its last view in the arrival queue (the Chronicle): for each fight runner whose
+    fought rose by k with lost rising by j, k entries of which exactly j read as lost, which ones picked by its own
+    shuffle-bag draw (a seeded draw keyed by the save, the runner and the fought count the window starts at), so the
+    same window always reads the same; past three entries in one window, one summary line
+    ui.fight.since {fought}{won}{lost}{runner} instead. Live, each fight is its own window as fought rises. An entry
+    is ui.fight.won {runner} (ui.fight.lost) when the runner's won_line_keys (lost_line_keys) is empty; otherwise the
+    k-th fight the runner has won since it first ran (counted from 0: fought - lost before the window, then the
+    window's wins in order) reads pool[bag[k mod n]], n the pool's size and bag the pool's indices shuffled by a
+    seeded draw keyed by the save, the runner, "won" (or "lost") and floor(k / n): each line once before any repeats,
+    the same on every device.
+  THE CLIENT MAY NOT:
+  - show odds for a fight whose fought is 0; it draws ui.fight.odds_unknown there, whatever loss_bp holds, and the threat's strength as ui.fight.threat_unknown
+    with no entries to open (the two strengths would give the odds away); the side's own strength shows as always.
+  - roll anything that changes a number, or show a loss the engine's lost count does not hold.
+  - show a threat's strength as reacting to the player's side: no wording ties a threat's rise to what the player
+    built (it rises with the region's clock alone).
+  New text keys (Content.text_entries): ui.fight.odds {lost}{of} | ui.fight.odds_pct {pct}   a fight's odds
+                                    ui.fight.odds_unknown   the odds of a fight whose fought is 0
+                                    ui.fight.threat_unknown   the threat's strength in ui.fight.vs, likewise
+                                    ui.fight.vs {side_name}{power}{threat_name}{threat}   the two strengths, each with the label of
+                                    its side (side_infos) or threat (threat_infos)
+                                    ui.fight.on_loss {costs}   what one lost fight costs, once
+                                    ui.fight.base   the base row of a strength's entries
+                                    ui.fight.tally {fought}{lost} | ui.fight.since {fought}{won}{lost}{runner}   counts,
+                                    and the arrival queue's summary line
+                                    ui.fight.won {runner} | ui.fight.lost {runner}   one fight in the arrival queue
+
+  Rejected, and why (fights on the wire):
+  - A per-fight event list from the server (each fight with its result): the engine has no per-fight results (they are
+    flows), so the server would invent them; the page's labels are presentation over exact counts, which is what the
+    server can honestly serve.
+  - The odds as a percentage only: "1 in 5" reads as the shuffle bag it is; a percentage is the fallback when no small
+    pair is exact.
+  - Serving the shuffle-bag labels from the server: they change nothing the server keeps, and the page already owns
+    the arrival queue's order and pacing; keyed by save, runner and window, they are the same on every device.
+  - A combat tab: fights are cards and ledger lines; a tab would be a second place for the same numbers. Revisited
+    when guards and walls bring a town-side view.
+
+JOURNAL
+  The book the player carries, written in: one page per thing known, holding the notes written about it and, for a
+  thing fought, its learned numbers (decisions.md, "What you learn is written in a journal", "Blind until learned,
+  perfect once known"). It is a reading of what the wire already carries: an entry and each of its notes are unlocks,
+  and the numbers are View.fights. View gains nothing. The page draws the journal from Content.journal,
+  view.unlocked and view.fights, and keeps what the player has read in AccountPresentation. Page design:
+  docs/design/opening-screen.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
+  page shell; not a system (one caller, nothing to swap).
+
+  The book is in sections, a closed set, and each page is in one:
+    days                the daily journal: the story's bigger beats, retold afterwards in the character's voice (the
+                        Log stays the live feed). Each note is written on a spine beat and names it.
+    creatures           the things fought, with their numbers.
+    places              places, events and expeditions.
+  Within a section, pages run in the order they are written. The content keeps that order: a section's pages are
+  declared (chapters in load order) in the order their first notes are written on every route, so content order is
+  writing order and nothing on the wire carries a time.
+
+  In the chapter files:
+    [journal]           feature: a FeatureId with a label_key (the book the player carries). Declared once, in the
+                        chapter that holds the first entry or an earlier one; Content.journal is null until then.
+    [[entries]]         id (an EntryId), section, sketch, hand, runners
+      section           "days", "creatures" or "places"
+      sketch            optional: the entry's drawing, an id matching [a-z0-9_]+, the image
+                        /assets/journal/<sketch>.png. A page with none is laid out as text alone, which is valid.
+      hand              "ink" or "pencil": how the entry's notes are written where a note does not say
+      runners           the fight cards and standing fights whose numbers the page shows, in this order; [] for none
+    [[notes]]           id (a NoteId), entry, gate, requires, hand, sketch, beat
+      beat              on a days page, required: the spine beat the note retells, an id of content/beats.yaml's
+                        beats (B5). Its gate is that beat's own step, so the note is written at the beat's instant.
+                        Refused on a note of any other section. The loader holds its presence and shape; the canon is
+                        not shipped, so tests hold that it names a beat in beats.yaml and that, on every played
+                        route, the note is written at the instant that beat lands.
+      entry             the entry the note is written on, declared in this chapter or an earlier one
+      gate, requires    when it is written, as an offer's: the loader makes the trigger "note_" + id, whose outcome
+                        unlocks the note and, for the entry's first note, the entry. Every other note's trigger also
+                        requires the entry unlocked, so a later note is a later outcome (or the first's own instant),
+                        never a note on a page that is not there.
+      hand              optional: the entry's hand when absent
+      sketch            optional: a small drawing beside the note, an id as for an entry
+    [text] <note id>    the note's words: a note's id is its text key (there is no text_key field)
+  An entry's first note is the first [[notes]] naming it in the chapter that declares the entry. A note's outcome is
+  only those unlocks: it writes no line and adds to no store.
+
+  The opening's checks (each naming ids, never text):
+    - a note whose entry is not declared in its chapter or an earlier one: refused, naming the note and the entry.
+    - an entry no [[notes]] in its own chapter names (no first note): refused, naming the entry.
+    - a runner that is neither a card with a fight nor a standing action with a fight: refused, naming the entry and
+      the runner.
+    - a sketch id outside [a-z0-9_]+ (it is a path): refused, naming the entry or note.
+    - a note on a days page with no beat, a beat outside [A-Za-z0-9-]+, or a beat on a note of another section:
+      refused, naming the note.
+    - an entry or a note while no chapter so far declares [journal]; [journal] declared twice; its feature unknown or
+      without a label_key: refused.
+    - a note with no [text] entry, or whose text holds a digit: refused by the existing text checks (Text and
+      numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
+    - entry and note ids are content ids like any other: new ids only across chapters, kept by the release lock, and
+      renamed by renames.toml under the id kinds entry and note. A note_ trigger's outcome is locked as any trigger's,
+      so a released entry keeps its first note.
+
+  Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY), renamed
+  through IdKind ENTRY and NOTE; engine DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
+  them as any unlock (subject "unlocked" with unlock_kind entry or note), so a gate on several entries is one Unlocked
+  condition each, and no count store mirrors them.
+
+  Content.journal: JournalInfo {feature, entries: [EntryInfo {entry, section, sketch, runners: [str], notes:
+  [NoteInfo {note, hand, sketch}]}]} | null. entries in content order (chapters in load order), each entry's notes in
+  content order; within one section, content order is writing order. Section is a closed enum, "days" | "creatures"
+  | "places". EntryInfo.sketch is null for a page with no drawing. A note's beat stays in the content: the page has
+  no use for it.
+  NoteInfo.hand is resolved (the entry's where the note names none), so EntryInfo carries no hand and the page applies
+  no default. NoteInfo.sketch is null for a note with none. A note's words are Content.text_entries[note]. Hand is a
+  closed enum, "ink" | "pencil": each hand is a style the page owns, so adding one is page work as well as content.
+  The sketch images live on the assets volume (engineering.md, bulk assets) at /assets/journal/<sketch>.png: ink on
+  transparent, drawn by docs/research/sketch-test/process.md. An entry's sketch is 1200 by 1200 (the method's 600 by
+  600 page at twice), holding the figure, its studies, a crossed-out try and the labels pointing into it, and no
+  caption or free notes: those are the entry's notes. A note's sketch is at most 600 by 600. The words drawn in a
+  sketch are art: no text entry holds them and no check reads them.
+
+  AccountPresentation gains journal_read: [Name] (at most MAX_LIST): the notes on pages the player has turned to.
+  Empty on a new account. A note is unread while view.unlocked holds it and journal_read does not; read is kept for
+  the account, as ledger_lines is, so a note read in one game is read in the next.
+
+  THE CLIENT MAY:
+  - draw Content.journal.feature as the Journal button, in the book's place with the chips, once view.unlocked holds
+    that feature and at least one entry; until then the book is plain text, as any feature with a label_key. The
+    button's word is the book's label_key. It carries the quiet dot while any note is unread, and at no other time.
+  - open the Journal sheet from it: one page per entry view.unlocked holds, the sections in the order days,
+    creatures, places, and each section's pages in Content.journal.entries order. It opens on the first entry holding
+    an unread note, else the entry last shown in this page session, else the first. Prev and Next turn one entry at a
+    time, across sections.
+  - draw one bookmark per section that has a page view.unlocked holds, in the same order, worded by its text key
+    (ui.journal.days, ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark.
+    Turning to a bookmark opens that section's first page holding an unread note, else its latest page (the last in
+    content order that view.unlocked holds). The bookmark of the open page's section is marked as the current one.
+  - on a page, draw the entry's sketch and each of its notes view.unlocked holds, in content order and in its hand,
+    with the note's sketch beside it. A note not unlocked is not drawn and keeps no room. A page whose sketch is null
+    is laid out as text alone: no empty room is kept for a drawing, nothing is loaded and nothing is reported.
+  - run the journal's lesson's numbers step only on a page that shows numbers: on a page with none, the lesson ends
+    (kept) after its notes step, and the numbers step runs as a lesson of its own the first time a page with numbers
+    is open. A step that waits on numbers never holds the lessons after it.
+  - under the notes, draw for each of EntryInfo.runners that view.fights holds, in runners order, the runner's label
+    (its card's label_key, or its standing action's) and its numbers exactly as the fight card words them (FIGHTS):
+    with fought 0, ui.fight.odds_unknown and ui.fight.vs with ui.fight.threat_unknown, and no tally; with fought
+    above 0, the odds (ui.fight.odds, else ui.fight.odds_pct), ui.fight.vs with both values, and ui.fight.tally
+    {fought}{lost}. Known means fought above 0, read off the view and stored nowhere (systems.md, Knowledge). A runner
+    view.fights does not hold (not unlocked) draws nothing. The numbers are redrawn at each view while the sheet is
+    open; a strength's entries do not open here (the fight card's do).
+  - count the notes of each page the player turns to (opening counts as turning to the page it opens on) as read,
+    and send them once, as the sheet closes: one PUT /api/me/presentation whose journal_read gains exactly those
+    notes, every other field as kept. A note unlocked while its page is open stays unread until the page is turned to
+    again.
+  - load a sketch when its page is drawn; one that fails to load leaves its room empty (no broken-image mark, no
+    stand-in drawing) and is reported to /api/client-errors with the sketch id.
+  THE CLIENT MAY NOT:
+  - send anything because of the sheet before it closes: opening it and turning its pages cause no decision,
+    advance, dry run, forecast or presentation write (the session's own advances at view.next_event_at go on as
+    ever). The read marks wait for the close.
+  - draw a figure for a runner whose fought is 0, take an entry's numbers from anywhere but view.fights, or draw an
+    entry or note view.unlocked does not hold.
+  - write a note's words anywhere but its page: the story strip and the Log carry lines, not notes.
+
+  New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
+                                    and its page turns
+                                    ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
+                                    the journal's lesson (opening-screen.md, "Lessons")
+                                    ui.journal.days | ui.journal.creatures | ui.journal.places   the sections'
+                                    bookmarks
+
+  Rejected, and why (the journal on the wire):
+  - A journal object or a known set on the View: each fact is already there (view.unlocked, view.fights), and the
+    engine has no use for a known set until a fork reads one (systems.md, Knowledge). A second home would drift.
+  - A `journal` feature beside the book: the page draws the journal from its first entry ("The screen arrives when it
+    means something"); a feature would be a second switch for what the entry unlock already says.
+  - A count store of entries for gates: one Unlocked condition per entry says the same with nothing to keep in step.
+  - Notes inside [[entries]]: a later chapter writes notes on an earlier chapter's entry, and chapters merge on with
+    new ids only, so a note is its own table naming its entry.
+  - Read marks per save, or in the browser: what the player has read is theirs across games, and a browser store is
+    lost on another device. Written at the close rather than per page so reading sends nothing.
+  - Every word in the sketch (process.md's notes files): notes grow as the player learns and pass the content's text
+    checks, so they are text; the sketch keeps only the words that point into the drawing.
+  - A note that strikes an earlier one, and a contents page: nothing in the first entries needs either.
+  - A written-at time on the wire to order a section's pages: content order is writing order, which the played
+    routes hold (a section's pages written in content order, a days note at its beat's instant), so a time would be a
+    second home for the same fact.
+
+  Acceptance (the first slice is done when each passes; server tests under app/tests, client tests under
+  app/client/test, as their neighbours):
+  1. A fixture chapter with [journal], one entry and two notes loads: Content.journal holds the entry with both
+     notes in order and each hand resolved; the loader made note_<id> for each; the first's outcome unlocks the
+     entry and the note, and the second's requires the entry unlocked.
+  2. Planted, each fails the load and names its ids: a note on an entry no chapter declares; a note on an entry a
+     later chapter declares; an entry with no note in its chapter; a runner with no fight; a sketch id holding "/";
+     an entry with no [journal]; [journal] twice; [journal] on a feature with no label_key; a note text holding a
+     digit. Control: the same fixture without the plant loads.
+  3. On fixture rules, a save reaching a first note's gate holds the entry and note unlocks from that instant; a
+     later note whose gate holds first is not unlocked until the entry is, then lands at that instant.
+  4. Renames: an entry and a note renamed in renames.toml carry their unlocks across a rebase; a released note id
+     removed without a rename fails tests/opening/test_released.py.
+  5. Wire: Content.journal is null for rules with no [journal] and served in content order otherwise; openapi.json
+     names JournalInfo, EntryInfo, NoteInfo and the Hand enum as components; the field-names test holds; journal_read
+     round-trips through PUT /api/me/presentation, refused past MAX_LIST or with a name a Name refuses.
+  6. The Journal button is absent with no entry unlocked (the book drawn as plain text) and present with one.
+  7. A runner with fought 0 draws ui.fight.odds_unknown and ui.fight.threat_unknown and no digit in its odds, threat
+     or tally; one with fought above 0 draws the served odds as oddsOf words them, both values and the tally; a
+     runner not in view.fights draws nothing.
+  8. With the clock held (no next_event_at passes), opening the sheet and turning to every page sends no request;
+     closing sends exactly one PUT /api/me/presentation, whose body equals the kept presentation but for
+     journal_read gaining exactly the shown pages' notes; no request under /api/saves/ is sent from open to close.
+  9. The button's dot shows while a note is unread and not otherwise; the sheet opens on the first entry with an
+     unread note; after a close with every unread page shown the dot is gone; a note unlocked while its page is open
+     keeps the dot after the close.
+  10. The layout's draws for an entry are equal across two saves and two page loads; over a fixed list of ids at
+      least two pages differ; adding a later note leaves every earlier note's draws unchanged.
+  11. The journal's lesson starts on the button's first showing, walks its steps, and is kept in the save; it
+      never returns once kept.
+  12. Renders at 390x844 (portrait page) and 3840x2160 and 1280x800 (spread), with one entry fought and one not, a
+      pencil note and a note sketch, looked at (headless-render); the page is the game's one dark theme
+      (color-scheme: dark), so the renders are repeated with the browser set to prefer light and must not differ.
+      tests/test_client_contrast.py passes with the hand's colours on the parchment.
+  13. Each sketch is looked at, by process.md's method, before its entry ships.
+
+BANKED TIME
+  Where production past a cap goes: trips, comforts and arrivals, each a card or an offer the wire already carries
+  (engine DESIGN.txt, "BANKED TIME"). Nothing new on the wire: no model, field, feature or text key. A trip is a
+  CardInfo with an uncapped card whose Card.needs list its supplies; a comfort is a capped craft; an arrival is an
+  OfferInfo whose answer queues a make-room one-off (OFFERS; "Queued one-off").
+  THE CLIENT MAY:
+  - draw a trip in the arrival queue like any uncapped card's completions (in the log, never the band), and the
+    trip's finds, which are triggers with lines, like any trigger's lines.
+  - draw the player's figure away from the scene while a trip runs on a tap, and for the trip's share of a cycle while
+    it runs mixed, choosing the pose from the card id as it does for any task.
+  THE CLIENT MAY NOT:
+  - show what a cap lost, as a number, a line or a colour ("time away is shown as what got done"): a full store's
+    ledger line reads as full, its net as served, and nothing totals overflow.
+  - mark a trip, comfort or arrival as a kind of its own (a tab, a badge, a "spend" button): each is drawn where its
+    card or offer is drawn, with the controls cards and offers already have.
+
+  Rejected, and why (banked time on the wire):
+  - A `trip: bool` on CardInfo for the scene: the page already picks a pose per card id, and a flag would be a second
+    home for what the card id says.
+  - A "banked hours" or "surplus" number served for the page to show: a bank the player watches fill is an offline cap's
+    shape, and it would read as what was missed.
+
+THE TOWN'S MIX
+  Once people join, the townsfolk's lanes are run by one mix whose shares are people's time: each share is a part of
+  one person's time, the person being the lane its card is on (engine DESIGN.txt, "THE TOWN'S MIX"). It is an
+  ordinary saved mix in view.mixes; which one runs is set by a rule, never by the player's switch.
+  Content: nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane): that lane's person has
+  joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
+  view.unlocked holds, and whose left unlock it does not (LEAVES).
+  View: running_town_mix_id (the town mix running now: the first rule that is on with a switch_mix of a town mix that
+  isn't greyed; null when none runs) and town_mix_order (the index into orders of that rule; null when none).
+  A mix is a town mix when every card it holds, nested mixes flattened, has a CardInfo.lane that is ruled; a hands
+  mix when every card is on hands; a mix with no card is a town mix when a join makes it or it was a town mix before it emptied, else a hands mix. running_mix_id and mix_order read only hands
+  mixes, as before. A card of the running town mix has its Card.share_bp and Card.run as a hands mix card has, and
+  Card.by is mix, or yielded while a rule's tap on its lane runs (its LaneBar.running_card is then that tap's card;
+  while the lane runs only shares, running_card is null and completes_at null). A share of a card whose lane has not
+  joined, or that is locked, idles.
+  Decisions:
+  - save_mix of a town mix: 422 invalid_decision, nothing written, when it holds cards of both kinds of mix, a card
+    whose lane has not joined, a card with a cap, or one person's shares summing above 10000; and for a new mix id
+    beginning "town:" (those are the game's; the one it made may be edited).
+  - switch_mix from the player of a town mix: 422 (set by rules). set_queue with a switch_mix of a town mix: 422 (the
+    queue is the hands' plan). set_orders accepts one: that is the town's rule.
+  - The town's always rule: an order {when: after_time {time: 0}, then: switch_mix m}, m a town mix. When the first
+    person joins, the game makes the town's mix and appends this rule (rule_runs lists it, on at once), and each
+    joining person's current always task becomes their whole share in it (their always rules on uncapped cards leave
+    view.orders; their other rules stay where they were and still act, as taps that take the whole of that person
+    while they run). The rule and the mix are the player's to edit from then on.
+  THE CLIENT MAY:
+  - draw the town as one strip under the hands strip, in place of the joined lanes' rows (a ruled lane not joined
+    keeps its row, A LANE RUN BY RULES): one row per person present, their lane's label, and per card of
+    running_town_mix_id on that lane its label, share and bar (sampled as any mix bar), with the person's idle
+    remainder shown as idle; a person tapping by a rule shows that tap as their lane row does, shares yielded.
+  - offer ui.town.change, which opens the mix editor's simple view on running_town_mix_id (else on the mix of the
+    town's first always rule not passed_over, else on a new always rule's new mix), one split per person, each a part
+    of 100%, offering as tasks only cards in view.cards on that person's lane without a cap. Saving sends save_mix of
+    that mix; a new mix sends save_mix then set_orders with the town's always rule pointed at it.
+  - teach it once, the first time the strip shows, with a lesson on the strip and the editor's own controls
+    (decisions.md, "Lessons"), skippable and never repeated in a save, kept in the save as other lessons are.
+  - in the Rules tab, list the rules whose switch_mix names a town mix under ui.town.title, in view.orders order, and
+    word an always one as ui.rule.town_always {mix}; a new town rule goes immediately before the town's first always
+    rule. A greyed town mix is drawn as the hands' greyed mix is: the strip says it stopped and which card retired.
+  THE CLIENT MAY NOT:
+  - offer switch_mix of a town mix in the Mixes list, or put a town mix in the queue.
+  - build an always rule (after_time 0, tap_card) on a joined lane: it would take that person whole for good.
+  - add shares across people, move a share from one person to another, or show the split as anything but each
+    person's own parts of 100% (the game never redistributes a share).
+
+  Rejected, and why (the town's mix on the wire):
+  - A town object on the view (people, shares, running state) beside view.mixes and view.cards: a second home for
+    facts the mix, the cards and the unlocks already carry.
+  - A `person` flag on LaneInfo: who has joined changes with the story, which is what the unlock set says.
+
+  New text keys (Content.text_entries): ui.town.title | ui.town.change   the strip's heading and its Change
+                                    ui.town.idle {person}   a person's unshared remainder
+                                    ui.rule.town_always {mix}   the town's always rule
+  The lesson's lines are content text keys like the other lessons'.
+
+LEAVES
+  A person may leave the town at a story moment (engine DESIGN.txt, "LEAVES"), for good. Unlock categories gain left
+  (id a lane): that lane's person has left. The people present (THE TOWN'S MIX) are the ruled lanes whose joined
+  unlock view.unlocked holds and whose left unlock it does not.
+  At that moment, in the same Step: the lane is gone from view.lanes; its cards are in neither view.cards nor
+  view.completed; their shares are gone from every mix in view.mixes (no mix greys, and nobody else's
+  shares change); the rules that tapped its cards are gone from view.orders, each kept in rule_runs with ended left
+  (RULE RUNS); the standing actions the moment stops are gone from view.standing. A task the person had under way
+  ends unfinished and pays nothing. The moment's lines say what happened. Nothing on Content changes but the unlock
+  category; no decision changes, and a decision naming a card of a lane that has left is refused as for a retired
+  card (tap_card from the player: 422).
+  THE CLIENT MAY:
+  - draw the town strip, the Rules tab's lanes and the scene without the person from the Step that holds the left
+    unlock, after the moment's lines have been revealed.
+  THE CLIENT MAY NOT:
+  - keep a row, a rule or an idle remainder for a person who has left, or draw their cards in the Completed tab.
+
+SPENT
+  A mix card stopped on a dry store gives its share to the other cards of the same running mix on the same lane, in
+  proportion to their own shares, until it starts again (engine DESIGN.txt, "SPENT"): a store something in play can
+  refill takes it back when the store reaches an hour of the card's cost, and a store nothing in play can make again
+  (a pool after its season) when an outcome refills it. Both are the same yield; they differ in what brings the card
+  back. The share the player set never changes on its own.
+  View: Card.run is paused for a card stopped on a store something can refill, and spent (its store will not refill
+  by itself) for one stopped on a store nothing can make again; either runs nothing. Card gains spent_store, the
+  store a spent card is stopped on (null unless run is spent), and gained: [SpentShare {card, share_bp}], the part
+  of its share each stopped card of its mix on its lane gives it now, in mix order (empty when none). Card.share_bp
+  stays the share the player set; the card runs at share_bp plus the sum of gained, and a card that gains while it
+  is waiting runs its gain as it runs its own share. The split that runs now is each card's share_bp plus
+  its gained, a paused or spent card's 0; it differs from the split set exactly while some card of the running mix
+  is paused or spent. A ledger line is not starved by a spent card alone (LedgerLine.starved), so a used-up pool does not show as
+  a problem.
+  Nothing on Content changes and no decision changes: save_mix and the split panel set share_bp only.
+  THE CLIENT MUST:
+  - while the running mix's split that runs differs from the one set, show it under the mix as a separate "running
+    now" split (ui.mix.running_now): each card at share_bp plus gained, a receiving card naming each source with
+    ui.mix.from {pct} {card}, a stopped card's part greyed with ui.mix.waiting {card}; and show nothing of it once
+    no card of the mix is paused or spent.
+  THE CLIENT MAY:
+  - draw a spent card's state with ui.mix.spent {store} (spent_store's label).
+  - keep the split panel and the mix editor on share_bp: what the player set is what they edit.
+  THE CLIENT MAY NOT:
+  - add gained into a share the player edits or the bar of the split set, or work out a gain itself.
+  - draw a spent card as greyed or as a problem: the mix runs on.
+
+  Rejected, and why (spent on the wire):
+  - share_bp served as the effective share: the split panel would show, and save back, a split the player never set.
+  - The page finding the spent store from the card's needs and the ledger: a second home for what the engine knows.
+  - Marking a card whose share moved only when its store is seasonal: a card that behaves like the others but looks
+    different, or the reverse (docs/decisions.md, "A mix keeps going without a dry store").
+
+  Text keys (Content.text_entries): ui.mix.spent {store}          a spent card's state
+                                    ui.mix.running_now            the label of the split that runs now
+                                    ui.mix.from {pct} {card}      a receiving card's gain, naming its source
+                                    ui.mix.waiting {card}         a stopped card's part of the split that runs now

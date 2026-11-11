@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ashfall: town over the mix</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=Alegreya+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#d9894a}a:hover{color:#f0a868}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #121012; color: #d8d0c4; font-family: 'Alegreya Sans', sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <div style="position: relative; width: 390px; height: 292px; flex-shrink: 0">
+    <img src="/_blob/0d1385c7be4681c6ef87c756120c4984" alt="The camp at night: a palisade, two shelters, five survivors around a fire" style="width: 390px; height: 292px; image-rendering: pixelated; display: block">
+    <div style="position: absolute; left: 12px; top: 12px; display: flex; gap: 8px; align-items: center; background: rgba(18,16,18,0.72); padding: 6px 10px; border-radius: 6px; font-size: 13px; color: #b9b0a3">
+      <span style="color: #e0954f">Night</span><span>Day 3</span><span>5 souls</span>
+    </div>
+    <button aria-label="Open the journal" style="position: absolute; right: 12px; top: 8px; width: 44px; height: 44px; border-radius: 6px; border: 1px solid #3a3236; background: rgba(18,16,18,0.72); color: #d8d0c4; display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M9 8h6"/></svg>
+    </button>
+    <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(to bottom, rgba(18,16,18,0), #121012)"></div>
+  </div>
+
+  <div style="padding: 4px 16px 0; display: flex; flex-direction: column; gap: 14px; flex-grow: 1">
+
+    <section style="border: 1px solid #2c2629; border-radius: 8px; padding: 10px 12px; background: #19161a">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-family: 'IM Fell English SC', serif; font-weight: 400; font-size: 18px; color: #e8dfd2">While you were away</h2>
+        <span style="font-size: 12px; color: #9a9187">9 h 40 m</span>
+      </div>
+      <ul style="margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 1.35">
+        <li>The fire held through the night. Scrap +42.</li>
+        <li>A stranger came for the warmth, and stayed.</li>
+        <li>Wolves at the palisade, driven off. Food −6.</li>
+      </ul>
+      <button style="margin-top: 8px; min-height: 44px; width: 100%; border-radius: 6px; border: 1px solid #6b3f22; background: #2a1b14; color: #f0b27a; font-family: 'Alegreya Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer">Open the satchel (3)</button>
+    </section>
+
+    <section>
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px">
+        <h2 style="margin: 0; font-family: 'IM Fell English SC', serif; font-weight: 400; font-size: 20px; color: #e8dfd2">Mix: Study</h2>
+        <span style="font-size: 12px; color: #9a9187">runs 7 h</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 9px">
+        <sc-for list="{{actions}}" as="a" hint-placeholder-count="5">
+          <div style="display: grid; grid-template-columns: 112px 38px minmax(0, 1fr) 64px; gap: 8px; align-items: center; font-size: 14px">
+            <span style="color: #e2d9cc">{{a.name}}</span>
+            <span style="color: #9a9187; text-align: right">{{a.share}}</span>
+            <div style="height: 8px; border-radius: 4px; background: #2a2427; overflow: hidden">
+              <div style="{{a.fill}}"></div>
+            </div>
+            <span style="color: #b9b0a3; font-size: 12px; text-align: right">{{a.eta}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="border-top: 1px solid #2c2629; padding-top: 10px">
+      <h3 style="margin: 0 0 6px; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9a9187">Ledger, per hour</h3>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; font-size: 13px; text-align: center">
+        <sc-for list="{{ledger}}" as="l" hint-placeholder-count="5">
+          <div style="background: #19161a; border: 1px solid #2c2629; border-radius: 6px; padding: 6px 2px">
+            <div style="color: #9a9187; font-size: 11px">{{l.name}}</div>
+            <div style="{{l.style}}">{{l.value}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="font-size: 13px; color: #b9b0a3; display: flex; gap: 8px; align-items: center">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9894a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h12"/><path d="M13 6l6 6-6 6"/></svg>
+      <span>Order: when knowledge is full, switch to <span style="color: #e2d9cc">Stockpile</span></span>
+    </section>
+  </div>
+
+  <nav aria-label="Main" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid #2c2629; background: #0e0c0e; flex-shrink: 0">
+    <a href="#town" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 20V10l4-3 4 3v10"/><path d="M13 20v-6h6v6"/></svg>Town</a>
+    <a href="#mix" aria-current="page" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #e0954f">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h10"/><path d="M4 12h14"/><path d="M4 17h7"/><circle cx="17" cy="7" r="2"/><circle cx="14" cy="17" r="2"/></svg>Mix</a>
+    <a href="#orders" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4 6l1 1 2-2"/><path d="M4 12l1 1 2-2"/><path d="M4 18l1 1 2-2"/></svg>Orders</a>
+    <a href="#map" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>Map</a>
+    <a href="#journal" style="min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; text-decoration: none; color: #9a9187">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 8h6"/></svg>Journal</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ember":{"editor":"color","default":"#c8743a","options":["#c8743a","#b8462e","#8f9a6a"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ember = this.props.ember ?? '#c8743a';
+    const bar = (pct) => 'height: 8px; width: ' + pct + '%; border-radius: 4px; background: ' + ember;
+    const actions = [
+      { name: 'Arcana: study', share: '40%', pct: 62, eta: '1 h 12 m' },
+      { name: 'Scavenging', share: '25%', pct: 35, eta: '24 m' },
+      { name: 'Cooking', share: '15%', pct: 80, eta: '6 m' },
+      { name: 'Foraging', share: '10%', pct: 18, eta: '41 m' },
+      { name: 'Rest', share: '10%', pct: 50, eta: '15 m' }
+    ].map((a) => ({ ...a, fill: bar(a.pct) }));
+    const plus = 'color: #a9c48a; font-weight: 700; font-size: 14px';
+    const even = 'color: #b9b0a3; font-weight: 500; font-size: 14px';
+    const ledger = [
+      { name: 'Knowledge', value: '+18', style: plus },
+      { name: 'Scrap', value: '+6', style: plus },
+      { name: 'Candles', value: '−4 · 7 h', style: 'color: #d9a066; font-weight: 500; font-size: 14px' },
+      { name: 'Energy', value: '0', style: even },
+      { name: 'Forage', value: '0', style: even }
+    ];
+    return { actions, ledger };
+  }
+}
+</script>
+</body>
+</html>

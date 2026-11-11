@@ -1,0 +1,6440 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ashfall",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/content": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Get Content",
+        "description": "Static: text, labels, cards and scales for the opening. Fetch once; rules_digest names the rules. ETag names\nthe build and the rules: If-None-Match with it is a 304.",
+        "operationId": "get_content",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Get Me",
+        "description": "This browser's account and its saves, the most recently played first. Never makes an account.",
+        "operationId": "get_me",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Get Games",
+        "description": "The account's live saves, the most recently played first, and its deleted saves still held.",
+        "operationId": "get_games",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Games"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "New Save",
+        "description": "A new save at game time 0; makes the account (and its cookie) when this browser has none. The account's\nother saves are kept.",
+        "operationId": "new_save",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewSave"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "too_many_saves",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited (Retry-After on an account's new games)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/open": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Open Save",
+        "description": "The save as last seen, its last lines, and the save advanced to now.",
+        "operationId": "open_save",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Opened"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/advance": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Advance",
+        "description": "The save advanced to now.",
+        "operationId": "advance",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Step"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/decisions": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Decide",
+        "description": "Advance to now, then apply the decision, if the save has had no other since `after`.",
+        "operationId": "decide",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Step"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "stale, with the save now as `step`; catching_up, with the save as left",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited (Retry-After): too many decisions on the save just now",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/presentation": {
+      "put": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Put Account Presentation",
+        "description": "Adds what the page sends to what the account keeps; answers what is kept now.",
+        "operationId": "put_account_presentation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountPresentation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/settings": {
+      "put": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Put Account Settings",
+        "description": "Replaces the player's settings for every game of the account; answers the account.",
+        "operationId": "put_account_settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountSettings"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/presentation": {
+      "put": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Put Save Presentation",
+        "description": "Adds what the page sends to what the save keeps; answers what is kept now.",
+        "operationId": "put_save_presentation",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavePresentation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavePresentation"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/forecast": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Forecast",
+        "description": "What lands from now if the player changes nothing (CONTRACT.txt, \"Forecast\"). Nothing is written; 409\ncatching_up while the save is still behind.",
+        "operationId": "forecast",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastAnswer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "catching_up, with the save as stored as `step`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/view": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Saved View",
+        "description": "The save as last written, at its own time: not advanced, nothing written (the front page's picture of each\nsave's camp).",
+        "operationId": "saved_view",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/dry-run": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Dry Run",
+        "description": "What the save would show after these decisions, applied in order now. Nothing is written.",
+        "operationId": "dry_run",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DryRunRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "stale, with the save now as `step`; catching_up, with the save as left",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/delete": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Delete Save",
+        "description": "Deletes a live save that is not the account's only one; it is held for a while and can be restored.",
+        "operationId": "delete_save",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Games"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "last_save",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/saves/{save_id}/restore": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Restore Save",
+        "description": "A held deleted save, live again as it was.",
+        "operationId": "restore_save",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Games"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "too_many_saves",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/transfer-code": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Make Transfer Code",
+        "description": "A code that joins one other browser to this account, once, within ten minutes; it ends the previous one.",
+        "operationId": "make_transfer_code",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferCode"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database or no join key (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/words": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Make Recovery Words",
+        "description": "New recovery words for this account; the old ones stop working.",
+        "operationId": "make_recovery_words",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryWords"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database or no join key (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/join": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Join",
+        "description": "This browser joins the account a transfer code or recovery words name.",
+        "operationId": "join",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Joined"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "no_such_code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "confirm_merge or too_many_saves, with `merge`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision: a request that does not fit the models",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database or no join key (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/devices": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "List Devices",
+        "description": "The account's devices, one per browser that holds a session of it.",
+        "operationId": "list_devices",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Devices"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/devices/{device_id}": {
+      "delete": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Remove Device",
+        "description": "Signs one device out from any of them: its session ends and its next request has no account. Removing the\nbrowser asking signs it out too (its cookie is ended). Answers the devices left.",
+        "operationId": "remove_device",
+        "parameters": [
+          {
+            "name": "device_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Device Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Devices"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found: no such device of this account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reminders": {
+      "put": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Put Reminder",
+        "description": "Reminders on for this browser with the window sent, or, with none, its keys refreshed; its window.",
+        "operationId": "put_reminder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReminderOn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reminder"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision: not a push service, an IANA zone or an offered absence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found: no window sent and this browser is not on",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Delete Reminder",
+        "description": "Reminders off for this browser. Answers 204 whether or not it was on.",
+        "operationId": "delete_reminder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReminderOff"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision: not a push service, an IANA zone or an offered absence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable: no database (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feedback": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Send Feedback",
+        "description": "Keeps a tester's words with the build and, if the save is theirs, where in the game they were.",
+        "operationId": "send_feedback",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "invalid_decision (an empty or too long text)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Healthz",
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/changes": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Recent Changes",
+        "operationId": "recent_changes_changes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Change"
+                  },
+                  "type": "array",
+                  "title": "Response Recent Changes Changes Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Account": {
+        "properties": {
+          "presentation": {
+            "$ref": "#/components/schemas/AccountPresentation"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/AccountSettings"
+          },
+          "has_words": {
+            "type": "boolean",
+            "title": "Has Words"
+          },
+          "words_due": {
+            "type": "boolean",
+            "title": "Words Due"
+          }
+        },
+        "type": "object",
+        "required": [
+          "presentation",
+          "settings",
+          "has_words",
+          "words_due"
+        ],
+        "title": "Account"
+      },
+      "AccountPresentation": {
+        "properties": {
+          "rules_opened": {
+            "type": "boolean",
+            "title": "Rules Opened",
+            "default": false
+          },
+          "devices_opened": {
+            "type": "boolean",
+            "title": "Devices Opened",
+            "default": false
+          },
+          "reminder_mentioned": {
+            "type": "boolean",
+            "title": "Reminder Mentioned",
+            "default": false
+          },
+          "ledger_lines": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Ledger Lines",
+            "default": []
+          },
+          "mix_stopped": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Mix Stopped",
+            "default": []
+          },
+          "switch_offered": {
+            "items": {
+              "$ref": "#/components/schemas/OfferedSwitch"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Switch Offered",
+            "default": []
+          },
+          "journal_read": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Journal Read",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AccountPresentation",
+        "description": "What the page keeps about the player across saves. What gates a lesson or a lesson's hint is the save's\n(SavePresentation), so a new game teaches everything again."
+      },
+      "AccountSettings": {
+        "properties": {
+          "lessons": {
+            "type": "boolean",
+            "title": "Lessons",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AccountSettings",
+        "description": "The player's own choices for every game of the account. A write replaces them whole."
+      },
+      "AfterTime": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "after_time",
+            "title": "Kind",
+            "default": "after_time"
+          },
+          "at": {
+            "type": "integer",
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at"
+        ],
+        "title": "AfterTime"
+      },
+      "AimInfo": {
+        "properties": {
+          "aim": {
+            "type": "string",
+            "title": "Aim"
+          },
+          "text_key": {
+            "type": "string",
+            "title": "Text Key"
+          },
+          "after": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "aim",
+          "text_key",
+          "after"
+        ],
+        "title": "AimInfo",
+        "description": "What a stretch of play is for: one line at the band's top, in content order (CONTRACT.txt, \"The client may\")."
+      },
+      "Amount": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "quantity"
+        ],
+        "title": "Amount"
+      },
+      "AnswerGain": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "quantity"
+        ],
+        "title": "AnswerGain"
+      },
+      "AnswerInfo": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "cost_key": {
+            "type": "string",
+            "title": "Cost Key"
+          },
+          "change_bp": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Change Bp"
+          },
+          "gains": {
+            "items": {
+              "$ref": "#/components/schemas/AnswerGain"
+            },
+            "type": "array",
+            "title": "Gains"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "label_key",
+          "cost_key",
+          "change_bp",
+          "gains",
+          "role"
+        ],
+        "title": "AnswerInfo"
+      },
+      "AnswerKind": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "answer_kind",
+            "title": "Kind",
+            "default": "answer_kind"
+          },
+          "offer_kind": {
+            "type": "string",
+            "title": "Offer Kind"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "offer_kind",
+          "role"
+        ],
+        "title": "AnswerKind",
+        "description": "Order verb only (never a Decision): answer the first open offer of `offer_kind` with its answer of `role`\n(CONTRACT.txt, \"Offers\"). 422 when no offer declares that kind and role."
+      },
+      "AnswerOffer": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "answer_offer",
+            "title": "Kind",
+            "default": "answer_offer"
+          },
+          "offer": {
+            "type": "string",
+            "title": "Offer"
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "offer",
+          "answer"
+        ],
+        "title": "AnswerOffer",
+        "description": "Answer a shown, open offer (CONTRACT.txt, \"Offers\"): 422 when the answer is not one of the offer's, or the\noffer is not shown or already answered."
+      },
+      "ApiError": {
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ErrorCode"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "step": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Step"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "merge": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MergeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ApiError",
+        "description": "Every error's body (CONTRACT.txt, ERRORS)."
+      },
+      "AtLeast": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "at_least",
+            "title": "Kind",
+            "default": "at_least"
+          },
+          "watched": {
+            "$ref": "#/components/schemas/Subject"
+          },
+          "value": {
+            "type": "integer",
+            "title": "Value"
+          },
+          "release": {
+            "type": "integer",
+            "title": "Release"
+          }
+        },
+        "type": "object",
+        "required": [
+          "watched",
+          "value",
+          "release"
+        ],
+        "title": "AtLeast"
+      },
+      "AtMost": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "at_most",
+            "title": "Kind",
+            "default": "at_most"
+          },
+          "watched": {
+            "$ref": "#/components/schemas/Subject"
+          },
+          "value": {
+            "type": "integer",
+            "title": "Value"
+          },
+          "release": {
+            "type": "integer",
+            "title": "Release"
+          }
+        },
+        "type": "object",
+        "required": [
+          "watched",
+          "value",
+          "release"
+        ],
+        "title": "AtMost"
+      },
+      "Blocker": {
+        "properties": {
+          "condition": {
+            "$ref": "#/components/schemas/Condition"
+          },
+          "ready_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ready At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "condition",
+          "ready_at"
+        ],
+        "title": "Blocker",
+        "description": "The first unmet precondition, as the condition that would make it ready; ready_at null: not by itself."
+      },
+      "CampInfo": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "camp_levels": {
+            "items": {
+              "$ref": "#/components/schemas/CampLevel"
+            },
+            "type": "array",
+            "title": "Camp Levels"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "camp_levels"
+        ],
+        "title": "CampInfo",
+        "description": "The bar to work toward: drawn from the ledger line of `store` (never drawn as a ledger line); its level is how\nmany of `camp_levels`' `at` the sample has reached (CONTRACT.txt)."
+      },
+      "CampLevel": {
+        "properties": {
+          "at": {
+            "type": "integer",
+            "title": "At"
+          },
+          "pays_key": {
+            "type": "string",
+            "title": "Pays Key"
+          },
+          "pays_from": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pays From"
+          },
+          "pays_to": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pays To"
+          },
+          "change_bp": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Change Bp"
+          },
+          "held": {
+            "type": "boolean",
+            "title": "Held"
+          },
+          "lifted_by": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Lifted By"
+          },
+          "names": {
+            "items": {
+              "$ref": "#/components/schemas/Unlock"
+            },
+            "type": "array",
+            "title": "Names"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "pays_key",
+          "pays_from",
+          "pays_to",
+          "change_bp",
+          "held",
+          "lifted_by",
+          "names"
+        ],
+        "title": "CampLevel"
+      },
+      "Card": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "completions": {
+            "type": "integer",
+            "title": "Completions"
+          },
+          "cap": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cap"
+          },
+          "bar": {
+            "$ref": "#/components/schemas/Segment"
+          },
+          "bar_total": {
+            "type": "integer",
+            "title": "Bar Total"
+          },
+          "by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunBy"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completes_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completes At"
+          },
+          "share_bp": {
+            "type": "integer",
+            "title": "Share Bp"
+          },
+          "run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "blocker": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Blocker"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tap_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tap S"
+          },
+          "needs": {
+            "items": {
+              "$ref": "#/components/schemas/Need"
+            },
+            "type": "array",
+            "title": "Needs"
+          },
+          "cuts_in": {
+            "type": "boolean",
+            "title": "Cuts In"
+          },
+          "spent_store": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spent Store"
+          },
+          "gained": {
+            "items": {
+              "$ref": "#/components/schemas/SpentShare"
+            },
+            "type": "array",
+            "title": "Gained"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "completions",
+          "cap",
+          "bar",
+          "bar_total",
+          "by",
+          "completes_at",
+          "share_bp",
+          "run",
+          "blocker",
+          "tap_s",
+          "needs",
+          "cuts_in",
+          "spent_store",
+          "gained"
+        ],
+        "title": "Card",
+        "description": "An unlocked card that is not completed: one entry of the card panel, the same whether tapped, mixed or idle.\nTappable iff blocker is null and its lane's LaneBar has no running_card or cuts_in is true."
+      },
+      "CardCount": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "card_count",
+            "title": "Kind",
+            "default": "card_count"
+          },
+          "card": {
+            "type": "string",
+            "title": "Card"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card"
+        ],
+        "title": "CardCount",
+        "description": "Completions of a card, taps and mix together."
+      },
+      "CardInfo": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "lane": {
+            "type": "string",
+            "title": "Lane"
+          },
+          "presentation": {
+            "$ref": "#/components/schemas/CardPresentation"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "upside_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upside Key"
+          },
+          "change_bp": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Change Bp"
+          },
+          "work_s": {
+            "type": "integer",
+            "title": "Work S"
+          },
+          "inputs": {
+            "items": {
+              "$ref": "#/components/schemas/Amount"
+            },
+            "type": "array",
+            "title": "Inputs"
+          },
+          "skill_needs": {
+            "items": {
+              "$ref": "#/components/schemas/SkillNeed"
+            },
+            "type": "array",
+            "title": "Skill Needs"
+          },
+          "step_needs": {
+            "items": {
+              "$ref": "#/components/schemas/StepNeed"
+            },
+            "type": "array",
+            "title": "Step Needs"
+          },
+          "glows": {
+            "type": "boolean",
+            "title": "Glows"
+          },
+          "fight": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FightInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "replaced_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replaced By"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "lane",
+          "presentation",
+          "label_key",
+          "upside_key",
+          "change_bp",
+          "work_s",
+          "inputs",
+          "skill_needs",
+          "step_needs",
+          "glows",
+          "fight",
+          "replaced_by"
+        ],
+        "title": "CardInfo"
+      },
+      "CardPresentation": {
+        "type": "string",
+        "enum": [
+          "narrative",
+          "action",
+          "craft"
+        ],
+        "title": "CardPresentation",
+        "description": "How the page dresses a card; one mechanic under all three (CONTRACT.txt, \"Cards\")."
+      },
+      "CardShare": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "card_share",
+            "title": "Kind",
+            "default": "card_share"
+          },
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "share_bp": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Share Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "share_bp"
+        ],
+        "title": "CardShare"
+      },
+      "Change": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "subject"
+        ],
+        "title": "Change"
+      },
+      "ChipInfo": {
+        "properties": {
+          "chip": {
+            "type": "string",
+            "title": "Chip"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone"
+          },
+          "when": {
+            "$ref": "#/components/schemas/Condition"
+          },
+          "cost_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Key"
+          },
+          "change_bp": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Change Bp"
+          },
+          "on_line_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On Line Key"
+          },
+          "off_line_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Line Key"
+          },
+          "offered_after": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "chip",
+          "label_key",
+          "tone",
+          "when",
+          "cost_key",
+          "change_bp",
+          "on_line_key",
+          "off_line_key",
+          "offered_after"
+        ],
+        "title": "ChipInfo"
+      },
+      "CompletedCard": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "completions": {
+            "type": "integer",
+            "title": "Completions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "completions"
+        ],
+        "title": "CompletedCard",
+        "description": "An unlocked card at its cap: the Completed tab. It returns to View.cards if a cap is raised."
+      },
+      "Condition": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/AtLeast"
+          },
+          {
+            "$ref": "#/components/schemas/AtMost"
+          },
+          {
+            "$ref": "#/components/schemas/AfterTime"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "after_time": "#/components/schemas/AfterTime",
+            "at_least": "#/components/schemas/AtLeast",
+            "at_most": "#/components/schemas/AtMost"
+          }
+        }
+      },
+      "Content": {
+        "properties": {
+          "rules_digest": {
+            "type": "string",
+            "title": "Rules Digest"
+          },
+          "scales": {
+            "$ref": "#/components/schemas/Scales"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/Limits"
+          },
+          "text_entries": {
+            "items": {
+              "$ref": "#/components/schemas/TextEntry"
+            },
+            "type": "array",
+            "title": "Text Entries"
+          },
+          "side_infos": {
+            "items": {
+              "$ref": "#/components/schemas/SideInfo"
+            },
+            "type": "array",
+            "title": "Side Infos"
+          },
+          "threat_infos": {
+            "items": {
+              "$ref": "#/components/schemas/ThreatInfo"
+            },
+            "type": "array",
+            "title": "Threat Infos"
+          },
+          "find_infos": {
+            "items": {
+              "$ref": "#/components/schemas/FindInfo"
+            },
+            "type": "array",
+            "title": "Find Infos"
+          },
+          "store_infos": {
+            "items": {
+              "$ref": "#/components/schemas/StoreInfo"
+            },
+            "type": "array",
+            "title": "Store Infos"
+          },
+          "standing_infos": {
+            "items": {
+              "$ref": "#/components/schemas/StandingInfo"
+            },
+            "type": "array",
+            "title": "Standing Infos"
+          },
+          "card_infos": {
+            "items": {
+              "$ref": "#/components/schemas/CardInfo"
+            },
+            "type": "array",
+            "title": "Card Infos"
+          },
+          "chip_infos": {
+            "items": {
+              "$ref": "#/components/schemas/ChipInfo"
+            },
+            "type": "array",
+            "title": "Chip Infos"
+          },
+          "feature_infos": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureInfo"
+            },
+            "type": "array",
+            "title": "Feature Infos"
+          },
+          "order_cards": {
+            "items": {
+              "$ref": "#/components/schemas/OrderCard"
+            },
+            "type": "array",
+            "title": "Order Cards"
+          },
+          "skill_infos": {
+            "items": {
+              "$ref": "#/components/schemas/SkillInfo"
+            },
+            "type": "array",
+            "title": "Skill Infos"
+          },
+          "node_infos": {
+            "items": {
+              "$ref": "#/components/schemas/NodeInfo"
+            },
+            "type": "array",
+            "title": "Node Infos"
+          },
+          "lane_infos": {
+            "items": {
+              "$ref": "#/components/schemas/LaneInfo"
+            },
+            "type": "array",
+            "title": "Lane Infos"
+          },
+          "offer_infos": {
+            "items": {
+              "$ref": "#/components/schemas/OfferInfo"
+            },
+            "type": "array",
+            "title": "Offer Infos"
+          },
+          "end_line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "End Line Keys"
+          },
+          "line_infos": {
+            "items": {
+              "$ref": "#/components/schemas/LineInfo"
+            },
+            "type": "array",
+            "title": "Line Infos"
+          },
+          "aim_infos": {
+            "items": {
+              "$ref": "#/components/schemas/AimInfo"
+            },
+            "type": "array",
+            "title": "Aim Infos"
+          },
+          "journal": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JournalInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "camp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CampInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "first_mix": {
+            "$ref": "#/components/schemas/FirstMix"
+          },
+          "transfer_code_s": {
+            "type": "integer",
+            "title": "Transfer Code S"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rules_digest",
+          "scales",
+          "limits",
+          "text_entries",
+          "side_infos",
+          "threat_infos",
+          "find_infos",
+          "store_infos",
+          "standing_infos",
+          "card_infos",
+          "chip_infos",
+          "feature_infos",
+          "order_cards",
+          "skill_infos",
+          "node_infos",
+          "lane_infos",
+          "offer_infos",
+          "end_line_keys",
+          "line_infos",
+          "aim_infos",
+          "journal",
+          "camp",
+          "first_mix",
+          "transfer_code_s"
+        ],
+        "title": "Content"
+      },
+      "Contribution": {
+        "properties": {
+          "runner": {
+            "type": "string",
+            "title": "Runner"
+          },
+          "per_hour": {
+            "type": "integer",
+            "title": "Per Hour"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner",
+          "per_hour"
+        ],
+        "title": "Contribution"
+      },
+      "Decision": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SwitchMix"
+          },
+          {
+            "$ref": "#/components/schemas/TapCard"
+          },
+          {
+            "$ref": "#/components/schemas/SaveMix"
+          },
+          {
+            "$ref": "#/components/schemas/DeleteMix"
+          },
+          {
+            "$ref": "#/components/schemas/SetOrders"
+          },
+          {
+            "$ref": "#/components/schemas/SetQueue"
+          },
+          {
+            "$ref": "#/components/schemas/AnswerOffer"
+          },
+          {
+            "$ref": "#/components/schemas/Prestige"
+          },
+          {
+            "$ref": "#/components/schemas/UndoPick"
+          },
+          {
+            "$ref": "#/components/schemas/MovePick"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "answer_offer": "#/components/schemas/AnswerOffer",
+            "delete_mix": "#/components/schemas/DeleteMix",
+            "move_pick": "#/components/schemas/MovePick",
+            "prestige": "#/components/schemas/Prestige",
+            "save_mix": "#/components/schemas/SaveMix",
+            "set_orders": "#/components/schemas/SetOrders",
+            "set_queue": "#/components/schemas/SetQueue",
+            "switch_mix": "#/components/schemas/SwitchMix",
+            "tap_card": "#/components/schemas/TapCard",
+            "undo_pick": "#/components/schemas/UndoPick"
+          }
+        }
+      },
+      "DecisionRequest": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "after": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "After"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "decision",
+          "after"
+        ],
+        "title": "DecisionRequest"
+      },
+      "DeleteMix": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "delete_mix",
+            "title": "Kind",
+            "default": "delete_mix"
+          },
+          "mix_id": {
+            "type": "string",
+            "title": "Mix Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mix_id"
+        ],
+        "title": "DeleteMix",
+        "description": "Delete a saved mix (422 while another mix nests it or an order or queue entry names it)."
+      },
+      "DeletedSave": {
+        "properties": {
+          "save": {
+            "$ref": "#/components/schemas/SaveInfo"
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Deleted At"
+          },
+          "purge_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Purge At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "save",
+          "deleted_at",
+          "purge_at"
+        ],
+        "title": "DeletedSave"
+      },
+      "Device": {
+        "properties": {
+          "device_id": {
+            "type": "integer",
+            "title": "Device Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Seen At"
+          },
+          "this_device": {
+            "type": "boolean",
+            "title": "This Device"
+          }
+        },
+        "type": "object",
+        "required": [
+          "device_id",
+          "label",
+          "created_at",
+          "last_seen_at",
+          "this_device"
+        ],
+        "title": "Device"
+      },
+      "Devices": {
+        "properties": {
+          "devices": {
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            },
+            "type": "array",
+            "title": "Devices"
+          }
+        },
+        "type": "object",
+        "required": [
+          "devices"
+        ],
+        "title": "Devices"
+      },
+      "DryRunRequest": {
+        "properties": {
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/Decision"
+            },
+            "type": "array",
+            "maxItems": 8,
+            "title": "Decisions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "decisions"
+        ],
+        "title": "DryRunRequest"
+      },
+      "Endpoint": {
+        "type": "string",
+        "maxLength": 1024
+      },
+      "EntryInfo": {
+        "properties": {
+          "entry": {
+            "type": "string",
+            "title": "Entry"
+          },
+          "section": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "sketch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sketch"
+          },
+          "runners": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Runners"
+          },
+          "notes": {
+            "items": {
+              "$ref": "#/components/schemas/NoteInfo"
+            },
+            "type": "array",
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "entry",
+          "section",
+          "sketch",
+          "runners",
+          "notes"
+        ],
+        "title": "EntryInfo",
+        "description": "A page: a thing known, in content order. Written when view.unlocked holds `entry`."
+      },
+      "ErrorCode": {
+        "type": "string",
+        "enum": [
+          "no_account",
+          "cross_site",
+          "not_found",
+          "no_such_code",
+          "stale",
+          "catching_up",
+          "confirm_merge",
+          "too_many_saves",
+          "last_save",
+          "not_json",
+          "too_large",
+          "invalid_decision",
+          "rate_limited",
+          "save_unavailable"
+        ],
+        "title": "ErrorCode"
+      },
+      "FeatureCard": {
+        "properties": {
+          "title_key": {
+            "type": "string",
+            "title": "Title Key"
+          },
+          "line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Line Keys"
+          },
+          "button_key": {
+            "type": "string",
+            "title": "Button Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title_key",
+          "line_keys",
+          "button_key"
+        ],
+        "title": "FeatureCard"
+      },
+      "FeatureInfo": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "title": "Feature"
+          },
+          "hint_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hint Key"
+          },
+          "label_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Key"
+          },
+          "feature_card": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FeatureCard"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature",
+          "hint_key",
+          "label_key",
+          "feature_card"
+        ],
+        "title": "FeatureInfo"
+      },
+      "FeedbackRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "pattern": "^[^\\x00]*$",
+            "title": "Text"
+          },
+          "save_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaveId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "FeedbackRequest"
+      },
+      "Fight": {
+        "properties": {
+          "runner": {
+            "type": "string",
+            "title": "Runner"
+          },
+          "side": {
+            "type": "string",
+            "title": "Side"
+          },
+          "threat": {
+            "type": "string",
+            "title": "Threat"
+          },
+          "power": {
+            "$ref": "#/components/schemas/Strength"
+          },
+          "threat_strength": {
+            "$ref": "#/components/schemas/Strength"
+          },
+          "loss_bp": {
+            "type": "integer",
+            "title": "Loss Bp"
+          },
+          "fought": {
+            "type": "integer",
+            "title": "Fought"
+          },
+          "lost": {
+            "type": "integer",
+            "title": "Lost"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner",
+          "side",
+          "threat",
+          "power",
+          "threat_strength",
+          "loss_bp",
+          "fought",
+          "lost"
+        ],
+        "title": "Fight",
+        "description": "One unlocked fight card or standing action, now (CONTRACT.txt, \"FIGHTS\")."
+      },
+      "FightInfo": {
+        "properties": {
+          "side": {
+            "type": "string",
+            "title": "Side"
+          },
+          "threat": {
+            "type": "string",
+            "title": "Threat"
+          },
+          "loses": {
+            "items": {
+              "$ref": "#/components/schemas/Amount"
+            },
+            "type": "array",
+            "title": "Loses"
+          },
+          "wounds": {
+            "items": {
+              "$ref": "#/components/schemas/Amount"
+            },
+            "type": "array",
+            "title": "Wounds"
+          },
+          "won_line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Won Line Keys"
+          },
+          "lost_line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Lost Line Keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "side",
+          "threat",
+          "loses",
+          "wounds",
+          "won_line_keys",
+          "lost_line_keys"
+        ],
+        "title": "FightInfo",
+        "description": "The odds a fight card or standing action runs under (CONTRACT.txt, \"FIGHTS\"): the strengths' ids, and what one lost\nfight costs. The strengths themselves are View.fights."
+      },
+      "FindInfo": {
+        "properties": {
+          "line_key": {
+            "type": "string",
+            "title": "Line Key"
+          },
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "line_key",
+          "store",
+          "quantity"
+        ],
+        "title": "FindInfo",
+        "description": "The amount a find puts in a store, for the text of its line: `line_key`'s `{found}` is quantity in whole items."
+      },
+      "FirstMix": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "title": "Feature"
+          },
+          "card_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Card Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature",
+          "card_ids"
+        ],
+        "title": "FirstMix",
+        "description": "The first mix the page offers once `feature` is unlocked and no mix exists: `card_ids` at an even split, saved\nby the player's tap (CONTRACT.txt)."
+      },
+      "Forecast": {
+        "properties": {
+          "horizon_at": {
+            "type": "integer",
+            "title": "Horizon At"
+          },
+          "level_ups": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastLevel"
+            },
+            "type": "array",
+            "title": "Level Ups"
+          },
+          "tops_out": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastTop"
+            },
+            "type": "array",
+            "title": "Tops Out"
+          },
+          "fills": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastFull"
+            },
+            "type": "array",
+            "title": "Fills"
+          },
+          "empties": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastEmpty"
+            },
+            "type": "array",
+            "title": "Empties"
+          }
+        },
+        "type": "object",
+        "required": [
+          "horizon_at",
+          "level_ups",
+          "tops_out",
+          "fills",
+          "empties"
+        ],
+        "title": "Forecast",
+        "description": "Everything that lands by `horizon_at` if the player changes nothing: orders, the queue and everything running\nplayed out (engine DESIGN.txt, \"Forecast\"). It holds for every later view of the save until its next decision.\nA time past horizon_at is unknown: draw none, never a guess."
+      },
+      "ForecastAnswer": {
+        "properties": {
+          "decisions": {
+            "type": "integer",
+            "title": "Decisions"
+          },
+          "forecast": {
+            "$ref": "#/components/schemas/Forecast"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decisions",
+          "forecast"
+        ],
+        "title": "ForecastAnswer",
+        "description": "POST /api/saves/{save_id}/forecast: the save advanced to now, and its forecast from there."
+      },
+      "ForecastEmpty": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "at": {
+            "type": "integer",
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "at"
+        ],
+        "title": "ForecastEmpty"
+      },
+      "ForecastFull": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "at": {
+            "type": "integer",
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "at"
+        ],
+        "title": "ForecastFull"
+      },
+      "ForecastLevel": {
+        "properties": {
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "at": {
+            "type": "integer",
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill",
+          "at"
+        ],
+        "title": "ForecastLevel"
+      },
+      "ForecastTop": {
+        "properties": {
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "at": {
+            "type": "integer",
+            "title": "At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill",
+          "at"
+        ],
+        "title": "ForecastTop"
+      },
+      "Games": {
+        "properties": {
+          "saves": {
+            "items": {
+              "$ref": "#/components/schemas/SaveInfo"
+            },
+            "type": "array",
+            "title": "Saves"
+          },
+          "deleted": {
+            "items": {
+              "$ref": "#/components/schemas/DeletedSave"
+            },
+            "type": "array",
+            "title": "Deleted"
+          },
+          "max_saves": {
+            "type": "integer",
+            "title": "Max Saves"
+          },
+          "kept_days": {
+            "type": "integer",
+            "title": "Kept Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "saves",
+          "deleted",
+          "max_saves",
+          "kept_days"
+        ],
+        "title": "Games",
+        "description": "The account's saves (CONTRACT.txt, \"Games on one account\")."
+      },
+      "Goal": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/GoalKind"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store"
+          },
+          "card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Card"
+          },
+          "skill": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill"
+          },
+          "target": {
+            "type": "integer",
+            "title": "Target"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Segment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "At"
+          },
+          "feeds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Feeds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "store",
+          "card",
+          "skill",
+          "target",
+          "value",
+          "at",
+          "feeds"
+        ],
+        "title": "Goal",
+        "description": "One thing an open story beat waits on: a store's amount reaching `target` (store, value), a card's completions\nreaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), or a wait on\nthe clock alone landing at `at`. The page marks the store's line, the card or the skill's row; a store with no line\nyet, and the clock, it states as a line of their own, the clock's naming what keeps it moving."
+      },
+      "GoalKind": {
+        "type": "string",
+        "enum": [
+          "store",
+          "card",
+          "level",
+          "clock"
+        ],
+        "title": "GoalKind"
+      },
+      "GoalLimit": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "in_per_hour": {
+            "type": "integer",
+            "title": "In Per Hour"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "in_per_hour"
+        ],
+        "title": "GoalLimit",
+        "description": "A store a card moving the goal waits on, dry: the line that holds the goal back while it stays dry."
+      },
+      "GoalRow": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/GoalKind"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store"
+          },
+          "skill": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill"
+          },
+          "target": {
+            "type": "integer",
+            "title": "Target"
+          },
+          "lands_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lands At"
+          },
+          "per_hour": {
+            "type": "integer",
+            "title": "Per Hour"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GoalLimit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "until": {
+            "$ref": "#/components/schemas/AtLeast"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "store",
+          "skill",
+          "target",
+          "lands_at",
+          "per_hour",
+          "limit",
+          "until"
+        ],
+        "title": "GoalRow",
+        "description": "How the setup as set moves one goal (CONTRACT.txt, \"Goal rows\"): a store reaching `target` (store) or a skill\nreaching level `target` (skill), when it lands at today's rates, and the line that binds it."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Hand": {
+        "type": "string",
+        "enum": [
+          "ink",
+          "pencil"
+        ],
+        "title": "Hand",
+        "description": "How a note is written; each is a style the page owns, so a new one is page work as well as content."
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "Health"
+      },
+      "Hour": {
+        "type": "integer",
+        "maximum": 23.0,
+        "minimum": 0.0
+      },
+      "Id": {
+        "type": "string",
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_.:-]+$"
+      },
+      "JoinRequest": {
+        "properties": {
+          "typed": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Typed"
+          },
+          "merge": {
+            "type": "boolean",
+            "title": "Merge",
+            "default": false
+          },
+          "keep": {
+            "type": "boolean",
+            "title": "Keep",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "typed"
+        ],
+        "title": "JoinRequest"
+      },
+      "Joined": {
+        "properties": {
+          "moved": {
+            "type": "integer",
+            "title": "Moved"
+          },
+          "account": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "kept": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Kept"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "moved",
+          "account"
+        ],
+        "title": "Joined"
+      },
+      "JournalInfo": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "title": "Feature"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/EntryInfo"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature",
+          "entries"
+        ],
+        "title": "JournalInfo",
+        "description": "The book the player carries. Null in Content until a chapter declares it."
+      },
+      "Kept": {
+        "properties": {
+          "saves": {
+            "type": "integer",
+            "title": "Saves"
+          },
+          "words": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Words"
+          },
+          "label": {
+            "type": "string",
+            "const": "Ostmere",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "saves",
+          "words",
+          "label"
+        ],
+        "title": "Kept"
+      },
+      "Key": {
+        "type": "string",
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]+={0,2}$"
+      },
+      "LaneBar": {
+        "properties": {
+          "lane": {
+            "type": "string",
+            "title": "Lane"
+          },
+          "running_card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Running Card"
+          },
+          "completes_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completes At"
+          },
+          "order": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Order"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lane",
+          "running_card",
+          "completes_at",
+          "order"
+        ],
+        "title": "LaneBar",
+        "description": "Which card a lane is tapping, and when the tap ends. The bar is the card's own (Card.bar)."
+      },
+      "LaneInfo": {
+        "properties": {
+          "lane": {
+            "type": "string",
+            "title": "Lane"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "ruled": {
+            "type": "boolean",
+            "title": "Ruled"
+          },
+          "later_labels": {
+            "items": {
+              "$ref": "#/components/schemas/LaneLabel"
+            },
+            "type": "array",
+            "title": "Later Labels"
+          },
+          "name_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lane",
+          "label_key",
+          "ruled",
+          "later_labels",
+          "name_key"
+        ],
+        "title": "LaneInfo",
+        "description": "Every lane, \"hands\" included. Its label is the label_key of the last of later_labels whose `after`\nview.unlocked holds, else label_key (CONTRACT.txt, \"A lane run by rules\")."
+      },
+      "LaneLabel": {
+        "properties": {
+          "after": {
+            "$ref": "#/components/schemas/Unlock"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "after",
+          "label_key"
+        ],
+        "title": "LaneLabel"
+      },
+      "LedgerLine": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "segment": {
+            "$ref": "#/components/schemas/Segment"
+          },
+          "net_per_hour": {
+            "type": "integer",
+            "title": "Net Per Hour"
+          },
+          "contributions": {
+            "items": {
+              "$ref": "#/components/schemas/Contribution"
+            },
+            "type": "array",
+            "title": "Contributions"
+          },
+          "empties_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Empties At"
+          },
+          "fills_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fills At"
+          },
+          "falling": {
+            "type": "boolean",
+            "title": "Falling"
+          },
+          "covered": {
+            "type": "boolean",
+            "title": "Covered"
+          },
+          "starved": {
+            "type": "boolean",
+            "title": "Starved"
+          },
+          "cap": {
+            "type": "integer",
+            "title": "Cap"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "segment",
+          "net_per_hour",
+          "contributions",
+          "empties_at",
+          "fills_at",
+          "falling",
+          "covered",
+          "starved",
+          "cap"
+        ],
+        "title": "LedgerLine"
+      },
+      "LessonEnd": {
+        "properties": {
+          "lesson": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "skipped": {
+            "type": "boolean",
+            "title": "Skipped"
+          },
+          "step": {
+            "type": "integer",
+            "maximum": 99.0,
+            "minimum": 0.0,
+            "title": "Step"
+          },
+          "longest_wait_s": {
+            "type": "integer",
+            "maximum": 86400.0,
+            "minimum": 0.0,
+            "title": "Longest Wait S"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lesson",
+          "skipped",
+          "step",
+          "longest_wait_s"
+        ],
+        "title": "LessonEnd",
+        "description": "How a lesson ended: for a round of testers, a skip clustered on one step marks it to cut."
+      },
+      "LevelPays": {
+        "properties": {
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          },
+          "pays_key": {
+            "type": "string",
+            "title": "Pays Key"
+          },
+          "change_bp": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Change Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "level",
+          "pays_key",
+          "change_bp"
+        ],
+        "title": "LevelPays",
+        "description": "What a level brings, shown before it lands: words (pays_key), \"?\" for a story unlock."
+      },
+      "Limits": {
+        "properties": {
+          "max_orders": {
+            "type": "integer",
+            "title": "Max Orders"
+          },
+          "max_queue": {
+            "type": "integer",
+            "title": "Max Queue"
+          },
+          "max_mixes": {
+            "type": "integer",
+            "title": "Max Mixes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "max_orders",
+          "max_queue",
+          "max_mixes"
+        ],
+        "title": "Limits",
+        "description": "What the page's editors stop at (CONTRACT.txt, \"Request limits\"): a request past one is a 422."
+      },
+      "LineInfo": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "story",
+              "tap",
+              "find",
+              "level",
+              "body",
+              "fight"
+            ],
+            "title": "Kind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "kind"
+        ],
+        "title": "LineInfo"
+      },
+      "LogLine": {
+        "properties": {
+          "at": {
+            "type": "integer",
+            "title": "At"
+          },
+          "seq": {
+            "type": "integer",
+            "title": "Seq"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Card"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "seq",
+          "key",
+          "card"
+        ],
+        "title": "LogLine"
+      },
+      "Me": {
+        "properties": {
+          "account": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Account"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "saves": {
+            "items": {
+              "$ref": "#/components/schemas/SaveInfo"
+            },
+            "type": "array",
+            "title": "Saves"
+          },
+          "max_saves": {
+            "type": "integer",
+            "title": "Max Saves"
+          },
+          "kept_days": {
+            "type": "integer",
+            "title": "Kept Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "account",
+          "saves",
+          "max_saves",
+          "kept_days"
+        ],
+        "title": "Me"
+      },
+      "MenuNode": {
+        "properties": {
+          "node": {
+            "type": "string",
+            "title": "Node"
+          },
+          "ranks_taken": {
+            "type": "integer",
+            "title": "Ranks Taken"
+          },
+          "ranks": {
+            "type": "integer",
+            "title": "Ranks"
+          },
+          "before_value": {
+            "type": "integer",
+            "title": "Before Value"
+          },
+          "after_value": {
+            "type": "integer",
+            "title": "After Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node",
+          "ranks_taken",
+          "ranks",
+          "before_value",
+          "after_value"
+        ],
+        "title": "MenuNode",
+        "description": "One node the skill's next pick may go into: `ranks_taken` of its `ranks` (drawn \"2/5\"), and its target's value\nnow and with one more rank, each at a full share: a make in rate units per hour, a card's work in work units per\nsecond, a store's cap in quantity units (Scales)."
+      },
+      "MergeSummary": {
+        "properties": {
+          "here": {
+            "type": "integer",
+            "title": "Here"
+          },
+          "there": {
+            "type": "integer",
+            "title": "There"
+          },
+          "there_newest_game_time": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "There Newest Game Time"
+          },
+          "max_saves": {
+            "type": "integer",
+            "title": "Max Saves"
+          },
+          "words_replaced": {
+            "type": "boolean",
+            "title": "Words Replaced"
+          }
+        },
+        "type": "object",
+        "required": [
+          "here",
+          "there",
+          "there_newest_game_time",
+          "max_saves",
+          "words_replaced"
+        ],
+        "title": "MergeSummary",
+        "description": "What joining would bring together (CONTRACT.txt, \"Moving to another device\")."
+      },
+      "Mix": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "pattern": "^[^\\x00]*$",
+            "title": "Id"
+          },
+          "components": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CardShare"
+                },
+                {
+                  "$ref": "#/components/schemas/SubMix"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "kind",
+                "mapping": {
+                  "card_share": "#/components/schemas/CardShare",
+                  "sub_mix": "#/components/schemas/SubMix"
+                }
+              }
+            },
+            "type": "array",
+            "maxItems": 64,
+            "title": "Components"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "components"
+        ],
+        "title": "Mix"
+      },
+      "MovePick": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "move_pick",
+            "title": "Kind",
+            "default": "move_pick"
+          },
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "node": {
+            "type": "string",
+            "title": "Node"
+          },
+          "to": {
+            "type": "string",
+            "title": "To"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "skill",
+          "node",
+          "to"
+        ],
+        "title": "MovePick",
+        "description": "By hand only: move the rank `node` holds on `skill`'s track to `to`, a node on SkillPrestige.menu_nodes. The rank\nis out of play, held by neither node, until the click that lifts the skill into the phase after next. A refusal\nis 422 invalid_decision."
+      },
+      "Name": {
+        "type": "string",
+        "maxLength": 64,
+        "pattern": "^[^\\x00]*$"
+      },
+      "Need": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          },
+          "segment": {
+            "$ref": "#/components/schemas/Segment"
+          },
+          "gate": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Condition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "makers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Makers"
+          },
+          "spent": {
+            "type": "boolean",
+            "title": "Spent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "quantity",
+          "segment",
+          "gate",
+          "makers",
+          "spent"
+        ],
+        "title": "Need",
+        "description": "A store a tap of the card needs. quantity: the most its input or any requirement on that store's value asks;\nsegment: how much there is, sampled like a ledger line's (served for a locked store too).\nDrawn short while the sample is below quantity; whether the card is ready is still its blocker's to say. gate: drawn\nin its place while set, the store unnamed (CONTRACT.txt, \"Cards\"); makers: the cards and standing actions in play\nthat make the store; spent: drawn as used up, set while short, nothing in play can make the store again and every\ntrigger that grants it has fired."
+      },
+      "NewSave": {
+        "properties": {
+          "save": {
+            "$ref": "#/components/schemas/SaveInfo"
+          },
+          "presentation": {
+            "$ref": "#/components/schemas/SavePresentation"
+          },
+          "step": {
+            "$ref": "#/components/schemas/Step"
+          }
+        },
+        "type": "object",
+        "required": [
+          "save",
+          "presentation",
+          "step"
+        ],
+        "title": "NewSave"
+      },
+      "NodeChange": {
+        "properties": {
+          "target": {
+            "$ref": "#/components/schemas/NodeTarget"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target",
+          "id",
+          "store"
+        ],
+        "title": "NodeChange",
+        "description": "What a node's ranks change, as the content authors it: `make`, what runner `id` (a card or standing action)\nmakes of `store`; `work`, card `id`'s work speed; `cap`, store `id`'s cap. The page names it by those ids' labels."
+      },
+      "NodeInfo": {
+        "properties": {
+          "node": {
+            "type": "string",
+            "title": "Node"
+          },
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "change": {
+            "$ref": "#/components/schemas/NodeChange"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node",
+          "skill",
+          "label_key",
+          "change"
+        ],
+        "title": "NodeInfo",
+        "description": "One node of `skill`'s prestige track (CONTRACT.txt, \"PRESTIGE PHASES\"); SkillPrestige.menu_nodes names it."
+      },
+      "NodeTarget": {
+        "type": "string",
+        "enum": [
+          "make",
+          "work",
+          "cap"
+        ],
+        "title": "NodeTarget"
+      },
+      "NoteInfo": {
+        "properties": {
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "hand": {
+            "$ref": "#/components/schemas/Hand"
+          },
+          "sketch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sketch"
+          }
+        },
+        "type": "object",
+        "required": [
+          "note",
+          "hand",
+          "sketch"
+        ],
+        "title": "NoteInfo",
+        "description": "A note on a page, in content order. Its words are the text entry of the same id."
+      },
+      "Offer": {
+        "properties": {
+          "offer": {
+            "type": "string",
+            "title": "Offer"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          },
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/OfferAnswer"
+            },
+            "type": "array",
+            "title": "Answers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "offer",
+          "answer",
+          "answers"
+        ],
+        "title": "Offer",
+        "description": "A shown offer, in content order: `answer` null while it is open, else the answer given."
+      },
+      "OfferAnswer": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Card"
+          },
+          "takes_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Takes S"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "card",
+          "takes_s"
+        ],
+        "title": "OfferAnswer"
+      },
+      "OfferInfo": {
+        "properties": {
+          "offer": {
+            "type": "string",
+            "title": "Offer"
+          },
+          "text_key": {
+            "type": "string",
+            "title": "Text Key"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Line Keys"
+          },
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/AnswerInfo"
+            },
+            "type": "array",
+            "title": "Answers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "offer",
+          "text_key",
+          "kind",
+          "line_keys",
+          "answers"
+        ],
+        "title": "OfferInfo"
+      },
+      "OfferedSwitch": {
+        "properties": {
+          "chip": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "mix_id": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "chip",
+          "mix_id"
+        ],
+        "title": "OfferedSwitch",
+        "description": "A repeated switch (models.RepeatedSwitch) whose rule offer the player has answered."
+      },
+      "Opened": {
+        "properties": {
+          "save": {
+            "$ref": "#/components/schemas/SaveInfo"
+          },
+          "was": {
+            "$ref": "#/components/schemas/View"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/PastLine"
+            },
+            "type": "array",
+            "title": "History"
+          },
+          "presentation": {
+            "$ref": "#/components/schemas/SavePresentation"
+          },
+          "step": {
+            "$ref": "#/components/schemas/Step"
+          }
+        },
+        "type": "object",
+        "required": [
+          "save",
+          "was",
+          "history",
+          "presentation",
+          "step"
+        ],
+        "title": "Opened"
+      },
+      "Order": {
+        "properties": {
+          "when": {
+            "$ref": "#/components/schemas/Condition"
+          },
+          "then": {
+            "$ref": "#/components/schemas/OrderVerb"
+          }
+        },
+        "type": "object",
+        "required": [
+          "when",
+          "then"
+        ],
+        "title": "Order"
+      },
+      "OrderCard": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "when": {
+            "$ref": "#/components/schemas/Condition"
+          },
+          "then": {
+            "$ref": "#/components/schemas/OrderVerb"
+          },
+          "offered_after": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "chip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chip"
+          },
+          "after_end": {
+            "type": "boolean",
+            "title": "After End"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "when",
+          "then",
+          "offered_after",
+          "chip",
+          "after_end"
+        ],
+        "title": "OrderCard",
+        "description": "The prefilled rule offered when a store's line is falling and uncovered: `when` is an at_most on `store`, which\nthe page words from ui text (CONTRACT.txt, \"Text and numbers\"); `then` taps a card."
+      },
+      "OrderState": {
+        "type": "string",
+        "enum": [
+          "on",
+          "waiting",
+          "outranked",
+          "passed_over"
+        ],
+        "title": "OrderState",
+        "description": "Where a rule stands now, so the page can say why one is off (CONTRACT.txt, \"THE CLIENT MAY\")."
+      },
+      "OrderVerb": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SwitchMix"
+          },
+          {
+            "$ref": "#/components/schemas/TapCard"
+          },
+          {
+            "$ref": "#/components/schemas/AnswerOffer"
+          },
+          {
+            "$ref": "#/components/schemas/AnswerKind"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "answer_kind": "#/components/schemas/AnswerKind",
+            "answer_offer": "#/components/schemas/AnswerOffer",
+            "switch_mix": "#/components/schemas/SwitchMix",
+            "tap_card": "#/components/schemas/TapCard"
+          }
+        }
+      },
+      "ParkedPick": {
+        "properties": {
+          "node": {
+            "type": "string",
+            "title": "Node"
+          },
+          "due": {
+            "type": "integer",
+            "title": "Due"
+          }
+        },
+        "type": "object",
+        "required": [
+          "node",
+          "due"
+        ],
+        "title": "ParkedPick",
+        "description": "A rank a move parked on `node`: it takes effect at the click that lifts the skill into phase `due`."
+      },
+      "PastLine": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "at": {
+            "type": "integer",
+            "title": "At"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "at",
+          "key"
+        ],
+        "title": "PastLine"
+      },
+      "Prestige": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "prestige",
+            "title": "Kind",
+            "default": "prestige"
+          },
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "node": {
+            "type": "string",
+            "title": "Node"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "skill",
+          "node"
+        ],
+        "title": "Prestige",
+        "description": "By hand only, never an order's or a queue entry's verb (CONTRACT.txt, \"PRESTIGE PHASES\"): one rank into `node`\non `skill`'s track. At the skill's top it is the click into the next phase; with SkillPrestige.pick_owed it fills\nthat pick. A refusal is 422 invalid_decision, its message naming why."
+      },
+      "QueueEntry": {
+        "properties": {
+          "verb": {
+            "$ref": "#/components/schemas/OrderVerb"
+          },
+          "until": {
+            "$ref": "#/components/schemas/Condition"
+          }
+        },
+        "type": "object",
+        "required": [
+          "verb",
+          "until"
+        ],
+        "title": "QueueEntry"
+      },
+      "RecoveryWords": {
+        "properties": {
+          "words": {
+            "type": "string",
+            "title": "Words"
+          },
+          "label": {
+            "type": "string",
+            "const": "Ostmere",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "words",
+          "label"
+        ],
+        "title": "RecoveryWords"
+      },
+      "Reminder": {
+        "properties": {
+          "window": {
+            "$ref": "#/components/schemas/ReminderWindow"
+          }
+        },
+        "type": "object",
+        "required": [
+          "window"
+        ],
+        "title": "Reminder"
+      },
+      "ReminderOff": {
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Endpoint"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "endpoint"
+        ],
+        "title": "ReminderOff"
+      },
+      "ReminderOn": {
+        "properties": {
+          "endpoint": {
+            "$ref": "#/components/schemas/Endpoint"
+          },
+          "p256dh": {
+            "$ref": "#/components/schemas/Key"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/Key"
+          },
+          "tz": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Tz"
+          },
+          "window": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReminderWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "endpoint",
+          "p256dh",
+          "auth",
+          "tz"
+        ],
+        "title": "ReminderOn",
+        "description": "This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys) and its time zone."
+      },
+      "ReminderWindow": {
+        "properties": {
+          "after_hours": {
+            "type": "integer",
+            "title": "After Hours"
+          },
+          "send_from_hour": {
+            "$ref": "#/components/schemas/Hour"
+          },
+          "send_until_hour": {
+            "$ref": "#/components/schemas/Hour"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "after_hours",
+          "send_from_hour",
+          "send_until_hour"
+        ],
+        "title": "ReminderWindow",
+        "description": "When a reminder may come: once the player has been away `after_hours`, at a local hour from `send_from_hour` up\nto `send_until_hour` (past midnight when from is later than until; equal: any hour)."
+      },
+      "RepeatedSwitch": {
+        "properties": {
+          "chip": {
+            "type": "string",
+            "title": "Chip"
+          },
+          "mix_id": {
+            "type": "string",
+            "title": "Mix Id"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "chip",
+          "mix_id",
+          "count"
+        ],
+        "title": "RepeatedSwitch",
+        "description": "The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (CONTRACT.txt,\n\"Repeats\")."
+      },
+      "RepeatedTap": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "count"
+        ],
+        "title": "RepeatedTap",
+        "description": "A hands card tapped `count` times in the window while the hands ran a mix without it (CONTRACT.txt,\n\"Repeats\")."
+      },
+      "Repeats": {
+        "properties": {
+          "taps": {
+            "items": {
+              "$ref": "#/components/schemas/RepeatedTap"
+            },
+            "type": "array",
+            "title": "Taps"
+          },
+          "switches": {
+            "items": {
+              "$ref": "#/components/schemas/RepeatedSwitch"
+            },
+            "type": "array",
+            "title": "Switches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "taps",
+          "switches"
+        ],
+        "title": "Repeats",
+        "description": "What the player keeps doing by hand, counted from the save's decision log: only what reached its count."
+      },
+      "RuleDry": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "holding": {
+            "type": "boolean",
+            "title": "Holding"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "holding"
+        ],
+        "title": "RuleDry",
+        "description": "A store rule's mix that cannot reach the rule's release for want of a store (CONTRACT.txt, \"Dry rules\"): the rule\nholds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short."
+      },
+      "RuleRun": {
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "starts": {
+            "type": "integer",
+            "title": "Starts"
+          },
+          "on_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On At"
+          },
+          "on_level": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On Level"
+          },
+          "off_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off At"
+          },
+          "off_level": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Level"
+          },
+          "ended": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "season",
+                  "left",
+                  "stint"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended"
+          },
+          "made": {
+            "items": {
+              "$ref": "#/components/schemas/Amount"
+            },
+            "type": "array",
+            "title": "Made"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order",
+          "starts",
+          "on_at",
+          "on_level",
+          "off_at",
+          "off_level",
+          "ended",
+          "made"
+        ],
+        "title": "RuleRun",
+        "description": "One rule's entry: how many times it came on since its entry began, its last start and its last let-go (null\nuntil it has let go), each with the amount of the store its condition reads (null for a condition on no store).\n`order` is the rule as the save has it now: equal to one of View.orders, unless `ended` is set: the game removed\nthe rule, at a season's turn or when its person left, at off_at. on_at is null only on an ended rule that never\ncame on. `ended` \"stint\" is a goal stint that popped at its goal (CONTRACT.txt, \"Rule runs\"): `order` is\n{when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to\ncontrol), off_at when its goal landed. `made`, on an ended stint only: what the save gained, from on_at to off_at,\nin the stores its mix's cards make, the goal's store first, then the largest, at most two; [] otherwise."
+      },
+      "RunBy": {
+        "type": "string",
+        "enum": [
+          "tap",
+          "mix"
+        ],
+        "title": "RunBy",
+        "description": "Who runs a card now: never both on the hands, since a tap yields the mix."
+      },
+      "RunKind": {
+        "type": "string",
+        "enum": [
+          "full",
+          "paused",
+          "yielded",
+          "waiting",
+          "greyed",
+          "spent"
+        ],
+        "title": "RunKind"
+      },
+      "Running": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "running",
+            "title": "Kind",
+            "default": "running"
+          },
+          "runner": {
+            "type": "string",
+            "title": "Runner"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner"
+        ],
+        "title": "Running"
+      },
+      "SaveId": {
+        "type": "integer",
+        "maximum": 9007199254740992.0,
+        "minimum": 1.0
+      },
+      "SaveInfo": {
+        "properties": {
+          "save_id": {
+            "type": "integer",
+            "title": "Save Id"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          },
+          "decisions": {
+            "type": "integer",
+            "title": "Decisions"
+          },
+          "game_time": {
+            "type": "integer",
+            "title": "Game Time"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "played_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Played At"
+          },
+          "camp_level": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Camp Level"
+          }
+        },
+        "type": "object",
+        "required": [
+          "save_id",
+          "number",
+          "decisions",
+          "game_time",
+          "ended_at",
+          "started_at",
+          "played_at",
+          "camp_level"
+        ],
+        "title": "SaveInfo"
+      },
+      "SaveMix": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "save_mix",
+            "title": "Kind",
+            "default": "save_mix"
+          },
+          "mix": {
+            "$ref": "#/components/schemas/Mix"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mix"
+        ],
+        "title": "SaveMix"
+      },
+      "SavePresentation": {
+        "properties": {
+          "rule_seen": {
+            "type": "boolean",
+            "title": "Rule Seen",
+            "default": false
+          },
+          "mix_offered": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Mix Offered",
+            "default": []
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Lessons",
+            "default": []
+          },
+          "lesson_ends": {
+            "items": {
+              "$ref": "#/components/schemas/LessonEnd"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Lesson Ends",
+            "default": []
+          },
+          "visits": {
+            "items": {
+              "$ref": "#/components/schemas/Visit"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Visits",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "SavePresentation",
+        "description": "What the page keeps about one save: its teaching (the lessons and what gates them or their hints) and its returns."
+      },
+      "Scales": {
+        "properties": {
+          "quantity_per_item": {
+            "type": "integer",
+            "title": "Quantity Per Item"
+          },
+          "rate_per_item_hour": {
+            "type": "integer",
+            "title": "Rate Per Item Hour"
+          },
+          "bp": {
+            "type": "integer",
+            "title": "Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantity_per_item",
+          "rate_per_item_hour",
+          "bp"
+        ],
+        "title": "Scales"
+      },
+      "Section": {
+        "type": "string",
+        "enum": [
+          "days",
+          "creatures",
+          "places"
+        ],
+        "title": "Section",
+        "description": "The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order."
+      },
+      "Segment": {
+        "properties": {
+          "start": {
+            "type": "integer",
+            "title": "Start"
+          },
+          "start_value": {
+            "type": "integer",
+            "title": "Start Value"
+          },
+          "rate": {
+            "type": "integer",
+            "title": "Rate"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "start_value",
+          "rate",
+          "limit"
+        ],
+        "title": "Segment",
+        "description": "value(t) = start_value + rate * (t - start), held at limit once reached. The client samples this."
+      },
+      "SetOrders": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "set_orders",
+            "title": "Kind",
+            "default": "set_orders"
+          },
+          "orders": {
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "type": "array",
+            "maxItems": 64,
+            "title": "Orders"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "orders"
+        ],
+        "title": "SetOrders"
+      },
+      "SetQueue": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "set_queue",
+            "title": "Kind",
+            "default": "set_queue"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/QueueEntry"
+            },
+            "type": "array",
+            "maxItems": 64,
+            "title": "Entries"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "entries"
+        ],
+        "title": "SetQueue"
+      },
+      "SideInfo": {
+        "properties": {
+          "side": {
+            "type": "string",
+            "title": "Side"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "side",
+          "label_key"
+        ],
+        "title": "SideInfo"
+      },
+      "SkillBar": {
+        "properties": {
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "xp": {
+            "$ref": "#/components/schemas/Segment"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          },
+          "level_xp": {
+            "type": "integer",
+            "title": "Level Xp"
+          },
+          "next_level_xp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Level Xp"
+          },
+          "next_level_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Level At"
+          },
+          "prestige": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SkillPrestige"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill",
+          "xp",
+          "level",
+          "level_xp",
+          "next_level_xp",
+          "next_level_at",
+          "prestige"
+        ],
+        "title": "SkillBar"
+      },
+      "SkillInfo": {
+        "properties": {
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/LevelPays"
+            },
+            "type": "array",
+            "title": "Levels"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill",
+          "label_key",
+          "levels"
+        ],
+        "title": "SkillInfo"
+      },
+      "SkillLevel": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "skill_level",
+            "title": "Kind",
+            "default": "skill_level"
+          },
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill"
+        ],
+        "title": "SkillLevel"
+      },
+      "SkillNeed": {
+        "properties": {
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill",
+          "level"
+        ],
+        "title": "SkillNeed",
+        "description": "A level a card requires of a skill: listed on the card as ui.card.needs_skill, short while below it."
+      },
+      "SkillPrestige": {
+        "properties": {
+          "phase": {
+            "type": "integer",
+            "title": "Phase"
+          },
+          "level_counted": {
+            "type": "integer",
+            "title": "Level Counted"
+          },
+          "at_top": {
+            "type": "boolean",
+            "title": "At Top"
+          },
+          "waiting_levels": {
+            "type": "integer",
+            "title": "Waiting Levels"
+          },
+          "menu_nodes": {
+            "items": {
+              "$ref": "#/components/schemas/MenuNode"
+            },
+            "type": "array",
+            "title": "Menu Nodes"
+          },
+          "undo_open": {
+            "type": "boolean",
+            "title": "Undo Open"
+          },
+          "mastered": {
+            "type": "boolean",
+            "title": "Mastered"
+          },
+          "pick_owed": {
+            "type": "boolean",
+            "title": "Pick Owed"
+          },
+          "topped_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topped At"
+          },
+          "picked": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Picked"
+          },
+          "parked": {
+            "items": {
+              "$ref": "#/components/schemas/ParkedPick"
+            },
+            "type": "array",
+            "title": "Parked"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phase",
+          "level_counted",
+          "at_top",
+          "waiting_levels",
+          "menu_nodes",
+          "undo_open",
+          "mastered",
+          "pick_owed",
+          "topped_at",
+          "picked",
+          "parked"
+        ],
+        "title": "SkillPrestige",
+        "description": "Where the skill stands in its prestige phases, at view.at."
+      },
+      "SpentShare": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "share_bp": {
+            "type": "integer",
+            "title": "Share Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "share_bp"
+        ],
+        "title": "SpentShare",
+        "description": "The part, share_bp, of spent card `card`'s share that the card holding this entry runs now."
+      },
+      "StandingBar": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "run": {
+            "$ref": "#/components/schemas/RunKind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "run"
+        ],
+        "title": "StandingBar",
+        "description": "An unlocked standing action, maker or consumer: full, or paused by a dry store."
+      },
+      "StandingInfo": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "skill": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill"
+          },
+          "fight": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FightInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "label_key",
+          "skill",
+          "fight"
+        ],
+        "title": "StandingInfo",
+        "description": "A standing action: runs by itself while unlocked, outside every mix and lane."
+      },
+      "Step": {
+        "properties": {
+          "save_id": {
+            "type": "integer",
+            "title": "Save Id"
+          },
+          "decisions": {
+            "type": "integer",
+            "title": "Decisions"
+          },
+          "rules_digest": {
+            "type": "string",
+            "title": "Rules Digest"
+          },
+          "build": {
+            "type": "string",
+            "title": "Build"
+          },
+          "view": {
+            "$ref": "#/components/schemas/View"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/LogLine"
+            },
+            "type": "array",
+            "title": "Lines"
+          },
+          "failed_tap": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Failed Tap"
+          },
+          "repeats": {
+            "$ref": "#/components/schemas/Repeats"
+          },
+          "rule_runs": {
+            "items": {
+              "$ref": "#/components/schemas/RuleRun"
+            },
+            "type": "array",
+            "title": "Rule Runs"
+          },
+          "catching_up_to": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Catching Up To"
+          }
+        },
+        "type": "object",
+        "required": [
+          "save_id",
+          "decisions",
+          "rules_digest",
+          "build",
+          "view",
+          "lines",
+          "failed_tap",
+          "repeats",
+          "rule_runs",
+          "catching_up_to"
+        ],
+        "title": "Step",
+        "description": "A save as just written: what to draw, and the lines the game wrote since it was last written."
+      },
+      "StepNeed": {
+        "properties": {
+          "card": {
+            "type": "string",
+            "title": "Card"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card",
+          "count"
+        ],
+        "title": "StepNeed",
+        "description": "A step a card requires: another card's completions, listed as ui.card.needs_step, short while below `count`."
+      },
+      "StoreInfo": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          },
+          "cap": {
+            "type": "integer",
+            "title": "Cap"
+          },
+          "made_by": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Made By"
+          },
+          "hidden": {
+            "type": "boolean",
+            "title": "Hidden"
+          },
+          "bonus_bp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bonus Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "label_key",
+          "cap",
+          "made_by",
+          "hidden",
+          "bonus_bp"
+        ],
+        "title": "StoreInfo"
+      },
+      "StoreValue": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "store_value",
+            "title": "Kind",
+            "default": "store_value"
+          },
+          "store": {
+            "type": "string",
+            "title": "Store"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store"
+        ],
+        "title": "StoreValue"
+      },
+      "Strength": {
+        "properties": {
+          "value": {
+            "type": "integer",
+            "title": "Value"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/StrengthEntry"
+            },
+            "type": "array",
+            "title": "Sources"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "sources"
+        ],
+        "title": "Strength",
+        "description": "A side's power or a threat's strength: `value` is what the engine uses; `sources` are every source behind it, the\nbase first, then the sum entries, then the factors, each in stack order (CONTRACT.txt, \"FIGHTS\")."
+      },
+      "StrengthEntry": {
+        "properties": {
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "form": {
+            "$ref": "#/components/schemas/StrengthKind"
+          },
+          "amount_bp": {
+            "type": "integer",
+            "title": "Amount Bp"
+          },
+          "share_bp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Share Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "form",
+          "amount_bp",
+          "share_bp"
+        ],
+        "title": "StrengthEntry",
+        "description": "One source behind a strength: the base (source null), a sum entry (+1500 is +15%) or a factor (15000 is x1.5)."
+      },
+      "StrengthKind": {
+        "type": "string",
+        "enum": [
+          "base",
+          "add_bp",
+          "mul_bp"
+        ],
+        "title": "StrengthKind"
+      },
+      "SubMix": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "sub_mix",
+            "title": "Kind",
+            "default": "sub_mix"
+          },
+          "mix_id": {
+            "type": "string",
+            "title": "Mix Id"
+          },
+          "share_bp": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Share Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mix_id",
+          "share_bp"
+        ],
+        "title": "SubMix"
+      },
+      "Subject": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StoreValue"
+          },
+          {
+            "$ref": "#/components/schemas/SkillLevel"
+          },
+          {
+            "$ref": "#/components/schemas/CardCount"
+          },
+          {
+            "$ref": "#/components/schemas/Unlocked"
+          },
+          {
+            "$ref": "#/components/schemas/Running"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "card_count": "#/components/schemas/CardCount",
+            "running": "#/components/schemas/Running",
+            "skill_level": "#/components/schemas/SkillLevel",
+            "store_value": "#/components/schemas/StoreValue",
+            "unlocked": "#/components/schemas/Unlocked"
+          }
+        }
+      },
+      "SwitchMix": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "switch_mix",
+            "title": "Kind",
+            "default": "switch_mix"
+          },
+          "mix_id": {
+            "type": "string",
+            "title": "Mix Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mix_id"
+        ],
+        "title": "SwitchMix"
+      },
+      "TapCard": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "tap_card",
+            "title": "Kind",
+            "default": "tap_card"
+          },
+          "card": {
+            "type": "string",
+            "title": "Card"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "card"
+        ],
+        "title": "TapCard",
+        "description": "One completion of a card by hand: a tap, a craft, a story step. The same verb from an order or the queue."
+      },
+      "TextEntry": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "text"
+        ],
+        "title": "TextEntry"
+      },
+      "ThreatInfo": {
+        "properties": {
+          "threat": {
+            "type": "string",
+            "title": "Threat"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "threat",
+          "label_key"
+        ],
+        "title": "ThreatInfo"
+      },
+      "TransferCode": {
+        "properties": {
+          "transfer_code": {
+            "type": "string",
+            "title": "Transfer Code"
+          },
+          "expires_in_s": {
+            "type": "integer",
+            "title": "Expires In S"
+          },
+          "join_url": {
+            "type": "string",
+            "title": "Join Url"
+          },
+          "qr": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Qr"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transfer_code",
+          "expires_in_s",
+          "join_url",
+          "qr"
+        ],
+        "title": "TransferCode"
+      },
+      "UndoPick": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "undo_pick",
+            "title": "Kind",
+            "default": "undo_pick"
+          },
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "skill"
+        ],
+        "title": "UndoPick",
+        "description": "By hand only: take back `skill`'s last pick while SkillPrestige.undo_open, leaving it owed. A refusal is 422\ninvalid_decision."
+      },
+      "Unlock": {
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/UnlockKind"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "id"
+        ],
+        "title": "Unlock",
+        "description": "`category`, not `kind`: on the wire `kind` is only ever a union's discriminator string."
+      },
+      "UnlockKind": {
+        "type": "string",
+        "enum": [
+          "action",
+          "card",
+          "skill",
+          "store",
+          "chip",
+          "feature",
+          "retired",
+          "offer",
+          "answered",
+          "answer",
+          "joined",
+          "left",
+          "entry",
+          "note"
+        ],
+        "title": "UnlockKind"
+      },
+      "Unlocked": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "unlocked",
+            "title": "Kind",
+            "default": "unlocked"
+          },
+          "unlock": {
+            "$ref": "#/components/schemas/Unlock"
+          }
+        },
+        "type": "object",
+        "required": [
+          "unlock"
+        ],
+        "title": "Unlocked"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "View": {
+        "properties": {
+          "at": {
+            "type": "integer",
+            "title": "At"
+          },
+          "next_event_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Event At"
+          },
+          "ledger": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerLine"
+            },
+            "type": "array",
+            "title": "Ledger"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillBar"
+            },
+            "type": "array",
+            "title": "Skills"
+          },
+          "standing": {
+            "items": {
+              "$ref": "#/components/schemas/StandingBar"
+            },
+            "type": "array",
+            "title": "Standing"
+          },
+          "lanes": {
+            "items": {
+              "$ref": "#/components/schemas/LaneBar"
+            },
+            "type": "array",
+            "title": "Lanes"
+          },
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "type": "array",
+            "title": "Cards"
+          },
+          "completed": {
+            "items": {
+              "$ref": "#/components/schemas/CompletedCard"
+            },
+            "type": "array",
+            "title": "Completed"
+          },
+          "greyed_mix_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Greyed Mix Ids"
+          },
+          "chips": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Chips"
+          },
+          "chips_seen": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Chips Seen"
+          },
+          "unlocked": {
+            "items": {
+              "$ref": "#/components/schemas/Unlock"
+            },
+            "type": "array",
+            "title": "Unlocked"
+          },
+          "all_covered": {
+            "type": "boolean",
+            "title": "All Covered"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "mixes": {
+            "items": {
+              "$ref": "#/components/schemas/Mix"
+            },
+            "type": "array",
+            "title": "Mixes"
+          },
+          "active_mix_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active Mix Id"
+          },
+          "running_mix_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Running Mix Id"
+          },
+          "mix_order": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mix Order"
+          },
+          "running_town_mix_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Running Town Mix Id"
+          },
+          "town_mix_order": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Town Mix Order"
+          },
+          "orders_on": {
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array",
+            "title": "Orders On"
+          },
+          "order_states": {
+            "items": {
+              "$ref": "#/components/schemas/OrderState"
+            },
+            "type": "array",
+            "title": "Order States"
+          },
+          "order_dry": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/RuleDry"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Order Dry"
+          },
+          "runs_out_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runs Out At"
+          },
+          "orders": {
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "type": "array",
+            "title": "Orders"
+          },
+          "queue": {
+            "items": {
+              "$ref": "#/components/schemas/QueueEntry"
+            },
+            "type": "array",
+            "title": "Queue"
+          },
+          "offers": {
+            "items": {
+              "$ref": "#/components/schemas/Offer"
+            },
+            "type": "array",
+            "title": "Offers"
+          },
+          "fights": {
+            "items": {
+              "$ref": "#/components/schemas/Fight"
+            },
+            "type": "array",
+            "title": "Fights"
+          },
+          "goals": {
+            "items": {
+              "$ref": "#/components/schemas/Goal"
+            },
+            "type": "array",
+            "title": "Goals"
+          },
+          "goal_rows": {
+            "items": {
+              "$ref": "#/components/schemas/GoalRow"
+            },
+            "type": "array",
+            "title": "Goal Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "next_event_at",
+          "ledger",
+          "skills",
+          "standing",
+          "lanes",
+          "cards",
+          "completed",
+          "greyed_mix_ids",
+          "chips",
+          "chips_seen",
+          "unlocked",
+          "all_covered",
+          "ended_at",
+          "mixes",
+          "active_mix_id",
+          "running_mix_id",
+          "mix_order",
+          "running_town_mix_id",
+          "town_mix_order",
+          "orders_on",
+          "order_states",
+          "order_dry",
+          "runs_out_at",
+          "orders",
+          "queue",
+          "offers",
+          "fights",
+          "goals",
+          "goal_rows"
+        ],
+        "title": "View"
+      },
+      "Visit": {
+        "properties": {
+          "left": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 0.0,
+            "title": "Left"
+          },
+          "back": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 0.0,
+            "title": "Back"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "left",
+          "back"
+        ],
+        "title": "Visit",
+        "description": "A return after time away: the game second the player last saw the save, and the one the return came to."
+      }
+    }
+  }
+}

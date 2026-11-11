@@ -1,0 +1,11 @@
+[
+  {"kind": "caption", "text": ["Unknown (1) - Coldwater ford, 3 nights running"]},
+  {"kind": "crossed", "text": ["legs too short.", "knees go higher than the back"]},
+  {"kind": "study", "id": "tooth", "text": ["tooth from the ford. ~3 in.", "not bone? greyish, hollow"]},
+  {"kind": "study", "id": "face", "text": ["face splits down the", "middle. saw it once"]},
+  {"kind": "study", "id": "knee", "text": ["knee joint - clicks", "when it steps"]},
+  {"kind": "label", "anchor": [205, 40], "text": ["knees above the back", "approx 14 ft?"]},
+  {"kind": "label", "anchor": [340, 210], "text": ["ribs show through.", "no hair"]},
+  {"kind": "label", "anchor": [236, 440], "text": ["no eyes that I", "could see"]},
+  {"kind": "label", "anchor": [150, 500], "text": ["stood in the ford", "~1 hr. didn't drink"]}
+]

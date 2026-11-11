@@ -1,0 +1,11 @@
+beats whenever (pace_scale 1): B8 day 7, target_day 8, B9 day 9.31, target_day 9
+  away V26->V27: 0 []
+  away V27->V28: 2 ['trigger t_stakes_full', 'trigger t_b8']
+  away V28->V29: 0 []
+  away V29->V30: 2 ['trigger t_roofs', 'trigger offer_o_posts']
+  away V30->V31: 2 ['trigger t_roofs_first', 'trigger t_ash_ground']
+  away V31->V32: 1 ['trigger t_wind']
+  away V32->V33: 0 []
+  away V33->V34: 0 []
+  away V34->V35: 0 []
+  away V35->V36: 2 ['trigger t_pack_near', 'trigger t_b9']

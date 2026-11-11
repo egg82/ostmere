@@ -1,0 +1,72 @@
+Wrong implementations of a leave (engine DESIGN.txt, "LEAVES", invariants 148-155; week-three plan, items 4 and 5) and of
+the retired chores beside it (invariants 142-147), to plant one at a time in a scratch copy; a test written blind from
+those parts alone must go red for each. Rows are claimed by `@kills(row)` markers on the tests of leaves_world.py's and
+retire_world.py's suites: test_leaves_*.py and test_retire_*.py. Record each run below the list as MUTANTS_drains.txt
+does (planted, red, survived, equivalent with the reason).
+
+LEAVES
+ 1 greys the mix     the leave retires la's cards by a RETIRED-style fact, so every saved mix holding one greys: the town's
+                     mix is greyed, running_town_mix is None, every lane stops.                           [149, 150]
+ 2 moves the shares  la's shares or time go to another lane (lb's cards run faster, the town's rates are renormalised
+                     over the people left, or a1's share is added to b1's).                               [148]
+ 3 pays the task     the tap under way at the leave still completes: ac.done at 70, its outcome stores, its completion
+                     counted; or the rate-form payment so far is wound back.                              [151]
+ 4 keeps the orders  save.orders still holds the taps of la's cards (they are passed over, or removed from the view only).
+                                                                                                         [150]
+ 5 stops still run   a standing action named in `stops` keeps contributing to rates, stays in View.standing, or has its
+                     explain share at BP.                                                                 [152]
+ 6 logs wrongly      the removed orders are logged with ended None or SEASON (or not at all), or logged twice, or with a
+                     wrong level (the store read at T - 1, or 0).                                        [150, 154]
+ 8 too many orders   every order whose verb is a tap is removed, or lb's orders go with la's.             [148, 150]
+ 9 LEFT unwritten    Unlock(LEFT) is not added, added twice, or removed again; or a second route adds it.  [153]
+10 lane held         the lane is not freed: ac stays on la's lane, unpaid, so it reads as busy.            [151]
+11 still listed      a left card stays in View.cards, or lands in View.completed, or its lane in View.lanes.  [152]
+12 still tappable    a player's tap, a SaveMix of a left card, or an order's tap of one is acted on, not refused or
+                     passed over.                                                                         [152]
+13 stops them all    every standing action stops, not only those the Leave lists.                           [152]
+14 locks the action  a stopped standing action's Unlocked(ACTION) turns false.                              [152]
+15 lands on the gone a join, an install or a start on a left lane is applied (JOINED written, a share added, an order
+                     installed, a card tapped).                                                           [152, 153]
+16 rebase misses it  rebase step 6 does not land a leave already true (LEFT absent), lands it without logging, or lands
+                     it at the wrong instant.                                                             [154]
+17 empty mix goes    a mix left with no component is deleted, greyed, or keeps one share.                   [148, 149]
+18 digest moves      the rules encoding writes `leaves: []` (or similar) for every outcome, so rules without a leave
+                     change digest; compare with the pinned digest in test_leaves_once_contract.py.        [155]
+19 validation        accepted: a Leave of an undeclared or non-ruled lane, an undeclared stop, two Leaves of one lane
+                     (one outcome or two), a Leave in a card's outcome, LEFT in Outcome.unlocks or Rules.opening; or
+                     the loader's equivalents.                                                            [155]
+20 explanations move the lines off la's lane change at the leave (a modifier, a share, a run).             [148]
+
+RETIRED CHORES (retire_orders; "Installed rule" / "Retired chores")
+21 retires others    the turn removes orders tapping cards other than the named (on the same lane, or the same store).
+                                                                                                         [142]
+22 retires partly    only the installed orders, or only the first matching one, go; or the latches shift so a kept order
+                     takes a removed one's.                                                               [142]
+23 touches the rest  the turn also clears the queue, the saved mixes or unlocks.                           [142]
+24 logs nothing      no RuleChange for a removed order, or one with ended None or LEFT, or a wrong level.   [143]
+25 lands again       the retirement lands more than once: an equal order the player sets after the turn is removed by a
+                     later advance.                                                                       [144]
+26 cancels the tap   the tap running at the turn is dropped (no landing), as a leave drops it.            [145]
+27 restarts it       a removed order keeps starting its card (the latch is kept apart from the order).      [145]
+28 validation        accepted: an undeclared card, a card named twice, retire_orders in an answer's or a card's outcome.
+                                                                                                         [146]
+29 rebase misses it  rebase step 6 does not remove the orders at a turn already past, or does not log them.   [147]
+30 digest moves      the rules encoding writes `retire_orders: []` for every outcome.                       [147]
+31 loader lenient    the loader accepts a named card that cures no chip whose store only a season's standing makes (or
+                     one whose store something else also makes).                                           [146]
+32 loader anywhere   the loader accepts retire_orders on a trigger that is not a season's turn, or on a card.  [146]
+33 ended too often   a SetOrders removal is logged as ended (SEASON or LEFT).                              [143]
+
+RUNS
+- Suites test_leaves_*.py (rows 1-20) and test_retire_*.py (rows 21-33), written blind from DESIGN.txt and CONTRACT.txt
+  alone. Run: python -m tools.mutate_suite leaves|retire --run (specs tools/leaves_mutants/, tools/retire_mutants/:
+  mNN.py is a row's mutant, mNNa.py ... its further variants, each planted alone). Each run also runs the other suite
+  and the implementation's own tests (engine/test_leaves_impl.py, engine/test_retired_chores_impl.py,
+  opening/test_leaves_loader.py, opening/test_retired_chores_loader.py); only the suite's own tests make claims.
+- Against the implementation: all 33 rows KILLED in every planted variant, each by a test that claims the row; no
+  survivors and no equivalent mutants. Rows 18 and 30 move every rules digest, so their specs rewrite the copy's
+  release lock (RELOCK). Not planted: row 3's rate-form wind-back and row 6's level 0 (the variants that read the
+  stores' history, which no edit of one line reaches).
+- First runs found three gaps in the suite itself, closed here: the install-on-a-left-lane test compared an order's verb
+  with a RuleInstall (always unequal), nothing observed Unlocked(ACTION) of a stopped action (row 14), and the
+  retire world's latches were all on (a slid latch, row 22b) and its unlock set empty (row 23c).

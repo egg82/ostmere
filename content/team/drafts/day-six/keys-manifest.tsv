@@ -1,0 +1,46 @@
+# Day-six keys manifest: every key in day_six.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 40
+key	kind	limit	alt	brief
+store_dawn_7	store label	n/a	-	-
+action_dawn_7	action label	n/a	-	-
+l_morning_7	line	line<=75; set median<=45,p90<=75	-	-
+l_spear	line	line<=75; set median<=45,p90<=75	-	-
+l_rats_first	line	line<=75; set median<=45,p90<=75	-	-
+l_crows_first	line	line<=75; set median<=45,p90<=75	-	-
+l_hunt_1	line	line<=75; set median<=45,p90<=75	H	-
+l_hunt_2	line	line<=75; set median<=45,p90<=75	H	-
+c_pelt_bedding	card label	n/a	-	-
+up_pelt_bedding	upside label	n/a	-	-
+l_bedding_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_bedding_1	line	line<=75; set median<=45,p90<=75	-	-
+l_bedding_2	line	line<=75; set median<=45,p90<=75	-	-
+l_bedding_done	line	line<=75; set median<=45,p90<=75	-	l_bedding_3
+store_pelt_6h	store label	n/a	-	-
+action_pelt_6h	action label	n/a	-	-
+o_pelt	offer label	n/a	-	-
+l_pelt_ask	line	line<=75; set median<=45,p90<=75	-	-
+a_pelt_give	offer answer label	n/a	-	-
+a_pelt_give_cost	offer answer label	n/a	-	-
+a_pelt_keep	offer answer label	n/a	-	-
+a_pelt_keep_cost	offer answer label	n/a	-	-
+l_pelt_kept	line	line<=75; set median<=45,p90<=75	-	-
+c_give_pelt	card label	n/a	-	-
+l_give_pelt_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_pelt_given	line	line<=75; set median<=45,p90<=75	-	-
+store_day_7	store label	n/a	-	-
+action_day_7	action label	n/a	-	-
+store_night_7	store label	n/a	-	-
+action_night_7	action label	n/a	-	-
+l_night_7	line	line<=75; set median<=45,p90<=75	-	-
+c_sit_fire_7	card label	n/a	-	-
+l_sit_fire_7_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_g2_1	line	line<=75; set median<=45,p90<=75	H	-
+l_g2_2	line	line<=75; set median<=45,p90<=75	H	-
+l_g2_3	line	line<=75; set median<=45,p90<=75	H	-
+l_camp_12	line	line<=75; set median<=45,p90<=75	-	-
+dayend6_title	end card	n/a	-	-
+dayend6_1	end card	n/a	-	-
+dayend6_2	end card	n/a	-	-

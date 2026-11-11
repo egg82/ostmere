@@ -1,0 +1,9 @@
+[
+  {"kind": "caption", "text": ["Grey wolf - edge of the camp, 3rd night"]},
+  {"kind": "crossed", "required": true, "text": ["no. too dog. head is LOW"]},
+  {"kind": "study", "id": "paw", "required": true, "text": ["fore paw. 4 toes show"]},
+  {"kind": "study", "id": "eye", "required": true, "text": ["eyeshine green-gold"]},
+  {"kind": "label", "anchor": [104, 352], "text": ["nights only. 3-6 of them"]},
+  {"kind": "label", "anchor": [330, 330], "text": [{"t": "afraid of fire", "struck": true}, "not afraid of fire. patient"]},
+  {"kind": "label", "anchor": [452, 420], "text": ["took the goat first", {"t": "haven't come back for goat since", "later": true}]}
+]

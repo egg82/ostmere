@@ -1,0 +1,20 @@
+Gate mutants for the failover handling (docs/decisions.md, "A database failover is replayed once, or answered 503"),
+each applied alone and run against tests/db/test_failover.py and tests/db/test_writable.py (the vanish_ ones also
+against tests/db/test_silent_vanish.py, through tools/silent_vanish.sh). All must go red.
+
+no_check                 db/engine.py: the pool's check is psycopg's plain one, not refuse_read_only                    killed
+check_passes_read_only   db/writable.py: refuse_read_only accepts a connection the server reports read-only           killed
+no_discard               db/writable.py: a read-only connection is refused but left open, so the pool puts it back    killed
+replay_on_commit         db/failover.py: a request is replayed even after a write reached COMMIT                      killed
+no_replay                api/replay.py: a failover is answered 503 without running the request again                  killed
+limits_swallow           db/failover.py: let_through lets nothing through, so the limit counts answer 429              killed
+no_08_57P                db/failover.py: SQLSTATE class 57P (a terminated backend) is not a failover                    killed
+no_budget                db/engine.py: the pool's checkout waits its default 30 s (run with the timeout at 3 s)         killed
+no_drain                 db/writable.py: a refused read-only connection leaves the pool's other idle connections        killed
+no_connect_timeout       db/engine.py: no connect_timeout is added, so a host that drops packets holds each connect      killed
+connect_timeout_forced   db/engine.py: connect_timeout is set even when the URL sets one                                 killed
+no_tcp_settings          db/engine.py: TCP_SETTINGS are not added, so a query on a vanished server waits out the kernel (vanish_)     killed
+tcp_settings_forced      db/engine.py: TCP_SETTINGS replace a value the URL sets                                                      killed
+no_tcp_user_timeout      db/engine.py: tcp_user_timeout is dropped from TCP_SETTINGS (keepalives alone still end the vanish wait: unit test only) killed
+no_keepalives            db/engine.py: keepalives are off, so an idle connection to a vanished server is not noticed                  killed
+statement_timeout        db/engine.py: a 6 s statement_timeout is added beside the TCP settings, so a long healthy query dies (vanish_) killed

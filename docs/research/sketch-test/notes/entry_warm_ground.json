@@ -1,0 +1,6 @@
+[
+  {"kind": "study", "id": "section", "required": true, "text": ["side on"]},
+  {"kind": "study", "id": "stone", "text": ["ring stone"]},
+  {"kind": "label", "anchor": [300, 330], "text": ["hearth"]},
+  {"kind": "label", "anchor": [530, 330], "text": ["4 paces"]}
+]

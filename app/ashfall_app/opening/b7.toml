@@ -1,0 +1,576 @@
+# B7: A29 in night 6, the strip on the rack's hang, the story fight (A27) and the combat it opens: the hunt, the spear,
+# the poultice, the pests' standing fights, the hurt and its cure, Melee, the ramp's clock. Data merged after
+# day_five.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec:
+# content/team/days-four-to-seven.md, "B7"; numbers: content/team/days-four-to-seven-numbers.md, "Odds targets". In
+# schema.IN_WRITING until its lines are written (days-four-to-seven plan, item 8). Combat-plan item 8.
+version = 1
+end_feature = "combat"
+
+# ---------- A29, B7 ----------
+
+# On the cards with B6, as sit_up_5 with B5; tappable in night 6 once three have arrived (beats.yaml, B7's gate).
+[[triggers]]
+id = "t_bank_fire_open"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "arcana", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "bank_fire_6" }] }
+
+# A29, B7: bank the fire in night 6. Its finish starts the strip and its clock and moves the aim.
+[[cards]]
+id = "bank_fire_6"
+presentation = "narrative"
+label_key = "c_bank_fire_6"
+work_s = 5
+cap = 1
+glows = true
+failed_line_key = "l_bank_fire_6_fail"
+requires = [
+  { test = "at_least", subject_kind = "store", id = "night_6", value = 5 },
+  { test = "at_least", subject_kind = "store", id = "arrivals", value = 3 },
+]
+[cards.finished]
+line_keys = ["l_b7_1", "l_b7_2", "l_b7_3"]
+unlocks = [
+  { unlock_kind = "feature", id = "wolves" },
+  { unlock_kind = "action", id = "b7_clock" },
+  { unlock_kind = "action", id = "b7_strip" },
+  { unlock_kind = "action", id = "b7_strip_catch" },
+]
+
+# ---------- the strip ----------
+
+# Never unlocked: fifteen game seconds, in tenths. b7_clock's own action and both strips draw it, 2400 an hour while
+# all three run, so the strip ends by the clock whether or not the rack runs dry first. A paused runner makes and
+# costs nothing, so each store has its own strip: one dry store never holds the other's.
+[[stores]]
+id = "b7_clock"
+label_key = "store_b7_clock"
+cap_items = 10
+initial_items = 10
+
+[[standing]]
+id = "b7_clock"
+label_key = "action_b7_clock"
+costs = [{ store = "b7_clock", items_per_hour = 2200 }]
+
+# Each takes more than its store's full cap at B7 (smoked 27, catch 13) inside the clock, pausing at empty.
+[[standing]]
+id = "b7_strip"
+label_key = "action_b7_strip"
+costs = [{ store = "smoked", items_per_hour = 7200 }, { store = "b7_clock", items_per_hour = 100 }]
+
+[[standing]]
+id = "b7_strip_catch"
+label_key = "action_b7_strip"
+costs = [{ store = "catch", items_per_hour = 3600 }, { store = "b7_clock", items_per_hour = 100 }]
+
+# A27 opens with B7, so it is tapped in B7's visit. Its bar (20 s; the hands are only ever slowed) outlasts the strip's
+# clock (15 s), so the rack its lines find stripped is bare whenever it finishes.
+[[triggers]]
+id = "t_stand_open"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "wolves", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "b7_stand" }] }
+
+# A27: drive them off. A beat never rolls, so no fight table. Its finish opens combat and all of the week's fights.
+[[cards]]
+id = "b7_stand"
+presentation = "narrative"
+label_key = "c_b7_stand"
+work_s = 20
+cap = 1
+glows = true
+[cards.finished]
+line_keys = ["l_stand_1", "l_stand_2", "l_stand_3", "l_combat_first"]
+unlocks = [
+  { unlock_kind = "feature", id = "combat" },
+  { unlock_kind = "skill", id = "melee" },
+  { unlock_kind = "store", id = "pelt" },
+  { unlock_kind = "chip", id = "hurt" },
+  { unlock_kind = "card", id = "hunt_wolf" },
+  { unlock_kind = "card", id = "make_spear" },
+  { unlock_kind = "card", id = "poultice" },
+  { unlock_kind = "action", id = "rats" },
+  { unlock_kind = "action", id = "crows" },
+  { unlock_kind = "action", id = "heal" },
+  { unlock_kind = "action", id = "r1_clock" },
+]
+
+# ---------- sides and threats ----------
+
+[[sides]]
+id = "hands"
+label_key = "side_hands"
+base = 8
+
+[[sides]]
+id = "larder"
+label_key = "side_larder"
+base = 4
+
+[[sides]]
+id = "rack"
+label_key = "side_rack"
+base = 4
+
+[[threats]]
+id = "lone_wolf"
+label_key = "threat_lone_wolf"
+base = 4
+
+[[threats]]
+id = "ashrats"
+label_key = "threat_ashrats"
+base = 4
+
+[[threats]]
+id = "crows"
+label_key = "threat_crows"
+base = 4
+
+# The old man's mending (day_five.toml, n4_mend), held on the hands while it runs, at its share of his time.
+[while_running]
+n4_mend = [{ side = "hands", amount_bp = 2500 }]
+
+# Day three's cures, each an entry on its pest's side once built.
+[[triggers]]
+id = "t_floor_guard"
+when = { test = "at_least", subject_kind = "card_count", id = "larder_floor", value = 3 }
+outcome = { modifiers = [{ target = "side", id = "larder", kind = "add_bp", amount_bp = 30000, source = "larder_floor" }] }
+
+[[triggers]]
+id = "t_roof_guard"
+when = { test = "at_least", subject_kind = "card_count", id = "rack_roof", value = 2 }
+outcome = { modifiers = [{ target = "side", id = "rack", kind = "add_bp", amount_bp = 30000, source = "rack_roof" }] }
+
+# ---------- the hunt, the spear, the hurt and its cure ----------
+
+# Never drawn: what a lost hunt adds, shown by its chip. A drawn line would read as falling and uncovered while it heals.
+[[stores]]
+id = "hurt"
+label_key = "store_hurt"
+cap_items = 3
+
+[[stores]]
+id = "pelt"
+label_key = "store_pelt"
+cap_items = 12
+
+# Tallies: made only by their fight's lines, never unlocked; caps over a year of the fastest rate.
+[[stores]]
+id = "hunt_lost"
+label_key = "store_hunt_lost"
+cap_items = 40000
+
+[[stores]]
+id = "rats_fought"
+label_key = "store_rats_fought"
+cap_items = 10000
+
+[[stores]]
+id = "rats_lost"
+label_key = "store_rats_lost"
+cap_items = 10000
+
+[[stores]]
+id = "crows_fought"
+label_key = "store_crows_fought"
+cap_items = 10000
+
+[[stores]]
+id = "crows_lost"
+label_key = "store_crows_lost"
+cap_items = 10000
+
+# The hunt: uncapped on the hands, run in the mix; a won share brings the catch and a pelt, a lost one a hurt. Its
+# work divides one item's quantity units.
+[[cards]]
+id = "hunt_wolf"
+presentation = "action"
+label_key = "c_hunt_wolf"
+work_s = 1200
+skill = "melee"
+xp_per_hour = 2
+failed_line_key = "l_hunt_fail"
+inputs = [{ store = "smoked", items = 1 }]
+outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }] }
+fight = { side = "hands", threat = "lone_wolf", lost = "hunt_lost", wounds = [{ store = "hurt", items = 1 }], won_line_keys = ["l_fight_hunt_won_1", "l_fight_hunt_won_2", "l_fight_hunt_won_3"], lost_line_keys = ["l_fight_hunt_lost_1", "l_fight_hunt_lost_2", "l_fight_hunt_lost_3"] }
+
+[[cards]]
+id = "make_spear"
+presentation = "craft"
+label_key = "c_make_spear"
+upside_key = "up_make_spear"
+work_s = 600
+cap = 1
+failed_line_key = "l_spear_fail"
+inputs = [{ store = "scrap", items = 6 }, { store = "dry_wood", items = 4 }]
+[cards.finished]
+modifiers = [{ target = "side", id = "hands", kind = "add_bp", amount_bp = 15000, source = "make_spear" }]
+
+[[cards]]
+id = "poultice"
+presentation = "action"
+label_key = "c_poultice"
+work_s = 60
+failed_line_key = "l_poultice_fail"
+inputs = [{ store = "clay", items = 2 }, { store = "roots", items = 6 }]
+# Takes up to a whole stack of hurt, forgiven past what is there: one tap clears any level, and it can be tapped
+# whenever the chip shows (engine DESIGN.txt, "DRAINS").
+drains = [{ store = "hurt", items = 3 }]
+
+# The first poultice's line: an uncapped card's outcome holds stores only.
+[[triggers]]
+id = "t_poultice_first"
+when = { test = "at_least", subject_kind = "card_count", id = "poultice", value = 1 }
+outcome = { line_keys = ["l_poultice"] }
+
+# Heals one hurt every 4 h by itself.
+[[standing]]
+id = "heal"
+label_key = "action_heal"
+costs = [{ store = "hurt", items_per_hour = 1, every_hours = 4 }]
+
+[[chips]]
+id = "hurt"
+label_key = "chip_hurt"
+tone = "hurt"
+# Shows from a quarter hurt, the level the heal resumes at after pausing at 0, so it never shows with nothing healing
+# (engine DESIGN.txt, "DRAINS", KNOWN GAPS).
+when = { test = "at_least", subject_kind = "store", id = "hurt", value = 1, every = 4 }
+effects = [
+  { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 8500, source = "hurt" },
+  { target = "side", id = "hands", kind = "mul_bp", amount_bp = 7500, source = "hurt" },
+]
+cost_key = "chip_hurt_cost"
+on_line_key = "l_hurt"
+off_line_key = "l_healed"
+
+# ---------- the pests ----------
+
+[[standing]]
+id = "rats"
+label_key = "action_rats"
+fight = { side = "larder", threat = "ashrats", lost = "rats_lost", fought = "rats_fought", fights_per_hour = 1, loses = [{ store = "roots", items = 2 }], won_line_keys = ["l_fight_rats_won_1", "l_fight_rats_won_2", "l_fight_rats_won_3"], lost_line_keys = ["l_fight_rats_lost_1", "l_fight_rats_lost_2", "l_fight_rats_lost_3"] }
+
+[[standing]]
+id = "crows"
+label_key = "action_crows"
+fight = { side = "rack", threat = "crows", lost = "crows_lost", fought = "crows_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_crows_won_1", "l_fight_crows_won_2", "l_fight_crows_won_3"], lost_line_keys = ["l_fight_crows_lost_1", "l_fight_crows_lost_2", "l_fight_crows_lost_3"] }
+
+# ---------- the ramp's clock ----------
+
+# Never unlocked: game hours since combat opened. Week 1 has no ramp step; week 2's first step reads it.
+[[stores]]
+id = "r1_clock"
+label_key = "store_r1_clock"
+cap_items = 8760
+
+[[standing]]
+id = "r1_clock"
+label_key = "action_r1_clock"
+makes = [{ store = "r1_clock", items_per_hour = 1 }]
+
+# ---------- Melee ----------
+
+# The hunt is on the hands, so the mix drives Melee and its row is marked to the curve's top: from 6 each level the
+# hunt a tenth faster, as Cooking's from 11 (day_three.toml) and Arcana's from 9 (day_five.toml). Its pays on the
+# hands' strength are sourced by the skill, so the fight panel names them by its label.
+[[skills]]
+id = "melee"
+label_key = "skill_melee"
+levels = [
+  { level = 2, pays_key = "pays_hunt_side" },
+  { level = 3, pays_key = "pays_melee_find" },
+  { level = 4, pays_key = "pays_hunt_side" },
+  { level = 5, pays_key = "pays_hunt_faster" },
+  { level = 6, pays_key = "pays_hunt_faster" },
+  { level = 7, pays_key = "pays_hunt_faster" },
+  { level = 8, pays_key = "pays_hunt_faster" },
+  { level = 9, pays_key = "pays_hunt_faster" },
+  { level = 10, pays_key = "pays_hunt_faster" },
+  { level = 11, pays_key = "pays_hunt_faster" },
+  { level = 12, pays_key = "pays_hunt_faster" },
+  { level = 13, pays_key = "pays_hunt_faster" },
+  { level = 14, pays_key = "pays_hunt_faster" },
+  { level = 15, pays_key = "pays_hunt_faster" },
+  { level = 16, pays_key = "pays_hunt_faster" },
+  { level = 17, pays_key = "pays_hunt_faster" },
+  { level = 18, pays_key = "pays_hunt_faster" },
+  { level = 19, pays_key = "pays_hunt_faster" },
+  { level = 20, pays_key = "pays_hunt_faster" },
+  { level = 21, pays_key = "pays_hunt_faster" },
+  { level = 22, pays_key = "pays_hunt_faster" },
+  { level = 23, pays_key = "pays_hunt_faster" },
+  { level = 24, pays_key = "pays_hunt_faster" },
+  { level = 25, pays_key = "pays_hunt_faster" },
+]
+
+[[triggers]]
+id = "t_melee_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 2 }
+outcome = { modifiers = [{ target = "side", id = "hands", kind = "add_bp", amount_bp = 1000, source = "melee" }] }
+
+# A find: an older kill in the thorn.
+[[triggers]]
+id = "t_melee_3"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 3 }
+outcome = { stores = [{ store = "pelt", items = 1 }], line_keys = ["l_melee_3"] }
+
+[[triggers]]
+id = "t_melee_4"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 4 }
+outcome = { modifiers = [{ target = "side", id = "hands", kind = "add_bp", amount_bp = 1000, source = "melee" }] }
+
+[[triggers]]
+id = "t_melee_5"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 5 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_5" }] }
+
+[[triggers]]
+id = "t_melee_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 6 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_6" }] }
+
+[[triggers]]
+id = "t_melee_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 7 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_7" }] }
+
+[[triggers]]
+id = "t_melee_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 8 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_8" }] }
+
+[[triggers]]
+id = "t_melee_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 9 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_9" }] }
+
+[[triggers]]
+id = "t_melee_10"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 10 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_10" }] }
+
+[[triggers]]
+id = "t_melee_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_11" }] }
+
+[[triggers]]
+id = "t_melee_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_12" }] }
+
+[[triggers]]
+id = "t_melee_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_13" }] }
+
+[[triggers]]
+id = "t_melee_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_14" }] }
+
+[[triggers]]
+id = "t_melee_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_15" }] }
+
+[[triggers]]
+id = "t_melee_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_16" }] }
+
+[[triggers]]
+id = "t_melee_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_17" }] }
+
+[[triggers]]
+id = "t_melee_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_18" }] }
+
+[[triggers]]
+id = "t_melee_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_19" }] }
+
+[[triggers]]
+id = "t_melee_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_20" }] }
+
+[[triggers]]
+id = "t_melee_21"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 21 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_21" }] }
+
+[[triggers]]
+id = "t_melee_22"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 22 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_22" }] }
+
+[[triggers]]
+id = "t_melee_23"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 23 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_23" }] }
+
+[[triggers]]
+id = "t_melee_24"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 24 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_24" }] }
+
+[[triggers]]
+id = "t_melee_25"
+when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 25 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_25" }] }
+
+# ---------- the journal ----------
+
+# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
+[[entries]]
+id = "e_days_3"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_day_b7"
+entry = "e_days_3"
+gate = { test = "at_least", subject_kind = "card_count", id = "bank_fire_6", value = 1 }
+beat = "B7"
+
+# At B7's moment too, so it opens nothing of its own while away.
+[[notes]]
+id = "n_ground_2"
+entry = "e_warm_ground"
+gate = { test = "at_least", subject_kind = "card_count", id = "bank_fire_6", value = 1 }
+
+# ---------- features ----------
+
+[[features]]
+id = "wolves"
+
+[[features]]
+id = "combat"
+
+# ---------- aims ----------
+
+# After day five's aim_pair (feature pair_offer); stands until week 2's first.
+[[aims]]
+id = "aim_keep"
+text_key = "aim_keep"
+after = { unlock_kind = "feature", id = "wolves" }
+
+# ---------- text ----------
+
+[line_kinds]
+l_bank_fire_6_fail = "tap"
+l_b7_1 = "story"
+l_b7_2 = "story"
+l_b7_3 = "story"
+l_stand_1 = "story"
+l_stand_2 = "story"
+l_stand_3 = "story"
+l_hunt_fail = "tap"
+l_spear_fail = "tap"
+l_poultice_fail = "tap"
+l_melee_3 = "find"
+l_combat_first = "story"
+l_hurt = "body"
+l_healed = "body"
+l_poultice = "story"
+l_fight_hunt_won_1 = "fight"
+l_fight_hunt_lost_1 = "fight"
+l_fight_rats_won_1 = "fight"
+l_fight_rats_lost_1 = "fight"
+l_fight_crows_won_1 = "fight"
+l_fight_crows_lost_1 = "fight"
+l_fight_hunt_won_2 = "fight"
+l_fight_hunt_won_3 = "fight"
+l_fight_hunt_lost_2 = "fight"
+l_fight_hunt_lost_3 = "fight"
+l_fight_rats_won_2 = "fight"
+l_fight_rats_won_3 = "fight"
+l_fight_rats_lost_2 = "fight"
+l_fight_rats_lost_3 = "fight"
+l_fight_crows_won_2 = "fight"
+l_fight_crows_won_3 = "fight"
+l_fight_crows_lost_2 = "fight"
+l_fight_crows_lost_3 = "fight"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's B7 routes give each line its states and the writers' pick
+# lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
+# shipping release: replace each value, never the marker's spelling.
+c_bank_fire_6 = "Tend the fire"
+l_bank_fire_6_fail = "you leave the coals as they are."
+l_b7_1 = "low stars, out on the ash. some of them blink."
+l_b7_2 = "the line of them ends where the firelight does."
+l_b7_3 = "every face is turned out, away from the rack."
+store_b7_clock = "clock"
+action_b7_clock = "Clock"
+action_b7_strip = "Wolves"
+c_b7_stand = "Drive the wolves off"
+l_stand_1 = "you pull a brand and swing it at the nearest wolf."
+l_stand_2 = "it turns. the rest follow it out of the light."
+l_stand_3 = "behind you, the rack is bare to its poles."
+side_hands = "Hands"
+side_larder = "Larder"
+side_rack = "Drying wall"
+threat_lone_wolf = "Wolf"
+threat_ashrats = "Rats"
+threat_crows = "Crows"
+store_hurt = "hurt"
+store_pelt = "pelts"
+store_hunt_lost = "hunts lost"
+store_rats_fought = "rat fights"
+store_rats_lost = "rat fights lost"
+store_crows_fought = "crow fights"
+store_crows_lost = "crow fights lost"
+c_hunt_wolf = "Hunt wolves"
+l_hunt_fail = "no smoked meat to take out with you."
+c_make_spear = "Make a spear"
+up_make_spear = "{pct} hunting strength"
+l_spear_fail = "you lay the pieces out. no spear in them."
+c_poultice = "Make a poultice"
+l_poultice_fail = "nothing to bind, or nothing to bind it with."
+action_heal = "Healing"
+chip_hurt = "hurt"
+chip_hurt_cost = "{pct} hands speed, {pct_b} hunting strength"
+action_rats = "Rats"
+action_crows = "Crows"
+store_r1_clock = "clock"
+action_r1_clock = "Clock"
+skill_melee = "Melee"
+pays_hunt_side = "{pct} hunting strength"
+pays_melee_find = "a pelt"
+pays_hunt_faster = "{pct} hunting speed"
+l_melee_3 = "a wolf lies stiff under the thorn. you take the pelt."
+l_combat_first = "{n2} looks from his headless shaft to the thorn."
+l_hurt = "you favour one side and lift with the other."
+l_healed = "you reach with both arms and don't notice."
+l_poultice = "you mash roots into clay and press it on."
+l_fight_hunt_won_1 = "you skin the wolf and carry the meat home."
+l_fight_hunt_lost_1 = "the wolf is quicker. you walk back without it."
+l_fight_rats_won_1 = "the rats scatter. the rows of roots are whole."
+l_fight_rats_lost_1 = "gnawed ends in the dirt. the rows are thinner."
+l_fight_crows_won_1 = "you swing a cloth. the crows lift off the rack."
+l_fight_crows_lost_1 = "you wave an arm. the crows take their pick anyway."
+aim_keep = "keep what's left from the wolves."
+l_fight_hunt_won_2 = "the wolf's pelt goes up on stakes to dry."
+l_fight_hunt_won_3 = "you run the wolf down in the scrub."
+l_fight_hunt_lost_2 = "you close on the wolf. it's already past you."
+l_fight_hunt_lost_3 = "the wolf knocks you flat and is gone."
+l_fight_rats_won_2 = "you wedge a flat rock in the gap the rats use."
+l_fight_rats_won_3 = "a stick, a boot. the rats leave the roots be."
+l_fight_rats_lost_2 = "roots lie bitten through, the ends dragged away."
+l_fight_rats_lost_3 = "the rats tunnel under. the larder is lighter."
+l_fight_crows_won_2 = "a stone at the crows, and the strips hang untouched."
+l_fight_crows_won_3 = "the crows leave the rack and croak from the thorn."
+l_fight_crows_lost_2 = "black wings lift off a bare pole."
+l_fight_crows_lost_3 = "you retie what the crows pulled. fewer strips hang."
+n_day_b7 = "eyes past the firelight all night. counted them to pass the time. lost count. started again"
+n_ground_2 = "banked the fire on the warm ground. it keeps its coals there like nowhere else in camp"
+# ---------- end of lines ----------

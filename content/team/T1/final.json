@@ -1,0 +1,14 @@
+{
+  "lines": [
+    "the ruin has its walls. that is about all it has.",
+    "brown sky now. by evening, grey.",
+    "you reach for a name to answer to. nothing steps forward.",
+    "rock, rock, flint. your knuckles learn it first.",
+    "cold. the first spark dies in the damp wood.",
+    "the second spark takes. you feed it the driest sticks you have.",
+    "one more look inside, you decide. then another.",
+    "behind you, your fire is down to a red thread. the cold has found your back."
+  ],
+  "sources": ["B", "A", "A", "A", "A", "A", "B", "B"],
+  "canon_ids": ["C-beat-1", "C-beat-2", "C-world-13", "C-world-15", "C-world-34", "C-region-1", "C-region-3"]
+}

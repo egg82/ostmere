@@ -1,0 +1,19 @@
+beats whenever (pace_scale 1): B12 day 11.66, target_day 13
+  away V46->V47: 2 ['trigger t_bear_sign', 'trigger offer_o_spoil']
+  away V47->V48: 4 ['trigger t_b12', 'trigger t_lamps', 'trigger t_broth_open', 'trigger offer_o_shaft']
+  away V48->V49: 1 ['trigger offer_o_lean_to']
+  away V49->V50: 1 ['trigger offer_o_lye']
+  away V50->V51: 1 ['trigger offer_o_wet']
+  away V51->V52: 2 ['trigger t_sitter', 'trigger offer_o_sag']
+  away V52->V53: 0 []
+  away V53->V54: 3 ['trigger t_s4', 'trigger t_b13', 'trigger offer_o_sun_rack']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1      26      11       0       5       1      17       2     62
+  2      19       4       3       2       0       5       2     35
+  3      11       0       0       0       0       0       4     15
+  4      20       3       0       0       0       2       1     26
+  5      16       5       0       0       0      22       2     45
+  6      21       4       0       2       0       7       1     35
+  7       9       3       0       0       0       0       3     15
+  8       9       3       0       2       0       3       3     20

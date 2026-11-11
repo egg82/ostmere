@@ -1,0 +1,10 @@
+Gate mutants for the rebase and the release lock (engine DESIGN.txt, part SAVES ACROSS RELEASES), each applied alone
+and run against tests/engine/test_rebase_impl.py, tests/saves and tests/opening/test_released.py. All must go red.
+
+drop_unknown            rebase.py: an id the new rules lack is skipped instead of raising RebaseError     killed
+reset_fired             rebase.py: every trigger rebased unfired                                           killed
+store_cap_lowered       lock_checks.py: a lowered store cap passes                                         killed
+card_cap_lowered        lock_checks.py: a lowered card cap passes                                          killed
+renamed_trigger_missed  lock_checks.py: a released trigger compared by its old id, not through renames     killed
+
+The blind contract suite (tests/engine_contract/test_rebase.py) alone also kills drop_unknown and reset_fired.

@@ -1,0 +1,725 @@
+# Day nine: B9 through E1-E3, SL17 and SL18 to B10, the palisade's last stage and a save-time floor, as data merged
+# after day_eight.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec:
+# content/team/week-two.md, "Day nine"; numbers: content/team/week-two-numbers.md.
+version = 1
+end_feature = "skin_post"
+
+# ---------- the chapter's clock ----------
+
+# Never drawn: game hours since B9, for the chapter's steps. Opened on B9's feature, as the season's clock is on the
+# turn's.
+[[stores]]
+id = "b9_clock"
+label_key = "store_b9_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "b9_clock"
+label_key = "action_b9_clock"
+makes = [{ store = "b9_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_b9_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "b9", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "b9_clock" }] }
+
+# E1: two hours after B9.
+[[triggers]]
+id = "t_ring"
+when = { test = "at_least", subject_kind = "store", id = "b9_clock", value = 2 }
+outcome = { line_keys = ["l_ring_1", "l_ring_2"] }
+
+# ---------- the pack's step ----------
+
+# The pack's ramp step on the season's clock (combat's ramp idiom), at 208 h on every route. Not on r1_clock: the card
+# that opens combat unlocks its standing, so the ramp check counts it as made by a card.
+[[triggers]]
+id = "t_pack_step"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 40 }
+outcome = { modifiers = [{ target = "threat", id = "wolf_pack", kind = "add_bp", amount_bp = 2500, source = "t_pack_step" }] }
+
+# ---------- SL18: the gap fire ----------
+
+# Five hours after B9 (E1 + 3 h). Its stones are the palisade's: the comfort against the build.
+[[triggers]]
+id = "t_gap_fire"
+when = { test = "at_least", subject_kind = "store", id = "b9_clock", value = 5 }
+outcome = { line_keys = ["l_gap_fire_1"], unlocks = [{ unlock_kind = "card", id = "gap_fire" }] }
+
+[[cards]]
+id = "gap_fire"
+presentation = "craft"
+label_key = "c_gap_fire"
+upside_key = "up_gap_fire"
+work_s = 1200
+cap = 2
+failed_line_key = "l_gap_fire_fail"
+inputs = [{ store = "dry_wood", items = 6 }, { store = "stones", items = 8 }]
+line_keys = ["l_gap_fire_2", "l_gap_fire_done"]
+[cards.finished]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 2500, source = "gap_fire" }]
+
+# Run by its order card, as hide_flaps is, so no stage is queued (one queue entry a stage let a babysitter land it
+# ahead of a player who queues).
+[[order_cards]]
+store = "stones"
+tap_card = "gap_fire"
+when = { test = "at_least", subject_kind = "store", id = "stones", value = 8, release = 8 }
+offered_after = { unlock_kind = "card", id = "gap_fire" }
+
+# ---------- SL17: old wire on the track ----------
+
+# Seven hours after B9, two after the gap fire is shown; the wire it brings is the fourth snare's.
+[[triggers]]
+id = "t_old_wire"
+when = { test = "at_least", subject_kind = "store", id = "b9_clock", value = 7 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "gap_fire", value = 1 }]
+outcome = { line_keys = ["l_old_wire"], stores = [{ store = "wire", items = 2 }], unlocks = [{ unlock_kind = "card", id = "set_snare_4" }] }
+
+[[cards]]
+id = "set_snare_4"
+presentation = "narrative"
+label_key = "c_set_snare_4"
+work_s = 600
+cap = 1
+failed_line_key = "l_snare_4_fail"
+inputs = [{ store = "wire", items = 2 }, { store = "dry_wood", items = 2 }]
+[cards.finished]
+line_keys = ["l_snare_4"]
+unlocks = [{ unlock_kind = "action", id = "snare_4" }]
+
+[[standing]]
+id = "snare_4"
+label_key = "action_snare"
+makes = [{ store = "catch", items_per_hour = 1 }]
+
+# ---------- E2: the open side ----------
+
+# Half the ring up, once the gap fire burns (its first stage, so a visit after SL18 has passed) or a day after B9 for a
+# camp that never lights it: the visitor's idiom, a drain on the rack and the pelts with its own clock store, an hour
+# long, each store its own strip so one dry store never holds the other's. The strip's clock standing is what the two
+# gates unlock: it moves only its own unshown store, so it opens nothing to see, and requires reads unlocks.
+[[triggers]]
+id = "t_open_side_lit"
+when = { test = "at_least", subject_kind = "card_count", id = "gap_fire", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "e2_clock" }] }
+
+[[triggers]]
+id = "t_open_side_late"
+when = { test = "at_least", subject_kind = "store", id = "b9_clock", value = 24 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "e2_clock" }] }
+
+[[triggers]]
+id = "t_open_side"
+when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "e2_clock", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_open_side_1", "l_open_side_2"]
+stores = [{ store = "e2_clock", items = 12 }]
+unlocks = [
+  { unlock_kind = "action", id = "e2_clock" },
+  { unlock_kind = "action", id = "e2_strip" },
+  { unlock_kind = "action", id = "e2_strip_pelt" },
+  { unlock_kind = "action", id = "ask_wait" },
+]
+
+# Never drawn: the strip's hour, 12 an hour while all three run.
+[[stores]]
+id = "e2_clock"
+label_key = "store_e2_clock"
+cap_items = 12
+hidden = true
+
+[[standing]]
+id = "e2_clock"
+label_key = "action_e2_clock"
+costs = [{ store = "e2_clock", items_per_hour = 10 }]
+
+[[standing]]
+id = "e2_strip"
+label_key = "action_e2_strip"
+costs = [{ store = "smoked", items_per_hour = 6 }, { store = "e2_clock", items_per_hour = 1 }]
+
+[[standing]]
+id = "e2_strip_pelt"
+label_key = "action_e2_strip"
+costs = [{ store = "pelt", items_per_hour = 1 }, { store = "e2_clock", items_per_hour = 1 }]
+
+# ---------- the season's second chore: the wind at the hides ----------
+
+# The wind blows from the season's turn to its end: a pool the turn fills, drawn an hour at a time, as day eight's
+# ashfall draws drift_left (day eight has shipped, so the wind is this chapter's own standing).
+[[triggers]]
+id = "t_wind_rises"
+season = true
+when = { test = "after_time", value = 604800 }
+outcome = { stores = [{ store = "wind_left", items = 168 }], unlocks = [{ unlock_kind = "action", id = "wind" }] }
+
+# Never drawn: the season's hours of wind left.
+[[stores]]
+id = "wind_left"
+label_key = "store_wind_left"
+cap_items = 168
+hidden = true
+
+# Never drawn but by its cures: what the wind has torn loose, the face of the chip below.
+[[stores]]
+id = "wind_torn"
+label_key = "store_wind_torn"
+cap_items = 18
+
+[[standing]]
+id = "wind"
+label_key = "action_wind"
+costs = [{ store = "wind_left", items_per_hour = 1 }]
+makes = [{ store = "wind_torn", items_per_hour = 1 }]
+
+# The wind tears the flaps loose: pegging them again takes pelts, and stones to weigh the hems, by hand or by a rule
+# on n1's lane; left undone, the bays are draughty, a rest cost that stays small. Shown when it is due, on the season's
+# clock: the torn flaps are past the chip's 12 by then, so the chore and its rule arrive together, the same hour on
+# every route.
+[[triggers]]
+id = "t_wind"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 23 }
+outcome = { line_keys = ["l_wind"], unlocks = [{ unlock_kind = "chip", id = "draughty" }, { unlock_kind = "card", id = "peg_flaps" }, { unlock_kind = "card", id = "n1_peg_flaps" }] }
+
+[[chips]]
+id = "draughty"
+label_key = "chip_draughty"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "wind_torn", value = 12 }
+effects = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 9000, source = "draughty" }]
+cost_key = "chip_draughty_cost"
+on_line_key = "l_draughty"
+off_line_key = "l_draughty_off"
+
+[[cards]]
+id = "peg_flaps"
+presentation = "action"
+label_key = "c_peg_flaps"
+work_s = 120
+failed_line_key = "l_peg_fail"
+inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
+
+[[cards]]
+id = "n1_peg_flaps"
+lane = "n1"
+presentation = "action"
+label_key = "c_n1_peg_flaps"
+work_s = 1200
+failed_line_key = "l_peg_fail"
+inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
+
+# "When draughty, {n1} pegs the flaps again": the chore's suggested rule (ash_laden's shape on her lane).
+[[order_cards]]
+store = "wind_torn"
+tap_card = "n1_peg_flaps"
+chip = "draughty"
+when = { test = "at_least", subject_kind = "store", id = "wind_torn", value = 12 }
+offered_after = { unlock_kind = "card", id = "n1_peg_flaps" }
+
+# ---------- E3 ----------
+
+[[triggers]]
+id = "t_smoke"
+when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 9 }
+outcome = { line_keys = ["l_road_smoke_1", "l_road_smoke_2"] }
+
+# ---------- the camp's asks (content/team/week-two.md, "The asks") ----------
+
+# Small offers of no kind whose answers install modifiers or give stores, as SL6's: neither answer is judged. The
+# first lands on the palisade's second stage (day eight's stretch), the second with B9 (its gate and requires are
+# B9's, so they are one moment).
+[[offers]]
+id = "o_posts"
+text_key = "o_posts"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 2 }
+line_keys = ["l_posts"]
+
+[[offers.answers]]
+id = "o_posts_cord"
+label_key = "a_posts_cord"
+cost_key = "a_posts_cord_cost"
+[offers.answers.outcome]
+modifiers = [{ target = "rate", id = "n4_cord", flow = "make", store = "cord", kind = "mul_bp", amount_bp = 12500, source = "o_posts_cord" }]
+
+[[offers.answers]]
+id = "o_posts_fire"
+label_key = "a_posts_fire"
+cost_key = "a_posts_fire_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "posts_fire" }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "posts_fire" }]
+
+[[offers]]
+id = "o_margin"
+text_key = "o_margin"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_ashrat", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_crow", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "wolves", value = 1 },
+]
+
+[[offers.answers]]
+id = "o_margin_gap"
+label_key = "a_margin_gap"
+cost_key = "a_margin_gap_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "margin_watch" }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 2500, source = "margin_watch" }]
+
+[[offers.answers]]
+id = "o_margin_fire"
+label_key = "a_margin_fire"
+cost_key = "a_margin_fire_cost"
+[offers.answers.outcome]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_margin_fire" }]
+
+# From E2, the asks while the ring goes up. The first comes with E2 (its gate and requires are E2's, so they are one
+# moment); each later one on a stage of the ring and after the last is answered, so they come in order at the pace the
+# ring is built. The answers still fill the hidden countdown below (a locked outcome); no gate reads it now.
+[[stores]]
+id = "ask_wait"
+label_key = "store_ask_wait"
+cap_items = 24
+hidden = true
+
+[[standing]]
+id = "ask_wait"
+label_key = "action_ask_wait"
+costs = [{ store = "ask_wait", items_per_hour = 2 }]
+
+[[offers]]
+id = "o_rack"
+text_key = "o_rack"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "e2_clock", value = 1 }]
+
+[[offers.answers]]
+id = "o_rack_high"
+label_key = "a_rack_high"
+cost_key = "a_rack_high_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 12500, source = "o_rack_high" }]
+
+[[offers.answers]]
+id = "o_rack_down"
+label_key = "a_rack_down"
+cost_key = "a_rack_down_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "smoked", items = 6 }]
+
+[[offers]]
+id = "o_deep"
+text_key = "o_deep"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 7 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_rack", value = 1 }]
+
+[[offers.answers]]
+id = "o_deep_sink"
+label_key = "a_deep_sink"
+cost_key = "a_deep_sink_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "posts_deep" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [
+  { target = "side", id = "gap", kind = "add_bp", amount_bp = 2500, source = "posts_deep" },
+  { target = "rate", id = "n2_stakes", flow = "make", store = "stakes", kind = "mul_bp", amount_bp = 9000, source = "posts_deep" },
+]
+
+[[offers.answers]]
+id = "o_deep_pace"
+label_key = "a_deep_pace"
+cost_key = "a_deep_pace_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+
+[[offers]]
+id = "o_bark"
+text_key = "o_bark"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_deep", value = 1 }]
+
+[[offers.answers]]
+id = "o_bark_tinder"
+label_key = "a_bark_tinder"
+cost_key = "a_bark_tinder_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 9000, source = "o_bark_tinder" }]
+
+[[offers.answers]]
+id = "o_bark_cord"
+label_key = "a_bark_cord"
+cost_key = "a_bark_cord_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "cord", items = 4 }]
+
+[[offers]]
+id = "o_footing"
+text_key = "o_footing"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 9 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_bark", value = 1 }]
+
+[[offers.answers]]
+id = "o_footing_hearth"
+label_key = "a_footing_hearth"
+cost_key = "a_footing_hearth_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_footing_hearth" }]
+
+[[offers.answers]]
+id = "o_footing_keep"
+label_key = "a_footing_keep"
+cost_key = "a_footing_keep_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
+
+[[offers]]
+id = "o_fed"
+text_key = "o_fed"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 10 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_footing", value = 1 }]
+
+[[offers.answers]]
+id = "o_fed_watch"
+label_key = "a_fed_watch"
+cost_key = "a_fed_watch_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "watch_fed" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [
+  { target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "watch_fed" },
+  { target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 9500, source = "watch_fed" },
+]
+
+[[offers.answers]]
+id = "o_fed_pot"
+label_key = "a_fed_pot"
+cost_key = "a_fed_pot_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+
+[[offers]]
+id = "o_lookout"
+text_key = "o_lookout"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 10 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_fed", value = 1 }]
+
+[[offers.answers]]
+id = "o_lookout_up"
+label_key = "a_lookout_up"
+cost_key = "a_lookout_up_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "lookout" }]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [
+  { target = "side", id = "gap", kind = "add_bp", amount_bp = 1500, source = "lookout" },
+  { target = "rate", id = "n2_stakes", flow = "make", store = "stakes", kind = "mul_bp", amount_bp = 9500, source = "lookout" },
+]
+
+[[offers.answers]]
+id = "o_lookout_wall"
+label_key = "a_lookout_wall"
+cost_key = "a_lookout_wall_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+
+[[offers]]
+id = "o_gate"
+text_key = "o_gate"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 11 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_lookout", value = 1 }]
+
+[[offers.answers]]
+id = "o_gate_road"
+label_key = "a_gate_road"
+cost_key = "a_gate_road_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_gate_road"]
+
+[[offers.answers]]
+id = "o_gate_track"
+label_key = "a_gate_track"
+cost_key = "a_gate_track_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+modifiers = [{ target = "rate", id = "field_track", flow = "cost", store = "roots", kind = "mul_bp", amount_bp = 9000, source = "o_gate_track" }]
+
+[[offers]]
+id = "o_skin"
+text_key = "o_skin"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_gate", value = 1 }]
+
+[[offers.answers]]
+id = "o_skin_post"
+label_key = "a_skin_post"
+cost_key = "a_skin_post_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "feature", id = "skin_post" }]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, source = "skin_post" }]
+
+[[offers.answers]]
+id = "o_skin_flaps"
+label_key = "a_skin_flaps"
+cost_key = "a_skin_flaps_cost"
+[offers.answers.outcome]
+stores = [{ store = "pelt", items = 1 }]
+
+# ---------- the days page ----------
+
+# The days page for B9 and B10: each note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL"). B9's trigger
+# is day eight's t_b9, so the note takes its condition.
+[[entries]]
+id = "e_days_4"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_day_b9"
+entry = "e_days_4"
+gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_ashrat", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_crow", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "wolves", value = 1 },
+]
+beat = "B9"
+
+# ---------- B10: the ring closed ----------
+
+# B10 on the last stage, as the ring's closing, so they are one moment. t_b10_floor and its clock are a released floor
+# nothing reads now (Q4: a sharp route may lead).
+[[triggers]]
+id = "t_ring_closed"
+when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "ring_closed" }] }
+
+[[triggers]]
+id = "t_b10_floor"
+when = { test = "after_time", value = 756000 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "b10_floor" }] }
+
+# Never drawn: hours past the floor.
+[[stores]]
+id = "b10_floor"
+label_key = "store_b10_floor"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "b10_floor"
+label_key = "action_b10_floor"
+makes = [{ store = "b10_floor", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_b10"
+when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+outcome = { line_keys = ["l_b10_1", "l_b10_2", "l_b10_3"], unlocks = [{ unlock_kind = "feature", id = "safety" }] }
+
+[[notes]]
+id = "n_day_b10"
+entry = "e_days_4"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+beat = "B10"
+
+# The crows' second note, written once the ring is closed.
+[[notes]]
+id = "n_crow_2"
+entry = "e_crow"
+gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
+hand = "ink"
+
+# ---------- the Camp ----------
+
+# Day eight's held marker filled in, lifted by the palisade's last stage.
+[[camp_levels]]
+at_items = 1600000
+pays_key = "camp_pays_14"
+pays_from = 27
+pays_to = 36
+held = true
+lifted_by = ["palisade"]
+line_keys = ["l_camp_14"]
+modifiers = [{ target = "cap", id = "stew", kind = "mul_bp", amount_bp = 13334, source = "camp_14" }]
+
+# Held at a "?" past the chapter, a goal on screen.
+[[camp_levels]]
+at_items = 2100000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- features ----------
+
+[[features]]
+id = "ring_closed"
+
+[[features]]
+id = "safety"
+
+[[features]]
+id = "posts_fire"
+label_key = "feature_posts_fire"
+
+[[features]]
+id = "margin_watch"
+label_key = "feature_margin_watch"
+
+[[features]]
+id = "posts_deep"
+label_key = "feature_posts_deep"
+
+[[features]]
+id = "lookout"
+label_key = "feature_lookout"
+
+[[features]]
+id = "watch_fed"
+label_key = "feature_watch_fed"
+
+[[features]]
+id = "skin_post"
+label_key = "feature_skin_post"
+
+# ---------- text ----------
+
+[line_kinds]
+l_ring_1 = "story"
+l_ring_2 = "story"
+l_gap_fire_1 = "story"
+l_gap_fire_fail = "tap"
+l_gap_fire_2 = "story"
+l_gap_fire_done = "story"
+l_old_wire = "find"
+l_snare_4_fail = "tap"
+l_snare_4 = "story"
+l_open_side_1 = "find"
+l_open_side_2 = "find"
+l_road_smoke_1 = "story"
+l_road_smoke_2 = "story"
+l_b10_1 = "story"
+l_b10_2 = "story"
+l_b10_3 = "story"
+l_wind = "story"
+l_draughty = "body"
+l_draughty_off = "body"
+l_peg_fail = "tap"
+l_camp_14 = "level"
+l_posts = "story"
+l_gate_road = "story"
+
+[text]
+# ---------- lines: [day two: line to write] ----------
+# Every key below is a placeholder until the simulator's day-nine routes give each line its states and the writers'
+# pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
+# release: replace each value, never the marker's spelling.
+store_b9_clock = "clock"
+action_b9_clock = "Clock"
+l_ring_1 = "lucy scores the ash round the whole camp, back to her start."
+l_ring_2 = "she looks at the stakes, then along the line, and cuts."
+l_gap_fire_1 = "the watch fire gets a bed in the gap, edged with stones."
+c_gap_fire = "Build up the gap fire"
+up_gap_fire = "{pct} strength at the gap"
+l_gap_fire_fail = "the watch fire needs more than the pile has."
+l_gap_fire_2 = "dry wood is laid inside the stone edge."
+l_gap_fire_done = "stones close around the watch fire in the gap."
+l_old_wire = "old wire on a stake. your fingers undo its knot without looking."
+c_set_snare_4 = "Set a snare"
+l_snare_4_fail = "the snare doesn't come together with what's in the pile."
+l_snare_4 = "the rusted wire is straightened and staked."
+l_open_side_1 = "the pack comes by the side with no posts. it makes no sound."
+l_open_side_2 = "bare low rows. drag marks from a pelt's pegs into the scrub."
+store_e2_clock = "clock"
+action_e2_clock = "Clock"
+action_e2_strip = "Losses"
+l_road_smoke_1 = "from the ridge, smoke on the road beyond. not one fire, several."
+l_road_smoke_2 = "the fires on the road edge toward the valley."
+l_b10_1 = "the last post is lashed. a gate of stakes closes the ring."
+l_b10_2 = "at the gate: a woman, her husband, her brother, a space between them."
+l_b10_3 = "the man who came with them stops behind the others."
+n_day_b9 = "the wolf page had a line in the margin i could not place. the letters were mine, or near enough"
+n_day_b10 = "one more post made the fence whole. people stood at the gate. i let them in, not sure what it was for"
+n_crow_2 = "followed the numbers out loud to the end of one run. i think theirs went higher than the camp does"
+l_wind = "warm wind has pulled the bay flaps loose."
+store_wind_left = "hours left"
+store_wind_torn = "torn flaps"
+action_wind = "Wind"
+chip_draughty = "draughty"
+chip_draughty_cost = "{pct} rest recovery"
+l_draughty = "air slips through the bays where the flaps lift."
+l_draughty_off = "the flap hems are weighted down."
+c_peg_flaps = "Peg the flaps down"
+c_n1_peg_flaps = "Peg the flaps down"
+l_peg_fail = "the hems cannot be pinned with what is there."
+camp_pays_14 = "stew holds {to}, was {from}"
+l_camp_14 = "the pot rides lower on its hook, fuller than it was."
+store_b10_floor = "clock"
+action_b10_floor = "Clock"
+store_ask_wait = "clock"
+action_ask_wait = "Clock"
+o_posts = "The first stretch holds. {n4} flexes raw hands."
+l_posts = "{n4} binds the first stretch with his own wet cord."
+a_posts_cord = "He twists cord"
+a_posts_cord_cost = "{pct} cord from {n4}"
+a_posts_fire = "He sits the watch"
+a_posts_fire_cost = "{pct} gap strength"
+o_margin = "The margin note marks the gap."
+a_margin_gap = "They watch the gap"
+a_margin_gap_cost = "{pct} gap strength"
+a_margin_fire = "They watch the fire"
+a_margin_fire_cost = "{pct} rest"
+o_rack = "{n3} gathers the scraps the pack left."
+a_rack_high = "She hangs them high"
+a_rack_high_cost = "{pct} smoked meat kept"
+a_rack_down = "She smokes them now"
+a_rack_down_cost = "smoked meat now"
+o_deep = "{n2} finds soft ground on the low side."
+a_deep_sink = "He sinks them deeper"
+a_deep_sink_cost = "{pct} gap strength, {pct_b} stakes from {n2}"
+a_deep_pace = "He keeps the pace"
+a_deep_pace_cost = "nothing"
+o_bark = "Stripped bark piles up where Lucy cuts stakes."
+a_bark_tinder = "She dries it"
+a_bark_tinder_cost = "{pct} wood on the fire"
+a_bark_cord = "She twists it"
+a_bark_cord_cost = "cord now"
+o_footing = "{n4} keeps turning up stones as he digs the footings."
+a_footing_hearth = "He builds a hearth"
+a_footing_hearth_cost = "{pct} rest"
+a_footing_keep = "He piles the stones"
+a_footing_keep_cost = "stones now"
+o_fed = "{n3} pauses at the pot. The watch at the gap eats cold."
+a_fed_watch = "She carries a bowl out"
+a_fed_watch_cost = "{pct} gap strength, {pct_b} stew"
+a_fed_pot = "She keeps the pot here"
+a_fed_pot_cost = "nothing"
+feature_watch_fed = "watch fed from the pot"
+o_lookout = "The stacked stakes give {n2} a lookout over the road."
+a_lookout_up = "He climbs the stakes"
+a_lookout_up_cost = "{pct} gap strength, {pct_b} stakes from {n2}"
+a_lookout_wall = "He stays below"
+a_lookout_wall_cost = "nothing"
+o_gate = "Lucy has the gate marked out but not its facing."
+a_gate_road = "She faces it to the road"
+a_gate_road_cost = "nothing"
+a_gate_track = "She faces it to the track"
+a_gate_track_cost = "{pct} roots on the track"
+l_gate_road = "the gate's place is marked in the ash, facing the road."
+o_skin = "{n2} scrapes down a heavy wolf skin."
+a_skin_post = "He nails it by the gap"
+a_skin_post_cost = "{pct} gap strength"
+a_skin_flaps = "He adds it to the flaps"
+a_skin_flaps_cost = "a pelt"
+feature_posts_fire = "{n4} on watch"
+feature_margin_watch = "watch at the marked place"
+feature_posts_deep = "deep posts"
+feature_lookout = "lookout on the stakes"
+feature_skin_post = "wolf skin on the posts"
+# ---------- end of lines ----------

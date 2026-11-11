@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ashfall: set a ledger line</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=Alegreya+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#d9894a}a:hover{color:#f0a868}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #0a090a; color: #d8d0c4; font-family: 'Alegreya Sans', sans-serif; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden">
+
+  <div style="padding: 16px; opacity: 0.35; display: flex; flex-direction: column; gap: 10px" aria-hidden="true">
+    <div style="font-family: 'IM Fell English SC', serif; font-size: 22px; color: #e8dfd2">Mix: Study</div>
+    <div style="height: 8px; border-radius: 4px; background: #2a2427"></div>
+    <div style="height: 8px; border-radius: 4px; background: #2a2427"></div>
+    <div style="height: 8px; border-radius: 4px; background: #2a2427"></div>
+  </div>
+
+  <section aria-label="Candles" style="background: #19161a; border-top: 1px solid #3a3236; border-radius: 14px 14px 0 0; padding: 10px 16px 20px; display: flex; flex-direction: column; gap: 16px">
+    <div style="width: 40px; height: 4px; border-radius: 2px; background: #3a3236; align-self: center"></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <h2 style="margin: 0; font-family: 'IM Fell English SC', serif; font-weight: 400; font-size: 24px; color: #e8dfd2">Candles</h2>
+      <span style="font-size: 14px"><span style="color: #d9a066; font-weight: 700">−4/h</span><span style="color: #9a9187"> · 28 in store · 7 h left</span></span>
+    </div>
+
+    <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px">
+      <legend style="font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9a9187; padding: 0; margin-bottom: 8px">Target</legend>
+      <label style="min-height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border: 1px solid #2c2629; border-radius: 6px; background: #121012; cursor: pointer">
+        <input type="radio" name="target" value="steady" style="accent-color: #c8743a; width: 18px; height: 18px">
+        <span>Hold</span>
+      </label>
+      <label style="min-height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border: 1px solid #6b3f22; border-radius: 6px; background: #2a1b14; cursor: pointer">
+        <input type="radio" name="target" value="until" checked style="accent-color: #c8743a; width: 18px; height: 18px">
+        <span style="flex-grow: 1">Last until</span>
+        <input type="time" value="18:00" aria-label="Last until" style="min-height: 36px; background: #121012; color: #e8dfd2; border: 1px solid #3a3236; border-radius: 6px; padding: 0 8px; font: 15px 'Alegreya Sans', sans-serif">
+      </label>
+      <label style="min-height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border: 1px solid #2c2629; border-radius: 6px; background: #121012; cursor: pointer">
+        <input type="radio" name="target" value="drain" style="accent-color: #c8743a; width: 18px; height: 18px">
+        <span>Run down</span>
+      </label>
+    </fieldset>
+
+    <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px">
+      <legend style="font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9a9187; padding: 0; margin-bottom: 8px">Adjust</legend>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap">
+        <label style="min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid #6b3f22; border-radius: 6px; background: #2a1b14; color: #f0b27a; cursor: pointer">
+          <input type="radio" name="by" checked style="accent-color: #c8743a">Scavenging
+        </label>
+        <label style="min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid #2c2629; border-radius: 6px; background: #121012; cursor: pointer">
+          <input type="radio" name="by" style="accent-color: #c8743a">Arcana: study
+        </label>
+        <label style="min-height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid #2c2629; border-radius: 6px; background: #121012; cursor: pointer">
+          <input type="radio" name="by" style="accent-color: #c8743a">Add Tallow-making
+        </label>
+      </div>
+    </fieldset>
+
+    <div style="border-top: 1px solid #2c2629; padding-top: 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 6px 10px; font-size: 14px; align-items: baseline">
+      <span style="color: #9a9187">Scavenging</span><span style="color: #9a9187">25%</span><span style="color: #9a9187">→</span><span style="color: #e2d9cc">29%</span>
+      <span style="color: #9a9187">Arcana: study</span><span style="color: #9a9187">40%</span><span style="color: #9a9187">→</span><span style="color: #e2d9cc">36%</span>
+      <span style="color: #9a9187">Knowledge</span><span style="color: #9a9187">+18/h</span><span style="color: #9a9187">→</span><span style="color: #e2d9cc">+16/h</span>
+      <span style="color: #9a9187">Runs</span><span style="color: #9a9187">7 h</span><span style="color: #9a9187">→</span><span style="color: #e2d9cc">until 18:00</span>
+    </div>
+
+    <div style="display: flex; gap: 8px">
+      <a href="Mix.dc.html" style="flex: 1; min-height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #3a3236; color: #d8d0c4; text-decoration: none; font-weight: 500">Cancel</a>
+      <a href="Mix.dc.html" style="flex: 2; min-height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #c8743a; background: #c8743a; color: #1a1009; text-decoration: none; font-weight: 700">Apply</a>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+key	reason
+l_scrap_ask	not true in a state: SL4 lands before K4's first scrap on the sharp and babysitter routes, so the line no longer names a scrap pile
+l_field_2	a name used two ways: the track's runs were called "the walk" here; the card is "Run the track"
+l_hearth_done	not true in a state: it shows when the fourth course is laid, still wet, so not "finished"; and its sitting turn pre-empted B5's
+lane_n2_named	label: no name slot exists (lead-picks, l_join_2), so his lane keeps "His hands" after K5
+a_bank_hers_cost	label: answer costs fill only {d} and text holds no digit, so the o_bank effects are words, not figures
+a_bank_his_cost	label: as a_bank_hers_cost

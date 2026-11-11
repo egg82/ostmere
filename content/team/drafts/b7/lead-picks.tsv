@@ -1,0 +1,34 @@
+key	source	why
+l_bank_fire_6_fail	rewrite	A's idea, names no store (the card has no inputs); off the card's own label wording
+l_b7_1	edit	B_alt's stars, set on the ash; off the light word the next line uses and a shipped in-the-ash
+l_b7_2	edit	B_alt less its extra word; holds the edge without the ring or none-come-in shape
+l_b7_3	rewrite	the stores field, left to the reader; no wood on a banked fire, no shipped piles-on-wood shape
+l_stand_1	edit	A and B's line, cut; names the wolf, since it shows a visit after l_b7_1..3
+l_stand_2	edit	B's pack following the turned one, shorter
+l_stand_3	edit	B's one stroke, loss last, without the brief's word
+l_hunt_fail	edit	C, true whatever the meat is for, cut
+l_spear_fail	A	true whichever input is short; no day five pile
+l_poultice_fail	A	covers a missing hurt and missing stuff
+l_melee_3	rewrite	the find pays a pelt, so the player takes it (A and C read as already taken); stiff carries the age; off the brief's fact wording
+l_combat_first	rewrite	no draft was true before make_spear; the unmade spear and the hunt by implication, he not the slot (the design names no one)
+l_hurt	edit	C's favouring, in the hands; no anyway the crows pool uses
+l_healed	edit	C's both arms, without naming the hurt; pairs with l_hurt
+l_poultice	rewrite	A's hands, shorter, not opening on the fact list
+l_fight_hunt_won_1	edit	C_2's skinning, wolf named, off melee_3's thorn
+l_fight_hunt_lost_1	edit	B, plain and spearless
+l_fight_rats_won_1	C	the larder's rows
+l_fight_rats_lost_1	C	C_3; shows the loss, no brief phrase
+l_fight_crows_won_1	edit	A, cut
+l_fight_crows_lost_1	edit	A's dry anyway, no strips the pool's third line uses
+l_fight_hunt_won_2	rewrite	the pelt as a way of life; no spear, a shape apart from carrying
+l_fight_hunt_won_3	rewrite	spearless, daytime-safe, no dwelling on the death
+l_fight_hunt_lost_2	edit	A_2, naming the wolf so it stands alone
+l_fight_hunt_lost_3	edit	C_2's knock-down, the hurt unsaid, cut
+l_fight_rats_won_2	edit	A_3's hands, rats named
+l_fight_rats_won_3	edit	A_2's brisk opening, no sacks or broom
+l_fight_rats_lost_2	rewrite	what is short, shown; no brief phrase
+l_fight_rats_lost_3	rewrite	the larder by its shipped name; no time word, no brief phrase
+l_fight_crows_won_2	edit	A_2's stone, crows named; the strips hang, not the rack
+l_fight_crows_won_3	edit	C_3, crows named so it stands alone
+l_fight_crows_lost_2	B	B_2's wings and bare pole, without the time phrase
+l_fight_crows_lost_3	edit	A_3, crows named

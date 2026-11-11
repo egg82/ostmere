@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0e10">
+<title>The Breaking of Ostmere</title>
+<meta name="description" content="The world ended. The chores didn't.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Breaking of Ostmere">
+<meta property="og:title" content="The Breaking of Ostmere">
+<meta property="og:url" content="https://ostmere.yggdrasil.pub/">
+<meta property="og:description" content="The world ended. The chores didn't.">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A campfire burning at night among ruined walls, under the title The Breaking of Ostmere.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<script>
+// A deploy rolls with two builds serving at once, so this page may come from one and its bundle be asked of the other,
+// which answers 404 (the bundle's path names its build). The first failure reloads after two seconds, when one build is
+// likely serving everything; after that a visible tab tries again every thirty seconds until a boot completes (the roll
+// is over). main.ts clears the mark once a page has loaded whole. (habits' app/static/index.html.)
+function bootFailed() {
+  if (window.ashfallBootFailed) return;
+  window.ashfallBootFailed = true;
+  var first = false;
+  try { first = sessionStorage.getItem("ashfall.boot.reloaded") !== "1"; if (first) sessionStorage.setItem("ashfall.boot.reloaded", "1"); } catch (_) { first = false; }
+  var again = function () {
+    if (document.visibilityState !== "visible") { setTimeout(again, 30000); return; }
+    fetch(location.href, { cache: "no-store" }).then(function (r) { if (r.ok) location.reload(); else setTimeout(again, 30000); },
+                                                     function () { setTimeout(again, 30000); });
+  };
+  setTimeout(again, first ? 2000 : 30000);
+}
+</script>
+<!-- The game (app/client/, bundled by CI into ashfall_app/build/client and served at /build/<build>/; the server
+     writes its build into these two paths at start). -->
+<link rel="stylesheet" href="/build/{{build}}/game.css" onerror="bootFailed()">
+<script type="module" src="/build/{{build}}/game.js" onerror="bootFailed()"></script>
+<style>
+  :root { --night: #0d0e10; }
+  html, body { margin: 0; background: var(--night); }
+  body { overflow-x: hidden; overflow-y: auto; }   /* the front page scrolls where it is taller than the window (a phone on its side); the game scrolls itself */
+  body.playing { overflow: hidden; }
+</style>
+</head>
+<body>
+<!-- The front page (src/front.css, src/begin.ts): the game's own scene over a strip of story lines and the panel. -->
+<main id="front">
+  <div id="stage"><span id="ledger" aria-hidden="true"></span><aside id="rail" hidden></aside></div>
+  <div class="front-strip"><ul id="log" aria-live="polite"></ul></div>
+  <div class="front-panel">
+    <div class="front-in">
+      <div>
+        <h1>The Breaking of Ostmere</h1>
+        <p id="sub"></p>
+      </div>
+      <div class="front-acts">
+        <div class="front-row"><button id="begin" type="button" data-continue="Continue" hidden>Begin</button></div>
+        <div id="keep"></div>
+        <p id="limited" hidden>Too many new games from here just now. Try again in a while.</p>
+        <p id="framed" hidden><span id="framed-text"></span> <a id="framed-link"></a></p>
+        <!-- Joining this browser to a game played elsewhere (app/client/src/begin.ts): a code, its link, or recovery words. -->
+        <div id="have" hidden>
+          <details id="have-code">
+            <summary>I have a code</summary>
+            <form id="join-code-form" class="have-form">
+              <label><span>Code from your other device</span><input id="join-code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="200"></label>
+              <button type="submit">Join</button>
+            </form>
+          </details>
+          <details id="have-words">
+            <summary>I have recovery words</summary>
+            <form id="join-words-form" class="have-form">
+              <input class="sr" type="text" autocomplete="username" value="Ostmere" readonly tabindex="-1" aria-hidden="true">
+              <label><span>Your four recovery words</span><input id="join-words" type="password" autocomplete="current-password" maxlength="200"></label>
+              <button type="submit">Join</button>
+            </form>
+          </details>
+          <!-- a refused join's line: the game sheet's own text (Content's ui.devices.*), filled in by begin.ts; this one only
+               when the content cannot be fetched either, worded as ui.devices.away -->
+          <p id="join-said" class="have-line" hidden data-away="Can't reach the server. Try again in a moment."></p>
+        </div>
+      </div>
+      <div class="front-foot">
+        <details id="dev" aria-label="Development log">
+          <summary class="head">alpha · build <span id="build">…</span></summary>
+          <div class="dev-body">
+            <div id="status"></div>
+            <div class="commits" id="commits" hidden></div>
+          </div>
+        </details>
+        <a id="privacy" href="/privacy" target="_blank" rel="noopener">Privacy</a>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+"use strict";
+
+// The story strip: the newest line bright, the one before it dimmer.
+const LINES = [
+  "the grey comes down all day, and nobody sweeps it.",
+  "a dead birch. it snaps where you bend it.",
+  "everything here is wet through, you included.",
+  "the nail sparks against the stone. the wood won't catch.",
+  "you count the sticks left. not enough for the night.",
+  "you sit close. your back stays cold.",
+];
+
+// The dev log: the game is being built, and these say how far along it is. Real commits come from /changes.
+const STATUS = [
+  ["ok", "campfire: lit. still one (1). no known issues"],
+  ["ok", "dead trees: several now. all dead, as designed"],
+  ["wip", "person by the fire: up and working. personality pending"],
+  ["warn", "the grey stuff falling is ash. please don't file it"],
+  ["wip", "the first two weeks: playable. the rest: pending"],
+  ["ok", "your game: kept on the server now. reload at will"],
+];
+
+function startLog() {
+  const log = document.getElementById("log");
+  let i = 0;
+  const next = () => {
+    const p = document.createElement("li");
+    p.textContent = LINES[i % LINES.length];
+    p.className = "line-new";
+    log.appendChild(p);
+    while (log.children.length > 2) log.firstElementChild.remove();
+    i += 1;
+  };
+  next();
+  next();
+  setInterval(next, 6500);
+}
+
+function text(tag, cls, s) {
+  const el = document.createElement(tag);
+  if (cls) el.className = cls;
+  el.textContent = s;
+  return el;
+}
+
+function startDevLog() {
+  const status = document.getElementById("status");
+  for (const [tag, line] of STATUS) {
+    const row = document.createElement("div");
+    row.append(text("span", `tag ${tag}`, `[${tag}]`), " ", line);
+    status.append(row);
+  }
+  fetch("/healthz").then((r) => r.json()).then((h) => { document.getElementById("build").textContent = h.version; })
+    .catch(() => { document.getElementById("build").textContent = "unknown"; });
+  fetch("/changes").then((r) => r.json()).then((list) => {
+    const box = document.getElementById("commits");
+    for (const c of list.slice(0, 4)) box.append(text("div", "", `${c.date}  ${c.subject.replace(/^ashfall[^:]*:\s*/, "")}`));
+    box.hidden = list.length === 0;
+  }).catch(() => {});
+}
+
+startLog();
+startDevLog();
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+Wrong implementations to plant one at a time; the [bracketed] test_cards_<name>.py module must go red
+(HYPOTHESIS_PROFILE=ci if a property needs depth). A timeout counts as red. Results follow the rows.
+
+ 1 lumps         the rejected design: inputs taken at a tap's start, outcome stores landed at its end (the 1.5A
+                 sequence costs 1.5A); lumps per completion in the mix too.                         [inputs, bar]
+ 2 two bars      a tap's progress kept apart from the mix's work: a tap always runs a whole work_s from 0;
+                 the mix's half bar lost or kept beside it; the tap's work not added to CardState.work. [bar, inputs, completions]
+ 3 both run      the mix keeps running during a HANDS tap; the tapped card runs at its mix share plus
+                 BP; mix cards read YIELDED with share 0; a rack tap yields the mix.               [bar, failed_tap]
+ 4 tap end       the tap lands at floor instead of ceil; at the multiple at or above w (a bar on a
+                 boundary lands at once); the mix not resumed after; the lane kept busy.            [bar]
+ 5 lump rate     base_den 1 (A per hour, not per completion); inputs rounded down or outcomes up;
+                 rounding per second accumulated; WorkRef or LaneSpeed left off lump lines; the
+                 WorkRef entry kept aimed at WorkRef in the Explanation.                            [inputs]
+ 6 one side      validation accepting a store twice across a card's makes, costs, inputs and outcome
+                 stores (a flow beside a lump on one store, a store listed twice in one list).        [validation]
+ 7 failed tap    a failed tap holds its lane (yielding the mix); its failed line missing, naming no card,
+                 the tap line instead, said twice or a second late; Step.failed unset, or set on a
+                 ready tap; an order or the queue taps an unready card; a failed tap evaluates orders
+                 and the queue; speed 0 read as unready (no refusal); a format 5 lane mid failed
+                 attempt kept busy by the upgrade (red in tests/saves).                              [failed_tap]
+ 8 interrupt     the tap holds the hands while its card is paused; the work reset or completed on
+                 interrupt; the tap line emitted; no evaluation after; requires checked only at the
+                 start; a tap whose speed falls to 0 left running.                                   [interrupt]
+ 9 waiting       a mix card runs while its requires are false, or its bar moves while WAITING;
+                 condition_index not the first unmet; no REQUIRES event (seen at a later one);
+                 a requires latched like an order's (a band accepted), or reading a Running subject. [interrupt, validation]
+10 dry order     standing actions paused before HANDS, or HANDS before other lanes; every consumer
+                 paused rather than until net >= 0; a paused mix card's work keeps moving; the
+                 pauses recomputed from scratch after an interrupt (a pause dropped, or a mix card
+                 still drawing the dry store left unpaused).                                         [mixable, interrupt, purity]
+11 completions   a COMPLETION event for an uncapped card; none for a mixed capped card; COMPLETION
+                 sorted after TAP_DONE; a capped card's work limited at every completion, so it
+                 completes at 334, 668, 1002 at 30% where an uncapped card crosses at 334, 667,
+                 1000; a tap's overshoot not clamped at its boundary; the cap's not clamped.         [completions, split]
+12 counts        CardCount treated as discrete (seen at the next event, not the crossing second);
+                 counted by taps only, or completions stored rather than read off the work; an
+                 AtMost on a count released at the wrong count or second.                            [completions, split]
+13 lines         an uncapped card's line on mix completions; lines[n] off by one; past the base cap
+                 the first line instead of the last; outcome lines before the completion line;
+                 finished before outcome.                                                            [completions, caps]
+14 caps          completions past the cap; work running on after the cap; finished at every
+                 completion, or never again after a raise; a tap at the cap kept running.            [caps, split]
+15 greyed        only the completed card's share stopped; the active mix not greyed; greyed mixes not
+                 in the view; runs_out_at still set.                                                 [caps]
+16 completed     a player's tap of a completed card accepted; an order's tap of it raising or
+                 starting; SaveMix accepting it; it left in View.cards.                               [caps, view]
+17 raises        a raise not un-greying until the player acts; raised not stored or not encoded;
+                 the raised card's next completion not evented.                                      [caps, codec]
+18 dead entry    a dead queue head waits (hands idle), is popped (its until holding), or is moved
+                 behind; the live entry that controls never pops on its own until, or the pop
+                 watches the dead head's until; a dead entry behind a live one popped; a revived
+                 entry not controlling at the raise, or not popping at once when its until holds.    [caps]
+19 greyed switch an order's SwitchMix to a greyed mix acts; the player's is refused.                 [caps]
+20 starved       starved when the store is above 0; not starved when covered; blind to a queue or
+                 order tap blocked on the store or on a requires; counting an order that is not true. [ledger]
+21 covered       covered ignoring Outcome.starts or a SwitchMix's flattened mix; a tap of a consumer
+                 counted as covering.                                                                [ledger]
+22 panel         locked or completed cards in View.cards; lanes shown before a card on them unlocks;
+                 by wrong (MIX during a tap, TAP for a yielded card); tap_s a whole work_s regardless
+                 of the bar; needs one per input and requires (store listed twice); blocker requires
+                 before inputs, or the whole input asked of a half-done card; View.standing listing
+                 consumers only, or out of rules order.                                              [view, bar, failed_tap, mixable]
+23 mixable       SaveMix accepting a rack card, a standing id, a locked or an unknown card.           [mixable]
+24 delete mix    DeleteMix of a nested or named mix accepted; deleting the active mix without
+                 evaluating; mixes reordered by a delete.                                            [mixable]
+25 standing      a standing action yielded by a tap, greyed with the mix, or run while locked.         [mixable]
+26 codec         FORMAT 1 (or any other) accepted; CardState or LaneState not round-tripping.        [codec]
+27 validation    each shape in test_cards_validation's INVALID accepted (one at a time); over-strict:
+                 a rack card starting a hands card or itself, a requires on a store the card costs,
+                 an order's band or Running subject, or a card id equal to a store's rejected (the
+                 valid controls).                                                                    [validation]
+28 purity        an outcome's starts applied from a set; the dry pause chosen at random.             [purity]
+29 evaluation    a tap's landing, an interrupt or a mixed capped completion not evaluating; a
+                 player's tap evaluating; READY missing for a queued tap (it waits into idleness);
+                 no READY at T + 1 for a candidate ready all along after the firing cap suspended
+                 evaluation at T; an unknown card in an order acted on or rejected.                  [orders, completions, interrupt]
+30 reading       view or a work.* read caching into or mutating the save.                            [reading]
+31 flow speed    WorkRef scaling a card's flows or XP (a faster card making more per hour), or
+                 LaneSpeed left off them.                                                            [inputs]
+32 run state     the mix Run chosen by the wrong precedence of GREYED, PAUSED, WAITING, YIELDED, HELD
+                 (a paused card in a greyed mix reading PAUSED, a waiting one reading YIELDED during a
+                 tap); by MIX for a card that is paused, waiting, greyed, yielded or held at 0, or
+                 not MIX for a held card moving at a non-zero fraction.                              [runstate]
+33 explain work  explain_work of a waiting, paused, greyed or yielded mix card as a tap started now
+                 (share BP, per_hour at full speed) instead of its mix share, Run and 0 per hour.     [runstate]
+34 pause owner   a Pause dropped with the tap it interrupted; resume_at at the wrong share (a tap's at
+                 the mix share, a mix card's at BP); a tap of a paused card accepted as ready or its
+                 Blocker blind to the Pause; no RESUME or READY at the resume second.                [interrupt]
+35 boundary dry  a tap interrupted, unlanded or paused when its store reaches 0 at the very second its
+                 work reaches the boundary (the completion half-registered).                         [interrupt]
+36 speed zero    a tap at speed 0 accepted (a lane held by a card that does not move), by the player
+                 or by an order or the queue.                                                        [failed_tap, interrupt]
+37 card state    a CardState kept at work 0, rate 0 and no raise, or dropped while only its rate or
+                 raise is non-zero (also engine_contract's canonical).                               [split]
+38 cap formula  the cap rounded up, or per step, or to nearest; adds compounded rather than summed; muls not compounded
+                 (the largest only); the second modifier ignored; the result off by one.         [cap_raises]
+39 cap reads    one store's entry raising every store; the ledger's cap, fills_at, the segment's limit or the makers'
+                 stop (rebuild) reading StoreDef.cap; stock above StoreDef.cap clamped back down. [cap_raises]
+40 cap readers  an outcome's stores clamped at StoreDef.cap; a dry pause's resume level capped at StoreDef.cap;
+                 a hold level checked against more than StoreDef.cap.
+                                                                                                  [cap_raises]
+41 cap validate a lowering StoreCap entry accepted (add -1, mul BP - 1) in an outcome, `finished` or a trigger; the
+                 boundary (add 0, mul BP) refused.                                                [cap_raises]
+42 cap chips    a chip effect aimed at a StoreCap accepted by validation.                              [cap_raises]
+43 cap start    a lowering StoreCap entry accepted in new_save's starting stack.                        [cap_raises]
+44 cap per src   an outcome's raise counted once per source: a card with cap 3 raises the cap once.     [cap_raises]
+45 cap full     fills_at None for a store sitting at its cap with rate 0.                               [cap_raises]
+46 end          the end never recorded; re-dated each time it holds; cleared when a line falls; the feature or
+                 the coverage left out of the condition; checked only at event instants (not a decision's), or at
+                 the advance's target time; dated a second late; coverage read without the orders; an unknown end
+                 feature accepted; the view or the codec dropping ended_at.                           [end, codec]
+47 settled       a dead entry whose until cannot fall kept (none settle, or one kind left out: AfterTime, a
+                 count, a level, an unlock); one whose until can fall popped; a settling until not watched
+                 before it holds; the settling pop evaluating; a live entry settling.         [queue_settled, caps]
+
+RESULTS
+Each variant was planted in the real engine (app/ashfall_app/engine, never committed) on its own, the cards and engine
+contract suites were run whole at the default profile with -x, and the file was restored with `git checkout -- <file>`
+with the tree checked clean before the next. Red is a failing test; a test timeout counts as red. Variants are lettered
+in the order planted within a row and cover each clause of the row and the neighbours the code's structure suggests (a
+few drafts that proved to be no-ops by construction were dropped, not counted). Pass 0 ran on the suites as they were
+at the first cards commit, pass 1 on the suites with the generators bounded and the default profile derandomized (both
+conftest.py), so pass 1 repeats. A variant that survived either pass is killed by a test written from the contract (red
+with the mutant, green without) or marked equivalent with its reason; every equivalent variant was also green over a
+deep run (HYPOTHESIS_PROFILE=ci, 200 examples) of both suites.
+Totals (rows 1-37): 236 planted, 202 red at once, 34 survived a pass: 21 killed, 12 equivalent, 1 undecided by the contract.
+
+ 1 lumps          planted 4, red 4
+ 2 two bars       planted 4, red 3, survived 1
+      d (land rounds the card's work down to a completion): equivalent: a landing is on a completion boundary, so work %
+        unit is already 0 (also green over the deep profile)
+ 3 both run       planted 6, red 6
+ 4 tap end        planted 5, red 5
+ 5 lump rate      planted 8, red 6, survived 2
+      h (an input's rest, which readiness asks for, ignores the modifiers aimed at its line): killed by
+        test_cards_view.py::test_a_need_is_one_whole_completion_and_readiness_asks_for_the_rest_rounded_up
+      i (an input's rest, which readiness asks for, is prorated rounding down): killed by
+        test_cards_view.py::test_a_need_is_one_whole_completion_and_readiness_asks_for_the_rest_rounded_up
+ 6 one side       planted 5, red 5
+ 7 failed tap     planted 12 (one pass, when the failed tap stopped taking time; the suites above plus
+                  tests/saves/test_failed_attempt_saves.py, test_failed_tap.py and tests/test_request_log.py), red 11,
+                  survived 1
+      j (a failed tap makes orders and the queue evaluate): killed by
+        test_cards_failed_tap.py::test_a_failed_tap_does_not_make_orders_and_the_queue_evaluate
+ 8 interrupt      planted 9, red 6, survived 3
+      a (the dry rule pauses a tapped card without interrupting it): equivalent: _stop_stalled ends a tap whose card no
+        longer moves, so the interrupt happens later in the same instant with the same result (also green over the deep
+        profile)
+      e (a requires interrupt does not evaluate orders): killed by
+        test_cards_interrupt.py::test_a_tap_interrupted_by_a_requires_makes_orders_evaluate
+      h (tap_seconds raises a speed to 1 after the zero check): equivalent: dead code: speed is already > 0 where it is
+        clamped (also green over the deep profile)
+ 9 waiting        planted 8, red 6, survived 2
+      c (WAITING names the last unmet requires): killed by
+        test_cards_interrupt.py::test_a_waiting_card_names_its_first_unmet_requires_and_it_runs_the_second_it_holds
+      g (REQUIRES events a second away are dropped): killed by
+        test_cards_interrupt.py::test_a_waiting_card_names_its_first_unmet_requires_and_it_runs_the_second_it_holds
+10 dry order      planted 6, red 4, survived 2
+      b (tapped cards read in reverse lane order): killed by
+        test_cards_mixable.py::test_running_dry_pauses_the_rack_tap_before_the_hands_tap
+      f (the dry rule ignores existing pauses when choosing): equivalent: a paused runner contributes 0, so it is never
+        a pausing candidate whether or not it is excluded (also green over the deep profile)
+11 completions    planted 7, red 6, survived 1
+      g (_completed accepts an uncapped card): equivalent: COMPLETION events exist only for capped cards, so the guard
+        never fires (also green over the deep profile)
+12 counts         planted 6, red 6
+13 lines          planted 7, red 7
+14 caps           planted 7, red 5, survived 2
+      b (_work_segment stops a card only past its cap): equivalent: a completed card's mix run is GREYED (rate 0) and a
+        tap of it is excluded, so the cap clause in _work_segment adds nothing (also green over the deep profile)
+      e (tapped_cards keeps a completed card): equivalent: a tap of a card reaching its cap lands at that instant
+        (TAP_DONE) before any rate is read, so the lane never holds a completed card (also green over the deep profile)
+15 greyed         planted 5, red 4, survived 1
+      d (runs_out_at is set for a greyed mix): killed by
+        test_cards_caps.py::test_a_greyed_mix_has_no_runs_out_at_though_a_standing_action_drains_its_store
+16 completed      planted 6, red 5, survived 1
+      e (an Outcome's tap of a completed card occupies the lane): killed by
+        test_cards_caps.py::test_an_outcome_that_starts_a_completed_card_changes_nothing
+17 raises         planted 6, red 6
+18 dead entry     planted 9, red 7, survived 2
+      b (the first entry of an all-dead queue controls): killed by
+        test_cards_caps.py::test_a_queue_of_only_dead_entries_acts_on_nothing_and_keeps_them
+      c (QUEUE_POP pops without re-checking its until): killed by
+        test_cards_caps.py::test_a_head_that_dies_at_the_instant_its_until_holds_is_not_popped_nor_is_the_next_entry
+19 greyed switch  planted 3, red 3
+20 starved        planted 8, red 7, survived 1
+      e (a tap blocked on any store's AtLeast starves every empty store): killed by
+        test_cards_ledger.py::test_a_waiting_tap_blocked_on_an_empty_store_starves_it
+21 covered        planted 7, red 6, survived 1
+      d (a switch to a mix that only costs the store counts as covering): killed by
+        test_cards_ledger.py::test_covered_follows_what_a_verb_makes[switch-to-a-consumer]
+22 panel          planted 13, red 11, survived 2
+      f (needs keeps the requires quantity, not the larger): killed by
+        test_cards_view.py::test_needs_keep_the_larger_quantity_whichever_side_it_is_on
+      n (needs sorted by store id): killed by test_cards_view.py::test_needs_follow_the_order_the_inputs_are_declared_in
+23 mixable        planted 4, red 4
+24 delete mix     planted 7, red 5, survived 2
+      e (DeleteMix of an inactive mix evaluates orders): killed by
+        test_cards_mixable.py::test_deleting_another_mix_does_not_evaluate
+      g (DeleteMix of the active mix keeps the pauses): undecided by the contract: DESIGN.txt clears pauses on a switch
+        and on SaveMix of the active mix, and says of DeleteMix only that nothing is active and evaluation ran; the
+        contract is silent on pauses, so no test asserts either way
+25 standing       planted 5, red 3, survived 2
+      b (a greyed mix greys the standing actions): killed by
+        test_cards_caps.py::test_a_greyed_mix_does_not_stop_a_standing_action
+      d (a paused standing action reads FULL while a tap holds the hands): killed by
+        test_cards_mixable.py::test_a_paused_standing_action_reads_paused_while_a_tap_holds_the_hands
+26 codec          planted 9, red 7, survived 2
+      a (decode drops the FORMAT check): equivalent: decode re-encodes with FORMAT and compares the text, so a foreign
+        format is refused either way (also green over the deep profile)
+      f (decode accepts FORMAT 1 as well as 2): equivalent: as C26.a (also green over the deep profile)
+27 validation     planted 7, red 6, survived 1
+      g (a skill id equal to a store id is rejected): killed by test_cards_validation.py::test_valid_rules_pass[a-skill-
+        and-a-store-share-an-id]
+28 purity         planted 4, red 4
+29 evaluation     planted 9, red 7, survived 2
+      e (candidates keeps an unknown card): equivalent: an unknown card is never tappable, and every use of candidates
+        sits behind tappable (also green over the deep profile)
+      i (a trigger firing does not evaluate orders): killed by
+        test_cards_orders.py::test_a_trigger_that_fires_makes_orders_evaluate
+30 reading        planted 5, red 5
+31 flow speed     planted 4, red 4
+32 run state      planted 9, red 8, survived 1
+      i (YIELDED only when not paused (the test is dead)): equivalent: paused_on is never set where it is tested (PAUSED
+        returns above) (also green over the deep profile)
+33 explain work   planted 4, red 4
+34 pause owner    planted 8, red 7, survived 1
+      f (RESUME falls a second early): killed by
+        test_cards_interrupt.py::test_a_pause_resumes_at_the_second_the_store_gets_there
+35 boundary dry   planted 5, red 4, survived 1
+      d (TAP_DONE lands without checking the work is on a boundary): equivalent: TAP_DONE is recomputed from the
+        segments at every instant; no stale one reaches the guard (also green over the deep profile)
+36 speed zero     planted 5, red 5
+    (row 37 has no variants of its own: its three are engine_contract row 9, g h i, all red or killed there.)
+38 dry boundary   DESIGN.txt's last decision: a mix card whose input runs dry at its completion boundary is passed over like
+                  a tap (the rejected reading), planted 1, red 1, by test_a_mix_card_whose_store_runs_dry_at_its_boundary_is_
+                  paused_with_one_completion.
+46 end            planted 12 (a never, b re-dated, c cleared, d no feature, e no coverage, f events only, g target time,
+                  h validation, i view, j codec, k a second late, l coverage without orders), red 12 against the end,
+                  codec and opening suites. The property test alone (every resolved instant) is red for a-g and k;
+                  h, i and j are outside what it checks; l survives it (its random worlds did not hit a falling line
+                  covered only by an order) and is red in test_cards_end's examples.
+47 settled        planted 11 (a none settle, b nothing can fall, c everything can fall, d no future watch, e the pop
+                  evaluates, f a live entry settles, g a level can fall, h an unlock can fall, i one entry per pop, j a
+                  count can fall, k an AfterTime can fall), red 6 at once, survived 5: e, f, g and h killed by
+                  test_cards_queue_settled.py (test_a_settling_entry_does_not_make_the_queue_act_again,
+                  test_a_live_entry_behind_the_head_waits_its_turn_though_its_until_holds_for_good, and the [level] and
+                  [unlocked] cases of test_a_dead_entry_whose_until_cannot_fall_settles_at_once); i equivalent: the pop
+                  stays pending at that instant until no entry settles, so one per pop drops the same entries. The
+                  property test alone is red for c.
+48 offer kinds  the kind's answer verb AnswerKind (DESIGN.txt, "OFFER KINDS", invariants 98-105; test_cards_offer_kinds.py). Wrong engines to
+                plant one at a time, each at the verb's two places: where the engine decides it can act and is dead, and where it
+                applies it. All thirteen planted (m as its four validation checks, l as its two): each is killed by the tests
+                named in brackets. h cannot be planted on the order's own verb, because evaluation sees the AnswerOffer it
+                resolves to; it is planted as evaluation not running on after any firing, which the three named tests kill.
+                a dead after first   is_dead holds for an AnswerKind once any offer of the kind is answered (or a rule-install
+                                     flag spends it after one use).                       [103, 99 later-offer, 98 equals]
+                b first answer id    the answer applied is the one found on the first offer of the kind (the first in the rules,
+                                     or the first ever answered) and kept, so a later offer is given another offer's answer id.
+                                                                                    [101 same-meaning, 99, 98 equals]
+                c position           the role is matched as the answer's index in the offer's answer tuple (or the index it has
+                                     in the first offer), not by the answer's role.                [101 both tests]
+                d not yet shown      can-act ignores Unlock(OFFER, o): any unanswered offer of the kind is answered, shown or
+                                     not.                                                    [100 not-yet-shown, 99 later]
+                e player may send    the player's decide() applies the verb instead of raising.            [104 player]
+                f queue accepts      SetQueue accepts the verb.                                       [104 set_queue]
+                g kind ignored       the offer's kind is not compared: any open offer is answered by the role.   [100 other kind]
+                h no run-on          after the first answer evaluation does not run on, so a second open offer waits for the
+                                     next instant.                                  [98 two-open, 99 while-open, 102]
+                i role ignored       the first answer of the offer is applied whatever the role.          [98, 101]
+                j latch ignored      the order acts whatever its latch (a false latch still answers); or reports ON/PASSED_OVER
+                                     wrongly.                                                              [103 waiting]
+                k not first          the last open offer (or the earliest shown) is answered first, not the earliest in rules.
+                                                                                                         [102]
+                l undeclared pair    SetOrders accepts an undeclared kind or role, or refuses a declared pair while no offer is
+                                     shown.                                              [104 undeclared, 104 accepts]
+                m validation lax     validate_rules accepts a role on an unkinded offer, a kinded answer without a role, two
+                                     answers one role, or differing role sets in a kind.                        [105]

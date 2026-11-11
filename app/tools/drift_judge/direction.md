@@ -1,0 +1,10 @@
+The direction the owner gave on pace and rhythm (from docs/decisions.md and the files it indexes).
+
+- The opening is the bar for the whole game: a game that kept the opening's energy throughout would be fun. Every later stretch is held to the opening's feel: something new to understand or decide on each visit, a system taught by need, the story landing where the eyes are.
+- Time to the next thing is measured in effort, not hours: while play is manual, a new system arrives within a few minutes of effort; once mixes and orders carry the player through hours, a new system may take days, since waiting no longer costs attention. The effort per new thing stays roughly constant while the clock time between them stretches, which is what keeps the reward coming.
+- The opening is 15 to 30 minutes of near-constant interaction. The first leave-it-running moment comes within about 15 minutes. The struggle is felt in how many steps things take, never in waiting.
+- The steps are different steps, never one tap repeated into a chore: feeling the character's struggle is good, wondering when the grind will end is not. No gate counts taps.
+- Idle time pays out mostly in the old: coming back after a while brings full stores and finished work, plus one new possibility, maybe two, as a reason to come back. One, maybe two is a guideline, not a limit; three, occasionally, in an edge case, is fine. Never a flood of new cards, systems or story while away.
+- Back-half slowdown is what ends idle games like Cookie Clicker, A Dark Room, Orb of Creation and Idle Awakening. The game's later weeks are read as closely as its first week, and things get bigger, never further apart.
+- Rhythm comes from the design, not from knobs (2026-11-07). A check fails only on an invariant: a softlock, a runaway spiral, a player who uses the taught tools being forced to babysit, or a number the page shows that doesn't come true. Everything else about the rhythm of play is taste, which readouts print and a person approves.
+- A sharp setup may lead the story's usual pace by up to a few days per week of play (2026-11-07); a beat held by the calendar or a night stays where it is.

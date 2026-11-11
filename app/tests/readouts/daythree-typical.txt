@@ -1,0 +1,14 @@
+typical: 10 visits from V6
+  V6       gap   9.2h  active  0.2m  new  16  bigger  5  first    0s  decisions  3  actions   4  idle    4s  run 1  effort  2  |  spend  5  decide  2
+  V7       gap   4.2h  active  0.3m  new  15  bigger  8  first    0s  decisions  4  actions   4  idle    7s  run 0  effort  4  |  spend  3  decide  3
+  V8       gap   3.2h  active  1.7m  new   5  bigger  2  first    0s  decisions  2  actions   7  idle   24s  run 5  effort  5  |  spend  7  decide  2
+  V9       gap   9.2h  active  0.1m  new  10  bigger  7  first    0s  decisions  2  actions   2  idle    4s  run 0  effort  2  |  spend  8  decide  1  [wait, 7 lines]
+  V10      gap   4.2h  active  1.4m  new   4  bigger  3  first    0s  decisions  0  actions   5  idle   24s  run 4  effort  4  |  spend 11  decide  1
+  V11      gap   3.2h  active  0.5m  new   1  bigger  0  first    0s  decisions  0  actions   2  idle   23s  run 2  effort  2  |  spend 11  decide  0
+  V12      gap   9.2h  active  1.1m  new   3  bigger  2  first    0s  decisions  2  actions   5  idle   23s  run 3  effort  5  |  spend 12  decide  2
+  V13      gap   4.2h  active  0.0m  new   1  bigger  0  first    0s  decisions  0  actions   0  idle    0s  run 0  effort  0  |  spend  9  decide  0  [wait, 1 lines]
+  V14      gap   3.2h  active  0.0m  new   5  bigger  3  first    0s  decisions  0  actions   0  idle    0s  run 0  effort  0  |  spend  6  decide  0  [wait, 8 lines]
+  V15      gap   9.2h  active  0.1m  new   7  bigger  4  first    0s  decisions  1  actions   2  idle    4s  run 1  effort  2  |  spend  8  decide  2  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 47, decide 6; 8h+: 4 returns, spend 33, decide 7
+  beats typical (pace_scale 1): B5 day 3.29, target_day 4
+  lost to caps: played 54%, away 8 h 8%, away 24 h 8%, away 72 h 39%

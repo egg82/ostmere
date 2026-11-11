@@ -1,0 +1,55 @@
+key	source	why
+l_ring_scored	edit	A's drag and C's "no word" turn; no lifted round the bays, the circle said once, no shipped "the ash no"
+l_palisade_fail	rewrite	A's sorting, true whichever of the three is short, and no "gap" to name the pack's place
+l_stage_1	edit	A's posts on the scored line without the shipped "you set the"
+l_stage_2	C	plainest, stands alone on return
+l_stage_3	C	the stretch standing is the stage's own turn
+l_stage_4	rewrite	A's walk without "stands" (stage 3's verb) or the hand on each post, which is a later beat's
+l_stage_5	edit	A's leaning post; "prop", since "wedge" is stage 2's verb and a shipped echo
+l_stage_6	C	names the stakes and moves the work along
+l_stage_7	A	his weight on it lets the reader judge the post
+l_stage_8	B	shortest and exact
+l_stage_9	rewrite	C's reset loose posts without a third "you" running into stage 8's
+l_stage_10	edit	B's brace with the pole as subject, so stages 10 and 11 don't open the same way
+l_stage_11	A	plain, no collision
+l_stage_12	edit	A's closing ring without the lifted round the bays
+l_cut_stakes_fail	A	the only one true at every short count
+l_lane_stakes_fail	B	true at any count, no "you"
+l_cord_fail	B	the only true one
+l_n4_cord_fail	B	true at any count, shows rather than says
+l_flaps_fail	C	shortest true line; C builds the flaps, so its fail matches
+l_flaps_1	C	one draft's build for stages 1-3, as the critic asked
+l_flaps_2	edit	C's pelt on the frame without the shipped "pelt over the"
+l_flaps_3	C	completes C's frame build
+l_flaps_done	A	names the flaps, catches them mid-dry, not done
+l_b8_1	edit	A alt's turning wind with C's brown noon; no lifted "a warm wind"
+l_b8_2	rewrite	C's plenty-then-wrong without the shipped "the larder is" or the spec's bowing roofs; the roof left to b8_3 so no word repeats on screen
+l_b8_3	rewrite	fungus then crows last, on the roof not the ridge (the far light's); no lifted shelves or "crows say numbers"
+l_pick_fail	C	true (one bloom is all it takes), no "you" on a shared card
+l_fungus_stew_fail	A	shortest true line
+l_howls	rewrite	C's turn, the fire untouched, without lifting the fact's words or the shipped "at the fire"
+l_caps_1	C	plain, the sorting left unexplained
+l_caps_2	rewrite	B's hand to hand without the lifted pot phrase; the plenty left to the reader
+l_ash_laden	rewrite	the chip is the roofs' load on rest; the drafts' lines were about the player's hair or a list
+l_ash_cleared	B	true: the chip clears when the roofs are shovelled, which A's thinning air is not
+l_clear_fail	edit	A without the spec's "on the roofs"
+l_roofs_first	rewrite	no lifted "in sheets", no shipped "slides off the"
+l_ash_ground	rewrite	C's content plus the tied bag, the turn no draft kept; nothing of what for
+l_ash_ground_fail	B	true, with a small action and the sack
+l_cord	edit	A's stop before "fast" without the lifted good knee
+l_pack_1	edit	A alt's both halves without the shipped "at the gap"
+l_pack_2	rewrite	what is taken goes with the ones that waited; no lifted "what hung lowest" or "the rest wait"
+l_fight_pack_won_1	C	plain and short
+l_fight_pack_won_2	edit	C's "trot off" without the shipped "the gap the"
+l_fight_pack_won_3	rewrite	C's held gap without the shipped "the gap and" or "held" twice in the pool
+l_fight_pack_lost_1	C	the only unlifted one
+l_fight_pack_lost_2	rewrite	the drafts' others echo shipped lines or repeat lost_1's words
+l_fight_pack_lost_3	rewrite	A's low end without the shipped "rack is bare" or the spec's stripped rows
+l_b9_1	rewrite	A alt's stop before the wolves (b9_2's page is untouched) without the shipped "by the fire"
+l_b9_2	edit	C's empty page against the note; no lifted "your own hand" or "in the margin"
+l_find_shelf	edit	C's "still firm" without the spec's "shelf of fungus"
+l_find_pole	edit	A's barked and dry without the shipped "pole in the"
+l_find_hoe	edit	B's rust-pitted but whole without the shipped "in the ash"
+l_find_pot	A	the dent and the water make the turn
+l_find_fine_ash	C	plain, gives the ash no purpose
+l_camp_13	C	plainest with a small turn

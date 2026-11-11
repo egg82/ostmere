@@ -1,0 +1,106 @@
+# Day-nine keys manifest: every key in day_nine.toml still at the UNWRITTEN marker, in file order.
+# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it) | journal note (its own batch, after this one).
+# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.
+# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).
+# keys: 100
+key	kind	limit	alt	brief
+store_b9_clock	store label	n/a	-	-
+action_b9_clock	action label	n/a	-	-
+l_ring_1	line	line<=75; set median<=45,p90<=75	H	-
+l_ring_2	line	line<=75; set median<=45,p90<=75	H	-
+l_gap_fire_1	line	line<=75; set median<=45,p90<=75	-	-
+c_gap_fire	card label	n/a	-	-
+up_gap_fire	upside label	n/a	-	-
+l_gap_fire_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_gap_fire_2	line	line<=75; set median<=45,p90<=75	-	-
+l_gap_fire_done	line	line<=75; set median<=45,p90<=75	-	-
+l_old_wire	line	line<=75; set median<=45,p90<=75	-	-
+c_set_snare_4	card label	n/a	-	-
+l_snare_4_fail	fail	line<=75; set median<=45,p90<=75	-	-
+l_snare_4	line	line<=75; set median<=45,p90<=75	-	-
+l_open_side_1	line	line<=75; set median<=45,p90<=75	H	-
+l_open_side_2	line	line<=75; set median<=45,p90<=75	H	-
+store_e2_clock	store label	n/a	-	-
+action_e2_clock	action label	n/a	-	-
+action_e2_strip	action label	n/a	-	-
+l_road_smoke_1	line	line<=75; set median<=45,p90<=75	H	l_smoke_1
+l_road_smoke_2	line	line<=75; set median<=45,p90<=75	H	l_smoke_2
+l_b10_1	line	line<=75; set median<=45,p90<=75	H	-
+l_b10_2	line	line<=75; set median<=45,p90<=75	H	-
+l_b10_3	line	line<=75; set median<=45,p90<=75	H	-
+n_crow_2	journal note	n/a	-	-
+l_wind	line	line<=75; set median<=45,p90<=75	-	-
+store_wind_left	store label	n/a	-	-
+store_wind_torn	store label	n/a	-	-
+action_wind	action label	n/a	-	-
+chip_draughty	chip label	n/a	-	-
+chip_draughty_cost	chip label	n/a	-	-
+l_draughty	line	line<=75; set median<=45,p90<=75	-	-
+l_draughty_off	line	line<=75; set median<=45,p90<=75	-	-
+c_peg_flaps	card label	n/a	-	-
+c_n1_peg_flaps	card label	n/a	-	-
+l_peg_fail	fail	line<=75; set median<=45,p90<=75	-	-
+camp_pays_14	camp label	n/a	-	-
+l_camp_14	line	line<=75; set median<=45,p90<=75	-	-
+store_b10_floor	store label	n/a	-	-
+action_b10_floor	action label	n/a	-	-
+store_ask_wait	store label	n/a	-	-
+action_ask_wait	action label	n/a	-	-
+o_posts	offer label	n/a	-	-
+l_posts	line	line<=75; set median<=45,p90<=75	-	-
+a_posts_cord	offer answer label	n/a	-	-
+a_posts_cord_cost	offer answer label	n/a	-	-
+a_posts_fire	offer answer label	n/a	-	-
+a_posts_fire_cost	offer answer label	n/a	-	-
+o_margin	offer label	n/a	-	-
+a_margin_gap	offer answer label	n/a	-	-
+a_margin_gap_cost	offer answer label	n/a	-	-
+a_margin_fire	offer answer label	n/a	-	-
+a_margin_fire_cost	offer answer label	n/a	-	-
+o_rack	offer label	n/a	-	-
+a_rack_high	offer answer label	n/a	-	-
+a_rack_high_cost	offer answer label	n/a	-	-
+a_rack_down	offer answer label	n/a	-	-
+a_rack_down_cost	offer answer label	n/a	-	-
+o_deep	offer label	n/a	-	-
+a_deep_sink	offer answer label	n/a	-	-
+a_deep_sink_cost	offer answer label	n/a	-	-
+a_deep_pace	offer answer label	n/a	-	-
+a_deep_pace_cost	offer answer label	n/a	-	-
+o_bark	offer label	n/a	-	-
+a_bark_tinder	offer answer label	n/a	-	-
+a_bark_tinder_cost	offer answer label	n/a	-	-
+a_bark_cord	offer answer label	n/a	-	-
+a_bark_cord_cost	offer answer label	n/a	-	-
+o_footing	offer label	n/a	-	-
+a_footing_hearth	offer answer label	n/a	-	-
+a_footing_hearth_cost	offer answer label	n/a	-	-
+a_footing_keep	offer answer label	n/a	-	-
+a_footing_keep_cost	offer answer label	n/a	-	-
+o_fed	offer label	n/a	-	-
+a_fed_watch	offer answer label	n/a	-	-
+a_fed_watch_cost	offer answer label	n/a	-	-
+a_fed_pot	offer answer label	n/a	-	-
+a_fed_pot_cost	offer answer label	n/a	-	-
+feature_watch_fed	label	n/a	-	-
+o_lookout	offer label	n/a	-	-
+a_lookout_up	offer answer label	n/a	-	-
+a_lookout_up_cost	offer answer label	n/a	-	-
+a_lookout_wall	offer answer label	n/a	-	-
+a_lookout_wall_cost	offer answer label	n/a	-	-
+o_gate	offer label	n/a	-	-
+a_gate_road	offer answer label	n/a	-	-
+a_gate_road_cost	offer answer label	n/a	-	-
+a_gate_track	offer answer label	n/a	-	-
+a_gate_track_cost	offer answer label	n/a	-	-
+l_gate_road	line	line<=75; set median<=45,p90<=75	-	-
+o_skin	offer label	n/a	-	-
+a_skin_post	offer answer label	n/a	-	-
+a_skin_post_cost	offer answer label	n/a	-	-
+a_skin_flaps	offer answer label	n/a	-	-
+a_skin_flaps_cost	offer answer label	n/a	-	-
+feature_posts_fire	label	n/a	-	-
+feature_margin_watch	label	n/a	-	-
+feature_posts_deep	label	n/a	-	-
+feature_lookout	label	n/a	-	-
+feature_skin_post	label	n/a	-	-

@@ -1,0 +1,141 @@
+# Feedback and game feel
+
+Evidence labels: developer, research, verbatim, practitioner, opinion, snippet (seen only in a search result).
+Coverage note: about 15 searches and 10 fetches. Most primary talks (Jonasson & Purho video, Nijman's "Art of
+Screenshake", Swink's book) were not retrievable as text; claims about them come from secondary summaries and are
+marked. Nothing primary was found on feedback design inside Cookie Clicker, Melvor Idle, Kittens Game or Antimatter
+Dimensions: that is a null result, not a gap in the search method (searches for developer accounts of popups, ticks
+and completion cues returned only generic guides).
+
+# Part A. General
+
+**1. More feedback is not better: the measured optimum is in the middle, and feedback tied to success beats feedback that is merely bigger.**
+- research: Kao 2020 built one action RPG at four juice levels (none, medium, high, extreme; visual and audio effects
+  only). Medium and high beat both none and extreme on experience, intrinsic motivation, playtime and performance.
+  The survey (Pichlmair & Johansen, arXiv 2011.09201, read in full) and the CHI 2024 paper (read in full; it gives
+  the 2020 sample as n=3,018 and calls the result a "goldilocks effect") both report this. The 2020 paper itself was
+  not found in open form, so its effect sizes are unverified.
+- research: Kao et al., CHI 2024 (preregistered, 1,699 participants, 2x2+control). Read in full. Success-dependent
+  feedback raised curiosity, effectance and competence alike (enjoyment only indirectly, through them). Amplification
+  (making the same feedback larger) lowered effectance (-.19) and competence (-.43) against standard feedback, which
+  the authors tentatively put down to impeded sense of agency; it had no direct effect on enjoyment or playtime.
+  Curiosity was the strongest predictor of enjoyment and the only predictor of free-choice playtime; enjoyment did
+  not predict playtime ("players played more when they were curious in the game, but not when they enjoyed it").
+  Mean voluntary playtime ran from 6.17 min (standard) to 10.18 min (a success-dependent amplified cell). Authors'
+  reading: motivation arises from reducing uncertainty over action success, which needs legible, differentiated feedback.
+  https://spiral.imperial.ac.uk/entities/publication/253c32f5-d124-4a23-88b5-9aaaf114608d
+- research caveat: Ballou et al. (CHI Play 2021) found the effectance scale used in this literature has poor
+  validity (snippet). Treat effect sizes as soft; the shape (middle beats extremes) is the usable part.
+- snippet: Folmer Kelly's GDC Europe counter-talk to "Juice it or lose it" argued juice can cost immersion (snippet).
+- Principle: give feedback a ladder with a ceiling, make the rung depend on what actually happened (a result, a
+  rare find, a failure), and do not escalate the same event class over time.
+
+**2. Juice's original claim is about response to input, and its evidence is demonstration, not measurement.**
+- developer: Jonasson & Purho's talk makes a Breakout clone lively with tweening, squash and stretch, and sound;
+  claims "maximum output for minimum input" and that crude graphics matter less than interactivity. Secondhand
+  summary at https://www.gamedeveloper.com/design/video-is-your-game-juicy-enough- . Presenters' opinion, no data.
+- snippet: Swink defines game feel as "real-time control of virtual objects in a simulated space, with interactions
+  emphasised by polish" (six areas: input, response, context, polish, metaphor, rules). The framework assumes a
+  controlled object; it says little about screens with no avatar. Applying it there is extrapolation, not evidence.
+- snippet: Nijman's Vlambeer talk stacks many small cues on each shot (a per-shot screenshake increment is the quoted
+  detail). The stacking-of-small-cues idea transfers; the full talk and its numbers were not retrieved (unverified: no
+  transcript found on a second attempt; the game-feel survey, read in full, cites Nijman and Jonasson & Purho for
+  screen shake and recoil but gives no numbers).
+- research: that survey defines juice as "excessive amounts of feedback in relation to user input", mechanically
+  superfluous, and warns that juice-rich interaction makes it hard to learn which aspects have mechanical importance:
+  a cost of juice not covered elsewhere here (read in full).
+- Principle: the unit of feel is one input answered by several small, simultaneous cues (motion, sound, a number),
+  each cheap, none load-bearing alone.
+
+**3. An answer to input must appear within about 100 ms; what follows can take longer.**
+- practitioner: Nielsen (read in full) states "0.1 second is about the limit for having the user feel that the system
+  is reacting instantaneously", attributing it to Miller (1968) and Card et al. (1991); those papers were not read.
+  GNOME HIG's 100 ms rule was seen only as a snippet. Hit flashes of 50-100 ms and button transitions of 80-120 ms are practitioner rules of thumb
+  (one blog, snippet), unmeasured.
+- Principle: acknowledge the input at once, even when the result is not ready (a press state, a refusal, a
+  "queued"). Failure is also feedback: an input that does nothing reads as a bug.
+
+**4. Reduced motion is an accessibility requirement with concrete, small asks, and screen-wide effects are the usual offenders.**
+- practitioner: WCAG 2.3.3 (AAA) accepts the CSS prefers-reduced-motion query, or a user setting, as a way to stop
+  motion triggered by interaction; web.dev advises making the reduced version the default for non-essential motion
+  (snippet).
+- practitioner: Game Accessibility Guidelines (full list, read): basic, "avoid flickering images and repetitive
+  patterns"; intermediate, "provide an option to turn off / hide background movement"; advanced, "provide an option
+  to turn off / hide all non interactive elements" and "avoid any sudden unexpected movement or events"; basic, "ensure
+  no essential information is conveyed by sounds alone"; intermediate, replicate significant sound information as text
+  or visuals. https://gameaccessibilityguidelines.com/full-list/
+- practitioner: shipped games added separate toggles for shake and for flashes (Dreamlight Valley, Mabinogi, Diablo 4
+  on/off only); the figure "no more than 3 flashes per second" is a community summary of the photosensitivity rule
+  (snippets).
+- Principle: one switch (OS preference honoured, plus an in-game setting) that replaces motion with a non-moving
+  equivalent (a colour change, a held highlight); never remove the information, only the movement. Flashes capped;
+  sound is never the only carrier.
+
+**5. For slow and background processes the feedback problem is different from the tap: it is legibility over time, then a signal at the end.**
+- research: Alharthi et al., "Playing to wait" (CHI 2018) analysed 66 idle games on rewards, interactivity, progress
+  rate and UI; the abstract defines idle games as "left running with little player interaction" and makes no claim
+  about feedback. The paper's body was not read. https://research.monash.edu/en/publications/playing-to-wait-a-taxonomy-of-idle-games/
+- opinion: one analyst reads Cookie Clicker as visual feedback on every cookie, achievement, generator and upgrade,
+  a shower of "feel-good moments" early and scarcer, more accomplishment-flavoured rewards later; also information
+  shown plainly (costs, income). Author's own reading, not the designer's. https://www.gamedeveloper.com/design/the-recipe-behind-cookie-clicker
+- practitioner (snippet): offline-return guides name clear feedback on return as one of three main risks; a Melvor
+  Idle player thread values offline progress matching active play. Player opinion.
+- Principle: pace of feedback should track pace of the process: a slow bar needs a visible creep and a distinct
+  completion, a return needs a summary of what happened, and an effect that fires per tick on a process that ticks
+  constantly turns into noise (inference from findings 1 and 4, not directly measured).
+
+**6. Over-juicing has three costs: habituation, loss of agency, and bodily harm.**
+- Habituation and immersion cost: finding 1 (extreme worse than medium) plus Kelly's counter-talk.
+- Agency: amplification lowered motivation (Kao 2024).
+- Harm: shake, flash and parallax trigger nausea and headaches (finding 4).
+- Principle: the check for a new effect is "what does it show that the player did not already see," not "does it look
+  good." An effect with no information content is the first thing to cut.
+
+# Part B. What it means for Ostmere
+
+Cited by heading: decisions.md "Rewarding at any moment", "Something to watch, any time, for hours", "Fun, but never
+vying for attention"; opening-screen.md cards and strip sections; systems.md "Feedback" row.
+
+**Where the design already agrees**
+- Immediate acknowledgement of a refused input: opening-screen.md has a tap that cannot proceed answer "at once and
+  taking no time" with a red glow, the thing that stopped it, and a failed line. This is finding 3 done fully.
+- Effects that do not move layout ("Taps never move the layout; an arrival may, once") and the "pulse means urgency,
+  never" rule fit finding 6; the quiet-dot-versus-glow distinction is feedback with information content.
+- Slow-process legibility is a stated pillar ("Progress visibly ticks while you watch"; "Silent and glanceable"), and
+  the return unwrap plus the dusk card cover the end-of-wait signal (finding 5).
+- Where reduced motion is mentioned (line slide, arrival queue) the treatment is "same information, no movement",
+  which is the right shape.
+
+**Conflicts and gaps**
+- Conflict with finding 1: "Lots of juice whatever the art style" and "Juice is everywhere... nothing touched feels
+  dead" has no ceiling. The evidence says the optimum is medium-high, with extreme worse than none-to-medium and
+  amplification harmful. The ladder exists in practice (+1 pop, level-up burst, Camp flourish) but is not written as
+  a rule, so later additions can only go up.
+- Gap (finding 4): reduced motion is handled case by case in opening-screen.md, and decisions.md has no policy. The
+  bursts, pops, glows and the dusk grade are not covered by any stated rule, and there is no in-game setting named.
+  Nothing states a flash limit.
+- Gap (finding 4, sound): "sound on every reward" next to "sound optional" does not say that sound never carries
+  information alone. It currently reads as safe because the design is text-led, but the rule is unwritten.
+- Gap (finding 5): feedback is specified for a tap's result and for a return. A completion produced by the mix or a
+  rule while the player is watching (the common case after the opening) has no stated tier. If it matches a tap's
+  "+1", the tap stops being special; if it is silent, the watched screen is flat.
+- Tension to resolve, not a conflict: tap pops would make tapping feel better than watching. That is compatible with
+  the 2 AM test (efficiency is untouched) but is a feel gap the design should choose on purpose.
+
+**Proposals to test**
+1. Write the feedback ladder as a rule, with a ceiling. Define tiers by event significance (ordinary completion,
+   first-of-kind, level-up, big beat), fixed effect size per tier, and no escalation within a tier. Test: have a
+   cold tester play a long stretch with the current effects and with every tier cut by one step; ask which stretch
+   they would rather watch, and whether either felt "busy". Kao suggests the lower build will not lose.
+2. One motion setting. Honour the OS reduced-motion preference by default, add one in-game toggle, define a
+   "calm" equivalent per effect (a held colour or a count change in place of a pop or burst), cap flashes, and write
+   "sound never carries information alone". Test: render every effect under emulated reduced motion with a headless
+   browser and check that each still tells what happened; grep the tokens in game.css for any effect without a calm
+   form.
+3. Give background completions a tier of their own, one step below a tap's and the same everywhere (the card's
+   count changing with a brief settle). Test: with the mix running and the player not tapping, ask a tester after
+   ten seconds what changed; if they cannot say, the tier is too quiet. Because it earns nothing extra, it stays
+   within the 2 AM test.
+
+Not covered, for another pass: sound design specifics, the Jonasson & Purho video itself, Nijman's numbers, Swink's
+book beyond its definition.

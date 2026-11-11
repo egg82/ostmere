@@ -1,0 +1,203 @@
+Wrong implementations to plant one at a time; the [bracketed] test_<name>.py module must go red (HYPOTHESIS_PROFILE=ci if slow).
+Mixes hold cards (CardShare); every "action" below is a card with continuous lines only unless a row says otherwise.
+
+ 1 split        accumulate value step by step with floor rounding (value += rate*dt//k); recompute from a
+                checkpoint that is not the segment start; advance() skipping events between t1 and t2.   [split]
+ 2 idempotent   advance(s, r, s.time) re-derives segments and rounds, or bumps a counter.                [split]
+ 3 decide       apply the verb first, then advance; advance only to the next event, not to t.            [split]
+ 4 reading      value()/next_event() stash a checkpoint in a module-level cache that a later advance
+                reuses; explain() or segment() normalises the save in place of a copy.                   [reading]
+ 5 value        value() computes from segment math but clamps differently from advance(); xp()/level()
+                skip the pending LEVEL_UP.                                                               [reading]
+ 6 linear       next_event() returns a time <= s.time, or one past a store limit; segment() returns a
+                stale start; value_at clamp applied only on the upper bound.                             [reading, event_times]
+ 7 bounds       no clamp at cap (overflow kept) or at 0 (a negative store after a partial last second);
+                XP keeps growing past the last threshold; level_for counts q < xp.                       [bounds, event_times]
+ 8 event times  floor division for the empty time; round-half-up; event one second late/early; the clamp
+                dropped so overshoot leaks; ceil_div wrong for negative a; no ValueError for b <= 0.     [event_times]
+ 9 canonical    segment.start left at the previous event time (a card's work segment included); latches not
+                resized on SetOrders; stores in dict/sorted-by-id order; pauses in the order they were
+                created, not runner order (standing, then cards); Save.cards in tap/creation order; a
+                CardState kept at work 0, rate 0 and no raise.                                            [canonical]
+10 explain      share_bp taken from the idle remainder or the declared (not flattened) share; adds
+                compounded instead of summed; segment rate computed without the modifier stack; base_den
+                left at 1 on a flow's explanation.                                                       [explain]
+11 rounding     round-to-nearest; costs rounded down (free tiny costs); makes rounded up; two roundings
+                (round each factor); additive sum allowed below 0; stack entries for other refs applied;
+                a lump line (base_den = work_s) rounded before dividing by work_s, or not divided.       [explain]
+12 same instant tied stores resolved by sequence descending (shows as Pause.store); dry pausing by rules
+                order, not mix order. LEVEL_UP-before-STORE_LIMIT is unobservable via the public API. [ordering, dry]
+13 cascade      raise on reaching the cap; no CascadeLimit recorded; verb still applied after the cap;
+                cap counts only verbs, not events; evaluation never resumes (save cannot advance).       [ordering]
+14 hysteresis   latch rises at > instead of >=; falls at the value not at release; release ignored
+                (plain threshold); AtMost mirror reversed; latch recomputed from the value each time.    [ordering]
+16 dry          pause first (or last-in-rules) consumer; pause all; resume at once, or at an hour of the
+                UNscaled cost (the contract is share-scaled); pauses in creation order; a paused card
+                still trains XP (XP segment vs explain) or still costs; a paused card's work (bar) still
+                moves.                                                                  [dry, explain]
+17 validation   validate_rules accepting duplicate ids / cap 0 / makes-and-costs one store; SaveMix
+                accepting shares summing > 100%, a cycle; release on the
+                wrong side accepted; flatten_shares flooring once at the end, or along each path;
+                backwards time silently clamped instead of TimeOrderError; a card shape accepted (work_s 0,
+                cap 0, off-lane or HANDS-declared lane, a store twice across makes, costs,
+                inputs and outcome stores, an uncapped card with a
+                discrete outcome or finished, wrong line count, a raise of an uncapped card, a HANDS card
+                tapped from a HANDS completion); a card off HANDS or a standing id saved into a mix; DeleteMix
+                of a nested or named mix accepted, or of the active mix leaving it active.               [validation]
+18 purity       import random for a tie-break, time/datetime.now for a stamp, fastapi or
+                ashfall_app.main for a helper, a function-local import of any of them.                   [purity]
+19 starved      a dry store whose card is paused on it not flagged starved; starved flagged for a store above
+                0 (a pause waiting out its hour) or with nothing paused on it; all_covered true while a
+                line is starved.                                                                         [dry]
+20 order mix    the running mix ignoring the latch, a greyed order mix, or order sequence (the last wins);
+                the running mix always save.active or mix_order always None; every save clearing pauses, or a
+                running-mix change keeping them; order switches applied as verbs (writing active); the queue
+                acting under an order's mix; SetOrders, SaveMix of an un-greying mix, or deleting the active
+                mix not rebuilding; a player's switch clearing pauses when the running mix stays; no rebuild
+                after an event that changes the running mix; a mix order's latch not held past the cap, or held
+                with no cascade; orders_on not the latches; runs_out_at read from save.active.
+                                                              [order_mix, ordering, cards_*, engine/*]
+
+21 rebase       unknown ids dropped silently; fired reset; orders, mixes or sources left unrenamed; chips and
+                fired read by position; renames applied whatever their kind, or to undeclared ids; RETIRED
+                unlocks unrenamed; one rename step, not the chain; the error naming the new id; no work
+                rescale; a moved card left on its lane; a new store at 0; no clamp, or clamped to the raw
+                cap; no evaluation or no lines at the rebase instant; full rebase under the same rules;
+                the canonical-text and length checks dropped.                                            [rebase]
+
+22 fights       loss_bp rounded down; loses (costs) left unscaled by loss_bp, or wounds, or only the fought tally
+                scaled; win and loss swapped; P over T; inputs scaled by the odds; a tap's odds live, not kept
+                (or not recorded in the tap's speed entries, or its cache not told of a lane change); odds
+                drifting with the clock or remembering the last read; fought counted double; a standing fight
+                ignoring per_hour; a fight's loss draining its store; a fight card with a cap, or the odds
+                source, accepted from content.                         [fight_odds, fight_tallies, fight_validation]
+90 town shares  a lane's shares summed across people (a total above BP refused, or one person's time divided by the
+                people present); a share taken of the player's time, not the person's; the lane-sum check on
+                declared not flattened shares; an idle remainder handed to the person's other cards or to
+                another person; a tap on a lane not yielding its shares, or
+                yielding every lane's; a yielded card's share dropped from the view; a player's SaveMix of
+                the running town mix applied only at the next event.                                   [town_mix_shares, town_mix_validation]
+91 never trains a ruled-lane card with a skill or an XP line accepted; a town card's XP line added to the
+                skill's rate; a join or a town mix changing the hands' XP.                              [town_mix_shares]
+92 town orders   town-mix orders read into running_mix (or hands orders into running_town_mix); save.active
+                consulted for the town; order sequence ignored (the last latched wins); the latch ignored;
+                town_mix_order the wrong index; with no town order a
+                mix still running; a tap order on a joined lane delayed until the shares end, or starting
+                while its shares run (the lane not read free).                                        [town_mix_rules]
+93 tap = share   a share's work or completions counted at the wrong speed (rate rounded the other way, bar not
+                scaled by the share, a lump paid at the completion instead of as a rate); a town card's
+                make line ignoring BP; completions read from the tap path only.                         [town_mix_rules]
+94 join keeps   a join dropping a non-always rule, an always rule of a capped card or another lane's rule; the
+                uncapped always rule kept (the lane taps and yields for good); the share given a wrong
+                card or not at all; the running tap cut at the join; the town's rule inserted above, or
+                latched false; the mix not created, replaced instead of extended; a latch of a kept rule
+                reset; JOINED not written or written for a different lane.                              [town_mix_join]
+95 join once    a join of a joined lane adding a second share card, a second rule or a second unlock; the
+                town's rule added again whenever the mix is present; a player's emptied orders refilled;
+                the rule inserted above the player's order.                                              [town_mix_join]
+96 validation   a join accepted for an undeclared, hands or unruled lane, a capped card, a card on another lane,
+                a mix id without "town:", in a card's outcome or finished, a JOINED unlock in an outcome or
+                the opening; SaveMix accepting a mixed-layer mix, a card on an unjoined lane, a capped
+                ruled-lane card, a lane sum above BP (declared, or through a nested mix), a new "town:" id; a
+                player's SwitchMix of a town mix, or SetQueue with one, accepted; SetOrders with one
+                refused.                                                                              [town_mix_validation]
+97 town rebase  step 6 not landing a join already true (or landing it without the mix, the rule or the
+                share); the always rule kept on the rebased lane; JOINED unrenamed or renamed on the wrong
+                kind; the town's mix id renamed.                                                        [town_mix_join]
+
+RESULTS
+Each variant was planted in the real engine (app/ashfall_app/engine, never committed) on its own, the cards and engine
+contract suites were run whole at the default profile with -x, and the file was restored with `git checkout -- <file>`
+with the tree checked clean before the next. Red is a failing test; a test timeout counts as red. Variants are lettered
+in the order planted within a row and cover each clause of the row and the neighbours the code's structure suggests (a
+few drafts that proved to be no-ops by construction were dropped, not counted). Pass 0 ran on the suites as they were
+at the first cards commit, pass 1 on the suites with the generators bounded and the default profile derandomized (both
+conftest.py), so pass 1 repeats. A variant that survived either pass is killed by a test written from the contract (red
+with the mutant, green without) or marked equivalent with its reason; every equivalent variant was also green over a
+deep run (HYPOTHESIS_PROFILE=ci, 200 examples) of both suites.
+Totals: 159 planted, 145 red at once, 14 survived a pass: 12 killed, 2 equivalent, 0 undecided by the contract.
+
+ 1 split          planted 4, red 4
+ 2 idempotent     planted 3, red 2, survived 1
+      a (advance rebuilds the rates at the target second): its killer went with Hold; not planted again since
+ 3 decide         planted 2, red 2
+ 4 reading        planted 3, red 3
+ 5 value          planted 4, red 2, survived 2
+      a (value() reads the current segment without resolving events): killed by
+        test_reading.py::test_reads_past_an_event_that_stops_the_card_are_not_extrapolated
+      c (xp() reads the current segment without resolving events): killed by
+        test_reading.py::test_reads_past_an_event_that_stops_the_card_are_not_extrapolated
+ 6 linear         planted 5, red 4, survived 1
+      a (next_event offers events at save.time): equivalent: a resolved save has no event at save.time, so next_event's
+        >= and > agree (also green over the deep profile)
+ 7 bounds         planted 5, red 5
+ 8 event times    planted 8, red 8
+ 9 canonical      planted 9, red 8, survived 1
+      i (a CardState holding only a raise is dropped): killed by
+        test_cards_caps.py::test_a_raise_is_kept_for_a_card_that_has_not_run
+10 explain        planted 6, red 6
+11 rounding       planted 9, red 9
+12 same instant   planted 4, red 4
+13 cascade        planted 6, red 5, survived 1
+      f (a verb an order applies is not a firing): killed by
+        test_ordering.py::test_every_verb_the_queue_applies_is_a_firing (re-planted with Order mix, when order
+        switches stopped being verbs)
+14 hysteresis     planted 7, red 5, survived 2
+      a (the initial latch rises at > instead of >=): killed by
+        test_ordering.py::test_every_latch_change_is_a_firing_and_a_mix_orders_waits_past_the_cap (re-planted
+        with Order mix)
+      f (the LATCH handler sets the latch from the value): equivalent: the handler's change_time guard runs first: a
+        latch that is changing has is_true opposite to it, so recomputing from the value gives the flip (also green over
+        the deep profile)
+16 dry            planted 11, red 10, survived 1
+      k (resume_at is an hour of the cost with no cap): killed by
+        test_dry.py::test_a_pause_resumes_at_the_cap_when_an_hour_of_its_cost_is_more_than_the_store_holds
+17 validation     planted 36, red 34, survived 2
+      c (a standing action may make and cost one store): killed by
+        test_validation.py::test_each_invalid_rule_shape_is_rejected[standing action makes and costs one store]
+      ze (new_save accepts a negative multiplier): killed by
+        test_validation.py::test_a_negative_multiplier_is_refused_where_the_stack_starts
+18 purity         planted 8, red 8
+19 starved        planted 5, red 5
+20 order mix      planted 19, red 17, survived 2
+      planted in a copy of app/ (scratch, never the tree), engine and both contract suites whole with -x
+      r (runs_out_at from save.active): killed by
+        engine/test_engine_flows.py::test_a_rule_mix_runs_with_its_runs_out_at
+21 rebase         planted 22, red 21, 1 equivalent
+      planted in a scratch reference rebase written from DESIGN.txt beside the engine (the suite was written before
+      the implementation), test_rebase.py whole, without -x
+      absolute rescale (work * W' // W): equivalent, since c * W * BP * W' / W is whole, so it equals the formula
+
+22 fights         planted 18, red 18 (engine and fight modules only, -x; fight_world.py builds the worlds)
+      loss_bp rounded down (A) and loses left unscaled (B): killed by
+        test_fight_odds.py::test_a_fight_pays_what_its_twin_with_the_odds_written_by_hand_pays
+      invariant 81 is red only for a history-dependent engine (R: odds remember the last read), since odds that
+        depend on the clock alone are the same function on every path that makes the same decisions at the same times
+Banked trips (invariants 87-89; none of these can be planted in a fixture, so each is an engine mutant for someone else to apply)
+ find_at_visit       conditions: CardCount's rise time read off the advance target, not solved off the work segment         [banked_trip_contract]
+   as run: conditions._count_time: the solved time one second late   [banked_trip_contract]   killed (test_the_nth_find_lands_at_the_second_the_nth_trip_completes...)
+ paused_trip_pays    rates: a paused card's make line (not its cost lines) still pays                                       [banked_trip_contract]
+   as run: rates.contribution: a PAUSED run's make line read at FULL   [banked_trip_contract]   killed (test_a_trip_against_an_empty_store_is_paused_and_sends_nothing_ever)
+Fighting trips (a FightDef on a trip's card; planted in the worktree engine, restored with git checkout, tree checked clean)
+ odds_on_inputs      odds: a fight card's input (supply) cost lines also carry the loss entry                                [banked_fighting_trip]
+   as run: odds._fighters: the card's losses extended with a COST ref per input   [banked_fighting_trip]   killed (8 red: test_the_supplies_are_taken_whole_whatever_the_odds, test_no_odds_entry_sits_on_the_supply_line)
+ finds_off_lost      conditions: CardCount of a fighting card read off its lost tally, not its completions                   [banked_fighting_trip]
+   as run: conditions._count and _count_time read the tally store in whole units   [banked_fighting_trip]   killed (7 red: test_finds_land_at_the_nth_trip_made_whether_it_was_won_or_lost, test_finds_land_at_the_same_instants_when_the_trip_is_tapped)
+90 town shares   planted 5, red 5
+91 never trains  planted 2, red 2
+92 town orders   planted 4, red 4
+93 tap = share   planted 1, red 1
+94 join keeps    planted 6, red 5, 1 equivalent
+      planted in the worktree engine one at a time, the four test_town_mix_*.py files whole with -x, restored with
+      `git checkout -- <file>` and the tree checked clean; red is an exit 1 with a FAILED line naming a test
+      c (the town's rule joins latched false): equivalent, since the instant's evaluation after the outcome re-derives
+        the latch, so the save after the join is identical (test_a_join_changes_only_what_invariant_94_lists asserts it)
+      not planted: the running tap cut at the join, a kept rule's latch reset, JOINED written for another lane
+95 join once     planted 2, red 2
+      a (a join of a joined lane runs again): first survived; killed by
+        test_town_mix_join.py::test_a_second_join_of_a_joined_lane_leaves_a_later_always_rule_on_it_alone
+96 validation    planted 8, red 8
+      not planted: the lane-sum check on declared shares, a mixed-layer mix accepted
+97 town rebase   planted 3, red 3
+      b (Join's lane unrenamed in a released outcome): first survived; killed by
+        test_town_mix_join.py::test_a_released_outcome_through_renames_renames_its_joins_lane_and_card
