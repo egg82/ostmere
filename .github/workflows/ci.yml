@@ -43,6 +43,8 @@ jobs:
       matrix:
         shard: [a, b]
     env:
+      # app/tests/test_household_names.py: the names, held only as this secret; unset (forks), it skips.
+      OSTMERE_HOUSEHOLD_NAMES: ${{ secrets.OSTMERE_HOUSEHOLD_NAMES }}
       ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
     steps:
       - uses: actions/checkout@v4

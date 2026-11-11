@@ -18,8 +18,9 @@ a commit older than its parent. Publishing a GitHub release tags the same image 
 (`.github/workflows/container-release.yml`). The nightly deep run is `tests-deep` (`.github/workflows/nightly.yml`).
 
 Images go to two registries, `docker.io/<DOCKERHUB_USERNAME>/ostmere` and `ghcr.io/<owner>/ostmere`, named once in the
-workflow's `DOCKERHUB_REPO` and `GHCR_REPO`. The repository needs one variable, `DOCKERHUB_USERNAME`, and one secret, `DOCKERHUB_TOKEN` (a Docker Hub access
-token with write access); GHCR uses the workflow's own `GITHUB_TOKEN`.
+workflow's `DOCKERHUB_REPO` and `GHCR_REPO`. The repository needs one variable, `DOCKERHUB_USERNAME`, and two secrets:
+`DOCKERHUB_TOKEN` (a Docker Hub access token with write access) and `OSTMERE_HOUSEHOLD_NAMES` (for
+`app/tests/test_household_names.py`); GHCR uses the workflow's own `GITHUB_TOKEN`.
 
 Flux image automation picks the newest `main-` tag of `ghcr.io/egg82/ostmere`, writes it to the cluster repo, and rolls
 the Deployment, whose migrate init container runs `python -m ashfall_app.db migrate` from the same image.
@@ -113,6 +114,10 @@ for the Python-run gates, `app/client/gates/held/` for the client's.
 | `app/tests/test_decision_citations.py` | a decision title quoted after `decisions.md` (or bare, closing a parenthesis) is an index entry or starts exactly one heading or bold lead in `docs/decisions/`; the index and those files' `##` headings agree | none |
 
 The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.
+`app/tests/test_household_names.py` fails when any tracked file names the household that runs the game (its people,
+pets, network, towns, hosts); the names are the CI secret `OSTMERE_HOUSEHOLD_NAMES`, so it skips everywhere but CI.
+Moving a held string to another file moves its `KEPT` entry with it, read from CI's "stale" and "over" output (paths
+and counts, never the names). Test fixtures use neutral site names (`site-a`, `site-b`), never a real one.
 
 ## Fast from the start
 
