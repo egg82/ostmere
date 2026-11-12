@@ -269,3 +269,6 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
 | Look test canvas | https://claude.ai/artifact/1EDLESML2xgre6iuvonRt1, source in `docs/design/look-test-canvas/` |
 | Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing-test/` |
 | Strawman doc (superseded by `decisions.md` where they differ) | https://claude.ai/code/artifact/571817bb-99df-498c-be29-3202fe5ef76e |
+25. **Where a tap's result is said**: a failed tap says why only under the card that was tapped, never in the log; a
+    success goes to the log only, never under the card. Find every place a tap's outcome is drawn (the card's note
+    line, the log, toasts) and route each outcome to one home. Starts after the GitHub move settles.

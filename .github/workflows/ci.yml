@@ -67,10 +67,14 @@ jobs:
         working-directory: app
         run: python -m tools.shards "${{ matrix.shard }}" -q -m "not playthrough" --durations=25 --durations-min=1
 
-  # Collection only (no database): the shards of `tests` together collect exactly what one unsharded run does.
+  # Collection only (no database): the shards of `tests` together collect exactly what one unsharded run does, and
+  # week two's shards (app/tools/weektwo_shards.py) select each week-two test exactly once; their names are handed to
+  # `playthrough-week-two` as its matrix, so the shards checked are the shards run.
   shards-cover:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      weektwo: ${{ steps.weektwo.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -82,6 +86,12 @@ jobs:
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - working-directory: app
         run: python -m tools.shards --check
+      - id: weektwo
+        working-directory: app
+        run: |
+          set -o pipefail
+          python -m tools.weektwo_shards --check | tee weektwo-shards.out
+          grep '^matrix=' weektwo-shards.out >> "$GITHUB_OUTPUT"
 
   # The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays each
   # representative route once per session and they share it), beside `tests` so neither waits on the other. Split by
@@ -122,13 +132,43 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  # The saved ends week two's chapters play on (app/tests/weektwo/ends.py), written by tools/chapter_saves.py (about 11
-  # minutes) and cached under their key (ends.key(): the rules, the engine's source, the play code), so a run whose key
-  # is cached unpacks it in seconds. The jobs that read the saves take them as an artifact and fail, not replay, when they
-  # are missing or stale (ASHFALL_REQUIRE_SAVED).
+  # The saved ends week two's chapters play on (app/tests/weektwo/ends.py), written by tools/chapter_saves.py and cached
+  # under their key (ends.key(): the rules, the engine's source, the play code), so a run whose key is cached unpacks it
+  # in seconds. No route's chain reads another's and no heavy-step reading needs another, so each part writes its routes'
+  # ends (typical's with the rebased saves) or a readings part (ends.READINGS), and the readers merge the parts'
+  # artifacts; test_weektwo_saved.py fails if a saved file is in no part. The jobs that read the saves fail, not replay,
+  # when they are missing or stale (ASHFALL_REQUIRE_SAVED).
   chapter-saves:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - part: typical
+            names: typical
+          - part: sharp
+            names: sharp
+          - part: whenever
+            names: whenever babysitter
+          - part: readings-early
+            names: readings-early
+          - part: readings-twelve-a
+            names: readings-twelve-a
+          - part: readings-twelve-b
+            names: readings-twelve-b
+          - part: readings-twelve-c
+            names: readings-twelve-c
+          - part: readings-twelve-d
+            names: readings-twelve-d
+          - part: readings-twelve-e
+            names: readings-twelve-e
+          - part: readings-fifteen-a
+            names: readings-fifteen-a
+          - part: readings-fifteen-b
+            names: readings-fifteen-b
+          - part: readings-fifteen-c
+            names: readings-fifteen-c
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
@@ -147,15 +187,15 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: chapter-saves-cache
-          key: chapter-saves-v1-${{ steps.key.outputs.key }}
-      - name: Saves, from the cache or written
+          key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ matrix.part }}
+      - name: Saves, from the cache or written (${{ matrix.names }})
         working-directory: app
         run: |
-          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache"
+          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" ${{ matrix.names }}
           test -s "$ASHFALL_SAVES_ROOT"/*/manifest.json
       - uses: actions/upload-artifact@v4
         with:
-          name: chapter-saves
+          name: chapter-saves-${{ matrix.part }}
           path: chapter-saves/
           retention-days: 1
 
@@ -216,7 +256,8 @@ jobs:
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - uses: actions/download-artifact@v4
         with:
-          name: chapter-saves
+          pattern: chapter-saves-*
+          merge-multiple: true
           path: chapter-saves
       - uses: actions/download-artifact@v4
         with:
@@ -233,16 +274,21 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
   # Week two's plays (tests/weektwo/routes.py), each chapter played on from the saved end of the one before
-  # (tests/weektwo/ends.py). A play and its readers share one xdist worker (tests/weektwo/conftest.py, `group_by_play`),
-  # so the workers split the job by (chapter, route).
+  # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
+  # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves]
+    needs: [chapter-saves, shards-cover]
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.shards-cover.outputs.weektwo) }}
     env:
       READOUTS_OUT: ${{ github.workspace }}/readouts-new
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       ASHFALL_REQUIRE_SAVED: "1"
+      WEEKTWO_SHARD: ${{ matrix.shard }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -254,10 +300,12 @@ jobs:
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - uses: actions/download-artifact@v4
         with:
-          name: chapter-saves
+          pattern: chapter-saves-*
+          merge-multiple: true
           path: chapter-saves
-      - working-directory: app
-        run: python -m pytest -q -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=25 --durations-min=1
+      - name: Playthrough (week two, ${{ matrix.shard }})
+        working-directory: app
+        run: python -m pytest -v -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=25 --durations-min=1
       - name: Upload changed readouts
         if: failure()
         uses: actions/upload-artifact@v4
