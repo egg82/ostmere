@@ -6,7 +6,6 @@ between its visits opens, and each calendar day's arrivals; the same for days ni
 week three's first, which plays on from day twelve's end. Each takes day eight unless given another chapter. Ids
 and numbers only (CLAUDE.md, "Never spoil the owner")."""
 from collections import Counter
-from concurrent.futures import Future
 from functools import cache
 
 from ashfall_app.engine import Save, SetQueue, TapCard, Verb
@@ -22,7 +21,6 @@ from tests.dayone.parity import Measured, Present, babysat, replay
 from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
 from tests.weektwo import counters
-from tests.weektwo import readings as readings_
 from tests.weektwo.routes import eleven, fifteen, nine, twelve, week2
 
 EIGHT = w2.day_eight("typical")
@@ -80,20 +78,15 @@ def heavy_steps(p: DayTwoPlayer, chapter: Later) -> list[tuple[str, int]]:
 
 
 @cache
-def readings(chapter: str) -> tuple[list[tuple[str, int]], dict[tuple[str, int], Future[bool]]]:
-    """The typical route's heavy steps of a chapter in order, and their readings, all started at once (readings.py)."""
+def decided_in(chapter: str, part: int) -> Decided:
+    """Whether each of the part's heavy steps decides, kept once read: none (empty) when the chapter has fewer heavy
+    steps than the part starts at."""
     p, later = PLAYS[chapter]("typical"), CHAPTERS[chapter]
     heavy = heavy_steps(p, later)
     assert len(heavy) <= PARTS[chapter] * PART_STEPS, f"{chapter} has {len(heavy)} heavy steps, more than its parts hold"
     steps = {v.label: v.steps for v in chapter_visits(p, later)}
-    return heavy, readings_.started({(label, i): steps[label][i] for label, i in heavy}, p.rules)
-
-
-def decided_in(chapter: str, part: int) -> Decided:
-    """Whether each of the part's heavy steps decides: none (empty) when the chapter has fewer heavy steps than the part
-    starts at."""
-    heavy, found = readings(chapter)
-    return {key: found[key].result() for key in heavy[part * PART_STEPS:(part + 1) * PART_STEPS]}
+    return {(label, i): counters.decides(steps[label][i], p.rules)
+            for label, i in heavy[part * PART_STEPS:(part + 1) * PART_STEPS]}
 
 
 def typical_decided(chapter: str) -> Decided:
