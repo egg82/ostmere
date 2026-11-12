@@ -144,9 +144,10 @@ suite still runs in seconds.
   (`app/tests/weektwo/ends.py`): each chapter starts from the saved end of the one before, and the rebased saves are
   read, not replayed from the start. The saves are not in git: `python tools/chapter_saves.py --write` (from `app/`,
   with `PYTHONPATH=.`, about 11 minutes) writes them under `~/.cache/ashfall/chapter-saves/<key>/`, the key hashing
-  what they depend on (`ends.key()`: the rules, the engine's source, the play code). CI's `chapter-saves` job writes
-  them in parts, one per route chain, keeps each in the Actions cache under that key and hands them to the
-  week-one-saved and week-two jobs as artifacts the readers merge. Week two's job runs one shard per chapter, day
+  what they depend on (`ends.key()`: the rules, the engine's source, the play code). The typical route's heavy-step readings,
+  minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
+  them. CI's `chapter-saves` job writes them in parts, one per route chain or readings part, keeps each in the Actions
+  cache under that key and hands them to the week-one-saved and week-two jobs as artifacts the readers merge. Week two's job runs one shard per chapter, day
   twelve's typical play in one of its own (`app/tools/weektwo_shards.py`), so a play's readers stay in one job;
   `shards-cover` fails unless the shards select each week-two test exactly once, and hands their names to the job as
   its matrix. With no saves for today's key the plays run from the start, so a local run needs no step; CI sets

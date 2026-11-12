@@ -134,9 +134,10 @@ jobs:
 
   # The saved ends week two's chapters play on (app/tests/weektwo/ends.py), written by tools/chapter_saves.py and cached
   # under their key (ends.key(): the rules, the engine's source, the play code), so a run whose key is cached unpacks it
-  # in seconds. No route's chain reads another's, so each part writes its routes' ends (typical's with the rebased saves)
-  # and the readers merge the parts' artifacts; test_weektwo_saved.py fails if a saved route is in no part. The jobs that
-  # read the saves fail, not replay, when they are missing or stale (ASHFALL_REQUIRE_SAVED).
+  # in seconds. No route's chain reads another's and no heavy-step reading needs another, so each part writes its routes'
+  # ends (typical's with the rebased saves) or a readings part (ends.READINGS), and the readers merge the parts'
+  # artifacts; test_weektwo_saved.py fails if a saved file is in no part. The jobs that read the saves fail, not replay,
+  # when they are missing or stale (ASHFALL_REQUIRE_SAVED).
   chapter-saves:
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -145,11 +146,29 @@ jobs:
       matrix:
         include:
           - part: typical
-            routes: typical
+            names: typical
           - part: sharp
-            routes: sharp
+            names: sharp
           - part: whenever
-            routes: whenever babysitter
+            names: whenever babysitter
+          - part: readings-early
+            names: readings-early
+          - part: readings-twelve-a
+            names: readings-twelve-a
+          - part: readings-twelve-b
+            names: readings-twelve-b
+          - part: readings-twelve-c
+            names: readings-twelve-c
+          - part: readings-twelve-d
+            names: readings-twelve-d
+          - part: readings-twelve-e
+            names: readings-twelve-e
+          - part: readings-fifteen-a
+            names: readings-fifteen-a
+          - part: readings-fifteen-b
+            names: readings-fifteen-b
+          - part: readings-fifteen-c
+            names: readings-fifteen-c
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
@@ -169,10 +188,10 @@ jobs:
         with:
           path: chapter-saves-cache
           key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ matrix.part }}
-      - name: Saves, from the cache or written (${{ matrix.routes }})
+      - name: Saves, from the cache or written (${{ matrix.names }})
         working-directory: app
         run: |
-          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" ${{ matrix.routes }}
+          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" ${{ matrix.names }}
           test -s "$ASHFALL_SAVES_ROOT"/*/manifest.json
       - uses: actions/upload-artifact@v4
         with:

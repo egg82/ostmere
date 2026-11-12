@@ -5,6 +5,7 @@ past its last beat; and what the readouts print (report.py): the chapter's spine
 between its visits opens, and each calendar day's arrivals; the same for days nine to twelve and for day fifteen,
 week three's first, which plays on from day twelve's end. Each takes day eight unless given another chapter. Ids
 and numbers only (CLAUDE.md, "Never spoil the owner")."""
+import os
 from collections import Counter
 from functools import cache
 
@@ -20,7 +21,7 @@ from tests.dayone import capcheck, checks, daily
 from tests.dayone.parity import Measured, Present, babysat, replay
 from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
-from tests.weektwo import counters
+from tests.weektwo import counters, ends
 from tests.weektwo.routes import eleven, fifteen, nine, twelve, week2
 
 EIGHT = w2.day_eight("typical")
@@ -80,13 +81,24 @@ def heavy_steps(p: DayTwoPlayer, chapter: Later) -> list[tuple[str, int]]:
 @cache
 def decided_in(chapter: str, part: int) -> Decided:
     """Whether each of the part's heavy steps decides, kept once read: none (empty) when the chapter has fewer heavy
-    steps than the part starts at."""
+    steps than the part starts at. Read from the saved readings (ends.READINGS) where the saves are present; a step with
+    none fails under ends.REQUIRE and is read here otherwise."""
     p, later = PLAYS[chapter]("typical"), CHAPTERS[chapter]
     heavy = heavy_steps(p, later)
     assert len(heavy) <= PARTS[chapter] * PART_STEPS, f"{chapter} has {len(heavy)} heavy steps, more than its parts hold"
+    mine = heavy[part * PART_STEPS:(part + 1) * PART_STEPS]
+    saved = ends.saved_readings(chapter) if ends.available() else {}
+    if os.environ.get(ends.REQUIRE):
+        missing = [key for key in mine if key not in saved]
+        assert not missing, f"{chapter}'s heavy steps {missing} have no saved reading: {ends.REWRITE}"
+    return {key: saved[key] if key in saved else read(p, later, key) for key in mine}
+
+
+def read(p: DayTwoPlayer, later: Later, key: tuple[str, int]) -> bool:
+    """Whether the heavy step at `key` (visit label, step index) of `p`'s chapter `later` decides."""
+    label, i = key
     steps = {v.label: v.steps for v in chapter_visits(p, later)}
-    return {(label, i): counters.decides(steps[label][i], p.rules)
-            for label, i in heavy[part * PART_STEPS:(part + 1) * PART_STEPS]}
+    return counters.decides(steps[label][i], p.rules)
 
 
 def typical_decided(chapter: str) -> Decided:

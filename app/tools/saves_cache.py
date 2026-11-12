@@ -1,11 +1,11 @@
 """CI's `chapter-saves` job (docs/engineering.md, "Fast from the start"): the saved ends for today's key, from the runner
 cache or written.
 
-    python -m tools.saves_cache CACHE_DIR [ROUTE...]   # from app/; ASHFALL_SAVES_ROOT is where the saves are put
+    python -m tools.saves_cache CACHE_DIR [PART...]   # from app/; ASHFALL_SAVES_ROOT is where the saves are put
 
 CACHE_DIR holds one `<key>.tar` per key (the job's `cache:` path). A tar for today's key is unpacked into the saves root
 (a hit); without one the writer runs and its output is tarred into CACHE_DIR (a miss). Only the newest KEEP tars are kept.
-With ROUTEs, only those routes' ends are written (tools/chapter_saves.py): CI caches each part under its own key.
+With PARTs, only those are written (tools/chapter_saves.py, `--write`): CI caches each part under its own key.
 """
 import subprocess
 import sys
@@ -56,9 +56,9 @@ def run(cache: Path, root: Path, key: str, write: Callable[[], None]) -> tuple[s
     return result, tar.stat().st_size
 
 
-def writer(routes: list[str]) -> Callable[[], None]:
+def writer(parts: list[str]) -> Callable[[], None]:
     def write() -> None:
-        subprocess.run([sys.executable, "tools/chapter_saves.py", "--write", *routes], check=True)
+        subprocess.run([sys.executable, "tools/chapter_saves.py", "--write", *parts], check=True)
     return write
 
 
@@ -69,7 +69,7 @@ def main(argv: list[str]) -> int:
     from tests.weektwo import ends
     started = time.monotonic()
     result, size = run(Path(argv[0]), ends.root(), ends.key(), writer(argv[1:]))
-    print(f"event=chapter_saves.cache key={ends.key()[:8]} routes={','.join(argv[1:]) or 'all'} result={result} "
+    print(f"event=chapter_saves.cache key={ends.key()[:8]} parts={','.join(argv[1:]) or 'all'} result={result} "
           f"seconds={time.monotonic() - started:.0f} bytes={size}", flush=True)
     return 0
 
