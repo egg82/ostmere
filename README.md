@@ -72,3 +72,8 @@ limit per test.
 - `docs/systems.md`: each system, the question it answers and where it lives.
 - `docs/core-loop.md`: the core loop.
 - `docs/open-work.md`: what's next.
+
+## License
+
+AGPL-3.0 (see [`LICENSE`](LICENSE)). Run it, change it and share it; anyone who distributes or serves a modified copy
+publishes its source under the same licence, with the copyright notices kept.
