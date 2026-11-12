@@ -100,6 +100,41 @@ def rebased_path(chapter: str) -> Path:
     return golden() / f"rebased-{chapter}.json"
 
 
+Span = tuple[str, int, int | None]
+"""(chapter, first heavy step, the one after the last or None for all the rest): a slice of verdicts.heavy_steps."""
+READINGS: dict[str, tuple[Span, ...]] = {
+    "readings-early": (("eight", 0, None), ("nine", 0, None), ("eleven", 0, None)),
+    "readings-twelve-a": (("twelve", 0, 3), ("twelve", 8, None)),
+    "readings-twelve-b": (("twelve", 3, 5),),
+    "readings-twelve-c": (("twelve", 5, 6),),
+    "readings-twelve-d": (("twelve", 6, 7),),
+    "readings-twelve-e": (("twelve", 7, 8),),
+    "readings-fifteen-a": (("fifteen", 0, 12),),
+    "readings-fifteen-b": (("fifteen", 12, 13),),
+    "readings-fifteen-c": (("fifteen", 13, None),),
+}
+"""The typical route's heavy-step readings (verdicts.decided_in) saved beside the ends, in parts CI writes in jobs of
+their own: no reading needs another, and day twelve's take minutes each. Each chapter's spans run from 0 with no gap and
+the last open, so a step added by content is read by its chapter's last span."""
+
+
+def readings_path(chapter: str, start: int) -> Path:
+    return golden() / f"readings-{chapter}-{start}.json"
+
+
+def saved_readings(chapter: str) -> dict[tuple[str, int], bool]:
+    """Every saved reading of `chapter`'s heavy steps, by (visit label, step index)."""
+    found: dict[tuple[str, int], bool] = {}
+    for f in sorted(golden().glob(f"readings-{chapter}-*.json")):
+        for label, i, decides in json.loads(f.read_text())["readings"]:
+            found[str(label), int(i)] = bool(decides)
+    return found
+
+
+def readings_json(found: dict[tuple[str, int], bool]) -> str:
+    return json.dumps({"readings": [[label, i, decides] for (label, i), decides in found.items()]}, indent=1) + "\n"
+
+
 class _Out(pickle.Pickler):
     def __init__(self, f: io.BytesIO, p: DayTwoPlayer) -> None:
         super().__init__(f, protocol=5)

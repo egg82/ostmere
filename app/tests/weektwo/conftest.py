@@ -19,6 +19,7 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.parity import Measured
 from tests.weektwo import ends, rebased, verdicts
 from tests.plays import mark_plays
+from tools import weektwo_shards as shards
 from tests.dayone import cures
 from tests.ladder import readout
 from tests.worth import readout as worth
@@ -85,10 +86,24 @@ def group_by_play(items: list[pytest.Item]) -> None:
 
 
 @pytest.hookimpl(tryfirst=True)   # xdist reads the group markers in its own hook, which runs after a conftest's unless this does
-def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     mark_plays(items, EIGHT_PLAYS, PLAY_TIMEOUT_S)
     group_by_play(items)
+    keep_shard(config, items)
     items.sort(key=played_first)
+
+
+def keep_shard(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Under WEEKTWO_SHARD, deselect the week-two tests another shard runs (tools/weektwo_shards.py); tests elsewhere
+    are kept."""
+    name = shards.chosen()
+    if name is None:
+        return
+    dropped = [i for i in items if shards.in_week_two(i) and shards.shard_of(play_of(i)) != name]
+    if dropped:
+        config.hook.pytest_deselected(items=dropped)
+        gone = set(map(id, dropped))
+        items[:] = [i for i in items if id(i) not in gone]
 
 
 @pytest.fixture(scope="session")
