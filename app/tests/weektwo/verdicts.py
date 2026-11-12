@@ -59,8 +59,8 @@ HUNT_PELT_GAP = ("content gap: pelt loses over half its making 24 h away from da
                  "(open-work.md, item 24)")
 """The cap-loss content gaps held as strict xfails, one reason per store over the chapters it fails in; each goes red
 once its sink lands."""
-PART_STEPS = 2
-PARTS = {"eight": 7, "nine": 4, "eleven": 3, "twelve": 6, "fifteen": 7}
+PART_STEPS = 1
+PARTS = {"eight": 13, "nine": 7, "eleven": 6, "twelve": 11, "fifteen": 14}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
 each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
 than its parts hold fails `decided_in`."""

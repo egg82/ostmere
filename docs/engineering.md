@@ -147,8 +147,7 @@ suite still runs in seconds.
   what they depend on (`ends.key()`: the rules, the engine's source, the play code). CI's `chapter-saves` job writes
   them in parts, one per route chain, keeps each in the Actions cache under that key and hands them to the
   week-one-saved and week-two jobs as artifacts the readers merge. Week two's job runs one shard per chapter, day
-  twelve's typical play in one of its own (`app/tools/weektwo_shards.py`), so a play's readers stay in one job, and a
-  chapter's counting reads its heavy steps in forked processes at once (`app/tests/weektwo/readings.py`);
+  twelve's typical play in one of its own (`app/tools/weektwo_shards.py`), so a play's readers stay in one job;
   `shards-cover` fails unless the shards select each week-two test exactly once, and hands their names to the job as
   its matrix. With no saves for today's key the plays run from the start, so a local run needs no step; CI sets
   `ASHFALL_REQUIRE_SAVED=1`, which makes a missing or stale save a failure. A saved end is held to today's play link
