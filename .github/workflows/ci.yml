@@ -286,7 +286,7 @@ jobs:
           path: chapter-saves
       - name: Playthrough (week two, ${{ matrix.shard }})
         working-directory: app
-        run: python -m pytest -q -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=25 --durations-min=1
+        run: python -m pytest -v -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=25 --durations-min=1
       - name: Upload changed readouts
         if: failure()
         uses: actions/upload-artifact@v4
