@@ -26,7 +26,6 @@ SHARDS: dict[str, frozenset[str]] = {
     "eleven": frozenset({"eleven"}),
     "twelve-typical": frozenset({"twelve-typical"}),
     "twelve": frozenset({"twelve"}),
-    "fifteen": frozenset({"fifteen"}),
 }
 ENV = "WEEKTWO_SHARD"
 WEEK_TWO = Path(__file__).resolve().parents[1] / "tests" / "weektwo"
