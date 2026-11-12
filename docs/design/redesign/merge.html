@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ostmere, Merged</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+/* ---------- game tokens: A's, value for value (built on game.css's palette) ---------- */
+:root {
+  --bg: #0f0f14; --raise: #16161d; --press: #1e1d26; --rule: #24232b; --track: #0b0b0f; --stage: #0b0a0b;
+  --ink-hi: #e8dfd2; --ink: #cfc7ba; --ink-dim: #8f877d;
+  --ember: #c8743a; --ember-hot: #e0954f; --alarm: #e0614a;
+  --h0: #b8865a; --h1: #8f9a6a; --h2: #6f8aa3; --h3: #c9a35c; --h4: #b0604c; --h5: #9a7aa0;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 40px;
+  --t-meta: 13px; --t-body: 15px; --t-story: 18px; --t-display: 22px;
+  /* new in the merge: C's feel timings, and an annotation ink that is never game ink */
+  --press-ms: 60ms; --settle-ms: 160ms; --settle-ease: cubic-bezier(.3,1.5,.5,1); --hop-ms: 150ms;
+  --anno: #6fa6b4;
+  --tagA: #e8dfd2; --tagB: #7fa0c0; --tagC: #9db07a; --tagE: #d0ac66;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font: 400 var(--t-body)/1.45 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+.fell { font-family: "IM Fell English SC", Georgia, serif; font-weight: 400; }
+
+/* ---------- presentation ---------- */
+.page { max-width: 1440px; margin: 0 auto; padding: 56px 30px 96px; }
+.page > section { margin-top: 96px; }
+.kicker { font-size: var(--t-meta); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); margin: 0 0 var(--s2); }
+h1 { font: 400 44px/1.05 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); margin: 0 0 var(--s3); }
+h2 { font: 400 30px/1.1 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); margin: 0 0 var(--s3); }
+h3 { font-size: 17px; font-weight: 500; color: var(--ink-hi); margin: var(--s4) 0 var(--s2); }
+p.lede { font-size: 19px; line-height: 1.5; max-width: 46em; margin: 0; }
+.prose { max-width: 46em; } .prose p { margin: 0 0 var(--s3); }
+.cap { font-size: var(--t-meta); color: var(--ink-dim); margin: var(--s2) 0 0; max-width: 44em; }
+.cap b { color: var(--ink); font-weight: 500; }
+.mock-label { font-size: var(--t-meta); color: var(--ink-dim); margin: 0 0 var(--s2); letter-spacing: .04em; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.row-gap { display: flex; gap: var(--s5); flex-wrap: wrap; align-items: flex-start; }
+.row-gap > * { min-width: 0; max-width: 100%; }
+.scrollbox { overflow-x: auto; max-width: 100%; padding-bottom: 8px; }
+.cols3 { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+/* credit tags */
+.from { display: inline-block; font-size: 12px; line-height: 18px; padding: 0 6px; border-radius: 2px; border: 1px solid currentColor; letter-spacing: .04em; white-space: nowrap; vertical-align: 2px; font-weight: 500; font-style: normal; }
+.from.A { color: var(--tagA); } .from.B { color: var(--tagB); } .from.C { color: var(--tagC); } .from.E { color: var(--tagE); } .from.G { color: #b7a3cf; }
+.legendbar { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: var(--s4); font-size: var(--t-meta); color: var(--ink-dim); }
+.legendbar span { display: inline-flex; gap: 8px; align-items: center; }
+
+/* annotation (never game ink) */
+.anno { font-size: 12px; color: var(--anno); letter-spacing: .03em; }
+.anno-line { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--anno); pointer-events: none; z-index: 5; }
+.anno-line span { position: absolute; right: 6px; top: -17px; font-size: 11px; color: var(--anno); background: var(--bg); padding: 0 4px; }
+.notebox { border-left: 2px dotted var(--anno); padding: 2px 0 2px 10px; font-size: 12px; color: var(--anno); line-height: 1.4; }
+
+/* tables */
+table.t { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.t th { text-align: left; font-weight: 500; color: var(--ink-dim); font-size: var(--t-meta); letter-spacing: .06em; text-transform: uppercase; padding: var(--s2) var(--s3) var(--s2) 0; border-bottom: 1px solid var(--rule); }
+table.t td { padding: 9px var(--s3) 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.t td:first-child { color: var(--ink-hi); }
+table.t tr.grp td { color: var(--ink-dim); font-size: var(--t-meta); letter-spacing: .1em; text-transform: uppercase; padding-top: 22px; }
+.loud3 { color: var(--ember-hot); } .loud2 { color: var(--ink-hi); } .loud1 { color: var(--ink-dim); } .loudx { color: var(--alarm); }
+.pill { display: inline-block; font-size: 12px; padding: 1px 6px; border-radius: 2px; background: var(--raise); color: var(--ink-dim); white-space: nowrap; }
+
+/* swatches + scale */
+.sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--s3); }
+.sw div { font-size: var(--t-meta); color: var(--ink-dim); }
+.sw i { display: block; height: 40px; border-radius: 2px; margin-bottom: 6px; }
+.scale > div { display: flex; align-items: baseline; gap: var(--s3); padding: 7px 0; border-bottom: 1px solid var(--rule); }
+.scale span:first-child { width: 110px; flex: none; font-size: var(--t-meta); color: var(--ink-dim); }
+
+/* ---------- the game, mocked ---------- */
+.device { background: var(--bg); position: relative; overflow: hidden; outline: 1px solid #2a2932; flex: none; }
+.phone { width: 390px; max-width: 100%; }
+.lbl { font-size: var(--t-meta); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+.dim { color: var(--ink-dim); } .hi { color: var(--ink-hi); } .meta { font-size: var(--t-meta); }
+.txtbtn { font-size: var(--t-meta); color: var(--ink); text-decoration: underline; text-decoration-color: #4a4650; text-underline-offset: 4px; white-space: nowrap; padding: 12px 0; }
+.btn { display: inline-flex; align-items: center; justify-content: center; font-size: var(--t-body); color: var(--ink-hi); background: var(--raise); border-radius: 2px; padding: 10px 16px; min-height: 44px; box-shadow: 0 2px 0 #050407; }
+.btn.primary { background: var(--ember); color: #1a0f08; font-weight: 500; }
+.bar { height: 2px; background: var(--track); position: relative; }
+.bar > i { position: absolute; inset: 0 auto 0 0; background: var(--ink-dim); }
+.bar.yours { height: 3px; } .bar.yours > i { background: var(--ember); }
+.scene { position: relative; background: var(--stage); }
+.scene svg { display: block; width: 100%; height: 100%; }
+.frame { box-shadow: 0 0 0 2px #08070a, 0 0 0 3px #34323c; }
+
+.camp { display: flex; align-items: center; gap: 12px; }
+.camp .lv { font: 400 var(--t-display)/1 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); white-space: nowrap; }
+.camp .bar { flex: 1; }
+.camp .next { font-size: var(--t-meta); color: var(--ink-dim); white-space: nowrap; }
+.aim { font-style: italic; color: var(--ink-dim); }
+.chip { font-size: var(--t-meta); color: var(--ink); white-space: nowrap; } .chip small { color: var(--ink-dim); font-size: var(--t-meta); }
+
+.strip p { margin: 0; font-style: italic; font-size: var(--t-story); line-height: 1.35; color: var(--ink-hi); }
+.strip p.old { color: var(--ink-dim); font-size: var(--t-body); }
+.strip p.new::before { content: ""; display: inline-block; width: 3px; height: 14px; background: var(--ember-hot); margin-right: 8px; vertical-align: -1px; }
+
+.split { display: flex; height: 8px; gap: 2px; } .split i { display: block; height: 100%; border-radius: 1px; }
+.legend { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: var(--t-meta); color: var(--ink); margin-top: 6px; }
+.legend span { white-space: nowrap; }
+.legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 1px; background: var(--c); margin-right: 6px; }
+.legend b { font-weight: 500; color: var(--ink-hi); }
+
+/* cards */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
+.card { background: var(--raise); border-radius: 2px; padding: 11px 12px 0; min-height: 78px; display: flex; flex-direction: column; position: relative; box-shadow: 0 2px 0 #050407; }
+.card .top { display: flex; align-items: baseline; gap: var(--s2); }
+.card .name { color: var(--ink-hi); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .name::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 1px; background: var(--c, transparent); margin-right: 8px; vertical-align: 1px; }
+.card .n { font-size: var(--t-meta); color: var(--ink-dim); }
+.card .sub { font-size: var(--t-meta); color: var(--ink-dim); margin-top: 2px; }
+.card .sub b { color: var(--ink-hi); font-weight: 500; }
+.card .bar { margin: auto -12px 0; }
+.card .bar > i { background: var(--c, var(--ink-dim)); }
+.card.wait { background: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
+.card.wait .name { color: var(--ink); }
+.card.pressed { transform: translateY(2px); box-shadow: 0 0 0 #050407; background: var(--press); }
+.card.fail { box-shadow: inset 0 0 0 1px var(--alarm); }
+.card.lit { box-shadow: inset 3px 0 0 var(--ember-hot), 0 2px 0 #050407; background: linear-gradient(90deg, rgba(224,149,79,.16), var(--raise) 60%); }
+.card.levelled { background: linear-gradient(90deg, rgba(224,149,79,.22), rgba(224,149,79,.04)); }
+.card .lvl { font-size: var(--t-meta); color: var(--ember-hot); margin-top: 2px; }
+.card .lvl s { color: var(--ink-dim); text-decoration: none; }
+.card .arr { color: var(--ink-dim); }
+.under { font-size: var(--t-meta); color: var(--alarm); padding: 6px 2px 0; line-height: 1.3; }
+.ring { position: absolute; inset: -6px; border-radius: 4px; box-shadow: 0 0 0 1px rgba(232,223,210,.35); pointer-events: none; }
+.plus { position: absolute; right: 10px; top: -15px; font-size: var(--t-meta); color: var(--ink-hi); }
+.cause { font-size: var(--t-meta); color: var(--ink-dim); }
+.cause::before { content: "↳ "; color: var(--ink-dim); }
+.ph { color: var(--anno); font-style: normal; border-bottom: 1px dotted var(--anno); }
+
+/* ledger */
+.ledger { display: grid; grid-template-columns: 1fr auto auto; column-gap: var(--s3); align-items: baseline; }
+.ledger > div { padding: 5px 0; }
+.ledger .k { color: var(--ink); } .ledger .r { color: var(--ink-hi); text-align: right; } .ledger .s { color: var(--ink-dim); font-size: var(--t-meta); text-align: right; white-space: nowrap; }
+.lgroup { display: flex; align-items: baseline; gap: 10px; border-top: 1px solid var(--rule); padding: 10px 0 4px; }
+.lgroup.empty { color: var(--ink-dim); }
+.lgroup .lbl { font-size: var(--t-meta); }
+.flash { background: linear-gradient(90deg, rgba(224,149,79,.18), transparent 70%); }
+
+/* asks */
+.ask { outline: 1px solid var(--ember-hot); border-radius: 2px; padding: 14px var(--s3); background: #17130f; }
+.ask .who { display: flex; align-items: center; gap: 6px; font-size: var(--t-meta); color: var(--ink-dim); }
+.face { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 2px; font-size: 12px; font-weight: 700; color: #15110d; }
+.face.L { background: #b89a72; } .face.M { background: #8a97a6; }
+.ask .q { font-style: italic; font-size: var(--t-story); color: var(--ink-hi); margin: 6px 0 2px; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-top: 10px; }
+.choice { background: var(--raise); border-radius: 2px; padding: 9px 11px; min-height: 44px; box-shadow: 0 2px 0 #050407; }
+.choice b { display: flex; align-items: center; gap: 6px; color: var(--ink-hi); font-weight: 500; }
+.choice .face { width: 18px; height: 18px; font-size: 11px; }
+.choice div { font-size: var(--t-meta); color: var(--ink); }
+.choice .led { color: var(--ink-dim); } .choice .led em { font-style: normal; color: var(--ink-hi); }
+.facts { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: var(--t-meta); color: var(--ink-dim); }
+.facts span b { color: var(--ink); font-weight: 400; }
+.facts .perm b { color: var(--ember-hot); }
+.asks-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+
+/* rail (desktop) */
+.rail { border-right: 1px solid var(--rule); padding: 18px 0; display: flex; flex-direction: column; }
+.rail .nav a { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 20px; color: var(--ink); text-decoration: none; }
+.rail .nav a small { font-size: var(--t-meta); color: var(--ink-dim); }
+.rail .nav a.on { color: var(--ink-hi); box-shadow: inset 2px 0 0 var(--ink-hi); background: var(--raise); }
+.rail .sk { padding: 7px 20px; }
+.rail .sk div { display: flex; justify-content: space-between; } .rail .sk b { font-weight: 400; color: var(--ink); } .rail .sk span { font-size: var(--t-meta); color: var(--ink-dim); }
+.rail .sk .bar { margin-top: 5px; }
+.rail .foot { margin-top: auto; padding: 0 20px; font-size: var(--t-meta); color: var(--ink-dim); }
+
+/* bottom bar (phone) */
+.bbar { position: absolute; left: 0; right: 0; bottom: 0; height: 62px; border-top: 1px solid var(--rule); background: var(--bg); display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: var(--t-meta); color: var(--ink-dim); }
+.bbar div { padding-top: 10px; } .bbar svg { display: block; margin: 0 auto 4px; }
+.bbar .on { color: var(--ink-hi); box-shadow: inset 0 2px 0 var(--ink-hi); }
+
+/* sheets */
+.sheet { background: var(--raise); border-radius: 6px 6px 0 0; box-shadow: 0 -1px 0 #2e2c36; }
+.grab { width: 36px; height: 4px; border-radius: 2px; background: #3a3842; margin: 8px auto 0; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 10px var(--s3) 0; }
+.sheet-head .fell { font-size: var(--t-display); color: var(--ink-hi); }
+.seg { display: flex; gap: var(--s4); padding: 0 var(--s3); border-bottom: 1px solid var(--rule); overflow: hidden; }
+.seg span { padding: 12px 0 10px; color: var(--ink-dim); white-space: nowrap; }
+.seg span.on { color: var(--ink-hi); box-shadow: inset 0 -2px 0 var(--ink-hi); }
+.filters { display: flex; gap: 6px; padding: 10px var(--s3); flex-wrap: wrap; }
+.filters span { font-size: var(--t-meta); padding: 3px 9px; border-radius: 2px; color: var(--ink-dim); box-shadow: inset 0 0 0 1px var(--rule); }
+.filters span.on { color: var(--ink-hi); background: var(--press); box-shadow: none; }
+.filters span.later { color: #5c5862; box-shadow: inset 0 0 0 1px #1d1c23; }
+.chapter { margin: 0 var(--s3); padding: 12px 0 12px 12px; border-left: 2px solid var(--ember); }
+.chapter .h { display: flex; justify-content: space-between; align-items: baseline; }
+.entry { padding: 7px 0; }
+.entry .story { font-style: italic; color: var(--ink-hi); margin: 0; }
+.tally { display: grid; grid-template-columns: 64px 1fr; gap: 3px 10px; font-size: var(--t-meta); padding: 8px 0 2px; }
+.tally span:nth-child(odd) { color: var(--ink-dim); } .tally span:nth-child(even) { color: var(--ink); }
+.later-sec { padding: 4px 0 0; font-size: var(--t-meta); color: #5c5862; }
+
+/* rules */
+.rule { display: grid; grid-template-columns: 20px 1fr auto; column-gap: var(--s2); align-items: center; padding: 10px var(--s3); border-bottom: 1px solid var(--rule); }
+.rule .grip { color: #4a4650; } .rule .w { color: var(--ink-hi); } .rule .to { font-size: var(--t-meta); color: var(--ink); white-space: nowrap; }
+.rule .off { grid-column: 2 / -1; font-size: var(--t-meta); color: var(--ink-dim); margin-top: 2px; }
+.rule.on .w::before { content: "● "; color: var(--ember); font-size: 11px; vertical-align: 2px; }
+.lately { padding: 8px var(--s3) 12px; font-size: var(--t-meta); color: var(--ink-dim); border-bottom: 1px solid var(--rule); }
+.lately div { padding: 3px 0; } .lately b { color: var(--ink); font-weight: 400; }
+.sec { padding: 14px var(--s3) 4px; }
+
+/* mix editor */
+.field { background: var(--bg); border-radius: 2px; padding: 10px 12px; color: var(--ink-hi); flex: 1; min-height: 44px; box-shadow: inset 0 0 0 1px var(--rule); }
+.mixrow { display: grid; grid-template-columns: 1fr 44px 44px 44px; align-items: center; gap: 6px; padding: 6px var(--s3); border-bottom: 1px solid var(--rule); }
+.mixrow .name::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 1px; background: var(--c); margin-right: 8px; }
+.mixrow .name { color: var(--ink-hi); }
+.step { height: 40px; display: grid; place-items: center; background: var(--bg); border-radius: 2px; color: var(--ink); box-shadow: 0 2px 0 #050407; }
+.mixrow .pct { text-align: center; color: var(--ink-hi); }
+.delta { display: grid; grid-template-columns: 1fr 70px 20px 70px; font-size: var(--t-body); padding: 0 var(--s3); }
+.delta div { padding: 4px 0; } .delta .h { font-size: var(--t-meta); color: var(--ink-dim); }
+.delta .num { text-align: right; color: var(--ink-hi); } .delta .was { text-align: right; color: var(--ink-dim); } .delta .a { text-align: center; color: var(--ink-dim); }
+.handle { position: absolute; top: -6px; bottom: -6px; width: 4px; background: var(--ink-hi); border-radius: 1px; }
+
+/* feel stills */
+.still { width: 180px; flex: none; }
+.still .t { font-size: var(--t-meta); color: var(--ember-hot); margin: 0 0 8px; }
+.still p.c { font-size: var(--t-meta); color: var(--ink-dim); margin: 8px 0 0; }
+.chain { display: flex; gap: 10px; align-items: stretch; }
+.hop { flex: 1; background: var(--raise); border-radius: 2px; padding: 10px; font-size: var(--t-meta); color: var(--ink-dim); min-width: 0; }
+.hop b { display: block; color: var(--ink-hi); font-weight: 500; font-size: var(--t-body); }
+.hop.on { box-shadow: inset 3px 0 0 var(--ember-hot); background: linear-gradient(90deg, rgba(224,149,79,.16), var(--raise) 60%); color: var(--ink); }
+.hop.done { color: var(--ink-dim); }
+.hop .t { color: var(--ember-hot); font-size: 12px; }
+
+/* live demo: C's press */
+.demo { cursor: pointer; transition: transform var(--settle-ms) var(--settle-ease), box-shadow var(--settle-ms), background var(--settle-ms); touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
+.demo:active { transform: translateY(2px); box-shadow: 0 0 0 #050407; background: var(--press); transition-duration: var(--press-ms); }
+@media (prefers-reduced-motion: reduce) { .demo, .demo:active { transform: none; transition: none; } }
+
+/* town */
+.person { display: grid; grid-template-columns: 44px 160px 1fr 120px; column-gap: var(--s3); align-items: center; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.avatar { width: 40px; height: 40px; border-radius: 2px; display: grid; place-items: center; font: 400 20px/1 "IM Fell English SC", Georgia, serif; color: #15110d; }
+.ghost { display: grid; grid-template-columns: 1fr auto; padding: 10px 0; border-bottom: 1px solid var(--rule); color: #5c5862; font-size: var(--t-body); }
+
+@media (max-width: 720px) {
+  .page { padding: 32px 16px 64px; }
+  .page > section { margin-top: 64px; }
+  h1 { font-size: 34px; } h2 { font-size: 25px; }
+  p.lede { font-size: 17px; }
+  .row-gap { gap: var(--s4); }
+  table.t.collapse { font-size: 13px; }
+  table.t.collapse tr:first-child { display: none; }
+  table.t.collapse tr { display: block; border-bottom: 1px solid var(--rule); padding: 10px 0; }
+  table.t.collapse td { display: inline; border: 0; padding: 0 8px 0 0; }
+  table.t.collapse td:first-child { display: block; font-weight: 500; margin-bottom: 2px; }
+  table.t.collapse td:nth-child(2) { display: block; margin-bottom: 4px; }
+  table.t.collapse td:nth-child(n+3) { font-size: 12px; color: var(--ink-dim); }
+  table.t.collapse tr.grp td { display: block; padding-top: 12px; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="fireglow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e0954f" stop-opacity=".55"/><stop offset=".5" stop-color="#c8743a" stop-opacity=".15"/><stop offset="1" stop-color="#c8743a" stop-opacity="0"/></radialGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#15161c"/><stop offset="1" stop-color="#1d1d24"/></linearGradient>
+    <symbol id="scene" viewBox="0 0 240 120" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges">
+      <rect width="240" height="120" fill="url(#sky)"/>
+      <g fill="#24252d"><rect x="150" y="10" width="2" height="52"/><rect x="146" y="22" width="4" height="1"/><rect x="152" y="30" width="5" height="1"/><rect x="178" y="4" width="2" height="58"/><rect x="174" y="18" width="4" height="1"/><rect x="180" y="26" width="6" height="1"/><rect x="206" y="14" width="2" height="48"/><rect x="208" y="24" width="4" height="1"/><rect x="225" y="8" width="2" height="54"/><rect x="120" y="20" width="2" height="42"/><rect x="116" y="30" width="4" height="1"/></g>
+      <rect y="62" width="240" height="58" fill="#1a191e"/>
+      <g fill="#222128"><rect x="20" y="80" width="3" height="2"/><rect x="96" y="96" width="4" height="2"/><rect x="170" y="88" width="3" height="2"/><rect x="210" y="104" width="4" height="2"/><rect x="60" y="108" width="3" height="2"/></g>
+      <rect x="14" y="26" width="64" height="38" fill="#2a2930"/>
+      <g fill="#33323a"><rect x="14" y="26" width="64" height="3"/><rect x="18" y="33" width="10" height="3"/><rect x="34" y="33" width="10" height="3"/><rect x="50" y="33" width="10" height="3"/><rect x="26" y="40" width="10" height="3"/><rect x="42" y="40" width="10" height="3"/><rect x="58" y="40" width="10" height="3"/></g>
+      <rect x="28" y="46" width="14" height="18" fill="#141318"/><rect x="64" y="20" width="6" height="6" fill="#3a3942"/>
+      <g fill="#2a2930"><rect x="88" y="50" width="22" height="13"/><rect x="190" y="44" width="20" height="19"/><rect x="194" y="40" width="12" height="4"/></g>
+      <g fill="#33323a"><rect x="88" y="50" width="22" height="2"/><rect x="190" y="44" width="20" height="2"/></g>
+      <ellipse cx="128" cy="76" rx="34" ry="20" fill="url(#fireglow)"/>
+      <rect x="122" y="78" width="12" height="2" fill="#3a2a1e"/><rect x="125" y="72" width="6" height="6" fill="#c8743a"/><rect x="126" y="69" width="4" height="4" fill="#e0954f"/><rect x="127" y="67" width="2" height="2" fill="#f0c38a"/>
+      <g><rect x="108" y="70" width="4" height="9" fill="#5a4a3e"/><rect x="108" y="66" width="4" height="4" fill="#9a8270"/></g>
+      <g><rect x="142" y="71" width="4" height="8" fill="#4a5058"/><rect x="142" y="67" width="4" height="4" fill="#8a7a6a"/></g>
+      <g><rect x="117" y="82" width="4" height="9" fill="#5e3a2a"/><rect x="117" y="78" width="4" height="4" fill="#a08670"/></g>
+    </symbol>
+    <symbol id="i-tasks" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="6" height="6"/><rect x="11" y="3" width="6" height="6"/><rect x="3" y="11" width="6" height="6"/><rect x="11" y="11" width="6" height="6"/></g></symbol>
+    <symbol id="i-town" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17 L10 4 L17 17 Z"/><path d="M10 17 L10 12"/></g></symbol>
+    <symbol id="i-rules" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h9M3 10h9M3 15h6"/><path d="M14 13l3 2-3 2"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 5 C7 3 4 3 2 4 V16 C4 15 7 15 10 17 C13 15 16 15 18 16 V4 C16 3 13 3 10 5 Z"/><path d="M10 5 V17"/></g></symbol>
+  </defs>
+</svg>
+
+<main class="page">
+
+<header>
+  <p class="kicker">Redesign G · the merge of A, B, C and E</p>
+  <h1>Ostmere, merged</h1>
+  <p class="lede">A's quiet look, B's record of cause and effect, E's desktop frame and C's phone frame and feel. Each part carries a tag, so you can trace it back to the design it came from.</p>
+  <div class="legendbar">
+    <span><i class="from A">from A</i> quiet: one frame, ember with two jobs, four sizes</span>
+    <span><i class="from B">from B</i> cause: one chronicle, "↳" on everything that arrives</span>
+    <span><i class="from C">from C</i> thumb: pinned stage, bottom bar, sheets, the press</span>
+    <span><i class="from E">from E</i> genre: the left rail, a Town view</span>
+    <span><i class="from G">new</i> added in the merge, mostly from the scale audit</span>
+    <span><span class="anno">blue-grey text</span> is a mockup note, never game ink</span>
+  </div>
+</header>
+
+<!-- ======================= 1 DIAGNOSIS ======================= -->
+<section>
+  <p class="kicker">1 · What is wrong</p>
+  <h2>Evenly loud, and every message in two places</h2>
+  <div class="prose"><p>The six designs agreed on the diagnosis more than on anything else. Today's screen gives everything the same signal (a 2px rim, a bevel, an ember edge), so nothing gets read first: that's the "too big, too crowded" feeling. A tap's result lands under the card and in the log at once, so neither place reads cleanly: that's the "weird". And the record has no causes. The fire question turns up with nothing anywhere saying what led to it. On a phone, the thing you open the game to touch sits below 600px of head. The comparison showed the rest: A fixed the volume, B fixed the record, C fixed the hand, and E and C were the only ones whose frames had room for a town. This page puts those four together.</p></div>
+</section>
+
+<!-- ======================= 2 LANGUAGE ======================= -->
+<section>
+  <p class="kicker">2 · The design language</p>
+  <h2>Fewer of everything, and one home per message</h2>
+
+  <div class="cols3" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:56px">
+    <div>
+      <h3>Colour <i class="from A">from A</i></h3>
+      <div class="sw">
+        <div><i style="background:#0f0f14;box-shadow:inset 0 0 0 1px #2a2932"></i>ground #0f0f14</div>
+        <div><i style="background:#16161d"></i>raise #16161d<br>tap targets, sheets</div>
+        <div><i style="background:#1e1d26"></i>press #1e1d26 <span class="from C">C</span><br>held down</div>
+        <div><i style="background:#24232b"></i>rule #24232b<br>between groups only</div>
+        <div><i style="background:#e8dfd2"></i>ink-hi: names, numbers, story</div>
+        <div><i style="background:#8f877d"></i>ink-dim: meta, causes, old lines</div>
+        <div><i style="background:#c8743a"></i>ember fill: <b class="hi">yours, moving</b></div>
+        <div><i style="background:#0f0f14;box-shadow:inset 0 0 0 1px #e0954f"></i>ember outline: <b class="hi">needs you now</b>, one thing at a time</div>
+        <div><i style="background:#e0614a"></i>alarm: a refused tap, a store falling with no rule</div>
+      </div>
+      <p class="cap">Mix hues (#b8865a #8f9a6a #6f8aa3 #c9a35c #b0604c #9a7aa0) are the only other colours. A card shows its hue as an 8px square, never as a rim.</p>
+    </div>
+    <div>
+      <h3>Type: four sizes, two fonts <i class="from A">from A</i></h3>
+      <div class="scale">
+        <div><span>22 · display</span><span class="fell hi" style="font-size:22px">Camp 9 · Book · Town</span></div>
+        <div><span>18 · story</span><span class="hi" style="font-size:18px;font-style:italic">the kindling is dry, for once.</span></div>
+        <div><span>15 · body</span><span>Scavenge · damp wood +21.22/min</span></div>
+        <div><span>13 · meta</span><span class="dim meta">↳ your tap · Cut wood · full in 3h 9m</span></div>
+      </div>
+      <p class="cap">IM Fell English SC only for the camp level and view titles. Everything else is Alegreya Sans with tabular figures.</p>
+      <h3>Space, edges, bars</h3>
+      <div class="scale">
+        <div><span>spacing</span><span>4 · 8 · 16 · 24 · 40. Groups 24 apart, rows 8.</span></div>
+        <div><span>edges</span><span>The scene keeps its frame. Nothing else has a border: groups sit on hairlines, controls lift onto <i>raise</i> with a 2px shadow under them.</span></div>
+        <div><span>bars</span><span>2px for things running alone, 3px ember for yours. No text inside a bar, ever: labels sit in a legend beneath it.</span></div>
+        <div><span>radius</span><span>2px.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:56px">Feel: calm at rest, good in the hand <i class="from C">from C</i> <i class="from A">from A</i></h3>
+  <div class="cols3" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div class="scale">
+      <div><span>press</span><span>On pointerdown the control sinks 2px onto its shadow, one step lighter. 60ms. Even a refused card goes down: a control that doesn't move reads as a bug.</span></div>
+      <div><span>settle</span><span>On release it comes back in 160ms with about 1px of overshoot.</span></div>
+      <div><span>tap result</span><span>A ring spreads 6px over 320ms and "+1" rises 12px. No words on the card.</span></div>
+    </div>
+    <div class="scale">
+      <div><span>level</span><span>The bonus shows on the card it speeds up, old → new, with a 700ms ember wash. It stays readable for 2s.</span></div>
+      <div><span>cascade</span><span>Each real consequence lights in turn, 150ms apart, at most six links. A lit link gets a 3px ember tick and a warm wash, never the outline, which belongs to the ask. Nothing gets faked: no consequence, no hop.</span></div>
+      <div><span>camp level</span><span>The scene's grade warms one step and keeps it.</span></div>
+    </div>
+    <div class="scale">
+      <div><span>ceiling</span><span>Each kind of event has a fixed size. The tenth level looks like the first.</span></div>
+      <div><span>reduced motion</span><span>No sink, ring or rise. The colour, the wash, the words and the numbers still change.</span></div>
+      <div><span>try it</span><span><span class="card demo" style="display:inline-flex;min-height:44px;width:180px;padding:10px 12px;--c:var(--h5)"><span class="name">Cut wood</span></span></span></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:56px">Feedback routing: one home per event <i class="from A">from A</i> <i class="from B">B</i> <i class="from G">new rows</i></h3>
+  <p class="cap" style="margin-bottom:12px">How loud: <span class="loud3">loud</span> is the ember outline, where the eye already is. <span class="loud2">Plain</span> is ink-hi, in place. <span class="loud1">Quiet</span> is ink-dim, or the Book only. <span class="loudx">Alarm</span> is for refusals and falling stores only. The strip on the main screen takes story lines and nothing else. Every row the chronicle keeps carries its "↳" cause.</p>
+  <table class="t collapse">
+    <tr><th>Event</th><th>Where it shows</th><th>How loud</th><th>How long</th><th>Kept in the Book</th></tr>
+    <tr class="grp"><td colspan="5">Today's events</td></tr>
+    <tr><td>Tap succeeds</td><td>Ring and "+1" on the card, no words. If the content has a line for it, the line goes to the strip as story. The ledger row it fed flashes once.</td><td class="loud2">plain</td><td>Strip: until pushed out</td><td>Story, ↳ your tap</td></tr>
+    <tr><td>Tap refused</td><td>One line under that card only, saying why, and its edge goes alarm. Never the strip, never the Book.</td><td class="loudx">alarm</td><td>Until the next tap anywhere, or 4s</td><td>No</td></tr>
+    <tr><td>Story line</td><td>The strip (three lines on phone).</td><td class="loud2">plain, 18px</td><td>Until pushed out</td><td>Story</td></tr>
+    <tr><td>New card or unlock</td><td>The card appears in place with "↳ what brought it" as its sub-line until first tapped.</td><td class="loud2">plain</td><td>Until first used</td><td>Everything, ↳ cause</td></tr>
+    <tr><td>Someone asks</td><td>The Asks front: one shown at a fixed height, a count of the rest. The only ember outline on screen.</td><td class="loud3">loud</td><td>Until answered, or until its content says it goes</td><td>Asks &amp; answers, with the answer given</td></tr>
+    <tr><td>Level up</td><td>The card it speeds up shows old → new; the rail row (desktop) or Town (phone) ticks.</td><td class="loud2">plain, wash</td><td>2s on the card</td><td>Everything, ↳ level</td></tr>
+    <tr><td>Store full</td><td>Its ledger row says "full" in ink-dim.</td><td class="loud1">quiet</td><td>While full</td><td>Everything, folded</td></tr>
+    <tr><td>Store falling, no rule on it</td><td>Its ledger row goes alarm, and it joins the Asks list with its fix beside it.</td><td class="loudx">alarm</td><td>While falling</td><td>Rules</td></tr>
+    <tr><td>Rule fires or lets go</td><td>The mix bar changes; Rules › Lately gets the row with its "because".</td><td class="loud1">quiet</td><td>—</td><td>Rules, ↳ the condition</td></tr>
+    <tr><td>Cascade</td><td>Each link lights where it lands, 150ms apart, at most six.</td><td class="loud2">plain</td><td>Under 1s</td><td>One folded line, ↳ the first link</td></tr>
+    <tr><td>Coming back</td><td>The Book opens on a "Since you left" chapter; the strip replays its story lines in turn while the controls work.</td><td class="loud2">plain</td><td>Until your next return</td><td>The chapter itself</td></tr>
+    <tr class="grp"><td colspan="5">Later events, written in now</td></tr>
+    <tr><td>Someone arrives</td><td>The scene (a figure walks in), then a Town row with ↳ cause; a story line if the content has one.</td><td class="loud2">plain</td><td>Row: until seen</td><td>Town filter, ↳ cause</td></tr>
+    <tr><td>Someone leaves or dies</td><td>Story register only: a strip line, the chronicle as story. Never alarm colour, never folded into a tally or a summary pill.</td><td class="loud2">plain</td><td>Until pushed out</td><td>Story and Town</td></tr>
+    <tr><td>Season turns</td><td>The scene's grade shifts; new chores join the Asks list (the fixed height holds); retired rules go to Lately with "because the season ended".</td><td class="loud2">plain</td><td>Grade: the season</td><td>Story and Rules</td></tr>
+    <tr><td>A building falls</td><td>A story line, and its Town row shows the rebuild as a card with "↳ fell".</td><td class="loud2">plain</td><td>Until rebuilt</td><td>Story and Town</td></tr>
+    <tr><td>A fight resolves</td><td>Odds sat under the card beforehand; the result goes to the card's ledger rows and the chronicle. A line only if it is story.</td><td class="loud2">plain</td><td>—</td><td>Fights filter</td></tr>
+    <tr><td>Prestige</td><td>The skill row shows "+n levels waiting"; the sheet opens from it. The click itself is a scene and a story line.</td><td class="loud2">plain</td><td>Until spent</td><td>Story and Everything</td></tr>
+    <tr><td>Townsfolk chatter</td><td>The Book under its own Chatter filter, and the Town view. Never the strip, never the main screen.</td><td class="loud1">quiet</td><td>—</td><td>Chatter filter only</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 3 MOCKUPS ======================= -->
+<section>
+  <p class="kicker">3a · The main screen, desktop 1440</p>
+  <h2>Rail, scene, cards</h2>
+  <p class="cap" style="margin-bottom:16px">E's frame in A's ink. The rail holds views and skills, never anyone's jobs. The middle holds the scene, the strip and the ledger. The right holds what your hands do: the mix, the one ask and the cards. Three feel states are frozen on the cards: <b>Scavenge</b> just levelled, <b>Cut wood</b> is held down, <b>Dig clay</b> is a lit link in a cascade.</p>
+  <div class="scrollbox">
+  <div class="device" id="desk-main" style="width:1380px;height:880px;display:grid;grid-template-columns:208px 1fr 452px">
+    <!-- rail -->
+    <aside class="rail">
+      <div style="padding:0 20px 14px" class="mock-label"><i class="from E">rail from E</i></div>
+      <nav class="nav">
+        <a class="on" href="#">Tasks <small>6</small></a>
+        <a href="#">Town <small>2 people</small></a>
+        <a href="#">Rules <small>2 on</small></a>
+        <a href="#">Book <small>back 2m</small></a>
+      </nav>
+      <div class="lbl" style="padding:22px 20px 6px">Skills</div>
+      <div class="sk"><div><b>Scavenging</b><span class="hi">18</span></div><div class="bar yours"><i style="width:4%"></i></div></div>
+      <div class="sk"><div><b>Woodcutting</b><span>17</span></div><div class="bar yours"><i style="width:74%"></i></div></div>
+      <div class="sk"><div><b>Foraging</b><span>17</span></div><div class="bar yours"><i style="width:14%"></i></div></div>
+      <div class="sk"><div><b>Cooking</b><span>3</span></div><div class="bar yours"><i style="width:44%"></i></div></div>
+      <div class="foot">Feedback · Another device · Games</div>
+    </aside>
+    <!-- middle -->
+    <div style="padding:18px 28px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:14px">
+      <div class="camp"><span class="lv">Camp 9</span><div class="bar yours"><i style="width:62%"></i></div><span class="next">level 10: something new</span><span class="chip">☾ tired <small>· hands slower</small></span></div>
+      <div class="aim">keep the fire going.</div>
+      <div class="scene frame" style="height:352px"><svg><use href="#scene"/></svg></div>
+      <div class="strip" style="min-height:76px">
+        <p class="old">the rain gets in the wood store again.</p>
+        <p class="new">the kindling is dry, for once.</p>
+      </div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:10px"><span class="lbl">Ledger</span><i class="from G">grouped</i><span style="flex:1"></span><span class="dim meta">rate · stock</span></div>
+        <div class="lgroup"><span class="lbl hi" style="color:var(--ink)">Yours</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;column-gap:40px">
+          <div class="ledger">
+            <div class="k">Damp wood</div><div class="r">+21.22/min</div><div class="s">full</div>
+            <div class="k">Stones</div><div class="r">+12.7/min</div><div class="s">full</div>
+            <div class="k">Catch</div><div class="r">+0.05/min</div><div class="s">4/13 · full in 3h 9m</div>
+            <div class="k">Wattle</div><div class="r">0/min</div><div class="s">15/24</div>
+          </div>
+          <div class="ledger">
+            <div class="k">Dry wood</div><div class="r">−0.13/min</div><div class="s">13/36</div>
+            <div class="k">Roots</div><div class="r">+10.51/min</div><div class="s">full</div>
+            <div class="k">Smoked</div><div class="r">−0.01/min</div><div class="s">9/18</div>
+            <div class="k">Clay</div><div class="r">+3.42/min</div><div class="s">full</div>
+          </div>
+        </div>
+        <div class="lgroup empty"><span class="lbl">Town</span><span class="anno">arrives later</span></div>
+        <div class="lgroup empty"><span class="lbl">Outposts</span><span class="anno">arrives later</span></div>
+        <div class="lgroup empty" style="padding-bottom:0"><span class="lbl">Threats</span><span class="anno">arrives later</span></div>
+      </div>
+    </div>
+    <!-- right -->
+    <div style="padding:18px 24px;display:flex;flex-direction:column;gap:16px">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:12px"><span class="lbl">Hands</span><span class="hi">Main</span><span class="dim meta">runs on</span><span style="flex:1"></span><span class="txtbtn">Mixes</span><span class="txtbtn">Edit</span></div>
+        <div class="split"><i style="width:27%;background:var(--h4)"></i><i style="width:16%;background:var(--h5)"></i><i style="width:57%;background:var(--h3)"></i></div>
+        <div class="legend"><span style="--c:var(--h4)">Scavenge <b>27%</b></span><span style="--c:var(--h5)">Cut wood <b>16%</b></span><span style="--c:var(--h3)">Dig clay <b>57%</b></span></div>
+      </div>
+      <div style="height:236px">
+        <div class="asks-head"><span class="lbl">Asks</span><span class="dim meta">1 waiting</span></div>
+        <div class="ask">
+          <div class="who"><span class="face L">L</span><span class="face M">M</span>Lucy and Martin ask</div>
+          <p class="q">Bank the fire her way or his?</p>
+          <div class="cause"><span class="ph">what led to it · content</span></div>
+          <div class="choices">
+            <div class="choice"><b><span class="face L">L</span>Her way</b><div>fire burns −10% wood</div><div class="led">dry wood −0.13 → <em>−0.05</em>/min</div></div>
+            <div class="choice"><b><span class="face M">M</span>His way</b><div>rest +10%</div><div class="led">rest 5.0s → <em>4.5s</em></div></div>
+          </div>
+          <div class="facts"><span>waiting <b>costs nothing</b></span><span><b>doesn't expire</b></span><span class="perm"><b>can't be changed after</b></span></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px"><span class="lbl">Tasks</span><span class="dim meta">something new · in 9h 50m</span></div>
+        <div class="cards">
+          <div class="card levelled" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,276</span></div><div class="lvl">Scavenging 18 · <s>1.0s</s> <span class="arr">→</span> 0.91s</div><div class="bar"><i style="width:30%"></i></div></div>
+          <div class="card pressed" style="--c:var(--h5)"><div class="top"><span class="name">Cut wood</span><span class="n">31,226</span></div><div class="sub">+1 damp wood · 1s</div><div class="bar"><i style="width:0%"></i></div></div>
+          <div class="card lit" style="--c:var(--h3)"><div class="top"><span class="name">Dig clay</span><span class="n">1,204</span></div><div class="sub">+1 clay · 6s</div><div class="bar"><i style="width:64%"></i></div></div>
+          <div class="card" style="--c:var(--h1)"><div class="top"><span class="name">Forage</span><span class="n">99</span></div><div class="sub">+1 roots · 4s</div><div class="bar"><i style="width:0"></i></div></div>
+          <div class="card" style="--c:var(--h2)"><div class="top"><span class="name">Rest</span><span class="n">205</span></div><div class="sub">clears tired · 5s</div><div class="bar"><i style="width:0"></i></div></div>
+          <div class="card wait"><div class="top"><span class="name">Smoke the catch</span><span class="n">0/1</span></div><div class="sub">catch 4/6</div><div class="bar"><i style="width:0"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <p class="cap">Fixture numbers from the camp-9 screenshot. The ask's after-numbers are illustrative: the engine fills them from the modifier. The ask is the only outlined thing on the screen, and the strip holds story only.</p>
+</section>
+
+<section>
+  <p class="kicker">3b · The main screen, phone 390</p>
+  <h2>Read in the top half, touch in the bottom</h2>
+  <div class="row-gap">
+    <div>
+      <p class="mock-label">390 × 844 · Tasks <i class="from C">frame from C</i> <i class="from A">ink from A</i></p>
+      <div class="device phone" style="height:844px">
+        <div style="padding:12px 16px 0">
+          <div class="camp" style="gap:10px"><span class="lv" style="font-size:18px">Camp 9</span><div class="bar yours"><i style="width:62%"></i></div><span class="next">▸ 10: something new</span></div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px" class="meta"><span class="aim">keep the fire going.</span><span class="chip">☾ tired</span></div>
+        </div>
+        <div class="scene" style="height:172px;margin-top:8px"><svg><use href="#scene"/></svg></div>
+        <div class="strip" style="padding:8px 16px 0;height:76px;overflow:hidden">
+          <p class="old" style="font-size:13px">the smoke goes straight up tonight.</p>
+          <p class="old">the rain gets in the wood store again.</p>
+          <p class="new" style="font-size:16px">the kindling is dry, for once.</p>
+        </div>
+        <div style="padding:6px 16px 0">
+          <div style="display:flex;align-items:center;gap:10px"><div class="split" style="flex:1"><i style="width:27%;background:var(--h4)"></i><i style="width:16%;background:var(--h5)"></i><i style="width:57%;background:var(--h3)"></i></div><span class="hi meta">Main ▾</span></div>
+          <div class="legend" style="margin-top:4px"><span style="--c:var(--h4)">Scavenge <b>27%</b></span><span style="--c:var(--h5)">Cut wood <b>16%</b></span><span style="--c:var(--h3)">Dig clay <b>57%</b></span></div>
+        </div>
+        <div class="anno-line" style="top:370px"><span>pinned stage · 370px</span></div>
+        <div style="padding:22px 16px 0">
+          <div class="ask" style="padding:10px 12px;display:flex;align-items:center;gap:10px;height:56px">
+            <span class="face L">L</span><span class="face M" style="margin-left:-6px">M</span>
+            <span style="flex:1;font-style:italic;color:var(--ink-hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Bank the fire her way or his?</span>
+            <span class="dim meta">1 ›</span>
+          </div>
+          <div class="cards" style="margin-top:12px">
+            <div class="card levelled" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,276</span></div><div class="lvl">Scav. 18 · <s>1.0s</s> → 0.91s</div><div class="bar"><i style="width:30%"></i></div></div>
+            <div class="card" style="--c:var(--h5)"><div class="top"><span class="name">Cut wood</span><span class="n">31,226</span></div><div class="sub">+1 damp wood · 1s</div><div class="bar"><i style="width:55%"></i></div></div>
+            <div class="card" style="--c:var(--h3)"><div class="top"><span class="name">Dig clay</span><span class="n">1,204</span></div><div class="sub">+1 clay · 6s</div><div class="bar"><i style="width:64%"></i></div></div>
+            <div class="card" style="--c:var(--h1)"><div class="top"><span class="name">Forage</span><span class="n">99</span></div><div class="sub">+1 roots · 4s</div><div class="bar"><i style="width:0"></i></div></div>
+            <div class="card" style="--c:var(--h2)"><div class="top"><span class="name">Rest</span><span class="n">205</span></div><div class="sub">clears tired · 5s</div><div class="bar"><i style="width:0"></i></div></div>
+            <div class="card wait"><div class="top"><span class="name">Smoke the catch</span><span class="n">0/1</span></div><div class="sub">catch 4/6</div><div class="bar"><i style="width:0"></i></div></div>
+          </div>
+        </div>
+        <div class="bbar"><div class="on"><svg width="20" height="20"><use href="#i-tasks"/></svg>Tasks</div><div><svg width="20" height="20"><use href="#i-town"/></svg>Town</div><div><svg width="20" height="20"><use href="#i-rules"/></svg>Rules</div><div><svg width="20" height="20"><use href="#i-book"/></svg>Book</div></div>
+      </div>
+    </div>
+    <div class="prose" style="max-width:520px;padding-top:24px">
+      <h3>What sits where</h3>
+      <p><b class="hi">Pinned, about 370px</b> <i class="from C">C</i>: the camp bar, the scene, three lines of strip, and the mix bar with its legend beneath it. The strip's height is a content rule ("a story line fits three rows at 358px"), checked against the content, so the stage never grows to make room for the longest line ever written.</p>
+      <p><b class="hi">The ask is one row at a fixed height</b> <i class="from G">new</i>: who, the question, and a count. Tapping it opens the full ask as a sheet. When a season turn brings several at once, the row still takes 56px and the count goes up, so the cards stay under your thumb.</p>
+      <p><b class="hi">Cards in the thumb half</b>, 78px or taller, with the bottom bar beneath them. Stores, skills and people are one tap away under <b>Town</b>; the record is under <b>Book</b>.</p>
+      <p><b class="hi">Four tabs, and no fifth</b>: the map, the journal and Done live inside Book.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">3c · A tap, both ways, and the payoffs</p>
+  <h2>Refusal under the card, success as story</h2>
+  <div class="row-gap">
+    <div>
+      <p class="mock-label" style="color:var(--alarm)">REFUSED · nothing in the strip, nothing in the Book <i class="from A">A</i> <i class="from C">C</i></p>
+      <div class="device phone" style="height:260px">
+        <div class="strip" style="padding:14px 16px 0;height:72px">
+          <p class="old">the rain gets in the wood store again.</p>
+          <p>the kindling is dry, for once.</p>
+        </div>
+        <div class="cards" style="padding:10px 16px 0">
+          <div><div class="card fail pressed"><div class="top"><span class="name">Smoke the catch</span><span class="n">0/1</span></div><div class="sub">catch 4/6</div><div class="bar"><i style="width:0"></i></div></div>
+            <div class="under">needs 6 catch · you have 4</div></div>
+          <div class="card" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,276</span></div><div class="sub">+1 stones · 1s</div><div class="bar"><i style="width:40%"></i></div></div>
+        </div>
+      </div>
+      <p class="cap">The card still sinks. Its edge goes alarm and one line says why. It clears on your next tap or after 4s, and the strip doesn't change.</p>
+    </div>
+    <div>
+      <p class="mock-label" style="color:var(--ember-hot)">SUCCEEDED · the card answers, the strip tells <i class="from A">A</i> <i class="from B">B</i></p>
+      <div class="device phone" style="height:260px">
+        <div class="strip" style="padding:14px 16px 0;height:72px">
+          <p class="old">the rain gets in the wood store again.</p>
+          <p class="new">the kindling is dry, for once.</p>
+        </div>
+        <div class="cards" style="padding:10px 16px 0">
+          <div class="card" style="--c:var(--h3)"><span class="ring"></span><span class="plus">+1</span><div class="top"><span class="name">Dig clay</span><span class="n">1,205</span></div><div class="sub">+1 clay · 6s</div><div class="bar"><i style="width:2%"></i></div></div>
+          <div class="card" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,276</span></div><div class="sub">+1 stones · 1s</div><div class="bar"><i style="width:40%"></i></div></div>
+        </div>
+        <div style="padding:14px 16px 0" class="meta"><span class="dim">in the Book:</span> <span class="hi" style="font-style:italic">the kindling is dry…</span> <span class="cause">your tap · Dig clay</span></div>
+      </div>
+      <p class="cap">Ring and "+1" on the card, and no words. The line goes to the strip with an ember tick that fades once you've had time to read it. The Book keeps it with its cause.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px">Press, then settle <i class="from C">from C</i></h3>
+  <div class="row-gap" style="gap:24px">
+    <div class="still"><p class="t">0ms · pointerdown</p><div class="card pressed" style="--c:var(--h5)"><div class="top"><span class="name">Cut wood</span><span class="n">31,226</span></div><div class="sub">+1 damp wood · 1s</div><div class="bar"><i style="width:0"></i></div></div><p class="c">Sinks 2px onto its shadow, a step lighter.</p></div>
+    <div class="still"><p class="t">+160ms · release</p><div class="card" style="--c:var(--h5);transform:translateY(-1px)"><div class="top"><span class="name">Cut wood</span><span class="n">31,226</span></div><div class="sub">working · 1s left</div><div class="bar"><i style="width:8%"></i></div></div><p class="c">Back up with about 1px of overshoot. The bar starts at once.</p></div>
+    <div class="still"><p class="t">+1s · done</p><div class="card" style="--c:var(--h5)"><span class="ring"></span><span class="plus">+1</span><div class="top"><span class="name">Cut wood</span><span class="n">31,227</span></div><div class="sub">+1 damp wood · 1s</div><div class="bar"><i style="width:100%"></i></div></div><p class="c">Ring, "+1", count ticks.</p></div>
+  </div>
+
+  <h3 style="margin-top:40px">A level shows on the card it speeds up <i class="from C">from C</i></h3>
+  <div class="row-gap" style="gap:24px;align-items:center">
+    <div class="still" style="width:220px"><p class="t">before</p><div class="card" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,275</span></div><div class="sub">+1 stones · 1.0s</div><div class="bar"><i style="width:96%"></i></div></div></div>
+    <div class="still" style="width:220px"><p class="t">Scavenging 17 → 18 · 2s</p><div class="card levelled" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,276</span></div><div class="lvl">Scavenging 18 · <s>1.0s</s> → 0.91s</div><div class="bar"><i style="width:2%"></i></div></div></div>
+    <div class="still" style="width:220px"><p class="t">after</p><div class="card" style="--c:var(--h4)"><div class="top"><span class="name">Scavenge</span><span class="n">32,276</span></div><div class="sub">+1 stones · 0.91s</div><div class="bar"><i style="width:30%"></i></div></div></div>
+    <p class="cap" style="max-width:300px">The level isn't a number on a far-off skill row. It shows up as the card you tap getting faster, old → new, right where you see it. The rail row ticks too.</p>
+  </div>
+
+  <h3 style="margin-top:40px">A cascade lights up link by link <i class="from C">from C</i> <i class="from A">A</i></h3>
+  <div class="scrollbox">
+    <div class="chain" style="min-width:880px">
+      <div class="hop done"><span class="t">0ms</span><b>Cut wood</b>completes</div>
+      <div class="hop done"><span class="t">+150ms</span><b>Damp wood 18/18</b>the store fills</div>
+      <div class="hop on"><span class="t">+300ms</span><b>Under 10 damp wood → Cut wood</b>the rule lets go</div>
+      <div class="hop"><span class="t">+450ms</span><b>Main</b>the mix bar slides back</div>
+      <div class="hop"><span class="t">+600ms</span><b>Dig clay</b>its bar picks up</div>
+    </div>
+  </div>
+  <p class="cap">Frozen at the third link. Each link lights where it really happens (the card, the ledger row, Rules, the mix bar, the next card), never in a banner. At most six links, all under a second. The Book keeps one folded line: "Cut wood filled damp wood · the rule let go".</p>
+</section>
+
+<section>
+  <p class="kicker">3d · The fire ask</p>
+  <h2>Who asks, what led here, what each answer does</h2>
+  <div class="row-gap">
+    <div>
+      <p class="mock-label">Phone · the ask sheet, opened from the row <i class="from C">sheet from C</i> <i class="from B">cause from B</i></p>
+      <div class="device phone" style="height:620px;background:#09090c">
+        <div style="opacity:.35;padding:12px 16px" class="meta dim">Camp 9 · the scene, dimmed</div>
+        <div class="sheet" style="position:absolute;left:0;right:0;bottom:0;height:540px">
+          <div class="grab"></div>
+          <div class="sheet-head"><span class="fell">Asks</span><span class="dim meta">1 waiting</span></div>
+          <div style="padding:14px 16px 0">
+            <div class="who" style="display:flex;align-items:center;gap:8px"><span class="face L">L</span><span class="face M">M</span><span class="meta dim">Lucy and Martin ask</span></div>
+            <p style="font-style:italic;font-size:18px;color:var(--ink-hi);margin:10px 0 4px">Bank the fire her way or his?</p>
+            <div class="cause"><span class="ph">what led to it · content field</span></div>
+            <p class="meta" style="margin:10px 0 0">Lucy tends the fire, 60% of her time. Until you answer, it burns as it does now.</p>
+            <div style="display:grid;gap:10px;margin-top:14px">
+              <div class="choice" style="padding:12px 14px"><b><span class="face L">L</span>Her way</b><div style="margin-top:4px">the fire burns 10% less wood</div><div class="led" style="margin-top:2px">dry wood −0.13/min → <em>−0.05/min</em></div></div>
+              <div class="choice" style="padding:12px 14px"><b><span class="face M">M</span>His way</b><div style="margin-top:4px">rest works 10% faster</div><div class="led" style="margin-top:2px">rest 5.0s → <em>4.5s</em> · tired clears sooner</div></div>
+            </div>
+            <div style="margin-top:16px;border-top:1px solid var(--rule);padding-top:10px;display:grid;grid-template-columns:1fr auto;row-gap:6px" class="meta">
+              <span class="dim">if you wait</span><span class="hi">costs nothing</span>
+              <span class="dim">goes away</span><span class="hi">never</span>
+              <span class="dim">the answer</span><span style="color:var(--ember-hot)">permanent</span>
+            </div>
+            <p class="anno" style="margin:8px 0 0">These three rows are content fields (wait_cost, expires, changeable). These are the fire offer's true values today.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:300px;max-width:520px">
+      <p class="mock-label">Desktop · the Asks front at its fixed height <i class="from A">seam from A</i> <i class="from G">list</i></p>
+      <div class="device" style="width:100%;max-width:452px;padding:16px;height:270px">
+        <div class="asks-head"><span class="lbl">Asks</span><span class="dim meta">1 of 3 · <u>see all</u></span></div>
+        <div class="ask">
+          <div class="who"><span class="face L">L</span><span class="face M">M</span>Lucy and Martin ask</div>
+          <p class="q">Bank the fire her way or his?</p>
+          <div class="cause"><span class="ph">what led to it · content</span></div>
+          <div class="choices">
+            <div class="choice"><b><span class="face L">L</span>Her way</b><div class="led">dry wood −0.13 → <em>−0.05</em></div></div>
+            <div class="choice"><b><span class="face M">M</span>His way</b><div class="led">rest 5.0s → <em>4.5s</em></div></div>
+          </div>
+          <div class="facts"><span>waiting <b>costs nothing</b></span><span><b>doesn't expire</b></span><span class="perm"><b>permanent</b></span></div>
+        </div>
+      </div>
+      <p class="anno" style="margin-top:8px">"1 of 3" is a fixture showing a season turn landing. Today there's only one. The front never grows: the rest wait in the list, oldest first.</p>
+
+      <p class="mock-label" style="margin-top:32px">After you answer · where it goes <i class="from B">from B</i></p>
+      <div class="device" style="width:100%;max-width:452px">
+        <div class="sec lbl">Rules › Answers</div>
+        <div class="rule"><span class="grip"></span><span class="w">Bank the fire · her way</span><span class="to dim">for good</span><span class="off">dry wood −0.13 → −0.05/min · answered just now</span></div>
+        <div class="sec lbl">Book › Asks &amp; answers</div>
+        <div style="padding:4px 16px 14px"><div class="hi" style="font-style:italic">Bank the fire her way or his? — her way.</div><div class="cause">your answer · Lucy and Martin asked</div></div>
+      </div>
+      <p class="cap">The ask leaves the front, and no line goes under anything. The dry wood row in the ledger now says why its rate moved: "her way: fire −10%".</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">3e · The Book and its chronicle</p>
+  <h2>One record, filtered by kind</h2>
+  <div class="row-gap">
+    <div>
+      <p class="mock-label">Phone · Book, opened after 54 minutes away <i class="from B">chronicle from B</i> <i class="from C">sheet from C</i></p>
+      <div class="device phone" style="height:844px">
+        <div style="padding:14px 16px 0;display:flex;justify-content:space-between;align-items:baseline"><span class="fell" style="font-size:22px;color:var(--ink-hi)">Book</span><span class="dim meta">back 2m ago</span></div>
+        <div class="seg" style="margin-top:6px"><span class="on">Chronicle</span><span>Journal</span><span>Done</span><span style="color:#5c5862">Map</span></div>
+        <div class="filters"><span class="on">Story</span><span>Everything</span><span>Asks &amp; answers</span><span>Rules</span><span class="later">Town</span><span class="later">Fights</span><span class="later">Chatter</span></div>
+        <div class="chapter">
+          <div class="h"><span class="fell hi" style="font-size:18px">Since you left</span><span class="dim meta">54m</span></div>
+          <div class="entry"><p class="story">the rain gets in the wood store again.</p><div class="cause">time</div></div>
+          <div class="entry"><p class="story">the kindling is dry, for once.</p><div class="cause">camp level 9 · brought Dig clay</div></div>
+          <div class="entry"><p class="story">Lucy and Martin ask how to bank the fire.</p><div class="cause"><span class="ph">cause · content</span></div></div>
+          <div class="tally">
+            <span>made</span><span>+1,146 damp wood (941 spilled, full) · +259 clay · +113 stones</span>
+            <span>levels</span><span>Camp 8 → 9 · Scavenging 16 → 17</span>
+            <span>rules</span><span>Under 10 damp wood → Cut wood came on twice</span>
+            <span>waiting</span><span><u>1 ask</u></span>
+          </div>
+          <div class="later-sec">people · seasons · fights <span class="anno">sections arrive later</span></div>
+        </div>
+        <div style="padding:16px 16px 0">
+          <div class="h" style="display:flex;justify-content:space-between"><span class="lbl">Earlier today</span><span class="dim meta">1h 40m</span></div>
+          <div class="entry"><p class="story">the smoke goes straight up tonight.</p><div class="cause">time</div></div>
+          <div class="entry"><p class="story" style="font-style:normal">Foraging 17: an better patch. +10% foraging speed.</p><div class="cause">level · Forage in Main and Martin's 40%</div></div>
+          <div class="meta dim" style="padding-top:6px">Scavenge 38 · Cut wood 21 · finds 3 <span class="anno">folded in Story</span></div>
+        </div>
+        <div style="padding:14px 16px" class="meta dim">Yesterday · 4 stretches ›</div>
+        <div class="bbar"><div><svg width="20" height="20"><use href="#i-tasks"/></svg>Tasks</div><div><svg width="20" height="20"><use href="#i-town"/></svg>Town</div><div><svg width="20" height="20"><use href="#i-rules"/></svg>Rules</div><div class="on"><svg width="20" height="20"><use href="#i-book"/></svg>Book</div></div>
+      </div>
+    </div>
+    <div class="prose" style="max-width:520px;padding-top:24px">
+      <h3>What the Book replaces</h3>
+      <p>The Log, the Journal button, the Completed tab and the line under a card all become one Book with four pages: <b>Chronicle</b>, <b>Journal</b> (the character's own voice, unchanged), <b>Done</b>, and later <b>Map</b>, as "front-of-the-book" asks.</p>
+      <p><b class="hi">Filters, not surfaces</b> <i class="from B">B</i>: Story hides the tallies and keeps the story lines large. Everything shows every row with its "↳". The later kinds (Town, Fights, Chatter) arrive as filters, never as new screens. Chatter shows only under its own filter.</p>
+      <p><b class="hi">"Since you left"</b> is a chapter that grows by section: made, levels, rules, waiting, and later people, seasons and fights. A death or a fall is written in it as story, never summed into a pill.</p>
+      <p><b class="hi">Every "↳" is a link</b>: from a line to the thing that caused it, and from a card or a rate back to its line.</p>
+      <p class="anno">The third story line in the chapter is neutral stand-in text for the ask's arrival. The real line and cause are content.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">3f · Automation</p>
+  <h2>The mix editor and the Rules tab</h2>
+  <div class="row-gap">
+    <div>
+      <p class="mock-label">Phone · mix editor sheet <i class="from C">steppers, thumb-zone Save from C</i> <i class="from A">delta from A</i></p>
+      <div class="device phone" style="height:780px;background:#09090c">
+        <div class="sheet" style="position:absolute;left:0;right:0;bottom:0;top:40px">
+          <div class="grab"></div>
+          <div class="sheet-head"><span class="fell">Edit mix</span><span class="txtbtn">Cancel</span></div>
+          <div style="padding:10px 16px;display:flex;gap:8px"><div class="field">Main</div></div>
+          <div style="padding:0 16px 4px" class="cause">running now · Main holds the hands</div>
+          <div style="position:relative;margin:16px 16px 8px"><div class="split" style="height:24px"><i style="width:32%;background:var(--h4)"></i><i style="width:16%;background:var(--h5)"></i><i style="width:52%;background:var(--h3)"></i></div><span class="handle" style="left:calc(32% - 3px)"></span><span class="handle" style="left:calc(48% - 1px)"></span></div>
+          <p class="anno" style="padding:0 16px;margin:0 0 8px">drag a divider, or step below. Labels never go inside the bar.</p>
+          <div class="mixrow" style="--c:var(--h4)"><span class="name">Scavenge</span><span class="step">−</span><span class="pct">32%</span><span class="step">+</span></div>
+          <div class="mixrow" style="--c:var(--h5)"><span class="name">Cut wood</span><span class="step">−</span><span class="pct">16%</span><span class="step">+</span></div>
+          <div class="mixrow" style="--c:var(--h3)"><span class="name">Dig clay</span><span class="step">−</span><span class="pct">52%</span><span class="step">+</span></div>
+          <div class="mixrow" style="--c:transparent;color:var(--ink-dim)"><span class="dim">+ add a task</span><span></span><span></span><span></span></div>
+          <div class="sec lbl">What this mix does</div>
+          <div class="delta">
+            <div class="h"></div><div class="h" style="text-align:right">now</div><div class="h"></div><div class="h" style="text-align:right">with this</div>
+            <div>Damp wood</div><div class="was">+21.22</div><div class="a">→</div><div class="num">+21.22</div>
+            <div>Stones</div><div class="was">+12.7</div><div class="a">→</div><div class="num">+15.1</div>
+            <div>Clay</div><div class="was">+3.42</div><div class="a">→</div><div class="num">+3.12</div>
+          </div>
+          <p class="anno" style="padding:4px 16px 0;margin:0">after-numbers illustrative; the engine computes them live as you step</p>
+          <div style="position:absolute;left:16px;right:16px;bottom:16px;display:flex;gap:8px"><span class="btn" style="flex:1">Save as new</span><span class="btn primary" style="flex:1">Save</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="mock-label">Phone · Rules tab <i class="from B">Lately first, "because" from B</i> <i class="from A">rows from A</i></p>
+      <div class="device phone" style="height:780px">
+        <div style="padding:14px 16px 0"><span class="fell" style="font-size:22px;color:var(--ink-hi)">Rules</span></div>
+        <div class="sec lbl" style="padding-top:12px">Lately</div>
+        <div class="lately">
+          <div><b>Under 10 damp wood → Cut wood</b> let go at 18 · 14m ago</div>
+          <div><b>Under 10 damp wood → Cut wood</b> came on at 9 · 31m ago</div>
+          <div><b>While tired → Rest</b> came on · 52m ago</div>
+        </div>
+        <div class="sec lbl">When ready, in order</div>
+        <div class="rule on"><span class="grip">≡</span><span class="w">While tired</span><span class="to">→ Rest</span><span class="off">on now · until tired clears</span></div>
+        <div class="rule"><span class="grip">≡</span><span class="w">Under 10 damp wood</span><span class="to">→ Cut wood</span><span class="off">off · damp wood is 18</span></div>
+        <div class="rule"><span class="grip">≡</span><span class="w dim">Otherwise</span><span class="to">→ Main</span><span class="off">runs when nothing above holds the hands</span></div>
+        <div style="padding:12px 16px"><span class="btn" style="width:100%">Add a rule</span></div>
+        <div class="sec lbl">Answers</div>
+        <div class="rule"><span class="grip"></span><span class="w">Bank the fire</span><span class="to dim">not answered</span><span class="off">waiting in Asks</span></div>
+        <div class="sec lbl">Mixes</div>
+        <div class="rule"><span class="grip"></span><span class="w">Main</span><span class="to">Edit</span><span class="off">Scavenge 27 · Cut wood 16 · Dig clay 57</span></div>
+        <div class="bbar"><div><svg width="20" height="20"><use href="#i-tasks"/></svg>Tasks</div><div><svg width="20" height="20"><use href="#i-town"/></svg>Town</div><div class="on"><svg width="20" height="20"><use href="#i-rules"/></svg>Rules</div><div><svg width="20" height="20"><use href="#i-book"/></svg>Book</div></div>
+      </div>
+    </div>
+    <div class="prose" style="max-width:340px;padding-top:24px">
+      <p>The editor opens as a sheet on phone and in the right column on desktop, with the scene left in view. Save sits in the thumb zone.</p>
+      <p>Rules opens on <b>Lately</b>, because "why is my mix different?" is what a returning player asks. An off rule says why it's off, an on rule says until when.</p>
+      <p>Answers live beside rules: an answer is a standing order the game holds for you.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">3g · The Town view</p>
+  <h2>People get a room of their own</h2>
+  <p class="cap" style="margin-bottom:16px">E's Camp Roster as a view in the rail. It holds the people, their lanes and the town's mix, which on phone sits under the Town tab together with stores and skills. The rail and the main screen never list anyone's jobs.</p>
+  <div class="scrollbox">
+  <div class="device" style="width:1180px;display:grid;grid-template-columns:208px 1fr">
+    <aside class="rail" style="min-height:560px">
+      <nav class="nav" style="margin-top:8px">
+        <a href="#">Tasks <small>6</small></a>
+        <a class="on" href="#">Town <small>2 people</small></a>
+        <a href="#">Rules <small>2 on</small></a>
+        <a href="#">Book</a>
+      </nav>
+      <div class="foot">Feedback · Another device · Games</div>
+    </aside>
+    <div style="padding:22px 32px">
+      <div style="display:flex;align-items:baseline;gap:16px"><span class="fell" style="font-size:22px;color:var(--ink-hi)">Town</span><span class="dim meta">2 people · both working</span><span style="flex:1"></span><span class="txtbtn">Edit town mix</span></div>
+      <div class="seg" style="padding:0;margin-top:10px"><span class="on">People</span><span>Stores &amp; skills</span><span style="color:#5c5862">Buildings</span><span style="color:#5c5862">Outposts</span></div>
+      <div class="person">
+        <span class="avatar" style="background:#b89a72">L</span>
+        <div><div class="hi">Lucy</div><div class="dim meta">keeps the fire</div></div>
+        <div><div class="split" style="height:6px"><i style="width:40%;background:var(--h1)"></i><i style="width:60%;background:var(--h0)"></i></div><div class="legend"><span style="--c:var(--h1)">Forage <b>40%</b></span><span style="--c:var(--h0)">Tend the fire <b>60%</b></span></div></div>
+        <div style="text-align:right"><div class="meta">now: Forage</div><div class="bar" style="margin-top:6px"><i style="width:30%;background:var(--h1)"></i></div></div>
+      </div>
+      <div class="person">
+        <span class="avatar" style="background:#8a97a6">M</span>
+        <div><div class="hi">Martin</div><div class="dim meta">forages, scavenges</div></div>
+        <div><div class="split" style="height:6px"><i style="width:40%;background:var(--h1)"></i><i style="width:10%;background:var(--h5)"></i><i style="width:50%;background:var(--h4)"></i></div><div class="legend"><span style="--c:var(--h1)">Forage <b>40%</b></span><span style="--c:var(--h5)">Cut wood <b>10%</b></span><span style="--c:var(--h4)">Scavenge <b>50%</b></span></div></div>
+        <div style="text-align:right"><div class="meta">now: Forage</div><div class="bar" style="margin-top:6px"><i style="width:55%;background:var(--h1)"></i></div></div>
+      </div>
+      <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:32px">
+        <div>
+          <p class="anno" style="margin:0 0 6px">At a town's size (fixture shape, no content):</p>
+          <div class="ghost"><span>▸ Notables</span><span class="meta">n</span></div>
+          <div class="ghost"><span>▸ grouped by role or lane</span><span class="meta">n working</span></div>
+          <div class="ghost"><span>▸ light tier</span><span class="meta">n · top 8 shown</span></div>
+          <div class="ghost" style="border:0"><span>search · pin</span><span class="meta">n hidden</span></div>
+        </div>
+        <div class="notebox" style="align-self:start">How it holds many people: notables stay as full rows like these two. Everyone else folds into groups by role, each showing its count and the group's own split bar. A group shows its top eight and says how many it hides. Search and pin reach the rest. Chatter shows here and in the Book, never on the main screen. The rail line stays one summary ("Town · 14 working") however big the town gets.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ======================= 4 SURFACES ======================= -->
+<section>
+  <p class="kicker">4 · What happened to each surface</p>
+  <h2>Kept, merged, moved, cut</h2>
+  <table class="t collapse">
+    <tr><th>Surface today</th><th>Now</th><th>From</th></tr>
+    <tr><td>Story strip</td><td>Kept, unboxed, story lines only, three rows on phone (a content rule)</td><td><i class="from B">B</i> <i class="from C">C</i></td></tr>
+    <tr><td>Log button and Log sheet</td><td>Merged into Book › Chronicle, with filters and "↳" causes</td><td><i class="from B">B</i></td></tr>
+    <tr><td>Line under a tapped card</td><td>Refusals only. A success goes to the strip, never under the card</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Journal</td><td>Moved into Book › Journal, unchanged in voice</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Completed tab</td><td>Moved into Book › Done</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Hands panel and mix bar</td><td>A bar with its legend beneath (no labels inside), Mixes and Edit as text buttons</td><td><i class="from A">A</i> <i class="from C">C</i></td></tr>
+    <tr><td>Offer box in Hands</td><td>The Asks list: one at a fixed height, a count, the full ask as a sheet</td><td><i class="from G">new</i> <i class="from B">B</i></td></tr>
+    <tr><td>Camp panel (people rows)</td><td>Moved to the Town view (rail on desktop, tab on phone)</td><td><i class="from E">E</i></td></tr>
+    <tr><td>Ledger</td><td>Grouped (yours / town / outposts / threats). Under the scene on desktop, Town › Stores on phone</td><td><i class="from G">new</i> <i class="from A">A</i></td></tr>
+    <tr><td>Skill rows</td><td>The rail on desktop, Town › Skills on phone. A level shows on its card</td><td><i class="from E">E</i> <i class="from C">C</i></td></tr>
+    <tr><td>Tasks / Completed / Rules tabs</td><td>The rail (desktop) and the bottom bar (phone): Tasks, Town, Rules, Book</td><td><i class="from E">E</i> <i class="from C">C</i></td></tr>
+    <tr><td>Cards</td><td>Kept, unframed tiles with a hue square. A waiting card is a hairline outline</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Mix editor, Mixes list</td><td>A sheet (phone) or the right column (desktop); steppers; Save in thumb reach</td><td><i class="from C">C</i> <i class="from A">A</i></td></tr>
+    <tr><td>Rules tab, Lately, condition editor</td><td>Kept; Lately moves to the top; Answers listed with rules; the editor is a sheet</td><td><i class="from B">B</i> <i class="from A">A</i></td></tr>
+    <tr><td>Book and Log buttons</td><td>Cut. The Book is a tab</td><td><i class="from C">C</i></td></tr>
+    <tr><td>Chips, aim, camp bar</td><td>Kept in the head, at meta size</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Lessons and the one glow</td><td>Kept, as the one ember outline, never alongside an ask</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Dots</td><td>Kept for a new card or a new rail view only. No counts of what was missed</td><td><i class="from A">A</i></td></tr>
+    <tr><td>Coming back (replay)</td><td>Kept, plus the "Since you left" chapter</td><td><i class="from B">B</i></td></tr>
+    <tr><td>Fights, prestige sheet</td><td>Odds under the fight card; Push past on the skill row opens the sheet; results go to the routing rows above</td><td><i class="from G">new</i></td></tr>
+  </table>
+</section>
+
+<!-- ======================= 5 THREE ======================= -->
+<section>
+  <p class="kicker">5 · If only three ship</p>
+  <h2>The three changes that matter most</h2>
+  <div class="cols3" style="gap:40px">
+    <div style="border-top:1px solid var(--rule);padding-top:16px">
+      <span class="fell" style="font-size:28px;color:var(--ember)">I</span>
+      <h3 style="margin-top:8px">One home per message, with its cause <i class="from B">B</i> <i class="from A">A</i></h3>
+      <p>A refusal goes under the card, a success becomes story, and everything else goes to one chronicle where each row says "↳" what caused it. This answers "weird" and "I have no idea what caused that" with a single change, and it scales by adding filters.</p>
+    </div>
+    <div style="border-top:1px solid var(--rule);padding-top:16px">
+      <span class="fell" style="font-size:28px;color:var(--ember)">II</span>
+      <h3 style="margin-top:8px">A frame with a place for the next thing <i class="from E">E</i> <i class="from C">C</i></h3>
+      <p>The rail on desktop, the bottom bar and sheets on phone, a Town view, and asks as a fixed-height list. The cards stay under your thumb, and a town, a season turn or a map never get stacked into the play column.</p>
+    </div>
+    <div style="border-top:1px solid var(--rule);padding-top:16px">
+      <span class="fell" style="font-size:28px;color:var(--ember)">III</span>
+      <h3 style="margin-top:8px">Quiet at rest, good in the hand <i class="from A">A</i> <i class="from C">C</i></h3>
+      <p>One frame, ember with two jobs and four sizes, so the scene and the one ask get read first. Then the press, the level shown on its card and the cascade lit link by link, so taps feel good with nothing calling you back.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+</body>
+</html>

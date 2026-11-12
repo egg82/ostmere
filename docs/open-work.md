@@ -251,6 +251,11 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
     - The track's input ratio: `field_track` takes about 5400 roots an hour at its full share against about 1330
       made, so it is held to a share where it takes about 110 stones an hour of about 260 made; stones overfill away
       from the ends of days eight to twelve, and roots from day eleven's.
+25. **The redesign**: every in-game screen gets a new look and feedback language; the front page only restyles to
+    match. Chosen and approved, not started: `docs/design/redesign.md` is the plan and the build order, and
+    `docs/design/redesign/merge.html` is the design. It absorbs "where a tap's result is said" (a refusal shows as
+    red plus the missing need with no text, and a success becomes a story line only). Fits into: the feedback ladder,
+    Chronicle and unwrap, and Offers; no new system. Load `writing-craft` for every player-facing string.
 
 ## Where things are
 
@@ -260,6 +265,7 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
 | Live site | https://ostmere.yggdrasil.pub (deploy: the cluster repo, via Flux) |
 | Research downloads (Widman map stamps, Gessner scans) | outside the repo |
 | Design canvas (six phone screens) | https://claude.ai/artifact/H6Foqa7diKmwDS1KGKJuxC, source in `docs/design/canvas/` |
+| Redesign comparison (six designs and the merge) | https://claude.ai/artifact/3zBFvQDBec1J6UWPqCuc6s, the chosen design in `docs/design/redesign/` |
 | Look test canvas | https://claude.ai/artifact/1EDLESML2xgre6iuvonRt1, source in `docs/design/look-test-canvas/` |
 | Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing-test/` |
 | Strawman doc (superseded by `decisions.md` where they differ) | https://claude.ai/code/artifact/571817bb-99df-498c-be29-3202fe5ef76e |
