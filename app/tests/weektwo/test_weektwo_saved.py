@@ -5,6 +5,7 @@ rebased save was written from today's play and code. A stale end fails, naming t
 controls show the comparisons see a changed play."""
 import copy
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,7 @@ from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weektwo import ends, rebased
-from tests.weektwo.routes import SAVED, laters, saved_end
+from tests.weektwo.routes import CHAPTERS, SAVED, laters, saved_end
 
 CHECKED = [(chapter, name) for chapter, names in SAVED.items() if chapter != "week1" for name in names]
 
@@ -28,10 +29,38 @@ def todays_rules() -> str:
 def test_the_saved_ends_are_every_end_the_chain_needs_on_todays_rules(todays_rules: str):
     wanted = {ends.player_path(c, n) for c, names in SAVED.items() for n in names}
     wanted |= {ends.rebased_path(c) for c in rebased.OLD} | {ends.manifest()}
+    wanted |= {ends.readings_path(c, first) for spans in ends.READINGS.values() for c, first, _ in spans}
     assert len(wanted) > len(SAVED)
     if ends.available():
         assert set(ends.golden().iterdir()) == wanted, ends.REWRITE
         assert ends.manifest_rules() == todays_rules, f"the saved ends were written under other rules: {ends.REWRITE}"
+
+
+def test_each_chapters_readings_run_from_its_first_heavy_step_with_no_gap_and_the_last_open():
+    spans: dict[str, list[tuple[int, int | None]]] = {}
+    for part in ends.READINGS.values():
+        for chapter, first, after in part:
+            spans.setdefault(chapter, []).append((first, after))
+    assert set(spans) == set(CHAPTERS)
+    for chapter, found in spans.items():
+        found.sort()
+        assert found[0][0] == 0 and found[-1][1] is None, chapter
+        assert all(after == nxt for (_, after), (nxt, _) in zip(found, found[1:])), (chapter, found)
+
+
+def test_a_changed_engine_file_is_a_new_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """The saves and readings are cached under key(): an engine file changed by one byte misses that cache."""
+    app = tmp_path / "app"
+    shutil.copytree(ends.APP / "ashfall_app" / "engine", app / "ashfall_app" / "engine")
+    for entry in ends.PLAY_CODE:
+        (app / entry).parent.mkdir(parents=True, exist_ok=True)
+        (app / entry).symlink_to(ends.APP / entry)
+    monkeypatch.setattr(ends, "APP", app)
+    before = ends.key.__wrapped__()
+    assert before == ends.key(), "the copy keys as the tree does"
+    engine = sorted((app / "ashfall_app" / "engine").rglob("*.py"))[0]
+    engine.write_text(engine.read_text() + "\n")
+    assert ends.key.__wrapped__() != before
 
 
 @pytest.fixture

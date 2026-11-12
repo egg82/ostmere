@@ -23,10 +23,10 @@ def shard_args(shard: str) -> list[str]:
     raise SystemExit(f"unknown shard {shard!r}: a or b")
 
 
-def collected(extra: list[str]) -> set[str]:
+def collected(extra: list[str], select: tuple[str, ...] = SELECT, env: dict[str, str] | None = None) -> set[str]:
     """The node ids pytest collects for these arguments, from its own -q listing (one `path::name` per line)."""
-    run = subprocess.run([sys.executable, "-m", "pytest", "--collect-only", "-q", *SELECT, *extra],
-                         capture_output=True, text=True, check=False)
+    run = subprocess.run([sys.executable, "-m", "pytest", "--collect-only", "-q", *select, *extra],
+                         capture_output=True, text=True, check=False, env=env)
     ids = {line for line in run.stdout.splitlines() if "::" in line}
     if run.returncode != 0 or not ids:
         sys.exit(f"collection failed (exit {run.returncode}, {len(ids)} ids):\n{run.stdout[-2000:]}{run.stderr[-2000:]}")
