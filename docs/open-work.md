@@ -45,6 +45,10 @@ Fits into: the pacing simulator (item 1), the route table in `app/tests/dayone/r
 **An order-dependent test.** `tests/db/test_failover.py::test_the_site_is_logged_at_startup` fails when run alone: it
 leans on an earlier test's logging setup (same on main before the overhaul). Give it its own logging setup.
 
+**A card tap that never lands at phone width, in the headless harness.** At 390x844 a Playwright click on a card
+button sent no decision; `elementFromPoint` at the button's centre returned the `.card-list` wrapper. Same on main
+before the redesign. Find whether the wrapper covers the buttons on a real phone or the probe misses; fix it if real.
+
 0. **The opening's follow-ups.** Every card is mixable: shipped (one kind of card, tapped or mixed; a one-off is a
    card with a cap that moves to Completed). The screen is `docs/design/opening-screen.md`, the story and timeline
    `content/team/opening-v2.md` (never shown to the owner).
@@ -264,7 +268,8 @@ leans on an earlier test's logging setup (same on main before the overhaul). Giv
 25. **The redesign**: every in-game screen gets a new look and feedback language; the front page only restyles to
     match. `docs/design/redesign.md` is the plan and the build order, and `docs/design/redesign/merge.html` is the
     design. Step 1 (routing: a refusal is red plus the missing need with no text, a success a story line only) shipped;
-    step 2, the look, is next. Fits into: the feedback ladder,
+    step 2 (the look: hairlines, four sizes, ember's two jobs) shipped; step 3, the mix bar's legend and the grouped
+    ledger, is next, and brings the mix hues onto the merge's palette. Fits into: the feedback ladder,
     Chronicle and unwrap, and Offers; no new system. Load `writing-craft` for every player-facing string.
 
 ## Where things are
