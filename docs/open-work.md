@@ -35,14 +35,15 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
 
 **The nightly run is red since 2026-11-06: day one's pacing for sharp, and no once-a-day player who plays.** A
 speed change to the day-one roots rule's band (`6b83fe73`, for fewer engine instants on a day away) moved B3 about
-10 h later for `sharp`, past its bar; `lazy`, which skips the tools, stopped reaching B3 within its horizon. Three
-parts, in order:
-- `lazy` is reported, never held (`decisions/simulator.md`, "Length"), so its miss is printed, not a crash or a
-  failure (in flight).
+10 h later for `sharp`, past its bar; `lazy`, which skips the tools, stopped reaching B3 within its horizon (it is
+reported, never held, so its miss now prints). Two parts, in order:
 - Add a once-a-day route that uses the tools, to `TOOL_USERS`, held to the bars; then
 - restore day one's pacing so `sharp` and that route meet them, finding the instants saving elsewhere (item 14's
   engine work) rather than in the band: the loader's two-completion band rule now refuses the old setting.
 Fits into: the pacing simulator (item 1), the route table in `app/tests/dayone/routes.py`.
+
+**An order-dependent test.** `tests/db/test_failover.py::test_the_site_is_logged_at_startup` fails when run alone: it
+leans on an earlier test's logging setup (same on main before the overhaul). Give it its own logging setup.
 
 0. **The opening's follow-ups.** Every card is mixable: shipped (one kind of card, tapped or mixed; a one-off is a
    card with a cap that moves to Completed). The screen is `docs/design/opening-screen.md`, the story and timeline
