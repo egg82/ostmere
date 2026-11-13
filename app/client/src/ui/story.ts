@@ -34,6 +34,13 @@ import { ruleEntries } from "../game/rulerows";
 const TOUCHES = ["pointerdown", "keydown"] as const;
 const KEEP = 200;
 
+/** The first ask on the page (ui/offerrows.ts) brought into view, its first answer focused. */
+function showAsk(): void {
+  const ask = document.querySelector<HTMLElement>(".offer-ask");
+  ask?.scrollIntoView({ block: "center" });
+  ask?.querySelector<HTMLButtonElement>("button")?.focus();
+}
+
 export class Story implements Part {
   /** The story strip: the newest lines that fit its room, whole (ui/headseat.ts seats it under the art). */
   readonly root = el("section", "strip");
@@ -66,7 +73,7 @@ export class Story implements Part {
   constructor(private readonly ctx: PartContext) {
     this.camp = new CampBar(ctx);
     this.aimLine = new AimLine(ctx);
-    this.chronicle = new ChronicleSheet(ctx.catalog, ctx.keeps);
+    this.chronicle = new ChronicleSheet(ctx.catalog, ctx.keeps, () => showAsk());
     this.journal = new Journal(ctx);
     this.lines.setAttribute("aria-live", "polite");
     const open = el("button", "chron-open", ctx.catalog.text.get(UI.chronicle));
@@ -94,6 +101,7 @@ export class Story implements Part {
     const { catalog } = this.ctx;
     this.nowAt = Math.max(this.nowAt, view.at);
     this.chronicle.seen(this.nowAt);
+    this.chronicle.waiting(view.offers.filter((o) => o.answer === null).length);
     const carried = catalog.content.feature_infos.filter((f) => f.label_key && catalog.unlocked(view, "feature", f.feature));
     this.journal.update(view);
     const book = (f: string): string => (this.journal.shown && f === catalog.content.journal?.feature ? "journal" : "keep");

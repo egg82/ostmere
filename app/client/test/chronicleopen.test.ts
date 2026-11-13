@@ -1,5 +1,5 @@
 // The chronicle follows the story while it is open: a line that lands joins it, in the band's form, and the view stays
-// at the bottom if the player was there, or where they scrolled to read.
+// where the player was: it opens at the top, newest first.
 import { install } from "./fake-dom";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
@@ -36,16 +36,16 @@ screen.show({ ...dayOneStep("landed", 200), lines: [line("line.1", 0)] }, true);
 opener.click();
 const before = logged();
 expect("the open chronicle holds what landed before", before.includes(text("line.1")), true);
+expect("it opens at the top", list.scrollTop, 0);
 
 screen.show({ ...dayOneStep("landed", 300), lines: [line("line.2", 1)] }, true);
 expect("a line that lands joins the open chronicle, last", logged().slice(-1), [text("line.2")]);
 expect("the earlier lines stay", logged().length, before.length + 1);
-expect("the player at the bottom follows", list.scrollTop, list.scrollHeight);
 
-list.scrollTop = 0;
+list.scrollTop = 150;
 screen.show({ ...dayOneStep("landed", 400), lines: [line("line.3", 2)] }, true);
-expect("a line joins even when the player has scrolled up", logged().slice(-1), [text("line.3")]);
-expect("a player reading above is not moved", list.scrollTop, 0);
+expect("a line joins even when the player has scrolled", logged().slice(-1), [text("line.3")]);
+expect("a player reading is not moved", list.scrollTop, 150);
 
 // A closed chronicle is filled afresh on opening: the landing does not touch it.
 sheet.close();

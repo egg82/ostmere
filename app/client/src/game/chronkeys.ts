@@ -2,10 +2,23 @@
 // rule's entries, and the words of a cause (CONTRACT.txt, "Line causes").
 export const CHRONICLE_KEYS = {
   chronicle: "ui.chronicle.open",
-  chronAwayM: "ui.chronicle.away_m",
+  chronAway: "ui.chronicle.away", // "{d}": an older stretch's title, d its awaySpan
+  chronAwayM: "ui.chronicle.away_m", // "{m}": how long the player was away, under an hour
   chronAwayH: "ui.chronicle.away_h",
   chronAwayHm: "ui.chronicle.away_hm",
   chronAwayD: "ui.chronicle.away_d",
+  chapter: "ui.chapter.title",
+  chapterStores: "ui.chapter.stores",
+  chapterLevels: "ui.chapter.levels",
+  chapterRules: "ui.chapter.rules",
+  chapterWaiting: "ui.chapter.waiting",
+  chapterGain: "ui.chapter.gain", // "{n}{store}"
+  chapterLoss: "ui.chapter.loss", // "{n}{store}"
+  chapterLevel: "ui.chapter.level", // "{name}{before}{after}"
+  chapterTimes: "ui.chapter.times", // "{rule}{n}": a rule that came on n times, n of 2 or more
+  chapterAsk: "ui.chapter.ask", // "{n}": one ask waiting
+  chapterAsks: "ui.chapter.asks", // "{n}"
+  chapterStill: "ui.chapter.still", // nothing changed while the player was away
   chronEarlier: "ui.chronicle.earlier",
   chronNow: "ui.chronicle.now",
   chronStory: "ui.chronicle.story",

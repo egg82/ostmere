@@ -8,6 +8,7 @@
 import { ApiFailure, type GameApi } from "../api/api";
 import type { Content, Decision, NewSave, PastLine, SavePresentation, Step, View } from "../api/types";
 import { Asking } from "./asking";
+import { chapterOf } from "./chapter";
 import { Clock } from "./clock";
 import { ForecastHold } from "./forecasthold";
 import { Keeps, NEW_SAVE, sentKeeps, type Kept } from "./keeps";
@@ -262,11 +263,11 @@ export class Session {
 
   private landed(next0: Step, prev: View, away: boolean): void {
     const next = this.forecast.withForecast(next0);
+    if (away) this.keeps.keepReturn(prev.at, next.view.at, this.content && chapterOf(this.content, prev, this.step?.rule_runs ?? [], next.view, next.rule_runs));
     this.fresh = false;
     this.step = next;
     this.events.build(next.build);
     this.clock.start(next.view.at);
-    if (away) this.keeps.keepReturn(prev.at, next.view.at);
     this.events.stepped(next, prev, away);
     if (this.content) progressed(this.content, next.view);
   }

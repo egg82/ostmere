@@ -6,7 +6,7 @@
 // server's answer, which holds what other pages kept, is adopted (presentation.ts). A send that fails is only logged
 // (the page goes on as if it was kept).
 import type { GameApi } from "../api/api";
-import type { AccountPresentation, AccountSettings, LessonEnd, OfferedSwitch, SavePresentation, Visit } from "../api/types";
+import type { AccountPresentation, AccountSettings, Chapter, LessonEnd, OfferedSwitch, SavePresentation, Visit } from "../api/types";
 import { AWAY_MIN_S, MAX_VISITS } from "./chronicle";
 import { mergePresentation, mergeSavePresentation, sendable, sendableSave } from "./presentation";
 
@@ -153,10 +153,16 @@ export class Keeps {
     return this.save.visits ?? [];
   }
 
-  /** A return from `left` to `back`, kept once per `left` when it was long enough to be a visit. */
-  keepReturn(left: number, back: number): void {
+  /** A return from `left` to `back`, kept once per `left` when it was long enough to be a visit, with its figures
+   * (game/chapter.ts) as the save's chapter in the same write. */
+  keepReturn(left: number, back: number, chapter: Chapter | null = null): void {
     if (back - left < AWAY_MIN_S || this.visits().some((v) => v.left === left)) return;
-    this.keepSave({ ...this.save, visits: [...this.visits(), { left, back }].slice(-MAX_VISITS) });
+    this.keepSave({ ...this.save, visits: [...this.visits(), { left, back }].slice(-MAX_VISITS), ...(chapter ? { chapter } : {}) });
+  }
+
+  /** The newest return's figures, null when none were kept (a return before they were, or none yet). */
+  chapter(): Chapter | null {
+    return this.save.chapter ?? null;
   }
 
   /** The note has been read: its page was turned to with the note on it (ui/journal.ts). Kept for the account. */

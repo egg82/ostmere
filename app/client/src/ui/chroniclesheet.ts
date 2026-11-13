@@ -1,13 +1,16 @@
-// The chronicle, newest last, in a sheet over the page (docs/design/opening-screen.md, "The chronicle"): a heading, a
-// row of filters once more than one kind has an entry (game/chronicle.ts routes each kind to one), then one stretch
-// per visit, the newest open and the older folded to a line of counts. Each line carries its cause beneath it. Under
-// Story, a stretch ends with how many entries it holds of each other filter, and each count opens that filter.
+// The chronicle, newest first, in a sheet over the page (docs/design/opening-screen.md, "The chronicle"): a heading, a
+// row of filters once more than one kind has an entry (game/chronicle.ts routes each kind to one), then the newest
+// return's "Since you left" chapter (ui/chapter.ts) and one stretch per earlier visit, folded to a line of counts (the
+// newest open when there is no chapter). Lines run oldest first within each. Each line carries its cause beneath it.
+// Under Story, a stretch ends with how many entries it holds of each other filter, and each count opens that filter.
 import { agoWords } from "../game/ago";
+import type { Visit } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { added, filtersOf, held, inStrip, stretches, tally, type Entry, type Filter, type Stretch } from "../game/chronicle";
 import { awayTitle, filterCount, filterLabel } from "../game/chronwords";
 import type { Keeps } from "../game/keeps";
 import { UI } from "../game/text";
+import { chapterNode, type ChapterView } from "./chapter";
 import { el } from "./dom";
 
 const START = -1;
@@ -23,8 +26,11 @@ export class ChronicleSheet {
   private now = 0;
   /** Stretches the player opened or folded by hand, by id: a stretch drawn again, under any filter, keeps its state. */
   private readonly handled = new Map<number, boolean>();
+  /** How many asks wait now: the chapter's waiting row. */
+  private asks = 0;
 
-  constructor(private readonly catalog: Catalog, private readonly keeps: Keeps) {
+  /** `showWaiting`: what the chapter's waiting count opens (the asks on the page). */
+  constructor(private readonly catalog: Catalog, private readonly keeps: Keeps, private readonly showWaiting: () => void) {
     const close = el("button", "quiet", catalog.text.get(UI.close));
     close.type = "button";
     close.autofocus = true;   // the sheet opens on Close, not on the first filter
@@ -39,18 +45,22 @@ export class ChronicleSheet {
   show(): void {
     this.draw();
     this.root.showModal();
-    this.list.scrollTop = this.list.scrollHeight;
+    this.list.scrollTop = 0;
   }
 
-  /** An entry joins the chronicle in its place by time; while it is open the view follows only if it was at the bottom. */
+  /** An entry joins the chronicle in its place by time; while it is open the view stays where it was. */
   add(entry: Entry): void {
     this.now = Math.max(this.now, entry.at);
     this.entries = added(this.entries, entry);
     if (!this.root.open) return;
-    const { scrollTop, clientHeight, scrollHeight } = this.list;
-    const atBottom = scrollHeight - scrollTop - clientHeight <= 4;
+    const { scrollTop } = this.list;
     this.draw();
-    if (atBottom) this.list.scrollTop = this.list.scrollHeight;
+    this.list.scrollTop = scrollTop;
+  }
+
+  /** How many asks wait now; drawn the next time the sheet draws. */
+  waiting(n: number): void {
+    this.asks = n;
   }
 
   /** The page's latest game second, so a stretch's "ago" reads against it. */
@@ -59,15 +69,33 @@ export class ChronicleSheet {
   }
 
   /** The stretches are cut from every entry, so a stretch keeps its title and state whatever the filter; the filter
-   * picks their lines, and a stretch with none of them is not drawn. The newest drawn opens unless folded by hand. */
+   * picks their lines, and a stretch with none of them is not drawn. The newest return's stretch is the chapter, drawn
+   * under Story and All even with no line; with no return kept, the newest drawn opens unless folded by hand. */
   private draw(): void {
     const offered = filtersOf(this.entries);
     if (this.filter !== null && !offered.includes(this.filter)) this.filter = offered[0] ?? "story";
     this.drawFilters(offered);
     const all = stretches(this.entries, this.keeps.visits());
-    const last = all.at(-1);
-    const drawn = all.filter((s) => held(s.lines, this.filter).length > 0);
-    this.list.replaceChildren(...drawn.map((s, i) => this.stretch(s, s === last, i === drawn.length - 1)));
+    const chapter = this.chapter(all);
+    const last = chapter ? null : all.at(-1);
+    const drawn = all.filter((s) => held(s.lines, this.filter).length > 0).reverse();
+    const top = chapter && (this.filter === "story" || this.filter === null || held(chapter.lines, this.filter).length > 0)
+      ? [chapterNode(this.catalog, chapter, this.filter, { line: (l) => this.line(l), pick: (f) => this.pick(f), showWaiting: () => this.waitingShown() })] : [];
+    this.list.replaceChildren(...top, ...drawn.map((s, i) => this.stretch(s, s === last, top.length === 0 && i === 0)));
+  }
+
+  /** The newest return's chapter, its stretch taken out of `all`; null with no return kept. */
+  private chapter(all: Stretch[]): ChapterView | null {
+    const visit = this.keeps.visits().reduce<Visit | null>((n, v) => (n === null || v.left > n.left ? v : n), null);
+    if (visit === null) return null;
+    const lines = all.at(-1)?.visit?.left === visit.left ? all.pop()!.lines : [];
+    const figures = this.keeps.chapter();
+    return { visit, lines, figures: figures?.left === visit.left ? figures : null, waiting: this.asks };
+  }
+
+  private waitingShown(): void {
+    this.root.close();
+    this.showWaiting();
   }
 
   private drawFilters(offered: Filter[]): void {
@@ -86,7 +114,7 @@ export class ChronicleSheet {
   private pick(filter: Filter | null): void {
     this.filter = filter;
     this.draw();
-    this.list.scrollTop = this.list.scrollHeight;
+    this.list.scrollTop = 0;
   }
 
   /** `newest`: the chronicle's last stretch (its title is "Now" when no return opened it). `open`: drawn open unless
