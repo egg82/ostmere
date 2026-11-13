@@ -149,6 +149,8 @@ def test_the_story_order_check_catches_a_swap_and_a_missing_beat():
     assert checks.story_order(landed) == []
     assert checks.story_order({**landed, "H7": landed["B3"] + 1})
     assert checks.story_order({b: t for b, t in landed.items() if b != "H6"})
+    assert checks.story_order({b: t for b, t in landed.items() if b != "B3"}) == ["never landed: ['B3']"]
+    assert checks.story_order({b: t for b, t in landed.items() if b != "B3"}, all_land=False) == []
 
 
 def test_the_near_promise_check_catches_a_visit_without_it():

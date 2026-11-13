@@ -11,7 +11,8 @@ from tests.dayone.policy import QUEUEABLE
 from tests.dayone.routes import TOOL_USERS, day
 
 CHECKS: dict[str, Callable[[str, DayOnePlayer], list[str]]] = {
-    "story_order": lambda _, p: checks.story_order(p.landed_at),
+    "reaches_b3": lambda name, p: _reaches_b3(p) if name in TOOL_USERS else [],
+    "story_order": lambda name, p: checks.story_order(p.landed_at, name in TOOL_USERS),
     "b3_relative": lambda name, p: _relative(p) if name in TOOL_USERS else [],
     "queueable": lambda name, p: _queueable(p) if name in TOOL_USERS else [],
     "promises": lambda _, p: goals.promise_problems(p),
@@ -21,6 +22,15 @@ CHECKS: dict[str, Callable[[str, DayOnePlayer], list[str]]] = {
 @cache
 def _steps() -> int:
     return len(presence_steps(day("babysitter").rules))
+
+
+def _reaches_b3(p: DayOnePlayer) -> list[str]:
+    """B3 is seen within the route's horizon (the end of its last visit); the B3-relative checks say nothing without it.
+    Held on the tool users only: the routes that skip the tools are reported (the readout), never held (simulator.md)."""
+    if "B3" in p.seen_at:
+        return []
+    assert p.end_at is not None
+    return [f"B3 not seen by {(p.save.time - p.end_at) / 3600:.1f} h ({len(p.visits)} visits)"]
 
 
 def _relative(p: DayOnePlayer) -> list[str]:

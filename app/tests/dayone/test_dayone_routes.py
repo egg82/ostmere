@@ -19,7 +19,6 @@ def test_a_route_meets_the_bar(day_verdicts: Verdicts, check: str):
     assert found[check] == []
 
 
-@pytest.mark.xfail(strict=True, reason="a route that never sees B3 raises KeyError in the B3-relative checks")
 def test_a_route_that_never_sees_b3_still_yields_verdicts():
     assert set(verdicts("lazy", 0)) == set(CHECKS)
 
