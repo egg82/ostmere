@@ -8,7 +8,7 @@ from tests.opening.playthrough import opening
 
 @pytest.fixture(scope="module", autouse=True)
 def shipped() -> Opening:
-    """The cached shipped opening, loaded in setup (not timed)."""
+    """The cached shipped opening."""
     return opening()
 
 

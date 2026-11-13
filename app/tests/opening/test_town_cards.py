@@ -31,7 +31,7 @@ def digest(o: Opening) -> str:
 @pytest.fixture(scope="module")
 def digests(tmp_path_factory: pytest.TempPathFactory) -> tuple[str, str, str]:
     """The digest of the chapters reloaded with an unedited copy of day three, of the cached shipped opening, and the
-    lock's, computed in setup (not timed)."""
+    lock's, computed once."""
     same = planted(tmp_path_factory.mktemp("town"), 'label_key = "c_woodcutting"', 'label_key = "c_woodcutting"')
     return digest(same), digest(opening()), load_lock().digest
 
@@ -46,7 +46,7 @@ def test_the_shipped_content_digest_is_the_lock_s(digests: tuple[str, str, str])
 @pytest.fixture(scope="module")
 def dropped_lane() -> tuple[Opening, Opening, str, str]:
     """The cached shipped opening, the same without n3's gather card, and the digests of the rules built from each
-    without the checks, computed in setup (not timed)."""
+    without the checks, computed once."""
     o = opening()
     dropped = o.model_copy(update={"cards": [c for c in o.cards if c.id != "n3_gather"]})
     return o, dropped, rules_digest(build_rules(o)), rules_digest(build_rules(dropped))
@@ -69,7 +69,7 @@ def test_an_expansion_that_collides_with_an_id_fails_the_loader_naming_it(tmp_pa
 
 @pytest.fixture(scope="module")
 def everything() -> Opening:
-    """Every chapter, those in writing too, loaded in setup (not timed): a lane a shipped entry names may be declared in
+    """Every chapter, those in writing too, loaded once: a lane a shipped entry names may be declared in
     a chapter still in writing, and expands there."""
     return load_opening(chapters=(*CHAPTERS, *IN_WRITING))
 

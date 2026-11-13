@@ -49,7 +49,7 @@ def game() -> Game:
 
 @pytest.fixture(autouse=True, scope="module")
 def primed() -> None:
-    """Build the cached rules and game in setup, which is not timed: the first test would be charged for them."""
+    """Build the cached rules and game once for the module."""
     game()
 
 

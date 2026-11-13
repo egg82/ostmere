@@ -317,7 +317,7 @@ def driven_st(draw: st.DrawFn, two_lanes: bool) -> Case:
 @given(driven_st(two_lanes=True))
 def test_invariant_57_both_lanes_driven(case: Case):
     """Invariant 57 on worlds with cards on both lanes, the costly kind: its 7 examples run as two tests of 4 and 3, and
-    the any-world 7 as a third, so each stays inside the per-test CPU ceiling (tests/conftest.py)."""
+    the any-world 7 as a third, so each stays inside the per-test ceiling (tests/conftest.py)."""
     check_57(case)
 
 

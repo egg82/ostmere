@@ -58,7 +58,7 @@ Imports = tuple[dict[str, set[str]], dict[str, set[str]]]
 @pytest.fixture(scope="module")
 def imports() -> Imports:
     """test_boundaries' graph of the package's units, and each unit's top-level names imported from outside the package:
-    every file parsed once, in setup, which the per-test CPU ceiling does not time (tests/conftest.py)."""
+    every file parsed once for the module."""
     outside: dict[str, set[str]] = {}
     for p in boundaries.PKG.rglob("*.py"):
         if p.parent != boundaries.PKG or p.name != "__init__.py":

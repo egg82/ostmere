@@ -32,7 +32,7 @@ def condition_atoms(source: str) -> set[tuple[str, str]]:
 @pytest.fixture(scope="module")
 def ids() -> dict[str, set[str]]:
     """Ids from every chapter, the ones still in writing included: a chapter's art is built before its lines are, and its
-    layers never show until the chapter ships. Loaded in setup (not timed): each chapter adds to the load."""
+    layers never show until the chapter ships. Loaded once for the module: each chapter adds to the load."""
     o = load_opening(chapters=(*CHAPTERS, *IN_WRITING))
     cards = {c.id for c in o.cards}
     return {

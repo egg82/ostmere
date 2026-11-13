@@ -124,7 +124,7 @@ def test_a_lift_that_cannot_lift_fails_the_load(tmp_path: Path, old: str, new: s
 
 @pytest.fixture(scope="module")
 def shipped() -> Opening:
-    """The cached shipped opening, loaded in setup (not timed)."""
+    """The cached shipped opening."""
     return opening()
 
 

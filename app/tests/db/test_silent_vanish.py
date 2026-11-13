@@ -3,8 +3,9 @@ on it: the pool's TCP settings (db/engine.py TCP_SETTINGS) turn the wait into a 
 
 `podman pause` does not do this (the host kernel still acknowledges), so tools/silent_vanish.sh runs Postgres in a
 network namespace of its own, runs these tests inside it, and, when a test creates $ASHFALL_VANISH/drop, drops every
-packet there with iptables. CI has no such privilege, so without the harness these tests skip. Each waits longer than
-the suite's 6 s timeout, so each sets its own."""
+packet there with iptables. CI has no such privilege, so without the harness these tests skip. They are the one place
+the pool's TCP settings meet a real kernel, so they wait for real: each sets its own timeout over the suite's 6 s, and
+the harness lifts the per-test ceiling (tests/conftest.py)."""
 
 import os
 import threading

@@ -10,7 +10,7 @@ from ashfall_app.saves.ruleset import ruleset
 
 @pytest.fixture(scope="module")
 def everything() -> Opening:
-    """Every chapter, those in writing too, loaded in setup (not timed): each chapter adds to the load."""
+    """Every chapter, those in writing too, loaded once for the module: each chapter adds to the load."""
     return load_opening(chapters=(*CHAPTERS, *IN_WRITING))
 
 

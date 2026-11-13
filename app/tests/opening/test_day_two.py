@@ -16,7 +16,7 @@ def with_day_two() -> Opening:
 
 @pytest.fixture(scope="module")
 def in_writing() -> Opening:
-    """The content with every chapter in writing merged, loaded in setup (not timed): each chapter adds to its load."""
+    """The content with every chapter in writing merged, loaded once for the module: each chapter adds to its load."""
     return with_day_two()
 
 
@@ -31,7 +31,7 @@ def test_no_shipping_release_holds_an_unwritten_line():
 
 def test_the_guard_sees_an_unwritten_line(shipped_opening: Opening, in_writing: Opening):
     """The check above can fail: of all-written text, one line planted as unwritten is found alone, in the
-    shipped text and in an in-writing chapter's. The shipped content is the session's (its load is not timed)."""
+    shipped text and in an in-writing chapter's. The shipped content is the session's, loaded once."""
     o = shipped_opening
     written = {k: "a line" for k in o.text}
     key = next(iter(written))

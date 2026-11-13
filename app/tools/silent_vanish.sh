@@ -49,7 +49,8 @@ run() {
     up
     ns=$(netns)
     rm -f "$SIG/drop" "$SIG/dropped"
-    (cd "$APP" && ASHFALL_VANISH="$SIG" podman unshare nsenter --net="$ns" \
+    # Each test waits out the kernel and libpq for real (that is what it proves), so the per-test ceiling is lifted.
+    (cd "$APP" && ASHFALL_VANISH="$SIG" TEST_CEILING_S=60 podman unshare nsenter --net="$ns" \
       python -m pytest -q -rA -n 0 -p no:cacheprovider "tests/db/test_silent_vanish.py::$t") &
     test_pid=$!
     while kill -0 "$test_pid" 2>/dev/null; do

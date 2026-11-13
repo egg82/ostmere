@@ -49,7 +49,7 @@ def served() -> Content:
 
 @pytest.fixture(scope="module")
 def content() -> Content:
-    """/api/content as served, and the cached opening and its rules, all built in setup (not timed)."""
+    """/api/content as served, and the cached opening and its rules, all built once."""
     opening_rules()
     return served()
 
