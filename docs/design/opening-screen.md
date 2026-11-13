@@ -21,23 +21,27 @@ beside them. Nothing the player needs during play sits in a far corner.
   older ones dimmer; a new line pushes out the oldest that no longer fits, so a quick run can still be read. A line
   shows when the arrival queue releases it, held back for the reading time of the one before (`decisions.md`, "A story
   line stays until it can be read"). The strip's height is the tallest story line in the content at the strip's width,
-  so no line is ever cut and none arriving moves anything: every line the content can write (`Content.line_infos`) is
-  laid out unseen in the strip's one cell, the shown lines sit over them, and as many of the newest as fit that height
-  show (at least the newest, so one where the room holds only one). The full log is one tap away (the "Log" button
-  with the chips, which looks like a button), dotted while a line it holds left the strip entirely before the player
-  touched anything after it showed. A new line slides in once, about 200 ms (no slide under reduced motion). The strip and
-  the Log are the record; a line the player's own tap wrote also shows on that card (Cards), where the eyes already
-  are (`docs/research/story-to-the-eyes.md`).
-- **The Log sheet** (`ui/logsheet.ts`) is the siblings' frame with a sticky `.panel-heading` (the word on the button). It is a
-  diary of visits: one stretch per return after at least half an hour away (`game/loggroups.ts`), each from the game second
-  the player left to the one they next left, titled "Away 54m" with how long ago the return was in the `ui.time.*` words.
-  The page keeps each return in the save's presentation (`SavePresentation.visits`, written when the away reveal lands), so
-  a reload keeps the stretches; lines before the first kept return are one stretch, "Earlier" (or "Now" when it is the only
-  one). The newest stretch is open under an ember spine and square; older ones are folded to their counts ("Taps 4 · Finds 3").
-  A line's kind (`Content.line_infos`, authored in each file's `[line_kinds]`; kinds in `opening/line_kinds.py`) sets it:
-  story lines are the only full-size text, in the bright ink; tap, find, level, body and fight lines are small, in the dim
-  ink, under the story line they follow and behind the stretch's counts, which open them. Lines the page words itself
-  (fights, a skill's top) carry their kind where the page words them; a return's away lines enter by the same stamps.
+  so no line is ever cut and none arriving moves anything: every story line the content can write (`Content.line_infos`,
+  the kinds `game/chronicle.ts` routes to Story) is laid out unseen in the strip's one cell, the shown lines sit over
+  them, and as many of the newest as fit that height show (at least the newest, so one where the room holds only one).
+  The strip shows story lines only: a story beat's, a tap's, the body's. A find, a level, a rule's start or let-go and a
+  fight go to the chronicle alone. The chronicle is one tap away (the "Chronicle" button with the chips, which looks
+  like a button), dotted while a line it holds left the strip entirely before the player touched anything after it
+  showed. A new line slides in once, about 200 ms (no slide under reduced motion).
+- **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the siblings' frame
+  with a sticky `.panel-heading` (the word on the button), then a row of filters once two kinds have entries: Story,
+  Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story. It is a diary of visits:
+  one stretch per return after at least half an hour away (`game/chronicle.ts`), each from the game second the player
+  left to the one they next left, titled "Away 54m" with how long ago the return was in the `ui.time.*` words. The page
+  keeps each return in the save's presentation (`SavePresentation.visits`, written when the away reveal lands), so a
+  reload keeps the stretches; lines before the first kept return are one stretch, "Earlier" (or "Now" when it is the
+  only one). The stretches are the same under every filter, which picks their lines; one with none of them is not
+  drawn. The newest drawn is open under an ember spine and square unless folded by hand; older ones are folded to their
+  counts by filter ("Story 4 · Finds 3"). Story lines are set as in the strip, italic in the bright ink; the others in
+  the body size and ink. Under each line, in the dim meta ink, "↳" and its cause (`Content.line_infos`' cause, worded
+  by `game/chronwords.ts`). Under Story, a stretch ends with its counts of the other filters, each a button that opens
+  its filter. Lines the page words itself (fights, a skill's top) carry their kind and cause where the page words them;
+  a return's away lines enter by the same stamps.
 - **The panel's foot:** a row of quiet text buttons after the last thing in the panel (the ledger and skills on a
   phone, the cards on a desktop): "Feedback" opens the tester's sheet (a field, what is sent along, Send, Not now).
   Nothing that must be seen sits with the chips for it.
@@ -46,7 +50,7 @@ beside them. Nothing the player needs during play sits in a far corner.
   phone. Its room is there from the first screen, so it never moves anything later;
   a new aim takes its turn in the arrival queue, after the lines that came with it. It is plain text, not a control: no
   dot, no glow.
-- **Chips at the art's top,** in one row with the Camp bar and the Log button, just above the art in its stage (pinned
+- **Chips at the art's top,** in one row with the Camp bar and the Chronicle button, just above the art in its stage (pinned
   with it on a phone), never on it: the head grows a row for each goal, and laid on the art it hid the camp's top. An
   icon plus the word (the word kept for screen
   readers and first sight), and under the word what the chip costs while it shows, two or three words from the
@@ -55,9 +59,9 @@ beside them. Nothing the player needs during play sits in a far corner.
   arrives with its answer. On a phone the chips stay in the head's one row while they fit, and the row keeps room for a chip and its
   cost line from the start, so one arriving never pushes the art down. When the Camp bar's line, the chips' cost lines
   and the buttons do not fit one row (a long next-level line, two costed chips, a larger text size), what does not fit
-  wraps onto a second row, the Journal and Log buttons last at the right: nothing leaves the screen, and the art moves
+  wraps onto a second row, the Journal and Chronicle buttons last at the right: nothing leaves the screen, and the art moves
   once when the row grows.
-- **The Camp bar with the chips:** the bar first, the chips after it against the Log button, so a chip coming or going
+- **The Camp bar with the chips:** the bar first, the chips after it against the Chronicle button, so a chip coming or going
   never moves the bar's left edge. It arrives at its first level, with its burst, already pointing at the next; the
   first level is a surprise, every later one previewed. A warm bar (it is the player's), its level, and its next
   marker stating what that level pays (before → after, or "something new" for a story unlock and while what it pays
@@ -92,7 +96,7 @@ line and a ledger line are measured in device pixels on both, and the story line
 ┌──────────────────────────────────────────────────┬──────────────────────────────┐
 │                                                  │ HANDS ▸ [ Gather ▓▓▓|Scav ▓▓ ]│  hands strip (slim mix view)
 │ the aim, one line                                │        runs on            Edit│
-│ Camp 1 ▓▓▓░ next…   ❄ cold  ◐ hungry       Log   ├──────────────────────────────┤
+│ Camp 1 ▓▓▓░ next…   ❄ cold  ◐ hungry   Chronicle ├──────────────────────────────┤
 │                                                  │ Tasks · Completed · Rules    │
 │              SCENE (the artwork)                 │ ┌──────────┐ ┌──────────┐    │
 │                                                  │ │ card     │ │ card     │    │
@@ -110,8 +114,8 @@ line and a ledger line are measured in device pixels on both, and the story line
 └──────────────────────────────────────────────────┴──────────────────────────────┘
 ```
 
-The art's column reads top to bottom: the aim, the art with the Camp bar, chips and Log in a dark row along its top
-(off the art until it holds a chip, the Camp bar or a dotted Log), then the story strip at its foot, right where the column meets the panel's cards. The strip spans the art's width, so
+The art's column reads top to bottom: the aim, the art with the Camp bar, chips and Chronicle in a dark row along its top
+(off the art until it holds a chip, the Camp bar or a dotted Chronicle), then the story strip at its foot, right where the column meets the panel's cards. The strip spans the art's width, so
 the longest line takes fewer rows here than on a phone.
 
 On a tall desktop window the skills and ledger sit in a block under the strip. Until one of them has something to
@@ -125,13 +129,13 @@ the fire's left. The scene manifest says so with an all-of condition (`running:r
 
 A trip is away from the scene like any job that takes the figure off the stool: its card id is listed in `tools/scene/trips.py`,
 so the seated figure gives way while the hands tap it and for its share of each cycle while the mix runs it. Its completions go
-to the Log and its finds play on the band, as an uncapped card's and a trigger's lines already do.
+to the chronicle alone and its finds to the chronicle's Finds, as an uncapped card's and a trigger's lines already do.
 
 ## Phone
 
 ```
 ┌────────────────────────────┐
-│ Camp 1 ▓▓░ ❄ cold  ◐  Log │  chips + Camp, pinned above the art
+│ Camp 1 ▓▓░ ❄ cold ◐ Chron │  chips + Camp, pinned above the art
 │ the aim, one line          │
 │ SCENE                      │
 ├────────────────────────────┤
@@ -240,7 +244,7 @@ Tasks or Completed: the row and its editor are their only way in. Fits into: the
   and can't be tapped.
 - **A choice arrives as one thing:** its two cards appear together, side by side in adjacent slots, under one small
   heading. Each names its upside, and both show what they take.
-- **A tap's line goes to the strip and the Log, never under the card.** It stays in the strip for its reading time: 2.9
+- **A tap's line goes to the strip and the chronicle, never under the card.** It stays in the strip for its reading time: 2.9
   words a second (the research's 15 characters a second at the opening's 5.1 characters a word), at least 3 s. A refused
   tap has no line at all: the card goes red and the need it lacks is marked in its need line (`decisions/feedback.md`,
   "Rewarding at any moment"). Every tap outcome has exactly one home.
@@ -300,7 +304,7 @@ Fight parts show once the `combat` feature is unlocked (api `CONTRACT.txt`, "FIG
   signed percentages, then factors as multiples; a second tap, or the other strength, closes it. No hover.
 - **A standing fight** (a threat that runs on its own) is a row in the ledger's Threats group under the stores' lines,
   calm and never red: its name, the same odds and strengths, and `fought, lost` as served.
-- **The arrival queue** writes each window of fights since the last view as lines in the strip and the Log: k entries
+- **The arrival queue** writes each window of fights since the last view as the chronicle's Fights entries, never the strip: k entries
   of which exactly j read as lost, which ones picked by a shuffle-bag draw seeded by save, runner and the fought count
   the window starts at (`app/client/src/game/fights.ts`), so the same window reads the same on every device. Past three
   in one window, one summary line of the exact counts. The draw changes no number.
@@ -336,9 +340,9 @@ phone, portrait                        desktop, and a phone in landscape
 ```
 
 - **The button.** From the first entry on, the book is a button in its own place after the chips: its icon and its
-  word (the book's label), styled as the Log button (`.log-open`'s raised surface and tap size). Nothing left of it
+  word (the book's label), styled as the Chronicle button (`.chron-open`'s raised surface and tap size). Nothing left of it
   moves, and the change takes its turn in the arrival queue as a feature does, after the step's lines. It carries the
-  quiet dot (`.new-dot`, placed as on `.log-open`) while a note is unread and at no other time, so a new entry dots
+  quiet dot (`.new-dot`, placed as on `.chron-open`) while a note is unread and at no other time, so a new entry dots
   it through its notes. It glows only as its lesson's step.
 - **The sheet** is the siblings' frame: `dialog.sheet.journal-sheet`, a sticky `.panel-heading` (`ui.journal.heading`)
   and sticky `.sheet-actions` holding Close (`ui.close`), then `Prev` and `Next` at the right end, under the thumb.
@@ -759,8 +763,8 @@ are engine decisions a save is replayed from, and a lesson is not game state.
   ledger lines, skill rows, needs, labels, headings, mix segments. It clears when the player interacts with the thing
   (a tap, a drag, a key) and when the thing is put to work: joined to a mix (in the editor or by Both), running, held
   by any saved mix, or named by a rule. A task already at work never shows a dot. Never cleared by being seen or by
-  time, and it never counts anything. The Log button takes one too, while a line it holds left the strip before the player touched
-  anything after it showed; it clears when the Log is touched.
+  time, and it never counts anything. The Chronicle button takes one too, while a line it holds left the strip before the player touched
+  anything after it showed; it clears when the Chronicle is touched.
 - **The glow** points at the one obvious next step, only when there truly is one, and only one at a time. In the
   opening: the first card; the first mix offer (`Both`); the first strike when everything it needs is in. Whenever
   the running mix greys (a task in it retired or completed): the strip's `Edit`, until the editor is opened. After
@@ -833,9 +837,9 @@ reads as what changed rather than everything at once (`decisions.md`, "Idle time
   for its reading time before what came with it, so a planned moment that landed while the player was away plays in
   full: every story line plays, in order, however many, and the newest stays in the strip
   afterwards. Lines that come again and again are not story lines: a chip's on-line
-  (which plays only the first time the chip shows in a save) goes to the Log only; its off-lines (which can come every
+  (which plays only the first time the chip shows in a save) goes to the chronicle only; its off-lines (which can come every
   cycle while away) collapse to the chip's last change, and that one and a repeat task's lines (an uncapped card's) go
-  to the Log only. Which line is which comes from the content (a chip's line keys) and the
+  to the chronicle only. Which line is which comes from the content (a chip's line keys) and the
   view (the writing card's cap), never the text.
 - **Pace:** the first at once, then 400–700 ms apart, the whole at most 4 s beside the lines' and the ledger's reading
   holds; past that, the rest together. Anything
