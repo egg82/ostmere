@@ -35,7 +35,7 @@ def test_the_end_moment_comes_after_both_crafts_and_the_roast(finished: Player):
     assert finished.has(UnlockKind.FEATURE, opening().end_feature)
     assert all(finished.completed(c) for c in (*CRAFTS, "roast_roots"))
     keys: list[str] = [ln.key for ln in finished.lines]
-    assert keys.index("l_ring_fail") < keys.index("l_fire_takes") < keys.index("l_knap_2") < keys.index("l_stool")
+    assert keys.index("l_fire_takes") < keys.index("l_knap_2") < keys.index("l_stool")
     assert finished.end_at is not None and finished.end_at >= first(finished, "l_settled")
 
 

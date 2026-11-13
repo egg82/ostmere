@@ -1,6 +1,6 @@
 """Every shipped story line fits the task card: no line of a shipped or in-writing chapter is past MAX_LINE characters.
 
-A line is a text key with the `l_` prefix (the content files' convention: `l_look`, `l_knap_fail`; labels and UI text
+A line is a text key with the `l_` prefix (the content files' convention: `l_look`, `l_knap_2`; labels and UI text
 carry other prefixes). The limit is the lines briefs' 90th-percentile figure applied to each line, since the briefs set
 no per-line maximum; their median (45) and 90th percentile (75) are printed per chapter, not gated. A person's name slot
 is measured as the name it shows (api/CONTRACT.txt, "Text and numbers", {<lane>}). A line over it that
