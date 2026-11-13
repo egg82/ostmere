@@ -11,7 +11,6 @@ from ..opening.eaters import bonus_bp
 from ..opening.makers import made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
 from ..opening.feature_entries import FeatureCardEntry
-from ..opening.lock import line_keys
 from ..opening.refs import outcomes
 from ..opening.schema import Opening
 from ..saves.interface import Played, Ruleset
@@ -19,6 +18,7 @@ from . import convert
 from .goalrows import goal_rows
 from .ruledry import order_dry
 from .goals import goals
+from .line_causes import line_infos
 from .sources import sources, store_sources
 from . import content_models as cm
 from .limits import MAX_MIXES, MAX_ORDERS, MAX_QUEUE
@@ -149,7 +149,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                         for lb in x.later_labels], name_key=x.name_key) for x in o.lanes)],
         offer_infos=_offer_infos(o),
         end_line_keys=list(o.end_line_keys),
-        line_infos=[cm.LineInfo(key=k, kind=o.line_kinds[k]) for k in dict.fromkeys(line_keys(o))],
+        line_infos=line_infos(o),
         journal=_journal(o),
         aim_infos=[cm.AimInfo(aim=a.id, text_key=a.text_key,
                               after=None if a.after is None else convert.unlock(authored.unlock(a.after)))

@@ -388,9 +388,12 @@ export const fixtureContent: Content = {
     { lane: "mason", label_key: "lane.mason", ruled: true, later_labels: [], name_key: null },
   ],
   end_line_keys: ["line.end"],
-  line_infos: [
-    { key: "line.1", kind: "story" }, { key: "line.2", kind: "story" }, { key: "line.3", kind: "tap" }, { key: "line.4", kind: "find" },
-    { key: "line.5", kind: "level" }, { key: "line.end", kind: "story" }, { key: "line.offer", kind: "story" },
+  line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")
+    { key: "line.1", kind: "story", cause: null }, { key: "line.2", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } } },
+    { key: "line.3", kind: "tap", cause: { kind: "runner", runner: "stand" } },
+    { key: "line.4", kind: "find", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 2, release: 2 } } },
+    { key: "line.5", kind: "level", cause: { kind: "camp", level: 1 } }, { key: "line.end", kind: "story", cause: null },
+    { key: "line.offer", kind: "story", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 10 * Q } } },
   ],
   aim_infos: [],
   journal: null,

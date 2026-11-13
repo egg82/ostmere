@@ -30,7 +30,7 @@ const placeholder = (key: string): string => `[fixture] ${key.replace(/_/g, " ")
 const content: Content = {
   ...fixtureContent,
   text_entries: [...fixtureContent.text_entries, ...[...BEATS, "l_tired", "l_rest_done"].map((key) => ({ key, text: placeholder(key) }))],
-  line_infos: [...fixtureContent.line_infos, ...BEATS.map((key) => ({ key, kind: "story" as const })), { key: "l_tired", kind: "body" as const }, { key: "l_rest_done", kind: "tap" as const }],
+  line_infos: [...fixtureContent.line_infos, ...BEATS.map((key) => ({ key, kind: "story" as const, cause: null })), { key: "l_tired", kind: "body" as const, cause: null }, { key: "l_rest_done", kind: "tap" as const, cause: null }],
   chip_infos: fixtureContent.chip_infos.map((c) => (c.chip === "tired" ? { ...c, on_line_key: "l_tired" } : c)),
 };
 const catalog = new Catalog(content);
@@ -121,7 +121,7 @@ check("the on-line and the last off-line", () => {
   const offContent: Content = {
     ...content,
     text_entries: [...content.text_entries, { key: "l_rested", text: placeholder("l_rested") }],
-    line_infos: [...content.line_infos, { key: "l_rested", kind: "body" as const }],
+    line_infos: [...content.line_infos, { key: "l_rested", kind: "body" as const, cause: null }],
     chip_infos: content.chip_infos.map((c) => (c.chip === "tired" ? { ...c, on_line_key: "l_tired", off_line_key: "l_rested" } : c)),
   };
   const screen = new Screen(new Catalog(offContent), () => undefined, () => Promise.resolve(null), new Keeps());

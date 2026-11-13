@@ -565,6 +565,19 @@ export interface components {
             /** Quantity */
             quantity: number;
         };
+        /**
+         * AnswerCause
+         * @description The player's answer to an offer.
+         */
+        AnswerCause: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "answer";
+            /** Offer */
+            offer: string;
+        };
         /** AnswerGain */
         AnswerGain: {
             /** Store */
@@ -664,6 +677,19 @@ export interface components {
             condition: components["schemas"]["Condition"];
             /** Ready At */
             ready_at: number | null;
+        };
+        /**
+         * CampCause
+         * @description A Camp level reached: `level` as the Camp bar counts it, from 1.
+         */
+        CampCause: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "camp";
+            /** Level */
+            level: number;
         };
         /**
          * CampInfo
@@ -1335,6 +1361,7 @@ export interface components {
             /** Max Mixes */
             max_mixes: number;
         };
+        LineCause: components["schemas"]["RunnerCause"] | components["schemas"]["WhenCause"] | components["schemas"]["SkillCause"] | components["schemas"]["CampCause"] | components["schemas"]["AnswerCause"];
         /** LineInfo */
         LineInfo: {
             /** Key */
@@ -1344,6 +1371,7 @@ export interface components {
              * @enum {string}
              */
             kind: "story" | "tap" | "find" | "level" | "body" | "fight";
+            cause: components["schemas"]["LineCause"] | null;
         };
         /** LogLine */
         LogLine: {
@@ -1741,6 +1769,19 @@ export interface components {
          * @enum {string}
          */
         RunKind: "full" | "paused" | "yielded" | "waiting" | "greyed" | "spent";
+        /**
+         * RunnerCause
+         * @description A card's run wrote the line (its line, outcome or finish), or a fight on a card or standing action did.
+         */
+        RunnerCause: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "runner";
+            /** Runner */
+            runner: string;
+        };
         /** Running */
         Running: {
             /**
@@ -1887,6 +1928,19 @@ export interface components {
             /** Next Level At */
             next_level_at: number | null;
             prestige: components["schemas"]["SkillPrestige"] | null;
+        };
+        /**
+         * SkillCause
+         * @description A level of `skill`: a line several of its levels share (a phase's pool), so the key cannot say which level.
+         */
+        SkillCause: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "skill";
+            /** Skill */
+            skill: string;
         };
         /** SkillInfo */
         SkillInfo: {
@@ -2248,6 +2302,18 @@ export interface components {
             left: number;
             /** Back */
             back: number;
+        };
+        /**
+         * WhenCause
+         * @description What a story beat, an offer's arrival or a chip waited on, as the condition the content wrote for it.
+         */
+        WhenCause: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "when";
+            when: components["schemas"]["Condition"];
         };
     };
     responses: never;

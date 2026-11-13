@@ -136,6 +136,13 @@ ENDPOINTS
   Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
   checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
   a line by its kind and never by its key or words.
+  Line causes: each LineInfo also carries cause, what writes the line, read from where the content authors its key
+  (api/line_causes.py): runner {runner}, a card's line, outcome or finish, or a fight's pool on a card or standing
+  action; when {when: Condition}, what a beat, an offer's arrival or a chip waited on; skill {skill}, a line several
+  levels of one skill share (a phase's pool), so which level is not known; camp {level}, a Camp level from 1; answer
+  {offer}, the player's answer. Null for the end's lines and a beat waiting on a lane's rules. A key is written in one
+  place or by one skill's levels; any other sharing fails the content's load. The page words a cause under its line in
+  the chronicle and never parses a line's words for one.
   AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
   game of the account; the page then starts no lesson and shows no hint that only a lesson gives (a guided offer is its
   one tap), and on again, each save's lessons go on from what it keeps. A PUT replaces the settings whole.
