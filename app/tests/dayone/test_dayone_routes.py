@@ -6,7 +6,7 @@ import pytest
 from tests.dayone.conftest import PLAY_TIMEOUT_S
 from tests.dayone.player import DayOnePlayer
 from tests.dayone.routes import plays
-from tests.dayone.verdicts import CHECKS
+from tests.dayone.verdicts import CHECKS, verdicts
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Verdicts = tuple[str, int, dict[str, list[str]]]
@@ -17,6 +17,11 @@ Verdicts = tuple[str, int, dict[str, list[str]]]
 def test_a_route_meets_the_bar(day_verdicts: Verdicts, check: str):
     _, _, found = day_verdicts
     assert found[check] == []
+
+
+@pytest.mark.xfail(strict=True, reason="a route that never sees B3 raises KeyError in the B3-relative checks")
+def test_a_route_that_never_sees_b3_still_yields_verdicts():
+    assert set(verdicts("lazy", 0)) == set(CHECKS)
 
 
 @pytest.mark.parametrize("day_route", plays(), indirect=True, ids=lambda r: f"{r[0]}-{r[1]}")
