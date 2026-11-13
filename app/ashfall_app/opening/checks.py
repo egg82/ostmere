@@ -11,6 +11,7 @@ from .chip_checks import check_chip_card, check_chips
 from .convert import build_rules, levels
 from .fight_checks import check_fight_content
 from .journal_checks import check_journal
+from .keep_checks import check_kept_needs
 from .fight_refs import check_fights, fights
 from .kind_checks import check_kinds
 from .line_kinds import check_line_kinds
@@ -65,6 +66,7 @@ def check_structure(o: "Opening") -> None:
     check_aims(o)
     check_journal(o)
     check_bands(o)
+    check_kept_needs(o)
     check_phase_pays(o)
     check_tracks(o.nodes)
 

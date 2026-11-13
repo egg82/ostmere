@@ -33,14 +33,13 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
   on a hidden itch.io page and Feedback Friday; galaxy.click rejects heavy generative-AI use). AI use is disclosed
   wherever a venue asks, not on the game's own site.
 
-**The nightly run is red since 2026-11-06: day one's pacing for sharp, and no once-a-day player who plays.** A
-speed change to the day-one roots rule's band (`6b83fe73`, for fewer engine instants on a day away) moved B3 about
-10 h later for `sharp`, past its bar; `lazy`, which skips the tools, stopped reaching B3 within its horizon (it is
-reported, never held, so its miss now prints). Two parts, in order:
-- Add a once-a-day route that uses the tools, to `TOOL_USERS`, held to the bars; then
-- restore day one's pacing so `sharp` and that route meet them, finding the instants saving elsewhere (item 14's
-  engine work) rather than in the band: the loader's two-completion band rule now refuses the old setting.
-Fits into: the pacing simulator (item 1), the route table in `app/tests/dayone/routes.py`.
+**Two tests that failed once on CI and passed on a rerun.** Find the cause of each; never raise a ceiling for it.
+- `tests/saves/test_strip_backfill.py::test_a_row_changed_after_it_was_read_keeps_the_change` hit the 6 s per-test
+  timeout inside `waiting()`'s poll for a lock waiter (main, run 43395790800, shard a). `waiting()` allows 20 s, more
+  than the ceiling, and if the backfill thread raises, its exception is lost and the poll spins to the timeout.
+- `tests/weektwo/test_weektwo_twelve.py::test_the_babysitter_ends_no_further_ahead_across_day_twelve` lost its xdist
+  worker ("node down: Not properly terminated") about 10 min in, with no timeout banner, and the job ran out its
+  30 min (PR #15, run 43390930356, attempt 1). Its setup took 211 s in an earlier green run; check its memory peak.
 
 **An order-dependent test.** `tests/db/test_failover.py::test_the_site_is_logged_at_startup` fails when run alone: it
 leans on an earlier test's logging setup (same on main before the overhaul). Give it its own logging setup.

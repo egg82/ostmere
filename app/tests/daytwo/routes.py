@@ -1,4 +1,4 @@
-"""Day two's routes: day one's ten (tests/dayone/routes.py), each with its schedule, knobs, reaction and look kept and
+"""Day two's routes: day one's (tests/dayone/routes.py) but daily, each with its schedule, knobs, reaction and look kept and
 played on past B3 to the visit B4 is seen in, with day two's knobs (policy.Knobs2) on top. Played once per pytest
 session, in a fixture's setup (docs/engineering.md, "Fast from the start"). Her lane lands every few seconds, each
 landing an engine event, so a game hour of day two costs far more than one of day one's (report.py prints each play's

@@ -312,7 +312,7 @@ work_s = 10
 cap = 1
 requires = [
   { test = "at_least", subject_kind = "store", id = "smoked", value = 6 },
-  { test = "at_least", subject_kind = "store", id = "roots", value = 15 },
+  { test = "at_least", subject_kind = "store", id = "roots", value = 12 },
   { test = "at_least", subject_kind = "card_count", id = "build_larder", value = 1 },
   { test = "at_least", subject_kind = "card_count", id = "build_smoke_rack", value = 1 },
 ]
@@ -958,7 +958,8 @@ tap_card = "screen_fire"
 when = { test = "at_least", subject_kind = "store", id = "wattle", value = 24, release = 24 }
 offered_after = { unlock_kind = "card", id = "screen_fire" }
 
-# Take stock's roots need: the roots rule re-tuned (forage under 13, until 15), once the larder can hold it.
+# Take stock's roots need: the roots rule re-tuned (forage under 13, until 15), once the larder can hold it. The need
+# is the rule's lower level, so the store the rule keeps meets it whenever the rule keeps up (keep_checks.py).
 [[order_cards]]
 store = "roots"
 tap_card = "forage"
