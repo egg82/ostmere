@@ -664,8 +664,12 @@ jobs:
                                     else .value.result == "skipped" end)' > /dev/null
 
   # The pushed digest under its deployable names: a manifest copy inside each repository, so no layer moves.
+  # always(), then the two results by name: without a status function the implicit success() also requires every job
+  # upstream of ci-ok, and the jobs a run is not meant to run are skipped, which made release skip on every push.
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      && needs.ci-ok.result == 'success' && needs.app-image.result == 'success'
     needs: [ci-ok, app-image]
     runs-on: ubuntu-latest
     timeout-minutes: 10
