@@ -18,7 +18,7 @@ from tests.daytwo import abs_band
 from tests.daytwo.checks import returns
 from tests.daytwo.player import DayTwoPlayer
 from tests.dayone import capcheck, checks, daily
-from tests.dayone.parity import Measured, Present, babysat, replay
+from tests.dayone.parity import Measured, Present, replay_pair
 from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
 from tests.weektwo import counters, ends
@@ -163,5 +163,4 @@ def two_am(seed: int = 0, chapter: str = "eight") -> tuple[Measured, Measured]:
     end = w.landed_at[w.stop_beat()] + AFTER_END_S
     queued = {e.verb.card for _, v in log if isinstance(v, SetQueue) for e in v.entries if isinstance(e.verb, TapCard)}
     boosts = (*BOOSTS, *(str(c) for c in later.queued if c in queued))
-    return (replay(w.rules, s0, log, end, False, boosts=boosts),
-            replay(w.rules, s0, babysat(log), end, True, present, boosts))
+    return replay_pair(w.rules, s0, log, end, present, boosts)
