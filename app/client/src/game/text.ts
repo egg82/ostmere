@@ -32,6 +32,8 @@ export const UI = {
   needsSkill: "ui.card.needs_skill", // "{skill} level {have}/{n}": a card held back by a skill level
   needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
   ledgerHeading: "ui.heading.ledger",
+  ledgerYours: "ui.ledger.yours", // the ledger's group of the player's own stores
+  ledgerThreats: "ui.ledger.threats", // the ledger's group of threats at the stores
   craftHeading: "ui.heading.craft",
   ordersHeading: "ui.heading.orders",
   mixesHeading: "ui.heading.mixes",

@@ -42,6 +42,8 @@ cool and neutral, never muddy one-hue brown. So a glance tells what the player d
 against the ruin. The fire is the warmest thing on screen. The interface keeps the rule with ember's two jobs: filled
 is yours and moving (a running bar, the primary button), and an outline needs you now, on one thing at a time. Only
 the scene has a frame; everything else sits on hairlines, and a control lifts onto a raised surface with a shadow.
+No text sits inside a mix's split bar: its labels go in a legend beneath it (the Mixes list's small bars still carry each task's initial). The six mix hues are muted and none is ember, each
+3:1 against the page, and neighbouring segments sit apart on a gap of the page.
 
 Type: IM Fell English SC for the camp level and view titles only, Alegreya Sans for everything else in four sizes
 (meta, body, story, display), Reenie Beanie (Google Fonts, OFL) for the journal's handwriting. It reads a little worse

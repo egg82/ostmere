@@ -163,7 +163,7 @@ the rows below apply.
 | Tapping | `HANDS · Stand up` and the card's name; the bar itself stays on the card |
 | Idle | `HANDS · idle` in grey |
 | Mix offered (first time) | the two cards' names side by side and one button, `Show me` while the mix's lesson may start (the glow, if nothing else has it), which opens a new mix on the real editor where the lesson walks it. After the lesson is done or skipped with no mix made, the same button reads `New mix` and opens the editor with nothing built |
-| Mix running | the split bar, one segment per card, each labelled with name and share (a segment too narrow for both cuts the name, never the share); under it the mix's name as plain text (a long one truncates, but gives way after the status text and the queue's head: a covered status keeps its width unseen, so the name is never squeezed for it). The rest arrive when they first mean something and then stay: `Mixes ▾` before the name once a mix is saved, `runs on` or `runs 7h` (never broken mid-value) once the ledger is there, and `Edit` at the end once a mix greys or an action card the first mix does not hold is in play |
+| Mix running | the split bar, one segment per card in its hue with no text inside, and a legend beneath naming each card and its share; under that the mix's name as plain text (a long one truncates, but gives way after the status text and the queue's head: a covered status keeps its width unseen, so the name is never squeezed for it). The rest arrive when they first mean something and then stay: `Mixes ▾` before the name once a mix is saved, `runs on` or `runs 7h` (never broken mid-value) once the ledger is there, and `Edit` at the end once a mix greys or an action card the first mix does not hold is in play |
 | Yielded to a tap | the bar dims and reads `paused while busy`, with `runs …` and the rule's `until …` hidden for the room; it comes back unchanged when the tap lands |
 | A card of the mix stopped (its store dry) | under the bar the player set, which never changes on its own, `running now` and the split that runs: each card at its share plus what it gains, `+25% from {card}` naming each source, and the stopped card's slice greyed, `{card} waiting`; a spent card also puts `{store} is used up` in the status. It comes through the arrival queue the first time; after that its row keeps its room and shows nothing while the splits match, so nothing under a finger moves when a store runs dry or refills. The town's rows show the same under each person's split (`ui/runningnow.ts`) |
 | Greyed | the bar in grey with the cards left, a retired or completed card's share divided among them in proportion (the editor still shows it struck, until removed); under it `stopped · {card} done`, naming the card that left, in plain ink, since the grey bar alone still reads as work under way; and `Edit` |
@@ -258,6 +258,10 @@ the lines that ask something: red, starved, or carrying an offer. Any other line
 arrives. Once drawn a line stays, remembered for the account, so each line moves the layout once; with nothing
 remembered (another account), the lines that ask something still show.
 
+The ledger is grouped: the player's stores under Yours, then the threats at them under Threats, each label drawn
+while its group has a row (on a phone, the lines moved above the cards take no label). A line is a row of name, rate
+and stock, with its time under the stock.
+
 Lines are store rates per hour, with when a store empties or fills; the "full in" time is the view's forecast
 (api `CONTRACT.txt`, "Forecast"), so no time is drawn when a rule will take from the store, or stop it, first.
 A **falling line with no rule covering it is red**, with its answer right beside it: an **inline rule offer** under
@@ -275,7 +279,7 @@ small button to that rule in the Rules tab. Player text says rule and task, neve
 - **Starved** (the store is at 0 and something waits on it) reads as a problem too, covered or not.
 - **Full** (`damp wood 12/12 · full`) is not an alarm: the ordinary line colour, `full` in
   the time's dim ink (never green, which would call a loss a gain; never an alarm hue or a pulse), no `Edit mix`. The rate beside it is what spills,
-  and the numbers and the bar show the loss: a cap rule is the player's to write (the cap rule's lesson), and skipping it costs
+  and the numbers show the loss: a cap rule is the player's to write (the cap rule's lesson), and skipping it costs
   only that overflow.
 - **A rising line's rule** (a card whose condition is `n or more` on a store a task takes, a side lane's or a build on
   the hands: `4 or more catch → Smoke`) is marked on the line (a hint dot) once it is full or rising, calm rather than red, and
@@ -294,7 +298,7 @@ Fight parts show once the `combat` feature is unlocked (api `CONTRACT.txt`, "FIG
   no whole pair up to 20 is exact), the two strengths beside it (`yours 12, theirs 9`), and what one lost fight costs or
   adds. Each strength is a button of at least 28 px that opens its entries under it, the base first, then sums as
   signed percentages, then factors as multiples; a second tap, or the other strength, closes it. No hover.
-- **A standing fight** (a threat that runs on its own) is a row in the ledger's threats group under the stores' lines,
+- **A standing fight** (a threat that runs on its own) is a row in the ledger's Threats group under the stores' lines,
   calm and never red: its name, the same odds and strengths, and `fought, lost` as served.
 - **The arrival queue** writes each window of fights since the last view as lines in the strip and the Log: k entries
   of which exactly j read as lost, which ones picked by a shuffle-bag draw seeded by save, runner and the fought count
@@ -419,7 +423,8 @@ whose top shows the strip.
 ┌──────────────────────────────────────────────┐
 │ Name [ Main                    ]   Save  ✕   │
 │                                              │
-│ [ Woodcutting 60% ▓▓▓▓▓▓|Scavenge 40% ▓▓▓▓ ] │  drag dividers; drag a segment off, or tap ✕ on its row
+│ [ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓|▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ] │  drag dividers; drag a segment off, or tap ✕ on its row
+│ ■ Woodcutting 60%  ■ Scavenge 40%            │  the legend, following a drag
 │                                              │
 │ per minute        now   →   after            │  live, before Save; and the goal rows, right under the
 │ damp wood        +6.0   →   +9.0             │  bar so a drag shows its effect without scrolling

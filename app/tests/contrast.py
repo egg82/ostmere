@@ -200,3 +200,22 @@ def pairs(css: str) -> list[Pair]:
                 worst = min(surfaces, key=lambda s: ratio(over(line, s), s))
                 found.append(Pair(f"{name} border", _hex(over(edge, worst)), _hex(worst), ratio(over(edge, worst), worst), LARGE_MIN))
     return found
+
+
+GRAPHIC_MIN = 3.0
+"""WCAG 1.4.11 for a graphic that carries meaning: a mix hue against what it sits on."""
+
+
+def hue_pairs(css: str) -> list[Pair]:
+    """Every mix hue (each value of --hue) against the page, the bar's track and a raised surface. Neighbouring segments
+    sit apart on a gap of the page, so a hue's neighbours are those surfaces, never another hue."""
+    rs = rules(css)
+    tok = tokens(rs)
+    found: list[Pair] = []
+    for value in variants(rs).get("--hue", []):
+        hue = parse_color(value, tok)
+        for name in ("--bg", "--track", "--raise"):
+            under = parse_color(tok[name], tok) if name in tok else None
+            if hue and under:
+                found.append(Pair(f"--hue={value} on {name}", _hex(hue[0]), _hex(under[0]), ratio(hue[0], under[0]), GRAPHIC_MIN))
+    return found

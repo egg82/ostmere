@@ -40,8 +40,9 @@
    not a wider one with tiny type. */
 html { font-size: clamp(16px, calc(0.5vw + 10px), 30px); }
 
-.hue-0 { --hue: #c8743a; } .hue-1 { --hue: #8f9a6a; } .hue-2 { --hue: #6f8aa3; }
-.hue-3 { --hue: #c9a35c; } .hue-4 { --hue: #cf573e; } .hue-5 { --hue: #9a7aa0; }
+/* the mix hues (merge.html's palette): none is ember, so ember keeps its two jobs */
+.hue-0 { --hue: #b8865a; } .hue-1 { --hue: #8f9a6a; } .hue-2 { --hue: #6f8aa3; }
+.hue-3 { --hue: #c9a35c; } .hue-4 { --hue: #b0604c; } .hue-5 { --hue: #9a7aa0; }
 
 body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress; transition: opacity .6s; }   /* asking the server again, or catching up: quiet */
 .catching-up { position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100vw - 32px); pointer-events: none; margin: 0; padding: .4rem .8rem; background: var(--raise); color: var(--ink-hi); border: 0; border-radius: 2px; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
@@ -172,7 +173,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .hands-status { flex: 1 1000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-dim); }   /* one line; the queue's head (.hands-next) shrinks before it, and it before the mix's name: shrink factors far apart in size, so the name, last to give way, loses not even a sub-pixel (that alone draws its ellipsis); hidden while covered, the status still holds its width */
 .hands.yielded .hands-status { flex: 1 0 auto; }   /* the short label never gives way: the name and the queue's head do */
 .hands.yielded :is(.hands-runs, .hands-rule) { display: none; }   /* a paused mix has nothing to run out: the name gets the room */
-.hands.yielded .share-bar, .hands.greyed .share-bar { filter: saturate(.15) brightness(.6); }
+:is(.hands.yielded, .hands.greyed) .share-track, :is(.hands.yielded, .hands.greyed) .share-key-item::before { filter: saturate(.15) brightness(.6); }   /* the hues, never the legend's words */
 .hands.greyed .hands-mix-name { color: var(--ink-dim); }
 .hands.greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
 /* an offer (ui/offerrows.ts), on the mix offer's row: the question, then one button per answer with its time under it */
@@ -199,22 +200,27 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .lane-row .lane-bar { margin-top: .35rem; }
 .lane-row .lane-fill { background: var(--ember); }
 
-/* a mix as one split bar */
-.share-bar { position: relative; touch-action: none; }
-.share-track { position: relative; height: 1.9rem; background: var(--track); }
-.share-bar.large .share-track { height: 3rem; }
-.share-seg { position: absolute; top: 0; bottom: 0; box-sizing: border-box; padding: 0 .5rem; display: flex; align-items: center; overflow: hidden; background: var(--hue); color: #140f0d; border-right: 2px solid var(--bg); transition: left .2s ease, width .2s ease; }
+/* a mix as one split bar, its legend beneath: no text inside the bar. Neighbouring hues sit apart on a 2px gap of the page,
+   each hue 3:1 against it (tests/test_client_contrast.py). The legend's look is shared with the town's (.town-key). */
+.share-bar { position: relative; }
+.share-track { position: relative; height: .5rem; background: var(--track); touch-action: none; }
+.share-bar.large .share-track { height: 1.25rem; }
+.share-bar.large .share-key { padding: 0 .5rem; }   /* the editor's bar runs to the sheet's edges; its legend does not */
+.share-seg { position: absolute; top: 0; bottom: 0; box-sizing: border-box; background: var(--hue); border-right: 2px solid var(--bg); transition: left .2s ease, width .2s ease; }
 .share-seg:nth-last-child(1 of .share-seg) { border-right: 0; }
-.share-text { display: flex; gap: .3em; min-width: 0; font-size: var(--t-meta); font-weight: 600; white-space: nowrap; }
-.share-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }   /* a narrow segment cuts the name, never the share beside it */
-.share-pct { flex: none; }
-.share-seg.struck { background: repeating-linear-gradient(135deg, #3a3236 0 6px, #2a2427 6px 12px); color: var(--ink-dim); }
-.share-seg.struck .share-text { text-decoration: line-through; }
+.share-seg.struck { background: repeating-linear-gradient(135deg, #3a3236 0 6px, #2a2427 6px 12px); }
+.share-key-item { white-space: nowrap; }
+.share-key-item.struck { color: var(--ink-dim); text-decoration: line-through; }
+.share-key-item.struck::before { background: repeating-linear-gradient(135deg, #3a3236 0 3px, #2a2427 3px 6px); }
+.share-pct { font-weight: 500; color: var(--ink-hi); font-variant-numeric: tabular-nums; }
 .share-bar.large .share-seg { cursor: grab; }
 .share-seg.leaving { opacity: .4; }
 .share-bar.dragging .share-seg { transition: none; }
-.share-divider { position: absolute; top: -.4rem; bottom: -.4rem; width: 1.8rem; transform: translateX(-50%); z-index: 2; cursor: ew-resize; touch-action: none; display: flex; align-items: center; justify-content: center; outline: none; }
-.share-divider::before { content: ""; width: 4px; height: calc(100% - .2rem); background: var(--ink-hi); box-shadow: 0 0 0 2px var(--bg); transition: transform .15s, background .15s; }
+/* the divider's reach is 2.75rem tall (44 px, decisions.md, motion and reach rule) whatever the bar's height; its mark spans the bar */
+.share-divider { position: absolute; top: -1.125rem; bottom: -1.125rem; width: 1.8rem; transform: translateX(-50%); z-index: 2; cursor: ew-resize; touch-action: none; display: flex; align-items: center; justify-content: center; outline: none; }
+.share-bar.large .share-divider { top: -.75rem; bottom: -.75rem; }
+.share-divider::before { content: ""; width: 4px; height: calc(100% - 2.05rem); background: var(--ink-hi); box-shadow: 0 0 0 2px var(--bg); transition: transform .15s, background .15s; }
+.share-bar.large .share-divider::before { height: calc(100% - 1.3rem); }
 .share-divider:hover::before, .share-divider:focus-visible::before { background: #fff; }
 .share-divider.held::before { background: #fff; transform: scaleX(1.4); }
 .share-divider.settle::before { animation: settle .35s ease; }
@@ -317,33 +323,31 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .skill.burst, .camp.burst { animation: burst .9s ease-out; }   /* the ladder's level rung (ui/ladder.ts) */
 @keyframes burst { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .8); background: rgba(42, 27, 20, .8); } 100% { box-shadow: 0 0 0 .9rem rgba(240, 178, 122, 0); } }
 
-/* the ledger */
-.ledger-lines { display: flex; flex-direction: column; gap: 2px; }   /* a list: lines between hairlines, not boxes (nothing in a line is tappable but its buttons) */
+/* the ledger: groups on hairlines, each a label over aligned rows of name, rate, and stock with its time */
+.ledger-group { margin: .5rem 0 0; padding: .5rem 0 .15rem; border-top: 1px solid var(--rule); font-size: var(--t-meta); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.ledger-lines { display: flex; flex-direction: column; }   /* a list: aligned rows, not boxes (nothing in a line is tappable but its buttons) */
 .ledger-item { display: flex; flex-direction: column; gap: .4rem; }
 .ledger-asks:empty { display: none; }   /* a phone's red and full lines above the cards (ui/ledger.ts, `asks`); none, no room */
 .line {
-  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name rate amount" "eta eta edit";
-  align-items: center; align-content: center; gap: 0 .75rem; min-height: 2.2rem; padding: .35rem 1rem .5rem .3rem; overflow: hidden;
-  border-bottom: 1px solid var(--rule); color: var(--ink-hi); transition: color .3s, background .3s;
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name rate amount" "eta eta eta" "edit edit edit";
+  align-items: baseline; gap: 0 1rem; min-height: 2rem; padding: .3rem 1rem .3rem 0; overflow: hidden;
+  color: var(--ink-hi); transition: color .3s, background .3s;
 }
-.line-name { grid-area: name; overflow-wrap: anywhere; }
-.line-rate { grid-area: rate; font-weight: 700; font-variant-numeric: tabular-nums; }
-.line-amount { grid-area: amount; color: var(--ink); font-size: var(--t-meta); font-variant-numeric: tabular-nums; text-align: right; }
-.line-eta-box { grid-area: eta; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; min-width: 0; }
-.line-eta { font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.line-name { grid-area: name; color: var(--ink); overflow-wrap: break-word; }
+.line-rate { grid-area: rate; color: var(--ink-hi); font-variant-numeric: tabular-nums; text-align: right; }
+.line-amount, .line-eta { font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; text-align: right; }
+.line-amount { grid-area: amount; }
+.line-eta { grid-area: eta; }
 .line-eta:empty { display: none; }
-.line-edit { grid-area: edit; min-height: 2rem !important; font-size: var(--t-meta); }
+.line-edit { grid-area: edit; justify-self: end; margin-top: .3rem; min-height: 2rem !important; font-size: var(--t-meta); }
 /* a link to a rule: words underlined, never a box */
 .hands-rule { text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; }
 .hands-rule:hover, .hands-rule:focus-visible { color: var(--ink-hi); text-decoration-color: var(--ink-hi); }
-.line-track { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--track); }
-.line-fill { display: block; height: 100%; background: var(--ink-dim); transform-origin: left; transform: scaleX(0); }
-.line.alarm { color: var(--alarm); }
+.line.alarm, .line.alarm :is(.line-name, .line-rate) { color: var(--alarm); }
 .line.alarm .line-name { font-weight: 700; }
 .line.alarm .line-name::before { content: "▲ " / ""; }   /* red is not the only cue: bold name and a mark, as the chips carry a glyph */
 .line.alarm.story .line-name::before { content: "▲ ▸ " / ""; }   /* a red line a story beat waits on keeps both marks */
-.line.alarm .line-amount, .line.alarm .line-eta { color: #d08a7c; }
-.line.alarm .line-fill { background: var(--alarm); }
+.line.alarm :is(.line-amount, .line-eta) { color: #d08a7c; }
 .line.lit { box-shadow: inset 0 0 0 1px var(--ink-hi); }
 .line.settle { animation: settle .5s ease; }
 .line-order { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: .5rem .75rem; padding: .3rem 0 .5rem .75rem; margin-left: .3rem; border-left: 1px solid var(--alarm); }   /* under its line, set off by a rule at its edge, not a box */
@@ -555,7 +559,7 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
 :is(.sheet, .rules) :is(.quiet, .primary):disabled { opacity: .35; cursor: default; }
 .selector-name { color: var(--ink-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mini-bar { display: flex; gap: 2px; height: .9rem; overflow: hidden; }
-.mini-seg { display: block; min-width: 0; overflow: hidden; padding-left: .2rem; background: var(--hue); color: #140f0d; font: 500 var(--t-meta)/.9rem "Alegreya Sans", system-ui, sans-serif; }   /* the task's initial: the hue is never the only cue */
+.mini-seg { display: block; min-width: 0; overflow: hidden; padding-left: .2rem; background: var(--hue); color: #000; font: 500 var(--t-meta)/.9rem "Alegreya Sans", system-ui, sans-serif; }   /* the task's initial: the hue is never the only cue */
 .selector-row.greyed .mini-seg { background: var(--ink-dim); }
 .selector-note { font-size: var(--t-meta); color: var(--ink); white-space: nowrap; }
 .selector-tools { display: flex; gap: .4rem; align-items: center; }
@@ -750,8 +754,7 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
   .low { flex: 1 1 auto; height: auto; min-height: max(8rem, min(22rem, 42vh) - var(--head-h, 0px)); }   /* the head above the art takes its room from here (ui/headseat.ts), so the art keeps its size */
   .low > .ledger { grid-column: 1; grid-row: 1 / span 2; }
   .low > .skills { grid-column: 2; grid-row: 1; }
-  .low .line { min-height: 2.4rem; padding-top: .3rem; padding-bottom: .45rem; }
-  .low .ledger-lines { display: grid; column-gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); grid-auto-flow: row dense; align-items: start; }
+  .low .ledger-lines { display: grid; column-gap: 2.4rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); grid-auto-flow: row dense; align-items: start; }
   /* a rule offer spans the whole grid row under its line; dense flow lets the line's neighbour keep the cell beside it */
   .low .ledger-item { display: contents; }
   .low .line-order { grid-column: 1 / -1; flex-wrap: nowrap; justify-content: space-between; margin-left: 0; }
@@ -800,11 +803,11 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
 .town-shares { display: flex; gap: 2px; margin-top: .25rem; height: .9rem; }
 .town-seg { flex: 1 1 0; min-width: 0; background: var(--hue); }
 .town-seg.idle { background: var(--track); }
-.town-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: var(--t-meta); color: var(--ink); }
-.town-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
+.town-key, .share-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: var(--t-meta); color: var(--ink); }
+.town-key-item::before, .share-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
 .town-key-item.idle::before { background: var(--track); border: 1px solid var(--ink-dim); box-sizing: border-box; }
 .town .lane-bar { margin-top: .3rem; }
-.town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as .hands.greyed .share-bar */
+.town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as the hands' greyed .share-track */
 .town.greyed .town-name { color: var(--ink-dim); }
 .town.greyed .town-key-item::before { filter: saturate(.15) brightness(.6); }
 .town.greyed .town-status { color: var(--ink-hi); }   /* why it stopped: plain, not dimmed with it */

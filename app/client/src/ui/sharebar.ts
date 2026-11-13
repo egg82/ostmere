@@ -1,5 +1,5 @@
-// A mix drawn as one bar split into its shares, each segment labelled with its name and share. Used by the hands strip
-// (slim) and the mix editor (large). Dividers drag share between their two neighbours, snapping to whole percents and
+// A mix drawn as one bar split into its shares, with a legend beneath it naming each segment and its share: no text sits
+// inside the bar. Used by the hands strip (slim) and the mix editor (large). Dividers drag share between their two neighbours, snapping to whole percents and
 // never below MIN_SHARE_BP, so no divider ever reaches 0%; in the editor a segment dragged off the bar is removed.
 // The bar only reports what the player did; the owner decides what to send.
 import { MIN_SHARE_BP } from "../game/mix";
@@ -28,15 +28,16 @@ export interface ShareBarHooks {
 export class ShareBar {
   readonly root: HTMLElement;
   private readonly bar = el("div", "share-track");
+  private readonly key = el("div", "share-key");
   private specs: SegmentSpec[] = [];
   private local: number[] = [];
-  private segs: { node: HTMLElement; name: HTMLElement; pct: HTMLElement }[] = [];
+  private segs: { seg: HTMLElement; name: HTMLElement; pct: HTMLElement }[] = [];
   private dividers: HTMLElement[] = [];
   private shape = "";
 
   constructor(className: string, private readonly bp: number, private readonly format: (bp: number) => string, private readonly hooks: ShareBarHooks) {
     this.root = el("div", `share-bar ${className}`);
-    this.root.append(this.bar);
+    this.root.append(this.bar, this.key);
   }
 
   get shares(): number[] {
@@ -52,24 +53,20 @@ export class ShareBar {
     this.layout();
   }
 
-  /** Each segment's node, by index (the owner marks a new one with a dot). */
-  segment(i: number): HTMLElement | undefined {
-    return this.segs[i]?.node;
-  }
-
   private build(specs: SegmentSpec[]): void {
     this.bar.replaceChildren();
+    this.key.replaceChildren();
     this.segs = specs.map((s, i) => {
-      const node = el("div", `share-seg hue-${s.hue % 6}`);
-      if (s.struck) node.classList.add("struck");
-      const text = el("span", "share-text");
+      const seg = el("div", `share-seg hue-${s.hue % 6}`);
+      const item = el("span", `share-key-item hue-${s.hue % 6}`);
+      for (const n of [seg, item]) n.classList.toggle("struck", s.struck === true);
       const name = el("span", "share-name");
-      const pct = el("span", "share-pct");
-      text.append(name, " ", pct);   // the name gives way to the share in a narrow segment (game.css)
-      node.append(text);
-      if (this.hooks.remove) node.addEventListener("pointerdown", (e) => this.dragOff(e, i, node));
-      this.bar.append(node);
-      return { node, name, pct };
+      const pct = el("b", "share-pct");
+      item.append(name, " ", pct);
+      if (this.hooks.remove) seg.addEventListener("pointerdown", (e) => this.dragOff(e, i, seg));
+      this.bar.append(seg);
+      this.key.append(item);
+      return { seg, name, pct };
     });
     this.dividers = specs.slice(1).map((_, i) => this.divider(i));
     this.bar.append(...this.dividers);
@@ -80,8 +77,8 @@ export class ShareBar {
     this.local.forEach((share, i) => {
       const seg = this.segs[i];
       if (seg) {
-        seg.node.style.left = `${(left / this.bp) * 100}%`;
-        seg.node.style.width = `${(share / this.bp) * 100}%`;
+        seg.seg.style.left = `${(left / this.bp) * 100}%`;
+        seg.seg.style.width = `${(share / this.bp) * 100}%`;
         setText(seg.name, this.specs[i]?.label ?? "");
         setText(seg.pct, this.format(share));
       }

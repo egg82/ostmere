@@ -2,7 +2,7 @@
 
 UI_KEYS: tuple[str, ...] = (
     "ui.duration.d", "ui.duration.dh", "ui.duration.h", "ui.duration.hm", "ui.duration.ms", "ui.duration.s", "ui.rate.per_minute", "ui.store.amount",
-    "ui.ledger.empties", "ui.ledger.fills", "ui.skill.level", "ui.mix.runs", "ui.mix.runs_indefinitely", "ui.mix.idle",
+    "ui.ledger.empties", "ui.ledger.fills", "ui.ledger.yours", "ui.ledger.threats", "ui.skill.level", "ui.mix.runs", "ui.mix.runs_indefinitely", "ui.mix.idle",
     "ui.mix.default", "ui.heading.ledger", "ui.heading.craft", "ui.heading.orders", "ui.order.remove",
     "ui.close", "ui.card.needs", "ui.card.needs_skill",
     "ui.log.open",

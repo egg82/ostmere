@@ -20,6 +20,8 @@ const text: Record<string, string> = {
   "ui.ledger.fills": "full in {d}",
   "ui.skill.level": "level {n}", "ui.skill.next_in": "{pays} · {d}", "ui.skill.none": "no more yet", "ui.next.unnamed": "something new",
   "ui.heading.ledger": "Ledger",
+  "ui.ledger.yours": "Yours",
+  "ui.ledger.threats": "Threats",
   "ui.heading.craft": "Craft",
   "ui.heading.orders": "Rules",
   "ui.heading.mixes": "Mixes",

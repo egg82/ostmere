@@ -1,17 +1,27 @@
-// A narrow share-bar segment cuts the task's name and keeps its share (ui/sharebar.ts, game.css): the share is its own
-// element that does not shrink, and the name is the one that takes the ellipsis. Both stay in the segment's text, name
-// then share, for anything reading it.
-import { readFileSync } from "node:fs";
+// No text sits inside a share bar (docs/design/redesign.md, "Phone frame"; ui/sharebar.ts): the segments are hue alone,
+// and a legend beneath names each one with its share, in the bar's order, following a divider as it moves.
+import { FakeEvent, fakeDocument, install } from "./fake-dom";
+import { ShareBar } from "../src/ui/sharebar";
+
+install();
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
-const body = (selector: string): string => [...css.matchAll(/(?:^|\n)(\.[^\n{}]*?)\s*\{([^}]*)\}/g)].find((m) => m[1] === selector)?.[2] ?? "";
-expect("the share does not shrink", /flex: none/.test(body(".share-pct")), true);
-expect("the name takes the ellipsis", /text-overflow: ellipsis/.test(body(".share-name")), true);
-expect("and may shrink below its text", /min-width: 0/.test(body(".share-name")), true);
-expect("the segment's text is no longer cut as a whole", /text-overflow/.test(body(".share-text")), false);
-const src = readFileSync("src/ui/sharebar.ts", "utf8");
-expect("the share has its own element, after the name", src.indexOf('"share-name"') > 0 && src.indexOf('"share-name"') < src.indexOf('"share-pct"'), true);
+const sent: number[][] = [];
+const bar = new ShareBar("slim", 10000, (bp) => `${bp / 100}%`, { commit: (s) => sent.push(s) });
+document.body.append(bar.root);
+const seg = (key: string, label: string, struck = false) => ({ key, label, hue: 0, struck });
+const segText = (): string[] => Array.from(bar.root.querySelectorAll(".share-seg"), (n) => n.textContent ?? "");
+const legend = (): string[] => Array.from(bar.root.querySelectorAll(".share-key-item"), (n) => n.textContent ?? "");
+
+bar.set([seg("a", "Alpha"), seg("b", "Beta", true)], [6000, 4000]);
+expect("a segment per share", segText().length, 2);
+expect("and no text in any of them", segText().every((t) => t === ""), true);
+expect("the legend names each, name then share, in order", legend(), ["Alpha 60%", "Beta 40%"]);
+expect("a struck segment is struck in the legend too", Array.from(bar.root.querySelectorAll(".share-key-item.struck"), (n) => n.textContent), ["Beta 40%"]);
+
+fakeDocument.querySelector(".share-divider")?.dispatchEvent(new FakeEvent("keydown", { key: "ArrowRight" }));
+expect("a divider moved by a key is sent", sent, [[6100, 3900]]);
+expect("and the legend follows it", legend(), ["Alpha 61%", "Beta 39%"]);
