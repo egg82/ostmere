@@ -85,7 +85,8 @@ the game works now.
 One surface per PR, smallest first. Each step is playable on its own:
 
 1. Routing: refused taps go red and highlight the missing need with no text; success goes to the strip only. Retire
-   the refusal lines.
+   the refusal lines. Start by finding every place a tap's outcome is drawn today (the card's note line, the log,
+   toasts), so each outcome ends with exactly one home.
 2. The look: tokens, type scale, hairlines in place of rims and bevels, ember's two jobs. No layout change yet.
 3. The mix bar's legend, and the ledger as grouped rows.
 4. The chronicle replaces the Log, with causes and the kind filter. Then "Since you left".
