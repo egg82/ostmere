@@ -97,7 +97,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 - [Something to watch, any time, for hours](decisions/world.md): something to watch, read and think about whenever it is opened, and watching earns nothing extra.
 - [A world map](decisions/world.md): a front-of-the-book map at two scales, from engraved stamps placed by code.
 - [Art: a drawn, living town over bars](decisions/world.md): Time Fantasy packs graded dark in code, warm means yours, the type, and sourced art for the map and journal.
-- [The chronicle and unwrap, as built](decisions/world.md): the arrival queue, what the rules did lately, fights since the last view, the visits record.
+- [The chronicle and unwrap, as built](decisions/world.md): one record with a filter per kind and a cause on every line, the arrival queue, what the rules did lately, fights since the last view, the visits record.
 
 ## Writer
 

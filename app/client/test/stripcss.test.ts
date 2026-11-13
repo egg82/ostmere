@@ -33,8 +33,8 @@ const clipped = [...css.matchAll(/([^{}]*\.(?:lines|strip)\b[^{}]*)\{([^}]*)\}/g
   .filter((m) => /mask-image|overflow: hidden|max-height|text-overflow/.test(m[2] ?? "")).map((m) => (m[1] ?? "").trim());
 expect("no rule fades or clips the strip or its line", clipped, []);
 
-// On a desktop the head leaves the art while it holds nothing, except a dotted Log, which must stay reachable.
-expect("a dotted Log keeps the head on the art", /\.scene-head:not\(:has\([^{}]*\.new-dot\)\) \{ display: none; \}/.test(css), true);
+// On a desktop the head leaves the art while it holds nothing, except a dotted Chronicle, which must stay reachable.
+expect("a dotted Chronicle keeps the head on the art", /\.scene-head:not\(:has\([^{}]*\.new-dot\)\) \{ display: none; \}/.test(css), true);
 
 // On a desktop the strip sits between the stage and the skills and ledger: the stage still sees the ledger's absence.
 expect("the art does not take the hidden ledger block's room, so its arrival resizes nothing", /\.stage:has\(~ \.low\[hidden\]\)/.test(css), false);

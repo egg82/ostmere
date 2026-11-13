@@ -8,7 +8,7 @@ from .fight_models import SideInfo as SideInfo, ThreatInfo as ThreatInfo
 from .find_models import FindInfo as FindInfo
 from .camp_models import CampInfo, CampLevel as CampLevel
 from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, NoteInfo as NoteInfo, Section as Section
-from ..opening.line_kinds import LineKind
+from .line_models import LineInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
 from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, OfferInfo
@@ -31,12 +31,6 @@ class Limits(BaseModel):
 class TextEntry(BaseModel):
     key: str
     text: str
-
-
-class LineInfo(BaseModel):
-    key: str
-    kind: LineKind
-    """How the Log sets the line (opening/line_kinds.py), authored beside its text."""
 
 
 class CardPresentation(StrEnum):
@@ -275,8 +269,8 @@ class Content(BaseModel):
     end_line_keys: list[str]
     """Lines the page appends to the log when the end happens (view.ended_at)."""
     line_infos: list[LineInfo]
-    """Every text key a story line can carry (LogLine.key and end_line_keys), each once, with its kind: the page sizes
-    its story strip to the tallest of them and sets each Log line by its kind."""
+    """Every text key a log line can carry (LogLine.key and end_line_keys), each once, with its kind and cause: the page
+    sizes its story strip to the tallest it shows and sets each chronicle line by its kind, under its cause."""
     aim_infos: list[AimInfo]
     journal: JournalInfo | None
     """The book, its pages and their notes (CONTRACT.txt, "JOURNAL"); null until a chapter declares [journal]."""

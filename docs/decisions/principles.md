@@ -55,7 +55,7 @@ feeling they must babysit it, staying up at 2 AM for a timer to set up the next 
 - **Shown in the design, not claimed** (a cold tester joked about waiting for notifications to log back in and gather rewards). The calm has to be visible in the visual language, so a stranger reads it without being
   told: no badges, counters or "!" calling for attention; no shop-shaped elements (gem icons, gold "claim" buttons,
   timers to skip); nothing pulses for urgency; a new control (a task card, a mix-editor Add entry) carries a small quiet
-  dot until the player interacts with it or puts it to work (and the Log button, while a line it holds left the story strip
+  dot until the player interacts with it or puts it to work (and the Chronicle button, while a line it holds left the story strip
   unread), never plain text (not merely when it is seen; a dot on everything new, plain text included, was the
   defect), never a glow (a glow says click me now, a dot says this is one of the new things); a glow has its own
   job: pointing at the one obvious next step when there truly is just one (the very first card; a first-of-its-kind

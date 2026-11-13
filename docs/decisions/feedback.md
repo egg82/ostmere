@@ -38,7 +38,7 @@ Feedback: null is silent. The ladder (`docs/design/opening-screen.md`, "The feed
 `app/client/src/ui/ladder.ts`: event kind to rung to effect. A failed tap (`api.models.Step`, its failed_tap) pulses its
 card red and the need that stopped it (`app/client/src/ui/cards.ts`); the effect's numbers are tokens in
 `app/client/src/game.css`. **A refused tap never has text**: the engine emits no line for it and the content has no
-refusal lines. A tap that lands puts its line in the strip and the Log, never under the card, so each tap outcome
+refusal lines. A tap that lands puts its line in the strip and the chronicle, never under the card, so each tap outcome
 has one home.
 
 Lessons: lessons as data (id, when it may start, trigger, steps naming a control and a line) and one runner, the glow

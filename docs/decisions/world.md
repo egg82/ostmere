@@ -72,14 +72,33 @@ touching the page around it.
 
 How the chronicle stands today, moved from its row in `systems.md`. The unwrap cursor lives in the presentation store.
 
+- **One record, one home per kind.** Every line the game writes, each rule's start and let-go and each fight goes to
+  the chronicle, a sheet opened from the button beside the chips (`app/client/src/ui/chroniclesheet.ts`). Each kind
+  has one filter (`app/client/src/game/chronicle.ts`, `ROUTES`): story, taps and the body's lines
+  under Story; finds, levels, rules and fights each under their own; town talk under its own, ready for the living
+  world. The story strip on the main screen holds the Story filter's kinds and nothing else, so a find, a level, a
+  rule or a fight never lands there, and town talk never will. A filter is offered once it has an entry, Story first
+  and All last; under Story a stretch ends with its counts of the other filters, each opening its filter. Each filter
+  keeps its own newest 200, so a busy kind never pushes out a quiet one's.
+- **Every line says what caused it**, as "↳" and a few words under it: the card or fight that wrote it, the store,
+  level or count a beat waited on, the Camp level, the player's answer. The cause is served beside the line's kind
+  (`app/ashfall_app/api/line_causes.py`; `app/ashfall_app/api/CONTRACT.txt`, "Line causes"), read from where the
+  content authors the key, and never parsed from the line. A key is written in one place, or by several levels of one
+  skill (a phase's pool), whose cause is the skill alone since the key cannot say which level; any other sharing
+  fails the content's load. A rule's entry takes the store's level when it came on or let go; a fight's line from a
+  runner's pool takes the runner, while ui.fight.* lines already name it. Rejected: putting the trigger's id on each
+  engine line, which would say exactly which level wrote a pool line but needs a new column on stored lines for a
+  history's sake.
 - The page's arrival queue (`app/client/src/game/arrivals.ts`) reveals what a return brings in turn and, live, each
   story line before what it announces.
 - What the rules did lately: the engine's rule changes (`app/ashfall_app/engine/rulelog.py`) kept per rule on the
   save's row (`app/ashfall_app/saves/ruleruns.py`), a goal stint's start and landing among them, with what the save
-  gained in its mix's stores between the two, drawn at the foot of the Rules tab (`app/client/src/ui/rulelately.ts`).
+  gained in its mix's stores between the two, drawn at the foot of the Rules tab (`app/client/src/ui/rulelately.ts`)
+  and as the chronicle's Rules entries (`app/client/src/game/rulerows.ts`). The record is a summary, so a start a later
+  start replaced before any page saw it is not an entry.
 - Fights since the last view, exactly as many lost as the engine's count, which ones picked by a shuffle-bag draw keyed
   by save, fight and window, each worded from its runner's pool of lines when the content gives one
   (`app/client/src/game/fights.ts`; `app/ashfall_app/api/CONTRACT.txt`, "FIGHTS").
 - The visits record: each return after a long time away kept in the save's presentation, newest last and the oldest
-  dropped past a limit (`app/client/src/game/keeps.ts`, `app/ashfall_app/accounts/presentation.py`), which the Log
-  splits its entries at.
+  dropped past a limit (`app/client/src/game/keeps.ts`, `app/ashfall_app/accounts/presentation.py`), which the
+  chronicle splits its stretches at, whatever the filter.

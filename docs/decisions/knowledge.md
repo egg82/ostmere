@@ -18,11 +18,11 @@ the same need.
 **The journal is the player-character's own voice**. Its writer is a person with a will, so it is
 not the narration's register: first person, lowercase and spare like the rest of the game, past tense and written
 after the fact, dry and clinical, sometimes wrong or unsure of itself. It is someone writing to themselves, not talking,
-so not the townsfolk's conversational register either. The log stays the live feed in the narration's voice; the
+so not the townsfolk's conversational register either. The chronicle stays the live feed in the narration's voice; the
 journal's `days` section retells the bigger beats in this one (`api/CONTRACT.txt`, "JOURNAL"), behind bookmarks for
 days, creatures and places.
 
-**Two registers, and Claude's own is neither.** World lines (the log, arrivals) are in the game's voice.
+**Two registers, and Claude's own is neither.** World lines (the chronicle, arrivals) are in the game's voice.
 Controls and labels are game UI: terse nouns and verbs ("Target", "Run down", "Loss 8%", "Unscouted"), never
 questions to the player or narration. A line that says what a change does is one short plain sentence: the thing, what
 it now does, the new amount ("Camp level 2: the warm wall dries 7 wood at a time instead of 5"), never arrow notation
@@ -47,12 +47,13 @@ play games waited for it.
 
 **A story line stays until it can be read.** Time never takes a line off the story strip: a line leaves only when
 newer ones push it out of the room, and never before its reading time since it showed (`game/reading.ts`; the arrival
-queue holds the next line back). The strip sits off the art, under it, and shows as many of the newest lines as fit,
-whole: its height is the tallest line in the content at its width, so no line is cut and none arriving moves anything (lines on the art, in a band
+queue holds the next line back). The strip sits off the art, under it, and shows as many of the newest story lines as
+fit, whole: its height is the tallest story line in the content at its width, so no line is cut and none arriving moves anything (lines on the art, in a band
 under the chips, were cut at their first row by the chip row through ten-odd fixes; a phone band cut to a line or two
 lost lines mid-sentence for that same cold tester). A line that leaves the strip before the player has touched anything since
-it showed may not have been read, so the Log button takes the quiet dot until it is touched. A tap's line also shows
-on its card for its reading time, for the eye at the finger; the strip and the Log are the record.
+it showed may not have been read, so the Chronicle button takes the quiet dot until it is touched. The strip shows
+story lines only (a story beat's, a tap's, the body's); a find's, a level's, a rule's and a fight's go to the chronicle
+alone, which is the record (`decisions.md`, "The chronicle and unwrap, as built").
 
 **The game never judges, in words, how you're doing or what you're after.** It states facts (rates, odds, how long
 a store lasts, what a better option would gain) and never labels them: no "balanced", "inefficient", "wasteful" or

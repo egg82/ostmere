@@ -1,6 +1,6 @@
 // The page's fights (docs/design/opening-screen.md, "Fights"): a fight card's odds, strengths and on-loss line; a
 // strength's entries opened by a tap (never by hover); a standing fight in the ledger with its tally; the arrival
-// queue's fight entries in the strip. All of it off while the `combat` feature is.
+// fight entries in the chronicle, never the strip. All of it off while the `combat` feature is.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fightsStep } from "../fixtures/fights";
@@ -137,22 +137,42 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   expect("the group shows the ledger", ledger.root.hidden, false);
 }
 
-// The strip: a window's entries, exactly the lost count of them reading lost; a long one a summary.
+/** Every entry the story's chronicle holds, in order: the sheet opened on All and read. */
+function chronicled(story: Story): string[] {
+  story.head.querySelector<HTMLButtonElement>(".chron-open")?.click();
+  story.root.querySelector<HTMLButtonElement>('.chron-filter[data-filter="all"]')?.click();
+  const got = [...story.root.querySelectorAll(".chron-all .chron-text")].map((n) => n.textContent ?? "");
+  story.root.querySelector<HTMLDialogElement>("dialog.chronicle")?.close();
+  return got;
+}
+
+function causesOf(story: Story): string[] {
+  story.head.querySelector<HTMLButtonElement>(".chron-open")?.click();
+  story.root.querySelector<HTMLButtonElement>('.chron-filter[data-filter="all"]')?.click();
+  const got = [...story.root.querySelectorAll(".chron-all .chron-cause")].map((n) => n.textContent ?? "");
+  story.root.querySelector<HTMLDialogElement>("dialog.chronicle")?.close();
+  return got;
+}
+
+// The chronicle: a window's entries, exactly the lost count of them reading lost; a long one a summary. None reaches the
+// strip.
 {
   const { ctx } = testContext();
-  const lines: string[] = [];
-  ctx.arrivals = { ...ctx.arrivals, line: (nodes) => { lines.push(text(nodes[0])); } };
+  const stripped: string[] = [];
+  ctx.arrivals = { ...ctx.arrivals, line: (nodes) => { stripped.push(text(nodes[0])); } };
   const story = new Story(ctx);
   const later = fightsStep("fightlater", 110).view;   // three more fought, one more lost, each runner
   story.update(later, view);
+  let lines = chronicled(story);
   expect("three entries a runner", lines.length, 6);
   expect("one of each runner lost", [lines.filter((l) => l === "Hunt the ridge: lost").length, lines.filter((l) => l === "Raiders at the stores: lost").length], [1, 1]);
-  lines.length = 0;
+  expect("a line that names its runner has no cause beneath it", causesOf(story).length, 0);
   story.update(fightsStep("fightmany", 120).view, later);
+  lines = chronicled(story).slice(6);
   expect("a long window is one summary line each", lines, ["37 fought, 4 lost", "37 fought, 4 lost"]);
-  lines.length = 0;
   story.update(later, null);
-  expect("the first view writes nothing", lines, []);
+  expect("the first view writes nothing", chronicled(story).length, 8);
+  expect("no fight reaches the strip", stripped, []);
 }
 
 // A runner with pools: its entries are its own lines, the losses exactly the lost count, no line twice before the
@@ -167,17 +187,17 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
       { key: "line.lost.a", text: "lost a" }, { key: "ui.fight.since", text: "{runner}: {won} won, {lost} lost of {fought}" }],
   };
   const { ctx } = testContext(undefined, new Catalog(pooled));
-  const lines: string[] = [];
-  ctx.arrivals = { ...ctx.arrivals, line: (nodes) => { lines.push(text(nodes[0])); } };
   const story = new Story(ctx);
   const later = fightsStep("fightlater", 110).view;
   story.update(later, view);
+  let lines = chronicled(story);
   const hunt = lines.filter((l) => l.startsWith("won ") || l.startsWith("lost "));
   expect("the hunt's three entries come from its pools", hunt.length, 3);
   expect("one reads lost, from the lost pool", hunt.filter((l) => l === "lost a").length, 1);
   expect("the two wins are two different lines", new Set(hunt.filter((l) => l.startsWith("won "))).size, 2);
   expect("the raiders keep ui.fight.*", lines.filter((l) => l.startsWith("Raiders at the stores: ")).length, 3);
-  lines.length = 0;
+  expect("a pool's line names no runner, so its cause does", causesOf(story), ["Hunt the ridge", "Hunt the ridge", "Hunt the ridge"]);
   story.update(fightsStep("fightmany", 120).view, later);
+  lines = chronicled(story).slice(6);
   expect("the summary names the runner and the wins", lines[0], "Hunt the ridge: 33 won, 4 lost of 37");
 }

@@ -11,7 +11,7 @@ from .interface import Json
 
 NEWEST = {"visits": 200}
 """For a list that keeps its newest entries, how many: past that the oldest go, where any other list stops gaining. The
-page's game/loggroups.ts MAX_VISITS and the API's MAX_VISITS are the same number."""
+page's game/chronicle.ts MAX_VISITS and the API's MAX_VISITS are the same number."""
 
 _KEYS = {"lesson_ends": "lesson", "visits": "left"}
 """For a list of objects, the field that names an entry: a second entry for one name is the same entry."""

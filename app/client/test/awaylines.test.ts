@@ -1,8 +1,8 @@
 // What a long absence brings back (docs/design/opening-screen.md, "Coming back"; decisions.md, "Day and night run on
 // the story's clock"): every story line that landed while the player was away plays, in order, each alone on the band
 // for its reading time; a tap moves on to the next, and Escape or a tap on the band shows the rest at once. A chip's
-// on-line, which comes once per save, goes to the Log only; its off-lines, which can come every cycle while away,
-// collapse to the chip's last change in the Log, as does a repeat task's line. The case is day one's fourth visit
+// on-line, which comes once per save, goes to the chronicle only; its off-lines, which can come every cycle while away,
+// collapse to the chip's last change in the chronicle, as does a repeat task's line. The case is day one's fourth visit
 // (run2, V4): beats H7 and B3 and Camp level 6 land after the tired chip's first showing. Keys are the content's; the
 // texts here are placeholders.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
@@ -30,15 +30,15 @@ const placeholder = (key: string): string => `[fixture] ${key.replace(/_/g, " ")
 const content: Content = {
   ...fixtureContent,
   text_entries: [...fixtureContent.text_entries, ...[...BEATS, "l_tired", "l_rest_done"].map((key) => ({ key, text: placeholder(key) }))],
-  line_infos: [...fixtureContent.line_infos, ...BEATS.map((key) => ({ key, kind: "story" as const })), { key: "l_tired", kind: "body" as const }, { key: "l_rest_done", kind: "tap" as const }],
+  line_infos: [...fixtureContent.line_infos, ...BEATS.map((key) => ({ key, kind: "story" as const, cause: null })), { key: "l_tired", kind: "body" as const, cause: null }, { key: "l_rest_done", kind: "tap" as const, cause: null }],
   chip_infos: fixtureContent.chip_infos.map((c) => (c.chip === "tired" ? { ...c, on_line_key: "l_tired" } : c)),
 };
 const catalog = new Catalog(content);
 const text = (key: string): string => catalog.text.get(key);
 const visible = (screen: Screen): string[] => [...screen.root.querySelectorAll("ol.lines > li")].filter((n) => !n.classList.contains("held")).map((n) => n.textContent ?? "");
 const logged = (screen: Screen): string[] => {
-  (document.querySelector(".log-open") as HTMLButtonElement).click();
-  return [...document.querySelectorAll(".log-all .v-body > p")].map((n) => n.textContent ?? "");
+  (document.querySelector(".chron-open") as HTMLButtonElement).click();
+  return [...document.querySelectorAll(".chron-all .v-body .chron-text")].map((n) => n.textContent ?? "");
 };
 
 /** V4's lines in the order they landed: the tired chip's on-line before the beats. */
@@ -78,18 +78,18 @@ check("every beat plays in order", () => {
   expect("the band keeps three", visible(screen).length <= 3, true);
 });
 
-// The tired chip, on now: its on-line in the Log only.
-check("a chip's on-line goes to the Log", () => {
+// The tired chip, on now: its on-line in the chronicle only.
+check("a chip's on-line goes to the chronicle", () => {
   const screen = returned(v4(), ["tired"]);
   const log = logged(screen);
-  expect("one tired line in the Log", log.filter((s) => s === text("l_tired")).length, 1);
-  expect("the beats in the Log, in order", log.filter((s) => BEATS.map(text).includes(s)), BEATS.map(text));
+  expect("one tired line in the chronicle", log.filter((s) => s === text("l_tired")).length, 1);
+  expect("the beats in the chronicle, in order", log.filter((s) => BEATS.map(text).includes(s)), BEATS.map(text));
 });
 
-// The chip off now (its off-line none): its on-line, the only one the save will send, is still in the Log.
+// The chip off now (its off-line none): its on-line, the only one the save will send, is still in the chronicle.
 check("a chip that ended off keeps its on-line", () => {
   const screen = returned(v4(), []);
-  expect("one tired line in the Log", logged(screen).filter((s) => s === text("l_tired")).length, 1);
+  expect("one tired line in the chronicle", logged(screen).filter((s) => s === text("l_tired")).length, 1);
 });
 
 // A tap moves on to the next beat at once; Escape shows the rest.
@@ -106,14 +106,14 @@ check("a tap advances, Escape skips", () => {
   expect("Escape: the last beat is shown", visible(screen).at(-1), text(BEATS[BEATS.length - 1]!));
 });
 
-// A repeat task's line (an uncapped card wrote it) goes to the Log, not the band.
+// A repeat task's line (an uncapped card wrote it) goes to the chronicle, not the band.
 check("a repeat task's line takes no turn", () => {
   const lines: LogLine[] = [{ at: 3000, seq: 0, key: "l_rest_done", card: "rest" }, { at: 3010, seq: 1, key: "l_b3_1", card: null }];
   const screen = returned(lines, []);
   const t0 = performance.now();
   at(screen, t0 + 10);
   expect("the beat leads", visible(screen), [text("l_b3_1")]);
-  expect("the task's line is in the Log", logged(screen).includes(text("l_rest_done")), true);
+  expect("the task's line is in the chronicle", logged(screen).includes(text("l_rest_done")), true);
 });
 
 // A chip that went on and then off, and on and off again, while away: its on-line and its last off-line are kept.
@@ -121,7 +121,7 @@ check("the on-line and the last off-line", () => {
   const offContent: Content = {
     ...content,
     text_entries: [...content.text_entries, { key: "l_rested", text: placeholder("l_rested") }],
-    line_infos: [...content.line_infos, { key: "l_rested", kind: "body" as const }],
+    line_infos: [...content.line_infos, { key: "l_rested", kind: "body" as const, cause: null }],
     chip_infos: content.chip_infos.map((c) => (c.chip === "tired" ? { ...c, on_line_key: "l_tired", off_line_key: "l_rested" } : c)),
   };
   const screen = new Screen(new Catalog(offContent), () => undefined, () => Promise.resolve(null), new Keeps());

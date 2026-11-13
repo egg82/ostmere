@@ -93,7 +93,7 @@ class SavePresentation(BaseModel):
     lesson_ends: list[LessonEnd] = Field(default=[], max_length=MAX_LIST)
     """Where each lesson in `lessons` ended, once each."""
     visits: list[Visit] = Field(default=[], max_length=MAX_LIST)
-    """The returns after a long time away, one per `left`: what the Log splits its entries at."""
+    """The returns after a long time away, one per `left`: what the chronicle splits its stretches at."""
 
 
 class AccountSettings(BaseModel):

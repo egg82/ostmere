@@ -7,7 +7,7 @@ import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { Session, type SessionEvents } from "../src/game/session";
 import { NEW_SAVE, NEW_SETTINGS } from "../src/game/keeps";
-import type { Past } from "../src/game/loggroups";
+import type { Past } from "../src/game/chronicle";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

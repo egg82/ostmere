@@ -3,9 +3,10 @@
 between the saves at its two boundaries, and its lines are the played run's lines stamped inside it. Shared by the
 week verdicts; `python -m tests.dayone.daily` prints week one's typical route."""
 from collections import Counter
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 
 from ashfall_app.engine import Line, Rules, Save, advance, view
+from ashfall_app.opening.schema import Opening
 from tests.dayone import absence
 from tests.opening.playthrough import Player
 
@@ -21,12 +22,12 @@ def save_at(history: Sequence[tuple[Save, object]], rules: Rules, t: int) -> Sav
 
 
 def day_counts(rules: Rules, history: Sequence[tuple[Save, object]], lines: Sequence[Line], first: int, days: int,
-               text: Mapping[str, str] | None = None) -> list[Counter[str]]:
-    """The arrivals by kind of each of `days` calendar days from engine time `first`; `text` is the lines' text where the
-    shipped opening lacks a chapter's (absence.counts)."""
+               o: Opening | None = None) -> list[Counter[str]]:
+    """The arrivals by kind of each of `days` calendar days from engine time `first`; `o` holds the lines' text and kinds
+    where the shipped opening lacks a chapter's (absence.counts)."""
     edges = [save_at(history, rules, first + i * DAY_S) for i in range(days + 1)]
     seen = [view(s, rules) for s in edges]
-    return [absence.counts(rules, seen[i], seen[i + 1], tuple(ln for ln in lines if edges[i].time <= ln.time < edges[i + 1].time), text)[0]
+    return [absence.counts(rules, seen[i], seen[i + 1], tuple(ln for ln in lines if edges[i].time <= ln.time < edges[i + 1].time), o)[0]
             for i in range(days)]
 
 
@@ -35,9 +36,9 @@ def whole_days(p: Player, end: int) -> int:
     return (end - p.history[0][0].time) // DAY_S
 
 
-def played(p: Player, end: int, text: Mapping[str, str] | None = None) -> list[Counter[str]]:
+def played(p: Player, end: int, o: Opening | None = None) -> list[Counter[str]]:
     """Each whole calendar day of `p` up to `end`."""
-    return day_counts(p.rules, p.history, p.lines, p.history[0][0].time, whole_days(p, end), text)
+    return day_counts(p.rules, p.history, p.lines, p.history[0][0].time, whole_days(p, end), o)
 
 
 def alive(c: Counter[str]) -> bool:

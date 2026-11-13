@@ -1,5 +1,5 @@
 // Blind contract tests, written from the contract alone (not the implementation), ported to the story strip: the strip
-// shows the newest line once read, a step's lines each stay until their reading time, the Log button gets a dot for a
+// shows the newest line once read, a step's lines each stay until their reading time, the Chronicle button gets a dot for a
 // line that left unseen, and the lone first card is `first untapped`. The CSS items read src/game.css.
 import { readFileSync } from "node:fs";
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
@@ -70,8 +70,8 @@ function newStory(onPhone: boolean): { story: Story; ui: FakeEl } {
 const strip = (ui: FakeEl): string[] => Array.from(ui.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
 const settle = (story: Story): void => { for (let i = 0; i < 12; i += 1) story.tick(0); };
 const opener = (root: FakeEl): FakeEl => {
-  const b = root.querySelector("button.log-open");
-  if (!b) throw new Error("no .log-open button");
+  const b = root.querySelector("button.chron-open");
+  if (!b) throw new Error("no .chron-open button");
   return b;
 };
 /** A dot is a `.new-dot` element in the story, or the class on the button itself. */
@@ -111,7 +111,7 @@ for (const onPhone of [true, false]) {
   expect("once read, the next takes its place", shownNow(), [text("line.2")]);
 }
 
-// ---- 3. the Log dot ----
+// ---- 3. the Chronicle dot ----
 {
   const { story, ui } = newStory(false);
   story.appendKeys(["line.1"]);
@@ -120,7 +120,7 @@ for (const onPhone of [true, false]) {
   now = readingMs(text("line.1"));
   settle(story);
   expect("sanity: a line left the strip", strip(ui).includes(text("line.1")), false);
-  expect("a line left with no touch since it showed: the Log button has a dot", dotted(ui), true);
+  expect("a line left with no touch since it showed: the Chronicle button has a dot", dotted(ui), true);
 
   touch("pointerdown", opener(ui));
   expect("a pointerdown on the button removes the dot", dotted(ui), false);
@@ -160,7 +160,7 @@ for (const onPhone of [true, false]) {
   expect("a line that leaves after a keydown adds no dot", dotted(ui), false);
 }
 {
-  // The Log sheet open while the line leaves.
+  // The chronicle open while the line leaves.
   const { story, ui } = newStory(false);
   story.appendKeys(["line.1"]);
   opener(ui).click();
@@ -169,7 +169,7 @@ for (const onPhone of [true, false]) {
   now = readingMs(text("line.1"));
   settle(story);
   expect("sanity: a line left the strip", strip(ui).includes(text("line.1")), false);
-  expect("a line that leaves while the Log sheet is open adds no dot", dotted(ui), false);
+  expect("a line that leaves while the chronicle is open adds no dot", dotted(ui), false);
 }
 {
   // A line restored on load: the restored line leaves when a live one pushes it out.

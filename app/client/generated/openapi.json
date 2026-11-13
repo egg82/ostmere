@@ -1697,6 +1697,26 @@
         ],
         "title": "Amount"
       },
+      "AnswerCause": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "answer",
+            "title": "Kind",
+            "default": "answer"
+          },
+          "offer": {
+            "type": "string",
+            "title": "Offer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "offer"
+        ],
+        "title": "AnswerCause",
+        "description": "The player's answer to an offer."
+      },
       "AnswerGain": {
         "properties": {
           "store": {
@@ -1936,6 +1956,26 @@
         ],
         "title": "Blocker",
         "description": "The first unmet precondition, as the condition that would make it ready; ready_at null: not by itself."
+      },
+      "CampCause": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "camp",
+            "title": "Kind",
+            "default": "camp"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          }
+        },
+        "type": "object",
+        "required": [
+          "level"
+        ],
+        "title": "CampCause",
+        "description": "A Camp level reached: `level` as the Camp bar counts it, from 1."
       },
       "CampInfo": {
         "properties": {
@@ -3958,6 +3998,35 @@
         "title": "Limits",
         "description": "What the page's editors stop at (CONTRACT.txt, \"Request limits\"): a request past one is a 422."
       },
+      "LineCause": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/RunnerCause"
+          },
+          {
+            "$ref": "#/components/schemas/WhenCause"
+          },
+          {
+            "$ref": "#/components/schemas/SkillCause"
+          },
+          {
+            "$ref": "#/components/schemas/CampCause"
+          },
+          {
+            "$ref": "#/components/schemas/AnswerCause"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "answer": "#/components/schemas/AnswerCause",
+            "camp": "#/components/schemas/CampCause",
+            "runner": "#/components/schemas/RunnerCause",
+            "skill": "#/components/schemas/SkillCause",
+            "when": "#/components/schemas/WhenCause"
+          }
+        }
+      },
       "LineInfo": {
         "properties": {
           "key": {
@@ -3975,12 +4044,23 @@
               "fight"
             ],
             "title": "Kind"
+          },
+          "cause": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LineCause"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
         "required": [
           "key",
-          "kind"
+          "kind",
+          "cause"
         ],
         "title": "LineInfo"
       },
@@ -5031,6 +5111,26 @@
         ],
         "title": "RunKind"
       },
+      "RunnerCause": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "runner",
+            "title": "Kind",
+            "default": "runner"
+          },
+          "runner": {
+            "type": "string",
+            "title": "Runner"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner"
+        ],
+        "title": "RunnerCause",
+        "description": "A card's run wrote the line (its line, outcome or finish), or a fight on a card or standing action did."
+      },
       "Running": {
         "properties": {
           "kind": {
@@ -5390,6 +5490,26 @@
           "prestige"
         ],
         "title": "SkillBar"
+      },
+      "SkillCause": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "skill",
+            "title": "Kind",
+            "default": "skill"
+          },
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill"
+        ],
+        "title": "SkillCause",
+        "description": "A level of `skill`: a line several of its levels share (a phase's pool), so the key cannot say which level."
       },
       "SkillInfo": {
         "properties": {
@@ -6434,6 +6554,25 @@
         ],
         "title": "Visit",
         "description": "A return after time away: the game second the player last saw the save, and the one the return came to."
+      },
+      "WhenCause": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "when",
+            "title": "Kind",
+            "default": "when"
+          },
+          "when": {
+            "$ref": "#/components/schemas/Condition"
+          }
+        },
+        "type": "object",
+        "required": [
+          "when"
+        ],
+        "title": "WhenCause",
+        "description": "What a story beat, an offer's arrival or a chip waited on, as the condition the content wrote for it."
       }
     }
   }

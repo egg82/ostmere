@@ -6,6 +6,7 @@ import { FIXTURE_CODE, fixtureDevices } from "./devices";
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { AccountPresentation, AccountSettings, Decision, Mix, SaveInfo, SavePresentation, Step } from "../src/api/types";
 import { fixtureContent } from "./content";
+import { CHRONICLE_VISITS, chronicleStep, isChronicle } from "./chronicle";
 import { dayOneStep, isDayOne } from "./dayone";
 import { dayTwoStep, isDayTwo } from "./daytwo";
 import { fightsStep, isFights } from "./fights";
@@ -16,7 +17,7 @@ import { isTown, townStep } from "./town";
 import { fixtureStep, type Kept, type Phase } from "./steps";
 
 const stepOf = (phase: Phase, at: number, kept: Kept = {}, decisions = 0): Step =>
-  (isFights(phase) ? fightsStep(phase, at, kept, decisions) : isJournal(phase) ? journalStep(phase, at, kept, decisions) : isDayOne(phase) ? dayOneStep(phase, at, kept, decisions) : isDayTwo(phase) ? dayTwoStep(phase, at, kept, decisions) : isTown(phase) ? townStep(phase, kept, decisions) : isPrestige(phase) ? prestigeStep(phase, at, kept, decisions) : fixtureStep(phase, at, kept, decisions));
+  (isChronicle(phase) ? chronicleStep(at, kept, decisions) : isFights(phase) ? fightsStep(phase, at, kept, decisions) : isJournal(phase) ? journalStep(phase, at, kept, decisions) : isDayOne(phase) ? dayOneStep(phase, at, kept, decisions) : isDayTwo(phase) ? dayTwoStep(phase, at, kept, decisions) : isTown(phase) ? townStep(phase, kept, decisions) : isPrestige(phase) ? prestigeStep(phase, at, kept, decisions) : fixtureStep(phase, at, kept, decisions));
 
 /** `unavailable`: every step after Begin answers 503 (the page's reconnecting state). `seen`: the player has seen a
  * rule come on and let go (writing rules is open). `limited`: a send of feedback answers 429. `due`: recovery words
@@ -28,9 +29,9 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
   let decisions = 0;
   let began = Date.now();
   const now = (): number => Math.floor((Date.now() - began) / 1000);
-  const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first);   // the repeat offers come only after the lessons
+  const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first) || isChronicle(first);   // the repeat offers come only after the lessons
   const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: [] };
+  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : [] };
   const settings: AccountSettings = { lessons: true };
   const info = (): SaveInfo => ({
     save_id: 1, number: 1, decisions, game_time: now(), ended_at: null, started_at: new Date(began).toISOString(),

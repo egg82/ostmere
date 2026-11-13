@@ -9,7 +9,7 @@ MAX_DRY_RUN = 8
 MAX_MIX_PARTS = 64
 MAX_LIST = 512
 MAX_VISITS = 200
-"""The returns a save keeps: the Log holds this many lines (the page's ui/story.ts KEEP), so an older return opens no stretch."""
+"""The returns a save keeps: the chronicle holds this many entries a filter (the page's game/chronicle.ts KEEP), so an older return opens no stretch."""
 MAX_NAME = 64
 NO_NUL = r"^[^\x00]*$"
 """Postgres text holds no U+0000: a free string a request stores carries this pattern, so it is 422, not a failed write."""

@@ -6,7 +6,7 @@
 // server's answer, which holds what other pages kept, is adopted (presentation.ts). A send that fails is only logged
 // (the page goes on as if it was kept).
 import type { AccountPresentation, AccountSettings, LessonEnd, OfferedSwitch, SavePresentation, Visit } from "../api/types";
-import { AWAY_MIN_S, MAX_VISITS } from "./loggroups";
+import { AWAY_MIN_S, MAX_VISITS } from "./chronicle";
 import { mergePresentation, mergeSavePresentation } from "./presentation";
 
 export interface KeepsSink {
@@ -147,7 +147,7 @@ export class Keeps {
       lesson_ends: [...(this.save.lesson_ends ?? []), end] });
   }
 
-  /** This save's returns after a long time away, oldest first: the Log's entries begin at each one's `left`. */
+  /** This save's returns after a long time away, oldest first: the chronicle's stretches begin at each one's `left`. */
   visits(): Visit[] {
     return this.save.visits ?? [];
   }

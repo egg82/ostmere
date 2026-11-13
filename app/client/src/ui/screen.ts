@@ -10,7 +10,7 @@ import type { Catalog } from "../game/catalog";
 import { nudgeTarget } from "../game/cues";
 import { NewMarks } from "../game/marks";
 import type { Keeps } from "../game/keeps";
-import type { Past } from "../game/loggroups";
+import type { Past } from "../game/chronicle";
 import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
 import { readingMs } from "../game/reading";
 import { HandStreak } from "../game/stall";
