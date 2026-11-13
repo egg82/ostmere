@@ -518,7 +518,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .chron-filter[aria-pressed="true"] { color: var(--ink-hi); background: var(--press); box-shadow: none; }
 .chron-filter:hover, .chron-count:hover { color: var(--ink-hi); }
 .chron-filter:focus-visible, .chron-count:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
-.chron-all { margin: 0; padding: 0 .3rem 0 0; list-style: none; max-height: 65vh; overflow-y: auto; color: var(--ink-hi); }
+.chron-all { margin: 0; padding: 0 .3rem 0 .4rem; list-style: none; max-height: 65vh; overflow-y: auto; color: var(--ink-hi); }
 .chron-stretch { position: relative; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px solid var(--rule); }
 .chron-stretch + .chron-stretch { margin-top: .15rem; }
 .chron-stretch::before { content: ""; position: absolute; left: -.38rem; top: .75rem; width: .6rem; height: .6rem; background: var(--bg); border: 1px solid var(--ink-dim); box-sizing: border-box; }
