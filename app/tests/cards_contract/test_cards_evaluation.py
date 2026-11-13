@@ -6,10 +6,11 @@ verb changed nothing. Two lanes ready at one instant both start; a speed-0 tap i
 brings its speed back; after a cascade a READY at T + 1 also covers a queue verb with no card."""
 from dataclasses import replace
 
+import pytest
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
-    BP, HANDS, ActionId, AfterTime, AtLeast, CardCount, CardDef, CardId, ChipDef, ChipId, Event, EventKind, Flow,
+    BP, HANDS, ActionId, AfterTime, Amount, AtLeast, CardCount, CardDef, CardId, ChipDef, ChipId, Event, EventKind, Flow,
     InvalidVerbError, LaneSpeed, MixId, Modifier, Order, Outcome, QueueEntry, Rules, Save, SaveMix, SetOrders,
     SetQueue, StandingDef, StoreDef, StoreId, StoreValue, SwitchMix, TapCard, TriggerDef, TriggerId, Verb, WorkRef,
     advance, decide, decode, encode, new_save, next_event, validate_rules, view,
@@ -284,6 +285,24 @@ def breaks_57(s: Save, r: Rules) -> str | None:
         if on and isinstance(o.then, TapCard) and can_act(s, r, o.then.card):
             return f"order {i} {o.then.card} can act at {s.time}"
     return f"queue head can act at {s.time}" if queue_breaks_57(s, r) else None
+
+
+@pytest.mark.xfail(strict=True, reason="can_act reads a cure's cut-in on the busy hands as the card able to act")
+def test_the_57_check_holds_a_true_order_on_a_busy_lane_to_wait_even_for_a_cure():
+    """Invariant 57's "its lane free", against "CURE CUT-IN": "An order's cure does not cut in; it waits for the task to
+    land". h holds the hands from the SetOrders at 0 while "full" shows and cu, a cure for it, has a true order: the
+    player could cut in with cu, yet no order can act. The control, the same orders by hand with the hands free, is
+    reported."""
+    cu, full = CardId("cu"), ChipId("full")
+    r = rules([StoreDef(X, 100 * Q, 0), StoreDef(W, 100 * Q, 3 * Q)],
+              cards=[CardDef(H, 100), CardDef(cu, 100, inputs=(Amount(W, Q),))],
+              chips=[ChipDef(full, AtLeast(StoreValue(W), 2 * Q, 2 * Q), ())])
+    orders = (Order(ALWAYS, TapCard(H)), Order(ALWAYS, TapCard(cu)))
+    assert breaks_57(replace(new_save(r), orders=orders, latches=(True, True)), r) is not None
+    s = decide(new_save(r), r, 0, SetOrders(orders))
+    assert lane(s, HANDS).card == H and view_of(s, r, cu).cuts_in
+    for t in (0, 1, 99):
+        assert breaks_57(advance(s, r, t), r) is None, t
 
 
 Steps = tuple[tuple[int, Verb | None], ...]
