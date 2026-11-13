@@ -10,9 +10,8 @@ import type { Content, Decision, NewSave, PastLine, SavePresentation, Step, View
 import { Asking } from "./asking";
 import { Clock } from "./clock";
 import { ForecastHold } from "./forecasthold";
-import { Keeps, NEW_SAVE, type Kept } from "./keeps";
+import { Keeps, NEW_SAVE, sentKeeps, type Kept } from "./keeps";
 import { progressed } from "./progressed";
-import { sendable, sendableSave } from "./presentation";
 
 export interface SessionEvents {
   /** A game began or opened, or the content changed under it (a deploy: the server rebased the save). `history`: the
@@ -214,23 +213,11 @@ export class Session {
     this.content = content;
     this.saveId = saveId;
     this.step = step;
-    this.keeps = this.keepsFor(saveId, kept);
+    this.keeps = sentKeeps(this.api, saveId, this.keeps.kept, kept);
     this.events.build(step.build);
     this.clock.start(step.view.at);
     this.events.started(content, step, this.keeps, history);
     progressed(content, step.view);
-  }
-
-  /** The keeps for save `saveId`: the account's and the settings carried on; each change sent, the answer adopted. */
-  private keepsFor(saveId: number, kept: SavePresentation | null): Keeps {
-    const notKept = (e: unknown): void => console.warn("ashfall: not kept", e);
-    const was = this.keeps.kept;
-    const keeps: Keeps = new Keeps({ ...was, save: kept ?? was.save }, {
-      account: (p) => void this.api.putMePresentation(sendable(p)).then((a) => keeps.adopt(a.presentation)).catch(notKept),
-      save: (p) => void this.api.putSavePresentation(saveId, sendableSave(p)).then((s) => keeps.adoptSave(s)).catch(notKept),
-      settings: (s) => void this.api.putMeSettings(s).then((a) => keeps.adoptSettings(a.settings)).catch(notKept),
-    });
-    return keeps;
   }
 
   private async send(decision: Decision | null, away = false): Promise<void> {

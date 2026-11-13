@@ -5,9 +5,10 @@
 // or off). Read when the game begins or opens; each change is sent at once with the page's whole copy, and the
 // server's answer, which holds what other pages kept, is adopted (presentation.ts). A send that fails is only logged
 // (the page goes on as if it was kept).
+import type { GameApi } from "../api/api";
 import type { AccountPresentation, AccountSettings, LessonEnd, OfferedSwitch, SavePresentation, Visit } from "../api/types";
 import { AWAY_MIN_S, MAX_VISITS } from "./chronicle";
-import { mergePresentation, mergeSavePresentation } from "./presentation";
+import { mergePresentation, mergeSavePresentation, sendable, sendableSave } from "./presentation";
 
 export interface KeepsSink {
   account?(presentation: AccountPresentation): void;
@@ -189,4 +190,16 @@ export class Keeps {
   get kept(): Kept {
     return { account: this.account, save: this.save, settings: this.settings };
   }
+}
+
+/** The keeps for save `saveId` (`kept`: what it keeps, null for the save in `was`), `was`'s account and settings carried
+ * on; each change sent, the answer adopted. */
+export function sentKeeps(api: GameApi, saveId: number, was: Kept, kept: SavePresentation | null): Keeps {
+  const notKept = (e: unknown): void => console.warn("ashfall: not kept", e);
+  const keeps: Keeps = new Keeps({ ...was, save: kept ?? was.save }, {
+    account: (p) => void api.putMePresentation(sendable(p)).then((a) => keeps.adopt(a.presentation)).catch(notKept),
+    save: (p) => void api.putSavePresentation(saveId, sendableSave(p)).then((s) => keeps.adoptSave(s)).catch(notKept),
+    settings: (s) => void api.putMeSettings(s).then((a) => keeps.adoptSettings(a.settings)).catch(notKept),
+  });
+  return keeps;
 }
