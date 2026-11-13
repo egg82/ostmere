@@ -1,0 +1,16 @@
+Wrong implementations of the code behind the tests that waited on the wall clock (a connect timeout, a pool budget, a
+lock race, a push service's answers, the served forecast's work), each planted alone in a scratch copy and run against
+tools/mutate_suite.py's `clocks` suite. Each must go red, before and after a test is moved off the wall clock.
+
+ 1 no connect      db/engine.py: no connect_timeout is added, so a host that takes the connection and never answers holds
+                   the pool's open until the kernel gives up
+ 2 timeout forced  db/engine.py: connect_timeout is set even when the URL sets its own
+ 3 timeout long    db/engine.py: CONNECT_TIMEOUT_S is 30, not 3
+ 4 no budget       db/engine.py: a checkout waits 3 s whatever timeout_s the caller gave
+ 5 prune saves     db/accounts.py: the prune deletes the doomed accounts' saves without judging their decisions again
+ 6 prune accounts  db/accounts.py: the prune deletes the doomed accounts without judging their progress again
+ 7 claim twice     db/reminders.py: a claim ignores an earlier send, so two jobs both win
+ 8 redirect        reminders/sender.py: the sender follows redirects
+ 9 410 not gone    reminders/sender.py: a 410 is an error, not a gone subscription
+10 every minute    engine/forecast.py: the forecast resolves an instant every minute even when nothing happens
+11 cap of 4        engine/forecast.py: MAX_INSTANTS is 4, so a forecast stops long before its horizon
