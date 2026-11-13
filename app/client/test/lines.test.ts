@@ -1,11 +1,8 @@
 // One thing at a time (docs/design/opening-screen.md): a line's reading time; a live step's lines lead their batch,
-// each holding the next turn for its reading time; a batch sent while another waits follows it; which lines go on a
-// card (the player's own taps only); and the reveal's line, slot-taking and straggler paths against a stand-in DOM.
-import { fixtureStep } from "../fixtures/steps";
-import type { Card, LogLine, View } from "../src/api/types";
+// each holding the next turn for its reading time; a batch sent while another waits follows it; and the reveal's line
+// and straggler paths against a stand-in DOM.
 import { ArrivalQueue, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/arrivals";
 import { READING, readingMs } from "../src/game/reading";
-import { TapLines } from "../src/game/taplines";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
@@ -85,32 +82,8 @@ function times<T>(q: ArrivalQueue<T>, from: number, until = from + 30_000): Arra
   expect("idle after", q.idle, true);
 }
 
-// Which lines go on a card: written by a card the player tapped, until that tap ends. Not the mix's, a rule's, or a
-// chip's; not a later line of a card whose tap has ended.
-{
-  const at = 50;
-  const base = fixtureStep("mid", at).view;
-  const c0 = base.cards[0];
-  if (!c0) throw new Error("fixture has no card");
-  const withBy = (by: Card["by"]): View => ({ ...base, cards: base.cards.map((c) => (c.card === c0.card ? { ...c, by } : c)) });
-  const line = (card: string | null): LogLine => ({ at, seq: 0, key: "k", card });
-  const taps = new TapLines();
-  expect("not tapped: band only", taps.cardOf(line(c0.card)), null);
-  taps.tap(c0.card);
-  expect("tapped: on its card", taps.cardOf(line(c0.card)), c0.card);
-  expect("a chip's line: band only", taps.cardOf(line(null)), null);
-  expect("another card's: band only", taps.cardOf(line("someone-else")), null);
-  taps.observe(withBy("tap"), withBy(null), null);
-  expect("while it runs: still the player's", taps.cardOf(line(c0.card)), c0.card);
-  taps.observe(withBy(null), withBy("tap"), null);
-  expect("the tap ended: a later line (the mix's) is band only", taps.cardOf(line(c0.card)), null);
-  taps.tap(c0.card);
-  taps.observe(withBy(null), withBy(null), c0.card);
-  expect("a failed tap ends it at once", taps.cardOf(line(c0.card)), null);
-}
-
-// The reveal on the page (ui/reveal.ts), against a stand-in DOM: a line, its card copy, a card taking its slot at its
-// turn, and a straggler drawn while a line is still being read.
+// The reveal on the page (ui/reveal.ts), against a stand-in DOM: a line, a card arriving at its turn, and a straggler
+// drawn while a line is still being read.
 {
   const listeners = new Map<string, () => void>();
   const g = globalThis as Record<string, unknown>;
@@ -138,18 +111,14 @@ function times<T>(q: ArrivalQueue<T>, from: number, until = from + 30_000): Arra
   const state = (ns: Fake[]) => ns.map((n) => (n.classList.has("held") ? "held" : n.classList.has("arrive") ? "shown" : "none"));
 
   const r = new Reveal();
-  const band = node(), onCard = node();
-  const card = { ...node(), getBoundingClientRect: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) };   // not in the page yet
-  let slot = "old card";
-  const old = { isConnected: true, getBoundingClientRect: () => ({ top: 100, bottom: 150, left: 10, right: 300 }),
-    replaceWith: () => { slot = "new card"; old.isConnected = false; } };
+  const band = node();
+  const card = node();
   r.collect();
-  r.line([asEl(band), asEl(onCard)], "1", 3000);
-  r.arrive(asEl(card), "card", "c", old as unknown as HTMLElement);   // sight is the slot's: it waits its turn -- a fake DOM double stands in for the real type
-  expect("collected: all held", state([band, onCard, card]), ["held", "held", "held"]);
+  r.line([asEl(band)], "1", 3000);
+  r.arrive(asEl(card), "card", "c");
+  expect("collected: all held", state([band, card]), ["held", "held"]);
   r.start(0);
-  expect("the line shows, band and card", state([band, onCard, card]), ["shown", "shown", "held"]);
-  expect("the old card keeps the slot", slot, "old card");
+  expect("the line shows, the card waits", state([band, card]), ["shown", "held"]);
   now = 2000;
   const straggler = node();
   r.arrive(asEl(straggler), "skill", "s");
@@ -157,7 +126,7 @@ function times<T>(q: ArrivalQueue<T>, from: number, until = from + 30_000): Arra
   r.tick(2999);
   expect("not before the reading time", state([card]), ["held"]);
   r.tick(3000);
-  expect("its turn: the card takes the slot", [state([card]), slot], [["shown"], "new card"]);
+  expect("its turn: the card shows", state([card]), ["shown"]);
   r.tick(3000 + MIN_GAP_MS);
   expect("then the straggler", [state([straggler]), listeners.size], [["shown"], 0]);
 

@@ -89,19 +89,28 @@ expect("a Pause on a store: that store's have/need", marked("shelter"), { card: 
 expect("a wait on time: the countdown", marked("rest"), { card: true, mark: ["foot"] });
 expect("a store never shown with no countdown: the card alone", marked("larder"), { card: true, mark: [] });
 
-// The failed line goes on the card as any tap's line does; while it shows, the countdown it is about stays in view.
+// A refusal is shown by the card and its need alone, never by text: the step answering a refused tap carries no line,
+// and the card gains no text and the strip no item. A tap that lands puts its line in the strip and nowhere on the card.
 {
   const screen = new Screen(catalog, () => undefined, () => Promise.resolve(null), new Keeps());
   document.body.replaceChildren(screen.root);
   screen.show({ ...base, view, lines: [] });
   screen.tick(AT);
-  (cardNode(screen, "look").querySelector(".card-tap") as HTMLButtonElement).click();
-  screen.show({ ...base, view, lines: [{ at: AT, seq: 0, key: "line.3", card: "look" }], failed_tap: "look" } as Step);
-  screen.tick(AT);
+  const strip = (): string[] => [...screen.root.querySelectorAll("ol.lines > li")].map((n) => n.textContent ?? "");
   const node = cardNode(screen, "look");
-  expect("the failed line is on the card", [...node.querySelectorAll(".card-line")].some((l) => !l.classList.contains("held")), true);
-  expect("and the card says it keeps its countdown", [node.classList.contains("saying"), node.classList.contains("saying-failed")], [true, true]);
-  expect("a line hides the timer only when it is not a failed tap's", /\n\.card\.saying:not\(\.saying-failed\) \.card-foot \{ visibility: hidden; \}/.test(readFileSync("src/game.css", "utf8")), true);
+  const words = node.textContent;
+  (node.querySelector(".card-tap") as HTMLButtonElement).click();
+  screen.show({ ...base, view, lines: [], failed_tap: "look" } as Step);
+  screen.tick(AT);
+  expect("a refused tap leaves the card's text as it was", cardNode(screen, "look").textContent, words);
+  expect("and puts nothing in the strip", strip(), []);
+  expect("the card is red", cardNode(screen, "look").classList.contains("tap-failed"), true);
+
+  const line = fixtureContent.text_entries.find((t) => t.key === "line.3")?.text ?? "";
+  screen.show({ ...base, view, lines: [{ at: AT, seq: 0, key: "line.3", card: "look" }], failed_tap: null } as Step);
+  screen.tick(AT);
+  expect("a tap that lands says its line in the strip", strip(), [line]);
+  expect("and not under the card", cardNode(screen, "look").textContent, words);
 }
 
 const quiet = shown(null);

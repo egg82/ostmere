@@ -85,7 +85,7 @@ function rig() {
 {  // a ledger line that arrives holds the next turn for its reading time, its offer's sentence counted
   const { ctx } = testContext();
   const sent: Array<[string, string, number]> = [];
-  const ledger = new Ledger({ ...ctx, keeps: keepsOf(KEPT), arrivals: { ...ctx.arrivals, arrive: (_n, kind, id, _t, holdMs = 0) => { sent.push([kind, id, holdMs]); } } });
+  const ledger = new Ledger({ ...ctx, keeps: keepsOf(KEPT), arrivals: { ...ctx.arrivals, arrive: (_n, kind, id, holdMs = 0) => { sent.push([kind, id, holdMs]); } } });
   ledger.update({ ...twoRed, ledger: others }, null);
   ledger.update(twoRed, { ...twoRed, ledger: others });
   const wood = sent.filter(([kind, id]) => kind === "store" && id === "wood");

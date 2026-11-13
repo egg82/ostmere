@@ -20,12 +20,8 @@ export interface Row {
   done: boolean;
   /** performance.now() when the card finished (so the hold is measured from the finish); 0 while live. */
   doneAt: number;
-  /** A line on the card: shown when the arrival queue un-holds it, then kept `ms`; `failed`: a failed tap's. */
-  lines: Array<{ node: HTMLElement; ms: number; shownAt: number; failed: boolean }>;
   /** False while a finished card's done look waits its turn in the arrival queue. */
   doneShown?: boolean;
-  /** The finished card still in this row's slot, until this card's turn to arrive. */
-  stand?: HTMLElement;
   /** The odds under a fight card (fightpanel.ts), else null. */
   fight: FightPanel | null;
   /** A rule started its running tap (ui/fires.ts), as of the last restyle. */
@@ -43,7 +39,7 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
   tap.type = "button";
   const row: Row = {
     id: card.card, node, tap, count: el("span", "card-count"), needs: new CardNeeds(ctx, card.card), ready: whenReady.make(card.card, node),
-    fill: el("span", "card-fill"), foot: el("span", "card-foot"), card, done: false, doneAt: 0, lines: [],
+    fill: el("span", "card-fill"), foot: el("span", "card-foot"), card, done: false, doneAt: 0,
     fight: info?.fight ? new FightPanel(catalog, info.fight) : null,
   };
   const head = el("span", "card-head");

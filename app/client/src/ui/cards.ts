@@ -3,13 +3,10 @@
 // cap, its needs as have/need (short ones in the ledger's red), its one bar (Card.bar modulo bar_total, whoever runs it),
 // Ready iff blocker is null; a card whose lane is busy can't be
 // tapped and looks flat, unless it cuts in (Card.cuts_in); an unready one is muted but still answers a tap: a failed tap, which takes no time, pulses the
-// card red and marks what stopped it, and says its failed line.
+// card red and marks what stopped it, with no text.
 // Slots don't move: a card that leaves view.cards stays in its slot, done, until a new card needs one (the new card takes
 // the slot of the card whose completion opened it, so the next step lands under the finger) or until it has been held
 // DONE_HOLD_MS and nothing is being touched, when it goes to the Completed tab and the cards after it close up.
-// A line the player's tap wrote shows on the card for its reading time, over the meta row, so nothing moves (a failed
-// tap's leaves the countdown it is about in view); a card
-// that would take the slot of a card still showing one waits in the arrival queue, and takes the slot at its turn.
 // A new card given a new slot at its group's end (below the mix's cards, out of sight on a phone) is scrolled into
 // view once, unless a finger is on the page or just left it.
 import type { Card, View } from "../api/types";
@@ -39,8 +36,6 @@ export class Cards implements Part {
   private readonly groups: CardGroups;
   private readonly whenReady: WhenReady;
   private readonly rows = new Map<string, Row>();
-  /** Finished cards standing in the slot a waiting card will take, drawn done with their line until it does. */
-  private readonly leaving = new Set<Row>();
   private view: View | null = null;
   private story: ReadonlySet<string> = new Set();
   /** The wait line, first in the deck (ui/waitline.ts). */
@@ -58,18 +53,6 @@ export class Cards implements Part {
     const press = (down: boolean): void => { this.pressed = down; this.lastPress = performance.now(); };
     document.addEventListener("pointerdown", () => press(true), true);
     for (const type of ["pointerup", "pointercancel"]) document.addEventListener(type, () => press(false), true);
-  }
-
-  /** Put a story line on a card on screen, for `ms` once shown; its node (held by the caller's queue), or null when the
-   * card is not on screen. The band's copy is the one read aloud. `failed`: the line of a failed tap of the card. */
-  say(card: string, text: string, ms: number, failed = false): HTMLElement | null {
-    const row = this.rows.get(card);
-    if (!row || !row.node.isConnected) return null;
-    const node = el("span", "card-line", text);
-    node.setAttribute("aria-hidden", "true");
-    row.node.append(node);
-    row.lines.push({ node, ms, shownAt: 0, failed });   // a second line from one tap waits its turn in the queue
-    return node;
   }
 
   /** A failed tap of this card (Step.failed_tap): the card pulses red, and so does what its blocker names (the need
@@ -105,7 +88,7 @@ export class Cards implements Part {
       if (!live.has(id) && !row.done) {
         row.done = true;
         row.doneAt = performance.now();
-        if (row.lines.length === 0 && prev) {   // finished looks are a change too: at their turn (with a line, at once)
+        if (prev) {   // finished looks are a change too: at their turn
           row.doneShown = false;
           this.ctx.arrivals.effect(row.node, "card", () => { row.doneShown = true; row.node.classList.toggle("done", row.done); });
         }
@@ -130,9 +113,7 @@ export class Cards implements Part {
         row.card = card;
         if (card.completions > before.completions && prev) {
           const rung = completionRung(before.by, row.byOrder === true);   // as it ran until now: the restyle below moves it on
-          const pop = (): void => play(row.node, rung);
-          if (row.lines.length > 0) pop();   // with its line, on the card the eyes are on
-          else this.ctx.arrivals.effect(row.node, "card", pop);
+          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung));
         }
       } else {
         const done = view.completed.find((c) => c.card === row.id);
@@ -141,25 +122,14 @@ export class Cards implements Part {
       hintCard(row.node, row.id, hints, () => this.ctx.keeps.keepMixOffered(row.id), this.marks.has(row.id));   // a quiet mark, once: the mix could take it
       this.restyle(row, view, { busy, running, single });
     }
-    for (const row of this.leaving) {
-      if (!row.node.isConnected) {
-        this.leaving.delete(row);
-        continue;
-      }
-      const done = view.completed.find((c) => c.card === row.id);
-      if (done) row.card = { ...row.card, completions: done.completions };
-      this.restyle(row, view, { busy, running, single });
-    }
   }
 
   tick(t: number): void {
     this.wait.tick(t);
     this.sweep();
-    for (const row of this.leaving) this.lineTick(row);
     const { format } = this.ctx.catalog;
     for (const row of this.rows.values()) {
       const { card } = row;
-      this.lineTick(row);
       if (row.done) continue;
       const span = card.bar_total;
       const v = sample(card.bar, t);
@@ -176,23 +146,6 @@ export class Cards implements Part {
   private markClock(row: Row, clock: boolean): void {
     if (clock) row.foot.dataset["teach"] = "clock";
     else delete row.foot.dataset["teach"];
-  }
-
-  /** A card's line: timed from when it shows, gone after its reading time (a newer one shown replaces it); the meta row
-   * is hidden while one is up. */
-  private lineTick(row: Row): void {
-    const shown = row.lines.filter((l) => !l.node.classList.contains("held"));
-    const latest = shown[shown.length - 1];
-    for (const l of shown) if (l !== latest) l.node.remove();
-    if (latest) {
-      const now = performance.now();
-      if (latest.shownAt === 0) latest.shownAt = now;
-      if (now - latest.shownAt >= latest.ms) latest.node.remove();
-    }
-    row.lines = row.lines.filter((l) => l.node.isConnected);
-    const up = row.lines.filter((l) => !l.node.classList.contains("held"));
-    row.node.classList.toggle("saying", up.length > 0);
-    row.node.classList.toggle("saying-failed", up.at(-1)?.failed === true);
   }
 
   /** Finished cards past their hold leave for the Completed tab (the view already lists them there), when no finger is near. */
@@ -225,12 +178,7 @@ export class Cards implements Part {
     const row = makeRow(this.ctx, this.whenReady, card);
     if (target) {
       const old = this.rows.get(target);
-      if (old && old.lines.length > 0 && inPlay) {   // it keeps the slot, showing its line, until this card's turn
-        row.stand = old.node;
-        this.leaving.add(old);
-      } else {
-        old?.node.remove();
-      }
+      old?.node.remove();
       this.rows.delete(target);
       group.slots[group.slots.indexOf(target)] = card.card;
     } else {
@@ -242,7 +190,7 @@ export class Cards implements Part {
       this.marks.add(card.card);
       this.arrived();
       markNew(row.node, () => this.marks.clear(card.card));
-      this.ctx.arrivals.arrive(row.node, "card", card.card, row.stand);
+      this.ctx.arrivals.arrive(row.node, "card", card.card);
       const tag = newGroup ? group.node.querySelector<HTMLElement>(":scope > .lane-tag") : null;
       if (tag) this.ctx.arrivals.arrive(tag, "card", card.card);   // a new group's heading comes with its first card
     }

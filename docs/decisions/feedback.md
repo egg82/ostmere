@@ -36,7 +36,10 @@ How these stand today, moved from their rows in `systems.md`.
 
 Feedback: null is silent. The ladder (`docs/design/opening-screen.md`, "The feedback ladder") is data in
 `app/client/src/ui/ladder.ts`: event kind to rung to effect. A failed tap (`api.models.Step`, its failed_tap) pulses its
-card and what stopped it (`app/client/src/ui/cards.ts`); the effect's numbers are tokens in `app/client/src/game.css`.
+card red and the need that stopped it (`app/client/src/ui/cards.ts`); the effect's numbers are tokens in
+`app/client/src/game.css`. **A refused tap never has text**: the engine emits no line for it and the content has no
+refusal lines. A tap that lands puts its line in the strip and the Log, never under the card, so each tap outcome
+has one home.
 
 Lessons: lessons as data (id, when it may start, trigger, steps naming a control and a line) and one runner, the glow
 as its highlight (`app/client/src/game/lessons.ts`, `app/client/src/ui/lessons.ts`). Done or skipped is kept in the
