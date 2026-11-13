@@ -243,9 +243,6 @@ def wiring(data: dict, key: str) -> list[str]:
                        + (f"; fires with {', '.join(others)}" if others else ""))
     for c in data.get("cards", []) + data.get("town_cards", []):
         fin = c.get("finished", {})
-        if c.get("failed_line_key") == key:
-            out.append(f"failed-card line of card {c['id']} ({c.get('presentation')}; lane {c.get('lane') or c.get('lanes', '-')}); inputs {inputs(c.get('inputs', [])) or 'none'}"
-                       + (f"; requires {conds(c['requires'])}" if c.get("requires") else ""))
         for src, lk in (("cap", c.get("line_keys", [])), ("finished", keys_in(fin)), ("outcome", keys_in(c.get("outcome", {})))):
             if key in lk:
                 pos = f"stage line {lk.index(key) + 1} of {len(lk)}" if src == "cap" else "line on finishing"

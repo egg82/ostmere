@@ -188,7 +188,6 @@ presentation = "narrative"
 label_key = "c_make_room"
 work_s = 5
 cap = 1
-failed_line_key = "l_make_room_fail"
 requires = [{ test = "at_least", subject_kind = "store", id = "night_2", value = 20 }]
 line_keys = ["l_room_1"]
 [cards.finished]
@@ -204,7 +203,6 @@ label_key = "c_build_shelter"
 upside_key = "up_shelter"
 work_s = 1800
 cap = 1
-failed_line_key = "l_shelter_fail"
 inputs = [{ store = "damp_wood", items = 12 }, { store = "stones", items = 2 }]
 line_keys = ["l_shelter"]
 [cards.finished]
@@ -218,7 +216,6 @@ label_key = "c_build_woodstack"
 upside_key = "up_woodstack"
 work_s = 1800
 cap = 1
-failed_line_key = "l_woodstack_fail"
 inputs = [{ store = "stones", items = 10 }, { store = "dry_wood", items = 4 }]
 line_keys = ["l_woodstack"]
 [cards.finished]
@@ -235,7 +232,6 @@ upside_key = "up_raised_bed"
 work_s = 1200
 cap = 3
 inputs = [{ store = "damp_wood", items = 12 }, { store = "stones", items = 6 }]
-failed_line_key = "l_bed_fail"
 line_keys = ["l_bed_1", "l_bed_2", "l_bed_3"]
 [cards.finished]
 modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 13000, source = "raised_bed" }]
@@ -634,17 +630,13 @@ l_evening_2 = "story"
 l_night_2a = "story"
 l_night_2b = "story"
 l_morning_3 = "story"
-l_make_room_fail = "tap"
 l_room_1 = "story"
 l_room_2 = "story"
 l_shelter = "story"
 l_woodstack = "story"
-l_shelter_fail = "tap"
-l_woodstack_fail = "tap"
 l_bed_1 = "story"
 l_bed_2 = "story"
 l_bed_3 = "story"
-l_bed_fail = "tap"
 l_offer_1 = "story"
 l_offer_2 = "story"
 l_yes = "story"
@@ -717,17 +709,13 @@ l_evening_2 = "dusk. two at the fire."
 l_night_2a = "from high up, wood grinding over stone. it goes on."
 l_night_2b = "then nothing. she heard it. she sleeps, or seems to."
 l_morning_3 = "she's up first, the fire fed. the stool's chip lies by it."
-l_make_room_fail = "no pole goes up in the dark. you try one."
 l_room_1 = "the lean-to is yours. the ash by the fire is pressed flat."
 l_room_2 = "a shelter, a woodstack. one first."
 l_shelter = "two stones and green poles, low by the lean-to. hers."
 l_woodstack = "a bed of flat stones. dry wood stacks on it chest high."
-l_shelter_fail = "you go to raise a roof and come up short."
-l_woodstack_fail = "that makes a pile, not a stack."
 l_bed_1 = "four poles, set to stand a hand off the ground."
 l_bed_2 = "stones under each pole, tamped in."
 l_bed_3 = "you lie on it. the wet is under you now, not in you."
-l_bed_fail = "you stand a pole in the wet and it leans."
 l_offer_1 = "she glances at her roof, then asks you something."
 l_offer_2 = "would you fetch the cart her people left? she could go herself."
 l_yes = "she looks at you. an offer, and you took it."

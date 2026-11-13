@@ -41,6 +41,8 @@ class Ruleset:
     held_manifest: str | None = None
     """These rules' manifest as canonical text, when save_manifests holds it as their digest's (saves/manifest.py
     `registered`): a save written then leaves it out of `state`. None: saves are written whole."""
+    retired_lines: frozenset[str] = frozenset()
+    """Text keys retired since a stored line was written: such a line is dropped."""
 
 
 @dataclass(frozen=True)

@@ -64,9 +64,8 @@ ENDPOINTS
   POST /api/saves/{save_id}/decisions DecisionRequest {decision, after} -> Step: advance to now, then apply the
                                       decision. `after` is the Step.decisions the page last saw (409 stale if the
                                       save has had another decision since). A tap_card of a card that is not ready
-                                      is a failed tap: it takes no time and changes nothing, its failed line (if it
-                                      has one) is in lines at once, and Step.failed_tap names the card (null on every
-                                      other Step).
+                                      is a failed tap: it takes no time, changes nothing and emits no line, and
+                                      Step.failed_tap names the card (null on every other Step).
   POST /api/saves/{save_id}/forecast  ForecastAnswer {decisions, forecast}: the save advanced to now and what lands
                                       from there if the player changes nothing (FORECAST below).
   POST /api/saves/{save_id}/dry-run   DryRunRequest {decisions} -> View: what the save would show after these
@@ -493,7 +492,7 @@ THE CLIENT MAY
     that order lets go first, so the time cannot be kept and no countdown shows. It can be tapped iff it is ready and
     its lane's LaneBar has no running_card; its time is Card.tap_s. A blocker on a store the view has not unlocked
     (a clock the player never sees, the night) shows as its countdown alone: no have/need and no When ready.
-    On a Step whose failed_tap names a card, pulse that card red and mark what its blocker names: the need of its
+    On a Step whose failed_tap names a card, pulse that card red and mark what its blocker names, and show no text for it: the need of its
     store (or, for a store the view has not unlocked, its countdown), skill level or step; a blocker with nothing
     of its own on the card (a time) marks the countdown, and with no countdown either, the card alone.
   - draw a time for a skill's next level, a store's "full in" or its "empty in" only from the forecast it holds

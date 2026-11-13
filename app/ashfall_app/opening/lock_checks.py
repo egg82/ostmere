@@ -47,10 +47,11 @@ def problems(lock: Lock, now: Lock, renames: list[RenameEntry]) -> list[Problem]
 
 def _rename_problems(lock: Lock, now: Lock, renames: list[RenameEntry]) -> list[Problem]:
     found: list[Problem] = []
-    given = [{"kind": r.kind, "from": r.old, "to": r.new} for r in renames]
+    given: list[dict[str, str | None]] = [{"kind": r.kind, "from": r.old, "to": r.new} for r in renames]
     found += [Problem("forbidden", f"a released rename was dropped: {r}") for r in lock.renames if r not in given]
     for r in renames:
-        if {"kind": r.kind, "from": r.old, "to": r.new} not in lock.renames and r.new in lock.ids.get(r.kind, []):
+        if ({"kind": r.kind, "from": r.old, "to": r.new} not in lock.renames and r.new is not None
+                and r.new in lock.ids.get(r.kind, [])):
             found.append(Problem("forbidden", f"{r.kind} {r.old} renamed to {r.new}, a released id: use a new one"))
         if r.old in now.ids.get(r.kind, []):
             found.append(Problem("forbidden", f"{r.kind} {r.old} was renamed away and is in the content again"))
@@ -69,7 +70,7 @@ def _removals(lock: Lock, now: Lock, fwd: Forwarding) -> list[Problem]:
         have = set(now.ids.get(kind, []))
         for x in lock.ids.get(kind, []):
             y = _fwd(fwd, kind, x)
-            if y in have:
+            if y in have or (kind == "line" and x in fwd.retired):
                 continue
             if y != x:
                 found.append(Problem("needs_mapping", f"{kind} {x} is renamed to {y}, which the content lacks"))

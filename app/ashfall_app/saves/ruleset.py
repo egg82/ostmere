@@ -14,7 +14,7 @@ def ruleset(opening: Opening, renames: list[RenameEntry], build: str, release: i
     rules = to_rules(opening)
     return Ruleset(rules=rules, digest=e.rules_digest(rules), renames=engine_renames(renames),
                    start_lines=tuple(e.LineKey(k) for k in opening.start_line_keys),
-                   line_renames=line_renames(renames), build=build, release=release,
+                   line_renames=line_renames(renames), retired_lines=retired_lines(renames), build=build, release=release,
                    camp_triggers=camp_triggers(opening, rules), repeats=repeat_rules(opening))
 
 
@@ -34,7 +34,7 @@ def camp_triggers(opening: Opening, rules: e.Rules) -> tuple[int, ...]:
 def line_renames(entries: list[RenameEntry]) -> dict[str, str]:
     """Each renamed text key to the key it is now, through every rename after it (a -> b and b -> c map a to c), for
     lines stored before a rename."""
-    step = {r.old: r.new for r in entries if r.kind == "line"}
+    step = {r.old: r.new for r in entries if r.kind == "line" and r.new is not None}
     out: dict[str, str] = {}
     for old in step:
         seen, now = {old}, step[old]
@@ -43,3 +43,8 @@ def line_renames(entries: list[RenameEntry]) -> dict[str, str]:
             now = step[now]
         out[old] = now
     return out
+
+
+def retired_lines(entries: list[RenameEntry]) -> frozenset[str]:
+    """The text keys content has retired."""
+    return frozenset(r.old for r in entries if r.kind == "line" and r.new is None)

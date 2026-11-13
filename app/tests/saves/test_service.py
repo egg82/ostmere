@@ -161,6 +161,18 @@ def test_open_serves_renamed_text_keys_under_their_new_names(engine: Engine, rs:
     assert [p.key for p in saves.open(account, info.save_id).history][-2:] == ["k_new", "k_other"]
 
 
+def test_open_drops_stored_lines_whose_text_key_is_retired(engine: Engine, rs: Ruleset, clock: FakeClock,
+                                                           account: int):
+    from dataclasses import replace
+    saves = PgSaves(engine, replace(rs, line_renames={"k_old": "k_gone"}, retired_lines=frozenset({"k_gone", "k_x"})),
+                    clock)
+    info, _ = saves.create(account)
+    with engine.begin() as conn:
+        rows.append_lines(conn, info.save_id, [(0, "k_x"), (0, "k_old"), (0, "k_other")])
+    assert [p.key for p in saves.open(account, info.save_id).history][-1:] == ["k_other"]
+    assert not {"k_x", "k_gone"} & {p.key for p in saves.open(account, info.save_id).history}
+
+
 def test_a_dry_run_shows_the_decisions_and_writes_nothing(saves: PgSaves, engine: Engine, account: int,
                                                           clock: FakeClock):
     info, _ = saves.create(account)

@@ -45,7 +45,6 @@ label_key = "c_palisade"
 upside_key = "up_palisade"
 work_s = 1800
 cap = 12
-failed_line_key = "l_palisade_fail"
 inputs = [{ store = "stakes", items = 16 }, { store = "cord", items = 4 }, { store = "stones", items = 6 }]
 outcome = { modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 5000, source = "palisade" }] }
 line_keys = ["l_stage_1", "l_stage_2", "l_stage_3", "l_stage_4", "l_stage_5", "l_stage_6", "l_stage_7", "l_stage_8",
@@ -71,7 +70,6 @@ label_key = "c_cut_stakes"
 work_s = 600
 skill = "woodcutting"
 xp_per_hour = 900
-failed_line_key = "l_cut_stakes_fail"
 inputs = [{ store = "damp_wood", items = 4 }]
 outcome = { stores = [{ store = "stakes", items = 1 }] }
 
@@ -82,7 +80,6 @@ lanes = ["n1", "n2", "n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_stakes"
 work_s = 1200
-failed_line_key = "l_lane_stakes_fail"
 inputs = [{ store = "damp_wood", items = 4 }]
 outcome = { stores = [{ store = "stakes", items = 1 }] }
 
@@ -91,7 +88,6 @@ id = "twist_cord"
 presentation = "action"
 label_key = "c_twist_cord"
 work_s = 600
-failed_line_key = "l_cord_fail"
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
 
@@ -103,7 +99,6 @@ lane = "n4"
 presentation = "action"
 label_key = "c_n4_cord"
 work_s = 900
-failed_line_key = "l_n4_cord_fail"
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
 
@@ -124,7 +119,6 @@ label_key = "c_hide_flaps"
 upside_key = "up_hide_flaps"
 work_s = 600
 cap = 4
-failed_line_key = "l_flaps_fail"
 inputs = [{ store = "pelt", items = 2 }, { store = "damp_wood", items = 4 }]
 line_keys = ["l_flaps_1", "l_flaps_2", "l_flaps_3", "l_flaps_done"]
 [cards.finished]
@@ -213,7 +207,6 @@ label_key = "c_pick_fungus"
 work_s = 30
 skill = "foraging"
 xp_per_hour = 300
-failed_line_key = "l_pick_fail"
 inputs = [{ store = "bloom", items = 1 }]
 outcome = { stores = [{ store = "fungus", items = 2 }] }
 
@@ -224,7 +217,6 @@ lanes = ["n3", "n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_pick"
 work_s = 120
-failed_line_key = "l_pick_fail"
 inputs = [{ store = "bloom", items = 1 }]
 outcome = { stores = [{ store = "fungus", items = 1 }] }
 
@@ -237,7 +229,6 @@ upside_of = "n2_eating"
 work_s = 40
 skill = "cooking"
 xp_per_hour = 18
-failed_line_key = "l_fungus_stew_fail"
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 3 }] }
 
@@ -282,7 +273,6 @@ id = "clear_roofs"
 presentation = "action"
 label_key = "c_clear_roofs"
 work_s = 120
-failed_line_key = "l_clear_fail"
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
 
@@ -292,7 +282,6 @@ lane = "n2"
 presentation = "action"
 label_key = "c_n2_clear_roofs"
 work_s = 1200
-failed_line_key = "l_clear_fail"
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
 
@@ -328,7 +317,6 @@ lane = "n3"
 presentation = "action"
 label_key = "c_n3_ash_ground"
 work_s = 7200
-failed_line_key = "l_ash_ground_fail"
 inputs = [{ store = "ash", items = 4 }]
 outcome = { stores = [{ store = "ashed_ground", items = 1 }] }
 
@@ -586,7 +574,6 @@ after = { unlock_kind = "feature", id = "drift" }
 
 [line_kinds]
 l_ring_scored = "story"
-l_palisade_fail = "tap"
 l_stage_1 = "story"
 l_stage_2 = "story"
 l_stage_3 = "story"
@@ -599,11 +586,6 @@ l_stage_9 = "story"
 l_stage_10 = "story"
 l_stage_11 = "story"
 l_stage_12 = "story"
-l_cut_stakes_fail = "tap"
-l_lane_stakes_fail = "tap"
-l_cord_fail = "tap"
-l_n4_cord_fail = "tap"
-l_flaps_fail = "tap"
 l_flaps_1 = "story"
 l_flaps_2 = "story"
 l_flaps_3 = "story"
@@ -611,17 +593,13 @@ l_flaps_done = "story"
 l_b8_1 = "find"
 l_b8_2 = "find"
 l_b8_3 = "find"
-l_pick_fail = "tap"
-l_fungus_stew_fail = "tap"
 l_howls = "story"
 l_caps_1 = "story"
 l_caps_2 = "story"
 l_ash_laden = "body"
 l_ash_cleared = "body"
-l_clear_fail = "tap"
 l_roofs_first = "story"
 l_ash_ground = "story"
-l_ash_ground_fail = "tap"
 l_cord = "story"
 l_pack_1 = "story"
 l_pack_2 = "story"
@@ -650,7 +628,6 @@ store_stakes = "stakes"
 store_cord = "cord"
 c_palisade = "Build the palisade"
 up_palisade = "{pct} strength at the gap with each stretch"
-l_palisade_fail = "you sort the pile. not enough for a stretch."
 l_stage_1 = "the first posts go in along the scored line."
 l_stage_2 = "stones wedged round the foot of each post."
 l_stage_3 = "cord bound round the heads. the stretch stands."
@@ -664,16 +641,11 @@ l_stage_10 = "a slanted pole braces the weak stretch."
 l_stage_11 = "you trim the cord ends close."
 l_stage_12 = "the ring closes on itself."
 c_cut_stakes = "Cut stakes"
-l_cut_stakes_fail = "not enough wood to split into stakes."
 c_lane_stakes = "Cut stakes"
-l_lane_stakes_fail = "the wood runs out before the points do."
 c_twist_cord = "Twist cord"
-l_cord_fail = "there isn't enough to twist a cord from."
 c_n4_cord = "Twist cord"
-l_n4_cord_fail = "{n4} sorts through the sticks and sets them down."
 c_hide_flaps = "Hang hide flaps"
 up_hide_flaps = "{pct} rest recovery"
-l_flaps_fail = "held to the opening, it doesn't cover."
 l_flaps_1 = "poles bent into a frame to fit the opening."
 l_flaps_2 = "a pelt stretched on the frame, hair side out."
 l_flaps_3 = "tied down at the corners with thongs."
@@ -689,10 +661,8 @@ action_drift_clock = "Clock"
 store_bloom = "fungus on the stumps"
 store_fungus = "fungus"
 c_pick_fungus = "Pick fungus"
-l_pick_fail = "every stump is picked bare."
 c_lane_pick = "Pick fungus"
 c_fungus_stew = "Cook fungus stew"
-l_fungus_stew_fail = "the pot stays on its hook. something is short."
 l_howls = "howls, answering each other. prints circle the rack, not the fire."
 l_caps_1 = "{n3} sorts the caps. half go in the fire."
 l_caps_2 = "the pot passes hand to hand, still not empty."
@@ -702,13 +672,11 @@ l_ash_laden = "the roof hangs low over where you sleep."
 l_ash_cleared = "the roof poles stop creaking."
 store_ash = "ash"
 c_clear_roofs = "Clear the roofs"
-l_clear_fail = "too little ash overhead to shovel."
 c_n2_clear_roofs = "Clear the roofs"
 l_roofs_first = "the roofs shed their ash in slabs under the shovel."
 l_ash_ground = "{n3} works ash in by hand, counts seed, and ties the bag shut."
 store_ashed_ground = "ash dug in"
 c_n3_ash_ground = "Work ash into the bed"
-l_ash_ground_fail = "{n3} looks in the sack. not enough ash in it."
 l_cord = "{n4} rolls bark into cord over one knee. fast."
 side_gap = "Gap"
 threat_wolf_pack = "Pack"

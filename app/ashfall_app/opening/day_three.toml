@@ -63,7 +63,6 @@ label_key = "c_field_track"
 work_s = 30
 skill = "scavenging"
 xp_per_hour = 360
-failed_line_key = "l_track_fail"
 inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 4 }, { store = "roots", items = 15 }]
 
 [[stores]]
@@ -97,7 +96,6 @@ label_key = "c_track_end"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_track_end_fail"
 requires = [{ test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 16 }]
 [cards.finished]
 line_keys = ["l_field_1", "l_field_2"]
@@ -136,7 +134,6 @@ label_key = "c_larder_floor"
 upside_key = "up_larder_floor"
 work_s = 2400
 cap = 3
-failed_line_key = "l_floor_fail"
 inputs = [{ store = "stones", items = 18 }, { store = "damp_wood", items = 6 }]
 line_keys = ["l_larder_1", "l_larder_2", "l_larder_3"]
 [cards.finished]
@@ -150,7 +147,6 @@ label_key = "c_rack_roof"
 upside_key = "up_rack_roof"
 work_s = 2400
 cap = 2
-failed_line_key = "l_roof_fail"
 inputs = [{ store = "damp_wood", items = 18 }, { store = "dry_wood", items = 6 }]
 line_keys = ["l_roof_1", "l_roof_2"]
 [cards.finished]
@@ -169,7 +165,6 @@ label_key = "c_wood_stack"
 upside_key = "up_wood_stack"
 work_s = 2400
 cap = 3
-failed_line_key = "l_stack_fail"
 inputs = [{ store = "stack_ready", items = 1 }, { store = "damp_wood", items = 18 }, { store = "stones", items = 6 }]
 line_keys = ["l_stack_1", "l_stack_2", "l_stack_3"]
 [cards.finished]
@@ -182,7 +177,6 @@ label_key = "c_pot_shelf"
 upside_key = "up_pot_shelf"
 work_s = 2400
 cap = 3
-failed_line_key = "l_shelf_fail"
 inputs = [{ store = "shelf_ready", items = 1 }, { store = "stones", items = 12 }, { store = "damp_wood", items = 6 }]
 line_keys = ["l_shelf_1", "l_shelf_2", "l_shelf_3"]
 [cards.finished]
@@ -222,7 +216,6 @@ label_key = "c_clay_hearth"
 upside_key = "up_clay_hearth"
 work_s = 1800
 cap = 4
-failed_line_key = "l_hearth_fail"
 inputs = [{ store = "hearth_dry", items = 1 }, { store = "clay", items = 6 }, { store = "stones", items = 10 }, { store = "dry_wood", items = 2 }]
 outcome = { stores = [{ store = "hearth_wet", items = 1 }], starts = ["cure_hearth"] }
 line_keys = ["l_hearth_1", "l_hearth_2", "l_hearth_3", "l_hearth_done"]
@@ -244,7 +237,6 @@ presentation = "action"
 label_key = "c_cure_hearth"
 work_s = 38000
 cap = 4
-failed_line_key = "l_cure_fail"
 inputs = [{ store = "hearth_wet", items = 1 }]
 outcome = { stores = [{ store = "hearth_dry", items = 1 }] }
 
@@ -288,7 +280,6 @@ upside_of = "n2_eating"
 work_s = 20
 skill = "cooking"
 xp_per_hour = 36
-failed_line_key = "l_stew_fail"
 requires = [{ test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }]
 inputs = [{ store = "roots", items = 4 }, { store = "smoked", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 2 }] }
@@ -388,7 +379,6 @@ label_key = "c_bank_hearth"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_bank_hearth_fail"
 requires = [
   { test = "at_least", subject_kind = "store", id = "night_4", value = 1 },
   { test = "at_least", subject_kind = "skill_level", id = "foraging", value = 5 },
@@ -406,7 +396,6 @@ presentation = "craft"
 label_key = "c_watch_fire"
 work_s = 3600
 cap = 2
-failed_line_key = "l_watch_fail"
 inputs = [{ store = "stones", items = 12 }, { store = "dry_wood", items = 6 }]
 outcome = { stores = [{ store = "watch_done", items = 1 }] }
 
@@ -416,7 +405,6 @@ id = "n1_build_watch"
 lane = "n1"
 presentation = "craft"
 label_key = "c_n1_build_watch"
-failed_line_key = "l_watch_fail"
 work_s = 14400
 cap = 2
 inputs = [{ store = "stones", items = 12 }, { store = "dry_wood", items = 6 }]
@@ -444,7 +432,6 @@ id = "n1_watch"
 lane = "n1"
 presentation = "action"
 label_key = "c_n1_watch"
-failed_line_key = "l_watch_dry"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]
@@ -492,7 +479,6 @@ presentation = "craft"
 label_key = "c_make_bay"
 work_s = 18000
 cap = 1
-failed_line_key = "l_bay_fail"
 inputs = [{ store = "damp_wood", items = 12 }, { store = "stones", items = 12 }]
 outcome = { stores = [{ store = "bay", items = 1 }] }
 
@@ -545,7 +531,6 @@ id = "n2_build_bay"
 lane = "n2"
 presentation = "craft"
 label_key = "c_n2_build_bay"
-failed_line_key = "l_bay_fail"
 work_s = 18000
 cap = 1
 inputs = [{ store = "damp_wood", items = 12 }, { store = "stones", items = 12 }]
@@ -879,41 +864,31 @@ after = { unlock_kind = "feature", id = "warm_ground" }
 # ---------- text ----------
 
 [line_kinds]
-l_track_end_fail = "tap"
 l_edge_1 = "story"
 l_edge_2 = "story"
-l_track_fail = "tap"
 l_track_first = "find"
 l_stream = "find"
 l_field_1 = "story"
 l_field_2 = "story"
-l_floor_fail = "tap"
 l_larder_1 = "story"
 l_larder_2 = "story"
 l_larder_3 = "story"
 l_larder_done = "story"
-l_roof_fail = "tap"
 l_roof_1 = "story"
 l_roof_2 = "story"
 l_roof_done = "story"
-l_hearth_fail = "tap"
-l_cure_fail = "tap"
 l_hearth_1 = "story"
 l_hearth_2 = "story"
 l_hearth_3 = "story"
 l_hearth_done = "story"
-l_stew_fail = "tap"
 l_stew_first = "story"
 l_night_3a = "story"
 l_night_3b = "story"
 l_morning_4 = "story"
 l_watch_1 = "story"
 l_watch_2 = "story"
-l_watch_fail = "tap"
 l_watch_lit = "story"
-l_watch_dry = "tap"
 l_night_4 = "story"
-l_bank_hearth_fail = "tap"
 l_b5_1 = "story"
 l_b5_2 = "story"
 l_b5_3 = "story"
@@ -923,7 +898,6 @@ l_bay_go = "story"
 l_bay_his = "story"
 l_bay_help = "story"
 l_bay_mid = "story"
-l_bay_fail = "tap"
 l_join_1 = "find"
 l_join_2 = "find"
 l_his_first = "find"
@@ -937,11 +911,9 @@ l_clay_seam = "find"
 l_lee_lichen = "find"
 l_buckle = "find"
 l_thick_pot = "find"
-l_stack_fail = "tap"
 l_stack_1 = "story"
 l_stack_2 = "story"
 l_stack_3 = "story"
-l_shelf_fail = "tap"
 l_shelf_1 = "story"
 l_shelf_2 = "story"
 l_shelf_3 = "story"
@@ -955,7 +927,6 @@ store_arrivals = "arrivals"
 c_walk_edge = "Scout past the firelight"
 c_field_track = "Lay the track further out"
 c_track_end = "Walk the track to its end"
-l_track_end_fail = "you lose the track past the cairn. not yet."
 store_scrap = "scrap"
 store_clay = "clay"
 c_dig_clay = "Dig clay"
@@ -1023,38 +994,29 @@ aim_three = "keep three fed."
 aim_warm = "find out why the ground is warm."
 l_edge_1 = "scrub, thorn, thorn, a sunk track. the camp is easy to find."
 l_edge_2 = "the ash is thinnest where you started. you check twice."
-l_track_fail = "not enough laid by to go further."
 l_track_first = "a run: out on the laid wood to the cairn, and back."
 l_stream = "ash everywhere but the water. the clay on the bank is warm."
 l_field_1 = "you laid the track all this way for furrows."
 l_field_2 = "the track's whole yield: a rusted ploughshare. scrap."
-l_floor_fail = "you lay out a floor and run short."
 l_larder_1 = "a course of stone, so the roots stop sitting in wet."
 l_larder_2 = "a second course, flat enough to set a root on."
 l_larder_3 = "the last course is laid. level, give or take."
 l_larder_done = "lucy moves two roots, and looks at the rows."
-l_roof_fail = "the roof takes more wood than this."
 l_roof_1 = "poles go up over the drying wall."
 l_roof_2 = "thatch of anything at all. it shows."
 l_roof_done = "rain runs dark off the roof. what hangs under it stays pale."
-l_hearth_fail = "the next layer won't go down yet."
-l_cure_fail = "there's no new layer to dry."
 l_hearth_1 = "one course of clay. a mud ring, so far."
 l_hearth_2 = "more clay, pressed onto the dry course."
 l_hearth_3 = "a third course. everyone steps round it to the fire."
 l_hearth_done = "the fourth course goes on. a whole hearth, drying."
-l_stew_fail = "too little to fill the pot."
 l_stew_first = "the first pot of stew. lucy eats hers standing."
 l_night_3a = "two howls trade across the dark, closer in."
 l_night_3b = "lucy piles on wood without a word. nothing comes."
 l_morning_4 = "frost out to the thorn. the stone stays dark."
 l_watch_1 = "lucy lays stones at the gap. she brings more."
 l_watch_2 = "room inside for a fire, facing down the track."
-l_watch_fail = "the gap stays bare for now."
 l_watch_lit = "lucy keeps her fire, stick by stick, looking out."
-l_watch_dry = "no dry wood to feed her fire."
 l_night_4 = "nightfall. three bowls, and the pot scraped."
-l_bank_hearth_fail = "not yet. the hearth can wait."
 l_b5_1 = "you bank the new hearth. round it, the ash melts away."
 l_b5_2 = "the ground is warm. all three of you sit down."
 l_b5_3 = "faint red in the cracks. nobody gets up for more wood."
@@ -1064,7 +1026,6 @@ l_bay_go = "you start a bay off the lean-to."
 l_bay_his = "he starts the bay himself. he doesn't ask where."
 l_bay_help = "he holds the poles steady while you tie them."
 l_bay_mid = "the bay stands framed. half its roof is still sky."
-l_bay_fail = "the bay needs more than you have."
 l_join_1 = "he sits. lucy looks at him once, then works on."
 l_join_2 = "he says his name. the stores go three ways now."
 l_his_first = "he's at work before anyone tells him."
@@ -1078,11 +1039,9 @@ l_clay_seam = "a seam of clay in the bank, grey and deep."
 l_lee_lichen = "lichen in a cairn's lee, scraped off for the pot."
 l_buckle = "a buckle in the ash. no belt, but a good buckle."
 l_thick_pot = "a thick-walled pot, whole. it will take stew."
-l_stack_fail = "the stack won't go up yet."
 l_stack_1 = "stones in two rows, with room for wood across."
 l_stack_2 = "damp wood piled on the stones, bark side up."
 l_stack_3 = "the stack stands clear. the bottom logs stay dry."
-l_shelf_fail = "no shelf yet. the pots sit on the ground."
 l_shelf_1 = "a flat stone set, then another."
 l_shelf_2 = "boards of damp wood laid across the stones."
 l_shelf_3 = "the pots go up, out from underfoot."

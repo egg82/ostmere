@@ -13,7 +13,7 @@ from ashfall_app.engine import (
 from drains_world import BIG, CURE, D, F, I, K, PER_SECOND, X, X2, Y, at, card_view, cure, drained, kills, mixed, near
 from drains_world import tapped, world
 
-DONE, FAILED = LineKey("cure.done"), LineKey("cure.failed")
+DONE = LineKey("cure.done")
 SAMPLES = (0, 1, 2, 10, 39, 40, 41, 50, 99, 100, 101, 500)
 TRICKLE = StandingDef(ActionId("trickle"), makes=(Flow(X, per_hour(1)),))
 """x rises 1000 units a second: above 0 from the first second."""
@@ -148,13 +148,13 @@ def test_a_tap_with_the_store_hitting_zero_midway_keeps_its_lane_and_its_work():
 
 @kills(6)
 def test_a_players_tap_with_the_drain_store_at_zero_is_a_failed_tap():
-    """Invariant 123 (and 22): failed == the card, the save only advanced, the failed line emitted, the blocker
+    """Invariant 123 (and 22): failed == the card, the save only advanced, no line emitted, the blocker
     AtLeast(StoreValue(x), 1, 1) with no ready_at while nothing raises x."""
-    r = world(cure(failed_line=FAILED), x0=0)
+    r = world(cure(), x0=0)
     s0 = new_save(r)
     step = decide_logged(s0, r, 5, TapCard(CURE))
     assert step.failed == CURE and step.save == advance(s0, r, 5)
-    assert [(ln.key, ln.card) for ln in step.lines] == [(FAILED, CURE)] and step.save.lanes[0].card is None
+    assert step.lines == () and step.save.lanes[0].card is None
     blocker = card_view(step.save, r).blocker
     assert blocker is not None and blocker.condition == AtLeast(StoreValue(X), 1, 1) and blocker.ready_at is None
 
@@ -169,7 +169,7 @@ def test_the_blocker_has_a_ready_time_when_something_raises_the_store():
 @kills(6, 7)
 def test_a_tap_with_one_unit_in_the_store_starts_and_takes_nothing_at_its_start():
     """Invariant 123: x at 1 unit or more starts, and x is unchanged at the start instant (no lump at the start)."""
-    r = world(cure(failed_line=FAILED), x0=1)
+    r = world(cure(), x0=1)
     step = decide_logged(new_save(r), r, 0, TapCard(CURE))
     assert step.failed is None and step.lines == () and step.save.lanes[0].card == CURE
     assert card_view(step.save, r).blocker is None
@@ -188,7 +188,7 @@ def test_a_tap_at_a_low_level_pays_by_its_work_not_at_once():
 def test_an_order_or_queue_entry_naming_it_waits_for_the_store_to_exceed_zero_then_starts_it(verb: str):
     """Invariant 123 (and 23): at 0 nothing changes and no failed tap is made; READY falls when x first exceeds 0, and the
     card starts then with x unchanged at that instant."""
-    r = world(cure(failed_line=FAILED), x0=0, standing=(TRICKLE,))
+    r = world(cure(), x0=0, standing=(TRICKLE,))
     if verb == "order":
         v = SetOrders((Order(AfterTime(0), TapCard(CURE)),))
     else:

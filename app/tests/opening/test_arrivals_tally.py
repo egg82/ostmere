@@ -100,7 +100,7 @@ CARD = 'presentation = "action"\nlabel_key = "t_c_work"\nwork_s = 60\n'
 @pytest.mark.parametrize("old, new, match", [
     (CARD + "\n[[cards]]\nid = \"t_p3_work\"", CARD + 'costs = [{ store = "t_arrivals", items_per_hour = 1 }]\n\n[[cards]]\nid = "t_p3_work"',
      "t_p2_work: takes a tally store"),
-    (CARD + "\n[[features]]", CARD + 'inputs = [{ store = "t_arrivals", items = 1 }]\nfailed_line_key = "t_c_fail"\n\n[[features]]', "t_p3_work: takes a tally store"),
+    (CARD + "\n[[features]]", CARD + 'inputs = [{ store = "t_arrivals", items = 1 }]\n\n[[features]]', "t_p3_work: takes a tally store"),
     ('outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }]',
      'outcome = { unlocks = [{ unlock_kind = "card", id = "t_p2_work" }]', "joins 1 not yet counted but adds 0"),
     ('mix = "town:main", card = "t_p2_work" }', 'mix = "town:main", card = "t_p2_work", counted = true }', "joins 0 not yet counted but adds 1"),

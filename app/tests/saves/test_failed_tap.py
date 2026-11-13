@@ -40,15 +40,13 @@ def at_first_unready(saves: PgSaves, account: int, clock: FakeClock, rs: Ruleset
     return info.save_id, played, card
 
 
-def test_an_unready_tap_answers_at_once_with_its_line_and_names_the_card(
+def test_an_unready_tap_answers_at_once_with_no_line_and_names_the_card(
         saves: PgSaves, account: int, clock: FakeClock, rs: Ruleset, at_first_unready: tuple[int, Played, e.CardId]):
     save_id, played, card = at_first_unready
     clock.tick(1)
     failed = saves.decide(account, save_id, e.TapCard(card), after=played.decisions)
-    line = next(c.failed_line for c in rs.rules.cards if c.id == card)
-    assert line is not None
     assert failed.failed == card and failed.decisions == played.decisions + 1
-    assert [(ln.time, ln.key, ln.card) for ln in failed.lines if ln.card == card] == [(failed.save.time, line, card)]
+    assert [ln for ln in failed.lines if ln.card == card] == []
     assert all(ls.card != card for ls in failed.save.lanes)
     assert failed.save == e.advance(played.save, rs.rules, failed.save.time)
     step = Game(opening(), rs).step(failed)

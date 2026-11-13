@@ -218,7 +218,7 @@ Tasks or Completed: the row and its editor are their only way in. Fits into: the
   added (`smoked 2/6` lights both smoke tasks). An input nothing will bring again (a pool used up, nothing in play
   making it, no grant left) says so on its row (`flint 0/1, none left`). A tap still answers, at once and taking no time: the card glows red for a moment,
   what stopped it (that need, skill or step row, or the countdown when that is all it shows) flashes red and swells
-  in place, and its failed line shows. A busy card can't be tapped and looks it (its bar running, the card's surface
+  in place, and no text shows. A busy card can't be tapped and looks it (its bar running, the card's surface
   flat), except a glowing step not yet done while the queue or a rule holds the hands: it stays ready, takes its glow,
   and its tap cuts in (`decisions.md`, "A glowing step cuts in").
 - **A working card draws no needs.** Its inputs are drawn as the work runs, so the live store would read short of the

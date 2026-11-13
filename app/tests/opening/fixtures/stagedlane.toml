@@ -26,7 +26,6 @@ presentation = "craft"
 label_key = "t_c_raise"
 work_s = 60
 cap = 3
-failed_line_key = "t_l_raise_fail"
 inputs = [{ store = "t_logs", items = 4 }]
 
 [[cards]]
@@ -55,7 +54,6 @@ when = { test = "at_least", subject_kind = "store", id = "t_logs", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "card", id = "t_raise" }, { unlock_kind = "card", id = "t_sweep" }, { unlock_kind = "card", id = "t_haul" }] }
 
 [line_kinds]
-t_l_raise_fail = "story"
 
 [text]
 t_s_logs = "Logs"
@@ -64,4 +62,3 @@ t_l_hauler = "Hauler"
 t_c_raise = "Raise"
 t_c_sweep = "Sweep"
 t_c_haul = "Haul"
-t_l_raise_fail = "Not yet"

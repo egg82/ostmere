@@ -25,7 +25,6 @@ presentation = "action"
 label_key = "t_c_shovel"
 work_s = 600
 inputs = [{ store = "t_load", items = 8 }]
-failed_line_key = "t_l_shovel_fail"
 
 [[chips]]
 id = "t_laden"
@@ -45,7 +44,6 @@ when = { test = "after_time", value = 0 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "t_settle" }, { unlock_kind = "card", id = "t_shovel" }, { unlock_kind = "chip", id = "t_laden" }] }
 
 [line_kinds]
-t_l_shovel_fail = "story"
 
 [text]
 t_s_load = "Load"
@@ -53,4 +51,3 @@ t_a_settle = "Settling"
 t_l_helper = "Helper"
 t_c_shovel = "Shovel"
 t_ch_laden = "Laden"
-t_l_shovel_fail = "Nothing to shovel."

@@ -26,7 +26,6 @@ label_key = "t_c_gather"
 work_s = 60
 inputs = [{ store = "t_pool_card", items = 1 }]
 makes = [{ store = "dry_wood", items_per_hour = 30 }]
-failed_line_key = "t_l_gather_failed"
 
 [[features]]
 id = "t_next"
@@ -44,11 +43,9 @@ when = { test = "after_time", value = 50400 }
 outcome = { unlocks = [{ unlock_kind = "feature", id = "t_next" }] }
 
 [line_kinds]
-t_l_gather_failed = "story"
 
 [text]
 t_s_pool = "Season stock"
 t_s_pool_card = "Season haul"
 t_a_burn = "Season burn"
 t_c_gather = "Gather"
-t_l_gather_failed = "Nothing to gather."

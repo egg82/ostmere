@@ -297,7 +297,6 @@ lane = "rack"
 presentation = "action"
 label_key = "c_lay_to_dry"
 work_s = 45
-failed_line_key = "l_dry_fail"
 inputs = [{ store = "damp_wood", items = 3 }]
 outcome = { stores = [{ store = "dry_wood", items = 3 }] }
 
@@ -317,7 +316,6 @@ presentation = "narrative"
 label_key = "c_ring_it"
 work_s = 3
 cap = 1
-failed_line_key = "l_ring_fail"
 inputs = [{ store = "stones", items = 5 }]
 requires = [{ test = "at_least", subject_kind = "card_count", id = "clear_spot", value = 2 }]
 line_keys = ["l_ring"]
@@ -330,7 +328,6 @@ label_key = "c_strike_fire"
 work_s = 4
 cap = 1
 glows = true
-failed_line_key = "l_strike_fail"
 inputs = [{ store = "dry_wood", items = 1 }]
 requires = [
   { test = "at_least", subject_kind = "card_count", id = "ring_it", value = 1 },
@@ -355,7 +352,6 @@ presentation = "narrative"
 label_key = "c_knap_edge"
 work_s = 3
 cap = 2
-failed_line_key = "l_knap_fail"
 inputs = [{ store = "flint", items = 1 }]
 line_keys = ["l_knap_1", "l_knap_2"]
 [cards.finished]
@@ -375,7 +371,6 @@ presentation = "narrative"
 label_key = "c_roast_roots"
 work_s = 4
 cap = 1
-failed_line_key = "l_roast_fail"
 inputs = [{ store = "roots", items = 3 }]
 requires = [{ test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }]
 line_keys = ["l_roast"]
@@ -393,7 +388,6 @@ label_key = "c_make_stool"
 upside_key = "up_stool"
 work_s = 10
 cap = 1
-failed_line_key = "l_stool_fail"
 inputs = [{ store = "dry_wood", items = 3 }]
 requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 2 }]
 line_keys = ["l_stool"]
@@ -411,7 +405,6 @@ label_key = "c_build_fireback"
 upside_key = "up_fireback"
 work_s = 10
 cap = 1
-failed_line_key = "l_fireback_fail"
 inputs = [{ store = "dry_wood", items = 3 }, { store = "stones", items = 4 }]
 requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 2 }]
 line_keys = ["l_fireback"]
@@ -674,21 +667,14 @@ l_look = "story"
 l_coat = "story"
 l_wood = "story"
 l_nail = "find"
-l_dry_fail = "tap"
 l_clear_1 = "story"
-l_ring_fail = "tap"
 l_flint = "find"
-l_strike_fail = "tap"
 l_fire_takes = "story"
 l_fire_lit = "story"
-l_knap_fail = "tap"
 l_knap_2 = "story"
 l_roots = "story"
-l_roast_fail = "tap"
 l_roast = "story"
-l_stool_fail = "tap"
 l_stool = "story"
-l_fireback_fail = "tap"
 l_fireback = "story"
 l_wall = "story"
 l_clear_2 = "story"
@@ -1150,21 +1136,14 @@ l_look = "walls, mostly. a roof over one corner. grey every way you look, nothin
 l_coat = "inside the coat, a book with its first pages gone at the stitching. wrapped with it, a charcoal stick worn short."
 l_wood = "dead birch, snapped off by hand, wet through."
 l_nail = "under a fallen beam, a bent nail. you keep it."
-l_dry_fail = "not enough wet wood to lay along the wall."
 l_clear_1 = "you scrape the ash back to stone with the side of your boot."
-l_ring_fail = "you set down what stones you have. it isn't a ring yet."
 l_flint = "a grey stone that sparks against the nail. you carry it back in your fist."
-l_strike_fail = "you strike at the dry wood for a good while. it stays wood."
 l_fire_takes = "it takes. you sit close enough to smell your sleeves."
 l_fire_lit = "fire lit. it eats a stick every ten minutes."
-l_knap_fail = "you knock two of the ring's stones together until your wrists ache. neither takes an edge."
 l_knap_2 = "with the edge, a birch comes down in four strokes."
 l_roots = "roots under the scrub, bitter and full of grit."
-l_roast_fail = "not enough roots, or no fire to put them in."
 l_roast = "roasted, they go soft enough to eat. you eat three."
-l_stool_fail = "you work at a seat and legs. none of it would hold you."
 l_stool = "four legs, one of them short. you sit on it anyway."
-l_fireback_fail = "you start on the fireback. halfway up, it comes down."
 l_fireback = "stones stacked at the fire's back. its heat comes off them onto your face."
 
 # New in opening v2: moments that are new or changed.

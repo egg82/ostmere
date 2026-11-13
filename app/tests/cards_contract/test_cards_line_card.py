@@ -22,7 +22,7 @@ def world() -> Rules:
         cards=[CardDef(CC, 100, cap=2, lines=(LineKey("c.1"), LineKey("c.2")),
                        outcome=Outcome(lines=(LineKey("c.out"),)), finished=Outcome(lines=(LineKey("c.fin"),))),
                CardDef(CU, 100, lines=(LineKey("cu.tap"),)),
-               CardDef(CF, 100, inputs=(Amount(X, Q),), failed_line=LineKey("cf.failed")),
+               CardDef(CF, 100, inputs=(Amount(X, Q),)),
                CardDef(CK, 100, cap=1, outcome=Outcome(unlocks=(Unlock(UnlockKind.CHIP, WARM),)))],
         chips=[ChipDef(WARM, AtLeast(StoreValue(Y), Q, Q), (), on_line=LineKey("warm.on"))],
         triggers=[TriggerDef(TriggerId("t"), AtLeast(CardCount(CU), 2, 2), Outcome(lines=(LineKey("t.fired"),)))],
@@ -46,10 +46,10 @@ def test_a_mixed_completion_names_its_card_too():
     assert cards(step.lines) == [("c.1", CC), ("c.out", CC), ("c.2", CC), ("c.out", CC), ("c.fin", CC)]
 
 
-def test_an_uncapped_tap_line_and_a_failed_line_name_their_card():
+def test_an_uncapped_tap_line_names_its_card_and_a_failed_tap_has_none():
     r = world()
     assert cards(advance_logged(tap(new_save(r), r, 0, CU), r, 100).lines) == [("cu.tap", CU)]
-    assert cards(decide_logged(new_save(r), r, 0, TapCard(CF)).lines) == [("cf.failed", CF)]
+    assert cards(decide_logged(new_save(r), r, 0, TapCard(CF)).lines) == []
 
 
 def test_a_chip_line_an_outcome_shows_and_a_trigger_line_name_no_card():

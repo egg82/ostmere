@@ -40,7 +40,6 @@ label_key = "c_dig_cellar"
 upside_key = "up_dig_cellar"
 work_s = 2400
 cap = 4
-failed_line_key = "l_dig_fail"
 inputs = [{ store = "stakes", items = 16 }, { store = "damp_wood", items = 6 }]
 line_keys = ["l_dig_stage_1", "l_dig_stage_2", "l_dig_stage_3", "l_dig_done"]
 [cards.finished]
@@ -201,7 +200,6 @@ label_key = "c_hunt_bear"
 work_s = 2400
 skill = "melee"
 xp_per_hour = 2
-failed_line_key = "l_hunt_bear_fail"
 inputs = [{ store = "smoked", items = 2 }, { store = "bear_sign", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }, { store = "tallow", items = 2 }] }
 fight = { side = "hands", threat = "ash_bear", lost = "bear_lost", wounds = [{ store = "hurt", items = 2 }], won_line_keys = ["l_fight_bear_won_1", "l_fight_bear_won_2"], lost_line_keys = ["l_fight_bear_lost_1", "l_fight_bear_lost_2"] }
@@ -246,7 +244,6 @@ label_key = "c_tallow_lamps"
 upside_key = "up_tallow_lamps"
 work_s = 600
 cap = 3
-failed_line_key = "l_lamps_fail"
 inputs = [{ store = "tallow", items = 2 }, { store = "stakes", items = 2 }]
 line_keys = ["l_lamps_1", "l_lamps_2", "l_lamps_done"]
 [cards.finished]
@@ -501,7 +498,6 @@ label_key = "c_sit_last_night"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_sit_last_night_fail"
 requires = [{ test = "at_least", subject_kind = "store", id = "drift_clock", value = 163 }]
 
 # S4: the last night sat; week 2's last beat, the chapter's end feature.
@@ -541,7 +537,6 @@ upside_of = "n2_eating"
 work_s = 300
 skill = "cooking"
 xp_per_hour = 300
-failed_line_key = "l_broth_fail"
 inputs = [{ store = "catch", items = 2 }, { store = "dry_wood", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 2 }] }
 
@@ -552,7 +547,6 @@ label_key = "c_stone_ring"
 work_s = 60
 skill = "arcana"
 xp_per_hour = 300
-failed_line_key = "l_stone_ring_fail"
 inputs = [{ store = "damp_wood", items = 6 }]
 outcome = { stores = [{ store = "dry_wood", items = 1 }] }
 
@@ -563,7 +557,6 @@ label_key = "c_spar"
 work_s = 600
 skill = "melee"
 xp_per_hour = 300
-failed_line_key = "l_spar_fail"
 requires = [{ test = "at_least", subject_kind = "store", id = "drift_clock", value = 163 }]
 
 # ---------- levels and finds ----------
@@ -683,7 +676,6 @@ after = { unlock_kind = "feature", id = "cellar" }
 
 [line_kinds]
 l_dig_open = "story"
-l_dig_fail = "tap"
 l_dig_stage_1 = "story"
 l_dig_stage_2 = "story"
 l_dig_stage_3 = "story"
@@ -697,27 +689,21 @@ l_b12_1 = "story"
 l_b12_2 = "story"
 l_b12_3 = "story"
 l_bear_sign = "find"
-l_hunt_bear_fail = "tap"
 l_fight_bear_won_1 = "fight"
 l_fight_bear_won_2 = "fight"
 l_fight_bear_lost_1 = "fight"
 l_fight_bear_lost_2 = "fight"
 l_lamps = "story"
-l_lamps_fail = "tap"
 l_lamps_1 = "story"
 l_lamps_2 = "story"
 l_lamps_done = "story"
 l_sitter_1 = "story"
 l_sitter_2 = "story"
 l_night_14 = "story"
-l_sit_last_night_fail = "tap"
 l_s4_1 = "story"
 l_s4_2 = "story"
 l_s4_3 = "story"
 l_find_gap_wolf = "find"
-l_broth_fail = "tap"
-l_stone_ring_fail = "tap"
-l_spar_fail = "tap"
 l_camp_15 = "level"
 l_camp_16 = "level"
 
@@ -731,7 +717,6 @@ store_dig_clock = "clock"
 action_dig_clock = "Clock"
 c_dig_cellar = "Dig a storage pit"
 up_dig_cellar = "{pct} root capacity, {pct_b} larder strength, picks take less from the stumps"
-l_dig_fail = "the props need more than the pile gives."
 l_dig_stage_1 = "stakes go in to hold the sides."
 l_dig_stage_2 = "damp wood braces the driven stakes."
 l_dig_stage_3 = "the shoring is set firm."
@@ -758,7 +743,6 @@ store_tallow = "tallow"
 store_bear_lost = "bear hunts lost"
 threat_ash_bear = "Bear"
 c_hunt_bear = "Hunt the bear"
-l_hunt_bear_fail = "you do not have what this hunt takes."
 l_fight_bear_won_1 = "the bear falls. you take meat, fat and a pelt."
 l_fight_bear_won_2 = "the bear goes down in the trees. meat and fat come home."
 l_fight_bear_lost_1 = "the bear is bigger than its sign. you come back with nothing."
@@ -768,7 +752,6 @@ n_gutter_1 = "knot near the gutter"
 l_lamps = "bear fat melts in the stew pot. you split stakes to take it."
 c_tallow_lamps = "Make tallow lamps"
 up_tallow_lamps = "{pct} strength at the gap"
-l_lamps_fail = "the lamps are short of what they take."
 l_lamps_1 = "the fat clouds as it cools in the stakes."
 l_lamps_2 = "a row of filled stakes, set out to firm."
 l_lamps_done = "lamps stand lit on the gate posts."
@@ -823,18 +806,14 @@ store_night_14 = "night"
 action_night_14 = "Night"
 l_night_14 = "the light drops. the wolf remains."
 c_sit_last_night = "Sit the night out"
-l_sit_last_night_fail = "you sit with the fire. nothing comes of it."
 l_s4_1 = "the wind drops at once. ash comes down lighter."
 l_s4_2 = "everyone is near the coals. the guard is at the gap."
 l_s4_3 = "the edge of the light is empty. no prints where it sat."
 pays_find_melee_7 = "a pelt, {pct} hunting speed"
 l_find_gap_wolf = "at the gap, an old wolf is dead. you skin it."
 c_catch_broth = "Stew the catch"
-l_broth_fail = "the catch won't stretch to a pot."
 c_stone_ring = "Stack damp wood round the stone to dry"
-l_stone_ring_fail = "too little damp wood to stack around the stone."
 c_spar = "Spar with spears"
-l_spar_fail = "not yet. there is other work first."
 n_day_b12 = "the dig went through into a cellar under the ruin, square and dry, dug for keeping stores. a board on the wall, scored in groups, the last group unfinished"
 camp_pays_15 = "fungus holds {to}, was {from}"
 l_camp_15 = "more fungus fits in the store."

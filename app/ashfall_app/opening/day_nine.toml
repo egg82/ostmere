@@ -54,7 +54,6 @@ label_key = "c_gap_fire"
 upside_key = "up_gap_fire"
 work_s = 1200
 cap = 2
-failed_line_key = "l_gap_fire_fail"
 inputs = [{ store = "dry_wood", items = 6 }, { store = "stones", items = 8 }]
 line_keys = ["l_gap_fire_2", "l_gap_fire_done"]
 [cards.finished]
@@ -83,7 +82,6 @@ presentation = "narrative"
 label_key = "c_set_snare_4"
 work_s = 600
 cap = 1
-failed_line_key = "l_snare_4_fail"
 inputs = [{ store = "wire", items = 2 }, { store = "dry_wood", items = 2 }]
 [cards.finished]
 line_keys = ["l_snare_4"]
@@ -199,7 +197,6 @@ id = "peg_flaps"
 presentation = "action"
 label_key = "c_peg_flaps"
 work_s = 120
-failed_line_key = "l_peg_fail"
 inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
 
 [[cards]]
@@ -208,7 +205,6 @@ lane = "n1"
 presentation = "action"
 label_key = "c_n1_peg_flaps"
 work_s = 1200
-failed_line_key = "l_peg_fail"
 inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
 
 # "When draughty, {n1} pegs the flaps again": the chore's suggested rule (ash_laden's shape on her lane).
@@ -594,11 +590,9 @@ label_key = "feature_skin_post"
 l_ring_1 = "story"
 l_ring_2 = "story"
 l_gap_fire_1 = "story"
-l_gap_fire_fail = "tap"
 l_gap_fire_2 = "story"
 l_gap_fire_done = "story"
 l_old_wire = "find"
-l_snare_4_fail = "tap"
 l_snare_4 = "story"
 l_open_side_1 = "find"
 l_open_side_2 = "find"
@@ -610,7 +604,6 @@ l_b10_3 = "story"
 l_wind = "story"
 l_draughty = "body"
 l_draughty_off = "body"
-l_peg_fail = "tap"
 l_camp_14 = "level"
 l_posts = "story"
 l_gate_road = "story"
@@ -627,12 +620,10 @@ l_ring_2 = "she looks at the stakes, then along the line, and cuts."
 l_gap_fire_1 = "the watch fire gets a bed in the gap, edged with stones."
 c_gap_fire = "Build up the gap fire"
 up_gap_fire = "{pct} strength at the gap"
-l_gap_fire_fail = "the watch fire needs more than the pile has."
 l_gap_fire_2 = "dry wood is laid inside the stone edge."
 l_gap_fire_done = "stones close around the watch fire in the gap."
 l_old_wire = "old wire on a stake. your fingers undo its knot without looking."
 c_set_snare_4 = "Set a snare"
-l_snare_4_fail = "the snare doesn't come together with what's in the pile."
 l_snare_4 = "the rusted wire is straightened and staked."
 l_open_side_1 = "the pack comes by the side with no posts. it makes no sound."
 l_open_side_2 = "bare low rows. drag marks from a pelt's pegs into the scrub."
@@ -657,7 +648,6 @@ l_draughty = "air slips through the bays where the flaps lift."
 l_draughty_off = "the flap hems are weighted down."
 c_peg_flaps = "Peg the flaps down"
 c_n1_peg_flaps = "Peg the flaps down"
-l_peg_fail = "the hems cannot be pinned with what is there."
 camp_pays_14 = "stew holds {to}, was {from}"
 l_camp_14 = "the pot rides lower on its hook, fuller than it was."
 store_b10_floor = "clock"

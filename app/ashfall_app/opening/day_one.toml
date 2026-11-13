@@ -180,7 +180,6 @@ presentation = "narrative"
 label_key = "c_look_out"
 work_s = 5
 cap = 1
-failed_line_key = "l_look_out_fail"
 requires = [{ test = "at_least", subject_kind = "store", id = "night", value = 20 }]
 line_keys = ["l_look_out_1"]
 finished = { line_keys = ["l_look_out_2"], unlocks = [{ unlock_kind = "card", id = "set_snare" }] }
@@ -192,7 +191,6 @@ presentation = "narrative"
 label_key = "c_set_snare"
 work_s = 8
 cap = 3
-failed_line_key = "l_snare_fail"
 inputs = [{ store = "wire", items = 1 }]
 line_keys = ["l_snare_1", "l_snare_2", "l_snare_3"]
 
@@ -216,7 +214,6 @@ label_key = "c_build_lean_to"
 upside_key = "up_lean_to"
 work_s = 20
 cap = 1
-failed_line_key = "l_lean_to_fail"
 inputs = [{ store = "dry_wood", items = 10 }, { store = "stones", items = 2 }]
 requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 3 }]
 line_keys = ["l_lean_to"]
@@ -233,7 +230,6 @@ label_key = "c_build_larder"
 upside_key = "up_larder"
 work_s = 20
 cap = 1
-failed_line_key = "l_larder_fail"
 inputs = [{ store = "dry_wood", items = 4 }, { store = "stones", items = 12 }]
 requires = [{ test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 3 }]
 line_keys = ["l_larder"]
@@ -256,7 +252,6 @@ presentation = "craft"
 label_key = "c_build_smoke_rack"
 work_s = 30
 cap = 1
-failed_line_key = "l_rack_fail"
 inputs = [{ store = "damp_wood", items = 10 }, { store = "tinder_fungus", items = 1 }]
 requires = [{ test = "at_least", subject_kind = "card_count", id = "look_over_camp", value = 1 }]
 line_keys = ["l_rack"]
@@ -278,7 +273,6 @@ label_key = "c_smoke_catch"
 work_s = 80
 skill = "cooking"
 xp_per_hour = 18
-failed_line_key = "l_smoke_fail"
 inputs = [{ store = "catch", items = 4 }, { store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "smoked", items = 2 }] }
 
@@ -293,18 +287,16 @@ label_key = "c_smoke_roots"
 work_s = 80
 skill = "cooking"
 xp_per_hour = 18
-failed_line_key = "l_smoke_fail"
 inputs = [{ store = "roots", items = 3 }, { store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "smoked", items = 2 }] }
 
-# The opening's roast, as often as hunger comes back: roots over the fire for fullness. Its label and failed line are
-# the roast's, so the step the player took once is the one they take again. Opened by t_cook.
+# The opening's roast, as often as hunger comes back: roots over the fire for fullness. Its label is the roast's, so the
+# step the player took once is the one they take again. Opened by t_cook.
 [[cards]]
 id = "cook_roots"
 presentation = "action"
 label_key = "c_roast_roots"
 work_s = 4
-failed_line_key = "l_roast_fail"
 inputs = [{ store = "roots", items = 3 }]
 requires = [{ test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }]
 outcome = { stores = [{ store = "fullness", items = 7 }] }
@@ -318,7 +310,6 @@ presentation = "narrative"
 label_key = "c_take_stock"
 work_s = 10
 cap = 1
-failed_line_key = "l_take_stock_fail"
 requires = [
   { test = "at_least", subject_kind = "store", id = "smoked", value = 6 },
   { test = "at_least", subject_kind = "store", id = "roots", value = 15 },
@@ -868,7 +859,6 @@ id = "weave_wattle"
 presentation = "action"
 label_key = "c_weave_wattle"
 work_s = 180
-failed_line_key = "l_weave_fail"
 inputs = [{ store = "damp_wood", items = 18 }]
 outcome = { stores = [{ store = "wattle", items = 1 }] }
 
@@ -880,7 +870,6 @@ label_key = "c_screen_fire"
 upside_key = "up_screen_fire"
 work_s = 30
 cap = 4
-failed_line_key = "l_screen_fail"
 inputs = [{ store = "wattle", items = 24 }, { store = "stones", items = 12 }]
 line_keys = ["l_screen_1", "l_screen_2", "l_screen_3", "l_screen_4"]
 [cards.finished]
@@ -1014,7 +1003,6 @@ l_sit_up = "story"
 l_morning = "story"
 l_look_out_1 = "story"
 l_look_out_2 = "story"
-l_look_out_fail = "tap"
 l_wire_1 = "find"
 l_wire_2 = "find"
 l_wire_3 = "find"
@@ -1022,24 +1010,18 @@ l_tinder = "find"
 l_snare_1 = "story"
 l_snare_2 = "story"
 l_snare_3 = "story"
-l_snare_fail = "tap"
 l_first_catch = "story"
 l_camp_daylight = "story"
 l_lean_to = "story"
 l_larder = "story"
-l_lean_to_fail = "tap"
-l_larder_fail = "tap"
 l_rack_shown = "story"
 l_rack = "story"
-l_rack_fail = "tap"
 l_cooking_open = "story"
 l_smoke_1 = "story"
-l_smoke_fail = "tap"
 l_cooking_2 = "level"
 l_prints_1 = "find"
 l_prints_2 = "find"
 l_smoke_roots = "story"
-l_take_stock_fail = "tap"
 l_b3_1 = "story"
 l_b3_2 = "story"
 l_b3_3 = "story"
@@ -1048,8 +1030,6 @@ l_camp_3 = "level"
 l_camp_4 = "level"
 l_camp_5 = "level"
 l_camp_6 = "level"
-l_weave_fail = "tap"
-l_screen_fail = "tap"
 l_screen_1 = "story"
 l_screen_2 = "story"
 l_screen_3 = "story"
@@ -1134,7 +1114,6 @@ l_sit_up = "the light holds still. you keep yours low."
 l_morning = "morning. the ridge light is out. your fire lasted the night."
 l_look_out_1 = "fog fills the bowl, steam rising through it. old fields, still in rows."
 l_look_out_2 = "where the light was, something dark and square."
-l_look_out_fail = "past the gap it's all dark, but for the one light."
 l_wire_1 = "wire from the ruins. it rings when you flick it."
 l_wire_2 = "a second wire. you work the kinks out."
 l_wire_3 = "more wire, stiff with rust at one end."
@@ -1142,24 +1121,18 @@ l_tinder = "bracket fungus on dead birch, dry inside."
 l_snare_1 = "the run you chose has a snare in it, rusted to flakes."
 l_snare_2 = "you set the second a stride from the first, along the same run."
 l_snare_3 = "the third goes in fast. you have the knot now."
-l_snare_fail = "without wire, it's only crouching in the scrub."
 l_first_catch = "an ashrat in a snare, gone quiet."
 l_camp_daylight = "ash on all you left out, you too. the roots are soft."
 l_lean_to = "birch poles, leaned. the open side faces the ridge."
 l_larder = "a larder of piled stone, a hand's width off the ground."
-l_lean_to_fail = "the poles clack together and won't stand."
-l_larder_fail = "you get the larder to knee height and no further."
 l_rack_shown = "meat goes off fast on warm ground. hung in smoke, it lasts."
 l_rack = "a birch rack over a smouldering knot of fungus."
-l_rack_fail = "it needs green poles and a smoulder."
 l_cooking_open = "cooking, the slow way: smoke and a long wait."
 l_smoke_1 = "no wind. the smoke stands straight up. you could steer by it."
-l_smoke_fail = "not enough to smoke. the rack sits cold."
 l_cooking_2 = "you get the knack of packing the rack. more fits."
 l_prints_1 = "one set of prints, from the gap to the larder."
 l_prints_2 = "three roots gone. smoked meat left, not yours."
 l_smoke_roots = "roots will smoke too. they come out like leather."
-l_take_stock_fail = "you tally the stores. there's nothing to spare yet."
 l_b3_1 = "you count the food twice. the count holds. you look up."
 l_b3_2 = "a figure comes out of the ash at the gap. alone."
 l_b3_3 = "she looks over the larder, then sits on your side of the fire."
@@ -1172,8 +1145,6 @@ store_wattle = "wattle"
 c_weave_wattle = "Weave wattle"
 c_screen_fire = "Build a screen round the fire"
 up_screen_fire = "{pct} warmth lost to the cold"
-l_weave_fail = "nothing green left to weave."
-l_screen_fail = "the screen won't go higher with what's here."
 l_screen_1 = "a wattle hurdle staked beside the fire. the heat stops at it."
 l_screen_2 = "a second hurdle, angled to the first. you sit in the corner they make."
 l_screen_3 = "a third hurdle. the firelight stays inside the screen now."

@@ -63,7 +63,6 @@ presentation = "craft"
 label_key = "c_make_hut"
 work_s = 10800
 cap = 1
-failed_line_key = "l_hut_fail"
 inputs = [{ store = "stakes", items = 16 }, { store = "stones", items = 12 }]
 outcome = { stores = [{ store = "hut", items = 1 }] }
 
@@ -96,7 +95,6 @@ id = "n5_build_hut"
 lane = "n5"
 presentation = "craft"
 label_key = "c_n5_build_hut"
-failed_line_key = "l_hut_fail"
 work_s = 10800
 cap = 1
 inputs = [{ store = "stakes", items = 16 }, { store = "stones", items = 12 }]
@@ -118,7 +116,6 @@ id = "{lane}_watch"
 lanes = ["n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_watch"
-failed_line_key = "l_lane_watch_dry"
 work_s = 1200
 inputs = [{ store = "dry_wood", items = 1 }]
 while_running = [{ side = "gap", amount_bp = 5000 }]
@@ -319,7 +316,6 @@ presentation = "narrative"
 label_key = "c_arm_n2"
 work_s = 600
 cap = 1
-failed_line_key = "l_arm_fail"
 inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
 
 [[cards]]
@@ -328,7 +324,6 @@ presentation = "narrative"
 label_key = "c_arm_n7"
 work_s = 600
 cap = 1
-failed_line_key = "l_arm_fail"
 inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
 
 # The guard at the gap: makes nothing, and holds the gap's entry while it runs, at its share of the lane's time.
@@ -387,7 +382,6 @@ label_key = "c_n6_posts"
 upside_key = "up_n6_posts"
 work_s = 3600
 cap = 1
-failed_line_key = "l_n6_posts_fail"
 inputs = [{ store = "stakes", items = 12 }]
 line_keys = ["l_n6_posts_done"]
 [cards.finished]
@@ -430,7 +424,6 @@ label_key = "c_keep_vigil"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_vigil_fail"
 requires = [
   { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 445 },
   { test = "at_least", subject_kind = "store", id = "guard_made", value = 1 },
@@ -493,25 +486,20 @@ l_family_1 = "story"
 l_family_2 = "story"
 l_hut_go = "story"
 l_hut_theirs = "story"
-l_hut_fail = "tap"
 l_join3_1 = "find"
 l_join3_2 = "find"
 l_guard_ask = "story"
-l_arm_fail = "tap"
 l_guard_n2_1 = "find"
 l_guard_n2_2 = "find"
 l_guard_n7_1 = "find"
 l_guard_n7_2 = "find"
 l_leaning_posts = "story"
-l_n6_posts_fail = "tap"
 l_n6_posts_done = "story"
 l_count = "story"
 l_night_12 = "story"
-l_vigil_fail = "tap"
 l_b11_1 = "story"
 l_b11_2 = "story"
 l_b11_3 = "story"
-l_lane_watch_dry = "tap"
 
 [text]
 # ---------- lines: [day two: line to write] ----------
@@ -531,7 +519,6 @@ l_hut_go = "the hut goes up under your hands."
 l_hut_theirs = "the hut goes up under her hands."
 c_make_hut = "Build a hut"
 c_n5_build_hut = "Build a hut"
-l_hut_fail = "the hut waits for what the pile lacks."
 store_hut = "hut"
 lane_n5 = "The woman's hands"
 lane_n5_named = "{n5}"
@@ -557,7 +544,6 @@ a_guard_n7 = "{n7} stands guard"
 a_guard_n7_cost = "{d} of your time, {n7} on guard"
 c_arm_n2 = "Make {n2} a spear"
 c_arm_n7 = "Make {n7} a spear"
-l_arm_fail = "there is not enough here to make the spear."
 c_n2_guard = "Guard the gap"
 c_n7_guard = "Guard the gap"
 up_guard = "{pct} strength at the gap while on guard"
@@ -568,20 +554,17 @@ l_guard_n7_2 = "{n7} takes it at the watch fire and faces the dark."
 l_leaning_posts = "{n6} tries each post by hand. three lean. he asks for stakes."
 c_n6_posts = "Brace the leaning posts"
 up_n6_posts = "{pct} strength at the gap"
-l_n6_posts_fail = "there aren't stakes for the leaning posts."
 l_n6_posts_done = "{n6}'s stakes brace the leaning posts."
 l_count = "the crows count one short. lucy goes to wake him. he is dead."
 store_night_12 = "night"
 action_night_12 = "Night"
 l_night_12 = "people gather at the fire. he lies covered."
 c_keep_vigil = "Keep the vigil"
-l_vigil_fail = "you stand by him and do not begin."
 l_b11_1 = "the camp sits up with him. the guard holds the gap."
 l_b11_2 = "someone's hand lies flat on the warm ground while he burns."
 l_b11_3 = "lucy cuts his mark on a board. beside it, nothing."
 aim_hut = "build them a place inside the wall."
 c_lane_watch = "Keep the fire at the gap"
-l_lane_watch_dry = "the watch fire is short of dry wood."
 store_guard_made = "clock"
 o_door = "{n2} pegs a door together for the new hut."
 a_door_fire = "He hangs it fire side"

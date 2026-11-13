@@ -68,7 +68,6 @@ presentation = "action"
 label_key = "t_c_tend"
 work_s = 30
 inputs = [{ store = "t_bitten", items = 1 }]
-failed_line_key = "t_l_tend_failed"
 
 [[features]]
 id = "combat"
@@ -118,7 +117,6 @@ entry = "j_page_b"
 gate = { test = "after_time", value = 300 }
 
 [line_kinds]
-t_l_tend_failed = "story"
 
 [text]
 j_note_a1 = "A first thing, set down in ink."
@@ -135,4 +133,3 @@ t_a_dusk = "Dusk falling"
 t_a_raid = "Rats at the stores"
 t_c_hunt = "Hunt"
 t_c_tend = "Tend bites"
-t_l_tend_failed = "Nothing to tend."

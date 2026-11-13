@@ -26,7 +26,7 @@ CARD_A = CardDef(
     outcome=Outcome(stores=(Amount(Y, Q),), unlocks=(Unlock(UnlockKind.CARD, CB),), modifiers=(mul(WorkRef(CB), 5000, "a"),),
                     raises=(CapRaise(CA, 1),), starts=(RB,), lines=(LineKey("ca.out"),)),
     finished=Outcome(lines=(LineKey("ca.fin"),), raises=(CapRaise(RB, 2),)),
-    lines=(LineKey("ca.1"), LineKey("ca.2")), failed_line=LineKey("ca.failed"))
+    lines=(LineKey("ca.1"), LineKey("ca.2")))
 CARD_B = CardDef(CB, 50, skill=K, xp_per_hour=100, makes=(Flow(Y, 1000),), costs=(Flow(Z, 500),),
                  lines=(LineKey("cb.tap"),))
 CARD_R = CardDef(RB, 30, lane=RACK, cap=3, outcome=Outcome(starts=(CA,)))  # a rack completion may start a hands card

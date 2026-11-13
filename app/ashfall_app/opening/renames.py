@@ -8,7 +8,7 @@ import tomllib
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from ..engine import IdKind, Rename
 from .convert import note_trigger_id, offer_trigger_id
@@ -23,9 +23,18 @@ can carry."""
 
 
 class RenameEntry(Entry):
+    """A rename. A `line` entry with no `to` retires the text key: nothing shows it any more, and a stored line that
+    carries it is dropped when a save opens."""
+
     kind: LockKind
     old: str = Field(alias="from")
-    new: str = Field(alias="to")
+    new: str | None = Field(default=None, alias="to")
+
+    @model_validator(mode="after")
+    def _only_a_line_is_retired(self) -> "RenameEntry":
+        if self.new is None and self.kind != "line":
+            raise ValueError(f"{self.kind} {self.old} has no `to`: only a line can be retired")
+        return self
 
 
 class RenamesFile(Entry):
@@ -44,11 +53,11 @@ def load_renames(path: Path = RENAMES) -> list[RenameEntry]:
 def _offer_trigger(r: RenameEntry) -> tuple[RenameEntry, ...]:
     """The rename of the trigger the loader made for a renamed offer or note."""
     made = {"offer": offer_trigger_id, "note": note_trigger_id}.get(r.kind)
-    if made is None:
+    if made is None or r.new is None:
         return ()
     return (RenameEntry.model_validate({"kind": "trigger", "from": made(r.old), "to": made(r.new)}),)
 
 
 def engine_renames(entries: list[RenameEntry]) -> tuple[Rename, ...]:
     """The entries a save can name (every kind but `line`: lines are never stored on a save)."""
-    return tuple(Rename(IdKind(r.kind), r.old, r.new) for r in entries if r.kind != "line")
+    return tuple(Rename(IdKind(r.kind), r.old, r.new) for r in entries if r.kind != "line" and r.new is not None)

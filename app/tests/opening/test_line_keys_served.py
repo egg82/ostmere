@@ -67,10 +67,10 @@ def test_every_story_line_key_is_served_once(content: Content) -> None:
 
 
 def test_the_walk_finds_a_planted_line() -> None:
-    """Control: a card line, a failed line and an outcome's line planted in the Rules are each found."""
+    """Control: a card line and an outcome's line planted in the Rules are each found."""
     rules = opening_rules()
     card = rules.cards[0]
-    planted = dataclasses.replace(card, lines=(*card.lines, "planted.line"), failed_line="planted.failed",
+    planted = dataclasses.replace(card, lines=(*card.lines, "planted.line"),
                                   outcome=dataclasses.replace(card.outcome, lines=("planted.outcome",)))
     found = engine_line_keys(dataclasses.replace(rules, cards=(planted, *rules.cards[1:])), set())
-    assert {"planted.line", "planted.failed", "planted.outcome"} <= found
+    assert {"planted.line", "planted.outcome"} <= found

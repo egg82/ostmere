@@ -17,8 +17,8 @@ from town_mix_world import lane_card, stored
 
 LATE = TriggerDef(TriggerId("late"), AfterTime(200), Outcome(joins=(join(LD, D1),), orders=(RuleInstall(DC),)))
 """At 200: a join of ld, and an install of its capped card's always rule."""
-PIN = "85277cdc413e3d7756de8539ac6f3247f716a920af194a92a4656b56d05349ba"
-"""rules_digest(rules(None)) as the engine computed it before this part: rules with no leave keep it."""
+PIN = "557f05c40bf8008631adb005a06854c3777f95e3a26b42a76d7c580406f2c414"
+"""rules_digest(rules(None)) for rules with no leave, which a leave-free world keeps."""
 
 
 def ld_world(leaves: bool) -> Rules:

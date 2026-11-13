@@ -26,7 +26,7 @@ class TapCard:
 
     From the player: a card on a ruled lane (set by rules), a locked or unknown card, a busy lane, or a completed card
     raises InvalidVerbError; an unready
-    card is a failed tap: it takes no time and changes nothing, and its failed_line is emitted at once. From an order,
+    card is a failed tap: it takes no time, changes nothing and emits no line. From an order,
     the queue or an Outcome: any of those, or an unready card, changes nothing. A player's tap does not make orders
     and the queue evaluate; its landing does.
     """

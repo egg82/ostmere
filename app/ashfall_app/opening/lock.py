@@ -38,8 +38,8 @@ class Lock(BaseModel):
     curve: list[int]
     outcomes: dict[str, JsonValue]
     """Trigger id to its outcome as the engine codec writes it, ids forwarded through the renames."""
-    renames: list[dict[str, str]]
-    """Every rename applied, as {kind, from, to}, in file order."""
+    renames: list[dict[str, str | None]]
+    """Every rename applied, as {kind, from, to}, in file order; `to` is None for a retired line."""
     release: int = 0
     """The content release this lock records; 0 before the first."""
     digest: str = ""
@@ -131,7 +131,8 @@ class Forwarding:
     def __init__(self, renames: Iterable[RenameEntry], standing: Iterable[str], cards: Iterable[str]) -> None:
         entries = list(renames)
         self.engine = Renamer(engine_renames(entries), standing, cards)
-        self._lines = {r.old: r.new for r in entries if r.kind == "line"}
+        self._lines = {r.old: r.new for r in entries if r.kind == "line" and r.new is not None}
+        self.retired = frozenset(r.old for r in entries if r.kind == "line" and r.new is None)
 
     def line(self, key: str) -> str:
         seen = {key}
@@ -143,8 +144,8 @@ class Forwarding:
 
 def forwarding(renames: list[RenameEntry]) -> Forwarding:
     """Runners are told apart by the renames' own kinds: a runner is a card unless a standing rename names it."""
-    standing = {r.old for r in renames if r.kind == "standing"} | {r.new for r in renames if r.kind == "standing"}
-    cards = {r.old for r in renames if r.kind == "card"} | {r.new for r in renames if r.kind == "card"}
+    standing = {n for r in renames if r.kind == "standing" for n in (r.old, r.new) if n is not None}
+    cards = {n for r in renames if r.kind == "card" for n in (r.old, r.new) if n is not None}
     return Forwarding(renames, standing, cards)
 
 
@@ -158,5 +159,5 @@ def _json_value(j: Json) -> JsonValue:
     return cast(JsonValue, j)  # cast -- one shape under two names; list invariance blocks it
 
 
-def _rename_json(r: RenameEntry) -> dict[str, str]:
+def _rename_json(r: RenameEntry) -> dict[str, str | None]:
     return {"kind": r.kind, "from": r.old, "to": r.new}

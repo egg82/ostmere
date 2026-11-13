@@ -16,8 +16,8 @@ from leaves_world import ended_changes, expected_ends, kills, logged_end
 from retire_world import C1, C2, OA, OB, OC, OD, OE, OF, ORDERS, LR, R1, R2, T0, TURN, rules, scene, turn
 from town_mix_world import card_view, lane_card
 
-PIN = "2d062104336566b55da08cf2329c283d724501c545ddc56c060279838b1d73aa"
-"""rules_digest(rules(None)) as the engine computed it before this part: rules with no retire_orders keep it."""
+PIN = "1293faf452dd5d5ebcab8c78a23c64345e439939bf2ccf7a0b0a8f6e46d23356"
+"""rules_digest(rules(None)) for rules with no retire_orders, which such a world keeps."""
 
 
 def worlds() -> tuple[Rules, Rules, Save, Save]:

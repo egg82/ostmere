@@ -112,8 +112,6 @@ def _check_parts(o: "Opening") -> None:
             need(where, "skill", c.skill, ids["skill"])
         for f in (*c.makes, *c.costs):
             need(where, "store", f.store, ids["store"])
-        if (c.inputs or c.requires) and c.failed_line_key is None:
-            fail(where, "can be tapped unready (it has inputs or requires) but has no failed_line_key")
     for where, out in outcomes(o):
         for q in out.starts:
             need(where, "card", q, ids["card"])
@@ -225,7 +223,7 @@ def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
         yield from ((f"lane {x.id}", lb.label_key) for lb in x.later_labels)
         yield from ((f"lane {x.id}", k) for k in (x.name_key,) if k is not None)
     for c in o.cards:
-        singles = (c.label_key, c.upside_key, c.failed_line_key)
+        singles = (c.label_key, c.upside_key)
         yield from ((f"card {c.id}", k) for k in (*singles, *c.line_keys) if k is not None)
     for ch in o.chips:
         yield from ((f"chip {ch.id}", k) for k in (ch.label_key, ch.cost_key, ch.on_line_key, ch.off_line_key)

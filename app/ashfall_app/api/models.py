@@ -257,7 +257,7 @@ class Step(BaseModel):
     lines: list[LogLine]
     failed_tap: str | None
     """The card, when this answers the player's tap of it and it was not ready: a failed tap, which took no time and
-    changed nothing; its failed line, if it has one, is in lines, and the card's blocker in view is what stopped it."""
+    changed nothing and emitted no line; the card's blocker in view is what stopped it."""
     repeats: Repeats
     """What the player keeps doing by hand, as of view.at (CONTRACT.txt, "Repeats")."""
     rule_runs: list[RuleRun]

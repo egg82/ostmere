@@ -69,7 +69,6 @@ label_key = "c_pelt_bedding"
 upside_key = "up_pelt_bedding"
 work_s = 1800
 cap = 6
-failed_line_key = "l_bedding_fail"
 inputs = [{ store = "pelt", items = 1 }, { store = "damp_wood", items = 6 }]
 line_keys = ["l_bedding_1", "l_bedding_2", "l_bedding_3", "l_bedding_4", "l_bedding_5", "l_bedding_done"]
 [cards.finished]
@@ -129,7 +128,6 @@ presentation = "narrative"
 label_key = "c_give_pelt"
 work_s = 5
 cap = 1
-failed_line_key = "l_give_pelt_fail"
 inputs = [{ store = "pelt", items = 1 }]
 line_keys = ["l_pelt_given"]
 
@@ -200,7 +198,6 @@ label_key = "c_sit_fire_7"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_sit_fire_7_fail"
 requires = [
   { test = "at_least", subject_kind = "store", id = "night_7", value = 5 },
   { test = "at_least", subject_kind = "store", id = "smoked", value = 18 },
@@ -252,7 +249,6 @@ l_rats_first = "story"
 l_crows_first = "story"
 l_hunt_1 = "story"
 l_hunt_2 = "story"
-l_bedding_fail = "tap"
 l_bedding_1 = "story"
 l_bedding_2 = "story"
 l_bedding_3 = "story"
@@ -261,10 +257,8 @@ l_bedding_5 = "story"
 l_bedding_done = "story"
 l_pelt_ask = "story"
 l_pelt_kept = "story"
-l_give_pelt_fail = "tap"
 l_pelt_given = "story"
 l_night_7 = "story"
-l_sit_fire_7_fail = "tap"
 l_g2_1 = "story"
 l_g2_2 = "story"
 l_g2_3 = "story"
@@ -285,7 +279,6 @@ l_hunt_1 = "a wolf by itself, every rib showing, teeth worn down."
 l_hunt_2 = "the meat is lean. it had gone without too."
 c_pelt_bedding = "Lay pelt bedding"
 up_pelt_bedding = "{pct} rest recovery"
-l_bedding_fail = "what you have won't cover a floor."
 l_bedding_1 = "you lay damp wood flat across the bay floors."
 l_bedding_2 = "pelts over the wood, fur up. you knee out the lumps."
 l_bedding_3 = "another pelt down, in the second bay. it still smells of wolf."
@@ -302,7 +295,6 @@ a_pelt_keep = "Sacking"
 a_pelt_keep_cost = "nothing"
 l_pelt_kept = "{n3} lays sacking over the ground and weights it."
 c_give_pelt = "Give {n3} a pelt"
-l_give_pelt_fail = "no pelt to hand over."
 l_pelt_given = "{n3} lays the pelt over the ground and weights it."
 store_day_7 = "day"
 action_day_7 = "Day"
@@ -310,7 +302,6 @@ store_night_7 = "night"
 action_night_7 = "Night"
 l_night_7 = "dusk. the strips are already up."
 c_sit_fire_7 = "Sit at the fire"
-l_sit_fire_7_fail = "you stand by the coals. nobody sits."
 l_g2_1 = "the rack hangs heavy. you stop counting."
 l_g2_2 = "lucy sits facing the others, over the flames."
 l_g2_3 = "the smoke leans. beyond the light, nothing."
