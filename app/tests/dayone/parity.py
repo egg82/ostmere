@@ -15,6 +15,7 @@ Measured on both: every store and skill XP at the common time, when each push of
 each store lost at its cap (its net while full, integrated)."""
 from dataclasses import dataclass, field
 from math import floor
+from multiprocessing import get_context
 
 from ashfall_app.engine import (
     AtLeast, CardId, InvalidVerbError, Rules, Save, SetOrders, SetQueue, TapCard, Verb, advance, decide, next_event,
@@ -98,6 +99,16 @@ def replay(rules: Rules, start: Save, log: list[tuple[int, Verb]], until: int, b
                 if x is not None)
         _waste(m, s, rules, t - s.time)
         s = advance(s, rules, t)
+
+
+def replay_pair(rules: Rules, start: Save, log: list[tuple[int, Verb]], until: int, present: Present,
+                boosts: tuple[str, ...] = BOOSTS) -> tuple[Measured, Measured]:
+    """(W, B): `log` replayed as it was and as a babysitter, the babysitter's in a child process while this one plays
+    the whenever player's. The two share nothing past the first few game hours, so this halves the wall clock of a
+    long chapter's pair on a machine with a core to spare."""
+    with get_context("spawn").Pool(1) as pool:   # leaving it terminates the child, so a timeout here is not held up
+        b = pool.apply_async(replay, (rules, start, babysat(log), until, True, present, boosts))
+        return replay(rules, start, log, until, False, boosts=boosts), b.get()
 
 
 def _try(s: Save, rules: Rules, verb: Verb) -> Save:
