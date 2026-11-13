@@ -1,6 +1,6 @@
 """The per-test time gate (time_gate.py): its verdicts can fail, a slow function fixture fails the test it serves, a slow
-shared fixture fails by name and is not charged to the tests that use it, a playthrough is not timed, and the held
-lists stay empty."""
+shared fixture fails by name and is not charged to the tests that use it (a slow test after its first user still
+fails), a playthrough is not timed, and the held lists stay empty."""
 import pytest
 
 from tests import time_gate as gate
@@ -13,12 +13,17 @@ import pytest
 
 @pytest.fixture
 def slow():
-    time.sleep(0.3)
+    time.sleep(0.15)
     yield
 
 @pytest.fixture(scope="session")
 def tree():
-    time.sleep(0.3)
+    time.sleep(0.4)
+    return 1
+
+@pytest.fixture(scope="session")
+def bush():
+    time.sleep(0.1)
     return 1
 
 def test_slow_setup(slow):
@@ -29,6 +34,12 @@ def test_uses_tree(tree):
 
 def test_uses_tree_again(tree):
     pass
+
+def test_slow_after_the_shared_fixture(tree, slow):
+    pass
+
+def test_slow_in_its_body_after_a_shared_fixture_it_set_up(bush):
+    time.sleep(0.15)
 
 @pytest.mark.playthrough
 def test_a_slow_playthrough(slow):
@@ -59,15 +70,17 @@ def test_the_held_lists_stay_empty():
 
 def test_the_gate_fails_slow_fixtures_and_spares_a_playthrough(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
     """The gate, registered as conftest.py registers it, run in-process over a file whose only costs are fixtures'
-    sleeps, under a 0.1 s test ceiling and a 0.2 s shared-fixture ceiling."""
-    monkeypatch.setattr(gate, "CEILING_S", 0.1)
-    monkeypatch.setattr(gate, "FIXTURE_CEILING_S", 0.2)
+    sleeps, under a 0.08 s test ceiling and a 0.3 s shared-fixture ceiling."""
+    monkeypatch.setattr(gate, "CEILING_S", 0.08)
+    monkeypatch.setattr(gate, "FIXTURE_CEILING_S", 0.3)
     pytester.makeini("[pytest]\nmarkers =\n    playthrough: a whole-game simulation\n")
     pytester.makeconftest("from tests import time_gate\n\n"
                           "def pytest_configure(config):\n    config.pluginmanager.register(time_gate, 'time_gate')\n")
     pytester.makepyfile(test_control=CONTROL)
     result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
-    result.assert_outcomes(passed=4, errors=2)
-    result.stdout.fnmatch_lines(["*test_slow_setup took 0.3*s of wall clock*",
-                                 "*fixture tree (session scope) took 0.3*s to set up*",
-                                 "PASSED test_control.py::test_uses_tree_again"])
+    result.assert_outcomes(passed=6, errors=4)   # a teardown error leaves its test counted as passed too
+    result.stdout.fnmatch_lines(["*test_slow_setup took *s of wall clock*",
+                                 "*fixture tree (session scope) took *s to set up*",
+                                 "*test_slow_after_the_shared_fixture took *s of wall clock*",
+                                 "*test_slow_in_its_body_after_a_shared_fixture_it_set_up took *s of wall clock*",
+                                 "PASSED test_control.py::test_uses_tree_again"], consecutive=False)
