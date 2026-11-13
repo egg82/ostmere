@@ -332,7 +332,7 @@ phone, portrait                        desktop, and a phone in landscape
 ```
 
 - **The button.** From the first entry on, the book is a button in its own place after the chips: its icon and its
-  word (the book's label), styled as the Log button (`.log-open`'s rim, bevel and tap size). Nothing left of it
+  word (the book's label), styled as the Log button (`.log-open`'s raised surface and tap size). Nothing left of it
   moves, and the change takes its turn in the arrival queue as a feature does, after the step's lines. It carries the
   quiet dot (`.new-dot`, placed as on `.log-open`) while a note is unread and at no other time, so a new entry dots
   it through its notes. It glows only as its lesson's step.
@@ -351,7 +351,7 @@ phone, portrait                        desktop, and a phone in landscape
   sibling draws ink on paper. Their values are the ones the sketch method draws with
   (`docs/research/sketch-test/process.md`): `--parchment: #e6dcc6`, `--hand-ink: #2b241c`, and `--hand-pencil:
   #645d52`, the ink lightened only as far as 4.5:1 on the parchment holds (`tests/test_client_contrast.py` checks
-  all three). The frame round the page stays the sheet's `--panel`, rim and shadow.
+  all three). Round the page is the sheet's raised surface and shadow.
   - **The sketch:** the entry's drawing (`/assets/journal/<sketch>.png`), `aria-hidden`, since its labels are art and
     the notes carry the page's words. One that fails to load leaves its room empty. A page with none (a days page) is
     text alone: the sketch's room is not drawn (on the desktop spread the notes page stands alone, without a gutter), and

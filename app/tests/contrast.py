@@ -174,18 +174,18 @@ def _cases(r: Rule, tok: dict[str, str], var: dict[str, list[str]]) -> list[tupl
 
 
 def pairs(css: str) -> list[Pair]:
-    """Every text colour against the surface it sits on (the rule's own background, else the page or the panel, whichever
+    """Every text colour against the surface it sits on (the rule's own background, else the page or a raised surface, whichever
     is worse), and every control's border against the same. Controls are the rules that set `cursor: pointer`."""
     rs = rules(css)
     tok, var = tokens(rs), variants(rs)
     page = parse_color(tok["--bg"], tok)
-    panel = parse_color(tok["--panel"], tok)
-    assert page and panel
+    raised = parse_color(tok["--raise"], tok)
+    assert page and raised
     found: list[Pair] = []
     for r in rs:
         for label, t in _cases(r, tok, var):
             own = background_of(r, t)
-            surfaces = [over(own, page[0])] if own and own[1] > 0 else [page[0], panel[0]]
+            surfaces = [over(own, page[0])] if own and own[1] > 0 else [page[0], raised[0]]
             name = f"{r.selector} {label}".strip()
             fg = parse_color(r.decls["color"], t) if "color" in r.decls else None
             if fg:

@@ -1,28 +1,28 @@
 /* Reminders (ui/reminders.ts) in the "Another device" sheet, and their one mention (ui/remindermention.ts). Shares
    game.css's tokens; only the slider and the row's layout are new. */
 .reminders-part { margin: 1rem 0 .5rem; }
-.reminders-said { margin: .3rem 0 .6rem; color: var(--ink-meta); }
+.reminders-said { margin: .3rem 0 .6rem; color: var(--ink); }
 .reminders-controls fieldset { border: 0; margin: 0 0 .9rem; padding: 0; min-width: 0; }
-.reminders-controls legend { padding: 0; margin-bottom: .35rem; color: var(--ink-bright); }
+.reminders-controls legend { padding: 0; margin-bottom: .35rem; color: var(--ink-hi); }
 .reminders-away { display: flex; flex-wrap: wrap; gap: .4rem .5rem; }
-.reminders-choice, .reminders-any { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; padding: 0 .7rem; border: 2px solid var(--rim-dim); cursor: pointer; }
-.reminders-choice:has(input:checked) { border-color: var(--btn-line); color: var(--btn-ink); }
-.reminders-choice:has(input:focus-visible), .reminders-any:has(input:focus-visible) { outline: 2px solid var(--ember-hot); outline-offset: 2px; }
+.reminders-choice, .reminders-any { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; padding: 0 .7rem; border-radius: 2px; background: var(--raise); box-shadow: var(--drop); cursor: pointer; }
+.reminders-choice:has(input:checked) { background: var(--press); color: var(--ink-hi); }
+.reminders-choice:has(input:focus-visible), .reminders-any:has(input:focus-visible) { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
 .reminders-choice input, .reminders-any input { accent-color: var(--ember); width: 1.1rem; height: 1.1rem; margin: 0; }
 .reminders-any { margin-top: .4rem; }
 .hour-slider { position: relative; padding: .9rem .9rem 0; touch-action: none; user-select: none; }
-.hour-track { position: relative; height: .6rem; background: var(--track); border: 2px solid var(--rim-dim); cursor: pointer; }
+.hour-track { position: relative; height: .6rem; background: var(--track); cursor: pointer; }
 .hour-span { position: absolute; top: 0; bottom: 0; background: var(--ember); }
-.hour-handle { position: absolute; top: 50%; width: 1.75rem; height: 1.75rem; margin-left: -.875rem; transform: translateY(-50%); box-sizing: border-box; background: var(--btn-bg); border: 3px solid var(--btn-ink); cursor: grab; }
-.hour-handle:focus-visible { outline: 3px solid var(--ink-head); outline-offset: 2px; }
+.hour-handle { position: absolute; top: 50%; width: 1.75rem; height: 1.75rem; margin-left: -.875rem; transform: translateY(-50%); box-sizing: border-box; background: var(--ink-hi); border: 0; border-radius: 2px; box-shadow: var(--drop); cursor: grab; }
+.hour-handle:focus-visible { outline: 3px solid var(--ink-hi); outline-offset: 2px; }
 .hour-labels { position: relative; height: 2.7rem; margin-top: .6rem; }
 .hour-label { position: absolute; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; line-height: 1.15; white-space: nowrap; }
-.hour-24 { color: var(--ink-bright); font-variant-numeric: tabular-nums; }
-.hour-12 { color: var(--ink-dim); font-size: .85rem; }
-.reminders-window-said { margin: .4rem 0 0; color: var(--ink-meta); }
-.hour-slider.off .hour-span { background: var(--grey); }
-.hour-slider.off .hour-handle { border-color: var(--grey); cursor: default; }
+.hour-24 { color: var(--ink-hi); font-variant-numeric: tabular-nums; }
+.hour-12 { color: var(--ink-dim); font-size: var(--t-meta); }
+.reminders-window-said { margin: .4rem 0 0; color: var(--ink); }
+.hour-slider.off .hour-span { background: var(--ink-dim); }
+.hour-slider.off .hour-handle { background: var(--ink-dim); cursor: default; }
 .hour-slider.off .hour-label { color: var(--ink-dim); }
-.reminder-mention { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .8rem; padding: .4rem .75rem; color: var(--ink-meta); }
+.reminder-mention { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .8rem; padding: .4rem .75rem; color: var(--ink); }
 .reminder-mention button { min-height: 2.75rem; }
 @media (prefers-reduced-motion: reduce) { .hour-handle, .hour-span { transition: none; } }
