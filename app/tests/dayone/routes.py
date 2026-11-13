@@ -24,6 +24,7 @@ ROUTES: dict[str, Route] = {
     "typical": Route("typical"),
     "sharp": Route("sharp", reaction=(1, 3)),
     "lazy": Route("lazy", Knobs(sits_up=False, mix_weave=False, screen_rule=False)),
+    "daily": Route("lazy"),
     "by_hand": Route("by_hand", Knobs(rising_rule=False, queue=False, hunger_rule=False, screen_rule=False)),
     "larder_first": Route("typical", Knobs(first_build="build_larder")),
     "evenings": Route("evenings"),
@@ -34,11 +35,12 @@ ROUTES: dict[str, Route] = {
                         look_s=600),
     "whenever": Route("whenever"),
 }
-"""typical: evenings and a night's sleep; sharp: back every hour or two; lazy: once a day; by_hand: no rule, no queue;
+"""typical: evenings and a night's sleep; sharp: back every hour or two; lazy: once a day, skipping the tools; daily: once
+a day, using them (docs/decisions/simulator.md, "Length"); by_hand: no rule, no queue;
 larder_first: the other build first; evenings: a workday player's day (nothing 09:30-18:30); lunch: with a lunch-break visit;
 return_22h: one return 22 h later; babysitter: never away, acts the second anything can be done; whenever: random
 times, the queue and the rules (the 2 AM test's player)."""
-TOOL_USERS = frozenset({"typical", "sharp", "whenever", "evenings", "lunch", "return_22h", "larder_first"})
+TOOL_USERS = frozenset({"typical", "sharp", "daily", "whenever", "evenings", "lunch", "return_22h", "larder_first"})
 """The players held to the babysit checks: they use the queue and the rules the game teaches. by_hand and lazy are
 reported, and checked only to land behind (docs/design/sim-invariants.md); the babysitter is the measure itself."""
 REPORTED = frozenset({"by_hand", "lazy"})
