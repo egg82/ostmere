@@ -74,7 +74,7 @@ def test_two_alternating_full_sets_of_lessons_log_each_lesson_once(game: GameCli
 def test_a_new_save_keeps_no_lesson_another_save_kept(game: GameClient):
     """Lessons are per save: a second game of the account starts with nothing kept about its teaching."""
     first = game.begin()
-    assert first["presentation"] == {"rule_seen": False, "mix_offered": [], "lessons": [], "lesson_ends": [], "visits": []}
+    assert first["presentation"] == {"rule_seen": False, "mix_offered": [], "lessons": [], "lesson_ends": [], "visits": [], "chapter": None}
     put_save(game, first["save"]["save_id"], {"lessons": ["first_mix", "first_rule"], "rule_seen": True,
                                               "lesson_ends": [end("first_mix"), end("first_rule")]})
     second = game.begin()
@@ -136,3 +136,16 @@ def test_a_stored_list_over_the_limit_is_trimmed_not_refused():
 
 def test_the_limit_is_the_api_s_visit_limit():
     assert NEWEST["visits"] == MAX_VISITS
+
+
+def test_a_save_keeps_its_newest_chapter_through_writes_that_carry_none(game: GameClient):
+    save = game.begin()["save"]["save_id"]
+    rule = {"when": {"kind": "at_most", "watched": {"kind": "store_value", "store": "wood"}, "value": 5, "release": 9},
+            "then": {"kind": "tap_card", "card": "c"}}
+    chapter = {"left": 10, "back": 4000, "stores": [{"id": "wood", "was": 3, "now": 90}], "levels": [],
+               "camp": {"id": "camp", "was": 1, "now": 2}, "rules": [{"order": rule, "came_on": True, "times": 2}]}
+    assert put_save(game, save, {"chapter": chapter})["chapter"] == chapter
+    assert put_save(game, save, {"lessons": ["first_mix"]})["chapter"] == chapter
+    assert game.client.post(f"/api/saves/{save}/open").json()["presentation"]["chapter"] == chapter
+    r = game.client.put(f"/api/saves/{save}/presentation", json={"chapter": {**chapter, "extra": 1}})
+    assert r.status_code == 422, r.text

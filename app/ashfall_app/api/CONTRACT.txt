@@ -124,7 +124,7 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}]},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
@@ -132,7 +132,13 @@ ENDPOINTS
   ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
   when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
   second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
-  chronicle's stretches begin at each `left`). A PUT from a page of the build before, which carries no visits, leaves them as stored.
+  chronicle's stretches begin at each `left`; chapter: the newest visit's figures, Chapter {left, back, stores: [Figure
+  {id, was, now}], levels: [Figure], camp: Figure | null, rules: [RuleChange {order, came_on, times}]}, what the return
+  found against what the player left: each store whose whole items moved (quantities), each skill that rose and the
+  Camp's level, each rule that came on (times: how often, 1 where the page could not count) or only let go while away;
+  the page takes it once, as the visit is kept, and draws it as the chronicle's "Since you left" chapter). A PUT from a
+  page of the build before, which carries no visits or chapter, leaves them as stored; a chapter replaces the stored one
+  only when its `left` is later, and never past the byte limit below.
   Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
   checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
   a line by its kind and never by its key or words.

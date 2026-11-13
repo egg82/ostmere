@@ -16,6 +16,10 @@ page's game/chronicle.ts MAX_VISITS and the API's MAX_VISITS are the same number
 _KEYS = {"lesson_ends": "lesson", "visits": "left"}
 """For a list of objects, the field that names an entry: a second entry for one name is the same entry."""
 
+LATEST = {"chapter": "left"}
+"""For an object that is replaced, the field that orders two copies: the stored one stays unless the sent one's is
+later, and a missing (null) one never replaces it."""
+
 
 def _is_list(value: object) -> TypeGuard[list[object]]:
     return isinstance(value, list)
@@ -50,6 +54,16 @@ def _grown(field: str, stored: list[object], sent: list[object], cap: int, room:
     return grown
 
 
+def _replaces(stored: object, sent: object, order: str, room: int) -> bool:
+    """`sent` takes a LATEST field's place: an object, later than the stored one (or none stored), and within `room`."""
+    if not _is_object(sent) or _weight(sent) - (_weight(stored) if stored is not None else 0) > room:
+        return False
+    if not _is_object(stored):
+        return True
+    a, b = stored.get(order), sent.get(order)
+    return isinstance(a, int) and isinstance(b, int) and b > a
+
+
 def merge_presentation(stored: Json, sent: Json, cap: int, max_bytes: int = MAX_BODY_BYTES) -> Json:
     """`stored` with `sent` added; a list stops growing at `cap` entries (one in NEWEST keeps its newest instead), and
     nothing is added past `max_bytes` of JSON (the stored ones always stay, but for a NEWEST list's oldest)."""
@@ -59,6 +73,10 @@ def merge_presentation(stored: Json, sent: Json, cap: int, max_bytes: int = MAX_
         have = merged.get(field)
         if isinstance(value, bool):
             merged[field] = value or have is True
+        elif (order := LATEST.get(field)) is not None:
+            if _replaces(have, value, order, room):
+                room -= _weight(value) - (_weight(have) if have is not None else 0)
+                merged[field] = value
         elif _is_list(value):
             kept = have if _is_list(have) else []
             newest = NEWEST.get(field)

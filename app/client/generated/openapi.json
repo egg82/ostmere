@@ -2383,6 +2383,67 @@
         ],
         "title": "Change"
       },
+      "Chapter": {
+        "properties": {
+          "left": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 0.0,
+            "title": "Left"
+          },
+          "back": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 0.0,
+            "title": "Back"
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/Figure"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Stores",
+            "default": []
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/Figure"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Levels",
+            "default": []
+          },
+          "camp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Figure"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/RuleChange"
+            },
+            "type": "array",
+            "maxItems": 64,
+            "title": "Rules",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "left",
+          "back"
+        ],
+        "title": "Chapter",
+        "description": "The figures of the newest return: what the chronicle's \"Since you left\" chapter shows beside its lines."
+      },
       "ChipInfo": {
         "properties": {
           "chip": {
@@ -3161,6 +3222,34 @@
         ],
         "title": "FightInfo",
         "description": "The odds a fight card or standing action runs under (CONTRACT.txt, \"FIGHTS\"): the strengths' ids, and what one lost\nfight costs. The strengths themselves are View.fights."
+      },
+      "Figure": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "was": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 0.0,
+            "title": "Was"
+          },
+          "now": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 0.0,
+            "title": "Now"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "was",
+          "now"
+        ],
+        "title": "Figure",
+        "description": "A store's quantity or a level as the player left it (`was`) and as the return found it (`now`)."
       },
       "FindInfo": {
         "properties": {
@@ -4980,6 +5069,32 @@
         "title": "Repeats",
         "description": "What the player keeps doing by hand, counted from the save's decision log: only what reached its count."
       },
+      "RuleChange": {
+        "properties": {
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "came_on": {
+            "type": "boolean",
+            "title": "Came On"
+          },
+          "times": {
+            "type": "integer",
+            "maximum": 9007199254740992.0,
+            "minimum": 1.0,
+            "title": "Times"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "order",
+          "came_on",
+          "times"
+        ],
+        "title": "RuleChange",
+        "description": "A rule that came on (or, never coming on, let go) while the player was away, and how many times it came on\n(1 where the page could not count more)."
+      },
       "RuleDry": {
         "properties": {
           "store": {
@@ -5287,6 +5402,16 @@
             "maxItems": 512,
             "title": "Visits",
             "default": []
+          },
+          "chapter": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Chapter"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "additionalProperties": false,
