@@ -267,6 +267,8 @@ def kept(save: Save, rules: Rules, v: View, kind: str, ident: str, at: int) -> b
 def after_card(p: DayOnePlayer) -> Iterator[tuple[Save, View]]:
     """The saves past B3 being seen (the end card follows it): the play's own, then its last save advanced with nobody
     deciding, at most one per AFTER_EVERY_S, to AFTER_CARD_S after it."""
+    if "B3" not in p.seen_at:
+        return
     seen = p.seen_at["B3"]
     last = seen
     for save, v in p.history:
@@ -281,6 +283,8 @@ def after_card(p: DayOnePlayer) -> Iterator[tuple[Save, View]]:
 
 def promise_problems(p: DayOnePlayer) -> list[str]:
     assert p.end_at is not None
+    if "B3" not in p.seen_at:
+        return []   # reaches_b3 owns that verdict
     out: list[str] = []
     later = list(after_card(p))
     assert later, "no sample past the end card"

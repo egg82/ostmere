@@ -39,11 +39,16 @@ def row(w: checks.Window, p: DayOnePlayer) -> str:
             f"actions {f.actions:3d}  idle {f.idle_s:4d}s  run {f.run}  effort {f.effort:2d}")
 
 
+def _b3_text(p: DayOnePlayer) -> str:
+    hours = checks.b3_hours(p)
+    return "B3 never landed" if hours is None else f"B3 {hours}h after it"
+
+
 def route_text(name: str, p: DayOnePlayer) -> str:
     """One route's readout: what the route did, as figures."""
     assert p.end_at is not None
     held = checks.visits_held(p)
-    out = [f"{name}: the end at {p.end_at / 60:.1f}m; B3 {checks.b3_hours(p)}h after it; {len(p.visits)} visits",
+    out = [f"{name}: the end at {p.end_at / 60:.1f}m; {_b3_text(p)}; {len(p.visits)} visits",
            row(checks.opening_window(p), p), *(row(w, p) for w in checks.windows(p))]
     hours = {b: round((t - p.end_at) / 3600, 2) for b, t in sorted(p.landed_at.items(), key=lambda kv: (kv[1], kv[0]))}
     seen = {b: round((p.seen_at[b] - p.end_at) / 3600, 2) for b in hours if b in p.seen_at}

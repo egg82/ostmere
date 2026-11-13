@@ -21,7 +21,10 @@ MAX_RUN = 2
 
 
 def reached(p: DayOnePlayer) -> dict[str, int]:
-    """Each skill's level in the last view the player saw by the time B3 was seen."""
+    """Each skill's level in the last view the player saw by the time B3 was seen; none when B3 never was (reaches_b3
+    owns that verdict)."""
+    if "B3" not in p.seen_at:
+        return {}
     stop = p.seen_at["B3"]
     levels: dict[str, int] = {}
     for save, v in p.history:
@@ -74,7 +77,9 @@ def leave_point(p: DayOnePlayer, label: str, exit_save: Save, shown: Leave) -> L
 
 
 def day_one_exits(p: DayOnePlayer) -> list[tuple[str, Save]]:
-    """Each leave point in day one: a visit's exit, up to B3 being seen."""
+    """Each leave point in day one: a visit's exit, up to B3 being seen (none when it never was)."""
+    if "B3" not in p.seen_at:
+        return []
     return [(f"V{v.index}", v.exit) for v in p.visits if v.exit is not None and v.exit.time <= p.seen_at["B3"]]
 
 

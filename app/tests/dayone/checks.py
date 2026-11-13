@@ -207,9 +207,10 @@ def absences(p: DayOnePlayer) -> list[tuple[str, list[str]]]:
 
 # ---------- the story ----------
 
-def story_order(landed_at: dict[str, int]) -> list[str]:
-    """Day one's beats all land, in the authored order (H6 < H7 < B3 and H1 < H2 among them)."""
-    missing = [b for b in STORY if b not in landed_at]
+def story_order(landed_at: dict[str, int], all_land: bool = True) -> list[str]:
+    """Day one's beats all land (`all_land`; a route that is only reported need not), in the authored order
+    (H6 < H7 < B3 and H1 < H2 among them)."""
+    missing = [b for b in STORY if b not in landed_at] if all_land else []
     order = sorted((b for b in STORY if b in landed_at), key=lambda b: (landed_at[b], STORY.index(b)))
     found = [f"never landed: {missing}"] if missing else []
     return found + ([f"order {order}"] if order != [b for b in STORY if b in order] else [])

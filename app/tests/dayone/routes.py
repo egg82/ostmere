@@ -41,6 +41,9 @@ times, the queue and the rules (the 2 AM test's player)."""
 TOOL_USERS = frozenset({"typical", "sharp", "whenever", "evenings", "lunch", "return_22h", "larder_first"})
 """The players held to the babysit checks: they use the queue and the rules the game teaches. by_hand and lazy are
 reported, and checked only to land behind (docs/design/sim-invariants.md); the babysitter is the measure itself."""
+REPORTED = frozenset({"by_hand", "lazy"})
+"""The routes that write no rules, reported and never held to a floor (docs/decisions/simulator.md, "Length"): the story
+checks that every other route meets are not asked of them. `keeper` is not a day-one route."""
 PUSH_ROUTES = ("typical", "by_hand", "babysitter", "whenever")
 SEEDS = (0, 1, 2) if DEEP else (0,)
 

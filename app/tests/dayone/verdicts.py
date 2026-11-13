@@ -8,10 +8,11 @@ from tests.dayone import checks, goals
 from tests.dayone.bands import b3_relative, presence_steps
 from tests.dayone.player import DayOnePlayer
 from tests.dayone.policy import QUEUEABLE
-from tests.dayone.routes import TOOL_USERS, day
+from tests.dayone.routes import REPORTED, TOOL_USERS, day
 
 CHECKS: dict[str, Callable[[str, DayOnePlayer], list[str]]] = {
-    "story_order": lambda _, p: checks.story_order(p.landed_at),
+    "reaches_b3": lambda name, p: [] if name in REPORTED else _reaches_b3(p),
+    "story_order": lambda name, p: story_problems(name, p.landed_at),
     "b3_relative": lambda name, p: _relative(p) if name in TOOL_USERS else [],
     "queueable": lambda name, p: _queueable(p) if name in TOOL_USERS else [],
     "promises": lambda _, p: goals.promise_problems(p),
@@ -21,6 +22,20 @@ CHECKS: dict[str, Callable[[str, DayOnePlayer], list[str]]] = {
 @cache
 def _steps() -> int:
     return len(presence_steps(day("babysitter").rules))
+
+
+def story_problems(name: str, landed_at: dict[str, int]) -> list[str]:
+    """checks.story_order, every beat required to land on every route but the reported ones."""
+    return checks.story_order(landed_at, name not in REPORTED)
+
+
+def _reaches_b3(p: DayOnePlayer) -> list[str]:
+    """B3 is seen within the route's horizon (the end of its last visit); the B3-relative checks say nothing without it.
+    Held on every route but the reported ones (routes.REPORTED), whose miss the readout shows."""
+    if "B3" in p.seen_at:
+        return []
+    assert p.end_at is not None
+    return [f"B3 not seen by {(p.save.time - p.end_at) / 3600:.1f} h ({len(p.visits)} visits)"]
 
 
 def _relative(p: DayOnePlayer) -> list[str]:
