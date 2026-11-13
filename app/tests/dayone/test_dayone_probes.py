@@ -15,6 +15,7 @@ from tests.dayone.bands import B3_CARD, b3_relative, presence_steps
 from tests.dayone.beats import STORY, near_promise_beats
 from tests.dayone.checks import Window
 from tests.dayone.story import flatcheck
+from tests.dayone.verdicts import story_problems
 from tests.opening.playthrough import News, opening_rules
 
 START = 10_000
@@ -151,6 +152,9 @@ def test_the_story_order_check_catches_a_swap_and_a_missing_beat():
     assert checks.story_order({b: t for b, t in landed.items() if b != "H6"})
     assert checks.story_order({b: t for b, t in landed.items() if b != "B3"}) == ["never landed: ['B3']"]
     assert checks.story_order({b: t for b, t in landed.items() if b != "B3"}, all_land=False) == []
+    short = {b: t for b, t in landed.items() if b != "B3"}
+    assert story_problems("babysitter", short) == ["never landed: ['B3']"]   # held: not a reported route
+    assert story_problems("lazy", short) == []
 
 
 def test_the_near_promise_check_catches_a_visit_without_it():
