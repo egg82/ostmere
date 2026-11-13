@@ -527,7 +527,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .chron-stretch summary { list-style: none; display: grid; grid-template-columns: 1fr auto; column-gap: .8rem; align-items: baseline; align-content: center; box-sizing: border-box; min-height: 2.75rem; padding: .45rem .3rem .45rem 0; cursor: pointer; }
 .chron-stretch summary::-webkit-details-marker { display: none; }
 .chron-stretch summary:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
-.v-title { font-size: var(--t-body); font-weight: 500; line-height: 1.2; color: var(--ink-dim); }
+.v-title { font-size: var(--t-body); font-weight: 500; line-height: 1.2; word-spacing: .15em; color: var(--ink-dim); }   /* Alegreya Sans' space at 500 is under .15em: "Away 1h" read as one word */
 .v-ago { font-size: var(--t-meta); color: var(--ink-dim); }
 .v-sum { grid-column: 1 / -1; margin-top: .1rem; font-size: var(--t-meta); line-height: 1.3; color: var(--ink-dim); }
 .chron-stretch details:not([open]) > summary .v-sum::after { content: "  ▸"; color: var(--ink-dim); }
@@ -539,7 +539,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .chron-text { margin: 0; font-size: var(--t-body); line-height: 1.4; color: var(--ink); }
 .chron-line.story .chron-text { font-size: var(--t-story); font-style: italic; color: var(--ink-hi); }   /* the story's lines, set as in the strip */
 .chron-cause { margin: .1rem 0 0; font-size: var(--t-meta); line-height: 1.3; color: var(--ink-dim); }
-.chron-cause::before { content: "↳\00a0"; }
+.chron-cause::before { content: "↳"; margin-right: .3em; }
 .chron-foot { display: flex; flex-wrap: wrap; gap: 6px; margin-top: .3rem; padding-top: .5rem; border-top: 1px solid var(--rule); }
 .feedback-field { display: block; width: 100%; box-sizing: border-box; min-height: 7rem; max-height: 50vh; resize: vertical; padding: .6rem .7rem; background: var(--bg); border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule); color: var(--ink-hi); font: inherit; font-size: var(--t-body); line-height: 1.4; }
 .feedback-field:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--ink-dim); }
