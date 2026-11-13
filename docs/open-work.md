@@ -50,7 +50,7 @@ leans on an earlier test's logging setup (same on main before the overhaul). Giv
    `content/team/opening-v2.md` (never shown to the owner).
    - **A pull forward** (the story didn't show enough to make anyone want to see where it goes). The first
      fifteen minutes should raise at least one question the player wants answered. The preview may (2026-10-13) reveal a little more if that is what it takes; the specifics stay below the line.
-   - **How the story reaches the eyes:** a tap's line on its card and one thing at a time, line first, shipped
+   - **How the story reaches the eyes:** a tap's line in the strip only (redesign step 1) and one thing at a time, line first, shipped
      (`docs/design/opening-screen.md`, "Cards" and "One thing at a time"; research in `docs/research/story-to-the-eyes.md`).
      Fits into: Cards (a second view of the line the Step carries; the story strip stays the record) and Chronicle and unwrap
      (the arrival queue's second use, live). The "was it seen" probe is `app/tools/seen/` (README in run.sh's header).
@@ -132,9 +132,7 @@ leans on an earlier test's logging setup (same on main before the overhaul). Giv
    **Content** lives in `content/` (design and story notes in `content/team/`; the shipped opening is
    `app/ashfall_app/opening/opening.toml`) and is never shown to the owner. Before day one is shared: the fixes from the desktop
    playthrough (`docs/research/desktop-playthrough.md`, ranked at its end; the phone pass is done; its first two fixes, the
-   Add-row chip's lesson step and a held lesson ending, are shipped, and so are 3, 4, 5, 6, 7 and 8). Fix 7, a done
-   card's line over the panel foot, is shipped as room under the cards (the panel foot sits below the tallest line a
-   card can hang), after clipping the line and holding the card's size were tried and dropped. Day two started once the fixes and polish on this
+   Add-row chip's lesson step and a held lesson ending, are shipped, and so are 3, 4, 5, 6, 7 and 8 (7 went with the card line itself). Day two started once the fixes and polish on this
    list were worked through, without waiting on testers, and takes in their feedback as it arrives.
    Day two ships (`app/ashfall_app/opening/day_two.toml`, in `CHAPTERS`; what it built is `docs/design/day-two-plan.md`).
    The model's active-play threshold is an observed habit (a few minutes with nothing notable and the player leaves; no
@@ -264,9 +262,9 @@ leans on an earlier test's logging setup (same on main before the overhaul). Giv
       made, so it is held to a share where it takes about 110 stones an hour of about 260 made; stones overfill away
       from the ends of days eight to twelve, and roots from day eleven's.
 25. **The redesign**: every in-game screen gets a new look and feedback language; the front page only restyles to
-    match. Chosen and approved, not started: `docs/design/redesign.md` is the plan and the build order, and
-    `docs/design/redesign/merge.html` is the design. It absorbs "where a tap's result is said" (a refusal shows as
-    red plus the missing need with no text, and a success becomes a story line only). Fits into: the feedback ladder,
+    match. `docs/design/redesign.md` is the plan and the build order, and `docs/design/redesign/merge.html` is the
+    design. Step 1 (routing: a refusal is red plus the missing need with no text, a success a story line only) shipped;
+    step 2, the look, is next. Fits into: the feedback ladder,
     Chronicle and unwrap, and Offers; no new system. Load `writing-craft` for every player-facing string.
 
 ## Where things are
