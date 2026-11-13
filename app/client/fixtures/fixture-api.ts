@@ -15,9 +15,10 @@ import { isJournal, journalStep } from "./journal";
 import { isPrestige, prestigeStep } from "./prestige";
 import { isTown, townStep } from "./town";
 import { fixtureStep, type Kept, type Phase } from "./steps";
+import { SINCE_VISITS, isSince, sinceBack, sinceStep } from "./since";
 
 const stepOf = (phase: Phase, at: number, kept: Kept = {}, decisions = 0): Step =>
-  (isChronicle(phase) ? chronicleStep(at, kept, decisions) : isFights(phase) ? fightsStep(phase, at, kept, decisions) : isJournal(phase) ? journalStep(phase, at, kept, decisions) : isDayOne(phase) ? dayOneStep(phase, at, kept, decisions) : isDayTwo(phase) ? dayTwoStep(phase, at, kept, decisions) : isTown(phase) ? townStep(phase, kept, decisions) : isPrestige(phase) ? prestigeStep(phase, at, kept, decisions) : fixtureStep(phase, at, kept, decisions));
+  (isChronicle(phase) ? chronicleStep(at, kept, decisions) : isSince(phase) ? sinceStep(phase, at, kept, decisions) : isFights(phase) ? fightsStep(phase, at, kept, decisions) : isJournal(phase) ? journalStep(phase, at, kept, decisions) : isDayOne(phase) ? dayOneStep(phase, at, kept, decisions) : isDayTwo(phase) ? dayTwoStep(phase, at, kept, decisions) : isTown(phase) ? townStep(phase, kept, decisions) : isPrestige(phase) ? prestigeStep(phase, at, kept, decisions) : fixtureStep(phase, at, kept, decisions));
 
 /** `unavailable`: every step after Begin answers 503 (the page's reconnecting state). `seen`: the player has seen a
  * rule come on and let go (writing rules is open). `limited`: a send of feedback answers 429. `due`: recovery words
@@ -29,9 +30,9 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
   let decisions = 0;
   let began = Date.now();
   const now = (): number => Math.floor((Date.now() - began) / 1000);
-  const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first) || isChronicle(first);   // the repeat offers come only after the lessons
+  const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first) || isChronicle(first) || isSince(first);   // the repeat offers come only after the lessons
   const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : [] };
+  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [] };
   const settings: AccountSettings = { lessons: true };
   const info = (): SaveInfo => ({
     save_id: 1, number: 1, decisions, game_time: now(), ended_at: null, started_at: new Date(began).toISOString(),
@@ -51,6 +52,7 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
     if (phase === "away" && d === null && now() > 0) return "mid";   // time passed with the page shut or hidden
     if (phase === "restaway" && d === null && now() > 0) return "restoffer";
     if (phase === "returned" && d === null && now() > 0) return "landed";   // a planned moment landed while away
+    if (isSince(phase) && d === null && now() > 0) return sinceBack(phase) ?? phase;   // shown again: the return
     if (phase === "prestigeaway" && d === null && now() > 0) return "prestige";   // firecraft topped out while away
     if (d?.kind === "prestige") return "prestigeclicked";
     if (d?.kind === "undo_pick") return "prestigeowed";

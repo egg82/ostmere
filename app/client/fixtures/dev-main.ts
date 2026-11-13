@@ -7,13 +7,14 @@
 // recovery words due; #devices opens the "Another device" sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
 // `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers (the answer rule's builder).
-// #chronicle opens the Chronicle (phase chronicle fills it). #journal opens the Journal sheet (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices.
+// #chronicle opens the Chronicle (phase chronicle fills it). #journal opens the Journal sheet (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone).
 import "../src/game.css";
 import "../src/fights.css";
 import { wireBegin } from "../src/begin";
 import { fixtureContent } from "./content";
 import { isJournal, withJournal } from "./journal";
 import { isPrestige, withPrestige } from "./prestige";
+import { isSince, withSince } from "./since";
 import { fixtureApi } from "./fixture-api";
 import { catchingUpApi } from "./catchup";
 import { fixtureManifestUrl } from "./scene-manifest";
@@ -31,6 +32,7 @@ if (hash.has("swap")) for (const s of fixtureContent.store_infos) if (s.made_by.
 const phase = (hash.get("phase") ?? "start") as Phase;
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
+if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));
 const fixture = fixtureApi(phase, hash.has("stale"), hash.has("seen"), hash.has("limited"), hash.has("due"));
 const kept = (hash.get("kept") ?? "").split(",").filter((l) => l.length > 0);
 // #stuck stands in for the server's View.order_dry (CONTRACT.txt, "Dry rules"; tested in tests/test_rule_dry.py): the rule
@@ -56,6 +58,7 @@ if (hash.has("devices")) clickWhenShown(".devices-open");
 if (hash.has("games")) clickWhenShown(".games-open");
 if (hash.has("journal")) clickWhenShown(".journal-open");
 if (hash.has("chronicle")) clickWhenShown(".chron-open");
+if (hash.has("back")) window.setTimeout(() => document.dispatchEvent(new Event("visibilitychange")), 1500);
 if (hash.has("prestigesheet")) clickWhenShown(".skill-foot .primary");
 if (hash.has("have")) clickWhenShown("#have-code summary");
 
