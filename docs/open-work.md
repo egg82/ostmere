@@ -33,11 +33,8 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
   on a hidden itch.io page and Feedback Friday; galaxy.click rejects heavy generative-AI use). AI use is disclosed
   wherever a venue asks, not on the game's own site.
 
-**Two tests that failed once on CI and passed on a rerun.** Find the cause of each; never raise a ceiling for it.
-- `tests/saves/test_strip_backfill.py::test_a_row_changed_after_it_was_read_keeps_the_change` hit the 6 s per-test
-  timeout inside `waiting()`'s poll for a lock waiter (main, run 43395790800, shard a). `waiting()` allows 20 s, more
-  than the ceiling, and if the backfill thread raises, its exception is lost and the poll spins to the timeout.
-- `tests/weektwo/test_weektwo_twelve.py::test_the_babysitter_ends_no_further_ahead_across_day_twelve` lost its xdist
+**A test that failed once on CI and passed on a rerun.** Find the cause; never raise a ceiling for it.
+`tests/weektwo/test_weektwo_twelve.py::test_the_babysitter_ends_no_further_ahead_across_day_twelve` lost its xdist
   worker ("node down: Not properly terminated") about 10 min in, with no timeout banner, and the job ran out its
   30 min (PR #15, run 43390930356, attempt 1). Its setup took 211 s in an earlier green run; check its memory peak.
 
