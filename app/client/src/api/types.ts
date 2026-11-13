@@ -41,6 +41,7 @@ export type JournalInfo = S["JournalInfo"];
 export type LaneBar = S["LaneBar"];
 export type LaneInfo = S["LaneInfo"];
 export type LedgerLine = S["LedgerLine"];
+export type LineCause = S["LineCause"];
 export type LogLine = S["LogLine"];
 export type Me = S["Me"];
 export type MergeSummary = S["MergeSummary"];

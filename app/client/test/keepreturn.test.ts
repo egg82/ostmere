@@ -1,5 +1,5 @@
 // A save keeps the newest MAX_VISITS returns: the oldest go as new ones are kept, and a merge with the server's answer trims too.
-import { MAX_VISITS } from "../src/game/loggroups";
+import { MAX_VISITS } from "../src/game/chronicle";
 import { Keeps } from "../src/game/keeps";
 import { mergeSavePresentation } from "../src/game/presentation";
 import { NEW_SAVE } from "../src/game/keeps";

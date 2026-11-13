@@ -2,7 +2,7 @@
 // together, a list is the first's entries then the second's that are new. The server does the same on every write;
 // the page does it to take the server's answer without losing a keep made while that write was in flight.
 import type { AccountPresentation, SavePresentation } from "../api/types";
-import { MAX_VISITS } from "./loggroups";
+import { MAX_VISITS } from "./chronicle";
 
 function union<T>(own: T[], more: T[], name: (item: T) => string): T[] {
   const seen = new Set(own.map(name));

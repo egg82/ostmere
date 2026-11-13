@@ -1,8 +1,8 @@
 // Content indexed by id, with the text and number formatting that go with it: what every part of the screen
 // is handed, so no part reaches into the raw content lists.
-import type { CardInfo, ChipInfo, LaneInfo, NodeInfo, OfferInfo, OrderCard, Content, SideInfo, SkillInfo, StoreInfo, ThreatInfo, View } from "../api/types";
+import type { CardInfo, ChipInfo, LaneInfo, LineCause, NodeInfo, OfferInfo, OrderCard, Content, SideInfo, SkillInfo, StoreInfo, ThreatInfo, View } from "../api/types";
 import { Format } from "./format";
-import type { LineKind } from "./loggroups";
+import type { LineKind } from "./chronicle";
 import { Text } from "./text";
 
 function byId<T, K extends keyof T>(items: T[], key: K): Map<T[K], T> {
@@ -23,6 +23,7 @@ export class Catalog {
   readonly sides: Map<string, SideInfo>;
   readonly threats: Map<string, ThreatInfo>;
   private readonly lineKinds: Map<string, LineKind>;
+  private readonly lineCauses: Map<string, LineCause | null>;
   readonly features: Map<string, string | null>;
   /** The store the Camp bar is drawn from; never a ledger line (CONTRACT.txt). */
   readonly campStore: string | null;
@@ -45,6 +46,7 @@ export class Catalog {
     this.sides = byId(content.side_infos, "side");
     this.threats = byId(content.threat_infos, "threat");
     this.lineKinds = new Map(content.line_infos.map((l) => [l.key, l.kind]));
+    this.lineCauses = new Map(content.line_infos.map((l) => [l.key, l.cause]));
     this.features = new Map(content.feature_infos.map((f) => [f.feature, f.hint_key]));
     for (const c of content.order_cards) if (c.chip === null) this.orderCards.set(c.store, [...this.orderCardsFor(c.store), c]);
     this.chipCards = content.order_cards.filter((c) => c.chip !== null);
@@ -57,11 +59,16 @@ export class Catalog {
     return this.orderCards.get(store) ?? [];
   }
 
-  /** How the Log sets a line: its kind, authored with its text. A key with none is a content the server's checks refused. */
+  /** How the chronicle sets a line: its kind, authored with its text. A key with none is a content the server's checks refused. */
   lineKind(key: string): LineKind {
     const kind = this.lineKinds.get(key);
     if (kind === undefined) throw new Error(`no kind for line ${key}`);
     return kind;
+  }
+
+  /** What writes a line, read from where its key is authored (CONTRACT.txt, "Line causes"); null: nothing does. */
+  lineCause(key: string): LineCause | null {
+    return this.lineCauses.get(key) ?? null;
   }
 
   label(key: string | null | undefined): string {

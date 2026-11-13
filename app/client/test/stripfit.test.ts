@@ -1,5 +1,5 @@
 // The story strip shows as many of the newest lines as fit whole in its room (docs/design/opening-screen.md, "One column
-// of attention"): the last N in order, a new line pushing out the oldest; the Log is dotted only when a line that
+// of attention"): the last N in order, a new line pushing out the oldest; the Chronicle is dotted only when a line that
 // showed with no touch after it leaves the strip entirely. A room not laid out holds just the newest.
 import { FakeEl, FakeEvent, fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
@@ -33,7 +33,7 @@ const story = new Story(ctx);
 document.body.append(story.head, story.root);
 const text = (key: string): string => ctx.catalog.text.get(key);
 const strip = (): string[] => Array.from(story.root.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
-const dotted = (): boolean => story.head.querySelector(".log-open")?.querySelector(".new-dot") !== null;
+const dotted = (): boolean => story.head.querySelector(".chron-open")?.querySelector(".new-dot") !== null;
 
 // A layout the fake DOM lacks: every line 20 high, 4 apart, newest last; a room of 68 holds three.
 // The page's types say DOM nodes; under install() they are FakeEls, which carry a settable rect.
@@ -59,8 +59,8 @@ expect("room for three: all three show, oldest first", strip(), ["line.1", "line
 expect("nothing has left: no dot", dotted(), false);
 arrive("line.4");
 expect("a new line pushes out the oldest", strip(), ["line.2", "line.3", "line.4"].map(text));
-expect("an unseen line left: the Log is dotted", dotted(), true);
-fakeDocument.querySelector(".log-open")?.dispatchEvent(new FakeEvent("pointerdown"));
+expect("an unseen line left: the Chronicle is dotted", dotted(), true);
+fakeDocument.querySelector(".chron-open")?.dispatchEvent(new FakeEvent("pointerdown"));
 fakeDocument.body.dispatchEvent(new FakeEvent("pointerdown"));
 expect("touching clears the dot", dotted(), false);
 

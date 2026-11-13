@@ -66,13 +66,13 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .scene-box.no-art .scene-art { visibility: hidden; }
 .scene-art { display: block; }
 
-/* the head: the Camp bar, chips and Log in one row just above the art, in its stage (ui/headseat.ts) */
+/* the head: the Camp bar, chips and Chronicle in one row just above the art, in its stage (ui/headseat.ts) */
 .scene-head { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; padding: .4rem .75rem; line-height: 1.35; text-align: left; }
 /* the aim: what this stretch is for, in the story's voice; one line, its room there from the first screen (ui/aim.ts,
    ui/headseat.ts): above the art, under the head's row on a phone */
 .aim { flex: none; box-sizing: content-box; height: 1.3em; margin: 0; padding: 0 .75rem .35rem; font-size: var(--t-meta); font-style: italic; line-height: 1.3; color: var(--ink-hi); text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .aim.aim-new { animation: arrive .9s ease-out; }
-.chips { display: flex; flex-wrap: wrap; gap: .9rem; margin-left: auto; }   /* after the Camp bar, against Log: a chip coming or going never moves the bar's left edge */
+.chips { display: flex; flex-wrap: wrap; gap: .9rem; margin-left: auto; }   /* after the Camp bar, against the Chronicle: a chip coming or going never moves the bar's left edge */
 /* a chip is a state, not a control: its glyph and words, no frame */
 .chip { font-size: var(--t-meta); padding: .1rem 0; color: var(--ink); text-shadow: 0 1px 3px #000; }
 .chip::before { margin-right: .3em; }
@@ -115,14 +115,14 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .lines li.held { display: none; }
 .lines li:not(:nth-last-child(1 of :not(.held))) { color: var(--ink-dim); }
 .lines li.arrive { animation: line-in .2s ease-out; }
-.log-open, .journal-open {   /* the Journal button (ui/journal.ts) is the Log button's twin: raised, the same tap size */
+.chron-open, .journal-open {   /* the Journal button (ui/journal.ts) is the Chronicle button's twin: raised, the same tap size */
   position: relative; flex: none; align-self: center; min-height: 1.9rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
   background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important;
 }
-.log-open { margin-left: auto; }
+.chron-open { margin-left: auto; }
 .journal-open::before { content: "▤"; margin-right: .4em; }
-.log-open .new-dot, .journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
-.log-open:hover, .log-open:focus-visible, .journal-open:hover, .journal-open:focus-visible { color: var(--ink-hi) !important; background: var(--press); outline: none; }
+.chron-open .new-dot, .journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
+.chron-open:hover, .chron-open:focus-visible, .journal-open:hover, .journal-open:focus-visible { color: var(--ink-hi) !important; background: var(--press); outline: none; }
 .panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
 .feedback-open, .devices-open, .games-open {   /* words only until it is hovered */
   flex: none; min-height: 2.4rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
@@ -429,7 +429,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .sheet > .panel-heading { position: sticky; top: 0; z-index: 1; background: var(--raise); padding: 1.1rem 0 .3rem; }   /* a sheet taller than the viewport scrolls between its heading and its actions */
 .sheet > .sheet-actions { position: sticky; bottom: 0; z-index: 1; background: var(--raise); padding: .5rem 0 1.1rem; }
 .sheet:not(:has(> .panel-heading)) { padding-top: 1.1rem; }
-.log-sheet { max-width: min(40rem, calc(100vw - 2rem)); }
+.chronicle { max-width: min(40rem, calc(100vw - 2rem)); }
 /* the Journal sheet (ui/journal.ts; docs/design/opening-screen.md, "The journal"). The page is parchment written in the
    hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the sketch, the notes
    and the numbers top to bottom, the sheet full height. Desktop: an open spread of two 600:780 pages, the sketch alone on
@@ -511,32 +511,36 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .games-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .games-held { margin-top: .9rem; border-top: 1px solid var(--rule); padding-top: .9rem; }
 .games-held:empty { display: none; }
-.log-all { margin: 0; padding: 0 .3rem 0 0; list-style: none; max-height: 65vh; overflow-y: auto; color: var(--ink-hi); }   /* the diary: a stretch per visit, the newest open (ui/logsheet.ts) */
-.log-visit { position: relative; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px solid var(--rule); }
-.log-visit + .log-visit { margin-top: .15rem; }
-.log-visit::before { content: ""; position: absolute; left: -.38rem; top: .75rem; width: .6rem; height: .6rem; background: var(--bg); border: 1px solid var(--ink-dim); box-sizing: border-box; }
-.log-visit.newest { border-left-color: var(--ink-dim); }
-.log-visit.newest::before { background: var(--ink-hi); border-color: var(--ink-hi); }   /* old reads dim, new reads bright: the spine and its square */
-.log-visit summary { list-style: none; display: grid; grid-template-columns: 1fr auto; column-gap: .8rem; align-items: baseline; align-content: center; box-sizing: border-box; min-height: 2.75rem; padding: .45rem .3rem .45rem 0; cursor: pointer; }
-.log-visit summary::-webkit-details-marker { display: none; }
-.log-visit summary:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
+/* the chronicle (ui/chroniclesheet.ts): the filters, then a stretch per visit, the newest open, each line over its cause */
+.chron-filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 0 .7rem; }
+.chron-filters[hidden] { display: none; }
+.chron-filter, .chron-count { min-height: 2.25rem; padding: 0 .7rem; font: inherit; font-size: var(--t-meta); line-height: 1.3; color: var(--ink-dim); background: none; border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule); cursor: pointer; }
+.chron-filter[aria-pressed="true"] { color: var(--ink-hi); background: var(--press); box-shadow: none; }
+.chron-filter:hover, .chron-count:hover { color: var(--ink-hi); }
+.chron-filter:focus-visible, .chron-count:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
+.chron-all { margin: 0; padding: 0 .3rem 0 0; list-style: none; max-height: 65vh; overflow-y: auto; color: var(--ink-hi); }
+.chron-stretch { position: relative; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px solid var(--rule); }
+.chron-stretch + .chron-stretch { margin-top: .15rem; }
+.chron-stretch::before { content: ""; position: absolute; left: -.38rem; top: .75rem; width: .6rem; height: .6rem; background: var(--bg); border: 1px solid var(--ink-dim); box-sizing: border-box; }
+.chron-stretch.newest { border-left-color: var(--ink-dim); }
+.chron-stretch.newest::before { background: var(--ink-hi); border-color: var(--ink-hi); }   /* old reads dim, new reads bright: the spine and its square */
+.chron-stretch summary { list-style: none; display: grid; grid-template-columns: 1fr auto; column-gap: .8rem; align-items: baseline; align-content: center; box-sizing: border-box; min-height: 2.75rem; padding: .45rem .3rem .45rem 0; cursor: pointer; }
+.chron-stretch summary::-webkit-details-marker { display: none; }
+.chron-stretch summary:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
 .v-title { font-size: var(--t-body); font-weight: 500; line-height: 1.2; color: var(--ink-dim); }
 .v-ago { font-size: var(--t-meta); color: var(--ink-dim); }
 .v-sum { grid-column: 1 / -1; margin-top: .1rem; font-size: var(--t-meta); line-height: 1.3; color: var(--ink-dim); }
-.log-visit details:not([open]) > summary .v-sum::after { content: "  ▸"; color: var(--ink-dim); }
+.chron-stretch details:not([open]) > summary .v-sum::after { content: "  ▸"; color: var(--ink-dim); }
 details[open] > summary .v-sum { display: none; }
-details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-hi); }
-.log-visit summary:hover .v-title, .log-visit summary:focus-visible .v-title { color: var(--ink-hi); }
+details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--ink-hi); }
+.chron-stretch summary:hover .v-title, .chron-stretch summary:focus-visible .v-title { color: var(--ink-hi); }
 .v-body { padding: 0 0 .8rem; }
-.log-story { margin: 0 0 .55rem; font-size: var(--t-story); line-height: 1.4; color: var(--ink-hi); }   /* the story, the only full-size text */
-.log-small { margin: -.3rem 0 .5rem; padding-left: .7rem; border-left: 1px solid var(--rule); font-size: var(--t-meta); line-height: 1.35; color: var(--ink-dim); }   /* taps, finds and levels: small, under the story line they follow */
-.log-small.level { font-style: italic; }
-.log-small[hidden] { display: none; }
-.log-foot { margin-top: .3rem; border-top: 1px solid var(--rule); }
-.log-tally { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; box-sizing: border-box; width: 100%; min-height: 2.75rem; padding: .3rem 0 0; background: none; border: 0; cursor: pointer; text-align: left; }
-.log-chip { padding: .1rem .5rem; font-size: var(--t-meta); line-height: 1.3; color: var(--ink); background: var(--raise); border-radius: 2px; box-shadow: var(--drop); }
-.log-tally[aria-expanded="true"] .log-chip, .log-tally:hover .log-chip, .log-tally:focus-visible .log-chip { color: var(--ink-hi); }
-.log-tally:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
+.chron-line { margin: 0 0 .7rem; }
+.chron-text { margin: 0; font-size: var(--t-body); line-height: 1.4; color: var(--ink); }
+.chron-line.story .chron-text { font-size: var(--t-story); font-style: italic; color: var(--ink-hi); }   /* the story's lines, set as in the strip */
+.chron-cause { margin: .1rem 0 0; font-size: var(--t-meta); line-height: 1.3; color: var(--ink-dim); }
+.chron-cause::before { content: "↳\00a0"; }
+.chron-foot { display: flex; flex-wrap: wrap; gap: 6px; margin-top: .3rem; padding-top: .5rem; border-top: 1px solid var(--rule); }
 .feedback-field { display: block; width: 100%; box-sizing: border-box; min-height: 7rem; max-height: 50vh; resize: vertical; padding: .6rem .7rem; background: var(--bg); border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule); color: var(--ink-hi); font: inherit; font-size: var(--t-body); line-height: 1.4; }
 .feedback-field:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--ink-dim); }
 .feedback-note { margin: .6rem 0 0; color: var(--ink); font-size: var(--t-meta); }
@@ -575,7 +579,7 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
 :is(.sheet, .rules) .cond-store, :is(.sheet, .rules) .cond-subject, :is(.sheet, .rules) .cond-mix, :is(.sheet, .rules) .cond-task, :is(.sheet, .rules) .cond-test { min-height: 2.75rem; padding: 0 .8rem; display: inline-flex; align-items: center; gap: .5rem;
   background: var(--raise); border: 0; box-shadow: var(--drop); }   /* .quiet buttons, drawn as unframed tiles */
 :is(.sheet, .rules) :is(.cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test):hover { background-color: var(--press); }
-.sheet :is(.quiet, .selector-run, .cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test, .log-chip) { background-color: var(--press); }   /* a sheet is raised already */
+.sheet :is(.quiet, .selector-run, .cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test) { background-color: var(--press); }   /* a sheet is raised already */
 :is(.sheet, .rules) .cond-store[aria-pressed="true"], :is(.sheet, .rules) .cond-subject[aria-pressed="true"], :is(.sheet, .rules) .cond-mix[aria-pressed="true"], :is(.sheet, .rules) .cond-task[aria-pressed="true"], :is(.sheet, .rules) .cond-test[aria-pressed="true"] { color: var(--ink-hi) !important; background: var(--press); box-shadow: inset 0 0 0 1px var(--ink-dim); }
 .cond-amount { font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
 .cond-steppers { display: flex; flex-wrap: wrap; gap: .6rem 1rem; }   /* When and Until share a row where they fit */
@@ -699,11 +703,11 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
   .card-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two cards a row, so the ledger sits nearer the tasks */
   .card.first { grid-column: 1 / -1; }
   .stage { height: auto; display: flex; flex-direction: column; }
-  .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right, under Log's place */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
+  .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right, under the Chronicle's place */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
   .scene-box { position: relative; inset: auto; --by-width: 1; padding: 0 .5rem .5rem; }
   .stage > .strip { flex: none; }
-  .log-open { margin-left: 0; }
-  .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, Log last, so nothing leaves the screen */
+  .chron-open { margin-left: 0; }
+  .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, the Chronicle last, so nothing leaves the screen */
   .chip { flex: none; white-space: nowrap; }
   .chip::before { margin-right: .2em; }
   .camp { min-width: 4.5rem; }
@@ -719,7 +723,7 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
   .stage { position: relative; flex: 1 1 0; min-height: 0; height: auto; display: flex; flex-direction: column; }
   .stage > .scene-head { padding: .6rem 1.75rem 0; }   /* above the art, never on it: its text in line with the aim's and the strip's */
   .scene-box { position: relative; inset: auto; flex: 1 1 0; min-height: 0; align-items: center; padding: 1rem; }
-  .scene-head:not(:has(.chip, .camp:not([hidden]), .new-dot)) { display: none; }   /* an empty row stays off the art, but never a dotted Log */
+  .scene-head:not(:has(.chip, .camp:not([hidden]), .new-dot)) { display: none; }   /* an empty row stays off the art, but never a dotted Chronicle */
   .left > .aim { padding: .6rem 1.75rem 0; }   /* over the art's column, its text in line with the strip's */
   .left > .strip { flex: none; padding: .55rem 1.75rem .65rem; }
   .end-dock { position: absolute; left: auto; right: 1rem; bottom: 1rem; width: calc(var(--panel-w) - 2rem); padding-bottom: 1.4rem; box-shadow: 0 .8rem 2rem rgba(0, 0, 0, .6); }

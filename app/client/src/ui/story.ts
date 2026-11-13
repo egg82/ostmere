@@ -1,13 +1,14 @@
 // The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
 // costs; each once its cure is on screen, game/shown.ts), what the player carries (a feature with a label, dotted
-// when it arrives) and the Log button, dotted when a line left the strip before the player touched anything after it
-// showed. The story strip, off the art: the newest lines that fit, whole and oldest first, the older dimmer, in room
-// kept for the tallest line the content can write (Content.line_infos, laid out unseen in the strip's one cell; ui/stripfit.ts
-// counts how many fit, at least the newest). The Feedback button (feedback.ts) opens the
-// tester's sheet from the panel's foot. The Log sheet (ui/logsheet.ts) keeps each line's game second and kind, so it can
-// split by visit and set the kinds apart. Lines arrive in (at, seq) order with each Step; their text is the content's.
-// The aim (ui/aim.ts) is the story's too. ui/headseat.ts seats the head, the aim and the strip.
+// when it arrives) and the Chronicle button, dotted when a line left the strip before the player touched anything after
+// it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
+// first, the older dimmer, in room kept for the tallest story line the content can write (Content.line_infos, laid out
+// unseen in the strip's one cell; ui/stripfit.ts counts how many fit, at least the newest). The Feedback button
+// (feedback.ts) opens the tester's sheet from the panel's foot. Every line, every rule's start and let-go and every fight
+// goes to the chronicle (ui/chroniclesheet.ts) with its game second, kind and cause. Lines arrive in (at, seq) order with
+// each Step; their text is the content's. The aim (ui/aim.ts) is the story's too. ui/headseat.ts seats the head, the
+// aim and the strip.
 import type { LogLine, View } from "../api/types";
 import { awayLines, type Placement } from "../game/awaylines";
 import { entries, poolLine, type Window } from "../game/fights";
@@ -21,12 +22,14 @@ import { CampBar } from "./camp";
 import { el, keyed, tapFeedback } from "./dom";
 import { FeedbackSheet } from "./feedback";
 import { Journal } from "./journal";
-import { LogSheet } from "./logsheet";
+import { ChronicleSheet } from "./chroniclesheet";
 import { chipHints } from "../game/hints";
 import { markNew, unmark } from "./fresh";
 import { fitting } from "./stripfit";
 import type { Part, PartContext } from "./part";
-import type { LineKind, Past } from "../game/loggroups";
+import { inStrip, type EntryKind, type Past } from "../game/chronicle";
+import { causeWords } from "../game/chronwords";
+import { ruleEntries } from "../game/rulerows";
 
 const TOUCHES = ["pointerdown", "keydown"] as const;
 const KEEP = 200;
@@ -34,7 +37,7 @@ const KEEP = 200;
 export class Story implements Part {
   /** The story strip: the newest lines that fit its room, whole (ui/headseat.ts seats it under the art). */
   readonly root = el("section", "strip");
-  /** The Camp bar, chips and Log: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
+  /** The Camp bar, chips and Chronicle: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
   readonly head = el("div", "scene-head");
   private readonly chips = el("div", "chips");
   private readonly aimLine: AimLine;
@@ -43,9 +46,11 @@ export class Story implements Part {
   /** The Feedback button: Screen seats it at the panel's foot. */
   readonly feedbackButton: HTMLButtonElement;
   private readonly camp: CampBar;
-  private readonly log: LogSheet;
+  private readonly chronicle: ChronicleSheet;
+  /** The rule entries already in the chronicle, by id (game/rulerows.ts). */
+  private readonly ruled = new Set<string>();
   private readonly journal: Journal;
-  private readonly logOpen: HTMLButtonElement;
+  private readonly chronicleOpen: HTMLButtonElement;
   /** When the player last touched the page (performance.now()). */
   private touchedAt = -Infinity;
   private chipRows = new Map<string, { node: HTMLElement }>();
@@ -61,26 +66,26 @@ export class Story implements Part {
   constructor(private readonly ctx: PartContext) {
     this.camp = new CampBar(ctx);
     this.aimLine = new AimLine(ctx);
-    this.log = new LogSheet(ctx.catalog, ctx.keeps);
+    this.chronicle = new ChronicleSheet(ctx.catalog, ctx.keeps);
     this.journal = new Journal(ctx);
     this.lines.setAttribute("aria-live", "polite");
-    const open = el("button", "log-open", ctx.catalog.text.get(UI.log));
+    const open = el("button", "chron-open", ctx.catalog.text.get(UI.chronicle));
     open.type = "button";
-    open.addEventListener("click", () => { tapFeedback(); this.log.show(); });
-    this.logOpen = open;
+    open.addEventListener("click", () => { tapFeedback(); this.chronicle.show(); });
+    this.chronicleOpen = open;
     for (const t of TOUCHES) document.addEventListener(t, () => { this.touchedAt = performance.now(); }, { capture: true });
     const feedback = new FeedbackSheet(ctx);
     this.feedbackButton = feedback.button;
     this.head.append(this.camp.root, this.chips, open);
-    this.root.append(this.room(), this.lines, this.log.root, this.journal.root, feedback.root);
+    this.root.append(this.room(), this.lines, this.chronicle.root, this.journal.root, feedback.root);
   }
 
-  /** Every line the content can write, unseen in the strip's one cell with the shown line: the cell is as tall as the
-   * tallest of them at the strip's width, so no line is cut and none arriving changes the strip's height. */
+  /** Every story line the content can write, unseen in the strip's one cell with the shown line: the cell is as tall as
+   * the tallest of them at the strip's width, so no line is cut and none arriving changes the strip's height. */
   private room(): HTMLElement {
     const room = this.roomCell;
     room.setAttribute("aria-hidden", "true");
-    const texts = new Set(this.ctx.catalog.content.line_infos.map((l) => this.ctx.catalog.text.get(l.key)).filter((t) => t));
+    const texts = new Set(this.ctx.catalog.content.line_infos.filter((l) => inStrip(l.kind)).map((l) => this.ctx.catalog.text.get(l.key)).filter((t) => t));
     room.append(...[...texts].map((t) => el("span", "", t)));
     return room;
   }
@@ -88,7 +93,7 @@ export class Story implements Part {
   update(view: View, prev: View | null): void {
     const { catalog } = this.ctx;
     this.nowAt = Math.max(this.nowAt, view.at);
-    this.log.seen(this.nowAt);
+    this.chronicle.seen(this.nowAt);
     const carried = catalog.content.feature_infos.filter((f) => f.label_key && catalog.unlocked(view, "feature", f.feature));
     this.journal.update(view);
     const book = (f: string): string => (this.journal.shown && f === catalog.content.journal?.feature ? "journal" : "keep");
@@ -99,6 +104,16 @@ export class Story implements Part {
     this.aimLine.update(view);
     this.fightLines(view, prev);
     this.topLines(view, prev);
+    this.ruleLines();
+  }
+
+  /** Each rule's latest start and let-go the chronicle does not hold yet (game/rulerows.ts). */
+  private ruleLines(): void {
+    for (const { id, entry } of ruleEntries(this.ctx.catalog, this.ctx.ruleRuns())) {
+      if (this.ruled.has(id)) continue;
+      this.ruled.add(id);
+      this.chronicle.add(entry);
+    }
   }
 
   /** A skill that reached its phase's top since the last view: one line, saying how long ago when that was a return
@@ -108,11 +123,11 @@ export class Story implements Part {
     for (const { skill, at } of toppedSince(prev, view)) {
       const name = this.ctx.catalog.skillLabel(skill);
       this.say(view.at - at >= 60 ? text.fill(UI.prestigeReached, { skill: name, d: format.duration(view.at - at) })
-        : text.fill(UI.prestigeReachedNow, { skill: name }), `top:${skill}:${at}`, "level");
+        : text.fill(UI.prestigeReachedNow, { skill: name }), `top:${skill}:${at}`, "level", null);
     }
   }
 
-  /** What fights happened since the last view, as lines in the strip and the Log: each fight of a window its own entry
+  /** What fights happened since the last view, as chronicle entries under their runner: each fight of a window its own entry
    * (the shuffle-bag labels, each worded from its runner's pool when it has one), a long window one summary line
    * (game/fights.ts). They take their turns in the arrival queue with the step's other lines. */
   private fightLines(view: View, prev: View | null): void {
@@ -122,23 +137,27 @@ export class Story implements Part {
     const standing = (runner: string) => catalog.content.standing_infos.find((a) => a.action === runner);
     const name = (runner: string): string => catalog.cards.has(runner) ? catalog.cardLabel(runner) : catalog.label(standing(runner)?.label_key);
     const fight = (runner: string) => catalog.cards.get(runner)?.fight ?? standing(runner)?.fight ?? null;
-    const one = (runner: string, kind: "won" | "lost", k: number): string => {
+    const causes: Array<string | null> = [];   // each entry's cause, in the order entries() words them: a pool's line
+    const one = (runner: string, kind: "won" | "lost", k: number): string => {   // names no runner, ui.fight.* does
       const pool = (kind === "won" ? fight(runner)?.won_line_keys : fight(runner)?.lost_line_keys) ?? [];
+      causes.push(pool.length > 0 ? name(runner) : null);
       if (pool.length > 0) return text.get(poolLine(save, runner, kind, pool, k));
       return text.fill(kind === "won" ? UI.fightWon : UI.fightLost, { runner: name(runner) });
     };
     const words = {
       won: (runner: string, k: number) => one(runner, "won", k),
       lost: (runner: string, k: number) => one(runner, "lost", k),
-      since: (w: Window) => text.fill(UI.fightSince,
-        { fought: String(w.fought), won: String(w.fought - w.lost), lost: String(w.lost), runner: name(w.runner) }),
+      since: (w: Window) => { causes.push(null); return text.fill(UI.fightSince,
+        { fought: String(w.fought), won: String(w.fought - w.lost), lost: String(w.lost), runner: name(w.runner) }); },
     };
-    entries(save, prev, view, words).forEach((said, i) => this.say(said, `fight:${view.at}:${i}`, "fight"));
+    entries(save, prev, view, words).forEach((said, i) => this.say(said, `fight:${view.at}:${i}`, "fight", causes[i] ?? null));
   }
 
-  /** A line the page words itself, in the strip and the Log, taking its turn in the arrival queue. */
-  private say(said: string, id: string, kind: LineKind): void {
-    this.log.add({ text: said, at: this.nowAt, kind });
+  /** A line the page words itself, in the chronicle, and in the strip when its kind is story, taking its turn there in
+   * the arrival queue. */
+  private say(said: string, id: string, kind: EntryKind, cause: string | null): void {
+    this.chronicle.add({ text: said, at: this.nowAt, kind, cause });
+    if (!inStrip(kind)) return;
     const item = el("li", "", said);
     this.lines.append(item);
     this.ctx.arrivals.line([item], id, readingMs(said));
@@ -175,9 +194,10 @@ export class Story implements Part {
       const text = this.ctx.catalog.text.get(key);
       if (!text || where[i] === "none") return null;
       const at = ats[i]!;
-      this.log.add({ text, at, kind: this.ctx.catalog.lineKind(key) });
-      if (where[i] === "log") return null;
+      const kind = this.ctx.catalog.lineKind(key);
+      this.chronicle.add({ text, at, kind, cause: causeWords(this.ctx.catalog, this.ctx.catalog.lineCause(key)) });
       this.keys.push({ key, at });
+      if (where[i] === "chronicle" || !inStrip(kind)) return null;
       const item = el("li", animate ? "" : "still", text);
       this.lines.append(item);
       return item;
@@ -189,7 +209,7 @@ export class Story implements Part {
 
   /** The strip shows the newest lines that have shown, as many as fit its room whole: a line that no longer fits goes
    * (the arrival queue held each back for the reading time of the one before); lines still waiting their turn stay. A
-   * line that goes with no touch from the player since it showed may not have been read: the Log gets its dot. */
+   * line that goes with no touch from the player since it showed may not have been read: the Chronicle gets its dot. */
   private trim(): void {
     const now = performance.now();
     const shown = [...this.lines.children].filter((n) => !n.classList.contains("held"));
@@ -198,7 +218,7 @@ export class Story implements Part {
     const keep = fitting(spans, this.roomCell.getBoundingClientRect().height);
     for (const gone of shown.slice(0, shown.length - keep)) {
       const since = this.shownAt.get(gone);
-      if (since !== undefined && this.touchedAt < since && !this.log.root.open) markNew(this.logOpen, () => {});
+      if (since !== undefined && this.touchedAt < since && !this.chronicle.root.open) markNew(this.chronicleOpen, () => {});
       gone.remove();
     }
   }

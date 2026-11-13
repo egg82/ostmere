@@ -3,7 +3,7 @@
 import type { Content } from "../api/types";
 import { GOAL_ROW_KEYS } from "./goalkeys";
 import { LESSON_KEYS } from "./lessonkeys";
-import { LOG_KEYS } from "./logkeys";
+import { CHRONICLE_KEYS } from "./chronkeys";
 import { PRESTIGE_KEYS } from "./prestigekeys";
 import { REMINDER_KEYS } from "./reminderkeys";
 import { RULE_KEYS } from "./rulekeys";
@@ -49,7 +49,6 @@ export const UI = {
   handsUntilDown: "ui.hands.until_down", // "{store}{m}": the strip while a "reaches" rule runs
   handsWhileChip: "ui.hands.while_chip", // "{chip}": the strip while a rule worded as a chip runs
   close: "ui.close",
-  log: "ui.log.open",
   feedbackOpen: "ui.feedback.open",
   feedbackPrompt: "ui.feedback.prompt", // the field's placeholder and accessible name
   feedbackNote: "ui.feedback.note", // what is sent along
@@ -71,7 +70,7 @@ export const UI = {
   both: "ui.mix.both",
   ...GOAL_ROW_KEYS,
   ...LESSON_KEYS,
-  ...LOG_KEYS,
+  ...CHRONICLE_KEYS,
   ...PRESTIGE_KEYS,
   ...REMINDER_KEYS,
   townTitle: "ui.town.title",   // the camp's shown name: the town mix's heading and label, one home

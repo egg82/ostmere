@@ -1,5 +1,5 @@
 // The page's trips (docs/design/banked-time-plan.md, item 6): a trip is a card known by its id. The figure is away
-// while one runs on a tap and for its share of each cycle while it runs mixed; its completions go to the Log and its
+// while one runs on a tap and for its share of each cycle while it runs mixed; its completions go to the chronicle and its
 // finds (triggers with lines, no card) to the band; and nothing on the page totals what a cap lost.
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
@@ -50,12 +50,12 @@ const away = "running:far_hunt|mix:far_hunt";
   expect("a trip with no share is never away", none, 0);
 }
 
-// Arrivals: an uncapped trip's completions go to the Log, its finds (a trigger's line, no card) play on the band.
+// Arrivals: an uncapped trip's completions go to the chronicle, its finds (a trigger's line, no card) play on the band.
 {
   const catalog = new Catalog(fixtureContent);
   const lines: LogLine[] = [{ at: 3000, seq: 0, key: "trip.done", card: "far_hunt" }, { at: 3001, seq: 1, key: "find.1", card: null }];
   const view: View = { ...base, cards: [trip({})] };
-  expect("trip completion and find", awayLines(catalog, lines, view, { ...base, cards: [] }), ["log", "band"]);
+  expect("trip completion and find", awayLines(catalog, lines, view, { ...base, cards: [] }), ["chronicle", "band"]);
   const capped: View = { ...base, cards: [trip({ cap: 3 })] };
   expect("control: a capped card's line plays", awayLines(catalog, lines.slice(0, 1), capped, base)[0], "band");
 }

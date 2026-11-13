@@ -37,7 +37,7 @@ function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);
 }
 
-const card = { title_key: "ui.close", line_keys: ["ui.log.open", "ui.tab.cards"], button_key: "ui.tab.completed" };
+const card = { title_key: "ui.close", line_keys: ["ui.chronicle.open", "ui.tab.cards"], button_key: "ui.tab.completed" };
 const content: Content = {
   ...fixtureContent,
   feature_infos: [...fixtureContent.feature_infos, { feature: "day_done", hint_key: null, label_key: null, feature_card: card }],
@@ -74,7 +74,7 @@ function run(first: View, next: View, busyFrames = 0) {
   check(r.scheduled === 1 && r.root.open, "then it comes up, once");
   check(r.onPage, "the card is on the page");
   const texts = r.root.all().map((n) => n.textContent);
-  check(texts.includes("Not now") && texts.includes("Log") && texts.includes("Tasks"), `title and lines: ${texts.join("|")}`);
+  check(texts.includes("Not now") && texts.includes("Chronicle") && texts.includes("Tasks"), `title and lines: ${texts.join("|")}`);
   const buttons = r.root.all().filter((n) => n.tag === "button");
   check(buttons.length === 1 && buttons[0]?.textContent === "Completed", "one button, the content's");
   check(vars.get("--end-h") === "198px", "while it is up the page reserves its height");

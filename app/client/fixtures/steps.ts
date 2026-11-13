@@ -18,12 +18,13 @@ import { BP, fixtureContent, Q, R, TIRED } from "./content";
 import type { DayOnePhase } from "./dayone";
 import type { DayTwoPhase } from "./daytwo";
 import type { FightsPhase } from "./fights";
+import type { ChroniclePhase } from "./chronicle";
 import type { JournalPhase } from "./journal";
 import type { PrestigePhase } from "./prestige";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];

@@ -50,7 +50,7 @@ class Point:
 
 def place(chips: Mapping[str, tuple[str, bool]], lines: Sequence[tuple[str, str | None]], shown: AbstractSet[str],
           repeats: AbstractSet[str]) -> list[str]:
-    """Where each line goes, as game/awaylines.ts places it: "band", "log" or "none". `chips`: line key to (chip, is
+    """Where each line goes, as game/awaylines.ts places it: "band", "chronicle" or "none". `chips`: line key to (chip, is
     its on-line); `lines`: (key, card); `shown`: the chips shown after; `repeats`: the uncapped cards."""
     chip_of = [chips.get(key) if card is None else None for key, card in lines]
     last = {c[0]: i for i, c in enumerate(chip_of) if c is not None}
@@ -58,9 +58,9 @@ def place(chips: Mapping[str, tuple[str, bool]], lines: Sequence[tuple[str, str 
     for i, (_, card) in enumerate(lines):
         c = chip_of[i]
         if c is not None:
-            out.append("log" if c[1] or (last[c[0]] == i and c[0] not in shown) else "none")
+            out.append("chronicle" if c[1] or (last[c[0]] == i and c[0] not in shown) else "none")
         else:
-            out.append("log" if card is not None and card in repeats else "band")
+            out.append("chronicle" if card is not None and card in repeats else "band")
     return out
 
 

@@ -106,7 +106,7 @@ function rig(kept = true) {
   document.body.replaceChildren(screen.root);
   screen.show(dayOneStep("returned", 100));
   expect("the Feedback button sits in the panel's foot", found(".panel-foot").children.map((n) => n.className), ["feedback-open"]);
-  expect("and not with the chips beside the Log", found(".scene-head").querySelector(".feedback-open"), null);
+  expect("and not with the chips beside the Chronicle", found(".scene-head").querySelector(".feedback-open"), null);
   const r = controls();
   r.open.click();
   write(r.field, "the screen's words");

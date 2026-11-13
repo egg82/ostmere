@@ -7,7 +7,7 @@
 // recovery words due; #devices opens the "Another device" sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
 // `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers (the answer rule's builder).
-// #journal opens the Journal sheet (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices.
+// #chronicle opens the Chronicle (phase chronicle fills it). #journal opens the Journal sheet (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices.
 import "../src/game.css";
 import "../src/fights.css";
 import { wireBegin } from "../src/begin";
@@ -55,6 +55,7 @@ if (hash.has("sheet")) clickWhenShown(".hands-name, .hands-plan");
 if (hash.has("devices")) clickWhenShown(".devices-open");
 if (hash.has("games")) clickWhenShown(".games-open");
 if (hash.has("journal")) clickWhenShown(".journal-open");
+if (hash.has("chronicle")) clickWhenShown(".chron-open");
 if (hash.has("prestigesheet")) clickWhenShown(".skill-foot .primary");
 if (hash.has("have")) clickWhenShown("#have-code summary");
 

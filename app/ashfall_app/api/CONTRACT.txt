@@ -132,7 +132,7 @@ ENDPOINTS
   ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
   when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
   second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
-  Log's entries begin at each `left`). A PUT from a page of the build before, which carries no visits, leaves them as stored.
+  chronicle's stretches begin at each `left`). A PUT from a page of the build before, which carries no visits, leaves them as stored.
   Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
   checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
   a line by its kind and never by its key or words.
@@ -486,8 +486,9 @@ THE CLIENT MAY
     ones too, labelled by LaneInfo). A chip whose ChipInfo has an offered_after is drawn only once view.unlocked
     holds it (its cure is on screen). A chip with a cost_key draws that text with its word, wherever it is drawn.
     Just above the art, one line: the aim, the text of the last of Content.aim_infos whose `after` view.unlocked
-    holds (the first has none, so there is always one). Content.line_infos lists every key a story line can carry
-    (any LogLine.key, and end_line_keys), each once, so the page can keep room for the tallest before any arrives.
+    holds (the first has none, so there is always one). Content.line_infos lists every key a log line can carry
+    (any LogLine.key, and end_line_keys), each once, so the page can keep the strip's room for the tallest line of a
+    kind the strip shows (story, tap, body) before any arrives.
   - draw one card panel from view.cards and a Completed tab from view.completed; a card moves between them only
     when the view says so. Each card is drawn the same whether tapped, mixed or idle: its completions against its
     cap ("3 of 5"; no cap, the count alone), its share and run in the running mix, and its one bar: Card.bar sampled
@@ -694,10 +695,16 @@ TEXT AND NUMBERS (one rule)
     ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
-    ui.log.open | ui.tab.cards | ui.tab.completed   the Log button and the Cards / Completed tabs
-    ui.log.away_m {m} | away_h {h} | away_hm {h} {m} | away_d {d}   the title of a Log stretch that began with a return: how long the player was away
-    ui.log.earlier | ui.log.now     the title of the stretch before the first return kept, and of the newest when no return is kept
-    ui.log.n_story | n_find | n_tap | n_level | n_body | n_fight {n}   how many lines of that kind a Log stretch holds
+    ui.chronicle.open | ui.tab.cards | ui.tab.completed   the Chronicle button and sheet, and the Cards / Completed tabs
+    ui.chronicle.away_m {m} | away_h {h} | away_hm {h} {m} | away_d {d}   the title of a chronicle stretch that began with a return: how long the player was away
+    ui.chronicle.earlier | ui.chronicle.now     the title of the stretch before the first return kept, and of the newest when no return is kept
+    ui.chronicle.story | finds | levels | rules | fights | talk | all   the chronicle's filters
+    ui.chronicle.count {name}{n}   how many entries of a filter a stretch holds
+    ui.chronicle.rule_on {rule} | ui.chronicle.rule_off {rule}   a rule's entry: it came on, it let go
+    ui.cause.store {store}{n} | ui.cause.below {store}{n} | ui.cause.level {skill}{n} | ui.cause.skill {skill} |
+    ui.cause.count {card}{n} | ui.cause.camp {n} | ui.cause.time | ui.cause.answer   a line's cause (Line causes):
+                                    a store reached or fallen to, a skill's level, one of a skill's levels, a card's
+                                    count, a Camp level, the clock, the player's answer
     ui.feedback.open | ui.feedback.prompt | ui.feedback.note | ui.feedback.send | ui.feedback.cancel |
     ui.feedback.thanks | ui.feedback.later   the Feedback button and its sheet: the button, the field's placeholder, the
                                     line saying what is sent along, Send, Not now, the thank-you, and the line when a send
@@ -1107,7 +1114,7 @@ JOURNAL
 
   The book is in sections, a closed set, and each page is in one:
     days                the daily journal: the story's bigger beats, retold afterwards in the character's voice (the
-                        Log stays the live feed). Each note is written on a spine beat and names it.
+                        chronicle stays the live feed). Each note is written on a spine beat and names it.
     creatures           the things fought, with their numbers.
     places              places, events and expeditions.
   Within a section, pages run in the order they are written. The content keeps that order: a section's pages are
@@ -1216,7 +1223,7 @@ JOURNAL
     ever). The read marks wait for the close.
   - draw a figure for a runner whose fought is 0, take an entry's numbers from anywhere but view.fights, or draw an
     entry or note view.unlocked does not hold.
-  - write a note's words anywhere but its page: the story strip and the Log carry lines, not notes.
+  - write a note's words anywhere but its page: the story strip and the chronicle carry lines, not notes.
 
   New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
                                     and its page turns
