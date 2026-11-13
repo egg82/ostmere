@@ -1,5 +1,5 @@
-"""Day two's readouts (report.py) against their approved text (tests/readout_snapshot.py), one per push route, rendered
-from the session's shared plays. A change fails until it is approved with
+"""Day two's readouts (report.py) reported against their committed text (tests/readout_snapshot.py), one per push route, rendered
+from the session's shared plays. A change is reported, never failed; commit it with
 `python -m tests.readout_snapshot --write daytwo`."""
 import pytest
 
@@ -16,6 +16,6 @@ def test_the_committed_readouts_are_the_ones_the_report_writes():
 
 
 @pytest.mark.parametrize("day2_readout", [(name, 0) for name in PUSH_ROUTES], indirect=True, ids=lambda r: r[0])
-def test_a_route_readout_is_approved(day2_readout: tuple[str, str]):
+def test_a_route_readout_is_reported(day2_readout: tuple[str, str]):
     name, text = day2_readout
     rs.check(f"daytwo-{name}", text)

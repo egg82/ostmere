@@ -1,23 +1,86 @@
-"""The per-test time gate (conftest.py): its verdict function can fail, a wait is not CPU, and the held list stays empty."""
-import time
+"""The per-test time gate (time_gate.py): its verdicts can fail, a slow function fixture fails the test it serves, a slow
+shared fixture fails by name and is not charged to the tests that use it (a slow test after its first user still
+fails), a playthrough is not timed, and the held lists stay empty."""
+import pytest
 
-from tests import conftest
+from tests import time_gate as gate
+
+pytest_plugins = ["pytester"]
+
+CONTROL = """
+import time
+import pytest
+
+@pytest.fixture
+def slow():
+    time.sleep(0.15)
+    yield
+
+@pytest.fixture(scope="session")
+def tree():
+    time.sleep(0.4)
+    return 1
+
+@pytest.fixture(scope="session")
+def bush():
+    time.sleep(0.1)
+    return 1
+
+def test_slow_setup(slow):
+    pass
+
+def test_uses_tree(tree):
+    pass
+
+def test_uses_tree_again(tree):
+    pass
+
+def test_slow_after_the_shared_fixture(tree, slow):
+    pass
+
+def test_slow_in_its_body_after_a_shared_fixture_it_set_up(bush):
+    time.sleep(0.15)
+
+@pytest.mark.playthrough
+def test_a_slow_playthrough(slow):
+    pass
+
+def test_fast():
+    pass
+"""
 
 
 def test_over_the_ceiling_is_slow():
-    assert conftest.too_slow("tests/x.py::t", conftest.CEILING_S + 0.01)
+    assert gate.too_slow("tests/x.py::t", gate.CEILING_S + 0.01)
 
 
 def test_under_the_ceiling_is_fine():
-    assert not conftest.too_slow("tests/x.py::t", conftest.CEILING_S)
+    assert not gate.too_slow("tests/x.py::t", gate.CEILING_S)
 
 
-def test_held_tests_are_excused_and_the_list_stays_empty():
-    assert conftest.too_slow("tests/x.py::t", 99)
-    assert not conftest.HELD, "HELD may only shrink; it starts empty, so it stays empty"
+def test_a_slow_shared_fixture_is_slow():
+    assert gate.fixture_too_slow("tree", gate.FIXTURE_CEILING_S + 0.01)
+    assert not gate.fixture_too_slow("tree", gate.FIXTURE_CEILING_S)
 
 
-def test_waiting_is_not_cpu():
-    start = conftest.cpu_now()
-    time.sleep(0.3)
-    assert conftest.cpu_now() - start < 0.1
+def test_the_held_lists_stay_empty():
+    assert gate.too_slow("tests/x.py::t", 99) and gate.fixture_too_slow("tree", 99)
+    assert not gate.HELD and not gate.HELD_FIXTURES, "the held lists may only shrink; they start empty, so stay empty"
+
+
+def test_the_gate_fails_slow_fixtures_and_spares_a_playthrough(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
+    """The gate, registered as conftest.py registers it, run in-process over a file whose only costs are fixtures'
+    sleeps, under a 0.08 s test ceiling and a 0.3 s shared-fixture ceiling."""
+    monkeypatch.setattr(gate, "CEILING_S", 0.08)
+    monkeypatch.setattr(gate, "FIXTURE_CEILING_S", 0.3)
+    pytester.makeini("[pytest]\nmarkers =\n    playthrough: a whole-game simulation\n")
+    pytester.makeconftest("from tests import time_gate\n\n"
+                          "def pytest_configure(config):\n    config.pluginmanager.register(time_gate, 'time_gate')\n")
+    pytester.makepyfile(test_control=CONTROL)
+    result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
+    result.assert_outcomes(passed=6, errors=4)   # a teardown error leaves its test counted as passed too
+    result.stdout.fnmatch_lines(["*test_slow_setup took *s of wall clock*",
+                                 "*fixture tree (session scope) took *s to set up*",
+                                 "*test_slow_after_the_shared_fixture took *s of wall clock*",
+                                 "*test_slow_in_its_body_after_a_shared_fixture_it_set_up took *s of wall clock*",
+                                 "PASSED test_control.py::test_uses_tree_again"], consecutive=False)

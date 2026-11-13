@@ -82,8 +82,8 @@ class Decider:
 
 @pytest.fixture
 def at_the_cap(game: GameClient, pg_url: str, shipped_ruleset: ShippedRuleset) -> Decider:
-    """A save holding 64 mixes, built in setup, which the per-test CPU ceiling does not time. The engine makes the 64
-    saves in memory and the row is written once: 64 requests each load, decide and write the save again (1.7 s)."""
+    """A save holding 64 mixes. The engine makes the 64 saves in memory and the row is written once: 64 requests
+    would each load, decide and write the save again (1.7 s)."""
     decide = Decider(game)
     database = open_database(pg_url, max_size=2)
     try:

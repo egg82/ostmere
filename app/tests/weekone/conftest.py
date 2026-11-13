@@ -1,5 +1,5 @@
-"""Week one's plays (routes.py) and what the verdicts read off them, built once per session in a fixture's setup (setup is
-not timed by the CPU ceiling): `week_route` takes its route by indirect parametrization, `week_part` one heavy step's reading of a
+"""Week one's plays (routes.py) and what the verdicts read off them, built once per session in a fixture's setup (playthrough
+tests, which their CI job's timeout budgets): `week_route` takes its route by indirect parametrization, `week_part` one heavy step's reading of a
 chapter (verdicts.PARTS), `week_spends` and `week_counts` one chapter's typical-route spend and per-visit counts (also by indirect
 parametrization), `week_days` one route's arrivals per calendar day, `week_marks` the typical route's visits marked for the
 readout (daytwo/checks.marks), `two_am_week_run` the 2 AM replay pair. A test
@@ -39,7 +39,7 @@ def week_route(request: pytest.FixtureRequest) -> tuple[str, DayTwoPlayer]:
 def week_export(week_route: tuple[str, DayTwoPlayer]) -> list[str]:
     """The route's play written where the saved week one's job reads it (ends.exported_path), then loaded back: the
     attributes, by name, on which the loaded play differs from the played one. Pickling and compressing a week's play
-    is the cost, so it is done in setup."""
+    is the cost, so it is done once, in the fixture."""
     name, p = week_route
     path = ends.exported_path(name)
     path.parent.mkdir(parents=True, exist_ok=True)

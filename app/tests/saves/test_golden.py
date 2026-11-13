@@ -3,7 +3,7 @@ the older ones through UPGRADES for real) load under today's opening and under a
 (a new card a new trigger unlocks, a renamed store with its mapping, a retuned work_s), keep everything they had
 earned, and run on (engine DESIGN.txt, "Rebase", invariants 49 to 51).
 
-Pushes advance each save one game day (the 2 s ceiling); the nightly tests-deep run sets SAVES_DAYS=30, and the
+Pushes advance each save one game day (the per-test ceiling, tests/conftest.py); the nightly tests-deep run sets SAVES_DAYS=30, and the
 saves-forward CI job advances the saves of the commit before a push 30 days with the pushed code."""
 import os
 from functools import cache

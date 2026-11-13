@@ -189,18 +189,34 @@ def silent_host() -> Generator[int]:
         yield int(s.getsockname()[1])
 
 
-def test_a_host_that_never_answers_is_passed_over_within_a_few_seconds(pg_url: str):
-    """Opened on a thread that is left behind if it hangs: a pool stuck connecting cannot be closed until libpq gives up."""
+SILENT_CONNECT_S = 1
+"""The connect timeout the silent-host smoke test sets in its URL: libpq's own wait, cut from the default to a second."""
+
+
+def test_a_host_that_never_answers_is_passed_over(pg_url: str):
+    """The one real wait in this file: libpq gives up on a host that takes the connection and never answers, and the
+    multi-host URL a two-site deploy uses moves on to the next. libpq times that itself, so no clock can be injected;
+    the URL sets a short connect_timeout, and the default open_database adds is checked by the test below. Opened on a
+    thread that is left behind if it hangs: a pool stuck connecting cannot be closed until libpq gives up."""
     opened: list[Database] = []
     with silent_host() as port:
-        opener = threading.Thread(
-            target=lambda: opened.append(open_database(multi_host(pg_url, first_port=port), timeout_s=30)), daemon=True)
+        url = make_conninfo(multi_host(pg_url, first_port=port), connect_timeout=SILENT_CONNECT_S)
+        opener = threading.Thread(target=lambda: opened.append(open_database(url, timeout_s=30)), daemon=True)
         opener.start()
-        opener.join(4)
-        assert opened, "no connection to the second host within 4 s"
+        opener.join(SILENT_CONNECT_S + 2)
+        assert opened, f"no connection to the second host within {SILENT_CONNECT_S + 2} s"
     with opened[0].engine.connect() as conn:
         assert conn.execute(text("SELECT 1")).scalar_one() == 1
     opened[0].close()
+
+
+def test_a_url_that_sets_no_connect_timeout_gives_up_on_a_host_within_a_few_seconds(pg_url: str):
+    database = open_database(pg_url)
+    try:
+        with database.pool.connection() as conn:
+            assert 0 < int(conn.info.get_parameters()["connect_timeout"]) <= 5
+    finally:
+        database.close()
 
 
 def test_a_connect_timeout_the_url_sets_is_kept(pg_url: str):

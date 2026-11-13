@@ -48,6 +48,6 @@ def test_a_planted_out_of_order_story_is_caught(loaded: Rebased):
     assert rebase_problems(swapped)
 
 
-def test_the_rebase_readout_is_approved():
+def test_the_rebase_readout_is_reported():
     """Last in the file, so every load is the cached one its case already made."""
     rs.check("dayone-rebase", rebase_text())

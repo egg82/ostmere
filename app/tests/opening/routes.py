@@ -1,8 +1,9 @@
 """The scripted plays every opening test reads, each played once per pytest session (docs/engineering.md, "Fast from
 the start"). A push plays the representative routes at seed 0: typical, by_hand, fireback_first, the eager forager, and
 one run kept going past the end. The nightly deep run (tests-deep, which sets HYPOTHESIS_PROFILE=ci) plays every route
-at seeds 0-2 and both kinds of player past the end. Tests take a route through the fixtures in conftest.py, so the play
-happens in a fixture's setup, never in a test's own time; a test that needs a moment of a play reads it (`Player.at`)."""
+at seeds 0-2 and both kinds of player past the end. Tests take a route through the fixtures in conftest.py, so each play
+happens once, in the first reader's setup (they are playthrough tests, budgeted by their CI job); a test that needs a
+moment of a play reads it (`Player.at`)."""
 import os
 from collections.abc import Callable
 from functools import cache

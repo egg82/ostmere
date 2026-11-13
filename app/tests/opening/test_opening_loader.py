@@ -32,7 +32,7 @@ def test_the_shipped_file_loads_and_its_rules_are_valid():
 
 @pytest.fixture(scope="module")
 def two_loads() -> tuple[Rules, Rules]:
-    """The shipped file loaded and converted twice, independently, in setup (not timed)."""
+    """The shipped file loaded and converted twice, independently."""
     return to_rules(load_opening()), to_rules(load_opening())
 
 
@@ -223,7 +223,7 @@ def test_a_fraction_that_does_not_divide_exactly_fails_the_load(tmp_path: Path):
 
 @pytest.fixture(scope="module")
 def fraction_rules(tmp_path_factory: pytest.TempPathFactory) -> Rules:
-    """The file with scavenge's stone split in three, loaded and converted in setup (not timed)."""
+    """The file with scavenge's stone split in three, loaded and converted."""
     path = broken(tmp_path_factory.mktemp("fraction"), 'outcome = { stores = [{ store = "stones", items = 1 }] }',
                   'outcome = { stores = [{ store = "stones", items = 1, every = 3 }] }')
     return to_rules(load_opening(path))
@@ -306,7 +306,7 @@ def chips_with_tired_moved() -> list[ChipEntry]:
 @pytest.fixture(scope="module")
 def order_digests() -> tuple[str, str, str]:
     """The cached opening's rules digest, that of the same without its order cards, and that with a chip's release moved,
-    converted in setup (not timed)."""
+    converted once."""
     o = opening()
     return (rules_digest(opening_rules()), rules_digest(to_rules(o.model_copy(update={"order_cards": []}))),
             rules_digest(to_rules(o.model_copy(update={"chips": chips_with_tired_moved()}))))

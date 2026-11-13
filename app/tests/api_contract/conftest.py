@@ -16,9 +16,9 @@ from tests.shipped_ruleset import ShippedRuleset
 
 @pytest.fixture(scope="session", autouse=True)
 def warm_request_paths(shipped_opening: Opening, shipped_ruleset: ShippedRuleset) -> None:
-    """Every route family the contract tests call, driven once on a database of its own in setup (not timed). The first
-    request of each kind pays for the app's lazy route state and the statements' compilation, which would otherwise be
-    charged to whichever test meets it first (about 1.2 s on the slow CI node). Skipped without a test database; the
+    """Every route family the contract tests call, driven once on a database of its own, before the first test. The
+    first request of each kind pays for the app's lazy route state and the statements' compilation (about 1.2 s on the
+    slow CI node), once per session rather than once per kind of test; the first test of the session is charged it. Skipped without a test database; the
     tests that need one skip themselves."""
     admin = os.environ.get("ASHFALL_TEST_PG", "")
     if not admin:

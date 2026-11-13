@@ -105,34 +105,39 @@ def test_a_forecast_made_earlier_on_the_same_path_lists_the_same_future(checked:
     assert checked[2] == []
 
 
-
-FORECAST_RATIO_MAX = 2.4
-"""p95 CPU seconds of one forecast at the served horizon over day one's saves, as a ratio to the engine bench's
-reference workload timed in the same process (tools/engine_bench.py), so the machine's speed and load cancel: wall
-seconds failed a 0.6 s budget at 0.86 s on a slow, busy CI runner. Twice the highest ratio measured locally (0.91-1.18
-under load), so a doubling fails. It is computed only when the page asks (CONTRACT.txt, "Forecast"), never on a plain
-advance or a decision."""
-REFERENCE_N = 1_200_000   # a fifth of the bench's workload: about 0.2 s, enough to time against
+INSTANTS_MAX = 240
+"""The most instants one forecast at the served horizon may resolve over day one's saves: twice the 118 measured (the
+typical route; babysitter's reach 56). A count, not a time, so the runner's speed and load do not move it: the CPU
+ratio this replaced failed at 2.65 against its 2.4 on unchanged code on a loaded host. What one instant costs is the
+engine bench's question (tools/bench_ab.py). The forecast is computed only when the page asks (CONTRACT.txt,
+"Forecast"), never on a plain advance or a decision."""
 
 
 @pytest.fixture(scope="module")
-def forecast_ratio() -> float:
-    """The 95th percentile over 12 saves each from two plays, in CPU seconds over the reference's, timed in setup."""
-    from time import process_time
-
+def forecast_work() -> list[tuple[int, bool]]:
+    """(instants resolved, horizon reached) of the served forecast on 12 saves each from two plays, counted through the
+    `stop` hook the API passes, which the forecast asks once before each instant."""
     from ashfall_app.api.service import FORECAST_S
-    from tools.engine_bench import reference
-    took: list[float] = []
+    work: list[tuple[int, bool]] = []
     for name in ("typical", "babysitter"):
         p = day(name)
         found = saves(p, every_s=1)
         for save in found[:: max(1, len(found) // 12)][:12]:
-            t0 = process_time()
-            forecast(save, p.rules, save.time + FORECAST_S, shown(save))
-            took.append(process_time() - t0)
-    took.sort()
-    return took[max(0, int(0.95 * len(took)) - 1)] / min(reference(REFERENCE_N) for _ in range(3))
+            asked = [0]
+
+            def stop() -> bool:
+                asked[0] += 1
+                return False
+            f = forecast(save, p.rules, save.time + FORECAST_S, shown(save), stop)
+            work.append((asked[0], f.until == save.time + FORECAST_S))
+    return work
 
 
-def test_a_forecast_stays_inside_its_budget(forecast_ratio: float):
-    assert forecast_ratio <= FORECAST_RATIO_MAX, f"p95 ratio {forecast_ratio:.3f} over {FORECAST_RATIO_MAX}"
+def test_a_forecast_stays_inside_its_budget(forecast_work: list[tuple[int, bool]]):
+    most = max(n for n, _ in forecast_work)
+    assert most <= INSTANTS_MAX, f"a forecast resolved {most} instants, over {INSTANTS_MAX}"
+
+
+def test_a_served_forecast_reaches_its_horizon(forecast_work: list[tuple[int, bool]]):
+    """None stops at MAX_INSTANTS short of the horizon, where nothing past it would be known."""
+    assert len(forecast_work) == 24 and all(reached for _, reached in forecast_work)

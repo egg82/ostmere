@@ -86,7 +86,7 @@ def broken(tmp_path: Path, old: str, new: str) -> Path:
 
 @pytest.fixture(scope="module")
 def control(tmp_path_factory: pytest.TempPathFactory) -> Opening:
-    """The harmless edit loaded in setup (not timed)."""
+    """The harmless edit, loaded."""
     return load_opening(OPENING, (*CHAPTERS, broken(tmp_path_factory.mktemp("control"), 't_c_work = "Work"', 't_c_work = "Toil"')))
 
 

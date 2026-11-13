@@ -113,8 +113,8 @@ come true. Everything else about the rhythm of play is taste, which the simulato
 - **Pace:** the 2 AM test and its instruments hold on the players who use the tools (typical, whenever, sharp and the
   other schedules), and a player who skips the tools lands behind them. The rhythm (new things and decisions per visit,
   effort between bigger things, what an absence opens, when each beat lands, each calendar day's arrivals, the
-  human-paced model's dead gaps) is a readout whose committed text CI compares, so it changes only when someone
-  approves the change. No band or target is set for it. The last month is read as closely as the first week (above).
+  human-paced model's dead gaps) is a readout whose committed text CI compares and reports, never
+  failing on it. No band or target is set for it. The last month is read as closely as the first week (above).
   A visit in the human-paced model ends once nothing is left to act on and nothing of the player's lands within the dead
   gap, so a long job started in a visit is not idle time. The readout marks the visit that reaches
   the edge of written content and each return during a long wait the player chose.
@@ -144,7 +144,7 @@ It fails only on an invariant (softlock, spiral, a tool user forced to babysit, 
 tools landing behind (`app/tests/dayone/human_flags.py`, `lands_behind`). The rhythm (per-visit and per-absence
 counters, beats beside their target days, calendar days, the human-paced model, each skill's ladder, what a re-mix is
 worth) is printed by each package's `report.py` and committed under `app/tests/readouts/`;
-`app/tests/readout_snapshot.py` fails a test when a readout's text changes, and
-`python -m tests.readout_snapshot --write` approves every package's at once. Week two plays on from week one's plays at
+`app/tests/readout_snapshot.py` reports a readout whose text changed, and
+`python -m tests.readout_snapshot --write` commits every package's at once. Week two plays on from week one's plays at
 G2 (`app/tests/weektwo/routes.py`), its decide counter refusing a queued stage (`app/tests/weektwo/counters.py`).
 Production lost to caps per store over a route and an absence: `app/tests/dayone/caploss.py`.

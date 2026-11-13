@@ -16,7 +16,7 @@ from tests.weektwo.routes import SAVED, laters, saved_end
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 
 HISTORY_PARTS = 4
-"""A week's history holds thousands of saves, too many to compare under the CPU ceiling in one test."""
+"""A week's history holds thousands of saves, too many to compare in one test inside a sensible timeout."""
 
 
 def todays_play(name: str) -> DayTwoPlayer:

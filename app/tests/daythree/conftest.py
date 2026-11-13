@@ -1,5 +1,5 @@
 """Day three's plays (routes.py) and what the verdicts read off them, built once per session in a fixture's setup
-(setup is not timed by the CPU ceiling): `day3_route` takes its route by indirect parametrization, `day3_counts` the
+(playthrough tests, which their CI job's timeout budgets): `day3_route` takes its route by indirect parametrization, `day3_counts` the
 typical route's per-visit counts, `day3_readout` its readout (report.py), `day3_cap_loss` its stores losing to caps, `day3_plumbed` the checks past the sinks over typical's saves, `two_am3_run` the 2 AM replay pair. A test reading one is marked playthrough."""
 import pytest
 

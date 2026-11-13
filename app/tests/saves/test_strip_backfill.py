@@ -136,7 +136,8 @@ def test_a_row_changed_after_it_was_read_keeps_the_change(engine: Engine, rs: Ru
 
 def waiting(engine: Engine) -> None:
     """Returns once a session waits on a lock (the backfill's compare-and-set behind the player's row lock)."""
-    probe = text("SELECT count(*) FROM pg_stat_activity WHERE wait_event_type = 'Lock' AND pid <> pg_backend_pid()")
+    probe = text("SELECT count(*) FROM pg_stat_activity WHERE wait_event_type = 'Lock' AND pid <> pg_backend_pid() "
+                 "AND datname = current_database()")
     deadline = time.monotonic() + 20
     with engine.connect() as other:
         while other.execute(probe).scalar_one() == 0:

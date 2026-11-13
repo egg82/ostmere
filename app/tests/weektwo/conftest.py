@@ -1,5 +1,5 @@
-"""Week two's plays (routes.py) and what the verdicts read off them, built once per session in a fixture's setup (setup is
-not timed by the CPU ceiling): `eight_route` takes its route by indirect parametrization, `eight_counts` the typical
+"""Week two's plays (routes.py) and what the verdicts read off them, built once per session in a fixture's setup (playthrough
+tests, which their CI job's timeout budgets): `eight_route` takes its route by indirect parametrization, `eight_counts` the typical
 route's per-visit counts (its heavy steps read first, a part to a setup, `week_part`), `eight_loss` its cap-loss check
 at the chapter's end, `eight_marks` its visits marked for the readout, `two_am_eight_run` the 2 AM replay pair;
 the `nine_`, `eleven_`, `twelve_` and `fifteen_` fixtures the same for days nine, eleven, twelve and fifteen,

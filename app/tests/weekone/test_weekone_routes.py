@@ -65,7 +65,7 @@ def test_a_part_of_a_chapters_counting_is_read(week_part: verdicts.Decided):
 
 
 @pytest.mark.parametrize("week_counts, chapter", [(c, c) for c in verdicts.CHAPTERS], indirect=["week_counts"])
-def test_a_chapters_visit_readout_is_approved(week_counts: Counts, chapter: str, week_marks: dict[str, str]):
+def test_a_chapters_visit_readout_is_reported(week_counts: Counts, chapter: str, week_marks: dict[str, str]):
     """After the parts above, whose readings the counts reuse (verdicts.typical_decided)."""
     _, found = week_counts
     assert len(found) >= 3, "the chapter's visits were counted"

@@ -5,6 +5,8 @@
   heldspeed  tests/engine_contract/test_heldspeed_*.py  MUTANTS_heldspeed.txt  specs tools/heldspeed_mutants/
   leaves  tests/engine_contract/test_leaves_*.py  MUTANTS_leaves.txt  rows 1-20   specs tools/leaves_mutants/
   retire  tests/engine_contract/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
+  clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/
+          the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); only its own tests make claims.
 
@@ -12,7 +14,8 @@ From app/:  python -m tools.mutate_suite SUITE --check
               exits 1 unless every row is claimed by a test marked @kills(row) and every claim names a row (a gate
               on the suite's own coverage; it plants nothing).
             python -m tools.mutate_suite SUITE --run [--only 1,5] [--specs DIR]
-              copies app/ to a scratch directory, requires the unmutated suite to be green there, then for each row
+              copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing
+              skipped (a suite that skipped its database tests would let every mutant survive), then for each row
               applies DIR/mNN.py (default the suite's specs directory) and runs the suite.
 
 A row may have variants, DIR/mNN.py and DIR/mNNx.py (one letter or more), each planted alone: the row passes when
@@ -31,6 +34,7 @@ or recorded EQUIVALENT.
 import argparse
 import ast
 import importlib.util
+import os
 import re
 import shutil
 import subprocess
@@ -41,7 +45,7 @@ from pathlib import Path
 from types import ModuleType
 
 APP = Path(__file__).resolve().parents[1]
-CONTRACT = APP / "tests" / "engine_contract"
+CONTRACT = "tests/engine_contract"
 ROW = re.compile(r"^ ?(\d+) \S")
 """A row starts in the first three columns (continuation lines are indented past them); its name fills columns 3-18."""
 FAILED = re.compile(r"^FAILED (\S+)", re.M)
@@ -56,6 +60,8 @@ class Suite:
     last: int = 10**6
     also: tuple[str, ...] = ()
     """Globs under app/ of test files run with the suite's own, whose claims they do not make."""
+    home: str = CONTRACT
+    """The directory under app/ holding the suite's MUTANTS file and its own tests."""
 
 
 SUITES = {
@@ -71,11 +77,14 @@ SUITES = {
         "tests/engine_contract/test_leaves_*.py", "tests/engine/test_leaves_impl.py",
         "tests/engine/test_retired_chores_impl.py", "tests/opening/test_leaves_loader.py",
         "tests/opening/test_retired_chores_loader.py")),
+    "clocks": Suite("MUTANTS_clocks.txt", "test_failover.py", "clocks_mutants", also=(
+        "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/reminders/test_sender.py",
+        "tests/dayone/test_dayone_forecast.py"), home="tests/db"),
 }
 
 
 def rows(suite: Suite) -> dict[int, str]:
-    lines = (CONTRACT / suite.mutants).read_text().splitlines()
+    lines = (APP / suite.home / suite.mutants).read_text().splitlines()
     found = {int(m[1]): line[3:19].strip() for line in lines if (m := ROW.match(line)) and suite.first <= int(m[1]) <= suite.last}
     if not found:
         sys.exit(f"{suite.mutants}: no rows parsed")
@@ -86,7 +95,7 @@ def claims(suite: Suite) -> dict[int, list[str]]:
     """Row -> the tests (file::name) marked @kills(row), read off the source, not by running anything. A claim of a row
     outside the suite's range is the sibling suite's."""
     out: dict[int, list[str]] = {}
-    for path in sorted(CONTRACT.glob(suite.tests)):
+    for path in sorted((APP / suite.home).glob(suite.tests)):
         for node in ast.walk(ast.parse(path.read_text())):
             if isinstance(node, ast.FunctionDef):
                 for dec in node.decorator_list:
@@ -124,14 +133,17 @@ def scratch_copy(into: Path) -> Path:
 
 
 def pytest(app: Path, suite: Suite) -> tuple[int, str]:
-    tests = sorted(str(p.relative_to(app)) for p in (app / "tests" / "engine_contract").glob(suite.tests))
+    tests = sorted(str(p.relative_to(app)) for p in (app / suite.home).glob(suite.tests))
     assert tests, f"no {suite.tests} files to run"
     for pattern in suite.also:
         beside = sorted(str(p.relative_to(app)) for p in app.glob(pattern))
         assert beside, f"no {pattern} files to run"
         tests += beside
+    env = {"PYTHONPATH": str(app), "PATH": "/usr/bin:/bin"}
+    if pg := os.environ.get("ASHFALL_TEST_PG"):
+        env["ASHFALL_TEST_PG"] = pg
     run = subprocess.run([sys.executable, "-m", "pytest", "-p", "no:cacheprovider", "-q", "-rf", *tests], cwd=app,
-                         env={"PYTHONPATH": str(app), "PATH": "/usr/bin:/bin"}, capture_output=True, text=True, check=False)
+                         env=env, capture_output=True, text=True, check=False)
     return run.returncode, run.stdout + run.stderr
 
 
@@ -195,6 +207,9 @@ def run(suite: Suite, only: set[int], specs: Path, failing: bool) -> int:
         code, out = pytest(base, suite)
         if code != 0:
             print(f"the unmutated suite is not green (exit {code}); nothing to learn from a mutant\n{out[-2500:]}")
+            return 1
+        if skipped := re.findall(r"\d+ skipped", out):
+            print(f"the unmutated suite skipped tests ({skipped[0]}): a skipped test cannot kill a mutant\n{out[-2500:]}")
             return 1
         print(f"baseline green: {re.findall(r'\d+ passed', out)}")
         bad = 0

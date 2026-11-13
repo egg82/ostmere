@@ -74,7 +74,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 
 - [Length: about 3 months, set by play, not playtime](decisions/simulator.md): the length a typical route takes, a back half that never slows, goals in view, promises on screen kept, bad states with a cure in reach.
 - [Tuned means checked](decisions/simulator.md): a check fails only on an invariant; rhythm is a readout; figures round and display one way; the UI speaks in numbers.
-- [The simulator, as built](decisions/simulator.md): the invariants it fails on, the readouts it prints and how they are approved.
+- [The simulator, as built](decisions/simulator.md): the invariants it fails on, the readouts it prints and how they are reported.
 
 ## Story
 

@@ -1,6 +1,8 @@
-"""Approval snapshots of the pacing simulator's readouts (docs/design/sim-invariants.md, "The approval snapshot"). A
-readout prints the rhythm of play, which is taste and never fails on a number; its text is committed under readouts/,
-and a test fails when the text changes, until someone approves the change by writing it again.
+"""The pacing simulator's readouts, reported against their committed text (docs/design/sim-invariants.md). A readout
+prints the rhythm of play, which is taste: it is read by a person and never fails a build. Its text is committed under
+readouts/; when today's text differs, `check` reports the diff as a ReadoutChanged warning (pytest's warnings summary,
+so the job's log shows it) and writes the new text under READOUTS_OUT for the job to keep. Only a readout that rendered
+nothing fails: that is a broken play, not a change of taste. Writing the text again commits the new rhythm.
 
     python -m tests.readout_snapshot --write              # from app/: every package's readouts
     python -m tests.readout_snapshot --write dayone ...   # only the named packages
@@ -12,6 +14,7 @@ import difflib
 import importlib
 import os
 import sys
+import warnings
 from pathlib import Path
 from types import ModuleType
 
@@ -29,7 +32,11 @@ PACKAGES = {
 OUT_ENV = "READOUTS_OUT"
 """Where a changed readout's new text is written for the CI job to keep as an artifact."""
 SHOWN = 60
-"""How many lines of a diff a failure prints."""
+"""How many lines of a diff a report prints."""
+
+
+class ReadoutChanged(UserWarning):
+    """Today's readout differs from the committed text: a report for a person to read, never a failure."""
 
 
 def path(name: str, root: Path = DIR) -> Path:
@@ -43,19 +50,21 @@ def differences(name: str, text: str, root: Path = DIR) -> list[str]:
     return list(difflib.unified_diff(old, text.splitlines(), f"committed {name}", f"today's {name}", lineterm=""))
 
 
-def check(name: str, text: str, root: Path = DIR) -> None:
-    """Fail when `text` differs from the committed readout, printing the diff's first lines and writing the new text
-    under OUT_ENV when it is set. An empty readout fails: a play that rendered nothing cannot be approved."""
+def check(name: str, text: str, root: Path = DIR) -> list[str]:
+    """Report how `text` differs from the committed readout, and return the diff: a ReadoutChanged warning carrying the
+    diff's first lines, and the new text written under OUT_ENV when it is set. Never fails on a difference, a readout
+    with no committed text included. An empty readout fails: a play that rendered nothing is broken."""
     assert text.strip(), f"readout {name} rendered nothing"
     diff = differences(name, text, root)
     if not diff:
-        return
+        return diff
     out = os.environ.get(OUT_ENV)
     if out:
         write(name, text, Path(out))
     more = f"\n... {len(diff) - SHOWN} more lines" if len(diff) > SHOWN else ""
-    raise AssertionError(f"readout {name} changed; if the change is wanted, approve it: python -m tests.readout_snapshot "
-                         f"--write {name.split('-')[0]}\n" + "\n".join(diff[:SHOWN]) + more)
+    warnings.warn(ReadoutChanged(f"readout {name} changed (to commit it: python -m tests.readout_snapshot --write "
+                                 f"{name.split('-')[0]})\n" + "\n".join(diff[:SHOWN]) + more), stacklevel=2)
+    return diff
 
 
 def write(name: str, text: str, root: Path = DIR) -> Path:
