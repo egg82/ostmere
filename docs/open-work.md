@@ -33,6 +33,12 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
   on a hidden itch.io page and Feedback Friday; galaxy.click rejects heavy generative-AI use). AI use is disclosed
   wherever a venue asks, not on the game's own site.
 
+**The nightly run is red, and has been since it moved to GitHub.** Only the deep-only day-one routes fail
+(`tests/dayone`): `lazy` never reaches B3, so `goals.py` and `levelpays.py` raise `KeyError` instead of reporting the
+miss, and `sharp` reaches B3 later than its bar. The routes the pull requests play pass. Find when it started and
+whether it is a game change, a route-player change or a bar these routes never met; a crash on a route that misses a
+beat is a test defect either way. Fits into: the pacing simulator (item 1).
+
 0. **The opening's follow-ups.** Every card is mixable: shipped (one kind of card, tapped or mixed; a one-off is a
    card with a cap that moves to Completed). The screen is `docs/design/opening-screen.md`, the story and timeline
    `content/team/opening-v2.md` (never shown to the owner).
