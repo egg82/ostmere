@@ -6,7 +6,6 @@ verb changed nothing. Two lanes ready at one instant both start; a speed-0 tap i
 brings its speed back; after a cascade a READY at T + 1 also covers a queue verb with no card."""
 from dataclasses import replace
 
-import pytest
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
@@ -235,12 +234,13 @@ def test_an_old_builds_save_with_a_ready_order_unapplied_waits_for_the_next_eval
 # ---- invariant 57 over random worlds ------------------------------------------------------------------------------
 
 def can_act(s: Save, r: Rules, c: CardId) -> bool:
-    """A TapCard of c can act in s: the player's own tap of it starts it now. The player's tap raises for a locked,
-    unknown, completed or retired card, a busy lane and speed 0, and is a failed tap (nothing starts) when unready
-    (DESIGN.txt, "Failed tap"), so it starting is exactly "unlocked, not completed or retired, its lane free, blocker
-    None, speed above 0"."""
+    """A TapCard of c can act in s: its lane is free and the player's own tap of it starts it now. On a free lane the
+    player's tap raises for a locked, unknown, completed or retired card and speed 0, and is a failed tap (nothing
+    starts) when unready (DESIGN.txt, "Failed tap"), so it starting is exactly "unlocked, not completed or retired,
+    blocker None, speed above 0". The lane is read apart because a player's tap may cut in on a busy one ("CUT-IN",
+    "CURE CUT-IN"), which an order's never does."""
     d = next((x for x in r.cards if x.id == c), None)
-    if d is None:
+    if d is None or lane(s, d.lane).card is not None:
         return False
     try:
         t = decide(s, r, s.time, TapCard(c))
@@ -287,7 +287,6 @@ def breaks_57(s: Save, r: Rules) -> str | None:
     return f"queue head can act at {s.time}" if queue_breaks_57(s, r) else None
 
 
-@pytest.mark.xfail(strict=True, reason="can_act reads a cure's cut-in on the busy hands as the card able to act")
 def test_the_57_check_holds_a_true_order_on_a_busy_lane_to_wait_even_for_a_cure():
     """Invariant 57's "its lane free", against "CURE CUT-IN": "An order's cure does not cut in; it waits for the task to
     land". h holds the hands from the SetOrders at 0 while "full" shows and cu, a cure for it, has a true order: the
