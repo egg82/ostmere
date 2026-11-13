@@ -11,8 +11,8 @@ mechanics only: no content.
 - **shown**: a number or state the page shows does not come true.
 
 Everything else about the rhythm of play is **taste**. Taste never fails on a threshold. It is printed as a readout,
-and the readout's text is committed as an approval snapshot: CI fails when the text changes, and a person approves
-the change by writing it again. No band or target is set for a rhythm. Scripted players who skip the tools are
+and the readout's text is committed beside it: when it changes, CI reports the diff and never fails; a person reads
+it and commits the new text by writing it again. No band or target is set for a rhythm. Scripted players who skip the tools are
 reported, never held to a floor; the one check on them is that they land measurably behind.
 
 Two more classes:
@@ -184,7 +184,7 @@ The cap-loss ones are content gaps, each a store a card fills with no sink behin
 
 Taste readouts print every route a package plays on a push.
 
-## The approval snapshot
+## The readout report
 
 - **Stored** one file per readout under `app/tests/readouts/`, named for its package (`dayone-typical.txt`,
   `weektwo-twelve.txt`, `ladder-sharp.txt`). Generated, so in a directory of its own (`engineering.md`, "Structural
@@ -194,14 +194,15 @@ Taste readouts print every route a package plays on a push.
 - **Compared** by `app/tests/readout_snapshot.py`, `check`, in each package's `test_<package>_readouts.py`, in the job
   that already plays the routes: `playthrough`, `playthrough-day-two`, `playthrough-week-one`, `playthrough-week-two`.
   Week one's chapter readouts are compared in `weekone/test_weekone_routes.py` and day one's rebase readout last in
-  `dayone/test_dayone_rebase.py`, after the setups whose readings they reuse. A difference fails with the diff's first
-  lines and, when `READOUTS_OUT` is set, writes the new text there. A package's committed files must be exactly the
-  readouts it writes, and an empty readout fails.
-- **Approved** with one command from `app/`: `python -m tests.readout_snapshot --write` writes every package's
+  `dayone/test_dayone_rebase.py`, after the setups whose readings they reuse. A difference is reported, never failed: a
+  `ReadoutChanged` warning carries the diff's first lines (pytest's warnings summary, in the job's log) and, when
+  `READOUTS_OUT` is set, the new text is written there and kept as the job's artifact. A package's committed files must
+  be exactly the readouts it writes, and an empty readout fails (a broken play, not taste).
+- **Committed** with one command from `app/`: `python -m tests.readout_snapshot --write` writes every package's
   readouts and removes files nothing writes; `--write dayone daytwo` writes only those. Because chapters play on from
-  earlier ones, a change early in the game moves every later readout, so re-approving writes them all.
+  earlier ones, a change early in the game moves every later readout, so committing the new text writes them all.
 - **Merges**: two branches that each move a readout conflict on its file. Write it again on the merged tree, never take
   a side.
 - The deep nightly run plays more routes and seeds; their figures are printed by the reports, never compared.
 
-What stops slow drift across many approved changes is the drift judge (`drift-judge.md`), which a session runs after landing a readout change.
+What stops slow drift across many committed changes is the drift judge (`drift-judge.md`), which a session runs after landing a readout change.

@@ -1,7 +1,7 @@
 # Drift judge
 
-The readouts' approval snapshots (`sim-invariants.md`) stop a rhythm changing unseen, but each change is approved one
-pull request at a time, so slow movement across many approvals passes. After a merge that changes a readout, a fresh
+The readout reports (`sim-invariants.md`) stop a rhythm changing unseen, but each change is committed one
+pull request at a time, so slow movement across many commits passes. After a merge that changes a readout, a fresh
 Claude Code subagent compares the cumulative movement since the build the owner last played against the owner's direction. It is
 advice: no verdict gates a pipeline, and nothing in CI calls a model.
 

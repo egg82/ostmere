@@ -144,17 +144,25 @@ snapshot assertion. One-off tools get none.
 habits' suite grew slow and had to be sped up after the fact; here speed is a gate from the first test, while the
 suite still runs in seconds.
 
-- **Every test has a time budget**, held like the function-size gate (`app/tests/conftest.py`): a ceiling of CPU
-  seconds per test and a held list that starts and stays empty, so a slow test fails CI the day it appears. CPU, not
-  wall, so a busy runner or a slower CPU type does not fail a fast test. Run it locally with `TEST_CEILING_S=0.66` to
-  leave room for CI's slower CPUs.
+- **Every test has a time budget**, held like the function-size gate (`app/tests/time_gate.py`, a plugin
+  `app/tests/conftest.py` registers): 4 s of wall clock per test over setup, call and teardown, and 10 s per shared
+  (class/module/package/session) fixture, timed on its own by name and taken out of the test's charge. HELD and
+  HELD_FIXTURES start and stay empty. Wall clock, because setup and waiting are what a person waits on: the CPU-only gate
+  it replaced timed the call alone, and speed commits moved cost into fixtures where nothing measured it. Tests marked
+  `playthrough`, and the plays they set up, are budgeted by their CI job's timeout instead. pytest.ini's `timeout = 6`
+  is the hang guard above the budget.
+- **Time never comes from the wall in a test**: a timeout, lease or retry takes an injected clock
+  (`app/tests/fake_clock.py`) or a tiny timeout, and an unreachable dependency is a fake that fails at once. The one
+  real wait kept is db/test_failover's silent-host smoke test (libpq times the connect itself), at a 1 s URL timeout.
+- **A performance test asserts a count, never a time** (the forecast's instants, `app/tests/dayone/test_dayone_forecast.py`);
+  what a unit of work costs is the engine bench's question.
 - **Whoever writes a test makes it fast before committing it**: run it under the gate, look at the slowest
   durations, and speed the test up, never the limit. The usual cause: sampling the engine from time zero at every
   point (each `value()`/`advance()` re-simulates from the save's time), which turns a linear check quadratic. Carry
   each sample forward from the last instead; the engine's invariant 1 (engine `DESIGN.txt`, "INVARIANTS") makes the
   two equivalent.
 - **The shipped content is loaded once per session** (`shipped_opening`, `app/tests/conftest.py`): `create_app()` loads
-  and checks every chapter, ~0.2 s of CPU (about 0.8 s on a slow server CPU) that every app-booting test would otherwise
+  and checks every chapter, ~0.2 s (about 0.8 s on a slow CI node) that every app-booting test would otherwise
   pay, twice in a test that builds two.
 - **Property tests run at two depths:** the fast Hypothesis profile on every push, the deep one on a schedule.
 - **Scripted playthroughs are played once per test session and shared** (`app/tests/opening/routes.py`): a test reads
