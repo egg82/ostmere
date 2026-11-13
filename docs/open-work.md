@@ -269,9 +269,12 @@ before the redesign. Find whether the wrapper covers the buttons on a real phone
     match. `docs/design/redesign.md` is the plan and the build order, and `docs/design/redesign/merge.html` is the
     design. Step 1 (routing: a refusal is red plus the missing need with no text, a success a story line only) shipped;
     step 2 (the look: hairlines, four sizes, ember's two jobs) and step 3 (the mix bar's legend, the merge's hues, the
-    ledger's groups) shipped; step 4, the chronicle replacing the Log, is next. Left from step 3: the ledger's Town
+    ledger's groups) shipped; step 4's first half (the chronicle replacing the Log, causes, the kind filter) shipped;
+    "Since you left" is next. Left from step 3: the ledger's Town
     and Outposts groups wait for a served store-group field (through the contract) when the first such store lands;
-    the Mixes list's small bars drop their initials for a legend in step 6. Fits into: the feedback ladder,
+    the Mixes list's small bars drop their initials for a legend in step 6. Left from step 4: a line shared by several
+    levels of one skill names the skill, not the level. For step 6: at 390 wide the camp bar's store readout
+    overlaps the Chronicle button (it overlapped the Log button before). Fits into: the feedback ladder,
     Chronicle and unwrap, and Offers; no new system. Load `writing-craft` for every player-facing string.
 
 ## Where things are
