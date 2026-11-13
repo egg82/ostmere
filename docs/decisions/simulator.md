@@ -11,6 +11,10 @@ every route beside the beat's target day before anything ships, and the story cl
 on every route by construction. The routes that write no rules (`by_hand`, `lazy`, `keeper`) are reported, never held to a floor, with one
 check that they land measurably behind: what bounds neglect is that nothing blocks and nothing spirals.
 
+**The game is for people who want to play; checking in rarely is how often, not how much.** A player who comes back
+once a day but uses the tools the game teaches when they do is held to the same bars as the typical route, scaled to
+their visits, and the simulator plays one. Only a route that also skips the tools is reported instead of held.
+
 **Progress freezes at the end of the main story**. Expansions take a while to make, so a player who
 reaches the end isn't left banking progress that the next content would arrive already outrun by. How it freezes is
 designed when the end is built.

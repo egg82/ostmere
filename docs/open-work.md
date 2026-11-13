@@ -33,11 +33,16 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
   on a hidden itch.io page and Feedback Friday; galaxy.click rejects heavy generative-AI use). AI use is disclosed
   wherever a venue asks, not on the game's own site.
 
-**The nightly run is red, and has been since it moved to GitHub.** Only the deep-only day-one routes fail
-(`tests/dayone`): `lazy` never reaches B3, so `goals.py` and `levelpays.py` raise `KeyError` instead of reporting the
-miss, and `sharp` reaches B3 later than its bar. The routes the pull requests play pass. Find when it started and
-whether it is a game change, a route-player change or a bar these routes never met; a crash on a route that misses a
-beat is a test defect either way. Fits into: the pacing simulator (item 1).
+**The nightly run is red since 2026-11-06: day one's pacing for sharp, and no once-a-day player who plays.** A
+speed change to the day-one roots rule's band (`6b83fe73`, for fewer engine instants on a day away) moved B3 about
+10 h later for `sharp`, past its bar; `lazy`, which skips the tools, stopped reaching B3 within its horizon. Three
+parts, in order:
+- `lazy` is reported, never held (`decisions/simulator.md`, "Length"), so its miss is printed, not a crash or a
+  failure (in flight).
+- Add a once-a-day route that uses the tools, to `TOOL_USERS`, held to the bars; then
+- restore day one's pacing so `sharp` and that route meet them, finding the instants saving elsewhere (item 14's
+  engine work) rather than in the band: the loader's two-completion band rule now refuses the old setting.
+Fits into: the pacing simulator (item 1), the route table in `app/tests/dayone/routes.py`.
 
 0. **The opening's follow-ups.** Every card is mixable: shipped (one kind of card, tapped or mixed; a one-off is a
    card with a cap that moves to Completed). The screen is `docs/design/opening-screen.md`, the story and timeline
