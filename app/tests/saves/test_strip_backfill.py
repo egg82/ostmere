@@ -2,8 +2,8 @@
 again; a row already stripped is left alone; a row whose digest holds another manifest, or whose envelope names
 another digest, stays whole; a row a player's write changed after it was read keeps that write; a dry run writes
 nothing; and the manifests no row names are pruned, this build's kept."""
-import threading
 import time
+from concurrent.futures import Future, ThreadPoolExecutor
 
 import pytest
 from sqlalchemy import Engine, insert, select, text, update
@@ -121,26 +121,28 @@ def test_a_row_changed_after_it_was_read_keeps_the_change(engine: Engine, rs: Ru
                                                           account: int):
     [save_id] = made(engine, rs, clock, account, 1)
     changed = e.encode(e.advance(e.new_save(rs.rules), rs.rules, 9), rs.rules)
-    done: list[Stripped] = []
-    with engine.connect() as player:
+    with ThreadPoolExecutor(1) as pool, engine.connect() as player:
         player.execute(select(saves.c.id).where(saves.c.id == save_id).with_for_update())
-        run = threading.Thread(target=lambda: done.append(strip(engine, rs)))
-        run.start()
-        waiting(engine)
+        run = pool.submit(strip, engine, rs)
+        waiting(engine, run)
         player.execute(update(saves).where(saves.c.id == save_id).values(state=changed))
         player.commit()
-    run.join(timeout=30)
-    assert done == [Stripped(stripped=1, whole=0, changed=1, pruned=0)]
+        assert run.result(timeout=2) == Stripped(stripped=1, whole=0, changed=1, pruned=0)
     assert columns(engine)[0] == changed
 
 
-def waiting(engine: Engine) -> None:
-    """Returns once a session waits on a lock (the backfill's compare-and-set behind the player's row lock)."""
+def waiting(engine: Engine, run: Future[Stripped]) -> None:
+    """Returns once a session waits on a lock (the backfill's compare-and-set behind the player's row lock); raises
+    the backfill's own error if it ended first. Each probe is its own transaction: pg_stat_activity is read once per
+    transaction, so a probe repeated inside one never sees a wait that began after its first read."""
     probe = text("SELECT count(*) FROM pg_stat_activity WHERE wait_event_type = 'Lock' AND pid <> pg_backend_pid() "
                  "AND datname = current_database()")
-    deadline = time.monotonic() + 20
+    deadline = time.monotonic() + 2
     with engine.connect() as other:
         while other.execute(probe).scalar_one() == 0:
+            other.rollback()
+            if run.done():
+                pytest.fail(f"the backfill ended without waiting on the player's row: {run.result()}")
             assert time.monotonic() < deadline, "the backfill never waited on the player's row"
             time.sleep(0.01)
 
