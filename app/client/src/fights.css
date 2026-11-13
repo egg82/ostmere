@@ -15,7 +15,7 @@
 .fight-amount { font-weight: 700; color: var(--ink-hi); }
 .fight-loss, .fight-tally { flex-basis: 100%; color: var(--ink-dim); }
 .card.done .fight { visibility: hidden; }   /* the slot keeps its size */
-.threats { display: flex; flex-direction: column; gap: .7rem; margin-top: .6rem; padding-top: .6rem; border-top: 1px solid var(--rule); }
+.threats { display: flex; flex-direction: column; gap: .7rem; padding-top: .3rem; }   /* under its group label (ui/ledger.ts) */
 .threats[hidden] { display: none; }
 .threat-name { display: block; font-weight: 500; color: var(--ink-hi); }
 .threat .fight { padding: 0; }

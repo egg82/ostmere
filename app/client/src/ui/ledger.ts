@@ -1,5 +1,6 @@
-// The ledger: a line per store the view lists, the Camp store excepted (it is the Camp bar), each from when it first
-// means something (game/shown.ts): one that asks something (red, starved or carrying an offer), or is falling, full
+// The ledger (docs/design/redesign.md, "Ledger"): grouped, each group's label drawn while it has a row: the player's
+// stores (Yours), then the threats at them (ui/threats.ts). A line per store the view lists, the Camp store excepted
+// (it is the Camp bar), each from when it first means something (game/shown.ts): one that asks something (red, starved or carrying an offer), or is falling, full
 // while fed, or covered by a rule. Once drawn a line stays, kept for the account (game/keeps.ts). A line is white unless it
 // is falling with nothing covering it, or starved (dry while something waits on it, covered or not); then it is red,
 // with its answer right beside it. The store's order card is never built from the line: the first time (the rule's lesson
@@ -46,7 +47,6 @@ interface Row {
   amount: HTMLElement;
   rate: HTMLElement;
   eta: HTMLElement;
-  fill: HTMLElement;
   edit: HTMLButtonElement;
 }
 
@@ -65,6 +65,8 @@ export class Ledger implements Part {
   readonly asks = el("div", "ledger-lines ledger-asks");
   private split = false;
   private readonly threats: Threats;
+  private readonly yours: HTMLElement;
+  private readonly threatsLabel: HTMLElement;
   private rows = new Map<string, Row>();
   private view: View | null = null;
   /** Stores whose order card was offered by the stall rule or a rising line: kept until set, so it does not vanish
@@ -76,7 +78,9 @@ export class Ledger implements Part {
   constructor(private readonly ctx: PartContext) {
     const { text } = ctx.catalog;
     this.threats = new Threats(ctx);
-    this.root.append(el("h2", "panel-heading", text.get(UI.ledgerHeading)), this.list, this.threats.root);
+    this.yours = el("h3", "ledger-group", text.get(UI.ledgerYours));
+    this.threatsLabel = el("h3", "ledger-group", text.get(UI.ledgerThreats));
+    this.root.append(el("h2", "panel-heading", text.get(UI.ledgerHeading)), this.yours, this.list, this.threatsLabel, this.threats.root);
   }
 
   update(view: View, prev: View | null): void {
@@ -111,7 +115,6 @@ export class Ledger implements Part {
       const { cap } = line;
       const value = sample(line.segment, t);
       setText(row.amount, format.amount(value, cap));
-      row.fill.style.transform = `scaleX(${cap > 0 ? Math.min(1, Math.max(0, value / cap)) : 0})`;
       const full = fullAndFed(line, t);
       const drain = row.offer === null && this.red(line) ? this.drain(line) : "";
       if (row.box.classList.contains("full") !== full) { row.box.classList.toggle("full", full); this.arrange(t); }
@@ -129,13 +132,15 @@ export class Ledger implements Part {
   }
 
   /** Seat each row in the list or, when split, in `asks` if its line is red or full at `t`; the ledger hides with no
-   * line left in it and no threat. */
+   * line left in it and no threat, and each group's label with its group. */
   private arrange(t: number): void {
     const rest: HTMLElement[] = [];
     const asks: HTMLElement[] = [];
     for (const { line, node } of this.rows.values()) (this.split && (this.red(line) || fullAndFed(line, t)) ? asks : rest).push(node);
     place(this.list, rest);
     place(this.asks, asks);
+    this.yours.hidden = rest.length === 0;
+    this.threatsLabel.hidden = this.threats.empty;
     this.root.hidden = rest.length === 0 && this.threats.empty;
   }
 
@@ -275,13 +280,9 @@ export class Ledger implements Part {
     edit.addEventListener("click", () => { tapFeedback(); this.ctx.actions.editMix(null); });
     const row: Row = {
       line, node, box, offer: null, offerKey: "", edit,
-      rate: el("span", "line-rate"), amount: el("span", "line-amount"), eta: el("span", "line-eta"), fill: el("span", "line-fill"),
+      rate: el("span", "line-rate"), amount: el("span", "line-amount"), eta: el("span", "line-eta"),
     };
-    const track = el("span", "line-track");
-    track.append(row.fill);
-    const eta = el("span", "line-eta-box");
-    eta.append(row.eta);
-    box.append(el("span", "line-name", this.ctx.catalog.storeTitle(line.store)), row.rate, row.amount, eta, edit, track);
+    box.append(el("span", "line-name", this.ctx.catalog.storeTitle(line.store)), row.rate, row.amount, row.eta, edit);
     return row;
   }
 }

@@ -656,6 +656,7 @@ TEXT AND NUMBERS (one rule)
     ui.rate.per_minute {n}          a ledger line's or contribution's rate
     ui.store.amount {n}{cap}        a store's amount
     ui.ledger.empties {d} | ui.ledger.fills {d}   until a falling line empties / a rising one fills
+    ui.ledger.yours | ui.ledger.threats   the ledger's group labels: the player's stores, the threats at them
     ui.skill.level {n}              a skill's level (a plain count)
     ui.card.needs {store}{have}{n}  a card's need: its store, what there is, its quantity (amounts; {n} rounded up,
                                     so a need never reads as less than it takes)
