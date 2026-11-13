@@ -405,7 +405,7 @@ export const fixtureContent: Content = {
   line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")
     { key: "line.1", kind: "story", cause: null }, { key: "line.2", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } } },
     { key: "line.3", kind: "tap", cause: { kind: "runner", runner: "stand" } },
-    { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" } }, { key: "line.5", kind: "story", cause: null },
+    { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" } }, { key: "line.5", kind: "story", cause: { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 5 * Q, release: 5 * Q } } },
     { key: "line.6", kind: "find", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 2, release: 2 } } },
     { key: "line.7", kind: "level", cause: { kind: "camp", level: 1 } }, { key: "line.end", kind: "story", cause: null },
     { key: "line.offer", kind: "story", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 10 * Q } } },
