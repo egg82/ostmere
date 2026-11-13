@@ -80,6 +80,15 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   rule or a fight never lands there, and town talk never will. A filter is offered once it has an entry, Story first
   and All last; under Story a stretch ends with its counts of the other filters, each opening its filter. Each filter
   keeps its own newest 200, so a busy kind never pushes out a quiet one's.
+- **Coming back opens a chapter.** The chronicle runs newest first, and the newest return's stretch is "Since you
+  left" (`app/client/src/ui/chapter.ts`): never folded, its lines with their causes, then under Story its figures as
+  rows, each only when it has something: stores gained and lost, levels old → new (the Camp's first), the rules that
+  ran, and how many asks wait now, linked to them. Figures, not sentences: a death or a fall stays a story line in the
+  chapter, never a count in a row. The figures are taken once, as the return lands (`app/client/src/game/chapter.ts`),
+  against the view the player left, and kept with the visit (`SavePresentation.chapter`), so a reload keeps them; a
+  return from before they were kept shows its lines and claims no figures. Later systems add rows (people, seasons,
+  fights) the same way. Rejected: a figures entry on every visit, which would put a few hundred bytes per return into
+  every presentation write; and opening the chronicle by itself on a return, which would cover the strip's replay.
 - **Every line says what caused it**, as "↳" and a few words under it: the card or fight that wrote it, the store,
   level or count a beat waited on, the Camp level, the player's answer. The cause is served beside the line's kind
   (`app/ashfall_app/api/line_causes.py`; `app/ashfall_app/api/CONTRACT.txt`, "Line causes"), read from where the
@@ -101,4 +110,5 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   (`app/client/src/game/fights.ts`; `app/ashfall_app/api/CONTRACT.txt`, "FIGHTS").
 - The visits record: each return after a long time away kept in the save's presentation, newest last and the oldest
   dropped past a limit (`app/client/src/game/keeps.ts`, `app/ashfall_app/accounts/presentation.py`), which the
-  chronicle splits its stretches at, whatever the filter.
+  chronicle splits its stretches at, whatever the filter; beside it the newest return's figures, replaced only by a
+  later return's.
