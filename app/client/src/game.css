@@ -227,8 +227,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 
 /* cards */
 .deck { display: flex; flex-direction: column; gap: .9rem; }
-.lane-tag { margin: 0 0 .35rem; font-size: var(--t-meta); letter-spacing: .12em; color: var(--ink-dim); }
-.lane-group:not([data-lane="hands"]) .lane-tag { text-transform: uppercase; }
+.lane-tag { margin: 0 0 .35rem; font-size: var(--t-meta); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
 .card-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr)); gap: .6rem; }
 .card {
   --foot-h: 2rem;   /* the foot's band: tall enough for When ready, so the button sits under the bar, never over it */
