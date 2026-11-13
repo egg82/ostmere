@@ -1,7 +1,10 @@
-# CI for Ostmere: the suite, the playthroughs, pyright, the client and the engine and save checks on every pull request
-# and every push to main, while the app image builds beside them. On main, once everything is green, `release` tags the
+# CI for Ostmere. Every pull request and push to main that changes code runs the per-PR set, inside the budget in
+# docs/engineering.md ("Scope and test budget"): the suite, one smoke route, pyright, the client, the engine and save
+# checks, and the app image. A pull request that changes only docs runs `docs`, the tests that read them. The whole-game
+# playthroughs and the chapter saves they read are the full run: nightly (nightly.yml calls this file with full), on a
+# pull request labelled `playthroughs`, and on a manual dispatch. On main, once everything is green, `release` tags the
 # image already pushed by digest: `dev` and `main-<sha8>-<commit-timestamp>`, the tag Flux image automation sorts on.
-# Pull requests build the image and push nothing. The nightly deep run is nightly.yml.
+# Pull requests build the image and push nothing.
 #
 # Images go to Docker Hub (`docker.io/<vars.DOCKERHUB_USERNAME>/ostmere`, logged in with `secrets.DOCKERHUB_TOKEN`) and
 # GHCR (`ghcr.io/<owner>/ostmere`, logged in with GITHUB_TOKEN).
@@ -10,16 +13,23 @@ name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
   push:
     branches:
       - main
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      full:
+        description: run the whole-game playthroughs too
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
@@ -33,11 +43,65 @@ env:
   PG_IMAGE: postgres:18.6
 
 jobs:
+  # What this run covers. `code` is false only for a pull request whose every changed file is under docs/, a top-level
+  # Markdown file or LICENSE (content/ is read by the play tests, so it is code). `full` adds the playthroughs.
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+      full: ${{ steps.diff.outputs.full }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          FULL: ${{ inputs.full == true || github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'playthroughs') }}
+        run: |
+          echo "full=$FULL" >> "$GITHUB_OUTPUT"
+          if [ "$EVENT" != pull_request ] || [ "$FULL" = true ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"; echo "$EVENT: code=true full=$FULL"; exit 0
+          fi
+          git diff --name-only "$(git merge-base "origin/$BASE_REF" HEAD)" HEAD > "$RUNNER_TEMP/changed"
+          cat "$RUNNER_TEMP/changed"
+          if [ ! -s "$RUNNER_TEMP/changed" ] || grep -v -E '^(docs/.*|[^/]+\.md|LICENSE)$' "$RUNNER_TEMP/changed" > /dev/null; then
+            code=true
+          else
+            code=false
+          fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"; echo "code=$code full=$FULL"
+
+  # A docs-only pull request: the tests that read docs/ (citations of code and of decisions) and the household-names
+  # guard, which reads every tracked file.
+  docs:
+    needs: changes
+    if: needs.changes.outputs.code == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      OSTMERE_HOUSEHOLD_NAMES: ${{ secrets.OSTMERE_HOUSEHOLD_NAMES }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - working-directory: app
+        run: python -m pytest -q tests/test_doc_citations.py tests/test_decision_citations.py tests/test_household_names.py
+
   # Two shards (app/tools/shards.py): a is tests/saves, accounts and api_contract, the heaviest; b is everything else,
   # so a new test directory runs in b. `shards-cover` fails if the two together are not the whole suite.
   tests:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:
@@ -71,8 +135,10 @@ jobs:
   # week two's shards (app/tools/weektwo_shards.py) select each week-two test exactly once; their names are handed to
   # `playthrough-week-two` as its matrix, so the shards checked are the shards run.
   shards-cover:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     outputs:
       weektwo: ${{ steps.weektwo.outputs.matrix }}
     steps:
@@ -93,12 +159,45 @@ jobs:
           python -m tools.weektwo_shards --check | tee weektwo-shards.out
           grep '^matrix=' weektwo-shards.out >> "$GITHUB_OUTPUT"
 
-  # The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays each
-  # representative route once per session and they share it), beside `tests` so neither waits on the other. Split by
-  # which session-scoped plays a test shares, so no job plays another's plays again; a directory added later runs in
-  # `everything-else` until it gets a job of its own. A readout whose text changed (app/tests/readout_snapshot.py) fails
-  # its test and leaves its new text in readouts-new/, uploaded on failure, to approve by committing it.
+  # The per-PR smoke route: the opening's representative routes (tests/opening/routes.py, PUSH_ROUTES) and the tests
+  # that read them, so a change that breaks play itself goes red before it merges. The rest of the playthroughs are the
+  # full run below.
+  playthrough-smoke:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      READOUTS_OUT: ${{ github.workspace }}/readouts-new
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Playthrough (the opening)
+        working-directory: app
+        run: python -m pytest -q -m playthrough tests/opening --durations=10 --durations-min=1
+      - name: Upload changed readouts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readouts-new-${{ github.job }}
+          path: readouts-new/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # Full run only. The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays
+  # each representative route once per session and they share it). Split by which session-scoped plays a test shares,
+  # so no job plays another's plays again; a directory added later runs in `everything-else` until it gets a job of its
+  # own. A readout whose text changed (app/tests/readout_snapshot.py) leaves its new text in readouts-new/, uploaded as
+  # an artifact.
   playthrough:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -124,7 +223,7 @@ jobs:
         working-directory: app
         run: python -m pytest -q -m playthrough ${{ matrix.args }} --durations=25 --durations-min=1
       - name: Upload changed readouts
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
@@ -139,6 +238,8 @@ jobs:
   # artifacts; test_weektwo_saved.py fails if a saved file is in no part. The jobs that read the saves fail, not replay,
   # when they are missing or stale (ASHFALL_REQUIRE_SAVED).
   chapter-saves:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -199,10 +300,12 @@ jobs:
           path: chapter-saves/
           retention-days: 1
 
-  # Week one's plays (tests/weekone/routes.py, days three to six on one player) and the tests that read them. It waits on
-  # nothing: the push routes' plays are left as an artifact (tests/weekone/test_weekone_export.py) for
-  # `playthrough-week-one-saved`.
+  # Full run only, like the jobs below that read the chapter saves (they are skipped with it). Week one's plays
+  # (tests/weekone/routes.py, days three to six on one player) and the tests that read them. The push routes' plays are
+  # left as an artifact (tests/weekone/test_weekone_export.py) for `playthrough-week-one-saved`.
   playthrough-week-one:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -227,7 +330,7 @@ jobs:
           path: weekone-plays/
           retention-days: 1
       - name: Upload changed readouts
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
@@ -266,7 +369,7 @@ jobs:
       - working-directory: app
         run: python -m pytest -q -m playthrough tests/weekone_saved --durations=10 --durations-min=1
       - name: Upload changed readouts
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
@@ -307,7 +410,7 @@ jobs:
         working-directory: app
         run: python -m pytest -v -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=25 --durations-min=1
       - name: Upload changed readouts
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: readouts-new-${{ github.job }}-${{ strategy.job-index }}
@@ -318,8 +421,10 @@ jobs:
   # this one job, so the runner's CPU type and load cancel. The base is the merge-base with the target branch on a pull
   # request, and the previous tip of main on a push. `steps` needs the Postgres.
   engine-bench:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 8
     env:
       ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
     steps:
@@ -363,8 +468,10 @@ jobs:
   # red before it deploys (engine DESIGN.txt, "Rebase"). The saves go the way a player's does: stored as rows in the
   # job's Postgres, checked as the app's start checks them, and opened through the saves service.
   saves-forward:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 5
     env:
       ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
     steps:
@@ -411,8 +518,10 @@ jobs:
   # Strict on every package, with no held count (app/pyrightconfig.json). It also covers tools/scene, whose imports
   # (Pillow) are in requirements-dev.txt for its sake.
   pyright:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -429,8 +538,10 @@ jobs:
   # the app is tests/test_openapi_spec.py, in `tests`), strict tsc over src/, fixtures/ and test/, the tests, and the
   # bundle.
   client:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: app/client
@@ -454,8 +565,10 @@ jobs:
   # The app image, built beside the tests. On main it is pushed by digest alone, a tag Flux never sees; `release` names
   # it once everything is green.
   app-image:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     permissions:
       contents: read
       packages: write
@@ -509,12 +622,17 @@ jobs:
           cache-to: type=gha,mode=max
 
   # The one check branch protection requires. A skipped required check counts as passed, and a job whose need failed is
-  # skipped, so this runs always and fails unless every job it needs succeeded.
+  # skipped, so this runs always and fails unless every job this run was meant to run succeeded: `changes` always, the
+  # per-PR set when code changed, `docs` when it did not, and the playthroughs when the run is full. A job outside the
+  # run's set must be skipped, not merely absent from the count.
   ci-ok:
     if: always()
     needs:
+      - changes
+      - docs
       - tests
       - shards-cover
+      - playthrough-smoke
       - playthrough
       - chapter-saves
       - playthrough-week-one
@@ -529,9 +647,21 @@ jobs:
     steps:
       - env:
           NEEDS: ${{ toJSON(needs) }}
+          CODE: ${{ needs.changes.outputs.code }}
+          FULL: ${{ needs.changes.outputs.full }}
         run: |
           echo "$NEEDS" | jq -r 'to_entries[] | "\(.key) \(.value.result)"'
-          echo "$NEEDS" | jq -e 'all(.[]; .result == "success")' > /dev/null
+          echo "code=$CODE full=$FULL"
+          echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" '
+            ["tests", "shards-cover", "playthrough-smoke", "engine-bench", "saves-forward", "pyright", "client",
+             "app-image"] as $per_pr
+            | ["playthrough", "chapter-saves", "playthrough-week-one", "playthrough-week-one-saved",
+               "playthrough-week-two"] as $full_run
+            | (["changes"] + (if $code == "true" then $per_pr else ["docs"] end)
+               + (if $full == "true" then $full_run else [] end)) as $wanted
+            | ($code == "true" or $code == "false")
+              and all(to_entries[]; if (.key | IN($wanted[])) then .value.result == "success"
+                                    else .value.result == "skipped" end)' > /dev/null
 
   # The pushed digest under its deployable names: a manifest copy inside each repository, so no layer moves.
   release:

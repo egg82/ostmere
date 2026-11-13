@@ -7,15 +7,22 @@ design is in `decisions/`, indexed by `decisions.md`.
 ## The pipeline
 
 Every change reaches `main` through a pull request (`gh pr create`), and branch protection requires the `ci-ok` job,
-which fails unless every other job passed. `.github/workflows/ci.yml` runs on every pull request and every push to
-`main`: `tests` (two shards, on a `postgres:18.6` container, production's version), `shards-cover`, `playthrough`
-(everything else, and day two), `chapter-saves`, `playthrough-week-one`, `playthrough-week-one-saved`,
-`playthrough-week-two`, `engine-bench`, `saves-forward`, strict `pyright` and `client`, while `app-image` builds
-`app/Containerfile` beside them. A pull request builds the image and pushes nothing. On `main` the image is pushed by
+which fails unless every job the run was meant to run passed. `.github/workflows/ci.yml` runs on every pull request
+and every push to `main`. Its `changes` job sorts the run: a pull request that changes only `docs/`, top-level
+Markdown or `LICENSE` runs `docs` (the citation tests and the household-names guard), and anything else runs the
+per-PR set: `tests` (two shards, on a `postgres:18.6` container, production's version), `shards-cover`,
+`playthrough-smoke` (the opening's representative routes), `engine-bench`, `saves-forward`, strict `pyright` and
+`client`, while `app-image` builds `app/Containerfile` beside them. The whole-game playthroughs (`playthrough`,
+`chapter-saves`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
+nightly on `main`, on a pull request labelled `playthroughs`, and on a manual dispatch. Label a pull request whose
+change a balance or pacing invariant could catch when it should not wait for the night. A pull request builds the
+image and pushes nothing. On `main` the image is pushed by
 digest alone, and once `ci-ok` is green `release` tags that digest `dev` and `main-<sha8>-<commit ts>`, so the deploy
 waits for green; commit timestamps may not go backwards, because the tags are ordered by string, and `release` refuses
 a commit older than its parent. Publishing a GitHub release tags the same image `<version>` and `latest`
-(`.github/workflows/container-release.yml`). The nightly deep run is `tests-deep` (`.github/workflows/nightly.yml`).
+(`.github/workflows/container-release.yml`). The nightly run (`.github/workflows/nightly.yml`) is the full run plus
+`tests-deep`, the deep Hypothesis profile and every route and seed; its reds are real breaks on `main` and are fixed
+the next day.
 
 Images go to two registries, `docker.io/<DOCKERHUB_USERNAME>/ostmere` and `ghcr.io/<owner>/ostmere`, named once in the
 workflow's `DOCKERHUB_REPO` and `GHCR_REPO`. The repository needs one variable, `DOCKERHUB_USERNAME`, and two secrets:
@@ -119,6 +126,19 @@ pets, network, towns, hosts); the names are the CI secret `OSTMERE_HOUSEHOLD_NAM
 Moving a held string to another file moves its `KEPT` entry with it, read from CI's "stale" and "over" output (paths
 and counts, never the names). Test fixtures use neutral site names (`site-a`, `site-b`), never a real one.
 
+## Scope and test budget
+
+A single-player web game with an API, played by its owner. **A pull request's CI takes about 5 minutes of wall clock**
+(a docs-only one about a minute), and the nightly full run is where the whole-game simulations live. The yardstick is
+an outside one, never the suite's own history: a unit test costs milliseconds, 0.05 s at most. Each job's
+`timeout-minutes` in `ci.yml` is its budget, so a job that outgrows it goes red instead of quietly slowing every pull
+request. Locally, and in every subagent, run the tests a change touches plus the structural gates; CI runs the rest.
+
+Test depth follows risk. The engine, saves, catch-up maths, the content loader and its checks, accounts and anything
+that can lose a player's progress get behaviour-level tests written first, blind where they are a contract. Routes,
+registrations and config plumbing get one smoke test per entry point. The client's look gets render-and-look, never a
+snapshot assertion. One-off tools get none.
+
 ## Fast from the start
 
 habits' suite grew slow and had to be sped up after the fact; here speed is a gate from the first test, while the
@@ -138,8 +158,10 @@ suite still runs in seconds.
   pay, twice in a test that builds two.
 - **Property tests run at two depths:** the fast Hypothesis profile on every push, the deep one on a schedule.
 - **Scripted playthroughs are played once per test session and shared** (`app/tests/opening/routes.py`): a test reads
-  a play or a moment of one, never plays its own. Tests that read one are marked `playthrough` and run in their own CI
-  job beside `tests`; a push plays the representative routes, and the nightly deep run plays every route and seed.
+  a play or a moment of one, never plays its own. Tests that read one are marked `playthrough`. A pull request plays
+  only the opening's representative routes (`playthrough-smoke`); the full run plays the rest of the chapters, and the
+  nightly deep run every route and seed. Of the bugs that reached `main` in a sample of the old repo's fixes, none
+  needed a simulation to catch, while the nightly lane caught balance breaks on `main`; that is why they live there.
 - **Week two's chapters play on from saved ends, so its job grows by one chapter per chapter**
   (`app/tests/weektwo/ends.py`): each chapter starts from the saved end of the one before, and the rebased saves are
   read, not replayed from the start. The saves are not in git: `python tools/chapter_saves.py --write` (from `app/`,
