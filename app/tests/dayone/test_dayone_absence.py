@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 
-from ashfall_app.engine import FeatureId, LedgerLine, StoreId, Unlock, UnlockKind, View, new_save, segment, view
+from ashfall_app.engine import FeatureId, LedgerLine, Line, LineKey, StoreId, Unlock, UnlockKind, View, new_save, segment, view
 from tests.dayone import absence
 from tests.dayone import arrival_rules as ar
 from tests.dayone.conftest import PLAY_TIMEOUT_S
@@ -104,3 +104,21 @@ def test_a_returning_ledger_line_holds_for_its_reading_and_a_red_one_for_its_off
     assert absence.ledger_holds(before, red)[0] > p.floor_ms
     no_ledger = tuple(u for u in red.unlocked if u.kind is not UnlockKind.FEATURE)
     assert absence.ledger_holds(before, replace(red, unlocked=no_ledger)) == []   # the ledger off: no line drawn
+
+
+def test_the_strip_kinds_are_read_from_the_page_source():
+    kinds = ar.strip_kinds()
+    assert "story" in kinds
+    assert not kinds & {"find", "level", "fight", "rule", "talk"}
+
+
+def test_a_return_counts_only_the_lines_the_strip_plays():
+    """A find's line placed on the band is the chronicle's alone, so it is no band line and holds no reading time."""
+    rules, o = opening_rules(), opening()
+    v = view(new_save(rules), rules)
+    story = next(k for k, kind in o.line_kinds.items() if kind == "story")
+    find = next(k for k, kind in o.line_kinds.items() if kind == "find")
+    lines = (Line(0, 0, LineKey(story)), Line(0, 1, LineKey(find)))
+    assert [str(ln.key) for ln in absence.band_lines(rules, lines, v, v, o.line_kinds)] == [story]
+    counted, holds = absence.counts(rules, v, v, lines)
+    assert counted["line"] == 1 and len(holds) == 1

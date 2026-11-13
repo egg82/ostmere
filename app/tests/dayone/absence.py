@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from ashfall_app.engine import Line, Rules, Save, UnlockKind, View, advance_logged, view
 from ashfall_app.opening.entries import ConditionEntry
+from ashfall_app.opening.schema import Opening
 from tests.dayone import arrival_rules as ar
 from tests.dayone import capcheck, caploss
 from tests.dayone.beats import STORY
@@ -64,11 +65,14 @@ def place(chips: Mapping[str, tuple[str, bool]], lines: Sequence[tuple[str, str 
     return out
 
 
-def band_lines(rules: Rules, lines: tuple[Line, ...], before: View, after: View) -> list[Line]:
+def band_lines(rules: Rules, lines: tuple[Line, ...], before: View, after: View, kinds: Mapping[str, str]) -> list[Line]:
+    """The lines a return plays on the strip: placed on the band, and of a kind the strip plays (`kinds`: each line key's
+    kind)."""
     chips = {str(k): (str(c.id), k == c.on_line) for c in rules.chips for k in (c.on_line, c.off_line) if k is not None}
     repeats = {c.card for c in (*before.cards, *after.cards) if c.cap is None}
     where = place(chips, [(ln.key, ln.card) for ln in lines], set(after.chips), repeats)
-    return [ln for ln, w in zip(lines, where) if w == "band"]
+    strip = ar.strip_kinds()
+    return [ln for ln, w in zip(lines, where) if w == "band" and kinds[str(ln.key)] in strip]
 
 
 def rule_words(when: ConditionEntry, store: str) -> str:
@@ -107,12 +111,12 @@ def ledger_holds(before: View, after: View) -> list[int]:
     return [ledger_hold_ms(after, s) for s in sorted(new - {camp.store if camp else ""})]
 
 
-def counts(rules: Rules, before: View, after: View, lines: tuple[Line, ...], text: Mapping[str, str] | None = None
+def counts(rules: Rules, before: View, after: View, lines: tuple[Line, ...], o: Opening | None = None
            ) -> tuple[Counter[str], list[int]]:
-    """Arrivals by kind, and the reading time of each band line, read in `text` (the shipped opening's unless given the
-    text of chapters it lacks)."""
-    text = opening().text if text is None else text
-    holds = [ar.reading_ms(text[ln.key]) for ln in band_lines(rules, lines, before, after)]
+    """Arrivals by kind, and the reading time of each band line, read in `o`'s text and kinds (the shipped opening's
+    unless given one with chapters it lacks)."""
+    o = opening() if o is None else o
+    holds = [ar.reading_ms(o.text[ln.key]) for ln in band_lines(rules, lines, before, after, o.line_kinds)]
     new = {u for u in after.unlocked if u.kind in ARRIVING} - set(before.unlocked)
     found = Counter({"line": len(holds), "chip": len(set(after.chips) - set(before.chips))})
     found.update(u.kind.value for u in new)

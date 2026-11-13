@@ -133,7 +133,7 @@ WEEK_ONE_DAYS = 6
 
 def calendar_days(p: DayTwoPlayer) -> list[Counter[str]]:
     """The arrivals by kind of each whole calendar day after week one's the route was played through (dayone/daily.py)."""
-    return daily.played(p, p.visits[-1].end, c3.opening3().text)[WEEK_ONE_DAYS:]
+    return daily.played(p, p.visits[-1].end, c3.opening3())[WEEK_ONE_DAYS:]
 
 
 def exit_save(p: DayTwoPlayer, chapter: Later = EIGHT) -> Save:
