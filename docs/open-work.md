@@ -33,10 +33,11 @@ hit and what the feedback asks is in `docs/research/galaxy-review.md`. Its work,
   on a hidden itch.io page and Feedback Friday; galaxy.click rejects heavy generative-AI use). AI use is disclosed
   wherever a venue asks, not on the game's own site.
 
-**A test that failed once on CI and passed on a rerun.** Find the cause; never raise a ceiling for it.
-`tests/weektwo/test_weektwo_twelve.py::test_the_babysitter_ends_no_further_ahead_across_day_twelve` lost its xdist
-  worker ("node down: Not properly terminated") about 10 min in, with no timeout banner, and the job ran out its
-  30 min (PR #15, run 43390930356, attempt 1). Its setup took 211 s in an earlier green run; check its memory peak.
+**Day twelve's whenever replays doubled after #15 and sit near the plays' 600 s timeout.** On CI the babysitter
+pair's setup went from 150-290 s to 347-511 s (#20 now runs its two replays side by side), and
+`tests/weektwo/test_ladder_readouts.py::test_a_route_ladder_readout_is_reported[whenever]` from about 210 s to
+300-420 s. Find what the replays now recompute (#15 moved B3 earlier for some routes) and carry state forward;
+never raise the timeout.
 
 **An order-dependent test.** `tests/db/test_failover.py::test_the_site_is_logged_at_startup` fails when run alone: it
 leans on an earlier test's logging setup (same on main before the overhaul). Give it its own logging setup.
