@@ -77,7 +77,6 @@ UNLOCKED = '{ test = "at_least", subject_kind = "unlocked", unlock_kind = "featu
 CHIP = ('[[chips]]\nid = "t_chip"\nlabel_key = "t_chip"\ntone = "cold"\nwhen = WHEN\ncost_key = "t_chip_cost"\n'
         'effects = [{ target = "lane", id = "hands", kind = "mul_bp", amount_bp = 8000, source = "t_chip" }]\n\n[text]\n')
 CARD = 'label_key = "t_c_one_off"\nwork_s = 40\ncap = 1\n'
-FAILED = 'failed_line_key = "t_l_rule"\n'
 TRIGGER = 'outcome = { unlocks = [{ unlock_kind = "feature", id = "t_after" }] }\n'
 TEXT_KEY = 't_c_one_off = "Look"'
 
@@ -87,7 +86,7 @@ def placed(where: str, c: str) -> tuple[tuple[str, str], ...]:
     if where == "chip":
         return (("[text]\n", CHIP.replace("WHEN", c)), (TEXT_KEY, f'{TEXT_KEY}\nt_chip = "Chip"\nt_chip_cost = "costs"'))
     if where == "card":
-        return ((CARD, f"{CARD}{FAILED}requires = [{c}]\n"),)
+        return ((CARD, f"{CARD}requires = [{c}]\n"),)
     return ((TRIGGER, f"{TRIGGER}requires = [{c}]\n"),)
 
 

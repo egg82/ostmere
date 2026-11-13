@@ -36,7 +36,7 @@ Hidden taps are for easter eggs and other inconsequential extras only, knowing t
 nearly everyone. Tapping a card that plainly isn't ready is one: an unready card looks unready (muted, only the
 number its missing need is short of marked, never glowing; red is the ledger's alarm, never a need) but still answers a tap. A failed tap takes no time and nothing on screen looks
 like progress: the card pulses red, what it is missing pulses with it (the need, skill level or step its blocker names,
-or its countdown when that is all the card shows, as for a store never shown), and its failed line lands at once. A busy
+or its countdown when that is all the card shows, as for a store never shown), and no text appears, ever. A busy
 card cannot be tapped and looks it. **Tapping never moves the layout**: one progress bar per thing, on the thing
 itself, and anything that appears or changes state does so in space already reserved, so the next card is where the
 player's finger expects it. The preview hid its order card behind a tap on a red ledger line, and no player ever set an

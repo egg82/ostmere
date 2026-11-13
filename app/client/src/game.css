@@ -143,7 +143,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .journal-open::before { content: "▤"; margin-right: .4em; }
 .log-open .new-dot, .journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
 .log-open:hover, .log-open:focus-visible, .journal-open:hover, .journal-open:focus-visible { color: var(--btn-ink) !important; border-color: var(--rim-ember); border-image: var(--px-ember) 1; outline: none; }
-.panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; margin-top: calc(var(--line-room) - 1rem); }   /* below the longest tap line a card can hang (.card-line), so a line never covers it; the 1rem is the panel's own gap */   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
+.panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
 .feedback-open, .devices-open, .games-open {   /* words only until it is hovered */
   flex: none; min-height: 2.4rem; padding: 0 .7rem; cursor: pointer; font-size: .9rem !important;
   background: transparent; border: 2px solid transparent; color: var(--ink-meta) !important;
@@ -151,7 +151,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .feedback-open:hover, .feedback-open:focus-visible, .devices-open:hover, .devices-open:focus-visible, .games-open:hover, .games-open:focus-visible { color: var(--btn-ink) !important; border-color: var(--btn-line); border-image: var(--px-btn) 1; outline: none; }
 
 /* ---------- the panel ---------- */
-.panel { --line-room: 12.5rem; /* the tallest tap line (about 150 characters) on a phone's 2-column card, with its margin; 360px wide and up */ padding: 0 1rem calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 1rem; }
+.panel { padding: 0 1rem calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 1rem; }
 .panel-top { position: sticky; top: var(--scene-vh); z-index: 3; margin: 0 -1rem; padding: .5rem 1rem; background: var(--bg); border-bottom: 2px solid #08070a; box-shadow: 0 2px 0 var(--rim-dim); }
 .panel-heading { margin: 0 0 .4rem; font: 400 1.1rem/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-head); letter-spacing: .02em; }
 .banners:empty { display: none; }
@@ -293,7 +293,6 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
    so the card keeps its size and the button never reaches the bar (two classes: the glow's position must not win) */
 .card .card-ready { position: absolute; right: .5rem; bottom: .55rem; z-index: 1; box-sizing: border-box; height: var(--foot-h); padding: 0 .7rem; font: inherit; font-size: .85rem; color: var(--btn-ink); background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm); cursor: pointer; }
 .card-ready.queued { color: var(--ink-meta); background: transparent; border-color: var(--rim-dim); border-image: var(--px-dim) 1; box-shadow: none; cursor: default; }
-.card.saying .card-ready { visibility: hidden; }   /* a line on the card has the foot */
 .card-tap:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 2px; }
 .card:not(.busy):not(.done) .card-tap:active { transform: scale(.98); }
 /* the first card: stand-alone, double width and about 1.5x height, the most obvious thing to tap at every size */
@@ -304,16 +303,6 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .card.first .card-track { margin-top: .8rem; height: 8px; }
 /* until its first tap it is only its verb: no count, bar or time that would read as something already under way */
 .card.first.untapped :is(.card-count, .card-track, .card-foot) { visibility: hidden; }
-/* a line the player's tap wrote, hung from the card's foot over what is below for its reading time: out of the card's
-   flow, so the card and every row after it stay where they are (Tapping never moves the layout), and the card's own
-   needs and countdown stay in view (a failed tap's marks). It takes no taps, so what it covers is still tappable. */
-.card-line { position: absolute; top: 100%; left: 0; right: 0; z-index: 3; box-sizing: border-box; margin-top: .25rem; padding: .5rem .8rem .55rem .9rem; font-size: .95rem; line-height: 1.25; color: var(--ink-bright); background: var(--panel); border: 2px solid var(--rim-ember); box-shadow: var(--drop); pointer-events: none; }
-.card-line.held { display: none; }
-.card-line.arrive { animation: card-line-in .2s ease-out; }
-@keyframes card-line-in { from { opacity: 0; transform: translateY(.35rem); } }
-.card.saying:not(.saying-failed) .card-foot { visibility: hidden; }
-.card.done.saying { opacity: 1; }
-.card.done.saying .card-tap { opacity: .42; }
 .card.by-order::after { content: ""; position: absolute; bottom: .5rem; right: .6rem; width: 6px; height: 6px; background: var(--ember-hot); }
 .pop { position: absolute; right: 4.4rem; top: .5rem; pointer-events: none; font-weight: 700; color: var(--btn-ink); animation: pop 1.1s ease-out forwards; }
 @keyframes pop { 0% { opacity: 0; transform: translateY(.3rem) scale(.8); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-1.6rem); } }
@@ -759,7 +748,7 @@ details[open] > summary .v-title, .log-visit.newest .v-title { color: var(--ink-
   .left > .aim { padding: .6rem 1.75rem 0; }   /* over the art's column, its text in line with the strip's */
   .left > .strip { flex: none; padding: .55rem 1.75rem .65rem; }
   .end-dock { position: absolute; left: auto; right: 1rem; bottom: 1rem; width: calc(var(--panel-w) - 2rem); padding-bottom: 1.4rem; box-shadow: 0 0 2rem rgba(200, 116, 58, .2), 0 .8rem 2rem rgba(0, 0, 0, .6); }
-  .panel { --line-room: 10rem; height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 0 1.2rem 1.6rem; border-left: 2px solid #08070a; box-shadow: inset 2px 0 0 var(--rim-dim); }
+  .panel { height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 0 1.2rem 1.6rem; border-left: 2px solid #08070a; box-shadow: inset 2px 0 0 var(--rim-dim); }
   .panel-top { top: 0; margin: 0 -1.2rem; padding: .7rem 1.2rem; }
   .panel.more { -webkit-mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); }   /* content runs past the foot (ui/morecue.ts): it fades out there, still under reduced motion */
 }

@@ -10,10 +10,9 @@ export interface Group {
   slots: string[];
 }
 
-/** What a slot shows: its card, or the finished card still standing in it until the card's turn to arrive. */
+/** What a slot shows: its card. */
 export interface Slotted {
   node: HTMLElement;
-  stand?: HTMLElement;
 }
 
 export class CardGroups {
@@ -63,8 +62,7 @@ export class CardGroups {
       let cursor = g.list.firstElementChild;
       for (const id of g.slots) {   // move only what is out of place: re-inserting restarts animations
         const row = rows.get(id);
-        if (row?.stand && !row.stand.isConnected) row.stand = undefined;   // the arrival took the slot
-        const node = row?.stand ?? row?.node;
+        const node = row?.node;
         if (!node) continue;
         if (node === cursor) cursor = cursor.nextElementSibling;
         else g.list.insertBefore(node, cursor);

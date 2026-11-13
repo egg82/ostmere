@@ -13,14 +13,13 @@ import { play } from "./ladder";
 
 const TOUCHES = ["click", "keydown"] as const;
 
-/** What a part calls when it draws something new. `takes`: a node on screen it replaces as it shows (a card's slot,
- * which the finished card keeps until then); sight is judged by that node. `holdMs`: its reading time, which the next
- * kind waits out (a ledger line, read before the cards). */
+/** What a part calls when it draws something new. `holdMs`: its reading time, which the next kind waits out (a ledger
+ * line, read before the cards). */
 export interface Arrivals {
-  arrive(node: HTMLElement, kind: ArrivalKind, id: string, takes?: HTMLElement, holdMs?: number): void;
+  arrive(node: HTMLElement, kind: ArrivalKind, id: string, holdMs?: number): void;
   /** A one-off change on `node` (a ring, a burst, the glow): `run` now, or at its turn after what is waiting. */
   effect(node: HTMLElement, kind: ArrivalKind, run: () => void): void;
-  /** A story line, in the strip and perhaps on its card: first in its batch, holding what follows for `readMs`. */
+  /** A story line: first in its batch, holding what follows for `readMs`. */
   line(nodes: HTMLElement[], id: string, readMs: number): void;
   /** Something is waiting its turn. */
   readonly busy: boolean;
@@ -28,7 +27,6 @@ export interface Arrivals {
 
 interface Held {
   node: HTMLElement;
-  takes?: HTMLElement;
   line?: boolean;
   run?: () => void;
 }
@@ -58,13 +56,13 @@ export class Reveal implements Arrivals {
     if (!this.collecting) this.start(performance.now());
   }
 
-  arrive(node: HTMLElement, kind: ArrivalKind, id: string, takes?: HTMLElement, holdMs = 0): void {
+  arrive(node: HTMLElement, kind: ArrivalKind, id: string, holdMs = 0): void {
     if (!this.busy) {
-      show([{ node, takes }]);
+      show([{ node }]);
       return;
     }
     node.classList.add("held");
-    this.queue.push(kind, id, null, { node, takes }, holdMs);   // the view gives no unlock times yet: shown in kind order
+    this.queue.push(kind, id, null, { node }, holdMs);   // the view gives no unlock times yet: shown in kind order
     if (!this.collecting) this.start(performance.now());   // a straggler: its turn comes after what is waiting
   }
 
@@ -84,7 +82,7 @@ export class Reveal implements Arrivals {
   /** The batch is drawn: begin showing it (the first thing at once). */
   start(nowMs: number): void {
     this.collecting = false;
-    this.queue.start(nowMs, reducedMotion(), (held) => held.some((h) => h.line === true || inSight(h.takes ?? h.node)));
+    this.queue.start(nowMs, reducedMotion(), (held) => held.some((h) => h.line === true || inSight(h.node)));
     if (!this.queue.quiet(nowMs) && !this.listening) {
       for (const t of TOUCHES) document.addEventListener(t, this.skip, { capture: true });
       this.listening = true;
@@ -122,12 +120,11 @@ function inSight(node: HTMLElement): boolean {
 }
 
 function show(held: Held[]): void {
-  for (const { node, takes, run } of held) {
+  for (const { node, run } of held) {
     if (run) {
       run();
       continue;
     }
-    if (takes?.isConnected) takes.replaceWith(node);
     node.classList.remove("held");
     play(node, "first");
   }

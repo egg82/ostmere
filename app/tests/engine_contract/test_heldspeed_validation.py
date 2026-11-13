@@ -79,8 +79,8 @@ def digest_rules(held: bool) -> Rules:
     return world(standing=eaters(3, held=held), with_gs=False)
 
 
-RECORDED = "658d3671a0f6cee06ae7f1c4ccd860115665d643310d6bcef92c61faa090b326"
-"""rules_digest of digest_rules(False), taken on the engine before held speed existed."""
+RECORDED = "6579b137ea469cb6b7b81053b620bb528a3c8e2d0f06fa41b7e72e379b1d891f"
+"""rules_digest of digest_rules(False), with no standing action holding."""
 
 
 @kills(12)

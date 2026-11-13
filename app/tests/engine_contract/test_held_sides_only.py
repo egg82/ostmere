@@ -1,7 +1,7 @@
 """Invariant 114 (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "The entries", "Instants", "Codec"): a held entry
 aims only at sides and is never stored. No threat explanation and no rate, work or lane speed Explanation lists one;
 s.modifiers and every LaneState.speed of a save hold none; and rules without while_running keep the digest, the
-manifest and the save text they had before this part (the pins below were taken from the engine before it)."""
+manifest and the save text the pins below hold (re-taken when a CardDef field went, which changes every digest)."""
 import hashlib
 import json
 
@@ -15,8 +15,8 @@ from held_world import GA, GA2, GAC, GH, GH2, HELD, HF, WOLF, hands, held_mods, 
 from town_mix_world import A1, B1, LA, LB, TM, TOWN_RULE, always, joiner, orders, start, world as town_world
 from tests.format8 import as_format_8
 
-PIN_DIGEST = "06a2d30a601da3d907c5b542b1f67cdcda4d564a05f0233758c0826071c68b5a"
-PIN_SAVE_SHA = "c3255e6f4f950070be2eb011aabd9a0b2ed277167701551ddde5e7c0d8fa5392"
+PIN_DIGEST = "c6bdea9ffefd665f22a5ec6aca5a77ff79c9d5461687c1664f50b6c16496b10a"
+PIN_SAVE_SHA = "2691aec38cbd7cea3d901d2c296f1d1c895759a24d76f830e6be7df4998b96c0"
 PIN_MANIFEST_SHA = "3a95e34cf7786a6d1fcacd9ed3d82d578cb2452d92465fa6e2aeea571123bfa7"
 
 
@@ -102,7 +102,7 @@ def test_reading_writes_nothing_and_a_decoded_save_holds_the_same_entries():
 
 @kills(20)
 def test_rules_without_while_running_keep_their_digest_manifest_and_save_text():
-    """The pins were taken from the engine before this part: a card with an empty while_running encodes as it did."""
+    """A card with an empty while_running leaves the field out of the encoding."""
     r = town_world((joiner("ja", LA, TM, A1), joiner("jb", LB, TM, B1)))
     assert rules_digest(r) == PIN_DIGEST
     s = advance(start(r, orders(TOWN_RULE, always(A1))), r, 345)
@@ -112,8 +112,8 @@ def test_rules_without_while_running_keep_their_digest_manifest_and_save_text():
 
 @kills(20)
 def test_a_second_world_without_the_field_keeps_its_digest_too():
-    """The fight suite's world (pin taken from the engine before this part): a different set of rules, same promise."""
-    assert rules_digest(fight_world(2, 5)) == "243695bd9aec8543d7305799397be355be9ccb0d35d4a3518c23d8b313598b19"
+    """The fight suite's world (pin re-taken with the others): a different set of rules, same promise."""
+    assert rules_digest(fight_world(2, 5)) == "e2ab1a569e7f67fa2fcc76759fcb812f1de48d9263faeb952a891fb681a21530"
 
 
 def test_rules_with_while_running_have_their_own_digest_and_the_same_manifest_as_without():

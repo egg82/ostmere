@@ -66,7 +66,6 @@ presentation = "action"
 label_key = "t_c_tend"
 work_s = 30
 inputs = [{ store = "t_bitten", items = 1 }]
-failed_line_key = "t_l_tend_failed"
 
 # Unlocks the clock's standing action and does not feed the clock itself.
 [[cards]]
@@ -91,7 +90,6 @@ when = { test = "at_least", subject_kind = "store", id = "t_clock", value = 5 }
 outcome = { modifiers = [{ target = "threat", id = "t_rats", kind = "mul_bp", amount_bp = 12000, source = "t_ramp_1" }] }
 
 [line_kinds]
-t_l_tend_failed = "story"
 
 [text]
 t_side_hands = "The town"
@@ -106,4 +104,3 @@ t_a_raid = "Rats at the stores"
 t_c_hunt = "Hunt"
 t_c_tend = "Tend bites"
 t_c_signal = "Signal"
-t_l_tend_failed = "Nothing to tend."

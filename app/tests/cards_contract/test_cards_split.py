@@ -139,7 +139,7 @@ def test_counts_are_read_off_the_work_and_a_hands_tap_never_runs_beside_the_mix(
 def test_logged_advance_splits_and_emits_only_rule_keys(sc: Scenario, cut: int, extra: int):
     """Invariants 25, 26: advance_logged(s, t).save == advance(s, t); the lines of s->t1 then t1->t2 equal those of
     s->t2, in (time, seq) order with seq from 0 at each instant; every key is one the rules can emit (a card's lines,
-    failed_line, an outcome's or finished's lines, a chip's)."""
+    an outcome's or finished's lines, a chip's)."""
     s, _, history = play_logged(sc)
     r = sc.rules
     t1, t2 = s.time + span(r, cut), s.time + span(r, cut) + span(r, extra)

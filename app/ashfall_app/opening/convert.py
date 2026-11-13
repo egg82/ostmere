@@ -213,7 +213,7 @@ def _card(c: "CardEntry", cards: set[str]) -> CardDef:
         inputs=tuple(amount(a) for a in c.inputs), requires=tuple(condition(x, cards) for x in c.requires),
         outcome=_outcome(c.outcome, cards), cap=c.cap, finished=_outcome(c.finished, cards),
         lines=tuple(LineKey(k) for k in c.line_keys),
-        failed_line=None if c.failed_line_key is None else LineKey(c.failed_line_key), fight=_fight(c.fight),
+        fight=_fight(c.fight),
         glows=c.glows, while_running=_held(c.while_running),
         drains=tuple(amount(a) for a in c.drains))
 

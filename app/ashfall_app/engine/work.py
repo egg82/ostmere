@@ -76,7 +76,7 @@ def tap_seconds(save: Save, rules: Rules, card: CardId) -> int | None:
 def tap(save: Save, rules: Rules, verb: TapCard, by_player: bool) -> Save:
     """The save after tapping verb.card at save.time. by_player: locked, unknown, completed, a busy lane or a speed of
     0 raises InvalidVerbError. Otherwise an order, the queue or an Outcome: any of those changes nothing. An unready
-    card changes nothing either (from the player it is a failed tap, whose line api.decide emits: DESIGN.txt, "Failed
+    card changes nothing either (from the player it is a failed tap, which emits no line: DESIGN.txt, "Failed
     tap"). A ready tap takes nothing at its start: it runs the card at a full share from its current work to the next
     completion, every line (inputs and outcome stores included) at that share (DESIGN.txt, "One bar"). A fresh tap is
     bounded at that completion; only retap.settle lets it repeat (DESIGN.txt, "REPEATING TAPS")."""
@@ -206,9 +206,9 @@ def _free(save: Save, lane: LaneId) -> Save:
 
 
 def written_by(c: CardDef) -> frozenset[LineKey]:
-    """The line keys the card's own content holds: its completion lines, its outcome's and finished's lines and its
-    failed tap's line. A chip's on_line that the card's outcome happens to show is the chip's, not the card's."""
-    keys = (*c.lines, *c.outcome.lines, *c.finished.lines, *_lines(c.failed_line))
+    """The line keys the card's own content holds: its completion lines, its outcome's and finished's lines.
+    A chip's on_line that the card's outcome happens to show is the chip's, not the card's."""
+    keys = (*c.lines, *c.outcome.lines, *c.finished.lines)
     return frozenset(keys)
 
 

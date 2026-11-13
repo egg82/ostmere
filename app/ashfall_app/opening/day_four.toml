@@ -147,7 +147,6 @@ id = "n2_watch"
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_watch"
-failed_line_key = "l_his_watch_dry"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]
@@ -162,7 +161,6 @@ label_key = "c_woodshed"
 upside_key = "up_woodshed"
 work_s = 2400
 cap = 3
-failed_line_key = "l_shed_fail"
 inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 12 }]
 line_keys = ["l_shed_1", "l_shed_2", "l_shed_done"]
 [cards.finished]
@@ -201,7 +199,6 @@ label_key = "c_sit_up"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_sit_up_5_fail"
 requires = [
   { test = "at_least", subject_kind = "store", id = "night_5", value = 5 },
   { test = "at_least", subject_kind = "skill_level", id = "scavenging", value = 18 },
@@ -358,15 +355,12 @@ l_fog_open = "story"
 l_sign_1 = "story"
 l_sign_2 = "story"
 l_his_watch = "story"
-l_his_watch_dry = "tap"
-l_shed_fail = "tap"
 l_shed_1 = "story"
 l_shed_2 = "story"
 l_shed_done = "story"
 l_stack4_1 = "story"
 l_stack4_2 = "story"
 l_night_5 = "story"
-l_sit_up_5_fail = "tap"
 l_b6_1 = "story"
 l_b6_2 = "story"
 l_b6_3 = "story"
@@ -409,15 +403,12 @@ l_fog_open = "you wipe the hang dry. the drip comes back."
 l_sign_1 = "half a deer on the track. you count prints and run out of fingers."
 l_sign_2 = "the same prints ring the camp. none come in."
 l_his_watch = "{n2} sits at the gap, the shaft on his knees."
-l_his_watch_dry = "he crouches by the gap. nothing there will light."
-l_shed_fail = "the shed won't stand on what's here."
 l_shed_1 = "posts in a row. from the track, a fence."
 l_shed_2 = "rafters lashed down, slabs lapped over them."
 l_shed_done = "lucy thumbs a log from the middle and slides it back."
 l_stack4_1 = "{n2} lays the logs bark up. lucy turns them over."
 l_stack4_2 = "he laughs. she stops at the last row."
 l_night_5 = "the wet wood smokes. nobody moves back."
-l_sit_up_5_fail = "you warm your hands. that's all."
 l_b6_1 = "the coals sink to a red thread. a twig on them. nothing."
 l_b6_2 = "your hand on the stone. the twig steams, then catches."
 l_b6_3 = "you scrub your fingers. the grey stays. lucy moves to the far side."

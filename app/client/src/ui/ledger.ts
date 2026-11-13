@@ -197,7 +197,7 @@ export class Ledger implements Part {
     row.offer?.classList.toggle("calm", !red);
     setText(row.rate, this.ctx.catalog.format.perMinute(line.net_per_hour));
     if (before && this.red(before) && !red) this.ctx.arrivals.effect(row.box, "store", () => pulse(row.box, "settle"));
-    if (arriving) this.ctx.arrivals.arrive(row.box, "store", line.store, undefined, readingMs(row.node.textContent ?? ""));   // read before the cards
+    if (arriving) this.ctx.arrivals.arrive(row.box, "store", line.store, readingMs(row.node.textContent ?? ""));   // read before the cards
   }
 
   /** The line's offer now; a card offered by the stall rule or a rising line is kept until a rule is set. */

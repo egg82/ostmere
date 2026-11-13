@@ -218,7 +218,7 @@ Tasks or Completed: the row and its editor are their only way in. Fits into: the
   added (`smoked 2/6` lights both smoke tasks). An input nothing will bring again (a pool used up, nothing in play
   making it, no grant left) says so on its row (`flint 0/1, none left`). A tap still answers, at once and taking no time: the card glows red for a moment,
   what stopped it (that need, skill or step row, or the countdown when that is all it shows) flashes red and swells
-  in place, and its failed line shows. A busy card can't be tapped and looks it (its bar running, the card's surface
+  in place, and no text shows. A busy card can't be tapped and looks it (its bar running, the card's surface
   flat), except a glowing step not yet done while the queue or a rule holds the hands: it stays ready, takes its glow,
   and its tap cuts in (`decisions.md`, "A glowing step cuts in").
 - **A working card draws no needs.** Its inputs are drawn as the work runs, so the live store would read short of the
@@ -240,13 +240,10 @@ Tasks or Completed: the row and its editor are their only way in. Fits into: the
   and can't be tapped.
 - **A choice arrives as one thing:** its two cards appear together, side by side in adjacent slots, under one small
   heading. Each names its upside, and both show what they take.
-- **A tap's line shows on the card that wrote it,** hung whole under the card over whatever follows, out of the card's
-  flow so nothing moves; the timer hides meanwhile. The panel foot (Feedback, Another device, Games) keeps room above
-  it for the tallest line a card can hang (`--line-room` in `game.css`, set for a 360px-wide phone's two-column card
-  and for the desktop panel), so a line never covers the foot, however few cards there are. It stays for its reading time: 2.9 words a second
-  (the research's 15 characters a second at the opening's 5.1 characters a word), at least 3 s. Only the player's
-  taps: lines written by the mix, a rule, time or a chip, and the end's, are strip-only. A finished card showing a line
-  keeps its slot, drawn done, until the card taking the slot arrives; a card that has left the screen gets no line.
+- **A tap's line goes to the strip and the Log, never under the card.** It stays in the strip for its reading time: 2.9
+  words a second (the research's 15 characters a second at the opening's 5.1 characters a word), at least 3 s. A refused
+  tap has no line at all: the card goes red and the need it lacks is marked in its need line (`decisions/feedback.md`,
+  "Rewarding at any moment"). Every tap outcome has exactly one home.
 - **Skill rows** show what the next level pays and, when the view's forecast has it land, the time to it (`a find ·
   12m`). Change the mix and the time changes: the row is where the player sees the setup at work. A row with nothing
   ahead in the content reads `no more yet`, its bar grey, so it never reads as progress toward something.
@@ -806,7 +803,7 @@ together), then holds the next turn for the line's reading time, and only then t
 line that came with it (at the usual 400–700 ms pace). A ledger line is read before the cards: the ledger's new lines
 keep the pace among themselves, then hold the next kind (skills, cards) for the longest one's reading time, its rule
 offer's sentence counted, so the fire's ledger is seen before the cards that came with it. The one-off changes take turns too: a completion's ring and
-"+1" (except on the card showing the line, where they come with it), a level's burst, a ledger line settling,
+"+1", a level's burst, a ledger line settling,
 the glow (the Rules tab's label too), a rule row's fired pulse and the Rules tab's pulse when a
 flown rule lands (the flight itself answers the tap, so it goes at once); a finished card waits to leave for Completed,
 and a self-update's reload waits until nothing does. A tap or key moves on to the next line while lines wait, or shows

@@ -133,16 +133,15 @@ def _card(draw: Draw, plan: _Plan, c: CardId, stores: list[StoreDef], lockable: 
     # Seconds-long work only where completions are bounded (a cap): an order re-tapping an uncapped one-second card
     # would make every second an instant, and the suite has a time budget.
     work_s = draw(st.sampled_from([1, 3, 7, 300, 900]) if cap is not None else st.integers(300, 1500))
-    failed = LineKey(f"{c}.failed") if draw(st.booleans()) else None
     if cap is None:
         lines = (LineKey(f"{c}.tap"),) if draw(st.booleans()) else ()
         return CardDef(c, work_s, plan.lane[c], K, xp, makes, costs, inputs, requires, Outcome(stores=outs), None,
-                       Outcome(), lines, failed)
+                       Outcome(), lines)
     disc = draw(_discrete_outcome(plan, c, lockable, targets, f"out.{c}", f"{c}.out"))
     fin = draw(_discrete_outcome(plan, c, lockable, targets, f"fin.{c}", f"{c}.fin"))
     lines = tuple(LineKey(f"{c}.{n}") for n in range(1, cap + 1)) if draw(st.booleans()) else ()
     outcome = Outcome(outs, disc.unlocks, disc.modifiers, disc.raises, disc.starts, disc.lines)
-    return CardDef(c, work_s, plan.lane[c], K, xp, makes, costs, inputs, requires, outcome, cap, fin, lines, failed)
+    return CardDef(c, work_s, plan.lane[c], K, xp, makes, costs, inputs, requires, outcome, cap, fin, lines)
 
 
 @st.composite
@@ -344,11 +343,10 @@ def timeline(save: Save, r: Rules, offsets: tuple[int, ...], events: int = 4) ->
 
 
 def rule_keys(r: Rules) -> set[str]:
-    """Every line key the rules can emit (DESIGN.txt, "Lines"; CardDef.lines and failed_line, outcomes, chips)."""
+    """Every line key the rules can emit (DESIGN.txt, "Lines"; CardDef.lines, outcomes, chips)."""
     found: set[str] = set()
     for c in r.cards:
         found |= set(c.lines) | set(c.outcome.lines) | set(c.finished.lines)
-        found |= {c.failed_line} if c.failed_line else set()
     for k in r.chips:
         found |= {x for x in (k.on_line, k.off_line) if x}
     for t in r.triggers:

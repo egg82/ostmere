@@ -14,8 +14,8 @@ Wrong implementations to plant one at a time; the [bracketed] test_cards_<name>.
                  WorkRef entry kept aimed at WorkRef in the Explanation.                            [inputs]
  6 one side      validation accepting a store twice across a card's makes, costs, inputs and outcome
                  stores (a flow beside a lump on one store, a store listed twice in one list).        [validation]
- 7 failed tap    a failed tap holds its lane (yielding the mix); its failed line missing, naming no card,
-                 the tap line instead, said twice or a second late; Step.failed unset, or set on a
+ 7 failed tap    a failed tap holds its lane (yielding the mix); a line emitted for it, naming no
+                 card, the tap line instead; Step.failed unset, or set on a
                  ready tap; an order or the queue taps an unready card; a failed tap evaluates orders
                  and the queue; speed 0 read as unready (no refusal); a format 5 lane mid failed
                  attempt kept busy by the upgrade (red in tests/saves).                              [failed_tap]

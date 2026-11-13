@@ -1,12 +1,12 @@
 """A failed tap (invariant 22, "Failed tap" in part "CARDS"): the player's tap of an unready card takes no time. Nothing
-runs, nothing is taken, the lane stays free and the mix keeps running; the card's failed_line lands at the tap's
-instant, and the decision's Step names the card (Step.failed), whatever its blocker: a short input, a false requires
+runs, nothing is taken, the lane stays free and the mix keeps running; no line is emitted,
+and the decision's Step names the card (Step.failed), whatever its blocker: a short input, a false requires
 or a Pause. An order, the queue or an Outcome never taps an unready card (invariant 23). A tap at speed 0, ready or
 not, is refused."""
 import pytest
 
 from ashfall_app.engine import (
-    BP, HANDS, AfterTime, Amount, AtLeast, CardDef, CardId, EventKind, Flow, InvalidVerbError, LaneState, LineKey, Order,
+    BP, HANDS, AfterTime, Amount, AtLeast, CardDef, CardId, EventKind, Flow, InvalidVerbError, LaneState, Order,
     MixId, Outcome, QueueEntry, RunKind, SetOrders, SetQueue, StandingDef, StoreDef, Step, StoreId, StoreValue, SwitchMix,
     TapCard, WorkRef, ActionId, advance, advance_logged, decide, decide_logged, new_save, next_event,
 )
@@ -19,18 +19,18 @@ GEN = ActionId("gen")
 
 
 def world():
-    """x short of c's and r's input; d waits on z; e is a blank ready card; n is unready with no failed line; p (200 s)
+    """x short of c's and r's input; d waits on z; e is a blank ready card; n is another unready card; p (200 s)
     costs y faster than gen refills it, so in the mix it runs y dry and is paused; rs, on the rack, starts c."""
     return rules(
         [StoreDef(X, 100 * Q, Q - 1), StoreDef(Y, 100 * Q, Q // 2), StoreDef(Z, 100 * Q, 0)],
         standing=[StandingDef(GEN, makes=(Flow(Y, 18_000),))],
-        cards=[CardDef(C, 100, inputs=(Amount(X, Q),), failed_line=LineKey("c.failed")),
+        cards=[CardDef(C, 100, inputs=(Amount(X, Q),)),
                CardDef(M, 100, makes=(Flow(Z, 1000),)),
-               CardDef(R, 100, lane=RACK, inputs=(Amount(X, Q),), failed_line=LineKey("r.failed")),
-               CardDef(D, 40, requires=(AtLeast(StoreValue(Z), 5 * Q, 5 * Q),), failed_line=LineKey("d.failed")),
+               CardDef(R, 100, lane=RACK, inputs=(Amount(X, Q),)),
+               CardDef(D, 40, requires=(AtLeast(StoreValue(Z), 5 * Q, 5 * Q),)),
                CardDef(E, 100),
                CardDef(N, 100, inputs=(Amount(X, Q),)),
-               CardDef(P, 200, costs=(Flow(Y, 36_000),), failed_line=LineKey("p.failed")),
+               CardDef(P, 200, costs=(Flow(Y, 36_000),)),
                CardDef(RS, 10, lane=RACK, cap=5, outcome=Outcome(starts=(C,)))],
         lanes=[RACK])
 
@@ -39,11 +39,10 @@ def said(step: Step) -> list[tuple[int, str, CardId | None]]:
     return [(ln.time, ln.key, ln.card) for ln in step.lines]
 
 
-@pytest.mark.parametrize("card, key", [(C, "c.failed"), (D, "d.failed"), (R, "r.failed")],
-                         ids=["short-input", "false-requires", "other-lane"])
-def test_an_unready_tap_changes_nothing_and_says_its_line_at_once(card: CardId, key: str):
+@pytest.mark.parametrize("card", [C, D, R], ids=["short-input", "false-requires", "other-lane"])
+def test_an_unready_tap_changes_nothing_and_says_nothing(card: CardId):
     """The save after the tap equals the save advanced to the tap's instant: every lane free, the mix running at its
-    share, no TAP_DONE ahead; the failed line is the step's only line, at the tap's instant, written by the card."""
+    share, no TAP_DONE ahead, and no line at all."""
     r = world()
     s = with_mix(new_save(r), r, 0, {M: BP})
     step = decide_logged(s, r, 10, TapCard(card))
@@ -52,15 +51,8 @@ def test_an_unready_tap_changes_nothing_and_says_its_line_at_once(card: CardId, 
     assert make(step.save, r, M, Z).run.kind is RunKind.FULL
     nxt = next_event(step.save, r)
     assert nxt is None or nxt.kind is not EventKind.TAP_DONE
-    assert said(step) == [(10, key, card)]
+    assert said(step) == []
     assert step.failed == card
-
-
-def test_an_unready_card_with_no_failed_line_says_nothing_and_is_still_named():
-    r = world()
-    s = new_save(r)
-    step = decide_logged(s, r, 5, TapCard(N))
-    assert step.save == advance(s, r, 5) and said(step) == [] and step.failed == N
 
 
 def test_a_paused_card_fails_at_once_and_keeps_its_pause():
@@ -70,7 +62,7 @@ def test_a_paused_card_fails_at_once_and_keeps_its_pause():
     blocker = engine_work.blocker(a, r, P)
     assert blocker is not None and blocker.condition == AtLeast(StoreValue(Y), a.pauses[0].resume_at, a.pauses[0].resume_at)
     step = decide_logged(a, r, 1000, TapCard(P))
-    assert step.save == a and said(step) == [(1000, "p.failed", P)] and step.failed == P
+    assert step.save == a and said(step) == [] and step.failed == P
 
 
 def test_the_view_after_a_failed_tap_still_shows_what_stopped_it():
@@ -89,14 +81,14 @@ def test_a_ready_tap_names_no_failure():
 
 
 def test_tapping_unready_again_and_again_moves_nothing():
-    """Tapping thirty times in a row leaves the save where advancing alone would, with one line per tap."""
+    """Tapping thirty times in a row leaves the save where advancing alone would, with no line."""
     r = world()
     s = with_mix(new_save(r), r, 0, {M: BP})
     lines = 0
     for t in range(1, 31):
         step = decide_logged(s, r, t, TapCard(C))
         s, lines = step.save, lines + len(step.lines)
-    assert s == advance(with_mix(new_save(r), r, 0, {M: BP}), r, 30) and lines == 30
+    assert s == advance(with_mix(new_save(r), r, 0, {M: BP}), r, 30) and lines == 0
     assert tap(s, r, 30, E) is not None
 
 

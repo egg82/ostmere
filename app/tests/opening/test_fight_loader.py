@@ -95,7 +95,7 @@ def test_a_fight_the_engine_refuses_is_refused_by_to_rules(tmp_path: Path, old: 
 def test_a_threat_aimed_at_from_a_cards_outcome_is_refused_by_to_rules(tmp_path: Path):
     """Who may aim at a threat is the engine's rule (invariant 83); the loader carries the modifier faithfully."""
     mod = '{ target = "threat", id = "t_rats", kind = "mul_bp", amount_bp = 12000, source = "t_tend" }'
-    path = edited(tmp_path, ('failed_line_key = "t_l_tend_failed"', f'failed_line_key = "t_l_tend_failed"\nfinished = {{ modifiers = [{mod}] }}'))
+    path = edited(tmp_path, ('inputs = [{ store = "t_bitten", items = 1 }]', f'inputs = [{{ store = "t_bitten", items = 1 }}]\nfinished = {{ modifiers = [{mod}] }}'))
     with pytest.raises(InvalidRulesError):
         to_rules(load_with(path))
 

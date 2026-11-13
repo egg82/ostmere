@@ -158,7 +158,7 @@ class CardDef:
 
     lines: with a cap, empty or one key per completion number up to the base cap (completion n emits lines[n - 1];
     completions past the base cap emit the last), however the card was run; without a cap, empty or one key, emitted
-    when a tap ends at a completion. failed_line: emitted at the instant of a failed tap (TapCard).
+    when a tap ends at a completion.
     """
 
     id: CardId
@@ -174,7 +174,6 @@ class CardDef:
     cap: int | None = None
     finished: Outcome = Outcome()
     lines: tuple[LineKey, ...] = ()
-    failed_line: LineKey | None = None
     fight: FightDef | None = None
     glows: bool = False
     """A step the page points at with its one glow: until its first completion, the player's tap of it cuts in on the

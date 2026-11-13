@@ -19,7 +19,6 @@ presentation = "action"
 label_key = "t_c_tend"
 work_s = 30
 inputs = [{ store = "t_bitten", items = 1 }]
-failed_line_key = "t_l_tend_failed"
 
 '''
 TEND_UNLOCK = ', { unlock_kind = "card", id = "t_tend" }'

@@ -25,7 +25,6 @@ work_s = 20
 skill = "arcana"
 xp_per_hour = 60
 glows = true
-failed_line_key = "l_stone_fail"
 inputs = [{ store = "damp_wood", items = 18 }]
 outcome = { stores = [{ store = "dry_wood", items = 1 }] }
 
@@ -58,7 +57,6 @@ work_s = 1800
 cap = 3
 skill = "arcana"
 xp_per_hour = 10
-failed_line_key = "l_stones_fail"
 requires = [{ test = "at_least", subject_kind = "skill_level", id = "arcana", value = 4 }]
 inputs = [{ store = "stones", items = 12 }, { store = "clay", items = 4 }]
 line_keys = ["l_stones_1", "l_stones_2", "l_stones_done"]
@@ -299,7 +297,6 @@ presentation = "craft"
 label_key = "c_make_bay2"
 work_s = 10800
 cap = 1
-failed_line_key = "l_bay2_fail"
 inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 18 }]
 outcome = { stores = [{ store = "bay2", items = 1 }] }
 
@@ -324,7 +321,6 @@ id = "n3_build_bay"
 lane = "n3"
 presentation = "craft"
 label_key = "c_n3_build_bay"
-failed_line_key = "l_bay2_fail"
 work_s = 10800
 cap = 1
 inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 18 }]
@@ -345,7 +341,6 @@ id = "n4_watch"
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_watch"
-failed_line_key = "l_n4_watch_dry"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]
@@ -415,7 +410,6 @@ id = "n3_dig_bed"
 lane = "n3"
 presentation = "craft"
 label_key = "c_n3_dig_bed"
-failed_line_key = "l_dig_bed_fail"
 work_s = 3600
 cap = 3
 inputs = [{ store = "stones", items = 6 }]
@@ -481,9 +475,7 @@ after = { unlock_kind = "feature", id = "pair_offer" }
 # ---------- text ----------
 
 [line_kinds]
-l_stone_fail = "tap"
 l_stone_first = "story"
-l_stones_fail = "tap"
 l_stones_1 = "story"
 l_stones_2 = "story"
 l_stones_done = "story"
@@ -497,12 +489,9 @@ l_pair_1 = "story"
 l_pair_2 = "story"
 l_bay2_go = "story"
 l_bay2_hers = "story"
-l_bay2_fail = "tap"
-l_n4_watch_dry = "tap"
 l_join2_1 = "find"
 l_join2_2 = "find"
 l_seed = "story"
-l_dig_bed_fail = "tap"
 l_dig_bed_1 = "story"
 l_dig_bed_2 = "story"
 l_dig_bed_done = "story"
@@ -515,11 +504,9 @@ l_night_6 = "story"
 # pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
 # shipping release: replace each value, never the marker's spelling.
 c_hand_on_stone = "Dry damp wood at the stone"
-l_stone_fail = "too little damp wood for the stone."
 l_stone_first = "palm to the stone, wet stick in the other. it dries."
 c_hearth_stones = "Heat stones for the pot"
 up_hearth_stones = "{pct} stew from the pot"
-l_stones_fail = "not yet. you can't ring the pot."
 l_stones_1 = "you lift the first stones with a doubled cloth."
 l_stones_2 = "more round the pot. nobody holds one long."
 l_stones_done = "clay into the gaps. the ring is left to dry."
@@ -546,7 +533,6 @@ a_pair_hers_cost = "{d} of her time"
 l_bay2_go = "you raise poles for a second bay, then stones."
 l_bay2_hers = "she raises the poles. the old man passes stones."
 c_make_bay2 = "Build a second sleeping bay"
-l_bay2_fail = "the pile won't stretch to another bay."
 lane_n3 = "The woman's hands"
 lane_n3_named = "{n3}"
 name_n3 = "Mary"
@@ -556,7 +542,6 @@ name_n4 = "Edward"
 c_n3_build_bay = "Build a second sleeping bay"
 store_bay2 = "second bay"
 c_n4_watch = "Keep the fire at the gap"
-l_n4_watch_dry = "the old man goes to the gap and lights nothing."
 c_n4_mend = "Mend gear"
 up_n4_mend = "{pct} sturdier gear while mending"
 l_join2_1 = "lucy brings a stool. the old man sits, not looking."
@@ -567,7 +552,6 @@ store_pair_3h = "clock"
 action_pair_3h = "Clock"
 l_seed = "{n3} sets seed out on a cloth, then ties it shut."
 c_n3_dig_bed = "Dig a garden bed"
-l_dig_bed_fail = "the edge needs stones the pile doesn't have."
 l_dig_bed_1 = "the top of the ground comes up in clods."
 l_dig_bed_2 = "stones go round the edge, flat side out."
 l_dig_bed_done = "the woman rakes it flat and leaves it bare."

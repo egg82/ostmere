@@ -5,7 +5,7 @@
 // it draws each View it is handed and samples it every frame. The one glow on a card is placed here (CardInfo.glows, the
 // first time it is ready with its lane free); the strip places its offers' glows, the Rules tab's label takes it once a
 // rule has come on and let go until the tab is opened, and a running lesson's step takes it (lessons.ts).
-import type { Condition, Decision, LogLine, Step, View } from "../api/types";
+import type { Condition, Decision, Step, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { nudgeTarget } from "../game/cues";
 import { NewMarks } from "../game/marks";
@@ -14,7 +14,6 @@ import type { Past } from "../game/loggroups";
 import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
 import { readingMs } from "../game/reading";
 import { HandStreak } from "../game/stall";
-import { TapLines, withoutRepeatedFails } from "../game/taplines";
 import { UI } from "../game/text";
 import { Banner } from "./banner";
 import { CardGlow } from "./cardglow";
@@ -68,7 +67,6 @@ export class Screen {
   private readonly ledger: Ledger;
   private readonly hands: Hands;
   private readonly flight = new Flight(this.reveal);
-  private readonly taps = new TapLines();
   private lineIds = 0;
   private drawing = false;
   private readonly editor: MixEditor;
@@ -101,7 +99,6 @@ export class Screen {
         if (d.kind === "tap_card") {
           this.fires.tap(d.card);
           this.streak.tap(d.card);
-          this.taps.tap(d.card);
         }
         decide(d);
       },
@@ -180,20 +177,20 @@ export class Screen {
   }
 
   /** `away`: the first view after the player was away, whose new things are revealed in turn. A step's lines, live or
-   * on a return, are revealed first, each held for its reading time before what came with it (a tap's also on its card). */
+   * on a return, are revealed first, each held for its reading time before what came with it. */
   show(step: Step, away = false): void {
     const first = this.view === null;
     this.latest = step;
-    const lines = away ? step.lines : withoutRepeatedFails(step.lines, step.failed_tap, this.story.keys.at(-1)?.key);
+    const lines = step.lines;
     const lead = lines.length > 0;   // live, first or on a return alike: each line in turn, a planned moment in full
     if ((away && !first) || lead) this.reveal.collect();
     if (away && !first) this.root.scrollTop = 0;   // a return opens at the top: no card row under the pinned strip
     const nodes = this.story.append(lines, lead, away && !first ? { view: step.view, prev: this.view } : null);
-    if (lead) this.lead(lines, nodes, step.failed_tap);
+    if (lead) this.lead(nodes);
     this.drawing = true;   // the end's lines join this batch rather than start one
     this.end.update(step.view, first);   // first, so the parts drawn next know whether the end is behind
     try {
-      this.draw(step.view, step.failed_tap);
+      this.draw(step.view);
       if (!first && step.failed_tap !== null) this.cards.failed(step.failed_tap, step.view);
     } finally {
       this.drawing = false;
@@ -212,18 +209,13 @@ export class Screen {
     if (!this.drawing) this.reveal.start(performance.now());
   }
 
-  /** Each line first in the queue, in the strip and on the card the player's tap wrote it on, held for its reading time. */
-  private lead(lines: LogLine[], nodes: Array<HTMLElement | null>, failed: string | null): void {
-    lines.forEach((line, i) => {
-      const shown = nodes[i];
-      if (!shown?.isConnected) return;   // not for the strip (a return's chip or task line: game/awaylines.ts)
-      const text = shown.textContent ?? "";
-      const ms = readingMs(text);
-      const card = this.taps.cardOf(line);
-      const onCard = card ? this.cards.say(card, text, ms, card === failed) : null;
+  /** Each line first in the queue, in the strip, held for its reading time. */
+  private lead(nodes: Array<HTMLElement | null>): void {
+    for (const shown of nodes) {
+      if (!shown?.isConnected) continue;   // not for the strip (a return's chip or task line: game/awaylines.ts)
       this.lineIds += 1;   // (at, seq) is unique only within one Step
-      this.reveal.line(onCard ? [shown, onCard] : [shown], String(this.lineIds), ms);
-    });
+      this.reveal.line([shown], String(this.lineIds), readingMs(shown.textContent ?? ""));
+    }
   }
 
   /** Something is still waiting its turn or a line is being read: not a moment to reload the page. */
@@ -248,11 +240,10 @@ export class Screen {
     if (this.view) this.draw(this.view);
   }
 
-  private draw(view: View, failed: string | null = null): void {
+  private draw(view: View): void {
     const prev = this.view;
     this.view = view;
     if ((prev && ruleLetGo(prev, view)) || ruleRunLetGo(this.latest.rule_runs)) this.keeps.keepRuleSeen();
-    this.taps.observe(view, prev, failed);
     this.fires.observe(view, prev);
     for (const part of this.parts) part.update(view, prev);
     this.banner.update(view, prev);

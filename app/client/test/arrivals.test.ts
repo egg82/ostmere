@@ -185,7 +185,7 @@ for (const n of [2, 3, 6, 7, 11, 20]) {
   reduced = false;
   const read = [node(), node()];   // a ledger line held for its reading, then a card
   r.collect();
-  r.arrive(asEl(read[0]!), "store", "wood", undefined, 3000);
+  r.arrive(asEl(read[0]!), "store", "wood", 3000);
   r.arrive(asEl(read[1]!), "card", "after");
   r.start(0);
   r.tick(MAX_GAP_MS);

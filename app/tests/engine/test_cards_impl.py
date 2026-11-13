@@ -27,7 +27,7 @@ def rules(wood: int = 4, standing: tuple[StandingDef, ...] = (), triggers: tuple
             CardDef(CHOP, 10, skill=SkillId("k"), xp_per_hour=1000, outcome=Outcome(stores=(Amount(WOOD, Q),)),
                     lines=(LineKey("chop.tap"),)),
             CardDef(CRAFT, 20, inputs=(Amount(WOOD, 2 * Q),), outcome=Outcome(stores=(Amount(PLANK, Q),)),
-                    lines=(LineKey("craft.tap"),), failed_line=LineKey("craft.fail")),
+                    lines=(LineKey("craft.tap"),)),
             CardDef(STORY, 5, cap=3, lines=(LineKey("s1"), LineKey("s2"), LineKey("s3")),
                     finished=Outcome(lines=(LineKey("fin"),))),
         ),
@@ -98,13 +98,13 @@ def test_tap_line_lands_after_the_work_and_only_for_uncapped():
     assert ev is not None and ev.kind is EventKind.TAP_DONE
 
 
-def test_a_failed_tap_costs_nothing_and_says_its_line_at_once():
+def test_a_failed_tap_costs_nothing_and_says_nothing():
     r = rules(wood=0)
     s = new_save(r)
     done = decide_logged(s, r, 0, TapCard(CRAFT))
     c = next(c for c in view(done.save, r).cards if c.card == CRAFT)
     assert c.blocker is not None and c.by is None and view(done.save, r).lanes[0].card is None
-    assert [(ln.time, ln.key) for ln in done.lines] == [(0, "craft.fail")] and done.failed == CRAFT
+    assert done.lines == () and done.failed == CRAFT
     assert done.save == s and work(done.save, CRAFT) == 0
 
 

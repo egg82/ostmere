@@ -237,10 +237,9 @@ def test_the_order_card_sets_an_order_that_covers_the_falling_line(game_wire: Ga
 
 
 @pytest.mark.playthrough
-def test_a_failed_tap_sends_its_line_to_the_log_and_the_card_shows_what_it_is_short(game_wire: Game,
-                                                                                     played: Player):
+def test_a_failed_tap_says_nothing_and_the_card_shows_what_it_is_short(game_wire: Game, played: Player):
     """The scripted ring too early: before it, the card lists its stones short; the tap takes no time, the hands stay
-    free, and its lines carry the card's failed line at once."""
+    free, and the step carries no line."""
     ring = next(i for i, (_, _, v) in enumerate(played.decisions) if v == TapCard(CardId("ring_it")))
     mine = played.replay(ring)
     at = played.decisions[ring][0]
@@ -251,4 +250,4 @@ def test_a_failed_tap_sends_its_line_to_the_log_and_the_card_shows_what_it_is_sh
     step = decide_logged(mine.save, opening_rules(), at, TapCard(CardId("ring_it")))
     hands = next(b for b in game_wire.view(step.save).lanes if b.lane == "hands")
     assert hands.running_card is None and step.failed == CardId("ring_it")
-    assert [(ln.time, ln.key) for ln in step.lines] == [(at, "l_ring_fail")]
+    assert step.lines == ()

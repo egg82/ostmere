@@ -41,7 +41,6 @@ label_key = "c_pull_beams"
 work_s = 1200
 skill = "scavenging"
 xp_per_hour = 900
-failed_line_key = "l_pull_beams_fail"
 inputs = [{ store = "ruin_beams", items = 1 }]
 outcome = { stores = [{ store = "beams", items = 1 }] }
 
@@ -55,7 +54,6 @@ label_key = "c_hall"
 upside_key = "up_hall"
 work_s = 2400
 cap = 8
-failed_line_key = "l_hall_fail"
 inputs = [
   { store = "stakes", items = 16 },
   { store = "stones", items = 3 },
@@ -177,7 +175,6 @@ label_key = "c_n3_sow"
 upside_key = "up_n3_sow"
 work_s = 1800
 cap = 6
-failed_line_key = "l_sow_fail"
 inputs = [{ store = "ashed_ground", items = 4 }]
 outcome = { modifiers = [{ target = "rate", id = "beds", flow = "make", store = "ripe", kind = "add_bp", amount_bp = 10000, source = "n3_sow" }] }
 
@@ -232,7 +229,6 @@ label_key = "c_reap"
 work_s = 300
 skill = "foraging"
 xp_per_hour = 300
-failed_line_key = "l_reap_fail"
 inputs = [{ store = "ripe", items = 3 }]
 outcome = { stores = [{ store = "barley", items = 2 }] }
 
@@ -242,7 +238,6 @@ lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_reap"
 work_s = 1200
-failed_line_key = "l_reap_fail"
 inputs = [{ store = "ripe", items = 3 }]
 outcome = { stores = [{ store = "barley", items = 2 }] }
 
@@ -263,7 +258,6 @@ upside_of = "n2_eating"
 work_s = 600
 skill = "cooking"
 xp_per_hour = 900
-failed_line_key = "l_barley_stew_fail"
 inputs = [{ store = "barley", items = 4 }, { store = "dry_wood", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 4 }] }
 
@@ -302,7 +296,6 @@ id = "cover_beds"
 presentation = "action"
 label_key = "c_cover_beds"
 work_s = 600
-failed_line_key = "l_cover_fail"
 inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
 
 [[cards]]
@@ -311,7 +304,6 @@ lane = "n3"
 presentation = "action"
 label_key = "c_n3_cover_beds"
 work_s = 1800
-failed_line_key = "l_cover_fail"
 inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
 
 # "When frosted, {n3} covers the beds": its `when` the chip's.
@@ -355,7 +347,6 @@ label_key = "c_hunt_deer"
 work_s = 2400
 skill = "melee"
 xp_per_hour = 2
-failed_line_key = "l_hunt_deer_fail"
 inputs = [{ store = "smoked", items = 1 }, { store = "deer_down", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 4 }, { store = "cord", items = 1 }] }
 fight = { side = "hands", threat = "ash_deer", lost = "deer_lost", won_line_keys = ["l_fight_deer_won_1", "l_fight_deer_won_2"], lost_line_keys = ["l_fight_deer_lost_1", "l_fight_deer_lost_2"] }
@@ -575,8 +566,6 @@ after = { unlock_kind = "feature", id = "belonging" }
 
 [line_kinds]
 l_floor_paced = "find"
-l_pull_beams_fail = "tap"
-l_hall_fail = "tap"
 l_stage_hall_1 = "story"
 l_stage_hall_2 = "story"
 l_stage_hall_3 = "story"
@@ -589,15 +578,10 @@ l_b13_1 = "find"
 l_b13_2 = "find"
 l_b13_3 = "find"
 l_sow = "story"
-l_sow_fail = "tap"
-l_reap_fail = "tap"
-l_barley_stew_fail = "tap"
 l_night_15 = "story"
 l_frost_1 = "story"
 l_frost_2 = "story"
-l_cover_fail = "tap"
 l_deer = "story"
-l_hunt_deer_fail = "tap"
 l_fight_deer_won_1 = "fight"
 l_fight_deer_won_2 = "fight"
 l_fight_deer_lost_1 = "fight"
@@ -620,10 +604,8 @@ l_floor_paced = "Lucy paces the dark beside the bays, counting low. at nine she 
 store_ruin_beams = "beams in the ruin"
 store_beams = "beams"
 c_pull_beams = "Pull beams from the ruin"
-l_pull_beams_fail = "nothing sound is left under the fallen roof."
 c_hall = "Build the hall"
 up_hall = "{pct} rest"
-l_hall_fail = "the hall's next stage is short."
 l_stage_hall_1 = "four corner posts go up beside the bays."
 l_stage_hall_2 = "stakes are driven along the first wall."
 l_stage_hall_3 = "the long walls close in."
@@ -646,15 +628,12 @@ action_clear_clock = "Clock"
 l_sow = "{n3} thumbs seed into her dark ground in rows. the bag ends flat."
 c_n3_sow = "Sow a bed"
 up_n3_sow = "{pct} barley growth"
-l_sow_fail = "{n3} has too little dark ground for another bed."
 store_ripe = "ripe barley"
 store_barley = "barley"
 action_beds = "Beds"
 c_reap = "Reap"
 c_lane_reap = "Reap"
-l_reap_fail = "nothing in the beds is ready to cut."
 c_barley_stew = "Cook barley stew"
-l_barley_stew_fail = "the pot needs barley and dry wood."
 l_night_15 = "dusk, and the cold comes down after it."
 l_frost_1 = "rime on everything past the warm ground. {n3}'s beds are white."
 l_frost_2 = "the hut door is frozen in its frame. nine sit round one fire, three deep."
@@ -664,13 +643,11 @@ chip_frosted = "frosted"
 chip_frosted_cost = "{pct} barley growth"
 c_cover_beds = "Cover the beds"
 c_n3_cover_beds = "Cover the beds"
-l_cover_fail = "there are not the hides to cover the beds."
 l_deer = "four small deer graze the melt at the warm edge. {n2} stands; gone."
 store_deer_down = "deer near the warm ground"
 store_deer_lost = "deer hunts lost"
 threat_ash_deer = "Deer"
 c_hunt_deer = "Hunt deer"
-l_hunt_deer_fail = "no deer near, or no smoked meat to carry."
 l_fight_deer_won_1 = "a deer down. meat for the rack, sinew too."
 l_fight_deer_won_2 = "you carry a small deer home across your shoulders."
 l_fight_deer_lost_1 = "the deer hear you first."

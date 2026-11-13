@@ -10,7 +10,7 @@ import pytest
 from hypothesis import given
 
 from ashfall_app.engine import (
-    FORMAT, HANDS, Amount, CapRaise, CardDef, CardId, LineKey, Outcome, Rules, Save, StateFormatError, StoreDef,
+    FORMAT, HANDS, Amount, CapRaise, CardDef, CardId, Outcome, Rules, Save, StateFormatError, StoreDef,
     StoreId, advance, decode, encode, new_save, rules_digest,
 )
 from cards_gen import Scenario, few, play, scenario_st, timeline
@@ -26,7 +26,7 @@ def special():
     r = rules([StoreDef(X, 100 * Q, 10 * Q), StoreDef(Y, 100 * Q, Q)],
               cards=[CardDef(C, 100, cap=2, inputs=(Amount(X, Q),)),
                      CardDef(RZ, 50, lane=RACK, cap=5, outcome=Outcome(raises=(CapRaise(C, 1),))),
-                     CardDef(F, 100, inputs=(Amount(Y, Q),), failed_line=LineKey("f.failed"))],
+                     CardDef(F, 100, inputs=(Amount(Y, Q),))],
               lanes=[RACK])
     s = with_mix(new_save(r), r, 0, {C: 5000})
     mid = advance(s, r, 50)

@@ -96,16 +96,13 @@ def decide(save: Save, rules: Rules, t: int, verb: Verb) -> Save:
 
 def _decide(save: Save, rules: Rules, t: int, verb: Verb, emit: Emit,
             seen: list[RuleChange] | None = None) -> tuple[Save, Save, CardId | None]:
-    """The save advanced to t before the verb, the save after it, and the card of a failed tap (its failed_line emitted
-    at t). `seen`, when given, collects the rule changes of the advance and of the decision's instant."""
+    """The save advanced to t before the verb, the save after it, and the card of a failed tap (no line is emitted for
+    it). `seen`, when given, collects the rule changes of the advance and of the decision's instant."""
     before, _ = _advance(save, rules, t, emit, seen)
     save, must_evaluate, lines = apply_verb(before, rules, verb)
     for key in lines:
         emit(t, key, None)
     failed = failed_tap(before, rules, verb)
-    line = None if failed is None else index(rules).cards[failed].failed_line
-    if failed is not None and line is not None:
-        emit(t, line, failed)
     after = resolve_instant(save, rules, [], must_evaluate, emit)
     if seen is not None:
         seen.extend(rule_changes(before, after, rules))
@@ -168,7 +165,7 @@ def _sourced(e: Explanation, gained: tuple[SpentShare, ...]) -> Explanation:
 class Line:
     """One log line: a content key emitted at engine time `time`. `seq` numbers the lines of one instant within one
     Step, from 0, in emission order: (time, seq) is unique within a Step, not across Steps. `card`: the card whose
-    completion, tap or failed tap wrote it (one of work.written_by's keys), however the card was run; None for a
+    completion or tap wrote it (one of work.written_by's keys), however the card was run; None for a
     chip's line and a trigger's. Lines are never stored on the save (DESIGN.txt, "Lines")."""
 
     time: int

@@ -9,6 +9,7 @@ from ashfall_app.engine import NodeDef, NodeId, Rules, StoreCap
 from ashfall_app.engine import upgrade as upgrade_module
 from ashfall_app.opening.checks import check_opening
 from ashfall_app.opening.lock import LOCK, Lock, content_ids, load_lock, merged, snapshot
+from ashfall_app.opening.line_kinds import line_keys
 from ashfall_app.opening.lock_checks import Problem, problems, release_problems
 from ashfall_app.opening.renames import RenameEntry, load_renames
 from ashfall_app.opening.schema import Opening, to_rules
@@ -121,6 +122,28 @@ def test_a_removed_card_is_told_to_retire_it():
 def test_a_removed_store_needs_a_mapping():
     ps = found(shipped_built(), lock=released(store=["ghost_store"]))
     assert any(p.cls == "needs_mapping" and "store ghost_store" in p.message for p in ps), ps
+
+
+def retired(key: str) -> RenameEntry:
+    return RenameEntry.model_validate({"kind": "line", "from": key})
+
+
+def test_a_removed_line_needs_a_mapping_or_a_retirement():
+    lock = released(line=["ghost_line"])
+    ps = found(shipped_built(), lock=lock)
+    assert any(p.cls == "needs_mapping" and "line ghost_line was removed" in p.message for p in ps), ps
+    assert not any("ghost_line" in p.message for p in found(shipped_built(), [retired("ghost_line")], lock=lock))
+
+
+def test_a_retired_line_back_in_the_content_is_forbidden(shipped_opening: Opening):
+    live = line_keys(shipped_opening)[0]
+    ps = found(shipped_built(), [retired(live)])
+    assert any(p.cls == "forbidden" and f"line {live} was renamed away" in p.message for p in ps), ps
+
+
+def test_only_a_line_can_be_retired():
+    with pytest.raises(ValueError, match="only a line can be retired"):
+        RenameEntry.model_validate({"kind": "store", "from": "roots"})
 
 
 @pytest.mark.parametrize("kind", ["entry", "note", "node"])

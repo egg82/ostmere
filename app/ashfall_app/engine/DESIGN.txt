@@ -93,8 +93,8 @@ CHOICES (each with its reason)
 - Pushes: a project of n pushes needs n starts; progress between pushes is kept on the save (CardState) and the lane
   is free between them. Each push ends with its own line.
 - Failed tap: the player may tap a project whose inputs or requires are unmet (or that a Pause holds). It takes no
-  time and changes nothing: no lane is occupied, the mix keeps running, nothing is consumed and nothing lands but
-  its failed_line, emitted at the tap's instant. Unready is known at the tap, never by chance: the same save and verb
+  time and changes nothing: no lane is occupied, the mix keeps running, nothing is consumed and no line is emitted.
+  Unready is known at the tap, never by chance: the same save and verb
   always fail or succeed alike. An order, the queue or an Outcome never starts an unready project,
   a busy lane or a locked one: it changes nothing (a verb that changes nothing is not an error).
 - Work: a push needs work_s * BP work units; it fills at BP per second at full speed, through modified_rate with
@@ -293,8 +293,7 @@ INVARIANTS (testable properties; r = valid rules, s = any save the engine return
     speed k the push lands at start + ceil(work_s * BP / k); the outcome's store deltas appear at that instant and
     no earlier; inputs are taken once per project, not per push.
 22. Failed tap: decide_logged(s, r, t, TapCard(p)) by the player, p unready at t (and tappable, speed above 0), has
-    save == advance(s, r, t), lines those of advance_logged(s, r, t) then p's failed_line at t (none without one)
-    written by p, and failed == p;
+    save == advance(s, r, t), lines those of advance_logged(s, r, t) and no more, and failed == p;
     a ready tap's failed is None; deciding it twice from equal saves gives equal results.
 23. No doomed orders: an order or queue entry naming an unready project changes nothing when evaluated; an order
     that cannot act is passed over for the next true one that can; a true order's or the queue head's TapCard
@@ -511,7 +510,7 @@ CHOICES (cards)
   since running reads requires). They hold at a tap's start and while the card runs. In the mix a false one makes
   the card WAITING (0/1, share idles) until it holds; for a tap it interrupts the tap. A REQUIRES event falls when
   the truth changes.
-- Failed tap: a player's tap of an unready card returns the save unchanged and api emits its failed_line at once
+- Failed tap: a player's tap of an unready card returns the save unchanged and emits no line
   (decisions.failed_tap names it). A tap at speed 0 (tap_seconds None), ready or not, is refused: InvalidVerbError
   from the player, nothing from an order.
 - Greyed mix: a saved mix whose flattened cards include a completed one. Derived, never stored. An order naming a
@@ -849,7 +848,8 @@ CHOICES (saves across releases)
   card made uncapped included); append curve levels; retire a card by an outcome (Unlock RETIRED); reorder
   declarations; change a card's work_s or lane.
   Needs a mapping (red until renames.toml maps it): rename any id; remove a released id of any kind but card. A removed
-  card is red with "retire it instead"; mapping it to a new card id is a rename, and fine.
+  card is red with "retire it instead"; mapping it to a new card id is a rename, and fine. A line key is retired by a
+  `line` entry with no `to`: no text shows it, and a stored line carrying it is dropped when a save opens.
   Forbidden after launch (red): reuse a released or renamed-away id (a rename's target is always a new id); lower a
   store's or a card's cap (an uncapped card given a cap included); change or remove a released curve threshold; change
   a released trigger's outcome, compared after renames (add a new trigger instead; this also catches inserting a camp
@@ -2714,7 +2714,7 @@ CHOICES (drains)
 - Ready above 0: at a tap's start each drain's store must hold at least 1 quantity unit. The card's blocker is its
   first unmet precondition read in the order inputs, then drains (in declaration order), then requires, then a Pause;
   a drain's is AtLeast(StoreValue(store), 1, 1), its ready_at the first whole second the store's segment holds 1 unit
-  (None while nothing raises it). A player's tap with a drain store at 0 is a failed tap (its failed_line, nothing
+  (None while nothing raises it). A player's tap with a drain store at 0 is a failed tap (nothing
   changed); an order's or the queue's changes nothing and logs no line (invariant 23), and READY falls at the blocker's
   ready_at, as for any blocker; so a ruled lane's rule taps the card again only once the store exceeds 0. Once started,
   a tap never ends for a drain: it lands at its completion with the store at 0 if it got there.

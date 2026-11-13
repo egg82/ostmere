@@ -22,7 +22,6 @@ label_key = "c_bank_fire_6"
 work_s = 5
 cap = 1
 glows = true
-failed_line_key = "l_bank_fire_6_fail"
 requires = [
   { test = "at_least", subject_kind = "store", id = "night_6", value = 5 },
   { test = "at_least", subject_kind = "store", id = "arrivals", value = 3 },
@@ -189,7 +188,6 @@ label_key = "c_hunt_wolf"
 work_s = 1200
 skill = "melee"
 xp_per_hour = 2
-failed_line_key = "l_hunt_fail"
 inputs = [{ store = "smoked", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }] }
 fight = { side = "hands", threat = "lone_wolf", lost = "hunt_lost", wounds = [{ store = "hurt", items = 1 }], won_line_keys = ["l_fight_hunt_won_1", "l_fight_hunt_won_2", "l_fight_hunt_won_3"], lost_line_keys = ["l_fight_hunt_lost_1", "l_fight_hunt_lost_2", "l_fight_hunt_lost_3"] }
@@ -201,7 +199,6 @@ label_key = "c_make_spear"
 upside_key = "up_make_spear"
 work_s = 600
 cap = 1
-failed_line_key = "l_spear_fail"
 inputs = [{ store = "scrap", items = 6 }, { store = "dry_wood", items = 4 }]
 [cards.finished]
 modifiers = [{ target = "side", id = "hands", kind = "add_bp", amount_bp = 15000, source = "make_spear" }]
@@ -211,7 +208,6 @@ id = "poultice"
 presentation = "action"
 label_key = "c_poultice"
 work_s = 60
-failed_line_key = "l_poultice_fail"
 inputs = [{ store = "clay", items = 2 }, { store = "roots", items = 6 }]
 # Takes up to a whole stack of hurt, forgiven past what is there: one tap clears any level, and it can be tapped
 # whenever the chip shows (engine DESIGN.txt, "DRAINS").
@@ -465,16 +461,12 @@ after = { unlock_kind = "feature", id = "wolves" }
 # ---------- text ----------
 
 [line_kinds]
-l_bank_fire_6_fail = "tap"
 l_b7_1 = "story"
 l_b7_2 = "story"
 l_b7_3 = "story"
 l_stand_1 = "story"
 l_stand_2 = "story"
 l_stand_3 = "story"
-l_hunt_fail = "tap"
-l_spear_fail = "tap"
-l_poultice_fail = "tap"
 l_melee_3 = "find"
 l_combat_first = "story"
 l_hurt = "body"
@@ -505,7 +497,6 @@ l_fight_crows_lost_3 = "fight"
 # lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
 # shipping release: replace each value, never the marker's spelling.
 c_bank_fire_6 = "Tend the fire"
-l_bank_fire_6_fail = "you leave the coals as they are."
 l_b7_1 = "low stars, out on the ash. some of them blink."
 l_b7_2 = "the line of them ends where the firelight does."
 l_b7_3 = "every face is turned out, away from the rack."
@@ -530,12 +521,9 @@ store_rats_lost = "rat fights lost"
 store_crows_fought = "crow fights"
 store_crows_lost = "crow fights lost"
 c_hunt_wolf = "Hunt wolves"
-l_hunt_fail = "no smoked meat to take out with you."
 c_make_spear = "Make a spear"
 up_make_spear = "{pct} hunting strength"
-l_spear_fail = "you lay the pieces out. no spear in them."
 c_poultice = "Make a poultice"
-l_poultice_fail = "nothing to bind, or nothing to bind it with."
 action_heal = "Healing"
 chip_hurt = "hurt"
 chip_hurt_cost = "{pct} hands speed, {pct_b} hunting strength"

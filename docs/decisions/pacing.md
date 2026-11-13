@@ -85,7 +85,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   waiting card's slice greyed; it disappears once they match again.
 - **One at a time counts decisions, not cards**. A choice between two cards (the stool or the fireback)
   arrives as one thing, both in view, or it stops being a choice; and a card that can be tried too early (ringing a
-  spot not yet cleared) stays there, because its failed line is the fun. Pacing spaces out systems and decisions,
+  spot not yet cleared) stays there, because trying it too early costs nothing and the red card answers it. Pacing spaces out systems and decisions,
   never by chaining the options of one choice or hiding what a player could try too soon.
 - **The screen arrives when it means something** (2026-10-17, after a non-gamer's cold play found the first minutes
   too busy). Each part of the screen is drawn from the moment it first means something to the player, not when the

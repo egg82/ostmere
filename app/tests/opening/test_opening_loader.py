@@ -102,7 +102,6 @@ def test_an_unknown_field_fails_the_load(tmp_path: Path, old: str, new: str):
     ('label_key = "c_rest"', 'label_key = "nope"'),
     ('upside_key = "up_stool"', 'upside_key = "nope"'),
     ('line_keys = ["l_up_1", "l_up_2", "l_up_3"]', 'line_keys = ["l_up_1", "l_up_2", "nope"]'),
-    ('failed_line_key = "l_strike_fail"', 'failed_line_key = "nope"'),
     ('line_keys = ["l_look"]', 'line_keys = ["nope"]'),
     ('line_keys = ["l_fire_lit"]', 'line_keys = ["nope"]'),
     ('outcome = { line_keys = ["l_wc_2"] }', 'outcome = { line_keys = ["nope"] }'),
@@ -170,17 +169,6 @@ def test_a_missing_fixed_ui_key_fails_the_load(tmp_path: Path, key: str):
     line = next(ln for ln in TEXT.splitlines() if ln.startswith(f'"{key}" = '))
     with pytest.raises(ValueError, match="missing the fixed key"):
         load_opening(broken(tmp_path, line + "\n", ""))
-
-
-@pytest.mark.parametrize("old,new", [
-    ('failed_line_key = "l_stool_fail"\n', ""),   # inputs, no line
-    ('label_key = "c_rest"\nwork_s = 10\n',          # requires, no line
-     'label_key = "c_rest"\nwork_s = 10\nrequires = [{ test = "at_least", subject_kind = "store", id = "roots", value = 1 }]\n'),
-])
-def test_a_card_that_can_be_tapped_unready_without_a_failed_line_fails_the_load(tmp_path: Path, old: str, new: str):
-    """Every card with inputs or requires says something when it fails; one with neither (rest, as shipped) need not."""
-    with pytest.raises(ValueError, match="no failed_line_key"):
-        load_opening(broken(tmp_path, old, new))
 
 
 def test_an_end_feature_nothing_unlocks_fails_the_load(tmp_path: Path):

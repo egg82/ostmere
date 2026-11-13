@@ -242,7 +242,6 @@ class CardEntry(Entry):
     cap: int | None = Field(default=None, ge=1)
     finished: OutcomeEntry = OutcomeEntry()
     line_keys: list[str] = []
-    failed_line_key: str | None = None
     fight: FightEntry | None = None
     while_running: list[WhileRunningEntry] = []
     glows: bool = False

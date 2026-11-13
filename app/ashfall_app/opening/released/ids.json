@@ -2311,7 +2311,7 @@
   445716000000,
   668736000000
  ],
- "digest": "ba8f1a04ef387a0319af3cbd02ebce4bb9ef34a78b1d66e98f60c978c202d4ff",
+ "digest": "3a8fc74dc144e4943baff1ca31bbe22a3b1c3fc38022a7b46c617cdd32a6803e",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -32777,12 +32777,412 @@
    "unlocks": []
   }
  },
- "release": 58,
+ "release": 59,
  "renames": [
   {
    "from": "t_stock_open",
    "kind": "trigger",
    "to": "t_stock_shown"
+  },
+  {
+   "from": "l_arm_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_ash_ground_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_bank_fire_6_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_bank_hearth_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_barley_stew_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_bay2_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_bay_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_bed_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_bedding_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_broth_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_clear_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_cord_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_cover_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_cure_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_cut_stakes_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_dig_bed_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_dig_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_dry_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_fireback_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_flaps_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_floor_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_fungus_stew_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_gap_fire_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_give_pelt_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_hall_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_hearth_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_his_watch_dry",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_hunt_bear_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_hunt_deer_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_hunt_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_hut_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_knap_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_lamps_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_lane_stakes_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_lane_watch_dry",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_larder_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_lean_to_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_look_out_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_make_room_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_n4_cord_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_n4_watch_dry",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_n6_posts_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_palisade_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_peg_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_pick_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_poultice_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_pull_beams_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_rack_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_reap_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_ring_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_roast_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_roof_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_screen_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_shed_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_shelf_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_shelter_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_sit_fire_7_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_sit_last_night_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_sit_up_5_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_smoke_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_snare_4_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_snare_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_sow_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_spar_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_spear_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_stack_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_stew_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_stone_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_stone_ring_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_stones_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_stool_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_strike_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_take_stock_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_track_end_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_track_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_vigil_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_watch_dry",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_watch_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_weave_fail",
+   "kind": "line",
+   "to": null
+  },
+  {
+   "from": "l_woodstack_fail",
+   "kind": "line",
+   "to": null
   }
  ],
  "store_caps": {

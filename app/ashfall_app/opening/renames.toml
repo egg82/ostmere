@@ -6,8 +6,330 @@
 #   from = "old_id"
 #   to = "new_id"       # always a new id: reusing a released one is forbidden
 #
+# A `line` entry with no `to` retires the text key: nothing shows it, and a stored line carrying it is dropped.
+#
 # Then run `python tools/content_lock.py --write` (from app/) so the release lock records it.
 [[renames]]
 kind = "trigger"
 from = "t_stock_open"
 to = "t_stock_shown"
+
+[[renames]]
+kind = "line"
+from = "l_arm_fail"
+
+[[renames]]
+kind = "line"
+from = "l_ash_ground_fail"
+
+[[renames]]
+kind = "line"
+from = "l_bank_fire_6_fail"
+
+[[renames]]
+kind = "line"
+from = "l_bank_hearth_fail"
+
+[[renames]]
+kind = "line"
+from = "l_barley_stew_fail"
+
+[[renames]]
+kind = "line"
+from = "l_bay2_fail"
+
+[[renames]]
+kind = "line"
+from = "l_bay_fail"
+
+[[renames]]
+kind = "line"
+from = "l_bed_fail"
+
+[[renames]]
+kind = "line"
+from = "l_bedding_fail"
+
+[[renames]]
+kind = "line"
+from = "l_broth_fail"
+
+[[renames]]
+kind = "line"
+from = "l_clear_fail"
+
+[[renames]]
+kind = "line"
+from = "l_cord_fail"
+
+[[renames]]
+kind = "line"
+from = "l_cover_fail"
+
+[[renames]]
+kind = "line"
+from = "l_cure_fail"
+
+[[renames]]
+kind = "line"
+from = "l_cut_stakes_fail"
+
+[[renames]]
+kind = "line"
+from = "l_dig_bed_fail"
+
+[[renames]]
+kind = "line"
+from = "l_dig_fail"
+
+[[renames]]
+kind = "line"
+from = "l_dry_fail"
+
+[[renames]]
+kind = "line"
+from = "l_fireback_fail"
+
+[[renames]]
+kind = "line"
+from = "l_flaps_fail"
+
+[[renames]]
+kind = "line"
+from = "l_floor_fail"
+
+[[renames]]
+kind = "line"
+from = "l_fungus_stew_fail"
+
+[[renames]]
+kind = "line"
+from = "l_gap_fire_fail"
+
+[[renames]]
+kind = "line"
+from = "l_give_pelt_fail"
+
+[[renames]]
+kind = "line"
+from = "l_hall_fail"
+
+[[renames]]
+kind = "line"
+from = "l_hearth_fail"
+
+[[renames]]
+kind = "line"
+from = "l_his_watch_dry"
+
+[[renames]]
+kind = "line"
+from = "l_hunt_bear_fail"
+
+[[renames]]
+kind = "line"
+from = "l_hunt_deer_fail"
+
+[[renames]]
+kind = "line"
+from = "l_hunt_fail"
+
+[[renames]]
+kind = "line"
+from = "l_hut_fail"
+
+[[renames]]
+kind = "line"
+from = "l_knap_fail"
+
+[[renames]]
+kind = "line"
+from = "l_lamps_fail"
+
+[[renames]]
+kind = "line"
+from = "l_lane_stakes_fail"
+
+[[renames]]
+kind = "line"
+from = "l_lane_watch_dry"
+
+[[renames]]
+kind = "line"
+from = "l_larder_fail"
+
+[[renames]]
+kind = "line"
+from = "l_lean_to_fail"
+
+[[renames]]
+kind = "line"
+from = "l_look_out_fail"
+
+[[renames]]
+kind = "line"
+from = "l_make_room_fail"
+
+[[renames]]
+kind = "line"
+from = "l_n4_cord_fail"
+
+[[renames]]
+kind = "line"
+from = "l_n4_watch_dry"
+
+[[renames]]
+kind = "line"
+from = "l_n6_posts_fail"
+
+[[renames]]
+kind = "line"
+from = "l_palisade_fail"
+
+[[renames]]
+kind = "line"
+from = "l_peg_fail"
+
+[[renames]]
+kind = "line"
+from = "l_pick_fail"
+
+[[renames]]
+kind = "line"
+from = "l_poultice_fail"
+
+[[renames]]
+kind = "line"
+from = "l_pull_beams_fail"
+
+[[renames]]
+kind = "line"
+from = "l_rack_fail"
+
+[[renames]]
+kind = "line"
+from = "l_reap_fail"
+
+[[renames]]
+kind = "line"
+from = "l_ring_fail"
+
+[[renames]]
+kind = "line"
+from = "l_roast_fail"
+
+[[renames]]
+kind = "line"
+from = "l_roof_fail"
+
+[[renames]]
+kind = "line"
+from = "l_screen_fail"
+
+[[renames]]
+kind = "line"
+from = "l_shed_fail"
+
+[[renames]]
+kind = "line"
+from = "l_shelf_fail"
+
+[[renames]]
+kind = "line"
+from = "l_shelter_fail"
+
+[[renames]]
+kind = "line"
+from = "l_sit_fire_7_fail"
+
+[[renames]]
+kind = "line"
+from = "l_sit_last_night_fail"
+
+[[renames]]
+kind = "line"
+from = "l_sit_up_5_fail"
+
+[[renames]]
+kind = "line"
+from = "l_smoke_fail"
+
+[[renames]]
+kind = "line"
+from = "l_snare_4_fail"
+
+[[renames]]
+kind = "line"
+from = "l_snare_fail"
+
+[[renames]]
+kind = "line"
+from = "l_sow_fail"
+
+[[renames]]
+kind = "line"
+from = "l_spar_fail"
+
+[[renames]]
+kind = "line"
+from = "l_spear_fail"
+
+[[renames]]
+kind = "line"
+from = "l_stack_fail"
+
+[[renames]]
+kind = "line"
+from = "l_stew_fail"
+
+[[renames]]
+kind = "line"
+from = "l_stone_fail"
+
+[[renames]]
+kind = "line"
+from = "l_stone_ring_fail"
+
+[[renames]]
+kind = "line"
+from = "l_stones_fail"
+
+[[renames]]
+kind = "line"
+from = "l_stool_fail"
+
+[[renames]]
+kind = "line"
+from = "l_strike_fail"
+
+[[renames]]
+kind = "line"
+from = "l_take_stock_fail"
+
+[[renames]]
+kind = "line"
+from = "l_track_end_fail"
+
+[[renames]]
+kind = "line"
+from = "l_track_fail"
+
+[[renames]]
+kind = "line"
+from = "l_vigil_fail"
+
+[[renames]]
+kind = "line"
+from = "l_watch_dry"
+
+[[renames]]
+kind = "line"
+from = "l_watch_fail"
+
+[[renames]]
+kind = "line"
+from = "l_weave_fail"
+
+[[renames]]
+kind = "line"
+from = "l_woodstack_fail"

@@ -1,8 +1,8 @@
 """Drains, part four: the codec and the digest (engine DESIGN.txt, "DRAINS", invariant 128). Written blind from that part
 and the public interface; the `kills` marker names the rows of MUTANTS_drains.txt each test must turn red for.
 
-fixtures/pre_drains.json is the output of the engine at the commit before drains existed (its rules digest, its
-manifest and one encoded save) for the rules `pinned()` builds: the proof that rules without a drain are unchanged."""
+fixtures/pre_drains.json holds the rules digest, the manifest and one encoded save of the rules `pinned()` builds, as a
+format 8 text with no drain: re-taken when a CardDef field went, which changes every digest."""
 import json
 from dataclasses import fields
 from pathlib import Path
