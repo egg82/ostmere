@@ -39,11 +39,13 @@ code; so it shares habits' code but not its look. The night camp in the look tes
 **Warm means yours**. What the player made or placed (wood they gathered, the rack, the stool, the
 fire, later every building) carries a warm palette; the world they found (the ruin, its old beams, the ground) stays
 cool and neutral, never muddy one-hue brown. So a glance tells what the player did, and as the town grows it reads
-against the ruin. The fire is the warmest thing on screen.
+against the ruin. The fire is the warmest thing on screen. The interface keeps the rule with ember's two jobs: filled
+is yours and moving (a running bar, the primary button), and an outline needs you now, on one thing at a time. Only
+the scene has a frame; everything else sits on hairlines, and a control lifts onto a raised surface with a shadow.
 
-Type, approved on the design canvas: IM Fell English SC for headings and place names, Alegreya Sans for
-everything else, Reenie Beanie (Google Fonts, OFL) for the journal's handwriting. It reads a little worse than
-Caveat but looks like a real hand, and the journal's handwriting is flavour: its numbers sit in Alegreya Sans.
+Type: IM Fell English SC for the camp level and view titles only, Alegreya Sans for everything else in four sizes
+(meta, body, story, display), Reenie Beanie (Google Fonts, OFL) for the journal's handwriting. It reads a little worse
+than Caveat but looks like a real hand, and the journal's handwriting is flavour: its numbers sit in Alegreya Sans.
 
 Map stamps, journal sketches and icons are sourced art, never drawn by Claude: the hand-drawn placeholders in the
 design canvas "you can definitely tell". Candidates: `docs/research/art-sourcing.md`. **The journal sketches

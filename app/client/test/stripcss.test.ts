@@ -18,11 +18,11 @@ const rule = (selector: string): string => {
 expect("the strip is a grid", /display: grid/.test(rule(".strip")), true);
 const cell = rule(".strip > .lines, .strip > .strip-room");
 expect("the line and the room share one cell", /grid-area: 1 \/ 1/.test(cell), true);
-expect("in one type size", /font-size: 1\.15rem/.test(cell) && /line-height: 1\.35/.test(cell), true);
+expect("in one type size", /font-size: var\(--t-story\)/.test(cell) && /line-height: 1\.35/.test(cell), true);
 expect("the room is unseen", /visibility: hidden/.test(rule(".strip-room")), true);
 expect("each line in the room shares the cell", /grid-area: 1 \/ 1/.test(rule(".strip-room > span")), true);
 expect("only a line waiting its turn is hidden by CSS; the strip's script keeps the ones that fit", /display: none/.test(rule(".lines li.held")), true);
-expect("the lines before the newest are dimmer", /color: var\(--ink-meta\)/.test(rule(".lines li:not(:nth-last-child(1 of :not(.held)))")), true);
+expect("the lines before the newest are dimmer", /color: var\(--ink-dim\)/.test(rule(".lines li:not(:nth-last-child(1 of :not(.held)))")), true);
 expect("the room measures its own height, not the cell's", /align-self: start/.test(rule(".strip-room")), true);
 
 // Nothing else sizes a story line, so a line and its room twin always wrap alike; nothing fades or clips one.

@@ -1,68 +1,67 @@
 /* ---------- the front page: the game's own scene over a story strip and a panel (static/index.html, begin.ts) ----------
-   Tokens, the type scale and the .sheet / .quiet frames are game.css's. */
-#front { display: flex; flex-direction: column; min-height: 100dvh; background: #0b0a0b; color: var(--ink); font: 400 1rem/1.35 "Alegreya Sans", system-ui, sans-serif; }
+   Tokens, the type scale and the .sheet / .quiet controls are game.css's. */
+#front { display: flex; flex-direction: column; min-height: 100dvh; background: var(--stage); color: var(--ink); font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; }
 body.playing #front { opacity: 0; pointer-events: none; transition: opacity .6s; }
 body.playing.instant #front { transition: none; }   /* a reload resumes at once: no fade */
 #front [hidden] { display: none !important; }
 
 /* the stage: the scene fills what the panel leaves, cropped around the fire (ui/glimpse.ts places the canvas) */
-#stage { position: relative; flex: 1 1 auto; min-height: 14rem; overflow: hidden; background: #0b0a0b; }
+#stage { position: relative; flex: 1 1 auto; min-height: 14rem; overflow: hidden; background: var(--stage); }
 .pic-in { position: absolute; inset: 0; }
 .pic-art { position: absolute; display: block; image-rendering: pixelated; }
-#ledger { position: absolute; top: .5rem; right: .75rem; z-index: 1; font-size: .9rem; color: var(--ink-meta); text-shadow: 0 1px 3px #000, 0 0 8px #000; font-variant-numeric: tabular-nums; pointer-events: none; }
-#ledger b { color: var(--ink-head); font-weight: 400; }
-#ledger .rate { color: var(--good); font-weight: 700; margin-left: .35em; }
+#ledger { position: absolute; top: .5rem; right: .75rem; z-index: 1; font-size: var(--t-meta); color: var(--ink); text-shadow: 0 1px 3px #000, 0 0 8px #000; font-variant-numeric: tabular-nums; pointer-events: none; }
+#ledger b { color: var(--ink-hi); font-weight: 400; }
+#ledger .rate { color: var(--ink-hi); font-weight: 500; margin-left: .35em; }
 
 /* the story strip: the newest line bright, the one before dimmer */
-.front-strip { flex: none; padding: .5rem .75rem .6rem; background: var(--bg); color: var(--ink-bright); border-top: 2px solid #08070a; box-shadow: inset 0 2px 0 var(--rim-dim); }
-#log { list-style: none; margin: 0 auto; padding: 0; max-width: 64rem; min-height: calc(2 * 1.35em + .3rem); font-size: 1.15rem; line-height: 1.35; }
+.front-strip { flex: none; padding: .5rem .75rem .6rem; background: var(--bg); color: var(--ink-hi); border-top: 1px solid var(--rule); }
+#log { list-style: none; margin: 0 auto; padding: 0; max-width: 64rem; min-height: calc(2 * 1.35em + .3rem); font-size: var(--t-story); font-style: italic; line-height: 1.35; }
 #log li + li { margin-top: .3rem; }
-#log li:not(:last-child) { color: var(--ink-meta); }
+#log li:not(:last-child) { color: var(--ink-dim); }
 #log li.line-new { animation: line-in .2s ease-out; }
 @keyframes line-in { from { opacity: 0; transform: translateY(.4rem); } }
 
 /* the panel: one row on a desktop, stacked on a phone */
-.front-panel { flex: none; background: var(--panel); border-top: 2px solid #08070a; padding: .9rem 1rem calc(.8rem + env(safe-area-inset-bottom)); }
+.front-panel { flex: none; background: var(--bg); border-top: 1px solid var(--rule); padding: .9rem 1rem calc(.8rem + env(safe-area-inset-bottom)); }
 .front-in { max-width: 64rem; margin: 0 auto; display: grid; gap: .9rem 2rem; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-#front h1 { margin: 0; font: 400 clamp(1.7rem, 3.2vw, 2.4rem)/1.05 "IM Fell English SC", Georgia, serif; letter-spacing: .06em; color: var(--ink-head); }
-#sub { margin: .35rem 0 0; color: var(--ink-meta); min-height: 1.35em; }
+#front h1 { margin: 0; font: 400 clamp(1.7rem, 3.2vw, 2.4rem)/1.05 "IM Fell English SC", Georgia, serif; letter-spacing: .06em; color: var(--ink-hi); }
+#sub { margin: .35rem 0 0; color: var(--ink-dim); min-height: 1.35em; }
 .front-acts { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
 .front-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
 #begin {
   min-height: 3rem; min-width: 9rem; padding: 0 1.6rem; cursor: pointer;
-  font: 400 1.35rem/1 "IM Fell English SC", Georgia, serif; letter-spacing: .08em;
-  color: var(--btn-ink); background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1;
-  box-shadow: var(--bevel-warm), var(--drop); transition: box-shadow .25s, transform .15s;
+  font: 500 var(--t-story)/1 "Alegreya Sans", system-ui, sans-serif;
+  color: var(--on-ember); background: var(--ember); border: 0; border-radius: 2px; box-shadow: var(--drop); transition: background .15s, transform .15s;
 }
-#begin:hover, #begin:focus-visible { border-image: var(--px-hot) 1; box-shadow: var(--bevel-warm), 0 0 1.1rem rgba(224, 149, 79, .25); outline: none; }
-#begin:active { transform: scale(.97); }
-.front-quiet { min-height: 2.4rem; padding: 0 .9rem; cursor: pointer; font: inherit; background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); color: var(--ink-meta); }
-.front-primary { min-height: 2.4rem; padding: 0 .9rem; cursor: pointer; font: inherit; font-weight: 500; background: var(--btn-bg) padding-box; border: 2px solid var(--rim-ember); border-image: var(--px-ember) 1; box-shadow: var(--bevel-warm), var(--drop); color: var(--btn-ink); }
-.front-quiet:hover, .front-quiet:focus-visible { color: var(--btn-ink); border-image: var(--px-ember) 1; outline: none; }
-/* the per-device choice: a pixel box at the frame's grain */
-.front-keep { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink-meta); }
-.front-keep-box { appearance: none; margin: 0; width: 1.25rem; height: 1.25rem; flex: none; background: var(--track) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: inset 0 2px 0 rgba(0, 0, 0, .6); cursor: pointer; display: grid; place-content: center; }
-.front-keep-box:checked::after { content: ""; width: .55rem; height: .55rem; background: var(--btn-ink); }
-.front-keep-box:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 1px; }
+#begin:hover, #begin:focus-visible { background: var(--ember-hot); outline: none; }
+#begin:active { transform: translateY(2px); box-shadow: none; }
+.front-quiet { min-height: 2.4rem; padding: 0 .9rem; cursor: pointer; font: inherit; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink); }
+.front-primary { min-height: 2.4rem; padding: 0 .9rem; cursor: pointer; font: inherit; font-weight: 500; background: var(--ember); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--on-ember); }
+.front-quiet:hover, .front-quiet:focus-visible { color: var(--ink-hi); background: var(--press); outline: none; }
+/* the per-device choice: a hairline box */
+.front-keep { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink); }
+.front-keep-box { appearance: none; margin: 0; width: 1.25rem; height: 1.25rem; flex: none; background: var(--bg); border: 1px solid var(--ink-dim); border-radius: 2px; cursor: pointer; display: grid; place-content: center; }
+.front-keep-box:checked::after { content: ""; width: .55rem; height: .55rem; background: var(--ink-hi); }
+.front-keep-box:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 1px; }
 
 /* "I have a code" and "I have recovery words" (index.html #have, begin.ts): plain links under Begin that open plain fields */
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-#have { width: min(22rem, 100%); display: flex; flex-direction: column; align-items: center; gap: .1rem; color: var(--ink-meta); }
-#have summary { padding: .4rem .3rem; cursor: pointer; list-style: none; color: var(--ink-meta); text-decoration: underline; text-underline-offset: .2em; }   /* the padding is the 24 px tap */
+#have { width: min(22rem, 100%); display: flex; flex-direction: column; align-items: center; gap: .1rem; color: var(--ink); }
+#have summary { padding: .4rem .3rem; cursor: pointer; list-style: none; color: var(--ink); text-decoration: underline; text-underline-offset: .2em; }   /* the padding is the 24 px tap */
 #have summary::-webkit-details-marker { display: none; }
-#have summary:hover, #have summary:focus-visible, #have details[open] summary { color: var(--ink-bright); outline: none; }
-#limited, #framed { margin: 0; font-size: .95rem; color: var(--ink-dim); }
-#framed-link { color: var(--ink-bright); text-decoration: underline; text-underline-offset: .2em; }
+#have summary:hover, #have summary:focus-visible, #have details[open] summary { color: var(--ink-hi); outline: none; }
+#limited, #framed { margin: 0; font-size: var(--t-meta); color: var(--ink-dim); }
+#framed-link { color: var(--ink-hi); text-decoration: underline; text-underline-offset: .2em; }
 .have-form { display: flex; gap: .5rem; align-items: flex-end; margin: .5rem 0 .2rem; text-align: left; }
-.have-form label { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; font-size: .9rem; color: var(--ink-meta); }
-.have-form input { min-height: 2.75rem; box-sizing: border-box; width: 100%; padding: 0 .7rem; font: 500 1.1rem/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .06em; color: var(--ink-bright); background: var(--track) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: inset 0 2px 0 rgba(0, 0, 0, .6); }
-.have-form input:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 1px; }
-.have-form button { min-height: 2.75rem; padding: 0 1.1rem; font: 500 1rem/1 "Alegreya Sans", system-ui, sans-serif; color: var(--ink-meta); background: var(--panel) padding-box; border: 2px solid var(--rim); border-image: var(--px-stone) 1; box-shadow: var(--bevel), var(--drop); cursor: pointer; }
-.have-form button:hover, .have-form button:focus-visible { color: var(--btn-ink); border-image: var(--px-ember) 1; outline: none; }
-.have-line { margin: .2rem 0 0; font-size: .95rem; }
+.have-form label { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; font-size: var(--t-meta); color: var(--ink); }
+.have-form input { min-height: 2.75rem; box-sizing: border-box; width: 100%; padding: 0 .7rem; font: 500 var(--t-story)/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .06em; color: var(--ink-hi); background: var(--bg); border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule); }
+.have-form input:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 1px; }
+.have-form button { min-height: 2.75rem; padding: 0 1.1rem; font: 500 var(--t-body)/1 "Alegreya Sans", system-ui, sans-serif; color: var(--ink); background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); cursor: pointer; }
+.have-form button:hover, .have-form button:focus-visible { color: var(--ink-hi); background: var(--press); outline: none; }
+.have-line { margin: .2rem 0 0; font-size: var(--t-meta); }
 
 /* the foot: the dev log opens upward from its header */
-.front-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0 1rem; justify-content: flex-end; font-size: .85rem; color: var(--ink-dim); margin-top: -.4rem; }
+.front-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0 1rem; justify-content: flex-end; font-size: var(--t-meta); color: var(--ink-dim); margin-top: -.4rem; }
 #privacy, #dev .head { display: inline-block; padding: .3rem .2rem; color: var(--ink-dim); cursor: pointer; }
 #privacy { text-decoration: underline; text-underline-offset: .2em; }
 #privacy:hover, #privacy:focus-visible, #dev .head:hover, #dev .head:focus-visible { color: var(--ink); outline: none; }
@@ -73,39 +72,40 @@ body.playing.instant #front { transition: none; }   /* a reload resumes at once:
 #dev[open] .head::after { content: " ▾"; }
 #dev .dev-body {
   position: absolute; right: 0; bottom: 100%; z-index: 3; width: max-content; max-width: min(30rem, calc(100vw - 2rem)); box-sizing: border-box; text-align: left;
-  font: 400 .72rem/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: #7d786f;
-  background: var(--panel) padding-box; border: 2px solid var(--rim-dim); border-image: var(--px-dim) 1; box-shadow: var(--bevel); padding: .6rem .75rem;
+  font: 400 var(--t-meta)/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--ink-dim);
+  background: var(--raise); border-radius: 2px; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .55); padding: .6rem .75rem;
 }
 #dev .tag { display: inline-block; min-width: 3.4em; }
 #dev .ok { color: #8ea67a; } #dev .wip { color: #c9a35c; } #dev .todo { color: #6f7b8c; } #dev .warn { color: #c47a5c; }
-#dev .commits { margin-top: .4rem; padding-top: .35rem; border-top: 2px solid #08070a; box-shadow: inset 0 2px 0 var(--rim-dim); }
+#dev .commits { margin-top: .4rem; padding-top: .35rem; border-top: 1px solid var(--rule); }
 #dev .commits div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 520px) { #dev .commits { display: none; } }
 
-/* the list of games (ui/places.ts): a framed rail over the scene on a desktop, the same list in a sheet on a phone */
+/* the list of games (ui/places.ts): a raised rail over the scene on a desktop, the same list in a sheet on a phone */
 #rail {
   position: absolute; z-index: 2; top: 2.6rem; right: 1rem; width: 21rem; box-sizing: border-box; overflow-y: auto; padding: .8rem .9rem 1rem; max-height: calc(100% - 3.6rem);
-  background: rgba(24, 24, 31, .86) padding-box; border: 4px solid var(--rim-dim); border-image: var(--px2-dim) 2; box-shadow: var(--bevel), 0 .6rem 2rem rgba(0, 0, 0, .55);
+  background: rgba(22, 22, 29, .92); border-radius: 2px; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .55);
 }
-.places-heading { margin: 0 0 .6rem; font: 400 .9rem/1.2 "Alegreya Sans", system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--ember-hot); }
-.sheet .places-heading { padding-top: 1.1rem; font: 400 1.1rem/1.2 "IM Fell English SC", Georgia, serif; letter-spacing: .02em; text-transform: none; color: var(--ink-head); }
-.places-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .6rem; }
-.places-note { margin: .6rem 0 0; font-size: .95rem; color: var(--ink-meta); }
+.places-heading { margin: 0 0 .6rem; font: 400 var(--t-meta)/1.2 "Alegreya Sans", system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+.sheet .places-heading { padding-top: 1.1rem; font: 400 var(--t-display)/1.2 "IM Fell English SC", Georgia, serif; letter-spacing: .02em; text-transform: none; color: var(--ink-hi); }
+.places-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.places-note { margin: .6rem 0 0; font-size: var(--t-meta); color: var(--ink); }
 .places-note:empty { display: none; }
 .places-trash { margin: .3rem 0 0; display: flex; flex-direction: column; gap: .3rem; align-items: flex-end; }
 .places-trash .games-ask { margin: 0; align-self: stretch; }
-.front-in .games-ask { margin: 0; color: var(--ink-meta); font-size: .95rem; }
+.front-in .games-ask { margin: 0; color: var(--ink); font-size: var(--t-meta); }
 .place { width: 100%; display: flex; align-items: center; gap: .8rem; padding: .4rem; text-align: left; cursor: pointer; font: inherit;
-  background: rgba(15, 15, 20, .7) padding-box; border: 2px solid var(--rim-dim); border-image: var(--px-dim) 1; box-shadow: var(--bevel); color: inherit; }
-.place:hover, .place:focus-visible, .place[aria-pressed="true"] { border-image: var(--px-ember) 1; outline: none; }
-.place:hover .pname, .place:focus-visible .pname, .place[aria-pressed="true"] .pname { color: var(--btn-ink); }
+  background: transparent; border: 0; border-bottom: 1px solid var(--rule); color: inherit; }
+.place:hover, .place:focus-visible, .place[aria-pressed="true"] { background: var(--press); box-shadow: inset 2px 0 0 var(--ink-hi); outline: none; }
+.place:hover .pname, .place:focus-visible .pname, .place[aria-pressed="true"] .pname { color: var(--ink-hi); }
 .ptext { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
-.pname { font: 400 1.1rem/1.15 "IM Fell English SC", Georgia, serif; letter-spacing: .05em; color: var(--ink-head); }
-.pmeta { font-size: .9rem; color: var(--ink-meta); }
-.place.new .pname { color: var(--ink-meta); }
+.pname { font-size: var(--t-body); font-weight: 500; line-height: 1.15; color: var(--ink-hi); }
+.pmeta { font-size: var(--t-meta); color: var(--ink); }
+.place.new .pname { color: var(--ink-dim); }
 .place.new .pic { opacity: .55; }
-/* a game's picture: the rows' own size, so five fit the rail at 1920x1080; a failed or unfetched view is a plain dark frame */
-.pic { position: relative; flex: none; box-sizing: border-box; width: 7.5rem; height: 4.8rem; overflow: hidden; border: 2px solid var(--rim); border-image: var(--px-stone) 1; background: #08070a; }
+/* a game's picture, a small scene and so framed as the scene is: the rows' own size, so five fit the rail at 1920x1080; a
+   failed or unfetched view is a plain dark frame */
+.pic { position: relative; flex: none; box-sizing: border-box; width: 7.5rem; height: 4.8rem; overflow: hidden; border: 2px solid #08070a; box-shadow: 0 0 0 1px #34323c; background: #08070a; }
 .pic.failed { background: #0a090c; }
 
 @media (max-width: 760px) {
@@ -113,7 +113,7 @@ body.playing.instant #front { transition: none; }   /* a reload resumes at once:
   .front-in { grid-template-columns: 1fr; text-align: center; gap: .8rem; }
   .front-acts { width: 100%; }
   .front-foot { justify-content: center; margin-top: -.3rem; }
-  #log { min-height: calc(2 * 1.35em + .3rem); font-size: 1.05rem; }
+  #log { min-height: calc(2 * 1.35em + .3rem); font-size: var(--t-body); }
 }
 @media (min-width: 761px) { .phone-only { display: none; } }
 @media (prefers-reduced-motion: reduce) {
