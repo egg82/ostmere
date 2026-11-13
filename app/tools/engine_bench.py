@@ -32,8 +32,7 @@ from test_cards_reading import read_everything  # noqa: E402 -- sys.path is set 
 Json = dict[str, Any]
 
 def reference(n: int = 6_000_000) -> float:
-    """CPU seconds of a fixed workload of the engine's own kind (dict and float churn), independent of the engine; `n`
-    smaller for a test that times against it (tests/dayone/test_dayone_forecast.py)."""
+    """CPU seconds of a fixed workload of the engine's own kind (dict and float churn), independent of the engine."""
     t0 = cpu_now()
     table: dict[int, float] = {}
     for i in range(n):

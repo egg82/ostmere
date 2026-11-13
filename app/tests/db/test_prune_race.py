@@ -26,8 +26,10 @@ def engine(pg_url: str) -> Iterator[Engine]:
 
 
 def waiting_on_a_lock(url: str) -> bool:
+    """A session on this test's own database waits on a lock (another test's waits, on its own database, don't count)."""
     with psycopg.connect(url) as c:
-        row = c.execute("SELECT count(*) FROM pg_stat_activity WHERE wait_event_type = 'Lock'").fetchone()
+        row = c.execute("SELECT count(*) FROM pg_stat_activity WHERE wait_event_type = 'Lock' "
+                        "AND datname = current_database()").fetchone()
     return row is not None and row[0] > 0
 
 
