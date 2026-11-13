@@ -1,7 +1,10 @@
-# The nightly deep run: the deep Hypothesis profile (HYPOTHESIS_PROFILE=ci) over every engine contract suite, while
-# pull requests and pushes run the fast default profile in ci.yml's `tests`. A new engine part's suite is added here when
-# it lands. The same variable makes tests/opening play every route at seeds 0-2 and both kinds of player past the end
-# (routes.py, DEEP); ci.yml plays the representative ones in `playthrough`.
+# The nightly run on main, the lane the whole-game simulations live in. Two jobs:
+# - `full`: ci.yml with full, so the playthroughs and the chapter saves run beside the per-PR set. Pull requests run
+#   only the smoke route (ci.yml, `playthrough-smoke`), unless labelled `playthroughs`.
+# - `tests-deep`: the deep Hypothesis profile (HYPOTHESIS_PROFILE=ci) over every engine contract suite, while pull
+#   requests and pushes run the fast default profile in ci.yml's `tests`. A new engine part's suite is added here when it
+#   lands. The same variable makes tests/opening play every route at seeds 0-2 and both kinds of player past the end
+#   (routes.py, DEEP).
 
 name: Nightly
 
@@ -14,6 +17,15 @@ permissions:
   contents: read
 
 jobs:
+  full:
+    uses: ./.github/workflows/ci.yml
+    with:
+      full: true
+    secrets: inherit
+    permissions:
+      contents: read
+      packages: write
+
   tests-deep:
     runs-on: ubuntu-latest
     timeout-minutes: 180
