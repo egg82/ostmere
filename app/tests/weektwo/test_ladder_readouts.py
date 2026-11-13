@@ -1,5 +1,5 @@
-"""The ladder readout (tests/ladder/readout.py) against its approved text (tests/readout_snapshot.py), one per route
-through day twelve, read here because this job has week two's plays. A change fails until it is approved with
+"""The ladder readout (tests/ladder/readout.py) reported against its committed text (tests/readout_snapshot.py), one per route
+through day twelve, read here because this job has week two's plays. A change is reported, never failed; commit it with
 `python -m tests.readout_snapshot --write ladder`."""
 import pytest
 
@@ -16,6 +16,6 @@ def test_the_committed_readouts_are_the_ones_the_ladder_writes():
 
 
 @pytest.mark.parametrize("twelve_ladder", TWELVE_PUSH_ROUTES, indirect=True)
-def test_a_route_ladder_readout_is_approved(twelve_ladder: tuple[str, str]):
+def test_a_route_ladder_readout_is_reported(twelve_ladder: tuple[str, str]):
     name, text = twelve_ladder
     rs.check(f"ladder-{name}", text)

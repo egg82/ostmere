@@ -1,5 +1,5 @@
-"""The worth readout (tests/worth/readout.py) against its approved text (tests/readout_snapshot.py), read here because
-this job has day fifteen's plays. A change fails until it is approved with `python -m tests.readout_snapshot --write
+"""The worth readout (tests/worth/readout.py) reported against its committed text (tests/readout_snapshot.py), read here because
+this job has day fifteen's plays. A change is reported, never failed; commit it with `python -m tests.readout_snapshot --write
 worth`."""
 import pytest
 
@@ -14,5 +14,5 @@ def test_the_committed_readouts_are_the_ones_worth_writes():
     assert rs.stray("worth", readout.NAMES) == ([], [])
 
 
-def test_the_worth_readout_is_approved(fifteen_worth: str):
+def test_the_worth_readout_is_reported(fifteen_worth: str):
     rs.check(f"worth-{readout.ROUTE}", fifteen_worth)
