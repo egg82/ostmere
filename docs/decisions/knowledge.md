@@ -19,8 +19,22 @@ the same need.
 not the narration's register: first person, lowercase and spare like the rest of the game, past tense and written
 after the fact, dry and clinical, sometimes wrong or unsure of itself. It is someone writing to themselves, not talking,
 so not the townsfolk's conversational register either. The chronicle stays the live feed in the narration's voice; the
-journal's `days` section retells the bigger beats in this one (`api/CONTRACT.txt`, "JOURNAL"), behind bookmarks for
-days, creatures and places.
+journal's `days` section is this person's diary (below), behind bookmarks for days, creatures and places.
+
+**The daily journal keeps its writer's habits** (owner, 2026-11-13). The `days` pages read like a real diary: firsts,
+the people who matter, turning points and losses go in; routine drops out after a few tellings unless it changes; a
+crowd gets a mention at most; entries start long and frequent and thin as things become normal, down to a line or
+none; a busy or away stretch leaves a gap and then a catch-up naming only the big things; a detail turns up a day late;
+now and then a misremembering is put right by a later entry; and what presses gets more room than what has become
+normal. Every habit is decided in code from the save's own lines, with its numbers in a data file and its draws seeded
+by save, day and subject, and each day is composed once, when it ends, and stored, so live and on return write the
+same page and later tuning applies forward only. Content writes each line per subject and slot (a first, a repeat, a
+catch-up, a mention, a late addition, a misremembering and its correction) and never says how often. The chronicle
+stays exact, so nothing the player needs rests on the journal; creatures and places stay the exact layer, untouched.
+Rejected: the chronicle as the lossy journal, which loses facts to a habit; entries written freely by Claude at
+runtime, since a stateless call cannot keep a rate or stay canon; thinning by day number, since the game's length is
+set by play; and gaps from the player's own absence, which would read as guilt and is not in the kept history. The
+mechanism, its rates and tests: `docs/design/journal.md`.
 
 **Two registers, and Claude's own is neither.** World lines (the chronicle, arrivals) are in the game's voice.
 Controls and labels are game UI: terse nouns and verbs ("Target", "Run down", "Loss 8%", "Unscouted"), never
