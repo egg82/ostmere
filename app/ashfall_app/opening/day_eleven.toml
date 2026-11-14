@@ -246,16 +246,22 @@ joins = [
 id = "s_n5_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n5", way = "joined" }
+first = { keys = ["j_n5_first"] }
+catchup = { keys = ["j_n5_catchup"] }
 
 [[subjects]]
 id = "s_n6_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n6", way = "joined" }
+first = { keys = ["j_n6_first"] }
+catchup = { keys = ["j_n6_catchup"] }
 
 [[subjects]]
 id = "s_n7_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n7", way = "joined" }
+first = { keys = ["j_n7_first"] }
+catchup = { keys = ["j_n7_catchup"] }
 
 # The fourth of the offer, their child, comes in at the same instant with no lane: an arrival, never a worker. Arrivals
 # 9 with the man behind them.
@@ -477,6 +483,8 @@ id = "s_b11"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b11" }
 first = { keys = ["n_day_b11"] }
+catchup = { keys = ["j_b11_catchup"] }
+late = { keys = ["j_b11_late"] }
 
 # ---------- features ----------
 
@@ -613,4 +621,13 @@ a_ditch_bank_cost = "stones now"
 feature_ditch_dug = "ditch outside the posts"
 aim_gap = "keep someone at the gap at night."
 n_day_b11 = "sat up with him. burned him by the scrub, away from the stone. no name, so lucy cut a mark on a board"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_n5_first = "{n5} gave the family's names at the gate. the child keeps close to her"
+j_n5_catchup = "a family came in. {n5} talks for them"
+j_n6_first = "{n6} is the husband. at the gate the three of them stood with a space between"
+j_n6_catchup = "{n6}, the husband"
+j_n7_first = "{n7} is the wife's brother. she gave his name for him"
+j_n7_catchup = "{n7}, the wife's brother"
+j_b11_catchup = "the man who came with the family died. sat up with him. burned him"
+j_b11_late = "someone kept a hand flat on the warm ground the whole time he burned"
 # ---------- end of lines ----------

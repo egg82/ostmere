@@ -614,6 +614,8 @@ id = "s_b2"
 kind = "beat"
 source = { source_kind = "card", id = "strike_fire" }
 first = { keys = ["n_day_b2"] }
+catchup = { keys = ["j_b2_catchup"] }
+late = { keys = ["j_b2_late"] }
 
 # ---------- features ----------
 
@@ -1272,3 +1274,6 @@ aim_stay = "make this somewhere you could stay."
 
 # The journal's notes (api/CONTRACT.txt, "JOURNAL").
 n_day_b2 = "fire, by my own hand. the first thing i've made, that i know of"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b2_catchup = "got a fire lit"
+j_b2_late = "forgot. the stones round the fire are all cut stone. somebody squared them once"

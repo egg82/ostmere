@@ -576,12 +576,15 @@ id = "s_b4_went"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b4_went" }
 first = { keys = ["n_day_b4"] }
+catchup = { keys = ["j_b4_went_catchup"] }
+late = { keys = ["j_b4_went_late"] }
 
 [[subjects]]
 id = "s_b4_she_went"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b4_she_went" }
 first = { keys = ["n_day_b4"] }
+catchup = { keys = ["j_b4_she_catchup"] }
 
 # ---------- features ----------
 
@@ -774,4 +777,8 @@ l_straight_poles = "young birch grown straight. every one a pole."
 l_root_plate = "a root plate taller than you, stones locked in it."
 l_tighter_rack = "you turn the strips on edge. the rack takes one more."
 n_day_b4 = "her people's cart wasn't on the ridge. she's stopped looking that way"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b4_went_catchup = "went up the ridge for her cart. it was gone"
+j_b4_went_late = "drag marks off the edge where the cart stood. wolf prints all through them"
+j_b4_she_catchup = "she went up for the cart herself. came back with nothing"
 # ---------- end of lines ----------

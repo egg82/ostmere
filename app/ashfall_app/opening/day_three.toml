@@ -610,6 +610,16 @@ joins = [{ lane = "n2", mix = "town:camp", card = "n2_forage" }]
 id = "s_n2_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n2", way = "joined" }
+first = { keys = ["j_n2_first"] }
+catchup = { keys = ["j_n2_catchup"] }
+late = { keys = ["j_n2_late"] }
+
+[[subjects]]
+id = "s_b5"
+kind = "beat"
+source = { source_kind = "card", id = "bank_hearth" }
+first = { keys = ["j_b5_first"] }
+catchup = { keys = ["j_b5_catchup"] }
 
 # She joins the town's mix with him (decisions.md, "The mix": her single task was a leftover). Her always task becomes
 # her share at her whole time, so nothing she does changes at the join; with no always task she joins with no share.
@@ -1109,4 +1119,10 @@ mention_went_few_2 = "the camp is quieter by a few voices."
 mention_went_few_3 = "the stores stretch further, for the wrong reason."
 mention_went_many_1 = "a whole side of the fire sits empty."
 mention_went_many_2 = "the pot goes round fast. too many are gone."
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_n2_first = "a man came up to the light, looking at the pot more than at us. alone. his spear has no head. {n2}. three to feed now"
+j_n2_catchup = "{n2} came, and stayed"
+j_n2_late = "{n2} went to work before anyone told him. lucy looked at him once and that was all"
+j_b5_first = "banked the new hearth. the ash melted back from it all round. warm ground under us, a faint red in the cracks. nobody fetched wood after that"
+j_b5_catchup = "banked the new hearth. the ground's warm round it"
 # ---------- end of lines ----------

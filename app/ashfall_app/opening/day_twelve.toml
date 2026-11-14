@@ -607,6 +607,22 @@ id = "s_b12"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b12" }
 first = { keys = ["n_day_b12"] }
+catchup = { keys = ["j_b12_catchup"] }
+late = { keys = ["j_b12_late"] }
+
+[[subjects]]
+id = "s_dig"
+kind = "routine"
+source = { source_kind = "card", id = "dig_cellar" }
+first = { keys = ["j_dig_first"] }
+repeat = { keys = ["j_dig_again_1", "j_dig_again_2"] }
+catchup = { keys = ["j_dig_catchup"] }
+
+[[subjects]]
+id = "s_sitter"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_sitter" }
+first = { keys = ["j_sitter_first"] }
 
 # ---------- the Camp ----------
 
@@ -844,4 +860,12 @@ feature_meat_below = "meat hung in the dig"
 feature_rack_kept = "meat kept on the rack"
 feature_crows_off = "crows kept off the rack"
 feature_crows_kept = "crows left at the rack"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b12_catchup = "dug into a cellar under the ruin. empty"
+j_b12_late = "there was a stool down there too, in the corner. short in the same leg as ours"
+j_dig_first = "started digging at the ruin's north wall, for what the larder won't hold. staked the sides as i went. had the spade in before anyone asked where"
+j_dig_again_1 = "dug. the sides are holding"
+j_dig_again_2 = "the dig again. it takes more stakes than i thought"
+j_dig_catchup = "dug at the ruin"
+j_sitter_first = "a grey wolf sat at the edge of the light, facing the fire. the guard didn't move. it didn't either"
 # ---------- end of lines ----------
