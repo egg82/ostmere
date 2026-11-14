@@ -81,10 +81,18 @@ keys = ["t_came_some_a", "t_came_some_b"]
 at_least = 1
 keys = ["t_went_one"]
 
+[[subjects]]
+id = "t_s_q1_joined"
+kind = "person"
+source = { source_kind = "lane", id = "t_q1", way = "joined" }
+first = { keys = ["t_j_q1_came"] }
+catchup = { keys = ["t_j_q1_came"] }
+
 [line_kinds]
 t_l_comes = "story"
 
 [text]
+t_j_q1_came = "someone came."
 t_s_heap = "Heap"
 t_l_post = "Post"
 t_l_q1 = "First"

@@ -436,6 +436,12 @@ entry = "e_days_3"
 gate = { test = "at_least", subject_kind = "card_count", id = "bank_fire_6", value = 1 }
 beat = "B7"
 
+[[subjects]]
+id = "s_b7"
+kind = "beat"
+source = { source_kind = "card", id = "bank_fire_6" }
+first = { keys = ["n_day_b7"] }
+
 # At B7's moment too, so it opens nothing of its own while away.
 [[notes]]
 id = "n_ground_2"

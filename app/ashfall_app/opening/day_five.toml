@@ -375,6 +375,16 @@ unlocks = [
 ]
 joins = [{ lane = "n3", mix = "town:camp", card = "n3_forage" }, { lane = "n4", mix = "town:camp", card = "n4_watch" }]
 
+[[subjects]]
+id = "s_n3_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n3", way = "joined" }
+
+[[subjects]]
+id = "s_n4_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n4", way = "joined" }
+
 [[standing]]
 id = "n3_eating"
 label_key = "action_n3_eating"

@@ -597,6 +597,11 @@ unlocks = [
 ]
 joins = [{ lane = "n2", mix = "town:camp", card = "n2_forage" }]
 
+[[subjects]]
+id = "s_n2_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n2", way = "joined" }
+
 # She joins the town's mix with him (decisions.md, "The mix": her single task was a leftover). Her always task becomes
 # her share at her whole time, so nothing she does changes at the join; with no always task she joins with no share.
 # Her own trigger, as t_joins' outcome is released; after it, so a save past K5 gets the same mix order at rebase. She

@@ -27,6 +27,7 @@ from .replace_checks import check_replacements
 from .retire_checks import check_retired_chores
 from .season_checks import check_season_turns
 from .slot_checks import check_slots
+from .subject_checks import check_subjects
 from .tally_checks import check_tallies
 from .ui_keys import UI_KEYS
 
@@ -69,6 +70,7 @@ def check_structure(o: "Opening") -> None:
     check_people(o)
     check_aims(o)
     check_journal(o)
+    check_subjects(o)
     check_bands(o)
     check_kept_needs(o)
     check_phase_pays(o)

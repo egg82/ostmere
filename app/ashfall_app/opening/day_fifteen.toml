@@ -511,11 +511,23 @@ entry = "e_days_7"
 gate = { test = "after_time", value = 1209600 }
 beat = "B13"
 
+[[subjects]]
+id = "s_b13"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b13" }
+first = { keys = ["n_day_b13"] }
+
 [[notes]]
 id = "n_day_b14"
 entry = "e_days_7"
 gate = { test = "at_least", subject_kind = "card_count", id = "hall", value = 8 }
 beat = "B14"
+
+[[subjects]]
+id = "s_b14"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b14" }
+first = { keys = ["n_day_b14"] }
 
 # ---------- the Camp ----------
 

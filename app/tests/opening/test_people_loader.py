@@ -16,6 +16,10 @@ from ashfall_app.opening.schema import OPENING, Opening, load_opening, to_rules
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "people.toml"
 COMES = 'outcome = { line_keys = ["t_l_comes"], unlocks'
 NO_LINE = 'outcome = { unlocks'
+Q1_SUBJECT = ('[[subjects]]\nid = "t_s_q1_joined"\nkind = "person"\n'
+              'source = { source_kind = "lane", id = "t_q1", way = "joined" }\n'
+              'first = { keys = ["t_j_q1_came"] }\ncatchup = { keys = ["t_j_q1_came"] }\n\n')
+"""The journal's subject for t_q1's joining, which a counted join does not have (subject_checks.py)."""
 
 PLANTS = (
     ("a person with no told", "lane t_q1: is a person with no `told`",
@@ -79,7 +83,8 @@ def test_the_served_lines_say_which_tell_a_person_and_which_are_mentions():
 
 def test_a_counted_join_needs_no_line_of_its_own(tmp_path: Path):
     """The person came earlier and was told then: the join only moves them into the town's mix."""
-    load_with(edited(tmp_path, (COMES, NO_LINE), ('card = "t_q1_work" }] }', 'card = "t_q1_work", counted = true }] }')))
+    load_with(edited(tmp_path, (COMES, NO_LINE), ('card = "t_q1_work" }] }', 'card = "t_q1_work", counted = true }] }'),
+                     (Q1_SUBJECT, "")))
 
 
 @pytest.mark.parametrize("plant", PLANTS, ids=lambda p: p[0])

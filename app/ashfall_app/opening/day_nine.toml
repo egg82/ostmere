@@ -498,6 +498,12 @@ requires = [
 ]
 beat = "B9"
 
+[[subjects]]
+id = "s_b9"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b9" }
+first = { keys = ["n_day_b9"] }
+
 # ---------- B10: the ring closed ----------
 
 # B10 on the last stage, as the ring's closing, so they are one moment. t_b10_floor and its clock are a released floor
@@ -534,6 +540,12 @@ id = "n_day_b10"
 entry = "e_days_4"
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
 beat = "B10"
+
+[[subjects]]
+id = "s_b10"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b10" }
+first = { keys = ["n_day_b10"] }
 
 # The crows' second note, written once the ring is closed.
 [[notes]]

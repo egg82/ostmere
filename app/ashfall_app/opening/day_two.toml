@@ -569,6 +569,18 @@ entry = "e_days_2"
 gate = { test = "at_least", subject_kind = "store", id = "walk", value = 1 }
 beat = "B4"
 
+[[subjects]]
+id = "s_b4_went"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b4_went" }
+first = { keys = ["n_day_b4"] }
+
+[[subjects]]
+id = "s_b4_she_went"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b4_she_went" }
+first = { keys = ["n_day_b4"] }
+
 # ---------- features ----------
 
 [[features]]

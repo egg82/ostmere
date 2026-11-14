@@ -243,6 +243,21 @@ joins = [
   { lane = "n7", mix = "town:camp", card = "n7_pick" },
 ]
 
+[[subjects]]
+id = "s_n5_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n5", way = "joined" }
+
+[[subjects]]
+id = "s_n6_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n6", way = "joined" }
+
+[[subjects]]
+id = "s_n7_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n7", way = "joined" }
+
 # The fourth of the offer, their child, comes in at the same instant with no lane: an arrival, never a worker. Arrivals
 # 9 with the man behind them.
 [[triggers]]
@@ -455,6 +470,12 @@ id = "n_day_b11"
 entry = "e_days_5"
 gate = { test = "at_least", subject_kind = "card_count", id = "keep_vigil", value = 1 }
 beat = "B11"
+
+[[subjects]]
+id = "s_b11"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b11" }
+first = { keys = ["n_day_b11"] }
 
 # ---------- features ----------
 

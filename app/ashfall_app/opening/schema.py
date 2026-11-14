@@ -27,7 +27,8 @@ from .line_kinds import LineKind
 from .journal_checks import check_first_notes
 from .convert import build_rules
 from .camp_entries import CampEntry, CampLevelEntry
-from .setting_entries import FirstMixEntry, RepeatOffersEntry
+from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
+from .subject_entries import SubjectEntry
 from .entries import (
     CardEntry, ChipEntry, Entry, LaneEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, StoreEntry,
     TriggerEntry, UnlockEntry, WhileRunningEntry,
@@ -83,6 +84,8 @@ class Opening(Entry):
     journal: JournalDecl | None = None
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []
+    subjects: list[SubjectEntry] = []
+    """What the journal's days are written about (subject_entries.py)."""
     start: list[UnlockEntry]
     """The unlock set a new save starts with (Rules.opening)."""
     camp: CampEntry | None = None
@@ -93,6 +96,7 @@ class Opening(Entry):
     """Only what chapters.merge carries, each entry kept so a later chapter's ranks expand their phases."""
     first_mix: FirstMixEntry
     repeat_offers: RepeatOffersEntry
+    journal_habits: JournalHabitsEntry
     end_line_keys: list[str] = []
     """Lines the page appends at the end moment (api/CONTRACT.txt, "The end"): no engine event marks it."""
     end_feature: str
@@ -142,6 +146,7 @@ class Chapter(Entry):
     journal: JournalDecl | None = None
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []
+    subjects: list[SubjectEntry] = []
     camp_levels: list[CampLevelEntry] = []
     """A level at a held level's at_items replaces it; the rest are added after the last."""
     prestige: PrestigeEntry | None = None
