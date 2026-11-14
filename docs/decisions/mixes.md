@@ -101,9 +101,13 @@ and you tune it, then hit go.
   share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS").
 - **The editors open simple; the full editor is one deliberate tap away** (after playing day one:
   poking around found the editors, and they were a bit much). A new rule opens on what it does and, once
-  that is chosen, what that answers (a chip such as hungry, or a store the task makes), so a rule like "cook roots when
-  hungry" takes two taps. `More options` opens the full editor in place: every mix, chip and store, the levels and the
-  rate. The full editor keeps all its power, since it is what makes rules handy later; only its first view shrinks.
+  that is chosen, what that answers: a chip such as hungry, or the stores the task is about, first what it makes,
+  then what it takes, then one step out, read off the cards' own inputs and outputs and never off words in their
+  names (owner: the store a task takes belongs there too). So a rule like "cook roots when hungry" takes two taps,
+  and it reads as one sentence with its levels showing, each part a choice in place (owner: the levels should not
+  hide behind More options). `More options` keeps the uncommon: every mix, chip and store, an exact number, and the
+  rate. A rule being changed can be copied in one tap, which is how a rule comes on at either of two conditions:
+  two rules doing the same thing. The full editor keeps all its power, since it is what makes rules handy later; only its first view shrinks.
   The mix editor likewise shows only what an edit changes. Each is first met through a lesson on its real controls
   at the moment it matters, the mix before rules, skippable and never repeated (after the galaxy.click
   reviewer's mix ran nothing for fifty minutes: `docs/design/opening-screen.md`, "Lessons"); beyond the first rule,

@@ -703,10 +703,11 @@ The editor takes the Rules tab's place until it is closed. A new rule opens **si
 ```
 New rule                                          ✕
 Do    [Forage] [Cook roots] [Rest] [Smoke roots]     the tasks a rule can do, hands and other lanes
-When  [hungry]                                       once a task is chosen: what it answers
+When  [smoked 2 / 12] [roots 6 / 24] [damp wood …]   once a task is chosen: the stores relevant to it, and its chips
 [More options]
 ────────────────────────────────────────────────
-While hungry → Cook roots                            the foot, pinned to the bottom of the screen while it scrolls
+When smoked▾ falls to▾ a quarter▾, Smoke roots▾      the foot, pinned to the bottom of the screen while it scrolls;
+until three quarters▾                                each part a choice in place
                                          [Add rule]
 ```
 
@@ -725,17 +726,33 @@ Tasks   [Forage] [Cook roots] …                     each task in play, by its 
 while Evening runs: dry wood +0.80/min              a fact from one dry run, never a verdict
 ────────────────────────────────────────────────
 Under 3 dry wood, until 8 → Evening
-Remove                                   [Add rule] Remove only when editing; Save in place of Add rule
+Remove                       [Copy rule] [Add rule] Remove and Copy rule only when editing; Save in place of Add rule
 ```
 
 - **The common rule is two taps:** what it does, then the chip or store it waits on. A new rule starts with nothing
-  chosen and `Add rule` off. In the simple view, `When` appears once a task is chosen and offers only what that task
-  answers: the chips whose store it makes, and the stores with a ledger line it makes; a store rule takes the default
-  levels below, stated in the sentence. Choosing another task clears a condition it does not answer. The rule as a
-  sentence and Save stay pinned at the screen's foot, under the thumb, whatever is scrolled.
+  chosen and `Add rule` off. In the simple view, `When` appears once a task is chosen and offers what that task
+  answers: the chips whose store it makes, and the stores relevant to it with a ledger line, in this order: what it
+  makes, what it takes, then one step out (the other stores of each card in play that makes what it takes or takes
+  what it makes). Relevance is read off the cards' own makes and takes (`CardInfo.makes`, `CardInfo.takes`), never
+  off words in a name, so a task named for one thing never pulls in an unrelated store that shares the word. Choosing
+  another task clears a condition it does not answer. The rule and Save stay pinned at the screen's foot, under the
+  thumb, whatever is scrolled.
+- **The quick add is one sentence with its levels showing:** a store rule in the simple view reads `When smoked falls
+  to a quarter, Smoke roots until three quarters` (`reaches`: `When catch reaches full, Smoke the catch until down to
+  half`), and each part is a choice in place, a native picker laid over its words: the store among the relevant
+  ones, the test, each level among the five named shares (off where the band would not fit), the task among the
+  tasks. A store the task takes starts at `reaches full, until down to half`, so the rule uses it as it piles up;
+  any other at `falls to a quarter, until three quarters`, so it makes more as it runs low. An exact number, a
+  percentage step and a store outside the relevant ones are `More options`'; a rule with an exact number reads as
+  the full editor's sentence below.
 - **The full editor keeps every choice** (`decisions.md`, "The mix"): the saved mixes beside the tasks, every chip,
-  store, level and task count a rule may watch, the levels (folded behind one row stating them, which opens them in place; a rule being
-  changed opens with them shown) and the rate fact. `More options` goes once it is open.
+  store (the relevant ones first), level and task count a rule may watch, the levels (folded behind one row stating
+  them, which opens them in place; a rule being changed opens with them shown) and the rate fact. `More options` goes
+  once it is open.
+- **`Copy rule`** on a rule being changed starts a new rule with the same task and condition, `Add rule` off until
+  something differs: two rules with the same task are how a rule comes on at either of two conditions. It opens in the
+  quick add when the rule reads as one there, else in the full editor. A chip's rule has none (its condition cannot
+  change), and it is off while the rules are full.
 - **A saved mix of one task alone is that task:** `Do` offers the task once, and choosing it runs that mix. A hands task
   with no such mix gets one when the rule is added (named by the task), as the offers do.
 - A chip chosen is the chip's own condition, worded `While hungry`, with no levels: the player never sees that store as
