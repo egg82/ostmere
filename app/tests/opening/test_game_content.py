@@ -126,6 +126,21 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
     assert made["warmth"] == []
 
 
+def test_a_card_serves_the_stores_it_makes_and_takes(content: Content):
+    """CardInfo.makes is the stores StoreInfo.made_by names the card for by its own lumps and flows, and takes is its
+    inputs, costs and drains: laying wood to dry takes damp wood and makes dry wood; rest makes energy by a flow and
+    takes nothing; the poultice takes its inputs and the store it drains."""
+    infos = {c.card: c for c in content.card_infos}
+    assert (infos["lay_to_dry"].makes, infos["lay_to_dry"].takes) == (["dry_wood"], ["damp_wood"])
+    assert (infos["rest"].makes, infos["rest"].takes) == (["energy"], [])
+    assert infos["poultice"].takes == ["clay", "roots", "hurt"]
+    made = {s.store: s.made_by for s in content.store_infos}
+    pairs = [(c.card, s) for c in content.card_infos for s in c.makes]
+    assert len(pairs) > 50   # control: the comparison below runs over the whole content
+    assert all(card in made[store] for card, store in pairs)
+    assert all(i.store in c.takes for c in content.card_infos for i in c.inputs)
+
+
 def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Content):
     """ring_it waits on two clearings and strike_fire on the ring; the glow is on the first card, the strike, day two's stool, day three's and each later chapter's that ships;
     the roots order is offered once eating has started; the book is a thing carried; the Camp's last level is held."""

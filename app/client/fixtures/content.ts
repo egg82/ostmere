@@ -344,8 +344,12 @@ const low = (store: string, n: number, m: number): Condition => ({ kind: "at_mos
 /** The tired chip's condition, which its rest offer shares (so the rule reads as the chip). */
 export const TIRED = low("energy", 3, 6);
 
+/** What each card makes, as the stores' made_by below names them. */
+const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woodcutting: ["damp_wood"], rest: ["energy"], smoke_catch: ["smoked"], smoke_roots: ["smoked"], forage: ["roots"] };
+
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs, skill_needs: [],
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs,
+  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
 

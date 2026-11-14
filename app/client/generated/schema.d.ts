@@ -812,6 +812,10 @@ export interface components {
             work_s: number;
             /** Inputs */
             inputs: components["schemas"]["Amount"][];
+            /** Makes */
+            makes: string[];
+            /** Takes */
+            takes: string[];
             /** Skill Needs */
             skill_needs: components["schemas"]["SkillNeed"][];
             /** Step Needs */
