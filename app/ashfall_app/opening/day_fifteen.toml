@@ -565,7 +565,7 @@ after = { unlock_kind = "feature", id = "belonging" }
 # ---------- text ----------
 
 [line_kinds]
-l_floor_paced = "find"
+l_floor_paced = "story"
 l_stage_hall_1 = "story"
 l_stage_hall_2 = "story"
 l_stage_hall_3 = "story"
@@ -574,9 +574,9 @@ l_stage_hall_5 = "story"
 l_stage_hall_6 = "story"
 l_stage_hall_7 = "story"
 l_stage_hall_8 = "story"
-l_b13_1 = "find"
-l_b13_2 = "find"
-l_b13_3 = "find"
+l_b13_1 = "story"
+l_b13_2 = "story"
+l_b13_3 = "story"
 l_sow = "story"
 l_night_15 = "story"
 l_frost_1 = "story"

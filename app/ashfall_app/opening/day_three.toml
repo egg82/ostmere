@@ -895,8 +895,8 @@ keys = ["mention_went_many_1", "mention_went_many_2"]
 [line_kinds]
 l_edge_1 = "story"
 l_edge_2 = "story"
-l_track_first = "find"
-l_stream = "find"
+l_track_first = "story"
+l_stream = "story"
 l_field_1 = "story"
 l_field_2 = "story"
 l_larder_1 = "story"
