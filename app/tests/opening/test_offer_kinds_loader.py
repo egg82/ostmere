@@ -93,7 +93,8 @@ def test_a_kind_whose_offers_differ_in_roles_fails_the_loader(shipped_opening: O
 
 
 def unkinded(tmp_path: Path) -> Path:
-    return variant(tmp_path, ("kind = \"q_ask\"\n", ""), ("role = \"yes\"\n", ""), ("role = \"no\"\n", ""))
+    declared = '[[offer_kinds]]\nkind = "q_ask"\nroles = [{ role = "yes", label_key = "q_k_yes" }, { role = "no", label_key = "q_k_no" }]\n\n'
+    return variant(tmp_path, (declared, ""), ("kind = \"q_ask\"\n", ""), ("role = \"yes\"\n", ""), ("role = \"no\"\n", ""))
 
 
 def test_giving_a_kind_to_released_offers_that_had_none_is_safe(shipped_opening: Opening, released: Lock, tmp_path: Path):

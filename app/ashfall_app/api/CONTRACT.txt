@@ -978,7 +978,10 @@ OFFERS
   label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}], askers, cause, waiting_key, expiry_key,
   permanence_key}] in content order, kind the group of offers that ask the same question and role what
   an answer means in it (both null on an offer outside any kind; a kinded offer has a role on every answer, and every
-  offer of a kind has the same roles), line_keys the lines written when the offer shows. askers: the ruled lanes whose
+  offer of a kind has the same roles), line_keys the lines written when the offer shows. Content.offer_kinds:
+  [OfferKindInfo {kind, roles: [KindRole {role, label_key}]}], one per kind in content order, a label for each role
+  written for whoever asks: the words of the rule that answers the kind (the content refuses a kind without one for
+  each of its roles). askers: the ruled lanes whose
   people ask (empty when no one person does). cause: what led to the offer, a LineCause (Line causes): its gate, or for
   a gate the page cannot word (a hidden store, a lane's rules) the first offer whose answer it requires, as answer
   {offer}; null with neither, and the offer's lines carry the same cause. The three *_key fields are text the content
@@ -1024,9 +1027,10 @@ OFFERS
     answered in the view (an open offer is not enough): a row with that offer's question (set apart from an open
     offer's), ui.rule.answered {answer} with the label of the answer that offer was given, the line
     ui.rule.answer_next (the buttons answer the kind's later offers), and one button per role,
-    each worded by the label of the answer that offer gave under the role. A tap sets the kind's rule to that role
+    each worded by the kind's own label for the role (Content.offer_kinds). A tap sets the kind's rule to that role
     (an always rule, appended; a rule already set for the kind is changed in place), and Remove takes it away. The
-    rule reads as ui.rule.answer with the label of the role's answer in the kind's first offer that has it.
+    rule reads as ui.rule.answer with the kind's label for the role; an answer_offer rule reads with that answer's own
+    label, which was written for that one ask.
   THE CLIENT MAY NOT build an answer_offer rule (no editor offers one; the order is set by a story moment or a tool),
   nor offer the answer rule for a kind before an offer of it has been answered.
 

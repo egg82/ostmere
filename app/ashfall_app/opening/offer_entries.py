@@ -17,6 +17,22 @@ class AnswerEntry(Entry):
     in every offer of the kind (engine DESIGN.txt, "OFFER KINDS")."""
 
 
+class KindRoleEntry(Entry):
+    """One role of an offer kind, worded for whoever asks."""
+
+    role: str
+    label_key: str
+
+
+class OfferKindEntry(Entry):
+    """An offer kind's own words: a label for each role its offers' answers carry, written for every future ask of the
+    kind, which is what an AnswerKind rule answers (CONTRACT.txt, "Offers"). An offer's own answer labels are written
+    for that one ask."""
+
+    kind: str
+    roles: list[KindRoleEntry] = Field(min_length=2)
+
+
 class OfferEntry(Entry):
     """Someone asks the player something: shown once `gate` and every `requires` hold (a trigger the loader makes,
     "offer_" + id), its line_keys written then; two or more answers; it never expires (engine DESIGN.txt, "Offers")."""

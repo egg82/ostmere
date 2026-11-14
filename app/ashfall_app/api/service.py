@@ -150,6 +150,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                         cm.LaneLabel(after=convert.unlock(authored.unlock(lb.after)), label_key=lb.label_key)
                         for lb in x.later_labels], name_key=x.name_key, told=x.told) for x in o.lanes)],
         offer_infos=_offer_infos(o),
+        offer_kinds=[cm.OfferKindInfo(kind=k.kind, roles=[cm.KindRole(role=r.role, label_key=r.label_key) for r in k.roles])
+                     for k in o.offer_kinds],
         end_line_keys=list(o.end_line_keys),
         line_infos=line_infos(o),
         journal=_journal(o),
