@@ -24,10 +24,12 @@ def shipped_loaded() -> None:
 
 
 def with_subject(o: Opening, sid: str, key: str, mention_key: str) -> Opening:
-    """`o` with SUBJECT renamed `sid`, its first slot holding `key` and its first band holding `mention_key`."""
+    """`o` with SUBJECT renamed `sid`, `key` added to its first slot and a band holding `mention_key` added; its own
+    keys are kept, so nothing the shipped lock holds goes missing."""
     def edit(s: SubjectEntry) -> SubjectEntry:
-        return s.model_copy(update={"id": sid, "first": SlotEntry(keys=[key]),
-                                    "mention": [BandEntry(at_least=1, keys=[mention_key])]})
+        first = [*(s.first.keys if s.first else []), key]
+        return s.model_copy(update={"id": sid, "first": SlotEntry(keys=first),
+                                    "mention": [*s.mention, BandEntry(at_least=1, keys=[mention_key])]})
     return o.model_copy(update={"subjects": [edit(s) if s.id == SUBJECT else s for s in o.subjects]})
 
 
