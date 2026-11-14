@@ -28,8 +28,8 @@ waits."""
 CHAPTER = Chapter(comforts=(CardId(BED),))
 """Day two's sinks as the sink policies read them: the comfort alone (no trip, and the offer is answered by Knobs2)."""
 LANE = "n1"
-FORAGE, CUT, SCAVENGE, GATHER = "n1_forage", "n1_cut", "n1_scavenge", "n1_gather"
-TASKS = (FORAGE, GATHER, CUT, SCAVENGE)
+FORAGE, CUT, SCAVENGE = "n1_forage", "n1_cut", "n1_scavenge"
+TASKS = (FORAGE, CUT, SCAVENGE)
 """Her task's options (the cards on her lane the page offers in `Change`)."""
 TASK_FOR = {"damp_wood": CUT, "stones": SCAVENGE, "dry_wood": CUT, "roots": FORAGE}
 """The task that feeds a store a build is short of (dry wood is laid from damp wood on the rack)."""

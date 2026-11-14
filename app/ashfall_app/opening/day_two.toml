@@ -89,6 +89,14 @@ unlocks = [
 ]
 orders = [{ tap_card = "n1_forage" }]
 
+# Her own knife cuts from the start, so cutting takes the place of her gathering by hand at once, as the edge's does
+# on the hands (choice_checks.py: no lane offers a job another beats outright). Its own trigger, as t_n1_works' outcome
+# is released.
+[[triggers]]
+id = "t_n1_cuts"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "n1_cut" }, { unlock_kind = "retired", id = "n1_gather", replaced_by = "n1_cut" }] }
+
 [[triggers]]
 id = "t_her_first"
 when = { test = "at_least", subject_kind = "store", id = "n1_worked", value = 1 }

@@ -2311,7 +2311,7 @@
   445716000000,
   668736000000
  ],
- "digest": "d1bacc1da3a596b5e11407e1c36c19b1e0bb678f1c9ed637de91a40fd5d7c90b",
+ "digest": "b31ef3ad9f3fc0f3464cf4a01a3a762f02fd4822eabde885a1b392cddc1bec7f",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -3579,6 +3579,7 @@
    "t_edge_open",
    "t_evening",
    "t_fallen_gable",
+   "t_family_cuts",
    "t_family_joins",
    "t_find_arc_11",
    "t_find_cook_6",
@@ -3682,8 +3683,10 @@
    "t_morning_5",
    "t_morning_6",
    "t_morning_7",
+   "t_n1_cuts",
    "t_n1_joins",
    "t_n1_works",
+   "t_n2_cuts",
    "t_nail",
    "t_night",
    "t_night_12",
@@ -9223,6 +9226,66 @@
    ],
    "unlocks": []
   },
+  "t_family_cuts": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n5_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n5_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    }
+   ]
+  },
   "t_family_joins": {
    "@": "Outcome",
    "joins": [
@@ -11910,6 +11973,34 @@
     }
    ]
   },
+  "t_n1_cuts": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n1_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    }
+   ]
+  },
   "t_n1_joins": {
    "@": "Outcome",
    "joins": [
@@ -11985,6 +12076,34 @@
      "kind": {
       "@": "UnlockKind",
       "v": "card"
+     }
+    }
+   ]
+  },
+  "t_n2_cuts": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n2_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n2_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
      }
     }
    ]
@@ -32777,7 +32896,7 @@
    "unlocks": []
   }
  },
- "release": 62,
+ "release": 63,
  "renames": [
   {
    "from": "t_stock_open",

@@ -611,6 +611,13 @@ id = "s_n2_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n2", way = "joined" }
 
+# His cutting takes the place of his gathering by hand from the join, as hers does (choice_checks.py). Its own trigger,
+# as t_joins' outcome is released.
+[[triggers]]
+id = "t_n2_cuts"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "n2_cut" }, { unlock_kind = "retired", id = "n2_gather", replaced_by = "n2_cut" }] }
+
 # She joins the town's mix with him (decisions.md, "The mix": her single task was a leftover). Her always task becomes
 # her share at her whole time, so nothing she does changes at the join; with no always task she joins with no share.
 # Her own trigger, as t_joins' outcome is released; after it, so a save past K5 gets the same mix order at rebase. She
