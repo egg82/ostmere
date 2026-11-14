@@ -130,6 +130,7 @@ cap_items = 3
 id = "evening"
 label_key = "store_evening"
 cap_items = 1
+clock = "evening"
 
 [[stores]]
 id = "warmth"
@@ -897,6 +898,15 @@ feature_book = "book"
 "ui.card.needs_spent" = "{store} {have}/{n}, none left"
 "ui.card.needs_skill" = "{skill} level {have}/{n}"
 "ui.card.needs_step" = "{card} {have}/{n}"
+"ui.card.opens" = "Opens {when}"
+"ui.when.dawn" = "at dawn"
+"ui.when.dawn_end" = "in the morning"
+"ui.when.day" = "during the day"
+"ui.when.day_end" = "at dusk"
+"ui.when.evening" = "in the evening"
+"ui.when.evening_end" = "at nightfall"
+"ui.when.night" = "after dark"
+"ui.when.night_end" = "at first light"
 "ui.fight.odds" = "{lost} in {of} lost"
 "ui.fight.odds_pct" = "{pct}% lost"
 "ui.fight.odds_unknown" = "odds unknown until fought"

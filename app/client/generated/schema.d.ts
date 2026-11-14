@@ -2173,6 +2173,10 @@ export interface components {
             made_by: string[];
             /** Hidden */
             hidden: boolean;
+            /** Tally */
+            tally: boolean;
+            /** Clock */
+            clock: ("dawn" | "day" | "evening" | "night") | null;
             /** Bonus Bp */
             bonus_bp: number | null;
         };

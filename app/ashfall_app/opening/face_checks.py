@@ -1,11 +1,14 @@
-"""The check that a card's face draws every require that can refuse its tap, before the tap (docs/decisions/
-principles.md, "Progress is stated, never hinted": a gate on progress may not hide). A require is drawn when it is:
+"""What a card's face can draw before a tap, and the check that it draws every require that can refuse the tap
+(docs/decisions/principles.md, "Progress is stated, never hinted": a gate on progress may not hide). A require is drawn
+when it is:
 - `at_least` on a store the player is shown (shown_stores): its have/need row;
 - `at_least` on a skill's level or another card's completions: its level or step row;
-- `at_least` on a clock (a store the player is never shown that only standing actions make) as the card's only
+- `at_least` on a clock with a part of the day (StoreEntry.clock): when it opens ("opens after dark");
+- `at_least` on another clock (a store the player is never shown that only standing actions make) as the card's only
   precondition, the clock's maker unlocked before the card can be: the card's countdown.
-A ruled lane's cards are its tasks, run by the player's rules and never tapped, so they are not checked. Raises
-ValueError naming the card and the kind of require (refs.fail); ids only, since the owner reads CI."""
+A ruled lane's cards are its tasks, run by the player's rules and never tapped, so they are not checked. The same
+stores are the ones a cause may name (api/line_causes.py). Raises ValueError naming the store (refs.fail); ids only,
+since the owner reads CI."""
 from collections.abc import Iterable
 from functools import reduce
 from typing import TYPE_CHECKING
@@ -23,29 +26,37 @@ Site = tuple[frozenset[Key], tuple["ConditionEntry", ...]]
 
 
 def shown_stores(o: "Opening") -> frozenset[str]:
-    """The stores the player can be shown: unlocked by the start or some outcome, and not hidden."""
+    """The stores whose amount the page draws: unlocked by the start or some outcome and not hidden, or a tally (a count
+    the game keeps, drawn as a figure though it has no ledger line)."""
     unlocked = {u.id for u in o.start if u.unlock_kind == "store"}
     unlocked |= {u.id for _, out in outcomes(o) for u in out.unlocks if u.unlock_kind == "store"}
-    return frozenset(s.id for s in o.stores if s.id in unlocked and not s.hidden)
+    return frozenset(s.id for s in o.stores if (s.id in unlocked and not s.hidden) or s.tally)
 
 
-def check_faces(o: "Opening") -> None:
-    found = undrawn(o)
-    if found:
-        card, kind, id_ = found[0]
-        fail(f"card {card}", f"requires {kind} {id_}, which its face cannot draw before a tap")
+def timed_stores(o: "Opening") -> frozenset[str]:
+    """The clocks a condition on reads as a time of day (StoreEntry.clock)."""
+    return frozenset(s.id for s in o.stores if s.clock is not None)
+
+
+def check_clocks(o: "Opening") -> None:
+    """A store with a part of the day is a clock: never shown, made only by standing actions."""
+    shown, clocks = shown_stores(o), standing_clocks(o)
+    for s in o.stores:
+        if s.clock is not None and (s.id in shown or s.id not in clocks):
+            fail(f"store {s.id}", f"reads as a time of day ({s.clock}) but is "
+                 + ("shown to the player" if s.id in shown else "not made by standing actions alone"))
 
 
 def undrawn(o: "Opening") -> list[tuple[str, str, str]]:
     """(card, subject kind, id) for each require of a tappable card that its face cannot draw."""
     ruled = {x.id for x in o.lanes if x.ruled}
-    shown, clocks = shown_stores(o), standing_clocks(o)
-    before = unlocked_before(o)
+    drawn = shown_stores(o) | timed_stores(o)
+    clocks, before = standing_clocks(o), unlocked_before(o)
     return [(c.id, r.subject_kind or r.test, r.id or "") for c in o.cards if c.lane not in ruled for r in c.requires
-            if not _drawn(c, r, shown, clocks, before.get(("card", c.id), frozenset()))]
+            if not _drawn(c, r, drawn, clocks, before.get(("card", c.id), frozenset()))]
 
 
-def _drawn(c: "CardEntry", r: "ConditionEntry", shown: frozenset[str], clocks: dict[str, frozenset[str]],
+def _drawn(c: "CardEntry", r: "ConditionEntry", drawn: frozenset[str], clocks: dict[str, frozenset[str]],
            before: frozenset[Key]) -> bool:
     if r.test != "at_least":
         return False
@@ -53,7 +64,7 @@ def _drawn(c: "CardEntry", r: "ConditionEntry", shown: frozenset[str], clocks: d
         return True
     if r.subject_kind != "store" or r.id is None:
         return False
-    if r.id in shown:
+    if r.id in drawn:
         return True
     alone = len(c.requires) == 1 and not c.inputs and not c.drains
     return alone and any(("action", a) in before for a in clocks.get(r.id, ()))

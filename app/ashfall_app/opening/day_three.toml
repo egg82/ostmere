@@ -296,6 +296,7 @@ outcome = { line_keys = ["l_stew_first"] }
 id = "evening_3"
 label_key = "store_evening_3"
 cap_items = 5
+clock = "evening"
 
 [[standing]]
 id = "evening_3"
@@ -307,6 +308,7 @@ makes = [{ store = "evening_3", items_per_hour = 20 }]
 id = "night_3"
 label_key = "store_night_3"
 cap_items = 20
+clock = "night"
 
 [[standing]]
 id = "night_3"
@@ -345,6 +347,7 @@ unlocks = [
 id = "evening_4"
 label_key = "store_evening_4"
 cap_items = 5
+clock = "evening"
 
 [[standing]]
 id = "evening_4"
@@ -355,6 +358,7 @@ makes = [{ store = "evening_4", items_per_hour = 20 }]
 id = "night_4"
 label_key = "store_night_4"
 cap_items = 20
+clock = "night"
 
 [[standing]]
 id = "night_4"

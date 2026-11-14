@@ -18,7 +18,7 @@ from . import convert
 from .goalrows import goal_rows
 from .ruledry import order_dry
 from .goals import goals
-from .line_causes import line_infos, offer_cause
+from .line_causes import line_infos, offer_cause, worded_stores
 from .line_models import PeopleBand, PeopleInfo
 from .sources import sources, store_sources
 from . import content_models as cm
@@ -106,7 +106,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES),
         text_entries=[cm.TextEntry(key=k, text=t) for k, t in o.text.items()],
         store_infos=[cm.StoreInfo(store=s.id, label_key=s.label_key, cap=e.units(s.cap_items), made_by=made_by(o, s.id),
-                                  hidden=s.hidden, bonus_bp=bonus_bp(o, s.id))
+                                  hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))
                      for s in o.stores],
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
         threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key) for t in o.threats],
@@ -172,9 +172,9 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
 
 def _offer_infos(o: Opening) -> list[cm.OfferInfo]:
     hidden = {s.id for s in o.stores if s.hidden}
-    cards = {c.id for c in o.cards}
+    cards, worded = {c.id for c in o.cards}, worded_stores(o)
     return [cm.OfferInfo(offer=x.id, text_key=x.text_key, kind=x.kind, line_keys=list(x.line_keys), askers=list(x.askers),
-                         cause=offer_cause(x, cards, hidden), waiting_key=x.waiting_key, expiry_key=x.expiry_key,
+                         cause=offer_cause(x, cards, worded), waiting_key=x.waiting_key, expiry_key=x.expiry_key,
                          permanence_key=x.permanence_key, answers=[
         cm.AnswerInfo(answer=a.id, label_key=a.label_key, cost_key=a.cost_key, role=a.role,
                       change_bp=_changes(a.outcome.modifiers),

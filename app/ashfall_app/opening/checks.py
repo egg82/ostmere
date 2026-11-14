@@ -9,6 +9,7 @@ from .ask_checks import check_asks
 from .band_checks import check_bands
 from .camp_checks import check_camp
 from .chip_checks import check_chip_card, check_chips
+from .face_checks import check_clocks
 from .convert import build_rules, levels
 from .fight_checks import check_fight_content
 from .journal_checks import check_journal
@@ -63,6 +64,7 @@ def check_structure(o: "Opening") -> None:
     check_asks(o)
     check_fights(o)
     check_tallies(o)
+    check_clocks(o)
     check_season_turns(o)
     check_retired_chores(o)
     check_replacements(o)

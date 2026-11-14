@@ -1,6 +1,6 @@
 """A refused card shows why on its face, on the saves week one's typical route plays through days four to six
 (docs/decisions/principles.md, "Progress is stated, never hinted"): each unmet require of a card on the panel is one
-the page draws from the served view and content, a store the player has been shown as its have/need, a level or a
+the page draws from the served view and content, a store the player has been shown or a tally as its have/need, a level or a
 step as its row, a clock with a part of the day as when it opens, and anything else only as the card's countdown.
 The content-wide check is tests/opening/test_requires_shown.py; this one reads real saves."""
 import pytest
@@ -36,12 +36,14 @@ def drawn(cond: Condition, card: CardView, seen: set[str], stores: dict[str, Sto
     if not isinstance(cond.subject, StoreValue):
         return False
     store = cond.subject.store
-    return store in seen or getattr(stores[store], "clock", None) is not None
+    return store in seen or stores[store].tally or stores[store].clock is not None
 
 
-def refused_unshown(p: DayTwoPlayer, stores: dict[str, StoreInfo]) -> list[str]:
-    """`card: require` once per card and require left undrawn on any save from B5 on."""
+def refused_unshown(p: DayTwoPlayer, stores: dict[str, StoreInfo]) -> tuple[list[str], set[str]]:
+    """`card: require` once per card and require left undrawn on any save from B5 on, and the cards seen refused by a
+    require."""
     found: dict[str, None] = {}
+    refused: set[str] = set()
     for s, _ in p.history:
         if s.time < p.landed_at["B5"]:
             continue
@@ -52,14 +54,16 @@ def refused_unshown(p: DayTwoPlayer, stores: dict[str, StoreInfo]) -> list[str]:
                 continue
             requires = index(p.rules).cards[card.card].requires
             for cond in unmet_conditions(s, p.rules, card.card):
-                if cond in requires and not drawn(cond, card, seen, stores):
-                    found[f"{card.card}: {cond}"] = None
-    return list(found)
+                if cond in requires:
+                    refused.add(card.card)
+                    if not drawn(cond, card, seen, stores):
+                        found[f"{card.card}: {cond}"] = None
+    return list(found), refused
 
 
-@pytest.mark.xfail(strict=True, reason="#59: sit_up_5 waits all day on its night with nothing on its face")
 @pytest.mark.parametrize("week_route", ["typical"], indirect=True)
 def test_a_refused_card_shows_why_on_its_face(week_route: tuple[str, DayTwoPlayer], stores: dict[str, StoreInfo]):
     _, p = week_route
-    found = refused_unshown(p, stores)
+    found, refused = refused_unshown(p, stores)
+    assert {"sit_up_5", "bank_fire_6"} <= refused, f"the night cards were never seen refused: {sorted(refused)}"
     assert not found, "\n".join(found)

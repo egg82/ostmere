@@ -6147,6 +6147,27 @@
             "type": "boolean",
             "title": "Hidden"
           },
+          "tally": {
+            "type": "boolean",
+            "title": "Tally"
+          },
+          "clock": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "dawn",
+                  "day",
+                  "evening",
+                  "night"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clock"
+          },
           "bonus_bp": {
             "anyOf": [
               {
@@ -6166,6 +6187,8 @@
           "cap",
           "made_by",
           "hidden",
+          "tally",
+          "clock",
           "bonus_bp"
         ],
         "title": "StoreInfo"

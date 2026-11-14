@@ -4,8 +4,9 @@
 // the trigger that grants the store waits on) draws the gate in its place, as a skill-level or step row, and never names
 // the store; a tap of a short store need's row lights its makers (Need.makers, ui/makerlight.ts) and does not tap the
 // card. A spent one (Need.spent: nothing in play makes it and nothing is left to grant it) says so on its row.
-// A need on a store the player has never been shown (a clock) draws no row, unless it has a gate: the card's countdown
-// is all of it. A skill
+// A need on a clock with a part of the day (StoreInfo.clock) draws when it opens until it is met ("Opens after dark",
+// game/timewords.ts); a tally (StoreInfo.tally) draws as have/need though it has no ledger line; a need on any other
+// store the player has never been shown draws no row, unless it has a gate: the card's countdown is all of it. A skill
 // level or a step once met stays met (levels and completions never fall), so its row goes; a store can fall, so its row stays.
 // While the card works (Card.run full or held) its needs are not drawn: its inputs are drawn as it runs, so the store
 // reads short of a whole input; a run paused for want of one (run paused) draws them.
@@ -14,8 +15,10 @@
 import type { Card, Condition, Need, View } from "../api/types";
 import { sample } from "../game/clock";
 import { completionsOf } from "../game/cues";
+import { clockWords } from "../game/timewords";
+import { UI } from "../game/text";
 import { shownLevel } from "../game/prestige";
-import { el } from "./dom";
+import { el, setText } from "./dom";
 import { lightMakers } from "./makerlight";
 import type { PartContext } from "./part";
 
@@ -50,17 +53,24 @@ export class CardNeeds {
     const skillNeeds = info?.skill_needs ?? [];
     const stepNeeds = info?.step_needs ?? [];
     const seen = new Set(view.unlocked.filter((u) => u.category === "store").map((u) => u.id));
+    const kind = (n: Need): string => {
+      const store = catalog.stores.get(n.store);
+      return n.gate !== null ? "gate" : seen.has(n.store) || store?.tally === true ? "" : store?.clock ? "when" : "unseen";
+    };
     this.needs = card.needs;
-    const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${seen.has(n.store)}:${JSON.stringify(n.gate)}`).join("|");
+    const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|");
     if (shape !== this.shape) {
       this.shape = shape;
       this.stores = card.needs.map((n) => n.store);
-      this.storeRows = card.needs.map((n, i) => this.storeRow(n.gate !== null ? "card-need gate" : seen.has(n.store) ? "card-need" : "card-need unseen", i));
-      for (const row of this.storeRows) row.hidden = row.classList.contains("unseen");
+      this.storeRows = card.needs.map((n, i) => this.storeRow(`card-need ${kind(n)}`.trim(), i));
       const skills = skillNeeds.map(() => el("span", "card-need skill"));
       const steps = stepNeeds.map(() => el("span", "card-need step"));
       this.root.replaceChildren(...this.storeRows, ...skills, ...steps);
     }
+    card.needs.forEach((need, i) => {
+      const row = this.storeRows[i];
+      if (row) row.hidden = row.classList.contains("unseen") || (row.classList.contains("when") && sample(need.segment, view.at) >= need.quantity);
+    });
     const skillNodes = [...this.root.querySelectorAll<HTMLElement>(".card-need.skill")];
     skillNeeds.forEach((need, i) => {
       const node = skillNodes[i];
@@ -103,6 +113,10 @@ export class CardNeeds {
     card.needs.forEach((need, i) => {
       const node = this.storeRows[i];
       if (!node || node.classList.contains("unseen") || need.gate !== null) return;
+      if (node.classList.contains("when")) {
+        setText(node, catalog.text.fill(UI.cardOpens, { when: clockWords(catalog, need.store, need.quantity) ?? "" }));
+        return;
+      }
       const have = sample(need.segment, t);
       const short = card.blocker !== null && have < need.quantity;   // red only while it holds the card back
       drawNeed(node, catalog.format.need(catalog.storeTitle(need.store), MARK, need.quantity, need.spent), catalog.format.items(have), short);

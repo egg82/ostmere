@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.opening.entries import ConditionEntry
-from ashfall_app.opening.face_checks import undrawn
+from ashfall_app.opening.face_checks import check_clocks, undrawn
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from tests.held_ledger import Ledger, dump, load, problems, tally, total
 
@@ -34,7 +34,6 @@ def content() -> Opening:
     return full()
 
 
-@pytest.mark.xfail(strict=True, reason="#59: a card waiting on a night shows nothing for it")
 def test_every_tappable_card_draws_its_requires(content: Opening):
     assert sum(len(c.requires) for c in content.cards) > 20, "checked almost no requires: the check is blind"
     found = wrong(content, load(HELD))
@@ -49,17 +48,31 @@ def planted(o: Opening, card: str, *requires: ConditionEntry) -> Opening:
 @pytest.mark.parametrize(("require", "kind"), [
     (ConditionEntry(test="at_least", subject_kind="unlocked", unlock_kind="feature", id="night", value=1), "unlocked"),
     (ConditionEntry(test="at_most", subject_kind="store", id="stones", value=3), "store"),
-    (ConditionEntry(test="at_least", subject_kind="store", id="arrivals", value=1), "store"),
+    (ConditionEntry(test="at_least", subject_kind="store", id="b7_clock", value=1), "store"),
     (ConditionEntry(test="after_time", value=60), "after_time"),
 ])
 def test_a_require_the_face_cannot_draw_is_named(content: Opening, require: ConditionEntry, kind: str):
     assert ("take_stock", kind, require.id or "") in undrawn(planted(content, "take_stock", require))
 
 
-def test_a_skill_level_and_a_step_are_drawn(content: Opening):
+def test_a_skill_level_a_step_a_tally_and_a_time_of_day_are_drawn(content: Opening):
     o = planted(content, "take_stock", ConditionEntry(test="at_least", subject_kind="skill_level", id="foraging", value=9),
-                ConditionEntry(test="at_least", subject_kind="card_count", id="strike_fire", value=1))
+                ConditionEntry(test="at_least", subject_kind="card_count", id="strike_fire", value=1),
+                ConditionEntry(test="at_least", subject_kind="store", id="arrivals", value=1),
+                ConditionEntry(test="at_least", subject_kind="store", id="night_5", value=5))
     assert not [x for x in undrawn(o) if x[0] == "take_stock"]
+
+
+def test_a_clock_with_no_time_of_day_is_not(content: Opening):
+    stores = [s.model_copy(update={"clock": None}) if s.id == "night_5" else s for s in content.stores]
+    assert ("sit_up_5", "store", "night_5") in undrawn(content.model_copy(update={"stores": stores}))
+
+
+@pytest.mark.parametrize(("store", "says"), [("stones", "shown to the player"), ("bay", "not made by standing actions")])
+def test_a_time_of_day_on_a_store_that_is_no_clock_fails_the_load(content: Opening, store: str, says: str):
+    stores = [s.model_copy(update={"clock": "night"}) if s.id == store else s for s in content.stores]
+    with pytest.raises(ValueError, match=f"store {store}: .*{says}"):
+        check_clocks(content.model_copy(update={"stores": stores}))
 
 
 def test_a_clock_is_a_countdown_only_alone_and_once_its_maker_runs(content: Opening):
