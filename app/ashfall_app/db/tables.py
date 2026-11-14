@@ -131,6 +131,18 @@ save_manifests = Table(
     Column("manifest", Text, nullable=False),
 )
 
+# The journal's composed days (saves/journal.py): one per game day the save has passed, written or not, in the step's
+# transaction that carried the save past it. `notes` is the day's notes in page order, each {subject, slot, key}; `gap`
+# is why a day was not written, null for a written or blank day. Earned history, never pruned; a day is never rewritten.
+save_journal = Table(
+    "save_journal", metadata,
+    Column("save_id", BigInteger, ForeignKey("saves.id", ondelete="CASCADE"), primary_key=True),
+    Column("day", Integer, primary_key=True),
+    Column("notes", JSONB, nullable=False),
+    Column("gap", Text, nullable=True),
+    CheckConstraint("gap IN ('busy', 'away')", name="ck_save_journal_gap"),
+)
+
 # One row per counted request. `who` is an HMAC-SHA256 of the client address under ASHFALL_RATE_KEY (never the
 # address), an account's id, or one constant for a count across everyone; each kind's writer prunes its rows past the
 # longest window it counts.
