@@ -622,13 +622,24 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .cond-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .cond-heading { margin: 0 !important; overflow-wrap: anywhere; }
 .cond-mixes, .cond-stores, .cond-tests { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
-:is(.sheet, .rules) .cond-store, :is(.sheet, .rules) .cond-subject, :is(.sheet, .rules) .cond-mix, :is(.sheet, .rules) .cond-task, :is(.sheet, .rules) .cond-test { min-height: 2.75rem; padding: 0 .8rem; display: inline-flex; align-items: center; gap: .5rem;
+:is(.sheet, .rules) .cond-store, :is(.sheet, .rules) .cond-subject, :is(.sheet, .rules) .cond-mix, :is(.sheet, .rules) .cond-task, :is(.sheet, .rules) .cond-test, :is(.sheet, .rules) :is(.cond-form, .cond-preset) { min-height: 2.75rem; padding: 0 .8rem; display: inline-flex; align-items: center; gap: .5rem;
   background: var(--raise); border: 0; box-shadow: var(--drop); }   /* .quiet buttons, drawn as unframed tiles */
-:is(.sheet, .rules) :is(.cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test):hover { background-color: var(--press); }
-.sheet :is(.quiet, .selector-run, .cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test) { background-color: var(--press); }   /* a sheet is raised already */
-:is(.sheet, .rules) .cond-store[aria-pressed="true"], :is(.sheet, .rules) .cond-subject[aria-pressed="true"], :is(.sheet, .rules) .cond-mix[aria-pressed="true"], :is(.sheet, .rules) .cond-task[aria-pressed="true"], :is(.sheet, .rules) .cond-test[aria-pressed="true"] { color: var(--ink-hi) !important; background: var(--press); box-shadow: inset 0 0 0 1px var(--ink-dim); }
+:is(.sheet, .rules) :is(.cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test, .cond-form, .cond-preset):hover { background-color: var(--press); }
+.sheet :is(.quiet, .selector-run, .cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test, .cond-form, .cond-preset) { background-color: var(--press); }   /* a sheet is raised already */
+:is(.sheet, .rules) .cond-store[aria-pressed="true"], :is(.sheet, .rules) .cond-subject[aria-pressed="true"], :is(.sheet, .rules) .cond-mix[aria-pressed="true"], :is(.sheet, .rules) .cond-task[aria-pressed="true"], :is(.sheet, .rules) .cond-test[aria-pressed="true"], :is(.sheet, .rules) :is(.cond-form, .cond-preset)[aria-pressed="true"] { color: var(--ink-hi) !important; background: var(--press); box-shadow: inset 0 0 0 1px var(--ink-dim); }
 .cond-amount { font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
-.cond-steppers { display: flex; flex-wrap: wrap; gap: .6rem 1rem; }   /* When and Until share a row where they fit */
+.cond-steppers { display: flex; flex-direction: column; gap: .9rem; }   /* When, then Until, each a level of its own (condlevels.ts) */
+/* a level: its label, a stepper and two forms (a share of the cap, or exact) on one row; the named shares under them */
+.cond-level { display: flex; flex-direction: column; gap: .4rem; }
+.cond-level-head { display: flex; align-items: center; gap: .5rem; }
+.cond-level-head .cond-forms { margin-left: auto; }
+.cond-forms, .cond-presets, .stint-shares { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+:is(.sheet, .rules) .cond-form { min-height: 2.2rem; font-size: var(--t-meta); }
+:is(.sheet, .rules, .stint-shares) .cond-preset { min-width: 2.75rem; padding: 0 .6rem; }
+:is(.sheet, .rules) :is(.cond-form, .cond-preset):disabled { opacity: .35; cursor: default; }
+.cond-level .cond-stepper .cond-label { display: none; }   /* the level's head names it; the buttons keep it for a screen reader */
+.stint-shares { justify-content: flex-end; }
+.stint-or { margin-right: .3rem; font-size: var(--t-meta); color: var(--ink); }
 .cond-stepper { display: flex; align-items: center; gap: .5rem; }
 .cond-label { min-width: 3rem; font-size: var(--t-meta); color: var(--ink); }
 :is(.sheet, .rules) .cond-step { min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: var(--t-story); }   /* a .primary */
@@ -761,7 +772,6 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .journal-sheet { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; box-sizing: border-box; border-radius: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
   .selector-run { grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 5rem); grid-template-areas: "dot name bar" "dot note note" ". key key"; }
   .selector-run > .selector-note:empty { display: none; }
-  .cond-steppers { flex-direction: column; }
   .game { padding-bottom: var(--end-h, 0px); }   /* a docked card's measured height (ui/featurecard.ts), so the last rows scroll clear of it */
   .game.editing .editor { position: fixed; z-index: 6; left: 0; right: 0; bottom: 0; top: calc(var(--scene-vh) + 6rem); overflow-y: auto; }
   .cond { position: fixed; z-index: 6; left: 0; right: 0; bottom: 0; top: calc(var(--scene-vh) + 6rem); gap: 0; padding: 0 1rem; background: var(--bg); }   /* a rule's editor, as the mix editor: the choices scroll above the foot, never under it */

@@ -12,7 +12,7 @@ import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, savedVerb }
 import { townNewRule } from "../game/town";
 import { chosen, doChoices, subjectChoices, taskOf, whenChoices, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
-import { bounds, clampRule, defaultRule, readRule, type Test } from "../game/storerule";
+import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
 import { noteOrderRemoved, noteOrderSet, noteRuleChanged } from "../telemetry";
 import { draftOrder, editDraft, headingWords, sameRule, storeCap, type Draft } from "./conditiondraft";
@@ -54,7 +54,7 @@ export class ConditionEditor {
     close.addEventListener("click", () => this.done());
     const head = el("div", "cond-head");
     head.append(this.heading, close);
-    this.levels = new Levels(text, (t) => this.setTest(t), (which, d) => this.step(which, d));
+    this.levels = new Levels(ctx.catalog, (t) => this.setTest(t), (which, level) => this.setLevel(which, level));
     this.subject = new SubjectControl(ctx.catalog, (r) => this.setSubject(r));
     for (const [b, key] of [[this.remove, UI.orderRemove], [this.save, UI.save], [this.more, UI.ruleMoreOptions]] as const) {
       b.type = "button";
@@ -221,11 +221,10 @@ export class ConditionEditor {
     this.draw();
   }
 
-  private step(which: "n" | "m", d: -1 | 1): void {
-    if (!this.draft) return;
-    const rule = this.draft.rule;
-    const next = which === "n" ? { ...rule, n: rule.n + d } : { ...rule, m: (rule.m ?? rule.n) + d };
-    this.draft.rule = clampRule(next, this.cap(rule.store));
+  private setLevel(which: "n" | "m", level: Level): void {
+    const next = this.draft && tryRule({ ...this.draft.rule, [which]: level }, this.cap(this.draft.rule.store));
+    if (!next || !this.draft) return;
+    this.draft.rule = next;
     this.draw();
   }
 
@@ -239,13 +238,12 @@ export class ConditionEditor {
     const { catalog } = this.ctx;
     const { rule } = draft;
     const chip = this.chipNow();
-    const room = bounds(rule.test, this.cap(rule.store), rule.n);
     this.drawHeading();
     const pick = chosen(catalog, view, draft.then);
     markPressed(catalog, view, this.does, this.chips, pick, chip, rule);
     this.levels.fold.root.hidden = !this.full || draft.chip === true || chip !== undefined || rule.store === "";
     const line = view.ledger.find((l) => l.store === rule.store);
-    this.levels.draw(rule, room, this.cap(rule.store), line ? sample(line.segment, view.at) / catalog.content.scales.quantity_per_item : null, (n) => catalog.format.count(n));
+    this.levels.draw(catalog, rule, this.cap(rule.store), line ? sample(line.segment, view.at) / catalog.content.scales.quantity_per_item : null);
     this.subject.draw(view, draft.chip ? undefined : draft.subject);
     markSubject(this.chips, draft.subject);
     this.drawSentence(view);

@@ -597,14 +597,24 @@ THE CLIENT MAY
     condition editor from the chip's first showing on: every chip in view.chips_seen that would be drawn (its
     offered_after, if any, in view.unlocked), whether or not it shows now and whatever task the rule then does.
   - build, read back and word a store rule (an order whose `when` watches a StoreValue), with Q =
-    Scales.quantity_per_item and n, m whole items:
-      "Under {n} {store}, until {m}"                   at_most, value n*Q - 1, release m*Q - 1; 1 <= n < m <= cap
-      "{n} or more {store}, until under {m}"           at_least, value n*Q, release m*Q;       1 <= m < n <= cap
-    so each crossing falls on the amount the page shows. Read back: at_most n = floor((value+1)/Q), m =
-    floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule read back with no band (m == n:
-    an order card with no release) is worded without "until" (ui.rule.below, ui.rule.reaches). The page builds only
-    rules with a band of at least one item, inside the store's cap (LedgerLine.cap), so never one that is always true
-    or flips at one level, and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
+    Scales.quantity_per_item. Each level is whole items n, m or a share of the cap (Share levels above), b in basis
+    points, sent with its flag true and worded by name (ui.level.empty, quarter, half, three_quarters, full at 0,
+    2500, 5000, 7500, 10000) or as ui.level.pct {pct}:
+      "Under {n} {store}, until {m}"                   at_most, value n*Q - 1, release m*Q - 1 (or b)
+      "{store} down to {b}, until {m}"                 at_most, value b, release m*Q - 1 (or b)
+      "{n} or more {store}, until under {m}"           at_least, value n*Q, release m*Q
+      "{n} or more {store}, until down to {b}"         at_least, value n*Q, release b
+      "{store} up to {b}, until under {m}"             at_least, value b, release m*Q
+      "{store} up to {b}, until down to {b}"           at_least, value b, release b
+    so each crossing in items falls on the amount the page shows, and a share is reached at the share itself from
+    either side (engine DESIGN.txt, "SHARE LEVELS"). Read back: a flagged level is its share; at_most n =
+    floor((value+1)/Q), m = floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule of items
+    read back with no band (m == n: an order card with no release) is worded without "until" (ui.rule.below,
+    ui.rule.reaches). A new rule starts with both levels shares (down to a quarter, until three quarters; up to full,
+    until half), in items only on a store too small for those to keep a band; either level of any rule can be turned
+    into the other form where it reads now. The page builds only rules whose levels, read against the store's cap now
+    (LedgerLine.cap) as the engine reads them, have a band of at least one item inside the cap, so never one that is
+    always true or flips at one level, and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
     the store of the rule being edited even without a ledger line (its cap from StoreInfo). It may
     write rules once it has seen one of the player's rules come on and then let go (view.orders_on), and draws no
     rule whose `when` is not on a StoreValue or one of the subject rules below, except a lane's always rule (A LANE
@@ -714,10 +724,17 @@ TEXT AND NUMBERS (one rule)
     ui.order.add                    a new rule's Add
     ui.rule.below {store}{n} | ui.rule.below_until {store}{n}{m} | ui.rule.reaches {store}{n} |
     ui.rule.reaches_until {store}{n}{m}   a store rule's condition, with no band and with one
+    ui.rule.down_to_until {store}{n}{m} | ui.rule.up_to_until {store}{n}{m} | ui.rule.up_to_until_under {store}{n}{m} |
+    ui.rule.reaches_until_down {store}{n}{m}   the same with a share level, by which level is one ("a store rule")
+    ui.level.empty | ui.level.quarter | ui.level.half | ui.level.three_quarters | ui.level.full | ui.level.pct {pct}
+                                    a share level's words; ui.level.mark_quarter | ui.level.mark_half |
+                                    ui.level.mark_three_quarters the editor's short marks for three of them
+    ui.rule.of_full | ui.rule.exact   a level's two forms in the condition editor: a share of the cap, or items
     ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
     ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
     ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits
                                     for under n / n or more, and the store holds `have` now (amounts, sampled)
+    ui.rule.needs_down_to {store}{n}{have} | ui.rule.needs_up_to {store}{n}{have}   the same for a share level
     ui.rule.stuck {n}{store} | ui.rule.unfed {store}{n}   a store rule that cannot let go, or whose mix may stop short
                                     (DRY RULES)
     ui.rule.outranked {rule} | ui.rule.passed_over   why a rule is off: an earlier rule has the hands (its condition's
@@ -728,6 +745,7 @@ TEXT AND NUMBERS (one rule)
     ui.hands.by_rule {store}{n} | ui.hands.until_up {store}{m} | ui.hands.until_down {store}{m}   the hands strip while
                                     a rule's mix or task runs: with no band, until a "below" rule lets go, until a
                                     "reaches" one does
+    ui.hands.until_up_to {store}{m} | ui.hands.until_down_to {store}{m}   the same two, the until a share level
     ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
@@ -938,12 +956,16 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
   - in the mix editor, offer ui.stint.run under the goal rows, never while Save is unavailable, the queue is at
     max_queue, or the editor makes a mix for a rule. Pressed, it lists each row of the edit's dry run whose lands_at
     is not the dry run's `at` (a met goal would pop at once): the goal (ui.goal.store, ui.goal.level) and its time
-    left in the dry run (ui.goal.never for null), never sorted or marked as better. Picking a row sends save_mix
-    (with saveDecisions' renames) when the edit differs from the saved mix, then set_queue with view.queue and the
-    stint {switch_mix {mix id}, until: row.until} at its end, and closes the editor.
+    left in the dry run (ui.goal.never for null), never sorted or marked as better; under a store's row, after
+    ui.stint.or_until, the named shares of that store's cap (a quarter, half, three quarters, full) its whole items
+    have not reached, each an until at_least {store_value, value = release = b, both flags true} with no time (none
+    is served for it). Picking one sends save_mix (with saveDecisions' renames) when the edit differs from the saved
+    mix, then set_queue with view.queue and the stint {switch_mix {mix id}, until: the row's until or the share's} at
+    its end, and closes the editor.
   - in Next (the Rules tab's queue), word a switch_mix entry ui.stint.entry {mix} {goal}: the goal from the row of
     view.goal_rows whose until equals the entry's (kind, subject, value, release), else from the until itself (a store
-    at value, a skill at the counted level). On the controlling entry while its mix runs, add the row's time left
+    at value, a share by ui.goal.store_share {store}{n}, a skill at the counted level). A share until never matches a
+    row. On the controlling entry while its mix runs, add the row's time left
     (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
     store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
   - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed): pressed, it lists the saved

@@ -18,7 +18,7 @@ export type SubjectRule =
 
 /** The subject rule a condition is, or null for any other (a store rule, a chip's, a time). */
 export function readSubject(catalog: Catalog, when: Condition): SubjectRule | null {
-  if (when.kind !== "at_least" || when.value !== when.release) return null;
+  if (when.kind !== "at_least" || when.value !== when.release || when.value_of_cap) return null;
   const w = when.watched;
   if (w.kind === "card_count") return { kind: "count", card: w.card, n: when.value };
   if (w.kind === "skill_level") return { kind: "level", skill: w.skill, n: when.value };

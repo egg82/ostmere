@@ -53,7 +53,7 @@ async function plan(view: View, after: View | null, seeRules = true) {
   rows()[2]?.click();
   await Promise.resolve();
   await Promise.resolve();
-  expect("the mix named, its goals listed", rows().map((r) => r.textContent), ["b until…✕", "Dead wood 302 h"]);
+  expect("the mix named, its goals listed, a store's with its shares not yet reached", rows().map((r) => r.textContent), ["b until…✕", "Dead wood 302 hor until½¾full"]);
   rows()[1]?.querySelector<HTMLElement>(".stint-goal")?.click();
   expect("queued at the end", got.decided, [{ kind: "set_queue", entries: [{ verb: { kind: "switch_mix", mix_id: "b" }, until: woodUntil }] }]);
   expect("closed again", rows().map((r) => r.textContent), ["+ Plan"]);
@@ -65,7 +65,7 @@ async function plan(view: View, after: View | null, seeRules = true) {
   const { rows } = await plan(view, null);
   rows()[0]?.click();
   rows()[1]?.click();
-  expect("the live view's goals", rows().map((r) => r.textContent), ["a until…✕", "Dead wood 301 h"]);
+  expect("the live view's goals", rows().map((r) => r.textContent), ["a until…✕", "Dead wood 301 hor until½¾full"]);
 }
 
 // Lately: an ended stint reads as its mix and goal, then what it ran and when its goal landed; one never seen starting only the landing

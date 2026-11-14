@@ -84,8 +84,8 @@ const wood = catalog.storeLabel("wood");
   const set = r.decided.find((d): d is Extract<Decision, { kind: "set_orders" }> => d.kind === "set_orders");
   const added: Order | undefined = set?.orders.at(-1);
   const when = added?.when;
-  expect("the rule comes on when wood reaches its cap", when && when.kind === "at_least" && when.watched.kind === "store_value" ? [when.watched.store, when.value] : null,
-    ["wood", full.view.ledger.find((l) => l.store === "wood")?.cap]);
+  expect("the rule comes on when wood is full, as a share so it keeps meaning full as the cap grows",
+    when && when.kind === "at_least" && when.watched.kind === "store_value" ? [when.watched.store, when.value, when.value_of_cap] : null, ["wood", 10000, true]);
   expect("and runs what the player picked", JSON.stringify(r.decided).includes('"tend"'), true);
 }
 

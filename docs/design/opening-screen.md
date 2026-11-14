@@ -748,12 +748,17 @@ Remove                                   [Add rule] Remove only when editing; Sa
   one-off, a card at its cap and a retired one are not offered. A task on another lane saves the same order an offered
   card does (`tap_card`). A task on another lane has no rate to state, so it shows no `while … runs` fact.
 - `falls below` comes on below `When` and lets go once the store reaches `Until`; `reaches` comes on at `When` and
-  lets go below `Until`. The band is at least one item and inside the store's cap, so a rule never flips at one
-  level and is never always true (the numbers' conventions: `api/CONTRACT.txt`). A store under two items is off.
-- The words put the number before the store and use no verb (`Under 3 stones, until 8`, `12 or more dry wood, until
-  under 6`), so they read right whatever the store's name.
-- A new store rule starts below a quarter of the cap, until halfway to full (`reaches`: at full, until below half),
-  and is added as the lowest priority. Editing keeps the rule's place; a rule written before bands (an offer with no release) opens with `Until`
+  lets go below `Until`. Each of `When` and `Until` is a share of the store's cap or an exact number, chosen beside
+  it (`of full` or `exact`): a share is picked by name (empty, ¼, ½, ¾, full) or stepped five points at a time, a
+  number stepped an item at a time, and switching keeps the level where it reads now. A share is reached at the share
+  itself from either side, so `down to empty` and `until empty` both mean nothing shown. The band is at least one
+  item and inside the store's cap, so a rule never flips at one level and is never always true (the conventions:
+  `api/CONTRACT.txt`). A store under two items is off.
+- The words put a number before the store and use no verb (`Under 3 stones, until 8`, `12 or more dry wood, until
+  under 6`), so they read right whatever the store's name; a share follows the store (`Dry wood down to a quarter,
+  until three quarters`, `Dry wood up to full, until down to empty`).
+- A new store rule starts as shares, down to a quarter, until three quarters (`reaches`: up to full, until down to
+  half), in items only on a store too small for those to keep a band, and is added as the lowest priority. Editing keeps the rule's place; a rule written before bands (an offer with no release) opens with `Until`
   already filled in, visible in the sentence before Save.
 - **A level or a task's count takes one stepper** in the store levels' place: `Level [−] 3 [+]` reads `Once Foraging
   reaches level 3`, `Times [−] 4 [+]` reads `Once Forage is done 4 times` (`Once Forage is done` at one). Each starts

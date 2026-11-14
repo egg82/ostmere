@@ -89,10 +89,11 @@ const one = (root: FakeEl, sel: string, n = 0): FakeEl => {
   const cond = one(r.root, ".cond");
   expect("the editor opens in the tab", cond.isConnected, true);
   expect("its levels show, unfolded", [one(cond, ".cond-fold-body").hidden, one(cond, ".cond-fold").hidden], [false, true]);
-  expect("on the rule's levels", q(cond, ".cond-fold-body .cond-value").map((n) => n.textContent), ["10", "20"]);
-  one(cond, ".cond-stepper .cond-step", 1).click();   // When +1
+  expect("on the rule's levels", q(cond, '.cond-fold-body [data-form="items"] .cond-value').map((n) => n.textContent), ["10", "20"]);
+  expect("each level in its own form: exact", q(cond, ".cond-form").map((n) => n.getAttribute("aria-pressed")), ["false", "true", "false", "true"]);
+  one(cond, '[data-form="items"] .cond-step', 1).click();   // When +1
   one(cond, ".cond-actions .primary").click();
-  expect("Save sends the rule in place", sent(r.decided[0])?.[0]?.when, buildRule({ store: "wood", test: "below", n: 11, m: 20 }, fixtureContent.scales.quantity_per_item));
+  expect("Save sends the rule in place", sent(r.decided[0])?.[0]?.when, buildRule({ store: "wood", test: "below", n: { items: 11 }, m: { items: 20 } }, fixtureContent.scales.quantity_per_item));
   expect("the others untouched", sent(r.decided[0])?.slice(1), [WARMTH, TIRED_RULE, SHELTER]);
   expect("back on the list", q(r.root, ".rules-list > .rules-row").length, 4);
   const lane = rig();
@@ -207,7 +208,8 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("two taps: Add rule on", one(cond, ".cond-actions .primary").disabled, false);
   one(cond, ".cond-more").click();
   expect("More options: the mixes, the levels folded", [q(cond, ".cond-mix").length > 0, one(cond, ".cond-levels").hidden, one(cond, ".cond-fold-body").hidden], [true, false, true]);
-  expect("the fold states them", q(cond, ".cond-fold-value").map((n) => n.textContent), q(cond, ".cond-fold-body .cond-value").map((n) => n.textContent));
+  expect("the fold states them in words, a new rule's as shares", q(cond, ".cond-fold-value").map((n) => n.textContent), ["a quarter", "three quarters"]);
+  expect("and the fine steps as percentages", q(cond, '.cond-fold-body [data-form="share"] .cond-value').map((n) => n.textContent), ["25%", "75%"]);
   one(cond, ".cond-fold").click();
   expect("one tap opens them", [one(cond, ".cond-fold-body").hidden, one(cond, ".cond-fold").hidden], [false, true]);
   one(cond, ".cond-actions .primary").click();
@@ -256,7 +258,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
 
 // The Mixes list is only mixes, each a rule runs saying how many.
 {
-  const twice: View = { ...tab, orders: [...tab.orders, { ...WOOD, when: buildRule({ store: "wood", test: "reaches", n: 30, m: 20 }, fixtureContent.scales.quantity_per_item) }] };
+  const twice: View = { ...tab, orders: [...tab.orders, { ...WOOD, when: buildRule({ store: "wood", test: "reaches", n: { items: 30 }, m: { items: 20 } }, fixtureContent.scales.quantity_per_item) }] };
   const sel = new MixSelector(context([], [], []));
   sel.show(twice);
   const root = sel.root as unknown as FakeEl;   // a fake DOM double -- it has only what this test reads
@@ -343,4 +345,42 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   e.tab.open({ ...view, orders: [...view.orders, own] }, 4);
   expect("an existing task rule opens on its task", pressed(e.root), ["Smoke roots"]);
   expect("its heading names the task", one(e.root, ".cond-heading").textContent, "Run Smoke roots when…");
+}
+
+// Share levels (CONTRACT.txt, "Share levels"): a new rule's levels are shares, each picked by name or stepped by five
+// points, and either level switches to an exact number and back, standing where it reads now. An existing rule of
+// numbers switches the same way. Dead wood's cap is 40.
+{
+  keeps.keepRuleSeen();
+  const r = rig();
+  one(r.root, ".rules-new").click();
+  const cond = one(r.root, ".cond");
+  one(cond, ".cond-task[data-card=\"gather\"]").click();
+  one(cond, ".cond-store[data-store=\"wood\"]").click();
+  one(cond, ".cond-more").click();
+  one(cond, ".cond-fold").click();
+  const sentence = () => one(cond, ".cond-sentence").textContent;
+  const forms = () => q(cond, ".cond-form").map((b) => b.getAttribute("aria-pressed"));
+  expect("a new rule's two levels: of full", forms(), ["true", "false", "true", "false"]);
+  expect("the default, in words", sentence().startsWith("Dead wood down to a quarter, until three quarters"), true);
+  expect("down to full is always true: its preset is off", one(cond, ".cond-preset", 4).disabled, true);
+  one(cond, ".cond-preset", 7).click();   // Until: half
+  expect("a preset picked by name", sentence().startsWith("Dead wood down to a quarter, until half"), true);
+  one(cond, "[data-form=\"share\"] .cond-step", 1).click();   // When: five points more
+  expect("five points more is a percentage", sentence().startsWith("Dead wood down to 30%, until half"), true);
+  one(cond, ".cond-form", 1).click();   // When: exact
+  expect("switched to a number where it reads now (30% of 40 holds at 12 and under)", sentence().startsWith("Under 13 Dead wood, until half"), true);
+  one(cond, ".cond-actions .primary").click();
+  expect("Add rule sends the mixed rule", sent(r.decided[0])?.at(-1)?.when, buildRule({ store: "wood", test: "below", n: { items: 13 }, m: { share: 5000 } }, fixtureContent.scales.quantity_per_item));
+}
+{
+  const r = rig();
+  one(r.root, ".rules-list .rule-cond", 0).click();
+  const cond = one(r.root, ".cond");
+  one(cond, ".cond-form", 0).click();   // When: of full
+  expect("under 10 of 40 is down to a quarter", one(cond, ".cond-sentence").textContent.startsWith("Dead wood down to a quarter, until 20"), true);
+  one(cond, ".cond-form", 2).click();   // Until: of full
+  expect("until 20 of 40 is until half", one(cond, ".cond-sentence").textContent.startsWith("Dead wood down to a quarter, until half"), true);
+  one(cond, ".cond-actions .primary").click();
+  expect("Save sends it in place, both levels shares", sent(r.decided[0])?.[0]?.when, buildRule({ store: "wood", test: "below", n: { share: 2500 }, m: { share: 5000 } }, fixtureContent.scales.quantity_per_item));
 }

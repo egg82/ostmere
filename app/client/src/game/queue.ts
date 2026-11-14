@@ -25,7 +25,7 @@ export function queueFull(catalog: Catalog, view: View): boolean {
 
 /** Whether `card` would be offered "When ready" if the queue had room. */
 export function queueable(catalog: Catalog, view: View, card: Card): boolean {
-  return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action" && keptReadyAt(view, card) !== null
+  return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action" && keptReadyAt(view, card, catalog.content.scales.quantity_per_item) !== null
     && !waitsOnUnseen(view, card)
     && (card.cap === null || card.completions < card.cap) && !queuedCards(view).includes(card.card);
 }
@@ -51,10 +51,15 @@ export function nextCard(view: View): string | null {
   return head?.kind === "tap_card" ? head.card : null;
 }
 
-/** The queue with a goal stint at its end: `mix` runs over the player's own until `row`'s goal lands (CONTRACT.txt,
- * "Goal stints"). */
-export function queueStint(view: View, mix: string, row: GoalRow): Decision {
-  return { kind: "set_queue", entries: [...view.queue, { verb: { kind: "switch_mix", mix_id: mix }, until: row.until }] };
+/** The queue with a goal stint at its end: `mix` runs over the player's own until `until` holds, a goal row's or a
+ * share of a store's cap (CONTRACT.txt, "Goal stints"). */
+export function queueStint(view: View, mix: string, until: Condition): Decision {
+  return { kind: "set_queue", entries: [...view.queue, { verb: { kind: "switch_mix", mix_id: mix }, until }] };
+}
+
+/** A stint's `until` at a share of `store`'s cap, in basis points: it holds once the store's whole items reach it. */
+export function shareUntil(store: string, share: number): Condition {
+  return { kind: "at_least", watched: { kind: "store_value", store }, value: share, release: share, value_of_cap: true, release_of_cap: true };
 }
 
 /** The goal row whose `until` is `until`, or null (no row: the goal left view.goal_rows, or another client wrote it). */
@@ -64,6 +69,7 @@ export function stintRow(view: View, until: Condition): GoalRow | null {
 
 function sameUntil(a: Condition, b: Condition): boolean {
   if (a.kind !== "at_least" || b.kind !== "at_least" || a.value !== b.value || a.release !== b.release) return false;
+  if ((a.value_of_cap ?? false) !== (b.value_of_cap ?? false) || (a.release_of_cap ?? false) !== (b.release_of_cap ?? false)) return false;
   const [x, y] = [a.watched, b.watched];
   if (x.kind === "store_value" && y.kind === "store_value") return x.store === y.store;
   return x.kind === "skill_level" && y.kind === "skill_level" && x.skill === y.skill;

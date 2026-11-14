@@ -11,14 +11,14 @@
 import "../src/game.css";
 import "../src/fights.css";
 import { wireBegin } from "../src/begin";
-import { fixtureContent } from "./content";
+import { fixtureContent, Q } from "./content";
 import { isJournal, withJournal } from "./journal";
 import { isPrestige, withPrestige } from "./prestige";
 import { isSince, withSince } from "./since";
 import { fixtureApi } from "./fixture-api";
 import { catchingUpApi } from "./catchup";
 import { fixtureManifestUrl } from "./scene-manifest";
-import type { Decision, Step, View } from "../src/api/types";
+import type { Decision, Order, Step, View } from "../src/api/types";
 import type { Phase } from "./steps";
 
 const hash = new URLSearchParams(location.hash.slice(1));
@@ -41,7 +41,15 @@ const dryOf = (v: View, holding: boolean): View => ({ ...v, order_dry: v.orders.
 const stuck = hash.has("stuck");
 // #manydone: every card of the content finished, for the Book's Done page at its fullest.
 const manyDone = (v: View): View => (hash.has("manydone") ? { ...v, completed: fixtureContent.card_infos.map((c) => ({ card: c.card, completions: 3 })) } : v);
-const asStep = (s: Step): Step => ({ ...s, view: manyDone(stuck ? dryOf(s.view, true) : s.view) });
+// #shares: the first rule's levels as shares of the cap (down to a quarter, until three quarters), the second's until
+// as full (CONTRACT.txt, "Share levels"), for the editor and the rule rows in both forms.
+const share = (o: Order, i: number): Order => (o.when.kind !== "at_most" || i > 1 ? o : { ...o, when: i === 0
+  ? { ...o.when, value: 2500, release: 7500, value_of_cap: true, release_of_cap: true } : { ...o.when, release: 10000, release_of_cap: true } });
+const shared = (v: View): View => (hash.has("shares") ? { ...v, orders: v.orders.map(share) } : v);
+// #goalrows: a store goal on wood (30, an hour off), for the goal pickers (ui/stint.ts) with a store's shares under it.
+const woodGoal = (v: View): View => (!hash.has("goalrows") ? v : { ...v, goal_rows: [{ kind: "store", store: "wood", skill: null, target: 30 * Q,
+  lands_at: v.at + 3600, per_hour: 60_000, limit: null, until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false } }] });
+const asStep = (s: Step): Step => ({ ...s, view: woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view))) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,
