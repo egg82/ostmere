@@ -66,20 +66,29 @@ class AtLeast:
     release == value is a plain threshold; release < value is a hysteresis band, so two orders can't flip each other.
     For a SkillLevel subject, value and release are levels; for a store, quantity units; for a CardCount, a count;
     for Unlocked and Running, 0 or 1; for LaneRules, a count.
+
+    value_of_cap, release_of_cap: that level is basis points (0..BP) of the watched store's cap now, read as a quantity
+    wherever the condition is read; a StoreValue subject in the save's orders and queue only (DESIGN.txt, "SHARE
+    LEVELS"). The release-side rule above then holds between the read quantities.
     """
 
     subject: Subject
     value: int
     release: int
+    value_of_cap: bool = False
+    release_of_cap: bool = False
 
 
 @dataclass(frozen=True)
 class AtMost:
-    """True once subject <= value; then stays true until subject > release (release >= value)."""
+    """True once subject <= value; then stays true until subject > release (release >= value). value_of_cap and
+    release_of_cap as AtLeast's."""
 
     subject: Subject
     value: int
     release: int
+    value_of_cap: bool = False
+    release_of_cap: bool = False
 
 
 @dataclass(frozen=True)
