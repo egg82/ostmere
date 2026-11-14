@@ -63,15 +63,15 @@ function newStory(onPhone: boolean): { story: Story; ui: FakeEl } {
   now = 0;
   const story = new Story(testContext().ctx);
   const ui = el("div");
-  ui.append(story.head, story.root);
+  ui.append(story.head, story.root, story.book);
   document.body.replaceChildren(ui);
   return { story, ui: mounted() };
 }
 const strip = (ui: FakeEl): string[] => Array.from(ui.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
 const settle = (story: Story): void => { for (let i = 0; i < 12; i += 1) story.tick(0); };
 const opener = (root: FakeEl): FakeEl => {
-  const b = root.querySelector("button.chron-open");
-  if (!b) throw new Error("no .chron-open button");
+  const b = root.querySelector("button[data-tab=\"book\"]");
+  if (!b) throw new Error("no Book button");
   return b;
 };
 /** A dot is a `.new-dot` element in the story, or the class on the button itself. */

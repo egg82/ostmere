@@ -22,7 +22,7 @@ const line = (key: string, seq: number): LogLine => ({ at: 100 + seq, seq, key, 
 const screen = new Screen(catalog, () => undefined, () => Promise.resolve(null), new Keeps());
 document.body.replaceChildren(screen.root);
 screen.show(dayOneStep("returned", 100));
-const opener = screen.root.querySelector<HTMLElement>("button.chron-open");
+const opener = screen.root.querySelector<HTMLElement>("button[data-tab=\"book\"]");
 const list = screen.root.querySelector<HTMLElement>("ol.chron-all");
 const sheet = screen.root.querySelector<HTMLDialogElement>("dialog.chronicle");
 if (!opener || !list || !sheet) throw new Error("the band holds the Chronicle button and its sheet");

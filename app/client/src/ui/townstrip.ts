@@ -1,19 +1,19 @@
-// The town's strip (docs/design/opening-screen.md, "The town"): under the hands strip, once a person has joined, one row
-// per person present in the hands strip's shape: who, their time split into the cards that hold a share (each with its
+// The town's people (docs/design/opening-screen.md, "The Town view"): first in the Town tab, once a person has joined,
+// one row per person present: their face and who, their time split into the cards that hold a share (each with its
 // share) and the idle remainder, under it the split that runs now while a card of theirs is stopped (runningnow.ts),
 // and the card they are working now with its bar, sampled as the card panel samples it.
 // Change opens the town's mix in the town editor. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../api/types";
-import { sample } from "../game/clock";
 import { people, personOf, townGreyed, townStoppedBy } from "../game/town";
 import { UI } from "../game/text";
 import { el, keyed, setText, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
+import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
 import { RunningNow } from "./runningnow";
 import { splitOf, type Part as Share } from "./townsplit";
 
-interface PersonRow { node: HTMLElement; name: HTMLElement; doing: HTMLElement; split: HTMLElement; fill: HTMLElement; now: RunningNow }
+interface PersonRow extends Row { split: HTMLElement; now: RunningNow }
 
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
@@ -34,7 +34,7 @@ export class TownStrip implements Part {
     head.append(this.status, this.change);
     const body = el("div", "hands-body");
     body.append(head, this.list);
-    this.root.append(el("span", "hands-label", text.get(UI.townTitle)), body);
+    this.root.append(body);
     this.root.hidden = true;
   }
 
@@ -60,28 +60,16 @@ export class TownStrip implements Part {
   tick(t: number): void {
     const view = this.view;
     if (!view) return;
-    for (const [lane, row] of this.rows) {
-      const card = view.cards.find((c) => c.card === personOf(this.ctx.catalog, view, lane).running);
-      const span = card?.bar_total ?? 0;
-      const v = card ? sample(card.bar, t) : 0;
-      row.fill.style.transform = `scaleX(${span > 0 ? (((v % span) + span) % span) / span : 0})`;
-    }
+    for (const [lane, row] of this.rows) drawBar(row, view, personOf(this.ctx.catalog, view, lane).running, t);
   }
 
   private make(lane: string): PersonRow {
-    const node = el("div", "town-person");
-    node.dataset.lane = lane;
-    const name = el("span", "town-name");
-    const doing = el("span", "hands-text town-doing");
+    const row = personRow("town-person", lane);
     const split = el("div", "town-split-of");
-    const track = el("div", "card-track lane-bar");
-    const fill = el("span", "card-fill lane-fill");
-    track.append(fill);
-    const who = el("div", "town-who");
-    who.append(name, doing);
     const now = new RunningNow(this.ctx, lane);
-    node.append(who, split, now.root, track);
-    return { node, name, doing, split, fill, now };
+    row.node.insertBefore(split, row.track);
+    row.node.insertBefore(now.root, row.track);
+    return { ...row, split, now };
   }
 
   private draw(lane: string, view: View): void {
@@ -90,9 +78,7 @@ export class TownStrip implements Part {
     if (!row) return;
     const person = personOf(catalog, view, lane, townGreyed(catalog, view));
     const label = catalog.laneLabel(lane, view);
-    setText(row.name, label);
-    setText(row.doing, person.running ? catalog.cardLabel(person.running) : catalog.text.get(UI.laneIdle));
-    row.doing.classList.toggle("idle", person.running === null);
+    drawWho(this.ctx, row, lane, label, person.running);
     const parts: Share[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
     if (person.idleBp > 0) parts.push({ text: `${catalog.text.fill(UI.townIdle, { person: label })} ${catalog.format.share(person.idleBp)}`, bp: person.idleBp, hue: 5, idle: true });
     const { bar, key } = splitOf(parts);

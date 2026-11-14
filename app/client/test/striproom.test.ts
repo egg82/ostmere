@@ -21,9 +21,7 @@ function strip(story: Story): string[] {
   return Array.from(story.root.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
 }
 function logButton(story: Story): HTMLElement {
-  const b = story.head.querySelector<HTMLElement>(".chron-open");
-  if (!b) throw new Error("no Chronicle button");
-  return b;
+  return story.book;
 }
 const dotted = (story: Story): boolean => logButton(story).querySelector(".new-dot") !== null;
 
@@ -32,8 +30,8 @@ function drawn(phone: boolean, at: number): { story: Story; text: (k: string) =>
   now = at;
   const { ctx } = testContext();
   const story = new Story(ctx);
-  document.body.append(story.head, story.root);
-  return { story, text: (key) => ctx.catalog.text.get(key), done: () => { story.head.remove(); story.root.remove(); } };
+  document.body.append(story.head, story.root, story.book);
+  return { story, text: (key) => ctx.catalog.text.get(key), done: () => { story.head.remove(); story.root.remove(); story.book.remove(); } };
 }
 
 /** Four lines shown one after another, `gap` ms apart. */
@@ -49,11 +47,11 @@ for (const phone of [true, false]) {
   const { story, text, done } = drawn(phone, phone ? 0 : 100_000);
   four(story, 10);
   expect(`${phone ? "phone" : "wider"}: the strip holds the newest line alone`, strip(story), [text("line.4")]);
-  expect(`${phone ? "phone" : "wider"}: lines left with no touch since they showed: the Chronicle is dotted`, dotted(story), true);
-  const log = fakeDocument.querySelector(".chron-open");
-  if (!log) throw new Error("the Chronicle button is not on the page");
+  expect(`${phone ? "phone" : "wider"}: lines left with no touch since they showed: Book is dotted`, dotted(story), true);
+  const log = fakeDocument.querySelector("button[data-tab=\"book\"]");
+  if (!log) throw new Error("Book is not on the page");
   log.dispatchEvent(new FakeEvent("pointerdown"));
-  expect("touching the Chronicle clears its dot", dotted(story), false);
+  expect("touching Book clears its dot", dotted(story), false);
   done();
 }
 
@@ -71,7 +69,7 @@ for (const phone of [true, false]) {
   now += 10;
   story.appendKeys(["line.3"]);
   story.tick(0);
-  expect("one that showed after the touch goes untouched: the Chronicle is dotted", dotted(story), true);
+  expect("one that showed after the touch goes untouched: Book is dotted", dotted(story), true);
   done();
 }
 

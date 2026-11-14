@@ -17,7 +17,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.feedback.open", "ui.feedback.prompt", "ui.feedback.note", "ui.feedback.send", "ui.feedback.cancel",
     "ui.feedback.thanks", "ui.feedback.later",
     "ui.tab.cards",
-    "ui.tab.completed", "ui.tab.town", "ui.tab.book", "ui.book.done",
+    "ui.tab.town", "ui.tab.book", "ui.book.done",
     "ui.hands.idle",
     "ui.lane.idle", "ui.lane.change", "ui.rule.always",
     "ui.town.title", "ui.town.change", "ui.town.idle", "ui.rule.town_always",

@@ -30,10 +30,10 @@ Object.assign(window, { matchMedia: () => ({ matches: false, addEventListener: (
 
 const { ctx } = testContext();
 const story = new Story(ctx);
-document.body.append(story.head, story.root);
+document.body.append(story.head, story.root, story.book);
 const text = (key: string): string => ctx.catalog.text.get(key);
 const strip = (): string[] => Array.from(story.root.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
-const dotted = (): boolean => story.head.querySelector(".chron-open")?.querySelector(".new-dot") !== null;
+const dotted = (): boolean => story.book.querySelector(".new-dot") !== null;
 
 // A layout the fake DOM lacks: every line 20 high, 4 apart, newest last; a room of 68 holds three.
 // The page's types say DOM nodes; under install() they are FakeEls, which carry a settable rect.
@@ -59,8 +59,8 @@ expect("room for three: all three show, oldest first", strip(), ["line.1", "line
 expect("nothing has left: no dot", dotted(), false);
 arrive("line.4");
 expect("a new line pushes out the oldest", strip(), ["line.2", "line.3", "line.4"].map(text));
-expect("an unseen line left: the Chronicle is dotted", dotted(), true);
-fakeDocument.querySelector(".chron-open")?.dispatchEvent(new FakeEvent("pointerdown"));
+expect("an unseen line left: Book is dotted", dotted(), true);
+fakeDocument.querySelector("button[data-tab=\"book\"]")?.dispatchEvent(new FakeEvent("pointerdown"));
 fakeDocument.body.dispatchEvent(new FakeEvent("pointerdown"));
 expect("touching clears the dot", dotted(), false);
 

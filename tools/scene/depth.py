@@ -10,7 +10,7 @@ sorted too, each at the row it lies on, so a figure out there is behind the haze
 """
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from typing import TYPE_CHECKING
 
 from dayone_world import FOG_BANDS, STEAM, fog_ground, steam_ground
@@ -22,8 +22,9 @@ if TYPE_CHECKING:
 FLAT = frozenset({
     "ruin", "ridge_shape", "ridge_bare", "track", "dead_field", "frost", "cairns_1",
     "cairns_2", "cairns_3", "kill", "wolf_prints", "ring_prints", "ridge_shapes", "road_smoke",
-    "cleared", "prints", "ring", "fire_laid", "clay_hearth_1", "clay_hearth_2", "clay_hearth_3", "hearth_stones_1",
-    "hearth_stones_2", "hearth_stones_3", "larder_floor_1", "larder_floor_2", "larder_floor_3", "raised_bed_1",
+    "cleared", "crack_glow", "warm_glow", "warm_glow_5", "warm_glow_6", "warm_glow_7", "prints", "ring", "fire_laid",
+    "clay_hearth_1", "clay_hearth_2", "clay_hearth_3", "hearth_stones_1", "hearth_stones_2", "hearth_stones_3",
+    "larder_floor_1", "larder_floor_2", "larder_floor_3", "raised_bed_1",
     "raised_bed_2", "raised_bed_3", "turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2",
     "ashed_3", "pelt_pegged_1", "pelt_pegged_2", "gap_ring", "gap_ring_ghost", "watch_ring", "watch_ring_ghost",
     "cellar_1", "cellar_2", "cellar_3", "cellar_4",
@@ -55,7 +56,8 @@ PART_OF: Mapping[str, str] = {
     "hut_ghost": "hut", "meat_on_rack": "smoke_rack", "meat_on_rack_again": "smoke_rack", "fungus_birch": "birch_log",
     "fungus_torn": "birch_log", "claw_marks": "birch_log", "birch_stump": "birch_log", "pyre_flames": "pyre",
     "lamp_1": "palisade_9", "lamp_2": "palisade_9", "lamps_lit": "palisade_9", "gap_laid": "gap_ring", "gap_lit": "gap_ring",
-    "watch_laid": "watch_ring", "watch_lit": "watch_ring",
+    "watch_laid": "watch_ring", "watch_lit": "watch_ring", "clay_hearth_2_front": "clay_hearth_1_front",
+    "clay_hearth_3_front": "clay_hearth_2_front",
 }
 """Layers drawn as part of another layer's art, to the layer they belong to."""
 
@@ -86,6 +88,31 @@ def arrange(entries: Sequence[Entry], bottoms: Mapping[str, int]) -> list[Entry]
     for e in sorted_band:
         e["base"] = base_of(e["id"])
     return [*flat, *sorted_band, *over]
+
+
+PASSES = ("base", "ungraded", "front")
+"""The page's passes, in the order it draws them (scene/manifest.ts passOf): each over everything before it."""
+
+
+def pass_of(entry: Entry) -> str:
+    return "front" if entry.get("front") else "ungraded" if entry.get("ungraded") else "base"
+
+
+HELD_MISDRAWN = frozenset({("figure_n2_guarding", "lamps_lit")})
+"""Pairs misdrawn today that no single pass can fix, held so the check stays on for the rest: may only shrink. The
+guard stands before the lit lamps on one night and behind the gap's fires on another; a layer per night would fix it."""
+
+
+def misdrawn(entries: Sequence[Entry], overlap: Callable[[str, str], bool]) -> list[tuple[str, str]]:
+    """Pairs (near, far) of `entries` (arranged, all shown at once) where the depth puts `near` in front of `far` but
+    the page draws `far` over it where their pixels meet (`overlap`): an ungraded or front pass laid over something
+    standing nearer. Flat ground is behind everything standing; lights and overlays are not things and are skipped."""
+    order = draw_order(entries)
+    drawn = {e["id"]: (PASSES.index(pass_of(e)), i) for i, e in enumerate(order)}
+    things = [e for e in order if not is_overlay(e)]
+    deep = {e["id"]: (1, e["base"], drawn[e["id"]][1]) if "base" in e else (0, 0, drawn[e["id"]][1]) for e in things}
+    return [(a["id"], b["id"]) for a in things for b in things
+            if deep[a["id"]] > deep[b["id"]] and drawn[a["id"]] < drawn[b["id"]] and overlap(a["id"], b["id"])]
 
 
 def draw_order(entries: Sequence[Entry]) -> list[Entry]:

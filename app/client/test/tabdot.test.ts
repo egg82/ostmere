@@ -33,7 +33,7 @@ function rig(): { screen: Screen; tabs: HTMLElement[]; dot: () => boolean } {
 
 {
   const { screen, tabs, dot } = rig();
-  tabs[1]?.click();   // Completed
+  tabs[2]?.click();   // Rules
   screen.show(withCard);
   expect("a card arrives on another tab: Tasks is dotted", dot(), true);
   tabs[0]?.click();

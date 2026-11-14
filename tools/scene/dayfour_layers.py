@@ -72,6 +72,16 @@ def hearth_layers() -> list[Layer]:
     return [Layer(id=f"hearth_stones_{n}", img=made.hearth_stones(n), when=f"pushes:hearth_stones@{n}") for n in (1, 2, 3)]
 
 
+def ground_light_layers() -> list[Layer]:
+    """The cracks' glow of day three's warm ground, back each night: in the ground, under everything standing."""
+    glow = day3_world.warm_glow(146)
+    return [
+        Layer(id="warm_glow_5", img=glow, when="action:night_5", until="feature:morning_6", blend="screen"),
+        Layer(id="warm_glow_6", img=glow, when="action:night_6", until="feature:morning_7", blend="screen"),
+        Layer(id="warm_glow_7", img=glow, when="action:night_7", until="feature:drift", blend="screen"),
+    ]
+
+
 def made_layers() -> list[Layer]:
     bay2 = made.bay2()
     return [
@@ -105,7 +115,8 @@ def figure_layers(away: str) -> list[Layer]:
         Layer(id="figure_n1_far_side", img=poses.n1_far_side(), when=N1_FAR, until=N1_BUSY, front=True),
         Layer(id="figure_n2_watching", img=poses.n2_watching(), when=d3.N2_WATCH, front=True),
         Layer(id="figure_n3_at_edge", img=poses.n3_at_edge(), when="feature:pair_offer", until="feature:pair_joined", front=True),
-        Layer(id="figure_n4_at_edge", img=poses.n4_seated_at_edge(), when="feature:pair_offer", until="feature:pair_joined"),
+        Layer(id="figure_n4_at_edge", img=poses.n4_seated_at_edge(), when="feature:pair_offer", until="feature:pair_joined",
+              front=True),
         Layer(id="figure_n3_laying_bay", img=poses.n3_laying_bay(), when="running:n3_build_bay"),
         Layer(id="figure_n3_digging", img=poses.n3_digging(), when="running:n3_dig_bed"),
         *d2.task_layers("n3", poses.N3, N3_TASKS, N3_OFF, NIGHT_6, MORNING_7),
@@ -136,14 +147,10 @@ def _crows(a: tuple[float, float], b: tuple[float, float]) -> Image.Image:
 
 
 def light_layers() -> list[Layer]:
-    """The nights' lights; the cracks' glow of day three's warm ground comes back each night."""
-    glow = day3_world.warm_glow(146)
+    """The nights' lights."""
     return [
         Layer(id="eyes", img=world.eyes(), when="feature:wolves", until=COMBAT, blend="screen", ungraded=True),
         Layer(id="wood_steam", img=world.wood_steam(), when=HAND),
-        Layer(id="warm_glow_5", img=glow, when="action:night_5", until="feature:morning_6", blend="screen"),
-        Layer(id="warm_glow_6", img=glow, when="action:night_6", until="feature:morning_7", blend="screen"),
-        Layer(id="warm_glow_7", img=glow, when="action:night_7", until="feature:drift", blend="screen"),
         Layer(id="firelight_dusk_5", img=firelight(0.7), when="action:night_5", until="feature:morning_6", blend="screen",
               ungraded=True),
         Layer(id="firelight_dusk_6", img=firelight(0.7), when="action:night_6", until="feature:morning_7", blend="screen",

@@ -37,7 +37,7 @@ const catalog = new Catalog(content);
 const text = (key: string): string => catalog.text.get(key);
 const visible = (screen: Screen): string[] => [...screen.root.querySelectorAll("ol.lines > li")].filter((n) => !n.classList.contains("held")).map((n) => n.textContent ?? "");
 const logged = (screen: Screen): string[] => {
-  (document.querySelector(".chron-open") as HTMLButtonElement).click();
+  (document.querySelector("button[data-tab=\"book\"]") as HTMLButtonElement).click();
   return [...document.querySelectorAll(".chron-all .v-body .chron-text")].map((n) => n.textContent ?? "");
 };
 

@@ -51,7 +51,7 @@ queue holds the next line back). The strip sits off the art, under it, and shows
 fit, whole: its height is the tallest story line in the content at its width, so no line is cut and none arriving moves anything (lines on the art, in a band
 under the chips, were cut at their first row by the chip row through ten-odd fixes; a phone band cut to a line or two
 lost lines mid-sentence for that same cold tester). A line that leaves the strip before the player has touched anything since
-it showed may not have been read, so the Chronicle button takes the quiet dot until it is touched. The strip shows
+it showed may not have been read, so the tabs' Book takes the quiet dot until it is touched. The strip shows
 story lines only (a story beat's, a tap's, the body's); a find's, a level's, a rule's and a fight's go to the chronicle
 alone, which is the record (`decisions.md`, "The chronicle and unwrap, as built").
 

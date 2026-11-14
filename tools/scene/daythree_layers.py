@@ -71,11 +71,21 @@ def under_layers() -> list[Layer]:
 
 
 def hearth_layers() -> list[Layer]:
-    """The hearth's courses round the fire (drawn before the flames, so the fire stands in it) and the pot on its rim."""
+    """The hearth's courses round the fire, on the ground behind the flames except for the near wall across them,
+    which stands in front (the page's front pass, over the lit fire), and the pot on its rim."""
+    far, near = zip(*(fire.hearth(n) for n in (1, 2, 3)))
     return [
-        *_staged("clay_hearth", [fire.hearth(n) for n in (1, 2, 3)], [1, 3, 4]),
-        Layer(id="stew_pot", img=fire.pot(), when="pushes:clay_hearth@1"),
+        *_staged("clay_hearth", list(far), [1, 3, 4]),
+        *[Layer(id=f"{layer['id']}_front", img=layer["img"], when=layer["when"], front=True)
+          for layer in _staged("clay_hearth", list(near), [1, 3, 4])],
+        Layer(id="stew_pot", img=fire.pot(), when="pushes:clay_hearth@1", front=True),
     ]
+
+
+def ground_light_layers() -> list[Layer]:
+    """The cracks' faint red round the hearth: in the ground, so under the hearth and everything standing."""
+    return [Layer(id="warm_glow", img=world.warm_glow(146), when="feature:warm_ground", until="feature:morning_5",
+                  blend="screen")]
 
 
 def made_layers() -> list[Layer]:
@@ -100,7 +110,8 @@ def figure_layers(away: str) -> list[Layer]:
         Layer(id="figure_walking_edge", img=poses.walking_the_rim(), when=EDGE),
         Layer(id="figure_away_track", img=poses.away_on_the_track(), when=TRIP),
         Layer(id="figure_digging", img=poses.digging_at_the_gap(), when=DIG, until=TRIP),
-        *[Layer(id=f"figure_building_{c}", img=build_at(WORK[c]), when=r, until=away) for c, r in COMFORTS.items()],
+        *[Layer(id=f"figure_building_{c}", img=build_at(WORK[c]), when=r, until=away, front=c == "clay_hearth")
+          for c, r in COMFORTS.items()],
         Layer(id="figure_n1_watching", img=poses.n1_watching(), when="running:n1_watch"),
         Layer(id="figure_n1_building_watch", img=poses.laying(poses.N1, poses.LAYING["watch"], "left"),
               when="running:n1_build_watch"),
@@ -119,5 +130,4 @@ def light_layers() -> list[Layer]:
         Layer(id="firelight_dusk_4", img=firelight(0.7), when="action:evening_4", until="feature:morning_5",
               blend="screen", ungraded=True),
         Layer(id="watch_light", img=fire.watch_light(), when="store:watch_done@2", blend="screen", ungraded=True),
-        Layer(id="warm_glow", img=world.warm_glow(146), when="feature:warm_ground", until="feature:morning_5", blend="screen"),
     ]

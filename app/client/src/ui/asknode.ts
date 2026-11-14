@@ -14,8 +14,8 @@ export interface AskNode {
   refresh(view: View, figures: ReadonlyMap<string, string[]>): void;
 }
 
-/** A person's face: the first letter of the name, in the lane's hue. */
-function face(ctx: PartContext, lane: string, name: string): HTMLElement {
+/** A person's face: the first letter of the name, in the lane's hue (an ask's, and the Town view's rows). */
+export function face(ctx: PartContext, lane: string, name: string): HTMLElement {
   const hue = ctx.catalog.content.lane_infos.findIndex((l) => l.lane === lane);
   const node = el("span", `ask-face hue-${Math.max(hue, 0) % 6}`, name.charAt(0).toUpperCase());
   node.setAttribute("aria-hidden", "true");

@@ -32,7 +32,7 @@ function opened(lines: LogLine[], now: number, visits: Array<{ left: number; bac
   screen.show(dayOneStep("returned", 100));
   const landed = dayOneStep("landed", now);
   screen.show({ ...landed, view: { ...landed.view, offers }, lines }, true);
-  (screen.root.querySelector("button.chron-open") as HTMLButtonElement).click();
+  (screen.root.querySelector("button[data-tab=\"book\"]") as HTMLButtonElement).click();
   const heading = screen.root.querySelector("dialog.chronicle > .panel-heading");
   expect("the sheet's heading", heading?.textContent, text(UI.chronicle));
   return screen;
@@ -104,7 +104,7 @@ const tap = (s: Screen, sel: string): void => (s.root.querySelector(sel) as HTML
   const first = fixtureStep("rulestab", 200_000);
   screen.show(first);
   screen.show({ ...first, view: { ...first.view, at: first.view.at + 100 } });   // the same runs, a later view
-  (screen.root.querySelector("button.chron-open") as HTMLButtonElement).click();
+  (screen.root.querySelector("button[data-tab=\"book\"]") as HTMLButtonElement).click();
   tap(screen, '.chron-filter[data-filter="rules"]');
   const found = stretches(screen).map(shown).flat();
   expect("what the rules did is under Rules, each start and let-go once however many Steps repeat it",

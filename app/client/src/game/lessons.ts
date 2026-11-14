@@ -142,7 +142,7 @@ export const LESSONS: readonly Lesson[] = [
     trigger: `[data-teach="dry-line"]`,
     steps: [
       { target: (s) => `[data-teach="dry-line"][data-store="${s["store"]}"]`, line: (c, s) => c.text.fill(UI.lessonDryLine, { store: c.storeLabel(s["store"] ?? ""), card: c.cardLabel(s["card"] ?? "") }), ends: "read" },
-      { target: () => `.hands-mix .hands-meta .hands-edit`, line: (c, s) => c.text.fill(UI.lessonDryEdit, { task: c.cardLabel(s["maker"] ?? ""), store: c.storeLabel(s["store"] ?? "") }), ends: "touch" },
+      { target: () => `.hands-meta .hands-edit`, line: (c, s) => c.text.fill(UI.lessonDryEdit, { task: c.cardLabel(s["maker"] ?? ""), store: c.storeLabel(s["store"] ?? "") }), ends: "touch" },
       { target: (s) => `.editor .add-card[data-card="${s["maker"]}"]`, line: (c, s) => c.text.fill(UI.lessonStoppedAdd, { task: c.cardLabel(s["maker"] ?? "") }), ends: "touch" },
       { target: () => `.editor .editor-head .primary`, line: (c, s) => c.text.fill(UI.lessonDrySave, { card: c.cardLabel(s["card"] ?? ""), task: c.cardLabel(s["maker"] ?? ""), store: c.storeLabel(s["store"] ?? "") }), ends: "touch" },
       { target: () => `.hands .hands-mix`, line: (c) => c.text.get(UI.lessonDryRule), ends: "read" },
