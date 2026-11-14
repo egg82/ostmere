@@ -250,7 +250,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .book .sheet-actions .quiet { min-height: 2.75rem; }
 .tab[data-tab="cards"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='3' y='3' width='6' height='6'/%3E%3Crect x='11' y='3' width='6' height='6'/%3E%3Crect x='3' y='11' width='6' height='6'/%3E%3Crect x='11' y='11' width='6' height='6'/%3E%3C/svg%3E"); }
 .tab[data-tab="town"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 17 L10 4 L17 17 Z M10 17 L10 12'/%3E%3C/svg%3E"); }
-.tab[data-tab="rules"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 5h9M3 10h9M3 15h6M14 13l3 2-3 2'/%3E%3C/svg%3E"); }
+.tab[data-tab="rules"], .line-rule { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 5h9M3 10h9M3 15h6M14 13l3 2-3 2'/%3E%3C/svg%3E"); }
 .tab[data-tab="book"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M10 5 C7 3 4 3 2 4 V16 C4 15 7 15 10 17 C13 15 16 15 18 16 V4 C16 3 13 3 10 5 Z M10 5 V17'/%3E%3C/svg%3E"); }
 
 /* cards */
@@ -347,7 +347,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 
 /* the ledger: groups on hairlines, each a label over aligned rows of name, rate, and stock with its time */
 .ledger-group { margin: .5rem 0 0; padding: .5rem 0 .15rem; border-top: 1px solid var(--rule); font-size: var(--t-meta); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
-.ledger-lines { display: flex; flex-direction: column; }   /* a list: aligned rows, not boxes (nothing in a line is tappable but its buttons) */
+.ledger-lines { display: flex; flex-direction: column; }   /* a list: aligned rows, not boxes (a line taps through only to the rule that watches it, ui/linerule.ts) */
 .ledger-item { display: flex; flex-direction: column; gap: .4rem; }
 .ledger-asks:empty { display: none; }   /* a phone's red and full lines above the cards (ui/ledger.ts, `asks`); none, no room */
 .line {
@@ -356,6 +356,10 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
   color: var(--ink-hi); transition: color .3s, background .3s;
 }
 .line-name { grid-area: name; color: var(--ink); overflow-wrap: break-word; }
+.line-rule { display: inline-block; width: .85rem; height: .85rem; margin-left: .45rem; padding: 0; border: 0; vertical-align: -.1em; background: var(--ink-dim); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; cursor: pointer; }   /* a rule watches this store: the Rules tab's own icon, small and dim */
+.line-rule[hidden] { display: none; }
+.line.ruled { cursor: pointer; }
+.line.ruled:hover .line-rule, .line-rule:focus-visible { background: var(--ink-hi); outline: none; }
 .line-rate { grid-area: rate; color: var(--ink-hi); font-variant-numeric: tabular-nums; text-align: right; }
 .line-amount, .line-eta { font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; text-align: right; }
 .line-amount { grid-area: amount; }
