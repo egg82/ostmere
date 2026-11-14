@@ -16,7 +16,7 @@ from .index import index
 from .instant import resolve_instant
 from .manifest import Manifest, ManifestOffer, declared, read_manifest
 from .rebuild import rebuild
-from .renaming import Rename, Renamer, renamed_save
+from .renaming import Rename, Renamer, Retired, renamed_save
 from .rulelog import rule_changes
 from .rules import Rules
 from .segments import Segment
@@ -28,14 +28,15 @@ from .unlocks import unlock_key
 from .upgrade import upgrade
 
 
-def rebase(text: str, rules: Rules, renames: tuple[Rename, ...] = ()) -> Save:
+def rebase(text: str, rules: Rules, renames: tuple[Rename | Retired, ...] = ()) -> Save:
     """The save `text` holds, under `rules`: decode(text, rules) when it was written under them; otherwise upgraded,
     renamed, reshaped and its instant resolved with evaluation (DESIGN.txt, "Rebase"). RebaseError for an id the
-    save's rules declared that these lack and no rename maps; StateFormatError for a text no encode gave."""
+    save's rules declared that these lack and no rename maps or retirement retires; StateFormatError for a text no
+    encode gave."""
     return _rebase(text, rules, renames, ignore)
 
 
-def rebase_logged(text: str, rules: Rules, renames: tuple[Rename, ...] = ()) -> Step:
+def rebase_logged(text: str, rules: Rules, renames: tuple[Rename | Retired, ...] = ()) -> Step:
     """rebase(), plus the lines its instant emitted (all at the save's time, seq from 0) and its rule changes: each
     order's latch that the instant turned, a rule an outcome installed included (DESIGN.txt, "Rebase" in part
     "TOWNSFOLK, INSTALLED RULES AND OFFERS")."""
@@ -44,19 +45,19 @@ def rebase_logged(text: str, rules: Rules, renames: tuple[Rename, ...] = ()) -> 
     return Step(after, numbered(lines), rule_changes=rule_changes(before, after, rules))
 
 
-def _rebase(text: str, rules: Rules, renames: tuple[Rename, ...], emit: Emit) -> Save:
+def _rebase(text: str, rules: Rules, renames: tuple[Rename | Retired, ...], emit: Emit) -> Save:
     return _rebased(text, rules, renames, emit)[1]
 
 
-def _rebased(text: str, rules: Rules, renames: tuple[Rename, ...], emit: Emit) -> tuple[Save, Save]:
+def _rebased(text: str, rules: Rules, renames: tuple[Rename | Retired, ...], emit: Emit) -> tuple[Save, Save]:
     """The save before step 6 (the reshaped save, or the decoded one) and the result."""
     envelope = _read(text)
     if envelope.get("format") == FORMAT and envelope.get("rules") == rules_digest(rules):
         same = decode(text, rules)
         return same, same
     manifest, save = _loose(upgrade(envelope))
-    m = Renamer(renames, manifest.standing, (c.id for c in manifest.cards))
-    _check_known(m, manifest, rules)
+    m = Renamer((r for r in renames if isinstance(r, Rename)), manifest.standing, (c.id for c in manifest.cards))
+    _check_known(m, manifest, rules, frozenset(r.trigger for r in renames if isinstance(r, Retired)))
     chips = tuple(m.id(IdKind.CHIP, c) for c in manifest.chips)
     triggers = tuple(m.id(IdKind.TRIGGER, t) for t in manifest.triggers)
     work_s = {CardId(m.id(IdKind.CARD, c.id)): c.work_s for c in manifest.cards}
@@ -91,14 +92,16 @@ def _loose(envelope: dict[str, Json]) -> tuple[Manifest, Save]:
     return manifest, save
 
 
-def _check_known(m: Renamer, manifest: Manifest, rules: Rules) -> None:
-    """Step 4: every id the manifest declares is declared by the new rules once renamed; nothing is ever dropped. An
-    answer the save's rules put under one offer stays under that offer (renamed), and a kind or role the save's rules
-    gave stays (an offer that had none may gain one: DESIGN.txt, "OFFER KINDS")."""
+def _check_known(m: Renamer, manifest: Manifest, rules: Rules, retired: frozenset[str]) -> None:
+    """Step 4: every id the manifest declares is declared by the new rules once renamed, or is a trigger they retired
+    (its fired flag goes with it at step 5; what it landed stays). An answer the save's rules put under one offer stays
+    under that offer (renamed), and a kind or role the save's rules gave stays (an offer that had none may gain one:
+    DESIGN.txt, "OFFER KINDS")."""
     now = declared(rules)
     for kind, ids in manifest.declared().items():
         for x in ids:
-            if m.id(kind, x) not in now[kind]:
+            y = m.id(kind, x)
+            if y not in now[kind] and not (kind is IdKind.TRIGGER and y in retired):
                 raise RebaseError(kind, x)
     under = {a.id: o.id for o in rules.offers for a in o.answers}
     for o in manifest.offers:

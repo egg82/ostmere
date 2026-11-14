@@ -799,8 +799,8 @@ CHOICES (saves across releases)
   reads back as the same verb without it (verb_from_json), so old decision logs still replay.
 - Rebase: rebase(text, rules, renames) -> Save, pure (engine/rebase.py); rebase_logged(text, rules, renames) -> Step,
   its save that same Save and its lines those of step 6, all at the save's time, seq from 0. renames is a tuple of
-  Rename. RebaseError is an EngineError carrying .kind (an IdKind) and .id. rebase, rebase_logged, Rename, IdKind,
-  RebaseError, UPGRADES and OLDEST_FORMAT are exported by the engine package. When the text's format is FORMAT and
+  Rename and Retired. RebaseError is an EngineError carrying .kind (an IdKind) and .id. rebase, rebase_logged, Rename, IdKind,
+  Retired, RebaseError, UPGRADES and OLDEST_FORMAT are exported by the engine package. When the text's format is FORMAT and
   its digest is rules_digest(rules), the result is decode(text, rules) with no lines, renames unread: the save is
   already under these rules. Otherwise, in order:
   1. upgrade the envelope to FORMAT (above);
@@ -813,7 +813,8 @@ CHOICES (saves across releases)
      SkillLevel), the unlock set and Unlocked subjects, chips and triggers (through the manifest), and modifiers'
      targets and sources. Mix ids are the player's names and are never renamed;
   4. an id the manifest declares that, renamed, the new rules do not declare raises RebaseError(kind, id), id as the
-     save had it: nothing is ever dropped. An id the manifest does not declare passes through as it is (an order may
+     save had it: nothing is ever dropped, but a trigger a Retired names (renamed), whose fired flag goes at step 5
+     while everything its outcome landed stays. An id the manifest does not declare passes through as it is (an order may
      name a card no rules have: "Orders"); a modifier's source is a label and never raises;
   5. build the canonical save under the new rules, at the same time: stores in rules order, each at its value, a new
      store at its initial value, a value above its store's cap under the save's stack (reachable only by lowering a
@@ -837,6 +838,10 @@ CHOICES (saves across releases)
   by their own); a modifier's source by SOURCE. Applied transitively: a -> b and b -> c map a to c, so one table holding
   every rename ever released maps a save from any older release. A cycle raises RebaseError(kind, id). Content keeps the
   table in app/ashfall_app/opening/renames.toml.
+- Retired: Retired(trigger), a trigger gone from the rules for good. A save that fired it keeps what its outcome
+  landed (its unlocks, its stores) and loses only the flag; one that had not never gets the outcome. Content retires
+  only the triggers it made for journal notes it retired (renames.toml: a `note` with no `to`), whose outcomes are
+  unlocks nothing reads once the note is gone.
 - Forward-only: what the save had at its last write stands; the time away after it runs under the new rules (the first
   advance after a rebase). A change meant to be retroactive is a later data migration, never a flag on saves.
 - Release lock (content, beside the engine): app/ashfall_app/opening/released/ids.json, written only by
@@ -849,7 +854,9 @@ CHOICES (saves across releases)
   declarations; change a card's work_s or lane.
   Needs a mapping (red until renames.toml maps it): rename any id; remove a released id of any kind but card. A removed
   card is red with "retire it instead"; mapping it to a new card id is a rename, and fine. A line key is retired by a
-  `line` entry with no `to`: no text shows it, and a stored line carrying it is dropped when a save opens.
+  `line` entry with no `to`: no text shows it, and a stored line carrying it is dropped when a save opens. A journal
+  note or entry is retired by a `note` or `entry` entry with no `to`: nothing writes it and a save keeps its unlock; a
+  retired note retires its loader-made trigger too (Retired). No other kind is retired.
   Forbidden after launch (red): reuse a released or renamed-away id (a rename's target is always a new id); lower a
   store's or a card's cap (an uncapped card given a cap included); change or remove a released curve threshold; change
   a released trigger's outcome, compared after renames (add a new trigger instead; this also catches inserting a camp
@@ -863,14 +870,14 @@ CHOICES (saves across releases)
   class is red. Before cutover (LAUNCHED False in the tool) --reset rewrites the lock from the content alone; after
   cutover, never.
 
-INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; R renames; s a save the engine
-returned under r; "allowed" means a change the release lock passes, with R its renames)
+INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; R renames and retirements; s a save the
+engine returned under r; "allowed" means a change the release lock passes, with R its renames)
 47. Identity: rebase(encode(s, r), r, R) == s for any R, and rebase_logged's lines are empty.
 48. Idempotent: for s2 = rebase(x, r2, R), rebase(encode(s2, r2), r2, R) == s2.
 49. Nothing earned taken back, for an allowed change from r to r2 and s2 = rebase(encode(s, r), r2, R), each id read
     through R: s2.time == s.time; every store of s holds at least its value in s; every skill's XP is at least its XP
     in s; every card's completions and raised equal those in s; s2.unlocked holds every unlock of s; every trigger
-    fired in s is fired in s2; ended_at and mixes equal those of s; s2.orders is s.orders plus only what a
+    fired in s is fired in s2 unless R retires it; ended_at and mixes equal those of s; s2.orders is s.orders plus only what a
     RuleInstall landing at the rebase instant adds (invariant 59); and s2.modifiers begins with s.modifiers
     (latches, the queue and active are as resolving the instant under r2 leaves them).
 50. New content defaults: in s2, a store new in r2 holds its initial value and a skill new in r2 XP 0, unless an
@@ -881,7 +888,8 @@ returned under r; "allowed" means a change the release lock passes, with R its r
 52. Moved lanes: a lane in s whose card's lane differs in r2 is free in s2, and that card's work is kept (rescaled as
     51).
 53. Unknown ids: when an id the manifest of encode(s, r) declares is neither declared by r2 nor renamed by R to an id
-    r2 declares, rebase raises RebaseError naming that id's kind and id; it never returns a save without it.
+    r2 declares, nor a trigger R retires, rebase raises RebaseError naming that id's kind and id; it never returns a
+    save without it.
 54. Composition: for allowed changes r -> r2 (renames R1) and r2 -> r3 (renames R2), rebase(encode(s, r), r3, R1 + R2)
     succeeds whenever rebasing through r2 does, and 49 holds between s and the result. The two results need not be
     equal (the instant through r2 resolves under r2, and rescaled bars round twice).
