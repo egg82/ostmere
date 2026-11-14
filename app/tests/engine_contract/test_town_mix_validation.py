@@ -133,3 +133,16 @@ def test_a_player_cannot_make_a_new_town_id_switch_to_a_town_mix_or_queue_one():
         decide(s, r, 0, SetQueue((QueueEntry(SwitchMix(TM), AfterTime(5)),)))
     decide(s, r, 0, orders(Order(ALWAYS, SwitchMix(TM2)), Order(AfterTime(5), SwitchMix(TM))))
     decide(start(r, *hands_mixes()), r, 0, SwitchMix(HM1))
+
+
+@pytest.mark.xfail(strict=True, raises=pytest.fail.Exception, reason="#61: SaveMix lets a saved mix change layer")
+@pytest.mark.parametrize("mix", [Mix(TM, (CardShare(H1, BP),)), Mix(HM1, (CardShare(A1, BP),))],
+                         ids=["the town's mix given a hands card", "a hands mix given a town card"])
+def test_a_save_mix_never_changes_a_saved_mixs_layer(mix: Mix):
+    """Invariant 96 ("Reserved ids"): SaveMix under the id of a saved mix keeps that mix's layer, so a name the player
+    types (a rename or a save as new in the mix editor, which holds hands cards) never reaches the town's mix. The town
+    mix's own edit (test_the_accepted_controls_for_a_town_save_mix) is the control."""
+    r = world((joiner("ja", LA, TM, A1),))
+    s = start(r, *hands_mixes())
+    with pytest.raises(InvalidVerbError):
+        decide(s, r, 0, SaveMix(mix))
