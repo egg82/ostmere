@@ -149,14 +149,15 @@ def save(conn: Connection, save_id: int, account_id: int | None, lock: bool = Fa
 
 
 def save_and(conn: Connection, save_id: int, account_id: int | None, lock: bool, visit: CTE | None,
-             extra: Sequence[Label[Any]] = ()) -> tuple[SaveRecord, Row[Any]] | None:
-    """`save`, with `extra` read in the same statement: the row carries each by its label."""
+             extra: Sequence[Label[Any]] = (),
+             params: dict[str, Any] | None = None) -> tuple[SaveRecord, Row[Any]] | None:
+    """`save`, with `extra` read in the same statement (its bound `params` given): the row carries each by its label."""
     q = select(*_COLUMNS, *extra).where(saves.c.id == save_id, saves.c.deleted_at.is_(None))
     if account_id is not None:
         q = q.where(saves.c.account_id == account_id)
     if visit is not None:
         q = q.add_cte(visit)
-    row = conn.execute(q.with_for_update() if lock else q).one_or_none()
+    row = conn.execute(q.with_for_update() if lock else q, params or {}).one_or_none()
     return None if row is None else (_record(row), row)
 
 

@@ -44,7 +44,7 @@ class Seen:
 def locked(conn: Connection, save_id: int, account_id: int, visit: CTE | None, keys: Sequence[str],
            now: datetime) -> tuple[SaveRecord, Seen] | None:
     """The save's row, locked (saves.save), and what its journal holds as of a request at wall time `now`."""
-    found = save_and(conn, save_id, account_id, True, visit, _seen_columns(keys, now))
+    found = save_and(conn, save_id, account_id, True, visit, _SEEN, {"j_now": now, "j_keys": list(keys)})
     if found is None:
         return None
     record, r = found
@@ -52,23 +52,27 @@ def locked(conn: Connection, save_id: int, account_id: int, visit: CTE | None, k
                         None if r.j_lines is None else [(at, key) for at, key in r.j_lines])
 
 
-def _seen_columns(keys: Sequence[str], now: datetime) -> list[Label[Any]]:
+def _seen_columns() -> list[Label[Any]]:
+    """`locked`'s columns, built once with bound parameters (`j_now`, `j_keys`) so a step does not rebuild them."""
     j, ln = save_journal.c, save_lines.c
     snap = saves.alias("snap")
     next_day = select(func.coalesce(func.max(j.day) + 1, 0)).where(j.save_id == saves.c.id).scalar_subquery()
-    played = func.extract("epoch", bindparam("j_now", now, type_=TIMESTAMP(timezone=True)) - saves.c.started_at)
+    played = func.extract("epoch", bindparam("j_now", type_=TIMESTAMP(timezone=True)) - saves.c.started_at)
     ended = func.floor(func.greatest(saves.c.game_time, played) / DAY_S)
     due = next_day < ended
     days = select(func.coalesce(func.json_agg(aggregate_order_by(func.json_build_array(j.day, j.notes, j.gap), j.day)),
                                 literal_column("'[]'::json"))).where(j.save_id == saves.c.id).scalar_subquery()
     lines = select(func.coalesce(func.json_agg(aggregate_order_by(func.json_build_array(ln.at, ln.key), ln.n)),
                                  literal_column("'[]'::json"))).where(
-        ln.save_id == saves.c.id, ln.key == func.any(bindparam("j_keys", list(keys), type_=ARRAY(Text))),
+        ln.save_id == saves.c.id, ln.key == func.any(bindparam("j_keys", type_=ARRAY(Text))),
         ln.at < ended * DAY_S).scalar_subquery()
     fresh = literal_column("saves.xmin") == select(literal_column("snap.xmin", Text)).where(
         snap.c.id == saves.c.id).scalar_subquery()
     return [next_day.label("j_next"), fresh.label("j_fresh"), case((due, days)).label("j_days"),
             case((due, lines)).label("j_lines")]
+
+
+_SEEN = _seen_columns()
 
 
 def days(conn: Connection, save_id: int) -> list[DayRecord]:
