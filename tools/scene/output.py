@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import NotRequired, TypedDict
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 import depth
 import grades
@@ -103,7 +103,38 @@ def composite(entries: list[Entry], state: State) -> Image.Image:
         return lit
     mask = _stack(Image.new("RGBA", (W, H), (0, 0, 0, 0)), front, state).getchannel("A")
     with_front = grades.apply(_stack(_stack(img, behind, state), front, state), grade).convert("RGBA")
-    return Image.composite(with_front, lit, mask)
+    glows = [e for e in entries if e.get("ungraded") and e.get("blend")]
+    return Image.composite(_stack(with_front, glows, state), lit, mask)
+
+
+def check_depth(entries: list[Entry]) -> None:
+    """No stage draws a layer over one the depth puts in front of it where their pixels meet (depth.misdrawn): the
+    page's ungraded and front passes go over everything in the passes before them, whatever stands nearer."""
+    masks: dict[str, Image.Image] = {}
+
+    def mask(e: Entry) -> Image.Image:
+        if e["id"] not in masks:
+            alpha = Image.open(OUT / e["src"].split("?")[0]).convert("RGBA").getchannel("A")
+            masks[e["id"]] = Image.new("1", (W, H))
+            masks[e["id"]].paste(kit.point(alpha, lambda v: 255 if v else 0).convert("1"), (e["x"], e["y"]))
+        return masks[e["id"]]
+
+    by_id = {e["id"]: e for e in entries}
+
+    def overlap(a: str, b: str) -> bool:
+        return ImageChops.logical_and(mask(by_id[a]), mask(by_id[b])).getbbox() is not None
+
+    faults: dict[tuple[str, str], str] = {}
+    for stage, state in STAGES.items():
+        shown = [e for e in entries if holds(e["when"], state) and not ("until" in e and holds(e["until"], state))]
+        for pair in depth.misdrawn(shown, overlap):
+            faults.setdefault(pair, stage)
+    new = {pair: stage for pair, stage in faults.items() if pair not in depth.HELD_MISDRAWN}
+    if new:
+        raise ValueError("drawn over what stands in front of it: "
+                         + "; ".join(f"{near} under {far} ({stage})" for (near, far), stage in new.items()))
+    if stale := depth.HELD_MISDRAWN - faults.keys():
+        raise ValueError(f"depth.HELD_MISDRAWN holds pairs no longer misdrawn, drop them: {sorted(stale)}")
 
 
 def _stack(img: Image.Image, entries: list[Entry], state: State) -> Image.Image:

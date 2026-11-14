@@ -29,7 +29,7 @@ import night
 import props
 import trips
 from figures import figure
-from output import OUT, Entry, Layer, bake, check_conditions, write_manifest, write_previews
+from output import OUT, Entry, Layer, bake, check_conditions, check_depth, write_manifest, write_previews
 from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, firelight,
                    rack, ruin, seated_at_work, stones_heap, stool, wood_drying)
 from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST
@@ -88,6 +88,9 @@ def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
         Layer(id="roof_posts", img=dayone.roof_posts(EAVE_Y, int(LIP) + 2 + EAVE, (ROOF_X[0] + 24, ROOF_X[1] - 14)),
               when="always"),
         Layer(id="cleared", img=cleared(rng), when="pushes:clear_spot@2"),
+        Layer(id="crack_glow", img=night.crack_glow((W, H), SLAB, 146, SEED), when="end:showing", until="feature:morning", blend="screen"),
+        *d3.ground_light_layers(),
+        *d4.ground_light_layers(),
         Layer(id="prints", img=world.prints(world.PRINTS), when="feature:prints"),
         Layer(id="damp_wood_1", img=damp_heap(0), when="store:damp_wood"),
         Layer(id="damp_wood_2", img=damp_heap(1), when="store:damp_wood@4"),
@@ -190,7 +193,6 @@ def _light_layers() -> list[Layer]:
         *d8.light_layers(),
         *d11.light_layers(),
         *d12.light_layers(),
-        Layer(id="crack_glow", img=night.crack_glow((W, H), SLAB, 146, SEED), when="end:showing", until="feature:morning", blend="screen"),
         Layer(id="ridge_light", img=night.ridge_light((W, H), RIDGE), when="end:showing", until="feature:morning", blend="screen"),
         Layer(id="ash", img=kit.ash((W, H), 420, (196, 188, 176), SEED), when="always"),
     ]
@@ -227,6 +229,7 @@ def main() -> None:
     rng = random.Random(SEED)
     entries = write_layers(rng)
     check_conditions(entries)
+    check_depth(entries)
     write_manifest(entries)
     write_previews(entries)
     total = sum(p.stat().st_size for p in OUT.iterdir())

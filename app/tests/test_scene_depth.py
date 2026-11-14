@@ -72,3 +72,46 @@ def test_a_body_by_the_larder_keeps_its_override_base():
     base = {e["id"]: e.get("base") for e in arranged()}
     assert base["vigil_body"] == base["figure_lying_apart"] == 204
 
+
+def standing(layer_id: str, base: int, pass_: str = "base", blend: str = "") -> Entry:
+    made = entry(layer_id, blend)
+    made["base"] = base
+    if pass_ == "ungraded":
+        made["ungraded"] = True
+    if pass_ == "front":
+        made["front"] = True
+    return made
+
+
+def everywhere(a: str, b: str) -> bool:
+    """Every pair's pixels meet."""
+    return True
+
+
+def nowhere(a: str, b: str) -> bool:
+    return False
+
+
+def test_the_lit_fire_drawn_over_a_nearer_wall_is_misdrawn():
+    """The page draws ungraded layers after every graded one: a wall standing nearer than the fire is hidden by it."""
+    layers = [entry("ruin"), standing("near_wall", 249), standing("fire_lit", 243, "ungraded")]
+    assert depth.misdrawn(layers, everywhere) == [("near_wall", "fire_lit")]
+
+
+def test_a_front_layer_over_a_nearer_figure_is_misdrawn_and_one_behind_is_not():
+    layers = [standing("figure_near", 260), standing("figure_far", 200), standing("wall_front", 249, "front")]
+    assert depth.misdrawn(layers, everywhere) == [("figure_near", "wall_front")]
+
+
+def test_flat_ground_lights_and_pixels_that_never_meet_are_not_misdrawn():
+    """Controls: flat ground lies under the fire, a glow is not a thing, and layers apart cannot hide each other."""
+    glow = entry("firelight", "screen")
+    glow["ungraded"] = True
+    layers = [entry("cleared"), standing("fire_lit", 243, "ungraded"), standing("near_wall", 249), glow]
+    assert depth.misdrawn([layers[0], layers[1], layers[3]], everywhere) == []
+    assert depth.misdrawn(layers, nowhere) == []
+
+
+def test_the_near_wall_in_front_of_the_lit_fire_is_drawn_after_it():
+    layers = [standing("fire_lit", 243, "ungraded"), standing("clay_hearth_1_front", 249, "front")]
+    assert depth.misdrawn(layers, everywhere) == []
