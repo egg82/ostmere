@@ -347,16 +347,16 @@ export const fixtureContent: Content = {
   limits: { max_orders: 64, max_queue: 64, max_mixes: 64 },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
-    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, bonus_bp: null },
-    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, bonus_bp: null },
-    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, bonus_bp: null },
-    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, bonus_bp: null },
-    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, bonus_bp: null },
-    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, bonus_bp: null },   // no ledger line: a chip's store
-    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, bonus_bp: null },
-    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, bonus_bp: null },
-    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, bonus_bp: null },
-    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, bonus_bp: null },   // bookkeeping: never a ledger line
+    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, tally: false, clock: null, bonus_bp: null },   // no ledger line: a chip's store
+    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, bonus_bp: null },   // bookkeeping: never a ledger line
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],

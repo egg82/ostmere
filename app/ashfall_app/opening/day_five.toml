@@ -227,6 +227,7 @@ outcome = { line_keys = ["l_morning_6"], unlocks = [{ unlock_kind = "action", id
 id = "day_6"
 label_key = "store_day_6"
 cap_items = 320
+clock = "day"
 
 [[standing]]
 id = "day_6"
@@ -443,6 +444,7 @@ outcome = { line_keys = ["l_old_watch"] }
 id = "night_6"
 label_key = "store_night_6"
 cap_items = 20
+clock = "night"
 
 [[standing]]
 id = "night_6"

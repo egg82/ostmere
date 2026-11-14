@@ -30,9 +30,10 @@ from .camp_entries import CampEntry, CampLevelEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LaneEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, StoreEntry,
-    TriggerEntry, UnlockEntry, WhileRunningEntry,
+    CardEntry, ChipEntry, Entry, LaneEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
+    UnlockEntry, WhileRunningEntry,
 )
+from .store_entries import StoreEntry
 from .feature_entries import AimEntry, FeatureCardEntry, FeatureEntry
 
 OPENING = Path(__file__).resolve().parent / "opening.toml"

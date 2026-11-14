@@ -102,6 +102,11 @@ class StoreInfo(BaseModel):
     whose level pays it, or by the completion a find waits on."""
     hidden: bool
     """The engine's bookkeeping (a clock, a countdown), never seen: no ledger line, in no served figure (AnswerInfo.gains)."""
+    tally: bool
+    """A count the game keeps (arrivals): no ledger line, but a card's need on it is drawn as have/need."""
+    clock: Literal["dawn", "day", "evening", "night"] | None
+    """The part of the story's day this clock counts through: a condition on it reads as that time (ui.when.*), never as
+    an amount (CONTRACT.txt, "Cards", "Line causes")."""
     bonus_bp: int | None
     """Set on a store only standing actions take from, each holding a lane speed while it runs: that speed change, in
     basis points. Its ledger line is a bonus, never red, and says the bonus is off once dry (CONTRACT.txt, "Ledger")."""
