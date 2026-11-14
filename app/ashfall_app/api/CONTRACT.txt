@@ -730,6 +730,9 @@ TEXT AND NUMBERS (one rule)
                                     a share level's words; ui.level.mark_quarter | ui.level.mark_half |
                                     ui.level.mark_three_quarters the editor's short marks for three of them
     ui.rule.of_full | ui.rule.exact   a level's two forms in the condition editor: a share of the cap, or items
+    ui.rule.quick_down {store}{test}{n}{task}{m} | ui.rule.quick_up {store}{test}{n}{task}{m} | ui.rule.falls_to |
+    ui.rule.reaches_to   the quick add's sentence, by its test, each slot a control; its two tests' words
+    ui.rule.copy                     a rule being changed: a new rule from it, to change before adding
     ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
     ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
     ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits

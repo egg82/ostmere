@@ -1,5 +1,5 @@
 // The condition editor's foot (condition.ts), pinned under the choices: the rule as it reads, the note when the same
-// rule already exists, the dry run's line, then Remove and Save.
+// rule already exists, the dry run's line, then Remove, Copy rule and Save.
 import type { Order, OrderVerb, View } from "../api/types";
 import { UI } from "../game/text";
 import { DryNote } from "./conddry";
@@ -13,26 +13,31 @@ export class CondFoot {
   private readonly note = el("p", "editor-note cond-note");
   private readonly dry: DryNote;
   private readonly remove = el("button", "quiet danger");
+  private readonly copy = el("button", "quiet cond-copy");
   private readonly save = el("button", "primary");
 
-  constructor(private readonly ctx: PartContext, drop: () => void, commit: () => void) {
+  constructor(private readonly ctx: PartContext, drop: () => void, commit: () => void, copy: () => void) {
     const { text } = ctx.catalog;
     this.dry = new DryNote(ctx);
-    for (const [b, key] of [[this.remove, UI.orderRemove], [this.save, UI.save]] as const) {
+    for (const [b, key] of [[this.remove, UI.orderRemove], [this.copy, UI.ruleCopy], [this.save, UI.save]] as const) {
       b.type = "button";
       setText(b, text.get(key));
     }
     this.remove.addEventListener("click", drop);
     this.save.addEventListener("click", commit);
+    this.copy.addEventListener("click", copy);
     const actions = el("div", "sheet-actions cond-actions");
-    actions.append(this.remove, this.save);
+    actions.append(this.remove, this.copy, this.save);
     this.root.append(this.sentence, this.note, this.dry.root, actions);
   }
 
-  /** A new rule (`index` null) is added; a rule being changed is saved, and can be removed. */
-  start(index: number | null): void {
+  /** A new rule (`index` null) is added; a rule being changed is saved, can be removed, and can be copied when
+   * `copyable` (not a chip's), while the rules have room (`full`: they do not). */
+  start(index: number | null, copyable: boolean, full: boolean): void {
     this.save.textContent = this.ctx.catalog.text.get(index === null ? UI.orderAdd : UI.save);
     this.remove.hidden = index === null;
+    this.copy.hidden = index === null || !copyable;
+    this.copy.disabled = full;
   }
 
   /** The sentence, the note and Save for `order` as Save would set it (footRow). */

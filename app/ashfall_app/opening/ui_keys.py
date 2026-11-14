@@ -125,6 +125,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.rule.heading",
     "ui.rule.while_runs",
     "ui.rule.exists",
+    "ui.rule.quick_down", "ui.rule.quick_up", "ui.rule.falls_to", "ui.rule.reaches_to", "ui.rule.copy",
     "ui.hands.until_up",
     "ui.hands.until_down",
     "ui.rule.chip",
