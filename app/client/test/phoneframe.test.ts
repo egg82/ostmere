@@ -1,7 +1,7 @@
 // The phone frame (docs/design/redesign.md, "Phone frame"; ui/tabs.ts, ui/partseat.ts, ui/asks.ts): on a phone the tabs
 // are the bottom bar, Tasks · Town · Rules · Book. Town holds the ledger and skills after the town's own rows; Book opens
-// the chronicle's sheet, whose Done page holds the finished cards (shown once there are some), on every frame. On a
-// landscape phone the ledger and skills stay off the tabs. The shown ask is one row whose way in names how many wait and
+// as a sheet whose Done page holds the finished cards (shown once there are some). On a landscape phone the ledger and
+// skills stay off the tabs, and Book is a view as on a desktop, Done in it. The shown ask is one row whose way in names how many wait and
 // opens the sheet of them all, even for one. On a phone only the mix's bar and its name ("Main ▾") stay pinned; its
 // controls scroll under them. (The desktop's rail: railframe.test.ts.)
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
@@ -41,22 +41,22 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
 {
   screenOn(true, "full");
   expect("phone: the ledger and skills are Town's", [one(".town-tab").querySelector(".ledger") !== null, one(".town-tab").querySelector(".skills") !== null], [true, true]);
-  expect("phone: the finished cards are the Book's", one("dialog.chronicle").querySelector(".completed") !== null, true);
+  expect("phone: the finished cards are in the Book's sheet", one("dialog.book-sheet").querySelector(".completed") !== null, true);
   expect("Tasks is on", one(".tabs [data-tab=\"cards\"]").getAttribute("aria-pressed"), "true");
   one(".tabs [data-tab=\"town\"]").click();
   expect("Town on: its panel shows and the cards do not", [one(".town-tab").hidden, one(".deck").hidden], [false, true]);
   expect("and its button is pressed", one(".tabs [data-tab=\"town\"]").getAttribute("aria-pressed"), "true");
   one(".tabs [data-tab=\"book\"]").click();
-  const book = one("dialog.chronicle");
-  expect("Book opens the chronicle's sheet", book.open, true);
-  expect("on the chronicle", book.classList.contains("paged"), false);
+  const book = one("dialog.book-sheet");
+  expect("Book opens as a sheet", book.open, true);
+  expect("on the chronicle", [one(".book .chronicle").hidden, one(".book .completed").hidden], [false, true]);
   const pages = book.querySelectorAll(".book-page");
-  expect("its pages: the chronicle, then Done", pages.map((p) => p.hidden), [false, false]);
-  pages[1]?.click();
-  expect("Done turns to the finished cards", [book.classList.contains("paged"), one("dialog.chronicle .completed").hidden], [true, false]);
+  expect("its pages: the chronicle, the journal (nothing written), Done", pages.map((p) => `${p.dataset["page"]}${p.hidden ? "" : "+"}`), ["chronicle+", "journal", "done+"]);
+  pages[2]?.click();
+  expect("Done turns to the finished cards", [one(".book .chronicle").hidden, one(".book .completed").hidden], [true, false]);
   book.close();
   one(".tabs [data-tab=\"book\"]").click();
-  expect("opened again, the Book starts on the chronicle", [book.classList.contains("paged"), one("dialog.chronicle .completed").hidden], [false, true]);
+  expect("opened again, the Book starts on the chronicle", [one(".book .chronicle").hidden, one(".book .completed").hidden], [false, true]);
   expect("Town stays the tab on: Book is a sheet", one(".tabs [data-tab=\"town\"]").getAttribute("aria-pressed"), "true");
 }
 {
@@ -71,12 +71,14 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
 }
 {
   screenOn(true, "start");
-  expect("nothing finished: no Done page", one("dialog.chronicle").querySelectorAll(".book-page").map((p) => p.hidden), [false, true]);
+  expect("nothing finished: no Done page", one("dialog.book-sheet").querySelectorAll(".book-page").map((p) => p.hidden), [false, true, true]);
 }
 {
   screenOn(false, "full");
   expect("landscape: Town holds no ledger or skills", [one(".town-tab").querySelector(".ledger"), one(".town-tab").querySelector(".skills")], [null, null]);
-  expect("landscape: the finished cards are the Book's too", one("dialog.chronicle").querySelector(".completed") !== null, true);
+  expect("landscape: the Book is a view, Done in it", [one(".book-tab").querySelector(".completed") !== null, one("dialog.book-sheet").querySelector(".book") === null], [true, true]);
+  one(".tabs [data-tab=\"book\"]").click();
+  expect("landscape: Book is the tab on, its view shown and no sheet", [one(".tabs [data-tab=\"book\"]").getAttribute("aria-pressed"), one(".book-tab").hidden, one("dialog.book-sheet").open], ["true", false, false]);
 }
 {
   media(true);

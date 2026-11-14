@@ -24,8 +24,8 @@ document.body.replaceChildren(screen.root);
 screen.show(dayOneStep("returned", 100));
 const opener = screen.root.querySelector<HTMLElement>("button[data-tab=\"book\"]");
 const list = screen.root.querySelector<HTMLElement>("ol.chron-all");
-const sheet = screen.root.querySelector<HTMLDialogElement>("dialog.chronicle");
-if (!opener || !list || !sheet) throw new Error("the band holds the Chronicle button and its sheet");
+const tasks = screen.root.querySelector<HTMLElement>("button[data-tab=\"cards\"]");
+if (!opener || !list || !tasks) throw new Error("the rail holds Book, and the Book its chronicle");
 const logged = (): string[] => [...list.querySelectorAll(".v-body .chron-text")].map((n) => n.textContent ?? "");
 
 // A layout the fake DOM lacks: 100 plus 100 a line, in a 200 window.
@@ -48,7 +48,7 @@ expect("a line joins even when the player has scrolled", logged().slice(-1), [te
 expect("a player reading is not moved", list.scrollTop, 150);
 
 // A closed chronicle is filled afresh on opening: the landing does not touch it.
-sheet.close();
+tasks.click();
 const closed = logged().length;
 screen.show({ ...dayOneStep("landed", 500), lines: [line("line.1", 3)] }, true);
 expect("a closed chronicle is left alone", logged().length, closed);

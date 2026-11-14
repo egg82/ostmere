@@ -118,13 +118,6 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .lines li.held { display: none; }
 .lines li:not(:nth-last-child(1 of :not(.held))) { color: var(--ink-dim); }
 .lines li.arrive { animation: line-in .2s ease-out; }
-.journal-open {   /* the Journal button (ui/journal.ts): raised, a tap size the head's row can hold */
-  position: relative; flex: none; align-self: center; min-height: 1.9rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
-  background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important;
-}
-.journal-open::before { content: "▤"; margin-right: .4em; }
-.journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
-.journal-open:hover, .journal-open:focus-visible { color: var(--ink-hi) !important; background: var(--press); outline: none; }
 .panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
 .feedback-open, .devices-open, .games-open {   /* words only until it is hovered */
   flex: none; min-height: 2.4rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
@@ -244,13 +237,17 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .asks-open { display: none; }
 .game.editing .panel > .tabs { visibility: hidden; }   /* the row keeps its room while an editor has the card area */
 .view-title { margin: 0; font: 400 var(--t-display)/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); }   /* the Town view's */
-/* the Book's pages: the row is its title, the chronicle first and Done once something is finished */
-.chronicle:has(> .book-pages:not(:empty)) > .panel-heading { display: none; }
-.book-pages { display: flex; gap: 1.25rem; position: sticky; top: 0; z-index: 1; padding-top: .6rem; background: var(--raise); border-bottom: 1px solid var(--rule); }
-.book-page { min-height: 2.75rem; padding: 0; background: none; border: 0; border-radius: 0; cursor: pointer; color: var(--ink-dim); }
+/* the Book (ui/book.ts): its title and its row of pages on one line over a hairline, then the page open. The row shows
+   only while a second page is offered; the Map joins it last once it exists. */
+.book-head { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 1.75rem; border-bottom: 1px solid var(--rule); }
+.book-pages { display: flex; gap: 1.25rem; }
+.book-pages:not(:has(> .book-page + .book-page:not([hidden]))) { display: none; }
+.book-page { position: relative; min-height: 2.75rem; padding: 0; background: none; border: 0; border-radius: 0; cursor: pointer; color: var(--ink-dim); }
 .book-page[aria-pressed="true"] { color: var(--ink-hi); box-shadow: inset 0 -2px 0 var(--ink-hi); }
-.chronicle > .completed { padding: .9rem 0; }
-.chronicle.paged :is(.chron-filters, .chron-all) { display: none; }   /* a page of the Book is open (ui/chroniclesheet.ts) */
+.book-page .new-dot { top: .55rem; left: auto; right: -.5rem; }   /* the Journal's, while a note is unread */
+.book > .chronicle { padding-top: .8rem; }
+.book > .completed { padding: .9rem 0; }
+.book .sheet-actions .quiet { min-height: 2.75rem; }
 .tab[data-tab="cards"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='3' y='3' width='6' height='6'/%3E%3Crect x='11' y='3' width='6' height='6'/%3E%3Crect x='3' y='11' width='6' height='6'/%3E%3Crect x='11' y='11' width='6' height='6'/%3E%3C/svg%3E"); }
 .tab[data-tab="town"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 17 L10 4 L17 17 Z M10 17 L10 12'/%3E%3C/svg%3E"); }
 .tab[data-tab="rules"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 5h9M3 10h9M3 15h6M14 13l3 2-3 2'/%3E%3C/svg%3E"); }
@@ -453,14 +450,15 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .sheet-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1rem; }
 .sheet > .panel-heading { position: sticky; top: 0; z-index: 1; background: var(--raise); padding: 1.1rem 0 .3rem; }   /* a sheet taller than the viewport scrolls between its heading and its actions */
 .sheet > .sheet-actions { position: sticky; bottom: 0; z-index: 1; background: var(--raise); padding: .5rem 0 1.1rem; }
-.sheet:not(:has(> .panel-heading)) { padding-top: 1.1rem; }
-.chronicle { max-width: min(40rem, calc(100vw - 2rem)); }
-/* the Journal sheet (ui/journal.ts; docs/design/opening-screen.md, "The journal"). The page is parchment written in the
-   hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the sketch, the notes
-   and the numbers top to bottom, the sheet full height. Desktop: an open spread of two 600:780 pages, the sketch alone on
-   the left, the notes then the numbers on the right. */
-.journal-sheet { padding: 0 1.1rem; --page-h: min(calc(94dvh - 8.5rem), calc((96vw - 2.2rem) * .65)); width: fit-content; max-width: 96vw; max-height: 94dvh; }
-.journal-sheet .quiet { min-height: 2.75rem; }
+.book-sheet .sheet-actions { position: sticky; bottom: 0; z-index: 1; background: var(--raise); padding: .5rem 0 1.1rem; }   /* the Book's, a level down in it */
+.sheet:not(:has(> .panel-heading, > .book)) { padding-top: 1.1rem; }
+.book-sheet { max-width: min(40rem, calc(100vw - 2rem)); }
+.book-sheet .book-head { position: sticky; top: 0; z-index: 1; background: var(--raise); padding-top: .6rem; }
+/* the Journal, a page of the Book (ui/journal.ts; docs/design/opening-screen.md, "The journal"). The page is parchment
+   written in the hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the
+   sketch, the notes and the numbers top to bottom, the Book's sheet full height while it is open. Desktop: an open spread
+   of two 600:780 pages, the sketch alone on the left, the notes then the numbers on the right. */
+.journal { --page-h: min(calc(94dvh - 8.5rem), calc((96vw - 2.2rem) * .65)); }
 .journal-spread { background: var(--parchment); color: var(--hand-ink); display: flex; flex-direction: column; gap: .8rem; padding: 1rem; }
 .journal-page, .journal-notes { display: contents; }
 .journal-sketch-box { display: contents; }
@@ -734,14 +732,14 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 @media (max-width: 1023px) and (orientation: portrait), (max-width: 639px) {
   .game { --bar-h: calc(3.875rem + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--bar-h); }
   .panel { padding-bottom: calc(var(--bar-h) + 1rem); }
-  .tabs { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; height: var(--bar-h); margin: 0; padding: 0 0 env(safe-area-inset-bottom); box-sizing: border-box; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; background: var(--bg); border-top: 1px solid var(--rule); }
-  .tabs > .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25rem; min-height: 0; padding: 0; border: 0; font-size: var(--t-meta); color: var(--ink-dim) !important; }
-  .tabs > .tab::before { content: ""; width: 1.25rem; height: 1.25rem; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
-  .tabs > .tab.on { color: var(--ink-hi) !important; box-shadow: inset 0 2px 0 var(--ink-hi); }
-  .tab .new-dot { top: .5rem; right: calc(50% - 1rem); }
+  .panel > .tabs { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; height: var(--bar-h); margin: 0; padding: 0 0 env(safe-area-inset-bottom); box-sizing: border-box; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; background: var(--bg); border-top: 1px solid var(--rule); }
+  .panel > .tabs > .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25rem; min-height: 0; padding: 0; border: 0; font-size: var(--t-meta); color: var(--ink-dim) !important; }
+  .panel > .tabs > .tab::before { content: ""; width: 1.25rem; height: 1.25rem; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+  .panel > .tabs > .tab.on { color: var(--ink-hi) !important; box-shadow: inset 0 2px 0 var(--ink-hi); }
+  .panel > .tabs .new-dot { top: .5rem; right: calc(50% - 1rem); }
   .end-dock { bottom: var(--bar-h); }
   .sheet[open]:not(.journal-sheet) { margin: auto 0 0; width: 100%; max-width: none; max-height: calc(100dvh - 2.5rem); border-radius: 6px 6px 0 0; }
-  .sheet > .sheet-actions { padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
+  .sheet > .sheet-actions, .book-sheet .sheet-actions { padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
   .view-title { font-size: var(--t-story); }
   /* the shown ask, one row of fixed height: who, the question, how many wait; a tap anywhere on it opens the sheet */
   .asks { padding: .6rem 0 0; border-bottom: 0; }
@@ -805,10 +803,16 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .panel { height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 0 1.2rem 1.6rem; border-left: 1px solid var(--rule); }
   .panel-top { top: 0; margin: 0 -1.2rem; padding: .7rem 1.2rem; }
   .panel.more { -webkit-mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); }   /* content runs past the foot (ui/morecue.ts): it fades out there, still under reduced motion */
-  /* the Town view (ui/townview.ts): the town's people take the scene's room and the panel's */
-  .game[data-tab="town"] .left { display: none; }
-  .game[data-tab="town"] .panel { grid-column: 1 / -1; padding: 1.4rem 2rem 1.6rem; }
-  .game[data-tab="town"] .panel > :not(.card-area, .tabs, .panel-foot, .banners) { display: none; }
+  /* the Town and Book views (ui/townview.ts, ui/book.ts): they take the scene's room and the panel's */
+  .game:is([data-tab="town"], [data-tab="book"]) .left { display: none; }
+  .game:is([data-tab="town"], [data-tab="book"]) .panel { grid-column: 1 / -1; padding: 1.4rem 2rem 1.6rem; }
+  .game:is([data-tab="town"], [data-tab="book"]) .panel > :not(.card-area, .tabs, .panel-foot, .banners) { display: none; }
+  .book-tab .chronicle { max-width: 40rem; }
+  .book-tab .journal { width: fit-content; margin: 0 auto; line-height: 1.4; user-select: text; }   /* as in a sheet: the spread at its own width, its text the sheet's */
+  .game[data-tab="book"] .panel { padding-bottom: 0; }   /* a spread and its Prev and Next fit the window, unscrolled */
+  .book-tab .chron-all { max-height: none; overflow: visible; }   /* the view's column scrolls, not a box inside it */
+  .book-tab .sheet-actions { justify-content: center; margin-top: .4rem; }   /* under the spread, never over it */
+  .book-tab .sheet-actions:not(:has(> :not([hidden]))) { display: none; }
   .town-tab { max-width: 64rem; }
   .town-people { gap: 0; }
   .town-tab { row-gap: 0; }
@@ -834,7 +838,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .rail > .skills { padding: 0 1.25rem; gap: .9rem; }
   .rail .skill-next { flex-basis: 100%; text-align: left; }   /* what the next level brings, under the name: the rail is narrow */
   .rail > .panel-foot { margin-top: auto; flex-direction: column; align-items: flex-start; gap: 0; padding: 0 .55rem; }
-  .game[data-tab="town"] .panel { grid-column: 2 / -1; }
+  .game:is([data-tab="town"], [data-tab="book"]) .panel { grid-column: 2 / -1; }
 }
 
 @media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
@@ -847,8 +851,6 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .journal-numbers { flex: none; margin-top: auto; }
   .journal-sketch-box { display: block; position: relative; flex: 1 1 auto; min-height: 0; }
   .journal-sketch { position: absolute; margin: 0; left: calc((100% - var(--sk-w)) * var(--sk-x)); top: calc((100% - var(--sk-w) * 600 / 780) * var(--sk-y)); }
-  .journal-sheet .sheet-actions > :first-child { margin-right: 0; }
-  .journal-sheet > .panel-heading { text-align: center; }
 }
 
 /* a desktop window tall enough (Screen's LOW_UNDER_SCENE): the ledger fills the room under the art, the cards and hands

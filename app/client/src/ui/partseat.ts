@@ -1,8 +1,8 @@
 // Where the tabs, the ledger, the skills and the panel's foot sit, by frame (docs/design/opening-screen.md, "Desktop" and
 // "Phone"). On a desktop the tabs, the skills and the foot are the left rail's, and the ledger fills the room under the
 // art when the window is tall enough, else the panel's foot. On a phone the tabs are the bottom bar (the panel's, fixed
-// by game.css) and the ledger and skills are the Town tab's. A landscape phone keeps them all in the panel. `laid` hears
-// each placing (a tall desktop).
+// by game.css) and the ledger and skills are the Town tab's. A landscape phone keeps them all in the panel. The Book
+// opens as a sheet on a phone and as a view elsewhere (ui/book.ts). `laid` hears each placing (a tall desktop).
 import { LOW_UNDER_SCENE, PHONE, RAIL } from "./layout";
 
 export interface Parts {
@@ -10,6 +10,7 @@ export interface Parts {
   ledger: HTMLElement;
   skills: HTMLElement;
   foot: HTMLElement;
+  book: { seat(asView: boolean): void };
 }
 
 export interface Seats {
@@ -35,6 +36,7 @@ export function seatParts(parts: Parts, seats: Seats, laid: (wide: boolean) => v
     else seats.panel.append(parts.ledger);
     if (!rail && !phone) seats.panel.append(parts.skills);
     if (!rail) seats.panel.append(parts.foot);
+    parts.book.seat(!phone);
     laid(wide === true);
   };
   for (const q of queries) q.addEventListener("change", place);

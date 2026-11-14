@@ -1,5 +1,5 @@
 // The journal's lesson on pages with and without numbers (CONTRACT.txt, "JOURNAL", THE CLIENT MAY): the numbers step runs
-// only on a page that shows numbers; on a page with none the lesson ends, kept, after its notes step, and the numbers
+// only on a page that shows numbers; on a page with none the lesson ends, kept, at the Journal's button, and the numbers
 // step is a lesson of its own the first time a page with numbers is open. A step that waits on numbers never holds the
 // lessons after it. And the rule offer that follows the book at its first showing is not held back by the journal lesson.
 import { install } from "./fake-dom";
@@ -29,7 +29,7 @@ function walk(lessons: string[], notes: string[]) {
   runner.update(stepWith(notes.slice(0, 1), 500).view);   // the book as it first shows: one page written
   const line = (): string => (runner.root.hidden ? "" : runner.root.querySelector(".lesson-line")?.textContent ?? "");
   const tick = (t: number): void => {
-    for (const sel of ['[data-teach="journal"]', '[data-teach="clock"]', '.journal-sheet [data-teach="journal-note"]', ".journal-sheet .journal-numbers"])
+    for (const sel of ['[data-teach="journal"]', '[data-teach="clock"]', '.book [data-page="journal"]', ".journal .journal-numbers"])
       for (const n of document.querySelectorAll(sel)) Object.assign(n, { rect: (n as HTMLElement).hidden ? NONE : RECT });   // the fake DOM lays nothing out
     clock = t;
     runner.tick();
@@ -39,16 +39,16 @@ function walk(lessons: string[], notes: string[]) {
   return { r, runner, keeps, sent, line, tick, got };
 }
 
-{  // a days page has no numbers: the lesson ends kept after its notes step, and the later lessons run
+{  // a days page has no numbers: the lesson ends kept at the Journal's button, and the later lessons run
   const w = walk(KEPT, [...NOTES_D, ...NOTES_A]);
   w.tick(0);
-  expect("starts on the button", w.line(), text("ui.lesson.journal_open"));
-  w.r.button()!.click();
+  expect("starts on Book's tab", w.line(), text("ui.lesson.journal_open"));
+  w.r.tab().click();
   w.tick(1);
-  expect("then the page's last note", w.line(), text("ui.lesson.journal_notes"));
-  w.got();
+  expect("then the Journal's button", w.line(), text("ui.lesson.journal_notes"));
+  w.r.button()!.click();
   w.tick(LATER);
-  expect("ended after the notes step: kept", [w.runner.current, w.keeps.lessonKept(JOURNAL), w.keeps.lessonKept(JOURNAL_NUMBERS)], [null, true, false]);
+  expect("ended at the Journal's button: kept", [w.runner.current, w.keeps.lessonKept(JOURNAL), w.keeps.lessonKept(JOURNAL_NUMBERS)], [null, true, false]);
   expect("the record counts it done", w.sent.at(-1)?.lesson_ends?.at(-1)?.skipped, false);
   const clockTrigger = document.createElement("div");
   clockTrigger.dataset["teach"] = "clock";
@@ -60,9 +60,9 @@ function walk(lessons: string[], notes: string[]) {
 {  // the numbers step is a lesson of its own the first time a page with numbers is open
   const w = walk(KEPT, [...NOTES_D, ...NOTES_A]);
   w.tick(0);
-  w.r.button()!.click();
+  w.r.tab().click();
   w.tick(1);
-  w.got();
+  w.r.button()!.click();
   w.tick(LATER);
   w.tick(LATER + 1);
   expect("no numbers on the page: nothing running", w.runner.current, null);
@@ -78,13 +78,13 @@ function walk(lessons: string[], notes: string[]) {
   expect("never again", w.runner.current, null);
 }
 
-{  // opened first on a page with numbers: the three lines run in turn, as before
+{  // opened first on a page with numbers: the three lines run in turn
   const w = walk(KEPT, NOTES_A);
   w.tick(0);
-  w.r.button()!.click();
+  w.r.tab().click();
   w.tick(1);
-  expect("notes", w.line(), text("ui.lesson.journal_notes"));
-  w.got();
+  expect("the Journal's button", w.line(), text("ui.lesson.journal_notes"));
+  w.r.button()!.click();
   w.tick(LATER);
   w.tick(LATER + 1);
   expect("then the numbers", [w.runner.current, w.line()], [JOURNAL_NUMBERS, text("ui.lesson.journal_numbers")]);

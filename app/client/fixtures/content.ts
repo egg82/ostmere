@@ -293,7 +293,7 @@ const text: Record<string, string> = {
   "ui.fight.won": "{runner}: won", "ui.fight.lost": "{runner}: lost",
   "ui.journal.heading": "Journal", "ui.journal.prev": "Prev", "ui.journal.next": "Next",
   "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places",
-  "ui.lesson.journal_open": "What you learn gets written in here.", "ui.lesson.journal_notes": "A dot on the button means a new note.",
+  "ui.lesson.journal_open": "What you learn gets written in here.", "ui.lesson.journal_notes": "A dot here means a new note.",
   "ui.lesson.journal_numbers": "Exact numbers once you've fought it. Unknown until then.",
   "ui.prestige.tops_out": "tops out in {d}",
   "ui.prestige.top": "at its top",

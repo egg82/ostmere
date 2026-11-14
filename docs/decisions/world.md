@@ -73,7 +73,7 @@ touching the page around it.
 How the chronicle stands today, moved from its row in `systems.md`. The unwrap cursor lives in the presentation store.
 
 - **One record, one home per kind.** Every line the game writes, each rule's start and let-go and each fight goes to
-  the chronicle, a sheet opened from the button beside the chips (`app/client/src/ui/chroniclesheet.ts`). Each kind
+  the chronicle, the Book's first page (`app/client/src/ui/chroniclesheet.ts`, in `app/client/src/ui/book.ts`). Each kind
   has one filter (`app/client/src/game/chronicle.ts`, `ROUTES`): story, taps and the body's lines
   under Story; finds, levels, rules and fights each under their own; town talk under its own, ready for the living
   world. The story strip on the main screen holds the Story filter's kinds and nothing else, so a find, a level, a
