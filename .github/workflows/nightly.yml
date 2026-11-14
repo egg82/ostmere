@@ -52,5 +52,5 @@ jobs:
         run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
       - working-directory: app
         run: >
-          python -m pytest -q --timeout=600 tests/engine_contract tests/cards_contract tests/opening tests/saves
-          tests/dayone tests/daytwo
+          python -m pytest -q --timeout=600 tests/engine_contract tests/cards_contract tests/journal_contract tests/opening
+          tests/saves tests/dayone tests/daytwo

@@ -1,0 +1,105 @@
+Wrong implementations of ashfall_app/saves/journal.py to plant one at a time; the [bracketed] test_journal_<name>.py
+modules must go red (HYPOTHESIS_PROFILE=ci where a property needs depth). A kill is a FAILED line naming a test, never
+an exception from a malformed plant; a timeout counts as red. The script that plants these is committed beside this
+list with the implementation, and results follow the rows. Equivalent mutants close the list, each with why no test
+can tell it apart.
+
+The roll and determinism
+ 1 salted hash   the roll from Python's hash() of the key tuple, or random.Random seeded by it.  [roll, forward]
+ 2 one draw      the roll ignores `purpose` (one draw serves write, late, misremember and order); or ignores the
+                 day, or the save.                                             [roll, late, misremember, rates, order]
+ 3 bytes         the last eight bytes, little-endian, over 2**64 - 1, or the key joined without "journal" or with
+                 another separator.                                                                         [roll]
+ 4 set order     notes or candidates gathered in a set of subject ids and emitted in its iteration order, so the
+                 order depends on PYTHONHASHSEED.                                                 [roll, properties]
+ 5 line order    the first line of a day wins (a change judged against lines earlier in the tuple, not before the
+                 day's start), so shuffling `lines` changes a result.                                  [properties]
+ 6 counter rng   draws from a running counter or one Random per call, so a new subject shifts every later draw.
+                                                                                            [isolation, roll, care]
+
+Shape and inputs
+ 7 day edge      a line at (d + 1) * 86400 counted in day d, or the day's last second left out.             [shape]
+ 8 no refusals   no ValueError for a line past the day's end or `composed` not exactly days 0 .. d - 1.      [shape]
+ 9 gap notes     a gap day still writes its musts (the gap set, notes kept).                    [shape, catchup]
+10 noise counts  a line whose source matches no subject counted toward busy; or sources matched loosely (a crowd
+                 taking the other way's mentions, a lane matched by id without its way).                   [isolation]
+11 busy lines    busy counts lines, not subjects (a crowd of six counts six).                               [gaps]
+
+Musts
+12 must bypass   the must bypass removed: beats and persons held to care, diligence and the budget.
+                                                                                     [must, budget, properties]
+13 must forever  a routine stays a must after it is told.                                                   [must]
+14 written once  a told subject with an empty repeat written again by first, or caught up.
+                                                                                     [must, catchup, properties]
+15 crowd stops   written once applied to a crowd's mentions (its repeat slot is always empty).            [must, shape]
+16 wrong kind    a worry or crowd treated as a must; a person not treated as one.                           [must]
+17 first again   a told beat with a repeat slot written by first again, or not at all.          [must, properties]
+
+Catch-up
+18 gap dropped   a must showing on a gap day never caught up.                           [catchup, properties, gaps]
+19 per gap day   one catch-up per gap day the must showed on, not one per run.                [catchup, properties]
+20 wrong day     the catch-up on the day after each gap day, the day after the run only if it has lines of its own,
+                 or on every written day after.                                               [catchup, properties]
+21 non-musts     the run's non-musts (a told routine, a worry, a crowd) written on the catch-up day.         [catchup]
+22 catch-up told a catch-up not counted as a telling that day: a beat caught up and showing written by first beside
+                 it, or a routine caught up written again as a must.                        [catchup, properties]
+23 stored gaps   gaps recomputed from today's habits instead of read from `composed`.               [forward]
+
+Care, diligence, budget
+24 w from lines  w counts the days the subject showed instead of its tellings in `composed`.              [care]
+25 w with late   late and correction notes counted as tellings.                                           [care]
+26 no change     a new key does not reset w; or the change judged against keys held on day d too (never a
+                 change); or a change kept for every later day carrying that key.                         [care]
+27 worry run     a worry's r counts every day it ever showed, not consecutive days; or r - 1 written r.    [care]
+28 no cap        a worry's care not capped at 1 (it then outranks every routine at care 1).              [budget]
+29 day number    diligence or the budget computed from the day number instead of the settledness.
+                                                                                   [diligence, budget, forward]
+30 settledness   s counts notes not written days; counts gap rows as written; takes beat_refresh per beat day, not
+                 per beat note; or is not floored at 0.                                     [diligence, budget]
+31 rounding      the budget by Python's round (banker's), floor or ceil.                              [budget]
+32 negative rest the budget less musts not clamped at 0, so a negative remainder slices from the end.      [budget]
+33 must notes    catch-up or correction notes left out of the must notes the budget subtracts.           [budget]
+34 late counted  a late addition takes a place in the budget.                                            [budget]
+35 keep wrong    the passing non-musts kept by id, by roll alone, lowest care first, or ties by higher order roll.
+                                                                                               [budget, order]
+
+Gaps and blanks
+36 away length  an away gap of k + 1 or k - 1 days, or starting the day after the subject showed.            [gaps]
+37 busy edge    busy when the count equals busy_ratio * budget (>= for >).                                   [gaps]
+38 busy owed    owed catch-ups counted toward busy.                                                          [gaps]
+39 busy wins    a day both away and busy stored as busy.                                                     [gaps]
+40 busy budget  busy judged against lines_start instead of the day's budget.                                 [gaps]
+
+Late additions, misremembering
+41 late writes  a due late addition alone writes a day that is otherwise blank.               [late, gaps, properties]
+42 late kept    a late addition kept across a blank or gap day to the next written day.            [late, gaps]
+43 late day     the late roll drawn for day d + 1 instead of the day written.         [late, rates, properties]
+44 late chain   a late note itself draws a late addition; or catch-up, repeat or misremember writings do not.
+                                                                                            [late, properties]
+45 no late slot a subject without a late slot given a late note.                                              [late]
+46 misremember  misremembered in a catch-up, or on a later telling; or with only one of its two slots.
+                                                                                      [misremember, properties]
+47 correction   the correction a day early, on the misremembering's own day plus the wait even when that day is a
+                 gap, repeated on later days, or not making a blank day written.     [misremember, properties]
+48 rate flipped a rate applied as 1 - rate, or the comparison turned (roll > rate).   [rates, late, misremember]
+
+Order and keys
+49 catch-ups    catch-ups ordered by id alone, or by the gap day descending.                                [order]
+50 must order   the day's own musts in `subjects` order or by id instead of the order roll.                 [order]
+51 groups       non-musts before musts, late additions after corrections, or either group not by id.
+                                                                                            [order, properties]
+52 care order   non-musts by order roll alone, ignoring care.                                               [order]
+53 no bag       a key chosen by roll with replacement, so a key repeats within a round.        [bag, properties]
+54 bag count    the bag's count restarted per call instead of counted over `composed`.                        [bag]
+55 bag key      one count per subject across its slots, or one across a crowd's bands.              [bag, properties]
+56 band         a crowd's band chosen as the lowest at most the count, or the first above it.                [shape]
+
+Forward only
+57 recompose    told counted from the lines (recomposing history) instead of the notes in `composed`.     [forward]
+58 drop unknown notes of a subject no longer in `subjects`, or keys no longer in the slot, ignored.        [forward]
+
+Equivalent (no test can tell them apart)
+ E1 <= for <    `roll <= care * diligence`: differs only when a draw equals the product exactly, which needs a
+                 SHA-256 prefix to land on that float (about 2**-53 per draw at best).
+ E2 bag order   any bag order that completes each round before repeating: statement 19 fixes rounds, not which
+                 key comes first in a round.
