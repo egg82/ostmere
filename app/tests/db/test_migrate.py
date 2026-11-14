@@ -16,8 +16,8 @@ from ashfall_app.db.migrate import MIGRATE_LOCK, SCRIPTS, WrongCollation, head, 
 from tests import pg
 
 HEAD = head()
-TABLES = {"accounts", "sessions", "saves", "save_lines", "save_decisions", "save_snapshots", "save_manifests", "tries",
-          "feedback", "transfer_codes", "reminder_devices"}
+TABLES = {"accounts", "sessions", "saves", "save_lines", "save_decisions", "save_snapshots", "save_manifests",
+          "save_journal", "tries", "feedback", "transfer_codes", "reminder_devices"}
 
 
 def tables(url: str) -> set[str]:

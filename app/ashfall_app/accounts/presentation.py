@@ -1,6 +1,7 @@
 """What a page keeps about the player (api/CONTRACT.txt, AccountPresentation) only grows: a flag once set stays set and
 a list only gains entries. A page's copy can be older than the stored one (a second tab, a second device), so a write
-is merged into what is stored: flags OR together, lists are the stored entries then the new ones. What is stored
+is merged into what is stored: flags OR together, lists are the stored entries then the new ones, a growing number keeps
+the higher. What is stored
 weighs at most MAX_BODY_BYTES of JSON, as much as one request may carry: past that, nothing more is added."""
 
 import json
@@ -19,6 +20,9 @@ _KEYS = {"lesson_ends": "lesson", "visits": "left"}
 LATEST = {"chapter": "left"}
 """For an object that is replaced, the field that orders two copies: the stored one stays unless the sent one's is
 later, and a missing (null) one never replaces it."""
+
+HIGHEST = frozenset({"newest_day_read"})
+"""Numbers that only grow: the stored one stays unless the sent one is higher, and a null one never replaces it."""
 
 
 def _is_list(value: object) -> TypeGuard[list[object]]:
@@ -73,6 +77,9 @@ def merge_presentation(stored: Json, sent: Json, cap: int, max_bytes: int = MAX_
         have = merged.get(field)
         if isinstance(value, bool):
             merged[field] = value or have is True
+        elif field in HIGHEST:
+            if isinstance(value, int) and (not isinstance(have, int) or value > have):
+                merged[field] = value
         elif (order := LATEST.get(field)) is not None:
             if _replaces(have, value, order, room):
                 room -= _weight(value) - (_weight(have) if have is not None else 0)

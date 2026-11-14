@@ -19,7 +19,7 @@ let fetched = 0;
 const api: GameApi = {
   content: () => { fetched += 1; return Promise.resolve({ ...fixtureContent, rules_digest: fetched === 1 ? fixtureContent.rules_digest : "new" }); },
   me: unused, begin: unused,
-  open: () => Promise.resolve({ save, was: fixtureStep("mid", 40).view, history: [], presentation: NEW_SAVE, step: slice(100, 500, fixtureContent.rules_digest) }),
+  open: () => Promise.resolve({ save, was: fixtureStep("mid", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: slice(100, 500, fixtureContent.rules_digest) }),
   savedView: () => Promise.reject(new Error("unused")),
   advance: () => Promise.resolve(slice(500, null, "new")),
   forecast: unused, decide: unused, dryRun: unused, putMePresentation: unused, putMeSettings: unused, putSavePresentation: unused, sendFeedback: unused, makeCode: unused,

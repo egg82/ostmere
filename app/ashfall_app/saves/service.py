@@ -22,11 +22,13 @@ from .. import engine as e
 from .. import logs
 from ..accounts import limits
 from ..clock import Clock
+from ..db import journal as journal_rows
 from ..db import reminders as reminder_rows
 from ..db import saves as rows
 from ..db import unit
+from ..db.journal import Seen
 from . import games as held
-from . import write
+from . import journal_write, write
 from .games import info
 from .interface import (
     MAX_SAVES, Behind, DecisionsLimited, Games, Info, Invalid, LastSave, NotFound, Opened, PastLine, Played, Ruleset,
@@ -112,24 +114,25 @@ class PgSaves:
 
     def open(self, account_id: int, save_id: int) -> Opened:
         t0, now, stop = time.perf_counter(), self._clock(), self._stop_for()
-        with self._locked(account_id, save_id, visited=now) as (conn, row):
+        with self._locked(account_id, save_id, now, visited=True) as (conn, row, seen):
             loaded = load(row, self._rs)
             renamed, retired = self._rs.line_renames, self._rs.retired_lines
             history = tuple(PastLine(n=ln.n, at=ln.at, key=key)
                             for ln in rows.last_lines(conn, save_id, HISTORY)
                             if (key := renamed.get(ln.key, ln.key)) not in retired)
-            played, now_row = self._write(conn, row, self._advanced(row, loaded, now, stop), now)
+            days = journal_write.written(conn, save_id)
+            played, now_row = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now)
         logs.info(_log, "save.opened", account=account_id, save=save_id, game_at=played.save.time,
                   away_s=int((now - row.updated_at).total_seconds()), lines=len(played.lines),
                   rebased=loaded.rebased, behind_s=_behind_s(played), ms=_ms(t0))
         return Opened(info=info(now_row), was=loaded.save, history=history, presentation=dict(row.presentation or {}),
-                      played=played)
+                      days=days, played=played)
 
     def advance(self, account_id: int, save_id: int) -> Played:
         t0, now, stop = time.perf_counter(), self._clock(), self._stop_for()
-        with self._locked(account_id, save_id, visited=now) as (conn, row):
+        with self._locked(account_id, save_id, now, visited=True) as (conn, row, seen):
             loaded = load(row, self._rs)
-            played = self._write(conn, row, self._advanced(row, loaded, now, stop), now).played
+            played = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now).played
         behind = _behind_s(played)
         logs.emit(_log, logging.INFO if played.lines or behind is not None else logging.DEBUG, "save.advanced",
                   account=account_id, save=save_id, game_at=played.save.time, lines=len(played.lines),
@@ -140,7 +143,7 @@ class PgSaves:
         t0, now, stop = time.perf_counter(), self._clock(), self._stop_for()
         fields: dict[str, object] = {"account": account_id, "save": save_id, "kind": write.KINDS[type(verb)],
                                      "target": _target(verb)}
-        with self._locked(account_id, save_id) as (conn, row):
+        with self._locked(account_id, save_id, now) as (conn, row, seen):
             loaded = load(row, self._rs)
             step = self._advanced(row, loaded, now, stop)
             stale, behind = after != row.decisions, step.catching_up_to is not None
@@ -154,7 +157,7 @@ class PgSaves:
                     raise Invalid(str(ex)) from ex
                 step = write.Step(done.save, write.numbered(step.lines, done.lines), verb, done.failed, done.context,
                                   step.rule_changes + done.rule_changes)
-            played = self._write(conn, row, step, now).played
+            played = self._write(conn, row, seen, step, now).played
         logs.info(_log, "save.decision", **fields, n=played.decisions, game_at=played.save.time,
                   result="stale" if stale else "behind" if behind else "ok", lines=len(played.lines),
                   rebased=loaded.rebased, behind_s=_behind_s(played), ms=_ms(t0))
@@ -214,15 +217,20 @@ class PgSaves:
         return row, done
 
     @contextmanager
-    def _locked(self, account_id: int, save_id: int,
-                visited: datetime | None = None) -> Generator[tuple[Connection, rows.SaveRecord]]:
-        """`visited`: the player is here at that time, stamped for reminders in the lock's own statement."""
-        visit = None if visited is None else reminder_rows.visit(account_id, visited)
+    def _locked(self, account_id: int, save_id: int, now: datetime,
+                visited: bool = False) -> Generator[tuple[Connection, rows.SaveRecord, Seen | None]]:
+        """The save's row locked, and what its journal holds for a step at `now` (db/journal.py `locked`), read in one
+        statement. `visited`: the player is here at `now`, stamped for reminders in the same statement."""
+        visit = reminder_rows.visit(account_id, now) if visited else None
         with unit.begin(self._engine) as conn:
-            row = rows.save(conn, save_id, account_id, lock=True, visit=visit)
+            if self._rs.journal is None:
+                row, seen = rows.save(conn, save_id, account_id, lock=True, visit=visit), None
+            else:
+                found = journal_rows.locked(conn, save_id, account_id, visit, journal_write.keys(self._rs), now)
+                row, seen = (None, None) if found is None else found
             if row is None:
                 raise NotFound(f"save {save_id}")
-            yield conn, row
+            yield conn, row, seen
 
     def _advanced(self, row: rows.SaveRecord, loaded: Loaded, now: datetime, stop: Callable[[], bool]) -> write.Step:
         to = game_now(row.started_at, now, loaded.save.time)
@@ -231,8 +239,9 @@ class PgSaves:
                           rule_changes=loaded.rule_changes + done.rule_changes,
                           catching_up_to=to if done.stopped_short else None)
 
-    def _write(self, conn: Connection, row: rows.SaveRecord, step: write.Step, now: datetime) -> write.Persisted:
-        return write.persist(conn, row, step, self._rs, now)
+    def _write(self, conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: write.Step,
+               now: datetime) -> write.Persisted:
+        return write.persist(conn, row, seen, step, self._rs, now)
 
 
 def _target(verb: e.Verb) -> str | None:

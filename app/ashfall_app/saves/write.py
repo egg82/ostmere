@@ -1,5 +1,6 @@
 """Writing a save after a step, in the step's transaction: the row (state, counters, which build wrote it), the lines
-the step added, and for a decision its log entry and, the first of a UTC day, that day's snapshot. The writer keeps
+the step added, the journal days it closed (journal_write.py), and for a decision its log entry and, the first of a UTC
+day, that day's snapshot. The writer keeps
 its own retention: decisions past DECISIONS_KEPT and snapshots past SNAPSHOT_DAYS go as new ones come in. Lines are
 earned history and never pruned."""
 
@@ -11,8 +12,10 @@ from sqlalchemy import Connection
 
 from .. import engine as e
 from ..db import saves as rows
+from ..db.journal import Seen
 from ..db.manifests import without
 from ..db.step import Log, write_step
+from . import journal_write
 from .interface import Played, Ruleset
 from .repeats import Logged, Repeats, count, hands_cards, since
 from .ruleruns import RuleRun, gathered, merged, pruned, runs_from_json, runs_to_json, standing
@@ -76,20 +79,24 @@ def camp_level(save: e.Save, rs: Ruleset) -> int:
     return sum(1 for i in rs.camp_triggers if i < len(save.fired) and save.fired[i])
 
 
-def persist(conn: Connection, row: rows.SaveRecord, step: Step, rs: Ruleset, now: datetime) -> Persisted:
+def persist(conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: Step, rs: Ruleset,
+            now: datetime) -> Persisted:
+    """`seen`: what the save's locking statement read of its journal (db/journal.py `locked`), None for rules with
+    none."""
     save_id, decisions = row.id, row.decisions + (step.verb is not None)
     before = runs_from_json(row.rule_runs)
     if step.catching_up_to is None:
         runs = merged(before, step.rule_changes, standing(step.save.orders, step.save.queue))
     else:
         runs = gathered(before, step.rule_changes)
+    days = journal_write.composed(conn, row, seen, step.lines, step.save.time, rs)
     listed, recent = write_step(
         conn, save_id, now, written(step.save, decisions, rs, runs), [(ln.time, str(ln.key)) for ln in step.lines],
         None if step.verb is None else _log_of(decisions, step, rs, now),
-        None if rs.repeats is None else since(rs.repeats, step.save.time))
+        None if rs.repeats is None else since(rs.repeats, step.save.time), [journal_write.stored_form(d) for d in days])
     played = Played(save_id=save_id, decisions=decisions, save=step.save, lines=step.lines, failed=step.failed,
                     repeats=_counted(recent, step.save.time, rs), rule_runs=pruned(runs, step.save.orders),
-                    catching_up_to=step.catching_up_to)
+                    catching_up_to=step.catching_up_to, days=days)
     return Persisted(played, listed)
 
 

@@ -291,7 +291,7 @@ export function fixtureStep(phase: Phase, at: number, kept: Kept = {}, decisions
   // repeattap, repeatswitch: mid, with a card tapped by hand again and again, or a switch made again and again while cold
   const repeats = phase === "repeattap" ? { taps: [{ card: "look", count: 5 }], switches: [] }
     : phase === "repeatswitch" ? { taps: [], switches: [{ chip: "cold", mix_id: mix.id, count: 3 }] } : { taps: [], switches: [] };
-  return { save_id: 1, decisions, rules_digest: fixtureContent.rules_digest, build: "fixture", view, lines: said, failed_tap: null, repeats, rule_runs: ruleRuns(phase, view), catching_up_to: null };
+  return { save_id: 1, decisions, rules_digest: fixtureContent.rules_digest, build: "fixture", view, lines: said, failed_tap: null, repeats, rule_runs: ruleRuns(phase, view), catching_up_to: null, journal_days: [] };
 }
 
 /** rulestab: what its rules did lately, the tired rule on a minute ago, the wood rule's last full run before it, and a

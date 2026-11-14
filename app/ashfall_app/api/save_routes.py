@@ -134,7 +134,8 @@ def add_save_routes(router: APIRouter, game: Game) -> None:
             got = services.of(request).saves.open(found, save_id)
         return Opened(save=save_info(got.info), was=game.view(got.was),
                       history=[PastLine(n=p.n, at=p.at, key=p.key) for p in got.history],
-                      presentation=save_presentation(got.presentation), step=game.step(got.played))
+                      presentation=save_presentation(got.presentation), journal_days=game.journal_days(got.days),
+                      step=game.step(got.played))
 
     @router.post("/saves/{save_id}/advance", response_model=Step, operation_id="advance", responses=_SAVE_ERRORS)
     def advance(request: Request, save_id: SaveId) -> Step:

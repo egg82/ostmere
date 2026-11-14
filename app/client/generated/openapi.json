@@ -2826,6 +2826,45 @@
         ],
         "title": "Contribution"
       },
+      "DayNote": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "hand": {
+            "$ref": "#/components/schemas/Hand"
+          },
+          "sketch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sketch"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject",
+          "slot",
+          "key",
+          "hand",
+          "sketch"
+        ],
+        "title": "DayNote",
+        "description": "A note on a written day, in page order. Its words are the text entry `key`."
+      },
       "Decision": {
         "oneOf": [
           {
@@ -3812,6 +3851,28 @@
           "account"
         ],
         "title": "Joined"
+      },
+      "JournalDay": {
+        "properties": {
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "day_notes": {
+            "items": {
+              "$ref": "#/components/schemas/DayNote"
+            },
+            "type": "array",
+            "title": "Day Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day",
+          "day_notes"
+        ],
+        "title": "JournalDay",
+        "description": "A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed."
       },
       "JournalInfo": {
         "properties": {
@@ -4909,6 +4970,13 @@
           "presentation": {
             "$ref": "#/components/schemas/SavePresentation"
           },
+          "journal_days": {
+            "items": {
+              "$ref": "#/components/schemas/JournalDay"
+            },
+            "type": "array",
+            "title": "Journal Days"
+          },
           "step": {
             "$ref": "#/components/schemas/Step"
           }
@@ -4919,6 +4987,7 @@
           "was",
           "history",
           "presentation",
+          "journal_days",
           "step"
         ],
         "title": "Opened"
@@ -5675,12 +5744,25 @@
                 "type": "null"
               }
             ]
+          },
+          "newest_day_read": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 104249991374.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newest Day Read"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "title": "SavePresentation",
-        "description": "What the page keeps about one save: its teaching (the lessons and what gates them or their hints) and its returns."
+        "description": "What the page keeps about one save: its teaching (the lessons and what gates them or their hints), its returns,\nand how far into its journal the player has read."
       },
       "Scales": {
         "properties": {
@@ -6043,6 +6125,20 @@
         "title": "SkillPrestige",
         "description": "Where the skill stands in its prestige phases, at view.at."
       },
+      "Slot": {
+        "type": "string",
+        "enum": [
+          "first",
+          "repeat",
+          "catchup",
+          "mention",
+          "late",
+          "misremember",
+          "correction"
+        ],
+        "title": "Slot",
+        "description": "The occasion a day's note was written for (docs/design/journal.md, \"The content's side\")."
+      },
       "SpentShare": {
         "properties": {
           "card": {
@@ -6181,6 +6277,13 @@
               }
             ],
             "title": "Catching Up To"
+          },
+          "journal_days": {
+            "items": {
+              "$ref": "#/components/schemas/JournalDay"
+            },
+            "type": "array",
+            "title": "Journal Days"
           }
         },
         "type": "object",
@@ -6194,7 +6297,8 @@
           "failed_tap",
           "repeats",
           "rule_runs",
-          "catching_up_to"
+          "catching_up_to",
+          "journal_days"
         ],
         "title": "Step",
         "description": "A save as just written: what to draw, and the lines the game wrote since it was last written."
