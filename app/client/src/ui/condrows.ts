@@ -40,11 +40,11 @@ export function whenRow(catalog: Catalog, chips: ChipInfo[], stores: string[], o
   }), ...more];
 }
 
-/** The foot: the rule as a sentence ("{condition} → {action}"; nothing before what it does is chosen), the note when
- * the same rule already exists, and Save off until the rule is whole and new. */
-export function footRow(catalog: Catalog, view: View, index: number | null, then: OrderVerb | null, order: Order | null, foot: { sentence: HTMLElement; note: HTMLElement; save: HTMLButtonElement }): void {
+/** The foot: the rule as a sentence ("{condition} → {action}"; nothing before what it does is chosen; no sentence
+ * given, left as it is), the note when the same rule already exists, and Save off until the rule is whole and new. */
+export function footRow(catalog: Catalog, view: View, index: number | null, then: OrderVerb | null, order: Order | null, foot: { sentence: HTMLElement | null; note: HTMLElement; save: HTMLButtonElement }): void {
   const hue = then?.kind === "tap_card" ? catalog.rank(then.card) % 6 : 5;
-  foot.sentence.replaceChildren(...(then ? [el("span", "", order ? conditionWords(catalog, order.when) ?? "" : ""), " → ",
+  foot.sentence?.replaceChildren(...(then ? [el("span", "", order ? conditionWords(catalog, order.when) ?? "" : ""), " → ",
     el("b", `rule-action hue-${hue}`, actionWords(catalog, then))] : []));
   const dup = order !== null && ruleExists(view, index, order);
   setText(foot.note, dup ? catalog.text.get(UI.ruleExists) : "");

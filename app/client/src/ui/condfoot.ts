@@ -15,6 +15,8 @@ export class CondFoot {
   private readonly remove = el("button", "quiet danger");
   private readonly copy = el("button", "quiet cond-copy");
   private readonly save = el("button", "primary");
+  /** What the quick add's parts in the sentence show now (condquick.quickParts); "" while the sentence is words. */
+  private quickKey = "";
 
   constructor(private readonly ctx: PartContext, drop: () => void, commit: () => void, copy: () => void) {
     const { text } = ctx.catalog;
@@ -40,9 +42,12 @@ export class CondFoot {
     this.copy.disabled = full;
   }
 
-  /** The sentence, the note and Save for `order` as Save would set it (footRow). */
-  draw(view: View, index: number | null, then: OrderVerb | null, order: Order | null): void {
-    footRow(this.ctx.catalog, view, index, then, order, { sentence: this.sentence, note: this.note, save: this.save });
+  /** The note and Save for `order` as Save would set it, and the sentence: the quick add's parts when given (rebuilt
+   * only when their key changes, so an open picker stays open), else the rule's words (footRow). */
+  draw(view: View, index: number | null, then: OrderVerb | null, order: Order | null, quick: { key: string; parts: () => HTMLElement[] } | null): void {
+    footRow(this.ctx.catalog, view, index, then, order, { sentence: quick ? null : this.sentence, note: this.note, save: this.save });
+    if (quick && quick.key !== this.quickKey) this.sentence.replaceChildren(...quick.parts());
+    this.quickKey = quick?.key ?? "";
   }
 
   /** The dry run's line for `order` (conddry.ts). */

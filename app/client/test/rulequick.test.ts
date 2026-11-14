@@ -143,3 +143,21 @@ const shared: View = { ...rising, orders: rising.orders.map((o, i) => (i === woo
   choose(cond, "action", "smoke_roots");
   expect("the task, in place: smoking roots makes smoked too, so the store stays", reads(cond), "When Smoked falls to a quarter, Smoke roots until three quarters");
 }
+{
+  // A new view while a part's picker may be open (the page's next step) keeps the parts as they are: rebuilding would
+  // close the picker under the player's thumb. A change that moves the sentence rebuilds it.
+  const { ctx } = testContext();
+  ctx.keeps.keepRuleSeen();
+  const tab = new RulesTab(ctx);
+  document.body.replaceChildren(tab.root);
+  tab.update(rising);
+  one(tab.root, ".rules-new").click();
+  const cond = one(tab.root, ".cond");
+  one(cond, ".cond-task[data-card=\"smoke_catch\"]").click();
+  one(cond, ".cond-store[data-store=\"smoked\"]").click();
+  const before = select(cond, "n");
+  tab.update({ ...rising, at: rising.at + 5 });
+  expect("the same sentence: the same select", select(cond, "n") === before, true);
+  choose(cond, "n", "s0");
+  expect("a pick redraws it", [select(cond, "n") === before, reads(cond)], [false, "When Smoked falls to empty, Smoke the catch until three quarters"]);
+}

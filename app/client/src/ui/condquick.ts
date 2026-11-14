@@ -26,8 +26,9 @@ export function quickTask(catalog: Catalog, view: View, draft: Draft, chip: bool
   return whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores.includes(draft.rule.store) ? task : null;
 }
 
-/** The quick add's sentence for `draft` on a store of `cap` items (quickSentence), or null when it does not read as one. */
-export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boolean, cap: number, pick: QuickPicks): HTMLElement[] | null {
+/** The quick add's sentence for `draft` on a store of `cap` items (quickSentence), or null when it does not read as
+ * one: `key` names everything the parts show, so a caller keeps the parts (and a picker open on one) while it holds. */
+export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boolean, cap: number, pick: QuickPicks): { key: string; parts: () => HTMLElement[] } | null {
   const task = quickTask(catalog, view, draft, chip);
   const { rule } = draft;
   if (task === null || rule.m === null) return null;
@@ -35,7 +36,8 @@ export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boo
   const tasks = doChoices(catalog, view, false, draft.then).flatMap((c) => (c.kind === "task" ? [c.card] : []));
   const m = rule.m;
   const can = (which: "n" | "m", l: Level) => tryRule({ ...rule, m, [which]: l }, cap) !== null;
-  return quickSentence(catalog, { ...rule, m }, { stores, tasks, task, can }, pick);
+  const offs = PRESETS.flatMap(([bp]) => (["n", "m"] as const).filter((w) => !can(w, { share: bp })).map((w) => `${w}${bp}`));
+  return { key: JSON.stringify([rule, task, stores, tasks, offs]), parts: () => quickSentence(catalog, { ...rule, m }, { stores, tasks, task, can }, pick) };
 }
 
 export interface QuickChoices {

@@ -232,11 +232,10 @@ export class ConditionEditor {
   /** The foot's sentence: in the quick add, the rule as one line of choices (condquick.ts), else as it reads. */
   private drawSentence(view: View): void {
     const draft = this.draft;
-    this.foot.draw(view, draft?.index ?? null, draft?.then ?? null, this.order());
     const picks = { store: (s: string) => this.setStore(s), test: (t: Test) => this.setTest(t), level: (w: "n" | "m", l: Level) => this.setLevel(w, l),
       task: (card: string) => this.setDo({ kind: "task", card }) };
-    const parts = this.full || !draft ? null : quickParts(this.ctx.catalog, view, draft, this.chipNow() !== undefined, this.cap(draft.rule.store), picks);
-    if (parts) this.foot.sentence.replaceChildren(...parts);
+    const quick = this.full || !draft ? null : quickParts(this.ctx.catalog, view, draft, this.chipNow() !== undefined, this.cap(draft.rule.store), picks);
+    this.foot.draw(view, draft?.index ?? null, draft?.then ?? null, this.order(), quick);
   }
 
   /** The engine's own number, in the full editor: the view after clearing the rules and running the rule's mix (a dry
