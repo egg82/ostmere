@@ -242,6 +242,42 @@ joins = [
   { lane = "n7", mix = "town:camp", card = "n7_pick" },
 ]
 
+# Their cutting takes the place of their gathering by hand from the join, as the first two's does (choice_checks.py).
+# Its own trigger, as t_family_joins' outcome is released.
+[[triggers]]
+id = "t_family_cuts"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_cut" },
+  { unlock_kind = "card", id = "n6_cut" },
+  { unlock_kind = "card", id = "n7_cut" },
+  { unlock_kind = "retired", id = "n5_gather", replaced_by = "n5_cut" },
+  { unlock_kind = "retired", id = "n6_gather", replaced_by = "n6_cut" },
+  { unlock_kind = "retired", id = "n7_gather", replaced_by = "n7_cut" },
+]
+
+# Their everyday jobs from the join: the weaving, clay and both pots.
+[[triggers]]
+id = "t_family_chores"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "fungus_stew", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_weave_wattle" },
+  { unlock_kind = "card", id = "n6_weave_wattle" },
+  { unlock_kind = "card", id = "n7_weave_wattle" },
+  { unlock_kind = "card", id = "n5_dig_clay" },
+  { unlock_kind = "card", id = "n6_dig_clay" },
+  { unlock_kind = "card", id = "n7_dig_clay" },
+  { unlock_kind = "card", id = "n5_stew" },
+  { unlock_kind = "card", id = "n6_stew" },
+  { unlock_kind = "card", id = "n7_stew" },
+  { unlock_kind = "card", id = "n5_fungus_stew" },
+  { unlock_kind = "card", id = "n6_fungus_stew" },
+  { unlock_kind = "card", id = "n7_fungus_stew" },
+]
+
 [[subjects]]
 id = "s_n5_joined"
 kind = "person"

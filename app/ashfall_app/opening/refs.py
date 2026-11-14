@@ -86,7 +86,7 @@ def outcomes(o: "Opening") -> Iterator[tuple[str, "OutcomeEntry"]]:
         yield from ((f"answer {a.id}", a.outcome) for a in x.answers)
 
 
-def _conditions(o: "Opening") -> Iterator[tuple[str, "ConditionEntry", bool]]:
+def conditions(o: "Opening") -> Iterator[tuple[str, "ConditionEntry", bool]]:
     """Every condition with where it sits, and whether it is a trigger's `when` or an offer's gate: the only places
     that may read lane_rules."""
     for c in o.cards:
@@ -218,7 +218,7 @@ def check_refs(o: "Opening") -> None:
     """Every fraction exact and its store known; every condition, modifier and unlock names something known."""
     ids = ids_by_kind(o)
     _check_fractions(o, ids)
-    for where, c, is_gate in _conditions(o):
+    for where, c, is_gate in conditions(o):
         _check_condition(o, ids, where, c, is_gate)
     for where, m in _modifiers(o):
         _check_modifier(ids, where, m)

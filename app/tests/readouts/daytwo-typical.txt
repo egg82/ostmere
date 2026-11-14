@@ -1,5 +1,5 @@
 typical: B3 12.5 h after the end; B4 11.38 h after B3; 4 day-two visits
-  V1       gap   9.0h  active  0.2m  new  12  bigger  9  first    0s  decisions  2  actions   3  idle    5s  run 1  effort  2  | spine 1 chapter 1 side 0 {}
+  V1       gap   9.0h  active  0.2m  new  13  bigger 10  first    0s  decisions  2  actions   3  idle    5s  run 1  effort  2  | spine 1 chapter 1 side 0 {}
   V2       gap   4.2h  active  0.2m  new  13  bigger  7  first    0s  decisions  2  actions   3  idle    5s  run 1  effort  2  | spine 0 chapter 3 side 0 {}
   V3       gap   3.2h  active  0.1m  new   7  bigger  3  first    0s  decisions  2  actions   2  idle    4s  run 0  effort  2  | spine 0 chapter 0 side 0 {}
   V4       gap   9.2h  active  0.0m  new   7  bigger  2  first    0s  decisions  1  actions   1  idle    2s  run 0  effort  1  | spine 1 chapter 0 side 0 {}  [edge]

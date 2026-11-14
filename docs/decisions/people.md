@@ -114,3 +114,9 @@ chapters is `line`, since each joining so far is a beat with lines of its own. R
 buries the people who matter under a roll call once groups arrive; a count threshold (the first N get lines), which
 the owner ruled out; and wording the mention on the page from the view's joined unlocks, which carry no time, so a
 return spanning days would collapse into one line at the wrong second.
+
+**Who can do which job.** Everyday work (cooking a stew, digging clay, weaving wattle) goes to most people by default,
+withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled
+or story-bound work goes to whoever the story fits (owner, 2026-11-14). No person's list holds a job another beats
+outright (the same outcome, at least as fast, at no extra cost), checked by `app/ashfall_app/opening/choice_checks.py`.
+Balance follows these: wide access is retuned in costs and rates, never withheld to save a number.
