@@ -197,7 +197,8 @@ middle and the right beside the rail. Its title and the town mix's Change share 
 person who has joined (`ui/townstrip.ts`): their face (the ask's, so a person looks the same wherever they appear), who
 they are and what they work now, their time split into the cards that hold a share with the idle rest, the split that
 runs now while one of their cards is stopped, and the bar of the card they work. Then a row per lane run by rules whose
-person has not joined (`ui/lanerows.ts`, below). On a phone the ledger and skills follow. Change opens the town editor in
+person has not joined (`ui/lanerows.ts`, below), in the same row form (`ui/personrow.ts`) with its own Change where a
+split would be. On a desktop what each works sits over its card's bar, on the right. On a phone the ledger and skills follow. Change opens the town editor in
 the view's place. These rows are their one home: the main screen and the rail never list anyone's jobs, and the Rules
 tab keeps the town's rules, not its people. A row arriving while another tab is open dots Town (the new-card dot), never
 on the first view.
@@ -244,7 +245,7 @@ The dividers on the strip are draggable for a quick change; the strip never show
 real share, see the editor).
 
 **A lane run by rules** (a townsperson who works: api `CONTRACT.txt`, "A lane run by rules") gets a row in the Town
-view, under the town's people, in the strip's shape: the lane's label (a later label once its unlock is held), what it
+view, under the town's people, in their row form: a face, the lane's label (a later label once its unlock is held), what it
 does (the task's name, or `idle`), the task's bar, and `Change`. A row arrives through the arrival queue the first time
 its lane is in view, then stays. `Change` opens the Rules tab on the
 lane's task editor: the rule editor's simple view with only `Do`, the lane's own tasks, the rule's sentence and Save. It

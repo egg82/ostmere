@@ -1,6 +1,7 @@
 // The desktop frame (docs/design/redesign.md, "Desktop frame"; ui/tabs.ts, ui/partseat.ts, ui/townview.ts): a left rail
 // holds the tabs, Tasks · Town · Rules · Book, then the skills, and the panel's foot; the ledger sits under the art. The
-// town's people and lanes are the Town tab's alone, never the main screen's. Town keeps its slot unseen until it has a
+// town's people and lanes are the Town tab's alone, never the main screen's, and each is drawn in the one row form: a
+// person who has joined and a lane run by rules alike. Town keeps its slot unseen until it has a
 // row, and a row arriving while another tab is open dots it, but not on the first view.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
@@ -50,6 +51,14 @@ const dotted = (b: FakeEl): boolean => b.querySelector(".new-dot") !== null;
   town().click();
   expect("Town on: the view shows, the cards do not", [one(".town-tab").hidden, one(".deck").hidden], [false, true]);
   expect("the screen knows Town is on (the view takes the middle and the right)", one(".game").dataset.tab, "town");
+}
+{
+  fresh().show(townStep("townone"));
+  const rows = one(".town-tab").querySelectorAll(".person-row");
+  const form = (r: FakeEl): unknown => [r.querySelector(".town-face .ask-face") !== null, r.querySelector(".town-name")?.textContent !== "", r.querySelector(".town-doing") !== null, r.querySelector(".lane-bar") !== null];
+  expect("one person and one lane: two rows", rows.map((r) => r.classList.contains("lane-row")), [false, true]);
+  expect("both in the one form: face, name, what they work, its bar", rows.map(form), [[true, true, true, true], [true, true, true, true]]);
+  expect("no other row form in the view", one(".town-tab").querySelectorAll(".hands-label").length, 0);
 }
 {
   const screen = fresh();

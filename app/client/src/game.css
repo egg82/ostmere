@@ -210,13 +210,6 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .hands-rows:not(:has(> :not([hidden], :empty))) { display: none; }
 .hands-rows { padding: 0 0 .5rem; border-bottom: 1px solid var(--rule); }
 .hands-rows > * { margin-top: .5rem; }
-/* a lane run by rules (ui/lanerows.ts): the strip's shape under it, one row per lane: who, what, its bar, Change */
-.lane-rows:not(:empty) { padding: .5rem 0; border-bottom: 1px solid var(--rule); }   /* under the pinned strip, scrolling with the cards on a phone */
-.lane-row { min-height: 2.75rem; }
-.lane-row + .lane-row { margin-top: .5rem; }
-.lane-row .hands-row { justify-content: space-between; }
-.lane-row .lane-bar { margin-top: .35rem; }
-.lane-row .lane-fill { background: var(--ember); }
 
 /* a mix as one split bar, its legend beneath: no text inside the bar. Neighbouring hues sit apart on a 2px gap of the page,
    each hue 3:1 against it (tests/test_client_contrast.py). The legend's look is shared with the town's (.town-key). */
@@ -818,9 +811,14 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .game[data-tab="town"] .panel > :not(.card-area, .tabs, .panel-foot, .banners) { display: none; }
   .town-tab { max-width: 64rem; }
   .town-people { gap: 0; }
-  .town-tab .town-people .town-person { grid-template-columns: 2.5rem minmax(6rem, 10rem) minmax(0, 1fr) minmax(6rem, 9rem); grid-template-areas: "face who split track" "face who now track"; column-gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
-  .town-people .town-who { flex-direction: column; align-items: flex-start; gap: .1rem; }
-  .town-people .town-name { font-size: var(--t-body); }
+  .town-tab { row-gap: 0; }
+  .town-tab > .view-title { padding-bottom: .6rem; }
+  .town-tab .person-row { grid-template-columns: 2.5rem minmax(6rem, 10rem) minmax(0, 1fr) minmax(6rem, 9rem); grid-template-areas: "face name split doing" "face name now track"; column-gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
+  .town-tab .person-row > .town-who { display: contents; }   /* the name beside the face; what they work over its bar, on the right */
+  .town-tab .person-row .town-name { grid-area: name; font-size: var(--t-body); }
+  .town-tab .person-row .town-doing { grid-area: doing; font-size: var(--t-meta); }
+  .town-tab .person-row > .lane-change { grid-area: split; justify-self: start; }
+  .town-tab .person-row > .lane-bar { margin-top: 0; }
   .town-face .ask-face { width: 2.5rem; height: 2.5rem; font: 400 1.25rem/1 "IM Fell English SC", Georgia, serif; }
 }
 
@@ -912,13 +910,14 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-tab .town .hands-row { grid-row: 1; grid-column: 2; }
 .town { display: block; min-height: 0; }
 /* a person: face and who, then their split, the split that runs now, and the card they work */
-.town-people .town-person { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "face who" "split split" "now now" "track track"; column-gap: .6rem; align-items: center; }
+.person-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "face who change" "split split split" "now now now" "track track track"; column-gap: .6rem; align-items: center; }
 .town-face { grid-area: face; display: flex; }
-.town-person > .town-who { grid-area: who; }
-.town-person > .town-split-of { grid-area: split; }
-.town-person > .running-now { grid-area: now; }
-.town-person > .lane-bar { grid-area: track; }
-.town + .lane-row { margin-top: .5rem; }
+.person-row > .town-who { grid-area: who; }
+.person-row > .town-split-of { grid-area: split; }
+.person-row > .running-now { grid-area: now; }
+.person-row > .lane-change { grid-area: change; }
+.person-row > .lane-bar { grid-area: track; margin-top: .3rem; }
+.person-row .lane-fill { background: var(--ember); }
 .town-people { margin-top: .35rem; display: grid; gap: .6rem; }
 .town-who { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; }
 .town-name { font-size: var(--t-meta); font-weight: 500; color: var(--ink-hi); margin: 0; }
@@ -928,12 +927,10 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-key, .share-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: var(--t-meta); color: var(--ink); }
 .town-key-item::before, .share-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
 .town-key-item.idle::before { background: var(--track); border: 1px solid var(--ink-dim); box-sizing: border-box; }
-.town .lane-bar { margin-top: .3rem; }
 .town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as the hands' greyed .share-track */
 .town.greyed .town-name { color: var(--ink-dim); }
 .town.greyed .town-key-item::before { filter: saturate(.15) brightness(.6); }
 .town.greyed .town-status { color: var(--ink-hi); }   /* why it stopped: plain, not dimmed with it */
-.town .lane-fill { background: var(--ember); }
 .town-editor { display: grid; gap: .9rem; align-content: start; }
 .town-editor[hidden] { display: none; }
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }
