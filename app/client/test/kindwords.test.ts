@@ -12,14 +12,13 @@ function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-// The fixture's "ask" offer, made a kind of its own: its answer "go" is the role "yes" and reads "Go now".
-const content = {
+// The fixture's "ask" offer, made a kind of its own: its answer "go" is the role "yes" and reads "Go now"; the fixture's
+// kind has its own labels for the roles.
+const content: Content = {
   ...fixtureContent,
-  text_entries: [...fixtureContent.text_entries, { key: "kind.q.yes", text: "Say yes" }, { key: "kind.q.no", text: "Say no" }],
-  offer_kinds: [{ kind: "q", roles: [{ role: "yes", label_key: "kind.q.yes" }, { role: "no", label_key: "kind.q.no" }] }],
   offer_infos: fixtureContent.offer_infos.map((o) => (o.offer !== "ask" ? o
     : { ...o, kind: "q", answers: o.answers.map((a) => ({ ...a, role: a.answer === "go" ? "yes" : "no" })) })),
-} as Content;
+};
 const catalog = new Catalog(content);
 
 expect("a kind rule, by the kind's label", answerWords(catalog, { kind: "answer_kind", offer_kind: "q", role: "yes" }), "Answer: Say yes");

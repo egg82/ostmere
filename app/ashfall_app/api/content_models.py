@@ -12,7 +12,7 @@ from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, N
 from .line_models import LineInfo, PeopleInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
-from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, OfferInfo
+from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, KindRole as KindRole, OfferInfo, OfferKindInfo as OfferKindInfo
 
 
 class Scales(BaseModel):
@@ -269,6 +269,8 @@ class Content(BaseModel):
     lane_infos: list[LaneInfo]
     offer_infos: list[OfferInfo]
     """Every offer, in content order (CONTRACT.txt, "Offers")."""
+    offer_kinds: list[OfferKindInfo]
+    """Every kind of offer with its role labels, in content order."""
     end_line_keys: list[str]
     """Lines the page appends to the log when the end happens (view.ended_at)."""
     line_infos: list[LineInfo]

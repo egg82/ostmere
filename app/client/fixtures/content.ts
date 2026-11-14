@@ -290,7 +290,7 @@ const text: Record<string, string> = {
   "ui.lane.idle": "idle", "ui.lane.change": "Change", "ui.rule.always": "{card}, always",
   "ui.rule.answer": "Answer: {answer}", "ui.rule.answers": "Answers", "ui.rule.answer_next": "Next time someone asks:", "ui.rule.answered": "Answered: {answer}",
   "lane.helper": "Helper", "lane.helper.later": "Helper, settled", "card.chop": "Chop logs", "card.haul": "Haul water", "card.fetch": "Fetch once",
-  "offer.ask": "[fixture] A question with two answers: which one?", "answer.wait": "Wait", "answer.go": "Go now", "offer.cost": "takes {d}",
+  "offer.ask": "[fixture] A question with two answers: which one?", "answer.wait": "Wait", "answer.go": "Go now", "kind.q.yes": "Say yes", "kind.q.no": "Say no", "offer.cost": "takes {d}",
   "offer.bank": "[fixture] Two ways to do a thing: whose?", "answer.hers": "Hers", "answer.his": "His", "offer.hers.effect": "[fixture] {pct} a thing", "offer.his.effect": "[fixture] {pct} another, {gain} wood",
   "offer.bank.waiting": "[fixture] waiting costs a thing", "offer.bank.expiry": "[fixture] gone by a time", "offer.bank.permanence": "[fixture] settled for good",
   "offer.trade": "[fixture] A third question, asked by one person with a long name?", "answer.keep": "Keep it", "answer.swap": "Swap it away",
@@ -427,6 +427,9 @@ export const fixtureContent: Content = {
     offer: "trade", text_key: "offer.trade", kind: null, line_keys: [],
     answers: [{ answer: "keep", label_key: "answer.keep", cost_key: "offer.keep.effect", change_bp: [500], gains: [], role: null }, { answer: "swap", label_key: "answer.swap", cost_key: "offer.swap.effect", change_bp: [], gains: [{ store: "stone", quantity: 3 * Q }], role: null }],
     askers: ["mason"], cause: { kind: "answer", offer: "bank" }, waiting_key: null, expiry_key: null, permanence_key: null,
+  }],
+  offer_kinds: [{   // the kind the tests and #kinded make of the "ask" offer: "go" is the role yes, "wait" the role no
+    kind: "q", roles: [{ role: "yes", label_key: "kind.q.yes" }, { role: "no", label_key: "kind.q.no" }],
   }],
   lane_infos: [
     { lane: "hands", label_key: "lane.hands", ruled: false, later_labels: [], name_key: null, told: null },
