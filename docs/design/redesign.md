@@ -49,7 +49,8 @@ Each part is tagged on the page with the competing design it came from.
 - **Asks.** A list, one shown at a fixed height, with a count of the rest. Each ask shows who asks, "↳" what led
   to it, and each answer as before → after figures.
 - **Ledger.** Grouped into yours, town, outposts and threats, each group appearing when its first row does. A row
-  turns red only when its store is falling with nothing covering it.
+  turns red only when its store is falling with nothing covering it; a rule of the player's spending the store as it
+  says covers it. No button stands under a row: a row a rule watches carries a small mark and opens that rule on a tap.
 - **Feel.** On pointer-down a card sinks 2px onto its shadow, a step lighter, and it settles in 160ms on release, at
   the page's `--press-ms`, `--settle-ms` and `--settle-ease`. A level shows its bonus on the card it speeds up for 2s:
   the skill, the level and one completion's time, old → new, read from the rules (the cards a level speeds and each

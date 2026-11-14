@@ -119,8 +119,8 @@ line and a ledger line are measured in device pixels on both, and the story line
 └────────────┴──────────────────────────────────────┴──────────────────────────────┘
 ```
 
-Three columns (`docs/design/redesign.md`, "Desktop frame"). **The left rail** holds the panel's tabs, Tasks, Town, Rules
-and Book (`ui/tabs.ts`: the same row the phone shows as its bottom bar), then the skills, and the panel's quiet text
+Three columns (`docs/design/redesign.md`, "Desktop frame"). **The left rail** holds the panel's tabs, Tasks, the town
+(named by `ui.town.title`, as its heading is), Rules and Book (`ui/tabs.ts`: the same row the phone shows as its bottom bar), then the skills, and the panel's quiet text
 buttons at its foot (`ui/partseat.ts` seats each by frame). Town and Rules keep their slots unseen until they arrive, as
 on the phone, so nothing in the rail moves. The rail never lists a person's jobs. Book is a view like Town (The Book).
 
@@ -201,7 +201,8 @@ runs now while one of their cards is stopped, and the bar of the card they work.
 person has not joined (`ui/lanerows.ts`, below), in the same row form (`ui/personrow.ts`) with its own Change where a
 split would be. On a desktop what each works sits over its card's bar, on the right. On a phone the ledger and skills follow. Change opens the town editor in
 the view's place. These rows are their one home: the main screen and the rail never list anyone's jobs, and the Rules
-tab keeps the town's rules, not its people. A row arriving while another tab is open dots Town (the new-card dot), never
+tab keeps the town's rules, not its people, and only once the town has a second mix to switch to (with one, a town rule
+has nothing to do, so neither they nor a New rule for them are drawn). A row arriving while another tab is open dots Town (the new-card dot), never
 on the first view.
 
 At a town's size the view scrolls in its own column with the panel's fade at its foot; the rail keeps its one Town
@@ -376,10 +377,18 @@ dot (below), and the player writes the rule in the Rules tab. Nothing is ever bu
 keeping the cell beside it. It is shown unprompted: in the preview, no player found the order card it kept out of
 sight, and every player who saw the inline offer set it. On the hands a rule always runs a mix, so the lesson's editor saves
 a mix of that task alone (named by the task) with the rule; a task on another lane
-(the rack) becomes a rule of its own. Once set, the line turns white and reads `covered`. A rule that is set while the
-line is still red (found by its store and test, so a level the player changed still counts) shows that rule's
-sentence and `Change`, which opens the Rules tab on that rule's editor. A falling line a rule covers says `covered`, a
-small button to that rule in the Rules tab. Player text says rule and task, never order or card.
+(the rack) becomes a rule of its own. Once set, the offer goes and the line turns white. Player text says rule and task,
+never order or card.
+
+- **Covered** is something keeping the store fed, or a rule of the player's spending it as the rule says: the rule is
+  on, it is an `n or more` rule on that store, and a task it runs is what takes from the store (`4 or more catch, until
+  under 1 → Smoke` draws the catch down and the line stays white). Red is for a store falling with nothing covering it.
+- **Nothing stands under a line a rule watches.** The line carries a small rule mark (the Rules tab's icon, dim), and a
+  tap anywhere on it opens that rule in the Rules tab: the rule spending the store, else the first rule on it. A rule
+  set while the line is still red changes nothing under it either; the mark is the way to it.
+- **A covering rule that can't keep up says so once,** beside the line's time: `empty in 4m · Gather can't keep up`
+  when the forecast empties a store an `under n` rule keeps, `full · Smoke can't keep up` when a store an `n or more`
+  rule takes from is full and still fed. An outranked or passed-over rule gives the Rules tab's own reason instead.
 
 - **Starved** (the store is at 0 and something waits on it) reads as a problem too, covered or not.
 - **Full** (`damp wood 12/12 · full`) is not an alarm: the ordinary line colour, `full` in
@@ -564,6 +573,9 @@ whose top shows the strip.
   already a saved mix's.
 - `New mix` opens the editor with no cards and a pre-filled name no saved mix has. `Save` stays off until a card has
   been added and the name is free; saving creates the mix.
+- A typed name never reaches another mix. `Save` is off for another saved mix's name (it would overwrite that mix) and
+  for a name beginning as the game's own mixes do (`limits.reserved_mix_prefix`), and one line under the name says
+  which; the server refuses the same.
 - `Delete mix` asks once, in place (`Delete? Yes · No`). A mix named by a rule (`a rule uses it`; in the Mixes list
   `used by 2 rules`), or nested in another, says so instead of deleting.
 - Renaming a mix that rules run points those rules at the new name; renaming the player's own keeps it the player's
@@ -572,7 +584,8 @@ whose top shows the strip.
 
 ## The Mixes list
 
-From the strip's name ▾ (or its `Mixes ▾`): the saved mixes and nothing else, the player's own first. A centred sheet
+From the strip's name ▾ (or its `Mixes ▾`): the player's saved mixes and nothing else, the player's own first. A town
+mix is never listed: it runs by rules and is changed in the town's editor. A centred sheet
 on a desktop, a full-width bottom sheet on a phone (as every sheet there, "Phone"; scrolling). Each mix's row draws its split as a small bar of hues with the legend under it.
 
 - **Tapping a mix makes it the default,** what runs when no rule's mix does; while a rule's mix runs, it sets what
@@ -629,7 +642,7 @@ Rack                                                   each side lane's task rul
 - Rules on a store's amount, a task's count and a skill's or the Camp's level are drawn, the kinds the editor writes.
   None is written or drawn on time, an unlock (unlocks only grow, so one the save holds is always true) or a task
   running (`set_orders` refuses it: an order on what its own mix stops would flip at every instant).
-- **Shortcuts:** the ledger offer's `Change` and a line's `covered` open the tab on that rule's editor; the strip's
+- **Shortcuts:** a ledger line a rule watches opens the tab on that rule's editor; the strip's
   `until …` or `while …` opens the tab itself, where `Lately` says what the rules did.
 - On a phone, tapping is the primary path (the picker, ≡'s menu); dragging ≡ works with touch too.
 - **A rule that is off says why** in a quiet line under it, in the ledger's grammar, from the engine's own
@@ -755,8 +768,8 @@ Remove                                   [Add rule] Remove only when editing; Sa
 - Changing a chip's rule shows its chip as the heading, its `Do` row, the sentence and `Remove`: no stores, test,
   levels, band or fact.
 
-Known limit: the ledger's `covered` ignores a rule's condition (a rule that would never come on still
-covers its line). The rule's own line in the Rules tab says it is waiting and on what.
+Known limit: a rule whose task or mix makes a store covers that store's line whatever its condition (a rule that would
+never come on still covers it). The rule's own line in the Rules tab says it is waiting and on what.
 
 ## Lessons
 

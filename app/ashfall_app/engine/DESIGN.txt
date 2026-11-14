@@ -1871,8 +1871,11 @@ CHOICES (the town's mix)
   are as before, and the only writer of active is the player's HANDS switch. A player's SaveMix of the
   running town mix applies at once (rates rebuilt, pauses cleared), as SaveMix of the running hands mix does.
 - Reserved ids: a MixId beginning "town:" is content's. SaveMix refuses (InvalidVerbError) one not already in
-  save.mixes, so only a join creates it; once created the player edits it as any mix. Why: mix ids are the player's
-  own text, never renamed, so a join's id must be one no player can already hold.
+  save.mixes, so only a join creates it; once created the player edits it as any mix. SaveMix under the id of a saved
+  mix keeps that mix's layer (InvalidVerbError otherwise; plan.mix_layer of the saved and of the new). Why: mix ids are
+  the player's own text, never renamed, so a join's id must be one no player can already hold; and a name the player
+  types for a hands mix (a rename, a save as new) must never overwrite a town mix, nor a town edit a hands mix, which
+  would move the rules switching it into the other layer.
 - Rates on a joined lane L: while L holds no tap, each card of the flattened running town mix that is on L runs at
   its share, as a hands mix card does on HANDS (Rate form, dry pauses, L's
   LaneSpeed joins its stack, its lumps paid as rates). While L holds a tap, every running town card on L is YIELDED
@@ -1966,7 +1969,8 @@ INVARIANTS (the town's mix; numbered on from 89)
     card on that lane, whose mix does not begin "town:", or that sits outside a trigger's or answer's outcome; and
     for a JOINED unlock in Outcome.unlocks or Rules.opening. InvalidVerbError for a player's SaveMix of a mix mixing
     layers, naming a card on an unjoined lane or a capped ruled-lane card, or summing a lane above BP; of a new
-    "town:" id; for a player's SwitchMix of a TOWN mix; and for SetQueue with one.
+    "town:" id; of a saved mix's id with cards of the other layer; for a player's SwitchMix of a TOWN mix; and for
+    SetQueue with one.
 97. Rebase: for s past the moment whose trigger holds a Join of L, rebasing s into rules that add that trigger gives
     the save invariant 94 describes, at the save's time; rebasing a save already holding Unlock(JOINED, L) through a
     rename of L gives Unlock(JOINED, L') and changes nothing else about the town.

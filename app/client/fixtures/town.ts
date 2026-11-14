@@ -5,6 +5,7 @@
 //   towngrey: "town" with its card Haul retired: the engine's greyed shape applied to the captured view (the mix greyed, its
 //             rule passed over, nobody running shares, the card gone from the cards);
 //   townone:  the helper alone has joined; the mason's lane keeps its own row, run by its always rule.
+// withSecondMix gives any of them a second town mix (the town's split under another name), so the town's rules show.
 import type { Step, View } from "../src/api/types";
 import { fixtureStep, type Kept } from "./steps";
 import { TOWN_WIRE, type TownWire } from "./townwire";
@@ -39,6 +40,12 @@ function greyed(v: View): View {
     orders_on: v.orders_on.map((on, i) => on && i !== at), order_states: v.order_states.map((s, i) => (i === at ? "passed_over" : s)),
     cards: v.cards.filter((c) => c.card !== "haul").map((c) => ({ ...c, share_bp: 0 })),
   };
+}
+
+/** `v` with a second town mix beside town:main: the town's rules have something to switch to, so the Rules tab shows them. */
+export function withSecondMix(v: View): View {
+  const town = v.mixes.find((m) => m.id === "town:main");
+  return town ? { ...v, mixes: [...v.mixes, { ...town, id: "Camp 2" }] } : v;
 }
 
 export function townStep(phase: TownPhase, kept: Kept = {}, decisions = 0): Step {

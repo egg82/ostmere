@@ -4,7 +4,7 @@
 // The views are the engine's own (fixtures/townwire.ts); the greyed one is that view with the greyed shape applied (fixtures/town.ts).
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
-import { townStep } from "../fixtures/town";
+import { townStep, withSecondMix } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import { RulesTab } from "../src/ui/rules";
 import { TownStrip } from "../src/ui/townstrip";
@@ -16,9 +16,9 @@ function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const both = townStep("town").view;
+const both = withSecondMix(townStep("town").view);   // a second town mix, so the town's rules show
 const townIndex = both.orders.findIndex((o) => o.then.kind === "switch_mix" && o.then.mix_id === "town:main");
-const greyed = townStep("towngrey").view;
+const greyed = withSecondMix(townStep("towngrey").view);
 const texts = (nodes: FakeEl[]): string[] => nodes.map((n) => n.textContent ?? "");
 
 function rules(view: View) {
@@ -41,7 +41,7 @@ function strip(view: View) {
   const section = root.querySelectorAll(".rules-town");
   expect("one town section", section.length, 1);
   expect("its heading", section[0]?.querySelector(".panel-heading")?.textContent, "Camp");
-  expect("the always rule's words", texts(root.querySelectorAll(".town-rule .rule-when")), ["Camp, always"]);
+  expect("the always rule's words", texts(root.querySelectorAll(".town-rule .rule-when")), ["Otherwise, Camp"]);
   expect("it is the one on", root.querySelectorAll(".town-rule.active").length, 1);
   expect("not among the hands' rules", root.querySelectorAll(".rules-list .rule-handle").map((h) => h.dataset.rule).includes(String(townIndex)), false);
   expect("the hands' rules are still there", root.querySelectorAll(".rules-list .rule-handle").length > 0, true);

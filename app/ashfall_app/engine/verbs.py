@@ -14,8 +14,9 @@ from .prestigeverbs import MovePick, Prestige, UndoPick
 class SaveMix:
     """Save `mix` under its id, replacing any saved mix of that id in place (new ids append). If it is the running
     mix, the change takes effect at once. Invalid shares, unknown ids, a nesting cycle, a card off HANDS, a
-    locked card, or a completed card (a mix is never saved greyed: DESIGN.txt, "Greyed mix"), or a new id
-    past MAX_MIXES saved mixes: InvalidVerbError."""
+    locked card, or a completed card (a mix is never saved greyed: DESIGN.txt, "Greyed mix"), a new id
+    past MAX_MIXES saved mixes, or cards of the other layer under a saved mix's id (DESIGN.txt, "Reserved ids"):
+    InvalidVerbError."""
 
     mix: Mix
 

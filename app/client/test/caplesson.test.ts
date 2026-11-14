@@ -4,7 +4,7 @@
 // the player adds is theirs: a "reaches" rule on that store doing the task they picked. Before writing rules is open,
 // after the lesson is kept, or with a reaching rule already on the store, nothing is marked.
 import { install } from "./fake-dom";
-import { fixtureContent } from "../fixtures/content";
+import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
@@ -135,4 +135,18 @@ const wood = catalog.storeLabel("wood");
   r.frame();
   expect("no trigger after the skip", r.line() !== null, false);
   expect("the line still reads full, with what is lost", r.screen.root.querySelector('.line.full .line-eta')?.textContent, text("ui.ledger.full"));
+}
+
+{  // control: a rule keeping wood stocked watches the full line, so the line carries that rule's mark; the lesson still
+   // starts from it and walks on
+  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1 }, then: { kind: "tap_card", card: "tend" } };
+  const v = full.view;
+  const r = rig({ ...v, orders: [...v.orders, keep], orders_on: [...v.orders_on, false], order_states: [...v.order_states, "waiting"] }, keepsOf(RULES_OPEN));
+  r.frame();
+  expect("the marked line is the trigger", [r.line()?.dataset.store, r.line()?.querySelector<HTMLElement>(".line-rule")?.hidden], ["wood", false]);
+  r.frame();
+  expect("the lesson starts on it", r.note(), text("ui.lesson.cap_full", { store: wood }));
+  r.tap(".lesson-next");
+  r.frame();
+  expect("and walks on to the Rules tab", r.note(), text("ui.lesson.cap_rules"));
 }

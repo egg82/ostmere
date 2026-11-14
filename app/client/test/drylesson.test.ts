@@ -3,7 +3,7 @@
 // is outside the mix. The line carries the quiet dot and the lesson walks the running mix's own Edit, the maker's add
 // button and Save; the mix saved is the player's, with the maker in it. Each fact of the cue taken away clears the mark.
 import { fakeDocument, FakeEvent, install } from "./fake-dom";
-import { fixtureContent } from "../fixtures/content";
+import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
@@ -129,4 +129,17 @@ function rig(view: View, keeps: Keeps) {
   const r = rig(dry, keepsOf(TAUGHT, null, { lessons: false }));
   r.frame(); r.frame();
   expect("off: no trigger", r.line() !== null, false);
+}
+
+{  // control: a rule watching wood that does not make it leaves the dry line uncovered, and marked with that rule; the
+   // lesson still starts from the line and walks on
+  const watching: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 2 * Q - 1, release: 6 * Q - 1 }, then: { kind: "tap_card", card: "tend" } };
+  const r = rig({ ...dry, orders: [...dry.orders, watching], orders_on: [...dry.orders_on, false], order_states: [...dry.order_states, "waiting"] }, keepsOf(TAUGHT));
+  r.frame();
+  expect("the marked line is the trigger", [r.line()?.dataset.store, r.line()?.querySelector<HTMLElement>(".line-rule")?.hidden], ["wood", false]);
+  r.frame();
+  expect("the lesson starts on it", r.note(), text("ui.lesson.dry_line", { store: wood, card: stool }));
+  r.tap(".lesson-next");
+  r.frame();
+  expect("and walks on to Edit", r.note(), text("ui.lesson.dry_edit", { task: gather, store: wood }));
 }

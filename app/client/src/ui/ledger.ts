@@ -1,20 +1,21 @@
 // The ledger (docs/design/redesign.md, "Ledger"): grouped, each group's label drawn while it has a row: the player's
 // stores (Yours), then the threats at them (ui/threats.ts). A line per store the view lists, the Camp store excepted
-// (it is the Camp bar), each from when it first means something (game/shown.ts): one that asks something (red, starved or carrying an offer), or is falling, full
-// while fed, or covered by a rule. Once drawn a line stays, kept for the account (game/keeps.ts). A line is white unless it
-// is falling with nothing covering it, or starved (dry while something waits on it, covered or not); then it is red,
-// with its answer right beside it. The store's order card is never built from the line: the first time (the rule's lesson
-// may start) its rule shows inline under the line with Show me, which opens the editor and walks it; after that the red
-// line carries a quiet mark (until touched) and the player writes the rule in the Rules tab. A card for a rising line
-// (cues.risingCard: a side lane's task or a hands build) is marked once the line is full or rising, and kept until a rule
-// is set. Once a rule on that store and test exists (at whatever levels) and the line is still red, the line shows that
-// rule's condition and action with Change, which opens the Rules tab on that rule's editor.
-// A full store that something
-// still feeds says so and that the extra is lost, never in an alarm's colour; a red line with no order card to answer it names what draws on it most, with
-// Edit mix. The first full store the hands fill (game/caphint.ts) carries the quiet mark and starts the cap rule's lesson,
-// once writing rules is open; nothing is built from it. The first dry store a mix card stopped on (game/dryhint.ts) carries
-// it too and starts the dry store's lesson. A line's "full in" and "empty in" are the forecast's (game/forecast.ts), so a rule that takes from the
-// store, tops it up or stops it short first leaves no time drawn.
+// (it is the Camp bar), each from when it first means something (game/shown.ts): one that asks something (red, starved
+// or carrying an offer), or is falling, full while fed, or covered by a rule. Once drawn a line stays, kept for the
+// account (game/keeps.ts). A line is white unless it is falling with nothing covering it (game/cover.ts: a rule drawing
+// its store down as it means to covers it), or starved (dry while something waits on it, covered or not); then it is
+// red, with its answer right beside it. The store's order card is never built from the line: the first time (the rule's
+// lesson may start) its rule shows inline under the line with Show me, which opens the editor and walks it; after that
+// the red line carries a quiet mark (until touched) and the player writes the rule in the Rules tab. A card for a
+// rising line (cues.risingCard: a side lane's task or a hands build) is marked once the line is full or rising, and
+// kept until a rule is set. Nothing stands under a line once a rule watches its store: the row carries that rule's mark
+// and taps through to it (ui/linerule.ts), and says why when the rule covers it and cannot keep up. A full store that
+// something still feeds says so and that the extra is lost, never in an alarm's colour; a red line with no order card
+// to answer it names what draws on it most, with Edit mix. The first full store the hands fill (game/caphint.ts)
+// carries the quiet mark and starts the cap rule's lesson, once writing rules is open; nothing is built from it. The
+// first dry store a mix card stopped on (game/dryhint.ts) carries it too and starts the dry store's lesson. A line's
+// "full in" and "empty in" are the forecast's (game/forecast.ts), so a rule that takes from the store, tops it up or
+// stops it short first leaves no time drawn.
 // While a mix share is dragged, the lines its cards feed or draw on light up.
 import type { LedgerLine, OrderCard, View } from "../api/types";
 import { sample } from "../game/clock";
@@ -23,8 +24,9 @@ import { dryCue, type DryCue } from "../game/dryhint";
 import { largestDrain, offeredCard, risingCard, risingLine } from "../game/cues";
 import { emptyAt, fullAt } from "../game/forecast";
 import { runningMix } from "../game/mix";
+import { lineRule } from "../game/cover";
 import { fullAndFed, LEDGER_FEATURE, lineJoins, redLine } from "../game/shown";
-import { actionWords, ruleFor, rulesFull, ruleWords } from "../game/orders";
+import { ruleFor, rulesFull, ruleWords } from "../game/orders";
 import { CAP_RULE, DRY_STORE, guided, guidedRule, ruleSubject, ruleWaits } from "../game/lessons";
 import { readingMs } from "../game/reading";
 import { stalled } from "../game/stall";
@@ -33,6 +35,7 @@ import { UI } from "../game/text";
 import { noteOrderShown } from "../telemetry";
 import { el, place, pulse, rekey, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
+import { behindWords, ruleMark, setRuleMark } from "./linerule";
 import type { Part, PartContext } from "./part";
 import { Threats } from "./threats";
 
@@ -48,6 +51,9 @@ interface Row {
   rate: HTMLElement;
   eta: HTMLElement;
   edit: HTMLButtonElement;
+  /** The rule the row's mark opens (game/cover.ts, lineRule), or -1. */
+  rule: number;
+  mark: HTMLButtonElement;
 }
 
 /** What a line's inline offer shows: the store's order card on offer, the rule set on its store and test (-1: none),
@@ -116,11 +122,13 @@ export class Ledger implements Part {
       const value = sample(line.segment, t);
       setText(row.amount, format.amount(value, cap));
       const full = fullAndFed(line, t);
-      const drain = row.offer === null && this.red(line) ? this.drain(line) : "";
+      const red = this.red(line);
+      const drain = row.offer === null && red ? this.drain(line) : "";
       if (row.box.classList.contains("full") !== full) { row.box.classList.toggle("full", full); this.arrange(t); }
-      row.edit.hidden = !drain || !this.view || runningMix(this.view) === null;
+      row.edit.hidden = !drain || row.rule >= 0 || !this.view || runningMix(this.view) === null;
       const eta = full ? text.get(UI.full) : this.eta(line, t);
-      setText(row.eta, drain ? `${eta} · ${drain}` : eta);
+      const why = drain || (!red && this.view ? behindWords(this.ctx.catalog, this.view, line, row.rule, t) : null);
+      setText(row.eta, why ? `${eta} · ${why}` : eta);
     }
   }
 
@@ -152,8 +160,8 @@ export class Ledger implements Part {
 
   /** Red as game/shown.ts says, except a store that only feeds a bonus (StoreInfo.bonus_bp): running low on it misses
    * the bonus and asks nothing, so it is never drawn as an alarm. */
-  private red(line: LedgerLine): boolean {
-    return redLine(line) && this.ctx.catalog.stores.get(line.store)?.bonus_bp == null;
+  private red(line: LedgerLine, view = this.view): boolean {
+    return view !== null && redLine(line, view) && this.ctx.catalog.stores.get(line.store)?.bonus_bp == null;
   }
 
   /** The label of what draws on a red line most (a card or a standing action), or "" (cues.largestDrain). */
@@ -195,7 +203,10 @@ export class Ledger implements Part {
     row.box.classList.toggle("alarm", red);
     row.box.classList.toggle("rising", line.net_per_hour > 0);
     const { card, rule, shown } = offer;
-    this.inline(row, shown ? card : undefined, rule);
+    this.inline(row, shown ? card : undefined);
+    row.rule = lineRule(view, line);
+    setRuleMark(row.mark, this.ctx.catalog, view, row.rule);
+    row.box.classList.toggle("ruled", row.rule >= 0);
     this.capLine(row, capped);
     this.dryLine(row, dry);
     this.hint(row, (capped && [null, CAP_RULE].includes(this.ctx.lesson())) || (dry !== null && [null, DRY_STORE].includes(this.ctx.lesson())) || (shown && card !== undefined && rule < 0 && this.view !== null && !guidedRule(this.view, this.ctx.keeps, card)));
@@ -213,7 +224,7 @@ export class Ledger implements Part {
     const rule = card === undefined ? -1 : ruleFor(view, card);
     if (card && (stalled(this.ctx.streak, card) || (risingCard(catalog, card) && risingLine(line, view.at)))) this.kept.add(line.store);
     if (rule >= 0) this.kept.delete(line.store);
-    const shown = card !== undefined && (rule >= 0 ? red : (red || this.kept.has(line.store)) && !rulesFull(catalog, view));
+    const shown = card !== undefined && rule < 0 && (red || this.kept.has(line.store)) && !rulesFull(catalog, view);
     return { card, rule, shown };
   }
 
@@ -237,33 +248,30 @@ export class Ledger implements Part {
     else unmark(row.box);
   }
 
-  /** The line's guide to the first rule's lesson, shown under it while the line is red and gone when it is not: Add rule, or, when a rule on
-   * its condition is set (`rule` >= 0) and the line is still red, that rule's action and Change. */
-  private inline(row: Row, card: OrderCard | undefined, rule: number): void {
+  /** The line's guide to the first rule's lesson, shown under it while the line is red (or its card kept) and no rule
+   * is set on its store and test, and gone when it is not: the card's rule and Show me. */
+  private inline(row: Row, card: OrderCard | undefined): void {
     const { catalog } = this.ctx;
-    const order = rule >= 0 ? this.view?.orders[rule] : undefined;
-    const words = card ? ruleWords(catalog, order ? { when: order.when, then: order.then } : { when: card.when, then: card.then }) : null;
-    const guide = card !== undefined && rule < 0 && this.view !== null && guidedRule(this.view, this.ctx.keeps, card);
+    const words = card ? ruleWords(catalog, { when: card.when, then: card.then }) : null;
+    const guide = card !== undefined && this.view !== null && guidedRule(this.view, this.ctx.keeps, card);
     const waits = guide && ruleWaits(card, this.ctx.lesson(), this.ctx.lessonSubject());   // guided, it waits out another lesson or offer
-    const key = card && words && !waits && (guide || rule >= 0) ? `${rule >= 0}|${words.when}|${words.action}|${guide}` : "";
+    const key = card && words && guide && !waits ? `${words.when}|${words.action}` : "";
     if (key === row.offerKey) return;
     row.offerKey = key;
     row.offer?.remove();
     row.offer = null;
     if (key === "" || !card || !words) return;
     const offer = el("div", "line-order");
-    const change = rule >= 0;
-    const button = el("button", change ? "quiet" : "primary lesson-go", catalog.text.get(change ? UI.orderChange : UI.lessonShow));
+    const button = el("button", "primary lesson-go", catalog.text.get(UI.lessonShow));
     button.type = "button";
-    if (guide) Object.assign(button.dataset, { teach: "rule-offer" }, ruleSubject(card));
+    Object.assign(button.dataset, { teach: "rule-offer" }, ruleSubject(card));
     button.addEventListener("click", () => {
       tapFeedback();
-      if (change) { this.ctx.actions.openRules(rule); return; }
       this.ctx.actions.openRules("new", card.when);   // the rule's lesson: built on the editor
     });
     const sentence = el("p", "rule-sentence");
     const hue = card.then.kind === "tap_card" ? catalog.rank(card.then.card) % 6 : 5;
-    sentence.append(el("span", "", words.when), " → ", el("b", `rule-action hue-${hue}`, order ? actionWords(catalog, order.then) : words.action));
+    sentence.append(el("span", "", words.when), " → ", el("b", `rule-action hue-${hue}`, words.action));
     offer.append(sentence, button);
     row.offer = offer;
     row.node.append(offer);
@@ -279,10 +287,12 @@ export class Ledger implements Part {
     edit.hidden = true;
     edit.addEventListener("click", () => { tapFeedback(); this.ctx.actions.editMix(null); });
     const row: Row = {
-      line, node, box, offer: null, offerKey: "", edit,
+      line, node, box, offer: null, offerKey: "", edit, rule: -1, mark: ruleMark(box, () => row.rule, (i) => this.ctx.actions.openRules(i)),
       rate: el("span", "line-rate"), amount: el("span", "line-amount"), eta: el("span", "line-eta"),
     };
-    box.append(el("span", "line-name", this.ctx.catalog.storeTitle(line.store)), row.rate, row.amount, row.eta, edit);
+    const name = el("span", "line-name", this.ctx.catalog.storeTitle(line.store));
+    name.append(row.mark);
+    box.append(name, row.rate, row.amount, row.eta, edit);
     return row;
   }
 }

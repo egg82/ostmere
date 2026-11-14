@@ -31,13 +31,14 @@ def check_mixes(save: Save, rules: Rules, mixes: tuple[Mix, ...]) -> None:
     """Every saved mix, since replacing one can break another that nests it: shares in range and summing to at most
     BP (a town mix's per person), every card known and on HANDS or on a ruled lane, never both. At most MAX_MIXES mixes. The mix being saved
     also holds no locked and no completed card, and in a town mix none capped or on a lane not joined (verbs.SaveMix);
-    a new id beginning "town:" is the game's (DESIGN.txt, "THE TOWN'S MIX")."""
+    a new id beginning "town:" is the game's, and a saved mix keeps its layer (DESIGN.txt, "THE TOWN'S MIX", "Reserved
+    ids")."""
     require(len(mixes) <= MAX_MIXES, f"a save holds at most {MAX_MIXES} mixes")
     old = {m.id for m in save.mixes}
     for mix in mixes:
         require(mix.id in old or not mix.id.startswith(TOWN_PREFIX), f"mix {mix.id}: {TOWN_PREFIX} ids are the game's")
         layer = _check_mix(rules, mixes, mix)
-        require(layer is MixLayer.HANDS or mix.id != save.active, f"mix {mix.id} is the active mix, the hands'")
+        require(mix.id not in old or layer is mix_layer(rules, save.mixes, mix.id), f"mix {mix.id} keeps its layer")
         if mix not in save.mixes:
             _check_saveable(save, rules, mixes, mix, layer)
 

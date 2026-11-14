@@ -4,7 +4,7 @@
 // the town's first always rule. The views are the engine's own (fixtures/townwire.ts) with one town rule added.
 import { fakeDocument, type FakeEl, FakeEvent, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
-import { townStep } from "../fixtures/town";
+import { townStep, withSecondMix } from "../fixtures/town";
 import type { Decision, Order, View } from "../src/api/types";
 import { RulesTab } from "../src/ui/rules";
 
@@ -22,7 +22,7 @@ const one = (root: FakeEl, sel: string, n = 0): FakeEl => {
 };
 const sent = (d: Decision | undefined): Order[] => (d?.kind === "set_orders" ? d.orders : []);
 
-const base = townStep("town").view;
+const base = withSecondMix(townStep("town").view);   // a second town mix, so the town's rules show
 const always = base.orders.findIndex((o) => o.then.kind === "switch_mix" && o.then.mix_id === "town:main");
 const TOWN_THEN: Order["then"] = { kind: "switch_mix", mix_id: "town:main" };
 const first: Order = { when: { kind: "after_time", at: 0 }, then: TOWN_THEN };
@@ -49,7 +49,7 @@ const rows = (root: FakeEl): FakeEl[] => q(root, ".rules-town .town-rule");
 
 {  // the always rule is worded by the town's title, not the mix's id
   const { root } = rig(base);
-  expect("always rule's words", one(root, ".town-rule .rule-when").textContent, "Camp, always");
+  expect("always rule's words", one(root, ".town-rule .rule-when").textContent, "Otherwise, Camp");
   expect("no raw id anywhere in the town section", /town:/.test(one(root, ".rules-town").shown()), false);
 }
 
@@ -103,8 +103,8 @@ const rows = (root: FakeEl): FakeEl[] => q(root, ".rules-town .town-rule");
   const { root, got } = rig(base);
   one(root, ".rules-town .town-new").click();
   const cond = one(root, ".cond");
-  expect("only the town's mix is offered to do", q(cond, ".cond-mix, .cond-task").map((b) => b.textContent), ["Camp"]);
-  expect("and no hands mix", q(cond, ".cond-mix").some((b) => b.dataset.mix !== "town:main"), false);
+  expect("only the town's mixes are offered to do", q(cond, ".cond-mix, .cond-task").map((b) => b.textContent), ["Camp", "Camp 2"]);
+  expect("and no hands mix", q(cond, ".cond-mix").map((b) => b.dataset.mix), ["town:main", "Camp 2"]);
   one(cond, ".cond-mix").click();
   one(cond, `.cond-store[data-store="${(WHEN as { watched: { store: string } }).watched.store}"]`).click();
   one(cond, ".cond-actions .primary").click();

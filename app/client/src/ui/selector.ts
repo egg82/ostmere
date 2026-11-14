@@ -1,11 +1,12 @@
-// The Mixes list (docs/design/opening-screen.md, "The Mixes list"), opened from the strip: the saved mixes, the
-// player's own first. Tapping one makes it the default (what runs when no rule's mix does): each such row says Run;
+// The Mixes list (docs/design/opening-screen.md, "The Mixes list"), opened from the strip: the player's saved mixes, the
+// player's own first, never a town mix (it runs by rules and is changed in the town's editor). Tapping one makes it the default (what runs when no rule's mix does): each such row says Run;
 // ● and "running" (or how long it runs) mark the one running now. A mix rules run says how many ("used by 2 rules") where Delete would be: a rule's mix can't be deleted. A
 // greyed mix (it holds a retired or completed card) can't be run, only edited or deleted. New mix last. The rules
 // themselves are the Rules tab's (rules.ts).
 import type { Mix, View } from "../api/types";
 import { mixesFull, mixNamedBy } from "../game/mix";
 import { rulesUsing } from "../game/orders";
+import { isTownMix } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import { segmentSpecs } from "./hands";
@@ -45,8 +46,9 @@ export class MixSelector {
     if (!view) return;
     const { text } = this.ctx.catalog;
     const add = mixesFull(this.ctx.catalog, view) ? el("p", "rules-full", text.get(UI.mixFull)) : this.newButton();
-    const own = view.mixes.filter((m) => m.id === view.active_mix_id);
-    const others = view.mixes.filter((m) => m.id !== view.active_mix_id);
+    const hands = view.mixes.filter((m) => !isTownMix(this.ctx.catalog, view, m));
+    const own = hands.filter((m) => m.id === view.active_mix_id);
+    const others = hands.filter((m) => m.id !== view.active_mix_id);
     this.list.replaceChildren(el("h2", "panel-heading", text.get(UI.mixesHeading)), ...[...own, ...others].map((m) => this.mixRow(view, m)), add);
   }
 

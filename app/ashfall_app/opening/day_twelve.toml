@@ -536,6 +536,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "stone_ring" }] }
 [[triggers]]
 id = "t_spar_open"
 when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "drift_clock", value = 1 }]
 outcome = { unlocks = [{ unlock_kind = "card", id = "spar" }] }
 
 [[cards]]
