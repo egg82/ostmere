@@ -99,6 +99,13 @@ and you tune it, then hit go.
   a rule that needs exactly 12. A new rule starts with shares, a rule already written keeps its numbers until either
   level is switched, and a goal stint can also run until a store is half, three quarters or full. The engine reads a
   share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS").
+- **A rule can carry guards and fallbacks, and has no "or"** (owner: rules are dumb, but with combinations they could
+  be way smarter). Up to three guards pause a rule while any of them holds ("13 or more catch, until under 1, unless
+  smoked is full"): the main condition keeps its "until", and the rule picks up where it left off when the last guard
+  lets go. Up to two fallbacks follow what it does ("Smoke the catch, or else Smoke roots"): it does the first it can
+  start, all on one lane or one layer. "Or" between conditions is two rules with the same action, so every rule stays
+  one sentence with no precedence to work out. Both sit behind `More options`, open from the first rule and never
+  unlocked by progress. Semantics, the saved shape and the contract: `docs/design/rule-guards.md`.
 - **The editors open simple; the full editor is one deliberate tap away** (after playing day one:
   poking around found the editors, and they were a bit much). A new rule opens on what it does and, once
   that is chosen, what that answers (a chip such as hungry, or a store the task makes), so a rule like "cook roots when
@@ -142,7 +149,7 @@ in `explain()` and shown on the page as the split that runs now: derived at the 
 work is a known gap.
 
 Standing orders and the queue: an order's mix is a pushdown of one over the player's, read per layer (a town mix's
-order never moves the hands' running mix), and a tap yields the mix. Planned: evaluation applies every verb that can
+order never moves the hands' running mix), and a tap yields the mix. Evaluation applies every verb that can
 act at an instant, not only the first, so no lane idles on a ready order (engine `DESIGN.txt`, "Evaluation applies
 every verb"). A story outcome installs a ruled lane's always rule as an ordinary order, and an answer can queue a hands
 one-off as a When ready entry (engine `DESIGN.txt`, "Installed rule", "Queued one-off";
