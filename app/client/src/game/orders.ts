@@ -217,11 +217,6 @@ export function rulesUsing(view: View, mixId: string): number {
   return view.orders.filter((o) => o.then.kind === "switch_mix" && o.then.mix_id === mixId).length;
 }
 
-/** The first rule watching this store's amount, or -1 (the rule a ledger line's "covered" names). */
-export function ruleOnStore(view: View, store: string): number {
-  return view.orders.findIndex((o) => o.when.kind !== "after_time" && o.when.watched.kind === "store_value" && o.when.watched.store === store);
-}
-
 /** Every rule that ran `from`, now running `to` (a mix renamed in the editor). */
 export function repointAll(view: View, from: string, to: string): Order[] {
   return view.orders.map((o) => (o.then.kind === "switch_mix" && o.then.mix_id === from ? { ...o, then: { kind: "switch_mix", mix_id: to } } : o));

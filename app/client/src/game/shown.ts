@@ -4,6 +4,7 @@
 import type { AimInfo, LedgerLine, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { sample } from "./clock";
+import { coveredLine } from "./cover";
 
 /** The chips the band draws: those on whose ChipInfo.offered_after, if any, view.unlocked holds (its cure is on screen). */
 export function shownChips(catalog: Catalog, view: View): string[] {
@@ -59,9 +60,9 @@ export function fullAndFed(line: LedgerLine, t: number): boolean {
   return line.cap > 0 && sample(line.segment, t) >= line.cap && fed > 0;
 }
 
-/** The line is red: starved, or falling with nothing covering it. */
-export function redLine(line: LedgerLine): boolean {
-  return line.starved || (line.falling && !line.covered);
+/** The line is red: starved, or falling with nothing covering it (game/cover.ts). */
+export function redLine(line: LedgerLine, view: View): boolean {
+  return line.starved || (line.falling && !coveredLine(line, view));
 }
 
 /** Something other than the hands' passing tap draws the store down. */
@@ -72,7 +73,7 @@ export function drawnDown(line: LedgerLine, view: View): boolean {
 
 /** A ledger line that asks something: starved, falling with nothing covering it, or carrying an offer (`offered`). */
 export function lineAsks(line: LedgerLine, view: View, offered: boolean): boolean {
-  return line.starved || (drawnDown(line, view) && !line.covered) || offered;
+  return line.starved || (drawnDown(line, view) && !coveredLine(line, view)) || offered;
 }
 
 /** A ledger line that joins the ledger now: it asks something, or is falling, full while fed, or covered by a rule. */

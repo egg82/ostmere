@@ -572,7 +572,13 @@ THE CLIENT MAY
     white. Also offer it, as an offer the player may
     ignore, once the player has started by hand, twice in a row, the card that order taps (a player who keeps laying wood
     to dry never lets the store fall); it then stays until set. A rule already set on the card's store and test (at
-    whatever levels) answers the card: the offer then shows that rule, and Change edits it.
+    whatever levels) answers the card: nothing is offered under the line.
+  - mark a ledger line whose store a rule watches (an order whose `when` is on that StoreValue) with a quiet mark, and
+    open that rule in the Rules tab on a tap anywhere on the line: the rule drawing the store down (below), else the
+    first watching it. Nothing stands under the line for it. When that rule covers the line and the store still heads
+    where the rule does not want it, the line says why beside its time (ui.ledger.behind with the rule's task or mix;
+    while the rule is outranked or passed over, the Rules tab's own reason): empty by the forecast while an at_most
+    rule wants it held, or full while something still feeds it while an at_least rule wants it taken.
   - an order_card with a `chip` is never shown under a ledger line: it is offered in the hands strip once that chip
     is in view.chips and no rule is set on the card's store and test, and then stays until such a rule is set (not
     when the chip clears). One with after_end waits for view.ended_at and for the end lines to have been read in that
@@ -613,7 +619,10 @@ THE CLIENT MAY
     card has no rule each carry the quiet dot until touched. The dot opens and highlights nothing, has no sentence, and
     a card's is kept once in AccountPresentation.mix_offered, a switch's in switch_offered.
   - draw a ledger line white when it is not starved and is either not falling or covered; otherwise red (a starved
-    line is dry while something waits on it, covered or not). Its amount is against LedgerLine.cap. A red line with
+    line is dry while something waits on it, covered or not). A falling line is covered when LedgerLine.covered, or
+    when a rule of the player's draws the store down as it means to: its order_states entry is on, its `when` is an
+    at_least on that store, and a card it runs (its tap_card, or a card_share of its mix) is a runner taking from the
+    store in LedgerLine.contributions. Its amount is against LedgerLine.cap. A red line with
     no order card to offer names its largest drain (unless that is the hands' tap, which ends by itself) and offers
     Edit mix, as a full line that something still feeds does. There is no banner text: "everything keeps itself
     going" shows only as every line white. A store whose StoreInfo.bonus_bp is set only feeds a bonus (the standing
@@ -677,6 +686,7 @@ TEXT AND NUMBERS (one rule)
     ui.rate.per_minute {n}          a ledger line's or contribution's rate
     ui.store.amount {n}{cap}        a store's amount
     ui.ledger.empties {d} | ui.ledger.fills {d}   until a falling line empties / a rising one fills
+    ui.ledger.behind {task}         a covering rule that cannot keep up: its task or mix
     ui.ledger.yours | ui.ledger.threats   the ledger's group labels: the player's stores, the threats at them
     ui.skill.level {n}              a skill's level (a plain count)
     ui.card.needs {store}{have}{n}  a card's need: its store, what there is, its quantity (amounts; {n} rounded up,
@@ -693,7 +703,7 @@ TEXT AND NUMBERS (one rule)
     ui.mix.idle                     the unassigned share
     ui.mix.default                  the id of the first mix the player makes (save_mix, then switch_mix)
     ui.heading.ledger | ui.heading.craft | ui.heading.orders | ui.heading.mixes | ui.order.remove | ui.close
-    ui.order.add | ui.order.change   a rule offer's controls
+    ui.order.add                    a new rule's Add
     ui.rule.below {store}{n} | ui.rule.below_until {store}{n}{m} | ui.rule.reaches {store}{n} |
     ui.rule.reaches_until {store}{n}{m}   a store rule's condition, with no band and with one
     ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |

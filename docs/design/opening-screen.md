@@ -376,10 +376,18 @@ dot (below), and the player writes the rule in the Rules tab. Nothing is ever bu
 keeping the cell beside it. It is shown unprompted: in the preview, no player found the order card it kept out of
 sight, and every player who saw the inline offer set it. On the hands a rule always runs a mix, so the lesson's editor saves
 a mix of that task alone (named by the task) with the rule; a task on another lane
-(the rack) becomes a rule of its own. Once set, the line turns white and reads `covered`. A rule that is set while the
-line is still red (found by its store and test, so a level the player changed still counts) shows that rule's
-sentence and `Change`, which opens the Rules tab on that rule's editor. A falling line a rule covers says `covered`, a
-small button to that rule in the Rules tab. Player text says rule and task, never order or card.
+(the rack) becomes a rule of its own. Once set, the offer goes and the line turns white. Player text says rule and task,
+never order or card.
+
+- **Covered** is something keeping the store fed, or a rule of the player's spending it as the rule says: the rule is
+  on, it is an `n or more` rule on that store, and a task it runs is what takes from the store (`4 or more catch, until
+  under 1 → Smoke` draws the catch down and the line stays white). Red is for a store falling with nothing covering it.
+- **Nothing stands under a line a rule watches.** The line carries a small rule mark (the Rules tab's icon, dim), and a
+  tap anywhere on it opens that rule in the Rules tab: the rule spending the store, else the first rule on it. A rule
+  set while the line is still red changes nothing under it either; the mark is the way to it.
+- **A covering rule that can't keep up says so once,** beside the line's time: `empty in 4m · Gather can't keep up`
+  when the forecast empties a store an `under n` rule keeps, `full · Smoke can't keep up` when a store an `n or more`
+  rule takes from is full and still fed. An outranked or passed-over rule gives the Rules tab's own reason instead.
 
 - **Starved** (the store is at 0 and something waits on it) reads as a problem too, covered or not.
 - **Full** (`damp wood 12/12 · full`) is not an alarm: the ordinary line colour, `full` in
@@ -629,7 +637,7 @@ Rack                                                   each side lane's task rul
 - Rules on a store's amount, a task's count and a skill's or the Camp's level are drawn, the kinds the editor writes.
   None is written or drawn on time, an unlock (unlocks only grow, so one the save holds is always true) or a task
   running (`set_orders` refuses it: an order on what its own mix stops would flip at every instant).
-- **Shortcuts:** the ledger offer's `Change` and a line's `covered` open the tab on that rule's editor; the strip's
+- **Shortcuts:** a ledger line a rule watches opens the tab on that rule's editor; the strip's
   `until …` or `while …` opens the tab itself, where `Lately` says what the rules did.
 - On a phone, tapping is the primary path (the picker, ≡'s menu); dragging ≡ works with touch too.
 - **A rule that is off says why** in a quiet line under it, in the ledger's grammar, from the engine's own
@@ -755,8 +763,8 @@ Remove                                   [Add rule] Remove only when editing; Sa
 - Changing a chip's rule shows its chip as the heading, its `Do` row, the sentence and `Remove`: no stores, test,
   levels, band or fact.
 
-Known limit: the ledger's `covered` ignores a rule's condition (a rule that would never come on still
-covers its line). The rule's own line in the Rules tab says it is waiting and on what.
+Known limit: a rule whose task or mix makes a store covers that store's line whatever its condition (a rule that would
+never come on still covers it). The rule's own line in the Rules tab says it is waiting and on what.
 
 ## Lessons
 

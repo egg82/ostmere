@@ -22,6 +22,7 @@ export const UI = {
   amount: "ui.store.amount", // "{n} of {cap}"
   empties: "ui.ledger.empties", // "{d}" until a falling store is empty
   fills: "ui.ledger.fills", // "{d}" until a rising store is full
+  ledgerBehind: "ui.ledger.behind", // "{task}": the task or mix of a rule covering a line that still heads where the rule does not want it
   level: "ui.skill.level", // "{n}"
   skillNextIn: "ui.skill.next_in", // "{pays} {d}": what the next level pays, and the forecast's time to it
   skillNone: "ui.skill.none", // a skill row with nothing ahead in this content
@@ -43,7 +44,6 @@ export const UI = {
   runsIndefinitely: "ui.mix.runs_indefinitely",
   defaultMix: "ui.mix.default", // the id of the first mix, saved from the first-mix offer
   orderAdd: "ui.order.add",
-  orderChange: "ui.order.change",
   orderRemove: "ui.order.remove",
   ...RULE_KEYS,
   handsByRule: "ui.hands.by_rule", // "{store}{n}": the strip while a "below" rule with no band runs
