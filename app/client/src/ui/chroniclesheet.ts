@@ -28,6 +28,9 @@ export class ChronicleSheet {
   private readonly handled = new Map<number, boolean>();
   /** How many asks wait now: the chapter's waiting row. */
   private asks = 0;
+  /** The Book's row of pages under the heading, the chronicle first (a phone's: game.css shows it there only). */
+  private readonly pages = el("div", "book-pages");
+  private readonly turned: Array<{ button: HTMLButtonElement; node: HTMLElement | null }> = [];
 
   /** `showWaiting`: what the chapter's waiting count opens (the asks on the page). */
   constructor(private readonly catalog: Catalog, private readonly keeps: Keeps, private readonly showWaiting: () => void) {
@@ -38,14 +41,45 @@ export class ChronicleSheet {
     const row = el("div", "sheet-actions");
     row.append(close);
     this.filters.setAttribute("role", "group");
-    this.root.append(el("h2", "panel-heading", catalog.text.get(UI.chronicle)), this.filters, this.list, row);
+    this.pages.setAttribute("role", "group");
+    this.root.append(el("h2", "panel-heading", catalog.text.get(UI.chronicle)), this.pages, this.filters, this.list, row);
     this.root.addEventListener("click", (e) => { if (e.target === this.root) this.root.close(); });
   }
 
+  /** The sheet, open on the chronicle. */
   show(): void {
+    this.turnTo(null);
     this.draw();
     this.root.showModal();
     this.list.scrollTop = 0;
+  }
+
+  /** A page of the Book beside the chronicle, `node` its content: its button joins the row of pages, and while it is
+   * open the chronicle's filters and lines give it their room. The caller hides the button while the page is empty. */
+  page(label: string, node: HTMLElement): HTMLButtonElement {
+    if (this.turned.length === 0) this.pages.append(this.pageButton(this.catalog.text.get(UI.chronicle), null));
+    const button = this.pageButton(label, node);
+    this.pages.append(button);
+    this.list.after(node);
+    this.turnTo(null);
+    return button;
+  }
+
+  private pageButton(label: string, node: HTMLElement | null): HTMLButtonElement {
+    const button = el("button", "book-page", label);
+    button.type = "button";
+    button.addEventListener("click", () => this.turnTo(node));
+    this.turned.push({ button, node });
+    return button;
+  }
+
+  /** Page `node` open (null: the chronicle), the others closed. */
+  private turnTo(node: HTMLElement | null): void {
+    this.root.classList.toggle("paged", node !== null);
+    for (const t of this.turned) {
+      if (t.node) t.node.hidden = t.node !== node;
+      t.button.setAttribute("aria-pressed", String(t.node === node));
+    }
   }
 
   /** An entry joins the chronicle in its place by time; while it is open the view stays where it was. */

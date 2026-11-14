@@ -59,6 +59,9 @@ export const UI = {
   feedbackLater: "ui.feedback.later", // not kept: too many just now, or no answer
   tabCards: "ui.tab.cards",
   tabCompleted: "ui.tab.completed",
+  tabTown: "ui.tab.town",   // a phone's bottom bar: the ledger and skills
+  tabBook: "ui.tab.book",   // a phone's bottom bar: the chronicle's sheet, with Done beside it
+  bookDone: "ui.book.done",   // the Book's page of what is finished (a phone's; the Completed tab elsewhere)
   handsIdle: "ui.hands.idle",
   laneIdle: "ui.lane.idle",   // a lane row while its lane is free
   laneChange: "ui.lane.change",   // a lane row's way to the rule that sets its task

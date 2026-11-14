@@ -703,6 +703,8 @@ TEXT AND NUMBERS (one rule)
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
     ui.chronicle.open | ui.tab.cards | ui.tab.completed   the Chronicle button and sheet, and the Cards / Completed tabs
+    ui.tab.town | ui.tab.book | ui.book.done   a phone's bottom bar: Town (the ledger and skills) and Book (the
+                                    chronicle's sheet), and the Book's Done page (the Completed tab's cards)
     ui.chronicle.away_m {m} | away_h {h} | away_hm {h} {m} | away_d {d}   the title of a chronicle stretch that began with a return: how long the player was away
     ui.chronicle.earlier | ui.chronicle.now     the title of the stretch before the first return kept, and of the newest when no return is kept
     ui.chronicle.story | finds | levels | rules | fights | talk | all   the chronicle's filters
