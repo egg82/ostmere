@@ -132,6 +132,10 @@ def test_the_subjects_awaiting_their_slots_are_exactly_those_still_missing_one()
     assert awaiting_faults(o, AWAITING_SLOTS) == []
 
 
-def test_a_held_subject_with_its_slots_reads_stale_and_a_fixture_subject_never_held():
+def test_a_held_subject_with_its_slots_reads_stale_and_one_missing_a_slot_reads_not_held():
     o = load_with(FIXTURE)
-    assert awaiting_faults(o, frozenset({"s_b2", "t_s_storm"})) == ["stale: t_s_storm"]
+    storm = next(s for s in o.subjects if s.id == "t_s_storm")
+    missing = storm.model_copy(update={"id": "t_s_bare", "catchup": None})
+    bare = o.model_copy(update={"subjects": [*o.subjects, missing]})
+    assert awaiting_faults(bare, frozenset({"t_s_bare", "t_s_storm"})) == ["stale: t_s_storm"]
+    assert awaiting_faults(bare, frozenset()) == ["not held: t_s_bare"]
