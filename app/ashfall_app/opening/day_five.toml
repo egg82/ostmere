@@ -589,7 +589,7 @@ aim_pair = "build a bay for the two of them."
 j_n3_first = "a woman with a sack on her shoulder asked to share the fire. {n3}. she does the asking for both of them"
 j_n3_catchup = "{n3} came, with an old man"
 j_n3_late = "{n3} keeps seed in a cloth. counts it out and ties it shut again"
-j_n4_first = "the old man with her is {n4}. one leg doesn't bend. lucy brought him a stool. he sat down on it without a look. five at the pot"
+j_n4_first = "{n4} is old, and one leg doesn't bend. lucy brought him a stool and he sat on it without a look. five at the pot"
 j_n4_catchup = "{n4}, with a leg that won't bend"
 j_ridge_first = "first thing, grey shapes sat in a row along the ridge, facing camp. lucy looked up too. nothing there"
 # ---------- end of lines ----------

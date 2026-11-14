@@ -1124,5 +1124,5 @@ j_n2_first = "a man came up to the light, looking at the pot more than at us. al
 j_n2_catchup = "{n2} came, and stayed"
 j_n2_late = "{n2} went to work before anyone told him. lucy looked at him once and that was all"
 j_b5_first = "banked the new hearth. the ash melted back from it all round. warm ground under us, a faint red in the cracks. nobody fetched wood after that"
-j_b5_catchup = "warm ground under the hearth"
+j_b5_catchup = "banked the new hearth. the ground's warm round it"
 # ---------- end of lines ----------

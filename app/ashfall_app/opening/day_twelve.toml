@@ -862,7 +862,7 @@ feature_crows_off = "crows kept off the rack"
 feature_crows_kept = "crows left at the rack"
 # The journal's slots (docs/design/journal.md, "The content's side").
 j_b12_catchup = "dug into a cellar under the ruin. empty"
-j_b12_late = "forgot the stool. there was one down there in the corner, short in the same leg as ours"
+j_b12_late = "there was a stool down there too, in the corner. short in the same leg as ours"
 j_dig_first = "started digging at the ruin's north wall, for what the larder won't hold. staked the sides as i went. had the spade in before anyone asked where"
 j_dig_again_1 = "dug. the sides are holding"
 j_dig_again_2 = "the dig again. it takes more stakes than i thought"

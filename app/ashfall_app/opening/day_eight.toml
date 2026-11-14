@@ -742,7 +742,7 @@ aim_wall = "ring the whole camp with stakes."
 # The journal's slots (docs/design/journal.md, "The content's side").
 j_fence_first = "started the fence. first posts in, along the line lucy scored"
 j_fence_again_1 = "more fence"
-j_fence_again_2 = "fence. the line looked shorter in the ash"
+j_fence_again_2 = "fence. ran short of cord before dark"
 j_fence_again_3 = "posts all day. stone grit in every cut on my hands"
 j_fence_catchup = "worked on the fence"
 j_fence_wrong = "started the fence. first posts in, along the line i scored round camp"
