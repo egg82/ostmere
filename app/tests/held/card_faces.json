@@ -1,0 +1,12 @@
+{
+ "bank_fire_6": {
+  "store:arrivals": 1
+ },
+ "keep_vigil": {
+  "store:guard_made": 1,
+  "store:stranger_clock": 1
+ },
+ "spar": {
+  "store:drift_clock": 1
+ }
+}
