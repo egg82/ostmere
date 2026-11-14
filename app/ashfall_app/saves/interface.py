@@ -30,7 +30,7 @@ class Ruleset:
 
     rules: e.Rules
     digest: str
-    renames: tuple[e.Rename, ...]
+    renames: tuple[e.Rename | e.Retired, ...]
     start_lines: tuple[e.LineKey, ...]
     line_renames: dict[str, str]
     """Text keys renamed since a stored line was written, to the key they are now."""

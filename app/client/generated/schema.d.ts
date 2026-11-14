@@ -2054,10 +2054,11 @@ export interface components {
         };
         /**
          * Section
-         * @description The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order.
+         * @description The part of the book an entry's page is in, each behind its own bookmark; within one, pages run in writing order.
+         *     The days pages are not entries: they are the written days (JournalDay).
          * @enum {string}
          */
-        Section: "days" | "creatures" | "places";
+        Section: "creatures" | "places";
         /**
          * Segment
          * @description value(t) = start_value + rate * (t - start), held at limit once reached. The client samples this.

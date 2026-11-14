@@ -479,25 +479,6 @@ stores = [{ store = "pelt", items = 1 }]
 
 # ---------- the days page ----------
 
-# The days page for B9 and B10: each note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL"). B9's trigger
-# is day eight's t_b9, so the note takes its condition.
-[[entries]]
-id = "e_days_4"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b9"
-entry = "e_days_4"
-gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
-requires = [
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_ashrat", value = 1 },
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_crow", value = 1 },
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "wolves", value = 1 },
-]
-beat = "B9"
-
 [[subjects]]
 id = "s_b9"
 kind = "beat"
@@ -535,12 +516,6 @@ makes = [{ store = "b10_floor", items_per_hour = 1 }]
 id = "t_b10"
 when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
 outcome = { line_keys = ["l_b10_1", "l_b10_2", "l_b10_3"], unlocks = [{ unlock_kind = "feature", id = "safety" }] }
-
-[[notes]]
-id = "n_day_b10"
-entry = "e_days_4"
-gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
-beat = "B10"
 
 [[subjects]]
 id = "s_b10"

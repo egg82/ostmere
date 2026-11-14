@@ -59,5 +59,6 @@ export const LESSON_KEYS = {
   journalDays: "ui.journal.days",
   journalCreatures: "ui.journal.creatures",
   journalPlaces: "ui.journal.places",
+  journalDay: "ui.journal.day", // a day's heading on a days page: "Day {n}"
   lessonClock: "ui.lesson.clock",   // the countdown of a wait the player is not shown the store of: the night
 } as const;

@@ -588,19 +588,6 @@ outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amou
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_2"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b4"
-entry = "e_days_2"
-gate = { test = "at_least", subject_kind = "store", id = "walk", value = 1 }
-beat = "B4"
-
 [[subjects]]
 id = "s_b4_went"
 kind = "beat"

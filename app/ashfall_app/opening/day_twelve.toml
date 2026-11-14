@@ -614,22 +614,6 @@ outcome = { stores = [{ store = "pelt", items = 1 }], line_keys = ["l_find_gap_w
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_6"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b12"
-entry = "e_days_6"
-gate = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
-requires = [
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "b9", value = 1 },
-]
-beat = "B12"
-
 [[subjects]]
 id = "s_b12"
 kind = "beat"

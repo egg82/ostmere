@@ -449,15 +449,23 @@ phone, portrait                        desktop, and a phone in landscape
 └────────────────────────────┘
 ```
 
-- **The way in.** From the first entry on, the journal is the Book's Journal page (The Book), and the book leaves the
-  chips. Its page button and the Book's tab carry the quiet dot (`.new-dot`) while a note is unread and at no other
-  time, so a new entry dots them through its notes. The Book's tab glows only as its lesson's step.
+- **The way in.** From its first page on (a written day or an entry), the journal is the Book's Journal page (The
+  Book), and the book leaves the chips. Its page button and the Book's tab carry the quiet dot (`.new-dot`) while
+  something written is unread (a note, or a day after the save's newest day read) and at no other time, so a new
+  entry dots them through its notes. The Book's tab glows only as its lesson's step.
 - **The page's frame** is the Book's: its head, then the Book's actions row with `Prev` and `Next` after the phone
   sheet's Close (`ui.close`) at the right end, under the thumb (on a desktop, centred under the spread, after it and
   never over it). All are `.quiet` at 44 px (no step here is the obvious next one, so none is `.primary`); `Prev` is off
   on the first page and `Next` on the last, never hidden, so neither moves. ← and → turn pages while it is open. It
-  opens on the first entry with an unread note, else the page last shown in this page session, else the first. Pages run by section (days, creatures, places) and in content order
-  within one, one per entry written.
+  opens on the first page holding something unread, else the page last shown in this page session, else the first.
+  Pages run by section: the days pages (below), then creatures and places in content order, one per entry written.
+- **The days pages** hold the written days (`docs/design/journal.md`, "What the page draws"): each day's notes under
+  its heading (`ui.journal.day`, in the hand at the notes' size, in `--hand-pencil`), days running on down a page until
+  the next would not fit, which starts a new page; a day is never split. Whether a day fits is counted in rows of the
+  hand at the desktop page's width (`game/days.ts`: a page holds 22 rows of about 46 characters, a note's drawing
+  five), never measured from the window, so the same days are the same pages on a phone and a desktop. The measure is
+  a little under what the desktop page holds at 1440×900, so a full page fits it unscrolled; elsewhere the page
+  scrolls as any long page does. A days page has no sketch and no numbers, and is seeded by its first day.
 - **The bookmarks** are a row of the panel's tab buttons (`.tabs`, `.tab`, `.on`) under the Book's head, in a `nav`
   labelled `ui.journal.heading`: one per section that has a page written (`ui.journal.days`, `.creatures`, `.places`), none for
   a section with no page. Each is a button, so Tab and Enter reach it. A bookmark turns to its section's first page with
@@ -491,7 +499,7 @@ phone, portrait                        desktop, and a phone in landscape
   the rem-sized text. A right page whose notes run past its
   height scrolls inside itself, the numbers staying at its foot.
 - **Seeded per entry.** The page's draws come from the seeded draw `game/fights.ts` uses, keyed by "journal", the
-  entry id and the part, never the save, so a page looks the same in every game and on every device and differs from
+  entry id (a days page's first day) and the part, never the save, so a page looks the same in every game and on every device and differs from
   its neighbours. The seed sets the sketch's width (86–100% of its box) and its offset in the space left over (on the
   left page, its height too); on a phone, whether the first note sits above the sketch (35%, the method's "caption on
   top"); each note's tilt (−2° to +1°, half the method's range, since live text must stay easy to read) and indent

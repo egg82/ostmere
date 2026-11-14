@@ -499,19 +499,6 @@ outcome = { stores = [{ store = "cord", items = 2 }], line_keys = ["l_find_antle
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_7"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b13"
-entry = "e_days_7"
-gate = { test = "after_time", value = 1209600 }
-beat = "B13"
-
 [[subjects]]
 id = "s_b13"
 kind = "beat"
@@ -519,12 +506,6 @@ source = { source_kind = "trigger", id = "t_b13" }
 first = { keys = ["n_day_b13"] }
 catchup = { keys = ["j_b13_catchup"] }
 late = { keys = ["j_b13_late"] }
-
-[[notes]]
-id = "n_day_b14"
-entry = "e_days_7"
-gate = { test = "at_least", subject_kind = "card_count", id = "hall", value = 8 }
-beat = "B14"
 
 [[subjects]]
 id = "s_b14"

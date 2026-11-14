@@ -144,6 +144,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.fight.won",
     "ui.fight.lost",
     "ui.journal.heading", "ui.journal.prev", "ui.journal.next", "ui.journal.days", "ui.journal.creatures", "ui.journal.places",
+    "ui.journal.day",
     "ui.lesson.journal_open", "ui.lesson.journal_notes", "ui.lesson.journal_numbers",
     "ui.prestige.tops_out", "ui.prestige.top", "ui.prestige.mastered", "ui.prestige.waiting",
     "ui.prestige.waiting_one", "ui.prestige.button", "ui.prestige.choose", "ui.prestige.undo", "ui.prestige.heading",

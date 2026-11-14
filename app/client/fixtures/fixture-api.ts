@@ -11,7 +11,7 @@ import { dayOneStep, isDayOne } from "./dayone";
 import { dayTwoStep, isDayTwo } from "./daytwo";
 import { fightsStep, isFights } from "./fights";
 import { fixtureGames } from "./games";
-import { isJournal, journalStep } from "./journal";
+import { isJournal, journalStep, READ_TO } from "./journal";
 import { isPrestige, prestigeStep } from "./prestige";
 import { isTown, townStep } from "./town";
 import { fixtureStep, type Kept, type Phase } from "./steps";
@@ -35,7 +35,8 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
   const now = (): number => Math.floor((Date.now() - began) / 1000);
   const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first) || isChronicle(first) || isSince(first) || isAsks(first) || isLedgerRules(first) || isFeel(first);   // the repeat offers come only after the lessons
   const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [] };
+  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [],
+    newest_day_read: first === "journalweeks" ? READ_TO : null };
   const settings: AccountSettings = { lessons: true };
   const info = (): SaveInfo => ({
     save_id: 1, number: 1, decisions, game_time: now(), ended_at: null, started_at: new Date(began).toISOString(),

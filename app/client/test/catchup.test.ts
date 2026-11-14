@@ -3,7 +3,7 @@
 // stepped() follows with every slice's lines. A decision made meanwhile is held and sent after, a catching_up 409 on a
 // decision goes on catching up, and no forecast is asked on the way. Written from the contract; the api is scripted.
 import { ApiFailure, type GameApi } from "../src/api/api";
-import type { Decision, Step, View } from "../src/api/types";
+import type { Decision, JournalDay, Step, View } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { Session, type SessionEvents } from "../src/game/session";
@@ -16,23 +16,26 @@ function check(ok: boolean, what: string): void {
 const TAP: Decision = { kind: "tap_card", card: "stand" };
 const save = (decisions = 0) => ({ save_id: 7, number: 1, decisions, game_time: 0, ended_at: null, started_at: "2026-10-17T09:00:00Z", played_at: "2026-10-17T09:00:00Z", camp_level: 0 });
 
-/** A Step at game time `at`, bringing lines `keys`, still catching up to `to` (null: caught up). */
-function slice(at: number, to: number | null, keys: string[], decisions = 0): Step {
+/** A Step at game time `at`, bringing lines `keys`, still catching up to `to` (null: caught up), and the written days
+ * numbered `days`. */
+function slice(at: number, to: number | null, keys: string[], decisions = 0, days: number[] = []): Step {
   const base = fixtureStep("standing", at, {}, decisions);
   const lines = keys.map((key, seq) => ({ at, seq, key, card: null }));
   const extra: { catching_up_to: number | null } = { catching_up_to: to };
-  return Object.assign({}, base, { lines, save_id: 7 }, extra);
+  return Object.assign({}, base, { lines, save_id: 7, journal_days: days.map(written) }, extra);
 }
 
-interface Landed { keys: string[]; prevAt: number; away: boolean; at: number; decisions: number }
+const written = (day: number): JournalDay => ({ day, day_notes: [{ subject: "s", slot: "first", key: "line.1", hand: "ink", sketch: null }] });
+
+interface Landed { keys: string[]; prevAt: number; away: boolean; at: number; decisions: number; days: number[] }
 interface Log {
-  calls: string[]; afters: number[]; catching: string[]; stepped: Landed[]; refused: (Decision | null)[]; waits: number[];
+  calls: string[]; afters: number[]; catching: string[]; stepped: Landed[]; refused: (Decision | null)[]; waits: number[]; started: number[][];
 }
 
 /** Scripted answers: `open` gives the first Step, each `advance` and `decide` the next of its list (an ApiFailure is
  * thrown). `gate`, while set, holds every advance until it is released. */
-function harness(script: { open?: Step; advances?: Step[]; decides?: (Step | ApiFailure)[]; begin?: Step; gated?: boolean }) {
-  const log: Log = { calls: [], afters: [], catching: [], stepped: [], refused: [], waits: [] };
+function harness(script: { open?: Step; advances?: Step[]; decides?: (Step | ApiFailure)[]; begin?: Step; gated?: boolean; stored?: number[] }) {
+  const log: Log = { calls: [], afters: [], catching: [], stepped: [], refused: [], waits: [], started: [] };
   let release: () => void = () => undefined;
   let gate: Promise<void> | null = script.gated ? new Promise<void>((r) => { release = r; }) : null;
   const hooks: { between: (() => void) | null } = { between: null };
@@ -49,7 +52,7 @@ function harness(script: { open?: Step; advances?: Step[]; decides?: (Step | Api
     begin: () => { log.calls.push("begin"); return Promise.resolve({ save: save(), presentation: NEW_SAVE, step: script.begin ?? slice(0, null, []) }); },
     open: () => {
       log.calls.push("open");
-      return Promise.resolve({ save: save(), was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: script.open ?? slice(100, null, []) });
+      return Promise.resolve({ save: save(), was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, journal_days: (script.stored ?? []).map(written), step: script.open ?? slice(100, null, []) });
     },
     savedView: () => Promise.reject(new Error("unused")),
     advance: async () => {
@@ -83,9 +86,9 @@ function harness(script: { open?: Step; advances?: Step[]; decides?: (Step | Api
     join: () => Promise.reject(new Error("not in these tests")),
   };
   const events: SessionEvents = {
-    started() { /* the page's */ },
+    started(_content, step: Step) { log.started.push(step.journal_days.map((d) => d.day)); },
     stepped(step: Step, prev: View, away: boolean) {
-      log.stepped.push({ keys: step.lines.map((l) => l.key), prevAt: prev.at, away, at: step.view.at, decisions: step.decisions });
+      log.stepped.push({ keys: step.lines.map((l) => l.key), prevAt: prev.at, away, at: step.view.at, decisions: step.decisions, days: step.journal_days.map((d) => d.day) });
     },
     catchingUp(at: number, to: number) { log.catching.push(`${at}>${to}`); hooks.between?.(); },
     build() { /* the self-update's */ },
@@ -200,4 +203,13 @@ const ONE_SLICE_LATE = [slice(2000, 3600, ["b1"]), slice(3600, null, ["c1", "c2"
   h.session.tick();
   await quiet(h);
   check(h.log.calls.includes("forecast"), "the forecast was due all along: it is asked once the save has caught up");
+}
+
+{  // the written days (CONTRACT.txt, "JOURNAL", "The written days"): the save as last seen carries the days stored before
+  // the open, never the open step's; the one stepped of a catch-up carries every slice's days, in order
+  const h = harness({ stored: [0, 1], open: slice(1000, 3600, ["a1"], 0, [2]), advances: [slice(2000, 3600, [], 0, [3]), slice(3600, null, [], 0, [4, 5])] });
+  await h.session.resume(7);
+  await quiet(h);
+  check(JSON.stringify(h.log.started) === "[[0,1]]", `the view last seen holds the stored days alone: ${JSON.stringify(h.log.started)}`);
+  check(h.log.stepped.length === 1 && h.log.stepped[0]!.days.join() === "2,3,4,5", `the catch-up carries each slice's days: ${JSON.stringify(h.log.stepped)}`);
 }
