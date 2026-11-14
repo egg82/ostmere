@@ -819,6 +819,32 @@ export interface components {
             /** Subject */
             subject: string;
         };
+        /**
+         * Chapter
+         * @description The figures of the newest return: what the chronicle's "Since you left" chapter shows beside its lines.
+         */
+        Chapter: {
+            /** Left */
+            left: number;
+            /** Back */
+            back: number;
+            /**
+             * Stores
+             * @default []
+             */
+            stores: components["schemas"]["Figure"][];
+            /**
+             * Levels
+             * @default []
+             */
+            levels: components["schemas"]["Figure"][];
+            camp?: components["schemas"]["Figure"] | null;
+            /**
+             * Rules
+             * @default []
+             */
+            rules: components["schemas"]["RuleChange"][];
+        };
         /** ChipInfo */
         ChipInfo: {
             /** Chip */
@@ -1049,6 +1075,17 @@ export interface components {
             won_line_keys: string[];
             /** Lost Line Keys */
             lost_line_keys: string[];
+        };
+        /**
+         * Figure
+         * @description A store's quantity or a level as the player left it (`was`) and as the return found it (`now`).
+         */
+        Figure: {
+            id: components["schemas"]["Id"];
+            /** Was */
+            was: number;
+            /** Now */
+            now: number;
         };
         /**
          * FindInfo
@@ -1720,6 +1757,18 @@ export interface components {
             switches: components["schemas"]["RepeatedSwitch"][];
         };
         /**
+         * RuleChange
+         * @description A rule that came on (or, never coming on, let go) while the player was away, and how many times it came on
+         *     (1 where the page could not count more).
+         */
+        RuleChange: {
+            order: components["schemas"]["Order"];
+            /** Came On */
+            came_on: boolean;
+            /** Times */
+            times: number;
+        };
+        /**
          * RuleDry
          * @description A store rule's mix that cannot reach the rule's release for want of a store (CONTRACT.txt, "Dry rules"): the rule
          *     holds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short.
@@ -1857,6 +1906,7 @@ export interface components {
              * @default []
              */
             visits: components["schemas"]["Visit"][];
+            chapter?: components["schemas"]["Chapter"] | null;
         };
         /** Scales */
         Scales: {

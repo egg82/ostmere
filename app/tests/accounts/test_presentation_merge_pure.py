@@ -40,3 +40,23 @@ def test_what_is_stored_stays_when_it_is_over_the_budget():
     stored: Json = {"lessons": [str(n) * 60 for n in range(10)], "ledger_lines": ["x"] * 3}
     got = merge_presentation(stored, {"lessons": ["new"], "ledger_lines": ["y"]}, 512, 100)
     assert got == stored
+
+
+def chapter(left: int, stores: int = 1) -> Json:
+    return {"left": left, "back": left + 1800, "stores": [{"id": "wood", "was": 0, "now": n} for n in range(stores)]}
+
+
+def test_the_chapter_is_the_latest_return_s_and_a_missing_one_never_replaces_it():
+    first = merge_presentation({}, {"chapter": chapter(10)}, 512)
+    assert first == {"chapter": chapter(10)}
+    assert merge_presentation(first, {"chapter": chapter(20)}, 512) == {"chapter": chapter(20)}
+    assert merge_presentation(first, {"chapter": chapter(5)}, 512) == first, "a stale page's older chapter stays out"
+    assert merge_presentation(first, {"chapter": chapter(10, 2)}, 512) == first, "the same return is kept as first written"
+    assert merge_presentation(first, {"chapter": None, "lessons": ["a"]}, 512) == {**first, "lessons": ["a"]}
+
+
+def test_a_chapter_past_the_byte_budget_is_not_kept():
+    budget = len(json.dumps({"chapter": chapter(10)}, separators=(",", ":")).encode()) + 40
+    kept = merge_presentation({}, {"chapter": chapter(10)}, 512, max_bytes=budget)
+    assert kept == {"chapter": chapter(10)}   # control: it fits
+    assert merge_presentation(kept, {"chapter": chapter(20, 30)}, 512, max_bytes=budget) == kept

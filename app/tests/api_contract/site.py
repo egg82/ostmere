@@ -142,7 +142,7 @@ def account_of(rules_opened: bool = False, devices_opened: bool = False, lessons
 
 def save_presentation_of(rule_seen: bool = False, lessons: list[str] | None = None) -> dict[str, Any]:
     """A SavePresentation with these flags, no dots touched and no lesson ends."""
-    return {"rule_seen": rule_seen, "mix_offered": [], "lessons": lessons or [], "lesson_ends": [], "visits": []}
+    return {"rule_seen": rule_seen, "mix_offered": [], "lessons": lessons or [], "lesson_ends": [], "visits": [], "chapter": None}
 
 
 def begun(b: Browser) -> tuple[Any, dict[str, Any]]:

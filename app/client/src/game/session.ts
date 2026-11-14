@@ -8,11 +8,11 @@
 import { ApiFailure, type GameApi } from "../api/api";
 import type { Content, Decision, NewSave, PastLine, SavePresentation, Step, View } from "../api/types";
 import { Asking } from "./asking";
+import { chapterOf } from "./chapter";
 import { Clock } from "./clock";
 import { ForecastHold } from "./forecasthold";
-import { Keeps, NEW_SAVE, type Kept } from "./keeps";
+import { Keeps, NEW_SAVE, sentKeeps, type Kept } from "./keeps";
 import { progressed } from "./progressed";
-import { sendable, sendableSave } from "./presentation";
 
 export interface SessionEvents {
   /** A game began or opened, or the content changed under it (a deploy: the server rebased the save). `history`: the
@@ -214,23 +214,11 @@ export class Session {
     this.content = content;
     this.saveId = saveId;
     this.step = step;
-    this.keeps = this.keepsFor(saveId, kept);
+    this.keeps = sentKeeps(this.api, saveId, this.keeps.kept, kept);
     this.events.build(step.build);
     this.clock.start(step.view.at);
     this.events.started(content, step, this.keeps, history);
     progressed(content, step.view);
-  }
-
-  /** The keeps for save `saveId`: the account's and the settings carried on; each change sent, the answer adopted. */
-  private keepsFor(saveId: number, kept: SavePresentation | null): Keeps {
-    const notKept = (e: unknown): void => console.warn("ashfall: not kept", e);
-    const was = this.keeps.kept;
-    const keeps: Keeps = new Keeps({ ...was, save: kept ?? was.save }, {
-      account: (p) => void this.api.putMePresentation(sendable(p)).then((a) => keeps.adopt(a.presentation)).catch(notKept),
-      save: (p) => void this.api.putSavePresentation(saveId, sendableSave(p)).then((s) => keeps.adoptSave(s)).catch(notKept),
-      settings: (s) => void this.api.putMeSettings(s).then((a) => keeps.adoptSettings(a.settings)).catch(notKept),
-    });
-    return keeps;
   }
 
   private async send(decision: Decision | null, away = false): Promise<void> {
@@ -275,11 +263,11 @@ export class Session {
 
   private landed(next0: Step, prev: View, away: boolean): void {
     const next = this.forecast.withForecast(next0);
+    if (away) this.keeps.keepReturn(prev.at, next.view.at, this.content && chapterOf(this.content, prev, this.step?.rule_runs ?? [], next.view, next.rule_runs));
     this.fresh = false;
     this.step = next;
     this.events.build(next.build);
     this.clock.start(next.view.at);
-    if (away) this.keeps.keepReturn(prev.at, next.view.at);
     this.events.stepped(next, prev, away);
     if (this.content) progressed(this.content, next.view);
   }

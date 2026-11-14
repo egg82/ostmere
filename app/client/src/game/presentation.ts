@@ -1,7 +1,8 @@
 // What the page keeps only grows (CONTRACT.txt, AccountPresentation and SavePresentation), so two copies of it join by union: flags OR
-// together, a list is the first's entries then the second's that are new. The server does the same on every write;
-// the page does it to take the server's answer without losing a keep made while that write was in flight.
-import type { AccountPresentation, SavePresentation } from "../api/types";
+// together, a list is the first's entries then the second's that are new, and of two chapters the later return's. The
+// server does the same on every write; the page does it to take the server's answer without losing a keep made while
+// that write was in flight.
+import type { AccountPresentation, Chapter, SavePresentation } from "../api/types";
 import { MAX_VISITS } from "./chronicle";
 
 function union<T>(own: T[], more: T[], name: (item: T) => string): T[] {
@@ -30,14 +31,17 @@ export function mergeSavePresentation(own: SavePresentation, more: SavePresentat
     lessons: names(own.lessons, more.lessons),
     lesson_ends: union(own.lesson_ends, more.lesson_ends, (e) => e.lesson),
     visits: union(own.visits ?? [], more.visits ?? [], (v) => String(v.left)).slice(-MAX_VISITS),   // an older pod answers none
+    chapter: later(own.chapter ?? null, more.chapter ?? null),
   };
 }
 
-/** What a save's write sends: `visits` only once one is kept, since a build from before them refuses a body naming it. */
+const later = (own: Chapter | null, more: Chapter | null): Chapter | null => (more !== null && (own === null || more.left > own.left) ? more : own);
+
+/** What a save's write sends: `visits` and `chapter` only once one is kept, since a build from before them refuses a
+ * body naming it. */
 export function sendableSave(p: SavePresentation): SavePresentation {
-  if ((p.visits ?? []).length > 0) return p;
-  const { visits: _none, ...older } = p;
-  return older as SavePresentation;
+  const { visits, chapter, ...older } = p;
+  return { ...older, ...((visits ?? []).length > 0 ? { visits } : {}), ...(chapter ? { chapter } : {}) } as SavePresentation;
 }
 
 /** What a write sends: `reminder_mentioned` only once it is set, since a build from before reminders refuses a body

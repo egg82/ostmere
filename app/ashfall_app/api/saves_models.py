@@ -5,7 +5,8 @@ from typing import Annotated, TypeGuard
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from .limits import MAX_DRY_RUN, MAX_GAME_SECOND, MAX_LIST, MAX_NAME, MAX_SAVE_ID, NO_NUL
+from .limits import MAX_DRY_RUN, MAX_GAME_SECOND, MAX_LIST, MAX_NAME, MAX_ORDERS, MAX_SAVE_ID, NO_NUL
+from .decision_models import Order
 from .models import Decision, Request, Step, View
 
 type Name = Annotated[str, Field(max_length=MAX_NAME, pattern=NO_NUL)]
@@ -47,6 +48,37 @@ class Visit(BaseModel):
     model_config = ConfigDict(extra="forbid")
     left: int = Field(ge=0, le=MAX_GAME_SECOND)
     back: int = Field(ge=0, le=MAX_GAME_SECOND)
+
+
+class Figure(BaseModel):
+    """A store's quantity or a level as the player left it (`was`) and as the return found it (`now`)."""
+
+    model_config = ConfigDict(extra="forbid")
+    id: Id
+    was: int = Field(ge=0, le=MAX_GAME_SECOND)
+    now: int = Field(ge=0, le=MAX_GAME_SECOND)
+
+
+class RuleChange(BaseModel):
+    """A rule that came on (or, never coming on, let go) while the player was away, and how many times it came on
+    (1 where the page could not count more)."""
+
+    model_config = ConfigDict(extra="forbid")
+    order: Order
+    came_on: bool
+    times: int = Field(ge=1, le=MAX_GAME_SECOND)
+
+
+class Chapter(BaseModel):
+    """The figures of the newest return: what the chronicle's "Since you left" chapter shows beside its lines."""
+
+    model_config = ConfigDict(extra="forbid")
+    left: int = Field(ge=0, le=MAX_GAME_SECOND)
+    back: int = Field(ge=0, le=MAX_GAME_SECOND)
+    stores: list[Figure] = Field(default=[], max_length=MAX_LIST)
+    levels: list[Figure] = Field(default=[], max_length=MAX_LIST)
+    camp: Figure | None = None
+    rules: list[RuleChange] = Field(default=[], max_length=MAX_ORDERS)
 
 
 class AccountPresentation(BaseModel):
@@ -94,6 +126,8 @@ class SavePresentation(BaseModel):
     """Where each lesson in `lessons` ended, once each."""
     visits: list[Visit] = Field(default=[], max_length=MAX_LIST)
     """The returns after a long time away, one per `left`: what the chronicle splits its stretches at."""
+    chapter: Chapter | None = None
+    """The newest return's figures; a write keeps the one with the later `left`."""
 
 
 class AccountSettings(BaseModel):

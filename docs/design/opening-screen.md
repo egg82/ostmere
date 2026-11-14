@@ -30,14 +30,21 @@ beside them. Nothing the player needs during play sits in a far corner.
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
 - **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the siblings' frame
   with a sticky `.panel-heading` (the word on the button), then a row of filters once two kinds have entries: Story,
-  Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story. It is a diary of visits:
-  one stretch per return after at least half an hour away (`game/chronicle.ts`), each from the game second the player
-  left to the one they next left, titled "Away 54m" with how long ago the return was in the `ui.time.*` words. The page
+  Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story, at the top, newest first.
+  It is a diary of visits: one stretch per return after at least half an hour away (`game/chronicle.ts`), each from the
+  game second the player left to the one they next left, its lines oldest first. The newest return's stretch is the
+  "Since you left" chapter (`ui/chapter.ts`): under an ember spine, never folded, titled with how long the player was
+  away ("54m"), drawn under Story and All even with no line. Under Story its lines are followed by its figures as
+  rows of a dim label and a value (`game/chronwords.ts`, `chapterRows`): stores ("+326 Dead wood · −26 Warmth"), levels
+  ("Camp 1 → 2 · Foraging 2 → 4"), rules (one per line, "… came on ×2"), waiting ("1 ask", which closes the
+  chronicle and brings the first ask into view); the levels and rules labels open their filters, and the counts of
+  any other filter follow. With figures kept and nothing in them or the lines, it says "Nothing changed." Older
+  stretches are titled "Away 54m" with how long ago the return was in the `ui.time.*` words. The page
   keeps each return in the save's presentation (`SavePresentation.visits`, written when the away reveal lands), so a
   reload keeps the stretches; lines before the first kept return are one stretch, "Earlier" (or "Now" when it is the
   only one). The stretches are the same under every filter, which picks their lines; one with none of them is not
-  drawn. The newest drawn is open under an ember spine and square unless folded by hand; older ones are folded to their
-  counts by filter ("Story 4 · Finds 3"). Story lines are set as in the strip, italic in the bright ink; the others in
+  drawn. With no chapter drawn, the newest stretch drawn is open under a bright spine and square unless folded by hand;
+  the others are folded to their counts by filter ("Story 4 · Finds 3"). Story lines are set as in the strip, italic in the bright ink; the others in
   the body size and ink. Under each line, in the dim meta ink, "↳" and its cause (`Content.line_infos`' cause, worded
   by `game/chronwords.ts`). Under Story, a stretch ends with its counts of the other filters, each a button that opens
   its filter. Lines the page words itself (fights, a skill's top) carry their kind and cause where the page words them;
@@ -849,6 +856,9 @@ reads as what changed rather than everything at once (`decisions.md`, "Idle time
   the first tap or key shows everything. A tap does this at its release, once it has landed on what it pressed:
   shown at the press, a line moved the controls under the finger and the tap was lost. Under reduced motion
   everything shows at once, with its dots.
+- **Kept as a chapter:** a return of half an hour or more is kept with its figures, and the chronicle opens on it as
+  "Since you left" (The chronicle, above) until the next one. The chronicle never opens by itself: the strip's replay
+  is the return's first telling, the chapter its record.
 
 ## The front page
 
