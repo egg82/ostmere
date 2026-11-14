@@ -34,6 +34,11 @@ export class LaneRows implements Part {
     this.strip = new TownStrip(ctx, () => { if (this.raw) this.town.show(this.raw); changed(); });
   }
 
+  /** How many rows are drawn: the town's people, then each lane run by rules that has no person in the town. */
+  get count(): number {
+    return (this.view ? people(this.ctx.catalog, this.view).length : 0) + this.rows.size;
+  }
+
   /** `prev`: the view before; a person it had who has left stays drawn until the lines the moment brought are read. */
   update(raw: View, prev: View | null = null): void {
     this.raw = raw;

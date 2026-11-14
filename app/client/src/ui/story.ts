@@ -1,8 +1,8 @@
 // The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
 // costs; each once its cure is on screen, game/shown.ts), what the player carries (a feature with a label, dotted
-// when it arrives) and the Chronicle button (on a phone the bottom bar's Book instead), dotted when a line left the strip
-// before the player touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
+// when it arrives). The tabs' Book (ui/tabs.ts) opens the chronicle, dotted when a line left the strip before the player
+// touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
 // first, the older dimmer, in room kept for the tallest story line the content can write (Content.line_infos, laid out
 // unseen in the strip's one cell; ui/stripfit.ts counts how many fit, at least the newest). The Feedback button
 // (feedback.ts) opens the tester's sheet from the panel's foot. Every line, every rule's start and let-go and every fight
@@ -37,7 +37,7 @@ const KEEP = 200;
 export class Story implements Part {
   /** The story strip: the newest lines that fit its room, whole (ui/headseat.ts seats it under the art). */
   readonly root = el("section", "strip");
-  /** The Camp bar, chips and Chronicle: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
+  /** The Camp bar and chips: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
   readonly head = el("div", "scene-head");
   private readonly chips = el("div", "chips");
   private readonly aimLine: AimLine;
@@ -50,8 +50,7 @@ export class Story implements Part {
   /** The rule entries already in the chronicle, by id (game/rulerows.ts). */
   private readonly ruled = new Set<string>();
   private readonly journal: Journal;
-  private readonly chronicleOpen: HTMLButtonElement;
-  /** The bottom bar's Book on a phone (ui/tabs.ts seats it): the Chronicle button's twin there. */
+  /** The tabs' Book (ui/tabs.ts): it opens the chronicle's sheet. */
   readonly book = el("button", "tab");
   /** When the player last touched the page (performance.now()). */
   private touchedAt = -Infinity;
@@ -72,18 +71,14 @@ export class Story implements Part {
     this.chronicle = new ChronicleSheet(ctx.catalog, ctx.keeps, showAsks);
     this.journal = new Journal(ctx);
     this.lines.setAttribute("aria-live", "polite");
-    const open = el("button", "chron-open", ctx.catalog.text.get(UI.chronicle));
     this.book.textContent = ctx.catalog.text.get(UI.tabBook);
     this.book.dataset.tab = "book";
-    for (const b of [open, this.book]) {
-      b.type = "button";
-      b.addEventListener("click", () => { tapFeedback(); unmark(open); unmark(this.book); this.chronicle.show(); });
-    }
-    this.chronicleOpen = open;
+    this.book.type = "button";
+    this.book.addEventListener("click", () => { tapFeedback(); unmark(this.book); this.chronicle.show(); });
     for (const t of TOUCHES) document.addEventListener(t, () => { this.touchedAt = performance.now(); }, { capture: true });
     const feedback = new FeedbackSheet(ctx);
     this.feedbackButton = feedback.button;
-    this.head.append(this.camp.root, this.chips, open);
+    this.head.append(this.camp.root, this.chips);
     this.root.append(this.room(), this.lines, this.chronicle.root, this.journal.root, feedback.root);
   }
 
@@ -222,7 +217,7 @@ export class Story implements Part {
 
   /** The strip shows the newest lines that have shown, as many as fit its room whole: a line that no longer fits goes
    * (the arrival queue held each back for the reading time of the one before); lines still waiting their turn stay. A
-   * line that goes with no touch from the player since it showed may not have been read: the Chronicle gets its dot. */
+   * line that goes with no touch from the player since it showed may not have been read: Book gets its dot. */
   private trim(): void {
     const now = performance.now();
     const shown = [...this.lines.children].filter((n) => !n.classList.contains("held"));
@@ -231,7 +226,7 @@ export class Story implements Part {
     const keep = fitting(spans, this.roomCell.getBoundingClientRect().height);
     for (const gone of shown.slice(0, shown.length - keep)) {
       const since = this.shownAt.get(gone);
-      if (since !== undefined && this.touchedAt < since && !this.chronicle.root.open) for (const b of [this.chronicleOpen, this.book]) markNew(b, () => {});
+      if (since !== undefined && this.touchedAt < since && !this.chronicle.root.open) markNew(this.book, () => {});
       gone.remove();
     }
   }

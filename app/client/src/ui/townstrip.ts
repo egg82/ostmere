@@ -1,5 +1,5 @@
-// The town's strip (docs/design/opening-screen.md, "The town"): under the hands strip, once a person has joined, one row
-// per person present in the hands strip's shape: who, their time split into the cards that hold a share (each with its
+// The town's people (docs/design/opening-screen.md, "The Town view"): first in the Town tab, once a person has joined,
+// one row per person present: their face and who, their time split into the cards that hold a share (each with its
 // share) and the idle remainder, under it the split that runs now while a card of theirs is stopped (runningnow.ts),
 // and the card they are working now with its bar, sampled as the card panel samples it.
 // Change opens the town's mix in the town editor. A lane that has joined has no row of its own any more (lanerows.ts);
@@ -8,12 +8,13 @@ import type { View } from "../api/types";
 import { sample } from "../game/clock";
 import { people, personOf, townGreyed, townStoppedBy } from "../game/town";
 import { UI } from "../game/text";
+import { face } from "./asknode";
 import { el, keyed, setText, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
 import { RunningNow } from "./runningnow";
 import { splitOf, type Part as Share } from "./townsplit";
 
-interface PersonRow { node: HTMLElement; name: HTMLElement; doing: HTMLElement; split: HTMLElement; fill: HTMLElement; now: RunningNow }
+interface PersonRow { node: HTMLElement; face: HTMLElement; name: HTMLElement; doing: HTMLElement; split: HTMLElement; fill: HTMLElement; now: RunningNow }
 
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
@@ -34,7 +35,7 @@ export class TownStrip implements Part {
     head.append(this.status, this.change);
     const body = el("div", "hands-body");
     body.append(head, this.list);
-    this.root.append(el("span", "hands-label", text.get(UI.townTitle)), body);
+    this.root.append(body);
     this.root.hidden = true;
   }
 
@@ -80,8 +81,9 @@ export class TownStrip implements Part {
     const who = el("div", "town-who");
     who.append(name, doing);
     const now = new RunningNow(this.ctx, lane);
-    node.append(who, split, now.root, track);
-    return { node, name, doing, split, fill, now };
+    const faceSlot = el("span", "town-face");
+    node.append(faceSlot, who, split, now.root, track);
+    return { node, face: faceSlot, name, doing, split, fill, now };
   }
 
   private draw(lane: string, view: View): void {
@@ -91,6 +93,7 @@ export class TownStrip implements Part {
     const person = personOf(catalog, view, lane, townGreyed(catalog, view));
     const label = catalog.laneLabel(lane, view);
     setText(row.name, label);
+    row.face.replaceChildren(face(this.ctx, lane, label));
     setText(row.doing, person.running ? catalog.cardLabel(person.running) : catalog.text.get(UI.laneIdle));
     row.doing.classList.toggle("idle", person.running === null);
     const parts: Share[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
