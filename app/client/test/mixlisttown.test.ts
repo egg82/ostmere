@@ -3,6 +3,7 @@
 // (fixtures/townwire.ts) over the day-two page, whose hands mixes stay listed.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
+import { fixtureContent } from "../fixtures/content";
 import { townStep } from "../fixtures/town";
 import type { PartContext } from "../src/ui/part";
 import { MixSelector } from "../src/ui/selector";
@@ -14,7 +15,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 }
 
 const view = townStep("town").view;
-const hands = view.mixes.filter((m) => !m.id.startsWith("town:")).map((m) => m.id);
+const hands = view.mixes.filter((m) => !fixtureContent.game_mix_ids.includes(m.id)).map((m) => m.id);
 const s = new MixSelector(testContext().ctx as PartContext);
 s.show(view);
 document.body.replaceChildren(s.root);

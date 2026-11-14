@@ -119,8 +119,8 @@ line and a ledger line are measured in device pixels on both, and the story line
 └────────────┴──────────────────────────────────────┴──────────────────────────────┘
 ```
 
-Three columns (`docs/design/redesign.md`, "Desktop frame"). **The left rail** holds the panel's tabs, Tasks, Town, Rules
-and Book (`ui/tabs.ts`: the same row the phone shows as its bottom bar), then the skills, and the panel's quiet text
+Three columns (`docs/design/redesign.md`, "Desktop frame"). **The left rail** holds the panel's tabs, Tasks, the town
+(named by `ui.town.title`, as its heading is), Rules and Book (`ui/tabs.ts`: the same row the phone shows as its bottom bar), then the skills, and the panel's quiet text
 buttons at its foot (`ui/partseat.ts` seats each by frame). Town and Rules keep their slots unseen until they arrive, as
 on the phone, so nothing in the rail moves. The rail never lists a person's jobs. Book is a view like Town (The Book).
 
@@ -201,7 +201,8 @@ runs now while one of their cards is stopped, and the bar of the card they work.
 person has not joined (`ui/lanerows.ts`, below), in the same row form (`ui/personrow.ts`) with its own Change where a
 split would be. On a desktop what each works sits over its card's bar, on the right. On a phone the ledger and skills follow. Change opens the town editor in
 the view's place. These rows are their one home: the main screen and the rail never list anyone's jobs, and the Rules
-tab keeps the town's rules, not its people. A row arriving while another tab is open dots Town (the new-card dot), never
+tab keeps the town's rules, not its people, and only once the town has a second mix to switch to (with one, a town rule
+has nothing to do, so neither they nor a New rule for them are drawn). A row arriving while another tab is open dots Town (the new-card dot), never
 on the first view.
 
 At a town's size the view scrolls in its own column with the panel's fade at its foot; the rail keeps its one Town
@@ -563,6 +564,9 @@ whose top shows the strip.
   already a saved mix's.
 - `New mix` opens the editor with no cards and a pre-filled name no saved mix has. `Save` stays off until a card has
   been added and the name is free; saving creates the mix.
+- A typed name never reaches another mix. `Save` is off for another saved mix's name (it would overwrite that mix) and
+  for a name beginning as the game's own mixes do (`limits.reserved_mix_prefix`), and one line under the name says
+  which; the server refuses the same.
 - `Delete mix` asks once, in place (`Delete? Yes · No`). A mix named by a rule (`a rule uses it`; in the Mixes list
   `used by 2 rules`), or nested in another, says so instead of deleting.
 - Renaming a mix that rules run points those rules at the new name; renaming the player's own keeps it the player's
@@ -571,7 +575,8 @@ whose top shows the strip.
 
 ## The Mixes list
 
-From the strip's name ▾ (or its `Mixes ▾`): the saved mixes and nothing else, the player's own first. A centred sheet
+From the strip's name ▾ (or its `Mixes ▾`): the player's saved mixes and nothing else, the player's own first. A town
+mix is never listed: it runs by rules and is changed in the town's editor. A centred sheet
 on a desktop, a full-width bottom sheet on a phone (as every sheet there, "Phone"; scrolling). Each mix's row draws its split as a small bar of hues with the legend under it.
 
 - **Tapping a mix makes it the default,** what runs when no rule's mix does; while a rule's mix runs, it sets what

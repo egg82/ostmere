@@ -13,7 +13,7 @@ export class TownView {
   private rows = 0;
 
   constructor(catalog: Catalog, private readonly lanes: LaneRows, private readonly tab: HTMLButtonElement) {
-    this.root.append(el("h2", "view-title", catalog.text.get(UI.tabTown)), lanes.root);
+    this.root.append(el("h2", "view-title", catalog.text.get(UI.townTitle)), lanes.root);
   }
 
   /** Whether the tab shows: once a person or a lane is drawn, or `more` holds (a phone's ledger or skills); until then its

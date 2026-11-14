@@ -56,6 +56,11 @@ export function isTownMix(catalog: Catalog, view: View, mix: Mix): boolean {
   return cards.length > 0 ? cards.every((c) => catalog.ruled(c)) : catalog.content.game_mix_ids.includes(mix.id);
 }
 
+/** The town has a second mix a rule could switch to: until then a town rule has nothing to do. */
+export function townCanSwitch(catalog: Catalog, view: View): boolean {
+  return view.mixes.filter((m) => isTownMix(catalog, view, m)).length > 1;
+}
+
 /** The town's always rule: after_time 0, switching a mix. */
 function townAlways(order: Order): boolean {
   return order.when.kind === "after_time" && order.when.at === 0 && order.then.kind === "switch_mix";
