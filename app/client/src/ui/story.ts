@@ -34,13 +34,6 @@ import { ruleEntries } from "../game/rulerows";
 const TOUCHES = ["pointerdown", "keydown"] as const;
 const KEEP = 200;
 
-/** The first ask on the page (ui/offerrows.ts) brought into view, its first answer focused. */
-function showAsk(): void {
-  const ask = document.querySelector<HTMLElement>(".offer-ask");
-  ask?.scrollIntoView({ block: "center" });
-  ask?.querySelector<HTMLButtonElement>("button")?.focus();
-}
-
 export class Story implements Part {
   /** The story strip: the newest lines that fit its room, whole (ui/headseat.ts seats it under the art). */
   readonly root = el("section", "strip");
@@ -70,10 +63,11 @@ export class Story implements Part {
   /** The lines written so far with their game seconds, oldest first (KEEP at most): what a redrawn screen restores. */
   readonly keys: Past[] = [];
 
-  constructor(private readonly ctx: PartContext) {
+  /** `showAsks`: what the chronicle's count of waiting asks opens (ui/asks.ts). */
+  constructor(private readonly ctx: PartContext, showAsks: () => void = () => undefined) {
     this.camp = new CampBar(ctx);
     this.aimLine = new AimLine(ctx);
-    this.chronicle = new ChronicleSheet(ctx.catalog, ctx.keeps, () => showAsk());
+    this.chronicle = new ChronicleSheet(ctx.catalog, ctx.keeps, showAsks);
     this.journal = new Journal(ctx);
     this.lines.setAttribute("aria-live", "polite");
     const open = el("button", "chron-open", ctx.catalog.text.get(UI.chronicle));

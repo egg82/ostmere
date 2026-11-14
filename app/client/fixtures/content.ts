@@ -163,6 +163,7 @@ const text: Record<string, string> = {
   "ui.cause.camp": "Camp level {n}",
   "ui.cause.time": "time",
   "ui.cause.answer": "your answer",
+  "ui.asks.heading": "Asks", "ui.asks.more": "{n} more", "ui.ask.figure": "{name} {before} → {after}", "ui.ask.answer_was": "your answer: {answer}",
   "ui.feedback.open": "Feedback",
   "ui.feedback.prompt": "What's working, what isn't, what confused you",
   "ui.feedback.note": "Sent with your game's progress and this build. No name goes with it.",

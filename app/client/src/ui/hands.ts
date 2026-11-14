@@ -8,8 +8,8 @@
 // condition holds (with "until …", where it lets go, where "runs …" would be), else the player's own. "until …" (or
 // "while …") is a button: it opens the Rules tab, where Lately says what the rules did. Once a mix exists "Mixes ▾" opens the Mixes list, the
 // running mix's name beside it as plain text; with none running but mixes or rules saved, a plain button in the meta slot opens the list (or, with
-// only rules, the Rules tab). Under the mix row, a card the mix can take, offered once (mixoffer.ts), what someone asks
-// until it is answered (offerrows.ts), and a chip's rule offer once it is due (chipoffer.ts). When the running
+// only rules, the Rules tab). Under the mix row, a card the mix can take, offered once (mixoffer.ts), and a chip's rule
+// offer once it is due (chipoffer.ts); what someone asks is the Asks list's (asks.ts). When the running
 // mix greys (a task in it retired or completed), Edit takes the glow until the editor is opened. While the queue holds a
 // tap, "next: {task}" sits in whichever row is showing.
 import type { Mix, View } from "../api/types";
@@ -24,7 +24,6 @@ import { UI } from "../game/text";
 import { ChipOffer } from "./chipoffer";
 import { LaneRows } from "./lanerows";
 import { PHONE } from "./layout";
-import { OfferRows } from "./offerrows";
 import { RunningNow } from "./runningnow";
 import { GlowWhile } from "./fresh";
 import { el, setText, tapFeedback } from "./dom";
@@ -49,8 +48,8 @@ export class Hands implements Part {
   readonly root = el("section", "hands");
   /** A row per lane run by rules, drawn under the strip (the screen places its root). */
   readonly lanes: LaneRows;
-  /** The offer rows on a phone, under the pinned strip and scrolling with the cards (the screen places its root); on a wider
-   * screen they sit in the strip, under the mix row. */
+  /** The chip's rule offer on a phone, under the pinned strip and scrolling with the cards (the screen places its root);
+   * on a wider screen it sits in the strip, under the mix row. */
   readonly rows = el("div", "hands-rows");
   private readonly label = el("span", "hands-label");
   private readonly text = el("span", "hands-text");
@@ -72,7 +71,6 @@ export class Hands implements Part {
   /** The split that runs now, under the bar while a card of the mix is stopped. */
   private readonly now: RunningNow;
   private readonly ruleOffer: ChipOffer;
-  private readonly offers: OfferRows;
   private readonly editGlow: GlowWhile;
   private view: View | null = null;
   private mix: Mix | null = null;
@@ -117,15 +115,13 @@ export class Hands implements Part {
     this.mixRow.append(this.bar.root, this.meta);
     this.handsRow.append(this.text, this.taskRule, this.plan);
     this.ruleOffer = new ChipOffer(ctx);
-    this.offers = new OfferRows(ctx);
     this.lanes = new LaneRows(ctx, changed);
     this.now = new RunningNow(ctx, "hands");
     this.editGlow = new GlowWhile(ctx.glow, this.edit);
     const body = el("div", "hands-body");
     body.append(this.handsRow, this.offer, this.mixRow, this.now.root);
-    const offerRows = [this.offers.root, this.ruleOffer.root];
     const phone = window.matchMedia(PHONE);
-    const seat = (): void => (phone.matches ? this.rows : body).append(...offerRows);
+    const seat = (): void => (phone.matches ? this.rows : body).append(this.ruleOffer.root);
     phone.addEventListener("change", seat);
     seat();
     this.root.append(this.label, body);
@@ -140,7 +136,6 @@ export class Hands implements Part {
       this.ctx.arrivals.arrive(this.root, "feature", "hands");
     }
     this.ruleOffer.update(view);
-    this.offers.update(view);
     this.lanes.update(view, prev);
     this.now.update(view);
     const mix = runningMix(view);
@@ -235,7 +230,6 @@ export class Hands implements Part {
   }
 
   tick(t: number): void {
-    this.offers.tick();
     this.lanes.tick(t);
     this.editGlow.tick();
     const view = this.view;

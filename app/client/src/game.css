@@ -17,6 +17,7 @@
   --on-ember: #1a0f08;
   --alarm: #e0614a;
   --drop: 0 2px 0 #050407;
+  --ask-ground: #17130f;   /* a waiting ask's warm ground, under its outline */
   /* four sizes, rem off the root below */
   --t-meta: .8125rem;
   --t-body: .9375rem;
@@ -147,7 +148,6 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .hands-text.idle { color: var(--ink-dim); }
 .hands-offer { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
 .rule-pick { display: inline-flex; align-items: center; gap: .6rem; flex-wrap: wrap; }   /* one chip card's rule and its button, a pair beside the chip's other cards */
-.offer-buttons { display: inline-flex; gap: .6rem; }   /* two buttons wrap as one group, never one alone */
 .hands-rule-offer, .hands-mix-offer { margin-top: .4rem; }   /* a chip's rule offer, its own row under the mix */
 .offer-names { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
 .offer-name { padding: .15rem .5rem; border-left: 4px solid var(--hue); background: var(--raise); color: var(--ink-hi); }
@@ -176,19 +176,34 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 :is(.hands.yielded, .hands.greyed) .share-track, :is(.hands.yielded, .hands.greyed) .share-key-item::before { filter: saturate(.15) brightness(.6); }   /* the hues, never the legend's words */
 .hands.greyed .hands-mix-name { color: var(--ink-dim); }
 .hands.greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
-/* an offer (ui/offerrows.ts), on the mix offer's row: the question, then one button per answer with its time under it */
-.offer-row { margin-top: .4rem; }
-/* someone asking, not the strip's routine: the ember outline, the question in the story's size; it has no Dismiss and waits */
-.offer-ask { padding: .6rem .75rem; border-radius: 2px; outline: 1px solid var(--ember-hot); outline-offset: -1px; }
-.offer-ask .offer-text { font-size: var(--t-story); font-style: italic; }
-.offer-text { flex: 1 1 14rem; margin: 0; min-width: 0; color: var(--ink-hi); }
+/* the Asks list (ui/asks.ts, ui/asknode.ts): one ask in a slot of fixed height, the rest counted; someone asking, set
+   apart from the routine by the ember outline on its warm ground, the question in the story's size; no Dismiss */
+.asks { padding: .6rem 0 .75rem; border-bottom: 1px solid var(--rule); }
+.asks-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; min-height: 2.4rem; }
+.asks-head .panel-heading { margin: 0; }
+.asks-more { min-height: 2.4rem; padding: 0 .3rem; cursor: pointer; font: inherit; font-size: var(--t-meta); color: var(--ink); background: transparent; border: 0; text-decoration: underline; text-underline-offset: 3px; }
+.asks-more:hover, .asks-more:focus-visible { color: var(--ink-hi); }
+.asks-slot { display: grid; min-height: 11rem; }   /* the shown ask's room, which the ask fills: a second ask arriving moves nothing under it */
+.ask { padding: .85rem 1rem; border-radius: 2px; outline: 1px solid var(--ember-hot); outline-offset: -1px; background: var(--ask-ground); }
+.ask-who { display: flex; align-items: center; gap: .4rem; margin: 0; font-size: var(--t-meta); color: var(--ink-dim); }
+.ask-face { display: inline-grid; place-items: center; width: 1.375rem; height: 1.375rem; border-radius: 2px; font-size: .75rem; font-weight: 700; color: var(--ink-hi); background: var(--raise); box-shadow: inset 0 0 0 2px var(--hue); }   /* the hue as a ring: dark ink on every hue would not hold 4.5:1 */
+.ask-text { margin: .35rem 0 .1rem; font-size: var(--t-story); font-style: italic; line-height: 1.3; color: var(--ink-hi); }
+.ask-cause { margin: 0; font-size: var(--t-meta); color: var(--ink-dim); }
+.ask-cause::before { content: "↳"; margin-right: .3em; }   /* as a chronicle line's cause */
+.ask-answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .5rem; margin-top: .6rem; }
+.ask-answer { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: .1rem; min-height: 2.75rem; padding: .55rem .7rem; text-align: left; line-height: 1.25; cursor: pointer; font: inherit; color: var(--ink); background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); }
+.ask-answer:hover, .ask-answer:focus-visible { background: var(--press); outline: none; }
+.ask-label { color: var(--ink-hi); font-weight: 500; }
+.ask-cost { font-size: var(--t-meta); }
+.ask-figures { display: flex; flex-direction: column; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.ask-facts { display: flex; flex-wrap: wrap; gap: .2rem 1rem; margin: .6rem 0 0; font-size: var(--t-meta); color: var(--ink); }
+.asks-all { display: flex; flex-direction: column; gap: .75rem; padding-top: .4rem; }
+.asks-all .ask { outline-color: var(--rule); }   /* the whole list: the outline stays the shown ask's alone */
 .kind-rule { flex-wrap: wrap; }
 .kind-rule .kind-asked, .kind-rule .kind-answered, .kind-rule .kind-lead { flex-basis: 100%; margin: 0; }
 .kind-rule .kind-asked { color: var(--ink); font-size: var(--t-meta); }
 .kind-rule .kind-lead { color: var(--ink-dim); font-size: var(--t-meta); }
-.offer-answer { display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: .3rem .9rem; line-height: 1.2; text-align: left; }
-.offer-cost { font-size: var(--t-meta); font-weight: 400; }
-/* the offer rows on a phone (ui/hands.ts seats them): under the pinned strip, scrolling with the cards, so a prompt does not cost the cards their room */
+/* a phone's chip rule offer (ui/hands.ts seats it): under the pinned strip, scrolling with the cards, so a prompt does not cost the cards their room */
 .hands-rows:not(:has(> :not([hidden], :empty))) { display: none; }
 .hands-rows { padding: 0 0 .5rem; border-bottom: 1px solid var(--rule); }
 .hands-rows > * { margin-top: .5rem; }
@@ -296,7 +311,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .line .new-dot { top: .55rem; left: auto; right: .3rem; }   /* inside .line, which clips its overflow, in the right gutter its padding keeps for it, so it never covers the amount and nothing moves when it comes */
 .glow { position: relative; z-index: 1; }
 .glow::after { content: ""; position: absolute; inset: -4px; pointer-events: none; border: 1px solid var(--ember-hot); border-radius: 2px; }
-.game:has(.offer-ask:not([hidden])) .glow::after { display: none; }   /* a waiting ask holds the one outline */
+.game:has(.asks:not([hidden])) .glow::after { display: none; }   /* a waiting ask holds the one outline */
 .card-tap.glow::after { inset: -4px; }
 
 /* skills */

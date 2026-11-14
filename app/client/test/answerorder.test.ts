@@ -1,12 +1,12 @@
 // The second offer kind (docs/design/day-three-plan.md, item 5; CONTRACT.txt, "Offers"): once an offer whose answers
 // start nothing and install a modifier sits beside one that starts a card, the Rules tab lists the answer order (the
-// always rules that answer offers, in list order, under the Answers heading), and the offer row words each answer's
+// always rules that answer offers, in list order, under the Answers heading), and the Asks list words each answer's
 // effect where a time would be.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayTwoStep } from "../fixtures/daytwo";
 import type { Offer, Order, View } from "../src/api/types";
-import { OfferRows } from "../src/ui/offerrows";
+import { Asks } from "../src/ui/asks";
 import { RulesTab } from "../src/ui/rules";
 
 install();
@@ -39,13 +39,15 @@ const both: View = { ...base, offers: [...base.offers, bank], orders: [...base.o
   expect("no arrow: the answer is in the words", section.querySelectorAll(".rule-arrow").length, 0);
 }
 
-{  // the modifier offer's row: each answer's effect where a time would be; the card offer's keeps its time
+{  // the modifier offer's ask: each answer's effect where a time would be; the card offer's keeps its time (both in the list)
   const { ctx } = testContext();
   ctx.lines = () => [];
-  const rows = new OfferRows(ctx);
-  const root = mounted(rows.root);
-  rows.update(both);
-  const costs = (offer: string) => root.querySelector(`[data-offer="${offer}"]`)?.querySelectorAll("button").map((b) => b.textContent);
+  const asks = new Asks(ctx);
+  const root = mounted(asks.root);
+  asks.update(both);
+  root.querySelector(".asks-more")?.click();
+  const list = root.querySelector(".asks-sheet");
+  const costs = (offer: string) => list?.querySelector(`[data-offer="${offer}"]`)?.querySelectorAll("button").map((b) => b.textContent);
   expect("the effects", costs("bank"), ["Hers[fixture] +10% a thing", "His[fixture] -10% another, 2 wood"]);
   expect("the card offer still names its time", costs("ask"), ["Wait", "Go nowtakes 12 m 30 s"]);
 }
