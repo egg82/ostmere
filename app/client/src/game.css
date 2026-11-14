@@ -788,7 +788,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .panel-top:has(> .hands.held) ~ .hands-rows > .hands-meta { visibility: hidden; }   /* they arrive with the strip */
   .hands-bar-row :is(.hands-name, .hands-mix-name) { flex: 0 1 auto; max-width: 45%; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 2rem; }   /* "Main ▾" beside the bar: a long name truncates */
   .hands-bar-row .hands-name { min-height: 0; padding-block: .375rem; margin-block: -.375rem; }   /* its reach is 2.75rem tall (44 px) in a row 2rem tall */
-  .hands-label { display: none; }   /* the bar is the player's: the lanes below name their people */
+  .panel-top .hands-label { display: none; }   /* the bar is the player's: the lanes in Town name their people */
   .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, so nothing leaves the screen */
   .chip { flex: none; white-space: nowrap; }
   .chip::before { margin-right: .2em; }
