@@ -441,6 +441,8 @@ id = "s_b7"
 kind = "beat"
 source = { source_kind = "card", id = "bank_fire_6" }
 first = { keys = ["n_day_b7"] }
+catchup = { keys = ["j_b7_catchup"] }
+late = { keys = ["j_b7_late"] }
 
 # At B7's moment too, so it opens nothing of its own while away.
 [[notes]]
@@ -567,4 +569,7 @@ l_fight_crows_lost_2 = "black wings lift off a bare pole."
 l_fight_crows_lost_3 = "you retie what the crows pulled. fewer strips hang."
 n_day_b7 = "eyes past the firelight all night. counted them to pass the time. lost count. started again"
 n_ground_2 = "banked the fire on the warm ground. it keeps its coals there like nowhere else in camp"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b7_catchup = "wolves round the edge of the light all night"
+j_b7_late = "left out the worst of it. while we all faced out, the rack behind us went bare to the poles"
 # ---------- end of lines ----------
