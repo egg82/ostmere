@@ -7,6 +7,8 @@
   retire  tests/engine_contract/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
   clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/
           the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
+  journal_days  tests/saves/test_journal_days.py (and the db tests in `also`)  tests/saves/MUTANTS_journal_days.txt
+          specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); only its own tests make claims.
 
@@ -80,6 +82,9 @@ SUITES = {
     "clocks": Suite("MUTANTS_clocks.txt", "test_failover.py", "clocks_mutants", also=(
         "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/reminders/test_sender.py",
         "tests/dayone/test_dayone_forecast.py"), home="tests/db"),
+    "journal_days": Suite("MUTANTS_journal_days.txt", "test_journal_days.py", "journal_days_mutants", also=(
+        "tests/db/test_journal_rows.py", "tests/db/test_journal_failover.py", "tests/db/test_decision_lock_span.py"),
+        home="tests/saves"),
 }
 
 

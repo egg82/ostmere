@@ -1,7 +1,7 @@
 """A step's write as one statement, so the save's row lock is held over one round trip for it rather than five to eight:
-the save's row, the lines the step added, for a decision its log entry (older entries pruned) and the day's snapshot
-(older days pruned), and the recent decisions the step's repeats are counted from. The parts are data-modifying CTEs of
-one SELECT, built once per shape with bound parameters (SQLAlchemy keys and compiles a construct once and reuses it);
+the save's row, the lines the step added, the journal days it composed, for a decision its log entry (older entries
+pruned) and the day's snapshot (older days pruned), and the recent decisions the step's repeats are counted from. The
+parts are data-modifying CTEs of one SELECT, built once per shape with bound parameters (SQLAlchemy keys and compiles a construct once and reuses it);
 they share one snapshot, so what is read of the log is the log as it stands before the statement, plus the
 entry it adds, less what it prunes. What is written when, and what is pruned, is saves/ (write.py); this module only
 writes."""
@@ -13,13 +13,22 @@ from functools import cache
 from typing import Any
 
 from sqlalchemy import (
-    ARRAY, BigInteger, CTE, ColumnElement, Connection, Integer, Select, Text, and_, bindparam, delete, exists,
+    ARRAY, BigInteger, CTE, ColumnElement, Connection, Integer, Select, Text, and_, bindparam, column, delete, exists,
     func, insert, literal_column, or_, select, union_all,
 )
-from sqlalchemy.dialects.postgresql import aggregate_order_by, insert as pg_insert
+from sqlalchemy.dialects.postgresql import JSONB, aggregate_order_by, insert as pg_insert
 
 from .saves import LISTED, WRITING, DecisionRecord, Listed, Written, as_listed, writing
-from .tables import save_decisions, save_lines, save_snapshots, saves
+from .tables import save_decisions, save_journal, save_lines, save_snapshots, saves
+
+
+@dataclass(frozen=True)
+class JournalDay:
+    """A composed day as stored: its notes in page order, each {subject, slot, key}, and its gap."""
+
+    day: int
+    notes: list[dict[str, str]]
+    gap: str | None
 
 
 @dataclass(frozen=True)
@@ -36,11 +45,13 @@ class Log:
 
 
 def write_step(conn: Connection, save_id: int, now: datetime, w: Written, lines: Sequence[tuple[int, str]],
-               log: Log | None, since: Mapping[str, int] | None) -> tuple[Listed, list[DecisionRecord]]:
+               log: Log | None, since: Mapping[str, int] | None,
+               days: Sequence[JournalDay] = ()) -> tuple[Listed, list[DecisionRecord]]:
     """The save as written, and its logged decisions of each kind in `since` made at or after its game time (none
-    without `since`), the step's own entry among them."""
+    without `since`), the step's own entry among them. A day of `days` the save already holds is left as it is."""
     params = writing(save_id, now, w) | {"line_at": [at for at, _ in lines], "line_key": [key for _, key in lines],
-                                         "save_id": save_id}
+                                         "save_id": save_id,
+                                         "j_days": [{"day": d.day, "notes": d.notes, "gap": d.gap} for d in days]}
     if log is not None:
         d = log.entry
         params |= {"now": now, "l_n": d.n, "l_at": d.at, "l_kind": d.kind, "l_verb": d.verb, "l_digest": d.rules_digest,
@@ -48,15 +59,16 @@ def write_step(conn: Connection, save_id: int, now: datetime, w: Written, lines:
     if since is not None:
         for i, (kind, at) in enumerate(since.items()):
             params |= {f"s_kind{i}": kind, f"s_at{i}": at}
-    row = conn.execute(_statement(log is not None, None if since is None else len(since)), params).one()
+    row = conn.execute(_statement(log is not None, None if since is None else len(since), bool(days)), params).one()
     return as_listed(row), [DecisionRecord(**d) for d in row.recent or ()]
 
 
 @cache
-def _statement(logged: bool, kinds: int | None) -> Select[Any]:
-    """`write_step`'s statement for a step that logs a decision or not and reads `kinds` kinds of recent decisions."""
+def _statement(logged: bool, kinds: int | None, journaled: bool) -> Select[Any]:
+    """`write_step`'s statement for a step that logs a decision or not, reads `kinds` kinds of recent decisions, and
+    stores journal days or not."""
     upd = WRITING.returning(*LISTED, saves.c.state).cte("upd")
-    parts = [_lines()]
+    parts = [_lines(), *([_journal()] if journaled else [])]
     entry: CTE | None = None
     if logged:
         entry, more = _logged(upd)
@@ -75,6 +87,16 @@ def _lines() -> CTE:
         ["save_id", "n", "at", "key"],
         select(bindparam("save_id", type_=BigInteger), last + given.c.i, given.c.at, given.c.key),
     ).returning(save_lines.c.n).cte("lines")
+
+
+def _journal() -> CTE:
+    """The days (`j_days`, a JSON array of {day, notes, gap}), each unless the save holds it already."""
+    given = func.jsonb_to_recordset(bindparam("j_days", type_=JSONB)).table_valued(
+        column("day", Integer), column("notes", JSONB), column("gap", Text)).render_derived(with_types=True)
+    return pg_insert(save_journal).from_select(
+        ["save_id", "day", "notes", "gap"],
+        select(bindparam("save_id", type_=BigInteger), given.c.day, given.c.notes, given.c.gap),
+    ).on_conflict_do_nothing(index_elements=["save_id", "day"]).returning(save_journal.c.day).cte("journaled")
 
 
 def _logged(upd: CTE) -> tuple[CTE, list[CTE]]:

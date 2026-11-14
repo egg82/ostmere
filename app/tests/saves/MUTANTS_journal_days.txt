@@ -1,0 +1,19 @@
+Wrong implementations of the journal's write path (saves/journal_write.py, db/journal.py, db/step.py, saves/write.py),
+each planted alone in a scratch copy by tools/mutate_suite.py's `journal_days` suite (specs tools/journal_days_mutants/):
+tests/saves/test_journal_days.py with tests/db/test_journal_rows.py, test_journal_failover.py and
+test_decision_lock_span.py beside it. Needs ASHFALL_TEST_PG. Each must go red.
+
+ 1 stale trusted   journal_write.py: a locking read that waited on another write is trusted
+ 2 always fresh    db/journal.py: the locking read always says its snapshot is fresh
+ 3 due late        db/journal.py: the days are read only once two days are due
+ 4 lines ahead     db/journal.py: lines of the day not yet ended are read
+ 5 own lines       journal_write.py: the step's own lines, not yet stored, are left out
+ 6 no renames      journal_write.py: a stored line under a key renamed since feeds nothing
+ 7 one cause       journal_write.py: a line of two causes feeds only the first's subject
+ 8 open day        journal_write.py: the day the step stops in is composed before it ends
+ 9 blanks carried  journal_write.py: Opened carries blank and gap days too
+10 conflict fails  db/step.py: a day the save already holds fails the write instead of being left as stored
+11 not stored      write.py: the composed days are not stored
+
+Equivalent, and so not in the code: filtering the stored or the step's lines to before the last closed day's end (each
+day is composed from the lines before its own end only).

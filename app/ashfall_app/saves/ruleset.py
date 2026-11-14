@@ -7,6 +7,7 @@ from ..opening.convert import camp_trigger_id
 from ..opening.renames import RenameEntry, engine_renames
 from ..opening.schema import Opening, to_rules
 from .interface import Ruleset
+from .journal_rules import journal_rules
 from .repeats import RepeatRules
 
 
@@ -15,7 +16,8 @@ def ruleset(opening: Opening, renames: list[RenameEntry], build: str, release: i
     return Ruleset(rules=rules, digest=e.rules_digest(rules), renames=engine_renames(renames),
                    start_lines=tuple(e.LineKey(k) for k in opening.start_line_keys),
                    line_renames=line_renames(renames), retired_lines=retired_lines(renames), build=build, release=release,
-                   camp_triggers=camp_triggers(opening, rules), repeats=repeat_rules(opening))
+                   camp_triggers=camp_triggers(opening, rules), repeats=repeat_rules(opening),
+                   journal=journal_rules(opening))
 
 
 def repeat_rules(opening: Opening) -> RepeatRules:

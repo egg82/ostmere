@@ -9,7 +9,8 @@ from typing import Any
 from datetime import datetime
 
 from sqlalchemy import (
-    CTE, ColumnElement, Connection, Row, ScalarSelect, Update, and_, bindparam, delete, func, insert, or_, select, update,
+    CTE, ColumnElement, Connection, Label, Row, ScalarSelect, Update, and_, bindparam, delete, func, insert, or_,
+    select, update,
 )
 
 from .manifests import held_for, whole
@@ -143,13 +144,20 @@ def save(conn: Connection, save_id: int, account_id: int | None, lock: bool = Fa
     """A live save (not deleted) by id, the account's own when `account_id` is given; `lock` holds its row until the
     transaction ends (SELECT ... FOR UPDATE), so writes to one save run one after another on any pod. `visit` is a
     write that rides the same statement (reminders.visit)."""
-    q = select(*_COLUMNS).where(saves.c.id == save_id, saves.c.deleted_at.is_(None))
+    found = save_and(conn, save_id, account_id, lock, visit)
+    return None if found is None else found[0]
+
+
+def save_and(conn: Connection, save_id: int, account_id: int | None, lock: bool, visit: CTE | None,
+             extra: Sequence[Label[Any]] = ()) -> tuple[SaveRecord, Row[Any]] | None:
+    """`save`, with `extra` read in the same statement: the row carries each by its label."""
+    q = select(*_COLUMNS, *extra).where(saves.c.id == save_id, saves.c.deleted_at.is_(None))
     if account_id is not None:
         q = q.where(saves.c.account_id == account_id)
     if visit is not None:
         q = q.add_cte(visit)
     row = conn.execute(q.with_for_update() if lock else q).one_or_none()
-    return None if row is None else _record(row)
+    return None if row is None else (_record(row), row)
 
 
 def saves_of(conn: Connection, account_id: int) -> list[Listed]:
