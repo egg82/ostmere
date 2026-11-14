@@ -51,7 +51,7 @@ function returned(lines: LogLine[], now: number): Screen {
   document.body.replaceChildren(screen.root);
   screen.show(dayOneStep("returned", 100));
   screen.show({ ...dayOneStep("landed", now), lines }, true);
-  (screen.root.querySelector("button.chron-open") as HTMLButtonElement).click();
+  (screen.root.querySelector("button[data-tab=\"book\"]") as HTMLButtonElement).click();
   return screen;
 }
 
