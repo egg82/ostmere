@@ -7,7 +7,7 @@ beats whenever (pace_scale 1): B10 day 10.23, target_day 11
   away V41->V42: 1 ['trigger t_ring_closed']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      26      11       0       5       1      17       2     62
-  2      19       4       3       2       0       5       2     35
-  3      11       0       0       0       0       0       4     15
-  4      20       3       0       0       0       2       1     26
+  1      23      11       0       5       1      21       2     63
+  2      18       4       3       2       0       5       2     34
+  3       8       0       0       0       0       0       4     12
+  4      18       3       0       0       0       2       1     24
