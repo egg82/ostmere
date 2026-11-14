@@ -17,7 +17,7 @@ export function isDayTwo(phase: string): phase is DayTwoPhase {
 }
 
 const always = (card: string): Order => ({ when: { kind: "after_time", at: 0 }, then: { kind: "tap_card", card } });
-const HAUL_LOW: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 3 * Q, release: 8 * Q }, then: { kind: "tap_card", card: "haul" } };
+const HAUL_LOW: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 3 * Q, release: 8 * Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "haul" } };
 /** The lane's rules after the hands' own: a done one-off, a store rule, the always rule at work, one it outranks. */
 export const LANE_RULES: Order[] = [always("fetch"), HAUL_LOW, always("chop"), always("haul")];
 

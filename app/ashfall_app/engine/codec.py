@@ -204,7 +204,9 @@ existed; decoding supplies the empty default."""
 
 
 _OMITTED_AT_DEFAULT: dict[tuple[str, str], object] = {
-    ("Mix", "layer"): MixLayer.HANDS, ("SkillState", "phase"): FIRST_PHASE}
+    ("Mix", "layer"): MixLayer.HANDS, ("SkillState", "phase"): FIRST_PHASE,
+    ("AtLeast", "value_of_cap"): False, ("AtLeast", "release_of_cap"): False,
+    ("AtMost", "value_of_cap"): False, ("AtMost", "release_of_cap"): False}
 """Fields left out of the encoding while at their default, so a save or a logged verb written before the field existed
 keeps its text and decodes with it."""
 

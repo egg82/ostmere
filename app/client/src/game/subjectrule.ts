@@ -18,7 +18,7 @@ export type SubjectRule =
 
 /** The subject rule a condition is, or null for any other (a store rule, a chip's, a time). */
 export function readSubject(catalog: Catalog, when: Condition): SubjectRule | null {
-  if (when.kind !== "at_least" || when.value !== when.release) return null;
+  if (when.kind !== "at_least" || when.value !== when.release || when.value_of_cap) return null;
   const w = when.watched;
   if (w.kind === "card_count") return { kind: "count", card: w.card, n: when.value };
   if (w.kind === "skill_level") return { kind: "level", skill: w.skill, n: when.value };
@@ -29,10 +29,10 @@ export function readSubject(catalog: Catalog, when: Condition): SubjectRule | nu
 
 /** The condition for a subject rule. */
 export function buildSubject(catalog: Catalog, rule: SubjectRule): Condition {
-  if (rule.kind === "count") return { kind: "at_least", watched: { kind: "card_count", card: rule.card }, value: rule.n, release: rule.n };
-  if (rule.kind === "level") return { kind: "at_least", watched: { kind: "skill_level", skill: rule.skill }, value: rule.n, release: rule.n };
+  if (rule.kind === "count") return { kind: "at_least", watched: { kind: "card_count", card: rule.card }, value: rule.n, release: rule.n, value_of_cap: false, release_of_cap: false };
+  if (rule.kind === "level") return { kind: "at_least", watched: { kind: "skill_level", skill: rule.skill }, value: rule.n, release: rule.n, value_of_cap: false, release_of_cap: false };
   const at = campLevels(catalog)[rule.n - 1]?.at ?? 0;
-  return { kind: "at_least", watched: { kind: "store_value", store: catalog.campStore ?? "" }, value: at, release: at };
+  return { kind: "at_least", watched: { kind: "store_value", store: catalog.campStore ?? "" }, value: at, release: at, value_of_cap: false, release_of_cap: false };
 }
 
 /** The condition in the player's words: "Once Forage is done 3 times", "Once Forage is done", "Once Camp reaches

@@ -6,12 +6,13 @@
 // the current rates, would come late by every tap they make. Never a countdown the engine's time cannot keep.
 import type { Card, View } from "../api/types";
 import { fullAt } from "./forecast";
+import { letGoAt } from "./storerule";
 
 /** The card's ready time, or null: none from the engine, a rule on its store stops the store short of the need, or
- * it waits on a full store the forecast does not fill by its horizon. */
-export function keptReadyAt(view: View, card: Card): number | null {
+ * it waits on a full store the forecast does not fill by its horizon. `q`: Scales.quantity_per_item. */
+export function keptReadyAt(view: View, card: Card, q: number): number | null {
   const at = card.blocker?.ready_at ?? null;
-  if (at === null || stopsShort(view, card)) return null;
+  if (at === null || stopsShort(view, card, q)) return null;
   const full = fullStore(view, card);
   return full === null ? at : fullAt(view, full, view.at);
 }
@@ -34,12 +35,14 @@ export function waitsOnUnseen(view: View, card: Card): boolean {
   return !view.unlocked.some((u) => u.category === "store" && u.id === store);
 }
 
-/** An "under x, until y" rule on the blocker's store that is on now lets go (past y) before the store reaches the need. */
-function stopsShort(view: View, card: Card): boolean {
+/** An "under x, until y" rule on the blocker's store that is on now lets go (at y) before the store reaches the need;
+ * a share's y is read off the store's cap (storerule.letGoAt). */
+function stopsShort(view: View, card: Card, q: number): boolean {
   const when = card.blocker?.condition;
   if (when?.kind !== "at_least" || when.watched.kind !== "store_value") return false;
   const { store } = when.watched;
   const need = when.value;
+  const cap = view.ledger.find((l) => l.store === store)?.cap ?? 0;
   return view.orders.some((o, i) => view.orders_on[i] === true && o.when.kind === "at_most"
-    && o.when.watched.kind === "store_value" && o.when.watched.store === store && o.when.release + 1 < need);
+    && o.when.watched.kind === "store_value" && o.when.watched.store === store && letGoAt(o.when, cap, q) < need);
 }

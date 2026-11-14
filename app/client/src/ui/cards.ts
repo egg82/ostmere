@@ -64,7 +64,7 @@ export class Cards implements Part {
     pulse(row.node, "tap-failed");
     const blocker = row.card.blocker;
     if (!blocker) return;
-    const mark = row.needs.shows(blocker.condition) ?? (keptReadyAt(view, row.card) !== null ? row.foot : null);
+    const mark = row.needs.shows(blocker.condition) ?? (keptReadyAt(view, row.card, this.ctx.catalog.content.scales.quantity_per_item) !== null ? row.foot : null);
     if (mark) pulse(mark, "fail-mark");
   }
 
@@ -135,7 +135,7 @@ export class Cards implements Part {
       const v = sample(card.bar, t);
       const done = span > 0 ? (((v % span) + span) % span) / span : 0;
       row.fill.style.transform = `scaleX(${done})`;
-      const wait = card.by === "tap" ? card.completes_at : this.view ? keptReadyAt(this.view, card) : null;
+      const wait = card.by === "tap" ? card.completes_at : this.view ? keptReadyAt(this.view, card, this.ctx.catalog.content.scales.quantity_per_item) : null;
       setText(row.foot, wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "");
       this.markClock(row, wait !== null && this.view !== null && waitsOnUnseen(this.view, card));
       row.needs.tick(card, this.view, t);

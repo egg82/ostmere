@@ -28,7 +28,7 @@ const AT = 100;
 const still = (v = 0) => ({ start: AT, start_value: v, rate: 0, limit: null });
 type Blocker = NonNullable<Card["blocker"]>;
 const store = (id: string, value: number): Blocker["condition"] =>
-  ({ kind: "at_least", watched: { kind: "store_value", store: id }, value, release: value });
+  ({ kind: "at_least", watched: { kind: "store_value", store: id }, value, release: value, value_of_cap: false, release_of_cap: false });
 const unready = (card: string, blocker: Blocker, needs: Card["needs"] = []): Card => ({
   card, completions: 0, cap: null, bar: still(), bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null,
   cuts_in: false, spent_store: null, gained: [], tap_s: 20, blocker, needs,
@@ -38,8 +38,8 @@ const base = fixtureStep("mid", AT);
 const cards: Card[] = [
   unready("lean_to", { condition: store("stone", 10 * Q), ready_at: AT + 52 }, [{ store: "stone", quantity: 10 * Q, segment: still(2 * Q), gate: null, makers: [], spent: false }]),
   unready("look", { condition: store("night", 20 * Q), ready_at: AT + 600 }, [{ store: "night", quantity: 20 * Q, segment: still(3 * Q), gate: null, makers: [], spent: false }]),
-  unready("hatchet", { condition: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3 }, ready_at: null }),
-  unready("stool", { condition: { kind: "at_least", watched: { kind: "card_count", card: "stand" }, value: 2, release: 2 }, ready_at: null }),
+  unready("hatchet", { condition: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false }, ready_at: null }),
+  unready("stool", { condition: { kind: "at_least", watched: { kind: "card_count", card: "stand" }, value: 2, release: 2, value_of_cap: false, release_of_cap: false }, ready_at: null }),
   // a Pause: wood holds the input but the card waits for wood to refill to its resume level
   unready("shelter", { condition: store("wood", 30 * Q), ready_at: AT + 900 }, [{ store: "wood", quantity: 6 * Q, segment: still(8 * Q), gate: null, makers: [], spent: false }]),
   unready("rest", { condition: { kind: "after_time", at: AT + 40 }, ready_at: AT + 40 }),

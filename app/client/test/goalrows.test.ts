@@ -19,11 +19,11 @@ const H = 3600;
 const base = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
 const wood = (lands: number | null, over: Partial<GoalRow> = {}): GoalRow => ({
   kind: "store", store: "wood", skill: null, target: 30 * Q, lands_at: lands, per_hour: 60 * R, limit: null,
-  until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q }, ...over,
+  until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false }, ...over,
 });
 const level = (lands: number | null, over: Partial<GoalRow> = {}): GoalRow => ({
   kind: "level", store: null, skill: "foraging", target: 4, lands_at: lands, per_hour: 120 * R, limit: null,
-  until: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 4, release: 4 }, ...over,
+  until: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 4, release: 4, value_of_cap: false, release_of_cap: false }, ...over,
 });
 const at = (rows: GoalRow[]): View => ({ ...base, goal_rows: rows });
 const text = (els: HTMLElement[]): string[] => els.map((e) => e.textContent ?? "");

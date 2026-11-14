@@ -643,7 +643,12 @@ export interface components {
             step?: components["schemas"]["Step"] | null;
             merge?: components["schemas"]["MergeSummary"] | null;
         };
-        /** AtLeast */
+        /**
+         * AtLeast
+         * @description value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
+         *     quantity; on a store_value, in orders and queue entries only (CONTRACT.txt, "a store rule"; engine DESIGN.txt,
+         *     "SHARE LEVELS").
+         */
         AtLeast: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -655,8 +660,21 @@ export interface components {
             value: number;
             /** Release */
             release: number;
+            /**
+             * Value Of Cap
+             * @default false
+             */
+            value_of_cap: boolean;
+            /**
+             * Release Of Cap
+             * @default false
+             */
+            release_of_cap: boolean;
         };
-        /** AtMost */
+        /**
+         * AtMost
+         * @description value_of_cap, release_of_cap as AtLeast's.
+         */
         AtMost: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -668,6 +686,16 @@ export interface components {
             value: number;
             /** Release */
             release: number;
+            /**
+             * Value Of Cap
+             * @default false
+             */
+            value_of_cap: boolean;
+            /**
+             * Release Of Cap
+             * @default false
+             */
+            release_of_cap: boolean;
         };
         /**
          * Blocker

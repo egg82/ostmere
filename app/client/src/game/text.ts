@@ -49,6 +49,8 @@ export const UI = {
   handsByRule: "ui.hands.by_rule", // "{store}{n}": the strip while a "below" rule with no band runs
   handsUntilUp: "ui.hands.until_up", // "{store}{m}": the strip while a "below" rule runs
   handsUntilDown: "ui.hands.until_down", // "{store}{m}": the strip while a "reaches" rule runs
+  handsUntilUpTo: "ui.hands.until_up_to", // "{store}{m}": the same two, the until a share
+  handsUntilDownTo: "ui.hands.until_down_to", // "{store}{m}"
   handsWhileChip: "ui.hands.while_chip", // "{chip}": the strip while a rule worded as a chip runs
   close: "ui.close",
   feedbackOpen: "ui.feedback.open",

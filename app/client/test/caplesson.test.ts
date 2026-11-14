@@ -84,8 +84,8 @@ const wood = catalog.storeLabel("wood");
   const set = r.decided.find((d): d is Extract<Decision, { kind: "set_orders" }> => d.kind === "set_orders");
   const added: Order | undefined = set?.orders.at(-1);
   const when = added?.when;
-  expect("the rule comes on when wood reaches its cap", when && when.kind === "at_least" && when.watched.kind === "store_value" ? [when.watched.store, when.value] : null,
-    ["wood", full.view.ledger.find((l) => l.store === "wood")?.cap]);
+  expect("the rule comes on when wood is full, as a share so it keeps meaning full as the cap grows",
+    when && when.kind === "at_least" && when.watched.kind === "store_value" ? [when.watched.store, when.value, when.value_of_cap] : null, ["wood", 10000, true]);
   expect("and runs what the player picked", JSON.stringify(r.decided).includes('"tend"'), true);
 }
 
@@ -120,7 +120,7 @@ const wood = catalog.storeLabel("wood");
 }
 
 {  // a rule on wood reaching a level is already the answer
-  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30, release: 10 }, then: { kind: "tap_card", card: "tend" } };
+  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30, release: 10, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
   const r = rig({ ...full.view, orders: [rule], orders_on: [false], order_states: ["waiting"] }, keepsOf(RULES_OPEN));
   r.frame(); r.frame();
   expect("answered: no trigger", r.line() !== null, false);
@@ -139,7 +139,7 @@ const wood = catalog.storeLabel("wood");
 
 {  // control: a rule keeping wood stocked watches the full line, so the line carries that rule's mark; the lesson still
    // starts from it and walks on
-  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1 }, then: { kind: "tap_card", card: "tend" } };
+  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
   const v = full.view;
   const r = rig({ ...v, orders: [...v.orders, keep], orders_on: [...v.orders_on, false], order_states: [...v.order_states, "waiting"] }, keepsOf(RULES_OPEN));
   r.frame();

@@ -94,20 +94,20 @@ const sentOrders = (ds: Decision[]): Order[] | null => {
   const d = ds.find((x) => x.kind === "set_orders");
   return d && d.kind === "set_orders" ? d.orders : null;
 };
-/** "Below a quarter of the cap" to within one raw unit; "until halfway" read loosely: above the low level, no lower than
- *  half the cap, no higher than the cap (the contract does not say halfway of what). */
+/** "Down to a quarter of the cap" and "until" no lower than half the cap and no higher than full, both as shares of
+ *  the cap, so the levels keep up as the cap grows (CONTRACT.txt, "Share levels"); the cap's size changes nothing. */
 function quarterThenUp(id: string, capItems: number, when: Order["when"] | undefined): void {
   if (!when || when.kind === "after_time") throw new Error(`not a store condition: ${JSON.stringify(when)}`);
-  const w = when as { kind: string; watched: unknown; value: number; release: number };
-  const where = `${w.value / Q} until ${w.release / Q} items of ${capItems}`;
-  expect(`${id} is the store watched`, w.watched, { kind: "store_value", store: id });
-  expect("below", w.kind, "at_most");
-  if (Math.abs(w.value - (capItems / 4) * Q) > 1) throw new Error(`low level is not a quarter of the cap: ${where}`);
-  if (w.release < (capItems / 2) * Q - 1 || w.release > capItems * Q) throw new Error(`release is not between half the cap and the cap: ${where}`);
+  const where = `${when.value} until ${when.release} of the cap (${capItems} items)`;
+  expect(`${id} is the store watched`, when.watched, { kind: "store_value", store: id });
+  expect("below", when.kind, "at_most");
+  expect("both levels are shares of the cap", [when.value_of_cap, when.release_of_cap], [true, true]);
+  if (when.value !== 2500) throw new Error(`low level is not a quarter of the cap: ${where}`);
+  if (when.release < 5000 || when.release > 10000) throw new Error(`release is not between half the cap and full: ${where}`);
 }
 const chipWhen = (chip: string) => fixtureContent.chip_infos.find((c) => c.chip === chip)!.when;
 const store = (s: string, n: number, m: number): Order["when"] =>
-  ({ kind: "at_most", watched: { kind: "store_value", store: s }, value: n * Q, release: m * Q });
+  ({ kind: "at_most", watched: { kind: "store_value", store: s }, value: n * Q, release: m * Q, value_of_cap: false, release_of_cap: false });
 
 // ---------------------------------------------------------------- 1: opens empty; Do lists the repeatable tasks
 
@@ -203,7 +203,7 @@ await check("3 a chip saves the chip's own condition; the sentence has no number
 
 // ---------------------------------------------------------------- 4: a store gets default levels
 
-await check("4 a store: below a quarter of the cap, until halfway", () => {
+await check("4 a store: down to a quarter of the cap, until at least half, as shares", () => {
   const r = rig(viewWith());
   const cond = newRule(r);
   one(cond, ".cond-task[data-card=\"tend\"]").click();

@@ -10,6 +10,7 @@ from .ids import CardId, LaneId, Runner, SkillId, StoreId
 from .lanes import TapCard
 from .mixes import SwitchMix
 from .unlocks import Unlock
+from .units import BP
 
 
 @dataclass(frozen=True)
@@ -66,20 +67,29 @@ class AtLeast:
     release == value is a plain threshold; release < value is a hysteresis band, so two orders can't flip each other.
     For a SkillLevel subject, value and release are levels; for a store, quantity units; for a CardCount, a count;
     for Unlocked and Running, 0 or 1; for LaneRules, a count.
+
+    value_of_cap, release_of_cap: that level is basis points (0..BP) of the watched store's cap now, read as a quantity
+    wherever the condition is read; a StoreValue subject in the save's orders and queue only (DESIGN.txt, "SHARE
+    LEVELS"). The release-side rule above then holds between the read quantities.
     """
 
     subject: Subject
     value: int
     release: int
+    value_of_cap: bool = False
+    release_of_cap: bool = False
 
 
 @dataclass(frozen=True)
 class AtMost:
-    """True once subject <= value; then stays true until subject > release (release >= value)."""
+    """True once subject <= value; then stays true until subject > release (release >= value). value_of_cap and
+    release_of_cap as AtLeast's."""
 
     subject: Subject
     value: int
     release: int
+    value_of_cap: bool = False
+    release_of_cap: bool = False
 
 
 @dataclass(frozen=True)
@@ -90,6 +100,21 @@ class AfterTime:
 
 
 type Condition = AtLeast | AtMost | AfterTime
+
+
+def share_problem(cond: AtLeast | AtMost) -> str | None:
+    """Why a condition holding a share level is not a valid one, or None (DESIGN.txt, "SHARE LEVELS"): a share level
+    reads a StoreValue's cap and is in 0..BP, and a release is on the right side of a value in the same form. A share
+    and a quantity are on different scales, so a band of one of each is never compared."""
+    if not isinstance(cond.subject, StoreValue):
+        return "a share level reads a store's cap"
+    levels = ((cond.value, cond.value_of_cap), (cond.release, cond.release_of_cap))
+    if any(of_cap and not 0 <= b <= BP for b, of_cap in levels):
+        return "a share level is in 0..BP"
+    if cond.value_of_cap != cond.release_of_cap:
+        return None
+    ok = cond.release <= cond.value if isinstance(cond, AtLeast) else cond.release >= cond.value
+    return None if ok else "condition release is on the wrong side of its value"
 
 type OrderVerb = SwitchMix | TapCard | AnswerOffer | AnswerKind
 """Verbs an order or the queue can apply: every player verb that acts in the world (SaveMix, DeleteMix, SetOrders and

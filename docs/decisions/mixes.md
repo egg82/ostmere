@@ -93,6 +93,12 @@ and you tune it, then hit go.
   remove it, or write a new one from any line and any card ("when wood is low, forage", even if it is odd). It
   arrives as its own taught step, after the first pre-filled orders have been set and seen working, never alongside
   them; until then orders come only from the order cards.
+- **A rule's levels can be a share of full or an exact number**, so a rule keeps meaning the same thing as its
+  store's maximum grows (owner: keeping the numbers up as maximums grow is tiring). A share reads as a word in the
+  rule: empty, a quarter, half, three quarters or full, or a percentage in five-point steps; an exact number stays for
+  a rule that needs exactly 12. A new rule starts with shares, a rule already written keeps its numbers until either
+  level is switched, and a goal stint can also run until a store is half, three quarters or full. The engine reads a
+  share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS").
 - **The editors open simple; the full editor is one deliberate tap away** (after playing day one:
   poking around found the editors, and they were a bit much). A new rule opens on what it does and, once
   that is chosen, what that answers (a chip such as hungry, or a store the task makes), so a rule like "cook roots when

@@ -113,7 +113,7 @@ const mixLine = catalog.text.get("ui.lesson.mix_offer");
 {  // a save already past each lesson, with nothing kept (made before lessons were per save), is not taught it again
   const none = keepsOf(NEW_FLAT);
   const played = fixtureStep("mid", 100).view;
-  const handsRule = { when: { kind: "at_most" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 999, release: 3999 }, then: { kind: "switch_mix" as const, mix_id: played.active_mix_id ?? "" } };
+  const handsRule = { when: { kind: "at_most" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 999, release: 3999, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix" as const, mix_id: played.active_mix_id ?? "" } };
   const mid: View = { ...played, orders: [...played.orders, handsRule], orders_on: [...played.orders_on, false], order_states: [...played.order_states, "waiting"] };
   expect("control: the mid save has a mix", played.mixes.length > 0, true);
   expect("control: with no hands rule it may have the first rule's lesson", mayStart(LESSONS.find((l) => l.id === FIRST_RULE)!, played, none), true);
@@ -123,7 +123,7 @@ const mixLine = catalog.text.get("ui.lesson.mix_offer");
   expect("a mid-game save with a hands rule: no first-rule lesson", mayStart(lesson(FIRST_RULE), mid, none), false);
   const seen = keepsOf({ rule_seen: true });
   const cap = fixtureStep("capfull", 100).view;
-  const reaches = { when: { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "food" }, value: 2000, release: 1000 }, then: { kind: "tap_card" as const, card: "look" } };
+  const reaches = { when: { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "food" }, value: 2000, release: 1000, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card" as const, card: "look" } };
   expect("control: the full-store save may have the cap rule's lesson", mayStart(lesson(CAP_RULE), cap, seen), true);
   expect("a save with a cap rule on any store: no cap rule's lesson", mayStart(lesson(CAP_RULE), { ...cap, orders: [...cap.orders, reaches], orders_on: [...cap.orders_on, false], order_states: [...cap.order_states, "waiting"] }, seen), false);
   const pushed = prestigeStep("prestige", 100).view;
