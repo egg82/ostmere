@@ -21,6 +21,7 @@ from .offer_entries import OfferEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
+from .people import PeopleEntry, with_mentions
 from .checks import check_content, check_opening, check_structure
 from .line_kinds import LineKind
 from .journal_checks import check_first_notes
@@ -86,6 +87,7 @@ class Opening(Entry):
     """The unlock set a new save starts with (Rules.opening)."""
     camp: CampEntry | None = None
     prestige: PrestigeEntry | None = None
+    people: PeopleEntry | None = None
     nodes: list[NodeEntry] = []
     phase_pays: list[PhasePaysEntry] = []
     """Only what chapters.merge carries, each entry kept so a later chapter's ranks expand their phases."""
@@ -144,6 +146,8 @@ class Chapter(Entry):
     """A level at a held level's at_items replaces it; the rest are added after the last."""
     prestige: PrestigeEntry | None = None
     """Declared once in the content: here only if no earlier file has it."""
+    people: PeopleEntry | None = None
+    """Declared once in the content, as prestige."""
     nodes: list[NodeEntry] = []
     """Appended after the content's so far, so each skill's track continues in file order."""
     phase_pays: list[PhasePaysEntry] = []
@@ -185,6 +189,7 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         merged, end = _merged(states[-1], chapter)
         states.append(merged)
         ends.append(end)
+    states[-1] = with_mentions(states[-1])
     last: list[str] = [e for e in ends if e is not None][-1:]
     if last and opening.end_card is not None:
         states[-1] = _with_end_card(states[-1], last[0], opening.end_card)

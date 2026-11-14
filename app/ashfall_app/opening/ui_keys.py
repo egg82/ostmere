@@ -11,6 +11,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.chronicle.all", "ui.chronicle.count", "ui.chronicle.rule_on", "ui.chronicle.rule_off",
     "ui.chapter.title", "ui.chapter.stores", "ui.chapter.levels", "ui.chapter.rules", "ui.chapter.waiting", "ui.chapter.gain",
     "ui.chapter.loss", "ui.chapter.level", "ui.chapter.times", "ui.chapter.ask", "ui.chapter.asks", "ui.chapter.still",
+    "ui.chapter.people",
     "ui.cause.store", "ui.cause.below", "ui.cause.level", "ui.cause.skill", "ui.cause.count", "ui.cause.camp", "ui.cause.time", "ui.cause.answer",
     "ui.asks.heading", "ui.asks.more", "ui.ask.figure", "ui.ask.answer_was",
     "ui.feedback.open", "ui.feedback.prompt", "ui.feedback.note", "ui.feedback.send", "ui.feedback.cancel",

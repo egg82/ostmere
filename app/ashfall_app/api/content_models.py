@@ -1,6 +1,7 @@
 """Wire models of the game's static content, fetched once (GET /api/content): text, the stores, cards, chips, skills,
 lanes, the Camp bar and the first mix. The conventions in models.py hold here."""
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -8,7 +9,7 @@ from .fight_models import SideInfo as SideInfo, ThreatInfo as ThreatInfo
 from .find_models import FindInfo as FindInfo
 from .camp_models import CampInfo, CampLevel as CampLevel
 from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, NoteInfo as NoteInfo, Section as Section
-from .line_models import LineInfo
+from .line_models import LineInfo, PeopleInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
 from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, OfferInfo
@@ -181,6 +182,8 @@ class LaneInfo(BaseModel):
     later_labels: list[LaneLabel]
     name_key: str | None
     """The person's name, filling every text's {<lane>} slot (CONTRACT.txt, "Text and numbers"); null: no name."""
+    told: Literal["line", "mention"] | None
+    """How a person's coming and going is written (CONTRACT.txt, "People"); null for a lane that is not a person."""
 
 
 class ChipInfo(BaseModel):
@@ -275,6 +278,8 @@ class Content(BaseModel):
     journal: JournalInfo | None
     """The book, its pages and their notes (CONTRACT.txt, "JOURNAL"); null until a chapter declares [journal]."""
     camp: CampInfo | None
+    people: PeopleInfo | None
+    """The bands a day's mention is worded from (CONTRACT.txt, "People"); null until a chapter declares [people]."""
     first_mix: FirstMix
     transfer_code_s: int
     """How long a transfer code works (TransferCode.expires_in_s), for the text that says so ({minutes})."""

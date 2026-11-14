@@ -2,12 +2,13 @@
 // phase opens on the camp as the player left it (rulestab's rules and mixes, still stores, an earlier visit and its
 // lines); the page shown again (dev-main's #back) lands on its `back` phase, that long later. sincelong brings every
 // section (stores up and down, two skills and the Camp up, two rules run, a find, a level, an ask); sinceshort one store
-// and one line; sincenone nothing at all.
+// and one line; sincenone nothing at all; sincejoin one store, a line and a person's joining; sincemention the same with
+// the day's mention of two people in place of the joining (the people section, CONTRACT.txt, "PEOPLE").
 import type { Content, LedgerLine, LogLine, RuleRun, Step, View, Visit } from "../src/api/types";
 import { Q } from "./content";
 import { fixtureStep, type Kept } from "./steps";
 
-const AWAY = { sincelong: 54 * 60, sinceshort: 40 * 60, sincenone: 35 * 60 } as const;
+const AWAY = { sincelong: 54 * 60, sinceshort: 40 * 60, sincenone: 35 * 60, sincejoin: 3 * 3600, sincemention: 5 * 3600 } as const;
 type Away = keyof typeof AWAY;
 export type SincePhase = Away | `${Away}back`;
 export const isSince = (phase: string): phase is SincePhase => phase.startsWith("since") && (phase.replace(/back$/, "") in AWAY);
@@ -37,6 +38,8 @@ const AFTER: Record<Away, Record<string, number>> = {
   sincelong: { wood: 340, warmth: 12, stone: 25, camp: 230 },
   sinceshort: { wood: 52, warmth: 38, stone: 3, camp: 60 },
   sincenone: BEFORE,
+  sincejoin: { wood: 52, warmth: 38, stone: 3, camp: 60 },
+  sincemention: { wood: 52, warmth: 38, stone: 3, camp: 60 },
 };
 
 function lines(...at: Array<[string, number]>): LogLine[] {
@@ -75,7 +78,9 @@ export function sinceStep(phase: SincePhase, at: number, kept: Kept = {}, decisi
   const left = back - AWAY[which];
   const long = which === "sincelong";
   const said = long ? lines(["line.1", left + 600], ["line.6", left + 1200], ["line.7", left + 1800], ["line.offer", back - 300], ["line.2", back - 100])
-    : which === "sinceshort" ? lines(["line.4", back - 200]) : [];
+    : which === "sinceshort" ? lines(["line.4", back - 200])
+    : which === "sincejoin" ? lines(["line.4", back - 2000], ["line.joins", back - 200])
+    : which === "sincemention" ? lines(["line.4", back - 4000], ["people.joined.mason", back - 3000], ["people.joined.helper", back - 3000]) : [];
   return {
     ...base, view: viewAt(base.view, back, AFTER[which], long ? [4, 2] : [2, 1], long), lines: said,
     rule_runs: long ? runs(base.view, left, back) : runs(base.view, left, null),

@@ -33,12 +33,14 @@ export interface Past {
   at: number;
 }
 
-/** One entry: its words, the game second it landed at, its kind, and what caused it in words (null: nothing to say). */
+/** One entry: its words, the game second it landed at, its kind, and what caused it in words (null: nothing to say).
+ * `person`: it tells someone joining or leaving, by their own line or a day's mention (CONTRACT.txt, "PEOPLE"). */
 export interface Entry {
   text: string;
   at: number;
   kind: EntryKind;
   cause: string | null;
+  person?: boolean;
 }
 
 /** Game seconds away that make a return a visit. */

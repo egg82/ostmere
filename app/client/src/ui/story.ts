@@ -9,7 +9,8 @@
 // goes to the chronicle (ui/chroniclesheet.ts) with its game second, kind and cause. Lines arrive in (at, seq) order with
 // each Step; their text is the content's. The aim (ui/aim.ts) is the story's too. ui/headseat.ts seats the head, the
 // aim and the strip.
-import type { LogLine, View } from "../api/types";
+import type { LogLine, Mention, View } from "../api/types";
+import { DayMentions } from "../game/people";
 import { awayLines, type Placement } from "../game/awaylines";
 import { entries, poolLine, type Window } from "../game/fights";
 import { toppedSince } from "../game/prestige";
@@ -63,6 +64,7 @@ export class Story implements Part {
   private readonly shownAt = new WeakMap<Element, number>();
   /** The lines written so far with their game seconds, oldest first (KEEP at most): what a redrawn screen restores. */
   readonly keys: Past[] = [];
+  private readonly mentions = new DayMentions();
 
   /** `showAsks`: what the chronicle's count of waiting asks opens (ui/asks.ts). */
   constructor(private readonly ctx: PartContext, showAsks: () => void = () => undefined) {
@@ -82,12 +84,14 @@ export class Story implements Part {
     this.root.append(this.room(), this.lines, this.chronicle.root, this.journal.root, feedback.root);
   }
 
-  /** Every story line the content can write, unseen in the strip's one cell with the shown line: the cell is as tall as
+  /** Every story line the content can write (a day's mention among them), unseen in the strip's one cell with the shown line: the cell is as tall as
    * the tallest of them at the strip's width, so no line is cut and none arriving changes the strip's height. */
   private room(): HTMLElement {
     const room = this.roomCell;
     room.setAttribute("aria-hidden", "true");
-    const texts = new Set(this.ctx.catalog.content.line_infos.filter((l) => inStrip(l.kind)).map((l) => this.ctx.catalog.text.get(l.key)).filter((t) => t));
+    const { content, text } = this.ctx.catalog;
+    const bands = [...content.people?.came ?? [], ...content.people?.went ?? []].flatMap((b) => b.keys);   // a day's mention
+    const texts = new Set([...content.line_infos.filter((l) => inStrip(l.kind)).map((l) => l.key), ...bands].map((k) => text.get(k)).filter((t) => t));
     room.append(...[...texts].map((t) => el("span", "", t)));
     return room;
   }
@@ -198,12 +202,15 @@ export class Story implements Part {
   }
 
   private place(keys: string[], animate: boolean, queued: boolean, where: Placement[], ats: number[]): Array<HTMLElement | null> {
+    const batch = new Map<string, HTMLElement>();   // this call's strip line of each day's mention
     const nodes = keys.map((key, i) => {
+      const told = this.ctx.catalog.mention(key);
+      if (told && where[i] !== "none") return this.mentioned(key, told, ats[i]!, animate, where[i] === "chronicle", batch);
       const text = this.ctx.catalog.text.get(key);
       if (!text || where[i] === "none") return null;
       const at = ats[i]!;
       const kind = this.ctx.catalog.lineKind(key);
-      this.chronicle.add({ text, at, kind, cause: causeWords(this.ctx.catalog, this.ctx.catalog.lineCause(key)) });
+      this.chronicle.add({ text, at, kind, cause: causeWords(this.ctx.catalog, this.ctx.catalog.lineCause(key)), person: this.ctx.catalog.tellsPerson(key) });
       this.keys.push({ key, at });
       if (where[i] === "chronicle" || !inStrip(kind)) return null;
       const item = el("li", animate ? "" : "still", text);
@@ -213,6 +220,24 @@ export class Story implements Part {
     if (!queued) this.trim();   // queued lines are not held yet: the trim waits for tick()
     if (this.keys.length > KEEP) this.keys.splice(0, this.keys.length - KEEP);
     return nodes;
+  }
+
+  /** A mention line, counted into its day's mention: one chronicle entry at the day's first second and one strip line,
+   * reworded as the day counts more (CONTRACT.txt, "PEOPLE"). Its strip line, or null when this call already drew the
+   * day's (reworded in place) or it is for the chronicle only. */
+  private mentioned(key: string, told: Mention, at: number, animate: boolean, stripless: boolean, batch: Map<string, HTMLElement>): HTMLElement | null {
+    this.keys.push({ key, at });
+    const got = this.mentions.count(this.ctx.catalog, this.ctx.saveId(), key, told, at);
+    if (got === null) return null;
+    if (got.was) this.chronicle.replace(got.was, got.entry);
+    else this.chronicle.add(got.entry);
+    const drawn = batch.get(got.id);
+    if (drawn) drawn.textContent = got.entry.text;
+    if (drawn || stripless) return null;
+    const item = el("li", animate ? "" : "still", got.entry.text);
+    this.lines.append(item);
+    batch.set(got.id, item);
+    return item;
   }
 
   /** The strip shows the newest lines that have shown, as many as fit its room whole: a line that no longer fits goes

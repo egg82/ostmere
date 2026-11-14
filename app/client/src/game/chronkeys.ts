@@ -18,6 +18,7 @@ export const CHRONICLE_KEYS = {
   chapterTimes: "ui.chapter.times", // "{rule}{n}": a rule that came on n times, n of 2 or more
   chapterAsk: "ui.chapter.ask", // "{n}": one ask waiting
   chapterAsks: "ui.chapter.asks", // "{n}"
+  chapterPeople: "ui.chapter.people",
   chapterStill: "ui.chapter.still", // nothing changed while the player was away
   chronEarlier: "ui.chronicle.earlier",
   chronNow: "ui.chronicle.now",

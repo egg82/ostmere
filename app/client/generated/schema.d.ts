@@ -917,6 +917,7 @@ export interface components {
             aim_infos: components["schemas"]["AimInfo"][];
             journal: components["schemas"]["JournalInfo"] | null;
             camp: components["schemas"]["CampInfo"] | null;
+            people: components["schemas"]["PeopleInfo"] | null;
             first_mix: components["schemas"]["FirstMix"];
             /** Transfer Code S */
             transfer_code_s: number;
@@ -1332,6 +1333,8 @@ export interface components {
             later_labels: components["schemas"]["LaneLabel"][];
             /** Name Key */
             name_key: string | null;
+            /** Told */
+            told: ("line" | "mention") | null;
         };
         /** LaneLabel */
         LaneLabel: {
@@ -1409,6 +1412,9 @@ export interface components {
              */
             kind: "story" | "tap" | "find" | "level" | "body" | "fight";
             cause: components["schemas"]["LineCause"] | null;
+            /** Person */
+            person: boolean;
+            mention: components["schemas"]["Mention"] | null;
         };
         /** LogLine */
         LogLine: {
@@ -1430,6 +1436,20 @@ export interface components {
             max_saves: number;
             /** Kept Days */
             kept_days: number;
+        };
+        /**
+         * Mention
+         * @description A mention line: `lane`'s person joined or left, counted into the day's one line the page words (CONTRACT.txt,
+         *     "People").
+         */
+        Mention: {
+            /** Lane */
+            lane: string;
+            /**
+             * Way
+             * @enum {string}
+             */
+            way: "joined" | "left";
         };
         /**
          * MenuNode
@@ -1666,6 +1686,23 @@ export interface components {
             at: number;
             /** Key */
             key: string;
+        };
+        /**
+         * PeopleBand
+         * @description The lines for a day on which at least `at_least` people came (or went), until the next band's.
+         */
+        PeopleBand: {
+            /** At Least */
+            at_least: number;
+            /** Keys */
+            keys: string[];
+        };
+        /** PeopleInfo */
+        PeopleInfo: {
+            /** Came */
+            came: components["schemas"]["PeopleBand"][];
+            /** Went */
+            went: components["schemas"]["PeopleBand"][];
         };
         /**
          * Prestige

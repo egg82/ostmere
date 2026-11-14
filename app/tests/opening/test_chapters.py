@@ -73,7 +73,7 @@ def test_a_check_failure_names_the_chapter_that_broke_it_though_a_later_chapter_
 
 
 EARLY = '[[cards]]\nid = "t_early"\nlane = "t_late"\npresentation = "action"\nlabel_key = "t_c_early"\nwork_s = 60\ncap = 1\n\n[text]\nt_c_early = "Early"\n'
-LATE = '[[lanes]]\nid = "t_late"\nlabel_key = "t_l_late"\nruled = true\n\n[text]\nt_l_late = "Late"\n'
+LATE = '[[lanes]]\nid = "t_late"\nlabel_key = "t_l_late"\nruled = true\ntold = "line"\n\n[text]\nt_l_late = "Late"\n'
 
 
 def test_a_chapter_naming_a_lane_only_a_later_chapter_adds_fails_naming_it(tmp_path: Path):
