@@ -3,10 +3,12 @@ subjects or slots count as they stand (statement 20), and composing is the same 
 (statement 1)."""
 from dataclasses import replace
 
+import pytest
+
 from ashfall_app.saves.journal import Fade, Habits, Press
 from journal_mixed import HABITS, SAVE_ID, composed, lines, subjects
 from journal_world import (
-    OWN_SLOTS, PLAIN, QUIET, beat, compose_next, compose_span, lines_before, note, routine, row, shows, slots_of,
+    OWN_SLOTS, PLAIN, QUIET, beat, compose_next, compose_span, lines_before, note, routine, row, shows, slots_of, worry,
 )
 
 R, B = routine("r"), beat("b")
@@ -73,3 +75,14 @@ def test_day_by_day_equals_one_sitting():
     for d in range(len(span)):
         again = compose_next(SAVE_ID, span[:d], lines_before(lines(), d), subjects(), HABITS)
         assert again == span[d], d
+
+
+@pytest.mark.parametrize("beat_refresh", [0.0, 1.0])
+def test_a_day_of_only_removed_subjects_notes_is_written_and_takes_nothing_back(beat_refresh: float):
+    """Statement 20 and "Terms": a stored day whose notes all name subjects no longer in `subjects` still counts as
+    written, and such a note has no kind, so it takes no settledness back even at a beat_refresh of 1: s = 1 and the
+    budget is 3 (not 4) of five untold worries passing at care 1."""
+    worries = tuple(worry(f"w{i}") for i in range(5))
+    rows = (row(0, note("gone", "first"), note("also_gone", "first")),)
+    day = compose_next(1, rows, [shows(w, 1) for w in worries], worries, replace(HALVING, beat_refresh=beat_refresh))
+    assert len(day.notes) == 3 and {n.slot for n in day.notes} == {"first"}

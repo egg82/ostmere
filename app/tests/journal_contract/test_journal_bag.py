@@ -76,3 +76,14 @@ def test_each_band_keeps_its_own_round(save_id: int):
     for band in c.mention:
         drawn = [k for k in mentions if k in band.keys]
         assert drawn and _rounds_complete(drawn, band.keys), band
+
+
+@given(save_id=st.integers(0, 2**40))
+def test_a_retired_key_does_not_advance_the_round(save_id: int):
+    """Statement 19: n counts only stored notes whose key the slot still holds. Keys 0 and 1 of three, then a retired
+    key, leave n = 2, so key 2 finishes the round (were the retired key counted, a new round would start)."""
+    b = beat("b", repeat=3)
+    rows = (row(0, note(b, "first")), row(1, note(b, "repeat", 0)), row(2, note(b, "repeat", key="b.repeat.gone")),
+            row(3, note(b, "repeat", 1)))
+    day = compose_next(save_id, rows, [shows(b, d) for d in range(5)], [b], QUIET)
+    assert [n.key for n in day.notes] == ["b.repeat.2"]

@@ -60,11 +60,12 @@ def gap_runs(rows: Sequence[ComposedDay]) -> list[tuple[int, int]]:
 
 def gap_musts(rows: Sequence[ComposedDay], run: tuple[int, int], lines: Sequence[Line],
               subjects: Sequence[Subject]) -> set[str]:
-    """The subjects that were a must on some day of the gap run (no notes are written inside a run, so a subject's
-    tellings are those before it)."""
+    """The subjects that were a must on some day of the gap run: a must on its own day with a non-empty `catchup`
+    (statement 7). No notes are written inside a run, so a subject's tellings are those before it."""
     first, last = run
     told = {s.id: tellings(rows[:first], s.id) for s in subjects}
-    return {s.id for d in range(first, last + 1) for s in showing(lines, subjects, d) if is_must(s, told[s.id])}
+    return {s.id for d in range(first, last + 1) for s in showing(lines, subjects, d)
+            if s.catchup and is_must(s, told[s.id])}
 
 
 def own_notes(day: ComposedDay, subject_id: str) -> list[str]:

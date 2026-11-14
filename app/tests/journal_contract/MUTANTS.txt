@@ -106,10 +106,7 @@ Equivalent (no test can tell them apart)
 
 Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 94 variants
 covering the 58 rows, each row's alternatives planted on their own as 2a, 2b, ...)
- 93 of 94 killed; rows caught: 57 of 58.
- Survivor 58a  a stored day whose notes all name subjects no longer in `subjects`, not counted as written in the
-               settledness. test_journal_forward's removed-subject test puts current subjects' notes on that day too,
-               so the day is written either way. Not equivalent: a day of only removed subjects' notes tells it apart.
- Outside its bracket  5 (line order): test_journal_care's change test kills it at the push profile every run; its
-               bracket, [properties], kills it only at the ci profile, and not on every draw.
+ 94 of 94 killed; rows caught: 58 of 58.
+ 58a           killed by test_journal_forward's day of only removed subjects' notes.
+ 5             killed at the push profile by its bracket: test_journal_properties' twin-line order property.
  Equivalents   E1 and E2 planted as `<=` and the bag's shuffle reversed: both survive the whole suite at ci.

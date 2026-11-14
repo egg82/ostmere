@@ -15,10 +15,9 @@ K1, K2 = routine("k1", misremember=1), routine("k2", misremember=1)
 
 
 def _sorted_by_order(notes: list[Note], save_id: int, day: int) -> bool:
-    """Ordered by the order roll; the contract names the roll but not its direction for musts, so either direction
-    passes and only a mixed order fails (gaps.txt)."""
+    """Ordered by the order roll, lower first (statement 18)."""
     rolls = [ref_roll(save_id, day, n.subject, "order") for n in notes]
-    return rolls == sorted(rolls) or rolls == sorted(rolls, reverse=True)
+    return rolls == sorted(rolls)
 
 
 def test_catchups_then_musts_then_non_musts_then_corrections():
@@ -75,7 +74,8 @@ def test_non_musts_by_care_then_order_roll(save_id: int):
 
 @given(save_id=st.integers(0, 2**40))
 def test_own_musts_follow_the_order_roll(save_id: int):
-    """Statement 18: the day's own musts are ordered by `roll(..., "order")`, not by id or by `subjects`' order."""
+    """Statement 18: the day's own musts are ordered by `roll(..., "order")`, lower first, not by id or by `subjects`'
+    order."""
     subs = tuple(beat(f"b{i}") for i in range(5))
     (day,) = compose_span(save_id, 1, [shows(s, 0) for s in subs], subs, PLAIN)
     assert len(day.notes) == 5 and _sorted_by_order(list(day.notes), save_id, 0)
@@ -91,3 +91,15 @@ def test_care_beats_order_roll():
     lines = [shows(hi, 0), shows(lo, 0), shows(hi, 1, "hi.new"), shows(lo, 1)]
     day = compose_next(save_id, rows, lines, (lo, hi), habits)
     assert [n.subject for n in day.notes] == ["hi", "lo"]
+
+
+def test_catchups_by_the_first_gap_day_each_showed_on():
+    """Statement 18: catch-ups run by the first day of the gap run each showed on, then id: z showed on days 1 and 3,
+    a and m on day 3 only, so z leads (by its last day it would tie with a and m and fall behind them by id)."""
+    z, a, m = beat("z"), beat("a"), beat("m")
+    trip = beat("trip", away=3)
+    lines = [shows(trip, 1), shows(z, 1, second=5), shows(z, 3), shows(m, 3), shows(a, 3, second=9)]
+    days = compose_span(1, 5, lines, [trip, z, a, m], PLAIN)
+    assert [d.gap for d in days[1:4]] == ["away"] * 3
+    assert [(n.subject, n.slot) for n in days[4].notes] == [
+        ("trip", "catchup"), ("z", "catchup"), ("a", "catchup"), ("m", "catchup")]

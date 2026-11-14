@@ -89,3 +89,14 @@ def test_every_must_is_written_within_its_runs_length_plus_one():
     days = compose_span(1, 7, [shows(long_trip, 1), shows(b, 1), shows(b, 6)], [b, long_trip], QUIET)
     assert [d.day for d in days if of(d, b)] == [5, 6]
     assert slots_of(days[5], b) == ["catchup"] and slots_of(days[6], b) == ["repeat"]
+
+
+def test_a_gap_must_with_no_catchup_slot_is_dropped():
+    """Statements 7 and 9: on a gap day a subject is a must only when its `catchup` slot is non-empty; a beat with
+    none is dropped with the run's other subjects, so the day after the gap writes only the other beat's catch-up,
+    and the dropped beat, still untold, is a first when it shows again."""
+    bare, kept = replace(beat("bare"), catchup=()), beat("kept")
+    lines = [shows(TRIP, 1), shows(bare, 1), shows(kept, 1), shows(bare, 5)]
+    days = compose_span(1, 6, lines, [bare, kept, TRIP], QUIET)
+    assert [(n.subject, n.slot) for n in days[3].notes] == [("kept", "catchup")]
+    assert [d.day for d in days if of(d, bare)] == [5] and slots_of(days[5], bare) == ["first"]

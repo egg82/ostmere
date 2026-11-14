@@ -95,3 +95,12 @@ def test_the_mixed_history_writes_and_gaps():
     """Control for the statement 3 and 4 checks above: the history they read has written days and a gap."""
     days = composed()
     assert sum(1 for d in days if d.notes) >= 4 and any(d.gap for d in days) and HABITS.late_rate > 0
+
+
+def test_a_told_crowd_below_every_band_is_not_written():
+    """Statement 3 and "Terms": a crowd's first telling needs no band, but once told, a day whose count is below every
+    band's `at_least` gives it no slot, so it is not written though its care is 1."""
+    c = crowd("c", bands=((3, 2),))
+    lines = [shows(c, 0, "p0"), shows(c, 1, "p1")] + [shows(c, 2, f"p{i}", second=i) for i in range(3)]
+    days = compose_span(5, 3, lines, [c], PLAIN)
+    assert slots_of(days[0], c) == ["first"] and days[1] == row(1) and slots_of(days[2], c) == ["mention"]

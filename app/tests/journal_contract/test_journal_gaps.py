@@ -98,3 +98,13 @@ def test_nothing_is_owed_after_a_blank():
     days = compose_span(1, 3, lines, [r, lately, B], habits)
     assert days[1] == row(1)
     assert [(n.subject, n.slot) for n in days[2].notes] == [("b", "first")]
+
+
+def test_a_crowd_below_its_bands_still_counts_toward_busy():
+    """Statement 14 and "Terms": a told crowd below every band is not written but still shows, so with a budget of one
+    at ratio 1 it and a beat make two showing and a busy day."""
+    c = crowd("c", bands=((3, 2),))
+    habits = replace(PLAIN, lines_start=1, lines_floor=1, busy_ratio=1.0)
+    lines = [shows(c, 0, "p0"), shows(c, 1, "p1"), shows(B, 1)]
+    day = compose_next(1, (row(0, note(c, "first")),), lines, [c, B], habits)
+    assert day.gap == "busy" and day.notes == ()

@@ -95,3 +95,10 @@ def test_each_misremembering_gets_its_own_correction():
     days = compose_span(1, 8, [shows(WRONG, 0), shows(other, 2)], [WRONG, other], ALWAYS)
     corrections = [(d.day, n.subject) for d in days for n in d.notes if n.slot == "correction"]
     assert corrections == [(3, "wrong"), (5, "other")]
+
+
+def test_the_shortest_wait_puts_the_correction_on_the_next_day():
+    """Statement 17: `correct_after_days` is at least 1, so with the shortest wait the correction is the next written
+    day's note and never beside its misremembering."""
+    days = compose_span(1, 3, [shows(WRONG, 0)], [WRONG], replace(ALWAYS, correct_after_days=1))
+    assert [[n.slot for n in d.notes] for d in days] == [["misremember"], ["correction"], []]

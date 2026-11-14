@@ -2,10 +2,11 @@
 keys from their slots (3), one note per subject a day (4), written once (7), musts on their own day (8) and in the
 catch-up after their gap (9). Each composes a whole history a day at a time, as the save writer does."""
 import random
+from dataclasses import replace
 
 from hypothesis import given, strategies as st
 
-from ashfall_app.saves.journal import ComposedDay
+from ashfall_app.saves.journal import ComposedDay, Fade, Line
 from journal_check import gap_musts, gap_runs, musts_on, own_notes, tellings
 from journal_gen import History, histories
 from journal_world import compose_span
@@ -23,6 +24,24 @@ def test_the_same_inputs_compose_the_same_whatever_the_line_order(history: Histo
     random.Random(seed).shuffle(shuffled)
     again = compose_span(history.save_id, history.days, shuffled, history.subjects, history.habits)
     assert _compose(history) == again
+
+
+@given(history=histories())
+def test_a_change_counts_wherever_it_sits_in_the_day(history: History):
+    """Statement 1 (and `compose_day`'s "any order") where order would bite: each line gets a twin at the same second
+    with a key its subject never held, placed after it in one tuple and before it in the other. With fade 0, diligence 1
+    and room in the budget, a told routine or crowd is written exactly on a change day, so a change looked for only in
+    some of a day's lines (the first, the last) shows as a difference between the two orders."""
+    habits = replace(history.habits, routine=Fade(1.0, 0.0), crowd=Fade(1.0, 0.0), floor=1.0, lines_start=50,
+                     lines_floor=50, busy_ratio=100.0)
+    after: list[Line] = []
+    before: list[Line] = []
+    for i, line in enumerate(history.lines):
+        twin = Line(f"fresh.{i}", line.at, line.source)
+        after += [line, twin]
+        before += [twin, line]
+    assert compose_span(history.save_id, history.days, after, history.subjects, habits) == compose_span(
+        history.save_id, history.days, before, history.subjects, habits)
 
 
 @given(history=histories())

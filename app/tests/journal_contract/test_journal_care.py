@@ -6,7 +6,7 @@ from dataclasses import replace
 import pytest
 from hypothesis import given, strategies as st
 
-from ashfall_app.saves.journal import Fade, Press
+from ashfall_app.saves.journal import DAY_S, Fade, Line, Press
 from journal_world import (
     PLAIN, compose_next, crowd, note, ref_roll, routine, row, shows, slots_of, worry,
 )
@@ -102,3 +102,15 @@ def test_a_worrys_first_telling_is_by_its_care_too(save_id: int):
     w = worry("w")
     day = compose_next(save_id, (), [shows(w, 0)], [w], replace(PLAIN, worry=Press(0.4, 3.0)))
     assert slots_of(day, w) == (["first"] if ref_roll(save_id, 0, "w", "write") < 0.4 else [])
+
+
+def test_a_key_held_only_by_other_lines_is_still_a_change():
+    """Statement 10: a change is a key no line *of that subject* held before the day; the same key held earlier by
+    another subject's line, or by a line feeding no subject, does not stop it being news."""
+    other = routine("other")
+    habits = replace(PLAIN, routine=Fade(1.0, 0.0))
+    rows = (row(0, note(R, "first"), note(other, "first")), row(1, note(R, "repeat")))
+    lines = [shows(R, 0), shows(other, 0, "shared"), Line("shared", DAY_S + 5, None), shows(R, 1)]
+    lines.append(shows(R, 2, "shared"))
+    day = compose_next(5, rows, lines, [R, other], habits)
+    assert slots_of(day, R) == ["repeat"]
