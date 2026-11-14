@@ -26,7 +26,7 @@ def ids_by_kind(o: "Opening") -> dict[str, list[str]]:
         "runner": [a.id for a in o.standing] + [c.id for c in o.cards],
         "side": [s.id for s in o.sides], "threat": [t.id for t in o.threats],
         "offer": [x.id for x in o.offers], "answer": [a.id for x in o.offers for a in x.answers],
-        "entry": [e.id for e in o.entries], "note": [n.id for n in o.notes],
+        "entry": [e.id for e in o.entries], "note": [n.id for n in o.notes], "subject": [s.id for s in o.subjects],
     }
 
 

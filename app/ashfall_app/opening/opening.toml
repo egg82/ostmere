@@ -569,6 +569,25 @@ id = "t_evening"
 when = { test = "at_least", subject_kind = "store", id = "evening", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "feature", id = "keeps_going" }] }
 
+# ---------- the journal's habits ----------
+
+# The numbers the days pages' habits are decided by (docs/design/journal.md, "The habits as data"). Nothing reads them
+# yet; the composer's readout sets them.
+[journal_habits]
+routine = { base = 0.8, fade = 0.5 }
+worry = { base = 0.4, press = 0.3 }
+crowd = { base = 0.5, fade = 0.7 }
+floor = 0.15
+halflife = 12
+beat_refresh = 3
+lines_start = 5
+lines_floor = 1
+lines_halflife = 10
+busy_ratio = 2
+late_rate = 0.15
+misremember_rate = 0.05
+correct_after_days = 2
+
 # ---------- the journal ----------
 
 [journal]
@@ -586,6 +605,14 @@ id = "n_day_b2"
 entry = "e_days_1"
 gate = { test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }
 beat = "B2"
+
+# What the days pages write about (docs/design/journal.md, "The content's side"). A beat's first telling is its days
+# note.
+[[subjects]]
+id = "s_b2"
+kind = "beat"
+source = { source_kind = "card", id = "strike_fire" }
+first = { keys = ["n_day_b2"] }
 
 # ---------- features ----------
 

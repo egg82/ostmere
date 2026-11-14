@@ -303,6 +303,12 @@ entry = "e_days_2"
 gate = { test = "at_least", subject_kind = "card_count", id = "sit_up_5", value = 1 }
 beat = "B6"
 
+[[subjects]]
+id = "s_b6"
+kind = "beat"
+source = { source_kind = "card", id = "sit_up_5" }
+first = { keys = ["n_day_b6"] }
+
 # ---------- features ----------
 
 [[features]]

@@ -1,0 +1,166 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_journal_subjects.py): one journal subject of each
+# kind, fed by a trigger, a card, a person's joining and leaving, and the mentions of people coming, and a days note
+# its beat subject retells. Not story: the ids and words are the tests' own. The planted variants are edits of this file.
+version = 1
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[lanes]]
+id = "t_q1"
+label_key = "t_l_q1"
+ruled = true
+told = "line"
+
+[[lanes]]
+id = "t_q2"
+label_key = "t_l_q2"
+ruled = true
+told = "mention"
+
+[[cards]]
+id = "t_dig"
+presentation = "action"
+label_key = "t_c_dig"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+outcome = { line_keys = ["t_l_dug"] }
+
+[[cards]]
+id = "t_rest"
+presentation = "action"
+label_key = "t_c_rest"
+work_s = 60
+
+[[triggers]]
+id = "t_storm"
+when = { test = "after_time", value = 100 }
+outcome = { line_keys = ["t_l_storm"] }
+
+[[triggers]]
+id = "t_hunger"
+when = { test = "after_time", value = 150 }
+outcome = { line_keys = ["t_l_hungry"] }
+
+[[triggers]]
+id = "t_quiet"
+when = { test = "after_time", value = 160 }
+outcome = { stores = [{ store = "t_heap", items = 1 }] }
+
+[[triggers]]
+id = "t_q1_comes"
+when = { test = "after_time", value = 200 }
+outcome = { line_keys = ["t_l_comes"], joins = [{ lane = "t_q1", mix = "town:main" }] }
+
+[[triggers]]
+id = "t_q2_comes"
+when = { test = "after_time", value = 300 }
+outcome = { joins = [{ lane = "t_q2", mix = "town:main" }] }
+
+[[triggers]]
+id = "t_q1_goes"
+when = { test = "after_time", value = 5000 }
+outcome = { line_keys = ["t_l_goes"], leaves = [{ lane = "t_q1" }] }
+
+[[people.came]]
+at_least = 1
+keys = ["t_came_one"]
+
+[[people.went]]
+at_least = 1
+keys = ["t_went_one"]
+
+[[entries]]
+id = "t_day_page"
+section = "days"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "t_day_storm"
+entry = "t_day_page"
+gate = { test = "after_time", value = 100 }
+beat = "B5"
+
+[[subjects]]
+id = "t_s_storm"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_storm" }
+first = { keys = ["t_day_storm"] }
+catchup = { keys = ["t_j_storm"] }
+
+[[subjects]]
+id = "t_s_dig"
+kind = "routine"
+source = { source_kind = "card", id = "t_dig" }
+first = { keys = ["t_j_dig"], sketch = "t_spade" }
+repeat = { keys = ["t_j_dig_again", "t_j_dig_more"] }
+catchup = { keys = ["t_j_dig_short"] }
+late = { keys = ["t_j_dig_late"], hand = "pencil" }
+misremember = { keys = ["t_j_dig_wrong"] }
+correction = { keys = ["t_j_dig_right"] }
+
+[[subjects]]
+id = "t_s_hunger"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_hunger" }
+first = { keys = ["t_j_hungry"] }
+
+[[subjects]]
+id = "t_s_q1_came"
+kind = "person"
+source = { source_kind = "lane", id = "t_q1", way = "joined" }
+first = { keys = ["t_j_q1_came"] }
+catchup = { keys = ["t_j_q1_came"] }
+
+[[subjects]]
+id = "t_s_q1_went"
+kind = "person"
+source = { source_kind = "lane", id = "t_q1", way = "left" }
+first = { keys = ["t_j_q1_went"] }
+catchup = { keys = ["t_j_q1_went"] }
+
+[[subjects]]
+id = "t_s_came"
+kind = "crowd"
+source = { source_kind = "mentions", way = "joined" }
+first = { keys = ["t_j_came_first"] }
+mention = [{ at_least = 1, keys = ["t_j_came_one"] }, { at_least = 2, keys = ["t_j_came_some"] }]
+
+[line_kinds]
+t_l_dug = "story"
+t_l_storm = "story"
+t_l_hungry = "story"
+t_l_comes = "story"
+t_l_goes = "story"
+
+[text]
+t_s_heap = "Heap"
+t_l_q1 = "First"
+t_l_q2 = "Second"
+t_c_dig = "Dig"
+t_c_rest = "Rest"
+t_l_dug = "Dug."
+t_l_storm = "A storm."
+t_l_hungry = "Hungry."
+t_l_comes = "One comes."
+t_l_goes = "One goes."
+t_came_one = "One more."
+t_went_one = "One fewer."
+t_day_storm = "the storm came."
+t_j_storm = "storm."
+t_j_dig = "dug the pit."
+t_j_dig_again = "dug."
+t_j_dig_more = "more digging."
+t_j_dig_short = "digging."
+t_j_dig_late = "the spade is cracked."
+t_j_dig_wrong = "dug it deep."
+t_j_dig_right = "it was not deep."
+t_j_hungry = "hungry."
+t_j_q1_came = "someone came."
+t_j_q1_went = "they left."
+t_j_came_first = "people came."
+t_j_came_one = "one more came."
+t_j_came_some = "more came."

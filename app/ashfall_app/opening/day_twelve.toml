@@ -600,6 +600,12 @@ requires = [
 ]
 beat = "B12"
 
+[[subjects]]
+id = "s_b12"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b12" }
+first = { keys = ["n_day_b12"] }
+
 # ---------- the Camp ----------
 
 # Day nine's held marker filled in, lifted by the cellar's last stage.

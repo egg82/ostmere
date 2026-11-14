@@ -51,11 +51,35 @@ id = "t_depart"
 when = { test = "after_time", value = 5000 }
 outcome = { line_keys = ["t_l_depart"], leaves = [{ lane = "t_p1", stops = ["t_tend"] }] }
 
+[[subjects]]
+id = "t_s_p1_joined"
+kind = "person"
+source = { source_kind = "lane", id = "t_p1", way = "joined" }
+first = { keys = ["t_j_p1_came"] }
+catchup = { keys = ["t_j_p1_came"] }
+
+[[subjects]]
+id = "t_s_p2_joined"
+kind = "person"
+source = { source_kind = "lane", id = "t_p2", way = "joined" }
+first = { keys = ["t_j_p2_came"] }
+catchup = { keys = ["t_j_p2_came"] }
+
+[[subjects]]
+id = "t_s_p1_left"
+kind = "person"
+source = { source_kind = "lane", id = "t_p1", way = "left" }
+first = { keys = ["t_j_p1_went"] }
+catchup = { keys = ["t_j_p1_went"] }
+
 [line_kinds]
 t_l_arrive = "story"
 t_l_depart = "story"
 
 [text]
+t_j_p1_came = "the first came."
+t_j_p2_came = "the second came."
+t_j_p1_went = "the first went."
 t_l_arrive = "Two come."
 t_l_depart = "One goes."
 t_s_heap = "Heap"

@@ -27,11 +27,11 @@ def check_people(o: "Opening") -> None:
         if told(o, "mention"):
             fail(f"lane {sorted(told(o, 'mention'))[0]}", "is a mention, and the content has no [people] bands to word it")
         return
-    _check_bands(o, "people came", o.people.came)
-    _check_bands(o, "people went", o.people.went)
+    check_band_list(o, "people came", o.people.came)
+    check_band_list(o, "people went", o.people.went)
 
 
-def _check_bands(o: "Opening", where: str, bands: list[BandEntry]) -> None:
+def check_band_list(o: "Opening", where: str, bands: list[BandEntry]) -> None:
     """The first band starts at one person, each later one at more than the last, and every key is in text."""
     starts = [b.at_least for b in bands]
     if starts[0] != 1 or any(a >= b for a, b in zip(starts, starts[1:])):

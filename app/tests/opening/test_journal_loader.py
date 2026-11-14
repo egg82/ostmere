@@ -130,12 +130,20 @@ DAYS_PAGE = '[[entries]]\nid = "j_day"\nsection = "days"\nhand = "ink"\nrunners 
 """A days page with no sketch: text alone."""
 
 
+DAYS_SUBJECT = ('[[triggers]]\nid = "j_told"\nwhen = { test = "after_time", value = 50 }\n'
+                'outcome = { line_keys = ["j_l_told"] }\n'
+                '[[subjects]]\nid = "j_s_day"\nkind = "beat"\nsource = { source_kind = "trigger", id = "j_told" }\n'
+                'first = { keys = ["j_day_1"] }\ncatchup = { keys = ["j_day_1"] }\n')
+"""The beat whose subject retells the days note (opening/subject_checks.py)."""
+
+
 def days_note(beat: str) -> str:
     return f'[[notes]]\nid = "j_day_1"\nentry = "j_day"\ngate = {{ test = "after_time", value = 50 }}\n{beat}'
 
 
 def with_days(tmp_path: Path, beat: str) -> tuple[Path, ...]:
-    return (appended(tmp_path, DAYS_PAGE + days_note(beat), 'j_day_1 = "Retold."\n'),)
+    return (edited(tmp_path, ("\n[line_kinds]\n", f"\n{DAYS_PAGE}{days_note(beat)}\n{DAYS_SUBJECT}\n[line_kinds]\nj_l_told = \"story\"\n"),
+                   ("\n[text]\n", '\n[text]\nj_day_1 = "Retold."\nj_l_told = "Told."\n')),)
 
 
 def days_note_without_beat(tmp_path: Path) -> tuple[Path, ...]:

@@ -35,14 +35,14 @@ def check_journal(o: "Opening") -> None:
     runners = {where.split(" ", 1)[1] for where, _ in fights(o)}
     for e in o.entries:
         if e.sketch is not None:
-            _check_sketch(f"entry {e.id}", e.sketch)
+            check_sketch(f"entry {e.id}", e.sketch)
         for r in e.runners:
             need(f"entry {e.id}", "runner with a fight", r, sorted(runners))
     sections = {e.id: e.section for e in o.entries}
     for n in o.notes:
         need(f"note {n.id}", "entry", n.entry, list(sections))
         if n.sketch is not None:
-            _check_sketch(f"note {n.id}", n.sketch)
+            check_sketch(f"note {n.id}", n.sketch)
         _check_beat(n, sections[n.entry])
 
 
@@ -57,7 +57,7 @@ def _check_beat(n: "NoteEntry", section: str) -> None:
         fail(f"note {n.id}", f"beat {n.beat!r} is not a beat id of [A-Za-z0-9-]+")
 
 
-def _check_sketch(where: str, sketch: str) -> None:
+def check_sketch(where: str, sketch: str) -> None:
     if SKETCH_ID.fullmatch(sketch) is None:
         fail(where, f"sketch {sketch!r} is not an id of [a-z0-9_]+ (it is a file name, not a path)")
 
