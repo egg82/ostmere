@@ -312,6 +312,14 @@ id = "s_b6"
 kind = "beat"
 source = { source_kind = "card", id = "sit_up_5" }
 first = { keys = ["n_day_b6"] }
+catchup = { keys = ["j_b6_catchup"] }
+late = { keys = ["j_b6_late"] }
+
+[[subjects]]
+id = "s_sign"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_sign" }
+first = { keys = ["j_sign_first"] }
 
 # ---------- features ----------
 
@@ -434,4 +442,8 @@ l_find_wc_20 = "you knock on a standing birch. it rings."
 pays_find_cook_6 = "a stew that keeps, {pct} cooking speed"
 l_find_cook_6 = "the spoon stands in the pot. you let go of it."
 n_day_b6 = "the fire nearly went out, and i fetched it back out of the stone. i wouldn't sit near that either"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b6_catchup = "the fire nearly died. i brought it back with a hand on the stone"
+j_b6_late = "grey on my fingers since the stone. it won't scrub off"
+j_sign_first = "half a deer left on the track. more prints than i could count, all round the camp. not one set comes in"
 # ---------- end of lines ----------
