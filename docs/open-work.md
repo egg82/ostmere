@@ -267,7 +267,10 @@ before the redesign. Find whether the wrapper covers the buttons on a real phone
     design. Step 1 (routing: a refusal is red plus the missing need with no text, a success a story line only) shipped;
     step 2 (the look: hairlines, four sizes, ember's two jobs) and step 3 (the mix bar's legend, the merge's hues, the
     ledger's groups) shipped; step 4 (the chronicle replacing the Log, causes, the kind filter, "Since you left")
-    shipped; step 5, asks as a list, is next. Left from step 3: the ledger's Town
+    shipped; step 5 (asks as a list: who asks, "↳" the cause, answers as before → after, and the three optional
+    texts) shipped; step 6, the phone frame, is next, and brings the ask's 56px row and its sheet. Left from step 5: an
+    `expiry_key` is refused until offers can expire, and an answer's figures can lag a rate change for a moment.
+    Left from step 3: the ledger's Town
     and Outposts groups wait for a served store-group field (through the contract) when the first such store lands;
     the Mixes list's small bars drop their initials for a legend in step 6. Left from step 4: a line shared by several
     levels of one skill names the skill, not the level; the chapter's fights line still sums won and lost, and must
