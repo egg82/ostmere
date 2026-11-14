@@ -17,7 +17,7 @@ from ..engine import Rules, validate_rules
 from .chapters import merge
 from .fight_entries import SideEntry, ThreatEntry
 from .journal_entries import JournalDecl, JournalEntry, NoteEntry
-from .offer_entries import OfferEntry
+from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
@@ -81,6 +81,7 @@ class Opening(Entry):
     features: list[FeatureEntry] = []
     order_cards: list[OrderCardEntry] = []
     offers: list[OfferEntry] = []
+    offer_kinds: list[OfferKindEntry] = []
     journal: JournalDecl | None = None
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []
@@ -143,6 +144,7 @@ class Chapter(Entry):
     features: list[FeatureEntry] = []
     order_cards: list[OrderCardEntry] = []
     offers: list[OfferEntry] = []
+    offer_kinds: list[OfferKindEntry] = []
     journal: JournalDecl | None = None
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []

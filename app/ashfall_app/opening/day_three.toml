@@ -472,6 +472,11 @@ line_keys = ["l_bay_his"]
 unlocks = [{ unlock_kind = "card", id = "n2_build_bay" }]
 orders = [{ tap_card = "n2_build_bay", first = true }]
 
+# The words of the rule that answers every arrival, for whoever comes next.
+[[offer_kinds]]
+kind = "arrival"
+roles = [{ role = "self", label_key = "k_arrival_self" }, { role = "other", label_key = "k_arrival_other" }]
+
 # A23 on the hands. Its work divides one item's quantity units at speeds 1 and a half (a tap keeps its start speed).
 [[cards]]
 id = "make_bay"
@@ -995,6 +1000,8 @@ a_make_room = "You build it"
 a_make_room_cost = "{d} of your time"
 a_let_him = "He builds it"
 a_let_him_cost = "{d} of his time"
+k_arrival_self = "You build it"
+k_arrival_other = "They build it"
 c_make_bay = "Build a sleeping bay"
 lane_n2 = "His hands"
 lane_n2_named = "{n2}"
