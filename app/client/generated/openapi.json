@@ -2187,6 +2187,10 @@
             "type": "boolean",
             "title": "Cuts In"
           },
+          "speed": {
+            "type": "integer",
+            "title": "Speed"
+          },
           "spent_store": {
             "anyOf": [
               {
@@ -2221,6 +2225,7 @@
           "tap_s",
           "needs",
           "cuts_in",
+          "speed",
           "spent_store",
           "gained"
         ],
@@ -4151,13 +4156,21 @@
             },
             "type": "array",
             "title": "Change Bp"
+          },
+          "speeds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Speeds"
           }
         },
         "type": "object",
         "required": [
           "level",
           "pays_key",
-          "change_bp"
+          "change_bp",
+          "speeds"
         ],
         "title": "LevelPays",
         "description": "What a level brings, shown before it lands: words (pays_key), \"?\" for a story unlock."

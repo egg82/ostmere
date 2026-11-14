@@ -22,12 +22,13 @@ import type { ChroniclePhase } from "./chronicle";
 import type { SincePhase } from "./since";
 import type { AsksPhase } from "./asks";
 import type { LedgerPhase } from "./ledgerrules";
+import type { FeelPhase } from "./feel";
 import type { JournalPhase } from "./journal";
 import type { PrestigePhase } from "./prestige";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | FeelPhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];
@@ -79,7 +80,7 @@ const still = (at: number, value = 0) => ({ start: at, start_value: value, rate:
 function card(at: number, id: string, over: Partial<Card> = {}): Card {
   return {
     card: id, completions: 0, cap: null, bar: still(at), bar_total: 5 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-    blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, needs: [], ...over,
+    blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: BP, needs: [], ...over,
   };
 }
 

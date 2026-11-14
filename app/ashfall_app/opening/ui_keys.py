@@ -58,7 +58,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.no",
     "ui.mix.named_by_order",
     "ui.mix.nested",
-    "ui.card.count",
+    "ui.card.count", "ui.card.levelled",
     "ui.card.retired",
     "ui.ledger.full",
     "ui.camp.pays",

@@ -25,6 +25,8 @@ import type { Part, PartContext } from "./part";
 import { WaitLine } from "./waitline";
 import { WhenReady } from "./whenready";
 import { storyMarks } from "../game/story";
+import { speedups } from "../game/levelled";
+import { levelShown, showLevel } from "./cardlevel";
 
 /** How long a finished card stays in its slot, so the player sees it finish, before it goes to Completed. */
 const DONE_HOLD_MS = 5000;
@@ -60,7 +62,6 @@ export class Cards implements Part {
   failed(card: string, view: View): void {
     const row = this.rows.get(card);
     if (!row || row.done) return;
-    row.node.classList.remove("press");   // one animation per node: the press would replay after the pulse
     pulse(row.node, "tap-failed");
     const blocker = row.card.blocker;
     if (!blocker) return;
@@ -90,7 +91,7 @@ export class Cards implements Part {
         row.doneAt = performance.now();
         if (prev) {   // finished looks are a change too: at their turn
           row.doneShown = false;
-          this.ctx.arrivals.effect(row.node, "card", () => { row.doneShown = true; row.node.classList.toggle("done", row.done); });
+          this.ctx.arrivals.effect(row.node, "card", () => { row.doneShown = true; row.node.classList.toggle("done", row.done); }, "finish");
         }
       }
     }
@@ -113,7 +114,7 @@ export class Cards implements Part {
         row.card = card;
         if (card.completions > before.completions && prev) {
           const rung = completionRung(before.by, row.byOrder === true);   // as it ran until now: the restyle below moves it on
-          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung));
+          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung), "finish");
         }
       } else {
         const done = view.completed.find((c) => c.card === row.id);
@@ -121,6 +122,10 @@ export class Cards implements Part {
       }
       hintCard(row.node, row.id, hints, () => this.ctx.keeps.keepMixOffered(row.id), this.marks.has(row.id));   // a quiet mark, once: the mix could take it
       this.restyle(row, view, { busy, running, single });
+    }
+    for (const s of before ? speedups(this.ctx.catalog, before, full) : []) {
+      const row = this.rows.get(s.card);
+      if (row && !row.done) this.ctx.arrivals.effect(row.node, "skill", () => showLevel(this.ctx.catalog, row, s, performance.now()), "level");
     }
   }
 
@@ -136,7 +141,7 @@ export class Cards implements Part {
       const done = span > 0 ? (((v % span) + span) % span) / span : 0;
       row.fill.style.transform = `scaleX(${done})`;
       const wait = card.by === "tap" ? card.completes_at : this.view ? keptReadyAt(this.view, card, this.ctx.catalog.content.scales.quantity_per_item) : null;
-      setText(row.foot, wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "");
+      if (!levelShown(row, performance.now())) setText(row.foot, wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "");
       this.markClock(row, wait !== null && this.view !== null && waitsOnUnseen(this.view, card));
       row.needs.tick(card, this.view, t);
     }

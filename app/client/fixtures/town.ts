@@ -8,7 +8,7 @@
 // withSecondMix gives any of them a second town mix (the town's split under another name), so the town's rules show.
 import type { Step, View } from "../src/api/types";
 import { fixtureStep, type Kept } from "./steps";
-import { TOWN_WIRE } from "./townwire";
+import { TOWN_WIRE, type TownWire } from "./townwire";
 
 export type TownPhase = "town" | "townone" | "towngrey";
 export const TOWN: readonly TownPhase[] = ["town", "townone", "towngrey"];
@@ -17,13 +17,16 @@ export function isTown(phase: string): phase is TownPhase {
   return (TOWN as readonly string[]).includes(phase);
 }
 
+/** The wire predates Card.speed: a card's speed as if its tap_s were a whole completion (nothing here reads it). */
+const withSpeed = (c: TownWire["cards"][number]): View["cards"][number] => ({ ...c, speed: c.tap_s === null ? 0 : c.bar_total / c.tap_s });
+
 /** The hands' own rules, mixes and cards stand as the day-two page has them; the wire's follow them, its rule indexes moved. */
 function town(phase: TownPhase, v: View): View {
   const { joined, ...wire } = TOWN_WIRE[phase === "town" ? "two" : "one"];
   const shift = v.orders.length;
   const lanes = wire.lanes.filter((l) => l.lane !== "hands").map((l) => ({ ...l, order: l.order === null ? null : l.order + shift }));
   return {
-    ...v, at: wire.at, lanes: [...v.lanes, ...lanes], cards: [...v.cards, ...wire.cards], mixes: [...v.mixes, ...wire.mixes],
+    ...v, at: wire.at, lanes: [...v.lanes, ...lanes], cards: [...v.cards, ...wire.cards.map(withSpeed)], mixes: [...v.mixes, ...wire.mixes],
     orders: [...v.orders, ...wire.orders], orders_on: [...v.orders_on, ...wire.orders_on], order_states: [...v.order_states, ...wire.order_states],
     running_town_mix_id: wire.running_town_mix_id, town_mix_order: wire.town_mix_order === null ? null : wire.town_mix_order + shift,
     unlocked: [...v.unlocked, ...joined, ...["chop", "haul", "hew", "carve"].map((id) => ({ category: "card" as const, id }))],

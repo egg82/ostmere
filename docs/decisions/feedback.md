@@ -39,7 +39,10 @@ Feedback: null is silent. The ladder (`docs/design/opening-screen.md`, "The feed
 card red and the need that stopped it (`app/client/src/ui/cards.ts`); the effect's numbers are tokens in
 `app/client/src/game.css`. **A refused tap never has text**: the engine emits no line for it and the content has no
 refusal lines. A tap that lands puts its line in the strip and the chronicle, never under the card, so each tap outcome
-has one home.
+has one home. A card sinks on a press and settles on release (`app/client/src/ui/cardrow.ts`); a level shows on the
+card it speeds up, old → new (`app/client/src/ui/cardlevel.ts`, from `app/client/src/game/levelled.ts`); and a live
+step's chain lights link by link at the link pace of the arrival queue that also paces returns and story lines
+(`app/client/src/ui/reveal.ts`).
 
 Lessons: lessons as data (id, when it may start, trigger, steps naming a control and a line) and one runner, the glow
 as its highlight (`app/client/src/game/lessons.ts`, `app/client/src/ui/lessons.ts`). Done or skipped is kept in the

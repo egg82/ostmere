@@ -40,7 +40,7 @@ from .viewparts import (
 )
 from .decisions import cuts_in
 from .inputs import input_whole
-from .work import blocker, completions, effective_cap, greyed, starved, tap_seconds
+from .work import blocker, completions, effective_cap, greyed, starved, tap_seconds, tap_work_speed
 
 
 @dataclass(frozen=True)
@@ -213,8 +213,8 @@ def _card_view(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
         bar_total=total, by=by, completes_at=_completes_at(bar, by, total),
         share_bp=share - sum(g.share_bp for g in gained), run=run,
         blocker=blocker(save, rules, c.id), tap_s=tap_seconds(save, rules, c.id), needs=_needs(save, rules, c),
-        cuts_in=cuts_in(save, rules, c.id), spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None,
-        gained=gained)
+        cuts_in=cuts_in(save, rules, c.id), speed=tap_work_speed(save, rules, c.id),
+        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained)
 
 
 def _run_by(save: Save, c: CardDef, tapped: bool) -> RunBy | None:

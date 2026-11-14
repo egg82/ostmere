@@ -162,6 +162,10 @@ class CardView:
     tap_s: int | None
     needs: tuple[Need, ...]
     cuts_in: bool
+    speed: int = field(repr=False)
+    """Work units per second a tap started now runs at (work.tap_work_speed): bar_total / speed is one whole
+    completion's time, whatever the bar holds; 0 when tap_s is None. Left out of the repr: the recorded fingerprints
+    predate it, and tap_s already carries the speed they need."""
     spent_store: StoreId | None = field(default=None, repr=False)
     """The store a SPENT card is stopped on; None unless run is SPENT (DESIGN.txt, "SPENT")."""
     gained: tuple[SpentShare, ...] = field(default=(), repr=False)

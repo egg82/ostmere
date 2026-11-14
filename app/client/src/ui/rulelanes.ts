@@ -55,6 +55,6 @@ function taskRow(ctx: PartContext, view: View, index: number, cond: (index: numb
   const lane = ruledLaneOf(catalog, order);   // on a ruled lane, ● is the rule whose task it runs now, as on the hands
   const on = lane === null ? view.orders_on[index] === true : view.lanes.find((l) => l.lane === lane)?.order === index;
   row.append(ruleDot(catalog, on), cond(index), ...does, remove);
-  if (order.then.kind === "tap_card" && ctx.fires.fresh.includes(order.then.card)) ctx.arrivals.effect(row, "card", () => pulse(row, "fired"));
+  if (order.then.kind === "tap_card" && ctx.fires.fresh.includes(order.then.card)) ctx.arrivals.effect(row, "card", () => pulse(row, "fired"), "rule");
   return row;
 }

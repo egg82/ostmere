@@ -12,7 +12,7 @@ from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, N
 from .line_models import LineInfo, PeopleInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
-from .node_models import NodeChange as NodeChange, NodeInfo, NodeTarget as NodeTarget
+from .skill_models import LevelPays as LevelPays, NodeChange as NodeChange, NodeInfo, NodeTarget as NodeTarget, SkillInfo
 from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, KindRole as KindRole, OfferInfo, OfferKindInfo as OfferKindInfo
 
 
@@ -127,23 +127,6 @@ class StandingInfo(BaseModel):
     skill: str | None
     fight: FightInfo | None
     """Set on a threat that runs on its own (CONTRACT.txt, "FIGHTS")."""
-
-
-class LevelPays(BaseModel):
-    """What a level brings, shown before it lands: words (pays_key), "?" for a story unlock."""
-
-    level: int
-    pays_key: str
-    change_bp: list[int]
-    """The level's modifiers as signed changes in basis points (+1000 is +10%), each distinct value once, in the order
-    authored; the {pct} and {pct_b} slots of pays_key. Empty for a level that pays a find."""
-
-
-class SkillInfo(BaseModel):
-    skill: str
-    label_key: str
-    levels: list[LevelPays]
-    """The levels that bring something, in order: the row shows the first above its level."""
 
 
 class FirstMix(BaseModel):

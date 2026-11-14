@@ -196,7 +196,7 @@ for (const onPhone of [true, false]) {
   const base: View = fixtureStep("restrule", AT).view;
   const card = (id: string, over: Partial<Card> = {}): Card => ({
     card: id, completions: 0, cap: 1, bar: { start: AT, start_value: 0, rate: 0, limit: null }, bar_total: 20, by: null,
-    completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, needs: [], ...over,
+    completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1, needs: [], ...over,
   });
   const only = (c: Card[], completed: View["completed"] = []): View => ({ ...base, cards: c, completed });
   const classes = (cards: Cards, id: string): string[] => (cards.node(id)?.closest(".card")?.className ?? "").split(" ").filter(Boolean);

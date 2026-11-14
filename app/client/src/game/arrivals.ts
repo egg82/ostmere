@@ -1,7 +1,8 @@
 // What is new on screen, shown one thing at a time: an Event Queue (Nystrom, Game Programming Patterns). The parts that
 // draw a new thing send it here as they draw; the reveal pulls them off over the next few seconds, so sending is
 // decoupled from showing in time. Two uses (docs/design/opening-screen.md): what arrived while the player was away
-// ("Coming back"), and a live step's story lines, each shown before what it announces ("One thing at a time"). It is
+// ("Coming back"), and a live step's story lines, each shown before what it announces ("One thing at a time"); a
+// second queue at LINK_PACE sets off a live step's cascade link by link (docs/design/redesign.md, "Feel"). It is
 // the first piece of the planned chronicle (docs/systems.md, "Chronicle and unwrap"), whose events will carry times.
 // No DOM here: the payload is whatever the reader shows (ui/reveal.ts).
 import type { Unlock } from "../api/types";
@@ -16,6 +17,22 @@ export const MIN_GAP_MS = 400;
 export const MAX_GAP_MS = 700;
 /** A batch's reveal never runs longer than this after its lines; whatever is still waiting then arrives together. */
 export const CAP_MS = 4000;
+
+/** How a queue spaces its turns: the spread is capMs over the batch, held within the two gaps. */
+export interface Pace {
+  minGapMs: number;
+  maxGapMs: number;
+  capMs: number;
+}
+export const ARRIVAL_PACE: Pace = { minGapMs: MIN_GAP_MS, maxGapMs: MAX_GAP_MS, capMs: CAP_MS };
+
+/** A cascade's links (ui/reveal.ts): one LINK_GAP_MS after another, so the eye can follow, at most MAX_LINKS turns. */
+export const LINK_GAP_MS = 90;
+export const MAX_LINKS = 6;
+export const LINK_PACE: Pace = { minGapMs: LINK_GAP_MS, maxGapMs: LINK_GAP_MS, capMs: (MAX_LINKS - 1) * LINK_GAP_MS };
+/** A cascade's links in the order one causes the next: a card finishes, its stores move, a level lands, a rule acts. */
+export const LINKS = ["finish", "store", "level", "rule"] as const;
+export type Link = (typeof LINKS)[number];
 
 interface Arrival<T> {
   kind: ArrivalKind;
@@ -37,6 +54,8 @@ export class ArrivalQueue<T> {
   private batch: Arrival<T>[] = [];
   /** Until when the last line shown is still being read: nothing else shows before then. */
   private heldUntil = -Infinity;
+
+  constructor(private readonly pace: Pace = ARRIVAL_PACE) {}
 
   /** Nothing waiting and nothing being sent. */
   get idle(): boolean {
@@ -81,14 +100,15 @@ export class ArrivalQueue<T> {
     }
     const rest = turns.filter((a) => a.kind !== "line");
     const n = rest.length;
-    const gap = reduced || n < 2 ? 0 : Math.min(MAX_GAP_MS, Math.max(MIN_GAP_MS, CAP_MS / (n - 1)));
+    const { minGapMs, maxGapMs, capMs } = this.pace;
+    const gap = reduced || n < 2 ? 0 : Math.min(maxGapMs, Math.max(minGapMs, capMs / (n - 1)));
     let held = 0;   // the held kinds' waits so far, past the gap each replaces
     let run = 0;   // the longest hold in the kind under way
     rest.forEach((a, i) => {
       const prev = rest[i - 1];
       if (prev && prev.kind !== a.kind) { held += Math.max(0, run - gap); run = 0; }
       run = Math.max(run, a.holdMs);
-      a.dueMs = t + held + Math.min(CAP_MS, i * gap);
+      a.dueMs = t + held + Math.min(capMs, i * gap);
     });
     this.waiting = [...this.waiting, ...unseen, ...lines, ...rest].sort((a, b) => a.dueMs - b.dueMs);   // stable
   }
@@ -128,7 +148,7 @@ export class ArrivalQueue<T> {
    * never while a line shown is still being read. */
   private freeAt(): number {
     const last = this.waiting[this.waiting.length - 1];
-    return Math.max(this.heldUntil, last ? last.dueMs + Math.max(last.holdMs, MIN_GAP_MS) : -Infinity);
+    return Math.max(this.heldUntil, last ? last.dueMs + Math.max(last.holdMs, this.pace.minGapMs) : -Infinity);
   }
 }
 
