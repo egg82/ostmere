@@ -320,7 +320,8 @@ words, `design/redesign.md`, "Words"). Fits into: Offers (`systems.md`), the arr
   place until it is met (`Scavenging level 1/2`, never `flint`, so the find stays a surprise), then the input as
   have/need. Tapping a short need's row lights the cards that make it, and the ledger lines they feed, with no words
   added (`smoked 2/6` lights both smoke tasks). An input nothing will bring again (a pool used up, nothing in play
-  making it, no grant left) says so on its row (`flint 0/1, none left`). A tap still answers, at once and taking no time: the card glows red for a moment,
+  making it, no grant left) says so on its row (`flint 0/1, none left`). A wait on a part of the day reads as when it
+  opens (`Opens after dark`) until it comes; a count the game keeps (arrivals) reads as have/need like a store. A tap still answers, at once and taking no time: the card glows red for a moment,
   what stopped it (that need, skill or step row, or the countdown when that is all it shows) flashes red and swells
   in place, and no text shows. A busy card can't be tapped and looks it (its bar running, the card's surface
   flat), except a glowing step not yet done while the queue or a rule holds the hands: it stays ready, takes its glow,
@@ -671,8 +672,8 @@ After the end, a step (not work done again and again, which is the mix's) that i
 end of its foot, beside the tap target. A ready time is a promise, so it is drawn only while the page can see it kept:
 a rule on the store the card waits on that is on and lets go below the need stops the store short, and then the card
 shows its need and maker with no countdown and no `When ready`. A step waiting on a store the player has never been
-shown (the night) is a clock, not something to plan around: it draws its countdown alone, with no need line and no
-`When ready`, since what it opens must open in front of the player (queued, the morning's step would open the snares
+shown (the night) is a clock, not something to plan around: it draws when it opens and its countdown, with no
+have/need and no `When ready`, since what it opens must open in front of the player (queued, the morning's step would open the snares
 unseen, and the 2 AM test fails). It queues one tap of the card, held until that tap
 completes, and the card flies to the Rules tab. Queued, it stays as a quiet `in Next` mark, so the card keeps its size;
 the strip notes `next: {task}` (the first thing to give way on a phone). The first time it is on show it takes the one
