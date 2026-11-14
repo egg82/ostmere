@@ -116,6 +116,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's.
 | `app/client/gates/function-size.mjs` (client, run by `npm test`) | 80 lines | `function_size.json` |
 | `app/tests/test_suppressions.py` | counts of `# pyright: ignore`, `# type: ignore`, `# noqa`, `cast(`, `@ts-ignore`, `@ts-expect-error`, `as unknown as`; each names its rule and a ` -- reason` on its line | `suppressions.json` |
 | `app/tests/test_save_fields.py` | the fields of `Save`; a new engine part has its own state type (`systems.md`, "The engine") | `save_fields.json` |
+| `app/tests/opening/test_requires_shown.py` | every requirement of a tappable card drawn on its face | `card_faces.json` |
 | `app/tests/test_boundaries.py` | package-to-package imports of `ashfall_app`: a new edge fails until added to `ALLOWED` | none (the list is in the test) |
 | `app/tests/test_doc_citations.py` | backticked paths in this file and `systems.md`, and symbols in `systems.md`, must resolve; `<!--planned-->` after a reference skips it while its target is missing and fails once it exists; `<!--external-->` is never checked | none |
 | `app/tests/test_decision_citations.py` | a decision title quoted after `decisions.md` (or bare, closing a parenthesis) is an index entry or starts exactly one heading or bold lead in `docs/decisions/`; the index and those files' `##` headings agree | none |
