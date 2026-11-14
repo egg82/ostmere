@@ -174,18 +174,22 @@ The loader's checks name ids and fields, never text: every subject has a first s
 `routine` subject has a catch-up slot; misremember and correction come together, and only on a `routine` subject,
 never a `beat`, `person` or `worry` (owner, 2026-11-14: the journal never misleads about the story); a source names a
 cause the content writes, and no cause feeds two subjects; each `line` person has a person subject for each way that
-moves them; every `days` note shipped before this has a beat subject; every slot key has text. Each check is shown red
-on a planted chapter first. A cause is a source, so two people one outcome joins are two causes; only a `person` feeds
-from a lane and only a `crowd` from a way's mentions; a days note's beat subject holds the note in its first slot, and a
-beat that lands by either of two triggers has a subject for each.
+moves them; every slot key has text; no entry is a `days` page. Each check is shown red on a planted chapter first. A
+cause is a source, so two people one outcome joins are two causes; only a `person` feeds from a lane and only a
+`crowd` from a way's mentions; and a beat that lands by either of two triggers has a subject for each.
 
 ## What the page draws
 
-The page draws written days the way a notebook fills (owner, 2026-11-14): each day's notes in order under its day,
-days running on down a `days` page until it is full, then a new page, with the hands and sketches the slots name, in
-today's page look. A day starts a new page only when it would not fit on the current one. Opened carries every written day; Step carries the days it composed.
-`SavePresentation` gains the newest day the player has turned to, which only grows; a page past it is unread and
-dots the Journal button. The creatures and places sections, their unlocks and their numbers are unchanged.
+The page draws written days the way a notebook fills (owner, 2026-11-14): each day's notes in order under its day's
+heading, days running on down a `days` page until the next would not fit, then a new page, with the hands and
+sketches the slots name, in today's page look. A day is never split; one longer than a page has a page of its own.
+Whether a day fits is a fixed measure of its words, rows of the hand at the desktop page's width (`opening-screen.md`,
+"The days pages"), never the window, so the same days are the same pages on every device and width, and a page, once
+a later one is begun, never changes. Opened carries every written day; Step carries the days it composed.
+`SavePresentation.newest_day_read` is the newest day the player has turned to, which only grows; a day past it is
+unread and dots the Journal button. The creatures and places sections, their unlocks and their numbers are unchanged.
+The `days` entries and notes that were the days pages before the written days are retired through the release lock
+(`renames.toml`); a save keeps their unlocks, and their loader-made triggers go (engine `DESIGN.txt`, "Retired").
 
 ## What must stay true
 
@@ -242,6 +246,11 @@ dots the Journal button. The creatures and places sections, their unlocks and th
 - **Striking through the misremembered note on its old page.** A page changing after it is written is not how ink
   works, and it would be a new look; the correction is a later note.
 - **A count threshold for who is written up.** Who matters is authored per person (`decisions.md`, "People, as built").
+- **Paging the days by the window's height.** A phone and a desktop would break the same days onto different pages, a
+  page would reflow when the window changed, and a page once read could change; a fixed measure of the words keeps
+  every page put.
+- **Keeping the old `days` notes beside the written days.** Two sources for one section would draw each beat twice;
+  the beat subjects' first slots already hold those notes' words.
 
 ## Build order
 
