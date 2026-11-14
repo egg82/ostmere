@@ -1,6 +1,7 @@
 // The front page's crop of the scene (scene/crop.ts, focus.ts, light.ts): whole device pixels per art pixel at any pixel
-// ratio, the box covered, the focus held, and the hour's light that leaves the game's own scene (full day) untouched.
-import { place } from "../src/scene/crop";
+// ratio, the box covered, the focus held, and the hour's light that leaves the game's own scene (full day) untouched. A
+// phone's stage is covered at the smallest scale that does it: the art edge to edge, cut only top and bottom.
+import { COVER, place } from "../src/scene/crop";
 import { focusOf, CAMP } from "../src/scene/focus";
 import { daylight, duskWash, lightFilter } from "../src/scene/light";
 
@@ -26,6 +27,11 @@ for (const [dpr, bw, bh] of [[1, 1920, 800], [2, 1920, 800], [1, 3840, 1900], [2
   expect("a window of 112 in 224", place([224, 144], 1, ART, { focus: [270, 196], hold: [0.5, 0.5], window: [112, 72] }).scale, 2);
   expect("a window of 112 in 157", place([157, 100], 1, ART, { focus: [270, 196], hold: [0.5, 0.5], window: [112, 72] }).scale, 1);
   expect("a window wider than the box", place([60, 40], 1, ART, { focus: [270, 196], hold: [0.5, 0.5], window: [112, 72] }).scale, 1);
+}
+for (const [dpr, bw] of [[1, 390], [3, 390], [2, 360]] as const) {  // a phone's stage, 168 tall: across its width, no wider
+  const p = place([bw, 168], dpr, ART, { ...COVER, focus: CAMP });
+  expect(`edge to edge at ${bw}@${dpr}`, [p.left, Math.abs(p.width - bw) < 1e-9], [0, true]);
+  expect(`the room is covered top to bottom at ${bw}@${dpr}`, [p.top <= 0, p.top + p.height >= 168 - 1 / dpr], [true, true]);
 }
 {  // what a small picture centres on
   const at = (id: string) => ({ id, x: 10, y: 20, w: 34, h: 52 });

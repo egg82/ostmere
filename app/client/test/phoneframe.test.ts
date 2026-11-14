@@ -2,7 +2,8 @@
 // are the bottom bar, Tasks · Town · Rules · Book. Town holds the ledger and skills after the town's own rows; Book opens
 // the chronicle's sheet, whose Done page holds the finished cards (shown once there are some), on every frame. On a
 // landscape phone the ledger and skills stay off the tabs. The shown ask is one row whose way in names how many wait and
-// opens the sheet of them all, even for one. (The desktop's rail: railframe.test.ts.)
+// opens the sheet of them all, even for one. On a phone only the mix's bar and its name ("Main ▾") stay pinned; its
+// controls scroll under them. (The desktop's rail: railframe.test.ts.)
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { asksStep } from "../fixtures/asks";
@@ -57,6 +58,16 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
   one(".tabs [data-tab=\"book\"]").click();
   expect("opened again, the Book starts on the chronicle", [book.classList.contains("paged"), one("dialog.chronicle .completed").hidden], [false, true]);
   expect("Town stays the tab on: Book is a sheet", one(".tabs [data-tab=\"town\"]").getAttribute("aria-pressed"), "true");
+}
+{
+  const screen = screenOn(true, "full");
+  const mix = fixtureStep("full", 100).view.running_mix_id ?? "";
+  expect("phone: the mix's name beside the bar opens the Mixes list", one(".panel-top .hands-bar-row .hands-name").textContent, `${mix} ▾`);
+  expect("phone: the mix's controls scroll under the pinned bar", [one(".hands-rows > .hands-meta") !== null, one(".panel-top").querySelector(".hands-meta")], [true, null]);
+  media(false);
+  screen.root.remove();
+  screenOn(false, "full");
+  expect("landscape: Mixes ▾ before the name, in the strip", [one(".hands-mix .hands-meta .hands-name").textContent?.endsWith("▾"), one(".hands-mix .hands-meta .hands-mix-name").textContent], [true, mix]);
 }
 {
   screenOn(true, "start");

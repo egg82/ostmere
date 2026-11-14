@@ -1,7 +1,9 @@
 // The hands strip: one row that says what the hands are doing (docs/design/opening-screen.md, "The hands strip"). It
 // takes no room until the first mix's offer (game/shown.ts), then comes in through the arrival queue; until then each
 // card's own bar says what the hands do. Once drawn it stays. The mix row opens
-// bare, its bar and name; Edit, Mixes ▾ and "runs …" each come when they first mean something, then stay.
+// bare, its bar and name; Edit, Mixes ▾ and "runs …" each come when they first mean something, then stay. On a phone only
+// the bar and the name ("Main ▾", the way to the Mixes list) stay pinned; the row of controls under them scrolls with the
+// cards (`rows`).
 // Tapping: the card's name (its bar stays on the card). Idle: "idle". The first-mix offer: its cards and one button.
 // A running mix: its split bar (under it, while a card of the mix is stopped, the split that runs now: runningnow.ts), name, how long it runs, Edit; dimmed while a tap holds the hands; grey when it holds a
 // retired or completed card, shown as the grey bar, "stopped · {card} done" naming that card, and Edit. The mix drawn is the one running now: a rule's while its
@@ -48,13 +50,14 @@ export class Hands implements Part {
   readonly root = el("section", "hands");
   /** A row per lane run by rules, drawn under the strip (the screen places its root). */
   readonly lanes: LaneRows;
-  /** The chip's rule offer on a phone, under the pinned strip and scrolling with the cards (the screen places its root);
-   * on a wider screen it sits in the strip, under the mix row. */
+  /** A phone's mix controls and chip rule offer, under the pinned strip and scrolling with the cards (the screen places
+   * its root); on a wider screen they sit in the strip. */
   readonly rows = el("div", "hands-rows");
   private readonly label = el("span", "hands-label");
   private readonly text = el("span", "hands-text");
   private readonly offer = el("div", "hands-offer");
   private readonly mixRow = el("div", "hands-mix");
+  private readonly barRow = el("div", "hands-bar-row");
   private readonly name = el("button", "hands-name");
   private readonly nameText = el("span", "hands-mix-name");
   private readonly plan = el("button", "hands-name hands-plan");
@@ -97,7 +100,6 @@ export class Hands implements Part {
     this.plan.type = "button";
     this.edit.type = "button";
     setText(this.edit, text.get(UI.edit));
-    setText(this.name, `${text.get(UI.mixesHeading)} ▾`);
     this.edit.addEventListener("click", () => { tapFeedback(); this.ctx.actions.editMix(null); });
     this.name.addEventListener("click", () => { tapFeedback(); this.ctx.actions.openSelector(); });
     this.plan.addEventListener("click", () => {
@@ -112,7 +114,8 @@ export class Hands implements Part {
       b.addEventListener("click", () => { tapFeedback(); this.ctx.actions.openRules(null); });
     }
     this.meta.append(this.name, this.nameText, this.runs, this.until, this.status, this.edit);
-    this.mixRow.append(this.bar.root, this.meta);
+    this.barRow.append(this.bar.root);
+    this.mixRow.append(this.barRow, this.meta);
     this.handsRow.append(this.text, this.taskRule, this.plan);
     this.ruleOffer = new ChipOffer(ctx);
     this.lanes = new LaneRows(ctx, changed);
@@ -121,7 +124,13 @@ export class Hands implements Part {
     const body = el("div", "hands-body");
     body.append(this.handsRow, this.offer, this.mixRow, this.now.root);
     const phone = window.matchMedia(PHONE);
-    const seat = (): void => (phone.matches ? this.rows : body).append(this.ruleOffer.root);
+    const seat = (): void => {
+      if (phone.matches) this.barRow.append(this.nameText, this.name);
+      else this.meta.prepend(this.name, this.nameText);
+      (phone.matches ? this.rows : this.mixRow).append(this.meta);
+      (phone.matches ? this.rows : body).append(this.ruleOffer.root);
+      if (this.mix) this.drawName(this.mix.id);
+    };
     phone.addEventListener("change", seat);
     seat();
     this.root.append(this.label, body);
@@ -144,7 +153,7 @@ export class Hands implements Part {
     this.plan.hidden = mix !== null || offer !== null || (view.mixes.length === 0 && view.orders.length === 0);
     setText(this.plan, `${this.ctx.catalog.text.get(view.mixes.length > 0 ? UI.mixesHeading : UI.ordersHeading)} ▾`);
     this.offer.hidden = offer === null;
-    this.mixRow.hidden = mix === null;
+    this.mixRow.hidden = this.meta.hidden = mix === null;
     this.root.dataset.state = mix ? "mix" : offer ? "offer" : "hands";
     if (offer) this.drawOffer(offer);
     const switchEdit = markSwitch(this.ctx, view, mix !== null, { name: this.name, plan: this.plan, edit: this.edit });
@@ -162,12 +171,23 @@ export class Hands implements Part {
     const bar = stripBar(segmentSpecs(this.ctx, mix, view), mix.components.map((c) => c.share_bp), this.ctx.catalog.content.scales.bp);
     this.bar.set(bar.specs, bar.shares);
     const yielded = !greyed && view.cards.some((c) => c.run === "yielded");
-    this.root.classList.toggle("greyed", greyed);
-    this.root.classList.toggle("yielded", yielded);
+    for (const n of [this.root, this.rows]) {
+      n.classList.toggle("greyed", greyed);
+      n.classList.toggle("yielded", yielded);
+    }
     markStopped(this.ctx, mix, view, greyed, this.edit);
     setText(this.status, yielded ? this.ctx.catalog.text.get(UI.yielded) : greyed ? this.stopped(mix, view) : spentNote(this.ctx.catalog, view));
-    setText(this.nameText, mix.id);   // the player's name, as text
-    this.nameText.title = mix.id;
+    this.drawName(mix.id);
+  }
+
+  /** The running mix's name, the player's, as text; on a phone, once a mix is saved, the name itself is the way to the
+   * Mixes list ("Main ▾"), where elsewhere "Mixes ▾" sits before it. */
+  private drawName(id: string): void {
+    const phone = window.matchMedia(PHONE).matches;
+    setText(this.nameText, id);
+    this.nameText.title = id;
+    setText(this.name, `${phone ? id : this.ctx.catalog.text.get(UI.mixesHeading)} ▾`);
+    this.nameText.hidden = phone && this.mixesSeen;
   }
 
   /** The mix row's controls that have come: Edit (or wherever the switch cue points it), Mixes ▾, "runs …" (tick). */
@@ -212,7 +232,7 @@ export class Hands implements Part {
   private drawHands(view: View): void {
     const lane = view.lanes.find((l) => l.lane === "hands");
     const running = lane?.running_card ?? null;
-    this.root.classList.remove("greyed", "yielded");
+    for (const n of [this.root, this.rows]) n.classList.remove("greyed", "yielded");
     this.text.classList.toggle("idle", running === null);
     const index = handsRule(view);
     const rule = view.orders[index];

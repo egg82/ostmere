@@ -7,7 +7,7 @@
 import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
 import { depthOrder, fadeStep, isGlow, isManifest, passOf, pickGrade, gradeStep, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
-import { place, type Crop } from "./crop";
+import { COVER, place, type Crop } from "./crop";
 import { focusOf } from "./focus";
 import { duskWash, lightFilter } from "./light";
 import { reducedMotion } from "../ui/dom";
@@ -43,6 +43,7 @@ export class Scene {
   /** Resolves once every layer's image has loaded (or failed): a still picture is drawn after it. */
   readonly loaded: Promise<void>;
   private crop: Pick<Crop, "hold" | "window"> | null = null;
+  private cover = false;   // the box asks to be covered (game.css's --cover: a phone's stage)
   private fixed: [number, number] | null = null;
   private day = 1;
   private gradeId = "";
@@ -161,7 +162,7 @@ export class Scene {
       this.composeBase(baseCtx, frontBaseCtx);
       this.baseDirty = false;
       this.shownDirty = true;
-      if (this.crop && !this.fixed) this.fit();
+      if ((this.crop || this.cover) && !this.fixed) this.fit();
     }
     this.chooseGrade(t);
     if (this.fade < 1) {
@@ -262,8 +263,10 @@ export class Scene {
     const [w, h] = this.manifest.size;
     if (!box) return;
     const dpr = window.devicePixelRatio || 1;
-    if (this.crop) { this.fitCropped(box, dpr); return; }
     const style = getComputedStyle(box);
+    this.cover = style.getPropertyValue("--cover").trim() === "1";
+    if (this.crop || this.cover) { this.fitCropped(box, dpr, this.crop ?? COVER); return; }
+    Object.assign(this.canvas.style, { left: "", top: "" });
     const bw = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - FRAME_PX;
     // A box that takes the art's own height (the phone stage) sets only its width.
     const byWidth = style.getPropertyValue("--by-width").trim() === "1";
@@ -279,17 +282,16 @@ export class Scene {
   /** The front canvas lies exactly over the first: its size and, in a crop, its place. */
   private followCanvas(): void {
     const { width, height, left, top } = this.canvas.style;
-    Object.assign(this.front.style, { width, height });
-    if (left || top) Object.assign(this.front.style, { left, top });
+    Object.assign(this.front.style, { width, height, left: left || "0px", top: top || "0px" });
   }
 
-  /** Place the canvas so the box shows the cropped part of the art, at whole device pixels per art pixel. */
-  private fitCropped(box: HTMLElement, dpr: number): void {
-    if (!this.crop || box.clientWidth === 0) return;
+  /** Place the canvas so the box shows the cropped part of the art: at whole device pixels per art pixel, or covering it. */
+  private fitCropped(box: HTMLElement, dpr: number, crop: Pick<Crop, "hold" | "window" | "cover">): void {
+    if (box.clientWidth === 0) return;
     const shown = this.layers.filter((d) => d.alpha > 0 && d.image.complete).map(({ layer, image }) => ({
       id: layer.id, x: layer.x, y: layer.y, w: image.naturalWidth, h: image.naturalHeight,
     }));
-    const placed = place([box.clientWidth, box.clientHeight], dpr, this.manifest.size, { ...this.crop, focus: this.fixed ?? focusOf(shown) });
+    const placed = place([box.clientWidth, box.clientHeight], dpr, this.manifest.size, { ...crop, focus: this.fixed ?? focusOf(shown) });
     Object.assign(this.canvas.style, {
       width: `${placed.width}px`, height: `${placed.height}px`, left: `${placed.left}px`, top: `${placed.top}px`,
     });

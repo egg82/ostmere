@@ -168,15 +168,17 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .hands-name:not(:disabled):hover { box-shadow: inset 0 0 0 1px var(--ink-dim); }
 .hands-name:disabled { cursor: default; }
 .hands-meta { display: flex; align-items: center; gap: .6rem; margin-top: calc(.3rem + 4px); font-size: var(--t-meta); }
+.hands-bar-row { display: flex; align-items: center; gap: .6rem; }
+.hands-bar-row > :first-child { flex: 1 1 auto; min-width: 0; }   /* the bar and its legend; a phone's mix name beside them */
 .hands-next { flex: 0 1000000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-meta); color: var(--ink); }   /* the queue's head: the first to give way */
 .hands-runs { flex: none; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* "runs 1 h 29 m" never breaks mid-value */
 .hands-rule { flex: 0 1 auto; min-width: 0; min-height: 2.2rem; padding: 0 .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: inherit; font-size: var(--t-meta); color: var(--ink); background: transparent; border: 0; cursor: pointer; }   /* where the running rule lets go: a link to it in the Rules tab */
 .hands-status { flex: 1 1000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-dim); }   /* one line; the queue's head (.hands-next) shrinks before it, and it before the mix's name: shrink factors far apart in size, so the name, last to give way, loses not even a sub-pixel (that alone draws its ellipsis); hidden while covered, the status still holds its width */
-.hands.yielded .hands-status { flex: 1 0 auto; }   /* the short label never gives way: the name and the queue's head do */
-.hands.yielded :is(.hands-runs, .hands-rule) { display: none; }   /* a paused mix has nothing to run out: the name gets the room */
+:is(.hands, .hands-rows).yielded .hands-status { flex: 1 0 auto; }   /* the short label never gives way: the name and the queue's head do */
+:is(.hands, .hands-rows).yielded :is(.hands-runs, .hands-rule) { display: none; }   /* a paused mix has nothing to run out: the name gets the room */
 :is(.hands.yielded, .hands.greyed) .share-track, :is(.hands.yielded, .hands.greyed) .share-key-item::before { filter: saturate(.15) brightness(.6); }   /* the hues, never the legend's words */
 .hands.greyed .hands-mix-name { color: var(--ink-dim); }
-.hands.greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
+:is(.hands, .hands-rows).greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
 /* the Asks list (ui/asks.ts, ui/asknode.ts): one ask in a slot of fixed height, the rest counted; someone asking, set
    apart from the routine by the ember outline on its warm ground, the question in the story's size; no Dismiss */
 .asks { padding: .6rem 0 .75rem; border-bottom: 1px solid var(--rule); }
@@ -747,8 +749,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .end-dock { bottom: var(--bar-h); }
   .sheet[open]:not(.journal-sheet) { margin: auto 0 0; width: 100%; max-width: none; max-height: calc(100dvh - 2.5rem); border-radius: 6px 6px 0 0; }
   .sheet > .sheet-actions { padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
-  .town-tab { display: flex; flex-direction: column; gap: 1rem; }
-  .view-title { display: none; }   /* the bottom bar names the tab */
+  .view-title { font-size: var(--t-story); }
   /* the shown ask, one row of fixed height: who, the question, how many wait; a tap anywhere on it opens the sheet */
   .asks { padding: .6rem 0 0; border-bottom: 0; }
   .asks-head { display: none; }
@@ -774,14 +775,19 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .stage { height: auto; display: flex; flex-direction: column; }
   .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; padding-inline: 1rem; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
   .stage > .aim { padding-inline: 1rem; }
-  .scene-box { position: relative; inset: auto; flex: none; height: var(--scene-h); padding: 0 1rem; }   /* the art fits a fixed room, so the stage never grows for it */
+  .scene-box { position: relative; inset: auto; flex: none; height: var(--scene-h); padding: 0; overflow: hidden; --cover: 1; }   /* the art covers a fixed room edge to edge (Scene.fit), held around what the view shows, so the stage never grows for it */
+  .scene-frame { position: absolute; inset: 0; border: 0; box-shadow: none; overflow: hidden; }   /* only the desktop's scene keeps a frame */
+  .scene-art { position: absolute; }
   .stage > .strip { flex: none; padding: .35rem 1rem; }
   .strip > .strip-room { height: calc(var(--strip-rows) * 1.35em); }   /* rows of the story's size: every story line fits it (tests/opening/test_strip_rows.py) */
   .lines li + li { margin-top: 0; }   /* three rows hold three short lines; the older are dimmer */
   .panel-top { padding-block: .3rem .4rem; }
   .hands { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .hands .share-key { margin-top: .2rem; }
-  .hands-meta { margin-top: .3rem; }
+  .hands-rows > .hands-meta { margin-top: .3rem; }   /* the mix's controls, under the pinned bar */
+  .panel-top:has(> .hands.held) ~ .hands-rows > .hands-meta { visibility: hidden; }   /* they arrive with the strip */
+  .hands-bar-row :is(.hands-name, .hands-mix-name) { flex: 0 1 auto; max-width: 45%; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 2rem; }   /* "Main ▾" beside the bar: a long name truncates */
+  .hands-bar-row .hands-name { min-height: 0; padding-block: .375rem; margin-block: -.375rem; }   /* its reach is 2.75rem tall (44 px) in a row 2rem tall */
   .hands-label { display: none; }   /* the bar is the player's: the lanes below name their people */
   .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, so nothing leaves the screen */
   .chip { flex: none; white-space: nowrap; }
@@ -810,11 +816,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .game[data-tab="town"] .left { display: none; }
   .game[data-tab="town"] .panel { grid-column: 1 / -1; padding: 1.4rem 2rem 1.6rem; }
   .game[data-tab="town"] .panel > :not(.card-area, .tabs, .panel-foot, .banners) { display: none; }
-  /* the view's title and Change share its first row; the town's people and lanes span it below */
-  .town-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem 1rem; max-width: 64rem; }
-  .town-tab > .lane-rows, .town-tab .town, .town-tab .town > .hands-body { display: contents; }
-  .town-tab > :not(.view-title, .lane-rows), .town-tab .lane-rows > :not(.town), .town-tab .town-people { grid-column: 1 / -1; }
-  .town-tab .town .hands-row { grid-row: 1; grid-column: 2; }
+  .town-tab { max-width: 64rem; }
   .town-people { gap: 0; }
   .town-tab .town-people .town-person { grid-template-columns: 2.5rem minmax(6rem, 10rem) minmax(0, 1fr) minmax(6rem, 9rem); grid-template-areas: "face who split track" "face who now track"; column-gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
   .town-people .town-who { flex-direction: column; align-items: flex-start; gap: .1rem; }
@@ -902,6 +904,12 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 /* The town (ui/townstrip.ts, ui/townedit.ts): under the hands strip one block per person present: their time as a bar of
    the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
    .hands, .hands-label, .lane-bar, .card-fill; new: the person block and its segments. */
+/* the Town tab: its title and Change share the first row; the town's people and lanes, then a phone's ledger and skills,
+   span it below */
+.town-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem 1rem; }
+.town-tab > .lane-rows, .town-tab .town, .town-tab .town > .hands-body { display: contents; }
+.town-tab > :not(.view-title, .lane-rows), .town-tab .lane-rows > :not(.town), .town-tab .town-people { grid-column: 1 / -1; }
+.town-tab .town .hands-row { grid-row: 1; grid-column: 2; }
 .town { display: block; min-height: 0; }
 /* a person: face and who, then their split, the split that runs now, and the card they work */
 .town-people .town-person { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "face who" "split split" "now now" "track track"; column-gap: .6rem; align-items: center; }
