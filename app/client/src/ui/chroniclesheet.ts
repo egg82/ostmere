@@ -86,6 +86,16 @@ export class ChronicleSheet {
   add(entry: Entry): void {
     this.now = Math.max(this.now, entry.at);
     this.entries = added(this.entries, entry);
+    this.redraw();
+  }
+
+  /** `entry` in the place of `old`: a day's mention reworded as it counts more (game/people.ts). */
+  replace(old: Entry, entry: Entry): void {
+    this.entries = this.entries.map((e) => (e === old ? entry : e));
+    this.redraw();
+  }
+
+  private redraw(): void {
     if (!this.root.open) return;
     const { scrollTop } = this.list;
     this.draw();

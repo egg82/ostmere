@@ -576,6 +576,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .chapter-item { white-space: nowrap; }   /* a figure never breaks inside: "Firecraft 1 → 2" */
 .chapter-sep { color: var(--ink-dim); }
 [data-section="rules"] .chapter-item { display: block; white-space: normal; }   /* a rule is a sentence of its own */
+.chapter-people { margin: .1rem 0 0; padding: .6rem .3rem 0 0; border-top: 1px solid var(--rule); }   /* who came and went */
+.chapter-sec { margin: 0 0 .35rem; font-size: var(--t-meta); font-weight: 400; color: var(--ink-dim); }
 .chapter-link { margin: -.45rem 0; padding: .45rem 0; font: inherit; color: inherit; background: none; border: 0; text-decoration: underline; text-underline-offset: .2em; text-decoration-color: var(--ink-dim); cursor: pointer; }
 .chapter-link:hover { color: var(--ink-hi); }
 .chapter-link:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }

@@ -1,6 +1,6 @@
 // Content indexed by id, with the text and number formatting that go with it: what every part of the screen
 // is handed, so no part reaches into the raw content lists.
-import type { CardInfo, ChipInfo, LaneInfo, LineCause, NodeInfo, OfferInfo, OrderCard, Content, SideInfo, SkillInfo, StoreInfo, ThreatInfo, View } from "../api/types";
+import type { CardInfo, ChipInfo, LaneInfo, LineCause, LineInfo, Mention, NodeInfo, OfferInfo, OrderCard, Content, SideInfo, SkillInfo, StoreInfo, ThreatInfo, View } from "../api/types";
 import { Format } from "./format";
 import type { LineKind } from "./chronicle";
 import { Text } from "./text";
@@ -22,8 +22,7 @@ export class Catalog {
   readonly offers: Map<string, OfferInfo>;
   readonly sides: Map<string, SideInfo>;
   readonly threats: Map<string, ThreatInfo>;
-  private readonly lineKinds: Map<string, LineKind>;
-  private readonly lineCauses: Map<string, LineCause | null>;
+  private readonly lines: Map<string, LineInfo>;
   readonly features: Map<string, string | null>;
   /** The store the Camp bar is drawn from; never a ledger line (CONTRACT.txt). */
   readonly campStore: string | null;
@@ -45,8 +44,7 @@ export class Catalog {
     this.offers = byId(content.offer_infos, "offer");
     this.sides = byId(content.side_infos, "side");
     this.threats = byId(content.threat_infos, "threat");
-    this.lineKinds = new Map(content.line_infos.map((l) => [l.key, l.kind]));
-    this.lineCauses = new Map(content.line_infos.map((l) => [l.key, l.cause]));
+    this.lines = byId(content.line_infos, "key");
     this.features = new Map(content.feature_infos.map((f) => [f.feature, f.hint_key]));
     for (const c of content.order_cards) if (c.chip === null) this.orderCards.set(c.store, [...this.orderCardsFor(c.store), c]);
     this.chipCards = content.order_cards.filter((c) => c.chip !== null);
@@ -61,14 +59,24 @@ export class Catalog {
 
   /** How the chronicle sets a line: its kind, authored with its text. A key with none is a content the server's checks refused. */
   lineKind(key: string): LineKind {
-    const kind = this.lineKinds.get(key);
+    const kind = this.lines.get(key)?.kind;
     if (kind === undefined) throw new Error(`no kind for line ${key}`);
     return kind;
   }
 
   /** What writes a line, read from where its key is authored (CONTRACT.txt, "Line causes"); null: nothing does. */
   lineCause(key: string): LineCause | null {
-    return this.lineCauses.get(key) ?? null;
+    return this.lines.get(key)?.cause ?? null;
+  }
+
+  /** A mention line's lane and way (CONTRACT.txt, "PEOPLE"); null for any other line. */
+  mention(key: string): Mention | null {
+    return this.lines.get(key)?.mention ?? null;
+  }
+
+  /** The line tells a person told by a line joining or leaving (CONTRACT.txt, "PEOPLE"). */
+  tellsPerson(key: string): boolean {
+    return this.lines.get(key)?.person === true;
   }
 
   label(key: string | null | undefined): string {
