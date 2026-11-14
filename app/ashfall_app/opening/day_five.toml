@@ -380,11 +380,22 @@ joins = [{ lane = "n3", mix = "town:camp", card = "n3_forage" }, { lane = "n4", 
 id = "s_n3_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n3", way = "joined" }
+first = { keys = ["j_n3_first"] }
+catchup = { keys = ["j_n3_catchup"] }
+late = { keys = ["j_n3_late"] }
 
 [[subjects]]
 id = "s_n4_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n4", way = "joined" }
+first = { keys = ["j_n4_first"] }
+catchup = { keys = ["j_n4_catchup"] }
+
+[[subjects]]
+id = "s_ridge"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_ridge" }
+first = { keys = ["j_ridge_first"] }
 
 [[standing]]
 id = "n3_eating"
@@ -574,4 +585,11 @@ store_night_6 = "night"
 action_night_6 = "Night"
 l_night_6 = "you bury the coals. everyone sits closer."
 aim_pair = "build a bay for the two of them."
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_n3_first = "a woman with a sack on her shoulder asked to share the fire. {n3}. she does the asking for both of them"
+j_n3_catchup = "{n3} came, with an old man"
+j_n3_late = "{n3} keeps seed in a cloth. counts it out and ties it shut again"
+j_n4_first = "the old man with her is {n4}. one leg doesn't bend. lucy brought him a stool. he sat down on it without a look. five at the pot"
+j_n4_catchup = "{n4}, with a leg that won't bend"
+j_ridge_first = "first thing, grey shapes sat in a row along the ridge, facing camp. lucy looked up too. nothing there"
 # ---------- end of lines ----------
