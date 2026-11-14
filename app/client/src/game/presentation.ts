@@ -1,5 +1,6 @@
 // What the page keeps only grows (CONTRACT.txt, AccountPresentation and SavePresentation), so two copies of it join by union: flags OR
-// together, a list is the first's entries then the second's that are new, and of two chapters the later return's. The
+// together, a list is the first's entries then the second's that are new, of two chapters the later return's, and of two
+// newest days read the later. The
 // server does the same on every write; the page does it to take the server's answer without losing a keep made while
 // that write was in flight.
 import type { AccountPresentation, Chapter, SavePresentation } from "../api/types";
@@ -32,16 +33,20 @@ export function mergeSavePresentation(own: SavePresentation, more: SavePresentat
     lesson_ends: union(own.lesson_ends, more.lesson_ends, (e) => e.lesson),
     visits: union(own.visits ?? [], more.visits ?? [], (v) => String(v.left)).slice(-MAX_VISITS),   // an older pod answers none
     chapter: later(own.chapter ?? null, more.chapter ?? null),
+    newest_day_read: higher(own.newest_day_read ?? null, more.newest_day_read ?? null),
   };
 }
 
+const higher = (own: number | null, more: number | null): number | null => (more !== null && (own === null || more > own) ? more : own);
+
 const later = (own: Chapter | null, more: Chapter | null): Chapter | null => (more !== null && (own === null || more.left > own.left) ? more : own);
 
-/** What a save's write sends: `visits` and `chapter` only once one is kept, since a build from before them refuses a
- * body naming it. */
+/** What a save's write sends: `visits`, `chapter` and `newest_day_read` only once one is kept, since a build from before
+ * them refuses a body naming it. */
 export function sendableSave(p: SavePresentation): SavePresentation {
-  const { visits, chapter, ...older } = p;
-  return { ...older, ...((visits ?? []).length > 0 ? { visits } : {}), ...(chapter ? { chapter } : {}) } as SavePresentation;
+  const { visits, chapter, newest_day_read: day, ...older } = p;
+  return { ...older, ...((visits ?? []).length > 0 ? { visits } : {}), ...(chapter ? { chapter } : {}),
+    ...(day !== null && day !== undefined ? { newest_day_read: day } : {}) } as SavePresentation;
 }
 
 /** What a write sends: `reminder_mentioned` only once it is set, since a build from before reminders refuses a body

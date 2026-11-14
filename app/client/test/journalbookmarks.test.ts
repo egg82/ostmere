@@ -78,7 +78,8 @@ const open = (r: Rig): Rig => { r.open(); return r; };
   bookmarks(r)[1]!.click();
   expect("nothing sent from a bookmark", [r.sent.length, r.asked, requests.length], [0, { decided: 0, dry: 0 }, 0]);
   r.close().click();
-  expect("one write; the pages turned to are read", [r.sent.length, [...(r.sent[0]?.journal_read ?? [])].sort()], [1, [...NOTES_D, ...NOTES_A, NOTE_B].sort()]);
+  expect("one write of book notes, one of the day; the pages turned to are read", [r.sent.length, [...(r.sent[0]?.journal_read ?? [])].sort(), r.sent.at(-1)?.newest_day_read],
+    [2, [...NOTES_A, NOTE_B].sort(), 0]);
 }
 
 {  // a section's first page written while the sheet is open adds its bookmark in order

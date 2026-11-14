@@ -1,18 +1,41 @@
 // The journal as the page reads it (docs/design/opening-screen.md, "The journal"; CONTRACT.txt, "JOURNAL"): which pages
 // and notes are written, what is unread, which page the sheet opens on, the numbers rows and the seeded layout. Pure:
-// every fact is Content.journal, view.unlocked or view.fights, and what has been read is the account's (Keeps).
-import type { EntryInfo, Fight, NoteInfo, View } from "../api/types";
+// the days pages are the written days the save served (game/days.ts), every other page is Content.journal and
+// view.unlocked, the numbers are view.fights, and what has been read is the account's notes and the save's newest day
+// (Keeps).
+import type { EntryInfo, Fight, Hand, JournalDay, View } from "../api/types";
 import type { Catalog } from "./catalog";
+import { dayPages } from "./days";
 import { fightOf, oddsWords, seeded } from "./fights";
 import { UI } from "./text";
 
-/** A page written: its entry, and the notes written on it so far, in content order. */
-export interface Page {
-  entry: EntryInfo;
-  notes: NoteInfo[];
+/** A note drawn on a page: `id` is a book note's id, or a day's note's day and place; its words are the text `key`. A
+ * days page's note names the day it was written on. */
+export interface PageNote {
+  id: string;
+  key: string;
+  hand: Hand;
+  sketch: string | null;
+  day: number | null;
 }
 
-export type Section = EntryInfo["section"];
+/** A page written: a days page (its id the first day on it), or an entry's page with the notes written on it so far,
+ * in content order. */
+export interface Page {
+  id: string;
+  section: Section;
+  sketch: string | null;
+  runners: string[];
+  notes: PageNote[];
+}
+
+export type Section = "days" | EntryInfo["section"];
+
+/** What the player has read: the account's book notes, and the newest written day turned to in this save. */
+export interface Reading {
+  note(id: string): boolean;
+  newestDay: number | null;
+}
 
 /** The book's sections in the order it runs, each with the text key of its bookmark. */
 export const SECTIONS: ReadonlyArray<{ section: Section; key: string }> = [
@@ -21,46 +44,55 @@ export const SECTIONS: ReadonlyArray<{ section: Section; key: string }> = [
   { section: "places", key: UI.journalPlaces },
 ];
 
-/** Every entry view.unlocked holds, section by section (days, creatures, places) and in content order within one, each
+/** The days pages, then every entry view.unlocked holds, creatures then places and in content order within one, each
  * with the notes it holds (a note not unlocked keeps no room). */
-export function pagesOf(catalog: Catalog, view: View): Page[] {
+export function pagesOf(catalog: Catalog, view: View, days: readonly JournalDay[]): Page[] {
   const journal = catalog.content.journal;
   if (!journal) return [];
-  const written = journal.entries
-    .filter((e) => catalog.unlocked(view, "entry", e.entry))
-    .map((entry) => ({ entry, notes: entry.notes.filter((n) => catalog.unlocked(view, "note", n.note)) }));
-  return SECTIONS.flatMap(({ section }) => written.filter((p) => p.entry.section === section));
+  const written: Page[] = journal.entries
+    .filter((e) => e.section !== "days" && catalog.unlocked(view, "entry", e.entry))
+    .map((e) => ({ id: e.entry, section: e.section, sketch: e.sketch, runners: e.runners, notes: e.notes
+      .filter((n) => catalog.unlocked(view, "note", n.note))
+      .map((n) => ({ id: n.note, key: n.note, hand: n.hand, sketch: n.sketch, day: null })) }));
+  return [...daysPages(catalog, days), ...SECTIONS.flatMap(({ section }) => written.filter((p) => p.section === section))];
+}
+
+function daysPages(catalog: Catalog, days: readonly JournalDay[]): Page[] {
+  return dayPages(days, (key) => catalog.text.get(key)).map((onPage) => ({
+    id: `days:${onPage[0]!.day}`, section: "days", sketch: null, runners: [],
+    notes: onPage.flatMap((d) => d.day_notes.map((n, i) => ({ id: `${d.day}.${i}`, key: n.key, hand: n.hand, sketch: n.sketch, day: d.day }))),
+  }));
 }
 
 /** The sections that have a page written, in the book's order: one bookmark each. */
 export function bookmarksOf(pages: Page[]): Array<{ section: Section; key: string }> {
-  return SECTIONS.filter(({ section }) => pages.some((p) => p.entry.section === section));
+  return SECTIONS.filter(({ section }) => pages.some((p) => p.section === section));
 }
 
-/** The page a section's bookmark turns to: its first page holding an unread note, else its latest page; -1 for a
+/** Whether the page holds something unread: a book note not read, or a day after the newest day turned to. */
+export function isUnread(page: Page, read: Reading): boolean {
+  return page.notes.some((n) => (n.day === null ? !read.note(n.id) : read.newestDay === null || n.day > read.newestDay));
+}
+
+/** The page a section's bookmark turns to: its first page holding something unread, else its latest page; -1 for a
  * section with no page. */
-export function bookmarkPage(pages: Page[], section: Section, read: (note: string) => boolean): number {
-  const own = pages.flatMap((p, i) => (p.entry.section === section ? [i] : []));
-  return own.find((i) => pages[i]!.notes.some((n) => !read(n.note))) ?? own.at(-1) ?? -1;
+export function bookmarkPage(pages: Page[], section: Section, read: Reading): number {
+  const own = pages.flatMap((p, i) => (p.section === section ? [i] : []));
+  return own.find((i) => isUnread(pages[i]!, read)) ?? own.at(-1) ?? -1;
 }
 
-/** The book is a button from the first entry on; until then it is the plain text of any feature with a label. */
+/** The book is a button from its first page on; until then it is the plain text of any feature with a label. */
 export function isButton(catalog: Catalog, view: View, pages: Page[]): boolean {
   const journal = catalog.content.journal;
   return journal !== null && catalog.unlocked(view, "feature", journal.feature) && pages.length > 0;
 }
 
-/** The notes written and not yet read, in page order. */
-export function unreadOf(pages: Page[], read: (note: string) => boolean): string[] {
-  return pages.flatMap((p) => p.notes.map((n) => n.note)).filter((n) => !read(n));
-}
-
-/** The page the sheet opens on: the first with an unread note, else the page last shown in this page session, else the
- * first. */
-export function openingPage(pages: Page[], read: (note: string) => boolean, last: string | null): number {
-  const unread = pages.findIndex((p) => p.notes.some((n) => !read(n.note)));
+/** The page the sheet opens on: the first holding something unread, else the page last shown in this page session,
+ * else the first. */
+export function openingPage(pages: Page[], read: Reading, last: string | null): number {
+  const unread = pages.findIndex((p) => isUnread(p, read));
   if (unread >= 0) return unread;
-  return Math.max(0, pages.findIndex((p) => p.entry.entry === last));
+  return Math.max(0, pages.findIndex((p) => p.id === last));
 }
 
 /** A runner's numbers in the fight card's words (CONTRACT.txt, "FIGHTS"): `odds`, the two strengths named in `vs`, and
@@ -89,10 +121,10 @@ function rowOf(catalog: Catalog, fight: Fight): NumbersRow {
   };
 }
 
-/** The entry's numbers, in runners order, one row for each runner view.fights holds (a runner it does not hold draws
+/** The page's numbers, in runners order, one row for each runner view.fights holds (a runner it does not hold draws
  * nothing). Known means fought above 0, read off the view and stored nowhere. */
-export function numbersOf(catalog: Catalog, view: View, entry: EntryInfo): NumbersRow[] {
-  return entry.runners.flatMap((r) => { const f = fightOf(view, r); return f ? [rowOf(catalog, f)] : []; });
+export function numbersOf(catalog: Catalog, view: View, page: Page): NumbersRow[] {
+  return page.runners.flatMap((r) => { const f = fightOf(view, r); return f ? [rowOf(catalog, f)] : []; });
 }
 
 /** One page's seeded draws (opening-screen.md, "Seeded per entry"). */

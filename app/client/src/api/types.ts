@@ -32,6 +32,7 @@ export type GoalRow = S["GoalRow"];
 export type FightInfo = S["FightInfo"];
 export type Games = S["Games"];
 export type EntryInfo = S["EntryInfo"];
+export type Hand = S["Hand"];
 export type JoinRequest = S["JoinRequest"];
 export type Joined = S["Joined"];
 /** How a join treats this browser's own games: plain (ask first when it has some), move them, or keep them where they are. */
@@ -48,6 +49,7 @@ export type LogLine = S["LogLine"];
 export type Me = S["Me"];
 export type MergeSummary = S["MergeSummary"];
 export type NoteInfo = S["NoteInfo"];
+export type JournalDay = S["JournalDay"];
 export type Mix = S["Mix"];
 export type Need = S["Need"];
 export type NewSave = S["NewSave"];

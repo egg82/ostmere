@@ -4,18 +4,21 @@
 //   journal:       the book on, combat on, two entries written. The first (creatures) has three notes (one pencil with
 //                  a drawing beside it) and names the fight card, fought 4 times; the second (places) has one pencil
 //                  note and names the standing fight, never fought. All four notes are unread.
-//   More pages, written when `journalView` is handed their notes: PAGE_C (a second creatures page, no numbers) and
-//   PAGE_D (a days page with no sketch and no numbers, two notes). Content order is B, A, C, D, so page order
-//   (days, creatures, places) is D, A, C, B.
-//   journallesson: the same, with the journal's lesson still to run.
-//   journaldays:   the book with one days page written (no sketch, no numbers).
-//   journalall:    every page written: days, two creatures pages and a places page.
-import type { Content, Step, View } from "../src/api/types";
+//   More pages, written when `journalView` is handed their notes: PAGE_C (a second creatures page, no numbers). Content
+//   order is B, A, C, so page order (days, creatures, places) is the days pages, A, C, B.
+//   DAY_D: a written day (game day 0) of two notes, the step's journal_days on the phases below that have days.
+//   journallesson: the same as journal, with the journal's lesson still to run.
+//   journaldays:   the book with one written day: one days page.
+//   journalall:    every page written: one days page, two creatures pages and a places page.
+//   journalweeks:  WEEKS' written days and nothing else: several days pages, the newest day turned to READ_TO. Its
+//                  days are a short day, days that fill a page and break, a long gap then a day of catch-up notes, a
+//                  late addition, and a misremembering whose correction is pages later.
+import type { Content, JournalDay, Step, View } from "../src/api/types";
 import { fightsStep } from "./fights";
 import type { Kept } from "./steps";
 
-export type JournalPhase = "journal" | "journallesson" | "journaldays" | "journalall";
-export const JOURNAL_PHASES: readonly JournalPhase[] = ["journal", "journallesson", "journaldays", "journalall"];
+export type JournalPhase = "journal" | "journallesson" | "journaldays" | "journalall" | "journalweeks";
+export const JOURNAL_PHASES: readonly JournalPhase[] = ["journal", "journallesson", "journaldays", "journalall", "journalweeks"];
 
 export function isJournal(phase: string): phase is JournalPhase {
   return (JOURNAL_PHASES as readonly string[]).includes(phase);
@@ -27,9 +30,29 @@ export const PAGE_B = "page_b";
 export const NOTES_A = ["note_a1", "note_a2", "note_a3"];
 export const NOTE_B = "note_b1";
 export const PAGE_C = "page_c";
-export const PAGE_D = "page_d";
 export const NOTE_C = "note_c1";
 export const NOTES_D = ["note_d1", "note_d2"];
+export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null })) };
+
+/** Placeholder words for WEEKS, in a diarist's voice (never shipped). */
+const WEEK_WORDS: Record<string, string> = {
+  rain: "Rain all day. Stayed in.",
+  roof: "Patched the roof over the north end with the last of the bark. It held through the night, mostly.",
+  roof2: "The roof again.",
+  well: "Found the old well past the birches. The water is cold and tastes of iron, but it is water and it is close.",
+  well2: "The well is good.",
+  fox: "A fox at the edge of the clearing at dusk. It watched the fire a long while before it went.",
+  fox_late: "Forgot to say: the fox had a white tip to its tail.",
+  count: "Counted the sacks in the store. Eleven, I think, and one half gone to damp.",
+  count_fix: "It was nine sacks, not eleven. I counted twice in the light.",
+  sick: "The cough is worse. Kept the fire high and slept by it.",
+  better: "Woke without the cough for the first time.",
+  catch_roof: "The roof came down in the wind and we put it up again.",
+  catch_well: "Lost the bucket down the well. Made another.",
+  catch_fox: "The fox took two of the hens.",
+  walk: "Walked the whole ridge to the far stones and back before dark, and saw nobody the whole way, not even smoke.",
+  frost: "First frost. The ground rang under the axe.",
+};
 
 const WORDS: Record<string, string> = {
   "feature.book": "Journal",
@@ -40,6 +63,7 @@ const WORDS: Record<string, string> = {
   note_c1: "Smaller than the first, and shyer.",
   note_d1: "The first night was the long one.",
   note_d2: "We kept the fire up until it was light.",
+  ...Object.fromEntries(Object.entries(WEEK_WORDS).map(([k, t]) => [`wk_${k}`, t])),
 };
 
 /** The fixture content with the book (a feature with a label) and a journal of two entries. */
@@ -55,7 +79,6 @@ export function withJournal(content: Content): Content {
         { entry: PAGE_A, section: "creatures", sketch: "sketch_a", runners: ["hunt"], notes: [
           { note: "note_a1", hand: "ink", sketch: null }, { note: "note_a2", hand: "pencil", sketch: "note_sketch" }, { note: "note_a3", hand: "ink", sketch: null }] },
         { entry: PAGE_C, section: "creatures", sketch: "sketch_c", runners: [], notes: [{ note: NOTE_C, hand: "ink", sketch: null }] },
-        { entry: PAGE_D, section: "days", sketch: null, runners: [], notes: NOTES_D.map((note) => ({ note, hand: "ink" as const, sketch: null })) },
       ],
     },
   };
@@ -64,7 +87,7 @@ export function withJournal(content: Content): Content {
 /** The view with the journal written: the book on, entries and notes unlocked (`notes` of them; an entry with one of its notes). */
 export function journalView(base: View, notes: string[] = [...NOTES_A, NOTE_B]): View {
   const holds = (page: string[]): boolean => notes.some((n) => page.includes(n));
-  const entries = [[PAGE_A, NOTES_A], [PAGE_B, [NOTE_B]], [PAGE_C, [NOTE_C]], [PAGE_D, NOTES_D]].flatMap(([id, page]) => (holds(page as string[]) ? [id as string] : []));
+  const entries = [[PAGE_A, NOTES_A], [PAGE_B, [NOTE_B]], [PAGE_C, [NOTE_C]]].flatMap(([id, page]) => (holds(page as string[]) ? [id as string] : []));
   return {
     ...base,
     fights: base.fights.map((f) => (f.runner === "raiders" ? { ...f, fought: 0, lost: 0 } : f)),
@@ -75,6 +98,31 @@ export function journalView(base: View, notes: string[] = [...NOTES_A, NOTE_B]):
 
 export function journalStep(phase: JournalPhase, at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fightsStep("fight", at, kept, decisions);
-  const notes = phase === "journaldays" ? NOTES_D : phase === "journalall" ? [...NOTES_D, ...NOTES_A, NOTE_C, NOTE_B] : undefined;
-  return { ...base, view: journalView(base.view, notes) };
+  const notes = phase === "journaldays" || phase === "journalweeks" ? [] : phase === "journalall" ? [...NOTES_A, NOTE_C, NOTE_B] : undefined;
+  const days = phase === "journalweeks" ? WEEKS : phase === "journaldays" || phase === "journalall" ? [DAY_D] : [];
+  return { ...base, view: journalView(base.view, notes), journal_days: days };
 }
+
+/** journalweeks' newest day turned to: the days after it are unread. */
+export const READ_TO = 4;
+
+
+const note = (key: string, slot: JournalDay["day_notes"][number]["slot"] = "first", hand: "ink" | "pencil" = "ink", sketch: string | null = null) =>
+  ({ subject: `s_${key}`, slot, key: `wk_${key}`, hand, sketch });
+
+/** Days 0 to 15 with gaps: a short day (1), days that fill the first page, a late addition (day 6 for day 5), a
+ * misremembering (day 7) corrected on day 14, a gap from day 9 to 12 caught up on day 13. */
+export const WEEKS: JournalDay[] = [
+  { day: 0, day_notes: [note("roof"), note("well", "first", "ink", "note_sketch")] },
+  { day: 1, day_notes: [note("rain")] },
+  { day: 2, day_notes: [note("roof2", "repeat"), note("well2", "repeat", "pencil")] },
+  { day: 3, day_notes: [note("walk")] },
+  { day: 4, day_notes: [note("sick")] },
+  { day: 5, day_notes: [note("fox"), note("better")] },
+  { day: 6, day_notes: [note("fox_late", "late", "pencil")] },
+  { day: 7, day_notes: [note("count", "misremember")] },
+  { day: 8, day_notes: [note("walk", "repeat"), note("rain", "repeat")] },
+  { day: 13, day_notes: [note("catch_roof", "catchup"), note("catch_well", "catchup"), note("catch_fox", "catchup"), note("frost")] },
+  { day: 14, day_notes: [note("count_fix", "correction", "pencil")] },
+  { day: 15, day_notes: [note("rain", "repeat")] },
+];

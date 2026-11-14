@@ -43,7 +43,7 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
   const updater = new SelfUpdate(() => document.querySelector("dialog[open]") !== null || (screen?.revealing ?? false));
   const session: Session = new Session(api, {
     started(content, step, keeps, history) {
-      const carried = screen?.storyPast ?? null;   // a deploy redraws the screen: its story stays
+      const carried = screen?.carried ?? null;   // a deploy redraws the screen: its story and its written days stay
       keepGame(step.save_id);
       screen?.root.remove();
       scene = null;
@@ -67,7 +67,7 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
         () => pushCap(browserEnv()));
       if (join !== null) devices.open(join);
       join = null;
-      screen.restore(history ?? carried ?? []);
+      screen.restore(history ?? carried?.past ?? [], history === null ? carried?.days ?? [] : []);
       screen.show(step);
       const { sceneBox, sceneCanvas } = screen;
       sceneBox.classList.add("loading");
