@@ -139,7 +139,7 @@ const wood = catalog.storeLabel("wood");
 
 {  // control: a rule keeping wood stocked watches the full line, so the line carries that rule's mark; the lesson still
    // starts from it and walks on
-  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1 }, then: { kind: "tap_card", card: "tend" } };
+  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
   const v = full.view;
   const r = rig({ ...v, orders: [...v.orders, keep], orders_on: [...v.orders_on, false], order_states: [...v.order_states, "waiting"] }, keepsOf(RULES_OPEN));
   r.frame();

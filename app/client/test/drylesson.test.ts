@@ -133,7 +133,7 @@ function rig(view: View, keeps: Keeps) {
 
 {  // control: a rule watching wood that does not make it leaves the dry line uncovered, and marked with that rule; the
    // lesson still starts from the line and walks on
-  const watching: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 2 * Q - 1, release: 6 * Q - 1 }, then: { kind: "tap_card", card: "tend" } };
+  const watching: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 2 * Q - 1, release: 6 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
   const r = rig({ ...dry, orders: [...dry.orders, watching], orders_on: [...dry.orders_on, false], order_states: [...dry.order_states, "waiting"] }, keepsOf(TAUGHT));
   r.frame();
   expect("the marked line is the trigger", [r.line()?.dataset.store, r.line()?.querySelector<HTMLElement>(".line-rule")?.hidden], ["wood", false]);
