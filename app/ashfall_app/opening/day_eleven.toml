@@ -7,8 +7,7 @@ end_feature = "ditch_dug"
 # ---------- the man behind them, with B10's moment ----------
 
 # He comes in with B10 (its condition and requires, so one moment), apart from the family's offer: an arrival with no
-# lane, a scene figure and a clock. Never drawn: game hours since he came, in twentieths; Z3, dusk 12 and the vigil read
-# it.
+# lane, a scene figure and a clock. Never drawn: game hours since he came, in twentieths; Z3 and dusk 12 read it.
 [[stores]]
 id = "stranger_clock"
 label_key = "store_stranger_clock"
@@ -366,13 +365,14 @@ upside_key = "up_guard"
 work_s = 3600
 while_running = [{ side = "gap", amount_bp = 15000 }]
 
-# Z2, either spear: lines and the install. A guard made is a hidden flag store, which A31 requires and which opens
-# nothing to see: the guard card was shown by the answer.
+# Z2, either spear: lines and the install. A guard made is a flag store, a tally the vigil's card draws as its have/need;
+# it opens nothing to see: the guard card was shown by the answer.
 [[stores]]
 id = "guard_made"
 label_key = "store_guard_made"
 cap_items = 1
 hidden = true
+tally = true
 
 [[triggers]]
 id = "t_guard_n2"
@@ -437,8 +437,8 @@ when = { test = "at_least", subject_kind = "store", id = "stranger_clock", value
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "keep_vigil", value = 1 }]
 outcome = { line_keys = ["l_night_12"], unlocks = [{ unlock_kind = "action", id = "night_12" }] }
 
-# A31, a quarter hour into the night, once a guard stands the gap. Its requires read the clock itself, so its countdown
-# shows from Z3. B10's floor (210 h) keeps it past B11's sharp floor.
+# A31, a quarter hour into night 12, once a guard stands the gap. It shows with Z3 and reads as opening after dark.
+# B10's floor (210 h) keeps it past B11's sharp floor.
 [[cards]]
 id = "keep_vigil"
 presentation = "narrative"
@@ -447,7 +447,7 @@ work_s = 5
 cap = 1
 glows = true
 requires = [
-  { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 445 },
+  { test = "at_least", subject_kind = "store", id = "night_12", value = 5 },
   { test = "at_least", subject_kind = "store", id = "guard_made", value = 1 },
 ]
 
@@ -593,7 +593,7 @@ l_b11_2 = "someone's hand lies flat on the warm ground while he burns."
 l_b11_3 = "lucy cuts his mark on a board. beside it, nothing."
 aim_hut = "build them a place inside the wall."
 c_lane_watch = "Keep the fire at the gap"
-store_guard_made = "clock"
+store_guard_made = "spear made"
 o_door = "{n2} pegs a door together for the new hut."
 a_door_fire = "He hangs it fire side"
 a_door_fire_cost = "{pct} rest"
