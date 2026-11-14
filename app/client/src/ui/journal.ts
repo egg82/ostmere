@@ -1,22 +1,28 @@
-// The Journal (docs/design/opening-screen.md, "The journal"; CONTRACT.txt, "JOURNAL"): the book the player carries as a
-// button from the first entry on, dotted while a note is unread, and the sheet it opens, one page per entry written. A
-// page is the entry's sketch, its notes in their hand and, under them, the numbers of the fights it names, in the fight
-// card's words. The page's draws are seeded (game/journal.ts) and the numbers are View.fights'. Opening the sheet and
-// turning its pages send nothing; the notes of every page turned to are kept as read in one write when it closes.
+// The Journal (docs/design/opening-screen.md, "The journal"; CONTRACT.txt, "JOURNAL"): a page of the Book (ui/book.ts)
+// from the first entry on, its button and the Book's tab dotted while a note is unread, one journal page per entry
+// written. A journal page is the entry's sketch, its notes in their hand and, under them, the numbers of the fights it
+// names, in the fight card's words. The draws are seeded (game/journal.ts) and the numbers are View.fights'. Turning to
+// it and turning its pages send nothing; the notes of every page turned to are kept as read in one write when it is left.
 import type { View } from "../api/types";
 import { bookmarkPage, bookmarksOf, isButton, layoutOf, numbersOf, openingPage, pagesOf, unreadOf, type NumbersRow, type Page, type Section } from "../game/journal";
 import { UI } from "../game/text";
 import { reportError } from "../telemetry";
+import type { BookPage } from "./book";
 import { el, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 
 const SKETCHES = "/assets/journal/";
 
-export class Journal {
-  /** The book, as a button once an entry is written; Story seats it with the chips. */
-  readonly button = el("button", "journal-open");
-  readonly root = el("dialog", "sheet journal-sheet");
-  private readonly dot = el("i", "new-dot");
+export class Journal implements BookPage {
+  readonly id = "journal";
+  readonly label: string;
+  readonly root = el("div", "journal");
+  readonly frame = "journal-sheet";
+  readonly actions: readonly HTMLElement[];
+  /** Its button in the Book's row of pages (seat()), hidden until an entry is written. */
+  private button: HTMLElement | null = null;
+  /** The dots of the unread notes: on its button, and on the Book's tab. */
+  private readonly dots = [el("i", "new-dot"), el("i", "new-dot")];
   private readonly sketch = el("div", "journal-sketch-box");
   private readonly notes = el("div", "journal-notes");
   private readonly numbers = el("div", "journal-numbers");
@@ -36,52 +42,43 @@ export class Journal {
   private drawn = { entry: "", notes: 0, numbers: "", sections: "" };
   private isOpen = false;
   private readonly failed = new Set<string>();
-  /** The open page's last note: the journal lesson points at it. */
-  private lastNote: HTMLElement | null = null;
 
-  constructor(private readonly ctx: Pick<PartContext, "catalog" | "keeps">) {
+  /** `tab`: the Book's tab, which carries the dot and the lesson's mark while the journal shows. */
+  constructor(private readonly ctx: Pick<PartContext, "catalog" | "keeps">, private readonly tab: HTMLElement) {
     const { catalog } = ctx;
-    const label = catalog.label(catalog.content.feature_infos.find((f) => f.feature === catalog.content.journal?.feature)?.label_key);
-    this.button.type = "button";
-    this.button.dataset["teach"] = "journal";
-    this.button.append(label);
-    this.dot.setAttribute("aria-hidden", "true");
-    this.dot.hidden = true;
-    this.button.append(this.dot);
-    this.button.addEventListener("click", () => { tapFeedback(); this.open(); });
-
-    const close = el("button", "quiet", catalog.text.get(UI.close));
-    close.type = "button";
-    close.autofocus = true;   // the sheet opens with Close focused, not the notes' scroller (whose focus ring would frame the page)
-    close.addEventListener("click", () => this.dismiss());
+    this.label = catalog.text.get(UI.journalHeading);
+    for (const d of this.dots) d.setAttribute("aria-hidden", "true");
     for (const [b, key, by] of [[this.prev, UI.journalPrev, -1], [this.next, UI.journalNext, 1]] as const) {
       b.type = "button";
       b.textContent = catalog.text.get(key);
       b.addEventListener("click", () => { tapFeedback(); this.turn(by); });
     }
-    const actions = el("div", "sheet-actions");
-    actions.append(close, this.prev, this.next);
+    this.actions = [this.prev, this.next];
     this.left.append(this.sketch);
     this.marks.setAttribute("aria-label", catalog.text.get(UI.journalHeading));
     const right = el("div", "journal-page journal-right");
     right.append(this.notes, this.numbers);
     this.spread.append(this.left, right);
-    this.root.append(el("h2", "panel-heading", catalog.text.get(UI.journalHeading)), this.marks, this.spread, actions);
-    this.root.addEventListener("click", (e) => { if (e.target === this.root) this.dismiss(); });
-    this.root.addEventListener("close", () => this.finish());
-    this.root.addEventListener("keydown", (e) => {
-      const key = (e as KeyboardEvent).key;
-      if (key === "ArrowLeft") this.turn(-1);
-      else if (key === "ArrowRight") this.turn(1);
-    });
+    this.root.append(this.marks, this.spread);
   }
 
-  /** Whether the book is a button now (an entry is written and the feature is on). */
+  /** Its button in the Book's row: hidden until the journal shows, and dotted with it. */
+  seat(button: HTMLElement): void {
+    this.button = button;
+    this.sync();
+  }
+
+  key(e: KeyboardEvent): void {
+    if (e.key === "ArrowLeft") this.turn(-1);
+    else if (e.key === "ArrowRight") this.turn(1);
+  }
+
+  /** Whether the journal is in the Book now (an entry is written and the feature is on). */
   get shown(): boolean {
     return this.view !== null && isButton(this.ctx.catalog, this.view, this.pages);
   }
 
-  /** Redrawn from each view: the dot, and an open sheet's notes and numbers. */
+  /** Redrawn from each view: the dots, and an open page's notes and numbers. */
   update(view: View): void {
     this.view = view;
     this.pages = pagesOf(this.ctx.catalog, view);
@@ -89,17 +86,24 @@ export class Journal {
     if (this.isOpen) this.draw(false);
   }
 
-  /** The dot shows while a note is written and unread, and at no other time. */
+  /** Its button shows with the journal, the Book's tab is its lesson's mark, and the dots show while a note is written
+   * and unread, at no other time. */
   private sync(): void {
-    this.dot.hidden = unreadOf(this.pages, (n) => this.ctx.keeps.journalRead(n)).length === 0;
+    const shown = this.shown;
+    if (this.button) this.button.hidden = !shown;
+    if (shown) this.tab.dataset["teach"] = "journal";
+    const unread = unreadOf(this.pages, (n) => this.ctx.keeps.journalRead(n)).length > 0;
+    for (const [d, on] of [[this.dots[0]!, this.button], [this.dots[1]!, this.tab]] as const) {
+      if (unread && on) on.append(d);
+      else d.remove();
+    }
   }
 
-  private open(): void {
+  turnedTo(): void {
     if (this.pages.length === 0) return;
     this.turned.clear();
     this.isOpen = true;
     this.go(openingPage(this.pages, (n) => this.ctx.keeps.journalRead(n), this.last), 0);
-    if (!this.root.open) this.root.showModal();
   }
 
   private index(): number {
@@ -201,9 +205,6 @@ export class Journal {
       this.notes.append(node);
     }
     this.drawn.notes = page.notes.length;
-    if (this.lastNote) delete this.lastNote.dataset["teach"];
-    this.lastNote = (this.notes.lastElementChild as HTMLElement | null);
-    if (this.lastNote) this.lastNote.dataset["teach"] = "journal-note";
   }
 
   /** A sketch is loaded when its page is drawn; one that fails leaves its room empty and is reported once. */
@@ -231,14 +232,9 @@ export class Journal {
     this.numbers.replaceChildren(...rows.map(rowNode));
   }
 
-  /** Close, a tap on the backdrop: the notes of the pages turned to are kept (finish() runs when the sheet closes). */
-  private dismiss(): void {
-    this.root.close();
-    this.finish();
-  }
-
-  /** The sheet is closed (by its button, the backdrop or Escape): one write of what was read, then the dot is redrawn. */
-  private finish(): void {
+  /** Turned from, or the Book closed (its Close, the backdrop, Escape, another tab): one write of what was read, then
+   * the dots are redrawn. */
+  turnedFrom(): void {
     if (!this.isOpen) return;
     this.isOpen = false;
     this.ctx.keeps.keepJournalRead(this.turned);

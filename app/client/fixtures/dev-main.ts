@@ -7,7 +7,7 @@
 // recovery words due; #devices opens the "Another device" sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
 // `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers (the answer rule's builder).
-// #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page and #town the Town tab (a phone's). #journal opens the Journal sheet (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone). Phases asksone and asksmany open the Asks list (asks.ts).
+// #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page (#manydone finishes every card) and #town the Town tab (a phone's). #journal opens the Book on its Journal (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone). Phases asksone and asksmany open the Asks list (asks.ts).
 import "../src/game.css";
 import "../src/fights.css";
 import { wireBegin } from "../src/begin";
@@ -39,7 +39,9 @@ const kept = (hash.get("kept") ?? "").split(",").filter((l) => l.length > 0);
 // holding the hands cannot let go, and a dry run says the rule being written may stop short.
 const dryOf = (v: View, holding: boolean): View => ({ ...v, order_dry: v.orders.map((o, i) => (!holding || v.order_states[i] === "on" ? (o.then.kind === "switch_mix" ? { store: "stone", holding } : null) : null)) });
 const stuck = hash.has("stuck");
-const asStep = (s: Step): Step => (stuck ? { ...s, view: dryOf(s.view, true) } : s);
+// #manydone: every card of the content finished, for the Book's Done page at its fullest.
+const manyDone = (v: View): View => (hash.has("manydone") ? { ...v, completed: fixtureContent.card_infos.map((c) => ({ card: c.card, completions: 3 })) } : v);
+const asStep = (s: Step): Step => ({ ...s, view: manyDone(stuck ? dryOf(s.view, true) : s.view) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,
@@ -56,10 +58,10 @@ function clickWhenShown(selector: string, then?: () => void, tries = 100, nth = 
 if (hash.has("sheet")) clickWhenShown(".hands-name, .hands-plan");
 if (hash.has("devices")) clickWhenShown(".devices-open");
 if (hash.has("games")) clickWhenShown(".games-open");
-if (hash.has("journal")) clickWhenShown(".journal-open");
+if (hash.has("journal")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page[data-page=journal]"));
 if (hash.has("chronicle")) clickWhenShown(".tabs [data-tab=book]");
 if (hash.has("town")) clickWhenShown(".tabs [data-tab=town]");
-if (hash.has("done")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page:last-child"));
+if (hash.has("done")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page[data-page=done]"));
 if (hash.has("back")) window.setTimeout(() => document.dispatchEvent(new Event("visibilitychange")), 1500);
 if (hash.has("prestigesheet")) clickWhenShown(".skill-foot .primary");
 if (hash.has("have")) clickWhenShown("#have-code summary");
