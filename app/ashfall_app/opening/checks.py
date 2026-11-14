@@ -28,6 +28,7 @@ from .replace_checks import check_replacements
 from .retire_checks import check_retired_chores
 from .season_checks import check_season_turns
 from .slot_checks import check_slots
+from .stake_checks import check_stakes, check_stakes_hold
 from .subject_checks import check_subjects
 from .tally_checks import check_tallies
 from .ui_keys import UI_KEYS
@@ -64,6 +65,7 @@ def check_structure(o: "Opening") -> None:
     check_asks(o)
     check_fights(o)
     check_tallies(o)
+    check_stakes(o)
     check_clocks(o)
     check_season_turns(o)
     check_retired_chores(o)
@@ -82,9 +84,10 @@ def check_structure(o: "Opening") -> None:
 def check_content(o: "Opening") -> None:
     """The costly checks, which hold of a line or a fight on its own and need no prefix: the text's rules (a digit, a
     slot, a fixed key), a prestige phase outlasting an ordinary absence (prestige.check_phase_spans), and every fight's
-    cure reachable (fight_checks.py, which builds the Rules). The merge runs them
-    once, on the last state."""
+    cure reachable (fight_checks.py, which builds the Rules); and every side stake held on a fought side, which a later
+    chapter may add (stake_checks.py). The merge runs them once, on the last state."""
     _check_text(o)
+    check_stakes_hold(o)
     if o.prestige is not None:
         check_phase_spans(build_rules(o))
     if any(True for _ in fights(o)):
