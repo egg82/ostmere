@@ -1,14 +1,17 @@
 """The journal composer (docs/design/journal.md): which notes the `days` pages write for one game day, chosen from the
-save's history by the writer's habits. Pure: no engine, no database, no clock; every draw is `roll`. The save writer
-stores each result as one `save_journal` row and passes the stored rows back in as `composed`.
+save's history by the writer's habits. Pure: no engine, no database, no clock; every draw is a hash of its own key
+(`roll`, and the bag's shuffle in statement 19). The save writer stores each result as one `save_journal` row and passes
+the stored rows back in as `composed`.
 
 Terms. Game day `d` is game seconds `[d * 86400, (d + 1) * 86400)`. A line *shows* subject S on day d when its `at` is
 in day d and its `source` equals S's `source`. A *telling* of S is a note of S by its first, repeat, catchup,
 misremember or mention slot (never late or correction); `w(S)` is the number of tellings of S in `composed`. S is
 *told* once `w(S) > 0`. A day is *written* when its notes are non-empty. `s`, the settledness, is the number of written
-days in `composed` less `beat_refresh` for each note in `composed` whose subject is a `beat`, never below 0.
+days in `composed` less `beat_refresh` for each note in `composed` whose subject is a `beat` in `subjects` (a note of a
+subject no longer in `subjects` has no kind and takes nothing back; its day still counts as written), never below 0.
 `round_half_up(x)` is `floor(x + 0.5)`. A crowd is told first by `first`, then by `mention`, which stands in for its
-`repeat`: the band whose `at_least` is the highest at most that day's count of its lines.
+`repeat`: the band whose `at_least` is the highest at most that day's count of its lines. On a day that count is below
+every band's `at_least`, a told crowd has no slot to tell it by and is not written; it still shows (statement 14).
 
 The contract, each statement checkable from inputs and output alone:
 
@@ -27,7 +30,9 @@ Shape
 Must
  7. A `beat` or `person` subject that shows on day d and has a slot to tell it by is a must on day d; so is a `routine`
     subject that shows and is not yet told. A subject already told with an empty `repeat` is never written again by
-    first, repeat, catchup or misremember slot ("written once"), must or not.
+    first, repeat, catchup or misremember slot ("written once"), must or not. On a gap day a subject is a must when it
+    would be one on its own day and its `catchup` slot, which writes it, is non-empty; one with an empty `catchup` is
+    dropped with the gap run's other subjects.
  8. Every must on a day that is not a gap is written that day: by `first` if not told, else `repeat` (a `routine` first
     by `misremember` instead when its misremember roll passes, statement 17). Musts are not limited by the budget.
  9. Every must on a gap day is written exactly once, by `catchup`, on the first written day after the run of gap days
@@ -36,7 +41,8 @@ Must
 
 Care, diligence, budget
 10. Care of a `routine` or `crowd` subject is `base * fade ** w`, its kind's numbers, with `w = 0` on a day one of its
-    lines has a key no line before day d's start held (a change). Care of a `worry` is
+    lines has a key no line of that subject held before day d's start (a change; lines of other subjects, or of none,
+    never count). Care of a `worry` is
     `min(1, base * (1 + press * (r - 1)))`, `r` the consecutive days ending at d on which it showed.
 11. Diligence is `floor + (1 - floor) * 0.5 ** (s / halflife)`. A non-must subject showing on day d passes when
     `roll(save_id, d, subject, "write") < care * diligence` (strict: a product of 0 never passes, of 1 always does).
@@ -59,14 +65,17 @@ Late additions, misremembering
 17. A subject with non-empty `misremember` and `correction` slots, told for the first time on its own day (not in a
     catch-up), is written by `misremember` instead of `first` when `roll(save_id, d, subject, "misremember") <
     misremember_rate`. Its correction is a must on the first written day at least `correct_after_days` later, and
-    exactly one correction follows each misremembering.
+    exactly one correction follows each misremembering. `correct_after_days` is at least 1 (the loader's range check),
+    so the correction is always on a later day than its misremembering.
 
 Order and lines
-18. Notes are ordered: catch-up notes (by the day each showed, then subject id), then the day's own musts (by `roll(...,
-    "order")`), then its non-musts (care descending, ties by `roll(..., "order")`), then late additions, then
-    corrections (each by subject id).
+18. Notes are ordered: catch-up notes (by the first day of the gap run each showed on, then subject id), then the day's
+    own musts (by `roll(..., "order")`, lower first), then its non-musts (care descending, ties by lower `roll(...,
+    "order")`), then late additions, then corrections (each by subject id).
 19. Within one subject and slot (for `mention`, within one band), the n-th note drawn (n counted over `composed`)
     completes a round of the slot's keys before any key repeats: notes with equal `n // len(keys)` are different keys.
+    n counts only stored notes whose key the slot still holds: a retired key does not advance the round. Which of a
+    round's unused keys comes next is a shuffle keyed by save, subject, slot (and band) and round, never a counter.
 
 Forward only
 20. `composed` is read as given, never recomposed: rows stored under other habits or subjects count as they stand, so

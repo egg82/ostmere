@@ -86,11 +86,12 @@ The rules, in the order the composer applies them for day `d`:
   held to the day's budget.
 - **Care** (non-must candidates): `base × fade^w`, where `w` is how many times this subject has been told (written by any slot but late or correction). A line key
   of the subject that the save's history has never held before is a change, and that day `w` counts as 0, so routine
-  that changes is news again. A worry's care is `base × (1 + press × (days in a row it has shown − 1))`, capped at 1.
+  that changes is news again; a change is judged against the subject's own earlier lines only. A worry's care is
+  `base × (1 + press × (days in a row it has shown − 1))`, capped at 1.
 - **Diligence:** `floor + (1 − floor) × 0.5^(s / halflife)`, where `s` is how settled the journal is: the entries
-  written so far, less `beat_refresh` for each beat written, never below 0. A non-must candidate is written when its
-  roll falls under `care × diligence`. Thinning follows how much has been written and what has happened, never the day
-  number.
+  written so far, less `beat_refresh` for each beat written, never below 0; a note of a subject no longer in the
+  content has no kind and takes nothing back. A non-must candidate is written when its roll falls under
+  `care × diligence`. Thinning follows how much has been written and what has happened, never the day number.
 - **Budget:** the most notes an entry holds, `lines_floor + (lines_start − lines_floor) × 0.5^(s / lines_halflife)`,
   rounded half up. Musts first, then the rest by care, ties by roll. A late addition is outside the budget.
 - **Busy:** a day whose candidates number more than `busy_ratio × budget` is not written: a busy gap. A full day early
@@ -100,17 +101,22 @@ The rules, in the order the composer applies them for day `d`:
 - **Blank:** a day with no must and no candidate that passes its roll is not written. A blank is not a gap: nothing is
   owed after it.
 - **Catch-up:** the first written day after a busy or away gap opens with every must of the gap, each by its catch-up
-  slot, oldest first. The gap's other candidates are dropped; the Chronicle has them. A catch-up note is a telling for
-  the rest of its day, so a subject it told is not a first again that day.
+  slot, oldest first (by the first day of the gap each showed on). The gap's other candidates are dropped; the
+  Chronicle has them. A must with no catch-up slot cannot be caught up and is dropped with them. A catch-up note is a
+  telling for the rest of its day, so a subject it told is not a first again that day.
 - **Late addition:** each subject written on day `d` that has a late slot draws one under `late_rate`. Its late slot is
   written in day `d + 1`'s entry if that day is written, and dropped if it is not.
 - **Misremembering:** a subject with a misremember slot, told for the first time on its own day (never in a catch-up), draws one under
   `misremember_rate`; it is then written by its misremember slot instead of its first. Its correction becomes a must on
-  the first written day at least `correct_after_days` later.
+  the first written day at least `correct_after_days` later; that wait is at least 1, so the correction is always a
+  later note.
 - **Which line of a slot:** a slot may hold several lines. A shuffle bag keyed by the save, the subject and the slot
   draws them, its draw count the times that slot has been written for that subject, so the lines take turns and none
-  repeats before the bag is empty. A crowd's band is chosen by how many came or went, as the people's mention bands are.
-- **Order on the page:** catch-up notes, then the day's own by care, then a late addition or a correction.
+  repeats before the bag is empty; a stored key the slot no longer holds does not count toward the bag's draws. A
+  crowd's band is chosen by how many came or went, as the people's mention bands are; on a day fewer came or went
+  than its lowest band, a told crowd has no line and is not written.
+- **Order on the page:** catch-up notes, then the day's own by care, then a late addition or a correction. The day's
+  own musts run by their order roll, lower first, as ties among the rest do.
 
 ## The habits as data
 
