@@ -545,6 +545,10 @@ THE CLIENT MAY
     absent, none) are below its count.
   - show on each skill row its next level and what it pays, from SkillInfo.levels (the first entry above
     SkillBar.level); a pays_key is words, "?" for a story unlock. Its {pct} slot (and {pct_b}) is LevelPays.change_bp.
+  - when a skill's shown level (SkillPrestige.level_counted, else SkillBar.level) rises from one view to the next,
+    show ui.card.levelled for 2 s on each card in view.cards that a level passed names in LevelPays.speeds and whose
+    Card.speed rose: {skill} the skill's label, {n} the new level, {before} and {after} one whole completion's time
+    (bar_total / speed) in the two views. A card whose speed did not rise shows nothing.
   - draw the Camp bar from the ledger line of Content.camp.store, which is never drawn as a ledger line: its
     level is how many of camp.camp_levels' `at` the line's sample has reached, its next marker the next level's
     pays_key (its {from} and {to} slots filled from pays_from and pays_to, {pct} from change_bp) in ui.camp.pays, shown only once

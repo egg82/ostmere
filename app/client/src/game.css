@@ -37,6 +37,11 @@
   --fail-ms: 400ms;
   --fail-scale: 1.12;
   --fail-glow: 0 0 0 2px var(--alarm), 0 0 1rem rgba(224, 97, 74, .55);
+  /* the feel (merge.html's tokens): a press sinks at --press-ms, the release settles at --settle-ms with a slight overshoot */
+  --press-ms: 60ms;
+  --settle-ms: 160ms;
+  --settle-ease: cubic-bezier(.3, 1.5, .5, 1);
+  --link-ms: 400ms;   /* a cascade's lit link fades over this, so the one lit last reads brightest */
   color-scheme: dark;
 }
 /* The root grows with the viewport (16px on a phone, ~20px at 1920, ~29px at 3840), so a 4K screen gets a larger page,
@@ -261,7 +266,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
   --foot-h: 2rem;   /* the foot's band: tall enough for When ready, so the button sits under the bar, never over it */
   position: relative; display: flex; min-height: 5.6rem;
   background: var(--raise); border-radius: 2px; box-shadow: var(--drop); color: var(--ink);
-  transition: background-color .2s, box-shadow .2s, opacity .3s;
+  transition: transform var(--settle-ms) var(--settle-ease), background-color var(--settle-ms), box-shadow var(--settle-ms), opacity .3s;
 }
 .card-tap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; padding: .6rem .8rem .55rem .9rem; text-align: left; background: none; border: 0; border-radius: inherit; cursor: pointer; }
 .card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; padding-right: 3.2rem; }
@@ -296,7 +301,9 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .card .card-ready { position: absolute; right: .5rem; bottom: .55rem; z-index: 1; box-sizing: border-box; height: var(--foot-h); padding: 0 .7rem; font: inherit; font-size: var(--t-meta); color: var(--ink-hi); background: var(--press); border: 0; border-radius: 2px; cursor: pointer; }
 .card-ready.queued { color: var(--ink-dim); background: transparent; box-shadow: inset 0 0 0 1px var(--rule); cursor: default; }
 .card-tap:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
-.card:not(.busy):not(.done) .card-tap:active { transform: scale(.98); }
+/* held down (cardrow.ts): 2px onto its shadow, a step lighter; a refused card goes down too */
+.card.pressed { transform: translateY(2px); background-color: var(--press); transition-duration: var(--press-ms); }
+.card.ready.pressed { box-shadow: 0 0 0 #050407; }
 /* the first card: stand-alone, double width and about 1.5x height, the most obvious thing to tap at every size */
 .card.first { grid-column: span 2; min-height: 8.4rem; }
 .card.first .card-tap { padding: 1rem 1.2rem; justify-content: center; }
@@ -305,9 +312,15 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .card.first .card-track { margin-top: .8rem; }
 /* until its first tap it is only its verb: no count, bar or time that would read as something already under way */
 .card.first.untapped :is(.card-count, .card-track, .card-foot) { visibility: hidden; }
+/* a level on the card it speeds up (cardlevel.ts): an ember wash, and the foot's line with the old time set apart */
+.card.levelled { background-image: linear-gradient(90deg, rgba(224, 149, 79, .22), rgba(224, 149, 79, .04)); }
+.card-level { color: var(--ember-hot); line-height: 1.2; }   /* two lines still fit the foot's band */
+.card-level s { color: var(--ink-dim); text-decoration: none; }
+.card-level > * { white-space: nowrap; }
 .card.by-order::after { content: ""; position: absolute; bottom: .5rem; right: .6rem; width: 6px; height: 6px; background: var(--ember); }
-.pop { position: absolute; right: 4.4rem; top: .5rem; pointer-events: none; font-weight: 700; color: var(--ink-hi); animation: pop 1.1s ease-out forwards; }
-@keyframes pop { 0% { opacity: 0; transform: translateY(.3rem) scale(.8); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-1.6rem); } }
+/* in the room the head keeps clear at its right, so it never covers the title or the needs */
+.pop { position: absolute; right: .8rem; top: .5rem; pointer-events: none; font-weight: 700; color: var(--ink-hi); animation: pop 1.1s ease-out forwards; }
+@keyframes pop { 0% { opacity: 0; transform: translateY(.3rem) scale(.8); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-.75rem); } }
 .completed .card { min-height: 3.2rem; padding: .6rem .9rem; }
 .completed .card-head { padding-right: 0; }
 
@@ -727,12 +740,14 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 /* juice: none of it moves the layout */
 .arrive { animation: arrive .5s ease-out backwards; }
 .held { visibility: hidden; }   /* arrived while away, waiting its turn (ui/reveal.ts): its room is already taken */
-.press { animation: press .22s ease; }
 .landed { animation: landed .7s ease; }
 @keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes line-in { from { opacity: 0; transform: translate(var(--line-from-x, .6rem), var(--line-from-y, 0)); } }
-@keyframes press { 40% { transform: scale(.97); } 100% { transform: none; } }
 @keyframes landed { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .7); } 100% { box-shadow: 0 0 0 .8rem rgba(240, 178, 122, 0); } }
+/* a cascade's lit link (dom.markLink): a 3px ember tick and a warm wash, never the outline, which belongs to the ask */
+:is(.skill, .camp, .rules-row):has(> .link-mark) { position: relative; }   /* .card and .line already are */
+.link-mark { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 3px 0 0 var(--ember-hot); background: linear-gradient(90deg, rgba(224, 149, 79, .16), transparent 60%); animation: link-lit var(--link-ms) ease-out forwards; }
+@keyframes link-lit { 0%, 20% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(1.02); } 100% { transform: none; } }
 /* the tap and level rungs' calm forms (reduced motion): the same ring held still, fading, with no spread */
 @keyframes ring-still { 0%, 50% { box-shadow: 0 0 0 2px var(--ember-hot); } 100% { box-shadow: 0 0 0 2px transparent; } }
@@ -895,10 +910,12 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 @media (prefers-reduced-motion: reduce) {
   .game, .game *, .game *::before, .game *::after { animation: none !important; transition: none !important; }
   .game .card.tap-failed { animation: tap-failed var(--fail-ms) ease-out !important; }   /* colour, not motion */
+  .game .card.pressed { transform: none; }   /* held down still reads a step lighter */
   .game .fail-mark, .game .fail-mark .need-have { animation: fail-flash var(--fail-ms) ease-out !important; }
   .game .landed { animation: ring-still .7s ease-out !important; }   /* the ladder's calm forms ("+1" stays, held still) */
   .game .burst { animation: burst-still .9s ease-out !important; }
   .game .rules-row.fired { animation: fired 1.2s ease-out !important; }   /* colour, not motion */
+  .game .link-mark { animation: link-lit var(--link-ms) ease-out forwards !important; }   /* a fade, not motion */
   body.reconnecting .game, body.catching-up .game { transition: none !important; }   /* a fade is an instant change */
 }
 

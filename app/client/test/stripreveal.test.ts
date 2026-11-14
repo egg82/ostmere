@@ -61,7 +61,7 @@ const noLedger: View = { ...mid, unlocked: mid.unlocked.filter((u) => u.id !== "
 const repeatable = (v: View, id: string): View => ({
   ...v, cards: [...v.cards, {
     card: id, completions: 0, cap: null, bar: { start: v.at, start_value: 0, rate: 0, limit: null }, bar_total: 5, by: null,
-    completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, needs: [],
+    completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: 1, needs: [],
   }],
 });
 

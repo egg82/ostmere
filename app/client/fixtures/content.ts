@@ -131,7 +131,7 @@ const text: Record<string, string> = {
   "ui.frame.open": "Play Ostmere in its own tab",
   "ui.card.needs": "{store} {have}/{n}",
   "ui.card.needs_spent": "{store} {have}/{n}, none left",
-  "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}",
+  "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}", "ui.card.levelled": "{skill} {n} · {before} → {after}",
   "ui.chronicle.open": "Chronicle",
   "ui.chronicle.away": "Away {d}",
   "ui.chronicle.away_m": "{m}m",
@@ -417,7 +417,7 @@ export const fixtureContent: Content = {
     offered_after: { category: "feature", id: "stock" }, chip: null, after_end: false,
   }],
   skill_infos: [
-    { skill: "foraging", label_key: "skill.foraging", levels: [{ level: 3, pays_key: "pays.more", change_bp: [1000] }, { level: 4, pays_key: "pays.unknown", change_bp: [] }] },
+    { skill: "foraging", label_key: "skill.foraging", levels: [{ level: 3, pays_key: "pays.more", change_bp: [1000], speeds: ["gather"] }, { level: 4, pays_key: "pays.unknown", change_bp: [], speeds: [] }] },
     { skill: "firecraft", label_key: "skill.firecraft", levels: [] },
   ],
   node_infos: [],

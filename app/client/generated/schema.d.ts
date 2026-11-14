@@ -777,6 +777,8 @@ export interface components {
             needs: components["schemas"]["Need"][];
             /** Cuts In */
             cuts_in: boolean;
+            /** Speed */
+            speed: number;
             /** Spent Store */
             spent_store: string | null;
             /** Gained */
@@ -1427,6 +1429,8 @@ export interface components {
             pays_key: string;
             /** Change Bp */
             change_bp: number[];
+            /** Speeds */
+            speeds: string[];
         };
         /**
          * Limits

@@ -910,17 +910,23 @@ in `app/client/src/ui/ladder.ts`, their sizes keyframes in `app/client/src/game.
 | Background | A card completes by the mix or a rule | "+1" rising off the card | "+1" held still on the card, then gone |
 | Tap | A card completes from the player's tap, a queued one (Next) included | "+1" and a ring spreading from the card | "+1" held still and a still ring, fading |
 | First | Something new arrives: a card, chip, skill row, ledger line, feature | The arrive pulse, and a dot if it can be acted on | Shown at once, with its dot |
-| Level | A skill or the Camp reaches a level | The burst: a wider, longer ring, the row lit | A still ring, the row lit, fading |
+| Level | A skill or the Camp reaches a level | The burst: a wider, longer ring, the row lit; each card the level speeds up reads its old → new time for 2 s on an ember wash | A still ring, the row lit, fading; the card's line the same |
 | Big | The end; a feature's card | Its lines in the strip, the scene to dusk; the card docks ("The end", "A feature's card") | The same: neither moves |
 
 - **A rule's completion sits with the mix's**, one rung below the same completion from a tap, so a tap stays special
   and a mix or rule running alone still shows what it did. A rule's run is a tap the page did not send, started by a
   standing order (`app/client/src/ui/fires.ts`, the card's by-order dot).
+- **The level on its card:** the cards a level makes faster are LevelPays.speeds, and only one whose speed rose shows
+  it. Its foot reads the skill, the level and one whole completion's time at the old and the new speed
+  (`ui.card.levelled`); under a minute the times keep the decimals that tell them apart (5 s → 4.5 s). Each time is
+  unbroken, and two lines fit the foot, so the card never grows.
 - **Below the ladder, answers to a touch or a change of state**, each no bigger than the background rung: a pressed
-  control dips; a failed tap pulses red on its card and blocker (colour, kept under reduced motion); a share divider or
-  a ledger line coming back from red settles; a rule row that just started a card lights (colour, kept under reduced
-  motion); an accepted rule offer flies to the Rules tab (under reduced motion the tab only takes its dot); a journal
-  page turned slides in (The journal; swapped at once under reduced motion).
+  card sinks 2px onto its shadow, a step lighter, in 60 ms, and settles in 160 ms with a slight overshoot when the
+  pointer lets go (a refused card too; one that cannot be tapped stays put; under reduced motion it only lightens); a
+  failed tap pulses red on its card and blocker (colour, kept under reduced motion); a share divider or a ledger line
+  coming back from red settles; a rule row that just started a card lights (colour, kept under reduced motion); an
+  accepted rule offer flies to the Rules tab (under reduced motion the tab only takes its dot); a journal page turned
+  slides in (The journal; swapped at once under reduced motion).
 - **No sound yet.** When sounds come, each rung gets one, fixed like its effect, and none carries information alone.
 
 ## One thing at a time
@@ -938,6 +944,15 @@ everything still waiting when none do (Escape and a tap on the story strip show 
 through: input is never held. Something drawn while the queue still waits takes the next turn. Under reduced motion
 the lines still lead and the ledger's hold stays (a wait is not motion); what follows them comes together. The end's lines take their turns the
 same way.
+
+**A cascade.** A live step with no story lines that sets off several consequences lights them one by one, about 90 ms
+apart, so the eye can follow: in the order one causes the next (a card finishing, a ledger line settling, a level's
+burst and its card's line, a rule row starting a card), at most six turns, the rest with the sixth, all under a second.
+In a chain of two or more each link gets a 3px ember tick and a warm wash that fade by themselves, never the outline,
+which belongs to the ask; a lone effect is no chain and shows at once, unmarked. The links take turns in a second
+arrival queue at its own pace, on the reveal's tick; what arrives in the same step still shows at once, and a tap or
+key sets off every link still waiting. Out of sight, a link takes no turn. Under reduced motion every link and its mark
+come together.
 
 ## Coming back
 

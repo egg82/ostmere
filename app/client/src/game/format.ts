@@ -91,6 +91,16 @@ export class Format {
     return this.text.fill(UI.durationS, { s: whole.format(sec) });
   }
 
+  /** Two spans told apart, a time before and after a change (a level on its card): under a minute in seconds with the
+   * fewest decimals that make them differ, two at most; from a minute, as duration(). */
+  spans(before: number, after: number): [string, string] {
+    const one = (s: number, digits: number): string =>
+      s >= 60 ? this.duration(s) : this.text.fill(UI.durationS, { s: new Intl.NumberFormat(undefined, { maximumFractionDigits: digits }).format(s) });
+    let digits = 0;
+    while (digits < 2 && one(before, digits) === one(after, digits)) digits += 1;
+    return [one(before, digits), one(after, digits)];
+  }
+
   /** A mix's header: runs for a duration, or runs indefinitely as set (view.runs_out_at null). */
   runs(runsOutAt: number | null, t: number): string {
     return runsOutAt === null ? this.text.get(UI.runsIndefinitely) : this.text.fill(UI.runs, { d: this.duration(runsOutAt - t) });

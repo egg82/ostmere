@@ -51,9 +51,13 @@ Each part is tagged on the page with the competing design it came from.
 - **Ledger.** Grouped into yours, town, outposts and threats, each group appearing when its first row does. A row
   turns red only when its store is falling with nothing covering it; a rule of the player's spending the store as it
   says covers it. No button stands under a row: a row a rule watches carries a small mark and opens that rule on a tap.
-- **Feel.** On pointer-down a card sinks 2px onto its shadow, and it settles in 160ms on release. A level shows its
-  bonus on the card it speeds up (old → new). A chain sets off its links one by one, about 90ms apart, so the eye
-  can follow the cascade. Reduced motion keeps every state and drops the movement.
+- **Feel.** On pointer-down a card sinks 2px onto its shadow, a step lighter, and it settles in 160ms on release, at
+  the page's `--press-ms`, `--settle-ms` and `--settle-ease`. A level shows its bonus on the card it speeds up for 2s:
+  the skill, the level and one completion's time, old → new, read from the rules (the cards a level speeds and each
+  card's speed are served), never guessed. A chain sets off its links one by one, about 90ms apart (not the page's
+  150ms), so the eye can follow the cascade, each lit with the page's ember tick and wash. Reduced motion keeps every
+  state and drops the movement: no sink, and the links light together. The details are in `opening-screen.md`, "The
+  feedback ladder" and "One thing at a time".
 
 ## Routing: one home per message
 
