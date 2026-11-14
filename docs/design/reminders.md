@@ -142,7 +142,7 @@ reminding is the point. Ostmere's carries no task and no miss.
 
 Each step is one MR; each ships with its test, proven able to fail.
 
-1. **Docs.** `decisions.md` amendment (done with this note), `systems.md` module row and `open-work.md` item 18's "Fits
+1. **Docs.** `decisions.md` amendment (done with this note), `systems.md` module row and issue #39's "Fits
    into:" line. Test: the citation test over `systems.md`.
 2. **Table and due query.** Alembic 0011, `reminders/due.py` (pure), `db/reminders.py` with the claim and prune. Tests:
    a Hypothesis property that `due` fires at most once per `visited_at`; a two-connection Postgres race where exactly

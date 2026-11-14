@@ -37,7 +37,7 @@ Nothing here is a new system.
 | Lately for stints | Chronicle and unwrap, via `engine/rulelog.py` | A stint's entry records its start, its goal landing and what its mix made while it ran |
 | Offers that step back | Offers and quests; the repeat offers (`opening-screen.md`, the hands strip); the lessons (`game/lessons.ts`) | The same detection, a quiet dot in place of the build, below |
 | The moments | Cards, goals, prestige, seasons and chores, trips, offers: all content on existing systems | Content supplies them; the simulator counts them |
-| The readout | Simulator, open-work item 1, "What a re-mix is worth" | This note specifies that item |
+| The readout | Simulator, issue #27, "What a re-mix is worth" | This note specifies that item |
 
 Patterns: **Command** (a stint is a queued verb) and **Specification** (a goal is a condition in the one vocabulary
 Gates already use). Nystrom's *Command* chapter is the precedent: a queue of commands is a plan that runs unattended.

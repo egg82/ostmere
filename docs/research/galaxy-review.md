@@ -4,7 +4,7 @@ Note: the title is now chosen, *The Breaking of Ostmere*; what follows still say
 
 galaxy.click's staff declined the listing for now: come back when the game is complete or nearly so. Their email is
 quoted at the end. What follows is what their feedback says, checked against the logs and the database where it could
-be, and what it asks of the game. The work it creates is in `open-work.md`, "Before resubmitting".
+be, and what it asks of the game. The work it creates is issue #22.
 
 ## What happened in their session
 

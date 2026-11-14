@@ -118,7 +118,7 @@ sections are in `design/opening-screen.md`.
   by words and art). It does not rule out meaning that is reachable only on hover. The only touch-size rule written down
   is 44 px in the condition editor. Nothing says the ledger's red, warm ownership or the dot-versus-glow difference still
   reads without colour (guideline: WCAG 2.5.8, Apple and Android touch guidance, GAG basic).
-- **"It is paced for someone who has never seen the game"** and the open-work item on teaching the mix, which is
+- **"It is paced for someone who has never seen the game"** and the queue item on teaching the mix, which is
   judged by "a cold tester who doesn't play idle games, never the owner". This is the RITE and Hodent finding applied
   correctly. The gap is that nothing says when testing stops: there is no pass condition fixed before the sessions,
   so one tester's accident can count as a finding, or a lesson is never called finished.
@@ -150,7 +150,7 @@ evidence, then by cost.
    about to do?". Report the result as "no problem hitting more than about half of testers", never "verified". Survey
    ratings at this sample size decide nothing. Test: the protocol is the test; it succeeds if it ends the teach-the-mix
    item with a stated result. Fits into: no system; it reads the decision log (Saves) and tester notes (Feedback, under
-   Logs, job runs, retention) and judges the open-work item on teaching the mix.
+   Logs, job runs, retention) and judges the queue item on teaching the mix.
 2. **Record the step each lesson is skipped on, and the step it waits longest on.** Change: one field per lesson
    end, written to the decision log or the page's telemetry. Test: across a round of testers, a skip that clusters on
    one step, or on a reading step, marks that step to cut or to replace with a visible result (Valve's playtests;
@@ -167,7 +167,7 @@ evidence, then by cost.
    second opened from the return screen (the shape Kolibri used for Idle Miner Tycoon, developer). Test: from the
    decision log and the recording, do the repeat offers appear and get taken after a return, and what does the tester
    do first? This is the only instrument proposed here that sees a return before the public build. Fits into: no
-   system; it extends proposal 1 and feeds the open-work item "The night visits go quiet" with real returns.
+   system; it extends proposal 1 and feeds the queue item "The night visits go quiet" with real returns.
 5. **Show a rule's reason in the Rules tab, and what ran while away.** Change: a quiet line under a rule that is off,
    in the ledger's grammar (`needs under 3 dry wood · now 5`, `outranked by {rule}`). From the strip's `until …`
    button, a short list of the last rule starts and let-gos, each with the store level at the time. Test: give a tester
@@ -197,10 +197,10 @@ evidence, then by cost.
    Test: the simulator's per-absence counters. Fits into: Simulator, and Chronicle and unwrap if the unwrap changes.
 
 **Dropped, with what already covers them:**
-- A recognition check ("pick the lines you saw from real and invented ones"): the open-work item "How the story reaches
+- A recognition check ("pick the lines you saw from real and invented ones"): issue #26, "How the story reaches
   the eyes".
 - Keeping a skipped lesson's offer reachable, and a new card saying it can join the mix (`teach-automation.md`): the
-  repeat offers on the hands strip, under the open-work item on teaching the mix.
+  repeat offers on the hands strip, under the queue item on teaching the mix.
 - A narrow causal overlay, one question per lens: its own writeup says to build it only if proposal 5 proves not
   enough.
 - A late-game screen budget (which regions stay on screen and what gets demoted): real, but nothing is testable until

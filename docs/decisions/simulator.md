@@ -135,7 +135,7 @@ by a served value (`CONTRACT.txt`, `{pct}`), so it is stated once.
 
 ## The simulator, as built
 
-How it stands today, moved from its row in `systems.md`. The queue item is `docs/open-work.md`, "Pacing simulator past
+How it stands today, moved from its row in `systems.md`. The queue item is issue #27, "Pacing simulator past
 the opening"; it names beats by number only.
 
 It fails only on an invariant (softlock, spiral, a tool user forced to babysit, a shown number not coming true;

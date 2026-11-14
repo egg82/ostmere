@@ -1,7 +1,7 @@
 # Desktop playthrough of day one (2026-10-24)
 
 Where a newcomer at a desktop browser would likely drift in the first session, read off the screen at 1440×900. It
-covers the open-work item "a desktop playthrough in a browser, for what the model can't see". It is a model's read of
+covers the queue item "a desktop playthrough in a browser, for what the model can't see". It is a model's read of
 the screen, not tester data: what it predicts about people still needs `docs/tester-protocol.md`'s cold testers. The
 phone pass left no written report, so the comparison below is against the phone layout in
 `docs/design/opening-screen.md` and the phone fixes in the log.
@@ -110,7 +110,7 @@ its needs had just been met.
 
 The Until morning card ("Morning is 1h away, in real time") comes at 15:02. Back to the camp brings a few new cards, one
 of them waiting on the night with a 53-minute countdown. After 17:54 no new card arrives through 24:43, stores sit full, and
-the only motion is bars. This is the open-work item "The night visits go quiet". It isn't desktop-specific; it's
+the only motion is bars. This is the queue item "The night visits go quiet". It isn't desktop-specific; it's
 recorded here because a person at a desk is likely to leave at this point.
 
 ## Desktop against the phone

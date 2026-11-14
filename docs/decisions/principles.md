@@ -113,7 +113,7 @@ let players pick a race when race was cosmetic; an update gave races weight in a
 
 ## Built on habits
 
-The living world comes from habits' modules when the town's content needs it (`open-work.md`, item 2). The app
+The living world comes from habits' modules when the town's content needs it (issue #28). The app
 shell and accounts were built here instead, once the account became the browser. The engine and the pacing simulator are new code with nothing to take from habits, so they
 start now.
 

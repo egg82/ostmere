@@ -166,7 +166,7 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
   open (week 3 needs none).
 - **Banked time** (`banked-time-plan.md`): its cap-loss target is held at each chapter's end (item 12); item 1 makes a
   spent pool's share go to work instead of idling, which is the same lost time seen from the mix.
-- **Open work**: item 7 is the map's first piece; open-work item 4 (journal pages) gains two entries.
+- **Open work**: item 7 is the map's first piece; issue #30 (journal pages) gains two entries.
 
 ## After week 3, where it plugs in
 
