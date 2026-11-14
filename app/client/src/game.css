@@ -662,6 +662,15 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .cond-span { position: absolute; top: 0; bottom: 0; background: var(--ember); }
 .cond-now { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink-hi); box-shadow: 0 0 0 2px var(--bg); }
 .cond-sentence { flex: none; }   /* .rule-sentence's 12rem basis would be its height in this column */
+/* the quick add's sentence (condquick.ts): each part reads as its words, a native select laid over them takes the tap;
+   story size and a tall line make each part a thumb's target */
+.cond-sentence:has(.quick-part) { font-size: var(--t-story); line-height: 2.2; }
+.quick-part { position: relative; display: inline-block; line-height: 1.4; white-space: nowrap; }
+.quick-word { color: var(--ink-hi); font-weight: 500; text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; }
+.quick-mark { margin-left: .15rem; font-size: var(--t-meta); color: var(--ink-dim); }
+.quick-select { position: absolute; top: -.5rem; bottom: -.5rem; left: -.2rem; right: -.2rem; width: calc(100% + .4rem); opacity: 0; cursor: pointer; font-size: 16px; }
+.quick-part:hover .quick-word, .quick-part:focus-within .quick-word { text-decoration-color: var(--ink-hi); }
+.quick-part:has(.quick-select:focus-visible) { outline: 1px solid var(--ink-hi); outline-offset: 3px; }
 .cond-more { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }   /* the way to the full editor */
 .cond-fact { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
 .cond-fact:empty, .cond-note:empty { display: none; }

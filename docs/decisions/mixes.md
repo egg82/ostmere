@@ -99,11 +99,22 @@ and you tune it, then hit go.
   a rule that needs exactly 12. A new rule starts with shares, a rule already written keeps its numbers until either
   level is switched, and a goal stint can also run until a store is half, three quarters or full. The engine reads a
   share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS").
+- **A rule can carry guards and fallbacks, and has no "or"** (owner: rules are dumb, but with combinations they could
+  be way smarter). Up to three guards pause a rule while any of them holds ("13 or more catch, until under 1, unless
+  smoked is full"): the main condition keeps its "until", and the rule picks up where it left off when the last guard
+  lets go. Up to two fallbacks follow what it does ("Smoke the catch, or else Smoke roots"): it does the first it can
+  start, all on one lane or one layer. "Or" between conditions is two rules with the same action, so every rule stays
+  one sentence with no precedence to work out. Both sit behind `More options`, open from the first rule and never
+  unlocked by progress. Semantics, the saved shape and the contract: `docs/design/rule-guards.md`.
 - **The editors open simple; the full editor is one deliberate tap away** (after playing day one:
   poking around found the editors, and they were a bit much). A new rule opens on what it does and, once
-  that is chosen, what that answers (a chip such as hungry, or a store the task makes), so a rule like "cook roots when
-  hungry" takes two taps. `More options` opens the full editor in place: every mix, chip and store, the levels and the
-  rate. The full editor keeps all its power, since it is what makes rules handy later; only its first view shrinks.
+  that is chosen, what that answers: a chip such as hungry, or the stores the task is about, first what it makes,
+  then what it takes, then one step out, read off the cards' own inputs and outputs and never off words in their
+  names (owner: the store a task takes belongs there too). So a rule like "cook roots when hungry" takes two taps,
+  and it reads as one sentence with its levels showing, each part a choice in place (owner: the levels should not
+  hide behind More options). `More options` keeps the uncommon: every mix, chip and store, an exact number, and the
+  rate. A rule being changed can be copied in one tap, which is how a rule comes on at either of two conditions:
+  two rules doing the same thing. The full editor keeps all its power, since it is what makes rules handy later; only its first view shrinks.
   The mix editor likewise shows only what an edit changes. Each is first met through a lesson on its real controls
   at the moment it matters, the mix before rules, skippable and never repeated (after the galaxy.click
   reviewer's mix ran nothing for fifty minutes: `docs/design/opening-screen.md`, "Lessons"); beyond the first rule,
@@ -142,7 +153,7 @@ in `explain()` and shown on the page as the split that runs now: derived at the 
 work is a known gap.
 
 Standing orders and the queue: an order's mix is a pushdown of one over the player's, read per layer (a town mix's
-order never moves the hands' running mix), and a tap yields the mix. Planned: evaluation applies every verb that can
+order never moves the hands' running mix), and a tap yields the mix. Evaluation applies every verb that can
 act at an instant, not only the first, so no lane idles on a ready order (engine `DESIGN.txt`, "Evaluation applies
 every verb"). A story outcome installs a ruled lane's always rule as an ordinary order, and an answer can queue a hands
 one-off as a When ready entry (engine `DESIGN.txt`, "Installed rule", "Queued one-off";

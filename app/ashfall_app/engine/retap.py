@@ -13,6 +13,7 @@ from .gates import is_unlocked
 from .ids import HANDS, CardId, LaneId
 from .index import index
 from .lanes import TapCard
+from .orders import rule_on
 from .rules import Rules
 from .state import Save
 from .unlocks import Unlock, UnlockKind
@@ -82,7 +83,7 @@ def watch_events(save: Save, rules: Rules) -> list[Event]:
             continue
         for order, latch in zip(save.orders, save.latches):
             verb = order.then
-            if not latch or not isinstance(verb, TapCard):
+            if not rule_on(latch) or not isinstance(verb, TapCard):
                 continue
             if verb.card == ls.card:
                 break

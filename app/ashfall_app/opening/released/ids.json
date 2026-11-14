@@ -3248,6 +3248,17 @@
    "scavenging",
    "woodcutting"
   ],
+  "slot_key": [
+   "n_day_b10",
+   "n_day_b11",
+   "n_day_b12",
+   "n_day_b2",
+   "n_day_b3",
+   "n_day_b4",
+   "n_day_b6",
+   "n_day_b7",
+   "n_day_b9"
+  ],
   "standing": [
    "ashfall",
    "ask_wait",
@@ -3412,6 +3423,24 @@
    "wind_torn",
    "wire",
    "z1_clock"
+  ],
+  "subject": [
+   "s_b10",
+   "s_b11",
+   "s_b12",
+   "s_b2",
+   "s_b3",
+   "s_b4_she_went",
+   "s_b4_went",
+   "s_b6",
+   "s_b7",
+   "s_b9",
+   "s_n2_joined",
+   "s_n3_joined",
+   "s_n4_joined",
+   "s_n5_joined",
+   "s_n6_joined",
+   "s_n7_joined"
   ],
   "trigger": [
    "camp_1",

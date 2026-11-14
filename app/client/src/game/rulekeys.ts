@@ -15,6 +15,11 @@ export const RULE_KEYS = {
   ruleReachesUntilDown: "ui.rule.reaches_until_down", // "{store}{n}{m}": a "reaches" rule, an amount when and a share until
   ruleOfFull: "ui.rule.of_full", // a level's two forms in the editor: a share of the store's cap, or whole items
   ruleExact: "ui.rule.exact",
+  ruleQuickDown: "ui.rule.quick_down", // "{store}{test}{n}{task}{m}": the quick add's sentence for a "below" rule (ui/condquick.ts)
+  ruleQuickUp: "ui.rule.quick_up", // the same for a "reaches" rule
+  ruleFallsTo: "ui.rule.falls_to", // the quick add's two tests, its {test}
+  ruleReachesTo: "ui.rule.reaches_to",
+  ruleCopy: "ui.rule.copy", // a rule being changed: a new rule from it, the same task and condition, to change
   levelEmpty: "ui.level.empty", // a share level's words: the five named shares, then any other as a percentage
   levelQuarter: "ui.level.quarter",
   levelHalf: "ui.level.half",

@@ -1,15 +1,16 @@
 // What the condition editor offers (docs/design/opening-screen.md, "The condition editor"), read off the view and the
 // content only. Its simple view offers the tasks a rule can do and, once one is chosen, what that task answers: the
-// chips whose store it makes and the stores it makes. More options adds the saved mixes and every chip and store a
-// rule may watch: every chip from its first showing on, every store with a line. A saved mix of one task alone is
-// offered as that task, so nothing is offered twice. And the mix switch the player keeps making by hand, which gets a
-// mark.
+// chips whose store it makes and the stores relevant to it (game/relevant.ts). More options adds the saved mixes and
+// every chip and store a rule may watch, the relevant stores first: every chip from its first showing on, every store
+// with a line. A saved mix of one task alone is offered as that task, so nothing is offered twice. And the mix switch
+// the player keeps making by hand, which gets a mark.
 import type { ChipInfo, LedgerLine, OrderVerb, RepeatedSwitch, Subject, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { rulesFull, sameCondition, soloCard } from "./orders";
 import { seenChips } from "./shown";
 import { buildSubject, type SubjectRule } from "./subjectrule";
-import { isTownMix } from "./town";
+import { relevantStores, type Relevant } from "./relevant";
+import { flatCards, isTownMix } from "./town";
 
 /** The stores a rule may watch: unlocked, with a ledger line, the Camp store excepted. */
 export function ruleStores(view: View, campStore: string | null): LedgerLine[] {
@@ -36,6 +37,13 @@ export function taskOf(catalog: Catalog, view: View, then: OrderVerb | null): st
   return mix ? soloCard(mix, catalog.content.scales.bp) : null;
 }
 
+/** The cards `then` runs: its task's card, or every card of its mix, nested mixes flattened; none for any other verb. */
+export function ruleCards(view: View, then: OrderVerb | null): string[] {
+  if (then?.kind === "tap_card") return [then.card];
+  const mix = then?.kind === "switch_mix" ? view.mixes.find((m) => m.id === then.mix_id) : undefined;
+  return mix ? flatCards(view, mix) : [];
+}
+
 /** What the Do row offers: the tasks, then (with More options) the saved mixes that are not a task offered. A town
  * rule (`town`) offers the town's mixes alone; any other, never a town mix (it is set by a rule on the town). */
 export function doChoices(catalog: Catalog, view: View, full: boolean, then: OrderVerb | null, town = false): DoChoice[] {
@@ -57,18 +65,21 @@ export function chipStore(chip: ChipInfo): string | null {
   return chip.when.kind === "after_time" || chip.when.watched.kind !== "store_value" ? null : chip.when.watched.store;
 }
 
-/** What the When row offers. Simple: with a task chosen, the chips whose store it makes and the stores with a ledger
- * line it makes; nothing before a task is chosen. Full: every chip the band has drawn in the save, whether it shows
- * now and whatever task answers it, and every store a rule may watch, with `editing`'s store last when it has no
- * ledger line. Only stores of two items or more (a band fits). */
-export function whenChoices(catalog: Catalog, view: View, full: boolean, task: string | null, editing: string | null): { chips: ChipInfo[]; stores: string[] } {
+/** What the When row offers for a rule doing `cards` (ruleCards). Simple: the chips whose store they make and the
+ * stores relevant to them (game/relevant.ts), in its order; nothing before a task is chosen. Full: every chip the band
+ * has drawn in the save, whether it shows now and whatever task answers it, and every store a rule may watch, the
+ * relevant ones first, with `editing`'s store last when it has no ledger line. Only stores with a ledger line of two
+ * items or more (a band fits). `relevant` is the tiers the stores came from. */
+export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: readonly string[], editing: string | null): { chips: ChipInfo[]; stores: string[]; relevant: Relevant } {
   const q = catalog.content.scales.quantity_per_item;
-  const makes = (store: string, cards: string[]) => (catalog.stores.get(store)?.made_by ?? []).some((c) => cards.includes(c));
-  const answers = task === null ? [] : [task];
+  const makes = (store: string) => (catalog.stores.get(store)?.made_by ?? []).some((c) => cards.includes(c));
   const seen = new Set(seenChips(catalog, view));
-  const chips = catalog.content.chip_infos.filter((c) => { const s = chipStore(c); return s !== null && (full ? seen.has(c.chip) : makes(s, answers)); });
-  const lines = ruleStores(view, catalog.campStore).filter((l) => l.cap >= 2 * q && (full || makes(l.store, answers))).map((l) => l.store);
-  return { chips, stores: editing !== null && !lines.includes(editing) ? [...lines, editing] : lines };
+  const chips = catalog.content.chip_infos.filter((c) => { const s = chipStore(c); return s !== null && (full ? seen.has(c.chip) : makes(s)); });
+  const lines = ruleStores(view, catalog.campStore).filter((l) => l.cap >= 2 * q).map((l) => l.store);
+  const relevant = relevantStores(catalog, cards, view.cards.map((c) => c.card), lines);
+  const first = [...relevant.makes, ...relevant.takes, ...relevant.near];
+  const offered = full ? [...first, ...lines.filter((s) => !first.includes(s))] : first;
+  return { chips, stores: editing !== null && !offered.includes(editing) ? [...offered, editing] : offered, relevant };
 }
 
 /** What the full editor's When row offers past the chips and stores, each as the rule it starts from: the Camp's level
@@ -86,7 +97,7 @@ export function subjectChoices(catalog: Catalog, view: View): { levels: SubjectR
  * what subjectChoices offers. */
 export function offeredSubjects(catalog: Catalog, view: View): Subject[] {
   const { levels, tasks } = subjectChoices(catalog, view);
-  const stores = whenChoices(catalog, view, true, null, null).stores.map((store): Subject => ({ kind: "store_value", store }));
+  const stores = whenChoices(catalog, view, true, [], null).stores.map((store): Subject => ({ kind: "store_value", store }));
   return [...stores, ...[...levels, ...tasks].flatMap((rule): Subject[] => { const c = buildSubject(catalog, rule); return c.kind === "after_time" ? [] : [c.watched]; })];
 }
 

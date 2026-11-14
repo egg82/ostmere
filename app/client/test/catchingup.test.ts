@@ -29,7 +29,7 @@ function harness(slices: Step[], decide: (after: number) => Step) {
   const api: GameApi = {
     content: () => Promise.resolve(fixtureContent),
     me: unused, begin: unused,
-    open: () => { calls.push("open"); return Promise.resolve({ save, was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, step: next() }); },
+    open: () => { calls.push("open"); return Promise.resolve({ save, was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: next() }); },
     savedView: () => Promise.reject(new Error("unused")),
     advance: () => { calls.push("advance"); return Promise.resolve(next()); },
     forecast: () => { calls.push("forecast"); return unused(); },

@@ -17,9 +17,12 @@ from .entries import Entry
 RENAMES = Path(__file__).resolve().parent / "renames.toml"
 
 type LockKind = Literal["store", "skill", "standing", "card", "lane", "chip", "trigger", "feature", "line", "offer",
-                        "answer", "entry", "note", "node"]
-"""The kinds of id the release lock holds: the engine's IdKinds a save can name, and `line`, a text key a log line
-can carry."""
+                        "answer", "entry", "note", "node", "subject", "slot_key"]
+"""The kinds of id the release lock holds: the engine's IdKinds a save can name, and the content's own: `line`, a text
+key a log line can carry, and the journal's `subject` ids and `slot_key`s (text keys its slots write), which a stored
+day names."""
+LOCAL_KINDS: tuple[LockKind, ...] = ("line", "subject", "slot_key")
+"""The kinds no save's engine state names, so the engine's rebase never sees their renames."""
 
 
 class RenameEntry(Entry):
@@ -59,5 +62,5 @@ def _offer_trigger(r: RenameEntry) -> tuple[RenameEntry, ...]:
 
 
 def engine_renames(entries: list[RenameEntry]) -> tuple[Rename, ...]:
-    """The entries a save can name (every kind but `line`: lines are never stored on a save)."""
-    return tuple(Rename(IdKind(r.kind), r.old, r.new) for r in entries if r.kind != "line" and r.new is not None)
+    """The entries the engine's rebase reads (every kind but LOCAL_KINDS)."""
+    return tuple(Rename(IdKind(r.kind), r.old, r.new) for r in entries if r.kind not in LOCAL_KINDS and r.new is not None)

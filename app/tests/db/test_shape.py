@@ -29,6 +29,7 @@ SHAPE: dict[str, list[tuple[str, str, bool]]] = {
     "save_snapshots": [("save_id", BIG, False), ("day", INT, False), ("state", TEXT, False),
                        ("rules_digest", TEXT, False), ("decisions", INT, False)],
     "save_manifests": [("rules_digest", TEXT, False), ("manifest", TEXT, False)],
+    "save_journal": [("save_id", BIG, False), ("day", INT, False), ("notes", JSON, False), ("gap", TEXT, True)],
     "tries": [("id", BIG, False), ("kind", TEXT, False), ("who", BYTES, False), ("at", WHEN, False)],
     "feedback": [("id", BIG, False), ("created_at", WHEN, False), ("text", TEXT, False), ("build", TEXT, False),
                  ("release", INT, False), ("account_id", BIG, True), ("save_id", BIG, True), ("game_time", BIG, True),
@@ -42,7 +43,7 @@ SHAPE: dict[str, list[tuple[str, str, bool]]] = {
 }
 KEYS = {"accounts": ["id"], "sessions": ["id"], "saves": ["id"], "save_lines": ["save_id", "n"],
         "save_decisions": ["save_id", "n"], "save_snapshots": ["save_id", "day"],
-        "save_manifests": ["rules_digest"], "tries": ["id"],
+        "save_manifests": ["rules_digest"], "save_journal": ["save_id", "day"], "tries": ["id"],
         "feedback": ["id"], "transfer_codes": ["id"], "reminder_devices": ["id"]}
 
 

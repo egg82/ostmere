@@ -2,7 +2,8 @@
 # "Release lock"). One entry per rename:
 #
 #   [[renames]]
-#   kind = "store"      # store, skill, standing, card, lane, chip, trigger, feature, or line (a log line's text key)
+#   kind = "store"      # store, skill, standing, card, lane, chip, trigger, feature, line (a log line's text key),
+#                     # subject (a journal subject's id), or slot_key (a text key a journal slot writes)
 #   from = "old_id"
 #   to = "new_id"       # always a new id: reusing a released one is forbidden
 #

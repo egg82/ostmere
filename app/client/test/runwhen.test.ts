@@ -104,7 +104,7 @@ expect("a rule replaced in that place is not it", ruleLetGo(on, { ...off, orders
 // (pressed, as the rule's), after the stores a rule may watch; a new rule never offers it.
 {
   const restrule = fixtureStep("restrule", 100).view;
-  const stores = (editing: string | null) => whenChoices(catalog, restrule, true, null, editing).stores;
+  const stores = (editing: string | null) => whenChoices(catalog, restrule, true, [], editing).stores;
   const watchable = stores(null);
   expect("a new rule: only stores with a line", watchable.includes("energy"), false);
   expect("editing the energy rule: energy last", stores("energy"), [...watchable, "energy"]);

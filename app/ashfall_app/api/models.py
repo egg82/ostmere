@@ -28,6 +28,7 @@ from .decision_models import (
     Prestige as Prestige, UndoPick as UndoPick, MovePick as MovePick,
 )
 from .fight_models import Fight as Fight, Strength as Strength, StrengthEntry as StrengthEntry, StrengthKind as StrengthKind
+from .journal_models import JournalDay
 from .need_models import Blocker as Blocker, Need as Need
 from .offer_models import Offer as Offer, OfferAnswer as OfferAnswer
 from .goal_models import Goal as Goal, GoalKind as GoalKind, GoalLimit as GoalLimit, GoalRow as GoalRow, RuleDry as RuleDry
@@ -268,3 +269,6 @@ class Step(BaseModel):
     catching_up_to: int | None
     """Set when this request's time ran out before the save reached now: the game time it was advancing to (view.at
     is short of it). Ask advance again at once until it is null (CONTRACT.txt, "Catching up")."""
+    journal_days: list[JournalDay]
+    """The written journal days this step composed, oldest first: those whose end it carried the save past
+    (CONTRACT.txt, "JOURNAL")."""

@@ -156,3 +156,14 @@ def initial_latch(condition: Condition, subject_value: int | None, now: int) -> 
     if isinstance(condition, AtLeast):
         return subject_value >= condition.value
     return subject_value <= condition.value
+
+
+def rule_on(latch: bool) -> bool:
+    """Whether the rule holding `latch` is on: what everything that acts on a rule asks (which mix runs, which tap
+    starts, which lane a rule holds, READY)."""
+    return latch
+
+
+def when_latch(latch: bool) -> bool:
+    """The state of the rule's `when` latch alone, the one the engine solves a change time for."""
+    return latch

@@ -19,7 +19,7 @@ from .installs import requeued
 from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
 from .offerstate import acting, refusal
-from .orders import AfterTime, Condition, Order, OrderVerb, initial_latch
+from .orders import AfterTime, Condition, Order, OrderVerb, initial_latch, rule_on
 from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
@@ -79,7 +79,7 @@ def _answer_order_verb(save: Save, rules: Rules) -> AnswerOffer | None:
     """The AnswerOffer of the first order whose latch is true and whose answer can act (an AnswerKind as the offer it
     resolves to); the rest are skipped."""
     for order, latch in zip(save.orders, save.latches):
-        if latch and isinstance(order.then, (AnswerOffer, AnswerKind)) and (found := acting(save, rules, order.then)):
+        if rule_on(latch) and isinstance(order.then, (AnswerOffer, AnswerKind)) and (found := acting(save, rules, order.then)):
             return found
     return None
 
@@ -88,7 +88,7 @@ def _tap_order_verb(save: Save, rules: Rules) -> TapCard | None:
     """The TapCard of the first order whose latch is true and whose card can act (ready, and its speed above 0);
     orders that cannot act are skipped, never chosen."""
     for order, latch in zip(save.orders, save.latches):
-        if latch and isinstance(order.then, TapCard) and _can_act(save, rules, order.then):
+        if rule_on(latch) and isinstance(order.then, TapCard) and _can_act(save, rules, order.then):
             return order.then
     return None
 
