@@ -215,7 +215,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("appended", sent(r.decided[0])?.length, 5);
 }
 
-// The shortcuts: open() lands on the given rule's editor; the ledger's Change and "covered", and the strip's "until …".
+// The shortcuts: open() lands on the given rule's editor; a ledger line's rule mark, and the strip's "until …".
 {
   const r = rig();
   r.tab.open(tab, 1);
@@ -228,8 +228,10 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   const ledger = new Ledger(context(decided, opened, []));
   fakeDocument.body.replaceChildren(ledger.root as unknown as FakeEl);   // a fake DOM double -- it has only what this test reads
   ledger.update({ ...red, unlocked: [...red.unlocked, { category: "feature", id: "ledger" }] }, null);
-  one(ledger.root as unknown as FakeEl, ".line-order .quiet").click();   // a fake DOM double -- it has only what this test reads
-  expect("the ledger's Change opens rule 0, not gated", opened, [0]);
+  const root = ledger.root as unknown as FakeEl;   // a fake DOM double -- it has only what this test reads
+  expect("no row under the red line", q(root, ".line-order").length, 0);
+  one(root, ".line-rule").click();
+  expect("the line's rule mark opens rule 0, not gated", opened, [0]);
 
   const covered = fixtureStep("covered", 100).view;
   const falling: View = { ...covered, unlocked: [...covered.unlocked, { category: "feature", id: "ledger" }],

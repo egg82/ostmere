@@ -4,7 +4,7 @@ planted in a second place fails the load."""
 import pytest
 
 from ashfall_app.api.decision_models import AtLeast, SkillLevel, StoreValue
-from ashfall_app.api.line_causes import line_infos
+from ashfall_app.api.line_causes import line_infos, worded_stores
 from ashfall_app.api.line_models import AnswerCause, CampCause, LineCause, RunnerCause, SkillCause, WhenCause
 from ashfall_app.opening.schema import Opening
 from tests.opening.playthrough import opening
@@ -27,17 +27,18 @@ def test_a_fights_pool_line_names_its_runner(causes: dict[str, LineCause | None]
 
 
 def test_a_beats_line_names_what_it_waited_on(causes: dict[str, LineCause | None]) -> None:
-    beat = next(t for t in opening().triggers
-                if t.when.subject_kind == "store" and t.when.test == "at_least" and t.outcome.line_keys)
+    worded = worded_stores(opening())
+    beat = next(t for t in opening().triggers if t.when.subject_kind == "store" and t.when.test == "at_least"
+                and t.when.id in worded and t.outcome.line_keys)
     got = causes[beat.outcome.line_keys[0]]
     assert isinstance(got, WhenCause) and isinstance(got.when, AtLeast)
     assert got.when.watched == StoreValue(store=beat.when.id or "")
 
 
-def test_a_chips_line_names_its_condition(causes: dict[str, LineCause | None]) -> None:
-    chip = next(c for c in opening().chips if c.on_line_key)
-    got = causes[chip.on_line_key or ""]
-    assert isinstance(got, WhenCause) and got.when.kind == chip.when.test
+def test_a_line_on_a_store_the_player_never_sees_has_no_cause(causes: dict[str, LineCause | None]) -> None:
+    worded = worded_stores(opening())
+    chip = next(c for c in opening().chips if c.on_line_key and c.when.subject_kind == "store" and c.when.id not in worded)
+    assert causes[chip.on_line_key or ""] is None
 
 
 def test_a_camp_levels_line_names_the_level_from_one(causes: dict[str, LineCause | None]) -> None:

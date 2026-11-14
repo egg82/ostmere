@@ -8,6 +8,7 @@ import pytest
 from ashfall_app import engine as e
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
+from ashfall_app.opening.refs import outcomes
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.test_townsfolk_loader import loaded
 
@@ -99,3 +100,12 @@ def test_set_orders_accepts_a_town_mix_as_the_towns_rule():
     rules, save = new_rules(), joined_save()
     order = w.Order(when=w.AfterTime(at=0), then=w.SwitchMix(mix_id=str(TOWN)))
     assert decide(game(rules), save, rules, w.SetOrders(orders=[order])).orders[0].then == e.SwitchMix(TOWN)
+
+
+def test_the_content_names_the_games_mixes_and_the_prefix_it_keeps():
+    """The mixes the game makes are the content's joins' (Content.game_mix_ids): the page words them by the town's title
+    and keeps them out of the player's list, with no reading of the id; a new id with the reserved prefix is refused."""
+    content = game(new_rules()).content()
+    joins = sorted({j.mix for _, out in outcomes(loaded()) for j in out.joins})
+    assert joins and content.game_mix_ids == joins
+    assert content.limits.reserved_mix_prefix == e.TOWN_PREFIX

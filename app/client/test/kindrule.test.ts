@@ -1,6 +1,6 @@
 // The answer rule on the page (CONTRACT.txt, "Offers"): the Rules tab's answers section builds one rule per offer kind,
-// and only once an offer of that kind has been answered; its buttons are the kind's roles worded by the answer that
-// offer gave; a tap sets (or, with a rule set, changes in place) an answer_kind order; the page builds no answer_offer.
+// and only once an offer of that kind has been answered; its buttons are the kind's roles worded by the kind's own
+// labels; a tap sets (or, with a rule set, changes in place) an answer_kind order; the page builds no answer_offer.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
@@ -46,12 +46,12 @@ const builders = (root: FakeEl) => root.querySelectorAll(".kind-rule");
   expect("no builder", builders(draw(open).root).length, 0);
 }
 
-{  // once one is answered: a row under Answers, a button per role worded by that offer's answers
+{  // once one is answered: a row under Answers, a button per role worded by the kind's labels
   const { root } = draw(answered);
   const rows = builders(root);
   expect("one builder", rows.length, 1);
   expect("in the answers section", rows[0]?.parentElement?.querySelector(".panel-heading")?.textContent, "Answers");
-  expect("a button per role, by the answer's label", rows[0]?.querySelectorAll("button").map((b) => [b.dataset.role, b.textContent]), [["no", "Wait"], ["yes", "Go now"]]);
+  expect("a button per role, by the kind's label", rows[0]?.querySelectorAll("button").map((b) => [b.dataset.role, b.textContent]), [["no", "Say no"], ["yes", "Say yes"]]);
   expect("a line says the buttons set a standing answer", rows[0]?.querySelector(".kind-lead")?.textContent, "Next time someone asks:");
   expect("none pressed with no rule", rows[0]?.querySelectorAll("button").map((b) => b.getAttribute("aria-pressed")), ["false", "false"]);
 }
@@ -64,7 +64,7 @@ const builders = (root: FakeEl) => root.querySelectorAll(".kind-rule");
 
 {  // with the rule set: its row says what it does, the role is pressed; a tap on the other role changes it in place
   const { root, decided } = draw(ruled);
-  expect("the rule's words", root.querySelectorAll(".task-rule").map((r) => r.querySelector(".rule-cond-text")?.textContent).filter((t) => t?.startsWith("Answer")), ["Answer: Go now"]);
+  expect("the rule's words", root.querySelectorAll(".task-rule").map((r) => r.querySelector(".rule-cond-text")?.textContent).filter((t) => t?.startsWith("Answer")), ["Answer: Say yes"]);
   expect("the pressed role", builders(root)[0]?.querySelectorAll("button").map((b) => b.getAttribute("aria-pressed")), ["false", "true"]);
   root.querySelector("[data-role=\"no\"]")?.click();
   expect("changed in place", decided, [{ kind: "set_orders", orders: [...answered.orders, { ...rule, then: { ...rule.then, role: "no" } }] }]);

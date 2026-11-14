@@ -91,7 +91,10 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   of the lines above (`decisions.md`, "People, as built"). Later systems add rows (seasons, fights) the same way. Rejected: a figures entry on every visit, which would put a few hundred bytes per return into
   every presentation write; and opening the chronicle by itself on a return, which would cover the strip's replay.
 - **Every line says what caused it**, as "↳" and a few words under it: the card or fight that wrote it, the store,
-  level or count a beat waited on, the Camp level, the player's answer. The cause is served beside the line's kind
+  level or count a beat waited on, the Camp level, the player's answer. A beat that waited on a clock the player never
+  sees reads as the time of day it marks ("after dark", "at first light"), from the store's part of the day
+  (`StoreEntry.clock`), the same words a card waiting on it uses; a store the player never sees with no part of the day
+  gives no cause, never an amount ("20 day"; `app/tests/opening/test_cause_stores.py`). The cause is served beside the line's kind
   (`app/ashfall_app/api/line_causes.py`; `app/ashfall_app/api/CONTRACT.txt`, "Line causes"), read from where the
   content authors the key, and never parsed from the line. A key is written in one place, or by several levels of one
   skill (a phase's pool), whose cause is the skill alone since the key cannot say which level; any other sharing

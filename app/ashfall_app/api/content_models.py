@@ -12,7 +12,7 @@ from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, N
 from .line_models import LineInfo, PeopleInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
-from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, OfferInfo
+from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, KindRole as KindRole, OfferInfo, OfferKindInfo as OfferKindInfo
 
 
 class Scales(BaseModel):
@@ -27,6 +27,8 @@ class Limits(BaseModel):
     max_orders: int
     max_queue: int
     max_mixes: int
+    reserved_mix_prefix: str
+    """A new mix id beginning so is the game's: save_mix of one is a 422 (CONTRACT.txt, "The town's mix")."""
 
 
 class TextEntry(BaseModel):
@@ -102,6 +104,11 @@ class StoreInfo(BaseModel):
     whose level pays it, or by the completion a find waits on."""
     hidden: bool
     """The engine's bookkeeping (a clock, a countdown), never seen: no ledger line, in no served figure (AnswerInfo.gains)."""
+    tally: bool
+    """A count the game keeps (arrivals): no ledger line, but a card's need on it is drawn as have/need."""
+    clock: Literal["dawn", "day", "evening", "night"] | None
+    """The part of the story's day this clock counts through: a condition on it reads as that time (ui.when.*), never as
+    an amount (CONTRACT.txt, "Cards", "Line causes")."""
     bonus_bp: int | None
     """Set on a store only standing actions take from, each holding a lane speed while it runs: that speed change, in
     basis points. Its ledger line is a bonus, never red, and says the bonus is off once dry (CONTRACT.txt, "Ledger")."""
@@ -269,6 +276,8 @@ class Content(BaseModel):
     lane_infos: list[LaneInfo]
     offer_infos: list[OfferInfo]
     """Every offer, in content order (CONTRACT.txt, "Offers")."""
+    offer_kinds: list[OfferKindInfo]
+    """Every kind of offer with its role labels, in content order."""
     end_line_keys: list[str]
     """Lines the page appends to the log when the end happens (view.ended_at)."""
     line_infos: list[LineInfo]
@@ -281,6 +290,9 @@ class Content(BaseModel):
     people: PeopleInfo | None
     """The bands a day's mention is worded from (CONTRACT.txt, "People"); null until a chapter declares [people]."""
     first_mix: FirstMix
+    game_mix_ids: list[str]
+    """The mix ids the game makes (the town's mixes its joins make): the game's own, worded by ui.town.title and changed
+    in the town's editor. Every other saved mix is the player's (CONTRACT.txt, "The town's mix")."""
     transfer_code_s: int
     """How long a transfer code works (TransferCode.expires_in_s), for the text that says so ({minutes})."""
 

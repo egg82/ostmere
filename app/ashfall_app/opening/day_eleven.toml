@@ -424,6 +424,7 @@ id = "night_12"
 label_key = "store_night_12"
 cap_items = 20
 hidden = true
+clock = "night"
 
 [[standing]]
 id = "night_12"

@@ -8,6 +8,7 @@ import { CHRONICLE_KEYS } from "./chronkeys";
 import { PRESTIGE_KEYS } from "./prestigekeys";
 import { REMINDER_KEYS } from "./reminderkeys";
 import { RULE_KEYS } from "./rulekeys";
+import { TIME_KEYS } from "./timewords";
 
 /** Keys the page itself asks for: units, templates, the controls. Line, label and card keys come from the content. */
 export const UI = {
@@ -21,6 +22,7 @@ export const UI = {
   amount: "ui.store.amount", // "{n} of {cap}"
   empties: "ui.ledger.empties", // "{d}" until a falling store is empty
   fills: "ui.ledger.fills", // "{d}" until a rising store is full
+  ledgerBehind: "ui.ledger.behind", // "{task}": the task or mix of a rule covering a line that still heads where the rule does not want it
   level: "ui.skill.level", // "{n}"
   skillNextIn: "ui.skill.next_in", // "{pays} {d}": what the next level pays, and the forecast's time to it
   skillNone: "ui.skill.none", // a skill row with nothing ahead in this content
@@ -42,7 +44,6 @@ export const UI = {
   runsIndefinitely: "ui.mix.runs_indefinitely",
   defaultMix: "ui.mix.default", // the id of the first mix, saved from the first-mix offer
   orderAdd: "ui.order.add",
-  orderChange: "ui.order.change",
   orderRemove: "ui.order.remove",
   ...RULE_KEYS,
   handsByRule: "ui.hands.by_rule", // "{store}{n}": the strip while a "below" rule with no band runs
@@ -58,7 +59,6 @@ export const UI = {
   feedbackThanks: "ui.feedback.thanks",
   feedbackLater: "ui.feedback.later", // not kept: too many just now, or no answer
   tabCards: "ui.tab.cards",
-  tabTown: "ui.tab.town",   // the town's people and lanes (on a phone the ledger and skills too); the desktop's Town view's title
   tabBook: "ui.tab.book",   // the chronicle's sheet, with Done beside it
   bookDone: "ui.book.done",   // the Book's page of what is finished
   handsIdle: "ui.hands.idle",
@@ -74,10 +74,11 @@ export const UI = {
   ...GOAL_ROW_KEYS,
   ...LESSON_KEYS,
   ...CHRONICLE_KEYS,
+  ...TIME_KEYS,
   ...ASK_KEYS,
   ...PRESTIGE_KEYS,
   ...REMINDER_KEYS,
-  townTitle: "ui.town.title",   // the camp's shown name: the town mix's heading and label, one home
+  townTitle: "ui.town.title",   // the camp's shown name, one home: its tab, its view's and rules' heading, its mix's label
   townChange: "ui.town.change",   // the strip's way into the town's mix
   townIdle: "ui.town.idle",   // "{person}": a person's unshared remainder
   edit: "ui.mix.edit",
@@ -89,6 +90,8 @@ export const UI = {
   runMix: "ui.mix.run", // the Mixes list: tapping this row runs the mix
   mixRunning: "ui.mix.running", // the Mixes list: the mix running now, when no time to state
   name: "ui.mix.name",
+  mixNameReserved: "ui.mix.name_reserved",   // "{prefix}": under the editor's name, a name the game keeps
+  mixNameTaken: "ui.mix.name_taken",   // under the editor's name, another saved mix's
   add: "ui.mix.add",
   perMinuteHead: "ui.mix.per_minute",
   now: "ui.mix.now",

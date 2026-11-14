@@ -17,7 +17,7 @@ from ..engine import Rules, validate_rules
 from .chapters import merge
 from .fight_entries import SideEntry, ThreatEntry
 from .journal_entries import JournalDecl, JournalEntry, NoteEntry
-from .offer_entries import OfferEntry
+from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
@@ -30,9 +30,10 @@ from .camp_entries import CampEntry, CampLevelEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LaneEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, StoreEntry,
-    TriggerEntry, UnlockEntry, WhileRunningEntry,
+    CardEntry, ChipEntry, Entry, LaneEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
+    UnlockEntry, WhileRunningEntry,
 )
+from .store_entries import StoreEntry
 from .feature_entries import AimEntry, FeatureCardEntry, FeatureEntry
 
 OPENING = Path(__file__).resolve().parent / "opening.toml"
@@ -81,6 +82,7 @@ class Opening(Entry):
     features: list[FeatureEntry] = []
     order_cards: list[OrderCardEntry] = []
     offers: list[OfferEntry] = []
+    offer_kinds: list[OfferKindEntry] = []
     journal: JournalDecl | None = None
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []
@@ -143,6 +145,7 @@ class Chapter(Entry):
     features: list[FeatureEntry] = []
     order_cards: list[OrderCardEntry] = []
     offers: list[OfferEntry] = []
+    offer_kinds: list[OfferKindEntry] = []
     journal: JournalDecl | None = None
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []

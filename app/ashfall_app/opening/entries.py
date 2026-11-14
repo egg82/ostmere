@@ -17,19 +17,6 @@ class ItemAmount(Entry):
     every: int = Field(default=1, ge=1)
 
 
-class StoreEntry(Entry):
-    id: str
-    label_key: str
-    cap_items: int = Field(ge=1)
-    initial_items: int = Field(default=0, ge=0)
-    tally: bool = False
-    """A count the game keeps and no card spends (arrivals): only an outcome adds to it, a gate reads it, and no card
-    takes it as a cost or an input (tally_checks.py)."""
-    hidden: bool = False
-    """The engine's bookkeeping (a clock, a countdown) the player never sees: no ledger line, in no served figure
-    (api/CONTRACT.txt, StoreInfo.hidden)."""
-
-
 class LevelPaysEntry(Entry):
     """What a skill's level brings, shown on its row before it lands: words, pays_unknown for a story unlock. The payout itself
     is a trigger on the level (a find) or a requirement that reads it (a craft made ready)."""

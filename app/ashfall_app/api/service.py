@@ -18,7 +18,7 @@ from . import convert
 from .goalrows import goal_rows
 from .ruledry import order_dry
 from .goals import goals
-from .line_causes import line_infos, offer_cause
+from .line_causes import line_infos, offer_cause, worded_stores
 from .line_models import PeopleBand, PeopleInfo
 from .sources import sources, store_sources
 from . import content_models as cm
@@ -103,10 +103,10 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
     return cm.Content(
         rules_digest=digest,
         scales=cm.Scales(quantity_per_item=e.QUANTITY_SCALE, rate_per_item_hour=e.RATE_SCALE, bp=e.BP),
-        limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES),
+        limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES, reserved_mix_prefix=e.TOWN_PREFIX),
         text_entries=[cm.TextEntry(key=k, text=t) for k, t in o.text.items()],
         store_infos=[cm.StoreInfo(store=s.id, label_key=s.label_key, cap=e.units(s.cap_items), made_by=made_by(o, s.id),
-                                  hidden=s.hidden, bonus_bp=bonus_bp(o, s.id))
+                                  hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))
                      for s in o.stores],
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
         threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key) for t in o.threats],
@@ -150,6 +150,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                         cm.LaneLabel(after=convert.unlock(authored.unlock(lb.after)), label_key=lb.label_key)
                         for lb in x.later_labels], name_key=x.name_key, told=x.told) for x in o.lanes)],
         offer_infos=_offer_infos(o),
+        offer_kinds=[cm.OfferKindInfo(kind=k.kind, roles=[cm.KindRole(role=r.role, label_key=r.label_key) for r in k.roles])
+                     for k in o.offer_kinds],
         end_line_keys=list(o.end_line_keys),
         line_infos=line_infos(o),
         journal=_journal(o),
@@ -167,14 +169,15 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             came=[PeopleBand(at_least=b.at_least, keys=list(b.keys)) for b in o.people.came],
             went=[PeopleBand(at_least=b.at_least, keys=list(b.keys)) for b in o.people.went]),
         first_mix=cm.FirstMix(feature=o.first_mix.feature, card_ids=list(o.first_mix.cards)),
+        game_mix_ids=sorted({j.mix for _, out in outcomes(o) for j in out.joins}),
         transfer_code_s=int(codes.LIFETIME.total_seconds()))
 
 
 def _offer_infos(o: Opening) -> list[cm.OfferInfo]:
     hidden = {s.id for s in o.stores if s.hidden}
-    cards = {c.id for c in o.cards}
+    cards, worded = {c.id for c in o.cards}, worded_stores(o)
     return [cm.OfferInfo(offer=x.id, text_key=x.text_key, kind=x.kind, line_keys=list(x.line_keys), askers=list(x.askers),
-                         cause=offer_cause(x, cards, hidden), waiting_key=x.waiting_key, expiry_key=x.expiry_key,
+                         cause=offer_cause(x, cards, worded), waiting_key=x.waiting_key, expiry_key=x.expiry_key,
                          permanence_key=x.permanence_key, answers=[
         cm.AnswerInfo(answer=a.id, label_key=a.label_key, cost_key=a.cost_key, role=a.role,
                       change_bp=_changes(a.outcome.modifiers),

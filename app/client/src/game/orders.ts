@@ -11,9 +11,6 @@ import { readRule, ruleUntil, ruleWhen, type StoreRule } from "./storerule";
 import { readSubject, subjectWords } from "./subjectrule";
 import { UI } from "./text";
 
-/** A mix id beginning so is the game's own town mix. */
-export const TOWN_PREFIX = "town:";
-
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 
 /** JSON with every object's keys sorted: equal for two values whatever order their fields were written in. */
@@ -70,9 +67,9 @@ export function ruleWords(catalog: Catalog, order: Order): { when: string; actio
   return when === null ? null : { when, action: actionWords(catalog, order.then) };
 }
 
-/** A mix as the player reads it: the game's town mix (its id begins "town:") as the town's title, any other by its name. */
+/** A mix as the player reads it: one the game made (Content.game_mix_ids) as the town's title, any other by its name. */
 export function mixLabel(catalog: Catalog, id: string): string {
-  return id.startsWith(TOWN_PREFIX) ? catalog.text.get(UI.townTitle) : id;
+  return catalog.content.game_mix_ids.includes(id) ? catalog.text.get(UI.townTitle) : id;
 }
 
 export function actionWords(catalog: Catalog, then: OrderVerb): string {
@@ -215,11 +212,6 @@ export function reorderRule(view: View, index: number, to: number, group: readon
 /** How many rules run this mix. */
 export function rulesUsing(view: View, mixId: string): number {
   return view.orders.filter((o) => o.then.kind === "switch_mix" && o.then.mix_id === mixId).length;
-}
-
-/** The first rule watching this store's amount, or -1 (the rule a ledger line's "covered" names). */
-export function ruleOnStore(view: View, store: string): number {
-  return view.orders.findIndex((o) => o.when.kind !== "after_time" && o.when.watched.kind === "store_value" && o.when.watched.store === store);
 }
 
 /** Every rule that ran `from`, now running `to` (a mix renamed in the editor). */

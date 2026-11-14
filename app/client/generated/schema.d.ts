@@ -909,6 +909,8 @@ export interface components {
             lane_infos: components["schemas"]["LaneInfo"][];
             /** Offer Infos */
             offer_infos: components["schemas"]["OfferInfo"][];
+            /** Offer Kinds */
+            offer_kinds: components["schemas"]["OfferKindInfo"][];
             /** End Line Keys */
             end_line_keys: string[];
             /** Line Infos */
@@ -919,6 +921,8 @@ export interface components {
             camp: components["schemas"]["CampInfo"] | null;
             people: components["schemas"]["PeopleInfo"] | null;
             first_mix: components["schemas"]["FirstMix"];
+            /** Game Mix Ids */
+            game_mix_ids: string[];
             /** Transfer Code S */
             transfer_code_s: number;
         };
@@ -1303,6 +1307,13 @@ export interface components {
             label: "Ostmere";
         };
         Key: string;
+        /** KindRole */
+        KindRole: {
+            /** Role */
+            role: string;
+            /** Label Key */
+            label_key: string;
+        };
         /**
          * LaneBar
          * @description Which card a lane is tapping, and when the tap ends. The bar is the card's own (Card.bar).
@@ -1400,6 +1411,8 @@ export interface components {
             max_queue: number;
             /** Max Mixes */
             max_mixes: number;
+            /** Reserved Mix Prefix */
+            reserved_mix_prefix: string;
         };
         LineCause: components["schemas"]["RunnerCause"] | components["schemas"]["WhenCause"] | components["schemas"]["SkillCause"] | components["schemas"]["CampCause"] | components["schemas"]["AnswerCause"];
         /** LineInfo */
@@ -1622,6 +1635,17 @@ export interface components {
             expiry_key: string | null;
             /** Permanence Key */
             permanence_key: string | null;
+        };
+        /**
+         * OfferKindInfo
+         * @description What the content says of an offer kind: the label of each role, written for whoever asks, which words the rule
+         *     that answers the kind (an offer's own answer labels are written for that one ask).
+         */
+        OfferKindInfo: {
+            /** Kind */
+            kind: string;
+            /** Roles */
+            roles: components["schemas"]["KindRole"][];
         };
         /**
          * OfferedSwitch
@@ -2173,6 +2197,10 @@ export interface components {
             made_by: string[];
             /** Hidden */
             hidden: boolean;
+            /** Tally */
+            tally: boolean;
+            /** Clock */
+            clock: ("dawn" | "day" | "evening" | "night") | null;
             /** Bonus Bp */
             bonus_bp: number | null;
         };
