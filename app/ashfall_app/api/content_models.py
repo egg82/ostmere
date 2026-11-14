@@ -12,6 +12,7 @@ from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, N
 from .line_models import LineInfo, PeopleInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
+from .skill_models import LevelPays as LevelPays, NodeChange as NodeChange, NodeInfo, NodeTarget as NodeTarget, SkillInfo
 from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, KindRole as KindRole, OfferInfo, OfferKindInfo as OfferKindInfo
 
 
@@ -122,49 +123,6 @@ class StandingInfo(BaseModel):
     skill: str | None
     fight: FightInfo | None
     """Set on a threat that runs on its own (CONTRACT.txt, "FIGHTS")."""
-
-
-class LevelPays(BaseModel):
-    """What a level brings, shown before it lands: words (pays_key), "?" for a story unlock."""
-
-    level: int
-    pays_key: str
-    change_bp: list[int]
-    """The level's modifiers as signed changes in basis points (+1000 is +10%), each distinct value once, in the order
-    authored; the {pct} and {pct_b} slots of pays_key. Empty for a level that pays a find."""
-    speeds: list[str]
-    """The cards the level makes faster, in card order: a work entry's card, each card on a lane entry's lane."""
-
-
-class NodeTarget(StrEnum):
-    MAKE = "make"
-    WORK = "work"
-    CAP = "cap"
-
-
-class NodeChange(BaseModel):
-    """What a node's ranks change, as the content authors it: `make`, what runner `id` (a card or standing action)
-    makes of `store`; `work`, card `id`'s work speed; `cap`, store `id`'s cap. The page names it by those ids' labels."""
-
-    target: NodeTarget
-    id: str
-    store: str | None
-
-
-class NodeInfo(BaseModel):
-    """One node of `skill`'s prestige track (CONTRACT.txt, "PRESTIGE PHASES"); SkillPrestige.menu_nodes names it."""
-
-    node: str
-    skill: str
-    label_key: str
-    change: NodeChange
-
-
-class SkillInfo(BaseModel):
-    skill: str
-    label_key: str
-    levels: list[LevelPays]
-    """The levels that bring something, in order: the row shows the first above its level."""
 
 
 class FirstMix(BaseModel):
