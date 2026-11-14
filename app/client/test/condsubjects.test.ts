@@ -22,9 +22,9 @@ for (const { phase, view } of SAVES) {
 }
 let chipsSeen = 0;
 for (const { phase, view } of SAVES) {
-  const offered = new Set(whenChoices(catalog, view, true, null, null).chips.map((c) => c.chip));
+  const offered = new Set(whenChoices(catalog, view, true, [], null).chips.map((c) => c.chip));
   const off = { ...view, chips: [] };   // a chip shown before and off now is offered all the same
-  const offeredOff = new Set(whenChoices(catalog, off, true, null, null).chips.map((c) => c.chip));
+  const offeredOff = new Set(whenChoices(catalog, off, true, [], null).chips.map((c) => c.chip));
   for (const chip of view.chips_seen) {
     chipsSeen++;
     if (!offered.has(chip) || !offeredOff.has(chip)) failures.push(`${phase}: chip not offered: ${chip}`);

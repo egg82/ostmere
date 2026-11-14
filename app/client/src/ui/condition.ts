@@ -10,7 +10,7 @@ import type { ChipInfo, Condition, Order, View } from "../api/types";
 import { sample } from "../game/clock";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, savedVerb } from "../game/orders";
 import { townNewRule } from "../game/town";
-import { chosen, doChoices, subjectChoices, taskOf, whenChoices, type DoChoice } from "../game/ruleoffers";
+import { chosen, doChoices, ruleCards, subjectChoices, whenChoices, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
 import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
@@ -155,7 +155,7 @@ export class ConditionEditor {
   /** In the simple view, a condition the newly chosen task does not answer is cleared, so what shows chosen is offered. */
   private keepOffered(view: View): void {
     const draft = this.draft!;
-    const offer = whenChoices(this.ctx.catalog, view, false, taskOf(this.ctx.catalog, view, draft.then), null);
+    const offer = whenChoices(this.ctx.catalog, view, false, ruleCards(view, draft.then), null);
     const chip = this.chipNow();
     if (chip ? offer.chips.includes(chip) : offer.stores.includes(draft.rule.store)) return;
     draft.rule = defaultRule("", "below", 0);
@@ -172,7 +172,7 @@ export class ConditionEditor {
     const { catalog } = this.ctx;
     const draft = this.draft;
     const editing = draft?.index === null || draft?.subject ? null : draft?.rule.store ?? null;
-    const offer = whenChoices(catalog, view, this.full, taskOf(catalog, view, draft?.then ?? null), editing);
+    const offer = whenChoices(catalog, view, this.full, ruleCards(view, draft?.then ?? null), editing);
     const subjects = this.full ? subjectRows(catalog, view, subjectChoices(catalog, view), (r) => this.setSubject(r, true)) : [];
     const row = draft?.chip === true ? [] : whenRow(catalog, offer.chips, offer.stores, (c) => this.setChip(c), (s) => this.setStore(s), subjects);
     this.chips.hidden = row.length === 0;
