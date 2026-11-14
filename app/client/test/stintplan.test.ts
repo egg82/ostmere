@@ -22,7 +22,7 @@ const base = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
 const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q };
 const wood = (lands: number): GoalRow => ({ kind: "store", store: "wood", skill: null, target: 30 * Q, lands_at: lands, per_hour: 60 * R, limit: null, until: woodUntil });
 const mix = (id: string): Mix => ({ id, components: [] });
-const planning = (over: Partial<View>): View => ({ ...base, mixes: [mix("a"), mix("b"), mix("town:camp")], active_mix_id: "a", running_mix_id: "a", greyed_mix_ids: [], queue: [], ...over });
+const planning = (over: Partial<View>): View => ({ ...base, mixes: [mix("a"), mix("b"), mix("town:main")], active_mix_id: "a", running_mix_id: "a", greyed_mix_ids: [], queue: [], ...over });
 
 async function plan(view: View, after: View | null, seeRules = true) {
   const { ctx, got } = testContext();

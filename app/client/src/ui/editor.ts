@@ -31,6 +31,8 @@ export class MixEditor {
   private readonly nameInput = el("input", "editor-name");
   private readonly save = el("button", "primary");
   private readonly saveNew = el("button", "quiet");
+  /** Why Save refuses the name typed: one the game keeps, or another saved mix's. */
+  private readonly refuse = el("p", "editor-refuse");
   private readonly bar: ShareBar;
   private readonly entries = el("div", "editor-entries");
   private readonly totals = el("div", "editor-totals");
@@ -80,7 +82,7 @@ export class MixEditor {
     const head = el("div", "editor-head");
     const buttons = el("div", "editor-buttons");
     buttons.append(this.save, close);
-    head.append(label, buttons);
+    head.append(label, buttons, this.refuse);
     const foot = el("div", "editor-foot"); foot.append(this.saveNew, this.danger);   // Save as new, then Delete
     this.root.append(head, this.bar.root, this.totals, this.stint, this.entries, this.adds.root, foot);   // the results sit under the bar, so a drag shows its effect in view
   }
@@ -237,15 +239,23 @@ export class MixEditor {
     this.drawDelete();
   }
 
+  /** Save and Save as new as the edit allows. A name beginning as the game's mixes do is refused, and so is another
+   * saved mix's name, which Save would overwrite; the line under the name says which. */
   private drawButtons(): void {
     const view = this.view;
+    const { text, content } = this.ctx.catalog;
     const name = this.nameInput.value.trim();
     const taken = !!view && view.mixes.some((m) => m.id === name);
+    const reserved = name.startsWith(content.limits.reserved_mix_prefix);
+    const other = taken && name !== this.from;
     const empty = (this.local?.components.length ?? 0) === 0;
     const full = !!view && mixesFull(this.ctx.catalog, view);
-    this.save.disabled = !name || empty || this.holdsGone() || (this.from === null && taken) || (full && !taken);
+    this.save.disabled = !name || empty || this.holdsGone() || reserved || other || (full && !taken);
     this.saveNew.hidden = this.from === null;
-    this.saveNew.disabled = !name || empty || this.holdsGone() || taken || full;
+    this.saveNew.disabled = !name || empty || this.holdsGone() || reserved || taken || full;
+    this.refuse.hidden = !reserved && !other;
+    this.refuse.textContent = reserved ? text.fill(UI.mixNameReserved, { prefix: content.limits.reserved_mix_prefix })
+      : other ? text.get(UI.mixNameTaken) : "";
   }
 
   private drawEntries(): void {

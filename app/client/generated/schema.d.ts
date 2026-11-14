@@ -921,6 +921,8 @@ export interface components {
             camp: components["schemas"]["CampInfo"] | null;
             people: components["schemas"]["PeopleInfo"] | null;
             first_mix: components["schemas"]["FirstMix"];
+            /** Game Mix Ids */
+            game_mix_ids: string[];
             /** Transfer Code S */
             transfer_code_s: number;
         };
@@ -1409,6 +1411,8 @@ export interface components {
             max_queue: number;
             /** Max Mixes */
             max_mixes: number;
+            /** Reserved Mix Prefix */
+            reserved_mix_prefix: string;
         };
         LineCause: components["schemas"]["RunnerCause"] | components["schemas"]["WhenCause"] | components["schemas"]["SkillCause"] | components["schemas"]["CampCause"] | components["schemas"]["AnswerCause"];
         /** LineInfo */

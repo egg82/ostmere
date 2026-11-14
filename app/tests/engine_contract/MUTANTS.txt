@@ -98,9 +98,9 @@ Mixes hold cards (CardShare); every "action" below is a card with continuous lin
 96 validation   a join accepted for an undeclared, hands or unruled lane, a capped card, a card on another lane,
                 a mix id without "town:", in a card's outcome or finished, a JOINED unlock in an outcome or
                 the opening; SaveMix accepting a mixed-layer mix, a card on an unjoined lane, a capped
-                ruled-lane card, a lane sum above BP (declared, or through a nested mix), a new "town:" id; a
-                player's SwitchMix of a town mix, or SetQueue with one, accepted; SetOrders with one
-                refused.                                                                              [town_mix_validation]
+                ruled-lane card, a lane sum above BP (declared, or through a nested mix), a new "town:" id, a
+                saved mix under its id with cards of the other layer; a player's SwitchMix of a town mix, or
+                SetQueue with one, accepted; SetOrders with one refused.                              [town_mix_validation]
 97 town rebase  step 6 not landing a join already true (or landing it without the mix, the rule or the
                 share); the always rule kept on the rebased lane; JOINED unrenamed or renamed on the wrong
                 kind; the town's mix id renamed.                                                        [town_mix_join]
@@ -196,7 +196,7 @@ Fighting trips (a FightDef on a trip's card; planted in the worktree engine, res
 95 join once     planted 2, red 2
       a (a join of a joined lane runs again): first survived; killed by
         test_town_mix_join.py::test_a_second_join_of_a_joined_lane_leaves_a_later_always_rule_on_it_alone
-96 validation    planted 8, red 8
+96 validation    planted 9, red 9
       not planted: the lane-sum check on declared shares, a mixed-layer mix accepted
 97 town rebase   planted 3, red 3
       b (Join's lane unrenamed in a released outcome): first survived; killed by

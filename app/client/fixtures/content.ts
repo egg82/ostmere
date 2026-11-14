@@ -182,7 +182,7 @@ const text: Record<string, string> = {
   "ui.feedback.thanks": "Thank you. That reached us.",
   "ui.feedback.later": "That didn't go through. Try again later.",
   "ui.tab.cards": "Tasks",
-  "ui.tab.town": "Town", "ui.tab.book": "Book", "ui.book.done": "Done",
+  "ui.tab.book": "Book", "ui.book.done": "Done",
   "ui.hands.idle": "idle",
   "ui.hands.by_rule": "while under {n} {store}",
   "ui.hands.until_up": "until {m} {store}", "ui.hands.until_down": "until under {m} {store}",
@@ -220,7 +220,7 @@ const text: Record<string, string> = {
   "ui.lesson.cap_levels": "Set when the rule comes on and when it lets go.",
   "ui.lesson.cap_reaches": "Pick reaches. The rule comes on once {store} is full.",
   "ui.lesson.cap_do": "Pick what your hands do instead.",
-  "ui.town.title": "Camp", "ui.town.change": "Change", "ui.town.idle": "{person}, idle", "ui.rule.town_always": "{mix}, always",
+  "ui.town.title": "Camp", "ui.town.change": "Change", "ui.town.idle": "{person}, idle", "ui.rule.town_always": "Otherwise, {mix}",
   "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Tap + and - to change a share.",
   "ui.lesson.town_save": "Save, and everyone works to this split.", "ui.lesson.town_runs": "Each person shows what they are doing now.",
   "lane.mason": "Mason", "card.hew": "Hew stone", "card.carve": "Carve beams",
@@ -233,7 +233,7 @@ const text: Record<string, string> = {
   "ui.mix.save": "Save",
   "ui.mix.save_new": "Save as new",
   "ui.mix.new": "New mix", "ui.mix.if_run": "if run", "ui.mix.run": "Run", "ui.mix.running": "running",
-  "ui.mix.name": "Name",
+  "ui.mix.name": "Name", "ui.mix.name_reserved": "Pick a name that doesn't start with “{prefix}”.", "ui.mix.name_taken": "Another mix has this name.",
   "ui.mix.add": "Add",
   "ui.mix.per_minute": "per minute",
   "ui.mix.now": "now",
@@ -345,7 +345,7 @@ const card = (id: string, lane: string, presentation: "narrative" | "action" | "
 export const fixtureContent: Content = {
   rules_digest: "fixture-digest",
   scales: { quantity_per_item: Q, rate_per_item_hour: R, bp: BP },
-  limits: { max_orders: 64, max_queue: 64, max_mixes: 64 },
+  limits: { max_orders: 64, max_queue: 64, max_mixes: 64, reserved_mix_prefix: "town:" },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
     { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null },
@@ -460,5 +460,6 @@ export const fixtureContent: Content = {
   },
   camp: { store: "camp", camp_levels: [{ at: 50 * Q, pays_key: "pays.wall", pays_from: 3 * Q, pays_to: 5 * Q, change_bp: [], held: false, lifted_by: [], names: [] }, { at: 200 * Q, pays_key: "pays.unknown", pays_from: null, pays_to: null, change_bp: [], held: true, lifted_by: [], names: [] }] },
   first_mix: { feature: "mix", card_ids: ["gather", "tend"] },
+  game_mix_ids: ["town:main"],   // the town fixtures' mix (fixtures/townwire.ts), made by their joins
   transfer_code_s: 600,
 };

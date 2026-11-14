@@ -103,7 +103,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
     return cm.Content(
         rules_digest=digest,
         scales=cm.Scales(quantity_per_item=e.QUANTITY_SCALE, rate_per_item_hour=e.RATE_SCALE, bp=e.BP),
-        limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES),
+        limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES, reserved_mix_prefix=e.TOWN_PREFIX),
         text_entries=[cm.TextEntry(key=k, text=t) for k, t in o.text.items()],
         store_infos=[cm.StoreInfo(store=s.id, label_key=s.label_key, cap=e.units(s.cap_items), made_by=made_by(o, s.id),
                                   hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))
@@ -169,6 +169,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             came=[PeopleBand(at_least=b.at_least, keys=list(b.keys)) for b in o.people.came],
             went=[PeopleBand(at_least=b.at_least, keys=list(b.keys)) for b in o.people.went]),
         first_mix=cm.FirstMix(feature=o.first_mix.feature, card_ids=list(o.first_mix.cards)),
+        game_mix_ids=sorted({j.mix for _, out in outcomes(o) for j in out.joins}),
         transfer_code_s=int(codes.LIFETIME.total_seconds()))
 
 

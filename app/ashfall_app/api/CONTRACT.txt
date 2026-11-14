@@ -723,9 +723,9 @@ TEXT AND NUMBERS (one rule)
     ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
-    ui.chronicle.open | ui.tab.cards | ui.tab.town | ui.tab.book   the chronicle's sheet, and the tabs: Tasks, Town (the
-                                    town's people and lanes, and on a phone the ledger and skills) and Book (the
-                                    chronicle's sheet)
+    ui.chronicle.open | ui.tab.cards | ui.tab.book   the chronicle's sheet, and the tabs: Tasks and Book (the
+                                    chronicle's sheet); the town's tab (its people and lanes, and on a phone the ledger
+                                    and skills) is named by ui.town.title
     ui.book.done                    the Book's page of finished cards
     ui.chronicle.away_m {m} | away_h {h} | away_hm {h} {m} | away_d {d}   the title of a chronicle stretch that began with a return: how long the player was away
     ui.chronicle.earlier | ui.chronicle.now     the title of the stretch before the first return kept, and of the newest when no return is kept
@@ -1357,8 +1357,10 @@ THE TOWN'S MIX
   Once people join, the townsfolk's lanes are run by one mix whose shares are people's time: each share is a part of
   one person's time, the person being the lane its card is on (engine DESIGN.txt, "THE TOWN'S MIX"). It is an
   ordinary saved mix in view.mixes; which one runs is set by a rule, never by the player's switch.
-  Content: nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane): that lane's person has
-  joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
+  Content: game_mix_ids, the mix ids the content's joins make: the game's own mixes, worded by ui.town.title and
+  changed in the town's editor; every other saved mix is the player's. limits.reserved_mix_prefix ("town:"): a new
+  mix id beginning so is the game's. Nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane):
+  that lane's person has joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
   view.unlocked holds, and whose left unlock it does not (LEAVES).
   View: running_town_mix_id (the town mix running now: the first rule that is on with a switch_mix of a town mix that
   isn't greyed; null when none runs) and town_mix_order (the index into orders of that rule; null when none).
@@ -1370,8 +1372,9 @@ THE TOWN'S MIX
   joined, or that is locked, idles.
   Decisions:
   - save_mix of a town mix: 422 invalid_decision, nothing written, when it holds cards of both kinds of mix, a card
-    whose lane has not joined, a card with a cap, or one person's shares summing above 10000; and for a new mix id
-    beginning "town:" (those are the game's; the one it made may be edited).
+    whose lane has not joined, a card with a cap, or one person's shares summing above 10000; for a new mix id
+    beginning "town:" (those are the game's; the one it made may be edited); and, for any mix, under the id of a saved
+    mix of the other kind (a hands mix's cards under a town mix's id, or the reverse).
   - switch_mix from the player of a town mix: 422 (set by rules). set_queue with a switch_mix of a town mix: 422 (the
     queue is the hands' plan). set_orders accepts one: that is the town's rule.
   - The town's always rule: an order {when: after_time {time: 0}, then: switch_mix m}, m a town mix. When the first
@@ -1390,11 +1393,17 @@ THE TOWN'S MIX
     that mix; a new mix sends save_mix then set_orders with the town's always rule pointed at it.
   - teach it once, the first time the strip shows, with a lesson on the strip and the editor's own controls
     (decisions.md, "Lessons"), skippable and never repeated in a save, kept in the save as other lessons are.
-  - in the Rules tab, list the rules whose switch_mix names a town mix under ui.town.title, in view.orders order, and
-    word an always one as ui.rule.town_always {mix}; a new town rule goes immediately before the town's first always
-    rule. A greyed town mix is drawn as the hands' greyed mix is: the strip says it stopped and which card retired.
+  - in the Rules tab, once view.mixes holds a second town mix, list the rules whose switch_mix names a town mix under
+    ui.town.title, in view.orders order, and word an always one as ui.rule.town_always {mix}; a new town rule goes
+    immediately before the town's first always rule. With one town mix a town rule has nothing to switch to, so the
+    page draws none of them and offers no new one (the always rule still runs). A greyed town mix is drawn as the
+    hands' greyed mix is: the strip says it stopped and which card retired.
+  - name the town everywhere by ui.town.title: its tab, its view's title, its rules' heading and a mix in
+    Content.game_mix_ids.
   THE CLIENT MAY NOT:
-  - offer switch_mix of a town mix in the Mixes list, or put a town mix in the queue.
+  - list a town mix in the Mixes list or open it in the mix editor, offer switch_mix of one there, or put one in the
+    queue. A name typed in the mix editor that begins limits.reserved_mix_prefix, or is another saved mix's, is
+    refused where it is typed.
   - build an always rule (after_time 0, tap_card) on a joined lane: it would take that person whole for good.
   - add shares across people, move a share from one person to another, or show the split as anything but each
     person's own parts of 100% (the game never redistributes a share).
@@ -1407,6 +1416,7 @@ THE TOWN'S MIX
   New text keys (Content.text_entries): ui.town.title | ui.town.change   the strip's heading and its Change
                                     ui.town.idle {person}   a person's unshared remainder
                                     ui.rule.town_always {mix}   the town's always rule
+                                    ui.mix.name_reserved {prefix} | ui.mix.name_taken   the mix editor's name refused
   The lesson's lines are content text keys like the other lessons'.
 
 LEAVES

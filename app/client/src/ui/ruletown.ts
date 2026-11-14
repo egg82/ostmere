@@ -1,11 +1,12 @@
 // The Rules tab's town section (docs/design/opening-screen.md, "The town"): the rules whose switch_mix names a town mix,
 // in order, under the town's heading, drawn as the hands' rules are (the tab's own row: ≡ with its menu and drag, ●,
-// the condition, → the mix) and a new town rule under them. The town's always rule reads as ui.rule.town_always (it has
-// no condition to edit); a rule whose mix is greyed is dimmed and says why, as a hands rule does. The mix itself is
-// changed from the town's strip.
+// the condition, → the mix) and a new town rule under them, once the town has a second mix to switch to: with one, a
+// town rule has nothing to do, so neither the section nor its New rule is drawn (the always rule stays in the engine).
+// The town's always rule reads as ui.rule.town_always (it has no condition to edit); a rule whose mix is greyed is
+// dimmed and says why, as a hands rule does. The mix itself is changed from the town's strip.
 import type { View } from "../api/types";
 import { mixLabel } from "../game/orders";
-import { townRules } from "../game/town";
+import { townCanSwitch, townRules } from "../game/town";
 import { UI } from "../game/text";
 import { el } from "./dom";
 import type { PartContext } from "./part";
@@ -21,11 +22,12 @@ export interface TownRows {
   add(): HTMLElement[];
 }
 
-/** The town's rules under the town's heading; none (no section) before a town mix has a rule. */
+/** The town's rules under the town's heading; none (no section) before a town mix has a rule or while the town has
+ * one mix. */
 export function townSection(ctx: PartContext, view: View, rows: TownRows): HTMLElement[] {
   const { catalog } = ctx;
   const rules = townRules(catalog, view);
-  if (rules.length === 0) return [];
+  if (rules.length === 0 || !townCanSwitch(catalog, view)) return [];
   const section = el("section", "rules-lane rules-town");
   section.append(el("h2", "panel-heading", catalog.text.get(UI.townTitle)), ...rules.flatMap((i) => rows.row(i, townBody(ctx, view, i, rows.cond))), ...rows.add());
   return [section];
