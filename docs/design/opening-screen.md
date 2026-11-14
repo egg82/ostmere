@@ -28,11 +28,11 @@ beside them. Nothing the player needs during play sits in a far corner.
   longest line ever written: that is a content rule, every story line fitting three rows at a 360-wide phone's 328px
   (`tests/opening/test_strip_rows.py`, its wrap checked against Chrome's), and three short lines fit with no gap between.
   The strip shows story lines only: a story beat's, a tap's, the body's. A find, a level, a rule's start or let-go and a
-  fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book: in the rail on a desktop, the
-  bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it
+  fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book, which opens on it: in the rail on a
+  desktop, the bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
-- **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the siblings' frame
-  with a sticky `.panel-heading` (the word on the button), then a row of filters once two kinds have entries: Story,
+- **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the Book's first
+  page (The Book, below): a row of filters once two kinds have entries: Story,
   Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story, at the top, newest first.
   It is a diary of visits: one stretch per return after at least half an hour away (`game/chronicle.ts`), each from the
   game second the player left to the one they next left, its lines oldest first. The newest return's stretch is the
@@ -68,9 +68,8 @@ beside them. Nothing the player needs during play sits in a far corner.
   with it, or held back by its content's `offered_after` if it costs nothing), so the first status the player meets
   arrives with its answer. On a phone the chips stay in the head's one row while they fit, and the row keeps room for a chip and its
   cost line from the start, so one arriving never pushes the art down. When the Camp bar's line, the chips' cost lines
-  and the buttons do not fit one row (a long next-level line, two costed chips, a larger text size), what does not fit
-  wraps onto a second row, the Journal button last at the right: nothing leaves the screen, and the art moves
-  once when the row grows.
+  and what the player carries do not fit one row (a long next-level line, two costed chips, a larger text size), what
+  does not fit wraps onto a second row: nothing leaves the screen, and the art moves once when the row grows.
 - **The Camp bar with the chips:** the bar first, the chips after it, so a chip coming or going
   never moves the bar's left edge. It arrives at its first level, with its burst, already pointing at the next; the
   first level is a surprise, every later one previewed. A warm bar (it is the player's), its level, and its next
@@ -79,7 +78,8 @@ beside them. Nothing the player needs during play sits in a far corner.
   level it fills to that marker and holds there until the story lifts it. It is not tappable while it isn't
   interactive, so it doesn't look like a button.
 - **What the player carries** (the book) sits after the chips the same way, icon and word, as plain text, no dot,
-  until the journal's first entry turns the book into the Journal button in the same place (The journal).
+  until the journal's first entry moves it into the Book as its Journal page (The Book): from then on nothing of it is
+  on the art, and Book is the one way to it.
 
 **Rejected, and why** (the story strip). The lines sat on the art for a long time, in a band under the chips, and
 each fix moved the collision rather than ending it: the band shared its box with a chip row whose height changes (a
@@ -120,8 +120,7 @@ line and a ledger line are measured in device pixels on both, and the story line
 Three columns (`docs/design/redesign.md`, "Desktop frame"). **The left rail** holds the panel's tabs, Tasks, Town, Rules
 and Book (`ui/tabs.ts`: the same row the phone shows as its bottom bar), then the skills, and the panel's quiet text
 buttons at its foot (`ui/partseat.ts` seats each by frame). Town and Rules keep their slots unseen until they arrive, as
-on the phone, so nothing in the rail moves. The rail never lists a person's jobs. Book opens the chronicle's sheet,
-whose row of pages is its title, the chronicle first and **Done** (the finished cards) once something is finished.
+on the phone, so nothing in the rail moves. The rail never lists a person's jobs. Book is a view like Town (The Book).
 
 The middle reads top to bottom: the aim, the art with the Camp bar and chips in a dark row along its top (off the art
 until it holds a chip or the Camp bar), then the story strip at its foot, right where the column meets the panel's
@@ -178,9 +177,9 @@ legend takes two rows.
 
 The panel's tabs are the bottom bar (`ui/tabs.ts`): **Tasks**, **Town** (the town's people and lanes, then the ledger
 and skills), **Rules** and **Book**. Town and Rules keep their slots unseen until they arrive, so nothing moves; a tab
-chosen while the panel is scrolled starts at its top under the stage. Book is the chronicle's sheet, as on a desktop.
+chosen while the panel is scrolled starts at its top under the stage. Book opens the Book as a sheet (The Book).
 Anything opened only sometimes (an ask, the Mixes list, the Book, a prestige) rises from the bottom as a sheet across
-the screen's width; the journal keeps its full-height page. The mix and rule editors fill the room under the pinned
+the screen's width; the Book's sheet takes the full height while its Journal page is open. The mix and rule editors fill the room under the pinned
 parts, with the bar hidden while the mix editor is open.
 
 The shown ask is one row of fixed height (56px): who asks by face, the question cut to one line, and how many wait
@@ -208,6 +207,24 @@ entry however big the town gets. Folding the light tier into groups by role, wit
 size (`decisions.md`, "The town"). Rejected: a Town view that copies the town strip beside the main screen's (two homes
 for one person's jobs); placeholder pages for buildings and outposts before either exists (`decisions.md`, "The screen
 arrives when it means something").
+
+## The Book
+
+One place for what the game has written down (`ui/book.ts`; `docs/design/redesign.md`, "Book"): the **Chronicle**,
+the **Journal** and **Done** (the finished cards), each a page, and later the **Map**. Its head is the title, `Book`, and
+beside it the row of pages, over a hairline; the row is the one way between them, and it shows once a second page is
+offered: the Journal from its first entry, Done once a card is finished, the Map with its first place. Book always opens
+on the chronicle. On a desktop or a landscape phone it is a view like Town, taking the middle and the right while
+the rail marks Book as the tab on, and the journal's spread sits centred in it with Prev and Next under it; another tab
+leaves it. On a phone it is a sheet from the bottom, with Close, full height while the Journal is open. Turning from the
+Journal or closing the Book is when the notes read are kept (The journal). The Journal's page button and the Book's tab
+carry the dot while a note is unread.
+
+Rejected: a Book that stays a sheet on a desktop while Tasks, Town and Rules change the view in place (the owner's
+report: Book has to behave like its neighbours); the journal's own button on the art beside it (two doors to one
+Book's contents); a dimmed Map in the row before a map exists (a page the player can't open reads as broken or as a
+promise; "The screen arrives when it means something"); a "back 2m ago" beside the title (the chapter already says how
+long the player was away).
 
 ## The hands strip (the mix's slim view)
 
@@ -321,8 +338,8 @@ words, `design/redesign.md`, "Words"). Fits into: Offers (`systems.md`), the arr
   slot: the new card takes the slot of the card whose step opened it, so the next step lands under the finger. A
   done card nobody takes the slot of goes to Completed after a short hold (5 s, so the player sees it finish), never
   within 1.5 s of a press or while one is down. Nothing reflows during a tap.
-- **Completed** is a tab beside `Tasks` with no count on it (on a phone, the Book's Done page). A completed card there is dimmed, shows its cap reached,
-  and can't be tapped.
+- **Completed** cards are the Book's Done page (The Book), offered once one exists, with no count on it. A completed card
+  there is dimmed, shows its cap reached, and can't be tapped.
 - **A choice arrives as one thing:** its two cards appear together, side by side in adjacent slots, under one small
   heading. Each names its upside, and both show what they take.
 - **A tap's line goes to the strip and the chronicle, never under the card.** It stays in the strip for its reading time: 2.9
@@ -396,14 +413,14 @@ Fight parts show once the `combat` feature is unlocked (api `CONTRACT.txt`, "FIG
 The book the player carries, written in: one page per thing known, its notes in the hand and its learned numbers
 under them (api `CONTRACT.txt`, "JOURNAL"; `decisions.md`, "What you learn is written in a journal" and, under Art,
 the type and the sketches). Fits into: Unlocks (entries and notes), Knowledge (the numbers, read off `View.fights`),
-Lessons (its first use), the page shell (a sheet). Not a system: one caller, nothing to swap. The page's code is two
+Lessons (its first use), the Book (a page of it). Not a system: one caller, nothing to swap. The page's code is two
 files: `game/journal.ts` (pure: which pages and notes show, what is unread, the numbers rows, the seeded draws) and
-`ui/journal.ts` (the button and the sheet).
+`ui/journal.ts` (the Book's Journal page).
 
 ```
 phone, portrait                        desktop, and a phone in landscape
 ┌────────────────────────────┐         ┌───────────────────────────────────────────────┐
-│ Journal                    │ heading │ Journal                                       │
+│ Book  Chronicle Journal …  │ head    │ Book  Chronicle  Journal  Done  (the Book's)  │
 │ ┌────────────────────────┐ │         │ ┌───────────────────┬───────────────────────┐ │
 │ │ (a first note, if the  │ │         │ │                   ░ a note, in the hand   │ │
 │ │  seed puts it on top)  │ │         │ │     SKETCH        ░   a later note,       │ │
@@ -415,25 +432,22 @@ phone, portrait                        desktop, and a phone in landscape
 │ │ runner         1 in 5  │ │         │ │                   ░ yours 12, theirs 9    │ │
 │ │ yours 12, theirs 9     │ │ numbers │ │                   ░ fought 6, lost 1      │ │
 │ │ fought 6, lost 1       │ │         │ └───────────────────┴───────────────────────┘ │
-│ └────────────────────────┘ │         │                        Close   Prev   Next    │
+│ └────────────────────────┘ │         │                      Prev   Next              │
 │ Close        Prev   Next   │ actions └───────────────────────────────────────────────┘
 └────────────────────────────┘
 ```
 
-- **The button.** From the first entry on, the book is a button in its own place after the chips: its icon and its
-  word (the book's label), on a raised surface at a tap size the head's row holds (`.journal-open`). Nothing left of it
-  moves, and the change takes its turn in the arrival queue as a feature does, after the step's lines. It carries the
-  quiet dot (`.new-dot`) while a note is unread and at no other time, so a new entry dots
-  it through its notes. It glows only as its lesson's step.
-- **The sheet** is the siblings' frame: `dialog.sheet.journal-sheet`, a sticky `.panel-heading` (`ui.journal.heading`)
-  and sticky `.sheet-actions` holding Close (`ui.close`), then `Prev` and `Next` at the right end, under the thumb.
-  All three are `.quiet` at 44 px (no step here is the obvious next one, so none is `.primary`); `Prev` is off on the
-  first page and `Next` on the last, never hidden, so neither moves. A tap on the backdrop or Escape closes it, as on
-  every sheet; ← and → turn pages while it is open. It opens on the first entry with an unread note, else the page
-  last shown in this page session, else the first. Pages run by section (days, creatures, places) and in content order
+- **The way in.** From the first entry on, the journal is the Book's Journal page (The Book), and the book leaves the
+  chips. Its page button and the Book's tab carry the quiet dot (`.new-dot`) while a note is unread and at no other
+  time, so a new entry dots them through its notes. The Book's tab glows only as its lesson's step.
+- **The page's frame** is the Book's: its head, then the Book's actions row with `Prev` and `Next` after the phone
+  sheet's Close (`ui.close`) at the right end, under the thumb (on a desktop, centred under the spread, after it and
+  never over it). All are `.quiet` at 44 px (no step here is the obvious next one, so none is `.primary`); `Prev` is off
+  on the first page and `Next` on the last, never hidden, so neither moves. ← and → turn pages while it is open. It
+  opens on the first entry with an unread note, else the page last shown in this page session, else the first. Pages run by section (days, creatures, places) and in content order
   within one, one per entry written.
-- **The bookmarks** are a row of the panel's tab buttons (`.tabs`, `.tab`, `.on`) under the heading, in a `nav`
-  labelled by the heading: one per section that has a page written (`ui.journal.days`, `.creatures`, `.places`), none for
+- **The bookmarks** are a row of the panel's tab buttons (`.tabs`, `.tab`, `.on`) under the Book's head, in a `nav`
+  labelled `ui.journal.heading`: one per section that has a page written (`ui.journal.days`, `.creatures`, `.places`), none for
   a section with no page. Each is a button, so Tab and Enter reach it. A bookmark turns to its section's first page with
   an unread note, else its latest page; the open page's section's bookmark is marked `.on` and `aria-current`.
 - **The page** is parchment, written in the hand's ink: three tokens added to `:root`, the only new ones, since no
@@ -455,13 +469,14 @@ phone, portrait                        desktop, and a phone in landscape
     (Fights), so the journal and the card never disagree. A runner never fought reads as the card's unknown: no
     figure but the player's own strength.
 - **Phone** (the phone query, as the mix editor's): one portrait page across the sheet's width, the sheet full height
-  (`100dvh`, under the safe area). Top to bottom: the sketch, the notes, the numbers. A long page scrolls between the
-  sticky heading and actions, as a tall sheet does.
+  (`100dvh`, under the safe area) while the Journal is open. Top to bottom: the sketch, the notes, the numbers. A long
+  page scrolls between the Book's sticky head and actions, as a tall sheet does.
 - **Desktop, and a phone in landscape** (the desktop query): an open spread, centred. The left page holds the sketch
   alone; the right page the notes, then the numbers at its foot (`decisions.md`: the sketch page on the left,
   numbers and lore on the right). The gutter between them is a shade of `--hand-ink` at 12% fading into each page.
-  Both pages are the largest 600:780 boxes two of which fit inside the sheet, less its heading and actions, so the
-  spread fits at 1280×800 and grows on a 4K screen with the rem-sized text. A right page whose notes run past its
+  Both pages are the largest 600:780 boxes two of which fit in 94% of the window's height less 8.5rem of head and
+  actions (and in 96% of its width), so the spread and its Prev and Next fit at 1280×720 and grow on a 4K screen with
+  the rem-sized text. A right page whose notes run past its
   height scrolls inside itself, the numbers staying at its foot.
 - **Seeded per entry.** The page's draws come from the seeded draw `game/fights.ts` uses, keyed by "journal", the
   entry id and the part, never the save, so a page looks the same in every game and on every device and differs from
@@ -779,7 +794,7 @@ waits for the hand-back as long as the rule takes.
 | A stopped mix | the first running mix to grey over a done card; its `Edit` is the trigger, and the mix has another card left to run or the content names a card that takes the done one's place (`replaced_by` on the retired unlock, in play and not yet in the mix). No `Show me`: the editor is the player's own | `Edit`: `{card} is done, so this mix stopped.` then `Open Edit.`, or `{card} is done, so this mix stopped. {task} takes its place. Open Edit.` with a replacement · with one, its add button: `Tap + {task} to add it.` · the editor's ✕ on the done card: `Tap ✕ to take {card} out.` · `Save`: `Save, and the mix runs again.` |
 | Switching mixes | after the end, a hands build waits on a store nothing at work makes, and a saved mix that is neither the running one nor the player's own makes it, or else the running mix could take a card in play that does (`game/teach.ts` `switchCue`); the strip's `Mixes ▾` (the mix's name, with a mix running), or `Edit` in the second case, is the trigger. No `Show me`: it points at the player's own controls | `Mixes ▾`: `{build} needs {store}. Your {mix} mix makes it. Open Mixes.` · that mix's `Run` in the list: `Tap {mix} to run it.` — or, when only the running mix could take the card, `Edit`: `{build} needs {store}. {task} makes it. Open Edit to add it to this mix.` · its add button: `Tap + {task} to add it.` · `Save`: `Save, and the mix makes {store}.` |
 | The clock | the night's countdown (the foot of a card waiting on a store the player was never shown) is on show, a few minutes into the night | the countdown (read): `A real-time wait: morning comes when it runs out. The camp keeps going meanwhile.` |
-| The journal | the Journal button is on show and no other lesson runs; no `Show me`, since the button is its own control | the Journal button: `What you learn gets written in here.` · the open page's last note (read): `A dot on the button means a new note.` |
+| The journal | the journal is in the Book and no other lesson runs; no `Show me`, since Book is its own control | Book's tab: `What you learn gets written in here.` · the Journal's button in the Book: `A dot here means a new note.` |
 | The journal's numbers | the journal's lesson is kept and a page that shows numbers is open | the page's numbers (read): `Exact numbers once you've fought it. Unknown until then.` |
 
 **Lessons are kept per save** (a game started over teaches as a first one does): the record is the
@@ -803,13 +818,13 @@ account and no hint that only a lesson gives shows (the full line's cap dot, the
 from); every guided offer is today's one tap, and the ordinary dots no longer wait on a lesson that will not run. A
 lesson under way when it is ticked ends unkept. Unticked again, each game's lessons go on from what it keeps.
 
-The journal's lesson runs inside its sheet after the first step: while a sheet is open the note is drawn inside the
+The journal's lesson's second step is inside the Book: on a phone, inside its sheet, where the note is drawn in the
 sheet's own layer, so the modal sheet never covers it. The numbers are a lesson of their own, so a page with none (a
-days page) never leaves a step waiting: the journal's lesson ends after its notes, and the numbers' starts the first time
-a page with numbers is open (at once, when the sheet opened on one).
+days page) never leaves a step waiting: the journal's lesson ends at the Journal's button, and the numbers' starts the
+first time a page with numbers is open (at once, when the Journal opened on one).
 
-The Journal button can show just before a guided rule offer (the book and the ledger open at the same beat). The
-journal's lesson yields: until its button is tapped it holds no offer back, and gives way to the rule's lesson when
+The journal can join the Book just before a guided rule offer (the book and the ledger open at the same beat). The
+journal's lesson yields: until Book is tapped it holds no offer back, and gives way to the rule's lesson when
 that one's `Show me` is on show (the journal's comes back after).
 
 The editor asks what a rule does before what it waits for, so the rule's lesson does too. A rule built this way takes
@@ -839,8 +854,8 @@ are engine decisions a save is replayed from, and a lesson is not game state.
 ## Dots and the one glow
 
 - **A dot** is small and quiet (no number, no pulse). It marks only a control the player can act on and has not yet: a
-  new task card, a new Add entry in the mix editor, the Journal button while a note is unread (cleared note by note
-  as the player turns to its page). Plain text never gets one: story lines, the book while it is text, chips,
+  new task card, a new Add entry in the mix editor, the Journal's page button and Book while a note is unread (cleared
+  note by note as the player turns to its page). Plain text never gets one: story lines, the book while it is text, chips,
   ledger lines, skill rows, needs, labels, headings, mix segments. It clears when the player interacts with the thing
   (a tap, a drag, a key) and when the thing is put to work: joined to a mix (in the editor or by Both), running, held
   by any saved mix, or named by a rule. A task already at work never shows a dot. Never cleared by being seen or by
