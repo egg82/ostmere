@@ -9,6 +9,7 @@ import { rulesUsing } from "../game/orders";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import { segmentSpecs } from "./hands";
+import { keyItem } from "./sharebar";
 import type { PartContext } from "./part";
 
 export class MixSelector {
@@ -71,7 +72,7 @@ export class MixSelector {
     run.disabled = greyed || own;
     const note = running ? (own && view.mix_order === null && !greyed ? catalog.format.runs(view.runs_out_at, view.at) : catalog.text.get(UI.mixRunning))
       : run.disabled ? "" : catalog.text.get(UI.runMix);
-    run.append(el("span", "selector-dot", running ? "●" : ""), el("span", "selector-name", mix.id), this.miniBar(view, mix), el("span", "selector-note", note));
+    run.append(el("span", "selector-dot", running ? "●" : ""), el("span", "selector-name", mix.id), ...this.miniBar(view, mix), el("span", "selector-note", note));
     run.addEventListener("click", () => {
       tapFeedback();
       this.ctx.actions.decide({ kind: "switch_mix", mix_id: mix.id });
@@ -86,15 +87,21 @@ export class MixSelector {
     return row;
   }
 
-  private miniBar(view: View, mix: Mix): HTMLElement {
+  /** The mix's split as a small bar of hues, and its legend beneath naming each task and its share. */
+  private miniBar(view: View, mix: Mix): HTMLElement[] {
     const bar = el("span", "mini-bar");
+    const key = el("span", "share-key");
     for (const [i, spec] of segmentSpecs(this.ctx, mix, view).entries()) {
+      const share = mix.components[i]?.share_bp ?? 0;
       const seg = el("i", `mini-seg hue-${spec.hue % 6}`);
-      seg.textContent = Array.from(spec.label)[0] ?? "";
-      seg.style.flexGrow = String(mix.components[i]?.share_bp ?? 0);
+      seg.style.flexGrow = String(share);
+      const { item, name, pct } = keyItem(spec);
+      name.textContent = spec.label;
+      pct.textContent = this.ctx.catalog.format.share(share);
       bar.append(seg);
+      key.append(item);
     }
-    return bar;
+    return [bar, key];
   }
 
   /** Delete asks once, in place. A mix rules run says how many instead; one nested in another, or queued, says so. */
