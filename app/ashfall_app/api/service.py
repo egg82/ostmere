@@ -14,6 +14,8 @@ from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
 from ..opening.schema import Opening
 from ..saves.interface import Played, Ruleset
+from ..saves.journal import ComposedDay
+from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
 from .goalrows import goal_rows
 from .ruledry import order_dry
@@ -22,10 +24,13 @@ from .line_causes import line_infos, offer_cause, worded_stores
 from .line_models import PeopleBand, PeopleInfo
 from .sources import sources, store_sources
 from . import content_models as cm
+from . import journal_models as jm
 from .limits import MAX_MIXES, MAX_ORDERS, MAX_QUEUE
 from . import models as w
 
 
+PLAIN = Look(DIARY_HAND, None)
+"""How a note is drawn whose slot gives no hand or sketch (a crowd's mention), or whose subject the content dropped."""
 FORECAST_S = 6 * 3600
 """How far ahead a view forecasts levels and full stores (CONTRACT.txt, "Forecast"): past it the page draws no time."""
 
@@ -77,7 +82,14 @@ class Game:
                                  off_level=r.off_level, ended=None if r.ended is None else r.ended.value,
                                  made=[cm.Amount(store=st, quantity=n) for st, n in r.made])
                        for r in played.rule_runs],
-            catching_up_to=played.catching_up_to)
+            catching_up_to=played.catching_up_to, journal_days=self.journal_days(played.days))
+
+    def journal_days(self, days: tuple[ComposedDay, ...]) -> list[jm.JournalDay]:
+        """The written ones of `days`, each note in the hand and with the sketch its slot names now."""
+        looks = {} if self._rs.journal is None else self._rs.journal.looks
+        return [jm.JournalDay(day=d.day, day_notes=[
+            jm.DayNote(subject=n.subject, slot=jm.Slot(n.slot), key=n.key, hand=jm.Hand(look.hand), sketch=look.sketch)
+            for n in d.notes for look in (looks.get((n.subject, n.slot), PLAIN),)]) for d in days if d.notes]
 
 
 def _fight(f: e.FightDef | None, entry: FightEntry | None) -> cm.FightInfo | None:

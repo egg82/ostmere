@@ -17,7 +17,7 @@ const step = { ...fixtureStep("mid", 100, {}, 0), save_id: 7, rules_digest: fixt
 const api: GameApi = {
   content: () => { calls.push("content"); return Promise.resolve(fixtureContent); },
   me: unused, begin: unused,
-  open: () => { calls.push("open"); return new Promise((r) => { answerOpen = () => r({ save, was: step.view, history: [], presentation: NEW_SAVE, step }); }); },
+  open: () => { calls.push("open"); return new Promise((r) => { answerOpen = () => r({ save, was: step.view, history: [], presentation: NEW_SAVE, journal_days: [], step }); }); },
   savedView: unused, advance: unused, forecast: unused, decide: unused, dryRun: unused, putMePresentation: unused, putMeSettings: unused, putSavePresentation: unused, sendFeedback: unused,
   makeCode: unused, makeWords: unused, games: unused, deleteGame: unused, restoreGame: unused, join: unused,
   devices: unused, removeDevice: unused,

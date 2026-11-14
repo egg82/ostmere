@@ -49,7 +49,7 @@ function harness(script: { open?: Step; advances?: Step[]; decides?: (Step | Api
     begin: () => { log.calls.push("begin"); return Promise.resolve({ save: save(), presentation: NEW_SAVE, step: script.begin ?? slice(0, null, []) }); },
     open: () => {
       log.calls.push("open");
-      return Promise.resolve({ save: save(), was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, step: script.open ?? slice(100, null, []) });
+      return Promise.resolve({ save: save(), was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: script.open ?? slice(100, null, []) });
     },
     savedView: () => Promise.reject(new Error("unused")),
     advance: async () => {

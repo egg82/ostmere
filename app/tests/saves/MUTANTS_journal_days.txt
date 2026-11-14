@@ -1,7 +1,7 @@
-Wrong implementations of the journal's write path (saves/journal_write.py, db/journal.py, db/step.py, saves/write.py),
-each planted alone in a scratch copy by tools/mutate_suite.py's `journal_days` suite (specs tools/journal_days_mutants/):
-tests/saves/test_journal_days.py with tests/db/test_journal_rows.py, test_journal_failover.py and
-test_decision_lock_span.py beside it. Needs ASHFALL_TEST_PG. Each must go red.
+Wrong implementations of the journal's write path (saves/journal_write.py, db/journal.py, db/step.py, saves/write.py)
+and its wire (api/service.py, accounts/presentation.py), each planted alone in a scratch copy by tools/mutate_suite.py's
+`journal_days` suite (specs tools/journal_days_mutants/): tests/saves/test_journal_days.py with the tests in the suite's
+`also` beside it. Needs ASHFALL_TEST_PG. Each must go red.
 
  1 stale trusted   journal_write.py: a locking read that waited on another write is trusted
  2 always fresh    db/journal.py: the locking read always says its snapshot is fresh
@@ -14,6 +14,10 @@ test_decision_lock_span.py beside it. Needs ASHFALL_TEST_PG. Each must go red.
  9 blanks carried  journal_write.py: Opened carries blank and gap days too
 10 conflict fails  db/step.py: a day the save already holds fails the write instead of being left as stored
 11 not stored      write.py: the composed days are not stored
+12 blanks served   api/service.py: a day not written is served
+13 all ink         api/service.py: every note is served in ink, whatever its slot names
+14 day read falls  presentation.py: a PUT's newest_day_read replaces the kept one, lower or null
+15 open forgets    saves/service.py: Opened carries no stored day
 
 Equivalent, and so not in the code: filtering the stored or the step's lines to before the last closed day's end (each
 day is composed from the lines before its own end only).

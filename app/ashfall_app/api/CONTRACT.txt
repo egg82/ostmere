@@ -54,11 +54,13 @@ ENDPOINTS
   account's is 404 not_found.
   POST /api/saves/{save_id}/delete    Games: the save deleted (GAMES ON ONE ACCOUNT).
   POST /api/saves/{save_id}/restore   Games: a deleted save live again (GAMES ON ONE ACCOUNT).
-  POST /api/saves/{save_id}/open      Opened {save, was, history, presentation, step}: the save as the player last saw
-                                      it (`was`, the View at the time it was last written), its last 200 lines before
-                                      this call (`history`, PastLine {n, at, key}, oldest first), what the page keeps
-                                      about its teaching (`presentation`, SavePresentation below), and `step`, the save
-                                      advanced to now with the lines that arrived while away. Writes like an advance.
+  POST /api/saves/{save_id}/open      Opened {save, was, history, presentation, journal_days, step}: the save as the
+                                      player last saw it (`was`, the View at the time it was last written), its last
+                                      200 lines before this call (`history`, PastLine {n, at, key}, oldest first), what
+                                      the page keeps about its teaching (`presentation`, SavePresentation below), its
+                                      journal's written days stored before this call (`journal_days`, JOURNAL, "The
+                                      written days"), and `step`, the save advanced to now with the lines that arrived
+                                      while away. Writes like an advance.
   POST /api/saves/{save_id}/advance   Step: a plain advance to now. Call it when the clock passes
                                       view.next_event_at, and on the page being shown again.
   POST /api/saves/{save_id}/decisions DecisionRequest {decision, after} -> Step: advance to now, then apply the
@@ -124,7 +126,7 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
@@ -136,9 +138,10 @@ ENDPOINTS
   {id, was, now}], levels: [Figure], camp: Figure | null, rules: [RuleChange {order, came_on, times}]}, what the return
   found against what the player left: each store whose whole items moved (quantities), each skill that rose and the
   Camp's level, each rule that came on (times: how often, 1 where the page could not count) or only let go while away;
-  the page takes it once, as the visit is kept, and draws it as the chronicle's "Since you left" chapter). A PUT from a
-  page of the build before, which carries no visits or chapter, leaves them as stored; a chapter replaces the stored one
-  only when its `left` is later, and never past the byte limit below.
+  the page takes it once, as the visit is kept, and draws it as the chronicle's "Since you left" chapter;
+  newest_day_read: JOURNAL, "The written days"). A PUT from a page of the build before, which carries no visits or
+  chapter, leaves them as stored; a chapter replaces the stored one only when its `left` is later, and never past the
+  byte limit below.
   Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
   checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
   a line by its kind and never by its key or words.
@@ -159,8 +162,9 @@ ENDPOINTS
   the account has recovery words; words_due, it has none, holds a decision on a save, and was made at least 3 days ago
   (the page marks the way to make them with a dot).
   A presentation only grows, so a PUT is merged into what the account (or the save) keeps, in one write under its row lock:
-  a flag is set if either has it, a list is the kept entries then the sent ones not yet there (a lesson_end is the
-  same entry as another naming the same lesson; the kept one stays), and a list stops growing at 512 entries, and every list at the byte limit (REQUEST LIMITS). A page
+  a flag is set if either has it, a growing number (newest_day_read) is the higher of the two, a list is the kept
+  entries then the sent ones not yet there (a lesson_end is the same entry as another naming the same lesson; the kept
+  one stays), and a list stops growing at 512 entries, and every list at the byte limit (REQUEST LIMITS). A page
   whose copy is older than what is kept (a second tab or device) so takes nothing away, and takes the answer as its
   new copy. The lesson id in a lesson.end line is the page's own id for a lesson, logged as sent like a card id.
 
@@ -1156,7 +1160,8 @@ JOURNAL
   and the numbers are View.fights. View gains nothing. The page draws the journal from Content.journal,
   view.unlocked and view.fights, and keeps what the player has read in AccountPresentation. Page design:
   docs/design/opening-screen.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
-  page shell; not a system (one caller, nothing to swap).
+  page shell; not a system (one caller, nothing to swap). The daily journal's written days are the one part the wire
+  carries anew, on Step and Opened (below, "The written days").
 
   The book is in sections, a closed set, and each page is in one:
     days                the daily journal: the story's bigger beats, retold afterwards in the character's voice (the
@@ -1271,6 +1276,29 @@ JOURNAL
     entry or note view.unlocked does not hold.
   - write a note's words anywhere but its page: the story strip and the chronicle carry lines, not notes.
 
+  The written days (docs/design/journal.md): the main character's daily journal, which the server composes from the
+  save's history, never the page. Game day d is game seconds [d * 86400, (d + 1) * 86400). A day is composed, written
+  or not, by the first step whose save time reaches its end, in that step's transaction; a step that closes several
+  composes each, oldest first, and a save that has none stored (one begun before the journal was kept) composes every
+  day it has closed on its next step. Composing reads only the lines before the day's end and the days stored before
+  it, so a day comes out the same whichever step composes it. Stored once, a day never changes: a later change to the
+  habits or the slots applies from the next day composed.
+    Step.journal_days    [JournalDay]: the written days this step composed, oldest first. Empty on most steps.
+    Opened.journal_days  [JournalDay]: every written day stored before the open, oldest first. The open's step
+                         carries the days it composed, so the two together are every written day.
+    JournalDay {day, day_notes: [DayNote {subject, slot, key, hand, sketch}]}: a day the journal wrote, its notes in
+                         page order (at least one). A day not written (a gap or a blank) is stored and never served.
+                         key is the note's text key (Content.text_entries); slot is a closed enum, "first" | "repeat" |
+                         "catchup" | "mention" | "late" | "misremember" | "correction"; hand is the slot's own, else
+                         "ink"; sketch the slot's, else null (/assets/journal/<sketch>.png). subject is the content's
+                         subject id.
+  SavePresentation gains newest_day_read: int | null, the newest written day whose page the player has turned to,
+  null on a new save; a written day after it is unread. It only grows: a PUT whose value is lower, or null, leaves the
+  kept one. The days are the save's own diary, so how far into them the player has read is kept per save, where the
+  book's notes, which every game shares, are read per account (journal_read).
+  THE CLIENT MAY NOT:
+  - compose a day, or draw a written day neither Opened nor a Step carried.
+
   New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
                                     and its page turns
                                     ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
@@ -1294,6 +1322,9 @@ JOURNAL
   - A written-at time on the wire to order a section's pages: content order is writing order, which the played
     routes hold (a section's pages written in content order, a days note at its beat's instant), so a time would be a
     second home for the same fact.
+  - The days not written on the wire, with why: the page draws nothing for them, and a gap's cause is the composer's.
+  - Every written day on every Step: Opened carries the stored ones once, and a step carries only those it composed.
+  - A day's hand left for the page to default: as NoteInfo.hand, the server resolves it and the page applies none.
 
   Acceptance (the first slice is done when each passes; server tests under app/tests, client tests under
   app/client/test, as their neighbours):
