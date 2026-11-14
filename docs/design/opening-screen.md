@@ -17,7 +17,7 @@ beside them. Nothing the player needs during play sits in a far corner.
 
 - **The story strip, under the art.** The newest story line sits whole in a strip of its own, off the artwork, in the
   panel's colours: in the pinned stage between the art and the hands strip on a phone, along the art's foot on a
-  desktop (between the art and the skills and ledger). It shows the newest lines that fit whole, oldest first, the
+  desktop (between the art and the ledger). It shows the newest lines that fit whole, oldest first, the
   older ones dimmer; a new line pushes out the oldest that no longer fits, so a quick run can still be read. A line
   shows when the arrival queue releases it, held back for the reading time of the one before (`decisions.md`, "A story
   line stays until it can be read"). On a desktop the strip's height is the tallest story line in the content at the
@@ -28,8 +28,8 @@ beside them. Nothing the player needs during play sits in a far corner.
   longest line ever written: that is a content rule, every story line fitting three rows at a 360-wide phone's 328px
   (`tests/opening/test_strip_rows.py`, its wrap checked against Chrome's), and three short lines fit with no gap between.
   The strip shows story lines only: a story beat's, a tap's, the body's. A find, a level, a rule's start or let-go and a
-  fight go to the chronicle alone. The chronicle is one tap away (the "Chronicle" button with the chips, which looks
-  like a button; on a phone the bottom bar's Book), dotted while a line it holds left the strip entirely before the player touched anything after it
+  fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book: in the rail on a desktop, the
+  bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
 - **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the siblings' frame
   with a sticky `.panel-heading` (the word on the button), then a row of filters once two kinds have entries: Story,
@@ -52,15 +52,15 @@ beside them. Nothing the player needs during play sits in a far corner.
   by `game/chronwords.ts`). Under Story, a stretch ends with its counts of the other filters, each a button that opens
   its filter. Lines the page words itself (fights, a skill's top) carry their kind and cause where the page words them;
   a return's away lines enter by the same stamps.
-- **The panel's foot:** a row of quiet text buttons after the last thing in the panel (the ledger and skills on a
-  phone, the cards on a desktop): "Feedback" opens the tester's sheet (a field, what is sent along, Send, Not now).
+- **The panel's foot:** quiet text buttons at the rail's foot on a desktop, after the last thing in the panel elsewhere
+  (`ui/partseat.ts`): "Feedback" opens the tester's sheet (a field, what is sent along, Send, Not now).
   Nothing that must be seen sits with the chips for it.
 - **The aim, just above the art** (`decisions.md`, "Every stretch of play has a stated aim"): one line in the story's
   voice, over the art's column on a desktop and between the Camp bar's row and the art in the pinned stage on a
   phone. Its room is there from the first screen, so it never moves anything later;
   a new aim takes its turn in the arrival queue, after the lines that came with it. It is plain text, not a control: no
   dot, no glow.
-- **Chips at the art's top,** in one row with the Camp bar and the Chronicle button, just above the art in its stage (pinned
+- **Chips at the art's top,** in one row with the Camp bar, just above the art in its stage (pinned
   with it on a phone), never on it: the head grows a row for each goal, and laid on the art it hid the camp's top. An
   icon plus the word (the word kept for screen
   readers and first sight), and under the word what the chip costs while it shows, two or three words from the
@@ -69,9 +69,9 @@ beside them. Nothing the player needs during play sits in a far corner.
   arrives with its answer. On a phone the chips stay in the head's one row while they fit, and the row keeps room for a chip and its
   cost line from the start, so one arriving never pushes the art down. When the Camp bar's line, the chips' cost lines
   and the buttons do not fit one row (a long next-level line, two costed chips, a larger text size), what does not fit
-  wraps onto a second row, the Journal and Chronicle buttons last at the right: nothing leaves the screen, and the art moves
+  wraps onto a second row, the Journal button last at the right: nothing leaves the screen, and the art moves
   once when the row grows.
-- **The Camp bar with the chips:** the bar first, the chips after it against the Chronicle button, so a chip coming or going
+- **The Camp bar with the chips:** the bar first, the chips after it, so a chip coming or going
   never moves the bar's left edge. It arrives at its first level, with its burst, already pointing at the next; the
   first level is a surprise, every later one previewed. A warm bar (it is the player's), its level, and its next
   marker stating what that level pays (before → after, or "something new" for a story unlock and while what it pays
@@ -103,36 +103,39 @@ line and a ledger line are measured in device pixels on both, and the story line
 ## Desktop (wider than about 64rem)
 
 ```
-┌──────────────────────────────────────────────────┬──────────────────────────────┐
-│                                                  │ HANDS ▸ [ Gather ▓▓▓|Scav ▓▓ ]│  hands strip (slim mix view)
-│ the aim, one line                                │        runs on            Edit│
-│ Camp 1 ▓▓▓░ next…   ❄ cold  ◐ hungry   Chronicle ├──────────────────────────────┤
-│                                                  │ Tasks · Completed · Rules    │
-│              SCENE (the artwork)                 │ ┌──────────┐ ┌──────────┐    │
-│                                                  │ │ card     │ │ card     │    │
-│                                                  │ └──────────┘ └──────────┘    │
-├──────────────────────────────────────────────────┤ ┌──────────┐ ┌──────────┐    │
-│ NEWEST LINE, whole (the strip: the tallest       │ │ card     │ │ card     │    │
-│ line's height, kept)                             │ └──────────┘ └──────────┘    │
-├──────────────────────────────────────────────────┤                              │
-│ SKILLS · LEDGER (a tall window)                  │ LEDGER (a short window)      │
-│                                                  │ dry wood 2  −6/h  empty 20m  │  red
-│                                                  │  ┌ rule ───────────────────┐  │
-│                                                  │  │ When low on dry wood →  │  │  inline, unprompted
-│                                                  │  │ ■ Lay to dry [Add rule] │  │
-│                                                  │  └─────────────────────────┘  │
-└──────────────────────────────────────────────────┴──────────────────────────────┘
+┌────────────┬──────────────────────────────────────┬──────────────────────────────┐
+│ Tasks      │ Camp 1 ▓▓▓░ next…   ❄ cold  ◐ hungry │ HANDS [ Gather ▓▓▓|Scav ▓▓ ] │  hands strip
+│ Town       │ the aim, one line                    │ Mixes ▾ Main  runs on   Edit │
+│ Rules      │ ┌──────────────────────────────────┐ ├──────────────────────────────┤
+│ Book       │ │        SCENE (the artwork)       │ │ the shown ask                │
+│            │ └──────────────────────────────────┘ │ ┌──────────┐ ┌──────────┐    │
+│ Foraging 2 │ NEWEST LINE, whole (the strip)       │ │ card     │ │ card     │    │  the open tab's panel:
+│ ▓▓▓░░░     ├──────────────────────────────────────┤ └──────────┘ └──────────┘    │  Tasks, or Rules
+│ Firecraft 1│ LEDGER (a tall window)               │                              │
+│            │ dry wood 2  −6/h  empty 20m          │ LEDGER (a short window)      │
+│ Feedback   │                                      │                              │
+└────────────┴──────────────────────────────────────┴──────────────────────────────┘
 ```
 
-The art's column reads top to bottom: the aim, the art with the Camp bar, chips and Chronicle in a dark row along its top
-(off the art until it holds a chip, the Camp bar or a dotted Chronicle), then the story strip at its foot, right where the column meets the panel's cards. The strip spans the art's width, so
-the longest line takes fewer rows here than on a phone.
+Three columns (`docs/design/redesign.md`, "Desktop frame"). **The left rail** holds the panel's tabs, Tasks, Town, Rules
+and Book (`ui/tabs.ts`: the same row the phone shows as its bottom bar), then the skills, and the panel's quiet text
+buttons at its foot (`ui/partseat.ts` seats each by frame). Town and Rules keep their slots unseen until they arrive, as
+on the phone, so nothing in the rail moves. The rail never lists a person's jobs. Book opens the chronicle's sheet,
+whose row of pages is its title, the chronicle first and **Done** (the finished cards) once something is finished.
 
-On a tall desktop window the skills and ledger sit in a block under the strip. Until one of them has something to
-show (the ledger comes with the fire) the block is not drawn, but its room is kept: the art is sized from the
-column's height less the aim, the strip and that room, as large as its width allows. So the art and the strip sit
-where they will stay, with the empty room under the strip, and the block's arrival, like a line's or a tap's, moves
-nothing (over a larger first screen that shrinks once).
+The middle reads top to bottom: the aim, the art with the Camp bar and chips in a dark row along its top (off the art
+until it holds a chip or the Camp bar), then the story strip at its foot, right where the column meets the panel's
+cards. The strip spans the art's width, so the longest line takes fewer rows here than on a phone. Only this scene keeps
+a frame.
+
+On a tall desktop window the ledger sits in a block under the strip. Until it has something to show (it comes with the
+fire) the block is not drawn, but its room is kept: the art is sized from the column's height less the aim, the strip
+and that room, as large as its width allows. So the art and the strip sit where they will stay, with the empty room
+under the strip, and the block's arrival, like a line's or a tap's, moves nothing (over a larger first screen that
+shrinks once). On a short window the ledger sits at the panel's foot.
+
+The right column is the hands' own: the hands strip, the shown ask, and the open tab's panel (Tasks or Rules); the mix
+editor takes the panel's place. Town is a view of its own (below): it takes the middle and the right.
 
 Once the stool is built the figure does its jobs (knap, roast, read) sat on it, facing the fire; before, it kneels at
 the fire's left. The scene manifest says so with an all-of condition (`running:read_by_fire&feature:stool`).
@@ -147,14 +150,14 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 ┌────────────────────────────┐
 │ Camp 1 ▓▓░        ❄ cold   │  the head: Camp bar and chips
 │ the aim, one line          │
-│        SCENE               │  the art in a fixed room
+│SCENE, edge to edge         │  the art covers a fixed room
 ├────────────────────────────┤
 │ newest lines, three rows   │  the strip
 ├────────────────────────────┤
-│ [Gather ▓▓▓|Scav ▓▓]       │  the hands strip: its bar, the
-│ ■ Gather 60% ■ Scav 40%    │  legend, Mixes ▾ · until … · Edit
-│ Mixes ▾  Rest  while … Edit│
+│ [Gather ▓▓▓|Scav ▓▓] Main ▾│  the mix's bar and name
+│ ■ Gather 60% ■ Scav 40%    │  and its legend
 ├────────────────────────────┤  ── pinned above, scrolls below
+│ runs on  while …      Edit │  the mix's controls
 │ [L][M] Bank the fire… 1 ›  │  the shown ask, one 56px row
 │ ┌──────────┐┌──────────┐   │
 │ │ card     ││ card     │   │  the open tab's panel
@@ -164,27 +167,46 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 └────────────────────────────┘
 ```
 
-Read in the top half, touch in the bottom. The head, the art, the strip and the hands strip stay pinned while the
-panel scrolls under them, so the newest lines stay on screen while the thumb is on a card, and each has a fixed
-height: the art fits a room of `--scene-h`, the strip is three rows (above), and the head keeps room for a chip and its
-cost line. At 390 wide the stage is about 336px and the hands strip under it about 85px; its controls row stays pinned
-because lessons point at Mixes ▾, the rule link and Edit, and they keep their reach.
+Read in the top half, touch in the bottom. The head, the art, the strip and the mix's bar stay pinned while the panel
+scrolls under them, so the newest lines stay on screen while the thumb is on a card, and each has a fixed height: the art
+covers a room of `--scene-h` edge to edge, cut top and bottom around what the view shows (`scene/crop.ts`, the front
+page's placement at a cover scale), the strip is three rows (above), and the head keeps room for a chip and its cost
+line. Of the hands strip only the bar, its legend and the mix's name stay pinned; the name is the way to the Mixes list
+(`Main ▾`). The rest of its controls (runs, the rule's link, Edit) sit right under the pin and arrive with the strip; the
+lessons that point at them find them there. At 390 wide the pinned part ends at about 380px, a little lower when a
+legend takes two rows.
 
-The panel's tabs are the bottom bar (`ui/tabs.ts`, the same row the desktop shows over the cards): **Tasks**, **Town**
-(the ledger and skills, once either has something), **Rules** and **Book**. Town and Rules keep their slots unseen
-until they arrive, so nothing moves; a tab chosen while the panel is scrolled starts at its top under the stage. Book
-is the chronicle's sheet, the Chronicle button's place on a phone and its unread dot with it; its row of pages is the
-title, the chronicle first and **Done** (what the desktop's Completed tab holds) once something is finished
-(`ui/partseat.ts` seats the ledger, skills and finished cards by layout). Anything opened only sometimes (an ask, the
-Mixes list, the Book, a prestige) rises from the bottom as a sheet across the screen's width; the journal keeps its
-full-height page. The mix and rule editors fill the room under the pinned parts, with the bar hidden while the mix
-editor is open.
+The panel's tabs are the bottom bar (`ui/tabs.ts`): **Tasks**, **Town** (the town's people and lanes, then the ledger
+and skills), **Rules** and **Book**. Town and Rules keep their slots unseen until they arrive, so nothing moves; a tab
+chosen while the panel is scrolled starts at its top under the stage. Book is the chronicle's sheet, as on a desktop.
+Anything opened only sometimes (an ask, the Mixes list, the Book, a prestige) rises from the bottom as a sheet across
+the screen's width; the journal keeps its full-height page. The mix and rule editors fill the room under the pinned
+parts, with the bar hidden while the mix editor is open.
 
 The shown ask is one row of fixed height (56px): who asks by face, the question cut to one line, and how many wait
 (`1 ›`). A tap anywhere on it opens the sheet of every open ask, whole, so a season's several asks never move the
-cards. Rejected: keeping the whole ask in the slot (it pushed the cards below the thumb's half); a separate Town view on
-the phone before the desktop's (step 7 of `design/redesign.md` brings both); a grab handle on the sheets (it promises a
-swipe that does nothing). In landscape the phone uses the desktop arrangement.
+cards. Rejected: keeping the whole ask in the slot (it pushed the cards below the thumb's half); the hands strip's whole
+controls row pinned (it held the stage at about 420px for controls used now and then); a grab handle on the sheets (it
+promises a swipe that does nothing). In landscape the phone uses the desktop's two columns with the tabs as a row over
+the cards, and no rail.
+
+## The Town view
+
+The town's people get a room of their own (`ui/townview.ts`): the Town tab on every frame, the desktop's taking the
+middle and the right beside the rail. Its title and the town mix's Change share the first row; under them a row per
+person who has joined (`ui/townstrip.ts`): their face (the ask's, so a person looks the same wherever they appear), who
+they are and what they work now, their time split into the cards that hold a share with the idle rest, the split that
+runs now while one of their cards is stopped, and the bar of the card they work. Then a row per lane run by rules whose
+person has not joined (`ui/lanerows.ts`, below). On a phone the ledger and skills follow. Change opens the town editor in
+the view's place. These rows are their one home: the main screen and the rail never list anyone's jobs, and the Rules
+tab keeps the town's rules, not its people. A row arriving while another tab is open dots Town (the new-card dot), never
+on the first view.
+
+At a town's size the view scrolls in its own column with the panel's fade at its foot; the rail keeps its one Town
+entry however big the town gets. Folding the light tier into groups by role, with search and pin, waits for a town that
+size (`decisions.md`, "The town"). Rejected: a Town view that copies the town strip beside the main screen's (two homes
+for one person's jobs); placeholder pages for buildings and outposts before either exists (`decisions.md`, "The screen
+arrives when it means something").
 
 ## The hands strip (the mix's slim view)
 
@@ -212,23 +234,23 @@ the rows below apply.
 | Hint: the first dry store (once) | the same dot on the store's ledger line, the first time a card of the running mix stops on a store that ran dry (its line starved), no rule covers that store, and a hands card in play that makes it is ready and outside the mix (`game/dryhint.ts`), once rules are taught. The dot opens nothing, and the dry store's lesson (Lessons) starts from the line. Done or skipped, it never comes back. A spent card (nothing in play can refill its store) is not marked: no card added would help. Fits into: as the first full store's |
 | First rule's entry (after the end) | on its own row under the mix row, only while the first rule's lesson may start: a chip's rule, `While {chip} → {task}`, and `Show me`, which opens a new rule on the real editor and the lesson walks it. It comes the first time the chip is on with no rule on its store, once the end lines have been read, and stays until a rule is set (not when the chip clears), so the strip moves once, on its arrival. Once the lesson is done or skipped no row is drawn: the chip carries the hint dot. No offer builds a mix or a rule |
 
-**On a phone the rows under the mix row (a chip's rule offer) sit under the pinned strip, not in it** (`Hands.rows`,
-placed by the screen as the lane rows are): they scroll with the cards, so a prompt does not cost the cards their room, and
-the strip keeps the mix's bar, name and `stopped · {card} done`. They still arrive through the arrival queue, and a row that
-arrives out of sight shows at once. On a wider screen they stay in the strip.
+**On a phone the mix's controls and the rows under the mix row (a chip's rule offer) sit under the pinned strip, not in
+it** (`Hands.rows`, placed by the screen right under the pin): they scroll with the cards, so a prompt does not cost the
+cards their room, and the pin keeps the mix's bar, legend and name (`Main ▾`). The controls arrive with the strip; the
+rows still arrive through the arrival queue, and a row that arrives out of sight shows at once. On a wider screen they
+stay in the strip.
 
 The dividers on the strip are draggable for a quick change; the strip never shows a 0% divider (a card joins with a
 real share, see the editor).
 
-**A lane run by rules** (a townsperson who works: api `CONTRACT.txt`, "A lane run by rules") gets a row under the
-strip in the strip's shape: the lane's label (a later label once its unlock is held), what it does (the task's name, or
-`idle`), the task's bar, and `Change`. The rows sit under the pinned band, not in it, so on a phone they scroll with the
-cards and the pinned stage stays the art, the line and the hands. A row
-arrives through the arrival queue the first time its lane is in view, then stays. `Change` opens the Rules tab on the
+**A lane run by rules** (a townsperson who works: api `CONTRACT.txt`, "A lane run by rules") gets a row in the Town
+view, under the town's people, in the strip's shape: the lane's label (a later label once its unlock is held), what it
+does (the task's name, or `idle`), the task's bar, and `Change`. A row arrives through the arrival queue the first time
+its lane is in view, then stays. `Change` opens the Rules tab on the
 lane's task editor: the rule editor's simple view with only `Do`, the lane's own tasks, the rule's sentence and Save. It
 opens on the rule the lane runs now, else the lane's first always rule that is not passed over, else a new always rule;
 Save changes that rule's task in place (its condition kept) or adds the always rule. The lane's tasks are never cards in
-Tasks or Completed: the row and its editor are their only way in. Fits into: the hands strip (`ui/lanerows.ts`, owned by
+Tasks or Done: the row and its editor are their only way in. Fits into: the Town view (`ui/lanerows.ts`, owned by
 `ui/hands.ts`), the Rules tab's editor (`ui/laneedit.ts`), `game/lanes.ts` for what Change opens.
 
 ## Asks
@@ -398,9 +420,9 @@ phone, portrait                        desktop, and a phone in landscape
 ```
 
 - **The button.** From the first entry on, the book is a button in its own place after the chips: its icon and its
-  word (the book's label), styled as the Chronicle button (`.chron-open`'s raised surface and tap size). Nothing left of it
+  word (the book's label), on a raised surface at a tap size the head's row holds (`.journal-open`). Nothing left of it
   moves, and the change takes its turn in the arrival queue as a feature does, after the step's lines. It carries the
-  quiet dot (`.new-dot`, placed as on `.chron-open`) while a note is unread and at no other time, so a new entry dots
+  quiet dot (`.new-dot`) while a note is unread and at no other time, so a new entry dots
   it through its notes. It glows only as its lesson's step.
 - **The sheet** is the siblings' frame: `dialog.sheet.journal-sheet`, a sticky `.panel-heading` (`ui.journal.heading`)
   and sticky `.sheet-actions` holding Close (`ui.close`), then `Prev` and `Next` at the right end, under the thumb.
@@ -821,8 +843,9 @@ are engine decisions a save is replayed from, and a lesson is not game state.
   ledger lines, skill rows, needs, labels, headings, mix segments. It clears when the player interacts with the thing
   (a tap, a drag, a key) and when the thing is put to work: joined to a mix (in the editor or by Both), running, held
   by any saved mix, or named by a rule. A task already at work never shows a dot. Never cleared by being seen or by
-  time, and it never counts anything. The Chronicle button takes one too, while a line it holds left the strip before the player touched
-  anything after it showed; it clears when the Chronicle is touched.
+  time, and it never counts anything. Book takes one too, while a line it holds left the strip before the player touched
+  anything after it showed; it clears when Book is touched. So does Town, when a person or a lane arrives while
+  another tab is open.
 - **The glow** points at the one obvious next step, only when there truly is one, and only one at a time. In the
   opening: the first card; the first mix offer (`Both`); the first strike when everything it needs is in. Whenever
   the running mix greys (a task in it retired or completed): the strip's `Edit`, until the editor is opened. After

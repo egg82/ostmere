@@ -46,7 +46,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   narrative-heavy and painstaking for the character, so the player feels their weakness through the screen before any
   power (A Dark Room's hook). They run on **one-off narrative actions**: standing up, looking around, gathering dead
   wood by hand. Each runs once, says something and opens the next; they are front-loaded, then sparse later, used where
-  the story needs a step. **A finished one-off moves to the Completed tab**, as every finished card does (upgrades,
+  the story needs a step. **A finished one-off moves to the Book's Done page**, as every finished card does (upgrades,
   research, built projects), as idle games usually do: a story step is a card with a cap, with no special case. Its
   record is also the log line it wrote (the journal, once it exists), and what it built shows in the scene. **Tools come before
   skills:** bare hands gather; a skill like Woodcutting opens once something has been made to cut with. Learning stays
