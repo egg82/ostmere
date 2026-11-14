@@ -163,15 +163,18 @@ in my hand. wrapped it in rag." `repeat`: "kettle." and "the rag is holding." `l
 the blanket."
 
 The loader's checks name ids and fields, never text: every subject has a first slot; every `beat`, `person` and
-`routine` subject has a catch-up slot; misremember and correction come together; a source names a cause the content
+`routine` subject has a catch-up slot; misremember and correction come together, and only on a `routine` subject,
+never a `beat`, `person` or `worry` (owner, 2026-11-14: the journal never misleads about the story); a source names a
+cause the content
 writes, and no cause feeds two subjects; each `line` person has a
 person subject for each way that moves them; every `days` note shipped before this has a beat subject; every slot key
 has text. Each check is shown red on a planted chapter first.
 
 ## What the page draws
 
-The page draws a composed day as a `days` page, one page per written day, its notes in order, with the hands and
-sketches the slots name, in today's page layout. Opened carries every written day; Step carries the days it composed.
+The page draws written days the way a notebook fills (owner, 2026-11-14): each day's notes in order under its day,
+days running on down a `days` page until it is full, then a new page, with the hands and sketches the slots name, in
+today's page look. A day starts a new page only when it would not fit on the current one. Opened carries every written day; Step carries the days it composed.
 `SavePresentation` gains the newest day the player has turned to, which only grows; a page past it is unread and
 dots the Journal button. The creatures and places sections, their unlocks and their numbers are unchanged.
 
