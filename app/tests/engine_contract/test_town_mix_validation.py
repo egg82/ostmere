@@ -135,7 +135,6 @@ def test_a_player_cannot_make_a_new_town_id_switch_to_a_town_mix_or_queue_one():
     decide(start(r, *hands_mixes()), r, 0, SwitchMix(HM1))
 
 
-@pytest.mark.xfail(strict=True, raises=pytest.fail.Exception, reason="#61: SaveMix lets a saved mix change layer")
 @pytest.mark.parametrize("mix", [Mix(TM, (CardShare(H1, BP),)), Mix(HM1, (CardShare(A1, BP),))],
                          ids=["the town's mix given a hands card", "a hands mix given a town card"])
 def test_a_save_mix_never_changes_a_saved_mixs_layer(mix: Mix):

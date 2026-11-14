@@ -1345,8 +1345,9 @@ THE TOWN'S MIX
   joined, or that is locked, idles.
   Decisions:
   - save_mix of a town mix: 422 invalid_decision, nothing written, when it holds cards of both kinds of mix, a card
-    whose lane has not joined, a card with a cap, or one person's shares summing above 10000; and for a new mix id
-    beginning "town:" (those are the game's; the one it made may be edited).
+    whose lane has not joined, a card with a cap, or one person's shares summing above 10000; for a new mix id
+    beginning "town:" (those are the game's; the one it made may be edited); and, for any mix, under the id of a saved
+    mix of the other kind (a hands mix's cards under a town mix's id, or the reverse).
   - switch_mix from the player of a town mix: 422 (set by rules). set_queue with a switch_mix of a town mix: 422 (the
     queue is the hands' plan). set_orders accepts one: that is the town's rule.
   - The town's always rule: an order {when: after_time {time: 0}, then: switch_mix m}, m a town mix. When the first
