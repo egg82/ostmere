@@ -11,7 +11,7 @@ from .modifiers import (
     lowers_threat,
 )
 from .orders import (
-    AfterTime, AtLeast, CardCount, Condition, LaneRules, Running, SkillLevel, StoreValue, Subject, Unlocked,
+    AfterTime, AtLeast, CardCount, Condition, LaneRules, Running, SkillLevel, StoreValue, Subject, Unlocked, share_problem,
 )
 from .cardsides import card_costs, card_makes
 from .drains import check_drains
@@ -23,13 +23,15 @@ if TYPE_CHECKING:
     from .rules import Rules
 
 
-def condition_problem(rules: "Rules", cond: Condition) -> str | None:
-    """Why `cond` cannot be used under `rules` (an unknown id, a release on the wrong side), or None."""
+def condition_problem(rules: "Rules", cond: Condition, in_rules: bool = False) -> str | None:
+    """Why `cond` cannot be used under `rules` (an unknown id, a release on the wrong side, a share level in_rules)."""
     if isinstance(cond, AfterTime):
         return None
     problem = subject_problem(rules, cond.subject)
     if problem is not None:
         return problem
+    if cond.value_of_cap or cond.release_of_cap:
+        return "a share level is a saved rule's alone" if in_rules else share_problem(cond)
     ok = cond.release <= cond.value if isinstance(cond, AtLeast) else cond.release >= cond.value
     return None if ok else "condition release is on the wrong side of its value"
 
@@ -69,15 +71,15 @@ def check_parts(rules: "Rules") -> None:
         check_while_running(rules, f"action {a.id}", a.while_running)
     check_tallies(rules)
     for c in rules.chips:
-        _require(condition_problem(rules, c.when) is None, f"chip {c.id}: bad condition")
+        _require(condition_problem(rules, c.when, in_rules=True) is None, f"chip {c.id}: bad condition")
         _require(not is_lane_rules(c.when), f"chip {c.id}: a chip cannot read LaneRules")
         _require(all(m.source == c.id for m in c.effects), f"chip {c.id}: an effect is not sourced by the chip")
         _check_modifiers(rules, c.effects, f"chip {c.id}")
         _require(not any(isinstance(m.target, StoreCap) for m in c.effects), f"chip {c.id}: a chip cannot aim at a cap")
     for t in rules.triggers:
-        _require(condition_problem(rules, t.when) is None, f"trigger {t.id}: bad condition")
+        _require(condition_problem(rules, t.when, in_rules=True) is None, f"trigger {t.id}: bad condition")
         for r in t.requires:
-            _require(condition_problem(rules, r) is None, f"trigger {t.id}: bad requirement")
+            _require(condition_problem(rules, r, in_rules=True) is None, f"trigger {t.id}: bad requirement")
             _require(not isinstance(r, AfterTime) and isinstance(r.subject, (Unlocked, Running)),
                      f"trigger {t.id}: a requirement must be on an unlock or a runner")
         _check_outcome(rules, t.outcome, f"trigger {t.id}", installs=True, trigger=t.id)
@@ -171,7 +173,7 @@ def _check_card(rules: "Rules", c: CardDef) -> None:
     check_while_running(rules, where, c.while_running)
     check_drains(rules, where, c, listed)
     for cond in c.requires:
-        _require(condition_problem(rules, cond) is None, f"{where}: bad requires condition")
+        _require(condition_problem(rules, cond, in_rules=True) is None, f"{where}: bad requires condition")
         _require(isinstance(cond, AfterTime) or cond.release == cond.value,
                  f"{where}: a requires is a plain threshold (release == value)")
         _require(isinstance(cond, AfterTime) or not isinstance(cond.subject, Running),

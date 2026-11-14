@@ -15,6 +15,7 @@ from ashfall_app.engine import (
     encode, new_save, validate_rules,
 )
 from contract_gen import Q, card, card_id, make_rules, mix_id, store_id
+from leaves_world import kills
 
 S0 = store_id(0)
 FILL, DRAIN = mix_id(0), mix_id(1)
@@ -63,6 +64,7 @@ def _up_to(value_bp: int, release_bp: int) -> AtLeast:
 
 # ---- invariant 163: the same share across a cap rise -------------------------------------------------------------
 
+@kills(7)
 def test_a_share_level_crosses_at_the_same_share_before_and_after_the_cap_rises():
     """"Down to half, until full" refilling S0 (8 of 10, drained at 1/h, refilled at 2/h): before the raise it comes
     on when S0 shows 5 and lets go at 10; the cap doubles at 9h while it refills, and from then on it lets go at 20 and
@@ -92,6 +94,7 @@ def test_an_amount_level_crosses_at_the_same_number_before_and_after_the_cap_ris
 
 # ---- invariant 164: full and empty ---------------------------------------------------------------------------------
 
+@kills(7)
 def test_full_is_the_live_cap_and_empty_is_nothing_shown():
     """"Up to full, until empty" draining S0 (filled at 1/h, drained at 2/h, from 0 of 10): it comes on at 10 and lets
     go once S0 shows 0; after the cap doubles at 15h it comes on at 20, not 10."""
@@ -113,6 +116,7 @@ def test_an_amount_at_the_old_full_no_longer_means_full_after_a_raise():
     assert {lv for t, on, lv in ch if on and t > 15 * H} == {10 * Q}
 
 
+@kills(5)
 def test_full_of_a_cap_that_is_not_whole_items_is_its_whole_items():
     """A cap of 10.5 items reads as 10 whole items: "up to full" holds at 10, and not at 9.99."""
     cap = 10 * Q + Q // 2
@@ -120,6 +124,7 @@ def test_full_of_a_cap_that_is_not_whole_items_is_its_whole_items():
     assert _latch(cap, 10 * Q - 1, _up_to(FULL, HALF)) is False
 
 
+@kills(6)
 def test_an_at_most_down_to_empty_holds_only_while_nothing_shows():
     assert _latch(10 * Q, Q - 1, _down_to(0, HALF)) is True
     assert _latch(10 * Q, Q, _down_to(0, HALF)) is False
@@ -127,6 +132,7 @@ def test_an_at_most_down_to_empty_holds_only_while_nothing_shows():
 
 # ---- the reading, as whole items against the exact share ---------------------------------------------------------
 
+@kills(1, 6, 10)
 def test_a_quarter_of_ten_holds_an_at_most_at_two_and_an_at_least_at_three():
     for store, below, above in ((2 * Q, True, False), (3 * Q - 1, True, False), (3 * Q, False, True)):
         assert _latch(10 * Q, store, _down_to(QUARTER, FULL)) is below, store
@@ -167,26 +173,45 @@ def test_an_at_most_until_a_quarter_lets_go_once_three_show():
 
 # ---- invariant 167: a band of one item ----------------------------------------------------------------------------
 
+@kills(2)
 def test_two_shares_that_meet_in_whole_items_keep_a_band_of_one_item():
     """A quarter and half of a 4-item cap read 1 and 2: "down to a quarter, until half" comes on when S0 shows 1 and
-    lets go at 3, one item past 2; "up to half, until a quarter" comes on at 2 and lets go once S0 shows 0."""
+    lets go at 3, one item past 2; "up to half, until a quarter" comes on at 2 and lets go once S0 shows 0. Each run
+    stops at its first change, so a band that is missing flips at most a few times before the check."""
+    down = Order(_down_to(QUARTER, HALF), SwitchMix(FILL))
     rules = _rules(4 * Q, Q // 2)
-    ch = _changes(rules, _world(rules, Order(_down_to(QUARTER, HALF), SwitchMix(FILL)), "drain"), 30 * H)
-    assert {lv // Q for _, on, lv in ch if on} == {1} and {lv // Q for _, on, lv in ch if not on} == {3}
-    rules = _rules(4 * Q, 0, fill=1000, drain=2000)
-    ch = _changes(rules, _world(rules, Order(_up_to(HALF, QUARTER), SwitchMix(DRAIN)), "fill"), 30 * H)
-    assert {lv // Q for _, on, lv in ch if on} == {2} and {lv // Q for _, on, lv in ch if not on} == {0}
+    assert [(on, lv // Q) for _, on, lv in _changes(rules, _world(rules, down, "drain"), 4600)][:1] == [(False, 3)]
+    rules = _rules(4 * Q, 3 * Q)
+    assert [(on, lv // Q) for _, on, lv in _changes(rules, _world(rules, down, "drain"), 4000)][:1] == [(True, 1)]
+    up = Order(_up_to(HALF, QUARTER), SwitchMix(DRAIN))
+    rules = _rules(4 * Q, 2 * Q, fill=1000, drain=2000)
+    assert [(on, lv // Q) for _, on, lv in _changes(rules, _world(rules, up, "fill"), 2000)][:1] == [(False, 0)]
+    rules = _rules(4 * Q, 3 * Q // 2, fill=1000, drain=2000)
+    assert [(on, lv // Q) for _, on, lv in _changes(rules, _world(rules, up, "fill"), 1900)][:1] == [(True, 2)]
+
+
+@kills(3, 4)
+def test_the_band_never_reaches_past_full_or_under_nothing_shown():
+    """Where a value level is within one item of full or empty there is no room for the band, and the rule is a plain
+    threshold rather than one that can never let go: on a 4-item cap "down to three quarters, until full" lets go at
+    full, and "up to a quarter, until empty" lets go once S0 shows 0."""
+    rules = _rules(4 * Q, 3 * Q)
+    ch = _changes(rules, _world(rules, Order(_down_to(3 * QUARTER, FULL), SwitchMix(FILL)), "drain"), 2000)
+    assert [(on, lv) for _, on, lv in ch[:1]] == [(False, 4 * Q)]
+    rules = _rules(4 * Q, 2 * Q, fill=1000, drain=2000)
+    ch = _changes(rules, _world(rules, Order(_up_to(QUARTER, 0), SwitchMix(DRAIN)), "fill"), 2000)
+    assert ch and ch[0][1] is False and ch[0][2] // Q == 0
 
 
 def test_a_release_the_cap_puts_inside_the_value_moves_one_item_past_it():
     """"Under 8 (an amount), until half (a share)" on a 10-item cap: half is 5, inside the value, so the rule lets go
     at 9, one item past where it comes on. After the cap doubles, half is 10 and it lets go at 10."""
-    rules = _rules(10 * Q, 9 * Q, raise_at=12 * H)
+    rules = _rules(10 * Q, 9 * Q, raise_at=2 * H)
     cond = AtMost(StoreValue(S0), 8 * Q - 1, HALF, release_of_cap=True)
     s = _world(rules, Order(cond, SwitchMix(FILL)), "drain")
-    ch = _changes(rules, s, 40 * H)
-    before = [lv for t, on, lv in ch if not on and t < 12 * H]
-    after = [lv for t, on, lv in ch if not on and t > 12 * H]
+    ch = _changes(rules, s, 13_000)
+    before = [lv for t, on, lv in ch if not on and t < 2 * H]
+    after = [lv for t, on, lv in ch if not on and t > 2 * H]
     assert before and {lv // Q for lv in before} == {9}
     assert after and {lv // Q for lv in after} == {10}
 
@@ -236,6 +261,7 @@ def test_a_share_level_off_a_store_out_of_range_or_on_the_wrong_side_is_refused(
         decide(s, rules, 0, SetQueue((QueueEntry(SwitchMix(FILL), cond),)))
 
 
+@kills(9)
 def test_a_share_level_and_an_amount_level_together_are_not_compared():
     """A mixed band is never refused for its sides: a share and a quantity are on different scales."""
     rules = _rules(10 * Q, 5 * Q)
@@ -245,6 +271,7 @@ def test_a_share_level_and_an_amount_level_together_are_not_compared():
         decide(s, rules, 0, SetOrders((Order(cond, SwitchMix(FILL)),)))
 
 
+@kills(8)
 def test_a_share_level_in_the_rules_is_refused():
     base = _rules(10 * Q, 5 * Q)
     share = _up_to(FULL, FULL)
