@@ -19,6 +19,7 @@ from .goalrows import goal_rows
 from .ruledry import order_dry
 from .goals import goals
 from .line_causes import line_infos, offer_cause
+from .line_models import PeopleBand, PeopleInfo
 from .sources import sources, store_sources
 from . import content_models as cm
 from .limits import MAX_MIXES, MAX_ORDERS, MAX_QUEUE
@@ -143,10 +144,11 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                      for s in o.skills],
         node_infos=[cm.NodeInfo(node=n.id, skill=n.skill, label_key=n.label_key, change=cm.NodeChange(
             target=cm.NodeTarget(n.changes.target), id=n.changes.id, store=n.changes.store)) for n in o.nodes],
-        lane_infos=[cm.LaneInfo(lane=e.HANDS, label_key=o.hands_label_key, ruled=False, later_labels=[], name_key=None),
+        lane_infos=[cm.LaneInfo(lane=e.HANDS, label_key=o.hands_label_key, ruled=False, later_labels=[], name_key=None,
+                                told=None),
                     *(cm.LaneInfo(lane=x.id, label_key=x.label_key, ruled=x.ruled, later_labels=[
                         cm.LaneLabel(after=convert.unlock(authored.unlock(lb.after)), label_key=lb.label_key)
-                        for lb in x.later_labels], name_key=x.name_key) for x in o.lanes)],
+                        for lb in x.later_labels], name_key=x.name_key, told=x.told) for x in o.lanes)],
         offer_infos=_offer_infos(o),
         end_line_keys=list(o.end_line_keys),
         line_infos=line_infos(o),
@@ -161,6 +163,9 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                                         change_bp=[] if lv.held else _changes(lv.modifiers),
                                                         names=[] if lv.held else _named(lv.modifiers, cards))
                                         for lv in o.camp.levels]),
+        people=None if o.people is None else PeopleInfo(
+            came=[PeopleBand(at_least=b.at_least, keys=list(b.keys)) for b in o.people.came],
+            went=[PeopleBand(at_least=b.at_least, keys=list(b.keys)) for b in o.people.went]),
         first_mix=cm.FirstMix(feature=o.first_mix.feature, card_ids=list(o.first_mix.cards)),
         transfer_code_s=int(codes.LIFETIME.total_seconds()))
 

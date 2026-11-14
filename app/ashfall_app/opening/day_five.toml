@@ -305,6 +305,7 @@ outcome = { stores = [{ store = "bay2", items = 1 }] }
 id = "n3"
 label_key = "lane_n3"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n3_named" }]
 name_key = "name_n3"
 
@@ -312,6 +313,7 @@ name_key = "name_n3"
 id = "n4"
 label_key = "lane_n4"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n4_named" }]
 name_key = "name_n4"
 
@@ -489,8 +491,8 @@ l_pair_1 = "story"
 l_pair_2 = "story"
 l_bay2_go = "story"
 l_bay2_hers = "story"
-l_join2_1 = "find"
-l_join2_2 = "find"
+l_join2_1 = "story"
+l_join2_2 = "story"
 l_seed = "story"
 l_dig_bed_1 = "story"
 l_dig_bed_2 = "story"

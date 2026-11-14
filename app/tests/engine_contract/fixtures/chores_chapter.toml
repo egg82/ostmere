@@ -29,6 +29,7 @@ costs = [{ store = "t_fuel", items_per_hour = 1 }]
 id = "t_helper"
 label_key = "t_l_helper"
 ruled = true
+told = "mention"
 
 [[cards]]
 id = "t_scoop"
@@ -73,7 +74,18 @@ outcome = { @CLOSE@ }
 
 @EXTRA@
 
+# t_helper is told by a mention (the content's people check): a leaving here writes no story line of its own.
+[[people.came]]
+at_least = 1
+keys = ["t_came"]
+
+[[people.went]]
+at_least = 1
+keys = ["t_went"]
+
 [text]
+t_came = "One more."
+t_went = "One fewer."
 t_s_fuel = "Fuel"
 t_s_pool = "Pool"
 t_s_y = "Yield"

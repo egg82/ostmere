@@ -45,6 +45,7 @@ costs = [{ store = "t_heat", items_per_hour = 4 }]
 id = "t_helper"
 label_key = "t_l_helper"
 ruled = true
+told = "line"
 
 # Every flow shape in one hands card (it also gets the camp's make flow); xp_per_hour is 6 whatever the flows say.
 [[cards]]

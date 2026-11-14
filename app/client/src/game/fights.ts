@@ -83,12 +83,17 @@ function shuffled<T>(xs: T[], next: () => number): T[] {
   return bag;
 }
 
-/** The pool's line for the runner's k-th fight of a kind (won or lost, counted from 0 since it first ran): the
- * pool's lines shuffled by a draw keyed by the save, the runner, the kind and the round floor(k / n), so each line
- * reads once before any repeats, the same on every device. */
-export function poolLine(save: number, runner: string, kind: "won" | "lost", pool: readonly string[], k: number): string {
+/** The k-th draw of a shuffle bag: `pool` shuffled by a draw keyed by `key` and the round floor(k / n), so each item
+ * comes once before any repeats, the same on every device. */
+export function bagged(key: string, pool: readonly string[], k: number): string {
   const round = Math.floor(k / pool.length);
-  return shuffled([...pool], seeded(`${save}|${runner}|${kind}|${round}`))[k % pool.length] ?? "";
+  return shuffled([...pool], seeded(`${key}|${round}`))[k % pool.length] ?? "";
+}
+
+/** The pool's line for the runner's k-th fight of a kind (won or lost, counted from 0 since it first ran): a shuffle
+ * bag keyed by the save, the runner and the kind. */
+export function poolLine(save: number, runner: string, kind: "won" | "lost", pool: readonly string[], k: number): string {
+  return bagged(`${save}|${runner}|${kind}`, pool, k);
 }
 
 /** Past this many fights in one window the arrival queue shows one summary line instead of one per fight. */

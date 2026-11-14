@@ -12,11 +12,13 @@ cap_items = 20
 id = "t_p1"
 label_key = "t_l_p1"
 ruled = true
+told = "line"
 
 [[lanes]]
 id = "t_p2"
 label_key = "t_l_p2"
 ruled = true
+told = "line"
 
 [[standing]]
 id = "t_tend"
@@ -42,14 +44,20 @@ makes = [{ store = "t_heap", items_per_hour = 30 }]
 [[triggers]]
 id = "t_arrive"
 when = { test = "after_time", value = 100 }
-outcome = { unlocks = [{ unlock_kind = "card", id = "t_p1_work" }, { unlock_kind = "card", id = "t_p2_work" }, { unlock_kind = "action", id = "t_tend" }], joins = [{ lane = "t_p1", mix = "town:main", card = "t_p1_work" }, { lane = "t_p2", mix = "town:main", card = "t_p2_work" }] }
+outcome = { line_keys = ["t_l_arrive"], unlocks = [{ unlock_kind = "card", id = "t_p1_work" }, { unlock_kind = "card", id = "t_p2_work" }, { unlock_kind = "action", id = "t_tend" }], joins = [{ lane = "t_p1", mix = "town:main", card = "t_p1_work" }, { lane = "t_p2", mix = "town:main", card = "t_p2_work" }] }
 
 [[triggers]]
 id = "t_depart"
 when = { test = "after_time", value = 5000 }
-outcome = { leaves = [{ lane = "t_p1", stops = ["t_tend"] }] }
+outcome = { line_keys = ["t_l_depart"], leaves = [{ lane = "t_p1", stops = ["t_tend"] }] }
+
+[line_kinds]
+t_l_arrive = "story"
+t_l_depart = "story"
 
 [text]
+t_l_arrive = "Two come."
+t_l_depart = "One goes."
 t_s_heap = "Heap"
 t_l_p1 = "First"
 t_l_p2 = "Second"

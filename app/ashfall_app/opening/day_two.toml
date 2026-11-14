@@ -18,6 +18,7 @@ curve_items = [36630, 54980, 82510, 123810, 185760]
 id = "n1"
 label_key = "lane_n1"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "n1_named" }, label_key = "lane_n1_named" }]
 
 # Her versions of the gathering cards: the hands cards' takes and makes at base rate, no skill and no XP, and camp items

@@ -90,7 +90,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 
 - [Nothing appears; everything is made](decisions/people.md): people arrive for a reason you made, by the needs the town meets, and rise into roles.
 - [The town](decisions/people.md): a town from nothing, gritty but never a spiral; souls, social lives and quests, deaths on the light tier, outposts and supply lines.
-- [People, as built](decisions/people.md): arrival policy, notables, and a person's name filled into text by lane.
+- [People, as built](decisions/people.md): arrival policy, notables, a person's name filled into text by lane, and who is written into the story by a line or a daily mention.
 
 ## Living world and maps
 

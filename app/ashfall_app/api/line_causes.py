@@ -7,16 +7,19 @@ from ..opening import convert as authored
 from ..opening.entries import ConditionEntry
 from ..opening.lock import line_keys
 from ..opening.offer_entries import OfferEntry
+from ..opening.people import mention_keys, person_keys
 from ..opening.refs import fail
 from ..opening.schema import Opening
 from . import convert
 from .decision_models import AtLeast, SkillLevel
-from .line_models import AnswerCause, CampCause, LineCause, LineInfo, RunnerCause, SkillCause, WhenCause
+from .line_models import AnswerCause, CampCause, LineCause, LineInfo, Mention, RunnerCause, SkillCause, WhenCause
 
 
 def line_infos(o: Opening) -> list[LineInfo]:
-    causes = _causes(o)
-    return [LineInfo(key=k, kind=o.line_kinds[k], cause=causes.get(k)) for k in dict.fromkeys(line_keys(o))]
+    causes, people, mentions = _causes(o), person_keys(o), mention_keys(o)
+    return [LineInfo(key=k, kind=o.line_kinds[k], cause=causes.get(k), person=k in people,
+                     mention=None if k not in mentions else Mention(way=mentions[k][0], lane=mentions[k][1]))
+            for k in dict.fromkeys(line_keys(o))]
 
 
 def _causes(o: Opening) -> dict[str, LineCause]:

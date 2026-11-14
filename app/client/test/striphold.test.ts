@@ -29,12 +29,13 @@ const shown = (): string[] => list().filter((n) => !n.classList.contains("held")
   const room = story.root.querySelector("div.strip-room");
   expect("the strip keeps a room", room !== null, true);
   expect("the room is out of the screen reader's way", room?.getAttribute("aria-hidden"), "true");
-  const want = [...new Set(fixtureContent.line_infos.filter((l) => l.kind === "story" || l.kind === "tap").map((l) => text(l.key)))];
+  const bands = [...fixtureContent.people?.came ?? [], ...fixtureContent.people?.went ?? []].flatMap((b) => b.keys);
+  const want = [...new Set([...fixtureContent.line_infos.filter((l) => l.kind === "story" || l.kind === "tap").map((l) => l.key), ...bands].map(text).filter((t) => t))];
   const got = Array.from(room?.children ?? [], (n) => n.textContent);
   expect("the room holds every story line the content can write, each once", got, want);
   expect("a find's and a level's lines get none", [got.includes(text("line.6")), got.includes(text("line.7"))], [false, false]);
   expect("the room and the list are the strip's own", [...story.root.children].slice(0, 2).map((n) => n.className), ["strip-room", "lines"]);
-  const dup = new Catalog({ ...fixtureContent, line_infos: [...fixtureContent.line_infos, { key: "line.1", kind: "story", cause: null }, { key: "no.such.key", kind: "story", cause: null }] });
+  const dup = new Catalog({ ...fixtureContent, line_infos: [...fixtureContent.line_infos, { key: "line.1", kind: "story", cause: null, person: false, mention: null }, { key: "no.such.key", kind: "story", cause: null, person: false, mention: null }] });
   const again = new Story(testContext(undefined, dup).ctx);
   expect("a repeated key or one with no text adds nothing", again.root.querySelector("div.strip-room")?.children.length, want.length);
 }

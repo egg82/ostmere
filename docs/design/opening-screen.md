@@ -40,7 +40,9 @@ beside them. Nothing the player needs during play sits in a far corner.
   away ("54m"), drawn under Story and All even with no line. Under Story its lines are followed by its figures as
   rows of a dim label and a value (`game/chronwords.ts`, `chapterRows`): stores ("+326 Dead wood · −26 Warmth"), levels
   ("Camp 1 → 2 · Foraging 2 → 4"), rules (one per line, "… came on ×2"), waiting ("1 ask", which closes the
-  chronicle and brings the first ask into view); the levels and rules labels open their filters, and the counts of
+  chronicle and brings the first ask into view); the levels and rules labels open their filters. When anyone came or
+  went, a people section follows under a hairline: the dim word "people", then the lines telling a person's joining or
+  leaving and each day's mention, set as story lines with their causes and taken out of the lines above. The counts of
   any other filter follow. With figures kept and nothing in them or the lines, it says "Nothing changed." Older
   stretches are titled "Away 54m" with how long ago the return was in the `ui.time.*` words. The page
   keeps each return in the save's presentation (`SavePresentation.visits`, written when the away reveal lands), so a

@@ -10,8 +10,6 @@ from .town import expand
 if TYPE_CHECKING:
     from .camp_entries import CampEntry, CampLevelEntry
     from .entries import CardEntry, LevelPaysEntry, SkillEntry, WhileRunningEntry
-    from .journal_entries import JournalDecl
-    from .prestige import PrestigeEntry
     from .schema import Chapter, Opening, SkillLevelsEntry
 
 
@@ -37,23 +35,19 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "chips": [*o.chips, *ch.chips], "triggers": [*o.triggers, *ch.triggers],
         "features": [*o.features, *ch.features], "order_cards": [*o.order_cards, *ch.order_cards],
         "offers": [*o.offers, *ch.offers],
-        "journal": _journal(o.journal, ch.journal), "entries": [*o.entries, *ch.entries], "notes": [*o.notes, *ch.notes],
-        "prestige": _prestige(o.prestige, ch.prestige), "nodes": [*o.nodes, *ch.nodes],
+        "journal": _once("journal", o.journal, ch.journal), "entries": [*o.entries, *ch.entries], "notes": [*o.notes, *ch.notes],
+        "prestige": _once("prestige", o.prestige, ch.prestige), "nodes": [*o.nodes, *ch.nodes],
+        "people": _once("people", o.people, ch.people),
         "camp": camp, "curve_items": [*o.curve_items, *ch.curve_items], "aims": [*o.aims, *ch.aims],
         "phase_pays": [*o.phase_pays, *ch.phase_pays],
         "text": {**o.text, **ch.text}, "line_kinds": {**o.line_kinds, **ch.line_kinds},
     }))
 
 
-def _prestige(old: "PrestigeEntry | None", new: "PrestigeEntry | None") -> "PrestigeEntry | None":
+def _once[T](name: str, old: T | None, new: T | None) -> T | None:
+    """A table declared once in the content: by an earlier file or by this chapter, never both."""
     if old is not None and new is not None:
-        raise ValueError("chapter prestige: [prestige] is declared twice")
-    return old if new is None else new
-
-
-def _journal(old: "JournalDecl | None", new: "JournalDecl | None") -> "JournalDecl | None":
-    if old is not None and new is not None:
-        raise ValueError("chapter journal: [journal] is declared twice")
+        raise ValueError(f"chapter {name}: [{name}] is declared twice")
     return old if new is None else new
 
 

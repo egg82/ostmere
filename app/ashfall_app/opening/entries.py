@@ -131,6 +131,8 @@ class LaneEntry(Entry):
     name_key: str | None = None
     """The person's name, as a label writes it: the page fills a text's `{<lane id>}` slot with it (api/CONTRACT.txt,
     "Text and numbers")."""
+    told: Literal["line", "mention"] | None = None
+    """How a ruled lane's person coming and going is written: in its outcome's story line, or a day's mention (people.py)."""
 
 
 class ConditionEntry(Entry):

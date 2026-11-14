@@ -86,8 +86,9 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   ran, and how many asks wait now, linked to the Asks list (the sheet of all of them when several wait). Figures, not sentences: a death or a fall stays a story line in the
   chapter, never a count in a row. The figures are taken once, as the return lands (`app/client/src/game/chapter.ts`),
   against the view the player left, and kept with the visit (`SavePresentation.chapter`), so a reload keeps them; a
-  return from before they were kept shows its lines and claims no figures. Later systems add rows (people, seasons,
-  fights) the same way. Rejected: a figures entry on every visit, which would put a few hundred bytes per return into
+  return from before they were kept shows its lines and claims no figures. When anyone came or went while away, a
+  people section follows the rows: the lines telling a person's joining or leaving and each day's mention, taken out
+  of the lines above (`decisions.md`, "People, as built"). Later systems add rows (seasons, fights) the same way. Rejected: a figures entry on every visit, which would put a few hundred bytes per return into
   every presentation write; and opening the chronicle by itself on a return, which would cover the strip's replay.
 - **Every line says what caused it**, as "↳" and a few words under it: the card or fight that wrote it, the store,
   level or count a beat waited on, the Camp level, the player's answer. The cause is served beside the line's kind
