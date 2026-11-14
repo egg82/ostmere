@@ -83,7 +83,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
 - **Coming back opens a chapter.** The chronicle runs newest first, and the newest return's stretch is "Since you
   left" (`app/client/src/ui/chapter.ts`): never folded, its lines with their causes, then under Story its figures as
   rows, each only when it has something: stores gained and lost, levels old → new (the Camp's first), the rules that
-  ran, and how many asks wait now, linked to them. Figures, not sentences: a death or a fall stays a story line in the
+  ran, and how many asks wait now, linked to the Asks list (the sheet of all of them when several wait). Figures, not sentences: a death or a fall stays a story line in the
   chapter, never a count in a row. The figures are taken once, as the return lands (`app/client/src/game/chapter.ts`),
   against the view the player left, and kept with the visit (`SavePresentation.chapter`), so a reload keeps them; a
   return from before they were kept shows its lines and claims no figures. Later systems add rows (people, seasons,

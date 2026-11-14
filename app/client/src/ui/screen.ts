@@ -29,6 +29,7 @@ import { Glow, GlowWhile, markNew } from "./fresh";
 import { IdleNudge } from "./nudge";
 import { Lessons } from "./lessons";
 import { Hands } from "./hands";
+import { Asks } from "./asks";
 import { seatHead } from "./headseat";
 import { LOW_UNDER_SCENE } from "./layout";
 import { Ledger } from "./ledger";
@@ -66,6 +67,7 @@ export class Screen {
   private readonly completed: Completed;
   private readonly ledger: Ledger;
   private readonly hands: Hands;
+  private readonly asks: Asks;
   private readonly flight = new Flight(this.reveal);
   private lineIds = 0;
   private drawing = false;
@@ -116,7 +118,7 @@ export class Screen {
       endBehind: () => this.end.behind, keeps, repeats: () => this.latest.repeats, ruleRuns: () => this.latest.rule_runs,
       lines: () => this.latest.lines, saveId: () => this.latest.save_id, lesson: () => this.lessons?.holding ?? null, lessonSubject: () => this.lessons?.subject ?? null,
     };
-    this.story = new Story(ctx);
+    this.story = new Story(ctx, () => this.asks.show());
     const marks = new NewMarks();
     this.cardGlow = new CardGlow(catalog, this.glow, (card) => this.cards.node(card));
     this.cards = new Cards(ctx, marks, () => { if (this.tab !== "cards" || this.editor.open) markNew(this.tabCards, () => undefined); });
@@ -127,6 +129,7 @@ export class Screen {
     this.banner = new Banner(catalog, this.reveal);
     this.end = new TheEnd(catalog, (keys) => this.endLines(keys), () => this.redraw());
     this.hands = new Hands(ctx, () => this.showTab());
+    this.asks = new Asks(ctx);
     const skills = new Skills(ctx);
     this.rules = new RulesTab(ctx);
     this.rulesGlow = new GlowWhile(this.glow, this.tabRules);
@@ -135,8 +138,8 @@ export class Screen {
     this.pinned.append(this.hands.root);
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);
-    panel.append(this.banner.root, this.pinned, this.hands.rows, this.hands.lanes.root, this.ledger.asks, this.tabs, area, this.foot);   // the offer rows (a phone's) and the lane rows under the strip, unpinned; then a phone's red and full ledger lines
-    this.parts = [this.story, this.hands, this.cards, this.completed, this.rules, skills, this.ledger,
+    panel.append(this.banner.root, this.pinned, this.asks.root, this.hands.rows, this.hands.lanes.root, this.ledger.asks, this.tabs, area, this.foot);   // the asks, a phone's chip rule offer and the lane rows under the strip, unpinned; then a phone's red and full ledger lines
+    this.parts = [this.story, this.hands, this.asks, this.cards, this.completed, this.rules, skills, this.ledger,
       new FeatureCard(catalog, this.reveal, this.root), new MoreCue(panel, area), (this.lessons = new Lessons(ctx, this.root, () => this.redraw()))];
 
     const frame = el("div", "scene-frame");

@@ -1593,6 +1593,15 @@ export interface components {
             line_keys: string[];
             /** Answers */
             answers: components["schemas"]["AnswerInfo"][];
+            /** Askers */
+            askers: string[];
+            cause: components["schemas"]["LineCause"] | null;
+            /** Waiting Key */
+            waiting_key: string | null;
+            /** Expiry Key */
+            expiry_key: string | null;
+            /** Permanence Key */
+            permanence_key: string | null;
         };
         /**
          * OfferedSwitch

@@ -230,6 +230,7 @@ outcome = { line_keys = ["l_road_smoke_1", "l_road_smoke_2"] }
 [[offers]]
 id = "o_posts"
 text_key = "o_posts"
+askers = ["n4"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 2 }
 line_keys = ["l_posts"]
 
@@ -290,6 +291,7 @@ costs = [{ store = "ask_wait", items_per_hour = 2 }]
 [[offers]]
 id = "o_rack"
 text_key = "o_rack"
+askers = ["n3"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 6 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "e2_clock", value = 1 }]
 
@@ -311,6 +313,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "smoked", items = 6 }]
 [[offers]]
 id = "o_deep"
 text_key = "o_deep"
+askers = ["n2"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 7 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_rack", value = 1 }]
 
@@ -336,6 +339,7 @@ stores = [{ store = "ask_wait", items = 3 }]
 [[offers]]
 id = "o_bark"
 text_key = "o_bark"
+askers = ["n1"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 8 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_deep", value = 1 }]
 
@@ -357,6 +361,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "cord", items = 4 }]
 [[offers]]
 id = "o_footing"
 text_key = "o_footing"
+askers = ["n4"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 9 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_bark", value = 1 }]
 
@@ -378,6 +383,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
 [[offers]]
 id = "o_fed"
 text_key = "o_fed"
+askers = ["n3"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 10 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_footing", value = 1 }]
 
@@ -403,6 +409,7 @@ stores = [{ store = "ask_wait", items = 3 }]
 [[offers]]
 id = "o_lookout"
 text_key = "o_lookout"
+askers = ["n2"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 10 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_fed", value = 1 }]
 
@@ -428,6 +435,7 @@ stores = [{ store = "ask_wait", items = 3 }]
 [[offers]]
 id = "o_gate"
 text_key = "o_gate"
+askers = ["n1"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 11 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_lookout", value = 1 }]
 
@@ -450,6 +458,7 @@ modifiers = [{ target = "rate", id = "field_track", flow = "cost", store = "root
 [[offers]]
 id = "o_skin"
 text_key = "o_skin"
+askers = ["n2"]
 gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_gate", value = 1 }]
 

@@ -9,6 +9,7 @@ from ashfall_app import engine as e
 from ashfall_app.api import content_models as cm
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
+from ashfall_app.api.line_models import WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.opening.schema import to_rules
 from ashfall_app.saves.ruleset import ruleset
@@ -33,7 +34,10 @@ def test_the_content_serves_the_ruled_lane_and_the_offer():
     asked = [x for x in content.offer_infos if x.offer == "t_ask"]   # beside day two's offer
     assert asked == [cm.OfferInfo(offer="t_ask", text_key="t_o_ask", kind=None, line_keys=["t_l_asked"], answers=[
         cm.AnswerInfo(answer="t_yes", label_key="t_a_yes", cost_key="t_a_yes_cost", role=None, change_bp=[], gains=[]),
-        cm.AnswerInfo(answer="t_no", label_key="t_a_no", cost_key="t_a_no_cost", role=None, change_bp=[], gains=[])])]
+        cm.AnswerInfo(answer="t_no", label_key="t_a_no", cost_key="t_a_no_cost", role=None, change_bp=[], gains=[])],
+        askers=[], cause=WhenCause(when=w.AtLeast(watched=w.Unlocked(unlock=w.Unlock(
+            category=w.UnlockKind.FEATURE, id="t_named")), value=1, release=1)),
+        waiting_key=None, expiry_key=None, permanence_key=None)]
 
 
 def test_the_view_serves_the_lane_order_and_the_open_offer():

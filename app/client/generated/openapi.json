@@ -4644,6 +4644,56 @@
             },
             "type": "array",
             "title": "Answers"
+          },
+          "askers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Askers"
+          },
+          "cause": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LineCause"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "waiting_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waiting Key"
+          },
+          "expiry_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expiry Key"
+          },
+          "permanence_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Permanence Key"
           }
         },
         "type": "object",
@@ -4652,7 +4702,12 @@
           "text_key",
           "kind",
           "line_keys",
-          "answers"
+          "answers",
+          "askers",
+          "cause",
+          "waiting_key",
+          "expiry_key",
+          "permanence_key"
         ],
         "title": "OfferInfo"
       },

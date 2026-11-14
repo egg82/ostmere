@@ -166,6 +166,11 @@ Offers and quests: authored or Claude-proposed, timing decided in code; state is
 answered, which answer). Answering is a Command, an order verb like a tap, so a rule or the queue can answer, and an
 offer's optional kind lets one rule answer every offer of it by role (engine `DESIGN.txt`, "OFFER KINDS";
 `app/ashfall_app/engine/answers.py`, `AnswerKind`). Never expires in its first piece. Declining costs no progress.
+An offer may name who asks (`askers`, ruled lanes) and carry three texts for where it differs from the usual
+(`waiting_key`, `expiry_key`, `permanence_key`), each optional and drawn only when given; the content refuses an
+`expiry_key` until offers can expire (engine `DESIGN.txt`, KNOWN GAPS). What led to an offer is served with it, its
+gate or, for a gate on a hidden store, the earlier answer it requires (`app/ashfall_app/api/line_causes.py`). The page
+draws open offers as one list (`docs/design/opening-screen.md`, "Asks").
 Interface: engine `DESIGN.txt`, "Offers", and `app/ashfall_app/api/CONTRACT.txt`, "OFFERS". Built:
 `app/ashfall_app/engine/offerstate.py` (where an offer stands), `app/ashfall_app/engine/answering.py` (an answer
 landing); the loader makes each offer's trigger (`app/ashfall_app/opening/convert.py`).

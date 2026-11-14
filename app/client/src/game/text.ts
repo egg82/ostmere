@@ -1,6 +1,7 @@
 // Every visible word comes from Content's text table (CONTRACT.txt). The page names keys, never text: a key
 // the content lacks renders as nothing and is reported once on the console, so the gap is found, not papered over.
 import type { Content } from "../api/types";
+import { ASK_KEYS } from "./askkeys";
 import { GOAL_ROW_KEYS } from "./goalkeys";
 import { LESSON_KEYS } from "./lessonkeys";
 import { CHRONICLE_KEYS } from "./chronkeys";
@@ -71,6 +72,7 @@ export const UI = {
   ...GOAL_ROW_KEYS,
   ...LESSON_KEYS,
   ...CHRONICLE_KEYS,
+  ...ASK_KEYS,
   ...PRESTIGE_KEYS,
   ...REMINDER_KEYS,
   townTitle: "ui.town.title",   // the camp's shown name: the town mix's heading and label, one home

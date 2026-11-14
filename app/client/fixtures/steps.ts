@@ -20,12 +20,13 @@ import type { DayTwoPhase } from "./daytwo";
 import type { FightsPhase } from "./fights";
 import type { ChroniclePhase } from "./chronicle";
 import type { SincePhase } from "./since";
+import type { AsksPhase } from "./asks";
 import type { JournalPhase } from "./journal";
 import type { PrestigePhase } from "./prestige";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];
@@ -36,6 +37,8 @@ export interface Kept {
   extra?: Mix[];
   orders?: Order[];
   queue?: QueueEntry[];
+  /** Answers given, as "offer:answer" (asks.ts). */
+  answered?: string[];
 }
 
 const solo = (id: string, card: string): Mix => ({ id, components: [{ kind: "card_share", card, share_bp: BP }] });

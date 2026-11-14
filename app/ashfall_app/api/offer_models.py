@@ -2,6 +2,8 @@
 of every offer. Re-exported from models.py and content_models.py."""
 from pydantic import BaseModel
 
+from .line_models import LineCause
+
 
 class OfferAnswer(BaseModel):
     answer: str
@@ -48,3 +50,14 @@ class OfferInfo(BaseModel):
     line_keys: list[str]
     """The lines written when the offer shows: its row is revealed after the last of them."""
     answers: list[AnswerInfo]
+    askers: list[str]
+    """The ruled lanes whose people ask, named by their lane's label; empty when no one person asks."""
+    cause: LineCause | None
+    """What led to the offer, as a line's cause (CONTRACT.txt, "Line causes"): its gate, or, for a gate the page cannot
+    word (a hidden store, a lane's rules), the earlier offer whose answer it requires; null with neither."""
+    waiting_key: str | None
+    """What waiting costs; null when waiting is free, as usual."""
+    expiry_key: str | None
+    """When the offer goes unanswered; null when it waits until answered, as usual."""
+    permanence_key: str | None
+    """What the answer settles for good, for a choice to weigh; null says nothing."""

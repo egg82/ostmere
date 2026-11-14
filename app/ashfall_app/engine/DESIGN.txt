@@ -1320,7 +1320,8 @@ REJECTED, AND WHY (townsfolk, installed rules, offers)
 
 KNOWN GAPS (townsfolk, installed rules, offers)
 - Offer expiry ("on offer for a stretch and then go", docs/decisions.md, "The town"): would be a fourth only-growing
-  fact (an unlock of the offer having gone) and an event at its time. Decided by: the first offer that expires.
+  fact (an unlock of the offer having gone) and an event at its time; the content's expiry_key, which says so to the
+  player, is refused until then (opening/ask_checks.py). Decided by: the first offer that expires.
 - Claude-proposed offers (docs/systems.md, Offers and quests) are authored OfferDefs today; a proposed one needs its
   own id space in the manifest. Decided by: the first emergent quest.
 - A queue entry tapping a retired chore's cure is left in the queue (retire_orders touches orders only); if the cure

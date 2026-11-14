@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from ..engine import HANDS, QUANTITY_SCALE, TOWN_PREFIX, units
 from .aims import check_aims
+from .ask_checks import check_asks
 from .band_checks import check_bands
 from .camp_checks import check_camp
 from .chip_checks import check_chip_card, check_chips
@@ -57,6 +58,7 @@ def check_structure(o: "Opening") -> None:
     _check_first_mix(o)
     check_refs(o)
     check_kinds(o)
+    check_asks(o)
     check_fights(o)
     check_tallies(o)
     check_season_turns(o)
@@ -241,7 +243,8 @@ def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
             yield from ((f"camp level {n}", k) for k in (lv.pays_key, *lv.line_keys))
     yield from ((f"aim {a.id}", a.text_key) for a in o.aims)
     for x in o.offers:
-        yield from ((f"offer {x.id}", k) for k in (x.text_key, *x.line_keys))
+        yield from ((f"offer {x.id}", k) for k in (x.text_key, *x.line_keys, x.waiting_key, x.expiry_key, x.permanence_key)
+                    if k is not None)
         yield from ((f"answer {a.id}", k) for a in x.answers for k in (a.label_key, a.cost_key))
     yield from (("start_line_keys", k) for k in o.start_line_keys)
     yield from (("end_line_keys", k) for k in o.end_line_keys)

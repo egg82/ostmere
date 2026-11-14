@@ -146,9 +146,10 @@ ENDPOINTS
   (api/line_causes.py): runner {runner}, a card's line, outcome or finish, or a fight's pool on a card or standing
   action; when {when: Condition}, what a beat, an offer's arrival or a chip waited on; skill {skill}, a line several
   levels of one skill share (a phase's pool), so which level is not known; camp {level}, a Camp level from 1; answer
-  {offer}, the player's answer. Null for the end's lines and a beat waiting on a lane's rules. A key is written in one
-  place or by one skill's levels; any other sharing fails the content's load. The page words a cause under its line in
-  the chronicle and never parses a line's words for one.
+  {offer}, the player's answer to that offer (an offer's own lines take the offer's cause: OFFERS). Null for the end's
+  lines and a beat waiting on a lane's rules. A key is written in one place or by one skill's levels; any other
+  sharing fails the content's load. The page words a cause under its line in the chronicle and never parses a line's
+  words for one.
   AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
   game of the account; the page then starts no lesson and shows no hint that only a lesson gives (a guided offer is its
   one tap), and on again, each save's lessons go on from what it keeps. A PUT replaces the settings whole.
@@ -971,9 +972,16 @@ A LANE RUN BY RULES
 OFFERS
   Someone asks the player something, with two or more answers; it waits until answered and never expires (engine
   DESIGN.txt, "Offers"). Content.offer_infos: [OfferInfo {offer, text_key, kind, line_keys, answers: [AnswerInfo {answer,
-  label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}]}] in content order, kind the group of offers that ask the same question and role what
+  label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}], askers, cause, waiting_key, expiry_key,
+  permanence_key}] in content order, kind the group of offers that ask the same question and role what
   an answer means in it (both null on an offer outside any kind; a kinded offer has a role on every answer, and every
-  offer of a kind has the same roles), line_keys the lines written when the offer shows. View: offers [Offer
+  offer of a kind has the same roles), line_keys the lines written when the offer shows. askers: the ruled lanes whose
+  people ask (empty when no one person does). cause: what led to the offer, a LineCause (Line causes): its gate, or for
+  a gate the page cannot word (a hidden store, a lane's rules) the first offer whose answer it requires, as answer
+  {offer}; null with neither, and the offer's lines carry the same cause. The three *_key fields are text the content
+  writes only where this offer differs from the usual, null otherwise: waiting_key, what waiting costs (usually
+  nothing: an open offer pauses only itself); expiry_key, when it goes (usually never; the content refuses one while
+  the engine has no offer expiry); permanence_key, what the answer settles for good, for a choice to weigh. View: offers [Offer
   {offer, answer, answers: [OfferAnswer {answer, card, takes_s}]}], every offer shown so far, in content order:
   answer null while it is open, else the answer given; per answer, the card it sets running (null for none) and
   takes_s, the seconds one completion of that card would take started now (null without a card).
@@ -995,13 +1003,17 @@ OFFERS
   declares, or a role the kind does not have, is 422 invalid_decision and writes nothing. The wire's field is
   offer_kind because `kind` is the verb's tag.
   THE CLIENT MAY:
-  - draw an offer row for each view.offers entry whose answer is null, in the hands strip where the mix offer sits,
-    revealed as an arrival: after the last of the Step's lines whose key is in its OfferInfo.line_keys, or at once
-    when this Step holds none of them (it showed before the page's last view). It holds OfferInfo.text_key and one
-    control per answer, its label_key and its cost_key with {d} filled from takes_s (a cost text with {d} left out
-    while takes_s is null; one without it, the effect of an answer that starts nothing and installs a modifier, drawn
-    as it stands), {pct} and {pct_b} from AnswerInfo.change_bp and {gain} and {gain_b} from AnswerInfo.gains. A tap
-    sends answer_offer. The row has no dismiss and stays until answered.
+  - draw the open offers (view.offers entries whose answer is null) as one Asks list: the first open one in content
+    order shown at a fixed height with a count of the rest, which opens the whole list. An offer is revealed as an
+    arrival: after the last of the Step's lines whose key is in its OfferInfo.line_keys, or at once when this Step
+    holds none of them (it showed before the page's last view). An ask holds its askers' lane labels,
+    OfferInfo.text_key, its cause worded as a line's, the *_key texts it has, and one control per answer: its label_key
+    and its cost_key with {d} filled from takes_s (a cost text with {d} left out while takes_s is null; one without it,
+    the effect of an answer that starts nothing and installs a modifier, drawn as it stands), {pct} and {pct_b} from
+    AnswerInfo.change_bp and {gain} and {gain_b} from AnswerInfo.gains. An answer with change_bp also shows each figure
+    it moves, before → after, read from a dry run of that answer_offer against the view (a store's net rate or cap, a
+    card's time), never computed by the page. A tap sends answer_offer. An ask has no dismiss and stays until
+    answered.
   - draw no row for an offer that arrives already answered: its lines say what happened.
   - list the answer order in the Rules tab: every always rule (after_time 0) that answers an offer, in list order, under
     ui.rule.answers, each as ui.rule.answer with no arrow.
