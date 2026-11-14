@@ -14,7 +14,7 @@ from ..engine import IdKind, Outcome, RebaseError
 from ..engine.codec import Json, from_json
 from ..engine.upgrade import missing_upgrades
 from .lock import KINDS, LOCK, Forwarding, Lock, forwarded, forwarding, load_lock, merged, snapshot
-from .renames import RENAMES, RenameEntry, load_renames
+from .renames import LOCAL_KINDS, RENAMES, RenameEntry, load_renames
 from .schema import Opening, to_rules
 
 type ProblemClass = Literal["needs_mapping", "forbidden", "out_of_date"]
@@ -58,7 +58,7 @@ def _rename_problems(lock: Lock, now: Lock, renames: list[RenameEntry]) -> list[
     try:
         fwd = forwarding(renames)
         for r in renames:
-            _ = fwd.engine.id(_kind(r.kind), r.old) if r.kind != "line" else fwd.line(r.old)
+            _ = fwd.local(r.kind, r.old) if r.kind in LOCAL_KINDS else fwd.engine.id(_kind(r.kind), r.old)
     except RebaseError as e:
         found.append(Problem("forbidden", f"the renames of {e.kind.value} {e.id} go round in a cycle"))
     return found
@@ -74,7 +74,7 @@ def _removals(lock: Lock, now: Lock, fwd: Forwarding) -> list[Problem]:
                 continue
             if y != x:
                 found.append(Problem("needs_mapping", f"{kind} {x} is renamed to {y}, which the content lacks"))
-            elif any(x in now.ids.get(k, []) and x not in lock.ids.get(k, []) for k in KINDS if k not in (kind, "line")):
+            elif any(x in now.ids.get(k, []) and x not in lock.ids.get(k, []) for k in KINDS if k != kind and k not in LOCAL_KINDS):
                 found.append(Problem("forbidden", f"{kind} {x} became another kind of id: add a new id instead"))
             elif kind == "card":
                 found.append(Problem("needs_mapping", f"card {x} was removed: retire it instead (an outcome's retired "
@@ -177,7 +177,7 @@ def _ruled(lock: Lock, now: Lock, fwd: Forwarding) -> list[Problem]:
 
 
 def _fwd(fwd: Forwarding, kind: str, x: str) -> str:
-    return fwd.line(x) if kind == "line" else fwd.engine.id(_kind(kind), x)
+    return fwd.local(kind, x) if kind in LOCAL_KINDS else fwd.engine.id(_kind(kind), x)
 
 
 def _kind(kind: str) -> IdKind:
