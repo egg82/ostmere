@@ -40,6 +40,14 @@ def test_every_tappable_card_draws_its_requires(content: Opening):
     assert not found, "\n".join(found)
 
 
+@pytest.mark.parametrize("card", [
+    pytest.param("keep_vigil", marks=pytest.mark.xfail(strict=True, reason="its clock and its guard are never drawn")),
+    pytest.param("spar", marks=pytest.mark.xfail(strict=True, reason="it can open before its clock runs")),
+])
+def test_a_card_that_was_held_draws_every_require(content: Opening, card: str):
+    assert [x for x in undrawn(content) if x[0] == card] == []
+
+
 def planted(o: Opening, card: str, *requires: ConditionEntry) -> Opening:
     cards = [c.model_copy(update={"requires": [*c.requires, *requires]}) if c.id == card else c for c in o.cards]
     return o.model_copy(update={"cards": cards})
