@@ -12,6 +12,7 @@ from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, N
 from .line_models import LineInfo, PeopleInfo
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
+from .node_models import NodeChange as NodeChange, NodeInfo, NodeTarget as NodeTarget
 from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, KindRole as KindRole, OfferInfo, OfferKindInfo as OfferKindInfo
 
 
@@ -132,30 +133,6 @@ class LevelPays(BaseModel):
     change_bp: list[int]
     """The level's modifiers as signed changes in basis points (+1000 is +10%), each distinct value once, in the order
     authored; the {pct} and {pct_b} slots of pays_key. Empty for a level that pays a find."""
-
-
-class NodeTarget(StrEnum):
-    MAKE = "make"
-    WORK = "work"
-    CAP = "cap"
-
-
-class NodeChange(BaseModel):
-    """What a node's ranks change, as the content authors it: `make`, what runner `id` (a card or standing action)
-    makes of `store`; `work`, card `id`'s work speed; `cap`, store `id`'s cap. The page names it by those ids' labels."""
-
-    target: NodeTarget
-    id: str
-    store: str | None
-
-
-class NodeInfo(BaseModel):
-    """One node of `skill`'s prestige track (CONTRACT.txt, "PRESTIGE PHASES"); SkillPrestige.menu_nodes names it."""
-
-    node: str
-    skill: str
-    label_key: str
-    change: NodeChange
 
 
 class SkillInfo(BaseModel):
