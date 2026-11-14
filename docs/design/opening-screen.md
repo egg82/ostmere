@@ -186,10 +186,9 @@ the rows below apply.
 | Hint: a mix switch or an order card (once per chip) | the same dot on the chip in the story strip: a switch of the player's own mix made `switches` times under it within `switches_within_s` (Step.repeats, kept in `Keeps.switchOffered`), or a chip whose order card has no rule yet (once a page session). On a red ledger line whose order card has no rule, the dot sits on the line (the red line stays the signal; once a page session). Only once the first rule's lesson is behind; nothing is built, opened or highlighted. Fits into: as the card's |
 | Hint: the first full store (once) | the same dot on the store's ledger line, the first time a store the player's mix or tap makes reaches its cap while another hands task could use the time and no rule watches it reach a level, once the player has seen a rule of theirs come on and let go (`game/caphint.ts`). No cap rule is installed in a new save; the dot opens nothing, and the cap rule's lesson (Lessons) starts from the line. Done or skipped, it never comes back. A player who ignores it loses only the overflow, which the full line shows. Fits into: as the card's, and lessons (`game/lessons.ts`) |
 | Hint: the first dry store (once) | the same dot on the store's ledger line, the first time a card of the running mix stops on a store that ran dry (its line starved), no rule covers that store, and a hands card in play that makes it is ready and outside the mix (`game/dryhint.ts`), once rules are taught. The dot opens nothing, and the dry store's lesson (Lessons) starts from the line. Done or skipped, it never comes back. A spent card (nothing in play can refill its store) is not marked: no card added would help. Fits into: as the first full store's |
-| Offer (someone asks) | on the mix offer's row, after it: the offer's question and one button per answer (44 px, each a primary tap), its time under its label (`takes 12m 30s`, from the answer's cost text; none when the answer starts nothing). No `Dismiss`: it stays until answered, which sends the answer. It is someone speaking, so it is set apart from the routine rows above it: a panel with an ember edge and a larger question, for as long as it waits. On arrival it takes the glow, as a ring round the whole row, until a button is tapped; the glow is the single attention mark, so a lesson's step keeps or takes it first and the offer waits for it, as it does for any other control already holding it. The ring is still, so reduced motion changes nothing. It arrives through the arrival queue after the last of its own lines in that step, or at once when that step holds none of them (it was shown before the page's last view). An offer answered while the page was shut (a rule may answer it) draws no row; an answer the server refuses because it was answered since redraws the save as it is. Not a guided offer: no lesson starts on it, and it does not wait for one, since a lesson's note follows its control and the question is the story's. Fits into: the mix offer's row (`ui/offerrows.ts` beside `ui/mixoffer.ts`), the arrival queue for its turn, the session for the refused answer |
 | First rule's entry (after the end) | on its own row under the mix row, only while the first rule's lesson may start: a chip's rule, `While {chip} → {task}`, and `Show me`, which opens a new rule on the real editor and the lesson walks it. It comes the first time the chip is on with no rule on its store, once the end lines have been read, and stays until a rule is set (not when the chip clears), so the strip moves once, on its arrival. Once the lesson is done or skipped no row is drawn: the chip carries the hint dot. No offer builds a mix or a rule |
 
-**On a phone the rows under the mix row (the offers) sit under the pinned strip, not in it** (`Hands.rows`,
+**On a phone the rows under the mix row (a chip's rule offer) sit under the pinned strip, not in it** (`Hands.rows`,
 placed by the screen as the lane rows are): they scroll with the cards, so a prompt does not cost the cards their room, and
 the strip keeps the mix's bar, name and `stopped · {card} done`. They still arrive through the arrival queue, and a row that
 arrives out of sight shows at once. On a wider screen they stay in the strip.
@@ -207,6 +206,33 @@ opens on the rule the lane runs now, else the lane's first always rule that is n
 Save changes that rule's task in place (its condition kept) or adds the always rule. The lane's tasks are never cards in
 Tasks or Completed: the row and its editor are their only way in. Fits into: the hands strip (`ui/lanerows.ts`, owned by
 `ui/hands.ts`), the Rules tab's editor (`ui/laneedit.ts`), `game/lanes.ts` for what Change opens.
+
+## Asks
+
+Every open offer (someone asks) lives in one list under the hands strip (`ui/asks.ts`), headed `ASKS`, and it takes
+no room while nothing is open. The first open offer in content order is drawn in a slot of fixed height that the ask
+fills, so when a season or a busy day brings several, nothing under it moves: the rest are only counted, as `2 more`,
+which opens every open ask in a sheet. The chronicle's waiting row points here: with one waiting it brings the ask into
+view and focuses its first answer, with several it opens the sheet.
+
+An ask (`ui/asknode.ts`) reads top to bottom: who asks, a face (initial, ringed in the lane's hue) and name per person;
+the question in the story's size; `↳` and what led to it, worded as a chronicle line's cause (an earlier answer by its
+label); one button per answer (44 px) with its label, its cost text (`takes 12m 30s` from takes_s; an effect such as
+`+10% rest` for an answer that installs a modifier), and each figure the answer moves, `Dead wood -2/min → -1.8/min`,
+`Rest 5 s → 4 s`, read off a dry run of that answer (`ui/askruns.ts`), never computed by the page. Last, the offer's own
+words for what differs from the usual: what waiting costs, when it goes, what the answer settles for good. Each piece
+the content leaves out is not drawn, so a bare offer is its question and its buttons. No `Dismiss`: it stays until
+answered.
+
+The shown ask is the one ember outline on screen, on a warm ground; in the sheet the asks sit on hairlines. On arrival
+it takes the glow (shown as its own outline), so a lesson's step keeps or takes the glow first and the ask waits. It
+arrives through the arrival queue after the last of its own lines in that step, or at once when that step holds none
+of them; one that joins behind the shown ask only moves the count. An offer answered while the page was shut (a rule
+may answer it) is never drawn; an answer the server refuses because it was answered since redraws the save as it is.
+Not a guided offer: no lesson starts on it. Rejected: one row per open ask (the scale check's first break: a season's
+several asks pushed the cards off a phone); a pager stepping through asks in the slot (hides the count's meaning and
+adds a control); a fixed "waiting costs nothing · never expires · permanent" line on every ask (only what differs gets
+words, `design/redesign.md`, "Words"). Fits into: Offers (`systems.md`), the arrival queue, the session's dry run.
 
 ## Cards
 
@@ -776,7 +802,7 @@ are engine decisions a save is replayed from, and a lesson is not game state.
   opening: the first card; the first mix offer (`Both`); the first strike when everything it needs is in. Whenever
   the running mix greys (a task in it retired or completed): the strip's `Edit`, until the editor is opened. After
   the end: the strip's first-rule entry (`Show me`, the first time it is on show, after a return's reveal has shown it);
-  the first `When ready`; and a someone-asks offer's row, on arrival. Switching mixes when a build waits on a store nothing at
+  the first `When ready`; and the shown ask, on arrival. Switching mixes when a build waits on a store nothing at
   work makes is a lesson ("Lessons", below), not a glow.
   A player who has touched nothing for a while (`NUDGE_IDLE_S`) while no mix runs is pointed at the first ready card they
   have never completed, with the same glow, when nothing else has it. When no card is ready at all and the next thing is a timer card more than 10 minutes out (the opening's
