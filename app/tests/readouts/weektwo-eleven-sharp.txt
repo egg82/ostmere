@@ -9,6 +9,6 @@ beats sharp (pace_scale 1): B11 day 9.59, target_day 12
   away V83->V84: 1 ['trigger t_b11']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      12       7       0       4       0      10       3     36
-  2      32       5       2       2       0       7       2     50
-  3      24       4       0       0       0      21       4     53
+  1       9       7       0       4       0      10       2     32
+  2      29       5       2       2       0       7       2     47
+  3      20       4       0       0       0      21       3     48
