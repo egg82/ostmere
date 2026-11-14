@@ -17,10 +17,10 @@ import { UI } from "../game/text";
 import { noteOrderRemoved, noteOrderSet, noteRuleChanged } from "../telemetry";
 import { draftOrder, editDraft, headingWords, sameRule, storeCap, type Draft } from "./conditiondraft";
 import { Levels } from "./condlevels";
-import { DryNote } from "./conddry";
 import { RuleFact } from "./condfact";
+import { CondFoot } from "./condfoot";
 import { markPressed, sameChoice } from "./condpress";
-import { doRow, footRow, whenRow } from "./condrows";
+import { doRow, whenRow } from "./condrows";
 import { markSubject, SubjectControl, subjectRows } from "./condsubject";
 import { bringIntoView, el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
@@ -33,12 +33,8 @@ export class ConditionEditor {
   private readonly levels: Levels;
   private readonly subject: SubjectControl;
   private readonly more = el("button", "quiet cond-more");
-  private readonly sentence = el("p", "rule-sentence cond-sentence");
   private readonly fact: RuleFact;
-  private readonly note = el("p", "editor-note cond-note");
-  private readonly dry: DryNote;
-  private readonly remove = el("button", "quiet danger");
-  private readonly save = el("button", "primary");
+  private readonly foot: CondFoot;
   private view: View | null = null;
   private draft: Draft | null = null;
   /** The full editor is open (More options, or a rule being changed). */
@@ -47,7 +43,7 @@ export class ConditionEditor {
   constructor(private readonly ctx: PartContext, private readonly done: () => void) {
     const { text } = ctx.catalog;
     this.fact = new RuleFact(ctx);
-    this.dry = new DryNote(ctx);
+    this.foot = new CondFoot(ctx, () => this.drop(), () => this.commit());
     const close = el("button", "editor-close", "✕");
     close.type = "button";
     close.setAttribute("aria-label", text.get(UI.close));
@@ -56,18 +52,11 @@ export class ConditionEditor {
     head.append(this.heading, close);
     this.levels = new Levels(ctx.catalog, (t) => this.setTest(t), (which, level) => this.setLevel(which, level));
     this.subject = new SubjectControl(ctx.catalog, (r) => this.setSubject(r));
-    for (const [b, key] of [[this.remove, UI.orderRemove], [this.save, UI.save], [this.more, UI.ruleMoreOptions]] as const) {
-      b.type = "button";
-      setText(b, text.get(key));
-    }
-    this.remove.addEventListener("click", () => this.drop());
-    this.save.addEventListener("click", () => this.commit());
+    this.more.type = "button";
+    setText(this.more, text.get(UI.ruleMoreOptions));
     this.more.addEventListener("click", () => { tapFeedback(); this.showFull(); });
-    const actions = el("div", "sheet-actions cond-actions");
-    actions.append(this.remove, this.save);
-    const foot = el("div", "cond-foot"); foot.append(this.sentence, this.note, this.dry.root, actions);   // the rule as it reads, beside Save
     const body = el("div", "cond-body"); body.append(head, this.does, this.chips, this.levels.fold.root, this.subject.root, this.fact.root, this.more);   // what scrolls; the foot is outside it
-    this.root.append(body, foot);
+    this.root.append(body, this.foot.root);
   }
 
   /** A new rule, nothing chosen yet: the simple view. Given an offered condition (a guided rule), it starts at that
@@ -102,9 +91,7 @@ export class ConditionEditor {
     this.view = view;
     this.draft = draft;
     this.fact.reset();
-    const { text } = this.ctx.catalog;
-    this.save.textContent = text.get(draft.index === null ? UI.orderAdd : UI.save);
-    this.remove.hidden = draft.index === null;
+    this.foot.start(draft.index);
     this.levels.fold.open(draft.index !== null);
     this.redraw();
     void this.preview();
@@ -248,11 +235,11 @@ export class ConditionEditor {
     markSubject(this.chips, draft.subject);
     this.drawSentence(view);
     this.drawFact();
-    void this.dry.show(view, draft.index, this.order(), draft.town === true);
+    this.foot.showDry(view, draft.index, this.order(), draft.town === true);
   }
 
   private drawSentence(view: View): void {
-    footRow(this.ctx.catalog, view, this.draft?.index ?? null, this.draft?.then ?? null, this.order(), { sentence: this.sentence, note: this.note, save: this.save });
+    this.foot.draw(view, this.draft?.index ?? null, this.draft?.then ?? null, this.order());
   }
 
   /** The engine's own number, in the full editor: the view after clearing the rules and running the rule's mix (a dry
