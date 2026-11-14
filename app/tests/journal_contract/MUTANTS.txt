@@ -103,3 +103,13 @@ Equivalent (no test can tell them apart)
                  SHA-256 prefix to land on that float (about 2**-53 per draw at best).
  E2 bag order   any bag order that completes each round before repeating: statement 19 fixes rounds, not which
                  key comes first in a round.
+
+Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 94 variants
+covering the 58 rows, each row's alternatives planted on their own as 2a, 2b, ...)
+ 93 of 94 killed; rows caught: 57 of 58.
+ Survivor 58a  a stored day whose notes all name subjects no longer in `subjects`, not counted as written in the
+               settledness. test_journal_forward's removed-subject test puts current subjects' notes on that day too,
+               so the day is written either way. Not equivalent: a day of only removed subjects' notes tells it apart.
+ Outside its bracket  5 (line order): test_journal_care's change test kills it at the push profile every run; its
+               bracket, [properties], kills it only at the ci profile, and not on every draw.
+ Equivalents   E1 and E2 planted as `<=` and the bag's shuffle reversed: both survive the whole suite at ci.
