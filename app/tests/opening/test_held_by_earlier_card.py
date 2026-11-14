@@ -1,6 +1,6 @@
 """A chapter gives an earlier card the entries it holds while running (schema.Chapter.while_running): a side the
-chapter declares, raised by a card an earlier file shipped. The merge refuses an unknown card and a card that already
-holds entries; the merged card reaches the engine's rules with them."""
+chapter declares, raised by a card an earlier file shipped, after any entries the card holds. The merge refuses an
+unknown card and an entry on a side the card already holds; the merged card reaches the engine's rules with them."""
 import pytest
 
 from ashfall_app.engine import CardId, SideId, WhileRunning
@@ -11,12 +11,12 @@ CARD = "gather_wood"
 """A card of the opening's own file."""
 
 
-def chapter(card: str) -> Chapter:
+def chapter(card: str, side: str = "t_gap") -> Chapter:
     return Chapter.model_validate({
         "version": 1,
-        "sides": [{"id": "t_gap", "label_key": "t_side_gap", "base": 4}],
-        "while_running": {card: [{"side": "t_gap", "amount_bp": 5000}]},
-        "text": {"t_side_gap": "Gap"},
+        "sides": [{"id": side, "label_key": f"t_side_{side}", "base": 4}],
+        "while_running": {card: [{"side": side, "amount_bp": 5000}]},
+        "text": {f"t_side_{side}": "Gap"},
     })
 
 
@@ -33,8 +33,14 @@ def test_an_unknown_card_fails_the_merge():
         merge(load_opening(chapters=()), chapter("ghost"))
 
 
-def test_a_card_that_already_holds_entries_fails_the_merge():
+def test_a_later_chapter_adds_a_second_side_after_the_first():
+    twice = merge(merge(load_opening(chapters=()), chapter(CARD)), chapter(CARD, "t_wall"))
+    card = next(c for c in to_rules(twice).cards if c.id == CardId(CARD))
+    assert card.while_running == (WhileRunning(SideId("t_gap"), 5000), WhileRunning(SideId("t_wall"), 5000))
+
+
+def test_an_entry_on_a_side_the_card_already_holds_fails_the_merge():
     once = merge(load_opening(chapters=()), chapter(CARD))
     again = chapter(CARD).model_copy(update={"sides": [], "text": {}})
-    with pytest.raises(ValueError, match=f"card {CARD} already holds entries"):
+    with pytest.raises(ValueError, match=f"card {CARD} already holds an entry on \\['t_gap'\\]"):
         merge(once, again)

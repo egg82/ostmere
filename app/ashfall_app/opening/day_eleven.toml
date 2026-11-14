@@ -112,16 +112,19 @@ cap_items = 1
 # Their forage, gather, cut, stakes and picking cards are the town cards (days three and eight), expanded here where
 # their lanes are declared.
 
-# A share at the watch fire on each of their lanes, held on the gap while it runs as the first three watchers' are, at
-# half their dry wood: the split between gathering and the watch is the town's (Z1's seven-way split).
+# A share at the watch fire on each of their lanes, held on the larder and the gap while it runs as the first three
+# watchers' are, at half their dry wood: the split between gathering and the watch is the town's (Z1's seven-way
+# split).
 [[town_cards]]
 id = "{lane}_watch"
 lanes = ["n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_watch"
+upside_key = "up_watch"
+stake = "side"
 work_s = 1200
 inputs = [{ store = "dry_wood", items = 1 }]
-while_running = [{ side = "gap", amount_bp = 5000 }]
+while_running = [{ side = "larder", amount_bp = 5000 }, { side = "gap", amount_bp = 5000 }]
 
 # ---------- the camp's asks while the hut goes up ----------
 

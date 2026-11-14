@@ -2311,7 +2311,7 @@
   445716000000,
   668736000000
  ],
- "digest": "d62825a984dea03f0256832c22caffb4476728a244333f048c2316ab3cf50d90",
+ "digest": "f692aad5fc969c457f32c6df12f434d4a1a23e207ec652f2740113fb45c07761",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -4313,6 +4313,11 @@
    "t_tinder",
    "t_tipped_birch",
    "t_tired",
+   "t_track_reach_1",
+   "t_track_reach_2",
+   "t_track_reach_3",
+   "t_track_reach_4",
+   "t_track_reach_5",
    "t_track_roots",
    "t_track_roots_2",
    "t_walk_out",
@@ -31592,6 +31597,131 @@
     }
    ]
   },
+  "t_track_reach_1": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "t_track_reach_1",
+     "target": {
+      "@": "WorkRef",
+      "card": "forage"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_track_reach_2": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "t_track_reach_2",
+     "target": {
+      "@": "WorkRef",
+      "card": "forage"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_track_reach_3": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "t_track_reach_3",
+     "target": {
+      "@": "WorkRef",
+      "card": "forage"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_track_reach_4": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "t_track_reach_4",
+     "target": {
+      "@": "WorkRef",
+      "card": "forage"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_track_reach_5": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "t_track_reach_5",
+     "target": {
+      "@": "WorkRef",
+      "card": "forage"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_track_roots": {
    "@": "Outcome",
    "lines": [],
@@ -32777,7 +32907,7 @@
    "unlocks": []
   }
  },
- "release": 60,
+ "release": 61,
  "renames": [
   {
    "from": "t_stock_open",

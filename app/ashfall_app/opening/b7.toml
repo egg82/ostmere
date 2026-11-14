@@ -125,9 +125,14 @@ id = "crows"
 label_key = "threat_crows"
 base = 4
 
-# The old man's mending (day_five.toml, n4_mend), held on the hands while it runs, at its share of his time.
+# The old man's mending (day_five.toml, n4_mend), held on the hands while it runs, at its share of his time. The
+# watch fire at the gap, where the prints ran in to the larder, holds the larder while it is kept, each watcher at their
+# share of their time (day_eight.toml adds the gap).
 [while_running]
 n4_mend = [{ side = "hands", amount_bp = 2500 }]
+n1_watch = [{ side = "larder", amount_bp = 5000 }]
+n2_watch = [{ side = "larder", amount_bp = 5000 }]
+n4_watch = [{ side = "larder", amount_bp = 5000 }]
 
 # Day three's cures, each an entry on its pest's side once built.
 [[triggers]]

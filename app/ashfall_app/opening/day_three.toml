@@ -54,16 +54,45 @@ unlocks = [
 # The trip: uncapped, run in the mix held against damp wood (the page's mix offer on the full line). Its three takes
 # are the three stores that overflow, in about the ratio the camp makes them, so no one take binds the others; the bar
 # is the 30 s floor and damp wood's take a full store (content/team/day-three.md, "Sinks after measuring"). It makes
-# nothing per run: scrap comes only as finds on its run count. Each lump a whole rate (work_s divides one item's
-# quantity units). Roots 15 a run, so with both foragers it still takes over half their roots (D-105).
+# nothing per run: what it buys is its reach, below. Each lump a whole rate (work_s divides one item's quantity
+# units). Roots 15 a run, so with both foragers it still takes over half their roots (D-105).
 [[cards]]
 id = "field_track"
 presentation = "action"
 label_key = "c_field_track"
+upside_key = "up_field_track"
 work_s = 30
 skill = "scavenging"
 xp_per_hour = 360
 inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 4 }, { store = "roots", items = 15 }]
+
+# Its reach: at each count of runs the hands forage a tenth faster, the card showing its runs against the next mark
+# (a pay on repeats, never a gate: decisions.md, "No gate counts taps"). Foraging speed, because roots are the take
+# that holds the track's share down, so what it buys is fed back into it.
+[[triggers]]
+id = "t_track_reach_1"
+when = { test = "at_least", subject_kind = "card_count", id = "field_track", value = 500 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "t_track_reach_1" }] }
+
+[[triggers]]
+id = "t_track_reach_2"
+when = { test = "at_least", subject_kind = "card_count", id = "field_track", value = 2000 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "t_track_reach_2" }] }
+
+[[triggers]]
+id = "t_track_reach_3"
+when = { test = "at_least", subject_kind = "card_count", id = "field_track", value = 4000 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "t_track_reach_3" }] }
+
+[[triggers]]
+id = "t_track_reach_4"
+when = { test = "at_least", subject_kind = "card_count", id = "field_track", value = 7000 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "t_track_reach_4" }] }
+
+[[triggers]]
+id = "t_track_reach_5"
+when = { test = "at_least", subject_kind = "card_count", id = "field_track", value = 11000 }
+outcome = { modifiers = [{ target = "work", id = "forage", kind = "mul_bp", amount_bp = 11000, source = "t_track_reach_5" }] }
 
 [[stores]]
 id = "scrap"
@@ -430,12 +459,15 @@ unlocks = [
   { unlock_kind = "retired", id = "n1_build_watch" },
 ]
 
-# Her share at the watch fire against her gathering.
+# Her share at the watch fire against her gathering. It feeds the sides combat's chapters declare (b7.toml's larder,
+# day_eight.toml's gap), each holding an entry while it runs.
 [[cards]]
 id = "n1_watch"
 lane = "n1"
 presentation = "action"
 label_key = "c_n1_watch"
+upside_key = "up_watch"
+stake = "side"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]
@@ -969,6 +1001,7 @@ l_shelf_3 = "story"
 store_arrivals = "arrivals"
 c_walk_edge = "Scout past the firelight"
 c_field_track = "Lay the track further out"
+up_field_track = "{pct} foraging speed each time it reaches further"
 c_track_end = "Walk the track to its end"
 store_scrap = "scrap"
 store_clay = "clay"
@@ -999,6 +1032,7 @@ c_watch_fire = "Build a fire at the gap"
 c_n1_build_watch = "Build a fire at the gap"
 store_watch_done = "fire at the gap"
 c_n1_watch = "Keep the fire at the gap"
+up_watch = "{pct} larder and gap strength while kept"
 o_stay = "Who builds his bay?"
 a_make_room = "You build it"
 a_make_room_cost = "{d} of your time"
