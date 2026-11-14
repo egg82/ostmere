@@ -526,12 +526,6 @@ outcome = { modifiers = [{ target = "work", id = "hand_on_stone", kind = "mul_bp
 # ---------- the journal ----------
 
 [[subjects]]
-id = "s_ring_scored"
-kind = "worry"
-source = { source_kind = "trigger", id = "t_ring_scored" }
-first = { keys = ["j_ring_first"] }
-
-[[subjects]]
 id = "s_palisade"
 kind = "routine"
 source = { source_kind = "card", id = "palisade" }
@@ -746,7 +740,6 @@ n_rat_2 = "warm wind, and they came indoors"
 n_crow_1 = "lined up on the ridge. all morning they said numbers"
 aim_wall = "ring the whole camp with stakes."
 # The journal's slots (docs/design/journal.md, "The content's side").
-j_ring_first = "lucy dragged a stick through the ash in a wide circle round camp. not a word about it"
 j_fence_first = "started the fence. first posts in, along the line lucy scored"
 j_fence_again_1 = "more fence"
 j_fence_again_2 = "fence. the line looked shorter in the ash"
