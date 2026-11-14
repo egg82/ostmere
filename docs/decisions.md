@@ -61,7 +61,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 ## Mixes and standing orders
 
 - [You and the town: two layers, joint projects](decisions/mixes.md): you run one mix, the town works in parallel under your orders, and big things need both.
-- [The mix: several actions at once](decisions/mixes.md): one card tapped or mixed, shares and an exact ledger, saved mixes that nest, rules the player writes, editors that open simple, a rule's levels a share of full or an exact number.
+- [The mix: several actions at once](decisions/mixes.md): one card tapped or mixed, shares and an exact ledger, saved mixes that nest, rules the player writes, editors that open simple, a rule's levels a share of full or an exact number, the quick add as one sentence with the stores a task makes and takes first, a rule copied in one tap.
 - [Automation is designed, not clicked](decisions/mixes.md): rules built by tapping, a priority list of "when X, do Y" lines.
 - [Cards, mixes, lanes, orders and modifiers, as built](decisions/mixes.md): the two layers' mixes, dry-store pauses, cut-ins, ruled lanes, installed rules and the queue as they run.
 
