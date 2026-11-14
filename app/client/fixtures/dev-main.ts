@@ -44,7 +44,7 @@ const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.pres
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,
   hash.has("noscene") ? "/no-scene.json" : fixtureManifestUrl(), hash.get("join"));
-if (hash.has("play")) document.getElementById("begin")?.click();
+if (hash.has("play")) clickWhenShown("#begin");   // once the page has asked who this is: a Begin pressed sooner is undone by that answer
 
 /** Click the `nth` visible match (the first by default) once it exists (the game draws after Begin's first answer). */
 function clickWhenShown(selector: string, then?: () => void, tries = 100, nth = 0): void {
