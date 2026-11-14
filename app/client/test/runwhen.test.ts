@@ -20,9 +20,9 @@ const reaches: StoreRule = { store: "wood", test: "reaches", n: 12, m: 6 };
 
 // Built: each crossing on the amount the page shows (floor of quantity / Q).
 expect("below builds at_most n·Q−1, release m·Q−1", buildRule(below, Q),
-  { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 3 * Q - 1, release: 8 * Q - 1 });
+  { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 3 * Q - 1, release: 8 * Q - 1, value_of_cap: false, release_of_cap: false });
 expect("reaches builds at_least n·Q, release m·Q", buildRule(reaches, Q),
-  { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 12 * Q, release: 6 * Q });
+  { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 12 * Q, release: 6 * Q, value_of_cap: false, release_of_cap: false });
 expect("below reads back", readRule(buildRule(below, Q), Q), below);
 expect("reaches reads back", readRule(buildRule(reaches, Q), Q), reaches);
 for (let cap = 2; cap <= 20; cap++) {
@@ -38,10 +38,10 @@ for (let cap = 2; cap <= 20; cap++) {
 }
 
 // An order card's plain threshold (release == value) reads as a rule with no band; with a release, as one with a band.
-const card = (value: number, release: number): Order["when"] => ({ kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: value * Q, release: release * Q });
+const card = (value: number, release: number): Order["when"] => ({ kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: value * Q, release: release * Q, value_of_cap: false, release_of_cap: false });
 expect("a content threshold with no release has no band", readRule(card(2, 2), Q), { store: "wood", test: "below", n: 2, m: null });
 expect("a content threshold with a release", readRule(card(2, 6), Q), { store: "wood", test: "below", n: 2, m: 6 });
-expect("a skill level is not a store rule", readRule({ kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3 }, Q), null);
+expect("a skill level is not a store rule", readRule({ kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false }, Q), null);
 
 // Levels a store allows; defaults; clamping.
 expect("below on 12", bounds("below", 12, 3), { n: [1, 11], m: [4, 12] });

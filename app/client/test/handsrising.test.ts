@@ -16,7 +16,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 }
 
 const BUILD: OrderCard = {
-  store: "stone", when: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 6 * Q, release: 6 * Q },
+  store: "stone", when: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 6 * Q, release: 6 * Q, value_of_cap: false, release_of_cap: false },
   then: { kind: "tap_card", card: "lean_to" }, offered_after: null, chip: null, after_end: false,
 };
 const catalog = new Catalog({ ...fixtureContent, order_cards: [...fixtureContent.order_cards, BUILD] });

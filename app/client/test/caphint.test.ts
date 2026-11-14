@@ -17,7 +17,7 @@ const wood = full.ledger.find((l) => l.store === "wood");
 const withWood = (view: View, change: (l: View["ledger"][number]) => View["ledger"][number]): View =>
   ({ ...view, ledger: view.ledger.map((l) => (l.store === "wood" ? change(l) : l)) });
 const watching = (kind: "at_least" | "at_most", store: string): Order => ({
-  when: { kind, watched: { kind: "store_value", store }, value: 10, release: kind === "at_least" ? 5 : 20 },
+  when: { kind, watched: { kind: "store_value", store }, value: 10, release: kind === "at_least" ? 5 : 20, value_of_cap: false, release_of_cap: false },
   then: { kind: "tap_card", card: "tend" },
 });
 

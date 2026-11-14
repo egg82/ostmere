@@ -37,7 +37,7 @@ expect("the rising card waits for its task", offeredCard(catalog, base, "catch")
 
 // The rising card's shape and its line.
 expect("an at_least on a side lane's input is a rising card", risingCard(catalog, CATCH), true);
-expect("an at_most is not", risingCard(catalog, { ...CATCH, when: { kind: "at_most", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q } }), false);
+expect("an at_most is not", risingCard(catalog, { ...CATCH, when: { kind: "at_most", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false } }), false);
 expect("a hands task taking from the store is (handsrising.test.ts)", risingCard(catalog, { ...CATCH, store: "wood", then: { kind: "tap_card", card: "lean_to" } }), true);
 expect("a side lane task that takes other stores is not", risingCard(catalog, { ...CATCH, store: "wood" }), false);
 expect("rising", risingLine(catchLine(2, 3), 100), true);

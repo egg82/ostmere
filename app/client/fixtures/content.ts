@@ -333,7 +333,7 @@ const text: Record<string, string> = {
 };
 
 /** "Under n, until m" on a store, as content writes it (at_most at n items, release at m). */
-const low = (store: string, n: number, m: number): Condition => ({ kind: "at_most", watched: { kind: "store_value", store }, value: n * Q, release: m * Q });
+const low = (store: string, n: number, m: number): Condition => ({ kind: "at_most", watched: { kind: "store_value", store }, value: n * Q, release: m * Q, value_of_cap: false, release_of_cap: false });
 /** The tired chip's condition, which its rest offer shares (so the rule reads as the chip). */
 export const TIRED = low("energy", 3, 6);
 
@@ -388,22 +388,22 @@ export const fixtureContent: Content = {
   ],
   chip_infos: [
     { chip: "cold", label_key: "chip.cold", tone: "cold", when: low("warmth", 30, 50), cost_key: "chip.cold_cost", change_bp: [-2000], on_line_key: null, off_line_key: null, offered_after: null },
-    { chip: "warm", label_key: "chip.warm", tone: "warm", when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 60 * Q, release: 40 * Q }, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null },
+    { chip: "warm", label_key: "chip.warm", tone: "warm", when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 60 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false }, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null },
     { chip: "tired", label_key: "chip.tired", tone: "tired", when: TIRED, cost_key: "chip.tired_cost", change_bp: [-5000], on_line_key: null, off_line_key: null, offered_after: null },
   ],
   feature_infos: [{ feature: "mix", hint_key: null, label_key: null, feature_card: null }, { feature: "combat", hint_key: null, label_key: null, feature_card: null }, { feature: "dusk_ramp", hint_key: null, label_key: "feature.dusk_ramp", feature_card: null }],
   order_cards: [{
     store: "wood",
-    when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 20 * Q },
+    when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 20 * Q, value_of_cap: false, release_of_cap: false },
     then: { kind: "tap_card", card: "gather" }, offered_after: null, chip: null, after_end: false,
   }, {
     store: "stone",
-    when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: 6 * Q },
+    when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: 6 * Q, value_of_cap: false, release_of_cap: false },
     then: { kind: "tap_card", card: "shelter" }, offered_after: null, chip: null, after_end: false,
   }, {
     store: "energy", when: TIRED, then: { kind: "tap_card", card: "rest" }, offered_after: null, chip: "tired", after_end: true,
   }, {   // a rising line's card: four or more catch, smoke it
-    store: "catch", when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q },
+    store: "catch", when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false },
     then: { kind: "tap_card", card: "smoke_catch" }, offered_after: { category: "card", id: "smoke_catch" }, chip: null, after_end: false,
   }, {   // the wood rule re-tuned for a later need, once that need is shown
     store: "wood", when: low("wood", 15, 30), then: { kind: "tap_card", card: "gather" },
@@ -422,7 +422,7 @@ export const fixtureContent: Content = {
     offer: "bank", text_key: "offer.bank", kind: null, line_keys: [],
     answers: [{ answer: "hers", label_key: "answer.hers", cost_key: "offer.hers.effect", change_bp: [1000], gains: [], role: null }, { answer: "his", label_key: "answer.his", cost_key: "offer.his.effect", change_bp: [-1000], gains: [{ store: "wood", quantity: 2.5 * Q }], role: null }],
     // every optional field: two askers, a cause, and the three texts (expiry stands for a later engine's; the content refuses one today)
-    askers: ["helper", "mason"], cause: { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: 3, release: 3 } },
+    askers: ["helper", "mason"], cause: { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false } },
     waiting_key: "offer.bank.waiting", expiry_key: "offer.bank.expiry", permanence_key: "offer.bank.permanence",
   }, {   // the third, for a list of several: one asker, its cause an earlier answer
     offer: "trade", text_key: "offer.trade", kind: null, line_keys: [],
@@ -443,14 +443,14 @@ export const fixtureContent: Content = {
   line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")
     { key: "line.1", kind: "story", cause: null, person: false, mention: null }, { key: "line.2", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: false, mention: null },
     { key: "line.3", kind: "tap", cause: { kind: "runner", runner: "stand" }, person: false, mention: null },
-    { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" }, person: false, mention: null }, { key: "line.5", kind: "story", cause: { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 5 * Q, release: 5 * Q } }, person: false, mention: null },
-    { key: "line.6", kind: "find", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 2, release: 2 } }, person: false, mention: null },
+    { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" }, person: false, mention: null }, { key: "line.5", kind: "story", cause: { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 5 * Q, release: 5 * Q, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
+    { key: "line.6", kind: "find", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 2, release: 2, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
     { key: "line.7", kind: "level", cause: { kind: "camp", level: 1 }, person: false, mention: null }, { key: "line.end", kind: "story", cause: null, person: false, mention: null },
     { key: "line.joins", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: true, mention: null },
     { key: "people.joined.mason", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: false, mention: { lane: "mason", way: "joined" } },
     { key: "people.joined.helper", kind: "story", cause: null, person: false, mention: { lane: "helper", way: "joined" } },
     { key: "people.left.mason", kind: "story", cause: null, person: false, mention: { lane: "mason", way: "left" } },
-    { key: "line.offer", kind: "story", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 10 * Q } }, person: false, mention: null },
+    { key: "line.offer", kind: "story", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 10 * Q, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
   ],
   aim_infos: [],
   journal: null,

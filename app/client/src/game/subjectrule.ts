@@ -29,10 +29,10 @@ export function readSubject(catalog: Catalog, when: Condition): SubjectRule | nu
 
 /** The condition for a subject rule. */
 export function buildSubject(catalog: Catalog, rule: SubjectRule): Condition {
-  if (rule.kind === "count") return { kind: "at_least", watched: { kind: "card_count", card: rule.card }, value: rule.n, release: rule.n };
-  if (rule.kind === "level") return { kind: "at_least", watched: { kind: "skill_level", skill: rule.skill }, value: rule.n, release: rule.n };
+  if (rule.kind === "count") return { kind: "at_least", watched: { kind: "card_count", card: rule.card }, value: rule.n, release: rule.n, value_of_cap: false, release_of_cap: false };
+  if (rule.kind === "level") return { kind: "at_least", watched: { kind: "skill_level", skill: rule.skill }, value: rule.n, release: rule.n, value_of_cap: false, release_of_cap: false };
   const at = campLevels(catalog)[rule.n - 1]?.at ?? 0;
-  return { kind: "at_least", watched: { kind: "store_value", store: catalog.campStore ?? "" }, value: at, release: at };
+  return { kind: "at_least", watched: { kind: "store_value", store: catalog.campStore ?? "" }, value: at, release: at, value_of_cap: false, release_of_cap: false };
 }
 
 /** The condition in the player's words: "Once Forage is done 3 times", "Once Forage is done", "Once Camp reaches

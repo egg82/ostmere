@@ -120,7 +120,7 @@ const wood = catalog.storeLabel("wood");
 }
 
 {  // a rule on wood reaching a level is already the answer
-  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30, release: 10 }, then: { kind: "tap_card", card: "tend" } };
+  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30, release: 10, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
   const r = rig({ ...full.view, orders: [rule], orders_on: [false], order_states: ["waiting"] }, keepsOf(RULES_OPEN));
   r.frame(); r.frame();
   expect("answered: no trigger", r.line() !== null, false);

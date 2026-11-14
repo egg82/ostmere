@@ -138,9 +138,10 @@ def test_a_store_rule_the_page_writes_is_taken_both_ways_with_a_band(game: GameC
     "under 2, until 4" on an empty one are accepted, come back as sent, and hold at once."""
     g = Step.model_validate(game.begin()["step"])
     q = units(1)
-    full = {"kind": "at_least", "watched": {"kind": "store_value", "store": "fullness"}, "value": 10 * q, "release": 5 * q}
+    full = {"kind": "at_least", "watched": {"kind": "store_value", "store": "fullness"}, "value": 10 * q, "release": 5 * q,
+            "value_of_cap": False, "release_of_cap": False}
     empty = {"kind": "at_most", "watched": {"kind": "store_value", "store": "dry_wood"}, "value": 2 * q - 1,
-             "release": 4 * q - 1}
+             "release": 4 * q - 1, "value_of_cap": False, "release_of_cap": False}
     orders = [{"when": full, "then": tap("gather_wood")}, {"when": empty, "then": tap("gather_wood")}]
     after = step(game.decide(g.save_id, {"kind": "set_orders", "orders": orders}, after=0))
     assert [o.model_dump(mode="json") for o in after.view.orders] == orders

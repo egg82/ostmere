@@ -42,7 +42,7 @@ expect("a starved line a rule covers: the rule is the answer already", dryCue(ca
 expect("a stopped card that is not paused (running): nothing", dryCue(catalog, { ...dry, cards: dry.cards.map((c) => (c.card === "stool" ? { ...c, run: "full" as const } : c)) }), null);
 expect("a spent card (nothing can refill it) is not this lesson's", dryCue(catalog, { ...dry, cards: dry.cards.map((c) => (c.card === "stool" ? { ...c, run: "spent" as const, spent_store: "wood" } : c)) }), null);
 expect("the maker already runs in the mix: the handover refills it", dryCue(catalog, { ...dry, cards: dry.cards.map((c) => (c.card === "gather" ? { ...c, share_bp: 5000 } : c)) }), null);
-expect("the maker not ready: adding it would not refill", dryCue(catalog, { ...dry, cards: dry.cards.map((c) => (c.card === "gather" ? { ...c, blocker: { condition: { kind: "at_least" as const, watched: { kind: "skill_level" as const, skill: "foraging" }, value: 9, release: 9 }, ready_at: null } } : c)) }), null);
+expect("the maker not ready: adding it would not refill", dryCue(catalog, { ...dry, cards: dry.cards.map((c) => (c.card === "gather" ? { ...c, blocker: { condition: { kind: "at_least" as const, watched: { kind: "skill_level" as const, skill: "foraging" }, value: 9, release: 9, value_of_cap: false, release_of_cap: false }, ready_at: null } } : c)) }), null);
 expect("no maker in play: nothing to add", dryCue(catalog, { ...dry, cards: dry.cards.filter((c) => c.card !== "gather") }), null);
 expect("no running mix: nothing", dryCue(catalog, { ...dry, running_mix_id: null }), null);
 
@@ -50,7 +50,7 @@ expect("no running mix: nothing", dryCue(catalog, { ...dry, running_mix_id: null
 const lesson = LESSONS.find((l) => l.id === DRY_STORE)!;
 expect("control: rules taught, it may start", mayStart(lesson, dry, keepsOf(TAUGHT)), true);
 expect("before the first rule's lesson (and no hands rule): it waits", mayStart(lesson, dry, keepsOf({ ...NEW_FLAT, lessons: [FIRST_MIX] })), false);
-const handsRule: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "warmth" }, value: 10, release: 20 }, then: { kind: "switch_mix", mix_id: "Stools" } };
+const handsRule: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "warmth" }, value: 10, release: 20, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Stools" } };
 expect("a save with a hands rule is past the first rule: it may start", mayStart(lesson, { ...dry, orders: [handsRule], orders_on: [false], order_states: ["waiting"] }, keepsOf({ ...NEW_FLAT, lessons: [FIRST_MIX] })), true);
 const fed = { ...dry, mixes: dry.mixes.map((m) => (m.id === "Stools" ? { ...m, components: [...m.components, { kind: "card_share" as const, card: "gather", share_bp: 5000 }] } : m)) };
 expect("control: no saved mix feeds itself in the fixture", anySelfFedMix(dry), false);

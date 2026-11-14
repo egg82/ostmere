@@ -35,7 +35,7 @@ export function queueTap(view: View, card: Card): Decision {
   const n = card.completions + 1;
   const entry: QueueEntry = {
     verb: { kind: "tap_card", card: card.card },
-    until: { kind: "at_least", watched: { kind: "card_count", card: card.card }, value: n, release: n },
+    until: { kind: "at_least", watched: { kind: "card_count", card: card.card }, value: n, release: n, value_of_cap: false, release_of_cap: false },
   };
   return { kind: "set_queue", entries: [...view.queue, entry] };
 }

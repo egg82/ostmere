@@ -88,17 +88,27 @@ type Subject = Annotated[
 
 
 class AtLeast(BaseModel):
+    """value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
+    quantity; on a store_value, in orders and queue entries only (CONTRACT.txt, "a store rule"; engine DESIGN.txt,
+    "SHARE LEVELS")."""
+
     kind: Literal["at_least"] = "at_least"
     watched: Subject
     value: int
     release: int
+    value_of_cap: bool = False
+    release_of_cap: bool = False
 
 
 class AtMost(BaseModel):
+    """value_of_cap, release_of_cap as AtLeast's."""
+
     kind: Literal["at_most"] = "at_most"
     watched: Subject
     value: int
     release: int
+    value_of_cap: bool = False
+    release_of_cap: bool = False
 
 
 class AfterTime(BaseModel):

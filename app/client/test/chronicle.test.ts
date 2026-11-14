@@ -56,11 +56,11 @@ expect("a runner by its label", cause("line.3"), catalog.runnerLabel("stand"));
 expect("a level", cause("line.6"), `${catalog.skillLabel("foraging")} 2`);
 expect("a Camp level", cause("line.7"), "Camp level 1");
 expect("a store reached, in whole items", cause("line.offer"), `10 ${catalog.storeLabel("wood")}`);
-expect("a store fallen to", causeWords(catalog, { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 0, release: Q } }),
+expect("a store fallen to", causeWords(catalog, { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 0, release: Q, value_of_cap: false, release_of_cap: false } }),
   `down to 0 ${catalog.storeLabel("wood")}`);
 expect("one of a skill's levels", causeWords(catalog, { kind: "skill", skill: "foraging" }), `${catalog.skillLabel("foraging")} level up`);
-expect("a card's count", causeWords(catalog, { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "look" }, value: 3, release: 3 } }),
+expect("a card's count", causeWords(catalog, { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "look" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false } }),
   `${catalog.cardLabel("look")} ×3`);
 expect("an answer", causeWords(catalog, { kind: "answer", offer: "ask" }), "your answer");
-expect("a card unlocked", causeWords(catalog, { kind: "when", when: { kind: "at_least", watched: { kind: "unlocked", unlock: { category: "card", id: "look" } }, value: 1, release: 1 } }),
+expect("a card unlocked", causeWords(catalog, { kind: "when", when: { kind: "at_least", watched: { kind: "unlocked", unlock: { category: "card", id: "look" } }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } }),
   catalog.cardLabel("look"));

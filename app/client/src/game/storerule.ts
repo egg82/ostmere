@@ -35,10 +35,10 @@ export function buildRule(rule: StoreRule, q: number): Condition {
   const watched = { kind: "store_value" as const, store: rule.store };
   if (rule.test === "below") {
     const value = rule.n * q - 1;
-    return { kind: "at_most", watched, value, release: rule.m === null ? value : rule.m * q - 1 };
+    return { kind: "at_most", watched, value, release: rule.m === null ? value : rule.m * q - 1, value_of_cap: false, release_of_cap: false };
   }
   const value = rule.n * q;
-  return { kind: "at_least", watched, value, release: rule.m === null ? value : rule.m * q };
+  return { kind: "at_least", watched, value, release: rule.m === null ? value : rule.m * q, value_of_cap: false, release_of_cap: false };
 }
 
 /** The levels a store with `cap` whole items allows: [lo, hi] for n, and for m given n. Null when the store is too

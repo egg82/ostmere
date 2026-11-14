@@ -113,6 +113,14 @@ ENDPOINTS
   entries take switch_mix, tap_card and answer_offer. Their conditions take no `running`
   subject (the page never builds one): set_orders or set_queue with one is 422 invalid_decision. A view still
   carries `running` subjects, in blockers and in saves that hold them.
+  Share levels: at_least and at_most carry value_of_cap and release_of_cap (bool, false when left out, always
+  served). True says that level is basis points, 0..10000, of the watched store's cap at the moment the condition is
+  read, not a quantity, so the rule keeps up as the cap grows (engine DESIGN.txt, "SHARE LEVELS": the store's whole
+  items are compared with the exact share of the cap's whole items, and a band of one item is kept). Only an order's
+  `when` and a queue entry's `until` on a store_value hold one; set_orders or set_queue with a share level on any
+  other subject, outside 0..10000, or with two share levels on the wrong side of each other is 422 invalid_decision.
+  A share level and a quantity are never compared for which side the release is on. Content's conditions (chips,
+  goals, blockers, order cards, goal rows) are always quantities.
   SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
   save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
   answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.

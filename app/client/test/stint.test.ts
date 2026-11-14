@@ -19,8 +19,8 @@ const catalog = new Catalog(fixtureContent);
 const R = fixtureContent.scales.rate_per_item_hour;
 const H = 3600;
 const base = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
-const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q };
-const levelUntil = { kind: "at_least" as const, watched: { kind: "skill_level" as const, skill: "foraging" }, value: 4, release: 4 };
+const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false };
+const levelUntil = { kind: "at_least" as const, watched: { kind: "skill_level" as const, skill: "foraging" }, value: 4, release: 4, value_of_cap: false, release_of_cap: false };
 const wood = (lands: number | null, over: Partial<GoalRow> = {}): GoalRow => ({
   kind: "store", store: "wood", skill: null, target: 30 * Q, lands_at: lands, per_hour: 60 * R, limit: null, until: woodUntil, ...over,
 });

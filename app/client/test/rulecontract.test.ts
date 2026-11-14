@@ -107,7 +107,7 @@ function quarterThenUp(id: string, capItems: number, when: Order["when"] | undef
 }
 const chipWhen = (chip: string) => fixtureContent.chip_infos.find((c) => c.chip === chip)!.when;
 const store = (s: string, n: number, m: number): Order["when"] =>
-  ({ kind: "at_most", watched: { kind: "store_value", store: s }, value: n * Q, release: m * Q });
+  ({ kind: "at_most", watched: { kind: "store_value", store: s }, value: n * Q, release: m * Q, value_of_cap: false, release_of_cap: false });
 
 // ---------------------------------------------------------------- 1: opens empty; Do lists the repeatable tasks
 
