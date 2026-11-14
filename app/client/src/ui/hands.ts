@@ -18,14 +18,14 @@ import { handsRule, ruleRunning } from "../game/orders";
 import { editShown, mixesShown, runsShown, stripShown } from "../game/shown";
 import { nextCard } from "../game/queue";
 import { spentNote } from "../game/spent";
-import { switchCue } from "../game/teach";
-import { FIRST_MIX, SWITCH_MIX, guided } from "../game/lessons";
+import { FIRST_MIX, guided } from "../game/lessons";
 import { UI } from "../game/text";
 import { ChipOffer } from "./chipoffer";
 import { LaneRows } from "./lanerows";
 import { PHONE } from "./layout";
 import { RunningNow } from "./runningnow";
 import { GlowWhile } from "./fresh";
+import { markStopped, markSwitch } from "./handsmarks";
 import { el, setText, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
 import { ShareBar, type SegmentSpec } from "./sharebar";
@@ -147,7 +147,7 @@ export class Hands implements Part {
     this.mixRow.hidden = mix === null;
     this.root.dataset.state = mix ? "mix" : offer ? "offer" : "hands";
     if (offer) this.drawOffer(offer);
-    const switchEdit = this.markSwitch(view, mix !== null);
+    const switchEdit = markSwitch(this.ctx, view, mix !== null, { name: this.name, plan: this.plan, edit: this.edit });
     this.editGlow.update(mix !== null && view.greyed_mix_ids.includes(mix.id));
     this.drawNext(view, mix !== null);
     if (!mix) {
@@ -164,24 +164,10 @@ export class Hands implements Part {
     const yielded = !greyed && view.cards.some((c) => c.run === "yielded");
     this.root.classList.toggle("greyed", greyed);
     this.root.classList.toggle("yielded", yielded);
-    this.markStopped(mix, view, greyed);
+    markStopped(this.ctx, mix, view, greyed, this.edit);
     setText(this.status, yielded ? this.ctx.catalog.text.get(UI.yielded) : greyed ? this.stopped(mix, view) : spentNote(this.ctx.catalog, view));
     setText(this.nameText, mix.id);   // the player's name, as text
     this.nameText.title = mix.id;
-  }
-
-  /** The switch-mix lesson's mark, while it may start: on Mixes ▾ (the mix's name beside it, with a mix running), or on Edit when
-   * only the running mix could take the card that makes the store. The subject is the build, the store and what makes it.
-   * Returns whether the mark is on Edit, which then shows. */
-  private markSwitch(view: View, mixShown: boolean): boolean {
-    const { catalog } = this.ctx;
-    const cue = guided(SWITCH_MIX, view, this.ctx.keeps) ? switchCue(catalog, view) : null;
-    for (const b of [this.name, this.plan, this.edit]) for (const k of ["switch", "build", "store", "mix", "card", "task"]) delete b.dataset[k];
-    if (cue === null) return false;
-    const at = cue.to === "edit" ? this.edit : mixShown ? this.name : this.plan;
-    const subject = { switch: cue.to, build: catalog.cardLabel(cue.build), store: catalog.storeLabel(cue.store) };
-    Object.assign(at.dataset, subject, cue.to === "mixes" ? { mix: cue.mix } : { card: cue.card, task: catalog.cardLabel(cue.card) });
-    return cue.to === "edit";
   }
 
   /** The mix row's controls that have come: Edit (or wherever the switch cue points it), Mixes ▾, "runs …" (tick). */
@@ -200,24 +186,6 @@ export class Hands implements Part {
     const gone = mix.components.find((c) => (c.kind === "card_share" ? !view.cards.some((v) => v.card === c.card) : view.greyed_mix_ids.includes(c.mix_id)));
     const name = gone === undefined ? "" : gone.kind === "card_share" ? catalog.cardLabel(gone.card) : gone.mix_id;
     return catalog.text.fill(UI.stopped, { card: name });
-  }
-
-  /** A lesson's mark on Edit while the mix is greyed over a done card: the card's name is the lesson's subject, with the
-   * card the content says takes its place (in play, not in the mix yet) when there is one. The editor's ✕ is off on a mix's
-   * only entry, so without a replacement to add first, the mark waits for another card in the mix. */
-  private markStopped(mix: Mix, view: View, greyed: boolean): void {
-    const { catalog } = this.ctx;
-    const gone = greyed ? this.goneCard(mix, view) : null;
-    const next = gone === null ? null : catalog.replacedBy(gone);
-    const added = next !== null && view.cards.some((c) => c.card === next) && !mix.components.some((c) => c.kind === "card_share" && c.card === next) ? next : null;
-    delete this.edit.dataset["teach"]; delete this.edit.dataset["gone"]; delete this.edit.dataset["with"]; delete this.edit.dataset["withLabel"];
-    if (gone === null || (added === null && mix.components.length < 2)) return;
-    Object.assign(this.edit.dataset, { teach: "mix-stopped", gone: catalog.cardLabel(gone) }, added === null ? {} : { with: added, withLabel: catalog.cardLabel(added) });
-  }
-
-  private goneCard(mix: Mix, view: View): string | null {
-    const gone = mix.components.find((c) => c.kind === "card_share" && !view.cards.some((v) => v.card === c.card));
-    return gone?.kind === "card_share" ? gone.card : null;
   }
 
   private byRule(order: View["orders"][number]): string {
