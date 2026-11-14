@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 FLAT = frozenset({
     "ruin", "ridge_shape", "ridge_bare", "track", "dead_field", "frost", "cairns_1",
     "cairns_2", "cairns_3", "kill", "wolf_prints", "ring_prints", "ridge_shapes", "road_smoke",
-    "cleared", "prints", "ring", "fire_laid",
+    "cleared", "crack_glow", "warm_glow", "warm_glow_5", "warm_glow_6", "warm_glow_7", "prints", "ring", "fire_laid",
     "clay_hearth_1", "clay_hearth_2", "clay_hearth_3", "hearth_stones_1", "hearth_stones_2", "hearth_stones_3",
     "larder_floor_1", "larder_floor_2", "larder_floor_3", "raised_bed_1",
     "raised_bed_2", "raised_bed_3", "turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2",

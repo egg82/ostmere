@@ -82,6 +82,12 @@ def hearth_layers() -> list[Layer]:
     ]
 
 
+def ground_light_layers() -> list[Layer]:
+    """The cracks' faint red round the hearth: in the ground, so under the hearth and everything standing."""
+    return [Layer(id="warm_glow", img=world.warm_glow(146), when="feature:warm_ground", until="feature:morning_5",
+                  blend="screen")]
+
+
 def made_layers() -> list[Layer]:
     """The bay and the rack's roof, and the watch fire at the gap: the ring when its first stage is done, lit at the
     second. The bay and the ring show their ghosts while they are being built."""
@@ -124,5 +130,4 @@ def light_layers() -> list[Layer]:
         Layer(id="firelight_dusk_4", img=firelight(0.7), when="action:evening_4", until="feature:morning_5",
               blend="screen", ungraded=True),
         Layer(id="watch_light", img=fire.watch_light(), when="store:watch_done@2", blend="screen", ungraded=True),
-        Layer(id="warm_glow", img=world.warm_glow(146), when="feature:warm_ground", until="feature:morning_5", blend="screen"),
     ]
