@@ -2730,6 +2730,13 @@
           "first_mix": {
             "$ref": "#/components/schemas/FirstMix"
           },
+          "game_mix_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Game Mix Ids"
+          },
           "transfer_code_s": {
             "type": "integer",
             "title": "Transfer Code S"
@@ -2761,6 +2768,7 @@
           "camp",
           "people",
           "first_mix",
+          "game_mix_ids",
           "transfer_code_s"
         ],
         "title": "Content"
@@ -4103,13 +4111,18 @@
           "max_mixes": {
             "type": "integer",
             "title": "Max Mixes"
+          },
+          "reserved_mix_prefix": {
+            "type": "string",
+            "title": "Reserved Mix Prefix"
           }
         },
         "type": "object",
         "required": [
           "max_orders",
           "max_queue",
-          "max_mixes"
+          "max_mixes",
+          "reserved_mix_prefix"
         ],
         "title": "Limits",
         "description": "What the page's editors stop at (CONTRACT.txt, \"Request limits\"): a request past one is a 422."

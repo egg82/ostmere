@@ -6,7 +6,7 @@ import type { CardShare, Decision, Mix, Order, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { ALWAYS } from "./lanes";
 import { MIN_SHARE_BP } from "./mix";
-import { freeName, TOWN_PREFIX } from "./orders";
+import { freeName } from "./orders";
 
 /** One share step in the editor: the smallest share a card can hold. */
 export const TOWN_STEP_BP = MIN_SHARE_BP;
@@ -50,10 +50,10 @@ function flatCards(view: View, mix: Mix, seen: Set<string> = new Set()): string[
   });
 }
 
-/** A town mix: every card it holds is on a ruled lane; holding none, its id is the game's (CONTRACT.txt). */
+/** A town mix: every card it holds is on a ruled lane; holding none, it is one the game made (CONTRACT.txt). */
 export function isTownMix(catalog: Catalog, view: View, mix: Mix): boolean {
   const cards = flatCards(view, mix);
-  return cards.length > 0 ? cards.every((c) => catalog.ruled(c)) : mix.id.startsWith(TOWN_PREFIX);
+  return cards.length > 0 ? cards.every((c) => catalog.ruled(c)) : catalog.content.game_mix_ids.includes(mix.id);
 }
 
 /** The town's always rule: after_time 0, switching a mix. */
@@ -141,7 +141,7 @@ export function townSaveDecisions(view: View, edited: Mix, isNew: boolean): Deci
   return [save, { kind: "set_orders", orders }];
 }
 
-/** A new town mix: no cards, a name no saved mix has (a name beginning "town:" is the game's). */
+/** A new town mix: no cards, a name no saved mix has. */
 export function newTownMix(view: View, name: string): Mix {
   return { id: freeName(view, name), components: [] };
 }

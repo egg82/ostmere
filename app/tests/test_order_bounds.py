@@ -41,4 +41,5 @@ def test_an_oversized_list_is_answered_422_naming_the_bound(game: GameClient):
 
 
 def test_the_page_is_served_the_bounds_its_editors_stop_at(game: GameClient):
-    assert game.client.get("/api/content").json()["limits"] == {"max_orders": 64, "max_queue": 64, "max_mixes": 64}
+    assert game.client.get("/api/content").json()["limits"] == {"max_orders": 64, "max_queue": 64, "max_mixes": 64,
+                                                                  "reserved_mix_prefix": "town:"}

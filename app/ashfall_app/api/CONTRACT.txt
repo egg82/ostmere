@@ -1332,8 +1332,10 @@ THE TOWN'S MIX
   Once people join, the townsfolk's lanes are run by one mix whose shares are people's time: each share is a part of
   one person's time, the person being the lane its card is on (engine DESIGN.txt, "THE TOWN'S MIX"). It is an
   ordinary saved mix in view.mixes; which one runs is set by a rule, never by the player's switch.
-  Content: nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane): that lane's person has
-  joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
+  Content: game_mix_ids, the mix ids the content's joins make: the game's own mixes, worded by ui.town.title and
+  changed in the town's editor; every other saved mix is the player's. limits.reserved_mix_prefix ("town:"): a new
+  mix id beginning so is the game's. Nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane):
+  that lane's person has joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
   view.unlocked holds, and whose left unlock it does not (LEAVES).
   View: running_town_mix_id (the town mix running now: the first rule that is on with a switch_mix of a town mix that
   isn't greyed; null when none runs) and town_mix_order (the index into orders of that rule; null when none).

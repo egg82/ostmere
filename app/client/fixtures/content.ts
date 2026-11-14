@@ -344,7 +344,7 @@ const card = (id: string, lane: string, presentation: "narrative" | "action" | "
 export const fixtureContent: Content = {
   rules_digest: "fixture-digest",
   scales: { quantity_per_item: Q, rate_per_item_hour: R, bp: BP },
-  limits: { max_orders: 64, max_queue: 64, max_mixes: 64 },
+  limits: { max_orders: 64, max_queue: 64, max_mixes: 64, reserved_mix_prefix: "town:" },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
     { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, bonus_bp: null },
@@ -456,5 +456,6 @@ export const fixtureContent: Content = {
   },
   camp: { store: "camp", camp_levels: [{ at: 50 * Q, pays_key: "pays.wall", pays_from: 3 * Q, pays_to: 5 * Q, change_bp: [], held: false, lifted_by: [], names: [] }, { at: 200 * Q, pays_key: "pays.unknown", pays_from: null, pays_to: null, change_bp: [], held: true, lifted_by: [], names: [] }] },
   first_mix: { feature: "mix", card_ids: ["gather", "tend"] },
+  game_mix_ids: ["town:main"],   // the town fixtures' mix (fixtures/townwire.ts), made by their joins
   transfer_code_s: 600,
 };

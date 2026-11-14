@@ -27,6 +27,8 @@ class Limits(BaseModel):
     max_orders: int
     max_queue: int
     max_mixes: int
+    reserved_mix_prefix: str
+    """A new mix id beginning so is the game's: save_mix of one is a 422 (CONTRACT.txt, "The town's mix")."""
 
 
 class TextEntry(BaseModel):
@@ -281,6 +283,9 @@ class Content(BaseModel):
     people: PeopleInfo | None
     """The bands a day's mention is worded from (CONTRACT.txt, "People"); null until a chapter declares [people]."""
     first_mix: FirstMix
+    game_mix_ids: list[str]
+    """The mix ids the game makes (the town's mixes its joins make): the game's own, worded by ui.town.title and changed
+    in the town's editor. Every other saved mix is the player's (CONTRACT.txt, "The town's mix")."""
     transfer_code_s: int
     """How long a transfer code works (TransferCode.expires_in_s), for the text that says so ({minutes})."""
 
