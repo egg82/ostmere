@@ -3150,12 +3150,15 @@ CHOICES (share levels)
   a level crossed between two shown amounts would come on at an amount that reads as the wrong side of it; and a cap
   raised by a multiplier need not be whole items, so the exact cap could be a fraction of an item above the full the
   page shows.
-- Hysteresis: the band lies between the two read quantities. Two share levels of a band (an at_most's value below
-  its release, an at_least's above) never cross: x < y gives floor(x) < ceil(y), so an at_most still lets go at
-  least one item above where it comes on, and an at_least one item below. A read release on the wrong side of the
-  read value is read as the value: an amount level and a share level the cap has moved past each other, or a cap
-  under one item. The condition is then a plain threshold until the cap moves the two apart; it never flips at
-  one level.
+- Hysteresis: a condition holding a share level keeps a band of at least one item between its read quantities. Whole
+  items can bring two levels together: a quarter and half of a 4-item cap read as 1 and 2, and an at_most on at 1
+  and under that lets go at 2 would flip at the quantity 2 items, every second the store moves across it. An amount
+  level and a share level can also pass each other as the cap rises. So when the read release is less than one item
+  past the read value, it moves to one item past it, but never beyond the store's range: an at_most's release is
+  then max(release, value, min(value + Q, C * Q - 1)), so it lets go at full at the latest; an at_least's is
+  min(release, value, max(value - Q, Q)), so it lets go once the store shows 0 at the latest. Only a value level
+  within one item of full or empty leaves no room, and that condition is a plain threshold. A condition of amount
+  levels alone is read as before, plain thresholds included.
 - The cap changing mid-rule: a cap only rises (Store caps), and only at an instant where something else fires (an
   outcome's raise at a completion). Share levels are read afresh at each read, so a rule's quantities move with the
   cap at that instant, and the pending check after the raise sees each latch against the new quantities. A latch is
@@ -3181,8 +3184,11 @@ reading table gives under store_cap at s, and its flags False.)
      whose release is 0 of the cap lets go exactly once the store shows 0.
 165. Unchanged for amounts: a condition with both flags False encodes to the text it had before the flags existed,
      and behaves as before.
-166. Validation: a share level on any subject but a StoreValue, or outside 0..BP, raises InvalidVerbError from
-     SetOrders and SetQueue; one in a chip, trigger or card condition raises InvalidRulesError.
+166. Validation: a share level on any subject but a StoreValue, or outside 0..BP, or a release on the wrong side of
+     a value in the same form, raises InvalidVerbError from SetOrders and SetQueue; a share level and an amount level
+     are never compared there. One in a chip, trigger or card condition raises InvalidRulesError.
+167. A band of one item: a condition holding a share level, whose read value leaves room for it, lets go at least
+     one item past where it comes on, and never past full (at_most) or under nothing shown (at_least).
 
 REJECTED, AND WHY (share levels)
 - A subject for the store's fullness (StoreShare, read in basis points): a rule with one amount level and one share
@@ -3194,6 +3200,9 @@ REJECTED, AND WHY (share levels)
   is the case that wants both.
 - Rewriting the saved quantities when a cap rises: a second writer of save.orders, and an order matched by equality
   would become another order, losing its latch, at every raise.
+- Reading levels that meet as a plain threshold: the store moves across one quantity every second, so the rule's mix
+  would switch at every second; one more item of band costs a level the player wrote one item, and only where whole
+  items had already moved it.
 - Rounding the share to the nearest item: a quarter of 10 would read as 3 for an at_most, which then holds at 3,
   above a quarter. Comparing the shown amount with the exact share is right on both sides.
 - Share levels in content: nothing in the content asks for one, and every reader of the rules' conditions (blockers,
