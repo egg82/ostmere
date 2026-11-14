@@ -128,6 +128,7 @@ while_running = [{ side = "gap", amount_bp = 5000 }]
 [[offers]]
 id = "o_door"
 text_key = "o_door"
+askers = ["n2"]
 gate = { test = "at_least", subject_kind = "store", id = "stranger_clock", value = 100 }
 requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_skin", value = 1 },
@@ -175,6 +176,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "scrap", items = 6 }]
 [[offers]]
 id = "o_ditch"
 text_key = "o_ditch"
+askers = ["n1"]
 gate = { test = "at_least", subject_kind = "store", id = "z1_clock", value = 80 }
 requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_pot", value = 1 },
@@ -291,6 +293,7 @@ makes = [{ store = "z1_clock", items_per_hour = 20 }]
 [[offers]]
 id = "o_guard"
 text_key = "o_guard"
+askers = ["n1"]
 gate = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
 line_keys = ["l_guard_ask"]
 

@@ -282,6 +282,9 @@ const text: Record<string, string> = {
   "lane.helper": "Helper", "lane.helper.later": "Helper, settled", "card.chop": "Chop logs", "card.haul": "Haul water", "card.fetch": "Fetch once",
   "offer.ask": "[fixture] A question with two answers: which one?", "answer.wait": "Wait", "answer.go": "Go now", "offer.cost": "takes {d}",
   "offer.bank": "[fixture] Two ways to do a thing: whose?", "answer.hers": "Hers", "answer.his": "His", "offer.hers.effect": "[fixture] {pct} a thing", "offer.his.effect": "[fixture] {pct} another, {gain} wood",
+  "offer.bank.waiting": "[fixture] waiting costs a thing", "offer.bank.expiry": "[fixture] gone by a time", "offer.bank.permanence": "[fixture] settled for good",
+  "offer.trade": "[fixture] A third question, asked by one person with a long name?", "answer.keep": "Keep it", "answer.swap": "Swap it away",
+  "offer.keep.effect": "[fixture] {pct} rest", "offer.swap.effect": "[fixture] {gain} stone now",
   "line.offer": "[fixture] a line that comes with the offer.",
   // fights (CONTRACT.txt, "FIGHTS"): the eight ui keys as opening.toml words them, and placeholder names
   "ui.fight.odds": "{lost} in {of} lost", "ui.fight.odds_pct": "{pct}% lost", "ui.fight.odds_unknown": "odds unknown until fought", "ui.fight.threat_unknown": "unknown", "ui.fight.vs": "{side_name} {power}, {threat_name} {threat}",
@@ -403,9 +406,17 @@ export const fixtureContent: Content = {
   offer_infos: [{
     offer: "ask", text_key: "offer.ask", kind: null, line_keys: ["line.offer"],
     answers: [{ answer: "wait", label_key: "answer.wait", cost_key: "offer.cost", change_bp: [], gains: [], role: null }, { answer: "go", label_key: "answer.go", cost_key: "offer.cost", change_bp: [], gains: [], role: null }],
+    askers: [], cause: null, waiting_key: null, expiry_key: null, permanence_key: null,   // an ask with none of the optional fields
   }, {   // the second kind: its answers start nothing, each installs a modifier (its cost text is the effect, no {d})
     offer: "bank", text_key: "offer.bank", kind: null, line_keys: [],
     answers: [{ answer: "hers", label_key: "answer.hers", cost_key: "offer.hers.effect", change_bp: [1000], gains: [], role: null }, { answer: "his", label_key: "answer.his", cost_key: "offer.his.effect", change_bp: [-1000], gains: [{ store: "wood", quantity: 2.5 * Q }], role: null }],
+    // every optional field: two askers, a cause, and the three texts (expiry stands for a later engine's; the content refuses one today)
+    askers: ["helper", "mason"], cause: { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: 3, release: 3 } },
+    waiting_key: "offer.bank.waiting", expiry_key: "offer.bank.expiry", permanence_key: "offer.bank.permanence",
+  }, {   // the third, for a list of several: one asker, its cause an earlier answer
+    offer: "trade", text_key: "offer.trade", kind: null, line_keys: [],
+    answers: [{ answer: "keep", label_key: "answer.keep", cost_key: "offer.keep.effect", change_bp: [500], gains: [], role: null }, { answer: "swap", label_key: "answer.swap", cost_key: "offer.swap.effect", change_bp: [], gains: [{ store: "stone", quantity: 3 * Q }], role: null }],
+    askers: ["mason"], cause: { kind: "answer", offer: "bank" }, waiting_key: null, expiry_key: null, permanence_key: null,
   }],
   lane_infos: [
     { lane: "hands", label_key: "lane.hands", ruled: false, later_labels: [], name_key: null },

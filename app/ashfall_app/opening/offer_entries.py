@@ -29,3 +29,12 @@ class OfferEntry(Entry):
     kind: str | None = None
     """Offers of one kind are answered together by an AnswerKind order; see AnswerEntry.role."""
     answers: list[AnswerEntry] = Field(min_length=2)
+    askers: list[str] = []
+    """The ruled lanes whose people ask, in the order the page names them; empty when no one person asks."""
+    waiting_key: str | None = None
+    """What waiting costs, for an offer whose waiting is not free; None says nothing (an open offer pauses only itself)."""
+    expiry_key: str | None = None
+    """When the offer goes unanswered; None says nothing, and every offer has None until the engine has offer expiry
+    (engine DESIGN.txt, KNOWN GAPS)."""
+    permanence_key: str | None = None
+    """What the answer settles for good, for an offer whose permanence the player should weigh; None says nothing."""

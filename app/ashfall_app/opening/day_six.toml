@@ -104,6 +104,7 @@ outcome = { unlocks = [{ unlock_kind = "feature", id = "pelt_ask" }] }
 [[offers]]
 id = "o_pelt"
 text_key = "o_pelt"
+askers = ["n3"]
 gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pelt_ask", value = 1 }
 line_keys = ["l_pelt_ask"]
 

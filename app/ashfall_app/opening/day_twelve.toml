@@ -263,6 +263,7 @@ offered_after = { unlock_kind = "card", id = "tallow_lamps" }
 [[offers]]
 id = "o_spoil"
 text_key = "o_spoil"
+askers = ["n6"]
 gate = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 1 }
 requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_ditch", value = 1 },
@@ -288,6 +289,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
 [[offers]]
 id = "o_cradle"
 text_key = "o_cradle"
+askers = ["n5"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 6 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_spoil", value = 1 }]
 
@@ -310,6 +312,7 @@ modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind
 [[offers]]
 id = "o_shaft"
 text_key = "o_shaft"
+askers = ["n7"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 16 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cradle", value = 1 }]
 
@@ -332,6 +335,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "scrap", items = 4 }]
 [[offers]]
 id = "o_cold_air"
 text_key = "o_cold_air"
+askers = ["n1"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_shaft", value = 1 }]
 
@@ -356,6 +360,7 @@ modifiers = [{ target = "side", id = "rack", kind = "add_bp", amount_bp = 1000, 
 [[offers]]
 id = "o_lean_to"
 text_key = "o_lean_to"
+askers = ["n2"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 24 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cold_air", value = 1 }]
 
@@ -378,6 +383,7 @@ modifiers = [{ target = "cap", id = "pelt", kind = "mul_bp", amount_bp = 15000, 
 [[offers]]
 id = "o_lye"
 text_key = "o_lye"
+askers = ["n5"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 33 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_lean_to", value = 1 }]
 
@@ -400,6 +406,7 @@ modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind
 [[offers]]
 id = "o_wet"
 text_key = "o_wet"
+askers = ["n2"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 38 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_lye", value = 1 }]
 
@@ -421,6 +428,7 @@ stores = [{ store = "ask_wait", items = 3 }, { store = "stones", items = 6 }]
 [[offers]]
 id = "o_crows"
 text_key = "o_crows"
+askers = ["n4"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 40 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_wet", value = 1 }]
 
@@ -445,6 +453,7 @@ modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = 1000, s
 [[offers]]
 id = "o_sag"
 text_key = "o_sag"
+askers = ["n6"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 50 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_crows", value = 1 }]
 

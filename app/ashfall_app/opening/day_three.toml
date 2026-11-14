@@ -636,6 +636,8 @@ outcome = { line_keys = ["l_scrap_ask"] }
 [[offers]]
 id = "o_bank"
 text_key = "o_bank"
+askers = ["n1", "n2"]
+permanence_key = "o_bank_permanence"
 gate = { test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 3 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }]
 line_keys = ["l_bank_1"]
@@ -973,6 +975,7 @@ action_n2_eating = "His share"
 store_n2_hour = "clock"
 action_n2_hour = "His first hour"
 o_bank = "Bank the fire her way or his?"
+o_bank_permanence = "settled for good"
 a_bank_hers = "Her way"
 a_bank_hers_cost = "{pct} wood on the fire"
 a_bank_his = "His way"
