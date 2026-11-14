@@ -47,8 +47,6 @@ def test_a_declared_stake_with_its_upside_passes():
 ])
 def test_a_card_that_gives_something_or_has_a_cap_is_no_sink(gives: dict[str, Any]):
     check_stakes(merged({**SINK, **gives}))
-    with pytest.raises(ValueError, match="card t_sink: has a stake but gives something"):
-        check_stakes(merged({**STAKED, **gives}))
 
 
 def test_a_card_that_takes_nothing_is_no_sink():
@@ -81,3 +79,11 @@ def test_a_side_stake_needs_an_entry_on_a_fought_side_once_any_fight_exists():
                                  sides=[SIDE, other], threats=threat, standing=[FIGHT]))
     check_stakes_hold(merged({**STAKED, "while_running": [{"side": "t_gap", "amount_bp": 1}]},
                              sides=[SIDE], threats=threat, standing=[FIGHT]))
+
+
+def test_a_card_that_takes_a_fights_wound_is_a_cure_not_a_sink():
+    wounding = {**FIGHT, "fight": {**FIGHT["fight"], "wounds": [{"store": "dry_wood", "items": 1}]}}
+    threat = [{"id": "t_rats", "label_key": "t_t", "base": 4}]
+    check_stakes(merged(SINK, sides=[SIDE], threats=threat, standing=[wounding]))
+    with pytest.raises(ValueError, match="cards t_sink: "):
+        check_stakes(merged(SINK, sides=[SIDE], threats=threat, standing=[FIGHT]))

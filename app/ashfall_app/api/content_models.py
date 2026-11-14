@@ -79,8 +79,6 @@ class CardInfo(BaseModel):
     change_bp: list[int]
     """The modifiers of its outcome (at each completion, as a staged build's), of its finish and held while it runs (at
     its full share), as signed changes in basis points, as LevelPays.change_bp: the slots of upside_key."""
-    marks: list[int]
-    """An uncapped card's completion counts, ascending, where its reach pays: triggers past one that change something."""
     work_s: int
     inputs: list[Amount]
     """Taken by each completion, paid as its work is done, tapped or mixed."""

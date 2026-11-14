@@ -2260,13 +2260,6 @@
             "type": "array",
             "title": "Change Bp"
           },
-          "marks": {
-            "items": {
-              "type": "integer"
-            },
-            "type": "array",
-            "title": "Marks"
-          },
           "work_s": {
             "type": "integer",
             "title": "Work S"
@@ -2326,7 +2319,6 @@
           "label_key",
           "upside_key",
           "change_bp",
-          "marks",
           "work_s",
           "inputs",
           "skill_needs",

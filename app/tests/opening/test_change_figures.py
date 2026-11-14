@@ -100,19 +100,8 @@ def test_a_card_holding_entries_while_it_runs_is_served_them_at_its_full_share(c
     assert (cards["n5_watch"], cards["n1_watch"]) == ([5000], [5000])
 
 
-def test_a_card_whose_count_pays_is_served_its_marks_and_their_change(content: Content):
-    """The triggers on an uncapped card's completions past one that change something, by count; a trigger at one (its
-    first run's story) is no mark, nor is a capped card's stage, and a card with no such trigger has none."""
-    infos = {c.card: c for c in content.card_infos}
-    assert infos["field_track"].marks == [500, 2000, 4000, 7000, 11000] and infos["field_track"].change_bp == [1000]
-    assert infos["n1_watch"].marks == [] and infos["larder_floor"].marks == [] and infos["larder_floor"].change_bp == [5000]
-
-
-def test_a_mark_with_no_change_is_no_mark():
-    o = edited(data=lambda part: part.replace('id = "t_track_reach_2"\nwhen = { test = "at_least", subject_kind = "card_count", '
-                                              'id = "field_track", value = 2000 }\noutcome = { modifiers = [{ target = "work", id = '
-                                              '"forage", kind = "mul_bp", amount_bp = 11000, source = "t_track_reach_2" }] }',
-                                              'id = "t_track_reach_2"\nwhen = { test = "at_least", subject_kind = "card_count", '
-                                              'id = "field_track", value = 2000 }\noutcome = { stores = [{ store = "scrap", items = 1 }] }'))
-    marks = {c.card: c.marks for c in Game(o, ruleset(o, load_renames(), "dev", 1)).content().card_infos}["field_track"]
-    assert marks == [500, 4000, 7000, 11000]
+def test_each_staked_sink_is_served_the_entries_it_holds_at_its_full_share(content: Content):
+    """The watch's larder and gap entries, one figure; the track's on the hands, which a later chapter gives."""
+    cards = {c.card: c.change_bp for c in content.card_infos}
+    assert [cards[c] for c in ("n1_watch", "n2_watch", "n4_watch", "n6_watch")] == [[5000]] * 4
+    assert cards["field_track"] == [10000]
