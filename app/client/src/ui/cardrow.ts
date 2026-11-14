@@ -26,6 +26,8 @@ export interface Row {
   fight: FightPanel | null;
   /** A rule started its running tap (ui/fires.ts), as of the last restyle. */
   byOrder?: boolean;
+  /** performance.now() until which a level shows on the card (cardlevel.ts); undefined: none. */
+  levelUntil?: number;
 }
 
 /** The card sinks while a pointer holds `tap` down and settles when it lets go (game.css, .card.pressed). Refused or

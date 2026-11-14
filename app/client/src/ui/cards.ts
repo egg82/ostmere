@@ -25,6 +25,8 @@ import type { Part, PartContext } from "./part";
 import { WaitLine } from "./waitline";
 import { WhenReady } from "./whenready";
 import { storyMarks } from "../game/story";
+import { speedups } from "../game/levelled";
+import { levelShown, showLevel } from "./cardlevel";
 
 /** How long a finished card stays in its slot, so the player sees it finish, before it goes to Completed. */
 const DONE_HOLD_MS = 5000;
@@ -121,6 +123,10 @@ export class Cards implements Part {
       hintCard(row.node, row.id, hints, () => this.ctx.keeps.keepMixOffered(row.id), this.marks.has(row.id));   // a quiet mark, once: the mix could take it
       this.restyle(row, view, { busy, running, single });
     }
+    for (const s of before ? speedups(this.ctx.catalog, before, full) : []) {
+      const row = this.rows.get(s.card);
+      if (row && !row.done) this.ctx.arrivals.effect(row.node, "skill", () => showLevel(this.ctx.catalog, row, s, performance.now()));
+    }
   }
 
   tick(t: number): void {
@@ -135,7 +141,7 @@ export class Cards implements Part {
       const done = span > 0 ? (((v % span) + span) % span) / span : 0;
       row.fill.style.transform = `scaleX(${done})`;
       const wait = card.by === "tap" ? card.completes_at : this.view ? keptReadyAt(this.view, card) : null;
-      setText(row.foot, wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "");
+      if (!levelShown(row, performance.now())) setText(row.foot, wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "");
       this.markClock(row, wait !== null && this.view !== null && waitsOnUnseen(this.view, card));
       row.needs.tick(card, this.view, t);
     }

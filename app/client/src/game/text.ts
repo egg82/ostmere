@@ -111,6 +111,7 @@ export const UI = {
   usedByOne: "ui.mix.used_by_one",
   nested: "ui.mix.nested",
   cardCount: "ui.card.count", // "{n}/{cap}"
+  cardLevelled: "ui.card.levelled", // "{skill}{n}{before}{after}": a level on the card it speeds up, its old and new time
   retired: "ui.card.retired",
   full: "ui.ledger.full",
   campPays: "ui.camp.pays", // "{level} {pays}": the next Camp level and its pays words, their own {from} and {to} filled
