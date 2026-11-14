@@ -60,7 +60,6 @@ export class Cards implements Part {
   failed(card: string, view: View): void {
     const row = this.rows.get(card);
     if (!row || row.done) return;
-    row.node.classList.remove("press");   // one animation per node: the press would replay after the pulse
     pulse(row.node, "tap-failed");
     const blocker = row.card.blocker;
     if (!blocker) return;

@@ -37,6 +37,10 @@
   --fail-ms: 400ms;
   --fail-scale: 1.12;
   --fail-glow: 0 0 0 2px var(--alarm), 0 0 1rem rgba(224, 97, 74, .55);
+  /* the feel (merge.html's tokens): a press sinks at --press-ms, the release settles at --settle-ms with a slight overshoot */
+  --press-ms: 60ms;
+  --settle-ms: 160ms;
+  --settle-ease: cubic-bezier(.3, 1.5, .5, 1);
   color-scheme: dark;
 }
 /* The root grows with the viewport (16px on a phone, ~20px at 1920, ~29px at 3840), so a 4K screen gets a larger page,
@@ -261,7 +265,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
   --foot-h: 2rem;   /* the foot's band: tall enough for When ready, so the button sits under the bar, never over it */
   position: relative; display: flex; min-height: 5.6rem;
   background: var(--raise); border-radius: 2px; box-shadow: var(--drop); color: var(--ink);
-  transition: background-color .2s, box-shadow .2s, opacity .3s;
+  transition: transform var(--settle-ms) var(--settle-ease), background-color var(--settle-ms), box-shadow var(--settle-ms), opacity .3s;
 }
 .card-tap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; padding: .6rem .8rem .55rem .9rem; text-align: left; background: none; border: 0; border-radius: inherit; cursor: pointer; }
 .card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; padding-right: 3.2rem; }
@@ -296,7 +300,9 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .card .card-ready { position: absolute; right: .5rem; bottom: .55rem; z-index: 1; box-sizing: border-box; height: var(--foot-h); padding: 0 .7rem; font: inherit; font-size: var(--t-meta); color: var(--ink-hi); background: var(--press); border: 0; border-radius: 2px; cursor: pointer; }
 .card-ready.queued { color: var(--ink-dim); background: transparent; box-shadow: inset 0 0 0 1px var(--rule); cursor: default; }
 .card-tap:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
-.card:not(.busy):not(.done) .card-tap:active { transform: scale(.98); }
+/* held down (cardrow.ts): 2px onto its shadow, a step lighter; a refused card goes down too */
+.card.pressed { transform: translateY(2px); background-color: var(--press); transition-duration: var(--press-ms); }
+.card.ready.pressed { box-shadow: 0 0 0 #050407; }
 /* the first card: stand-alone, double width and about 1.5x height, the most obvious thing to tap at every size */
 .card.first { grid-column: span 2; min-height: 8.4rem; }
 .card.first .card-tap { padding: 1rem 1.2rem; justify-content: center; }
@@ -711,11 +717,9 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 /* juice: none of it moves the layout */
 .arrive { animation: arrive .5s ease-out backwards; }
 .held { visibility: hidden; }   /* arrived while away, waiting its turn (ui/reveal.ts): its room is already taken */
-.press { animation: press .22s ease; }
 .landed { animation: landed .7s ease; }
 @keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes line-in { from { opacity: 0; transform: translate(var(--line-from-x, .6rem), var(--line-from-y, 0)); } }
-@keyframes press { 40% { transform: scale(.97); } 100% { transform: none; } }
 @keyframes landed { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .7); } 100% { box-shadow: 0 0 0 .8rem rgba(240, 178, 122, 0); } }
 @keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(1.02); } 100% { transform: none; } }
 /* the tap and level rungs' calm forms (reduced motion): the same ring held still, fading, with no spread */
@@ -880,6 +884,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 @media (prefers-reduced-motion: reduce) {
   .game, .game *, .game *::before, .game *::after { animation: none !important; transition: none !important; }
   .game .card.tap-failed { animation: tap-failed var(--fail-ms) ease-out !important; }   /* colour, not motion */
+  .game .card.pressed { transform: none; }   /* held down still reads a step lighter */
   .game .fail-mark, .game .fail-mark .need-have { animation: fail-flash var(--fail-ms) ease-out !important; }
   .game .landed { animation: ring-still .7s ease-out !important; }   /* the ladder's calm forms ("+1" stays, held still) */
   .game .burst { animation: burst-still .9s ease-out !important; }

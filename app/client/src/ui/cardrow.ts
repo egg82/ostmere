@@ -1,7 +1,7 @@
 // One card's row in the card panel (cards.ts): its nodes and what the panel keeps about it between views.
 import type { Card } from "../api/types";
 import { CardNeeds } from "./cardneeds";
-import { el, pulse, tapFeedback } from "./dom";
+import { el, tapFeedback } from "./dom";
 import { FightPanel, seatFight } from "./fightpanel";
 import type { PartContext } from "./part";
 import type { WhenReady } from "./whenready";
@@ -28,6 +28,13 @@ export interface Row {
   byOrder?: boolean;
 }
 
+/** The card sinks while a pointer holds `tap` down and settles when it lets go (game.css, .card.pressed). Refused or
+ * not, a tap that can be made goes down; a disabled one stays put. */
+function pressable(tap: HTMLButtonElement, node: HTMLElement): void {
+  tap.addEventListener("pointerdown", () => { if (!tap.disabled) node.classList.add("pressed"); });
+  for (const type of ["pointerup", "pointercancel", "pointerleave"]) tap.addEventListener(type, () => node.classList.remove("pressed"));
+}
+
 /** A new row for `card`: its nodes, wired to tap it. */
 export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row {
   const { catalog } = ctx;
@@ -51,9 +58,9 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
   tap.append(row.needs.root, track, row.foot);
   tap.addEventListener("click", () => {
     tapFeedback();
-    pulse(node, "press");
     ctx.actions.decide({ kind: "tap_card", card: card.card });
   });
+  pressable(tap, node);
   if (row.fight) seatFight(node, tap, row.ready, row.fight);
   else node.append(tap, row.ready);
   return row;
