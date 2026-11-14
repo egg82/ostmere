@@ -70,7 +70,7 @@ def _removals(lock: Lock, now: Lock, fwd: Forwarding) -> list[Problem]:
         have = set(now.ids.get(kind, []))
         for x in lock.ids.get(kind, []):
             y = _fwd(fwd, kind, x)
-            if y in have or (kind == "line" and x in fwd.retired):
+            if y in have or (kind, x) in fwd.retired:
                 continue
             if y != x:
                 found.append(Problem("needs_mapping", f"{kind} {x} is renamed to {y}, which the content lacks"))

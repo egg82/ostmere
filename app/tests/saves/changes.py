@@ -2,12 +2,14 @@
 unlocks), shared by the golden saves and the saves service's rebase tests."""
 from functools import cache
 
-from ashfall_app.engine import CardId, IdKind, Rename
+from ashfall_app.engine import CardId, IdKind, Rename, Retired
 from ashfall_app.opening.checks import check_opening
+from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import OPENING, CardEntry, Opening, TriggerEntry
 from tests.opening.edited import edited, roots_renamed
 
-RENAMES = (Rename(IdKind.STORE, "roots", "tubers"),)
+RENAMES: tuple[Rename | Retired, ...] = (*engine_renames(load_renames()), Rename(IdKind.STORE, "roots", "tubers"))
+"""What has shipped, then the change's own rename."""
 RETUNED = CardId("lay_to_dry")
 
 

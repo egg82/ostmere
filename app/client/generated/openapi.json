@@ -5806,12 +5806,11 @@
       "Section": {
         "type": "string",
         "enum": [
-          "days",
           "creatures",
           "places"
         ],
         "title": "Section",
-        "description": "The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order."
+        "description": "The part of the book an entry's page is in, each behind its own bookmark; within one, pages run in writing order.\nThe days pages are not entries: they are the written days (JournalDay)."
       },
       "Segment": {
         "properties": {

@@ -15,7 +15,7 @@ from typing import cast
 
 from pydantic import BaseModel, ConfigDict, JsonValue
 
-from ..engine import LineKey, Outcome, Rules, rules_digest
+from ..engine import LineKey, Outcome, Rename, Rules, rules_digest
 from ..engine.codec import Json, to_json
 from ..engine.renaming import Renamer, renamed_outcome
 from .line_kinds import line_keys
@@ -39,7 +39,7 @@ class Lock(BaseModel):
     outcomes: dict[str, JsonValue]
     """Trigger id to its outcome as the engine codec writes it, ids forwarded through the renames."""
     renames: list[dict[str, str | None]]
-    """Every rename applied, as {kind, from, to}, in file order; `to` is None for a retired line."""
+    """Every rename applied, as {kind, from, to}, in file order; `to` is None for a retired id."""
     release: int = 0
     """The content release this lock records; 0 before the first."""
     digest: str = ""
@@ -138,10 +138,11 @@ class Forwarding:
 
     def __init__(self, renames: Iterable[RenameEntry], standing: Iterable[str], cards: Iterable[str]) -> None:
         entries = list(renames)
-        self.engine = Renamer(engine_renames(entries), standing, cards)
+        self.engine = Renamer((r for r in engine_renames(entries) if isinstance(r, Rename)), standing, cards)
         self._local = {kind: {r.old: r.new for r in entries if r.kind == kind and r.new is not None}
                        for kind in LOCAL_KINDS}
-        self.retired = frozenset(r.old for r in entries if r.kind == "line" and r.new is None)
+        self.retired = frozenset((r.kind, r.old) for r in entries if r.new is None)
+        """Each retired id as (kind, id): lines, journal notes and entries, and a retired note's trigger."""
 
     def local(self, kind: str, key: str) -> str:
         """`key` of a LOCAL_KINDS kind through every rename of it (a cycle stops where it closes)."""

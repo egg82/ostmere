@@ -51,7 +51,7 @@ def test_the_spec_names_the_journals_components():
     schemas: dict[str, Any] = create_app().openapi()["components"]["schemas"]
     assert {"JournalInfo", "EntryInfo", "NoteInfo", "Hand", "Section"} <= set(schemas)
     assert schemas["Hand"]["enum"] == ["ink", "pencil"]
-    assert schemas["Section"]["enum"] == ["days", "creatures", "places"]
+    assert schemas["Section"]["enum"] == ["creatures", "places"]
     assert schemas["EntryInfo"]["properties"]["sketch"]["anyOf"] == [{"type": "string"}, {"type": "null"}]
     assert schemas["Content"]["properties"]["journal"]["anyOf"][0] == {"$ref": "#/components/schemas/JournalInfo"}
 

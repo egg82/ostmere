@@ -1,8 +1,7 @@
 """The loader's checks on the journal's subjects (docs/design/journal.md, "The content's side"), each naming ids and
 fields, never text: a source names a cause the content writes, and no cause feeds two subjects; the slots each kind
 needs are there, misremember and correction come together and only on a routine; every slot key has text; each
-`line` person has a person subject for each way that moves them; every days note has a beat subject whose first slot
-holds it. Raises ValueError naming the subject (refs.fail)."""
+`line` person has a person subject for each way that moves them. Raises ValueError naming the subject (refs.fail)."""
 from typing import TYPE_CHECKING
 
 from .journal_checks import check_sketch
@@ -38,7 +37,6 @@ def check_subjects(o: "Opening") -> None:
         sources[key] = s.id
         _check_slots(o, s)
     _check_people(o, set(sources))
-    _check_days_notes(o)
 
 
 def _check_source(o: "Opening", s: "SubjectEntry") -> None:
@@ -105,11 +103,3 @@ def _check_people(o: "Opening", sources: set[tuple[str, str | None, str | None]]
         for way, lane in moves(out):
             if lane in line and ("lane", lane, way) not in sources:
                 fail(where, f"{way} {lane}, a line person, and no person subject feeds from it")
-
-
-def _check_days_notes(o: "Opening") -> None:
-    days = {e.id for e in o.entries if e.section == "days"}
-    retold = {k for s in o.subjects if s.kind == "beat" and s.first is not None for k in s.first.keys}
-    for n in o.notes:
-        if n.entry in days and n.id not in retold:
-            fail(f"note {n.id}", "is a days note, and no beat subject's first slot holds it")

@@ -1205,29 +1205,25 @@ JOURNAL
   carries anew, on Step and Opened (below, "The written days").
 
   The book is in sections, a closed set, and each page is in one:
-    days                the daily journal: the story's bigger beats, retold afterwards in the character's voice (the
-                        chronicle stays the live feed). Each note is written on a spine beat and names it.
+    days                the daily journal: the written days the server composes from the save (below, "The written
+                        days"), never entries. Its pages are the page's own: days run on down a page until the next
+                        would not fit.
     creatures           the things fought, with their numbers.
     places              places, events and expeditions.
-  Within a section, pages run in the order they are written. The content keeps that order: a section's pages are
-  declared (chapters in load order) in the order their first notes are written on every route, so content order is
-  writing order and nothing on the wire carries a time.
+  Within creatures and places, pages run in the order they are written. The content keeps that order: a section's
+  pages are declared (chapters in load order) in the order their first notes are written on every route, so content
+  order is writing order and nothing on the wire carries a time.
 
   In the chapter files:
     [journal]           feature: a FeatureId with a label_key (the book the player carries). Declared once, in the
                         chapter that holds the first entry or an earlier one; Content.journal is null until then.
     [[entries]]         id (an EntryId), section, sketch, hand, runners
-      section           "days", "creatures" or "places"
+      section           "creatures" or "places"
       sketch            optional: the entry's drawing, an id matching [a-z0-9_]+, the image
                         /assets/journal/<sketch>.png. A page with none is laid out as text alone, which is valid.
       hand              "ink" or "pencil": how the entry's notes are written where a note does not say
       runners           the fight cards and standing fights whose numbers the page shows, in this order; [] for none
-    [[notes]]           id (a NoteId), entry, gate, requires, hand, sketch, beat
-      beat              on a days page, required: the spine beat the note retells, an id of content/beats.yaml's
-                        beats (B5). Its gate is that beat's own step, so the note is written at the beat's instant.
-                        Refused on a note of any other section. The loader holds its presence and shape; the canon is
-                        not shipped, so tests hold that it names a beat in beats.yaml and that, on every played
-                        route, the note is written at the instant that beat lands.
+    [[notes]]           id (a NoteId), entry, gate, requires, hand, sketch
       entry             the entry the note is written on, declared in this chapter or an earlier one
       gate, requires    when it is written, as an offer's: the loader makes the trigger "note_" + id, whose outcome
                         unlocks the note and, for the entry's first note, the entry. Every other note's trigger also
@@ -1245,15 +1241,16 @@ JOURNAL
     - a runner that is neither a card with a fight nor a standing action with a fight: refused, naming the entry and
       the runner.
     - a sketch id outside [a-z0-9_]+ (it is a path): refused, naming the entry or note.
-    - a note on a days page with no beat, a beat outside [A-Za-z0-9-]+, or a beat on a note of another section:
-      refused, naming the note.
+    - an entry whose section is "days": refused, naming the section (the days pages are the written days).
     - an entry or a note while no chapter so far declares [journal]; [journal] declared twice; its feature unknown or
       without a label_key: refused.
     - a note with no [text] entry, or whose text holds a digit: refused by the existing text checks (Text and
       numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
     - entry and note ids are content ids like any other: new ids only across chapters, kept by the release lock, and
       renamed by renames.toml under the id kinds entry and note. A note_ trigger's outcome is locked as any trigger's,
-      so a released entry keeps its first note.
+      so a released entry keeps its first note. A released entry or note leaves only by retirement (renames.toml, an
+      entry with no `to`): a save keeps its unlock, and a retired note's trigger goes with it (engine DESIGN.txt,
+      "Retired").
 
   Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY), renamed
   through IdKind ENTRY and NOTE; engine DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
@@ -1262,9 +1259,8 @@ JOURNAL
 
   Content.journal: JournalInfo {feature, entries: [EntryInfo {entry, section, sketch, runners: [str], notes:
   [NoteInfo {note, hand, sketch}]}]} | null. entries in content order (chapters in load order), each entry's notes in
-  content order; within one section, content order is writing order. Section is a closed enum, "days" | "creatures"
-  | "places". EntryInfo.sketch is null for a page with no drawing. A note's beat stays in the content: the page has
-  no use for it.
+  content order; within one section, content order is writing order. Section is a closed enum, "creatures" |
+  "places". EntryInfo.sketch is null for a page with no drawing.
   NoteInfo.hand is resolved (the entry's where the note names none), so EntryInfo carries no hand and the page applies
   no default. NoteInfo.sketch is null for a note with none. A note's words are Content.text_entries[note]. Hand is a
   closed enum, "ink" | "pencil": each hand is a style the page owns, so adding one is page work as well as content.
@@ -1280,16 +1276,23 @@ JOURNAL
 
   THE CLIENT MAY:
   - draw Content.journal.feature as the Journal button, in the book's place with the chips, once view.unlocked holds
-    that feature and at least one entry; until then the book is plain text, as any feature with a label_key. The
-    button's word is the book's label_key. It carries the quiet dot while any note is unread, and at no other time.
-  - open the Journal sheet from it: one page per entry view.unlocked holds, the sections in the order days,
-    creatures, places, and each section's pages in Content.journal.entries order. It opens on the first entry holding
-    an unread note, else the entry last shown in this page session, else the first. Prev and Next turn one entry at a
-    time, across sections.
-  - draw one bookmark per section that has a page view.unlocked holds, in the same order, worded by its text key
-    (ui.journal.days, ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark.
-    Turning to a bookmark opens that section's first page holding an unread note, else its latest page (the last in
-    content order that view.unlocked holds). The bookmark of the open page's section is marked as the current one.
+    that feature and the book has a page (a written day, or an entry view.unlocked holds); until then the book is
+    plain text, as any feature with a label_key. The button's word is the book's label_key. It carries the quiet dot
+    while anything written is unread (a note, or a written day after newest_day_read), and at no other time.
+  - open the Journal sheet from it: the days pages, then one page per entry view.unlocked holds, creatures then
+    places, each section's entry pages in Content.journal.entries order. It opens on the first page holding something
+    unread, else the page last shown in this page session, else the first. Prev and Next turn one page at a time,
+    across sections.
+  - fill the days pages with the written days in day order: each day's notes in page order under its day's heading
+    (ui.journal.day {n}, n the game day plus one), in the note's hand and with its sketch beside it, days running on
+    down a page until the next would not fit, which starts a new page; a day is never split, so one longer than a page
+    has a page of its own. Whether a day fits is a fixed measure of its words (rows of the hand at the desktop
+    page's width), never the window, so the same days are the same pages on every device and width, and a page,
+    once a later one is begun, never changes. A day served while its page is open joins it and stays unread.
+  - draw one bookmark per section that has a page, in the same order, worded by its text key (ui.journal.days,
+    ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark. Turning to a bookmark
+    opens that section's first page holding something unread, else its latest page. The bookmark of the open page's
+    section is marked as the current one.
   - on a page, draw the entry's sketch and each of its notes view.unlocked holds, in content order and in its hand,
     with the note's sketch beside it. A note not unlocked is not drawn and keeps no room. A page whose sketch is null
     is laid out as text alone: no empty room is kept for a drawing, nothing is loaded and nothing is reported.
@@ -1305,8 +1308,9 @@ JOURNAL
     open; a strength's entries do not open here (the fight card's do).
   - count the notes of each page the player turns to (opening counts as turning to the page it opens on) as read,
     and send them once, as the sheet closes: one PUT /api/me/presentation whose journal_read gains exactly those
-    notes, every other field as kept. A note unlocked while its page is open stays unread until the page is turned to
-    again.
+    notes, every other field as kept, and, when the newest day on the days pages turned to is later than
+    newest_day_read, one PUT /api/saves/{id}/presentation with that day. A note unlocked while its page is open stays
+    unread until the page is turned to again.
   - load a sketch when its page is drawn; one that fails to load leaves its room empty (no broken-image mark, no
     stand-in drawing) and is reported to /api/client-errors with the sketch id.
   THE CLIENT MAY NOT:
@@ -1342,6 +1346,7 @@ JOURNAL
 
   New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
                                     and its page turns
+                                    ui.journal.day {n}   a day's heading on a days page
                                     ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
                                     the journal's lesson (opening-screen.md, "Lessons")
                                     ui.journal.days | ui.journal.creatures | ui.journal.places   the sections'
@@ -1360,9 +1365,10 @@ JOURNAL
   - Every word in the sketch (process.md's notes files): notes grow as the player learns and pass the content's text
     checks, so they are text; the sketch keeps only the words that point into the drawing.
   - A note that strikes an earlier one, and a contents page: nothing in the first entries needs either.
-  - A written-at time on the wire to order a section's pages: content order is writing order, which the played
-    routes hold (a section's pages written in content order, a days note at its beat's instant), so a time would be a
-    second home for the same fact.
+  - A written-at time on the wire to order a section's entry pages: content order is writing order, which the played
+    routes hold, so a time would be a second home for the same fact.
+  - The days pages' breaks on the wire, or paged by the window: the page's measure is fixed, so the pages follow from
+    the days alone, and a break the window chose would differ between a phone and a desktop.
   - The days not written on the wire, with why: the page draws nothing for them, and a gap's cause is the composer's.
   - Every written day on every Step: Opened carries the stored ones once, and a step carries only those it composed.
   - A day's hand left for the page to default: as NoteInfo.hand, the server resolves it and the page applies none.

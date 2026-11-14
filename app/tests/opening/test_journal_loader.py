@@ -126,36 +126,9 @@ def sketch_of_a_note_with_slash(tmp_path: Path) -> tuple[Path, ...]:
     return (edited(tmp_path, ('sketch = "j_note_sketch"', 'sketch = "n/s"')),)
 
 
-DAYS_PAGE = '[[entries]]\nid = "j_day"\nsection = "days"\nhand = "ink"\nrunners = []\n'
-"""A days page with no sketch: text alone."""
-
-
-DAYS_SUBJECT = ('[[triggers]]\nid = "j_told"\nwhen = { test = "after_time", value = 50 }\n'
-                'outcome = { line_keys = ["j_l_told"] }\n'
-                '[[subjects]]\nid = "j_s_day"\nkind = "beat"\nsource = { source_kind = "trigger", id = "j_told" }\n'
-                'first = { keys = ["j_day_1"] }\ncatchup = { keys = ["j_day_1"] }\n')
-"""The beat whose subject retells the days note (opening/subject_checks.py)."""
-
-
-def days_note(beat: str) -> str:
-    return f'[[notes]]\nid = "j_day_1"\nentry = "j_day"\ngate = {{ test = "after_time", value = 50 }}\n{beat}'
-
-
-def with_days(tmp_path: Path, beat: str) -> tuple[Path, ...]:
-    return (edited(tmp_path, ("\n[line_kinds]\n", f"\n{DAYS_PAGE}{days_note(beat)}\n{DAYS_SUBJECT}\n[line_kinds]\nj_l_told = \"story\"\n"),
-                   ("\n[text]\n", '\n[text]\nj_day_1 = "Retold."\nj_l_told = "Told."\n')),)
-
-
-def days_note_without_beat(tmp_path: Path) -> tuple[Path, ...]:
-    return with_days(tmp_path, "")
-
-
-def days_note_with_bad_beat(tmp_path: Path) -> tuple[Path, ...]:
-    return with_days(tmp_path, 'beat = "B 5"')
-
-
-def beat_on_another_section(tmp_path: Path) -> tuple[Path, ...]:
-    return (edited(tmp_path, ('id = "j_note_b1"\n', 'id = "j_note_b1"\nbeat = "B5"\n')),)
+def days_page(tmp_path: Path) -> tuple[Path, ...]:
+    """The days pages are the written days the save composes (docs/design/journal.md), never an entry."""
+    return (edited(tmp_path, ('section = "places"', 'section = "days"')),)
 
 
 def unknown_section(tmp_path: Path) -> tuple[Path, ...]:
@@ -173,9 +146,7 @@ PLANTS = [
     (book_twice, ["[journal]", "twice"]),
     (book_without_label, ["mix", "label_key"]),
     (note_text_with_digit, ["j_note_b1", "digit"]),
-    (days_note_without_beat, ["j_day_1", "beat"]),
-    (days_note_with_bad_beat, ["j_day_1", "B 5"]),
-    (beat_on_another_section, ["j_note_b1", "B5"]),
+    (days_page, ["section", "'days'"]),
     (unknown_section, ["section"]),
 ]
 
@@ -190,14 +161,6 @@ def test_each_planted_journal_fault_fails_the_load_naming_its_ids(tmp_path: Path
 
 def test_the_control_without_a_plant_loads():
     assert len(load(FIXTURE).entries) == 2
-
-
-def test_a_days_page_with_no_sketch_and_a_beat_on_its_note_loads(tmp_path: Path):
-    o = load(*with_days(tmp_path, 'beat = "B5"'))
-    day = next(e for e in o.entries if e.id == "j_day")
-    assert (day.section, day.sketch) == ("days", None)
-    assert next(n for n in o.notes if n.id == "j_day_1").beat == "B5"
-    assert {e.id: e.section for e in o.entries} == {PAGE_A: "creatures", PAGE_B: "places", "j_day": "days"}
 
 
 def test_an_authored_outcome_cannot_unlock_an_entry(tmp_path: Path):

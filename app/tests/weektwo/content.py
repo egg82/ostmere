@@ -30,8 +30,7 @@ TWELVE = Landings(
     {"S1": ("t_s1",), "SL20": ("t_bear_sign",), "S2": ("t_s2",), "B12": ("t_b12",), "SL21": ("t_lamps",),
      "S3": ("t_sitter",), "N14": ("t_night_14",), "S4": ("t_s4",), "B13": ("t_b13",)},
     {"A32": ("sit_last_night",)}, {}, {})
-"""B13 too, the next chapter's: a route away over the turn sees S4 and B13 in one visit, and B13's days note is held
-to B13's landing."""
+"""B13 too, the next chapter's: a route away over the turn sees S4 and B13 in one visit."""
 FIFTEEN = Landings(
     {"B13": ("t_b13",), "SL22": ("t_sow",), "T1": ("t_frost",), "T2": ("t_deer",), "SL23": ("t_beams",),
      "T3": ("t_walls",), "B14": ("t_b14",)}, {}, {}, {})

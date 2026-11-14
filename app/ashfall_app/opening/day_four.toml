@@ -300,13 +300,6 @@ modifiers = [{ target = "cap", id = "stew", kind = "mul_bp", amount_bp = 15000, 
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[notes]]
-id = "n_day_b6"
-entry = "e_days_2"
-gate = { test = "at_least", subject_kind = "card_count", id = "sit_up_5", value = 1 }
-beat = "B6"
-
 [[subjects]]
 id = "s_b6"
 kind = "beat"

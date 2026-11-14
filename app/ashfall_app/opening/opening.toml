@@ -594,21 +594,7 @@ correct_after_days = 2
 [journal]
 feature = "book"
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_1"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b2"
-entry = "e_days_1"
-gate = { test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }
-beat = "B2"
-
-# What the days pages write about (docs/design/journal.md, "The content's side"). A beat's first telling is its days
-# note.
+# What the days pages write about (docs/design/journal.md, "The content's side").
 [[subjects]]
 id = "s_b2"
 kind = "beat"

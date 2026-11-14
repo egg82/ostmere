@@ -69,11 +69,6 @@ PLANTS = (
      (('[[subjects]]\nid = "t_s_q1_went"\nkind = "person"\n'
        'source = { source_kind = "lane", id = "t_q1", way = "left" }\n'
        'first = { keys = ["t_j_q1_went"] }\ncatchup = { keys = ["t_j_q1_went"] }\n', ''),)),
-    ("a days note no beat subject retells", "note t_day_storm: is a days note, and no beat subject's first slot holds it",
-     ((STORM_FIRST, 'first = { keys = ["t_j_storm"] }\n'),)),
-    ("a days note retold only by a routine", "note t_day_storm: is a days note, and no beat subject's first slot holds it",
-     ((STORM_FIRST, 'first = { keys = ["t_j_storm"] }\n'),
-      ('first = { keys = ["t_j_dig"], sketch', 'first = { keys = ["t_day_storm"], sketch'))),
     ("a first key with no text", "subject t_s_hunger: first key 't_j_nowhere' is not in text",
      (('keys = ["t_j_hungry"]', 'keys = ["t_j_nowhere"]'),)),
     ("a repeat key with no text", "subject t_s_dig: repeat key 't_j_nowhere' is not in text",

@@ -142,7 +142,7 @@ def test_a_retired_line_back_in_the_content_is_forbidden(shipped_opening: Openin
 
 
 def test_only_a_line_can_be_retired():
-    with pytest.raises(ValueError, match="only a line can be retired"):
+    with pytest.raises(ValueError, match="only a line, a note or an entry can be retired"):
         RenameEntry.model_validate({"kind": "store", "from": "roots"})
 
 

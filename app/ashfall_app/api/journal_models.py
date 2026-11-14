@@ -14,10 +14,9 @@ class Hand(StrEnum):
 
 
 class Section(StrEnum):
-    """The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order."""
+    """The part of the book an entry's page is in, each behind its own bookmark; within one, pages run in writing order.
+    The days pages are not entries: they are the written days (JournalDay)."""
 
-    DAYS = "days"
-    """The daily journal: the story's bigger beats, retold."""
     CREATURES = "creatures"
     """The things fought, with their numbers."""
     PLACES = "places"

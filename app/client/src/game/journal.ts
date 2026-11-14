@@ -50,7 +50,7 @@ export function pagesOf(catalog: Catalog, view: View, days: readonly JournalDay[
   const journal = catalog.content.journal;
   if (!journal) return [];
   const written: Page[] = journal.entries
-    .filter((e) => e.section !== "days" && catalog.unlocked(view, "entry", e.entry))
+    .filter((e) => catalog.unlocked(view, "entry", e.entry))
     .map((e) => ({ id: e.entry, section: e.section, sketch: e.sketch, runners: e.runners, notes: e.notes
       .filter((n) => catalog.unlocked(view, "note", n.note))
       .map((n) => ({ id: n.note, key: n.note, hand: n.hand, sketch: n.sketch, day: null })) }));

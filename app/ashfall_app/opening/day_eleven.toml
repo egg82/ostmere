@@ -465,19 +465,6 @@ outcome = { line_keys = ["l_b11_1", "l_b11_2", "l_b11_3"], unlocks = [{ unlock_k
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_5"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b11"
-entry = "e_days_5"
-gate = { test = "at_least", subject_kind = "card_count", id = "keep_vigil", value = 1 }
-beat = "B11"
-
 [[subjects]]
 id = "s_b11"
 kind = "beat"

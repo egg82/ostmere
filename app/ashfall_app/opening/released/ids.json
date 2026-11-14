@@ -2311,7 +2311,7 @@
   445716000000,
   668736000000
  ],
- "digest": "d1bacc1da3a596b5e11407e1c36c19b1e0bb678f1c9ed637de91a40fd5d7c90b",
+ "digest": "1db74bc5ce73beb7d8e01e570e07343ceeea1cd115fa990ef8852fedb1423d14",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -32870,7 +32870,7 @@
    "unlocks": []
   }
  },
- "release": 62,
+ "release": 63,
  "renames": [
   {
    "from": "t_stock_open",
@@ -33275,6 +33275,151 @@
   {
    "from": "l_woodstack_fail",
    "kind": "line",
+   "to": null
+  },
+  {
+   "from": "e_days_1",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "e_days_2",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "e_days_3",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "e_days_4",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "e_days_5",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "e_days_6",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "e_days_7",
+   "kind": "entry",
+   "to": null
+  },
+  {
+   "from": "n_day_b2",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b2",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b3",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b3",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b4",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b4",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b6",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b6",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b7",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b7",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b9",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b9",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b10",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b10",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b11",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b11",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b12",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b12",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b13",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b13",
+   "kind": "trigger",
+   "to": null
+  },
+  {
+   "from": "n_day_b14",
+   "kind": "note",
+   "to": null
+  },
+  {
+   "from": "note_n_day_b14",
+   "kind": "trigger",
    "to": null
   }
  ],
