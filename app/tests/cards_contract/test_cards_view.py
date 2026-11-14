@@ -169,6 +169,20 @@ def test_tap_s_is_the_rest_of_the_current_completion_at_the_current_speed():
     assert view_of(stopped, r, CH).tap_s is None and engine_work.tap_seconds(stopped, r, CH) is None
 
 
+def test_speed_is_a_whole_completion_at_a_taps_speed_whatever_the_bar_holds():
+    """CardView.speed: work units per second a tap started now runs at, so bar_total / speed is one whole completion
+    (100 s), from an empty bar or a half one; tired hands halve it, a speed-up raises it; 0 when the speed is 0."""
+    r = world(x0=10 * Q, gen=0)
+    fresh = new_save(r)
+    half = advance(with_mix(fresh, r, 0, {CH: BP}), r, 50)
+    for s in (fresh, half):
+        cv = view_of(s, r, CH)
+        assert cv.bar_total // cv.speed == 100
+    assert view_of(new_save(r, (mul(LaneSpeed(HANDS), 5000, "tired"),)), r, CH).speed == BP // 2
+    assert view_of(new_save(r, (mul(WorkRef(CH), 12_500, "level"),)), r, CH).speed == BP * 5 // 4
+    assert view_of(new_save(r, (add(WorkRef(CH), -BP, "stop"),)), r, CH).speed == 0
+
+
 def test_tappable_and_ready_read_the_lane_the_lock_and_the_cap():
     """work.tappable: known, unlocked, not completed, its lane free; work.ready: tappable and no blocker."""
     r = world(x0=10 * Q)

@@ -130,6 +130,9 @@ class LevelPays(BaseModel):
     change_bp: list[int]
     """The level's modifiers as signed changes in basis points (+1000 is +10%), each distinct value once, in the order
     authored; the {pct} and {pct_b} slots of pays_key. Empty for a level that pays a find."""
+    speeds: list[str]
+    """The cards the level makes faster, in card order: a work entry's card, every card on a lane entry's lane. Empty
+    when it changes no card's speed (a rate, a cap, a find)."""
 
 
 class NodeTarget(StrEnum):

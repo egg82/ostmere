@@ -31,7 +31,7 @@ const store = (id: string, value: number): Blocker["condition"] =>
   ({ kind: "at_least", watched: { kind: "store_value", store: id }, value, release: value });
 const unready = (card: string, blocker: Blocker, needs: Card["needs"] = []): Card => ({
   card, completions: 0, cap: null, bar: still(), bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null,
-  cuts_in: false, spent_store: null, gained: [], tap_s: 20, blocker, needs,
+  cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1, blocker, needs,
 });
 
 const base = fixtureStep("mid", AT);

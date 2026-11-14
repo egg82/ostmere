@@ -27,7 +27,7 @@ const AT = 100;
 const still = (v = 0) => ({ start: AT, start_value: v, rate: 0, limit: null });
 /** The lean-to, 2 of 10 stone, the engine's ready time 52 s on. */
 const lean: Card = {
-  card: "lean_to", completions: 0, cap: 1, bar: still(), bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20,
+  card: "lean_to", completions: 0, cap: 1, bar: still(), bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1,
   blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 10 * Q, release: 10 * Q }, ready_at: AT + 52 },
   needs: [{ store: "stone", quantity: 10 * Q, segment: still(2 * Q), gate: null, makers: [], spent: false }],
 };

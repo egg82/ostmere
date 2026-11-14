@@ -92,7 +92,7 @@ const emptyIn = (s: number) => catalog.text.fill(UI.empties, { d: catalog.format
 const ended = fixtureStep("restoffer", AT).view;
 const nightCard: Card = {
   card: "look", completions: 0, cap: 1, bar: { start: AT, start_value: 0, rate: 0, limit: null }, bar_total: 5, by: null,
-  completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5,
+  completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: 1,
   blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "night" }, value: 20 * Q, release: 20 * Q }, ready_at: AT + 900 },
   needs: [{ store: "night", quantity: 20 * Q, segment: { start: AT, start_value: 3 * Q, rate: 1, limit: 20 * Q }, gate: null, makers: [], spent: false }],
 };

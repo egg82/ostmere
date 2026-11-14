@@ -91,7 +91,7 @@ def _cards(cards: Iterable[e.CardView], sources: Mapping[tuple[str, str], Source
         card=c.card, completions=c.completions, cap=c.cap, bar=segment(c.bar), bar_total=c.bar_total,
         by=None if c.by is None else w.RunBy(c.by.value), completes_at=c.completes_at, share_bp=c.share_bp,
         run=None if c.run is None else w.RunKind(c.run.value), blocker=_blocker(c.blocker), tap_s=c.tap_s,
-        needs=[_need(c.card, n, sources) for n in c.needs], cuts_in=c.cuts_in,
+        needs=[_need(c.card, n, sources) for n in c.needs], cuts_in=c.cuts_in, speed=c.speed,
         spent_store=c.spent_store, gained=[w.SpentShare(card=g.card, share_bp=g.share_bp) for g in c.gained])
         for c in cards]
 

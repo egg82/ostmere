@@ -139,7 +139,9 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             chip=c.chip, after_end=c.after_end)
             for c in o.order_cards],
         skill_infos=[cm.SkillInfo(skill=s.id, label_key=s.label_key,
-                                 levels=[cm.LevelPays(level=lv.level, pays_key=lv.pays_key, change_bp=_level_changes(o, s.id, lv.level))
+                                 levels=[cm.LevelPays(level=lv.level, pays_key=lv.pays_key,
+                                                      change_bp=_level_changes(o, s.id, lv.level),
+                                                      speeds=_level_speeds(o, s.id, lv.level))
                                          for lv in s.levels])
                      for s in o.skills],
         node_infos=[cm.NodeInfo(node=n.id, skill=n.skill, label_key=n.label_key, change=cm.NodeChange(
@@ -210,8 +212,21 @@ def _card_changes(c: CardEntry, o: Opening) -> list[int]:
 
 def _level_changes(o: Opening, skill: str, level: int) -> list[int]:
     """The changes of the trigger that lands when `skill` reaches `level`, none when that level pays a find."""
-    return _changes([m for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "skill_level"
-                     and t.when.id == skill and t.when.value == level for m in t.outcome.modifiers])
+    return _changes(_level_modifiers(o, skill, level))
+
+
+def _level_modifiers(o: Opening, skill: str, level: int) -> list[ModifierEntry]:
+    return [m for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "skill_level"
+            and t.when.id == skill and t.when.value == level for m in t.outcome.modifiers]
+
+
+def _level_speeds(o: Opening, skill: str, level: int) -> list[str]:
+    """The cards the level's modifiers make faster, in card order: a work entry's card, each card on a lane entry's
+    lane."""
+    mods = _level_modifiers(o, skill, level)
+    works = {m.id for m in mods if m.target == "work"}
+    lanes = {m.id for m in mods if m.target == "lane"}
+    return [c.id for c in o.cards if c.id in works or c.lane in lanes]
 
 
 def _named(mods: list[ModifierEntry], cards: set[str]) -> list[w.Unlock]:

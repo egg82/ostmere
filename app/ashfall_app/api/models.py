@@ -164,6 +164,9 @@ class Card(BaseModel):
     """A tap now starts it although its lane is busy: a glowing step not yet done, while the hands run a task the queue
     or a rule starts again once it lands, or a cure for a chip shown now, while the hands run a task that is not one
     (CONTRACT.txt, "Cut-in")."""
+    speed: int
+    """Work units per second a tap started now runs at: bar_total / speed is one whole completion's time, whatever the
+    bar holds (tap_s is the rest of the current one); 0 when tap_s is null."""
     spent_store: str | None
     """The store a spent card is stopped on; null unless run is spent."""
     gained: list[SpentShare]

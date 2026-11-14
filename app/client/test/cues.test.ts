@@ -12,7 +12,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 const still = { start: 0, start_value: 0, rate: 0, limit: null };
 const card = (id: string, over: Partial<Card> = {}): Card => ({
   card: id, completions: 0, cap: null, bar: still, bar_total: 5 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-  blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, needs: [], ...over,
+  blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: BP, needs: [], ...over,
 });
 const blocked = { condition: { kind: "after_time" as const, at: 99 }, ready_at: 99 };
 const view = (over: Partial<View> = {}): View => ({
