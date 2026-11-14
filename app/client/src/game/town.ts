@@ -40,7 +40,7 @@ export function personOf(catalog: Catalog, view: View, lane: string, stopped: Mi
 }
 
 /** The cards a mix holds with nested mixes flattened. */
-function flatCards(view: View, mix: Mix, seen: Set<string> = new Set()): string[] {
+export function flatCards(view: View, mix: Mix, seen: Set<string> = new Set()): string[] {
   if (seen.has(mix.id)) return [];
   seen.add(mix.id);
   return mix.components.flatMap((c) => {

@@ -8,7 +8,7 @@ from ..accounts import codes
 from ..opening import convert as authored
 from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
-from ..opening.makers import made_by
+from ..opening.makers import card_makes, card_takes, made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
 from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
@@ -129,6 +129,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
             upside_key=c.upside_key, change_bp=_card_changes(c, o), work_s=c.work_s,
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
+            makes=card_makes(c), takes=card_takes(c),
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires
                          if r.subject_kind == "skill_level" and r.test == "at_least" and r.id is not None],
             step_needs=[cm.StepNeed(card=r.id, count=r.value) for r in c.requires

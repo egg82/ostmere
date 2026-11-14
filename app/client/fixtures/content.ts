@@ -36,7 +36,9 @@ const text: Record<string, string> = {
   "ui.rule.reaches": "{n} or more {store}", "ui.rule.reaches_until": "{n} or more {store}, until under {m}",
   "ui.rule.down_to_until": "{store} down to {n}, until {m}", "ui.rule.up_to_until": "{store} up to {n}, until down to {m}",
   "ui.rule.up_to_until_under": "{store} up to {n}, until under {m}", "ui.rule.reaches_until_down": "{n} or more {store}, until down to {m}",
-  "ui.rule.of_full": "of full", "ui.rule.exact": "exact", "ui.level.empty": "empty", "ui.level.quarter": "a quarter", "ui.level.half": "half",
+  "ui.rule.of_full": "of full", "ui.rule.exact": "exact",
+  "ui.rule.quick_down": "When {store} {test} {n}, {task} until {m}", "ui.rule.quick_up": "When {store} {test} {n}, {task} until down to {m}",
+  "ui.rule.falls_to": "falls to", "ui.rule.reaches_to": "reaches", "ui.rule.copy": "Copy rule", "ui.level.empty": "empty", "ui.level.quarter": "a quarter", "ui.level.half": "half",
   "ui.level.three_quarters": "three quarters", "ui.level.full": "full", "ui.level.pct": "{pct}%",
   "ui.level.mark_quarter": "¼", "ui.level.mark_half": "½", "ui.level.mark_three_quarters": "¾",
   "ui.rule.falls_below": "falls below", "ui.rule.reaches_label": "reaches", "ui.rule.when": "When", "ui.rule.do": "Do", "ui.rule.more_options": "More options", "ui.rule.until": "Until",
@@ -344,8 +346,12 @@ const low = (store: string, n: number, m: number): Condition => ({ kind: "at_mos
 /** The tired chip's condition, which its rest offer shares (so the rule reads as the chip). */
 export const TIRED = low("energy", 3, 6);
 
+/** What each card makes, as the stores' made_by below names them. */
+const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woodcutting: ["damp_wood"], rest: ["energy"], smoke_catch: ["smoked"], smoke_roots: ["smoked"], forage: ["roots"] };
+
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs, skill_needs: [],
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs,
+  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
 

@@ -21,8 +21,8 @@ word of the `where` in checks._key_fields)."""
 UI = frozenset({
     "a", "after", "ago", "answer", "b", "before", "build", "cap", "card", "chip", "costs", "d", "days", "fought", "from", "goal", "h", "have",
     "level", "lost", "m", "max", "minutes", "mix", "n", "name", "need", "node", "number", "of", "pays", "pct", "percent", "person",
-    "played", "power", "prefix", "rule", "runner", "s", "seen", "side_name", "skill", "started", "store", "store_b", "task", "threat",
-    "threat_name", "until", "when", "won",
+    "played", "power", "prefix", "rule", "runner", "s", "seen", "side_name", "skill", "started", "store", "store_b", "task", "test",
+    "threat", "threat_name", "until", "when", "won",
 })
 """The slots the page fills in the fixed `ui.` texts (CONTRACT, "Text and numbers" and the section of each key's feature)."""
 

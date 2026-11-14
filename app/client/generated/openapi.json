@@ -2298,6 +2298,20 @@
             "type": "array",
             "title": "Inputs"
           },
+          "makes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Makes"
+          },
+          "takes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Takes"
+          },
           "skill_needs": {
             "items": {
               "$ref": "#/components/schemas/SkillNeed"
@@ -2348,6 +2362,8 @@
           "change_bp",
           "work_s",
           "inputs",
+          "makes",
+          "takes",
           "skill_needs",
           "step_needs",
           "glows",

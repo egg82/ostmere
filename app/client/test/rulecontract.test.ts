@@ -264,7 +264,8 @@ await check("6 hands task: a rule running its solo mix; an equal saved one is re
 });
 
 await check("6 hands task with no saved solo mix: one named by its label is saved first", () => {
-  const content: Content = { ...fixtureContent, store_infos: fixtureContent.store_infos.map((s) => (s.store === "wood" ? { ...s, made_by: ["gather", "woodcutting"] } : s)) };
+  const content: Content = { ...fixtureContent, store_infos: fixtureContent.store_infos.map((s) => (s.store === "wood" ? { ...s, made_by: ["gather", "woodcutting"] } : s)),
+    card_infos: fixtureContent.card_infos.map((c) => (c.card === "woodcutting" ? { ...c, makes: [...c.makes, "wood"] } : c)) };
   const r = rig(viewWith(), new Catalog(content));
   const cond = newRule(r);
   one(cond, ".cond-task[data-card=\"woodcutting\"]").click();

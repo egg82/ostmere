@@ -83,6 +83,10 @@ class CardInfo(BaseModel):
     work_s: int
     inputs: list[Amount]
     """Taken by each completion, paid as its work is done, tapped or mixed."""
+    makes: list[str]
+    """The stores its completions land or its flows fill, in content order: what a rule doing it is about first."""
+    takes: list[str]
+    """The stores its inputs, costs and drains take from, in content order."""
     skill_needs: list[SkillNeed]
     """The skill levels its requirements ask for, in requirement order."""
     step_needs: list[StepNeed]
