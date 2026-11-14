@@ -10,7 +10,7 @@ import { openAsks } from "../game/asks";
 import { UI } from "../game/text";
 import { askNode, type AskNode } from "./asknode";
 import { AskRuns } from "./askruns";
-import { el, setText, tapFeedback } from "./dom";
+import { bringIntoView, el, setText, tapFeedback } from "./dom";
 import { GlowWhile } from "./fresh";
 import type { Part, PartContext } from "./part";
 
@@ -64,11 +64,11 @@ export class Asks implements Part {
   }
 
   /** The waiting asks brought into view (the chronicle's "waiting" row): the list when several wait, else the one
-   * shown, its first answer focused. */
+   * shown below the pinned parts, its first answer focused. */
   show(): void {
     if (this.more.hidden) {
-      this.slot.scrollIntoView({ block: "center" });
-      this.slot.querySelector<HTMLButtonElement>("button")?.focus();
+      bringIntoView(document, this.slot);
+      this.slot.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
     } else this.openList();
   }
 
