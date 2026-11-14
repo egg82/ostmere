@@ -29,7 +29,7 @@ import night
 import props
 import trips
 from figures import figure
-from output import OUT, Entry, Layer, bake, check_conditions, write_manifest, write_previews
+from output import OUT, Entry, Layer, bake, check_conditions, check_depth, write_manifest, write_previews
 from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, firelight,
                    rack, ruin, seated_at_work, stones_heap, stool, wood_drying)
 from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST
@@ -227,6 +227,7 @@ def main() -> None:
     rng = random.Random(SEED)
     entries = write_layers(rng)
     check_conditions(entries)
+    check_depth(entries)
     write_manifest(entries)
     write_previews(entries)
     total = sum(p.stat().st_size for p in OUT.iterdir())

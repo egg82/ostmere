@@ -33,10 +33,11 @@ def _arc(x: int, r: tuple[int, int]) -> float:
     return r[1] * math.sqrt(max(0.0, 1 - (x / r[0]) ** 2))
 
 
-def hearth(stage: int) -> Image.Image:
+def hearth(stage: int) -> tuple[Image.Image, Image.Image]:
     """A wall of clay bricks round the fire's ring, a course a stage, drawn as Time Fantasy draws its brick fireplace:
     its outer face in courses of bricks lit from above with mortar between, the inside of the far wall in shade, and the
-    flat top of the wall so far, outlined inside and out."""
+    flat top of the wall so far, outlined inside and out. Two pieces: the near wall across the fire's width (from the
+    middle of the wall's top down), which stands in front of the flames, and the rest, which lies behind them."""
     rx, ry = HEARTH_R
     inner = (rx - 3, ry - 2)
     top = 3 * COURSE
@@ -55,9 +56,17 @@ def hearth(stage: int) -> Image.Image:
     for h in range(lo, hi + 1):
         for x in (-rx - 1, rx + 1):
             d.point((cx + x, cy - h), fill=OUTLINE)                              # the wall's ends, outlined
-    out = canvas()
-    put(out, kit.up(img), FIRE[0] - (cx + 0.5) * 2, FIRE[1] - (cy + 0.5) * 2)
-    return out
+    behind, top_y = canvas(), int(FIRE[1] - (cy + 0.5) * 2)
+    put(behind, kit.up(img), FIRE[0] - (cx + 0.5) * 2, top_y)
+    fire = campfire_split("camp_campfire_lit")[1]
+    drawn = fire.getchannel("A").getbbox()
+    assert drawn is not None
+    left = int(FIRE[0] - fire.width / 2)
+    box = (left + drawn[0], top_y + 2 * (cy - hi), left + drawn[2], H)
+    before = canvas()
+    before.paste(behind.crop(box), box[:2])
+    behind.paste((0, 0, 0, 0), box)
+    return behind, before
 
 
 def _lump(x: int, h: int) -> tuple[int, int, int, int]:
