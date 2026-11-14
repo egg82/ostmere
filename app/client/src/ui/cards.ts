@@ -91,7 +91,7 @@ export class Cards implements Part {
         row.doneAt = performance.now();
         if (prev) {   // finished looks are a change too: at their turn
           row.doneShown = false;
-          this.ctx.arrivals.effect(row.node, "card", () => { row.doneShown = true; row.node.classList.toggle("done", row.done); });
+          this.ctx.arrivals.effect(row.node, "card", () => { row.doneShown = true; row.node.classList.toggle("done", row.done); }, "finish");
         }
       }
     }
@@ -114,7 +114,7 @@ export class Cards implements Part {
         row.card = card;
         if (card.completions > before.completions && prev) {
           const rung = completionRung(before.by, row.byOrder === true);   // as it ran until now: the restyle below moves it on
-          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung));
+          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung), "finish");
         }
       } else {
         const done = view.completed.find((c) => c.card === row.id);
@@ -125,7 +125,7 @@ export class Cards implements Part {
     }
     for (const s of before ? speedups(this.ctx.catalog, before, full) : []) {
       const row = this.rows.get(s.card);
-      if (row && !row.done) this.ctx.arrivals.effect(row.node, "skill", () => showLevel(this.ctx.catalog, row, s, performance.now()));
+      if (row && !row.done) this.ctx.arrivals.effect(row.node, "skill", () => showLevel(this.ctx.catalog, row, s, performance.now()), "level");
     }
   }
 

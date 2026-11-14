@@ -35,6 +35,17 @@ export function popOne(node: HTMLElement): void {
   window.setTimeout(() => pop.remove(), 1500);
 }
 
+/** A cascade's lit link on `node` (ui/reveal.ts): an ember tick and wash laid over it that fade by themselves. Its own
+ * span, as the "+1" is, so its animation never ends one playing on the node. */
+export function markLink(node: HTMLElement): void {
+  node.querySelector(":scope > .link-mark")?.remove();
+  const mark = el("span", "link-mark");
+  mark.setAttribute("aria-hidden", "true");
+  mark.addEventListener("animationend", () => mark.remove());
+  node.append(mark);
+  window.setTimeout(() => mark.remove(), 1500);
+}
+
 /** Keyed rows: reuse a key's row across redraws, make new ones, drop the ones that left, keep the given order. */
 export function keyed<T, R extends { node: HTMLElement }>(
   parent: Element, items: T[], key: (item: T) => string, rows: Map<string, R>, make: (item: T) => R,

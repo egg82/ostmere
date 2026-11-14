@@ -178,6 +178,7 @@ export class Screen {
     const lines = step.lines;
     const lead = lines.length > 0;   // live, first or on a return alike: each line in turn, a planned moment in full
     if ((away && !first) || lead) this.reveal.collect();
+    else if (!first) this.reveal.cascade();   // a live step's consequences light link by link
     if (away && !first) this.root.scrollTop = 0;   // a return opens at the top: no card row under the pinned strip
     const nodes = this.story.append(lines, lead, away && !first ? { view: step.view, prev: this.view } : null);
     if (lead) this.lead(nodes);

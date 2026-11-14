@@ -41,6 +41,7 @@
   --press-ms: 60ms;
   --settle-ms: 160ms;
   --settle-ease: cubic-bezier(.3, 1.5, .5, 1);
+  --link-ms: 400ms;   /* a cascade's lit link fades over this, so the one lit last reads brightest */
   color-scheme: dark;
 }
 /* The root grows with the viewport (16px on a phone, ~20px at 1920, ~29px at 3840), so a 4K screen gets a larger page,
@@ -725,6 +726,10 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 @keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes line-in { from { opacity: 0; transform: translate(var(--line-from-x, .6rem), var(--line-from-y, 0)); } }
 @keyframes landed { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .7); } 100% { box-shadow: 0 0 0 .8rem rgba(240, 178, 122, 0); } }
+/* a cascade's lit link (dom.markLink): a 3px ember tick and a warm wash, never the outline, which belongs to the ask */
+:is(.skill, .camp, .rules-row):has(> .link-mark) { position: relative; }   /* .card and .line already are */
+.link-mark { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 3px 0 0 var(--ember-hot); background: linear-gradient(90deg, rgba(224, 149, 79, .16), transparent 60%); animation: link-lit var(--link-ms) ease-out forwards; }
+@keyframes link-lit { 0%, 20% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(1.02); } 100% { transform: none; } }
 /* the tap and level rungs' calm forms (reduced motion): the same ring held still, fading, with no spread */
 @keyframes ring-still { 0%, 50% { box-shadow: 0 0 0 2px var(--ember-hot); } 100% { box-shadow: 0 0 0 2px transparent; } }
@@ -893,6 +898,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .game .landed { animation: ring-still .7s ease-out !important; }   /* the ladder's calm forms ("+1" stays, held still) */
   .game .burst { animation: burst-still .9s ease-out !important; }
   .game .rules-row.fired { animation: fired 1.2s ease-out !important; }   /* colour, not motion */
+  .game .link-mark { animation: link-lit var(--link-ms) ease-out forwards !important; }   /* a fade, not motion */
   body.reconnecting .game, body.catching-up .game { transition: none !important; }   /* a fade is an instant change */
 }
 

@@ -7,8 +7,12 @@
 // shows everything still waiting. With no line waiting, the first tap or key shows everything. The tap itself goes
 // through as usual: it moves things on at its click, once it has landed, since a line shown at the press grows the strip
 // for a frame and moves what is under the finger before the release.
-import { ArrivalQueue, type ArrivalKind } from "../game/arrivals";
-import { reducedMotion } from "./dom";
+// A cascade (docs/design/redesign.md, "Feel"): while a live step with no lines is drawn, each effect that is a link in a
+// chain (a Link: a card finishing, a store moving, a level, a rule acting) joins a second queue at LINK_PACE, ordered by
+// cause, and takes its turn on the same tick, lit (dom.markLink) when the chain has two links or more. What arrives
+// in that step shows at once as ever, and a tap or key sets off every link still waiting.
+import { ArrivalQueue, LINK_PACE, LINKS, type ArrivalKind, type Link } from "../game/arrivals";
+import { markLink, reducedMotion } from "./dom";
 import { play } from "./ladder";
 
 const TOUCHES = ["click", "keydown"] as const;
@@ -17,8 +21,9 @@ const TOUCHES = ["click", "keydown"] as const;
  * line, read before the cards). */
 export interface Arrivals {
   arrive(node: HTMLElement, kind: ArrivalKind, id: string, holdMs?: number): void;
-  /** A one-off change on `node` (a ring, a burst, the glow): `run` now, or at its turn after what is waiting. */
-  effect(node: HTMLElement, kind: ArrivalKind, run: () => void): void;
+  /** A one-off change on `node` (a ring, a burst, the glow): `run` now, or at its turn after what is waiting; with a
+   * `link`, at its turn in the step's cascade. */
+  effect(node: HTMLElement, kind: ArrivalKind, run: () => void, link?: Link): void;
   /** A story line: first in its batch, holding what follows for `readMs`. */
   line(nodes: HTMLElement[], id: string, readMs: number): void;
   /** Something is waiting its turn. */
@@ -29,10 +34,16 @@ interface Held {
   node: HTMLElement;
   line?: boolean;
   run?: () => void;
+  /** A link of a chain of two or more: lit at its turn. */
+  lit?: boolean;
 }
 
 export class Reveal implements Arrivals {
   private readonly queue = new ArrivalQueue<Held>();
+  /** The cascade's links, ordered by Link (given as each one's `at`). */
+  private readonly links = new ArrivalQueue<Held>(LINK_PACE);
+  /** A live step's draw is under way and its links join one chain; what they are, sent so far. */
+  private chain: Held[] | null = null;
   private collecting = false;
   private listening = false;
   private readonly skip = (e?: Event): void => {
@@ -46,7 +57,13 @@ export class Reveal implements Arrivals {
     return this.collecting || !this.queue.quiet(performance.now());
   }
 
-  effect(node: HTMLElement, kind: ArrivalKind, run: () => void): void {
+  effect(node: HTMLElement, kind: ArrivalKind, run: () => void, link?: Link): void {
+    if (!this.busy && link && this.chain) {
+      const held: Held = { node, run };
+      this.chain.push(held);
+      this.links.push(kind, `link:${this.chain.length}`, LINKS.indexOf(link), held);
+      return;
+    }
     if (!this.busy) {
       run();
       return;
@@ -79,11 +96,21 @@ export class Reveal implements Arrivals {
     this.collecting = true;
   }
 
-  /** The batch is drawn: begin showing it (the first thing at once). */
+  /** A live step with no batch is being drawn: its links make one cascade, set off at start(). */
+  cascade(): void {
+    this.chain = [];
+  }
+
+  /** The batch is drawn: begin showing it (the first thing at once), and the cascade's links. */
   start(nowMs: number): void {
     this.collecting = false;
+    if (this.chain) {
+      for (const held of this.chain) held.lit = this.chain.length > 1;
+      this.chain = null;
+      this.links.start(nowMs, reducedMotion(), (held) => held.some((h) => inSight(h.node)));
+    }
     this.queue.start(nowMs, reducedMotion(), (held) => held.some((h) => h.line === true || inSight(h.node)));
-    if (!this.queue.quiet(nowMs) && !this.listening) {
+    if (!(this.queue.quiet(nowMs) && this.links.idle) && !this.listening) {
       for (const t of TOUCHES) document.addEventListener(t, this.skip, { capture: true });
       this.listening = true;
     }
@@ -91,18 +118,18 @@ export class Reveal implements Arrivals {
   }
 
   tick(nowMs: number): void {
-    for (const held of this.queue.due(nowMs)) show(held);
-    if (this.queue.quiet(nowMs) && !this.collecting) this.stopListening();
+    for (const held of [...this.links.due(nowMs), ...this.queue.due(nowMs)]) show(held);
+    if (this.queue.quiet(nowMs) && this.links.idle && !this.collecting) this.stopListening();
   }
 
   private advance(): void {
     const now = performance.now();
-    for (const held of this.queue.advance(now)) show(held);
+    for (const held of [...this.links.skip(), ...this.queue.advance(now)]) show(held);
     if (this.queue.quiet(now) && !this.collecting) this.stopListening();
   }
 
   private finish(): void {
-    for (const held of this.queue.skip()) show(held);
+    for (const held of [...this.links.skip(), ...this.queue.skip()]) show(held);
     this.stopListening();
   }
 
@@ -120,7 +147,8 @@ function inSight(node: HTMLElement): boolean {
 }
 
 function show(held: Held[]): void {
-  for (const { node, run } of held) {
+  for (const { node, run, lit } of held) {
+    if (lit) markLink(node);
     if (run) {
       run();
       continue;

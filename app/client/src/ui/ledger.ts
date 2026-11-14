@@ -201,7 +201,7 @@ export class Ledger implements Part {
     this.hint(row, (capped && [null, CAP_RULE].includes(this.ctx.lesson())) || (dry !== null && [null, DRY_STORE].includes(this.ctx.lesson())) || (shown && card !== undefined && rule < 0 && this.view !== null && !guidedRule(this.view, this.ctx.keeps, card)));
     row.offer?.classList.toggle("calm", !red);
     setText(row.rate, this.ctx.catalog.format.perMinute(line.net_per_hour));
-    if (before && this.red(before) && !red) this.ctx.arrivals.effect(row.box, "store", () => pulse(row.box, "settle"));
+    if (before && this.red(before) && !red) this.ctx.arrivals.effect(row.box, "store", () => pulse(row.box, "settle"), "store");
     if (arriving) this.ctx.arrivals.arrive(row.box, "store", line.store, readingMs(row.node.textContent ?? ""));   // read before the cards
   }
 
