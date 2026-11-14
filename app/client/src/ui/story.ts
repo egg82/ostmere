@@ -1,8 +1,8 @@
 // The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
 // costs; each once its cure is on screen, game/shown.ts), what the player carries (a feature with a label, dotted
-// when it arrives) and the Chronicle button, dotted when a line left the strip before the player touched anything after
-// it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
+// when it arrives) and the Chronicle button (on a phone the bottom bar's Book instead), dotted when a line left the strip
+// before the player touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
 // first, the older dimmer, in room kept for the tallest story line the content can write (Content.line_infos, laid out
 // unseen in the strip's one cell; ui/stripfit.ts counts how many fit, at least the newest). The Feedback button
 // (feedback.ts) opens the tester's sheet from the panel's foot. Every line, every rule's start and let-go and every fight
@@ -51,6 +51,8 @@ export class Story implements Part {
   private readonly ruled = new Set<string>();
   private readonly journal: Journal;
   private readonly chronicleOpen: HTMLButtonElement;
+  /** The bottom bar's Book on a phone (ui/tabs.ts seats it): the Chronicle button's twin there. */
+  readonly book = el("button", "tab");
   /** When the player last touched the page (performance.now()). */
   private touchedAt = -Infinity;
   private chipRows = new Map<string, { node: HTMLElement }>();
@@ -71,8 +73,12 @@ export class Story implements Part {
     this.journal = new Journal(ctx);
     this.lines.setAttribute("aria-live", "polite");
     const open = el("button", "chron-open", ctx.catalog.text.get(UI.chronicle));
-    open.type = "button";
-    open.addEventListener("click", () => { tapFeedback(); this.chronicle.show(); });
+    this.book.textContent = ctx.catalog.text.get(UI.tabBook);
+    this.book.dataset.tab = "book";
+    for (const b of [open, this.book]) {
+      b.type = "button";
+      b.addEventListener("click", () => { tapFeedback(); unmark(open); unmark(this.book); this.chronicle.show(); });
+    }
     this.chronicleOpen = open;
     for (const t of TOUCHES) document.addEventListener(t, () => { this.touchedAt = performance.now(); }, { capture: true });
     const feedback = new FeedbackSheet(ctx);
@@ -165,6 +171,11 @@ export class Story implements Part {
     this.ctx.arrivals.line([item], id, readingMs(said));
   }
 
+  /** A page of the Book beside the chronicle (ui/chroniclesheet.ts, page): Screen's Done. */
+  bookPage(label: string, node: HTMLElement): HTMLButtonElement {
+    return this.chronicle.page(label, node);
+  }
+
   /** The aim's line: Screen seats it above the art. */
   get aim(): HTMLElement {
     return this.aimLine.root;
@@ -220,7 +231,7 @@ export class Story implements Part {
     const keep = fitting(spans, this.roomCell.getBoundingClientRect().height);
     for (const gone of shown.slice(0, shown.length - keep)) {
       const since = this.shownAt.get(gone);
-      if (since !== undefined && this.touchedAt < since && !this.chronicle.root.open) markNew(this.chronicleOpen, () => {});
+      if (since !== undefined && this.touchedAt < since && !this.chronicle.root.open) for (const b of [this.chronicleOpen, this.book]) markNew(b, () => {});
       gone.remove();
     }
   }

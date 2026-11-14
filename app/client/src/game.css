@@ -29,7 +29,9 @@
   --hand-ink: #2b241c;
   --hand-pencil: #645d52;
   --panel-w: clamp(28rem, 30vw, 38rem);
-  --scene-vh: 38vh;   /* the pinned scene on a phone */
+  --scene-vh: 38vh;   /* the pinned stage on a phone: ui/headseat.ts measures it */
+  --scene-h: 10.5rem;   /* the art's room in a phone's stage */
+  --strip-rows: 3;   /* a phone's strip, in rows of the story's size (tests/opening/test_strip_rows.py reads it) */
   /* the failed tap's pulse (the Feedback system's effect, ui/cards.ts failed()): the card's red glow and the flash of
      what stopped the tap, transform and colour only, so nothing moves */
   --fail-ms: 400ms;
@@ -240,11 +242,17 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .share-divider.held::before { background: #fff; transform: scaleX(1.4); }
 .share-divider.settle::before { animation: settle .35s ease; }
 
-/* tabs: Cards · Completed (no count) */
+/* tabs: Tasks · Completed · Rules (no count); Town and Book are a phone's bottom bar's, with an icon each */
 .tabs { display: flex; gap: .3rem; margin-bottom: -.4rem; }
 .tab { background: transparent; border: 0; border-bottom: 2px solid transparent; padding: .3rem .5rem; min-height: 2.2rem; color: var(--ink) !important; cursor: pointer; position: relative; }
 .tab.on { color: var(--ink-hi) !important; border-bottom-color: var(--ink-hi); }
 .tab .new-dot { top: .3rem; left: auto; right: .15rem; }   /* Tasks, when a card arrived while another tab was open */
+.tab[data-tab="town"], .tab[data-tab="book"], .asks-open, .book-pages { display: none; }
+.chronicle.paged :is(.chron-filters, .chron-all) { display: none; }   /* a page of the Book is open (ui/chroniclesheet.ts) */
+.tab[data-tab="cards"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='3' y='3' width='6' height='6'/%3E%3Crect x='11' y='3' width='6' height='6'/%3E%3Crect x='3' y='11' width='6' height='6'/%3E%3Crect x='11' y='11' width='6' height='6'/%3E%3C/svg%3E"); }
+.tab[data-tab="town"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 17 L10 4 L17 17 Z M10 17 L10 12'/%3E%3C/svg%3E"); }
+.tab[data-tab="rules"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 5h9M3 10h9M3 15h6M14 13l3 2-3 2'/%3E%3C/svg%3E"); }
+.tab[data-tab="book"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M10 5 C7 3 4 3 2 4 V16 C4 15 7 15 10 17 C13 15 16 15 18 16 V4 C16 3 13 3 10 5 Z M10 5 V17'/%3E%3C/svg%3E"); }
 
 /* cards */
 .deck { display: flex; flex-direction: column; gap: .9rem; }
@@ -581,7 +589,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .selector .panel-heading { margin: 0 0 .2rem; }
 .rule-when { color: var(--ink); font-size: var(--t-meta); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .selector-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
-.selector-run { flex: 1 1 18rem; display: grid; grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 6rem) auto; grid-template-areas: "dot name bar note"; gap: .6rem; align-items: center; min-height: 2.8rem; padding: 0 .7rem; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); cursor: pointer; text-align: left; }
+.selector-run { flex: 1 1 18rem; display: grid; grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 6rem) auto; grid-template-areas: "dot name bar note" ". key key key"; gap: .2rem .6rem; align-items: center; min-height: 2.8rem; padding: .45rem .7rem; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); cursor: pointer; text-align: left; }
 .selector-row.active .selector-run { background: var(--press); box-shadow: inset 2px 0 0 var(--ink-hi); }
 .selector-run:disabled { cursor: default; }
 .selector-row.greyed .selector-run { opacity: .55; }
@@ -589,12 +597,13 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .selector-run > .selector-name { grid-area: name; }
 .selector-run > .mini-bar { grid-area: bar; }
 .selector-run > .selector-note { grid-area: note; }
+.selector-run > .share-key { grid-area: key; margin-top: 0; }   /* the legend: no text inside the bar (ui/selector.ts) */
 .selector-run { align-content: center; }
 :is(.sheet, .rules) :is(.quiet, .primary):disabled { opacity: .35; cursor: default; }
 .selector-name { color: var(--ink-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mini-bar { display: flex; gap: 2px; height: .9rem; overflow: hidden; }
-.mini-seg { display: block; min-width: 0; overflow: hidden; padding-left: .2rem; background: var(--hue); color: #000; font: 500 var(--t-meta)/.9rem "Alegreya Sans", system-ui, sans-serif; }   /* the task's initial: the hue is never the only cue */
-.selector-row.greyed .mini-seg { background: var(--ink-dim); }
+.mini-bar { display: flex; gap: 2px; height: .5rem; overflow: hidden; }
+.mini-seg { display: block; min-width: 0; background: var(--hue); }
+.selector-row.greyed .mini-seg, .selector-row.greyed .share-key-item::before { background: var(--ink-dim); }
 .selector-note { font-size: var(--t-meta); color: var(--ink); white-space: nowrap; }
 .selector-tools { display: flex; gap: .4rem; align-items: center; }
 /* the condition editor (in the Rules tab) */
@@ -717,11 +726,40 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 @keyframes fail-mark { 35% { color: var(--alarm); transform: scale(var(--fail-scale)); } }
 @keyframes fail-flash { 35% { color: var(--alarm); } }
 
-/* phone editor: a full-height sheet under the pinned scene and strip; the Mixes list a bottom sheet */
+/* The phone frame (docs/design/redesign.md, "Phone frame"): a pinned stage of about 370px (the head, the scene at a fixed
+   height, a strip --strip-rows tall, the hands strip and its legend), the cards in the thumb's half, the tabs as a bottom
+   bar (ui/tabs.ts), and every sheet rising from the bottom. The editors fill the room under the pinned parts. */
 @media (max-width: 1023px) and (orientation: portrait), (max-width: 639px) {
-  .selector[open], .prestige-sheet[open] { margin: auto 0 0; max-width: none; width: 100%; padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
+  .game { --bar-h: calc(3.875rem + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--bar-h); }
+  .panel { padding-bottom: calc(var(--bar-h) + 1rem); }
+  .tabs { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; height: var(--bar-h); margin: 0; padding: 0 0 env(safe-area-inset-bottom); box-sizing: border-box; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; background: var(--bg); border-top: 1px solid var(--rule); }
+  .tabs > .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25rem; min-height: 0; padding: 0; border: 0; font-size: var(--t-meta); color: var(--ink-dim) !important; }
+  .tabs > .tab::before { content: ""; width: 1.25rem; height: 1.25rem; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+  .tabs > .tab.on { color: var(--ink-hi) !important; box-shadow: inset 0 2px 0 var(--ink-hi); }
+  .tabs > .tab[data-tab="completed"] { display: none; }   /* the Book's Done page on a phone */
+  .tab .new-dot { top: .5rem; right: calc(50% - 1rem); }
+  .chron-open { display: none; }   /* the bottom bar's Book */
+  .end-dock { bottom: var(--bar-h); }
+  .sheet[open]:not(.journal-sheet) { margin: auto 0 0; width: 100%; max-width: none; max-height: calc(100dvh - 2.5rem); border-radius: 6px 6px 0 0; }
+  .sheet > .sheet-actions { padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
+  .chronicle:has(> .book-pages:not(:empty)) > .panel-heading { display: none; }   /* the row of pages is the Book's title */
+  .book-pages { display: flex; gap: 1.25rem; position: sticky; top: 0; z-index: 1; padding-top: .6rem; background: var(--raise); border-bottom: 1px solid var(--rule); }
+  .book-page { min-height: 2.75rem; padding: 0; background: none; border: 0; border-radius: 0; cursor: pointer; color: var(--ink-dim); }
+  .book-page[aria-pressed="true"] { color: var(--ink-hi); box-shadow: inset 0 -2px 0 var(--ink-hi); }
+  .book-done { padding: .9rem 0; }
+  .town-tab { display: flex; flex-direction: column; gap: 1rem; }
+  /* the shown ask, one row of fixed height: who, the question, how many wait; a tap anywhere on it opens the sheet */
+  .asks { padding: .6rem 0 0; border-bottom: 0; }
+  .asks-head { display: none; }
+  .asks-slot { position: relative; min-height: 0; height: 3.5rem; }
+  .asks-slot > .ask { display: flex; align-items: center; gap: .6rem; min-width: 0; padding: 0 2.6rem 0 .75rem; }
+  .asks-slot .ask-who { flex: none; }
+  .asks-slot :is(.ask-names, .ask-cause, .ask-answers, .ask-facts) { display: none; }
+  .asks-slot .ask-text { flex: 1 1 auto; min-width: 0; margin: 0; font-size: var(--t-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .asks-open { display: flex; position: absolute; z-index: 2; inset: 0; align-items: center; justify-content: flex-end; padding: 0 .75rem; background: transparent; border: 0; cursor: pointer; font-size: var(--t-meta); color: var(--ink-dim) !important; }
+  .asks-open::after { content: "›"; margin-left: .3em; }
   .journal-sheet { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; box-sizing: border-box; border-radius: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-  .selector-run { grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 5rem); grid-template-areas: "dot name bar" "dot note note"; }
+  .selector-run { grid-template-columns: 1rem minmax(0, 1fr) minmax(3rem, 5rem); grid-template-areas: "dot name bar" "dot note note" ". key key"; }
   .selector-run > .selector-note:empty { display: none; }
   .cond-steppers { flex-direction: column; }
   .game { padding-bottom: var(--end-h, 0px); }   /* a docked card's measured height (ui/featurecard.ts), so the last rows scroll clear of it */
@@ -733,11 +771,18 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .card-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two cards a row, so the ledger sits nearer the tasks */
   .card.first { grid-column: 1 / -1; }
   .stage { height: auto; display: flex; flex-direction: column; }
-  .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right, under the Chronicle's place */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
-  .scene-box { position: relative; inset: auto; --by-width: 1; padding: 0 .5rem .5rem; }
-  .stage > .strip { flex: none; }
-  .chron-open { margin-left: 0; }
-  .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, the Chronicle last, so nothing leaves the screen */
+  .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; padding-inline: 1rem; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
+  .stage > .aim { padding-inline: 1rem; }
+  .scene-box { position: relative; inset: auto; flex: none; height: var(--scene-h); padding: 0 1rem; }   /* the art fits a fixed room, so the stage never grows for it */
+  .stage > .strip { flex: none; padding: .35rem 1rem; }
+  .strip > .strip-room { height: calc(var(--strip-rows) * 1.35em); }   /* rows of the story's size: every story line fits it (tests/opening/test_strip_rows.py) */
+  .lines li + li { margin-top: 0; }   /* three rows hold three short lines; the older are dimmer */
+  .panel-top { padding-block: .3rem .4rem; }
+  .hands { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .hands .share-key { margin-top: .2rem; }
+  .hands-meta { margin-top: .3rem; }
+  .hands-label { display: none; }   /* the bar is the player's: the lanes below name their people */
+  .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, so nothing leaves the screen */
   .chip { flex: none; white-space: nowrap; }
   .chip::before { margin-right: .2em; }
   .camp { min-width: 4.5rem; }

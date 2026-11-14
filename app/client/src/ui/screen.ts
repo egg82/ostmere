@@ -1,10 +1,10 @@
-// The game screen (docs/design/opening-screen.md): the scene with the story strip under it, and the panel beside
-// it (under it on a phone): the hands strip and a row per lane run by rules, Tasks · Completed · Rules, the skills and the ledger (the Rules tab shows once
-// the first rule exists; the Mixes list opens from the strip). On a big desktop window the skills and ledger sit under the
-// scene, so neither column has dead space. The mix editor takes the card area's place while open. It owns no game state:
-// it draws each View it is handed and samples it every frame. The one glow on a card is placed here (CardInfo.glows, the
-// first time it is ready with its lane free); the strip places its offers' glows, the Rules tab's label takes it once a
-// rule has come on and let go until the tab is opened, and a running lesson's step takes it (lessons.ts).
+// The game screen (docs/design/opening-screen.md): the scene with the story strip under it, and the panel beside it
+// (under it on a phone): the hands strip, a row per lane run by rules, the asks, then the tabs (ui/tabs.ts; a phone's
+// bottom bar), the Rules tab once the first rule exists; the skills and ledger sit by layout (ui/partseat.ts). The mix
+// editor takes the card area's place while open. It owns no game state: it draws each View it is handed and samples it
+// every frame. The one glow on a card is placed here (CardInfo.glows, the first time it is ready with its lane free); the
+// strip places its offers' glows, the Rules tab's label takes it once a rule has come on and let go until the tab is
+// opened, and a running lesson's step takes it (lessons.ts).
 import type { Condition, Decision, Step, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { nudgeTarget } from "../game/cues";
@@ -14,7 +14,6 @@ import type { Past } from "../game/chronicle";
 import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
 import { readingMs } from "../game/reading";
 import { HandStreak } from "../game/stall";
-import { UI } from "../game/text";
 import { Banner } from "./banner";
 import { CardGlow } from "./cardglow";
 import { Cards } from "./cards";
@@ -31,7 +30,8 @@ import { Lessons } from "./lessons";
 import { Hands } from "./hands";
 import { Asks } from "./asks";
 import { seatHead } from "./headseat";
-import { LOW_UNDER_SCENE } from "./layout";
+import { PHONE } from "./layout";
+import { seatParts } from "./partseat";
 import { Ledger } from "./ledger";
 import type { Actions, Part, RuleTarget } from "./part";
 import type { Moment } from "./remindermention";
@@ -41,7 +41,8 @@ import { MixSelector } from "./selector";
 import { Skills } from "./skills";
 import { Story } from "./story";
 import { MoreCue } from "./morecue";
-import { showTabs, wireTabs, type Tab } from "./tabs";
+import { PanelTabs, type Tab } from "./tabs";
+import { UI } from "../game/text";
 
 export class Screen {
   readonly root = el("div", "game");
@@ -51,6 +52,11 @@ export class Screen {
   readonly foot = el("div", "panel-foot");
   private readonly left = el("div", "left");
   private readonly low = el("div", "low");
+  /** The Town tab's panel, and the Completed tab's with the Book's Done page (what sits in each: ui/partseat.ts). */
+  private readonly town = el("section", "town-tab");
+  private readonly done = { tab: el("div", "done-tab"), book: el("div", "book-done") };
+  private readonly doneButton: HTMLButtonElement;
+  private readonly area = el("div", "card-area");
   private readonly state: HTMLElement[];
   private readonly panel: HTMLElement;
   private readonly fires = new OrderFires();
@@ -75,10 +81,7 @@ export class Screen {
   private readonly selector: MixSelector;
   private readonly banner: Banner;
   private readonly end: TheEnd;
-  private readonly tabCards = el("button", "tab");
-  private readonly tabCompleted = el("button", "tab");
-  private readonly tabRules = el("button", "tab");
-  private readonly tabs = el("div", "tabs");
+  private readonly tabs: PanelTabs;
   /** The hands strip's band, pinned under the scene on a phone. */
   private readonly pinned = el("div", "panel-top");
   private readonly rules: RulesTab;
@@ -88,7 +91,6 @@ export class Screen {
   private view: View | null = null;
   private latest: Pick<Step, "repeats" | "rule_runs" | "lines" | "save_id"> = { repeats: { taps: [], switches: [] }, rule_runs: [], lines: [], save_id: 0 };
   private lessons: Lessons | null = null;
-  private tab: Tab = "cards";
   private readonly cardGlow: CardGlow;
 
   constructor(
@@ -119,9 +121,11 @@ export class Screen {
       lines: () => this.latest.lines, saveId: () => this.latest.save_id, lesson: () => this.lessons?.holding ?? null, lessonSubject: () => this.lessons?.subject ?? null,
     };
     this.story = new Story(ctx, () => this.asks.show());
+    this.tabs = new PanelTabs(catalog, this.story.book, (tab) => this.pick(tab));
+    this.doneButton = this.story.bookPage(catalog.text.get(UI.bookDone), this.done.book);
     const marks = new NewMarks();
     this.cardGlow = new CardGlow(catalog, this.glow, (card) => this.cards.node(card));
-    this.cards = new Cards(ctx, marks, () => { if (this.tab !== "cards" || this.editor.open) markNew(this.tabCards, () => undefined); });
+    this.cards = new Cards(ctx, marks, () => { if (this.tabs.on !== "cards" || this.editor.open) markNew(this.tabs.cards, () => undefined); });
     this.completed = new Completed(ctx);
     this.ledger = new Ledger(ctx);
     this.editor = new MixEditor(ctx, () => this.showTab(), marks);
@@ -132,15 +136,14 @@ export class Screen {
     this.asks = new Asks(ctx);
     const skills = new Skills(ctx);
     this.rules = new RulesTab(ctx);
-    this.rulesGlow = new GlowWhile(this.glow, this.tabRules);
-    const area = el("div", "card-area");
-    area.append(this.cards.root, this.completed.root, this.rules.root, this.editor.root, this.hands.lanes.town.root);
+    this.rulesGlow = new GlowWhile(this.glow, this.tabs.rules);
+    this.area.append(this.cards.root, this.done.tab, this.town, this.rules.root, this.editor.root, this.hands.lanes.town.root);
     this.pinned.append(this.hands.root);
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);
-    panel.append(this.banner.root, this.pinned, this.asks.root, this.hands.rows, this.hands.lanes.root, this.ledger.asks, this.tabs, area, this.foot);   // the asks, a phone's chip rule offer and the lane rows under the strip, unpinned; then a phone's red and full ledger lines
+    panel.append(this.banner.root, this.pinned, this.asks.root, this.hands.rows, this.hands.lanes.root, this.ledger.asks, this.tabs.root, this.area, this.foot);   // the asks, a phone's chip rule offer and the lane rows under the strip, unpinned; then a phone's red and full ledger lines
     this.parts = [this.story, this.hands, this.asks, this.cards, this.completed, this.rules, skills, this.ledger,
-      new FeatureCard(catalog, this.reveal, this.root), new MoreCue(panel, area), (this.lessons = new Lessons(ctx, this.root, () => this.redraw()))];
+      new FeatureCard(catalog, this.reveal, this.root), new MoreCue(panel, this.area), (this.lessons = new Lessons(ctx, this.root, () => this.redraw()))];
 
     const frame = el("div", "scene-frame");
     this.sceneCanvas.setAttribute("aria-hidden", "true");
@@ -151,21 +154,14 @@ export class Screen {
     this.left.append(stage, this.low);
     seatHead(this.root, stage, this.story.head, this.story.aim, this.story.root);
 
-    wireTabs(catalog, [[this.tabCards, UI.tabCards, "cards"], [this.tabCompleted, UI.tabCompleted, "completed"], [this.tabRules, UI.ordersHeading, "rules"]], (tab) => {
-      if (tab === "rules") { this.openRules(null); return; }
-      this.tab = tab;
-      this.showTab();
-    });
-    this.tabRules.style.visibility = "hidden";
-    this.tabs.append(this.tabCards, this.tabCompleted, this.tabRules);
     this.state = [this.ledger.root, skills.root];   // on a phone the ledger comes first, nearest the cards
     this.low.hidden = true;
     this.panel = panel;
     this.root.append(this.left, panel, this.selector.root);
-    const wide = window.matchMedia(LOW_UNDER_SCENE);
-    const place = (): void => { if (wide.matches) this.low.append(...this.state); else this.foot.before(...this.state); this.ledger.setSplit(!wide.matches); };
-    wide.addEventListener("change", place);
-    place();
+    seatParts(this.state, this.completed.root, { low: this.low, foot: this.foot, town: this.town, done: this.done }, (phone, wide) => {
+      this.ledger.setSplit(!wide);
+      if (!phone && this.tabs.on === "town") this.pick("cards");   // Town is a phone's tab
+    });
     this.showTab();
   }
 
@@ -254,11 +250,13 @@ export class Screen {
     this.selector.update(view);
     const rules = mixRules(view).length + taskRules(view).length;
     this.rulesShown ||= rulesTabDrawn(view, this.keeps.ruleSeen());   // Next lives there too
-    this.tabRules.style.visibility = this.rulesShown ? "" : "hidden";   // its room is kept: nothing moves
+    this.tabs.rules.style.visibility = this.rulesShown ? "" : "hidden";   // its room is kept: nothing moves
     this.rulesGlow.update(rules > 0 && this.keeps.ruleSeen() && !this.keeps.rulesOpened());
-    if (prev && (view.orders.length > prev.orders.length || view.queue.length > prev.queue.length)) this.flight.landed(this.tabRules, this.tab === "rules");
-    this.tabCompleted.style.visibility = view.completed.length > 0 ? "" : "hidden";   // its room is kept: nothing moves
+    if (prev && (view.orders.length > prev.orders.length || view.queue.length > prev.queue.length)) this.flight.landed(this.tabs.rules, this.tabs.on === "rules");
+    this.tabs.completed.style.visibility = view.completed.length > 0 ? "" : "hidden";   // its room is kept: nothing moves
+    this.doneButton.hidden = view.completed.length === 0;
     this.low.hidden = this.state.every((part) => part.hidden);   // nothing under the strip until the ledger or a skill has something to show
+    this.tabs.town.style.visibility = this.low.hidden ? "hidden" : "";
     this.cardGlow.place(view);
   }
 
@@ -270,11 +268,11 @@ export class Screen {
     this.keeps.keepRulesOpened();
     this.rulesGlow.used();
     this.rulesShown = true;
-    this.tabRules.style.visibility = "";
-    this.tab = "rules";
+    this.tabs.rules.style.visibility = "";
+    this.tabs.on = "rules";
     this.rules.open(view, rule, offered);
     this.showTab();
-    revealBelow(this.tabs, this.pinned, [this.root, this.panel]);
+    revealBelow(window.matchMedia(PHONE).matches ? this.area : this.tabs.root, this.pinned, [this.root, this.panel]);
   }
 
   private openEditor(mixId: string | null, fresh = false, forRule: number | null = null): void {
@@ -288,7 +286,15 @@ export class Screen {
   private showTab(): void {
     const editing = this.editor.open || this.hands.lanes.town.open;
     this.root.classList.toggle("editing", editing);
-    this.tabs.style.visibility = editing ? "hidden" : "";
-    showTabs(this.tab, editing, [[this.tabCards, this.cards.root, "cards"], [this.tabCompleted, this.completed.root, "completed"], [this.tabRules, this.rules.root, "rules"]]);
+    this.tabs.show(editing, { cards: this.cards.root, completed: this.done.tab, town: this.town, rules: this.rules.root });
+  }
+
+  /** The tab a tap chose (Rules opens on its own way in). On a phone a panel scrolled under the pinned stage starts at
+   * its top again. */
+  private pick(tab: Tab): void {
+    if (tab === "rules") { this.openRules(null); return; }
+    this.tabs.on = tab;
+    this.showTab();
+    if (window.matchMedia(PHONE).matches) revealBelow(this.area, this.pinned, [this.root, this.panel]);
   }
 }

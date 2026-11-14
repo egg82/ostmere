@@ -8,7 +8,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 }
 
 const css = readFileSync("src/game.css", "utf8");
-const phone = css.slice(css.indexOf("/* phone editor:"), css.indexOf("/* desktop (and a phone in landscape)"));
+const phone = css.slice(css.indexOf("/* The phone frame"), css.indexOf("/* desktop (and a phone in landscape)"));
 expect("the phone block was found", phone.length > 100, true);
 expect("the art leaves while a rule is built", /\.game:has\(\.rules \.cond\) \.scene-box \{ display: none; \}/.test(phone), true);
 

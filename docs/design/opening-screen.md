@@ -20,13 +20,16 @@ beside them. Nothing the player needs during play sits in a far corner.
   desktop (between the art and the skills and ledger). It shows the newest lines that fit whole, oldest first, the
   older ones dimmer; a new line pushes out the oldest that no longer fits, so a quick run can still be read. A line
   shows when the arrival queue releases it, held back for the reading time of the one before (`decisions.md`, "A story
-  line stays until it can be read"). The strip's height is the tallest story line in the content at the strip's width,
-  so no line is ever cut and none arriving moves anything: every story line the content can write (`Content.line_infos`,
+  line stays until it can be read"). On a desktop the strip's height is the tallest story line in the content at the
+  strip's width, so no line is ever cut and none arriving moves anything: every story line the content can write (`Content.line_infos`,
   the kinds `game/chronicle.ts` routes to Story) is laid out unseen in the strip's one cell, the shown lines sit over
   them, and as many of the newest as fit that height show (at least the newest, so one where the room holds only one).
+  On a phone the strip is three rows of the story's size (`--strip-rows`), so the pinned stage never grows for the
+  longest line ever written: that is a content rule, every story line fitting three rows at a 360-wide phone's 328px
+  (`tests/opening/test_strip_rows.py`, its wrap checked against Chrome's), and three short lines fit with no gap between.
   The strip shows story lines only: a story beat's, a tap's, the body's. A find, a level, a rule's start or let-go and a
   fight go to the chronicle alone. The chronicle is one tap away (the "Chronicle" button with the chips, which looks
-  like a button), dotted while a line it holds left the strip entirely before the player touched anything after it
+  like a button; on a phone the bottom bar's Book), dotted while a line it holds left the strip entirely before the player touched anything after it
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
 - **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the siblings' frame
   with a sticky `.panel-heading` (the word on the button), then a row of filters once two kinds have entries: Story,
@@ -142,25 +145,46 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 
 ```
 ┌────────────────────────────┐
-│ Camp 1 ▓▓░ ❄ cold ◐ Chron │  chips + Camp, pinned above the art
+│ Camp 1 ▓▓░        ❄ cold   │  the head: Camp bar and chips
 │ the aim, one line          │
-│ SCENE                      │
+│        SCENE               │  the art in a fixed room
 ├────────────────────────────┤
-│ NEWEST LINES, whole (the   │  the story strip: the tallest line's
-│ strip keeps its height)    │  height, pinned under the art
+│ newest lines, three rows   │  the strip
 ├────────────────────────────┤
-│ HANDS [Gather ▓▓|Scav ▓▓]  │  hands strip, sticky under the art
-├────────────────────────────┤
-│ Tasks · Completed · Rules  │
+│ [Gather ▓▓▓|Scav ▓▓]       │  the hands strip: its bar, the
+│ ■ Gather 60% ■ Scav 40%    │  legend, Mixes ▾ · until … · Edit
+│ Mixes ▾  Rest  while … Edit│
+├────────────────────────────┤  ── pinned above, scrolls below
+│ [L][M] Bank the fire… 1 ›  │  the shown ask, one 56px row
 │ ┌──────────┐┌──────────┐   │
-│ │ card     ││ card     │   │  scrolls
+│ │ card     ││ card     │   │  the open tab's panel
 │ └──────────┘└──────────┘   │
-│ LEDGER …                   │
+├────────────────────────────┤
+│ Tasks  Town  Rules  Book   │  the bottom bar
 └────────────────────────────┘
 ```
 
-The art, the story strip and the hands strip stay pinned while the cards and ledger scroll under them, so the newest
-lines are always on screen while the thumb is on a card. In landscape the phone uses the desktop arrangement.
+Read in the top half, touch in the bottom. The head, the art, the strip and the hands strip stay pinned while the
+panel scrolls under them, so the newest lines stay on screen while the thumb is on a card, and each has a fixed
+height: the art fits a room of `--scene-h`, the strip is three rows (above), and the head keeps room for a chip and its
+cost line. At 390 wide the stage is about 336px and the hands strip under it about 85px; its controls row stays pinned
+because lessons point at Mixes ▾, the rule link and Edit, and they keep their reach.
+
+The panel's tabs are the bottom bar (`ui/tabs.ts`, the same row the desktop shows over the cards): **Tasks**, **Town**
+(the ledger and skills, once either has something), **Rules** and **Book**. Town and Rules keep their slots unseen
+until they arrive, so nothing moves; a tab chosen while the panel is scrolled starts at its top under the stage. Book
+is the chronicle's sheet, the Chronicle button's place on a phone and its unread dot with it; its row of pages is the
+title, the chronicle first and **Done** (what the desktop's Completed tab holds) once something is finished
+(`ui/partseat.ts` seats the ledger, skills and finished cards by layout). Anything opened only sometimes (an ask, the
+Mixes list, the Book, a prestige) rises from the bottom as a sheet across the screen's width; the journal keeps its
+full-height page. The mix and rule editors fill the room under the pinned parts, with the bar hidden while the mix
+editor is open.
+
+The shown ask is one row of fixed height (56px): who asks by face, the question cut to one line, and how many wait
+(`1 ›`). A tap anywhere on it opens the sheet of every open ask, whole, so a season's several asks never move the
+cards. Rejected: keeping the whole ask in the slot (it pushed the cards below the thumb's half); a separate Town view on
+the phone before the desktop's (step 7 of `design/redesign.md` brings both); a grab handle on the sheets (it promises a
+swipe that does nothing). In landscape the phone uses the desktop arrangement.
 
 ## The hands strip (the mix's slim view)
 
@@ -212,8 +236,9 @@ Tasks or Completed: the row and its editor are their only way in. Fits into: the
 Every open offer (someone asks) lives in one list under the hands strip (`ui/asks.ts`), headed `ASKS`, and it takes
 no room while nothing is open. The first open offer in content order is drawn in a slot of fixed height that the ask
 fills, so when a season or a busy day brings several, nothing under it moves: the rest are only counted, as `2 more`,
-which opens every open ask in a sheet. The chronicle's waiting row points here: with one waiting it brings the ask into
-view and focuses its first answer, with several it opens the sheet.
+which opens every open ask in a sheet. On a phone the slot is one row and opens that sheet ("Phone"). The chronicle's
+waiting row points here: with one waiting on a wider screen it brings the ask into view and focuses its first answer;
+with several, or on a phone, it opens the sheet.
 
 An ask (`ui/asknode.ts`) reads top to bottom: who asks, a face (initial, ringed in the lane's hue) and name per person;
 the question in the story's size; `↳` and what led to it, worded as a chronicle line's cause (an earlier answer by its
@@ -273,7 +298,7 @@ words, `design/redesign.md`, "Words"). Fits into: Offers (`systems.md`), the arr
   slot: the new card takes the slot of the card whose step opened it, so the next step lands under the finger. A
   done card nobody takes the slot of goes to Completed after a short hold (5 s, so the player sees it finish), never
   within 1.5 s of a press or while one is down. Nothing reflows during a tap.
-- **Completed** is a tab beside `Tasks` with no count on it. A completed card there is dimmed, shows its cap reached,
+- **Completed** is a tab beside `Tasks` with no count on it (on a phone, the Book's Done page). A completed card there is dimmed, shows its cap reached,
   and can't be tapped.
 - **A choice arrives as one thing:** its two cards appear together, side by side in adjacent slots, under one small
   heading. Each names its upside, and both show what they take.
@@ -507,7 +532,7 @@ whose top shows the strip.
 ## The Mixes list
 
 From the strip's name ▾ (or its `Mixes ▾`): the saved mixes and nothing else, the player's own first. A centred sheet
-on a desktop, a full-width bottom sheet on a phone (at most 85% of the height, scrolling).
+on a desktop, a full-width bottom sheet on a phone (as every sheet there, "Phone"; scrolling). Each mix's row draws its split as a small bar of hues with the legend under it.
 
 - **Tapping a mix makes it the default,** what runs when no rule's mix does; while a rule's mix runs, it sets what
   comes back, not what runs now. Each mix it can run says `Run`; ● and `running` (or, for the player's own, how long it

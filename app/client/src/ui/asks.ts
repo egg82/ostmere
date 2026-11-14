@@ -1,7 +1,8 @@
 // The Asks list (CONTRACT.txt, "OFFERS"; docs/design/redesign.md, "Asks"): every open offer, and their one home on the
 // page. It takes no room until an ask is open. Under its heading the first open ask in content order is drawn
 // (ui/asknode.ts) in a slot of fixed height, so a season bringing several moves nothing under it, and "{n} more"
-// opens the whole list in a sheet. A new ask arrives through the arrival queue after the last of its lines in this
+// opens the whole list in a sheet. On a phone the slot is one row (who, the question, how many wait), and a tap
+// anywhere on it opens the sheet, so a season's asks never push the cards from under the thumb. A new ask arrives through the arrival queue after the last of its lines in this
 // Step, or at once when the Step holds none of them (it showed before the page's last view); one that arrives already
 // answered is never drawn. The shown ask holds the ember outline, and takes the one glow when it is free: a lesson's
 // step keeps it first, and the ask waits for it (GlowWhile) until answered.
@@ -12,12 +13,15 @@ import { askNode, type AskNode } from "./asknode";
 import { AskRuns } from "./askruns";
 import { bringIntoView, el, setText, tapFeedback } from "./dom";
 import { GlowWhile } from "./fresh";
+import { PHONE } from "./layout";
 import type { Part, PartContext } from "./part";
 
 export class Asks implements Part {
   readonly root = el("section", "asks");
   private readonly more = el("button", "asks-more");
   private readonly slot = el("div", "asks-slot");
+  /** A phone's way into the sheet: laid over the whole row, how many wait at its end. */
+  private readonly opener = el("button", "asks-open");
   private readonly sheet = el("dialog", "sheet asks-sheet");
   private readonly sheetList = el("div", "asks-all");
   private readonly runs: AskRuns;
@@ -31,7 +35,8 @@ export class Asks implements Part {
     const { text } = ctx.catalog;
     this.runs = new AskRuns(ctx, () => { if (this.view) this.update(this.view); });
     this.more.type = "button";
-    this.more.addEventListener("click", () => { tapFeedback(); this.openList(); });
+    this.opener.type = "button";
+    for (const b of [this.more, this.opener]) b.addEventListener("click", () => { tapFeedback(); this.openList(); });
     const head = el("div", "asks-head");
     head.append(el("span", "panel-heading", text.get(UI.asks)), this.more);
     this.root.append(head, this.slot);
@@ -56,6 +61,8 @@ export class Asks implements Part {
     this.drawFront(view, open[0] ?? null);
     setText(this.more, open.length > 1 ? this.ctx.catalog.text.fill(UI.asksMore, { n: this.ctx.catalog.format.count(open.length - 1) }) : "");
     this.more.hidden = open.length < 2;
+    setText(this.opener, this.ctx.catalog.format.count(open.length));
+    this.opener.setAttribute("aria-label", `${this.ctx.catalog.text.get(UI.asks)} ${this.opener.textContent ?? ""}`);
     if (this.sheet.open) this.drawList(view, open);
   }
 
@@ -63,10 +70,10 @@ export class Asks implements Part {
     this.front?.glow.tick();
   }
 
-  /** The waiting asks brought into view (the chronicle's "waiting" row): the list when several wait, else the one
-   * shown below the pinned parts, its first answer focused. */
+  /** The waiting asks brought into view (the chronicle's "waiting" row): the list when several wait or on a phone, else
+   * the one shown below the pinned parts, its first answer focused. */
   show(): void {
-    if (this.more.hidden) {
+    if (this.more.hidden && !window.matchMedia(PHONE).matches) {
       bringIntoView(document, this.slot);
       this.slot.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
     } else this.openList();
@@ -86,7 +93,7 @@ export class Asks implements Part {
       this.slot.replaceChildren();
       if (offer !== null) {
         const ask = askNode(this.ctx, offer);
-        this.slot.append(ask.node);
+        this.slot.append(ask.node, this.opener);
         this.front = { offer, ask, glow: new GlowWhile(this.ctx.glow, ask.node) };
         this.front.glow.update(true);   // after the arrival has held the slot: the glow comes when it shows
       }

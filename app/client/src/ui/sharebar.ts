@@ -16,6 +16,17 @@ export interface SegmentSpec {
   struck?: boolean;
 }
 
+/** One entry of a bar's legend: the segment's hue as a square, its name, then its share (the Mixes list's small bars
+ * share it). */
+export function keyItem(spec: SegmentSpec): { item: HTMLElement; name: HTMLElement; pct: HTMLElement } {
+  const item = el("span", `share-key-item hue-${spec.hue % 6}`);
+  item.classList.toggle("struck", spec.struck === true);
+  const name = el("span", "share-name");
+  const pct = el("b", "share-pct");
+  item.append(name, " ", pct);
+  return { item, name, pct };
+}
+
 export interface ShareBarHooks {
   /** Shares as they move, before letting go (the editor's live totals). */
   moving?(shares: number[], divider: number): void;
@@ -58,11 +69,8 @@ export class ShareBar {
     this.key.replaceChildren();
     this.segs = specs.map((s, i) => {
       const seg = el("div", `share-seg hue-${s.hue % 6}`);
-      const item = el("span", `share-key-item hue-${s.hue % 6}`);
-      for (const n of [seg, item]) n.classList.toggle("struck", s.struck === true);
-      const name = el("span", "share-name");
-      const pct = el("b", "share-pct");
-      item.append(name, " ", pct);
+      seg.classList.toggle("struck", s.struck === true);
+      const { item, name, pct } = keyItem(s);
       if (this.hooks.remove) seg.addEventListener("pointerdown", (e) => this.dragOff(e, i, seg));
       this.bar.append(seg);
       this.key.append(item);

@@ -51,7 +51,7 @@ const texts = (root: FakeEl | null | undefined, selector: string) => root?.query
 {  // the ask: its text, one button per answer with its cost, no dismiss; a tap answers
   const { root, got, arrived } = drawn([LINE]);
   expect("the offer's text", root.querySelector(".ask-text")?.textContent, "[fixture] A question with two answers: which one?");
-  const buttons = slot(root)?.querySelectorAll("button") ?? [];
+  const buttons = slot(root)?.querySelector(".ask")?.querySelectorAll("button") ?? [];   // the ask's own: a phone's way into the sheet sits over it
   expect("one button per answer, the cost from takes_s (none while null)", buttons.map((b) => b.textContent), ["Wait", "Go nowtakes 12 m 30 s"]);
   expect("revealed as an arrival when its line is in this Step", arrived, ["chip:offer:ask"]);
   buttons[1]?.click();
