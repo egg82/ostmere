@@ -39,10 +39,13 @@ Each part is tagged on the page with the competing design it came from.
   the mix's other controls scroll just under it. Cards sit in the thumb's half, a bottom bar holds Tasks, Town,
   Rules and Book, and anything set up only sometimes opens as a sheet from the bottom. Under Town sit the town's
   people and lanes, then the ledger and skills.
-- **Book.** It holds the Chronicle, the Journal, Done (the finished cards) and, later, the Map. **The journal
-  pages are kept exactly as they are:** the parchment, the handwriting, the drawings. They are the lore and story
-  layer and the one deliberate exception to the quiet look (the only light surface, like a book opened by the
-  fire). The page never draws one; the build keeps `ui/journal.ts`'s rendering.
+- **Book.** It holds the Chronicle, the Journal, Done (the finished cards) and, later, the Map, as pages with one
+  way between them: the row beside its title. It opens on the Chronicle. On a desktop it is a view like Town, in
+  the middle and the right; on a phone, a sheet from the bottom. The journal has no other door (its button on the
+  art is gone). A page shows in the row only once it has something, so the Map has no slot on screen until its
+  first place. **The journal pages are kept exactly as they are:** the parchment, the handwriting, the drawings.
+  They are the lore and story layer and the one deliberate exception to the quiet look (the only light surface,
+  like a book opened by the fire). The page never draws one; the build keeps `ui/journal.ts`'s rendering.
 - **Asks.** A list, one shown at a fixed height, with a count of the rest. Each ask shows who asks, "↳" what led
   to it, and each answer as before → after figures.
 - **Ledger.** Grouped into yours, town, outposts and threats, each group appearing when its first row does. A row
@@ -80,7 +83,8 @@ unwrap (`systems.md`), widened to replace the Log and filtered by kind. The caus
 chronicle already records. Routing is the feedback ladder (`decisions.md`, "Rewarding at any moment") with one
 home per rung. The asks are Offers with three new optional content fields. The rail, the bottom bar and the
 landscape row are three forms of `ui/tabs.ts`'s one row of tabs, and the Town view is that row's Town panel, holding
-the town strip and lane rows moved off the main screen. Decisions get rewritten as each part ships, in the same PR, because they say how
+the town strip and lane rows moved off the main screen. The Book view is that row's Book panel (a sheet on a phone),
+its pages the Chronicle, the Journal and Done moved into it. Decisions get rewritten as each part ships, in the same PR, because they say how
 the game works now.
 
 ## Build order

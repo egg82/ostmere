@@ -197,22 +197,22 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: JOURNAL,
-    // the Journal button, the moment it first shows (ui/journal.ts): its own control, so no Show me; the step after the first runs in its sheet;
-    // not in a save with a second page written
+    // the Book's tab, the moment the journal joins the Book (ui/journal.ts marks it): its own control, so no Show me; then the
+    // Journal's button in the Book, which carries the unread dot; not in a save with a second page written
     may: (view) => view.unlocked.filter((u) => u.category === "entry").length <= 1,
     trigger: `[data-teach="journal"]`,
     yields: true,
     steps: [
       { target: () => `[data-teach="journal"]`, line: (c) => c.text.get(UI.lessonJournalOpen), ends: "touch" },
-      { target: () => `.journal-sheet [data-teach="journal-note"]`, line: (c) => c.text.get(UI.lessonJournalNotes), ends: "read" },
+      { target: () => `.book [data-page="journal"]`, line: (c) => c.text.get(UI.lessonJournalNotes), ends: "touch" },
     ],
   },
   {
     id: JOURNAL_NUMBERS,
     // a page's numbers, the first time a page that shows some is open after the journal's lesson: a page with none never waits on it
     may: (_view, keeps) => keeps.lessonKept(JOURNAL),
-    trigger: `.journal-sheet .journal-numbers`,
-    steps: [{ target: () => `.journal-sheet .journal-numbers`, line: (c) => c.text.get(UI.lessonJournalNumbers), ends: "read" }],
+    trigger: `.journal .journal-numbers`,
+    steps: [{ target: () => `.journal .journal-numbers`, line: (c) => c.text.get(UI.lessonJournalNumbers), ends: "read" }],
   },
   {
     id: PRESTIGE,

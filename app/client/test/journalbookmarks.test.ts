@@ -8,7 +8,7 @@ type Rig = ReturnType<typeof rig>;
 const bookmarks = (r: Rig): HTMLElement[] => [...r.sheet().querySelectorAll<HTMLElement>(".journal-bookmarks button")];
 const labels = (r: Rig): string[] => bookmarks(r).map((b) => b.textContent ?? "");
 const current = (r: Rig): string[] => bookmarks(r).filter((b) => b.getAttribute("aria-current") === "true").map((b) => b.textContent ?? "");
-const open = (r: Rig): Rig => { r.button()!.click(); return r; };
+const open = (r: Rig): Rig => { r.open(); return r; };
 
 {  // one bookmark per section that has a written page, in the order days, creatures, places, worded by the section's key
   expect("all three sections written", labels(open(rig({ notes: EVERY }))), [text("ui.journal.days"), text("ui.journal.creatures"), text("ui.journal.places")]);
@@ -73,7 +73,7 @@ const open = (r: Rig): Rig => { r.button()!.click(); return r; };
   const r = rig({ notes: EVERY, read: [] });
   r.sent.length = 0;
   requests.length = 0;
-  r.button()!.click();
+  r.open();
   bookmarks(r)[2]!.click();
   bookmarks(r)[1]!.click();
   expect("nothing sent from a bookmark", [r.sent.length, r.asked, requests.length], [0, { decided: 0, dry: 0 }, 0]);

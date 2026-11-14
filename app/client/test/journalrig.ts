@@ -1,11 +1,12 @@
-// The rendered journal on the fixture pages (fixtures/journal.ts), shared by the journal tests: the strip and sheet on a
-// real Screen, the sent requests and the account writes.
+// The rendered journal on the fixture pages (fixtures/journal.ts), shared by the journal tests: the Book's journal page on
+// a real Screen (a phone's sheet unless `phone: false`, the desktop's view), the sent requests and the account writes.
 import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { BOOK, journalStep, journalView, NOTE_B, NOTES_A, withJournal } from "../fixtures/journal";
 import type { Step } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { FIRST_MIX, FIRST_RULE, JOURNAL, JOURNAL_NUMBERS } from "../src/game/lessons";
+import { PHONE } from "../src/ui/layout";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
@@ -37,7 +38,9 @@ export function stepWith(notes: string[], at: number, fought = true): Step {
   return { ...base, view: fought ? view : { ...view, fights: [] } };
 }
 
-export function rig(opts: { read?: string[]; notes?: string[]; lessons?: string[] } = {}) {
+export function rig(opts: { read?: string[]; notes?: string[]; lessons?: string[]; phone?: boolean } = {}) {
+  const phone = opts.phone ?? true;
+  Object.assign(window, { matchMedia: (q: string) => ({ matches: phone && q === PHONE, addEventListener: () => {} }) });
   const sent: Flat[] = [];
   const asked = { decided: 0, dry: 0 };
   const kept: Flat = { ...NEW_FLAT, lessons: opts.lessons ?? [...KEPT, JOURNAL, JOURNAL_NUMBERS], journal_read: opts.read ?? [] };
@@ -48,13 +51,20 @@ export function rig(opts: { read?: string[]; notes?: string[]; lessons?: string[
   const show = (notes: string[]): void => { at += 10; screen.show(stepWith(notes, at)); };
   show(opts.notes ?? ALL);
   const q = <T extends HTMLElement = HTMLElement>(sel: string): T | null => screen.root.querySelector<T>(sel);
-  const button = (): HTMLElement | null => q(".journal-open");
-  const dotShows = (): boolean => { const d = button()?.querySelector(".new-dot"); return d !== null && d !== undefined && !(d as HTMLElement).hidden; };
-  const sheet = (): HTMLElement => q(".journal-sheet")!;
+  const tab = (): HTMLElement => q('.tabs [data-tab="book"]')!;
+  /** The Journal's button in the Book, while it is offered. */
+  const button = (): HTMLElement | null => { const b = q('.book [data-page="journal"]'); return b && !b.hidden ? b : null; };
+  /** Book, then Journal: the one way in. */
+  const open = (): void => { tab().click(); button()!.click(); };
+  const dotShows = (): boolean => button()?.querySelector(".new-dot") != null;
+  const tabDot = (): boolean => tab().querySelector(".new-dot") != null;
+  const sheet = (): HTMLElement => q(".book")!;
   const actions = (): HTMLButtonElement[] => [...sheet().querySelectorAll<HTMLButtonElement>(".sheet-actions button")];
-  const [close, prev, next] = [0, 1, 2].map((i) => () => actions()[i]!);
+  const [prev, next] = [1, 2].map((i) => () => actions()[i]!);
+  /** Out of the journal: the sheet's Close on a phone, the Tasks tab on a desktop. */
+  const close = (): HTMLElement => (phone ? actions()[0]! : q('.tabs [data-tab="cards"]')!);
   const words = (): string[] => [...sheet().querySelectorAll<HTMLElement>(".journal-words")].map((n) => n.textContent ?? "");
   const numbers = (): HTMLElement => sheet().querySelector<HTMLElement>(".journal-numbers")!;
-  return { screen, keeps, sent, asked, show, q, button, dotShows, sheet, close: close!, prev: prev!, next: next!, words, numbers };
+  return { screen, keeps, sent, asked, show, q, tab, button, open, dotShows, tabDot, sheet, close, prev: prev!, next: next!, words, numbers };
 }
 

@@ -63,7 +63,7 @@ function newStory(onPhone: boolean): { story: Story; ui: FakeEl } {
   now = 0;
   const story = new Story(testContext().ctx);
   const ui = el("div");
-  ui.append(story.head, story.root, story.book);
+  ui.append(story.head, story.root, story.book.tab);
   document.body.replaceChildren(ui);
   return { story, ui: mounted() };
 }
@@ -163,7 +163,7 @@ for (const onPhone of [true, false]) {
   // The chronicle open while the line leaves.
   const { story, ui } = newStory(false);
   story.appendKeys(["line.1"]);
-  opener(ui).click();
+  story.book.opened();
   now = 1000;
   story.appendKeys(["line.4"]);
   now = readingMs(text("line.1"));

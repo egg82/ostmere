@@ -30,10 +30,10 @@ Object.assign(window, { matchMedia: () => ({ matches: false, addEventListener: (
 
 const { ctx } = testContext();
 const story = new Story(ctx);
-document.body.append(story.head, story.root, story.book);
+document.body.append(story.head, story.root, story.book.tab);
 const text = (key: string): string => ctx.catalog.text.get(key);
 const strip = (): string[] => Array.from(story.root.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
-const dotted = (): boolean => story.book.querySelector(".new-dot") !== null;
+const dotted = (): boolean => story.book.tab.querySelector(".new-dot") !== null;
 
 // A layout the fake DOM lacks: every line 20 high, 4 apart, newest last; a room of 68 holds three.
 // The page's types say DOM nodes; under install() they are FakeEls, which carry a settable rect.

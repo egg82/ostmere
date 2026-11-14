@@ -139,18 +139,18 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
 
 /** Every entry the story's chronicle holds, in order: the sheet opened on All and read. */
 function chronicled(story: Story): string[] {
-  story.book.click();
+  story.book.opened();
   story.root.querySelector<HTMLButtonElement>('.chron-filter[data-filter="all"]')?.click();
   const got = [...story.root.querySelectorAll(".chron-all .chron-text")].map((n) => n.textContent ?? "");
-  story.root.querySelector<HTMLDialogElement>("dialog.chronicle")?.close();
+  story.book.sheet.close();
   return got;
 }
 
 function causesOf(story: Story): string[] {
-  story.book.click();
+  story.book.opened();
   story.root.querySelector<HTMLButtonElement>('.chron-filter[data-filter="all"]')?.click();
   const got = [...story.root.querySelectorAll(".chron-all .chron-cause")].map((n) => n.textContent ?? "");
-  story.root.querySelector<HTMLDialogElement>("dialog.chronicle")?.close();
+  story.book.sheet.close();
   return got;
 }
 

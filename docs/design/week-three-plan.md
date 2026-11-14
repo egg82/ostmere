@@ -110,7 +110,7 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
 7. **The map's first slice** (**L**, opening, api, client, art; interface first: a section "MAP" in `CONTRACT.txt`).
    (a) Content: a chapter's `[[places]]` (id, stamp kind, a coarse position, the unlock that reveals it, a label key
    or none), served on `Content`; the loader refuses a place with no reveal and two places on one position. (b) The
-   page: a Map sheet from a button that arrives with its first place (the screen arrives when it means something);
+   page: the Book's Map page, offered in its row of pages with its first place (the screen arrives when it means something);
    stamps placed by code from the sourced set (`docs/research/art-sourcing.md`), never overlapping, never repeating
    until the pool is used, each label in clear space beside its place with a dark halo, never over another stamp
    (`decisions.md`, "A world map"); a phone-portrait and a desktop layout; its first use a lesson on its own control.

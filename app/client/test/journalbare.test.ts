@@ -8,7 +8,7 @@ const sketches = (root: HTMLElement): HTMLElement[] => [...root.querySelectorAll
 {  // the days page has none: no image at all, no request, the notes alone
   const r = rig({ notes: NOTES_D });
   requests.length = 0;
-  r.button()!.click();
+  r.open();
   expect("its notes are drawn", r.words(), NOTES_D.map(text));
   expect("no sketch element", sketches(r.sheet()).length, 0);
   expect("no image anywhere on the page", r.sheet().querySelectorAll("img").length, 0);
@@ -20,7 +20,7 @@ const sketches = (root: HTMLElement): HTMLElement[] => [...root.querySelectorAll
 
 {  // turning to a page with a sketch brings the room back, and back again leaves it
   const r = rig({ notes: [...NOTES_D, ...NOTES_A], read: [...NOTES_D, ...NOTES_A] });
-  r.button()!.click();
+  r.open();
   expect("days: bare", r.sheet().querySelector<HTMLElement>(".journal-spread")?.dataset["bare"], "true");
   r.next().click();
   const spread = r.sheet().querySelector<HTMLElement>(".journal-spread")!;

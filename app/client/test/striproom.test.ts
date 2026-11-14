@@ -21,7 +21,7 @@ function strip(story: Story): string[] {
   return Array.from(story.root.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
 }
 function logButton(story: Story): HTMLElement {
-  return story.book;
+  return story.book.tab;
 }
 const dotted = (story: Story): boolean => logButton(story).querySelector(".new-dot") !== null;
 
@@ -30,8 +30,8 @@ function drawn(phone: boolean, at: number): { story: Story; text: (k: string) =>
   now = at;
   const { ctx } = testContext();
   const story = new Story(ctx);
-  document.body.append(story.head, story.root, story.book);
-  return { story, text: (key) => ctx.catalog.text.get(key), done: () => { story.head.remove(); story.root.remove(); story.book.remove(); } };
+  document.body.append(story.head, story.root, story.book.tab);
+  return { story, text: (key) => ctx.catalog.text.get(key), done: () => { story.head.remove(); story.root.remove(); story.book.tab.remove(); } };
 }
 
 /** Four lines shown one after another, `gap` ms apart. */
@@ -84,9 +84,7 @@ for (const phone of [true, false]) {
 
 {
   const { story, done } = drawn(true, 400_000);
-  const sheet = story.root.querySelector<HTMLDialogElement>("dialog.chronicle");
-  if (!sheet) throw new Error("no chronicle");
-  sheet.showModal();
+  story.book.opened();
   four(story, 10);
   expect("lines leaving while the chronicle is open: no dot", dotted(story), false);
   done();

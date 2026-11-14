@@ -50,8 +50,8 @@ export const LESSON_KEYS = {
   lessonSwitchRun: "ui.lesson.switch_run",   // "{mix}": its Run in the list
   lessonSwitchEdit: "ui.lesson.switch_edit",   // "{build} {store} {task}": the build's wait, the card that makes it; points at Edit
   lessonSwitchSave: "ui.lesson.switch_save",   // "{store}"
-  lessonJournalOpen: "ui.lesson.journal_open", // the Journal button: what gets written in it
-  lessonJournalNotes: "ui.lesson.journal_notes", // the open page's last note: notes are added, a dot says one is new
+  lessonJournalOpen: "ui.lesson.journal_open", // the Book's tab: what gets written in it
+  lessonJournalNotes: "ui.lesson.journal_notes", // the Journal's button in the Book: a dot on it says a note is new
   lessonJournalNumbers: "ui.lesson.journal_numbers", // the page's numbers: exact once fought
   journalHeading: "ui.journal.heading",
   journalPrev: "ui.journal.prev",

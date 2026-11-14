@@ -1,4 +1,4 @@
-// The chronicle sheet (ui/chroniclesheet.ts, ui/chapter.ts): newest first, the newest return's "Since you left" chapter
+// The chronicle, the Book's first page (ui/chroniclesheet.ts, ui/chapter.ts): newest first, the newest return's "Since you left" chapter
 // at the top, never folded, then one stretch per earlier return folded to its counts; a row of filters once two kinds
 // have entries, Story first; under Story, the chapter's figures as rows and a stretch's counts of the other filters, each
 // opening its filter; each line over its cause.
@@ -33,8 +33,8 @@ function opened(lines: LogLine[], now: number, visits: Array<{ left: number; bac
   const landed = dayOneStep("landed", now);
   screen.show({ ...landed, view: { ...landed.view, offers }, lines }, true);
   (screen.root.querySelector("button[data-tab=\"book\"]") as HTMLButtonElement).click();
-  const heading = screen.root.querySelector("dialog.chronicle > .panel-heading");
-  expect("the sheet's heading", heading?.textContent, text(UI.chronicle));
+  const heading = screen.root.querySelector(".book-tab .book-head > .view-title");
+  expect("the Book's view, under its title", heading?.textContent, text(UI.tabBook));
   return screen;
 }
 
@@ -137,5 +137,5 @@ const tap = (s: Screen, sel: string): void => (s.root.querySelector(sel) as HTML
   expect("where the chapter shows no figures", rows(chapterOf(s)), []);
   tap(s, '.chron-filter[data-filter="story"]');
   tap(s, '.chapter-rows dd[data-section="waiting"] button');
-  expect("the waiting count closes the chronicle to show what waits", s.root.querySelector<HTMLDialogElement>("dialog.chronicle")?.open, false);
+  expect("the waiting count leaves the Book for Tasks to show what waits", [s.root.querySelector<HTMLElement>(".book-tab")?.hidden, s.root.querySelector("button[data-tab=\"cards\"]")?.getAttribute("aria-pressed")], [true, "true"]);
 }

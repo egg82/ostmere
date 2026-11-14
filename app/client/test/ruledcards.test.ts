@@ -6,6 +6,7 @@ import { dayTwoStep } from "../fixtures/daytwo";
 import { NewMarks } from "../src/game/marks";
 import { Cards } from "../src/ui/cards";
 import { Completed } from "../src/ui/completed";
+import { Story } from "../src/ui/story";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });
@@ -26,7 +27,7 @@ const ruled = dayTwoStep("ruled", 100).view;
 {  // the lane's cards stay out of the card panel and the Completed tab
   const { ctx } = testContext();
   const cards = new Cards(ctx, new NewMarks());
-  const done = new Completed(ctx);
+  const done = new Completed(ctx, new Story(ctx).book);
   cards.update(ruled, null);
   done.update(ruled);
   expect("no card on the ruled lane in Tasks", ["chop", "haul"].map((c) => cards.node(c) !== undefined), [false, false]);
