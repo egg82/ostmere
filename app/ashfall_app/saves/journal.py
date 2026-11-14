@@ -81,6 +81,7 @@ Forward only
 20. `composed` is read as given, never recomposed: rows stored under other habits or subjects count as they stand, so
     changing the habits or the slots changes only days not yet composed.
 """
+import hashlib
 from dataclasses import dataclass
 from typing import Literal
 
@@ -191,7 +192,8 @@ def roll(save_id: int, day: int, subject: str, purpose: Purpose) -> float:
     """The draw for one subject's purpose on one day, in [0, 1): the SHA-256 of the UTF-8 bytes of
     f"{save_id}|journal|{day}|{subject}|{purpose}", its first eight bytes read big-endian, divided by 2**64. Depends on
     nothing else, so no draw shifts another."""
-    raise NotImplementedError
+    digest = hashlib.sha256(f"{save_id}|journal|{day}|{subject}|{purpose}".encode()).digest()
+    return int.from_bytes(digest[:8], "big") / 2**64
 
 
 def compose_day(
@@ -208,4 +210,6 @@ def compose_day(
     0 .. day - 1, oldest first. `subjects`: the content's, ids distinct and no two with one source.
     Raises ValueError when a line is at or past the day's end, or `composed` is not exactly days 0 .. day - 1 in order.
     """
-    raise NotImplementedError
+    from .journal_composer.day import compose  # the implementation imports this module's types
+
+    return compose(save_id, day, lines, composed, subjects, habits)
