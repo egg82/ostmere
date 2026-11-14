@@ -18,6 +18,7 @@ from .index import index
 from .motion import store_segment
 from .mixes import flatten_shares
 from .modifiers import Run, RunKind
+from .orders import when_latch
 from .needs import store_need
 from .phaseview import skill_bar
 from .plan import (
@@ -117,7 +118,7 @@ def view(save: Save, rules: Rules) -> View:
         chips=shown_chips(save, rules), chips_seen=tuple(c.id for c, seen in zip(rules.chips, save.chips_seen) if seen),
         unlocked=_unlocked(save, rules), runs_out_at=_runs_out_at(save, rules, ledger),
         all_covered=all_covered(save, rules), ended_at=save.ended_at,
-        running_mix=running_mix_id(save, rules), mix_order=mix_order(save, rules), orders_on=save.latches,
+        running_mix=running_mix_id(save, rules), mix_order=mix_order(save, rules), orders_on=tuple(when_latch(on) for on in save.latches),
         order_states=order_states(save, rules), offers=_offers(save, rules),
         fights=fight_views(save, rules),
         running_town_mix=running_town_mix_id(save, rules), town_mix_order=town_mix_order(save, rules),

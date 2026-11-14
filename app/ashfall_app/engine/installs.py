@@ -8,7 +8,7 @@ from .cards import RuleInstall
 from .counts import completions
 from .ids import CardId
 from .lanes import TapCard
-from .orders import AfterTime, AtLeast, CardCount, Order, QueueEntry, initial_latch
+from .orders import AfterTime, AtLeast, CardCount, Order, QueueEntry, initial_latch, rule_on
 from .rules import Rules
 from .state import Save
 
@@ -70,6 +70,6 @@ def requeued(save: Save, rules: Rules, card: CardId) -> Save:
     """`card`'s When ready entry at the queue's front unless a true order or a queue entry already taps it: the way an
     interrupted hands task is taken up again (DESIGN.txt, "CURE CUT-IN", "Inputs against a dry store")."""
     verb = TapCard(card)
-    planned = any(on and o.then == verb for o, on in zip(save.orders, save.latches)) \
+    planned = any(rule_on(on) and o.then == verb for o, on in zip(save.orders, save.latches)) \
         or any(e.verb == verb for e in save.queue)
     return save if planned else queued(save, rules, (card,))
