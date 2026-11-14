@@ -1930,53 +1930,87 @@
   "make_spear": 1,
   "make_stool": 1,
   "n1_build_watch": 2,
+  "n1_catch_broth": null,
   "n1_cut": null,
+  "n1_dig_clay": null,
   "n1_forage": null,
+  "n1_fungus_stew": null,
   "n1_gather": null,
   "n1_peg_flaps": null,
   "n1_scavenge": null,
   "n1_stakes": null,
+  "n1_stew": null,
   "n1_walk_ridge": 1,
   "n1_watch": null,
+  "n1_weave_wattle": null,
   "n2_build_bay": 1,
+  "n2_catch_broth": null,
   "n2_clear_roofs": null,
   "n2_cut": null,
+  "n2_dig_clay": null,
   "n2_forage": null,
+  "n2_fungus_stew": null,
   "n2_gather": null,
   "n2_guard": null,
   "n2_scavenge": null,
   "n2_stakes": null,
+  "n2_stew": null,
   "n2_watch": null,
+  "n2_weave_wattle": null,
   "n3_ash_ground": null,
   "n3_build_bay": 1,
+  "n3_catch_broth": null,
   "n3_dig_bed": 3,
+  "n3_dig_clay": null,
   "n3_forage": null,
+  "n3_fungus_stew": null,
   "n3_gather": null,
   "n3_pick": null,
+  "n3_stew": null,
+  "n3_weave_wattle": null,
+  "n4_catch_broth": null,
   "n4_cord": null,
+  "n4_fungus_stew": null,
   "n4_mend": null,
+  "n4_stew": null,
   "n4_watch": null,
+  "n4_weave_wattle": null,
   "n5_build_hut": 1,
+  "n5_catch_broth": null,
   "n5_cut": null,
+  "n5_dig_clay": null,
   "n5_forage": null,
+  "n5_fungus_stew": null,
   "n5_gather": null,
   "n5_pick": null,
   "n5_stakes": null,
+  "n5_stew": null,
   "n5_watch": null,
+  "n5_weave_wattle": null,
+  "n6_catch_broth": null,
   "n6_cut": null,
+  "n6_dig_clay": null,
   "n6_forage": null,
+  "n6_fungus_stew": null,
   "n6_gather": null,
   "n6_pick": null,
   "n6_posts": 1,
   "n6_stakes": null,
+  "n6_stew": null,
   "n6_watch": null,
+  "n6_weave_wattle": null,
+  "n7_catch_broth": null,
   "n7_cut": null,
+  "n7_dig_clay": null,
   "n7_forage": null,
+  "n7_fungus_stew": null,
   "n7_gather": null,
   "n7_guard": null,
   "n7_pick": null,
   "n7_stakes": null,
+  "n7_stew": null,
   "n7_watch": null,
+  "n7_weave_wattle": null,
   "palisade": 12,
   "peg_flaps": null,
   "pelt_bedding": 6,
@@ -2064,53 +2098,87 @@
   "make_spear": "hands",
   "make_stool": "hands",
   "n1_build_watch": "n1",
+  "n1_catch_broth": "n1",
   "n1_cut": "n1",
+  "n1_dig_clay": "n1",
   "n1_forage": "n1",
+  "n1_fungus_stew": "n1",
   "n1_gather": "n1",
   "n1_peg_flaps": "n1",
   "n1_scavenge": "n1",
   "n1_stakes": "n1",
+  "n1_stew": "n1",
   "n1_walk_ridge": "n1",
   "n1_watch": "n1",
+  "n1_weave_wattle": "n1",
   "n2_build_bay": "n2",
+  "n2_catch_broth": "n2",
   "n2_clear_roofs": "n2",
   "n2_cut": "n2",
+  "n2_dig_clay": "n2",
   "n2_forage": "n2",
+  "n2_fungus_stew": "n2",
   "n2_gather": "n2",
   "n2_guard": "n2",
   "n2_scavenge": "n2",
   "n2_stakes": "n2",
+  "n2_stew": "n2",
   "n2_watch": "n2",
+  "n2_weave_wattle": "n2",
   "n3_ash_ground": "n3",
   "n3_build_bay": "n3",
+  "n3_catch_broth": "n3",
   "n3_dig_bed": "n3",
+  "n3_dig_clay": "n3",
   "n3_forage": "n3",
+  "n3_fungus_stew": "n3",
   "n3_gather": "n3",
   "n3_pick": "n3",
+  "n3_stew": "n3",
+  "n3_weave_wattle": "n3",
+  "n4_catch_broth": "n4",
   "n4_cord": "n4",
+  "n4_fungus_stew": "n4",
   "n4_mend": "n4",
+  "n4_stew": "n4",
   "n4_watch": "n4",
+  "n4_weave_wattle": "n4",
   "n5_build_hut": "n5",
+  "n5_catch_broth": "n5",
   "n5_cut": "n5",
+  "n5_dig_clay": "n5",
   "n5_forage": "n5",
+  "n5_fungus_stew": "n5",
   "n5_gather": "n5",
   "n5_pick": "n5",
   "n5_stakes": "n5",
+  "n5_stew": "n5",
   "n5_watch": "n5",
+  "n5_weave_wattle": "n5",
+  "n6_catch_broth": "n6",
   "n6_cut": "n6",
+  "n6_dig_clay": "n6",
   "n6_forage": "n6",
+  "n6_fungus_stew": "n6",
   "n6_gather": "n6",
   "n6_pick": "n6",
   "n6_posts": "n6",
   "n6_stakes": "n6",
+  "n6_stew": "n6",
   "n6_watch": "n6",
+  "n6_weave_wattle": "n6",
+  "n7_catch_broth": "n7",
   "n7_cut": "n7",
+  "n7_dig_clay": "n7",
   "n7_forage": "n7",
+  "n7_fungus_stew": "n7",
   "n7_gather": "n7",
   "n7_guard": "n7",
   "n7_pick": "n7",
   "n7_stakes": "n7",
+  "n7_stew": "n7",
   "n7_watch": "n7",
+  "n7_weave_wattle": "n7",
   "palisade": "hands",
   "peg_flaps": "hands",
   "pelt_bedding": "hands",
@@ -2198,53 +2266,87 @@
   "make_spear": false,
   "make_stool": false,
   "n1_build_watch": false,
+  "n1_catch_broth": false,
   "n1_cut": false,
+  "n1_dig_clay": false,
   "n1_forage": false,
+  "n1_fungus_stew": false,
   "n1_gather": false,
   "n1_peg_flaps": false,
   "n1_scavenge": false,
   "n1_stakes": false,
+  "n1_stew": false,
   "n1_walk_ridge": false,
   "n1_watch": false,
+  "n1_weave_wattle": false,
   "n2_build_bay": false,
+  "n2_catch_broth": false,
   "n2_clear_roofs": false,
   "n2_cut": false,
+  "n2_dig_clay": false,
   "n2_forage": false,
+  "n2_fungus_stew": false,
   "n2_gather": false,
   "n2_guard": false,
   "n2_scavenge": false,
   "n2_stakes": false,
+  "n2_stew": false,
   "n2_watch": false,
+  "n2_weave_wattle": false,
   "n3_ash_ground": false,
   "n3_build_bay": false,
+  "n3_catch_broth": false,
   "n3_dig_bed": false,
+  "n3_dig_clay": false,
   "n3_forage": false,
+  "n3_fungus_stew": false,
   "n3_gather": false,
   "n3_pick": false,
+  "n3_stew": false,
+  "n3_weave_wattle": false,
+  "n4_catch_broth": false,
   "n4_cord": false,
+  "n4_fungus_stew": false,
   "n4_mend": false,
+  "n4_stew": false,
   "n4_watch": false,
+  "n4_weave_wattle": false,
   "n5_build_hut": false,
+  "n5_catch_broth": false,
   "n5_cut": false,
+  "n5_dig_clay": false,
   "n5_forage": false,
+  "n5_fungus_stew": false,
   "n5_gather": false,
   "n5_pick": false,
   "n5_stakes": false,
+  "n5_stew": false,
   "n5_watch": false,
+  "n5_weave_wattle": false,
+  "n6_catch_broth": false,
   "n6_cut": false,
+  "n6_dig_clay": false,
   "n6_forage": false,
+  "n6_fungus_stew": false,
   "n6_gather": false,
   "n6_pick": false,
   "n6_posts": false,
   "n6_stakes": false,
+  "n6_stew": false,
   "n6_watch": false,
+  "n6_weave_wattle": false,
+  "n7_catch_broth": false,
   "n7_cut": false,
+  "n7_dig_clay": false,
   "n7_forage": false,
+  "n7_fungus_stew": false,
   "n7_gather": false,
   "n7_guard": false,
   "n7_pick": false,
   "n7_stakes": false,
+  "n7_stew": false,
   "n7_watch": false,
+  "n7_weave_wattle": false,
   "palisade": false,
   "peg_flaps": false,
   "pelt_bedding": false,
@@ -2311,7 +2413,7 @@
   445716000000,
   668736000000
  ],
- "digest": "d1bacc1da3a596b5e11407e1c36c19b1e0bb678f1c9ed637de91a40fd5d7c90b",
+ "digest": "8d10208f8378aa5e94b3d2162f991fe6a7d7f6d0d1a229477e469382b168cb26",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -2420,53 +2522,87 @@
    "make_spear",
    "make_stool",
    "n1_build_watch",
+   "n1_catch_broth",
    "n1_cut",
+   "n1_dig_clay",
    "n1_forage",
+   "n1_fungus_stew",
    "n1_gather",
    "n1_peg_flaps",
    "n1_scavenge",
    "n1_stakes",
+   "n1_stew",
    "n1_walk_ridge",
    "n1_watch",
+   "n1_weave_wattle",
    "n2_build_bay",
+   "n2_catch_broth",
    "n2_clear_roofs",
    "n2_cut",
+   "n2_dig_clay",
    "n2_forage",
+   "n2_fungus_stew",
    "n2_gather",
    "n2_guard",
    "n2_scavenge",
    "n2_stakes",
+   "n2_stew",
    "n2_watch",
+   "n2_weave_wattle",
    "n3_ash_ground",
    "n3_build_bay",
+   "n3_catch_broth",
    "n3_dig_bed",
+   "n3_dig_clay",
    "n3_forage",
+   "n3_fungus_stew",
    "n3_gather",
    "n3_pick",
+   "n3_stew",
+   "n3_weave_wattle",
+   "n4_catch_broth",
    "n4_cord",
+   "n4_fungus_stew",
    "n4_mend",
+   "n4_stew",
    "n4_watch",
+   "n4_weave_wattle",
    "n5_build_hut",
+   "n5_catch_broth",
    "n5_cut",
+   "n5_dig_clay",
    "n5_forage",
+   "n5_fungus_stew",
    "n5_gather",
    "n5_pick",
    "n5_stakes",
+   "n5_stew",
    "n5_watch",
+   "n5_weave_wattle",
+   "n6_catch_broth",
    "n6_cut",
+   "n6_dig_clay",
    "n6_forage",
+   "n6_fungus_stew",
    "n6_gather",
    "n6_pick",
    "n6_posts",
    "n6_stakes",
+   "n6_stew",
    "n6_watch",
+   "n6_weave_wattle",
+   "n7_catch_broth",
    "n7_cut",
+   "n7_dig_clay",
    "n7_forage",
+   "n7_fungus_stew",
    "n7_gather",
    "n7_guard",
    "n7_pick",
    "n7_stakes",
+   "n7_stew",
    "n7_watch",
+   "n7_weave_wattle",
    "palisade",
    "peg_flaps",
    "pelt_bedding",
@@ -3672,6 +3808,8 @@
    "t_edge_open",
    "t_evening",
    "t_fallen_gable",
+   "t_family_chores",
+   "t_family_cuts",
    "t_family_joins",
    "t_find_arc_11",
    "t_find_cook_6",
@@ -3775,8 +3913,13 @@
    "t_morning_5",
    "t_morning_6",
    "t_morning_7",
+   "t_n1_clay_pot",
+   "t_n1_cuts",
    "t_n1_joins",
+   "t_n1_weaves",
    "t_n1_works",
+   "t_n2_chores",
+   "t_n2_cuts",
    "t_nail",
    "t_night",
    "t_night_12",
@@ -3797,6 +3940,7 @@
    "t_pack",
    "t_pack_near",
    "t_pack_step",
+   "t_pair_chores",
    "t_pair_joins",
    "t_pair_offer",
    "t_pelt_ask_bed",
@@ -4406,6 +4550,8 @@
    "t_tinder",
    "t_tipped_birch",
    "t_tired",
+   "t_town_broth",
+   "t_town_fungus_stew",
    "t_track_roots",
    "t_track_roots_2",
    "t_walk_out",
@@ -9316,6 +9462,174 @@
    ],
    "unlocks": []
   },
+  "t_family_chores": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n5_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n5_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n5_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n5_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
+  "t_family_cuts": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n5_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n5_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    }
+   ]
+  },
   "t_family_joins": {
    "@": "Outcome",
    "joins": [
@@ -12003,6 +12317,62 @@
     }
    ]
   },
+  "t_n1_clay_pot": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n1_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
+  "t_n1_cuts": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n1_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
+     }
+    }
+   ]
+  },
   "t_n1_joins": {
    "@": "Outcome",
    "joins": [
@@ -12021,6 +12391,26 @@
    "starts": [],
    "stores": [],
    "unlocks": []
+  },
+  "t_n1_weaves": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
   },
   "t_n1_works": {
    "@": "Outcome",
@@ -12078,6 +12468,70 @@
      "kind": {
       "@": "UnlockKind",
       "v": "card"
+     }
+    }
+   ]
+  },
+  "t_n2_chores": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n2_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n2_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n2_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
+  "t_n2_cuts": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n2_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n2_gather",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "retired"
      }
     }
    ]
@@ -12604,6 +13058,58 @@
    "starts": [],
    "stores": [],
    "unlocks": []
+  },
+  "t_pair_chores": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n3_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n4_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n3_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n3_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n4_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
   },
   "t_pair_joins": {
    "@": "Outcome",
@@ -31685,6 +32191,118 @@
     }
    ]
   },
+  "t_town_broth": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n2_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n3_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n4_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n5_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
+  "t_town_fungus_stew": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n2_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n3_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n4_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
   "t_track_roots": {
    "@": "Outcome",
    "lines": [],
@@ -32870,7 +33488,7 @@
    "unlocks": []
   }
  },
- "release": 62,
+ "release": 64,
  "renames": [
   {
    "from": "t_stock_open",

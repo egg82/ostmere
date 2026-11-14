@@ -232,6 +232,31 @@ xp_per_hour = 18
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 3 }] }
 
+# The fungus pot, an everyday job everyone takes (day three's pot).
+[[town_cards]]
+id = "{lane}_fungus_stew"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_fungus_stew"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 40
+inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 3 }] }
+
+# With the hands' fungus pot.
+[[triggers]]
+id = "t_town_fungus_stew"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "fungus_stew", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_fungus_stew" },
+  { unlock_kind = "card", id = "n2_fungus_stew" },
+  { unlock_kind = "card", id = "n3_fungus_stew" },
+  { unlock_kind = "card", id = "n4_fungus_stew" },
+]
+
 # U1: six hours after the turn.
 [[triggers]]
 id = "t_howls"

@@ -528,6 +528,34 @@ id = "t_broth_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }
 outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
 
+# The broth, an everyday job everyone takes (day three's pot).
+[[town_cards]]
+id = "{lane}_catch_broth"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_catch_broth"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 300
+inputs = [{ store = "catch", items = 2 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }] }
+
+# With the hands' broth.
+[[triggers]]
+id = "t_town_broth"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "catch_broth", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_catch_broth" },
+  { unlock_kind = "card", id = "n2_catch_broth" },
+  { unlock_kind = "card", id = "n3_catch_broth" },
+  { unlock_kind = "card", id = "n4_catch_broth" },
+  { unlock_kind = "card", id = "n5_catch_broth" },
+  { unlock_kind = "card", id = "n6_catch_broth" },
+  { unlock_kind = "card", id = "n7_catch_broth" },
+]
+
 [[triggers]]
 id = "t_ring_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }

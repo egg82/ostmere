@@ -621,6 +621,13 @@ source = { source_kind = "card", id = "bank_hearth" }
 first = { keys = ["j_b5_first"] }
 catchup = { keys = ["j_b5_catchup"] }
 
+# His cutting takes the place of his gathering by hand from the join, as hers does (choice_checks.py). Its own trigger,
+# as t_joins' outcome is released.
+[[triggers]]
+id = "t_n2_cuts"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "n2_cut" }, { unlock_kind = "retired", id = "n2_gather", replaced_by = "n2_cut" }] }
+
 # She joins the town's mix with him (decisions.md, "The mix": her single task was a leftover). Her always task becomes
 # her share at her whole time, so nothing she does changes at the join; with no always task she joins with no share.
 # Her own trigger, as t_joins' outcome is released; after it, so a save past K5 gets the same mix order at rebase. She
@@ -629,6 +636,51 @@ catchup = { keys = ["j_b5_catchup"] }
 id = "t_n1_joins"
 when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
 outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true }] }
+
+# Clay and the pot, the hands' everyday jobs a person also takes (day two's weaving). The old man's leg rules out the
+# digging, so his lane has no clay card.
+[[town_cards]]
+id = "{lane}_dig_clay"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_dig_clay"
+work_s = 10
+outcome = { stores = [{ store = "clay", items = 1 }] }
+
+[[town_cards]]
+id = "{lane}_stew"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_stew"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 20
+requires = [{ test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }]
+inputs = [{ store = "roots", items = 4 }, { store = "smoked", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }] }
+
+# Hers with the hands' clay and pot.
+[[triggers]]
+id = "t_n1_clay_pot"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stew", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_dig_clay" },
+  { unlock_kind = "card", id = "n1_stew" },
+]
+
+# His from the join.
+[[triggers]]
+id = "t_n2_chores"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stew", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n2_weave_wattle" },
+  { unlock_kind = "card", id = "n2_dig_clay" },
+  { unlock_kind = "card", id = "n2_stew" },
+]
 
 # He eats what she eats (n1_eating) and the pot: the smoked line, made from the snares a little faster than she eats
 # it, has a second mouth once he joins.
