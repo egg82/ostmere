@@ -74,7 +74,7 @@ A subject's **kind** is one of a closed set, each with its numbers in data:
 
 | Kind | Fed by | Habit |
 |---|---|---|
-| `beat` | a turning point or a loss: the lines of a story trigger | **must**: always written, never dropped |
+| `beat` | a turning point or a loss: the lines of a story trigger or a one-off card | **must**: always written, never dropped |
 | `person` | a `line` person joining or leaving | **must** |
 | `routine` | work and finds that recur | **must** the first time (a first); after that it fades with each telling |
 | `worry` | what presses: a trigger's lines the content marks as a plan, a fear or the body's want | grows with each consecutive day it shows, falls away when it stops |
@@ -112,9 +112,9 @@ The rules, in the order the composer applies them for day `d`:
 
 ## The habits as data
 
-One table, declared once in `opening.toml` beside `[repeat_offers]` (`[journal_habits]`, planned), loaded and range
-checked by the content loader. Starting values are set in build step 3 by reading the simulator's readout, not chosen
-here.
+One table, declared once in `opening.toml` beside `[repeat_offers]` (`[journal_habits]`), loaded and range checked
+by the content loader. Starting values are set in build step 3 by reading the simulator's readout, not chosen here;
+until then the table holds placeholders nothing reads.
 
 | Knob | Meaning |
 |---|---|
@@ -165,10 +165,11 @@ the blanket."
 The loader's checks name ids and fields, never text: every subject has a first slot; every `beat`, `person` and
 `routine` subject has a catch-up slot; misremember and correction come together, and only on a `routine` subject,
 never a `beat`, `person` or `worry` (owner, 2026-11-14: the journal never misleads about the story); a source names a
-cause the content
-writes, and no cause feeds two subjects; each `line` person has a
-person subject for each way that moves them; every `days` note shipped before this has a beat subject; every slot key
-has text. Each check is shown red on a planted chapter first.
+cause the content writes, and no cause feeds two subjects; each `line` person has a person subject for each way that
+moves them; every `days` note shipped before this has a beat subject; every slot key has text. Each check is shown red
+on a planted chapter first. A cause is a source, so two people one outcome joins are two causes; only a `person` feeds
+from a lane and only a `crowd` from a way's mentions; a days note's beat subject holds the note in its first slot, and a
+beat that lands by either of two triggers has a subject for each.
 
 ## What the page draws
 
@@ -241,13 +242,16 @@ Each step is one PR with its tests, proven able to fail.
 1. **This note and the decision** (docs only).
 2. **Subjects in the content.** The subject and slot schema in the chapter files, the loader's checks (each red on a
    planted chapter), and `[journal_habits]` loaded and range checked. Beat subjects for today's `days` notes, their
-   first slots reusing those notes' text. Nothing reads them yet; the journal is unchanged.
+   first slots reusing those notes' text, and person subjects for the `line` people's comings and goings. Subjects still
+   missing a first or catch-up slot are held by id until step 6 writes them (`AWAITING_SLOTS`, which only shrinks).
+   Nothing reads them yet; the journal is unchanged.
 3. **The composer and its readout.** The pure module with the hashed roll and the shuffle bag, the blind contract suite,
    the property tests, the mutant list, and the nightly simulator readout. Starting habit values are set from the
    readout. Nothing calls it from the API yet.
 4. **Stored and served.** The `save_journal` table and migration; composition in the step's transaction for every day
    the step closes (a save with no rows composes all of its closed days); Opened and Step carry the written days;
-   `SavePresentation`'s newest day turned to; `CONTRACT.txt` "JOURNAL" rewritten for the `days` section. Tests: the
+   `SavePresentation`'s newest day turned to; `CONTRACT.txt` "JOURNAL" rewritten for the `days` section; subject ids and
+   slot keys taken into the release lock. Tests: the
    day-by-day and one-jump saves match; a habits change leaves stored rows alone; one row per day under two writers.
 5. **The page.** The `days` section drawn from the served days in today's layout, the dot from the newest day turned
    to; the `days` notes' unlocks retired from the page, and their released `note_` triggers handled through the
