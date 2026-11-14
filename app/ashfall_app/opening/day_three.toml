@@ -522,6 +522,7 @@ outcome = { line_keys = ["l_bay_mid"] }
 id = "n2"
 label_key = "lane_n2"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "n2_joined" }, label_key = "lane_n2_named" }]
 name_key = "name_n2"
 
@@ -863,6 +864,32 @@ id = "aim_warm"
 text_key = "aim_warm"
 after = { unlock_kind = "feature", id = "warm_ground" }
 
+# A day's mention of the people told by `mention` (decisions.md, "People, as built"): the band for how many came or
+# went that day, one of its lines drawn by a seeded shuffle. Words, never a count: a number is not the voice.
+[[people.came]]
+at_least = 1
+keys = ["mention_came_one_1", "mention_came_one_2", "mention_came_one_3"]
+
+[[people.came]]
+at_least = 2
+keys = ["mention_came_few_1", "mention_came_few_2", "mention_came_few_3"]
+
+[[people.came]]
+at_least = 5
+keys = ["mention_came_many_1", "mention_came_many_2", "mention_came_many_3"]
+
+[[people.went]]
+at_least = 1
+keys = ["mention_went_one_1", "mention_went_one_2", "mention_went_one_3"]
+
+[[people.went]]
+at_least = 2
+keys = ["mention_went_few_1", "mention_went_few_2", "mention_went_few_3"]
+
+[[people.went]]
+at_least = 5
+keys = ["mention_went_many_1", "mention_went_many_2"]
+
 # ---------- text ----------
 
 [line_kinds]
@@ -900,9 +927,9 @@ l_bay_go = "story"
 l_bay_his = "story"
 l_bay_help = "story"
 l_bay_mid = "story"
-l_join_1 = "find"
-l_join_2 = "find"
-l_his_first = "find"
+l_join_1 = "story"
+l_join_2 = "story"
+l_his_first = "story"
 l_scrap_ask = "story"
 l_bank_1 = "story"
 l_bank_hers = "story"
@@ -1049,4 +1076,21 @@ l_shelf_1 = "a flat stone set, then another."
 l_shelf_2 = "boards of damp wood laid across the stones."
 l_shelf_3 = "the pots go up, out from underfoot."
 n_ground_1 = "warm out to four paces round the hearth, then cold as anywhere. warmest after dark"
+mention_came_one_1 = "one more bowl goes round the pot."
+mention_came_one_2 = "a stranger comes in out of the ash, and stays."
+mention_came_one_3 = "someone new sleeps on the far side of the fire."
+mention_came_few_1 = "a few more come in off the road. the pot stretches."
+mention_came_few_2 = "new faces at the fire. nobody asks where from."
+mention_came_few_3 = "the ladle scrapes bottom sooner."
+mention_came_many_1 = "a crowd comes in, ash to the knees."
+mention_came_many_2 = "more come than there are blankets."
+mention_came_many_3 = "too many new faces to learn in a day."
+mention_went_one_1 = "a place at the fire stands empty."
+mention_went_one_2 = "one bowl fewer goes round the pot."
+mention_went_one_3 = "a bedroll by the fire stays rolled up."
+mention_went_few_1 = "a few places at the fire stand empty."
+mention_went_few_2 = "the camp is quieter by a few voices."
+mention_went_few_3 = "the stores stretch further, for the wrong reason."
+mention_went_many_1 = "a whole side of the fire sits empty."
+mention_went_many_2 = "the pot goes round fast. too many are gone."
 # ---------- end of lines ----------

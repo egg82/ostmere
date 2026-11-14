@@ -9,6 +9,7 @@ end_feature = "t_after"
 id = "t_helper"
 label_key = "t_l_helper"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "t_named" }, label_key = "t_l_helper_named" }]
 
 [[cards]]

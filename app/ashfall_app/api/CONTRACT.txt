@@ -1400,6 +1400,24 @@ LEAVES
   THE CLIENT MAY NOT:
   - keep a row, a rule or an idle remainder for a person who has left, or draw their cards in the Completed tab.
 
+PEOPLE (docs/decisions.md, "People, as built")
+  How a person's joining and leaving is written: LaneInfo.told, line or mention for a ruled lane, null for any other
+  lane. A line person's joining (a counted join aside: they came earlier) and leaving are told by the story lines of
+  the outcome that moves them; each such LineInfo has person true. A mention person has no line of their own: each
+  outcome that joins or leaves one writes a mention line, key "people.<way>.<lane>", text empty, kind story, its
+  LineInfo's mention {lane, way: joined | left}. Mention lines are in the save's log like any line, at the second the
+  person came or went.
+  Content.people {came, went}: each a list of bands {at_least, keys}, rising from 1. The page words each game day's
+  mention lines (day: the line's game second over 86400) as one line per way: the band of the highest at_least not over
+  how many lanes came (or went) that day, and of its keys the one a shuffle bag keyed by the save, the way and the band
+  draws for that day.
+  THE CLIENT MAY:
+  - draw a day's mention lines as that one line in the strip and the chronicle, at the second of the day's first,
+    reworded when a later Step adds to the same day; and gather the person and mention lines of a return into the
+    "Since you left" chapter's people section.
+  THE CLIENT MAY NOT:
+  - draw a mention line by itself, or name the person a mention counts.
+
 SPENT
   A mix card stopped on a dry store gives its share to the other cards of the same running mix on the same lane, in
   proportion to their own shares, until it starts again (engine DESIGN.txt, "SPENT"): a store something in play can

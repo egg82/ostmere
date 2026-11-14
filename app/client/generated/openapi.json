@@ -2717,6 +2717,16 @@
               }
             ]
           },
+          "people": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PeopleInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "first_mix": {
             "$ref": "#/components/schemas/FirstMix"
           },
@@ -2749,6 +2759,7 @@
           "aim_infos",
           "journal",
           "camp",
+          "people",
           "first_mix",
           "transfer_code_s"
         ],
@@ -3899,6 +3910,21 @@
               }
             ],
             "title": "Name Key"
+          },
+          "told": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "line",
+                  "mention"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Told"
           }
         },
         "type": "object",
@@ -3907,7 +3933,8 @@
           "label_key",
           "ruled",
           "later_labels",
-          "name_key"
+          "name_key",
+          "told"
         ],
         "title": "LaneInfo",
         "description": "Every lane, \"hands\" included. Its label is the label_key of the last of later_labels whose `after`\nview.unlocked holds, else label_key (CONTRACT.txt, \"A lane run by rules\")."
@@ -4143,13 +4170,29 @@
                 "type": "null"
               }
             ]
+          },
+          "person": {
+            "type": "boolean",
+            "title": "Person"
+          },
+          "mention": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Mention"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
         "required": [
           "key",
           "kind",
-          "cause"
+          "cause",
+          "person",
+          "mention"
         ],
         "title": "LineInfo"
       },
@@ -4224,6 +4267,29 @@
           "kept_days"
         ],
         "title": "Me"
+      },
+      "Mention": {
+        "properties": {
+          "lane": {
+            "type": "string",
+            "title": "Lane"
+          },
+          "way": {
+            "type": "string",
+            "enum": [
+              "joined",
+              "left"
+            ],
+            "title": "Way"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lane",
+          "way"
+        ],
+        "title": "Mention",
+        "description": "A mention line: `lane`'s person joined or left, counted into the day's one line the page words (CONTRACT.txt,\n\"People\")."
       },
       "MenuNode": {
         "properties": {
@@ -4904,6 +4970,52 @@
           "key"
         ],
         "title": "PastLine"
+      },
+      "PeopleBand": {
+        "properties": {
+          "at_least": {
+            "type": "integer",
+            "title": "At Least"
+          },
+          "keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Keys"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at_least",
+          "keys"
+        ],
+        "title": "PeopleBand",
+        "description": "The lines for a day on which at least `at_least` people came (or went), until the next band's."
+      },
+      "PeopleInfo": {
+        "properties": {
+          "came": {
+            "items": {
+              "$ref": "#/components/schemas/PeopleBand"
+            },
+            "type": "array",
+            "title": "Came"
+          },
+          "went": {
+            "items": {
+              "$ref": "#/components/schemas/PeopleBand"
+            },
+            "type": "array",
+            "title": "Went"
+          }
+        },
+        "type": "object",
+        "required": [
+          "came",
+          "went"
+        ],
+        "title": "PeopleInfo"
       },
       "Prestige": {
         "properties": {

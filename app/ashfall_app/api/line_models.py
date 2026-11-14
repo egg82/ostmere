@@ -43,6 +43,26 @@ class AnswerCause(BaseModel):
     offer: str
 
 
+class Mention(BaseModel):
+    """A mention line: `lane`'s person joined or left, counted into the day's one line the page words (CONTRACT.txt,
+    "People")."""
+
+    lane: str
+    way: Literal["joined", "left"]
+
+
+class PeopleBand(BaseModel):
+    """The lines for a day on which at least `at_least` people came (or went), until the next band's."""
+
+    at_least: int
+    keys: list[str]
+
+
+class PeopleInfo(BaseModel):
+    came: list[PeopleBand]
+    went: list[PeopleBand]
+
+
 type LineCause = Annotated[RunnerCause | WhenCause | SkillCause | CampCause | AnswerCause, Field(discriminator="kind")]
 
 
@@ -54,3 +74,7 @@ class LineInfo(BaseModel):
     cause: LineCause | None
     """What writes the line, read from where its key is authored: one place, or several levels of one skill; null for
     the opening's first lines, the end's, and a beat waiting on a lane's rules."""
+    person: bool
+    """A story line of an outcome where a `line` person joins or leaves (CONTRACT.txt, "People")."""
+    mention: Mention | None
+    """Set on a mention line, which has no text of its own: the page counts it into the day's mention."""

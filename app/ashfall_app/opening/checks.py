@@ -22,6 +22,7 @@ from .phase_pays import check_phase_pays
 from .prestige import check_phase_spans, check_tracks
 from .refs import check_refs, fail, ids_by_kind, need, offer_cap, outcomes
 from .leave_checks import check_leaves
+from .people_checks import check_people
 from .replace_checks import check_replacements
 from .retire_checks import check_retired_chores
 from .season_checks import check_season_turns
@@ -65,6 +66,7 @@ def check_structure(o: "Opening") -> None:
     check_retired_chores(o)
     check_replacements(o)
     check_leaves(o)
+    check_people(o)
     check_aims(o)
     check_journal(o)
     check_bands(o)

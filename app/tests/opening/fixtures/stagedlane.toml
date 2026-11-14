@@ -13,11 +13,13 @@ initial_items = 20
 id = "t_builder"
 label_key = "t_l_builder"
 ruled = true
+told = "line"
 
 [[lanes]]
 id = "t_hauler"
 label_key = "t_l_hauler"
 ruled = true
+told = "line"
 
 [[cards]]
 id = "t_raise"

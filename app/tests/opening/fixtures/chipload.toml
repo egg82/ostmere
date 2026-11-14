@@ -17,6 +17,7 @@ makes = [{ store = "t_load", items_per_hour = 4 }]
 id = "t_helper"
 label_key = "t_l_helper"
 ruled = true
+told = "line"
 
 [[cards]]
 id = "t_shovel"

@@ -44,7 +44,7 @@ def test_a_reworded_test_chapter_is_safe(tmp_path: Path):
 
 def test_a_lanes_ruled_changed_is_forbidden(tmp_path: Path):
     """The installs go too: on an unruled lane they would not load, nor would the trigger reading its rules."""
-    path = broken(tmp_path, "ruled = true\n", "ruled = false\n")
+    path = broken(tmp_path, 'ruled = true\ntold = "line"\n', "ruled = false\n")
     kept = [line for line in path.read_text().splitlines(keepends=True) if not line.startswith("orders = [")]
     assert len(kept) == len(path.read_text().splitlines()) - 2
     text = "".join(kept)

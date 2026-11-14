@@ -29,6 +29,7 @@ costs = [{ store = "t_fuel", items_per_hour = 1 }]
 id = "t_helper"
 label_key = "t_l_helper"
 ruled = true
+told = "line"
 
 [[cards]]
 id = "t_scoop"

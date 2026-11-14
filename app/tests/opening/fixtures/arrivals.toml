@@ -15,11 +15,13 @@ tally = true
 id = "t_p2"
 label_key = "t_l_p2"
 ruled = true
+told = "mention"
 
 [[lanes]]
 id = "t_p3"
 label_key = "t_l_p3"
 ruled = true
+told = "mention"
 
 [[cards]]
 id = "t_p2_work"

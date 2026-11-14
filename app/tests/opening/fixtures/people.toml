@@ -1,0 +1,98 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_people_loader.py): one person told by a line joins
+# with a story line of their own; two told by a mention join together with none, and later one of them leaves. Not
+# story: the ids and words are the tests' own. The planted variants are edits of this file.
+version = 1
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[lanes]]
+id = "t_post"
+label_key = "t_l_post"
+
+[[lanes]]
+id = "t_q1"
+label_key = "t_l_q1"
+ruled = true
+told = "line"
+
+[[lanes]]
+id = "t_q2"
+label_key = "t_l_q2"
+ruled = true
+told = "mention"
+
+[[lanes]]
+id = "t_q3"
+label_key = "t_l_q3"
+ruled = true
+told = "mention"
+
+[[cards]]
+id = "t_q1_work"
+lane = "t_q1"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_q2_work"
+lane = "t_q2"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_q3_work"
+lane = "t_q3"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[triggers]]
+id = "t_q1_comes"
+when = { test = "after_time", value = 100 }
+outcome = { line_keys = ["t_l_comes"], unlocks = [{ unlock_kind = "card", id = "t_q1_work" }], joins = [{ lane = "t_q1", mix = "town:main", card = "t_q1_work" }] }
+
+[[triggers]]
+id = "t_pair_comes"
+when = { test = "after_time", value = 200 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "t_q2_work" }, { unlock_kind = "card", id = "t_q3_work" }], joins = [{ lane = "t_q2", mix = "town:main", card = "t_q2_work" }, { lane = "t_q3", mix = "town:main", card = "t_q3_work" }] }
+
+[[triggers]]
+id = "t_q3_goes"
+when = { test = "after_time", value = 5000 }
+outcome = { leaves = [{ lane = "t_q3" }] }
+
+[[people.came]]
+at_least = 1
+keys = ["t_came_one"]
+
+[[people.came]]
+at_least = 2
+keys = ["t_came_some_a", "t_came_some_b"]
+
+[[people.went]]
+at_least = 1
+keys = ["t_went_one"]
+
+[line_kinds]
+t_l_comes = "story"
+
+[text]
+t_s_heap = "Heap"
+t_l_post = "Post"
+t_l_q1 = "First"
+t_l_q2 = "Second"
+t_l_q3 = "Third"
+t_c_work = "Work"
+t_l_comes = "One comes."
+t_came_one = "One more."
+t_came_some_a = "Some more."
+t_came_some_b = "More again."
+t_went_one = "One fewer."

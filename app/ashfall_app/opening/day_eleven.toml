@@ -72,6 +72,7 @@ outcome = { stores = [{ store = "hut", items = 1 }] }
 id = "n5"
 label_key = "lane_n5"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n5_named" }]
 name_key = "name_n5"
 
@@ -79,6 +80,7 @@ name_key = "name_n5"
 id = "n6"
 label_key = "lane_n6"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n6_named" }]
 name_key = "name_n6"
 
@@ -86,6 +88,7 @@ name_key = "name_n6"
 id = "n7"
 label_key = "lane_n7"
 ruled = true
+told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n7_named" }]
 name_key = "name_n7"
 
@@ -489,8 +492,8 @@ l_family_1 = "story"
 l_family_2 = "story"
 l_hut_go = "story"
 l_hut_theirs = "story"
-l_join3_1 = "find"
-l_join3_2 = "find"
+l_join3_1 = "story"
+l_join3_2 = "story"
 l_guard_ask = "story"
 l_guard_n2_1 = "find"
 l_guard_n2_2 = "find"
