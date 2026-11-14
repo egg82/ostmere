@@ -14,7 +14,6 @@ import type { Past } from "../game/chronicle";
 import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
 import { readingMs } from "../game/reading";
 import { HandStreak } from "../game/stall";
-import { UI } from "../game/text";
 import { Banner } from "./banner";
 import { CardGlow } from "./cardglow";
 import { Cards } from "./cards";
@@ -41,7 +40,7 @@ import { MixSelector } from "./selector";
 import { Skills } from "./skills";
 import { Story } from "./story";
 import { MoreCue } from "./morecue";
-import { showTabs, wireTabs, type Tab } from "./tabs";
+import { PanelTabs } from "./tabs";
 
 export class Screen {
   readonly root = el("div", "game");
@@ -75,10 +74,7 @@ export class Screen {
   private readonly selector: MixSelector;
   private readonly banner: Banner;
   private readonly end: TheEnd;
-  private readonly tabCards = el("button", "tab");
-  private readonly tabCompleted = el("button", "tab");
-  private readonly tabRules = el("button", "tab");
-  private readonly tabs = el("div", "tabs");
+  private readonly tabs: PanelTabs;
   /** The hands strip's band, pinned under the scene on a phone. */
   private readonly pinned = el("div", "panel-top");
   private readonly rules: RulesTab;
@@ -88,7 +84,6 @@ export class Screen {
   private view: View | null = null;
   private latest: Pick<Step, "repeats" | "rule_runs" | "lines" | "save_id"> = { repeats: { taps: [], switches: [] }, rule_runs: [], lines: [], save_id: 0 };
   private lessons: Lessons | null = null;
-  private tab: Tab = "cards";
   private readonly cardGlow: CardGlow;
 
   constructor(
@@ -119,9 +114,14 @@ export class Screen {
       lines: () => this.latest.lines, saveId: () => this.latest.save_id, lesson: () => this.lessons?.holding ?? null, lessonSubject: () => this.lessons?.subject ?? null,
     };
     this.story = new Story(ctx, () => this.asks.show());
+    this.tabs = new PanelTabs(catalog, (tab) => {
+      if (tab === "rules") { this.openRules(null); return; }
+      this.tabs.on = tab;
+      this.showTab();
+    });
     const marks = new NewMarks();
     this.cardGlow = new CardGlow(catalog, this.glow, (card) => this.cards.node(card));
-    this.cards = new Cards(ctx, marks, () => { if (this.tab !== "cards" || this.editor.open) markNew(this.tabCards, () => undefined); });
+    this.cards = new Cards(ctx, marks, () => { if (this.tabs.on !== "cards" || this.editor.open) markNew(this.tabs.cards, () => undefined); });
     this.completed = new Completed(ctx);
     this.ledger = new Ledger(ctx);
     this.editor = new MixEditor(ctx, () => this.showTab(), marks);
@@ -132,13 +132,13 @@ export class Screen {
     this.asks = new Asks(ctx);
     const skills = new Skills(ctx);
     this.rules = new RulesTab(ctx);
-    this.rulesGlow = new GlowWhile(this.glow, this.tabRules);
+    this.rulesGlow = new GlowWhile(this.glow, this.tabs.rules);
     const area = el("div", "card-area");
     area.append(this.cards.root, this.completed.root, this.rules.root, this.editor.root, this.hands.lanes.town.root);
     this.pinned.append(this.hands.root);
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);
-    panel.append(this.banner.root, this.pinned, this.asks.root, this.hands.rows, this.hands.lanes.root, this.ledger.asks, this.tabs, area, this.foot);   // the asks, a phone's chip rule offer and the lane rows under the strip, unpinned; then a phone's red and full ledger lines
+    panel.append(this.banner.root, this.pinned, this.asks.root, this.hands.rows, this.hands.lanes.root, this.ledger.asks, this.tabs.root, area, this.foot);   // the asks, a phone's chip rule offer and the lane rows under the strip, unpinned; then a phone's red and full ledger lines
     this.parts = [this.story, this.hands, this.asks, this.cards, this.completed, this.rules, skills, this.ledger,
       new FeatureCard(catalog, this.reveal, this.root), new MoreCue(panel, area), (this.lessons = new Lessons(ctx, this.root, () => this.redraw()))];
 
@@ -151,13 +151,6 @@ export class Screen {
     this.left.append(stage, this.low);
     seatHead(this.root, stage, this.story.head, this.story.aim, this.story.root);
 
-    wireTabs(catalog, [[this.tabCards, UI.tabCards, "cards"], [this.tabCompleted, UI.tabCompleted, "completed"], [this.tabRules, UI.ordersHeading, "rules"]], (tab) => {
-      if (tab === "rules") { this.openRules(null); return; }
-      this.tab = tab;
-      this.showTab();
-    });
-    this.tabRules.style.visibility = "hidden";
-    this.tabs.append(this.tabCards, this.tabCompleted, this.tabRules);
     this.state = [this.ledger.root, skills.root];   // on a phone the ledger comes first, nearest the cards
     this.low.hidden = true;
     this.panel = panel;
@@ -254,10 +247,10 @@ export class Screen {
     this.selector.update(view);
     const rules = mixRules(view).length + taskRules(view).length;
     this.rulesShown ||= rulesTabDrawn(view, this.keeps.ruleSeen());   // Next lives there too
-    this.tabRules.style.visibility = this.rulesShown ? "" : "hidden";   // its room is kept: nothing moves
+    this.tabs.rules.style.visibility = this.rulesShown ? "" : "hidden";   // its room is kept: nothing moves
     this.rulesGlow.update(rules > 0 && this.keeps.ruleSeen() && !this.keeps.rulesOpened());
-    if (prev && (view.orders.length > prev.orders.length || view.queue.length > prev.queue.length)) this.flight.landed(this.tabRules, this.tab === "rules");
-    this.tabCompleted.style.visibility = view.completed.length > 0 ? "" : "hidden";   // its room is kept: nothing moves
+    if (prev && (view.orders.length > prev.orders.length || view.queue.length > prev.queue.length)) this.flight.landed(this.tabs.rules, this.tabs.on === "rules");
+    this.tabs.completed.style.visibility = view.completed.length > 0 ? "" : "hidden";   // its room is kept: nothing moves
     this.low.hidden = this.state.every((part) => part.hidden);   // nothing under the strip until the ledger or a skill has something to show
     this.cardGlow.place(view);
   }
@@ -270,11 +263,11 @@ export class Screen {
     this.keeps.keepRulesOpened();
     this.rulesGlow.used();
     this.rulesShown = true;
-    this.tabRules.style.visibility = "";
-    this.tab = "rules";
+    this.tabs.rules.style.visibility = "";
+    this.tabs.on = "rules";
     this.rules.open(view, rule, offered);
     this.showTab();
-    revealBelow(this.tabs, this.pinned, [this.root, this.panel]);
+    revealBelow(this.tabs.root, this.pinned, [this.root, this.panel]);
   }
 
   private openEditor(mixId: string | null, fresh = false, forRule: number | null = null): void {
@@ -288,7 +281,6 @@ export class Screen {
   private showTab(): void {
     const editing = this.editor.open || this.hands.lanes.town.open;
     this.root.classList.toggle("editing", editing);
-    this.tabs.style.visibility = editing ? "hidden" : "";
-    showTabs(this.tab, editing, [[this.tabCards, this.cards.root, "cards"], [this.tabCompleted, this.completed.root, "completed"], [this.tabRules, this.rules.root, "rules"]]);
+    this.tabs.show(editing, { cards: this.cards.root, completed: this.completed.root, rules: this.rules.root });
   }
 }
