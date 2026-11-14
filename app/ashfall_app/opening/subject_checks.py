@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from .subject_entries import SlotEntry, SourceEntry, SubjectEntry
 
 AWAITING_SLOTS: frozenset[str] = frozenset({
-    "s_b4_went", "s_b4_she_went", "s_b6", "s_b7", "s_b9", "s_b10", "s_b11", "s_b12", "s_b13", "s_b14", "s_n2_joined",
-    "s_n3_joined", "s_n4_joined", "s_n5_joined", "s_n6_joined", "s_n7_joined",
+    "s_b6", "s_b7", "s_b9", "s_b10", "s_b11", "s_b12", "s_b13", "s_b14", "s_n2_joined", "s_n3_joined", "s_n4_joined",
+    "s_n5_joined", "s_n6_joined", "s_n7_joined",
 })
 """Shipped subjects declared before their lines are written: the first and catch-up slots are not required of them.
 tests/opening/test_journal_subjects.py holds this to exactly the shipped subjects still missing one."""
