@@ -338,7 +338,7 @@ const low = (store: string, n: number, m: number): Condition => ({ kind: "at_mos
 export const TIRED = low("energy", 3, 6);
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs, skill_needs: [],
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], marks: [], work_s: 5, inputs, skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
 

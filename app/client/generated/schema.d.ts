@@ -780,6 +780,8 @@ export interface components {
             upside_key: string | null;
             /** Change Bp */
             change_bp: number[];
+            /** Marks */
+            marks: number[];
             /** Work S */
             work_s: number;
             /** Inputs */

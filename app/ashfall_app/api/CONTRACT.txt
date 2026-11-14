@@ -500,7 +500,9 @@ THE CLIENT MAY
     kind the strip shows (story, tap, body) before any arrives.
   - draw one card panel from view.cards and a Completed tab from view.completed; a card moves between them only
     when the view says so. Each card is drawn the same whether tapped, mixed or idle: its completions against its
-    cap ("3 of 5"; no cap, the count alone), its share and run in the running mix, and its one bar: Card.bar sampled
+    cap ("3 of 5"; no cap, against the next of CardInfo.marks above it, the completion counts its reach pays at, and
+    past the last the count alone), its upside_key (also under its name in the town editor), its share and run in the
+    running mix, and its one bar: Card.bar sampled
     and taken modulo bar_total, whoever runs it (Card.by: tap, mix, or null and still). Card.completes_at is a tap's
     landing, drawn as its countdown; a share's is null: a rule that takes the hands yields the mix, so no landing is
     claimed for it.
@@ -666,7 +668,8 @@ TEXT AND NUMBERS (one rule)
                        signed change in basis points, +1000 for a tenth more; a CardInfo's include the entries it holds
                        while it runs, at its full share, then those of the standing action its content names as
                        upside_of, the runner whose held entries its upside describes: a recipe whose make another
-                       runner eats names that eater, and the page draws the eater's change on the recipe) as a signed
+                       runner eats names that eater, and the page draws the eater's change on the recipe, then its
+                       marks': the changes of the triggers on its completions past one) as a signed
                        percent: change / Scales.bp * 100
                        toward zero, no trailing zeros, two decimals at most (a change that is not zero never reads as
                        zero), sign unless zero ("+10%", "-33.33%"). The text names what changes and carries no direction

@@ -218,7 +218,8 @@ export class Cards implements Part {
     cl.toggle("first", s.single && !row.done);
     cl.toggle("untapped", s.single && !row.done && card.completions === 0 && card.by === null);
     row.tap.disabled = row.done || laneBusy;
-    setText(row.count, retired ? catalog.text.get(UI.retired) : card.cap !== null || card.completions > 0 ? catalog.format.completions(card.completions, card.cap) : "");
+    const mark = info?.marks.find((m) => m > card.completions) ?? null;   // an uncapped card's reach: its runs against the next
+    setText(row.count, retired ? catalog.text.get(UI.retired) : card.cap !== null || card.completions > 0 ? catalog.format.completions(card.completions, card.cap ?? mark) : "");
     row.needs.draw(row.card, view, row.done);
     row.fight?.sync(view, row.id);
     this.whenReady.sync(row.ready, row.done ? undefined : card, view);

@@ -133,7 +133,11 @@ export class TownEditor {
     drop.type = "button";
     drop.setAttribute("aria-label", `${catalog.cardLabel(card)} ${catalog.text.get(UI.orderRemove)}`);
     drop.addEventListener("click", () => this.edit(dropTownCard(mix, card)));
-    row.append(el("span", "town-card-name", catalog.cardLabel(card)), step(-1, "−"), el("span", "town-card-share", catalog.format.share(bp)), step(1, "+"), drop);
+    const what = el("span", "town-card-what");   // the card, and what it is for when it says (its upside)
+    what.append(el("span", "town-card-name", catalog.cardLabel(card)));
+    const info = catalog.cards.get(card);
+    if (info?.upside_key) what.append(el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp))));
+    row.append(what, step(-1, "−"), el("span", "town-card-share", catalog.format.share(bp)), step(1, "+"), drop);
     return row;
   }
 }
