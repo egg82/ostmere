@@ -5,6 +5,7 @@ from collections.abc import Iterable
 
 from ..opening import convert as authored
 from ..opening.entries import ConditionEntry
+from ..opening.face_checks import shown_stores, timed_stores
 from ..opening.lock import line_keys
 from ..opening.offer_entries import OfferEntry
 from ..opening.people import mention_keys, person_keys
@@ -23,8 +24,7 @@ def line_infos(o: Opening) -> list[LineInfo]:
 
 
 def _causes(o: Opening) -> dict[str, LineCause]:
-    cards = {c.id for c in o.cards}
-    hidden = {s.id for s in o.stores if s.hidden}
+    cards, worded = {c.id for c in o.cards}, worded_stores(o)
     found: dict[str, LineCause] = {}
 
     def put(keys: Iterable[str], cause: LineCause | None) -> None:
@@ -41,24 +41,28 @@ def _causes(o: Opening) -> dict[str, LineCause]:
         if fight is not None:
             put([*fight.won_line_keys, *fight.lost_line_keys], RunnerCause(runner=runner))
     for t in o.triggers:
-        put(t.outcome.line_keys, _when(t.when, cards))
+        put(t.outcome.line_keys, _when(t.when, cards, worded))
     for x in o.offers:
-        put(x.line_keys, offer_cause(x, cards, hidden))
+        put(x.line_keys, offer_cause(x, cards, worded))
         put([k for a in x.answers for k in a.outcome.line_keys], AnswerCause(offer=x.id))
     for ch in o.chips:
-        put([k for k in (ch.on_line_key, ch.off_line_key) if k is not None], WhenCause(when=convert.condition(authored.condition(ch.when, cards))))
+        put([k for k in (ch.on_line_key, ch.off_line_key) if k is not None], _when(ch.when, cards, worded))
     for i, lv in enumerate(o.camp.levels if o.camp is not None else []):
         put(lv.line_keys, CampCause(level=i + 1))
     return found
 
 
-def offer_cause(x: OfferEntry, cards: set[str], hidden: set[str]) -> LineCause | None:
-    """What led to an offer: its gate, unless the gate watches a hidden store or a lane's rules, which the page cannot
-    word; then the first offer whose answer it requires."""
-    if x.gate.subject_kind != "store" or x.gate.id not in hidden:
-        gate = _when(x.gate, cards)
-        if gate is not None:
-            return gate
+def worded_stores(o: Opening) -> frozenset[str]:
+    """The stores a cause may name: one whose amount the page draws, or a clock that reads as a time of day."""
+    return shown_stores(o) | timed_stores(o)
+
+
+def offer_cause(x: OfferEntry, cards: set[str], worded: frozenset[str]) -> LineCause | None:
+    """What led to an offer: its gate, unless the page cannot word it (worded_stores, _when); then the first offer whose
+    answer it requires."""
+    gate = _when(x.gate, cards, worded)
+    if gate is not None:
+        return gate
     after = next((c.id for c in x.requires if c.subject_kind == "unlocked" and c.unlock_kind == "answered"), None)
     return None if after is None else AnswerCause(offer=after)
 
@@ -77,6 +81,9 @@ def _skill(c: LineCause | None) -> str | None:
     return None
 
 
-def _when(c: ConditionEntry, cards: set[str]) -> WhenCause | None:
-    """A beat waiting on a lane's rules has no condition the page can read (the lesson on screen is its step)."""
-    return None if c.subject_kind == "lane_rules" else WhenCause(when=convert.condition(authored.condition(c, cards)))
+def _when(c: ConditionEntry, cards: set[str], worded: frozenset[str]) -> WhenCause | None:
+    """None where the page has nothing honest to word: a lane's rules (the lesson on screen is its step), or a store
+    whose amount the player is never shown and that reads as no time of day."""
+    if c.subject_kind == "lane_rules" or (c.subject_kind == "store" and c.id not in worded):
+        return None
+    return WhenCause(when=convert.condition(authored.condition(c, cards)))

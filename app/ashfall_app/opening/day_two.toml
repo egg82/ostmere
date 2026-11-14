@@ -130,6 +130,7 @@ unlocks = [{ unlock_kind = "feature", id = "n1_named" }, { unlock_kind = "action
 id = "evening_2"
 label_key = "store_evening_2"
 cap_items = 5
+clock = "evening"
 
 [[standing]]
 id = "evening_2"
@@ -141,6 +142,7 @@ makes = [{ store = "evening_2", items_per_hour = 20 }]
 id = "night_2"
 label_key = "store_night_2"
 cap_items = 20
+clock = "night"
 
 [[standing]]
 id = "night_2"

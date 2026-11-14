@@ -18,6 +18,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_7" }, { unlock_kind 
 id = "dawn_7"
 label_key = "store_dawn_7"
 cap_items = 20
+clock = "dawn"
 
 [[standing]]
 id = "dawn_7"
@@ -139,6 +140,7 @@ line_keys = ["l_pelt_given"]
 id = "day_7"
 label_key = "store_day_7"
 cap_items = 120
+clock = "day"
 
 [[standing]]
 id = "day_7"
@@ -176,6 +178,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "night_7" }] }
 id = "night_7"
 label_key = "store_night_7"
 cap_items = 20
+clock = "night"
 
 [[standing]]
 id = "night_7"

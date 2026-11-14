@@ -290,7 +290,7 @@ const text: Record<string, string> = {
   "ui.lane.idle": "idle", "ui.lane.change": "Change", "ui.rule.always": "{card}, always",
   "ui.rule.answer": "Answer: {answer}", "ui.rule.answers": "Answers", "ui.rule.answer_next": "Next time someone asks:", "ui.rule.answered": "Answered: {answer}",
   "lane.helper": "Helper", "lane.helper.later": "Helper, settled", "card.chop": "Chop logs", "card.haul": "Haul water", "card.fetch": "Fetch once",
-  "offer.ask": "[fixture] A question with two answers: which one?", "answer.wait": "Wait", "answer.go": "Go now", "offer.cost": "takes {d}",
+  "offer.ask": "[fixture] A question with two answers: which one?", "answer.wait": "Wait", "answer.go": "Go now", "kind.q.yes": "Say yes", "kind.q.no": "Say no", "offer.cost": "takes {d}",
   "offer.bank": "[fixture] Two ways to do a thing: whose?", "answer.hers": "Hers", "answer.his": "His", "offer.hers.effect": "[fixture] {pct} a thing", "offer.his.effect": "[fixture] {pct} another, {gain} wood",
   "offer.bank.waiting": "[fixture] waiting costs a thing", "offer.bank.expiry": "[fixture] gone by a time", "offer.bank.permanence": "[fixture] settled for good",
   "offer.trade": "[fixture] A third question, asked by one person with a long name?", "answer.keep": "Keep it", "answer.swap": "Swap it away",
@@ -347,16 +347,16 @@ export const fixtureContent: Content = {
   limits: { max_orders: 64, max_queue: 64, max_mixes: 64, reserved_mix_prefix: "town:" },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
-    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, bonus_bp: null },
-    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, bonus_bp: null },
-    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, bonus_bp: null },
-    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, bonus_bp: null },
-    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, bonus_bp: null },
-    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, bonus_bp: null },   // no ledger line: a chip's store
-    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, bonus_bp: null },
-    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, bonus_bp: null },
-    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, bonus_bp: null },
-    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, bonus_bp: null },   // bookkeeping: never a ledger line
+    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, tally: false, clock: null, bonus_bp: null },   // no ledger line: a chip's store
+    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, bonus_bp: null },   // bookkeeping: never a ledger line
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],
@@ -427,6 +427,9 @@ export const fixtureContent: Content = {
     offer: "trade", text_key: "offer.trade", kind: null, line_keys: [],
     answers: [{ answer: "keep", label_key: "answer.keep", cost_key: "offer.keep.effect", change_bp: [500], gains: [], role: null }, { answer: "swap", label_key: "answer.swap", cost_key: "offer.swap.effect", change_bp: [], gains: [{ store: "stone", quantity: 3 * Q }], role: null }],
     askers: ["mason"], cause: { kind: "answer", offer: "bank" }, waiting_key: null, expiry_key: null, permanence_key: null,
+  }],
+  offer_kinds: [{   // the kind the tests and #kinded make of the "ask" offer: "go" is the role yes, "wait" the role no
+    kind: "q", roles: [{ role: "yes", label_key: "kind.q.yes" }, { role: "no", label_key: "kind.q.no" }],
   }],
   lane_infos: [
     { lane: "hands", label_key: "lane.hands", ruled: false, later_labels: [], name_key: null, told: null },

@@ -147,7 +147,9 @@ ENDPOINTS
   action; when {when: Condition}, what a beat, an offer's arrival or a chip waited on; skill {skill}, a line several
   levels of one skill share (a phase's pool), so which level is not known; camp {level}, a Camp level from 1; answer
   {offer}, the player's answer to that offer (an offer's own lines take the offer's cause: OFFERS). Null for the end's
-  lines and a beat waiting on a lane's rules. A key is written in one place or by one skill's levels; any other
+  lines, a beat waiting on a lane's rules, and a `when` on a store the player is never shown (neither unlocked by any
+  outcome nor a tally, or hidden) unless it is a clock with a part of the day (StoreInfo.clock), which the page words
+  as that time (ui.when.*), never as an amount. A key is written in one place or by one skill's levels; any other
   sharing fails the content's load. The page words a cause under its line in the chronicle and never parses a line's
   words for one.
   AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
@@ -505,11 +507,15 @@ THE CLIENT MAY
     A card is ready iff blocker is null, else show blocker.ready_at as a countdown (null: no countdown), except while
     an at_most order on the blocker's store is on (view.orders_on) and its release + 1 is below the blocker's value:
     that order lets go first, so the time cannot be kept and no countdown shows. It can be tapped iff it is ready and
-    its lane's LaneBar has no running_card; its time is Card.tap_s. A blocker on a store the view has not unlocked
-    (a clock the player never sees, the night) shows as its countdown alone: no have/need and no When ready.
+    its lane's LaneBar has no running_card; its time is Card.tap_s. A need on a store the view has not unlocked is
+    drawn by what the store is: a tally (StoreInfo.tally) as ui.card.needs like any store; a clock with a part of
+    the day (StoreInfo.clock) as when it opens, ui.card.opens with {when} from ui.when.* (below), until its sample
+    reaches the quantity; any other (a countdown the player never sees) not at all, so the card's countdown is all of
+    it. A blocker on a store the view has not unlocked never takes When ready.
     On a Step whose failed_tap names a card, pulse that card red and mark what its blocker names, and show no text for it: the need of its
-    store (or, for a store the view has not unlocked, its countdown), skill level or step; a blocker with nothing
-    of its own on the card (a time) marks the countdown, and with no countdown either, the card alone.
+    store (its have/need or when it opens; for a countdown the player never sees, the countdown), skill level or step;
+    a blocker with nothing of its own on the card (a time) marks the countdown, and with no countdown either, the card
+    alone. Every require that can refuse a tap is one the card draws (tests/opening/test_requires_shown.py).
   - draw a time for a skill's next level, a store's "full in" or its "empty in" only from the forecast it holds
     (FORECAST below), never from SkillBar.next_level_at, LedgerLine.fills_at or empties_at, which hold only until the
     next event.
@@ -678,6 +684,11 @@ TEXT AND NUMBERS (one rule)
     ui.card.needs_spent {store}{have}{n}  the same, for a Need.spent need: nothing will bring the store again
     ui.card.needs_step {card}{have}{n}   a card's step need: the other card, its completions, the count wanted
     ui.card.needs_skill {skill}{have}{n}  a card's skill-level need: the skill's label, its level, the level wanted
+    ui.card.opens {when}            a card's need on a clock with a part of the day: when it opens
+    ui.when.dawn | dawn_end | day | day_end | evening | evening_end | night | night_end   a condition on a clock with
+                                    that part of the day (StoreInfo.clock) as a time: the part itself while the value
+                                    is short of the clock's cap (StoreInfo.cap), the part's end at the cap. A card's
+                                    ui.card.opens and a cause both word it so
     ui.mix.runs {d} | ui.mix.runs_indefinitely   the running mix's header (view.runs_out_at)
     ui.mix.idle                     the unassigned share
     ui.mix.default                  the id of the first mix the player makes (save_mix, then switch_mix)
@@ -978,9 +989,12 @@ OFFERS
   label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}], askers, cause, waiting_key, expiry_key,
   permanence_key}] in content order, kind the group of offers that ask the same question and role what
   an answer means in it (both null on an offer outside any kind; a kinded offer has a role on every answer, and every
-  offer of a kind has the same roles), line_keys the lines written when the offer shows. askers: the ruled lanes whose
+  offer of a kind has the same roles), line_keys the lines written when the offer shows. Content.offer_kinds:
+  [OfferKindInfo {kind, roles: [KindRole {role, label_key}]}], one per kind in content order, a label for each role
+  written for whoever asks: the words of the rule that answers the kind (the content refuses a kind without one for
+  each of its roles). askers: the ruled lanes whose
   people ask (empty when no one person does). cause: what led to the offer, a LineCause (Line causes): its gate, or for
-  a gate the page cannot word (a hidden store, a lane's rules) the first offer whose answer it requires, as answer
+  a gate the page cannot word (Line causes: a store never shown, a lane's rules) the first offer whose answer it requires, as answer
   {offer}; null with neither, and the offer's lines carry the same cause. The three *_key fields are text the content
   writes only where this offer differs from the usual, null otherwise: waiting_key, what waiting costs (usually
   nothing: an open offer pauses only itself); expiry_key, when it goes (usually never; the content refuses one while
@@ -1024,9 +1038,10 @@ OFFERS
     answered in the view (an open offer is not enough): a row with that offer's question (set apart from an open
     offer's), ui.rule.answered {answer} with the label of the answer that offer was given, the line
     ui.rule.answer_next (the buttons answer the kind's later offers), and one button per role,
-    each worded by the label of the answer that offer gave under the role. A tap sets the kind's rule to that role
+    each worded by the kind's own label for the role (Content.offer_kinds). A tap sets the kind's rule to that role
     (an always rule, appended; a rule already set for the kind is changed in place), and Remove takes it away. The
-    rule reads as ui.rule.answer with the label of the role's answer in the kind's first offer that has it.
+    rule reads as ui.rule.answer with the kind's label for the role; an answer_offer rule reads with that answer's own
+    label, which was written for that one ask.
   THE CLIENT MAY NOT build an answer_offer rule (no editor offers one; the order is set by a story moment or a tool),
   nor offer the answer rule for a kind before an offer of it has been answered.
 

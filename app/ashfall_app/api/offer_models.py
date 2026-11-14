@@ -42,6 +42,19 @@ class AnswerInfo(BaseModel):
     """What the answer means in its offer's kind; null for an offer without one."""
 
 
+class KindRole(BaseModel):
+    role: str
+    label_key: str
+
+
+class OfferKindInfo(BaseModel):
+    """What the content says of an offer kind: the label of each role, written for whoever asks, which words the rule
+    that answers the kind (an offer's own answer labels are written for that one ask)."""
+
+    kind: str
+    roles: list[KindRole]
+
+
 class OfferInfo(BaseModel):
     offer: str
     text_key: str

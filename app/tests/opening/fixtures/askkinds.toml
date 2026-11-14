@@ -53,11 +53,17 @@ q_l_first_no = "story"
 q_l_second_no = "story"
 q_l_second_yes = "story"
 
+[[offer_kinds]]
+kind = "q_ask"
+roles = [{ role = "yes", label_key = "q_k_yes" }, { role = "no", label_key = "q_k_no" }]
+
 [text]
 q_o_first = "A first question"
 q_o_second = "A second question"
 q_a_yes = "Yes"
 q_a_no = "No"
+q_k_yes = "You say yes"
+q_k_no = "You say no"
 q_a_cost = "takes nothing"
 q_l_first_yes = "First, yes."
 q_l_first_no = "First, no."

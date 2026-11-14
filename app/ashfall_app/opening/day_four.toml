@@ -24,6 +24,7 @@ outcome = { modifiers = [{ target = "rate", id = "smoke_catch", flow = "make", s
 id = "dawn_5"
 label_key = "store_dawn_5"
 cap_items = 20
+clock = "dawn"
 
 [[standing]]
 id = "dawn_5"
@@ -91,6 +92,7 @@ cost_key = "chip_fogbound_cost"
 id = "day_5"
 label_key = "store_day_5"
 cap_items = 320
+clock = "day"
 
 [[standing]]
 id = "day_5"
@@ -178,6 +180,7 @@ outcome = { line_keys = ["l_stack4_1", "l_stack4_2"] }
 id = "night_5"
 label_key = "store_night_5"
 cap_items = 20
+clock = "night"
 
 [[standing]]
 id = "night_5"
@@ -221,6 +224,7 @@ label_key = "skill_arcana"
 id = "dawn_6"
 label_key = "store_dawn_6"
 cap_items = 20
+clock = "dawn"
 
 [[standing]]
 id = "dawn_6"

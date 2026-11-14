@@ -2676,6 +2676,13 @@
             "type": "array",
             "title": "Offer Infos"
           },
+          "offer_kinds": {
+            "items": {
+              "$ref": "#/components/schemas/OfferKindInfo"
+            },
+            "type": "array",
+            "title": "Offer Kinds"
+          },
           "end_line_keys": {
             "items": {
               "type": "string"
@@ -2761,6 +2768,7 @@
           "node_infos",
           "lane_infos",
           "offer_infos",
+          "offer_kinds",
           "end_line_keys",
           "line_infos",
           "aim_infos",
@@ -3837,6 +3845,24 @@
         "minLength": 1,
         "pattern": "^[A-Za-z0-9_-]+={0,2}$"
       },
+      "KindRole": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "label_key": {
+            "type": "string",
+            "title": "Label Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "label_key"
+        ],
+        "title": "KindRole"
+      },
       "LaneBar": {
         "properties": {
           "lane": {
@@ -4789,6 +4815,28 @@
           "permanence_key"
         ],
         "title": "OfferInfo"
+      },
+      "OfferKindInfo": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/KindRole"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "roles"
+        ],
+        "title": "OfferKindInfo",
+        "description": "What the content says of an offer kind: the label of each role, written for whoever asks, which words the rule\nthat answers the kind (an offer's own answer labels are written for that one ask)."
       },
       "OfferedSwitch": {
         "properties": {
@@ -6160,6 +6208,27 @@
             "type": "boolean",
             "title": "Hidden"
           },
+          "tally": {
+            "type": "boolean",
+            "title": "Tally"
+          },
+          "clock": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "dawn",
+                  "day",
+                  "evening",
+                  "night"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clock"
+          },
           "bonus_bp": {
             "anyOf": [
               {
@@ -6179,6 +6248,8 @@
           "cap",
           "made_by",
           "hidden",
+          "tally",
+          "clock",
           "bonus_bp"
         ],
         "title": "StoreInfo"

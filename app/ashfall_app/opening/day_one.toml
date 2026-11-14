@@ -103,6 +103,7 @@ cap_items = 4
 id = "night"
 label_key = "store_night"
 cap_items = 20
+clock = "night"
 
 # Never unlocked: what the visitor will take, drawn down with the roots it takes, so H7 lands only once three roots
 # are gone (always whole: a dry larder pauses the visitor, not the beat's truth).

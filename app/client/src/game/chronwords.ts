@@ -6,6 +6,7 @@ import type { Catalog } from "./catalog";
 import type { Filter } from "./chronicle";
 import { ruleText } from "./rulerows";
 import { UI, type Text } from "./text";
+import { timeWords } from "./timewords";
 
 const LABEL: Record<Filter | "all", string> = {
   story: UI.chronStory, finds: UI.chronFinds, levels: UI.chronLevels, rules: UI.chronRules, fights: UI.chronFights,
@@ -78,10 +79,13 @@ export function causeWords(catalog: Catalog, cause: LineCause | null): string | 
   }
 }
 
-/** A condition met, as a cause: a store reached or fallen to, a level, a count, the thing unlocked or running, or time. */
+/** A condition met, as a cause: a clock's time of day, a store reached or fallen to, a level, a count, the thing
+ * unlocked or running, or time. */
 export function whenWords(catalog: Catalog, when: Condition): string | null {
   const { text, format } = catalog;
   if (when.kind === "after_time") return text.get(UI.causeTime);
+  const time = timeWords(catalog, when);
+  if (time !== null) return time;
   const w = when.watched;
   if (w.kind === "store_value") return text.fill(when.kind === "at_least" ? UI.causeStore : UI.causeBelow, { store: catalog.storeLabel(w.store), n: format.items(when.value) });
   if (when.kind === "at_most") return null;

@@ -8,6 +8,7 @@ import { CHRONICLE_KEYS } from "./chronkeys";
 import { PRESTIGE_KEYS } from "./prestigekeys";
 import { REMINDER_KEYS } from "./reminderkeys";
 import { RULE_KEYS } from "./rulekeys";
+import { TIME_KEYS } from "./timewords";
 
 /** Keys the page itself asks for: units, templates, the controls. Line, label and card keys come from the content. */
 export const UI = {
@@ -73,6 +74,7 @@ export const UI = {
   ...GOAL_ROW_KEYS,
   ...LESSON_KEYS,
   ...CHRONICLE_KEYS,
+  ...TIME_KEYS,
   ...ASK_KEYS,
   ...PRESTIGE_KEYS,
   ...REMINDER_KEYS,

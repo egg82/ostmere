@@ -94,7 +94,11 @@ is met); the route to it stays the player's to work out. A gate the player can o
 defect. **The next step is always on screen, with how far along it is** (no player left wondering for hours or
 days when the next bit of story comes, while a store sits half empty): whatever the next beat waits on (a
 store's amount, a level, a count) shows as the goal with its current value, so a store that holds the story up reads
-as what is next, not as a store like any other. A wait on the clock alone shows its countdown. The same holds for rules: a subject the player can see is one a rule can watch.
+as what is next, not as a store like any other. A wait on the clock alone shows its countdown. A card shows every
+requirement that can refuse its tap before the tap: a store as have/need, a level or a step as its row, a night or
+other part of the day as when it opens ("Opens after dark"), any other clock as its countdown; a card the content
+can show with a requirement its face cannot draw fails the build (`app/tests/opening/test_requires_shown.py`, whose
+held list only shrinks). The same holds for rules: a subject the player can see is one a rule can watch.
 **Progress uses mechanics native to the genre and fits the game's type and story**: a milestone is a build,
 a level or a count, never a state of the screen; the opening's end is its last steps done, not every ledger line white,
 since getting by is good enough in this story.
