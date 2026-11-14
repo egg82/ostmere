@@ -92,7 +92,7 @@ red line fixed and has to work out what now limits the goal. That is the loop Ko
    only. Conflict: none; `decisions.md`:592 holds if each pick states its effect. Conflicts with the current
    `prestige-phases.md`:143-146 (picks only order the nodes) only until row 15 lands.
 
-3. **A dominance readout in the simulator, not in the game.** Extends: the pacing simulator (open-work item 1, "what a
+3. **A dominance readout in the simulator, not in the game.** Extends: the pacing simulator (issue #27, "what a
    re-mix is worth"). Per phase, each source's share of income (Pecorella) and whether one saved-mix shape wins from
    every starting state. A shape that always wins is a bug in the choice, found in a number. Effort: low. Fun: a guard,
    so proposals 1, 2, 4 stay choices.

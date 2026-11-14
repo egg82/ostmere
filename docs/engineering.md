@@ -62,7 +62,7 @@ pattern.
 
 - **Fit pass before a new kind of thing.** When an ask adds a system, something placed in the world, new data, or a new
   roll or schedule: what is it an instance of, which row of `docs/systems.md` already does that, and how do games usually
-  solve it? Extend or combine; build new only when nothing fits, and say why. The open-work item carries a
+  solve it? Extend or combine; build new only when nothing fits, and say why. Its issue carries a
   "Fits into:" line. Tweaks to lines, art and numbers need no fit pass.
 - **`docs/systems.md` is the inventory**: what counts as a system (behind the locator) and what is model, data or
   module, each row's question and pattern, and the engine's contract. Planned before the code; updated in the same
@@ -99,7 +99,7 @@ structural checks hold (`docs/research/agentic-engineering.md`). So:
   pyright on the touched files. Subagents run only the tests their change touches; the full suite runs in the pull request's
   checks, not on the shared box.
 - **Cleanup is a standing pass** over merged code (duplication, drift from `docs/systems.md`), not only review before.
-- **The orchestrator edits the shared single-file docs** (`systems.md`, the decisions index, `open-work.md`,
+- **The orchestrator edits the shared single-file docs** (`systems.md`, the decisions index, the board's issues,
   `CLAUDE.md`, this file) from the doc deltas its writers report; a writer edits the decision file for its own system.
 
 ## Structural gates
@@ -226,7 +226,7 @@ requests reach both builds. What holds:
 ## Rules from day one
 
 habits is still partway through reworking its code to these rules, so its code mixes the old way and the new. Take
-its rules, and the parts its `docs/open-work.md` and `docs/systems.md` show as done; before copying one of its files as
+its rules, and the parts its queue and its systems inventory show as done; before copying one of its files as
 an example, check which side it is on.
 
 - **Postgres from the first table**, Postgres 18 with C collation (seeded orders depend on byte sort). SQL lives only in
@@ -285,3 +285,23 @@ an example, check which side it is on.
 - **Accounts are the app's own** (anonymous cookie sessions and a device transfer code, no external sign-in); tests
   sign in through sessions, never a trusted header.
 - **Sums from Postgres are typed explicitly**: `sum()` over bigint comes back as `Decimal`.
+
+## Shared machines
+
+The host, the CI runners and the cluster are shared with whatever other sessions are working:
+before a suite, a test container, a pipeline or an API burst, check who else is busy and coordinate only on real
+contention (method and limits in the `fanout-craft` skill, `references/shared-resources.md`<!--external-->). Research that lands under `docs/research/` is sent to the habits session too,
+the parts that apply to it.
+
+## Where things are
+
+| What | Where |
+|---|---|
+| Repo, CI, queue | GitHub, Actions ("The pipeline" above); the queue is the Ostmere: Work board, https://github.com/users/egg82/projects/2 |
+| Live site | https://ostmere.yggdrasil.pub (deploy: the cluster repo, via Flux) |
+| Research downloads (Widman map stamps, Gessner scans) | outside the repo |
+| Design canvas (six phone screens) | https://claude.ai/artifact/H6Foqa7diKmwDS1KGKJuxC, source in `docs/design/canvas/` |
+| Redesign comparison (six designs and the merge) | https://claude.ai/artifact/3zBFvQDBec1J6UWPqCuc6s, the chosen design in `docs/design/redesign/` |
+| Look test canvas | https://claude.ai/artifact/1EDLESML2xgre6iuvonRt1, source in `docs/design/look-test-canvas/` |
+| Writing and model tests | https://claude.ai/artifact/WbXhGSQedRy2SnN2gM3rNd, source in `docs/research/writing-test/` |
+| Strawman doc (superseded by `decisions.md` where they differ) | https://claude.ai/code/artifact/571817bb-99df-498c-be29-3202fe5ef76e |

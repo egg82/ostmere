@@ -7,7 +7,7 @@ What is written for the game, by whom, and on what budget.
 The finished game opens to the public internet if possible, so nothing a stranger can do may run up
 the Claude bill, and nobody manages anyone's access, which would be a terrible job. Yet every save should
 grow differently, souls and emergent quests included, which react to that town's own history. Four layers, cheapest
-first. Each kind of call's model is set by model-golfing it (the blind model test in `open-work.md`); the estimate until
+first. Each kind of call's model is set by model-golfing it (the blind model test in issue #29); the estimate until
 then is Sonnet for short lines that need little thought about the world, Opus for a kind that must reason over it (an
 emergent quest read from days of history):
 1. **Combination, free per player.** Most of what makes a save unique is code combining pooled pieces by the save's

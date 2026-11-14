@@ -2,7 +2,7 @@
 
 The inventory an agent checks before building something new (`CLAUDE.md`, the fit pass): what kind of thing is this,
 and which row below already answers that question? Extend or combine that system; add a row only when none fits, and
-say why in the open-work item's "Fits into:" line. Update this file in the same change that adds, merges or retires a
+say why in the issue's "Fits into:" line. Update this file in the same change that adds, merges or retires a
 system, and when a "Duplicates / planned" cell is resolved (delete the cell's text, not the row).
 
 Each cell is about a sentence; how a system works and why lives in its file under `docs/decisions/` (the index is
@@ -89,7 +89,7 @@ number showing its source, odds before you commit) is a property of one determin
 | Spells | Which rules combine into which spell, and its effects | | Model + data. Rules as data combined by a small interpreter; effects are modifiers and events | Deterministic from the build; cascades are chains of same-instant events under the firing cap | None |
 | Expeditions | Who goes, where, what returns | `docs/design/banked-time-plan.md`; DESIGN "BANKED TIME"; `decisions/combat.md` | Data on Cards, a model once a second member goes. A trip is an uncapped card with inputs; finds are triggers on its completion count | Run in the mix like any card | Backup, stance and wide expeditions (that part's KNOWN GAPS) |
 | Regions | Which regions are open, time spent in each, their outpost sites | | Model. State in the engine | Time in a region drives its threat strength | None |
-| Simulator | Do the invariants hold over a whole run, and how does it play? | `app/tests/dayone/routes.py` (`TOOL_USERS`), `app/tests/dayone/human_flags.py` (`lands_behind`), `app/tests/dayone/caploss.py`, `app/tests/weektwo/routes.py`, `app/tests/weektwo/counters.py`, `app/tests/readout_snapshot.py`, `app/tests/readouts/`; `docs/design/sim-invariants.md` | Tool. Scripted players driving the engine; each `report.py` readout reported against its committed text | CI; fails only on an invariant, readouts are reported, never failed; `python -m tests.readout_snapshot --write` commits them | `docs/open-work.md`, "Pacing simulator past the opening" |
+| Simulator | Do the invariants hold over a whole run, and how does it play? | `app/tests/dayone/routes.py` (`TOOL_USERS`), `app/tests/dayone/human_flags.py` (`lands_behind`), `app/tests/dayone/caploss.py`, `app/tests/weektwo/routes.py`, `app/tests/weektwo/counters.py`, `app/tests/readout_snapshot.py`, `app/tests/readouts/`; `docs/design/sim-invariants.md` | Tool. Scripted players driving the engine; each `report.py` readout reported against its committed text | CI; fails only on an invariant, readouts are reported, never failed; `python -m tests.readout_snapshot --write` commits them | issue #27, "Pacing simulator past the opening" |
 
 ## The world and its people
 

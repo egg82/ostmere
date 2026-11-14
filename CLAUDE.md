@@ -1,8 +1,10 @@
 # The Breaking of Ostmere (Ostmere)
 
 A single-player idle game, *The Breaking of Ostmere* (`ostmere.yggdrasil.pub`), made for its owner and played by them. The package and cluster names still say ashfall. Design rules: read the index `docs/decisions.md`, then the files in `docs/decisions/` for the systems a change touches, before designing anything.
-The queue, and where the design canvas and tests live: `docs/open-work.md`.
-How code is built and shipped, and the rules carried over from habits' mistakes: `docs/engineering.md`.
+The queue is the Ostmere: Work board (https://github.com/users/egg82/projects/2): issues, top first, and a PR that
+finishes one says `Closes #n`.
+How code is built and shipped, the rules carried over from habits' mistakes, and where the design canvas and tests
+live: `docs/engineering.md`.
 **Load the `agentic-engineering` skill before changing anything here**, and name it in every writer's brief.
 Every change reaches `main` through a pull request (`gh pr create`); GitHub Actions runs the full suite and the merge
 waits on its `ci-ok` check. Locally, run only the tests a change touches plus the structural gates. A push to `main`
@@ -12,7 +14,7 @@ releases the image `ghcr.io/egg82/ostmere` (and `egg82/ostmere` on Docker Hub), 
 starts with a fit pass, not a design:** what is it an instance of, which system in `docs/systems.md` already does that
 kind of thing, and how do games usually solve it (Nystrom's Game Programming Patterns, gameprogrammingpatterns.com: read
 the chapter, not a summary; the Gang of Four; what has been built on them since)? Extend that system or combine the
-two; build a new one only when none fits, and say why. Its open-work item carries a "Fits into:" line. Tweaks to
+two; build a new one only when none fits, and say why. Its issue carries a "Fits into:" line. Tweaks to
 lines, art and numbers need no fit pass. `docs/engineering.md`, "Patterns", has the dos and don'ts.
 
 **Never raise a held count to get a change through; split, reduce or report instead.** The structural gates' ledgers are in

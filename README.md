@@ -71,7 +71,7 @@ limit per test.
 - `docs/decisions.md`: the design decisions, indexed, with one file per system in `docs/decisions/`.
 - `docs/systems.md`: each system, the question it answers and where it lives.
 - `docs/core-loop.md`: the core loop.
-- `docs/open-work.md`: what's next.
+- What's next: the Ostmere: Work board (https://github.com/users/egg82/projects/2), top first.
 
 ## License
 

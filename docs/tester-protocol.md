@@ -1,6 +1,6 @@
 # Tester protocol
 
-How a cold tester judges the open-work item "Teach the mix system where it is first needed", and any later lesson. One
+How a cold tester judges issue #22's "Teach the mix system where it is first needed", and any later lesson. One
 tester at a time, fix between testers, stop by a rule written before the first one. The why, with sources, is
 `docs/research/design-101.md` §1 ("watch newcomers in small rounds") and §3 proposals 1 and 4. Never the owner, who knows the
 design, and a genre-literate player hides the gaps a newcomer hits.
@@ -70,4 +70,4 @@ For repeat offers and the return screen. Two or three cold testers each play two
 second opened from the return screen, not a new game. Read the sheet for both, and from the decision log and the
 recording: do the repeat offers appear and get taken after the return, and what is the first thing the tester does? The
 pass and stop rules are the same, and so is the silence. It is the only instrument that sees a return before the public
-build. Its result feeds "The night visits go quiet" in `docs/open-work.md`.
+build. Its result says whether the night visits go quiet.

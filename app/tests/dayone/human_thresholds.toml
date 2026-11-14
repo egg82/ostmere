@@ -7,7 +7,7 @@ dead_gap = "dead_gap_habit_s"   # which threshold a stretch of play with nothing
 value = 180
 unit = "s"
 source = "design choice"
-note = "An observed habit (docs/open-work.md, item 6): a few minutes of play with nothing notable and the player leaves; 3 min is the reading of 'a few'. Held within a visit, up to the leave; a leave whose screen names no payoff is flagged as bored"
+note = "An observed habit (issue #32): a few minutes of play with nothing notable and the player leaves; 3 min is the reading of 'a few'. Held within a visit, up to the leave; a leave whose screen names no payoff is flagged as bored"
 
 [threshold.dead_gap_research_s]
 value = 10

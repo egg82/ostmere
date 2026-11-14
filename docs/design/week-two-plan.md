@@ -81,7 +81,7 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    quiet dot while a note is unread; one page per entry in the hand font with the learned numbers below in Alegreya
    Sans, read from `View.fights` for a fought runner (unknown until fought, week 1's item 6 rule); portrait page on a
    phone, an open spread on desktop; layout seeded per entry; its first use a lesson on its own control. (c) The sketch
-   method for the first entries (open-work item 4, `docs/research/sketch-test/process.md`), each looked at before it
+   method for the first entries (issue #30, `docs/research/sketch-test/process.md`), each looked at before it
    ships. Fits into: Unlocks (the entry kind), Knowledge (its first real use, as a page reading), Lessons (first use),
    the page shell (a sheet). Not a system: one caller, nothing to swap. Interface: api `CONTRACT.txt`, "JOURNAL", and
    `opening-screen.md`, "The journal". Accept: that section's numbered acceptance tests.
@@ -146,7 +146,7 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
   capped fights, stance and who you bring stay open (week 2 needs none).
 - **Banked time** (`banked-time-plan.md`): its cap-loss target is held at each chapter's end (item 13); the season's pools
   are sinks' supply, not sinks.
-- **Open work**: item 5 here is open-work item 4 (journal pages), first slice.
+- **Open work**: item 5 here is issue #30 (journal pages), first slice.
 
 ## After week 2, where it plugs in
 

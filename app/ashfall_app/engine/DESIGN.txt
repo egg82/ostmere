@@ -2669,7 +2669,7 @@ KNOWN GAPS (held speed)
 - A HeldSpeed on a lane whose card is a fight raises the fight's rate with the lane's speed, as any speed entry there
   does; no content does this yet. Decided by: whoever first writes it.
 
-DRAINS (a take forgiven at 0) AND FRACTIONS AT THE LOADER (week one's lost-fight chip, open-work item 10). Where this
+DRAINS (a take forgiven at 0) AND FRACTIONS AT THE LOADER (week one's lost-fight chip, issue #33). Where this
 part and an entry above disagree, this part holds. Examples name ids only; which stores, chips, cards and numbers is
 content's. Blind tests are written from this part alone, against app/tests/engine_contract/MUTANTS_drains.txt.
 

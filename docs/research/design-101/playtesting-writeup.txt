@@ -111,14 +111,14 @@ pages do not address it), and any solo or small-team multi-session idle-game pla
 Practice already agrees with Part A on several points; two gaps are worth a test.
 
 **Where practice agrees**
-- **Cold tester, not the author.** The open-work item on teaching the mix says it is "judged by a cold tester who doesn't play
+- **Cold tester, not the author.** The queue item on teaching the mix says it is "judged by a cold tester who doesn't play
   idle games, never the owner", and `decisions.md`, "Shown in the design, not claimed" and the opening-screen doc's four
   fixes all come from cold testers' stalls (eyes split, type small, first card lost, front page unclear). That is finding 6 applied
   correctly; the owner being genre-literate says the same.
 - **Behaviour over report.** The "was it seen" probe (`app/tools/seen/`) plus the planned "pick the seen lines from
   real and invented ones" step is the recognition check of finding 7. Keep it as the instrument for story-line
   reach rather than asking testers whether they noticed.
-- **Return visits.** `docs/open-work.md` holds day two until day one is shared and testers' feedback is in, and says to
+- **Return visits.** The queue held day two until day one is shared and testers' feedback is in, and says to
   judge notifications from the returns in the telemetry. That is the right order for finding 4.
 - **Fix, then retest.** Small lines ship unreviewed and the game is developed live (`decisions.md`, "Developed live,
   forward-only by preference"); fast fixes are the condition RITE needs.
@@ -136,7 +136,7 @@ Practice already agrees with Part A on several points; two gaps are worth a test
 1. **A RITE-style stop for the mix and rule lessons.** Cold testers one at a time; fix what a tester stalled on before the
    next; stop after three consecutive testers who reach the first built mix and first built rule without help, and
    report it as "no problem hitting more than about half of testers found" rather than "verified". Cheap because
-   lessons are data (open-work, "Teach the mix system where it is first needed"). Pass condition stated before the
+   lessons are data (issue #22, "Teach the mix system where it is first needed"). Pass condition stated before the
    first session, and the observer says nothing.
 2. **A gapped cold-tester pair.** Two or three cold testers, each playing two short sittings a few hours apart (the
    Kolibri shape), with the second sitting opened from the return screen. Read from the decision log and screen

@@ -47,7 +47,7 @@ def test_a_return_during_a_hearth_cure_alone_still_owes_a_decision(day3_counts: 
 
 @pytest.mark.xfail(strict=True, reason="content gap: roots loses over half its making 8 h away from day three's end; the "
                    "lane foragers n1_forage and n2_forage fill it faster than field_track takes it, and no other sink "
-                   "takes roots (open-work.md, item 16)")
+                   "takes roots (issue #38)")
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_threes_end(day3_cap_loss: dict[str, tuple[int, ...]]):
     assert day3_cap_loss == {}
 

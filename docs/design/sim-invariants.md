@@ -162,7 +162,7 @@ and the like) are content structure, not pacing, and are untouched.
 Cap loss (D30, T8, H4, W7, K6) is babysit: a tool user who must come back to spend a full store is babysitting. Its
 limit, `LIMIT` in `dayone/capcheck.py` (half of each gathered store's making over 8 h and 24 h away), was picked, not
 derived. Every other failing check is exact: a route reaches a beat or not, a drawn time comes true or not, a
-babysitter ends level or ahead. With the default cap orders gone (`open-work.md`, item 15 (b)), typical writes its own
+babysitter ends level or ahead. With the default cap orders gone (issue #37, (b)), typical writes its own
 cap rule, which is the point.
 
 ## Held today
@@ -170,7 +170,7 @@ cap rule, which is the point.
 The strict xfails (T10, H6, W9, day eight's K7; and cap loss: H4, W7 on days four and six, K6 on days eight, nine,
 eleven, twelve and fifteen) are babysit invariants failing on today's content, each for the reason its xfail names.
 The cap-loss ones are content gaps, each a store a card fills with no sink behind it, or `field_track`'s input ratio
-(`open-work.md`, items 16 and 24). The taste entries of day one's and day two's `HELD` ledgers went with the taste checks, the
+(issues #38 and #40). The taste entries of day one's and day two's `HELD` ledgers went with the taste checks, the
 `by_hand` and `lazy` per-visit entries among them, and with them the ledger machinery in both packages.
 
 ## Which players are held

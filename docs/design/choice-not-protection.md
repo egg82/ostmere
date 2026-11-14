@@ -97,7 +97,7 @@ audit). Row 29 is D with no other class. D is flagged on 11 rows. Six of them ch
 
 ## The top changes, ranked by how much they would un-water the game
 
-All six are decided; their build order is `open-work.md`, item 15.
+All six are decided; their build order is issue #37.
 
 1. **Retire "defaults are never wasteful" (rows 4, 30, 45, 46, 47).** Caps, starved inputs and routine spends become
    things the player answers with rules the game taught. This brings back the reason mixes and rules exist, which

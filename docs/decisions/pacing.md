@@ -126,7 +126,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   - the smoke lane's cards, 18: a lane of its own costs the hands nothing.
 
   So the slow skills reach the target only through content: sinks for what their levels speed up, and gates their
-  finds cannot meet (`open-work.md`, "The slow skills wait on content").
+  finds cannot meet (issue #40).
 
   Late levels open a new method or place, not just a longer bar. Nothing important waits behind the slowest grind.
   (Idle Fantasy uses RuneScape's XP table, where 92 is about half of 99; Prayer is bone-burying for many hours, and its
@@ -144,7 +144,7 @@ behind the worst grind. Its timing has a flat optimum, so there is no right mome
 prestige rewards reach the web beyond that skill, so no track is skippable for its bonus. True prestige is for your
 skills only.
 
-**Prestige is the player's click, and a week away loses nothing** (the design is open-work 15). A
+**Prestige is the player's click, and a week away loses nothing** (the design is issue #37). A
 skill that reaches its top is never reset behind the player's back, since a skill found at level 1 after a week away
 is the "won't know what's happening" return. Prestige is a click plus a choice of bonus, and it lifts the skill's
 top, the way the camp's levels go: the skill's level never falls, and the player sees one level counted up across the

@@ -25,7 +25,7 @@ later_labels = [{ after = { unlock_kind = "feature", id = "n1_named" }, label_ke
 # Each also counts her first finished task (n1_worked), whatever the player set her to first.
 # Her task repeats as a rate and lands only when her rules change it (engine DESIGN.txt, "REPEATING TAPS"). Each lump at most half its
 # store's smallest cap from B3 on (roots 24, damp wood and stones 18), work_s a multiple of 6 so the shelter's 1.2
-# divides it, each lump (n1_worked's too) a whole rate at 1.0 and 1.2 (docs/open-work.md, "a lump paid over a tap"),
+# divides it, each lump (n1_worked's too) a whole rate at 1.0 and 1.2,
 # and her first forage done within V1's 60 s.
 [[cards]]
 id = "n1_forage"

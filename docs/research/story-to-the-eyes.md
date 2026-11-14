@@ -1,7 +1,7 @@
 # Getting story lines to where the eyes already are
 
 How idle and incremental games put story text where a player watching bars and cards will read it, and what that
-means for Ashfall's screen. Covers `open-work.md`, "How the story reaches the eyes". Source code was read at the
+means for Ashfall's screen. Covers issue #26, "How the story reaches the eyes". Source code was read at the
 commits linked; reviews and papers were opened unless marked *snippet* (a search-result summary only).
 
 ## The finding
