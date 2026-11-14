@@ -62,7 +62,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .game button { font: inherit; color: inherit; }
 
 .left { display: contents; }   /* a phone: the stage is pinned in the game's own scroll */
-.low { display: none; }
+.low, .rail { display: none; }
 .stage { position: sticky; top: 0; z-index: 4; height: var(--scene-vh); overflow: hidden; background: var(--stage); }
 .scene-box { position: absolute; inset: 0; box-sizing: border-box; padding: .5rem; display: flex; justify-content: center; align-items: center; }
 .scene-frame { position: relative; padding: 0; border: 4px solid #4a4754; border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' shape-rendering='crispEdges'%3E%3Cpath fill='%2308070a' d='M2 0h5v1H2zM2 8h5v1H2zM0 2h1v5H0zM8 2h1v5H8zM1 1h1v1H1zM7 1h1v1H7zM1 7h1v1H1zM7 7h1v1H7z'/%3E%3Cpath fill='%234a4754' d='M2 1h5v1H2zM2 7h5v1H2zM1 2h1v5H1zM7 2h1v5H7z'/%3E%3C/svg%3E") 2; background: #08070a; line-height: 0; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
@@ -118,14 +118,13 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .lines li.held { display: none; }
 .lines li:not(:nth-last-child(1 of :not(.held))) { color: var(--ink-dim); }
 .lines li.arrive { animation: line-in .2s ease-out; }
-.chron-open, .journal-open {   /* the Journal button (ui/journal.ts) is the Chronicle button's twin: raised, the same tap size */
+.journal-open {   /* the Journal button (ui/journal.ts): raised, a tap size the head's row can hold */
   position: relative; flex: none; align-self: center; min-height: 1.9rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
   background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important;
 }
-.chron-open { margin-left: auto; }
 .journal-open::before { content: "▤"; margin-right: .4em; }
-.chron-open .new-dot, .journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
-.chron-open:hover, .chron-open:focus-visible, .journal-open:hover, .journal-open:focus-visible { color: var(--ink-hi) !important; background: var(--press); outline: none; }
+.journal-open .new-dot { top: .2rem; left: auto; right: .2rem; }
+.journal-open:hover, .journal-open:focus-visible { color: var(--ink-hi) !important; background: var(--press); outline: none; }
 .panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
 .feedback-open, .devices-open, .games-open {   /* words only until it is hovered */
   flex: none; min-height: 2.4rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
@@ -169,15 +168,17 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .hands-name:not(:disabled):hover { box-shadow: inset 0 0 0 1px var(--ink-dim); }
 .hands-name:disabled { cursor: default; }
 .hands-meta { display: flex; align-items: center; gap: .6rem; margin-top: calc(.3rem + 4px); font-size: var(--t-meta); }
+.hands-bar-row { display: flex; align-items: center; gap: .6rem; }
+.hands-bar-row > :first-child { flex: 1 1 auto; min-width: 0; }   /* the bar and its legend; a phone's mix name beside them */
 .hands-next { flex: 0 1000000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-meta); color: var(--ink); }   /* the queue's head: the first to give way */
 .hands-runs { flex: none; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* "runs 1 h 29 m" never breaks mid-value */
 .hands-rule { flex: 0 1 auto; min-width: 0; min-height: 2.2rem; padding: 0 .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: inherit; font-size: var(--t-meta); color: var(--ink); background: transparent; border: 0; cursor: pointer; }   /* where the running rule lets go: a link to it in the Rules tab */
 .hands-status { flex: 1 1000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-dim); }   /* one line; the queue's head (.hands-next) shrinks before it, and it before the mix's name: shrink factors far apart in size, so the name, last to give way, loses not even a sub-pixel (that alone draws its ellipsis); hidden while covered, the status still holds its width */
-.hands.yielded .hands-status { flex: 1 0 auto; }   /* the short label never gives way: the name and the queue's head do */
-.hands.yielded :is(.hands-runs, .hands-rule) { display: none; }   /* a paused mix has nothing to run out: the name gets the room */
+:is(.hands, .hands-rows).yielded .hands-status { flex: 1 0 auto; }   /* the short label never gives way: the name and the queue's head do */
+:is(.hands, .hands-rows).yielded :is(.hands-runs, .hands-rule) { display: none; }   /* a paused mix has nothing to run out: the name gets the room */
 :is(.hands.yielded, .hands.greyed) .share-track, :is(.hands.yielded, .hands.greyed) .share-key-item::before { filter: saturate(.15) brightness(.6); }   /* the hues, never the legend's words */
 .hands.greyed .hands-mix-name { color: var(--ink-dim); }
-.hands.greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
+:is(.hands, .hands-rows).greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
 /* the Asks list (ui/asks.ts, ui/asknode.ts): one ask in a slot of fixed height, the rest counted; someone asking, set
    apart from the routine by the ember outline on its warm ground, the question in the story's size; no Dismiss */
 .asks { padding: .6rem 0 .75rem; border-bottom: 1px solid var(--rule); }
@@ -209,13 +210,6 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .hands-rows:not(:has(> :not([hidden], :empty))) { display: none; }
 .hands-rows { padding: 0 0 .5rem; border-bottom: 1px solid var(--rule); }
 .hands-rows > * { margin-top: .5rem; }
-/* a lane run by rules (ui/lanerows.ts): the strip's shape under it, one row per lane: who, what, its bar, Change */
-.lane-rows:not(:empty) { padding: .5rem 0; border-bottom: 1px solid var(--rule); }   /* under the pinned strip, scrolling with the cards on a phone */
-.lane-row { min-height: 2.75rem; }
-.lane-row + .lane-row { margin-top: .5rem; }
-.lane-row .hands-row { justify-content: space-between; }
-.lane-row .lane-bar { margin-top: .35rem; }
-.lane-row .lane-fill { background: var(--ember); }
 
 /* a mix as one split bar, its legend beneath: no text inside the bar. Neighbouring hues sit apart on a 2px gap of the page,
    each hue 3:1 against it (tests/test_client_contrast.py). The legend's look is shared with the town's (.town-key). */
@@ -242,12 +236,20 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .share-divider.held::before { background: #fff; transform: scaleX(1.4); }
 .share-divider.settle::before { animation: settle .35s ease; }
 
-/* tabs: Tasks · Completed · Rules (no count); Town and Book are a phone's bottom bar's, with an icon each */
+/* tabs: Tasks · Town · Rules · Book (no count); a row over the cards here, the rail on a desktop, a bottom bar with an icon each on a phone */
 .tabs { display: flex; gap: .3rem; margin-bottom: -.4rem; }
 .tab { background: transparent; border: 0; border-bottom: 2px solid transparent; padding: .3rem .5rem; min-height: 2.2rem; color: var(--ink) !important; cursor: pointer; position: relative; }
 .tab.on { color: var(--ink-hi) !important; border-bottom-color: var(--ink-hi); }
 .tab .new-dot { top: .3rem; left: auto; right: .15rem; }   /* Tasks, when a card arrived while another tab was open */
-.tab[data-tab="town"], .tab[data-tab="book"], .asks-open, .book-pages { display: none; }
+.asks-open { display: none; }
+.game.editing .panel > .tabs { visibility: hidden; }   /* the row keeps its room while an editor has the card area */
+.view-title { margin: 0; font: 400 var(--t-display)/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); }   /* the Town view's */
+/* the Book's pages: the row is its title, the chronicle first and Done once something is finished */
+.chronicle:has(> .book-pages:not(:empty)) > .panel-heading { display: none; }
+.book-pages { display: flex; gap: 1.25rem; position: sticky; top: 0; z-index: 1; padding-top: .6rem; background: var(--raise); border-bottom: 1px solid var(--rule); }
+.book-page { min-height: 2.75rem; padding: 0; background: none; border: 0; border-radius: 0; cursor: pointer; color: var(--ink-dim); }
+.book-page[aria-pressed="true"] { color: var(--ink-hi); box-shadow: inset 0 -2px 0 var(--ink-hi); }
+.chronicle > .completed { padding: .9rem 0; }
 .chronicle.paged :is(.chron-filters, .chron-all) { display: none; }   /* a page of the Book is open (ui/chroniclesheet.ts) */
 .tab[data-tab="cards"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='3' y='3' width='6' height='6'/%3E%3Crect x='11' y='3' width='6' height='6'/%3E%3Crect x='3' y='11' width='6' height='6'/%3E%3Crect x='11' y='11' width='6' height='6'/%3E%3C/svg%3E"); }
 .tab[data-tab="town"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 17 L10 4 L17 17 Z M10 17 L10 12'/%3E%3C/svg%3E"); }
@@ -736,18 +738,11 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .tabs > .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25rem; min-height: 0; padding: 0; border: 0; font-size: var(--t-meta); color: var(--ink-dim) !important; }
   .tabs > .tab::before { content: ""; width: 1.25rem; height: 1.25rem; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
   .tabs > .tab.on { color: var(--ink-hi) !important; box-shadow: inset 0 2px 0 var(--ink-hi); }
-  .tabs > .tab[data-tab="completed"] { display: none; }   /* the Book's Done page on a phone */
   .tab .new-dot { top: .5rem; right: calc(50% - 1rem); }
-  .chron-open { display: none; }   /* the bottom bar's Book */
   .end-dock { bottom: var(--bar-h); }
   .sheet[open]:not(.journal-sheet) { margin: auto 0 0; width: 100%; max-width: none; max-height: calc(100dvh - 2.5rem); border-radius: 6px 6px 0 0; }
   .sheet > .sheet-actions { padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); }
-  .chronicle:has(> .book-pages:not(:empty)) > .panel-heading { display: none; }   /* the row of pages is the Book's title */
-  .book-pages { display: flex; gap: 1.25rem; position: sticky; top: 0; z-index: 1; padding-top: .6rem; background: var(--raise); border-bottom: 1px solid var(--rule); }
-  .book-page { min-height: 2.75rem; padding: 0; background: none; border: 0; border-radius: 0; cursor: pointer; color: var(--ink-dim); }
-  .book-page[aria-pressed="true"] { color: var(--ink-hi); box-shadow: inset 0 -2px 0 var(--ink-hi); }
-  .book-done { padding: .9rem 0; }
-  .town-tab { display: flex; flex-direction: column; gap: 1rem; }
+  .view-title { font-size: var(--t-story); }
   /* the shown ask, one row of fixed height: who, the question, how many wait; a tap anywhere on it opens the sheet */
   .asks { padding: .6rem 0 0; border-bottom: 0; }
   .asks-head { display: none; }
@@ -773,15 +768,20 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .stage { height: auto; display: flex; flex-direction: column; }
   .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; padding-inline: 1rem; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
   .stage > .aim { padding-inline: 1rem; }
-  .scene-box { position: relative; inset: auto; flex: none; height: var(--scene-h); padding: 0 1rem; }   /* the art fits a fixed room, so the stage never grows for it */
+  .scene-box { position: relative; inset: auto; flex: none; height: var(--scene-h); padding: 0; overflow: hidden; --cover: 1; }   /* the art covers a fixed room edge to edge (Scene.fit), held around what the view shows, so the stage never grows for it */
+  .scene-frame { position: absolute; inset: 0; border: 0; box-shadow: none; overflow: hidden; }   /* only the desktop's scene keeps a frame */
+  .scene-art { position: absolute; }
   .stage > .strip { flex: none; padding: .35rem 1rem; }
   .strip > .strip-room { height: calc(var(--strip-rows) * 1.35em); }   /* rows of the story's size: every story line fits it (tests/opening/test_strip_rows.py) */
   .lines li + li { margin-top: 0; }   /* three rows hold three short lines; the older are dimmer */
   .panel-top { padding-block: .3rem .4rem; }
   .hands { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .hands .share-key { margin-top: .2rem; }
-  .hands-meta { margin-top: .3rem; }
-  .hands-label { display: none; }   /* the bar is the player's: the lanes below name their people */
+  .hands-rows > .hands-meta { margin-top: .3rem; }   /* the mix's controls, under the pinned bar */
+  .panel-top:has(> .hands.held) ~ .hands-rows > .hands-meta { visibility: hidden; }   /* they arrive with the strip */
+  .hands-bar-row :is(.hands-name, .hands-mix-name) { flex: 0 1 auto; max-width: 45%; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 2rem; }   /* "Main ▾" beside the bar: a long name truncates */
+  .hands-bar-row .hands-name { min-height: 0; padding-block: .375rem; margin-block: -.375rem; }   /* its reach is 2.75rem tall (44 px) in a row 2rem tall */
+  .panel-top .hands-label { display: none; }   /* the bar is the player's: the lanes in Town name their people */
   .chips { display: contents; }   /* the chips and the book are the head's own items: all of them on the row while they fit, else the ones that do not wrap under it, so nothing leaves the screen */
   .chip { flex: none; white-space: nowrap; }
   .chip::before { margin-right: .2em; }
@@ -798,13 +798,43 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .stage { position: relative; flex: 1 1 0; min-height: 0; height: auto; display: flex; flex-direction: column; }
   .stage > .scene-head { padding: .6rem 1.75rem 0; }   /* above the art, never on it: its text in line with the aim's and the strip's */
   .scene-box { position: relative; inset: auto; flex: 1 1 0; min-height: 0; align-items: center; padding: 1rem; }
-  .scene-head:not(:has(.chip, .camp:not([hidden]), .new-dot)) { display: none; }   /* an empty row stays off the art, but never a dotted Chronicle */
+  .scene-head:not(:has(.chip, .camp:not([hidden]), .new-dot)) { display: none; }   /* an empty row stays off the art, but never a dotted feature */
   .left > .aim { padding: .6rem 1.75rem 0; }   /* over the art's column, its text in line with the strip's */
   .left > .strip { flex: none; padding: .55rem 1.75rem .65rem; }
   .end-dock { position: absolute; left: auto; right: 1rem; bottom: 1rem; width: calc(var(--panel-w) - 2rem); padding-bottom: 1.4rem; box-shadow: 0 .8rem 2rem rgba(0, 0, 0, .6); }
   .panel { height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 0 1.2rem 1.6rem; border-left: 1px solid var(--rule); }
   .panel-top { top: 0; margin: 0 -1.2rem; padding: .7rem 1.2rem; }
   .panel.more { -webkit-mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); }   /* content runs past the foot (ui/morecue.ts): it fades out there, still under reduced motion */
+  /* the Town view (ui/townview.ts): the town's people take the scene's room and the panel's */
+  .game[data-tab="town"] .left { display: none; }
+  .game[data-tab="town"] .panel { grid-column: 1 / -1; padding: 1.4rem 2rem 1.6rem; }
+  .game[data-tab="town"] .panel > :not(.card-area, .tabs, .panel-foot, .banners) { display: none; }
+  .town-tab { max-width: 64rem; }
+  .town-people { gap: 0; }
+  .town-tab { row-gap: 0; }
+  .town-tab > .view-title { padding-bottom: .6rem; }
+  .town-tab .person-row { grid-template-columns: 2.5rem minmax(6rem, 10rem) minmax(0, 1fr) minmax(6rem, 9rem); grid-template-areas: "face name split doing" "face name now track"; column-gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
+  .town-tab .person-row > .town-who { display: contents; }   /* the name beside the face; what they work over its bar, on the right */
+  .town-tab .person-row .town-name { grid-area: name; font-size: var(--t-body); }
+  .town-tab .person-row .town-doing { grid-area: doing; font-size: var(--t-meta); }
+  .town-tab .person-row > .lane-change { grid-area: split; justify-self: start; }
+  .town-tab .person-row > .lane-bar { margin-top: 0; }
+  .town-face .ask-face { width: 2.5rem; height: 2.5rem; font: 400 1.25rem/1 "IM Fell English SC", Georgia, serif; }
+}
+
+/* the desktop frame (docs/design/redesign.md, "Desktop frame"; ui/partseat.ts): the left rail holds the tabs, then the
+   skills, and the panel's foot at its bottom; the scene and the strip sit in the middle and the panel on the right */
+@media (min-width: 1024px) {
+  .game { --rail-w: 14rem; grid-template-columns: var(--rail-w) minmax(0, 1fr) var(--panel-w); max-width: min(114rem, calc(var(--rail-w) + var(--panel-w) + 160vh)); }
+  .rail { display: flex; flex-direction: column; gap: 1.6rem; height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 1rem 0 .6rem; border-right: 1px solid var(--rule); }
+  .rail > .tabs { flex-direction: column; gap: 0; margin: 0; }
+  .rail .tab { text-align: left; min-height: 2.75rem; padding: 0 1.25rem; border: 0; color: var(--ink) !important; }
+  .rail .tab.on { color: var(--ink-hi) !important; box-shadow: inset 2px 0 0 var(--ink-hi); background: var(--raise); }
+  .rail .tab .new-dot { top: 1rem; right: 1.25rem; }
+  .rail > .skills { padding: 0 1.25rem; gap: .9rem; }
+  .rail .skill-next { flex-basis: 100%; text-align: left; }   /* what the next level brings, under the name: the rail is narrow */
+  .rail > .panel-foot { margin-top: auto; flex-direction: column; align-items: flex-start; gap: 0; padding: 0 .55rem; }
+  .game[data-tab="town"] .panel { grid-column: 2 / -1; }
 }
 
 @media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
@@ -821,18 +851,16 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .journal-sheet > .panel-heading { text-align: center; }
 }
 
-/* a desktop window tall enough (Screen's LOW_UNDER_SCENE): the skills and ledger fill the room under the art,
-   the cards and hands keep the panel. Its height is fixed, so the art never resizes when the ledger arrives. */
+/* a desktop window tall enough (Screen's LOW_UNDER_SCENE): the ledger fills the room under the art, the cards and hands
+   keep the panel. Its height is fixed, so the art never resizes when the ledger arrives. */
 @media (min-width: 1024px) and (min-height: 600px) {
   .low {
-    display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: .8rem 1.4rem; align-items: start; flex: none;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: .8rem 1.4rem; align-items: start; flex: none;
     height: min(22rem, 42vh); overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: .8rem 1.2rem 1.2rem; border-top: 1px solid var(--rule);
   }
   .stage { flex: none; height: auto; }   /* the stage takes the art's height; the art fills the column's width (Scene.fit caps it) */
   .scene-box { position: relative; inset: auto; flex: none; --by-width: 1; --fill: 1; }
   .low { flex: 1 1 auto; height: auto; min-height: max(8rem, min(22rem, 42vh) - var(--head-h, 0px)); }   /* the head above the art takes its room from here (ui/headseat.ts), so the art keeps its size */
-  .low > .ledger { grid-column: 1; grid-row: 1 / span 2; }
-  .low > .skills { grid-column: 2; grid-row: 1; }
   .low .ledger-lines { display: grid; column-gap: 2.4rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); grid-auto-flow: row dense; align-items: start; }
   /* a rule offer spans the whole grid row under its line; dense flow lets the line's neighbour keep the cell beside it */
   .low .ledger-item { display: contents; }
@@ -874,8 +902,22 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 /* The town (ui/townstrip.ts, ui/townedit.ts): under the hands strip one block per person present: their time as a bar of
    the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
    .hands, .hands-label, .lane-bar, .card-fill; new: the person block and its segments. */
-.town { min-height: 0; align-items: start; }
-.town + .lane-row { margin-top: .5rem; }
+/* the Town tab: its title and Change share the first row; the town's people and lanes, then a phone's ledger and skills,
+   span it below */
+.town-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem 1rem; }
+.town-tab > .lane-rows, .town-tab .town, .town-tab .town > .hands-body { display: contents; }
+.town-tab > :not(.view-title, .lane-rows), .town-tab .lane-rows > :not(.town), .town-tab .town-people { grid-column: 1 / -1; }
+.town-tab .town .hands-row { grid-row: 1; grid-column: 2; }
+.town { display: block; min-height: 0; }
+/* a person: face and who, then their split, the split that runs now, and the card they work */
+.person-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "face who change" "split split split" "now now now" "track track track"; column-gap: .6rem; align-items: center; }
+.town-face { grid-area: face; display: flex; }
+.person-row > .town-who { grid-area: who; }
+.person-row > .town-split-of { grid-area: split; }
+.person-row > .running-now { grid-area: now; }
+.person-row > .lane-change { grid-area: change; }
+.person-row > .lane-bar { grid-area: track; margin-top: .3rem; }
+.person-row .lane-fill { background: var(--ember); }
 .town-people { margin-top: .35rem; display: grid; gap: .6rem; }
 .town-who { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; }
 .town-name { font-size: var(--t-meta); font-weight: 500; color: var(--ink-hi); margin: 0; }
@@ -885,12 +927,10 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-key, .share-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: var(--t-meta); color: var(--ink); }
 .town-key-item::before, .share-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
 .town-key-item.idle::before { background: var(--track); border: 1px solid var(--ink-dim); box-sizing: border-box; }
-.town .lane-bar { margin-top: .3rem; }
 .town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as the hands' greyed .share-track */
 .town.greyed .town-name { color: var(--ink-dim); }
 .town.greyed .town-key-item::before { filter: saturate(.15) brightness(.6); }
 .town.greyed .town-status { color: var(--ink-hi); }   /* why it stopped: plain, not dimmed with it */
-.town .lane-fill { background: var(--ember); }
 .town-editor { display: grid; gap: .9rem; align-content: start; }
 .town-editor[hidden] { display: none; }
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }

@@ -32,12 +32,14 @@ Each part is tagged on the page with the competing design it came from.
   coming back opens a "Since you left" chapter. The main screen's strip shows story lines only; town talk never
   enters it.
 - **Desktop frame.** A left rail holds Tasks, Town, Rules and Book, then the skills. The scene and strip sit in
-  the middle and the cards on the right. The rail never lists a person's jobs, and the town has a view of its own.
-- **Phone frame.** The pinned stage is about 370px: the camp bar, the scene, a strip three lines tall, and the
-  mix bar with its legend beneath it (no text inside a bar, ever). Cards sit in the thumb's half, a bottom bar
-  holds Tasks, Town, Rules and Book, and anything set up only sometimes opens as a sheet from the bottom. The
-  ledger and skills sit under Town.
-- **Book.** It holds the Chronicle, the Journal, Done (today's Completed tab) and, later, the Map. **The journal
+  the middle and the cards on the right. The rail never lists a person's jobs, and the town has a view of its own:
+  Town takes the middle and the right, the town's people and lanes in one home.
+- **Phone frame.** The pinned stage is about 380px: the camp bar, the scene edge to edge, a strip three lines tall,
+  and the mix bar with its legend beneath it (no text inside a bar, ever) and the mix's name beside it (`Main ▾`);
+  the mix's other controls scroll just under it. Cards sit in the thumb's half, a bottom bar holds Tasks, Town,
+  Rules and Book, and anything set up only sometimes opens as a sheet from the bottom. Under Town sit the town's
+  people and lanes, then the ledger and skills.
+- **Book.** It holds the Chronicle, the Journal, Done (the finished cards) and, later, the Map. **The journal
   pages are kept exactly as they are:** the parchment, the handwriting, the drawings. They are the lore and story
   layer and the one deliberate exception to the quiet look (the only light surface, like a book opened by the
   fire). The page never draws one; the build keeps `ui/journal.ts`'s rendering.
@@ -76,8 +78,9 @@ Each part is tagged on the page with the competing design it came from.
 Nothing here is a new system. The look is game.css's tokens and type, cut down. The record is Chronicle and
 unwrap (`systems.md`), widened to replace the Log and filtered by kind. The causes are a field on what the
 chronicle already records. Routing is the feedback ladder (`decisions.md`, "Rewarding at any moment") with one
-home per rung. The asks are Offers with three new optional content fields. The rail and the bottom bar replace
-`ui/tabs.ts` and the panel layout. Decisions get rewritten as each part ships, in the same PR, because they say how
+home per rung. The asks are Offers with three new optional content fields. The rail, the bottom bar and the
+landscape row are three forms of `ui/tabs.ts`'s one row of tabs, and the Town view is that row's Town panel, holding
+the town strip and lane rows moved off the main screen. Decisions get rewritten as each part ships, in the same PR, because they say how
 the game works now.
 
 ## Build order

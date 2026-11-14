@@ -1,5 +1,5 @@
-// The town's mix on the page (CONTRACT.txt, "The town's mix"; game/town.ts, ui/townstrip.ts, ui/townedit.ts): under the
-// hands strip, once people have joined, one block per person: who, their shares and the idle rest, the card they are on;
+// The town's mix on the page (CONTRACT.txt, "The town's mix"; game/town.ts, ui/townstrip.ts, ui/townedit.ts): in the Town
+// tab, once people have joined, one block per person: their face and who, their shares and the idle rest, the card they are on;
 // Change opens the town editor, one split per person; before the join the page is day two's lane row. The views are the
 // engine's own (fixtures/townwire.ts: helper tapping Haul by a rule, shares yielded; mason on shares).
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
@@ -44,7 +44,7 @@ const saved = (d: Decision | undefined): Mix | null => (d?.kind === "save_mix" ?
 
 {  // two people: a block each, their shares and idle rest as the engine served them, the card each is on
   const { root } = rig(both);
-  expect("the strip's heading", root.querySelector(".town .hands-label")?.textContent, "Camp");
+  expect("each person's face", texts(root.querySelectorAll(".town-person .ask-face")), ["H", "M"]);
   expect("a block per person", texts(root.querySelectorAll(".town-person .town-name")), ["Helper", "Mason"]);
   expect("the helper taps by a rule", texts(root.querySelectorAll(".town-person .town-doing")), ["Haul water", "Hew stone"]);
   expect("shares, idle last", root.querySelectorAll(".town-person").map((p) => texts(p.querySelectorAll(".town-key-item"))), [

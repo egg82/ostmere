@@ -35,11 +35,11 @@ const sentOrders = (d: Decision | undefined): Order[] | null => (d?.kind === "se
   const root = mounted(rows.root);
   rows.update(ruled);
   expect("one row, for the ruled lane only", root.querySelectorAll(".lane-row").length, 1);
-  expect("its label", root.querySelector(".hands-label")?.textContent, "Helper");
-  expect("what it does", root.querySelector(".hands-text")?.textContent, "Chop logs");
+  expect("its label", root.querySelector(".lane-row .town-name")?.textContent, "Helper");
+  expect("what it does", root.querySelector(".lane-row .town-doing")?.textContent, "Chop logs");
   rows.update(offered);
-  expect("a later label once its unlock is held", root.querySelector(".hands-label")?.textContent, "Helper, settled");
-  expect("free: idle", root.querySelector(".hands-text")?.textContent, "idle");
+  expect("a later label once its unlock is held", root.querySelector(".lane-row .town-name")?.textContent, "Helper, settled");
+  expect("free: idle", root.querySelector(".lane-row .town-doing")?.textContent, "idle");
 }
 
 /** What Change asks for on this view. */

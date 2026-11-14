@@ -172,7 +172,7 @@ const text: Record<string, string> = {
   "ui.feedback.thanks": "Thank you. That reached us.",
   "ui.feedback.later": "That didn't go through. Try again later.",
   "ui.tab.cards": "Tasks",
-  "ui.tab.completed": "Completed", "ui.tab.town": "Town", "ui.tab.book": "Book", "ui.book.done": "Done",
+  "ui.tab.town": "Town", "ui.tab.book": "Book", "ui.book.done": "Done",
   "ui.hands.idle": "idle",
   "ui.hands.by_rule": "while under {n} {store}",
   "ui.hands.until_up": "until {m} {store}", "ui.hands.until_down": "until under {m} {store}",

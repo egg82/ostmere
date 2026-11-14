@@ -1,8 +1,9 @@
 // The phone frame (docs/design/redesign.md, "Phone frame"; ui/tabs.ts, ui/partseat.ts, ui/asks.ts): on a phone the tabs
-// are the bottom bar, Tasks · Town · Rules · Book. Town holds the ledger and skills; Book opens the chronicle's sheet, whose
-// Done page holds the finished cards (shown once there are some); the Chronicle button's unread dot goes on Book too. On a
-// wider screen the ledger and skills stay off the tabs and the finished cards are the Completed tab's. The shown ask is
-// one row whose way in names how many wait and opens the sheet of them all, even for one.
+// are the bottom bar, Tasks · Town · Rules · Book. Town holds the ledger and skills after the town's own rows; Book opens
+// the chronicle's sheet, whose Done page holds the finished cards (shown once there are some), on every frame. On a
+// landscape phone the ledger and skills stay off the tabs. The shown ask is one row whose way in names how many wait and
+// opens the sheet of them all, even for one. On a phone only the mix's bar and its name ("Main ▾") stay pinned; its
+// controls scroll under them. (The desktop's rail: railframe.test.ts.)
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { asksStep } from "../fixtures/asks";
@@ -40,7 +41,7 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
 {
   screenOn(true, "full");
   expect("phone: the ledger and skills are Town's", [one(".town-tab").querySelector(".ledger") !== null, one(".town-tab").querySelector(".skills") !== null], [true, true]);
-  expect("phone: the finished cards are the Book's", one(".book-done").querySelector(".completed") !== null, true);
+  expect("phone: the finished cards are the Book's", one("dialog.chronicle").querySelector(".completed") !== null, true);
   expect("Tasks is on", one(".tabs [data-tab=\"cards\"]").getAttribute("aria-pressed"), "true");
   one(".tabs [data-tab=\"town\"]").click();
   expect("Town on: its panel shows and the cards do not", [one(".town-tab").hidden, one(".deck").hidden], [false, true]);
@@ -52,11 +53,21 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
   const pages = book.querySelectorAll(".book-page");
   expect("its pages: the chronicle, then Done", pages.map((p) => p.hidden), [false, false]);
   pages[1]?.click();
-  expect("Done turns to the finished cards", [book.classList.contains("paged"), one(".book-done").hidden], [true, false]);
+  expect("Done turns to the finished cards", [book.classList.contains("paged"), one("dialog.chronicle .completed").hidden], [true, false]);
   book.close();
   one(".tabs [data-tab=\"book\"]").click();
-  expect("opened again, the Book starts on the chronicle", [book.classList.contains("paged"), one(".book-done").hidden], [false, true]);
+  expect("opened again, the Book starts on the chronicle", [book.classList.contains("paged"), one("dialog.chronicle .completed").hidden], [false, true]);
   expect("Town stays the tab on: Book is a sheet", one(".tabs [data-tab=\"town\"]").getAttribute("aria-pressed"), "true");
+}
+{
+  const screen = screenOn(true, "full");
+  const mix = fixtureStep("full", 100).view.running_mix_id ?? "";
+  expect("phone: the mix's name beside the bar opens the Mixes list", one(".panel-top .hands-bar-row .hands-name").textContent, `${mix} ▾`);
+  expect("phone: the mix's controls scroll under the pinned bar", [one(".hands-rows > .hands-meta") !== null, one(".panel-top").querySelector(".hands-meta")], [true, null]);
+  media(false);
+  screen.root.remove();
+  screenOn(false, "full");
+  expect("landscape: Mixes ▾ before the name, in the strip", [one(".hands-mix .hands-meta .hands-name").textContent?.endsWith("▾"), one(".hands-mix .hands-meta .hands-mix-name").textContent], [true, mix]);
 }
 {
   screenOn(true, "start");
@@ -64,8 +75,8 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
 }
 {
   screenOn(false, "full");
-  expect("wider: Town holds nothing", one(".town-tab").children.length, 0);
-  expect("wider: the finished cards are the Completed tab's", one(".done-tab").querySelector(".completed") !== null, true);
+  expect("landscape: Town holds no ledger or skills", [one(".town-tab").querySelector(".ledger"), one(".town-tab").querySelector(".skills")], [null, null]);
+  expect("landscape: the finished cards are the Book's too", one("dialog.chronicle").querySelector(".completed") !== null, true);
 }
 {
   media(true);
