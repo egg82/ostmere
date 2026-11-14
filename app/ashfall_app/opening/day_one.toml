@@ -891,6 +891,14 @@ id = "s_b3"
 kind = "beat"
 source = { source_kind = "card", id = "take_stock" }
 first = { keys = ["n_day_b3"] }
+catchup = { keys = ["j_b3_catchup"] }
+late = { keys = ["j_b3_late"] }
+
+[[subjects]]
+id = "s_prints"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_prints" }
+first = { keys = ["j_prints_first"] }
 
 # ---------- features ----------
 
@@ -1157,3 +1165,7 @@ l_screen_1 = "a wattle hurdle staked beside the fire. the heat stops at it."
 l_screen_2 = "a second hurdle, angled to the first. you sit in the corner they make."
 l_screen_3 = "a third hurdle. the firelight stays inside the screen now."
 l_screen_4 = "the screen rings the fire. the cold has to come over the top."
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b3_catchup = "a woman walked in out of the ash and stayed"
+j_b3_late = "she looked over the larder before she ever looked at me"
+j_prints_first = "one set of prints from the gap to the larder. three roots gone. smoked meat left where they were. not mine"
