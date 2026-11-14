@@ -84,7 +84,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 
 ## Knowledge
 
-- [What the mods added is built in](decisions/knowledge.md): odds, ETAs and rates first-class; the registers; what can be tapped looks tappable; story lines stay until read; no verdicts; blind until learned; the journal.
+- [What the mods added is built in](decisions/knowledge.md): odds, ETAs and rates first-class; the registers; what can be tapped looks tappable; story lines stay until read; no verdicts; blind until learned; the journal, and the daily journal's habits.
 
 ## People and the town
 
