@@ -523,6 +523,38 @@ when = { test = "at_least", subject_kind = "skill_level", id = "arcana", value =
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift", value = 1 }]
 outcome = { modifiers = [{ target = "work", id = "hand_on_stone", kind = "mul_bp", amount_bp = 12000, source = "arcana_12_stone" }] }
 
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_ring_scored"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_ring_scored" }
+first = { keys = ["j_ring_first"] }
+
+[[subjects]]
+id = "s_palisade"
+kind = "routine"
+source = { source_kind = "card", id = "palisade" }
+first = { keys = ["j_fence_first"] }
+repeat = { keys = ["j_fence_again_1", "j_fence_again_2", "j_fence_again_3"] }
+catchup = { keys = ["j_fence_catchup"] }
+misremember = { keys = ["j_fence_wrong"] }
+correction = { keys = ["j_fence_right"] }
+
+[[subjects]]
+id = "s_b8"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b8" }
+first = { keys = ["j_b8_first"] }
+catchup = { keys = ["j_b8_catchup"] }
+late = { keys = ["j_b8_late"] }
+
+[[subjects]]
+id = "s_howls"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_howls" }
+first = { keys = ["j_howls_first"] }
+
 # ---------- the Camp ----------
 
 [[camp_levels]]
@@ -713,4 +745,17 @@ n_rat_1 = "fat, grey, big front claws. they nested in the roots. a stone floor s
 n_rat_2 = "warm wind, and they came indoors"
 n_crow_1 = "lined up on the ridge. all morning they said numbers"
 aim_wall = "ring the whole camp with stakes."
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_ring_first = "lucy dragged a stick through the ash in a wide circle round camp. not a word about it"
+j_fence_first = "started the fence. first posts in, along the line lucy scored"
+j_fence_again_1 = "more fence"
+j_fence_again_2 = "fence. the line looked shorter in the ash"
+j_fence_again_3 = "posts all day. stone grit in every cut on my hands"
+j_fence_catchup = "worked on the fence"
+j_fence_wrong = "started the fence. first posts in, along the line i scored round camp"
+j_fence_right = "lucy scored the fence line, not me. i only set the posts where she'd drawn"
+j_b8_first = "warm wind, all from one side. brown at noon with ash. fungus out of every stump by morning. the larder's full, for once"
+j_b8_catchup = "the warm wind. fungus everywhere"
+j_b8_late = "crows on the roof through all of it, calling numbers"
+j_howls_first = "howls answering each other half the night. the prints go round the rack, not round the fire"
 # ---------- end of lines ----------
