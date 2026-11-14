@@ -21,11 +21,11 @@ function expect(label: string, got: unknown, want: unknown): void {
 const base = fixtureStep("mid", 100).view;
 const catalog = new Catalog(fixtureContent);
 const watched = { kind: "store_value" as const, store: "stone" };
-const atLevel = (level: number): Condition => ({ kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: level, release: level });
-const atCount = (count: number): Condition => ({ kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: count, release: count });
+const atLevel = (level: number): Condition => ({ kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: level, release: level, value_of_cap: false, release_of_cap: false });
+const atCount = (count: number): Condition => ({ kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: count, release: count, value_of_cap: false, release_of_cap: false });
 
 function strike(gate: Condition | null, makers: string[] = [], have = 0, spent = false): Card {
-  return { ...base.cards[0]!, card: "stool", blocker: { condition: { kind: "at_least", watched, value: 1 * Q, release: 1 * Q }, ready_at: null },
+  return { ...base.cards[0]!, card: "stool", blocker: { condition: { kind: "at_least", watched, value: 1 * Q, release: 1 * Q, value_of_cap: false, release_of_cap: false }, ready_at: null },
     needs: [{ store: "stone", quantity: 1 * Q, segment: { start: 0, start_value: have * Q, rate: 0, limit: null }, gate, makers, spent }] };
 }
 
@@ -56,7 +56,7 @@ expect("spent: only the number marked", drawn(strike(null, [], 0, true)).row.que
 expect("no gate, a store never shown: no row", text(drawn(strike(null), 2, false)), "(hidden)");
 {
   const blocked = drawn(strike(atLevel(3)));
-  expect("a failed tap marks the gate's row", blocked.needs.shows({ kind: "at_least", watched, value: 1 * Q, release: 1 * Q }) === blocked.row, true);
+  expect("a failed tap marks the gate's row", blocked.needs.shows({ kind: "at_least", watched, value: 1 * Q, release: 1 * Q, value_of_cap: false, release_of_cap: false }) === blocked.row, true);
 }
 
 // A tap of a short row with makers lights them, and the card's own tap never hears it.

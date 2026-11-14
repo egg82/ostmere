@@ -7,7 +7,7 @@
 // The "after" numbers are the engine's own: the edit is sent as a dry run (Actions.dryRun) and its view read, never
 // kept, so the page computes no rate; an edit still holding a retired or completed card is previewed without it, as
 // Save will need it gone. Rates are facts: nothing here says balanced, efficient or better.
-import type { GoalRow, Mix, View } from "../api/types";
+import type { Condition, Mix, View } from "../api/types";
 import { cardShares, dropComponent, holdsCard, joinCard, mixesFull, runningMix, saveDecisions, withShares } from "../game/mix";
 import { freeName, repointRule } from "../game/orders";
 import { queueFull, queueStint } from "../game/queue";
@@ -196,15 +196,15 @@ export class MixEditor {
     this.close();
   }
 
-  /** Saves the edit when it differs from the saved mix, then queues it until `row`'s goal (CONTRACT.txt, "Goal stints"). */
-  private runUntil(row: GoalRow): void {
+  /** Saves the edit when it differs from the saved mix, then queues it until `until` (CONTRACT.txt, "Goal stints"). */
+  private runUntil(until: Condition): void {
     const view = this.view;
     const mix = this.edited();
     if (!view || !mix || this.save.disabled) return;
     tapFeedback();
     const saved = view.mixes.find((m) => m.id === mix.id);
     const decisions = saved && JSON.stringify(saved) === JSON.stringify(mix) ? [] : saveDecisions(view, mix, this.from, false);
-    for (const d of [...decisions, queueStint(view, mix.id, row)]) this.ctx.actions.decide(d);
+    for (const d of [...decisions, queueStint(view, mix.id, until)]) this.ctx.actions.decide(d);
     this.close();
   }
 

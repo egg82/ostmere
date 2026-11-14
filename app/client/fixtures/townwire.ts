@@ -156,7 +156,9 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
       "card": "chop"
      },
      "value": 1,
-     "release": 1
+     "release": 1,
+     "value_of_cap": false,
+     "release_of_cap": false
     },
     "then": {
      "kind": "tap_card",
@@ -334,7 +336,9 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
       "card": "chop"
      },
      "value": 1,
-     "release": 1
+     "release": 1,
+     "value_of_cap": false,
+     "release_of_cap": false
     },
     "then": {
      "kind": "tap_card",

@@ -47,13 +47,13 @@ const solo = (id: string, card: string): Mix => ({ id, components: [{ kind: "car
 const GATHER = solo("Gather by hand", "gather");
 const REST = solo("Rest by the fire", "tend");
 const low = (store: string, value: number, release: number): Order["when"] =>
-  ({ kind: "at_most", watched: { kind: "store_value", store }, value: value * Q, release: release * Q });
+  ({ kind: "at_most", watched: { kind: "store_value", store }, value: value * Q, release: release * Q, value_of_cap: false, release_of_cap: false });
 const WOOD_RULE: Order = { when: low("wood", 10, 20), then: { kind: "switch_mix", mix_id: GATHER.id } };
 const WARMTH_RULE: Order = { when: low("warmth", 40, 60), then: { kind: "switch_mix", mix_id: REST.id } };
 const SHELTER_RULE: Order = { when: low("stone", 2, 6), then: { kind: "tap_card", card: "shelter" } };
 const OLD_WOOD_RULE: Order = { when: low("wood", 10, 10), then: { kind: "switch_mix", mix_id: GATHER.id } };
 const WARM_RULE: Order = {
-  when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 80 * Q, release: 40 * Q },
+  when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 80 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false },
   then: { kind: "switch_mix", mix_id: REST.id },
 };
 const REST_MIX = solo("Rest", "rest");
@@ -144,10 +144,10 @@ function mid(at: number, mix: Mix, covered: boolean, plan: Plan): View {
     standing: [],
     lanes: [freeHands, { lane: "bench", running_card: "shelter", completes_at: at + 12, order: null }],
     cards: [
-      card(at, "look", { blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 4 * Q, release: 4 * Q }, ready_at: null }, needs: [need(at, "stone", 4, 3)] }),
+      card(at, "look", { blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false }, ready_at: null }, needs: [need(at, "stone", 4, 3)] }),
       mixed("gather", 5),
       mixed("tend", 7),
-      card(at, "hatchet", { blocker: { condition: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3 }, ready_at: null }, needs: [need(at, "wood", 2, 14)], tap_s: 30 }),
+      card(at, "hatchet", { blocker: { condition: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false }, ready_at: null }, needs: [need(at, "wood", 2, 14)], tap_s: 30 }),
       card(at, "stool", { needs: [need(at, "wood", 3, 14)], tap_s: 25, cap: 1 }),
       card(at, "shelter", { by: "tap", bar: { start: at, start_value: 8 * BP, rate: BP, limit: 20 * BP }, bar_total: 20 * BP, completes_at: at + 12, cap: 3, completions: 1 }),
     ],
@@ -307,5 +307,5 @@ function ruleRuns(phase: Phase, view: View): RuleRun[] {
 }
 
 /** rulestab's popped goal stint: gather until 30 wood. */
-const STINT_ORDER: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q },
+const STINT_ORDER: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false },
   then: { kind: "switch_mix", mix_id: GATHER.id } };

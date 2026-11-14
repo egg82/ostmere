@@ -20,6 +20,7 @@ from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
 from .offerstate import acting, refusal
 from .orders import AfterTime, Condition, Order, OrderVerb, initial_latch
+from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
 from .rates import lane_state
@@ -240,9 +241,11 @@ def _kept_latch(save: Save, rules: Rules, order: Order) -> bool:
 
 
 def latch_now(save: Save, rules: Rules, cond: Condition) -> bool:
-    """The latch a condition starts with at save.time (orders.initial_latch on its subject's value now)."""
-    value = None if isinstance(cond, AfterTime) else subject_value(save, rules, cond.subject)
-    return initial_latch(cond, value, save.time)
+    """The latch a condition starts with at save.time (orders.initial_latch on its subject's value now, its share
+    levels read off the cap now)."""
+    if isinstance(cond, AfterTime):
+        return initial_latch(cond, None, save.time)
+    return initial_latch(read_levels(save, rules, cond), subject_value(save, rules, cond.subject), save.time)
 
 
 def _save_mix(save: Save, rules: Rules, mix: Mix) -> Save:

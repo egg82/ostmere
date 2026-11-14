@@ -25,7 +25,7 @@ const still = { start: AT, start_value: 0, rate: 0, limit: null };
 /** A card whose blocker is a countdown on `store` (the engine's ready time 3400 s on). */
 const waiting = (id: string, store: string): Card => ({
   card: id, completions: 0, cap: 1, bar: still, bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1,
-  blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store }, value: 20 * Q, release: 20 * Q }, ready_at: AT + 3400 },
+  blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store }, value: 20 * Q, release: 20 * Q, value_of_cap: false, release_of_cap: false }, ready_at: AT + 3400 },
   needs: [{ store, quantity: 20 * Q, segment: still, gate: null, makers: [], spent: false }],
 });
 const base = fixtureStep("restoffer", AT);

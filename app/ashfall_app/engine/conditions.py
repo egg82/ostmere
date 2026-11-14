@@ -14,6 +14,7 @@ from .orders import (
 )
 from .rules import Rules
 from .segments import Segment, reach_time
+from .sharelevels import read_levels
 from .phases import counted_xp, level_counted
 from .state import Save, SkillState
 
@@ -38,6 +39,7 @@ def is_true(save: Save, rules: Rules, cond: Condition) -> bool:
     """The condition read plainly (no latch): what makes a latch rise, and what pops a queue head."""
     if isinstance(cond, AfterTime):
         return save.time >= cond.time
+    cond = read_levels(save, rules, cond)
     v = subject_value(save, rules, cond.subject)
     return v >= cond.value if isinstance(cond, AtLeast) else v <= cond.value
 
@@ -67,6 +69,7 @@ def unmet_rise_time(save: Save, rules: Rules, cond: Condition) -> int | None:
     """rise_time of a condition that is not true now."""
     if isinstance(cond, AfterTime):
         return cond.time
+    cond = read_levels(save, rules, cond)
     if isinstance(cond.subject, (Unlocked, Running, LaneRules)):
         return None  # discrete: it changes only at an instant, where the pending check sees it
     if isinstance(cond.subject, CardCount):
@@ -87,6 +90,7 @@ def counting_segment(save: Save, rules: Rules, subject: CardCount | StoreValue) 
 def _fall_time(save: Save, rules: Rules, cond: Condition) -> int | None:
     if isinstance(cond, AfterTime):
         return None
+    cond = read_levels(save, rules, cond)
     v = subject_value(save, rules, cond.subject)
     if isinstance(cond, AtLeast):
         if v < cond.release:

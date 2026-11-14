@@ -39,9 +39,11 @@ def condition(c: e.Condition) -> w.Condition:
         case e.AfterTime():
             return w.AfterTime(at=c.time)
         case e.AtLeast():
-            return w.AtLeast(watched=subject(c.subject), value=c.value, release=c.release)
+            return w.AtLeast(watched=subject(c.subject), value=c.value, release=c.release, value_of_cap=c.value_of_cap,
+                             release_of_cap=c.release_of_cap)
         case e.AtMost():
-            return w.AtMost(watched=subject(c.subject), value=c.value, release=c.release)
+            return w.AtMost(watched=subject(c.subject), value=c.value, release=c.release, value_of_cap=c.value_of_cap,
+                            release_of_cap=c.release_of_cap)
 
 
 def order_verb(v: e.OrderVerb) -> w.OrderVerb:
@@ -186,9 +188,9 @@ def from_condition(c: w.Condition, rules: e.Rules) -> e.Condition:
         case w.AfterTime():
             return e.AfterTime(c.at)
         case w.AtLeast():
-            return e.AtLeast(from_subject(c.watched, rules), c.value, c.release)
+            return e.AtLeast(from_subject(c.watched, rules), c.value, c.release, c.value_of_cap, c.release_of_cap)
         case w.AtMost():
-            return e.AtMost(from_subject(c.watched, rules), c.value, c.release)
+            return e.AtMost(from_subject(c.watched, rules), c.value, c.release, c.value_of_cap, c.release_of_cap)
 
 
 def from_order_verb(v: w.OrderVerb) -> e.OrderVerb:

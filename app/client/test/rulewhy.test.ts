@@ -50,7 +50,7 @@ const states = (...s: OrderState[]): OrderState[] => s;
 
 // An "n or more" rule words its level the same way.
 {
-  const reaches: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 12 * Q }, then: base.orders[0]!.then };
+  const reaches: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 12 * Q, value_of_cap: false, release_of_cap: false }, then: base.orders[0]!.then };
   const view = amounts({ ...base, orders: [reaches, ...base.orders.slice(1)], order_states: states("waiting", "on", "on", "on") }, { wood: [14] });
   expect("a reaches rule", draw(view).why()["0"], "needs 30 or more Dead wood · now 14");
 }

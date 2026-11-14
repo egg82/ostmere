@@ -32,7 +32,7 @@ const catalog = new Catalog(content);
 const base = fixtureStep("mid", 100).view;
 const need = (id: string, quantity: number, have: number): Need =>
   ({ store: id, quantity: quantity * Q, segment: { start: 0, start_value: have * Q, rate: 0, limit: null }, gate: null, makers: [], spent: false });
-const atLeast = (id: string, value: number): Condition => ({ kind: "at_least", watched: { kind: "store_value", store: id }, value: value * Q, release: value * Q });
+const atLeast = (id: string, value: number): Condition => ({ kind: "at_least", watched: { kind: "store_value", store: id }, value: value * Q, release: value * Q, value_of_cap: false, release_of_cap: false });
 
 function face(needs: Need[]): CardNeeds {
   const card: Card = { ...base.cards[0]!, card: "stool", run: null, blocker: { condition: atLeast(needs[0]!.store, needs[0]!.quantity / Q), ready_at: null }, needs };

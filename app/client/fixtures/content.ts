@@ -34,10 +34,16 @@ const text: Record<string, string> = {
   "ui.rule.otherwise": "Otherwise", "ui.rule.on": "on now",
   "ui.rule.new": "New rule", "ui.rule.full": "That is all the room there is for rules", "ui.rule.handle": "Move or remove", "ui.rule.below": "Under {n} {store}", "ui.rule.below_until": "Under {n} {store}, until {m}",
   "ui.rule.reaches": "{n} or more {store}", "ui.rule.reaches_until": "{n} or more {store}, until under {m}",
+  "ui.rule.down_to_until": "{store} down to {n}, until {m}", "ui.rule.up_to_until": "{store} up to {n}, until down to {m}",
+  "ui.rule.up_to_until_under": "{store} up to {n}, until under {m}", "ui.rule.reaches_until_down": "{n} or more {store}, until down to {m}",
+  "ui.rule.of_full": "of full", "ui.rule.exact": "exact", "ui.level.empty": "empty", "ui.level.quarter": "a quarter", "ui.level.half": "half",
+  "ui.level.three_quarters": "three quarters", "ui.level.full": "full", "ui.level.pct": "{pct}%",
+  "ui.level.mark_quarter": "¼", "ui.level.mark_half": "½", "ui.level.mark_three_quarters": "¾",
   "ui.rule.falls_below": "falls below", "ui.rule.reaches_label": "reaches", "ui.rule.when": "When", "ui.rule.do": "Do", "ui.rule.more_options": "More options", "ui.rule.until": "Until",
   "ui.rule.less": "less", "ui.rule.more": "more", "ui.rule.heading": "Run {mix} when…", "ui.rule.while_runs": "while {mix} runs",
   "ui.rule.exists": "a rule already does this",
   "ui.rule.needs_below": "needs under {n} {store} · now {have}", "ui.rule.needs_reaches": "needs {n} or more {store} · now {have}",
+  "ui.rule.needs_down_to": "needs {store} down to {n} · now {have}", "ui.rule.needs_up_to": "needs {store} up to {n} · now {have}",
   "ui.rule.outranked": "outranked by {rule}", "ui.rule.passed_over": "passed over · a task it runs is done",
   "ui.rule.stuck": "can't reach {n}: out of {store}", "ui.rule.unfed": "nothing in this mix makes {store}; it may stop short of {n}",
   "ui.rule.lately": "Lately", "ui.rule.ran_once": "ran once", "ui.rule.ran": "ran {n} times", "ui.rule.came_on": "came on {ago} ago",
@@ -186,6 +192,7 @@ const text: Record<string, string> = {
   "ui.hands.idle": "idle",
   "ui.hands.by_rule": "while under {n} {store}",
   "ui.hands.until_up": "until {m} {store}", "ui.hands.until_down": "until under {m} {store}",
+  "ui.hands.until_up_to": "until {store} is up to {m}", "ui.hands.until_down_to": "until {store} is down to {m}",
   "ui.mix.both": "Both",
   "ui.lesson.tag": "Tutorial",
   "ui.lesson.skip": "Skip this lesson", "ui.lesson.next": "Got it",
@@ -238,7 +245,7 @@ const text: Record<string, string> = {
   "ui.mix.per_minute": "per minute",
   "ui.mix.now": "now",
   "ui.mix.after": "after",
-  "ui.goal.head": "goals", "ui.goal.store": "{store} {n}", "ui.goal.level": "{skill} {n}", "ui.goal.never": "never",
+  "ui.goal.head": "goals", "ui.goal.store": "{store} {n}", "ui.goal.store_share": "{store} at {n}", "ui.stint.or_until": "or until", "ui.goal.level": "{skill} {n}", "ui.goal.never": "never",
   "ui.goal.limited": "limited by {store}, {n}", "ui.goal.xp": "XP {n}",
   "ui.stint.run": "Run until…", "ui.stint.entry": "{mix} until {goal}", "ui.stint.which": "{mix} until…", "ui.stint.ran": "ran {d}", "ui.stint.landed": "goal landed {ago} ago",
   "ui.stint.made": "made {n} {store}", "ui.stint.made_two": "made {n} {store} and {m} {store_b}",
@@ -333,7 +340,7 @@ const text: Record<string, string> = {
 };
 
 /** "Under n, until m" on a store, as content writes it (at_most at n items, release at m). */
-const low = (store: string, n: number, m: number): Condition => ({ kind: "at_most", watched: { kind: "store_value", store }, value: n * Q, release: m * Q });
+const low = (store: string, n: number, m: number): Condition => ({ kind: "at_most", watched: { kind: "store_value", store }, value: n * Q, release: m * Q, value_of_cap: false, release_of_cap: false });
 /** The tired chip's condition, which its rest offer shares (so the rule reads as the chip). */
 export const TIRED = low("energy", 3, 6);
 
@@ -388,22 +395,22 @@ export const fixtureContent: Content = {
   ],
   chip_infos: [
     { chip: "cold", label_key: "chip.cold", tone: "cold", when: low("warmth", 30, 50), cost_key: "chip.cold_cost", change_bp: [-2000], on_line_key: null, off_line_key: null, offered_after: null },
-    { chip: "warm", label_key: "chip.warm", tone: "warm", when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 60 * Q, release: 40 * Q }, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null },
+    { chip: "warm", label_key: "chip.warm", tone: "warm", when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 60 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false }, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null },
     { chip: "tired", label_key: "chip.tired", tone: "tired", when: TIRED, cost_key: "chip.tired_cost", change_bp: [-5000], on_line_key: null, off_line_key: null, offered_after: null },
   ],
   feature_infos: [{ feature: "mix", hint_key: null, label_key: null, feature_card: null }, { feature: "combat", hint_key: null, label_key: null, feature_card: null }, { feature: "dusk_ramp", hint_key: null, label_key: "feature.dusk_ramp", feature_card: null }],
   order_cards: [{
     store: "wood",
-    when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 20 * Q },
+    when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 20 * Q, value_of_cap: false, release_of_cap: false },
     then: { kind: "tap_card", card: "gather" }, offered_after: null, chip: null, after_end: false,
   }, {
     store: "stone",
-    when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: 6 * Q },
+    when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: 6 * Q, value_of_cap: false, release_of_cap: false },
     then: { kind: "tap_card", card: "shelter" }, offered_after: null, chip: null, after_end: false,
   }, {
     store: "energy", when: TIRED, then: { kind: "tap_card", card: "rest" }, offered_after: null, chip: "tired", after_end: true,
   }, {   // a rising line's card: four or more catch, smoke it
-    store: "catch", when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q },
+    store: "catch", when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false },
     then: { kind: "tap_card", card: "smoke_catch" }, offered_after: { category: "card", id: "smoke_catch" }, chip: null, after_end: false,
   }, {   // the wood rule re-tuned for a later need, once that need is shown
     store: "wood", when: low("wood", 15, 30), then: { kind: "tap_card", card: "gather" },
@@ -422,7 +429,7 @@ export const fixtureContent: Content = {
     offer: "bank", text_key: "offer.bank", kind: null, line_keys: [],
     answers: [{ answer: "hers", label_key: "answer.hers", cost_key: "offer.hers.effect", change_bp: [1000], gains: [], role: null }, { answer: "his", label_key: "answer.his", cost_key: "offer.his.effect", change_bp: [-1000], gains: [{ store: "wood", quantity: 2.5 * Q }], role: null }],
     // every optional field: two askers, a cause, and the three texts (expiry stands for a later engine's; the content refuses one today)
-    askers: ["helper", "mason"], cause: { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: 3, release: 3 } },
+    askers: ["helper", "mason"], cause: { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false } },
     waiting_key: "offer.bank.waiting", expiry_key: "offer.bank.expiry", permanence_key: "offer.bank.permanence",
   }, {   // the third, for a list of several: one asker, its cause an earlier answer
     offer: "trade", text_key: "offer.trade", kind: null, line_keys: [],
@@ -443,14 +450,14 @@ export const fixtureContent: Content = {
   line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")
     { key: "line.1", kind: "story", cause: null, person: false, mention: null }, { key: "line.2", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: false, mention: null },
     { key: "line.3", kind: "tap", cause: { kind: "runner", runner: "stand" }, person: false, mention: null },
-    { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" }, person: false, mention: null }, { key: "line.5", kind: "story", cause: { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 5 * Q, release: 5 * Q } }, person: false, mention: null },
-    { key: "line.6", kind: "find", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 2, release: 2 } }, person: false, mention: null },
+    { key: "line.4", kind: "story", cause: { kind: "runner", runner: "look" }, person: false, mention: null }, { key: "line.5", kind: "story", cause: { kind: "when", when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 5 * Q, release: 5 * Q, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
+    { key: "line.6", kind: "find", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 2, release: 2, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
     { key: "line.7", kind: "level", cause: { kind: "camp", level: 1 }, person: false, mention: null }, { key: "line.end", kind: "story", cause: null, person: false, mention: null },
     { key: "line.joins", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: true, mention: null },
     { key: "people.joined.mason", kind: "story", cause: { kind: "when", when: { kind: "after_time", at: 0 } }, person: false, mention: { lane: "mason", way: "joined" } },
     { key: "people.joined.helper", kind: "story", cause: null, person: false, mention: { lane: "helper", way: "joined" } },
     { key: "people.left.mason", kind: "story", cause: null, person: false, mention: { lane: "mason", way: "left" } },
-    { key: "line.offer", kind: "story", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 10 * Q } }, person: false, mention: null },
+    { key: "line.offer", kind: "story", cause: { kind: "when", when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 10 * Q, value_of_cap: false, release_of_cap: false } }, person: false, mention: null },
   ],
   aim_infos: [],
   journal: null,

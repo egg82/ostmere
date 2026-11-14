@@ -113,7 +113,7 @@ expect("and builds nothing", shown.decided, []);
   const other = { when: { ...TIRED, value: 5 * Q, release: 9 * Q }, then: { kind: "switch_mix" as const, mix_id: "Lie down" } };
   r.node.update({ ...offer, orders: [...offer.orders, other], orders_on: [...offer.orders_on, false] });
   expect("gone once an energy rule is set", r.root.hidden, true);
-  const reaches = { when: { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "energy" }, value: 9 * Q, release: 5 * Q }, then: other.then };
+  const reaches = { when: { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "energy" }, value: 9 * Q, release: 5 * Q, value_of_cap: false, release_of_cap: false }, then: other.then };
   expect("a reaches rule on energy does not answer it", chipCards(catalog, { ...offer, orders: [...offer.orders, reaches] }, true)[0]?.store, "energy");
 }
 

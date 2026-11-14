@@ -6,7 +6,7 @@ import type { Catalog } from "../game/catalog";
 import { sample } from "../game/clock";
 import { alwaysWords } from "../game/lanes";
 import { chipOf, conditionWords, storeRule } from "../game/orders";
-import { readRule } from "../game/storerule";
+import { levelWords, needsKey, readRule } from "../game/storerule";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
 
@@ -27,8 +27,8 @@ export function whyOff(catalog: Catalog, view: View, index: number, t: number): 
   const rule = storeRule(catalog, order);
   const line = rule ? view.ledger.find((l) => l.store === rule.store) : undefined;
   if (!rule || !line) return null;
-  const slots = { store: catalog.storeLabel(rule.store), n: catalog.format.count(rule.n), have: catalog.format.items(sample(line.segment, t)) };
-  return catalog.text.fill(rule.test === "below" ? UI.ruleNeedsBelow : UI.ruleNeedsReaches, slots);
+  const slots = { store: catalog.storeLabel(rule.store), n: levelWords(catalog, rule.n), have: catalog.format.items(sample(line.segment, t)) };
+  return catalog.text.fill(needsKey(rule), slots);
 }
 
 /** What a store rule's `dry` (View.order_dry) says: it holds the hands and cannot let go (stuck), or its mix may stop
@@ -36,7 +36,7 @@ export function whyOff(catalog: Catalog, view: View, index: number, t: number): 
 export function dryWords(catalog: Catalog, order: Order, dry: RuleDry | null): string | null {
   const rule = dry && readRule(order.when, catalog.content.scales.quantity_per_item);
   if (!dry || !rule) return null;
-  const slots = { store: catalog.storeLabel(dry.store), n: catalog.format.count(rule.m ?? rule.n) };
+  const slots = { store: catalog.storeLabel(dry.store), n: levelWords(catalog, rule.m ?? rule.n) };
   return catalog.text.fill(dry.holding ? UI.ruleStuck : UI.ruleUnfed, slots);
 }
 
