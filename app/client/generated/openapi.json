@@ -4258,6 +4258,14 @@
             "type": "integer",
             "title": "Max Mixes"
           },
+          "max_unless": {
+            "type": "integer",
+            "title": "Max Unless"
+          },
+          "max_or_else": {
+            "type": "integer",
+            "title": "Max Or Else"
+          },
           "reserved_mix_prefix": {
             "type": "string",
             "title": "Reserved Mix Prefix"
@@ -4268,6 +4276,8 @@
           "max_orders",
           "max_queue",
           "max_mixes",
+          "max_unless",
+          "max_or_else",
           "reserved_mix_prefix"
         ],
         "title": "Limits",
@@ -5035,6 +5045,24 @@
           },
           "then": {
             "$ref": "#/components/schemas/OrderVerb"
+          },
+          "unless": {
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Unless",
+            "default": []
+          },
+          "or_else": {
+            "items": {
+              "$ref": "#/components/schemas/OrderVerb"
+            },
+            "type": "array",
+            "maxItems": 2,
+            "title": "Or Else",
+            "default": []
           }
         },
         "type": "object",
@@ -5042,7 +5070,8 @@
           "when",
           "then"
         ],
-        "title": "Order"
+        "title": "Order",
+        "description": "A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any\nguard in `unless` holds, the rule is paused. Both lists are left out when empty (CONTRACT.txt, \"Rule guards\")."
       },
       "OrderCard": {
         "properties": {
@@ -5094,12 +5123,39 @@
         "title": "OrderCard",
         "description": "The prefilled rule offered when a store's line is falling and uncovered: `when` is an at_most on `store`, which\nthe page words from ui text (CONTRACT.txt, \"Text and numbers\"); `then` taps a card."
       },
+      "OrderGuard": {
+        "properties": {
+          "on": {
+            "type": "boolean",
+            "title": "On"
+          },
+          "lets_go": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lets Go"
+          }
+        },
+        "type": "object",
+        "required": [
+          "on",
+          "lets_go"
+        ],
+        "title": "OrderGuard",
+        "description": "One guard of a rule as the engine reads it now (View.order_guards)."
+      },
       "OrderState": {
         "type": "string",
         "enum": [
           "on",
           "waiting",
           "outranked",
+          "paused",
           "passed_over"
         ],
         "title": "OrderState",
@@ -6978,6 +7034,30 @@
             "type": "array",
             "title": "Order States"
           },
+          "order_guards": {
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/OrderGuard"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Order Guards"
+          },
+          "order_doing": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Order Doing"
+          },
           "order_dry": {
             "items": {
               "anyOf": [
@@ -7070,6 +7150,8 @@
           "town_mix_order",
           "orders_on",
           "order_states",
+          "order_guards",
+          "order_doing",
           "order_dry",
           "runs_out_at",
           "orders",

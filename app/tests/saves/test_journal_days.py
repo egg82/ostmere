@@ -17,6 +17,7 @@ from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.journal import DAY_S, ComposedDay
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
+from tests.kills import kills
 from tests.saves.journal_fixture import (
     HABITS, JOURNAL, WORK, journaled, lock_waiters, reference, store_lines, stored,
 )
@@ -33,6 +34,7 @@ def begun(engine: Engine, rs: Ruleset, clock: FakeClock, account: int) -> tuple[
     return saves, info.save_id
 
 
+@kills(5, 11)
 def test_a_step_stores_every_day_it_closes_and_no_later_one(engine: Engine, rs: Ruleset, clock: FakeClock,
                                                              account: int):
     saves, save_id = begun(engine, rs, clock, account)
@@ -46,6 +48,7 @@ def test_a_step_stores_every_day_it_closes_and_no_later_one(engine: Engine, rs: 
     assert len(stored(engine, save_id)) == 3
 
 
+@kills(8)
 def test_a_day_ends_at_its_last_second(engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
     saves, save_id = begun(engine, rs, clock, account)
     clock.tick(DAY_S - 1)
@@ -75,6 +78,7 @@ def test_day_by_day_and_one_jump_store_the_same_rows(pg_url: str, pg_empty: str,
     assert found[0][1] == found[1][1] and len(found[0][1]) == 6
 
 
+@kills(9, 15)
 def test_opened_carries_the_written_days_stored_before_it_and_its_step_those_it_composed(
         engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
     """Day 1 has no line and is blank: stored, and not carried."""
@@ -107,6 +111,7 @@ def test_a_habits_or_slots_change_leaves_every_stored_row_as_it_was(engine: Engi
     assert after[3:] == reference(engine, save_id, 5, tuned)[3:] != reference(engine, save_id, 5)[3:]
 
 
+@kills(6)
 def test_a_line_stored_under_a_key_renamed_since_feeds_the_subject_of_its_new_key(
         engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
     saves = PgSaves(engine, journaled(replace(rs, line_renames={"l_old_work": "l_work"})), clock, stop_for=never)
@@ -117,6 +122,7 @@ def test_a_line_stored_under_a_key_renamed_since_feeds_the_subject_of_its_new_ke
     assert [n.subject for n in played.days[1].notes] == ["s_work"]
 
 
+@kills(1, 2, 7)
 def test_two_steps_racing_on_one_save_store_each_day_once(pg_url: str, engine: Engine, rs: Ruleset,
                                                           clock: FakeClock, account: int):
     """Both steps wait on a third transaction holding the save's row, so the second to run reads the save after the

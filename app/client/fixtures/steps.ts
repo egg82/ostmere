@@ -22,13 +22,14 @@ import type { ChroniclePhase } from "./chronicle";
 import type { SincePhase } from "./since";
 import type { AsksPhase } from "./asks";
 import type { LedgerPhase } from "./ledgerrules";
+import type { GuardsPhase } from "./guards";
 import type { FeelPhase } from "./feel";
 import type { JournalPhase } from "./journal";
 import type { PrestigePhase } from "./prestige";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | FeelPhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | GuardsPhase | FeelPhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];
@@ -48,17 +49,17 @@ const GATHER = solo("Gather by hand", "gather");
 const REST = solo("Rest by the fire", "tend");
 const low = (store: string, value: number, release: number): Order["when"] =>
   ({ kind: "at_most", watched: { kind: "store_value", store }, value: value * Q, release: release * Q, value_of_cap: false, release_of_cap: false });
-const WOOD_RULE: Order = { when: low("wood", 10, 20), then: { kind: "switch_mix", mix_id: GATHER.id } };
-const WARMTH_RULE: Order = { when: low("warmth", 40, 60), then: { kind: "switch_mix", mix_id: REST.id } };
-const SHELTER_RULE: Order = { when: low("stone", 2, 6), then: { kind: "tap_card", card: "shelter" } };
-const OLD_WOOD_RULE: Order = { when: low("wood", 10, 10), then: { kind: "switch_mix", mix_id: GATHER.id } };
+const WOOD_RULE: Order = { when: low("wood", 10, 20), then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [] };
+const WARMTH_RULE: Order = { when: low("warmth", 40, 60), then: { kind: "switch_mix", mix_id: REST.id }, unless: [], or_else: [] };
+const SHELTER_RULE: Order = { when: low("stone", 2, 6), then: { kind: "tap_card", card: "shelter" }, unless: [], or_else: [] };
+const OLD_WOOD_RULE: Order = { when: low("wood", 10, 10), then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [] };
 const WARM_RULE: Order = {
   when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 80 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false },
-  then: { kind: "switch_mix", mix_id: REST.id },
+  then: { kind: "switch_mix", mix_id: REST.id }, unless: [], or_else: [],
 };
 const REST_MIX = solo("Rest", "rest");
 const STOOLS = solo("Stools", "stool");
-const TIRED_RULE: Order = { when: TIRED, then: { kind: "switch_mix", mix_id: REST_MIX.id } };
+const TIRED_RULE: Order = { when: TIRED, then: { kind: "switch_mix", mix_id: REST_MIX.id }, unless: [], or_else: [] };
 /** The end, this long before a rest phase's view: an older end, so a fresh page never replays its card. */
 const ENDED_AGO = 600;
 const EVENING: Mix = { id: "Evening", components: [{ kind: "card_share", card: "gather", share_bp: 5_000 }, { kind: "card_share", card: "tend", share_bp: 5_000 }] };
@@ -91,7 +92,7 @@ function base(at: number): View {
     at, next_event_at: null, ledger: [], skills: [], standing: [], lanes: [freeHands],
     cards: [card(at, "stand", { cap: 3 })], completed: [], greyed_mix_ids: [],
     chips: [], chips_seen: [], unlocked: [{ category: "card", id: "stand" }], all_covered: true, ended_at: null, mixes: [], active_mix_id: null, runs_out_at: null,
-    running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], forecast: { horizon_at: at + 6 * 3600, level_ups: [], tops_out: [], fills: [], empties: [] },
+    running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], forecast: { horizon_at: at + 6 * 3600, level_ups: [], tops_out: [], fills: [], empties: [] },
   };
 }
 
@@ -164,7 +165,7 @@ function mid(at: number, mix: Mix, covered: boolean, plan: Plan): View {
     ],
     all_covered: covered, ended_at: covered ? at : null, mixes: [mix, ...plan.mixes.filter((m) => m.id !== mix.id)], active_mix_id: mix.id,
     runs_out_at: covered ? null : at + 5_400, running_mix_id: plan.running ?? mix.id, mix_order: plan.order, running_town_mix_id: null, town_mix_order: null,
-    orders_on: plan.on, order_states: statesOf(plan), order_dry: [], orders: plan.orders, queue: [], offers: [], fights: [], goals: [], goal_rows: [],
+    orders_on: plan.on, order_states: statesOf(plan), order_guards: plan.orders.map(() => []), order_doing: plan.orders.map(() => null), order_dry: [], orders: plan.orders, queue: [], offers: [], fights: [], goals: [], goal_rows: [],
     // foraging's next level lands as its bar says; firecraft's is pushed back by the rule that takes the hands first
     forecast: { horizon_at: at + 6 * 3600, level_ups: [{ skill: "foraging", at: at + 70 }, { skill: "firecraft", at: at + 1_500 }], tops_out: [], fills: [{ store: "warmth", at: at + 744 }], empties: [{ store: "wood", at: at + 420 }] },
   };
@@ -338,4 +339,4 @@ function ruleRuns(phase: Phase, view: View): RuleRun[] {
 
 /** rulestab's popped goal stint: gather until 30 wood. */
 const STINT_ORDER: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false },
-  then: { kind: "switch_mix", mix_id: GATHER.id } };
+  then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [] };

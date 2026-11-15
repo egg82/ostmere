@@ -28,6 +28,7 @@ PACKAGES = {
     "weekone": "tests.weekone.report",
     "weektwo": "tests.weektwo.report",
     "ladder": "tests.ladder.readout",
+    "makers": "tests.makers.readout",
     "worth": "tests.worth.readout",
 }
 OUT_ENV = "READOUTS_OUT"

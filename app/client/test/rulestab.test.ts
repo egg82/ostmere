@@ -112,7 +112,7 @@ const one = (root: FakeEl, sel: string, n = 0): FakeEl => {
   expect("what it does pressed", q(cond, ".cond-mix, .cond-task").filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.textContent), ["Rest"]);
   one(cond, ".cond-task[data-card=\"gather\"]").click();   // the task of the saved solo mix "Gather by hand"
   one(cond, ".cond-actions .primary").click();
-  expect("Save keeps the chip's condition, with the new mix", sent(r.decided[0])?.[2], { when: TIRED, then: { kind: "switch_mix", mix_id: "Gather by hand" } });
+  expect("Save keeps the chip's condition, with the new mix", sent(r.decided[0])?.[2], { when: TIRED, then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [] });
   const s = rig();
   one(s.root, ".rules-list .rule-cond", 2).click();
   one(s.root, ".cond-actions .danger").click();

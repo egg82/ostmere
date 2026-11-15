@@ -18,7 +18,6 @@ const text: Record<string, string> = {
   "ui.store.amount": "{n} / {cap}",
   "ui.ledger.empties": "{d} left",
   "ui.ledger.fills": "full in {d}",
-  "ui.ledger.behind": "{task} can't keep up",
   "ui.skill.level": "level {n}", "ui.skill.next_in": "{pays} · {d}", "ui.skill.none": "no more yet", "ui.next.unnamed": "something new",
   "ui.heading.ledger": "Ledger",
   "ui.ledger.yours": "Yours",
@@ -47,6 +46,8 @@ const text: Record<string, string> = {
   "ui.rule.needs_below": "needs under {n} {store} · now {have}", "ui.rule.needs_reaches": "needs {n} or more {store} · now {have}",
   "ui.rule.needs_down_to": "needs {store} down to {n} · now {have}", "ui.rule.needs_up_to": "needs {store} up to {n} · now {have}",
   "ui.rule.outranked": "outranked by {rule}", "ui.rule.passed_over": "passed over · a task it runs is done",
+  "ui.rule.passed_over_all": "passed over · every task it lists is done", "ui.rule.or_else": "{a}, or else {b}", "ui.rule.unless": "{rule}, unless {when}", "ui.rule.and_unless": "{rule}, and unless {when}", "ui.guard.full": "{store} is full", "ui.guard.empty": "{store} is empty", "ui.guard.reaches": "{store} is {n} or more", "ui.guard.below": "{store} is under {n}", "ui.guard.up_to": "{store} is {n} or more", "ui.guard.down_to": "{store} is {n} or less", "ui.guard.done": "{card} is done {n} times", "ui.guard.done_once": "{card} is done", "ui.guard.level": "{name} is level {n} or more", "ui.rule.paused": "paused {until}", "ui.rule.and": "{a}, and {b}", "ui.guard.until_under": "until {store} is under {n} · now {have}", "ui.guard.until_reaches": "until {store} is {n} or more · now {have}", "ui.guard.while": "while {when}", "ui.rule.on_doing": "on now · {task}", "ui.rule.on_none": "on now · nothing it lists can start yet",
+  "ui.rule.unless_label": "Unless", "ui.rule.unless_hint": "Pauses the rule while this holds.", "ui.rule.unless_add": "Add an unless", "ui.rule.unless_or_more": "or more", "ui.rule.unless_under": "under", "ui.rule.unless_done": "Add this unless", "ui.rule.else_label": "Or else", "ui.rule.else_hint": "Does the first one it can start.", "ui.rule.else_add": "Add an or else",
   "ui.rule.stuck": "can't reach {n}: out of {store}", "ui.rule.unfed": "nothing in this mix makes {store}; it may stop short of {n}",
   "ui.rule.lately": "Lately", "ui.rule.ran_once": "ran once", "ui.rule.ran": "ran {n} times", "ui.rule.came_on": "came on {ago} ago",
   "ui.rule.came_on_at": "came on at {have} {store}, {ago} ago", "ui.rule.let_go": "let go {ago} ago", "ui.rule.let_go_at": "let go at {have} {store}, {ago} ago",
@@ -358,7 +359,7 @@ const card = (id: string, lane: string, presentation: "narrative" | "action" | "
 export const fixtureContent: Content = {
   rules_digest: "fixture-digest",
   scales: { quantity_per_item: Q, rate_per_item_hour: R, bp: BP },
-  limits: { max_orders: 64, max_queue: 64, max_mixes: 64, reserved_mix_prefix: "town:" },
+  limits: { max_orders: 64, max_queue: 64, max_mixes: 64, max_unless: 3, max_or_else: 2, reserved_mix_prefix: "town:" },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
     { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null },

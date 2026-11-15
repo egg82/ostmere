@@ -25,7 +25,7 @@ from .line_models import PeopleBand, PeopleInfo
 from .sources import sources, store_sources
 from . import content_models as cm
 from . import journal_models as jm
-from .limits import MAX_MIXES, MAX_ORDERS, MAX_QUEUE
+from .limits import MAX_MIXES, MAX_OR_ELSE, MAX_ORDERS, MAX_QUEUE, MAX_UNLESS
 from . import models as w
 
 
@@ -77,7 +77,7 @@ class Game:
             repeats=w.Repeats(taps=[w.RepeatedTap(card=c, count=n) for c, n in played.repeats.taps],
                               switches=[w.RepeatedSwitch(chip=chip, mix_id=mix, count=n)
                                         for chip, mix, n in played.repeats.switches]),
-            rule_runs=[w.RuleRun(order=w.Order(when=convert.condition(r.order.when), then=convert.order_verb(r.order.then)),
+            rule_runs=[w.RuleRun(order=convert.order(r.order),
                                  starts=r.starts, on_at=r.on_at, on_level=r.on_level, off_at=r.off_at,
                                  off_level=r.off_level, ended=None if r.ended is None else r.ended.value,
                                  made=[cm.Amount(store=st, quantity=n) for st, n in r.made])
@@ -116,7 +116,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
     return cm.Content(
         rules_digest=digest,
         scales=cm.Scales(quantity_per_item=e.QUANTITY_SCALE, rate_per_item_hour=e.RATE_SCALE, bp=e.BP),
-        limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES, reserved_mix_prefix=e.TOWN_PREFIX),
+        limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES, max_unless=MAX_UNLESS, max_or_else=MAX_OR_ELSE, reserved_mix_prefix=e.TOWN_PREFIX),
         text_entries=[cm.TextEntry(key=k, text=t) for k, t in o.text.items()],
         store_infos=[cm.StoreInfo(store=s.id, label_key=s.label_key, cap=e.units(s.cap_items), made_by=made_by(o, s.id),
                                   hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))

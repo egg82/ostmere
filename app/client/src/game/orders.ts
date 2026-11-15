@@ -108,11 +108,11 @@ function drawn(order: Order): boolean {
   return order.when.kind !== "after_time" && ["store_value", "card_count", "skill_level"].includes(order.when.watched.kind);
 }
 
-/** The rule whose task the hands are doing now, or -1. */
+/** The rule whose task the hands are doing now (its first or a fallback), or -1. */
 export function handsRule(view: View): number {
   const running = view.lanes.find((l) => l.lane === "hands")?.running_card ?? null;
   return running === null ? -1
-    : view.orders.findIndex((o, i) => view.orders_on[i] === true && o.then.kind === "tap_card" && o.then.card === running);
+    : view.orders.findIndex((o, i) => view.orders_on[i] === true && [o.then, ...o.or_else].some((a) => a.kind === "tap_card" && a.card === running));
 }
 
 /** The saved mix of this card alone at the whole share, if one exists. */
@@ -133,22 +133,36 @@ export function freeName(view: View, base: string): string {
  * a task on another lane is the rule's own task (CONTRACT.txt).
  */
 export function addRule(view: View, catalog: Catalog, card: OrderCard): Decision[] {
-  return ruleDecisions(view, catalog, null, { when: card.when, then: card.then });
+  return ruleDecisions(view, catalog, null, { when: card.when, then: card.then, unless: [], or_else: [] });
 }
 
 /** Setting `order`, appended as the lowest priority (`index` null; on a ruled lane, just before its first always rule)
  * or in place of rule `index`. A hands task runs as the saved mix of that task alone: reused when one is saved, else
  * saved first under the task's label. */
 export function ruleDecisions(view: View, catalog: Catalog, index: number | null, order: Order): Decision[] {
-  const then = order.then;
   const at = index === null ? newRuleAt(catalog, view, order) : null;   // a ruled lane's: before its first always rule
   if (at !== null) return [{ kind: "set_orders", orders: [...view.orders.slice(0, at), order, ...view.orders.slice(at)] }];
-  if (then.kind !== "tap_card" || catalog.cards.get(then.card)?.lane !== "hands") return [setRule(view, index, order)];
+  const cards = [...new Set([order.then, ...order.or_else].flatMap((v) => (handsTap(catalog, v) ? [v.card] : [])))];
   const bp = catalog.content.scales.bp;
-  const found = soloMix(view, then.card, bp);
-  const id = found?.id ?? freeName(view, catalog.cardLabel(then.card));
-  const save: Decision[] = found ? [] : [{ kind: "save_mix", mix: { id, components: [{ kind: "card_share", card: then.card, share_bp: bp }] } }];
-  return [...save, setRule(view, index, { when: order.when, then: { kind: "switch_mix", mix_id: id } })];
+  const ids = new Map<string, string>();
+  const save: Decision[] = [];
+  let known = view;
+  for (const card of cards) {
+    const found = soloMix(known, card, bp);
+    const id = found?.id ?? freeName(known, catalog.cardLabel(card));
+    ids.set(card, id);
+    if (found) continue;
+    const mix: Mix = { id, components: [{ kind: "card_share", card, share_bp: bp }] };
+    save.push({ kind: "save_mix", mix });
+    known = { ...known, mixes: [...known.mixes, mix] };
+  }
+  const solo = (v: OrderVerb): OrderVerb => (handsTap(catalog, v) ? { kind: "switch_mix", mix_id: ids.get(v.card)! } : v);
+  return [...save, setRule(view, index, { ...order, then: solo(order.then), or_else: order.or_else.map(solo) })];
+}
+
+/** A tap of a hands task: a rule runs it as its solo mix. */
+export function handsTap(catalog: Catalog, v: OrderVerb): v is Extract<OrderVerb, { kind: "tap_card" }> {
+  return v.kind === "tap_card" && catalog.cards.get(v.card)?.lane === "hands";
 }
 
 /** The verb a rule saves for `then`: a hands task is its saved solo mix when there is one (ruleDecisions saves one
@@ -239,7 +253,7 @@ export function setRule(view: View, index: number | null, order: Order): Decisio
 
 /** Another rule (not `index`) already does exactly this. */
 export function ruleExists(view: View, index: number | null, order: Order): boolean {
-  return view.orders.some((o, i) => i !== index && sameCondition(o.when, order.when) && same(o.then, order.then));
+  return view.orders.some((o, i) => i !== index && sameCondition(o.when, order.when) && same(o.then, order.then) && same(o.unless, order.unless) && same(o.or_else, order.or_else));
 }
 
 /** A rule of the player's has been seen on and then off, the same rule in the same place: the step that brings

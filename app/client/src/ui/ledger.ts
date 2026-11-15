@@ -9,7 +9,7 @@
 // the red line carries a quiet mark (until touched) and the player writes the rule in the Rules tab. A card for a
 // rising line (cues.risingCard: a side lane's task or a hands build) is marked once the line is full or rising, and
 // kept until a rule is set. Nothing stands under a line once a rule watches its store: the row carries that rule's mark
-// and taps through to it (ui/linerule.ts), and says why when the rule covers it and cannot keep up. A full store that
+// and taps through to it (ui/linerule.ts), A full store that
 // something still feeds says so and that the extra is lost, never in an alarm's colour; a red line with no order card
 // to answer it names what draws on it most, with Edit mix. The first full store the hands fill (game/caphint.ts)
 // carries the quiet mark and starts the cap rule's lesson, once writing rules is open; nothing is built from it. The
@@ -35,7 +35,7 @@ import { UI } from "../game/text";
 import { noteOrderShown } from "../telemetry";
 import { el, place, pulse, rekey, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
-import { behindWords, ruleMark, setRuleMark } from "./linerule";
+import { ruleMark, setRuleMark } from "./linerule";
 import type { Part, PartContext } from "./part";
 import { Threats } from "./threats";
 
@@ -127,8 +127,7 @@ export class Ledger implements Part {
       if (row.box.classList.contains("full") !== full) { row.box.classList.toggle("full", full); this.arrange(t); }
       row.edit.hidden = !drain || row.rule >= 0 || !this.view || runningMix(this.view) === null;
       const eta = full ? text.get(UI.full) : this.eta(line, t);
-      const why = drain || (!red && this.view ? behindWords(this.ctx.catalog, this.view, line, row.rule, t) : null);
-      setText(row.eta, why ? `${eta} · ${why}` : eta);
+      setText(row.eta, drain ? `${eta} · ${drain}` : eta);
     }
   }
 
@@ -252,7 +251,7 @@ export class Ledger implements Part {
    * is set on its store and test, and gone when it is not: the card's rule and Show me. */
   private inline(row: Row, card: OrderCard | undefined): void {
     const { catalog } = this.ctx;
-    const words = card ? ruleWords(catalog, { when: card.when, then: card.then }) : null;
+    const words = card ? ruleWords(catalog, { when: card.when, then: card.then, unless: [], or_else: [] }) : null;
     const guide = card !== undefined && this.view !== null && guidedRule(this.view, this.ctx.keeps, card);
     const waits = guide && ruleWaits(card, this.ctx.lesson(), this.ctx.lessonSubject());   // guided, it waits out another lesson or offer
     const key = card && words && guide && !waits ? `${words.when}|${words.action}` : "";

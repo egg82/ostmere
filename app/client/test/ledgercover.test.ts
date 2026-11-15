@@ -2,8 +2,6 @@
 // turns red only when its store is falling with nothing covering it). "As it means to" is read off the rule and the view:
 // the rule is on, its condition is "n or more" of that store, and a card it runs is among what takes from the store.
 // No button stands under a ledger row: a row a rule watches carries a quiet mark, and tapping the row opens that rule.
-// A covering rule that cannot keep up says why on the row: empty by the forecast while a rule "under n" wants the store
-// held, or full with more coming in while a rule "n or more" wants it taken.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent, Q, R } from "../fixtures/content";
@@ -23,8 +21,8 @@ const AT = 100;
 const catalog = new Catalog(fixtureContent);
 const mid = fixtureStep("mid", AT).view;   // wood falling, drawn down by tend, nothing covering it; forecast: wood empties at AT + 420
 
-const SMOKE: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 2 * Q, release: Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "smoke_catch" } };
-const KEEP_WOOD: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Gather by hand" } };
+const SMOKE: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 2 * Q, release: Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "smoke_catch" }, unless: [], or_else: [] };
+const KEEP_WOOD: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [] };
 const KEEP_CATCH: Order = { ...SMOKE, when: { kind: "at_most", watched: { kind: "store_value", store: "catch" }, value: 2 * Q - 1, release: 4 * Q - 1, value_of_cap: false, release_of_cap: false } };
 
 function line(store: string, items: number, by: Array<[string, number]>, over: Partial<LedgerLine> = {}): LedgerLine {
@@ -65,7 +63,6 @@ function draw(v: View) {
   return { part, got, row, shown, offers: () => part.root.querySelectorAll(".line-order").length };
 }
 
-const behind = (task: string): string => catalog.text.fill("ui.ledger.behind", { task });
 const empties = (s: number): string => catalog.text.fill(UI.empties, { d: catalog.format.duration(s) });
 
 // The owner's case: a rule smoking the catch while there is some, until under one, draws the catch down as it means to.
@@ -75,7 +72,6 @@ const smoking = line("catch", 4, [["smoke_catch", -4]]);
   expect("spent by its own rule: not red", d.shown("catch").alarm, false);
   expect("no row and no button under it", d.offers(), 0);
   expect("the quiet mark, nothing else", [d.shown("catch").mark, d.shown("catch").edit], [true, false]);
-  expect("and no reason: the rule is doing what it says", d.shown("catch").eta.includes(behind(catalog.cardLabel("smoke_catch"))), false);
   d.row("catch").click();
   expect("tapping the row opens that rule", d.got.opened, [0]);
 }
@@ -97,18 +93,14 @@ expect("no rule: no mark", draw(view([smoking])).shown("catch").mark, false);
   expect("the row opens the rule", d.got.opened, [0]);
 }
 
-// A covering rule that cannot keep up says why, once, on the row.
+// A covered line that still empties or fills shows only its time: no word blames the rule.
 {
-  const wood = { ...mid.ledger.find((l) => l.store === "wood")!, covered: true };   // the rule's mix makes wood, and the forecast still empties it
+  const wood = { ...mid.ledger.find((l) => l.store === "wood")!, covered: true };
   const d = draw(view([wood], [KEEP_WOOD], ["on"]));
   expect("covered: white", d.shown("wood").alarm, false);
-  expect("empty while the rule wants it held: says why", d.shown("wood").eta, `${empties(420)} · ${behind("Gather by hand")}`);
-  const kept = draw({ ...view([wood], [KEEP_WOOD], ["on"]), forecast: { ...mid.forecast!, empties: [] } });
-  expect("control: the forecast keeps it: no reason", kept.shown("wood").eta, "");
+  expect("empty while the rule wants it held: the time alone", d.shown("wood").eta, empties(420));
 }
 {
   const full = line("catch", 6, [["gather", 6], ["smoke_catch", -4]]);
-  const d = draw(view([full], [SMOKE], ["on"]));
-  expect("full with more coming in while the rule takes: says why", d.shown("catch").eta, `${catalog.text.get(UI.full)} · ${behind(catalog.cardLabel("smoke_catch"))}`);
-  expect("control: full with no rule on it says only full", draw(view([full])).shown("catch").eta, catalog.text.get(UI.full));
+  expect("full with more coming in while the rule takes: full alone", draw(view([full], [SMOKE], ["on"])).shown("catch").eta, catalog.text.get(UI.full));
 }

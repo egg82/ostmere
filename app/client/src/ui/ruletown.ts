@@ -5,6 +5,7 @@
 // The town's always rule reads as ui.rule.town_always (it has no condition to edit); a rule whose mix is greyed is
 // dimmed and says why, as a hands rule does. The mix itself is changed from the town's strip.
 import type { View } from "../api/types";
+import { ruleActions } from "../game/guardwords";
 import { mixLabel } from "../game/orders";
 import { townCanSwitch, townRules } from "../game/town";
 import { UI } from "../game/text";
@@ -38,5 +39,5 @@ function townBody(ctx: PartContext, view: View, index: number, cond: (index: num
   const order = view.orders[index]!;
   const mixId = order.then.kind === "switch_mix" ? order.then.mix_id : "";
   if (order.when.kind === "after_time" && order.when.at === 0) return [el("span", "rule-when", catalog.text.fill(UI.ruleTownAlways, { mix: mixLabel(catalog, mixId) }))];
-  return [cond(index), el("span", "rule-arrow", "→"), el("span", "rule-slot-name", mixLabel(catalog, mixId))];
+  return [cond(index), el("span", "rule-arrow", "→"), el("span", order.or_else.length > 0 ? "rule-slot-name has-else" : "rule-slot-name", ruleActions(catalog, order))];
 }

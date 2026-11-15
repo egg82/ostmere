@@ -75,7 +75,7 @@ expect("ruleFor finds a rule whose levels were changed", ruleFor(edited, woodCar
 const high: View = { ...list, orders: [{ ...list.orders[0]!, when: buildRule(items("reaches", 30, 20), Q) }] };
 expect("ruleFor does not take a reaches rule for a below card", ruleFor(high, woodCard), -1);
 
-const evening: Order = { when: buildRule(below, Q), then: { kind: "switch_mix", mix_id: "Evening" } };
+const evening: Order = { when: buildRule(below, Q), then: { kind: "switch_mix", mix_id: "Evening" }, unless: [], or_else: [] };
 const added = setRule(list, null, evening);
 expect("a new rule is the lowest priority", added.kind === "set_orders" ? added.orders : null, [...list.orders, evening]);
 const changed = setRule(list, 1, evening);
@@ -87,7 +87,7 @@ expect("same condition, another mix: not a duplicate", ruleExists(list, null, { 
 const written = fixtureStep("written", 100).view;
 expect("reaches rules are drawn: hands", mixRules(written), [0, 1]);
 expect("reaches rules are drawn: tasks", taskRules(written), [2]);
-expect("an after_time rule is not drawn", mixRules({ ...written, orders: [{ when: { kind: "after_time", at: 5 }, then: { kind: "switch_mix", mix_id: "Evening" } }] }), []);
+expect("an after_time rule is not drawn", mixRules({ ...written, orders: [{ when: { kind: "after_time", at: 5 }, then: { kind: "switch_mix", mix_id: "Evening" }, unless: [], or_else: [] }] }), []);
 expect("an old rule with no band reads without until", ruleWords(catalog, written.orders[0]!)?.when, "Under 10 Dead wood");
 expect("a reaches rule's words", ruleWords(catalog, written.orders[1]!)?.when, "80 or more Warmth, until under 40");
 

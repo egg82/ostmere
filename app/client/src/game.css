@@ -53,8 +53,8 @@ html { font-size: clamp(16px, calc(0.5vw + 10px), 30px); }
 .hue-3 { --hue: #c9a35c; } .hue-4 { --hue: #b0604c; } .hue-5 { --hue: #9a7aa0; }
 
 body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress; transition: opacity .6s; }   /* asking the server again, or catching up: quiet */
-.catching-up { position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100vw - 32px); pointer-events: none; margin: 0; padding: .4rem .8rem; background: var(--raise); color: var(--ink-hi); border: 0; border-radius: 2px; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
-.catching-up[hidden] { display: none; }
+p.catching-up { position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100vw - 32px); pointer-events: none; margin: 0; padding: .4rem .8rem; background: var(--raise); color: var(--ink-hi); border: 0; border-radius: 2px; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+p.catching-up[hidden] { display: none; }
 
 /* ---------- the game ---------- */
 .game {
@@ -331,8 +331,9 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .line .new-dot { top: .55rem; left: auto; right: .3rem; }   /* inside .line, which clips its overflow, in the right gutter its padding keeps for it, so it never covers the amount and nothing moves when it comes */
 .glow { position: relative; z-index: 1; }
 .glow::after { content: ""; position: absolute; inset: -4px; pointer-events: none; border: 1px solid var(--ember-hot); border-radius: 2px; }
-.game:has(.asks:not([hidden])) .glow::after { display: none; }   /* a waiting ask holds the one outline */
+.game:has(.asks:not([hidden])) .glow:not(.strip)::after { display: none; }   /* a waiting ask holds the one outline; the strip's, lit for a return's first line (ui/stripglow.ts), is brief and stays */
 .card-tap.glow::after { inset: -4px; }
+.strip.glow::after { inset: 0; }   /* the strip runs to the screen's edges on a phone: its ring is drawn inside it */
 
 /* skills */
 .skills { display: flex; flex-direction: column; gap: .5rem; }
@@ -680,6 +681,24 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .quick-part:hover .quick-word, .quick-part:focus-within .quick-word { text-decoration-color: var(--ink-hi); }
 .quick-part:has(.quick-select:focus-visible) { outline: 1px solid var(--ink-hi); outline-offset: 3px; }
 .cond-more { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }   /* the way to the full editor */
+.cond-guards, .cond-guard-pick { display: flex; flex-direction: column; gap: .6rem; }   /* Unless (condguards.ts): the guards, an add, and the picker of what a new one watches */
+.cond-guards { padding-top: .9rem; border-top: 1px solid var(--rule); }
+.cond-guards-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; }
+.cond .cond-guards-head .rules-label { flex: none; }
+.cond-guards-hint, .cond-guard-store { font-size: var(--t-meta); color: var(--ink); }
+.cond-guard { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-guard-words { color: var(--ink-hi); overflow-wrap: anywhere; }
+.cond-guard-what { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.cond-guard-add, .cond-guard-drop { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }
+.cond-guard-done { align-self: flex-start; min-height: 2.75rem; }
+.cond-else { display: flex; flex-direction: column; gap: .6rem; }   /* Or else (condelse.ts): the fallbacks, an add, and the picker of what a new one does */
+.cond-else-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; }
+.cond .cond-else-head .rules-label { flex: none; }
+.cond-else-hint { font-size: var(--t-meta); color: var(--ink); }
+.cond-else-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-else-words { color: var(--ink-hi); overflow-wrap: anywhere; }
+.cond-else-pick { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.cond-else-add, .cond-else-drop { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }
 .cond-fact { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
 .cond-fact:empty, .cond-note:empty { display: none; }
 .cond-note { margin: 0; }
@@ -717,6 +736,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .rules-row > .rule-when { flex: 0 1 auto; padding-left: .8rem; font-size: var(--t-body); }
 .rule-slot { flex: none; max-width: 9.5rem; min-height: 2.4rem; display: inline-flex; align-items: center; gap: .2rem; padding: 0 .55rem; font: inherit; font-size: var(--t-meta); color: var(--ink-hi); background: transparent; border: 1px dashed var(--ink-dim); border-radius: 2px; cursor: pointer; }   /* the mix slot: tap to pick, or drop a mix on it */
 .rule-slot-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rule-slot-name.has-else { white-space: normal; text-align: left; overflow-wrap: anywhere; }   /* a rule's mixes with "or else": wrapped, never cut */
 .task-rule .rule-action { flex: 0 1 auto; min-width: 0; margin-right: .3rem; }
 /* Next: the queue's taps, between the hands rules and Otherwise (nextlist.ts) */
 .rules-next { margin: .3rem 0 0 2.1rem; font-size: var(--t-meta); font-weight: 500; color: var(--ink); }

@@ -123,6 +123,18 @@ ENDPOINTS
   other subject, outside 0..10000, or with two share levels on the wrong side of each other is 422 invalid_decision.
   A share level and a quantity are never compared for which side the release is on. Content's conditions (chips,
   goals, blockers, order cards, goal rows) are always quantities.
+  Rule guards and fallbacks: an Order is {when, then, unless, or_else}; `unless` (conditions, at most
+  3) and `or_else` (order verbs, at most 2) may be left out of a request and read as empty, and are
+  always served. The rule's actions are `then` followed by `or_else`: it runs the first that can act. Each `unless` entry
+  is the condition that blocks the rule, read as a `when` is (the same refusals, share levels included): while any holds, the rule is paused, and it resumes when the
+  last lets go. All actions are one kind (tap_card or switch_mix), taps on one lane, mixes of one layer; a rule that
+  answers an offer takes no or_else; a guard or an action listed twice is refused. Every refusal is 422
+  invalid_decision, a list past its limit included. A rule with neither list is the rule it always was,
+  in a request, in a save and in a rule_run's `order`, which equals its rule in View.orders.
+  View carries, beside orders_on (still the `when` latch alone): order_states[i] may be `paused`;
+  order_guards[i][j] {on, lets_go} for guard j of orders[i], `on` its latch and `lets_go` the quantity of the watched
+  store it lets go at as the engine reads it now (a share level read against the cap now), null off a store;
+  order_doing[i], the index in the rule's actions (then, then or_else) of the one it runs now, else null.
   SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
   save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
   answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.
@@ -429,7 +441,7 @@ REQUEST LIMITS
   as at 512 entries).
   save_mix: at most 64 components; a save holds at most Content.limits.max_mixes (64) mixes, and a save_mix
   of a new id past that is 422 invalid_decision (replacing a saved mix is always allowed).
-  set_orders: at most Content.limits.max_orders (64) orders. set_queue: at most Content.limits.max_queue (64) entries.
+  set_orders: at most Content.limits.max_orders (64) orders, each with at most Content.limits.max_unless (3) guards and Content.limits.max_or_else (2) fallbacks; the rule editor stops offering another of either at that. set_queue: at most Content.limits.max_queue (64) entries.
   The page's rules editor and "When ready" stop offering another at those, and say so in one plain line (ui.rule.full,
   ui.queue.full); the mix lists and the mix editor stop offering a new mix at max_mixes, the same way (ui.mix.full); its ledger, chip and repeated-switch rule offers stop at the rules' bound, quietly.
 
@@ -574,7 +586,8 @@ THE CLIENT MAY
   - say why a rule is off from view.order_states[i], never from its own reading of the stores:
     waiting (its condition does not hold), outranked (its condition holds and an earlier rule has the hands or the
     lane: orders[mix_order] for a mix rule, orders[LaneBar.order] of its card's lane for a rule that taps a card),
-    passed_over (its mix is greyed, its task completed, or its offer answered, whatever its condition). on is not off.
+    passed_over (its mix is greyed, its task completed, or its offer answered, whatever its condition), paused (its
+    condition holds and a guard of its `unless` holds; it resumes when the last lets go). on is not off.
   - offer the first mix: once view.unlocked holds the feature Content.first_mix.feature and view.mixes is
     empty, offer first_mix.card_ids (those in view.cards) as one control. The player's tap on it sends save_mix with the
     id from text `ui.mix.default`, those cards in that order at an even split of Scales.bp (the remainder to the
@@ -717,7 +730,6 @@ TEXT AND NUMBERS (one rule)
     ui.rate.per_minute {n}          a ledger line's or contribution's rate
     ui.store.amount {n}{cap}        a store's amount
     ui.ledger.empties {d} | ui.ledger.fills {d}   until a falling line empties / a rising one fills
-    ui.ledger.behind {task}         a covering rule that cannot keep up: its task or mix
     ui.ledger.yours | ui.ledger.threats   the ledger's group labels: the player's stores, the threats at them
     ui.skill.level {n}              a skill's level (a plain count)
     ui.card.needs {store}{have}{n}  a card's need: its store, what there is, its quantity (amounts; {n} rounded up,

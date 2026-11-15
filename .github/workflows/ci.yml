@@ -159,6 +159,30 @@ jobs:
           python -m tools.weektwo_shards --check | tee weektwo-shards.out
           grep '^matrix=' weektwo-shards.out >> "$GITHUB_OUTPUT"
 
+  # Every planted mutant (app/tools/*_mutants/) applies to the current code: each anchor occurs exactly once. Plants
+  # only, and every row of every suite's MUTANTS file is claimed by a test marked @kills. No test run, no dependencies
+  # beyond the standard library; a mutation run is by hand.
+  mutant-plants:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - working-directory: app
+        run: python -m tools.mutate_suite --plants
+      - working-directory: app
+        run: |
+          bad=0
+          for suite in $(python -c "from tools.mutate_suite import SUITES; print(*SUITES)"); do
+            echo "== $suite"
+            python -m tools.mutate_suite "$suite" --check || bad=1
+          done
+          exit $bad
+
   # The per-PR smoke route: the opening's representative routes (tests/opening/routes.py, PUSH_ROUTES) and the tests
   # that read them, so a change that breaks play itself goes red before it merges. The rest of the playthroughs are the
   # full run below.
@@ -634,6 +658,7 @@ jobs:
       - docs
       - tests
       - shards-cover
+      - mutant-plants
       - playthrough-smoke
       - playthrough
       - chapter-saves
@@ -655,8 +680,8 @@ jobs:
           echo "$NEEDS" | jq -r 'to_entries[] | "\(.key) \(.value.result)"'
           echo "code=$CODE full=$FULL"
           echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" '
-            ["tests", "shards-cover", "playthrough-smoke", "engine-bench", "saves-forward", "pyright", "client",
-             "app-image"] as $per_pr
+            ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "saves-forward", "pyright",
+             "client", "app-image"] as $per_pr
             | ["playthrough", "chapter-saves", "playthrough-week-one", "playthrough-week-one-saved",
                "playthrough-week-two"] as $full_run
             | (["changes"] + (if $code == "true" then $per_pr else ["docs"] end)

@@ -27,7 +27,8 @@ function town(phase: TownPhase, v: View): View {
   const lanes = wire.lanes.filter((l) => l.lane !== "hands").map((l) => ({ ...l, order: l.order === null ? null : l.order + shift }));
   return {
     ...v, at: wire.at, lanes: [...v.lanes, ...lanes], cards: [...v.cards, ...wire.cards.map(withSpeed)], mixes: [...v.mixes, ...wire.mixes],
-    orders: [...v.orders, ...wire.orders], orders_on: [...v.orders_on, ...wire.orders_on], order_states: [...v.order_states, ...wire.order_states],
+    orders: [...v.orders, ...wire.orders.map((o) => ({ ...o, unless: [], or_else: [] }))],
+    order_guards: [...v.order_guards, ...wire.orders.map(() => [])], order_doing: [...v.order_doing, ...wire.orders.map(() => null)], orders_on: [...v.orders_on, ...wire.orders_on], order_states: [...v.order_states, ...wire.order_states],
     running_town_mix_id: wire.running_town_mix_id, town_mix_order: wire.town_mix_order === null ? null : wire.town_mix_order + shift,
     unlocked: [...v.unlocked, ...joined, ...["chop", "haul", "hew", "carve"].map((id) => ({ category: "card" as const, id }))],
   };

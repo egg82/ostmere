@@ -8,8 +8,9 @@
 // each side lane's task rules under the lane's label; a ruled lane's always rule, and its row's Change, open that lane's
 // task editor (laneedit.ts). Every change sends the whole list (set_orders) in its new order.
 import type { Condition, Decision, RuleRun, View } from "../api/types";
-import { chipOf, conditionWords, mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
+import { chipOf, mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
 import { UI } from "../game/text";
+import { actionsOf, ruleActions, ruleCondition } from "../game/guardwords";
 import { noteOrderRemoved, noteRuleChanged } from "../telemetry";
 import { ConditionEditor } from "./condition";
 import { el, tapFeedback } from "./dom";
@@ -26,17 +27,11 @@ import { townSection, type TownRows } from "./ruletown";
 import { latelyRows, retickLately } from "./rulelately";
 import { retickWhy, whyLine } from "./rulewhy";
 
-/** The mix rule `index` runs, or "" for a rule that does a task. */
-function mixIdOf(view: View, index: number): string {
-  const then = view.orders[index]?.then;
-  return then?.kind === "switch_mix" ? then.mix_id : "";
-}
-
 type Mode = { kind: "list" } | { kind: "edit" } | { kind: "lane" } | { kind: "pick"; slot: Slot };
 
 /** What a redraw depends on: a view that changes none of it leaves the tab alone (a press or a focus survives). */
 function shape(view: View, fired: readonly string[], ruleSeen: boolean, runs: readonly RuleRun[], plan: string): string {
-  return JSON.stringify([plan, view.orders, view.queue, view.orders_on, view.order_states, view.order_dry, view.mixes.map((m) => m.id), view.greyed_mix_ids, view.active_mix_id, view.mix_order, view.town_mix_order, ruleSeen, fired, runs]);
+  return JSON.stringify([plan, view.orders, view.queue, view.orders_on, view.order_states, view.order_guards, view.order_doing, view.order_dry, view.mixes.map((m) => m.id), view.greyed_mix_ids, view.active_mix_id, view.mix_order, view.town_mix_order, ruleSeen, fired, runs]);
 }
 
 export class RulesTab implements Part {
@@ -99,7 +94,11 @@ export class RulesTab implements Part {
     this.draw();
   }
 
+  /** A lane's task editor is the simple one: a rule holding a guard or a fallback opens the full editor instead (or
+   * the list, when the full editor does not open it). */
   private openLane(view: View, lane: string, rule: number | null): void {
+    const held = rule === null ? undefined : view.orders[rule];
+    if (rule !== null && held && (held.unless.length > 0 || held.or_else.length > 0)) { this.open(view, rule); return; }
     this.laneEdit.open(view, { lane, rule });
     this.mode = { kind: "lane" };
     this.draw();
@@ -146,7 +145,7 @@ export class RulesTab implements Part {
     }
     const town = townRules(this.ctx.catalog, view);   // listed under the town's heading (ruletown.ts), not here
     const rules = mixRules(view).filter((i) => !town.includes(i));
-    const rows = rules.flatMap((i) => this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, mixIdOf(view, i))], false));
+    const rows = rules.flatMap((i) => this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view.orders[i]!), view.orders[i]!.or_else.length > 0)], false));
     const write = this.ctx.keeps.ruleSeen() ? [this.newRule(view)] : [];
     this.list.replaceChildren(...rows, ...nextRows(this.ctx, view, this.plan), this.otherwiseRow(view), ...write);
     this.lanes.replaceChildren(...townSection(this.ctx, view, this.townRows(view)), ...laneSections(this.ctx, view, (i) => this.condButton(view, i)));
@@ -174,11 +173,10 @@ export class RulesTab implements Part {
     const group = this.groupOf(view, index);
     const first = group[0] === index, last = group[group.length - 1] === index;
     const on = town ? view.town_mix_order : view.mix_order;
-    const mixId = mixIdOf(view, index);
     const row = el("div", town ? "rules-row town-rule" : "rules-row");
     row.dataset.rule = String(index);
     row.classList.toggle("active", on === index);
-    row.classList.toggle("greyed", view.greyed_mix_ids.includes(mixId));
+    row.classList.toggle("greyed", actionsOf(view.orders[index]!).every((a) => a.kind === "switch_mix" && view.greyed_mix_ids.includes(a.mix_id)));
     const handle = el("button", "rule-handle", "≡");
     handle.type = "button";
     handle.dataset.rule = String(index);
@@ -232,7 +230,7 @@ export class RulesTab implements Part {
     b.type = "button";
     if (view.orders_on[index] === true) b.dataset.teach = "rule-on";   // a lesson's mark of a rule at work
     b.classList.toggle("chip-rule", chipOf(this.ctx.catalog, order.when) !== undefined);
-    b.append(el("span", "rule-cond-text", always ?? conditionWords(this.ctx.catalog, order.when) ?? ""), el("span", "rule-edit-mark", "✎"));
+    b.append(el("span", "rule-cond-text", always ?? ruleCondition(this.ctx.catalog, order) ?? ""), el("span", "rule-edit-mark", "✎"));
     b.querySelector(".rule-edit-mark")?.setAttribute("aria-hidden", "true");
     b.addEventListener("click", () => {
       tapFeedback();
@@ -242,12 +240,13 @@ export class RulesTab implements Part {
     return b;
   }
 
-  /** A mix slot: tap for the picker. */
-  private slot(slot: Slot, mixId: string): HTMLElement {
+  /** A mix slot, worded as `label` (the rule's mixes, or the player's own; with fallbacks it wraps, so none is cut
+   * off): tap for the picker. */
+  private slot(slot: Slot, label: string, fallbacks = false): HTMLElement {
     const b = el("button", "rule-slot");
     b.type = "button";
     b.dataset.slot = String(slot);
-    b.append(el("span", "rule-slot-name", mixId || this.ctx.catalog.text.get(UI.handsIdle)), " ▾");
+    b.append(el("span", fallbacks ? "rule-slot-name has-else" : "rule-slot-name", label || this.ctx.catalog.text.get(UI.handsIdle)), " ▾");
     b.addEventListener("click", () => {
       tapFeedback();
       this.menu = null;

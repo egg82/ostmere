@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .limits import MAX_MIX_PARTS, MAX_ORDERS, MAX_QUEUE, NO_NUL
+from .limits import MAX_MIX_PARTS, MAX_OR_ELSE, MAX_ORDERS, MAX_QUEUE, MAX_UNLESS, NO_NUL
 
 class Request(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -174,8 +174,24 @@ type OrderVerb = Annotated[SwitchMix | TapCard | AnswerOffer | AnswerKind, Field
 
 
 class Order(BaseModel):
+    """A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any
+    guard in `unless` holds, the rule is paused. Both lists are left out when empty (CONTRACT.txt, "Rule guards")."""
+
     when: Condition
     then: OrderVerb
+    unless: list[Condition] = Field(default=[], max_length=MAX_UNLESS)
+    """Guards, each the condition that blocks the rule (engine DESIGN.txt, "RULE GUARDS")."""
+    or_else: list[OrderVerb] = Field(default=[], max_length=MAX_OR_ELSE)
+    """Fallback actions, tried after `then` in this order."""
+
+
+class OrderGuard(BaseModel):
+    """One guard of a rule as the engine reads it now (View.order_guards)."""
+
+    on: bool
+    """Its latch: true while the guard blocks the rule."""
+    lets_go: int | None
+    """The quantity of the watched store at which it lets go, a share level read against the cap now; null off a store."""
 
 
 class QueueEntry(BaseModel):

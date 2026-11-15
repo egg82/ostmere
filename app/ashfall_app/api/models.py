@@ -23,7 +23,7 @@ from .decision_models import (
     CardCount as CardCount, UnlockKind as UnlockKind, Unlock as Unlock, Unlocked as Unlocked, Running as Running,
     Subject as Subject, AtLeast as AtLeast, AtMost as AtMost, AfterTime as AfterTime, Condition as Condition,
     CardShare as CardShare, SubMix as SubMix, Mix as Mix, SwitchMix as SwitchMix, TapCard as TapCard,
-    OrderVerb as OrderVerb, Order as Order, QueueEntry as QueueEntry, SaveMix as SaveMix, DeleteMix as DeleteMix,
+    OrderVerb as OrderVerb, Order as Order, OrderGuard as OrderGuard, QueueEntry as QueueEntry, SaveMix as SaveMix, DeleteMix as DeleteMix,
     SetOrders as SetOrders, SetQueue as SetQueue, AnswerOffer as AnswerOffer, AnswerKind as AnswerKind, Decision as Decision,
     Prestige as Prestige, UndoPick as UndoPick, MovePick as MovePick,
 )
@@ -66,6 +66,8 @@ class OrderState(StrEnum):
     OUTRANKED = "outranked"
     """A mix rule whose condition holds while an earlier rule, View.mix_order, has the hands; a task rule whose
     condition holds while its card's lane runs an earlier rule's task (orders[LaneBar.order])."""
+    PAUSED = "paused"
+    """Its condition holds and a guard (Order.unless) holds too: it resumes when the last guard lets go."""
     PASSED_OVER = "passed_over"
     """It cannot act whatever its condition: its mix is greyed (in greyed_mix_ids), or its task is completed."""
 
@@ -230,6 +232,11 @@ class View(BaseModel):
     """orders_on[i]: orders[i]'s condition holds now."""
     order_states: list[OrderState]
     """order_states[i]: where orders[i] stands now."""
+    order_guards: list[list[OrderGuard]]
+    """order_guards[i][j]: guard j of orders[i], in the order of Order.unless."""
+    order_doing: list[int | None]
+    """order_doing[i]: the index in the rule's actions (then, then or_else) of the one it runs now: its lane runs
+    that card for this rule, or the running mix is that mix by this rule; else null."""
     order_dry: list[RuleDry | None]
     """order_dry[i]: a store rule whose mix is, or may be, short of an input (CONTRACT.txt, "Dry rules"); else null."""
     runs_out_at: int | None

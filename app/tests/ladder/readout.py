@@ -17,6 +17,7 @@ spoil the owner").
 """
 import sys
 import time
+from collections.abc import Callable
 
 from ashfall_app.engine import Save, advance
 from tests.daytwo.player import DayTwoPlayer
@@ -44,10 +45,17 @@ def played_saves(p: DayTwoPlayer) -> list[Save]:
     return saves if saves[-1].time >= p.save.time else [*saves, p.save]
 
 
-def skill_rows(p: DayTwoPlayer, last: int | None) -> list[str]:
+def timeline(p: DayTwoPlayer) -> Callable[[int], Save]:
+    """The route's save at any instant (ticks.at_time over played_saves). One timeline serves every reading of a route,
+    so each reading runs on from the nearest save any reading has made."""
+    rules = p.rules
+    return at_time(played_saves(p), lambda s, t: advance(s, rules, t))
+
+
+def skill_rows(p: DayTwoPlayer, save_at: Callable[[int], Save], last: int | None) -> list[str]:
     """One block per skill: its levels' first-reach times, then its phase's top."""
     rules, saves = p.rules, played_saves(p)
-    save_at, end = at_time(saves, lambda s, t: advance(s, rules, t)), saves[-1]
+    end = saves[-1]
     times = [s.time for s in saves]
     out: list[str] = []
     for sk in rules.skills:
@@ -62,10 +70,9 @@ def skill_rows(p: DayTwoPlayer, last: int | None) -> list[str]:
     return out
 
 
-def sampled(p: DayTwoPlayer, step_h: int) -> list[tuple[int, Save]]:
+def sampled(p: DayTwoPlayer, save_at: Callable[[int], Save], step_h: int) -> list[tuple[int, Save]]:
     """The route's save every `step_h` game hours from instant 0 to its end, each played on once for every reading."""
-    rules, saves = p.rules, played_saves(p)
-    save_at = at_time(saves, lambda s, t: advance(s, rules, t))
+    saves = played_saves(p)
     return [(t, save_at(t)) for t in range(0, saves[-1].time, step_h * HOUR_S)]
 
 
@@ -120,8 +127,9 @@ def _cell(percent: float) -> str:
 
 def route_text(name: str, p: DayTwoPlayer) -> str:
     """A route's readout: every skill's ladder and every card's share by day, sampled every STEP_H game hours."""
-    at = sampled(p, STEP_H)
-    return "\n".join([f"== {name}: the edge at game day {p.save.time / DAY_S:.2f}", *skill_rows(p, None),
+    save_at = timeline(p)
+    at = sampled(p, save_at, STEP_H)
+    return "\n".join([f"== {name}: the edge at game day {p.save.time / DAY_S:.2f}", *skill_rows(p, save_at, None),
                       "  card share of the running mixes by day, percent (. none, ~ under 0.5)",
                       *share_rows(p, at),
                       "  XP by source per band of game days, percent of the skill's XP",
@@ -137,11 +145,12 @@ def readouts() -> dict[str, str]:
 def route_report(name: str, last: int | None, skills: bool, shares: bool, step_h: int) -> None:
     t0 = time.process_time()
     p = twelve(name)
+    save_at = timeline(p)
     print(f"\n== {name}: the edge at game day {p.save.time / DAY_S:.2f} (played in {time.process_time() - t0:.0f} CPU s)")
     if skills:
-        print("\n".join(skill_rows(p, last)))
+        print("\n".join(skill_rows(p, save_at, last)))
     if shares:
-        at = sampled(p, step_h)
+        at = sampled(p, save_at, step_h)
         print("\n  card share of the running mixes by day, percent (. none, ~ under 0.5)")
         print("\n".join(share_rows(p, at)))
         print("\n  XP by source per band of game days, percent of the skill's XP")
