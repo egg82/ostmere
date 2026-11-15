@@ -3,8 +3,10 @@
 //   fight:   the `combat` feature on; one fight card (Hunt the ridge, 2 in 5 lost; yours 8 against 9, with gear and
 //            a skill behind the 8) and one standing fight (raiders at the stores, 7.5% lost, 31 fought and 2 lost).
 //   fightnew, fightfirst: the same fights with none fought yet, and with one fought (odds unknown, then served).
+//            A poultice drains the hurt the hunt wounds, which is at 0: its tap waits on that drain.
 //   fightlater: the same fights 5 and 1 fights later (a window the arrival queue writes entries for), then a long one.
-import type { Fight, Step, Strength, View } from "../src/api/types";
+import type { Card, Fight, Need, Step, Strength, View } from "../src/api/types";
+import { Q } from "./content";
 import { fixtureStep, type Kept } from "./steps";
 
 export type FightsPhase = "fight" | "fightlater" | "fightmany" | "fightnew" | "fightfirst";
@@ -33,13 +35,26 @@ function fights(extra: number, lostExtra: number, only?: number): Fight[] {
   ];
 }
 
+/** A poultice with its roots in hand and nothing hurt: the drain at 0 is its blocker. */
+function poultice(card: Card, at: number): Card {
+  const need = (store: string, quantity: number, has: number): Need => ({
+    store, quantity, segment: { start: at, start_value: has, rate: 0, limit: null }, gate: null, makers: [], spent: false,
+  });
+  const hurt = { kind: "at_least", watched: { kind: "store_value", store: "hurt" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } as const;
+  return {
+    ...card, card: "poultice", completions: 0, cap: null, by: null, run: null, share_bp: 0, tap_s: 60, bar_total: 60 * 10_000,
+    blocker: { condition: hurt, ready_at: null }, needs: [need("roots", 6 * Q, 20 * Q), need("hurt", 1, 0)],
+  };
+}
+
 export function fightsStep(phase: FightsPhase, at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fixtureStep("mid", at, kept, decisions);
   const extra = phase === "fight" ? 0 : phase === "fightlater" ? 3 : 40;
   const view: View = {
     ...base.view, fights: fights(extra, phase === "fight" ? 0 : phase === "fightlater" ? 1 : 5, phase === "fightnew" ? 0 : phase === "fightfirst" ? 1 : undefined),
-    cards: [...base.view.cards, { ...base.view.cards[0], card: "hunt", completions: 0, cap: null, by: null, tap_s: 5, bar_total: 5 * 10_000 } as View["cards"][number]],
-    unlocked: [...base.view.unlocked, { category: "card", id: "hunt" }, { category: "feature", id: "combat" }],
+    cards: [...base.view.cards, { ...base.view.cards[0], card: "hunt", completions: 0, cap: null, by: null, tap_s: 5, bar_total: 5 * 10_000 } as View["cards"][number],
+      poultice(base.view.cards[0]!, at)],
+    unlocked: [...base.view.unlocked, { category: "card", id: "hunt" }, { category: "card", id: "poultice" }, { category: "feature", id: "combat" }],
   };
   return { ...base, view, lines: [] };
 }

@@ -2312,6 +2312,13 @@
             "type": "array",
             "title": "Takes"
           },
+          "drains": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Drains"
+          },
           "skill_needs": {
             "items": {
               "$ref": "#/components/schemas/SkillNeed"
@@ -2364,6 +2371,7 @@
           "inputs",
           "makes",
           "takes",
+          "drains",
           "skill_needs",
           "step_needs",
           "glows",

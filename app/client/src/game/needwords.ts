@@ -9,14 +9,16 @@ import { shownLevel } from "./prestige";
 import { UI } from "./text";
 import { clockWords } from "./timewords";
 
-/** How the face draws a store need: by its gate, as have/need (a store shown, or a tally), as when it opens (a clock
- * with a part of the day), or not at all (any other store the player has never been shown). */
+/** How `card`'s face draws a store need: by its gate, as have/need (a store shown, a tally, or one the card drains and
+ * that is not hidden: CardInfo.drains), as when it opens (a clock with a part of the day), or not at all (any other
+ * store the player has never been shown). */
 export type NeedKind = "gate" | "store" | "when" | "unseen";
 
-export function needKind(catalog: Catalog, view: View, need: Need): NeedKind {
+export function needKind(catalog: Catalog, view: View, need: Need, card: string): NeedKind {
   if (need.gate !== null) return "gate";
   const store = catalog.stores.get(need.store);
-  if (view.unlocked.some((u) => u.category === "store" && u.id === need.store) || store?.tally === true) return "store";
+  const drained = store?.hidden === false && (catalog.cards.get(card)?.drains.includes(need.store) ?? false);
+  if (view.unlocked.some((u) => u.category === "store" && u.id === need.store) || store?.tally === true || drained) return "store";
   return store?.clock ? "when" : "unseen";
 }
 
@@ -60,7 +62,7 @@ function conditionWords(catalog: Catalog, view: View, card: Card, when: Conditio
   if (w.kind === "card_count") return stepWords(catalog, w.card, completionsOf(view, w.card), when.value);
   const need = w.kind === "store_value" ? card.needs.find((n) => n.store === w.store) : undefined;
   if (need === undefined) return null;
-  const kind = needKind(catalog, view, need);
+  const kind = needKind(catalog, view, need, card.card);
   return kind === "gate" && need.gate !== null ? conditionWords(catalog, view, card, need.gate)
     : kind === "store" ? storeWords(catalog, need, sample(need.segment, view.at)) : kind === "when" ? opensWords(catalog, need) : null;
 }

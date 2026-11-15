@@ -818,6 +818,8 @@ export interface components {
             makes: string[];
             /** Takes */
             takes: string[];
+            /** Drains */
+            drains: string[];
             /** Skill Needs */
             skill_needs: components["schemas"]["SkillNeed"][];
             /** Step Needs */

@@ -6,6 +6,8 @@ when it is:
 - `at_least` on a clock with a part of the day (StoreEntry.clock): when it opens ("opens after dark");
 - `at_least` on another clock (a store the player is never shown that only standing actions make) as the card's only
   precondition, the clock's maker unlocked before the card can be: the card's countdown.
+A drain refuses a player's tap while its store is at 0 (engine DESIGN.txt, "DRAINS"), so it is a require too: the
+face draws a drain's store as have/need unless the store is hidden (CardInfo.drains).
 A ruled lane's cards are its tasks, run by the player's rules and never tapped, so they are not checked. The same
 stores are the ones a cause may name (api/line_causes.py). Raises ValueError naming the store (refs.fail); ids only,
 since the owner reads CI."""
@@ -48,12 +50,16 @@ def check_clocks(o: "Opening") -> None:
 
 
 def undrawn(o: "Opening") -> list[tuple[str, str, str]]:
-    """(card, subject kind, id) for each require of a tappable card that its face cannot draw."""
+    """(card, subject kind, id) for each require of a tappable card that its face cannot draw; a drain's kind is
+    "drain"."""
     ruled = {x.id for x in o.lanes if x.ruled}
     drawn = shown_stores(o) | timed_stores(o)
     clocks, before = standing_clocks(o), unlocked_before(o)
-    return [(c.id, r.subject_kind or r.test, r.id or "") for c in o.cards if c.lane not in ruled for r in c.requires
-            if not _drawn(c, r, drawn, clocks, before.get(("card", c.id), frozenset()))]
+    tappable = [c for c in o.cards if c.lane not in ruled]
+    hidden = {s.id for s in o.stores if s.hidden}
+    return [*((c.id, r.subject_kind or r.test, r.id or "") for c in tappable for r in c.requires
+              if not _drawn(c, r, drawn, clocks, before.get(("card", c.id), frozenset()))),
+            *((c.id, "drain", d.store) for c in tappable for d in c.drains if d.store in hidden)]
 
 
 def _drawn(c: "CardEntry", r: "ConditionEntry", drawn: frozenset[str], clocks: dict[str, frozenset[str]],
