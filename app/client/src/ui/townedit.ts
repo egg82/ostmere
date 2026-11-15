@@ -106,7 +106,8 @@ export class TownEditor {
     const adds = el("div", "editor-adds");
     adds.append(el("span", "editor-add-label", catalog.text.get(UI.add)));
     for (const card of townTasks(catalog, view, lane).filter((id) => !mix.components.some((c) => c.kind === "card_share" && c.card === id))) {
-      const add = el("button", `quiet town-add hue-${catalog.rank(card) % 6}`, catalog.cardLabel(card));
+      const add = el("button", `quiet town-add hue-${catalog.rank(card) % 6}`);
+      add.append(el("span", "town-card-name", catalog.cardLabel(card)), ...this.upside(card));
       add.type = "button";
       add.dataset.card = card;
       add.disabled = idle < MIN_SHARE_BP;
@@ -115,6 +116,13 @@ export class TownEditor {
     }
     node.append(el("h3", "town-name", label), bar, key, rows, adds);
     return node;
+  }
+
+  /** The card's upside: on a row at its share, and on its Add button, which has no share yet, at the full figure. */
+  private upside(card: string, shareBp?: number): HTMLElement[] {
+    const { catalog } = this.ctx;
+    const info = catalog.cards.get(card);
+    return info?.upside_key ? [el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, (shareBp === undefined ? catalog.format.figures(info.change_bp) : catalog.format.figuresAt(info, shareBp))))] : [];
   }
 
   private cardRow(card: string, bp: number, mix: Mix): HTMLElement {
@@ -135,8 +143,7 @@ export class TownEditor {
     drop.addEventListener("click", () => this.edit(dropTownCard(mix, card)));
     const what = el("span", "town-card-what");   // the card, and what it is for when it says (its upside)
     what.append(el("span", "town-card-name", catalog.cardLabel(card)));
-    const info = catalog.cards.get(card);
-    if (info?.upside_key) what.append(el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp))));
+    what.append(...this.upside(card, bp));
     row.append(what, step(-1, "−"), el("span", "town-card-share", catalog.format.share(bp)), step(1, "+"), drop);
     return row;
   }

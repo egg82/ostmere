@@ -7,7 +7,7 @@
 // The "after" numbers are the engine's own: the edit is sent as a dry run (Actions.dryRun) and its view read, never
 // kept, so the page computes no rate; an edit still holding a retired or completed card is previewed without it, as
 // Save will need it gone. Rates are facts: nothing here says balanced, efficient or better.
-import type { Condition, Mix, View } from "../api/types";
+import type { Condition, Decision, Mix, View } from "../api/types";
 import { cardShares, dropComponent, holdsCard, joinCard, mixesFull, runningMix, saveDecisions, withShares } from "../game/mix";
 import { freeName, repointRule } from "../game/orders";
 import { queueFull, queueStint } from "../game/queue";
@@ -21,10 +21,10 @@ import { AddFold } from "./editoradds";
 import { entryRows } from "./editorrows";
 import { afterHead, totalsRows } from "./editortotals";
 import { goalRows } from "./goaltimes";
+import { MixPreview } from "./mixpreview";
 import { ShareBar } from "./sharebar";
 import { stintParts } from "./stint";
 
-const PREVIEW_MS = 150;
 
 export class MixEditor {
   readonly root = el("section", "editor");
@@ -46,9 +46,10 @@ export class MixEditor {
   /** A new mix made for this rule (a rule slot's picker in the Rules tab): saving points the rule at it. */
   private forRule: number | null = null;
   private local: Mix | null = null;
-  private seq = 0;
-  private timer = 0;
   private asking = false;
+  private readonly preview = new MixPreview(
+    () => this.previewDecisions(), (ds) => this.ctx.actions.dryRun(ds), (after) => this.previewed(after),
+  );
 
   constructor(
     private readonly ctx: PartContext, private readonly closed: () => void, private readonly marks: NewMarks,
@@ -68,7 +69,7 @@ export class MixEditor {
     const label = el("label", "editor-label");
     label.append(el("span", "", text.get(UI.name)), this.nameInput);
     this.nameInput.maxLength = 40;
-    this.nameInput.addEventListener("input", () => { this.drawButtons(); this.schedule(); });
+    this.nameInput.addEventListener("input", () => { this.drawButtons(); this.preview.schedule(); });
     for (const [b, key] of [[this.save, UI.save], [this.saveNew, UI.saveNew]] as const) {
       b.type = "button";
       setText(b, text.get(key));
@@ -107,6 +108,7 @@ export class MixEditor {
     this.view = view;
     this.from = from;
     this.forRule = forRule;
+    this.preview.reset();
     this.local = structuredClone(mix);
     this.nameInput.value = mix.id;
     this.asking = this.picking = false;
@@ -114,11 +116,12 @@ export class MixEditor {
     this.after = view;
     this.root.hidden = false;
     this.draw();
-    this.schedule();
+    this.preview.schedule();
   }
 
   close(): void {
     this.root.hidden = true;
+    this.preview.reset();
     this.local = null;
     this.ctx.actions.highlight(null);
     this.closed();
@@ -136,7 +139,7 @@ export class MixEditor {
     if (!this.local) return;
     this.local = withShares(this.local, shares);
     this.drawEntries();
-    this.schedule();
+    this.preview.schedule();
   }
 
   private join(card: string): void {
@@ -145,7 +148,7 @@ export class MixEditor {
     tapFeedback();
     this.local = joinCard(this.local, card, this.ctx.catalog.content.scales.bp);
     this.draw();
-    this.schedule();
+    this.preview.schedule();
   }
 
   private drop(i: number): void {
@@ -153,7 +156,7 @@ export class MixEditor {
     tapFeedback();
     this.local = dropComponent(this.local, i, this.ctx.catalog.content.scales.bp);
     this.draw();
-    this.schedule();
+    this.preview.schedule();
   }
 
   private edited(): Mix | null {
@@ -208,21 +211,18 @@ export class MixEditor {
     this.close();
   }
 
-  private schedule(): void {
-    window.clearTimeout(this.timer);
-    this.timer = window.setTimeout(() => void this.preview(), PREVIEW_MS);
-  }
-
-  private async preview(): Promise<void> {
+  /** The edit as a dry run is sent, null when there is nothing to preview. */
+  private previewDecisions(): Decision[] | null {
     const view = this.view;
     const edited = this.edited();
     const mix = edited && view ? this.runnable(edited, view) : null;
-    if (!view || !mix || mix.components.length === 0 || !this.open) return;
-    const seq = ++this.seq;
+    if (!view || !mix || mix.components.length === 0 || !this.open) return null;
     const runs = mix.id === view.running_mix_id || mix.id === view.active_mix_id;   // the same rule as saveDecisions' switch
-    const decisions = runs ? [{ kind: "save_mix" as const, mix }] : [{ kind: "save_mix" as const, mix }, { kind: "switch_mix" as const, mix_id: mix.id }];
-    const after = await this.ctx.actions.dryRun(decisions);
-    if (seq !== this.seq || !this.open) return;
+    return runs ? [{ kind: "save_mix", mix }] : [{ kind: "save_mix", mix }, { kind: "switch_mix", mix_id: mix.id }];
+  }
+
+  private previewed(after: View | null): void {
+    if (!this.open) return;
     this.after = after;
     this.drawEntries();
     this.drawTotals();
@@ -269,7 +269,8 @@ export class MixEditor {
     const { view, after, from } = this;
     if (!view) return;
     const { catalog } = this.ctx;
-    this.totals.replaceChildren(...totalsRows(catalog, view, after, from), ...goalRows(catalog, view, after, afterHead(catalog, view, from)));
+    const unknown = this.preview.unknown ? [el("p", "totals-unknown", catalog.text.get(UI.forecastUnknown))] : [];
+    this.totals.replaceChildren(...unknown, ...totalsRows(catalog, view, after, from), ...goalRows(catalog, view, after, afterHead(catalog, view, from)));
     const off = this.save.disabled || queueFull(catalog, view);
     this.stint.hidden = this.forRule !== null;
     this.stint.replaceChildren(...stintParts(catalog, after, this.picking, off, () => { this.picking = !this.picking; this.drawTotals(); }, (r) => this.runUntil(r)));

@@ -6,8 +6,8 @@ import type { Catalog } from "./catalog";
 import { repointAll, ruled } from "./orders";
 import { UI } from "./text";
 
-/** The smallest share a divider can leave a card with: a card is in the mix with a real share, or not in it. */
-export const MIN_SHARE_BP = 500;
+/** The smallest share a divider can leave a card with: 1%. A card is in the mix with a real share, or not in it. */
+export const MIN_SHARE_BP = 100;
 
 /** The mix the hands run now: a rule's while its condition holds, else the player's own (view.running_mix_id). */
 export function runningMix(view: View): Mix | null {

@@ -1,0 +1,71 @@
+// A reordered rule slides to its new place (FLIP): the rows' tops are measured before the move, the list is redrawn in
+// its new order, each row that changed place is set back at its old top, then released to slide home on --settle-ms and
+// --settle-ease (.slide in game.css, which the reduced-motion block turns into an instant change). Under reduced motion
+// nothing is set up at all.
+import type { Decision, View } from "../api/types";
+import { reducedMotion } from "./dom";
+
+/** Where each rule that changes place lands: new index -> old index, for rule `index` moved to where rule `to` stands
+ * in `group` (the rules drawn together, in order), the ones between shifting one place (game/orders.ts reorderRule). */
+export function shiftOf(group: readonly number[], index: number, to: number): Map<number, number> {
+  const from = group.indexOf(index), at = group.indexOf(to);
+  const moved = new Map<number, number>();
+  if (from < 0 || at < 0 || from === at) return moved;
+  const order = [...group];
+  order.splice(from, 1);
+  order.splice(at, 0, index);
+  order.forEach((was, n) => { if (was !== group[n]) moved.set(group[n]!, was); });
+  return moved;
+}
+
+/** Each drawn rule row's top, by its rule index. */
+export function rowTops(root: HTMLElement): Map<number, number> {
+  const tops = new Map<number, number>();
+  for (const row of root.querySelectorAll<HTMLElement>(".rules-row[data-rule]")) tops.set(Number(row.dataset.rule), row.getBoundingClientRect().top);
+  return tops;
+}
+
+/** The rows now drawn in `root` that moved (`shift`: new index -> old index) leave from the `tops` they had; the lines
+ * that hang under a row (why it is off, its menu) go with it. */
+export function slide(root: HTMLElement, tops: ReadonlyMap<number, number>, shift: ReadonlyMap<number, number>): void {
+  if (reducedMotion()) return;
+  const moving: Array<{ nodes: HTMLElement[]; dy: number }> = [];
+  for (const row of root.querySelectorAll<HTMLElement>(".rules-row[data-rule]")) {
+    const was = shift.get(Number(row.dataset.rule));
+    const top = was === undefined ? undefined : tops.get(was);
+    if (top === undefined) continue;
+    const dy = top - row.getBoundingClientRect().top;
+    if (dy === 0) continue;
+    const nodes = [row];
+    for (let n = row.nextElementSibling as HTMLElement | null; n && !n.classList.contains("rules-row"); n = n.nextElementSibling as HTMLElement | null) nodes.push(n);
+    moving.push({ nodes, dy });
+  }
+  for (const { nodes, dy } of moving) for (const n of nodes) n.style.transform = `translateY(${dy}px)`;
+  void root.offsetHeight;
+  for (const { nodes } of moving) {
+    for (const n of nodes) {
+      n.classList.add("slide");
+      n.style.transform = "";
+      n.addEventListener("transitionend", () => n.classList.remove("slide"), { once: true });
+    }
+  }
+}
+
+/** A reorder sent and not yet drawn: the rows' tops before it, where each moved rule lands, and the set_orders the redraw
+ * waits for. */
+export class Slider {
+  private sent: { tops: Map<number, number>; shift: Map<number, number>; orders: string } | null = null;
+
+  constructor(private readonly root: HTMLElement) {}
+
+  arm(decision: Decision, shift: Map<number, number> | undefined): void {
+    if (shift && shift.size > 0 && decision.kind === "set_orders") this.sent = { tops: rowTops(this.root), shift, orders: JSON.stringify(decision.orders) };
+  }
+
+  /** Called after each redraw: slides once the view holds the order that was sent. */
+  play(view: View): void {
+    if (!this.sent || JSON.stringify(view.orders) !== this.sent.orders) return;
+    slide(this.root, this.sent.tops, this.sent.shift);
+    this.sent = null;
+  }
+}

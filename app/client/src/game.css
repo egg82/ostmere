@@ -433,6 +433,7 @@ p.catching-up[hidden] { display: none; }
 .totals-arrow { color: var(--ink-dim); text-align: center !important; }
 .totals-after.changed { color: var(--ink-hi); font-weight: 700; }
 .totals-after.unknown { color: var(--ink-dim); }
+.totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
 .totals-runs { font-size: var(--t-meta); color: var(--ink); }
 .goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
 .editor-adds { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
@@ -746,6 +747,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .rules-row.drop-before { box-shadow: 0 -2px 0 var(--ink-hi); }
 .rules-row.drop-after { box-shadow: 0 2px 0 var(--ink-hi); }
 .rules-row.lifted { opacity: .35; }
+.rules-row.slide, .rule-why.slide, .rule-menu.slide { transition: transform var(--settle-ms) var(--settle-ease); }   /* a reordered rule slides home (ui/ruleslide.ts) */
 .rules.dragging, .rules.dragging * { user-select: none; cursor: grabbing; }
 .drag-ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; color: var(--ink); opacity: .92; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
 .rule-menu { display: flex; flex-wrap: wrap; gap: .5rem; padding: .3rem .4rem .3rem 2.1rem; }
@@ -1033,4 +1035,4 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-card-share { min-width: 3.2rem; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink-hi); }
 .town-step, .town-drop { flex: none; min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: var(--t-story); }
 .town-step:disabled, .town-add:disabled { opacity: .45; cursor: default; }
-.town-add { min-height: 2.6rem; padding: 0 .8rem; border-left: 4px solid var(--hue); }
+.town-add { min-height: 2.6rem; padding: .2rem .8rem; border-left: 4px solid var(--hue); display: flex; flex-direction: column; align-items: flex-start; text-align: left; }

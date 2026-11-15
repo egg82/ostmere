@@ -44,7 +44,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.mix.new",
     "ui.mix.name", "ui.mix.name_reserved", "ui.mix.name_taken",
     "ui.mix.add",
-    "ui.mix.per_minute",
+    "ui.mix.per_minute", "ui.mix.forecast_unknown",
     "ui.mix.now",
     "ui.mix.after",
     "ui.goal.head", "ui.goal.store", "ui.goal.level", "ui.goal.never", "ui.goal.limited", "ui.goal.xp",

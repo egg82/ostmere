@@ -94,6 +94,7 @@ export const UI = {
   mixNameReserved: "ui.mix.name_reserved",   // "{prefix}": under the editor's name, a name the game keeps
   mixNameTaken: "ui.mix.name_taken",   // under the editor's name, another saved mix's
   add: "ui.mix.add",
+  forecastUnknown: "ui.mix.forecast_unknown", // the editor's totals when the preview got no answer
   perMinuteHead: "ui.mix.per_minute",
   now: "ui.mix.now",
   after: "ui.mix.after",

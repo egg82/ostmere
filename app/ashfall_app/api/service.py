@@ -128,7 +128,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                         fight=_fight(standing_fights.get(e.ActionId(a.id)), a.fight)) for a in o.standing],
         card_infos=[cm.CardInfo(
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
-            upside_key=c.upside_key, change_bp=_card_changes(c, o), work_s=c.work_s,
+            upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s,
+            kept=_kept_infos(c, o),
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
             makes=card_makes(c), takes=card_takes(c), drains=[d.store for d in c.drains],
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires
@@ -216,13 +217,19 @@ def _changes(mods: list[ModifierEntry]) -> list[int]:
     return list(dict.fromkeys(m.amount_bp - (e.BP if m.kind == "mul_bp" else 0) for m in mods))
 
 
-def _card_changes(c: CardEntry, o: Opening) -> list[int]:
+def _kept_infos(c: CardEntry, o: Opening) -> list[cm.KeptInfo]:
+    slots = _card_slots(c, o)
+    return [cm.KeptInfo(side=w.side, lane=w.lane, amount_bp=w.amount_bp, slot=slots.index((w.amount_bp, True))) for w in c.while_running]
+
+
+def _card_slots(c: CardEntry, o: Opening) -> list[tuple[int, bool]]:
     """Its outcome's and finish's changes, then its while_running entries' (each an add_bp on a side or a lane's speed
     at the full share, which the View scales by the card's share now), then those of the standing action it names as
-    upside_of."""
+    upside_of, each with whether it is held by the card itself. A distinct (value, held) pair appears once, so a held
+    amount never shares a slot with a change that does not scale."""
     eater = [w for a in o.standing if a.id == c.upside_of for w in a.while_running]
-    return list(dict.fromkeys([*_changes([*c.outcome.modifiers, *c.finished.modifiers]),
-                               *(w.amount_bp for w in (*c.while_running, *eater))]))
+    return list(dict.fromkeys([*((v, False) for v in _changes([*c.outcome.modifiers, *c.finished.modifiers])),
+                               *((w.amount_bp, True) for w in c.while_running), *((w.amount_bp, False) for w in eater)]))
 
 
 def _level_changes(o: Opening, skill: str, level: int) -> list[int]:
