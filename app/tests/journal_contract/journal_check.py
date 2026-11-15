@@ -14,6 +14,14 @@ def showing(lines: Sequence[Line], subjects: Sequence[Subject], day: int) -> lis
     return [s for s in subjects if s.source in sources]
 
 
+def first_at(lines: Sequence[Line], subject: Subject, first_day: int, last_day: int) -> int | None:
+    """The earliest `at` among the lines showing `subject` on days `first_day` .. `last_day` (statement 18), None when
+    none does."""
+    ats = [line.at for line in lines
+           if line.source == subject.source and first_day * DAY_S <= line.at < (last_day + 1) * DAY_S]
+    return min(ats) if ats else None
+
+
 def tellings(rows: Sequence[ComposedDay], subject_id: str) -> int:
     return sum(1 for r in rows for n in r.notes if n.subject == subject_id and n.slot in TELLING_SLOTS)
 
