@@ -25,3 +25,14 @@ until then. Record each run below the list as MUTANTS_guards.txt does.
 17 retire keeps    a rule whose every action is named stays, empty or with its last action.                 [21]
 18 dead chosen     "can act" for a tap ignores a completed card: a dead first action is chosen and nothing
                    starts.                                                                                 [14, 15]
+
+Run against the engine at #131: rows 1-18, 27 plants (tools/or_else_mutants/mNN[x].py, a variant per "or" clause).
+- 26 KILLED by the blind suite. Rows 3, 4, 9 are stateful or sit in retap: the engine keeps no "sticky" choice, so
+  m03a and m09 remember the last choice in a module global (reset when time runs back), and m04a cancels a repeating
+  fallback instead of bounding it. No plant reaches a non-repeating fallback being cancelled: nothing wakes evaluation
+  while its lane is busy (no READY there), so that half of row 4 has no code path to mutate.
+- Row 16 let both variants through: a latch reset is corrected at the same instant unless it is held inside its band.
+  test_or_else_directed.py::test_a_rule_that_keeps_an_action_keeps_a_guard_latch_held_inside_its_band kills m16a and
+  m16b (checked by planting each in a scratch copy; the tool runs only the blind files).
+  python -m tools.mutate_suite or_else --run --only 1,2,3,4,5,6,7,8,9
+  python -m tools.mutate_suite or_else --run --only 10,11,12,13,14,15,16,17,18
