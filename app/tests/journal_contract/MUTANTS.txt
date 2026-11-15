@@ -114,7 +114,7 @@ Marks
 64 mark cap     the cap cut before the draw (the first held kinds, then rolled), not applied, or off by one.  [marks]
 65 empty days   marks on a gap or blank day, or a mark rate drawn with no notes.                             [marks]
 66 mark effects a day's marks changing its notes, their order or the gap (a mark taking a place in the budget, or
-                 marks drawn before and shifting the notes).                                                [marks]
+                 marks drawn before and shifting the notes).                                                [marks, marks_directed]
 
 Equivalent (no test can tell them apart)
  E1 <= for <    `roll <= care * diligence`: differs only when a draw equals the product exactly, which needs a

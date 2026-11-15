@@ -185,6 +185,7 @@ export const UI = {
   gameNew: "ui.games.new",
   gamesFull: "ui.games.full", // "{max}": Games.max_saves
   gamesLimited: "ui.games.limited",
+  creditsStains: "ui.games.credits_stains",
   gamesDeleted: "ui.games.deleted_heading",
   gameKept: "ui.games.kept", // "{until}": DeletedSave.purge_at as a date
   gameRestore: "ui.games.restore",

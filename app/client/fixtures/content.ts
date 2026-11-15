@@ -114,6 +114,7 @@ const text: Record<string, string> = {
   "ui.games.new": "New game",
   "ui.games.full": "You can keep up to {max} games. Delete one to start another.",
   "ui.games.limited": "Too many new games today. Try again later.",
+  "ui.games.credits_stains": "Page stains: Starshine Scribbles, Creative Commons Attribution licence",
   "ui.games.deleted_heading": "Deleted",
   "ui.games.kept": "Kept until {until}",
   "ui.games.restore": "Restore",

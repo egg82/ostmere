@@ -554,6 +554,7 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .games-name { color: var(--ink-hi); font-weight: 500; }
 .games-camp, .games-dates, .games-ask, .games-note, .games-playing { color: var(--ink); font-size: var(--t-meta); }
 .games-dates, .games-ask, .games-note { margin: 0; }
+.games-credit { margin: 0; color: var(--ink-dim); font-size: var(--t-meta); text-align: center; }
 .games-note:empty { display: none; }
 .games-note { margin-top: .6rem; }
 .games-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }

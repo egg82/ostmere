@@ -784,7 +784,7 @@ TEXT AND NUMBERS (one rule)
     ui.hands.idle | ui.mix.yielded   the hands strip's states
     ui.games.open | ui.games.heading | ui.games.name {number} | ui.games.unnumbered | ui.games.camp {level} |
     ui.games.dates {started}{played} | ui.games.playing | ui.games.switch | ui.games.delete |
-    ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited |
+    ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited | ui.games.credits_stains |
     ui.games.deleted_heading | ui.games.kept {until} | ui.games.restore |
     ui.games.straight | ui.games.skip_lessons
                                     the Games button and its sheet: a save's name (and one with no number), how far,
