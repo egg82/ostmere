@@ -72,6 +72,12 @@ export const RULE_KEYS = {
   guardUntilUnder: "ui.guard.until_under", // "{store}{n}{have}": where an "n or more" store guard lets go, and the amount now
   guardUntilReaches: "ui.guard.until_reaches", // "{store}{n}{have}": the same for an "under n" store guard
   guardWhile: "ui.guard.while", // "{when}": a held guard off a store (a chip's, a count, a level)
+  ruleUnlessLabel: "ui.rule.unless_label", // the full editor's guards, over their list
+  ruleUnlessHint: "ui.rule.unless_hint",
+  ruleUnlessAdd: "ui.rule.unless_add", // opens the picker of what a new guard watches
+  ruleUnlessOrMore: "ui.rule.unless_or_more", // a store guard's two tests: it blocks at the level or more, or under it
+  ruleUnlessUnder: "ui.rule.unless_under",
+  ruleUnlessDone: "ui.rule.unless_done", // confirms the guard being written
   ruleOnDoing: "ui.rule.on_doing", // "{task}": a rule with fallbacks that is on, running one past its first
   ruleOnNone: "ui.rule.on_none", // a rule with fallbacks that is on, none of whose actions can start
   ruleLately: "ui.rule.lately", // the Rules tab's last block: what the rules did lately

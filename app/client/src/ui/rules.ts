@@ -94,7 +94,11 @@ export class RulesTab implements Part {
     this.draw();
   }
 
+  /** A lane's task editor is the simple one: a rule holding a guard or a fallback opens the full editor instead (or
+   * the list, when the full editor does not open it). */
   private openLane(view: View, lane: string, rule: number | null): void {
+    const held = rule === null ? undefined : view.orders[rule];
+    if (rule !== null && held && (held.unless.length > 0 || held.or_else.length > 0)) { this.open(view, rule); return; }
     this.laneEdit.open(view, { lane, rule });
     this.mode = { kind: "lane" };
     this.draw();

@@ -71,7 +71,7 @@ function quiet(cls: string, label: string, pick: () => void): HTMLButtonElement 
 
 /** One level: its label, a stepper (five points of the cap, or one item) and the two forms; under them, while it is a
  * share, the named shares. */
-class LevelRow {
+export class LevelRow {
   readonly root = el("div", "cond-level");
   private readonly forms: [HTMLButtonElement, HTMLButtonElement];
   private readonly presets: [number, HTMLButtonElement][];

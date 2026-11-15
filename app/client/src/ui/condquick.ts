@@ -22,7 +22,7 @@ export function quickTest(catalog: Catalog, view: View, then: OrderVerb | null, 
 export function quickTask(catalog: Catalog, view: View, draft: Draft, chip: boolean): string | null {
   const task = taskOf(catalog, view, draft.then);
   const { n, m } = draft.rule;
-  if (chip || draft.chip || draft.subject || draft.town || m === null || !isShare(n) || !isShare(m) || task === null) return null;
+  if (chip || draft.chip || draft.subject || draft.town || draft.unless.length > 0 || draft.orElse.length > 0 || m === null || !isShare(n) || !isShare(m) || task === null) return null;
   return whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores.includes(draft.rule.store) ? task : null;
 }
 
