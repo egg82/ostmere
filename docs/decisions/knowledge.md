@@ -27,13 +27,17 @@ crowd gets a mention at most; entries start long and frequent and thin as things
 none; a busy or away stretch leaves a gap and then a catch-up naming only the big things; a detail turns up a day late;
 now and then a misremembering is put right by a later entry; and what presses gets more room than what has become
 normal. Every habit is decided in code from the save's own lines, with its numbers in a data file and its draws seeded
-by save, day and subject, and each day is composed once, when it ends, and stored, so live and on return write the
-same page and later tuning applies forward only. Content writes each line per subject and slot (a first, a repeat, a
+by save, day and subject. A day's page fills as the day goes, and a note, once shown, never drops off or changes
+(owner, 2026-11-15): the journal belongs to someone who writes things down as they go. Each note is decided at the
+line it is about, from what is known then, and stored, so live play, a long advance and a return write the same page
+and later tuning applies forward only; what the whole day in view used to decide (the budget kept by care, a busy day
+left blank whole) now decides at its moment. Content writes each line per subject and slot (a first, a repeat, a
 catch-up, a mention, a late addition, a misremembering and its correction) and never says how often. The pages fill
 like a notebook (owner, 2026-11-14): days run on down a page until the next would not fit, by a fixed measure of
 their words, so the same days are the same pages on every device, in the journal's unchanged look. The chronicle
 stays exact, so nothing the player needs rests on the journal; creatures and places stay the exact layer, untouched.
-Rejected: the chronicle as the lossy journal, which loses facts to a habit; entries written freely by Claude at
+Rejected: the chronicle as the lossy journal, which loses facts to a habit; a provisional page rewritten at the day's
+end, since notes the player had read would vanish; entries written freely by Claude at
 runtime, since a stateless call cannot keep a rate or stay canon; thinning by day number, since the game's length is
 set by play; and gaps from the player's own absence, which would read as guilt and is not in the kept history. The
 mechanism, its rates and tests: `docs/design/journal.md`.
