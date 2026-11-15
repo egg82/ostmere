@@ -232,7 +232,7 @@ const text: Record<string, string> = {
   "ui.lesson.cap_reaches": "Pick reaches. The rule comes on once {store} is full.",
   "ui.lesson.cap_do": "Pick what your hands do instead.",
   "ui.town.title": "Camp", "ui.town.change": "Change", "ui.town.idle": "{person}, idle", "ui.rule.town_always": "Otherwise, {mix}",
-  "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Tap + and - to change a share.",
+  "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Drag a divider to change a share.",
   "ui.lesson.town_save": "Save, and everyone works to this split.", "ui.lesson.town_runs": "Each person shows what they are doing now.",
   "lane.mason": "Mason", "card.hew": "Hew stone", "card.carve": "Carve beams",
   "ui.lesson.stopped_edit": "{card} is done, so this mix stopped. Open Edit.", "ui.lesson.stopped_edit_with": "{card} is done, so this mix stopped. {task} takes its place. Open Edit.", "ui.lesson.stopped_add": "Tap + {task} to add it.", "ui.lesson.stopped_drop": "Tap ✕ to take {card} out.", "ui.lesson.stopped_save": "Save, and the mix runs again.",
