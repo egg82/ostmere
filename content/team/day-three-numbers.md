@@ -129,8 +129,8 @@ on typical: O-stay comes with the first stews, at the first return after the hea
 
 ## Gates on shipping
 
-Day three's move into CHAPTERS put it under the opening's gates (`decisions.md`, "No gate counts taps"; "A card that
-shows every need met does the thing"), and the engine's `ready_at` became the latest unmet need's (invariant 31). The
+Day three's move into CHAPTERS put it under the opening's gates (`decisions.md`, "Progress never needs the same tap repeated
+by hand"; "A card that shows every need met does the thing"), and the engine's `ready_at` became the latest unmet need's (invariant 31). The
 changes: K4 is `track_end` at Scavenging 16 (was run 540); O-stay comes with the first stew (was stew 6); night 4 reads
 `cure_hearth`'s count, capped at 4 (was the `cure_done` store); morning 4 opens the watch fire (was shown at A22 behind
 a flag); the buckle moves to Scavenging 17; `pot_shelf` opens at the third course (was the fourth; now the second, below); `rack_roof` takes 6 dry
