@@ -4,8 +4,8 @@ from dataclasses import replace
 
 from hypothesis import given, strategies as st
 
-from ashfall_app.saves.journal import MARK_KINDS, Habits, MarkKind, MarkRates, Subject, compose_day
-from journal_gen import examples, histories
+from ashfall_app.saves.journal import MARK_KINDS, ComposedDay, Habits, Line, MarkKind, MarkRates, Subject, compose_day
+from journal_gen import History, examples, histories
 from journal_world import (
     PLAIN, QUIET, beat, compose_span, find_save, lines_before, ref_roll, routine, shows, slots_of, worry,
 )
@@ -24,7 +24,8 @@ def rates(**by_kind: float) -> MarkRates:
     return MarkRates(**by_kind)
 
 
-def day_marks(subjects: list[Subject], lines: list, habits: Habits, days: int = 1, save_id: int = 1):
+def day_marks(subjects: list[Subject], lines: list[Line], habits: Habits, days: int = 1,
+              save_id: int = 1) -> tuple[MarkKind, ...]:
     return compose_span(save_id, days, lines, subjects, habits)[-1].marks
 
 
@@ -232,7 +233,7 @@ def test_the_default_habits_carry_no_marks():
 
 
 @st.composite
-def marked_histories(draw: st.DrawFn):
+def marked_histories(draw: st.DrawFn) -> History:
     """A generated history whose subjects are given marks, with rates and a cap."""
     history = draw(histories(max_days=8))
     pick = st.sampled_from([None, *EVENT_KINDS])
@@ -243,7 +244,8 @@ def marked_histories(draw: st.DrawFn):
     return replace(history, subjects=subjects, habits=habits)
 
 
-def expected_marks(save_id, day, row, subjects, habits) -> tuple[MarkKind, ...]:
+def expected_marks(save_id: int, day: int, row: ComposedDay, subjects: tuple[Subject, ...],
+                   habits: Habits) -> tuple[MarkKind, ...]:
     """Statement 21 as stated, from the day's notes alone."""
     if not row.notes:
         return ()
@@ -252,13 +254,13 @@ def expected_marks(save_id, day, row, subjects, habits) -> tuple[MarkKind, ...]:
             if n.slot not in ("late", "correction") and n.subject in by_id} - {None}
     if any(n.slot == "catchup" for n in row.notes):
         held.add("smudge")
-    drawn = [k for k in MARK_KINDS if k in held and ref_roll(save_id, day, k, "mark") < getattr(habits.marks, k)]
+    drawn: list[MarkKind] = [k for k in MARK_KINDS if k in held and ref_roll(save_id, day, k, "mark") < getattr(habits.marks, k)]
     return tuple(drawn[:habits.marks_most])
 
 
 @examples(30)
 @given(h=marked_histories())
-def test_every_day_carries_exactly_the_marks_its_notes_draw(h):
+def test_every_day_carries_exactly_the_marks_its_notes_draw(h: History):
     """Statement 21, for every history: a day's marks equal those drawn from its own notes, so each is a kind in
     `MARK_KINDS` order, unique, at most `marks_most`, held, drawn, and a day with no notes has none."""
     days = compose_span(h.save_id, h.days, h.lines, h.subjects, h.habits)
@@ -269,7 +271,7 @@ def test_every_day_carries_exactly_the_marks_its_notes_draw(h):
 
 @examples(30)
 @given(h=marked_histories())
-def test_marks_never_change_the_notes_or_gaps(h):
+def test_marks_never_change_the_notes_or_gaps(h: History):
     """Statement 21: with and without marks the days have the same notes in the same order and the same gaps."""
     bare = replace(h.habits, marks=MarkRates(), marks_most=0)
     with_marks = compose_span(h.save_id, h.days, h.lines, h.subjects, h.habits)
@@ -280,7 +282,7 @@ def test_marks_never_change_the_notes_or_gaps(h):
 
 @examples(30)
 @given(h=marked_histories())
-def test_a_day_re_viewed_has_the_same_marks(h):
+def test_a_day_re_viewed_has_the_same_marks(h: History):
     """Statements 21 and 1: composing the same day again from the same arguments gives the same marks."""
     days = compose_span(h.save_id, h.days, h.lines, h.subjects, h.habits)
     again = compose_span(h.save_id, h.days, tuple(reversed(h.lines)), h.subjects, h.habits)
