@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening
-from ashfall_app.opening.subject_checks import AWAITING_SLOTS, CATCHUP_KINDS
+from ashfall_app.opening.subject_checks import AWAITING_SLOTS, CATCHUP_KINDS, check_subjects
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "subjects.toml"
 STORM_FIRST = 'first = { keys = ["t_day_storm"] }\n'
@@ -134,3 +134,21 @@ def test_a_held_subject_with_its_slots_reads_stale_and_one_missing_a_slot_reads_
     bare = o.model_copy(update={"subjects": [*o.subjects, missing]})
     assert awaiting_faults(bare, frozenset({"t_s_bare", "t_s_storm"})) == ["stale: t_s_storm"]
     assert awaiting_faults(bare, frozenset()) == ["not held: t_s_bare"]
+
+
+def test_a_subject_sourced_from_a_fight_only_card_is_refused_and_a_card_with_its_own_line_is_not():
+    o = load_opening(OPENING, CHAPTERS + IN_WRITING)
+    hunt = next(c for c in o.cards if c.fight is not None and not (c.line_keys or c.outcome.line_keys
+                                                                    or c.finished.line_keys))
+    assert hunt.fight is not None and (hunt.fight.won_line_keys or hunt.fight.lost_line_keys)
+    base = next(s for s in o.subjects if s.source.source_kind == "card")
+    fed = base.model_copy(update={"id": "t_s_hunt", "source": base.source.model_copy(update={"id": hunt.id})})
+    with pytest.raises(ValueError, match=f"subject t_s_hunt: its source, card {hunt.id}, is not a cause the content writes a kept line"):
+        check_subjects(o.model_copy(update={"subjects": [*o.subjects, fed]}))
+    own = hunt.model_copy(update={"outcome": hunt.outcome.model_copy(update={"line_keys": [*base_keys(o)]})})
+    cards = [own if c.id == hunt.id else c for c in o.cards]
+    check_subjects(o.model_copy(update={"subjects": [*o.subjects, fed], "cards": cards}))
+
+
+def base_keys(o: Opening) -> list[str]:
+    return [next(iter(o.text))]

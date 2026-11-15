@@ -176,7 +176,7 @@ the blanket."
 The loader's checks name ids and fields, never text: every subject has a first slot; every `beat`, `person` and
 `routine` subject has a catch-up slot; misremember and correction come together, and only on a `routine` subject,
 never a `beat`, `person` or `worry` (owner, 2026-11-14: the journal never misleads about the story); a source names a
-cause the content writes, and no cause feeds two subjects; each `line` person has a person subject for each way that
+cause the content writes a kept line of (a fight's won and lost lines are drawn by the page, never saved), and no cause feeds two subjects; each `line` person has a person subject for each way that
 moves them; every slot key has text; no entry is a `days` page. Each check is shown red on a planted chapter first. A
 cause is a source, so two people one outcome joins are two causes; only a `person` feeds from a lane and only a
 `crowd` from a way's mentions; and a beat that lands by either of two triggers has a subject for each.

@@ -47,7 +47,7 @@ def _check_source(o: "Opening", s: "SubjectEntry") -> None:
     if (s.kind == "person") != (src.source_kind == "lane") or (s.kind == "crowd") != (src.source_kind == "mentions"):
         fail(where, "only a person feeds from a lane's coming or going, and only a crowd from a way's mentions")
     if not _writes(o, src):
-        fail(where, f"its source, {_named(src)}, is not a cause the content writes lines of")
+        fail(where, f"its source, {_named(src)}, is not a cause the content writes {_kept_words(o, src)}")
 
 
 def _named(src: "SourceEntry") -> str:
@@ -55,17 +55,22 @@ def _named(src: "SourceEntry") -> str:
 
 
 def _writes(o: "Opening", src: "SourceEntry") -> bool:
-    """Whether the content writes lines of this cause: an authored trigger or a card with lines, a `line` person moved
-    that way, a mention person moved that way."""
+    """Whether the content writes a line the save keeps for this cause: an authored trigger or a card with lines of its
+    own (`engine.work.written_by`: not its fight's won and lost lines, which the page draws), a `line` person moved that
+    way, a mention person moved that way."""
     if src.source_kind == "trigger":
         return any(t.id == src.id and t.outcome.line_keys for t in o.triggers)
     if src.source_kind == "card":
-        return any(c.id == src.id and (c.line_keys or c.outcome.line_keys or c.finished.line_keys
-                                       or (c.fight is not None and (c.fight.won_line_keys or c.fight.lost_line_keys)))
-                   for c in o.cards)
+        return any(c.id == src.id and (c.line_keys or c.outcome.line_keys or c.finished.line_keys) for c in o.cards)
     if src.source_kind == "lane":
         return src.id in told(o, "line") and any(m == (src.way, src.id) for _, out in outcomes(o) for m in moves(out))
     return any(way == src.way for way, _ in mention_keys(o).values())
+
+
+def _kept_words(o: "Opening", src: "SourceEntry") -> str:
+    drawn = src.source_kind == "card" and any(
+        c.id == src.id and c.fight is not None and (c.fight.won_line_keys or c.fight.lost_line_keys) for c in o.cards)
+    return "a kept line of (only its fight's, which the page draws)" if drawn else "lines of"
 
 
 def _check_slots(o: "Opening", s: "SubjectEntry") -> None:
