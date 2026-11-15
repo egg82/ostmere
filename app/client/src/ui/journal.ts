@@ -8,10 +8,12 @@
 import type { JournalDay, View } from "../api/types";
 import { joinDays } from "../game/days";
 import { bookmarkPage, bookmarksOf, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, type NumbersRow, type Page, type Reading, type Section } from "../game/journal";
+import { wantedOf } from "../game/pagemarks";
 import { UI } from "../game/text";
 import { reportError } from "../telemetry";
 import type { BookPage } from "./book";
 import { el, tapFeedback } from "./dom";
+import { PageMarks } from "./pagemarks";
 import type { PartContext } from "./part";
 
 const SKETCHES = "/assets/journal/";
@@ -31,6 +33,7 @@ export class Journal implements BookPage {
   private readonly numbers = el("div", "journal-numbers");
   private readonly spread = el("div", "journal-spread");
   private readonly left = el("div", "journal-page journal-left");
+  private readonly pageMarks = new PageMarks(this.spread);
   /** One bookmark for each section that has a page written, in the book's order. */
   private readonly marks = el("nav", "tabs journal-bookmarks");
   private readonly prev = el("button", "quiet");
@@ -50,7 +53,7 @@ export class Journal implements BookPage {
   private readonly failed = new Set<string>();
 
   /** `tab`: the Book's tab, which carries the dot and the lesson's mark while the journal shows. */
-  constructor(private readonly ctx: Pick<PartContext, "catalog" | "keeps">, private readonly tab: HTMLElement) {
+  constructor(private readonly ctx: Pick<PartContext, "catalog" | "keeps" | "saveId">, private readonly tab: HTMLElement) {
     const { catalog } = ctx;
     this.label = catalog.text.get(UI.journalHeading);
     for (const d of this.dots) d.setAttribute("aria-hidden", "true");
@@ -63,7 +66,7 @@ export class Journal implements BookPage {
     this.left.append(this.sketch);
     this.marks.setAttribute("aria-label", catalog.text.get(UI.journalHeading));
     const right = el("div", "journal-page journal-right");
-    right.append(this.notes, this.numbers);
+    right.append(this.notes, this.numbers, this.pageMarks.layer);
     this.spread.append(this.left, right);
     this.root.append(this.marks, this.spread);
   }
@@ -168,6 +171,7 @@ export class Journal implements BookPage {
     else this.appendNotes(page);
     this.drawNumbers(page);
     this.drawMarks(page);
+    this.pageMarks.show(wantedOf(this.ctx.saveId(), page, this.days));
   }
 
   /** The bookmarks of the sections written, the open page's section marked as the current one. */

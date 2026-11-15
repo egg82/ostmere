@@ -618,6 +618,7 @@ outcome = { stores = [{ store = "pelt", items = 1 }], line_keys = ["l_find_gap_w
 id = "s_b12"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b12" }
+mark = "mud"
 first = { keys = ["n_day_b12"] }
 catchup = { keys = ["j_b12_catchup"] }
 late = { keys = ["j_b12_late"] }
@@ -626,6 +627,7 @@ late = { keys = ["j_b12_late"] }
 id = "s_dig"
 kind = "routine"
 source = { source_kind = "card", id = "dig_cellar" }
+mark = "mud"
 first = { keys = ["j_dig_first"] }
 repeat = { keys = ["j_dig_again_1", "j_dig_again_2"] }
 catchup = { keys = ["j_dig_catchup"] }

@@ -43,7 +43,8 @@ Each part is tagged on the page with the competing design it came from.
   way between them: the row beside its title. It opens on the Chronicle. On a desktop it is a view like Town, in
   the middle and the right; on a phone, a sheet from the bottom. The journal has no other door (its button on the
   art is gone). A page shows in the row only once it has something, so the Map has no slot on screen until its
-  first place. **The journal pages are kept exactly as they are:** the parchment, the handwriting, the drawings.
+  first place. **The journal pages are kept exactly as they are:** the parchment, the handwriting, the drawings
+  (owner, 2026-11-14: marks from the days are added, `journal.md`, "Marks on the page").
   They are the lore and story layer and the one deliberate exception to the quiet look (the only light surface,
   like a book opened by the fire). The page never draws one; the build keeps `ui/journal.ts`'s rendering.
 - **Asks.** A list, one shown at a fixed height, with a count of the rest. Each ask shows who asks, "↳" what led

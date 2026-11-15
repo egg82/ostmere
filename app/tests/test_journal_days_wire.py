@@ -66,11 +66,11 @@ def test_each_note_is_in_its_slots_hand_and_sketch_and_one_whose_slot_names_none
     looks = {("s_a", "first"): Look("pencil", "j_sketch"), ("s_a", "late"): Look("ink", None)}
     game = Game(shipped_ruleset.opening, replace(shipped_ruleset.rs, journal=replace(JOURNAL, looks=looks)))
     notes = (Note("s_a", "first", "k.1"), Note("s_crowd", "mention", "k.2"), Note("s_a", "late", "k.3"))
-    served = game.journal_days((ComposedDay(0, (), "busy"), ComposedDay(1, notes, None), ComposedDay(2, (), None)))
+    served = game.journal_days((ComposedDay(0, (), "busy"), ComposedDay(1, notes, None, ("soot", "smudge")), ComposedDay(2, (), None)))
     assert served == [jm.JournalDay(day=1, day_notes=[
         jm.DayNote(subject="s_a", slot=jm.Slot.FIRST, key="k.1", hand=jm.Hand.PENCIL, sketch="j_sketch"),
         jm.DayNote(subject="s_crowd", slot=jm.Slot.MENTION, key="k.2", hand=jm.Hand.INK, sketch=None),
-        jm.DayNote(subject="s_a", slot=jm.Slot.LATE, key="k.3", hand=jm.Hand.INK, sketch=None)])]
+        jm.DayNote(subject="s_a", slot=jm.Slot.LATE, key="k.3", hand=jm.Hand.INK, sketch=None)], marks=[jm.Mark.SOOT, jm.Mark.SMUDGE])]
 
 
 def test_a_step_that_closes_no_day_carries_none(game: GameClient):

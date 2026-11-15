@@ -618,6 +618,7 @@ late = { keys = ["j_n2_late"] }
 id = "s_b5"
 kind = "beat"
 source = { source_kind = "card", id = "bank_hearth" }
+mark = "soot"
 first = { keys = ["j_b5_first"] }
 catchup = { keys = ["j_b5_catchup"] }
 

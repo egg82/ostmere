@@ -14,6 +14,9 @@ type SubjectKind = Literal["beat", "person", "routine", "worry", "crowd"]
 
 type SourceKind = Literal["trigger", "card", "lane", "mentions"]
 
+type SubjectMark = Literal["blood", "soot", "water", "mud"]
+"""The page marks a subject can cause (docs/design/journal.md, "Marks on the page"); a smudge comes from a catch-up."""
+
 
 class SourceEntry(Entry):
     """The cause whose lines feed a subject: a trigger's or a card's lines (`id`), a `line` person's coming or going
@@ -48,3 +51,5 @@ class SubjectEntry(Entry):
     late: SlotEntry | None = None
     misremember: SlotEntry | None = None
     correction: SlotEntry | None = None
+    mark: SubjectMark | None = None
+    """The mark a day that writes this subject may carry on its page."""

@@ -427,6 +427,7 @@ outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", a
 id = "s_b7"
 kind = "beat"
 source = { source_kind = "card", id = "bank_fire_6" }
+mark = "soot"
 first = { keys = ["n_day_b7"] }
 catchup = { keys = ["j_b7_catchup"] }
 late = { keys = ["j_b7_late"] }

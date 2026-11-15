@@ -10,7 +10,7 @@ import { DAY_GAP, dayPages, dayRows, joinDays, noteRows, PAGE_ROWS, ROW_CHARS } 
 const words = (key: string): string => catalog.text.get(key);
 const KEY = "wk_rain";   // a one-row note
 const day = (n: number, keys: string[], sketch: string | null = null): JournalDay =>
-  ({ day: n, day_notes: keys.map((key) => ({ subject: `s_${key}`, slot: "first" as const, key, hand: "ink" as const, sketch })) });
+  ({ day: n, day_notes: keys.map((key) => ({ subject: `s_${key}`, slot: "first" as const, key, hand: "ink" as const, sketch })), marks: [] });
 const days = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) => d.day));
 
 {  // the written days held: one per day, oldest first, a day held never replaced

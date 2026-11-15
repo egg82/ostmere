@@ -505,6 +505,7 @@ outcome = { line_keys = ["l_b11_1", "l_b11_2", "l_b11_3"], unlocks = [{ unlock_k
 id = "s_b11"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b11" }
+mark = "soot"
 first = { keys = ["n_day_b11"] }
 catchup = { keys = ["j_b11_catchup"] }
 late = { keys = ["j_b11_late"] }

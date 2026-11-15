@@ -32,7 +32,7 @@ export const NOTE_B = "note_b1";
 export const PAGE_C = "page_c";
 export const NOTE_C = "note_c1";
 export const NOTES_D = ["note_d1", "note_d2"];
-export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null })) };
+export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null })), marks: [] };
 
 /** Placeholder words for WEEKS, in a diarist's voice (never shipped). */
 const WEEK_WORDS: Record<string, string> = {
@@ -111,18 +111,19 @@ const note = (key: string, slot: JournalDay["day_notes"][number]["slot"] = "firs
   ({ subject: `s_${key}`, slot, key: `wk_${key}`, hand, sketch });
 
 /** Days 0 to 15 with gaps: a short day (1), days that fill the first page, a late addition (day 6 for day 5), a
- * misremembering (day 7) corrected on day 14, a gap from day 9 to 12 caught up on day 13. */
+ * misremembering (day 7) corrected on day 14, a gap from day 9 to 12 caught up on day 13; every kind of mark on some
+ * day. */
 export const WEEKS: JournalDay[] = [
-  { day: 0, day_notes: [note("roof"), note("well", "first", "ink", "note_sketch")] },
-  { day: 1, day_notes: [note("rain")] },
-  { day: 2, day_notes: [note("roof2", "repeat"), note("well2", "repeat", "pencil")] },
-  { day: 3, day_notes: [note("walk")] },
-  { day: 4, day_notes: [note("sick")] },
-  { day: 5, day_notes: [note("fox"), note("better")] },
-  { day: 6, day_notes: [note("fox_late", "late", "pencil")] },
-  { day: 7, day_notes: [note("count", "misremember")] },
-  { day: 8, day_notes: [note("walk", "repeat"), note("rain", "repeat")] },
-  { day: 13, day_notes: [note("catch_roof", "catchup"), note("catch_well", "catchup"), note("catch_fox", "catchup"), note("frost")] },
-  { day: 14, day_notes: [note("count_fix", "correction", "pencil")] },
-  { day: 15, day_notes: [note("rain", "repeat")] },
+  { day: 0, day_notes: [note("roof"), note("well", "first", "ink", "note_sketch")], marks: ["mud"] },
+  { day: 1, day_notes: [note("rain")], marks: ["water"] },
+  { day: 2, day_notes: [note("roof2", "repeat"), note("well2", "repeat", "pencil")], marks: [] },
+  { day: 3, day_notes: [note("walk")], marks: ["mud"] },
+  { day: 4, day_notes: [note("sick")], marks: ["blood"] },
+  { day: 5, day_notes: [note("fox"), note("better")], marks: ["blood", "mud"] },
+  { day: 6, day_notes: [note("fox_late", "late", "pencil")], marks: [] },
+  { day: 7, day_notes: [note("count", "misremember")], marks: [] },
+  { day: 8, day_notes: [note("walk", "repeat"), note("rain", "repeat")], marks: ["soot"] },
+  { day: 13, day_notes: [note("catch_roof", "catchup"), note("catch_well", "catchup"), note("catch_fox", "catchup"), note("frost")], marks: ["smudge"] },
+  { day: 14, day_notes: [note("count_fix", "correction", "pencil")], marks: [] },
+  { day: 15, day_notes: [note("rain", "repeat")], marks: ["soot"] },
 ];

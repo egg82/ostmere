@@ -37,7 +37,7 @@ def bracketed() -> dict[str, list[str]]:
     rows: dict[str, list[str]] = {}
     for chunk in re.split(r"\n(?=\s?\d+ )", text):
         found = re.match(r"\s?(\d+) ", chunk)
-        names = re.findall(r"\[([a-z, ]+)\]", chunk)
+        names = re.findall(r"\[([a-z_, ]+)\]", chunk)
         if found and names:
             rows[found.group(1)] = [f"{SUITE}/test_journal_{n.strip()}.py" for n in names[-1].split(",")]
     return rows

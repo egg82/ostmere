@@ -101,14 +101,33 @@ Forward only
 57 recompose    told counted from the lines (recomposing history) instead of the notes in `composed`.     [forward]
 58 drop unknown notes of a subject no longer in `subjects`, or keys no longer in the slot, ignored.        [forward]
 
+Marks
+59 mark roll    the mark roll keyed by the subject's id instead of the kind, ignoring the day or the save, drawn with
+                 another purpose, compared `>` or as 1 - rate, or one rate used for every kind.                [marks]
+60 held late    a late or correction note holding its subject's mark (or either not counted as a slot other than
+                 late or correction).                                                                       [marks]
+61 held source  a kind held by a subject not in `subjects`, by one with no `mark`, or by a subject that shows but
+                 is not written.                                                                            [marks]
+62 smudge       smudge held by any note, by a gap day, or not by a catch-up; a catch-up note not holding its
+                 subject's own mark.                                                                        [marks]
+63 mark order   marks in subject or note order, or a kind twice for two subjects.                            [marks]
+64 mark cap     the cap cut before the draw (the first held kinds, then rolled), not applied, or off by one.  [marks]
+65 empty days   marks on a gap or blank day, or a mark rate drawn with no notes.                             [marks]
+66 mark effects a day's marks changing its notes, their order or the gap (a mark taking a place in the budget, or
+                 marks drawn before and shifting the notes).                                                [marks, marks_directed]
+
 Equivalent (no test can tell them apart)
  E1 <= for <    `roll <= care * diligence`: differs only when a draw equals the product exactly, which needs a
                  SHA-256 prefix to land on that float (about 2**-53 per draw at best).
  E2 bag order   any bag order that completes each round before repeating: statement 19 fixes rounds, not which
                  key comes first in a round.
+ E3 <= mark    `roll <= rate` for a mark: differs only when a draw equals the rate exactly (as E1).
+ E4 smudge, none  `marks` called with no notes holding smudge: `compose` calls it only with a day's notes, so a
+                 day with no notes never reaches it (a gap or blank returns first).
+ E5 blank marks   marks drawn on a blank day from its musts: a blank day has no musts (a must is always a head note).
 
 Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 99 variants
-covering the 58 rows, each row's alternatives planted on their own as 2a, 2b, ...)
+covering rows 1-58 (rows 59-66 add 28 plants, all killed; E4 and E5 survive the whole suite), each row's alternatives planted on their own as 2a, 2b, ...)
  99 of 99 killed; rows caught: 58 of 58.
  35d           killed by test_journal_budget's care-over-order-roll keep, the one case where the two disagree.
  58a           killed by test_journal_forward's day of only removed subjects' notes.
