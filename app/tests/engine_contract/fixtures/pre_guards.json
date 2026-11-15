@@ -1,0 +1,78 @@
+{
+ "lines": 38,
+ "save": "{\"format\":9,\"manifest\":{\"cards\":[{\"cap\":null,\"id\":\"cu\",\"lane\":\"hands\",\"work_s\":60},{\"cap\":null,\"id\":\"cd\",\"lane\":\"hands\",\"work_s\":60},{\"cap\":null,\"id\":\"ci\",\"lane\":\"hands\",\"work_s\":60},{\"cap\":null,\"id\":\"cr\",\"lane\":\"hands\",\"work_s\":60},{\"cap\":null,\"id\":\"cr2\",\"lane\":\"hands\",\"work_s\":60},{\"cap\":1000000,\"id\":\"k\",\"lane\":\"l\",\"work_s\":1},{\"cap\":null,\"id\":\"k2\",\"lane\":\"l\",\"work_s\":1},{\"cap\":null,\"id\":\"k3\",\"lane\":\"l\",\"work_s\":1},{\"cap\":null,\"id\":\"k4\",\"lane\":\"l\",\"work_s\":1},{\"cap\":null,\"id\":\"kl\",\"lane\":\"l\",\"work_s\":10},{\"cap\":null,\"id\":\"j\",\"lane\":\"l2\",\"work_s\":1}],\"chips\":[],\"features\":[],\"lanes\":[\"l\",\"l2\"],\"offers\":[],\"skills\":[\"k0\"],\"standing\":[\"tick\",\"wick\"],\"stores\":[{\"cap\":360000000,\"id\":\"t\"},{\"cap\":3600000000,\"id\":\"w\"},{\"cap\":3600000000000,\"id\":\"x\"},{\"cap\":3600000000000,\"id\":\"y\"}],\"triggers\":[]},\"rules\":\"8c613f8cd33e97c4593c6844c4731ea04abec995e97c823a5c5381a9bf33501d\",\"save\":{\"@\":\"Save\",\"active\":\"idle\",\"cards\":[{\"@\":\"CardState\",\"card\":\"cr\",\"raised\":0,\"work\":{\"@\":\"Segment\",\"limit\":null,\"rate\":10000,\"start\":4,\"start_value\":40000}},{\"@\":\"CardState\",\"card\":\"k\",\"raised\":0,\"work\":{\"@\":\"Segment\",\"limit\":30000,\"rate\":10000,\"start\":4,\"start_value\":20000}},{\"@\":\"CardState\",\"card\":\"k2\",\"raised\":0,\"work\":{\"@\":\"Segment\",\"limit\":null,\"rate\":0,\"start\":4,\"start_value\":20000}}],\"cascade_count\":0,\"chips\":[],\"chips_seen\":[],\"ended_at\":null,\"fired\":[],\"lanes\":[{\"@\":\"LaneState\",\"card\":null,\"lane\":\"hands\",\"speed\":null},{\"@\":\"LaneState\",\"card\":\"k\",\"lane\":\"l\",\"speed\":null},{\"@\":\"LaneState\",\"card\":null,\"lane\":\"l2\",\"speed\":null}],\"last_cascade\":null,\"latches\":[true,true,false,true],\"mixes\":[{\"@\":\"Mix\",\"components\":[{\"@\":\"CardShare\",\"card\":\"cu\",\"share_bp\":10000}],\"id\":\"up\"},{\"@\":\"Mix\",\"components\":[{\"@\":\"CardShare\",\"card\":\"cd\",\"share_bp\":10000}],\"id\":\"down\"},{\"@\":\"Mix\",\"components\":[{\"@\":\"CardShare\",\"card\":\"ci\",\"share_bp\":10000}],\"id\":\"idle\"},{\"@\":\"Mix\",\"components\":[{\"@\":\"CardShare\",\"card\":\"cr\",\"share_bp\":10000}],\"id\":\"rm\"},{\"@\":\"Mix\",\"components\":[{\"@\":\"CardShare\",\"card\":\"cr2\",\"share_bp\":10000}],\"id\":\"rm2\"}],\"modifiers\":[],\"orders\":[{\"@\":\"Order\",\"then\":{\"@\":\"TapCard\",\"card\":\"k\"},\"when\":{\"@\":\"AtLeast\",\"release\":32400000,\"subject\":{\"@\":\"StoreValue\",\"store\":\"t\"},\"value\":36000000}},{\"@\":\"Order\",\"then\":{\"@\":\"SwitchMix\",\"mix\":\"rm\"},\"when\":{\"@\":\"AtMost\",\"release\":21600000,\"subject\":{\"@\":\"StoreValue\",\"store\":\"w\"},\"value\":18000000}},{\"@\":\"Order\",\"then\":{\"@\":\"SwitchMix\",\"mix\":\"rm2\"},\"when\":{\"@\":\"AtLeast\",\"release\":10000,\"release_of_cap\":true,\"subject\":{\"@\":\"StoreValue\",\"store\":\"t\"},\"value\":10000,\"value_of_cap\":true}},{\"@\":\"Order\",\"then\":{\"@\":\"TapCard\",\"card\":\"k2\"},\"when\":{\"@\":\"AfterTime\",\"time\":0}}],\"pauses\":[],\"queue\":[],\"skills\":[{\"@\":\"SkillState\",\"skill\":\"k0\",\"xp\":{\"@\":\"Segment\",\"limit\":null,\"rate\":0,\"start\":4,\"start_value\":0}}],\"stores\":[{\"@\":\"StoreState\",\"segment\":{\"@\":\"Segment\",\"limit\":360000000,\"rate\":3600000,\"start\":4,\"start_value\":43200000},\"store\":\"t\"},{\"@\":\"StoreState\",\"segment\":{\"@\":\"Segment\",\"limit\":3600000000,\"rate\":3600000,\"start\":4,\"start_value\":14400000},\"store\":\"w\"},{\"@\":\"StoreState\",\"segment\":{\"@\":\"Segment\",\"limit\":3600000000000,\"rate\":3600000,\"start\":4,\"start_value\":14400000},\"store\":\"x\"},{\"@\":\"StoreState\",\"segment\":{\"@\":\"Segment\",\"limit\":null,\"rate\":0,\"start\":4,\"start_value\":0},\"store\":\"y\"}],\"time\":4,\"unlocked\":[]}}",
+ "set_orders": {
+  "@": "SetOrders",
+  "orders": [
+   {
+    "@": "Order",
+    "then": {
+     "@": "TapCard",
+     "card": "k"
+    },
+    "when": {
+     "@": "AtLeast",
+     "release": 32400000,
+     "subject": {
+      "@": "StoreValue",
+      "store": "t"
+     },
+     "value": 36000000
+    }
+   },
+   {
+    "@": "Order",
+    "then": {
+     "@": "SwitchMix",
+     "mix": "rm"
+    },
+    "when": {
+     "@": "AtMost",
+     "release": 21600000,
+     "subject": {
+      "@": "StoreValue",
+      "store": "w"
+     },
+     "value": 18000000
+    }
+   },
+   {
+    "@": "Order",
+    "then": {
+     "@": "SwitchMix",
+     "mix": "rm2"
+    },
+    "when": {
+     "@": "AtLeast",
+     "release": 10000,
+     "release_of_cap": true,
+     "subject": {
+      "@": "StoreValue",
+      "store": "t"
+     },
+     "value": 10000,
+     "value_of_cap": true
+    }
+   },
+   {
+    "@": "Order",
+    "then": {
+     "@": "TapCard",
+     "card": "k2"
+    },
+    "when": {
+     "@": "AfterTime",
+     "time": 0
+    }
+   }
+  ]
+ },
+ "trajectory": {
+  "0": "3178b4580d7d5df9959ecaf83bc7ca0d1fb92f00f961e9f2d5a6f413600411b5",
+  "13": "beeb3c17ac479ddc04ab75ba69368d919e1c62f486d6db1d77ecd6dab256f803",
+  "25": "79fe5ef9afa9416deac5881fae34ae06762d813c29fd5c7ffc48c848a2203895",
+  "4": "b5614556ac9ff6024feb888bd984225d14fbecfb008d66b744fa4b30bb61cce5",
+  "40": "807829bdbd3bbdd1d932f37f0970fabd64e9311a1a0eaaa42ea90df7adc950aa",
+  "9": "205b9e0572f50d21641770e98b3d9ac1f30919d98efe0c45dfebc85ab8c6f1ec"
+ }
+}
