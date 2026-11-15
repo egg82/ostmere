@@ -63,7 +63,7 @@ function at(screen: Screen, ms: number): void {
   try { screen.tick(4000); } finally { performance.now = real; }
 }
 
-// Every beat plays, in order, each alone for its reading time.
+// Every beat plays, in order, each alone for its reading time (the first held longer).
 check("every beat plays in order", () => {
   const screen = returned(v4(), ["tired"]);
   let t = performance.now();   // the reveal started during returned(): each beat is due by now plus the ones before it
@@ -72,7 +72,7 @@ check("every beat plays in order", () => {
     const shown = visible(screen);
     expect(`beat ${i + 1} is the newest line`, shown[shown.length - 1], text(key));
     expect(`beat ${i + 1} alone: nothing after it yet`, shown.filter((s) => BEATS.slice(i + 1).map(text).includes(s)), []);
-    t += readingMs(text(key));
+    t += readingMs(text(key), i === 0);
   });
   expect("no chip line on the band", visible(screen).filter((s) => s === text("l_tired")), []);
   expect("the band keeps three", visible(screen).length <= 3, true);

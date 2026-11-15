@@ -38,11 +38,16 @@ const at = (keys: string[]): LogLine[] => keys.map((key, seq) => ({ at: 3400, se
   const { screen } = returned(at(["line.1", "line.2"]));
   screen.tick(4000);
   expect("the first line, alone", shown(screen), [text("line.1")]);
-  const wait = readingMs(text("line.1"));
+  expect("the strip carries the glow while the first line is held", screen.root.querySelector(".strip")?.classList.contains("glow"), true);
+  performance.now = () => t0 + readingMs(text("line.1")) + 50;   // the plain reading time is not enough for a return's first
+  screen.tick(4000);
+  expect("a return's first line is held past its plain reading time", shown(screen), [text("line.1")]);
+  const wait = readingMs(text("line.1"), true);
   const realNow = performance.now;
   performance.now = () => t0 + wait + 50;
   screen.tick(4000);
   expect("after its reading time, the second in its place", shown(screen), [text("line.2")]);
+  expect("the glow ends with the hold", screen.root.querySelector(".strip")?.classList.contains("glow"), false);
   performance.now = realNow;
 }
 
@@ -51,4 +56,21 @@ const at = (keys: string[]): LogLine[] => keys.map((key, seq) => ({ at: 3400, se
   const { screen } = returned(at(["line.1", "line.2", "line.3", "line.4", "line.5"]));
   screen.tick(4000);
   expect("the oldest line first, alone", shown(screen), [text("line.1")]);
+}
+
+// A live step's first line is not a return: held for its plain reading time, no glow on the strip.
+{
+  const screen = new Screen(catalog, () => undefined, () => Promise.resolve(null), new Keeps());
+  document.body.replaceChildren(screen.root);
+  screen.show(dayOneStep("returned", 100));
+  const t0 = performance.now();
+  screen.show({ ...dayOneStep("landed", 4000), lines: at(["line.1", "line.2"]) }, false);
+  screen.tick(4000);
+  expect("a live step's first line, alone", shown(screen), [text("line.1")]);
+  expect("a live step does not light the strip", screen.root.querySelector(".strip")?.classList.contains("glow"), false);
+  const realNow = performance.now;
+  performance.now = () => t0 + readingMs(text("line.1")) + 50;
+  screen.tick(4000);
+  expect("a live step's first line is held its plain reading time only", shown(screen), [text("line.2")]);
+  performance.now = realNow;
 }

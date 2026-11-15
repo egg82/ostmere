@@ -40,6 +40,7 @@ import { RulesTab } from "./rules";
 import { MixSelector } from "./selector";
 import { Skills } from "./skills";
 import { Story } from "./story";
+import { StripGlow } from "./stripglow";
 import { MoreCue } from "./morecue";
 import { PanelTabs, type Tab } from "./tabs";
 import { TownView } from "./townview";
@@ -74,6 +75,7 @@ export class Screen {
   private readonly asks: Asks;
   private readonly flight = new Flight(this.reveal);
   private lineIds = 0;
+  private readonly stripGlow: StripGlow;
   private drawing = false;
   private readonly editor: MixEditor;
   private readonly selector: MixSelector;
@@ -119,6 +121,7 @@ export class Screen {
       lines: () => this.latest.lines, saveId: () => this.latest.save_id, lesson: () => this.lessons?.holding ?? null, lessonSubject: () => this.lessons?.subject ?? null,
     };
     this.story = new Story(ctx, () => this.asks.show(), () => this.pick("cards"));
+    this.stripGlow = new StripGlow(this.story.root);
     this.tabs = new PanelTabs(catalog, this.story.book.tab, (tab) => this.pick(tab));
     const marks = new NewMarks();
     this.cardGlow = new CardGlow(catalog, this.glow, (card) => this.cards.node(card));
@@ -182,7 +185,7 @@ export class Screen {
     if (away && !first) this.root.scrollTop = 0;   // a return opens at the top: no card row under the pinned strip
     const nodes = this.story.append(lines, lead, away && !first ? { view: step.view, prev: this.view } : null);
     this.story.written(step.journal_days);
-    if (lead) this.lead(nodes);
+    if (lead) this.stripGlow.lead(this.reveal, nodes, away && !first, () => String(++this.lineIds));
     this.drawing = true;   // the end's lines join this batch rather than start one
     this.end.update(step.view, first);   // first, so the parts drawn next know whether the end is behind
     try {
@@ -205,15 +208,6 @@ export class Screen {
     if (!this.drawing) this.reveal.start(performance.now());
   }
 
-  /** Each line first in the queue, in the strip, held for its reading time. */
-  private lead(nodes: Array<HTMLElement | null>): void {
-    for (const shown of nodes) {
-      if (!shown?.isConnected) continue;   // not for the strip (a return's chip or task line: game/awaylines.ts)
-      this.lineIds += 1;   // (at, seq) is unique only within one Step
-      this.reveal.line([shown], String(this.lineIds), readingMs(shown.textContent ?? ""));
-    }
-  }
-
   /** Something is still waiting its turn or a line is being read: not a moment to reload the page. */
   get revealing(): boolean {
     return this.reveal.busy;
@@ -226,6 +220,7 @@ export class Screen {
 
   tick(t: number): void {
     this.reveal.tick(performance.now());
+    this.stripGlow.tick(performance.now(), this.reveal.busy);
     this.rulesGlow.tick();
     this.nudge.tick();
     for (const part of this.parts) part.tick(t);
