@@ -120,7 +120,8 @@ The rules, in the order the composer applies them for day `d`:
 - **Order on the page:** a day reads in the order things happened. Catch-up notes come first, then the day's own
   notes, musts and the rest together, each placed by the first line that showed its subject that day; lines in the
   same second go by subject id. A late addition or a correction comes last. Care decides whether a subject is written,
-  never where it stands.
+  never where it stands. A day stored before the composer placed notes this way is read in this order when a save
+  opens, its row untouched.
 
 ## The habits as data
 
