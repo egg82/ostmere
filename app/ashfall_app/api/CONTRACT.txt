@@ -712,7 +712,7 @@ TEXT AND NUMBERS (one rule)
                        while it runs, at its full share, then those of the standing action its content names as
                        upside_of, the runner whose held entries its upside describes: a recipe whose make another
                        runner eats names that eater, and the page draws the eater's change on the recipe; where a
-                       person's share of the card is chosen, the page draws each change at a CardInfo.held slot as
+                       person's share of the card is chosen, the page draws each change at a CardInfo.kept slot as
                        floor(amount_bp * share / Scales.bp), the engine's rounding, and the rest as served, while a
                        card's face has no share and draws all at the full share) as a signed
                        percent: change / Scales.bp * 100

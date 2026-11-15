@@ -69,8 +69,8 @@ export class Format {
 
   /** A card's {pct} slots at `shareBp` of its runner's time: each served change at a held entry's slot scales
    * as the engine does (amount * share, rounded down once), the rest stand. */
-  figuresAt(info: Pick<CardInfo, "change_bp" | "held">, shareBp: number): Record<string, string> {
-    const held = new Set(info.held.map((h) => h.slot));
+  figuresAt(info: Pick<CardInfo, "change_bp" | "kept">, shareBp: number): Record<string, string> {
+    const held = new Set(info.kept.map((k) => k.slot));
     return this.figures(info.change_bp.map((bp, i) => (held.has(i) ? Math.floor((bp * shareBp) / this.scales.bp) : bp)));
   }
 

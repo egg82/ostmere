@@ -129,7 +129,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         card_infos=[cm.CardInfo(
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
             upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s,
-            held=_held_infos(c, o),
+            kept=_kept_infos(c, o),
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
             makes=card_makes(c), takes=card_takes(c), drains=[d.store for d in c.drains],
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires
@@ -217,9 +217,9 @@ def _changes(mods: list[ModifierEntry]) -> list[int]:
     return list(dict.fromkeys(m.amount_bp - (e.BP if m.kind == "mul_bp" else 0) for m in mods))
 
 
-def _held_infos(c: CardEntry, o: Opening) -> list[cm.HeldInfo]:
+def _kept_infos(c: CardEntry, o: Opening) -> list[cm.KeptInfo]:
     slots = _card_slots(c, o)
-    return [cm.HeldInfo(side=w.side, lane=w.lane, amount_bp=w.amount_bp, slot=slots.index((w.amount_bp, True))) for w in c.while_running]
+    return [cm.KeptInfo(side=w.side, lane=w.lane, amount_bp=w.amount_bp, slot=slots.index((w.amount_bp, True))) for w in c.while_running]
 
 
 def _card_slots(c: CardEntry, o: Opening) -> list[tuple[int, bool]]:

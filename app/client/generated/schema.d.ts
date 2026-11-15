@@ -810,8 +810,8 @@ export interface components {
             upside_key: string | null;
             /** Change Bp */
             change_bp: number[];
-            /** Held */
-            held: components["schemas"]["HeldInfo"][];
+            /** Kept */
+            kept: components["schemas"]["KeptInfo"][];
             /** Work S */
             work_s: number;
             /** Inputs */
@@ -1312,20 +1312,6 @@ export interface components {
             /** Version */
             version: string;
         };
-        /**
-         * HeldInfo
-         * @description One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both.
-         */
-        HeldInfo: {
-            /** Side */
-            side: string | null;
-            /** Lane */
-            lane: string | null;
-            /** Amount Bp */
-            amount_bp: number;
-            /** Slot */
-            slot: number;
-        };
         Hour: number;
         Id: string;
         /** JoinRequest */
@@ -1384,6 +1370,20 @@ export interface components {
              * @constant
              */
             label: "Ostmere";
+        };
+        /**
+         * KeptInfo
+         * @description One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both.
+         */
+        KeptInfo: {
+            /** Side */
+            side: string | null;
+            /** Lane */
+            lane: string | null;
+            /** Amount Bp */
+            amount_bp: number;
+            /** Slot */
+            slot: number;
         };
         Key: string;
         /** KindRole */
