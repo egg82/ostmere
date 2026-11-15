@@ -746,6 +746,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .rules-row.drop-before { box-shadow: 0 -2px 0 var(--ink-hi); }
 .rules-row.drop-after { box-shadow: 0 2px 0 var(--ink-hi); }
 .rules-row.lifted { opacity: .35; }
+.rules-row.slide, .rule-why.slide, .rule-menu.slide { transition: transform var(--settle-ms) var(--settle-ease); }   /* a reordered rule slides home (ui/ruleslide.ts) */
 .rules.dragging, .rules.dragging * { user-select: none; cursor: grabbing; }
 .drag-ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; color: var(--ink); opacity: .92; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
 .rule-menu { display: flex; flex-wrap: wrap; gap: .5rem; padding: .3rem .4rem .3rem 2.1rem; }
