@@ -87,6 +87,7 @@ def put_day(game: GameClient, save_id: int, body: dict[str, Any]) -> Any:
     return game.client.put(f"/api/saves/{save_id}/presentation", json=body)
 
 
+@kills(14)
 def test_newest_day_read_only_grows(game: GameClient):
     save_id = int(game.begin()["save"]["save_id"])
     assert put_day(game, save_id, {}).json()["newest_day_read"] is None
