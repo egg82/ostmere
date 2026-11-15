@@ -146,11 +146,11 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
-  dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
+  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
   ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
   when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
   second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
@@ -662,7 +662,7 @@ THE CLIENT MAY
     editor): a card the player's own mix could take (mixable, in play, doable again, not in the mix, Step.repeats.taps),
     a chip whose mix switch the player keeps making or whose order card has no rule, and a red ledger line whose order
     card has no rule each carry the quiet dot until touched. The dot opens and highlights nothing, has no sentence, and
-    a card's is kept once in AccountPresentation.mix_offered, a switch's in switch_offered.
+    a card's is kept once in SavePresentation.mix_offered, a ledger line's in lines_touched, a switch's in switch_offered.
   - draw a ledger line white when it is not starved and is either not falling or covered; otherwise red (a starved
     line is dry while something waits on it, covered or not). A falling line is covered when LedgerLine.covered, or
     when a rule of the player's draws the store down as it means to: its order_states entry is on, its `when` is an

@@ -29,6 +29,7 @@ export function mergeSavePresentation(own: SavePresentation, more: SavePresentat
   return {
     rule_seen: own.rule_seen || more.rule_seen,
     mix_offered: names(own.mix_offered, more.mix_offered),
+    lines_touched: names(own.lines_touched ?? [], more.lines_touched ?? []),
     lessons: names(own.lessons, more.lessons),
     lesson_ends: union(own.lesson_ends, more.lesson_ends, (e) => e.lesson),
     visits: union(own.visits ?? [], more.visits ?? [], (v) => String(v.left)).slice(-MAX_VISITS),   // an older pod answers none
@@ -41,11 +42,11 @@ const higher = (own: number | null, more: number | null): number | null => (more
 
 const later = (own: Chapter | null, more: Chapter | null): Chapter | null => (more !== null && (own === null || more.left > own.left) ? more : own);
 
-/** What a save's write sends: `visits`, `chapter` and `newest_day_read` only once one is kept, since a build from before
+/** What a save's write sends: `lines_touched`, `visits`, `chapter` and `newest_day_read` only once one is kept, since a build from before
  * them refuses a body naming it. */
 export function sendableSave(p: SavePresentation): SavePresentation {
-  const { visits, chapter, newest_day_read: day, ...older } = p;
-  return { ...older, ...((visits ?? []).length > 0 ? { visits } : {}), ...(chapter ? { chapter } : {}),
+  const { lines_touched: touched, visits, chapter, newest_day_read: day, ...older } = p;
+  return { ...older, ...((touched ?? []).length > 0 ? { lines_touched: touched } : {}), ...((visits ?? []).length > 0 ? { visits } : {}), ...(chapter ? { chapter } : {}),
     ...(day !== null && day !== undefined ? { newest_day_read: day } : {}) } as SavePresentation;
 }
 
