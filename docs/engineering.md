@@ -44,7 +44,8 @@ streaming `tar` from the first site's running `web` pod into the cluster repo's 
 Each site's volume (`art/`, `journal/`, `audio/`, whichever exist) must match the source's file count and bytes per
 kind or the run stops there with a non-zero exit; a later site whose namespace does not exist yet is skipped with a
 warning. `KUBE_CONTEXT=<site>` seeds one site from the local tree, and `FROM_CONTEXT=<a> KUBE_CONTEXT=<b>` one site from
-another's live pod, whose volume is the source of truth.
+another's live pod, whose volume is the source of truth. The journal's page marks are made by `tools/pagemarks.py`
+from the bought overlays into `$ASHFALL_ASSETS/journal/marks/` and seeded with the `journal` kind.
 
 After merging a pull request that changes a readout, the merging session runs `python -m tools.drift_judge --brief`
 (from `app/`, `PYTHONPATH=.`) and gives its output to a fresh subagent as the brief, which judges the movement since
