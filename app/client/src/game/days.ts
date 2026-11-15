@@ -4,11 +4,15 @@
 // width.
 import type { JournalDay } from "../api/types";
 
-/** One written day per day number, oldest first: `more` joined into `held` (a day already held stays as it is). */
+/** One written day per day number, oldest first: `more` joined into `held`. A day still being written comes again with
+ * more notes, each copy beginning with the last, so of two copies of a day the one with more notes is kept. */
 export function joinDays(held: readonly JournalDay[], more: readonly JournalDay[]): JournalDay[] {
-  const have = new Set(held.map((d) => d.day));
-  const fresh = more.filter((d) => !have.has(d.day) && have.add(d.day));
-  return fresh.length === 0 ? [...held] : [...held, ...fresh].sort((a, b) => a.day - b.day);
+  const byDay = new Map(held.map((d) => [d.day, d]));
+  for (const d of more) {
+    const had = byDay.get(d.day);
+    if (!had || d.day_notes.length > had.day_notes.length) byDay.set(d.day, d);
+  }
+  return [...byDay.values()].sort((a, b) => a.day - b.day);
 }
 
 /** The page's measure, in rows of the hand as the desktop page draws them (1440 by 900: the room under a page's padding
@@ -36,20 +40,28 @@ export function dayRows(day: JournalDay, words: (key: string) => string): number
   return HEADING_ROWS + day.day_notes.reduce((n, note) => n + noteRows(words(note.key).length, note.sketch !== null), 0);
 }
 
-/** The days pages: days run on down a page until the next would not fit, which starts a new page. A day is never split,
- * so one longer than a page has a page of its own. A page, once a later one is begun, never changes. */
+/** The days pages: days run on down a page. A day begins on the page in hand when its heading and first note fit there,
+ * else on a new page; each later note that does not fit begins a new page, where the rest of its day is headed again
+ * (a page holds the part of each day written on it). A note too long for any page still has one of its own. Notes only
+ * ever join the last page or begin a new one, so a page, once a later one is begun, never changes. */
 export function dayPages(days: readonly JournalDay[], words: (key: string) => string): JournalDay[][] {
   const pages: JournalDay[][] = [];
   let used = 0;
   for (const day of days) {
-    const page = pages.at(-1);
-    const rows = dayRows(day, words);
-    if (page && used + DAY_GAP + rows <= PAGE_ROWS) {
-      page.push(day);
-      used += DAY_GAP + rows;
-    } else {
-      pages.push([day]);
-      used = rows;
+    for (const note of day.day_notes) {
+      const rows = noteRows(words(note.key).length, note.sketch !== null);
+      const page = pages.at(-1);
+      const part = page?.at(-1)?.day === day.day ? page.at(-1) : undefined;
+      if (page && part && used + rows <= PAGE_ROWS) {
+        page[page.length - 1] = { ...part, day_notes: [...part.day_notes, note] };
+        used += rows;
+      } else if (page && !part && used + DAY_GAP + HEADING_ROWS + rows <= PAGE_ROWS) {
+        page.push({ ...day, day_notes: [note] });
+        used += DAY_GAP + HEADING_ROWS + rows;
+      } else {
+        pages.push([{ ...day, day_notes: [note] }]);
+        used = HEADING_ROWS + rows;
+      }
     }
   }
   return pages;

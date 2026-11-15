@@ -1,24 +1,31 @@
-"""The journal composer (docs/design/journal.md): which notes the `days` pages write for one game day, chosen from the
-save's history by the writer's habits. Pure: no engine, no database, no clock; every draw is a hash of its own key
-(`roll`, and the bag's shuffle in statement 19). The save writer stores each result as one `save_journal` row and passes
-the stored rows back in as `composed`.
+"""The journal composer (docs/design/journal.md): the notes the `days` pages write for one game day, chosen from the
+save's history by the writer's habits, as the day goes. Pure: no engine, no database, no clock; every draw is a hash of
+its own key (`roll`, and the bag's shuffle in statement 19). The save writer stores each result as the day's
+`save_journal` row, extending the row of a day still open, and passes the stored rows back in as `composed`.
 
 Terms. Game day `d` is game seconds `[d * 86400, (d + 1) * 86400)`. A line *shows* subject S on day d when its `at` is
-in day d and its `source` equals S's `source`. A *telling* of S is a note of S by its first, repeat, catchup,
-misremember or mention slot (never late or correction); `w(S)` is the number of tellings of S in `composed`. S is
-*told* once `w(S) > 0`. A day is *written* when its notes are non-empty. `s`, the settledness, is the number of written
-days in `composed` less `beat_refresh` for each note in `composed` whose subject is a `beat` in `subjects` (a note of a
-subject no longer in `subjects` has no kind and takes nothing back; its day still counts as written), never below 0.
-`round_half_up(x)` is `floor(x + 0.5)`. A crowd is told first by `first`, then by `mention`, which stands in for its
-`repeat`: the band whose `at_least` is the highest at most that day's count of its lines. On a day that count is below
-every band's `at_least`, a told crowd has no slot to tell it by and is not written; it still shows (statement 14).
+in day d and its `source` equals S's `source`. The day's lines run by `at`, ties in the order `lines` holds them (the
+order the save stored them). A *moment* of S on day d is the first line that shows S that day, or a later one whose key
+no earlier line of S held (a *change*). A *telling* of S is a note of S by its first, repeat, catchup, misremember or
+mention slot (never late or correction); `w(S)` is the number of tellings of S before the moment, in `composed` and on
+the day's page so far. S is *told* once `w(S) > 0`. A day is *written* when its notes are non-empty. `s`, the
+settledness, is the number of written days in `composed` less `beat_refresh` for each note in `composed` whose subject
+is a `beat` in `subjects` (a note of a subject no longer in `subjects` has no kind and takes nothing back; its day still
+counts as written), never below 0. `round_half_up(x)` is `floor(x + 0.5)`. A crowd is told first by `first`, then by
+`mention`, which stands in for its `repeat`: the band whose `at_least` is the highest at most that day's count of its
+lines. On a day that count is below every band's `at_least`, a told crowd has no slot to tell it by and is not written;
+it still shows (statement 14).
+
+A day is composed in three parts: its start (an away gap running into it, else the catch-ups owed), its moments in order,
+and, once `ended`, its end (its crowds, then late additions, then corrections). A day *breaks off* into a gap at a moment
+(statements 13, 14); no later moment of it writes, and it has no end.
 
 The contract, each statement checkable from inputs and output alone:
 
 Shape
  1. The same arguments give an equal result, in any process (no salted `hash()`, no clock, no global state). So
-    composing days one per step or a span in one sitting stores the same rows.
- 2. The result's `day` is the argument `day`. A day with `gap` set has no notes.
+    composing a day once with all its lines or again and again as they arrive stores the same row (statement 22).
+ 2. The result's `day` is the argument `day`. A day with `gap` set holds only notes written before it broke off.
  3. Every note's subject is in `subjects`, its key is in that subject's slot named by the note's `slot` (for `mention`,
     in one of its bands' keys), and that slot is non-empty.
  4. No subject has two notes on one day, except a catch-up note beside its own day's note, a late addition or a
@@ -30,66 +37,72 @@ Shape
 Must
  7. A `beat` or `person` subject that shows on day d and has a slot to tell it by is a must on day d; so is a `routine`
     subject that shows and is not yet told. A subject already told with an empty `repeat` is never written again by
-    first, repeat, catchup or misremember slot ("written once"), must or not. On a gap day a subject is a must when it
-    would be one on its own day and its `catchup` slot, which writes it, is non-empty; one with an empty `catchup` is
-    dropped with the gap run's other subjects.
- 8. Every must on a day that is not a gap is written that day: by `first` if not told, else `repeat` (a `routine` first
-    by `misremember` instead when its misremember roll passes, statement 17). Musts are not limited by the budget.
- 9. Every must on a gap day is written exactly once, by `catchup`, on the first written day after the run of gap days
-    it fell in, however many gap days it showed on; the run's other subjects are never written later. So every must is
-    written within its gap run's length plus one day of showing. A catch-up note is a telling for the rest of its day.
+    first, repeat, catchup or misremember slot ("written once"), must or not. A subject that showed on a gap day with no
+    note of it that day is a must of that gap when it would be one on its own day and its `catchup` slot, which writes
+    it, is non-empty; one with an empty `catchup` is dropped with the gap run's other subjects.
+ 8. Every must is written at its first moment of the day unless the day broke off before it: by `first` if not told,
+    else `repeat` (a `routine` first by `misremember` instead when its misremember roll passes, statement 17). Musts are
+    not limited by the budget.
+ 9. The run of gap days ending on day d - 1 reaches back to the first of them, the one with notes or else the earliest.
+    Every must of the run is written exactly once, by `catchup`, at the start of day d when day d does not open in an
+    away gap (else the run goes on); the run's other subjects are never written later. A catch-up note is a telling
+    for the rest of its day.
 
 Care, diligence, budget
-10. Care of a `routine` or `crowd` subject is `base * fade ** w`, its kind's numbers, with `w = 0` on a day one of its
-    lines has a key no line of that subject held before day d's start (a change; lines of other subjects, or of none,
-    never count). Care of a `worry` is
+10. Care of a `routine` or `crowd` subject is `base * fade ** w`, its kind's numbers, with `w = 0` at a change (for a
+    crowd, weighed at the day's end, when any of the day's lines of it has a key no line of it held before the day's
+    start; lines of other subjects, or of none, never count). Care of a `worry` is
     `min(1, base * (1 + press * (r - 1)))`, `r` the consecutive days ending at d on which it showed.
-11. Diligence is `floor + (1 - floor) * 0.5 ** (s / halflife)`. A non-must subject showing on day d passes when
-    `roll(save_id, d, subject, "write") < care * diligence` (strict: a product of 0 never passes, of 1 always does).
-12. The budget is `round_half_up(lines_floor + (lines_start - lines_floor) * 0.5 ** (s / lines_halflife))`. The day's
-    non-must own notes number at most the budget less its must notes (own, catch-up and correction), never below 0; the
-    passing non-musts kept are those of highest care, ties by lower `roll(..., "order")`. A late addition is outside
-    the budget. Diligence and budget depend on `composed`, never on `day` itself.
+11. Diligence is `floor + (1 - floor) * 0.5 ** (s / halflife)`. A non-must not yet written that day passes at a moment
+    when `roll(save_id, d, subject, "write") < care * diligence` (strict: a product of 0 never passes, of 1 always does).
+    A crowd is weighed once, at the day's end.
+12. The budget is `round_half_up(lines_floor + (lines_start - lines_floor) * 0.5 ** (s / lines_halflife))`. A passing
+    non-must is written only while the day's page holds fewer notes than the budget (first come). Diligence and budget
+    depend on `composed`, never on `day` itself.
 
 Gaps and blanks
-13. Away: a subject with `away_days = k > 0` showing on day d makes days d .. d + k - 1 a gap with `gap = "away"`.
-14. Busy: a day not away whose count of subjects showing exceeds `busy_ratio * budget` has `gap = "busy"`. What is owed
-    from earlier days (catch-up, late addition, correction) is not counted.
-15. Blank: a day that is not a gap, has no must, no owed catch-up or correction, and no non-must passing its roll has
-    no notes and `gap` None. Nothing is owed after a blank.
+13. Away: a subject with `away_days = k > 0` breaks day d off at its first moment there, and days d + 1 .. d + k - 1 are
+    an away gap from their start, with no notes. Away is judged before busy at a moment.
+14. Busy: at a subject's first moment of the day, when the subjects the day has shown so far, it included, number more
+    than `busy_ratio * budget`, the day breaks off with `gap = "busy"`. What is owed from earlier days (catch-up, late
+    addition, correction) is not counted.
+15. Blank: an ended day with no gap and no notes. Nothing is owed after a blank.
 
 Late additions, misremembering
-16. A subject with a non-empty `late` slot, written on day d by any slot but late or correction, gets a late note on
-    day d + 1 when `roll(save_id, d, subject, "late") < late_rate` and day d + 1 is written for another reason; never
-    on any other day.
+16. A subject with a non-empty `late` slot, written on day d by any slot but late or correction, gets a late note at
+    day d + 1's end when `roll(save_id, d, subject, "late") < late_rate` and the page holds a note or a correction is
+    due; never on any other day.
 17. A subject with non-empty `misremember` and `correction` slots, told for the first time on its own day (not in a
     catch-up), is written by `misremember` instead of `first` when `roll(save_id, d, subject, "misremember") <
-    misremember_rate`. Its correction is a must on the first written day at least `correct_after_days` later, and
-    exactly one correction follows each misremembering. `correct_after_days` is at least 1 (the loader's range check),
-    so the correction is always on a later day than its misremembering.
+    misremember_rate`. Its correction is written at the end of the first day at least `correct_after_days` later that
+    does not break off, and exactly one correction follows each misremembering. `correct_after_days` is at least 1 (the
+    loader's range check), so the correction is always on a later day than its misremembering.
 
 Order and lines
-18. Notes run in four groups: catch-up notes, then the day's own notes, then late additions, then corrections. Catch-ups
-    run by the earliest `at` among the lines that showed each in its gap run, and the day's own notes (musts and
-    non-musts alike) by the earliest `at` among the lines that show each on day d, ties in `at` by subject id. Late
-    additions and corrections run by subject id. Care and `roll(..., "order")` decide which non-musts are kept
-    (statement 12), never where a note stands.
-19. Within one subject and slot (for `mention`, within one band), the n-th note drawn (n counted over `composed`)
-    completes a round of the slot's keys before any key repeats: notes with equal `n // len(keys)` are different keys.
-    n counts only stored notes whose key the slot still holds: a retired key does not advance the round. Which of a
-    round's unused keys comes next is a shuffle keyed by save, subject, slot (and band) and round, never a counter.
+18. Notes stand in the order they are written: catch-up notes, by the earliest `at` among the lines that showed each on
+    a run day it has no note of, ties by subject id; then the day's own notes, each at the moment that wrote it; then crowds, by their first moments; then
+    late additions, then corrections, each by subject id.
+19. Within one subject and slot (for `mention`, within one band), the n-th note drawn (n counted over `composed` and the
+    page so far) completes a round of the slot's keys before any key repeats: notes with equal `n // len(keys)` are
+    different keys. n counts only stored notes whose key the slot still holds: a retired key does not advance the
+    round. Which of a round's unused keys comes next is a shuffle keyed by save, subject, slot (and band) and round,
+    never a counter.
 
 Forward only
 20. `composed` is read as given, never recomposed: rows stored under other habits or subjects count as they stand, so
-    changing the habits or the slots changes only days not yet composed.
+    changing the habits or the slots changes only notes not yet composed.
 
 Marks
-21. A day's `marks` are the kinds of mark its page carries, in `MARK_KINDS` order, each at most once. A kind is *held*
-    on day d when the day has notes and: for `smudge`, one of them is by `catchup`; for any other kind, a note by a
-    slot other than `late` or `correction` is of a subject in `subjects` whose `mark` is that kind. A held kind is drawn
-    when `roll(save_id, d, kind, "mark") < getattr(habits.marks, kind)` (the kind in the subject's place), and `marks`
-    is the drawn kinds, the first `marks_most` of them. A day with no notes, a gap or a blank, has none. Marks never
-    change which notes a day has, nor their order.
+21. A day's `marks` are kinds of mark, each at most once, in the order drawn. A note by a slot other than `late` or
+    `correction` *holds* its subject's `mark` (if any), and a `catchup` note also holds `smudge`. When a note is written,
+    each kind it holds that the page does not carry is drawn when `roll(save_id, d, kind, "mark") <
+    getattr(habits.marks, kind)` (the kind in the subject's place) and the page carries fewer than `marks_most`. Marks
+    never change which notes a day has, nor their order.
+
+Written as the day goes
+22. With `ended` false the day has no end: no crowd, late addition or correction. A day composed with `lines` holding
+    more of its lines (appended in order), or with `ended` true, begins with the notes and marks it had, and keeps its
+    gap once set.
 """
 import hashlib
 from dataclasses import dataclass
@@ -100,7 +113,7 @@ type SourceKind = Literal["trigger", "card", "lane", "mentions"]
 type Way = Literal["joined", "left"]
 type SlotName = Literal["first", "repeat", "catchup", "mention", "late", "misremember", "correction"]
 type Gap = Literal["busy", "away"]
-type Purpose = Literal["write", "late", "misremember", "order", "mark"]
+type Purpose = Literal["write", "late", "misremember", "mark"]
 type MarkKind = Literal["blood", "soot", "water", "mud", "smudge"]
 
 MARK_KINDS: tuple[MarkKind, ...] = ("blood", "soot", "water", "mud", "smudge")
@@ -235,13 +248,15 @@ def compose_day(
     composed: tuple[ComposedDay, ...],
     subjects: tuple[Subject, ...],
     habits: Habits,
+    ended: bool = True,
 ) -> ComposedDay:
-    """Compose game day `day` of save `save_id` (the module docstring's contract).
+    """Compose game day `day` of save `save_id` as it stands (the module docstring's contract).
 
-    `lines`: the save's lines with `at < (day + 1) * DAY_S`, any order. `composed`: the stored rows for days
-    0 .. day - 1, oldest first. `subjects`: the content's, ids distinct and no two with one source.
+    `lines`: the save's lines known so far with `at < (day + 1) * DAY_S`, in the order stored. `composed`: the stored
+    rows for days 0 .. day - 1, oldest first. `subjects`: the content's, ids distinct and no two with one source.
+    `ended`: every line of the day is known, so its end is composed.
     Raises ValueError when a line is at or past the day's end, or `composed` is not exactly days 0 .. day - 1 in order.
     """
     from .journal_composer.day import compose  # the implementation imports this module's types
 
-    return compose(save_id, day, lines, composed, subjects, habits)
+    return compose(save_id, day, lines, composed, subjects, habits, ended)

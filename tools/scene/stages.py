@@ -76,13 +76,13 @@ STAGES["26_track_home"] = STAGES["26_track"].then({"pushes:larder_floor@1", "run
 STAGES["27_night_three"] = STAGES["26_track_home"].then({"action:evening_3", "feature:night_3", "pushes:larder_floor@2",
                                                          "pushes:rack_roof@1", "pushes:raised_bed@1"}, {"running:larder_floor"})
 STAGES["28_hearth"] = STAGES["27_night_three"].then({"feature:morning_4", "pushes:clay_hearth@1", "pushes:larder_floor@3",
-                                                     "pushes:rack_roof@2", "pushes:raised_bed@2", "store:watch_done",
+                                                     "pushes:rack_roof@2", "pushes:raised_bed@2", "project:watch_fire",
                                                      "feature:dead_field", "running:clay_hearth"})
 STAGES["28_digging"] = STAGES["28_hearth"].then({"running:dig_clay"}, {"running:clay_hearth"})
 STAGES["29_stranger"] = STAGES["28_hearth"].then({"feature:stay_offer", "pushes:clay_hearth@3", "pushes:field_track@6"},
                                                  {"running:clay_hearth"})
-STAGES["30_three"] = STAGES["29_stranger"].then({"feature:n2_joined", "pushes:raised_bed@3", "pushes:clay_hearth@4"},
-                                                watch_done=2, bay=1)
+STAGES["30_three"] = STAGES["29_stranger"].then({"feature:n2_joined", "pushes:raised_bed@3", "pushes:clay_hearth@4",
+                                                 "pushes:watch_fire@2", "project:n2_build_bay"})
 STAGES["30_bay_going_up"] = STAGES["29_stranger"].then({"feature:n2_joined", "running:n2_build_bay"}, {"running:n1_forage"})
 STAGES["31_warm_ground"] = STAGES["30_three"].then({"action:evening_4", "feature:night_4", "feature:warm_ground"})
 # Days four to seven (app/ashfall_app/opening/{day_four,day_five,b7,day_six}.toml; the lists are
@@ -98,7 +98,7 @@ STAGES["35_ridge"] = STAGES["34_stone_hand"].then({"feature:morning_6", "feature
 STAGES["35_pair"] = STAGES["35_ridge"].then({"feature:pair_offer", "pushes:hearth_stones@3"})
 STAGES["36_bay_going_up"] = STAGES["35_pair"].then({"running:make_bay2"})
 STAGES["36_five"] = STAGES["35_pair"].then({"feature:pair_joined", "pushes:n3_dig_bed@1", "pushes:n3_dig_bed@2",
-                                            "feature:turned_ground"}, bay2=1)
+                                            "feature:turned_ground", "project:make_bay2"})
 STAGES["36_digging"] = STAGES["36_five"].then({"running:n3_dig_bed"}, {"running:n3_gather"})
 STAGES["37_wolves"] = STAGES["36_five"].then({"action:night_6", "feature:night_6", "feature:wolves", "pushes:n3_dig_bed@3"},
                                              {"running:n3_dig_bed"}, smoked=27, catch=13, b7_clock=10)
@@ -136,7 +136,7 @@ STAGES["47_family"] = STAGES["46_ring_closed"].then({"action:stranger_clock", "r
                                                     stakes=0)
 STAGES["47_they_build"] = STAGES["47_family"].then({"running:n5_build_hut"}, {"running:make_hut"})
 STAGES["47_joined"] = STAGES["47_family"].then({"feature:family_joined", "action:z1_clock", "project:make_hut"},
-                                               {"running:make_hut"}, hut=1, stranger_clock=80, stakes=9)
+                                               {"running:make_hut"}, stranger_clock=80, stakes=9)
 STAGES["48_guard"] = STAGES["47_joined"].then({"project:arm_n2", "running:n2_guard", "running:n6_posts"}, guard_made=1,
                                               stranger_clock=200, z1_clock=100)
 STAGES["48_guard_n7"] = STAGES["47_joined"].then({"project:arm_n7", "running:n7_guard"}, guard_made=1,

@@ -4,6 +4,6 @@ EDITS: list[tuple[str, str, str]] = [
      'return tuple(d for d in stored if d.notes)\n',
      'return tuple(stored)\n'),
     ('ashfall_app/saves/journal_write.py',
-     'for d in stored if d.notes)\n',
-     'for d in stored)\n'),
+     'for d, r in zip(stored, found) if d.notes)\n',
+     'for d, r in zip(stored, found))\n'),
 ]

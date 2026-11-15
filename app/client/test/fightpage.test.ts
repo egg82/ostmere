@@ -33,7 +33,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   cards.update(view, off);
   const fight = cards.root.querySelector<HTMLElement>(".fight");
   expect("the fight shows once combat is on", fight?.hidden, false);
-  expect("odds", text(fight?.querySelector(".fight-odds")), "2 in 5 lost");
+  expect("odds", text(fight?.querySelector(".fight-odds")), "loses 2 in 5 fights");
   expect("vs", text(fight?.querySelector(".fight-vs")), "Your hands 8, Wolves 9");
   expect("what a loss costs and adds", text(fight?.querySelector(".fight-loss")), "a loss costs 3 Dead wood, 1 Energy");
   expect("the odds sit beside the tap, not inside it", cards.root.querySelector(".card-tap .fight"), null);
@@ -42,22 +42,22 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   const [power, threat] = Array.from(fight?.querySelectorAll(".fight-strength") ?? []);
   expect("two strength buttons", [text(power), text(threat)], ["8", "9"]);
   (power as HTMLButtonElement).click();
-  expect("a tap opens the entries, the base first", Array.from(entries?.querySelectorAll(".fight-entry") ?? [], text), ["base6", "Hatchet+50%", "Foraging+25%", "Stool50%+12.5%", "Cold×0.8"]);
+  expect("a tap opens the entries, the base first", Array.from(entries?.querySelectorAll(".fight-entry") ?? [], text), ["base strength6", "Hatchet+50%", "Foraging+25%", "Stool50%+12.5%", "Cold×0.8"]);
   expect("and says so", power?.getAttribute("aria-expanded"), "true");
   (threat as HTMLButtonElement).click();
-  expect("the other strength replaces it", Array.from(entries?.querySelectorAll(".fight-entry") ?? [], text), ["base9"]);
+  expect("the other strength replaces it", Array.from(entries?.querySelectorAll(".fight-entry") ?? [], text), ["base strength9"]);
   (threat as HTMLButtonElement).click();
   expect("a second tap closes it", entries?.hidden, true);
   cards.update({ ...view, fights: view.fights.map((f) => ({ ...f, loss_bp: 2000 })) }, view);
-  expect("a redraw with new odds shows them", text(cards.root.querySelector(".fight-odds")), "1 in 5 lost");
+  expect("a redraw with new odds shows them", text(cards.root.querySelector(".fight-odds")), "loses 1 in 5 fights");
 }
 
 // Blind until learned: a runner never fought shows its odds as unknown on the card, in its open strength sheet and in
 // the ledger; from the first fight on, the served odds.
 {
-  const oddsFigure = /\d+ in \d+ lost|% lost/;
+  const oddsFigure = /loses \d+ in \d+ fights|loses [\d.]+% of fights/;
   const fought = (n: number): View => ({ ...view, fights: view.fights.map((f) => ({ ...f, fought: n, lost: 0 })) });
-  for (const [n, card, standing] of [[0, "odds unknown until fought", "odds unknown until fought"], [1, "2 in 5 lost", "7.5% lost"]] as const) {
+  for (const [n, card, standing] of [[0, "odds unknown until fought", "odds unknown until fought"], [1, "loses 2 in 5 fights", "loses 7.5% of fights"]] as const) {
     const { ctx } = testContext();
     const cards = new Cards(ctx, new NewMarks());
     const ledger = new Ledger(ctx);
@@ -95,7 +95,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
     sides.forEach(([owner, strength], i) => {
       buttons[i]?.click();
       const rows = Array.from(panel?.querySelectorAll(".fight-entries .fight-entry") ?? [], (r) => [text(r.querySelector(".fight-source")), text(r.querySelector(".fight-amount"))]);
-      const want = (strength?.sources ?? []).map((s) => (s.source === null ? "base" : labelOf[s.source]));
+      const want = (strength?.sources ?? []).map((s) => (s.source === null ? "base strength" : labelOf[s.source]));
       expect(`${threat} ${owner}: the sheet is named`, text(panel?.querySelector(".fight-entries .fight-owner")), owner);
       expect(`${threat} ${owner}: every served entry is a row`, rows.map((r) => r[0]), want);
       seen += rows.length;
@@ -117,7 +117,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   const panel = cards.root.querySelector(".fight");
   panel?.querySelector<HTMLButtonElement>(".fight-strength")?.click();
   const rows = Array.from(panel?.querySelectorAll(".fight-entries .fight-entry") ?? [], (r) => [text(r.querySelector(".fight-source")), text(r.querySelector(".fight-share")), text(r.querySelector(".fight-amount"))]);
-  expect("a partial share sits in its row; a whole share and a permanent entry have none", rows.map((r) => [r[0], r[1]]), [["base", ""], ["Hatchet", ""], ["Stool", "50%"], ["Rest", ""], ["Foraging", ""]]);
+  expect("a partial share sits in its row; a whole share and a permanent entry have none", rows.map((r) => [r[0], r[1]]), [["base strength", ""], ["Hatchet", ""], ["Stool", "50%"], ["Rest", ""], ["Foraging", ""]]);
   const order = Array.from(panel?.querySelectorAll(".fight-entries .fight-entry")[2]?.children ?? [], (c) => c.className);
   expect("the share is between source and amount", order, ["fight-source", "fight-share", "fight-amount"]);
 }
@@ -148,7 +148,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   ledger.update(view, off);
   const row = ledger.root.querySelector(".threat");
   expect("the threat's name", text(row?.querySelector(".threat-name")), "Raiders at the stores");
-  expect("its odds", text(row?.querySelector(".fight-odds")), "7.5% lost");
+  expect("its odds", text(row?.querySelector(".fight-odds")), "loses 7.5% of fights");
   expect("its tally", text(row?.querySelector(".fight-tally")), "31 fought, 2 lost");
   expect("the group shows the ledger", ledger.root.hidden, false);
 }
