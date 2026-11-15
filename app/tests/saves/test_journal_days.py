@@ -1,7 +1,8 @@
-"""A step stores the journal days it closes (docs/design/journal.md, "What it reads, and when it writes"): one
-save_journal row per game day the save passed the end of, written or not, equal to what the composer makes of the
-lines before that day's end; composing a day at a time or a span in one step stores the same rows; two steps racing on
-one save store each day once; and rows once stored are never rewritten, whatever the habits become."""
+"""A step stores the journal days it writes in (docs/design/journal.md, "Written as the day goes"): one save_journal
+row per game day the save has begun, written or not, equal to what the composer makes of the lines up to the step's
+save time; a day's end is written once it has ended; composing a day at a time or a span in one step stores the same
+rows; two steps racing on one save store each note once; and notes once stored are never rewritten, whatever the
+habits become."""
 import threading
 import time
 from collections.abc import Callable
@@ -19,7 +20,7 @@ from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
 from tests.kills import kills
 from tests.saves.journal_fixture import (
-    HABITS, JOURNAL, WORK, journaled, lock_waiters, reference, store_lines, stored,
+    BEAT, HABITS, JOURNAL, TIRED, WORK, journaled, lock_waiters, reference, store_lines, stored,
 )
 
 
@@ -34,27 +35,39 @@ def begun(engine: Engine, rs: Ruleset, clock: FakeClock, account: int) -> tuple[
     return saves, info.save_id
 
 
-@kills(5, 11)
-def test_a_step_stores_every_day_it_closes_and_no_later_one(engine: Engine, rs: Ruleset, clock: FakeClock,
-                                                             account: int):
+@kills(4, 5, 11)
+def test_a_step_stores_every_day_it_begins_the_last_still_open(engine: Engine, rs: Ruleset, clock: FakeClock,
+                                                                account: int):
+    """The step stops at second 2 of day 3, before its line at second 5: day 3 is begun with nothing on it yet."""
     saves, save_id = begun(engine, rs, clock, account)
-    clock.tick(3 * DAY_S + 3600)
+    clock.tick(3 * DAY_S + 2)
     played = saves.advance(account, save_id)
-    assert stored(engine, save_id) == reference(engine, save_id, 3)
-    assert [d.day for d in played.days] == [0, 1, 2] and list(played.days) == stored(engine, save_id)
+    assert stored(engine, save_id) == reference(engine, save_id, 3 * DAY_S + 2)
+    assert [d.day for d in played.days] == [0, 1, 2] and stored(engine, save_id)[3].notes == ()
+    assert list(played.days) == [d for d in stored(engine, save_id) if d.notes]
     assert "s_tired" in {n.subject for n in played.days[0].notes}, "the step's own line did not show its subject"
     clock.tick(DAY_S - 7200)
-    assert saves.advance(account, save_id).days == ()
-    assert len(stored(engine, save_id)) == 3
+    assert [d.day for d in saves.advance(account, save_id).days] == [3]
+    assert len(stored(engine, save_id)) == 4
+    assert stored(engine, save_id) == reference(engine, save_id, 4 * DAY_S - 7198)
 
 
 @kills(8)
-def test_a_day_ends_at_its_last_second(engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
-    saves, save_id = begun(engine, rs, clock, account)
-    clock.tick(DAY_S - 1)
-    assert saves.advance(account, save_id).days == ()
+def test_a_days_end_is_written_once_it_has_ended_and_not_before(engine: Engine, rs: Ruleset, clock: FakeClock,
+                                                                 account: int):
+    """Day 0 writes the beat, whose late addition comes at day 1's end: not while day 1 is open, then once it ends."""
+    beat = replace(BEAT, late=("j.beat_late",))
+    late = replace(JOURNAL, habits=replace(HABITS, late_rate=1.0), subjects=(beat, WORK, TIRED))
+    saves = PgSaves(engine, journaled(rs, late), clock, stop_for=never)
+    save_id = saves.create(account)[0].save_id
+    store_lines(engine, save_id)
+    clock.tick(2 * DAY_S - 1)
+    saves.advance(account, save_id)
+    assert all(n.slot != "late" for d in stored(engine, save_id) for n in d.notes)
     clock.tick(1)
-    assert [d.day for d in saves.advance(account, save_id).days] == [0]
+    played = saves.advance(account, save_id)
+    assert [(d.day, n.slot) for d in played.days for n in d.notes if n.slot == "late"] == [(1, "late")]
+    assert stored(engine, save_id)[:2] == reference(engine, save_id, 2 * DAY_S, late)[:2]
 
 
 def test_day_by_day_and_one_jump_store_the_same_rows(pg_url: str, pg_empty: str, rs: Ruleset):
@@ -75,27 +88,30 @@ def test_day_by_day_and_one_jump_store_the_same_rows(pg_url: str, pg_empty: str,
         finally:
             database.close()
     assert found[0][0] == found[1][0]
-    assert found[0][1] == found[1][1] and len(found[0][1]) == 6
+    assert found[0][1] == found[1][1] and len(found[0][1]) == 7
 
 
 @kills(9, 15)
 def test_opened_carries_the_written_days_stored_before_it_and_its_step_those_it_composed(
         engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
-    """Day 1 has no line and is blank: stored, and not carried."""
+    """Day 1 has no line and is blank: stored, and not carried. Day 3 is still being written: carried with its notes so
+    far."""
     saves = PgSaves(engine, journaled(rs), clock, stop_for=never)
     save_id = saves.create(account)[0].save_id
     store_lines(engine, save_id, ((100, "l_beat"), (2 * DAY_S + 10, "l_beat"), (3 * DAY_S + 10, "l_beat")))
     clock.tick(3 * DAY_S + 60)
     first = saves.open(account, save_id)
-    assert first.days == () and [d.day for d in first.played.days] == [0, 1, 2]
+    assert first.days == () and [d.day for d in first.played.days] == [0, 2, 3]
     clock.tick(DAY_S)
     again = saves.open(account, save_id)
-    assert [d.day for d in again.days] == [0, 2] and list(again.days) == [stored(engine, save_id)[i] for i in (0, 2)]
-    assert [d.day for d in again.played.days] == [3]
+    assert [d.day for d in again.days] == [0, 2, 3]
+    assert list(again.days) == [stored(engine, save_id)[i] for i in (0, 2, 3)]
+    assert again.played.days == ()
 
 
-def test_a_habits_or_slots_change_leaves_every_stored_row_as_it_was(engine: Engine, rs: Ruleset, clock: FakeClock,
-                                                                    account: int):
+def test_a_habits_or_slots_change_leaves_every_stored_note_as_it_was(engine: Engine, rs: Ruleset, clock: FakeClock,
+                                                                     account: int):
+    """The change lands while day 3 is open: its notes stay as stored; days after it compose under the new rules."""
     saves, save_id = begun(engine, rs, clock, account)
     clock.tick(3 * DAY_S + 60)
     saves.advance(account, save_id)
@@ -105,10 +121,12 @@ def test_a_habits_or_slots_change_leaves_every_stored_row_as_it_was(engine: Engi
                     subjects=tuple(work if s == WORK else s for s in JOURNAL.subjects))
     later = PgSaves(engine, journaled(rs, tuned), clock, stop_for=never)
     clock.tick(2 * DAY_S)
-    played = later.advance(account, save_id)
+    later.advance(account, save_id)
     after = stored(engine, save_id)
-    assert after[:3] == before and [d.day for d in played.days] == [3, 4]
-    assert after[3:] == reference(engine, save_id, 5, tuned)[3:] != reference(engine, save_id, 5)[3:]
+    assert after[:3] == before[:3] and after[3].notes[:len(before[3].notes)] == before[3].notes
+    time = 5 * DAY_S + 60
+    assert after[4:] == reference(engine, save_id, time, tuned, tuple(after[:4]))[4:]
+    assert after[4:] != reference(engine, save_id, time, JOURNAL, tuple(after[:4]))[4:]
 
 
 @kills(6)
@@ -151,5 +169,5 @@ def test_two_steps_racing_on_one_save_store_each_day_once(pg_url: str, engine: E
     for t in threads:
         t.join(3)
     assert errors == []
-    assert stored(engine, save_id) == reference(engine, save_id, 4)
-    assert sorted(d.day for r in results for d in r.days) == [0, 1, 2, 3]
+    assert stored(engine, save_id) == reference(engine, save_id, 4 * DAY_S + 60)
+    assert sorted(d.day for r in results for d in r.days) == [d.day for d in stored(engine, save_id) if d.notes]

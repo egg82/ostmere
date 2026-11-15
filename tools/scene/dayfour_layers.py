@@ -86,8 +86,8 @@ def made_layers() -> list[Layer]:
     bay2 = made.bay2()
     return [
         *[Layer(id=f"woodshed_{n}", img=made.woodshed(n), when=f"pushes:woodshed@{n}") for n in (1, 2, 3)],
-        Layer(id="bay2", img=bay2, when="store:bay2"),
-        Layer(id="bay2_ghost", img=dayone.ghost(bay2), when="running:make_bay2|running:n3_build_bay", until="store:bay2"),
+        Layer(id="bay2", img=bay2, when=d8.BAY2_BUILT),
+        Layer(id="bay2_ghost", img=dayone.ghost(bay2), when="running:make_bay2|running:n3_build_bay", until=d8.BAY2_BUILT),
         *[Layer(id=f"turned_{n}", img=made.turned(n), when=f"pushes:n3_dig_bed@{n}") for n in (1, 2, 3)],
         Layer(id="turned_pelt", img=made.turned_pelt(), when="project:give_pelt&feature:night_7"),
         Layer(id="pelt_pegged_1", img=made.pegged(1), when="store:pelt"),

@@ -59,7 +59,7 @@ feeling they must babysit it, staying up at 2 AM for a timer to set up the next 
   unread; Town, while a person or lane it holds arrived unseen), never plain text (not merely when it is seen; a dot on everything new, plain text included, was the
   defect), never a glow (a glow says click me now, a dot says this is one of the new things); a glow has its own
   job: pointing at the one obvious next step when there truly is just one (the very first card; a first-of-its-kind
-  moment), one at a time; a red line is information with its answer beside it, never an alarm that nags; time away is
+  moment), one at a time, gone once the card is used by any route (a tap, a mix, a rule, the queue) and kept gone across a reload; a red line is information with its answer beside it, never an alarm that nags; time away is
   shown as what got done, never as what was missed. A line up front saying so is fine, but the screen has to prove it.
 - **The opening's end is a moment, and the card that follows it is a feature card, not a screen.** The end's lines land
   in the story like any other and play goes on. The real-time wait is taught by a lesson (the clock's) at the moment its

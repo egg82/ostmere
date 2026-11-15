@@ -32,14 +32,14 @@ def test_overlapping_aways_join():
 
 
 def test_a_day_busier_than_the_budget_allows_is_a_busy_gap():
-    """Statement 14: more subjects showing than `busy_ratio * budget` (strictly) makes a busy gap: at ratio 1.5 and
-    budget 2, three showing is written and four is busy, musts and all."""
+    """Statement 14: more subjects shown so far than `busy_ratio * budget` (strictly) breaks the day off: at ratio 1.5
+    and budget 2, three showing are written and the fourth makes the rest of the day busy, musts and all."""
     subs = [beat(f"b{i}") for i in range(4)]
     habits = replace(QUIET, lines_start=2, lines_floor=2, busy_ratio=1.5)
     three = compose_next(1, (), [shows(s, 0) for s in subs[:3]], subs, habits)
     assert three.gap is None and len(three.notes) == 3
     four = compose_next(1, (), [shows(s, 0) for s in subs], subs, habits)
-    assert four.gap == "busy" and four.notes == ()
+    assert four.gap == "busy" and [n.subject for n in four.notes] == ["b0", "b1", "b2"]
 
 
 def test_a_crowd_counts_once_however_many_came():
@@ -51,15 +51,15 @@ def test_a_crowd_counts_once_however_many_came():
 
 
 def test_the_same_day_is_written_early_and_busy_once_settled():
-    """Statement 14 with 12: busy is against the day's budget, so four subjects fit the opening budget of four and
-    are busy once two written days bring it to two."""
+    """Statement 14 with 12: busy is against the day's budget, so four subjects fit the opening budget of four, and once
+    two written days bring it to two the third breaks the day off."""
     subs = tuple(routine(f"r{i}") for i in range(4))
     habits = replace(PLAIN, lines_start=4, lines_floor=1, lines_halflife=1.0, busy_ratio=1.0)
     first = compose_next(1, (), [shows(s, 0) for s in subs], subs, habits)
     assert first.gap is None and len(first.notes) == 4
     rows = (row(0, *(note(s, "first") for s in subs)), row(1, *(note(s, "repeat") for s in subs)))
     later = compose_next(1, rows, [shows(s, d) for s in subs for d in range(3)], subs, habits)
-    assert later.gap == "busy" and later.notes == ()
+    assert later.gap == "busy" and [(n.subject, n.slot) for n in later.notes] == [("r0", "repeat"), ("r1", "repeat")]
 
 
 def test_what_is_owed_does_not_count_toward_busy():
@@ -75,9 +75,9 @@ def test_what_is_owed_does_not_count_toward_busy():
 
 
 def test_away_wins_over_busy():
-    """Statements 13 and 14: busy is for a day not away; a day both would be is an away gap."""
+    """Statements 13 and 14: at a moment that would tip the day busy, an away subject makes it an away gap."""
     trip = worry("trip", away=1)
-    subs = [beat(f"b{i}") for i in range(3)] + [trip]
+    subs = [beat("b0"), trip]
     habits = replace(QUIET, lines_start=1, lines_floor=1, busy_ratio=1.0)
     assert compose_next(1, (), [shows(s, 0) for s in subs], subs, habits).gap == "away"
 

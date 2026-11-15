@@ -457,9 +457,9 @@ phone, portrait                        desktop, and a phone in landscape
   opens on the first page holding something unread, else the page last shown in this page session, else the first.
   Pages run by section: the days pages (below), then creatures and places in content order, one per entry written.
 - **The days pages** hold the written days (`docs/design/journal.md`, "What the page draws"): each day's notes under
-  its heading (`ui.journal.day`, in the hand at the notes' size, in `--hand-pencil`), days running on down a page until
-  the next would not fit, which starts a new page; a day is never split. Whether a day fits is counted in rows of the
-  hand at the desktop page's width (`game/days.ts`: a page holds 22 rows of about 46 characters, a note's drawing
+  its heading (`ui.journal.day`, in the hand at the notes' size, in `--hand-pencil`), days running on down a page; a
+  note that does not fit starts a new page, headed again by its day, so a day still being written runs on over the
+  page instead of leaving it. Whether a note fits is counted in rows of the hand at the desktop page's width (`game/days.ts`: a page holds 22 rows of about 46 characters, a note's drawing
   five), never measured from the window, so the same days are the same pages on a phone and a desktop. The measure is
   a little under what the desktop page holds at 1440×900, so a full page fits it unscrolled; elsewhere the page
   scrolls as any long page does. A days page has no sketch and no numbers, and is seeded by its first day.

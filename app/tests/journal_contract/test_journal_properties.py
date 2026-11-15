@@ -17,21 +17,23 @@ def _compose(h: History) -> tuple[ComposedDay, ...]:
 
 
 @given(history=histories(), seed=st.integers(0, 2**32))
-def test_the_same_inputs_compose_the_same_whatever_the_line_order(history: History, seed: int):
-    """Statement 1 (and `compose_day`'s "any order"): composing twice, the second time with the lines shuffled, gives
-    equal rows."""
+def test_lines_run_by_their_second_ties_in_the_order_given(history: History, seed: int):
+    """Statement 1 and "Terms": composing twice gives equal rows, and the lines shuffled compose as the same shuffle put
+    in game-time order (ties in a second kept in the order given)."""
     shuffled = list(history.lines)
     random.Random(seed).shuffle(shuffled)
+    assert _compose(history) == _compose(history)
     again = compose_span(history.save_id, history.days, shuffled, history.subjects, history.habits)
-    assert _compose(history) == again
+    ordered = sorted(shuffled, key=lambda ln: ln.at)
+    assert again == compose_span(history.save_id, history.days, ordered, history.subjects, history.habits)
 
 
 @given(history=histories())
 def test_a_change_counts_wherever_it_sits_in_the_day(history: History):
-    """Statement 1 (and `compose_day`'s "any order") where order would bite: each line gets a twin at the same second
-    with a key its subject never held, placed after it in one tuple and before it in the other. With fade 0, diligence 1
-    and room in the budget, a told routine or crowd is written exactly on a change day, so a change looked for only in
-    some of a day's lines (the first, the last) shows as a difference between the two orders."""
+    """Statement 10 where order would bite: each line gets a twin at the same second with a key its subject never held,
+    placed after it in one tuple and before it in the other. With fade 0, diligence 1 and room in the budget, a told
+    routine or crowd is written exactly on a change day, at the twin, so a change looked for only at a subject's first
+    line of the day shows as a difference between the two orders."""
     habits = replace(history.habits, routine=Fade(1.0, 0.0), crowd=Fade(1.0, 0.0), floor=1.0, lines_start=50,
                      lines_floor=50, busy_ratio=100.0)
     after: list[Line] = []
@@ -46,9 +48,13 @@ def test_a_change_counts_wherever_it_sits_in_the_day(history: History):
 
 @given(history=histories())
 def test_days_and_gaps(history: History):
-    """Statement 2: each row is its own day, and a gap row has no notes."""
+    """Statement 2: each row is its own day, and a day that broke off holds only notes from before it did: no crowd,
+    late addition or correction, which come at the day's end."""
     for d, r in enumerate(_compose(history)):
-        assert r.day == d and (r.gap is None or r.notes == ())
+        assert r.day == d
+        if r.gap is not None:
+            ends = {s.id for s in history.subjects if s.kind == "crowd"}
+            assert all(n.slot not in ("late", "correction") and n.subject not in ends for n in r.notes), (d, r)
 
 
 @given(history=histories())
@@ -102,15 +108,15 @@ def test_every_must_is_written_on_its_own_day(history: History):
 
 @given(history=histories())
 def test_every_gap_must_is_caught_up_once_after_its_run(history: History):
-    """Statement 9: each must of a gap run has exactly one catch-up note, on the first day after the run (which is then
-    written), and no catch-up note appears anywhere else."""
+    """Statement 9: each must of a gap run has exactly one catch-up note, at the start of the first day after the run
+    (which is then written), and no catch-up note appears anywhere else."""
     rows = _compose(history)
     expected: list[tuple[int, str]] = []
     for run in gap_runs(rows):
         after = run[1] + 1
         musts = gap_musts(rows, run, history.lines, history.subjects)
         if after < len(rows) and musts:
-            assert rows[after].gap is None and rows[after].notes, (run, musts)
+            assert rows[after].notes, (run, musts)
         expected += [(after, sid) for sid in sorted(musts) if after < len(rows)]
     got = sorted((r.day, n.subject) for r in rows for n in r.notes if n.slot == "catchup")
     assert got == sorted(expected)

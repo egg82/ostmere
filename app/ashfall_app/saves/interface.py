@@ -96,8 +96,8 @@ class Played:
     """The game time this request was advancing to when its time budget ended it short (save.time is the last
     instant it resolved), else None: a long absence is caught up one bounded slice per request, so ask again."""
     days: tuple[ComposedDay, ...] = ()
-    """The journal days this write composed and stored, oldest first: each game day its save.time passed the end of
-    that the save had not composed (journal_write.py)."""
+    """The journal days this write added notes to, oldest first, each as it now stands: the day still being written and
+    each day it began (journal_write.py)."""
 
 
 @dataclass(frozen=True)
@@ -117,7 +117,8 @@ class Opened:
     presentation: dict[str, object]
     """What the page keeps about its teaching, as stored (api/CONTRACT.txt, SavePresentation)."""
     days: tuple[ComposedDay, ...]
-    """Its written journal days stored before this open, oldest first; `played.days` has those it composed."""
+    """Its written journal days stored before this open, oldest first, the day in progress with its notes so far;
+    `played.days` has those the open's step added to, whole."""
     played: Played
     """It advanced to now, with what arrived while away."""
 

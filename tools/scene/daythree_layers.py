@@ -21,6 +21,12 @@ from parts import firelight
 from place import FIRE
 
 EDGE = "running:walk_edge"
+BAY_BUILT = "project:make_bay|project:n2_build_bay"
+"""The bay, once either lane has built it: its store is never unlocked, so the page's ledger never lists it."""
+WATCH_RING = "project:watch_fire|project:n1_build_watch"
+WATCH_LIT = "pushes:watch_fire@2|pushes:n1_build_watch@2|pushes:watch_fire@1&pushes:n1_build_watch@1"
+"""The watch fire's first stage done, and its second, from either lane (their stages add up; the store they fill is
+never unlocked)."""
 TRIP = "running:field_track|mix:field_track"
 DIG = "running:dig_clay|mix:dig_clay"
 AWAY_JOBS = f"{EDGE}|{TRIP}|{DIG}"
@@ -93,14 +99,14 @@ def made_layers() -> list[Layer]:
     second. The bay and the ring show their ghosts while they are being built."""
     bay, ring = made.bay(), fire.watch_ring()
     return [
-        Layer(id="bay", img=bay, when="store:bay"),
-        Layer(id="bay_ghost", img=dayone.ghost(bay), when="running:make_bay|running:n2_build_bay", until="store:bay"),
+        Layer(id="bay", img=bay, when=BAY_BUILT),
+        Layer(id="bay_ghost", img=dayone.ghost(bay), when="running:make_bay|running:n2_build_bay", until=BAY_BUILT),
         *_staged("rack_roof", [made.rack_roof(n) for n in (1, 2)], [1, 2]),
-        Layer(id="watch_ring", img=ring, when="store:watch_done"),
+        Layer(id="watch_ring", img=ring, when=WATCH_RING),
         Layer(id="watch_ring_ghost", img=dayone.ghost(ring), when="running:watch_fire|running:n1_build_watch",
-              until="store:watch_done"),
-        Layer(id="watch_laid", img=fire.watch_laid(), when="store:watch_done", until="store:watch_done@2"),
-        Layer(id="watch_lit", img=fire.watch_lit(), when="store:watch_done@2", ungraded=True),
+              until=WATCH_RING),
+        Layer(id="watch_laid", img=fire.watch_laid(), when=WATCH_RING, until=WATCH_LIT),
+        Layer(id="watch_lit", img=fire.watch_lit(), when=WATCH_LIT, ungraded=True),
     ]
 
 
@@ -129,5 +135,5 @@ def light_layers() -> list[Layer]:
               ungraded=True),
         Layer(id="firelight_dusk_4", img=firelight(0.7), when="action:evening_4", until="feature:morning_5",
               blend="screen", ungraded=True),
-        Layer(id="watch_light", img=fire.watch_light(), when="store:watch_done@2", blend="screen", ungraded=True),
+        Layer(id="watch_light", img=fire.watch_light(), when=WATCH_LIT, blend="screen", ungraded=True),
     ]
