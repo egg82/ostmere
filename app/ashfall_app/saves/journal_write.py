@@ -12,7 +12,10 @@ from ..db import journal as rows
 from ..db.saves import SaveRecord
 from ..db.step import JournalDay
 from .interface import Ruleset
+from .journal_composer.history import read
+from .journal_composer.order import page_order
 from .journal import DAY_S, MARK_KINDS, ComposedDay, Line, Note, compose_day
+from .journal_rules import JournalRules
 
 
 def keys(rs: Ruleset) -> list[str]:
@@ -40,9 +43,7 @@ def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: S
     stored = tuple(day_of(r) for r in found)
     if len(stored) >= closed:
         return ()
-    history = sorted((Line(key, at, source) for at, old in [*keyed, *((ln.time, str(ln.key)) for ln in lines)]
-                      if (key := rs.line_renames.get(old, old)) not in rs.retired_lines
-                      for source in j.sources.get(key, ())), key=lambda ln: ln.at)
+    history = fed([*keyed, *((ln.time, str(ln.key)) for ln in lines)], rs, j)
     ats = [ln.at for ln in history]
     days = list(stored)
     for d in range(len(stored), closed):
@@ -62,6 +63,18 @@ def stored_form(d: ComposedDay) -> JournalDay:
                       list(d.marks))
 
 
-def written(conn: Connection, save_id: int) -> tuple[ComposedDay, ...]:
-    """The save's stored days that have notes, oldest first."""
-    return tuple(d for r in rows.days(conn, save_id) if (d := day_of(r)).notes)
+def fed(pairs: Sequence[tuple[int, str]], rs: Ruleset, j: JournalRules) -> list[Line]:
+    """The lines, (game second, key), as the composer reads them: renamed, retired ones dropped, one per source."""
+    return sorted((Line(key, at, source) for at, old in pairs if (key := rs.line_renames.get(old, old)) not in rs.retired_lines
+                   for source in j.sources.get(key, ())), key=lambda ln: ln.at)
+
+
+def written(conn: Connection, save_id: int, rs: Ruleset) -> tuple[ComposedDay, ...]:
+    """The save's stored days that have notes, oldest first, each in page order (statement 18): a day stored before the
+    composer ordered its notes by their lines is read in that order, its rows untouched."""
+    stored = [day_of(r) for r in rows.days(conn, save_id)]
+    j = rs.journal
+    if j is None or not any(d.notes for d in stored):
+        return tuple(d for d in stored if d.notes)
+    history = read(fed(rows.lines_of(conn, save_id, keys(rs), len(stored) * DAY_S), rs, j), j.subjects)
+    return tuple(page_order(d, stored[:d.day], history, j.subjects) for d in stored if d.notes)

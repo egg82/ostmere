@@ -120,7 +120,8 @@ The rules, in the order the composer applies them for day `d`:
 - **Order on the page:** a day reads in the order things happened. Catch-up notes come first, then the day's own
   notes, musts and the rest together, each placed by the first line that showed its subject that day; lines in the
   same second go by subject id. A late addition or a correction comes last. Care decides whether a subject is written,
-  never where it stands.
+  never where it stands. A day stored before the composer placed notes this way is read in this order when a save
+  opens, its row untouched.
 
 ## The habits as data
 
@@ -205,6 +206,9 @@ as they are" (`redesign.md`, "Book"): the parchment, the hand and the drawings s
 ones (a stray smudge, a faint thumbprint, specks where the ink skipped, a ring, a crease, scratches). Which, and
 where, are draws keyed by the save and the page's id, so a page looks the same each time it is opened and no two
 pages match. Wear has no history and no rate to keep, so the page draws it alone.
+
+Every mark is turned to any angle, mirrored, scaled and faded by its own seeded draw, and one page never carries the same
+art twice while another of its kind is unused; a forced repeat is mirrored and turned against the first and lies far from it.
 
 **Event marks**, rarer and stronger, come from what the day held, never at random:
 

@@ -22,7 +22,7 @@ from .orders import AfterTime, Condition, StoreValue, guard_latches, when_latch
 from .needs import store_need
 from .phaseview import skill_bar
 from .plan import (
-    OrderState, lane_order, mix_order, order_states, running_mix_id, running_town_mix_id, town_mix_order,
+    OrderState, lane_order, mix_order, order_doing, order_states, running_mix_id, running_town_mix_id, town_mix_order,
 )
 from .mixruns import mix_entries, mix_gains, town_entries
 from .rates import Running, contribution, lane_state, running, unlocked_standing
@@ -101,6 +101,9 @@ class View:
     order_guards: tuple[tuple[GuardView, ...], ...] = field(default=(), repr=False)
     """order_guards[i]: one per guard of orders[i], in the order of Order.unless (DESIGN.txt, "RULE GUARDS"). Left
     out of the repr, like the town's, so the recorded fingerprints stay those of a game with no guard."""
+    order_doing: tuple[int | None, ...] = field(default=(), repr=False)
+    """order_doing[i]: the index in orders[i].actions of the action it runs now, else None (plan.order_doing;
+    DESIGN.txt, "OR ELSE"). Left out of the repr, like order_guards."""
 
 
 def view(save: Save, rules: Rules) -> View:
@@ -126,7 +129,7 @@ def view(save: Save, rules: Rules) -> View:
         order_states=order_states(save, rules), offers=_offers(save, rules),
         fights=fight_views(save, rules),
         running_town_mix=running_town_mix_id(save, rules), town_mix_order=town_mix_order(save, rules),
-        held=held_views(save, rules), order_guards=_order_guards(save, rules),
+        held=held_views(save, rules), order_guards=_order_guards(save, rules), order_doing=order_doing(save, rules),
     )
 
 

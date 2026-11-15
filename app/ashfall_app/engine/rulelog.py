@@ -11,7 +11,7 @@ from .ids import CardId, StoreId
 from .index import index
 from .lanes import TapCard
 from .mixes import SwitchMix, flatten_shares
-from .orders import AfterTime, Order, QueueEntry, StoreValue, when_latch
+from .orders import AfterTime, Order, QueueEntry, StoreValue, pruned, when_latch
 from .plan import controlling_entry
 from .rules import Rules
 from .state import Save
@@ -46,8 +46,9 @@ def rule_changes(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, .
     `after`'s order; then each distinct order of `before` an outcome removed, in `before`'s order."""
     if before.orders == after.orders and before.latches == after.latches and before.queue == after.queue:
         return ()
+    retired = _retired_cards(before, after, rules)
     latched = tuple(RuleChange(after.time, o, when_latch(on), _level(after, rules, o))
-                    for o, on in zip(after.orders, after.latches) if when_latch(on) != _was_on(before, o))
+                    for o, on in zip(after.orders, after.latches) if when_latch(on) != _was_on(before, o, retired))
     return latched + _ended(before, after, rules) + _stints(before, after, rules)
 
 
@@ -82,10 +83,10 @@ def _stint_order(entry: QueueEntry) -> Order:
 
 
 def _ended(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, ...]:
-    gone = [o for o in dict.fromkeys(before.orders) if o not in after.orders]
+    retired = _retired_cards(before, after, rules)
+    gone = [o for o in dict.fromkeys(before.orders) if _kept(o, retired) not in after.orders]
     if not gone:
         return ()
-    retired = _retired_cards(before, after, rules)
     went = left_lanes(after) - left_lanes(before)
     cards = index(rules).cards
     found: list[RuleChange] = []
@@ -104,8 +105,14 @@ def _retired_cards(before: Save, after: Save, rules: Rules) -> frozenset[CardId]
                      for c in t.outcome.retire_orders)
 
 
-def _was_on(save: Save, order: Order) -> bool:
-    return next((when_latch(on) for o, on in zip(save.orders, save.latches) if o == order), False)
+def _kept(order: Order, retired: frozenset[CardId]) -> Order | None:
+    """What a season's retirement leaves of the order: a rule that keeps one of its actions keeps going, unlogged."""
+    return pruned(order, lambda a: isinstance(a, TapCard) and a.card in retired)
+
+
+def _was_on(save: Save, order: Order, retired: frozenset[CardId]) -> bool:
+    return next((when_latch(on) for o, on in zip(save.orders, save.latches)
+                 if order in (o, _kept(o, retired))), False)
 
 
 def _level(save: Save, rules: Rules, order: Order) -> int | None:

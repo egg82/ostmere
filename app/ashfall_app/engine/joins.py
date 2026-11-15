@@ -10,7 +10,8 @@ from .ids import CardId, LaneId, MixId
 from .index import index
 from .lanes import TapCard
 from .mixes import CardShare, Mix, SwitchMix, flatten_shares
-from .orders import AfterTime, Order, initial_latch
+from .installs import without_actions
+from .orders import AfterTime, Order, OrderVerb, initial_latch
 from .rules import Rules
 from .state import Save
 from .unlocks import Unlock, UnlockKind, unlock_key
@@ -49,9 +50,9 @@ def _with_town_rule(save: Save, mix: MixId) -> Save:
                    latches=(*save.latches, initial_latch(rule.when, None, save.time)))
 
 
-def _always_rule_card(rules: Rules, lane: LaneId, order: Order) -> CardId | None:
-    """The uncapped card an always rule (AfterTime(0), TapCard) on `lane` taps, else None."""
-    card = index(rules).cards.get(order.then.card) if isinstance(order.then, TapCard) else None
+def _always_rule_card(rules: Rules, lane: LaneId, order: Order, verb: OrderVerb) -> CardId | None:
+    """The uncapped card `verb`, one of an always rule's (AfterTime(0)) actions, taps on `lane`, else None."""
+    card = index(rules).cards.get(verb.card) if isinstance(verb, TapCard) else None
     if card is None or card.lane != lane or card.cap is not None or order.when != AfterTime(0):
         return None
     return card.id
@@ -60,16 +61,16 @@ def _always_rule_card(rules: Rules, lane: LaneId, order: Order) -> CardId | None
 def _share_card(save: Save, rules: Rules, j: Join) -> CardId | None:
     """The card of the lane's first uncapped always rule that is not retired, else the join's own card."""
     for o in save.orders:
-        card = _always_rule_card(rules, j.lane, o)
-        if card is not None and not is_retired(save, rules, card):
-            return card
+        for a in o.actions:
+            card = _always_rule_card(rules, j.lane, o, a)
+            if card is not None and not is_retired(save, rules, card):
+                return card
     return j.card
 
 
 def _without_always_rules(save: Save, rules: Rules, lane: LaneId) -> Save:
-    """Every always rule on the lane of an uncapped card leaves the orders with its latch; the rest stay."""
-    kept = [(o, on) for o, on in zip(save.orders, save.latches) if _always_rule_card(rules, lane, o) is None]
-    return replace(save, orders=tuple(o for o, _ in kept), latches=tuple(on for _, on in kept))
+    """Every always rule's tap of an uncapped card on the lane leaves the orders (without_actions); the rest stay."""
+    return without_actions(save, lambda o, a: _always_rule_card(rules, lane, o, a) is not None)
 
 
 def _with_share(save: Save, rules: Rules, j: Join, card: CardId | None) -> Save:

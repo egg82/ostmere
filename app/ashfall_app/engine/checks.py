@@ -14,7 +14,7 @@ from .mixes import MAX_MIXES, CardShare, Mix, MixLayer, SubMix, SwitchMix, flatt
 from .plan import mix_layer
 from .modifiers import Modifier, ModifierKind, lowers_cap, lowers_threat
 from .nodes import NODE_PREFIX
-from .orders import MAX_GUARDS, Condition, OrderVerb, Running, Unlocked
+from .orders import MAX_ACTIONS, MAX_GUARDS, Condition, OrderVerb, Running, Unlocked
 from .rules import Rules
 from .rules_check import condition_problem, is_lane_rules, subject_problem
 from .state import Save
@@ -79,7 +79,7 @@ def check_delete(save: Save, mix: MixId) -> None:
     require(mix in {m.id for m in save.mixes}, f"unknown mix {mix}")
     require(not any(isinstance(c, SubMix) and c.mix == mix for m in save.mixes for c in m.components),
             f"mix {mix} is nested in another mix")
-    verbs = [o.then for o in save.orders] + [e.verb for e in save.queue]
+    verbs = [a for o in save.orders for a in o.actions] + [e.verb for e in save.queue]
     require(not any(isinstance(v, SwitchMix) and v.mix == mix for v in verbs),
             f"mix {mix} is named by an order or the queue")
 
@@ -99,6 +99,24 @@ def check_guards(rules: Rules, guards: tuple[Condition, ...]) -> None:
     require(len(set(guards)) == len(guards), "a rule holds no guard twice")
     for g in guards:
         check_condition(rules, g)
+
+
+def check_actions(rules: Rules, mixes: tuple[Mix, ...], actions: tuple[OrderVerb, ...]) -> None:
+    """An order's actions, each already a valid order verb: at most MAX_ACTIONS, none twice, and with fallbacks all taps
+    of cards on one lane or all mixes of one layer, never an answer (DESIGN.txt, "OR ELSE"). A tap of a card the rules
+    do not declare puts no lane in the comparison."""
+    require(len(actions) <= MAX_ACTIONS, f"a rule lists at most {MAX_ACTIONS} actions")
+    require(len(set(actions)) == len(actions), "a rule lists no action twice")
+    if len(actions) == 1:
+        return
+    require(not isinstance(actions[0], (AnswerOffer, AnswerKind)), "a rule answering an offer has no fallback")
+    kind = type(actions[0])
+    require(all(type(a) is kind for a in actions), "every action of a rule is the same kind of verb")
+    cards = index(rules).cards
+    lanes = {cards[a.card].lane for a in actions if isinstance(a, TapCard) and a.card in cards}
+    layers = {mix_layer(rules, mixes, a.mix) for a in actions if isinstance(a, SwitchMix)}
+    require(len(lanes) <= 1, "every task a rule lists is on one lane")
+    require(len(layers) <= 1, "every mix a rule lists is of one layer")
 
 
 def check_switch(mixes: tuple[Mix, ...], verb: SwitchMix) -> None:

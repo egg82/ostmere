@@ -1,0 +1,38 @@
+Wrong implementations of "or else" actions (docs/design/rule-guards.md, "Contract (blind)", statements 14-21), to plant
+one at a time in a scratch copy; a test written from the note alone must go red for each. Rows are claimed by
+`@kills(row)` markers on test_or_else_*_contract.py. Specs go in tools/or_else_mutants/mNN[x].py once the
+engine has `Order.or_else` (none yet: the suite was written before any implementation); `--check` is the gate
+until then. Record each run below the list as MUTANTS_guards.txt does.
+
+ 1 no fallbacks    only `then` is ever considered; `or_else` is stored and read back but never acted on.   [14, 15, 17]
+ 2 reversed        the actions are tried last to first.                                                    [14, 15, 18]
+ 3 sticks          once a fallback runs, the rule keeps it though an earlier action can act again.          [14, 16]
+ 4 cancels         a fallback tap running is cancelled, not landed, when an earlier action turns ready.     [14, 16]
+ 5 first dead      a rule is passed over when its first action is dead, or when any one is.                 [14, 20]
+ 6 polled          a rule with nothing able to act is not woken as a listed tap turns ready: the tap starts
+                   at the next other event.                                                                 [14, 15, 17]
+ 7 holds the lane  a rule that is on with nothing able to act keeps a later rule from the lane.             [17]
+ 8 ready of first  READY falls only for the `then` tap, not for a listed fallback.                          [14, 15, 17]
+ 9 mix sticks      an un-greyed first mix does not take the layer back from the fallback until it greys.    [14, 18]
+10 mix skipped     a greyed first mix hands the layer to the player's own mix, not the next listed mix.     [14, 18]
+11 guard bypass    a guard stops only the first action; a fallback runs while the guard holds.              [19]
+12 guard falls     a rule paused by a guard runs its fallback ("or else" for a blocked guard).              [19]
+13 doing           `order_doing` is always the first position, or None, whatever runs.                      [20]
+14 retire all      `retire_orders` naming one action removes the whole rule.                                [21]
+15 retire first    `retire_orders` reads only the rule's `then`: a named fallback stays listed, and a named
+                   first action leaves the list headed by it.                                               [21]
+16 retire resets   a rule that keeps an action has its latches set afresh or dropped.                       [21]
+17 retire keeps    a rule whose every action is named stays, empty or with its last action.                 [21]
+18 dead chosen     "can act" for a tap ignores a completed card: a dead first action is chosen and nothing
+                   starts.                                                                                 [14, 15]
+
+Run against the engine at #131: rows 1-18, 27 plants (tools/or_else_mutants/mNN[x].py, a variant per "or" clause).
+- 26 KILLED by the blind suite. Rows 3, 4, 9 are stateful or sit in retap: the engine keeps no "sticky" choice, so
+  m03a and m09 remember the last choice in a module global (reset when time runs back), and m04a cancels a repeating
+  fallback instead of bounding it. No plant reaches a non-repeating fallback being cancelled: nothing wakes evaluation
+  while its lane is busy (no READY there), so that half of row 4 has no code path to mutate.
+- Row 16 let both variants through: a latch reset is corrected at the same instant unless it is held inside its band.
+  test_or_else_directed.py::test_a_rule_that_keeps_an_action_keeps_a_guard_latch_held_inside_its_band kills m16a and
+  m16b (checked by planting each in a scratch copy; the tool runs only the blind files).
+  python -m tools.mutate_suite or_else --run --only 1,2,3,4,5,6,7,8,9
+  python -m tools.mutate_suite or_else --run --only 10,11,12,13,14,15,16,17,18

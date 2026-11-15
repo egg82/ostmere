@@ -45,4 +45,5 @@ RUNS
     13 exact cap   at-most share guards were only tried on whole-item caps (b = 9600 on a 10.5-item cap tells them apart)
     21 limits      the blind lane-rules case names an unruled lane, which the subject check refuses on its own
   m01 and m21e loop forever when planted, so their specs lower the engine's settle bound to make that a failure.
-- Row 27 and the fallback round trip belong with "or else" (#91): no plant until it lands; their tests stay strict xfails.
+- Row 27, against the engine at #91 ("or else"): m27a-m27f, one per refusal, all KILLED by the blind tests that claim it
+      python -m tools.mutate_suite guards --run --only 27
