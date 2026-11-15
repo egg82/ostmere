@@ -5,6 +5,7 @@
 import type { Card, LedgerLine, OrderCard, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { sample } from "./clock";
+import { inUse } from "./marks";
 import { ruleFor, rulesFull } from "./orders";
 
 /** The store's order card on offer: the last in content order whose offered_after view.unlocked holds (or that names
@@ -55,13 +56,15 @@ export function completionsOf(view: View, card: string): number {
   return [...view.cards, ...view.completed].find((c) => c.card === card)?.completions ?? 0;
 }
 
-/** The card the one glow goes to now: the first marked one (CardInfo.glows) not glowed yet, ready, its lane free or
+/** The card the one glow goes to now: the first marked one (CardInfo.glows) not glowed yet and not put to work or done (a reload forgets what was
+ * glowed, never what was used), ready, its lane free or
  * cutting in (Card.cuts_in). */
 export function glowTarget(catalog: Catalog, view: View, glowed: ReadonlySet<string>): string | null {
   const busy = new Set(view.lanes.filter((l) => l.running_card !== null).map((l) => l.lane));
+  const used = inUse(view);
   const card = view.cards.find((c) => {
     const info = catalog.cards.get(c.card);
-    return info?.glows === true && !glowed.has(c.card) && c.blocker === null && (c.cuts_in || !busy.has(info.lane));
+    return info?.glows === true && !glowed.has(c.card) && !used.has(c.card) && completionsOf(view, c.card) === 0 && c.blocker === null && (c.cuts_in || !busy.has(info.lane));
   });
   return card?.card ?? null;
 }
