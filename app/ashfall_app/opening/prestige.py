@@ -2,7 +2,6 @@
 their conversion to the engine's types. A node may change a make, a card's work or a store's cap; the schema has no
 way to aim one at XP, a cost or a lane's speed, so the load refuses such a node (engine nodechecks.py holds the rest,
 a node acting on its own skill's work included)."""
-from collections import Counter
 from typing import Literal
 
 from pydantic import Field
@@ -62,20 +61,6 @@ def node_def(n: NodeEntry, cards: set[str]) -> NodeDef:
     else:
         target = StoreCap(StoreId(c.id))
     return NodeDef(NodeId(n.id), SkillId(n.skill), target, n.ranks, n.per_rank_bp)
-
-
-def check_tracks(nodes: list[NodeEntry]) -> None:
-    """ValueError naming a skill whose track is one node, or a node of more than one rank. With every node one rank and
-    two or more nodes, every click but the last has two unfinished nodes to choose between whatever the pick order; a
-    multi-rank node lets the other nodes fill first and leave a choiceless click."""
-    held = Counter(n.skill for n in nodes)
-    for skill, count in held.items():
-        if count < 2:
-            raise ValueError(f"prestige {skill}: its track is one node, so a click has no choice; a track holds at least two")
-    for n in nodes:
-        if n.ranks != 1:
-            raise ValueError(f"prestige {n.skill}: node {n.id} has {n.ranks} ranks; a node is one rank, so no click but "
-                             "the last is choiceless")
 
 
 def check_phase_spans(rules: Rules) -> None:

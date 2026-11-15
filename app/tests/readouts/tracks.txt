@@ -1,0 +1,7 @@
+skill        nodes ranks  new repeat  multi-rank nodes; nodes repeating an earlier change
+woodcutting      7     7    7      0  -; -
+scavenging       6     6    6      0  -; -
+foraging         2     2    2      0  -; -
+cooking          2     2    2      0  -; -
+arcana           2     2    2      0  -; -
+melee            2     2    2      0  -; -
