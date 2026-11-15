@@ -226,7 +226,7 @@ class PgSaves:
             if self._rs.journal is None:
                 row, seen = rows.save(conn, save_id, account_id, lock=True, visit=visit), None
             else:
-                found = journal_rows.locked(conn, save_id, account_id, visit, journal_write.keys(self._rs), now)
+                found = journal_rows.locked(conn, save_id, account_id, visit, journal_write.keys(self._rs))
                 row, seen = (None, None) if found is None else found
             if row is None:
                 raise NotFound(f"save {save_id}")

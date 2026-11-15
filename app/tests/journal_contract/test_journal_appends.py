@@ -66,9 +66,9 @@ def test_a_busy_day_keeps_what_was_written_before_it_got_busy():
     subs = [beat(f"b{i}") for i in range(3)]
     habits = replace(QUIET, lines_start=2, lines_floor=2, busy_ratio=1.0)
     lines = tuple(shows(s, 0, second=i + 1) for i, s in enumerate(subs))
-    day0 = compose_day(1, 0, lines, (), subs, habits)
+    day0 = compose_day(1, 0, lines, (), tuple(subs), habits)
     assert day0.gap == "busy" and [n.subject for n in day0.notes] == ["b0", "b1"]
-    day1 = compose_day(1, 1, lines, (day0,), subs, habits)
+    day1 = compose_day(1, 1, lines, (day0,), tuple(subs), habits)
     assert day1.notes == (note("b2", "catchup"),)
 
 

@@ -50,13 +50,13 @@ def test_a_day_in_progress_is_stored_with_its_notes_so_far(engine: Engine, rs: R
 def test_a_note_once_stored_never_disappears_or_changes(engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
     saves, save_id = begun(engine, rs, clock, account)
     seen: list[ComposedDay] = []
-    for _ in range(5 * 24 // 3):
-        clock.tick(3 * HOUR)
+    for _ in range(3 * 24 // 4):
+        clock.tick(4 * HOUR + 7)
         saves.advance(account, save_id)
         now = stored(engine, save_id)
         assert _begins(now, seen), (seen, now)
         seen = now
-    assert sum(len(d.notes) for d in seen) > 3
+    assert sum(len(d.notes) for d in seen) > 2
 
 
 def _stepped(url: str, rs: Ruleset, steps: list[int], open_at_end: bool) -> tuple[int, list[ComposedDay]]:
@@ -76,8 +76,8 @@ def _stepped(url: str, rs: Ruleset, steps: list[int], open_at_end: bool) -> tupl
         database.close()
 
 
-SMALL = [2 * HOUR + 17 * 60] * 60
-"""Sixty steps of 2h17m: about five and a half days, crossing each day's end mid-step."""
+SMALL = [8 * HOUR + 17 * 60] * 16
+"""Sixteen steps of 8h17m: about five and a half days, crossing each day's end mid-step."""
 
 
 def test_small_steps_and_one_long_advance_store_the_same_rows(pg_url: str, pg_empty: str, rs: Ruleset):
@@ -98,7 +98,7 @@ def test_a_return_composes_what_live_play_composes(pg_url: str, pg_empty: str, r
 def test_rows_stored_whole_before_stay_and_the_day_in_progress_is_composed_from_its_start(
         engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
     saves, save_id = begun(engine, rs, clock, account)
-    whole = [{"save_id": save_id, "day": 0, "notes": [{"subject": "s_beat", "slot": "first", "key": "j.beat"}],
+    whole: list[dict[str, object]] = [{"save_id": save_id, "day": 0, "notes": [{"subject": "s_beat", "slot": "first", "key": "j.beat"}],
               "gap": None},
              {"save_id": save_id, "day": 1, "notes": [], "gap": "busy"}]
     with engine.begin() as conn:

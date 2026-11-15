@@ -1,5 +1,7 @@
-"""The budget: its formula rounded half up, what musts leave of it (never below 0), which passing non-musts it keeps,
-the late addition outside it, and its independence from the day number (statement 12)."""
+"""The budget: its formula rounded half up, first come (a passing non-must is written while the page holds fewer notes,
+musts regardless), the late addition and correction outside it, and its independence from the day number (statement
+12)."""
+import random
 from dataclasses import replace
 
 from hypothesis import given, strategies as st
@@ -43,33 +45,36 @@ def test_settledness_never_below_zero_keeps_the_budget_at_its_start():
     assert len(day.notes) == 3
 
 
-def test_musts_take_the_budget_first_and_never_leave_it_negative():
-    """Statement 12: non-musts number at most the budget less the must notes, never below 0: a budget of one and three
-    musts keep no non-must (a negative remainder must not count from the end)."""
+def test_a_full_page_takes_no_non_must_and_musts_go_past_it():
+    """Statement 12: a budget of one and three musts first keep no non-must; one non-must first, then three musts,
+    writes all four."""
     beats = tuple(beat(f"b{i}") for i in range(3))
     habits = replace(PLAIN, lines_start=1, lines_floor=1)
-    day = compose_next(1, TOLD, [shows(s, d) for s in (*FIVE, *beats) for d in (0, 1)], (*FIVE, *beats), habits)
-    assert sorted(n.subject for n in day.notes) == ["b0", "b1", "b2"]
+    subs = (*FIVE, *beats)
+    musts_first = compose_next(1, TOLD, [shows(s, d) for s in (*beats, *FIVE) for d in (0, 1)], subs, habits)
+    assert [n.subject for n in musts_first.notes] == ["b0", "b1", "b2"]
+    one_first = compose_next(1, TOLD, [shows(s, d) for s in (FIVE[0], *beats, *FIVE[1:]) for d in (0, 1)], subs, habits)
+    assert [n.subject for n in one_first.notes] == ["r0", "b0", "b1", "b2"]
 
 
-def test_musts_leave_the_rest_of_the_budget_to_non_musts():
-    """Statement 12: a budget of three and one must keep two non-musts."""
+def test_a_must_first_leaves_the_rest_of_the_budget_to_non_musts():
+    """Statement 12: a budget of three and one must first keep two non-musts."""
     b = beat("b")
-    day = compose_next(1, TOLD, [shows(s, d) for s in (*FIVE, b) for d in (0, 1)], (*FIVE, b),
+    day = compose_next(1, TOLD, [shows(s, d) for s in (b, *FIVE) for d in (0, 1)], (*FIVE, b),
                        replace(PLAIN, lines_start=3, lines_floor=3))
     assert slots_of(day, b) == ["first"] and sum(1 for n in day.notes if n.slot == "repeat") == 2
 
 
-def test_catchup_and_correction_notes_count_against_the_budget():
-    """Statement 12: the must notes are own, catch-up and correction alike: with a budget of three, one catch-up and one
-    correction leave room for one non-must."""
+def test_catchup_notes_count_against_the_budget_and_a_correction_does_not():
+    """Statement 12: with a budget of three, one catch-up leaves room for two non-musts; the correction comes at the
+    day's end, outside it."""
     caught, wrong = beat("caught"), routine("wrong", misremember=1)
     rows = (row(0, note(wrong, "misremember"), *(note(r, "first") for r in FIVE)), row(1, gap="away"))
     lines = [shows(wrong, 0), shows(caught, 1)] + [shows(r, d) for r in FIVE for d in (0, 2)]
     habits = replace(PLAIN, lines_start=3, lines_floor=3, correct_after_days=2)
     day = compose_next(1, rows, lines, (*FIVE, caught, wrong), habits)
     assert slots_of(day, caught) == ["catchup"] and slots_of(day, wrong) == ["correction"]
-    assert sum(1 for n in day.notes if n.slot == "repeat") == 1
+    assert sum(1 for n in day.notes if n.slot == "repeat") == 2
 
 
 def test_a_late_addition_is_outside_the_budget():
@@ -83,40 +88,29 @@ def test_a_late_addition_is_outside_the_budget():
     assert sum(1 for n in day.notes if n.slot == "repeat") == 1
 
 
-def test_the_highest_care_is_kept():
-    """Statement 12: the passing non-musts kept are those of highest care (fewest tellings at fade 0.9)."""
+def test_the_earliest_passing_are_kept_whatever_their_care():
+    """Statement 12: first come: with room for two, the two passing non-musts whose lines come first are kept, though
+    their care (most tellings at fade 0.9) is the lowest."""
     subs = tuple(routine(f"t{w}", repeat=4) for w in range(1, 5))
     rows = tuple(row(d, *(note(s, "first" if d == 0 else "repeat", max(d - 1, 0)) for s in subs[d:])) for d in range(4))
     today = 4
     habits = replace(PLAIN, routine=Fade(1.0, 0.9), lines_start=2, lines_floor=2)
     save_id = find_save(lambda sid: all(ref_roll(sid, today, s.id, "write") < 0.6 for s in subs))
-    day = compose_next(save_id, rows, [shows(s, d) for s in subs for d in range(5)], subs, habits)
-    assert sorted(n.subject for n in day.notes) == ["t1", "t2"]
+    day = compose_next(save_id, rows, [shows(s, d) for s in reversed(subs) for d in range(5)], subs, habits)
+    assert [n.subject for n in day.notes] == ["t4", "t3"]
 
 
-def test_care_outranks_the_order_roll_in_what_is_kept():
-    """Statement 12: with room for one, care 1 (a fresh change) is kept over care 0.5 whose order roll is lower."""
-    hi, lo = routine("hi"), routine("lo")
-    habits = replace(PLAIN, routine=Fade(1.0, 0.5), lines_start=1, lines_floor=1)
-    rows = (row(0, note(hi, "first"), note(lo, "first")),)
-    save_id = find_save(lambda sid: ref_roll(sid, 1, "lo", "write") < 0.5
-                        and ref_roll(sid, 1, "lo", "order") < ref_roll(sid, 1, "hi", "order"))
-    lines = [shows(hi, 0), shows(lo, 0), shows(hi, 1, "hi.new"), shows(lo, 1)]
-    day = compose_next(save_id, rows, lines, (lo, hi), habits)
-    assert [n.subject for n in day.notes] == ["hi"]
-
-
-@given(save_id=st.integers(0, 2**40))
-def test_ties_in_care_keep_the_lower_order_roll(save_id: int):
-    """Statement 12: among equal care, the kept are those of lower `roll(..., "order")`; a worry capped at care 1 ties
-    with a routine at care 1 (statement 10's cap)."""
+@given(seed=st.integers(0, 2**32))
+def test_the_kept_are_the_first_passing_in_line_order(seed: int):
+    """Statement 12: all passing at care 1 and a budget of two, the kept are the first two whose lines come first."""
     capped = worry("zz", repeat=1)
     subs = (*FIVE, capped)
     habits = replace(PLAIN, worry=Press(1.0, 1.0), lines_start=2, lines_floor=2)
     rows = (row(0, *(note(s, "first") for s in subs)),)
-    day = compose_next(save_id, rows, [shows(s, d) for s in subs for d in (0, 1)], subs, habits)
-    lowest = sorted(subs, key=lambda s: ref_roll(save_id, 1, s.id, "order"))[:2]
-    assert sorted(n.subject for n in day.notes) == sorted(s.id for s in lowest)
+    order = list(subs)
+    random.Random(seed).shuffle(order)
+    day = compose_next(1, rows, [shows(s, 0) for s in subs] + [shows(s, 1) for s in order], subs, habits)
+    assert [n.subject for n in day.notes] == [s.id for s in order[:2]]
 
 
 def test_the_budget_thins_as_the_journal_settles():

@@ -131,10 +131,12 @@ save_manifests = Table(
     Column("manifest", Text, nullable=False),
 )
 
-# The journal's composed days (saves/journal.py): one per game day the save has passed, written or not, in the step's
-# transaction that carried the save past it. `notes` is the day's notes in page order, each {subject, slot, key}; `gap`
-# is why a day was not written, null for a written or blank day; `marks` the kinds of mark its page carries. Earned history,
-# never pruned; a day is never rewritten.
+# The journal's composed days (saves/journal.py): one per game day the save has begun, written or not, by the steps that
+# carried the save through it. `notes` is the day's notes in page order, each {subject, slot, key}; `gap` is why the day
+# broke off, null for a day written through or blank; `marks` the kinds of mark its page carries, in the order drawn;
+# `through` the save time it was composed through, before the day's end while it is still being written, null for a
+# day composed whole before notes were written as the day goes. Earned history, never pruned; a step only appends to
+# the notes and marks of a day still being written and sets its gap once (db/step.py).
 save_journal = Table(
     "save_journal", metadata,
     Column("save_id", BigInteger, ForeignKey("saves.id", ondelete="CASCADE"), primary_key=True),
@@ -142,6 +144,7 @@ save_journal = Table(
     Column("notes", JSONB, nullable=False),
     Column("gap", Text, nullable=True),
     Column("marks", JSONB, nullable=False, server_default=text("'[]'::jsonb")),
+    Column("through", BigInteger, nullable=True),
     CheckConstraint("gap IN ('busy', 'away')", name="ck_save_journal_gap"),
 )
 
