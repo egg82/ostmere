@@ -8,7 +8,7 @@ from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.makers import readout
 from tests.weektwo.routes import TWELVE_PUSH_ROUTES, twelve
 
-pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
+pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S), pytest.mark.weektwo_shard("makers")]
 
 
 def test_the_committed_readouts_are_the_ones_the_makers_write():

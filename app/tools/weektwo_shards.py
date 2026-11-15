@@ -1,7 +1,7 @@
 """The shards of CI's `playthrough-week-two` job: which job runs each week-two test (tests/weektwo).
 
 A test goes to the shard naming its play (tests/weektwo/conftest.py, `play_of`) as "chapter-route", else the one naming
-its play's chapter, else, reading no play, the one naming NO_PLAY. Every reader of a play lands in one shard, so no job
+its play's chapter, else, reading no play, the one naming NO_PLAY. A test marked `weektwo_shard(name)` goes to that shard whatever it reads. Every reader of a play lands in one shard, so no job
 plays another's plays again. Kept out of tests/weektwo so a change here leaves the saved ends' key alone (ends.py).
 
 WEEKTWO_SHARD=<name> runs one shard; unset, every test runs.
@@ -27,6 +27,7 @@ SHARDS: dict[str, frozenset[str]] = {
     "twelve-typical": frozenset({"twelve-typical"}),
     "twelve": frozenset({"twelve"}),
     "fifteen": frozenset({"fifteen"}),
+    "makers": frozenset({"makers"}),
 }
 ENV = "WEEKTWO_SHARD"
 WEEK_TWO = Path(__file__).resolve().parents[1] / "tests" / "weektwo"
@@ -34,8 +35,11 @@ ARGS = ["tests/weektwo"]
 SELECT = ("-m", "playthrough")
 
 
-def shard_of(play: tuple[str, str] | None) -> str | None:
-    """The shard a test reading `play` runs in, or None when no shard names it."""
+def shard_of(play: tuple[str, str] | None, named: str | None = None) -> str | None:
+    """The shard a test reading `play` runs in, or None when no shard names it. `named` is the test's own
+    `weektwo_shard` marker, which overrides its play."""
+    if named is not None:
+        return named if named in SHARDS else None
     keys = ("-".join(play), play[0]) if play is not None else (NO_PLAY,)
     for key in keys:
         found = [name for name, held in SHARDS.items() if key in held]
