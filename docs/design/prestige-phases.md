@@ -130,8 +130,9 @@ phase's length at Q's mix.
 ### Nodes and their ranks
 
 - A node is data: what it changes (a rate or cap on a card or store **outside** the prestiging skill), its rank count,
-  and its per-rank amount. Every rank is equal, and ranks within a node add. The shipped tracks use one-rank nodes only (the loader
-  refuses more): a multi-rank node lets the others fill first and leave a click with nothing to choose.
+  and its per-rank amount. Every rank is equal, and ranks within a node add. A multi-rank node can let the others fill first and leave a
+  click with nothing to choose; that is a matter of feel, so the loader allows it and the `tracks` readout
+  (`tests/readouts/tracks.txt`) reports each track's multi-rank and repeating nodes.
 - **The bound:** a full node gives *R* × *a*. Nodes of different kinds compound with each other, so a skill's whole
   track tops out at the product of (1 + *R*·*a*) over its nodes: a fixed number known when the content is written.
   Five nodes of five ranks at a modest per-rank amount land between about 3x and 8x on the rates they touch.
@@ -141,7 +142,8 @@ phase's length at Q's mix.
   XP lands at the click don't close it. The undo swaps the pick and nothing else (the phase and its levels stay).
   Because a rank's entries are derived from the pick, the swap is exact. It is a misclick window, and the player is
   always there for it, since the click is only by hand.
-- **Can a pick strand a player?** No: every click but the last has two unfinished nodes to choose between. A pick can leave a node unfinished, and that is the point: when every node completes, a pick only orders them and two players' skills end the same. So a track
+- **Can a pick strand a player?** No: while any node is unfinished there is a click to make, and with one-rank nodes (what the
+  shipped tracks use, reported by the `tracks` readout) every click but the last has two to choose between. A pick can leave a node unfinished, and that is the point: when every node completes, a pick only orders them and two players' skills end the same. So a track
   holds more nodes than a typical game clicks, and the pick says what the skill is for. "Moving a pick" below is what
   makes that safe to choose.
 - **Size each skill's track** so a typical game fills about two thirds of it. Measured with the ladder readout

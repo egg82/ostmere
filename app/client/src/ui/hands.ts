@@ -5,9 +5,11 @@
 // the bar and the name ("Main ▾", the way to the Mixes list) stay pinned; the row of controls under them scrolls with the
 // cards (`rows`).
 // Tapping: the card's name (its bar stays on the card). Idle: "idle". The first-mix offer: its cards and one button.
-// A running mix: its split bar (under it, while a card of the mix is stopped, the split that runs now: runningnow.ts), name, how long it runs, Edit; dimmed while a tap holds the hands; grey when it holds a
-// retired or completed card, shown as the grey bar, "stopped · {card} done" naming that card, and Edit. The mix drawn is the one running now: a rule's while its
-// condition holds (with "until …", where it lets go, where "runs …" would be), else the player's own. "until …" (or
+// A running mix: its split bar (under it, while a card of the mix is stopped, the split that runs now: runningnow.ts), name, how long it runs, Edit; grey when it holds a
+// retired or completed card, shown as the grey bar, "stopped · {card} done" naming that card, and Edit. The bar shows what the hands do now
+// (game/holder.ts, ui/handsheld.ts): while a tap holds them, that card as the whole bar with its time left, the name slot
+// saying "then {mix}"; else a rule's mix while its condition holds, or a goal stint's mix, either with "until …", where it
+// lets go, where "runs …" would be, and "then {mix}" after it; else the player's own. "until …" (or
 // "while …") is a button: it opens the Rules tab, where Lately says what the rules did. Once a mix exists "Mixes ▾" opens the Mixes list, the
 // running mix's name beside it as plain text; with none running but mixes or rules saved, a plain button in the meta slot opens the list (or, with
 // only rules, the Rules tab). Under the mix row, a card the mix can take, offered once (mixoffer.ts), and a chip's rule
@@ -19,6 +21,7 @@ import { apportion, firstMixOffer, runningMix, withShares } from "../game/mix";
 import { handsRule, ruleRunning } from "../game/orders";
 import { editShown, mixesShown, runsShown, stripShown } from "../game/shown";
 import { nextCard } from "../game/queue";
+import { handsHolder, type Holder } from "../game/holder";
 import { spentNote } from "../game/spent";
 import { FIRST_MIX, guided } from "../game/lessons";
 import { UI } from "../game/text";
@@ -28,6 +31,7 @@ import { PHONE } from "./layout";
 import { RunningNow } from "./runningnow";
 import { GlowWhile } from "./fresh";
 import { markStopped, markSwitch } from "./handsmarks";
+import { letGo, tapBar, thenWords } from "./handsheld";
 import { el, setText, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
 import { ShareBar, type SegmentSpec } from "./sharebar";
@@ -62,8 +66,10 @@ export class Hands implements Part {
   private readonly nameText = el("span", "hands-mix-name");
   private readonly plan = el("button", "hands-name hands-plan");
   private readonly runs = el("span", "hands-runs");
-  /** Where the running rule lets go, as a way into the Rules tab, where Lately says what the rules did. */
+  /** Where the running rule or goal stint lets go, as a way into the Rules tab, where Lately says what the rules did. */
   private readonly until = el("button", "hands-rule");
+  /** What a rule's or a stint's mix gives the hands back to. */
+  private readonly then = el("span", "hands-then");
   private readonly taskRule = el("button", "hands-rule");
   private readonly status = el("span", "hands-status");
   private readonly edit = el("button", "hands-edit");
@@ -77,6 +83,7 @@ export class Hands implements Part {
   private readonly editGlow: GlowWhile;
   private view: View | null = null;
   private mix: Mix | null = null;
+  private holder: Holder = { kind: "own" };
   private offerKey = "";
   /** The strip, and each of the mix row's Edit, Mixes ▾ and "runs …", has been drawn this page session: it stays. */
   private arrived = false;
@@ -113,7 +120,7 @@ export class Hands implements Part {
       b.dataset.teach = "rule-running";
       b.addEventListener("click", () => { tapFeedback(); this.ctx.actions.openRules(null); });
     }
-    this.meta.append(this.name, this.nameText, this.runs, this.until, this.status, this.edit);
+    this.meta.append(this.name, this.nameText, this.runs, this.until, this.then, this.status, this.edit);
     this.barRow.append(this.bar.root);
     this.mixRow.append(this.barRow, this.meta);
     this.handsRow.append(this.text, this.taskRule, this.plan);
@@ -166,27 +173,40 @@ export class Hands implements Part {
     }
     this.mix = mix;
     this.taskRule.hidden = true;
+    this.holder = handsHolder(view);
+    const tapped = this.holder.kind === "tap";
     const greyed = view.greyed_mix_ids.includes(mix.id);
     this.drawMeta(view, switchEdit);
-    const bar = stripBar(segmentSpecs(this.ctx, mix, view), mix.components.map((c) => c.share_bp), this.ctx.catalog.content.scales.bp);
-    this.bar.set(bar.specs, bar.shares);
-    const yielded = !greyed && view.cards.some((c) => c.run === "yielded");
+    this.drawBar(view.at);
     for (const n of [this.root, this.rows]) {
-      n.classList.toggle("greyed", greyed);
-      n.classList.toggle("yielded", yielded);
+      n.classList.toggle("greyed", greyed && !tapped);
+      n.classList.toggle("tapped", tapped);
     }
     markStopped(this.ctx, mix, view, greyed, this.edit);
-    setText(this.status, yielded ? this.ctx.catalog.text.get(UI.yielded) : greyed ? this.stopped(mix, view) : spentNote(this.ctx.catalog, view));
+    setText(this.status, tapped ? "" : greyed ? this.stopped(mix, view) : spentNote(this.ctx.catalog, view));
+    setText(this.then, tapped ? "" : thenWords(this.ctx, this.holder));
+    this.then.title = this.then.textContent ?? "";
+    this.then.hidden = this.then.title === "";
     this.drawName(mix.id);
   }
 
-  /** The running mix's name, the player's, as text; on a phone, once a mix is saved, the name itself is the way to the
-   * Mixes list ("Main ▾"), where elsewhere "Mixes ▾" sits before it. */
+  /** The bar: a holding tap's card with its time left at `t`, else the running mix's split. */
+  private drawBar(t: number): void {
+    const { holder: h, mix } = this;
+    if (!mix) return;
+    const bar = h.kind === "tap" ? tapBar(this.ctx, h.card, h.endsAt, t)
+      : stripBar(segmentSpecs(this.ctx, mix, this.view), mix.components.map((c) => c.share_bp), this.ctx.catalog.content.scales.bp);
+    this.bar.set(bar.specs, bar.shares);
+  }
+
+  /** The running mix's name as text, or while a tap holds the hands "then {mix}"; on a phone, once a mix is saved, it
+   * is itself the way to the Mixes list ("Main ▾"), where elsewhere "Mixes ▾" sits before it. */
   private drawName(id: string): void {
     const phone = window.matchMedia(PHONE).matches;
-    setText(this.nameText, id);
-    this.nameText.title = id;
-    setText(this.name, `${phone ? id : this.ctx.catalog.text.get(UI.mixesHeading)} ▾`);
+    const label = this.holder.kind === "tap" ? thenWords(this.ctx, this.holder) || id : id;
+    setText(this.nameText, label);
+    this.nameText.title = label;
+    setText(this.name, `${phone ? label : this.ctx.catalog.text.get(UI.mixesHeading)} ▾`);
     this.nameText.hidden = phone && this.mixesSeen;
   }
 
@@ -222,11 +242,14 @@ export class Hands implements Part {
     this.editGlow.tick();
     const view = this.view;
     if (!view || !this.mix) return;
-    const live = !view.greyed_mix_ids.includes(this.mix.id);
-    const rule = view.mix_order === null ? undefined : view.orders[view.mix_order];
-    this.runs.hidden = rule !== undefined || !this.runsSeen;
-    this.until.hidden = rule === undefined;
-    setText(rule ? this.until : this.runs, rule ? this.byRule(rule) : live ? this.ctx.catalog.format.runs(view.runs_out_at, t) : "");
+    const tapped = this.holder.kind === "tap";
+    const live = !tapped && !view.greyed_mix_ids.includes(this.mix.id);
+    const where = letGo(this.ctx, view, this.holder);
+    this.runs.hidden = where !== null || tapped || !this.runsSeen;
+    this.until.hidden = where === null;
+    setText(this.until, where ?? "");
+    setText(this.runs, live && where === null ? this.ctx.catalog.format.runs(view.runs_out_at, t) : "");
+    if (tapped) this.drawBar(t);
   }
 
   private drawHands(view: View): void {

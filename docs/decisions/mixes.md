@@ -125,6 +125,12 @@ and you tune it, then hit go.
 - **Saving a mix never changes which mix runs** (a new mix took over, and getting back to Main took working
   out). Running a mix is its own tap, in the Mixes list, which says which one runs and offers `Run` on the rest. It is
   the hands' version of "a saved mix never quietly starts doing something else".
+- **The hands strip's bar always shows what the hands are actually doing** (owner: Rest sat at "1s remaining" for minutes while
+  a planned build held the hands, findable only by scrolling to its card). While a tap holds the hands, whoever started
+  it, the bar is that card alone with its time left and a small "then {mix}" names what the hands go back to; a rule's
+  or a goal stint's mix is the bar while it runs, with where it lets go and "then {mix}". When the holder lets go, the
+  mix returns. Nothing says "paused because…", on a card or the strip: the bar already shows what runs
+  (`docs/design/opening-screen.md`, "The hands strip").
 - One mechanism for both layers: your mix runs your day, the town's mix runs its buildings and people.
 
 ## Automation is designed, not clicked
@@ -164,6 +170,12 @@ and the Rules tab says why a rule is off under it (`app/client/src/ui/rulewhy.ts
 that will turn ready by itself (When ready, held until its next completion), and a mix until a goal row lands (a goal
 stint: a queued switch runs over the player's mix until it pops, engine `DESIGN.txt`, "Queue mix";
 `app/client/src/ui/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
+One queue, two ways in (owner: planning what to build next is where Plan is most useful): Next's Plan adds
+either kind of entry, cards first. It lists the steps When ready takes, picked through the card's own path, ready now
+ones included (a build planned while the hands are busy runs after the task under way), then the steps it would take
+but for what they wait on, off, each saying what in its card's face words, then the mixes. A card's When ready stays as
+a shortcut into the same queue, offered where a tap cannot do the job: on a step not ready yet, or ready while its lane
+runs another tap.
 
 Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are all modifiers, and a cap only rises.
 Planned for combat: a side's and a threat's strength are targets too, a threat's raised only by its region's schedule

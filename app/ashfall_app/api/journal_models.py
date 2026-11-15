@@ -54,6 +54,17 @@ class JournalInfo(BaseModel):
     entries: list[EntryInfo]
 
 
+class Mark(StrEnum):
+    """A kind of mark a written day leaves on its page (docs/design/journal.md, "Marks on the page"); each is art the page
+    owns, so a new one is page work as well as content."""
+
+    BLOOD = "blood"
+    SOOT = "soot"
+    WATER = "water"
+    MUD = "mud"
+    SMUDGE = "smudge"
+
+
 class Slot(StrEnum):
     """The occasion a day's note was written for (docs/design/journal.md, "The content's side")."""
 
@@ -85,3 +96,5 @@ class JournalDay(BaseModel):
     day: int
     day_notes: list[DayNote]
     """At least one, in page order."""
+    marks: list[Mark]
+    """The marks the day leaves on its page, each kind at most once; empty for none."""

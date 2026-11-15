@@ -1,0 +1,48 @@
+Wrong implementations of rule guards (docs/design/rule-guards.md, "Contract (blind)", statements 1-13 and 22-24), to
+plant one at a time in a scratch copy; a test written from the note alone must go red for each. Rows are claimed by
+`@kills(row)` markers on test_guards_*.py. Record each run below the list as MUTANTS_drains.txt does.
+
+ 1 one bit         one paused bit per rule: set as any guard comes on, cleared as any lets go.        [1, 8, 12]
+ 2 no band         a guard read as a plain threshold at its value; its release is ignored.              [5]
+ 3 lets go         a guard coming on sets the `when` latch false, as a second "until" would.            [7]
+ 4 when frozen     the `when` latch does not move while a guard holds.                                  [7]
+ 5 polled          a guard's change is not solved as an event: it is seen at the next other event.      [5]
+ 6 cancels tap     a guard coming on mid-tap ends the running tap or loses its outcome.                 [6]
+ 7 all guards      the rule is paused only while every guard is latched.                                 [8]
+ 8 fresh off       SetOrders sets each guard latch false instead of reading its threshold.             [11, 2]
+ 9 reset kept      an order equal to an old one, guards included, has its latches set afresh.          [11]
+10 equal sans      orders matched ignoring `unless`: an edited guard keeps the old latches.             [11]
+11 start cap       a share guard is read off the store's starting cap, or not re-read at a cap raise.   [10]
+12 no share band   a share guard whose levels meet is a plain threshold, with no one-item band.         [9]
+13 exact cap       a share guard is read off the exact cap, not its whole items.                         [9]
+14 state order     paused is judged before waiting or passed over.                                       [12]
+15 paused named    a paused rule is shown as outranked, waiting or on.                                   [12]
+16 orders_on       view.orders_on reads "the rule is on" rather than the `when` latch.                  [12]
+17 past cap        past the firing cap, a guard latch change on a mix rule moves the running mix.       [13]
+18 empty written   the codec writes `unless` or `or_else` while empty.                                   [1]
+19 latch form      a rule with no guard saves GuardedLatch(when, ()) rather than a bool.               [1, 2]
+20 codec drops     decode drops `unless`, `or_else` or a GuardedLatch's guard bools.                     [2]
+21 limits          a fourth guard, a guard listed twice, or a guard a `when` would fail is accepted.    [3]
+22 too strict      a valid guard (a share, an at-most, another store, on a mix rule) is refused.        [3]
+23 tap source      the tap source ignores guards; only the running mix reads them.                      [5, 23]
+24 no ready        a lane freed by a guard letting go is not refilled until another event.              [5, 23]
+25 memoryless      a guard latch is set afresh from its threshold at each advance, so an advance split
+                   inside a band differs from the whole.                                                 [22]
+26 forecast        the forecast plays the rules as if they held no guard.                               [24]
+27 or-else limits  four actions, an action twice, a tap and a mix, two lanes, two layers, or `or_else`
+                   on a rule answering an offer is accepted.                                            [3]
+
+RUNS
+- Suite tests/engine_contract/test_guards_*.py (blind, written from the design note alone; test_guards_directed.py
+  holds the directed tests below). Rerun, from app/, in batches under the per-test timeout of pytest.ini:
+      python -m tools.mutate_suite guards --run --only 1,2,3,4,5,6,7,8,9,10,11,12,13
+      python -m tools.mutate_suite guards --run --only 14,15,16,17,18,19,20,21,22,23,24,25,26
+  `--check` fails unless every row is claimed. Specs: tools/guards_mutants/mNN[x].py, a variant per "or" clause.
+- Against the engine at #90: rows 1-26, 44 plants, all KILLED. The blind suite let four through; each has a directed
+  test claiming its row:
+    3  lets go     no blind test brings a guard on inside `when`'s band (the guards there hold from the start)
+    8  fresh off   the fresh guard latch is corrected inside the same instant; only its firing shows (cascade_count)
+    13 exact cap   at-most share guards were only tried on whole-item caps (b = 9600 on a 10.5-item cap tells them apart)
+    21 limits      the blind lane-rules case names an unruled lane, which the subject check refuses on its own
+  m01 and m21e loop forever when planted, so their specs lower the engine's settle bound to make that a failure.
+- Row 27 and the fallback round trip belong with "or else" (#91): no plant until it lands; their tests stay strict xfails.

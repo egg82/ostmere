@@ -98,3 +98,10 @@ def test_a_card_holding_entries_while_it_runs_is_served_them_at_its_full_share(c
     cards = {c.card: c.change_bp for c in content.card_infos}
     assert (cards["n2_guard"], cards["n7_guard"]) == ([15000], [15000])
     assert (cards["n5_watch"], cards["n1_watch"]) == ([5000], [5000])
+
+
+def test_each_staked_sink_is_served_the_entries_it_holds_at_its_full_share(content: Content):
+    """The watch's larder and gap entries, one figure; the track's on the hands, which a later chapter gives."""
+    cards = {c.card: c.change_bp for c in content.card_infos}
+    assert [cards[c] for c in ("n1_watch", "n2_watch", "n4_watch", "n6_watch")] == [[5000]] * 4
+    assert cards["field_track"] == [10000]

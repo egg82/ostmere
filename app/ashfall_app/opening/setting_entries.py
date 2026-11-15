@@ -31,6 +31,16 @@ class WorryEntry(Entry):
     press: float = Field(gt=0)
 
 
+class MarkRatesEntry(Entry):
+    """Each page mark's chance of being drawn on a day that holds it."""
+
+    blood: float = Field(ge=0, le=1)
+    soot: float = Field(ge=0, le=1)
+    water: float = Field(ge=0, le=1)
+    mud: float = Field(ge=0, le=1)
+    smudge: float = Field(ge=0, le=1)
+
+
 class JournalHabitsEntry(Entry):
     """The numbers the journal's habits are decided by (docs/design/journal.md, "The habits as data"). The must kinds
     (a beat, a person, a routine's first telling) carry none: they are always written."""
@@ -50,6 +60,9 @@ class JournalHabitsEntry(Entry):
     late_rate: float = Field(ge=0, le=1)
     misremember_rate: float = Field(ge=0, le=1)
     correct_after_days: int = Field(ge=1)
+    marks: MarkRatesEntry
+    marks_most: int = Field(ge=0)
+    """The most event marks one day's page keeps."""
 
     @model_validator(mode="after")
     def _budget_falls(self) -> Self:

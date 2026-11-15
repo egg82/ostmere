@@ -4,8 +4,9 @@ The Journal's `days` pages are the main character's own diary. They are written 
 the people who matter and the turning points go in; routine drops out after a few tellings; entries start long and
 frequent and thin as life becomes normal; a busy stretch leaves a gap and then a catch-up; a detail turns up a day late;
 now and then something is misremembered and put right later. The Chronicle stays the exact record with a cause on every
-line, so nothing the player needs depends on the journal. The pages' look does not change: this note decides what is
-written on them, never how they are drawn.
+line, so nothing the player needs depends on the journal. The pages' look does not change, except for the marks the
+days leave on them ("Marks on the page", below); otherwise this note decides what is written on them, never how they
+are drawn.
 
 Every habit is decided in code from the save's history, with its numbers in a data file the tuning pass adjusts, and
 every draw is seeded, so a save replays the same journal. The content authors the words, per subject and per slot.
@@ -93,7 +94,8 @@ The rules, in the order the composer applies them for day `d`:
   content has no kind and takes nothing back. A non-must candidate is written when its roll falls under
   `care × diligence`. Thinning follows how much has been written and what has happened, never the day number.
 - **Budget:** the most notes an entry holds, `lines_floor + (lines_start − lines_floor) × 0.5^(s / lines_halflife)`,
-  rounded half up. Musts first, then the rest by care, ties by roll. A late addition is outside the budget.
+  rounded half up. Musts count against it first; the rest are kept by care, ties by roll. A late addition is outside
+  the budget.
 - **Busy:** a day whose candidates number more than `busy_ratio × budget` is not written: a busy gap. A full day early
   on, when the budget is large, is written; the same day later, when entries are short, is not. Only the day's own
   subjects count, never what is owed, so a catch-up cannot make its own day busy.
@@ -101,9 +103,9 @@ The rules, in the order the composer applies them for day `d`:
 - **Blank:** a day with no must and no candidate that passes its roll is not written. A blank is not a gap: nothing is
   owed after it.
 - **Catch-up:** the first written day after a busy or away gap opens with every must of the gap, each by its catch-up
-  slot, oldest first (by the first day of the gap each showed on). The gap's other candidates are dropped; the
-  Chronicle has them. A must with no catch-up slot cannot be caught up and is dropped with them. A catch-up note is a
-  telling for the rest of its day, so a subject it told is not a first again that day.
+  slot, in the order they happened (by the first line each showed by in the gap). The gap's other candidates are
+  dropped; the Chronicle has them. A must with no catch-up slot cannot be caught up and is dropped with them. A
+  catch-up note is a telling for the rest of its day, so a subject it told is not a first again that day.
 - **Late addition:** each subject written on day `d` that has a late slot draws one under `late_rate`. Its late slot is
   written in day `d + 1`'s entry if that day is written, and dropped if it is not.
 - **Misremembering:** a subject with a misremember slot, told for the first time on its own day (never in a catch-up), draws one under
@@ -115,8 +117,10 @@ The rules, in the order the composer applies them for day `d`:
   repeats before the bag is empty; a stored key the slot no longer holds does not count toward the bag's draws. A
   crowd's band is chosen by how many came or went, as the people's mention bands are; on a day fewer came or went
   than its lowest band, a told crowd has no line and is not written.
-- **Order on the page:** catch-up notes, then the day's own by care, then a late addition or a correction. The day's
-  own musts run by their order roll, lower first, as ties among the rest do.
+- **Order on the page:** a day reads in the order things happened. Catch-up notes come first, then the day's own
+  notes, musts and the rest together, each placed by the first line that showed its subject that day; lines in the
+  same second go by subject id. A late addition or a correction comes last. Care decides whether a subject is written,
+  never where it stands.
 
 ## The habits as data
 
@@ -134,11 +138,12 @@ until then the table holds placeholders nothing reads.
 | `busy_ratio` | Candidates over budget that make a day busy |
 | `late_rate` | The chance a written subject with a late slot gets its late addition |
 | `misremember_rate`, `correct_after_days` | The chance a first telling is misremembered, and the shortest wait for its correction |
+| `marks` (per mark kind), `marks_most` | The chance a mark the day holds is drawn on its page, and the most event marks one day keeps |
 
 ## Determinism
 
 Each roll is a fixed hash of `save id | journal | day | subject | purpose` (purpose one of write, late, misremember,
-order), mapped to [0, 1): the SHA-256 of the key's UTF-8 bytes joined by `|`, its first eight bytes big-endian over 2^64, never Python's salted `hash()`. No draw depends on a
+order; a mark's roll is keyed by its kind in the subject's place, purpose mark), mapped to [0, 1): the SHA-256 of the key's UTF-8 bytes joined by `|`, its first eight bytes big-endian over 2^64, never Python's salted `hash()`. No draw depends on a
 counter, so a new subject or a new purpose shifts no other roll. The shuffle bag's position is a count over the stored
 rows. With the stored rows, the history, the content and the habits fixed, a day composes to the same notes on every
 build and every pod; storing it once keeps a day fixed after the content or the habits change. The composer runs only
@@ -173,7 +178,7 @@ the blanket."
 The loader's checks name ids and fields, never text: every subject has a first slot; every `beat`, `person` and
 `routine` subject has a catch-up slot; misremember and correction come together, and only on a `routine` subject,
 never a `beat`, `person` or `worry` (owner, 2026-11-14: the journal never misleads about the story); a source names a
-cause the content writes, and no cause feeds two subjects; each `line` person has a person subject for each way that
+cause the content writes a kept line of (a fight's won and lost lines are drawn by the page, never saved), and no cause feeds two subjects; each `line` person has a person subject for each way that
 moves them; every slot key has text; no entry is a `days` page. Each check is shown red on a planted chapter first. A
 cause is a source, so two people one outcome joins are two causes; only a `person` feeds from a lane and only a
 `crowd` from a way's mentions; and a beat that lands by either of two triggers has a subject for each.
@@ -190,6 +195,44 @@ a later one is begun, never changes. Opened carries every written day; Step carr
 unread and dots the Journal button. The creatures and places sections, their unlocks and their numbers are unchanged.
 The `days` entries and notes that were the days pages before the written days are retired through the release lock
 (`renames.toml`); a save keeps their unlocks, and their loader-made triggers go (engine `DESIGN.txt`, "Retired").
+
+## Marks on the page
+
+Pages that are too clean don't read like a journal (owner, 2026-11-14). This amends "the journal pages are kept exactly
+as they are" (`redesign.md`, "Book"): the parchment, the hand and the drawings stay; marks are added, in two layers.
+
+**Wear**, on every page of the journal (days, creatures and places): one light mark, now and then two, from a set of everyday
+ones (a stray smudge, a faint thumbprint, specks where the ink skipped, a ring, a crease, scratches). Which, and
+where, are draws keyed by the save and the page's id, so a page looks the same each time it is opened and no two
+pages match. Wear has no history and no rate to keep, so the page draws it alone.
+
+**Event marks**, rarer and stronger, come from what the day held, never at random:
+
+| Mark | Caused by |
+|---|---|
+| `blood` | a subject the content marks `blood`: a fight, an injury, a kill |
+| `soot` | a subject marked `soot`: a day at the fire, smoke, burnt ground |
+| `water` | a subject marked `water`: rain, frost and thaw, a crossing |
+| `mud` | a subject marked `mud`: digging, building, tracks, a long day outside |
+| `smudge` | a day that opens with a catch-up: the entry written in a hurry after a busy or away stretch |
+
+A subject's mark is an explicit field where the content authors it (`mark`, optional), never read from its words. The
+composer chooses a day's marks with its notes (statement 21 of `saves/journal.py`): each kind the day's own and
+catch-up notes hold passes a seeded roll under its rate in `[journal_habits.marks]`, and a day keeps at most
+`marks_most`. Marks are stored with the day, so like the ink they never change once composed. Late additions and
+corrections are about another day and cause none.
+
+**Legibility.** A mark never covers the words. The page places each mark at a seeded spot, keeps it only where its box
+crosses no line of words, no day heading and no drawing, and otherwise tries the next spot; one that finds no room is
+not drawn. So marks sit in the margins, the gaps between days and the room beside short lines, often bleeding off an
+edge. They are drawn with the parchment's own multiply blend, wear at about a third of full strength and event marks
+at about four fifths, and a page carries at most two event marks besides its wear; no mark sits on another, so they
+never pile into one corner. A place is chosen against where the words lie at the page's size, so a page is marked the
+same each time at one size; only the newest days page gains words, so only its marks can move, to stay off them.
+
+**The art** is Starshine Scribbles' "Stains and Damage" (CC BY 4.0, credited in the game), bought art outside the repo:
+`tools/pagemarks.py` crops, cleans, recolours (blood is the splatter recoloured) and scales the overlays into
+`journal/marks/` on the assets volume with a manifest of each kind's variants, and the page picks a variant by seed.
 
 ## What must stay true
 

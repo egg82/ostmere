@@ -54,12 +54,15 @@ unlocks = [
 # The trip: uncapped, run in the mix held against damp wood (the page's mix offer on the full line). Its three takes
 # are the three stores that overflow, in about the ratio the camp makes them, so no one take binds the others; the bar
 # is the 30 s floor and damp wood's take a full store (content/team/day-three.md, "Sinks after measuring"). It makes
-# nothing per run: scrap comes only as finds on its run count. Each lump a whole rate (work_s divides one item's
-# quantity units). Roots 15 a run, so with both foragers it still takes over half their roots (D-105).
+# nothing per run: the hunts go out along it, so while it is laid it holds the hands' side (b7.toml, where the side is
+# declared). Each lump a whole rate (work_s divides one item's quantity units). Roots 15 a run, so with both foragers it
+# still takes over half their roots (D-105).
 [[cards]]
 id = "field_track"
 presentation = "action"
 label_key = "c_field_track"
+upside_key = "up_field_track"
+stake = "side"
 work_s = 30
 skill = "scavenging"
 xp_per_hour = 360
@@ -429,12 +432,15 @@ unlocks = [
   { unlock_kind = "retired", id = "n1_build_watch" },
 ]
 
-# Her share at the watch fire against her gathering.
+# Her share at the watch fire against her gathering. It feeds the sides combat's chapters declare (b7.toml's larder,
+# day_eight.toml's gap), each holding an entry while it runs.
 [[cards]]
 id = "n1_watch"
 lane = "n1"
 presentation = "action"
 label_key = "c_n1_watch"
+upside_key = "up_watch"
+stake = "side"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]
@@ -617,6 +623,7 @@ late = { keys = ["j_n2_late"] }
 id = "s_b5"
 kind = "beat"
 source = { source_kind = "card", id = "bank_hearth" }
+mark = "soot"
 first = { keys = ["j_b5_first"] }
 catchup = { keys = ["j_b5_catchup"] }
 
@@ -1030,6 +1037,7 @@ l_shelf_3 = "story"
 store_arrivals = "arrivals"
 c_walk_edge = "Scout past the firelight"
 c_field_track = "Lay the track further out"
+up_field_track = "{pct} hunting strength while you lay it"
 c_track_end = "Walk the track to its end"
 store_scrap = "scrap"
 store_clay = "clay"
@@ -1038,7 +1046,7 @@ c_larder_floor = "Lay a larder floor"
 up_larder_floor = "{pct} root capacity"
 c_rack_roof = "Roof over the drying wood"
 up_rack_roof = "{pct} drying speed"
-c_clay_hearth = "Add a clay layer to the hearth"
+c_clay_hearth = "Add a clay layer round the fire"
 up_clay_hearth = "{pct} stew from the pot"
 lane_hearth = "Hearth"
 c_cure_hearth = "Dry the new clay layer"
@@ -1060,6 +1068,7 @@ c_watch_fire = "Build a fire at the gap"
 c_n1_build_watch = "Build a fire at the gap"
 store_watch_done = "fire at the gap"
 c_n1_watch = "Keep the fire at the gap"
+up_watch = "{pct} larder and gap strength while kept"
 o_stay = "Who builds his bay?"
 a_make_room = "You build it"
 a_make_room_cost = "{d} of your time"
@@ -1101,8 +1110,8 @@ aim_three = "keep three fed."
 aim_warm = "find out why the ground is warm."
 l_edge_1 = "scrub, thorn, thorn, a sunk track. the camp is easy to find."
 l_edge_2 = "the ash is thinnest where you started. you check twice."
-l_track_first = "a run: out on the laid wood to the cairn, and back."
-l_stream = "ash everywhere but the water. the clay on the bank is warm."
+l_track_first = "a run: out on the laid wood to a cairn, and back."
+l_stream = "ash on everything but a stream. the clay on its bank is warm."
 l_field_1 = "you laid the track all this way for furrows."
 l_field_2 = "the track's whole yield: a rusted ploughshare. scrap."
 l_larder_1 = "a course of stone, so the roots stop sitting in wet."
@@ -1114,12 +1123,12 @@ l_roof_2 = "thatch of anything at all. it shows."
 l_roof_done = "rain runs dark off the roof. what hangs under it stays pale."
 l_hearth_1 = "one course of clay. a mud ring, so far."
 l_hearth_2 = "more clay, pressed onto the dry course."
-l_hearth_3 = "a third course. everyone steps round it to the fire."
+l_hearth_3 = "a third course. everyone reaches over it to the fire."
 l_hearth_done = "the fourth course goes on. a whole hearth, drying."
 l_stew_first = "the first pot of stew. lucy eats hers standing."
 l_night_3a = "two howls trade across the dark, closer in."
 l_night_3b = "lucy piles on wood without a word. nothing comes."
-l_morning_4 = "frost out to the thorn. the stone stays dark."
+l_morning_4 = "frost out to the thorn. the stone round the fire stays dark."
 l_watch_1 = "lucy lays stones at the gap. she brings more."
 l_watch_2 = "room inside for a fire, facing down the track."
 l_watch_lit = "lucy keeps her fire, stick by stick, looking out."

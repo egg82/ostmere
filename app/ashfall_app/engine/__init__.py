@@ -28,8 +28,8 @@ from .modifiers import (
     ThreatStrength, WorkRef, modified_rate,
 )
 from .orders import (
-    AfterTime, AtLeast, AtMost, CardCount, Condition, LaneRules, Order, OrderVerb, QueueEntry, Running, SkillLevel,
-    StoreValue, Subject, Unlocked,
+    MAX_GUARDS, AfterTime, AtLeast, AtMost, CardCount, Condition, GuardedLatch, LaneRules, Latch, Order, OrderVerb,
+    QueueEntry, Running, SkillLevel, StoreValue, Subject, Unlocked,
 )
 from .offers import AnswerDef, OfferDef
 from .plan import OrderState
@@ -56,7 +56,7 @@ from .spent import spent_stores
 from .view import View, view
 from .fightview import FightView
 from .viewparts import (
-    AnswerView, CardView, CompletedCard, Contribution, HeldView, LaneBar, LedgerLine, MenuNode, Need, OfferView, RunBy,
+    AnswerView, CardView, CompletedCard, Contribution, GuardView, HeldView, LaneBar, LedgerLine, MenuNode, Need, OfferView, RunBy,
     SkillBar, SkillPhase, StandingBar,
 )
 
@@ -83,7 +83,7 @@ __all__ = [
     "SideDef", "ThreatDef", "StrengthExplanation", "explain_strength", "strength",
     "modified_rate",
     "AfterTime", "AtLeast", "AtMost", "CardCount", "Condition", "LaneRules", "Order", "OrderVerb", "OrderState", "QueueEntry", "Running",
-    "SkillLevel", "StoreValue", "Subject", "Unlocked",
+    "SkillLevel", "StoreValue", "Subject", "Unlocked", "MAX_GUARDS", "GuardedLatch", "Latch",
     "PacingCurve", "Rules", "SkillDef", "StandingDef", "StoreDef", "validate_rules",
     "NODE_PREFIX", "NodeDef", "NodeTarget", "PrestigeDef", "Prestige", "PrestigeRefusal", "PrestigeRefused", "UndoPick",
     "MovePick",
@@ -94,7 +94,7 @@ __all__ = [
     "Unlock", "UnlockKind", "unlock_key",
     "BP", "QUANTITY_SCALE", "RATE_SCALE", "SECONDS_PER_HOUR", "ceil_div", "per_hour", "units",
     "DeleteMix", "SaveMix", "SetOrders", "SetQueue", "Verb",
-    "CardView", "CompletedCard", "Contribution", "HeldView", "LaneBar", "LedgerLine", "MenuNode", "Need", "RunBy", "SkillBar", "SkillPhase",
+    "CardView", "CompletedCard", "Contribution", "GuardView", "HeldView", "LaneBar", "LedgerLine", "MenuNode", "Need", "RunBy", "SkillBar", "SkillPhase",
     "StandingBar",
     "AnswerKind", "AnswerOffer", "AnswerView", "OfferView", "FightView",
     "View", "store_need", "view", "Pending", "pending", "spent_stores",

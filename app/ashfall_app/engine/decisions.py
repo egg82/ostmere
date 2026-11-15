@@ -4,7 +4,8 @@ from dataclasses import replace
 
 from . import plan
 from .checks import (
-    check_condition, check_delete, check_hand_tap, check_mixes, check_order_verb, check_player_switch, check_queue_verb,
+    check_condition, check_delete, check_guards, check_hand_tap, check_mixes, check_order_verb, check_player_switch,
+    check_queue_verb,
 )
 from .answering import answered
 from .answers import AnswerKind, AnswerOffer
@@ -19,7 +20,7 @@ from .installs import requeued
 from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
 from .offerstate import acting, refusal
-from .orders import AfterTime, Condition, Order, OrderVerb, initial_latch, rule_on
+from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, rule_on
 from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
@@ -214,6 +215,7 @@ def _applied(save: Save, rules: Rules, verb: PlanVerb) -> tuple[Save, bool]:
         for o in verb.orders:
             refuse_by_hand(o.then)
             check_condition(rules, o.when)
+            check_guards(rules, o.unless)
             check_order_verb(rules, save.mixes, o.then)
         latches = tuple(_kept_latch(save, rules, o) for o in verb.orders)
         return with_running_mix(save, rules, replace(save, orders=verb.orders, latches=latches)), True
@@ -231,13 +233,14 @@ def failed_tap(save: Save, rules: Rules, verb: Verb) -> CardId | None:
     return verb.card if isinstance(verb, TapCard) and blocker(save, rules, verb.card) is not None else None
 
 
-def _kept_latch(save: Save, rules: Rules, order: Order) -> bool:
-    """The latch of the first order in save.orders equal to `order`, matched as rulelog.py matches them, so a kept or
-    moved rule holds its place in its band; else latch_now, for a new or edited one (DESIGN.txt, "Rule changes")."""
+def _kept_latch(save: Save, rules: Rules, order: Order) -> Latch:
+    """The latch of the first order in save.orders equal to `order` (guards included), matched as rulelog.py matches
+    them, so a kept or moved rule holds its place in every band; else latch_now of its `when` and of each guard, for a
+    new or edited one (DESIGN.txt, "Rule changes", "RULE GUARDS")."""
     for old, on in zip(save.orders, save.latches):
         if old == order:
             return on
-    return latch_now(save, rules, order.when)
+    return latch_of(latch_now(save, rules, order.when), tuple(latch_now(save, rules, g) for g in order.unless))
 
 
 def latch_now(save: Save, rules: Rules, cond: Condition) -> bool:

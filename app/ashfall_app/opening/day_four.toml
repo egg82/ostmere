@@ -142,12 +142,14 @@ requires = [
 ]
 outcome = { line_keys = ["l_his_watch"], unlocks = [{ unlock_kind = "card", id = "n2_watch" }] }
 
-# His share at the watch fire against his woodcutting, as hers; it makes nothing yet (week 2's packs read it).
+# His share at the watch fire against his woodcutting, as hers, feeding the same sides.
 [[cards]]
 id = "n2_watch"
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_watch"
+upside_key = "up_watch"
+stake = "side"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]
@@ -303,6 +305,7 @@ modifiers = [{ target = "cap", id = "stew", kind = "mul_bp", amount_bp = 15000, 
 id = "s_b6"
 kind = "beat"
 source = { source_kind = "card", id = "sit_up_5" }
+mark = "soot"
 first = { keys = ["n_day_b6"] }
 catchup = { keys = ["j_b6_catchup"] }
 late = { keys = ["j_b6_late"] }
@@ -311,6 +314,7 @@ late = { keys = ["j_b6_late"] }
 id = "s_sign"
 kind = "worry"
 source = { source_kind = "trigger", id = "t_sign" }
+mark = "blood"
 first = { keys = ["j_sign_first"] }
 
 # ---------- features ----------
@@ -405,11 +409,11 @@ store_dawn_6 = "dawn"
 action_dawn_6 = "Dawn"
 camp_pays_11 = "stew holds {to}, was {from}"
 aim_dry = "keep the fire lit through the fog."
-aim_stone = "find out what the stone does."
+aim_stone = "find out what the hearth's stone does."
 l_morning_5 = "first light. past the scrub, all white."
 l_fog_1 = "wood from the stack bends before it snaps."
-l_fog_roofed = "the hang under the roof is dry. you don't mention it."
-l_fog_open = "you wipe the hang dry. the drip comes back."
+l_fog_roofed = "the wood under the roof is dry. you don't mention it."
+l_fog_open = "you wipe the wood on the wall dry. the drip comes back."
 l_sign_1 = "half a deer on the track. you count prints and run out of fingers."
 l_sign_2 = "the same prints ring the camp. none come in."
 l_his_watch = "{n2} sits at the gap, the shaft on his knees."
@@ -420,8 +424,8 @@ l_stack4_1 = "{n2} lays the logs bark up. lucy turns them over."
 l_stack4_2 = "he laughs. she stops at the last row."
 l_night_5 = "the wet wood smokes. nobody moves back."
 l_b6_1 = "the coals sink to a red thread. a twig on them. nothing."
-l_b6_2 = "your hand on the stone. the twig steams, then catches."
-l_b6_3 = "you scrub your fingers. the grey stays. lucy moves to the far side."
+l_b6_2 = "your hand on the hearth's warm stone. the twig steams, then catches."
+l_b6_3 = "you scrub your fingers. the grey on them stays. lucy moves to the far side."
 l_camp_11 = "the pot takes two hands now, and a cloth."
 pays_find_for_11 = "a soft root bank, {pct} foraging speed"
 l_find_for_11 = "a soft bank. the roots come up whole."

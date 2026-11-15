@@ -50,9 +50,9 @@ def test_a_step_stores_its_days_and_the_locking_read_reads_them_once_a_day_is_du
     account, sid = new_save(conn)
     assert seen(conn, account, sid, T0 + DAY / 2) == journal.Seen(0, True, None, None)
     step.write_step(conn, sid, T0, written(), [(5, "k"), (6, "other"), (3 * 86400, "k")], None, None,
-                    [step.JournalDay(0, NOTES_A, None), step.JournalDay(1, [], "busy")])
-    stored = [journal.DayRecord(0, [{"subject": "s_a", "slot": "first", "key": "k.a"}], None),
-              journal.DayRecord(1, [], "busy")]
+                    [step.JournalDay(0, NOTES_A, None, ["soot", "smudge"]), step.JournalDay(1, [], "busy", [])])
+    stored = [journal.DayRecord(0, [{"subject": "s_a", "slot": "first", "key": "k.a"}], None, ["soot", "smudge"]),
+              journal.DayRecord(1, [], "busy", [])]
     assert journal.days(conn, sid) == stored
     assert seen(conn, account, sid, T0 + 2 * DAY) == journal.Seen(2, True, None, None)
     assert seen(conn, account, sid, T0 + 3 * DAY) == journal.Seen(2, True, stored, [(5, "k")])
@@ -64,7 +64,7 @@ def test_a_locking_read_that_waited_on_another_write_says_its_snapshot_is_stale(
     found: list[journal.Seen] = []
     with engine.connect() as writer:
         writer.begin()
-        step.write_step(writer, sid, T0, written(decisions=1), [], None, None, [step.JournalDay(0, NOTES_A, None)])
+        step.write_step(writer, sid, T0, written(decisions=1), [], None, None, [step.JournalDay(0, NOTES_A, None, [])])
 
         def read() -> None:
             with engine.begin() as c:
@@ -84,9 +84,9 @@ def test_a_locking_read_that_waited_on_another_write_says_its_snapshot_is_stale(
 
 def test_a_day_the_save_already_holds_is_left_as_stored(conn: Connection):
     _, sid = new_save(conn)
-    step.write_step(conn, sid, T0, written(), [], None, None, [step.JournalDay(0, NOTES_A, None)])
+    step.write_step(conn, sid, T0, written(), [], None, None, [step.JournalDay(0, NOTES_A, None, [])])
     step.write_step(conn, sid, T0 + DAY, written(decisions=1), [(9, "k")], None, None,
-                    [step.JournalDay(0, NOTES_B, None), step.JournalDay(1, NOTES_B, None)])
+                    [step.JournalDay(0, NOTES_B, None, []), step.JournalDay(1, NOTES_B, None, [])])
     assert [(d.day, d.notes[0]["key"]) for d in journal.days(conn, sid)] == [(0, "k.a"), (1, "k.b")]
     assert [ln.key for ln in s.last_lines(conn, sid, 10)] == ["k"], "the step's other writes did not land"
 
@@ -99,7 +99,7 @@ def test_lines_of_reads_only_the_keys_asked_before_the_time_asked(conn: Connecti
 
 def test_a_save_deleted_for_good_takes_its_days(conn: Connection):
     _, sid = new_save(conn)
-    step.write_step(conn, sid, T0, written(), [], None, None, [step.JournalDay(0, NOTES_A, None)])
+    step.write_step(conn, sid, T0, written(), [], None, None, [step.JournalDay(0, NOTES_A, None, [])])
     s.set_deleted(conn, sid, T0)
     assert s.purge_deleted(conn, T0 + DAY, 10) == 1
     assert journal.days(conn, sid) == []

@@ -1,0 +1,55 @@
+"""A card that takes stores gives the player something they can see (docs/decisions/pacing.md, "A sink shows what it
+buys"). An uncapped card that takes stores and gives nothing by itself, cures nothing and is read by no condition past
+its first completion is a bare sink: it declares its `stake`, what it feeds, and its face says it (upside_key); the
+whole content bears the stake out. Ids and fields only, never text. Raises ValueError naming the cards (refs.fail)."""
+from typing import TYPE_CHECKING
+
+from .fight_refs import fights
+from .refs import conditions, fail
+
+if TYPE_CHECKING:
+    from .entries import CardEntry, OutcomeEntry
+    from .schema import Opening
+
+
+def check_stakes(o: "Opening") -> None:
+    """Every bare sink declares its stake, and every stake has an upside_key. Holds of each chapter's state, since the
+    stake is declared where the card is."""
+    sinks = bare(o)
+    missing = [c.id for c in o.cards if c.stake is None and c.id in sinks]
+    if missing:
+        fail(f"cards {', '.join(missing)}", "take stores and give nothing: each declares its stake (what it feeds) and "
+                                            "says it with an upside_key")
+    for c in o.cards:
+        if c.stake is not None and c.upside_key is None:
+            fail(f"card {c.id}", "has a stake and no upside_key, so its face does not say what it feeds")
+
+
+def check_stakes_hold(o: "Opening") -> None:
+    """A "side" stake: once any fight exists, the card holds an entry on a side some fight is fought on (its
+    while_running, which a later chapter may add)."""
+    fought = {f.side for _, f in fights(o)}
+    if not fought:
+        return
+    for c in o.cards:
+        if c.stake == "side" and not any(w.side in fought for w in c.while_running):
+            fail(f"card {c.id}", "has the stake side but holds no entry on a side any fight is fought on")
+
+
+def bare(o: "Opening") -> set[str]:
+    """The bare sinks: uncapped cards that take stores and give nothing by themselves (no make, nothing in the outcome
+    or finish, no fight), take no bad store (one a chip reads or a fight wounds into: a cure), and are read by no
+    condition running or past their first completion."""
+    bad = {ch.when.id for ch in o.chips if ch.when.subject_kind == "store"} | {a.store for _, f in fights(o) for a in f.wounds}
+    read = {x.id for _, x, _ in conditions(o) if x.subject_kind == "running" or (x.subject_kind == "card_count" and x.value > 1)}
+    return {c.id for c in o.cards if c.cap is None and c.id not in read and _takes(c) and not _takes(c) & bad
+            and not (c.makes or _gives(c.outcome) or _gives(c.finished) or c.fight is not None)}
+
+
+def _takes(c: "CardEntry") -> set[str]:
+    return {a.store for a in (*c.inputs, *c.drains)} | {f.store for f in c.costs}
+
+
+def _gives(out: "OutcomeEntry") -> bool:
+    return any((out.stores, out.unlocks, out.modifiers, out.raises, out.starts, out.line_keys, out.orders, out.queues,
+                out.joins, out.retire_orders, out.leaves))

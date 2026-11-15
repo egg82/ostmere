@@ -14,7 +14,7 @@ from .mixes import MAX_MIXES, CardShare, Mix, MixLayer, SubMix, SwitchMix, flatt
 from .plan import mix_layer
 from .modifiers import Modifier, ModifierKind, lowers_cap, lowers_threat
 from .nodes import NODE_PREFIX
-from .orders import Condition, OrderVerb, Running, Unlocked
+from .orders import MAX_GUARDS, Condition, OrderVerb, Running, Unlocked
 from .rules import Rules
 from .rules_check import condition_problem, is_lane_rules, subject_problem
 from .state import Save
@@ -90,6 +90,15 @@ def check_condition(rules: Rules, cond: Condition) -> None:
     problem = condition_problem(rules, cond)
     require(problem is None, problem or "")
     require(not is_lane_rules(cond), "a lane-rules condition is only a trigger's")
+
+
+def check_guards(rules: Rules, guards: tuple[Condition, ...]) -> None:
+    """An order's guards: at most MAX_GUARDS, none twice, each one SetOrders would accept as a `when` (DESIGN.txt,
+    "RULE GUARDS")."""
+    require(len(guards) <= MAX_GUARDS, f"a rule holds at most {MAX_GUARDS} guards")
+    require(len(set(guards)) == len(guards), "a rule holds no guard twice")
+    for g in guards:
+        check_condition(rules, g)
 
 
 def check_switch(mixes: tuple[Mix, ...], verb: SwitchMix) -> None:

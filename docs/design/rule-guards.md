@@ -86,12 +86,13 @@ order's latch is true" (which mix runs, which tap starts, which lane a rule hold
 - **A guard keeps a band.** The page writes a guard as one level and sets its release one item past it: "unless
   smoked is 10 or more" blocks from 10 and lets go under 9. A guard on a share level stores the same share for both
   levels and takes the one-item band SHARE LEVELS gives a condition whose levels meet, so "unless smoked is full"
-  blocks at full and lets go one item under. Without the band a rule whose own mix fills the guarded store would
+  blocks at full and lets go once the store is under one item short of full. Without the band a rule whose own mix fills the guarded store would
   switch on and off every second at the level.
 - **A store's maximum rising** moves a share guard with it at that instant, as it moves any share level: the guard's
   latch keeps its state and is read against the new quantities, so a rule paused on "full" resumes at the raise if the
-  store is now a full item short.
-- **Several guards**: the rule is paused while any one is latched. Each has its own latch and band.
+  store is now more than a full item short (exactly one short is not under the release, and stays paused).
+- **Several guards**: the rule is paused while any one is latched. Each has its own latch and band, kept whether or
+  not the rule's `when` holds, so a guard reads the same when the `when` turns true.
 - **Editing a rule** follows today's rule for orders: `SetOrders` matches by equality, guards and actions included. A
   rule kept or moved keeps its `when` latch and every guard latch; a rule edited in any part is a new rule, each
   latch set from its threshold alone.

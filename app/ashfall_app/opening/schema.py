@@ -168,8 +168,8 @@ class Chapter(Entry):
     """The id of this chapter's last moment, one of its `features`: required of a chapter that declares features. The
     content's end card is attached to the last shipped chapter's (merge_chapters)."""
     while_running: dict[str, list[WhileRunningEntry]] = {}
-    """Entries held while an earlier card runs, by card id, for a card that holds none: a side this chapter declares
-    raised by a card an earlier one shipped (Safe under the release lock: the card pays more)."""
+    """Entries held while an earlier card runs, by card id, after any it holds: a side this chapter declares raised by a
+    card an earlier one shipped (Safe under the release lock: the card pays more)."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
 

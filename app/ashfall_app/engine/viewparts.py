@@ -210,3 +210,12 @@ class OfferView:
     offer: OfferId
     answer: AnswerId | None
     answers: tuple[AnswerView, ...]
+
+
+@dataclass(frozen=True)
+class GuardView:
+    """One guard of a rule (DESIGN.txt, "RULE GUARDS"): `on` its latch; `lets_go` the quantity of the watched store it
+    lets go at as the engine reads it now (its release, a share level read off the cap now), None off a store."""
+
+    on: bool
+    lets_go: int | None

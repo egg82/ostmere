@@ -9,7 +9,7 @@ from ..opening.refs import outcomes
 from ..opening.schema import Opening
 from ..opening.setting_entries import FadeEntry, JournalHabitsEntry
 from ..opening.subject_entries import SlotEntry, SourceEntry, SubjectEntry
-from .journal import Band, Fade, Habits, Press, Source, Subject
+from .journal import Band, Fade, Habits, MarkRates, Press, Source, Subject
 
 DIARY_HAND = "ink"
 """The hand of a note whose slot names none: the `days` pages' own."""
@@ -48,7 +48,8 @@ def habits(h: JournalHabitsEntry) -> Habits:
                   floor=h.floor, halflife=h.halflife, beat_refresh=h.beat_refresh, lines_start=h.lines_start,
                   lines_floor=h.lines_floor, lines_halflife=h.lines_halflife, busy_ratio=h.busy_ratio,
                   late_rate=h.late_rate, misremember_rate=h.misremember_rate,
-                  correct_after_days=h.correct_after_days)
+                  correct_after_days=h.correct_after_days, marks=MarkRates(**h.marks.model_dump()),
+                  marks_most=h.marks_most)
 
 
 def _fade(f: FadeEntry) -> Fade:
@@ -81,7 +82,7 @@ def _subject(s: SubjectEntry) -> Subject:
     return Subject(id=s.id, kind=s.kind, source=_source(s.source), away_days=s.away_days, first=_k(s.first),
                    repeat=_k(s.repeat), catchup=_k(s.catchup),
                    mention=tuple(Band(b.at_least, tuple(b.keys)) for b in s.mention),
-                   late=_k(s.late), misremember=_k(s.misremember), correction=_k(s.correction))
+                   late=_k(s.late), misremember=_k(s.misremember), correction=_k(s.correction), mark=s.mark)
 
 
 def _k(slot: SlotEntry | None) -> tuple[str, ...]:

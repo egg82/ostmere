@@ -589,6 +589,8 @@ busy_ratio = 2
 late_rate = 0.15
 misremember_rate = 0.05
 correct_after_days = 2
+marks_most = 2
+marks = { blood = 0.6, soot = 0.35, water = 0.4, mud = 0.3, smudge = 0.5 }
 
 # ---------- the journal ----------
 
@@ -600,6 +602,7 @@ feature = "book"
 id = "s_b2"
 kind = "beat"
 source = { source_kind = "card", id = "strike_fire" }
+mark = "soot"
 first = { keys = ["n_day_b2"] }
 catchup = { keys = ["j_b2_catchup"] }
 late = { keys = ["j_b2_late"] }
@@ -836,6 +839,8 @@ feature_book = "book"
 "ui.queue.plan" = "Plan"
 "ui.queue.full" = "Next is full"
 "ui.hands.next" = "next: {card}"
+"ui.hands.then" = "then {mix}"
+"ui.hands.until_goal" = "until {goal}"
 "ui.rule.otherwise" = "Otherwise"
 "ui.rule.on" = "on now"
 "ui.rule.up" = "Move up"
@@ -1093,7 +1098,6 @@ feature_book = "book"
 "ui.stint.landed" = "goal landed {ago} ago"
 "ui.stint.made" = "made {n} {store}"
 "ui.stint.made_two" = "made {n} {store} and {m} {store_b}"
-"ui.mix.yielded" = "paused while busy"
 "ui.mix.spent" = "{store} is used up"
 "ui.mix.running_now" = "running now"
 "ui.mix.from" = "+{pct} from {card}"
@@ -1198,6 +1202,7 @@ feature_book = "book"
 "ui.games.new" = "New game"
 "ui.games.full" = "You can keep up to {max} games. Delete one to start another."
 "ui.games.limited" = "Too many new games today. Try again later."
+"ui.games.credits_stains" = "Page stains: Starshine Scribbles, Creative Commons Attribution licence"
 "ui.games.deleted_heading" = "Deleted"
 "ui.games.kept" = "Kept until {until}"
 "ui.games.restore" = "Restore"
@@ -1221,7 +1226,7 @@ feature_book = "book"
 l_up_1 = "you get an arm under you. it gives."
 l_up_2 = "knees under you this time. then not."
 l_up_3 = "up. the wall holds you there until the ground stops tilting."
-l_look = "walls, mostly. a roof over one corner. grey every way you look, nothing moving in it. your hands have been cold a long while."
+l_look = "walls, mostly, with a gap in them. a roof over one corner. grey every way you look, nothing moving in it. your hands have been cold a long while."
 l_coat = "inside the coat, a book with its first pages gone at the stitching. wrapped with it, a charcoal stick worn short."
 l_wood = "dead birch, snapped off by hand, wet through."
 l_nail = "under a fallen beam, a bent nail. you keep it."
@@ -1247,7 +1252,7 @@ l_tired = "your arms go heavy. you work at half the pace, and it wasn't much of 
 l_knap_1 = "the flint splits wrong and opens two of your fingers. wiping the blood off, you find a mark inside your wrist, old and neater than a scar."
 l_retire = "no more snapping dead wood by hand. the edge does it better."
 l_wc_2 = "you split the birch where you mean to now."
-l_stack = "you stack the cut birch by the wall. the ash greys the top logs and stops at the stone."
+l_stack = "you stack the cut birch by the wall. the ash greys the top logs and stops short of the wall."
 l_read = "by firelight, the first page after the torn ones isn't quite blank. something drawn on a page that's gone has pressed through: circles, round a circle."
 l_settled = "it's starting to look like somewhere to stay. you eat from the roots as you go, a little at a time."
 l_stool_first = "a seat first, then. the open fire eats wood while you sit."

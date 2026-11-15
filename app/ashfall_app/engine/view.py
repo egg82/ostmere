@@ -18,7 +18,7 @@ from .index import index
 from .motion import store_segment
 from .mixes import flatten_shares
 from .modifiers import Run, RunKind
-from .orders import when_latch
+from .orders import AfterTime, Condition, StoreValue, guard_latches, when_latch
 from .needs import store_need
 from .phaseview import skill_bar
 from .plan import (
@@ -29,6 +29,7 @@ from .rates import Running, contribution, lane_state, running, unlocked_standing
 from .rules import Rules
 from .rules_check import features
 from .segments import Segment, reach_time
+from .sharelevels import read_levels
 from .cardsides import card_costs
 from .coverage import all_covered, covered
 from .units import BP
@@ -36,7 +37,7 @@ from .state import Save
 from .offerstate import answer_card, answer_given, is_shown
 from .unlocks import PRESENT_ONLY, Unlock, UnlockKind, unlock_key
 from .viewparts import (
-    AnswerView, CardView, CompletedCard, Contribution, HeldView, LaneBar, LedgerLine, Need, OfferView, RunBy,
+    AnswerView, CardView, CompletedCard, Contribution, GuardView, HeldView, LaneBar, LedgerLine, Need, OfferView, RunBy,
     SkillBar, StandingBar,
 )
 from .decisions import cuts_in
@@ -97,6 +98,9 @@ class View:
     held: tuple[HeldView, ...] = field(default=(), repr=False)
     """The cards whose while_running entries are held now, in rules.cards order (DESIGN.txt, "ENTRIES HELD WHILE A
     CARD RUNS"). Left out of the repr, like the town's, so the recorded fingerprints stay those of a game with none."""
+    order_guards: tuple[tuple[GuardView, ...], ...] = field(default=(), repr=False)
+    """order_guards[i]: one per guard of orders[i], in the order of Order.unless (DESIGN.txt, "RULE GUARDS"). Left
+    out of the repr, like the town's, so the recorded fingerprints stay those of a game with no guard."""
 
 
 def view(save: Save, rules: Rules) -> View:
@@ -122,8 +126,17 @@ def view(save: Save, rules: Rules) -> View:
         order_states=order_states(save, rules), offers=_offers(save, rules),
         fights=fight_views(save, rules),
         running_town_mix=running_town_mix_id(save, rules), town_mix_order=town_mix_order(save, rules),
-        held=held_views(save, rules),
+        held=held_views(save, rules), order_guards=_order_guards(save, rules),
     )
+
+
+def _order_guards(save: Save, rules: Rules) -> tuple[tuple[GuardView, ...], ...]:
+    def lets_go(cond: Condition) -> int | None:
+        if isinstance(cond, AfterTime) or not isinstance(cond.subject, StoreValue):
+            return None
+        return read_levels(save, rules, cond).release
+    return tuple(tuple(GuardView(on, lets_go(g)) for g, on in zip(o.unless, guard_latches(latch)))
+                 for o, latch in zip(save.orders, save.latches))
 
 
 def _ledger(save: Save, rules: Rules, now: Running) -> tuple[LedgerLine, ...]:

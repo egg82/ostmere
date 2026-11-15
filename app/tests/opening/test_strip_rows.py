@@ -4,7 +4,7 @@ pinned stage never grows for the longest line ever written; this is the content 
 
 What the strip shows is read from the page (client/src/game/chronicle.ts, ROUTES: the kinds routed to the Story
 filter), and the rows and the size from client/src/game.css. Lines wrap at spaces only, which can only add rows, never
-hide one. A person's name slot is measured as the name it shows (tests/opening/test_line_length.py, shown)."""
+hide one. A person's name slot is measured as the name it shows (api/CONTRACT.txt, "Text and numbers", {<lane>})."""
 import re
 import tomllib
 from functools import cache
@@ -15,7 +15,6 @@ from PIL import ImageFont
 
 from ashfall_app.opening.line_kinds import LineKind
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, UNWRITTEN
-from tests.opening.test_line_length import shown
 
 APP = Path(__file__).resolve().parents[2]
 CLIENT = APP / "client" / "src"
@@ -39,8 +38,23 @@ def rows_allowed() -> int:
 
 
 @cache
-def font() -> ImageFont.FreeTypeFont:
-    size = css_var("t-story")
+def names() -> dict[str, str]:
+    """Each named lane's name, from every chapter: a slot names a person a chapter before it may have named."""
+    out: dict[str, str] = {}
+    for path in (*CHAPTERS, *IN_WRITING):
+        data = tomllib.loads(path.read_text())
+        out |= {x["id"]: data["text"][x["name_key"]] for x in data.get("lanes", []) if "name_key" in x}
+    return out
+
+
+def shown(text: str) -> str:
+    return re.sub(r"\{(\w+)\}", lambda m: names().get(m.group(1), m.group(0)), text)
+
+
+@cache
+def font(size_var: str = "t-story") -> ImageFont.FreeTypeFont:
+    """The italic face at a size game.css names (--t-story for the strip, --t-meta for the aim)."""
+    size = css_var(size_var)
     assert size.endswith("rem"), size
     return ImageFont.truetype(str(FONT), round(float(size.removesuffix("rem")) * ROOT_PX))
 
