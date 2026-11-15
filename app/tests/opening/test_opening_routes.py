@@ -142,7 +142,8 @@ def test_a_store_rule_the_page_writes_is_taken_both_ways_with_a_band(game: GameC
             "value_of_cap": False, "release_of_cap": False}
     empty = {"kind": "at_most", "watched": {"kind": "store_value", "store": "dry_wood"}, "value": 2 * q - 1,
              "release": 4 * q - 1, "value_of_cap": False, "release_of_cap": False}
-    orders = [{"when": full, "then": tap("gather_wood")}, {"when": empty, "then": tap("gather_wood")}]
+    orders = [{"when": full, "then": tap("gather_wood"), "unless": [], "or_else": []},
+              {"when": empty, "then": tap("gather_wood"), "unless": [], "or_else": []}]
     after = step(game.decide(g.save_id, {"kind": "set_orders", "orders": orders}, after=0))
     assert [o.model_dump(mode="json") for o in after.view.orders] == orders
     assert after.view.orders_on == [True, True]
