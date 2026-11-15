@@ -1314,7 +1314,7 @@ JOURNAL
   - load a sketch when its page is drawn; one that fails to load leaves its room empty (no broken-image mark, no
     stand-in drawing) and is reported to /api/client-errors with the sketch id.
   - mark the pages (docs/design/journal.md, "Marks on the page"): on every page, one or two wear marks chosen and
-    placed by draws keyed by the save and the page's id; on a days page, each of its days' marks, at most three a
+    placed by draws keyed by the save and the page's id; on a days page, each of its days' marks, at most two a
     page, a variant chosen and placed by draws keyed by the save, the day and the kind. The art is
     /assets/journal/marks/ and its manifest.json; a mark is kept only where its box crosses no line of words, no day
     heading and no drawing, else the next draw is tried, and one that finds no room is not drawn. A manifest or

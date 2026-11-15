@@ -50,10 +50,10 @@ SMEAR_TOP = (0, 0, 1, 0.55)
 
 PICKS = (
     Pick("blood", 1, DRIED_BLOOD), Pick("blood", 14, DRIED_BLOOD, SMEAR_TOP),
-    Pick("soot", 4, SOOT), Pick("soot", 8, SOOT),
+    Pick("soot", 4, SOOT), Pick("soot", 14, SOOT, SMEAR_TOP),
     Pick("water", 5), Pick("water", 6), Pick("water", 3, part=NO_EDGE_LINE),
-    Pick("mud", 10, MUD), Pick("mud", 7, MUD), Pick("mud", 6, MUD),
-    Pick("smudge", 14, HAND_INK, SMEAR_TOP), Pick("smudge", 7, HAND_INK), Pick("smudge", 8, HAND_INK),
+    Pick("mud", 7, MUD), Pick("mud", 6, MUD),
+    Pick("smudge", 14, HAND_INK, SMEAR_TOP), Pick("smudge", 7, HAND_INK),
     Pick("wear", 9), Pick("wear", 13, HAND_INK), Pick("wear", 16), Pick("wear", 3, part=NO_EDGE_LINE),
 )
 

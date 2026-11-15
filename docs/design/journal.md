@@ -201,7 +201,7 @@ The `days` entries and notes that were the days pages before the written days ar
 Pages that are too clean don't read like a journal (owner, 2026-11-14). This amends "the journal pages are kept exactly
 as they are" (`redesign.md`, "Book"): the parchment, the hand and the drawings stay; marks are added, in two layers.
 
-**Wear**, on every page of the journal (days, creatures and places): one or two light marks from a set of everyday
+**Wear**, on every page of the journal (days, creatures and places): one light mark, now and then two, from a set of everyday
 ones (a stray smudge, a faint thumbprint, specks where the ink skipped, a ring, a crease, scratches). Which, and
 where, are draws keyed by the save and the page's id, so a page looks the same each time it is opened and no two
 pages match. Wear has no history and no rate to keep, so the page draws it alone.
@@ -226,8 +226,9 @@ corrections are about another day and cause none.
 crosses no line of words, no day heading and no drawing, and otherwise tries the next spot; one that finds no room is
 not drawn. So marks sit in the margins, the gaps between days and the room beside short lines, often bleeding off an
 edge. They are drawn with the parchment's own multiply blend, wear at about a third of full strength and event marks
-at about two thirds, and a page carries at most three event marks besides its wear. Only the newest days page gains
-words, so only its marks can move, and only to stay off new words.
+at about four fifths, and a page carries at most two event marks besides its wear; no mark sits on another, so they
+never pile into one corner. A place is chosen against where the words lie at the page's size, so a page is marked the
+same each time at one size; only the newest days page gains words, so only its marks can move, to stay off them.
 
 **The art** is Starshine Scribbles' "Stains and Damage" (CC BY 4.0, credited in the game), bought art outside the repo:
 `tools/pagemarks.py` crops, cleans, recolours (blood is the splatter recoloured) and scales the overlays into
