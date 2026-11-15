@@ -82,6 +82,14 @@ Order and lines
 Forward only
 20. `composed` is read as given, never recomposed: rows stored under other habits or subjects count as they stand, so
     changing the habits or the slots changes only days not yet composed.
+
+Marks
+21. A day's `marks` are the kinds of mark its page carries, in `MARK_KINDS` order, each at most once. A kind is *held*
+    on day d when the day has notes and: for `smudge`, one of them is by `catchup`; for any other kind, a note by a
+    slot other than `late` or `correction` is of a subject in `subjects` whose `mark` is that kind. A held kind is drawn
+    when `roll(save_id, d, kind, "mark") < getattr(habits.marks, kind)` (the kind in the subject's place), and `marks`
+    is the drawn kinds, the first `marks_most` of them. A day with no notes, a gap or a blank, has none. Marks never
+    change which notes a day has, nor their order.
 """
 import hashlib
 from dataclasses import dataclass
@@ -92,7 +100,12 @@ type SourceKind = Literal["trigger", "card", "lane", "mentions"]
 type Way = Literal["joined", "left"]
 type SlotName = Literal["first", "repeat", "catchup", "mention", "late", "misremember", "correction"]
 type Gap = Literal["busy", "away"]
-type Purpose = Literal["write", "late", "misremember", "order"]
+type Purpose = Literal["write", "late", "misremember", "order", "mark"]
+type MarkKind = Literal["blood", "soot", "water", "mud", "smudge"]
+
+MARK_KINDS: tuple[MarkKind, ...] = ("blood", "soot", "water", "mud", "smudge")
+"""Every kind of mark, in the order a day's marks are kept (statement 21). `smudge` is the day's own (a catch-up); the
+others are a subject's `mark`."""
 
 DAY_S = 86400
 
@@ -139,6 +152,8 @@ class Subject:
     late: tuple[str, ...] = ()
     misremember: tuple[str, ...] = ()
     correction: tuple[str, ...] = ()
+    mark: MarkKind | None = None
+    """The mark a day that writes this subject may carry (statement 21); never `smudge`."""
 
 
 @dataclass(frozen=True)
@@ -151,6 +166,17 @@ class Fade:
 class Press:
     base: float
     press: float
+
+
+@dataclass(frozen=True)
+class MarkRates:
+    """Each mark kind's chance of being drawn on a day that holds it (statement 21)."""
+
+    blood: float = 0.0
+    soot: float = 0.0
+    water: float = 0.0
+    mud: float = 0.0
+    smudge: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -170,6 +196,8 @@ class Habits:
     late_rate: float
     misremember_rate: float
     correct_after_days: int
+    marks: MarkRates = MarkRates()
+    marks_most: int = 0
 
 
 @dataclass(frozen=True)
@@ -183,11 +211,13 @@ class Note:
 
 @dataclass(frozen=True)
 class ComposedDay:
-    """One stored `save_journal` row: written when `notes` is non-empty; a gap (and why) when `gap` is set."""
+    """One stored `save_journal` row: written when `notes` is non-empty; a gap (and why) when `gap` is set; the marks
+    its page carries (statement 21)."""
 
     day: int
     notes: tuple[Note, ...]
     gap: Gap | None
+    marks: tuple[MarkKind, ...] = ()
 
 
 def roll(save_id: int, day: int, subject: str, purpose: Purpose) -> float:
