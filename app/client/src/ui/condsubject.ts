@@ -4,12 +4,10 @@
 // for a task's count of times done. What is offered is ruleoffers.subjectChoices's; numbers and conditions are
 // subjectrule.ts's.
 import type { View } from "../api/types";
-import { sectioned } from "../game/cardsections";
 import type { Catalog } from "../game/catalog";
 import { clampSubject, defaultSubject, subjectKey, subjectName, subjectNow, subjectRange, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
 import { stepper, type Stepper } from "./condlevels";
-import { sectionHead } from "./condrows";
 import { el, setText } from "./dom";
 
 /** The Levels and Tasks heads and their buttons; each button carries data-subject, read back to mark the one chosen. */
@@ -24,8 +22,7 @@ export function subjectRows(catalog: Catalog, view: View, choices: { levels: Sub
     return b;
   };
   const head = (key: string, rules: SubjectRule[]) => (rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rules.map(button)]);
-  const tasks = sectioned(catalog, choices.tasks, (r) => (r.kind === "count" ? r.card : null)).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
-  return [...head(UI.ruleLevels, choices.levels), ...(tasks.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleTasks)), ...tasks])];
+  return [...head(UI.ruleLevels, choices.levels), ...head(UI.ruleTasks, choices.tasks)];
 }
 
 /** Pressed on the subject button that is `rule`'s. */
