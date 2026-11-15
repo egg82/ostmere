@@ -13,6 +13,7 @@ from sqlalchemy import Engine, text
 from ashfall_app.db import accounts as a
 from ashfall_app.db import saves as s
 from ashfall_app.db.engine import open_database
+from tests.kills import kills
 
 T0 = datetime(2026, 10, 1, 12, tzinfo=UTC)
 CUTOFF = T0 + timedelta(days=30)
@@ -63,6 +64,7 @@ def prune_while_a_decision_commits(engine: Engine, url: str, decisions: int) -> 
     return pruned[0], left
 
 
+@kills(5, 6)
 def test_a_save_whose_first_decision_committed_during_the_prune_is_kept(engine: Engine, pg_url: str):
     pruned, left = prune_while_a_decision_commits(engine, pg_url, decisions=1)
     assert (pruned, left) == (0, 1)

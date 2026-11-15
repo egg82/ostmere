@@ -16,6 +16,7 @@ from ashfall_app.db import saves as s
 from ashfall_app.db import step
 from ashfall_app.db.engine import open_database
 from tests.db.test_records import DAY, T0, written
+from tests.kills import kills
 from tests.saves.journal_fixture import lock_waiters
 
 NOTES_A = [{"subject": "s_a", "slot": "first", "key": "k.a"}]
@@ -46,6 +47,7 @@ def seen(conn: Connection, account: int, sid: int, now: datetime) -> journal.See
     return found[1]
 
 
+@kills(3, 4)
 def test_a_step_stores_its_days_and_the_locking_read_reads_them_once_a_day_is_due(conn: Connection):
     account, sid = new_save(conn)
     assert seen(conn, account, sid, T0 + DAY / 2) == journal.Seen(0, True, None, None)
@@ -82,6 +84,7 @@ def test_a_locking_read_that_waited_on_another_write_says_its_snapshot_is_stale(
         assert seen(c, account, sid, T0 + 2 * DAY).fresh
 
 
+@kills(10)
 def test_a_day_the_save_already_holds_is_left_as_stored(conn: Connection):
     _, sid = new_save(conn)
     step.write_step(conn, sid, T0, written(), [], None, None, [step.JournalDay(0, NOTES_A, None, [])])

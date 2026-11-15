@@ -15,6 +15,7 @@ from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.journal import DAY_S, ComposedDay, Note
 from ashfall_app.saves.journal_rules import Look, journal_rules
 from tests.game_client import GameClient
+from tests.kills import kills
 from tests.saves.journal_fixture import JOURNAL, a_beat_line
 from tests.shipped_ruleset import ShippedRuleset
 
@@ -37,6 +38,7 @@ def test_the_spec_names_the_days_and_requires_them_on_step_and_opened():
     assert {"type": "integer", "minimum": 0, "maximum": 2**53 // DAY_S} in day_read["anyOf"]
 
 
+@kills(12)
 def test_a_step_carries_the_written_days_it_composed_and_an_open_every_one_stored_before_it(
         game: GameClient, pg_url: str, shipped_opening: Opening):
     key, subject = a_beat_line(shipped_opening)
@@ -61,6 +63,7 @@ def test_a_step_carries_the_written_days_it_composed_and_an_open_every_one_store
     assert again.json()["journal_days"] == days, "a day once served is served the same"
 
 
+@kills(13)
 def test_each_note_is_in_its_slots_hand_and_sketch_and_one_whose_slot_names_none_in_ink(
         shipped_ruleset: ShippedRuleset):
     looks = {("s_a", "first"): Look("pencil", "j_sketch"), ("s_a", "late"): Look("ink", None)}
@@ -84,6 +87,7 @@ def put_day(game: GameClient, save_id: int, body: dict[str, Any]) -> Any:
     return game.client.put(f"/api/saves/{save_id}/presentation", json=body)
 
 
+@kills(14)
 def test_newest_day_read_only_grows(game: GameClient):
     save_id = int(game.begin()["save"]["save_id"])
     assert put_day(game, save_id, {}).json()["newest_day_read"] is None

@@ -12,6 +12,7 @@ from sqlalchemy.exc import IntegrityError
 from ashfall_app.db import accounts as a
 from ashfall_app.db import reminders as r
 from ashfall_app.db.engine import open_database
+from tests.kills import kills
 
 T0 = datetime(2026, 11, 1, 12, tzinfo=UTC)
 LATER = T0 + timedelta(days=2)
@@ -70,6 +71,7 @@ def test_a_claim_that_waits_on_another_loses_when_it_commits(engine: Engine, pg_
     assert second == [False]
 
 
+@kills(7)
 def test_of_several_claims_at_once_exactly_one_wins(engine: Engine):
     device_id = device(engine)
     wins: list[bool] = []

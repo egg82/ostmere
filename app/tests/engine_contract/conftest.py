@@ -3,7 +3,6 @@
 import os
 from typing import cast
 
-import pytest
 from hypothesis import HealthCheck, Phase, settings
 
 _COMMON = settings(
@@ -17,7 +16,3 @@ settings.register_profile("contract", _COMMON, max_examples=20, phases=_NO_SHRIN
 settings.register_profile("ci", _COMMON, max_examples=200, phases=_NO_SHRINK)
 settings.register_profile("debug", _COMMON, max_examples=50)
 settings.load_profile(os.environ.get("HYPOTHESIS_PROFILE", "contract"))
-
-
-def pytest_configure(config: pytest.Config) -> None:
-    config.addinivalue_line("markers", "kills(*rows): the rows of the suite's MUTANTS_*.txt this test must turn red for")
