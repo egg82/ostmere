@@ -23,5 +23,5 @@ def _lane_rules(save: Save, rules: Rules, subject: LaneRules) -> int:
     """Orders tapping a known card on the lane whose `when` is not AfterTime(0); an unknown card is not counted."""
     cards = index(rules).cards
     return sum(1 for o in save.orders
-               if isinstance(o.then, TapCard) and o.then.card in cards and cards[o.then.card].lane == subject.lane
+               if any(isinstance(a, TapCard) and a.card in cards and cards[a.card].lane == subject.lane for a in o.actions)
                and o.when != AfterTime(0))

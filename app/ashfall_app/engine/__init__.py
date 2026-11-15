@@ -28,7 +28,7 @@ from .modifiers import (
     ThreatStrength, WorkRef, modified_rate,
 )
 from .orders import (
-    MAX_GUARDS, AfterTime, AtLeast, AtMost, CardCount, Condition, GuardedLatch, LaneRules, Latch, Order, OrderVerb,
+    MAX_ACTIONS, MAX_GUARDS, AfterTime, AtLeast, AtMost, CardCount, Condition, GuardedLatch, LaneRules, Latch, Order, OrderVerb,
     QueueEntry, Running, SkillLevel, StoreValue, Subject, Unlocked,
 )
 from .offers import AnswerDef, OfferDef
@@ -83,7 +83,7 @@ __all__ = [
     "SideDef", "ThreatDef", "StrengthExplanation", "explain_strength", "strength",
     "modified_rate",
     "AfterTime", "AtLeast", "AtMost", "CardCount", "Condition", "LaneRules", "Order", "OrderVerb", "OrderState", "QueueEntry", "Running",
-    "SkillLevel", "StoreValue", "Subject", "Unlocked", "MAX_GUARDS", "GuardedLatch", "Latch",
+    "SkillLevel", "StoreValue", "Subject", "Unlocked", "MAX_ACTIONS", "MAX_GUARDS", "GuardedLatch", "Latch",
     "PacingCurve", "Rules", "SkillDef", "StandingDef", "StoreDef", "validate_rules",
     "NODE_PREFIX", "NodeDef", "NodeTarget", "PrestigeDef", "Prestige", "PrestigeRefusal", "PrestigeRefused", "UndoPick",
     "MovePick",

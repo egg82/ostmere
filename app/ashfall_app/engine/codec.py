@@ -197,7 +197,7 @@ def _manifest_offer(o: OfferDef) -> Json:
     return found
 
 
-_OMITTED_WHEN_EMPTY = frozenset({("Order", "unless"), ("Outcome", "joins"), ("Outcome", "retire_orders"),
+_OMITTED_WHEN_EMPTY = frozenset({("Order", "unless"), ("Order", "or_else"), ("Outcome", "joins"), ("Outcome", "retire_orders"),
                                  ("Outcome", "leaves"), ("OfferDef", "kind"), ("AnswerDef", "role"), ("PhaseState", "parked")})
 """Fields left out of the encoding while empty, so rules that use none keep the digest they had before the field
 existed; decoding supplies the empty default."""

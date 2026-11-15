@@ -22,7 +22,7 @@ def covered(save: Save, rules: Rules, store: StoreId) -> bool:
     """Some order's verb (latched or not) or the queue's controlling entry makes this store; a dead verb covers
     nothing."""
     queued = live_queue_verb(save, rules)
-    verbs = [o.then for o in save.orders] + ([] if queued is None else [queued])
+    verbs = [a for o in save.orders for a in o.actions] + ([] if queued is None else [queued])
     return any(_makes(save, rules, v, store) for v in verbs if not is_dead(save, rules, v))
 
 
