@@ -2,6 +2,7 @@
 // what it waits on (chips, then stores; the editor fills in the amounts). Each button carries its choice in data-card,
 // data-mix, data-chip or data-store, which the editor reads to mark the one pressed.
 import type { ChipInfo, Order, OrderVerb, View } from "../api/types";
+import { sectioned } from "../game/cardsections";
 import type { Catalog } from "../game/catalog";
 import { ruleActions, ruleCondition } from "../game/guardwords";
 import { actionWords, mixLabel, ruleExists } from "../game/orders";
@@ -9,16 +10,25 @@ import type { DoChoice } from "../game/ruleoffers";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
 
-/** Do: its label, then a button per choice; a greyed mix is off. */
-export function doRow(catalog: Catalog, view: View, choices: DoChoice[], pick: (c: DoChoice) => void): HTMLElement[] {
-  return [el("span", "rules-label", catalog.text.get(UI.ruleDo)), ...choices.map((c) => {
-    const b = el("button", `quiet ${c.kind === "task" ? "cond-task" : "cond-mix"}`, c.kind === "task" ? catalog.cardLabel(c.card) : mixLabel(catalog, c.mix));
+/** A section's heading, on a row of its own above its tiles. */
+export const sectionHead = (heading: string): HTMLElement[] => (heading === "" ? [] : [el("span", "rules-label cond-subhead", heading)]);
+
+/** A button per choice with its label and its choice in data-card or data-mix (a greyed mix is off), under the
+ * Tasks page's section headings with the mixes last (game/cardsections.ts); `click` goes on each. */
+export function choiceButtons(catalog: Catalog, view: View, choices: DoChoice[], cls: (c: DoChoice) => string, click: (c: DoChoice) => void): HTMLElement[] {
+  return sectioned(catalog, choices, (c) => (c.kind === "task" ? c.card : null)).flatMap((g) => [...sectionHead(g.heading), ...g.items.map((c) => {
+    const b = el("button", cls(c), c.kind === "task" ? catalog.cardLabel(c.card) : mixLabel(catalog, c.mix));
     b.type = "button";
     if (c.kind === "task") b.dataset.card = c.card;
     else { b.dataset.mix = c.mix; b.disabled = view.greyed_mix_ids.includes(c.mix); }
-    b.addEventListener("click", () => pick(c));
+    b.addEventListener("click", () => click(c));
     return b;
-  })];
+  })]);
+}
+
+/** Do: its label, then the choices (choiceButtons). */
+export function doRow(catalog: Catalog, view: View, choices: DoChoice[], pick: (c: DoChoice) => void): HTMLElement[] {
+  return [el("span", "rules-label", catalog.text.get(UI.ruleDo)), ...choiceButtons(catalog, view, choices, (c) => `quiet ${c.kind === "task" ? "cond-task" : "cond-mix"}`, pick)];
 }
 
 /** When: its label, the chips, then the stores (each with a slot for its amount), then `more` (the levels and tasks);
