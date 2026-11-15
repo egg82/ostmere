@@ -122,6 +122,22 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   expect("the share is between source and amount", order, ["fight-source", "fight-share", "fight-amount"]);
 }
 
+// A source the content gives no words never shows as its id: opening its strength throws.
+{
+  const { ctx } = testContext();
+  const cards = new Cards(ctx, new NewMarks());
+  document.body.replaceChildren(cards.root);
+  const sources = [{ source: null, form: "base" as const, amount_bp: 6, share_bp: null }, { source: "no_such_entry", form: "add_bp" as const, amount_bp: 5000, share_bp: null }];
+  cards.update({ ...view, fights: view.fights.map((f) => (f.threat === "wolves" ? { ...f, power: { value: 8, sources } } : f)) }, null);
+  let thrown = "";
+  try {
+    cards.root.querySelector(".fight")?.querySelector<HTMLButtonElement>(".fight-strength")?.click();
+  } catch (e) {
+    thrown = String(e);
+  }
+  expect("an unworded source throws, naming it", thrown.includes("no_such_entry"), true);
+}
+
 // The standing fight, in the ledger with its tally.
 {
   const { ctx } = testContext();

@@ -11,11 +11,12 @@ import { el, setText, tapFeedback } from "./dom";
 type Side = "power" | "threat";
 const GAP = ["\u0001", "\u0002"] as const;   // where the two strengths go in the vs words
 
-/** A source id as its label: a card, skill, chip, store or feature the content names; else the id as served. */
+/** A source id as its label: a card, skill, chip, store or feature the content names. Throws on a source none names. */
 function sourceName(catalog: Catalog, id: string): string {
   const feature = catalog.content.feature_infos.find((f) => f.feature === id)?.label_key;
   const key = catalog.cards.get(id)?.label_key ?? catalog.skills.get(id)?.label_key ?? catalog.chips.get(id)?.label_key ?? catalog.stores.get(id)?.label_key ?? feature;
-  return key ? catalog.label(key) : id;
+  if (!key) throw new Error(`no label for strength source ${id}`);
+  return catalog.label(key);
 }
 
 /** A fight card's parts: its tap and When ready in a body of their own with the odds under it, so the button stays

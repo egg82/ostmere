@@ -339,7 +339,7 @@ const text: Record<string, string> = {
   "ui.prestige.reached": "{skill} reached its top {d} ago.",
   "ui.prestige.reached_now": "{skill} reached its top.",
   "ui.lesson.prestige": "{skill} is at its top. Push past lifts the top. Its level and everything it gave you stay.",
-  "card.hunt": "Hunt the ridge", "card.hunt.up": "meat and hide", "standing.raiders": "Raiders at the stores", "side.hands": "Your hands", "threat.wolves": "Wolves", "threat.raiders": "Raiders",
+  "card.poultice": "Make a poultice", "store.hurt": "Hurt", "card.hunt": "Hunt the ridge", "card.hunt.up": "meat and hide", "standing.raiders": "Raiders at the stores", "side.hands": "Your hands", "threat.wolves": "Wolves", "threat.raiders": "Raiders",
 };
 
 /** "Under n, until m" on a store, as content writes it (at_most at n items, release at m). */
@@ -352,7 +352,7 @@ const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woo
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
   card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs,
-  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), skill_needs: [],
+  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), drains: [], skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
 
@@ -371,6 +371,7 @@ export const fixtureContent: Content = {
     { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
     { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, bonus_bp: null },
     { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, bonus_bp: null },
+    { store: "hurt", label_key: "store.hurt", cap: 3 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },   // never unlocked: a fight's wound, drained by the poultice
     { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, bonus_bp: null },   // bookkeeping: never a ledger line
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
@@ -398,6 +399,7 @@ export const fixtureContent: Content = {
     card("look_out", "hands", "narrative"),
     card("forage", "hands", "action"),
     { ...card("hunt", "hands", "action"), fight: { side: "hands", threat: "wolves", loses: [{ store: "wood", quantity: 3 * Q }], wounds: [{ store: "energy", quantity: Q }], won_line_keys: [], lost_line_keys: [] } },
+    { ...card("poultice", "hands", "action", [{ store: "roots", quantity: 6 * Q }]), takes: ["roots", "hurt"], drains: ["hurt"] },
     card("chop", "helper", "action"), card("haul", "helper", "action"), card("fetch", "helper", "narrative"), card("hew", "mason", "action"), card("carve", "mason", "action"),   // the ruled lane's tasks
   ],
   chip_infos: [

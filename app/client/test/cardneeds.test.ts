@@ -48,3 +48,20 @@ function shownWith(run: Card["run"]): boolean {
 expect("a card at full work draws no needs", shownWith("full"), false);
 expect("a run paused for want of an input draws them", shownWith("paused"), true);
 expect("a card not running draws them", shownWith(null), true);
+
+// A drain (CardInfo.drains) waits on its store above 0: drawn as have/need though the store was never shown, unless
+// the store is hidden.
+function drainRow(store: string): { shown: boolean; text: string } {
+  const drains = { ...content, card_infos: content.card_infos.map((c) => (c.card === "stool" ? { ...c, drains: [store] } : c)) };
+  const card: Card = { ...stool, needs: [{ store, quantity: 1, segment: { start: 0, start_value: 0, rate: 0, limit: null }, gate: null, makers: [], spent: false }] };
+  const view: View = { ...base, cards: [card], completed: [] };
+  const needs = new CardNeeds(testContext(undefined, new Catalog(drains)).ctx, "stool");
+  needs.draw(card, view, false);
+  needs.tick(card, view, 100);
+  const row = needs.root.querySelector<HTMLElement>(".card-need");
+  return { shown: row !== null && !row.hidden, text: row?.textContent ?? "" };
+}
+
+expect("the control store is never shown", base.unlocked.some((u) => u.category === "store" && u.id === "hurt"), false);
+expect("a drained store never shown draws its row", drainRow("hurt"), { shown: true, text: "Hurt 0/1" });
+expect("a drained hidden store does not", drainRow("clock").shown, false);
