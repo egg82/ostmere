@@ -18,18 +18,22 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB, aggregate_order_by, insert as pg_insert
 
+from .journal import DAY_S
 from .saves import LISTED, WRITING, DecisionRecord, Listed, Written, as_listed, writing
 from .tables import save_decisions, save_journal, save_lines, save_snapshots, saves
 
 
 @dataclass(frozen=True)
 class JournalDay:
-    """A composed day as stored: its notes in page order, each {subject, slot, key}, its gap and its marks."""
+    """What a step stores of a day: for a day the save does not hold, the day (its notes in page order, each {subject,
+    slot, key}, its gap and its marks); for a day still being written, what it adds, the notes and marks to append and
+    the gap if it broke off. `through`: the save time it is composed through."""
 
     day: int
     notes: list[dict[str, str]]
     gap: str | None
     marks: list[str]
+    through: int
 
 
 @dataclass(frozen=True)
@@ -49,11 +53,12 @@ def write_step(conn: Connection, save_id: int, now: datetime, w: Written, lines:
                log: Log | None, since: Mapping[str, int] | None,
                days: Sequence[JournalDay] = ()) -> tuple[Listed, list[DecisionRecord]]:
     """The save as written, and its logged decisions of each kind in `since` made at or after its game time (none
-    without `since`), the step's own entry among them. A day of `days` the save already holds is left as it is."""
+    without `since`), the step's own entry among them. A day of `days` the save already holds is extended while it is
+    still being written (its `through` before its end), and otherwise left as it is."""
     params = writing(save_id, now, w) | {"line_at": [at for at, _ in lines], "line_key": [key for _, key in lines],
                                          "save_id": save_id,
-                                         "j_days": [{"day": d.day, "notes": d.notes, "gap": d.gap, "marks": d.marks}
-                                                    for d in days]}
+                                         "j_days": [{"day": d.day, "notes": d.notes, "gap": d.gap, "marks": d.marks,
+                                                     "through": d.through} for d in days]}
     if log is not None:
         d = log.entry
         params |= {"now": now, "l_n": d.n, "l_at": d.at, "l_kind": d.kind, "l_verb": d.verb, "l_digest": d.rules_digest,
@@ -92,14 +97,25 @@ def _lines() -> CTE:
 
 
 def _journal() -> CTE:
-    """The days (`j_days`, a JSON array of {day, notes, gap, marks}), each unless the save holds it already."""
+    """The days (`j_days`, a JSON array of {day, notes, gap, marks, through}): a day the save does not hold is inserted;
+    one it holds that is still being written has the notes and marks appended, its gap set if it had none, and its
+    `through` moved on; any other is left as it is. Nothing stored is removed or rewritten."""
     given = func.jsonb_to_recordset(bindparam("j_days", type_=JSONB)).table_valued(
-        column("day", Integer), column("notes", JSONB), column("gap", Text), column("marks", JSONB)
+        column("day", Integer), column("notes", JSONB), column("gap", Text), column("marks", JSONB),
+        column("through", BigInteger),
     ).render_derived(with_types=True)
-    return pg_insert(save_journal).from_select(
-        ["save_id", "day", "notes", "gap", "marks"],
-        select(bindparam("save_id", type_=BigInteger), given.c.day, given.c.notes, given.c.gap, given.c.marks),
-    ).on_conflict_do_nothing(index_elements=["save_id", "day"]).returning(save_journal.c.day).cte("journaled")
+    ins = pg_insert(save_journal).from_select(
+        ["save_id", "day", "notes", "gap", "marks", "through"],
+        select(bindparam("save_id", type_=BigInteger), given.c.day, given.c.notes, given.c.gap, given.c.marks,
+               given.c.through),
+    )
+    t, new = save_journal.c, ins.excluded
+    return ins.on_conflict_do_update(
+        index_elements=["save_id", "day"],
+        set_={"notes": t.notes.op("||")(new.notes), "marks": t.marks.op("||")(new.marks),
+              "gap": func.coalesce(t.gap, new.gap), "through": new.through},
+        where=and_(t.through.is_not(None), t.through < (t.day + 1) * DAY_S),
+    ).returning(save_journal.c.day).cte("journaled")
 
 
 def _logged(upd: CTE) -> tuple[CTE, list[CTE]]:

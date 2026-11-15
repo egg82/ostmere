@@ -9,11 +9,14 @@ from .telling import Telling, is_must, plain
 
 
 def catchups(composed: Sequence[ComposedDay], history: History, subjects: Sequence[Subject]) -> list[Telling]:
-    """Each must of the gap run just ended, once, by the earliest line it showed by in the run, then id."""
+    """Each must of the gap run just ended, once, by the earliest line it showed by in the run, then id: a subject that
+    showed on a run day with no note of it that day (it showed after the gap began there)."""
     first_at: dict[str, int] = {}
     for d in gap_run(composed):
+        noted = {n.subject for n in composed[d].notes}
         for s in showing(history, subjects, d):
-            first_at.setdefault(s.id, history.first_at(s.id, d))
+            if s.id not in noted:
+                first_at.setdefault(s.id, history.first_at(s.id, d))
     by_id = {s.id: s for s in subjects}
     out: list[Telling] = []
     for sid in sorted(first_at, key=lambda i: (first_at[i], i)):
