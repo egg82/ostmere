@@ -92,6 +92,9 @@ structural checks hold (`docs/research/agentic-engineering.md`). So:
   no longer imports is no gate at all, and nothing goes red to say so: its tests simply stop being collected.
 - **Structure and behaviour in separate commits**: a refactor lands with identical outputs, a change of behaviour on
   its own.
+- **A pull request's description follows the `pr-description`<!--external--> skill's baseline**: a summary line, then
+  Why, How and Verified, with Risk, After merge, Rollback or Screenshots only when they apply. Story beats are named
+  by id, never by what happens (`CLAUDE.md`, "Never spoil the owner"). Earlier pull requests are not the model.
 - **Ceremony scales with the task.** A new system gets interface first, review, then implementer and contract tests in
   parallel; a change you can describe in one sentence just gets made, with its test.
 - **Reviewers look for correctness and contract gaps only**, never "anything that could be better": that is how
