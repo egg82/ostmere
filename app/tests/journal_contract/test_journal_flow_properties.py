@@ -3,7 +3,7 @@ late additions (16), misremembering and corrections (17), the page's order (18) 
 from hypothesis import given
 
 from ashfall_app.saves.journal import ComposedDay, Note
-from journal_check import budget, musts_on, showing
+from journal_check import budget, first_at, gap_runs, musts_on, showing
 from journal_gen import History, histories
 from journal_world import OWN_SLOTS, compose_span, ref_roll
 
@@ -99,22 +99,29 @@ def test_misremembering_is_exactly_the_roll_on_a_first_own_telling(history: Hist
             assert (n.slot == "misremember") == wrong, (r.day, n)
 
 
-def _group(n: Note, musts: set[str]) -> int:
-    return {"catchup": 0, "late": 3, "correction": 4}.get(n.slot, 1 if n.subject in musts else 2)
+def _group(n: Note) -> int:
+    return {"catchup": 0, "late": 2, "correction": 3}.get(n.slot, 1)
 
 
 @given(history=histories())
-def test_the_page_runs_in_its_five_groups(history: History):
-    """Statement 18: catch-ups, own musts, own non-musts, late additions, corrections; late additions and corrections
-    each by subject id."""
+def test_the_page_runs_in_its_four_groups(history: History):
+    """Statement 18: catch-ups by their earliest line in the gap run just ended, own notes by their earliest line of the
+    day, both with ties by id; then late additions and corrections, each by subject id."""
     rows = _compose(history)
+    by_id = {s.id: s for s in history.subjects}
+    runs = {last: first for first, last in gap_runs(rows)}
     for d, r in enumerate(rows):
-        musts = musts_on(rows, d, history.lines, history.subjects)
-        groups = [_group(n, musts) for n in r.notes]
+        groups = [_group(n) for n in r.notes]
         assert groups == sorted(groups), (d, r.notes)
-        for slot in ("late", "correction"):
-            ids = [n.subject for n in r.notes if n.slot == slot]
-            assert ids == sorted(ids), (d, slot)
+        span = {"catchup": (runs.get(d - 1, d), d - 1)}
+        for slot in ("catchup", "own", "late", "correction"):
+            ids = [n.subject for n in r.notes if (n.slot in OWN_SLOTS if slot == "own" else n.slot == slot)]
+            if slot in ("late", "correction"):
+                assert ids == sorted(ids), (d, slot)
+                continue
+            first, last = span.get(slot, (d, d))
+            places = [(first_at(history.lines, by_id[i], first, last), i) for i in ids]
+            assert places == sorted(places), (d, slot, places)
 
 
 @given(history=histories())

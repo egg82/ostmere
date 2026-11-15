@@ -782,7 +782,9 @@ TEXT AND NUMBERS (one rule)
     ui.feedback.thanks | ui.feedback.later   the Feedback button and its sheet: the button, the field's placeholder, the
                                     line saying what is sent along, Send, Not now, the thank-you, and the line when a send
                                     was not kept (limited, or no answer)
-    ui.hands.idle | ui.mix.yielded   the hands strip's states
+    ui.hands.idle | ui.hands.then {mix} | ui.hands.until_goal {goal}   the hands strip's states: idle; the mix the hands
+                                    go back to while a tap, a rule's mix or a goal stint holds them; where a goal stint's
+                                    mix lets go
     ui.games.open | ui.games.heading | ui.games.name {number} | ui.games.unnumbered | ui.games.camp {level} |
     ui.games.dates {started}{played} | ui.games.playing | ui.games.switch | ui.games.delete |
     ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited |
@@ -984,8 +986,14 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
     row. On the controlling entry while its mix runs, add the row's time left
     (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
     store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
-  - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed): pressed, it lists the saved
-    mixes; a mix picked is worded ui.stint.which {mix}, with the goals of the dry run of switch_mix to it (the live
+  - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed or a card would take
+    When ready): pressed, it lists first each step that When ready takes, ready now ones included (blocker null),
+    worded ui.queue.when_ready, whose pick sends exactly the entry When ready sends; a card's own When ready is offered
+    on these only while it cannot be tapped (unready, or ready on a lane whose running_card is another card). Then each
+    step that would take it but for its blocker (no ready time kept,
+    or a store the view has not unlocked), not pickable, worded as the card draws its blocker's need (ui.card.needs,
+    ui.card.opens, a skill level or step; a step whose card draws nothing for its blocker is left out); then the saved
+    mixes. A mix picked is worded ui.stint.which {mix}, with the goals of the dry run of switch_mix to it (the live
     view's when it already runs) listed as the mix editor lists them. Picking a goal sends set_queue with view.queue
     and the stint at its end. New text keys: ui.queue.plan | ui.stint.which {mix}.
 

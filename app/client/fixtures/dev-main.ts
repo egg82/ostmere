@@ -2,7 +2,7 @@
 // URL hash: #stale answers every step 503 (the reconnecting state); #phase=… picks the first Step (steps.ts, Phase);
 // #play also presses Begin (for screenshots); #sheet then opens the Mixes list from the strip. #rules opens the Rules
 // tab, #rule=N the condition editor on its Nth rule's condition, #pick=N the picker on its Nth mix slot. #seen opens
-// writing rules (as if a rule had been seen on then off); #new then opens the Rules tab's New rule. #limited makes a send of feedback answer 429. The shortcuts:
+// writing rules (as if a rule had been seen on then off); #new then opens the Rules tab's New rule, #plan its Next's Plan. #limited makes a send of feedback answer 429. The shortcuts:
 // #change (the ledger's Change), #covered (a ledger line's "covered"), #strip (the strip's "until …"). #due marks
 // recovery words due; #devices opens the "Another device" sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
@@ -76,10 +76,11 @@ if (hash.has("have")) clickWhenShown("#have-code summary");
 
 const rule = hash.get("rule");
 const pick = hash.get("pick");
-if (hash.has("rules") || rule !== null || pick !== null || hash.has("new")) {
+if (hash.has("rules") || rule !== null || pick !== null || hash.has("new") || hash.has("plan")) {
   const then = rule !== null ? () => clickWhenShown(".rules .rule-cond", undefined, 100, Number(rule))
     : pick !== null ? () => clickWhenShown(".rules .rule-slot", undefined, 100, Number(pick))
-      : hash.has("new") ? () => clickWhenShown(".rules-new") : undefined;
+      : hash.has("new") ? () => clickWhenShown(".rules-new")
+        : hash.has("plan") ? () => clickWhenShown(".stint-plan") : undefined;
   clickWhenShown(".tabs [data-tab=rules]", then);
 }
 if (hash.has("change")) clickWhenShown(".line-order .quiet");

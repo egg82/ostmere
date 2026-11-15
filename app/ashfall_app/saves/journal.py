@@ -69,9 +69,11 @@ Late additions, misremembering
     so the correction is always on a later day than its misremembering.
 
 Order and lines
-18. Notes are ordered: catch-up notes (by the first day of the gap run each showed on, then subject id), then the day's
-    own musts (by `roll(..., "order")`, lower first), then its non-musts (care descending, ties by lower `roll(...,
-    "order")`), then late additions, then corrections (each by subject id).
+18. Notes run in four groups: catch-up notes, then the day's own notes, then late additions, then corrections. Catch-ups
+    run by the earliest `at` among the lines that showed each in its gap run, and the day's own notes (musts and
+    non-musts alike) by the earliest `at` among the lines that show each on day d, ties in `at` by subject id. Late
+    additions and corrections run by subject id. Care and `roll(..., "order")` decide which non-musts are kept
+    (statement 12), never where a note stands.
 19. Within one subject and slot (for `mention`, within one band), the n-th note drawn (n counted over `composed`)
     completes a round of the slot's keys before any key repeats: notes with equal `n // len(keys)` are different keys.
     n counts only stored notes whose key the slot still holds: a retired key does not advance the round. Which of a

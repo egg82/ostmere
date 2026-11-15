@@ -22,11 +22,12 @@ def compose(save_id: int, day: int, lines: Sequence[Line], composed: Sequence[Co
     caught = catchups(composed, history, subjects)
     fixes = corrections(composed, subjects, habits, day)
     own = candidates(save_id, day, history, composed, subjects, habits, {t.subject for t in caught})
-    musts = sorted((c for c in own if c.must), key=lambda c: (c.order, c.telling.subject))
+    musts = [c for c in own if c.must]
     passing = _passing(save_id, day, own, diligence(settled, habits))
     left = max(0, room - len(caught) - len(musts) - len(fixes))
     kept = sorted(passing, key=lambda c: (-c.care, c.order, c.telling.subject))[:left]
-    head = [*caught, *(c.telling for c in musts), *(c.telling for c in kept)]
+    written = sorted([*musts, *kept], key=lambda c: (history.first_at(c.telling.subject, day), c.telling.subject))
+    head = [*caught, *(c.telling for c in written)]
     if not head and not fixes:
         return ComposedDay(day, (), None)
     told = [*head, *lates(save_id, composed, subjects, habits), *fixes]

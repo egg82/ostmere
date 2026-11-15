@@ -10,10 +10,12 @@ B, T, O = "journal_composer/bag.py", "journal_composer/telling.py", "journal_com
 W, D = "journal_composer/own.py", "journal_composer/day.py"
 
 KEY = 'sha256(f"{save_id}|journal|{day}|{subject}|{purpose}"'
-HEAD = "    head = [*caught, *(c.telling for c in musts), *(c.telling for c in kept)]"
+HEAD = "    head = [*caught, *(c.telling for c in written)]"
 KEEP = "    kept = sorted(passing, key=lambda c: (-c.care, c.order, c.telling.subject))[:left]"
 LEFT = "    left = max(0, room - len(caught) - len(musts) - len(fixes))"
-MUSTS = "    musts = sorted((c for c in own if c.must), key=lambda c: (c.order, c.telling.subject))"
+AT = "history.first_at(c.telling.subject, day)"
+BY = "    written = sorted([*musts, *kept], key=lambda c: "
+OWN_SORT = f"{BY}({AT}, c.telling.subject))"
 CAUGHT = "    caught = catchups(composed, history, subjects)\n"
 TOLD = "        told = tellings(composed, s.id) + (s.id in caught)"
 LATE_ROLL = 'roll(save_id, yesterday.day, s.id, "late") < habits.late_rate'
@@ -22,7 +24,8 @@ CARE_W = "    return faded(fade, 0 if changed(history, s.id, day) else told)"
 EARLIER = "if d < day for k in keys}"
 AWAY_RANGE = "range(day - s.away_days + 1, day + 1)"
 BUSY = "    if len(showing(history, subjects, day)) > habits.busy_ratio * room:"
-SORT_FIRST = "    for sid in sorted(first_day, key=lambda i: (first_day[i], i)):"
+SORT_FIRST = "    for sid in sorted(first_at, key=lambda i: (first_at[i], i)):"
+FIRST_AT = "            first_at.setdefault(s.id, history.first_at(s.id, d))\n"
 BUDGET = "    return math.floor(habits.lines_floor + span * 0.5 ** (settled / habits.lines_halflife) + 0.5)"
 BUDGET_RAW = "habits.lines_floor + span * 0.5 ** (settled / habits.lines_halflife)"
 WRITTEN = "    written = sum(1 for r in composed if r.notes)"
@@ -38,8 +41,9 @@ PLANTS: dict[str, list[Edit]] = {
     "3a": [(J, 'int.from_bytes(digest[:8], "big") / 2**64', 'int.from_bytes(digest[-8:], "little") / (2**64 - 1)')],
     "3b": [(J, KEY, 'sha256(f"{save_id}|{day}|{subject}|{purpose}"')],
     "3c": [(J, KEY, 'sha256(f"{save_id}:journal:{day}:{subject}:{purpose}"')],
-    "4": [(D, MUSTS, "    musts = [c for i in {c.telling.subject for c in own if c.must} for c in own"
-                     " if c.must and c.telling.subject == i]")],
+    "4": [(D, OWN_SORT, "    both = [*musts, *kept]\n"
+                        "    written = [c for i in {c.telling.subject for c in both} for c in both"
+                        " if c.telling.subject == i]")],
     "5": [(H, "for k in history.keys(subject, day))", "for k in history.keys(subject, day)[:1])")],
     "6": [(J, "import hashlib\n", "import hashlib\nimport itertools\n_COUNTER = itertools.count()\n"),
           (J, KEY, 'sha256(f"{save_id}|journal|{next(_COUNTER)}"')],
@@ -68,8 +72,8 @@ PLANTS: dict[str, list[Edit]] = {
     "16b": [(T, 'subject.kind in ("beat", "person")', 'subject.kind in ("beat",)')],
     "17": [(T, "    if told == 0:\n", '    if told == 0 or subject.kind == "beat":\n')],
     "18": [(O, "    for d in gap_run(composed):", "    for d in gap_run(composed)[:0]:")],
-    "19": [(O, "            first_day.setdefault(s.id, d)\n", "            first_day.setdefault(s.id, d)\n"
-            "    pairs = [(d, s.id) for d in gap_run(composed) for s in showing(history, subjects, d)]\n"),
+    "19": [(O, FIRST_AT, FIRST_AT
+            + "    pairs = [(d, s.id) for d in gap_run(composed) for s in showing(history, subjects, d)]\n"),
            (O, SORT_FIRST, "    for _, sid in sorted(pairs):")],
     "20": [(D, CAUGHT, "    caught = catchups(composed, history, subjects)"
                        " if showing(history, subjects, day) else []\n")],
@@ -140,18 +144,24 @@ PLANTS: dict[str, list[Edit]] = {
     "47d": [(D, "    if not head and not fixes:", "    if not head:")],
     "48a": [(O, LATE_ROLL, 'roll(save_id, yesterday.day, s.id, "late") < 1 - habits.late_rate')],
     "48b": [(W, '"misremember") < habits.misremember_rate', '"misremember") > habits.misremember_rate')],
-    "49a": [(O, SORT_FIRST, "    for sid in sorted(first_day):")],
-    "49b": [(O, SORT_FIRST, "    for sid in sorted(first_day, key=lambda i: (-first_day[i], i)):")],
-    "50a": [(D, MUSTS, "    musts = sorted((c for c in own if c.must), key=lambda c: c.telling.subject)")],
-    "50b": [(D, MUSTS, "    musts = [c for c in own if c.must]")],
-    "51a": [(D, HEAD, "    head = [*caught, *(c.telling for c in kept), *(c.telling for c in musts)]")],
+    "49a": [(O, SORT_FIRST, "    for sid in sorted(first_at):")],
+    "49b": [(O, SORT_FIRST, "    for sid in sorted(first_at, key=lambda i: (-first_at[i], i)):")],
+    "49c": [(O, FIRST_AT, "            first_at.setdefault(s.id, d)\n")],
+    "50a": [(D, OWN_SORT, f"{BY}(c.order, c.telling.subject))")],
+    "50b": [(D, OWN_SORT, f"{BY}c.telling.subject)")],
+    "50c": [(D, OWN_SORT, f"{BY}(not c.must, {AT}, c.telling.subject))")],
+    "50d": [(D, OWN_SORT, f"{BY}(-{AT}, c.telling.subject))")],
+    "50e": [(H, "            days[day] = min(days.get(day, line.at), line.at)",
+             "            days[day] = max(days.get(day, line.at), line.at)")],
+    "50f": [(D, OWN_SORT, f"{BY}{AT})")],
+    "51a": [(D, HEAD, "    head = [*(c.telling for c in written), *caught]")],
     "51b": [(D, "    told = [*head, *lates(save_id, composed, subjects, habits), *fixes]",
              "    told = [*head, *fixes, *lates(save_id, composed, subjects, habits)]")],
     "51c": [(O, '    for s in sorted(subjects, key=lambda x: x.id):\n        t = plain(s, "late")',
              '    for s in subjects:\n        t = plain(s, "late")')],
     "51d": [(O, '    for s in sorted(subjects, key=lambda x: x.id):\n        t = plain(s, "correction")',
              '    for s in subjects:\n        t = plain(s, "correction")')],
-    "52": [(D, KEEP, f"{KEEP}\n    kept = sorted(kept, key=lambda c: c.order)")],
+    "52": [(D, OWN_SORT, f"{BY}(-c.care, {AT}, c.telling.subject))")],
     "53": [(B, "    return min(unused, key=lambda k: _shuffle(save_id, subject, bag, round_no, k))",
             "    return min(keys, key=lambda k: _shuffle(save_id, subject, bag, len(stored), k))")],
     "54": [(B, "    stored = drawn(composed, t.subject, t.slot, t.keys)", "    stored: list[str] = []")],

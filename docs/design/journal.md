@@ -93,7 +93,8 @@ The rules, in the order the composer applies them for day `d`:
   content has no kind and takes nothing back. A non-must candidate is written when its roll falls under
   `care × diligence`. Thinning follows how much has been written and what has happened, never the day number.
 - **Budget:** the most notes an entry holds, `lines_floor + (lines_start − lines_floor) × 0.5^(s / lines_halflife)`,
-  rounded half up. Musts first, then the rest by care, ties by roll. A late addition is outside the budget.
+  rounded half up. Musts count against it first; the rest are kept by care, ties by roll. A late addition is outside
+  the budget.
 - **Busy:** a day whose candidates number more than `busy_ratio × budget` is not written: a busy gap. A full day early
   on, when the budget is large, is written; the same day later, when entries are short, is not. Only the day's own
   subjects count, never what is owed, so a catch-up cannot make its own day busy.
@@ -101,9 +102,9 @@ The rules, in the order the composer applies them for day `d`:
 - **Blank:** a day with no must and no candidate that passes its roll is not written. A blank is not a gap: nothing is
   owed after it.
 - **Catch-up:** the first written day after a busy or away gap opens with every must of the gap, each by its catch-up
-  slot, oldest first (by the first day of the gap each showed on). The gap's other candidates are dropped; the
-  Chronicle has them. A must with no catch-up slot cannot be caught up and is dropped with them. A catch-up note is a
-  telling for the rest of its day, so a subject it told is not a first again that day.
+  slot, in the order they happened (by the first line each showed by in the gap). The gap's other candidates are
+  dropped; the Chronicle has them. A must with no catch-up slot cannot be caught up and is dropped with them. A
+  catch-up note is a telling for the rest of its day, so a subject it told is not a first again that day.
 - **Late addition:** each subject written on day `d` that has a late slot draws one under `late_rate`. Its late slot is
   written in day `d + 1`'s entry if that day is written, and dropped if it is not.
 - **Misremembering:** a subject with a misremember slot, told for the first time on its own day (never in a catch-up), draws one under
@@ -115,8 +116,10 @@ The rules, in the order the composer applies them for day `d`:
   repeats before the bag is empty; a stored key the slot no longer holds does not count toward the bag's draws. A
   crowd's band is chosen by how many came or went, as the people's mention bands are; on a day fewer came or went
   than its lowest band, a told crowd has no line and is not written.
-- **Order on the page:** catch-up notes, then the day's own by care, then a late addition or a correction. The day's
-  own musts run by their order roll, lower first, as ties among the rest do.
+- **Order on the page:** a day reads in the order things happened. Catch-up notes come first, then the day's own
+  notes, musts and the rest together, each placed by the first line that showed its subject that day; lines in the
+  same second go by subject id. A late addition or a correction comes last. Care decides whether a subject is written,
+  never where it stands.
 
 ## The habits as data
 
@@ -173,7 +176,7 @@ the blanket."
 The loader's checks name ids and fields, never text: every subject has a first slot; every `beat`, `person` and
 `routine` subject has a catch-up slot; misremember and correction come together, and only on a `routine` subject,
 never a `beat`, `person` or `worry` (owner, 2026-11-14: the journal never misleads about the story); a source names a
-cause the content writes, and no cause feeds two subjects; each `line` person has a person subject for each way that
+cause the content writes a kept line of (a fight's won and lost lines are drawn by the page, never saved), and no cause feeds two subjects; each `line` person has a person subject for each way that
 moves them; every slot key has text; no entry is a `days` page. Each check is shown red on a planted chapter first. A
 cause is a source, so two people one outcome joins are two causes; only a `person` feeds from a lane and only a
 `crowd` from a way's mentions; and a beat that lands by either of two triggers has a subject for each.

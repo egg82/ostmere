@@ -7,13 +7,10 @@ from .refs import fail, outcomes
 if TYPE_CHECKING:
     from .schema import Opening
 
-AIM_MAX_CHARS = 40
-"""An aim is one line at the band's top: at a phone's 390 px it holds about fifty characters at its size."""
-
 
 def check_aims(o: "Opening") -> None:
     """One aim always set: the first holds from the start, each later one from an unlock the start or some outcome
-    really gives (so the aim before it ends); each fits one line."""
+    really gives (so the aim before it ends). Whether each fits one line is tests/opening/test_aim_fit.py's."""
     if not o.aims:
         fail("aims", "needs an aim from the start: every stretch of play has one")
     if o.aims[0].after is not None:
@@ -25,6 +22,3 @@ def check_aims(o: "Opening") -> None:
             fail(f"aim {a.id}", "only the first aim takes no after")
         if (a.after.unlock_kind, a.after.id) not in given:
             fail(f"aim {a.id}", f"nothing unlocks {a.after.unlock_kind} {a.after.id}, so the aim before it never ends")
-    for a in o.aims:
-        if len(o.text.get(a.text_key, "")) > AIM_MAX_CHARS:
-            fail(f"aim {a.id}", f"over {AIM_MAX_CHARS} characters: it must fit one line on a phone")

@@ -99,7 +99,6 @@ export const UI = {
   now: "ui.mix.now",
   after: "ui.mix.after",
   ifRun: "ui.mix.if_run", // the totals' second column for a mix that Save does not run
-  yielded: "ui.mix.yielded",
   spent: "ui.mix.spent", // "{store}": a card of the mix is stopped on a store nothing can make again
   runningNow: "ui.mix.running_now", // the label of the split the mix runs now, while a card of it is stopped
   gainFrom: "ui.mix.from", // "{pct}{card}": a part of the split that runs now gained from a stopped card
@@ -127,6 +126,8 @@ export const UI = {
   queuePlan: "ui.queue.plan", // Next's "+ Plan": a stint written from the list (ui/stintplan.ts)
   queueFull: "ui.queue.full", // the When ready button's place once the queue holds Content.limits.max_queue
   handsNext: "ui.hands.next", // "{card}": the strip's note of the queue's head
+  handsThen: "ui.hands.then", // "{mix}": what the hands go back to, while a tap, a rule's mix or a goal stint holds them
+  handsUntilGoal: "ui.hands.until_goal", // "{goal}": the strip while a goal stint's mix runs, where it lets go
   devicesOpen: "ui.devices.open", // the panel foot's way to the "Another device" sheet
   devicesHeading: "ui.devices.heading",
   codeLead: "ui.devices.code_lead",

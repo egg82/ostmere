@@ -94,6 +94,18 @@ def test_the_highest_care_is_kept():
     assert sorted(n.subject for n in day.notes) == ["t1", "t2"]
 
 
+def test_care_outranks_the_order_roll_in_what_is_kept():
+    """Statement 12: with room for one, care 1 (a fresh change) is kept over care 0.5 whose order roll is lower."""
+    hi, lo = routine("hi"), routine("lo")
+    habits = replace(PLAIN, routine=Fade(1.0, 0.5), lines_start=1, lines_floor=1)
+    rows = (row(0, note(hi, "first"), note(lo, "first")),)
+    save_id = find_save(lambda sid: ref_roll(sid, 1, "lo", "write") < 0.5
+                        and ref_roll(sid, 1, "lo", "order") < ref_roll(sid, 1, "hi", "order"))
+    lines = [shows(hi, 0), shows(lo, 0), shows(hi, 1, "hi.new"), shows(lo, 1)]
+    day = compose_next(save_id, rows, lines, (lo, hi), habits)
+    assert [n.subject for n in day.notes] == ["hi"]
+
+
 @given(save_id=st.integers(0, 2**40))
 def test_ties_in_care_keep_the_lower_order_roll(save_id: int):
     """Statement 12: among equal care, the kept are those of lower `roll(..., "order")`; a worry capped at care 1 ties
