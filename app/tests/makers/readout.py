@@ -10,9 +10,10 @@ sim-invariants.md). Stores and card ids and counts only (CLAUDE.md, "Never spoil
     python -m tests.makers.readout typical smoked   # the named routes, then only the named stores
 """
 import sys
+from collections.abc import Callable
 from fractions import Fraction
 
-from ashfall_app.engine import Save, advance
+from ashfall_app.engine import Save
 from ashfall_app.engine.counts import completions
 from ashfall_app.engine.gates import store_cap
 from ashfall_app.engine.ids import CardId
@@ -23,9 +24,8 @@ from ashfall_app.engine.rates import exact_contribution, running, store_value
 from ashfall_app.engine.sides import makes
 from ashfall_app.engine.units import QUANTITY_SCALE
 from tests.daytwo.player import DayTwoPlayer
-from tests.ladder.readout import STEP_H, played_saves, sampled
+from tests.ladder.readout import STEP_H, played_saves, sampled, timeline
 from tests.ladder.sources import BANDS, band_label
-from tests.ladder.ticks import at_time
 from tests.makers.tally import Band, Made, at_cap_share, band_spans, made_by_band, merged
 from tests.weektwo.routes import TWELVE_PUSH_ROUTES, twelve
 
@@ -49,11 +49,10 @@ def made_at(p: DayTwoPlayer, save: Save) -> Made:
     return out
 
 
-def lumps_made(p: DayTwoPlayer) -> dict[str, dict[Band, dict[str, float]]]:
+def lumps_made(p: DayTwoPlayer, save_at: Callable[[int], Save]) -> dict[str, dict[Band, dict[str, float]]]:
     """Items each card's outcome stores gained per band: its completions in the band times what a completion pays at
     the band's end (a modifier that changed inside the band is read at its end)."""
     rules, saves = p.rules, played_saves(p)
-    save_at = at_time(saves, lambda s, t: advance(s, rules, t))
     out: dict[str, dict[Band, dict[str, float]]] = {}
     for band, t0, t1 in band_spans(saves[-1].time):
         a, b = save_at(t0), save_at(t1)
@@ -75,8 +74,9 @@ def full_at(p: DayTwoPlayer, save: Save) -> dict[str, bool]:
 def route_text(name: str, p: DayTwoPlayer, only: tuple[str, ...] = ()) -> str:
     """A route's readout: each store's makers by band, in percent of the items made, with the store's items made and the
     percent of samples at its cap."""
-    at = sampled(p, STEP_H)
-    made = merged(made_by_band([(t, made_at(p, s)) for t, s in at], STEP_H), lumps_made(p))
+    save_at = timeline(p)
+    at = sampled(p, save_at, STEP_H)
+    made = merged(made_by_band([(t, made_at(p, s)) for t, s in at], STEP_H), lumps_made(p, save_at))
     full = at_cap_share([(t, full_at(p, s)) for t, s in at])
     assert made, "no store was made in over the route"
     out = [f"== {name}: items made per store by maker, percent (sampled every {STEP_H} game hours; made = items the "

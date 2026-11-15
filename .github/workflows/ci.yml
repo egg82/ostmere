@@ -288,6 +288,8 @@ jobs:
             names: readings-twelve-d
           - part: readings-twelve-e
             names: readings-twelve-e
+          - part: readings-twelve-f
+            names: readings-twelve-f
           - part: readings-fifteen-a
             names: readings-fifteen-a
           - part: readings-fifteen-b

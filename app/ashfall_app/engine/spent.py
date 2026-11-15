@@ -9,7 +9,7 @@ from .fightlines import fight_costs
 from .gone import stopped
 from .ids import CardId, LaneId, Runner, StoreId
 from .index import derived
-from .memo import SaveMemo
+from .memo import PartsMemo, SaveMemo
 from .mixes import SpentShare
 from .modifiers import Run, RunKind
 from .rules import Rules
@@ -38,8 +38,7 @@ _SPENT: SaveMemo[frozenset[StoreId]] = SaveMemo(4)
 
 def _spent(save: Save, rules: Rules) -> frozenset[StoreId]:
     empty = {st.store for st in save.stores if st.segment.start_value == 0}
-    live = {x: [takes for runner, u, takes in found if _in_play(save, rules, runner, u)]
-            for x, found in _makers(rules).items()}
+    live = _live(save, rules)
     spent = {d.id for d in rules.stores}
     changed = True
     while changed:
@@ -50,6 +49,19 @@ def _spent(save: Save, rules: Rules) -> frozenset[StoreId]:
                 spent.discard(x)
                 changed = True
     return frozenset(spent)
+
+
+_LIVE: PartsMemo[dict[StoreId, list[frozenset[StoreId]]]] = PartsMemo(4)
+"""Kept while the unlock set and the rules are the same objects and the same cards are completed: all that _in_play
+reads."""
+
+
+def _live(save: Save, rules: Rules) -> dict[StoreId, list[frozenset[StoreId]]]:
+    """Each store's makers in play, as the stores each takes."""
+    completed = frozenset(c.id for c in rules.cards if is_completed(save, rules, c.id))
+    return _LIVE.get((save.unlocked, rules), lambda: {
+        x: [takes for runner, u, takes in found if _in_play(save, rules, runner, u)]
+        for x, found in _makers(rules).items()}, completed)
 
 
 def _in_play(save: Save, rules: Rules, runner: Runner, u: Unlock) -> bool:
