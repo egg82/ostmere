@@ -35,8 +35,8 @@ function mixIdOf(view: View, index: number): string {
 type Mode = { kind: "list" } | { kind: "edit" } | { kind: "lane" } | { kind: "pick"; slot: Slot };
 
 /** What a redraw depends on: a view that changes none of it leaves the tab alone (a press or a focus survives). */
-function shape(view: View, fired: readonly string[], ruleSeen: boolean, runs: readonly RuleRun[]): string {
-  return JSON.stringify([view.orders, view.queue, view.orders_on, view.order_states, view.order_dry, view.mixes.map((m) => m.id), view.greyed_mix_ids, view.active_mix_id, view.mix_order, view.town_mix_order, ruleSeen, fired, runs]);
+function shape(view: View, fired: readonly string[], ruleSeen: boolean, runs: readonly RuleRun[], plan: string): string {
+  return JSON.stringify([plan, view.orders, view.queue, view.orders_on, view.order_states, view.order_dry, view.mixes.map((m) => m.id), view.greyed_mix_ids, view.active_mix_id, view.mix_order, view.town_mix_order, ruleSeen, fired, runs]);
 }
 
 export class RulesTab implements Part {
@@ -119,7 +119,7 @@ export class RulesTab implements Part {
   }
 
   private shape(view: View): string {
-    return shape(view, this.ctx.fires.fresh, this.ctx.keeps.ruleSeen(), this.ctx.ruleRuns());
+    return shape(view, this.ctx.fires.fresh, this.ctx.keeps.ruleSeen(), this.ctx.ruleRuns(), this.plan.shape(view));
   }
 
   private back(): void {

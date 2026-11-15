@@ -24,6 +24,8 @@ const wood = (lands: number): GoalRow => ({ kind: "store", store: "wood", skill:
 const mix = (id: string): Mix => ({ id, components: [] });
 const planning = (over: Partial<View>): View => ({ ...base, mixes: [mix("a"), mix("b"), mix("town:main")], active_mix_id: "a", running_mix_id: "a", greyed_mix_ids: [], queue: [], ...over });
 
+const mixRow = (rows: HTMLElement[], id: string) => rows.find((r) => r.textContent === id);
+
 async function plan(view: View, after: View | null, seeRules = true) {
   const { ctx, got } = testContext();
   const c = { ...ctx, keeps: keepsOf({ ...TAUGHT, rule_seen: seeRules }), actions: { ...ctx.actions, dryRun: () => Promise.resolve(after) } };
@@ -49,8 +51,9 @@ async function plan(view: View, after: View | null, seeRules = true) {
   const { rows, got } = await plan(view, after);
   expect("the button", rows().map((r) => r.textContent), ["+ Plan"]);
   rows()[0]?.click();
-  expect("the saved mixes", rows().map((r) => r.textContent), ["Plan✕", "a", "b"]);
-  rows()[2]?.click();
+  expect("the steps it could take, waiting ones saying on what, then the saved mixes", rows().map((r) => r.textContent),
+    ["Plan✕", "Look aroundFlint 3/4", "HatchetForaging level 2/3", "a", "b"]);
+  mixRow(rows(), "b")?.click();
   await Promise.resolve();
   await Promise.resolve();
   expect("the mix named, its goals listed, a store's with its shares not yet reached", rows().map((r) => r.textContent), ["b until…✕", "Dead wood 302 hor until½¾full"]);
@@ -64,7 +67,7 @@ async function plan(view: View, after: View | null, seeRules = true) {
   const view = planning({ goal_rows: [wood(base.at + H)] });
   const { rows } = await plan(view, null);
   rows()[0]?.click();
-  rows()[1]?.click();
+  mixRow(rows(), "a")?.click();
   expect("the live view's goals", rows().map((r) => r.textContent), ["a until…✕", "Dead wood 301 hor until½¾full"]);
 }
 

@@ -41,6 +41,15 @@ export function whenReady(catalog: Catalog, view: View, id: string): Decision | 
   return card !== undefined && canQueue(catalog, view, card) ? queueTap(view, card) : null;
 }
 
+/** The cards Plan lists, each in the page's order: those "When ready" takes now, then the steps it would take but for
+ * what they wait on (no ready time the page can see kept, or a store the player has never been shown). */
+export function planCards(catalog: Catalog, view: View): { now: Card[]; waiting: Card[] } {
+  if (queueFull(catalog, view)) return { now: [], waiting: [] };
+  const now = view.cards.filter((c) => queueable(catalog, view, c));
+  const waiting = view.cards.filter((c) => c.blocker !== null && !now.includes(c) && plannableStep(catalog, view, c));
+  return { now, waiting };
+}
+
 /** The queue with one more tap of `card` at its end, held until that tap completes. */
 export function queueTap(view: View, card: Card): Decision {
   const n = card.completions + 1;
