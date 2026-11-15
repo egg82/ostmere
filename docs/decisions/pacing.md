@@ -82,12 +82,16 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   shown unready from the end. So a return shows what the mix built, more for a better mix and more for a day away
   than a night away. The cap-loss check still reads chapter ends only: day one's leave points are a readout.
 - **A sink shows what it buys**. A card that takes stores trades them for something the player can see: what it
-  makes, a fight's odds, a chip it clears, or a stake on its face. A card that takes stores and gives nothing by itself
-  feeds something else, says what in its upside, and the thing is real: a watch holds a side a fight is fought on, so a
-  kept fire lowers that threat's odds in the Threats row and a lapse raises them back; the track the hunts go out along
-  holds the hunters' side while it is laid. A stake never counts runs: a pay at the Nth run is a gate that counts taps
-  (above). The loader refuses a card that takes stores, gives nothing, and declares no stake
-  (`app/ashfall_app/opening/stake_checks.py`).
+  makes, a fight's odds, a chip it clears, or a stake on its face. A card that takes stores to feed something else
+  says what in its upside, and the thing is real. A side stake holds a side a fight is fought on while it runs: a
+  kept watch fire lowers that threat's odds in the Threats row and a lapse raises them back. A reach stake fills a
+  store that triggers read, each paying an effect its upside names: the track lays a store of track laid, and each
+  reach of it speeds the hunts that go out along it (owner, 2026-11-14). A held side pays only while the card runs,
+  so it is no stake for work that competes with what it helps (laying and hunting are both the hands' time); a reach
+  is banked, so the two never need to overlap. Every runner of the work fills the one store at its own share, a
+  person's beside the hands', and its readers count the store, never a card's runs. The loader refuses a card that
+  takes stores, gives nothing, and declares no stake, a side stake held on no fought side, and a reach stake no
+  trigger reads (`app/ashfall_app/opening/stake_checks.py`).
 - **A mix keeps going without a dry store** (consistency is the priority: no card may look the same
   as every other card and yet be treated differently, say because it is seasonal). A card that behaves differently must look different; no rule may single out a card for a property
   the page doesn't show. A card whose store runs
