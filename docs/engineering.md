@@ -184,7 +184,8 @@ suite still runs in seconds.
   minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
   them. CI's `chapter-saves` job writes them in parts, one per route chain or readings part, keeps each in the Actions
   cache under that key and hands them to the week-one-saved and week-two jobs as artifacts the readers merge. Week two's job runs one shard per chapter, day
-  twelve's typical play in one of its own (`app/tools/weektwo_shards.py`), so a play's readers stay in one job;
+  twelve's typical play in one of its own and the makers readouts in another (a test's `weektwo_shard` marker names its
+  shard; `app/tools/weektwo_shards.py`), so a play's readers stay in one job;
   `shards-cover` fails unless the shards select each week-two test exactly once, and hands their names to the job as
   its matrix. With no saves for today's key the plays run from the start, so a local run needs no step; CI sets
   `ASHFALL_REQUIRE_SAVED=1`, which makes a missing or stale save a failure. A saved end is held to today's play link

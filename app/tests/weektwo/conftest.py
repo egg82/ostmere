@@ -74,6 +74,12 @@ def play_of(item: pytest.Item) -> tuple[str, str] | None:
     return None
 
 
+def named_shard(item: pytest.Item) -> str | None:
+    """The shard a test's `weektwo_shard` marker names, or None."""
+    marker = item.get_closest_marker("weektwo_shard")
+    return marker.args[0] if marker else None
+
+
 def group_by_play(items: list[pytest.Item]) -> None:
     """Under `pytest -n N --dist loadgroup`, a play's readers share one worker, which builds it once; without xdist the
     marker does nothing."""
@@ -99,7 +105,7 @@ def keep_shard(config: pytest.Config, items: list[pytest.Item]) -> None:
     name = shards.chosen()
     if name is None:
         return
-    dropped = [i for i in items if shards.in_week_two(i) and shards.shard_of(play_of(i)) != name]
+    dropped = [i for i in items if shards.in_week_two(i) and shards.shard_of(play_of(i), named_shard(i)) != name]
     if dropped:
         config.hook.pytest_deselected(items=dropped)
         gone = set(map(id, dropped))
