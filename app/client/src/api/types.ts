@@ -56,6 +56,7 @@ export type NewSave = S["NewSave"];
 export type Opened = S["Opened"];
 export type Order = S["Order"];
 export type OrderCard = S["OrderCard"];
+export type OrderGuard = S["OrderGuard"];
 export type OrderState = S["OrderState"];
 export type OrderVerb = S["OrderVerb"];
 export type Offer = S["Offer"];

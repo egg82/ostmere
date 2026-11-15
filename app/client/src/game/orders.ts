@@ -108,11 +108,11 @@ function drawn(order: Order): boolean {
   return order.when.kind !== "after_time" && ["store_value", "card_count", "skill_level"].includes(order.when.watched.kind);
 }
 
-/** The rule whose task the hands are doing now, or -1. */
+/** The rule whose task the hands are doing now (its first or a fallback), or -1. */
 export function handsRule(view: View): number {
   const running = view.lanes.find((l) => l.lane === "hands")?.running_card ?? null;
   return running === null ? -1
-    : view.orders.findIndex((o, i) => view.orders_on[i] === true && o.then.kind === "tap_card" && o.then.card === running);
+    : view.orders.findIndex((o, i) => view.orders_on[i] === true && [o.then, ...o.or_else].some((a) => a.kind === "tap_card" && a.card === running));
 }
 
 /** The saved mix of this card alone at the whole share, if one exists. */
