@@ -113,7 +113,9 @@ and you tune it, then hit go.
   names (owner: the store a task takes belongs there too). So a rule like "cook roots when hungry" takes two taps,
   and it reads as one sentence with its levels showing, each part a choice in place (owner: the levels should not
   hide behind More options). `More options` keeps the uncommon: every mix, chip and store, an exact number, and the
-  rate. A rule being changed can be copied in one tap, which is how a rule comes on at either of two conditions:
+  rate. Every list of cards a rule editor offers (Do, Or else, the quick add's action) goes under the Tasks page's
+  sections, alphabetically by shown name within each, with the mixes last under their own heading (owner: too many
+  cards to sift through unordered). A rule being changed can be copied in one tap, which is how a rule comes on at either of two conditions:
   two rules doing the same thing. The full editor keeps all its power, since it is what makes rules handy later; only its first view shrinks.
   The mix editor likewise shows only what an edit changes. Each is first met through a lesson on its real controls
   at the moment it matters, the mix before rules, skippable and never repeated (after the galaxy.click

@@ -11,7 +11,7 @@ import { sample } from "../game/clock";
 import { choiceVerb } from "../game/elsechoices";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
 import { townNewRule } from "../game/town";
-import { chosen, doChoices, ruleCards, subjectChoices, whenChoices, type DoChoice } from "../game/ruleoffers";
+import { chosen, doChoices, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
 import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
@@ -24,8 +24,9 @@ import { ElseEditor } from "./condelse";
 import { GuardEditor } from "./condguards";
 import { markPressed, sameChoice } from "./condpress";
 import { quickParts, quickTask, quickTest } from "./condquick";
-import { doRow, whenRow } from "./condrows";
-import { markSubject, SubjectControl, subjectRows } from "./condsubject";
+import { doRow } from "./condrows";
+import { markSubject, SubjectControl } from "./condsubject";
+import { draftWhenRow } from "./condwhen";
 import { bringIntoView, el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 
@@ -154,12 +155,8 @@ export class ConditionEditor {
   /** When: the chips, then the stores, that ruleoffers.whenChoices offers, then (full) the levels and tasks; hidden for
    * a chip's rule being changed and until there is something to offer. */
   private drawWhen(view: View): void {
-    const { catalog } = this.ctx;
     const draft = this.draft;
-    const editing = draft?.index === null || draft?.subject ? null : draft?.rule.store ?? null;
-    const offer = whenChoices(catalog, view, this.full, ruleCards(view, draft?.then ?? null), editing);
-    const subjects = this.full ? subjectRows(catalog, view, subjectChoices(catalog, view), (r) => this.setSubject(r, true)) : [];
-    const row = draft?.chip === true ? [] : whenRow(catalog, offer.chips, offer.stores, (c) => this.setChip(c), (s) => this.setStore(s), subjects);
+    const row = draftWhenRow(this.ctx.catalog, view, this.full, draft, { chip: (c) => this.setChip(c), store: (s) => this.setStore(s), subject: (r) => this.setSubject(r, true) });
     this.chips.hidden = row.length === 0;
     this.chips.replaceChildren(...row);
   }
