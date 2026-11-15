@@ -50,14 +50,12 @@ export class PageMarks {
       img.addEventListener("error", () => this.report(`journal mark failed to load: ${p.src}`));
       img.src = `${MARKS}${p.src}`;
       const s = img.style;
-      s.left = `${p.box.x}px`;
-      s.top = `${p.box.y}px`;
-      // a quarter turn swaps the image's sides, so it is sized unturned and turned about its centre into the box
-      const [w, h] = p.turn ? [p.box.h, p.box.w] : [p.box.w, p.box.h];
-      s.width = `${w}px`;
-      s.height = `${h}px`;
-      s.translate = `${(p.box.w - w) / 2}px ${(p.box.h - h) / 2}px`;
-      s.transform = `${p.turn ? "rotate(90deg) " : ""}${p.flip ? "scaleX(-1)" : ""}`;
+      // sized unturned and centred in its bounding box, then turned, mirrored and scaled about its centre
+      s.width = `${p.w}px`;
+      s.height = `${p.h}px`;
+      s.left = `${p.box.x + (p.box.w - p.w) / 2}px`;
+      s.top = `${p.box.y + (p.box.h - p.h) / 2}px`;
+      s.transform = `rotate(${p.angle.toFixed(1)}deg) scale(${p.flipX ? -p.scale : p.scale}, ${p.flipY ? -p.scale : p.scale})`;
       s.opacity = p.opacity.toFixed(2);
       return img;
     }));
