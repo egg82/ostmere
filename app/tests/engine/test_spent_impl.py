@@ -3,10 +3,10 @@ the fixpoint and the yield's arithmetic, beside the blind contract suite."""
 from dataclasses import replace
 
 from ashfall_app.engine import (
-    BP, QUANTITY_SCALE as Q, AfterTime, Amount, CardDef, CardId, CardShare, Flow, FlowKind, LaneDef, LaneId, Leave, Mix,
-    MixId, Outcome, PacingCurve, RateRef, Rules, Run, RunKind, SaveMix, SkillDef, SkillId, SpentShare, StandingDef,
-    StoreDef, StoreId, SwitchMix, TriggerDef, TriggerId, Unlock, UnlockKind, ActionId, advance, decide, explain,
-    new_save, per_hour, view,
+    BP, QUANTITY_SCALE as Q, AfterTime, Amount, CardDef, CardId, CardShare, CardState, Flow, FlowKind, LaneDef, LaneId,
+    Leave, Mix, MixId, Outcome, PacingCurve, RateRef, Rules, Run, RunKind, SaveMix, Segment, SkillDef, SkillId,
+    SpentShare, StandingDef, StoreDef, StoreId, SwitchMix, TriggerDef, TriggerId, Unlock, UnlockKind, ActionId, advance,
+    decide, explain, new_save, per_hour, view,
 )
 from ashfall_app.api import convert, models as w
 from ashfall_app.engine.spent import spent_stores, yielded
@@ -50,6 +50,17 @@ def test_a_locked_maker_and_a_locked_standing_keep_nothing_out():
     opened = rules((maker,), empty(A, B), (stand,),
                    opening=(Unlock(UnlockKind.CARD, maker.id), Unlock(UnlockKind.ACTION, stand.id)))
     assert spent_stores(new_save(opened), opened) == frozenset()
+
+
+def test_a_maker_reaching_its_cap_under_the_same_unlock_set_leaves_its_store_spent():
+    """A card at its cap is no maker, though nothing in the unlock set changed when it got there."""
+    mk = CardDef(CardId("mk"), 10, makes=(Flow(A, 1000),), cap=1)
+    r = rules((mk,), empty(A))
+    s = new_save(r)
+    assert spent_stores(s, r) == frozenset()
+    done = replace(s, cards=(CardState(mk.id, Segment(0, 10 * BP, 0)),))
+    assert done.unlocked is s.unlocked
+    assert spent_stores(done, r) == {A}
 
 
 def _spent(card: str, share: int) -> tuple[CardId, int, Run]:
