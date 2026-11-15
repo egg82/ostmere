@@ -70,7 +70,7 @@ def arrange(entries: Sequence[Entry], bottoms: Mapping[str, int]) -> list[Entry]
     """The entries in band order (flat, sorted, overlay), each sorted one with its `base`; `bottoms` is each layer's
     lowest drawn pixel. Order inside a band is the manifest's own."""
     ids = {e["id"] for e in entries}
-    stale = (FLAT | OVERLAY | WALLS | BASE_OVERRIDE.keys() | PART_OF.keys() | set(PART_OF.values())) - ids
+    stale = (FLAT | OVERLAY | BASE_OVERRIDE.keys() | PART_OF.keys() | set(PART_OF.values())) - ids
     if stale:
         raise ValueError(f"depth names layers the scene no longer has: {sorted(stale)}")
     flat = [e for e in entries if e["id"] in FLAT]
@@ -142,3 +142,8 @@ def on_walls(entries: Sequence[Entry], footing_overlap: Callable[[str, str], boo
     walls = [e for e in entries if e["id"] in WALLS]
     return [(f["id"], w["id"]) for f in entries if f["id"].startswith("figure_") for w in walls
             if w.get("base", -1) <= f.get("base", 0) and footing_overlap(f["id"], w["id"])]
+
+
+def missing_walls(entries: Sequence[Entry]) -> list[str]:
+    """Names in `WALLS` that no layer of the whole scene (`entries`, every stage) has: a stale table checks nothing."""
+    return sorted(WALLS - {e["id"] for e in entries})

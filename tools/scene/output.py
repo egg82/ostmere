@@ -128,6 +128,8 @@ def check_depth(entries: list[Entry]) -> None:
 def check_footing(entries: list[Entry]) -> None:
     """No figure's footing lies on a wall it stands in front of (depth.on_walls), in any stage: a seat or a spot a wall's
     courses grow over later fails here, naming the stage. Fails too when no stage had a figure and a wall together."""
+    if gone := depth.missing_walls(entries):
+        raise ValueError(f"depth.WALLS names layers the scene no longer has: {gone}")
     overlap = _overlap(entries, footing=True)
     faults: dict[tuple[str, str], str] = {}
     met = 0

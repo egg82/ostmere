@@ -28,7 +28,7 @@ def camp() -> tuple[list[Entry], dict[str, int]]:
 
 def arranged() -> list[Entry]:
     entries, bottoms = camp()
-    stale = depth.FLAT | depth.OVERLAY | depth.WALLS | depth.BASE_OVERRIDE.keys() | depth.PART_OF.keys() | set(depth.PART_OF.values())
+    stale = depth.FLAT | depth.OVERLAY | depth.BASE_OVERRIDE.keys() | depth.PART_OF.keys() | set(depth.PART_OF.values())
     for name in stale - set(bottoms):
         entries.append(entry(name))
         bottoms[name] = 100
@@ -138,4 +138,11 @@ def test_feet_clear_of_a_wall_or_hidden_behind_it_are_not_on_it():
     assert depth.on_walls(layers, footing_on(("figure_gathering", "fireback"))) == []
     assert depth.on_walls(layers, footing_on(("birch_log", "fireback"))) == []
     assert depth.on_walls(layers, lambda a, b: False) == []
+
+
+def test_a_wall_name_gone_from_the_whole_scene_is_reported():
+    """The control: WALLS is checked against every layer of the scene, not each stage's, and a gone name is named."""
+    layers = [entry(name) for name in depth.WALLS - {"fireback"}]
+    assert depth.missing_walls(layers) == ["fireback"]
+    assert depth.missing_walls([entry(name) for name in depth.WALLS]) == []
 
