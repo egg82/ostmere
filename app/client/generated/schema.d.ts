@@ -1323,6 +1323,8 @@ export interface components {
             lane: string | null;
             /** Amount Bp */
             amount_bp: number;
+            /** Slot */
+            slot: number;
         };
         Hour: number;
         Id: string;

@@ -67,11 +67,11 @@ export class Format {
     return Object.fromEntries(changesBp.slice(0, 2).map((bp, i) => [i === 0 ? "pct" : "pct_b", this.change(bp)]));
   }
 
-  /** A card's {pct} slots at `shareBp` of its runner's time: each served change that is a held entry's amount scales
+  /** A card's {pct} slots at `shareBp` of its runner's time: each served change at a held entry's slot scales
    * as the engine does (amount * share, rounded down once), the rest stand. */
   figuresAt(info: Pick<CardInfo, "change_bp" | "held">, shareBp: number): Record<string, string> {
-    const held = new Set(info.held.map((h) => h.amount_bp));
-    return this.figures(info.change_bp.map((bp) => (held.has(bp) ? Math.floor((bp * shareBp) / this.scales.bp) : bp)));
+    const held = new Set(info.held.map((h) => h.slot));
+    return this.figures(info.change_bp.map((bp, i) => (held.has(i) ? Math.floor((bp * shareBp) / this.scales.bp) : bp)));
   }
 
   /** The {gain} and {gain_b} slots of an answer's cost text: the stores it puts in, in whole items, rounded down. */

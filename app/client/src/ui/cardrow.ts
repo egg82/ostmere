@@ -1,6 +1,5 @@
 // One card's row in the card panel (cards.ts): its nodes and what the panel keeps about it between views.
 import type { Card } from "../api/types";
-import { UI } from "../game/text";
 import { CardNeeds } from "./cardneeds";
 import { el, tapFeedback } from "./dom";
 import { FightPanel, seatFight } from "./fightpanel";
@@ -55,11 +54,7 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
   const head = el("span", "card-head");
   head.append(el("span", "card-title", catalog.label(info?.label_key)), row.count);
   tap.append(head);
-  if (info?.upside_key) {
-    const upside = el("span", "card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp)));
-    if (info.held.length > 0) upside.append(el("span", "card-upside-note", `, ${catalog.text.get(UI.atFull)}`));
-    tap.append(upside);
-  }
+  if (info?.upside_key) tap.append(el("span", "card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp))));
   const track = el("span", "card-track");
   track.append(row.fill);
   tap.append(row.needs.root, track, row.foot);

@@ -6,7 +6,8 @@ import re
 import pytest
 
 from ashfall_app.api.content_models import Content
-from ashfall_app.api.service import Game, _changes
+from ashfall_app.api.service import Game, _card_slots
+from ashfall_app.opening.entries import ModifierEntry
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.opening.renames import load_renames
 from ashfall_app.saves.ruleset import ruleset
@@ -109,18 +110,19 @@ def test_each_staked_sink_is_served_the_entries_it_holds_at_its_full_share(conte
 
 def test_a_card_that_holds_entries_serves_them_and_the_rest_serve_none(content: Content):
     watch = next(c for c in content.card_infos if c.card == "n4_watch")
-    assert [(h.side, h.lane, h.amount_bp) for h in watch.held] == [("larder", None, 5000), ("gap", None, 5000)]
+    assert [(h.side, h.lane, h.amount_bp, h.slot) for h in watch.held] == [("larder", None, 5000, 0), ("gap", None, 5000, 0)]
     assert 5000 in watch.change_bp
     holders = [c for c in content.card_infos if c.held]
     assert all((h.side is None) != (h.lane is None) for c in holders for h in c.held)
     assert [c.card for c in content.card_infos if not c.held and c.card == "stew"] == ["stew"]
 
 
-def test_a_held_amount_is_not_also_another_change_of_its_card():
-    """The page scales the served changes equal to a held amount, so no other change of the card may share one."""
+def test_a_held_entry_names_its_slot_and_an_equal_unscaled_change_has_another(content: Content):
+    for c in (c for c in content.card_infos if c.held):
+        assert all(c.change_bp[h.slot] == h.amount_bp for h in c.held), c.card
     o = load_opening()
-    holders = [c for c in o.cards if c.while_running]
-    assert holders
-    for c in holders:
-        own = _changes([*c.outcome.modifiers, *c.finished.modifiers])
-        assert not set(own) & {w.amount_bp for w in c.while_running}, c.id
+    watch = next(c for c in o.cards if c.id == "n4_watch")
+    same_amount = ModifierEntry(target="rate", id="x", flow="make", store="x", kind="add_bp", amount_bp=5000, source="x")
+    plain = watch.model_copy(update={"outcome": watch.outcome.model_copy(update={"modifiers": [same_amount]})})
+    slots = _card_slots(plain, o)
+    assert slots == [(5000, False), (5000, True)]

@@ -42,7 +42,7 @@ function editorRow(over: Partial<Content["card_infos"][number]>, text: string): 
 }
 const shareOf = (row: FakeEl): string => row.querySelector(".town-card-share")?.textContent ?? "";
 const upsideOf = (row: FakeEl): string => row.querySelector(".town-card-upside")?.textContent ?? "";
-const held = [{ side: "gap", lane: null, amount_bp: 5000 }];
+const held = [{ side: "gap", lane: null, amount_bp: 5000, slot: 0 }];
 
 {  // a held amount is worded at the share, and follows it
   const row = editorRow({ change_bp: [5000], held }, "{pct} strength while kept");
@@ -58,7 +58,7 @@ const held = [{ side: "gap", lane: null, amount_bp: 5000 }];
 }
 
 {  // a change the card does not hold stays as served, beside the one it does
-  const row = editorRow({ change_bp: [1500, 5000], held }, "{pct} work, {pct_b} strength");
+  const row = editorRow({ change_bp: [1500, 5000], held: [{ ...held[0]!, slot: 1 }] }, "{pct} work, {pct_b} strength");
   const share = Number.parseFloat(shareOf(row()));
   expect("only the held figure scales", upsideOf(row()), `+15% work, +${share / 2}% strength`);
 }
@@ -69,20 +69,22 @@ const held = [{ side: "gap", lane: null, amount_bp: 5000 }];
 }
 
 {  // rounded down once, on the whole amount: a figure that does not divide is cut, not rounded
-  const row = editorRow({ change_bp: [3333], held: [{ side: "gap", lane: null, amount_bp: 3333 }] }, "{pct} strength");
+  const row = editorRow({ change_bp: [3333], held: [{ side: "gap", lane: null, amount_bp: 3333, slot: 0 }] }, "{pct} strength");
   const bp = Number.parseFloat(shareOf(row())) * 100;
   expect("the engine's floor", upsideOf(row()), `+${Math.floor((3333 * bp) / 10000) / 100}% strength`);
 }
 
-{  // a card's face has no share: it keeps the full figure and says so, only where it holds an entry
-  const face = (over: Partial<Content["card_infos"][number]>): string => {
-    const catalog = withCard("haul", { upside_key: "up.kept", ...over }, { "up.kept": "{pct} strength while kept" });
-    const { ctx } = testContext(new Glow(), catalog);
-    const card = townStep("town").view.cards.find((c) => c.card === "haul");
-    if (!card) throw new Error("the town fixture has no haul");
-    const row = makeRow(ctx, new WhenReady(ctx), card);
-    return row.node.querySelector(".card-upside")?.textContent ?? "";
-  };
-  expect("the full figure, at full time", face({ change_bp: [5000], held }), "+50% strength while kept, at full time");
-  expect("a card that holds nothing says nothing more", face({ change_bp: [5000], held: [] }), "+50% strength while kept");
+{  // an unscaled change equal to a held amount stays as served: only the held slot scales
+  const row = editorRow({ change_bp: [5000, 5000], held: [{ ...held[0]!, slot: 1 }] }, "{pct} work, {pct_b} strength");
+  const share = Number.parseFloat(shareOf(row()));
+  expect("the equal change at another slot is not scaled", upsideOf(row()), `+50% work, +${share / 2}% strength`);
+}
+
+{  // a card's face has no share: it keeps the full figure
+  const catalog = withCard("haul", { upside_key: "up.kept", change_bp: [5000], held }, { "up.kept": "{pct} strength while kept" });
+  const { ctx } = testContext(new Glow(), catalog);
+  const card = townStep("town").view.cards.find((c) => c.card === "haul");
+  if (!card) throw new Error("the town fixture has no haul");
+  const row = makeRow(ctx, new WhenReady(ctx), card);
+  expect("the full figure", row.node.querySelector(".card-upside")?.textContent, "+50% strength while kept");
 }

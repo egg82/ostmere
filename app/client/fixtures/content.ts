@@ -135,7 +135,7 @@ const text: Record<string, string> = {
   "ui.frame.open": "Play Ostmere in its own tab",
   "ui.card.needs": "{store} {have}/{n}",
   "ui.card.needs_spent": "{store} {have}/{n}, none left",
-  "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}", "ui.card.at_full": "at full time", "ui.card.levelled": "{skill} {n} · {before} → {after}",
+  "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}", "ui.card.levelled": "{skill} {n} · {before} → {after}",
   "ui.chronicle.open": "Chronicle",
   "ui.chronicle.away": "Away {d}",
   "ui.chronicle.away_m": "{m}m",
