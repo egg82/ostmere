@@ -3,9 +3,8 @@
 // or layer allows is offered (game/elsechoices.ts), up to Content.limits.max_or_else, none twice.
 import type { OrderVerb, View } from "../api/types";
 import { choiceVerb, elseChoices, keepElse } from "../game/elsechoices";
-import { actionWords } from "../game/orders";
+import { actionWords, mixLabel } from "../game/orders";
 import { UI } from "../game/text";
-import { choiceButtons } from "./condrows";
 import { bringIntoView, el, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 
@@ -47,7 +46,12 @@ export class ElseEditor {
     add.setAttribute("aria-expanded", String(this.adding && room));
     const pick = el("div", "cond-else-pick");
     if (this.adding && room) {
-      pick.append(...choiceButtons(catalog, view, offer, () => "quiet cond-else-choice", (c) => { tapFeedback(); this.add(choiceVerb(c), orElse); }));
+      pick.append(...offer.map((c) => {
+        const b = button("quiet cond-else-choice", c.kind === "task" ? catalog.cardLabel(c.card) : mixLabel(catalog, c.mix), () => this.add(choiceVerb(c), orElse));
+        if (c.kind === "task") b.dataset.card = c.card;
+        else { b.dataset.mix = c.mix; b.disabled = view.greyed_mix_ids.includes(c.mix); }
+        return b;
+      }));
     }
     this.root.replaceChildren(head, ...held, add, ...(this.adding && room ? [pick] : []));
   }

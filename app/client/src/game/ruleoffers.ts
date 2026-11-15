@@ -6,7 +6,6 @@
 // the player keeps making by hand, which gets a mark.
 import type { ChipInfo, LedgerLine, OrderVerb, RepeatedSwitch, Subject, View } from "../api/types";
 import type { Catalog } from "./catalog";
-import { inSectionOrder } from "./cardsections";
 import { rulesFull, sameCondition, soloCard } from "./orders";
 import { seenChips } from "./shown";
 import { buildSubject, type SubjectRule } from "./subjectrule";
@@ -45,15 +44,13 @@ export function ruleCards(view: View, then: OrderVerb | null): string[] {
   return mix ? flatCards(view, mix) : [];
 }
 
-/** What the Do row offers: the tasks in the Tasks page's sections, each by name (game/cardsections.ts), then (with
- * More options) the saved mixes that are not a task offered. A town
+/** What the Do row offers: the tasks, then (with More options) the saved mixes that are not a task offered. A town
  * rule (`town`) offers the town's mixes alone; any other, never a town mix (it is set by a rule on the town). */
 export function doChoices(catalog: Catalog, view: View, full: boolean, then: OrderVerb | null, town = false): DoChoice[] {
   const tasks = town ? [] : ruleTasks(catalog, view, taskOf(catalog, view, then));
   const shown = new Set(tasks);
   const mixes = full || town ? view.mixes.filter((m) => isTownMix(catalog, view, m) === town && !shown.has(soloCard(m, catalog.content.scales.bp) ?? "")) : [];
-  const all = [...tasks.map((card) => ({ kind: "task" as const, card })), ...mixes.map((m) => ({ kind: "mix" as const, mix: m.id }))];
-  return inSectionOrder(catalog, all, (c) => (c.kind === "task" ? c.card : null));
+  return [...tasks.map((card) => ({ kind: "task" as const, card })), ...mixes.map((m) => ({ kind: "mix" as const, mix: m.id }))];
 }
 
 /** The choice `then` is pressed as: its task (a solo mix included), else its mix. */
@@ -92,7 +89,7 @@ export function subjectChoices(catalog: Catalog, view: View): { levels: SubjectR
   const camp = catalog.campStore;
   const hasCamp = camp !== null && view.ledger.some((l) => l.store === camp) && catalog.unlocked(view, "store", camp);
   const levels: SubjectRule[] = [...(hasCamp ? [{ kind: "camp" as const, n: 1 }] : []), ...view.skills.map((s) => ({ kind: "level" as const, skill: s.skill, n: 1 }))];
-  const tasks = inSectionOrder(catalog, view.cards.map((c) => c.card), (c) => c).map((card): SubjectRule => ({ kind: "count", card, n: 1 }));
+  const tasks: SubjectRule[] = view.cards.map((c) => ({ kind: "count" as const, card: c.card, n: 1 }));
   return { levels, tasks };
 }
 
