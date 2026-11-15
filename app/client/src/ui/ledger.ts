@@ -252,7 +252,7 @@ export class Ledger implements Part {
    * is set on its store and test, and gone when it is not: the card's rule and Show me. */
   private inline(row: Row, card: OrderCard | undefined): void {
     const { catalog } = this.ctx;
-    const words = card ? ruleWords(catalog, { when: card.when, then: card.then }) : null;
+    const words = card ? ruleWords(catalog, { when: card.when, then: card.then, unless: [], or_else: [] }) : null;
     const guide = card !== undefined && this.view !== null && guidedRule(this.view, this.ctx.keeps, card);
     const waits = guide && ruleWaits(card, this.ctx.lesson(), this.ctx.lessonSubject());   // guided, it waits out another lesson or offer
     const key = card && words && guide && !waits ? `${words.when}|${words.action}` : "";

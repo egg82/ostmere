@@ -34,7 +34,7 @@ export class ChipOffer {
 
   private draw(card: OrderCard): void {
     const { catalog } = this.ctx;
-    const words = ruleWords(catalog, { when: card.when, then: card.then });
+    const words = ruleWords(catalog, { when: card.when, then: card.then, unless: [], or_else: [] });
     if (!words) return;
     const sentence = el("p", "rule-sentence");
     const hue = card.then.kind === "tap_card" ? catalog.rank(card.then.card) % 6 : 5;

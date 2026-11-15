@@ -23,8 +23,8 @@ const AT = 100;
 const catalog = new Catalog(fixtureContent);
 const mid = fixtureStep("mid", AT).view;   // wood falling, drawn down by tend, nothing covering it; forecast: wood empties at AT + 420
 
-const SMOKE: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 2 * Q, release: Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "smoke_catch" } };
-const KEEP_WOOD: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Gather by hand" } };
+const SMOKE: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 2 * Q, release: Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "smoke_catch" }, unless: [], or_else: [] };
+const KEEP_WOOD: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [] };
 const KEEP_CATCH: Order = { ...SMOKE, when: { kind: "at_most", watched: { kind: "store_value", store: "catch" }, value: 2 * Q - 1, release: 4 * Q - 1, value_of_cap: false, release_of_cap: false } };
 
 function line(store: string, items: number, by: Array<[string, number]>, over: Partial<LedgerLine> = {}): LedgerLine {

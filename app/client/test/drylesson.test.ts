@@ -50,7 +50,7 @@ expect("no running mix: nothing", dryCue(catalog, { ...dry, running_mix_id: null
 const lesson = LESSONS.find((l) => l.id === DRY_STORE)!;
 expect("control: rules taught, it may start", mayStart(lesson, dry, keepsOf(TAUGHT)), true);
 expect("before the first rule's lesson (and no hands rule): it waits", mayStart(lesson, dry, keepsOf({ ...NEW_FLAT, lessons: [FIRST_MIX] })), false);
-const handsRule: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "warmth" }, value: 10, release: 20, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Stools" } };
+const handsRule: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "warmth" }, value: 10, release: 20, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Stools" }, unless: [], or_else: [] };
 expect("a save with a hands rule is past the first rule: it may start", mayStart(lesson, { ...dry, orders: [handsRule], orders_on: [false], order_states: ["waiting"] }, keepsOf({ ...NEW_FLAT, lessons: [FIRST_MIX] })), true);
 const fed = { ...dry, mixes: dry.mixes.map((m) => (m.id === "Stools" ? { ...m, components: [...m.components, { kind: "card_share" as const, card: "gather", share_bp: 5000 }] } : m)) };
 expect("control: no saved mix feeds itself in the fixture", anySelfFedMix(dry), false);
@@ -133,7 +133,7 @@ function rig(view: View, keeps: Keeps) {
 
 {  // control: a rule watching wood that does not make it leaves the dry line uncovered, and marked with that rule; the
    // lesson still starts from the line and walks on
-  const watching: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 2 * Q - 1, release: 6 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
+  const watching: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 2 * Q - 1, release: 6 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [] };
   const r = rig({ ...dry, orders: [...dry.orders, watching], orders_on: [...dry.orders_on, false], order_states: [...dry.order_states, "waiting"] }, keepsOf(TAUGHT));
   r.frame();
   expect("the marked line is the trigger", [r.line()?.dataset.store, r.line()?.querySelector<HTMLElement>(".line-rule")?.hidden], ["wood", false]);

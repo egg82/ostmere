@@ -133,7 +133,7 @@ export function freeName(view: View, base: string): string {
  * a task on another lane is the rule's own task (CONTRACT.txt).
  */
 export function addRule(view: View, catalog: Catalog, card: OrderCard): Decision[] {
-  return ruleDecisions(view, catalog, null, { when: card.when, then: card.then });
+  return ruleDecisions(view, catalog, null, { when: card.when, then: card.then, unless: [], or_else: [] });
 }
 
 /** Setting `order`, appended as the lowest priority (`index` null; on a ruled lane, just before its first always rule)
@@ -148,7 +148,7 @@ export function ruleDecisions(view: View, catalog: Catalog, index: number | null
   const found = soloMix(view, then.card, bp);
   const id = found?.id ?? freeName(view, catalog.cardLabel(then.card));
   const save: Decision[] = found ? [] : [{ kind: "save_mix", mix: { id, components: [{ kind: "card_share", card: then.card, share_bp: bp }] } }];
-  return [...save, setRule(view, index, { when: order.when, then: { kind: "switch_mix", mix_id: id } })];
+  return [...save, setRule(view, index, { ...order, then: { kind: "switch_mix", mix_id: id } })];
 }
 
 /** The verb a rule saves for `then`: a hands task is its saved solo mix when there is one (ruleDecisions saves one

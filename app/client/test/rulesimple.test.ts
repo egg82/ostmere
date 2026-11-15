@@ -59,7 +59,7 @@ function newRule(view: View): { cond: HTMLElement; decided: Decision[] } {
   expect("saved: the task's solo mix, then the rule on the chip's condition", decided.map((d) => d.kind), ["save_mix", "set_orders"]);
   const set = decided[1];
   const added = set?.kind === "set_orders" ? set.orders.at(-1) : undefined;
-  expect("the chip's condition, running that mix", added, { when: TIRED, then: { kind: "switch_mix", mix_id: "Rest" } });
+  expect("the chip's condition, running that mix", added, { when: TIRED, then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [] });
 }
 
 // A task chosen after another clears a condition it does not answer; More options offers every chip and store.

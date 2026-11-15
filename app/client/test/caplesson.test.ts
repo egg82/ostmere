@@ -120,7 +120,7 @@ const wood = catalog.storeLabel("wood");
 }
 
 {  // a rule on wood reaching a level is already the answer
-  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30, release: 10, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
+  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30, release: 10, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [] };
   const r = rig({ ...full.view, orders: [rule], orders_on: [false], order_states: ["waiting"] }, keepsOf(RULES_OPEN));
   r.frame(); r.frame();
   expect("answered: no trigger", r.line() !== null, false);
@@ -139,7 +139,7 @@ const wood = catalog.storeLabel("wood");
 
 {  // control: a rule keeping wood stocked watches the full line, so the line carries that rule's mark; the lesson still
    // starts from it and walks on
-  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" } };
+  const keep: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q - 1, release: 20 * Q - 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [] };
   const v = full.view;
   const r = rig({ ...v, orders: [...v.orders, keep], orders_on: [...v.orders_on, false], order_states: [...v.order_states, "waiting"] }, keepsOf(RULES_OPEN));
   r.frame();
