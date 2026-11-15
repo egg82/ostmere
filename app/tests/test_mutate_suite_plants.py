@@ -1,4 +1,5 @@
 """The mutation tool names every spec that does not plant, before it runs anything."""
+import sys
 from pathlib import Path
 
 import pytest
@@ -42,3 +43,11 @@ def test_a_run_stops_before_any_test_when_a_mutant_does_not_plant(tmp_path: Path
     specs = _specs_with(tmp_path, "m11.py", "text that is nowhere in the engine\n")
     assert ms.run(SPENT, set(), specs, False) == 1
     assert "NOT PLANTED m11.py" in capsys.readouterr().out
+
+
+def test_plants_over_every_suite_exits_0_now_and_1_for_a_broken_spec(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(sys, "argv", ["mutate_suite", "--plants"])
+    assert ms.main() == 0
+    specs = _specs_with(tmp_path, "m11.py", "text that is nowhere in the engine\n")
+    monkeypatch.setattr(sys, "argv", ["mutate_suite", "spent", "--plants", "--specs", str(specs)])
+    assert ms.main() == 1

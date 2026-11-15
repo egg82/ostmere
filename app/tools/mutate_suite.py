@@ -16,9 +16,11 @@ A suite may also run other test files beside its own (`also`: the implementation
 its MUTANTS file); only its own tests make claims.
 
 From app/:  python -m tools.mutate_suite SUITE --check
-              exits 1 unless every row is claimed by a test marked @kills(row), every claim names a row, and every
-              spec would plant: each anchor occurs exactly once, naming the mutant that does not (a gate on the
-              suite's own coverage; it plants nothing, runs no test).
+              exits 1 unless every row is claimed by a test marked @kills(row), every claim names a row and every spec
+              plants (a gate on the suite's own coverage; it plants nothing, runs no test).
+            python -m tools.mutate_suite [SUITE] --plants
+              the last of those alone, for every suite when none is named (CI): exits 1, naming each mutant whose
+              anchor occurs other than once.
             python -m tools.mutate_suite SUITE --run [--only 1,5] [--specs DIR]
               copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing
               skipped (a suite that skipped its database tests would let every mutant survive), then for each row
@@ -70,6 +72,8 @@ class Suite:
     """The directory under app/ holding the suite's MUTANTS file and its own tests."""
 
 
+LEAVES_ALSO = ("tests/engine/test_leaves_impl.py", "tests/engine/test_retired_chores_impl.py",
+               "tests/opening/test_leaves_loader.py", "tests/opening/test_retired_chores_loader.py")
 SUITES = {
     "held": Suite("MUTANTS_held.txt", "test_held_*.py", "held_mutants"),
     "drains": Suite("MUTANTS_drains.txt", "test_drains_*.py", "drains_mutants"),
@@ -78,14 +82,10 @@ SUITES = {
     "share": Suite("MUTANTS_share.txt", "test_share_levels_*.py", "share_mutants"),
     "guards": Suite("MUTANTS_guards.txt", "test_guards_*.py", "guards_mutants"),
     "or_else": Suite("MUTANTS_or_else.txt", "test_or_else_*_contract.py", "or_else_mutants"),
-    "leaves": Suite("MUTANTS_leaves.txt", "test_leaves_*.py", "leaves_mutants", 1, 20, (
-        "tests/engine_contract/test_retire_*.py", "tests/engine/test_leaves_impl.py",
-        "tests/engine/test_retired_chores_impl.py", "tests/opening/test_leaves_loader.py",
-        "tests/opening/test_retired_chores_loader.py")),
-    "retire": Suite("MUTANTS_leaves.txt", "test_retire_*.py", "retire_mutants", 21, 33, (
-        "tests/engine_contract/test_leaves_*.py", "tests/engine/test_leaves_impl.py",
-        "tests/engine/test_retired_chores_impl.py", "tests/opening/test_leaves_loader.py",
-        "tests/opening/test_retired_chores_loader.py")),
+    "leaves": Suite("MUTANTS_leaves.txt", "test_leaves_*.py", "leaves_mutants", 1, 20,
+                    ("tests/engine_contract/test_retire_*.py", *LEAVES_ALSO)),
+    "retire": Suite("MUTANTS_leaves.txt", "test_retire_*.py", "retire_mutants", 21, 33,
+                    ("tests/engine_contract/test_leaves_*.py", *LEAVES_ALSO)),
     "clocks": Suite("MUTANTS_clocks.txt", "test_failover.py", "clocks_mutants", also=(
         "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/reminders/test_sender.py",
         "tests/dayone/test_dayone_forecast.py"), home="tests/db"),
@@ -278,16 +278,18 @@ def run(suite: Suite, only: set[int], specs: Path, failing: bool) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("suite", choices=sorted(SUITES))
-    ap.add_argument("--check", action="store_true")
-    ap.add_argument("--run", action="store_true")
+    ap.add_argument("suite", nargs="?", choices=sorted(SUITES))
+    for flag in ("--check", "--plants", "--run"):
+        ap.add_argument(flag, action="store_true")
     ap.add_argument("--only", default="")
     ap.add_argument("--failing", action="store_true", help="with --run, list the failing tests of each mutant")
     ap.add_argument("--specs", type=Path, default=None)
     a = ap.parse_args()
-    if a.check == a.run:
-        ap.error("exactly one of --check, --run")
-    suite = SUITES[a.suite]
+    if a.check + a.run + a.plants != 1:
+        ap.error("exactly one of --check, --run, --plants")
+    if a.plants:
+        return max(check_plants(s, a.specs or APP / "tools" / s.specs) for s in ([SUITES[a.suite]] if a.suite else SUITES.values()))
+    suite = SUITES[a.suite or ap.error("--check and --run name a suite")]
     specs = a.specs or APP / "tools" / suite.specs
     if a.check:
         return check(suite) | check_plants(suite, specs)
