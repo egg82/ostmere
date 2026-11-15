@@ -3,6 +3,7 @@
 // select laid over the words it reads as, so a tap opens the platform's own picker in place. The levels offer the five
 // named shares; a rule with an exact number is More options' (condlevels.ts), and any other share shows as it reads.
 import type { OrderVerb, View } from "../api/types";
+import { sectioned } from "../game/cardsections";
 import type { Catalog } from "../game/catalog";
 import { doChoices, ruleCards, taskOf, whenChoices } from "../game/ruleoffers";
 import { isShare, levelWords, PRESETS, sameLevel, tryRule, type Level, type StoreRule, type Test } from "../game/storerule";
@@ -58,19 +59,27 @@ export interface QuickPicks {
   task: (card: string) => void;
 }
 
-type Option = { value: string; label: string; disabled?: boolean };
+/** An option; ones in a row with the same `group` sit under one option group of that name. */
+type Option = { value: string; label: string; disabled?: boolean; group?: string };
 
 /** One part: its words, a ▾, and over them a transparent select holding `options` with `value` chosen. */
 function part(cls: string, words: string, options: Option[], value: string, pick: (v: string) => void, label = ""): HTMLElement {
   const wrap = el("span", `quick-part ${cls}`);
   const select = el("select", "quick-select");
   if (label) select.setAttribute("aria-label", label);
+  let group: HTMLElement | null = null;
+  let named: string | undefined;
   for (const o of options) {
+    if (o.group !== named || (o.group && !group)) {
+      named = o.group;
+      group = o.group ? el("optgroup") : null;
+      if (group && o.group) { group.setAttribute("label", o.group); select.append(group); }
+    }
     const opt = el("option", "", o.label);
     opt.value = o.value;
     opt.disabled = o.disabled === true;
     opt.selected = o.value === value;
-    select.append(opt);
+    (group ?? select).append(opt);
   }
   select.value = value;
   select.addEventListener("change", () => { if (select.value !== value) pick(select.value); });
@@ -100,7 +109,7 @@ export function quickSentence(catalog: Catalog, rule: StoreRule & { m: Level }, 
     test: part("quick-test", text.get(rule.test === "below" ? UI.ruleFallsTo : UI.ruleReachesTo), tests, rule.test, (v) => pick.test(v as Test)),
     n: levelPart(catalog, "n", rule.n, choices, pick),
     m: levelPart(catalog, "m", rule.m, choices, pick),
-    task: part(`quick-action ${hue}`, catalog.cardLabel(choices.task), choices.tasks.map((c) => ({ value: c, label: catalog.cardLabel(c) })), choices.task, pick.task,
+    task: part(`quick-action ${hue}`, catalog.cardLabel(choices.task), sectioned(catalog, choices.tasks, (c) => c).flatMap((g) => g.items.map((c) => ({ value: c, label: catalog.cardLabel(c), group: g.heading || undefined }))), choices.task, pick.task,
       text.get(UI.ruleDo)),
   };
   const template = text.get(rule.test === "below" ? UI.ruleQuickDown : UI.ruleQuickUp);
