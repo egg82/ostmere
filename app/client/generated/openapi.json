@@ -2287,6 +2287,13 @@
             "type": "array",
             "title": "Change Bp"
           },
+          "kept": {
+            "items": {
+              "$ref": "#/components/schemas/KeptInfo"
+            },
+            "type": "array",
+            "title": "Kept"
+          },
           "work_s": {
             "type": "integer",
             "title": "Work S"
@@ -2367,6 +2374,7 @@
           "label_key",
           "upside_key",
           "change_bp",
+          "kept",
           "work_s",
           "inputs",
           "makes",
@@ -3958,6 +3966,49 @@
           "label"
         ],
         "title": "Kept"
+      },
+      "KeptInfo": {
+        "properties": {
+          "side": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Side"
+          },
+          "lane": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lane"
+          },
+          "amount_bp": {
+            "type": "integer",
+            "title": "Amount Bp"
+          },
+          "slot": {
+            "type": "integer",
+            "title": "Slot"
+          }
+        },
+        "type": "object",
+        "required": [
+          "side",
+          "lane",
+          "amount_bp",
+          "slot"
+        ],
+        "title": "KeptInfo",
+        "description": "One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both."
       },
       "Key": {
         "type": "string",

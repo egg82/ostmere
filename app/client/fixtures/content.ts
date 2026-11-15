@@ -352,7 +352,7 @@ export const TIRED = low("energy", 3, 6);
 const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woodcutting: ["damp_wood"], rest: ["energy"], smoke_catch: ["smoked"], smoke_roots: ["smoked"], forage: ["roots"] };
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs,
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], kept: [], work_s: 5, inputs,
   makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), drains: [], skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });

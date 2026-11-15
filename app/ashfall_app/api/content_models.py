@@ -73,6 +73,17 @@ class FightInfo(BaseModel):
     """The pool for one fight lost; empty: ui.fight.lost."""
 
 
+class KeptInfo(BaseModel):
+    """One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both."""
+
+    side: str | None
+    lane: str | None
+    amount_bp: int
+    """At the card's full share; the View's fight entries are what applies, at the runner's share."""
+    slot: int
+    """The position in CardInfo.change_bp this entry's amount fills (two entries of one amount fill one slot)."""
+
+
 class CardInfo(BaseModel):
     card: str
     lane: str
@@ -84,6 +95,10 @@ class CardInfo(BaseModel):
     change_bp: list[int]
     """The modifiers of its outcome (at each completion, as a staged build's), of its finish and held while it runs (at
     its full share), as signed changes in basis points, as LevelPays.change_bp: the slots of upside_key."""
+    kept: list[KeptInfo]
+    """The card's own while_running entries, in content order: the slots of change_bp that scale with the runner's share
+    (amount_bp * share // Scales.bp, as the engine rounds it). The standing action named as upside_of is not here: it runs
+    at the full share."""
     work_s: int
     inputs: list[Amount]
     """Taken by each completion, paid as its work is done, tapped or mixed."""
