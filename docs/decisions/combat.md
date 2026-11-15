@@ -39,7 +39,9 @@ Combat: planned in `docs/design/combat-plan.md`; interface in engine `DESIGN.txt
 or a standing action that runs alone; odds are Modifiers entries from the two strengths, losses are flows, and the
 region's ramp is triggers on a clock store. No Save field, event kind or verb: a fight is never an event, and the
 engine keeps exact counts of fights and losses in tally stores. Only the schedule is a policy worth A/B; preparation
-decides, chance shows (which fight the chronicle calls lost is the chronicle's).
+decides, chance shows (which fight the chronicle calls lost is the chronicle's). A card that holds a side while it runs
+(a watch, a guard) says so on its face, where its share is set, and is listed with its share in that side's strength;
+a later chapter may add another side to the entries a card already holds (`pacing.md`, "A sink shows what it buys").
 
 Expeditions: planned in `docs/design/banked-time-plan.md`; interface in engine `DESIGN.txt`, "BANKED TIME". The first
 slice: a trip is an uncapped card with inputs, run in the mix on its supply store; finds are triggers on its completion

@@ -373,7 +373,8 @@ id = "wolf_pack"
 label_key = "threat_wolf_pack"
 base = 8
 
-# The watch shares week 1 shipped, each held on the gap while it runs, at its share of its lane's time.
+# The watch shares week 1 shipped, each held on the gap while it runs beside the larder b7.toml gave it, at its share of
+# its lane's time.
 [while_running]
 n1_watch = [{ side = "gap", amount_bp = 5000 }]
 n2_watch = [{ side = "gap", amount_bp = 5000 }]

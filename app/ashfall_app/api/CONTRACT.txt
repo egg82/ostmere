@@ -512,7 +512,8 @@ THE CLIENT MAY
     kind the strip shows (story, tap, body) before any arrives.
   - draw one card panel from view.cards and a Completed tab from view.completed; a card moves between them only
     when the view says so. Each card is drawn the same whether tapped, mixed or idle: its completions against its
-    cap ("3 of 5"; no cap, the count alone), its share and run in the running mix, and its one bar: Card.bar sampled
+    cap ("3 of 5"; no cap, the count alone), its upside_key (also under its name in the town editor), its share and run
+    in the running mix, and its one bar: Card.bar sampled
     and taken modulo bar_total, whoever runs it (Card.by: tap, mix, or null and still). Card.completes_at is a tap's
     landing, drawn as its countdown; a share's is null: a rule that takes the hands yields the mix, so no landing is
     claimed for it.

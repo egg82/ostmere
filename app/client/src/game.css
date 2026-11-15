@@ -1008,7 +1008,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-key-item.stopped::before { filter: saturate(.15) brightness(.6); }
 .town-cards { display: grid; gap: .35rem; }
 .town-card { display: flex; align-items: center; gap: .5rem; }
-.town-card-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-hi); }
+.town-card-what { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.town-card-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-hi); }
 .town-card-share { min-width: 3.2rem; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink-hi); }
 .town-step, .town-drop { flex: none; min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: var(--t-story); }
 .town-step:disabled, .town-add:disabled { opacity: .45; cursor: default; }

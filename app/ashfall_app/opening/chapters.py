@@ -53,14 +53,16 @@ def _once[T](name: str, old: T | None, new: T | None) -> T | None:
 
 
 def _held(cards: "list[CardEntry]", added: "dict[str, list[WhileRunningEntry]]") -> "list[CardEntry]":
-    """Earlier cards given the entries they hold while running (Chapter.while_running), each card one that holds none."""
+    """Earlier cards given more entries to hold while running (Chapter.while_running), after the ones they hold, each on
+    a side or lane the card holds nothing on yet."""
     known = {c.id: c for c in cards}
-    for cid in added:
+    for cid, entries in added.items():
         if cid not in known:
             raise ValueError(f"chapter while_running: unknown card {cid}")
-        if known[cid].while_running:
-            raise ValueError(f"chapter while_running: card {cid} already holds entries")
-    return [c.model_copy(update={"while_running": added[c.id]}) if c.id in added else c for c in cards]
+        held = {w.side or w.lane or "" for w in known[cid].while_running} & {w.side or w.lane or "" for w in entries}
+        if held:
+            raise ValueError(f"chapter while_running: card {cid} already holds an entry on {sorted(held)}")
+    return [c.model_copy(update={"while_running": [*c.while_running, *added[c.id]]}) if c.id in added else c for c in cards]
 
 
 def _camp(camp: "CampEntry | None", added: "list[CampLevelEntry]") -> "CampEntry | None":
