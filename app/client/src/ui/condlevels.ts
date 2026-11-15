@@ -10,28 +10,6 @@ import { UI } from "../game/text";
 import { el, setText, tapFeedback } from "./dom";
 import { ValueSlider } from "./valueslider";
 
-export interface Stepper {
-  root: HTMLElement;
-  value: HTMLElement;
-  less: HTMLButtonElement;
-  more: HTMLButtonElement;
-}
-
-/** A labelled − value + row; `less` and `more` name the buttons for a screen reader after the label. */
-export function stepper(label: string, less: string, more: string, step: (d: -1 | 1) => void): Stepper {
-  const root = el("div", "cond-stepper");
-  const value = el("span", "cond-value");
-  const down = el("button", "primary cond-step", "−");
-  const up = el("button", "primary cond-step", "+");
-  down.type = up.type = "button";
-  down.setAttribute("aria-label", `${label} ${less}`);
-  up.setAttribute("aria-label", `${label} ${more}`);
-  down.addEventListener("click", () => { tapFeedback(); step(-1); });
-  up.addEventListener("click", () => { tapFeedback(); step(1); });
-  root.append(el("span", "cond-label", label), down, value, up);
-  return { root, value, less: down, more: up };
-}
-
 export class LevelsFold {
   readonly root = el("div", "cond-levels");
   private readonly toggle = el("button", "cond-fold");

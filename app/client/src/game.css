@@ -663,10 +663,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 :is(.sheet, .rules) :is(.cond-form, .cond-preset):disabled { opacity: .35; cursor: default; }
 .stint-shares { justify-content: flex-end; }
 .stint-or { margin-right: .3rem; font-size: var(--t-meta); color: var(--ink); }
-.cond-stepper { display: flex; align-items: center; gap: .5rem; }
 .cond-label { min-width: 3rem; font-size: var(--t-meta); color: var(--ink); }
-:is(.sheet, .rules) .cond-step { min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: var(--t-story); }   /* a .primary */
-:is(.sheet, .rules) .cond-step:disabled { opacity: .35; cursor: default; }
 .cond-value { min-width: 2.2rem; text-align: center; font-size: var(--t-story); font-weight: 700; color: var(--ink-hi); font-variant-numeric: tabular-nums; }
 .cond-band { position: relative; height: 3px; background: var(--track); pointer-events: none; }   /* drawn, not a control */
 .cond-span { position: absolute; top: 0; bottom: 0; background: var(--ember); }
