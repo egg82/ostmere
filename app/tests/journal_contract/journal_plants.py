@@ -8,23 +8,27 @@ type Edit = tuple[str, str, str]
 J, H, L, N = "journal.py", "journal_composer/history.py", "journal_composer/ledger.py", "journal_composer/numbers.py"
 B, T, O = "journal_composer/bag.py", "journal_composer/telling.py", "journal_composer/owed.py"
 W, D = "journal_composer/own.py", "journal_composer/day.py"
-MK = "journal_composer/marks.py"
+MK, P = "journal_composer/marks.py", "journal_composer/page.py"
 
 KEY = 'sha256(f"{save_id}|journal|{day}|{subject}|{purpose}"'
-HEAD = "    head = [*caught, *(c.telling for c in written)]"
-KEEP = "    kept = sorted(passing, key=lambda c: (-c.care, c.order, c.telling.subject))[:left]"
-LEFT = "    left = max(0, room - len(caught) - len(musts) - len(fixes))"
-AT = "history.first_at(c.telling.subject, day)"
-BY = "    written = sorted([*musts, *kept], key=lambda c: "
-OWN_SORT = f"{BY}({AT}, c.telling.subject))"
-CAUGHT = "    caught = catchups(composed, history, subjects)\n"
-TOLD = "        told = tellings(composed, s.id) + (s.id in caught)"
+CATCH_UP = "    for t in catchups(composed, history, subjects):\n        page.write(t)\n"
+AWAY_DAY = '    if away(history, subjects, day):\n        page.gap = "away"\n        return page.done()\n'
+AWAY_MOMENT = '        if s.away_days > 0:\n            page.gap = "away"\n            return False\n'
+BUSY = "        if len(page.shown) > page.habits.busy_ratio * room:"
+BUSY_BLOCK = BUSY + '\n            page.gap = "busy"\n            return False\n'
+ROOM = "    room, diligent = budget(settled, habits), diligence(settled, habits)"
+ROOMLEFT = "len(page.notes) < room"
+TOLD = "s, page.told(s.id), history, page.habits, m.change)"
+MOMENT_SORT = "key=lambda p: p[0].at)"
+END_FIXES = ("    if page.notes or fixes:\n"
+             "        for t in lates(page.save_id, page.composed, list(page.subjects.values()), page.habits):\n"
+             "            page.write(t)\n    for t in fixes:\n        page.write(t)\n")
+MARK_ROLL = 'roll(save_id, day, kind, "mark")'
 LATE_ROLL = 'roll(save_id, yesterday.day, s.id, "late") < habits.late_rate'
 WROTE = 'if n.slot not in ("late", "correction")}'
-CARE_W = "    return faded(fade, 0 if changed(history, s.id, day) else told)"
+CARE_W = "    return faded(fade, 0 if change else told)"
 EARLIER = "if d < day for k in keys}"
-AWAY_RANGE = "range(day - s.away_days + 1, day + 1)"
-BUSY = "    if len(showing(history, subjects, day)) > habits.busy_ratio * room:"
+AWAY_RANGE = "range(day - s.away_days + 1, day)"
 SORT_FIRST = "    for sid in sorted(first_at, key=lambda i: (first_at[i], i)):"
 FIRST_AT = "            first_at.setdefault(s.id, history.first_at(s.id, d))\n"
 BUDGET = "    return math.floor(habits.lines_floor + span * 0.5 ** (settled / habits.lines_halflife) + 0.5)"
@@ -42,29 +46,22 @@ PLANTS: dict[str, list[Edit]] = {
     "3a": [(J, 'int.from_bytes(digest[:8], "big") / 2**64', 'int.from_bytes(digest[-8:], "little") / (2**64 - 1)')],
     "3b": [(J, KEY, 'sha256(f"{save_id}|{day}|{subject}|{purpose}"')],
     "3c": [(J, KEY, 'sha256(f"{save_id}:journal:{day}:{subject}:{purpose}"')],
-    "4": [(D, OWN_SORT, "    both = [*musts, *kept]\n"
-                        "    written = [c for i in {c.telling.subject for c in both} for c in both"
-                        " if c.telling.subject == i]")],
+    "4": [(D, "    for m in moments(lines, subjects, day):\n", "    for m in set(moments(lines, subjects, day)):\n")],
     "5": [(H, "for k in history.keys(subject, day))", "for k in history.keys(subject, day)[:1])")],
     "6": [(J, "import hashlib\n", "import hashlib\nimport itertools\n_COUNTER = itertools.count()\n"),
           (J, KEY, 'sha256(f"{save_id}|journal|{next(_COUNTER)}"')],
     "7": [(H, "line.at // DAY_S", "(line.at + 1) // DAY_S")],
     "8a": [(D, "    if any(line.at >= (day + 1) * DAY_S for line in lines):\n", "    if False:\n")],
     "8b": [(D, "    if [r.day for r in composed] != list(range(day)):\n", "    if False:\n")],
-    "9": [(D, "    if gap is not None:\n        return ComposedDay(day, (), gap)\n", ""),
-          (D, "        return ComposedDay(day, (), None)", "        return ComposedDay(day, (), gap)"),
-          (D, "for t in told), None)", "for t in told), gap)")],
+    "9": [(D, AWAY_DAY + CATCH_UP, CATCH_UP + AWAY_DAY)],
     "10": [(H, "    by_source = {s.source: s.id for s in subjects}",
             "    by_source = {s.source.id: s.id for s in subjects}"),
            (H, "by_source.get(line.source) if", "by_source.get(line.source.id) if")],
-    "10b": [(D, BUSY, "    if len(showing(history, subjects, day)) + noise > habits.busy_ratio * room:"),
-            (D, "room: int, habits: Habits) -> Gap | None:",
-             "room: int, habits: Habits, noise: int = 0) -> Gap | None:"),
-            (D, "    gap = _gap(history, subjects, day, room, habits)",
-             "    gap = _gap(history, subjects, day, room, habits,"
-             " sum(1 for x in lines if x.source is None and x.at // DAY_S == day))")],
-    "11": [(D, BUSY, "    if sum(len(history.keys(s.id, day)) for s in subjects) > habits.busy_ratio * room:")],
-    "12": [(W, "        must = is_must(s, told)", "        must = False")],
+    "10b": [(D, "    crowds: list[Subject] = []\n",
+             "    crowds: list[Subject] = []\n"
+             "    page.shown.update(f'noise{i}' for i, x in enumerate(lines) if x.source is None and x.at // DAY_S == day)\n")],
+    "11": [(D, BUSY, "        if sum(len(history.keys(i, page.day)) for i in page.shown) > page.habits.busy_ratio * room:")],
+    "12": [(W, "    must = is_must(s, told)\n", "    must = False\n")],
     "13": [(T, 'return subject.kind == "routine" and told == 0 and bool(subject.first)',
             'return subject.kind == "routine" and bool(subject.first)')],
     "14": [(T, 'return "repeat" if subject.repeat else None', 'return "repeat" if subject.repeat else "first"')],
@@ -76,16 +73,15 @@ PLANTS: dict[str, list[Edit]] = {
     "19": [(O, FIRST_AT, FIRST_AT
             + "    pairs = [(d, s.id) for d in gap_run(composed) for s in showing(history, subjects, d)]\n"),
            (O, SORT_FIRST, "    for _, sid in sorted(pairs):")],
-    "20": [(D, CAUGHT, "    caught = catchups(composed, history, subjects)"
-                       " if showing(history, subjects, day) else []\n")],
+    "20": [(D, CATCH_UP, "    for t in (catchups(composed, history, subjects) if moments(lines, subjects, day) else []):\n"
+                         "        page.write(t)\n")],
     "21": [(O, "        if t is not None and is_must(by_id[sid], tellings(composed, sid)):",
             "        if t is not None:")],
-    "22": [(D, "{t.subject for t in caught})", "set())")],
-    "23": [(D, CAUGHT, "    caught = catchups([ComposedDay(r.day, r.notes,"
-                       " _gap(history, subjects, r.day, room, habits))"
-                       " for r in composed], history, subjects)\n")],
-    "24": [(W, CARE_W, "    return faded(fade, 0 if changed(history, s.id, day) else"
-                       " len([d for d in history.by_subject[s.id] if d < day]))")],
+    "22": [(P, "n.subject == subject and n.slot in TELLINGS)", 'n.subject == subject and n.slot in TELLINGS and n.slot != "catchup")')],
+    "23": [(D, "    for t in catchups(composed, history, subjects):\n",
+            "    for t in catchups([ComposedDay(r.day, r.notes, compose(save_id, r.day, [x for x in lines if x.at < (r.day + 1) * DAY_S],"
+            " composed[:r.day], subjects, habits, True).gap, r.marks) for r in composed], history, subjects):\n")],
+    "24": [(W, CARE_W, "    return faded(fade, 0 if change else sum(1 for d in history.by_subject[s.id] if d < day))")],
     "25": [(L, '"misremember", "mention"})', '"misremember", "mention", "late", "correction"})')],
     "26a": [(W, CARE_W, "    return faded(fade, told)")],
     "26b": [(H, EARLIER, "if d <= day for k in keys}")],
@@ -96,7 +92,7 @@ PLANTS: dict[str, list[Edit]] = {
     "28": [(N, "    return min(1.0, press.base * (1 + press.press * (days_in_a_row - 1)))",
             "    return press.base * (1 + press.press * (days_in_a_row - 1))")],
     "29a": [(D, "diligence(settled, habits)", "diligence(float(day), habits)")],
-    "29b": [(D, "    room = budget(settled, habits)", "    room = budget(float(day), habits)")],
+    "29b": [(D, ROOM, "    room, diligent = budget(float(day), habits), diligence(settled, habits)")],
     "30a": [(L, WRITTEN, "    written = sum(len(r.notes) for r in composed)")],
     "30b": [(L, WRITTEN, "    written = sum(1 for r in composed if r.notes or r.gap)")],
     "30c": [(L, "    beat_notes = sum(1 for r in composed for n in r.notes if n.subject in beats)",
@@ -106,27 +102,18 @@ PLANTS: dict[str, list[Edit]] = {
     "31a": [(N, BUDGET, f"    return round({BUDGET_RAW})")],
     "31b": [(N, BUDGET, f"    return math.floor({BUDGET_RAW})")],
     "31c": [(N, BUDGET, f"    return math.ceil({BUDGET_RAW})")],
-    "32": [(D, LEFT, "    left = room - len(caught) - len(musts) - len(fixes)")],
-    "33": [(D, LEFT, "    left = max(0, room - len(musts))")],
-    "34": [(D, LEFT, "    left = max(0, room - len(caught) - len(musts) - len(fixes)"
-                     " - len(lates(save_id, composed, subjects, habits)))")],
-    "35a": [(D, KEEP, "    kept = sorted(passing, key=lambda c: c.telling.subject)[:left]")],
-    "35b": [(D, KEEP, "    kept = sorted(passing, key=lambda c: (c.care, c.order, c.telling.subject))[:left]")],
-    "35c": [(D, KEEP, "    kept = sorted(passing, key=lambda c: (-c.care, -c.order, c.telling.subject))[:left]")],
-    "35d": [(D, KEEP, "    kept = sorted(passing, key=lambda c: (c.order, c.telling.subject))[:left]")],
-    "36a": [(H, AWAY_RANGE, "range(day - s.away_days, day + 1)")],
-    "36b": [(H, AWAY_RANGE, "range(day - s.away_days + 2, day + 1)")],
-    "36c": [(H, AWAY_RANGE, "range(day - s.away_days, day)")],
-    "37": [(D, "> habits.busy_ratio * room:", ">= habits.busy_ratio * room:")],
-    "38": [(D, BUSY, "    if len(showing(history, subjects, day)) + owed > habits.busy_ratio * room:"),
-           (D, "room: int, habits: Habits) -> Gap | None:", "room: int, habits: Habits, owed: int = 0) -> Gap | None:"),
-           (D, "    gap = _gap(history, subjects, day, room, habits)",
-            "    gap = _gap(history, subjects, day, room, habits, len(catchups(composed, history, subjects)))")],
-    "39": [(D, f'    if away(history, subjects, day):\n        return "away"\n{BUSY}\n        return "busy"',
-            f'{BUSY}\n        return "busy"\n    if away(history, subjects, day):\n        return "away"')],
-    "40": [(D, "> habits.busy_ratio * room:", "> habits.busy_ratio * habits.lines_start:")],
-    "41": [(D, "    if not head and not fixes:",
-            "    if not head and not fixes and not lates(save_id, composed, subjects, habits):")],
+    "33": [(D, ROOMLEFT, "len([n for n in page.notes if n.slot != 'catchup']) < room")],
+    "34": [(D, ROOMLEFT, "len(page.notes) + len(lates(page.save_id, page.composed, list(page.subjects.values()), page.habits)) < room")],
+    "36a": [(H, AWAY_RANGE, "range(day - s.away_days, day)")],
+    "36b": [(H, AWAY_RANGE, "range(day - s.away_days + 2, day)")],
+    "36c": [(H, AWAY_RANGE, "range(day - s.away_days + 1, day + 1)")],
+    "37": [(D, "> page.habits.busy_ratio * room:", ">= page.habits.busy_ratio * room:")],
+    "38": [(D, BUSY, "        if len(page.shown) + len(catchups(page.composed, history, list(page.subjects.values())))"
+                     " > page.habits.busy_ratio * room:")],
+    "39": [(D, AWAY_MOMENT + BUSY_BLOCK, BUSY_BLOCK + AWAY_MOMENT)],
+    "39b": [(D, AWAY_MOMENT, AWAY_MOMENT.replace("            return False\n", ""))],
+    "40": [(D, "> page.habits.busy_ratio * room:", "> page.habits.busy_ratio * page.habits.lines_start:")],
+    "41": [(D, "    if page.notes or fixes:\n", "    if page.notes or fixes or lates(page.save_id, page.composed, list(page.subjects.values()), page.habits):\n")],
     "42": [(O, "    yesterday = composed[-1]",
             "    yesterday = next((r for r in reversed(composed) if r.notes), composed[-1])")],
     "43": [(O, LATE_ROLL, 'roll(save_id, yesterday.day + 1, s.id, "late") < habits.late_rate')],
@@ -142,27 +129,25 @@ PLANTS: dict[str, list[Edit]] = {
     "47b": [(O, "wrong[-1] + wait > day:", "wrong[-1] + wait != day:")],
     "47c": [(O, '    return not any(n.subject == subject and n.slot == "correction"',
              '    return True or not any(n.subject == subject and n.slot == "correction"')],
-    "47d": [(D, "    if not head and not fixes:", "    if not head:")],
+    "47d": [(D, "    for t in fixes:\n        page.write(t)\n", "    for t in (fixes if page.notes else []):\n        page.write(t)\n")],
     "48a": [(O, LATE_ROLL, 'roll(save_id, yesterday.day, s.id, "late") < 1 - habits.late_rate')],
     "48b": [(W, '"misremember") < habits.misremember_rate', '"misremember") > habits.misremember_rate')],
     "49a": [(O, SORT_FIRST, "    for sid in sorted(first_at):")],
     "49b": [(O, SORT_FIRST, "    for sid in sorted(first_at, key=lambda i: (-first_at[i], i)):")],
     "49c": [(O, FIRST_AT, "            first_at.setdefault(s.id, d)\n")],
-    "50a": [(D, OWN_SORT, f"{BY}(c.order, c.telling.subject))")],
-    "50b": [(D, OWN_SORT, f"{BY}c.telling.subject)")],
-    "50c": [(D, OWN_SORT, f"{BY}(not c.must, {AT}, c.telling.subject))")],
-    "50d": [(D, OWN_SORT, f"{BY}(-{AT}, c.telling.subject))")],
+    "50b": [(H, MOMENT_SORT, "key=lambda p: p[1].id)")],
+    "50d": [(H, MOMENT_SORT, "key=lambda p: -p[0].at)")],
     "50e": [(H, "            days[day] = min(days.get(day, line.at), line.at)",
              "            days[day] = max(days.get(day, line.at), line.at)")],
-    "50f": [(D, OWN_SORT, f"{BY}{AT})")],
-    "51a": [(D, HEAD, "    head = [*(c.telling for c in written), *caught]")],
-    "51b": [(D, "    told = [*head, *lates(save_id, composed, subjects, habits), *fixes]",
-             "    told = [*head, *fixes, *lates(save_id, composed, subjects, habits)]")],
+    "50f": [(H, MOMENT_SORT, "key=lambda p: (p[0].at, p[1].id))")],
+    "51a": [(D, CATCH_UP, ""), (D, "    if ended:\n", CATCH_UP + "    if ended:\n")],
+    "51b": [(D, END_FIXES, "    due = bool(page.notes or fixes)\n    for t in fixes:\n        page.write(t)\n    if due:\n"
+                           "        for t in lates(page.save_id, page.composed, list(page.subjects.values()), page.habits):\n"
+                           "            page.write(t)\n")],
     "51c": [(O, '    for s in sorted(subjects, key=lambda x: x.id):\n        t = plain(s, "late")',
              '    for s in subjects:\n        t = plain(s, "late")')],
     "51d": [(O, '    for s in sorted(subjects, key=lambda x: x.id):\n        t = plain(s, "correction")',
              '    for s in subjects:\n        t = plain(s, "correction")')],
-    "52": [(D, OWN_SORT, f"{BY}(-c.care, {AT}, c.telling.subject))")],
     "53": [(B, "    return min(unused, key=lambda k: _shuffle(save_id, subject, bag, round_no, k))",
             "    return min(keys, key=lambda k: _shuffle(save_id, subject, bag, len(stored), k))")],
     "54": [(B, "    stored = drawn(composed, t.subject, t.slot, t.keys)", "    stored: list[str] = []")],
@@ -175,52 +160,42 @@ PLANTS: dict[str, list[Edit]] = {
     "56b": [(T, BAND, "    reached = [b for b in subject.mention if b.at_least > count]"),
             (T, "    return max(reached, key=lambda b: b.at_least) if reached else None",
              "    return min(reached, key=lambda b: b.at_least) if reached else None")],
-    "57": [(W, TOLD, "        told = sum(1 for d in history.by_subject[s.id] if d < day) + (s.id in caught)")],
+    "57": [(D, TOLD, "s, sum(1 for d in history.by_subject[s.id] if d < page.day)\n            + len([n for n in page.notes if n.subject == s.id]), history, page.habits, m.change)")],
     "58a": [(L, WRITTEN, "    written = sum(1 for r in composed"
                          " if any(n.subject in {s.id for s in subjects} for n in r.notes))")],
-    "58b": [(W, TOLD, "        told = sum(1 for r in composed for n in r.notes if n.subject == s.id"
-                      ' and n.slot in ("first", "repeat", "catchup", "misremember", "mention") and n.key in'
-                      " (*s.first, *s.repeat, *s.catchup, *s.misremember, *(k for b in s.mention for k in b.keys)))"
-                      " + (s.id in caught)")],
-    "59a": [(MK, 'roll(save_id, day, k, "mark")', 'roll(save_id, day, next((s.id for s in subjects if s.mark == k), k), "mark")')],
-    "59b": [(MK, 'roll(save_id, day, k, "mark")', 'roll(save_id, 0, k, "mark")')],
-    "59c": [(MK, 'roll(save_id, day, k, "mark")', 'roll(0, day, k, "mark")')],
-    "59d": [(MK, 'roll(save_id, day, k, "mark")', 'roll(save_id, day, k, "write")')],
-    "59e": [(MK, 'roll(save_id, day, k, "mark") < getattr(habits.marks, k)', 'roll(save_id, day, k, "mark") > getattr(habits.marks, k)')],
-    "59f": [(MK, 'roll(save_id, day, k, "mark") < getattr(habits.marks, k)', 'roll(save_id, day, k, "mark") < 1 - getattr(habits.marks, k)')],
-    "59g": [(MK, 'getattr(habits.marks, k)', 'habits.marks.smudge')],
+    "58b": [(P, "return tellings(self.composed, subject) + ",
+             "return sum(1 for r in self.composed for n in r.notes if n.subject == subject and n.slot in TELLINGS"
+             " and n.key in (*self.subjects[subject].first, *self.subjects[subject].repeat, *self.subjects[subject].catchup,"
+             " *self.subjects[subject].misremember, *(k for b in self.subjects[subject].mention for k in b.keys))) + ")],
+    "59a": [(MK, MARK_ROLL, 'roll(save_id, day, note.subject, "mark")')],
+    "59b": [(MK, MARK_ROLL, 'roll(save_id, 0, kind, "mark")')],
+    "59c": [(MK, MARK_ROLL, 'roll(0, day, kind, "mark")')],
+    "59d": [(MK, MARK_ROLL, 'roll(save_id, day, kind, "write")')],
+    "59e": [(MK, MARK_ROLL + " <", MARK_ROLL + " >")],
+    "59f": [(MK, "< getattr(habits.marks, kind)", "< 1 - getattr(habits.marks, kind)")],
+    "59g": [(MK, "getattr(habits.marks, kind)", "habits.marks.smudge")],
     "60a": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset()')],
     "60b": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset({"correction"})')],
     "60c": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset({"late"})')],
-    "61a": [(MK, "n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked}", "n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked}"
-              " | {s.mark for s in subjects if s.mark is not None and s.id not in {n.subject for n in notes}}")],
-    "61b": [(MK, "s.id: s.mark for s in subjects if s.mark is not None}", 's.id: s.mark or "smudge" for s in subjects}')],
-    "61c": [(MK, "    if any(n.slot ==", "    held |= set(marked.values())\n    if any(n.slot ==")],
-    "62a": [(MK, 'if any(n.slot == "catchup" for n in notes):', "if notes:")],
-    "E3": [(MK, 'roll(save_id, day, k, "mark") < getattr(habits.marks, k)', 'roll(save_id, day, k, "mark") <= getattr(habits.marks, k)')],
-    "E4": [(MK, 'if any(n.slot == "catchup" for n in notes):', 'if any(n.slot == "catchup" for n in notes) or not notes:')],
-    "62c": [(MK, 'if any(n.slot == "catchup" for n in notes):', "if False:")],
+    "E4": [(MK, "if s is not None and s.mark is not None else []", 'if s is not None and s.mark is not None else [] if s is not None else ["smudge"]')],
+    "61b": [(MK, "[s.mark] if s is not None and s.mark is not None else []", '[s.mark or "smudge"] if s is not None else []')],
+    "62a": [(MK, 'return [*own, "smudge"] if note.slot == "catchup" else own', 'return [*own, "smudge"]')],
+    "E3": [(MK, "< getattr(habits.marks, kind)", "<= getattr(habits.marks, kind)")],
+    "62c": [(MK, 'return [*own, "smudge"] if note.slot == "catchup" else own', "return own")],
     "62d": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction", "catchup"})')],
-    "63a": [(MK, "[k for k in MARK_KINDS\n                             if k in held", "[k for k in dict.fromkeys(n_k for n in notes for n_k in [marked.get(n.subject)] if n_k)\n                             if k in held")],
-    "63b": [(MK, "[k for k in MARK_KINDS\n                             if k in held", "[k for k in dict.fromkeys(s.mark for s in subjects)\n                             if k in held")],
-    "63c": [(MK, "    drawn: list[MarkKind] = [k for k in MARK_KINDS\n                             if k in held and",
-                "    drawn: list[MarkKind] = [k for n in notes if n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked\n"
-                "                             for k in [marked[n.subject]] if")],
-    "64a": [(MK, "    drawn: list[MarkKind] = [k for k in MARK_KINDS\n                             if k in held and",
-                "    drawn: list[MarkKind] = [k for k in [k for k in MARK_KINDS if k in held][:habits.marks_most]\n                             if")],
-    "64b": [(MK, "return tuple(drawn[:habits.marks_most])", "return tuple(drawn)")],
-    "64c": [(MK, "return tuple(drawn[:habits.marks_most])", "return tuple(drawn[:habits.marks_most + 1])")],
-    "64d": [(MK, "return tuple(drawn[:habits.marks_most])", "return tuple(drawn[:max(0, habits.marks_most - 1)])")],
-    "65a": [(D, "        return ComposedDay(day, (), gap)\n",
-                "        return ComposedDay(day, (), gap, marks(save_id, day, tuple(note(save_id, composed, t) for t in"
-                " catchups(composed, history, subjects)), subjects, habits))\n")],
-    "E5": [(D, "        return ComposedDay(day, (), None)\n",
-                "        return ComposedDay(day, (), None, marks(save_id, day, tuple(note(save_id, composed, t) for t in"
-                " [*caught, *(c.telling for c in musts)]), subjects, habits))\n")],
-    "66a": [(D, LEFT, "    left = max(0, room - len(caught) - len(musts) - len(fixes) - (1 if any(s.mark for s in subjects) else 0))")],
-    "66b": [(D, "    return ComposedDay(day, notes, None, marks(save_id, day, notes, subjects, habits))",
-                "    drawn = marks(save_id, day, notes, subjects, habits)\n"
-                "    return ComposedDay(day, notes[1:] + notes[:1] if drawn else notes, None, drawn)")],
-    "E1": [(D, '"write") < c.care * diligent]', '"write") <= c.care * diligent]')],
+    "63a": [(MK, "    for kind in held(note, subjects):\n", "    for kind in reversed(held(note, subjects)):\n")],
+    "63b": [(P, "tuple(self.marks))", "tuple(sorted(self.marks, key=MARK_KINDS.index)))"),
+            (P, "import ComposedDay, Gap, Habits, MarkKind, Note, Subject", "import MARK_KINDS, ComposedDay, Gap, Habits, MarkKind, Note, Subject")],
+    "63c": [(MK, "if kind in have or kind in out or", "if kind in out or")],
+    "64a": [(MK, "    for kind in held(note, subjects):\n", "    for kind in held(note, subjects)[:max(0, habits.marks_most - len(have))]:\n")],
+    "64b": [(MK, "or len(have) + len(out) >= habits.marks_most:", "or False:")],
+    "64c": [(MK, "len(have) + len(out) >= habits.marks_most", "len(have) + len(out) > habits.marks_most")],
+    "64d": [(MK, "len(have) + len(out) >= habits.marks_most", "len(have) + len(out) >= habits.marks_most - 1")],
+    "65a": [(D, '        page.gap = "away"\n        return page.done()\n',
+             '        page.gap = "away"\n        page.marks += [k for k in ("smudge",) if roll(save_id, day, k, "mark") < getattr(habits.marks, k)]\n'
+             "        return page.done()\n")],
+    "66a": [(D, ROOMLEFT, "len(page.notes) + len(page.marks) < room")],
+    "66b": [(P, "tuple(self.notes), self.gap", "tuple(self.notes[1:] + self.notes[:1] if self.marks else self.notes), self.gap")],
+    "E1": [(D, "< care * diligent and", "<= care * diligent and")],
     "E2": [(B, "    return min(unused, key=lambda k:", "    return max(unused, key=lambda k:")],
 }
