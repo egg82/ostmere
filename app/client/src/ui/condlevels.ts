@@ -8,6 +8,7 @@ import type { Catalog } from "../game/catalog";
 import { isShare, levelAt, levelWords, PRESETS, SHARE_STEP, BP, switchForm, tryRule, type Level, type StoreRule, type Test } from "../game/storerule";
 import { UI } from "../game/text";
 import { el, setText, tapFeedback } from "./dom";
+import { ValueSlider } from "./valueslider";
 
 export interface Stepper {
   root: HTMLElement;
@@ -69,15 +70,16 @@ function quiet(cls: string, label: string, pick: () => void): HTMLButtonElement 
   return b;
 }
 
-/** One level: its label, a stepper (five points of the cap, or one item) and the two forms; under them, while it is a
- * share, the named shares. */
+/** One level: its label, a slider (five points of the cap, or one item up to the store's maximum), its value in words
+ * and the two forms; under them, while it is a share, the named shares. */
 export class LevelRow {
   readonly root = el("div", "cond-level");
   private readonly forms: [HTMLButtonElement, HTMLButtonElement];
   private readonly presets: [number, HTMLButtonElement][];
   private readonly share = el("div", "cond-presets");
-  private readonly fine: Stepper;
-  private readonly items: Stepper;
+  private readonly fine: ValueSlider;
+  private readonly items: ValueSlider;
+  private readonly value = el("span", "cond-value");
   private level: Level = { share: 0 };
   private turn: () => Level = () => this.level;
 
@@ -91,27 +93,21 @@ export class LevelRow {
       b.setAttribute("aria-label", `${label} ${text.get(key)}`);
       return [bp, b];
     });
-    const less = text.get(UI.ruleLess), more = text.get(UI.ruleMore);
-    this.fine = stepper(label, less, more, (d) => pick({ share: this.stepShare(d) }));
-    this.items = stepper(label, less, more, (d) => { if (!isShare(this.level)) pick({ items: this.level.items + d }); });
+    this.fine = new ValueSlider(label, (share) => pick({ share }));
+    this.items = new ValueSlider(label, (items) => pick({ items }));
     this.fine.root.dataset.form = "share";
     this.items.root.dataset.form = "items";
     const head = el("div", "cond-level-head");
     const forms = el("div", "cond-forms");
     forms.append(...this.forms);
-    head.append(el("span", "cond-label", label), this.fine.root, this.items.root, forms);
+    head.append(el("span", "cond-label", label), this.value, forms);
     this.share.append(...this.presets.map(([, b]) => b));
-    this.root.append(head, this.share);
+    this.root.append(head, this.fine.root, this.items.root, this.share);
   }
 
-  private stepShare(d: -1 | 1): number {
-    const at = isShare(this.level) ? this.level.share : 0;
-    return Math.min(BP, Math.max(0, Math.round((at + d * SHARE_STEP) / SHARE_STEP) * SHARE_STEP));
-  }
-
-  /** `level` shown in its form, each choice off where `can` says the rule would not be one the page builds; `turn` is
-   * the level in the other form. */
-  draw(catalog: Catalog, level: Level, can: (l: Level) => boolean, turn: () => Level): void {
+  /** `level` shown in its form, the slider running to `cap` items, each choice off where `can` says the rule would not be
+   * one the page builds; `turn` is the level in the other form. */
+  draw(catalog: Catalog, level: Level, cap: number, can: (l: Level) => boolean, turn: () => Level): void {
     this.level = level;
     this.turn = turn;
     const share = isShare(level);
@@ -125,10 +121,10 @@ export class LevelRow {
       b.setAttribute("aria-pressed", String(share && level.share === bp));
       b.disabled = !can({ share: bp });
     }
-    const s = share ? this.fine : this.items;
-    setText(s.value, share ? catalog.text.fill(UI.levelPct, { pct: String(level.share / 100) }) : levelWords(catalog, level));
-    s.less.disabled = !can(share ? { share: this.stepShare(-1) } : { items: level.items - 1 });
-    s.more.disabled = !can(share ? { share: this.stepShare(1) } : { items: level.items + 1 });
+    const words = levelWords(catalog, level);
+    setText(this.value, words);
+    if (isShare(level)) this.fine.draw({ min: 0, max: BP, step: SHARE_STEP }, level.share, words, (share) => can({ share }));
+    else this.items.draw({ min: 0, max: Math.max(cap, level.items), step: 1 }, level.items, words, (items) => can({ items }));
   }
 }
 
@@ -167,8 +163,8 @@ export class Levels {
     for (const [test, b] of this.tests) b.setAttribute("aria-pressed", String(test === rule.test));
     const m = rule.m ?? rule.n;
     const can = (which: Which) => (l: Level) => tryRule({ ...rule, m, [which]: l }, cap) !== null;
-    this.rows.n.draw(catalog, rule.n, can("n"), () => switchForm(rule.n, rule.test, "on", cap));
-    this.rows.m.draw(catalog, m, can("m"), () => switchForm(m, rule.test, "off", cap));
+    this.rows.n.draw(catalog, rule.n, cap, can("n"), () => switchForm(rule.n, rule.test, "on", cap));
+    this.rows.m.draw(catalog, m, cap, can("m"), () => switchForm(m, rule.test, "off", cap));
     this.fold.state(levelWords(catalog, rule.n), levelWords(catalog, m));
     const pct = (items: number) => `${cap > 0 ? (100 * Math.min(cap, Math.max(0, items))) / cap : 0}%`;
     const a = levelAt(rule.n, cap), b = levelAt(m, cap);

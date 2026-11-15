@@ -651,15 +651,15 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 :is(.sheet, .rules) .cond-store[aria-pressed="true"], :is(.sheet, .rules) .cond-subject[aria-pressed="true"], :is(.sheet, .rules) .cond-mix[aria-pressed="true"], :is(.sheet, .rules) .cond-task[aria-pressed="true"], :is(.sheet, .rules) .cond-test[aria-pressed="true"], :is(.sheet, .rules) :is(.cond-form, .cond-preset)[aria-pressed="true"] { color: var(--ink-hi) !important; background: var(--press); box-shadow: inset 0 0 0 1px var(--ink-dim); }
 .cond-amount { font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
 .cond-steppers { display: flex; flex-direction: column; gap: .9rem; }   /* When, then Until, each a level of its own (condlevels.ts) */
-/* a level: its label, a stepper and two forms (a share of the cap, or exact) on one row; the named shares under them */
+/* a level: its label, its value and two forms (a share of the cap, or exact) on one row; its slider, then the named shares under them */
 .cond-level { display: flex; flex-direction: column; gap: .4rem; }
 .cond-level-head { display: flex; align-items: center; gap: .5rem; }
 .cond-level-head .cond-forms { margin-left: auto; }
+.cond-level-head .cond-value { min-width: 0; text-align: left; }
 .cond-forms, .cond-presets, .stint-shares { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
 :is(.sheet, .rules) .cond-form { min-height: 2.2rem; font-size: var(--t-meta); }
 :is(.sheet, .rules, .stint-shares) .cond-preset { min-width: 2.75rem; padding: 0 .6rem; }
 :is(.sheet, .rules) :is(.cond-form, .cond-preset):disabled { opacity: .35; cursor: default; }
-.cond-level .cond-stepper .cond-label { display: none; }   /* the level's head names it; the buttons keep it for a screen reader */
 .stint-shares { justify-content: flex-end; }
 .stint-or { margin-right: .3rem; font-size: var(--t-meta); color: var(--ink); }
 .cond-stepper { display: flex; align-items: center; gap: .5rem; }

@@ -1,0 +1,7 @@
+/* A single-value slider (ui/valueslider.ts): the track is the whole tap target, the handle sits on it. */
+.value-slider { touch-action: none; user-select: none; }
+.value-track { position: relative; height: 2.75rem; cursor: pointer; }
+.value-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: .5rem; margin-top: -.25rem; background: var(--track); }
+.value-fill { position: absolute; left: 0; top: 50%; height: .5rem; margin-top: -.25rem; background: var(--ember); }
+.value-handle { position: absolute; top: 50%; width: 1.75rem; height: 1.75rem; margin: -.875rem 0 0 -.875rem; box-sizing: border-box; background: var(--ink-hi); border-radius: 2px; box-shadow: var(--drop); cursor: grab; }
+.value-handle:focus-visible { outline: 3px solid var(--ink-hi); outline-offset: 2px; }

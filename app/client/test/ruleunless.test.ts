@@ -2,7 +2,7 @@
 // 28 of its contract): the simple editor never opens a rule holding a guard or a fallback; the full editor, behind More
 // options, builds only guards the engine accepts, a store guard's release one item past its value, both levels of a
 // share guard the same share, at most Content.limits.max_unless, none twice, and keeps what it does not write.
-import { fakeDocument, FakeEl, install } from "./fake-dom";
+import { fakeDocument, FakeEl, FakeEvent, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent, BP, Q } from "../fixtures/content";
 import { guardsStep } from "../fixtures/guards";
@@ -68,7 +68,7 @@ function newGuard(r: Rig, s: string): FakeEl {
 const confirm = (cond: FakeEl): void => one(cond, ".cond-guard-done").click();
 const exact = (cond: FakeEl): void => one(cond, ".cond-guard-pick .cond-form", 1).click();
 const step = (cond: FakeEl, dir: "less" | "more", times = 1): void => {
-  for (let i = 0; i < times; i++) one(cond, ".cond-guard-pick .cond-stepper[data-form=\"items\"] .cond-step", dir === "less" ? 0 : 1).click();
+  for (let i = 0; i < times; i++) one(cond, '.cond-guard-pick [data-form="items"] [role="slider"]').dispatchEvent(Object.assign(new FakeEvent("keydown"), { key: dir === "less" ? "ArrowLeft" : "ArrowRight" }));
 };
 
 // 28: a store guard on a share is one share for both levels ("unless stone is full").
