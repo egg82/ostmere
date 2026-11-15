@@ -2734,7 +2734,8 @@ CHOICES (drains)
   In the mix nothing is asked: a mix card whose drain store is 0 runs and takes nothing from it.
 - Read model: CardView.needs lists a drain's store at quantity 1 (what a tap's start asks), after the inputs'
   whole-completion amounts. Starved is unchanged: a candidate tap blocked by a drain's blocker makes its store starved,
-  as any AtLeast blocker does (no special case; a drained store is never drawn in the content that uses one).
+  as any AtLeast blocker does (no special case). In the content that uses one the ledger draws no line for a drained
+  store, and the card's face draws its need (CardInfo.drains).
   Explain and the ledger read a drain as an input line; its Explanation is its display rate, never clamped, so at 0 with
   drains forgiven the store is at a limit (invariant 10's sum does not apply there), net_per_hour sums the drain in
   unclamped as at a cap, and falling reads the segment (rate 0 there: not falling). A drain covers nothing.
