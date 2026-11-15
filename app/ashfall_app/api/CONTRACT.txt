@@ -984,8 +984,10 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
     (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
     store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
   - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed or a card would take
-    When ready): pressed, it lists first each card that would take When ready, worded ui.queue.when_ready, whose pick
-    sends exactly the entry When ready sends; then each step that would take it but for its blocker (no ready time kept,
+    When ready): pressed, it lists first each step that When ready takes, ready now ones included (blocker null),
+    worded ui.queue.when_ready, whose pick sends exactly the entry When ready sends; a card's own When ready is offered
+    on these only while it cannot be tapped (unready, or ready on a lane whose running_card is another card). Then each
+    step that would take it but for its blocker (no ready time kept,
     or a store the view has not unlocked), not pickable, worded as the card draws its blocker's need (ui.card.needs,
     ui.card.opens, a skill level or step; a step whose card draws nothing for its blocker is left out); then the saved
     mixes. A mix picked is worded ui.stint.which {mix}, with the goals of the dry run of switch_mix to it (the live

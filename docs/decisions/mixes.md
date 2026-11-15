@@ -165,10 +165,11 @@ that will turn ready by itself (When ready, held until its next completion), and
 stint: a queued switch runs over the player's mix until it pops, engine `DESIGN.txt`, "Queue mix";
 `app/client/src/ui/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
 One queue, two ways in (owner: planning what to build next is where Plan is most useful): Next's Plan adds
-either kind of entry, cards first. It lists the steps When ready would take now, picked through the card's own path,
-then the steps it would take but for what they wait on, off, each saying what in the words its card's face uses, then
-the mixes. A card that is ready now is left out, since a tap builds it. A card's When ready stays as a shortcut into
-the same queue.
+either kind of entry, cards first. It lists the steps When ready takes, picked through the card's own path, ready now
+ones included (a build planned while the hands are busy runs after the task under way), then the steps it would take
+but for what they wait on, off, each saying what in its card's face words, then the mixes. A card's When ready stays as
+a shortcut into the same queue, offered where a tap cannot do the job: on a step not ready yet, or ready while its lane
+runs another tap.
 
 Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are all modifiers, and a cap only rises.
 Planned for combat: a side's and a threat's strength are targets too, a threat's raised only by its region's schedule
