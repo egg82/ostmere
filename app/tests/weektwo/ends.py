@@ -104,11 +104,12 @@ Span = tuple[str, int, int | None]
 """(chapter, first heavy step, the one after the last or None for all the rest): a slice of verdicts.heavy_steps."""
 READINGS: dict[str, tuple[Span, ...]] = {
     "readings-early": (("eight", 0, None), ("nine", 0, None), ("eleven", 0, None)),
-    "readings-twelve-a": (("twelve", 0, 3), ("twelve", 8, None)),
+    "readings-twelve-a": (("twelve", 0, 3), ("twelve", 8, 9)),
     "readings-twelve-b": (("twelve", 3, 5),),
     "readings-twelve-c": (("twelve", 5, 6),),
     "readings-twelve-d": (("twelve", 6, 7),),
-    "readings-twelve-e": (("twelve", 7, 8),),
+    "readings-twelve-e": (("twelve", 7, 8), ("twelve", 10, None)),
+    "readings-twelve-f": (("twelve", 9, 10),),
     "readings-fifteen-a": (("fifteen", 0, 12),),
     "readings-fifteen-b": (("fifteen", 12, 13),),
     "readings-fifteen-c": (("fifteen", 13, None),),
