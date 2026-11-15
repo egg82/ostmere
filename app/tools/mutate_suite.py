@@ -16,8 +16,9 @@ A suite may also run other test files beside its own (`also`: the implementation
 its MUTANTS file); only its own tests make claims.
 
 From app/:  python -m tools.mutate_suite SUITE --check
-              exits 1 unless every row is claimed by a test marked @kills(row) and every claim names a row (a gate
-              on the suite's own coverage; it plants nothing).
+              exits 1 unless every row is claimed by a test marked @kills(row), every claim names a row, and every
+              spec would plant: each anchor occurs exactly once, naming the mutant that does not (a gate on the
+              suite's own coverage; it plants nothing, runs no test).
             python -m tools.mutate_suite SUITE --run [--only 1,5] [--specs DIR]
               copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing
               skipped (a suite that skipped its database tests would let every mutant survive), then for each row
@@ -129,6 +130,13 @@ def check(suite: Suite) -> int:
     return 1 if unclaimed or unknown else 0
 
 
+def check_plants(suite: Suite, specs: Path) -> int:
+    """Exit 1, naming each mutant, unless every spec of the suite plants."""
+    problems = unplanted(suite, specs)
+    print("\n".join(f"NOT PLANTED {line}" for line in problems), end="\n" if problems else "")
+    return 1 if problems else 0
+
+
 @dataclass(frozen=True)
 class Outcome:
     verdict: str
@@ -179,6 +187,26 @@ def plant(app: Path, edits: list[tuple[str, str, str]]) -> str | None:
     return None
 
 
+def unplanted(suite: Suite, specs: Path) -> list[str]:
+    """One line per spec that would not plant on the tree under APP: an anchor missing or not unique (read against the
+    text the spec's earlier edits leave), a spec for no row, or a row with no spec. Nothing is written."""
+    known = rows(suite)
+    found: dict[int, list[Path]] = {}
+    for f in sorted(specs.glob("m[0-9][0-9]*.py")):
+        found.setdefault(int(f.stem[1:3]), []).append(f)
+    problems = [f"{f.name}: a spec for no row of {suite.mutants}" for n, fs in found.items() if n not in known for f in fs]
+    problems += [f"m{n:02d}: no spec in {specs}" for n in sorted(set(known) - set(found))]
+    for f in (f for n in sorted(set(found) & set(known)) for f in found[n]):
+        texts: dict[str, str] = {}
+        for path, old, new in getattr(load_spec(f), "EDITS", []):
+            text = texts.setdefault(path, (APP / path).read_text())
+            if text.count(old) != 1:
+                problems.append(f"{f.name}: {path}: anchor occurs {text.count(old)} times, not once")
+                break
+            texts[path] = text.replace(old, new, 1)
+    return problems
+
+
 def classify(code: int, out: str) -> Outcome:
     failed = tuple(FAILED.findall(out))
     if code == 0:
@@ -213,6 +241,9 @@ def relock(app: Path) -> str | None:
 
 def run(suite: Suite, only: set[int], specs: Path, failing: bool) -> int:
     known, claimed = rows(suite), claims(suite)
+    if check_plants(suite, specs):
+        print("a mutant that does not plant is a hole in the run; fix its anchor before running")
+        return 1
     with tempfile.TemporaryDirectory() as tmp:
         base = scratch_copy(Path(tmp))
         code, out = pytest(base, suite)
@@ -257,9 +288,9 @@ def main() -> int:
     if a.check == a.run:
         ap.error("exactly one of --check, --run")
     suite = SUITES[a.suite]
-    if a.check:
-        return check(suite)
     specs = a.specs or APP / "tools" / suite.specs
+    if a.check:
+        return check(suite) | check_plants(suite, specs)
     return run(suite, {int(x) for x in a.only.split(",") if x}, specs, a.failing)
 
 
