@@ -130,6 +130,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.rule.unless_add",
     "ui.rule.unless_or_more",
     "ui.rule.unless_under",
+    "ui.rule.unless_done",
     "ui.rule.on_doing",
     "ui.rule.on_none",
     "ui.rule.stuck",

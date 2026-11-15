@@ -14,7 +14,7 @@ import { UI } from "../game/text";
 import { LevelRow } from "./condlevels";
 import { subjectRows } from "./condsubject";
 import { storeCap } from "./conditiondraft";
-import { el, tapFeedback } from "./dom";
+import { bringIntoView, el, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 
 function button(cls: string, label: string, click: () => void): HTMLButtonElement {
@@ -90,7 +90,7 @@ export class GuardEditor {
       tests.append(b);
     }
     this.level.draw(catalog, g.level, (l) => guardValid({ ...g, level: l }, cap), () => otherForm(g, cap));
-    const done = button("primary cond-guard-done", text.get(UI.orderAdd), () => this.add(buildGuard(g, catalog.content.scales.quantity_per_item)));
+    const done = button("primary cond-guard-done", text.get(UI.ruleUnlessDone), () => this.add(buildGuard(g, catalog.content.scales.quantity_per_item)));
     done.disabled = !guardValid(g, cap);
     const words = el("span", "cond-guard-words", guardWords(catalog, buildGuard(g, catalog.content.scales.quantity_per_item)) ?? levelWords(catalog, g.level));
     return [el("div", "cond-label cond-guard-store", catalog.storeTitle(g.store)), tests, this.level.root, words, done];
@@ -98,7 +98,10 @@ export class GuardEditor {
 
   private set(g: Guard): void {
     this.picked = g;
-    if (this.view) this.draw(this.view, this.unless, true);
+    if (!this.view) return;
+    this.draw(this.view, this.unless, true);
+    const pick = this.root.querySelector<HTMLElement>(".cond-guard-pick");
+    if (pick) bringIntoView(document, pick);
   }
 
   private add(guard: Condition): void {
