@@ -309,7 +309,7 @@ const text: Record<string, string> = {
   "line.offer": "[fixture] a line that comes with the offer.",
   // fights (CONTRACT.txt, "FIGHTS"): the eight ui keys as opening.toml words them, and placeholder names
   "ui.fight.odds": "{lost} in {of} lost", "ui.fight.odds_pct": "{pct}% lost", "ui.fight.odds_unknown": "odds unknown until fought", "ui.fight.threat_unknown": "unknown", "ui.fight.vs": "{side_name} {power}, {threat_name} {threat}",
-  "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.base": "base", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
+  "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.base": "base strength", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
   "ui.fight.won": "{runner}: won", "ui.fight.lost": "{runner}: lost",
   "ui.journal.heading": "Journal", "ui.journal.prev": "Prev", "ui.journal.next": "Next",
   "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places", "ui.journal.day": "Day {n}",
