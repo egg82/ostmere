@@ -55,13 +55,15 @@ def walking_the_rim() -> Image.Image:
     return figure("walk (2)", RIM_WALK, flip=True)
 
 
-def away_on_the_track() -> Image.Image:
+def away_on_the_track(held: Image.Image | None = None) -> Image.Image:
     """The player's back, shrunk to the distance, walking up the track, a shadow under his feet as the cairns have,
-    graded as the figures are and then hazed as the low ground at his feet is (the layer's bake leaves it alone)."""
+    graded as the figures are and then hazed as the low ground at his feet is (the layer's bake leaves it alone).
+    `held` is a tool in his hand, shrunk with him."""
     img = Image.new("RGBA", (W, H))
     x, y = ON_TRACK
     ImageDraw.Draw(img).ellipse((x - 7, y - 3, x + 6, y + 2), fill=(14, 16, 22, 120))
-    img.alpha_composite(kit.grade(from_behind(ON_TRACK, tweak=_far), **WOOD))
+    tool = [] if held is None else [(_far(held), 3, -round(held.height * 0.5) + 2)]
+    img.alpha_composite(kit.grade(from_behind(ON_TRACK, tweak=_far, held=tool), **WOOD))
     return valley.veiled(img, y)
 
 
