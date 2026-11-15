@@ -52,10 +52,14 @@ feeling they must babysit it, staying up at 2 AM for a timer to set up the next 
   none after it until the player returns, an invitation that names no loss, no countdown and nothing from a save. One
   early mention points at the setting, shown once whether or not it is taken (`design/reminders.md`). And a digest of
   story moments. Never a daily one, a badge, or a message that something is waiting.
+- **Make what is already there tappable before adding words.** A way to reach more (a breakdown, the total a bonus
+  feeds, what a job does) is the existing figure or line made tappable and marked tappable the way the screen's
+  other tappable words are, not a new line or label beside it. Something new goes on screen only when nothing
+  already there can carry it. The owner's rule, from play: subtractive over additive, so the screen does not fill up.
 - **Shown in the design, not claimed** (a cold tester joked about waiting for notifications to log back in and gather rewards). The calm has to be visible in the visual language, so a stranger reads it without being
   told: no badges, counters or "!" calling for attention; no shop-shaped elements (gem icons, gold "claim" buttons,
   timers to skip); nothing pulses for urgency; a new control (a task card, a mix-editor Add entry) carries a small quiet
-  dot until the player interacts with it or puts it to work (and the tabs' Book, while a line it holds left the story strip
+  dot until the player interacts with it or puts it to work, and a dot once cleared stays cleared, across views and reloads (and the tabs' Book, while a line it holds left the story strip
   unread; Town, while a person or lane it holds arrived unseen), never plain text (not merely when it is seen; a dot on everything new, plain text included, was the
   defect), never a glow (a glow says click me now, a dot says this is one of the new things); a glow has its own
   job: pointing at the one obvious next step when there truly is just one (the very first card; a first-of-its-kind
