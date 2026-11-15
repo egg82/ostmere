@@ -37,6 +37,8 @@ use that teaches it, and every number can show where it comes from (some of Orb'
     simulator's active-effort readout flags a heavy stretch and never fails. One hard check stays: no story gate needs
     many taps of one card before mixes or rules can take them over (`app/tests/opening/tap_gates.py` defines "before"
     and "many").
+    Nor do stores need to grow until one training fits a single go: a mix trains a skill over several, and tuning
+    store sizes toward that would bind them for no gain (owner, 2026-11-15).
   - Surprise (a lucky find) is a minor extra, not a pillar.
   - **From Idle Awakening's pacing** (studied 2026-10-15, from own-play notes kept outside the repo):
     something new every 2–5 minutes early, the main level about every 10, judged on real players' runs; a cheap, visible
