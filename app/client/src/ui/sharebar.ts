@@ -14,6 +14,8 @@ export interface SegmentSpec {
   hue: number;
   /** Struck through: a retired or completed card the mix still holds. */
   struck?: boolean;
+  /** Shown in the legend in place of the share (a tap's time left). */
+  note?: string;
 }
 
 /** One entry of a bar's legend: the segment's hue as a square, its name, then its share (the Mixes list's small bars
@@ -88,7 +90,7 @@ export class ShareBar {
         seg.seg.style.left = `${(left / this.bp) * 100}%`;
         seg.seg.style.width = `${(share / this.bp) * 100}%`;
         setText(seg.name, this.specs[i]?.label ?? "");
-        setText(seg.pct, this.format(share));
+        setText(seg.pct, this.specs[i]?.note ?? this.format(share));
       }
       left += share;
       const div = this.dividers[i];

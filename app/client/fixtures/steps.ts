@@ -28,7 +28,7 @@ import type { PrestigePhase } from "./prestige";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | FeelPhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | FeelPhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];
@@ -243,6 +243,35 @@ function dryStore(view: View, at: number): View {
   return { ...view, cards: [...cards, card(at, "far_hunt", { needs: [need(at, "wood", 2, 0)] })], unlocked: [...view.unlocked, { category: "card", id: "far_hunt" }], ledger: view.ledger.map((l) => (l.store === "wood" ? wood : l)), mixes: [...view.mixes, STOOLS], active_mix_id: STOOLS.id, running_mix_id: STOOLS.id, all_covered: false };
 }
 
+/** When held lands: the step a held phase taps runs this long from Begin. */
+const HELD_S = 8;
+
+/** held: a When ready step of stool runs on the hands over the player's Rest mix until HELD_S, then lands and the mix
+ * returns; heldstint: a goal stint runs Gather by hand over the player's Rest mix until wood reaches 30. */
+function heldVariant(phase: Phase, view: View, at: number): View {
+  const solo = (c: Card, mix: Mix): Card => {
+    const first = mix.components[0];
+    const mine = first?.kind === "card_share" && first.card === c.card;
+    return c.card === "gather" || c.card === "tend" ? { ...c, share_bp: mine ? BP : 0, run: mine ? "full" : null, by: mine ? "mix" : null } : c;
+  };
+  if (phase === "heldstint") {
+    const until = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false };
+    return { ...view, cards: view.cards.map((c) => solo(c, GATHER)), mixes: [REST, GATHER], active_mix_id: REST.id, running_mix_id: GATHER.id,
+      queue: [{ verb: { kind: "switch_mix", mix_id: GATHER.id }, until }],
+      goal_rows: [{ kind: "store", store: "wood", skill: null, target: 30 * Q, lands_at: at + 2 * 3600, per_hour: 60_000, limit: null, until }] };
+  }
+  const resting = { ...view, cards: view.cards.map((c) => solo(c, REST)), mixes: [REST], active_mix_id: REST.id, running_mix_id: REST.id };
+  if (at >= HELD_S) return { ...resting, cards: resting.cards.filter((c) => c.card !== "stool"), completed: [...resting.completed, { card: "stool", completions: 1 }] };
+  const once = { kind: "at_least" as const, watched: { kind: "card_count" as const, card: "stool" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false };
+  return {
+    ...resting, next_event_at: HELD_S,
+    lanes: resting.lanes.map((l) => (l.lane === "hands" ? { ...l, running_card: "stool", completes_at: HELD_S } : l)),
+    queue: [{ verb: { kind: "tap_card", card: "stool" }, until: once }],
+    cards: resting.cards.map((c) => (c.card === "stool" ? { ...c, by: "tap" as const, completes_at: HELD_S, bar: { start: at, start_value: at * BP, rate: BP, limit: HELD_S * BP }, bar_total: HELD_S * BP }
+      : c.by === "mix" ? { ...c, run: "yielded" as const, completes_at: null } : c)),
+  };
+}
+
 /** greyed: the running mix holds a retired card; full: the wood store is at its cap with a maker still feeding it. */
 function variant(phase: Phase, view: View, at: number): View {
   if (phase === "greyed" && view.active_mix_id !== null) {
@@ -259,6 +288,7 @@ function variant(phase: Phase, view: View, at: number): View {
       : rest.includes(c) ? { ...c, gained: stop ? [{ card: stop.card, share_bp: gain(c) }] : [] } : c)) };
   }
   if (phase === "drystore") return dryStore(view, at);
+  if (phase === "held" || phase === "heldstint") return heldVariant(phase, view, at);
   if (phase === "full" || phase === "capfull") return { ...view, ledger: view.ledger.map((l) => (l.store === "wood" ? store(at, "wood", 40, 300, 40, false) : l)) };
   if (phase === "trip" || phase === "tripmix") return tripVariant(phase, view, at);
   if (phase === "goals") return { ...view, goals: [   // a story beat's marks: a card, a line, a skill row; and the wait line (game/story.ts)

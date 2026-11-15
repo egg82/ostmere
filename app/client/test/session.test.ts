@@ -116,6 +116,7 @@ function harness(content: Content = fixtureContent, fail: (call: string, n: numb
   await h.session.begin();
   await h.session.advance();
   check(h.log.waits.join() === "1000,2000,4000", `the backoff doubles: ${h.log.waits.join()}`);
+  check(h.log.connected.join() === "false,true", `a step that gets no answer shows reconnecting until one does: ${h.log.connected.join()}`);
 }
 {  // refusals: a decision that does not fit, an account or save gone, Begin limited
   const bad = harness(fixtureContent, (call) => (call === "decide" ? new ApiFailure("invalid_decision", "422") : null));
