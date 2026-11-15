@@ -1,7 +1,7 @@
 // A kept bonus shows what its share gives (CONTRACT.txt, {pct}; CardInfo.kept): in the town editor a card that holds
 // an entry while it runs words that entry at the person's share, rounded down once as the engine rounds it, and the
-// figure follows the share as it is stepped; a change the card does not hold stays as served.
-import { fakeDocument, type FakeEl, install } from "./fake-dom";
+// figure follows the share as it is dragged; a change the card does not hold stays as served.
+import { fakeDocument, type FakeEl, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { Content } from "../src/api/types";
@@ -35,12 +35,21 @@ function editorRow(over: Partial<Content["card_infos"][number]>, text: string): 
   document.body.replaceChildren(rows.root, rows.town.root);
   rows.update(townStep("town").view);
   (fakeDocument.body.firstElementChild as FakeEl).querySelector(".town-change")?.click();
+  for (const track of fakeDocument.body.children[1]?.querySelectorAll(".share-track") ?? []) track.rect = { left: 0, top: 0, width: 1000, height: 20, right: 1000, bottom: 20 };
   return () => {
     const helper = (fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl;
     return helper.querySelectorAll(".town-card").find((r) => r.dataset.card === "haul") as FakeEl;
   };
 }
 const shareOf = (row: FakeEl): string => row.querySelector(".town-card-share")?.textContent ?? "";
+/** The helper's chop|haul divider dragged from x0 to x1 on a 1000px bar. */
+function drag(x0: number, x1: number): void {
+  const helper = (fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl;
+  const divider = helper.querySelector(".share-divider") as FakeEl;
+  divider.dispatchEvent(pointer("pointerdown", x0, 10));
+  divider.dispatchEvent(pointer("pointermove", x1, 10));
+  divider.dispatchEvent(pointer("pointerup", x1, 10));
+}
 const upsideOf = (row: FakeEl): string => row.querySelector(".town-card-upside")?.textContent ?? "";
 const held = [{ side: "gap", lane: null, amount_bp: 5000, slot: 0 }];
 
@@ -49,11 +58,11 @@ const held = [{ side: "gap", lane: null, amount_bp: 5000, slot: 0 }];
   const share = Number.parseFloat(shareOf(row()));
   expect("the haul share is a percent the test can scale", share > 0 && share < 100, true);
   expect("at its share, not the full amount", upsideOf(row()), `+${share / 2}% strength while kept`);
-  row().querySelector(".town-minus")?.click();
+  drag(600, 700);   // chop takes from haul
   const less = Number.parseFloat(shareOf(row()));
-  expect("stepping down moves the share", less < share, true);
+  expect("dragging down moves the share", less < share, true);
   expect("and the figure follows it", upsideOf(row()), `+${less / 2}% strength while kept`);
-  row().querySelector(".town-plus")?.click();
+  drag(700, 600);
   expect("and back", upsideOf(row()), `+${share / 2}% strength while kept`);
 }
 
