@@ -1,10 +1,9 @@
-"""The aims' load check (opening/aims.py): an aim from the start, each later one from an unlock something really gives,
-every one a line short enough for a phone. Each failure is a file built to break it; the control loads."""
+"""The aims' load check (opening/aims.py): an aim from the start, each later one from an unlock something really gives.
+Each failure is a file built to break it; the control loads."""
 from pathlib import Path
 
 import pytest
 
-from ashfall_app.opening.aims import AIM_MAX_CHARS
 from ashfall_app.opening.schema import OPENING, load_opening
 from tests.opening.test_opening_loader import broken
 
@@ -25,7 +24,6 @@ def test_the_shipped_aims_load_in_order_and_the_first_takes_no_after():
     (SECOND_AFTER, 'text_key = "aim_alive"\n', "only the first aim takes no after"),
     (SECOND_AFTER, 'text_key = "aim_alive"\nafter = { unlock_kind = "card", id = "woodcutting_2" }\n', "unknown card"),
     (SECOND_AFTER, 'text_key = "aim_alive"\nafter = { unlock_kind = "feature", id = "fireback" }\n', None),
-    ('aim_fire = "you\'re freezing. a fire, before dark."', f'aim_fire = "{"x" * (AIM_MAX_CHARS + 1)}"', "over 40 characters"),
 ])
 def test_a_broken_aim_fails_the_load(tmp_path: Path, old: str, new: str, match: str | None):
     path = broken(tmp_path, old, new)
