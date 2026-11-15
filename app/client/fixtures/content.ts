@@ -18,7 +18,6 @@ const text: Record<string, string> = {
   "ui.store.amount": "{n} / {cap}",
   "ui.ledger.empties": "{d} left",
   "ui.ledger.fills": "full in {d}",
-  "ui.ledger.behind": "{task} can't keep up",
   "ui.skill.level": "level {n}", "ui.skill.next_in": "{pays} · {d}", "ui.skill.none": "no more yet", "ui.next.unnamed": "something new",
   "ui.heading.ledger": "Ledger",
   "ui.ledger.yours": "Yours",

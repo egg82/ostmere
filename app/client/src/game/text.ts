@@ -22,7 +22,6 @@ export const UI = {
   amount: "ui.store.amount", // "{n} of {cap}"
   empties: "ui.ledger.empties", // "{d}" until a falling store is empty
   fills: "ui.ledger.fills", // "{d}" until a rising store is full
-  ledgerBehind: "ui.ledger.behind", // "{task}": the task or mix of a rule covering a line that still heads where the rule does not want it
   level: "ui.skill.level", // "{n}"
   skillNextIn: "ui.skill.next_in", // "{pays} {d}": what the next level pays, and the forecast's time to it
   skillNone: "ui.skill.none", // a skill row with nothing ahead in this content

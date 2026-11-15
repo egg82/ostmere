@@ -387,10 +387,6 @@ never order or card.
 - **Nothing stands under a line a rule watches.** The line carries a small rule mark (the Rules tab's icon, dim), and a
   tap anywhere on it opens that rule in the Rules tab: the rule spending the store, else the first rule on it. A rule
   set while the line is still red changes nothing under it either; the mark is the way to it.
-- **A covering rule that can't keep up says so once,** beside the line's time: `empty in 4m · Gather can't keep up`
-  when the forecast empties a store an `under n` rule keeps, `full · Smoke can't keep up` when a store an `n or more`
-  rule takes from is full and still fed. An outranked or passed-over rule gives the Rules tab's own reason instead.
-
 - **Starved** (the store is at 0 and something waits on it) reads as a problem too, covered or not.
 - **Full** (`damp wood 12/12 · full`) is not an alarm: the ordinary line colour, `full` in
   the time's dim ink (never green, which would call a loss a gain; never an alarm hue or a pulse), no `Edit mix`. The rate beside it is what spills,
