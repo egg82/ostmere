@@ -117,3 +117,24 @@ const days = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) =
   back.close().click();
   expect("turning to an earlier page takes nothing back", back.sent.length, 0);
 }
+
+{  // a day still being written: a later copy carrying more notes replaces the one held, and as it grows past the page its
+  // notes so far keep their page and the rest run on to the next, headed again by its day
+  const growing = (n: number): JournalDay => day(9, Array.from({ length: n }, () => KEY));
+  const held = joinDays([day(8, [KEY]), growing(1)], [growing(3)]);
+  expect("the copy with more notes replaces the day held", held.map((d) => d.day_notes.length), [1, 3]);
+  expect("a copy with fewer notes leaves it", joinDays(held, [growing(2)]).map((d) => d.day_notes.length), [1, 3]);
+  const notesOn = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) => d.day_notes.length));
+  const before = [day(7, Array.from({ length: 12 }, () => KEY))];
+  let shown = notesOn(dayPages([...before, growing(1)], words));
+  for (let n = 2; n <= 16; n += 1) {
+    const now = notesOn(dayPages([...before, growing(n)], words));
+    for (let i = 0; i < shown.length - 1; i += 1) expect(`${n} notes: page ${i} is as it was`, now[i], shown[i]);
+    const last = shown.length - 1;
+    expect(`${n} notes: the last page shown keeps every note it had`, now[last]!.slice(0, shown[last]!.length - 1), shown[last]!.slice(0, -1));
+    expect(`${n} notes: the day on the last page shown only grows there`, now[last]![shown[last]!.length - 1]! >= shown[last]!.at(-1)!, true);
+    expect(`${n} notes: none lost`, now.flat().reduce((a, b) => a + b, 0), 12 + n);
+    shown = now;
+  }
+  expect("the day ran on to a second page", shown.length > 1 && dayPages([...before, growing(16)], words).at(-1)![0]!.day, 9);
+}
