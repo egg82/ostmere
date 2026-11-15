@@ -129,6 +129,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         card_infos=[cm.CardInfo(
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
             upside_key=c.upside_key, change_bp=_card_changes(c, o), work_s=c.work_s,
+            held=[cm.HeldInfo(side=w.side, lane=w.lane, amount_bp=w.amount_bp) for w in c.while_running],
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
             makes=card_makes(c), takes=card_takes(c), drains=[d.store for d in c.drains],
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires

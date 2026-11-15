@@ -810,6 +810,8 @@ export interface components {
             upside_key: string | null;
             /** Change Bp */
             change_bp: number[];
+            /** Held */
+            held: components["schemas"]["HeldInfo"][];
             /** Work S */
             work_s: number;
             /** Inputs */
@@ -1309,6 +1311,18 @@ export interface components {
             status: string;
             /** Version */
             version: string;
+        };
+        /**
+         * HeldInfo
+         * @description One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both.
+         */
+        HeldInfo: {
+            /** Side */
+            side: string | null;
+            /** Lane */
+            lane: string | null;
+            /** Amount Bp */
+            amount_bp: number;
         };
         Hour: number;
         Id: string;

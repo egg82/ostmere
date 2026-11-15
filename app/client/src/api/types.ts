@@ -13,6 +13,7 @@ export type CampInfo = S["CampInfo"];
 export type CampLevel = S["CampLevel"];
 export type Card = S["Card"];
 export type CardInfo = S["CardInfo"];
+export type HeldInfo = S["HeldInfo"];
 export type CardShare = S["CardShare"];
 export type ChipInfo = S["ChipInfo"];
 export type CompletedCard = S["CompletedCard"];

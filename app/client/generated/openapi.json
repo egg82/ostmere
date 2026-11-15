@@ -2287,6 +2287,13 @@
             "type": "array",
             "title": "Change Bp"
           },
+          "held": {
+            "items": {
+              "$ref": "#/components/schemas/HeldInfo"
+            },
+            "type": "array",
+            "title": "Held"
+          },
           "work_s": {
             "type": "integer",
             "title": "Work S"
@@ -2367,6 +2374,7 @@
           "label_key",
           "upside_key",
           "change_bp",
+          "held",
           "work_s",
           "inputs",
           "makes",
@@ -3812,6 +3820,44 @@
           "version"
         ],
         "title": "Health"
+      },
+      "HeldInfo": {
+        "properties": {
+          "side": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Side"
+          },
+          "lane": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lane"
+          },
+          "amount_bp": {
+            "type": "integer",
+            "title": "Amount Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "side",
+          "lane",
+          "amount_bp"
+        ],
+        "title": "HeldInfo",
+        "description": "One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both."
       },
       "Hour": {
         "type": "integer",
