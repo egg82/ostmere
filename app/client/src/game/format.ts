@@ -1,5 +1,5 @@
 // Numbers into the content's templates. Fixed-point to items by Scales; words only from the text table.
-import type { Scales } from "../api/types";
+import type { CardInfo, Scales } from "../api/types";
 import { Text, UI } from "./text";
 
 const whole = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
@@ -65,6 +65,13 @@ export class Format {
   /** The {pct} and {pct_b} slots of a level's, upside's or chip's text: its changes in the order served. */
   figures(changesBp: readonly number[]): Record<string, string> {
     return Object.fromEntries(changesBp.slice(0, 2).map((bp, i) => [i === 0 ? "pct" : "pct_b", this.change(bp)]));
+  }
+
+  /** A card's {pct} slots at `shareBp` of its runner's time: each served change that is a held entry's amount scales
+   * as the engine does (amount * share, rounded down once), the rest stand. */
+  figuresAt(info: Pick<CardInfo, "change_bp" | "held">, shareBp: number): Record<string, string> {
+    const held = new Set(info.held.map((h) => h.amount_bp));
+    return this.figures(info.change_bp.map((bp) => (held.has(bp) ? Math.floor((bp * shareBp) / this.scales.bp) : bp)));
   }
 
   /** The {gain} and {gain_b} slots of an answer's cost text: the stores it puts in, in whole items, rounded down. */
