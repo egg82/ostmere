@@ -683,7 +683,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .cond-guards, .cond-guard-pick { display: flex; flex-direction: column; gap: .6rem; }   /* Unless (condguards.ts): the guards, an add, and the picker of what a new one watches */
 .cond-guards { padding-top: .9rem; border-top: 1px solid var(--rule); }
 .cond-guards-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; }
-.cond .cond-guards .rules-label { flex: none; }
+.cond .cond-guards-head .rules-label { flex: none; }
 .cond-guards-hint, .cond-guard-store { font-size: var(--t-meta); color: var(--ink); }
 .cond-guard { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
 .cond-guard-words { color: var(--ink-hi); overflow-wrap: anywhere; }
