@@ -5808,6 +5808,15 @@
             "title": "Mix Offered",
             "default": []
           },
+          "lines_touched": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Lines Touched",
+            "default": []
+          },
           "lessons": {
             "items": {
               "$ref": "#/components/schemas/Id"

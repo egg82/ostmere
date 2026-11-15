@@ -2064,6 +2064,11 @@ export interface components {
              */
             mix_offered: components["schemas"]["Id"][];
             /**
+             * Lines Touched
+             * @default []
+             */
+            lines_touched: components["schemas"]["Id"][];
+            /**
              * Lessons
              * @default []
              */
