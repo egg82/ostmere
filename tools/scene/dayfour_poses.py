@@ -9,11 +9,11 @@ from __future__ import annotations
 from PIL import Image, ImageOps
 
 import kit
-from daythree_poses import AT_GAP, N2, laying, shovel, staff
+from daythree_poses import N2, away_on_the_track, laying, shovel, staff
 from daytwo import cut
 from daytwo_poses import Who, person
 from dayone_poses import N1
-from figures import figure, from_behind
+from figures import figure
 from kit import T
 from place import BY_FIRE
 
@@ -60,9 +60,8 @@ def hand_on_stone() -> Image.Image:
 
 
 def hunting() -> Image.Image:
-    """The player's back at the gap's mouth, a spear in his hand (off the scene: the hunt)."""
-    tool = spear()
-    return from_behind(AT_GAP, held=[(tool, 6, -tool.height + 4)])
+    """The player out on the track as laying it shows him, the spear in his hand: off down the gap after the game."""
+    return away_on_the_track(spear())
 
 
 def n1_far_side() -> Image.Image:
