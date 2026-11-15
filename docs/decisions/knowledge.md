@@ -63,7 +63,9 @@ play games waited for it.
 
 **A story line stays until it can be read.** Time never takes a line off the story strip: a line leaves only when
 newer ones push it out of the room, and never before its reading time since it showed (`game/reading.ts`; the arrival
-queue holds the next line back). The strip sits off the art, under it, and shows as many of the newest story lines as
+queue holds the next line back; 150 words a minute, 3.5 s at the least). The first story line of a return is held 1.75
+times its reading time, and the strip takes the glow for that hold, so the eye goes there as the lines start; a live
+step's first line is not a return and gets neither. The strip sits off the art, under it, and shows as many of the newest story lines as
 fit, whole: its height is the tallest story line in the content at its width, so no line is cut and none arriving moves anything (lines on the art, in a band
 under the chips, were cut at their first row by the chip row through ten-odd fixes; a phone band cut to a line or two
 lost lines mid-sentence for that same cold tester). A line that leaves the strip before the player has touched anything since
