@@ -1313,6 +1313,12 @@ JOURNAL
     unread until the page is turned to again.
   - load a sketch when its page is drawn; one that fails to load leaves its room empty (no broken-image mark, no
     stand-in drawing) and is reported to /api/client-errors with the sketch id.
+  - mark the pages (docs/design/journal.md, "Marks on the page"): on every page, one or two wear marks chosen and
+    placed by draws keyed by the save and the page's id; on a days page, each of its days' marks, at most three a
+    page, a variant chosen and placed by draws keyed by the save, the day and the kind. The art is
+    /assets/journal/marks/ and its manifest.json; a mark is kept only where its box crosses no line of words, no day
+    heading and no drawing, else the next draw is tried, and one that finds no room is not drawn. A manifest or
+    image that fails to load draws no marks and is reported to /api/client-errors once.
   THE CLIENT MAY NOT:
   - send anything because of the sheet before it closes: opening it and turning its pages cause no decision,
     advance, dry run, forecast or presentation write (the session's own advances at view.next_event_at go on as
@@ -1320,6 +1326,7 @@ JOURNAL
   - draw a figure for a runner whose fought is 0, take an entry's numbers from anywhere but view.fights, or draw an
     entry or note view.unlocked does not hold.
   - write a note's words anywhere but its page: the story strip and the chronicle carry lines, not notes.
+  - draw a mark over the words, or a mark a served day does not carry (wear aside).
 
   The written days (docs/design/journal.md): the main character's daily journal, which the server composes from the
   save's history, never the page. Game day d is game seconds [d * 86400, (d + 1) * 86400). A day is composed, written
@@ -1331,12 +1338,14 @@ JOURNAL
     Step.journal_days    [JournalDay]: the written days this step composed, oldest first. Empty on most steps.
     Opened.journal_days  [JournalDay]: every written day stored before the open, oldest first. The open's step
                          carries the days it composed, so the two together are every written day.
-    JournalDay {day, day_notes: [DayNote {subject, slot, key, hand, sketch}]}: a day the journal wrote, its notes in
+    JournalDay {day, day_notes: [DayNote {subject, slot, key, hand, sketch}], marks}: a day the journal wrote, its notes in
                          page order (at least one). A day not written (a gap or a blank) is stored and never served.
                          key is the note's text key (Content.text_entries); slot is a closed enum, "first" | "repeat" |
                          "catchup" | "mention" | "late" | "misremember" | "correction"; hand is the slot's own, else
                          "ink"; sketch the slot's, else null (/assets/journal/<sketch>.png). subject is the content's
-                         subject id.
+                         subject id. marks: the marks the day leaves on its page, each a closed enum, "blood" | "soot"
+                         | "water" | "mud" | "smudge", each at most once, stored with the day (saves/journal.py,
+                         statement 21); empty for none.
   SavePresentation gains newest_day_read: int | null, the newest written day whose page the player has turned to,
   null on a new save; a written day after it is unread. It only grows: a PUT whose value is lower, or null, leaves the
   kept one. The days are the save's own diary, so how far into them the player has read is kept per save, where the

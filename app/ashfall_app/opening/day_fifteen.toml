@@ -519,6 +519,7 @@ late = { keys = ["j_b14_late"] }
 id = "s_hall"
 kind = "routine"
 source = { source_kind = "card", id = "hall" }
+mark = "mud"
 first = { keys = ["j_hall_first"] }
 repeat = { keys = ["j_hall_again_1", "j_hall_again_2", "j_hall_again_3"] }
 catchup = { keys = ["j_hall_catchup"] }
@@ -529,6 +530,7 @@ correction = { keys = ["j_hall_right"] }
 id = "s_frost"
 kind = "worry"
 source = { source_kind = "trigger", id = "t_frost" }
+mark = "water"
 first = { keys = ["j_frost_first"] }
 
 # ---------- the Camp ----------

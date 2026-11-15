@@ -5,6 +5,7 @@ from ..journal import DAY_S, ComposedDay, Gap, Habits, Line, Subject, roll
 from .bag import note
 from .history import History, away, read, showing
 from .ledger import settledness
+from .marks import marks
 from .numbers import budget, diligence
 from .owed import catchups, corrections, lates
 from .own import Candidate, candidates
@@ -31,7 +32,8 @@ def compose(save_id: int, day: int, lines: Sequence[Line], composed: Sequence[Co
     if not head and not fixes:
         return ComposedDay(day, (), None)
     told = [*head, *lates(save_id, composed, subjects, habits), *fixes]
-    return ComposedDay(day, tuple(note(save_id, composed, t) for t in told), None)
+    notes = tuple(note(save_id, composed, t) for t in told)
+    return ComposedDay(day, notes, None, marks(save_id, day, notes, subjects, habits))
 
 
 def _refuse(day: int, lines: Sequence[Line], composed: Sequence[ComposedDay]) -> None:

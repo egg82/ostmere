@@ -24,11 +24,12 @@ from .tables import save_decisions, save_journal, save_lines, save_snapshots, sa
 
 @dataclass(frozen=True)
 class JournalDay:
-    """A composed day as stored: its notes in page order, each {subject, slot, key}, and its gap."""
+    """A composed day as stored: its notes in page order, each {subject, slot, key}, its gap and its marks."""
 
     day: int
     notes: list[dict[str, str]]
     gap: str | None
+    marks: list[str]
 
 
 @dataclass(frozen=True)
@@ -51,7 +52,8 @@ def write_step(conn: Connection, save_id: int, now: datetime, w: Written, lines:
     without `since`), the step's own entry among them. A day of `days` the save already holds is left as it is."""
     params = writing(save_id, now, w) | {"line_at": [at for at, _ in lines], "line_key": [key for _, key in lines],
                                          "save_id": save_id,
-                                         "j_days": [{"day": d.day, "notes": d.notes, "gap": d.gap} for d in days]}
+                                         "j_days": [{"day": d.day, "notes": d.notes, "gap": d.gap, "marks": d.marks}
+                                                    for d in days]}
     if log is not None:
         d = log.entry
         params |= {"now": now, "l_n": d.n, "l_at": d.at, "l_kind": d.kind, "l_verb": d.verb, "l_digest": d.rules_digest,
@@ -90,12 +92,13 @@ def _lines() -> CTE:
 
 
 def _journal() -> CTE:
-    """The days (`j_days`, a JSON array of {day, notes, gap}), each unless the save holds it already."""
+    """The days (`j_days`, a JSON array of {day, notes, gap, marks}), each unless the save holds it already."""
     given = func.jsonb_to_recordset(bindparam("j_days", type_=JSONB)).table_valued(
-        column("day", Integer), column("notes", JSONB), column("gap", Text)).render_derived(with_types=True)
+        column("day", Integer), column("notes", JSONB), column("gap", Text), column("marks", JSONB)
+    ).render_derived(with_types=True)
     return pg_insert(save_journal).from_select(
-        ["save_id", "day", "notes", "gap"],
-        select(bindparam("save_id", type_=BigInteger), given.c.day, given.c.notes, given.c.gap),
+        ["save_id", "day", "notes", "gap", "marks"],
+        select(bindparam("save_id", type_=BigInteger), given.c.day, given.c.notes, given.c.gap, given.c.marks),
     ).on_conflict_do_nothing(index_elements=["save_id", "day"]).returning(save_journal.c.day).cte("journaled")
 
 

@@ -1341,6 +1341,8 @@ export interface components {
             day: number;
             /** Day Notes */
             day_notes: components["schemas"]["DayNote"][];
+            /** Marks */
+            marks: components["schemas"]["Mark"][];
         };
         /**
          * JournalInfo
@@ -1500,6 +1502,13 @@ export interface components {
             /** Card */
             card: string | null;
         };
+        /**
+         * Mark
+         * @description A kind of mark a written day leaves on its page (docs/design/journal.md, "Marks on the page"); each is art the page
+         *     owns, so a new one is page work as well as content.
+         * @enum {string}
+         */
+        Mark: "blood" | "soot" | "water" | "mud" | "smudge";
         /** Me */
         Me: {
             account: components["schemas"]["Account"] | null;

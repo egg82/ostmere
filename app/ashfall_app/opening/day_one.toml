@@ -891,6 +891,7 @@ late = { keys = ["j_b3_late"] }
 id = "s_prints"
 kind = "worry"
 source = { source_kind = "trigger", id = "t_prints" }
+mark = "mud"
 first = { keys = ["j_prints_first"] }
 
 # ---------- features ----------

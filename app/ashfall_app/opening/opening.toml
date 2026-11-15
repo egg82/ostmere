@@ -588,6 +588,8 @@ busy_ratio = 2
 late_rate = 0.15
 misremember_rate = 0.05
 correct_after_days = 2
+marks_most = 2
+marks = { blood = 0.6, soot = 0.35, water = 0.4, mud = 0.3, smudge = 0.5 }
 
 # ---------- the journal ----------
 
@@ -599,6 +601,7 @@ feature = "book"
 id = "s_b2"
 kind = "beat"
 source = { source_kind = "card", id = "strike_fire" }
+mark = "soot"
 first = { keys = ["n_day_b2"] }
 catchup = { keys = ["j_b2_catchup"] }
 late = { keys = ["j_b2_late"] }

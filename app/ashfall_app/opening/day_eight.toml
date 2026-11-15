@@ -554,6 +554,7 @@ outcome = { modifiers = [{ target = "work", id = "hand_on_stone", kind = "mul_bp
 id = "s_palisade"
 kind = "routine"
 source = { source_kind = "card", id = "palisade" }
+mark = "mud"
 first = { keys = ["j_fence_first"] }
 repeat = { keys = ["j_fence_again_1", "j_fence_again_2", "j_fence_again_3"] }
 catchup = { keys = ["j_fence_catchup"] }
@@ -564,6 +565,7 @@ correction = { keys = ["j_fence_right"] }
 id = "s_b8"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b8" }
+mark = "soot"
 first = { keys = ["j_b8_first"] }
 catchup = { keys = ["j_b8_catchup"] }
 late = { keys = ["j_b8_late"] }

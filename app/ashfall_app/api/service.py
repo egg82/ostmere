@@ -89,7 +89,8 @@ class Game:
         looks = {} if self._rs.journal is None else self._rs.journal.looks
         return [jm.JournalDay(day=d.day, day_notes=[
             jm.DayNote(subject=n.subject, slot=jm.Slot(n.slot), key=n.key, hand=jm.Hand(look.hand), sketch=look.sketch)
-            for n in d.notes for look in (looks.get((n.subject, n.slot), PLAIN),)]) for d in days if d.notes]
+            for n in d.notes for look in (looks.get((n.subject, n.slot), PLAIN),)],
+            marks=[jm.Mark(k) for k in d.marks]) for d in days if d.notes]
 
 
 def _fight(f: e.FightDef | None, entry: FightEntry | None) -> cm.FightInfo | None:

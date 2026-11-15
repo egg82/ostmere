@@ -529,6 +529,7 @@ late = { keys = ["j_b10_late"] }
 id = "s_smoke"
 kind = "worry"
 source = { source_kind = "trigger", id = "t_smoke" }
+mark = "soot"
 first = { keys = ["j_smoke_first"] }
 
 # The crows' second note, written once the ring is closed.

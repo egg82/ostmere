@@ -304,6 +304,7 @@ modifiers = [{ target = "cap", id = "stew", kind = "mul_bp", amount_bp = 15000, 
 id = "s_b6"
 kind = "beat"
 source = { source_kind = "card", id = "sit_up_5" }
+mark = "soot"
 first = { keys = ["n_day_b6"] }
 catchup = { keys = ["j_b6_catchup"] }
 late = { keys = ["j_b6_late"] }
@@ -312,6 +313,7 @@ late = { keys = ["j_b6_late"] }
 id = "s_sign"
 kind = "worry"
 source = { source_kind = "trigger", id = "t_sign" }
+mark = "blood"
 first = { keys = ["j_sign_first"] }
 
 # ---------- features ----------
