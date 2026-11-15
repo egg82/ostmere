@@ -46,8 +46,7 @@ when = { test = "at_least", subject_kind = "card_count", id = "hand_on_stone", v
 outcome = { line_keys = ["l_stone_first"] }
 
 # Hot stones into the pot: staged on the hands, queued When ready, on the cards with B6 and needing Arcana 4 (its
-# level's marker says so; a level never opens a card: decisions.md, "No gate counts taps"). The last stage makes a pot
-# four stew, after the clay hearth's three.
+# level's marker says so). The last stage makes a pot four stew, after the clay hearth's three.
 [[cards]]
 id = "hearth_stones"
 presentation = "craft"
@@ -255,9 +254,8 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "night_6" }] }
 
 # ---------- O-pair, the second bay ----------
 
-# O-pair's moment: morning 6, the camp's pot already feeding three. Never a level of stew, which only the stew card
-# makes (decisions.md, "No gate counts taps"); stew 9 held at morning 6 on every route but one. Its own feature, so
-# the aim can start at it.
+# O-pair's moment: morning 6, the camp's pot already feeding three (stew 9 held at morning 6 on every route but one).
+# Its own feature, so the aim can start at it.
 [[triggers]]
 id = "t_pair_offer"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "morning_6", value = 1 }

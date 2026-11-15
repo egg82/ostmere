@@ -519,10 +519,9 @@ outcome = { line_keys = ["l_s4_1", "l_s4_2", "l_s4_3"], unlocks = [{ unlock_kind
 # ---------- the slow skills' methods ----------
 
 # A method each for Cooking, Arcana and Melee (their rates: docs/decisions.md, "Finite, and the walls are the
-# world"), each
-# opened on a moment the chapter already has (o_cold_air's, the bear's sign, B12) whether or not an ask is answered;
-# never on a level ("No gate counts taps"). Melee's levels speed the hunt, and pelt has no sink in week two, so spar
-# runs only from night 14, with sit_last_night.
+# world"), each opened on a moment the chapter already has (o_cold_air's, the bear's sign, B12) whether or not an ask
+# is answered. Melee's levels speed the hunt, and pelt has no sink in week two, so spar runs only from night 14, with
+# sit_last_night.
 [[triggers]]
 id = "t_broth_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }

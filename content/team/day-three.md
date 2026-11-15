@@ -120,8 +120,7 @@ hands lane, run in the mix held against its supply store), Triggers (finds on it
   measuring").
 - **Finds:** **1 run** (a trigger on `card_count`), K2: the warm stream; clay +6, opens `dig_clay` and the clay
   line. **K4 is a step of its own**, `track_end` (narrative, cap 1, glows), shown with the track at K1 and ready at
-  Scavenging 16, the level the track trains toward (`decisions.md`, "No gate counts taps": a run count may pay, never
-  open): the dead field; scrap +4, and the scrap line shows. The arc's L2 (wolf sign) takes the same shape when its
+  Scavenging 16, the level the track trains toward: the dead field; scrap +4, and the scrap line shows. The arc's L2 (wolf sign) takes the same shape when its
   chapter is written; its level is the one typical reaches about 24-30 h after B4 (simulator).
 - **After the finds** it keeps paying Scavenging XP. Scrap (cap 12) comes only from finds on its run count and level
   finds, never a lump a run (BT2 as revised).

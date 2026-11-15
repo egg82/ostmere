@@ -87,8 +87,7 @@ unlocks = [
 ]
 
 # K4: walking the track to its end, a step of its own at the Scavenging level the track trains toward (a level shown
-# with the track, never a count of its runs: decisions.md, "No gate counts taps"; the level is the simulator's,
-# day-three-numbers.md). The first scrap, so the scrap line shows here.
+# with the track; the level is the simulator's, day-three-numbers.md). The first scrap, so the scrap line shows here.
 [[cards]]
 id = "track_end"
 presentation = "narrative"

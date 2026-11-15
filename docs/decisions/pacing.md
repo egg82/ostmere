@@ -30,9 +30,13 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   - **Progress made while away**, never a daily reward.
   - **The story is told where the eyes are,** so the slowness means something.
   - **Fewer upkeep taps, more real decisions** with visible consequences.
-  - **No gate counts taps** (the preview's tap, wait, tap, wait was the counter-example: 12 gathers to open the ruin, 10 scavenges
-    for the fire). Repeating a card can pay out (a level, a find), but what opens the next thing is a different step
-    the player takes, never the Nth repeat of the same one.
+  - **Progress never needs the same tap repeated by hand** (the preview's tap, wait, tap, wait was the
+    counter-example: 12 gathers to open the ruin, 10 scavenges for the fire). The complaint is manual tedium, not
+    counting: a store's amount or a level can open the next thing, since a mix fills the one and trains the other while
+    the player is away. How much a stretch leans on hand repetition is a "more or less" matter, so the pacing
+    simulator's active-effort readout flags a heavy stretch and never fails. One hard check stays: no story gate needs
+    many taps of one card before mixes or rules can take them over (`app/tests/opening/tap_gates.py` defines "before"
+    and "many").
   - Surprise (a lucky find) is a minor extra, not a pillar.
   - **From Idle Awakening's pacing** (studied 2026-10-15, from own-play notes kept outside the repo):
     something new every 2–5 minutes early, the main level about every 10, judged on real players' runs; a cheap, visible
