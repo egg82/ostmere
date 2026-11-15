@@ -5,8 +5,8 @@ stays on across an edit of another rule or a reorder, and a rule added in the sa
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
-    BP, AfterTime, AtLeast, AtMost, CardShare, Condition, Flow, Mix, MixId, Order, Rules, Save, SaveMix, SetOrders,
-    StoreDef, StoreValue, SwitchMix, advance, decide, new_save, value,
+    BP, AfterTime, AtLeast, AtMost, CardShare, Condition, Flow, Latch, Mix, MixId, Order, Rules, Save, SaveMix,
+    SetOrders, StoreDef, StoreValue, SwitchMix, advance, decide, new_save, value,
 )
 from contract_gen import Q, card, card_id, make_rules, mix_id, store_id
 
@@ -52,7 +52,7 @@ def _off_mid_band(old: tuple[Order, ...]) -> tuple[Rules, Save]:
     return rules, s
 
 
-def _after(rules: Rules, s: Save, new: tuple[Order, ...]) -> tuple[bool, ...]:
+def _after(rules: Rules, s: Save, new: tuple[Order, ...]) -> tuple[Latch, ...]:
     return decide(s, rules, MID_BAND_AT, SetOrders(new)).latches
 
 
@@ -146,7 +146,7 @@ def test_any_permutation_leaves_every_orders_latch_unchanged(data: st.DataObject
         s = decide(s, rules, 0, SaveMix(Mix(m, (CardShare(card_id(i), BP),))))
     s = decide(s, rules, 0, SetOrders(tuple(old)))
     at_t = advance(s, rules, t)
-    first: dict[Order, bool] = {}
+    first: dict[Order, Latch] = {}
     for o, latch in zip(old, at_t.latches):
         first.setdefault(o, latch)
     perm = tuple(data.draw(st.permutations(old)))

@@ -3215,3 +3215,65 @@ REJECTED, AND WHY (share levels)
   above a quarter. Comparing the shown amount with the exact share is right on both sides.
 - Share levels in content: nothing in the content asks for one, and every reader of the rules' conditions (blockers,
   pending triggers, cure readings) would then need the cap.
+
+RULE GUARDS (a rule's "unless" list: issue #90, docs/design/rule-guards.md, which holds the design, the page's words
+and the contract). Where this part and an entry above disagree, this part holds.
+
+FIT PASS
+- A guard is an instance of Conditions, given as an explicit list on the order, as a trigger's and a card's `requires`
+  are; no conjunction type and no new condition kind (REJECTED, AND WHY, the first entry). Each guard is latched as a
+  `when` is, with its own release, so its change time is solved and nothing polls. A rule's `when` latch and its
+  guards' latches are separate small machines (Nystrom, State, "Concurrent State Machines"); paused is read off them.
+- No new event kind, verb or Save field.
+
+CHOICES (rule guards)
+- Shape: Order.unless, a tuple of conditions, at most MAX_GUARDS (3), each the condition that blocks. Left out of the
+  codec's text while empty, so every save and logged SetOrders without one keeps its text: FORMAT is unchanged.
+  Save.latches[i] is a bool for a rule with no guard, and GuardedLatch(when, unless) for one with guards, one bool
+  per guard in list order; each rule has exactly one form, so equal saves still encode alike. orders.latch_of builds
+  it, and rule_on, when_latch and guard_latches read it; nothing else looks inside a latch.
+- On: a rule is on when its `when` latch is true and no guard's is (orders.rule_on). Everything that acts on a rule
+  reads that: which tap starts, which mix runs, the lane a rule holds, READY, invariant 57. A rule whose `when`
+  latch is true and some guard's latch is true is paused (OrderState.PAUSED, after passed over and waiting, before
+  outranked).
+- A guard pauses and never lets go: the `when` latch reads `when` alone and keeps moving while paused. Paused inside
+  `when`'s band, the rule resumes when its last guard lets go; `when` let go while paused, it is waiting from then on.
+- Every guard is latched at all times, whatever the `when` latch: a guard's band is a fact about its store, and a
+  latch held still while the rule waits would be wrong when it came on.
+- Change times: one LATCH event per rule, at the first time any of its latches changes (latches.latch_change_time),
+  so (kind, sequence) stays one key per rule and same-instant order stays rule order. Its handler flips the first
+  latch that changes now, `when` before the guards in list order (latches.flipped_now); a second change at the same
+  instant is pending again and is its own firing. A rule with no guard takes the path it took before.
+- Firing cap: a guard's latch change on a rule whose verb is a SwitchMix waits past the cap, as a `when` change does,
+  for the same reason (it moves the running mix with no verb applied).
+- A running tap lands: nothing cancels a tap when a guard comes on; the next one does not start. A guard reads the
+  stores as they are, never what a tap will make.
+- Share levels: a guard is read as any order condition is (SHARE LEVELS), its band included. A cap raise reads a
+  share guard's latch against the new quantities at that instant; the latch is never reset.
+- SetOrders: refuses (InvalidVerbError) more than MAX_GUARDS guards, a guard listed twice, and any guard it would
+  refuse as a `when` (check_condition: so no LaneRules, a share level only on a store). Orders match by equality,
+  guards included (Rule changes): a kept or moved rule keeps every latch; an edited one latches `when` and each
+  guard afresh from its threshold (latch_now).
+- Rule changes report the `when` latch alone: a pause is not a let-go, and a rule topping a store up would otherwise
+  log a pair of lines per item. View.orders_on stays the `when` latch. View.order_guards[i] is one GuardView per
+  guard: `on` its latch, `lets_go` the quantity it lets go at as read now (its release, a share read off the cap
+  now), None off a store. It is left out of View's repr, so the recorded fingerprints are unchanged.
+- Renames rename the ids inside a guard as inside `when`.
+
+INVARIANTS (rule guards; numbered on from 168. on(i) is rule_on(s.latches[i]).)
+168. Unchanged without guards: a save whose orders hold no guard has bool latches and encodes, evaluates, logs and
+     reads exactly as before Order.unless existed; a logged SetOrders without one keeps its text.
+169. One form: s.latches[i] is a GuardedLatch exactly when s.orders[i].unless is not empty, and then its `unless` has
+     one entry per guard.
+170. Paused acts nothing: while a guard latch of rule i is true, no tap of rule i starts by evaluation and its mix is
+     not the running mix; at the instant the last one lets go, rule i acts as a rule whose `when` latch just rose.
+171. The `when` latch ignores guards: under the same store values, a rule's `when` latch changes at the same times
+     with its guards as without them.
+172. Split and replay: invariants 1, 3 and 25 hold for saves holding guards.
+
+REJECTED, AND WHY (rule guards)
+- One LATCH event per latch (a sequence per guard): the sequence would have to encode both the rule and the guard,
+  every same-instant order between rules would depend on that encoding, and guard-free saves would change sequences.
+- Holding a guard's latch still while the rule waits: it would come on in a state its store does not have, and the
+  view would show a guard on that is not.
+- The rest is in docs/design/rule-guards.md, "Rejected, and why".

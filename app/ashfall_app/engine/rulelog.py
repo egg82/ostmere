@@ -1,7 +1,7 @@
-"""Rule starts and let-gos: an order's latch turning true (it comes on) or false (it lets go) across one instant or one
-decision (DESIGN.txt, "Rule changes"), and an order the game removed (DESIGN.txt, "Retired chores", "Logged"). Orders
-have no id, so a change names the order itself, matched across the two saves by equality: a reorder keeps it, an edit
-makes it another order."""
+"""Rule starts and let-gos: an order's `when` latch turning true (it comes on) or false (it lets go) across one instant
+or one decision (DESIGN.txt, "Rule changes"; a guard pausing it is not one: "RULE GUARDS"), and an order the game
+removed (DESIGN.txt, "Retired chores", "Logged"). Orders have no id, so a change names the order itself, matched
+across the two saves by equality: a reorder keeps it, an edit makes it another order."""
 from dataclasses import dataclass
 from enum import Enum
 
@@ -11,7 +11,7 @@ from .ids import CardId, StoreId
 from .index import index
 from .lanes import TapCard
 from .mixes import SwitchMix, flatten_shares
-from .orders import AfterTime, Order, QueueEntry, StoreValue, rule_on
+from .orders import AfterTime, Order, QueueEntry, StoreValue, when_latch
 from .plan import controlling_entry
 from .rules import Rules
 from .state import Save
@@ -46,8 +46,8 @@ def rule_changes(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, .
     `after`'s order; then each distinct order of `before` an outcome removed, in `before`'s order."""
     if before.orders == after.orders and before.latches == after.latches and before.queue == after.queue:
         return ()
-    latched = tuple(RuleChange(after.time, o, rule_on(on), _level(after, rules, o))
-                    for o, on in zip(after.orders, after.latches) if rule_on(on) != _was_on(before, o))
+    latched = tuple(RuleChange(after.time, o, when_latch(on), _level(after, rules, o))
+                    for o, on in zip(after.orders, after.latches) if when_latch(on) != _was_on(before, o))
     return latched + _ended(before, after, rules) + _stints(before, after, rules)
 
 
@@ -105,7 +105,7 @@ def _retired_cards(before: Save, after: Save, rules: Rules) -> frozenset[CardId]
 
 
 def _was_on(save: Save, order: Order) -> bool:
-    return next((rule_on(on) for o, on in zip(save.orders, save.latches) if o == order), False)
+    return next((when_latch(on) for o, on in zip(save.orders, save.latches) if o == order), False)
 
 
 def _level(save: Save, rules: Rules, order: Order) -> int | None:

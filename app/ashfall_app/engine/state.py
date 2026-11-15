@@ -11,7 +11,7 @@ from .events import CascadeLimit
 from .ids import MixId, NodeId, Runner, SkillId, StoreId
 from .mixes import Mix
 from .modifiers import Modifier
-from .orders import Order, QueueEntry
+from .orders import Latch, Order, QueueEntry
 from .segments import Segment
 from .unlocks import Unlock
 
@@ -88,9 +88,9 @@ class Pause:
 class Save:
     """Every event at or before `time` has been resolved; the next event is strictly after `time`.
 
-    latches[i] belongs to orders[i]. active is the player's own mix, written only by the player's and the queue's
-    SwitchMix and by DeleteMix: None until the first switch, and after DeleteMix of it. An order's mix runs over it
-    while the order is latched (the running mix, derived: DESIGN.txt, "Order mix"). An active mix may be greyed
+    latches[i] belongs to orders[i]: a bool, or a GuardedLatch for an order with guards. active is the player's own
+    mix, written only by the player's and the queue's SwitchMix and by DeleteMix: None until the first switch, and
+    after DeleteMix of it. An order's mix runs over it while the order is on (the running mix, derived: DESIGN.txt, "Order mix"). An active mix may be greyed
     (derived, never stored: DESIGN.txt, "Greyed mix").
     """
 
@@ -101,7 +101,7 @@ class Save:
     active: MixId | None
     pauses: tuple[Pause, ...]
     orders: tuple[Order, ...]
-    latches: tuple[bool, ...]
+    latches: tuple[Latch, ...]
     queue: tuple[QueueEntry, ...]
     modifiers: tuple[Modifier, ...]
     cascade_count: int = 0

@@ -11,7 +11,7 @@ from hypothesis.strategies import DrawFn
 from ashfall_app.engine import (
     BP, HANDS, ActionId, AfterTime, AtLeast, AtMost, CardDef, CardShare, Flow, Mix, MixId, Order, QueueEntry, SaveMix, Save, SetOrders,
     SetQueue, StandingDef, StoreDef, StoreValue, SwitchMix, TapCard, advance, decide, new_save, next_event, segment, value, view,
-    Rules, CardId, Verb,
+    Rules, CardId, Verb, Latch,
 )
 from contract_gen import (
     Q, Scenario, card, card_id, condition_st, few, make_rules, mix_id, mix_st, play, probe_times, rules_st, store_id,
@@ -449,7 +449,7 @@ def test_a_rule_that_refills_its_store_rises_below_its_value_and_releases_when_t
     r, s = _store_band_world(AtMost(StoreValue(S0), 3 * Q - 1, cap * Q - 1), 5 * Q, 2000, 1000, cap, True)
     assert s.latches == (False,) and view(s, r).running_mix == M1 and segment(s, r, S0).rate == -1000
     cur = s
-    flips: list[tuple[int, bool]] = []
+    flips: list[tuple[int, Latch]] = []
     while len(flips) < 4:
         e = next_event(cur, r)
         assert e is not None

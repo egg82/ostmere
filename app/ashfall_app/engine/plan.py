@@ -11,7 +11,7 @@ from .lanes import TapCard
 from .memo import SaveMemo
 from .errors import InvalidVerbError
 from .mixes import Mix, MixLayer, SwitchMix, flatten_shares
-from .orders import OrderVerb, rule_on
+from .orders import Latch, OrderVerb, rule_on, when_latch
 from .rules import Rules
 from .state import Save
 
@@ -147,7 +147,9 @@ class OrderState(Enum):
     ON = "on"
     """A mix order whose mix runs (mix_order), or a tap order whose condition holds."""
     WAITING = "waiting"
-    """Its condition does not hold (its latch is false)."""
+    """Its condition does not hold (its `when` latch is false)."""
+    PAUSED = "paused"
+    """Its `when` latch is true and a guard's latch is true (DESIGN.txt, "RULE GUARDS")."""
     OUTRANKED = "outranked"
     """A mix order whose condition holds while an earlier mix order's mix runs (mix_order); a tap order whose condition
     holds while its card's lane runs the task of an earlier order (lane_order)."""
@@ -161,11 +163,13 @@ def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
     cards = index(rules).cards
     lanes = {lane: lane_order(save, rules, lane) for lane in index(rules).lanes}
 
-    def state(i: int, verb: OrderVerb, latch: bool) -> OrderState:
+    def state(i: int, verb: OrderVerb, latch: Latch) -> OrderState:
         if is_dead(save, rules, verb):
             return OrderState.PASSED_OVER
-        if not rule_on(latch):
+        if not when_latch(latch):
             return OrderState.WAITING
+        if not rule_on(latch):
+            return OrderState.PAUSED
         if isinstance(verb, SwitchMix):
             return OrderState.ON if running[_layer_of(save, rules, verb.mix)] == i else OrderState.OUTRANKED
         if isinstance(verb, (AnswerOffer, AnswerKind)):
