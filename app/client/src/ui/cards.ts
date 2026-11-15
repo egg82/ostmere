@@ -191,10 +191,12 @@ export class Cards implements Part {
       if (inPlay) this.atEnd ??= row.node;
     }
     this.rows.set(card.card, row);
-    if (inPlay) {
+    if (inPlay && card.completions === 0) {   // a card done before is not new when it returns
       this.marks.add(card.card);
       this.arrived();
       markNew(row.node, () => this.marks.clear(card.card));
+    }
+    if (inPlay) {
       this.ctx.arrivals.arrive(row.node, "card", card.card);
       const tag = newGroup ? group.node.querySelector<HTMLElement>(":scope > .lane-tag") : null;
       if (tag) this.ctx.arrivals.arrive(tag, "card", card.card);   // a new group's heading comes with its first card

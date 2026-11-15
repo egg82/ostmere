@@ -1,6 +1,6 @@
 // A dot the player cleared stays cleared (decisions/pacing.md, the quiet dot): across the card finishing and leaving the
 // Tasks tab and coming back, across redraws and steps, and across a reload.
-import { FakeEvent, install } from "./fake-dom";
+import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Step } from "../src/api/types";
@@ -40,9 +40,9 @@ function rig(): { screen: Screen; dot: () => boolean; frame: (ms: number) => voi
   const { screen, dot, frame } = rig();
   screen.show(withCard);
   expect("a card that arrives is dotted", dot(), true);
-  screen.root.querySelector('[data-card="take_stock"]')?.dispatchEvent(new FakeEvent("pointerdown"));
+  fakeDocument.querySelector('[data-card="take_stock"]')?.dispatchEvent(new FakeEvent("pointerdown"));
   expect("a touch clears it", dot(), false);
-  screen.root.querySelector('[data-card="take_stock"]')?.dispatchEvent(new FakeEvent("pointerup"));
+  fakeDocument.querySelector('[data-card="take_stock"]')?.dispatchEvent(new FakeEvent("pointerup"));
   screen.show(withCard);
   expect("a redraw leaves it cleared", dot(), false);
   screen.show(finished);
