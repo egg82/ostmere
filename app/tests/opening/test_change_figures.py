@@ -101,7 +101,14 @@ def test_a_card_holding_entries_while_it_runs_is_served_them_at_its_full_share(c
 
 
 def test_each_staked_sink_is_served_the_entries_it_holds_at_its_full_share(content: Content):
-    """The watch's larder and gap entries, one figure; the track's on the hands, which a later chapter gives."""
+    """The watch's larder and gap entries, one figure."""
     cards = {c.card: c.change_bp for c in content.card_infos}
     assert [cards[c] for c in ("n1_watch", "n2_watch", "n4_watch", "n6_watch")] == [[5000]] * 4
-    assert cards["field_track"] == [10000]
+
+
+def test_every_track_card_is_served_what_its_reach_pays(content: Content):
+    """The hands' and each person's: the one figure every reach of track laid pays the hunt, which a later chapter
+    declares."""
+    cards = {c.card: c.change_bp for c in content.card_infos}
+    track = sorted(c for c in cards if c.endswith("field_track"))
+    assert len(track) == 7 and [cards[c] for c in track] == [[1000]] * 7

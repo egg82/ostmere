@@ -81,6 +81,28 @@ def test_a_side_stake_needs_an_entry_on_a_fought_side_once_any_fight_exists():
                              sides=[SIDE], threats=threat, standing=[FIGHT]))
 
 
+REACH: dict[str, Any] = {**SINK, "stake": "reach", "upside_key": "t_up",
+                         "outcome": {"stores": [{"store": "damp_wood", "items": 1}]}}
+
+
+def reading(store: str, modifiers: list[dict[str, Any]]) -> dict[str, Any]:
+    return {"id": "t_reach", "when": {"test": "at_least", "subject_kind": "store", "id": store, "value": 5},
+            "outcome": {"modifiers": modifiers}}
+
+
+SPEED = [{"target": "work", "id": "gather_wood", "kind": "mul_bp", "amount_bp": 11000, "source": "t_reach"}]
+
+
+def test_a_reach_stake_needs_a_trigger_on_the_store_it_fills_that_pays_a_modifier():
+    check_stakes_hold(merged(REACH, triggers=[reading("damp_wood", SPEED)]))
+    with pytest.raises(ValueError, match="card t_sink: has the stake reach but no trigger on a store it fills pays"):
+        check_stakes_hold(merged(REACH))
+    with pytest.raises(ValueError, match="card t_sink: has the stake reach"):
+        check_stakes_hold(merged(REACH, triggers=[reading("dry_wood", SPEED)]))   # a store it takes, not fills
+    with pytest.raises(ValueError, match="card t_sink: has the stake reach"):
+        check_stakes_hold(merged(REACH, triggers=[{**reading("damp_wood", []), "outcome": {"line_keys": ["t_l"]}}]))
+
+
 def test_a_card_that_takes_a_fights_wound_is_a_cure_not_a_sink():
     wounding = {**FIGHT, "fight": {**FIGHT["fight"], "wounds": [{"store": "dry_wood", "items": 1}]}}
     threat = [{"id": "t_rats", "label_key": "t_t", "base": 4}]
