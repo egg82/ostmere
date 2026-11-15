@@ -433,6 +433,7 @@ p.catching-up[hidden] { display: none; }
 .totals-arrow { color: var(--ink-dim); text-align: center !important; }
 .totals-after.changed { color: var(--ink-hi); font-weight: 700; }
 .totals-after.unknown { color: var(--ink-dim); }
+.totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
 .totals-runs { font-size: var(--t-meta); color: var(--ink); }
 .goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
 .editor-adds { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
