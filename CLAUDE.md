@@ -7,7 +7,7 @@ How code is built and shipped, the rules carried over from habits' mistakes, and
 live: `docs/engineering.md`.
 **Load the `agentic-engineering` skill before changing anything here**, and name it in every writer's brief.
 Every change reaches `main` through a pull request (`gh pr create`); GitHub Actions runs the full suite and the merge
-waits on its `ci-ok` check. Locally, run only the tests a change touches plus the structural gates. A push to `main`
+waits on its `ci-ok` check. Locally, run only the tests a change touches plus `app/tools/gates.sh` (every structural gate). A push to `main`
 releases the image `ghcr.io/egg82/ostmere` (and `egg82/ostmere` on Docker Hub), and Flux deploys it from the registry.
 
 **An ask that adds a new kind of thing (a system, something placed in the world, new data, a new roll or schedule)
