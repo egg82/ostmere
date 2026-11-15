@@ -141,7 +141,7 @@ def test_the_limit_is_the_api_s_visit_limit():
 
 def test_a_save_keeps_its_newest_chapter_through_writes_that_carry_none(game: GameClient):
     save = game.begin()["save"]["save_id"]
-    rule = {"when": {"kind": "at_most", "watched": {"kind": "store_value", "store": "wood"}, "value": 5, "release": 9,
+    rule: dict[str, object] = {"when": {"kind": "at_most", "watched": {"kind": "store_value", "store": "wood"}, "value": 5, "release": 9,
                      "value_of_cap": False, "release_of_cap": False},
             "then": {"kind": "tap_card", "card": "c"}, "unless": [], "or_else": []}
     chapter = {"left": 10, "back": 4000, "stores": [{"id": "wood", "was": 3, "now": 90}], "levels": [],
