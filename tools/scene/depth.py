@@ -70,7 +70,7 @@ def arrange(entries: Sequence[Entry], bottoms: Mapping[str, int]) -> list[Entry]
     """The entries in band order (flat, sorted, overlay), each sorted one with its `base`; `bottoms` is each layer's
     lowest drawn pixel. Order inside a band is the manifest's own."""
     ids = {e["id"] for e in entries}
-    stale = (FLAT | OVERLAY | BASE_OVERRIDE.keys() | PART_OF.keys() | set(PART_OF.values())) - ids
+    stale = (FLAT | OVERLAY | WALLS | BASE_OVERRIDE.keys() | PART_OF.keys() | set(PART_OF.values())) - ids
     if stale:
         raise ValueError(f"depth names layers the scene no longer has: {sorted(stale)}")
     flat = [e for e in entries if e["id"] in FLAT]
@@ -89,6 +89,15 @@ def arrange(entries: Sequence[Entry], bottoms: Mapping[str, int]) -> list[Entry]
         e["base"] = base_of(e["id"])
     return [*flat, *sorted_band, *over]
 
+
+WALLS = frozenset({
+    "fireback", "clay_hearth_1", "clay_hearth_2", "clay_hearth_3",
+    "clay_hearth_1_front", "clay_hearth_2_front", "clay_hearth_3_front",
+})
+"""The stone and clay a figure cannot stand on: the fireback's mound and the hearth's courses, each stage of it."""
+
+FEET = 6
+"""Rows at the bottom of a figure's art that are its footing: a seat's legs or a standing figure's feet."""
 
 PASSES = ("base", "ungraded", "front")
 """The page's passes, in the order it draws them (scene/manifest.ts passOf): each over everything before it."""
@@ -124,3 +133,12 @@ def draw_order(entries: Sequence[Entry]) -> list[Entry]:
     for slot, entry in zip(slots, ranked):
         out[slot] = entry
     return out
+
+
+def on_walls(entries: Sequence[Entry], footing_overlap: Callable[[str, str], bool]) -> list[tuple[str, str]]:
+    """Pairs (figure, wall) of `entries` (arranged, all shown at once) where the figure's footing (`footing_overlap`:
+    its `FEET` bottom rows meet the wall's pixels) lies on a wall it is in front of: one that lies on the ground, or
+    one whose base is no lower than the figure's. A figure behind a wall has its feet hidden by it, which is fine."""
+    walls = [e for e in entries if e["id"] in WALLS]
+    return [(f["id"], w["id"]) for f in entries if f["id"].startswith("figure_") for w in walls
+            if w.get("base", -1) <= f.get("base", 0) and footing_overlap(f["id"], w["id"])]

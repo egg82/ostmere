@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Callable
 from pathlib import Path
 from typing import NotRequired, TypedDict
 
@@ -110,20 +111,7 @@ def composite(entries: list[Entry], state: State) -> Image.Image:
 def check_depth(entries: list[Entry]) -> None:
     """No stage draws a layer over one the depth puts in front of it where their pixels meet (depth.misdrawn): the
     page's ungraded and front passes go over everything in the passes before them, whatever stands nearer."""
-    masks: dict[str, Image.Image] = {}
-
-    def mask(e: Entry) -> Image.Image:
-        if e["id"] not in masks:
-            alpha = Image.open(OUT / e["src"].split("?")[0]).convert("RGBA").getchannel("A")
-            masks[e["id"]] = Image.new("1", (W, H))
-            masks[e["id"]].paste(kit.point(alpha, lambda v: 255 if v else 0).convert("1"), (e["x"], e["y"]))
-        return masks[e["id"]]
-
-    by_id = {e["id"]: e for e in entries}
-
-    def overlap(a: str, b: str) -> bool:
-        return ImageChops.logical_and(mask(by_id[a]), mask(by_id[b])).getbbox() is not None
-
+    overlap = _overlap(entries)
     faults: dict[tuple[str, str], str] = {}
     for stage, state in STAGES.items():
         shown = [e for e in entries if holds(e["when"], state) and not ("until" in e and holds(e["until"], state))]
@@ -135,6 +123,48 @@ def check_depth(entries: list[Entry]) -> None:
                          + "; ".join(f"{near} under {far} ({stage})" for (near, far), stage in new.items()))
     if stale := depth.HELD_MISDRAWN - faults.keys():
         raise ValueError(f"depth.HELD_MISDRAWN holds pairs no longer misdrawn, drop them: {sorted(stale)}")
+
+
+def check_footing(entries: list[Entry]) -> None:
+    """No figure's footing lies on a wall it stands in front of (depth.on_walls), in any stage: a seat or a spot a wall's
+    courses grow over later fails here, naming the stage. Fails too when no stage had a figure and a wall together."""
+    overlap = _overlap(entries, footing=True)
+    faults: dict[tuple[str, str], str] = {}
+    met = 0
+    for stage, state in STAGES.items():
+        shown = [e for e in entries if holds(e["when"], state) and not ("until" in e and holds(e["until"], state))]
+        met += any(e["id"] in depth.WALLS for e in shown) and any(e["id"].startswith("figure_") for e in shown)
+        for pair in depth.on_walls(shown, overlap):
+            faults.setdefault(pair, stage)
+    if not met:
+        raise ValueError("no stage shows a figure and a wall together: the footing check looked at nothing")
+    if faults:
+        raise ValueError("a figure's feet lie on a wall: " + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
+
+
+def _overlap(entries: list[Entry], footing: bool = False) -> Callable[[str, str], bool]:
+    """Whether two layers' pixels meet; with `footing`, whether the first's bottom `depth.FEET` rows meet the second's."""
+    masks: dict[str, Image.Image] = {}
+    by_id = {e["id"]: e for e in entries}
+
+    def mask(e: Entry) -> Image.Image:
+        if e["id"] not in masks:
+            alpha = Image.open(OUT / e["src"].split("?")[0]).convert("RGBA").getchannel("A")
+            masks[e["id"]] = Image.new("1", (W, H))
+            masks[e["id"]].paste(kit.point(alpha, lambda v: 255 if v else 0).convert("1"), (e["x"], e["y"]))
+        return masks[e["id"]]
+
+    def feet(e: Entry) -> Image.Image:
+        whole, bottom = mask(e), e["y"] + Image.open(OUT / e["src"].split("?")[0]).height
+        band = Image.new("1", (W, H))
+        band.paste(whole.crop((0, bottom - depth.FEET, W, bottom)), (0, bottom - depth.FEET))
+        return band
+
+    def overlap(a: str, b: str) -> bool:
+        first = feet(by_id[a]) if footing else mask(by_id[a])
+        return ImageChops.logical_and(first, mask(by_id[b])).getbbox() is not None
+
+    return overlap
 
 
 def _stack(img: Image.Image, entries: list[Entry], state: State) -> Image.Image:

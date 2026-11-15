@@ -1,6 +1,7 @@
 """tools/scene/depth.py: the generator marks which layers the page depth-sorts and gives each its ground-contact `base`,
 and draw_order is the page's rule (scene/manifest.ts depthOrder), so the previews match the page."""
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -27,7 +28,7 @@ def camp() -> tuple[list[Entry], dict[str, int]]:
 
 def arranged() -> list[Entry]:
     entries, bottoms = camp()
-    stale = depth.FLAT | depth.OVERLAY | depth.BASE_OVERRIDE.keys() | depth.PART_OF.keys() | set(depth.PART_OF.values())
+    stale = depth.FLAT | depth.OVERLAY | depth.WALLS | depth.BASE_OVERRIDE.keys() | depth.PART_OF.keys() | set(depth.PART_OF.values())
     for name in stale - set(bottoms):
         entries.append(entry(name))
         bottoms[name] = 100
@@ -115,3 +116,26 @@ def test_flat_ground_lights_and_pixels_that_never_meet_are_not_misdrawn():
 def test_the_near_wall_in_front_of_the_lit_fire_is_drawn_after_it():
     layers = [standing("fire_lit", 243, "ungraded"), standing("clay_hearth_1_front", 249, "front")]
     assert depth.misdrawn(layers, everywhere) == []
+
+
+def footing_on(*pairs: tuple[str, str]) -> Callable[[str, str], bool]:
+    return lambda figure, wall: (figure, wall) in pairs
+
+
+def test_a_seat_on_the_fireback_or_a_hearth_course_is_a_figure_on_a_wall():
+    """The planted failure: a seat whose legs lie on the mound (it stands in front of it) or on a ground-flat hearth
+    course, which every figure is drawn over."""
+    layers = [entry("clay_hearth_2"), standing("fireback", 190), standing("figure_seated", 193)]
+    on = footing_on(("figure_seated", "fireback"), ("figure_seated", "clay_hearth_2"))
+    assert depth.on_walls(layers, on) == [("figure_seated", "clay_hearth_2"), ("figure_seated", "fireback")]
+
+
+def test_feet_clear_of_a_wall_or_hidden_behind_it_are_not_on_it():
+    """Controls: a figure whose footing meets no wall pixel, one behind a based wall (its feet are hidden by it), and
+    things that are not figures on a wall are all fine."""
+    layers = [standing("fireback", 190), standing("figure_gathering", 171), standing("figure_seated", 193),
+              standing("birch_log", 210)]
+    assert depth.on_walls(layers, footing_on(("figure_gathering", "fireback"))) == []
+    assert depth.on_walls(layers, footing_on(("birch_log", "fireback"))) == []
+    assert depth.on_walls(layers, lambda a, b: False) == []
+
