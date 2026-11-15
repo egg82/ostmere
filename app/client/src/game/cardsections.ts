@@ -25,7 +25,7 @@ export function compareSections(catalog: Catalog): (a: string, b: string) => num
 }
 
 /** `items` as the sections a picker lists them under: the cards (`cardOf` names an item's card) by section in the
- * page's order, each section's by shown name; then, as a last group with no heading, the items with no card (mixes). */
+ * page's order, each section's by shown name; then, as a last group under the Mixes heading, the items with no card. */
 export function sectioned<T>(catalog: Catalog, items: readonly T[], cardOf: (item: T) => string | null): { heading: string; items: T[] }[] {
   const byKey = new Map<string, T[]>();
   const rest: T[] = [];
@@ -40,7 +40,7 @@ export function sectioned<T>(catalog: Catalog, items: readonly T[], cardOf: (ite
     heading: sectionHeading(catalog, key),
     items: (byKey.get(key) ?? []).sort((a, b) => label(a).localeCompare(label(b))),
   }));
-  return rest.length > 0 ? [...groups, { heading: "", items: rest }] : groups;
+  return rest.length > 0 ? [...groups, { heading: catalog.text.get(UI.mixesHeading), items: rest }] : groups;
 }
 
 /** `items` flattened from `sectioned`: the order a picker lists them in. */

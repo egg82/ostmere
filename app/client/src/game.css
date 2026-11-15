@@ -639,7 +639,6 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .cond { display: flex; flex-direction: column; gap: .9rem; }
 .cond-body { display: flex; flex-direction: column; gap: .9rem; }
 .cond .rules-label { flex: 0 0 100%; margin: 0; font-size: var(--t-meta); color: var(--ink); }   /* "Mixes", "Tasks": a row's head, above its tiles */
-.cond .cond-break { flex: 0 0 100%; height: 0; }   /* the mixes, after the cards: a row of their own */
 .cond .cond-subhead { margin-top: .5rem; }   /* Levels and Tasks under When: a head inside the group, a little apart from the tiles above */
 .cond-stores { padding-top: .9rem; border-top: 1px solid var(--rule); }   /* a hairline between the groups */
 .cond-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }

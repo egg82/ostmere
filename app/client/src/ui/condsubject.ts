@@ -24,7 +24,7 @@ export function subjectRows(catalog: Catalog, view: View, choices: { levels: Sub
     return b;
   };
   const head = (key: string, rules: SubjectRule[]) => (rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rules.map(button)]);
-  const tasks = sectioned(catalog, choices.tasks, (r) => (r.kind === "count" ? r.card : null)).flatMap((g, i) => [...sectionHead(g.heading, i === 0), ...g.items.map(button)]);
+  const tasks = sectioned(catalog, choices.tasks, (r) => (r.kind === "count" ? r.card : null)).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
   return [...head(UI.ruleLevels, choices.levels), ...(tasks.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleTasks)), ...tasks])];
 }
 

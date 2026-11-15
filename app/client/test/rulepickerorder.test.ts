@@ -88,9 +88,7 @@ check("the Do picker: the page's sections, by name, the mixes last", () => {
   expect("a card from each lane is offered", seen.filter((s) => s.card !== null).length >= OTHER.length, true);
   expect("sections drawn", new Set(seen.map((s) => s.section)).size > 2, true);
   expect("some mix is offered", seen.some((s) => s.mix !== null), true);
-  const kids = one(root, ".cond .cond-mixes").children;
-  const firstMix = kids.findIndex((k) => k.dataset.mix !== undefined);
-  expect("the mixes start a row of their own", kids[firstMix - 1]?.classList.contains("cond-break"), true);
+  expect("the mixes sit under the Mixes heading", seen.filter((s) => s.mix !== null).map((s) => s.section), seen.filter((s) => s.mix !== null).map(() => catalog.text.get(UI.mixesHeading)));
   holdsOrder("do", seen);
 });
 
@@ -101,6 +99,7 @@ check("the Or else picker lists the same way", () => {
   const seen = walk(one(root, ".cond-else-pick"));
   expect("cards offered", seen.filter((s) => s.card !== null).length > 3, true);
   expect("mixes offered", seen.some((s) => s.mix !== null), true);
+  expect("the mixes sit under the Mixes heading", seen.filter((s) => s.mix !== null).every((s) => s.section === catalog.text.get(UI.mixesHeading)), true);
   holdsOrder("else", seen);
 });
 
