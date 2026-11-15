@@ -32,6 +32,7 @@ export const UI = {
   needs: "ui.card.needs", // "{store} {have}/{n}": a card's need
   needsSpent: "ui.card.needs_spent", // "{store} {have}/{n}": a card's need on a store nothing will bring again
   needsSkill: "ui.card.needs_skill", // "{skill} level {have}/{n}": a card held back by a skill level
+  atFull: "ui.card.at_full", // beside a held entry's figure on a card face: the figure is at full time
   needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
   ledgerHeading: "ui.heading.ledger",
   ledgerYours: "ui.ledger.yours", // the ledger's group of the player's own stores

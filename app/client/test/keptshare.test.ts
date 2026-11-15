@@ -7,7 +7,9 @@ import { townStep } from "../fixtures/town";
 import type { Content } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { Glow } from "../src/ui/fresh";
+import { makeRow } from "../src/ui/cardrow";
 import { LaneRows } from "../src/ui/lanerows";
+import { WhenReady } from "../src/ui/whenready";
 import { fixtureContent } from "../fixtures/content";
 
 install();
@@ -70,4 +72,17 @@ const held = [{ side: "gap", lane: null, amount_bp: 5000 }];
   const row = editorRow({ change_bp: [3333], held: [{ side: "gap", lane: null, amount_bp: 3333 }] }, "{pct} strength");
   const bp = Number.parseFloat(shareOf(row())) * 100;
   expect("the engine's floor", upsideOf(row()), `+${Math.floor((3333 * bp) / 10000) / 100}% strength`);
+}
+
+{  // a card's face has no share: it keeps the full figure and says so, only where it holds an entry
+  const face = (over: Partial<Content["card_infos"][number]>): string => {
+    const catalog = withCard("haul", { upside_key: "up.kept", ...over }, { "up.kept": "{pct} strength while kept" });
+    const { ctx } = testContext(new Glow(), catalog);
+    const card = townStep("town").view.cards.find((c) => c.card === "haul");
+    if (!card) throw new Error("the town fixture has no haul");
+    const row = makeRow(ctx, new WhenReady(ctx), card);
+    return row.node.querySelector(".card-upside")?.textContent ?? "";
+  };
+  expect("the full figure, at full time", face({ change_bp: [5000], held }), "+50% strength while kept, at full time");
+  expect("a card that holds nothing says nothing more", face({ change_bp: [5000], held: [] }), "+50% strength while kept");
 }
