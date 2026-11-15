@@ -781,7 +781,9 @@ TEXT AND NUMBERS (one rule)
     ui.feedback.thanks | ui.feedback.later   the Feedback button and its sheet: the button, the field's placeholder, the
                                     line saying what is sent along, Send, Not now, the thank-you, and the line when a send
                                     was not kept (limited, or no answer)
-    ui.hands.idle | ui.mix.yielded   the hands strip's states
+    ui.hands.idle | ui.hands.then {mix} | ui.hands.until_goal {goal}   the hands strip's states: idle; the mix the hands
+                                    go back to while a tap, a rule's mix or a goal stint holds them; where a goal stint's
+                                    mix lets go
     ui.games.open | ui.games.heading | ui.games.name {number} | ui.games.unnumbered | ui.games.camp {level} |
     ui.games.dates {started}{played} | ui.games.playing | ui.games.switch | ui.games.delete |
     ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited |

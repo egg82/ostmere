@@ -45,10 +45,13 @@ export function unqueue(view: View, index: number): Decision {
   return { kind: "set_queue", entries: view.queue.filter((_, i) => i !== index) };
 }
 
-/** The card the queue's head taps, or null (an empty queue, or a head that switches a mix). */
+/** The card the queue taps next: its head's, or, while the head's card already runs on the hands, the entry's after
+ * it; null when that entry is missing or switches a mix. */
 export function nextCard(view: View): string | null {
+  const running = view.lanes.find((l) => l.lane === "hands")?.running_card ?? null;
   const head = view.queue[0]?.verb;
-  return head?.kind === "tap_card" ? head.card : null;
+  const next = head?.kind === "tap_card" && head.card === running ? view.queue[1]?.verb : head;
+  return next?.kind === "tap_card" ? next.card : null;
 }
 
 /** The queue with a goal stint at its end: `mix` runs over the player's own until `until` holds, a goal row's or a
