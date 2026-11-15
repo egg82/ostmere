@@ -5,11 +5,10 @@
 import type { CardShare, Decision, Mix, Order, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { ALWAYS } from "./lanes";
-import { MIN_SHARE_BP } from "./mix";
 import { freeName } from "./orders";
 
-/** One share step in the editor: the smallest share a card can hold. */
-export const TOWN_STEP_BP = MIN_SHARE_BP;
+/** One share step in the town editor, and the smallest share it offers: its own 5%, not the mix floor. */
+export const TOWN_STEP_BP = 500;
 /** The share a card joins a person's time with, when that much is free. */
 const JOIN_BP = 5_000;
 
