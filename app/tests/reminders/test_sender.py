@@ -1,5 +1,6 @@
 """WebPushSender against a push service on localhost: what each answer means, and where a request may go."""
 from ashfall_app.reminders.sender import Delivery, NullSender, WebPushSender
+from tests.kills import kills
 
 from tests.reminders.fakepush import push_service, subscription_keys, vapid_config
 
@@ -17,6 +18,7 @@ def test_201_is_delivered():
         assert seen.paths == ["/201"]
 
 
+@kills(9)
 def test_410_means_the_subscription_is_gone():
     with push_service() as (base, _):
         assert send(base + "/410") == Delivery("gone", 410)
@@ -27,6 +29,7 @@ def test_500_is_a_failure_with_its_status():
         assert send(base + "/500") == Delivery("error", 500, "http")
 
 
+@kills(8)
 def test_a_redirect_is_not_followed():
     with push_service() as (elsewhere, other), push_service(redirect_to=elsewhere + "/201") as (base, first):
         outcome = send(base + "/redirect")

@@ -10,6 +10,7 @@ from ashfall_app.engine import Forecast, Rules, Save, SkillId, StoreId, UnlockKi
 from tests.dayone.conftest import PLAY_TIMEOUT_S
 from tests.dayone.player import DayOnePlayer
 from tests.dayone.routes import day
+from tests.kills import kills
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 HORIZON_S = 2 * 3600
@@ -133,11 +134,13 @@ def forecast_work() -> list[tuple[int, bool]]:
     return work
 
 
+@kills(10)
 def test_a_forecast_stays_inside_its_budget(forecast_work: list[tuple[int, bool]]):
     most = max(n for n, _ in forecast_work)
     assert most <= INSTANTS_MAX, f"a forecast resolved {most} instants, over {INSTANTS_MAX}"
 
 
+@kills(11)
 def test_a_served_forecast_reaches_its_horizon(forecast_work: list[tuple[int, bool]]):
     """None stops at MAX_INSTANTS short of the horizon, where nothing past it would be known."""
     assert len(forecast_work) == 24 and all(reached for _, reached in forecast_work)

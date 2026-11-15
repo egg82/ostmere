@@ -160,7 +160,8 @@ jobs:
           grep '^matrix=' weektwo-shards.out >> "$GITHUB_OUTPUT"
 
   # Every planted mutant (app/tools/*_mutants/) applies to the current code: each anchor occurs exactly once. Plants
-  # only, no test run, no dependencies beyond the standard library; a mutation run is by hand.
+  # only, and every row of every suite's MUTANTS file is claimed by a test marked @kills. No test run, no dependencies
+  # beyond the standard library; a mutation run is by hand.
   mutant-plants:
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -173,6 +174,14 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - working-directory: app
         run: python -m tools.mutate_suite --plants
+      - working-directory: app
+        run: |
+          bad=0
+          for suite in $(python -c "from tools.mutate_suite import SUITES; print(*SUITES)"); do
+            echo "== $suite"
+            python -m tools.mutate_suite "$suite" --check || bad=1
+          done
+          exit $bad
 
   # The per-PR smoke route: the opening's representative routes (tests/opening/routes.py, PUSH_ROUTES) and the tests
   # that read them, so a change that breaks play itself goes red before it merges. The rest of the playthroughs are the

@@ -13,7 +13,7 @@
   journal_days  tests/saves/test_journal_days.py (and the tests in `also`)  tests/saves/MUTANTS_journal_days.txt
           specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
-its MUTANTS file); only its own tests make claims.
+its MUTANTS file); a claim is read from either, and a claim of a row outside the suite's rows is the sibling's.
 
 From app/:  python -m tools.mutate_suite SUITE --check
               exits 1 unless every row is claimed by a test marked @kills(row), every claim names a row and every spec
@@ -104,17 +104,17 @@ def rows(suite: Suite) -> dict[int, str]:
 
 
 def claims(suite: Suite) -> dict[int, list[str]]:
-    """Row -> the tests (file::name) marked @kills(row), read off the source, not by running anything. A claim of a row
-    outside the suite's range is the sibling suite's."""
+    """Row -> the tests (file::name) marked @kills(row), read off the source, not by running anything, in the suite's
+    own files and in `also`. A claim of a row outside the suite's range is the sibling suite's."""
     out: dict[int, list[str]] = {}
-    for path in sorted((APP / suite.home).glob(suite.tests)):
+    for path in sorted([*(APP / suite.home).glob(suite.tests), *(p for g in suite.also for p in APP.glob(g))]):
         for node in ast.walk(ast.parse(path.read_text())):
             if isinstance(node, ast.FunctionDef):
                 for dec in node.decorator_list:
                     if isinstance(dec, ast.Call) and getattr(dec.func, "id", None) == "kills":
                         for arg in dec.args:
                             if isinstance(arg, ast.Constant) and isinstance(arg.value, int) and suite.first <= arg.value <= suite.last:
-                                out.setdefault(arg.value, []).append(f"{path.name}::{node.name}")
+                                out.setdefault(arg.value, []).append(f"{path.relative_to(APP).as_posix()}::{node.name}")
     return out
 
 

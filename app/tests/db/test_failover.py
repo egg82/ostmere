@@ -20,6 +20,7 @@ from sqlalchemy import Engine, event, text
 
 from ashfall_app.db.engine import Database, from_env, open_database
 from tests.game_client import GameClient
+from tests.kills import kills
 
 Fault = Callable[[Any], None]
 
@@ -193,6 +194,7 @@ SILENT_CONNECT_S = 1
 """The connect timeout the silent-host smoke test sets in its URL: libpq's own wait, cut from the default to a second."""
 
 
+@kills(2)
 def test_a_host_that_never_answers_is_passed_over(pg_url: str):
     """The one real wait in this file: libpq gives up on a host that takes the connection and never answers, and the
     multi-host URL a two-site deploy uses moves on to the next. libpq times that itself, so no clock can be injected;
@@ -210,6 +212,7 @@ def test_a_host_that_never_answers_is_passed_over(pg_url: str):
     opened[0].close()
 
 
+@kills(1, 3)
 def test_a_url_that_sets_no_connect_timeout_gives_up_on_a_host_within_a_few_seconds(pg_url: str):
     database = open_database(pg_url)
     try:
@@ -251,6 +254,7 @@ def test_a_tcp_setting_the_url_sets_is_kept_and_the_others_are_added(pg_url: str
         database.close()
 
 
+@kills(4)
 def test_getconn_fails_within_its_budget_when_no_host_is_writable(pg_url: str):
     url = make_conninfo(pg_url, target_session_attrs="read-write")
     database = open_database(url, timeout_s=0.5)
