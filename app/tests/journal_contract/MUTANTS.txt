@@ -84,11 +84,14 @@ Late additions, misremembering
 48 rate flipped a rate applied as 1 - rate, or the comparison turned (roll > rate).   [rates, late, misremember]
 
 Order and keys
-49 catch-ups    catch-ups ordered by id alone, or by the gap day descending.                                [order]
-50 must order   the day's own musts in `subjects` order or by id instead of the order roll.                 [order]
-51 groups       non-musts before musts, late additions after corrections, or either group not by id.
+49 catch-ups    catch-ups ordered by id alone, by their earliest line descending, or by the gap day alone (the
+                 line's second ignored).                                                                     [order]
+50 own order    the day's own notes by the order roll or by id instead of their earliest line; musts before
+                 non-musts; latest line first; a subject placed by its latest line of the day; ties in the second
+                 not by id.                                                                                  [order]
+51 groups       catch-ups after the own notes, late additions after corrections, or either of those not by id.
                                                                                             [order, properties]
-52 care order   non-musts by order roll alone, ignoring care.                                               [order]
+52 care order   the own notes by care first, their lines only breaking ties.                                [order]
 53 no bag       a key chosen by roll with replacement, so a key repeats within a round.        [bag, properties]
 54 bag count    the bag's count restarted per call instead of counted over `composed`.                        [bag]
 55 bag key      one count per subject across its slots, or one across a crowd's bands.              [bag, properties]
@@ -104,9 +107,10 @@ Equivalent (no test can tell them apart)
  E2 bag order   any bag order that completes each round before repeating: statement 19 fixes rounds, not which
                  key comes first in a round.
 
-Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 94 variants
+Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 99 variants
 covering the 58 rows, each row's alternatives planted on their own as 2a, 2b, ...)
- 94 of 94 killed; rows caught: 58 of 58.
+ 99 of 99 killed; rows caught: 58 of 58.
+ 35d           killed by test_journal_budget's care-over-order-roll keep, the one case where the two disagree.
  58a           killed by test_journal_forward's day of only removed subjects' notes.
  5             killed at the push profile by its bracket: test_journal_properties' twin-line order property.
  Equivalents   E1 and E2 planted as `<=` and the bag's shuffle reversed: both survive the whole suite at ci.
