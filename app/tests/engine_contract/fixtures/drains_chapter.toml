@@ -63,6 +63,8 @@ costs = [{ store = "t_x", @CARD_COST@ }]
 id = "t_cure"
 presentation = "action"
 label_key = "t_c_cure"
+upside_key = "t_up_cure"
+stake = "side"
 work_s = 60
 drains = [@DRAIN@]
 
@@ -108,6 +110,7 @@ t_a_chill = "Chill"
 t_l_helper = "Helper"
 t_c_flows = "Flows"
 t_c_cure = "Cure"
+t_up_cure = "{pct} larder strength while it runs"
 t_c_stoke = "Stoke"
 t_ch_warm = "Warm"
 t_ch_cold = "Cold"

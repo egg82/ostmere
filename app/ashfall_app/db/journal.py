@@ -23,6 +23,8 @@ class DayRecord:
     notes: Any
     """The day's notes in page order, as JSON reads back: a list of {subject, slot, key}."""
     gap: str | None
+    marks: Any
+    """The kinds of mark its page carries, as JSON reads back: a list of strings."""
 
 
 @dataclass(frozen=True)
@@ -60,7 +62,7 @@ def _seen_columns() -> list[Label[Any]]:
     played = func.extract("epoch", bindparam("j_now", type_=TIMESTAMP(timezone=True)) - saves.c.started_at)
     ended = func.floor(func.greatest(saves.c.game_time, played) / DAY_S)
     due = next_day < ended
-    days = select(func.coalesce(func.json_agg(aggregate_order_by(func.json_build_array(j.day, j.notes, j.gap), j.day)),
+    days = select(func.coalesce(func.json_agg(aggregate_order_by(func.json_build_array(j.day, j.notes, j.gap, j.marks), j.day)),
                                 literal_column("'[]'::json"))).where(j.save_id == saves.c.id).scalar_subquery()
     lines = select(func.coalesce(func.json_agg(aggregate_order_by(func.json_build_array(ln.at, ln.key), ln.n)),
                                  literal_column("'[]'::json"))).where(
@@ -78,8 +80,8 @@ _SEEN = _seen_columns()
 def days(conn: Connection, save_id: int) -> list[DayRecord]:
     """Every stored day of the save, oldest first."""
     j = save_journal.c
-    rows = conn.execute(select(j.day, j.notes, j.gap).where(j.save_id == save_id).order_by(j.day))
-    return [DayRecord(day=r.day, notes=r.notes, gap=r.gap) for r in rows]
+    rows = conn.execute(select(j.day, j.notes, j.gap, j.marks).where(j.save_id == save_id).order_by(j.day))
+    return [DayRecord(day=r.day, notes=r.notes, gap=r.gap, marks=r.marks) for r in rows]
 
 
 def lines_of(conn: Connection, save_id: int, keys: Sequence[str], before: int) -> list[tuple[int, str]]:

@@ -1,43 +1,42 @@
-"""A skill's prestige track holds at least two nodes of one rank each, so every click but the last is a choice
-(opening/prestige.py, check_tracks), and the shipped tracks' nodes act beyond their skill by an ordinary rank amount. Read off the shipped
-content, with planted changes."""
+"""The shipped prestige tracks' nodes act beyond their skill by an ordinary rank amount, and the tracks' readout
+(tests/opening/tracks_readout.py) reports how many ranks bring something new. How many nodes a track holds and how many
+ranks a node has are taste: reported, never failed (the engine's nodechecks.py holds what must be true of a node). Read off
+the shipped content, with planted changes."""
 from collections import Counter
 
-import pytest
-
-from ashfall_app.opening.checks import check_structure
-from ashfall_app.opening.prestige import check_tracks
 from ashfall_app.opening.schema import Opening
-
-
-def test_every_shipped_track_holds_at_least_two_nodes(shipped_opening: Opening):
-    held = Counter(n.skill for n in shipped_opening.nodes)
-    assert len(held) >= 6 and min(held.values()) >= 2, held
-
-
-def test_every_shipped_node_is_one_rank(shipped_opening: Opening):
-    assert shipped_opening.nodes and {n.ranks for n in shipped_opening.nodes} == {1}
-
-
-def test_a_two_rank_node_is_refused(shipped_opening: Opening):
-    nodes = [n.model_copy(update={"ranks": 2}) if n.id == "wc_lever" else n for n in shipped_opening.nodes]
-    with pytest.raises(ValueError, match="node wc_lever has 2 ranks"):
-        check_tracks(nodes)
-    check_tracks(shipped_opening.nodes)
+from tests import readout_snapshot as rs
+from tests.opening import tracks_readout
 
 
 def test_every_shipped_rank_is_sized_like_the_first_ones(shipped_opening: Opening):
     assert {n.per_rank_bp for n in shipped_opening.nodes} == {2500}
 
 
-def test_a_track_of_one_node_is_refused(shipped_opening: Opening):
-    nodes = [n for n in shipped_opening.nodes if n.id != "ar_dry_shelf"]
-    assert Counter(n.skill for n in nodes)["arcana"] == 1   # the plant leaves arcana one node
-    with pytest.raises(ValueError, match="prestige arcana: its track is one node"):
-        check_tracks(nodes)
+def test_the_committed_readouts_are_the_ones_the_tracks_write():
+    assert rs.stray("tracks", tracks_readout.NAMES) == ([], [])
 
 
-def test_the_load_runs_the_check(shipped_opening: Opening):
-    nodes = [n for n in shipped_opening.nodes if n.id != "me_sinew_ties"]
-    with pytest.raises(ValueError, match="prestige melee: its track is one node"):
-        check_structure(shipped_opening.model_copy(update={"nodes": nodes}))
+def test_the_tracks_readout_is_reported(shipped_opening: Opening):
+    assert shipped_opening.nodes
+    text = tracks_readout.render(shipped_opening.nodes)
+    assert len(text.splitlines()) == len(Counter(n.skill for n in shipped_opening.nodes)) + 1
+    rs.check("tracks", text)
+
+
+def test_the_readout_counts_repeats_and_nodes_that_bring_something_new(shipped_opening: Opening):
+    first = shipped_opening.nodes[0]
+    twice = first.model_copy(update={"ranks": 3})
+    same = first.model_copy(update={"id": "planted_again"})
+    planted = [twice, same, *(n for n in shipped_opening.nodes if n.skill == first.skill and n.id != first.id)]
+    row = tracks_readout.render(planted).splitlines()[1].split()
+    held = len(planted)
+    ranks = 3 + 1 + held - 2
+    assert row[:5] == [first.skill, str(held), str(ranks), str(held - 1), str(ranks - (held - 1))]
+    assert f"{first.id} x3" in " ".join(row) and "planted_again" in row[-1]
+
+
+def test_a_multi_rank_node_loads(shipped_opening: Opening):
+    from ashfall_app.opening.checks import check_structure
+    nodes = [n.model_copy(update={"ranks": 2}) if n.id == "wc_lever" else n for n in shipped_opening.nodes]
+    check_structure(shipped_opening.model_copy(update={"nodes": nodes}))

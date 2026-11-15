@@ -37,7 +37,7 @@ def bracketed() -> dict[str, list[str]]:
     rows: dict[str, list[str]] = {}
     for chunk in re.split(r"\n(?=\s?\d+ )", text):
         found = re.match(r"\s?(\d+) ", chunk)
-        names = re.findall(r"\[([a-z, ]+)\]", chunk)
+        names = re.findall(r"\[([a-z_, ]+)\]", chunk)
         if found and names:
             rows[found.group(1)] = [f"{SUITE}/test_journal_{n.strip()}.py" for n in names[-1].split(",")]
     return rows
@@ -123,7 +123,7 @@ def main(ids: list[str]) -> int:
             print(out[-3000:])
             print("the unmutated copy is not green: nothing to measure")
             return 2
-        results = {pid: run_one(root, pid, rows.get(pid.rstrip("abcd"), [SUITE])) for pid in ids or list(PLANTS)}
+        results = {pid: run_one(root, pid, rows.get(pid.rstrip("abcdefghij"), [SUITE])) for pid in ids or list(PLANTS)}
     for pid, o in results.items():
         print(f"{pid:>4} {o.status:<9} {o.profile:<16} {o.detail}")
     mutants = {p: o for p, o in results.items() if not p.startswith("E")}

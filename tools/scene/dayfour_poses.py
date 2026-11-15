@@ -32,9 +32,9 @@ PAIR_SITS = (9.35 * T, 8.75 * T)
 N3_BY_FIRE = (7.1 * T, 8.9 * T)
 N4_BY_FIRE = (10.0 * T, 8.9 * T)
 """Where each of them keeps once joined, below the hearth's two ends: her standing, him seated."""
-N1_FAR = (7.8 * T, 6.0 * T)
-"""Lucy's far mark: seated behind the hearth, facing the player across the fire."""
-N2_WATCH = (10.0 * T, 6.4 * T)
+N1_FAR = (7.8 * T, 5.4 * T)
+"""Lucy's far mark: seated behind the hearth's far wall and the fireback, above their tops, looking at the fire."""
+N2_WATCH = (10.5 * T, 6.4 * T)
 N4_WATCH = (11.5 * T, 6.65 * T)
 """Where each sits a watch at the watch fire, facing the track (Lucy's is `daythree_poses.WATCHING`)."""
 BAY2_WORK = (4.3 * T, 8.95 * T)

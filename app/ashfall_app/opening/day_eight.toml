@@ -373,7 +373,8 @@ id = "wolf_pack"
 label_key = "threat_wolf_pack"
 base = 8
 
-# The watch shares week 1 shipped, each held on the gap while it runs, at its share of its lane's time.
+# The watch shares week 1 shipped, each held on the gap while it runs beside the larder b7.toml gave it, at its share of
+# its lane's time.
 [while_running]
 n1_watch = [{ side = "gap", amount_bp = 5000 }]
 n2_watch = [{ side = "gap", amount_bp = 5000 }]
@@ -554,6 +555,7 @@ outcome = { modifiers = [{ target = "work", id = "hand_on_stone", kind = "mul_bp
 id = "s_palisade"
 kind = "routine"
 source = { source_kind = "card", id = "palisade" }
+mark = "mud"
 first = { keys = ["j_fence_first"] }
 repeat = { keys = ["j_fence_again_1", "j_fence_again_2", "j_fence_again_3"] }
 catchup = { keys = ["j_fence_catchup"] }
@@ -564,6 +566,7 @@ correction = { keys = ["j_fence_right"] }
 id = "s_b8"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b8" }
+mark = "soot"
 first = { keys = ["j_b8_first"] }
 catchup = { keys = ["j_b8_catchup"] }
 late = { keys = ["j_b8_late"] }
@@ -724,8 +727,8 @@ l_ash_cleared = "the roof poles stop creaking."
 store_ash = "ash"
 c_clear_roofs = "Clear the roofs"
 c_n2_clear_roofs = "Clear the roofs"
-l_roofs_first = "the roofs shed their ash in slabs under the shovel."
-l_ash_ground = "{n3} works ash in by hand, counts seed, and ties the bag shut."
+l_roofs_first = "the roofs shed their ash in slabs under a shovel."
+l_ash_ground = "{n3} works ash in by hand, counts seed, and ties the cloth shut."
 store_ashed_ground = "ash dug in"
 c_n3_ash_ground = "Work ash into the bed"
 l_cord = "{n4} rolls bark into cord over one knee. fast."

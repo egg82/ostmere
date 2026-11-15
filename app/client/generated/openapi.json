@@ -3880,12 +3880,20 @@
             },
             "type": "array",
             "title": "Day Notes"
+          },
+          "marks": {
+            "items": {
+              "$ref": "#/components/schemas/Mark"
+            },
+            "type": "array",
+            "title": "Marks"
           }
         },
         "type": "object",
         "required": [
           "day",
-          "day_notes"
+          "day_notes",
+          "marks"
         ],
         "title": "JournalDay",
         "description": "A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed."
@@ -4381,6 +4389,18 @@
           "card"
         ],
         "title": "LogLine"
+      },
+      "Mark": {
+        "type": "string",
+        "enum": [
+          "blood",
+          "soot",
+          "water",
+          "mud",
+          "smudge"
+        ],
+        "title": "Mark",
+        "description": "A kind of mark a written day leaves on its page (docs/design/journal.md, \"Marks on the page\"); each is art the page\nowns, so a new one is page work as well as content."
       },
       "Me": {
         "properties": {

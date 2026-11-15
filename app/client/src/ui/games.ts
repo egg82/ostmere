@@ -54,7 +54,7 @@ export class GamesSheet {
     const foot = el("div", "sheet-actions");
     foot.append(close, this.make);
     this.root.append(el("h2", "panel-heading", text.get(UI.gamesHeading)), this.list, this.note, this.held, this.straight.root,
-      this.skipLessons.root, foot);
+      this.skipLessons.root, foot, el("p", "games-credit", text.get(UI.creditsStains)));
     this.root.addEventListener("click", (e) => { if (e.target === this.root) this.root.close(); });
   }
 

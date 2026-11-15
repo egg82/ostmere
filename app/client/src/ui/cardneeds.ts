@@ -15,9 +15,7 @@
 import type { Card, Condition, Need, View } from "../api/types";
 import { sample } from "../game/clock";
 import { completionsOf } from "../game/cues";
-import { clockWords } from "../game/timewords";
-import { UI } from "../game/text";
-import { shownLevel } from "../game/prestige";
+import { levelOf, needKind, opensWords, skillWords, stepWords, storeWords } from "../game/needwords";
 import { el, setText } from "./dom";
 import { lightMakers } from "./makerlight";
 import type { PartContext } from "./part";
@@ -52,11 +50,7 @@ export class CardNeeds {
     const info = catalog.cards.get(this.id);
     const skillNeeds = info?.skill_needs ?? [];
     const stepNeeds = info?.step_needs ?? [];
-    const seen = new Set(view.unlocked.filter((u) => u.category === "store").map((u) => u.id));
-    const kind = (n: Need): string => {
-      const store = catalog.stores.get(n.store);
-      return n.gate !== null ? "gate" : seen.has(n.store) || store?.tally === true ? "" : store?.clock ? "when" : "unseen";
-    };
+    const kind = (n: Need): string => { const k = needKind(catalog, view, n); return k === "store" ? "" : k; };
     this.needs = card.needs;
     const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|");
     if (shape !== this.shape) {
@@ -75,10 +69,9 @@ export class CardNeeds {
     skillNeeds.forEach((need, i) => {
       const node = skillNodes[i];
       if (!node) return;
-      const bar = view.skills.find((s) => s.skill === need.skill);
-      const have = bar ? shownLevel(bar) : 1;
+      const have = levelOf(view, need.skill);
       node.hidden = have >= need.level;
-      drawNeed(node, catalog.format.needSkill(catalog.skillLabel(need.skill), MARK, need.level), catalog.format.count(have), have < need.level);
+      drawNeed(node, skillWords(catalog, need.skill, MARK, need.level), catalog.format.count(have), have < need.level);
     });
     card.needs.forEach((need, i) => { if (need.gate !== null && this.storeRows[i]) this.drawGate(this.storeRows[i], need.gate, view); });
     const stepNodes = [...this.root.querySelectorAll<HTMLElement>(".card-need.step")];
@@ -87,7 +80,7 @@ export class CardNeeds {
       if (!node) return;
       const have = completionsOf(view, need.card);
       node.hidden = have >= need.count;
-      drawNeed(node, catalog.format.needStep(catalog.cardLabel(need.card), MARK, need.count), catalog.format.count(have), have < need.count);
+      drawNeed(node, stepWords(catalog, need.card, MARK, need.count), catalog.format.count(have), have < need.count);
     });
     const shown = [...this.storeRows, ...skillNodes, ...stepNodes].filter((row) => !row.hidden).length;
     this.root.hidden = done || shown === 0 || working(card);
@@ -114,12 +107,12 @@ export class CardNeeds {
       const node = this.storeRows[i];
       if (!node || node.classList.contains("unseen") || need.gate !== null) return;
       if (node.classList.contains("when")) {
-        setText(node, catalog.text.fill(UI.cardOpens, { when: clockWords(catalog, need.store, need.quantity) ?? "" }));
+        setText(node, opensWords(catalog, need));
         return;
       }
       const have = sample(need.segment, t);
       const short = card.blocker !== null && have < need.quantity;   // red only while it holds the card back
-      drawNeed(node, catalog.format.need(catalog.storeTitle(need.store), MARK, need.quantity, need.spent), catalog.format.items(have), short);
+      drawNeed(node, storeWords(catalog, need, MARK), catalog.format.items(have), short);
     });
   }
 
@@ -141,12 +134,11 @@ export class CardNeeds {
     if (gate.kind === "after_time") return;
     const w = gate.watched;
     if (w.kind === "skill_level") {
-      const bar = view.skills.find((s) => s.skill === w.skill);
-      const have = bar ? shownLevel(bar) : 1;
-      drawNeed(node, catalog.format.needSkill(catalog.skillLabel(w.skill), MARK, gate.value), catalog.format.count(have), have < gate.value);
+      const have = levelOf(view, w.skill);
+      drawNeed(node, skillWords(catalog, w.skill, MARK, gate.value), catalog.format.count(have), have < gate.value);
     } else if (w.kind === "card_count") {
       const have = completionsOf(view, w.card);
-      drawNeed(node, catalog.format.needStep(catalog.cardLabel(w.card), MARK, gate.value), catalog.format.count(have), have < gate.value);
+      drawNeed(node, stepWords(catalog, w.card, MARK, gate.value), catalog.format.count(have), have < gate.value);
     }
   }
 }

@@ -891,6 +891,7 @@ late = { keys = ["j_b3_late"] }
 id = "s_prints"
 kind = "worry"
 source = { source_kind = "trigger", id = "t_prints" }
+mark = "mud"
 first = { keys = ["j_prints_first"] }
 
 # ---------- features ----------
@@ -1121,13 +1122,13 @@ l_night_1 = "no sound from the ridge. the light stays low."
 l_night_2 = "one howl, a long way off. the air is so still you hear it end."
 l_sit_up = "the light holds still. you keep yours low."
 l_morning = "morning. the ridge light is out. your fire lasted the night."
-l_look_out_1 = "fog fills the bowl, steam rising through it. old fields, still in rows."
+l_look_out_1 = "fog fills the valley below, steam rising through it. old fields, still in rows."
 l_look_out_2 = "where the light was, something dark and square."
 l_wire_1 = "wire from the ruins. it rings when you flick it."
 l_wire_2 = "a second wire. you work the kinks out."
 l_wire_3 = "more wire, stiff with rust at one end."
 l_tinder = "bracket fungus on dead birch, dry inside."
-l_snare_1 = "the run you chose has a snare in it, rusted to flakes."
+l_snare_1 = "the run you chose already has a snare in it, rusted to flakes."
 l_snare_2 = "you set the second a stride from the first, along the same run."
 l_snare_3 = "the third goes in fast. you have the knot now."
 l_first_catch = "an ashrat in a snare, gone quiet."

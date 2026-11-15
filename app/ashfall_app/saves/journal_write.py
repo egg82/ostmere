@@ -12,7 +12,7 @@ from ..db import journal as rows
 from ..db.saves import SaveRecord
 from ..db.step import JournalDay
 from .interface import Ruleset
-from .journal import DAY_S, ComposedDay, Line, Note, compose_day
+from .journal import DAY_S, MARK_KINDS, ComposedDay, Line, Note, compose_day
 
 
 def keys(rs: Ruleset) -> list[str]:
@@ -53,11 +53,13 @@ def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: S
 
 def day_of(r: rows.DayRecord) -> ComposedDay:
     return ComposedDay(r.day, tuple(Note(n["subject"], n["slot"], n["key"]) for n in r.notes),
-                       "busy" if r.gap == "busy" else "away" if r.gap == "away" else None)
+                       "busy" if r.gap == "busy" else "away" if r.gap == "away" else None,
+                       tuple(k for k in MARK_KINDS if k in r.marks))
 
 
 def stored_form(d: ComposedDay) -> JournalDay:
-    return JournalDay(d.day, [{"subject": n.subject, "slot": n.slot, "key": n.key} for n in d.notes], d.gap)
+    return JournalDay(d.day, [{"subject": n.subject, "slot": n.slot, "key": n.key} for n in d.notes], d.gap,
+                      list(d.marks))
 
 
 def written(conn: Connection, save_id: int) -> tuple[ComposedDay, ...]:

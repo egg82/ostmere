@@ -358,6 +358,8 @@ id = "n4_watch"
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_watch"
+upside_key = "up_watch"
+stake = "side"
 work_s = 600
 requires = [{ test = "at_least", subject_kind = "store", id = "watch_done", value = 2 }]
 inputs = [{ store = "dry_wood", items = 1 }]

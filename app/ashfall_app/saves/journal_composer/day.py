@@ -5,6 +5,7 @@ from ..journal import DAY_S, ComposedDay, Gap, Habits, Line, Subject, roll
 from .bag import note
 from .history import History, away, read, showing
 from .ledger import settledness
+from .marks import marks
 from .numbers import budget, diligence
 from .owed import catchups, corrections, lates
 from .own import Candidate, candidates
@@ -22,15 +23,17 @@ def compose(save_id: int, day: int, lines: Sequence[Line], composed: Sequence[Co
     caught = catchups(composed, history, subjects)
     fixes = corrections(composed, subjects, habits, day)
     own = candidates(save_id, day, history, composed, subjects, habits, {t.subject for t in caught})
-    musts = sorted((c for c in own if c.must), key=lambda c: (c.order, c.telling.subject))
+    musts = [c for c in own if c.must]
     passing = _passing(save_id, day, own, diligence(settled, habits))
     left = max(0, room - len(caught) - len(musts) - len(fixes))
     kept = sorted(passing, key=lambda c: (-c.care, c.order, c.telling.subject))[:left]
-    head = [*caught, *(c.telling for c in musts), *(c.telling for c in kept)]
+    written = sorted([*musts, *kept], key=lambda c: (history.first_at(c.telling.subject, day), c.telling.subject))
+    head = [*caught, *(c.telling for c in written)]
     if not head and not fixes:
         return ComposedDay(day, (), None)
     told = [*head, *lates(save_id, composed, subjects, habits), *fixes]
-    return ComposedDay(day, tuple(note(save_id, composed, t) for t in told), None)
+    notes = tuple(note(save_id, composed, t) for t in told)
+    return ComposedDay(day, notes, None, marks(save_id, day, notes, subjects, habits))
 
 
 def _refuse(day: int, lines: Sequence[Line], composed: Sequence[ComposedDay]) -> None:

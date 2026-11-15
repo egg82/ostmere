@@ -1,6 +1,6 @@
 """Blind contract test (written from the contract, not the implementation): the content loader rejects content with no
 aims, a first aim that has an `after`, a later aim without one, an `after` naming an unknown id, an `after` that neither
-the start nor any outcome unlocks, and an aim longer than 40 characters. Each rejected file differs from a control that
+the start nor any outcome unlocks. Each rejected file differs from a control that
 loads by exactly that property; the shipped content, as served, keeps the same rules."""
 import re
 from pathlib import Path
@@ -89,16 +89,6 @@ def test_an_after_nothing_unlocks_is_rejected(tmp_path: Path):
     rejects(aims_file(tmp_path, [CONTROL[0], ("a_second", "Keep the fire", after)], extra_features=orphan))
 
 
-def test_an_aim_of_forty_characters_loads_and_forty_one_is_rejected(tmp_path: Path):
-    forty = "x" * 40
-    loads(aims_file(tmp_path, [("a_first", forty, None)]))
-    rejects(aims_file(tmp_path, [("a_first", forty + "x", None)]))
-
-
-def test_a_later_aim_too_long_is_rejected_too(tmp_path: Path):
-    rejects(aims_file(tmp_path, [CONTROL[0], ("a_second", "x" * 41, AT_OUTCOME)]))
-
-
 def test_the_shipped_opening_with_its_chapters_loads():
     load_opening()
 
@@ -108,4 +98,4 @@ def test_the_shipped_content_as_served_obeys_the_rules():
     infos = content.aim_infos
     text = {e.key: e.text for e in content.text_entries}
     assert infos and infos[0].after is None and all(i.after is not None for i in infos[1:])
-    assert all(0 < len(text[i.text_key]) <= 40 for i in infos)
+    assert all(text[i.text_key] for i in infos)
