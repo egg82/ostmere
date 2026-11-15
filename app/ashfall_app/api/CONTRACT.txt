@@ -710,8 +710,9 @@ TEXT AND NUMBERS (one rule)
                        signed change in basis points, +1000 for a tenth more; a CardInfo's include the entries it holds
                        while it runs, at its full share, then those of the standing action its content names as
                        upside_of, the runner whose held entries its upside describes: a recipe whose make another
-                       runner eats names that eater, and the page draws the eater's change on the recipe) as a signed
-                       percent: change / Scales.bp * 100
+                       runner eats names that eater, and the page draws the eater's change on the recipe), then,
+                       for a card whose content gives it a reach, those of the triggers on the store it fills, as a
+                       signed percent: change / Scales.bp * 100
                        toward zero, no trailing zeros, two decimals at most (a change that is not zero never reads as
                        zero), sign unless zero ("+10%", "-33.33%"). The text names what changes and carries no direction
                        word the sign already says; a text holds exactly as many of these slots as its change_bp has values

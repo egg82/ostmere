@@ -12,6 +12,7 @@ from ..opening.makers import card_makes, card_takes, made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
 from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
+from ..opening.stake_checks import reach_modifiers
 from ..opening.schema import Opening
 from ..saves.interface import Played, Ruleset
 from ..saves.journal import ComposedDay
@@ -219,10 +220,11 @@ def _changes(mods: list[ModifierEntry]) -> list[int]:
 def _card_changes(c: CardEntry, o: Opening) -> list[int]:
     """Its outcome's and finish's changes, then its while_running entries' (each an add_bp on a side or a lane's speed
     at the full share, which the View scales by the card's share now), then those of the standing action it names as
-    upside_of."""
+    upside_of, then, for a reach stake, those its reach pays."""
     eater = [w for a in o.standing if a.id == c.upside_of for w in a.while_running]
+    reach = reach_modifiers(o, c) if c.stake == "reach" else []
     return list(dict.fromkeys([*_changes([*c.outcome.modifiers, *c.finished.modifiers]),
-                               *(w.amount_bp for w in (*c.while_running, *eater))]))
+                               *(w.amount_bp for w in (*c.while_running, *eater)), *_changes(reach)]))
 
 
 def _level_changes(o: Opening, skill: str, level: int) -> list[int]:

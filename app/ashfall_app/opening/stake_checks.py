@@ -8,7 +8,7 @@ from .fight_refs import fights
 from .refs import conditions, fail
 
 if TYPE_CHECKING:
-    from .entries import CardEntry, OutcomeEntry
+    from .entries import CardEntry, ModifierEntry, OutcomeEntry
     from .schema import Opening
 
 
@@ -27,13 +27,25 @@ def check_stakes(o: "Opening") -> None:
 
 def check_stakes_hold(o: "Opening") -> None:
     """A "side" stake: once any fight exists, the card holds an entry on a side some fight is fought on (its
-    while_running, which a later chapter may add)."""
+    while_running, which a later chapter may add). A "reach" stake: some trigger on a store the card's completions fill
+    pays a modifier (reach_modifiers)."""
+    for c in o.cards:
+        if c.stake == "reach" and not reach_modifiers(o, c):
+            fail(f"card {c.id}", "has the stake reach but no trigger on a store it fills pays a modifier")
     fought = {f.side for _, f in fights(o)}
     if not fought:
         return
     for c in o.cards:
         if c.stake == "side" and not any(w.side in fought for w in c.while_running):
             fail(f"card {c.id}", "has the stake side but holds no entry on a side any fight is fought on")
+
+
+def reach_modifiers(o: "Opening", c: "CardEntry") -> list["ModifierEntry"]:
+    """What a reach buys: the modifiers of the triggers on an at_least of a store the card's completions fill, in
+    trigger order."""
+    filled = {s.store for s in c.outcome.stores}
+    return [m for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "store"
+            and t.when.id in filled for m in t.outcome.modifiers]
 
 
 def bare(o: "Opening") -> set[str]:

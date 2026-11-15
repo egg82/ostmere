@@ -83,7 +83,8 @@ class CardInfo(BaseModel):
     """CRAFT only: the one upside the card names; the cost is for the player to work out."""
     change_bp: list[int]
     """The modifiers of its outcome (at each completion, as a staged build's), of its finish and held while it runs (at
-    its full share), as signed changes in basis points, as LevelPays.change_bp: the slots of upside_key."""
+    its full share), then those its reach pays (triggers on the store it fills), as signed changes in basis points, as
+    LevelPays.change_bp: the slots of upside_key."""
     work_s: int
     inputs: list[Amount]
     """Taken by each completion, paid as its work is done, tapped or mixed."""
