@@ -14,6 +14,8 @@ K, a one-second card on lane L, or switches to a mix. With K, the lane holds K a
 rule is on: a tap started at t lands at t + 1, where the rule taps again if it is still on.
 """
 from collections.abc import Sequence
+from fractions import Fraction
+from math import ceil, floor
 from dataclasses import dataclass
 from typing import Any
 
@@ -25,7 +27,7 @@ from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, ActionId, AfterTime, Amount, AtLeast, AtMost, CardDef, CardId, CardShare, Condition, Flow, LaneDef,
     LaneId, LineKey, Mix, MixId, Modifier, ModifierKind, Order, OrderState, OrderVerb, Outcome, PacingCurve, Rules, Save,
     SaveMix, SetOrders, SkillDef, SkillId, SourceId, StandingDef, StoreCap, StoreDef, StoreId, StoreValue, SwitchMix,
-    OfferDef, TriggerDef, TriggerId, View, decide, new_save, per_hour,
+    OfferDef, TriggerDef, TriggerId, View, advance, decide, new_save, per_hour, view,
 )
 
 T, W, X, Y = StoreId("t"), StoreId("w"), StoreId("x"), StoreId("y")
@@ -230,3 +232,42 @@ def scene_st(draw: st.DrawFn) -> Scene:
     when = draw(st.one_of(st.just(ALWAYS), COND))
     guards = draw(st.lists(COND, min_size=1, max_size=3, unique=True))
     return t0, segments, when, guards
+
+
+# ---- share-guard helpers, shared by the share contract and the directed tests ----
+
+def share_amounts(kind: bool, b: int, cap_items: int) -> tuple[int, int]:
+    """(value, release) in quantity units for _share(kind, b) on a store of cap_items whole items (SHARE LEVELS)."""
+    x = Fraction(b * cap_items, BP)
+    if kind:
+        value, release = ceil(x) * Q, (floor(x) + 1) * Q
+        return value, (release if release <= value - Q else min(release, value, max(value - Q, Q)))
+    value, release = (floor(x) + 1) * Q - 1, ceil(x) * Q - 1
+    return value, (release if release >= value + Q else max(release, value, min(value + Q, cap_items * Q - 1)))
+
+
+def mixes_each_second(r: Rules, s: Save, until: int) -> list[object]:
+    out: list[object] = []
+    cur = s
+    for t in range(until + 1):
+        cur = advance(cur, r, t)
+        out.append(view(cur, r).running_mix)
+    return out
+
+
+def share_chase(kind: bool, value: int, release: int, cap_items: int, until: int) -> list[object]:
+    """The running mix each second for a boundary-chasing rule: an at-least guard on a rule whose mix (UP) fills T from
+    empty, or an at-most guard on one whose mix (DOWN) drains it from full; the player's mix runs the other way."""
+    rule, player = (UP, DOWN) if kind else (DOWN, UP)
+    x, latch = (0 if kind else cap_items), False
+    out: list[object] = []
+    for t in range(until + 1):
+        q = x * Q
+        if kind:
+            latch = (q >= value) if (t == 0 or not latch) else not (q < release)
+        else:
+            latch = (q <= value) if (t == 0 or not latch) else not (q > release)
+        out.append(player if latch else rule)
+        step = 1 if out[-1] == UP else -1
+        x = max(0, min(cap_items, x + step))
+    return out

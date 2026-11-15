@@ -5,13 +5,14 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import (
-    AtLeast, AtMost, InvalidVerbError, LaneDef, LaneRules, OrderState, SetOrders, StoreValue, SwitchMix, TapCard,
+    AtLeast, AtMost, GuardedLatch, InvalidVerbError, LaneDef, LaneRules, OrderState, SetOrders, StoreValue, SwitchMix, TapCard,
     advance, decide, view,
 )
 from guards_world import (
-    ALWAYS, DOWN, K, L, L2, RM, T, UP, W, at_least, at_most, cap_raise, guarded, kills, rules, start,
+    ALWAYS, DOWN, K, L, L2, RM, T, UP, W, at_least, at_most, cap_raise, guarded, kills, mixes_each_second, rules,
+    share_amounts, share_chase, start,
 )
-from test_guards_share_contract import HALF, _amounts, _chase, _mixes
+from test_guards_share_contract import HALF
 
 
 @kills(3)
@@ -34,7 +35,8 @@ def test_setting_a_rule_whose_guard_already_holds_spends_no_firing():
     r = rules(t0=10, max_firings=1)
     s = start(r, ())
     after = decide(s, r, 0, SetOrders((guarded(ALWAYS, TapCard(K), at_least(5, 4)),)))
-    assert after.latches[0].unless == (True,)
+    latch = after.latches[0]
+    assert isinstance(latch, GuardedLatch) and latch.unless == (True,)
     assert after.cascade_count == 0
 
 
@@ -42,11 +44,11 @@ def test_setting_a_rule_whose_guard_already_holds_spends_no_firing():
 @pytest.mark.parametrize("b", [HALF, 3000, 7000, 9600])
 def test_an_at_most_share_guard_reads_the_whole_items_of_a_fractional_cap(b: int):
     """Statement 9: with T's cap 10.5 items an at-most share guard reads the 10 whole items, as the table gives."""
-    value, release = _amounts(False, b, 10)
+    value, release = share_amounts(False, b, 10)
     r = rules(t0=10, cap=10, triggers=(cap_raise(0, 10_500),))
     s = start(r, (guarded(ALWAYS, SwitchMix(DOWN), AtMost(StoreValue(T), b, b, value_of_cap=True, release_of_cap=True)),),
               active=UP)
-    assert _mixes(r, s, 30) == _chase(False, value, release, 10, 30)
+    assert mixes_each_second(r, s, 30) == share_chase(False, value, release, 10, 30)
 
 
 @kills(21)
