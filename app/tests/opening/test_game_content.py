@@ -155,7 +155,7 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
     assert roots.offered_after is not None and (roots.offered_after.category, roots.offered_after.id) == ("action", "eating")
     assert next(c for c in content.order_cards if c.store == "dry_wood").offered_after is None
     assert [f.feature for f in content.feature_infos if f.label_key] == shipped(
-        ["book", "posts_fire", "margin_watch", "posts_deep", "lookout", "watch_fed", "skin_post"],
+        ["book", "t_rats_drift", "posts_fire", "margin_watch", "posts_deep", "lookout", "watch_fed", "skin_post", "t_pack_step"],
         (DAY_ELEVEN, ["door_gate", "ditch_dug"]),
         (DAY_TWELVE, ["spoil_ring", "shaft_bound", "meat_below", "rack_kept", "crows_off", "crows_kept"]))
     authored = opening().camp
