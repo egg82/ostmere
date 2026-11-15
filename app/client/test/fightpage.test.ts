@@ -33,7 +33,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   cards.update(view, off);
   const fight = cards.root.querySelector<HTMLElement>(".fight");
   expect("the fight shows once combat is on", fight?.hidden, false);
-  expect("odds", text(fight?.querySelector(".fight-odds")), "2 in 5 lost");
+  expect("odds", text(fight?.querySelector(".fight-odds")), "loses 2 in 5 fights");
   expect("vs", text(fight?.querySelector(".fight-vs")), "Your hands 8, Wolves 9");
   expect("what a loss costs and adds", text(fight?.querySelector(".fight-loss")), "a loss costs 3 Dead wood, 1 Energy");
   expect("the odds sit beside the tap, not inside it", cards.root.querySelector(".card-tap .fight"), null);
@@ -49,15 +49,15 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   (threat as HTMLButtonElement).click();
   expect("a second tap closes it", entries?.hidden, true);
   cards.update({ ...view, fights: view.fights.map((f) => ({ ...f, loss_bp: 2000 })) }, view);
-  expect("a redraw with new odds shows them", text(cards.root.querySelector(".fight-odds")), "1 in 5 lost");
+  expect("a redraw with new odds shows them", text(cards.root.querySelector(".fight-odds")), "loses 1 in 5 fights");
 }
 
 // Blind until learned: a runner never fought shows its odds as unknown on the card, in its open strength sheet and in
 // the ledger; from the first fight on, the served odds.
 {
-  const oddsFigure = /\d+ in \d+ lost|% lost/;
+  const oddsFigure = /loses \d+ in \d+ fights|loses [\d.]+% of fights/;
   const fought = (n: number): View => ({ ...view, fights: view.fights.map((f) => ({ ...f, fought: n, lost: 0 })) });
-  for (const [n, card, standing] of [[0, "odds unknown until fought", "odds unknown until fought"], [1, "2 in 5 lost", "7.5% lost"]] as const) {
+  for (const [n, card, standing] of [[0, "odds unknown until fought", "odds unknown until fought"], [1, "loses 2 in 5 fights", "loses 7.5% of fights"]] as const) {
     const { ctx } = testContext();
     const cards = new Cards(ctx, new NewMarks());
     const ledger = new Ledger(ctx);
@@ -148,7 +148,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   ledger.update(view, off);
   const row = ledger.root.querySelector(".threat");
   expect("the threat's name", text(row?.querySelector(".threat-name")), "Raiders at the stores");
-  expect("its odds", text(row?.querySelector(".fight-odds")), "7.5% lost");
+  expect("its odds", text(row?.querySelector(".fight-odds")), "loses 7.5% of fights");
   expect("its tally", text(row?.querySelector(".fight-tally")), "31 fought, 2 lost");
   expect("the group shows the ledger", ledger.root.hidden, false);
 }
