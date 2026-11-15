@@ -1,5 +1,5 @@
 """The day's own subjects: how each is told, whether it is a must, its care and its order roll (statements 7, 8, 10,
-17 and 18)."""
+12 and 17)."""
 from collections.abc import Sequence
 from dataclasses import dataclass
 
