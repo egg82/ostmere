@@ -41,7 +41,7 @@ def test_a_step_whose_write_meets_a_failover_is_replayed_and_stores_each_day_onc
     assert r.status_code == 200, r.text
     logged = [ln for ln in capsys.readouterr().out.splitlines() if "event=db.failover" in ln]
     assert len(logged) == 1 and "replayed=true" in logged[0], logged
-    assert days(pg_url, save_id) == [(0, 0), (1, 1), (2, 0)]
+    assert days(pg_url, save_id) == [(0, 0), (1, 1), (2, 0), (3, 0)]
 
 
 def test_a_step_whose_commit_is_lost_is_answered_503_and_the_next_ask_stores_each_day_once(
@@ -51,4 +51,4 @@ def test_a_step_whose_commit_is_lost_is_answered_503_and_the_next_ask_stores_eac
     assert game.advance(save_id).status_code == 503
     r = game.advance(save_id)
     assert r.status_code == 200, r.text
-    assert days(pg_url, save_id) == [(0, 0), (1, 1), (2, 0)]
+    assert days(pg_url, save_id) == [(0, 0), (1, 1), (2, 0), (3, 0)]

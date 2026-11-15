@@ -25,7 +25,7 @@ export interface Kept {
 
 const NOWHERE: KeepsSink = {};
 export const NEW_ACCOUNT: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-export const NEW_SAVE: SavePresentation = { rule_seen: false, mix_offered: [], lessons: [], lesson_ends: [], visits: [], newest_day_read: null };
+export const NEW_SAVE: SavePresentation = { rule_seen: false, mix_offered: [], lines_touched: [], lessons: [], lesson_ends: [], visits: [], newest_day_read: null };
 export const NEW_SETTINGS: AccountSettings = { lessons: true };
 
 export class Keeps {
@@ -107,6 +107,16 @@ export class Keeps {
   keepMixOffered(card: string): void {
     if (this.mixOffered(card)) return;
     this.keepSave({ ...this.save, mix_offered: [...(this.save.mix_offered ?? []), card] });
+  }
+
+  /** The store's ledger line's quiet dot has been touched in this save: it is not marked again. */
+  lineTouched(store: string): boolean {
+    return (this.save.lines_touched ?? []).includes(store);
+  }
+
+  keepLineTouched(store: string): void {
+    if (this.lineTouched(store)) return;
+    this.keepSave({ ...this.save, lines_touched: [...(this.save.lines_touched ?? []), store] });
   }
 
   /** The rule offer for this repeated switch has been answered: it is not offered again. */

@@ -11,7 +11,7 @@ from tests.game_client import GameClient
 END: dict[str, Any] = {"lesson": "l", "skipped": False, "step": 0, "longest_wait_s": 0}
 LISTS: list[tuple[type[BaseModel], str]] = [
     (AccountPresentation, "ledger_lines"), (AccountPresentation, "mix_stopped"), (AccountPresentation, "journal_read"),
-    (SavePresentation, "mix_offered"), (SavePresentation, "lessons"),
+    (SavePresentation, "mix_offered"), (SavePresentation, "lines_touched"), (SavePresentation, "lessons"),
 ]
 
 

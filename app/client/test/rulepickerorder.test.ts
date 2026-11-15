@@ -36,10 +36,18 @@ const view: View = { ...base, cards: [...base.cards, ...OTHER.filter((c) => !bas
 
 interface Seen { card: string | null; mix: string | null; section: string }
 
+/** The one node mounted on the page: a real-typed root seen as the fake element it is. */
+function mounted(root: HTMLElement): FakeEl {
+  document.body.replaceChildren(root);
+  const node = fakeDocument.body.firstElementChild;
+  if (!node) throw new Error("nothing mounted");
+  return node;
+}
+
 /** The Tasks page's section of `card`, as its own lane group draws it: the lane and the heading under it. */
-const pageGroups = new CardGroups(document.createElement("div") as unknown as HTMLElement, catalog);
+const pageGroups = new CardGroups(document.createElement("div"), catalog);
 function pageSection(card: string): { lane: string; heading: string } {
-  const node = pageGroups.of(card).node as unknown as FakeEl;
+  const node = mounted(pageGroups.of(card).node);
   return { lane: node.dataset.lane ?? "", heading: q(node, ".lane-tag")[0]?.textContent ?? "" };
 }
 /** The page's order of sections: the hands first, then the lanes as the content lists them, a lane's crafts last. */
@@ -63,9 +71,9 @@ function mount(v: View, c = catalog): { tab: RulesTab; root: FakeEl } {
   const { ctx } = testContext(undefined, c);
   ctx.keeps.keepRuleSeen();
   const tab = new RulesTab(ctx);
-  document.body.replaceChildren(tab.root);
+  const root = mounted(tab.root);
   tab.update(v);
-  return { tab, root: tab.root as unknown as FakeEl };
+  return { tab, root };
 }
 
 function holdsOrder(name: string, seen: Seen[]): void {

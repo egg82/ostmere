@@ -255,7 +255,7 @@ export class Screen {
   private openRules(rule: RuleTarget, offered?: Condition): void {
     const view = this.view;
     if (!view) return;
-    if (this.editor.open) this.editor.close();
+    this.closeEditors();
     this.keeps.keepRulesOpened();
     this.rulesGlow.used();
     this.rulesShown = true;
@@ -274,6 +274,11 @@ export class Screen {
     this.showTab();
   }
 
+  private closeEditors(): void {
+    if (this.editor.open) this.editor.close();
+    if (this.hands.lanes.town.open) this.hands.lanes.town.close();
+  }
+
   private showTab(): void {
     const editing = this.editor.open || this.hands.lanes.town.open;
     this.root.classList.toggle("editing", editing);
@@ -286,6 +291,7 @@ export class Screen {
   private pick(tab: Tab): void {
     if (tab === "rules") { this.openRules(null); return; }
     if (tab === "book" && !this.story.book.inView) { this.story.book.opened(); return; }   // a phone's sheet: the tab on stays
+    this.closeEditors();   // an editor is its tab's: it does not follow a tap to another
     this.tabs.on = tab;
     this.showTab();
     if (tab === "book") this.story.book.opened();
