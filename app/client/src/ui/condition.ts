@@ -8,6 +8,7 @@
 // what it does and Remove, never a level, so the store behind a chip is never shown as a number.
 import type { ChipInfo, Condition, Order, View } from "../api/types";
 import { sample } from "../game/clock";
+import { choiceVerb } from "../game/elsechoices";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
 import { townNewRule } from "../game/town";
 import { chosen, doChoices, ruleCards, subjectChoices, whenChoices, type DoChoice } from "../game/ruleoffers";
@@ -19,6 +20,7 @@ import { draftOrder, editDraft, headingWords, keepOffered, sameRule, storeCap, t
 import { Levels } from "./condlevels";
 import { RuleFact } from "./condfact";
 import { CondFoot } from "./condfoot";
+import { ElseEditor } from "./condelse";
 import { GuardEditor } from "./condguards";
 import { markPressed, sameChoice } from "./condpress";
 import { quickParts, quickTask, quickTest } from "./condquick";
@@ -37,6 +39,7 @@ export class ConditionEditor {
   private readonly more = el("button", "quiet cond-more");
   private readonly fact: RuleFact;
   private readonly guards: GuardEditor;
+  private readonly orElse: ElseEditor;
   private readonly foot: CondFoot;
   private view: View | null = null;
   private draft: Draft | null = null;
@@ -47,6 +50,7 @@ export class ConditionEditor {
     const { text } = ctx.catalog;
     this.fact = new RuleFact(ctx);
     this.guards = new GuardEditor(ctx, (unless) => { if (this.draft) { this.draft.unless = unless; this.draw(); } });
+    this.orElse = new ElseEditor(ctx, (orElse) => { if (this.draft) { this.draft.orElse = orElse; this.draw(); } });
     this.foot = new CondFoot(ctx, () => this.drop(), () => this.commit(), () => this.copy());
     const close = el("button", "editor-close", "✕");
     close.type = "button";
@@ -59,7 +63,7 @@ export class ConditionEditor {
     this.more.type = "button";
     setText(this.more, text.get(UI.ruleMoreOptions));
     this.more.addEventListener("click", () => { tapFeedback(); this.showFull(); });
-    const body = el("div", "cond-body"); body.append(head, this.does, this.chips, this.levels.fold.root, this.subject.root, this.fact.root, this.guards.root, this.more);   // what scrolls; the foot is outside it
+    const body = el("div", "cond-body"); body.append(head, this.does, this.orElse.root, this.chips, this.levels.fold.root, this.subject.root, this.fact.root, this.guards.root, this.more);   // what scrolls; the foot is outside it
     this.root.append(body, this.foot.root);
   }
 
@@ -136,7 +140,7 @@ export class ConditionEditor {
     const draft = this.draft;
     if (!draft || !this.view || sameChoice(chosen(this.ctx.catalog, this.view, draft.then), c)) return;
     tapFeedback();
-    draft.then = c.kind === "task" ? { kind: "tap_card", card: c.card } : { kind: "switch_mix", mix_id: c.mix };
+    draft.then = choiceVerb(c);
     this.fact.reset();
     if (!this.full) keepOffered(this.ctx.catalog, this.view, draft, this.chipNow());
     this.redraw();
@@ -228,6 +232,7 @@ export class ConditionEditor {
     this.subject.draw(view, draft.chip ? undefined : draft.subject);
     markSubject(this.chips, draft.subject);
     this.guards.draw(view, draft.unless, this.full);
+    this.orElse.draw(view, draft.then, draft.orElse, this.full);
     this.drawSentence(view);
     this.drawFact();
     this.foot.showDry(view, draft.index, this.order(), draft.town === true);

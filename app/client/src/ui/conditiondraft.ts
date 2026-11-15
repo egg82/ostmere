@@ -1,7 +1,7 @@
 // The condition editor's draft and the pure choices it makes from one (condition.ts draws and sends).
 import type { ChipInfo, Condition, Order, OrderVerb, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
-import { actionWords, chipOf, conditionWords, savedVerb, storeRule } from "../game/orders";
+import { actionWords, chipOf, conditionWords, handsTap, savedVerb, storeRule } from "../game/orders";
 import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } from "../game/storerule";
 import { buildSubject, readSubject, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
@@ -23,7 +23,7 @@ export interface Draft {
   town?: boolean;
   /** A count, a level or a task running, in place of `rule` (whose store is then ""). */
   subject?: SubjectRule;
-  /** The rule's guards, and the fallbacks it keeps as they are (the editor writes guards; fallbacks are not its yet). */
+  /** The rule's guards, and its fallbacks as the editor holds them: a hands task is a tap here, saved as its solo mix. */
   unless: Condition[];
   orElse: OrderVerb[];
 }
@@ -50,8 +50,10 @@ export function storeCap(catalog: Catalog, view: View | null, store: string): nu
 export function draftOrder(catalog: Catalog, view: View | null, draft: Draft | null, chip: boolean): Order | null {
   if (!draft?.then || !view) return null;
   const then = savedVerb(view, catalog, draft.then);
-  if (draft.orElse.some((v) => v.kind !== then.kind)) return null;
-  const rest = { then, unless: draft.unless, or_else: draft.orElse };
+  const kind = (v: OrderVerb) => (handsTap(catalog, v) ? "switch_mix" : v.kind);   // a hands task is saved as its solo mix
+  const orElse = draft.orElse.map((v) => savedVerb(view, catalog, v));
+  if (orElse.some((v) => kind(v) !== kind(then))) return null;
+  const rest = { then, unless: draft.unless, or_else: orElse };
   if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, ...rest };
   if (draft.subject) return { when: buildSubject(catalog, draft.subject), ...rest };
   if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store))) return null;

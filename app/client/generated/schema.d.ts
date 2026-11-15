@@ -1475,6 +1475,8 @@ export interface components {
             max_mixes: number;
             /** Max Unless */
             max_unless: number;
+            /** Max Or Else */
+            max_or_else: number;
             /** Reserved Mix Prefix */
             reserved_mix_prefix: string;
         };

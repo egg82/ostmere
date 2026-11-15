@@ -30,6 +30,8 @@ class Limits(BaseModel):
     max_mixes: int
     max_unless: int
     """Guards a rule may hold (Order.unless)."""
+    max_or_else: int
+    """Fallbacks a rule may hold after its first action (Order.or_else)."""
     reserved_mix_prefix: str
     """A new mix id beginning so is the game's: save_mix of one is a 422 (CONTRACT.txt, "The town's mix")."""
 
