@@ -717,6 +717,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .rules-row > .rule-when { flex: 0 1 auto; padding-left: .8rem; font-size: var(--t-body); }
 .rule-slot { flex: none; max-width: 9.5rem; min-height: 2.4rem; display: inline-flex; align-items: center; gap: .2rem; padding: 0 .55rem; font: inherit; font-size: var(--t-meta); color: var(--ink-hi); background: transparent; border: 1px dashed var(--ink-dim); border-radius: 2px; cursor: pointer; }   /* the mix slot: tap to pick, or drop a mix on it */
 .rule-slot-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rule-slot-name.has-else { white-space: normal; text-align: left; overflow-wrap: anywhere; }   /* a rule's mixes with "or else": wrapped, never cut */
 .task-rule .rule-action { flex: 0 1 auto; min-width: 0; margin-right: .3rem; }
 /* Next: the queue's taps, between the hands rules and Otherwise (nextlist.ts) */
 .rules-next { margin: .3rem 0 0 2.1rem; font-size: var(--t-meta); font-weight: 500; color: var(--ink); }

@@ -54,6 +54,26 @@ export const RULE_KEYS = {
   rulePassedOver: "ui.rule.passed_over", // a rule whose mix is greyed or whose task is done
   ruleStuck: "ui.rule.stuck", // "{n}{store}": a rule holding the hands whose release cannot be reached for want of a store
   ruleUnfed: "ui.rule.unfed", // "{store}{n}": a rule's mix consumes a store none of its cards makes, so it may stop short
+  rulePassedOverAll: "ui.rule.passed_over_all", // a rule with fallbacks every one of whose actions is dead
+  ruleOrElse: "ui.rule.or_else", // "{a}{b}": a rule's actions, one fallback at a time (game/guardwords.ts)
+  ruleUnless: "ui.rule.unless", // "{rule}{when}": a rule's condition and its first guard
+  ruleAndUnless: "ui.rule.and_unless", // "{rule}{when}": each further guard
+  guardFull: "ui.guard.full", // "{store}": a guard on a store, worded as a state, by its level's form
+  guardEmpty: "ui.guard.empty", // "{store}"
+  guardReaches: "ui.guard.reaches", // "{store}{n}"
+  guardBelow: "ui.guard.below", // "{store}{n}"
+  guardUpTo: "ui.guard.up_to", // "{store}{n}": n a share's words
+  guardDownTo: "ui.guard.down_to", // "{store}{n}"
+  guardDone: "ui.guard.done", // "{card}{n}": a guard on how many times a task is done
+  guardDoneOnce: "ui.guard.done_once", // "{card}"
+  guardLevel: "ui.guard.level", // "{name}{n}": a guard on a skill's or the Camp's level
+  rulePaused: "ui.rule.paused", // "{until}": a paused rule's line, the clauses of the guards that hold
+  ruleAnd: "ui.rule.and", // "{a}{b}": two of those clauses
+  guardUntilUnder: "ui.guard.until_under", // "{store}{n}{have}": where an "n or more" store guard lets go, and the amount now
+  guardUntilReaches: "ui.guard.until_reaches", // "{store}{n}{have}": the same for an "under n" store guard
+  guardWhile: "ui.guard.while", // "{when}": a held guard off a store (a chip's, a count, a level)
+  ruleOnDoing: "ui.rule.on_doing", // "{task}": a rule with fallbacks that is on, running one past its first
+  ruleOnNone: "ui.rule.on_none", // a rule with fallbacks that is on, none of whose actions can start
   ruleLately: "ui.rule.lately", // the Rules tab's last block: what the rules did lately
   ruleRanOnce: "ui.rule.ran_once", // an entry's count of starts, at one
   ruleRan: "ui.rule.ran", // "{n}": an entry's count of starts

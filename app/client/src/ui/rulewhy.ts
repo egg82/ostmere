@@ -1,11 +1,13 @@
 // Why a rule is off (docs/design/opening-screen.md, "The Rules tab"): a quiet line under its row, from the view's
 // order_states (CONTRACT.txt), in the ledger's grammar. A waiting store rule names what it waits for and what the store
-// holds now, sampled from its ledger line as the ledger samples it.
+// holds now, sampled from its ledger line as the ledger samples it; a paused rule names where its guards let go
+// (game/guardwords.ts), and a rule with fallbacks that is on names the one it runs past its first.
 import type { Order, RuleDry, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { sample } from "../game/clock";
 import { alwaysWords } from "../game/lanes";
-import { chipOf, conditionWords, storeRule } from "../game/orders";
+import { actionsOf, pausedWords } from "../game/guardwords";
+import { actionWords, chipOf, conditionWords, storeRule } from "../game/orders";
 import { levelWords, needsKey, readRule } from "../game/storerule";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
@@ -16,8 +18,9 @@ export function whyOff(catalog: Catalog, view: View, index: number, t: number): 
   const order = view.orders[index];
   const state = view.order_states[index];
   if (!order || state === undefined) return null;
-  if (state === "on") return dryWords(catalog, order, view.order_dry[index]?.holding ? view.order_dry[index] : null);
-  if (state === "passed_over") return catalog.text.get(UI.rulePassedOver);
+  if (state === "on") return dryWords(catalog, order, view.order_dry[index]?.holding ? view.order_dry[index] : null) ?? doingWords(catalog, view, index);
+  if (state === "passed_over") return catalog.text.get(order.or_else.length > 0 ? UI.rulePassedOverAll : UI.rulePassedOver);
+  if (state === "paused") return pausedWords(catalog, view, index, t);
   if (state === "outranked") {
     const by = outrankedBy(catalog, view, index);
     const rule = by ? alwaysWords(catalog, by) ?? conditionWords(catalog, by.when) : null;
@@ -38,6 +41,17 @@ export function dryWords(catalog: Catalog, order: Order, dry: RuleDry | null): s
   if (!dry || !rule) return null;
   const slots = { store: catalog.storeLabel(dry.store), n: levelWords(catalog, rule.m ?? rule.n) };
   return catalog.text.fill(dry.holding ? UI.ruleStuck : UI.ruleUnfed, slots);
+}
+
+/** What a rule with fallbacks that is on runs: "on now · {action}" past its first, "on now · nothing it lists can start
+ * yet" for none (View.order_doing); null for its first, and for a rule with no fallback. */
+function doingWords(catalog: Catalog, view: View, index: number): string | null {
+  const order = view.orders[index]!;
+  if (order.or_else.length === 0) return null;
+  const doing = view.order_doing[index] ?? null;
+  if (doing === null) return catalog.text.get(UI.ruleOnNone);
+  const action = actionsOf(order)[doing];
+  return doing === 0 || !action ? null : catalog.text.fill(UI.ruleOnDoing, { task: actionWords(catalog, action) });
 }
 
 /** The earlier rule that has what rule `index` would run: orders[mix_order] for a mix rule, orders[LaneBar.order] of
