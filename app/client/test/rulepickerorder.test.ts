@@ -88,6 +88,9 @@ check("the Do picker: the page's sections, by name, the mixes last", () => {
   expect("a card from each lane is offered", seen.filter((s) => s.card !== null).length >= OTHER.length, true);
   expect("sections drawn", new Set(seen.map((s) => s.section)).size > 2, true);
   expect("some mix is offered", seen.some((s) => s.mix !== null), true);
+  const kids = one(root, ".cond .cond-mixes").children;
+  const firstMix = kids.findIndex((k) => k.dataset.mix !== undefined);
+  expect("the mixes start a row of their own", kids[firstMix - 1]?.classList.contains("cond-break"), true);
   holdsOrder("do", seen);
 });
 
