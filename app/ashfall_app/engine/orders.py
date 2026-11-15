@@ -3,7 +3,8 @@
 Conditions are thresholds on stores, levels and time, each with a latch (Save.latches). When orders act: DESIGN.txt,
 "Orders" and "Firing cap".
 """
-from dataclasses import dataclass
+from collections.abc import Callable, Iterator
+from dataclasses import dataclass, replace
 
 from .answers import AnswerKind, AnswerOffer
 from .ids import CardId, LaneId, Runner, SkillId, StoreId
@@ -135,9 +136,18 @@ class Order:
     unless: tuple[Condition, ...] = ()
     """Guards: while any one's latch is true the rule is paused, never let go (DESIGN.txt, "RULE GUARDS"). Each is
     stored as the condition that blocks, latched as `when` is, with its own band. At most MAX_GUARDS, none twice."""
+    or_else: tuple[OrderVerb, ...] = ()
+    """Fallbacks: the rule acts through the first of `actions` that can act (DESIGN.txt, "OR ELSE"). Every action is
+    the same kind of verb, taps of one lane or mixes of one layer; a rule answering an offer has none."""
+
+    @property
+    def actions(self) -> tuple[OrderVerb, ...]:
+        """`then` followed by `or_else`: what the rule tries, in that order."""
+        return (self.then, *self.or_else)
 
 
 MAX_GUARDS = 3
+MAX_ACTIONS = 3
 
 
 @dataclass(frozen=True)
@@ -193,6 +203,23 @@ def when_latch(latch: Latch) -> bool:
 def guard_latches(latch: Latch) -> tuple[bool, ...]:
     """Each guard's latch, in the order of Order.unless; () for a rule with no guard."""
     return latch.unless if isinstance(latch, GuardedLatch) else ()
+
+
+def listed(orders: tuple[Order, ...], latches: tuple[Latch, ...]) -> Iterator[tuple[int, OrderVerb, Latch]]:
+    """(rule index, action, the rule's latch) for every action of every rule, in rule order and then list order: the
+    rules read as the adjacent one-action rules they stand for, which is how every source of evaluation walks them
+    (DESIGN.txt, "OR ELSE")."""
+    for i, (o, latch) in enumerate(zip(orders, latches)):
+        for a in o.actions:
+            yield i, a, latch
+
+
+def pruned(order: Order, drop: Callable[[OrderVerb], bool]) -> Order | None:
+    """The order with the actions `drop` names taken out of its list, else unchanged; None when none is left."""
+    actions = tuple(a for a in order.actions if not drop(a))
+    if not actions:
+        return None
+    return order if actions == order.actions else replace(order, then=actions[0], or_else=actions[1:])
 
 
 def latch_of(when: bool, guards: tuple[bool, ...]) -> Latch:

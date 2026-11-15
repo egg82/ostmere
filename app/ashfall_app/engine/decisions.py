@@ -4,7 +4,7 @@ from dataclasses import replace
 
 from . import plan
 from .checks import (
-    check_condition, check_delete, check_guards, check_hand_tap, check_mixes, check_order_verb, check_player_switch,
+    check_actions, check_condition, check_delete, check_guards, check_hand_tap, check_mixes, check_order_verb, check_player_switch,
     check_queue_verb,
 )
 from .answering import answered
@@ -20,7 +20,7 @@ from .installs import requeued
 from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
 from .offerstate import acting, refusal
-from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, rule_on
+from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, listed, rule_on
 from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
@@ -86,11 +86,11 @@ def _answer_order_verb(save: Save, rules: Rules) -> AnswerOffer | None:
 
 
 def _tap_order_verb(save: Save, rules: Rules) -> TapCard | None:
-    """The TapCard of the first order whose latch is true and whose card can act (ready, and its speed above 0);
-    orders that cannot act are skipped, never chosen."""
-    for order, latch in zip(save.orders, save.latches):
-        if rule_on(latch) and isinstance(order.then, TapCard) and _can_act(save, rules, order.then):
-            return order.then
+    """The first TapCard that can act (ready, and its speed above 0) listed by an order that is on, orders in order and
+    each order's actions in list order; taps that cannot act are skipped, never chosen (DESIGN.txt, "OR ELSE")."""
+    for _, verb, latch in listed(save.orders, save.latches):
+        if rule_on(latch) and isinstance(verb, TapCard) and _can_act(save, rules, verb):
+            return verb
     return None
 
 
@@ -146,7 +146,7 @@ def _ordered(save: Save, card: CardId) -> bool:
     """An order taps `card`, true or not: a stage that drinks the store its own order watches has dropped that order's
     latch by the middle of the stage, which does not make the stage a hand tap (DESIGN.txt, "ORDER CARD ON A STAGED
     BUILD")."""
-    return any(o.then == TapCard(card) for o in save.orders)
+    return any(TapCard(card) in o.actions for o in save.orders)
 
 
 def cure_cuts_in(save: Save, rules: Rules, card: CardId) -> bool:
@@ -213,10 +213,13 @@ def _applied(save: Save, rules: Rules, verb: PlanVerb) -> tuple[Save, bool]:
         return _delete_mix(save, rules, verb)
     if isinstance(verb, SetOrders):
         for o in verb.orders:
-            refuse_by_hand(o.then)
+            for a in o.actions:
+                refuse_by_hand(a)
             check_condition(rules, o.when)
             check_guards(rules, o.unless)
-            check_order_verb(rules, save.mixes, o.then)
+            for a in o.actions:
+                check_order_verb(rules, save.mixes, a)
+            check_actions(rules, save.mixes, o.actions)
         latches = tuple(_kept_latch(save, rules, o) for o in verb.orders)
         return with_running_mix(save, rules, replace(save, orders=verb.orders, latches=latches)), True
     for e in verb.entries:

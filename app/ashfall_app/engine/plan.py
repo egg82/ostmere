@@ -11,7 +11,7 @@ from .lanes import TapCard
 from .memo import SaveMemo
 from .errors import InvalidVerbError
 from .mixes import Mix, MixLayer, SwitchMix, flatten_shares
-from .orders import Latch, OrderVerb, rule_on, when_latch
+from .orders import Latch, Order, OrderVerb, listed, rule_on, when_latch
 from .rules import Rules
 from .state import Save
 
@@ -50,7 +50,7 @@ def queue_mix_id(save: Save, rules: Rules) -> MixId | None:
 
 def candidates(save: Save, rules: Rules) -> tuple[CardId, ...]:
     """The known cards a true order or the controlling queue entry would tap, once ready."""
-    verbs = [o.then for o, latch in zip(save.orders, save.latches) if rule_on(latch)]
+    verbs = [a for _, a, latch in listed(save.orders, save.latches) if rule_on(latch)]
     queued = live_queue_verb(save, rules)
     if queued is not None:
         verbs.append(queued)
@@ -83,14 +83,14 @@ def _layer_of(save: Save, rules: Rules, mix: MixId) -> MixLayer:
 
 
 def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | None:
-    """The first order whose latch is true and whose verb is a SwitchMix to a saved mix of `layer` that is not greyed,
-    as (its index, its mix): the order whose mix runs over the player's (DESIGN.txt, "Order mix"). Orders of the other
-    layer never change this layer's running mix."""
+    """The first order that is on and lists a SwitchMix to a saved mix of `layer` that is not greyed, as (its index,
+    the first such mix it lists): the order whose mix runs over the player's (DESIGN.txt, "Order mix", "OR ELSE").
+    Orders of the other layer never change this layer's running mix."""
     saved = {m.id for m in save.mixes}
-    for i, (o, latch) in enumerate(zip(save.orders, save.latches)):
-        if rule_on(latch) and isinstance(o.then, SwitchMix) and o.then.mix in saved and not greyed(save, rules, o.then.mix) \
-                and mix_layer(rules, save.mixes, o.then.mix) is layer:
-            return i, o.then.mix
+    for i, a, latch in listed(save.orders, save.latches):
+        if rule_on(latch) and isinstance(a, SwitchMix) and a.mix in saved and not greyed(save, rules, a.mix) \
+                and mix_layer(rules, save.mixes, a.mix) is layer:
+            return i, a.mix
     return None
 
 
@@ -132,13 +132,13 @@ def running_town_mix_id(save: Save, rules: Rules) -> MixId | None:
 
 
 def lane_order(save: Save, rules: Rules, lane: LaneId) -> int | None:
-    """The index of the first order whose latch is true, whose verb is not dead, and whose verb taps the card `lane`
-    runs now; None while the lane is free or no such order exists (DESIGN.txt, "Lane order"). Presentation only."""
+    """The index of the first order that is on and lists a tap, not dead, of the card `lane` runs now; None while the
+    lane is free or no such order exists (DESIGN.txt, "Lane order"). Presentation only."""
     card = next(ls.card for ls in save.lanes if ls.lane == lane)
     if card is None:
         return None
-    return next((i for i, (o, latch) in enumerate(zip(save.orders, save.latches))
-                 if rule_on(latch) and o.then == TapCard(card) and not is_dead(save, rules, o.then)), None)
+    return next((i for i, a, latch in listed(save.orders, save.latches)
+                 if rule_on(latch) and a == TapCard(card) and not is_dead(save, rules, a)), None)
 
 
 class OrderState(Enum):
@@ -154,7 +154,7 @@ class OrderState(Enum):
     """A mix order whose condition holds while an earlier mix order's mix runs (mix_order); a tap order whose condition
     holds while its card's lane runs the task of an earlier order (lane_order)."""
     PASSED_OVER = "passed_over"
-    """Its verb is dead (is_dead): it cannot act whatever its condition."""
+    """Every action it lists is dead (is_dead): it cannot act whatever its condition."""
 
 
 def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
@@ -163,8 +163,9 @@ def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
     cards = index(rules).cards
     lanes = {lane: lane_order(save, rules, lane) for lane in index(rules).lanes}
 
-    def state(i: int, verb: OrderVerb, latch: Latch) -> OrderState:
-        if is_dead(save, rules, verb):
+    def state(i: int, o: Order, latch: Latch) -> OrderState:
+        verb = o.then
+        if all(is_dead(save, rules, a) for a in o.actions):
             return OrderState.PASSED_OVER
         if not when_latch(latch):
             return OrderState.WAITING
@@ -174,7 +175,23 @@ def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
             return OrderState.ON if running[_layer_of(save, rules, verb.mix)] == i else OrderState.OUTRANKED
         if isinstance(verb, (AnswerOffer, AnswerKind)):
             return OrderState.ON
-        first = lanes[cards[verb.card].lane] if verb.card in cards else None
+        lane = next((cards[a.card].lane for a in o.actions if isinstance(a, TapCard) and a.card in cards), None)
+        first = None if lane is None else lanes[lane]
         return OrderState.OUTRANKED if first is not None and first < i else OrderState.ON
 
-    return tuple(state(i, o.then, latch) for i, (o, latch) in enumerate(zip(save.orders, save.latches)))
+    return tuple(state(i, o, latch) for i, (o, latch) in enumerate(zip(save.orders, save.latches)))
+
+
+def order_doing(save: Save, rules: Rules) -> tuple[int | None, ...]:
+    """order_doing[i]: the index in save.orders[i].actions of the action it runs now, its lane running that card for
+    this rule (lane_order) or the running mix being that mix by this rule; else None. Presentation only."""
+    doing: dict[int, OrderVerb] = {}
+    for layer in MixLayer:
+        rule = _mix_rule(save, rules, layer)
+        if rule is not None:
+            doing[rule[0]] = SwitchMix(rule[1])
+    for ls in save.lanes:
+        i = lane_order(save, rules, ls.lane)
+        if i is not None and ls.card is not None:
+            doing[i] = TapCard(ls.card)
+    return tuple(o.actions.index(doing[i]) if i in doing else None for i, o in enumerate(save.orders))
