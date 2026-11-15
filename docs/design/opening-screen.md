@@ -664,6 +664,11 @@ Rack                                                   each side lane's task rul
 - **Next**, the queue, sits between the hands rules and `Otherwise`, the order the engine gives the hands: a rule that
   is on, then the queue's head once it is ready, else the player's own mix. One line per entry, `Remove` at its end.
   The tab shows once the queue holds something.
+- **`+ Plan`**, under Next while the queue has room, adds either kind of entry. Its list starts with the cards
+  `When ready` takes, ready now ones included (each reading `When ready`, picked exactly as that button picks it),
+  then the steps it would take but for what they wait on, outlined and off, each with the row its card's face draws
+  for that wait (`Flint 3/4`, `Opens after dark`, `Foraging level 2/3`), then the saved mixes, a mix leading on to its
+  goals. It is offered once there is a card or a mix to pick.
 
 ### Lately
 
@@ -697,7 +702,9 @@ shows its need and maker with no countdown and no `When ready`. A step waiting o
 shown (the night) is a clock, not something to plan around: it draws when it opens and its countdown, with no
 have/need and no `When ready`, since what it opens must open in front of the player (queued, the morning's step would open the snares
 unseen, and the 2 AM test fails). It queues one tap of the card, held until that tap
-completes, and the card flies to the Rules tab. Queued, it stays as a quiet `in Next` mark, so the card keeps its size;
+completes, and the card flies to the Rules tab. A step ready now carries it too while its lane runs another tap, so
+the build runs after that task. It is a shortcut: Next's `+ Plan` lists these cards, and steps ready on a free lane, and
+queues the same entry. Queued, it stays as a quiet `in Next` mark, so the card keeps its size;
 the strip notes `next: {task}` (the first thing to give way on a phone). The first time it is on show it takes the one
 glow.
 

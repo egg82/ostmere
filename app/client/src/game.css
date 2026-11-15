@@ -732,6 +732,11 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .lately-facts { padding: 0 .4rem .35rem 2.1rem; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
 .rules-new { align-self: flex-start; }
 .stint-plan { align-self: flex-start; }
+/* Plan's cards (ui/stintplan.ts): one still waiting is off, outlined like a card's "in Next"; the mixes start after a gap */
+.plan-card:disabled { background: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
+.plan-card:disabled .selector-name { color: var(--ink); }
+.plan-card:disabled .selector-note { color: var(--ink-dim); }
+.plan-card + .selector-run:not(.plan-card) { margin-top: .6rem; }
 .rules-full { align-self: flex-start; margin: 0; color: var(--ink-dim); }
 .rules .rule-picker { margin-top: .4rem; }
 @media (max-width: 639px) {
