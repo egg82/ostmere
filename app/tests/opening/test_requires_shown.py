@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.opening.entries import ConditionEntry, ItemAmount
-from ashfall_app.opening.face_checks import check_clocks, undrawn
+from ashfall_app.opening.face_checks import check_clocks, shown_stores, undrawn
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from tests.held_ledger import Ledger, dump, load, problems, tally, total
 
@@ -40,7 +40,7 @@ def test_every_tappable_card_draws_its_requires(content: Opening):
     assert not found, "\n".join(found)
 
 
-@pytest.mark.parametrize("card", ["keep_vigil", "spar"])
+@pytest.mark.parametrize("card", ["keep_vigil", "spar", "poultice"])
 def test_a_card_that_was_held_draws_every_require(content: Opening, card: str):
     assert [x for x in undrawn(content) if x[0] == card] == []
 
@@ -69,6 +69,12 @@ def drained(o: Opening, card: str, store: str) -> Opening:
 def test_a_drain_on_a_store_the_face_never_draws_is_named(content: Opening):
     """A drain refuses a player's tap while its store is at 0 (engine DESIGN.txt, "DRAINS"): a require like any other."""
     assert ("take_stock", "drain", "drift_left") in undrawn(drained(content, "take_stock", "drift_left"))
+
+
+def test_a_drain_on_a_store_never_unlocked_but_not_hidden_is_drawn(content: Opening):
+    """The face draws every drain's store that is not hidden as have/need (CardInfo.drains), unlocked or not."""
+    assert "hurt" not in shown_stores(content), "the control store is shown: it no longer tests a drain's own row"
+    assert not [x for x in undrawn(drained(content, "take_stock", "hurt")) if x[0] == "take_stock"]
 
 
 def test_a_skill_level_a_step_a_tally_and_a_time_of_day_are_drawn(content: Opening):

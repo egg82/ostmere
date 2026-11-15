@@ -91,6 +91,9 @@ class CardInfo(BaseModel):
     """The stores its completions land or its flows fill, in content order: what a rule doing it is about first."""
     takes: list[str]
     """The stores its inputs, costs and drains take from, in content order."""
+    drains: list[str]
+    """The stores its drains take from, in content order. A tap waits while one is at 0, so the face draws each as a
+    have/need row (Card.needs holds it at quantity 1) unless the store is hidden."""
     skill_needs: list[SkillNeed]
     """The skill levels its requirements ask for, in requirement order."""
     step_needs: list[StepNeed]
