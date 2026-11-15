@@ -12,7 +12,8 @@ def _modifiers(node: Any) -> list[Modifier]:
     if isinstance(node, Modifier):
         return [node]
     if isinstance(node, (tuple, list)):
-        return [m for x in node for m in _modifiers(x)]
+        items: list[Any] = [*node]
+        return [m for x in items for m in _modifiers(x)]
     if is_dataclass(node) and not isinstance(node, type):
         return [m for f in fields(node) for m in _modifiers(getattr(node, f.name))]
     return []

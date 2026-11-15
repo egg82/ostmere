@@ -599,6 +599,10 @@ held = true
 id = "drift"
 
 [[features]]
+id = "t_rats_drift"
+label_key = "feature_t_rats_drift"
+
+[[features]]
 id = "roofs_cleared"
 
 [[features]]
@@ -712,6 +716,7 @@ store_roof_ash = "ash on the roofs"
 action_ashfall = "Falling ash"
 store_drift_clock = "clock"
 action_drift_clock = "Clock"
+feature_t_rats_drift = "Season"
 store_bloom = "fungus on the stumps"
 store_fungus = "fungus"
 c_pick_fungus = "Pick fungus"

@@ -590,6 +590,10 @@ label_key = "feature_watch_fed"
 id = "skin_post"
 label_key = "feature_skin_post"
 
+[[features]]
+id = "t_pack_step"
+label_key = "feature_t_pack_step"
+
 # ---------- text ----------
 
 [line_kinds]
@@ -620,6 +624,7 @@ l_gate_road = "story"
 # pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
 # release: replace each value, never the marker's spelling.
 store_b9_clock = "clock"
+feature_t_pack_step = "Season"
 action_b9_clock = "Clock"
 l_ring_1 = "lucy scores the ash round the whole camp, back to her start."
 l_ring_2 = "she looks along the line, then at the stakes, and cuts more."
