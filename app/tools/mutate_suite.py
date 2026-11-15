@@ -5,6 +5,7 @@
   heldspeed  tests/engine_contract/test_heldspeed_*.py  MUTANTS_heldspeed.txt  specs tools/heldspeed_mutants/
   share   tests/engine_contract/test_share_levels_*.py  MUTANTS_share.txt  specs tools/share_mutants/
   guards  tests/engine_contract/test_guards_*.py  MUTANTS_guards.txt  specs tools/guards_mutants/
+  or_else tests/engine_contract/test_or_else_*_contract.py  MUTANTS_or_else.txt  specs tools/or_else_mutants/
   leaves  tests/engine_contract/test_leaves_*.py  MUTANTS_leaves.txt  rows 1-20   specs tools/leaves_mutants/
   retire  tests/engine_contract/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
   clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/
@@ -75,6 +76,7 @@ SUITES = {
     "heldspeed": Suite("MUTANTS_heldspeed.txt", "test_heldspeed_*.py", "heldspeed_mutants"),
     "share": Suite("MUTANTS_share.txt", "test_share_levels_*.py", "share_mutants"),
     "guards": Suite("MUTANTS_guards.txt", "test_guards_*.py", "guards_mutants"),
+    "or_else": Suite("MUTANTS_or_else.txt", "test_or_else_*_contract.py", "or_else_mutants"),
     "leaves": Suite("MUTANTS_leaves.txt", "test_leaves_*.py", "leaves_mutants", 1, 20, (
         "tests/engine_contract/test_retire_*.py", "tests/engine/test_leaves_impl.py",
         "tests/engine/test_retired_chores_impl.py", "tests/opening/test_leaves_loader.py",
