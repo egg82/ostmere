@@ -33,6 +33,10 @@ ORDERS = (
 PLAYS = (0, 4, 9, 13, 25, 40)
 
 
+OR_ELSE = pytest.mark.xfail(strict=True, raises=TypeError, reason="fallbacks (or_else) land with #91; these flip then")
+"""Statement tests that pass `or_else`, red until the engine has it."""
+
+
 def play(r: Rules) -> dict[int, Save]:
     s = start(r, ORDERS)
     return {t: advance(s, r, t) for t in PLAYS}
@@ -63,6 +67,7 @@ def test_a_save_without_guards_encodes_to_its_old_text_with_bool_latches():
     assert s.latches and all(type(x) is bool for x in s.latches)
 
 
+@OR_ELSE
 @kills(18)
 def test_an_order_given_empty_lists_is_the_order_without_them_and_keeps_the_old_text():
     """Statement 1: Order(when, then, unless=(), or_else=()) is today's Order(when, then); set through SetOrders, the
@@ -143,6 +148,7 @@ def test_a_logged_set_orders_holding_guards_round_trips(orders: tuple[Order, ...
     assert verb_from_json(verb_to_json(v)) == v
 
 
+@OR_ELSE
 @kills(20)
 def test_a_save_and_a_logged_set_orders_holding_fallbacks_round_trip():
     """Statement 2 for `or_else` (lands with the "or else" build step; gaps.txt): fallbacks beside guards."""
@@ -208,6 +214,7 @@ def test_a_guard_refused_as_a_when_is_refused(bad: AtLeast):
         _set((guarded(ALWAYS, TapCard(K), bad),))
 
 
+@OR_ELSE
 @kills(27)
 def test_four_actions_are_refused_and_three_are_not():
     """Statement 3 (with "or else"): four actions; "at most 3 actions"."""
@@ -216,6 +223,7 @@ def test_four_actions_are_refused_and_three_are_not():
         _set((with_else(ALWAYS, TapCard(K), (TapCard(K2), TapCard(K3), TapCard(K4))),))
 
 
+@OR_ELSE
 @kills(27)
 def test_an_action_listed_twice_is_refused():
     """Statement 3 (with "or else"): an action listed twice, `then` included."""
@@ -225,6 +233,7 @@ def test_an_action_listed_twice_is_refused():
         _set((with_else(ALWAYS, TapCard(K), (TapCard(K2), TapCard(K2))),))
 
 
+@OR_ELSE
 @kills(27)
 def test_a_tap_and_a_mix_in_one_rule_are_refused():
     """Statement 3 (with "or else"): every action is the same kind of verb."""
@@ -235,6 +244,7 @@ def test_a_tap_and_a_mix_in_one_rule_are_refused():
         _set((with_else(ALWAYS, SwitchMix(RM), (TapCard(K),)),))
 
 
+@OR_ELSE
 @kills(27)
 def test_taps_on_two_lanes_are_refused():
     """Statement 3 (with "or else"): every listed tap is of a card on one lane (J is on L2, KL on L)."""
@@ -243,6 +253,7 @@ def test_taps_on_two_lanes_are_refused():
         _set((with_else(ALWAYS, TapCard(K), (TapCard(J),)),))
 
 
+@OR_ELSE
 @kills(27)
 def test_mixes_of_two_layers_are_refused():
     """Statement 3 (with "or else"): every listed mix is of one layer, hands or town."""
@@ -253,6 +264,7 @@ def test_mixes_of_two_layers_are_refused():
         decide(s, r, 0, SetOrders((with_else(town.ALWAYS, SwitchMix(town.HM1), (SwitchMix(town.TM),)),)))
 
 
+@OR_ELSE
 @kills(27)
 def test_or_else_on_a_rule_answering_an_offer_is_refused():
     """Statement 3 (with "or else"): a rule whose `then` answers an offer takes no `or_else`; the same rule without it,

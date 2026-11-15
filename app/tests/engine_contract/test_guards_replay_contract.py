@@ -2,7 +2,7 @@
 determinism and replay"). The scenes move with nobody deciding: a boundary-chasing rule fills T with its own mix until
 its guard pauses it and the player's mix empties T again, so guard latches change again and again on their own; a
 second rule taps K under a `when` and guards on T, and a third may be paused by a guard on W, which only rises."""
-from hypothesis import given, strategies as st
+from hypothesis import assume, given, strategies as st
 
 from ashfall_app.engine import (
     BP, AtLeast, Order, Rules, Save, SetOrders, StoreValue, SwitchMix, TapCard, advance, advance_logged, decide,
@@ -142,6 +142,7 @@ def test_a_forecast_lists_the_fills_and_emptyings_an_advance_reaches(cap: int, w
     """Statement 24: a rule fills T unless T is full (as a share, or as an amount) and, once W reaches w_level, for
     good; the player's mix empties T. The forecast from the start lists the fills and emptyings of T that advancing
     reaches, guard pauses included."""
+    assume(w_level > cap)   # W's guard pauses the rule for good at w_level seconds, so T must fill first
     full = (AtLeast(StoreValue(T), BP, BP, value_of_cap=True, release_of_cap=True) if share
             else at_least(cap, cap - 1))
     guards = (full, at_least(w_level, 1, W)) + ((at_least(cap - 1, cap - 3),) if extra else ())
@@ -149,5 +150,5 @@ def test_a_forecast_lists_the_fills_and_emptyings_an_advance_reaches(cap: int, w
     s = start(r, (guarded(ALWAYS, SwitchMix(UP), *guards),), active=DOWN)
     f = forecast(s, r, 60, stores=(T,))
     fills, empties = _walk(r, s, f.until, cap * Q)
-    assert fills, "the walk saw no fill"   # T is full by `cap` seconds
+    assert fills or extra, "the walk saw no fill"   # T is full by `cap` seconds; the extra guard pauses it an item short
     assert (list(f.fills.get(T, ())), list(f.empties.get(T, ()))) == (fills, empties)
