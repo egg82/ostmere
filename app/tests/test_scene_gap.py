@@ -83,6 +83,11 @@ def test_the_hunt_shows_the_figure_where_laying_track_does(monkeypatch: pytest.M
     import dayfour_poses as poses
     spear, away = Image.new("RGBA", (2, 9)), Image.new("RGBA", (3, 3))
     seen: list[Image.Image | None] = []
+
+    def fake_away(held: Image.Image | None = None) -> Image.Image:
+        seen.append(held)
+        return away
+
     monkeypatch.setattr(poses, "spear", lambda: spear)
-    monkeypatch.setattr(poses, "away_on_the_track", lambda held=None: (seen.append(held), away)[1])
+    monkeypatch.setattr(poses, "away_on_the_track", fake_away)
     assert poses.hunting() is away and seen == [spear]
