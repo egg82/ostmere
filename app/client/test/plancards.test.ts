@@ -9,7 +9,7 @@ import { fixtureStep } from "../fixtures/steps";
 import type { Card, Mix, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { planCards } from "../src/game/queue";
-import { waitWords } from "../src/game/waitwords";
+import { waitWords } from "../src/game/needwords";
 import { CardNeeds } from "../src/ui/cardneeds";
 import { StintPlan } from "../src/ui/stintplan";
 import { WhenReady } from "../src/ui/whenready";
@@ -41,29 +41,40 @@ function planner(v: View, ctx = testContext()) {
   return { got: ctx.got, rows: () => rows };
 }
 
-// One queue, two ways in: the same entry from the card's When ready and from Plan's pick.
-{
+// One queue, two ways in: the same entry from the card's When ready and from Plan's pick, for a step with a ready time
+// and for one ready now while its lane runs another tap (the build waits for the task under way).
+const stool = ended.cards.find((c) => c.card === "stool")!;
+const busy: View = { ...view, lanes: view.lanes.map((l) => (l.lane === catalog.laneOf("stool") ? { ...l, running_card: "gather" } : l)) };
+expect("the stool is ready now", stool.blocker, null);
+for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its lane busy", busy, stool]] as const) {
   const card = testContext();
   const w = new WhenReady(card.ctx);
-  const button = w.make("larder", document.createElement("div"));
-  w.sync(button, larder, view);
+  const button = w.make(c.card, document.createElement("div"));
+  w.sync(button, c, v);
+  expect(`${label}: the card offers When ready`, [button.hidden, button.disabled], [false, false]);
   button.click();
-  const plan = planner(view);
+  const plan = planner(v);
   plan.rows()[0]?.click();
-  const row = plan.rows().find((r) => r.textContent?.startsWith("Larder"));
-  row?.click();
-  expect("the card's When ready sent one entry", card.got.decided.length, 1);
-  expect("Plan's pick sends the same entry", plan.got.decided, card.got.decided);
-  expect("Plan closes after the pick", plan.rows().map((r) => r.textContent), ["+ Plan"]);
+  plan.rows().find((r) => r.querySelector(".selector-name")?.textContent === catalog.cardLabel(c.card))?.click();
+  expect(`${label}: the card's When ready sent one entry`, card.got.decided.length, 1);
+  expect(`${label}: Plan's pick sends the same entry`, plan.got.decided, card.got.decided);
+  expect(`${label}: Plan closes after the pick`, plan.rows().map((r) => r.textContent), ["+ Plan"]);
+}
+{
+  const w = new WhenReady(testContext().ctx);
+  const button = w.make("stool", document.createElement("div"));
+  w.sync(button, stool, view);
+  expect("ready now on a free lane: the face leaves it to a tap", button.hidden, true);
 }
 
-// What Plan lists: the cards it can take now, then the waiting ones with their face's words, then the mixes.
+// What Plan lists: the cards it takes, then the waiting ones with their face's words, then the mixes.
 {
   const plan = planner(view);
   plan.rows()[0]?.click();
   const rows = plan.rows();
-  expect("the card it can take now first, the mixes last", [...rows.slice(0, 2), ...rows.slice(-2)].map((r) => r.textContent), ["Plan✕", "LarderWhen ready", "a", "b"]);
-  const waits = rows.slice(2, -2) as HTMLButtonElement[];
+  expect("the cards it takes first, ready now included, in the page's order; the mixes last", [...rows.slice(0, 3), ...rows.slice(-2)].map((r) => r.textContent),
+    ["Plan✕", "StoolWhen ready", "LarderWhen ready", "a", "b"]);
+  const waits = rows.slice(3, -2) as HTMLButtonElement[];
   const faceSays = (card: Card): string => {
     const face = new CardNeeds(testContext().ctx, card.card);
     face.draw(card, view, false);
@@ -82,8 +93,8 @@ function planner(v: View, ctx = testContext()) {
 // Plan opens on a card alone (no mix to run), and not before the end, when no card could be taken.
 {
   expect("a card to plan and no mix: offered", planner({ ...view, mixes: [] }).rows().map((r) => r.textContent), ["+ Plan"]);
-  expect("only a waiting card and no mix: nothing", planner({ ...view, mixes: [], cards: [...ended.cards, lean] }).rows(), []);
-  expect("a card queued already is not offered again", planner({ ...view, mixes: [], queue: [{ verb: { kind: "tap_card", card: "larder" },
+  expect("only a waiting card and no mix: nothing", planner({ ...view, mixes: [], cards: [lean] }).rows(), []);
+  expect("a card queued already is not offered again", planner({ ...view, mixes: [], cards: [lean, larder], queue: [{ verb: { kind: "tap_card", card: "larder" },
     until: { kind: "at_least", watched: { kind: "card_count", card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } }] }).rows(), []);
 }
 

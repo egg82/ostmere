@@ -1,10 +1,10 @@
 // "When ready" on a card (docs/design/opening-screen.md, "Cards" and "The Rules tab"): a small button on a step that
-// will turn ready by itself (game/queue.canQueue), beside the card's own tap target, never inside it. It adds one tap
-// of the card to the queue, and the card flies to the Rules tab, where Next lists it. Once queued it stays as a quiet
+// will turn ready by itself, or is ready on a lane running another tap (game/queue.canQueue), beside the card's own tap
+// target, never inside it. It adds one tap of the card to the queue, and the card flies to the Rules tab, where Next lists it. Once queued it stays as a quiet
 // "in Next" mark, so the card does not change size under the finger. The first time it is on show it takes the one
 // glow (once a page session), the queue's taught step.
 import type { Card, View } from "../api/types";
-import { canQueue, queuedCards, queueable, queueFull, whenReady } from "../game/queue";
+import { canQueue, onFace, queuedCards, queueFull, whenReady } from "../game/queue";
 import { UI } from "../game/text";
 import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
@@ -36,7 +36,7 @@ export class WhenReady {
     const { catalog } = this.ctx;
     const queued = card !== undefined && queuedCards(view).includes(card.card);
     const offered = card !== undefined && canQueue(catalog, view, card);
-    const full = !queued && card !== undefined && queueFull(catalog, view) && queueable(catalog, view, card);
+    const full = !queued && card !== undefined && queueFull(catalog, view) && onFace(catalog, view, card);
     button.hidden = !queued && !offered && !full;
     button.disabled = !offered;
     button.classList.toggle("queued", queued);

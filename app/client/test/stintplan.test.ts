@@ -38,8 +38,8 @@ async function plan(view: View, after: View | null, seeRules = true) {
 {
   const { rows } = await plan(planning({}), null, false);
   expect("closed to a player who has not met rules", rows(), []);
-  const none = await plan(planning({ mixes: [mix("a")], greyed_mix_ids: ["a"] }), null);
-  expect("no mix to run", none.rows(), []);
+  const none = await plan(planning({ mixes: [mix("a")], greyed_mix_ids: ["a"], cards: [] }), null);
+  expect("no mix to run and no card to plan", none.rows(), []);
   const full = await plan(planning({ queue: Array.from({ length: fixtureContent.limits.max_queue }, () => ({ verb: { kind: "switch_mix" as const, mix_id: "a" }, until: woodUntil })) }), null);
   expect("a full Next offers nothing", full.rows(), []);
 }
@@ -51,8 +51,8 @@ async function plan(view: View, after: View | null, seeRules = true) {
   const { rows, got } = await plan(view, after);
   expect("the button", rows().map((r) => r.textContent), ["+ Plan"]);
   rows()[0]?.click();
-  expect("the steps it could take, waiting ones saying on what, then the saved mixes", rows().map((r) => r.textContent),
-    ["Plan✕", "Look aroundFlint 3/4", "HatchetForaging level 2/3", "a", "b"]);
+  expect("the steps it takes (the stool, ready now), waiting ones saying on what, then the saved mixes", rows().map((r) => r.textContent),
+    ["Plan✕", "StoolWhen ready", "Look aroundFlint 3/4", "HatchetForaging level 2/3", "a", "b"]);
   mixRow(rows(), "b")?.click();
   await Promise.resolve();
   await Promise.resolve();

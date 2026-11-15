@@ -1,13 +1,13 @@
 // Next's "+ Plan" (CONTRACT.txt, "Goal stints"; docs/design/opening-screen.md, "The Rules tab"): the two kinds of entry
-// the queue holds. First the cards "When ready" would take now, each picked through the card's own path
-// (game/queue.whenReady); then the steps it would take but for what they wait on, off, each saying what in its face's
-// words (game/waitwords.ts); then the saved hands mixes: a mix picked lists the goals it would run to (the dry run of
+// the queue holds. First the cards "When ready" takes, ready now ones included, each picked through the card's own
+// path (game/queue.whenReady); then the steps it would take but for what they wait on, off, each saying what in its
+// face's words (game/needwords.ts, which the face draws from too); then the saved hands mixes: a mix picked lists the goals it would run to (the dry run of
 // switching to it, or the live view's when it already runs), and a goal picked queues the stint at the end of Next.
 import type { Card, View } from "../api/types";
 import { planCards, queueFull, queueStint, whenReady } from "../game/queue";
 import { isTownMix } from "../game/town";
 import { UI } from "../game/text";
-import { waitWords } from "../game/waitwords";
+import { waitWords } from "../game/needwords";
 import { el, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 import { goalPicker } from "./stint";
