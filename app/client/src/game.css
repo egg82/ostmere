@@ -331,8 +331,9 @@ body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress
 .line .new-dot { top: .55rem; left: auto; right: .3rem; }   /* inside .line, which clips its overflow, in the right gutter its padding keeps for it, so it never covers the amount and nothing moves when it comes */
 .glow { position: relative; z-index: 1; }
 .glow::after { content: ""; position: absolute; inset: -4px; pointer-events: none; border: 1px solid var(--ember-hot); border-radius: 2px; }
-.game:has(.asks:not([hidden])) .glow::after { display: none; }   /* a waiting ask holds the one outline */
+.game:has(.asks:not([hidden])) .glow:not(.strip)::after { display: none; }   /* a waiting ask holds the one outline; the strip's, lit for a return's first line (ui/stripglow.ts), is brief and stays */
 .card-tap.glow::after { inset: -4px; }
+.strip.glow::after { inset: 0; }   /* the strip runs to the screen's edges on a phone: its ring is drawn inside it */
 
 /* skills */
 .skills { display: flex; flex-direction: column; gap: .5rem; }
