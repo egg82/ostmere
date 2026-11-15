@@ -125,6 +125,12 @@ and you tune it, then hit go.
 - **Saving a mix never changes which mix runs** (a new mix took over, and getting back to Main took working
   out). Running a mix is its own tap, in the Mixes list, which says which one runs and offers `Run` on the rest. It is
   the hands' version of "a saved mix never quietly starts doing something else".
+- **The hands strip's bar always shows what the hands are actually doing** (owner: Rest sat at "1s remaining" for minutes while
+  a planned build held the hands, findable only by scrolling to its card). While a tap holds the hands, whoever started
+  it, the bar is that card alone with its time left and a small "then {mix}" names what the hands go back to; a rule's
+  or a goal stint's mix is the bar while it runs, with where it lets go and "then {mix}". When the holder lets go, the
+  mix returns. Nothing says "paused because…", on a card or the strip: the bar already shows what runs
+  (`docs/design/opening-screen.md`, "The hands strip").
 - One mechanism for both layers: your mix runs your day, the town's mix runs its buildings and people.
 
 ## Automation is designed, not clicked
