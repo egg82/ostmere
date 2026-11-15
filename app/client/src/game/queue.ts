@@ -25,9 +25,20 @@ export function queueFull(catalog: Catalog, view: View): boolean {
 
 /** Whether `card` would be offered "When ready" if the queue had room. */
 export function queueable(catalog: Catalog, view: View, card: Card): boolean {
-  return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action" && keptReadyAt(view, card, catalog.content.scales.quantity_per_item) !== null
-    && !waitsOnUnseen(view, card)
+  return plannableStep(catalog, view, card) && keptReadyAt(view, card, catalog.content.scales.quantity_per_item) !== null && !waitsOnUnseen(view, card);
+}
+
+/** A step "When ready" could take, whatever it waits on: after the end, not an action, short of its cap, not queued. */
+function plannableStep(catalog: Catalog, view: View, card: Card): boolean {
+  return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action"
     && (card.cap === null || card.completions < card.cap) && !queuedCards(view).includes(card.card);
+}
+
+/** "When ready" on card `id`, from its face or from Plan: the queue with one tap of it at the end, or null when it is
+ * not offered. The one way the page puts a card in the queue. */
+export function whenReady(catalog: Catalog, view: View, id: string): Decision | null {
+  const card = view.cards.find((c) => c.card === id);
+  return card !== undefined && canQueue(catalog, view, card) ? queueTap(view, card) : null;
 }
 
 /** The queue with one more tap of `card` at its end, held until that tap completes. */

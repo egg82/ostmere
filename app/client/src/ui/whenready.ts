@@ -4,7 +4,7 @@
 // "in Next" mark, so the card does not change size under the finger. The first time it is on show it takes the one
 // glow (once a page session), the queue's taught step.
 import type { Card, View } from "../api/types";
-import { canQueue, queuedCards, queueable, queueFull, queueTap } from "../game/queue";
+import { canQueue, queuedCards, queueable, queueFull, whenReady } from "../game/queue";
 import { UI } from "../game/text";
 import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
@@ -21,12 +21,11 @@ export class WhenReady {
     b.type = "button";
     b.hidden = true;
     b.addEventListener("click", () => {
-      const view = this.view;
-      const live = view?.cards.find((c) => c.card === card);
-      if (!view || !live || !canQueue(this.ctx.catalog, view, live)) return;
+      const decision = this.view === null ? null : whenReady(this.ctx.catalog, this.view, card);
+      if (decision === null) return;
       tapFeedback();
       this.ctx.actions.orderSent(node);
-      this.ctx.actions.decide(queueTap(view, live));
+      this.ctx.actions.decide(decision);
     });
     return b;
   }
