@@ -13,6 +13,7 @@ import dayeight_made as made
 import dayeight_poses as poses
 import dayeight_world as world
 import dayeleven_layers as d11
+import daythree_layers as d3
 import daytwelve_layers as d12
 import dayfour_made as day4
 import dayfour_poses as day4_poses
@@ -30,7 +31,9 @@ N4_JOBS = "running:n4_cord"
 STRIPPED = "store:e2_clock"
 """Holds while E2's strip runs: the rack's hang is gone for its hour."""
 CLOSED, SAFETY = "feature:ring_closed", "feature:safety"
-ROOFS = {"bay": "store:bay", "bay2": "store:bay2", "lean_to": "feature:lean_to", "n1_shelter": "feature:n1_shelter",
+BAY2_BUILT = "project:make_bay2|project:n3_build_bay"
+"""The second bay, once either lane has built it (its store is never unlocked, so the page's ledger never lists it)."""
+ROOFS = {"bay": d3.BAY_BUILT, "bay2": BAY2_BUILT, "lean_to": "feature:lean_to", "n1_shelter": "feature:n1_shelter",
          "woodshed": "pushes:woodshed@3", "rack_roof": "pushes:rack_roof@2"}
 """Each roof the ash lies on, and what shows it."""
 
@@ -64,7 +67,7 @@ def made_layers() -> list[Layer]:
         Layer(id="ash_heap", img=made.ash_heap(), when="store:ash"),
         *[Layer(id=f"ashed_{n}", img=made.ashed(n), when=f"store:ashed_ground&pushes:n3_dig_bed@{n}") for n in (1, 2, 3)],
         Layer(id="snare_4", img=made.snare_4(), when="action:snare_4"),
-        *[Layer(id=f"roof_ash_{r}", img=world.roof_ash(img), when=f"chip:ash_laden&{ROOFS[r]}")
+        *[Layer(id=f"roof_ash_{r}", img=world.roof_ash(img), when="|".join(f"chip:ash_laden&{c}" for c in ROOFS[r].split("|")))
           for r, img in _roofs().items()],
     ]
 
