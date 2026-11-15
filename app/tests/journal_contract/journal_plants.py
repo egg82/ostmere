@@ -8,6 +8,7 @@ type Edit = tuple[str, str, str]
 J, H, L, N = "journal.py", "journal_composer/history.py", "journal_composer/ledger.py", "journal_composer/numbers.py"
 B, T, O = "journal_composer/bag.py", "journal_composer/telling.py", "journal_composer/owed.py"
 W, D = "journal_composer/own.py", "journal_composer/day.py"
+MK = "journal_composer/marks.py"
 
 KEY = 'sha256(f"{save_id}|journal|{day}|{subject}|{purpose}"'
 HEAD = "    head = [*caught, *(c.telling for c in written)]"
@@ -181,6 +182,45 @@ PLANTS: dict[str, list[Edit]] = {
                       ' and n.slot in ("first", "repeat", "catchup", "misremember", "mention") and n.key in'
                       " (*s.first, *s.repeat, *s.catchup, *s.misremember, *(k for b in s.mention for k in b.keys)))"
                       " + (s.id in caught)")],
+    "59a": [(MK, 'roll(save_id, day, k, "mark")', 'roll(save_id, day, next((s.id for s in subjects if s.mark == k), k), "mark")')],
+    "59b": [(MK, 'roll(save_id, day, k, "mark")', 'roll(save_id, 0, k, "mark")')],
+    "59c": [(MK, 'roll(save_id, day, k, "mark")', 'roll(0, day, k, "mark")')],
+    "59d": [(MK, 'roll(save_id, day, k, "mark")', 'roll(save_id, day, k, "write")')],
+    "59e": [(MK, 'roll(save_id, day, k, "mark") < getattr(habits.marks, k)', 'roll(save_id, day, k, "mark") > getattr(habits.marks, k)')],
+    "59f": [(MK, 'roll(save_id, day, k, "mark") < getattr(habits.marks, k)', 'roll(save_id, day, k, "mark") < 1 - getattr(habits.marks, k)')],
+    "59g": [(MK, 'getattr(habits.marks, k)', 'habits.marks.smudge')],
+    "60a": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset()')],
+    "60b": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset({"correction"})')],
+    "60c": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset({"late"})')],
+    "61a": [(MK, "n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked}", "n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked}"
+              " | {s.mark for s in subjects if s.mark is not None and s.id not in {n.subject for n in notes}}")],
+    "61b": [(MK, "s.id: s.mark for s in subjects if s.mark is not None}", 's.id: s.mark or "smudge" for s in subjects}')],
+    "61c": [(MK, "    if any(n.slot ==", "    held |= set(marked.values())\n    if any(n.slot ==")],
+    "62a": [(MK, 'if any(n.slot == "catchup" for n in notes):', "if notes:")],
+    "E3": [(MK, 'roll(save_id, day, k, "mark") < getattr(habits.marks, k)', 'roll(save_id, day, k, "mark") <= getattr(habits.marks, k)')],
+    "E4": [(MK, 'if any(n.slot == "catchup" for n in notes):', 'if any(n.slot == "catchup" for n in notes) or not notes:')],
+    "62c": [(MK, 'if any(n.slot == "catchup" for n in notes):', "if False:")],
+    "62d": [(MK, 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})', 'ABOUT_ANOTHER_DAY = frozenset({"late", "correction", "catchup"})')],
+    "63a": [(MK, "[k for k in MARK_KINDS\n                             if k in held", "[k for k in dict.fromkeys(n_k for n in notes for n_k in [marked.get(n.subject)] if n_k)\n                             if k in held")],
+    "63b": [(MK, "[k for k in MARK_KINDS\n                             if k in held", "[k for k in dict.fromkeys(s.mark for s in subjects)\n                             if k in held")],
+    "63c": [(MK, "    drawn: list[MarkKind] = [k for k in MARK_KINDS\n                             if k in held and",
+                "    drawn: list[MarkKind] = [k for n in notes if n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked\n"
+                "                             for k in [marked[n.subject]] if")],
+    "64a": [(MK, "    drawn: list[MarkKind] = [k for k in MARK_KINDS\n                             if k in held and",
+                "    drawn: list[MarkKind] = [k for k in [k for k in MARK_KINDS if k in held][:habits.marks_most]\n                             if")],
+    "64b": [(MK, "return tuple(drawn[:habits.marks_most])", "return tuple(drawn)")],
+    "64c": [(MK, "return tuple(drawn[:habits.marks_most])", "return tuple(drawn[:habits.marks_most + 1])")],
+    "64d": [(MK, "return tuple(drawn[:habits.marks_most])", "return tuple(drawn[:max(0, habits.marks_most - 1)])")],
+    "65a": [(D, "        return ComposedDay(day, (), gap)\n",
+                "        return ComposedDay(day, (), gap, marks(save_id, day, tuple(note(save_id, composed, t) for t in"
+                " catchups(composed, history, subjects)), subjects, habits))\n")],
+    "E5": [(D, "        return ComposedDay(day, (), None)\n",
+                "        return ComposedDay(day, (), None, marks(save_id, day, tuple(note(save_id, composed, t) for t in"
+                " [*caught, *(c.telling for c in musts)]), subjects, habits))\n")],
+    "66a": [(D, LEFT, "    left = max(0, room - len(caught) - len(musts) - len(fixes) - (1 if any(s.mark for s in subjects) else 0))")],
+    "66b": [(D, "    return ComposedDay(day, notes, None, marks(save_id, day, notes, subjects, habits))",
+                "    drawn = marks(save_id, day, notes, subjects, habits)\n"
+                "    return ComposedDay(day, notes[1:] + notes[:1] if drawn else notes, None, drawn)")],
     "E1": [(D, '"write") < c.care * diligent]', '"write") <= c.care * diligent]')],
     "E2": [(B, "    return min(unused, key=lambda k:", "    return max(unused, key=lambda k:")],
 }

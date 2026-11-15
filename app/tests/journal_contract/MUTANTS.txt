@@ -122,9 +122,12 @@ Equivalent (no test can tell them apart)
  E2 bag order   any bag order that completes each round before repeating: statement 19 fixes rounds, not which
                  key comes first in a round.
  E3 <= mark    `roll <= rate` for a mark: differs only when a draw equals the rate exactly (as E1).
+ E4 smudge, none  `marks` called with no notes holding smudge: `compose` calls it only with a day's notes, so a
+                 day with no notes never reaches it (a gap or blank returns first).
+ E5 blank marks   marks drawn on a blank day from its musts: a blank day has no musts (a must is always a head note).
 
 Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 99 variants
-covering the 58 rows, each row's alternatives planted on their own as 2a, 2b, ...)
+covering rows 1-58 (rows 59-66 add 28 plants, all killed; E4 and E5 survive the whole suite), each row's alternatives planted on their own as 2a, 2b, ...)
  99 of 99 killed; rows caught: 58 of 58.
  35d           killed by test_journal_budget's care-over-order-roll keep, the one case where the two disagree.
  58a           killed by test_journal_forward's day of only removed subjects' notes.
