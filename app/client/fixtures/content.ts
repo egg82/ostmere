@@ -247,6 +247,7 @@ const text: Record<string, string> = {
   "ui.mix.name": "Name", "ui.mix.name_reserved": "Pick a name that doesn't start with “{prefix}”.", "ui.mix.name_taken": "Another mix has this name.",
   "ui.mix.add": "Add",
   "ui.mix.per_minute": "per minute",
+  "ui.mix.forecast_unknown": "No forecast yet. Trying again.",
   "ui.mix.now": "now",
   "ui.mix.after": "after",
   "ui.goal.head": "goals", "ui.goal.store": "{store} {n}", "ui.goal.store_share": "{store} at {n}", "ui.stint.or_until": "or until", "ui.goal.level": "{skill} {n}", "ui.goal.never": "never",

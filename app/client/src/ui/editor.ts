@@ -25,6 +25,7 @@ import { ShareBar } from "./sharebar";
 import { stintParts } from "./stint";
 
 const PREVIEW_MS = 150;
+const RETRY_MS = 2000;
 
 export class MixEditor {
   readonly root = el("section", "editor");
@@ -46,8 +47,13 @@ export class MixEditor {
   /** A new mix made for this rule (a rule slot's picker in the Rules tab): saving points the rule at it. */
   private forRule: number | null = null;
   private local: Mix | null = null;
+  /** Counts openings, so an answer for an edit that has since been closed or replaced is dropped. */
   private seq = 0;
   private timer = 0;
+  private flying = false;
+  private stale = false;
+  /** The last preview got no answer (a refused or failed request): the totals say so and it is asked again. */
+  private unknown = false;
   private asking = false;
 
   constructor(
@@ -107,6 +113,8 @@ export class MixEditor {
     this.view = view;
     this.from = from;
     this.forRule = forRule;
+    this.seq++;
+    this.unknown = false;
     this.local = structuredClone(mix);
     this.nameInput.value = mix.id;
     this.asking = this.picking = false;
@@ -119,6 +127,7 @@ export class MixEditor {
 
   close(): void {
     this.root.hidden = true;
+    this.seq++;
     this.local = null;
     this.ctx.actions.highlight(null);
     this.closed();
@@ -208,9 +217,12 @@ export class MixEditor {
     this.close();
   }
 
+  /** Asks for a preview of the edit as it stands, at most one at a time and one per PREVIEW_MS, so a drag that never
+   * pauses still sees its numbers move; an answer is shown when it lands and the next one asked for if the edit moved on. */
   private schedule(): void {
-    window.clearTimeout(this.timer);
-    this.timer = window.setTimeout(() => void this.preview(), PREVIEW_MS);
+    this.stale = true;
+    if (this.timer || this.flying) return;
+    this.timer = window.setTimeout(() => { this.timer = 0; void this.preview(); }, PREVIEW_MS);
   }
 
   private async preview(): Promise<void> {
@@ -218,14 +230,20 @@ export class MixEditor {
     const edited = this.edited();
     const mix = edited && view ? this.runnable(edited, view) : null;
     if (!view || !mix || mix.components.length === 0 || !this.open) return;
-    const seq = ++this.seq;
+    this.stale = false;
+    this.flying = true;
+    const seq = this.seq;
     const runs = mix.id === view.running_mix_id || mix.id === view.active_mix_id;   // the same rule as saveDecisions' switch
     const decisions = runs ? [{ kind: "save_mix" as const, mix }] : [{ kind: "save_mix" as const, mix }, { kind: "switch_mix" as const, mix_id: mix.id }];
     const after = await this.ctx.actions.dryRun(decisions);
+    this.flying = false;
     if (seq !== this.seq || !this.open) return;
     this.after = after;
+    this.unknown = after === null;
     this.drawEntries();
     this.drawTotals();
+    if (this.unknown) this.timer = window.setTimeout(() => { this.timer = 0; void this.preview(); }, RETRY_MS);
+    else if (this.stale) this.schedule();
   }
 
   private draw(): void {
@@ -269,7 +287,8 @@ export class MixEditor {
     const { view, after, from } = this;
     if (!view) return;
     const { catalog } = this.ctx;
-    this.totals.replaceChildren(...totalsRows(catalog, view, after, from), ...goalRows(catalog, view, after, afterHead(catalog, view, from)));
+    const unknown = this.unknown ? [el("p", "totals-unknown", catalog.text.get(UI.forecastUnknown))] : [];
+    this.totals.replaceChildren(...unknown, ...totalsRows(catalog, view, after, from), ...goalRows(catalog, view, after, afterHead(catalog, view, from)));
     const off = this.save.disabled || queueFull(catalog, view);
     this.stint.hidden = this.forRule !== null;
     this.stint.replaceChildren(...stintParts(catalog, after, this.picking, off, () => { this.picking = !this.picking; this.drawTotals(); }, (r) => this.runUntil(r)));
