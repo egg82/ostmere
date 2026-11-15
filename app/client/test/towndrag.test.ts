@@ -55,8 +55,8 @@ function opened(view: View) {
     [["chop", 5000], ["haul", 4500], ["hew", 7000], ["carve", 2000]]);
 }
 
-{  // Add is enabled exactly when the card could join, and joins with all the idle there is when it is under half
-  for (const rest of [MIN_SHARE_BP - 100, MIN_SHARE_BP]) {
+{  // Add is enabled exactly when the card could join, and joins with all the idle there is when that is under half
+  for (const rest of [0, 300, MIN_SHARE_BP]) {
     const mix = (m: Mix): Mix => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "hew").map((c) => (c.kind === "card_share" && c.card === "carve" ? { ...c, share_bp: 10_000 - rest } : c)) });
     const { editor, person } = opened({ ...both, mixes: both.mixes.map((m) => (m.id === "town:main" ? mix(m) : m)) });
     const add = person(1).querySelector('.town-add[data-card="hew"]') as FakeEl;
