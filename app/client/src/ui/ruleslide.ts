@@ -2,6 +2,7 @@
 // its new order, each row that changed place is set back at its old top, then released to slide home on --settle-ms and
 // --settle-ease (.slide in game.css, which the reduced-motion block turns into an instant change). Under reduced motion
 // nothing is set up at all.
+import type { Decision, View } from "../api/types";
 import { reducedMotion } from "./dom";
 
 /** Where each rule that changes place lands: new index -> old index, for rule `index` moved to where rule `to` stands
@@ -47,5 +48,24 @@ export function slide(root: HTMLElement, tops: ReadonlyMap<number, number>, shif
       n.style.transform = "";
       n.addEventListener("transitionend", () => n.classList.remove("slide"), { once: true });
     }
+  }
+}
+
+/** A reorder sent and not yet drawn: the rows' tops before it, where each moved rule lands, and the set_orders the redraw
+ * waits for. */
+export class Slider {
+  private sent: { tops: Map<number, number>; shift: Map<number, number>; orders: string } | null = null;
+
+  constructor(private readonly root: HTMLElement) {}
+
+  arm(decision: Decision, shift: Map<number, number> | undefined): void {
+    if (shift && shift.size > 0 && decision.kind === "set_orders") this.sent = { tops: rowTops(this.root), shift, orders: JSON.stringify(decision.orders) };
+  }
+
+  /** Called after each redraw: slides once the view holds the order that was sent. */
+  play(view: View): void {
+    if (!this.sent || JSON.stringify(view.orders) !== this.sent.orders) return;
+    slide(this.root, this.sent.tops, this.sent.shift);
+    this.sent = null;
   }
 }

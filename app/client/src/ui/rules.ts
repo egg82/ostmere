@@ -11,7 +11,7 @@ import type { Condition, Decision, RuleRun, View } from "../api/types";
 import { chipOf, mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
 import { UI } from "../game/text";
 import { actionsOf, ruleActions, ruleCondition } from "../game/guardwords";
-import { rowTops, shiftOf, slide } from "./ruleslide";
+import { Slider, shiftOf } from "./ruleslide";
 import { noteOrderRemoved, noteRuleChanged } from "../telemetry";
 import { ConditionEditor } from "./condition";
 import { el, tapFeedback } from "./dom";
@@ -52,8 +52,7 @@ export class RulesTab implements Part {
   /** The rule whose handle takes focus after the next draw (it was moved by a key). */
   private focus: number | null = null;
   private readonly drag: RuleDrag;
-  /** A reorder sent and not yet drawn: the rows' tops before it, where each moved rule lands, and the set_orders the redraw waits for. */
-  private slid: { tops: Map<number, number>; shift: Map<number, number>; orders: string } | null = null;
+  private readonly slider = new Slider(this.root);
   /** A press is down inside the tab: a redraw waits for it, so the node under the finger stays. */
   private pressing = false;
 
@@ -63,10 +62,7 @@ export class RulesTab implements Part {
     this.plan = new StintPlan(ctx, () => this.draw());
     this.drag = new RuleDrag({
       root: this.root, view: () => this.view, group: (view, rule) => this.groupOf(view, rule),
-      dropped: (what, target) => {
-        const group = this.groupOf(this.view!, what.rule), to = Number(target.dataset.rule);
-        this.send(reorderRule(this.view!, what.rule, to, group), shiftOf(group, what.rule, to));
-      },
+      dropped: (what, target) => this.send(reorderRule(this.view!, what.rule, Number(target.dataset.rule), this.groupOf(this.view!, what.rule)), shiftOf(this.groupOf(this.view!, what.rule), what.rule, Number(target.dataset.rule))),
       ended: () => { this.pressing = false; this.draw(); },
     });
     this.root.append(this.list, this.lanes, this.lately);
@@ -134,7 +130,7 @@ export class RulesTab implements Part {
 
   private send(decision: Decision | null, shift?: Map<number, number>): void {
     if (decision === null) return;
-    if (shift && shift.size > 0 && decision.kind === "set_orders") this.slid = { tops: rowTops(this.root), shift, orders: JSON.stringify(decision.orders) };
+    this.slider.arm(decision, shift);
     tapFeedback();
     noteRuleChanged();
     this.ctx.actions.decide(decision);
@@ -157,14 +153,9 @@ export class RulesTab implements Part {
     this.list.replaceChildren(...rows, ...nextRows(this.ctx, view, this.plan), this.otherwiseRow(view), ...write);
     this.lanes.replaceChildren(...townSection(this.ctx, view, this.townRows(view)), ...laneSections(this.ctx, view, (i) => this.condButton(view, i)));
     this.lately.replaceChildren(...latelyRows(this.ctx.catalog, view, this.ctx.ruleRuns()));
-    if (this.slid && JSON.stringify(view.orders) === this.slid.orders) {
-      slide(this.root, this.slid.tops, this.slid.shift);
-      this.slid = null;
-    }
-    if (this.focus !== null) {
-      this.list.querySelector<HTMLElement>(`.rule-handle[data-rule="${this.focus}"]`)?.focus();
-      this.focus = null;
-    }
+    this.slider.play(view);
+    if (this.focus !== null) this.list.querySelector<HTMLElement>(`.rule-handle[data-rule="${this.focus}"]`)?.focus();
+    this.focus = null;
   }
 
   /** What the town's section needs of the tab: a rule's condition button, a rule's row (the hands' own, ≡ and menu
