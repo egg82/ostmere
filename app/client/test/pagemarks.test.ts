@@ -3,7 +3,7 @@
 import type { JournalDay } from "../src/api/types";
 import { seeded } from "../src/game/fights";
 import type { Page } from "../src/game/journal";
-import { crosses, PAGE_EVENT_MARKS, placeMarks, SOFT_EDGE, wantedOf, type Box, type MarkManifest } from "../src/game/pagemarks";
+import { crosses, PAGE_EVENT_MARKS, placeMarks, REPEAT_APART, REPEAT_TURN, SOFT_EDGE, wantedOf, type Box, type MarkManifest } from "../src/game/pagemarks";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
@@ -53,4 +53,40 @@ const page = (days: number[]): Page => ({ id: `days:${days[0]}`, section: "days"
   const a = JSON.stringify(placeMarks(wanted(5), ART, PAGE, []));
   expect("same again", JSON.stringify(placeMarks(wanted(5), ART, PAGE, [])), a);
   expect("another save differs", JSON.stringify(placeMarks(wanted(6), ART, PAGE, [])) !== a, true);
+}
+
+{  // every mark carries its own seeded transform: a wide spread of turns, both mirrors, scales and opacities, the same each draw
+  const places = Array.from({ length: 300 }, (_, i) => placeMarks(wantedOf(i, page([i]), [day(i, ["soot"])]), ART, PAGE, [])).flat();
+  const angles = places.map((p) => p.angle);
+  expect("turns span the circle", Math.max(...angles) - Math.min(...angles) > 300, true);
+  expect("mirrored both ways", [places.some((p) => p.flipX), places.some((p) => p.flipY)], [true, true]);
+  expect("scale varies", new Set(places.map((p) => p.scale.toFixed(1))).size > 3, true);
+  expect("opacity varies", new Set(places.map((p) => p.opacity.toFixed(2))).size > 20, true);
+  const again = Array.from({ length: 300 }, (_, i) => placeMarks(wantedOf(i, page([i]), [day(i, ["soot"])]), ART, PAGE, [])).flat();
+  expect("same seed, same marks and transforms", JSON.stringify(again), JSON.stringify(places));
+}
+
+{  // an art is not drawn twice on a page while another of its kind is unused
+  for (let s = 0; s < 300; s++) {
+    const placed = placeMarks(wantedOf(s, page([0]), [day(0, [])]), ART, PAGE, []);
+    const srcs = placed.map((p) => p.src);
+    expect(`save ${s}: no art twice`, new Set(srcs).size, srcs.length);
+  }
+}
+
+{  // when the pool is spent, the repeat is mirrored and turned against the first and lies far from it
+  const one: MarkManifest = { wear: [{ src: "wear-1.webp", w: 512, h: 512 }] };
+  const wanted = [{ kind: "wear" as const, key: "a" }, { kind: "wear" as const, key: "b" }];
+  let pairs = 0;
+  for (let s = 0; s < 100; s++) {
+    const [a, b] = placeMarks(wanted.map((w) => ({ ...w, key: `${w.key}${s}` })), one, PAGE, []);
+    if (a === undefined || b === undefined) continue;
+    pairs++;
+    const turn = Math.abs(((b.angle - a.angle + 540) % 360) - 180);
+    expect(`pair ${s}: mirrored against the first`, a.flipX !== b.flipX, true);
+    expect(`pair ${s}: turned away`, turn >= REPEAT_TURN - 1e-6, true);
+    const gap = Math.hypot(a.box.x + a.box.w / 2 - b.box.x - b.box.w / 2, a.box.y + a.box.h / 2 - b.box.y - b.box.h / 2);
+    expect(`pair ${s}: far apart`, gap >= REPEAT_APART * Math.hypot(PAGE.w, PAGE.h), true);
+  }
+  expect("repeats were placed", pairs > 20, true);
 }
