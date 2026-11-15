@@ -118,11 +118,11 @@ export class TownEditor {
     return node;
   }
 
-  /** The card's upside, as its face states it: on a row, and on its Add button before it is a job. */
-  private upside(card: string): HTMLElement[] {
+  /** The card's upside: on a row at its share, and on its Add button, which has no share yet, at the full figure. */
+  private upside(card: string, shareBp?: number): HTMLElement[] {
     const { catalog } = this.ctx;
     const info = catalog.cards.get(card);
-    return info?.upside_key ? [el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp)))] : [];
+    return info?.upside_key ? [el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, (shareBp === undefined ? catalog.format.figures(info.change_bp) : catalog.format.figuresAt(info, shareBp))))] : [];
   }
 
   private cardRow(card: string, bp: number, mix: Mix): HTMLElement {
@@ -143,7 +143,7 @@ export class TownEditor {
     drop.addEventListener("click", () => this.edit(dropTownCard(mix, card)));
     const what = el("span", "town-card-what");   // the card, and what it is for when it says (its upside)
     what.append(el("span", "town-card-name", catalog.cardLabel(card)));
-    what.append(...this.upside(card));
+    what.append(...this.upside(card, bp));
     row.append(what, step(-1, "−"), el("span", "town-card-share", catalog.format.share(bp)), step(1, "+"), drop);
     return row;
   }

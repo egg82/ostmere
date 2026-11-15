@@ -5,6 +5,9 @@ stage that shows them together. Boxes come from the placing constants and the si
 import sys
 from pathlib import Path
 
+import pytest
+from PIL import Image
+
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
 import dayone_world as world   # tools/scene, on the path from the line above
@@ -73,3 +76,18 @@ def test_the_check_sees_an_overlap_when_there_is_one():
     assert meets(stone(ON_TRACK[0] - 16, ON_TRACK[1] - 20), figure())
     assert not meets(stone(ON_TRACK[0] + 40, ON_TRACK[1] - 20), figure())
     assert len(props()) >= 10
+
+
+def test_the_hunt_shows_the_figure_where_laying_track_does(monkeypatch: pytest.MonkeyPatch):
+    """The hunt's figure is the away figure out on the track, spear in hand, not one standing at the gap's mouth."""
+    import dayfour_poses as poses
+    spear, away = Image.new("RGBA", (2, 9)), Image.new("RGBA", (3, 3))
+    seen: list[Image.Image | None] = []
+
+    def fake_away(held: Image.Image | None = None) -> Image.Image:
+        seen.append(held)
+        return away
+
+    monkeypatch.setattr(poses, "spear", lambda: spear)
+    monkeypatch.setattr(poses, "away_on_the_track", fake_away)
+    assert poses.hunting() is away and seen == [spear]

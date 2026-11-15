@@ -247,6 +247,7 @@ const text: Record<string, string> = {
   "ui.mix.name": "Name", "ui.mix.name_reserved": "Pick a name that doesn't start with “{prefix}”.", "ui.mix.name_taken": "Another mix has this name.",
   "ui.mix.add": "Add",
   "ui.mix.per_minute": "per minute",
+  "ui.mix.forecast_unknown": "No forecast yet. Trying again.",
   "ui.mix.now": "now",
   "ui.mix.after": "after",
   "ui.goal.head": "goals", "ui.goal.store": "{store} {n}", "ui.goal.store_share": "{store} at {n}", "ui.stint.or_until": "or until", "ui.goal.level": "{skill} {n}", "ui.goal.never": "never",
@@ -351,7 +352,7 @@ export const TIRED = low("energy", 3, 6);
 const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woodcutting: ["damp_wood"], rest: ["energy"], smoke_catch: ["smoked"], smoke_roots: ["smoked"], forage: ["roots"] };
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs,
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], kept: [], work_s: 5, inputs,
   makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), drains: [], skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
