@@ -1,70 +1,14 @@
-"""The opening's drip (docs/decisions.md, "The opening is fun first"): no gate counts taps (an authoring rule), either
-craft first reaches the end, and tapping extra early never reaches the end sooner than its steps. How the opening
-moves (effort between new things, runs of taps, what a day away opens, how the crafts show) is its readout
-(report.py), never a threshold."""
-from dataclasses import replace
-
+"""The opening's drip (docs/decisions.md, "The opening is fun first"): either craft first reaches the end, and tapping
+extra early never reaches the end sooner than its steps. The one check on gates and repeated taps is test_tap_gates.py.
+How the opening moves (effort between new things, runs of taps, what a day away opens, how the crafts show) is its
+readout (report.py), never a threshold."""
 import pytest
 
-from ashfall_app.engine import (
-    AtLeast, AtMost, CardCount, CardId, Condition, Flow, Rules, SkillLevel, StoreId, StoreValue, TriggerDef, TriggerId,
-    TapCard, UnlockKind, advance_logged, decide_logged,
-)
-from tests.opening.playthrough import CRAFTS, Player, opening_rules
+from ashfall_app.engine import CardId, TapCard, UnlockKind, advance_logged, decide_logged
+from tests.opening.playthrough import CRAFTS, Player
 from tests.opening.routes import EagerForager
 
 pytestmark = pytest.mark.playthrough
-
-# ---------- no gate counts taps ----------
-
-def counted_gates(rules: Rules) -> list[str]:
-    """Every gate that counts repeats of one card: a CardCount above 1 on an uncapped card or above a capped card's
-    cap, a trigger on a store only one repeatable card makes (a standing action making it too is another maker), and a
-    skill level that opens anything (a level pays a find, never an opening)."""
-    caps = {c.id: c.cap for c in rules.cards}
-    makers: dict[StoreId, list[CardId]] = {}
-    for c in rules.cards:
-        for store in {f.store for f in c.makes} | {a.store for a in c.outcome.stores}:
-            makers.setdefault(store, []).append(c.id)
-    standing_made = {f.store for a in rules.standing for f in a.makes}
-    conditions: list[tuple[str, Condition]] = [(f"trigger {t.id}", t.when) for t in rules.triggers]
-    conditions += [(f"card {c.id}", r) for c in rules.cards for r in c.requires]
-    conditions += [(f"chip {c.id}", c.when) for c in rules.chips]
-    found: list[str] = []
-    for where, cond in conditions:
-        if not isinstance(cond, (AtLeast, AtMost)):
-            continue
-        s = cond.subject
-        if isinstance(s, CardCount) and cond.value > (caps[s.card] or 1):
-            found.append(f"{where} counts {cond.value} of {s.card}")
-        if where.startswith("trigger") and isinstance(s, StoreValue) and isinstance(cond, AtLeast):
-            only = makers.get(s.store, [])
-            if len(only) == 1 and caps[only[0]] is None and s.store not in standing_made:
-                found.append(f"{where} counts {s.store}, made only by {only[0]}")
-    found += [f"trigger {t.id} opens at a level" for t in rules.triggers
-              if isinstance(t.when, AtLeast) and isinstance(t.when.subject, SkillLevel) and t.outcome.unlocks]
-    return found
-
-
-def test_no_gate_counts_taps_of_one_card():
-    assert counted_gates(opening_rules()) == []
-
-
-@pytest.mark.parametrize("when", [
-    AtLeast(CardCount(CardId("gather_wood")), 6, 6),
-    AtLeast(CardCount(CardId("clear_spot")), 3, 3),
-    AtLeast(StoreValue(StoreId("planted_store")), 10 * 3_600_000, 10 * 3_600_000),   # the one card that makes it
-])
-def test_the_gate_check_catches_a_count(when: AtLeast):
-    """The probe can fail: v1's kind of gate, added to the shipped rules, is reported. The store of the last case is
-    made by one uncapped card planted here, so no shipped card's second maker can take the case away."""
-    rules = opening_rules()
-    maker = next(c for c in rules.cards if c.cap is None)
-    cards = tuple(replace(c, makes=(*c.makes, Flow(StoreId("planted_store"), 1))) if c is maker else c for c in rules.cards)
-    planted = replace(rules, cards=cards,
-                      triggers=(*rules.triggers, TriggerDef(TriggerId("t_planted"), when, rules.triggers[0].outcome)))
-    assert [g for g in counted_gates(planted) if "t_planted" in g]
-
 
 # ---------- the choice ----------
 

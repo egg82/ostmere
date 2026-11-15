@@ -152,14 +152,15 @@ unlocks = [
   { unlock_kind = "feature", id = "combat" },
 ]
 
-# The lamps' clock starts with the sign (t_bear_sign's condition, so one moment).
+# Hours since the bear's sign, starting with it (t_bear_sign's condition, so one moment). Nothing reads it; its ids are
+# released, so it stays (opening/lock_checks.py).
 [[triggers]]
 id = "t_sign_clock"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "bear_season", value = 1 }]
 outcome = { unlocks = [{ unlock_kind = "action", id = "sign_clock" }] }
 
-# Never drawn: hours since the bear's sign (SL20), the lamps' clock.
+# Never drawn: hours since the bear's sign (SL20).
 [[stores]]
 id = "sign_clock"
 label_key = "store_sign_clock"
@@ -230,10 +231,10 @@ sketch = "gutter_knot"
 
 # ---------- SL21: lamps at the gate ----------
 
-# Fifteen hours after the bear's sign, on its clock.
+# When the bear's fat is in: tallow 2, one won hunt's, so the line and the lamps' card arrive with what they take.
 [[triggers]]
 id = "t_lamps"
-when = { test = "at_least", subject_kind = "store", id = "sign_clock", value = 15 }
+when = { test = "at_least", subject_kind = "store", id = "tallow", value = 2 }
 outcome = { line_keys = ["l_lamps"], unlocks = [{ unlock_kind = "card", id = "tallow_lamps" }] }
 
 # Three stages, the last holding the gap; run by its order card, as hide_flaps is.
@@ -519,10 +520,9 @@ outcome = { line_keys = ["l_s4_1", "l_s4_2", "l_s4_3"], unlocks = [{ unlock_kind
 # ---------- the slow skills' methods ----------
 
 # A method each for Cooking, Arcana and Melee (their rates: docs/decisions.md, "Finite, and the walls are the
-# world"), each
-# opened on a moment the chapter already has (o_cold_air's, the bear's sign, B12) whether or not an ask is answered;
-# never on a level ("No gate counts taps"). Melee's levels speed the hunt, and pelt has no sink in week two, so spar
-# runs only from night 14, with sit_last_night.
+# world"), each opened on a moment the chapter already has (o_cold_air's, the bear's sign, B12) whether or not an ask
+# is answered. Melee's levels speed the hunt, and pelt has no sink in week two, so spar runs only from night 14, with
+# sit_last_night.
 [[triggers]]
 id = "t_broth_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }

@@ -34,8 +34,7 @@ the town's mix; B7, combat by a story fight; day six, the hunt, gear, the pests'
 **What changed from day three's outline, and why:**
 
 1. **L2's gate.** Day three set n₃ (wolf sign) at a run count of the track, which typical reaches a day before B5. L2
-   lands two game hours after L1 instead, so it falls in day four on every route and counts no runs (`decisions.md`,
-   "No gate counts taps").
+   lands two game hours after L1 instead, so it falls in day four on every route.
 2. **The day's length.** Story days 5, 6 and 7 end on a clock with a floor in save time (`after_time`), not on a long
    build: day three already uses the cure-lane idiom for its floor, and a second long lay-and-wait would be samey.
    The play-driven gates beside them (B6's Scavenging level, B7's arrivals) are what a sharp setup moves.
@@ -334,7 +333,7 @@ more visits here, filled by Melee and Arcana levels, the comforts and the hunt's
 
 | Id | Visit | Gate | What happens (the facts) | Turn · outcome · register · cost · moves · promise · thread |
 |---|---|---|---|---|
-| G1 | Y3 | `hunt_wolf`'s first finish, won or lost (a fight pays by the share won, so a pelt can take more than one hunt; no gate counts taps) | The first wolf the hunt brings back is alone and starving, ribs like a rack of its own, its teeth worn. It comes back as meat and a pelt. Everything out there is as hungry as the camp. | down · yes_but · grim · time · PC · opens C-promise-22 · th-survive middle |
+| G1 | Y3 | `hunt_wolf`'s first finish, won or lost (a fight pays by the share won, so a pelt can take more than one hunt) | The first wolf the hunt brings back is alone and starving, ribs like a rack of its own, its teeth worn. It comes back as meat and a pelt. Everything out there is as hungry as the camp. | down · yes_but · grim · time · PC · opens C-promise-22 · th-survive middle |
 | G2 | Y6 | night 7 and smoked ≥ 18 | Night 7, the Still's last. The rack is hung again, fuller than before. Five at the fire, Lucy still on the far side of it. Nothing at the edge of the light tonight. The air has changed: for the first time in a week there is a little wind. | up · yes · warm · none · PC, N1 · pays C-promise-22 · th-survive middle |
 
 G2's wind is the Still ending, the calendar's fact; it says nothing of what the Drift brings (B8's). Lucy stays on the
