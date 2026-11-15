@@ -3,7 +3,8 @@
 // data-mix, data-chip or data-store, which the editor reads to mark the one pressed.
 import type { ChipInfo, Order, OrderVerb, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
-import { actionWords, conditionWords, mixLabel, ruleExists } from "../game/orders";
+import { ruleActions, ruleCondition } from "../game/guardwords";
+import { actionWords, mixLabel, ruleExists } from "../game/orders";
 import type { DoChoice } from "../game/ruleoffers";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
@@ -44,8 +45,8 @@ export function whenRow(catalog: Catalog, chips: ChipInfo[], stores: string[], o
  * given, left as it is), the note when the same rule already exists, and Save off until the rule is whole and new. */
 export function footRow(catalog: Catalog, view: View, index: number | null, then: OrderVerb | null, order: Order | null, foot: { sentence: HTMLElement | null; note: HTMLElement; save: HTMLButtonElement }): void {
   const hue = then?.kind === "tap_card" ? catalog.rank(then.card) % 6 : 5;
-  foot.sentence?.replaceChildren(...(then ? [el("span", "", order ? conditionWords(catalog, order.when) ?? "" : ""), " → ",
-    el("b", `rule-action hue-${hue}`, actionWords(catalog, then))] : []));
+  foot.sentence?.replaceChildren(...(then ? [el("span", "", order ? ruleCondition(catalog, order) ?? "" : ""), " → ",
+    el("b", `rule-action hue-${hue}`, order ? ruleActions(catalog, order) : actionWords(catalog, then))] : []));
   const dup = order !== null && ruleExists(view, index, order);
   setText(foot.note, dup ? catalog.text.get(UI.ruleExists) : "");
   foot.save.disabled = order === null || dup;

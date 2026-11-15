@@ -19,6 +19,7 @@ import { draftOrder, editDraft, headingWords, keepOffered, sameRule, storeCap, t
 import { Levels } from "./condlevels";
 import { RuleFact } from "./condfact";
 import { CondFoot } from "./condfoot";
+import { GuardEditor } from "./condguards";
 import { markPressed, sameChoice } from "./condpress";
 import { quickParts, quickTask, quickTest } from "./condquick";
 import { doRow, whenRow } from "./condrows";
@@ -35,6 +36,7 @@ export class ConditionEditor {
   private readonly subject: SubjectControl;
   private readonly more = el("button", "quiet cond-more");
   private readonly fact: RuleFact;
+  private readonly guards: GuardEditor;
   private readonly foot: CondFoot;
   private view: View | null = null;
   private draft: Draft | null = null;
@@ -44,6 +46,7 @@ export class ConditionEditor {
   constructor(private readonly ctx: PartContext, private readonly done: () => void) {
     const { text } = ctx.catalog;
     this.fact = new RuleFact(ctx);
+    this.guards = new GuardEditor(ctx, (unless) => { if (this.draft) { this.draft.unless = unless; this.draw(); } });
     this.foot = new CondFoot(ctx, () => this.drop(), () => this.commit(), () => this.copy());
     const close = el("button", "editor-close", "✕");
     close.type = "button";
@@ -56,7 +59,7 @@ export class ConditionEditor {
     this.more.type = "button";
     setText(this.more, text.get(UI.ruleMoreOptions));
     this.more.addEventListener("click", () => { tapFeedback(); this.showFull(); });
-    const body = el("div", "cond-body"); body.append(head, this.does, this.chips, this.levels.fold.root, this.subject.root, this.fact.root, this.more);   // what scrolls; the foot is outside it
+    const body = el("div", "cond-body"); body.append(head, this.does, this.chips, this.levels.fold.root, this.subject.root, this.fact.root, this.guards.root, this.more);   // what scrolls; the foot is outside it
     this.root.append(body, this.foot.root);
   }
 
@@ -67,7 +70,7 @@ export class ConditionEditor {
     this.full = town;
     const rule = offered ? readRule(offered, this.ctx.catalog.content.scales.quantity_per_item) : null;
     const opened = offered && rule && chipOf(this.ctx.catalog, offered) ? { rule, when: offered } : undefined;
-    this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, town });
+    this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, town, unless: [], orElse: [] });
   }
 
   /** Rule `index` as conditiondraft.editDraft opens it, in the full editor; false for a rule it does not open. */
@@ -224,6 +227,7 @@ export class ConditionEditor {
     this.levels.draw(catalog, rule, this.cap(rule.store), line ? sample(line.segment, view.at) / catalog.content.scales.quantity_per_item : null);
     this.subject.draw(view, draft.chip ? undefined : draft.subject);
     markSubject(this.chips, draft.subject);
+    this.guards.draw(view, draft.unless, this.full);
     this.drawSentence(view);
     this.drawFact();
     this.foot.showDry(view, draft.index, this.order(), draft.town === true);

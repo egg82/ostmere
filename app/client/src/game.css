@@ -680,6 +680,16 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .quick-part:hover .quick-word, .quick-part:focus-within .quick-word { text-decoration-color: var(--ink-hi); }
 .quick-part:has(.quick-select:focus-visible) { outline: 1px solid var(--ink-hi); outline-offset: 3px; }
 .cond-more { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }   /* the way to the full editor */
+.cond-guards, .cond-guard-pick { display: flex; flex-direction: column; gap: .6rem; }   /* Unless (condguards.ts): the guards, an add, and the picker of what a new one watches */
+.cond-guards { padding-top: .9rem; border-top: 1px solid var(--rule); }
+.cond-guards-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; }
+.cond .cond-guards .rules-label { flex: none; }
+.cond-guards-hint, .cond-guard-store { font-size: var(--t-meta); color: var(--ink); }
+.cond-guard { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-guard-words { color: var(--ink-hi); overflow-wrap: anywhere; }
+.cond-guard-what { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.cond-guard-add, .cond-guard-drop { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }
+.cond-guard-done { align-self: flex-start; min-height: 2.75rem; }
 .cond-fact { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
 .cond-fact:empty, .cond-note:empty { display: none; }
 .cond-note { margin: 0; }

@@ -23,6 +23,9 @@ export interface Draft {
   town?: boolean;
   /** A count, a level or a task running, in place of `rule` (whose store is then ""). */
   subject?: SubjectRule;
+  /** The rule's guards, and the fallbacks it keeps as they are (the editor writes guards; fallbacks are not its yet). */
+  unless: Condition[];
+  orElse: OrderVerb[];
 }
 
 export function sameRule(a: StoreRule, b: StoreRule): boolean {
@@ -47,10 +50,12 @@ export function storeCap(catalog: Catalog, view: View | null, store: string): nu
 export function draftOrder(catalog: Catalog, view: View | null, draft: Draft | null, chip: boolean): Order | null {
   if (!draft?.then || !view) return null;
   const then = savedVerb(view, catalog, draft.then);
-  if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, then, unless: [], or_else: [] };
-  if (draft.subject) return { when: buildSubject(catalog, draft.subject), then, unless: [], or_else: [] };
+  if (draft.orElse.some((v) => v.kind !== then.kind)) return null;
+  const rest = { then, unless: draft.unless, or_else: draft.orElse };
+  if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, ...rest };
+  if (draft.subject) return { when: buildSubject(catalog, draft.subject), ...rest };
   if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store))) return null;
-  return { when: draftWhen(draft.rule, draft.opened, catalog.content.scales.quantity_per_item), then, unless: [], or_else: [] };
+  return { when: draftWhen(draft.rule, draft.opened, catalog.content.scales.quantity_per_item), ...rest };
 }
 
 /** The draft rule `index` opens on: a subject rule as set; a store rule at its levels as set, a chip's as the chip, one
@@ -61,13 +66,14 @@ export function editDraft(catalog: Catalog, view: View, index: number): Draft | 
   const { then } = order;
   const town = then.kind === "switch_mix" && view.mixes.some((m) => m.id === then.mix_id && isTownMix(catalog, view, m));
   const subject = readSubject(catalog, order.when);
-  if (subject) return { index, then, rule: defaultRule("", "below", 0), subject, town };
+  const kept = { unless: order.unless, orElse: order.or_else };
+  if (subject) return { index, then, rule: defaultRule("", "below", 0), subject, town, ...kept };
   const rule = storeRule(catalog, order);
   if (!rule) return null;
   const chip = chipOf(catalog, order.when) !== undefined;
   const clamped = chip ? rule : clampRule(rule, storeCap(catalog, view, rule.store));
   const opened = sameRule(clamped, rule) ? { rule, when: order.when } : undefined;
-  return { index, then, rule: clamped, opened, chip, town };
+  return { index, then, rule: clamped, opened, chip, town, ...kept };
 }
 
 /** The editor's heading: a chip's rule as the chip, a rule being changed by what it runs, else "New rule". */

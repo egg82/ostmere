@@ -239,7 +239,7 @@ export function setRule(view: View, index: number | null, order: Order): Decisio
 
 /** Another rule (not `index`) already does exactly this. */
 export function ruleExists(view: View, index: number | null, order: Order): boolean {
-  return view.orders.some((o, i) => i !== index && sameCondition(o.when, order.when) && same(o.then, order.then));
+  return view.orders.some((o, i) => i !== index && sameCondition(o.when, order.when) && same(o.then, order.then) && same(o.unless, order.unless) && same(o.or_else, order.or_else));
 }
 
 /** A rule of the player's has been seen on and then off, the same rule in the same place: the step that brings
