@@ -441,7 +441,7 @@ REQUEST LIMITS
   as at 512 entries).
   save_mix: at most 64 components; a save holds at most Content.limits.max_mixes (64) mixes, and a save_mix
   of a new id past that is 422 invalid_decision (replacing a saved mix is always allowed).
-  set_orders: at most Content.limits.max_orders (64) orders. set_queue: at most Content.limits.max_queue (64) entries.
+  set_orders: at most Content.limits.max_orders (64) orders, each with at most Content.limits.max_unless (3) guards; the rule editor stops offering another guard at that. set_queue: at most Content.limits.max_queue (64) entries.
   The page's rules editor and "When ready" stop offering another at those, and say so in one plain line (ui.rule.full,
   ui.queue.full); the mix lists and the mix editor stop offering a new mix at max_mixes, the same way (ui.mix.full); its ledger, chip and repeated-switch rule offers stop at the rules' bound, quietly.
 

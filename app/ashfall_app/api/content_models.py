@@ -28,6 +28,8 @@ class Limits(BaseModel):
     max_orders: int
     max_queue: int
     max_mixes: int
+    max_unless: int
+    """Guards a rule may hold (Order.unless)."""
     reserved_mix_prefix: str
     """A new mix id beginning so is the game's: save_mix of one is a 422 (CONTRACT.txt, "The town's mix")."""
 

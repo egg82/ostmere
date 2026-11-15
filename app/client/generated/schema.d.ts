@@ -1473,6 +1473,8 @@ export interface components {
             max_queue: number;
             /** Max Mixes */
             max_mixes: number;
+            /** Max Unless */
+            max_unless: number;
             /** Reserved Mix Prefix */
             reserved_mix_prefix: string;
         };

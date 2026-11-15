@@ -4258,6 +4258,10 @@
             "type": "integer",
             "title": "Max Mixes"
           },
+          "max_unless": {
+            "type": "integer",
+            "title": "Max Unless"
+          },
           "reserved_mix_prefix": {
             "type": "string",
             "title": "Reserved Mix Prefix"
@@ -4268,6 +4272,7 @@
           "max_orders",
           "max_queue",
           "max_mixes",
+          "max_unless",
           "reserved_mix_prefix"
         ],
         "title": "Limits",
