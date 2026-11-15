@@ -17,9 +17,10 @@ reported, never held to a floor; the one check on them is that they land measura
 
 Two more classes:
 
-- **correct**: content, engine and plumbing doing what they say (lines never repeat, saves load, an authoring rule
-  `decisions.md` states, the chain of saved ends matching today's play). The four invariants are about pacing;
-  correctness was never in question. These keep failing.
+- **correct**: content, engine and plumbing doing what they say, where a failure breaks a **save**, a **contract**
+  (a shape or bound the client or engine relies on), a **figure shown to the player**, or **story order**. Each row
+  names which, in a few words. An authoring rule `decisions.md` states does not qualify on its own: if breaking it
+  harms none of the four, it is taste and its check is a readout. These keep failing.
 - **control**: a planted fault proving an instrument can fail. A control of a counter asserts the count on its planted
   fixture; the controls of the bands went with the bands.
 
@@ -44,9 +45,9 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | O11 | `dayone/growth.py`, `climb_hours` | each skill's climb against the fastest; the 3x band is gone | taste | readout |
 | O12 | `opening/test_second_skill.py`: `test_the_skill_checks_cover_the_new_row_and_pass` | markers paid, no blank level, no runaway | shown + spiral | fails |
 | O13 | `opening/test_phase_pays.py`: work pays are adds | later phases' work pays never multiply | spiral | fails |
-| O14 | same: `test_every_level_of_every_phase_a_track_reaches_pays` | every level a track reaches pays | correct (`decisions.md`, "A level is a thing, not only a number") | fails |
-| O15 | same: no three speed-only levels running, and the loader's refusal | at least every third level brings something named | correct (the same rule, stated for authoring) | fails |
-| O16 | `opening/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct | fails |
+| O14 | same: `test_every_level_of_every_phase_a_track_reaches_pays` | every level a track reaches pays | taste | fails until #112 makes it a readout |
+| O15 | same: no three speed-only levels running, and the loader's refusal | at least every third level brings something named | taste | fails until #109 makes it a readout |
+| O16 | `opening/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct: story order | fails |
 | O17 | `opening/test_first_rule_offer.py` | every route meets a rule offer before the end | babysit (the tool is taught) | fails |
 | O18 | the by_hand player past the end | actions between the offer and the door's glow | taste | readout |
 
@@ -56,7 +57,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 |---|---|---|---|---|
 | D1-D4 | each visit's counters (`dayone/checks.py`, `figures`) and the opening's own row | new and bigger things, the first one's second, decisions, actions, idle, runs, effort | taste | readout |
 | D5 | `checks.absences` | what a day away from each visit opens | taste | readout |
-| D6 | `CHECKS["story_order"]` | day one's beats all land, in authored order | softlock + correct | fails |
+| D6 | `CHECKS["story_order"]` | day one's beats all land, in authored order | softlock + correct: story order | fails |
 | D7 | `checks.near_promise` | returns showing no beat on the near promise | taste | readout |
 | D8 | `dayone/story.py`, `flatcheck` | the content team's story-shape flags on the route | taste | readout |
 | D9 | B3's hours after the end | the typical band and the babysitter's floor are gone | taste | readout |
@@ -64,21 +65,21 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D11 | `CHECKS["queueable"]` | every rate-raising step queueable before it is ready | babysit | fails, on `TOOL_USERS` |
 | D12 | `dayone/goals.py`, `goal_summary` | samples with no driven goal; samples where weighting decides | taste | readout |
 | D13 | `CHECKS["promises"]` | every time the page draws comes true | shown | fails |
-| D14 | `dayone/test_dayone_routes.py`: `test_what_lands_away_is_seen_on_return` | a beat is seen no sooner than it lands | correct | fails |
+| D14 | `dayone/test_dayone_routes.py`: `test_what_lands_away_is_seen_on_return` | a beat is seen no sooner than it lands | correct: story order | fails |
 | D15 | `dayone/test_dayone_two_am.py` | the babysitter given the whenever player's reveals ends level | babysit | fails |
 | D16 | `dayone/test_dayone_cures.py` | every chip shown has a cure on offer | softlock | fails |
 | D17 | `dayone/test_dayone_forecast.py` | the forecast is what advance does | shown | fails |
-| D18 | same: `test_a_forecast_stays_inside_its_budget` | the forecast's cost | correct | fails |
+| D18 | same: `test_a_forecast_stays_inside_its_budget` | the forecast's cost | correct: contract (the forecast the page asks for stays bounded) | fails |
 | D19 | `dayone/test_dayone_invariants.py` | a card showing every need met starts when tapped | shown | fails |
-| D20 | `dayone/test_dayone_aims.py`: `test_every_aim_is_stated_at_some_view` (`dayone/screen.py`) | every declared aim is stated; views with no aim are the readout's | correct + taste | fails; the count is a readout |
+| D20 | `dayone/test_dayone_aims.py`: `test_every_aim_is_stated_at_some_view` (`dayone/screen.py`) | every declared aim is stated; views with no aim are the readout's | shown (a stretch with no stated aim hides the next step) + taste | fails; the count is a readout |
 | D21 | `dayone/screen.py`, `early` | mechanics drawn in the first five minutes | taste | readout |
-| D22 | `dayone/test_dayone_level_pays.py`: `test_no_skill_pays_speed_alone_three_levels_running` | O15's rule on the levels day one reaches | correct | fails |
+| D22 | `dayone/test_dayone_level_pays.py`: `test_no_skill_pays_speed_alone_three_levels_running` | O15's rule on the levels day one reaches | taste | fails until #109 makes it a readout |
 | D23 | `dayone/levelpays.py`, `speed_only_leaves` | leave points naming only a speed level | taste | readout |
 | D24 | `dayone/test_dayone_prestige.py` | a visit clicker ends level with an instant one inside the carry window | babysit | fails |
-| D25 | `dayone/test_dayone_absence.py`: `test_a_longer_absence_never_holds_fewer_arrivals` | a property of the page's arrival queue | correct | fails |
+| D25 | `dayone/test_dayone_absence.py`: `test_a_longer_absence_never_holds_fewer_arrivals` | a property of the page's arrival queue | shown (what a return holds) | fails |
 | D26 | the absence ladder (`dayone/absence.py`) | what a return holds after 1, 8 and 24 h, and each gathered store's cap loss from day one's leave points as D30 reads it (day one's leave points come before the cap rule is taught, so they are read, never checked) | taste | readout |
-| D27 | `dayone/test_dayone_rebase.py`: `test_the_rebased_story_lands_in_order` | a golden ended save's story lands in order; what its load opens is the readout's | correct + taste | fails; the counts are a readout |
-| D28-D29 | the rebase's lines; `dayone/test_dayone_lines.py` | lines are text keys; none repeats | correct | fails |
+| D27 | `dayone/test_dayone_rebase.py`: `test_the_rebased_story_lands_in_order` | a golden ended save's story lands in order; what its load opens is the readout's | correct: a saved end and story order + taste | fails; the counts are a readout |
+| D28-D29 | the rebase's lines; `dayone/test_dayone_lines.py` | lines are text keys; none repeats | correct: contract (text keys the client draws) | fails |
 | D30 | `dayone/capcheck.py` | from a chapter's end, 8 h and 24 h away lose at most `LIMIT` of each gathered store's making | babysit | fails (H4's and two of W7's strict xfails: held below) |
 | D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | the check on players who skip the tools | fails |
 | D32 | the human-paced player's day (`dayone/human_flags.py`) | sessions, dead gaps, bored leaves, earned and fixed-time unlocks | taste | readout |
@@ -89,14 +90,14 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 |---|---|---|---|---|
 | T1 | each visit, with `daytwo/checks.py`, `marks` | day one's counters; the edge of written content and returns during a long wait marked | taste | readout |
 | T2 | `checks.absences` | what each absence between visits opens | taste | readout |
-| T3 | `CHECKS["story_order"]` | day two's beats all land, in order | softlock + correct | fails |
+| T3 | `CHECKS["story_order"]` | day two's beats all land, in order | softlock + correct: story order | fails |
 | T4 | `daytwo/story.py`, `flatcheck2` | story-shape flags on the route | taste | readout |
 | T5-T6 | B4's hours after B3 | the typical band and the babysitter's floor are gone | taste | readout |
 | T7 | `CHECKS["b4_relative"]` | a tool user's B4 lags the babysitter's by its gaps | babysit | fails, on `TOOL_USERS` |
 | T8 | `CHECKS["cap_loss"]` | typical's day-two end, as D30 | babysit | fails |
 | T9 | `daytwo/abs_band.py`, `summary` | each beat from B5 on, its day beside its `target_day` | taste | readout |
 | T10 | `daytwo/test_daytwo_two_am.py` | 2 AM across day two | babysit | fails (a strict xfail: held below) |
-| T11-T13 | `daytwo/test_daytwo_routes.py`, `daytwo/test_daytwo_repeat.py` | beats seen after landing, no repeats, the answered branch's lines, the player model's leave rule, the repeating lane | correct | fails |
+| T11-T13 | `daytwo/test_daytwo_routes.py`, `daytwo/test_daytwo_repeat.py` | beats seen after landing, no repeats, the answered branch's lines, the player model's leave rule, the repeating lane | correct: story order (beats seen after landing) and contract (line keys) | fails |
 | T14 | `daytwo/caps.py`, `lines_of` | each store's share lost to caps as played and away | taste | readout |
 
 ### Day three (job `playthrough`; `daythree/verdicts.py`; readouts `daythree/report.py`)
@@ -118,7 +119,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | W1 | `weekone/test_weekone_routes.py`: `test_the_route_plays_days_four_to_six_to_g2` | each push route reaches G2 | softlock | fails |
 | W2 | `weekone/test_weekone_routes.py` (G1's fight) | the page reads G1's fight as won | shown | fails |
 | W3 | B6 and B7's days | beside their target days; the sharp floor tests went with the band | taste | readout |
-| W4 | `test_night_seven_falls_before_the_seasons_turn` | the story against the calendar | correct | fails |
+| W4 | `test_night_seven_falls_before_the_seasons_turn` | the story against the calendar | correct: story order | fails |
 | W5 | `dayone/daily.py` | each calendar day's arrivals by kind, on typical, sharp and whenever | taste | readout |
 | W6 | each chapter's visits | spend and decide, marked as T1 | taste | readout |
 | W7-W8 | cap loss, as D30; the checks past the sinks, as H5 | | babysit; shown + softlock | fails (W7 on days four and six strict xfails: held below) |
@@ -126,7 +127,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | W10 | `weekone/test_weekone_fights.py`: the same decisions at any visit times end the same | | babysit | fails |
 | W11 | same: building the gear wins more fights | the gear's stated strength comes true | shown | fails |
 | W12-W14 | a store a threat emptied has a card to refill it; fight landings; every chip has a cure | | softlock; shown | fails |
-| W15-W16 | long absence instants; journal notes and line keys | | correct | fails |
+| W15-W16 | long absence instants; journal notes and line keys | | correct: contract (a return resolves in bounded steps; journal and line keys) | fails |
 
 ### Week two (job `playthrough-week-two`; `weektwo/verdicts.py`; readouts `weektwo/report.py`)
 
@@ -142,17 +143,17 @@ One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight),
 | K6-K7 | cap loss, as D30; 2 AM per chapter | | babysit | fails (cap loss on days eight to fifteen and day eight's 2 AM strict xfails: held below) |
 | K8-K9 | a save from the chapter before loads and plays on; every chip has a cure | | softlock | fails |
 | K10 | typical's late store at the ends of days eleven and twelve | | taste | readout |
-| K11-K12 | calendar, a fight pool ending its card, a join's tally, notes, line keys | | correct | fails |
+| K11-K12 | calendar, a fight pool ending its card, a join's tally, notes, line keys | | correct: story order (calendar) and contract (the rest) | fails |
 
 ### Chains, ladder and fixtures
 
 | # | Where | What | Class | Now |
 |---|---|---|---|---|
-| C1 | `weekone_saved/`, `weektwo/test_weektwo_saved.py`, `weekone/test_weekone_export.py` | the saved ends are today's play, link by link | correct | fails |
+| C1 | `weekone_saved/`, `weektwo/test_weektwo_saved.py`, `weekone/test_weekone_export.py` | the saved ends are today's play, link by link | correct: contract (each chapter plays on from the saved end before it) | fails |
 | C2 | `ladder/readout.py` | each skill's ladder, each card's share by day, each skill's XP by source per band of days, and whether one saved mix shape always wins (`ladder/dominance.py`; its control sets in `ladder/test_dominance.py`) | taste | readout, compared in `weektwo/test_ladder_readouts.py` |
 | C3-C6 | `ladder/test_*.py`, `banked/` | the ladder's arithmetic; 2 AM, the checks past the sinks and the sink policies on a fixture chapter | control; babysit | fails |
 | C7 | `worth/readout.py` | what a re-mix is worth per visit on keeper, tuner's moments by cause, the two control routes, moments per visit by week beside the opening's (`worth-a-change.md`) | taste | readout, compared in `weektwo/test_worth_readouts.py` |
-| C8 | `worth/test_measure.py`, `worth/test_summary.py` | the worth measure on a fixture world (a split in proportion worth nothing, a starved goal worth a lot, the first build's measure beside it) and the readout's arithmetic | control; correct | fails |
+| C8 | `worth/test_measure.py`, `worth/test_summary.py` | the worth measure on a fixture world (a split in proportion worth nothing, a starved goal worth a lot, the first build's measure beside it) and the readout's arithmetic | control | fails |
 
 The opening's loader, lock, content-contract and cost tests (`opening/test_released.py`, `opening/test_chapters.py`
 and the like) are content structure, not pacing, and are untouched.
