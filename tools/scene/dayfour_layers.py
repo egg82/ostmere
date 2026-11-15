@@ -112,7 +112,7 @@ def figure_layers(away: str) -> list[Layer]:
         Layer(id="figure_hand_on_stone", img=poses.hand_on_stone(), when=HAND),
         Layer(id="figure_hunting", img=poses.hunting(), when=HUNT),
         *[Layer(id=f"figure_building_{c}", img=build_at(WORK[c]), when=r, until=away) for c, r in COMFORTS.items()],
-        Layer(id="figure_n1_far_side", img=poses.n1_far_side(), when=N1_FAR, until=N1_BUSY, front=True),
+        Layer(id="figure_n1_far_side", img=poses.n1_far_side(), when=N1_FAR, until=N1_BUSY),
         Layer(id="figure_n2_watching", img=poses.n2_watching(), when=d3.N2_WATCH, front=True),
         Layer(id="figure_n3_at_edge", img=poses.n3_at_edge(), when="feature:pair_offer", until="feature:pair_joined", front=True),
         Layer(id="figure_n4_at_edge", img=poses.n4_seated_at_edge(), when="feature:pair_offer", until="feature:pair_joined",
