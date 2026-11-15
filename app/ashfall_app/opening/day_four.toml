@@ -114,8 +114,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "night_5" }] }
 
 # ---------- L2, SL8: the sign on the track, his watch ----------
 
-# L2: L1 + 2 h, so it lands in day four on every route; never a count of the track's runs (decisions.md, "No gate
-# counts taps").
+# L2: L1 + 2 h, so it lands in day four on every route.
 [[triggers]]
 id = "t_sign"
 when = { test = "at_least", subject_kind = "store", id = "day_5", value = 40 }

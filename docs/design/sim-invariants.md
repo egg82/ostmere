@@ -31,7 +31,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 
 | # | Where | What | Class | Now |
 |---|---|---|---|---|
-| O1 | `opening/test_opening_pacing.py`: `test_no_gate_counts_taps_of_one_card` | no story gate counts taps of one card | correct (`decisions.md`, "No gate counts taps") | fails |
+| O1 | `opening/test_tap_gates.py`: `test_no_story_gate_needs_many_taps_before_automation` | no story gate needs 10 or more taps of one card before mixes or rules open (`opening/tap_gates.py`); a store's amount and a level are not counted | correct (`decisions.md`, "Progress never needs the same tap repeated by hand") | fails |
 | O2 | the typical route's timeline | taps and decisions between new things | taste | readout |
 | O3 | each push route | the longest run of taps of one card | taste | readout |
 | O4 | a day away from the first order | what it opens | taste | readout |
