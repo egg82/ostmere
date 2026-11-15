@@ -13,7 +13,7 @@ from .ids import HANDS, CardId, LaneId, LineKey, Runner, StoreId
 from .index import index
 from .installs import requeued
 from .lumps import drainers
-from .orders import when_latch
+from .latches import flipped_now
 from .phaseevents import carry_ended, topped_out
 from .plan import controlling_entry
 from .rates import FULL, contribution, lane_state, running, store_value, tapped_cards
@@ -87,10 +87,10 @@ def _dispatch(save: Save, rules: Rules, event: Event, emit: Emit, landing: froze
         return _resume(save, rules, event.subject), False
     if event.kind is EventKind.LATCH:
         i = event.sequence
-        if change_time(save, rules, save.orders[i].when, when_latch(save.latches[i])) != save.time:
+        flipped = flipped_now(save, rules, save.orders[i], save.latches[i])
+        if flipped is None:
             return save, False
-        latches = save.latches[:i] + (not when_latch(save.latches[i]),) + save.latches[i + 1:]
-        return replace(save, latches=latches), True
+        return replace(save, latches=save.latches[:i] + (flipped,) + save.latches[i + 1:]), True
     if event.kind is EventKind.QUEUE_POP:
         settled = settled_entries(save, rules)
         if settled:

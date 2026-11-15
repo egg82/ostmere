@@ -125,13 +125,32 @@ never dead (DESIGN.txt, "OFFER KINDS")."""
 
 @dataclass(frozen=True)
 class Order:
-    """While `when` is true: a TapCard taps when it can act and no earlier tap order is true and can act; a SwitchMix
-    runs its mix over the player's when no earlier mix order's mix runs, and the player's own comes back once it
-    releases. An order whose verb cannot act is passed over; tap and mix orders never shadow each other (DESIGN.txt,
-    "Orders", "Order mix"). A TapCard may name a card locked today."""
+    """While the rule is on (rule_on: `when` true and no guard's latch true): a TapCard taps when it can act and no
+    earlier tap order is on and can act; a SwitchMix runs its mix over the player's when no earlier mix order's mix
+    runs, and the player's own comes back once it is off. An order whose verb cannot act is passed over; tap and mix
+    orders never shadow each other (DESIGN.txt, "Orders", "Order mix"). A TapCard may name a card locked today."""
 
     when: Condition
     then: OrderVerb
+    unless: tuple[Condition, ...] = ()
+    """Guards: while any one's latch is true the rule is paused, never let go (DESIGN.txt, "RULE GUARDS"). Each is
+    stored as the condition that blocks, latched as `when` is, with its own band. At most MAX_GUARDS, none twice."""
+
+
+MAX_GUARDS = 3
+
+
+@dataclass(frozen=True)
+class GuardedLatch:
+    """The latches of a rule with guards: `when`'s, and one per guard in the order of Order.unless. A rule with no
+    guard has a bare bool instead, so each rule has one form and equal saves encode alike."""
+
+    when: bool
+    unless: tuple[bool, ...]
+
+
+type Latch = bool | GuardedLatch
+"""Save.latches[i]: a bool for a rule with no guard, else a GuardedLatch."""
 
 
 @dataclass(frozen=True)
@@ -158,12 +177,24 @@ def initial_latch(condition: Condition, subject_value: int | None, now: int) -> 
     return subject_value <= condition.value
 
 
-def rule_on(latch: bool) -> bool:
-    """Whether the rule holding `latch` is on: what everything that acts on a rule asks (which mix runs, which tap
-    starts, which lane a rule holds, READY)."""
+def rule_on(latch: Latch) -> bool:
+    """Whether the rule holding `latch` is on: its `when` latch true and no guard's. What everything that acts on a
+    rule asks (which mix runs, which tap starts, which lane a rule holds, READY)."""
+    if isinstance(latch, GuardedLatch):
+        return latch.when and not any(latch.unless)
     return latch
 
 
-def when_latch(latch: bool) -> bool:
-    """The state of the rule's `when` latch alone, the one the engine solves a change time for."""
-    return latch
+def when_latch(latch: Latch) -> bool:
+    """The state of the rule's `when` latch alone: what the rule log and View.orders_on read."""
+    return latch.when if isinstance(latch, GuardedLatch) else latch
+
+
+def guard_latches(latch: Latch) -> tuple[bool, ...]:
+    """Each guard's latch, in the order of Order.unless; () for a rule with no guard."""
+    return latch.unless if isinstance(latch, GuardedLatch) else ()
+
+
+def latch_of(when: bool, guards: tuple[bool, ...]) -> Latch:
+    """The one form of a rule's latch: the bare `when` latch with no guard, else a GuardedLatch."""
+    return GuardedLatch(when, guards) if guards else when

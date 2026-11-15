@@ -24,7 +24,7 @@ from .modifiers import (
     FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef,
 )
 from .orders import (
-    AfterTime, AtLeast, AtMost, CardCount, Order, QueueEntry, Running, SkillLevel, StoreValue, Unlocked,
+    AfterTime, AtLeast, AtMost, CardCount, GuardedLatch, Order, QueueEntry, Running, SkillLevel, StoreValue, Unlocked,
 )
 from .rules import Rules
 from .rules_check import features
@@ -43,7 +43,7 @@ type Json = None | bool | int | str | list[Json] | dict[str, Json]
 
 _CLASSES: dict[str, Callable[..., object]] = {c.__name__: c for c in (
     Save, StoreState, SkillState, PhaseState, ParkedRank, Segment, Mix, CardShare, SubMix, SwitchMix, TapCard, Pause, Order,
-    QueueEntry, AtLeast, AtMost, AfterTime, StoreValue, SkillLevel, CardCount, Unlocked, Running, Modifier,
+    QueueEntry, AtLeast, AtMost, AfterTime, StoreValue, SkillLevel, CardCount, Unlocked, Running, GuardedLatch, Modifier,
     RateRef, WorkRef, LaneSpeed, StoreCap, SideStrength, ThreatStrength, Unlock, LaneState, CardState, CascadeLimit, AnswerOffer, AnswerKind,
 )}
 _OUTCOMES = _CLASSES | {c.__name__: c for c in (
@@ -197,8 +197,8 @@ def _manifest_offer(o: OfferDef) -> Json:
     return found
 
 
-_OMITTED_WHEN_EMPTY = frozenset({("Outcome", "joins"), ("Outcome", "retire_orders"), ("Outcome", "leaves"),
-                                 ("OfferDef", "kind"), ("AnswerDef", "role"), ("PhaseState", "parked")})
+_OMITTED_WHEN_EMPTY = frozenset({("Order", "unless"), ("Outcome", "joins"), ("Outcome", "retire_orders"),
+                                 ("Outcome", "leaves"), ("OfferDef", "kind"), ("AnswerDef", "role"), ("PhaseState", "parked")})
 """Fields left out of the encoding while empty, so rules that use none keep the digest they had before the field
 existed; decoding supplies the empty default."""
 

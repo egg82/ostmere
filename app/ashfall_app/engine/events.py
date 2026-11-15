@@ -34,7 +34,8 @@ class EventKind(IntEnum):
     TRIGGER = 9
     """A trigger that has not fired finds its condition true. sequence: index in rules.triggers."""
     LATCH = 10
-    """An order's condition turns true or false. sequence: index in save.orders."""
+    """One of an order's latches (its `when`'s or a guard's) turns true or false; one event per order, at the first of
+    them (latches.py). sequence: index in save.orders."""
     QUEUE_POP = 11
     """The controlling queue entry's `until` turns true (the first live entry), or a dead entry's `until` that cannot
     fall turns true (it settles: DESIGN.txt, "Greyed mix"). sequence: 0."""

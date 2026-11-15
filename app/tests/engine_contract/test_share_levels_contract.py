@@ -9,7 +9,7 @@ import pytest
 from hypothesis import given, settings, strategies as st
 
 from ashfall_app.engine import (
-    BP, AtLeast, AtMost, CardCount, CardShare, ChipDef, ChipId, Flow, InvalidRulesError, InvalidVerbError, Mix,
+    BP, AtLeast, AtMost, CardCount, CardShare, ChipDef, ChipId, Flow, InvalidRulesError, InvalidVerbError, Latch, Mix,
     Modifier, ModifierKind, Order, Outcome, QueueEntry, Rules, Save, SaveMix, SetOrders, SetQueue, SkillLevel, SourceId,
     SkillId, StoreCap, StoreDef, StoreValue, SwitchMix, TriggerDef, TriggerId, AfterTime, advance, advance_logged, decide, decode,
     encode, new_save, validate_rules,
@@ -47,7 +47,7 @@ def _changes(rules: Rules, s: Save, until: int) -> list[tuple[int, bool, int]]:
     return [(c.time, c.on, c.level) for c in advance_logged(s, rules, until).rule_changes if c.level is not None]
 
 
-def _latch(cap: int, store: int, cond: AtLeast | AtMost) -> bool:
+def _latch(cap: int, store: int, cond: AtLeast | AtMost) -> Latch:
     """The latch SetOrders gives a new order on S0 at `store` of `cap` (latched afresh from its value alone)."""
     rules = _rules(cap, store)
     s = decide(new_save(rules), rules, 0, SaveMix(Mix(FILL, (CardShare(card_id(0), BP),))))
