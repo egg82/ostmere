@@ -63,7 +63,7 @@ export class LaneEditor {
   private order(): Order | null {
     if (this.card === null) return null;
     const when = this.target.rule === null ? ALWAYS : this.view?.orders[this.target.rule]?.when ?? ALWAYS;
-    return { when, then: { kind: "tap_card", card: this.card } };
+    return { when, then: { kind: "tap_card", card: this.card }, unless: [], or_else: [] };
   }
 
   private draw(): void {

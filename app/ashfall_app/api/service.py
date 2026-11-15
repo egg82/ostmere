@@ -77,7 +77,7 @@ class Game:
             repeats=w.Repeats(taps=[w.RepeatedTap(card=c, count=n) for c, n in played.repeats.taps],
                               switches=[w.RepeatedSwitch(chip=chip, mix_id=mix, count=n)
                                         for chip, mix, n in played.repeats.switches]),
-            rule_runs=[w.RuleRun(order=w.Order(when=convert.condition(r.order.when), then=convert.order_verb(r.order.then)),
+            rule_runs=[w.RuleRun(order=convert.order(r.order),
                                  starts=r.starts, on_at=r.on_at, on_level=r.on_level, off_at=r.off_at,
                                  off_level=r.off_level, ended=None if r.ended is None else r.ended.value,
                                  made=[cm.Amount(store=st, quantity=n) for st, n in r.made])

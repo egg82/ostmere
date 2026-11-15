@@ -1735,10 +1735,24 @@ export interface components {
             journal_days: components["schemas"]["JournalDay"][];
             step: components["schemas"]["Step"];
         };
-        /** Order */
+        /**
+         * Order
+         * @description A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any
+         *     guard in `unless` holds, the rule is paused. Both lists are left out when empty (CONTRACT.txt, "Rule guards").
+         */
         Order: {
             when: components["schemas"]["Condition"];
             then: components["schemas"]["OrderVerb"];
+            /**
+             * Unless
+             * @default []
+             */
+            unless: components["schemas"]["Condition"][];
+            /**
+             * Or Else
+             * @default []
+             */
+            or_else: components["schemas"]["OrderVerb"][];
         };
         /**
          * OrderCard
@@ -1757,11 +1771,21 @@ export interface components {
             after_end: boolean;
         };
         /**
+         * OrderGuard
+         * @description One guard of a rule as the engine reads it now (View.order_guards).
+         */
+        OrderGuard: {
+            /** On */
+            on: boolean;
+            /** Lets Go */
+            lets_go: number | null;
+        };
+        /**
          * OrderState
          * @description Where a rule stands now, so the page can say why one is off (CONTRACT.txt, "THE CLIENT MAY").
          * @enum {string}
          */
-        OrderState: "on" | "waiting" | "outranked" | "passed_over";
+        OrderState: "on" | "waiting" | "outranked" | "paused" | "passed_over";
         OrderVerb: components["schemas"]["SwitchMix"] | components["schemas"]["TapCard"] | components["schemas"]["AnswerOffer"] | components["schemas"]["AnswerKind"];
         /**
          * ParkedPick
@@ -2483,6 +2507,10 @@ export interface components {
             orders_on: boolean[];
             /** Order States */
             order_states: components["schemas"]["OrderState"][];
+            /** Order Guards */
+            order_guards: components["schemas"]["OrderGuard"][][];
+            /** Order Doing */
+            order_doing: (number | null)[];
             /** Order Dry */
             order_dry: (components["schemas"]["RuleDry"] | null)[];
             /** Runs Out At */

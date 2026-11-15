@@ -141,8 +141,10 @@ def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | No
         mix_order=v.mix_order,
         running_town_mix_id=v.running_town_mix, town_mix_order=v.town_mix_order, orders_on=list(v.orders_on),
         order_states=[w.OrderState(s.value) for s in v.order_states],
+        order_guards=[[w.OrderGuard(on=g.on, lets_go=g.lets_go) for g in gs] for gs in v.order_guards],
+        order_doing=list(v.order_doing),
         order_dry=list(order_dry) or [None] * len(save.orders),
-        orders=[w.Order(when=condition(o.when), then=order_verb(o.then)) for o in save.orders],
+        orders=[order(o) for o in save.orders],
         queue=[w.QueueEntry(verb=order_verb(q.verb), until=condition(q.until)) for q in save.queue],
         offers=[w.Offer(offer=o.offer, answer=o.answer,
                         answers=[w.OfferAnswer(answer=a.answer, card=a.card, takes_s=a.takes_s) for a in o.answers])
@@ -193,6 +195,16 @@ def from_condition(c: w.Condition, rules: e.Rules) -> e.Condition:
             return e.AtMost(from_subject(c.watched, rules), c.value, c.release, c.value_of_cap, c.release_of_cap)
 
 
+def order(o: e.Order) -> w.Order:
+    return w.Order(when=condition(o.when), then=order_verb(o.then), unless=[condition(g) for g in o.unless],
+                   or_else=[order_verb(a) for a in o.or_else])
+
+
+def from_order(o: w.Order, rules: e.Rules) -> e.Order:
+    return e.Order(_page_built(o.when, rules), from_order_verb(o.then), tuple(_page_built(g, rules) for g in o.unless),
+                   tuple(from_order_verb(a) for a in o.or_else))
+
+
 def from_order_verb(v: w.OrderVerb) -> e.OrderVerb:
     if isinstance(v, w.TapCard):
         return e.TapCard(e.CardId(v.card))
@@ -221,7 +233,7 @@ def verb(d: w.Decision, rules: e.Rules) -> e.Verb:
         case w.DeleteMix():
             return e.DeleteMix(e.MixId(d.mix_id))
         case w.SetOrders():
-            return e.SetOrders(tuple(e.Order(_page_built(o.when, rules), from_order_verb(o.then)) for o in d.orders))
+            return e.SetOrders(tuple(from_order(o, rules) for o in d.orders))
         case w.SetQueue():
             return e.SetQueue(tuple(e.QueueEntry(from_order_verb(q.verb), _page_built(q.until, rules))
                                     for q in d.entries))

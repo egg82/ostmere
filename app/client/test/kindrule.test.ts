@@ -28,7 +28,7 @@ const kinded = new Catalog({ ...fixtureContent, offer_infos: fixtureContent.offe
   : { ...o, kind: "q", answers: o.answers.map((a) => ({ ...a, role: a.answer === "go" ? "yes" : "no" })) })) });
 const open = dayTwoStep("offered", 100).view;
 const answered: View = { ...open, offers: open.offers.map((o) => (o.offer === "ask" ? { ...o, answer: "go" } : o)) };
-const rule: Order = { when: { kind: "after_time", at: 0 }, then: { kind: "answer_kind", offer_kind: "q", role: "yes" } };
+const rule: Order = { when: { kind: "after_time", at: 0 }, then: { kind: "answer_kind", offer_kind: "q", role: "yes" }, unless: [], or_else: [] };
 const ruled: View = { ...answered, orders: [...answered.orders, rule], orders_on: [...answered.orders_on, false], order_states: [...answered.order_states, "on"] };
 
 function draw(view: View): { root: FakeEl; decided: Decision[] } {

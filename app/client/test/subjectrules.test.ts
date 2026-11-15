@@ -69,7 +69,7 @@ for (const c of cases) {
   const set = decided.at(-1);
   expect(`${c.name}: one set_orders, the rule its only order`, set?.kind === "set_orders" ? set.orders : set, [{ when: c.when, then: MIX }]);
 
-  const { tab: back } = editor({ ...view, orders: [{ when: c.when, then: MIX }], orders_on: [false], order_states: ["waiting"] });
+  const { tab: back } = editor({ ...view, orders: [{ when: c.when, then: MIX, unless: [], or_else: [] }], orders_on: [false], order_states: ["waiting"] });
   expect(`${c.name}: the Rules tab draws it in its words`, one(back.root, ".rule-cond-text").textContent, c.words);
   one(back.root, ".rule-cond").click();
   const reopened = one(back.root, ".cond");
