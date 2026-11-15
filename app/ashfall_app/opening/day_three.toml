@@ -80,31 +80,6 @@ id = "t_track_laid"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "store", id = "track_laid" }] }
 
-# Laying track is everyday work (decisions/people.md, "Who can do which job"): a townsperson's card at the hands' takes
-# and makes, with no skill, filling the same store. The old man's leg rules out the walk, as it does the digging.
-[[town_cards]]
-id = "{lane}_field_track"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7"]
-presentation = "action"
-label_key = "c_field_track"
-upside_key = "up_field_track"
-stake = "reach"
-work_s = 30
-inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 4 }, { store = "roots", items = 15 }]
-outcome = { stores = [{ store = "track_laid", items = 1 }] }
-
-[[triggers]]
-id = "t_n1_track"
-when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }]
-outcome = { unlocks = [{ unlock_kind = "card", id = "n1_field_track" }] }
-
-[[triggers]]
-id = "t_n2_track"
-when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }]
-outcome = { unlocks = [{ unlock_kind = "card", id = "n2_field_track" }] }
-
 [[stores]]
 id = "scrap"
 label_key = "store_scrap"
@@ -701,6 +676,31 @@ work_s = 20
 requires = [{ test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }]
 inputs = [{ store = "roots", items = 4 }, { store = "smoked", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 2 }] }
+
+# Laying track is everyday work (decisions/people.md, "Who can do which job"): a townsperson's card at the hands' takes
+# and makes, with no skill, filling the same store. The old man's leg rules out the walk, as it does the digging.
+[[town_cards]]
+id = "{lane}_field_track"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_field_track"
+upside_key = "up_field_track"
+stake = "reach"
+work_s = 30
+inputs = [{ store = "damp_wood", items = 18 }, { store = "stones", items = 4 }, { store = "roots", items = 15 }]
+outcome = { stores = [{ store = "track_laid", items = 1 }] }
+
+[[triggers]]
+id = "t_n1_track"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n1_field_track" }] }
+
+[[triggers]]
+id = "t_n2_track"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "field_track", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n2_field_track" }] }
 
 # Hers with the hands' clay and pot.
 [[triggers]]

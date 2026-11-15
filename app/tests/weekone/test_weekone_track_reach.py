@@ -35,7 +35,8 @@ def both_laying() -> tuple[dict[str, int], float, dict[str, int], float]:
     card at her share, six game hours on: the runs and the track laid before and after."""
     p = week1("typical").fork()
     town = next(m for m in p.save.mixes if str(m.id) == "town:camp")
-    moved = tuple(CardShare(CardId(HERS), c.share_bp) if str(c.card) == HER_FORAGE else c for c in town.components)
+    moved = tuple(CardShare(CardId(HERS), c.share_bp) if isinstance(c, CardShare) and str(c.card) == HER_FORAGE else c
+                  for c in town.components)
     assert moved != town.components
     before, laid_before = runs(p), laid(p)
     p.decide("decision", (SaveMix(Mix(town.id, moved)),))
