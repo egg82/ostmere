@@ -1,5 +1,5 @@
 """Revision 0013 (the journal's days): a save the build before wrote, days into its game, migrates with no days stored
-and composes every day it has closed on its next step, its subject's line written on the day it fell on."""
+and composes every day it has begun on its next step, its subject's line written on the day it fell on."""
 import shutil
 from pathlib import Path
 
@@ -14,7 +14,7 @@ from tests.game_client import game_client
 from tests.saves.journal_fixture import a_beat_line
 
 
-def test_a_save_from_before_the_journal_was_stored_composes_its_closed_days_on_its_next_step(
+def test_a_save_from_before_the_journal_was_stored_composes_its_days_on_its_next_step(
         pg_url: str, pg_empty: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shipped_opening: Opening):
     scripts = tmp_path / "alembic"
     shutil.copytree(SCRIPTS, scripts, ignore=shutil.ignore_patterns("__pycache__"))
@@ -38,7 +38,7 @@ def test_a_save_from_before_the_journal_was_stored_composes_its_closed_days_on_i
         assert opened.status_code == 200, opened.text
     with psycopg.connect(pg_empty) as c:
         days = c.execute("SELECT day, notes FROM save_journal WHERE save_id = %s ORDER BY day", (save_id,)).fetchall()
-    assert [d for d, _ in days] == [0, 1, 2]
+    assert [d for d, _ in days] == [0, 1, 2, 3]
     assert [[n["subject"] for n in notes] for _, notes in days][1] == [subject]
     served = opened.json()
     assert served["journal_days"] == [] and [d["day"] for d in served["step"]["journal_days"]] == [1]

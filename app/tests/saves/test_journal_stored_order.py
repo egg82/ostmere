@@ -1,5 +1,5 @@
-"""A day stored before the composer ordered notes by their lines reads in page order (statement 18) when opened, its
-row untouched and no note added, dropped or redrawn (statement 20)."""
+"""A day stored whole before the composer ordered notes by their lines reads in page order (statement 18) when opened,
+its row untouched and no note added, dropped or redrawn (statement 20); a day written as it went reads as stored."""
 from collections.abc import Callable
 
 from sqlalchemy import Engine, update
@@ -11,6 +11,7 @@ from ashfall_app.saves.journal_composer.history import read
 from ashfall_app.saves.journal_composer.order import page_order
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
+from tests.kills import kills
 from tests.saves.journal_fixture import BEAT, JOURNAL, TIRED, WORK, journaled, store_lines, stored
 
 SUBJECTS = JOURNAL.subjects
@@ -53,8 +54,23 @@ def test_opened_reads_a_day_stored_in_the_old_order_in_page_order_and_leaves_its
     old = [{"subject": n.subject, "slot": n.slot, "key": n.key} for n in reversed(right.notes)]
     with engine.begin() as conn:
         conn.execute(update(save_journal).where(save_journal.c.save_id == save_id, save_journal.c.day == 0)
-                     .values(notes=old))
+                     .values(notes=old, through=None))
     assert stored(engine, save_id)[0].notes == right.notes[::-1]
     again = saves.open(account, save_id)
     assert again.days[0].notes == right.notes
     assert stored(engine, save_id)[0].notes == right.notes[::-1]
+
+
+@kills(16)
+def test_opened_reads_a_day_written_as_it_went_as_stored(engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
+    saves = PgSaves(engine, journaled(rs), clock, stop_for=never)
+    save_id = saves.create(account)[0].save_id
+    store_lines(engine, save_id, ((50, "l_work"), (100, "l_beat")))
+    clock.tick(DAY_S + 60)
+    saves.open(account, save_id)
+    right = stored(engine, save_id)[0]
+    old = [{"subject": n.subject, "slot": n.slot, "key": n.key} for n in reversed(right.notes)]
+    with engine.begin() as conn:
+        conn.execute(update(save_journal).where(save_journal.c.save_id == save_id, save_journal.c.day == 0)
+                     .values(notes=old))
+    assert saves.open(account, save_id).days[0].notes == right.notes[::-1]

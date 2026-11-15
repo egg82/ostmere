@@ -169,18 +169,19 @@ def test_two_subjects_of_one_mark_hold_it_once():
 # --- kept: order and the cap -----------------------------------------------------------------------------------------
 
 
-def test_marks_run_in_mark_kinds_order_whatever_the_subject_order():
-    """Statement 21: marks are in `MARK_KINDS` order, not the order of the subjects, their ids or their notes."""
+def test_marks_run_in_the_order_drawn():
+    """Statement 21: marks are in the order the notes holding them were written, and a catch-up holds its subject's mark
+    before its smudge."""
     subs = [marked(beat(f"s{i}"), k) for i, k in enumerate(reversed(EVENT_KINDS))]
     lines = [shows(s, 0, second=i) for i, s in enumerate(subs)]
-    assert day_marks(subs, lines, SURE) == EVENT_KINDS
+    assert day_marks(subs, lines, SURE) == tuple(reversed(EVENT_KINDS))
     trip, seen = worry("trip", away=1), marked(beat("seen"), "blood")
     days = compose_span(1, 3, [shows(trip, 1), shows(seen, 1)], [trip, seen], SURE)
     assert days[2].marks == ("blood", "smudge")
 
 
 def test_a_day_keeps_the_first_marks_most_of_its_drawn_kinds():
-    """Statement 21: the first `marks_most` drawn kinds in `MARK_KINDS` order are kept; 0 keeps none."""
+    """Statement 21: the first `marks_most` kinds drawn, in the order their notes are written, are kept; 0 keeps none."""
     subs = [marked(beat(k), k) for k in EVENT_KINDS]
     lines = [shows(s, 0) for s in subs]
     for most in range(6):
@@ -246,27 +247,30 @@ def marked_histories(draw: st.DrawFn) -> History:
 
 def expected_marks(save_id: int, day: int, row: ComposedDay, subjects: tuple[Subject, ...],
                    habits: Habits) -> tuple[MarkKind, ...]:
-    """Statement 21 as stated, from the day's notes alone."""
-    if not row.notes:
-        return ()
+    """Statement 21 as stated, from the day's notes alone, in the order they were written."""
     by_id = {s.id: s for s in subjects}
-    held = {by_id[n.subject].mark for n in row.notes
-            if n.slot not in ("late", "correction") and n.subject in by_id} - {None}
-    if any(n.slot == "catchup" for n in row.notes):
-        held.add("smudge")
-    drawn: list[MarkKind] = [k for k in MARK_KINDS if k in held and ref_roll(save_id, day, k, "mark") < getattr(habits.marks, k)]
-    return tuple(drawn[:habits.marks_most])
+    drawn: list[MarkKind] = []
+    for n in row.notes:
+        if n.slot in ("late", "correction"):
+            continue
+        mark = by_id[n.subject].mark if n.subject in by_id else None
+        kinds: list[MarkKind] = [*([mark] if mark is not None else []), *(["smudge"] if n.slot == "catchup" else [])]
+        for k in kinds:
+            if (k not in drawn and len(drawn) < habits.marks_most
+                    and ref_roll(save_id, day, k, "mark") < getattr(habits.marks, k)):
+                drawn.append(k)
+    return tuple(drawn)
 
 
 @examples(30)
 @given(h=marked_histories())
 def test_every_day_carries_exactly_the_marks_its_notes_draw(h: History):
-    """Statement 21, for every history: a day's marks equal those drawn from its own notes, so each is a kind in
-    `MARK_KINDS` order, unique, at most `marks_most`, held, drawn, and a day with no notes has none."""
+    """Statement 21, for every history: a day's marks equal those drawn from its own notes as they were written, so each
+    is unique, at most `marks_most`, held, drawn, and a day with no notes has none."""
     days = compose_span(h.save_id, h.days, h.lines, h.subjects, h.habits)
     for d, row in enumerate(days):
         assert row.marks == expected_marks(h.save_id, d, row, h.subjects, h.habits), d
-        assert len(row.marks) <= h.habits.marks_most and list(row.marks) == sorted(set(row.marks), key=MARK_KINDS.index)
+        assert len(row.marks) <= h.habits.marks_most and len(set(row.marks)) == len(row.marks)
 
 
 @examples(30)
@@ -285,5 +289,5 @@ def test_marks_never_change_the_notes_or_gaps(h: History):
 def test_a_day_re_viewed_has_the_same_marks(h: History):
     """Statements 21 and 1: composing the same day again from the same arguments gives the same marks."""
     days = compose_span(h.save_id, h.days, h.lines, h.subjects, h.habits)
-    again = compose_span(h.save_id, h.days, tuple(reversed(h.lines)), h.subjects, h.habits)
+    again = compose_span(h.save_id, h.days, h.lines, h.subjects, h.habits)
     assert [d.marks for d in days] == [d.marks for d in again]

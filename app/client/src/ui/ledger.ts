@@ -78,8 +78,6 @@ export class Ledger implements Part {
   /** Stores whose order card was offered by the stall rule or a rising line: kept until set, so it does not vanish
    * under a tap or a dip. */
   private readonly kept = new Set<string>();
-  /** Lines whose mark the player touched this page session. */
-  private readonly touched = new Set<string>();
 
   constructor(private readonly ctx: PartContext) {
     const { text } = ctx.catalog;
@@ -243,7 +241,7 @@ export class Ledger implements Part {
    * is behind, and on the cap rule's or the dry store's line while no other lesson runs. Nothing is offered or built. */
   private hint(row: Row, on: boolean): void {
     const store = row.line.store;
-    if (on && !this.touched.has(store)) markNew(row.box, () => this.touched.add(store));
+    if (on && !this.ctx.keeps.lineTouched(store)) markNew(row.box, () => this.ctx.keeps.keepLineTouched(store));
     else unmark(row.box);
   }
 

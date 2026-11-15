@@ -1336,7 +1336,8 @@ export interface components {
         };
         /**
          * JournalDay
-         * @description A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed.
+         * @description A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). A later copy of a day still being
+         *     written begins with this one's notes and marks.
          */
         JournalDay: {
             /** Day */
@@ -2063,6 +2064,11 @@ export interface components {
              * @default []
              */
             mix_offered: components["schemas"]["Id"][];
+            /**
+             * Lines Touched
+             * @default []
+             */
+            lines_touched: components["schemas"]["Id"][];
             /**
              * Lessons
              * @default []

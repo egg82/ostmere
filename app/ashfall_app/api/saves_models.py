@@ -122,6 +122,8 @@ class SavePresentation(BaseModel):
     """A rule has been seen on and then off in this save: writing rules is open, and the cap rule's lesson may come."""
     mix_offered: list[Id] = Field(default=[], max_length=MAX_LIST)
     """The cards whose "your mix could take it" dot the player has touched: each is marked once."""
+    lines_touched: list[Id] = Field(default=[], max_length=MAX_LIST)
+    """The stores whose ledger line's quiet dot the player has touched: each is marked once."""
     lessons: list[Id] = Field(default=[], max_length=MAX_LIST)
     """The lessons done or skipped in this save (the page's game/lessons.ts ids): each comes once."""
     lesson_ends: list[LessonEnd] = Field(default=[], max_length=MAX_LIST)

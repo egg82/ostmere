@@ -1,39 +1,35 @@
-"""One game day composed (the contract in `saves/journal.py`): a gap, a blank, or the day's notes in page order."""
+"""One game day composed as it goes (the contract in `saves/journal.py`): its start, each of its moments in order, and,
+once it has ended, its end. Each step only appends to the page (statement 22)."""
 from collections.abc import Sequence
 
-from ..journal import DAY_S, ComposedDay, Gap, Habits, Line, Subject, roll
-from .bag import note
-from .history import History, away, read, showing
+from ..journal import DAY_S, ComposedDay, Habits, Line, Subject, roll
+from .history import History, Moment, away, changed, moments, read
 from .ledger import settledness
-from .marks import marks
 from .numbers import budget, diligence
 from .owed import catchups, corrections, lates
-from .own import Candidate, candidates
+from .own import candidate
+from .page import Page
 
 
 def compose(save_id: int, day: int, lines: Sequence[Line], composed: Sequence[ComposedDay],
-            subjects: Sequence[Subject], habits: Habits) -> ComposedDay:
+            subjects: Sequence[Subject], habits: Habits, ended: bool) -> ComposedDay:
     _refuse(day, lines, composed)
     history = read(lines, subjects)
+    page = Page(save_id, day, composed, {s.id: s for s in subjects}, habits)
+    if away(history, subjects, day):
+        page.gap = "away"
+        return page.done()
+    for t in catchups(composed, history, subjects):
+        page.write(t)
     settled = settledness(composed, subjects, habits)
-    room = budget(settled, habits)
-    gap = _gap(history, subjects, day, room, habits)
-    if gap is not None:
-        return ComposedDay(day, (), gap)
-    caught = catchups(composed, history, subjects)
-    fixes = corrections(composed, subjects, habits, day)
-    own = candidates(save_id, day, history, composed, subjects, habits, {t.subject for t in caught})
-    musts = [c for c in own if c.must]
-    passing = _passing(save_id, day, own, diligence(settled, habits))
-    left = max(0, room - len(caught) - len(musts) - len(fixes))
-    kept = sorted(passing, key=lambda c: (-c.care, c.order, c.telling.subject))[:left]
-    written = sorted([*musts, *kept], key=lambda c: (history.first_at(c.telling.subject, day), c.telling.subject))
-    head = [*caught, *(c.telling for c in written)]
-    if not head and not fixes:
-        return ComposedDay(day, (), None)
-    told = [*head, *lates(save_id, composed, subjects, habits), *fixes]
-    notes = tuple(note(save_id, composed, t) for t in told)
-    return ComposedDay(day, notes, None, marks(save_id, day, notes, subjects, habits))
+    room, diligent = budget(settled, habits), diligence(settled, habits)
+    crowds: list[Subject] = []
+    for m in moments(lines, subjects, day):
+        if not _weigh(page, m, history, room, diligent, crowds):
+            return page.done()
+    if ended:
+        _end(page, history, room, diligent, crowds)
+    return page.done()
 
 
 def _refuse(day: int, lines: Sequence[Line], composed: Sequence[ComposedDay]) -> None:
@@ -43,14 +39,44 @@ def _refuse(day: int, lines: Sequence[Line], composed: Sequence[ComposedDay]) ->
         raise ValueError(f"journal: composed is not exactly days 0 .. {day - 1}")
 
 
-def _gap(history: History, subjects: Sequence[Subject], day: int, room: int, habits: Habits) -> Gap | None:
-    if away(history, subjects, day):
-        return "away"
-    if len(showing(history, subjects, day)) > habits.busy_ratio * room:
-        return "busy"
-    return None
+def _weigh(page: Page, m: Moment, history: History, room: int, diligent: float, crowds: list[Subject]) -> bool:
+    """One moment (statements 8 and 11-14); False once the day has broken off into a gap."""
+    s = m.subject
+    if m.first:
+        page.shown.add(s.id)
+        if s.away_days > 0:
+            page.gap = "away"
+            return False
+        if len(page.shown) > page.habits.busy_ratio * room:
+            page.gap = "busy"
+            return False
+        if s.kind == "crowd":
+            crowds.append(s)
+    if s.kind == "crowd" or page.has_own(s.id):
+        return True
+    c = candidate(page.save_id, page.day, s, page.told(s.id), history, page.habits, m.change)
+    if c is None or (c.must and not m.first):
+        return True
+    if c.must or _passes(page, s.id, c.care, diligent, room):
+        page.write(c.telling)
+    return True
 
 
-def _passing(save_id: int, day: int, own: list[Candidate], diligent: float) -> list[Candidate]:
-    """The non-musts whose write roll falls under care times diligence (statement 11)."""
-    return [c for c in own if not c.must and roll(save_id, day, c.telling.subject, "write") < c.care * diligent]
+def _passes(page: Page, subject: str, care: float, diligent: float, room: int) -> bool:
+    """A non-must's write roll falls under care times diligence, and the page has room (statements 11 and 12)."""
+    return roll(page.save_id, page.day, subject, "write") < care * diligent and len(page.notes) < room
+
+
+def _end(page: Page, history: History, room: int, diligent: float, crowds: list[Subject]) -> None:
+    """The day's end: its crowds, by their first lines, then the late additions and the corrections due (statements 16,
+    17 and 22)."""
+    for s in crowds:
+        c = candidate(page.save_id, page.day, s, page.told(s.id), history, page.habits, changed(history, s.id, page.day))
+        if c is not None and _passes(page, s.id, c.care, diligent, room):
+            page.write(c.telling)
+    fixes = corrections(page.composed, list(page.subjects.values()), page.habits, page.day)
+    if page.notes or fixes:
+        for t in lates(page.save_id, page.composed, list(page.subjects.values()), page.habits):
+            page.write(t)
+    for t in fixes:
+        page.write(t)

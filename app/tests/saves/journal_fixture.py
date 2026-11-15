@@ -1,7 +1,7 @@
 """A small journal for the writer's tests (saves/journal_write.py): two subjects on line keys no content writes and one
 on a line the opening writes by itself early on day 0 (so only a step's own lines show it), the lines a test stores for
-them, and the days the composer makes of a save's stored lines, composed one at a time from its own public function, as
-the reference the stored rows must equal."""
+them, and the days the composer makes of a save's stored lines at a save time, composed one at a time from its own public
+function, as the reference the stored rows must equal."""
 from dataclasses import replace
 
 import psycopg
@@ -59,14 +59,18 @@ def lines_of(engine: Engine, save_id: int) -> list[tuple[int, str]]:
         return [(ln.at, ln.key) for ln in rows.last_lines(conn, save_id, 100_000)]
 
 
-def reference(engine: Engine, save_id: int, days: int, journal: JournalRules = JOURNAL) -> list[ComposedDay]:
-    """Days 0 .. days - 1 as compose_day makes them from the save's stored lines, each from the lines before its end
-    and the days before it."""
-    fed = [Line(key, at, src) for at, key in lines_of(engine, save_id) for src in journal.sources.get(key, ())]
-    out: list[ComposedDay] = []
-    for d in range(days):
-        before = tuple(ln for ln in fed if ln.at < (d + 1) * DAY_S)
-        out.append(compose_day(save_id, d, before, tuple(out), journal.subjects, journal.habits))
+def reference(engine: Engine, save_id: int, time: int, journal: JournalRules = JOURNAL,
+              start: tuple[ComposedDay, ...] = ()) -> list[ComposedDay]:
+    """The days as compose_day makes them at save time `time` from the save's stored lines: each day after `start`
+    through `time`'s day, from the lines up to `time` before its end and the days before it, ended unless it is
+    `time`'s own day."""
+    fed = [Line(key, at, src) for at, key in lines_of(engine, save_id) if at <= time
+           for src in journal.sources.get(key, ())]
+    out = list(start)
+    for d in range(len(out), time // DAY_S + 1):
+        end = (d + 1) * DAY_S
+        out.append(compose_day(save_id, d, tuple(ln for ln in fed if ln.at < end), tuple(out), journal.subjects,
+                               journal.habits, ended=time >= end))
     return out
 
 

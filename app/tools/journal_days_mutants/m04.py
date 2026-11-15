@@ -1,6 +1,6 @@
-"""Row 04 of tests/saves/MUTANTS_journal_days.txt: the locking read reads lines of the day not yet ended."""
+"""Row 04 of tests/saves/MUTANTS_journal_days.txt: lines stored past the step's save time are composed."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/db/journal.py',
-     '        ln.at < ended * DAY_S).scalar_subquery()\n',
-     '        ln.at < (ended + 1) * DAY_S).scalar_subquery()\n'),
+    ('ashfall_app/saves/journal_write.py',
+     '    history = history[:bisect_right([ln.at for ln in history], time)]\n',
+     ''),
 ]
