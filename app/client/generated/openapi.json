@@ -4262,6 +4262,10 @@
             "type": "integer",
             "title": "Max Unless"
           },
+          "max_or_else": {
+            "type": "integer",
+            "title": "Max Or Else"
+          },
           "reserved_mix_prefix": {
             "type": "string",
             "title": "Reserved Mix Prefix"
@@ -4273,6 +4277,7 @@
           "max_queue",
           "max_mixes",
           "max_unless",
+          "max_or_else",
           "reserved_mix_prefix"
         ],
         "title": "Limits",
