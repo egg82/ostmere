@@ -29,7 +29,9 @@ now and then a misremembering is put right by a later entry; and what presses ge
 normal. Every habit is decided in code from the save's own lines, with its numbers in a data file and its draws seeded
 by save, day and subject, and each day is composed once, when it ends, and stored, so live and on return write the
 same page and later tuning applies forward only. Content writes each line per subject and slot (a first, a repeat, a
-catch-up, a mention, a late addition, a misremembering and its correction) and never says how often. The chronicle
+catch-up, a mention, a late addition, a misremembering and its correction) and never says how often. The pages fill
+like a notebook (owner, 2026-11-14): days run on down a page until the next would not fit, by a fixed measure of
+their words, so the same days are the same pages on every device, in the journal's unchanged look. The chronicle
 stays exact, so nothing the player needs rests on the journal; creatures and places stay the exact layer, untouched.
 Rejected: the chronicle as the lossy journal, which loses facts to a habit; entries written freely by Claude at
 runtime, since a stateless call cannot keep a rate or stay canon; thinning by day number, since the game's length is

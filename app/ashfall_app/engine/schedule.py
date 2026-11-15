@@ -11,7 +11,7 @@ from .memo import SaveMemo
 from .answers import AnswerKind, AnswerOffer
 from .mixes import flatten_shares
 from .offerstate import acting
-from .orders import Condition, OrderVerb
+from .orders import Condition, OrderVerb, rule_on, when_latch
 from .phaseevents import phase_events
 from .phases import next_level_xp
 from .plan import candidates, controlling_entry, is_dead, live_queue_verb, mix_order
@@ -44,7 +44,7 @@ def _events(save: Save, rules: Rules) -> list[Event]:
     found += _chip_events(save, rules) + trigger_events(save, rules) + _ready_events(save, rules)
     found += watch_events(save, rules)
     for i, (order, latch) in enumerate(zip(save.orders, save.latches)):
-        t = change_time(save, rules, order.when, latch)
+        t = change_time(save, rules, order.when, when_latch(latch))
         if t is not None:
             found.append(Event(t, EventKind.LATCH, i, str(i)))
     return found + _pop_events(save, rules)
@@ -86,7 +86,7 @@ def pending(save: Save, rules: Rules) -> list[Event]:
     found += _chip_events(save, rules) + triggers_now(save, rules) + _ready_now(save, rules)
     found += watch_events(save, rules)
     for i, (order, latch) in enumerate(zip(save.orders, save.latches)):
-        if change_time(save, rules, order.when, latch) == save.time:
+        if change_time(save, rules, order.when, when_latch(latch)) == save.time:
             found.append(Event(save.time, EventKind.LATCH, i, str(i)))
     return [e for e in found + _pop_events(save, rules) if e.time == save.time]
 
@@ -227,7 +227,7 @@ def _ready_events(save: Save, rules: Rules) -> list[Event]:
 def _cardless_waits(save: Save, rules: Rules) -> bool:
     """A verb with no card could act: a true order's AnswerOffer or AnswerKind that can act, or, while no order's mix
     runs, a controlling queue entry's AnswerOffer that can act."""
-    if any(latch and isinstance(o.then, (AnswerOffer, AnswerKind)) and acting(save, rules, o.then) is not None
+    if any(rule_on(latch) and isinstance(o.then, (AnswerOffer, AnswerKind)) and acting(save, rules, o.then) is not None
            for o, latch in zip(save.orders, save.latches)):
         return True
     queued = live_queue_verb(save, rules) if mix_order(save, rules) is None else None

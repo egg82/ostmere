@@ -5,7 +5,7 @@
 // samples it every frame. The one glow on a card is placed here (CardInfo.glows, the first time it is ready with its lane
 // free); the strip places its offers' glows, the Rules tab's label takes it once a rule has come on and let go until the
 // tab is opened, and a running lesson's step takes it (lessons.ts).
-import type { Condition, Decision, Step, View } from "../api/types";
+import type { Condition, Decision, JournalDay, Step, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { nudgeTarget } from "../game/cues";
 import { NewMarks } from "../game/marks";
@@ -160,14 +160,14 @@ export class Screen {
     this.showTab();
   }
 
-  /** The story's last lines, drawn at once before the first view (a save opened, or a screen redrawn for a deploy). */
-  restore(past: Past[]): void {
-    this.story.restore(past);
+  /** The story's last lines and written days, drawn at once before the first view (a save opened, a screen redrawn). */
+  restore(past: Past[], days: readonly JournalDay[] = []): void {
+    this.story.restore(past, days);
   }
 
-  /** The story's lines, oldest first: what a screen redrawn for a deploy restores. */
-  get storyPast(): Past[] {
-    return [...this.story.keys];
+  /** What a screen redrawn for a deploy restores (Story.carried). */
+  get carried(): { past: Past[]; days: JournalDay[] } {
+    return this.story.carried;
   }
 
   /** `away`: the first view after the player was away, whose new things are revealed in turn. A step's lines, live or
@@ -178,8 +178,10 @@ export class Screen {
     const lines = step.lines;
     const lead = lines.length > 0;   // live, first or on a return alike: each line in turn, a planned moment in full
     if ((away && !first) || lead) this.reveal.collect();
+    else if (!first) this.reveal.cascade();   // a live step's consequences light link by link
     if (away && !first) this.root.scrollTop = 0;   // a return opens at the top: no card row under the pinned strip
     const nodes = this.story.append(lines, lead, away && !first ? { view: step.view, prev: this.view } : null);
+    this.story.written(step.journal_days);
     if (lead) this.lead(nodes);
     this.drawing = true;   // the end's lines join this batch rather than start one
     this.end.update(step.view, first);   // first, so the parts drawn next know whether the end is behind

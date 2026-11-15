@@ -1,10 +1,11 @@
 // The condition editor's draft and the pure choices it makes from one (condition.ts draws and sends).
-import type { Condition, Order, OrderVerb, View } from "../api/types";
+import type { ChipInfo, Condition, Order, OrderVerb, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { actionWords, chipOf, conditionWords, savedVerb, storeRule } from "../game/orders";
-import { bounds, buildRule, clampRule, defaultRule, type StoreRule } from "../game/storerule";
+import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } from "../game/storerule";
 import { buildSubject, readSubject, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
+import { ruleCards, whenChoices } from "../game/ruleoffers";
 import { isTownMix } from "../game/town";
 
 export interface Draft {
@@ -25,7 +26,7 @@ export interface Draft {
 }
 
 export function sameRule(a: StoreRule, b: StoreRule): boolean {
-  return a.store === b.store && a.test === b.test && a.n === b.n && a.m === b.m;
+  return a.store === b.store && a.test === b.test && sameLevel(a.n, b.n) && sameLevel(a.m, b.m);
 }
 
 /** The condition a draft at `rule` saves: the edited rule's own while its levels are as it opened (a chip's stays the
@@ -48,7 +49,7 @@ export function draftOrder(catalog: Catalog, view: View | null, draft: Draft | n
   const then = savedVerb(view, catalog, draft.then);
   if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, then };
   if (draft.subject) return { when: buildSubject(catalog, draft.subject), then };
-  if (bounds(draft.rule.test, storeCap(catalog, view, draft.rule.store), draft.rule.n) === null) return null;
+  if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store))) return null;
   return { when: draftWhen(draft.rule, draft.opened, catalog.content.scales.quantity_per_item), then };
 }
 
@@ -74,4 +75,13 @@ export function headingWords(catalog: Catalog, draft: Draft): string {
   return draft.chip && draft.opened ? conditionWords(catalog, draft.opened.when) ?? ""
     : draft.index !== null && draft.then ? catalog.text.fill(UI.ruleHeading, { mix: actionWords(catalog, draft.then) })
       : catalog.text.get(UI.ruleNew);
+}
+
+/** In the simple view, a condition the newly chosen task does not answer is cleared, so what shows chosen is offered.
+ * `chip`: the chip the draft's condition is, if any. */
+export function keepOffered(catalog: Catalog, view: View, draft: Draft, chip: ChipInfo | undefined): void {
+  const offer = whenChoices(catalog, view, false, ruleCards(view, draft.then), null);
+  if (chip ? offer.chips.includes(chip) : offer.stores.includes(draft.rule.store)) return;
+  draft.rule = defaultRule("", "below", 0);
+  draft.opened = undefined;
 }

@@ -69,11 +69,6 @@ PLANTS = (
      (('[[subjects]]\nid = "t_s_q1_went"\nkind = "person"\n'
        'source = { source_kind = "lane", id = "t_q1", way = "left" }\n'
        'first = { keys = ["t_j_q1_went"] }\ncatchup = { keys = ["t_j_q1_went"] }\n', ''),)),
-    ("a days note no beat subject retells", "note t_day_storm: is a days note, and no beat subject's first slot holds it",
-     ((STORM_FIRST, 'first = { keys = ["t_j_storm"] }\n'),)),
-    ("a days note retold only by a routine", "note t_day_storm: is a days note, and no beat subject's first slot holds it",
-     ((STORM_FIRST, 'first = { keys = ["t_j_storm"] }\n'),
-      ('first = { keys = ["t_j_dig"], sketch', 'first = { keys = ["t_day_storm"], sketch'))),
     ("a first key with no text", "subject t_s_hunger: first key 't_j_nowhere' is not in text",
      (('keys = ["t_j_hungry"]', 'keys = ["t_j_nowhere"]'),)),
     ("a repeat key with no text", "subject t_s_dig: repeat key 't_j_nowhere' is not in text",
@@ -132,6 +127,10 @@ def test_the_subjects_awaiting_their_slots_are_exactly_those_still_missing_one()
     assert awaiting_faults(o, AWAITING_SLOTS) == []
 
 
-def test_a_held_subject_with_its_slots_reads_stale_and_a_fixture_subject_never_held():
+def test_a_held_subject_with_its_slots_reads_stale_and_one_missing_a_slot_reads_not_held():
     o = load_with(FIXTURE)
-    assert awaiting_faults(o, frozenset({"s_b2", "t_s_storm"})) == ["stale: t_s_storm"]
+    storm = next(s for s in o.subjects if s.id == "t_s_storm")
+    missing = storm.model_copy(update={"id": "t_s_bare", "catchup": None})
+    bare = o.model_copy(update={"subjects": [*o.subjects, missing]})
+    assert awaiting_faults(bare, frozenset({"t_s_bare", "t_s_storm"})) == ["stale: t_s_storm"]
+    assert awaiting_faults(bare, frozenset()) == ["not held: t_s_bare"]

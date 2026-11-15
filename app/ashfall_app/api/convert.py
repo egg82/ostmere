@@ -39,9 +39,11 @@ def condition(c: e.Condition) -> w.Condition:
         case e.AfterTime():
             return w.AfterTime(at=c.time)
         case e.AtLeast():
-            return w.AtLeast(watched=subject(c.subject), value=c.value, release=c.release)
+            return w.AtLeast(watched=subject(c.subject), value=c.value, release=c.release, value_of_cap=c.value_of_cap,
+                             release_of_cap=c.release_of_cap)
         case e.AtMost():
-            return w.AtMost(watched=subject(c.subject), value=c.value, release=c.release)
+            return w.AtMost(watched=subject(c.subject), value=c.value, release=c.release, value_of_cap=c.value_of_cap,
+                            release_of_cap=c.release_of_cap)
 
 
 def order_verb(v: e.OrderVerb) -> w.OrderVerb:
@@ -91,7 +93,7 @@ def _cards(cards: Iterable[e.CardView], sources: Mapping[tuple[str, str], Source
         card=c.card, completions=c.completions, cap=c.cap, bar=segment(c.bar), bar_total=c.bar_total,
         by=None if c.by is None else w.RunBy(c.by.value), completes_at=c.completes_at, share_bp=c.share_bp,
         run=None if c.run is None else w.RunKind(c.run.value), blocker=_blocker(c.blocker), tap_s=c.tap_s,
-        needs=[_need(c.card, n, sources) for n in c.needs], cuts_in=c.cuts_in,
+        needs=[_need(c.card, n, sources) for n in c.needs], cuts_in=c.cuts_in, speed=c.speed,
         spent_store=c.spent_store, gained=[w.SpentShare(card=g.card, share_bp=g.share_bp) for g in c.gained])
         for c in cards]
 
@@ -186,9 +188,9 @@ def from_condition(c: w.Condition, rules: e.Rules) -> e.Condition:
         case w.AfterTime():
             return e.AfterTime(c.at)
         case w.AtLeast():
-            return e.AtLeast(from_subject(c.watched, rules), c.value, c.release)
+            return e.AtLeast(from_subject(c.watched, rules), c.value, c.release, c.value_of_cap, c.release_of_cap)
         case w.AtMost():
-            return e.AtMost(from_subject(c.watched, rules), c.value, c.release)
+            return e.AtMost(from_subject(c.watched, rules), c.value, c.release, c.value_of_cap, c.release_of_cap)
 
 
 def from_order_verb(v: w.OrderVerb) -> e.OrderVerb:

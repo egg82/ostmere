@@ -25,7 +25,7 @@ export interface Kept {
 
 const NOWHERE: KeepsSink = {};
 export const NEW_ACCOUNT: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-export const NEW_SAVE: SavePresentation = { rule_seen: false, mix_offered: [], lessons: [], lesson_ends: [], visits: [] };
+export const NEW_SAVE: SavePresentation = { rule_seen: false, mix_offered: [], lessons: [], lesson_ends: [], visits: [], newest_day_read: null };
 export const NEW_SETTINGS: AccountSettings = { lessons: true };
 
 export class Keeps {
@@ -175,6 +175,18 @@ export class Keeps {
     const fresh = [...new Set(notes)].filter((n) => !this.journalRead(n));
     if (fresh.length === 0) return;
     this.keepAccount({ ...this.account, journal_read: [...(this.account.journal_read ?? []), ...fresh] });
+  }
+
+  /** The newest written day the player has turned to in this save, null before the first: a later day is unread. */
+  newestDayRead(): number | null {
+    return this.save.newest_day_read ?? null;
+  }
+
+  /** The newest day of the days pages turned to, kept as one write when it is later than the one kept. */
+  keepDayRead(day: number | null): void {
+    const was = this.newestDayRead();
+    if (day === null || (was !== null && day <= was)) return;
+    this.keepSave({ ...this.save, newest_day_read: day });
   }
 
   /** The account's copy the server answered a send with, which holds what other pages kept: joined into the page's own. */

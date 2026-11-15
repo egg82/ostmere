@@ -6,7 +6,7 @@ import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Condition, GoalRow, QueueEntry, View } from "../src/api/types";
-import { controllingEntry, queueStint, stintRow } from "../src/game/queue";
+import { controllingEntry, queueStint, shareUntil, stintRow } from "../src/game/queue";
 import { stintFacts, stintParts, stintWords } from "../src/ui/stint";
 
 install();
@@ -19,8 +19,8 @@ const catalog = new Catalog(fixtureContent);
 const R = fixtureContent.scales.rate_per_item_hour;
 const H = 3600;
 const base = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
-const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q };
-const levelUntil = { kind: "at_least" as const, watched: { kind: "skill_level" as const, skill: "foraging" }, value: 4, release: 4 };
+const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false };
+const levelUntil = { kind: "at_least" as const, watched: { kind: "skill_level" as const, skill: "foraging" }, value: 4, release: 4, value_of_cap: false, release_of_cap: false };
 const wood = (lands: number | null, over: Partial<GoalRow> = {}): GoalRow => ({
   kind: "store", store: "wood", skill: null, target: 30 * Q, lands_at: lands, per_hour: 60 * R, limit: null, until: woodUntil, ...over,
 });
@@ -33,7 +33,7 @@ const view = (over: Partial<View>): View => ({ ...base, ...over });
 // queuing: the stint goes at the end of the queue, its until the row's own
 {
   const v = view({ queue: [stint("a", levelUntil)] });
-  expect("queued at the end", queueStint(v, "b", wood(100 + H)), { kind: "set_queue", entries: [stint("a", levelUntil), stint("b")] });
+  expect("queued at the end", queueStint(v, "b", wood(100 + H).until), { kind: "set_queue", entries: [stint("a", levelUntil), stint("b")] });
 }
 
 // a row is found by its until alone: kind, subject, value
@@ -69,12 +69,29 @@ expect("none", controllingEntry(view({ queue: [] })), null);
 {
   const after = view({ goal_rows: [wood(100), level(100 + 2 * H)] });
   expect("closed", stintParts(catalog, after, false, false, () => {}, () => {}).length, 1);
-  let picked: GoalRow | null = null;
-  const [button, list] = stintParts(catalog, after, true, false, () => {}, (r) => { picked = r; });
+  let picked: Condition | null = null;
+  const [button, list] = stintParts(catalog, after, true, false, () => {}, (u) => { picked = u; });
   expect("button", button?.textContent, "Run until…");
   const goals = Array.from(list?.children ?? []) as HTMLElement[];
   expect("the met goal is left out", goals.map((g) => g.textContent), ["Foraging 42 h"]);
   goals[0]?.click();
-  expect("picked", (picked as GoalRow | null)?.skill, "foraging");
+  expect("picked: the row's until", picked, level(100 + 2 * H).until);
   expect("disabled lists nothing", stintParts(catalog, after, true, true, () => {}, () => {}).length, 1);
+}
+
+// a store's goal also offers that store's named shares not yet reached; a share until is worded by its share and is
+// never taken for a row with the same numbers
+{
+  const after = view({ goal_rows: [wood(100 + H)] });
+  let picked: Condition | null = null;
+  const [, list] = stintParts(catalog, after, true, false, () => {}, (u) => { picked = u; });
+  const [row, shares] = Array.from(list?.children ?? []) as HTMLElement[];
+  expect("the goal, then its shares", [row?.className, shares?.className], ["stint-goal", "stint-shares"]);
+  const marks = Array.from(shares?.querySelectorAll(".cond-preset") ?? []) as HTMLElement[];
+  expect("full is offered, by name for a screen reader", marks.at(-1)?.getAttribute("aria-label"), "Dead wood at full");
+  marks.at(-1)?.click();
+  expect("picked: full, as a share", picked, shareUntil("wood", 10000));
+  const full = stint("a", shareUntil("wood", 10000));
+  expect("Next words a share", stintWords(catalog, view({ goal_rows: [] }), full), "a until Dead wood at full");
+  expect("a share is not a row's amount", stintRow(view({ goal_rows: [{ ...wood(100), until: { ...woodUntil, value: 10000, release: 10000 } }] }), full.until), null);
 }

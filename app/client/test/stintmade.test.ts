@@ -14,7 +14,7 @@ const H = 3600;
 const catalog = new Catalog(fixtureContent);
 const now = 1_000_000;
 const run = (made: Amount[], on: number | null = now - 6 * H): RuleRun => ({
-  order: { when: { kind: "at_least", watched: { kind: "skill_level", skill: "k" }, value: 2, release: 2 }, then: { kind: "switch_mix", mix_id: "b" } },
+  order: { when: { kind: "at_least", watched: { kind: "skill_level", skill: "k" }, value: 2, release: 2, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "b" } },
   starts: on === null ? 0 : 1, on_at: on, on_level: null, off_at: now - 4 * H, off_level: null, ended: "stint", made,
 });
 const facts = (made: Amount[], on: number | null = now - 6 * H): string => stintFacts(catalog, run(made, on), now);

@@ -17,15 +17,18 @@ const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.str
 const canon = (x: unknown): string => JSON.stringify(x, (_, v: unknown) => (v !== null && typeof v === "object" && !Array.isArray(v)
   ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) : v));
 
+/** A condition with its share flags written out: one left out is false (CONTRACT.txt, "Share levels"). */
+const filled = (c: Condition): Condition => (c.kind === "after_time" ? c
+  : { ...c, value_of_cap: c.value_of_cap ?? false, release_of_cap: c.release_of_cap ?? false });
+
 /** The same condition, whatever order its fields were written in. */
 export function sameCondition(a: Condition, b: Condition): boolean {
-  return canon(a) === canon(b);
+  return canon(filled(a)) === canon(filled(b));
 }
 
 /** The chip whose condition `when` is exactly (same test, store and levels), if any. */
 export function chipOf(catalog: Catalog, when: Condition): ChipInfo | undefined {
-  const key = canon(when);
-  return catalog.content.chip_infos.find((c) => canon(c.when) === key);
+  return catalog.content.chip_infos.find((c) => sameCondition(c.when, when));
 }
 
 /** A rule's condition in the player's words: as its chip (ui.rule.chip) when it is a chip's, else as a subject rule
@@ -236,7 +239,7 @@ export function setRule(view: View, index: number | null, order: Order): Decisio
 
 /** Another rule (not `index`) already does exactly this. */
 export function ruleExists(view: View, index: number | null, order: Order): boolean {
-  return view.orders.some((o, i) => i !== index && same(o, order));
+  return view.orders.some((o, i) => i !== index && sameCondition(o.when, order.when) && same(o.then, order.then));
 }
 
 /** A rule of the player's has been seen on and then off, the same rule in the same place: the step that brings

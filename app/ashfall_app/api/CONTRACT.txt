@@ -54,11 +54,13 @@ ENDPOINTS
   account's is 404 not_found.
   POST /api/saves/{save_id}/delete    Games: the save deleted (GAMES ON ONE ACCOUNT).
   POST /api/saves/{save_id}/restore   Games: a deleted save live again (GAMES ON ONE ACCOUNT).
-  POST /api/saves/{save_id}/open      Opened {save, was, history, presentation, step}: the save as the player last saw
-                                      it (`was`, the View at the time it was last written), its last 200 lines before
-                                      this call (`history`, PastLine {n, at, key}, oldest first), what the page keeps
-                                      about its teaching (`presentation`, SavePresentation below), and `step`, the save
-                                      advanced to now with the lines that arrived while away. Writes like an advance.
+  POST /api/saves/{save_id}/open      Opened {save, was, history, presentation, journal_days, step}: the save as the
+                                      player last saw it (`was`, the View at the time it was last written), its last
+                                      200 lines before this call (`history`, PastLine {n, at, key}, oldest first), what
+                                      the page keeps about its teaching (`presentation`, SavePresentation below), its
+                                      journal's written days stored before this call (`journal_days`, JOURNAL, "The
+                                      written days"), and `step`, the save advanced to now with the lines that arrived
+                                      while away. Writes like an advance.
   POST /api/saves/{save_id}/advance   Step: a plain advance to now. Call it when the clock passes
                                       view.next_event_at, and on the page being shown again.
   POST /api/saves/{save_id}/decisions DecisionRequest {decision, after} -> Step: advance to now, then apply the
@@ -113,6 +115,14 @@ ENDPOINTS
   entries take switch_mix, tap_card and answer_offer. Their conditions take no `running`
   subject (the page never builds one): set_orders or set_queue with one is 422 invalid_decision. A view still
   carries `running` subjects, in blockers and in saves that hold them.
+  Share levels: at_least and at_most carry value_of_cap and release_of_cap (bool, false when left out, always
+  served). True says that level is basis points, 0..10000, of the watched store's cap at the moment the condition is
+  read, not a quantity, so the rule keeps up as the cap grows (engine DESIGN.txt, "SHARE LEVELS": the store's whole
+  items are compared with the exact share of the cap's whole items, and a band of one item is kept). Only an order's
+  `when` and a queue entry's `until` on a store_value hold one; set_orders or set_queue with a share level on any
+  other subject, outside 0..10000, or with two share levels on the wrong side of each other is 422 invalid_decision.
+  A share level and a quantity are never compared for which side the release is on. Content's conditions (chips,
+  goals, blockers, order cards, goal rows) are always quantities.
   SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
   save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
   answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.
@@ -124,7 +134,7 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
@@ -136,9 +146,10 @@ ENDPOINTS
   {id, was, now}], levels: [Figure], camp: Figure | null, rules: [RuleChange {order, came_on, times}]}, what the return
   found against what the player left: each store whose whole items moved (quantities), each skill that rose and the
   Camp's level, each rule that came on (times: how often, 1 where the page could not count) or only let go while away;
-  the page takes it once, as the visit is kept, and draws it as the chronicle's "Since you left" chapter). A PUT from a
-  page of the build before, which carries no visits or chapter, leaves them as stored; a chapter replaces the stored one
-  only when its `left` is later, and never past the byte limit below.
+  the page takes it once, as the visit is kept, and draws it as the chronicle's "Since you left" chapter;
+  newest_day_read: JOURNAL, "The written days"). A PUT from a page of the build before, which carries no visits or
+  chapter, leaves them as stored; a chapter replaces the stored one only when its `left` is later, and never past the
+  byte limit below.
   Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
   checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
   a line by its kind and never by its key or words.
@@ -159,8 +170,9 @@ ENDPOINTS
   the account has recovery words; words_due, it has none, holds a decision on a save, and was made at least 3 days ago
   (the page marks the way to make them with a dot).
   A presentation only grows, so a PUT is merged into what the account (or the save) keeps, in one write under its row lock:
-  a flag is set if either has it, a list is the kept entries then the sent ones not yet there (a lesson_end is the
-  same entry as another naming the same lesson; the kept one stays), and a list stops growing at 512 entries, and every list at the byte limit (REQUEST LIMITS). A page
+  a flag is set if either has it, a growing number (newest_day_read) is the higher of the two, a list is the kept
+  entries then the sent ones not yet there (a lesson_end is the same entry as another naming the same lesson; the kept
+  one stays), and a list stops growing at 512 entries, and every list at the byte limit (REQUEST LIMITS). A page
   whose copy is older than what is kept (a second tab or device) so takes nothing away, and takes the answer as its
   new copy. The lesson id in a lesson.end line is the page's own id for a lesson, logged as sent like a card id.
 
@@ -538,6 +550,10 @@ THE CLIENT MAY
     absent, none) are below its count.
   - show on each skill row its next level and what it pays, from SkillInfo.levels (the first entry above
     SkillBar.level); a pays_key is words, "?" for a story unlock. Its {pct} slot (and {pct_b}) is LevelPays.change_bp.
+  - when a skill's shown level (SkillPrestige.level_counted, else SkillBar.level) rises from one view to the next,
+    show ui.card.levelled for 2 s on each card in view.cards that a level passed names in LevelPays.speeds and whose
+    Card.speed rose: {skill} the skill's label, {n} the new level, {before} and {after} one whole completion's time
+    (bar_total / speed) in the two views. A card whose speed did not rise shows nothing.
   - draw the Camp bar from the ledger line of Content.camp.store, which is never drawn as a ledger line: its
     level is how many of camp.camp_levels' `at` the line's sample has reached, its next marker the next level's
     pays_key (its {from} and {to} slots filled from pays_from and pays_to, {pct} from change_bp) in ui.camp.pays, shown only once
@@ -585,19 +601,33 @@ THE CLIENT MAY
     when the chip clears). One with after_end waits for view.ended_at and for the end lines to have been read in that
     page (below, "The end"). Accepting it is the same as above. A chip with several order_cards offers each, side by
     side, in content order; a rule set on the chip's store and test answers them all.
+  - offer, in the condition editor's When list for a rule doing some cards (a task, or a mix's cards), first the
+    stores those cards make (CardInfo.makes), then the stores they take (CardInfo.takes), then the stores of each
+    card in view.cards that makes one they take or takes one they make; never by words in a label. The simple view
+    offers only those; the full editor offers every store, those first.
   - word a rule whose `when` equals a ChipInfo's `when` as that chip: ui.rule.chip in a rule's condition,
     ui.hands.while_chip on the hands strip while it runs; never by its numbers. Offer a chip's rule in the full
     condition editor from the chip's first showing on: every chip in view.chips_seen that would be drawn (its
     offered_after, if any, in view.unlocked), whether or not it shows now and whatever task the rule then does.
   - build, read back and word a store rule (an order whose `when` watches a StoreValue), with Q =
-    Scales.quantity_per_item and n, m whole items:
-      "Under {n} {store}, until {m}"                   at_most, value n*Q - 1, release m*Q - 1; 1 <= n < m <= cap
-      "{n} or more {store}, until under {m}"           at_least, value n*Q, release m*Q;       1 <= m < n <= cap
-    so each crossing falls on the amount the page shows. Read back: at_most n = floor((value+1)/Q), m =
-    floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule read back with no band (m == n:
-    an order card with no release) is worded without "until" (ui.rule.below, ui.rule.reaches). The page builds only
-    rules with a band of at least one item, inside the store's cap (LedgerLine.cap), so never one that is always true
-    or flips at one level, and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
+    Scales.quantity_per_item. Each level is whole items n, m or a share of the cap (Share levels above), b in basis
+    points, sent with its flag true and worded by name (ui.level.empty, quarter, half, three_quarters, full at 0,
+    2500, 5000, 7500, 10000) or as ui.level.pct {pct}:
+      "Under {n} {store}, until {m}"                   at_most, value n*Q - 1, release m*Q - 1 (or b)
+      "{store} down to {b}, until {m}"                 at_most, value b, release m*Q - 1 (or b)
+      "{n} or more {store}, until under {m}"           at_least, value n*Q, release m*Q
+      "{n} or more {store}, until down to {b}"         at_least, value n*Q, release b
+      "{store} up to {b}, until under {m}"             at_least, value b, release m*Q
+      "{store} up to {b}, until down to {b}"           at_least, value b, release b
+    so each crossing in items falls on the amount the page shows, and a share is reached at the share itself from
+    either side (engine DESIGN.txt, "SHARE LEVELS"). Read back: a flagged level is its share; at_most n =
+    floor((value+1)/Q), m = floor((release+1)/Q); at_least n = floor(value/Q), m = floor(release/Q). A rule of items
+    read back with no band (m == n: an order card with no release) is worded without "until" (ui.rule.below,
+    ui.rule.reaches). A new rule starts with both levels shares (down to a quarter, until three quarters; up to full,
+    until half), in items only on a store too small for those to keep a band; either level of any rule can be turned
+    into the other form where it reads now. The page builds only rules whose levels, read against the store's cap now
+    (LedgerLine.cap) as the engine reads them, have a band of at least one item inside the cap, so never one that is
+    always true or flips at one level, and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
     the store of the rule being edited even without a ledger line (its cap from StoreInfo). It may
     write rules once it has seen one of the player's rules come on and then let go (view.orders_on), and draws no
     rule whose `when` is not on a StoreValue or one of the subject rules below, except a lane's always rule (A LANE
@@ -707,10 +737,20 @@ TEXT AND NUMBERS (one rule)
     ui.order.add                    a new rule's Add
     ui.rule.below {store}{n} | ui.rule.below_until {store}{n}{m} | ui.rule.reaches {store}{n} |
     ui.rule.reaches_until {store}{n}{m}   a store rule's condition, with no band and with one
+    ui.rule.down_to_until {store}{n}{m} | ui.rule.up_to_until {store}{n}{m} | ui.rule.up_to_until_under {store}{n}{m} |
+    ui.rule.reaches_until_down {store}{n}{m}   the same with a share level, by which level is one ("a store rule")
+    ui.level.empty | ui.level.quarter | ui.level.half | ui.level.three_quarters | ui.level.full | ui.level.pct {pct}
+                                    a share level's words; ui.level.mark_quarter | ui.level.mark_half |
+                                    ui.level.mark_three_quarters the editor's short marks for three of them
+    ui.rule.of_full | ui.rule.exact   a level's two forms in the condition editor: a share of the cap, or items
+    ui.rule.quick_down {store}{test}{n}{task}{m} | ui.rule.quick_up {store}{test}{n}{task}{m} | ui.rule.falls_to |
+    ui.rule.reaches_to   the quick add's sentence, by its test, each slot a control; its two tests' words
+    ui.rule.copy                     a rule being changed: a new rule from it, to change before adding
     ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
     ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
     ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits
                                     for under n / n or more, and the store holds `have` now (amounts, sampled)
+    ui.rule.needs_down_to {store}{n}{have} | ui.rule.needs_up_to {store}{n}{have}   the same for a share level
     ui.rule.stuck {n}{store} | ui.rule.unfed {store}{n}   a store rule that cannot let go, or whose mix may stop short
                                     (DRY RULES)
     ui.rule.outranked {rule} | ui.rule.passed_over   why a rule is off: an earlier rule has the hands (its condition's
@@ -721,6 +761,7 @@ TEXT AND NUMBERS (one rule)
     ui.hands.by_rule {store}{n} | ui.hands.until_up {store}{m} | ui.hands.until_down {store}{m}   the hands strip while
                                     a rule's mix or task runs: with no band, until a "below" rule lets go, until a
                                     "reaches" one does
+    ui.hands.until_up_to {store}{m} | ui.hands.until_down_to {store}{m}   the same two, the until a share level
     ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
@@ -931,12 +972,16 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
   - in the mix editor, offer ui.stint.run under the goal rows, never while Save is unavailable, the queue is at
     max_queue, or the editor makes a mix for a rule. Pressed, it lists each row of the edit's dry run whose lands_at
     is not the dry run's `at` (a met goal would pop at once): the goal (ui.goal.store, ui.goal.level) and its time
-    left in the dry run (ui.goal.never for null), never sorted or marked as better. Picking a row sends save_mix
-    (with saveDecisions' renames) when the edit differs from the saved mix, then set_queue with view.queue and the
-    stint {switch_mix {mix id}, until: row.until} at its end, and closes the editor.
+    left in the dry run (ui.goal.never for null), never sorted or marked as better; under a store's row, after
+    ui.stint.or_until, the named shares of that store's cap (a quarter, half, three quarters, full) its whole items
+    have not reached, each an until at_least {store_value, value = release = b, both flags true} with no time (none
+    is served for it). Picking one sends save_mix (with saveDecisions' renames) when the edit differs from the saved
+    mix, then set_queue with view.queue and the stint {switch_mix {mix id}, until: the row's until or the share's} at
+    its end, and closes the editor.
   - in Next (the Rules tab's queue), word a switch_mix entry ui.stint.entry {mix} {goal}: the goal from the row of
     view.goal_rows whose until equals the entry's (kind, subject, value, release), else from the until itself (a store
-    at value, a skill at the counted level). On the controlling entry while its mix runs, add the row's time left
+    at value, a share by ui.goal.store_share {store}{n}, a skill at the counted level). A share until never matches a
+    row. On the controlling entry while its mix runs, add the row's time left
     (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
     store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
   - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed): pressed, it lists the saved
@@ -1157,32 +1202,29 @@ JOURNAL
   and the numbers are View.fights. View gains nothing. The page draws the journal from Content.journal,
   view.unlocked and view.fights, and keeps what the player has read in AccountPresentation. Page design:
   docs/design/opening-screen.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
-  page shell; not a system (one caller, nothing to swap).
+  page shell; not a system (one caller, nothing to swap). The daily journal's written days are the one part the wire
+  carries anew, on Step and Opened (below, "The written days").
 
   The book is in sections, a closed set, and each page is in one:
-    days                the daily journal: the story's bigger beats, retold afterwards in the character's voice (the
-                        chronicle stays the live feed). Each note is written on a spine beat and names it.
+    days                the daily journal: the written days the server composes from the save (below, "The written
+                        days"), never entries. Its pages are the page's own: days run on down a page until the next
+                        would not fit.
     creatures           the things fought, with their numbers.
     places              places, events and expeditions.
-  Within a section, pages run in the order they are written. The content keeps that order: a section's pages are
-  declared (chapters in load order) in the order their first notes are written on every route, so content order is
-  writing order and nothing on the wire carries a time.
+  Within creatures and places, pages run in the order they are written. The content keeps that order: a section's
+  pages are declared (chapters in load order) in the order their first notes are written on every route, so content
+  order is writing order and nothing on the wire carries a time.
 
   In the chapter files:
     [journal]           feature: a FeatureId with a label_key (the book the player carries). Declared once, in the
                         chapter that holds the first entry or an earlier one; Content.journal is null until then.
     [[entries]]         id (an EntryId), section, sketch, hand, runners
-      section           "days", "creatures" or "places"
+      section           "creatures" or "places"
       sketch            optional: the entry's drawing, an id matching [a-z0-9_]+, the image
                         /assets/journal/<sketch>.png. A page with none is laid out as text alone, which is valid.
       hand              "ink" or "pencil": how the entry's notes are written where a note does not say
       runners           the fight cards and standing fights whose numbers the page shows, in this order; [] for none
-    [[notes]]           id (a NoteId), entry, gate, requires, hand, sketch, beat
-      beat              on a days page, required: the spine beat the note retells, an id of content/beats.yaml's
-                        beats (B5). Its gate is that beat's own step, so the note is written at the beat's instant.
-                        Refused on a note of any other section. The loader holds its presence and shape; the canon is
-                        not shipped, so tests hold that it names a beat in beats.yaml and that, on every played
-                        route, the note is written at the instant that beat lands.
+    [[notes]]           id (a NoteId), entry, gate, requires, hand, sketch
       entry             the entry the note is written on, declared in this chapter or an earlier one
       gate, requires    when it is written, as an offer's: the loader makes the trigger "note_" + id, whose outcome
                         unlocks the note and, for the entry's first note, the entry. Every other note's trigger also
@@ -1200,15 +1242,16 @@ JOURNAL
     - a runner that is neither a card with a fight nor a standing action with a fight: refused, naming the entry and
       the runner.
     - a sketch id outside [a-z0-9_]+ (it is a path): refused, naming the entry or note.
-    - a note on a days page with no beat, a beat outside [A-Za-z0-9-]+, or a beat on a note of another section:
-      refused, naming the note.
+    - an entry whose section is "days": refused, naming the section (the days pages are the written days).
     - an entry or a note while no chapter so far declares [journal]; [journal] declared twice; its feature unknown or
       without a label_key: refused.
     - a note with no [text] entry, or whose text holds a digit: refused by the existing text checks (Text and
       numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
     - entry and note ids are content ids like any other: new ids only across chapters, kept by the release lock, and
       renamed by renames.toml under the id kinds entry and note. A note_ trigger's outcome is locked as any trigger's,
-      so a released entry keeps its first note.
+      so a released entry keeps its first note. A released entry or note leaves only by retirement (renames.toml, an
+      entry with no `to`): a save keeps its unlock, and a retired note's trigger goes with it (engine DESIGN.txt,
+      "Retired").
 
   Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY), renamed
   through IdKind ENTRY and NOTE; engine DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
@@ -1217,9 +1260,8 @@ JOURNAL
 
   Content.journal: JournalInfo {feature, entries: [EntryInfo {entry, section, sketch, runners: [str], notes:
   [NoteInfo {note, hand, sketch}]}]} | null. entries in content order (chapters in load order), each entry's notes in
-  content order; within one section, content order is writing order. Section is a closed enum, "days" | "creatures"
-  | "places". EntryInfo.sketch is null for a page with no drawing. A note's beat stays in the content: the page has
-  no use for it.
+  content order; within one section, content order is writing order. Section is a closed enum, "creatures" |
+  "places". EntryInfo.sketch is null for a page with no drawing.
   NoteInfo.hand is resolved (the entry's where the note names none), so EntryInfo carries no hand and the page applies
   no default. NoteInfo.sketch is null for a note with none. A note's words are Content.text_entries[note]. Hand is a
   closed enum, "ink" | "pencil": each hand is a style the page owns, so adding one is page work as well as content.
@@ -1235,16 +1277,23 @@ JOURNAL
 
   THE CLIENT MAY:
   - draw Content.journal.feature as the Journal button, in the book's place with the chips, once view.unlocked holds
-    that feature and at least one entry; until then the book is plain text, as any feature with a label_key. The
-    button's word is the book's label_key. It carries the quiet dot while any note is unread, and at no other time.
-  - open the Journal sheet from it: one page per entry view.unlocked holds, the sections in the order days,
-    creatures, places, and each section's pages in Content.journal.entries order. It opens on the first entry holding
-    an unread note, else the entry last shown in this page session, else the first. Prev and Next turn one entry at a
-    time, across sections.
-  - draw one bookmark per section that has a page view.unlocked holds, in the same order, worded by its text key
-    (ui.journal.days, ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark.
-    Turning to a bookmark opens that section's first page holding an unread note, else its latest page (the last in
-    content order that view.unlocked holds). The bookmark of the open page's section is marked as the current one.
+    that feature and the book has a page (a written day, or an entry view.unlocked holds); until then the book is
+    plain text, as any feature with a label_key. The button's word is the book's label_key. It carries the quiet dot
+    while anything written is unread (a note, or a written day after newest_day_read), and at no other time.
+  - open the Journal sheet from it: the days pages, then one page per entry view.unlocked holds, creatures then
+    places, each section's entry pages in Content.journal.entries order. It opens on the first page holding something
+    unread, else the page last shown in this page session, else the first. Prev and Next turn one page at a time,
+    across sections.
+  - fill the days pages with the written days in day order: each day's notes in page order under its day's heading
+    (ui.journal.day {n}, n the game day plus one), in the note's hand and with its sketch beside it, days running on
+    down a page until the next would not fit, which starts a new page; a day is never split, so one longer than a page
+    has a page of its own. Whether a day fits is a fixed measure of its words (rows of the hand at the desktop
+    page's width), never the window, so the same days are the same pages on every device and width, and a page,
+    once a later one is begun, never changes. A day served while its page is open joins it and stays unread.
+  - draw one bookmark per section that has a page, in the same order, worded by its text key (ui.journal.days,
+    ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark. Turning to a bookmark
+    opens that section's first page holding something unread, else its latest page. The bookmark of the open page's
+    section is marked as the current one.
   - on a page, draw the entry's sketch and each of its notes view.unlocked holds, in content order and in its hand,
     with the note's sketch beside it. A note not unlocked is not drawn and keeps no room. A page whose sketch is null
     is laid out as text alone: no empty room is kept for a drawing, nothing is loaded and nothing is reported.
@@ -1260,8 +1309,9 @@ JOURNAL
     open; a strength's entries do not open here (the fight card's do).
   - count the notes of each page the player turns to (opening counts as turning to the page it opens on) as read,
     and send them once, as the sheet closes: one PUT /api/me/presentation whose journal_read gains exactly those
-    notes, every other field as kept. A note unlocked while its page is open stays unread until the page is turned to
-    again.
+    notes, every other field as kept, and, when the newest day on the days pages turned to is later than
+    newest_day_read, one PUT /api/saves/{id}/presentation with that day. A note unlocked while its page is open stays
+    unread until the page is turned to again.
   - load a sketch when its page is drawn; one that fails to load leaves its room empty (no broken-image mark, no
     stand-in drawing) and is reported to /api/client-errors with the sketch id.
   THE CLIENT MAY NOT:
@@ -1272,8 +1322,32 @@ JOURNAL
     entry or note view.unlocked does not hold.
   - write a note's words anywhere but its page: the story strip and the chronicle carry lines, not notes.
 
+  The written days (docs/design/journal.md): the main character's daily journal, which the server composes from the
+  save's history, never the page. Game day d is game seconds [d * 86400, (d + 1) * 86400). A day is composed, written
+  or not, by the first step whose save time reaches its end, in that step's transaction; a step that closes several
+  composes each, oldest first, and a save that has none stored (one begun before the journal was kept) composes every
+  day it has closed on its next step. Composing reads only the lines before the day's end and the days stored before
+  it, so a day comes out the same whichever step composes it. Stored once, a day never changes: a later change to the
+  habits or the slots applies from the next day composed.
+    Step.journal_days    [JournalDay]: the written days this step composed, oldest first. Empty on most steps.
+    Opened.journal_days  [JournalDay]: every written day stored before the open, oldest first. The open's step
+                         carries the days it composed, so the two together are every written day.
+    JournalDay {day, day_notes: [DayNote {subject, slot, key, hand, sketch}]}: a day the journal wrote, its notes in
+                         page order (at least one). A day not written (a gap or a blank) is stored and never served.
+                         key is the note's text key (Content.text_entries); slot is a closed enum, "first" | "repeat" |
+                         "catchup" | "mention" | "late" | "misremember" | "correction"; hand is the slot's own, else
+                         "ink"; sketch the slot's, else null (/assets/journal/<sketch>.png). subject is the content's
+                         subject id.
+  SavePresentation gains newest_day_read: int | null, the newest written day whose page the player has turned to,
+  null on a new save; a written day after it is unread. It only grows: a PUT whose value is lower, or null, leaves the
+  kept one. The days are the save's own diary, so how far into them the player has read is kept per save, where the
+  book's notes, which every game shares, are read per account (journal_read).
+  THE CLIENT MAY NOT:
+  - compose a day, or draw a written day neither Opened nor a Step carried.
+
   New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
                                     and its page turns
+                                    ui.journal.day {n}   a day's heading on a days page
                                     ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
                                     the journal's lesson (opening-screen.md, "Lessons")
                                     ui.journal.days | ui.journal.creatures | ui.journal.places   the sections'
@@ -1292,9 +1366,13 @@ JOURNAL
   - Every word in the sketch (process.md's notes files): notes grow as the player learns and pass the content's text
     checks, so they are text; the sketch keeps only the words that point into the drawing.
   - A note that strikes an earlier one, and a contents page: nothing in the first entries needs either.
-  - A written-at time on the wire to order a section's pages: content order is writing order, which the played
-    routes hold (a section's pages written in content order, a days note at its beat's instant), so a time would be a
-    second home for the same fact.
+  - A written-at time on the wire to order a section's entry pages: content order is writing order, which the played
+    routes hold, so a time would be a second home for the same fact.
+  - The days pages' breaks on the wire, or paged by the window: the page's measure is fixed, so the pages follow from
+    the days alone, and a break the window chose would differ between a phone and a desktop.
+  - The days not written on the wire, with why: the page draws nothing for them, and a gap's cause is the composer's.
+  - Every written day on every Step: Opened carries the stored ones once, and a step carries only those it composed.
+  - A day's hand left for the page to default: as NoteInfo.hand, the server resolves it and the page applies none.
 
   Acceptance (the first slice is done when each passes; server tests under app/tests, client tests under
   app/client/test, as their neighbours):

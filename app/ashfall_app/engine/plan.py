@@ -11,7 +11,7 @@ from .lanes import TapCard
 from .memo import SaveMemo
 from .errors import InvalidVerbError
 from .mixes import Mix, MixLayer, SwitchMix, flatten_shares
-from .orders import OrderVerb
+from .orders import OrderVerb, rule_on
 from .rules import Rules
 from .state import Save
 
@@ -50,7 +50,7 @@ def queue_mix_id(save: Save, rules: Rules) -> MixId | None:
 
 def candidates(save: Save, rules: Rules) -> tuple[CardId, ...]:
     """The known cards a true order or the controlling queue entry would tap, once ready."""
-    verbs = [o.then for o, latch in zip(save.orders, save.latches) if latch]
+    verbs = [o.then for o, latch in zip(save.orders, save.latches) if rule_on(latch)]
     queued = live_queue_verb(save, rules)
     if queued is not None:
         verbs.append(queued)
@@ -88,7 +88,7 @@ def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | 
     layer never change this layer's running mix."""
     saved = {m.id for m in save.mixes}
     for i, (o, latch) in enumerate(zip(save.orders, save.latches)):
-        if latch and isinstance(o.then, SwitchMix) and o.then.mix in saved and not greyed(save, rules, o.then.mix) \
+        if rule_on(latch) and isinstance(o.then, SwitchMix) and o.then.mix in saved and not greyed(save, rules, o.then.mix) \
                 and mix_layer(rules, save.mixes, o.then.mix) is layer:
             return i, o.then.mix
     return None
@@ -138,7 +138,7 @@ def lane_order(save: Save, rules: Rules, lane: LaneId) -> int | None:
     if card is None:
         return None
     return next((i for i, (o, latch) in enumerate(zip(save.orders, save.latches))
-                 if latch and o.then == TapCard(card) and not is_dead(save, rules, o.then)), None)
+                 if rule_on(latch) and o.then == TapCard(card) and not is_dead(save, rules, o.then)), None)
 
 
 class OrderState(Enum):
@@ -164,7 +164,7 @@ def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
     def state(i: int, verb: OrderVerb, latch: bool) -> OrderState:
         if is_dead(save, rules, verb):
             return OrderState.PASSED_OVER
-        if not latch:
+        if not rule_on(latch):
             return OrderState.WAITING
         if isinstance(verb, SwitchMix):
             return OrderState.ON if running[_layer_of(save, rules, verb.mix)] == i else OrderState.OUTRANKED

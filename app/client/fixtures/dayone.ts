@@ -22,7 +22,7 @@ const still = (at: number, value = 0) => ({ start: at, start_value: value, rate:
 function card(at: number, id: string, over: Partial<Card> = {}): Card {
   return {
     card: id, completions: 0, cap: 1, bar: still(at), bar_total: 20 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-    blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, needs: [], ...over,
+    blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: BP, needs: [], ...over,
   };
 }
 
@@ -30,7 +30,7 @@ function card(at: number, id: string, over: Partial<Card> = {}): Card {
 function short(at: number, id: string, store: string, need: number, have: number, readyAt: number | null, over: Partial<Card> = {}): Card {
   const watched = { kind: "store_value" as const, store };
   return card(at, id, {
-    blocker: { condition: { kind: "at_least", watched, value: need * Q, release: need * Q }, ready_at: readyAt },
+    blocker: { condition: { kind: "at_least", watched, value: need * Q, release: need * Q, value_of_cap: false, release_of_cap: false }, ready_at: readyAt },
     needs: [{ store, quantity: need * Q, segment: { start: at, start_value: have * Q, rate: readyAt === null ? 0 : Math.ceil(((need - have) * Q) / (readyAt - at)), limit: null }, gate: null, makers: [], spent: false }],
     ...over,
   });
@@ -45,7 +45,7 @@ function line(at: number, store: string, items: number, perHour: number, cap: nu
   };
 }
 
-const queued = (id: string): QueueEntry => ({ verb: { kind: "tap_card", card: id }, until: { kind: "at_least", watched: { kind: "card_count", card: id }, value: 1, release: 1 } });
+const queued = (id: string): QueueEntry => ({ verb: { kind: "tap_card", card: id }, until: { kind: "at_least", watched: { kind: "card_count", card: id }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } });
 const feature = (id: string) => ({ category: "feature" as const, id });
 
 function builds(at: number, view: View, queue: QueueEntry[]): View {

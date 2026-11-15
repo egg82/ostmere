@@ -18,6 +18,7 @@ from .index import index
 from .motion import store_segment
 from .mixes import flatten_shares
 from .modifiers import Run, RunKind
+from .orders import when_latch
 from .needs import store_need
 from .phaseview import skill_bar
 from .plan import (
@@ -40,7 +41,7 @@ from .viewparts import (
 )
 from .decisions import cuts_in
 from .inputs import input_whole
-from .work import blocker, completions, effective_cap, greyed, starved, tap_seconds
+from .work import blocker, completions, effective_cap, greyed, starved, tap_seconds, tap_work_speed
 
 
 @dataclass(frozen=True)
@@ -117,7 +118,7 @@ def view(save: Save, rules: Rules) -> View:
         chips=shown_chips(save, rules), chips_seen=tuple(c.id for c, seen in zip(rules.chips, save.chips_seen) if seen),
         unlocked=_unlocked(save, rules), runs_out_at=_runs_out_at(save, rules, ledger),
         all_covered=all_covered(save, rules), ended_at=save.ended_at,
-        running_mix=running_mix_id(save, rules), mix_order=mix_order(save, rules), orders_on=save.latches,
+        running_mix=running_mix_id(save, rules), mix_order=mix_order(save, rules), orders_on=tuple(when_latch(on) for on in save.latches),
         order_states=order_states(save, rules), offers=_offers(save, rules),
         fights=fight_views(save, rules),
         running_town_mix=running_town_mix_id(save, rules), town_mix_order=town_mix_order(save, rules),
@@ -213,8 +214,8 @@ def _card_view(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
         bar_total=total, by=by, completes_at=_completes_at(bar, by, total),
         share_bp=share - sum(g.share_bp for g in gained), run=run,
         blocker=blocker(save, rules, c.id), tap_s=tap_seconds(save, rules, c.id), needs=_needs(save, rules, c),
-        cuts_in=cuts_in(save, rules, c.id), spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None,
-        gained=gained)
+        cuts_in=cuts_in(save, rules, c.id), speed=tap_work_speed(save, rules, c.id),
+        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained)
 
 
 def _run_by(save: Save, c: CardDef, tapped: bool) -> RunBy | None:

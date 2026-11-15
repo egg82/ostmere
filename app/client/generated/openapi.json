@@ -1894,6 +1894,16 @@
           "release": {
             "type": "integer",
             "title": "Release"
+          },
+          "value_of_cap": {
+            "type": "boolean",
+            "title": "Value Of Cap",
+            "default": false
+          },
+          "release_of_cap": {
+            "type": "boolean",
+            "title": "Release Of Cap",
+            "default": false
           }
         },
         "type": "object",
@@ -1902,7 +1912,8 @@
           "value",
           "release"
         ],
-        "title": "AtLeast"
+        "title": "AtLeast",
+        "description": "value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a\nquantity; on a store_value, in orders and queue entries only (CONTRACT.txt, \"a store rule\"; engine DESIGN.txt,\n\"SHARE LEVELS\")."
       },
       "AtMost": {
         "properties": {
@@ -1922,6 +1933,16 @@
           "release": {
             "type": "integer",
             "title": "Release"
+          },
+          "value_of_cap": {
+            "type": "boolean",
+            "title": "Value Of Cap",
+            "default": false
+          },
+          "release_of_cap": {
+            "type": "boolean",
+            "title": "Release Of Cap",
+            "default": false
           }
         },
         "type": "object",
@@ -1930,7 +1951,8 @@
           "value",
           "release"
         ],
-        "title": "AtMost"
+        "title": "AtMost",
+        "description": "value_of_cap, release_of_cap as AtLeast's."
       },
       "Blocker": {
         "properties": {
@@ -2165,6 +2187,10 @@
             "type": "boolean",
             "title": "Cuts In"
           },
+          "speed": {
+            "type": "integer",
+            "title": "Speed"
+          },
           "spent_store": {
             "anyOf": [
               {
@@ -2199,6 +2225,7 @@
           "tap_s",
           "needs",
           "cuts_in",
+          "speed",
           "spent_store",
           "gained"
         ],
@@ -2271,6 +2298,20 @@
             "type": "array",
             "title": "Inputs"
           },
+          "makes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Makes"
+          },
+          "takes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Takes"
+          },
           "skill_needs": {
             "items": {
               "$ref": "#/components/schemas/SkillNeed"
@@ -2321,6 +2362,8 @@
           "change_bp",
           "work_s",
           "inputs",
+          "makes",
+          "takes",
           "skill_needs",
           "step_needs",
           "glows",
@@ -2798,6 +2841,45 @@
           "per_hour"
         ],
         "title": "Contribution"
+      },
+      "DayNote": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "slot": {
+            "$ref": "#/components/schemas/Slot"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "hand": {
+            "$ref": "#/components/schemas/Hand"
+          },
+          "sketch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sketch"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject",
+          "slot",
+          "key",
+          "hand",
+          "sketch"
+        ],
+        "title": "DayNote",
+        "description": "A note on a written day, in page order. Its words are the text entry `key`."
       },
       "Decision": {
         "oneOf": [
@@ -3786,6 +3868,28 @@
         ],
         "title": "Joined"
       },
+      "JournalDay": {
+        "properties": {
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "day_notes": {
+            "items": {
+              "$ref": "#/components/schemas/DayNote"
+            },
+            "type": "array",
+            "title": "Day Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day",
+          "day_notes"
+        ],
+        "title": "JournalDay",
+        "description": "A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed."
+      },
       "JournalInfo": {
         "properties": {
           "feature": {
@@ -4113,13 +4217,21 @@
             },
             "type": "array",
             "title": "Change Bp"
+          },
+          "speeds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Speeds"
           }
         },
         "type": "object",
         "required": [
           "level",
           "pays_key",
-          "change_bp"
+          "change_bp",
+          "speeds"
         ],
         "title": "LevelPays",
         "description": "What a level brings, shown before it lands: words (pays_key), \"?\" for a story unlock."
@@ -4874,6 +4986,13 @@
           "presentation": {
             "$ref": "#/components/schemas/SavePresentation"
           },
+          "journal_days": {
+            "items": {
+              "$ref": "#/components/schemas/JournalDay"
+            },
+            "type": "array",
+            "title": "Journal Days"
+          },
           "step": {
             "$ref": "#/components/schemas/Step"
           }
@@ -4884,6 +5003,7 @@
           "was",
           "history",
           "presentation",
+          "journal_days",
           "step"
         ],
         "title": "Opened"
@@ -5640,12 +5760,25 @@
                 "type": "null"
               }
             ]
+          },
+          "newest_day_read": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 104249991374.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newest Day Read"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "title": "SavePresentation",
-        "description": "What the page keeps about one save: its teaching (the lessons and what gates them or their hints) and its returns."
+        "description": "What the page keeps about one save: its teaching (the lessons and what gates them or their hints), its returns,\nand how far into its journal the player has read."
       },
       "Scales": {
         "properties": {
@@ -5673,12 +5806,11 @@
       "Section": {
         "type": "string",
         "enum": [
-          "days",
           "creatures",
           "places"
         ],
         "title": "Section",
-        "description": "The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order."
+        "description": "The part of the book an entry's page is in, each behind its own bookmark; within one, pages run in writing order.\nThe days pages are not entries: they are the written days (JournalDay)."
       },
       "Segment": {
         "properties": {
@@ -6008,6 +6140,20 @@
         "title": "SkillPrestige",
         "description": "Where the skill stands in its prestige phases, at view.at."
       },
+      "Slot": {
+        "type": "string",
+        "enum": [
+          "first",
+          "repeat",
+          "catchup",
+          "mention",
+          "late",
+          "misremember",
+          "correction"
+        ],
+        "title": "Slot",
+        "description": "The occasion a day's note was written for (docs/design/journal.md, \"The content's side\")."
+      },
       "SpentShare": {
         "properties": {
           "card": {
@@ -6146,6 +6292,13 @@
               }
             ],
             "title": "Catching Up To"
+          },
+          "journal_days": {
+            "items": {
+              "$ref": "#/components/schemas/JournalDay"
+            },
+            "type": "array",
+            "title": "Journal Days"
           }
         },
         "type": "object",
@@ -6159,7 +6312,8 @@
           "failed_tap",
           "repeats",
           "rule_runs",
-          "catching_up_to"
+          "catching_up_to",
+          "journal_days"
         ],
         "title": "Step",
         "description": "A save as just written: what to draw, and the lines the game wrote since it was last written."

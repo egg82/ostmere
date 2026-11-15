@@ -499,36 +499,37 @@ outcome = { stores = [{ store = "cord", items = 2 }], line_keys = ["l_find_antle
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_7"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b13"
-entry = "e_days_7"
-gate = { test = "after_time", value = 1209600 }
-beat = "B13"
-
 [[subjects]]
 id = "s_b13"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b13" }
 first = { keys = ["n_day_b13"] }
-
-[[notes]]
-id = "n_day_b14"
-entry = "e_days_7"
-gate = { test = "at_least", subject_kind = "card_count", id = "hall", value = 8 }
-beat = "B14"
+catchup = { keys = ["j_b13_catchup"] }
+late = { keys = ["j_b13_late"] }
 
 [[subjects]]
 id = "s_b14"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b14" }
 first = { keys = ["n_day_b14"] }
+catchup = { keys = ["j_b14_catchup"] }
+late = { keys = ["j_b14_late"] }
+
+[[subjects]]
+id = "s_hall"
+kind = "routine"
+source = { source_kind = "card", id = "hall" }
+first = { keys = ["j_hall_first"] }
+repeat = { keys = ["j_hall_again_1", "j_hall_again_2", "j_hall_again_3"] }
+catchup = { keys = ["j_hall_catchup"] }
+misremember = { keys = ["j_hall_wrong"] }
+correction = { keys = ["j_hall_right"] }
+
+[[subjects]]
+id = "s_frost"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_frost" }
+first = { keys = ["j_frost_first"] }
 
 # ---------- the Camp ----------
 
@@ -701,3 +702,16 @@ aim_table = "keep the long table fed."
 feature_rack_sunned = "rack moved into the sun"
 store_meals = "meals"
 action_table = "The table"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b13_catchup = "the sky thinned. we have shadows"
+j_b13_late = "lucy, {n2} and {n4} never stopped work to look up"
+j_b14_catchup = "the hall's finished. all of us at one table"
+j_b14_late = "from my seat i could see the bottom of the pot. so could everyone"
+j_hall_first = "lucy paced the hall out in the dark, counting under her breath. nine paces. corner posts up beside the bays"
+j_hall_again_1 = "more of the hall"
+j_hall_again_2 = "the hall. stakes, cord, more stakes"
+j_hall_again_3 = "hall all day. shoulders done in"
+j_hall_catchup = "worked on the hall"
+j_hall_wrong = "lucy paced the hall out in the dark, counting under her breath. eleven paces. corner posts up beside the bays"
+j_hall_right = "lucy's count for the hall was nine paces. i wrote eleven. must have misheard her counting"
+j_frost_first = "frost on everything past the warm ground. {n3}'s beds gone white. the hut door froze in its frame, so nine of us round the one fire, three deep"

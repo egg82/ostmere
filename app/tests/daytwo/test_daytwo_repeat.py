@@ -103,6 +103,6 @@ def test_her_switching_rules_equal_the_per_landing_engine(day2_route: DayTwoPlay
     r, start = day2_route.rules, b3_save(day2_route)
     roots = next(st.segment.start_value for st in start.stores if st.store == ROOTS)
     rule = Order(AtLeast(StoreValue(ROOTS), roots + ROOTS_RULE_UP * Q, roots + ROOTS_RULE_DOWN * Q),
-                 TapCard(CardId("n1_gather")))
+                 TapCard(CardId("n1_cut")))
     switched, _ = compare(decide(start, r, start.time, SetOrders((rule, *start.orders))), r, 5_400, monkeypatch)
     assert switched >= 3, "the rule switched her task, on, off and on again, in the span"

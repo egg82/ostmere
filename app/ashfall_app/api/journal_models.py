@@ -1,5 +1,6 @@
-"""The journal on the wire (CONTRACT.txt, "JOURNAL"): what the content says of the book, its pages and their notes. Whether
-a page or note is written is view.unlocked's, and a page's numbers are View.fights'. Re-exported from content_models.py."""
+"""The journal on the wire (CONTRACT.txt, "JOURNAL"): what the content says of the book, its pages and their notes, and
+the daily journal's written days. Whether a page or note is written is view.unlocked's, and a page's numbers are
+View.fights'. Re-exported from content_models.py and, the days, models.py."""
 from enum import StrEnum
 
 from pydantic import BaseModel
@@ -13,10 +14,9 @@ class Hand(StrEnum):
 
 
 class Section(StrEnum):
-    """The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order."""
+    """The part of the book an entry's page is in, each behind its own bookmark; within one, pages run in writing order.
+    The days pages are not entries: they are the written days (JournalDay)."""
 
-    DAYS = "days"
-    """The daily journal: the story's bigger beats, retold."""
     CREATURES = "creatures"
     """The things fought, with their numbers."""
     PLACES = "places"
@@ -52,3 +52,36 @@ class JournalInfo(BaseModel):
     feature: str
     """A feature with a label_key: the Journal button's word."""
     entries: list[EntryInfo]
+
+
+class Slot(StrEnum):
+    """The occasion a day's note was written for (docs/design/journal.md, "The content's side")."""
+
+    FIRST = "first"
+    REPEAT = "repeat"
+    CATCHUP = "catchup"
+    MENTION = "mention"
+    LATE = "late"
+    MISREMEMBER = "misremember"
+    CORRECTION = "correction"
+
+
+class DayNote(BaseModel):
+    """A note on a written day, in page order. Its words are the text entry `key`."""
+
+    subject: str
+    """The journal subject it is about (the content's)."""
+    slot: Slot
+    key: str
+    hand: Hand
+    """Resolved: the slot's own, else ink."""
+    sketch: str | None
+    """A small drawing beside the note, /assets/journal/<sketch>.png; null for none."""
+
+
+class JournalDay(BaseModel):
+    """A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed."""
+
+    day: int
+    day_notes: list[DayNote]
+    """At least one, in page order."""

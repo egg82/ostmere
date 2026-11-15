@@ -1,6 +1,6 @@
 # A test chapter, merged onto the opening alone (tests/opening/test_journal_subjects.py): one journal subject of each
-# kind, fed by a trigger, a card, a person's joining and leaving, and the mentions of people coming, and a days note
-# its beat subject retells. Not story: the ids and words are the tests' own. The planted variants are edits of this file.
+# kind, fed by a trigger, a card, a person's joining and leaving, and the mentions of people coming. Not story: the ids
+# and words are the tests' own. The planted variants are edits of this file.
 version = 1
 
 [[stores]]
@@ -71,18 +71,6 @@ keys = ["t_came_one"]
 [[people.went]]
 at_least = 1
 keys = ["t_went_one"]
-
-[[entries]]
-id = "t_day_page"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "t_day_storm"
-entry = "t_day_page"
-gate = { test = "after_time", value = 100 }
-beat = "B5"
 
 [[subjects]]
 id = "t_s_storm"

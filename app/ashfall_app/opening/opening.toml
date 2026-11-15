@@ -594,26 +594,14 @@ correct_after_days = 2
 [journal]
 feature = "book"
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_1"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b2"
-entry = "e_days_1"
-gate = { test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }
-beat = "B2"
-
-# What the days pages write about (docs/design/journal.md, "The content's side"). A beat's first telling is its days
-# note.
+# What the days pages write about (docs/design/journal.md, "The content's side").
 [[subjects]]
 id = "s_b2"
 kind = "beat"
 source = { source_kind = "card", id = "strike_fire" }
 first = { keys = ["n_day_b2"] }
+catchup = { keys = ["j_b2_catchup"] }
+late = { keys = ["j_b2_late"] }
 
 # ---------- features ----------
 
@@ -860,6 +848,26 @@ feature_book = "book"
 "ui.rule.below_until" = "Under {n} {store}, until {m}"
 "ui.rule.reaches" = "{n} or more {store}"
 "ui.rule.reaches_until" = "{n} or more {store}, until under {m}"
+"ui.rule.down_to_until" = "{store} down to {n}, until {m}"
+"ui.rule.up_to_until" = "{store} up to {n}, until down to {m}"
+"ui.rule.up_to_until_under" = "{store} up to {n}, until under {m}"
+"ui.rule.reaches_until_down" = "{n} or more {store}, until down to {m}"
+"ui.rule.of_full" = "of full"
+"ui.rule.exact" = "exact"
+"ui.rule.quick_down" = "When {store} {test} {n}, {task} until {m}"
+"ui.rule.quick_up" = "When {store} {test} {n}, {task} until down to {m}"
+"ui.rule.falls_to" = "falls to"
+"ui.rule.reaches_to" = "reaches"
+"ui.rule.copy" = "Copy rule"
+"ui.level.empty" = "empty"
+"ui.level.quarter" = "a quarter"
+"ui.level.half" = "half"
+"ui.level.three_quarters" = "three quarters"
+"ui.level.full" = "full"
+"ui.level.pct" = "{pct}%"
+"ui.level.mark_quarter" = "¼"
+"ui.level.mark_half" = "½"
+"ui.level.mark_three_quarters" = "¾"
 "ui.rule.falls_below" = "falls below"
 "ui.rule.reaches_label" = "reaches"
 "ui.rule.when" = "When"
@@ -879,6 +887,8 @@ feature_book = "book"
 "ui.rule.level" = "Level"
 "ui.rule.needs_below" = "needs under {n} {store} · now {have}"
 "ui.rule.needs_reaches" = "needs {n} or more {store} · now {have}"
+"ui.rule.needs_down_to" = "needs {store} down to {n} · now {have}"
+"ui.rule.needs_up_to" = "needs {store} up to {n} · now {have}"
 "ui.rule.outranked" = "outranked by {rule}"
 "ui.rule.passed_over" = "passed over · a task it runs is done"
 "ui.rule.stuck" = "can't reach {n}: out of {store}"
@@ -986,6 +996,8 @@ feature_book = "book"
 "ui.hands.by_rule" = "while under {n} {store}"
 "ui.hands.until_up" = "until {m} {store}"
 "ui.hands.until_down" = "until under {m} {store}"
+"ui.hands.until_up_to" = "until {store} is up to {m}"
+"ui.hands.until_down_to" = "until {store} is down to {m}"
 "ui.hands.while_chip" = "while {chip}"
 "ui.mix.both" = "Both"
 "ui.lesson.tag" = "Tutorial"
@@ -1048,6 +1060,7 @@ feature_book = "book"
 "ui.journal.days" = "Days"
 "ui.journal.creatures" = "Creatures"
 "ui.journal.places" = "Places"
+"ui.journal.day" = "Day {n}"
 "ui.mix.edit" = "Edit"
 "ui.mix.edit_mix" = "Edit mix"
 "ui.mix.save" = "Save"
@@ -1066,11 +1079,13 @@ feature_book = "book"
 "ui.mix.if_run" = "if run"
 "ui.goal.head" = "goals"
 "ui.goal.store" = "{store} {n}"
+"ui.goal.store_share" = "{store} at {n}"
 "ui.goal.level" = "{skill} {n}"
 "ui.goal.never" = "never"
 "ui.goal.limited" = "limited by {store}, {n}"
 "ui.goal.xp" = "XP {n}"
 "ui.stint.run" = "Run until…"
+"ui.stint.or_until" = "or until"
 "ui.stint.entry" = "{mix} until {goal}"
 "ui.stint.which" = "{mix} until…"
 "ui.stint.ran" = "ran {d}"
@@ -1092,6 +1107,7 @@ feature_book = "book"
 "ui.mix.named_by_order" = "a rule uses it"
 "ui.mix.nested" = "inside another mix"
 "ui.card.count" = "{n}/{cap}"
+"ui.card.levelled" = "{skill} {n} · {before} → {after}"
 "ui.card.retired" = "retired"
 "ui.ledger.full" = "full"
 "ui.camp.pays" = "level {level}: {pays}"
@@ -1245,3 +1261,6 @@ aim_stay = "make this somewhere you could stay."
 
 # The journal's notes (api/CONTRACT.txt, "JOURNAL").
 n_day_b2 = "fire, by my own hand. the first thing i've made, that i know of"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b2_catchup = "got a fire lit"
+j_b2_late = "forgot. the stones round the fire are all cut stone. somebody squared them once"

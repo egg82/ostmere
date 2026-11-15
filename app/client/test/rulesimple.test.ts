@@ -72,7 +72,7 @@ function newRule(view: View): { cond: HTMLElement; decided: Decision[] } {
   expect("and Add rule is off", one(cond, ".cond-actions .primary").disabled, true);
   one(cond, ".cond-more").click();
   expect("More options: gone once open", one(cond, ".cond-more").hidden, true);
-  const full = whenChoices(catalog, offer, true, null, null);
+  const full = whenChoices(catalog, offer, true, [], null);
   expect("full: every chip a task in play answers, then every store", q(cond, ".cond-stores .cond-store").map((b) => b.dataset.chip ?? b.dataset.store),
     [...full.chips.map((c) => c.chip), ...full.stores]);
 }
@@ -84,7 +84,7 @@ function newRule(view: View): { cond: HTMLElement; decided: Decision[] } {
   const full = doChoices(catalog, offer, true, null);
   expect("full: the gather mix shows as the gather task, not twice", full.filter((c) => (c.kind === "mix" && c.mix === "Gather by hand") || (c.kind === "task" && c.card === "gather")),
     [{ kind: "task", card: "gather" }]);
-  expect("a store too small for a band is never offered", whenChoices(catalog, offer, true, null, null).stores.every((s) => (catalog.stores.get(s)?.cap ?? 0) >= 2 * fixtureContent.scales.quantity_per_item), true);
+  expect("a store too small for a band is never offered", whenChoices(catalog, offer, true, [], null).stores.every((s) => (catalog.stores.get(s)?.cap ?? 0) >= 2 * fixtureContent.scales.quantity_per_item), true);
 }
 
 // The strip's way into the mixes says what it is; the name is plain text beside it.

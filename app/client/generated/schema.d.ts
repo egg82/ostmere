@@ -643,7 +643,12 @@ export interface components {
             step?: components["schemas"]["Step"] | null;
             merge?: components["schemas"]["MergeSummary"] | null;
         };
-        /** AtLeast */
+        /**
+         * AtLeast
+         * @description value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
+         *     quantity; on a store_value, in orders and queue entries only (CONTRACT.txt, "a store rule"; engine DESIGN.txt,
+         *     "SHARE LEVELS").
+         */
         AtLeast: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -655,8 +660,21 @@ export interface components {
             value: number;
             /** Release */
             release: number;
+            /**
+             * Value Of Cap
+             * @default false
+             */
+            value_of_cap: boolean;
+            /**
+             * Release Of Cap
+             * @default false
+             */
+            release_of_cap: boolean;
         };
-        /** AtMost */
+        /**
+         * AtMost
+         * @description value_of_cap, release_of_cap as AtLeast's.
+         */
         AtMost: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -668,6 +686,16 @@ export interface components {
             value: number;
             /** Release */
             release: number;
+            /**
+             * Value Of Cap
+             * @default false
+             */
+            value_of_cap: boolean;
+            /**
+             * Release Of Cap
+             * @default false
+             */
+            release_of_cap: boolean;
         };
         /**
          * Blocker
@@ -749,6 +777,8 @@ export interface components {
             needs: components["schemas"]["Need"][];
             /** Cuts In */
             cuts_in: boolean;
+            /** Speed */
+            speed: number;
             /** Spent Store */
             spent_store: string | null;
             /** Gained */
@@ -784,6 +814,10 @@ export interface components {
             work_s: number;
             /** Inputs */
             inputs: components["schemas"]["Amount"][];
+            /** Makes */
+            makes: string[];
+            /** Takes */
+            takes: string[];
             /** Skill Needs */
             skill_needs: components["schemas"]["SkillNeed"][];
             /** Step Needs */
@@ -932,6 +966,20 @@ export interface components {
             runner: string;
             /** Per Hour */
             per_hour: number;
+        };
+        /**
+         * DayNote
+         * @description A note on a written day, in page order. Its words are the text entry `key`.
+         */
+        DayNote: {
+            /** Subject */
+            subject: string;
+            slot: components["schemas"]["Slot"];
+            /** Key */
+            key: string;
+            hand: components["schemas"]["Hand"];
+            /** Sketch */
+            sketch: string | null;
         };
         Decision: components["schemas"]["SwitchMix"] | components["schemas"]["TapCard"] | components["schemas"]["SaveMix"] | components["schemas"]["DeleteMix"] | components["schemas"]["SetOrders"] | components["schemas"]["SetQueue"] | components["schemas"]["AnswerOffer"] | components["schemas"]["Prestige"] | components["schemas"]["UndoPick"] | components["schemas"]["MovePick"];
         /** DecisionRequest */
@@ -1285,6 +1333,16 @@ export interface components {
             kept?: components["schemas"]["Kept"] | null;
         };
         /**
+         * JournalDay
+         * @description A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed.
+         */
+        JournalDay: {
+            /** Day */
+            day: number;
+            /** Day Notes */
+            day_notes: components["schemas"]["DayNote"][];
+        };
+        /**
          * JournalInfo
          * @description The book the player carries. Null in Content until a chapter declares it.
          */
@@ -1399,6 +1457,8 @@ export interface components {
             pays_key: string;
             /** Change Bp */
             change_bp: number[];
+            /** Speeds */
+            speeds: string[];
         };
         /**
          * Limits
@@ -1662,6 +1722,8 @@ export interface components {
             /** History */
             history: components["schemas"]["PastLine"][];
             presentation: components["schemas"]["SavePresentation"];
+            /** Journal Days */
+            journal_days: components["schemas"]["JournalDay"][];
             step: components["schemas"]["Step"];
         };
         /** Order */
@@ -1948,7 +2010,8 @@ export interface components {
         };
         /**
          * SavePresentation
-         * @description What the page keeps about one save: its teaching (the lessons and what gates them or their hints) and its returns.
+         * @description What the page keeps about one save: its teaching (the lessons and what gates them or their hints), its returns,
+         *     and how far into its journal the player has read.
          */
         SavePresentation: {
             /**
@@ -1977,6 +2040,8 @@ export interface components {
              */
             visits: components["schemas"]["Visit"][];
             chapter?: components["schemas"]["Chapter"] | null;
+            /** Newest Day Read */
+            newest_day_read?: number | null;
         };
         /** Scales */
         Scales: {
@@ -1989,10 +2054,11 @@ export interface components {
         };
         /**
          * Section
-         * @description The part of the book a page is in, each behind its own bookmark; within one, pages run in writing order.
+         * @description The part of the book an entry's page is in, each behind its own bookmark; within one, pages run in writing order.
+         *     The days pages are not entries: they are the written days (JournalDay).
          * @enum {string}
          */
-        Section: "days" | "creatures" | "places";
+        Section: "creatures" | "places";
         /**
          * Segment
          * @description value(t) = start_value + rate * (t - start), held at limit once reached. The client samples this.
@@ -2120,6 +2186,12 @@ export interface components {
             parked: components["schemas"]["ParkedPick"][];
         };
         /**
+         * Slot
+         * @description The occasion a day's note was written for (docs/design/journal.md, "The content's side").
+         * @enum {string}
+         */
+        Slot: "first" | "repeat" | "catchup" | "mention" | "late" | "misremember" | "correction";
+        /**
          * SpentShare
          * @description The part, share_bp, of spent card `card`'s share that the card holding this entry runs now.
          */
@@ -2174,6 +2246,8 @@ export interface components {
             rule_runs: components["schemas"]["RuleRun"][];
             /** Catching Up To */
             catching_up_to: number | null;
+            /** Journal Days */
+            journal_days: components["schemas"]["JournalDay"][];
         };
         /**
          * StepNeed

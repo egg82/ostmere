@@ -35,10 +35,10 @@ export class StintPlan {
     const head = el("div", "cond-head");
     head.append(el("h3", "rules-next", mix === null ? catalog.text.get(UI.queuePlan) : catalog.text.fill(UI.stintWhich, { mix })), close);
     if (mix === null) return [head, ...mixes.map((m) => this.mixButton(view, m.id))];
-    return after === null ? [head] : [head, goalPicker(catalog, after, (row) => {
+    return after === null ? [head] : [head, goalPicker(catalog, after, (until) => {
       tapFeedback();
       this.step = null;
-      this.ctx.actions.decide(queueStint(view, mix, row));
+      this.ctx.actions.decide(queueStint(view, mix, until));
       this.redraw();
     })];
   }

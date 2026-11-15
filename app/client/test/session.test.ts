@@ -36,7 +36,7 @@ function harness(content: Content = fixtureContent, fail: (call: string, n: numb
     content: () => answer("content", () => ({ ...content, rules_digest: rules.digest })),
     me: () => answer("me", () => ({ account: null, saves: [], max_saves: 5, kept_days: 30 })),
     begin: () => answer("begin", () => ({ save: save(), presentation: NEW_SAVE, step: { ...step(0), lines: [] } })),
-    open: (id) => answer("open", () => ({ save: save(3), was: fixtureStep("start", 40).view, history: [{ n: 0, at: 0, key: "line.1" }], presentation: NEW_SAVE, step: { ...step(100), save_id: id } })),
+    open: (id) => answer("open", () => ({ save: save(3), was: fixtureStep("start", 40).view, history: [{ n: 0, at: 0, key: "line.1" }], presentation: NEW_SAVE, journal_days: [], step: { ...step(100), save_id: id } })),
     savedView: () => Promise.reject(new Error("unused")),
     advance: () => answer("advance", () => step(100)),
     forecast: () => answer("forecast", () => ({ decisions, forecast: { horizon_at: 100 + 6 * 3600, level_ups: [], tops_out: [], fills: [], empties: [] } })),

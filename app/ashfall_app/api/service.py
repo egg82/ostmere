@@ -8,12 +8,14 @@ from ..accounts import codes
 from ..opening import convert as authored
 from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
-from ..opening.makers import made_by
+from ..opening.makers import card_makes, card_takes, made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
 from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
 from ..opening.schema import Opening
 from ..saves.interface import Played, Ruleset
+from ..saves.journal import ComposedDay
+from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
 from .goalrows import goal_rows
 from .ruledry import order_dry
@@ -22,10 +24,13 @@ from .line_causes import line_infos, offer_cause, worded_stores
 from .line_models import PeopleBand, PeopleInfo
 from .sources import sources, store_sources
 from . import content_models as cm
+from . import journal_models as jm
 from .limits import MAX_MIXES, MAX_ORDERS, MAX_QUEUE
 from . import models as w
 
 
+PLAIN = Look(DIARY_HAND, None)
+"""How a note is drawn whose slot gives no hand or sketch (a crowd's mention), or whose subject the content dropped."""
 FORECAST_S = 6 * 3600
 """How far ahead a view forecasts levels and full stores (CONTRACT.txt, "Forecast"): past it the page draws no time."""
 
@@ -77,7 +82,14 @@ class Game:
                                  off_level=r.off_level, ended=None if r.ended is None else r.ended.value,
                                  made=[cm.Amount(store=st, quantity=n) for st, n in r.made])
                        for r in played.rule_runs],
-            catching_up_to=played.catching_up_to)
+            catching_up_to=played.catching_up_to, journal_days=self.journal_days(played.days))
+
+    def journal_days(self, days: tuple[ComposedDay, ...]) -> list[jm.JournalDay]:
+        """The written ones of `days`, each note in the hand and with the sketch its slot names now."""
+        looks = {} if self._rs.journal is None else self._rs.journal.looks
+        return [jm.JournalDay(day=d.day, day_notes=[
+            jm.DayNote(subject=n.subject, slot=jm.Slot(n.slot), key=n.key, hand=jm.Hand(look.hand), sketch=look.sketch)
+            for n in d.notes for look in (looks.get((n.subject, n.slot), PLAIN),)]) for d in days if d.notes]
 
 
 def _fight(f: e.FightDef | None, entry: FightEntry | None) -> cm.FightInfo | None:
@@ -117,6 +129,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
             upside_key=c.upside_key, change_bp=_card_changes(c, o), work_s=c.work_s,
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
+            makes=card_makes(c), takes=card_takes(c),
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires
                          if r.subject_kind == "skill_level" and r.test == "at_least" and r.id is not None],
             step_needs=[cm.StepNeed(card=r.id, count=r.value) for r in c.requires
@@ -139,7 +152,9 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             chip=c.chip, after_end=c.after_end)
             for c in o.order_cards],
         skill_infos=[cm.SkillInfo(skill=s.id, label_key=s.label_key,
-                                 levels=[cm.LevelPays(level=lv.level, pays_key=lv.pays_key, change_bp=_level_changes(o, s.id, lv.level))
+                                 levels=[cm.LevelPays(level=lv.level, pays_key=lv.pays_key,
+                                                      change_bp=_level_changes(o, s.id, lv.level),
+                                                      speeds=_level_speeds(o, s.id, lv.level))
                                          for lv in s.levels])
                      for s in o.skills],
         node_infos=[cm.NodeInfo(node=n.id, skill=n.skill, label_key=n.label_key, change=cm.NodeChange(
@@ -211,8 +226,21 @@ def _card_changes(c: CardEntry, o: Opening) -> list[int]:
 
 def _level_changes(o: Opening, skill: str, level: int) -> list[int]:
     """The changes of the trigger that lands when `skill` reaches `level`, none when that level pays a find."""
-    return _changes([m for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "skill_level"
-                     and t.when.id == skill and t.when.value == level for m in t.outcome.modifiers])
+    return _changes(_level_modifiers(o, skill, level))
+
+
+def _level_modifiers(o: Opening, skill: str, level: int) -> list[ModifierEntry]:
+    return [m for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "skill_level"
+            and t.when.id == skill and t.when.value == level for m in t.outcome.modifiers]
+
+
+def _level_speeds(o: Opening, skill: str, level: int) -> list[str]:
+    """The cards the level's modifiers make faster, in card order: a work entry's card, each card on a lane entry's
+    lane."""
+    mods = _level_modifiers(o, skill, level)
+    works = {m.id for m in mods if m.target == "work"}
+    lanes = {m.id for m in mods if m.target == "lane"}
+    return [c.id for c in o.cards if c.id in works or c.lane in lanes]
 
 
 def _named(mods: list[ModifierEntry], cards: set[str]) -> list[w.Unlock]:

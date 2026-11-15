@@ -26,7 +26,7 @@ makes = [{ store = "t_heat", items_per_hour = 20 }]
 id = "t_charm"
 presentation = "action"
 label_key = "t_c_charm"
-work_s = 60
+work_s = 90
 skill = "t_lore"
 xp_per_hour = 60
 makes = [{ store = "t_heat", items_per_hour = 30 }]

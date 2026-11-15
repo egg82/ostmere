@@ -318,6 +318,20 @@ told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n4_named" }]
 name_key = "name_n4"
 
+# Their everyday jobs from the join (day two's weaving, day three's clay and pot), his sitting down: no clay.
+[[triggers]]
+id = "t_pair_chores"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stew", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n3_weave_wattle" },
+  { unlock_kind = "card", id = "n4_weave_wattle" },
+  { unlock_kind = "card", id = "n3_dig_clay" },
+  { unlock_kind = "card", id = "n3_stew" },
+  { unlock_kind = "card", id = "n4_stew" },
+]
+
 # A26 on her lane, the same real time and stores as A25.
 [[cards]]
 id = "n3_build_bay"
@@ -382,11 +396,22 @@ joins = [{ lane = "n3", mix = "town:camp", card = "n3_forage" }, { lane = "n4", 
 id = "s_n3_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n3", way = "joined" }
+first = { keys = ["j_n3_first"] }
+catchup = { keys = ["j_n3_catchup"] }
+late = { keys = ["j_n3_late"] }
 
 [[subjects]]
 id = "s_n4_joined"
 kind = "person"
 source = { source_kind = "lane", id = "n4", way = "joined" }
+first = { keys = ["j_n4_first"] }
+catchup = { keys = ["j_n4_catchup"] }
+
+[[subjects]]
+id = "s_ridge"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_ridge" }
+first = { keys = ["j_ridge_first"] }
 
 [[standing]]
 id = "n3_eating"
@@ -576,4 +601,11 @@ store_night_6 = "night"
 action_night_6 = "Night"
 l_night_6 = "you bury the coals. everyone sits closer."
 aim_pair = "build a bay for the two of them."
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_n3_first = "a woman with a sack on her shoulder asked to share the fire. {n3}. she does the asking for both of them"
+j_n3_catchup = "{n3} came, with an old man"
+j_n3_late = "{n3} keeps seed in a cloth. counts it out and ties it shut again"
+j_n4_first = "{n4} is old, and one leg doesn't bend. lucy brought him a stool and he sat on it without a look. five at the pot"
+j_n4_catchup = "{n4}, with a leg that won't bend"
+j_ridge_first = "first thing, grey shapes sat in a row along the ridge, facing camp. lucy looked up too. nothing there"
 # ---------- end of lines ----------

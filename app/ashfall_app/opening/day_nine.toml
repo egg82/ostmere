@@ -479,30 +479,12 @@ stores = [{ store = "pelt", items = 1 }]
 
 # ---------- the days page ----------
 
-# The days page for B9 and B10: each note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL"). B9's trigger
-# is day eight's t_b9, so the note takes its condition.
-[[entries]]
-id = "e_days_4"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b9"
-entry = "e_days_4"
-gate = { test = "at_least", subject_kind = "store", id = "pack_fought", value = 1 }
-requires = [
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_ashrat", value = 1 },
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "entry", id = "e_crow", value = 1 },
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "wolves", value = 1 },
-]
-beat = "B9"
-
 [[subjects]]
 id = "s_b9"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b9" }
 first = { keys = ["n_day_b9"] }
+catchup = { keys = ["j_b9_catchup"] }
 
 # ---------- B10: the ring closed ----------
 
@@ -535,17 +517,19 @@ id = "t_b10"
 when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
 outcome = { line_keys = ["l_b10_1", "l_b10_2", "l_b10_3"], unlocks = [{ unlock_kind = "feature", id = "safety" }] }
 
-[[notes]]
-id = "n_day_b10"
-entry = "e_days_4"
-gate = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
-beat = "B10"
-
 [[subjects]]
 id = "s_b10"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b10" }
 first = { keys = ["n_day_b10"] }
+catchup = { keys = ["j_b10_catchup"] }
+late = { keys = ["j_b10_late"] }
+
+[[subjects]]
+id = "s_smoke"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_smoke" }
+first = { keys = ["j_smoke_first"] }
 
 # The crows' second note, written once the ring is closed.
 [[notes]]
@@ -733,4 +717,9 @@ feature_margin_watch = "watch at the marked place"
 feature_posts_deep = "deep posts"
 feature_lookout = "lookout on the stakes"
 feature_skin_post = "wolf skin on the posts"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b9_catchup = "a line in the wolf page's margin i don't remember writing"
+j_b10_catchup = "the fence closed. people came in at the gate"
+j_b10_late = "one man came with them and stood back behind the rest. not family, i don't think"
+j_smoke_first = "smoke on the road past the ridge. several fires. each time i look they're further down toward the valley"
 # ---------- end of lines ----------

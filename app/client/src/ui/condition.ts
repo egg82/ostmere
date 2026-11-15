@@ -8,19 +8,20 @@
 // what it does and Remove, never a level, so the store behind a chip is never shown as a number.
 import type { ChipInfo, Condition, Order, View } from "../api/types";
 import { sample } from "../game/clock";
-import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, savedVerb } from "../game/orders";
+import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
 import { townNewRule } from "../game/town";
-import { chosen, doChoices, subjectChoices, taskOf, whenChoices, type DoChoice } from "../game/ruleoffers";
+import { chosen, doChoices, ruleCards, subjectChoices, whenChoices, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
-import { bounds, clampRule, defaultRule, readRule, type Test } from "../game/storerule";
+import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
 import { noteOrderRemoved, noteOrderSet, noteRuleChanged } from "../telemetry";
-import { draftOrder, editDraft, headingWords, sameRule, storeCap, type Draft } from "./conditiondraft";
+import { draftOrder, editDraft, headingWords, keepOffered, sameRule, storeCap, type Draft } from "./conditiondraft";
 import { Levels } from "./condlevels";
-import { DryNote } from "./conddry";
 import { RuleFact } from "./condfact";
+import { CondFoot } from "./condfoot";
 import { markPressed, sameChoice } from "./condpress";
-import { doRow, footRow, whenRow } from "./condrows";
+import { quickParts, quickTask, quickTest } from "./condquick";
+import { doRow, whenRow } from "./condrows";
 import { markSubject, SubjectControl, subjectRows } from "./condsubject";
 import { bringIntoView, el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
@@ -33,12 +34,8 @@ export class ConditionEditor {
   private readonly levels: Levels;
   private readonly subject: SubjectControl;
   private readonly more = el("button", "quiet cond-more");
-  private readonly sentence = el("p", "rule-sentence cond-sentence");
   private readonly fact: RuleFact;
-  private readonly note = el("p", "editor-note cond-note");
-  private readonly dry: DryNote;
-  private readonly remove = el("button", "quiet danger");
-  private readonly save = el("button", "primary");
+  private readonly foot: CondFoot;
   private view: View | null = null;
   private draft: Draft | null = null;
   /** The full editor is open (More options, or a rule being changed). */
@@ -47,27 +44,20 @@ export class ConditionEditor {
   constructor(private readonly ctx: PartContext, private readonly done: () => void) {
     const { text } = ctx.catalog;
     this.fact = new RuleFact(ctx);
-    this.dry = new DryNote(ctx);
+    this.foot = new CondFoot(ctx, () => this.drop(), () => this.commit(), () => this.copy());
     const close = el("button", "editor-close", "✕");
     close.type = "button";
     close.setAttribute("aria-label", text.get(UI.close));
     close.addEventListener("click", () => this.done());
     const head = el("div", "cond-head");
     head.append(this.heading, close);
-    this.levels = new Levels(text, (t) => this.setTest(t), (which, d) => this.step(which, d));
+    this.levels = new Levels(ctx.catalog, (t) => this.setTest(t), (which, level) => this.setLevel(which, level));
     this.subject = new SubjectControl(ctx.catalog, (r) => this.setSubject(r));
-    for (const [b, key] of [[this.remove, UI.orderRemove], [this.save, UI.save], [this.more, UI.ruleMoreOptions]] as const) {
-      b.type = "button";
-      setText(b, text.get(key));
-    }
-    this.remove.addEventListener("click", () => this.drop());
-    this.save.addEventListener("click", () => this.commit());
+    this.more.type = "button";
+    setText(this.more, text.get(UI.ruleMoreOptions));
     this.more.addEventListener("click", () => { tapFeedback(); this.showFull(); });
-    const actions = el("div", "sheet-actions cond-actions");
-    actions.append(this.remove, this.save);
-    const foot = el("div", "cond-foot"); foot.append(this.sentence, this.note, this.dry.root, actions);   // the rule as it reads, beside Save
     const body = el("div", "cond-body"); body.append(head, this.does, this.chips, this.levels.fold.root, this.subject.root, this.fact.root, this.more);   // what scrolls; the foot is outside it
-    this.root.append(body, foot);
+    this.root.append(body, this.foot.root);
   }
 
   /** A new rule, nothing chosen yet: the simple view. Given an offered condition (a guided rule), it starts at that
@@ -102,9 +92,7 @@ export class ConditionEditor {
     this.view = view;
     this.draft = draft;
     this.fact.reset();
-    const { text } = this.ctx.catalog;
-    this.save.textContent = text.get(draft.index === null ? UI.orderAdd : UI.save);
-    this.remove.hidden = draft.index === null;
+    this.foot.start(draft.index, !draft.chip, rulesFull(this.ctx.catalog, view));
     this.levels.fold.open(draft.index !== null);
     this.redraw();
     void this.preview();
@@ -147,19 +135,9 @@ export class ConditionEditor {
     tapFeedback();
     draft.then = c.kind === "task" ? { kind: "tap_card", card: c.card } : { kind: "switch_mix", mix_id: c.mix };
     this.fact.reset();
-    if (!this.full) this.keepOffered(this.view);
+    if (!this.full) keepOffered(this.ctx.catalog, this.view, draft, this.chipNow());
     this.redraw();
     void this.preview();
-  }
-
-  /** In the simple view, a condition the newly chosen task does not answer is cleared, so what shows chosen is offered. */
-  private keepOffered(view: View): void {
-    const draft = this.draft!;
-    const offer = whenChoices(this.ctx.catalog, view, false, taskOf(this.ctx.catalog, view, draft.then), null);
-    const chip = this.chipNow();
-    if (chip ? offer.chips.includes(chip) : offer.stores.includes(draft.rule.store)) return;
-    draft.rule = defaultRule("", "below", 0);
-    draft.opened = undefined;
   }
 
   private cap(store: string): number {
@@ -172,7 +150,7 @@ export class ConditionEditor {
     const { catalog } = this.ctx;
     const draft = this.draft;
     const editing = draft?.index === null || draft?.subject ? null : draft?.rule.store ?? null;
-    const offer = whenChoices(catalog, view, this.full, taskOf(catalog, view, draft?.then ?? null), editing);
+    const offer = whenChoices(catalog, view, this.full, ruleCards(view, draft?.then ?? null), editing);
     const subjects = this.full ? subjectRows(catalog, view, subjectChoices(catalog, view), (r) => this.setSubject(r, true)) : [];
     const row = draft?.chip === true ? [] : whenRow(catalog, offer.chips, offer.stores, (c) => this.setChip(c), (s) => this.setStore(s), subjects);
     this.chips.hidden = row.length === 0;
@@ -194,7 +172,7 @@ export class ConditionEditor {
     const draft = this.draft;
     if (!draft || (draft.rule.store === store && !this.chipNow())) return;
     tapFeedback();
-    draft.rule = defaultRule(store, draft.rule.test, this.cap(store));
+    draft.rule = defaultRule(store, this.full || !this.view ? draft.rule.test : quickTest(this.ctx.catalog, this.view, draft.then, store), this.cap(store));
     draft.subject = undefined;
     this.draw();
     reveal(this.levels.fold.root);
@@ -221,11 +199,10 @@ export class ConditionEditor {
     this.draw();
   }
 
-  private step(which: "n" | "m", d: -1 | 1): void {
-    if (!this.draft) return;
-    const rule = this.draft.rule;
-    const next = which === "n" ? { ...rule, n: rule.n + d } : { ...rule, m: (rule.m ?? rule.n) + d };
-    this.draft.rule = clampRule(next, this.cap(rule.store));
+  private setLevel(which: "n" | "m", level: Level): void {
+    const next = this.draft && tryRule({ ...this.draft.rule, [which]: level }, this.cap(this.draft.rule.store));
+    if (!next || !this.draft) return;
+    this.draft.rule = next;
     this.draw();
   }
 
@@ -239,22 +216,26 @@ export class ConditionEditor {
     const { catalog } = this.ctx;
     const { rule } = draft;
     const chip = this.chipNow();
-    const room = bounds(rule.test, this.cap(rule.store), rule.n);
     this.drawHeading();
     const pick = chosen(catalog, view, draft.then);
     markPressed(catalog, view, this.does, this.chips, pick, chip, rule);
     this.levels.fold.root.hidden = !this.full || draft.chip === true || chip !== undefined || rule.store === "";
     const line = view.ledger.find((l) => l.store === rule.store);
-    this.levels.draw(rule, room, this.cap(rule.store), line ? sample(line.segment, view.at) / catalog.content.scales.quantity_per_item : null, (n) => catalog.format.count(n));
+    this.levels.draw(catalog, rule, this.cap(rule.store), line ? sample(line.segment, view.at) / catalog.content.scales.quantity_per_item : null);
     this.subject.draw(view, draft.chip ? undefined : draft.subject);
     markSubject(this.chips, draft.subject);
     this.drawSentence(view);
     this.drawFact();
-    void this.dry.show(view, draft.index, this.order(), draft.town === true);
+    this.foot.showDry(view, draft.index, this.order(), draft.town === true);
   }
 
+  /** The foot's sentence: in the quick add, the rule as one line of choices (condquick.ts), else as it reads. */
   private drawSentence(view: View): void {
-    footRow(this.ctx.catalog, view, this.draft?.index ?? null, this.draft?.then ?? null, this.order(), { sentence: this.sentence, note: this.note, save: this.save });
+    const draft = this.draft;
+    const picks = { store: (s: string) => this.setStore(s), test: (t: Test) => this.setTest(t), level: (w: "n" | "m", l: Level) => this.setLevel(w, l),
+      task: (card: string) => this.setDo({ kind: "task", card }) };
+    const quick = this.full || !draft ? null : quickParts(this.ctx.catalog, view, draft, this.chipNow() !== undefined, this.cap(draft.rule.store), picks);
+    this.foot.draw(view, draft?.index ?? null, draft?.then ?? null, this.order(), quick);
   }
 
   /** The engine's own number, in the full editor: the view after clearing the rules and running the rule's mix (a dry
@@ -283,6 +264,17 @@ export class ConditionEditor {
     const decisions = draft.town && draft.index === null ? [townNewRule(view, order)] : ruleDecisions(view, this.ctx.catalog, draft.index, order);
     for (const d of decisions) this.ctx.actions.decide(d);
     this.done();
+  }
+
+  /** A new rule from the one being changed, the same task and condition: in the quick add when it reads as one
+   * (condquick.quickTask), else in the full editor. */
+  private copy(): void {
+    const { draft, view } = this;
+    if (!draft || draft.index === null || draft.chip || !view) return;
+    tapFeedback();
+    const copied: Draft = { ...draft, index: null };
+    this.full = quickTask(this.ctx.catalog, view, copied, false) === null;
+    this.start(view, copied);
   }
 
   private drop(): void {

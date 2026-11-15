@@ -2,11 +2,14 @@
 # "Release lock"). One entry per rename:
 #
 #   [[renames]]
-#   kind = "store"      # store, skill, standing, card, lane, chip, trigger, feature, or line (a log line's text key)
+#   kind = "store"      # store, skill, standing, card, lane, chip, trigger, feature, entry, note, line (a log line's
+#                       # text key), subject (a journal subject's id), or slot_key (a text key a journal slot writes)
 #   from = "old_id"
 #   to = "new_id"       # always a new id: reusing a released one is forbidden
 #
-# A `line` entry with no `to` retires the text key: nothing shows it, and a stored line carrying it is dropped.
+# A `line` entry with no `to` retires the text key: nothing shows it, and a stored line carrying it is dropped. A `note`
+# or `entry` with no `to` retires a journal note or page: nothing writes it, a save keeps its unlock, and a retired
+# note's trigger goes from a save that fired it.
 #
 # Then run `python tools/content_lock.py --write` (from app/) so the release lock records it.
 [[renames]]
@@ -333,3 +336,75 @@ from = "l_weave_fail"
 [[renames]]
 kind = "line"
 from = "l_woodstack_fail"
+
+[[renames]]
+kind = "entry"
+from = "e_days_1"
+
+[[renames]]
+kind = "entry"
+from = "e_days_2"
+
+[[renames]]
+kind = "entry"
+from = "e_days_3"
+
+[[renames]]
+kind = "entry"
+from = "e_days_4"
+
+[[renames]]
+kind = "entry"
+from = "e_days_5"
+
+[[renames]]
+kind = "entry"
+from = "e_days_6"
+
+[[renames]]
+kind = "entry"
+from = "e_days_7"
+
+[[renames]]
+kind = "note"
+from = "n_day_b2"
+
+[[renames]]
+kind = "note"
+from = "n_day_b3"
+
+[[renames]]
+kind = "note"
+from = "n_day_b4"
+
+[[renames]]
+kind = "note"
+from = "n_day_b6"
+
+[[renames]]
+kind = "note"
+from = "n_day_b7"
+
+[[renames]]
+kind = "note"
+from = "n_day_b9"
+
+[[renames]]
+kind = "note"
+from = "n_day_b10"
+
+[[renames]]
+kind = "note"
+from = "n_day_b11"
+
+[[renames]]
+kind = "note"
+from = "n_day_b12"
+
+[[renames]]
+kind = "note"
+from = "n_day_b13"
+
+[[renames]]
+kind = "note"
+from = "n_day_b14"

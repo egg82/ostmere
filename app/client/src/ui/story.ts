@@ -9,7 +9,7 @@
 // goes to the chronicle (ui/chroniclesheet.ts) with its game second, kind and cause. Lines arrive in (at, seq) order with
 // each Step; their text is the content's. The aim (ui/aim.ts) is the story's too. ui/headseat.ts seats the head, the
 // aim and the strip.
-import type { LogLine, Mention, View } from "../api/types";
+import type { JournalDay, LogLine, Mention, View } from "../api/types";
 import { DayMentions } from "../game/people";
 import { awayLines, type Placement } from "../game/awaylines";
 import { entries, poolLine, type Window } from "../game/fights";
@@ -95,6 +95,16 @@ export class Story implements Part {
     const texts = new Set([...content.line_infos.filter((l) => inStrip(l.kind)).map((l) => l.key), ...bands].map((k) => text.get(k)).filter((t) => t));
     room.append(...[...texts].map((t) => el("span", "", t)));
     return room;
+  }
+
+  /** Written days a Step or Opened carried: the journal's days pages hold them from the next update. */
+  written(days: readonly JournalDay[]): void {
+    this.journal.written(days);
+  }
+
+  /** The lines written so far and the journal's written days, oldest first: what a redrawn screen restores. */
+  get carried(): { past: Past[]; days: JournalDay[] } {
+    return { past: [...this.keys], days: this.journal.writtenDays };
   }
 
   update(view: View, prev: View | null): void {
@@ -192,8 +202,10 @@ export class Story implements Part {
     return this.place(keys, animate, queued, keys.map((): Placement => "band"), keys.map(() => this.nowAt));
   }
 
-  /** Lines drawn still before the first view, each at the second it landed at (a save opened, a screen redrawn). */
-  restore(past: Past[]): void {
+  /** Lines drawn still before the first view, each at the second it landed at, and the written days a redrawn screen
+   * carries (a save opened, a screen redrawn). */
+  restore(past: Past[], days: readonly JournalDay[]): void {
+    this.journal.written(days);
     this.place(past.map((p) => p.key), false, false, past.map((): Placement => "band"), past.map((p) => p.at));
   }
 

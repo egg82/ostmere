@@ -12,7 +12,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 const still = { start: 0, start_value: 0, rate: 0, limit: null };
 const card = (id: string, over: Partial<Card> = {}): Card => ({
   card: id, completions: 0, cap: null, bar: still, bar_total: 5 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-  blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, needs: [], ...over,
+  blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: BP, needs: [], ...over,
 });
 const blocked = { condition: { kind: "after_time" as const, at: 99 }, ready_at: 99 };
 const view = (over: Partial<View> = {}): View => ({
@@ -50,7 +50,7 @@ expect("timer nudge: a card at its cap is not affordable", nudgeTarget(catalog, 
 expect("timer nudge: not within ten minutes", nudgeTarget(catalog, idle([away("gather", 600)])), null);
 expect("timer nudge: not while a card is affordable", nudgeTarget(catalog, idle([away("gather", 3000), card("tend")])), null);
 expect("timer nudge: not when something else is next", nudgeTarget(catalog,
-  idle([away("gather", 3000), card("tend", { blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: Q, release: Q }, ready_at: 900 } })])), null);
+  idle([away("gather", 3000), card("tend", { blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: Q, release: Q, value_of_cap: false, release_of_cap: false }, ready_at: 900 } })])), null);
 expect("timer nudge: measured from now", nudgeTarget(catalog, idle([away("gather", 3000)], { at: 2500 })), null);
 
 // The order card: the fixture's wood card, once with no offered_after and once waiting on a feature.

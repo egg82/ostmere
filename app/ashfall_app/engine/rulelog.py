@@ -11,7 +11,7 @@ from .ids import CardId, StoreId
 from .index import index
 from .lanes import TapCard
 from .mixes import SwitchMix, flatten_shares
-from .orders import AfterTime, Order, QueueEntry, StoreValue
+from .orders import AfterTime, Order, QueueEntry, StoreValue, rule_on
 from .plan import controlling_entry
 from .rules import Rules
 from .state import Save
@@ -46,8 +46,8 @@ def rule_changes(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, .
     `after`'s order; then each distinct order of `before` an outcome removed, in `before`'s order."""
     if before.orders == after.orders and before.latches == after.latches and before.queue == after.queue:
         return ()
-    latched = tuple(RuleChange(after.time, o, on, _level(after, rules, o))
-                    for o, on in zip(after.orders, after.latches) if on != _was_on(before, o))
+    latched = tuple(RuleChange(after.time, o, rule_on(on), _level(after, rules, o))
+                    for o, on in zip(after.orders, after.latches) if rule_on(on) != _was_on(before, o))
     return latched + _ended(before, after, rules) + _stints(before, after, rules)
 
 
@@ -105,7 +105,7 @@ def _retired_cards(before: Save, after: Save, rules: Rules) -> frozenset[CardId]
 
 
 def _was_on(save: Save, order: Order) -> bool:
-    return next((on for o, on in zip(save.orders, save.latches) if o == order), False)
+    return next((rule_on(on) for o, on in zip(save.orders, save.latches) if o == order), False)
 
 
 def _level(save: Save, rules: Rules, order: Order) -> int | None:

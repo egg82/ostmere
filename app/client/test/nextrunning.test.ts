@@ -16,7 +16,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 
 const ended = fixtureStep("restoffer", 100).view;
 const tapOf = (card: string, n: number): QueueEntry => ({
-  verb: { kind: "tap_card", card }, until: { kind: "at_least", watched: { kind: "card_count", card }, value: n, release: n },
+  verb: { kind: "tap_card", card }, until: { kind: "at_least", watched: { kind: "card_count", card }, value: n, release: n, value_of_cap: false, release_of_cap: false },
 });
 const queue = [tapOf("larder", 1), tapOf("lean_to", 2)];
 const running: View = { ...ended, queue,

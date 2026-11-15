@@ -10,10 +10,10 @@ from tests.opening.edited import edited
 RETIRE = '{ unlock_kind = "retired", id = "gather_wood", replaced_by = "woodcutting" }'
 
 
-def test_the_card_infos_name_the_replacement_of_the_one_card_the_content_names_it_for() -> None:
+def test_the_card_infos_name_the_replacement_of_each_card_the_content_names_it_for() -> None:
     content = Content.model_validate(TestClient(create_app()).get("/api/content").json())
     named = {c.card: c.replaced_by for c in content.card_infos if c.replaced_by is not None}
-    assert named == {"gather_wood": "woodcutting"}
+    assert named == {"gather_wood": "woodcutting", **{f"{lane}_gather": f"{lane}_cut" for lane in ("n1", "n2", "n5", "n6", "n7")}}
     assert len(content.card_infos) > 1
 
 

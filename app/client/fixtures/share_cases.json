@@ -1,0 +1,21 @@
+{
+  "about": "Store rules with share levels, as the page's rule editor builds them (client/test/sharelevels.test.ts proves the editor writes and reads back each `when` from its `rule`; tests/test_share_levels_wire.py proves the engine accepts each through the wire). A store of cap 12 items; Q = 3600000.",
+  "cap_items": 12,
+  "cases": [
+    {"name": "down to a quarter, until full",
+     "rule": {"test": "below", "n": {"share": 2500}, "m": {"share": 10000}},
+     "when": {"kind": "at_most", "watched": {"kind": "store_value", "store": "s"}, "value": 2500, "release": 10000, "value_of_cap": true, "release_of_cap": true}},
+    {"name": "up to full, until empty",
+     "rule": {"test": "reaches", "n": {"share": 10000}, "m": {"share": 0}},
+     "when": {"kind": "at_least", "watched": {"kind": "store_value", "store": "s"}, "value": 10000, "release": 0, "value_of_cap": true, "release_of_cap": true}},
+    {"name": "under 6, until full",
+     "rule": {"test": "below", "n": {"items": 6}, "m": {"share": 10000}},
+     "when": {"kind": "at_most", "watched": {"kind": "store_value", "store": "s"}, "value": 21599999, "release": 10000, "value_of_cap": false, "release_of_cap": true}},
+    {"name": "up to 80%, until under 3",
+     "rule": {"test": "reaches", "n": {"share": 8000}, "m": {"items": 3}},
+     "when": {"kind": "at_least", "watched": {"kind": "store_value", "store": "s"}, "value": 8000, "release": 10800000, "value_of_cap": true, "release_of_cap": false}},
+    {"name": "under 3, until 9 (amounts, as before)",
+     "rule": {"test": "below", "n": {"items": 3}, "m": {"items": 9}},
+     "when": {"kind": "at_most", "watched": {"kind": "store_value", "store": "s"}, "value": 10799999, "release": 32399999, "value_of_cap": false, "release_of_cap": false}}
+  ]
+}

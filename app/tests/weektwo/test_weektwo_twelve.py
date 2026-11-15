@@ -1,21 +1,19 @@
 """Week two's checks on its played routes through day twelve, to night 14 (docs/design/week-two-plan.md, item 13;
 verdicts.py): each of day twelve's push routes plays from B11's visit to S4's, the edge of week two's content; dusk 14
-lands at 330 h on the calendar and S4 before B13's turn; the bear's hunts end with their pool; its days note written
-at its beat's landing; away from the chapter's end no gathered store loses over half its making to its cap; every chip
-shown has a cure; the babysitter ends no further ahead than the whenever player from B11's visit to an hour past S4;
-and typical's save at day eleven's end, written under the rules without day twelve, loads under today's and plays on.
+lands at 330 h on the calendar and S4 before B13's turn; the bear's hunts end with their pool; away from the chapter's
+end no gathered store loses over half its making to its cap; every chip shown has a cure; the babysitter ends no further
+ahead than the whenever player from B11's visit to an hour past S4; and typical's save at day eleven's end, written under the rules without day twelve, loads under today's and plays on.
 The rhythm is the readouts' (test_weektwo_readouts.py)."""
 import pytest
 
-from ashfall_app.engine import StoreId, Unlock, UnlockKind, units
+from ashfall_app.engine import StoreId, units
 from ashfall_app.engine.rates import store_value
 from ashfall_app.engine.work import completions
 from tests.daythree import counters
-from tests.daythree.content import opening3, rules3
+from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.parity import Measured, compare
-from tests.weekone.test_weekone_journal import misplaced_notes
 from tests.weektwo import content as w2
 from tests.weektwo import verdicts
 from tests.weektwo.rebased import PLAYED_ON_S, Rebased, fired, rules11
@@ -33,16 +31,6 @@ def test_the_route_plays_day_twelve_to_s4(twelve_route: Route):
     name, p = twelve_route
     assert p.stop_beat() == "S4" and "S4" in p.seen_at, f"{name} saw S4"
     assert {"S1", "SL20", "S2", "B12", "S3", "N14", "A32"} <= set(p.landed_at)
-
-
-@pytest.mark.parametrize("twelve_route", TWELVE_PUSH_ROUTES, indirect=True)
-def test_day_twelves_days_note_is_written_at_its_beats_landing(twelve_route: Route):
-    name, p = twelve_route
-    days = {e.id for e in opening3().entries if e.section == "days"}
-    mine = {n.id for n in opening3().notes if n.entry in days and n.beat == "B12"}
-    assert mine == {"n_day_b12"}
-    assert all(Unlock(UnlockKind.NOTE, n) in p.unlocked_at for n in mine), name
-    assert misplaced_notes(p, opening3())[1] == [], name
 
 
 @pytest.mark.parametrize("twelve_route", TWELVE_PUSH_ROUTES, indirect=True)

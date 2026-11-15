@@ -24,15 +24,15 @@ function expect(label: string, got: unknown, want: unknown): void {
 const catalog = new Catalog(fixtureContent);
 const still = (v = 0) => ({ start: 100, start_value: v, rate: 0, limit: null });
 const waiting = (id: string, readyAt: number | null, over: Partial<Card> = {}): Card => ({
-  card: id, completions: 0, cap: 1, bar: still(), bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20,
-  blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 12 * Q, release: 12 * Q }, ready_at: readyAt },
+  card: id, completions: 0, cap: 1, bar: still(), bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1,
+  blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 12 * Q, release: 12 * Q, value_of_cap: false, release_of_cap: false }, ready_at: readyAt },
   needs: [{ store: "stone", quantity: 12 * Q, segment: still(3 * Q), gate: null, makers: [], spent: false }], ...over,
 });
 const ended = fixtureStep("restoffer", 100).view;   // the end ten minutes back
 const at = (cards: Card[], queue: QueueEntry[] = [], over: Partial<View> = {}): View => ({ ...ended, cards: [...ended.cards, ...cards], queue, ...over });
 const larder = waiting("larder", 400);
 const tapOf = (card: string, n: number): QueueEntry => ({
-  verb: { kind: "tap_card", card }, until: { kind: "at_least", watched: { kind: "card_count", card }, value: n, release: n },
+  verb: { kind: "tap_card", card }, until: { kind: "at_least", watched: { kind: "card_count", card }, value: n, release: n, value_of_cap: false, release_of_cap: false },
 });
 
 // Which cards offer it.

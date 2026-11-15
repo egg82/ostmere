@@ -528,6 +528,34 @@ id = "t_broth_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }
 outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
 
+# The broth, an everyday job everyone takes (day three's pot).
+[[town_cards]]
+id = "{lane}_catch_broth"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_catch_broth"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 300
+inputs = [{ store = "catch", items = 2 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 2 }] }
+
+# With the hands' broth.
+[[triggers]]
+id = "t_town_broth"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "catch_broth", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_catch_broth" },
+  { unlock_kind = "card", id = "n2_catch_broth" },
+  { unlock_kind = "card", id = "n3_catch_broth" },
+  { unlock_kind = "card", id = "n4_catch_broth" },
+  { unlock_kind = "card", id = "n5_catch_broth" },
+  { unlock_kind = "card", id = "n6_catch_broth" },
+  { unlock_kind = "card", id = "n7_catch_broth" },
+]
+
 [[triggers]]
 id = "t_ring_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
@@ -536,6 +564,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "stone_ring" }] }
 [[triggers]]
 id = "t_spar_open"
 when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "drift_clock", value = 1 }]
 outcome = { unlocks = [{ unlock_kind = "card", id = "spar" }] }
 
 [[cards]]
@@ -585,27 +614,27 @@ outcome = { stores = [{ store = "pelt", items = 1 }], line_keys = ["l_find_gap_w
 
 # ---------- the journal ----------
 
-# A days note is written at its beat's own step (api/CONTRACT.txt, "JOURNAL").
-[[entries]]
-id = "e_days_6"
-section = "days"
-hand = "ink"
-runners = []
-
-[[notes]]
-id = "n_day_b12"
-entry = "e_days_6"
-gate = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
-requires = [
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "b9", value = 1 },
-]
-beat = "B12"
-
 [[subjects]]
 id = "s_b12"
 kind = "beat"
 source = { source_kind = "trigger", id = "t_b12" }
 first = { keys = ["n_day_b12"] }
+catchup = { keys = ["j_b12_catchup"] }
+late = { keys = ["j_b12_late"] }
+
+[[subjects]]
+id = "s_dig"
+kind = "routine"
+source = { source_kind = "card", id = "dig_cellar" }
+first = { keys = ["j_dig_first"] }
+repeat = { keys = ["j_dig_again_1", "j_dig_again_2"] }
+catchup = { keys = ["j_dig_catchup"] }
+
+[[subjects]]
+id = "s_sitter"
+kind = "worry"
+source = { source_kind = "trigger", id = "t_sitter" }
+first = { keys = ["j_sitter_first"] }
 
 # ---------- the Camp ----------
 
@@ -843,4 +872,12 @@ feature_meat_below = "meat hung in the dig"
 feature_rack_kept = "meat kept on the rack"
 feature_crows_off = "crows kept off the rack"
 feature_crows_kept = "crows left at the rack"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b12_catchup = "dug into a cellar under the ruin. empty"
+j_b12_late = "there was a stool down there too, in the corner. short in the same leg as ours"
+j_dig_first = "started digging at the ruin's north wall, for what the larder won't hold. staked the sides as i went. had the spade in before anyone asked where"
+j_dig_again_1 = "dug. the sides are holding"
+j_dig_again_2 = "the dig again. it takes more stakes than i thought"
+j_dig_catchup = "dug at the ruin"
+j_sitter_first = "a grey wolf sat at the edge of the light, facing the fire. the guard didn't move. it didn't either"
 # ---------- end of lines ----------

@@ -9,6 +9,8 @@ from datetime import datetime
 from typing import Protocol
 
 from .. import engine as e
+from .journal import ComposedDay
+from .journal_rules import JournalRules
 from .repeats import RepeatRules, Repeats
 from .ruleruns import RuleRun
 
@@ -28,7 +30,7 @@ class Ruleset:
 
     rules: e.Rules
     digest: str
-    renames: tuple[e.Rename, ...]
+    renames: tuple[e.Rename | e.Retired, ...]
     start_lines: tuple[e.LineKey, ...]
     line_renames: dict[str, str]
     """Text keys renamed since a stored line was written, to the key they are now."""
@@ -43,6 +45,8 @@ class Ruleset:
     `registered`): a save written then leaves it out of `state`. None: saves are written whole."""
     retired_lines: frozenset[str] = frozenset()
     """Text keys retired since a stored line was written: such a line is dropped."""
+    journal: JournalRules | None = None
+    """The journal's subjects and habits (journal_rules.py); None composes no days."""
 
 
 @dataclass(frozen=True)
@@ -91,6 +95,9 @@ class Played:
     catching_up_to: int | None = None
     """The game time this request was advancing to when its time budget ended it short (save.time is the last
     instant it resolved), else None: a long absence is caught up one bounded slice per request, so ask again."""
+    days: tuple[ComposedDay, ...] = ()
+    """The journal days this write composed and stored, oldest first: each game day its save.time passed the end of
+    that the save had not composed (journal_write.py)."""
 
 
 @dataclass(frozen=True)
@@ -109,6 +116,8 @@ class Opened:
     """Its last HISTORY lines before this open, oldest first."""
     presentation: dict[str, object]
     """What the page keeps about its teaching, as stored (api/CONTRACT.txt, SavePresentation)."""
+    days: tuple[ComposedDay, ...]
+    """Its written journal days stored before this open, oldest first; `played.days` has those it composed."""
     played: Played
     """It advanced to now, with what arrived while away."""
 

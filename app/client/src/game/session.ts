@@ -140,7 +140,7 @@ export class Session {
       const early = this.contentAlongside();
       const opened = await this.asking.answered(() => this.api.open(saveId));
       const content = await this.contentFor(opened.step, early);
-      const was: Step = { ...opened.step, view: opened.was, lines: [], failed_tap: null, catching_up_to: null };
+      const was: Step = { ...opened.step, view: opened.was, lines: [], failed_tap: null, catching_up_to: null, journal_days: opened.journal_days ?? [] };
       this.begun(content, was, saveId, opened.history, opened.presentation ?? NEW_SAVE);   // an older pod answers none: none kept, never the last save's
       await this.took(await this.caughtUp(opened.step, saveId), opened.was, true);
     } catch (e) {
@@ -149,16 +149,18 @@ export class Session {
   }
 
   /** `first`, or, while it stops short of now, the Step advance answers once one reaches it, with every slice's lines
-   * in order (each slice's (at, seq) follow the last's). */
+   * in order (each slice's (at, seq) follow the last's) and every slice's written days. */
   private async caughtUp(first: Step, id: number): Promise<Step> {
     let next = first;
     const lines = [...first.lines];
+    const days = [...first.journal_days];
     while (next.catching_up_to !== null) {
       this.events.catchingUp(next.view.at, next.catching_up_to);
       next = await this.asking.answered(() => this.api.advance(id));
       lines.push(...next.lines);
+      days.push(...next.journal_days);
     }
-    return next === first ? first : { ...next, lines };
+    return next === first ? first : { ...next, lines, journal_days: days };
   }
 
   /** The content asked for while the save's own call is out: one try, null when the page holds it already or it failed

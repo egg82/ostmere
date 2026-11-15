@@ -1,4 +1,4 @@
-"""The shipped opening with its journal taken out (the book's declaration, its pages and their notes' words), for the
+"""The shipped opening with its journal taken out (the book's declaration, and any pages with their notes' words), for the
 journal fixture to declare its own book on: the loader allows [journal] once."""
 import re
 import tempfile
@@ -15,7 +15,7 @@ def strip_journal(text: str) -> str:
     start, stop = text.index(START), text.index(STOP)
     block = text[start:stop]
     notes = re.findall(r'^\[\[notes\]\]\nid = "(\w+)"', block, re.M)
-    assert "[journal]" in block and notes, "the block holds the book and a note"
+    assert "[journal]" in block, "the block holds the book"
     rest = text[:start] + text[stop:]
     for n in notes:
         rest, found = re.subn(rf"^{n} = .*\n", "", rest, flags=re.M)

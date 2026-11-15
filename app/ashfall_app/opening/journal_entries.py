@@ -7,9 +7,9 @@ from .entries import ConditionEntry, Entry
 type Hand = Literal["ink", "pencil"]
 """How a note is written. Closed: each hand is a style the page owns, so a new one is page work as well as content."""
 
-type Section = Literal["days", "creatures", "places"]
-"""The part of the book a page is in, each behind its own bookmark. Closed: a new one is page work as well as
-content."""
+type Section = Literal["creatures", "places"]
+"""The part of the book an entry's page is in, each behind its own bookmark. Closed: a new one is page work as well as
+content. The days pages are the written days, composed from the save (docs/design/journal.md), never entries."""
 
 
 class JournalDecl(Entry):
@@ -44,5 +44,3 @@ class NoteEntry(Entry):
     hand: Hand | None = None
     sketch: str | None = None
     """A small drawing beside the note."""
-    beat: str | None = None
-    """On a days page, required: the spine beat (content/beats.yaml) the note retells, written at its landing."""

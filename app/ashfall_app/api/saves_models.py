@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .limits import MAX_DRY_RUN, MAX_GAME_SECOND, MAX_LIST, MAX_NAME, MAX_ORDERS, MAX_SAVE_ID, NO_NUL
 from .decision_models import Order
+from .journal_models import JournalDay
 from .models import Decision, Request, Step, View
 
 type Name = Annotated[str, Field(max_length=MAX_NAME, pattern=NO_NUL)]
@@ -113,7 +114,8 @@ class AccountPresentation(BaseModel):
 
 
 class SavePresentation(BaseModel):
-    """What the page keeps about one save: its teaching (the lessons and what gates them or their hints) and its returns."""
+    """What the page keeps about one save: its teaching (the lessons and what gates them or their hints), its returns,
+    and how far into its journal the player has read."""
 
     model_config = ConfigDict(extra="forbid")
     rule_seen: bool = False
@@ -128,6 +130,8 @@ class SavePresentation(BaseModel):
     """The returns after a long time away, one per `left`: what the chronicle splits its stretches at."""
     chapter: Chapter | None = None
     """The newest return's figures; a write keeps the one with the later `left`."""
+    newest_day_read: int | None = Field(default=None, ge=0, le=MAX_GAME_SECOND // 86400)
+    """The newest journal day the player has turned to; a write keeps the later. Null until one."""
 
 
 class AccountSettings(BaseModel):
@@ -216,6 +220,8 @@ class Opened(BaseModel):
     """The save's last 200 lines before this open, oldest first."""
     presentation: SavePresentation
     """What the page has kept about this save's teaching."""
+    journal_days: list[JournalDay]
+    """Every written journal day stored before this open, oldest first; `step.journal_days` has those it composed."""
     step: Step
     """The save advanced to now, with the lines that arrived while away."""
 

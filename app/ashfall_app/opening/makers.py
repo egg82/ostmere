@@ -20,20 +20,25 @@ def made_by(o: "Opening", store: str) -> list[str]:
         or (t.when.subject_kind == "card_count" and t.when.id == c.id) for t in finds)]
 
 
+def card_makes(c: "CardEntry") -> list[str]:
+    """The stores the card's completions land or its make flows fill (CardInfo.makes), each once, in content order."""
+    return list(dict.fromkeys([*(a.store for a in [*c.outcome.stores, *c.finished.stores]), *(f.store for f in c.makes)]))
+
+
+def card_takes(c: "CardEntry") -> list[str]:
+    """The stores the card's inputs, costs and drains take from (CardInfo.takes), each once, in content order."""
+    return list(dict.fromkeys([*(a.store for a in c.inputs), *(f.store for f in c.costs), *(a.store for a in c.drains)]))
+
+
 def card_made(o: "Opening", store: str) -> bool:
     """Some card's completion lands the store or its make flow fills it."""
-    return any(_makes(c, store) for c in o.cards)
-
-
-def _makes(c: "CardEntry", store: str) -> bool:
-    lumps = [*c.outcome.stores, *c.finished.stores]
-    return any(a.store == store for a in lumps) or any(f.store == store for f in c.makes)
+    return any(store in card_makes(c) for c in o.cards)
 
 
 def card_makers(o: "Opening", store: str) -> list[str]:
     """Card ids in card order whose completion lands the store or whose make flow fills it: the cards a short need on
     it lights (View Need.makers)."""
-    return [c.id for c in o.cards if _makes(c, store)]
+    return [c.id for c in o.cards if store in card_makes(c)]
 
 
 def standing_makers(o: "Opening", store: str) -> list[str]:

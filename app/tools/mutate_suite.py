@@ -3,10 +3,13 @@
   drains  tests/engine_contract/test_drains_*.py  MUTANTS_drains.txt  specs tools/drains_mutants/
   spent   tests/engine_contract/test_spent_*.py   MUTANTS_spent.txt   specs tools/spent_mutants/
   heldspeed  tests/engine_contract/test_heldspeed_*.py  MUTANTS_heldspeed.txt  specs tools/heldspeed_mutants/
+  share   tests/engine_contract/test_share_levels_*.py  MUTANTS_share.txt  specs tools/share_mutants/
   leaves  tests/engine_contract/test_leaves_*.py  MUTANTS_leaves.txt  rows 1-20   specs tools/leaves_mutants/
   retire  tests/engine_contract/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
   clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/
           the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
+  journal_days  tests/saves/test_journal_days.py (and the tests in `also`)  tests/saves/MUTANTS_journal_days.txt
+          specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); only its own tests make claims.
 
@@ -69,6 +72,7 @@ SUITES = {
     "drains": Suite("MUTANTS_drains.txt", "test_drains_*.py", "drains_mutants"),
     "spent": Suite("MUTANTS_spent.txt", "test_spent_*.py", "spent_mutants"),
     "heldspeed": Suite("MUTANTS_heldspeed.txt", "test_heldspeed_*.py", "heldspeed_mutants"),
+    "share": Suite("MUTANTS_share.txt", "test_share_levels_*.py", "share_mutants"),
     "leaves": Suite("MUTANTS_leaves.txt", "test_leaves_*.py", "leaves_mutants", 1, 20, (
         "tests/engine_contract/test_retire_*.py", "tests/engine/test_leaves_impl.py",
         "tests/engine/test_retired_chores_impl.py", "tests/opening/test_leaves_loader.py",
@@ -80,6 +84,9 @@ SUITES = {
     "clocks": Suite("MUTANTS_clocks.txt", "test_failover.py", "clocks_mutants", also=(
         "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/reminders/test_sender.py",
         "tests/dayone/test_dayone_forecast.py"), home="tests/db"),
+    "journal_days": Suite("MUTANTS_journal_days.txt", "test_journal_days.py", "journal_days_mutants", also=(
+        "tests/db/test_journal_rows.py", "tests/db/test_journal_failover.py", "tests/db/test_decision_lock_span.py",
+        "tests/db/test_save_journal_migrate.py", "tests/test_journal_days_wire.py"), home="tests/saves"),
 }
 
 

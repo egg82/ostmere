@@ -15,17 +15,17 @@ from typing import cast
 
 from pydantic import BaseModel, ConfigDict, JsonValue
 
-from ..engine import LineKey, Outcome, Rules, rules_digest
+from ..engine import LineKey, Outcome, Rename, Rules, rules_digest
 from ..engine.codec import Json, to_json
 from ..engine.renaming import Renamer, renamed_outcome
 from .line_kinds import line_keys
-from .renames import LockKind, RenameEntry, engine_renames
+from .renames import LOCAL_KINDS, LockKind, RenameEntry, engine_renames
 from .schema import Opening
 
 LOCK = Path(__file__).resolve().parent / "released" / "ids.json"
 KINDS: tuple[LockKind, ...] = (
     "store", "skill", "standing", "card", "lane", "chip", "trigger", "feature", "line", "offer", "answer",
-    "entry", "note", "node")
+    "entry", "note", "node", "subject", "slot_key")
 
 
 class Lock(BaseModel):
@@ -39,7 +39,7 @@ class Lock(BaseModel):
     outcomes: dict[str, JsonValue]
     """Trigger id to its outcome as the engine codec writes it, ids forwarded through the renames."""
     renames: list[dict[str, str | None]]
-    """Every rename applied, as {kind, from, to}, in file order; `to` is None for a retired line."""
+    """Every rename applied, as {kind, from, to}, in file order; `to` is None for a retired id."""
     release: int = 0
     """The content release this lock records; 0 before the first."""
     digest: str = ""
@@ -122,22 +122,33 @@ def content_ids(o: Opening, rules: Rules) -> dict[str, list[str]]:
         "trigger": [t.id for t in rules.triggers], "feature": [f.id for f in o.features], "line": line_keys(o),
         "offer": [x.id for x in rules.offers], "answer": [a.id for x in rules.offers for a in x.answers],
         "entry": [e.id for e in o.entries], "note": [n.id for n in o.notes], "node": [n.id for n in rules.nodes],
+        "subject": [s.id for s in o.subjects], "slot_key": slot_keys(o),
     }
 
 
+def slot_keys(o: Opening) -> list[str]:
+    """Every text key a subject's slots, or a crowd's mention bands, can write into a day."""
+    slots = [slot for s in o.subjects for slot in (s.first, s.repeat, s.catchup, s.late, s.misremember, s.correction)]
+    return [k for slot in slots if slot is not None for k in slot.keys] + [
+        k for s in o.subjects for band in s.mention for k in band.keys]
+
+
 class Forwarding:
-    """Ids through the renames, transitively: the engine's Renamer for engine kinds, a table for lines."""
+    """Ids through the renames, transitively: the engine's Renamer for engine kinds, a table per kind for LOCAL_KINDS."""
 
     def __init__(self, renames: Iterable[RenameEntry], standing: Iterable[str], cards: Iterable[str]) -> None:
         entries = list(renames)
-        self.engine = Renamer(engine_renames(entries), standing, cards)
-        self._lines = {r.old: r.new for r in entries if r.kind == "line" and r.new is not None}
-        self.retired = frozenset(r.old for r in entries if r.kind == "line" and r.new is None)
+        self.engine = Renamer((r for r in engine_renames(entries) if isinstance(r, Rename)), standing, cards)
+        self._local = {kind: {r.old: r.new for r in entries if r.kind == kind and r.new is not None}
+                       for kind in LOCAL_KINDS}
+        self.retired = frozenset((r.kind, r.old) for r in entries if r.new is None)
+        """Each retired id as (kind, id): lines, journal notes and entries, and a retired note's trigger."""
 
-    def line(self, key: str) -> str:
-        seen = {key}
-        while key in self._lines and self._lines[key] not in seen:
-            key = self._lines[key]
+    def local(self, kind: str, key: str) -> str:
+        """`key` of a LOCAL_KINDS kind through every rename of it (a cycle stops where it closes)."""
+        table, seen = self._local[kind], {key}
+        while key in table and table[key] not in seen:
+            key = table[key]
             seen.add(key)
         return key
 
@@ -152,7 +163,7 @@ def forwarding(renames: list[RenameEntry]) -> Forwarding:
 def forwarded(outcome: Outcome, fwd: Forwarding) -> Json:
     """The outcome with every id and line key through the renames, as the codec writes it."""
     o = renamed_outcome(outcome, fwd.engine)
-    return to_json(replace(o, lines=tuple(LineKey(fwd.line(k)) for k in o.lines)))
+    return to_json(replace(o, lines=tuple(LineKey(fwd.local("line", k)) for k in o.lines)))
 
 
 def _json_value(j: Json) -> JsonValue:

@@ -449,15 +449,23 @@ phone, portrait                        desktop, and a phone in landscape
 └────────────────────────────┘
 ```
 
-- **The way in.** From the first entry on, the journal is the Book's Journal page (The Book), and the book leaves the
-  chips. Its page button and the Book's tab carry the quiet dot (`.new-dot`) while a note is unread and at no other
-  time, so a new entry dots them through its notes. The Book's tab glows only as its lesson's step.
+- **The way in.** From its first page on (a written day or an entry), the journal is the Book's Journal page (The
+  Book), and the book leaves the chips. Its page button and the Book's tab carry the quiet dot (`.new-dot`) while
+  something written is unread (a note, or a day after the save's newest day read) and at no other time, so a new
+  entry dots them through its notes. The Book's tab glows only as its lesson's step.
 - **The page's frame** is the Book's: its head, then the Book's actions row with `Prev` and `Next` after the phone
   sheet's Close (`ui.close`) at the right end, under the thumb (on a desktop, centred under the spread, after it and
   never over it). All are `.quiet` at 44 px (no step here is the obvious next one, so none is `.primary`); `Prev` is off
   on the first page and `Next` on the last, never hidden, so neither moves. ← and → turn pages while it is open. It
-  opens on the first entry with an unread note, else the page last shown in this page session, else the first. Pages run by section (days, creatures, places) and in content order
-  within one, one per entry written.
+  opens on the first page holding something unread, else the page last shown in this page session, else the first.
+  Pages run by section: the days pages (below), then creatures and places in content order, one per entry written.
+- **The days pages** hold the written days (`docs/design/journal.md`, "What the page draws"): each day's notes under
+  its heading (`ui.journal.day`, in the hand at the notes' size, in `--hand-pencil`), days running on down a page until
+  the next would not fit, which starts a new page; a day is never split. Whether a day fits is counted in rows of the
+  hand at the desktop page's width (`game/days.ts`: a page holds 22 rows of about 46 characters, a note's drawing
+  five), never measured from the window, so the same days are the same pages on a phone and a desktop. The measure is
+  a little under what the desktop page holds at 1440×900, so a full page fits it unscrolled; elsewhere the page
+  scrolls as any long page does. A days page has no sketch and no numbers, and is seeded by its first day.
 - **The bookmarks** are a row of the panel's tab buttons (`.tabs`, `.tab`, `.on`) under the Book's head, in a `nav`
   labelled `ui.journal.heading`: one per section that has a page written (`ui.journal.days`, `.creatures`, `.places`), none for
   a section with no page. Each is a button, so Tab and Enter reach it. A bookmark turns to its section's first page with
@@ -491,7 +499,7 @@ phone, portrait                        desktop, and a phone in landscape
   the rem-sized text. A right page whose notes run past its
   height scrolls inside itself, the numbers staying at its foot.
 - **Seeded per entry.** The page's draws come from the seeded draw `game/fights.ts` uses, keyed by "journal", the
-  entry id and the part, never the save, so a page looks the same in every game and on every device and differs from
+  entry id (a days page's first day) and the part, never the save, so a page looks the same in every game and on every device and differs from
   its neighbours. The seed sets the sketch's width (86–100% of its box) and its offset in the space left over (on the
   left page, its height too); on a phone, whether the first note sits above the sketch (35%, the method's "caption on
   top"); each note's tilt (−2° to +1°, half the method's range, since live text must stay easy to read) and indent
@@ -703,10 +711,11 @@ The editor takes the Rules tab's place until it is closed. A new rule opens **si
 ```
 New rule                                          ✕
 Do    [Forage] [Cook roots] [Rest] [Smoke roots]     the tasks a rule can do, hands and other lanes
-When  [hungry]                                       once a task is chosen: what it answers
+When  [smoked 2 / 12] [roots 6 / 24] [damp wood …]   once a task is chosen: the stores relevant to it, and its chips
 [More options]
 ────────────────────────────────────────────────
-While hungry → Cook roots                            the foot, pinned to the bottom of the screen while it scrolls
+When smoked▾ falls to▾ a quarter▾, Smoke roots▾      the foot, pinned to the bottom of the screen while it scrolls;
+until three quarters▾                                each part a choice in place
                                          [Add rule]
 ```
 
@@ -725,17 +734,33 @@ Tasks   [Forage] [Cook roots] …                     each task in play, by its 
 while Evening runs: dry wood +0.80/min              a fact from one dry run, never a verdict
 ────────────────────────────────────────────────
 Under 3 dry wood, until 8 → Evening
-Remove                                   [Add rule] Remove only when editing; Save in place of Add rule
+Remove                       [Copy rule] [Add rule] Remove and Copy rule only when editing; Save in place of Add rule
 ```
 
 - **The common rule is two taps:** what it does, then the chip or store it waits on. A new rule starts with nothing
-  chosen and `Add rule` off. In the simple view, `When` appears once a task is chosen and offers only what that task
-  answers: the chips whose store it makes, and the stores with a ledger line it makes; a store rule takes the default
-  levels below, stated in the sentence. Choosing another task clears a condition it does not answer. The rule as a
-  sentence and Save stay pinned at the screen's foot, under the thumb, whatever is scrolled.
+  chosen and `Add rule` off. In the simple view, `When` appears once a task is chosen and offers what that task
+  answers: the chips whose store it makes, and the stores relevant to it with a ledger line, in this order: what it
+  makes, what it takes, then one step out (the other stores of each card in play that makes what it takes or takes
+  what it makes). Relevance is read off the cards' own makes and takes (`CardInfo.makes`, `CardInfo.takes`), never
+  off words in a name, so a task named for one thing never pulls in an unrelated store that shares the word. Choosing
+  another task clears a condition it does not answer. The rule and Save stay pinned at the screen's foot, under the
+  thumb, whatever is scrolled.
+- **The quick add is one sentence with its levels showing:** a store rule in the simple view reads `When smoked falls
+  to a quarter, Smoke roots until three quarters` (`reaches`: `When catch reaches full, Smoke the catch until down to
+  half`), and each part is a choice in place, a native picker laid over its words: the store among the relevant
+  ones, the test, each level among the five named shares (off where the band would not fit), the task among the
+  tasks. A store the task takes starts at `reaches full, until down to half`, so the rule uses it as it piles up;
+  any other at `falls to a quarter, until three quarters`, so it makes more as it runs low. An exact number, a
+  percentage step and a store outside the relevant ones are `More options`'; a rule with an exact number reads as
+  the full editor's sentence below.
 - **The full editor keeps every choice** (`decisions.md`, "The mix"): the saved mixes beside the tasks, every chip,
-  store, level and task count a rule may watch, the levels (folded behind one row stating them, which opens them in place; a rule being
-  changed opens with them shown) and the rate fact. `More options` goes once it is open.
+  store (the relevant ones first), level and task count a rule may watch, the levels (folded behind one row stating
+  them, which opens them in place; a rule being changed opens with them shown) and the rate fact. `More options` goes
+  once it is open.
+- **`Copy rule`** on a rule being changed starts a new rule with the same task and condition, `Add rule` off until
+  something differs: two rules with the same task are how a rule comes on at either of two conditions. It opens in the
+  quick add when the rule reads as one there, else in the full editor. A chip's rule has none (its condition cannot
+  change), and it is off while the rules are full.
 - **A saved mix of one task alone is that task:** `Do` offers the task once, and choosing it runs that mix. A hands task
   with no such mix gets one when the rule is added (named by the task), as the offers do.
 - A chip chosen is the chip's own condition, worded `While hungry`, with no levels: the player never sees that store as
@@ -748,12 +773,17 @@ Remove                                   [Add rule] Remove only when editing; Sa
   one-off, a card at its cap and a retired one are not offered. A task on another lane saves the same order an offered
   card does (`tap_card`). A task on another lane has no rate to state, so it shows no `while … runs` fact.
 - `falls below` comes on below `When` and lets go once the store reaches `Until`; `reaches` comes on at `When` and
-  lets go below `Until`. The band is at least one item and inside the store's cap, so a rule never flips at one
-  level and is never always true (the numbers' conventions: `api/CONTRACT.txt`). A store under two items is off.
-- The words put the number before the store and use no verb (`Under 3 stones, until 8`, `12 or more dry wood, until
-  under 6`), so they read right whatever the store's name.
-- A new store rule starts below a quarter of the cap, until halfway to full (`reaches`: at full, until below half),
-  and is added as the lowest priority. Editing keeps the rule's place; a rule written before bands (an offer with no release) opens with `Until`
+  lets go below `Until`. Each of `When` and `Until` is a share of the store's cap or an exact number, chosen beside
+  it (`of full` or `exact`): a share is picked by name (empty, ¼, ½, ¾, full) or stepped five points at a time, a
+  number stepped an item at a time, and switching keeps the level where it reads now. A share is reached at the share
+  itself from either side, so `down to empty` and `until empty` both mean nothing shown. The band is at least one
+  item and inside the store's cap, so a rule never flips at one level and is never always true (the conventions:
+  `api/CONTRACT.txt`). A store under two items is off.
+- The words put a number before the store and use no verb (`Under 3 stones, until 8`, `12 or more dry wood, until
+  under 6`), so they read right whatever the store's name; a share follows the store (`Dry wood down to a quarter,
+  until three quarters`, `Dry wood up to full, until down to empty`).
+- A new store rule starts as shares, down to a quarter, until three quarters (`reaches`: up to full, until down to
+  half), in items only on a store too small for those to keep a band, and is added as the lowest priority. Editing keeps the rule's place; a rule written before bands (an offer with no release) opens with `Until`
   already filled in, visible in the sentence before Save.
 - **A level or a task's count takes one stepper** in the store levels' place: `Level [−] 3 [+]` reads `Once Foraging
   reaches level 3`, `Times [−] 4 [+]` reads `Once Forage is done 4 times` (`Once Forage is done` at one). Each starts
@@ -905,17 +935,23 @@ in `app/client/src/ui/ladder.ts`, their sizes keyframes in `app/client/src/game.
 | Background | A card completes by the mix or a rule | "+1" rising off the card | "+1" held still on the card, then gone |
 | Tap | A card completes from the player's tap, a queued one (Next) included | "+1" and a ring spreading from the card | "+1" held still and a still ring, fading |
 | First | Something new arrives: a card, chip, skill row, ledger line, feature | The arrive pulse, and a dot if it can be acted on | Shown at once, with its dot |
-| Level | A skill or the Camp reaches a level | The burst: a wider, longer ring, the row lit | A still ring, the row lit, fading |
+| Level | A skill or the Camp reaches a level | The burst: a wider, longer ring, the row lit; each card the level speeds up reads its old → new time for 2 s on an ember wash | A still ring, the row lit, fading; the card's line the same |
 | Big | The end; a feature's card | Its lines in the strip, the scene to dusk; the card docks ("The end", "A feature's card") | The same: neither moves |
 
 - **A rule's completion sits with the mix's**, one rung below the same completion from a tap, so a tap stays special
   and a mix or rule running alone still shows what it did. A rule's run is a tap the page did not send, started by a
   standing order (`app/client/src/ui/fires.ts`, the card's by-order dot).
+- **The level on its card:** the cards a level makes faster are LevelPays.speeds, and only one whose speed rose shows
+  it. Its foot reads the skill, the level and one whole completion's time at the old and the new speed
+  (`ui.card.levelled`); under a minute the times keep the decimals that tell them apart (5 s → 4.5 s). Each time is
+  unbroken, and two lines fit the foot, so the card never grows.
 - **Below the ladder, answers to a touch or a change of state**, each no bigger than the background rung: a pressed
-  control dips; a failed tap pulses red on its card and blocker (colour, kept under reduced motion); a share divider or
-  a ledger line coming back from red settles; a rule row that just started a card lights (colour, kept under reduced
-  motion); an accepted rule offer flies to the Rules tab (under reduced motion the tab only takes its dot); a journal
-  page turned slides in (The journal; swapped at once under reduced motion).
+  card sinks 2px onto its shadow, a step lighter, in 60 ms, and settles in 160 ms with a slight overshoot when the
+  pointer lets go (a refused card too; one that cannot be tapped stays put; under reduced motion it only lightens); a
+  failed tap pulses red on its card and blocker (colour, kept under reduced motion); a share divider or a ledger line
+  coming back from red settles; a rule row that just started a card lights (colour, kept under reduced motion); an
+  accepted rule offer flies to the Rules tab (under reduced motion the tab only takes its dot); a journal page turned
+  slides in (The journal; swapped at once under reduced motion).
 - **No sound yet.** When sounds come, each rung gets one, fixed like its effect, and none carries information alone.
 
 ## One thing at a time
@@ -933,6 +969,15 @@ everything still waiting when none do (Escape and a tap on the story strip show 
 through: input is never held. Something drawn while the queue still waits takes the next turn. Under reduced motion
 the lines still lead and the ledger's hold stays (a wait is not motion); what follows them comes together. The end's lines take their turns the
 same way.
+
+**A cascade.** A live step with no story lines that sets off several consequences lights them one by one, about 90 ms
+apart, so the eye can follow: in the order one causes the next (a card finishing, a ledger line settling, a level's
+burst and its card's line, a rule row starting a card), at most six turns, the rest with the sixth, all under a second.
+In a chain of two or more each link gets a 3px ember tick and a warm wash that fade by themselves, never the outline,
+which belongs to the ask; a lone effect is no chain and shows at once, unmarked. The links take turns in a second
+arrival queue at its own pace, on the reveal's tick; what arrives in the same step still shows at once, and a tap or
+key sets off every link still waiting. Out of sight, a link takes no turn. Under reduced motion every link and its mark
+come together.
 
 ## Coming back
 

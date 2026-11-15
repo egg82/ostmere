@@ -69,7 +69,7 @@ export class CampBar implements Part {
     this.show(reached);
     if (reached === this.shown) return;
     if (this.shown === 0 && reached > 0) this.ctx.arrivals.arrive(this.root, "chip", "camp");
-    if (this.shown >= 0 && reached > this.shown) this.ctx.arrivals.effect(this.root, "chip", () => play(this.root, "level"));
+    if (this.shown >= 0 && reached > this.shown) this.ctx.arrivals.effect(this.root, "chip", () => play(this.root, "level"), "level");
     this.shown = reached;
     setText(this.level, `${catalog.storeLabel(camp.store)} ${catalog.text.fill(UI.level, { n: catalog.format.count(reached) })}`);
   }

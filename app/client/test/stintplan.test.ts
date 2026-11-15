@@ -19,7 +19,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 const R = fixtureContent.scales.rate_per_item_hour;
 const H = 3600;
 const base = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
-const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q };
+const woodUntil = { kind: "at_least" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false };
 const wood = (lands: number): GoalRow => ({ kind: "store", store: "wood", skill: null, target: 30 * Q, lands_at: lands, per_hour: 60 * R, limit: null, until: woodUntil });
 const mix = (id: string): Mix => ({ id, components: [] });
 const planning = (over: Partial<View>): View => ({ ...base, mixes: [mix("a"), mix("b"), mix("town:main")], active_mix_id: "a", running_mix_id: "a", greyed_mix_ids: [], queue: [], ...over });
@@ -53,7 +53,7 @@ async function plan(view: View, after: View | null, seeRules = true) {
   rows()[2]?.click();
   await Promise.resolve();
   await Promise.resolve();
-  expect("the mix named, its goals listed", rows().map((r) => r.textContent), ["b until…✕", "Dead wood 302 h"]);
+  expect("the mix named, its goals listed, a store's with its shares not yet reached", rows().map((r) => r.textContent), ["b until…✕", "Dead wood 302 hor until½¾full"]);
   rows()[1]?.querySelector<HTMLElement>(".stint-goal")?.click();
   expect("queued at the end", got.decided, [{ kind: "set_queue", entries: [{ verb: { kind: "switch_mix", mix_id: "b" }, until: woodUntil }] }]);
   expect("closed again", rows().map((r) => r.textContent), ["+ Plan"]);
@@ -65,7 +65,7 @@ async function plan(view: View, after: View | null, seeRules = true) {
   const { rows } = await plan(view, null);
   rows()[0]?.click();
   rows()[1]?.click();
-  expect("the live view's goals", rows().map((r) => r.textContent), ["a until…✕", "Dead wood 301 h"]);
+  expect("the live view's goals", rows().map((r) => r.textContent), ["a until…✕", "Dead wood 301 hor until½¾full"]);
 }
 
 // Lately: an ended stint reads as its mix and goal, then what it ran and when its goal landed; one never seen starting only the landing

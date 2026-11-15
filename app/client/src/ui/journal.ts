@@ -1,10 +1,13 @@
-// The Journal (docs/design/opening-screen.md, "The journal"; CONTRACT.txt, "JOURNAL"): a page of the Book (ui/book.ts)
-// from the first entry on, its button and the Book's tab dotted while a note is unread, one journal page per entry
-// written. A journal page is the entry's sketch, its notes in their hand and, under them, the numbers of the fights it
-// names, in the fight card's words. The draws are seeded (game/journal.ts) and the numbers are View.fights'. Turning to
-// it and turning its pages send nothing; the notes of every page turned to are kept as read in one write when it is left.
-import type { View } from "../api/types";
-import { bookmarkPage, bookmarksOf, isButton, layoutOf, numbersOf, openingPage, pagesOf, unreadOf, type NumbersRow, type Page, type Section } from "../game/journal";
+// The Journal (docs/design/opening-screen.md, "The journal"; docs/design/journal.md, "What the page draws"; CONTRACT.txt,
+// "JOURNAL"): a page of the Book (ui/book.ts) from its first page on, its button and the Book's tab dotted while
+// something is unread. The days pages hold the written days the save served, each day's notes under its day, as many
+// days as fit (game/days.ts); every other page is one entry written. A page is its sketch, its notes in their hand and,
+// under them, the numbers of the fights it names, in the fight card's words. The draws are seeded (game/journal.ts) and
+// the numbers are View.fights'. Turning to it and turning its pages send nothing; when it is left, the book notes of every
+// page turned to are kept as read in one write, and the newest day turned to in another.
+import type { JournalDay, View } from "../api/types";
+import { joinDays } from "../game/days";
+import { bookmarkPage, bookmarksOf, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, type NumbersRow, type Page, type Reading, type Section } from "../game/journal";
 import { UI } from "../game/text";
 import { reportError } from "../telemetry";
 import type { BookPage } from "./book";
@@ -33,13 +36,16 @@ export class Journal implements BookPage {
   private readonly prev = el("button", "quiet");
   private readonly next = el("button", "quiet");
   private view: View | null = null;
+  /** Every written day served so far, oldest first. */
+  private days: JournalDay[] = [];
   private pages: Page[] = [];
-  /** The entry on the open page, and the one last shown in this page session. */
+  /** The open page's id, and the one last shown in this page session. */
   private current: string | null = null;
   private last: string | null = null;
-  /** The notes of the pages turned to since the sheet opened: sent as read when it closes. */
+  /** The book notes, and the newest day, of the pages turned to since the sheet opened: kept as read when it closes. */
   private readonly turned = new Set<string>();
-  private drawn = { entry: "", notes: 0, numbers: "", sections: "" };
+  private turnedDay: number | null = null;
+  private drawn = { page: "", notes: 0, numbers: "", sections: "" };
   private isOpen = false;
   private readonly failed = new Set<string>();
 
@@ -78,21 +84,37 @@ export class Journal implements BookPage {
     return this.view !== null && isButton(this.ctx.catalog, this.view, this.pages);
   }
 
+  /** Written days a Step or Opened carried, joined to those held; drawn at the next update. */
+  written(days: readonly JournalDay[]): void {
+    this.days = joinDays(this.days, days);
+  }
+
+  /** Every written day held, oldest first: what a redrawn screen restores. */
+  get writtenDays(): JournalDay[] {
+    return [...this.days];
+  }
+
   /** Redrawn from each view: the dots, and an open page's notes and numbers. */
   update(view: View): void {
     this.view = view;
-    this.pages = pagesOf(this.ctx.catalog, view);
+    this.pages = pagesOf(this.ctx.catalog, view, this.days);
     this.sync();
     if (this.isOpen) this.draw(false);
   }
 
-  /** Its button shows with the journal, the Book's tab is its lesson's mark, and the dots show while a note is written
-   * and unread, at no other time. */
+  private get reading(): Reading {
+    const { keeps } = this.ctx;
+    return { note: (n) => keeps.journalRead(n), newestDay: keeps.newestDayRead() };
+  }
+
+  /** Its button shows with the journal, the Book's tab is its lesson's mark, and the dots show while something written
+   * is unread, at no other time. */
   private sync(): void {
     const shown = this.shown;
     if (this.button) this.button.hidden = !shown;
     if (shown) this.tab.dataset["teach"] = "journal";
-    const unread = unreadOf(this.pages, (n) => this.ctx.keeps.journalRead(n)).length > 0;
+    const reading = this.reading;
+    const unread = this.pages.some((p) => isUnread(p, reading));
     for (const [d, on] of [[this.dots[0]!, this.button], [this.dots[1]!, this.tab]] as const) {
       if (unread && on) on.append(d);
       else d.remove();
@@ -102,12 +124,13 @@ export class Journal implements BookPage {
   turnedTo(): void {
     if (this.pages.length === 0) return;
     this.turned.clear();
+    this.turnedDay = null;
     this.isOpen = true;
-    this.go(openingPage(this.pages, (n) => this.ctx.keeps.journalRead(n), this.last), 0);
+    this.go(openingPage(this.pages, this.reading, this.last), 0);
   }
 
   private index(): number {
-    return Math.max(0, this.pages.findIndex((p) => p.entry.entry === this.current));
+    return Math.max(0, this.pages.findIndex((p) => p.id === this.current));
   }
 
   private turn(by: -1 | 1): void {
@@ -115,12 +138,15 @@ export class Journal implements BookPage {
     if (to >= 0 && to < this.pages.length) this.go(to, by);
   }
 
-  /** Turns to page `i`: its notes written now count as read when the sheet closes. `by` is the side turned toward. */
+  /** Turns to page `i`: what is written on it now counts as read when the sheet closes. `by` is the side turned toward. */
   private go(i: number, by: number): void {
     const page = this.pages[i];
     if (!page) return;
-    this.current = this.last = page.entry.entry;
-    for (const n of page.notes) this.turned.add(n.note);
+    this.current = this.last = page.id;
+    for (const n of page.notes) {
+      if (n.day === null) this.turned.add(n.id);
+      else this.turnedDay = Math.max(this.turnedDay ?? n.day, n.day);
+    }
     this.draw(true);
     if (by !== 0) this.slide(by);
   }
@@ -138,7 +164,7 @@ export class Journal implements BookPage {
     const at = this.index();
     this.prev.disabled = at === 0;
     this.next.disabled = at === this.pages.length - 1;
-    if (whole || this.drawn.entry !== page.entry.entry) this.drawPage(page);
+    if (whole || this.drawn.page !== page.id) this.drawPage(page);
     else this.appendNotes(page);
     this.drawNumbers(page);
     this.drawMarks(page);
@@ -153,7 +179,7 @@ export class Journal implements BookPage {
       this.marks.replaceChildren(...sections.map((m) => this.bookmark(m.section, m.key)));
     }
     for (const b of Array.from(this.marks.children) as HTMLElement[]) {
-      const on = b.dataset["section"] === page.entry.section;
+      const on = b.dataset["section"] === page.section;
       b.classList.toggle("on", on);
       if (on) b.setAttribute("aria-current", "true");
       else b.removeAttribute("aria-current");
@@ -170,35 +196,39 @@ export class Journal implements BookPage {
 
   /** A bookmark's page: the section's first with an unread note, else its latest. */
   private turnTo(section: Section): void {
-    const to = bookmarkPage(this.pages, section, (n) => this.ctx.keeps.journalRead(n));
+    const to = bookmarkPage(this.pages, section, this.reading);
     if (to >= 0) this.go(to, Math.sign(to - this.index()));
   }
 
   private drawPage(page: Page): void {
-    const layout = layoutOf(page.entry.entry, page.entry.notes.length);
+    const layout = layoutOf(page.id, page.notes.length);
     const s = this.spread.style;
     s.setProperty("--sk-w", `${layout.sketchWidth.toFixed(1)}%`);
     s.setProperty("--sk-x", layout.sketchX.toFixed(3));
     s.setProperty("--sk-y", layout.sketchY.toFixed(3));
     this.spread.dataset["above"] = String(layout.noteAbove);
-    const bare = page.entry.sketch === null;   // no drawing: the page is text alone, with no room kept for one
+    const bare = page.sketch === null;   // no drawing: the page is text alone, with no room kept for one
     this.left.hidden = bare;
     this.spread.dataset["bare"] = String(bare);
-    this.sketch.replaceChildren(...(page.entry.sketch === null ? [] : [this.image(page.entry.sketch, "journal-sketch")]));
+    this.sketch.replaceChildren(...(page.sketch === null ? [] : [this.image(page.sketch, "journal-sketch")]));
     this.notes.replaceChildren();
-    this.drawn = { ...this.drawn, entry: page.entry.entry, notes: 0 };
+    this.drawn = { ...this.drawn, page: page.id, notes: 0 };
     this.appendNotes(page);
   }
 
-  /** Notes only append: one written while the page is open joins it, and no earlier note moves. */
+  /** Notes only append: one written while the page is open joins it, and no earlier note moves. On a days page each
+   * day's first note is headed by its day. */
   private appendNotes(page: Page): void {
-    const { entry } = page;
-    const looks = layoutOf(entry.entry, entry.notes.length).notes;
+    const looks = layoutOf(page.id, page.notes.length).notes;
+    const { text } = this.ctx.catalog;
     for (let i = this.drawn.notes; i < page.notes.length; i++) {
       const info = page.notes[i]!;
-      const look = looks[entry.notes.findIndex((n) => n.note === info.note)]!;
+      const look = looks[i]!;
+      if (info.day !== null && info.day !== page.notes[i - 1]?.day) {
+        this.notes.append(el("p", "journal-day", text.fill(UI.journalDay, { n: String(info.day + 1) })));
+      }
       const node = el("div", `journal-note hand-${info.hand}`);
-      node.append(el("p", "journal-words", this.ctx.catalog.text.get(info.note)));
+      node.append(el("p", "journal-words", text.get(info.key)));
       if (info.sketch) node.append(this.image(info.sketch, "journal-note-sketch"));
       node.style.setProperty("--tilt", `${look.tiltDeg.toFixed(2)}deg`);
       node.style.setProperty("--indent", `${look.indentRem.toFixed(2)}rem`);
@@ -224,21 +254,23 @@ export class Journal implements BookPage {
 
   /** The numbers under the notes, redrawn at each view while the sheet is open. */
   private drawNumbers(page: Page): void {
-    const rows = this.view ? numbersOf(this.ctx.catalog, this.view, page.entry) : [];
-    const key = JSON.stringify([page.entry.entry, rows]);
+    const rows = this.view ? numbersOf(this.ctx.catalog, this.view, page) : [];
+    const key = JSON.stringify([page.id, rows]);
     this.numbers.hidden = rows.length === 0;
     if (key === this.drawn.numbers) return;
     this.drawn.numbers = key;
     this.numbers.replaceChildren(...rows.map(rowNode));
   }
 
-  /** Turned from, or the Book closed (its Close, the backdrop, Escape, another tab): one write of what was read, then
-   * the dots are redrawn. */
+  /** Turned from, or the Book closed (its Close, the backdrop, Escape, another tab): a write of the book notes read and
+   * one of the newest day turned to, each only when it adds something, then the dots are redrawn. */
   turnedFrom(): void {
     if (!this.isOpen) return;
     this.isOpen = false;
     this.ctx.keeps.keepJournalRead(this.turned);
+    this.ctx.keeps.keepDayRead(this.turnedDay);
     this.turned.clear();
+    this.turnedDay = null;
     this.sync();
   }
 }

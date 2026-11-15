@@ -10,7 +10,7 @@ from dataclasses import dataclass, replace
 from .cards import Amount, CapRaise, CardState, Join, LaneState, Leave, Outcome, RuleInstall
 from .errors import RebaseError
 from .answers import AnswerOffer
-from .ids import ActionId, AnswerId, CardId, IdKind, LaneId, NodeId, OfferId, Runner, SkillId, SourceId, StoreId
+from .ids import ActionId, AnswerId, CardId, IdKind, LaneId, NodeId, OfferId, Runner, SkillId, SourceId, StoreId, TriggerId
 from .lanes import TapCard
 from .mixes import CardShare, Component, Mix
 from .modifiers import LaneSpeed, Modifier, RateRef, SideStrength, StoreCap, Target, ThreatStrength, WorkRef
@@ -29,6 +29,14 @@ class Rename:
     kind: IdKind
     old: str
     new: str
+
+
+@dataclass(frozen=True)
+class Retired:
+    """Trigger `trigger` is gone from the rules for good: a save that fired it keeps what its outcome landed, and one
+    that had not never will (content keeps every retirement ever released: renames.toml)."""
+
+    trigger: TriggerId
 
 
 _UNLOCK_KINDS = {

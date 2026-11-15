@@ -9,6 +9,26 @@ export const RULE_KEYS = {
   ruleBelowUntil: "ui.rule.below_until", // "{store}{n}{m}"
   ruleReaches: "ui.rule.reaches", // "{store}{n}"
   ruleReachesUntil: "ui.rule.reaches_until", // "{store}{n}{m}"
+  ruleDownToUntil: "ui.rule.down_to_until", // "{store}{n}{m}": a "below" rule whose when is a share (storerule.ts)
+  ruleUpToUntil: "ui.rule.up_to_until", // "{store}{n}{m}": a "reaches" rule, both levels shares
+  ruleUpToUntilUnder: "ui.rule.up_to_until_under", // "{store}{n}{m}": a "reaches" rule, a share when and an amount until
+  ruleReachesUntilDown: "ui.rule.reaches_until_down", // "{store}{n}{m}": a "reaches" rule, an amount when and a share until
+  ruleOfFull: "ui.rule.of_full", // a level's two forms in the editor: a share of the store's cap, or whole items
+  ruleExact: "ui.rule.exact",
+  ruleQuickDown: "ui.rule.quick_down", // "{store}{test}{n}{task}{m}": the quick add's sentence for a "below" rule (ui/condquick.ts)
+  ruleQuickUp: "ui.rule.quick_up", // the same for a "reaches" rule
+  ruleFallsTo: "ui.rule.falls_to", // the quick add's two tests, its {test}
+  ruleReachesTo: "ui.rule.reaches_to",
+  ruleCopy: "ui.rule.copy", // a rule being changed: a new rule from it, the same task and condition, to change
+  levelEmpty: "ui.level.empty", // a share level's words: the five named shares, then any other as a percentage
+  levelQuarter: "ui.level.quarter",
+  levelHalf: "ui.level.half",
+  levelThreeQuarters: "ui.level.three_quarters",
+  levelFull: "ui.level.full",
+  levelPct: "ui.level.pct", // "{pct}"
+  levelMarkQuarter: "ui.level.mark_quarter", // the editor's short marks for a quarter, half and three quarters
+  levelMarkHalf: "ui.level.mark_half",
+  levelMarkThreeQuarters: "ui.level.mark_three_quarters",
   ruleFallsBelow: "ui.rule.falls_below", // the condition editor's two tests
   ruleReachesLabel: "ui.rule.reaches_label",
   ruleWhen: "ui.rule.when", // the editor's two steppers
@@ -28,6 +48,8 @@ export const RULE_KEYS = {
   ruleLevel: "ui.rule.level",
   ruleNeedsBelow: "ui.rule.needs_below", // "{store}{n}{have}": why an "under n" rule is off, and what the store holds now
   ruleNeedsReaches: "ui.rule.needs_reaches", // "{store}{n}{have}": why an "n or more" rule is off
+  ruleNeedsDownTo: "ui.rule.needs_down_to", // "{store}{n}{have}": the same for a rule whose when is a share
+  ruleNeedsUpTo: "ui.rule.needs_up_to", // "{store}{n}{have}"
   ruleOutranked: "ui.rule.outranked", // "{rule}": an earlier rule has the hands (its condition's words)
   rulePassedOver: "ui.rule.passed_over", // a rule whose mix is greyed or whose task is done
   ruleStuck: "ui.rule.stuck", // "{n}{store}": a rule holding the hands whose release cannot be reached for want of a store

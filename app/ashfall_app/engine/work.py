@@ -67,10 +67,15 @@ def tap_seconds(save: Save, rules: Rules, card: CardId) -> int | None:
     """Seconds a tap started now takes: the rest of the current completion's work at the current full-share speed;
     None when that speed is 0, and then a tap is refused (InvalidVerbError from the player, nothing from an order)."""
     c = index(rules).cards[card]
-    speed = work_line(save, rules, card, BP, FULL).per_hour
-    if speed <= 0:
+    speed = tap_work_speed(save, rules, card)
+    if speed == 0:
         return None
     return ceil_div(counts.unit(c) - counts.work_value(save, card) % counts.unit(c), speed)
+
+
+def tap_work_speed(save: Save, rules: Rules, card: CardId) -> int:
+    """Work units per second a tap started now runs at, a full share; 0 at a speed of 0 or below."""
+    return max(0, work_line(save, rules, card, BP, FULL).per_hour)
 
 
 def tap(save: Save, rules: Rules, verb: TapCard, by_player: bool) -> Save:
