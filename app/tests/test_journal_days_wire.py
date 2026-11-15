@@ -38,7 +38,6 @@ def test_the_spec_names_the_days_and_requires_them_on_step_and_opened():
     assert {"type": "integer", "minimum": 0, "maximum": 2**53 // DAY_S} in day_read["anyOf"]
 
 
-@kills(12)
 def test_a_step_carries_the_written_days_it_composed_and_an_open_every_one_stored_before_it(
         game: GameClient, pg_url: str, shipped_opening: Opening):
     key, subject = a_beat_line(shipped_opening)
@@ -63,7 +62,7 @@ def test_a_step_carries_the_written_days_it_composed_and_an_open_every_one_store
     assert again.json()["journal_days"] == days, "a day once served is served the same"
 
 
-@kills(13)
+@kills(12, 13)
 def test_each_note_is_in_its_slots_hand_and_sketch_and_one_whose_slot_names_none_in_ink(
         shipped_ruleset: ShippedRuleset):
     looks = {("s_a", "first"): Look("pencil", "j_sketch"), ("s_a", "late"): Look("ink", None)}
@@ -76,7 +75,7 @@ def test_each_note_is_in_its_slots_hand_and_sketch_and_one_whose_slot_names_none
         jm.DayNote(subject="s_a", slot=jm.Slot.LATE, key="k.3", hand=jm.Hand.INK, sketch=None)], marks=[jm.Mark.SOOT, jm.Mark.SMUDGE])]
 
 
-def test_a_step_that_closes_no_day_carries_none(game: GameClient):
+def test_a_step_that_writes_no_note_carries_no_day(game: GameClient):
     save_id = int(game.begin()["save"]["save_id"])
     game.clock.tick(3600)
     r = game.advance(save_id)

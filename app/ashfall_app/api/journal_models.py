@@ -91,10 +91,11 @@ class DayNote(BaseModel):
 
 
 class JournalDay(BaseModel):
-    """A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed."""
+    """A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). A later copy of a day still being
+    written begins with this one's notes and marks."""
 
     day: int
     day_notes: list[DayNote]
     """At least one, in page order."""
     marks: list[Mark]
-    """The marks the day leaves on its page, each kind at most once; empty for none."""
+    """The marks the day leaves on its page, each kind at most once, in the order drawn; empty for none."""

@@ -80,21 +80,19 @@ def test_care_never_decides_the_place():
 
 
 def test_a_subject_stands_by_its_earliest_line_of_the_day():
-    """Statement 18: a's lines at seconds 90 and 10 (given latest first) put it before b at 50, where the order roll
-    would put b first."""
+    """Statement 18: a's lines at seconds 90 and 10 (given latest first) put it before b at 50: lines run by their
+    second, whatever the order given."""
     a, b = beat("a"), beat("b")
-    save_id = find_save(lambda sid: ref_roll(sid, 0, "b", "order") < ref_roll(sid, 0, "a", "order"))
     lines = [shows(a, 0, "a.late", second=90), shows(b, 0, second=50), shows(a, 0, second=10)]
-    (day,) = compose_span(save_id, 1, lines, (b, a), PLAIN)
+    (day,) = compose_span(1, 1, lines, (b, a), PLAIN)
     assert [n.subject for n in day.notes] == ["a", "b"]
 
 
-def test_ties_in_the_second_go_by_id():
-    """Statement 18: three notes whose lines share one second run by subject id, where the order roll would not."""
+def test_ties_in_the_second_go_in_the_order_stored():
+    """Statement 18: three notes whose lines share one second run in the order the lines were stored, not by id."""
     subs = (beat("z"), beat("a"), beat("m"))
-    save_id = find_save(lambda sid: sorted("zam", key=lambda s: ref_roll(sid, 0, s, "order")) != ["a", "m", "z"])
-    (day,) = compose_span(save_id, 1, [shows(s, 0, second=7) for s in subs], subs, PLAIN)
-    assert [n.subject for n in day.notes] == ["a", "m", "z"]
+    (day,) = compose_span(1, 1, [shows(s, 0, second=7) for s in subs], subs, PLAIN)
+    assert [n.subject for n in day.notes] == ["z", "a", "m"]
 
 
 def test_catchups_by_their_earliest_line_in_the_gap_run():

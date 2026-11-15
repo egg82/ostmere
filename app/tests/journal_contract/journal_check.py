@@ -54,12 +54,13 @@ def musts_on(rows: Sequence[ComposedDay], day: int, lines: Sequence[Line], subje
 
 
 def gap_runs(rows: Sequence[ComposedDay]) -> list[tuple[int, int]]:
-    """Each run of consecutive gap days, as (first day, last day)."""
+    """Each run of consecutive gap days, as (first day, last day); a gap day with notes (it broke off after writing)
+    begins a run of its own (statement 9)."""
     runs: list[tuple[int, int]] = []
     for r in rows:
         if r.gap is None:
             continue
-        if runs and runs[-1][1] == r.day - 1:
+        if runs and runs[-1][1] == r.day - 1 and not r.notes:
             runs[-1] = (runs[-1][0], r.day)
         else:
             runs.append((r.day, r.day))
@@ -68,12 +69,12 @@ def gap_runs(rows: Sequence[ComposedDay]) -> list[tuple[int, int]]:
 
 def gap_musts(rows: Sequence[ComposedDay], run: tuple[int, int], lines: Sequence[Line],
               subjects: Sequence[Subject]) -> set[str]:
-    """The subjects that were a must on some day of the gap run: a must on its own day with a non-empty `catchup`
-    (statement 7). No notes are written inside a run, so a subject's tellings are those before it."""
+    """The subjects of a gap run caught up after it: one that showed on a run day with no note of it that day, has a
+    non-empty `catchup`, and is a must by its tellings through the run (statements 7 and 9)."""
     first, last = run
-    told = {s.id: tellings(rows[:first], s.id) for s in subjects}
+    told = {s.id: tellings(rows[:last + 1], s.id) for s in subjects}
     return {s.id for d in range(first, last + 1) for s in showing(lines, subjects, d)
-            if s.catchup and is_must(s, told[s.id])}
+            if s.catchup and is_must(s, told[s.id]) and all(n.subject != s.id for n in rows[d].notes)}
 
 
 def own_notes(day: ComposedDay, subject_id: str) -> list[str]:

@@ -74,12 +74,12 @@ def test_the_away_subject_itself_is_caught_up_when_a_must():
 
 
 def test_a_must_in_a_busy_gap_is_caught_up():
-    """Statements 9 and 14: a busy day is a gap too, and its musts are caught up."""
+    """Statements 9 and 14: a busy day is a gap from the subject that tipped it, and the musts after are caught up."""
     subs = [beat("b1"), beat("b2"), beat("b3")]
     habits = replace(QUIET, lines_start=1, lines_floor=1, busy_ratio=2.0)
     days = compose_span(1, 2, [shows(s, 0) for s in subs], subs, habits)
-    assert days[0].gap == "busy" and days[0].notes == ()
-    assert sorted((n.subject, n.slot) for n in days[1].notes) == [(s.id, "catchup") for s in subs]
+    assert days[0].gap == "busy" and [n.subject for n in days[0].notes] == ["b1", "b2"]
+    assert [(n.subject, n.slot) for n in days[1].notes] == [("b3", "catchup")]
 
 
 def test_every_must_is_written_within_its_runs_length_plus_one():

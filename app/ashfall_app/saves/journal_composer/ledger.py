@@ -19,10 +19,13 @@ def settledness(composed: Sequence[ComposedDay], subjects: Sequence[Subject], ha
 
 
 def gap_run(composed: Sequence[ComposedDay]) -> range:
-    """The days of the run of stored gaps that ends on the last stored day; empty when that day is no gap."""
+    """The days of the run of stored gaps that ends on the last stored day, back to its first: the gap day that broke off
+    after notes were written, or the earliest of them. Empty when the last stored day is no gap."""
     start = len(composed)
     while start > 0 and composed[start - 1].gap is not None:
         start -= 1
+        if composed[start].notes:
+            break
     return range(start, len(composed))
 
 

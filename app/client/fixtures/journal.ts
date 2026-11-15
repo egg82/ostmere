@@ -13,12 +13,13 @@
 //   journalweeks:  WEEKS' written days and nothing else: several days pages, the newest day turned to READ_TO. Its
 //                  days are a short day, days that fill a page and break, a long gap then a day of catch-up notes, a
 //                  late addition, and a misremembering whose correction is pages later.
+//   journaltoday:  WEEKS' days 0 to 4, then day 5 still being written: its first note so far (TODAY), turned to day 4.
 import type { Content, JournalDay, Step, View } from "../src/api/types";
 import { fightsStep } from "./fights";
 import type { Kept } from "./steps";
 
-export type JournalPhase = "journal" | "journallesson" | "journaldays" | "journalall" | "journalweeks";
-export const JOURNAL_PHASES: readonly JournalPhase[] = ["journal", "journallesson", "journaldays", "journalall", "journalweeks"];
+export type JournalPhase = "journal" | "journallesson" | "journaldays" | "journalall" | "journalweeks" | "journaltoday";
+export const JOURNAL_PHASES: readonly JournalPhase[] = ["journal", "journallesson", "journaldays", "journalall", "journalweeks", "journaltoday"];
 
 export function isJournal(phase: string): phase is JournalPhase {
   return (JOURNAL_PHASES as readonly string[]).includes(phase);
@@ -98,8 +99,8 @@ export function journalView(base: View, notes: string[] = [...NOTES_A, NOTE_B]):
 
 export function journalStep(phase: JournalPhase, at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fightsStep("fight", at, kept, decisions);
-  const notes = phase === "journaldays" || phase === "journalweeks" ? [] : phase === "journalall" ? [...NOTES_A, NOTE_C, NOTE_B] : undefined;
-  const days = phase === "journalweeks" ? WEEKS : phase === "journaldays" || phase === "journalall" ? [DAY_D] : [];
+  const notes = phase === "journaldays" || phase === "journalweeks" || phase === "journaltoday" ? [] : phase === "journalall" ? [...NOTES_A, NOTE_C, NOTE_B] : undefined;
+  const days = phase === "journalweeks" ? WEEKS : phase === "journaltoday" ? [...WEEKS.slice(0, 5), TODAY] : phase === "journaldays" || phase === "journalall" ? [DAY_D] : [];
   return { ...base, view: journalView(base.view, notes), journal_days: days };
 }
 
@@ -127,3 +128,6 @@ export const WEEKS: JournalDay[] = [
   { day: 14, day_notes: [note("count_fix", "correction", "pencil")], marks: [] },
   { day: 15, day_notes: [note("rain", "repeat")], marks: ["soot"] },
 ];
+
+/** journaltoday's day still being written: WEEKS' day 5 with its first note so far. */
+export const TODAY: JournalDay = { ...WEEKS[5]!, day_notes: WEEKS[5]!.day_notes.slice(0, 1), marks: ["blood"] };

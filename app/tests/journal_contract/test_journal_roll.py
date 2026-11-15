@@ -10,7 +10,7 @@ from hypothesis import given, strategies as st
 from ashfall_app.saves.journal import Purpose, roll
 from journal_world import ref_roll
 
-PURPOSES: tuple[Purpose, ...] = ("write", "late", "misremember", "order")
+PURPOSES: tuple[Purpose, ...] = ("write", "late", "misremember", "mark")
 HERE = Path(__file__).parent
 APP = HERE.parent.parent
 
@@ -51,7 +51,7 @@ def _in_fresh_process(code: str, hash_seed: str) -> str:
     return done.stdout
 
 
-ROLLS = "from ashfall_app.saves.journal import roll\nprint([roll(s, 9, 'k', 'order') for s in range(9)])"
+ROLLS = "from ashfall_app.saves.journal import roll\nprint([roll(s, 9, 'k', 'write') for s in range(9)])"
 SPAN = "from journal_mixed import composed\nprint(repr(composed()))"
 
 
