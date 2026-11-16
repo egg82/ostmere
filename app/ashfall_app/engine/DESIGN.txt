@@ -180,7 +180,8 @@ CHOICES (each with its reason)
   ended STINT when a SwitchMix entry has left the queue and its `until` holds in the saved after. A removal while its
   `until` does not hold, and a stint that holds as it is queued, report nothing; one whose until held as it came to
   control is reported ended with no start. A player's SetQueue that removes a stint whose goal already holds reports it
-  as landed. A stint's start and its landing carry `levels`: the amount then of each store its mix's cards make (their
+  as landed. A stint the game handed back (Queue mix, "Dry stint") reports `on` False with ended DRY: an entry that
+  left the queue in an advance, its `until` not holding. A stint's start and its landing carry `levels`: the amount then of each store its mix's cards make (their
   makes and outcome stores, at a share above 0), so what the save gained in those stores while it ran is the
   difference, read by whoever keeps the two (saves/ruleruns.py).
 - Decision context (context.py): decide_logged's Step.context is what held at the decision's instant before the verb
@@ -555,7 +556,11 @@ CHOICES (cards)
   applies as before. A queue entry whose `until` never comes true (its goal's rate is 0, a store goal over its cap,
   a store that falls) keeps controlling and its mix keeps running: nothing passes it over, pops it or rescues the
   plan, and the entries behind it wait. A greyed queue mix is a dead entry (Greyed mix): the next live entry
-  controls. Why: a switch that stood lost the player's mix at the first stint, the reason Order mix rejected it for
+  controls. Dry stint: when the dry rule pauses a card the running queue mix holds at a share above 0 that the
+  player's own mix (save.active) does not run, the entry pops at that instant and the player's mix runs on, as an
+  order's action that cannot act yields to the next (OR ELSE); the pop clears the pauses with the running mix. A card the
+  player's mix runs too is not the stint's, and a pause on one does not end it. An input can run dry partway through
+  a stint that was fine when it began, so the offer is not refused up front. Why: a switch that stood lost the player's mix at the first stint, the reason Order mix rejected it for
   orders; the queue writing save.active was never sent by the page, and no live save held such an entry.
 - Retired: an Outcome retires a card by unlocking Unlock(RETIRED, card) (a newer tool replaces older work,
   docs/decisions.md, "The mix"). A retired card is out of play exactly as a completed one is, by the one predicate

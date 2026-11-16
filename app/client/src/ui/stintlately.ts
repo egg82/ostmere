@@ -18,7 +18,7 @@ export function stintFacts(catalog: Catalog, run: RuleRun, t: number): string {
   const { text, format } = catalog;
   const parts: string[] = [];
   if (run.on_at !== null && run.off_at !== null) parts.push(text.fill(UI.stintRan, { d: format.duration(run.off_at - run.on_at) }));
-  if (run.off_at !== null) parts.push(text.fill(UI.stintLanded, { ago: format.duration(Math.max(0, t - run.off_at)) }));
+  if (run.off_at !== null) parts.push(text.fill(run.ended === "dry" ? UI.stintDry : UI.stintLanded, { ago: format.duration(Math.max(0, t - run.off_at)) }));
   const made = madeFact(catalog, run);
   if (made) parts.push(made);
   return parts.join(" · ");

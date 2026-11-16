@@ -282,7 +282,7 @@ const text: Record<string, string> = {
   "ui.mix.after": "after",
   "ui.goal.head": "goals", "ui.goal.store": "{store} {n}", "ui.goal.store_share": "{store} at {n}", "ui.stint.or_until": "or until", "ui.goal.level": "{skill} {n}", "ui.goal.never": "never",
   "ui.goal.limited": "limited by {store}, {n}", "ui.goal.xp": "XP {n}",
-  "ui.stint.run": "Run until…", "ui.stint.entry": "{mix} until {goal}", "ui.stint.which": "{mix} until…", "ui.stint.ran": "ran {d}", "ui.stint.landed": "goal landed {ago} ago",
+  "ui.stint.run": "Run until…", "ui.stint.entry": "{mix} until {goal}", "ui.stint.which": "{mix} until…", "ui.stint.ran": "ran {d}", "ui.stint.landed": "goal landed {ago} ago", "ui.stint.dry": "out of input {ago} ago, back to your own tasks",
   "ui.stint.made": "made {n} {store}", "ui.stint.made_two": "made {n} {store} and {m} {store_b}",
   "ui.mix.spent": "{store} is used up",
   "ui.mix.running_now": "running now",

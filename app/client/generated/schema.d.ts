@@ -1984,7 +1984,8 @@ export interface components {
          *     the rule, at a season's turn or when its person left, at off_at. on_at is null only on an ended rule that never
          *     came on. `ended` "stint" is a goal stint that popped at its goal (CONTRACT.txt, "Rule runs"): `order` is
          *     {when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to
-         *     control), off_at when its goal landed. `made`, on an ended stint only: what the save gained, from on_at to off_at,
+         *     control), off_at when its goal landed; "dry" is one the game handed back because its card ran out of input: the same,
+         *     off_at when it did. `made`, on an ended stint only: what the save gained, from on_at to off_at,
          *     in the stores its mix's cards make, the goal's store first, then the largest, at most two; [] otherwise.
          */
         RuleRun: {
@@ -2000,7 +2001,7 @@ export interface components {
             /** Off Level */
             off_level: number | null;
             /** Ended */
-            ended: ("season" | "left" | "stint") | null;
+            ended: ("season" | "left" | "stint" | "dry") | null;
             /** Made */
             made: components["schemas"]["Amount"][];
         };

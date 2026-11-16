@@ -26,3 +26,5 @@ expect("two gains", facts([{ store: "wood", quantity: 12 * Q }, { store: "stone"
 expect("whole items rounded down", facts([{ store: "wood", quantity: 5 * Q + Math.floor(Q * 0.9) }, { store: "stone", quantity: 2 * Q + 1 }]),
   "ran 2 h · goal landed 4 h ago · made 5 Dead wood and 2 Flint");
 expect("made after the landing, with no start seen", facts([{ store: "stone", quantity: 7 * Q }], null), "goal landed 4 h ago · made 7 Flint");
+expect("a stint handed back says so in place of a landing", stintFacts(catalog, { ...run([]), ended: "dry" }, now),
+  "ran 2 h · out of input 4 h ago, back to your own tasks");
