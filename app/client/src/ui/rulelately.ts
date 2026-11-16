@@ -30,7 +30,7 @@ export function endedLine(catalog: Catalog, run: RuleRun): string {
 
 /** The quiet line under an entry, at time `t`. */
 export function runFacts(catalog: Catalog, run: RuleRun, t: number): string {
-  if (run.ended === "stint") return stintFacts(catalog, run, t);
+  if (run.ended === "stint" || run.ended === "dry") return stintFacts(catalog, run, t);
   const { text, format } = catalog;
   const store = chipOf(catalog, run.order.when) ? null : storeRule(catalog, run.order)?.store ?? null;
   const when = (bare: string, withLevel: string, at: number, level: number | null): string => {
@@ -49,11 +49,11 @@ export function latelyRows(catalog: Catalog, view: View, runs: readonly RuleRun[
   const shown = shownRuns(view, runs);
   if (shown.length === 0) return [];
   const rows = shown.flatMap((run, i) => {
-    if (run.ended !== null && run.ended !== "stint") return [el("div", "lately-rule lately-line", endedLine(catalog, run))];
+    if (run.ended !== null && run.ended !== "stint" && run.ended !== "dry") return [el("div", "lately-rule lately-line", endedLine(catalog, run))];
     const words = ruleWords(catalog, run.order);
     const facts = el("div", "lately-facts lately-line", runFacts(catalog, run, view.at));
     facts.dataset.run = String(i);
-    const rule = run.ended === "stint" ? stintLine(catalog, run) : words ? `${words.when} → ${words.action}` : "";
+    const rule = run.ended === "stint" || run.ended === "dry" ? stintLine(catalog, run) : words ? `${words.when} → ${words.action}` : "";
     return [el("div", "lately-rule lately-line", rule), facts];
   });
   return [el("h3", "rules-next lately-line", catalog.text.get(UI.ruleLately)), ...rows];

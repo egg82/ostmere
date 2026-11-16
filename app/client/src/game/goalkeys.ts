@@ -14,6 +14,7 @@ export const GOAL_ROW_KEYS = {
   stintWhich: "ui.stint.which",   // "{mix} until…": Next's Plan, once a mix is picked and its goals are listed
   stintRan: "ui.stint.ran",   // "{d}": how long a popped stint ran, in Lately
   stintLanded: "ui.stint.landed",   // "{ago}": when its goal landed, in Lately
+  stintDry: "ui.stint.dry",   // "{ago}": when a stint ran out of input and the game handed the hands back, in Lately
   stintMade: "ui.stint.made",   // "{n}{store}": what the save gained in a store while the stint ran, in Lately
   stintMadeTwo: "ui.stint.made_two",   // "{n}{store}{m}{store_b}": the same for two stores
 } as const;

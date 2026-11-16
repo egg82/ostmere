@@ -250,6 +250,12 @@ RULE RUNS
   `when`, as Next words it) and under it the facts, joined by " · ": ui.stint.ran {d} (off_at - on_at, only with an
   on_at) and ui.stint.landed {ago} (frame time - off_at).
   New text keys (Content.text_entries): ui.stint.ran {d} | ui.stint.landed {ago}   an ended stint's facts.
+  Dry stint: a stint whose card ran out of input (engine DESIGN.txt, "Queue mix") is handed back, not held: its entry
+  leaves view.queue and the player's mix runs on. It gets an entry with ended "dry" like an ended stint's, its until not
+  holding, off_at the instant it left; made is [].
+  THE CLIENT MAY word it as the ended stint's line and, in place of ui.stint.landed, ui.stint.dry {ago} (frame time -
+  off_at).
+  New text key: ui.stint.dry {ago}   a stint the game handed back.
   Made: RuleRun gains made [Amount {store, quantity}], [] on every entry but an ended stint's. On one, what the save
   gained while it ran: for each store that a card in the stint's mix (at a share above 0) makes, by its makes or its
   outcome's stores, both at the instant the stint began to run and at the instant it popped, that store's amount at
