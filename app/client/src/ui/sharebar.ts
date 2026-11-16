@@ -1,6 +1,6 @@
 // A mix drawn as one bar split into its shares, with a legend beneath it naming each segment and its share: no text sits
 // inside the bar. Used by the hands strip (slim) and the mix editor (large). Dividers drag share between their two neighbours, snapping to whole percents and
-// never below MIN_SHARE_BP, so no divider ever reaches 0%; in the editor a segment dragged off the bar is removed.
+// never below MIN_SHARE_BP, except that a segment marked idle may go to nothing, so a lone task can take the whole bar; in the editor a segment dragged off the bar is removed.
 // The bar only reports what the player did; the owner decides what to send.
 import { MIN_SHARE_BP } from "../game/mix";
 import { el, pulse, setText, tapFeedback } from "./dom";
@@ -14,6 +14,8 @@ export interface SegmentSpec {
   hue: number;
   /** Struck through: a retired or completed card the mix still holds. */
   struck?: boolean;
+  /** The rest nobody holds: it may shrink to nothing, where every other segment keeps MIN_SHARE_BP. */
+  idle?: boolean;
   /** Shown in the legend in place of the share (a tap's time left). */
   note?: string;
 }
@@ -122,8 +124,10 @@ export class ShareBar {
     const before = this.local.slice(0, i).reduce((a, b) => a + b, 0);
     const pair = (this.local[i] ?? 0) + (this.local[i + 1] ?? 0);
     const raw = Math.round((bpAt - before) / SNAP_BP) * SNAP_BP;
-    const mine = Math.min(pair - MIN_SHARE_BP, Math.max(MIN_SHARE_BP, raw));
-    if (mine === this.local[i] || pair < 2 * MIN_SHARE_BP) return false;
+    const lo = this.specs[i]?.idle ? 0 : MIN_SHARE_BP;
+    const hi = this.specs[i + 1]?.idle ? 0 : MIN_SHARE_BP;
+    const mine = Math.min(pair - hi, Math.max(lo, raw));
+    if (mine === this.local[i] || pair < lo + hi) return false;
     this.local[i] = mine;
     this.local[i + 1] = pair - mine;
     this.layout();

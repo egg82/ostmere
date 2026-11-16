@@ -109,3 +109,11 @@ def test_the_content_names_the_games_mixes_and_the_prefix_it_keeps():
     joins = sorted({j.mix for _, out in outcomes(loaded()) for j in out.joins})
     assert joins and content.game_mix_ids == joins
     assert content.limits.reserved_mix_prefix == e.TOWN_PREFIX
+
+
+def test_one_card_may_hold_a_persons_whole_time():
+    rules, save = new_rules(), joined_save()
+    g = game(rules)
+    saved = decide(g, save, rules, town_mix(("a", 10_000)))
+    mix = next(m for m in g.view(saved).mixes if m.id == str(TOWN))
+    assert [(c.card, c.share_bp) for c in mix.components if isinstance(c, w.CardShare)] == [("a", 10_000)]
