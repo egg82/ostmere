@@ -35,11 +35,15 @@ notification can carry the app's identity (the Chromium architecture notes say p
 "can be delegated to the web origin", and that for a WebAPK Chrome hands notifications to the app to display; for a
 TWA the notes do not describe push at all).
 
-- **Unverified:** that a TWA's Web Push works end to end with no code in the shell, and what the delegation service
-  must contain. I could not find the Chrome page that states it (`notification-delegation` was a 404). The first
-  device test (step 3 below) is the proof; if it fails, the shell gains a `DelegationService` and nothing else.
-- **Unverified:** what push transport each browser uses. Chrome's Web Push probably rides Google's services; that
-  belongs to the browser, not to the APK, so it does not touch F-Droid's rule on the app's own dependencies.
+- **Web Push works through the TWA with no code in the shell** (device test, 2026-11-15: GrapheneOS, Firefox as the
+  default browser, Vanadium installed). The library skips a default browser with no TWA support and takes the first
+  installed one that has it, here Vanadium; a reminder arrived from Vanadium with the app's icon and opened the app
+  when tapped. No `DelegationService` was needed.
+- **The push transport is the browser's.** Vanadium's subscription endpoint is on `fcm.googleapis.com` (Google's
+  service, through the phone's sandboxed Google Play); Firefox's is Mozilla's. That belongs to the browser, not to
+  the APK, so it does not touch F-Droid's rule on the app's own dependencies.
+- **A hand-written manifest must declare `ManageDataLauncherActivity`.** `LauncherActivity` enables it on every launch,
+  and without it the app crashes at start (Bubblewrap-generated projects declare it).
 - **Main F-Droid users on a phone with no Google services** need a browser whose Web Push works there. That is not
   a goal until the owner says it is. If it becomes one, add UnifiedPush (below) rather than FCM.
 
@@ -51,9 +55,8 @@ TWA the notes do not describe push at all).
 - **`/.well-known/assetlinks.json`:** a static file served from the web app (`web/page.py`, as the manifest is),
   holding the `delegate_permission/common.handle_all_urls` relation, the package name and the key's SHA-256
   fingerprint ([Digital Asset Links](https://developers.google.com/digital-asset-links/v1/getting-started):
-  location, relation and fields read there). Without it the TWA opens as a Custom Tab with a bar. The Google page does
-  not say what content type or redirects it accepts; serve `application/json` and no redirect, and treat that as
-  unverified until the device test.
+  location, relation and fields read there). Without it the TWA opens as a Custom Tab with a bar. Served as
+  `application/json` with no redirect, it verified on the device test: the app opens with no bar.
 - **Same key in every channel.** Main F-Droid normally signs its own build, which would give a different signature
   and make users reinstall to switch. It can instead publish our signed APK after rebuilding it and finding the
   two identical, pinned with `AllowedAPKSigningKeys`
@@ -85,7 +88,7 @@ TWA the notes do not describe push at all).
 |---|---|---|
 | 1 | `android/` Gradle project: TWA launcher, Custom Tab fallback, debug APK in CI. Pins build tools and JDK. | Nothing. |
 | 2 | `assetlinks.json` route and test, fingerprint from a config value. | The key's SHA-256 fingerprint, after step 4. |
-| 3 | Device test: install the debug APK, check the bar is gone, subscribe, receive a reminder. Fixes the two unverified push and link points above. | A phone, and the name of the browser on it. |
+| 3 | Device test: install the debug APK, check the bar is gone, subscribe, receive a reminder. Its results are the push and link points above. | A phone, and the name of the browser on it. |
 | 4 | Generate the keystore; release workflow signs the APK and attaches it to a GitHub release on an `android-vMAJOR.MINOR.PATCH` tag (versionCode is `major*10000 + minor*100 + patch`), failing unless the signer matches `android/release-key.sha256`. | Run `keytool`, add the secrets, keep the backup. |
 | 5 | Obtainium check: add the repo, install, publish a newer tag, see it update. | The phone again. |
 | 6 | Own F-Droid repo: workflow builds the index and deploys it. | A hosting target and the repo key. |
