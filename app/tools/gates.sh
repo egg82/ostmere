@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Every structural gate in docs/engineering.md's "Structural gates" table, in one command; exits 1 if any fails.
+# Every structural gate in docs/engineering.md's "Structural gates" table, plus CI's pyright, in one command; exits 1
+# if any fails.
 # tests/test_gates_command.py fails when a gate path in that table is missing from the lists below.
 #
 #   PATH=<venv>/bin:$PATH app/tools/gates.sh      # from anywhere; needs the dev requirements and `npm ci` in app/client
@@ -44,6 +45,7 @@ plants() {
 
 cd "$APP" || exit 1
 step "python gates" python -m pytest -q -n 2 "${PYTEST_GATES[@]#app/}"
+step "pyright" pyright
 for gate in "${CLIENT_GATES[@]}"; do
   step "$gate" bash -c 'cd client && node --input-type=module -e "(await import(process.argv[1])).run()" "./${1#app/client/}"' _ "$gate"
 done
