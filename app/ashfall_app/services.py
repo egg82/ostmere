@@ -9,12 +9,14 @@ from fastapi import Request
 
 from .accounts.interface import Accounts, NullAccounts
 from .saves.interface import NullSaves, Saves
+from .writer.service import Writer
 
 
 @dataclass(frozen=True)
 class Services:
     accounts: Accounts = field(default_factory=NullAccounts)
     saves: Saves = field(default_factory=NullSaves)
+    writer: Writer = field(default_factory=Writer)
 
 
 def of(request: Request) -> Services:
