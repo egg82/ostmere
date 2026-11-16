@@ -321,22 +321,25 @@ id = "t_child_in"
 when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
 outcome = { stores = [{ store = "arrivals", items = 1 }] }
 
+# The three who work eat meat with the pot, as he does (n2_eating), and twice his, come in off the road thin: eight at
+# the fire outrun the snares, and roots go over the smoke for what the catch cannot make (issue #102). At one an hour
+# each the snares still kept up on typical.
 [[standing]]
 id = "n5_eating"
 label_key = "action_n5_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 while_running = [{ lane = "n5", amount_bp = 1500 }]
 
 [[standing]]
 id = "n6_eating"
 label_key = "action_n6_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 while_running = [{ lane = "n6", amount_bp = 1500 }]
 
 [[standing]]
 id = "n7_eating"
 label_key = "action_n7_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 while_running = [{ lane = "n7", amount_bp = 1500 }]
 
 # His stakes by a rule: under the hut's and the posts' worth he cuts until near full, so a full stack sends him back to

@@ -122,7 +122,7 @@ gathered store's making. What drinks each store, by chapter:
 | ash | her ground (4 a run, uncapped till `ashed_ground` 24) | the same | the hut (12) | her ground |
 | pelt | `hide_flaps` (2 a stage) | `hide_flaps`; E2's strip | the hut (4) | (week 3's hall) |
 | tallow | | | | `tallow_lamps` |
-| smoked | the pack, the crows, the hunt | the same; E2's strip | the same | the bear hunt |
+| smoked | the pack, the crows, the hunt | the same; E2's strip | the same; n5-n7 eat it (2 an hour each), past what the snares make, so roots go over the smoke for the rest | the same; the bear hunt |
 
 **Stakes on lanes are run by an order card** offered under the stakes line once a second lane cuts them: "under 20
 stakes, {lane} cuts stakes, until 24" (D-91's at_most shape), so a full stack sends the lane to its next rule instead of

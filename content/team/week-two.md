@@ -398,6 +398,8 @@ lines say "the woman", "her husband", "her brother", "their child" until Z1 give
 
 Their cards: the town cards (forage, gather, cut, stakes, pick) on n5-n7 by item 4's expansion. Default split on
 joining: n5 forages, n6 keeps the watch (his stakes by a rule offered with the join: under 15, until 23), n7 picks fungus.
+The three eat meat with the pot, as n2 does (`n2_eating`) but twice his, come in off the road thin: eight at the fire
+outrun the snares, and what the catch cannot smoke, roots make up (issue #102: both smoke cards carry a share from here).
 
 ### The guard (fit pass)
 
