@@ -15,7 +15,8 @@ from .installs import requeued
 from .lumps import drainers
 from .latches import flipped_now
 from .phaseevents import carry_ended, topped_out
-from .plan import controlling_entry
+from .mixes import flatten_shares
+from .plan import controlling_entry, queue_mix_id, running_mix_id
 from .rates import FULL, contribution, lane_state, running, store_value, tapped_cards
 from .rebuild import rebuild
 from .requires import first_unmet
@@ -82,7 +83,9 @@ def _dispatch(save: Save, rules: Rules, event: Event, emit: Emit, landing: froze
     if event.kind is EventKind.TRIGGER:
         return _trigger_fired(save, rules, event.sequence, emit)
     if event.kind is EventKind.STORE_LIMIT:
-        return _pause_until_not_dry(save, rules, StoreId(event.subject), landing)
+        paused, interrupted = _pause_until_not_dry(save, rules, StoreId(event.subject), landing)
+        handed = _hand_back_dry_stint(paused, rules)
+        return handed, interrupted or handed is not paused
     if event.kind is EventKind.RESUME:
         return _resume(save, rules, event.subject), False
     if event.kind is EventKind.LATCH:
@@ -139,6 +142,20 @@ def _pause_until_not_dry(save: Save, rules: Rules, store: StoreId, landing: froz
             if lane == HANDS:
                 save = requeued(save, rules, CardId(a))
     return save, interrupted
+
+
+def _hand_back_dry_stint(save: Save, rules: Rules) -> Save:
+    """A queue mix running a card that holds a Pause, one the player's own mix does not run, pops its entry: the stint's
+    card can no longer run, so the hands go back to what they were doing (DESIGN.txt, "Queue mix"), as an order's
+    action that cannot act yields to the next. The pop clears the pauses with the running mix."""
+    i, mix = controlling_entry(save, rules), queue_mix_id(save, rules)
+    if i is None or mix is None or running_mix_id(save, rules) != mix:
+        return save
+    own = {s.card for s in flatten_shares(save.mixes, save.active)} if save.active is not None else set()
+    dry = {p.runner for p in save.pauses}
+    if not any(s.share_bp > 0 and s.card not in own and s.card in dry for s in flatten_shares(save.mixes, mix)):
+        return save
+    return replace(save, queue=save.queue[:i] + save.queue[i + 1:])
 
 
 def _tapped_lane(save: Save, rules: Rules, runner: Runner) -> LaneId | None:

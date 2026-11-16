@@ -19,11 +19,13 @@ from .state import Save
 
 class Ended(Enum):
     """Why an order's entry ended: a season's turn retired its chore, its person left the town, or (STINT) a goal stint
-    popped at its goal. A stint is reported as Order(entry.until, entry.verb), so it is known by its mix and goal."""
+    popped at its goal, or (DRY) one the game handed back because its card ran out of input. A stint is reported as
+    Order(entry.until, entry.verb), so it is known by its mix and goal."""
 
     SEASON = "season"
     LEFT = "left"
     STINT = "stint"
+    DRY = "dry"
 
 
 @dataclass(frozen=True)
@@ -54,13 +56,18 @@ def rule_changes(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, .
 
 def _stints(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, ...]:
     """A goal stint (a queue entry that switches a mix) coming to control: on; then each one that left the queue with
-    its goal holding in `after`: off, ended STINT. A stint the player removed before its goal holds reports nothing."""
+    its goal holding in `after`: off, ended STINT; and, where time moved (the game's doing, not a decision's), one that
+    left with its goal not holding: ended DRY. A stint the player removed before its goal holds reports nothing."""
     started = _controlling_stint(after, rules)
     changes = [RuleChange(after.time, _stint_order(started), True, None, None, _made_levels(after, rules, started))] \
         if started is not None and started != _controlling_stint(before, rules) else []
     changes += [RuleChange(after.time, _stint_order(q), False, None, Ended.STINT, _made_levels(after, rules, q))
                 for q in dict.fromkeys(before.queue)
                 if isinstance(q.verb, SwitchMix) and q not in after.queue and is_true(after, rules, q.until)]
+    changes += [RuleChange(after.time, _stint_order(q), False, None, Ended.DRY, _made_levels(after, rules, q))
+                for q in dict.fromkeys(before.queue)
+                if after.time > before.time and isinstance(q.verb, SwitchMix) and q not in after.queue
+                and not is_true(after, rules, q.until)]
     return tuple(changes)
 
 
