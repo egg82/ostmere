@@ -42,4 +42,11 @@ each later phase's longest stretch of levels paying only speed
   cooking        2 levels in a row pay only speed
   arcana         2 levels in a row pay only speed
   melee          2 levels in a row pay only speed
+each skill's levels that pay nothing: unmarked in its row, and unwaited-for in the later phases its track reaches
+  scavenging     row none; later phases none
+  woodcutting    row none; later phases none
+  foraging       row none; later phases none
+  cooking        row none; later phases none
+  arcana         row none; later phases none
+  melee          row none; later phases none
   by_hand past the end: read -> offer 7.1m; offer -> accepted 0.1m; read -> door 10.9m; actions between offer and door 1
