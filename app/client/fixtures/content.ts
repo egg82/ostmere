@@ -356,7 +356,7 @@ const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woo
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
   card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], kept: [], work_s: 5, inputs,
-  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), reach: null, drains: [], skill_needs: [],
+  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), reach: null, skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
 
@@ -403,7 +403,7 @@ export const fixtureContent: Content = {
     card("look_out", "hands", "narrative"),
     card("forage", "hands", "action"),
     { ...card("hunt", "hands", "action"), fight: { side: "hands", threat: "wolves", loses: [{ store: "wood", quantity: 3 * Q }], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [] } },
-    { ...card("poultice", "hands", "action", [{ store: "roots", quantity: 6 * Q }]), takes: ["roots", "hurt"], drains: ["hurt"] },
+    { ...card("poultice", "hands", "action", [{ store: "roots", quantity: 6 * Q }]), takes: ["roots", "hurt"] },
     card("chop", "helper", "action"), card("haul", "helper", "action"), card("fetch", "helper", "narrative"), card("hew", "mason", "action"), card("carve", "mason", "action"),   // the ruled lane's tasks
   ],
   chip_infos: [

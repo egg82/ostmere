@@ -1,7 +1,6 @@
 // Hurt is a level the player can see (docs/decisions/combat.md): a store a fight wounds shows its level, whole items
 // rounded up (any hurt at all reads at least 1), through the chip's own words ("hurt 2"), on the fight card's loss line
-// ("lose, and you're hurt +1") and on the face of the card that drains it ("Hurt 2/1"). A chip on a store no fight
-// wounds, and a store a loss only spends, read as they did.
+// ("lose, and you're hurt +1"). A chip on a store no fight wounds, and a store a loss only spends, read as they did.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { Q, fixtureContent } from "../fixtures/content";
@@ -9,7 +8,6 @@ import { fightsStep, withHurtChip } from "../fixtures/fights";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, FightInfo, StoreLevel, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { CardNeeds } from "../src/ui/cardneeds";
 import { FightPanel } from "../src/ui/fightpanel";
 import { Story } from "../src/ui/story";
 
@@ -57,22 +55,4 @@ const chipWords = (story: Story): string[] => Array.from(story.head.querySelecto
   expect("a bigger one", line({ ...wound, wounds: [{ store: "hurt", quantity: 2 * Q }] }), "lose, and you're hurt +2");
   expect("a spend is still a cost", line({ ...wound, wounds: [], loses: [{ store: "wood", quantity: 3 * Q }] }), "a loss costs 3 Dead wood");
   expect("both, each in its own words", line({ ...wound, loses: [{ store: "wood", quantity: 3 * Q }] }), "a loss costs 3 Dead wood; lose, and you're hurt +1");
-}
-
-// The poultice's face counts hurt as the chip does.
-{
-  const poultice = fightsStep("fight", AT).view.cards.find((c) => c.card === "poultice");
-  if (!poultice) throw new Error("the fixture has no poultice");
-  const hurtNeed = (items: number): string => {
-    const need = { ...poultice.needs[1]!, segment: { start: AT, start_value: items * Q, rate: 0, limit: null } };
-    const card = { ...poultice, needs: [poultice.needs[0]!, need] };
-    const needs = new CardNeeds(testContext(undefined, catalog).ctx, "poultice");
-    const view = fightsStep("fight", AT).view;
-    needs.draw(card, view, false);
-    needs.tick(card, view, AT);
-    return needs.root.querySelectorAll(".card-need")[1]?.textContent ?? "";
-  };
-  expect("none hurt", hurtNeed(0), "Hurt 0/1");
-  expect("a quarter hurt reads as the chip does", hurtNeed(0.25), "Hurt 1/1");
-  expect("two and a half", hurtNeed(2.5), "Hurt 3/1");
 }

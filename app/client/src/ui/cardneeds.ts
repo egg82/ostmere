@@ -5,8 +5,7 @@
 // the store; a tap of a short store need's row lights its makers (Need.makers, ui/makerlight.ts) and does not tap the
 // card. A spent one (Need.spent: nothing in play makes it and nothing is left to grant it) says so on its row.
 // A need on a clock with a part of the day (StoreInfo.clock) draws when it opens until it is met ("Opens after dark",
-// game/timewords.ts); a tally (StoreInfo.tally), and a store the card drains that is not hidden (CardInfo.drains: a tap
-// waits while it is at 0), draw as have/need though neither has a ledger line; a need on any other store the player has
+// game/timewords.ts); a tally (StoreInfo.tally) draws as have/need though it has no ledger line; a need on any other store the player has
 // never been shown draws no row, unless it has a gate: the card's countdown is all of it. A skill
 // level or a step once met stays met (levels and completions never fall), so its row goes; a store can fall, so its row stays.
 // While the card works (Card.run full or held) its needs are not drawn: its inputs are drawn as it runs, so the store
@@ -69,7 +68,7 @@ export class CardNeeds {
     const info = catalog.cards.get(this.id);
     const skillNeeds = info?.skill_needs ?? [];
     const stepNeeds = info?.step_needs ?? [];
-    const kind = (n: Need): string => { const k = needKind(catalog, view, n, this.id); return k === "store" ? "" : k; };
+    const kind = (n: Need): string => { const k = needKind(catalog, view, n); return k === "store" ? "" : k; };
     this.needs = card.needs;
     this.nothing = takesNothing(catalog, this.id, card.needs);
     const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|");

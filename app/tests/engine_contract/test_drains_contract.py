@@ -166,7 +166,7 @@ def test_a_drain_store_at_zero_leaves_the_card_ready():
     assert card_view(new_save(r), r).blocker is None
 
 
-@kills(6, 7)
+@kills(7)
 def test_a_tap_with_one_unit_in_the_store_starts_and_takes_nothing_at_its_start():
     """Invariant 123: x at 1 unit or more starts, and x is unchanged at the start instant (no lump at the start)."""
     r = world(cure(), x0=1)

@@ -28,8 +28,8 @@ const content: Content = {
   text_entries: [...fixtureContent.text_entries, { key: "card.haul.up", text: "water for the camp" }],
 };
 
-function face(takes: string[], drains: string[], run: Card["run"], upside: string | null = "card.haul.up", card: Card = held): string | undefined {
-  const infos = content.card_infos.map((c) => (c.card === "haul" ? { ...c, takes, drains, upside_key: upside } : c));
+function face(takes: string[], run: Card["run"], upside: string | null = "card.haul.up", card: Card = held): string | undefined {
+  const infos = content.card_infos.map((c) => (c.card === "haul" ? { ...c, takes, upside_key: upside } : c));
   const needs = new CardNeeds(testContext(undefined, new Catalog({ ...content, card_infos: infos })).ctx, "haul");
   const shown: Card = { ...card, run, needs: [] };
   const view: View = { ...step.view, cards: [shown] };
@@ -38,11 +38,11 @@ function face(takes: string[], drains: string[], run: Card["run"], upside: strin
   return line && !needs.root.hidden ? line.textContent : undefined;
 }
 
-expect("a card taking from no store says so", face([], [], null), SAYS);
-expect("and while it works", face([], [], "full"), SAYS);
-expect("a card with no upside drawn says nothing", face([], [], null, null), undefined);
-expect("a card with an input does not", face(["roots"], [], null), undefined);
-expect("nor one with a drain", face(["hurt"], ["hurt"], null), undefined);
+expect("a card taking from no store says so", face([], null), SAYS);
+expect("and while it works", face([], "full"), SAYS);
+expect("a card with no upside drawn says nothing", face([], null, null), undefined);
+expect("a card with an input does not", face(["roots"], null), undefined);
+expect("nor one with a drain", face(["hurt"], null), undefined);
 
 const catalog = new Catalog(content);
 const { ctx } = testContext(undefined, catalog);

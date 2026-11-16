@@ -2329,13 +2329,6 @@
               }
             ]
           },
-          "drains": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Drains"
-          },
           "skill_needs": {
             "items": {
               "$ref": "#/components/schemas/SkillNeed"
@@ -2390,7 +2383,6 @@
           "makes",
           "takes",
           "reach",
-          "drains",
           "skill_needs",
           "step_needs",
           "glows",

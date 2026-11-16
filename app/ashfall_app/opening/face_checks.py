@@ -6,8 +6,6 @@ when it is:
 - `at_least` on a clock with a part of the day (StoreEntry.clock): when it opens ("opens after dark");
 - `at_least` on another clock (a store the player is never shown that only standing actions make) as the card's only
   precondition, the clock's maker unlocked before the card can be: the card's countdown.
-A drain refuses a player's tap while its store is at 0 (engine DESIGN.txt, "DRAINS"), so it is a require too: the
-face draws a drain's store as have/need unless the store is hidden (CardInfo.drains).
 A reach stake's store (CardInfo.reach) is a require too: the track laid is a line that joins the ledger only once full,
 so the face draws it against the next reach, and must have a store it may draw.
 A ruled lane's cards are its tasks, run by the player's rules and never tapped, so they are not checked. The same
@@ -53,16 +51,14 @@ def check_clocks(o: "Opening") -> None:
 
 
 def undrawn(o: "Opening") -> list[tuple[str, str, str]]:
-    """(card, subject kind, id) for each require of a tappable card that its face cannot draw; a drain's kind is
-    "drain", a reach stake's store's "reach"."""
+    """(card, subject kind, id) for each require of a tappable card that its face cannot draw; a reach stake's store's
+    kind is "reach"."""
     ruled = {x.id for x in o.lanes if x.ruled}
     drawn = shown_stores(o) | timed_stores(o)
     clocks, before = standing_clocks(o), unlocked_before(o)
     tappable = [c for c in o.cards if c.lane not in ruled]
-    hidden = {s.id for s in o.stores if s.hidden}
     return [*((c.id, r.subject_kind or r.test, r.id or "") for c in tappable for r in c.requires
               if not _drawn(c, r, drawn, clocks, before.get(("card", c.id), frozenset()))),
-            *((c.id, "drain", d.store) for c in tappable for d in c.drains if d.store in hidden),
             *((c.id, "reach", s) for c in tappable if c.stake == "reach"
               for s in dict.fromkeys(s for s, _ in reach_stops(o, c)) if s not in drawn)]
 
@@ -77,7 +73,7 @@ def _drawn(c: "CardEntry", r: "ConditionEntry", drawn: frozenset[str], clocks: d
         return False
     if r.id in drawn:
         return True
-    alone = len(c.requires) == 1 and not c.inputs and not c.drains
+    alone = len(c.requires) == 1 and not c.inputs
     return alone and any(("action", a) in before for a in clocks.get(r.id, ()))
 
 

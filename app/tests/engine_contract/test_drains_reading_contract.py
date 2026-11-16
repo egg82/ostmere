@@ -144,6 +144,7 @@ def test_a_fight_cards_odds_scale_its_losses_and_wounds_but_never_its_drain(how:
 
 # ---- the read model ------------------------------------------------------------------------------------------------
 
+@kills(17)
 def test_a_drain_is_no_need():
     """DRAINS, "Read model": CardView.needs lists the inputs' whole-completion amounts and no drain."""
     r = world(cure(inputs=(Amount(I, 10 * Q),)), x0=Q, i0=10 * Q)

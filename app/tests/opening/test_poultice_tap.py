@@ -1,10 +1,9 @@
-"""What refuses a tap of `poultice` with its inputs in hand, read through the engine's decide path (issue #160): its
-drain on `hurt` at 0 (engine DESIGN.txt, "DRAINS", "Ready above 0"), and nothing else. The card's face draws the
-inputs; the drain is the require it must draw too (tests/opening/test_requires_shown.py)."""
+"""A tap of `poultice` with its inputs in hand starts at any hurt, none included: its drain on `hurt` asks nothing
+(engine DESIGN.txt, "DRAINS"), read through the engine's decide path (issue #237)."""
 from dataclasses import replace
 from functools import cache
 
-from ashfall_app.engine import AtLeast, CardId, Rules, Save, StoreId, StoreState, StoreValue, TapCard, new_save, units
+from ashfall_app.engine import CardId, Rules, Save, StoreId, StoreState, TapCard, new_save, units
 from ashfall_app.engine.api import decide_logged
 from ashfall_app.engine.rates import tapped_cards
 from ashfall_app.engine.segments import Segment
@@ -35,12 +34,11 @@ def tap(s: Save) -> tuple[Save, CardId | None]:
     return step.save, step.failed
 
 
-def test_with_its_inputs_in_hand_and_no_hurt_the_tap_fails_on_the_drain():
+def test_with_its_inputs_in_hand_and_no_hurt_the_tap_starts():
     s = in_hand(0)
     after, failed = tap(s)
-    assert failed == POULTICE and POULTICE not in tapped_cards(after, rules())
-    b = blocker(s, rules(), POULTICE)
-    assert b is not None and b.condition == AtLeast(StoreValue(HURT), 1, 1)
+    assert failed is None and POULTICE in tapped_cards(after, rules())
+    assert blocker(s, rules(), POULTICE) is None
 
 
 def test_any_hurt_at_all_lets_the_same_tap_start():

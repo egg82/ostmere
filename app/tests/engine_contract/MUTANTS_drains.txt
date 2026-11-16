@@ -31,7 +31,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
 15 repeats         a drain card on a declared lane is repeat-eligible: its landings are skipped while x is 0.  [130]
 16 split           the clamp at 0 is computed from the span's start, so advancing in two steps across x reaching 0
                    differs from one step.                                                          [131]
-17 (retired)       a drain has no blocker, so there is no blocker order to get wrong; row 6 covers it.
+17 drain a need    CardView.needs lists a drain's store (at 1 unit, as a tap's start once asked).        [Read model]
 18 validation      accepted: a drain on an unknown store, quantity 0, a store also in the card's inputs, costs,
                    makes, outcome stores or fight lines, one store drained twice.                  [DRAINS, Validation]
 19 fraction rounds an inexact every_hours or every is rounded (down or to nearest) instead of refused.     [132]
