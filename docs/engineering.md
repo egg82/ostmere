@@ -100,7 +100,8 @@ structural checks hold (`docs/research/agentic-engineering.md`). So:
 - **Reviewers look for correctness and contract gaps only**, never "anything that could be better": that is how
   abstraction layers, defensive code and tests for impossible cases get added.
 - **Locally, run what the change touches**: the targeted tests for it, `app/tools/gates.sh` (every gate in the
-  "Structural gates" table, at most 2 workers; `npm test` alone misses the Python-run ones), and pyright on the touched files. Subagents run only the tests their change touches; the full suite runs in the pull request's
+  "Structural gates" table, at most 2 workers; `npm test` alone misses the Python-run ones), and pyright on the touched files as CI runs it: `pyright -p app --pythonpath <venv>/bin/python <files>` (run
+  from the repo root without `-p app` it skips the strict config and passes what CI refuses). Subagents run only the tests their change touches; the full suite runs in the pull request's
   checks, not on the shared box.
 - **Cleanup is a standing pass** over merged code (duplication, drift from `docs/systems.md`), not only review before.
 - **The orchestrator edits the shared single-file docs** (`systems.md`, the decisions index, the board's issues,
