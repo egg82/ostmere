@@ -2,11 +2,14 @@
 the cards with h(c) > 0, in rules.cards order, each with share_bp = h(c) and entries equal to its held entries in the
 stack; explain_strength (and so FightView.power) lists the held entries among its adds with their "held:" source. The
 wire half is test_held_wire.py."""
+import pytest
+
 from ashfall_app.engine import (
-    BP, RunKind, SideStrength, TapCard, ThreatStrength, advance, decide, explain_strength, new_save, view,
+    BP, CardShare, InvalidVerbError, Mix, MixId, RunKind, SaveMix, SideStrength, SwitchMix, TapCard, ThreatStrength, advance,
+    decide, explain_strength, new_save, view,
 )
 from held_world import (
-    G, GA, GAC, GB, GH, GH2, GREQ, HELD, WOLF, first, hands, held_mods, ja, jb, kills, run_of, town, world,
+    G, GA, GAC, GB, GH, GH2, GREQ, HELD, HM, flat, held_of, raised, WOLF, first, hands, held_mods, ja, jb, kills, run_of, town, world,
 )
 from town_mix_world import TOWN_RULE, always, orders
 
@@ -72,3 +75,24 @@ def test_the_strength_explanations_and_the_fight_view_list_the_held_entries_amon
     assert fights and all(f.power.adds == held for f in fights if f.side == G)
     assert all(not f.threat_strength.adds for f in fights)
     assert explain_strength(s, r, ThreatStrength(WOLF)).adds == ()
+
+
+def test_no_card_has_two_shares_because_a_mix_never_holds_both_layers():
+    """A card sits on one lane and a mix holds one layer, so a held card's shares never add across the hands' mix and
+    the town's: both layers running at once list each card once at its own share, and one mix of both is refused."""
+    r = world((ja(),))
+    s = decide(town(r, (GA, 2500)), r, 0, orders(TOWN_RULE, always(GAC)))
+    s = decide(decide(s, r, 0, SaveMix(Mix(HM, (CardShare(GH, 3000),)))), r, 0, SwitchMix(HM))
+    assert [(h.card, h.share_bp) for h in view(advance(s, r, 30), r).held] == [(GA, 2500), (GH, 3000)]
+    both = Mix(MixId("both"), (CardShare(GH, 3000), CardShare(GA, 2500)))
+    with pytest.raises(InvalidVerbError):
+        decide(s, r, 30, SaveMix(both))
+
+
+def test_two_runners_holding_one_side_add_each_at_its_own_share():
+    """ga (4000 on g, la) at 2500 and gb (2000 on g, lb) at 7000: both are held, and g is raised by the sum of each
+    entry at its own share."""
+    r = world((ja(), jb()))
+    s = advance(decide(town(r, (GA, 2500), (GB, 7000)), r, 0, orders(TOWN_RULE, always(GAC))), r, 30)
+    assert held_of(s, r, GA) == [flat(4000, 2500)] and held_of(s, r, GB) == [flat(2000, 7000)]
+    assert raised(s, r) == flat(4000, 2500) + flat(2000, 7000) == 2400

@@ -2528,6 +2528,8 @@ those sourced "held:" + a card.)
     share in its layer's running mix when its Run is FULL; else 0, in
     particular while yielded, paused, waiting, greyed, completed, retired, locked, on an unjoined lane, or in a saved
     mix that does not run. A card tapped while in the running mix counts BP, not BP plus its share.
+    No card has two shares: it sits on one lane and a mix holds one layer, so a mix of both layers is refused and the
+    hands' and the town's running mixes never both hold a card; shares add only by flattening within one mix.
 112. Only at instants: for s.time <= t < the next instant of s, every held entry of advance(s, r, t) equals s's;
     every instant at which the held entries change also changes a lane's tap, a running mix or its shares, a pause, a
     card's Run, the unlock set or greying. A share change at T (a SaveMix of the running town mix, a tap starting or
