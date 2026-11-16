@@ -254,7 +254,8 @@ class View(BaseModel):
     goal_rows: list[GoalRow]
     """Each goal a mix can move, when it lands at the rates as set and what binds it (CONTRACT.txt, "Goal rows")."""
     levels: list[StoreLevel]
-    """Each store a lost fight adds to, as its segment, in content order (CONTRACT.txt, "FIGHTS", "read a level")."""
+    """Each store a lost fight adds to, then each store the scene reads that the ledger does not list, as its segment
+    (CONTRACT.txt, "FIGHTS", "read a level")."""
 
 
 class Step(BaseModel):

@@ -107,7 +107,7 @@ def create_app(clock: Clock = system) -> FastAPI:
     logs.setup()
     opening = checked_opening()
     rs = ruleset(opening, load_renames(), os.environ.get("BUILD_VERSION", "dev"), load_lock().release)
-    game = Game(opening, rs)
+    game = Game(opening, rs, page.assets_dir() / page.SCENE_MANIFEST)
     logs.info(logging.getLogger("ashfall.app"), "app.start", rules=rs.digest, version=rs.build, release=rs.release)
     database = db.from_env(os.environ)
     services = wire(database, rs, clock)

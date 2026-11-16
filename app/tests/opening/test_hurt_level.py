@@ -9,15 +9,15 @@ from tests.opening.test_poultice_tap import HURT, in_hand, rules
 
 def test_hurt_is_served_as_the_store_it_is():
     s = in_hand(Q + Q // 2)
-    got = levels(s, rules())
+    got = levels(s, rules(), engine_view(s, rules()))
     assert [lv.store for lv in got] == ["hurt"]
     assert got[0].segment.start_value == Q + Q // 2
 
 
 def test_a_store_no_fight_wounds_is_not_a_level():
     s = in_hand(0)
-    assert {lv.store for lv in levels(s, rules())} == {"hurt"}
-    assert "clay" not in {lv.store for lv in levels(s, rules())}
+    assert {lv.store for lv in levels(s, rules(), engine_view(s, rules()))} == {"hurt"}
+    assert "clay" not in {lv.store for lv in levels(s, rules(), engine_view(s, rules()))}
 
 
 def test_the_store_has_no_ledger_line_to_read_instead():

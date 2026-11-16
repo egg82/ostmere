@@ -3,6 +3,7 @@
 build seen gets the shipped rules under its name, once. A test that patches the lock or renames, or patches the opening,
 gets its own Ruleset from the real builders."""
 from dataclasses import replace
+from pathlib import Path
 
 from ashfall_app.api.service import Game
 from ashfall_app.opening.lock import load_lock
@@ -30,7 +31,9 @@ class ShippedRuleset:
             return self._by_build[build]
         return ruleset(opening, renames, build, release)
 
-    def make_game(self, opening: Opening, rs: Ruleset) -> Game:
+    def make_game(self, opening: Opening, rs: Ruleset, scene_manifest: Path | None = None) -> Game:
+        if scene_manifest is not None and scene_manifest.exists():
+            return Game(opening, rs, scene_manifest)
         if opening is self.opening and self._by_build.get(rs.build) is rs:
             if rs.build not in self._games:
                 self._games[rs.build] = Game(opening, rs)
