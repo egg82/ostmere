@@ -24,11 +24,12 @@ if (!haul || !info) throw new Error("the fixture's town should carry the helper'
 const held: Card = haul;
 const content: Content = {
   ...fixtureContent,
-  card_infos: fixtureContent.card_infos.map((c) => (c.card === "haul" ? { ...c, takes: [] } : c)),
+  card_infos: fixtureContent.card_infos.map((c) => (c.card === "haul" ? { ...c, takes: [], upside_key: "card.haul.up" } : c)),
+  text_entries: [...fixtureContent.text_entries, { key: "card.haul.up", text: "water for the camp" }],
 };
 
-function face(takes: string[], drains: string[], run: Card["run"], card: Card = held): string | undefined {
-  const infos = content.card_infos.map((c) => (c.card === "haul" ? { ...c, takes, drains } : c));
+function face(takes: string[], drains: string[], run: Card["run"], upside: string | null = "card.haul.up", card: Card = held): string | undefined {
+  const infos = content.card_infos.map((c) => (c.card === "haul" ? { ...c, takes, drains, upside_key: upside } : c));
   const needs = new CardNeeds(testContext(undefined, new Catalog({ ...content, card_infos: infos })).ctx, "haul");
   const shown: Card = { ...card, run, needs: [] };
   const view: View = { ...step.view, cards: [shown] };
@@ -39,6 +40,7 @@ function face(takes: string[], drains: string[], run: Card["run"], card: Card = 
 
 expect("a card taking from no store says so", face([], [], null), SAYS);
 expect("and while it works", face([], [], "full"), SAYS);
+expect("a card with no upside drawn says nothing", face([], [], null, null), undefined);
 expect("a card with an input does not", face(["roots"], [], null), undefined);
 expect("nor one with a drain", face(["hurt"], ["hurt"], null), undefined);
 
@@ -51,3 +53,4 @@ rows.update(step.view);
 (fakeDocument.body.firstElementChild as FakeEl).querySelector(".town-change")?.click();
 const row = editor.querySelector('.town-card[data-card="haul"]') ?? editor.querySelector('.town-add[data-card="haul"]');
 expect("a Camp person's task says so too", row?.querySelector(".card-need.nothing")?.textContent, SAYS);
+expect("a Camp task with no upside has none", editor.querySelector('.town-card[data-card="chop"]')?.querySelector(".card-need.nothing") ?? null, null);

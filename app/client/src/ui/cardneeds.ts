@@ -14,8 +14,8 @@
 // A card with a reach stake (CardInfo.reach) also draws its store against the next reach, even while it works: a rising
 // line joins the ledger only once full, so this row is where the player reads how far the next reach is; it goes once
 // every reach is passed.
-// A card that takes from no store (CardInfo.takes empty: no inputs, costs or drains) says so in a need's place, while it
-// works too: every other face has a cost row, so a missing one reads as a cost not shown (takesNothing).
+// A card that shows an upside (CardInfo.upside_key) and takes from no store (CardInfo.takes empty: no inputs, costs or
+// drains) says so in a need's place, while it works too: a benefit with no cost beside it reads as a cost not shown (takesNothing).
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
 // what its blocker names (shows()).
 import type { Card, Condition, LedgerLine, Need, View } from "../api/types";
@@ -38,10 +38,11 @@ function drawNeed(node: HTMLElement, words: string, have: string, short: boolean
   node.replaceChildren(...(short ? [pre, el("b", "need-have", have), post] : [pre + have + post]).filter((k) => k !== ""));
 }
 
-/** The line of a card that takes from no store and draws no other need row, in the place a cost would sit; else null. */
+/** The line of a card that shows an upside, takes from no store and draws no other need row, in the place a cost would
+ * sit; else null: a benefit with no cost beside it is what reads as a hidden cost. */
 export function takesNothing(catalog: Catalog, card: string, needs: Need[] = []): HTMLElement | null {
   const info = catalog.cards.get(card);
-  const bare = info && info.takes.length === 0 && needs.length === 0 && info.skill_needs.length === 0 && info.step_needs.length === 0 && !info.reach;
+  const bare = info && info.upside_key && info.takes.length === 0 && needs.length === 0 && info.skill_needs.length === 0 && info.step_needs.length === 0 && !info.reach;
   return bare ? el("span", "card-need nothing", catalog.text.get(UI.takesNothing)) : null;
 }
 
