@@ -114,11 +114,12 @@ class PgSaves:
 
     def open(self, account_id: int, save_id: int) -> Opened:
         t0, now, stop = time.perf_counter(), self._clock(), self._stop_for()
-        with self._locked(account_id, save_id, now, visited=True) as (conn, row, seen):
+        with self._locked(account_id, save_id, now, visited=True, history=HISTORY) as (conn, row, seen):
             loaded = load(row, self._rs)
             renamed, retired = self._rs.line_renames, self._rs.retired_lines
+            last = seen.history if seen is not None and seen.fresh and seen.history is not None else None
             history = tuple(PastLine(n=ln.n, at=ln.at, key=key)
-                            for ln in rows.last_lines(conn, save_id, HISTORY)
+                            for ln in (rows.last_lines(conn, save_id, HISTORY) if last is None else last)
                             if (key := renamed.get(ln.key, ln.key)) not in retired)
             days = journal_write.written(conn, save_id, seen, self._rs)
             played, now_row = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now)
@@ -218,15 +219,16 @@ class PgSaves:
 
     @contextmanager
     def _locked(self, account_id: int, save_id: int, now: datetime,
-                visited: bool = False) -> Generator[tuple[Connection, rows.SaveRecord, Seen | None]]:
+                visited: bool = False, history: int | None = None) -> Generator[tuple[Connection, rows.SaveRecord, Seen | None]]:
         """The save's row locked, and what its journal holds for a step at `now` (db/journal.py `locked`), read in one
-        statement. `visited`: the player is here at `now`, stamped for reminders in the same statement."""
+        statement. `visited`: the player is here at `now`, stamped for reminders in the same statement. `history`: its last
+        that many lines too, read in the statement (`seen.history`; None when it could not be, the caller reads them)."""
         visit = reminder_rows.visit(account_id, now) if visited else None
         with unit.begin(self._engine) as conn:
             if self._rs.journal is None:
                 row, seen = rows.save(conn, save_id, account_id, lock=True, visit=visit), None
             else:
-                found = journal_rows.locked(conn, save_id, account_id, visit, journal_write.keys(self._rs))
+                found = journal_rows.locked(conn, save_id, account_id, visit, journal_write.keys(self._rs), history)
                 row, seen = (None, None) if found is None else found
             if row is None:
                 raise NotFound(f"save {save_id}")

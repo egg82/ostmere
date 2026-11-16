@@ -7,10 +7,10 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from sqlalchemy import ARRAY, CTE, Connection, Label, Text, bindparam, func, literal_column, select
+from sqlalchemy import ARRAY, CTE, Connection, Integer, Label, Text, bindparam, func, literal_column, select
 from sqlalchemy.dialects.postgresql import aggregate_order_by
 
-from .saves import SaveRecord, save_and
+from .saves import LineRecord, SaveRecord, save_and
 from .tables import save_journal, save_lines, saves
 
 DAY_S = 86400
@@ -40,16 +40,21 @@ class Seen:
     """Every stored day, oldest first."""
     lines: list[tuple[int, str]]
     """The save's lines, (game second, key), carrying one of the keys asked, in the order stored."""
+    history: list[LineRecord] | None = None
+    """The save's last lines, oldest first, when `locked` was asked for them; None when it was not."""
 
 
-def locked(conn: Connection, save_id: int, account_id: int, visit: CTE | None,
-           keys: Sequence[str]) -> tuple[SaveRecord, Seen] | None:
-    """The save's row, locked (saves.save), and what its journal holds."""
-    found = save_and(conn, save_id, account_id, True, visit, _SEEN, {"j_keys": list(keys)})
+def locked(conn: Connection, save_id: int, account_id: int, visit: CTE | None, keys: Sequence[str],
+           history: int | None = None) -> tuple[SaveRecord, Seen] | None:
+    """The save's row, locked (saves.save), and what its journal holds; with `history`, its last that many lines too,
+    read in the same statement (so, like the days, they may lack a write the lock waited on: check `fresh`)."""
+    extra = _SEEN if history is None else [*_SEEN, _HISTORY]
+    found = save_and(conn, save_id, account_id, True, visit, extra, {"j_keys": list(keys), "j_history": history})
     if found is None:
         return None
     record, r = found
-    return record, Seen(r.j_fresh, [DayRecord(*d) for d in r.j_days], [(at, key) for at, key in r.j_lines])
+    last = None if history is None else [LineRecord(*line) for line in reversed(r.j_history)]
+    return record, Seen(r.j_fresh, [DayRecord(*d) for d in r.j_days], [(at, key) for at, key in r.j_lines], last)
 
 
 def _seen_columns() -> list[Label[Any]]:
@@ -67,7 +72,18 @@ def _seen_columns() -> list[Label[Any]]:
     return [fresh.label("j_fresh"), days.label("j_days"), lines.label("j_lines")]
 
 
+def _history_column() -> Label[Any]:
+    """The save's last `j_history` lines as JSON, newest first, built once with a bound limit."""
+    ln = save_lines.c
+    last = select(ln.n, ln.at, ln.key).where(ln.save_id == saves.c.id).order_by(ln.n.desc()).limit(
+        bindparam("j_history", type_=Integer)).subquery("last")
+    return select(func.coalesce(func.json_agg(aggregate_order_by(
+        func.json_build_array(last.c.n, last.c.at, last.c.key), last.c.n.desc())),
+        literal_column("'[]'::json"))).scalar_subquery().label("j_history")
+
+
 _SEEN = _seen_columns()
+_HISTORY = _history_column()
 
 
 def days(conn: Connection, save_id: int) -> list[DayRecord]:

@@ -73,7 +73,7 @@ def test_each_route_takes_its_round_trips(game: GameClient, trips: list[int]):
     assert counts == {
         "begin, signed in": 13,
         "me": 5,
-        "open": 7,
+        "open": 6,
         "advance": 6,
         "forecast": 5,
         "decide": 7,

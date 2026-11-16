@@ -47,6 +47,15 @@ def seen(conn: Connection, account: int, sid: int) -> journal.Seen:
     return found[1]
 
 
+def test_the_locking_read_reads_the_last_lines_asked_oldest_first(conn: Connection):
+    account, sid = new_save(conn)
+    step.write_step(conn, sid, T0, written(), [(5, "a"), (6, "b"), (7, "c")], None, None, [])
+    asked = journal.locked(conn, sid, account, None, ["k"], history=2)
+    assert asked is not None and asked[1].history == [s.LineRecord(1, 6, "b"), s.LineRecord(2, 7, "c")]
+    assert seen(conn, account, sid).history is None
+    assert s.last_lines(conn, sid, 2) == asked[1].history
+
+
 def test_a_step_stores_its_days_and_the_locking_read_reads_them(conn: Connection):
     account, sid = new_save(conn)
     assert seen(conn, account, sid) == journal.Seen(True, [], [])
