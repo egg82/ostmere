@@ -43,7 +43,10 @@ def test_no_lane_label_shows_a_raw_slot(everything: Opening):
     """Control: a label's slot counts as raw when its lane has no name to fill it with; the fake lane id proves it can."""
     o = everything
     names = {x.id for x in o.lanes if x.name_key is not None}
-    raw = lambda text: [s for s in SLOT.findall(text) if s not in names]
+
+    def raw(text: str) -> list[str]:
+        return [s for s in SLOT.findall(text) if s not in names]
+
     labels = [k for x in o.lanes for k in (x.label_key, *(y.label_key for y in x.later_labels))]
     assert len(labels) > 10 and raw("{nobody}'s hands") == ["nobody"]
     assert [k for k in labels if raw(o.text[k])] == []
