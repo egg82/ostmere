@@ -118,9 +118,6 @@ class CardInfo(BaseModel):
     reach: ReachInfo | None
     """Set on a card with the stake reach: the store its completions fill and the amounts at which its triggers pay. The
     face draws the store's amount and the next stop, since a rising line is not in the ledger until it is full."""
-    drains: list[str]
-    """The stores its drains take from, in content order. A tap waits while one is at 0, so the face draws each as a
-    have/need row (Card.needs holds it at quantity 1) unless the store is hidden."""
     skill_needs: list[SkillNeed]
     """The skill levels its requirements ask for, in requirement order."""
     step_needs: list[StepNeed]

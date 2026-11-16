@@ -267,7 +267,6 @@ def _mix_share(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
 
 def _needs(save: Save, rules: Rules, c: CardDef) -> tuple[Need, ...]:
     want: dict[StoreId, int] = {s: q for s, q in input_whole(save, rules, c) if q > 0}
-    want |= {a.store: 1 for a in c.drains}
     for cond in c.requires:
         if (need := store_need(cond)) is not None:
             want[need[0]] = max(want.get(need[0], 0), need[1])

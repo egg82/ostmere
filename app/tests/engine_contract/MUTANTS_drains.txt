@@ -12,7 +12,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
                    0 adds anything.                                                            [122, 127]
  5 more than N     a completion takes more than A' (the drain is charged per tap as well as by work, or rounded
                    up twice), or a drain keeps taking past its card's landing.                     [122]
- 6 ready at 0      a tap with x = 0 starts (no failed tap, no blocker), or an order's tap acts at 0.  [123]
+ 6 blocks at 0     a tap with x = 0 is refused (a failed tap, a blocker), or an order's tap waits at 0.  [123]
  7 lump at start   a tap takes min(x, A') at its start instant instead of paying by work.        [123, 122]
  8 forgives inputs forgiveness reaches the cure's other inputs or costs: an input store at 0 does not pause the cure,
                    or a completion lands with an input unpaid.                                     [125]
@@ -31,8 +31,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
 15 repeats         a drain card on a declared lane is repeat-eligible: its landings are skipped while x is 0.  [130]
 16 split           the clamp at 0 is computed from the span's start, so advancing in two steps across x reaching 0
                    differs from one step.                                                          [131]
-17 blocker order   the drain's blocker is read before the inputs' (a card short of an input and at x = 0 reports
-                   the drain), or at a whole A' instead of 1 unit.                                 [123]
+17 drain a need    CardView.needs lists a drain's store (at 1 unit, as a tap's start once asked).        [Read model]
 18 validation      accepted: a drain on an unknown store, quantity 0, a store also in the card's inputs, costs,
                    makes, outcome stores or fight lines, one store drained twice.                  [DRAINS, Validation]
 19 fraction rounds an inexact every_hours or every is rounded (down or to nearest) instead of refused.     [132]

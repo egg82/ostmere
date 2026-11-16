@@ -71,15 +71,14 @@ def test_a_ruled_lane_card_without_drains_repeats_and_with_drains_lands_at_each_
 
 
 @kills(15)
-def test_the_rule_taps_again_while_the_store_holds_and_stops_when_it_is_empty():
-    """Invariants 130, 123: 2.5 items fund taps from 0 s and 10 s, and the one at 20 s lands at 30 s with x at 0 from 25 s;
-    the rule's next tap is not ready, so the lane is free and the card has landed three times, not a hundred."""
+def test_the_rule_taps_again_at_zero_as_a_drain_asks_nothing():
+    """Invariants 130, 123: 2.5 items fund the taps from 0 s and 10 s and the one at 20 s lands at 30 s with x at 0 from
+    25 s; the rule's next taps start at 0 all the same, so the card lands every 10 s."""
     r, s = _ruled(cure(Q, work_s=10, lane=L), 5 * Q // 2)
     assert [card_view(advance(s, r, t), r).completions for t in (9, 10, 20, 29, 30)] == [0, 1, 2, 2, 3]
     a = advance(s, r, 100)
-    assert next(ls.card for ls in a.lanes if ls.lane == L) is None
-    assert card_view(a, r).completions == 3 and at(s, r, X, 25) == 0
-    assert card_view(advance(s, r, 100_000), r).completions == 3
+    assert next(ls.card for ls in a.lanes if ls.lane == L) == CURE
+    assert card_view(a, r).completions == 10 and at(s, r, X, 25) == 0
 
 
 # ---- 131: split ------------------------------------------------------------------------------------------------
@@ -145,11 +144,11 @@ def test_a_fight_cards_odds_scale_its_losses_and_wounds_but_never_its_drain(how:
 
 # ---- the read model ------------------------------------------------------------------------------------------------
 
-def test_a_drain_is_listed_in_needs_at_one_unit_after_the_inputs():
-    """DRAINS, "Read model": CardView.needs lists a drain's store at quantity 1 (what a tap's start asks), after the
-    inputs' whole-completion amounts."""
+@kills(17)
+def test_a_drain_is_no_need():
+    """DRAINS, "Read model": CardView.needs lists the inputs' whole-completion amounts and no drain."""
     r = world(cure(inputs=(Amount(I, 10 * Q),)), x0=Q, i0=10 * Q)
-    assert [(n.store, n.quantity) for n in card_view(new_save(r), r).needs] == [(I, 10 * Q), (X, 1)]
+    assert [(n.store, n.quantity) for n in card_view(new_save(r), r).needs] == [(I, 10 * Q)]
 
 
 def test_a_forgiven_drain_reads_as_an_input_line_never_clamped_and_the_store_is_not_falling():

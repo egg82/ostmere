@@ -5,11 +5,12 @@ import type { Catalog } from "./catalog";
 import { ruleCards } from "./ruleoffers";
 import { defaultRule, itemsRule, valid, type StoreRule, type Test } from "./storerule";
 
-/** What one run of the task takes of `store`, in whole items rounded up (as View.levels reads); 0 when it takes none. */
+/** What one run of the task takes of `store`, in whole items rounded up (as View.levels reads; a take of any size reads
+ * as 1 at least, a drain's included, which Card.needs no longer lists); 0 when it takes none. */
 function take(catalog: Catalog, view: View, then: OrderVerb | null, store: string): number {
-  const cards = ruleCards(view, then);
+  const cards = ruleCards(view, then).filter((c) => catalog.cards.get(c)?.takes.includes(store));
   const quantities = view.cards.filter((c) => cards.includes(c.card)).flatMap((c) => c.needs.filter((n) => n.store === store).map((n) => n.quantity));
-  return Math.ceil(Math.max(0, ...quantities) / catalog.content.scales.quantity_per_item);
+  return cards.length === 0 ? 0 : Math.max(1, Math.ceil(Math.max(0, ...quantities) / catalog.content.scales.quantity_per_item));
 }
 
 /** The rule a store starts as: a level the task takes ("reaches") starts at the smallest rule the page builds at or above

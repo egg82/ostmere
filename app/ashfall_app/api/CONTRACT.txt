@@ -533,8 +533,7 @@ THE CLIENT MAY
     an at_most order on the blocker's store is on (view.orders_on) and its release + 1 is below the blocker's value:
     that order lets go first, so the time cannot be kept and no countdown shows. It can be tapped iff it is ready and
     its lane's LaneBar has no running_card; its time is Card.tap_s. A need on a store the view has not unlocked is
-    drawn by what the store is: a tally (StoreInfo.tally), or a store the card drains (CardInfo.drains) that is not
-    hidden, as ui.card.needs like any store; a clock with a part of
+    drawn by what the store is: a tally (StoreInfo.tally), as ui.card.needs like any store; a clock with a part of
     the day (StoreInfo.clock) as when it opens, ui.card.opens with {when} from ui.when.* (below), until its sample
     reaches the quantity; any other (a countdown the player never sees) not at all, so the card's countdown is all of
     it. A blocker on a store the view has not unlocked never takes When ready.

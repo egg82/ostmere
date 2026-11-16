@@ -821,8 +821,6 @@ export interface components {
             /** Takes */
             takes: string[];
             reach: components["schemas"]["ReachInfo"] | null;
-            /** Drains */
-            drains: string[];
             /** Skill Needs */
             skill_needs: components["schemas"]["SkillNeed"][];
             /** Step Needs */

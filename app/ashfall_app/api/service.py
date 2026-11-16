@@ -135,7 +135,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s,
             kept=_kept_infos(c, o),
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
-            makes=card_makes(c), takes=card_takes(c), reach=_reach(o, c), drains=[d.store for d in c.drains],
+            makes=card_makes(c), takes=card_takes(c), reach=_reach(o, c),
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires
                          if r.subject_kind == "skill_level" and r.test == "at_least" and r.id is not None],
             step_needs=[cm.StepNeed(card=r.id, count=r.value) for r in c.requires

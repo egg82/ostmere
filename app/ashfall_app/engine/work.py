@@ -40,12 +40,10 @@ def blocker(save: Save, rules: Rules, card: CardId) -> Blocker | None:
 
 
 def unmet_conditions(save: Save, rules: Rules, card: CardId) -> tuple[Condition, ...]:
-    """What a tap of `card` now still lacks: each input's rest in declaration order, then each drain's store above 0,
-    then each requires, then a pause."""
+    """What a tap of `card` now still lacks: each input's rest in declaration order, then each requires, then a pause."""
     c = index(rules).cards[card]
     found: list[Condition] = [AtLeast(StoreValue(store), q, q)
                               for store, q in input_rest(save, rules, c) if store_value(save, store) < q]
-    found += [AtLeast(StoreValue(a.store), 1, 1) for a in c.drains if store_value(save, a.store) < 1]
     found += [cond for cond in c.requires if not is_true(save, rules, cond)]
     pause = next((p for p in save.pauses if p.runner == card), None)
     if pause is not None:
