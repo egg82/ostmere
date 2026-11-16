@@ -87,7 +87,7 @@ export function chipStore(chip: ChipInfo): string | null {
   return chip.when.kind === "after_time" || chip.when.watched.kind !== "store_value" ? null : chip.when.watched.store;
 }
 
-/** What the When row offers for a rule doing `cards` (ruleCards). Simple: the chips whose store they make and the
+/** What the When row offers for a rule doing `cards` (ruleCards). Simple: the chips on a store they make, or rising on a store they take, and the
  * stores relevant to them (game/relevant.ts), in its order; nothing before a task is chosen. Full: every chip the band
  * has drawn in the save, whether it shows now and whatever task answers it, and every store a rule may watch, the
  * relevant ones first, with `editing`'s store last when it has no ledger line. Only stores with a ledger line of two
@@ -96,10 +96,12 @@ export function chipStore(chip: ChipInfo): string | null {
 export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: readonly string[], editing: string | null): { chips: ChipInfo[]; stores: string[]; relevant: Relevant } {
   const q = catalog.content.scales.quantity_per_item;
   const makes = (store: string) => (catalog.stores.get(store)?.made_by ?? []).some((c) => cards.includes(c));
+  const takes = (store: string) => cards.some((c) => catalog.cards.get(c)?.takes.includes(store));
   const seen = new Set(seenChips(catalog, view));
   const lines = [...ruleStores(view, catalog.campStore).filter((l) => l.cap >= 2 * q).map((l) => l.store), ...levelStores(catalog, view)];
   const relevant = relevantStores(catalog, cards, view.cards.map((c) => c.card), lines);
-  const chips = catalog.content.chip_infos.filter((c) => { const s = chipStore(c); return s !== null && !catalog.isLevel(s) && (full ? seen.has(c.chip) : makes(s)); });
+  const answers = (c: ChipInfo, s: string) => makes(s) || (c.when.kind === "at_least" && takes(s));
+  const chips = catalog.content.chip_infos.filter((c) => { const s = chipStore(c); return s !== null && !catalog.isLevel(s) && (full ? seen.has(c.chip) : answers(c, s)); });
   const first = [...relevant.makes, ...relevant.takes, ...relevant.near];
   const offered = full ? [...first, ...lines.filter((s) => !first.includes(s))] : first;
   return { chips, stores: editing !== null && !offered.includes(editing) ? [...offered, editing] : offered, relevant };

@@ -108,7 +108,7 @@ and you tune it, then hit go.
   unlocked by progress. Semantics, the saved shape and the contract: `docs/design/rule-guards.md`.
 - **The editors open simple; the full editor is one deliberate tap away** (after playing day one:
   poking around found the editors, and they were a bit much). A new rule opens on what it does and, once
-  that is chosen, what that answers: a chip such as hungry, or the stores the task is about, first what it makes,
+  that is chosen, what that answers: a chip such as hungry, or a rising one such as ash-laden on a store the task takes, or the stores the task is about, first what it makes,
   then what it takes, then one step out, read off the cards' own inputs and outputs and never off words in their
   names (owner: the store a task takes belongs there too). So a rule like "cook roots when hungry" takes two taps,
   and it reads as one sentence with its levels showing, each part a choice in place (owner: the levels should not
