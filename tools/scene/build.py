@@ -220,7 +220,7 @@ def write_layers(rng: random.Random) -> list[Entry]:
             entry["ungraded"] = True
         if layer.get("front"):
             entry["front"] = True
-        if layer.get("flicker"):
+        if "flicker" in layer and layer["flicker"]:
             entry["flicker"] = layer["flicker"]
         bottoms[layer["id"]] = box[3]
         out.append(entry)
