@@ -161,8 +161,10 @@ visit's exit, the setup left running for the absence.
   goal of the last set landing, the player's mix edited, and the set gaining a skill.
 - **Printed:** per day, keeper's worth and tuner's moments by cause; fresh's worth at visits with and without a cause;
   moments per visit by week beside the opening's; the longest stretch with none; every visit.
-- **Not built:** own rules against offers only (goal arrival on a route that writes stints against one that only
-  accepts offers) waits for goal stints.
+- **Own rules against offers only:** a second readout (`worth-stints-typical`, `tests/worth/stints.py`) plays the real
+  engine, not the rates. On the first visit with a set on every third day it plays the save two days as keeper left it
+  and with a stint queued per goal of the set (the upkeep and the goal's card, until the goal lands), and prints how
+  much of the set's XP to go each brought and how many goals held. It reports and holds no threshold.
 
 **The worth threshold** says which visits count as moments: 25%, above where fresh's worth sits at visits with no
 cause, so the best drifting as goals near is noise and a cause moving it is a moment. It sorts visits for the printout

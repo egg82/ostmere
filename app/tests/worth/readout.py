@@ -4,7 +4,8 @@ tests/worth/probe.py). Per day: keeper's worth at its visits, tuner's moments an
 by decile (the two controls among them), fresh's worth with and without a cause (what the threshold is read from), how
 far the kept rates came true, the opening's moments per visit beside each week's, the longest stretch with none, and
 every visit. It reports and fails nothing; its text is committed under tests/readouts/ and compared by
-tests/weektwo/test_worth_readouts.py, whose job has day fifteen's plays. Goals are skill ids and levels, causes are kinds (CLAUDE.md, "Never spoil the owner").
+tests/weektwo/test_worth_readouts.py, whose job has day fifteen's plays, with the route with its own rules (stints.py, its own
+text). Goals are skill ids and levels, causes are kinds (CLAUDE.md, "Never spoil the owner").
 
     python -m tests.worth.readout            # from app/: print the readout and its CPU cost
 """
@@ -15,11 +16,12 @@ from collections.abc import Callable
 
 from tests.dayone.player import DayOnePlayer
 from tests.weektwo.routes import fifteen
+from tests.worth import stints
 from tests.worth import summary as sm
 from tests.worth.route import visit_worths
 
 ROUTE = "typical"
-NAMES = (f"worth-{ROUTE}",)
+NAMES = (f"worth-{ROUTE}", f"worth-stints-{ROUTE}")
 Pick = Callable[[sm.VisitWorth], float | None]
 ROUTES: tuple[tuple[str, Pick], ...] = (
     ("keeper", lambda v: v.keeper_s),
@@ -89,7 +91,8 @@ def text(p: DayOnePlayer) -> str:
 
 
 def readouts() -> dict[str, str]:
-    return {f"worth-{ROUTE}": text(fifteen(ROUTE))}
+    p = fifteen(ROUTE)
+    return {f"worth-{ROUTE}": text(p), f"worth-stints-{ROUTE}": stints.text(p, ROUTE)}
 
 
 def main(argv: list[str]) -> int:
@@ -97,7 +100,9 @@ def main(argv: list[str]) -> int:
     p = fifteen(ROUTE)
     t1 = time.process_time()
     sys.stdout.write(text(p))
-    print(f"(played in {t1 - t0:.0f} CPU s, read in {time.process_time() - t1:.1f} CPU s)")
+    t2 = time.process_time()
+    sys.stdout.write(stints.text(p, ROUTE))
+    print(f"(played in {t1 - t0:.0f} CPU s, read in {t2 - t1:.1f} CPU s, stints in {time.process_time() - t2:.1f} CPU s)")
     return 0
 
 

@@ -1,0 +1,13 @@
+== worth with a route's own rules on typical: goal stints against offers only, on the real engine
+  from the exit of the first visit with a set on days 2, 5, 8, ... (the worth readout's set), the save is played
+  2 days as keeper left it (offers only: no rule written for a goal) and with a stint queued per goal of the
+  set (soonest alone first: the upkeep and the goal's card, until the goal lands, then the player's mix);
+  nothing is tapped after the exit. done: the share of the set's XP still to go at the exit that the play
+  brought; landed: goals of the set that hold at its end
+  visits by which setup is ahead: same 2, stints ahead 2, stints behind 1
+  visit   day  goals  keeper: done, landed  stints: done, landed
+  V6     1.22     2    100%   2    100%   2   same
+  V19    4.16     2    100%   2    100%   2   same
+  V32    7.06     5     71%   4     80%   4   stints ahead
+  V45   10.21     5     78%   3      4%   1   stints behind
+  V58   13.15     4     42%   3     70%   3   stints ahead
