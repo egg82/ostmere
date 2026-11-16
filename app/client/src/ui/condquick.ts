@@ -40,7 +40,7 @@ export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boo
   const items = catalog.isLevel(rule.store) ? cap : null;
   const offered = items === null ? PRESETS.map(([bp]) => ({ share: bp })) : Array.from({ length: items }, (_, i) => ({ items: i + 1 }));
   const offs = offered.flatMap((l) => (["n", "m"] as const).filter((w) => !can(w, l)).map((w) => `${w}${levelValue(l)}`));
-  return { key: JSON.stringify([rule, task, stores, tasks, offs]), parts: () => quickSentence(catalog, { ...rule, m }, { stores, tasks, task, can, items }, pick) };
+  return { key: JSON.stringify([rule, task, stores, tasks, offs]), parts: () => quickSentence(catalog, { ...rule, m }, { stores, tasks, task, can, items, view }, pick) };
 }
 
 export interface QuickChoices {
@@ -54,6 +54,8 @@ export interface QuickChoices {
   can: (which: "n" | "m", level: Level) => boolean;
   /** The store's cap in items when its levels are whole items (a store a lost fight adds to), else null: shares. */
   items: number | null;
+  /** The save the sentence is drawn for: a lane's label in the task list is the one it holds. */
+  view: View;
 }
 
 export interface QuickPicks {
@@ -127,7 +129,7 @@ export function quickSentence(catalog: Catalog, rule: StoreRule & { m: Level }, 
     test: part("quick-test", text.get(rule.test === "below" ? UI.ruleFallsTo : UI.ruleReachesTo), tests, rule.test, (v) => pick.test(v as Test)),
     n: levelPart(catalog, rule, "n", rule.n, choices, pick),
     m: levelPart(catalog, rule, "m", rule.m, choices, pick),
-    task: part(`quick-action ${hue}`, catalog.cardLabel(choices.task), sectioned(catalog, choices.tasks, (c) => c).flatMap((g) => g.items.map((c) => ({ value: c, label: catalog.cardLabel(c), group: g.heading || undefined }))), choices.task, pick.task,
+    task: part(`quick-action ${hue}`, catalog.cardLabel(choices.task), sectioned(catalog, choices.tasks, (c) => c, choices.view).flatMap((g) => g.items.map((c) => ({ value: c, label: catalog.cardLabel(c), group: g.heading || undefined }))), choices.task, pick.task,
       text.get(UI.ruleDo)),
   };
   const template = text.get(rule.test === "below" ? UI.ruleQuickDown : UI.ruleQuickUp);
