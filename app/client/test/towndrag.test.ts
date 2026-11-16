@@ -1,6 +1,6 @@
 // A person's mix in the Camp editor is set with the hands' share bar (ui/sharebar.ts): dragging a divider trades share
 // between a person's neighbouring parts, the last one against their idle rest; the old -/+ step buttons are gone, and
-// Add is offered exactly when a card could join.
+// Add is always offered.
 import { fakeDocument, type FakeEl, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
@@ -55,16 +55,14 @@ function opened(view: View) {
     [["chop", 5000], ["haul", 4500], ["hew", 7000], ["carve", 2000]]);
 }
 
-{  // Add is enabled exactly when the card could join, and joins with all the idle there is when that is under half
-  for (const rest of [0, 300, MIN_SHARE_BP]) {
+{  // Add joins with all the idle there is when that is under half (with none, it takes a slice: fullshare.test.ts)
+  for (const rest of [300, MIN_SHARE_BP]) {
     const mix = (m: Mix): Mix => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "hew").map((c) => (c.kind === "card_share" && c.card === "carve" ? { ...c, share_bp: 10_000 - rest } : c)) });
     const { editor, person } = opened({ ...both, mixes: both.mixes.map((m) => (m.id === "town:main" ? mix(m) : m)) });
     const add = person(1).querySelector('.town-add[data-card="hew"]') as FakeEl;
-    expect(`Add at ${rest} idle`, add.disabled, rest < MIN_SHARE_BP);
-    if (!add.disabled) {
-      add.click();
-      expect("the card joins with the idle share", texts(person(1).querySelectorAll(".town-card-share")), [`${rest / 100}%`, `${(10_000 - rest) / 100}%`].reverse());
-    }
+    expect(`Add at ${rest} idle`, add.disabled, false);
+    add.click();
+    expect("the card joins with the idle share", texts(person(1).querySelectorAll(".town-card-share")), [`${rest / 100}%`, `${(10_000 - rest) / 100}%`].reverse());
     expect("still open", editor.hidden, false);
   }
 }

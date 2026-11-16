@@ -5,7 +5,7 @@
 import type { CardShare, Decision, Mix, Order, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { ALWAYS } from "./lanes";
-import { MIN_SHARE_BP } from "./mix";
+import { apportion, MIN_SHARE_BP } from "./mix";
 import { freeName } from "./orders";
 
 /** The share a card joins a person's time with, when that much is free. */
@@ -123,10 +123,20 @@ export function withTownShare(catalog: Catalog, mix: Mix, card: string, bp: numb
   return { ...mix, components };
 }
 
-/** A card joining a person's time: half of it, or what is free when that is less; null when under the smallest share is free. */
+/** A card joining a person's time: half of what is free, or all of it when that is less; with under the smallest share
+ * free, an equal slice from their cards, as a card joins the hands' mix (game/mix.ts joinCard). */
 export function joinTownCard(catalog: Catalog, mix: Mix, card: string): Mix | null {
-  const free = catalog.content.scales.bp - given(catalog, mix, catalog.laneOf(card));
-  return withTownShare(catalog, mix, card, Math.min(JOIN_BP, free));
+  const lane = catalog.laneOf(card);
+  const bp = catalog.content.scales.bp;
+  const free = bp - given(catalog, mix, lane);
+  if (free >= MIN_SHARE_BP) return withTownShare(catalog, mix, card, Math.min(JOIN_BP, free));
+  const mine = mix.components.filter((c) => c.kind === "card_share" && catalog.laneOf(c.card) === lane);
+  const slice = Math.floor(bp / (mine.length + 1));
+  if (slice < MIN_SHARE_BP) return null;
+  const rest = apportion(mine.map((c) => c.share_bp), bp - slice);
+  let k = 0;
+  const kept = mix.components.map((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? { ...c, share_bp: rest[k++] ?? c.share_bp } : c));
+  return { ...mix, components: [...kept, { kind: "card_share", card, share_bp: slice }] };
 }
 
 /** The mix with one person's cards given `shares`, in the order the mix lists them (a bar's last part may be the idle

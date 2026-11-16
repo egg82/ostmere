@@ -1,12 +1,11 @@
 // The town editor (docs/design/opening-screen.md, "The town"): the town's mix, one split per person, each person's own
 // parts of 100% and the rest idle. A person's bar is the hands' ShareBar: its dividers are dragged to trade share between
-// neighbours, the last one against the idle rest (never below the mix editor's smallest share). A card joins from the
-// Add row with half of what is free and leaves by its ✕; only that person's own cards, without a cap, are offered.
+// neighbours, the last one against the idle rest (never below the mix editor's smallest share, the idle rest down to nothing). A card joins from the
+// Add row with half of what is free (an equal slice from the person's cards when nothing is) and leaves by its ✕; only that person's own cards, without a cap, are offered.
 // Nothing moves a share from one person to another or adds them across people. Save sends the mix, and for a new one the
 // town's always rule pointed at it (game/town.ts); ✕ at the top leaves without a change. It takes the card area's place,
 // as the mix editor does.
 import type { Mix, View } from "../api/types";
-import { MIN_SHARE_BP } from "../game/mix";
 import { UI } from "../game/text";
 import { dropTownCard, given, joinTownCard, newTownMix, people, townMixToEdit, townSaveDecisions, townTasks, withTownShares } from "../game/town";
 import { el, setText, tapFeedback } from "./dom";
@@ -105,10 +104,8 @@ export class TownEditor {
     const cards = mix.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? [c] : []));
     const specs: SegmentSpec[] = cards.map((c) => ({ key: c.card, label: catalog.cardLabel(c.card), hue: catalog.rank(c.card) }));
     const shares = cards.map((c) => c.share_bp);
-    if (idle > 0) {
-      specs.push({ key: `idle:${lane}`, label: catalog.text.fill(UI.townIdle, { person: label }), hue: 5 });
-      shares.push(idle);
-    }
+    specs.push({ key: `idle:${lane}`, label: catalog.text.fill(UI.townIdle, { person: label }), hue: 5, idle: true });   // always there, so a full person has a divider to drag down
+    shares.push(idle);
     const bar = this.barOf(lane);
     bar.set(specs, shares);
     this.cardRows(rows, lane, mix);
@@ -119,7 +116,6 @@ export class TownEditor {
       add.append(el("span", "town-card-name", catalog.cardLabel(card)), ...this.upside(card));
       add.type = "button";
       add.dataset.card = card;
-      add.disabled = idle < MIN_SHARE_BP;
       add.addEventListener("click", () => this.edit(joinTownCard(catalog, mix, card)));
       adds.append(add);
     }
