@@ -10,12 +10,9 @@ on:
     paths:
       - android/**
       - .github/workflows/android.yml
+  # Tags only: a push's path filter also applies to a tag push, so a tag on a commit that did not touch android/ never
+  # ran. A change to android/ is built on its pull request.
   push:
-    branches:
-      - main
-    paths:
-      - android/**
-      - .github/workflows/android.yml
     tags:
       - android-v*
   workflow_dispatch:
