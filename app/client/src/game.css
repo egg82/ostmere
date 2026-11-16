@@ -756,6 +756,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .lately-rule { padding: .35rem .4rem 0 2.1rem; color: var(--ink); }
 .lately-facts { padding: 0 .4rem .35rem 2.1rem; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
 .rules-new { align-self: flex-start; }
+.rules-side { display: flex; gap: 6px; padding: 0 0 .5rem; }   /* Mine | Camp: the editor's choice buttons (.cond-test), the chosen one pressed */
 .stint-plan { align-self: flex-start; }
 /* Plan's cards (ui/stintplan.ts): one still waiting is off, outlined like a card's "in Next"; the mixes start after a gap */
 .plan-card:disabled { background: transparent; box-shadow: inset 0 0 0 1px var(--rule); }

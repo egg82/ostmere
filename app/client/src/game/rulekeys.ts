@@ -2,6 +2,7 @@
 // merged into `UI`, game/text.ts.
 export const RULE_KEYS = {
   ruleFull: "ui.rule.full", // in the place of the New rule button once the rules hold Content.limits.max_orders
+  ruleSideMine: "ui.rule.side_mine", // the Rules page's switch: the player's own rules (Camp is ui.town.title)
   ruleNew: "ui.rule.new", // the Rules tab's way to a new rule (once writing rules is open), and the simple editor's heading
   ruleDo: "ui.rule.do", // the condition editor's row of what a rule does
   ruleMoreOptions: "ui.rule.more_options", // opens the full condition editor from the simple one

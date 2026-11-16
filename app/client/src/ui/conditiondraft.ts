@@ -6,6 +6,7 @@ import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } f
 import { buildSubject, readSubject, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
 import { ruleCards, whenChoices } from "../game/ruleoffers";
+import type { RuleSide } from "../game/ruleside";
 import { isTownMix } from "../game/town";
 
 export interface Draft {
@@ -21,6 +22,10 @@ export interface Draft {
   chip?: boolean;
   /** A rule on the town: it does a town mix and nothing else. */
   town?: boolean;
+  /** A new rule made on one side of the Rules page: it offers that side's tasks alone. */
+  scope?: RuleSide;
+  /** With `scope` Camp: the one person the rule is for. */
+  lane?: string;
   /** A count, a level or a task running, in place of `rule` (whose store is then ""). */
   subject?: SubjectRule;
   /** The rule's guards, and its fallbacks as the editor holds them: a hands task is a tap here, saved as its solo mix. */

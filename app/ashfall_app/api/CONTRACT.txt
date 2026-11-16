@@ -775,6 +775,7 @@ TEXT AND NUMBERS (one rule)
     ui.rule.quick_down {store}{test}{n}{task}{m} | ui.rule.quick_up {store}{test}{n}{task}{m} | ui.rule.falls_to |
     ui.rule.reaches_to   the quick add's sentence, by its test, each slot a control; its two tests' words
     ui.rule.copy                     a rule being changed: a new rule from it, to change before adding
+    ui.rule.side_mine   the Rules tab's switch, Mine | Camp (Camp is ui.town.title)
     ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
     ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
     ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits

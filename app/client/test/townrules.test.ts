@@ -6,10 +6,13 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep, withSecondMix } from "../fixtures/town";
 import type { View } from "../src/api/types";
+import type { SideKept } from "../src/app/ruleside";
+import type { RuleSide } from "../src/game/ruleside";
 import { RulesTab } from "../src/ui/rules";
 import { TownStrip } from "../src/ui/townstrip";
 
 install();
+const camp: SideKept = { get: () => "camp", set: () => undefined };   // the town is drawn on Camp
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });
 
 function expect(label: string, got: unknown, want: unknown): void {
@@ -21,9 +24,9 @@ const townIndex = both.orders.findIndex((o) => o.then.kind === "switch_mix" && o
 const greyed = withSecondMix(townStep("towngrey").view);
 const texts = (nodes: FakeEl[]): string[] => nodes.map((n) => n.textContent ?? "");
 
-function rules(view: View) {
+function rules(view: View, side: RuleSide = "camp") {
   const { ctx, got } = testContext();
-  const tab = new RulesTab(ctx);
+  const tab = new RulesTab(ctx, side === "camp" ? camp : { get: () => side, set: () => undefined });
   document.body.replaceChildren(tab.root);
   tab.update(view);
   return { root: fakeDocument.body.firstElementChild as FakeEl, got };
@@ -44,7 +47,7 @@ function strip(view: View) {
   expect("the always rule's words", texts(root.querySelectorAll(".town-rule .rule-when")), ["Otherwise, Camp"]);
   expect("it is the one on", root.querySelectorAll(".town-rule.active").length, 1);
   expect("not among the hands' rules", root.querySelectorAll(".rules-list .rule-handle").map((h) => h.dataset.rule).includes(String(townIndex)), false);
-  expect("the hands' rules are still there", root.querySelectorAll(".rules-list .rule-handle").length > 0, true);
+  expect("the hands' rules are still there, on Mine", rules(both, "mine").root.querySelectorAll(".rules-list .rule-handle").length > 0, true);
   expect("not dimmed while it runs", root.querySelectorAll(".town-rule.greyed").length, 0);
 }
 

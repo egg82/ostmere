@@ -620,6 +620,10 @@ Rack                                                   each side lane's task rul
 ● (Under 2 dry wood, until 6 ✎)  →  ■ Lay to dry   Remove
 ```
 
+- **Mine | Camp.** Once a second person has hands, a switch tops the list and shows one side at a time: Mine, the lists
+  above (the hands' rules, Next, Otherwise, `+ New rule`, the lanes that are not people's, Answers); Camp, the town's
+  rules, each person's lane and a `+ New rule` offering people's tasks under their names (`docs/decisions/mixes.md`). The
+  side is kept per device; before a second person has hands there is no switch and one list.
 - **Rules run mixes, in priority order.** The first hands rule whose condition holds runs its mix over the player's;
   when it lets go, the player's own comes back. A mix can have several rules (each its own line: X or Y).
 - **The condition is a button** in the house button colours with an edit mark: it opens the condition editor in the

@@ -1,7 +1,7 @@
 // FIXTURE entry, never shipped (node build.mjs --fixtures build-dev): the front page and game against fixtures.
 // URL hash: #stale answers every step 503 (the reconnecting state); #phase=… picks the first Step (steps.ts, Phase);
 // #play also presses Begin (for screenshots); #sheet then opens the Mixes list from the strip. #rules opens the Rules
-// tab, #rule=N the condition editor on its Nth rule's condition, #pick=N the picker on its Nth mix slot. #seen opens
+// tab (#camp, on its Camp side), #rule=N the condition editor on its Nth rule's condition, #pick=N the picker on its Nth mix slot. #seen opens
 // writing rules (as if a rule had been seen on then off); #new then opens the Rules tab's New rule, #plan its Next's Plan. #limited makes a send of feedback answer 429. The shortcuts:
 // #change (the ledger's Change), #covered (a ledger line's "covered"), #strip (the strip's "until …"). #due marks
 // recovery words due; #devices opens the "Another device" sheet; #settings the Settings sheet; #join=CODE is a join link; #have opens "I have a code".
@@ -88,6 +88,7 @@ if (hash.has("rules") || rule !== null || pick !== null || hash.has("new") || ha
         : hash.has("plan") ? () => clickWhenShown(".stint-plan") : undefined;
   clickWhenShown(".tabs [data-tab=rules]", then);
 }
+if (hash.has("camp")) clickWhenShown(".tabs [data-tab=rules]", () => clickWhenShown(".rules-side-pick[data-side=camp]"));   // the Rules page on its Camp side
 if (hash.has("change")) clickWhenShown(".line-order .quiet");
 if (hash.has("covered")) clickWhenShown(".line-covered");
 if (hash.has("strip")) clickWhenShown(".hands-rule");

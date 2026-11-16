@@ -7,6 +7,7 @@ import type { Catalog } from "../game/catalog";
 import { isAlways, ruledLaneOf } from "../game/lanes";
 import { ruleActions } from "../game/guardwords";
 import { removeRule, taskRules } from "../game/orders";
+import { ruleSideOf, type RuleSide } from "../game/ruleside";
 import { UI } from "../game/text";
 import { noteOrderRemoved } from "../telemetry";
 import { el, pulse, tapFeedback } from "./dom";
@@ -24,16 +25,17 @@ export function ruleDot(catalog: Catalog, on: boolean): HTMLElement {
 /** The group of the rules that answer an offer: no lane's. */
 const ANSWERS = "";
 
-/** Each side lane's task rules, under the lane's label. `cond` draws rule `index`'s condition button. */
-export function laneSections(ctx: PartContext, view: View, cond: (index: number) => HTMLElement): HTMLElement[] {
+/** Each side lane's task rules, under the lane's label. `cond` draws rule `index`'s condition button. `side`: only that
+ * side of the page's rules (the answers are Mine's). */
+export function laneSections(ctx: PartContext, view: View, cond: (index: number) => HTMLElement, side: RuleSide | null = null): HTMLElement[] {
   const { catalog } = ctx;
   const byLane = new Map<string, number[]>();
-  for (const i of taskRules(view)) {
+  for (const i of taskRules(view).filter((r) => side === null || ruleSideOf(catalog, view, r) === side)) {
     const then = view.orders[i]!.then;
     const lane = then.kind === "tap_card" ? catalog.laneOf(then.card) : ANSWERS;
     byLane.set(lane, [...(byLane.get(lane) ?? []), i]);
   }
-  const builders = kindRows(ctx, view);
+  const builders = side === "camp" ? [] : kindRows(ctx, view);
   if (builders.length > 0 && !byLane.has(ANSWERS)) byLane.set(ANSWERS, []);
   const lanes = [...byLane].sort(([a], [b]) => Number(a === ANSWERS) - Number(b === ANSWERS));
   return lanes.map(([lane, rules]) => {
