@@ -38,13 +38,12 @@ function newRule(view: View): { cond: HTMLElement; decided: Decision[] } {
 const chips = (cond: HTMLElement) => q(cond, ".cond-stores .cond-chip").map((b) => b.textContent);
 const stores = (cond: HTMLElement) => q(cond, ".cond-stores .cond-store[data-store]").map((b) => b.dataset["store"]);
 
-// The poultice is a task the Do row offers; choosing it offers hurt, the store it takes, as a chip and as a store.
+// The poultice is a task the Do row offers; choosing it offers hurt, the store it takes.
 {
   const { cond, decided } = newRule(hurt);
   expect("the poultice is offered as an action", q(cond, ".cond-task").map((b) => b.dataset["card"]).includes("poultice"), true);
   one(cond, ".cond-task[data-card=\"poultice\"]").click();
-  expect("its chip", chips(cond), ["hurt"]);
-  expect("the store it takes", stores(cond).includes("hurt"), true);
+  expect("hurt is offered once, as the store: a chip's rule carries no level", [chips(cond), stores(cond).includes("hurt")], [[], true]);
   one(cond, ".cond-store[data-store=\"hurt\"]").click();
   expect("the quick add reads hurt as a store the task takes: it reaches", one(cond, ".cond-sentence .quick-test .quick-word").textContent, "reaches");
   one(cond, ".cond-actions .primary").click();
