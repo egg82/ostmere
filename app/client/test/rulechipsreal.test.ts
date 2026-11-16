@@ -1,28 +1,43 @@
-// The shipped cards and chips (fixtures/real_chip_cards.json, which tests/test_rule_chip_cases_wire.py keeps equal to the
-// shipped content): the simple rule view offers ash-laden for clearing the roofs and draughty for pegging the flaps, on
-// either lane (#277). Both chips rise on a store their task takes.
+// Every shipped chip and card (fixtures/real_chip_cards.json, which tests/test_rule_chip_cases_wire.py keeps equal to the
+// shipped content): the simple rule view offers a chip for a card when the chip falls on a store the card makes (tired
+// for rest) or rises on a store it takes (ash-laden for clearing the roofs, #277).
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import type { CardInfo, ChipInfo } from "../src/api/types";
+import type { CardInfo, ChipInfo, Content, StoreInfo } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { whenChoices } from "../src/game/ruleoffers";
+import { chipStore, whenChoices } from "../src/game/ruleoffers";
 import { readFileSync } from "node:fs";
 
-function expect(label: string, got: unknown, want: unknown): void {
-  if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
-}
-
-const real = JSON.parse(readFileSync("fixtures/real_chip_cards.json", "utf8")) as { cards: { card: string; takes: string[] }[]; chips: { chip: string; when: ChipInfo["when"] }[] };
-const base = fixtureContent.card_infos[0] as CardInfo;
-const baseChip = fixtureContent.chip_infos[0] as ChipInfo;
-const catalog = new Catalog({
+const real = JSON.parse(readFileSync("fixtures/real_chip_cards.json", "utf8")) as {
+  cards: { card: string; makes: string[]; takes: string[]; wounds: string[] }[];
+  chips: { chip: string; when: ChipInfo["when"] }[];
+  stores: { store: string; made_by: string[] }[];
+};
+const card0 = fixtureContent.card_infos[0] as CardInfo;
+const chip0 = fixtureContent.chip_infos[0] as ChipInfo;
+const store0 = fixtureContent.store_infos[0] as StoreInfo;
+const content: Content = {
   ...fixtureContent,
-  card_infos: [...fixtureContent.card_infos, ...real.cards.map((c): CardInfo => ({ ...base, card: c.card, makes: [], takes: c.takes }))],
-  chip_infos: [...fixtureContent.chip_infos, ...real.chips.map((c): ChipInfo => ({ ...baseChip, chip: c.chip, when: c.when }))],
-});
+  card_infos: real.cards.map((c): CardInfo => ({ ...card0, card: c.card, makes: c.makes, takes: c.takes, fight: c.wounds.length === 0 ? null : { ...(card0.fight as NonNullable<CardInfo["fight"]>), wounds: c.wounds.map((store) => ({ store, quantity: 1 })) } })),
+  chip_infos: real.chips.map((c): ChipInfo => ({ ...chip0, chip: c.chip, when: c.when })),
+  store_infos: real.stores.map((s): StoreInfo => ({ ...store0, store: s.store, made_by: s.made_by })),
+  standing_infos: [],
+};
+const catalog = new Catalog(content);
 const view = fixtureStep("restoffer", 100).view;
-const chips = (card: string) => whenChoices(catalog, view, false, [card], null).chips.map((c) => c.chip);
 
-expect("the shipped content has the cases", real.cards.length > 0 && real.chips.length > 0, true);
-for (const card of ["clear_roofs", "n2_clear_roofs"]) expect(`${card} offers ash-laden`, chips(card), ["ash_laden"]);
-for (const card of ["peg_flaps", "n1_peg_flaps"]) expect(`${card} offers draughty`, chips(card), ["draughty"]);
+const pairs: string[] = [];
+const missing: string[] = [];
+for (const chip of content.chip_infos) {
+  const store = chipStore(chip);
+  if (store === null || catalog.isLevel(store)) continue;
+  for (const card of content.card_infos) {
+    const answers = chip.when.kind === "at_most" ? card.makes.includes(store) : chip.when.kind === "at_least" && card.takes.includes(store);
+    if (!answers) continue;
+    pairs.push(`${chip.chip}/${card.card}`);
+    if (!whenChoices(catalog, view, false, [card.card], null).chips.some((c) => c.chip === chip.chip)) missing.push(`${chip.chip}/${card.card}`);
+  }
+}
+if (pairs.length === 0) throw new Error("no chip/card pair was checked");
+if (missing.length > 0) throw new Error(`chip/card pairs missing from the simple view (of ${pairs.length}): ${missing.join(", ")}`);
+console.log(`rulechipsreal: ${pairs.length} pairs checked: ${pairs.join(", ")}`);
