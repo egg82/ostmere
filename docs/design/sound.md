@@ -40,7 +40,7 @@ the owner's ear sets them.
 |---|---|---|---|---|
 | Background (a card done by the mix or a rule) | the "+1" | No | — | — |
 | Tap (a card done from the player's tap, Next included) | the `landed` ring | Yes: one short, dry knock on wood | Soft | Every landed tap; taps within a tenth of a second play one. The pitch steps through a fixed cycle of five small offsets, each within a third of a semitone, so a run of taps is not a machine gun |
-| Tap, its chain (each link of a live step's cascade lighting) | the link's ember mark | Yes: a wooden tick per link after the first, each a step higher, the volume fixed | Soft | The first link is the tap's own knock. Up to five ticks follow at the link pace, one per turn, rising through a pentatonic to the tick's recorded pitch; the next chain starts low again. Links that light together play one tick |
+| Tap, its chain (each link of a live step's cascade lighting) | the link's ember mark | Yes: a wooden tick per link after the first, each a step higher, the volume fixed | Soft | The first link is the tap's own knock. Up to five ticks follow at the link pace, one per turn, rising through the pentatonic on the First note; the next chain starts low again. Links that light together play one tick |
 | First (something new arrives: a card, chip, skill row, ledger line, feature, an offer) | the `arrive` pulse | Yes: one struck note | Soft | One per batch |
 | Level (a skill or the Camp reaches a level) | the `burst` | Yes: the First note three times, rising (root, third, fifth) | Medium | One per batch, however many levels landed in it. A level that is a link in a chain plays this in place of its tick |
 | Big: the opening's end | the end's first line, the evening firelight coming up | Yes: one low strike that rings and settles | Full | Once per save, whenever the end's lines play; a return that shows the dusk alone, without its lines, plays nothing |
@@ -165,8 +165,12 @@ How the page makes it land:
   that where the eye does not. A tap that sets off every waiting link stops the ticks not yet begun and plays one.
 - **A sound due at a known later time** is placed with the context's output timestamp, which pairs a context time
   with the clock time it is heard at; where a browser lacks it, the context's reported output latency is taken off.
-- **Pitch is set by playback rate**, in exact ratios: the chain's ticks at 0.6, 0.675, 0.75, 0.9 and 1.0 of the
-  recording, never above it, so a tick is never brighter than recorded; the level's notes at 1, 5/4 and 3/2.
+- **Pitch is set by playback rate**, in exact ratios: the level's notes at 1, 5/4 and 3/2 of the First note; the
+  chain's ticks at 1, 9/8, 5/4, 3/2 and 5/3 of a lowest tick tuned to the First note's own pitch, in whichever
+  octave keeps the tick inside its length and brightness. A level that lands mid-chain plays its three notes in
+  place of a tick, so the ticks have to be in those notes' key.
+- **The opening's strike is tuned the same way**, to the tonic or the fifth of the evening piece, which enters four
+  seconds after it. A strike a semitone off makes the piece sound out of tune as it arrives.
 - **Cut off cleanly.** A one-shot stopped early (hidden, muted, links set off at once) fades over 50 ms.
 
 ## What a candidate must measure
@@ -180,18 +184,24 @@ second. A pitched cue's slope is never below −0.5 semitones a second, the fail
 |---|---|---|---|---|---|---|
 | Tap | a knock | one (onsets under 60 ms apart are one) | 35 ms or less | 0.2 s or less | 600 to 1,300 Hz | — |
 | Failed tap | a knock | one | 35 ms or less | 0.3 s or less | at most 0.7 of the tap's | may fall in pitch |
-| Chain tick | a tick or knock | one | 25 ms or less | 0.09 s or less | 2,500 Hz or less at its top rate | pitch steady within half a semitone, so it can be tuned |
+| Chain tick | a tick or knock | one | 25 ms or less | 0.09 s or less at its lowest rate | 2,500 Hz or less at its top rate | pitch steady within half a semitone, so it can be tuned |
 | First | a struck note | one | 35 ms or less | 0.2 to 0.5 s | 1,500 to 3,000 Hz | pitch level or rising |
 | Level | the First clip | three plays, 110 ms apart | as First | 0.9 s or less in all | as First | rising by construction |
 | Story cue | a struck note | one | 50 ms or less | 1 to 2.5 s | 2,000 Hz or less | pitch level within half a semitone a second, and below the First note |
 | Opening's end | a low strike, or one swell | one | 50 ms or less for a strike; a swell no slower than 0.8 s | 2 to 4 s | 2,000 Hz or less | pitch level |
 | Page turn | paper | one gesture | peak within 0.27 s | 0.5 s or less | — | — |
 | Rule settle | something set down | one, or a contact and one smaller | 35 ms or less | 0.3 s or less | 3,000 Hz or less | — |
-| Wind | wind, a recording | — | — | a loop of 90 s or more | 1,000 Hz or less | loudness range 5 LU or less; seam step 1 dB or less, no click |
+| Wind | wind, a recording | — | — | a loop of 90 s or more | 1,000 Hz or less | loudness range 7 LU or less, with no swell or trough at the seam; seam step 1 dB or less, no click |
 | Fire | fire | — | — | a loop of 60 s or more | 1,500 Hz or less | loudness range 6 LU or less; peaks at most 14 dB over its loudness, so no pop is louder than a tap; seam step 1 dB or less |
-| Evening piece | music, one or two instruments | under one onset a second | — | 80 to 180 s, ending in its own tail | 1,200 Hz or less | its key measured, with the story cue's and the First note's pitches in its scale |
+| Evening piece | music, one or two instruments | under one onset a second | — | 80 to 180 s, ending in its own tail | 1,200 Hz or less | its key measured, with the story cue's note and the Level's three notes in its scale |
 
 The evening piece's mood is judged by ear and by nothing else.
+
+The wind's loudness range is as wide as the way it is played allows: at a fixed gain well under the tap and never
+ducked, a gust at the top of a 7 LU range is still under the tap. Its length is not traded away, because a loop's
+period is what hours of play expose. The fire's peak limit is not traded either: a pop over the tap's level reads as
+a tap the player did not make. A fire recorded with louder pops is clipped to the limit in the asset, sample by
+sample, which leaves the seam alone; whether it still crackles after that is for the ear.
 
 ## Never sounded
 
