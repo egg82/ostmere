@@ -14,6 +14,8 @@ export interface SceneLayer {
   ungraded?: boolean;
   /** Stands in front of the lights: drawn on the second canvas, graded like the base, over the ungraded pass. */
   front?: boolean;
+  /** A light that varies as it burns: how far (0 to 1) its alpha may dip. Absent, it is steady. */
+  flicker?: number;
   /** The y of the art's ground contact (its feet): layers that have one are drawn in order of it (see depthOrder). */
   base?: number;
 }

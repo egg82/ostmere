@@ -14,7 +14,7 @@ import dayone_world as world
 from dayone_poses import N1, build_at, n1_by_fire
 from kit import T
 from output import Layer
-from parts import firelight
+from parts import FLICKER, firelight
 
 TASKS = {"foraging": "running:n1_forage", "gathering": "running:n1_gather", "cutting": "running:n1_cut",
          "scavenging": "running:n1_scavenge"}
@@ -79,5 +79,5 @@ def figure_layers(away: str, n1_jobs: str) -> list[Layer]:
 
 
 def light_layers() -> list[Layer]:
-    return [Layer(id="firelight_dusk_2", img=firelight(0.7), when="feature:dusk_2", until=MORNING, blend="screen",
+    return [Layer(id="firelight_dusk_2", flicker=FLICKER, img=firelight(0.7), when="feature:dusk_2", until=MORNING, blend="screen",
                   ungraded=True)]

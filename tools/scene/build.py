@@ -30,7 +30,7 @@ import props
 import trips
 from figures import figure
 from output import OUT, Entry, Layer, bake, check_conditions, check_depth, check_footing, write_manifest, write_previews
-from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, firelight,
+from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, FLICKER, firelight,
                    rack, ruin, seated_at_work, stones_heap, stool, wood_drying)
 from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST
 from tints import WOOD
@@ -184,9 +184,9 @@ def _people_layers(walls: Image.Image) -> list[Layer]:
 def _light_layers() -> list[Layer]:
     """The lights over everything, then the ash in the air."""
     return [
-        Layer(id="firelight", img=firelight(0.55), when="project:strike_fire", blend="screen", ungraded=True),
-        Layer(id="firelight_fireback", img=firelight(0.25), when="project:build_fireback", blend="screen", ungraded=True),
-        Layer(id="firelight_dusk", img=firelight(0.7), when="end:showing", until="feature:morning", blend="screen", ungraded=True),
+        Layer(id="firelight", flicker=FLICKER, img=firelight(0.55), when="project:strike_fire", blend="screen", ungraded=True),
+        Layer(id="firelight_fireback", flicker=FLICKER, img=firelight(0.25), when="project:build_fireback", blend="screen", ungraded=True),
+        Layer(id="firelight_dusk", flicker=FLICKER, img=firelight(0.7), when="end:showing", until="feature:morning", blend="screen", ungraded=True),
         *d2.light_layers(),
         *d3.light_layers(),
         *d4.light_layers(),
@@ -220,6 +220,8 @@ def write_layers(rng: random.Random) -> list[Entry]:
             entry["ungraded"] = True
         if layer.get("front"):
             entry["front"] = True
+        if layer.get("flicker"):
+            entry["flicker"] = layer["flicker"]
         bottoms[layer["id"]] = box[3]
         out.append(entry)
     return depth.arrange(out, bottoms)
