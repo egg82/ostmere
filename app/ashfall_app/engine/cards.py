@@ -181,8 +181,8 @@ class CardDef:
     while_running: tuple[Held, ...] = ()
     """Sides and lane speeds this card raises while it runs (the codec leaves the field out while empty)."""
     drains: tuple[Amount, ...] = ()
-    """Takes of up to `quantity` per completion, paid as inputs are and forgiven at 0: they never pause the card, and a
-    tap needs each store above 0 (DESIGN.txt, "DRAINS"; the codec leaves the field out while empty)."""
+    """Takes of up to `quantity` per completion, paid as inputs are and forgiven at 0: they never pause the card or
+    refuse its tap (DESIGN.txt, "DRAINS"; the codec leaves the field out while empty)."""
 
 
 @dataclass(frozen=True)

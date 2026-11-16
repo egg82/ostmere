@@ -2695,8 +2695,8 @@ FIT PASS
   C < 2θ, while stacking wants C > 3θ. Some part of the engine has to change; the smallest is the take.
 - A drain is an input with the dry rule turned the other way, which is Cap's rule mirrored at 0: at a cap overflow is
   lost and the makers keep running (CHOICES, "Cap"); at 0 a drain's underflow is forgiven and its card keeps running.
-  It reuses Rate form (paid by the card's work), the Blocker (a threshold read at a tap's start) and the dry rule (for
-  every other consumer). No new type (a drain is an Amount), Save field, event kind, verb or system; CardDef gains one
+  It reuses Rate form (paid by the card's work) and the dry rule (for every other consumer); it asks nothing at a
+  tap's start, as a meal at a full belly or a rest at full energy asks nothing. No new type (a drain is an Amount), Save field, event kind, verb or system; CardDef gains one
   tuple. Nystrom: a field on a Type Object, used only when present (Component's sense, as `fight` is).
 - How games do it: a cleanse that removes up to N stacks of a debuff, usable while any stack remains, and wasted in
   part on fewer; the stacks decay by themselves meanwhile.
@@ -2726,23 +2726,17 @@ CHOICES (drains)
 - Only drains are forgiven: the card's inputs and costs keep the dry rule as they were. An input store at 0 pauses the
   card (CARDS, "Inputs against a dry store"), which stops its drains too. The invariant "a completion is never finished
   unpaid" (CARDS, the same entry) holds with this one exception: the unpaid part of a drain.
-- Ready above 0: at a tap's start each drain's store must hold at least 1 quantity unit. The card's blocker is its
-  first unmet precondition read in the order inputs, then drains (in declaration order), then requires, then a Pause;
-  a drain's is AtLeast(StoreValue(store), 1, 1), its ready_at the first whole second the store's segment holds 1 unit
-  (None while nothing raises it). A player's tap with a drain store at 0 is a failed tap (nothing
-  changed); an order's or the queue's changes nothing and logs no line (invariant 23), and READY falls at the blocker's
-  ready_at, as for any blocker; so a ruled lane's rule taps the card again only once the store exceeds 0. Once started,
-  a tap never ends for a drain: it lands at its completion with the store at 0 if it got there.
-  In the mix nothing is asked: a mix card whose drain store is 0 runs and takes nothing from it.
-- Read model: CardView.needs lists a drain's store at quantity 1 (what a tap's start asks), after the inputs'
-  whole-completion amounts. Starved is unchanged: a candidate tap blocked by a drain's blocker makes its store starved,
-  as any AtLeast blocker does (no special case). In the content that uses one the ledger draws no line for a drained
-  store, and the card's face draws its need (CardInfo.drains).
+- Asks nothing at a tap's start: a drain is no precondition, so a tap with its store at 0 starts, is no failed tap,
+  and its blocker, ready_at and READY never name the drain; an order or the queue starts it at once. Its inputs are
+  paid as always and the drain takes nothing at 0 (the unpaid part forgiven). Once started, a tap never ends for a drain:
+  it lands at its completion with the store at 0 if it got there. In the mix the same: nothing is asked.
+- Read model: CardView.needs lists no drain (a drain is no need), and no tap is starved by one. In the content that
+  uses one the ledger draws no line for a drained store, and the card's face draws no need for it.
   Explain and the ledger read a drain as an input line; its Explanation is its display rate, never clamped, so at 0 with
   drains forgiven the store is at a limit (invariant 10's sum does not apply there), net_per_hour sums the drain in
   unclamped as at a cap, and falling reads the segment (rate 0 there: not falling). A drain covers nothing.
 - Repeating taps: a tap of a card with drains is never repeat-eligible, as one with inputs is not (REPEATING TAPS): its
-  readiness at each landing is a threshold a rate would cross unseen.
+  store is clamped at 0, which a rate would not see.
 - Cures: cure_reading.takes counts each drain's store, so a card that drains the store of an at_least chip is a cure
   for it (invariant 120's words unchanged); the cures gate and the cure cut-in read that one answer. A card draining
   the store of an at_most chip is no cure for it: its CardView.cuts_in is false, and a player's TapCard of it on a busy

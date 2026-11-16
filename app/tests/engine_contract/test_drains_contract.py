@@ -144,26 +144,26 @@ def test_a_tap_with_the_store_hitting_zero_midway_keeps_its_lane_and_its_work():
         assert card_view(a, r).by == RunBy.TAP, t
 
 
-# ---- 123: ready above 0 -------------------------------------------------------------------------------------
+# ---- 123: a drain never refuses a tap ------------------------------------------------------------------------
 
 @kills(6)
-def test_a_players_tap_with_the_drain_store_at_zero_is_a_failed_tap():
-    """Invariant 123 (and 22): failed == the card, the save only advanced, no line emitted, the blocker
-    AtLeast(StoreValue(x), 1, 1) with no ready_at while nothing raises x."""
+def test_a_players_tap_with_the_drain_store_at_zero_starts_and_the_store_stays_at_zero():
+    """Invariant 123: a drain asks nothing at a tap's start, so at 0 the tap starts, its inputs are paid by the card's
+    work, and x stays at 0 (the take forgiven)."""
+    card = cure(inputs=(Amount(I, 10 * Q),))
+    r = world(card, x0=0, i0=10 * Q)
+    step = decide_logged(new_save(r), r, 5, TapCard(CURE))
+    assert step.failed is None and step.save.lanes[0].card == CURE
+    assert card_view(step.save, r).blocker is None
+    assert at(step.save, r, X, 5) == 0 and at(step.save, r, X, 50) == 0
+    done = advance(step.save, r, 105)
+    assert at(done, r, X, 105) == 0 and at(done, r, I, 105) == 0 and card_view(done, r).completions == 1
+
+
+@kills(6)
+def test_a_drain_store_at_zero_leaves_the_card_ready():
     r = world(cure(), x0=0)
-    s0 = new_save(r)
-    step = decide_logged(s0, r, 5, TapCard(CURE))
-    assert step.failed == CURE and step.save == advance(s0, r, 5)
-    assert step.lines == () and step.save.lanes[0].card is None
-    blocker = card_view(step.save, r).blocker
-    assert blocker is not None and blocker.condition == AtLeast(StoreValue(X), 1, 1) and blocker.ready_at is None
-
-
-@kills(6)
-def test_the_blocker_has_a_ready_time_when_something_raises_the_store():
-    r = world(cure(), x0=0, standing=(TRICKLE,))
-    blocker = card_view(new_save(r), r).blocker
-    assert blocker is not None and blocker.condition == AtLeast(StoreValue(X), 1, 1) and blocker.ready_at == 1
+    assert card_view(new_save(r), r).blocker is None
 
 
 @kills(6, 7)
@@ -185,39 +185,27 @@ def test_a_tap_at_a_low_level_pays_by_its_work_not_at_once():
 
 @kills(6)
 @pytest.mark.parametrize("verb", ["order", "queue"])
-def test_an_order_or_queue_entry_naming_it_waits_for_the_store_to_exceed_zero_then_starts_it(verb: str):
-    """Invariant 123 (and 23): at 0 nothing changes and no failed tap is made; READY falls when x first exceeds 0, and the
-    card starts then with x unchanged at that instant."""
-    r = world(cure(), x0=0, standing=(TRICKLE,))
+def test_an_order_or_queue_entry_naming_it_starts_it_at_zero(verb: str):
+    r = world(cure(), x0=0)
     if verb == "order":
         v = SetOrders((Order(AfterTime(0), TapCard(CURE)),))
     else:
         v = SetQueue((QueueEntry(TapCard(CURE), AtLeast(CardCount(CURE), 1, 1)),))
-    step = decide_logged(new_save(r), r, 0, v)
-    s = step.save
-    assert step.lines == () and s.lanes[0].card is None
-    ev = next_event(s, r)
-    assert ev is not None and (ev.time, ev.kind) == (1, EventKind.READY)
-    assert advance(s, r, 0).lanes[0].card is None
-    started = advance(s, r, 1)
-    assert started.lanes[0].card == CURE and at(started, r, X, 1) == 1000
-    assert advance_logged(s, r, 1).lines == ()
+    started = decide_logged(new_save(r), r, 0, v).save
+    assert advance(started, r, 1).lanes[0].card == CURE
 
 
 # ---- the blocker's order ----------------------------------------------------------------------------------
 
-@kills(17)
-@pytest.mark.parametrize("x0,x2,i0,f0,expected", [
-    (0, 0, 4 * Q, 0, AtLeast(StoreValue(I), 10 * Q, 10 * Q)),
-    (0, 0, 10 * Q, 0, AtLeast(StoreValue(X), 1, 1)),
-    (Q, 0, 10 * Q, 0, AtLeast(StoreValue(X2), 1, 1)),
-    (Q, Q, 10 * Q, 0, AtLeast(StoreValue(F), 5 * Q, 5 * Q)),
-], ids=["input first", "then the first drain", "then the next drain", "then requires"])
-def test_the_blocker_reads_inputs_then_drains_in_order_then_requires_and_a_drain_asks_for_one_unit(
-        x0: int, x2: int, i0: int, f0: int, expected: AtLeast):
+@kills(6)
+@pytest.mark.parametrize("i0,expected", [
+    (4 * Q, AtLeast(StoreValue(I), 10 * Q, 10 * Q)),
+    (10 * Q, AtLeast(StoreValue(F), 5 * Q, 5 * Q)),
+], ids=["input first", "a drain at 0 is skipped"])
+def test_the_blocker_reads_inputs_then_requires_and_a_drain_asks_nothing(i0: int, expected: AtLeast):
     card = cure(inputs=(Amount(I, 10 * Q),), requires=(AtLeast(StoreValue(F), 5 * Q, 5 * Q),),
                 drains=(Amount(X, 10 * Q), Amount(X2, 10 * Q)))
-    r = world(card, x0=x0, x2=x2, i0=i0)
+    r = world(card, x0=0, i0=i0)
     blocker = card_view(new_save(r), r).blocker
     assert blocker is not None and blocker.condition == expected
     step = decide_logged(new_save(r), r, 0, TapCard(CURE))
