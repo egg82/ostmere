@@ -17,6 +17,7 @@ PYTEST_GATES=(
   app/tests/test_boundaries.py
   app/tests/test_doc_citations.py
   app/tests/test_decision_citations.py
+  app/tests/test_canon_ids.py
   app/tests/test_scene_stores.py
 )
 CLIENT_GATES=(
