@@ -145,6 +145,12 @@ def cap_loss(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, tuple[int, ..
     return capcheck.failing(exit_save(p, chapter), p.rules, (camp.store,) if camp else ())
 
 
+def cap_unwanted(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, tuple[int, ...]]:
+    """The cap-loss check's stores nothing wants (dayone/wanted.py), reported beside it."""
+    camp = c3.opening3().camp
+    return capcheck.unwanted(exit_save(p, chapter), p.rules, (camp.store,) if camp else ())
+
+
 @cache
 def two_am(seed: int = 0, chapter: str = "eight") -> tuple[Measured, Measured]:
     """The whenever player's decisions from the visit before the chapter's first replayed as they were and as a
