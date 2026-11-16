@@ -18,6 +18,7 @@ from psycopg import sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 from sqlalchemy import Engine, event, text
 
+from ashfall_app import logs
 from ashfall_app.db.engine import Database, from_env, open_database
 from tests.game_client import GameClient
 from tests.kills import kills
@@ -283,6 +284,7 @@ def test_a_multi_host_url_is_accepted_unchanged(pg_url: str):
 
 
 def test_the_site_is_logged_at_startup(pg_url: str, capsys: pytest.CaptureFixture[str]):
+    logs.setup()
     database = from_env({"DATABASE_URL": multi_host(pg_url), "SITE": "site-a"})
     assert database is not None
     database.close()
