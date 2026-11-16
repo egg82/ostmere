@@ -23,6 +23,11 @@ export class Format {
     return whole.format(Math.floor(quantity / this.scales.quantity_per_item));
   }
 
+  /** A level the player reads in whole items, rounded up: any hurt at all reads at least 1, as a need reads. */
+  level(quantity: number): string {
+    return whole.format(Math.ceil(quantity / this.scales.quantity_per_item));
+  }
+
   amount(quantity: number, cap: number): string {
     return this.text.fill(UI.amount, { n: this.items(quantity), cap: this.items(cap) });
   }

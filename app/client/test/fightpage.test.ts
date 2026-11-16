@@ -35,7 +35,7 @@ const text = (n: Element | null | undefined): string => n?.textContent ?? "";
   expect("the fight shows once combat is on", fight?.hidden, false);
   expect("odds", text(fight?.querySelector(".fight-odds")), "loses 2 in 5 fights");
   expect("vs", text(fight?.querySelector(".fight-vs")), "Your hands 8, Wolves 9");
-  expect("what a loss costs and adds", text(fight?.querySelector(".fight-loss")), "a loss costs 3 Dead wood, 1 Energy");
+  expect("what a loss costs and adds", text(fight?.querySelector(".fight-loss")), "a loss costs 3 Dead wood; lose, and you're hurt +1");
   expect("the odds sit beside the tap, not inside it", cards.root.querySelector(".card-tap .fight"), null);
   const entries = fight?.querySelector<HTMLElement>(".fight-entries");
   expect("entries are closed until tapped", entries?.hidden, true);

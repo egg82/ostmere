@@ -113,7 +113,7 @@ export class CardNeeds {
       }
       const have = sample(need.segment, t);
       const short = card.blocker !== null && have < need.quantity;   // red only while it holds the card back
-      drawNeed(node, storeWords(catalog, need, MARK), catalog.format.items(have), short);
+      drawNeed(node, storeWords(catalog, need, MARK), catalog.isLevel(need.store) ? catalog.format.level(have) : catalog.format.items(have), short);
     });
   }
 

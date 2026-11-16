@@ -31,6 +31,8 @@ export class Catalog {
   /** Each store's ledger-line order cards, in content order: a later one supersedes an earlier once it is offered. */
   private readonly orderCards = new Map<string, OrderCard[]>();
   private readonly cardOrder: Map<string, number>;
+  /** The stores a lost fight adds to (FightInfo.wounds): each is read as a level, not an amount (docs/decisions/combat.md). */
+  private readonly levels: Set<string>;
 
   constructor(readonly content: Content) {
     this.text = new Text(content);
@@ -50,6 +52,13 @@ export class Catalog {
     this.chipCards = content.order_cards.filter((c) => c.chip !== null);
     this.cardOrder = new Map(content.card_infos.map((c, i) => [c.card, i]));
     this.campStore = content.camp?.store ?? null;
+    const fights = [...content.card_infos.map((c) => c.fight), ...content.standing_infos.map((s) => s.fight)];
+    this.levels = new Set(fights.flatMap((f) => f?.wounds.map((w) => w.store) ?? []));
+  }
+
+  /** Whether the store is a level: one a lost fight adds to, shown by its chip and read in whole items rounded up. */
+  isLevel(store: string): boolean {
+    return this.levels.has(store);
   }
 
   /** The ledger line's order cards for a store, in content order; a chip's card is never one. */

@@ -310,7 +310,7 @@ const text: Record<string, string> = {
   "line.offer": "[fixture] a line that comes with the offer.",
   // fights (CONTRACT.txt, "FIGHTS"): the eight ui keys as opening.toml words them, and placeholder names
   "ui.fight.odds": "loses {lost} in {of} fights", "ui.fight.odds_pct": "loses {pct}% of fights", "ui.fight.odds_unknown": "odds unknown until fought", "ui.fight.threat_unknown": "unknown", "ui.fight.vs": "{side_name} {power}, {threat_name} {threat}",
-  "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.base": "base strength", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
+  "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.on_wound": "lose, and you're {store} +{n}", "ui.fight.base": "base strength", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
   "ui.fight.won": "{runner}: won", "ui.fight.lost": "{runner}: lost",
   "ui.journal.heading": "Journal", "ui.journal.prev": "Prev", "ui.journal.next": "Next",
   "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places", "ui.journal.day": "Day {n}",
@@ -340,7 +340,7 @@ const text: Record<string, string> = {
   "ui.prestige.reached": "{skill} reached its top {d} ago.",
   "ui.prestige.reached_now": "{skill} reached its top.",
   "ui.lesson.prestige": "{skill} is at its top. Push past lifts the top. Its level and everything it gave you stay.",
-  "card.poultice": "Make a poultice", "store.hurt": "Hurt", "card.hunt": "Hunt the ridge", "card.hunt.up": "meat and hide", "standing.raiders": "Raiders at the stores", "side.hands": "Your hands", "threat.wolves": "Wolves", "threat.raiders": "Raiders",
+  "card.poultice": "Make a poultice", "store.hurt": "hurt", "card.hunt": "Hunt the ridge", "card.hunt.up": "meat and hide", "standing.raiders": "Raiders at the stores", "side.hands": "Your hands", "threat.wolves": "Wolves", "threat.raiders": "Raiders",
 };
 
 /** "Under n, until m" on a store, as content writes it (at_most at n items, release at m). */
@@ -399,7 +399,7 @@ export const fixtureContent: Content = {
     card("take_stock", "hands", "narrative"),
     card("look_out", "hands", "narrative"),
     card("forage", "hands", "action"),
-    { ...card("hunt", "hands", "action"), fight: { side: "hands", threat: "wolves", loses: [{ store: "wood", quantity: 3 * Q }], wounds: [{ store: "energy", quantity: Q }], won_line_keys: [], lost_line_keys: [] } },
+    { ...card("hunt", "hands", "action"), fight: { side: "hands", threat: "wolves", loses: [{ store: "wood", quantity: 3 * Q }], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [] } },
     { ...card("poultice", "hands", "action", [{ store: "roots", quantity: 6 * Q }]), takes: ["roots", "hurt"], drains: ["hurt"] },
     card("chop", "helper", "action"), card("haul", "helper", "action"), card("fetch", "helper", "narrative"), card("hew", "mason", "action"), card("carve", "mason", "action"),   // the ruled lane's tasks
   ],

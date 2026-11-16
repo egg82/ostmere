@@ -4,6 +4,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
+from .decision_models import Segment
+
 
 class StrengthKind(StrEnum):
     BASE = "base"
@@ -20,6 +22,14 @@ class StrengthEntry(BaseModel):
     share_bp: int | None
     """Set only on an entry a card holds while it runs: `source` is then the card's id, `share_bp` its share of its
     lane's time now, `amount_bp` what that share gives. Null on every other entry."""
+
+
+class StoreLevel(BaseModel):
+    """A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole
+    items rounded up, as a level (CONTRACT.txt, "FIGHTS")."""
+
+    store: str
+    segment: Segment
 
 
 class Strength(BaseModel):

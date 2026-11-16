@@ -20,6 +20,7 @@ import { shownChips } from "../game/shown";
 import { UI } from "../game/text";
 import { AimLine } from "./aim";
 import { CampBar } from "./camp";
+import { chipNode, drawLevels } from "./chipnode";
 import { el, keyed } from "./dom";
 import { FeedbackSheet } from "./feedback";
 import { Book } from "./book";
@@ -57,6 +58,7 @@ export class Story implements Part {
   /** When the player last touched the page (performance.now()). */
   private touchedAt = -Infinity;
   private chipRows = new Map<string, { node: HTMLElement }>();
+  private seen: View | null = null;
   /** Chips whose mark the player touched this page session. */
   private readonly touchedChips = new Set<string>();
   /** The game second of the latest view or line: what a line the page words itself is stamped with. */
@@ -117,6 +119,8 @@ export class Story implements Part {
     const inBook = (f: string): boolean => this.journal.shown && f === catalog.content.journal?.feature;
     const items = [...shownChips(catalog, view).map((c) => `chip:${c}`), ...carried.filter((f) => !inBook(f.feature)).map((f) => `keep:${f.feature}`)];
     this.chipRows = keyed(this.chips, items, (k) => k, this.chipRows, (k) => ({ node: this.item(k) }));
+    this.seen = view;
+    drawLevels(catalog, this.chips, view, view.at);
     this.hintChips(view);
     this.camp.update(view);
     this.aimLine.update(view);
@@ -187,6 +191,7 @@ export class Story implements Part {
   }
 
   tick(t: number): void {
+    if (this.seen) drawLevels(this.ctx.catalog, this.chips, this.seen, t);
     this.camp.tick(t);
     this.trim();
   }
@@ -282,10 +287,7 @@ export class Story implements Part {
     const [kind, id = ""] = key.split(":");
     const { catalog } = this.ctx;
     if (kind === "chip") {
-      const info = catalog.chips.get(id);
-      const node = el("span", "chip", catalog.label(info?.label_key));
-      if (info?.cost_key) node.append(el("span", "chip-cost", catalog.text.fill(info.cost_key, catalog.format.figures(info.change_bp))));
-      node.dataset["tone"] = info?.tone ?? "";
+      const node = chipNode(catalog, id);
       this.ctx.arrivals.arrive(node, "chip", id);
       return node;
     }

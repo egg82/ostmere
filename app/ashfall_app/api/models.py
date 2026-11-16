@@ -27,7 +27,7 @@ from .decision_models import (
     SetOrders as SetOrders, SetQueue as SetQueue, AnswerOffer as AnswerOffer, AnswerKind as AnswerKind, Decision as Decision,
     Prestige as Prestige, UndoPick as UndoPick, MovePick as MovePick,
 )
-from .fight_models import Fight as Fight, Strength as Strength, StrengthEntry as StrengthEntry, StrengthKind as StrengthKind
+from .fight_models import Fight as Fight, StoreLevel as StoreLevel, Strength as Strength, StrengthEntry as StrengthEntry, StrengthKind as StrengthKind
 from .journal_models import JournalDay
 from .need_models import Blocker as Blocker, Need as Need
 from .offer_models import Offer as Offer, OfferAnswer as OfferAnswer
@@ -253,6 +253,8 @@ class View(BaseModel):
     """What the next beat waits on, unmet: at most one step of work, then at most one clock (CONTRACT.txt, "Goals")."""
     goal_rows: list[GoalRow]
     """Each goal a mix can move, when it lands at the rates as set and what binds it (CONTRACT.txt, "Goal rows")."""
+    levels: list[StoreLevel]
+    """Each store a lost fight adds to, as its segment, in content order (CONTRACT.txt, "FIGHTS", "read a level")."""
 
 
 class Step(BaseModel):
