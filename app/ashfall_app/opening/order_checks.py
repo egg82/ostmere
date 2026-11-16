@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING
 from ..engine import QUANTITY_SCALE, units
 from .chip_checks import check_chip_card
 from .convert import levels
-from .refs import fail, need, offer_cap
+from .offer_caps import Chain, offer_cap
+from .refs import fail, need
 
 if TYPE_CHECKING:
     from .entries import OrderCardEntry
@@ -14,6 +15,7 @@ if TYPE_CHECKING:
 def check_order_cards(o: "Opening", ids: dict[str, list[str]]) -> None:
     """Each order card names a known store and exactly one of tap_card and switch_mix, with a `when` on its own store.
     `ids` is ids_by_kind(o)."""
+    chain = Chain(o) if any(oc.when.test == "at_most" and oc.when.release is not None for oc in o.order_cards) else None
     for oc in o.order_cards:
         where = f"order card for {oc.store}"
         need(where, "store", oc.store, ids["store"])
@@ -30,7 +32,7 @@ def check_order_cards(o: "Opening", ids: dict[str, list[str]]) -> None:
         if oc.when.test == "at_least":
             _check_rising_card(o, where, oc, cap)
         elif cap is not None and oc.when.release is not None \
-                and levels(oc.when)[1] >= offer_cap(o, oc.store, oc.offered_after) * QUANTITY_SCALE:
+                and levels(oc.when)[1] >= offer_cap(o, oc.store, oc.offered_after, chain) * QUANTITY_SCALE:
             fail(where, "its release is at or past the store's cap when it is offered, so the rule would never let go")
         check_chip_card(o, where, oc)
 

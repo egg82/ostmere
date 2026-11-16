@@ -5,7 +5,7 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, NoReturn
 
 from ..engine import HANDS, QUANTITY_SCALE, per_hour, units
-from .convert import amount, levels, note_trigger_id, offer_trigger_id
+from .convert import levels, note_trigger_id, offer_trigger_id
 
 if TYPE_CHECKING:
     from .entries import ConditionEntry, FlowEntry, ItemAmount, ModifierEntry, OutcomeEntry, UnlockEntry
@@ -112,36 +112,6 @@ def _modifiers(o: "Opening") -> Iterator[tuple[str, "ModifierEntry"]]:
     if o.camp is not None:
         for n, lv in enumerate(o.camp.levels, start=1):
             yield from ((f"camp level {n}", m) for m in lv.modifiers)
-
-
-def offer_cap(o: "Opening", store: str, after: "UnlockEntry | None") -> float:
-    """The cap `store` has for certain once `after` is unlocked, in items: its own cap with the cap modifiers that
-    land with `after`, or with every outcome a trigger opening `after` counts up to. A rule offered then may let go
-    above the store's first cap, never above this. Several ways to `after`: the least of them."""
-    base = float(next(s.cap_items for s in o.stores if s.id == store))
-    if after is None:
-        return base
-    ways = [_with(base, store, [*out.modifiers, *_counted(o, where)]) for where, out in outcomes(o)
-            if any(u.unlock_kind == after.unlock_kind and u.id == after.id for u in out.unlocks)]
-    return min(ways, default=base)
-
-
-def _counted(o: "Opening", where: str) -> list["ModifierEntry"]:
-    """A trigger waiting on a count of a store every one of whose makers it needs: those makers' modifiers."""
-    t = next((t for t in o.triggers if where == f"trigger {t.id}"), None)
-    if t is None or t.when.test != "at_least" or t.when.subject_kind != "store":
-        return []
-    makers = [out for _, out in outcomes(o) if any(a.store == t.when.id for a in out.stores)]
-    if sum(amount(a).quantity for out in makers for a in out.stores if a.store == t.when.id) > levels(t.when)[0]:
-        return []
-    return [m for out in makers for m in out.modifiers]
-
-
-def _with(base: float, store: str, mods: list["ModifierEntry"]) -> float:
-    for m in mods:
-        if m.target == "cap" and m.id == store:
-            base = base * m.amount_bp / 10_000 if m.kind == "mul_bp" else base + m.amount_bp / 10_000
-    return base
 
 
 def _unlocks(o: "Opening") -> Iterator[tuple[str, "UnlockEntry"]]:
