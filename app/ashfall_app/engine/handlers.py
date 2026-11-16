@@ -151,7 +151,7 @@ def _hand_back_dry_stint(save: Save, rules: Rules) -> Save:
     i, mix = controlling_entry(save, rules), queue_mix_id(save, rules)
     if i is None or mix is None or running_mix_id(save, rules) != mix:
         return save
-    own = {s.card for s in flatten_shares(save.mixes, save.active)} if save.active is not None else set()
+    own: set[CardId] = {s.card for s in flatten_shares(save.mixes, save.active)} if save.active is not None else set()
     dry = {p.runner for p in save.pauses}
     if not any(s.share_bp > 0 and s.card not in own and s.card in dry for s in flatten_shares(save.mixes, mix)):
         return save
