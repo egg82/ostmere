@@ -8,6 +8,7 @@ import type { ChipInfo, LedgerLine, OrderVerb, RepeatedSwitch, Subject, View } f
 import type { Catalog } from "./catalog";
 import { inSectionOrder } from "./cardsections";
 import { rulesFull, sameCondition, soloCard } from "./orders";
+import { sample } from "./clock";
 import { seenChips } from "./shown";
 import { buildSubject, type SubjectRule } from "./subjectrule";
 import { relevantStores, type Relevant } from "./relevant";
@@ -16,6 +17,24 @@ import { flatCards, isTownMix } from "./town";
 /** The stores a rule may watch: unlocked, with a ledger line, the Camp store excepted. */
 export function ruleStores(view: View, campStore: string | null): LedgerLine[] {
   return view.ledger.filter((l) => l.store !== campStore && view.unlocked.some((u) => u.category === "store" && u.id === l.store));
+}
+
+/** The stores a lost fight adds to (Catalog.isLevel) whose chip the band has drawn, with room for a band: they have no
+ * ledger line and are never unlocked as stores, so their chip is the way in. */
+function levelStores(catalog: Catalog, view: View): string[] {
+  const q = catalog.content.scales.quantity_per_item;
+  const drawn = seenChips(catalog, view).flatMap((id) => { const info = catalog.chips.get(id); return info ? [chipStore(info)] : []; });
+  return [...new Set(drawn)].filter((s): s is string => s !== null && catalog.isLevel(s) && (catalog.stores.get(s)?.cap ?? 0) >= 2 * q);
+}
+
+/** A store's level in items at the view's time: the ledger line's, or for a level its served one in whole items rounded
+ * up (View.levels); null with neither. */
+export function storeItems(catalog: Catalog, view: View, store: string): number | null {
+  const q = catalog.content.scales.quantity_per_item;
+  const line = view.ledger.find((l) => l.store === store);
+  if (line) return sample(line.segment, view.at) / q;
+  const level = catalog.isLevel(store) ? view.levels.find((l) => l.store === store) : undefined;
+  return level ? Math.ceil(sample(level.segment, view.at) / q) : null;
 }
 
 /** One choice of what a rule does: a task, or a saved mix that is not one task alone. */
@@ -72,14 +91,15 @@ export function chipStore(chip: ChipInfo): string | null {
  * stores relevant to them (game/relevant.ts), in its order; nothing before a task is chosen. Full: every chip the band
  * has drawn in the save, whether it shows now and whatever task answers it, and every store a rule may watch, the
  * relevant ones first, with `editing`'s store last when it has no ledger line. Only stores with a ledger line of two
- * items or more (a band fits). `relevant` is the tiers the stores came from. */
+ * items or more (a band fits). A store a fight wounds (Catalog.isLevel) is offered as the store alone, never as its chip:
+ * a chip's rule carries no level. `relevant` is the tiers the stores came from. */
 export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: readonly string[], editing: string | null): { chips: ChipInfo[]; stores: string[]; relevant: Relevant } {
   const q = catalog.content.scales.quantity_per_item;
   const makes = (store: string) => (catalog.stores.get(store)?.made_by ?? []).some((c) => cards.includes(c));
   const seen = new Set(seenChips(catalog, view));
-  const chips = catalog.content.chip_infos.filter((c) => { const s = chipStore(c); return s !== null && (full ? seen.has(c.chip) : makes(s)); });
-  const lines = ruleStores(view, catalog.campStore).filter((l) => l.cap >= 2 * q).map((l) => l.store);
+  const lines = [...ruleStores(view, catalog.campStore).filter((l) => l.cap >= 2 * q).map((l) => l.store), ...levelStores(catalog, view)];
   const relevant = relevantStores(catalog, cards, view.cards.map((c) => c.card), lines);
+  const chips = catalog.content.chip_infos.filter((c) => { const s = chipStore(c); return s !== null && !catalog.isLevel(s) && (full ? seen.has(c.chip) : makes(s)); });
   const first = [...relevant.makes, ...relevant.takes, ...relevant.near];
   const offered = full ? [...first, ...lines.filter((s) => !first.includes(s))] : first;
   return { chips, stores: editing !== null && !offered.includes(editing) ? [...offered, editing] : offered, relevant };
