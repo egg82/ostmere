@@ -1,4 +1,4 @@
-// Reminders for this device, a row of the "Another device" sheet (docs/design/reminders.md, "What the player sees"):
+// Reminders for this device, a row of the Settings sheet (docs/design/reminders.md, "What the player sees"):
 // off at first; the absence choices, the window slider and "Any time"; turning on asks the browser's permission
 // with the purpose already on screen. A server from before reminders offers no row; one without a VAPID key, or a
 // browser that cannot push, says so and offers nothing. On open the row checks the browser's subscription against

@@ -15,6 +15,8 @@ import { Devices } from "./ui/devices";
 import { remindersConfig } from "./app/pageconfig";
 import { browserEnv, pushCap } from "./app/push";
 import { ReminderMention } from "./ui/remindermention";
+import { ReminderRow } from "./ui/reminders";
+import { SettingsSheet } from "./ui/settings";
 import { GamesSheet } from "./ui/games";
 import { Screen } from "./ui/screen";
 
@@ -35,6 +37,7 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
   let screen: Screen | null = null;
   let scene: Scene | null = null;
   let devices: Devices | null = null;
+  let settings: SettingsSheet | null = null;
   let games: GamesSheet | null = null;
   let catching: CatchingUp | null = null;
   let mention: ReminderMention | null = null;
@@ -52,18 +55,18 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
       host.append(screen.root);
       devices?.root.remove();
       devices = new Devices(api, catalog.text, catalog.format, content.transfer_code_s, keeps, what.account ?? null);
-      screen.foot.append(devices.button);   // beside Feedback, in the panel's last row
-      host.append(devices.root);
       games?.root.remove();
       games = gamesSheet(api, catalog, session, step.save_id, skipLessons(keeps, () => screen?.redraw()));
-      screen.foot.append(games.button);   // beside Another device
-      host.append(games.root);
+      settings?.root.remove();
+      settings = new SettingsSheet(catalog.text, new ReminderRow(catalog.text));
+      screen.foot.append(devices.button, games.button, settings.button);   // beside Feedback, in the panel's last row
+      host.append(devices.root, games.root, settings.root);
       catching?.hide();
       catching?.root.remove();
       catching = new CatchingUp(catalog.text);
       host.append(catching.root);
-      const opened = devices;
-      mention = new ReminderMention(keeps, catalog.text, () => { opened.open(null); opened.reminders.focus(); }, remindersConfig,
+      const opened = settings;
+      mention = new ReminderMention(keeps, catalog.text, () => void opened.showReminders(), remindersConfig,
         () => pushCap(browserEnv()));
       if (join !== null) devices.open(join);
       join = null;
@@ -95,7 +98,7 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
       document.body.classList.toggle("reconnecting", !ok);
     },
     lost(fresh) {
-      onLost(window, fresh, () => { catching?.hide(); takeDown(screen, devices, games, catching); what.unkept?.(); }, () => location.reload());
+      onLost(window, fresh, () => { catching?.hide(); takeDown(screen, devices, settings, games, catching); what.unkept?.(); }, () => location.reload());
     },
     limited() {
       what.limited?.();

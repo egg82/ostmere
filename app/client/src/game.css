@@ -124,11 +124,11 @@ p.catching-up[hidden] { display: none; }
 .lines li:not(:nth-last-child(1 of :not(.held))) { color: var(--ink-dim); }
 .lines li.arrive { animation: line-in .2s ease-out; }
 .panel-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }   /* quiet text buttons at the panel's foot: Feedback, and others beside it */
-.feedback-open, .devices-open, .games-open {   /* words only until it is hovered */
+.feedback-open, .devices-open, .games-open, .settings-open {   /* words only until it is hovered */
   flex: none; min-height: 2.4rem; padding: 0 .7rem; cursor: pointer; font-size: var(--t-meta) !important;
   background: transparent; border: 0; color: var(--ink-dim) !important;
 }
-.feedback-open:hover, .feedback-open:focus-visible, .devices-open:hover, .devices-open:focus-visible, .games-open:hover, .games-open:focus-visible { color: var(--ink-hi) !important; outline: none; }
+.feedback-open:hover, .feedback-open:focus-visible, .devices-open:hover, .devices-open:focus-visible, .games-open:hover, .games-open:focus-visible, .settings-open:hover, .settings-open:focus-visible { color: var(--ink-hi) !important; outline: none; }
 
 /* ---------- the panel ---------- */
 .panel { padding: 0 1rem calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 1rem; }
@@ -533,8 +533,8 @@ p.catching-up[hidden] { display: none; }
 .devices-wordsform .sheet-actions { margin-top: 0; }
 .devices-joinform { display: flex; gap: .5rem; align-items: flex-end; }
 /* Games (ui/games.ts): the account's games, the one played marked, the deleted ones held under them */
-.games-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
-.games-sheet .panel-heading { margin: 0 0 .2rem; }
+.games-sheet, .settings-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.games-sheet .panel-heading, .settings-sheet .panel-heading { margin: 0 0 .2rem; }
 .games-choice { display: flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink); }   /* each kept choice on its own row (as .front-keep) */
 /* the prestige sheet (ui/prestigesheet.ts): each node a row on a hairline */
 .prestige-sheet { max-width: min(30rem, calc(100vw - 2rem)); }

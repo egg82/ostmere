@@ -1,4 +1,4 @@
-/* Reminders (ui/reminders.ts) in the "Another device" sheet, and their one mention (ui/remindermention.ts). Shares
+/* Reminders (ui/reminders.ts) in the Settings sheet, and their one mention (ui/remindermention.ts). Shares
    game.css's tokens; only the slider and the row's layout are new. */
 .reminders-part { margin: 1rem 0 .5rem; }
 .reminders-said { margin: .3rem 0 .6rem; color: var(--ink); }
