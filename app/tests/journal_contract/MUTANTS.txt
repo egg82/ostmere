@@ -20,7 +20,8 @@ The roll and determinism
 Shape and inputs
  7 day edge      a line at (d + 1) * 86400 counted in day d, or the day's last second left out.             [shape]
  8 no refusals   no ValueError for a line past the day's end or `composed` not exactly days 0 .. d - 1.      [shape]
- 9 gap notes     a gap day still writes its musts (the gap set, notes kept).                    [shape, catchup]
+ 9 gap notes     an away day still writes its catch-ups, or an away subject's first line of the day does not break
+                 the day off.                                                                      [shape, gaps]
 10 noise counts  a line whose source matches no subject counted toward busy; or sources matched loosely (a crowd
                  taking the other way's mentions, a lane matched by id without its way).                   [isolation]
 11 busy lines    busy counts lines, not subjects (a crowd of six counts six).                               [gaps]
@@ -57,11 +58,8 @@ Care, diligence, budget
 30 settledness   s counts notes not written days; counts gap rows as written; takes beat_refresh per beat day, not
                  per beat note; or is not floored at 0.                                     [diligence, budget]
 31 rounding      the budget by Python's round (banker's), floor or ceil.                              [budget]
-32 negative rest the budget less musts not clamped at 0, so a negative remainder slices from the end.      [budget]
-33 must notes    catch-up or correction notes left out of the must notes the budget subtracts.           [budget]
+33 catch-up room a catch-up note not counted against the budget a non-must is written under.             [budget]
 34 late counted  a late addition takes a place in the budget.                                            [budget]
-35 keep wrong    the passing non-musts kept by id, by roll alone, lowest care first, or ties by higher order roll.
-                                                                                               [budget, order]
 
 Gaps and blanks
 36 away length  an away gap of k + 1 or k - 1 days, or starting the day after the subject showed.            [gaps]
@@ -86,12 +84,10 @@ Late additions, misremembering
 Order and keys
 49 catch-ups    catch-ups ordered by id alone, by their earliest line descending, or by the gap day alone (the
                  line's second ignored).                                                                     [order]
-50 own order    the day's own notes by the order roll or by id instead of their earliest line; musts before
-                 non-musts; latest line first; a subject placed by its latest line of the day; ties in the second
-                 not by id.                                                                                  [order]
+50 own order    the day's own notes by id instead of their lines; latest line first; a subject placed by its latest
+                 line of the day; ties in the second by id, not as the lines are stored.                    [order]
 51 groups       catch-ups after the own notes, late additions after corrections, or either of those not by id.
                                                                                             [order, properties]
-52 care order   the own notes by care first, their lines only breaking ties.                                [order]
 53 no bag       a key chosen by roll with replacement, so a key repeats within a round.        [bag, properties]
 54 bag count    the bag's count restarted per call instead of counted over `composed`.                        [bag]
 55 bag key      one count per subject across its slots, or one across a crowd's bands.              [bag, properties]
@@ -106,8 +102,7 @@ Marks
                  another purpose, compared `>` or as 1 - rate, or one rate used for every kind.                [marks]
 60 held late    a late or correction note holding its subject's mark (or either not counted as a slot other than
                  late or correction).                                                                       [marks]
-61 held source  a kind held by a subject not in `subjects`, by one with no `mark`, or by a subject that shows but
-                 is not written.                                                                            [marks]
+61 held source  a kind held by a note of a subject with no `mark`.                                          [marks]
 62 smudge       smudge held by any note, by a gap day, or not by a catch-up; a catch-up note not holding its
                  subject's own mark.                                                                        [marks]
 63 mark order   marks in subject or note order, or a kind twice for two subjects.                            [marks]
@@ -122,14 +117,16 @@ Equivalent (no test can tell them apart)
  E2 bag order   any bag order that completes each round before repeating: statement 19 fixes rounds, not which
                  key comes first in a round.
  E3 <= mark    `roll <= rate` for a mark: differs only when a draw equals the rate exactly (as E1).
- E4 smudge, none  `marks` called with no notes holding smudge: `compose` calls it only with a day's notes, so a
-                 day with no notes never reaches it (a gap or blank returns first).
- E5 blank marks   marks drawn on a blank day from its musts: a blank day has no musts (a must is always a head note).
+ E4 unknown     a note of a subject not in `subjects` holding smudge: every note written is of a subject in `subjects`,
+                 so none reaches it.
 
-Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 99 variants
-covering rows 1-58 (rows 59-66 add 28 plants, all killed; E4 and E5 survive the whole suite), each row's alternatives planted on their own as 2a, 2b, ...)
- 99 of 99 killed; rows caught: 58 of 58.
- 35d           killed by test_journal_budget's care-over-order-roll keep, the one case where the two disagree.
- 58a           killed by test_journal_forward's day of only removed subjects' notes.
+Results (`python tests/journal_contract/plant_mutants.py` from app/, every plant in journal_plants.py: 116 plants, each
+row's alternatives planted on their own as 2a, 2b, ...; `plant_mutants.py --plants` checks in CI that every one applies)
+ 116 of 116 killed; E1 to E4 survive the whole suite at ci, as equivalents must.
+ 28, 36c       killed at the ci profile by the whole suite, not by their bracket.
+ 64a           killed at the ci profile by its bracket.
  5             killed at the push profile by its bracket: test_journal_properties' twin-line order property.
+ 58a           killed by test_journal_forward's day of only removed subjects' notes.
  Equivalents   E1 and E2 planted as `<=` and the bag's shuffle reversed: both survive the whole suite at ci.
+ Rows 32, 35, 52  have no plants: the composer writes a day as a fold over its moments (statement 22), so the budget
+                 is a count the page is held against, not a remainder, and a day's non-musts are not ranked.

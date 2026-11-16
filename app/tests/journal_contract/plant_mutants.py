@@ -6,7 +6,8 @@ made only of other exceptions are the plant's own breakage (`broken`), and a pla
 once is `unplanted`. A survivor of the push profile runs again at HYPOTHESIS_PROFILE=ci, then against the whole suite.
 The unmutated copy must pass first, and each mutated file is restored byte for byte before the next plant.
 
-From app/: `python tests/journal_contract/plant_mutants.py [id ...]` (no ids: every plant)."""
+From app/: `python tests/journal_contract/plant_mutants.py [id ...]` (no ids: every plant), or `... --plants`: plants
+nothing and runs no test, and exits 1 naming each plant whose anchor is not found exactly once (CI, `mutant-plants`)."""
 import os
 import re
 import shutil
@@ -65,9 +66,9 @@ def judge(code: int, out: str, profile: str) -> Outcome:
     return Outcome("broken", profile, f"exit {code}: {', '.join(errors) or out.strip().splitlines()[-1:]}")
 
 
-def plant(saves: Path, edits: list[Edit]) -> dict[Path, str] | None:
-    """Applies the edits, returning each touched file's original text; None (nothing written) when an anchor is not
-    found exactly once."""
+def planted(saves: Path, edits: list[Edit]) -> tuple[dict[Path, str], dict[Path, str]] | str:
+    """The edits applied in memory: (each touched file's original text, its planted text), or what is wrong with the
+    first edit that does not apply (an anchor not found exactly once, or an edit that changes nothing)."""
     originals: dict[Path, str] = {}
     texts: dict[Path, str] = {}
     for name, old, new in edits:
@@ -75,8 +76,29 @@ def plant(saves: Path, edits: list[Edit]) -> dict[Path, str] | None:
         originals.setdefault(path, path.read_text())
         text = texts.get(path, originals[path])
         if text.count(old) != 1:
-            return None
+            return f"{name}: anchor found {text.count(old)} times, not once"
+        if old == new:
+            return f"{name}: the edit changes nothing"
         texts[path] = text.replace(old, new, 1)
+    return originals, texts
+
+
+def unplanted(saves: Path) -> list[str]:
+    """Each plant that does not apply to the code in `saves`, with why."""
+    out: list[str] = []
+    for pid, edits in PLANTS.items():
+        result = planted(saves, edits)
+        if isinstance(result, str):
+            out.append(f"{pid}: {result}")
+    return out
+
+
+def plant(saves: Path, edits: list[Edit]) -> dict[Path, str] | None:
+    """Applies the edits, returning each touched file's original text; None (nothing written) when one does not apply."""
+    result = planted(saves, edits)
+    if isinstance(result, str):
+        return None
+    originals, texts = result
     for path, text in texts.items():
         path.write_text(text)
         assert path.read_text() == text != originals[path], path
@@ -133,5 +155,11 @@ def main(ids: list[str]) -> int:
     return 0
 
 
+def check_plants() -> int:
+    bad = unplanted(APP / "ashfall_app/saves")
+    print("\n".join(f"NOT PLANTED {line}" for line in bad) or f"every one of {len(PLANTS)} plants applies exactly once")
+    return 1 if bad else 0
+
+
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(check_plants() if sys.argv[1:] == ["--plants"] else main(sys.argv[1:]))

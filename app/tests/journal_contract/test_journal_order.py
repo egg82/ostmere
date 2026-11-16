@@ -41,6 +41,15 @@ def test_catchups_then_own_notes_by_their_lines_then_corrections():
         ("k1", "correction"), ("k2", "correction")]
 
 
+def test_a_catchup_is_placed_by_the_earliest_line_of_its_day_not_the_latest():
+    """Statement 18: cz showed at seconds 10 and 70 of the gap day, cy at 40, so cz (earliest 10) comes before cy (40),
+    where the latest lines (70, 40) and the ids would both put cy first."""
+    cy, cz = beat("cy"), beat("cz")
+    lines = [shows(cz, 0, second=10), shows(cy, 0, second=40), shows(cz, 0, second=70)]
+    day = compose_next(3, (row(0, gap="away"),), lines, (cy, cz))
+    assert [(n.subject, n.slot) for n in day.notes] == [("cz", "catchup"), ("cy", "catchup")]
+
+
 def test_own_notes_by_their_lines_then_late_then_corrections():
     """Statement 18 on a day after a written one: the own notes by second, then late additions by id, then corrections
     by id."""

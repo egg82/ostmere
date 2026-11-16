@@ -22,6 +22,7 @@ CLIENT_GATES=(
   app/client/gates/function-size.mjs
 )
 PLANT_CHECK=app/tools/mutate_suite.py
+JOURNAL_PLANTS=app/tests/journal_contract/plant_mutants.py
 
 failed=()
 step() {
@@ -34,6 +35,7 @@ step() {
 plants() {
   local suite bad=0
   python -m tools.mutate_suite --plants || bad=1
+  python "${JOURNAL_PLANTS#app/}" --plants || bad=1
   for suite in $(python -c "from tools.mutate_suite import SUITES; print(*SUITES)"); do
     python -m tools.mutate_suite "$suite" --check || bad=1
   done
