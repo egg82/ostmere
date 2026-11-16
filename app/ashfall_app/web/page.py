@@ -74,7 +74,13 @@ class BuildFiles(StaticFiles):
         return response
 
 
+SCENE_MANIFEST = Path("art/scene/manifest.json")
+"""Under the assets volume: what the page fetches as /assets/art/scene/manifest.json."""
 HASH_LENGTH = 12   # hex digits of a file's sha256 in a scene layer's `?h=` (tools/scene/build.py)
+
+
+def assets_dir() -> Path:
+    return Path(os.environ.get("ASSETS_DIR", "/assets"))
 
 
 class AssetFiles(RevalidatedFiles):
@@ -171,7 +177,7 @@ def serve_shell(app: FastAPI, version: str) -> None:
     def favicon() -> FileResponse:
         return FileResponse(ICONS / "favicon.ico", media_type="image/x-icon", headers={"Cache-Control": "public, no-cache"})
 
-    assets = Path(os.environ.get("ASSETS_DIR", "/assets"))
+    assets = assets_dir()
     files = AssetFiles(directory=assets) if assets.is_dir() else None
 
     @app.get("/", response_class=HTMLResponse, include_in_schema=False)

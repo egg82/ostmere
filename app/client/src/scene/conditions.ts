@@ -18,7 +18,8 @@ export class SceneFacts {
    * running:<id>           a lane is tapping it now
    * mix:<id>               the active mix is running it and it is its turn: the mix's cards run at once, but the
    *                        figure can be in one place, so the cards take turns at the figure, each for its share
-   * store:<id>             the store holds at least one item, sampled at t
+   * store:<id>             the store holds at least one item, sampled at t: read off its ledger line, else off
+   *                        view.levels (a store the page never lists: the hidden clocks)
    * store:<id>@<n>         the store holds at least n items, sampled at t
    * end:showing            the end has happened (view.ended_at, which the end lines key on too; it never clears)
    * chip:<id>              the chip is showing
@@ -44,8 +45,8 @@ export class SceneFacts {
       case "running": return view.lanes.some((l) => l.running_card === rest);
       case "store": {
         const [store, n = "1"] = rest.split("@", 2);
-        const line = view.ledger.find((l) => l.store === store);
-        return line !== undefined && sample(line.segment, t) >= Number(n) * quantityPerItem;
+        const segment = (view.ledger.find((l) => l.store === store) ?? view.levels.find((l) => l.store === store))?.segment;
+        return segment !== undefined && sample(segment, t) >= Number(n) * quantityPerItem;
       }
       case "end": return rest === "showing" && view.ended_at !== null;
       case "chip": return view.chips.includes(rest);

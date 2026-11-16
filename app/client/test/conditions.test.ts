@@ -27,6 +27,24 @@ expect("running:shelter|store:stone@4", AT, true);
 expect("store:stone@4|chip:warm", AT, false);
 expect("chip:warm|chip:cold", AT, true);
 
+// A store the page never lists is read off view.levels, falling at its own rate; a ledger line wins when there is one.
+{
+  const base = fixtureStep("mid", AT).view;
+  const clock = { store: "hidden_clock", segment: { start: AT, start_value: 10 * Q, rate: -Q, limit: 0 } };
+  const f = new SceneFacts();
+  f.observe({ ...base, levels: [clock] });
+  const want = (condition: string, t: number, ok: boolean): void => {
+    const got = f.holds(condition, t, Q);
+    if (got !== ok) throw new Error(`levels: holds("${condition}", t=${t}) = ${got}, want ${ok}`);
+  };
+  want("store:hidden_clock", AT, true);
+  want("store:hidden_clock@10", AT, true);
+  want("store:hidden_clock@10", AT + 1, false);
+  want("store:hidden_clock@9", AT + 1, true);
+  want("store:hidden_clock", AT + 10, false);
+  want("store:wood@14", AT, true);
+}
+
 // A card running on the hands lane: `running:<id>` holds for that card and for no other, so the figure's pose follows it.
 {
   const hands = new SceneFacts();
