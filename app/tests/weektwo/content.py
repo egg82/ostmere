@@ -2,8 +2,8 @@
 and the chapter's sinks, order cards, shares and each route's split of the town, on the rules day three loads (every
 chapter in writing merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import (
-    AfterTime, AnswerId, AtMost, CardId, OfferId, Order, Rules, Save, StoreId, StoreValue, TapCard, Unlock, UnlockKind,
-    View, units,
+    AfterTime, AnswerId, CardId, OfferId, Order, Rules, Save, StoreId, TapCard, Unlock, UnlockKind,
+    View,
 )
 from ashfall_app.engine.rates import store_value
 from ashfall_app.opening.convert import condition
@@ -77,13 +77,6 @@ BEAR_SHARE = 1500
 """The hands' share a route that hunts the bear gives it once shown (12b), as the wolf hunt's."""
 POSTS_RULE = (Unlock(UnlockKind.CARD, POSTS), Order(AfterTime(0), TapCard(POSTS)))
 """His posts on his lane are built by a rule of the player's (a capped card is never a share), as her bed was."""
-SMOKED_LOW, SMOKED_UNTIL = 14, 24
-SMOKE_ROOTS_RULE = (Unlock(UnlockKind.ACTION, "n5_eating"),
-                    Order(AtMost(StoreValue(StoreId("smoked")), units(SMOKED_LOW), units(SMOKED_UNTIL)),
-                          TapCard(CardId("smoke_roots"))))
-"""Once the family eats meat (day eleven) the snares fall short of the eating, so the player keeps smoked with roots:
-"under 15 smoked, smoke roots, until 24", a rule of the player's beside the catch's. No order card offers it: one on
-smoked fails the content checks (a release past every need on smoked, 18, is past the cap the checks can be sure of)."""
 STEW_FUNGUS = Trip(CardId("fungus_stew"), StoreId("fungus"), share_bp=1000)
 """The pot in the mix on full fungus (8a)."""
 
@@ -171,7 +164,7 @@ def day_eleven(route: str) -> Later:
     return Later(
         start="B10", stop="B11",
         sinks=Chapter(trips=nine.sinks.trips, comforts=nine.sinks.comforts, arrivals=(*nine.sinks.arrivals, ARRIVAL_ELEVEN)),
-        steps=(VIGIL,), order_cards=(*nine.order_cards, POSTS_RULE, SMOKE_ROOTS_RULE), keeps=nine.keeps,
+        steps=(VIGIL,), order_cards=(*nine.order_cards, POSTS_RULE, *order_cards(stores=("smoked",))), keeps=nine.keeps,
         landed=ELEVEN.of, news=("O-family", "Z1", "O-guard", "Z2", "SL19", "Z3", "A31", "B11"),
         answers=(*nine.answers, *ASKS_ELEVEN, GUARD), shares=nine.shares, cures=nine.cures, own=nine.own, queued=(VIGIL,))
 
