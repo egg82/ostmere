@@ -36,6 +36,7 @@ class Layer(TypedDict):
     blend: NotRequired[str]
     ungraded: NotRequired[bool]
     front: NotRequired[bool]
+    flicker: NotRequired[float]
 
 
 class Entry(TypedDict):
@@ -49,6 +50,7 @@ class Entry(TypedDict):
     blend: NotRequired[str]
     ungraded: NotRequired[bool]
     front: NotRequired[bool]
+    flicker: NotRequired[float]
     base: NotRequired[int]
 
 

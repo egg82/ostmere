@@ -12,7 +12,7 @@ import daythree_world as day3_world
 from dayeight_poses import BROTHER
 from daythree_poses import N2
 from output import Layer
-from parts import firelight
+from parts import FLICKER, firelight
 
 ARRIVED = "action:stranger_clock"
 """B10's moment: the family at the gate and the man behind them, who comes in with it."""
@@ -45,7 +45,7 @@ def light_layers() -> list[Layer]:
     to morning 13."""
     return [
         Layer(id="warm_glow_12", img=day3_world.warm_glow(146), when=NIGHT_12, until=d12.MORNING, blend="screen"),
-        Layer(id="firelight_dusk_12", img=firelight(0.7), when=NIGHT_12, until=d12.MORNING, blend="screen",
+        Layer(id="firelight_dusk_12", flicker=FLICKER, img=firelight(0.7), when=NIGHT_12, until=d12.MORNING, blend="screen",
               ungraded=True),
     ]
 

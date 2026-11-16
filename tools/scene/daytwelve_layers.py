@@ -13,7 +13,7 @@ import daytwelve_made as made
 import daytwelve_poses as poses
 import daytwelve_world as world
 from output import Layer
-from parts import firelight
+from parts import FLICKER, firelight
 
 MORNING = "action:morning_13"
 """Morning 13, an hour after the vigil: night 12's grade, lights and the covered body end on it."""
@@ -67,5 +67,5 @@ def light_layers() -> list[Layer]:
     return [
         Layer(id="lamp_light", img=made.lamp_light(), when=LAMPS, blend="screen", ungraded=True),
         Layer(id="warm_glow_14", img=day3_world.warm_glow(146), when=NIGHT_14, blend="screen"),
-        Layer(id="firelight_dusk_14", img=firelight(0.7), when=NIGHT_14, blend="screen", ungraded=True),
+        Layer(id="firelight_dusk_14", flicker=FLICKER, img=firelight(0.7), when=NIGHT_14, blend="screen", ungraded=True),
     ]

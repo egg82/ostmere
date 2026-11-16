@@ -3,13 +3,15 @@
 // `until` does not, fading in and out; a grade (a filter plus an overlay colour) is chosen the same way. This
 // module draws; what is true comes from SceneFacts. With no manifest, the game plays with no scene drawn.
 // The canvas is the art's own size (manifest.size) and CSS scales it up, pixelated, so the cost of a frame does not
-// grow with the window; a frame is drawn only when a layer's fade or the grade's fade is moving.
+// grow with the window; a frame is drawn only when a fade is moving or a flickering light is showing (flicker.ts).
 import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
-import { depthOrder, fadeStep, isGlow, isManifest, passOf, pickGrade, gradeStep, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
+import { depthOrder, fadeStep, isGlow, passOf, pickGrade, gradeStep, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
 import { COVER, place, type Crop } from "./crop";
 import { focusOf } from "./focus";
+import { fetchManifest, roomAbove } from "./room";
 import { duskWash, lightFilter } from "./light";
+import { Clock } from "./flicker";
 import { reducedMotion } from "../ui/dom";
 
 /** Where licensed assets are served; the scene's manifest and layers sit under it. */
@@ -24,6 +26,8 @@ interface Drawn {
   layer: SceneLayer;
   image: HTMLImageElement;
   alpha: number;
+  /** The flicker's level this frame (1 where the layer is steady), scaling alpha when drawn. */
+  glow: number;
 }
 
 export class Scene {
@@ -50,6 +54,7 @@ export class Scene {
   private from: SceneGrade | null = null;
   private to: SceneGrade | null = null;
   private fade = 1;
+  private readonly clock = new Clock();
   private baseDirty = true;
   private shownDirty = true;
 
@@ -68,7 +73,7 @@ export class Scene {
         image.onerror = () => resolve();
       }));
       image.src = new URL(layer.src, base).href;
-      return { layer, image, alpha: 0 };
+      return { layer, image, alpha: 0, glow: 1 };
     });
     this.loaded = Promise.all(arrived).then(() => undefined);
     canvas.width = w;
@@ -110,18 +115,8 @@ export class Scene {
   }
 
   /** A manifest fetched once, for any number of scenes drawn from it (the front page's pictures). */
-  static async manifest(url: string): Promise<{ manifest: SceneManifest; base: string } | null> {
-    try {
-      // Revalidated every time: a copy cached under an old policy (assets were once immutable for a year) is never used.
-      const response = await fetch(url, { cache: "no-cache" });
-      if (!response.ok) return null;
-      const manifest: unknown = await response.json();
-      if (!isManifest(manifest)) throw new Error("not a scene manifest");
-      return { manifest, base: new URL(url, location.href).href };
-    } catch (e) {
-      console.warn("ashfall: no scene", e);
-      return null;
-    }
+  static manifest(url: string): Promise<{ manifest: SceneManifest; base: string } | null> {
+    return fetchManifest(url);
   }
 
   /** Shows part of the art in a box that clips it (the front page): `focus` of the art held at `hold` of the box. With
@@ -164,6 +159,7 @@ export class Scene {
       this.shownDirty = true;
       if ((this.crop || this.cover) && !this.fixed) this.fit();
     }
+    this.flicker(dt, reduced);
     this.chooseGrade(t);
     if (this.fade < 1) {
       this.fade = Math.min(1, this.fade + gradeStep(this.to, dt, reduced));
@@ -175,6 +171,20 @@ export class Scene {
     }
   }
 
+  /** Light that flickers is redrawn at the clock's pace while it shows; with nothing flickering or under reduced motion
+   * the clock's steps stop moving the picture, so no frame is drawn for it. */
+  private flicker(dt: number, reduced: boolean): void {
+    if (!this.clock.advance(dt, reduced)) return;
+    this.layers.forEach((drawn, i) => {
+      const strength = drawn.layer.flicker;
+      if (!strength) return;
+      const glow = this.clock.level(i, strength, reduced);
+      if (glow === drawn.glow) return;
+      drawn.glow = glow;
+      if (drawn.alpha > 0) this.shownDirty = true;
+    });
+  }
+
   private composeBase(ctx: CanvasRenderingContext2D, frontCtx: CanvasRenderingContext2D): void {
     const [w, h] = this.manifest.size;
     ctx.clearRect(0, 0, w, h);
@@ -184,10 +194,10 @@ export class Scene {
   }
 
   private drawLayers(ctx: CanvasRenderingContext2D, pass: Pass, only: (layer: SceneLayer) => boolean = () => true): void {
-    for (const { layer, image, alpha } of this.layers) {
+    for (const { layer, image, alpha, glow } of this.layers) {
       if (passOf(layer) !== pass || !only(layer)) continue;
       if (alpha <= 0 || !image.complete || image.naturalWidth === 0) continue;
-      ctx.globalAlpha = alpha;
+      ctx.globalAlpha = alpha * glow;
       ctx.globalCompositeOperation = (layer.blend ?? "source-over") as GlobalCompositeOperation;
       ctx.drawImage(image, layer.x, layer.y);
     }
@@ -245,18 +255,6 @@ export class Scene {
     if (!this.canFilter) this.canvas.style.filter = this.front.style.filter = chosen[1].filter;
   }
 
-  /** The height a width-sized box may take: its column's height less the panel and the story strip under it and the head
-   * and the aim over it (a phone has no column: no cap). */
-  private roomAbove(box: HTMLElement): number {
-    const left = box.closest<HTMLElement>(".left");
-    if (!left || left.clientHeight === 0) return Infinity;
-    const low = left.querySelector<HTMLElement>(".low");
-    const aim = (left.querySelector<HTMLElement>(".aim")?.offsetHeight ?? 0) + (left.querySelector<HTMLElement>(".scene-head")?.offsetHeight ?? 0);
-    const strip = left.querySelector<HTMLElement>(".strip")?.offsetHeight ?? 0;
-    const style = getComputedStyle(box);
-    return left.clientHeight - (low ? parseFloat(getComputedStyle(low).minHeight) || 0 : 0) - aim - strip - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - FRAME_PX;
-  }
-
   /** Size the canvas, in CSS px, to the largest scale of the art that fits the box: whole device pixels once that is 2x or more. */
   private fit(): void {
     const box = this.canvas.parentElement?.parentElement;
@@ -270,7 +268,7 @@ export class Scene {
     const bw = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - FRAME_PX;
     // A box that takes the art's own height (the phone stage) sets only its width.
     const byWidth = style.getPropertyValue("--by-width").trim() === "1";
-    const bh = byWidth ? this.roomAbove(box) : box.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - FRAME_PX;
+    const bh = byWidth ? roomAbove(box, FRAME_PX) : box.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - FRAME_PX;
     const fit = Math.min((bw * dpr) / w, (bh * dpr) / h);
     if (!(fit > 0)) return;
     const k = fit >= 2 && style.getPropertyValue("--fill").trim() !== "1" ? Math.floor(fit) : fit;

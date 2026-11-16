@@ -21,7 +21,7 @@ import trips
 from dayone_poses import build_at
 from kit import T
 from output import Layer
-from parts import firelight
+from parts import FLICKER, firelight
 from place import FIRE
 
 HAND = "running:hand_on_stone|mix:hand_on_stone"
@@ -151,10 +151,10 @@ def light_layers() -> list[Layer]:
     return [
         Layer(id="eyes", img=world.eyes(), when="feature:wolves", until=COMBAT, blend="screen", ungraded=True),
         Layer(id="wood_steam", img=world.wood_steam(), when=HAND),
-        Layer(id="firelight_dusk_5", img=firelight(0.7), when="action:night_5", until="feature:morning_6", blend="screen",
+        Layer(id="firelight_dusk_5", flicker=FLICKER, img=firelight(0.7), when="action:night_5", until="feature:morning_6", blend="screen",
               ungraded=True),
-        Layer(id="firelight_dusk_6", img=firelight(0.7), when="action:night_6", until="feature:morning_7", blend="screen",
+        Layer(id="firelight_dusk_6", flicker=FLICKER, img=firelight(0.7), when="action:night_6", until="feature:morning_7", blend="screen",
               ungraded=True),
-        Layer(id="firelight_dusk_7", img=firelight(0.7), when="action:night_7", until="feature:drift", blend="screen",
+        Layer(id="firelight_dusk_7", flicker=FLICKER, img=firelight(0.7), when="action:night_7", until="feature:drift", blend="screen",
               ungraded=True),
     ]

@@ -206,6 +206,10 @@ def carrying(feet: tuple[float, float]) -> Image.Image:
     return img
 
 
+FLICKER = 0.22
+"""How far the fire's light dips as it flickers, as a share of its alpha (the page varies it; the art is steady)."""
+
+
 def firelight(strength: float) -> Image.Image:
     """Warm light thrown by the fire, for a screen blend; the fireback's is a second, smaller one on top."""
     mask = kit.radial((W, H), FIRE, 4.2 * T, int(255 * strength), 0, squash=0.8)
