@@ -1,5 +1,6 @@
 // The sections a card sits under, on the Tasks page (ui/cardgroups.ts) and in every list of cards a rule editor offers:
 // one per lane, the hands first, a lane's crafts in a section under its other cards.
+import type { View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { UI } from "./text";
 
@@ -8,10 +9,11 @@ export function sectionKey(catalog: Catalog, card: string): string {
   return `${catalog.laneOf(card)}${catalog.cards.get(card)?.presentation === "craft" ? ":craft" : ""}`;
 }
 
-/** The section's heading as the Tasks page shows it; empty for the hands. */
-export function sectionHeading(catalog: Catalog, key: string): string {
+/** The section's heading as the Tasks page shows it; empty for the hands. A lane's label is the one `view` has (its
+ * person's name once the game has said it); without a view, the lane's first. */
+export function sectionHeading(catalog: Catalog, key: string, view?: View): string {
   const [lane = "hands", craft] = key.split(":");
-  return craft ? catalog.text.get(UI.craftHeading) : lane === "hands" ? "" : catalog.laneLabel(lane);
+  return craft ? catalog.text.get(UI.craftHeading) : lane === "hands" ? "" : catalog.laneLabel(lane, view);
 }
 
 /** Section keys in the page's order: lanes in content order from the hands, a lane's crafts after its other cards. */
@@ -26,7 +28,7 @@ export function compareSections(catalog: Catalog): (a: string, b: string) => num
 
 /** `items` as the sections a picker lists them under: the cards (`cardOf` names an item's card) by section in the
  * page's order, each section's by shown name; then, as a last group under the Mixes heading, the items with no card. */
-export function sectioned<T>(catalog: Catalog, items: readonly T[], cardOf: (item: T) => string | null): { heading: string; items: T[] }[] {
+export function sectioned<T>(catalog: Catalog, items: readonly T[], cardOf: (item: T) => string | null, view?: View): { heading: string; items: T[] }[] {
   const byKey = new Map<string, T[]>();
   const rest: T[] = [];
   for (const item of items) {
@@ -37,7 +39,7 @@ export function sectioned<T>(catalog: Catalog, items: readonly T[], cardOf: (ite
   }
   const label = (item: T): string => catalog.cardLabel(cardOf(item) ?? "");
   const groups = [...byKey.keys()].sort(compareSections(catalog)).map((key) => ({
-    heading: sectionHeading(catalog, key),
+    heading: sectionHeading(catalog, key, view),
     items: (byKey.get(key) ?? []).sort((a, b) => label(a).localeCompare(label(b))),
   }));
   return rest.length > 0 ? [...groups, { heading: catalog.text.get(UI.mixesHeading), items: rest }] : groups;
