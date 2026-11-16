@@ -10,6 +10,7 @@ import type { ChipInfo, Condition, Order, View } from "../api/types";
 import { choiceVerb } from "../game/elsechoices";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
 import { townNewRule } from "../game/town";
+import { startRule } from "../game/levelrule";
 import { chosen, doChoices, storeItems, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
 import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
@@ -175,7 +176,8 @@ export class ConditionEditor {
     const draft = this.draft;
     if (!draft || (draft.rule.store === store && !this.chipNow())) return;
     tapFeedback();
-    draft.rule = defaultRule(store, this.full || !this.view ? draft.rule.test : quickTest(this.ctx.catalog, this.view, draft.then, store), this.cap(store));
+    const test = this.full || !this.view ? draft.rule.test : quickTest(this.ctx.catalog, this.view, draft.then, store);
+    draft.rule = startRule(this.ctx.catalog, this.view, draft.then, store, test, this.cap(store));
     draft.subject = undefined;
     this.draw();
     reveal(this.levels.fold.root);
@@ -198,7 +200,7 @@ export class ConditionEditor {
   private setTest(test: Test): void {
     if (!this.draft || this.draft.rule.test === test) return;
     tapFeedback();
-    this.draft.rule = defaultRule(this.draft.rule.store, test, this.cap(this.draft.rule.store));
+    this.draft.rule = startRule(this.ctx.catalog, this.view, this.draft.then, this.draft.rule.store, test, this.cap(this.draft.rule.store));
     this.draw();
   }
 

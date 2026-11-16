@@ -46,10 +46,13 @@ const stores = (cond: HTMLElement) => q(cond, ".cond-stores .cond-store[data-sto
   expect("hurt is offered once, as the store: a chip's rule carries no level", [chips(cond), stores(cond).includes("hurt")], [[], true]);
   one(cond, ".cond-store[data-store=\"hurt\"]").click();
   expect("the quick add reads hurt as a store the task takes: it reaches", one(cond, ".cond-sentence .quick-test .quick-word").textContent, "reaches");
+  const read = Array.from(one(cond, ".cond-sentence").children).map((c) => (c.classList.contains("quick-part") ? c.querySelector(".quick-word")?.textContent : c.textContent) ?? "").join("");
+  expect("it starts at 2 of the 3 hurt (one run takes 1, and a band needs two items) and ends empty, not at full", read, "When hurt reaches 65%, Make a poultice until down to empty");
   one(cond, ".cond-actions .primary").click();
   const set = decided.at(-1);
   const when = set?.kind === "set_orders" ? set.orders.at(-1)?.when : undefined;
   expect("saved as a rule that waits on the hurt store, at a level", [when?.kind, when && "watched" in when ? when.watched : null], ["at_least", { kind: "store_value", store: "hurt" }]);
+  expect("65% of 3 reads 2 and lets go at none", when?.kind === "at_least" ? [when.value, when.release, when.value_of_cap, when.release_of_cap] : null, [6500, 0, true, true]);
 }
 
 // The level a rule reads is the one the chip shows: whole items, rounded up.

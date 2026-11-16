@@ -21,3 +21,14 @@ def test_the_rule_taps_the_poultice_once_hurt_reaches_its_level():
 
 def test_it_waits_while_nothing_is_hurt():
     assert not taps(0)
+
+
+def test_the_quick_adds_default_reads_two_of_three_hurt():
+    """65% of the store's cap (3 items), until empty: on at 2 hurt, not at 1.5 (the page's start for a level a task takes)."""
+    rule = SetOrders((Order(AtLeast(StoreValue(HURT), 6500, 0, True, True), TapCard(POULTICE)),))
+
+    def on(units: int) -> bool:
+        s = in_hand(units)
+        return POULTICE in tapped_cards(decide_logged(s, rules(), s.time, rule).save, rules())
+
+    assert on(2 * Q) and not on(Q + Q // 2)
