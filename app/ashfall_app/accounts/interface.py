@@ -153,6 +153,10 @@ class Accounts(Protocol):
         """The session a token names, while it is alive. Changes nothing."""
         ...
 
+    def who_about(self, token: str | None) -> tuple[Seen, About] | None:
+        """`who` and `about` for its account, in one round trip."""
+        ...
+
     def renew(self, seen: Seen) -> bool:
         """Marks the session used, at most once a day, without reading it again; True when it did (set its cookie
         again). Called only after a write succeeded, so a refused request writes nothing."""
@@ -220,6 +224,9 @@ class Accounts(Protocol):
 
 class NullAccounts:
     def who(self, token: str | None) -> Seen | None:
+        raise AccountsUnavailable("no database")
+
+    def who_about(self, token: str | None) -> tuple[Seen, About] | None:
         raise AccountsUnavailable("no database")
 
     def renew(self, seen: Seen) -> bool:

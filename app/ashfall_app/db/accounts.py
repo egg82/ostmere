@@ -4,8 +4,9 @@ module only reads and writes, in the caller's transaction. Wall times are the ca
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
-from sqlalchemy import ColumnElement, Connection, and_, delete, exists, insert, select, update
+from sqlalchemy import ColumnElement, Connection, Row, and_, delete, exists, insert, select, update
 from sqlalchemy.exc import IntegrityError
 
 from .tables import accounts, saves, sessions
@@ -38,17 +39,34 @@ def create_account(conn: Connection, now: datetime) -> int:
                .scalar_one())
 
 
-def account(conn: Connection, account_id: int) -> AccountRecord | None:
+def _account_columns() -> list[ColumnElement[Any]]:
     progress = exists().where(saves.c.account_id == accounts.c.id, saves.c.decisions > 0)
-    row = conn.execute(select(accounts.c.id, accounts.c.created_at, accounts.c.last_seen_at, accounts.c.presentation,
-                              accounts.c.lessons, accounts.c.words_hash.is_not(None).label("has_words"),
-                              progress.label("has_progress"))
-                       .where(accounts.c.id == account_id)).one_or_none()
-    if row is None:
-        return None
+    return [accounts.c.id, accounts.c.created_at, accounts.c.last_seen_at, accounts.c.presentation, accounts.c.lessons,
+            accounts.c.words_hash.is_not(None).label("has_words"), progress.label("has_progress")]
+
+
+def _account_record(row: Row[Any]) -> AccountRecord:
     return AccountRecord(id=row.id, created_at=row.created_at, last_seen_at=row.last_seen_at,
                          presentation=dict(row.presentation), lessons=bool(row.lessons), has_words=bool(row.has_words),
                          has_progress=bool(row.has_progress))
+
+
+def account(conn: Connection, account_id: int) -> AccountRecord | None:
+    row = conn.execute(select(*_account_columns()).where(accounts.c.id == account_id)).one_or_none()
+    return None if row is None else _account_record(row)
+
+
+def session_and_account(conn: Connection, token_hash: bytes,
+                        alive_since: datetime) -> tuple[SessionRecord, AccountRecord] | None:
+    """`session_by_hash` and the session's `account`, in one statement."""
+    row = conn.execute(select(sessions.c.id.label("session_id"), sessions.c.last_seen_at.label("session_seen_at"),
+                              *_account_columns())
+                       .join_from(sessions, accounts, sessions.c.account_id == accounts.c.id)
+                       .where(sessions.c.token_hash == token_hash, sessions.c.last_seen_at >= alive_since)
+                       ).one_or_none()
+    if row is None:
+        return None
+    return SessionRecord(id=row.session_id, account_id=row.id, last_seen_at=row.session_seen_at), _account_record(row)
 
 
 def lock_account(conn: Connection, account_id: int) -> bool:

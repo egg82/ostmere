@@ -8,8 +8,8 @@ from sqlalchemy import Engine, event
 from tests.db.test_one_checkout import engine_of
 from tests.game_client import GameClient
 
-ME = 6
-OPEN = 8
+ME = 5
+OPEN = 7
 
 
 def trips(engine: Engine) -> list[str]:

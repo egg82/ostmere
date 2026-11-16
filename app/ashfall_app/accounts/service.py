@@ -42,6 +42,16 @@ class PgAccounts:
             session = sessions.current(conn, token, self._clock())
         return None if session is None else Seen(session.account_id, session.id, session.last_seen_at)
 
+    def who_about(self, token: str | None) -> tuple[Seen, About] | None:
+        if not token:
+            return None
+        with unit.read(self._engine) as conn:
+            found = sessions.current_with_account(conn, token, self._clock())
+        if found is None:
+            return None
+        session, account = found
+        return Seen(session.account_id, session.id, session.last_seen_at), self._about(account)
+
     def renew(self, seen: Seen) -> bool:
         now = self._clock()
         if not sessions.due(seen.last_seen_at, now):
@@ -64,8 +74,9 @@ class PgAccounts:
     def about(self, account_id: int) -> About | None:
         with unit.read(self._engine) as conn:
             found = rows.account(conn, account_id)
-        if found is None:
-            return None
+        return None if found is None else self._about(found)
+
+    def _about(self, found: rows.AccountRecord) -> About:
         due = found.has_progress and not found.has_words and found.created_at <= self._clock() - WORDS_DUE_AFTER
         return About(presentation=found.presentation, lessons=found.lessons, has_words=found.has_words, words_due=due)
 
