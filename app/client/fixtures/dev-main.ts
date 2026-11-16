@@ -10,6 +10,7 @@
 // #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page (#manydone finishes every card) and #town the Town tab (a phone's). #journal opens the Book on its Journal (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone). Phases asksone and asksmany open the Asks list (asks.ts); phase feel lands a chain on each tap (feel.ts).
 import "../src/game.css";
 import "../src/fights.css";
+import "../src/slider.css";
 import { wireBegin } from "../src/begin";
 import { fixtureContent, Q } from "./content";
 import { isJournal, withJournal } from "./journal";

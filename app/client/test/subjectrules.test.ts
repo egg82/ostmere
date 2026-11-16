@@ -45,9 +45,9 @@ function editor(v: View): { tab: RulesTab; decided: Decision[] } {
   return { tab, decided: got.decided };
 }
 
-/** What the open editor shows of its subject: the button pressed, the shown stepper's label and number. */
+/** What the open editor shows of its subject: the button pressed, the shown slider's label and number. */
 function state(cond: HTMLElement): { pick: string | undefined; label: string | undefined; n: string | undefined } {
-  const stepper = q(one(cond, ".cond-subject-control"), ".cond-stepper").find(shown);
+  const stepper = q(one(cond, ".cond-subject-control"), ".cond-level").find(shown);
   return {
     pick: q(cond, ".cond-subject").find((b) => b.getAttribute("aria-pressed") === "true")?.dataset.subject,
     label: stepper?.querySelector(".cond-label")?.textContent ?? undefined,
@@ -62,7 +62,7 @@ for (const c of cases) {
   one(cond, ".cond-more").click();
   one(cond, `.cond-mix[data-mix="${MIX.mix_id}"]`).click();
   one(cond, `.cond-subject[data-subject="${c.pick}"]`).click();
-  for (let i = 0; i < c.steps; i++) q(cond, ".cond-subject-control .cond-stepper").find(shown)!.querySelectorAll("button")[1]!.click();
+  for (let i = 0; i < c.steps; i++) q(cond, ".cond-subject-control .cond-level").find(shown)!.querySelector('[role="slider"]')!.dispatchEvent(Object.assign(new Event("keydown"), { key: "ArrowRight" }));
   const written = state(cond);
   expect(`${c.name}: the sentence`, one(cond, ".cond-sentence").textContent, `${c.words} → ${MIX.mix_id}`);
   one(cond, ".cond-actions .primary").click();
@@ -88,11 +88,17 @@ for (const c of cases) {
   one(cond, '.cond-subject[data-subject="level:foraging"]').click();
   expect("foraging at level 2: starts at level 3", state(cond), { pick: "level:foraging", label: "Level", n: "3" });
   one(cond, '.cond-subject[data-subject="camp"]').click();
-  expect("the Camp: only levels below the held one", q(cond, ".cond-subject-control .cond-stepper").find(shown)!.querySelectorAll("button")[1]!.disabled, true);
+  const camp = q(cond, ".cond-subject-control .cond-level").find(shown)!.querySelector('[role="slider"]')!;
+  expect("the Camp: only levels below the held one", camp.getAttribute("aria-valuenow"), camp.getAttribute("aria-valuemax"));
+  expect("a level with no top slides ten past where it stands", (() => {
+    one(cond, '.cond-subject[data-subject="level:foraging"]').click();
+    const h = q(cond, ".cond-subject-control .cond-level").find(shown)!.querySelector('[role="slider"]')!;
+    return [h.getAttribute("aria-valuemin"), h.getAttribute("aria-valuemax")];
+  })(), ["1", "12"]);
 }
 
 // A pick that shows a control brings it into view, centred in its scroll box (dom.bringIntoView), so on a desktop it
-// never opens under the pinned foot: the store levels for a store, the stepper for a level or a task. A pick in the
+// never opens under the pinned foot: the store levels for a store, the slider for a level or a task. A pick in the
 // simple view shows no levels, so nothing scrolls; picking the same subject again shows nothing new.
 {
   const scrolls = (node: HTMLElement): unknown[] => [...(Reflect.get(node, "scrolls") as unknown[])];
@@ -108,7 +114,7 @@ for (const c of cases) {
   expect("a store: its levels centred", scrolls(one(cond, ".cond-levels")), centred);
   const control = one(cond, ".cond-subject-control");
   one(cond, '.cond-subject[data-subject="level:foraging"]').click();
-  expect("a level: its stepper centred", scrolls(control), centred);
+  expect("a level: its slider centred", scrolls(control), centred);
   one(cond, '.cond-subject[data-subject="task:gather"]').click();
   expect("a task: centred again", scrolls(control), [...centred, ...centred]);
   one(cond, '.cond-subject[data-subject="task:gather"]').click();

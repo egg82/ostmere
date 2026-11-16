@@ -82,16 +82,16 @@ const one = (root: FakeEl, sel: string, n = 0): FakeEl => {
   expect("no New rule before the taught step", q(r.root, ".rules-new").length, 0);
 }
 
-// Editing a rule's levels is never gated (the taught step not yet seen): the condition opens the editor with steppers.
+// Editing a rule's levels is never gated (the taught step not yet seen): the condition opens the editor with sliders.
 {
   const r = rig();
   one(r.root, ".rules-list .rule-cond", 0).click();
   const cond = one(r.root, ".cond");
   expect("the editor opens in the tab", cond.isConnected, true);
   expect("its levels show, unfolded", [one(cond, ".cond-fold-body").hidden, one(cond, ".cond-fold").hidden], [false, true]);
-  expect("on the rule's levels", q(cond, '.cond-fold-body [data-form="items"] .cond-value').map((n) => n.textContent), ["10", "20"]);
+  expect("on the rule's levels", q(cond, ".cond-fold-body .cond-value").map((n) => n.textContent), ["10", "20"]);
   expect("each level in its own form: exact", q(cond, ".cond-form").map((n) => n.getAttribute("aria-pressed")), ["false", "true", "false", "true"]);
-  one(cond, '[data-form="items"] .cond-step', 1).click();   // When +1
+  one(cond, '[data-form="items"] [role="slider"]').dispatchEvent(Object.assign(new FakeEvent("keydown"), { key: "ArrowRight" }));   // When +1
   one(cond, ".cond-actions .primary").click();
   expect("Save sends the rule in place", sent(r.decided[0])?.[0]?.when, buildRule({ store: "wood", test: "below", n: { items: 11 }, m: { items: 20 } }, fixtureContent.scales.quantity_per_item));
   expect("the others untouched", sent(r.decided[0])?.slice(1), [WARMTH, TIRED_RULE, SHELTER]);
@@ -209,7 +209,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   one(cond, ".cond-more").click();
   expect("More options: the mixes, the levels folded", [q(cond, ".cond-mix").length > 0, one(cond, ".cond-levels").hidden, one(cond, ".cond-fold-body").hidden], [true, false, true]);
   expect("the fold states them in words, a new rule's as shares", q(cond, ".cond-fold-value").map((n) => n.textContent), ["a quarter", "three quarters"]);
-  expect("and the fine steps as percentages", q(cond, '.cond-fold-body [data-form="share"] .cond-value').map((n) => n.textContent), ["25%", "75%"]);
+  expect("and the sliders read them in words", q(cond, ".cond-fold-body .cond-value").map((n) => n.textContent), ["a quarter", "three quarters"]);
   one(cond, ".cond-fold").click();
   expect("one tap opens them", [one(cond, ".cond-fold-body").hidden, one(cond, ".cond-fold").hidden], [false, true]);
   one(cond, ".cond-actions .primary").click();
@@ -366,7 +366,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   expect("down to full is always true: its preset is off", one(cond, ".cond-preset", 4).disabled, true);
   one(cond, ".cond-preset", 7).click();   // Until: half
   expect("a preset picked by name", sentence().startsWith("Dead wood down to a quarter, until half"), true);
-  one(cond, "[data-form=\"share\"] .cond-step", 1).click();   // When: five points more
+  one(cond, '[data-form="share"] [role="slider"]').dispatchEvent(Object.assign(new FakeEvent("keydown"), { key: "ArrowRight" }));   // When: five points more
   expect("five points more is a percentage", sentence().startsWith("Dead wood down to 30%, until half"), true);
   one(cond, ".cond-form", 1).click();   // When: exact
   expect("switched to a number where it reads now (30% of 40 holds at 12 and under)", sentence().startsWith("Under 13 Dead wood, until half"), true);
