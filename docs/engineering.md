@@ -290,7 +290,8 @@ an example, check which side it is on.
 - **Bulk assets live on the RWX assets volume, never in git or the image**, licensed or not: audio, sprite
   sheets, tiles, generated art and their manifests, mounted read-only and served at `/assets/`. Git holds the code
   that makes or picks them (a generator, a seed command), never its output. Small UI files (favicon, icons, a web
-  font) stay in git. An image nothing references any more is removed, not kept.
+  font) stay in git. An image nothing references any more is removed, not kept. Only the `web` deployment mounts
+  the volume; the API (`app`) does not, so nothing the API runs may read `/assets/`: data it needs ships in the image.
 - **Accounts are the app's own** (anonymous cookie sessions and a device transfer code, no external sign-in); tests
   sign in through sessions, never a trusted header.
 - **Sums from Postgres are typed explicitly**: `sum()` over bigint comes back as `Decimal`.
