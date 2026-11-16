@@ -165,7 +165,8 @@ def retune_trip(v: View, rules: Rules, save: Save, trip: Trip, marks: Marks) -> 
         if marks.get(trip.card) == RAISED:
             return None
         fight = fights_a_rule(v, rules, save, trip)
-        if save.active != untuned_id(trip) and card.run is not RunKind.PAUSED and not line.starved and not fight:
+        if save.active != untuned_id(trip) and card.run is not RunKind.PAUSED and not line.starved and not fight \
+                and not outdrawn(save, trip, line):
             return None
         share = trip.share_bp if not fight and bursty(rules, save, trip) else tuned_share(rules, save, trip)
         if save.active != untuned_id(trip) and abs(share - now) < TUNE_STEP_BP:
@@ -175,6 +176,14 @@ def retune_trip(v: View, rules: Rules, save: Save, trip: Trip, marks: Marks) -> 
     mix_id = MixId(f"{trip.card}_{trip.supply}_mixed") if save.active == untuned_id(trip) else save.active
     mixed = trip_mix(save, trip, share, mix_id)
     return "decision", ((SaveMix(mixed),) if mix_id == save.active else (SaveMix(mixed), SwitchMix(mix_id)))
+
+
+def outdrawn(save: Save, trip: Trip, line: LedgerLine) -> bool:
+    """The trip runs its supply down under a reserve rule of the player's (reserve_move): the line falls with the trip
+    drawing on it, so the rule comes on each time round. A draw that rose since the share was set (a level) is read
+    off the preview again, as a player sees the reserve come on and turns the trip down."""
+    return line.net_per_hour < 0 and any(isinstance(o.then, SwitchMix) and o.then.mix == reserve_mix_id(trip) for o in save.orders) \
+        and any(str(c.runner) == str(trip.card) and c.per_hour < 0 for c in line.contributions)
 
 
 def rule_on(rules: Rules, save: Save, trip: Trip) -> bool:
