@@ -725,8 +725,8 @@ TEXT AND NUMBERS (one rule)
                        runner eats names that eater, and the page draws the eater's change on the recipe; then, for a
                        card whose content gives it a reach, those of the triggers on the store it fills; where a
                        person's share of the card is chosen, the page draws each change at a CardInfo.kept slot as
-                       floor(amount_bp * share / Scales.bp), the engine's rounding, and the rest as served, while a
-                       card's face has no share and draws all at the full share) as a signed
+                       floor(amount_bp * share / Scales.bp), the engine's rounding, and the rest as served; a card's face
+                       draws them at its Card.share_bp in the running mix, and all at the full share while that is 0) as a signed
                        percent: change / Scales.bp * 100
                        toward zero, no trailing zeros, two decimals at most (a change that is not zero never reads as
                        zero), sign unless zero ("+10%", "-33.33%"). The text names what changes and carries no direction
