@@ -11,7 +11,7 @@
 // aim and the strip.
 import type { JournalDay, LogLine, Mention, View } from "../api/types";
 import { DayMentions } from "../game/people";
-import { awayLines, type Placement } from "../game/awaylines";
+import { awayLines, pastLines, type Placement } from "../game/awaylines";
 import { entries, poolLine, type Window } from "../game/fights";
 import { toppedSince } from "../game/prestige";
 import { readingMs } from "../game/reading";
@@ -207,11 +207,11 @@ export class Story implements Part {
     return this.place(keys, animate, queued, keys.map((): Placement => "band"), keys.map(() => this.nowAt));
   }
 
-  /** Lines drawn still before the first view, each at the second it landed at, and the written days a redrawn screen
-   * carries (a save opened, a screen redrawn). */
+  /** Lines drawn still before the first view, each at the second it landed at (a kept return's placed as it was,
+   * game/awaylines.ts pastLines), and the written days a redrawn screen carries (a save opened, a screen redrawn). */
   restore(past: Past[], days: readonly JournalDay[]): void {
     this.journal.written(days);
-    this.place(past.map((p) => p.key), false, false, past.map((): Placement => "band"), past.map((p) => p.at));
+    this.place(past.map((p) => p.key), false, false, pastLines(this.ctx.catalog, past, this.ctx.keeps.visits()), past.map((p) => p.at));
   }
 
   private place(keys: string[], animate: boolean, queued: boolean, where: Placement[], ats: number[]): Array<HTMLElement | null> {
