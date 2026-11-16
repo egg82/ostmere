@@ -1,0 +1,62 @@
+{
+  "cards": [
+    {
+      "card": "clear_roofs",
+      "takes": [
+        "roof_ash"
+      ]
+    },
+    {
+      "card": "n2_clear_roofs",
+      "takes": [
+        "roof_ash"
+      ]
+    },
+    {
+      "card": "peg_flaps",
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
+      ]
+    },
+    {
+      "card": "n1_peg_flaps",
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
+      ]
+    }
+  ],
+  "chips": [
+    {
+      "chip": "ash_laden",
+      "when": {
+        "kind": "at_least",
+        "watched": {
+          "kind": "store_value",
+          "store": "roof_ash"
+        },
+        "value": 57600000,
+        "release": 57600000,
+        "value_of_cap": false,
+        "release_of_cap": false
+      }
+    },
+    {
+      "chip": "draughty",
+      "when": {
+        "kind": "at_least",
+        "watched": {
+          "kind": "store_value",
+          "store": "wind_torn"
+        },
+        "value": 43200000,
+        "release": 43200000,
+        "value_of_cap": false,
+        "release_of_cap": false
+      }
+    }
+  ]
+}
