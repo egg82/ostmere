@@ -8,10 +8,11 @@ Fits into: Feedback (`docs/systems.md`). Each sound is one more field on a ladde
 
 ## The ground rules
 
-- **Off until the player turns it on.** One Sound switch, kept per device: the same save is played on a phone in a
-  waiting room and on a desktop at home, and only the player knows which one may make noise. Off by default because
-  the game is played in spare minutes in public, and `decisions.md`, "Silent and glanceable", asks that nothing in it
-  needs sound. The device's own volume is the volume.
+- **On by default, off in one tap.** A speaker button always on screen mutes everything at once, and a Sound
+  switch in settings says the same; the choice is kept per device, because the same save is played on a phone in a
+  waiting room and on a desktop at home, and only the player knows which one may make noise (habits' music does
+  the same). Browsers hold audio until the page's first tap, so the first sound is that tap's. Nothing in the game
+  needs sound (`decisions.md`, "Silent and glanceable"). The device's own volume is the volume.
 - **Sound only answers something the player did or something they are looking at.** Nothing plays while the page is
   hidden, and no sound ever exists to call the player back (`decisions.md`, "Fun, but never vying for attention").
 - **Every sound doubles something already on screen.** Each moment below has its visual on the ladder; with sound off
@@ -65,6 +66,20 @@ not a repeat, and it resets every chain: a good build setting off a long cascade
 
 Every beat shares one cue, so the sound never tells the player what kind of beat is coming before the words do.
 
+## The bed under the scene
+
+A quiet loop under everything while the scene shows, below the tap's level, so it is felt more than heard; it
+serves "Something to watch, any time, for hours" (`decisions.md`).
+
+| Layer | When |
+|---|---|
+| Wind | From the first open, always |
+| The fire | Once the fire is built, on the same condition that lights the scene's firelight; it never plays before |
+
+The fire's sound follows its picture: whatever condition draws the firelight starts it, so the two cannot disagree.
+Each loop is long and seamless enough that its repeat is not heard, fades in over a few seconds rather than
+starting, and stops with the page hidden or the speaker muted.
+
 ## Never sounded
 
 - Anything the mix or the rules do on their own: completions, rule runs, chains they start.
@@ -72,19 +87,17 @@ Every beat shares one cue, so the sound never tells the player what kind of beat
   fights, losses and deaths. The red line is the signal, and an alarm would summon the player to a game that never
   needs them.
 - A wait or countdown finishing. A ding at the end of a timer teaches watching the timer.
-- Anything while the page is hidden, and anything on opening the app beyond the return batch's one cue.
+- Anything while the page is hidden, and anything on opening the app beyond the bed and the return batch's one cue.
 
 ## Rejected, and why
 
-- **Sound on by default.** It would make the first public open loud for a game whose decisions say it needs no
-  sound; the Sound switch is one tap for a player who wants it.
+- **Sound off by default.** Sound is part of how the game feels, and a player who must not make noise has the
+  speaker button one tap away.
 - **One setting for the whole account.** The right answer differs by device (phone in public, desktop at home), so
   the switch belongs to the device.
 - **Music.** Played in spare minutes, often somewhere a phone stays quiet, so music would mostly be muted, and a
   score is the most expensive thing on this page to find and screen. Revisit if the owner wants it.
-- **An ambient bed under the scene** (fire, wind, the town's noise). Same reasons as music, for now. It is the one
-  addition here that would serve "something to watch, for hours" (`decisions.md`, "Something to watch, any time, for
-  hours"), so it is the first thing to reconsider.
+- **The fire's sound from the start.** There is no fire to hear until it is built, and the scene does not draw one.
 - **A sting per beat, matched to its mood.** It would give the mood away before the line is read, and every beat
   would need its own sound screened.
 - **A bigger cue for weekly beats or for the last beat.** Bigger sound for the same kind of event lowers the
