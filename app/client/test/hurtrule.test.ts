@@ -3,7 +3,7 @@
 // to is offered once its chip has been drawn, and the quick add reads it as a level, in whole items rounded up.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
-import { fixtureContent } from "../fixtures/content";
+import { fixtureContent, Q } from "../fixtures/content";
 import { fightsStep, withHurtChip } from "../fixtures/fights";
 import type { Decision, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
@@ -47,12 +47,15 @@ const stores = (cond: HTMLElement) => q(cond, ".cond-stores .cond-store[data-sto
   one(cond, ".cond-store[data-store=\"hurt\"]").click();
   expect("the quick add reads hurt as a store the task takes: it reaches", one(cond, ".cond-sentence .quick-test .quick-word").textContent, "reaches");
   const read = Array.from(one(cond, ".cond-sentence").children).map((c) => (c.classList.contains("quick-part") ? c.querySelector(".quick-word")?.textContent : c.textContent) ?? "").join("");
-  expect("it starts at 2 of the 3 hurt (one run takes 1, and a band needs two items) and ends empty, not at full", read, "When hurt reaches 65%, Make a poultice until down to empty");
+  expect("it starts at 2 of the 3 hurt, in the items the chip shows (one run takes 1, and a band needs two items) and ends empty, not at full", read, "When hurt reaches 2, Make a poultice until down to empty");
+  const options = (cls: string) => q(one(cond, `.cond-sentence .${cls}`), "option").map((o) => `${o.textContent}${(o as HTMLOptionElement).disabled ? "-" : ""}`);
+  expect("when: each amount the chip can show, the band's ends off", options("quick-n"), ["empty-", "1-", "2", "3"]);
+  expect("until: only empty keeps a band under reaches 2", options("quick-m"), ["empty", "1-", "2-", "3-"]);
   one(cond, ".cond-actions .primary").click();
   const set = decided.at(-1);
   const when = set?.kind === "set_orders" ? set.orders.at(-1)?.when : undefined;
   expect("saved as a rule that waits on the hurt store, at a level", [when?.kind, when && "watched" in when ? when.watched : null], ["at_least", { kind: "store_value", store: "hurt" }]);
-  expect("65% of 3 reads 2 and lets go at none", when?.kind === "at_least" ? [when.value, when.release, when.value_of_cap, when.release_of_cap] : null, [6500, 0, true, true]);
+  expect("reaches 2 is on once the chip reads 2 (above one item) and lets go at none", when?.kind === "at_least" ? [when.value, when.release, when.value_of_cap, when.release_of_cap] : null, [Q + 1, 1, false, false]);
 }
 
 // The level a rule reads is the one the chip shows: whole items, rounded up.

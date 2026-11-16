@@ -37,7 +37,7 @@ export function whyOff(catalog: Catalog, view: View, index: number, t: number): 
 /** What a store rule's `dry` (View.order_dry) says: it holds the hands and cannot let go (stuck), or its mix may stop
  * short (unfed); null for neither. The release is the rule's own. */
 export function dryWords(catalog: Catalog, order: Order, dry: RuleDry | null): string | null {
-  const rule = dry && readRule(order.when, catalog.content.scales.quantity_per_item);
+  const rule = dry && readRule(order.when, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
   if (!dry || !rule) return null;
   const slots = { store: catalog.storeLabel(dry.store), n: levelWords(catalog, rule.m ?? rule.n) };
   return catalog.text.fill(dry.holding ? UI.ruleStuck : UI.ruleUnfed, slots);

@@ -89,7 +89,7 @@ export class GuardEditor {
       b.setAttribute("aria-pressed", String(g.test === test));
       tests.append(b);
     }
-    this.level.draw(catalog, g.level, cap, (l) => guardValid({ ...g, level: l }, cap), () => otherForm(g, cap));
+    this.level.draw(catalog, g.level, cap, (l) => guardValid({ ...g, level: l }, cap), () => otherForm(g, cap), false);
     const done = button("primary cond-guard-done", text.get(UI.ruleUnlessDone), () => this.add(buildGuard(g, catalog.content.scales.quantity_per_item)));
     done.disabled = !guardValid(g, cap);
     const words = el("span", "cond-guard-words", guardWords(catalog, buildGuard(g, catalog.content.scales.quantity_per_item)) ?? levelWords(catalog, g.level));
