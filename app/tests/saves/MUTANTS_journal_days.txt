@@ -5,19 +5,20 @@ and its wire (api/service.py, accounts/presentation.py), each planted alone in a
 
  1 stale trusted   journal_write.py: a locking read that waited on another write is trusted
  2 always fresh    db/journal.py: the locking read always says its snapshot is fresh
- 3 due late        db/journal.py: the days are read only once two days are due
- 4 lines ahead     db/journal.py: lines of the day not yet ended are read
+ 3 appends replace db/step.py: a day still being written has its stored notes replaced, not appended to
+ 4 lines ahead     journal_write.py: lines stored past the step's save time are composed
  5 own lines       journal_write.py: the step's own lines, not yet stored, are left out
  6 no renames      journal_write.py: a stored line under a key renamed since feeds nothing
  7 one cause       journal_write.py: a line of two causes feeds only the first's subject
- 8 open day        journal_write.py: the day the step stops in is composed before it ends
+ 8 open day        journal_write.py: the day the step stops in is composed as ended, its end written early
  9 blanks carried  journal_write.py: Opened carries blank and gap days too
-10 conflict fails  db/step.py: a day the save already holds fails the write instead of being left as stored
+10 closed appended db/step.py: a day closed, or stored whole, is appended to like one still being written
 11 not stored      write.py: the composed days are not stored
 12 blanks served   api/service.py: a day not written is served
 13 all ink         api/service.py: every note is served in ink, whatever its slot names
 14 day read falls  presentation.py: a PUT's newest_day_read replaces the kept one, lower or null
 15 open forgets    saves/service.py: Opened carries no stored day
+16 reordered       journal_write.py: a day written as it went is put in the old page order when read
 
-Equivalent, and so not in the code: filtering the stored or the step's lines to before the last closed day's end (each
-day is composed from the lines before its own end only).
+Equivalent, and so not in the code: filtering the stored or the step's lines to before the end of the step's own day
+(each day is composed from the lines before its own end only).

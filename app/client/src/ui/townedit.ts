@@ -1,16 +1,17 @@
 // The town editor (docs/design/opening-screen.md, "The town"): the town's mix, one split per person, each person's own
-// parts of 100% and the rest idle. A card holds a share in steps (the smallest is the mix editor's smallest), joins from
-// the Add row with half of what is free and leaves by its ✕; only that person's own cards, without a cap, are offered.
+// parts of 100% and the rest idle. A person's bar is the hands' ShareBar: its dividers are dragged to trade share between
+// neighbours, the last one against the idle rest (never below the mix editor's smallest share). A card joins from the
+// Add row with half of what is free and leaves by its ✕; only that person's own cards, without a cap, are offered.
 // Nothing moves a share from one person to another or adds them across people. Save sends the mix, and for a new one the
 // town's always rule pointed at it (game/town.ts); ✕ at the top leaves without a change. It takes the card area's place,
 // as the mix editor does.
 import type { Mix, View } from "../api/types";
 import { MIN_SHARE_BP } from "../game/mix";
 import { UI } from "../game/text";
-import { dropTownCard, given, joinTownCard, newTownMix, people, townMixToEdit, townSaveDecisions, townTasks, withTownShare, TOWN_STEP_BP } from "../game/town";
+import { dropTownCard, given, joinTownCard, newTownMix, people, townMixToEdit, townSaveDecisions, townTasks, withTownShares } from "../game/town";
 import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
-import { splitOf, type Part as Share } from "./townsplit";
+import { ShareBar, type SegmentSpec } from "./sharebar";
 
 export class TownEditor {
   readonly root = el("section", "editor town-editor");
@@ -19,6 +20,9 @@ export class TownEditor {
   private view: View | null = null;
   private local: Mix | null = null;
   private isNew = false;
+  private readonly bars = new Map<string, ShareBar>();
+  /** A divider is held: a new view waits for the let-go, so the bar under the finger is not rebuilt. */
+  private held = false;
 
   constructor(private readonly ctx: PartContext, private readonly closed: () => void) {
     const { text } = ctx.catalog;
@@ -61,7 +65,7 @@ export class TownEditor {
   /** A new view while open: the cards that can join follow it; the edit stays as it is. */
   update(view: View): void {
     this.view = view;
-    if (this.open && this.local) this.draw();
+    if (!this.held && this.open && this.local) this.draw();
   }
 
   private commit(): void {
@@ -94,50 +98,82 @@ export class TownEditor {
     const node = el("section", "town-person");
     node.dataset.lane = lane;
     const rows = el("div", "town-cards");
-    const parts: Share[] = [];
-    for (const c of mix.components) {
-      if (c.kind !== "card_share" || catalog.laneOf(c.card) !== lane) continue;
-      parts.push({ text: `${catalog.cardLabel(c.card)} ${catalog.format.share(c.share_bp)}`, bp: c.share_bp, hue: catalog.rank(c.card) % 6, idle: false });
-      rows.append(this.cardRow(c.card, c.share_bp, mix));
+    const cards = mix.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? [c] : []));
+    const specs: SegmentSpec[] = cards.map((c) => ({ key: c.card, label: catalog.cardLabel(c.card), hue: catalog.rank(c.card) }));
+    const shares = cards.map((c) => c.share_bp);
+    if (idle > 0) {
+      specs.push({ key: `idle:${lane}`, label: catalog.text.fill(UI.townIdle, { person: label }), hue: 5 });
+      shares.push(idle);
     }
-    if (idle > 0) parts.push({ text: `${catalog.text.fill(UI.townIdle, { person: label })} ${catalog.format.share(idle)}`, bp: idle, hue: 5, idle: true });
-    const { bar, key } = splitOf(parts);
-    bar.classList.add("town-bar");
+    const bar = this.barOf(lane);
+    bar.set(specs, shares);
+    this.cardRows(rows, lane, mix);
     const adds = el("div", "editor-adds");
     adds.append(el("span", "editor-add-label", catalog.text.get(UI.add)));
     for (const card of townTasks(catalog, view, lane).filter((id) => !mix.components.some((c) => c.kind === "card_share" && c.card === id))) {
-      const add = el("button", `quiet town-add hue-${catalog.rank(card) % 6}`, catalog.cardLabel(card));
+      const add = el("button", `quiet town-add hue-${catalog.rank(card) % 6}`);
+      add.append(el("span", "town-card-name", catalog.cardLabel(card)), ...this.upside(card));
       add.type = "button";
       add.dataset.card = card;
       add.disabled = idle < MIN_SHARE_BP;
       add.addEventListener("click", () => this.edit(joinTownCard(catalog, mix, card)));
       adds.append(add);
     }
-    node.append(el("h3", "town-name", label), bar, key, rows, adds);
+    node.append(el("h3", "town-name", label), bar.root, rows, adds);
     return node;
+  }
+
+  /** The person's bar, kept across redraws; moving a divider edits the mix at once, and letting go redraws. */
+  private barOf(lane: string): ShareBar {
+    const kept = this.bars.get(lane);
+    if (kept) return kept;
+    const { catalog } = this.ctx;
+    const at = (shares: number[]): void => {
+      if (this.local) this.local = withTownShares(catalog, this.local, lane, shares);
+    };
+    const bar = new ShareBar("large town-bar", catalog.content.scales.bp, (bp) => catalog.format.share(bp), {
+      moving: (shares, d) => {
+        at(shares);
+        const row = this.body.querySelector<HTMLElement>(`.town-person[data-lane="${lane}"] .town-cards`);
+        if (this.local && row) this.cardRows(row, lane, this.local);
+        if (d >= 0) this.held = true;
+        else this.release();
+      },
+      commit: (shares) => { at(shares); this.release(); },
+    });
+    this.bars.set(lane, bar);
+    return bar;
+  }
+
+  private release(): void {
+    this.held = false;
+    if (this.open && this.local) this.draw();
+  }
+
+  private cardRows(rows: HTMLElement, lane: string, mix: Mix): void {
+    const { catalog } = this.ctx;
+    rows.replaceChildren(...mix.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? [this.cardRow(c.card, c.share_bp, mix)] : [])));
+  }
+
+  /** The card's upside: on a row at its share, and on its Add button, which has no share yet, at the full figure. */
+  private upside(card: string, shareBp?: number): HTMLElement[] {
+    const { catalog } = this.ctx;
+    const info = catalog.cards.get(card);
+    return info?.upside_key ? [el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, (shareBp === undefined ? catalog.format.figures(info.change_bp) : catalog.format.figuresAt(info, shareBp))))] : [];
   }
 
   private cardRow(card: string, bp: number, mix: Mix): HTMLElement {
     const { catalog } = this.ctx;
     const row = el("div", "town-card");
     row.dataset.card = card;
-    const step = (sign: 1 | -1, glyph: string): HTMLButtonElement => {
-      const b = el("button", `quiet town-step town-${sign > 0 ? "plus" : "minus"}`, glyph);
-      b.type = "button";
-      b.setAttribute("aria-label", `${catalog.cardLabel(card)} ${glyph}`);
-      b.disabled = withTownShare(catalog, mix, card, bp + sign * TOWN_STEP_BP) === null;
-      b.addEventListener("click", () => this.edit(withTownShare(catalog, mix, card, bp + sign * TOWN_STEP_BP)));
-      return b;
-    };
     const drop = el("button", "quiet town-drop", "✕");
     drop.type = "button";
     drop.setAttribute("aria-label", `${catalog.cardLabel(card)} ${catalog.text.get(UI.orderRemove)}`);
     drop.addEventListener("click", () => this.edit(dropTownCard(mix, card)));
     const what = el("span", "town-card-what");   // the card, and what it is for when it says (its upside)
     what.append(el("span", "town-card-name", catalog.cardLabel(card)));
-    const info = catalog.cards.get(card);
-    if (info?.upside_key) what.append(el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp))));
-    row.append(what, step(-1, "−"), el("span", "town-card-share", catalog.format.share(bp)), step(1, "+"), drop);
+    what.append(...this.upside(card, bp));
+    row.append(what, el("span", "town-card-share", catalog.format.share(bp)), drop);
     return row;
   }
 }

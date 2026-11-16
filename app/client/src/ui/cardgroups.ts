@@ -1,7 +1,7 @@
 // The card panel's lane groups (docs/design/opening-screen.md, "Cards"): one group per lane, the hands first, crafts
 // under one heading below their lane's cards; each group keeps its slots in order, so a card never moves under a finger.
 import type { Catalog } from "../game/catalog";
-import { UI } from "../game/text";
+import { compareSections, sectionHeading, sectionKey } from "../game/cardsections";
 import { el } from "./dom";
 
 export interface Group {
@@ -30,10 +30,10 @@ export class CardGroups {
     const key = this.key(card);
     let g = this.groups.get(key);
     if (!g) {
-      const [lane = "hands", craft] = key.split(":");
+      const lane = key.split(":")[0] ?? "hands";
       const node = el("div", "lane-group");
       node.dataset.lane = lane;
-      const heading = craft ? this.catalog.text.get(UI.craftHeading) : lane === "hands" ? "" : this.catalog.laneLabel(lane);
+      const heading = sectionHeading(this.catalog, key);
       if (heading) node.append(el("h3", "lane-tag", heading));
       const list = el("div", "card-list");
       node.append(list);
@@ -45,12 +45,7 @@ export class CardGroups {
 
   /** Groups in lane order (the hands first, their crafts under them), slots in their kept order. */
   layout(rows: Map<string, Slotted>): void {
-    const lanes = ["hands", ...this.catalog.lanes.keys()];
-    const keys = [...this.groups.keys()].sort((a, b) => {
-      const [la = "", ca] = a.split(":");
-      const [lb = "", cb] = b.split(":");
-      return (lanes.indexOf(la) - lanes.indexOf(lb)) || Number(Boolean(ca)) - Number(Boolean(cb));
-    });
+    const keys = [...this.groups.keys()].sort(compareSections(this.catalog));
     let at = this.root.querySelector(":scope > .lane-group");   // anything before the groups (the wait line) stays first
     for (const key of keys) {
       const g = this.groups.get(key);
@@ -71,7 +66,6 @@ export class CardGroups {
   }
 
   private key(card: string): string {
-    const info = this.catalog.cards.get(card);
-    return `${info?.lane ?? "hands"}${info?.presentation === "craft" ? ":craft" : ""}`;
+    return sectionKey(this.catalog, card);
   }
 }

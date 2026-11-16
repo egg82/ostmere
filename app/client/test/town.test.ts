@@ -82,20 +82,12 @@ function opened(view: View) {
   expect("a capped card is not offered; hew is, carve is not", ed2.querySelectorAll(".town-add").map((b) => b.dataset.card), ["hew"]);
 }
 
-{  // + and - move a share in steps within the person's whole time; Save sends that mix
+{  // Save sends the town's mix as it stands
   const { editor, got } = opened(both);
-  const helper = (): FakeEl => editor.querySelectorAll(".town-person")[0] as FakeEl;
-  helper().querySelector(".town-card .town-minus")?.click();   // chop 60% -> 55%
-  expect("a step down", texts(helper().querySelectorAll(".town-card-share")), ["55%", "30%"]);
-  helper().querySelectorAll(".town-card .town-plus")[1]?.click();   // haul 30% -> 35%
-  helper().querySelectorAll(".town-card .town-plus")[1]?.click();   // 40%
-  helper().querySelector(".town-card .town-plus")?.click();   // chop back to 60%: the person's whole time is given
-  expect("the rest is gone", texts(helper().querySelectorAll(".town-key-item")), ["Chop logs 60%", "Haul water 40%"]);
-  expect("no step past the whole", helper().querySelectorAll(".town-card .town-plus").map((b) => b.disabled), [true, true]);
   editor.querySelector(".editor-head .primary")?.click();
   const mix = saved(got.decided[0]);
   expect("the town's mix is saved", mix?.id, "town:main");
-  expect("its shares", mix?.components.map((c) => (c.kind === "card_share" ? [c.card, c.share_bp] : null)), [["chop", 6000], ["haul", 4000], ["hew", 7000], ["carve", 2000]]);
+  expect("its shares", mix?.components.map((c) => (c.kind === "card_share" ? [c.card, c.share_bp] : null)), [["chop", 6000], ["haul", 3000], ["hew", 7000], ["carve", 2000]]);
   expect("the editor closes", editor.hidden, true);
   expect("one decision", got.decided.length, 1);
 }

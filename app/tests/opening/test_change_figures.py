@@ -7,6 +7,7 @@ import pytest
 
 from ashfall_app.api.content_models import Content
 from ashfall_app.api.service import Game
+from ashfall_app.opening.entries import ModifierEntry
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.opening.renames import load_renames
 from ashfall_app.saves.ruleset import ruleset
@@ -112,3 +113,24 @@ def test_every_track_card_is_served_what_its_reach_pays(content: Content):
     cards = {c.card: c.change_bp for c in content.card_infos}
     track = sorted(c for c in cards if c.endswith("field_track"))
     assert len(track) == 7 and [cards[c] for c in track] == [[1000]] * 7
+
+
+def test_a_card_that_holds_entries_serves_them_and_the_rest_serve_none(content: Content):
+    watch = next(c for c in content.card_infos if c.card == "n4_watch")
+    assert [(k.side, k.lane, k.amount_bp, k.slot) for k in watch.kept] == [("larder", None, 5000, 0), ("gap", None, 5000, 0)]
+    assert 5000 in watch.change_bp
+    holders = [c for c in content.card_infos if c.kept]
+    assert all((k.side is None) != (k.lane is None) for c in holders for k in c.kept)
+    assert [c.card for c in content.card_infos if not c.kept and c.card == "stew"] == ["stew"]
+
+
+def test_a_kept_entry_names_its_slot_and_an_equal_unscaled_change_has_another(content: Content):
+    for c in (c for c in content.card_infos if c.kept):
+        assert all(c.change_bp[k.slot] == k.amount_bp for k in c.kept), c.card
+    o = load_opening()
+    same_amount = ModifierEntry(target="rate", id="x", flow="make", store="x", kind="add_bp", amount_bp=5000, source="x")
+    cards = [c.model_copy(update={"outcome": c.outcome.model_copy(update={"modifiers": [same_amount]})}) if c.id == "n4_watch" else c
+             for c in o.cards]
+    served = Game(o.model_copy(update={"cards": cards}), ruleset(o, load_renames(), "dev", 1)).content()
+    watch = next(c for c in served.card_infos if c.card == "n4_watch")
+    assert (watch.change_bp, [k.slot for k in watch.kept]) == ([5000, 5000], [1, 1])

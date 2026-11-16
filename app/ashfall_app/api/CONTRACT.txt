@@ -146,11 +146,11 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
-  dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
+  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
   ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
   when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
   second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
@@ -662,7 +662,7 @@ THE CLIENT MAY
     editor): a card the player's own mix could take (mixable, in play, doable again, not in the mix, Step.repeats.taps),
     a chip whose mix switch the player keeps making or whose order card has no rule, and a red ledger line whose order
     card has no rule each carry the quiet dot until touched. The dot opens and highlights nothing, has no sentence, and
-    a card's is kept once in AccountPresentation.mix_offered, a switch's in switch_offered.
+    a card's is kept once in SavePresentation.mix_offered, a ledger line's in lines_touched, a switch's in switch_offered.
   - draw a ledger line white when it is not starved and is either not falling or covered; otherwise red (a starved
     line is dry while something waits on it, covered or not). A falling line is covered when LedgerLine.covered, or
     when a rule of the player's draws the store down as it means to: its order_states entry is on, its `when` is an
@@ -711,9 +711,12 @@ TEXT AND NUMBERS (one rule)
                        signed change in basis points, +1000 for a tenth more; a CardInfo's include the entries it holds
                        while it runs, at its full share, then those of the standing action its content names as
                        upside_of, the runner whose held entries its upside describes: a recipe whose make another
-                       runner eats names that eater, and the page draws the eater's change on the recipe), then,
-                       for a card whose content gives it a reach, those of the triggers on the store it fills, as a
-                       signed percent: change / Scales.bp * 100
+                       runner eats names that eater, and the page draws the eater's change on the recipe; then, for a
+                       card whose content gives it a reach, those of the triggers on the store it fills; where a
+                       person's share of the card is chosen, the page draws each change at a CardInfo.kept slot as
+                       floor(amount_bp * share / Scales.bp), the engine's rounding, and the rest as served, while a
+                       card's face has no share and draws all at the full share) as a signed
+                       percent: change / Scales.bp * 100
                        toward zero, no trailing zeros, two decimals at most (a change that is not zero never reads as
                        zero), sign unless zero ("+10%", "-33.33%"). The text names what changes and carries no direction
                        word the sign already says; a text holds exactly as many of these slots as its change_bp has values
@@ -1308,10 +1311,11 @@ JOURNAL
     across sections.
   - fill the days pages with the written days in day order: each day's notes in page order under its day's heading
     (ui.journal.day {n}, n the game day plus one), in the note's hand and with its sketch beside it, days running on
-    down a page until the next would not fit, which starts a new page; a day is never split, so one longer than a page
-    has a page of its own. Whether a day fits is a fixed measure of its words (rows of the hand at the desktop
-    page's width), never the window, so the same days are the same pages on every device and width, and a page,
-    once a later one is begun, never changes. A day served while its page is open joins it and stays unread.
+    down a page; a day begins on the page in hand if its heading and first note fit, and a note that does not fit
+    begins a new page, headed again by its day. Whether a note fits is a fixed measure of its words (rows of the hand
+    at the desktop page's width), never the window, so the same days are the same pages on every device and width,
+    and a page, once a later one is begun, never changes. A day served while its page is open joins it, or grows on
+    it, and stays unread.
   - draw one bookmark per section that has a page, in the same order, worded by its text key (ui.journal.days,
     ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark. Turning to a bookmark
     opens that section's first page holding something unread, else its latest page. The bookmark of the open page's
@@ -1352,23 +1356,26 @@ JOURNAL
   - draw a mark over the words, or a mark a served day does not carry (wear aside).
 
   The written days (docs/design/journal.md): the main character's daily journal, which the server composes from the
-  save's history, never the page. Game day d is game seconds [d * 86400, (d + 1) * 86400). A day is composed, written
-  or not, by the first step whose save time reaches its end, in that step's transaction; a step that closes several
-  composes each, oldest first, and a save that has none stored (one begun before the journal was kept) composes every
-  day it has closed on its next step. Composing reads only the lines before the day's end and the days stored before
-  it, so a day comes out the same whichever step composes it. Stored once, a day never changes: a later change to the
-  habits or the slots applies from the next day composed.
-    Step.journal_days    [JournalDay]: the written days this step composed, oldest first. Empty on most steps.
-    Opened.journal_days  [JournalDay]: every written day stored before the open, oldest first. The open's step
-                         carries the days it composed, so the two together are every written day.
+  save's history, never the page. Game day d is game seconds [d * 86400, (d + 1) * 86400). A day's page fills as the
+  day goes: each step composes the day still being written and each day it begins, oldest first, in its transaction,
+  and a save that has none stored (one begun before the journal was kept) composes every day it has begun on its next
+  step. A note is decided from the lines up to it, so a day comes out the same however the steps fell. A note once
+  stored never changes or goes: a step only adds notes and marks after those a day has, and a later change to the
+  habits or the slots applies from the next note composed.
+    Step.journal_days    [JournalDay]: each written day this step added notes to, whole (every note it has), oldest
+                         first. Empty on most steps.
+    Opened.journal_days  [JournalDay]: every written day stored before the open, oldest first, the day in progress with
+                         the notes it had then. The open's step carries the days it added to, so the two together,
+                         each day taken as the copy with more notes, are every written day.
     JournalDay {day, day_notes: [DayNote {subject, slot, key, hand, sketch}], marks}: a day the journal wrote, its notes in
-                         page order (at least one). A day not written (a gap or a blank) is stored and never served.
+                         page order (at least one); a later copy of the same day begins with the notes and marks of an
+                         earlier one. A day not written (a gap or a blank) is stored and never served.
                          key is the note's text key (Content.text_entries); slot is a closed enum, "first" | "repeat" |
                          "catchup" | "mention" | "late" | "misremember" | "correction"; hand is the slot's own, else
                          "ink"; sketch the slot's, else null (/assets/journal/<sketch>.png). subject is the content's
                          subject id. marks: the marks the day leaves on its page, each a closed enum, "blood" | "soot"
-                         | "water" | "mud" | "smudge", each at most once, stored with the day (saves/journal.py,
-                         statement 21); empty for none.
+                         | "water" | "mud" | "smudge", each at most once, in the order drawn, stored with the day
+                         (saves/journal.py, statement 21); empty for none.
   SavePresentation gains newest_day_read: int | null, the newest written day whose page the player has turned to,
   null on a new save; a written day after it is unread. It only grows: a PUT whose value is lower, or null, leaves the
   kept one. The days are the save's own diary, so how far into them the player has read is kept per save, where the

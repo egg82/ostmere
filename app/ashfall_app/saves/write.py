@@ -1,5 +1,5 @@
 """Writing a save after a step, in the step's transaction: the row (state, counters, which build wrote it), the lines
-the step added, the journal days it closed (journal_write.py), and for a decision its log entry and, the first of a UTC
+the step added, the journal days it wrote in (journal_write.py), and for a decision its log entry and, the first of a UTC
 day, that day's snapshot. The writer keeps
 its own retention: decisions past DECISIONS_KEPT and snapshots past SNAPSHOT_DAYS go as new ones come in. Lines are
 earned history and never pruned."""
@@ -89,11 +89,11 @@ def persist(conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: Ste
         runs = merged(before, step.rule_changes, standing(step.save.orders, step.save.queue))
     else:
         runs = gathered(before, step.rule_changes)
-    days = journal_write.composed(conn, row, seen, step.lines, step.save.time, rs)
+    days, journaled = journal_write.composed(conn, row, seen, step.lines, step.save.time, rs)
     listed, recent = write_step(
         conn, save_id, now, written(step.save, decisions, rs, runs), [(ln.time, str(ln.key)) for ln in step.lines],
         None if step.verb is None else _log_of(decisions, step, rs, now),
-        None if rs.repeats is None else since(rs.repeats, step.save.time), [journal_write.stored_form(d) for d in days])
+        None if rs.repeats is None else since(rs.repeats, step.save.time), journaled)
     played = Played(save_id=save_id, decisions=decisions, save=step.save, lines=step.lines, failed=step.failed,
                     repeats=_counted(recent, step.save.time, rs), rule_runs=pruned(runs, step.save.orders),
                     catching_up_to=step.catching_up_to, days=days)

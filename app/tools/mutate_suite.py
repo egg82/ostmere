@@ -90,7 +90,7 @@ SUITES = {
         "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/reminders/test_sender.py",
         "tests/dayone/test_dayone_forecast.py"), home="tests/db"),
     "journal_days": Suite("MUTANTS_journal_days.txt", "test_journal_days.py", "journal_days_mutants", also=(
-        "tests/db/test_journal_rows.py", "tests/db/test_journal_failover.py", "tests/db/test_decision_lock_span.py",
+        "tests/saves/test_journal_*.py", "tests/db/test_journal_*.py", "tests/db/test_decision_lock_span.py",
         "tests/db/test_save_journal_migrate.py", "tests/test_journal_days_wire.py"), home="tests/saves"),
 }
 

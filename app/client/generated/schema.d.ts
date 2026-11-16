@@ -810,6 +810,8 @@ export interface components {
             upside_key: string | null;
             /** Change Bp */
             change_bp: number[];
+            /** Kept */
+            kept: components["schemas"]["KeptInfo"][];
             /** Work S */
             work_s: number;
             /** Inputs */
@@ -1336,7 +1338,8 @@ export interface components {
         };
         /**
          * JournalDay
-         * @description A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). Stored once, never changed.
+         * @description A game day the daily journal wrote: game seconds [day * 86400, (day + 1) * 86400). A later copy of a day still being
+         *     written begins with this one's notes and marks.
          */
         JournalDay: {
             /** Day */
@@ -1367,6 +1370,20 @@ export interface components {
              * @constant
              */
             label: "Ostmere";
+        };
+        /**
+         * KeptInfo
+         * @description One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both.
+         */
+        KeptInfo: {
+            /** Side */
+            side: string | null;
+            /** Lane */
+            lane: string | null;
+            /** Amount Bp */
+            amount_bp: number;
+            /** Slot */
+            slot: number;
         };
         Key: string;
         /** KindRole */
@@ -2063,6 +2080,11 @@ export interface components {
              * @default []
              */
             mix_offered: components["schemas"]["Id"][];
+            /**
+             * Lines Touched
+             * @default []
+             */
+            lines_touched: components["schemas"]["Id"][];
             /**
              * Lessons
              * @default []

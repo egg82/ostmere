@@ -1,7 +1,8 @@
 // The daily journal's days pages (docs/design/journal.md, "What the page draws"; CONTRACT.txt, "JOURNAL", "The written
-// days"): each day's notes in order under its day, days running on down a page until the next would not fit, a day never
-// split, the measure fixed so the same days are the same pages on every device and width; the dot while a day after the
-// save's newest day read is written; the newest day turned to kept as the sheet closes.
+// days"): each day's notes in order under its day, days running on down a page, a note that does not fit beginning the
+// next page under its day's heading again, the measure fixed so the same days are the same pages on every device and
+// width; a day still being written growing on its page; the dot while a day after the save's newest day read is
+// written; the newest day turned to kept as the sheet closes.
 import { catalog, expect, rig, text } from "./journalrig";
 import { WEEKS } from "../fixtures/journal";
 import type { JournalDay } from "../src/api/types";
@@ -13,7 +14,7 @@ const day = (n: number, keys: string[], sketch: string | null = null): JournalDa
   ({ day: n, day_notes: keys.map((key) => ({ subject: `s_${key}`, slot: "first" as const, key, hand: "ink" as const, sketch })), marks: [] });
 const days = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) => d.day));
 
-{  // the written days held: one per day, oldest first, a day held never replaced
+{  // the written days held: one per day, oldest first, a day held kept against a copy no longer
   const held = joinDays([day(3, [KEY])], [day(1, [KEY]), day(3, ["wk_roof"])]);
   expect("joined, oldest first, one per day", held.map((d) => d.day), [1, 3]);
   expect("the day held stays", held[1]!.day_notes[0]!.key, KEY);
@@ -34,7 +35,9 @@ const days = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) =
   expect("a full page, then the day that did not fit on the next", days(pages), [run.slice(0, fit).map((d) => d.day), [fit]]);
   expect("one day fewer: one page", dayPages(run.slice(0, fit), words).length, 1);
   const long = day(50, Array.from({ length: 12 }, () => "wk_roof"));   // longer than a page
-  expect("a day longer than a page has one of its own, never split", days(dayPages([day(49, [KEY]), long, day(51, [KEY])], words)), [[49], [50], [51]]);
+  const over = dayPages([day(49, [KEY]), long, day(51, [KEY])], words);
+  expect("a day longer than a page runs on over the next, from where the page had room", days(over), [[49, 50], [50], [50, 51]]);
+  expect("every note of it once, in order", over.flatMap((p) => p.filter((d) => d.day === 50).flatMap((d) => d.day_notes)).length, 12);
   expect("every day once, in order", days(dayPages(WEEKS, words)).flat(), WEEKS.map((d) => d.day));
   const sized = (key: string): string => "x".repeat(Number(key.slice(1)));   // key "c<n>": n characters
   const tall = day(0, [`c${18 * ROW_CHARS}`]);   // 1 + 18.25 rows
@@ -116,4 +119,35 @@ const days = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) =
   back.open();
   back.close().click();
   expect("turning to an earlier page takes nothing back", back.sent.length, 0);
+}
+
+{  // a day still being written: a later copy carrying more notes replaces the one held, and as it grows past the page its
+  // notes so far keep their page and the rest run on to the next, headed again by its day
+  const growing = (n: number): JournalDay => day(9, Array.from({ length: n }, () => KEY));
+  const held = joinDays([day(8, [KEY]), growing(1)], [growing(3)]);
+  expect("the copy with more notes replaces the day held", held.map((d) => d.day_notes.length), [1, 3]);
+  expect("a copy with fewer notes leaves it", joinDays(held, [growing(2)]).map((d) => d.day_notes.length), [1, 3]);
+  const notesOn = (pages: JournalDay[][]): number[][] => pages.map((p) => p.map((d) => d.day_notes.length));
+  const before = [day(7, Array.from({ length: 12 }, () => KEY))];
+  let shown = notesOn(dayPages([...before, growing(1)], words));
+  for (let n = 2; n <= 16; n += 1) {
+    const now = notesOn(dayPages([...before, growing(n)], words));
+    for (let i = 0; i < shown.length - 1; i += 1) expect(`${n} notes: page ${i} is as it was`, now[i], shown[i]);
+    const last = shown.length - 1;
+    expect(`${n} notes: the last page shown keeps every note it had`, now[last]!.slice(0, shown[last]!.length - 1), shown[last]!.slice(0, -1));
+    expect(`${n} notes: the day on the last page shown only grows there`, now[last]![shown[last]!.length - 1]! >= shown[last]!.at(-1)!, true);
+    expect(`${n} notes: none lost`, now.flat().reduce((a, b) => a + b, 0), 12 + n);
+    shown = now;
+  }
+  expect("the day ran on to a second page", shown.length > 1 && dayPages([...before, growing(16)], words).at(-1)![0]!.day, 9);
+}
+
+{  // a day still being written grows on its page while the page is open: its earlier notes stay where they were drawn
+  const partial: JournalDay = { ...WEEKS[1]!, day_notes: WEEKS[1]!.day_notes.slice(0, 1) };
+  const r = rig({ notes: [], days: [WEEKS[0]!, partial], newestDay: null });
+  r.open();
+  const before = r.written();
+  r.show([], [{ ...partial, day_notes: [...partial.day_notes, { ...partial.day_notes[0]!, key: "wk_roof" }] }]);
+  expect("the earlier notes stay as drawn", r.written().slice(0, before.length), before);
+  expect("the new note joins the page", r.written().at(-1), text("wk_roof"));
 }

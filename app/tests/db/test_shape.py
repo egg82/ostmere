@@ -30,7 +30,7 @@ SHAPE: dict[str, list[tuple[str, str, bool]]] = {
                        ("rules_digest", TEXT, False), ("decisions", INT, False)],
     "save_manifests": [("rules_digest", TEXT, False), ("manifest", TEXT, False)],
     "save_journal": [("save_id", BIG, False), ("day", INT, False), ("notes", JSON, False), ("gap", TEXT, True),
-                     ("marks", JSON, False)],
+                     ("marks", JSON, False), ("through", BIG, True)],
     "tries": [("id", BIG, False), ("kind", TEXT, False), ("who", BYTES, False), ("at", WHEN, False)],
     "feedback": [("id", BIG, False), ("created_at", WHEN, False), ("text", TEXT, False), ("build", TEXT, False),
                  ("release", INT, False), ("account_id", BIG, True), ("save_id", BIG, True), ("game_time", BIG, True),

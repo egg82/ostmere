@@ -99,8 +99,8 @@ structural checks hold (`docs/research/agentic-engineering.md`). So:
   parallel; a change you can describe in one sentence just gets made, with its test.
 - **Reviewers look for correctness and contract gaps only**, never "anything that could be better": that is how
   abstraction layers, defensive code and tests for impossible cases get added.
-- **Locally, run what the change touches**: the targeted tests for it, every file in the "Structural gates" table, and
-  pyright on the touched files. Subagents run only the tests their change touches; the full suite runs in the pull request's
+- **Locally, run what the change touches**: the targeted tests for it, `app/tools/gates.sh` (every gate in the
+  "Structural gates" table, at most 2 workers; `npm test` alone misses the Python-run ones), and pyright on the touched files. Subagents run only the tests their change touches; the full suite runs in the pull request's
   checks, not on the shared box.
 - **Cleanup is a standing pass** over merged code (duplication, drift from `docs/systems.md`), not only review before.
 - **The orchestrator edits the shared single-file docs** (`systems.md`, the decisions index, the board's issues,
@@ -111,7 +111,8 @@ structural checks hold (`docs/research/agentic-engineering.md`). So:
 A gate with a ledger holds a per-file count, seeded at what the code had when the gate arrived. It fails when a file is
 over its held count or new, and when it is under ("stale, lower it"), so the ledger always equals the code. Never raise
 a count; split, reduce or report. The ledgers are generated (`--write`) and live apart from hand-edited files: `app/tests/held/`
-for the Python-run gates, `app/client/gates/held/` for the client's.
+for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/gates.sh` runs every row;
+`app/tests/test_gates_command.py` fails if a row's path is missing from it.
 
 | Gate | Limit | Ledger |
 |---|---|---|
@@ -124,6 +125,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's.
 | `app/tests/test_boundaries.py` | package-to-package imports of `ashfall_app`: a new edge fails until added to `ALLOWED` | none (the list is in the test) |
 | `app/tests/test_doc_citations.py` | backticked paths in this file and `systems.md`, and symbols in `systems.md`, must resolve; `<!--planned-->` after a reference skips it while its target is missing and fails once it exists; `<!--external-->` is never checked | none |
 | `app/tests/test_decision_citations.py` | a decision title quoted after `decisions.md` (or bare, closing a parenthesis) is an index entry or starts exactly one heading or bold lead in `docs/decisions/`; the index and those files' `##` headings agree | none |
+| `app/tests/test_scene_stores.py` | a scene layer's `store:` condition names only a store the opening unlocks (the page reads it from the ledger, which lists only unlocked stores) | none (its held list is in the test and only shrinks) |
 | `app/tools/mutate_suite.py` `--plants` and `--check` (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
 The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.

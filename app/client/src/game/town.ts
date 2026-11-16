@@ -8,8 +8,6 @@ import { ALWAYS } from "./lanes";
 import { MIN_SHARE_BP } from "./mix";
 import { freeName } from "./orders";
 
-/** One share step in the editor: the smallest share a card can hold. */
-export const TOWN_STEP_BP = MIN_SHARE_BP;
 /** The share a card joins a person's time with, when that much is free. */
 const JOIN_BP = 5_000;
 
@@ -115,20 +113,27 @@ export function given(catalog: Catalog, mix: Mix, lane: string): number {
   return mix.components.reduce((n, c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? n + c.share_bp : n), 0);
 }
 
-/** The mix with `card` given `bp` of its person's time (a card not in the mix joins): null below one step, or above what
+/** The mix with `card` given `bp` of its person's time (a card not in the mix joins): null below the smallest share, or above what
  * the person has free. */
 export function withTownShare(catalog: Catalog, mix: Mix, card: string, bp: number): Mix | null {
   const now = mix.components.find((c): c is CardShare => c.kind === "card_share" && c.card === card)?.share_bp ?? 0;
-  if (bp < TOWN_STEP_BP || given(catalog, mix, catalog.laneOf(card)) - now + bp > catalog.content.scales.bp) return null;
+  if (bp < MIN_SHARE_BP || given(catalog, mix, catalog.laneOf(card)) - now + bp > catalog.content.scales.bp) return null;
   const components = now > 0 ? mix.components.map((c) => (c.kind === "card_share" && c.card === card ? { ...c, share_bp: bp } : c))
     : [...mix.components, { kind: "card_share" as const, card, share_bp: bp }];
   return { ...mix, components };
 }
 
-/** A card joining a person's time: half of it, or what is free when that is less; null when under one step is free. */
+/** A card joining a person's time: half of it, or what is free when that is less; null when under the smallest share is free. */
 export function joinTownCard(catalog: Catalog, mix: Mix, card: string): Mix | null {
   const free = catalog.content.scales.bp - given(catalog, mix, catalog.laneOf(card));
   return withTownShare(catalog, mix, card, Math.min(JOIN_BP, free));
+}
+
+/** The mix with one person's cards given `shares`, in the order the mix lists them (a bar's last part may be the idle
+ * rest, which no card holds). */
+export function withTownShares(catalog: Catalog, mix: Mix, lane: string, shares: number[]): Mix {
+  let k = 0;
+  return { ...mix, components: mix.components.map((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? { ...c, share_bp: shares[k++] ?? c.share_bp } : c)) };
 }
 
 export function dropTownCard(mix: Mix, card: string): Mix {

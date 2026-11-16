@@ -232,7 +232,7 @@ const text: Record<string, string> = {
   "ui.lesson.cap_reaches": "Pick reaches. The rule comes on once {store} is full.",
   "ui.lesson.cap_do": "Pick what your hands do instead.",
   "ui.town.title": "Camp", "ui.town.change": "Change", "ui.town.idle": "{person}, idle", "ui.rule.town_always": "Otherwise, {mix}",
-  "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Tap + and - to change a share.",
+  "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Drag a divider to change a share.",
   "ui.lesson.town_save": "Save, and everyone works to this split.", "ui.lesson.town_runs": "Each person shows what they are doing now.",
   "lane.mason": "Mason", "card.hew": "Hew stone", "card.carve": "Carve beams",
   "ui.lesson.stopped_edit": "{card} is done, so this mix stopped. Open Edit.", "ui.lesson.stopped_edit_with": "{card} is done, so this mix stopped. {task} takes its place. Open Edit.", "ui.lesson.stopped_add": "Tap + {task} to add it.", "ui.lesson.stopped_drop": "Tap ✕ to take {card} out.", "ui.lesson.stopped_save": "Save, and the mix runs again.",
@@ -247,6 +247,7 @@ const text: Record<string, string> = {
   "ui.mix.name": "Name", "ui.mix.name_reserved": "Pick a name that doesn't start with “{prefix}”.", "ui.mix.name_taken": "Another mix has this name.",
   "ui.mix.add": "Add",
   "ui.mix.per_minute": "per minute",
+  "ui.mix.forecast_unknown": "No forecast yet. Trying again.",
   "ui.mix.now": "now",
   "ui.mix.after": "after",
   "ui.goal.head": "goals", "ui.goal.store": "{store} {n}", "ui.goal.store_share": "{store} at {n}", "ui.stint.or_until": "or until", "ui.goal.level": "{skill} {n}", "ui.goal.never": "never",
@@ -308,8 +309,8 @@ const text: Record<string, string> = {
   "offer.keep.effect": "[fixture] {pct} rest", "offer.swap.effect": "[fixture] {gain} stone now",
   "line.offer": "[fixture] a line that comes with the offer.",
   // fights (CONTRACT.txt, "FIGHTS"): the eight ui keys as opening.toml words them, and placeholder names
-  "ui.fight.odds": "{lost} in {of} lost", "ui.fight.odds_pct": "{pct}% lost", "ui.fight.odds_unknown": "odds unknown until fought", "ui.fight.threat_unknown": "unknown", "ui.fight.vs": "{side_name} {power}, {threat_name} {threat}",
-  "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.base": "base", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
+  "ui.fight.odds": "loses {lost} in {of} fights", "ui.fight.odds_pct": "loses {pct}% of fights", "ui.fight.odds_unknown": "odds unknown until fought", "ui.fight.threat_unknown": "unknown", "ui.fight.vs": "{side_name} {power}, {threat_name} {threat}",
+  "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.base": "base strength", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
   "ui.fight.won": "{runner}: won", "ui.fight.lost": "{runner}: lost",
   "ui.journal.heading": "Journal", "ui.journal.prev": "Prev", "ui.journal.next": "Next",
   "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places", "ui.journal.day": "Day {n}",
@@ -351,7 +352,7 @@ export const TIRED = low("energy", 3, 6);
 const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woodcutting: ["damp_wood"], rest: ["energy"], smoke_catch: ["smoked"], smoke_roots: ["smoked"], forage: ["roots"] };
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], work_s: 5, inputs,
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], kept: [], work_s: 5, inputs,
   makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), drains: [], skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });

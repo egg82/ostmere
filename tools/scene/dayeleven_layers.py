@@ -21,7 +21,7 @@ JOINED = "feature:family_joined"
 COUNTED = f"store:stranger_clock@400&{JOINED}"
 """Z3: the trigger's own gate (twenty hours from B10, once Z1), which unlocks only a card."""
 BUILDING = "running:make_hut|running:n5_build_hut"
-BUILT = "store:hut"
+BUILT = "project:make_hut|project:n5_build_hut"
 HUT_HANDS = "running:make_hut"
 HANDS_AWAY = [HUT_HANDS]
 """Building the hut takes the player off the stool."""

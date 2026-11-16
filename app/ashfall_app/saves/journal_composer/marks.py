@@ -1,18 +1,28 @@
-"""A day's page marks (statement 21): the kinds its notes hold, each drawn under its rate, the first `marks_most`
-kept."""
-from collections.abc import Sequence
+"""A day's page marks (statement 21): the kinds a note holds as it is written, each drawn under its rate, the first
+`marks_most` drawn kept."""
+from collections.abc import Mapping
 
-from ..journal import MARK_KINDS, Habits, MarkKind, Note, Subject, roll
+from ..journal import Habits, MarkKind, Note, Subject, roll
 
 ABOUT_ANOTHER_DAY = frozenset({"late", "correction"})
 
 
-def marks(save_id: int, day: int, notes: Sequence[Note], subjects: Sequence[Subject],
-          habits: Habits) -> tuple[MarkKind, ...]:
-    marked: dict[str, MarkKind] = {s.id: s.mark for s in subjects if s.mark is not None}
-    held: set[MarkKind] = {marked[n.subject] for n in notes if n.slot not in ABOUT_ANOTHER_DAY and n.subject in marked}
-    if any(n.slot == "catchup" for n in notes):
-        held.add("smudge")
-    drawn: list[MarkKind] = [k for k in MARK_KINDS
-                             if k in held and roll(save_id, day, k, "mark") < getattr(habits.marks, k)]
-    return tuple(drawn[:habits.marks_most])
+def held(note: Note, subjects: Mapping[str, Subject]) -> list[MarkKind]:
+    """The kinds `note` holds: its subject's mark, then `smudge` for a catch-up; none for a late addition or correction."""
+    if note.slot in ABOUT_ANOTHER_DAY:
+        return []
+    s = subjects.get(note.subject)
+    own: list[MarkKind] = [s.mark] if s is not None and s.mark is not None else []
+    return [*own, "smudge"] if note.slot == "catchup" else own
+
+
+def drawn(save_id: int, day: int, note: Note, subjects: Mapping[str, Subject], habits: Habits,
+          have: list[MarkKind]) -> list[MarkKind]:
+    """The kinds `note` adds to a page already carrying `have`."""
+    out: list[MarkKind] = []
+    for kind in held(note, subjects):
+        if kind in have or kind in out or len(have) + len(out) >= habits.marks_most:
+            continue
+        if roll(save_id, day, kind, "mark") < getattr(habits.marks, kind):
+            out.append(kind)
+    return out

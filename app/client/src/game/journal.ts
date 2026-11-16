@@ -57,11 +57,20 @@ export function pagesOf(catalog: Catalog, view: View, days: readonly JournalDay[
   return [...daysPages(catalog, days), ...SECTIONS.flatMap(({ section }) => written.filter((p) => p.section === section))];
 }
 
+/** Each days page, its id from the note it begins with: `days:<day>` at a day's first note, `days:<day>.<n>` where a day
+ * runs on from the page before; each note's id is its day and its place in the whole day. */
 function daysPages(catalog: Catalog, days: readonly JournalDay[]): Page[] {
-  return dayPages(days, (key) => catalog.text.get(key)).map((onPage) => ({
-    id: `days:${onPage[0]!.day}`, section: "days", sketch: null, runners: [],
-    notes: onPage.flatMap((d) => d.day_notes.map((n, i) => ({ id: `${d.day}.${i}`, key: n.key, hand: n.hand, sketch: n.sketch, day: d.day }))),
-  }));
+  const placed = new Map<number, number>();
+  return dayPages(days, (key) => catalog.text.get(key)).map((onPage) => {
+    const first = onPage[0]!;
+    const from = placed.get(first.day) ?? 0;
+    const notes = onPage.flatMap((d) => {
+      const start = placed.get(d.day) ?? 0;
+      placed.set(d.day, start + d.day_notes.length);
+      return d.day_notes.map((n, i) => ({ id: `${d.day}.${start + i}`, key: n.key, hand: n.hand, sketch: n.sketch, day: d.day }));
+    });
+    return { id: from === 0 ? `days:${first.day}` : `days:${first.day}.${from}`, section: "days", sketch: null, runners: [], notes };
+  });
 }
 
 /** The sections that have a page written, in the book's order: one bookmark each. */

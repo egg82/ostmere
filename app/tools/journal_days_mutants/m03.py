@@ -1,6 +1,7 @@
-"""Row 03 of tests/saves/MUTANTS_journal_days.txt: the locking read reads the days only once two days are due."""
+"""Row 03 of tests/saves/MUTANTS_journal_days.txt: a day still being written has its stored notes replaced by what the step
+adds, not appended to."""
 EDITS: list[tuple[str, str, str]] = [
-    ('ashfall_app/db/journal.py',
-     '    due = next_day < ended\n',
-     '    due = next_day < ended - 1\n'),
+    ('ashfall_app/db/step.py',
+     '"notes": t.notes.op("||")(new.notes)',
+     '"notes": new.notes'),
 ]

@@ -1,14 +1,16 @@
 // The condition editor's subjects past the stores (condition.ts, the full editor; docs/design/opening-screen.md, "The
 // condition editor"): under When, a Levels row (the Camp and each skill, at the level each stands at now) and a Tasks
-// row (each task in play); and, once one is chosen, its one stepper in the levels' place: "Level" for a level, "Times"
+// row (each task in play); and, once one is chosen, its one slider in the levels' place: "Level" for a level, "Times"
 // for a task's count of times done. What is offered is ruleoffers.subjectChoices's; numbers and conditions are
 // subjectrule.ts's.
 import type { View } from "../api/types";
+import { sectioned } from "../game/cardsections";
 import type { Catalog } from "../game/catalog";
 import { clampSubject, defaultSubject, subjectKey, subjectName, subjectNow, subjectRange, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
-import { stepper, type Stepper } from "./condlevels";
+import { sectionHead } from "./condrows";
 import { el, setText } from "./dom";
+import { ValueSlider } from "./valueslider";
 
 /** The Levels and Tasks heads and their buttons; each button carries data-subject, read back to mark the one chosen. */
 export function subjectRows(catalog: Catalog, view: View, choices: { levels: SubjectRule[]; tasks: SubjectRule[] }, pick: (r: SubjectRule) => void): HTMLElement[] {
@@ -22,7 +24,8 @@ export function subjectRows(catalog: Catalog, view: View, choices: { levels: Sub
     return b;
   };
   const head = (key: string, rules: SubjectRule[]) => (rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rules.map(button)]);
-  return [...head(UI.ruleLevels, choices.levels), ...head(UI.ruleTasks, choices.tasks)];
+  const tasks = sectioned(catalog, choices.tasks, (r) => (r.kind === "count" ? r.card : null)).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
+  return [...head(UI.ruleLevels, choices.levels), ...(tasks.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleTasks)), ...tasks])];
 }
 
 /** Pressed on the subject button that is `rule`'s. */
@@ -31,23 +34,45 @@ export function markSubject(root: ParentNode, rule: SubjectRule | undefined): vo
   for (const b of root.querySelectorAll<HTMLElement>(".cond-subject")) b.setAttribute("aria-pressed", String(b.dataset.subject === key));
 }
 
-/** The chosen subject's stepper: a count's "Times" or a level's "Level". */
+/** A subject with no top slides this far past where it stands now (a number written higher is shown whole). */
+const OPEN_REACH = 10;
+
+/** One of the subject's numbers: its label, the number, and a slider by one from `lo` to `hi`. */
+class SubjectNumber {
+  readonly root = el("div", "cond-level");
+  private readonly value = el("span", "cond-value");
+  private readonly slider: ValueSlider;
+
+  constructor(label: string, pick: (n: number) => void) {
+    this.slider = new ValueSlider(label, pick);
+    const head = el("div", "cond-level-head");
+    head.append(el("span", "cond-label", label), this.value);
+    this.root.append(head, this.slider.root);
+  }
+
+  draw(catalog: Catalog, n: number, lo: number, hi: number): void {
+    const words = catalog.format.count(n);
+    setText(this.value, words);
+    this.slider.draw({ min: lo, max: hi, step: 1 }, n, words, () => true);
+  }
+}
+
+/** The chosen subject's number: a count's "Times" or a level's "Level", from the least to the most it can reach. */
 export class SubjectControl {
   readonly root = el("div", "cond-levels cond-subject-control");
-  private readonly times: Stepper;
-  private readonly level: Stepper;
+  private readonly times: SubjectNumber;
+  private readonly level: SubjectNumber;
   private rule: SubjectRule | null = null;
   private view: View | null = null;
 
   constructor(private readonly catalog: Catalog, private readonly changed: (rule: SubjectRule) => void) {
     const { text } = catalog;
-    const step = (d: -1 | 1) => this.step(d);
-    this.times = stepper(text.get(UI.ruleTimes), text.get(UI.ruleLess), text.get(UI.ruleMore), step);
-    this.level = stepper(text.get(UI.ruleLevel), text.get(UI.ruleLess), text.get(UI.ruleMore), step);
+    this.times = new SubjectNumber(text.get(UI.ruleTimes), (n) => this.set(n));
+    this.level = new SubjectNumber(text.get(UI.ruleLevel), (n) => this.set(n));
     this.root.append(this.times.root, this.level.root);
   }
 
-  /** Shows `rule`'s stepper, its buttons off at the ends of what the subject allows; hidden with no subject chosen. */
+  /** Shows `rule`'s number over what the subject allows; hidden with no subject chosen. */
   draw(view: View, rule: SubjectRule | undefined): void {
     this.view = view;
     this.rule = rule ?? null;
@@ -55,17 +80,15 @@ export class SubjectControl {
     if (!rule) return;
     this.times.root.hidden = rule.kind !== "count";
     this.level.root.hidden = rule.kind === "count";
-    const shown = rule.kind === "count" ? this.times : this.level;
-    const [lo, hi] = subjectRange(this.catalog, view, rule);
-    setText(shown.value, this.catalog.format.count(rule.n));
-    shown.less.disabled = rule.n <= lo;
-    shown.more.disabled = rule.n >= hi;
+    const [lo, top] = subjectRange(this.catalog, view, rule);
+    const hi = Number.isFinite(top) ? top : Math.max(rule.n, subjectNow(this.catalog, view, rule) + OPEN_REACH);
+    (rule.kind === "count" ? this.times : this.level).draw(this.catalog, rule.n, lo, hi);
   }
 
-  private step(d: -1 | 1): void {
+  private set(n: number): void {
     const { rule, view } = this;
     if (!rule || !view) return;
-    const next = clampSubject(this.catalog, view, { ...rule, n: rule.n + d });
+    const next = clampSubject(this.catalog, view, { ...rule, n });
     if (next.n !== rule.n) this.changed(next);
   }
 }

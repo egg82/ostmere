@@ -3,6 +3,7 @@ import "./game.css";
 import "./front.css";
 import "./fights.css";
 import "./reminders.css";
+import "./slider.css";
 import { boot } from "./app/boot";
 
 boot();
