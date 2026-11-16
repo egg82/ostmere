@@ -58,8 +58,9 @@ land at a fixed time, and flags a stretch where only fixed-time ones land.
 
 **A level is a thing, not only a number.** Each level makes its skill's own work faster (levels speed the work, never
 the levelling, so time per level never shrinks), but a plain speed-up is the floor, and it goes samey; unlocks and story
-break it up. A skill goes at most two levels in a row paying
-only speed; at least every third brings something named: a find, an unlock, a story moment.
+break it up. The aim is that at least every third level brings something named: a find, an unlock, a story moment.
+How long a skill's stretch of speed-only levels runs is a readout (the opening's per later phase, day one's per route),
+never a check: "samey" is more or less, and a ban on it bent the content into filler finds.
 
 This and the 3-month band hold together because they measure different things. The band bounds the story's beats; the
 setup moves the goals between beats, and how much the camp has when a beat lands. A sharp setup gets each goal sooner

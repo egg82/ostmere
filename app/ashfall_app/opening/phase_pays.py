@@ -14,8 +14,7 @@ chosen by how many finds the track has paid (`find_line`), so no line comes twic
 the find is a new trigger under `find_id` that also carries the speed.
 
 Checked (check_phase_pays): a later phase's work pay is an add, never a multiplier (docs/design/prestige-phases.md,
-"The loop", spiral 2), and speeds only its own skill's cards; at most two levels in a row pay only speed, counted
-around the phase; the find's store is one a card that stays available consumes (`staying_stores`)."""
+"The loop", spiral 2), and speeds a card that exists (which skill's card is a readout, tests/opening/speed_reach.py); the find's store is one a card that stays available consumes (`staying_stores`)."""
 from collections import Counter
 from typing import TYPE_CHECKING, Literal
 
@@ -29,8 +28,6 @@ from .refs import fail, outcomes
 if TYPE_CHECKING:
     from .schema import Opening
 
-MAX_SPEED_ONLY = 2
-"""Levels in a row that may pay only speed (docs/decisions.md, "A level is a thing")."""
 RETIRED_AT = 10_000
 """The counted level a retired find's trigger waits for: far past any track."""
 
@@ -165,8 +162,7 @@ def _rowed(skill: SkillEntry, added: list[LevelPaysEntry]) -> SkillEntry:
 
 def check_phase_pays(o: "Opening") -> None:
     """ValueError naming the entry unless every phase_pays entry is one skill's only one, speeds by an add the work of
-    cards its skill trains, finds at distinct levels 2..top_level leaving no more than MAX_SPEED_ONLY speed-only levels
-    in a row around the phase; and unless no skill-level trigger past both the top level and the curve's last level
+    cards, finds at distinct levels 2..top_level; and unless no skill-level trigger past both the top level and the curve's last level
     (a later phase's pay written by hand) multiplies a card's work."""
     trains = {c.id: c.skill for c in o.cards}
     for skill, n in Counter(pp.skill for pp in o.phase_pays).items():
@@ -186,14 +182,12 @@ def _check_entry(o: "Opening", pp: PhasePaysEntry, trains: dict[str, str | None]
     for s in pp.speed:
         if s.kind != "add_bp":
             fail(where, f"work {s.id} is a multiplier: a later phase's work pay is an add (prestige-phases, \"The loop\")")
-        if trains.get(s.id) != pp.skill:
-            fail(where, f"work {s.id} is not a card {pp.skill} trains")
+        if s.id not in trains:
+            fail(where, f"work {s.id} is not a card")
     top = o.prestige.top_level if o.prestige is not None else 0
     levels = pp.find.levels
     if len(set(levels)) != len(levels) or any(not 2 <= lv <= top for lv in levels):
         fail(where, f"finds need distinct levels in 2..{top}")
-    if _longest_speed_only(set(levels), top) > MAX_SPEED_ONLY:
-        fail(where, f"leaves more than {MAX_SPEED_ONLY} levels in a row paying only speed")
     if len(set(pp.find.lines)) != len(pp.find.lines):
         fail(where, "find lines repeat in the pool")
     if pp.find.store not in staying_stores(o):
@@ -209,8 +203,9 @@ def staying_stores(o: "Opening") -> set[str]:
     return {x.store for c in o.cards if c.cap is None and c.id not in retired for x in (*c.inputs, *c.drains, *c.costs)}
 
 
-def _longest_speed_only(named: set[int], top: int) -> int:
-    """The longest run of levels not in `named`, the phase's levels 2..top read twice so a run across the click counts."""
+def longest_speed_only(named: set[int], top: int) -> int:
+    """The longest run of levels not in `named`, the phase's levels 2..top read twice so a run across the click counts.
+    A readout's figure (tests/opening/report.py), never a check: how samey a stretch reads is taste."""
     run = longest = 0
     for lv in [*range(2, top + 1)] * 2:
         run = 0 if lv in named else run + 1

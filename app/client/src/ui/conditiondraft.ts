@@ -33,9 +33,10 @@ export function sameRule(a: StoreRule, b: StoreRule): boolean {
 }
 
 /** The condition a draft at `rule` saves: the edited rule's own while its levels are as it opened (a chip's stays the
- * chip's, a content card's keeps its exact threshold), else built from the levels. `q`: Scales.quantity_per_item. */
-export function draftWhen(rule: StoreRule, opened: Draft["opened"], q: number): Condition {
-  return opened && sameRule(rule, opened.rule) ? opened.when : buildRule(rule, q);
+ * chip's, a content card's keeps its exact threshold), else built from the levels. `q`: Scales.quantity_per_item; `level`:
+ * the store is a level (Catalog.isLevel). */
+export function draftWhen(rule: StoreRule, opened: Draft["opened"], q: number, level = false): Condition {
+  return opened && sameRule(rule, opened.rule) ? opened.when : buildRule(rule, q, level);
 }
 
 /** The cap of a store in whole items, from its ledger line (caps can grow), else its StoreInfo. */
@@ -57,7 +58,7 @@ export function draftOrder(catalog: Catalog, view: View | null, draft: Draft | n
   if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, ...rest };
   if (draft.subject) return { when: buildSubject(catalog, draft.subject), ...rest };
   if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store))) return null;
-  return { when: draftWhen(draft.rule, draft.opened, catalog.content.scales.quantity_per_item), ...rest };
+  return { when: draftWhen(draft.rule, draft.opened, catalog.content.scales.quantity_per_item, catalog.isLevel(draft.rule.store)), ...rest };
 }
 
 /** The draft rule `index` opens on: a subject rule as set; a store rule at its levels as set, a chip's as the chip, one

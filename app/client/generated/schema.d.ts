@@ -2339,6 +2339,16 @@ export interface components {
             /** Bonus Bp */
             bonus_bp: number | null;
         };
+        /**
+         * StoreLevel
+         * @description A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole
+         *     items rounded up, as a level (CONTRACT.txt, "FIGHTS").
+         */
+        StoreLevel: {
+            /** Store */
+            store: string;
+            segment: components["schemas"]["Segment"];
+        };
         /** StoreValue */
         StoreValue: {
             /**
@@ -2555,6 +2565,8 @@ export interface components {
             goals: components["schemas"]["Goal"][];
             /** Goal Rows */
             goal_rows: components["schemas"]["GoalRow"][];
+            /** Levels */
+            levels: components["schemas"]["StoreLevel"][];
         };
         /**
          * Visit

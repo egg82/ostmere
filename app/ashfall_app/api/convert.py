@@ -122,7 +122,7 @@ def _fights(fights: Iterable[e.FightView], held: Iterable[e.HeldView]) -> list[w
 
 def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | None = None,
          goals: Sequence[w.Goal] = (), goal_rows: Sequence[w.GoalRow] = (),
-         order_dry: Sequence[w.RuleDry | None] = ()) -> w.View:
+         order_dry: Sequence[w.RuleDry | None] = (), levels: Sequence[w.StoreLevel] = ()) -> w.View:
     """The wire View of an engine View; the player's plan (mixes, orders, queue) is read off the save, where each
     card's needs come from (api/sources.py), the goals (api/goals.py) and their rows (api/goalrows.py) passed in."""
     return w.View(
@@ -149,7 +149,8 @@ def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | No
         offers=[w.Offer(offer=o.offer, answer=o.answer,
                         answers=[w.OfferAnswer(answer=a.answer, card=a.card, takes_s=a.takes_s) for a in o.answers])
                 for o in v.offers],
-        fights=_fights(v.fights, v.held), goals=list(goals), goal_rows=list(goal_rows))
+        fights=_fights(v.fights, v.held), goals=list(goals), goal_rows=list(goal_rows),
+        levels=list(levels))
 
 
 def _prestige(p: e.SkillPhase) -> w.SkillPrestige:

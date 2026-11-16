@@ -42,6 +42,8 @@ engine keeps exact counts of fights and losses in tally stores. Only the schedul
 decides, chance shows (which fight the chronicle calls lost is the chronicle's). A card that holds a side while it runs
 (a watch, a guard) says so on its face, where its share is set, and is listed with its share in that side's strength;
 a later chapter may add another side to the entries a card already holds (`pacing.md`, "A sink shows what it buys").
+A wounded store (one a lost fight adds to, like hurt) is a level the player sees, in whole items rounded up, never a
+cost in units; the server serves it as `View.levels`, off the ledger (`CONTRACT.txt`, "FIGHTS").
 
 Expeditions: planned in `docs/design/banked-time-plan.md`; interface in engine `DESIGN.txt`, "BANKED TIME". The first
 slice: a trip is an uncapped card with inputs, run in the mix on its supply store; finds are triggers on its completion

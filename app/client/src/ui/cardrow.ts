@@ -1,5 +1,6 @@
 // One card's row in the card panel (cards.ts): its nodes and what the panel keeps about it between views.
 import type { Card } from "../api/types";
+import { Bonus } from "./bonus";
 import { CardNeeds } from "./cardneeds";
 import { el, tapFeedback } from "./dom";
 import { FightPanel, seatFight } from "./fightpanel";
@@ -24,6 +25,8 @@ export interface Row {
   doneShown?: boolean;
   /** The odds under a fight card (fightpanel.ts), else null. */
   fight: FightPanel | null;
+  /** The upside line of a card that feeds a side's strength, which leads to it (bonus.ts), else null. */
+  bonus: Bonus | null;
   /** A rule started its running tap (ui/fires.ts), as of the last restyle. */
   byOrder?: boolean;
   /** performance.now() until which a level shows on the card (cardlevel.ts); undefined: none. */
@@ -49,12 +52,19 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
   const row: Row = {
     id: card.card, node, tap, count: el("span", "card-count"), needs: new CardNeeds(ctx, card.card), ready: whenReady.make(card.card, node),
     fill: el("span", "card-fill"), foot: el("span", "card-foot"), card, done: false, doneAt: 0,
-    fight: info?.fight ? new FightPanel(catalog, info.fight) : null,
+    fight: info?.fight ? new FightPanel(catalog, info.fight) : null, bonus: null,
   };
   const head = el("span", "card-head");
   head.append(el("span", "card-title", catalog.label(info?.label_key)), row.count);
   tap.append(head);
-  if (info?.upside_key) tap.append(el("span", "card-upside", catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp))));
+  const side = info?.kept.find((k) => k.side !== null)?.side;
+  if (info?.upside_key) {
+    const words = catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp));
+    if (side) {   // beside the tap, never inside the button: a button holds no button
+      row.bonus = new Bonus(catalog, side, "card-upside");
+      row.bonus.draw(words, null);
+    } else tap.append(el("span", "card-upside", words));
+  }
   const track = el("span", "card-track");
   track.append(row.fill);
   tap.append(row.needs.root, track, row.foot);
@@ -63,7 +73,8 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
     ctx.actions.decide({ kind: "tap_card", card: card.card });
   });
   pressable(tap, node);
-  if (row.fight) seatFight(node, tap, row.ready, row.fight);
+  if (row.fight) seatFight(node, tap, row.ready, row.fight, row.bonus);
+  else if (row.bonus) seatFight(node, tap, row.ready, null, row.bonus);
   else node.append(tap, row.ready);
   return row;
 }

@@ -38,7 +38,7 @@ export function conditionWords(catalog: Catalog, when: Condition): string | null
   if (chip) return catalog.text.fill(UI.ruleChip, { chip: catalog.label(chip.label_key) });
   const subject = readSubject(catalog, when);
   if (subject) return subjectWords(catalog, subject);
-  const rule = readRule(when, catalog.content.scales.quantity_per_item);
+  const rule = readRule(when, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
   return rule === null ? null : ruleWhen(catalog, rule);
 }
 
@@ -53,7 +53,7 @@ export function ruleRunning(catalog: Catalog, order: Order): string {
 
 /** A rule's condition as a store rule, or null for any other (a subject rule's Camp level included). */
 export function storeRule(catalog: Catalog, order: Order): StoreRule | null {
-  return readSubject(catalog, order.when) ? null : readRule(order.when, catalog.content.scales.quantity_per_item);
+  return readSubject(catalog, order.when) ? null : readRule(order.when, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
 }
 
 /** The rule already set on an order card's store and test (whatever its levels, which the player may have changed,

@@ -70,6 +70,15 @@ def test_a_crowds_care_fades_and_a_new_face_is_a_change():
     assert slots_of(new, c) == ["mention"]
 
 
+def test_a_crowds_key_held_on_a_later_day_is_no_change():
+    """Statement 10: a key held by any earlier line of the crowd is no change, not only a key of its first day."""
+    c = crowd("c", bands=((1, 2),))
+    habits = replace(PLAIN, crowd=Fade(1.0, 0.0))
+    rows = (row(0, note(c, "first")), row(1))
+    lines = [shows(c, 0, "who.a"), shows(c, 1, "who.b"), shows(c, 2, "who.b")]
+    assert compose_next(5, rows, lines, [c], habits).notes == ()
+
+
 @given(save_id=saves, days_in_a_row=st.integers(1, 4))
 def test_a_worry_grows_with_each_day_in_a_row(save_id: int, days_in_a_row: int):
     """Statement 10: a worry's care is `min(1, base * (1 + press * (r - 1)))`, `r` the consecutive days ending today on
@@ -93,6 +102,17 @@ def test_a_worry_long_enough_in_a_row_always_passes(save_id: int):
     rows = (row(0, note(w, "first")), row(1), row(2))
     day = compose_next(save_id, rows, [shows(w, d) for d in range(4)], [w], habits)
     assert slots_of(day, w) == ["repeat"]
+
+
+@given(save_id=saves)
+def test_a_worrys_capped_care_still_meets_diligence(save_id: int):
+    """Statement 10: past the cap care is 1, so a worry then passes exactly when its roll is under diligence (here
+    0.75: one written day, a halflife of one, a floor of 0.5), not every time."""
+    w = worry("w", repeat=2)
+    habits = replace(PLAIN, worry=Press(0.5, 1.0), floor=0.5)
+    rows = (row(0, note(w, "first")), row(1), row(2))
+    day = compose_next(save_id, rows, [shows(w, d) for d in range(4)], [w], habits)
+    assert slots_of(day, w) == (["repeat"] if ref_roll(save_id, 3, "w", "write") < 0.75 else [])
 
 
 @given(save_id=saves)

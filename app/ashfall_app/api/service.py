@@ -19,6 +19,7 @@ from ..saves.journal import ComposedDay
 from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
 from .goalrows import goal_rows
+from .levels import levels
 from .ruledry import order_dry
 from .goals import goals
 from .line_causes import line_infos, offer_cause, worded_stores
@@ -59,7 +60,7 @@ class Game:
         v = e.view(save, rules)
         open_goals = goals(save, rules, v, self._goals)
         return convert.view(save, v, sources(save, rules, v, self._sources), open_goals,
-                            goal_rows(save, rules, v, open_goals), order_dry(save, rules, v))
+                            goal_rows(save, rules, v, open_goals), order_dry(save, rules, v), levels(save, rules))
 
     def forecast(self, played: Played, stop: Callable[[], bool]) -> w.ForecastAnswer:
         """The save's forecast from now (it replays hours of the save, so it has its own call: CONTRACT.txt,

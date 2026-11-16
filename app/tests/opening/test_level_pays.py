@@ -1,6 +1,5 @@
-"""No skill row has a blank level before its last marker (a mixed skill's row runs to the curve's top), every marker pays when its level lands (docs/decisions.md:
-something to build toward, and a promise shown is kept); and the loop between a level's pay and the next level stays
-tame (tests/dayone/growth.py). Static: read off the merged content and its rules, no play."""
+"""Every marker pays when its level lands (docs/decisions.md: a promise shown is kept; a level with no marker is the
+readout's, blank_levels.py); and the loop between a level's pay and the next level stays tame (tests/dayone/growth.py). Static: read off the merged content and its rules, no play."""
 from dataclasses import replace
 from functools import cache
 
@@ -11,6 +10,7 @@ from ashfall_app.engine import (
 from ashfall_app.engine.orders import AtLeast, SkillLevel
 from ashfall_app.opening.schema import Opening, load_opening, to_rules
 from tests.dayone.growth import climb_hours, fastest_rates, level_times, runaway
+from tests.opening.blank_levels import top_level
 
 
 @cache
@@ -29,40 +29,14 @@ def paid_levels(rules: Rules) -> dict[str, set[int]]:
     return out
 
 
-def top_level(rules: Rules) -> int:
-    return len(rules.curve.thresholds) + 1
-
-
 def unpaid_markers(o: Opening, rules: Rules) -> list[str]:
     paid = paid_levels(rules)
     return [f"{s.id} {lv.level} ({lv.pays_key})" for s in o.skills for lv in s.levels
             if lv.level not in paid.get(s.id, set())]
 
 
-def mixed_skills(rules: Rules) -> set[str]:
-    """The skills a hands card trains: the mix drives them."""
-    return {str(c.skill) for c in rules.cards if c.skill is not None and str(c.lane) == "hands"}
-
-
-def unmarked_levels(o: Opening, rules: Rules) -> list[str]:
-    """A row reads "no more yet" past its last marker, never a blank level before it; a mixed skill's row runs to the
-    curve's top."""
-    mixed = mixed_skills(rules)
-    missing: list[str] = []
-    for s in o.skills:
-        marked = {lv.level for lv in s.levels}
-        last = top_level(rules) if s.id in mixed else max(marked, default=1)
-        missing += [f"{s.id} {n}" for n in range(2, last + 1) if n not in marked]
-    return missing
-
-
 def test_every_marker_pays_when_its_level_lands():
     assert unpaid_markers(*merged()) == []
-
-
-def test_no_row_has_a_gap_and_every_mixed_skill_is_marked_to_the_top():
-    o, rules = merged()
-    assert mixed_skills(rules) and unmarked_levels(o, rules) == []
 
 
 def test_a_level_never_comes_sooner_than_the_one_before():

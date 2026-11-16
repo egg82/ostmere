@@ -126,7 +126,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/test_doc_citations.py` | backticked paths in this file and `systems.md`, and symbols in `systems.md`, must resolve; `<!--planned-->` after a reference skips it while its target is missing and fails once it exists; `<!--external-->` is never checked | none |
 | `app/tests/test_decision_citations.py` | a decision title quoted after `decisions.md` (or bare, closing a parenthesis) is an index entry or starts exactly one heading or bold lead in `docs/decisions/`; the index and those files' `##` headings agree | none |
 | `app/tests/test_scene_stores.py` | a scene layer's `store:` condition names only a store the opening unlocks (the page reads it from the ledger, which lists only unlocked stores) | none (its held list is in the test and only shrinks) |
-| `app/tools/mutate_suite.py` `--plants` and `--check` (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
+| `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
 The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.
 `app/tests/test_household_names.py` fails when any tracked file names the household that runs the game (its people,

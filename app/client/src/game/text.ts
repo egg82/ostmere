@@ -209,7 +209,8 @@ export const UI = {
   fightOddsUnknown: "ui.fight.odds_unknown", // a fight not yet fought: its odds are not known
   fightThreatUnknown: "ui.fight.threat_unknown", // the threat's strength in the vs words, before the first fight
   fightVs: "ui.fight.vs", // "{side_name}{power}{threat_name}{threat}": the two strengths, each a tap to its entries, each named
-  fightOnLoss: "ui.fight.on_loss", // "{costs}": what one lost fight costs, or adds, as a list
+  fightOnLoss: "ui.fight.on_loss", // "{costs}": what one lost fight costs, as a list
+  fightOnWound: "ui.fight.on_wound", // "{store}{n}": what one lost fight adds to a level, in the level's own measure
   fightBase: "ui.fight.base", // a strength's base row
   fightTally: "ui.fight.tally", // "{fought}{lost}": a standing fight's counts
   fightSince: "ui.fight.since", // "{fought}{won}{lost}{runner}": a window past three fights, in the arrival queue

@@ -43,13 +43,15 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | O9 | `opening/test_level_pays.py`: `test_every_marker_pays_when_its_level_lands` | a level's marker pays when the level lands | shown | fails |
 | O10 | same: `test_a_level_never_comes_sooner_than_the_one_before` (`dayone/growth.py`, `runaway`) | no level's pay outruns its curve step | spiral | fails |
 | O11 | `dayone/growth.py`, `climb_hours` | each skill's climb against the fastest; the 3x band is gone | taste | readout |
-| O12 | `opening/test_second_skill.py`: `test_the_skill_checks_cover_the_new_row_and_pass` | markers paid, no blank level, no runaway | shown + spiral | fails |
+| O12 | `opening/test_second_skill.py`: `test_the_skill_checks_cover_the_new_row_and_pass` | markers paid, no runaway (a blank level is O14's) | shown + spiral | fails |
 | O13 | `opening/test_phase_pays.py`: work pays are adds | later phases' work pays never multiply | spiral | fails |
-| O14 | same: `test_every_level_of_every_phase_a_track_reaches_pays` | every level a track reaches pays | taste | fails until #112 makes it a readout |
-| O15 | same: no three speed-only levels running, and the loader's refusal | at least every third level brings something named | taste | fails until #109 makes it a readout |
+| O14 | `opening/blank_levels.py`, `blank_lines` | levels paying nothing per skill: unmarked in its row, unwaited-for in the later phases its track reaches | taste | readout |
+| O15 | `opening/report.py`, `samey_lines` | each later phase's longest stretch of levels paying only speed | taste | readout |
 | O16 | `opening/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct: story order | fails |
 | O17 | `opening/test_first_rule_offer.py` | every route meets a rule offer before the end | babysit (the tool is taught) | fails |
 | O18 | the by_hand player past the end | actions between the offer and the door's glow | taste | readout |
+| O19 | `opening/speed_reach.py`, `node_size_lines` | each skill's track nodes by size in basis points per rank | taste | readout |
+| O20 | same, `reach_lines` | the cards of another skill a later phase's speed pay also speeds; the loader refuses only a card that does not exist | taste | readout |
 
 ### Day one (job `playthrough`; `dayone/verdicts.py`; readouts `dayone/report.py`)
 
@@ -73,7 +75,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D19 | `dayone/test_dayone_invariants.py` | a card showing every need met starts when tapped | shown | fails |
 | D20 | `dayone/test_dayone_aims.py`: `test_every_aim_is_stated_at_some_view` (`dayone/screen.py`) | every declared aim is stated; views with no aim are the readout's | shown (a stretch with no stated aim hides the next step) + taste | fails; the count is a readout |
 | D21 | `dayone/screen.py`, `early` | mechanics drawn in the first five minutes | taste | readout |
-| D22 | `dayone/test_dayone_level_pays.py`: `test_no_skill_pays_speed_alone_three_levels_running` | O15's rule on the levels day one reaches | taste | fails until #109 makes it a readout |
+| D22 | `dayone/report.py`, `runs_line` | O15's stretches on the levels day one reaches, past two running, per route | taste | readout |
 | D23 | `dayone/levelpays.py`, `speed_only_leaves` | leave points naming only a speed level | taste | readout |
 | D24 | `dayone/test_dayone_prestige.py` | a visit clicker ends level with an instant one inside the carry window | babysit | fails |
 | D25 | `dayone/test_dayone_absence.py`: `test_a_longer_absence_never_holds_fewer_arrivals` | a property of the page's arrival queue | shown (what a return holds) | fails |
@@ -81,7 +83,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D27 | `dayone/test_dayone_rebase.py`: `test_the_rebased_story_lands_in_order` | a golden ended save's story lands in order; what its load opens is the readout's | correct: a saved end and story order + taste | fails; the counts are a readout |
 | D28-D29 | the rebase's lines; `dayone/test_dayone_lines.py` | lines are text keys; none repeats | correct: contract (text keys the client draws) | fails |
 | D30 | `dayone/capcheck.py` | from a chapter's end, 8 h and 24 h away lose at most `LIMIT` of each gathered store's making | babysit | fails (H4's and two of W7's strict xfails: held below) |
-| D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | the check on players who skip the tools | fails |
+| D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | babysit: skipping the taught tools must cost something, or the tools are not worth teaching | fails |
 | D32 | the human-paced player's day (`dayone/human_flags.py`) | sessions, dead gaps, bored leaves, earned and fixed-time unlocks | taste | readout |
 
 ### Day two (job `playthrough-day-two`; `daytwo/verdicts.py`; readouts `daytwo/report.py`)

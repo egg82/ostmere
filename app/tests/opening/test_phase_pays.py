@@ -1,4 +1,4 @@
-"""Later phases' level pays (opening/phase_pays.py): every level of every phase a skill's track reaches pays, its work
+"""Later phases' level pays (opening/phase_pays.py): no pay lies past the last phase a skill's track reaches, its work
 pays are adds, and the loader refuses a later phase's work pay written as a multiplier (docs/design/prestige-phases.md,
 "The loop", spiral 2). Static: read off the shipped content, with planted changes."""
 from typing import Literal
@@ -14,7 +14,10 @@ from ashfall_app.opening.phase_pays import (
     RETIRED_AT, check_phase_pays, expanded, expanded_id, find_id, find_items, find_line, staying_stores,
 )
 from ashfall_app.opening.prestige import NodeEntry
-from ashfall_app.opening.schema import Opening
+from ashfall_app.opening.schema import Opening, to_rules
+from tests.opening.blank_levels import blank_lines, level_pays, phase_blanks
+from tests.opening.report import samey_lines
+from tests.opening.speed_reach import reach_lines
 
 PREFIXES = ("t_pp_", "t_pf_")
 
@@ -36,20 +39,26 @@ def with_table(o: Opening, skill: str, **update: object) -> Opening:
                                                for pp in o.phase_pays]})
 
 
-def level_pays(o: Opening, skill: str) -> set[int]:
-    """The counted levels a skill's triggers wait for, not counting a retired find's, which waits out of reach."""
-    return {t.when.value for t in o.triggers
-            if t.when.subject_kind == "skill_level" and t.when.id == skill and t.when.value != RETIRED_AT}
-
-
-def test_every_level_of_every_phase_a_track_reaches_pays(shipped_opening: Opening):
+def test_the_levels_a_track_reaches_that_pay_nothing_are_reported_never_refused(shipped_opening: Opening):
+    """Which levels pay is the opening readout's figure (blank_levels.py), taste and not a check."""
     o = shipped_opening
     assert o.prestige is not None and o.phase_pays
+    skill = o.phase_pays[0].skill
+    last = o.prestige.top_level + 1
+    assert last in level_pays(o, skill)
+    bare = o.model_copy(update={"triggers": [t for t in o.triggers if not (t.when.id == skill and t.when.value == last)]})
+    check_phase_pays(bare)
+    assert phase_blanks(bare)[skill] == [last]
+    line = next(ln for ln in blank_lines(bare, to_rules(bare)) if ln.split()[0] == skill)
+    assert f"later phases [{last}]" in line
+
+
+def test_no_track_reaches_a_pay_past_its_last_phase(shipped_opening: Opening):
+    o = shipped_opening
+    assert o.prestige is not None
     top = o.prestige.top_level
     for pp in o.phase_pays:
-        ranks = sum(n.ranks for n in o.nodes if n.skill == pp.skill)
-        last = ranks * (top - 1) + top   # the last phase's top, counted
-        assert ranks >= 1 and set(range(top + 1, last + 1)) <= level_pays(o, pp.skill), pp.skill
+        last = sum(n.ranks for n in o.nodes if n.skill == pp.skill) * (top - 1) + top
         assert last + 1 not in level_pays(o, pp.skill), f"{pp.skill}: a pay past the last phase the track reaches"
 
 
@@ -62,7 +71,7 @@ def test_every_later_phase_work_pay_past_the_curve_is_an_add(shipped_opening: Op
     assert mods and all(m.target == "work" and m.kind == "add_bp" for m in mods)
 
 
-def test_a_new_phase_finds_at_its_first_level_and_never_three_speed_only_in_a_row(shipped_opening: Opening):
+def test_a_new_phase_finds_at_its_first_level(shipped_opening: Opening):
     o = shipped_opening
     assert o.prestige is not None
     by_id = {t.id: t for t in o.triggers}
@@ -70,13 +79,7 @@ def test_a_new_phase_finds_at_its_first_level_and_never_three_speed_only_in_a_ro
         ranks = sum(n.ranks for n in o.nodes if n.skill == pp.skill)
         assert all(by_id[find_id(pp.skill, p, 2)].outcome.line_keys for p in range(3, ranks + 2)), pp.skill
         live = [t for t in o.triggers if t.when.id == pp.skill and t.id.startswith(PREFIXES) and t.when.value != RETIRED_AT]
-        named = {t.when.value for t in live if t.outcome.line_keys}
-        expanded_levels = sorted(t.when.value for t in live)
-        run = longest = 0
-        for c in expanded_levels:
-            run = 0 if c in named else run + 1
-            longest = max(longest, run)
-        assert named and longest <= 2, pp.skill
+        assert any(t.outcome.line_keys for t in live), pp.skill
 
 
 def test_the_rows_name_each_expanded_level(shipped_opening: Opening):
@@ -135,22 +138,34 @@ def test_a_hand_written_later_phase_trigger_that_multiplies_work_is_refused(ship
     check_phase_pays(planted(curve_last(o), "mul_bp"))   # the curve's own levels keep their authored pays
 
 
-def test_a_table_speeding_another_skills_work_is_refused(shipped_opening: Opening):
+def test_a_table_speeding_another_skills_work_loads_and_is_reported(shipped_opening: Opening):
+    """Whose card a pay speeds is the opening readout's figure (speed_reach.py), not a check; a card that is not one is refused."""
     pp = next(p for p in shipped_opening.phase_pays if p.skill == "woodcutting")
-    other = [s.model_copy(update={"id": "scavenge"}) for s in pp.speed]
-    with pytest.raises(ValueError, match="work scavenge is not a card woodcutting trains"):
-        check_phase_pays(with_table(shipped_opening, "woodcutting", speed=other))
+    other = next(c for c in shipped_opening.cards if c.skill not in (None, "woodcutting"))
+    planted = with_table(shipped_opening, "woodcutting", speed=[s.model_copy(update={"id": other.id}) for s in pp.speed])
+    check_phase_pays(planted)
+    line = next(ln for ln in reach_lines(planted) if ln.split()[0] == "woodcutting")
+    assert f"also speeds {other.id} ({other.skill})" in line
+    assert "only its own" in next(ln for ln in reach_lines(shipped_opening) if ln.split()[0] == "woodcutting")
+    nothing = [s.model_copy(update={"id": "no_such_card"}) for s in pp.speed]
+    with pytest.raises(ValueError, match="work no_such_card is not a card"):
+        check_phase_pays(with_table(shipped_opening, "woodcutting", speed=nothing))
 
 
-def test_finds_leaving_three_speed_only_levels_in_a_row_are_refused(shipped_opening: Opening):
+def test_finds_leaving_speed_only_stretches_are_reported_never_refused(shipped_opening: Opening):
+    """How samey a phase reads is the opening readout's figure (report.samey_lines), not a check."""
     pp = next(p for p in shipped_opening.phase_pays if p.skill == "woodcutting")
+
     def levels(*at: int) -> Opening:
         return with_table(shipped_opening, "woodcutting", find=pp.find.model_copy(update={"levels": list(at)}))
-    with pytest.raises(ValueError, match="more than 2 levels in a row paying only speed"):
-        check_phase_pays(levels(2, 6, 9, 12, 15, 18, 21))
-    with pytest.raises(ValueError, match="more than 2 levels in a row paying only speed"):   # 20, 21, 22, then 2, 3
-        check_phase_pays(levels(4, 7, 10, 13, 16, 19))
-    check_phase_pays(levels(4, 7, 10, 13, 16, 19, 22))
+
+    def woodcutting(o: Opening) -> str:
+        return next(ln for ln in samey_lines(o) if ln.split()[0] == "woodcutting")
+
+    for at, longest in (((2, 6, 9, 12, 15, 18, 21), 3), ((4, 7, 10, 13, 16, 19), 5), ((4, 7, 10, 13, 16, 19, 22), 2)):
+        o = levels(*at)
+        check_phase_pays(o)
+        assert f" {longest} levels in a row" in woodcutting(o), at
 
 
 def test_the_load_runs_the_check(shipped_opening: Opening):
