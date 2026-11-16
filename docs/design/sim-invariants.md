@@ -80,7 +80,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D26 | the absence ladder (`dayone/absence.py`) | what a return holds after 1, 8 and 24 h, and each gathered store's cap loss from day one's leave points as D30 reads it (day one's leave points come before the cap rule is taught, so they are read, never checked) | taste | readout |
 | D27 | `dayone/test_dayone_rebase.py`: `test_the_rebased_story_lands_in_order` | a golden ended save's story lands in order; what its load opens is the readout's | correct: a saved end and story order + taste | fails; the counts are a readout |
 | D28-D29 | the rebase's lines; `dayone/test_dayone_lines.py` | lines are text keys; none repeats | correct: contract (text keys the client draws) | fails |
-| D30 | `dayone/capcheck.py` | from a chapter's end, 8 h and 24 h away lose at most `LIMIT` of each gathered store's making | babysit | fails (H4's and two of W7's strict xfails: held below) |
+| D30 | `dayone/capcheck.py` | from a chapter's end, 8 h and 24 h away lose at most `LIMIT` of each gathered store's making, a store something wants (`dayone/wanted.py`: a card or standing action takes it, or a requires or `when` reads it); the loss on a store nothing wants is a readout | babysit | fails (H4's and two of W7's strict xfails: held below) |
 | D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | the check on players who skip the tools | fails |
 | D32 | the human-paced player's day (`dayone/human_flags.py`) | sessions, dead gaps, bored leaves, earned and fixed-time unlocks | taste | readout |
 

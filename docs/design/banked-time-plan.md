@@ -57,7 +57,8 @@ three's content; items 6–9 can follow it.
    to its rate times the span, a store below its cap reports 0, and the module asserts it sampled a non-empty set
    of stores; day two's typical reproduces the table above within a point.
 2. **The cap-loss check** (**S**, tests). A verdict `cap_loss` on the typical route: from each chapter's last
-   decision, 8 h and 24 h absences lose at most half of each gathered store's making. Gathered: a store some card
+   decision, 8 h and 24 h absences lose at most half of each gathered store's making, for stores something wants (`tests/dayone/wanted.py`; the
+   rest are reported). Gathered: a store some card
    on a lane makes; not a tally store, and not the camp store (its levels pace the story by design). A chapter's end
    is read as a player has it, with the chapters after it merged: day two's from the visit B4 is seen in, where day
    three's track is offered (`tests/daytwo/caps.py`, `shipped_end`); on day two's rules alone every gathered store
