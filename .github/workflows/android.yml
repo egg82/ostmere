@@ -1,4 +1,5 @@
-# The Android app (docs/design/android-app.md): a debug APK of the Trusted Web Activity, built when android/ changes. It
+# The Android app (docs/design/android-app.md): a debug APK of the Trusted Web Activity, built when android/ changes, and
+# a signed release APK on every such pull request and on an `android-v*` tag, which also publishes the GitHub release. It
 # is not part of `ci-ok`: that check gates the web app, and a path-filtered workflow that does not run would leave a
 # required check pending. CI's `changes` job counts android/ as not code, so such a pull request skips the web suite.
 
@@ -15,6 +16,8 @@ on:
     paths:
       - android/**
       - .github/workflows/android.yml
+    tags:
+      - android-v*
   workflow_dispatch:
 
 permissions:
@@ -26,6 +29,7 @@ concurrency:
 
 jobs:
   debug-apk:
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -56,3 +60,76 @@ jobs:
           name: ostmere-debug-apk
           path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+  # Gradle builds the release APK unsigned, so no secret reaches Gradle. build-tools 34 signs it: F-Droid's reproducible
+  # builds page says apksigner from 35.0.0-rc1 on fails verification. The job fails unless the signer is the release key.
+  release-apk:
+    # A fork's pull request has no secrets.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      BT: build-tools/34.0.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install the pinned SDK packages
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "build-tools;34.0.0"
+      - name: Version from the tag
+        id: version
+        run: |
+          name=0.1.0
+          code=1
+          if [[ "$GITHUB_REF" == refs/tags/android-v* ]]; then
+            name=${GITHUB_REF_NAME#android-v}
+            [[ "$name" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]] || { echo "tag $GITHUB_REF_NAME is not android-vMAJOR.MINOR.PATCH"; exit 1; }
+            code=$(( BASH_REMATCH[1] * 10000 + BASH_REMATCH[2] * 100 + BASH_REMATCH[3] ))
+          fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "versionName=$name versionCode=$code"
+      - name: Build the unsigned release APK
+        working-directory: android
+        run: ./gradlew --no-daemon assembleRelease -PostmereVersionName=${{ steps.version.outputs.name }} -PostmereVersionCode=${{ steps.version.outputs.code }}
+      - name: Align and sign
+        env:
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          printf '%s' "$ANDROID_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.p12"
+          mkdir -p dist
+          "$ANDROID_HOME/$BT/zipalign" -f 4 android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/aligned.apk"
+          "$ANDROID_HOME/$BT/apksigner" sign --ks "$RUNNER_TEMP/release.p12" --ks-key-alias "$ANDROID_KEY_ALIAS" \
+            --ks-pass env:ANDROID_KEYSTORE_PASSWORD --key-pass env:ANDROID_KEY_PASSWORD \
+            --out "dist/ostmere-${{ steps.version.outputs.name }}.apk" "$RUNNER_TEMP/aligned.apk"
+      - name: Delete the keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release.p12"
+      - name: Verify the signer is the release key
+        run: |
+          apk=$(ls dist/*.apk)
+          certs=$("$ANDROID_HOME/$BT/apksigner" verify --print-certs "$apk")
+          echo "$certs"
+          want=$(tr -d ':\n' < android/release-key.sha256 | tr 'A-F' 'a-f')
+          got=$(echo "$certs" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')
+          [ -n "$want" ] && [ "$got" = "$want" ] || { echo "signer fingerprint $got does not match android/release-key.sha256"; exit 1; }
+          echo "signer matches the release key"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ostmere-release-apk
+          path: dist/*.apk
+          if-no-files-found: error
+      - name: Publish the GitHub release
+        if: ${{ startsWith(github.ref, 'refs/tags/android-v') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/*.apk --title "Android ${GITHUB_REF_NAME#android-v}" --generate-notes

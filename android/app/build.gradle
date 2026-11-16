@@ -11,8 +11,9 @@ android {
         applicationId = 'pub.yggdrasil.ostmere'
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = '0.1.0'
+        // A release build passes both from the tag (.github/workflows/android.yml); other builds keep these.
+        versionCode = (findProperty('ostmereVersionCode') ?: '1') as int
+        versionName = findProperty('ostmereVersionName') ?: '0.1.0'
     }
 }
 
