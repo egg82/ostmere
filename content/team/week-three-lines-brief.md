@@ -60,7 +60,7 @@ than planned?" row is the one to read first.
     hands, never in danger in these lines (j_ridge's walk included);
   - the board (T13): plain; the name is said, not quoted; never "tally" as a Chequer word; no line compares the two
     marks;
-  - no line judges either answer to O-road, O-choir or O-pair, or any job's yes or no;
+  - no line judges either answer to O-road, O-choir or O-cutter, or any job's yes or no;
   - no proper noun but Lucy and the name slots.
 
 ## Voice exemplars (shipped)

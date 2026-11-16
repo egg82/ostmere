@@ -92,7 +92,7 @@ accepted cost of a calendar end).
 | A35 → B15 | Arcana L (13), T5, save time ≥ 349 h (1 256 400 s) | Arcana 10-11 at 336 | 386 (T5 binds) | 414-426 |
 | T7, O-choir | `meals` ≥ 24 and B15 + 2 h | | 388 | 416-428 |
 | T8 | the choir joined + 3 h | | 391 | 419-431 |
-| T9, O-pair | `meals` ≥ 40 and the choir joined + 6 h | | 394 | 422-434 |
+| T9, O-cutter | `meals` ≥ 40 and the choir joined + 6 h | | 394 | 422-434 |
 | the starer | `meals` ≥ 56, the pair joined, save time ≥ 369 h | | 394-400 | 428-438 |
 | B16 | arrivals 15, `belonging`, `starer_clock` ≥ 8 | 8 h | 402-408 | 436-446 |
 | T10 | `cut_road` stage 7 | | 395-405 | 448-458 |
@@ -185,7 +185,7 @@ The same targets as weeks one and two, held on typical from B13's visit to T13's
 | 18a | SL27 | `warm_beds` | the working against the covers |
 | 18b | T7, O-choir | | the answer; their shares |
 | 18c | T8 | barley stew; `hunt_deer` | the hunts against the road |
-| 18d | T9, O-pair | a road stage | the answer; the road's split |
+| 18d | T9, O-cutter | a road stage | the answer; the road's split |
 | 18e | the starer, a job | | the job |
 | 18f | B16 | | (the snares: nothing to spend on them) a job |
 | 19a | T10 | a road stage | stages against reaping |
@@ -200,7 +200,7 @@ The same targets as weeks one and two, held on typical from B13's visit to T13's
 
 At most two unlocks. Night 14 → 15a: B13 (its cards and the rules' removal, one moment) and SL22. 15a → 15b: T1 and
 the chip (one moment with the covers' order card: the chip is T1's frost). 18a → 18b: T7 with O-choir (one moment).
-18c → 18d: T9 with O-pair. 18e → 18f: B16 alone (the starer's arrival is the visit before). 19c → 19d: B17 (the leave,
+18c → 18d: T9 with O-cutter. 18e → 18f: B16 alone (the starer's arrival is the visit before). 19c → 19d: B17 (the leave,
 `r2_open` and the map, one moment). The jobs share absences with at most one unlock (each shows on the countdown after
 the last job's finish).
 
