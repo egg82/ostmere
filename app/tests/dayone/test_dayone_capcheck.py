@@ -6,8 +6,8 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import (
-    BP, Amount, AtLeast, CardDef, CardId, CardShare, Flow, Mix, MixId, PacingCurve, Rules, Save, SaveMix,
-    SkillDef, SkillId, StoreDef, StoreId, StoreValue, SwitchMix, decide, new_save,
+    BP, Amount, AtLeast, CardDef, CardId, CardShare, FightDef, Flow, Mix, MixId, PacingCurve, Rules, Save, SaveMix,
+    SideId, SkillDef, SkillId, StoreDef, StoreId, StoreValue, SwitchMix, ThreatId, decide, new_save,
 )
 from tests.dayone import capcheck
 from tests.dayone.wanted import wanted
@@ -60,6 +60,12 @@ def test_a_store_a_condition_reads_is_wanted():
     reader = CardDef(CardId("reader"), 60, requires=(AtLeast(StoreValue(WOOD), 1, 1),))
     assert wanted(rules) == set()
     assert wanted(replace(rules, cards=(*rules.cards, reader))) == {"wood"}
+
+
+def test_a_store_only_a_lost_fight_takes_is_not_wanted():
+    rules, _ = world(mixed=False, takes=False)
+    raid = CardDef(CardId("raid"), 60, fight=FightDef(SideId("s"), ThreatId("t"), FOUND, loses=(Amount(WOOD, 1),)))
+    assert wanted(replace(rules, cards=(*rules.cards, raid))) == set()
 
 
 def test_a_store_apart_is_not_gathered():
