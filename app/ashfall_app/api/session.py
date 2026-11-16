@@ -8,7 +8,7 @@ from starlette.concurrency import run_in_threadpool
 
 from .. import services
 from ..accounts import cookies, labels
-from ..accounts.interface import AccountsUnavailable, Seen
+from ..accounts.interface import AccountsUnavailable, About, Seen
 from ..accounts.sessions import LIFETIME
 from .errors import no_account, unavailable
 
@@ -30,6 +30,16 @@ def who(request: Request) -> int | None:
     setattr(request.state, _TOKEN, token)
     setattr(request.state, _SEEN, found)
     return found.account_id
+
+
+def who_about(request: Request) -> tuple[int, About] | None:
+    """`who` with its account's `about`, read together; no cookie header is set, a GET renews nothing."""
+    token = cookies.read(request, cookies.SESSION)
+    try:
+        found = services.of(request).accounts.who_about(token)
+    except AccountsUnavailable as ex:
+        raise unavailable(str(ex)) from ex
+    return None if found is None else (found[0].account_id, found[1])
 
 
 def account(request: Request) -> int:

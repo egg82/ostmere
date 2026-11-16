@@ -33,6 +33,14 @@ def current(conn: Connection, token: str | None, now: datetime) -> SessionRecord
     return rows.session_by_hash(conn, token_hash(token), now - LIFETIME)
 
 
+def current_with_account(conn: Connection, token: str | None,
+                         now: datetime) -> tuple[SessionRecord, rows.AccountRecord] | None:
+    """`current` and the session's account, read in one statement."""
+    if not token:
+        return None
+    return rows.session_and_account(conn, token_hash(token), now - LIFETIME)
+
+
 def due(last_seen_at: datetime, now: datetime) -> bool:
     """A session last used at `last_seen_at` is marked used again."""
     return now - last_seen_at >= RENEW

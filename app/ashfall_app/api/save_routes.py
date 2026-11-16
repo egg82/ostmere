@@ -104,12 +104,11 @@ def add_save_routes(router: APIRouter, game: Game) -> None:
     @router.get("/me", response_model=Me, operation_id="get_me")
     def get_me(request: Request) -> Me:
         """This browser's account and its saves, the most recently played first. Never makes an account."""
-        found = session.who(request)
-        s = services.of(request)
-        about = None if found is None else s.accounts.about(found)
-        if found is None or about is None:
+        found = session.who_about(request)
+        if found is None:
             return Me(account=None, saves=[], max_saves=MAX_SAVES, kept_days=KEPT_DAYS)
-        return Me(account=account(about), saves=[save_info(i) for i in s.saves.list(found)],
+        account_id, about = found
+        return Me(account=account(about), saves=[save_info(i) for i in services.of(request).saves.list(account_id)],
                   max_saves=MAX_SAVES, kept_days=KEPT_DAYS)
 
     @router.post("/saves", response_model=NewSave, operation_id="new_save", responses=_NEW_ERRORS)

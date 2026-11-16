@@ -120,7 +120,7 @@ class PgSaves:
             history = tuple(PastLine(n=ln.n, at=ln.at, key=key)
                             for ln in rows.last_lines(conn, save_id, HISTORY)
                             if (key := renamed.get(ln.key, ln.key)) not in retired)
-            days = journal_write.written(conn, save_id, self._rs)
+            days = journal_write.written(conn, save_id, seen, self._rs)
             played, now_row = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now)
         logs.info(_log, "save.opened", account=account_id, save=save_id, game_at=played.save.time,
                   away_s=int((now - row.updated_at).total_seconds()), lines=len(played.lines),
