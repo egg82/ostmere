@@ -15,6 +15,7 @@ import grades
 import kit
 from drift import source_digest
 from place import H, W, canvas
+from storeset import write_list
 from stages import CONDITIONS, KINDS, STAGES, State, holds
 from tints import BAKES, WOOD
 
@@ -90,6 +91,7 @@ def write_manifest(entries: list[Entry]) -> None:
                 "(figures standing before the fire) are drawn on a second canvas over those, graded like the rest.",
     }
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1) + "\n")
+    write_list(entries, grades.GRADES)
 
 
 def composite(entries: list[Entry], state: State) -> Image.Image:
