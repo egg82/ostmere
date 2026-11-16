@@ -52,8 +52,8 @@ and three false starts, each crossed out, and never gets a fourth.
 
 ## Question 5: what did the previous me want? (answered at B49)
 
-The circles-round-a-circle diagram shows three times only: P6 (pressed through from the torn pages), B24 (the
-waystation map) and B49.
+The circles-round-a-circle diagram shows three times only: day one's read by the fire (pressed through from the torn
+pages), B24 (the waystation map) and B49.
 
 | Clue | Where |
 |---|---|

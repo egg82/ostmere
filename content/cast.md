@@ -5,6 +5,9 @@ Two kinds of notable:
 - **Risen** (an authored role, cast per save from whoever is in town when its gate opens: the light-tier person with
   the best-fitting traits and history). Their soul is the save's; their arc beats are authored. N2, N5, N7, N8, N10.
 
+Shipped text keys people by arrival in lowercase ({n1} to {n7}). Those keys are not notable numbers: n1 is N1, n3
+rises as N2 at B14, and the rest are light tier.
+
 All notables **never die** and **never betray you** (betrayal stays on the light tier). They may be in danger and
 scrape through. Each rises from the light tier through something that happens, never by title.
 

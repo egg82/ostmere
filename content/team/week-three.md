@@ -391,7 +391,7 @@ player through it, and is gone before dawn.
 | 18a | 0-9 h | the working; the first beds warmed | | side SL27 |
 | 18b | 3-9 h | three at the door, singing | will the table keep them? | T7 (opens); O-choir |
 | 18c | 3-9 h | the pot empty before Mary | | T8 (advances) |
-| 18d | 3-9 h | the man and his sister on the old road | | T9 (advances); O-pair |
+| 18d | 3-9 h | the man and his sister on the old road | | T9 (advances); O-cutter |
 | 18e | 3-9 h | a stranger at supper | | |
 | 18f | 0-9 h | the empty place, the unwashed bowl, the snares | (who was he?) | B16 (pays) |
 
@@ -402,7 +402,7 @@ player through it, and is gone before dawn.
 | 18a (3-5 min) | reads SL27; warms the beds by hand or sets the working's rule against the covers' | SL27 at `warm_beds`' first finish | the rime going off a bed like breath off glass | l_first_working (SL27) |
 | 18b (3-5 min) | reads T7; answers **O-choir** (to the beds / to the road), or its kind's rule has; splits their shares | T7 and O-choir at `meals` ≥ 24 and B15 + 2 h | three women in the doorway, the hall's light behind them | l_choir_1, l_choir_2 (T7) |
 | 18c (3-5 min) | reads T8; the deer hunt's share, the beds' barley stew, the wolf hunt against the road | T8 at the choir joined + 3 h (the table's cost raised at the join) | the pot tipped toward the light, empty | l_pot_out (T8) |
-| 18d (3-5 min) | reads T9; answers **O-pair** (her first task); the road's next stages, now with him on clearing | T9 and O-pair at `meals` ≥ 40 and the choir joined + 6 h | a man and a woman on the old road, an axe on his shoulder | l_pair_1, l_pair_2 (T9) |
+| 18d (3-5 min) | reads T9; answers **O-cutter** (her first task); the road's next stages, now with him on clearing | T9 and O-cutter at `meals` ≥ 40 and the choir joined + 6 h | a man and a woman on the old road, an axe on his shoulder | l_pair_1, l_pair_2 (T9) |
 | 18e (3-5 min) | the starer's arrival line; jobs; levels | `t_starer` at `meals` ≥ 56, the pair joined, save time ≥ 369 h: arrivals 15 | a newcomer at the table's end | l_starer_in |
 | 18f (3-5 min) | reads B16; the snares' line; the empty place | B16 at arrivals 15, `belonging`, `starer_clock` ≥ 8 | an empty place at the table, a bowl not washed; the near snares re-tied | l_b16_1 to l_b16_3 |
 
@@ -417,7 +417,7 @@ expansion), People. No engine work. Arrivals read 15 after the starer: 9 at 336 
 | Offer | Shown | Answers | Each answer |
 |---|---|---|---|
 | O-choir (kind `arrival`) | `meals` ≥ 24, B15 + 2 h | **To the beds** / **To the road** (labels to the voice pass) | all three join at once (n8, n9, n10, arrivals +3); their first task by the answer: reaping, or clearing the road; the table's cost +1 an hour |
-| O-pair (kind `arrival`) | `meals` ≥ 40, the choir joined + 6 h | **To the beds** / **To the pot** (hers) | both join (n11, n12, arrivals +2); he takes the road (`n11_clear_road`, the lanes' 1800 s, his always rule installed: he has cut roads, and he is first out, not faster); her first task by the answer; the table +1 an hour |
+| O-cutter (kind `arrival`) | `meals` ≥ 40, the choir joined + 6 h | **To the beds** / **To the pot** (hers) | both join (n11, n12, arrivals +2); he takes the road (`n11_clear_road`, the lanes' 1800 s, his always rule installed: he has cut roads, and he is first out, not faster); her first task by the answer; the table +1 an hour |
 
 The arrival kind's rule answers either at the instant it shows where the player set one (week one's items 10-12). The
 starer is no offer: he comes in and sits down (`t_starer`, arrivals +1, a scene figure at the table's end), and no line
@@ -444,7 +444,7 @@ lines say "the three women" until T7 gives their names, "the man" and "his siste
 |---|---|---|---|---|
 | T7 | 18b | `meals` ≥ 24, B15 + 2 h (O-choir's moment) | At dusk three women at the hall's door, who followed its light down the valley. They don't ask; they sing for their supper, three parts, and in every verse there is a bar where nobody sings and they wait it out together before going on. | up · none · warm · people · PC, N1 · opens C-promise-30 · th-town middle |
 | T8 | 18c | the choir joined + 3 h | At the table Mary counts heads against the pot, ladles, and serves herself last, and when she gets to herself the ladle comes up empty. She sits down with the bowl anyway. | down · no · grim · stores · N2 · advances C-promise-30 · th-town middle |
-| T9 | 18d | `meals` ≥ 40, the choir joined + 6 h (O-pair's moment) | A man and his sister come in along the old road the player marked, an axe on his shoulder. He has cut roads, he says. He looks along the marked line to the ridge and says it's crooked, and in the morning he is out on it before anyone. | up · none · wry · people · PC · advances C-promise-30 · th-network middle |
+| T9 | 18d | `meals` ≥ 40, the choir joined + 6 h (O-cutter's moment) | A man and his sister come in along the old road the player marked, an axe on his shoulder. He has cut roads, he says. He looks along the marked line to the ridge and says it's crooked, and in the morning he is out on it before anyone. | up · none · wry · people · PC · advances C-promise-30 · th-network middle |
 | B16 | 18f | arrivals 15, `belonging`, `starer_clock` ≥ 8 | As `spine.md`: the newcomer who sat down to supper stared at the player across the table the whole meal and said nothing. In the morning his place is empty, his bowl unwashed, and the snares in the near runs have been re-tied in the night, every one, with the player's own knot. | as `beats.yaml` (down · dread · trust · PC · advances C-promise-2, C-promise-5 · th-past middle), and pays C-promise-30 |
 
 T8's empty ladle is a line and a scene, never a store taken (the table's cost rose at the join; the line describes it).
@@ -503,7 +503,7 @@ orders, Catalogue (`{lane}_clear_road` defined once), Modifiers. No engine work 
 | `cut_road` (P3) | hands | SL24 (the road marked) | 10 | 2400 | 12 cleared, 6 stones, 4 stakes a stage; stage 6 also 4 beams (the bridge over the warm stream) | stage 7 T10, stage 8 T11, stage 10 B17 (with B16 and the floor); finished: R2 open, the map, Camp 18 lifted; scene: four states |
 | `shovel_road` | hands | SL24 | none | 600 | | 1 cleared (Woodcutting: stumps and roots in the cut) |
 | `{lane}_clear_road` (town card) | n1-n10, n12 | SL24 | none | 1800 | | 1 cleared |
-| `n11_clear_road` | n11 | O-pair | none | 1800 | | 1 cleared (his always rule) |
+| `n11_clear_road` | n11 | O-cutter | none | 1800 | | 1 cleared (his always rule) |
 
 `cleared` (ash shovelled off the old road), cap 24. The order card under the cleared line, offered once cleared first
 reaches 12: "when cleared reaches 12, lay the road". Totals: 120 cleared, 60 stones, 40 stakes, 4 beams, 6.7 h of hands.
@@ -626,7 +626,7 @@ C-promise-30, 19c does not, 20b-20d touch none (between two near questions).
 - **Every planned moment plays in full on return:** B13, T1, T2, T4, T5, T6, T7, T8, T9, B16, T10, T11, T12 and most
   stage finishes land while away on typical; each is revealed in order, one at a time.
 - **Per absence, at most two unlocks:** night 14 → 15a brings B13 (its cards and the chore rules' removal are one
-  moment) and SL22 (B13 + 2 h); T1 is ten hours on, its own absence; T7 and O-choir are one moment, T9 and O-pair one;
+  moment) and SL22 (B13 + 2 h); T1 is ten hours on, its own absence; T7 and O-choir are one moment, T9 and O-cutter one;
   the starer's arrival and B16 are 8 h apart; B17's leave, R2 and the map are one moment. A return that brings an
   arrival answered by rule and its next job counts two.
 - **The 2 AM test:** the hall and its beams are on screen from S4's visit, before the turn; B13's cards open onto the
