@@ -15,7 +15,7 @@ import { panelView } from "../game/lanes";
 import { keptReadyAt, waitsOnUnseen } from "../game/ready";
 import { UI } from "../game/text";
 import { CardGroups } from "./cardgroups";
-import { makeRow, type Row } from "./cardrow";
+import { makeRow, upsideWords, type Row } from "./cardrow";
 import { el, pulse, setText } from "./dom";
 import { completionRung, play } from "./ladder";
 import { cardHintsNow, hintCard } from "./cardhint";
@@ -230,7 +230,11 @@ export class Cards implements Part {
     row.needs.draw(row.card, view, row.done);
     row.fight?.sync(view, row.id);
     const side = info?.kept.find((k) => k.side !== null)?.side;
-    if (row.bonus && side) row.bonus.sync(sideStrength(catalog, view, side));
+    const words = upsideWords(catalog, card);
+    if (words !== null) {
+      if (row.bonus && side) row.bonus.draw(words, sideStrength(catalog, view, side));
+      else if (row.upside) setText(row.upside, words);
+    }
     this.whenReady.sync(row.ready, row.done ? undefined : card, view);
   }
 }

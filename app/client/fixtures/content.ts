@@ -224,6 +224,8 @@ const text: Record<string, string> = {
   "ui.lesson.second_name": "Give it a name.",
   "ui.lesson.second_save": "Save it. Your first mix keeps running until you switch.",
   "ui.lesson.second_run": "To switch, open your mixes and tap Run on the one you want.",
+  "ui.lesson.side_hold": "{card} adds to your strength while it runs. A mix runs it beside {task}, so both work at once.",
+  "ui.lesson.side_open": "Put both in one mix and they run together, {card} paying at its share of your time.",
   "ui.lesson.cap_full": "{store} is full. What your hands make past the top is lost.",
   "ui.lesson.dry_line": "{store} ran dry, so {card} stopped. Nothing in this mix makes more.", "ui.lesson.dry_edit": "{task} makes {store}. Open Edit to add it to this mix.", "ui.lesson.dry_save": "Save. While {card} waits, its time goes to the rest of the mix, and {task} makes more {store}.", "ui.lesson.dry_rule": "A rule can also switch to another mix when something runs dry.",
   "ui.lesson.cap_rules": "A rule can switch your hands to something else when it fills. Open Rules.",

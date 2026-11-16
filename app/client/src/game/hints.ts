@@ -9,6 +9,7 @@ import { chipCards } from "./cues";
 import { FIRST_MIX, FIRST_RULE, guided, guidedRule, SECOND_MIX } from "./lessons";
 import type { Keeps } from "./keeps";
 import { holdsCard, mixesFull } from "./mix";
+import { sideCue, SIDE_MIX, type SideCue } from "./sidelesson";
 import { hintedSwitch, ruleTasks } from "./ruleoffers";
 
 /** The cards to mark: ones the player keeps tapping by hand (`repeated`, Step.repeats.taps) that the player's own mix
@@ -31,6 +32,11 @@ export function cardHints(catalog: Catalog, view: View, keeps: Keeps, lesson: st
 export function secondMixCard(catalog: Catalog, view: View, keeps: Keeps, repeated: readonly RepeatedTap[]): string | null {
   if (!guided(SECOND_MIX, view, keeps) || mixesFull(catalog, view)) return null;
   return hintedCards(catalog, view, () => false, repeated)[0] ?? null;
+}
+
+/** The card the side-holder's lesson starts from, while it may and a new mix can be saved. */
+export function sideMixCue(catalog: Catalog, view: View, keeps: Keeps): SideCue | null {
+  return guided(SIDE_MIX, view, keeps) && !mixesFull(catalog, view) ? sideCue(catalog, view) : null;
 }
 
 /** What a chip's mark is for: a mix switch the player keeps making under it, or a rule its card could answer. */

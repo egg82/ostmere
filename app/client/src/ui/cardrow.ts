@@ -1,5 +1,6 @@
 // One card's row in the card panel (cards.ts): its nodes and what the panel keeps about it between views.
 import type { Card } from "../api/types";
+import type { Catalog } from "../game/catalog";
 import { Bonus } from "./bonus";
 import { CardNeeds } from "./cardneeds";
 import { el, tapFeedback } from "./dom";
@@ -27,6 +28,8 @@ export interface Row {
   fight: FightPanel | null;
   /** The upside line of a card that feeds a side's strength, which leads to it (bonus.ts), else null. */
   bonus: Bonus | null;
+  /** The upside line of a card that feeds no side, else null. */
+  upside: HTMLElement | null;
   /** A rule started its running tap (ui/fires.ts), as of the last restyle. */
   byOrder?: boolean;
   /** performance.now() until which a level shows on the card (cardlevel.ts); undefined: none. */
@@ -38,6 +41,14 @@ export interface Row {
 function pressable(tap: HTMLButtonElement, node: HTMLElement): void {
   tap.addEventListener("pointerdown", () => { if (!tap.disabled) node.classList.add("pressed"); });
   for (const type of ["pointerup", "pointercancel", "pointerleave"]) tap.addEventListener(type, () => node.classList.remove("pressed"));
+}
+
+/** The card's upside line, null when it names none. A card that holds an entry while it runs words it at its share of the
+ * mix (Card.share_bp; 0: no share, the full figure), as the town editor does at the person's share. */
+export function upsideWords(catalog: Catalog, card: Card): string | null {
+  const info = catalog.cards.get(card.card);
+  if (!info?.upside_key) return null;
+  return catalog.text.fill(info.upside_key, card.share_bp > 0 ? catalog.format.figuresAt(info, card.share_bp) : catalog.format.figures(info.change_bp));
 }
 
 /** A new row for `card`: its nodes, wired to tap it. */
@@ -52,18 +63,18 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
   const row: Row = {
     id: card.card, node, tap, count: el("span", "card-count"), needs: new CardNeeds(ctx, card.card), ready: whenReady.make(card.card, node),
     fill: el("span", "card-fill"), foot: el("span", "card-foot"), card, done: false, doneAt: 0,
-    fight: info?.fight ? new FightPanel(catalog, info.fight) : null, bonus: null,
+    fight: info?.fight ? new FightPanel(catalog, info.fight) : null, bonus: null, upside: null,
   };
   const head = el("span", "card-head");
   head.append(el("span", "card-title", catalog.label(info?.label_key)), row.count);
   tap.append(head);
   const side = info?.kept.find((k) => k.side !== null)?.side;
-  if (info?.upside_key) {
-    const words = catalog.text.fill(info.upside_key, catalog.format.figures(info.change_bp));
+  const words = upsideWords(catalog, card);
+  if (words !== null) {
     if (side) {   // beside the tap, never inside the button: a button holds no button
       row.bonus = new Bonus(catalog, side, "card-upside");
       row.bonus.draw(words, null);
-    } else tap.append(el("span", "card-upside", words));
+    } else tap.append(row.upside = el("span", "card-upside", words));
   }
   const track = el("span", "card-track");
   track.append(row.fill);

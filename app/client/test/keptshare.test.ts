@@ -89,11 +89,11 @@ const held = [{ side: "gap", lane: null, amount_bp: 5000, slot: 0 }];
   expect("the equal change at another slot is not scaled", upsideOf(row()), `+50% work, +${share / 2}% strength`);
 }
 
-{  // a card's face has no share: it keeps the full figure
+{  // a card's face is worded at its share too (sideface.test.ts holds the rest of it)
   const catalog = withCard("haul", { upside_key: "up.kept", change_bp: [5000], kept: held }, { "up.kept": "{pct} strength while kept" });
   const { ctx } = testContext(new Glow(), catalog);
   const card = townStep("town").view.cards.find((c) => c.card === "haul");
   if (!card) throw new Error("the town fixture has no haul");
-  const row = makeRow(ctx, new WhenReady(ctx), card);
-  expect("the full figure", row.node.querySelector(".card-upside")?.textContent, "+50% strength while kept");
+  const row = makeRow(ctx, new WhenReady(ctx), { ...card, share_bp: 4000 });
+  expect("at its share", row.node.querySelector(".card-upside")?.textContent, "+20% strength while kept");
 }
