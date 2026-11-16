@@ -2431,7 +2431,7 @@
   445716000000,
   668736000000
  ],
- "digest": "8210b404ee7b98bd7c4c2604dc18bae52cae7f1d64c2959c045a71f1f70dd2ea",
+ "digest": "c41029e9d2fe0090d3d1905bc96470a9a21200f8cc1f9b4394b3b29725a418cb",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -3823,6 +3823,7 @@
    "t_deadfall",
    "t_dig",
    "t_doorway",
+   "t_draughty_off",
    "t_dressed_kerb",
    "t_drift_clock",
    "t_dusk_2",
@@ -4521,6 +4522,7 @@
    "t_roof_done",
    "t_roof_guard",
    "t_roofs",
+   "t_roofs_cleared",
    "t_roofs_first",
    "t_root_hollow",
    "t_root_mat",
@@ -9249,6 +9251,19 @@
      "store": "stones"
     }
    ],
+   "unlocks": []
+  },
+  "t_draughty_off": {
+   "@": "Outcome",
+   "lines": [
+    "l_draughty_off"
+   ],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
    "unlocks": []
   },
   "t_dressed_kerb": {
@@ -30998,6 +31013,19 @@
     }
    ]
   },
+  "t_roofs_cleared": {
+   "@": "Outcome",
+   "lines": [
+    "l_ash_cleared"
+   ],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_roofs_first": {
    "@": "Outcome",
    "lines": [
@@ -33766,7 +33794,7 @@
    "unlocks": []
   }
  },
- "release": 71,
+ "release": 72,
  "renames": [
   {
    "from": "t_stock_open",

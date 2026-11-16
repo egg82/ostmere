@@ -19,8 +19,8 @@ def check_chips(o: "Opening") -> None:
 
 
 def check_chip_card(o: "Opening", where: str, oc: "OrderCardEntry") -> None:
-    """A chip's order card: the chip exists, watches the card's store, and has the card's `when` exactly (the page
-    words the rule as the chip); after_end only on such a card."""
+    """A chip's order card: the chip exists, watches the card's store, has the card's `when` exactly (the page
+    words the rule as the chip) and no off_line_key; after_end only on such a card."""
     if oc.chip is None:
         if oc.after_end:
             fail(where, "after_end needs a chip: only a chip's card is offered in the hands strip")
@@ -32,3 +32,6 @@ def check_chip_card(o: "Opening", where: str, oc: "OrderCardEntry") -> None:
         fail(where, f"chip {oc.chip} does not watch its store {oc.store}")
     if chip.when != oc.when:
         fail(where, f"its when is not chip {oc.chip}'s, so the rule would not read as the chip")
+    if chip.off_line_key is not None:
+        fail(f"chip {chip.id}", "has an order card and an off_line_key: the rule clears it every cycle and the line "
+             "repeats each time; say the first cure with a trigger instead")
