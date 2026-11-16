@@ -1,0 +1,58 @@
+# The Android app (docs/design/android-app.md): a debug APK of the Trusted Web Activity, built when android/ changes. It
+# is not part of `ci-ok`: that check gates the web app, and a path-filtered workflow that does not run would leave a
+# required check pending. CI's `changes` job counts android/ as not code, so such a pull request skips the web suite.
+
+name: Android
+
+on:
+  pull_request:
+    paths:
+      - android/**
+      - .github/workflows/android.yml
+  push:
+    branches:
+      - main
+    paths:
+      - android/**
+      - .github/workflows/android.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  debug-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      # AGP 9.5 needs JDK 17 and build-tools 36.0.0 at least; the platform is the compileSdk in android/app/build.gradle.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install the pinned SDK packages
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"
+      - name: Build
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
+      - name: Check the manifest names the site
+        run: |
+          apk=$(ls android/app/build/outputs/apk/debug/*.apk)
+          badging=$("$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$apk")
+          echo "$badging" | grep -E "^(package|application-label|launchable-activity)"
+          xmltree=$("$ANDROID_HOME/build-tools/36.0.0/aapt2" dump xmltree --file AndroidManifest.xml "$apk")
+          echo "$xmltree" | grep -F "https://ostmere.yggdrasil.pub/"
+          echo "$xmltree" | grep -F "ostmere.yggdrasil.pub"
+          echo "$badging" | grep -F "application-label:'The Breaking of Ostmere'"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ostmere-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
