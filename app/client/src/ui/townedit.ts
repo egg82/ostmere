@@ -12,6 +12,7 @@ import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 import { ShareBar, type SegmentSpec } from "./sharebar";
 import { Bonus } from "./bonus";
+import { takesNothing } from "./cardneeds";
 import { sideStrength } from "./strength";
 
 export class TownEditor {
@@ -113,7 +114,7 @@ export class TownEditor {
     adds.append(el("span", "editor-add-label", catalog.text.get(UI.add)));
     for (const card of townTasks(catalog, view, lane).filter((id) => !mix.components.some((c) => c.kind === "card_share" && c.card === id))) {
       const add = el("button", `quiet town-add hue-${catalog.rank(card) % 6}`);
-      add.append(el("span", "town-card-name", catalog.cardLabel(card)), ...this.upside(card));
+      add.append(el("span", "town-card-name", catalog.cardLabel(card)), ...this.upside(card), ...this.nothing(card));
       add.type = "button";
       add.dataset.card = card;
       add.addEventListener("click", () => this.edit(joinTownCard(catalog, mix, card)));
@@ -169,6 +170,11 @@ export class TownEditor {
     return [bonus.line];
   }
 
+  private nothing(card: string): HTMLElement[] {
+    const line = takesNothing(this.ctx.catalog, card);
+    return line ? [line] : [];
+  }
+
   private cardRow(card: string, bp: number, mix: Mix): HTMLElement {
     const { catalog } = this.ctx;
     const row = el("div", "town-card");
@@ -179,7 +185,7 @@ export class TownEditor {
     drop.addEventListener("click", () => this.edit(dropTownCard(mix, card)));
     const what = el("span", "town-card-what");   // the card, and what it is for when it says (its upside)
     what.append(el("span", "town-card-name", catalog.cardLabel(card)));
-    what.append(...this.upside(card, bp));
+    what.append(...this.upside(card, bp), ...this.nothing(card));
     row.append(what, el("span", "town-card-share", catalog.format.share(bp)), drop);
     return row;
   }

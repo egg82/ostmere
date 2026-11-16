@@ -14,14 +14,18 @@
 // A card with a reach stake (CardInfo.reach) also draws its store against the next reach, even while it works: a rising
 // line joins the ledger only once full, so this row is where the player reads how far the next reach is; it goes once
 // every reach is passed.
+// A card that takes from no store (CardInfo.takes empty: no inputs, costs or drains) says so in a need's place, while it
+// works too: every other face has a cost row, so a missing one reads as a cost not shown (takesNothing).
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
 // what its blocker names (shows()).
 import type { Card, Condition, LedgerLine, Need, View } from "../api/types";
 import { sample } from "../game/clock";
 import { completionsOf } from "../game/cues";
+import { UI } from "../game/text";
 import { levelOf, needKind, opensWords, skillWords, stepWords, storeWords } from "../game/needwords";
 import { el, setText } from "./dom";
 import { lightMakers } from "./makerlight";
+import type { Catalog } from "../game/catalog";
 import type { PartContext } from "./part";
 
 const MARK = "\u0001";   // where the have number goes in a need's words
@@ -32,6 +36,13 @@ function drawNeed(node: HTMLElement, words: string, have: string, short: boolean
   node.classList.toggle("short", short);
   if (node.textContent === pre + have + post && (node.querySelector(".need-have") !== null) === short) return;
   node.replaceChildren(...(short ? [pre, el("b", "need-have", have), post] : [pre + have + post]).filter((k) => k !== ""));
+}
+
+/** The line of a card that takes from no store and draws no other need row, in the place a cost would sit; else null. */
+export function takesNothing(catalog: Catalog, card: string, needs: Need[] = []): HTMLElement | null {
+  const info = catalog.cards.get(card);
+  const bare = info && info.takes.length === 0 && needs.length === 0 && info.skill_needs.length === 0 && info.step_needs.length === 0 && !info.reach;
+  return bare ? el("span", "card-need nothing", catalog.text.get(UI.takesNothing)) : null;
 }
 
 /** Whether the card is drawing its inputs as it works (full): a paused run, waiting or yielded one is not. */
@@ -46,6 +57,7 @@ export class CardNeeds {
   private needs: Need[] = [];
   private shape: string | null = null;
   private readonly reach = el("span", "card-need reach");
+  private nothing: HTMLElement | null = null;
   private reachLine: LedgerLine | null = null;
 
   constructor(private readonly ctx: PartContext, private readonly id: string) {}
@@ -58,6 +70,7 @@ export class CardNeeds {
     const stepNeeds = info?.step_needs ?? [];
     const kind = (n: Need): string => { const k = needKind(catalog, view, n, this.id); return k === "store" ? "" : k; };
     this.needs = card.needs;
+    this.nothing = takesNothing(catalog, this.id, card.needs);
     const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|");
     if (shape !== this.shape) {
       this.shape = shape;
@@ -65,7 +78,7 @@ export class CardNeeds {
       this.storeRows = card.needs.map((n, i) => this.storeRow(`card-need ${kind(n)}`.trim(), i));
       const skills = skillNeeds.map(() => el("span", "card-need skill"));
       const steps = stepNeeds.map(() => el("span", "card-need step"));
-      this.root.replaceChildren(...this.storeRows, ...skills, ...steps, ...(info?.reach ? [this.reach] : []));
+      this.root.replaceChildren(...this.storeRows, ...skills, ...steps, ...(this.nothing ? [this.nothing] : []), ...(info?.reach ? [this.reach] : []));
     }
     card.needs.forEach((need, i) => {
       const row = this.storeRows[i];
@@ -93,7 +106,7 @@ export class CardNeeds {
     const store = info?.reach?.store;
     this.reachLine = store === undefined ? null : view.ledger.find((l) => l.store === store) ?? null;
     this.tickReach(view.at);
-    this.root.hidden = done || (rows.every((row) => row.hidden) && this.reach.hidden);
+    this.root.hidden = done || (this.nothing === null && rows.every((row) => row.hidden) && this.reach.hidden);
   }
 
   /** The row drawn for what `condition` watches (a blocker's): its store's have/need, its skill level or its step;
