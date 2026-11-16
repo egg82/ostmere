@@ -14,3 +14,4 @@ whenever: the end at 8.8m; B3 20.5h after it; 4 visits
   flatcheck []
   goals: 9 samples, 6 with a choice due, 0 of those with no goal the setup drives; weighting decides the order at 2 of 2 with a pair
   leaves naming only a speed level []
+  stretches of levels paying only speed past two, in 4 skills read: []

@@ -15,6 +15,7 @@ from ashfall_app.opening.phase_pays import (
 )
 from ashfall_app.opening.prestige import NodeEntry
 from ashfall_app.opening.schema import Opening
+from tests.opening.report import samey_lines
 
 PREFIXES = ("t_pp_", "t_pf_")
 
@@ -62,7 +63,7 @@ def test_every_later_phase_work_pay_past_the_curve_is_an_add(shipped_opening: Op
     assert mods and all(m.target == "work" and m.kind == "add_bp" for m in mods)
 
 
-def test_a_new_phase_finds_at_its_first_level_and_never_three_speed_only_in_a_row(shipped_opening: Opening):
+def test_a_new_phase_finds_at_its_first_level(shipped_opening: Opening):
     o = shipped_opening
     assert o.prestige is not None
     by_id = {t.id: t for t in o.triggers}
@@ -70,13 +71,7 @@ def test_a_new_phase_finds_at_its_first_level_and_never_three_speed_only_in_a_ro
         ranks = sum(n.ranks for n in o.nodes if n.skill == pp.skill)
         assert all(by_id[find_id(pp.skill, p, 2)].outcome.line_keys for p in range(3, ranks + 2)), pp.skill
         live = [t for t in o.triggers if t.when.id == pp.skill and t.id.startswith(PREFIXES) and t.when.value != RETIRED_AT]
-        named = {t.when.value for t in live if t.outcome.line_keys}
-        expanded_levels = sorted(t.when.value for t in live)
-        run = longest = 0
-        for c in expanded_levels:
-            run = 0 if c in named else run + 1
-            longest = max(longest, run)
-        assert named and longest <= 2, pp.skill
+        assert any(t.outcome.line_keys for t in live), pp.skill
 
 
 def test_the_rows_name_each_expanded_level(shipped_opening: Opening):
@@ -142,15 +137,20 @@ def test_a_table_speeding_another_skills_work_is_refused(shipped_opening: Openin
         check_phase_pays(with_table(shipped_opening, "woodcutting", speed=other))
 
 
-def test_finds_leaving_three_speed_only_levels_in_a_row_are_refused(shipped_opening: Opening):
+def test_finds_leaving_speed_only_stretches_are_reported_never_refused(shipped_opening: Opening):
+    """How samey a phase reads is the opening readout's figure (report.samey_lines), not a check."""
     pp = next(p for p in shipped_opening.phase_pays if p.skill == "woodcutting")
+
     def levels(*at: int) -> Opening:
         return with_table(shipped_opening, "woodcutting", find=pp.find.model_copy(update={"levels": list(at)}))
-    with pytest.raises(ValueError, match="more than 2 levels in a row paying only speed"):
-        check_phase_pays(levels(2, 6, 9, 12, 15, 18, 21))
-    with pytest.raises(ValueError, match="more than 2 levels in a row paying only speed"):   # 20, 21, 22, then 2, 3
-        check_phase_pays(levels(4, 7, 10, 13, 16, 19))
-    check_phase_pays(levels(4, 7, 10, 13, 16, 19, 22))
+
+    def woodcutting(o: Opening) -> str:
+        return next(ln for ln in samey_lines(o) if ln.split()[0] == "woodcutting")
+
+    for at, longest in (((2, 6, 9, 12, 15, 18, 21), 3), ((4, 7, 10, 13, 16, 19), 5), ((4, 7, 10, 13, 16, 19, 22), 2)):
+        o = levels(*at)
+        check_phase_pays(o)
+        assert f" {longest} levels in a row" in woodcutting(o), at
 
 
 def test_the_load_runs_the_check(shipped_opening: Opening):

@@ -35,4 +35,11 @@ each skill's climb at a full share of its fastest runner
   melee             619 h to the curve's top, x3.00 the fastest
   scavenging        516 h to the curve's top, x2.50 the fastest
   woodcutting       206 h to the curve's top, x1.00 the fastest
+each later phase's longest stretch of levels paying only speed
+  woodcutting    2 levels in a row pay only speed
+  scavenging     2 levels in a row pay only speed
+  foraging       2 levels in a row pay only speed
+  cooking        2 levels in a row pay only speed
+  arcana         2 levels in a row pay only speed
+  melee          2 levels in a row pay only speed
   by_hand past the end: read -> offer 7.1m; offer -> accepted 0.1m; read -> door 10.9m; actions between offer and door 1

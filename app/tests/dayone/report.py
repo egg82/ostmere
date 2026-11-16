@@ -16,11 +16,12 @@ test_dayone_readouts.py; nothing in them is a threshold. Minutes, hours and ids 
 import sys
 import time
 
+from ashfall_app.engine import Rules
 from tests.dayone import absence, checks, goals, human_report
 from tests.dayone import human_flags as hf
 from tests.dayone.beats import near_promise_beats
 from tests.dayone.human import HumanPlayer, human_day, thresholds
-from tests.dayone.levelpays import day_one_exits, leave_point, leave_points, speed_only_leaves
+from tests.dayone.levelpays import day_one_exits, leave_point, leave_points, reached, runs, speed_only_leaves
 from tests.dayone.parity import compare
 from tests.dayone.player import DayOnePlayer
 from tests.dayone.routes import PUSH_ROUTES, ROUTES, day, two_am
@@ -44,6 +45,11 @@ def _b3_text(p: DayOnePlayer) -> str:
     return "B3 never landed" if hours is None else f"B3 {hours}h after it"
 
 
+def runs_line(rules: Rules, top: dict[str, int]) -> str:
+    """The stretches of more than two levels paying only speed among the levels the route reached, per skill."""
+    return f"  stretches of levels paying only speed past two, in {len(top)} skills read: {runs(rules, top)}"
+
+
 def route_text(name: str, p: DayOnePlayer) -> str:
     """One route's readout: what the route did, as figures."""
     assert p.end_at is not None
@@ -60,6 +66,7 @@ def route_text(name: str, p: DayOnePlayer) -> str:
     out.append(f"  goals: {g.samples} samples, {g.choice_due} with a choice due, {g.undriven} of those with no goal the "
                f"setup drives; weighting decides the order at {g.decided} of {g.judged} with a pair")
     out.append(f"  leaves naming only a speed level {speed_only_leaves(leave_points(p), p.rules)}")
+    out.append(runs_line(p.rules, reached(p)))
     return "\n".join(out) + "\n"
 
 

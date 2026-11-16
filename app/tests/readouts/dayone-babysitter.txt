@@ -8,3 +8,4 @@ babysitter: the end at 8.5m; B3 3.9h after it; 1 visits
   flatcheck []
   goals: 18 samples, 2 with a choice due, 0 of those with no goal the setup drives; weighting decides the order at 2 of 2 with a pair
   leaves naming only a speed level []
+  stretches of levels paying only speed past two, in 4 skills read: []

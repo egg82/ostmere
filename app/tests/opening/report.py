@@ -1,7 +1,7 @@
 """The opening's readout (docs/design/sim-invariants.md): how its push routes move, printed and never judged. Per
 route, the end moment and the longest run of taps of one card; the typical route's timeline of effort between new
 things; what a day away opens from the first order; how the two crafts first show; each skill's climb against the
-fastest; and the by_hand player's steps past the end. Minutes, counts and ids only (CLAUDE.md, "Never spoil the owner").
+fastest; each later phase's longest stretch of levels paying only speed; and the by_hand player's steps past the end. Minutes, counts and ids only (CLAUDE.md, "Never spoil the owner").
 
     python -m tests.opening.report     # from app/: print it
 """
@@ -10,9 +10,11 @@ from collections.abc import Mapping
 from itertools import groupby
 
 from ashfall_app.engine import Rules, advance_logged
+from ashfall_app.opening.phase_pays import longest_speed_only
+from ashfall_app.opening.schema import Opening
 from tests.dayone.growth import climb_hours
 from tests.opening.afterend import AfterEnd
-from tests.opening.playthrough import CRAFTS, News, Player, opening_rules
+from tests.opening.playthrough import CRAFTS, News, Player, opening, opening_rules
 from tests.opening.routes import PUSH_ROUTES, after_end, route
 
 NAMES = ("opening",)
@@ -55,6 +57,14 @@ def climb_lines(rules: Rules) -> list[str]:
     return [f"  {skill:14s} {h:6.0f} h to the curve's top, x{h / best:.2f} the fastest" for skill, h in sorted(hours.items())]
 
 
+def samey_lines(o: Opening) -> list[str]:
+    """Per skill with a later-phase table, the longest stretch of its phase's levels that pay only speed (a find is the
+    named pay): how samey it reads, a figure and never a check (docs/decisions/simulator.md, "A level is a thing")."""
+    top = o.prestige.top_level if o.prestige is not None else 0
+    return [f"  {pp.skill:14s} {longest_speed_only(set(pp.find.levels), top)} levels in a row pay only speed"
+            for pp in o.phase_pays]
+
+
 def after_end_line(a: AfterEnd) -> str:
     def mm(t: int | None) -> str:
         return "never" if t is None else f"{t / 60:.1f}m"
@@ -80,6 +90,8 @@ def render(routes: Mapping[str, Player], a: AfterEnd) -> str:
     out.append(f"the crafts at first show: {crafts_shown(routes['typical'])}")
     out.append("each skill's climb at a full share of its fastest runner")
     out += climb_lines(opening_rules())
+    out.append("each later phase's longest stretch of levels paying only speed")
+    out += samey_lines(opening())
     out.append(after_end_line(a))
     return "\n".join(out) + "\n"
 

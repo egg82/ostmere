@@ -1,5 +1,6 @@
-"""A level is a thing, not only a number (docs/decisions.md): among the levels day one reaches, a skill goes at most
-two levels in a row paying speed alone; at least every third brings something named. Reached levels are measured on a
+"""A level is a thing, not only a number (docs/decisions.md): among the levels day one reaches, a skill is read for
+stretches of more than two levels in a row paying speed alone; at least every third bringing something named is the
+aim, and the stretches are the readout's (report.py), never a check. Reached levels are measured on a
 played route (each skill's level as the player saw it when B3 is seen, day one's end); what a level pays is read off
 the rules.
 
@@ -17,7 +18,7 @@ from tests.dayone.human_flags import Leave, leave
 from tests.dayone.player import DayOnePlayer
 
 MAX_RUN = 2
-"""Levels in a row a skill may pay with numbers alone."""
+"""Levels in a row a skill pays with numbers alone before a stretch is reported."""
 
 
 def reached(p: DayOnePlayer) -> dict[str, int]:
