@@ -6,7 +6,7 @@ B7" outline and keeps it except where a section below says why not. Numbers are 
 (`days-four-to-seven-numbers.md`); lines are written from `days-four-to-seven-lines-brief.md`; engineering's side is
 `docs/design/days-four-to-seven-plan.md` (spoiler-free). Combat's shapes are `combat-open.md`'s answers (C1-C9),
 banked time's are `banked-time-open.md`'s (BT1-BT6). New canon is listed at the end as proposals (tentative until the
-lead confirms), new decisions as D-103 to D-110.
+lead confirms), new decisions as D-140 to D-142 and D-106 to D-110.
 
 Binding, carried: day and night run on the story's clock; a planned moment that lands while the player is away plays
 in full on return; nothing is lost *because* the player was away (D-59). Every return has something to spend and
@@ -449,8 +449,8 @@ advanced W3, paid W4; C-promise-21 opened X2, advanced X4, paid by B7 (X5); C-pr
   (G1), C-beat-102 (G2), each as its row above.
 - The third arrival is a pair who met on the road (a woman with seed, an old man who can't gather); light tier.
 
-Decisions to record: D-103 (L2's B5-relative gate), D-104 (story days 5-7 end on a clock with a save-time floor),
-D-105 (Arcana's first card: 6 damp wood to 2 dry wood, held against damp wood), D-106 (the stakes go to week 2),
+Decisions to record: D-140 (L2's B5-relative gate), D-141 (story days 5-7 end on a clock with a save-time floor),
+D-142 (Arcana's first card: 6 damp wood to 2 dry wood, held against damp wood), D-106 (the stakes go to week 2),
 D-107 (B7 as A29's lines, the strip, and a one-off story fight that opens combat), D-108 (the watch fires make nothing
 until week 2's packs), D-109 (the spear's handing-over is a side beat; chapter net −1), D-110 (week 1 ends at night 7,
 dusk on the calendar's 162 h).

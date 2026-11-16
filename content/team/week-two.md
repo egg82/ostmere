@@ -4,8 +4,8 @@ Spoilers: this file is under `content/` and never shown to the owner. It picks u
 night 7) and runs from B8, the turn to the Drift at save time 168 h, to the end of story day 14, the Drift's last night,
 in four chapters. Numbers are targets (`week-two-numbers.md`); lines are written from `week-two-lines-brief.md`;
 engineering's side is `docs/design/week-two-plan.md` (spoiler-free). New canon is listed at the end as proposals
-(tentative until the lead confirms), new decisions as D-111 to D-123 (week 1's back half proposed D-103 to D-110,
-which collide with ids since recorded; see "Open").
+(tentative until the lead confirms), new decisions as D-111 to D-123 (week 1's back half's are
+D-106 to D-110 and D-140 to D-142).
 
 Binding, carried: nothing is lost *because* the player was away (D-59); every return has something to spend and
 something to decide (D-94); a side beat never gates a spine or chapter beat (D-97); watching earns nothing extra (the
@@ -736,8 +736,8 @@ Two questions, asked spoiler-free in this pass's report:
    Without it typical ran dry in night 14 (numbers file, "Measured (day twelve)");
    `test_typical_never_empties_the_bloom_by_the_last_night` holds it.
 4. **Ash** is a cure's by-product: if the cap-loss check fails it, the lever is the clear's yield (4), not a new sink.
-5. **Week 1's proposed D-103 to D-110 and C-beat-94 to C-beat-102** were never recorded and three of the D ids are
-   taken; whoever records them renumbers them. Week 2's start at D-111 and C-beat-103 to stay clear.
+5. **Week 1's proposed decisions** are recorded as D-106 to D-110, and the three whose ids were taken (proposed as
+   D-103 to D-105) as D-140 to D-142.
 6. **Week 3 must decide** what a share does when its season's pool runs dry (the bloom at 336 h): `decisions.md` says a
    re-tune is only ever set off by something the player chose, so the share should yield its time to the rest of the
    mix, not idle (plan, "After week 2").
