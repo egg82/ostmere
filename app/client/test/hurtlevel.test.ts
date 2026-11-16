@@ -5,9 +5,9 @@
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { Q, fixtureContent } from "../fixtures/content";
-import { fightsStep } from "../fixtures/fights";
+import { fightsStep, withHurtChip } from "../fixtures/fights";
 import { fixtureStep } from "../fixtures/steps";
-import type { ChipInfo, Content, FightInfo, StoreLevel, View } from "../src/api/types";
+import type { Content, FightInfo, StoreLevel, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { CardNeeds } from "../src/ui/cardneeds";
 import { FightPanel } from "../src/ui/fightpanel";
@@ -22,15 +22,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 
 const AT = 100;
 const wound: FightInfo = { side: "hands", threat: "wolves", loses: [], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [] };
-const hurtChip: ChipInfo = {
-  chip: "hurt", label_key: "chip.hurt", tone: "hurt", cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null,
-  when: { kind: "at_least", watched: { kind: "store_value", store: "hurt" }, value: Q / 4, release: Q / 4, value_of_cap: false, release_of_cap: false },
-};
-const content: Content = {
-  ...fixtureContent,
-  chip_infos: [...fixtureContent.chip_infos, hurtChip],
-  text_entries: [...fixtureContent.text_entries, { key: "chip.hurt", text: "hurt" }],
-};
+const content: Content = withHurtChip(fixtureContent);
 const catalog = new Catalog(content);
 
 /** The hurt level as the server serves it: `items` of hurt at AT, falling `perHour` items an hour. */
