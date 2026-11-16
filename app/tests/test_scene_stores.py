@@ -1,10 +1,12 @@
 """tools/scene: a layer's `store:` condition reads the page's ledger, which holds only stores the opening unlocks
-(engine/view.py `_ledger`), else View.levels, which serves the rest the scene manifest names (api/levels.py). Judged
-here: every store the scene names is one the opening defines. What a built thing shows on is a card's completions."""
+(engine/view.py `_ledger`), else View.levels, which serves the rest the scene names (api/levels.py, from the committed
+api/scene_stores.json). Judged here: that list is the stores the scene names, and each is one the opening defines. What a built thing shows on is a card's completions."""
+import json
 import re
 import sys
 from pathlib import Path
 
+from ashfall_app.api import scenestores
 from ashfall_app.opening.refs import outcomes
 from ashfall_app.opening.schema import load_opening, to_rules
 
@@ -31,3 +33,16 @@ def test_every_store_a_layer_reads_is_one_the_opening_defines():
     that the opening defines: one it does not define would never hold."""
     defined = {s.id for s in to_rules(load_opening()).stores}
     assert named_in_the_scene() <= defined, sorted(named_in_the_scene() - defined)
+
+
+def test_the_committed_list_is_the_stores_the_scene_names():
+    """tools/scene/build.py rewrites the list from the layers it seeds (storeset.py); a store atom added to a scene module
+    without rebuilding leaves it short and the hidden clock unserved."""
+    listed = json.loads(Path(scenestores.__file__).with_name("scene_stores.json").read_text())
+    assert listed == sorted(named_in_the_scene()), sorted(named_in_the_scene() ^ set(listed))
+
+
+def test_storeset_reads_every_condition_of_layers_and_grades():
+    from storeset import stores_read
+    layers = [{"when": "always"}, {"when": "store:a@3&running:x"}, {"when": "pushes:p@1|store:b", "until": "store:z"}]
+    assert stores_read(layers, {"night": {"when": "store:c@20|chip:cold"}}) == ["a", "b", "c", "z"]

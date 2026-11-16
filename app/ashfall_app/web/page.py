@@ -74,8 +74,6 @@ class BuildFiles(StaticFiles):
         return response
 
 
-SCENE_MANIFEST = Path("art/scene/manifest.json")
-"""Under the assets volume: what the page fetches as /assets/art/scene/manifest.json."""
 HASH_LENGTH = 12   # hex digits of a file's sha256 in a scene layer's `?h=` (tools/scene/build.py)
 
 

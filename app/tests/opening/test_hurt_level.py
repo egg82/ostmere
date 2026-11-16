@@ -1,6 +1,7 @@
 """View.levels (CONTRACT.txt, "FIGHTS", "read a level"): each store a lost fight adds to, as its segment, so the page
 can draw its level though the store has no ledger line. Judged on the opening's own rules and a save holding hurt."""
 from ashfall_app.api.levels import levels
+from ashfall_app.api.scenestores import scene_stores
 from ashfall_app.engine import QUANTITY_SCALE as Q, StoreId
 from ashfall_app.engine import view as engine_view
 from tests.shipped_ruleset import ShippedRuleset
@@ -30,4 +31,6 @@ def test_the_store_has_no_ledger_line_to_read_instead():
 def test_the_game_serves_them_in_its_view(shipped_ruleset: ShippedRuleset):
     s = in_hand(Q + Q // 2)
     wire = shipped_ruleset.make_game(shipped_ruleset.opening, shipped_ruleset.rs).view(s)
-    assert [(lv.store, lv.segment.start_value) for lv in wire.levels] == [("hurt", Q + Q // 2)]
+    served = [(lv.store, lv.segment.start_value) for lv in wire.levels]
+    assert served[0] == ("hurt", Q + Q // 2)
+    assert {store for store, _ in served[1:]} <= scene_stores()

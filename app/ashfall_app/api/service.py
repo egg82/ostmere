@@ -2,7 +2,6 @@
 Steps and Views. The saves themselves are the Saves system's (saves/); routes call this to speak the contract.
 """
 from collections.abc import Callable
-from pathlib import Path
 
 from .. import engine as e
 from ..accounts import codes
@@ -40,9 +39,8 @@ FORECAST_S = 6 * 3600
 
 
 class Game:
-    def __init__(self, opening: Opening, rs: Ruleset, scene_manifest: Path | None = None) -> None:
+    def __init__(self, opening: Opening, rs: Ruleset) -> None:
         self._rs = rs
-        self._scene_manifest = scene_manifest
         self._content = _content(opening, rs.rules, rs.digest)
         self._sources = store_sources(opening)
         self._goals = goal_defs(opening, rs.rules)
@@ -64,7 +62,7 @@ class Game:
         open_goals = goals(save, rules, v, self._goals)
         return convert.view(save, v, sources(save, rules, v, self._sources), open_goals,
                             goal_rows(save, rules, v, open_goals), order_dry(save, rules, v),
-                            levels(save, rules, v, scene_stores(self._scene_manifest)))
+                            levels(save, rules, v, scene_stores()))
 
     def forecast(self, played: Played, stop: Callable[[], bool]) -> w.ForecastAnswer:
         """The save's forecast from now (it replays hours of the save, so it has its own call: CONTRACT.txt,
