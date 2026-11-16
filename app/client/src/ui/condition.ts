@@ -9,6 +9,7 @@
 import type { ChipInfo, Condition, Order, View } from "../api/types";
 import { choiceVerb } from "../game/elsechoices";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
+import type { RuleSide } from "../game/ruleside";
 import { townNewRule } from "../game/town";
 import { startRule } from "../game/levelrule";
 import { chosen, doChoices, storeItems, type DoChoice } from "../game/ruleoffers";
@@ -71,11 +72,11 @@ export class ConditionEditor {
   /** A new rule, nothing chosen yet: the simple view. Given an offered condition (a guided rule), it starts at that
    * condition's levels, a chip's as the chip. `town`: a rule on the town, which does one of the town's mixes, so it
    * opens on the full editor, where the mixes are. */
-  openNew(view: View, offered?: Condition, town = false): void {
+  openNew(view: View, offered?: Condition, town = false, scope?: RuleSide, lane?: string): void {
     this.full = town;
     const rule = offered ? readRule(offered, this.ctx.catalog.content.scales.quantity_per_item, (s) => this.ctx.catalog.isLevel(s)) : null;
     const opened = offered && rule && chipOf(this.ctx.catalog, offered) ? { rule, when: offered } : undefined;
-    this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, town, unless: [], orElse: [] });
+    this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, town, scope, lane, unless: [], orElse: [] });
   }
 
   /** Rule `index` as conditiondraft.editDraft opens it, in the full editor; false for a rule it does not open. */
@@ -134,7 +135,7 @@ export class ConditionEditor {
 
   /** Do: the tasks (and, in the full editor, the saved mixes) as one row. */
   private drawDo(view: View): void {
-    this.does.replaceChildren(...doRow(this.ctx.catalog, view, doChoices(this.ctx.catalog, view, this.full, this.draft?.then ?? null, this.draft?.town === true), (c) => this.setDo(c)));
+    this.does.replaceChildren(...doRow(this.ctx.catalog, view, doChoices(this.ctx.catalog, view, this.full, this.draft?.then ?? null, this.draft?.town === true, this.draft?.scope, this.draft?.lane), (c) => this.setDo(c)));
   }
 
   private setDo(c: DoChoice): void {

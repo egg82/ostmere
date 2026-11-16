@@ -98,6 +98,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.rule.down",
     "ui.hands.by_rule",
     "ui.rule.new",
+    "ui.rule.side_mine",
     "ui.rule.full",
     "ui.rule.handle",
     "ui.mix.used_by",

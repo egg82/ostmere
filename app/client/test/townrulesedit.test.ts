@@ -6,6 +6,7 @@ import { fakeDocument, type FakeEl, FakeEvent, install, pointer } from "./fake-d
 import { testContext } from "./context";
 import { townStep, withSecondMix } from "../fixtures/town";
 import type { Decision, Order, View } from "../src/api/types";
+import type { RuleSide } from "../src/game/ruleside";
 import { RulesTab } from "../src/ui/rules";
 
 install();
@@ -37,10 +38,10 @@ function twoRules(): View {
   return { ...base, orders, orders_on: pad(base.orders_on, false), order_states: pad(base.order_states, "waiting" as View["order_states"][number]), town_mix_order: always + 2 };
 }
 
-function rig(view: View, writing = true) {
+function rig(view: View, writing = true, side: RuleSide = "camp") {   // the town is drawn on Camp, the hands' rules on Mine
   const { ctx, got } = testContext();
   if (writing) ctx.keeps.keepRuleSeen();   // writing rules is open, as it is by day three
-  const tab = new RulesTab(ctx);
+  const tab = new RulesTab(ctx, { get: () => side, set: () => undefined });
   document.body.replaceChildren(tab.root);
   tab.update(view);
   return { root: fakeDocument.body.firstElementChild as FakeEl, got };
@@ -81,9 +82,10 @@ const rows = (root: FakeEl): FakeEl[] => q(root, ".rules-town .town-rule");
   const { root, got } = rig(view);
   one(root, ".rules-town .rule-handle", 1).dispatchEvent(new FakeEvent("keydown", { key: "ArrowDown" }));
   expect("ArrowDown moves it below the next", sent(got.decided[0]).slice(always, always + 3), [mine, first, other]);
-  const hands = q(root, ".rules-list .rule-handle");
+  const mineRoot = rig(view, true, "mine").root;
+  const hands = q(mineRoot, ".rules-list .rule-handle");
   hands[hands.length - 1]!.click();
-  expect("the last hands rule can't move down into the town", q(one(root, ".rules-list .rule-menu"), "button")[1]!.disabled, true);
+  expect("the last hands rule can't move down into the town", q(one(mineRoot, ".rules-list .rule-menu"), "button")[1]!.disabled, true);
 }
 
 {  // dragging ≡ among the town's rows sends the permuted list
@@ -101,7 +103,8 @@ const rows = (root: FakeEl): FakeEl[] => q(root, ".rules-town .town-rule");
 
 {  // a new town rule: the full editor, doing a town mix and nothing else
   const { root, got } = rig(base);
-  one(root, ".rules-town .town-new").click();
+  one(root, ".rules-new").click();   // Camp's one New rule asks who it is for
+  one(root, ".rules-who .cond-task").click();   // the town is first
   const cond = one(root, ".cond");
   expect("only the town's mixes are offered to do", q(cond, ".cond-mix, .cond-task").map((b) => b.textContent), ["Camp", "Camp 2"]);
   expect("and no hands mix", q(cond, ".cond-mix").map((b) => b.dataset.mix), ["town:main", "Camp 2"]);
@@ -117,7 +120,7 @@ const rows = (root: FakeEl): FakeEl[] => q(root, ".rules-town .town-rule");
 }
 
 {  // the hands' editor never offers a town mix
-  const { root } = rig(base);
+  const { root } = rig(base, true, "mine");
   one(root, ".rules-new").click();
   one(root, ".cond-more").click();
   expect("no town mix among the hands' choices", q(root, ".cond-mix").some((b) => b.dataset.mix === "town:main"), false);

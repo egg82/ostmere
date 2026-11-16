@@ -34,7 +34,7 @@ export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boo
   const { rule } = draft;
   if (task === null || rule.m === null) return null;
   const stores = whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores;
-  const tasks = doChoices(catalog, view, false, draft.then).flatMap((c) => (c.kind === "task" ? [c.card] : []));
+  const tasks = doChoices(catalog, view, false, draft.then, false, draft.scope, draft.lane).flatMap((c) => (c.kind === "task" ? [c.card] : []));
   const m = rule.m;
   const can = (which: "n" | "m", l: Level) => sameLevel(tryRule({ ...rule, m, [which]: l }, cap)?.[which] ?? null, l);
   const items = catalog.isLevel(rule.store) ? cap : null;

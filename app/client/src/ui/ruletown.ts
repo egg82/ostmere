@@ -19,8 +19,6 @@ export interface TownRows {
   cond(index: number): HTMLElement;
   /** Rule `index` as the tab draws a rule: `body` after its ●, the rule's own lines and menu around it. */
   row(index: number, body: HTMLElement[]): HTMLElement[];
-  /** The new-rule control, or nothing while writing rules is not open or the rules are full. */
-  add(): HTMLElement[];
 }
 
 /** The town's rules under the town's heading; none (no section) before a town mix has a rule or while the town has
@@ -30,7 +28,7 @@ export function townSection(ctx: PartContext, view: View, rows: TownRows): HTMLE
   const rules = townRules(catalog, view);
   if (rules.length === 0 || !townCanSwitch(catalog, view)) return [];
   const section = el("section", "rules-lane rules-town");
-  section.append(el("h2", "panel-heading", catalog.text.get(UI.townTitle)), ...rules.flatMap((i) => rows.row(i, townBody(ctx, view, i, rows.cond))), ...rows.add());
+  section.append(el("h2", "panel-heading", catalog.text.get(UI.townTitle)), ...rules.flatMap((i) => rows.row(i, townBody(ctx, view, i, rows.cond))));
   return [section];
 }
 

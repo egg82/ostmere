@@ -31,7 +31,7 @@ const text: Record<string, string> = {
   "ui.mix.default": "First mix",
   "ui.order.add": "Add rule", "ui.order.remove": "Remove",
   "ui.rule.otherwise": "Otherwise", "ui.rule.on": "on now",
-  "ui.rule.new": "New rule", "ui.rule.full": "That is all the room there is for rules", "ui.rule.handle": "Move or remove", "ui.rule.below": "Under {n} {store}", "ui.rule.below_until": "Under {n} {store}, until {m}",
+  "ui.rule.side_mine": "Mine", "ui.rule.new": "New rule", "ui.rule.full": "That is all the room there is for rules", "ui.rule.handle": "Move or remove", "ui.rule.below": "Under {n} {store}", "ui.rule.below_until": "Under {n} {store}, until {m}",
   "ui.rule.reaches": "{n} or more {store}", "ui.rule.reaches_until": "{n} or more {store}, until under {m}",
   "ui.rule.down_to_until": "{store} down to {n}, until {m}", "ui.rule.up_to_until": "{store} up to {n}, until down to {m}",
   "ui.rule.up_to_until_under": "{store} up to {n}, until under {m}", "ui.rule.reaches_until_down": "{n} or more {store}, until down to {m}",
