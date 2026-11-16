@@ -56,9 +56,9 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
       devices?.root.remove();
       devices = new Devices(api, catalog.text, catalog.format, content.transfer_code_s, keeps, what.account ?? null);
       games?.root.remove();
-      games = gamesSheet(api, catalog, session, step.save_id, skipLessons(keeps, () => screen?.redraw()));
+      games = gamesSheet(api, catalog, session, step.save_id);
       settings?.root.remove();
-      settings = new SettingsSheet(catalog.text, new ReminderRow(catalog.text));
+      settings = new SettingsSheet(catalog.text, new ReminderRow(catalog.text), browserStraight(), skipLessons(keeps, () => screen?.redraw()));
       screen.foot.append(devices.button, games.button, settings.button);   // beside Feedback, in the panel's last row
       host.append(devices.root, games.root, settings.root);
       catching?.hide();
@@ -142,17 +142,15 @@ function takeDown(...parts: ({ readonly root: HTMLElement } | null)[]): void {
 }
 
 /** The Games sheet of the save this page plays: a switch or a new game plays in place, and the tab keeps its game. */
-function gamesSheet(api: GameApi, catalog: Catalog, session: Session, playing: number, skip: Straight): GamesSheet {
+function gamesSheet(api: GameApi, catalog: Catalog, session: Session, playing: number): GamesSheet {
   return new GamesSheet(api, catalog.text, {
     playing: () => playing,
     open: (id) => { noteGame("switch", id); void session.resume(id); },
     begun: (made) => { noteGame("new", made.save.save_id); void session.begin(made); },
-    straight: browserStraight(),
-    skipLessons: skip,
   });
 }
 
-/** The lessons setting as the Games sheet's "skip" checkbox; a change redraws the screen, so a guided offer turns to its
+/** The lessons setting as the Settings sheet's "skip" checkbox; a change redraws the screen, so a guided offer turns to its
  * one tap (or back) at once. */
 function skipLessons(keeps: Keeps, redraw: () => void): Straight {
   return { get: () => !keeps.lessonsOn(), set: (skip) => { keeps.keepLessonsOn(!skip); redraw(); } };

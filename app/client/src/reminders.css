@@ -1,6 +1,8 @@
 /* Reminders (ui/reminders.ts) in the Settings sheet, and their one mention (ui/remindermention.ts). Shares
    game.css's tokens; only the slider and the row's layout are new. */
 .reminders-part { margin: 1rem 0 .5rem; }
+.devices-part > .reminders-part { margin: 0; }   /* in a Settings group, the group's own gap spaces it */
+.reminders-part .part-heading { margin: 0; }
 .reminders-said { margin: .3rem 0 .6rem; color: var(--ink); }
 .reminders-controls fieldset { border: 0; margin: 0 0 .9rem; padding: 0; min-width: 0; }
 .reminders-controls legend { padding: 0; margin-bottom: .35rem; color: var(--ink-hi); }

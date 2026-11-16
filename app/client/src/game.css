@@ -535,7 +535,7 @@ p.catching-up[hidden] { display: none; }
 /* Games (ui/games.ts): the account's games, the one played marked, the deleted ones held under them */
 .games-sheet, .settings-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
 .games-sheet .panel-heading, .settings-sheet .panel-heading { margin: 0 0 .2rem; }
-.games-choice { display: flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink); }   /* each kept choice on its own row (as .front-keep) */
+.settings-choice { display: flex; align-items: center; gap: .55rem; min-height: 2.4rem; cursor: pointer; color: var(--ink); }   /* each kept choice on its own row (as .front-keep) */
 /* the prestige sheet (ui/prestigesheet.ts): each node a row on a hairline */
 .prestige-sheet { max-width: min(30rem, calc(100vw - 2rem)); }
 .prestige-sheet .panel-heading { margin: 0 0 .2rem; }

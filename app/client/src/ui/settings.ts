@@ -1,22 +1,24 @@
-// Settings: a quiet text button at the panel's foot opening a sheet of this device's own choices, beside Games and
-// "Another device" (which holds only what moves a game between devices). The sheet's parts are listed in one array,
-// each a root and an open() called as the sheet opens.
+// Settings: a quiet text button at the panel's foot opening a sheet of the player's choices, beside Games and "Another
+// device" (which holds only what moves a game between devices). Each group is headed by what its choices are bound to,
+// this device or every game; each choice is shown as the sheet opens.
+import type { Straight } from "../app/straight";
 import { UI, type Text } from "../game/text";
 import { el } from "./dom";
 import type { ReminderRow } from "./reminders";
-
-export interface SettingsPart {
-  root: HTMLElement;
-  open(): void | Promise<void>;
-}
+import { checkChoice, straightChoice } from "./straightchoice";
 
 export class SettingsSheet {
   readonly button = el("button", "settings-open");
   readonly root = el("dialog", "sheet settings-sheet");
-  private readonly parts: SettingsPart[];
+  private readonly opens: (() => void | Promise<void>)[];
 
-  constructor(text: Text, readonly reminders: ReminderRow) {
-    this.parts = [reminders];
+  /** `straight` is this device's choice to open straight into a game; `skipLessons` the account's, checked: lessons off. */
+  constructor(text: Text, readonly reminders: ReminderRow, straight: Straight, skipLessons: Straight) {
+    const open = straightChoice(text, straight, "settings-choice", "settings-straight");
+    const lessons = checkChoice(text.get(UI.gameSkipLessons), skipLessons, "settings-choice", "settings-lessons");
+    const device = group(text.get(UI.settingsDevice), reminders.root, open.root);
+    const every = group(text.get(UI.settingsEvery), lessons.root);
+    this.opens = [() => reminders.open(), open.show, lessons.show];
     this.button.type = "button";
     this.button.textContent = text.get(UI.settingsOpen);
     this.button.addEventListener("click", () => void this.open());
@@ -25,14 +27,13 @@ export class SettingsSheet {
     close.addEventListener("click", () => this.root.close());
     const foot = el("div", "sheet-actions");
     foot.append(close);
-    this.root.append(el("h2", "panel-heading", text.get(UI.settingsHeading)), el("p", "devices-lead", text.get(UI.settingsDevice)),
-      ...this.parts.map((p) => p.root), foot);
+    this.root.append(el("h2", "panel-heading", text.get(UI.settingsHeading)), device, every, foot);
     this.root.addEventListener("click", (e) => { if (e.target === this.root) this.root.close(); });
   }
 
   /** Shows the sheet; resolves once every part has drawn what it offers. */
   async open(): Promise<void> {
-    const drawn = this.parts.map((p) => p.open());
+    const drawn = this.opens.map((show) => show());
     if (!this.root.open) this.root.showModal();
     await Promise.all(drawn);
   }
@@ -42,4 +43,11 @@ export class SettingsSheet {
     await this.open();
     this.reminders.focus();
   }
+}
+
+/** A group of choices under a heading naming what they are bound to, ruled like the parts of "Another device". */
+function group(heading: string, ...rows: HTMLElement[]): HTMLElement {
+  const box = el("section", "devices-part");
+  box.append(el("h3", "lane-tag", heading), ...rows);
+  return box;
 }

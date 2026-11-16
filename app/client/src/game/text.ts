@@ -135,7 +135,8 @@ export const UI = {
   devicesHeading: "ui.devices.heading",
   settingsOpen: "ui.settings.open", // the panel foot's way to the Settings sheet
   settingsHeading: "ui.settings.heading",
-  settingsDevice: "ui.settings.device", // the line above the choices this device keeps
+  settingsDevice: "ui.settings.device", // the group heading for the choices this device keeps
+  settingsEvery: "ui.settings.every", // the group heading for the choices every game shares
   codeLead: "ui.devices.code_lead",
   codeNote: "ui.devices.code_note", // "{d}": how long the code still works
   codeGone: "ui.devices.code_gone",
