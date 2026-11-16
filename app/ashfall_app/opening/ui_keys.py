@@ -71,6 +71,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.queue.heading",
     "ui.queue.plan",
     "ui.queue.full",
+    "ui.queue.move",
     "ui.mix.full",
     "ui.hands.next", "ui.hands.then", "ui.hands.until_goal",
     "ui.devices.open", "ui.devices.heading", "ui.devices.code_lead", "ui.devices.code_note", "ui.devices.code_gone",

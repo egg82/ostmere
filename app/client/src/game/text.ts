@@ -122,6 +122,7 @@ export const UI = {
   queueWhenReady: "ui.queue.when_ready", // a step's button that lines up its tap for when it turns ready
   queueQueued: "ui.queue.queued", // the same button once the tap is in the queue
   queueRunning: "ui.queue.running", // a Next entry whose tap a lane already runs, in Remove's place
+  queueMove: "ui.queue.move", // a Next entry's ≡, for screen readers: it drags, or moves by the arrow keys
   queueHeading: "ui.queue.heading", // the Rules tab's list of what the queue taps next
   queuePlan: "ui.queue.plan", // Next's "+ Plan": a stint written from the list (ui/stintplan.ts)
   queueFull: "ui.queue.full", // the When ready button's place once the queue holds Content.limits.max_queue

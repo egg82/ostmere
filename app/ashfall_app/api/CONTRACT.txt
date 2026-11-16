@@ -1054,6 +1054,8 @@ A LANE RUN BY RULES
     way, gone once c completes.
   - In Next, a tap_card entry whose card is some view.lanes entry's running_card is drawn with ui.queue.running in
     place of Remove: it stays in view.queue until that tap completes, and set_queue without it would not stop the work.
+  - The other Next entries may be reordered: one set_queue with the same entries (each verb and until unchanged) in the
+    new order, the entries a lane runs at their own indices.
   THE CLIENT MAY, for each lane in view.lanes whose LaneInfo.ruled is true:
   - draw it as a row under the hands strip, the hands strip's shape: its label, what it does (the label of
     running_card, or ui.lane.idle while free), the running card's bar (its Card in view.cards, sampled as any bar),
@@ -1137,6 +1139,7 @@ OFFERS
                                     offer (the answer's label), and the Rules tab's heading over such rules
                                     ui.rule.answered {answer}   the answer rule builder's word of the answer given
                                     ui.queue.running   a Next entry whose tap a lane already runs
+                                    ui.queue.move   a Next entry's ≡, for screen readers: it drags, or moves by the arrow keys
 
 CUT-IN
   A glowing step the hands have not done yet (CardInfo.glows, completions 0) is tappable while the hands run a task

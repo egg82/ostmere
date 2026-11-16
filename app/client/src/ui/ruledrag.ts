@@ -33,7 +33,8 @@ interface Drag {
 export class RuleDrag {
   private drag: Drag | null = null;
 
-  constructor(private readonly host: DragHost) {}
+  /** `attr`: the data attribute that numbers the draggable rows (`data-rule` for rules). */
+  constructor(private readonly host: DragHost, private readonly attr = "rule") {}
 
   /** A press is being dragged (or may become a drag). */
   get active(): boolean {
@@ -52,7 +53,7 @@ export class RuleDrag {
       if (!drag || drag.pointer !== e.pointerId) return;
       if (!drag.ghost) {
         if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < DRAG_PX) return;
-        drag.ghost = this.lift(this.host.root.querySelector<HTMLElement>(`.rules-row[data-rule="${drag.what.rule}"]`) ?? node);
+        drag.ghost = this.lift(this.host.root.querySelector<HTMLElement>(`.rules-row[data-${this.attr}="${drag.what.rule}"]`) ?? node);
       }
       drag.ghost.style.transform = `translate(${e.clientX - drag.x}px, ${e.clientY - drag.y}px)`;
       this.aim(drag, e.clientY);
@@ -95,10 +96,10 @@ export class RuleDrag {
     for (const n of root.querySelectorAll(".drop-before, .drop-after")) n.classList.remove("drop-before", "drop-after");
     drag.target = null;
     const group = this.host.group(view, drag.what.rule);
-    const rows = [...root.querySelectorAll<HTMLElement>(".rules-row[data-rule]")].filter((r) => group.includes(Number(r.dataset.rule)));
+    const rows = [...root.querySelectorAll<HTMLElement>(`.rules-row[data-${this.attr}]`)].filter((r) => group.includes(Number(r.dataset[this.attr])));
     if (rows.length === 0) return;
     const at = rows.find((r) => y < r.getBoundingClientRect().bottom) ?? rows[rows.length - 1]!;
-    const from = group.indexOf(drag.what.rule), to = group.indexOf(Number(at.dataset.rule));
+    const from = group.indexOf(drag.what.rule), to = group.indexOf(Number(at.dataset[this.attr]));
     if (from === to || to < 0) return;
     at.classList.add(to > from ? "drop-after" : "drop-before");
     drag.target = at;

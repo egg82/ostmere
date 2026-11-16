@@ -77,6 +77,31 @@ export function unqueue(view: View, index: number): Decision {
   return { kind: "set_queue", entries: view.queue.filter((_, i) => i !== index) };
 }
 
+/** Whether a lane is running the card the entry taps: the entry stays queued until that tap completes, so it holds its
+ * place and is not offered a Remove. */
+export function runsNow(view: View, entry: QueueEntry): boolean {
+  const verb = entry.verb;
+  return verb.kind === "tap_card" && view.lanes.some((l) => l.running_card === verb.card);
+}
+
+/** The entries Next lets move, in order: all but those a lane already runs. */
+export function movableEntries(view: View): number[] {
+  return view.queue.flatMap((e, i) => (runsNow(view, e) ? [] : [i]));
+}
+
+/** The queue with entry `from` moved to entry `to`'s place among the movable ones; the entries a lane runs keep their
+ * places. Null when either is not movable or they are the same. */
+export function moveQueued(view: View, from: number, to: number): Decision | null {
+  const slots = movableEntries(view);
+  const a = slots.indexOf(from), b = slots.indexOf(to);
+  if (a < 0 || b < 0 || a === b) return null;
+  const order = slots.map((i) => view.queue[i]!);
+  order.splice(b, 0, ...order.splice(a, 1));
+  const entries = [...view.queue];
+  slots.forEach((slot, k) => { entries[slot] = order[k]!; });
+  return { kind: "set_queue", entries };
+}
+
 /** The card the queue taps next: its head's, or, while the head's card already runs on the hands, the entry's after
  * it; null when that entry is missing or switches a mix. */
 export function nextCard(view: View): string | null {

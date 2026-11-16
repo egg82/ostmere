@@ -1,12 +1,11 @@
 // The Rules tab (docs/design/opening-screen.md, "The Rules tab"): every rule the player has, one line each, beside
 // Tasks and Completed. The hands rules, top priority first (the town's rules, ruletown.ts, are drawn as these are, in
-// their own order): ≡ (drag to reorder; tap for Move up · Move down · Remove;
-// arrow keys move it), the condition as a button that opens the condition editor (condition.ts) in the tab, → and the
-// mix slot, which opens a picker. Then Next, what the queue will tap (nextlist.ts), and "Otherwise", the
-// player's own mix, whose slot sets the default.
-// "+ New rule" once writing rules is open (Keeps.ruleSeen, the taught step); changing a rule is never gated. Under it,
-// each side lane's task rules under the lane's label; a ruled lane's always rule, and its row's Change, open that lane's
-// task editor (laneedit.ts). Every change sends the whole list (set_orders) in its new order.
+// their own order): ≡ (drag to reorder; tap for Move up · Move down · Remove; arrow keys move it), the condition as a
+// button that opens the condition editor (condition.ts) in the tab, → and the mix slot, which opens a picker. Then
+// Next, what the queue will tap (nextlist.ts, ordered by nextorder.ts), and "Otherwise", the player's own mix, whose
+// slot sets the default. "+ New rule" once writing rules is open (Keeps.ruleSeen, the taught step); changing a rule is
+// never gated. Under it, each side lane's task rules under the lane's label; a ruled lane's always rule, and its row's
+// Change, open that lane's task editor (laneedit.ts). Every change sends the whole list (set_orders) in its new order.
 import type { Condition, Decision, RuleRun, View } from "../api/types";
 import { chipOf, mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
 import { UI } from "../game/text";
@@ -19,6 +18,7 @@ import { LaneEditor } from "./laneedit";
 import { alwaysWords, ruledLaneOf } from "../game/lanes";
 import { townRules } from "../game/town";
 import { nextRows } from "./nextlist";
+import { NextOrder } from "./nextorder";
 import { StintPlan } from "./stintplan";
 import type { Part, PartContext, RuleTarget } from "./part";
 import { RuleDrag } from "./ruledrag";
@@ -52,6 +52,7 @@ export class RulesTab implements Part {
   /** The rule whose handle takes focus after the next draw (it was moved by a key). */
   private focus: number | null = null;
   private readonly drag: RuleDrag;
+  private readonly order: NextOrder;
   private readonly slider = new Slider(this.root);
   /** A press is down inside the tab: a redraw waits for it, so the node under the finger stays. */
   private pressing = false;
@@ -65,6 +66,7 @@ export class RulesTab implements Part {
       dropped: (what, target) => this.send(reorderRule(this.view!, what.rule, Number(target.dataset.rule), this.groupOf(this.view!, what.rule)), shiftOf(this.groupOf(this.view!, what.rule), what.rule, Number(target.dataset.rule))),
       ended: () => { this.pressing = false; this.draw(); },
     });
+    this.order = new NextOrder(ctx, this.root, () => this.view, () => { this.pressing = false; this.draw(); });
     this.root.append(this.list, this.lanes, this.lately);
     this.root.addEventListener("pointerdown", () => { this.pressing = true; });
     for (const t of ["pointerup", "pointercancel"]) document.addEventListener(t, () => this.release());
@@ -150,7 +152,7 @@ export class RulesTab implements Part {
     const rules = mixRules(view).filter((i) => !town.includes(i));
     const rows = rules.flatMap((i) => this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view.orders[i]!), view.orders[i]!.or_else.length > 0)], false));
     const write = this.ctx.keeps.ruleSeen() ? [this.newRule(view)] : [];
-    this.list.replaceChildren(...rows, ...nextRows(this.ctx, view, this.plan), this.otherwiseRow(view), ...write);
+    this.list.replaceChildren(...rows, ...nextRows(this.ctx, view, this.plan, this.order), this.otherwiseRow(view), ...write);
     this.lanes.replaceChildren(...townSection(this.ctx, view, this.townRows(view)), ...laneSections(this.ctx, view, (i) => this.condButton(view, i)));
     this.lately.replaceChildren(...latelyRows(this.ctx.catalog, view, this.ctx.ruleRuns()));
     this.slider.play(view);
@@ -260,17 +262,15 @@ export class RulesTab implements Part {
 
   private pickSlot(view: View, slot: Slot): HTMLElement[] {
     return slotPicker(this.ctx, view, slot, {
-      place: (mixId) => { this.place(view, slot, mixId); this.back(); },
+      place: (mixId) => {
+        const d = pointSlot(view, slot, mixId);
+        if (d?.kind === "set_orders") noteRuleChanged();
+        if (d) this.ctx.actions.decide(d);
+        this.back();
+      },
       fresh: () => { this.mode = { kind: "list" }; this.ctx.actions.newMix(slot === "otherwise" ? null : slot); },
       close: () => this.back(),
     });
-  }
-
-  private place(view: View, slot: Slot, mixId: string): void {
-    const d = pointSlot(view, slot, mixId);
-    if (!d) return;
-    if (d.kind === "set_orders") noteRuleChanged();
-    this.ctx.actions.decide(d);
   }
 
   /** The last line: what runs when no rule does, the player's own mix. */

@@ -6,9 +6,12 @@ import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { QueueEntry, View } from "../src/api/types";
 import { nextRows } from "../src/ui/nextlist";
+import { NextOrder } from "../src/ui/nextorder";
+import type { PartContext } from "../src/ui/part";
 import { StintPlan } from "../src/ui/stintplan";
 
 install();
+const idle = (ctx: PartContext): NextOrder => new NextOrder(ctx, document.createElement("div"), () => null, () => {});
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
@@ -22,15 +25,15 @@ const queue = [tapOf("larder", 1), tapOf("lean_to", 2)];
 const running: View = { ...ended, queue,
   lanes: ended.lanes.map((l) => (l.lane === "hands" ? { ...l, running_card: "larder", completes_at: 400 } : l)) };
 
-{  // control: with the hands free, both entries offer Remove
+{  // control: with the hands free, both entries offer Remove and a ≡
   const { ctx } = testContext();
-  const rows = nextRows(ctx, { ...ended, queue }, new StintPlan(ctx, () => {}));
-  expect("both removable", rows.map((r) => r.textContent), ["Next", "LarderRemove", "Lean-toRemove"]);
+  const rows = nextRows(ctx, { ...ended, queue }, new StintPlan(ctx, () => {}), idle(ctx));
+  expect("both removable", rows.map((r) => r.textContent), ["Next", "≡LarderRemove", "≡Lean-toRemove"]);
 }
 
 {  // the head's card is on the hands: it reads under way and has no Remove; the entry behind it keeps its own
   const { ctx } = testContext();
-  const rows = nextRows(ctx, running, new StintPlan(ctx, () => {}));
+  const rows = nextRows(ctx, running, new StintPlan(ctx, () => {}), idle(ctx));
   expect("under way, no Remove", rows.map((r) => r.textContent), ["Next", "Larderunder way", "Lean-toRemove"]);
   expect("no button on the running entry", rows[1]!.querySelectorAll("button").length, 0);
 }
