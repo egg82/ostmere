@@ -19,3 +19,8 @@
 .threats[hidden] { display: none; }
 .threat-name { display: block; font-weight: 500; color: var(--ink-hi); }
 .threat .fight { padding: 0; }
+.bonus { display: flex; flex-direction: column; align-items: flex-start; }   /* a kept bonus's line (ui/bonus.ts): a card's sits under its tap, padded as the odds are */
+.card > .bonus { padding: 0 .8rem .35rem .9rem; margin-top: -.2rem; }
+.bonus-link { min-height: 1.75rem; padding: 0; font: inherit; font-size: var(--t-meta); color: var(--ink); text-align: left; background: transparent; border: 0; text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; cursor: pointer; }   /* underlined as the strengths are */
+.bonus-link:hover, .bonus-link:focus-visible, .bonus-link[aria-expanded="true"] { color: var(--ink-hi); text-decoration-color: var(--ink-hi); }
+.bonus .fight-entries { align-self: stretch; font-size: var(--t-meta); color: var(--ink); }
