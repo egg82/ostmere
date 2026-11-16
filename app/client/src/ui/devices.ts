@@ -1,7 +1,7 @@
 // "Another device" (CONTRACT.txt, "Moving to another device"): a quiet text button at the panel's foot opening a sheet
 // of four parts, a code to join another device to this game (devicecode.ts), recovery words for when every device is
 // gone (devicewords.ts), joining this device to another (devicejoin.ts), and the account's browsers with a Remove on
-// each (devicelist.ts), then this device's reminders (reminders.ts). A join that left this device's games behind replaces the four with the step that shows their
+// each (devicelist.ts); this device's own choices, reminders among them, are the Settings sheet's (settings.ts). A join that left this device's games behind replaces the four with the step that shows their
 // words (devicekept.ts), and the sheet cannot be closed until its Continue reloads. The button carries the quiet dot while recovery words are due and the sheet has never been
 // opened; opening it clears the dot for good (Keeps).
 import type { GameApi } from "../api/api";
@@ -13,7 +13,6 @@ import { UI, type Text } from "../game/text";
 import { CodePart } from "./devicecode";
 import { DeviceList } from "./devicelist";
 import { KeptPart } from "./devicekept";
-import { ReminderRow } from "./reminders";
 import { JoinPart } from "./devicejoin";
 import { WordsPart } from "./devicewords";
 import { el } from "./dom";
@@ -36,7 +35,6 @@ export class Devices {
   private readonly joining: JoinPart;
   private readonly list: DeviceList;
   private readonly kept: KeptPart;
-  readonly reminders: ReminderRow;
   private readonly actions = el("div", "sheet-actions");
   private held = false;
 
@@ -52,7 +50,6 @@ export class Devices {
     this.kept = new KeptPart(ctx);
     this.joining = new JoinPart(ctx, WORDS_LABEL, (kept) => this.leave(kept));
     this.list = new DeviceList(ctx);
-    this.reminders = new ReminderRow(text);
     this.button.type = "button";
     this.button.append(text.get(UI.devicesOpen));
     this.dot.setAttribute("aria-hidden", "true");
@@ -64,7 +61,7 @@ export class Devices {
     close.addEventListener("click", () => this.root.close());
     this.actions.append(close);
     this.root.append(el("h2", "panel-heading", text.get(UI.devicesHeading)), this.code.root, this.words.root,
-      this.joining.root, this.list.root, this.reminders.root, this.kept.root, this.actions);
+      this.joining.root, this.list.root, this.kept.root, this.actions);
     this.root.addEventListener("click", (e) => { if (e.target === this.root && !this.held) this.root.close(); });
     this.root.addEventListener("cancel", (e) => { if (this.held) e.preventDefault(); });
     this.root.addEventListener("close", () => this.code.stop());
@@ -73,7 +70,7 @@ export class Devices {
   /** The join left this device's games on their old account: only their words are left to show. */
   private leave(kept: KeptGames): void {
     this.held = true;
-    for (const part of [this.code.root, this.words.root, this.joining.root, this.list.root, this.reminders.root, this.actions]) part.hidden = true;
+    for (const part of [this.code.root, this.words.root, this.joining.root, this.list.root, this.actions]) part.hidden = true;
     this.code.stop();
     this.kept.show(kept);
   }
@@ -84,7 +81,6 @@ export class Devices {
     this.keeps.keepDevicesOpened();
     this.words.reset();
     this.list.open();
-    void this.reminders.open();
     if (!this.root.open) this.root.showModal();
     if (join === null) void this.code.make();
     else this.joining.fill(join);

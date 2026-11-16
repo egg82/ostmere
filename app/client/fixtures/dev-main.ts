@@ -4,13 +4,14 @@
 // tab, #rule=N the condition editor on its Nth rule's condition, #pick=N the picker on its Nth mix slot. #seen opens
 // writing rules (as if a rule had been seen on then off); #new then opens the Rules tab's New rule, #plan its Next's Plan. #limited makes a send of feedback answer 429. The shortcuts:
 // #change (the ledger's Change), #covered (a ledger line's "covered"), #strip (the strip's "until …"). #due marks
-// recovery words due; #devices opens the "Another device" sheet; #join=CODE is a join link; #have opens "I have a code".
+// recovery words due; #devices opens the "Another device" sheet; #settings the Settings sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
 // `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers (the answer rule's builder).
 // #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page (#manydone finishes every card) and #town the Town tab (a phone's). #journal opens the Book on its Journal (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone). Phases asksone and asksmany open the Asks list (asks.ts); phase feel lands a chain on each tap (feel.ts).
 import "../src/game.css";
 import "../src/fights.css";
 import "../src/slider.css";
+import "../src/reminders.css";
 import { wireBegin } from "../src/begin";
 import { fixtureContent, Q } from "./content";
 import { isFights, withHurtChip } from "./fights";
@@ -69,6 +70,7 @@ function clickWhenShown(selector: string, then?: () => void, tries = 100, nth = 
 if (hash.has("sheet")) clickWhenShown(".hands-name, .hands-plan");
 if (hash.has("devices")) clickWhenShown(".devices-open");
 if (hash.has("games")) clickWhenShown(".games-open");
+if (hash.has("settings")) clickWhenShown(".settings-open");
 if (hash.has("journal")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page[data-page=journal]"));
 if (hash.has("chronicle")) clickWhenShown(".tabs [data-tab=book]");
 if (hash.has("town")) clickWhenShown(".tabs [data-tab=town]");

@@ -133,6 +133,10 @@ export const UI = {
   handsUntilGoal: "ui.hands.until_goal", // "{goal}": the strip while a goal stint's mix runs, where it lets go
   devicesOpen: "ui.devices.open", // the panel foot's way to the "Another device" sheet
   devicesHeading: "ui.devices.heading",
+  settingsOpen: "ui.settings.open", // the panel foot's way to the Settings sheet
+  settingsHeading: "ui.settings.heading",
+  settingsDevice: "ui.settings.device", // the group heading for the choices this device keeps
+  settingsEvery: "ui.settings.every", // the group heading for the choices every game shares
   codeLead: "ui.devices.code_lead",
   codeNote: "ui.devices.code_note", // "{d}": how long the code still works
   codeGone: "ui.devices.code_gone",

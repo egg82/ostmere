@@ -195,14 +195,15 @@ export class FakeEl {
   }
 }
 
-/** One compound selector: tag, .classes, [attr] / [attr="v"], :scope. */
+/** One compound selector: tag, .classes, [attr] / [attr="v"], :scope, :checked. */
 function matchCompound(n: FakeEl, sel: string, scope?: FakeEl): boolean {
   if (sel === ":scope") return n === scope;
-  const m = /^([a-z][\w-]*)?((?:\.[\w-]+|\[[^\]]+\]|:scope)*)$/i.exec(sel);
+  const m = /^([a-z][\w-]*)?((?:\.[\w-]+|\[[^\]]+\]|:scope|:checked)*)$/i.exec(sel);
   if (!m) throw new Error(`fake-dom: selector not understood: ${sel}`);
   if (m[1] && n.tagName !== m[1]) return false;
-  for (const part of m[2]!.match(/\.[\w-]+|\[[^\]]+\]|:scope/g) ?? []) {
+  for (const part of m[2]!.match(/\.[\w-]+|\[[^\]]+\]|:scope|:checked/g) ?? []) {
     if (part === ":scope") { if (n !== scope) return false; continue; }
+    if (part === ":checked") { if (!n.checked) return false; continue; }
     if (part.startsWith(".")) { if (!n.classList.contains(part.slice(1))) return false; continue; }
     const a = /^\[([\w-]+)(?:="([^"]*)")?\]$/.exec(part);
     if (!a) throw new Error(`fake-dom: attribute selector not understood: ${part}`);

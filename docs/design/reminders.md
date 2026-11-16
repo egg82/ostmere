@@ -102,7 +102,7 @@ reminding is the point. Ostmere's carries no task and no miss.
 
 ## What the player sees
 
-- **The setting** sits in the Devices sheet (`app/client/src/ui/devices.ts`) as a row for this device, off at first:
+- **The setting** sits in the Settings sheet (`app/client/src/ui/settings.ts`, a panel-foot button beside Games) as a row for this device, off at first:
   "Reminders" with the choices **12 hours, a day, 3 days, a week** (data, one file) and the line "One notification when
   you've been away that long. None after it until you're back." Beside the absence length sits the window the
   reminder may arrive in, the player's own: a slider with two handles over the 24 hours, **from** and **until**, first at 9 and 21 (where the
@@ -112,7 +112,7 @@ reminding is the point. Ostmere's carries no task and no miss.
   purpose already on screen: "Ostmere sends one notification after you've been away for the time you pick." Turning
   it off deletes the row and says "Reminders are off."
 - **The single mention.** After the opening's end lines have been read and no lesson holds the glow, one quiet row
-  with a button: "If you'd like a nudge to come back, there's a setting for it." / `Open settings`. No dot, glow or
+  with a button: "If you'd like a nudge to come back, there's a setting for it." / `Open settings`. The button opens the Settings sheet with the row focused. No dot, glow or
   badge (`decisions.md`, "Shown in the design"). It is shown once per account. The store is a new bool in
   `AccountPresentation` (`reminder_mentioned`, merged by OR like `devices_opened`), **written when the row is drawn**,
   not when it is tapped, so taking it up, closing it, ignoring it and loading it on a second device all leave it gone.

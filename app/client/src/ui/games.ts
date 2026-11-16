@@ -4,13 +4,11 @@
 // held come last, each with Restore. What a tap does to the page (switch, a new game) is the caller's (GamesActions).
 import { ApiFailure, type GameApi } from "../api/api";
 import type { DeletedSave, Games, NewSave, SaveInfo } from "../api/types";
-import type { Straight } from "../app/straight";
 import { dateOf } from "../game/format";
 import { DELETE_WORDS, START_OVER_WORDS, deleteParts, startOver } from "./gamedelete";
 import { UI, type Text } from "../game/text";
 import { noteGame } from "../telemetry";
 import { el } from "./dom";
-import { checkChoice, straightChoice, type StraightChoice } from "./straightchoice";
 
 export interface GamesActions {
   /** The save this page plays now. */
@@ -19,10 +17,6 @@ export interface GamesActions {
   open(saveId: number): void;
   /** Play a save just made by New game. */
   begun(made: NewSave): void;
-  /** This device's choice to open straight into a game, shown as a checkbox. */
-  straight: Straight;
-  /** The account's choice to skip lessons in every game, shown as a checkbox (checked: lessons off). */
-  skipLessons: Straight;
 }
 
 export class GamesSheet {
@@ -32,8 +26,6 @@ export class GamesSheet {
   private readonly held = el("section", "games-held");
   private readonly note = el("p", "games-note");
   private readonly make = el("button", "primary");
-  private readonly straight: StraightChoice;
-  private readonly skipLessons: StraightChoice;
   private games: Games | null = null;
   private asking: number | null = null;   // the game whose Delete asks once more
   private busy = false;
@@ -46,23 +38,18 @@ export class GamesSheet {
     this.make.type = "button";
     this.make.textContent = text.get(UI.gameNew);
     this.make.addEventListener("click", () => void this.begin());
-    this.straight = straightChoice(text, actions.straight, "games-choice", "games-straight");
-    this.skipLessons = checkChoice(text.get(UI.gameSkipLessons), actions.skipLessons, "games-choice", "games-lessons");
     const close = el("button", "quiet", text.get(UI.close));
     close.type = "button";
     close.addEventListener("click", () => this.root.close());
     const foot = el("div", "sheet-actions");
     foot.append(close, this.make);
-    this.root.append(el("h2", "panel-heading", text.get(UI.gamesHeading)), this.list, this.note, this.held, this.straight.root,
-      this.skipLessons.root, foot, el("p", "games-credit", text.get(UI.creditsStains)));
+    this.root.append(el("h2", "panel-heading", text.get(UI.gamesHeading)), this.list, this.note, this.held, foot, el("p", "games-credit", text.get(UI.creditsStains)));
     this.root.addEventListener("click", (e) => { if (e.target === this.root) this.root.close(); });
   }
 
   open(): void {
     this.asking = null;
     this.note.textContent = "";
-    this.straight.show();
-    this.skipLessons.show();
     if (!this.root.open) this.root.showModal();
     void this.run(() => this.api.games());
   }

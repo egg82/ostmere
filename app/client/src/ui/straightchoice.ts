@@ -1,5 +1,5 @@
 // A choice the player keeps as a checkbox: "Skip the front page on this device" (app/straight.ts), on the front page and
-// in the Games sheet, and "Skip lessons in every game" (the account's lessons setting), in the Games sheet.
+// in the Settings sheet, and "Skip lessons" (the account's lessons setting), in the Settings sheet.
 import type { Straight } from "../app/straight";
 import { UI, type Text } from "../game/text";
 import { el } from "./dom";

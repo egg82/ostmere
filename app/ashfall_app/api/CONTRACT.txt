@@ -818,13 +818,16 @@ TEXT AND NUMBERS (one rule)
     ui.games.dates {started}{played} | ui.games.playing | ui.games.switch | ui.games.delete |
     ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited | ui.games.credits_stains |
     ui.games.deleted_heading | ui.games.kept {until} | ui.games.restore |
-    ui.games.straight | ui.games.skip_lessons
                                     the Games button and its sheet: a save's name (and one with no number), how far,
                                     its dates, the open one's mark, Open, Delete and its confirmation, New game, the
                                     lines for the cap, the new-game limit and the last live save, and the deleted saves
-                                    with Restore, the checkbox that skips the front page on this device (shown in
-                                    this sheet and on the front page), and the checkbox that turns lessons off in every
-                                    game of the account (AccountSettings.lessons, checked when it is false)
+                                    with Restore
+    ui.settings.open | ui.settings.heading | ui.settings.device | ui.settings.every |
+    ui.games.straight | ui.games.skip_lessons
+                                    the Settings button and its sheet, in groups headed by what a choice is bound to
+                                    (this device, every game): the checkbox that skips the front page on this device
+                                    (shown in this sheet and on the front page), and the checkbox that turns lessons off
+                                    in every game of the account (AccountSettings.lessons, checked when it is false)
     ui.games.played {when}          the front page's list of games: a row's last-played line, {when} one of the ui.time.*
                                     words (the list's heading is ui.games.heading, the phone's button ui.games.open)
     ui.front.continue               the front page's button, in Begin's place, on a browser that has games

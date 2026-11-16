@@ -1,4 +1,4 @@
-// The text keys of the reminders row in the "Another device" sheet and its one mention (merged into `UI`, game/text.ts).
+// The text keys of the reminders row in the Settings sheet and its one mention (merged into `UI`, game/text.ts).
 export const REMINDER_KEYS = {
   remindersHeading: "ui.reminders.heading",
   remindersLead: "ui.reminders.lead",   // what turning on does, on screen before the browser asks

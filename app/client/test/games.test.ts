@@ -33,7 +33,7 @@ function rig(begin: () => Promise<NewSave> = no) {
   };
   const opened: number[] = [];
   const begun: number[] = [];
-  const sheet = new GamesSheet(api, text, { playing: () => 1, open: (id) => opened.push(id), begun: (m) => begun.push(m.save.save_id), straight: { get: () => false, set: () => undefined }, skipLessons: { get: () => false, set: () => undefined } });
+  const sheet = new GamesSheet(api, text, { playing: () => 1, open: (id) => opened.push(id), begun: (m) => begun.push(m.save.save_id) });
   const holder = document.createElement("div");
   holder.append(sheet.button, sheet.root);
   document.body.replaceChildren(holder);
