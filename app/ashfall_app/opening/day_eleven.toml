@@ -342,6 +342,14 @@ label_key = "action_n7_eating"
 costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 while_running = [{ lane = "n7", amount_bp = 1500 }]
 
+# Smoked kept up with roots once the family eats meat: the snares fall short of the eating (issue #102), so the rule
+# smokes roots under 15 until 24, past the day's need of 18 and under the larder's cap by then (offer_caps.py).
+[[order_cards]]
+store = "smoked"
+tap_card = "smoke_roots"
+when = { test = "at_most", subject_kind = "store", id = "smoked", value = 14, release = 24 }
+offered_after = { unlock_kind = "action", id = "n5_eating" }
+
 # His stakes by a rule: under the hut's and the posts' worth he cuts until near full, so a full stack sends him back to
 # his share instead of filling past the cap (the cord rule's shape).
 [[order_cards]]
