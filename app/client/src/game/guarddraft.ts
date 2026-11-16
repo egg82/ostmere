@@ -3,7 +3,7 @@
 // "unless smoked is under 10" blocks under 10 and lets go from 11. A share keeps the same share for both levels, which
 // the engine widens to a band of one item (CONTRACT.txt, "Share levels"). The page words a guard in guardwords.ts.
 import type { Condition } from "../api/types";
-import { BP, isShare, SHARE_STEP, type Level, type Test } from "./storerule";
+import { BP, crossing, isShare, SHARE_STEP, type Level, type Test } from "./storerule";
 
 export interface Guard {
   store: string;
@@ -12,15 +12,15 @@ export interface Guard {
   level: Level;
 }
 
-/** The condition the guard saves. `q`: Scales.quantity_per_item. */
-export function buildGuard(g: Guard, q: number): Condition {
+/** The condition the guard saves. `q`: Scales.quantity_per_item; `level`: the store is a level (Catalog.isLevel), whose
+ * whole items cross on its chip's reading (storerule.ts). */
+export function buildGuard(g: Guard, q: number, level = false): Condition {
   const watched = { kind: "store_value" as const, store: g.store };
   const share = isShare(g.level);
   const n = isShare(g.level) ? g.level.share : g.level.items;
-  if (g.test === "reaches") {
-    return { kind: "at_least", watched, value: share ? n : n * q, release: share ? n : (n - 1) * q, value_of_cap: share, release_of_cap: share };
-  }
-  return { kind: "at_most", watched, value: share ? n : n * q - 1, release: share ? n : (n + 1) * q - 1, value_of_cap: share, release_of_cap: share };
+  const below = g.test === "below";
+  const at = (items: number): number => (share ? n : crossing(items, below, q, level));
+  return { kind: below ? "at_most" : "at_least", watched, value: at(n), release: at(below ? n + 1 : n - 1), value_of_cap: share, release_of_cap: share };
 }
 
 /** Whether the page builds the guard on a store of `cap` whole items: a share inside 0..BP that is neither always on
@@ -32,8 +32,9 @@ export function guardValid(g: Guard, cap: number): boolean {
   return g.test === "reaches" ? g.level.items >= 2 && g.level.items <= cap : g.level.items >= 1 && g.level.items <= cap - 1;
 }
 
-/** Where a new guard starts: "unless {store} is full". */
-export const defaultGuard = (store: string): Guard => ({ store, test: "reaches", level: { share: BP } });
+/** Where a new guard starts: "unless {store} is full"; on a level store (`cap` its whole items, else null) its levels are
+ * whole items only, so it starts at the cap. */
+export const defaultGuard = (store: string, cap: number | null = null): Guard => ({ store, test: "reaches", level: cap === null ? { share: BP } : { items: cap } });
 
 /** The guard's level in the other form, standing about where it reads now. */
 export function otherForm(g: Guard, cap: number): Level {
@@ -42,8 +43,10 @@ export function otherForm(g: Guard, cap: number): Level {
 }
 
 /** The guard with its test changed: its level stays when the page builds it so, else it moves to where a new guard of
- * that test starts (full for "or more", a quarter for "under"). */
-export function withTest(g: Guard, test: Test, cap: number): Guard {
+ * that test starts (full for "or more", a quarter for "under"; in whole items on a level store, `items`). */
+export function withTest(g: Guard, test: Test, cap: number, items = false): Guard {
   const next = { ...g, test };
-  return guardValid(next, cap) ? next : { ...next, level: { share: test === "reaches" ? BP : 2500 } };
+  if (guardValid(next, cap)) return next;
+  const share = test === "reaches" ? BP : 2500;
+  return { ...next, level: items ? { items: test === "reaches" ? cap : Math.max(1, Math.ceil(cap / 4)) } : { share } };
 }

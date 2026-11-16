@@ -2,7 +2,7 @@
 import type { ChipInfo, View } from "../api/types";
 import { sample } from "../game/clock";
 import type { Catalog } from "../game/catalog";
-import type { DoChoice } from "../game/ruleoffers";
+import { storeItems, type DoChoice } from "../game/ruleoffers";
 import type { Test } from "../game/storerule";
 import { setText } from "./dom";
 
@@ -15,8 +15,9 @@ export function markPressed(catalog: Catalog, view: View, does: HTMLElement, chi
   }
   for (const b of chips.querySelectorAll<HTMLButtonElement>(".cond-store")) {
     const line = view.ledger.find((l) => l.store === b.dataset.store);
+    const level = b.dataset.store !== undefined && catalog.isLevel(b.dataset.store) ? storeItems(catalog, view, b.dataset.store) : null;
     b.setAttribute("aria-pressed", String(b.dataset.chip !== undefined ? chip?.chip === b.dataset.chip : !chip && b.dataset.store === rule.store));
     const amount = b.querySelector(".cond-amount");
-    if (amount) setText(amount, line ? catalog.format.amount(sample(line.segment, view.at), line.cap) : "");
+    if (amount) setText(amount, line ? catalog.format.amount(sample(line.segment, view.at), line.cap) : level === null ? "" : catalog.format.count(level));
   }
 }

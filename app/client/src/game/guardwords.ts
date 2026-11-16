@@ -24,7 +24,7 @@ export function guardWords(catalog: Catalog, guard: Condition): string | null {
   const subject = readSubject(catalog, guard);
   if (subject?.kind === "count") return text.fill(subject.n === 1 ? UI.guardDoneOnce : UI.guardDone, { card: catalog.cardLabel(subject.card), n: format.count(subject.n) });
   if (subject) return text.fill(UI.guardLevel, { name: subjectName(catalog, subject), n: format.count(subject.n) });
-  const rule = readRule(guard, catalog.content.scales.quantity_per_item);
+  const rule = readRule(guard, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
   if (!rule) return null;
   const store = catalog.storeLabel(rule.store);
   const below = rule.test === "below";
