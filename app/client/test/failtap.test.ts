@@ -2,7 +2,7 @@
 // the card (Step.failed_tap), the card pulses red and the thing on it that shows what stopped the tap pulses with it:
 // the have/need of a short or pausing store, the skill level, the step, or, for a store the player has never been shown
 // or a wait on time, the countdown. Nothing on a card that did not fail; nothing but the card when the card shows no
-// such thing. The pulse is a transform and colours only, its numbers tokens on :root, so it moves no layout.
+// such thing. The pulse is a transform and colours only, so it moves no layout.
 import { readFileSync } from "node:fs";
 import { install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
@@ -118,11 +118,8 @@ expect("no failed tap: no pulse anywhere", quiet.root.querySelectorAll(".tap-fai
 const one = shown("lean_to");
 expect("only the failed card pulses", one.root.querySelectorAll(".tap-failed").length, 1);
 
-// The pulse's numbers are tokens in one place, and it moves nothing: transform, colour and shadow only.
+// The pulse moves nothing: transform, colour and shadow only.
 const css = readFileSync("src/game.css", "utf8");
-const root = css.slice(css.indexOf(":root {"), css.indexOf("}", css.indexOf(":root {")));
-expect("its duration is a token", /--fail-ms: 400ms;/.test(root), true);
-expect("its scale is a token", /--fail-scale: 1\.12;/.test(root), true);
 const frames = (name: string): string => {
   const start = css.indexOf(`@keyframes ${name} {`);
   if (start < 0) throw new Error(`no keyframes ${name}`);

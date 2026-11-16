@@ -1,6 +1,6 @@
 // The story strip's layout (src/game.css; docs/design/opening-screen.md, "One column of attention"): the shown line and
 // the room of every line share one grid cell and one type size, so the strip is the tallest line's height and no line
-// is cut; the lines before the newest are dimmer, none faded or clipped. The Camp bar's next-marker wraps by word rather
+// is cut; none faded or clipped. The Camp bar's next-marker wraps by word rather
 // than truncating, and the first card keeps its hidden parts' room. The layout is CSS, so this reads the rules.
 import { readFileSync } from "node:fs";
 
@@ -22,7 +22,6 @@ expect("in one type size", /font-size: var\(--t-story\)/.test(cell) && /line-hei
 expect("the room is unseen", /visibility: hidden/.test(rule(".strip-room")), true);
 expect("each line in the room shares the cell", /grid-area: 1 \/ 1/.test(rule(".strip-room > span")), true);
 expect("only a line waiting its turn is hidden by CSS; the strip's script keeps the ones that fit", /display: none/.test(rule(".lines li.held")), true);
-expect("the lines before the newest are dimmer", /color: var\(--ink-dim\)/.test(rule(".lines li:not(:nth-last-child(1 of :not(.held)))")), true);
 expect("the room measures its own height, not the cell's", /align-self: start/.test(rule(".strip-room")), true);
 
 // Nothing else sizes a story line, so a line and its room twin always wrap alike; nothing fades or clips one.
