@@ -50,6 +50,8 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | O16 | `opening/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct: story order | fails |
 | O17 | `opening/test_first_rule_offer.py` | every route meets a rule offer before the end | babysit (the tool is taught) | fails |
 | O18 | the by_hand player past the end | actions between the offer and the door's glow | taste | readout |
+| O19 | `opening/speed_reach.py`, `node_size_lines` | each skill's track nodes by size in basis points per rank | taste | readout |
+| O20 | same, `reach_lines` | the cards of another skill a later phase's speed pay also speeds; the loader refuses only a card that does not exist | taste | readout |
 
 ### Day one (job `playthrough`; `dayone/verdicts.py`; readouts `dayone/report.py`)
 
@@ -81,7 +83,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D27 | `dayone/test_dayone_rebase.py`: `test_the_rebased_story_lands_in_order` | a golden ended save's story lands in order; what its load opens is the readout's | correct: a saved end and story order + taste | fails; the counts are a readout |
 | D28-D29 | the rebase's lines; `dayone/test_dayone_lines.py` | lines are text keys; none repeats | correct: contract (text keys the client draws) | fails |
 | D30 | `dayone/capcheck.py` | from a chapter's end, 8 h and 24 h away lose at most `LIMIT` of each gathered store's making | babysit | fails (H4's and two of W7's strict xfails: held below) |
-| D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | the check on players who skip the tools | fails |
+| D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | babysit: skipping the taught tools must cost something, or the tools are not worth teaching | fails |
 | D32 | the human-paced player's day (`dayone/human_flags.py`) | sessions, dead gaps, bored leaves, earned and fixed-time unlocks | taste | readout |
 
 ### Day two (job `playthrough-day-two`; `daytwo/verdicts.py`; readouts `daytwo/report.py`)

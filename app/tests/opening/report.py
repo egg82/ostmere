@@ -17,6 +17,7 @@ from tests.opening.afterend import AfterEnd
 from tests.opening.blank_levels import blank_lines
 from tests.opening.playthrough import CRAFTS, News, Player, opening, opening_rules
 from tests.opening.routes import PUSH_ROUTES, after_end, route
+from tests.opening.speed_reach import node_size_lines, reach_lines
 
 NAMES = ("opening",)
 DAY_S = 24 * 3600
@@ -95,6 +96,10 @@ def render(routes: Mapping[str, Player], a: AfterEnd) -> str:
     out += samey_lines(opening())
     out.append("each skill's levels that pay nothing: unmarked in its row, and unwaited-for in the later phases its track reaches")
     out += blank_lines(opening(), opening_rules())
+    out.append("each skill's track nodes by size, in basis points per rank")
+    out += node_size_lines(opening())
+    out.append("each later phase's speed pay: the cards of another skill it also speeds")
+    out += reach_lines(opening())
     out.append(after_end_line(a))
     return "\n".join(out) + "\n"
 

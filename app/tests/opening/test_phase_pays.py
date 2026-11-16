@@ -17,6 +17,7 @@ from ashfall_app.opening.prestige import NodeEntry
 from ashfall_app.opening.schema import Opening, to_rules
 from tests.opening.blank_levels import blank_lines, level_pays, phase_blanks
 from tests.opening.report import samey_lines
+from tests.opening.speed_reach import reach_lines
 
 PREFIXES = ("t_pp_", "t_pf_")
 
@@ -137,11 +138,18 @@ def test_a_hand_written_later_phase_trigger_that_multiplies_work_is_refused(ship
     check_phase_pays(planted(curve_last(o), "mul_bp"))   # the curve's own levels keep their authored pays
 
 
-def test_a_table_speeding_another_skills_work_is_refused(shipped_opening: Opening):
+def test_a_table_speeding_another_skills_work_loads_and_is_reported(shipped_opening: Opening):
+    """Whose card a pay speeds is the opening readout's figure (speed_reach.py), not a check; a card that is not one is refused."""
     pp = next(p for p in shipped_opening.phase_pays if p.skill == "woodcutting")
-    other = [s.model_copy(update={"id": "scavenge"}) for s in pp.speed]
-    with pytest.raises(ValueError, match="work scavenge is not a card woodcutting trains"):
-        check_phase_pays(with_table(shipped_opening, "woodcutting", speed=other))
+    other = next(c for c in shipped_opening.cards if c.skill not in (None, "woodcutting"))
+    planted = with_table(shipped_opening, "woodcutting", speed=[s.model_copy(update={"id": other.id}) for s in pp.speed])
+    check_phase_pays(planted)
+    line = next(ln for ln in reach_lines(planted) if ln.split()[0] == "woodcutting")
+    assert f"also speeds {other.id} ({other.skill})" in line
+    assert "only its own" in next(ln for ln in reach_lines(shipped_opening) if ln.split()[0] == "woodcutting")
+    nothing = [s.model_copy(update={"id": "no_such_card"}) for s in pp.speed]
+    with pytest.raises(ValueError, match="work no_such_card is not a card"):
+        check_phase_pays(with_table(shipped_opening, "woodcutting", speed=nothing))
 
 
 def test_finds_leaving_speed_only_stretches_are_reported_never_refused(shipped_opening: Opening):
