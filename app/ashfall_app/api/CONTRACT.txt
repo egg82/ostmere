@@ -624,7 +624,9 @@ THE CLIENT MAY
     chip's rule carries no level; the store's rule has one). A rule on it is an ordinary store rule (the engine reads a store_value
     condition on any store); the editor reads its level from View.levels in whole items rounded up, words its levels in
     those items only (never a share), and puts each crossing on that reading: under n is at_most (n-1)*Q, n or more is
-    at_least (n-1)*Q + 1, a release the same, so "reaches 2" is on while the chip shows 2 or more (above one item).
+    at_least (n-1)*Q + 1, a release the same, so "reaches 2" is on while the chip shows 2 or more (above one item). An Unless guard on it is the same: whole items
+    only, starting at the cap, crossing and worded on that reading, with its release one item past its value; the When list shows
+    its level beside the name, as the chip does.
   - word a rule whose `when` equals a ChipInfo's `when` as that chip: ui.rule.chip in a rule's condition,
     ui.hands.while_chip on the hands strip while it runs; never by its numbers. Offer a chip's rule in the full
     condition editor from the chip's first showing on: every chip in view.chips_seen that would be drawn (its

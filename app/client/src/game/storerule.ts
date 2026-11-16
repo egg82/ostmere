@@ -41,7 +41,7 @@ export function sameLevel(a: Level | null, b: Level | null): boolean {
 /** The raw amount a whole-item level crosses at. A ledger store shows its amount rounded down, so "under n" is at most
  * n*q-1 and "n or more" is n*q. A level store (Catalog.isLevel) shows it rounded up (View.levels), so under n is at most
  * (n-1)*q and n or more is above (n-1)*q. */
-const crossing = (items: number, below: boolean, q: number, level: boolean): number =>
+export const crossing = (items: number, below: boolean, q: number, level: boolean): number =>
   level ? (items - 1) * q + (below ? 0 : 1) : items * q - (below ? 1 : 0);
 
 /** `crossing`'s inverse. */

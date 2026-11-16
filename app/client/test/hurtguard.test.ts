@@ -47,10 +47,11 @@ function fullEditor(): { cond: FakeEl; decided: Decision[] } {
   const { cond, decided } = fullEditor();
   one(cond, ".cond-guard-add").click();
   one(cond, ".cond-guard-what .cond-store[data-store=\"hurt\"]").click();
-  expect("a hurt guard starts at the cap in whole items", one(cond, ".cond-guard-pick .cond-guard-words").textContent, "Hurt is 3 or more");
+  expect("a hurt guard starts at the cap in whole items", one(cond, ".cond-guard-pick .cond-guard-words").textContent, "hurt is 3 or more");
   one(cond, ".cond-guard-pick [data-form=\"items\"] [role=\"slider\"]").dispatchEvent(Object.assign(new FakeEvent("keydown"), { key: "ArrowLeft" }));
   one(cond, ".cond-guard-done").click();
-  expect("it is worded in the items its chip shows", one(cond, ".cond-guards .cond-guard .cond-guard-words").textContent, "Hurt is 2 or more");
+  expect("it is worded in the items its chip shows", one(cond, ".cond-guards .cond-guard .cond-guard-words").textContent, "hurt is 2 or more");
+  one(cond, ".cond-stores .cond-store[data-store=\"hurt\"]").click();
   one(cond, ".cond-actions .primary").click();
   const set = decided.find((d) => d.kind === "set_orders");
   const guard = set?.kind === "set_orders" ? set.orders.at(-1)?.unless[0] : undefined;
