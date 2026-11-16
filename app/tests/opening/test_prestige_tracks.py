@@ -7,10 +7,15 @@ from collections import Counter
 from ashfall_app.opening.schema import Opening
 from tests import readout_snapshot as rs
 from tests.opening import tracks_readout
+from tests.opening.speed_reach import node_size_lines
 
 
-def test_every_shipped_rank_is_sized_like_the_first_ones(shipped_opening: Opening):
-    assert {n.per_rank_bp for n in shipped_opening.nodes} == {2500}
+def test_node_sizes_are_reported_never_refused(shipped_opening: Opening):
+    first = shipped_opening.nodes[0]
+    odd = first.model_copy(update={"per_rank_bp": first.per_rank_bp + 500})
+    rest = [n for n in shipped_opening.nodes[1:] if n.skill == first.skill]
+    line = node_size_lines(shipped_opening.model_copy(update={"nodes": [odd, *rest]}))[0]
+    assert f"{odd.per_rank_bp}bp x1" in line and first.skill in line
 
 
 def test_the_committed_readouts_are_the_ones_the_tracks_write():
