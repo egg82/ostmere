@@ -6,17 +6,19 @@
 // slot sets the default. "+ New rule" once writing rules is open (Keeps.ruleSeen, the taught step); changing a rule is
 // never gated. Under it, each side lane's task rules under the lane's label; a ruled lane's always rule, and its row's
 // Change, open that lane's task editor (laneedit.ts). Every change sends the whole list (set_orders) in its new order.
-import type { Condition, Decision, RuleRun, View } from "../api/types";
-import { chipOf, mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
+import type { Condition, Decision, View } from "../api/types";
+import { mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
 import { UI } from "../game/text";
-import { actionsOf, ruleActions, ruleCondition } from "../game/guardwords";
+import { actionsOf, ruleActions } from "../game/guardwords";
 import { Slider, shiftOf } from "./ruleslide";
 import { noteOrderRemoved, noteRuleChanged } from "../telemetry";
 import { ConditionEditor } from "./condition";
 import { el, tapFeedback } from "./dom";
 import { LaneEditor } from "./laneedit";
-import { alwaysWords, ruledLaneOf } from "../game/lanes";
 import { townRules } from "../game/town";
+import { condButton } from "./rulecond";
+import { ruleMenu } from "./rulemenu";
+import { shape } from "./ruleshape";
 import { nextRows } from "./nextlist";
 import { NextOrder } from "./nextorder";
 import { StintPlan } from "./stintplan";
@@ -29,11 +31,6 @@ import { latelyRows, retickLately } from "./rulelately";
 import { retickWhy, whyLine } from "./rulewhy";
 
 type Mode = { kind: "list" } | { kind: "edit" } | { kind: "lane" } | { kind: "pick"; slot: Slot };
-
-/** What a redraw depends on: a view that changes none of it leaves the tab alone (a press or a focus survives). */
-function shape(view: View, fired: readonly string[], ruleSeen: boolean, runs: readonly RuleRun[], plan: string): string {
-  return JSON.stringify([plan, view.orders, view.queue, view.orders_on, view.order_states, view.order_guards, view.order_doing, view.order_dry, view.mixes.map((m) => m.id), view.greyed_mix_ids, view.active_mix_id, view.mix_order, view.town_mix_order, ruleSeen, fired, runs]);
-}
 
 export class RulesTab implements Part {
   readonly root = el("section", "rules");
@@ -197,19 +194,10 @@ export class RulesTab implements Part {
     row.append(handle, ruleDot(this.ctx.catalog, on === index), ...body);
     const why = whyLine(catalog, view, index, view.at);
     if (this.menu !== index) return [row, ...why];
-    const menu = el("div", "rule-menu");
-    const tool = (label: string, disabled: boolean, act: () => void, cls = "quiet"): HTMLButtonElement => {
-      const b = el("button", cls, label);
-      b.type = "button";
-      b.disabled = disabled;
-      b.addEventListener("click", act);
-      return b;
-    };
-    menu.append(
-      tool(catalog.text.get(UI.ruleUp), first, () => this.move(view, index, -1)),
-      tool(catalog.text.get(UI.ruleDown), last, () => this.move(view, index, 1)),
-      tool(catalog.text.get(UI.orderRemove), false, () => { this.menu = null; noteOrderRemoved(); tapFeedback(); this.ctx.actions.decide(removeRule(view, index)); }, "quiet danger"),
-    );
+    const menu = ruleMenu(catalog, {
+      first, last, move: (step) => this.move(view, index, step),
+      remove: () => { this.menu = null; noteOrderRemoved(); tapFeedback(); this.ctx.actions.decide(removeRule(view, index)); },
+    });
     return [row, ...why, menu];
   }
 
@@ -224,24 +212,12 @@ export class RulesTab implements Part {
     this.send(d, shiftOf(group, index, to));
   }
 
-  /** A rule's condition: a button with an edit mark that opens the condition editor (a ruled lane's always rule: its
-   * words, opening the lane's task editor). Never gated. */
+  /** A rule's condition: the button of rulecond.ts, opening the lane's task editor or the condition editor. */
   private condButton(view: View, index: number): HTMLElement {
-    const order = view.orders[index]!;
-    const lane = ruledLaneOf(this.ctx.catalog, order);
-    const always = alwaysWords(this.ctx.catalog, order);
-    const b = el("button", "rule-cond");
-    b.type = "button";
-    if (view.orders_on[index] === true) b.dataset.teach = "rule-on";   // a lesson's mark of a rule at work
-    b.classList.toggle("chip-rule", chipOf(this.ctx.catalog, order.when) !== undefined);
-    b.append(el("span", "rule-cond-text", always ?? ruleCondition(this.ctx.catalog, order) ?? ""), el("span", "rule-edit-mark", "✎"));
-    b.querySelector(".rule-edit-mark")?.setAttribute("aria-hidden", "true");
-    b.addEventListener("click", () => {
-      tapFeedback();
-      if (always !== null && lane !== null) this.openLane(view, lane, index);
-      else if (this.cond.openEdit(view, index)) { this.mode = { kind: "edit" }; this.draw(); }
+    return condButton(this.ctx, view, index, {
+      lane: (lane, i) => this.openLane(view, lane, i),
+      edit: (i) => { if (this.cond.openEdit(view, i)) { this.mode = { kind: "edit" }; this.draw(); } },
     });
-    return b;
   }
 
   /** A mix slot, worded as `label` (the rule's mixes, or the player's own; with fallbacks it wraps, so none is cut
