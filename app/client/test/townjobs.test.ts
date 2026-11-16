@@ -45,4 +45,4 @@ for (const id of offered) {
   const add = editor.querySelector(`.town-add[data-card="${id}"]`);
   expect(`${id}: its upside is on its Add button`, add?.querySelector(".card-upside")?.textContent, catalog.text.get(want));
 }
-expect("the mend job reads its name and effect", editor.querySelector(`.town-add[data-card="${MEND}"]`)?.textContent, "Mend geargear lasts longer");
+expect("the mend job reads its name, effect and that it takes nothing", editor.querySelector(`.town-add[data-card="${MEND}"]`)?.textContent, "Mend geargear lasts longerTakes nothing");
