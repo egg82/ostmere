@@ -11,11 +11,14 @@ import { Catalog } from "../src/game/catalog";
 import { canQueue, nextCard, queuedCards, queueTap, unqueue } from "../src/game/queue";
 import { Hands } from "../src/ui/hands";
 import { nextRows } from "../src/ui/nextlist";
+import { NextOrder } from "../src/ui/nextorder";
+import type { PartContext } from "../src/ui/part";
 import { StintPlan } from "../src/ui/stintplan";
 import { RulesTab } from "../src/ui/rules";
 import { WhenReady } from "../src/ui/whenready";
 
 install();
+const idle = (ctx: PartContext): NextOrder => new NextOrder(ctx, document.createElement("div"), () => null, () => {});
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
@@ -99,9 +102,9 @@ expect("queued cards in order", queuedCards(at([], [tapOf("larder", 1), tapOf("l
 {
   const { ctx, got } = testContext();
   const view = at([], [tapOf("larder", 1), tapOf("lean_to", 2)]);
-  expect("empty: nothing", nextRows(ctx, at([]), new StintPlan(ctx, () => {})).length, 0);
-  const rows = nextRows(ctx, view, new StintPlan(ctx, () => {}));
-  expect("heading and two lines", rows.map((r) => r.textContent), ["Next", "LarderRemove", "Lean-toRemove"]);
+  expect("empty: nothing", nextRows(ctx, at([]), new StintPlan(ctx, () => {}), idle(ctx)).length, 0);
+  const rows = nextRows(ctx, view, new StintPlan(ctx, () => {}), idle(ctx));
+  expect("heading and two lines", rows.map((r) => r.textContent), ["Next", "≡LarderRemove", "≡Lean-toRemove"]);
   rows[2]!.querySelector<HTMLElement>(".quiet")?.click();
   expect("Remove the second", got.decided, [{ kind: "set_queue", entries: [tapOf("larder", 1)] }]);
 }
