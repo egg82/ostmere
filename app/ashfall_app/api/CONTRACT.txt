@@ -618,7 +618,11 @@ THE CLIENT MAY
   - offer, in the condition editor's When list for a rule doing some cards (a task, or a mix's cards), first the
     stores those cards make (CardInfo.makes), then the stores they take (CardInfo.takes), then the stores of each
     card in view.cards that makes one they take or takes one they make; never by words in a label. The simple view
-    offers only those; the full editor offers every store, those first.
+    offers only those; the full editor offers every store, those first. A store some fight wounds (read a level,
+    above) has no ledger line and is never unlocked as a store, so it is offered once a chip watching it is drawn (in
+    view.chips_seen, offered_after held), in the same tiers; that chip is offered in the simple view for a task that
+    takes the store, as for one that makes it. A rule on it is an ordinary store rule (the engine reads a store_value
+    condition on any store); the editor reads its level from View.levels in whole items rounded up.
   - word a rule whose `when` equals a ChipInfo's `when` as that chip: ui.rule.chip in a rule's condition,
     ui.hands.while_chip on the hands strip while it runs; never by its numbers. Offer a chip's rule in the full
     condition editor from the chip's first showing on: every chip in view.chips_seen that would be drawn (its

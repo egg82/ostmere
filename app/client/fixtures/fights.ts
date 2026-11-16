@@ -67,5 +67,5 @@ export function fightsStep(phase: FightsPhase, at: number, kept: Kept = {}, deci
   if (phase !== "fighthurt") return { ...base, view, lines: [] };
   const hurt = 1.5 * Q;
   const cards = view.cards.map((c) => (c.card === "poultice" ? { ...c, needs: c.needs.map((n) => (n.store === "hurt" ? { ...n, segment: { ...n.segment, start_value: hurt } } : n)) } : c));
-  return { ...base, view: { ...view, cards, chips: [...view.chips, "hurt"], levels: [{ store: "hurt", segment: { start: at, start_value: hurt, rate: 0, limit: null } }] }, lines: [] };
+  return { ...base, view: { ...view, cards, chips: [...view.chips, "hurt"], chips_seen: [...view.chips_seen, "hurt"], levels: [{ store: "hurt", segment: { start: at, start_value: hurt, rate: 0, limit: null } }] }, lines: [] };
 }

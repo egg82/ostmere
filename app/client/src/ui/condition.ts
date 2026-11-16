@@ -7,11 +7,10 @@
 // ruleoffers.ts's; levels and ±1 conventions are storerule.ts's. A chip's rule is the chip: changing one offers only
 // what it does and Remove, never a level, so the store behind a chip is never shown as a number.
 import type { ChipInfo, Condition, Order, View } from "../api/types";
-import { sample } from "../game/clock";
 import { choiceVerb } from "../game/elsechoices";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
 import { townNewRule } from "../game/town";
-import { chosen, doChoices, type DoChoice } from "../game/ruleoffers";
+import { chosen, doChoices, storeItems, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
 import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
@@ -224,8 +223,7 @@ export class ConditionEditor {
     const pick = chosen(catalog, view, draft.then);
     markPressed(catalog, view, this.does, this.chips, pick, chip, rule);
     this.levels.fold.root.hidden = !this.full || draft.chip === true || chip !== undefined || rule.store === "";
-    const line = view.ledger.find((l) => l.store === rule.store);
-    this.levels.draw(catalog, rule, this.cap(rule.store), line ? sample(line.segment, view.at) / catalog.content.scales.quantity_per_item : null);
+    this.levels.draw(catalog, rule, this.cap(rule.store), storeItems(catalog, view, rule.store));
     this.subject.draw(view, draft.chip ? undefined : draft.subject);
     markSubject(this.chips, draft.subject);
     this.guards.draw(view, draft.unless, this.full);
