@@ -3,6 +3,7 @@
 // amount is shown rounded down. The crossings sit on the amount the page shows (CONTRACT.txt, "a store rule").
 import { fixtureContent, Q } from "../fixtures/content";
 import { buildRule, readRule, ruleWhen, valid, type StoreRule } from "../src/game/storerule";
+import { conditionWords } from "../src/game/orders";
 import { Catalog } from "../src/game/catalog";
 import { withHurtChip } from "../fixtures/fights";
 
@@ -25,7 +26,8 @@ const under = (raw: number): boolean => below.kind === "at_most" && raw <= below
 const letGo = (raw: number): boolean => below.kind === "at_most" && raw > below.release;
 for (const raw of [0, 1, Q, Q + 1, 2 * Q, 2 * Q + 1, 3 * Q]) expect(`under 2 at ${raw}`, [under(raw), letGo(raw)], [chip(raw) < 2, chip(raw) >= 3]);
 
-for (const r of [rule("reaches", 2, 1), rule("below", 2, 3), rule("reaches", 3, 2)]) expect(`${r.test} ${r.n.items} reads back`, readRule(buildRule(r, Q, true), Q, true), r);
+for (const r of [rule("reaches", 2, 1), rule("below", 2, 3), rule("reaches", 3, 2)]) expect(`${r.test} ${JSON.stringify(r.n)} reads back`, readRule(buildRule(r, Q, true), Q, () => true), r);
 
 expect("the band rule is the one a ledger store has", [valid(rule("reaches", 2, 1), 3), valid(rule("reaches", 1, 1), 3)], [true, false]);
-expect("worded in items", ruleWhen(catalog, rule("reaches", 2, 1)), "2 or more Hurt, until under 1");
+expect("worded in items", ruleWhen(catalog, rule("reaches", 2, 1)), "2 or more hurt, until under 1");
+expect("a saved rule on hurt is read and worded in the same items", conditionWords(catalog, buildRule(rule("reaches", 2, 1), Q, true)), "2 or more hurt, until under 1");

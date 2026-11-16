@@ -6,7 +6,7 @@ import type { OrderVerb, View } from "../api/types";
 import { sectioned } from "../game/cardsections";
 import type { Catalog } from "../game/catalog";
 import { doChoices, ruleCards, taskOf, whenChoices } from "../game/ruleoffers";
-import { isShare, levelWords, PRESETS, sameLevel, tryRule, type Level, type StoreRule, type Test } from "../game/storerule";
+import { isShare, itemsAt, levelWords, PRESETS, sameLevel, shownAt, tryRule, type Level, type StoreRule, type Test } from "../game/storerule";
 import { UI } from "../game/text";
 import type { Draft } from "./conditiondraft";
 import { el } from "./dom";
@@ -18,12 +18,12 @@ export function quickTest(catalog: Catalog, view: View, then: OrderVerb | null, 
 }
 
 /** The task a draft reads as in the quick add, or null when it does not: a store rule (no chip, count or level) with
- * both levels shares, not the town's, doing a task, on a store the simple When row offers. Exact numbers are More
- * options'. */
+ * both levels shares (whole items on a store a lost fight adds to, Catalog.isLevel, whose chip shows items), not the
+ * town's, doing a task, on a store the simple When row offers. Exact numbers are More options'. */
 export function quickTask(catalog: Catalog, view: View, draft: Draft, chip: boolean): string | null {
   const task = taskOf(catalog, view, draft.then);
   const { n, m } = draft.rule;
-  if (chip || draft.chip || draft.subject || draft.town || draft.unless.length > 0 || draft.orElse.length > 0 || m === null || !isShare(n) || !isShare(m) || task === null) return null;
+  if (chip || draft.chip || draft.subject || draft.town || draft.unless.length > 0 || draft.orElse.length > 0 || m === null || isShare(n) === catalog.isLevel(draft.rule.store) || isShare(m) === catalog.isLevel(draft.rule.store) || task === null) return null;
   return whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores.includes(draft.rule.store) ? task : null;
 }
 
@@ -36,9 +36,11 @@ export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boo
   const stores = whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores;
   const tasks = doChoices(catalog, view, false, draft.then).flatMap((c) => (c.kind === "task" ? [c.card] : []));
   const m = rule.m;
-  const can = (which: "n" | "m", l: Level) => tryRule({ ...rule, m, [which]: l }, cap) !== null;
-  const offs = PRESETS.flatMap(([bp]) => (["n", "m"] as const).filter((w) => !can(w, { share: bp })).map((w) => `${w}${bp}`));
-  return { key: JSON.stringify([rule, task, stores, tasks, offs]), parts: () => quickSentence(catalog, { ...rule, m }, { stores, tasks, task, can }, pick) };
+  const can = (which: "n" | "m", l: Level) => sameLevel(tryRule({ ...rule, m, [which]: l }, cap)?.[which] ?? null, l);
+  const items = catalog.isLevel(rule.store) ? cap : null;
+  const offered = items === null ? PRESETS.map(([bp]) => ({ share: bp })) : Array.from({ length: items }, (_, i) => ({ items: i + 1 }));
+  const offs = offered.flatMap((l) => (["n", "m"] as const).filter((w) => !can(w, l)).map((w) => `${w}${levelValue(l)}`));
+  return { key: JSON.stringify([rule, task, stores, tasks, offs]), parts: () => quickSentence(catalog, { ...rule, m }, { stores, tasks, task, can, items }, pick) };
 }
 
 export interface QuickChoices {
@@ -50,6 +52,8 @@ export interface QuickChoices {
   task: string;
   /** Whether the rule with this level in place of n or m is one the page builds. */
   can: (which: "n" | "m", level: Level) => boolean;
+  /** The store's cap in items when its levels are whole items (a store a lost fight adds to), else null: shares. */
+  items: number | null;
 }
 
 export interface QuickPicks {
@@ -92,10 +96,24 @@ const readLevel = (v: string): Level => (v.startsWith("s") ? { share: Number(v.s
 
 /** A level's part: the five named shares (each off where the rule would not build), and the level as it stands when
  * it is none of them. */
-function levelPart(catalog: Catalog, which: "n" | "m", level: Level, choices: QuickChoices, pick: QuickPicks): HTMLElement {
+function levelPart(catalog: Catalog, rule: StoreRule, which: "n" | "m", level: Level, choices: QuickChoices, pick: QuickPicks): HTMLElement {
+  if (choices.items !== null && !isShare(level)) return itemsPart(catalog, rule, which, level.items, choices.items, choices, pick);
   const presets: Option[] = PRESETS.map(([bp, key]) => ({ value: `s${bp}`, label: catalog.text.get(key), disabled: !choices.can(which, { share: bp }) }));
   const own = PRESETS.some(([bp]) => sameLevel(level, { share: bp })) ? [] : [{ value: levelValue(level), label: levelWords(catalog, level) }];
   return part(`quick-${which}`, levelWords(catalog, level), [...own, ...presets], levelValue(level), (v) => pick.level(which, readLevel(v)),
+    catalog.text.get(which === "n" ? UI.ruleWhen : UI.ruleUntil));
+}
+
+/** A whole-item level's part, worded as the amount the chip shows where the rule holds or lets go ("reaches 2", "until
+ * down to empty"), one choice for each amount from empty to the cap. */
+function itemsPart(catalog: Catalog, rule: StoreRule, which: "n" | "m", items: number, cap: number, choices: QuickChoices, pick: QuickPicks): HTMLElement {
+  const side = which === "n" ? "on" : "off";
+  const words = (shown: number): string => (shown === 0 ? catalog.text.get(UI.levelEmpty) : catalog.format.count(shown));
+  const options = Array.from({ length: cap + 1 }, (_, shown) => {
+    const level = { items: itemsAt(shown, rule.test, side) };
+    return { value: levelValue(level), label: words(shown), disabled: !choices.can(which, level) };
+  });
+  return part(`quick-${which}`, words(shownAt({ items }, rule.test, side, cap)), options, levelValue({ items }), (v) => pick.level(which, readLevel(v)),
     catalog.text.get(which === "n" ? UI.ruleWhen : UI.ruleUntil));
 }
 
@@ -107,8 +125,8 @@ export function quickSentence(catalog: Catalog, rule: StoreRule & { m: Level }, 
   const parts: Record<string, HTMLElement> = {
     store: part("quick-store", catalog.storeLabel(rule.store), choices.stores.map((s) => ({ value: s, label: catalog.storeTitle(s) })), rule.store, pick.store),
     test: part("quick-test", text.get(rule.test === "below" ? UI.ruleFallsTo : UI.ruleReachesTo), tests, rule.test, (v) => pick.test(v as Test)),
-    n: levelPart(catalog, "n", rule.n, choices, pick),
-    m: levelPart(catalog, "m", rule.m, choices, pick),
+    n: levelPart(catalog, rule, "n", rule.n, choices, pick),
+    m: levelPart(catalog, rule, "m", rule.m, choices, pick),
     task: part(`quick-action ${hue}`, catalog.cardLabel(choices.task), sectioned(catalog, choices.tasks, (c) => c).flatMap((g) => g.items.map((c) => ({ value: c, label: catalog.cardLabel(c), group: g.heading || undefined }))), choices.task, pick.task,
       text.get(UI.ruleDo)),
   };

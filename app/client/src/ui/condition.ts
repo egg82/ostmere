@@ -73,7 +73,7 @@ export class ConditionEditor {
    * opens on the full editor, where the mixes are. */
   openNew(view: View, offered?: Condition, town = false): void {
     this.full = town;
-    const rule = offered ? readRule(offered, this.ctx.catalog.content.scales.quantity_per_item) : null;
+    const rule = offered ? readRule(offered, this.ctx.catalog.content.scales.quantity_per_item, (s) => this.ctx.catalog.isLevel(s)) : null;
     const opened = offered && rule && chipOf(this.ctx.catalog, offered) ? { rule, when: offered } : undefined;
     this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, town, unless: [], orElse: [] });
   }
@@ -163,7 +163,7 @@ export class ConditionEditor {
 
   private setChip(chip: ChipInfo): void {
     const draft = this.draft;
-    const rule = readRule(chip.when, this.ctx.catalog.content.scales.quantity_per_item);
+    const rule = readRule(chip.when, this.ctx.catalog.content.scales.quantity_per_item, (s) => this.ctx.catalog.isLevel(s));
     if (!draft || !rule || this.chipNow()?.chip === chip.chip) return;
     tapFeedback();
     draft.rule = rule;

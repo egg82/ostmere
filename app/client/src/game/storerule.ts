@@ -38,22 +38,33 @@ export function sameLevel(a: Level | null, b: Level | null): boolean {
   return isShare(a) ? isShare(b) && a.share === b.share : !isShare(b) && a.items === b.items;
 }
 
-/** The store rule a condition is, or null for any other condition. `q`: Scales.quantity_per_item. */
-export function readRule(when: Condition, q: number): StoreRule | null {
+/** The raw amount a whole-item level crosses at. A ledger store shows its amount rounded down, so "under n" is at most
+ * n*q-1 and "n or more" is n*q. A level store (Catalog.isLevel) shows it rounded up (View.levels), so under n is at most
+ * (n-1)*q and n or more is above (n-1)*q. */
+const crossing = (items: number, below: boolean, q: number, level: boolean): number =>
+  level ? (items - 1) * q + (below ? 0 : 1) : items * q - (below ? 1 : 0);
+
+/** `crossing`'s inverse. */
+const itemsFromRaw = (raw: number, below: boolean, q: number, level: boolean): number =>
+  level ? Math.floor((raw - (below ? 0 : 1)) / q) + 1 : Math.floor((raw + (below ? 1 : 0)) / q);
+
+/** The store rule a condition is, or null for any other condition. `q`: Scales.quantity_per_item; `isLevel`: whether a store
+ * is a level (Catalog.isLevel). */
+export function readRule(when: Condition, q: number, isLevel: (store: string) => boolean = () => false): StoreRule | null {
   if (when.kind === "after_time" || when.watched.kind !== "store_value") return null;
   const below = when.kind === "at_most";
-  const off = below ? 1 : 0;
-  const n: Level = when.value_of_cap ? { share: when.value } : { items: Math.floor((when.value + off) / q) };
-  const m: Level = when.release_of_cap ? { share: when.release } : { items: Math.floor((when.release + off) / q) };
+  const level = isLevel(when.watched.store);
+  const n: Level = when.value_of_cap ? { share: when.value } : { items: itemsFromRaw(when.value, below, q, level) };
+  const m: Level = when.release_of_cap ? { share: when.release } : { items: itemsFromRaw(when.release, below, q, level) };
   const banded = isShare(n) || isShare(m) || (below ? m.items > n.items : m.items < n.items);
   return { store: when.watched.store, test: below ? "below" : "reaches", n, m: banded ? m : null };
 }
 
 /** The condition for a store rule. A rule with no band builds as a plain threshold (only content makes those). */
-export function buildRule(rule: StoreRule, q: number): Condition {
+export function buildRule(rule: StoreRule, q: number, level = false): Condition {
   const watched = { kind: "store_value" as const, store: rule.store };
   const below = rule.test === "below";
-  const raw = (l: Level): number => (isShare(l) ? l.share : l.items * q - (below ? 1 : 0));
+  const raw = (l: Level): number => (isShare(l) ? l.share : crossing(l.items, below, q, level));
   const m = rule.m ?? rule.n;
   return { kind: below ? "at_most" : "at_least", watched, value: raw(rule.n), release: raw(m),
     value_of_cap: isShare(rule.n), release_of_cap: isShare(m) };
@@ -62,7 +73,7 @@ export function buildRule(rule: StoreRule, q: number): Condition {
 /** Where a level stands among the store's whole items under a cap of `cap` items, as the engine reads it (DESIGN.txt,
  * "SHARE LEVELS"): side "on", the shown amount at or past which the rule holds (at or under for "below", at or over
  * for "reaches"); side "off", the shown amount at which it lets go. */
-function shownAt(l: Level, test: Test, side: "on" | "off", cap: number): number {
+export function shownAt(l: Level, test: Test, side: "on" | "off", cap: number): number {
   const floorSide = (test === "below") === (side === "on");
   if (!isShare(l)) return floorSide ? l.items - 1 : l.items;
   return floorSide ? Math.floor((l.share * cap) / BP) : Math.ceil((l.share * cap) / BP);
@@ -108,7 +119,11 @@ export function tryRule(rule: StoreRule, cap: number): StoreRule | null {
  * too small for those to keep a band, in items: under a quarter, until halfway to full; or at full, until under half. */
 export function defaultRule(store: string, test: Test, cap: number): StoreRule {
   const shares = { store, test, n: { share: test === "below" ? 2500 : BP }, m: defaultUntil(test) };
-  if (valid(shares, cap)) return shares;
+  return valid(shares, cap) ? shares : itemsRule(store, test, cap);
+}
+
+/** A new rule in whole items: under a quarter, until halfway to full; or at full, until under half. */
+export function itemsRule(store: string, test: Test, cap: number): StoreRule {
   const n = test === "below" ? Math.ceil(cap / 4) : cap;
   return clampRule({ store, test, n: { items: n }, m: { items: test === "below" ? Math.ceil((n + cap) / 2) : Math.max(1, Math.floor(n / 2)) } }, cap);
 }
@@ -119,9 +134,11 @@ const defaultUntil = (test: Test): Level => ({ share: test === "below" ? 7500 : 
  * items as the nearest share step. */
 export function switchForm(l: Level, test: Test, side: "on" | "off", cap: number): Level {
   if (!isShare(l)) return { share: clamp(Math.round((l.items * BP) / Math.max(1, cap) / SHARE_STEP) * SHARE_STEP, 0, BP) };
-  const shown = shownAt(l, test, side, cap);
-  return { items: (test === "below") === (side === "on") ? shown + 1 : shown };
+  return { items: itemsAt(shownAt(l, test, side, cap), test, side) };
 }
+
+/** The whole-item level that reads as `shown` (shownAt's inverse for items). */
+export const itemsAt = (shown: number, test: Test, side: "on" | "off"): number => ((test === "below") === (side === "on") ? shown + 1 : shown);
 
 /** A level in the player's words: a count, a share's name, or its percentage. */
 export function levelWords(catalog: Catalog, l: Level): string {
