@@ -12,6 +12,8 @@ import { dropTownCard, given, joinTownCard, newTownMix, people, townMixToEdit, t
 import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 import { ShareBar, type SegmentSpec } from "./sharebar";
+import { Bonus } from "./bonus";
+import { sideStrength } from "./strength";
 
 export class TownEditor {
   readonly root = el("section", "editor town-editor");
@@ -21,6 +23,8 @@ export class TownEditor {
   private local: Mix | null = null;
   private isNew = false;
   private readonly bars = new Map<string, ShareBar>();
+  /** The cards whose bonus line has its strength sheet open: a redraw keeps them open. */
+  private readonly bonusOpen = new Set<string>();
   /** A divider is held: a new view waits for the let-go, so the bar under the finger is not rebuilt. */
   private held = false;
 
@@ -155,11 +159,18 @@ export class TownEditor {
     rows.replaceChildren(...mix.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? [this.cardRow(c.card, c.share_bp, mix)] : [])));
   }
 
-  /** The card's upside: on a row at its share, and on its Add button, which has no share yet, at the full figure. */
+  /** The card's upside: on a row at its share, and on its Add button, which has no share yet, at the full figure. A row's
+   * upside that feeds a side leads to that side's strength (bonus.ts). */
   private upside(card: string, shareBp?: number): HTMLElement[] {
     const { catalog } = this.ctx;
     const info = catalog.cards.get(card);
-    return info?.upside_key ? [el("span", "card-upside town-card-upside", catalog.text.fill(info.upside_key, (shareBp === undefined ? catalog.format.figures(info.change_bp) : catalog.format.figuresAt(info, shareBp))))] : [];
+    if (!info?.upside_key) return [];
+    const words = catalog.text.fill(info.upside_key, (shareBp === undefined ? catalog.format.figures(info.change_bp) : catalog.format.figuresAt(info, shareBp)));
+    const side = info.kept.find((k) => k.side !== null)?.side;
+    if (shareBp === undefined || !side || !this.view) return [el("span", "card-upside town-card-upside", words)];
+    const bonus = new Bonus(catalog, side, "card-upside town-card-upside", (open) => { if (open) this.bonusOpen.add(card); else this.bonusOpen.delete(card); }, this.bonusOpen.has(card));
+    bonus.draw(words, sideStrength(catalog, this.view, side));
+    return [bonus.line];
   }
 
   private cardRow(card: string, bp: number, mix: Mix): HTMLElement {

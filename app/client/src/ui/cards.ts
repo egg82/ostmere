@@ -22,6 +22,7 @@ import { cardHintsNow, hintCard } from "./cardhint";
 import type { NewMarks } from "../game/marks";
 import { markNew } from "./fresh";
 import type { Part, PartContext } from "./part";
+import { sideStrength } from "./strength";
 import { WaitLine } from "./waitline";
 import { WhenReady } from "./whenready";
 import { storyMarks } from "../game/story";
@@ -228,6 +229,8 @@ export class Cards implements Part {
     setText(row.count, retired ? catalog.text.get(UI.retired) : card.cap !== null || card.completions > 0 ? catalog.format.completions(card.completions, card.cap) : "");
     row.needs.draw(row.card, view, row.done);
     row.fight?.sync(view, row.id);
+    const side = info?.kept.find((k) => k.side !== null)?.side;
+    if (row.bonus && side) row.bonus.sync(sideStrength(catalog, view, side));
     this.whenReady.sync(row.ready, row.done ? undefined : card, view);
   }
 }
