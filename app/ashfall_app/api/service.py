@@ -12,6 +12,7 @@ from ..opening.makers import card_makes, card_takes, made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
 from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
+from ..opening.stake_checks import reach_modifiers, reach_stops
 from ..opening.schema import Opening
 from ..saves.interface import Played, Ruleset
 from ..saves.journal import ComposedDay
@@ -132,7 +133,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s,
             kept=_kept_infos(c, o),
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
-            makes=card_makes(c), takes=card_takes(c), drains=[d.store for d in c.drains],
+            makes=card_makes(c), takes=card_takes(c), reach=_reach(o, c), drains=[d.store for d in c.drains],
             skill_needs=[cm.SkillNeed(skill=r.id, level=r.value) for r in c.requires
                          if r.subject_kind == "skill_level" and r.test == "at_least" and r.id is not None],
             step_needs=[cm.StepNeed(card=r.id, count=r.value) for r in c.requires
@@ -226,11 +227,18 @@ def _kept_infos(c: CardEntry, o: Opening) -> list[cm.KeptInfo]:
 def _card_slots(c: CardEntry, o: Opening) -> list[tuple[int, bool]]:
     """Its outcome's and finish's changes, then its while_running entries' (each an add_bp on a side or a lane's speed
     at the full share, which the View scales by the card's share now), then those of the standing action it names as
-    upside_of, each with whether it is held by the card itself. A distinct (value, held) pair appears once, so a held
-    amount never shares a slot with a change that does not scale."""
+    upside_of, each with whether it is held by the card itself, then, for a reach stake, those its reach pays. A
+    distinct (value, held) pair appears once, so a held amount never shares a slot with a change that does not scale."""
     eater = [w for a in o.standing if a.id == c.upside_of for w in a.while_running]
+    reach = reach_modifiers(o, c) if c.stake == "reach" else []
     return list(dict.fromkeys([*((v, False) for v in _changes([*c.outcome.modifiers, *c.finished.modifiers])),
-                               *((w.amount_bp, True) for w in c.while_running), *((w.amount_bp, False) for w in eater)]))
+                               *((w.amount_bp, True) for w in c.while_running), *((w.amount_bp, False) for w in eater),
+                               *((v, False) for v in _changes(reach))]))
+
+
+def _reach(o: Opening, c: CardEntry) -> cm.ReachInfo | None:
+    stops = reach_stops(o, c) if c.stake == "reach" else []
+    return cm.ReachInfo(store=stops[0][0], stops=[q for s, q in stops if s == stops[0][0]]) if stops else None
 
 
 def _level_changes(o: Opening, skill: str, level: int) -> list[int]:

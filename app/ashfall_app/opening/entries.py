@@ -233,9 +233,11 @@ class CardEntry(Entry):
     line_keys: list[str] = []
     fight: FightEntry | None = None
     while_running: list[WhileRunningEntry] = []
-    stake: Literal["side"] | None = None
-    """What a card that takes stores and gives nothing by itself feeds: "side", a fight's side it holds an entry on
-    while it runs (a later chapter may add the entry). Required on such a card, with an upside_key (stake_checks.py)."""
+    stake: Literal["side", "reach"] | None = None
+    """What a card that takes stores feeds: "side", a fight's side it holds an entry on while it runs (a later chapter
+    may add the entry); "reach", a store its completions fill whose amount triggers read, each paying a modifier (its
+    upside's figures are theirs). Required, with an upside_key, on a card that takes stores and gives nothing by itself
+    (stake_checks.py)."""
     glows: bool = False
     """The one glow lands here the first time the card is ready while its lane is free: the opening's obvious next
     steps (docs/design/opening-screen.md, "Dots and the one glow"), said where the card is authored."""

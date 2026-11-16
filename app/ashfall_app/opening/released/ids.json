@@ -1933,6 +1933,7 @@
   "n1_catch_broth": null,
   "n1_cut": null,
   "n1_dig_clay": null,
+  "n1_field_track": null,
   "n1_forage": null,
   "n1_fungus_stew": null,
   "n1_gather": null,
@@ -1948,6 +1949,7 @@
   "n2_clear_roofs": null,
   "n2_cut": null,
   "n2_dig_clay": null,
+  "n2_field_track": null,
   "n2_forage": null,
   "n2_fungus_stew": null,
   "n2_gather": null,
@@ -1962,6 +1964,7 @@
   "n3_catch_broth": null,
   "n3_dig_bed": 3,
   "n3_dig_clay": null,
+  "n3_field_track": null,
   "n3_forage": null,
   "n3_fungus_stew": null,
   "n3_gather": null,
@@ -1979,6 +1982,7 @@
   "n5_catch_broth": null,
   "n5_cut": null,
   "n5_dig_clay": null,
+  "n5_field_track": null,
   "n5_forage": null,
   "n5_fungus_stew": null,
   "n5_gather": null,
@@ -1990,6 +1994,7 @@
   "n6_catch_broth": null,
   "n6_cut": null,
   "n6_dig_clay": null,
+  "n6_field_track": null,
   "n6_forage": null,
   "n6_fungus_stew": null,
   "n6_gather": null,
@@ -2002,6 +2007,7 @@
   "n7_catch_broth": null,
   "n7_cut": null,
   "n7_dig_clay": null,
+  "n7_field_track": null,
   "n7_forage": null,
   "n7_fungus_stew": null,
   "n7_gather": null,
@@ -2101,6 +2107,7 @@
   "n1_catch_broth": "n1",
   "n1_cut": "n1",
   "n1_dig_clay": "n1",
+  "n1_field_track": "n1",
   "n1_forage": "n1",
   "n1_fungus_stew": "n1",
   "n1_gather": "n1",
@@ -2116,6 +2123,7 @@
   "n2_clear_roofs": "n2",
   "n2_cut": "n2",
   "n2_dig_clay": "n2",
+  "n2_field_track": "n2",
   "n2_forage": "n2",
   "n2_fungus_stew": "n2",
   "n2_gather": "n2",
@@ -2130,6 +2138,7 @@
   "n3_catch_broth": "n3",
   "n3_dig_bed": "n3",
   "n3_dig_clay": "n3",
+  "n3_field_track": "n3",
   "n3_forage": "n3",
   "n3_fungus_stew": "n3",
   "n3_gather": "n3",
@@ -2147,6 +2156,7 @@
   "n5_catch_broth": "n5",
   "n5_cut": "n5",
   "n5_dig_clay": "n5",
+  "n5_field_track": "n5",
   "n5_forage": "n5",
   "n5_fungus_stew": "n5",
   "n5_gather": "n5",
@@ -2158,6 +2168,7 @@
   "n6_catch_broth": "n6",
   "n6_cut": "n6",
   "n6_dig_clay": "n6",
+  "n6_field_track": "n6",
   "n6_forage": "n6",
   "n6_fungus_stew": "n6",
   "n6_gather": "n6",
@@ -2170,6 +2181,7 @@
   "n7_catch_broth": "n7",
   "n7_cut": "n7",
   "n7_dig_clay": "n7",
+  "n7_field_track": "n7",
   "n7_forage": "n7",
   "n7_fungus_stew": "n7",
   "n7_gather": "n7",
@@ -2269,6 +2281,7 @@
   "n1_catch_broth": false,
   "n1_cut": false,
   "n1_dig_clay": false,
+  "n1_field_track": false,
   "n1_forage": false,
   "n1_fungus_stew": false,
   "n1_gather": false,
@@ -2284,6 +2297,7 @@
   "n2_clear_roofs": false,
   "n2_cut": false,
   "n2_dig_clay": false,
+  "n2_field_track": false,
   "n2_forage": false,
   "n2_fungus_stew": false,
   "n2_gather": false,
@@ -2298,6 +2312,7 @@
   "n3_catch_broth": false,
   "n3_dig_bed": false,
   "n3_dig_clay": false,
+  "n3_field_track": false,
   "n3_forage": false,
   "n3_fungus_stew": false,
   "n3_gather": false,
@@ -2315,6 +2330,7 @@
   "n5_catch_broth": false,
   "n5_cut": false,
   "n5_dig_clay": false,
+  "n5_field_track": false,
   "n5_forage": false,
   "n5_fungus_stew": false,
   "n5_gather": false,
@@ -2326,6 +2342,7 @@
   "n6_catch_broth": false,
   "n6_cut": false,
   "n6_dig_clay": false,
+  "n6_field_track": false,
   "n6_forage": false,
   "n6_fungus_stew": false,
   "n6_gather": false,
@@ -2338,6 +2355,7 @@
   "n7_catch_broth": false,
   "n7_cut": false,
   "n7_dig_clay": false,
+  "n7_field_track": false,
   "n7_forage": false,
   "n7_fungus_stew": false,
   "n7_gather": false,
@@ -2413,7 +2431,7 @@
   445716000000,
   668736000000
  ],
- "digest": "c61299079db06bbd4ef234e88f0e1222d37dcdb19ebb8b99860c9f3281e3eea0",
+ "digest": "d6c4a969aa2e2fa293f014bd2b5fcdeee3eed8839bcec3ffdada5de6bc8a131f",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -2525,6 +2543,7 @@
    "n1_catch_broth",
    "n1_cut",
    "n1_dig_clay",
+   "n1_field_track",
    "n1_forage",
    "n1_fungus_stew",
    "n1_gather",
@@ -2540,6 +2559,7 @@
    "n2_clear_roofs",
    "n2_cut",
    "n2_dig_clay",
+   "n2_field_track",
    "n2_forage",
    "n2_fungus_stew",
    "n2_gather",
@@ -2554,6 +2574,7 @@
    "n3_catch_broth",
    "n3_dig_bed",
    "n3_dig_clay",
+   "n3_field_track",
    "n3_forage",
    "n3_fungus_stew",
    "n3_gather",
@@ -2571,6 +2592,7 @@
    "n5_catch_broth",
    "n5_cut",
    "n5_dig_clay",
+   "n5_field_track",
    "n5_forage",
    "n5_fungus_stew",
    "n5_gather",
@@ -2582,6 +2604,7 @@
    "n6_catch_broth",
    "n6_cut",
    "n6_dig_clay",
+   "n6_field_track",
    "n6_forage",
    "n6_fungus_stew",
    "n6_gather",
@@ -2594,6 +2617,7 @@
    "n7_catch_broth",
    "n7_cut",
    "n7_dig_clay",
+   "n7_field_track",
    "n7_forage",
    "n7_fungus_stew",
    "n7_gather",
@@ -3606,6 +3630,7 @@
    "stranger_clock",
    "tallow",
    "tinder_fungus",
+   "track_laid",
    "walk",
    "walk_out",
    "warmth",
@@ -3813,6 +3838,7 @@
    "t_family_chores",
    "t_family_cuts",
    "t_family_joins",
+   "t_family_track",
    "t_find_arc_11",
    "t_find_cook_6",
    "t_find_cook_9",
@@ -3918,10 +3944,13 @@
    "t_n1_clay_pot",
    "t_n1_cuts",
    "t_n1_joins",
+   "t_n1_track",
    "t_n1_weaves",
    "t_n1_works",
    "t_n2_chores",
    "t_n2_cuts",
+   "t_n2_track",
+   "t_n3_track",
    "t_nail",
    "t_night",
    "t_night_12",
@@ -4478,6 +4507,11 @@
    "t_rack_shown",
    "t_rats_drift",
    "t_rats_first",
+   "t_reach_1",
+   "t_reach_2",
+   "t_reach_3",
+   "t_reach_4",
+   "t_reach_5",
    "t_ridge",
    "t_ring",
    "t_ring_closed",
@@ -4554,6 +4588,7 @@
    "t_tired",
    "t_town_broth",
    "t_town_fungus_stew",
+   "t_track_laid",
    "t_track_roots",
    "t_track_roots_2",
    "t_walk_out",
@@ -9862,6 +9897,42 @@
     }
    ]
   },
+  "t_family_track": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n5_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n6_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "n7_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
   "t_find_arc_11": {
    "@": "Outcome",
    "lines": [
@@ -12394,6 +12465,26 @@
    "stores": [],
    "unlocks": []
   },
+  "t_n1_track": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n1_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
   "t_n1_weaves": {
    "@": "Outcome",
    "lines": [],
@@ -12534,6 +12625,46 @@
      "kind": {
       "@": "UnlockKind",
       "v": "retired"
+     }
+    }
+   ]
+  },
+  "t_n2_track": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n2_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    }
+   ]
+  },
+  "t_n3_track": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "n3_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
      }
     }
    ]
@@ -30465,6 +30596,131 @@
    "stores": [],
    "unlocks": []
   },
+  "t_reach_1": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_1",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_reach_2": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_2",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_reach_3": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_3",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_reach_4": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_4",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_reach_5": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_5",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_ridge": {
    "@": "Outcome",
    "lines": [
@@ -32305,6 +32561,26 @@
     }
    ]
   },
+  "t_track_laid": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "track_laid",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "store"
+     }
+    }
+   ]
+  },
   "t_track_roots": {
    "@": "Outcome",
    "lines": [],
@@ -33490,7 +33766,7 @@
    "unlocks": []
   }
  },
- "release": 67,
+ "release": 69,
  "renames": [
   {
    "from": "t_stock_open",
@@ -34130,6 +34406,7 @@
   "stranger_clock": 3456000000,
   "tallow": 21600000,
   "tinder_fungus": 3600000,
+  "track_laid": 36000000000,
   "walk": 3600000,
   "walk_out": 270000000,
   "warmth": 36000000,

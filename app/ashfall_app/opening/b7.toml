@@ -127,11 +127,9 @@ base = 4
 
 # The old man's mending (day_five.toml, n4_mend), held on the hands while it runs, at its share of his time. The
 # watch fire at the gap, where the prints ran in to the larder, holds the larder while it is kept, each watcher at their
-# share of their time (day_eight.toml adds the gap). The track the hunts go out along holds the hands while it is laid,
-# at its share of the hands' time.
+# share of their time (day_eight.toml adds the gap).
 [while_running]
 n4_mend = [{ side = "hands", amount_bp = 2500 }]
-field_track = [{ side = "hands", amount_bp = 10000 }]
 n1_watch = [{ side = "larder", amount_bp = 5000 }]
 n2_watch = [{ side = "larder", amount_bp = 5000 }]
 n4_watch = [{ side = "larder", amount_bp = 5000 }]
@@ -198,6 +196,36 @@ xp_per_hour = 2
 inputs = [{ store = "smoked", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }] }
 fight = { side = "hands", threat = "lone_wolf", lost = "hunt_lost", wounds = [{ store = "hurt", items = 1 }], won_line_keys = ["l_fight_hunt_won_1", "l_fight_hunt_won_2", "l_fight_hunt_won_3"], lost_line_keys = ["l_fight_hunt_lost_1", "l_fight_hunt_lost_2", "l_fight_hunt_lost_3"] }
+
+# ---------- the track's reach ----------
+
+# The hunts go out along the track, so each reach of track laid (day_three.toml, track_laid) speeds them as a Melee
+# level does. One figure for every reach: the track's face reads it (stake "reach"). A save past a reach gets it when
+# this file merges.
+[[triggers]]
+id = "t_reach_1"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 1000 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_1" }] }
+
+[[triggers]]
+id = "t_reach_2"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 2500 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_2" }] }
+
+[[triggers]]
+id = "t_reach_3"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 4500 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_3" }] }
+
+[[triggers]]
+id = "t_reach_4"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 7000 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_4" }] }
+
+[[triggers]]
+id = "t_reach_5"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 10000 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_5" }] }
 
 [[cards]]
 id = "make_spear"

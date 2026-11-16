@@ -820,6 +820,7 @@ export interface components {
             makes: string[];
             /** Takes */
             takes: string[];
+            reach: components["schemas"]["ReachInfo"] | null;
             /** Drains */
             drains: string[];
             /** Skill Needs */
@@ -1867,6 +1868,16 @@ export interface components {
         QueueEntry: {
             verb: components["schemas"]["OrderVerb"];
             until: components["schemas"]["Condition"];
+        };
+        /**
+         * ReachInfo
+         * @description What a card with the stake reach fills: its face draws the store against the next stop (CONTRACT.txt, "Cards").
+         */
+        ReachInfo: {
+            /** Store */
+            store: string;
+            /** Stops */
+            stops: number[];
         };
         /** RecoveryWords */
         RecoveryWords: {

@@ -2319,6 +2319,16 @@
             "type": "array",
             "title": "Takes"
           },
+          "reach": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReachInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "drains": {
             "items": {
               "type": "string"
@@ -2379,6 +2389,7 @@
           "inputs",
           "makes",
           "takes",
+          "reach",
           "drains",
           "skill_needs",
           "step_needs",
@@ -5374,6 +5385,28 @@
           "until"
         ],
         "title": "QueueEntry"
+      },
+      "ReachInfo": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "stops": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Stops"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "stops"
+        ],
+        "title": "ReachInfo",
+        "description": "What a card with the stake reach fills: its face draws the store against the next stop (CONTRACT.txt, \"Cards\")."
       },
       "RecoveryWords": {
         "properties": {

@@ -11,9 +11,12 @@
 // level or a step once met stays met (levels and completions never fall), so its row goes; a store can fall, so its row stays.
 // While the card works (Card.run full or held) its needs are not drawn: its inputs are drawn as it runs, so the store
 // reads short of a whole input; a run paused for want of one (run paused) draws them.
+// A card with a reach stake (CardInfo.reach) also draws its store against the next reach, even while it works: a rising
+// line joins the ledger only once full, so this row is where the player reads how far the next reach is; it goes once
+// every reach is passed.
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
 // what its blocker names (shows()).
-import type { Card, Condition, Need, View } from "../api/types";
+import type { Card, Condition, LedgerLine, Need, View } from "../api/types";
 import { sample } from "../game/clock";
 import { completionsOf } from "../game/cues";
 import { levelOf, needKind, opensWords, skillWords, stepWords, storeWords } from "../game/needwords";
@@ -42,6 +45,8 @@ export class CardNeeds {
   private stores: string[] = [];
   private needs: Need[] = [];
   private shape: string | null = null;
+  private readonly reach = el("span", "card-need reach");
+  private reachLine: LedgerLine | null = null;
 
   constructor(private readonly ctx: PartContext, private readonly id: string) {}
 
@@ -60,7 +65,7 @@ export class CardNeeds {
       this.storeRows = card.needs.map((n, i) => this.storeRow(`card-need ${kind(n)}`.trim(), i));
       const skills = skillNeeds.map(() => el("span", "card-need skill"));
       const steps = stepNeeds.map(() => el("span", "card-need step"));
-      this.root.replaceChildren(...this.storeRows, ...skills, ...steps);
+      this.root.replaceChildren(...this.storeRows, ...skills, ...steps, ...(info?.reach ? [this.reach] : []));
     }
     card.needs.forEach((need, i) => {
       const row = this.storeRows[i];
@@ -83,8 +88,12 @@ export class CardNeeds {
       node.hidden = have >= need.count;
       drawNeed(node, stepWords(catalog, need.card, MARK, need.count), catalog.format.count(have), have < need.count);
     });
-    const shown = [...this.storeRows, ...skillNodes, ...stepNodes].filter((row) => !row.hidden).length;
-    this.root.hidden = done || shown === 0 || working(card);
+    const rows = [...this.storeRows, ...skillNodes, ...stepNodes];
+    if (working(card)) rows.forEach((row) => { row.hidden = true; });
+    const store = info?.reach?.store;
+    this.reachLine = store === undefined ? null : view.ledger.find((l) => l.store === store) ?? null;
+    this.tickReach(view.at);
+    this.root.hidden = done || (rows.every((row) => row.hidden) && this.reach.hidden);
   }
 
   /** The row drawn for what `condition` watches (a blocker's): its store's have/need, its skill level or its step;
@@ -104,6 +113,7 @@ export class CardNeeds {
   /** The store needs at game time t; a gated one is drawn with the view (draw). */
   tick(card: Card, _view: View | null, t: number): void {
     const { catalog } = this.ctx;
+    this.tickReach(t);
     card.needs.forEach((need, i) => {
       const node = this.storeRows[i];
       if (!node || node.classList.contains("unseen") || need.gate !== null) return;
@@ -115,6 +125,17 @@ export class CardNeeds {
       const short = card.blocker !== null && have < need.quantity;   // red only while it holds the card back
       drawNeed(node, storeWords(catalog, need, MARK), catalog.isLevel(need.store) ? catalog.format.level(have) : catalog.format.items(have), short);
     });
+  }
+
+  private tickReach(t: number): void {
+    const info = this.ctx.catalog.cards.get(this.id);
+    const have = this.reachLine === null ? 0 : sample(this.reachLine.segment, t);
+    const next = info?.reach?.stops.find((s) => s > have);
+    this.reach.hidden = this.reachLine === null || next === undefined;
+    if (!this.reach.hidden && next !== undefined && info?.reach) {
+      const { catalog } = this.ctx;
+      setText(this.reach, catalog.format.reach(catalog.storeTitle(info.reach.store), have, next));
+    }
   }
 
   /** The row of the i-th store need: a tap of it while it is short lights that need's makers, not the card. */

@@ -32,6 +32,7 @@ export const UI = {
   needs: "ui.card.needs", // "{store} {have}/{n}": a card's need
   needsSpent: "ui.card.needs_spent", // "{store} {have}/{n}": a card's need on a store nothing will bring again
   needsSkill: "ui.card.needs_skill", // "{skill} level {have}/{n}": a card held back by a skill level
+  reach: "ui.card.reach", // "{store} {have}, next reach at {n}": the store a reach stake fills, against its next stop
   needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
   ledgerHeading: "ui.heading.ledger",
   ledgerYours: "ui.ledger.yours", // the ledger's group of the player's own stores
