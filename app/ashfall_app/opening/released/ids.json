@@ -2431,7 +2431,7 @@
   445716000000,
   668736000000
  ],
- "digest": "d6c4a969aa2e2fa293f014bd2b5fcdeee3eed8839bcec3ffdada5de6bc8a131f",
+ "digest": "8210b404ee7b98bd7c4c2604dc18bae52cae7f1d64c2959c045a71f1f70dd2ea",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -33766,7 +33766,7 @@
    "unlocks": []
   }
  },
- "release": 69,
+ "release": 71,
  "renames": [
   {
    "from": "t_stock_open",
