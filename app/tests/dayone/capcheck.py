@@ -1,12 +1,13 @@
 """The cap-loss check (docs/design/banked-time-plan.md, item 2): from a chapter's last decision, an 8 h and a 24 h
 absence lose at most half of what each gathered store makes to its cap. Gathered: a store some card on a lane makes.
 A tally store is made only by a fight's line, never a card's makes, so it is out by construction; the camp store is
-passed in, since its levels pace the story by design. 72 h is reported, not checked (caploss.ABSENCE_H). Store ids only
-(CLAUDE.md, "Never spoil the owner")."""
+passed in, since its levels pace the story by design. A store nothing wants (wanted.py) is reported, not failed. 72 h is
+reported, not checked (caploss.ABSENCE_H). Store ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Collection
 
 from ashfall_app.engine import Rules, Save
 from tests.dayone import caploss
+from tests.dayone.wanted import wanted
 
 HOURS = (8, 24)
 LIMIT = 0.5
@@ -19,7 +20,7 @@ def gathered(rules: Rules, apart: Collection[str] = ()) -> frozenset[str]:
     return frozenset(made) - set(apart)
 
 
-def failing(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
+def losing(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
     """Each gathered store losing more than LIMIT of its making over an absence from `save`, with the hours it does.
     Fails when no gathered store was sampled, since a check of nothing would pass every chapter."""
     away = caploss.absences(save, rules, HOURS)
@@ -27,6 +28,18 @@ def failing(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, 
     assert sampled, "no gathered store was sampled"
     found = {s: tuple(h for h in HOURS if away[h][s].share > LIMIT) for s in sorted(sampled)}
     return {s: hs for s, hs in found.items() if hs}
+
+
+def failing(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
+    """The losing stores something wants (wanted.py): the check's failures."""
+    keep = wanted(rules)
+    return {s: hs for s, hs in losing(save, rules, apart).items() if s in keep}
+
+
+def unwanted(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
+    """The losing stores nothing wants: reported by the readouts, never failed."""
+    keep = wanted(rules)
+    return {s: hs for s, hs in losing(save, rules, apart).items() if s not in keep}
 
 
 def problems(found: dict[str, tuple[int, ...]]) -> list[str]:

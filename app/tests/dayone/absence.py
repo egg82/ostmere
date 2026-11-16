@@ -149,10 +149,12 @@ def absences(rules: Rules, save: Save, hours: tuple[int, ...]) -> tuple[Return, 
 
 
 def gathered_losses(losses: Mapping[str, caploss.StoreLoss], rules: Rules) -> tuple[tuple[str, float], ...]:
-    """The gathered stores (capcheck.gathered, the camp store apart) that lost any of their making, with each share."""
+    """The gathered stores (capcheck.gathered, the camp store apart) that lost any of their making, with each share; a
+    store nothing wants (wanted.py) is marked, since the check does not fail it."""
     camp = opening().camp
-    kept = capcheck.gathered(rules, (camp.store,) if camp else ())
-    return tuple((s, loss.share) for s, loss in losses.items() if s in kept and loss.lost > 0)
+    kept, wanted = capcheck.gathered(rules, (camp.store,) if camp else ()), capcheck.wanted(rules)
+    return tuple((s if s in wanted else f"{s} (unwanted)", loss.share) for s, loss in losses.items()
+                 if s in kept and loss.lost > 0)
 
 
 def last_beat(p: HumanPlayer, time: int) -> str:

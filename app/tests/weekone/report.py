@@ -73,8 +73,10 @@ def route_report(name: str, p: DayTwoPlayer) -> None:
     marked = checks2.marks(p, first=1)
     for chapter, found in verdicts.chapter_counts(p).items():
         print(chapter_text(chapter, found, marked), end="")
-        failing = capcheck.failing(verdicts.exit_save(p, verdicts.CHAPTERS[chapter]), p.rules, (camp.store,) if camp else ())
+        save, apart = verdicts.exit_save(p, verdicts.CHAPTERS[chapter]), (camp.store,) if camp else ()
+        failing = capcheck.failing(save, p.rules, apart)
         print(f"    cap_loss at the end: {'FAIL ' + '; '.join(capcheck.problems(failing)) if failing else 'ok'}")
+        print(f"    cap_loss on stores nothing wants: {'; '.join(capcheck.problems(capcheck.unwanted(save, p.rules, apart))) or 'none'}")
 
 
 def line_states(plays: dict[str, DayTwoPlayer]) -> list[str]:

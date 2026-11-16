@@ -94,6 +94,7 @@ def route_report(name: str, seed: int, p: DayTwoPlayer, chapter: Later = verdict
     print("    unlocks per absence: " + "; ".join(f"{a} {len(u)}" for a, u in verdicts.absences(p, chapter)))
     failing = verdicts.cap_loss(p, chapter)
     print(f"    cap_loss at the end: {'FAIL ' + '; '.join(capcheck.problems(failing)) if failing else 'ok'}")
+    print(f"    cap_loss on stores nothing wants: {'; '.join(capcheck.problems(verdicts.cap_unwanted(p, chapter))) or 'none'}")
 
 
 def line_states(plays: dict[str, DayTwoPlayer]) -> list[str]:
