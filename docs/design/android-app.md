@@ -86,7 +86,7 @@ TWA the notes do not describe push at all).
 | 1 | `android/` Gradle project: TWA launcher, Custom Tab fallback, debug APK in CI. Pins build tools and JDK. | Nothing. |
 | 2 | `assetlinks.json` route and test, fingerprint from a config value. | The key's SHA-256 fingerprint, after step 4. |
 | 3 | Device test: install the debug APK, check the bar is gone, subscribe, receive a reminder. Fixes the two unverified push and link points above. | A phone, and the name of the browser on it. |
-| 4 | Generate the keystore; release workflow signs the APK and attaches it to a GitHub release. | Run `keytool`, add the secrets, keep the backup. |
+| 4 | Generate the keystore; release workflow signs the APK and attaches it to a GitHub release on an `android-vMAJOR.MINOR.PATCH` tag (versionCode is `major*10000 + minor*100 + patch`), failing unless the signer matches `android/release-key.sha256`. | Run `keytool`, add the secrets, keep the backup. |
 | 5 | Obtainium check: add the repo, install, publish a newer tag, see it update. | The phone again. |
 | 6 | Own F-Droid repo: workflow builds the index and deploys it. | A hosting target and the repo key. |
 | 7 | Main F-Droid: `fdroiddata` recipe, reproducibility check, inclusion request. | The owner's yes, and answers to the `NonFreeNet` and `NonFreeDep` questions. |
