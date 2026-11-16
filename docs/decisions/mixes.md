@@ -98,7 +98,11 @@ and you tune it, then hit go.
   rule: empty, a quarter, half, three quarters or full, or a percentage in five-point steps; an exact number stays for
   a rule that needs exactly 12. A new rule starts with shares, a rule already written keeps its numbers until either
   level is switched, and a goal stint can also run until a store is half, three quarters or full. The engine reads a
-  share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS").
+  share against the cap at that moment (engine `DESIGN.txt`, "SHARE LEVELS"). The editor builds only a rule that
+  starts and stops at least one whole item apart (`valid` in `app/client/src/game/storerule.ts`), so on a small store a
+  share can sit no nearer full than that allows: "down to 95%, until full" works on 54 roots but stops at 90% on 18 wood.
+  Kept as it is, with nothing on screen saying why (owner, 2026-11-16: "we can leave it as is"): a rule one item from
+  full would restart on every item.
 - **A rule can carry guards and fallbacks, and has no "or"** (owner: rules are dumb, but with combinations they could
   be way smarter). Up to three guards pause a rule while any of them holds ("13 or more catch, until under 1, unless
   smoked is full"): the main condition keeps its "until", and the rule picks up where it left off when the last guard
