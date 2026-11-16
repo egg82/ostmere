@@ -43,8 +43,8 @@ env:
   PG_IMAGE: postgres:18.6
 
 jobs:
-  # What this run covers. `code` is false only for a pull request whose every changed file is under docs/, a top-level
-  # Markdown file or LICENSE (content/ is read by the play tests, so it is code). `full` adds the playthroughs.
+  # What this run covers. `code` is false only for a pull request whose every changed file is under docs/ or android/, a
+  # top-level Markdown file or LICENSE (content/ is read by the play tests, so it is code). `full` adds the playthroughs.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -67,7 +67,7 @@ jobs:
           fi
           git diff --name-only "$(git merge-base "origin/$BASE_REF" HEAD)" HEAD > "$RUNNER_TEMP/changed"
           cat "$RUNNER_TEMP/changed"
-          if [ ! -s "$RUNNER_TEMP/changed" ] || grep -v -E '^(docs/.*|[^/]+\.md|LICENSE)$' "$RUNNER_TEMP/changed" > /dev/null; then
+          if [ ! -s "$RUNNER_TEMP/changed" ] || grep -v -E '^(docs/.*|android/.*|[^/]+\.md|LICENSE)$' "$RUNNER_TEMP/changed" > /dev/null; then
             code=true
           else
             code=false
