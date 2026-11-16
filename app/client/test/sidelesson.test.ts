@@ -1,8 +1,8 @@
 // The side-holder's lesson (game/sidelesson.ts, SIDE_MIX; docs/design/opening-screen.md, "Lessons"): the first time a fight
-// of a side is served while a card that holds that side is in play, the holder's face is the trigger. It walks the Mixes
-// list's own New mix with the holder and the fight card, then shows the holder's face at its share. Never again once done
-// or skipped, and it starts from nothing else.
-import { FakeEvent, fakeDocument, install } from "./fake-dom";
+// of a side is served while a card that holds that side is in play, the holder's face is the trigger. Two steps: the face, then
+// the Mixes control, whose line says both in one mix run together. Never again once done or skipped, and it starts from
+// nothing else.
+import { install } from "./fake-dom";
 import { fightsStep } from "../fixtures/fights";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, Decision, View } from "../src/api/types";
@@ -71,42 +71,20 @@ function rig(keeps: Keeps, shown: View = view) {
     n.click();
     frame();
   };
-  const add = (card: string): void => {
-    fakeDocument.querySelector(`.editor .add-card[data-card="${card}"]`)?.dispatchEvent(new FakeEvent("click", { detail: 0 }));   // a key's tap: it joins
-    frame();
-  };
-  return { screen, decided, frame, trigger, note, tap, add, keeps };
+  return { screen, decided, frame, trigger, note, tap, keeps };
 }
 
-{  // the walk, on the real controls; nothing is sent until Save
+{  // two steps: the holder's face, then the Mixes control; nothing is opened or sent for the player
   const r = rig(keepsOf(TAUGHT));
   r.frame();
   expect("the holder's face is the trigger, naming the fight", [r.trigger()?.dataset.card, r.trigger()?.dataset.fight], ["poultice", "hunt"]);
   r.frame();
   expect("the lesson starts on it", r.note(), text("ui.lesson.side_hold", slots));
   r.tap(".lesson-next"); r.frame();
-  expect("then the Mixes list", r.note(), text("ui.lesson.second_open"));
+  expect("then the Mixes control, saying both run together", r.note(), text("ui.lesson.side_open", { card: slots.card }));
   r.tap('[data-teach="mixes"]');
-  expect("then New mix", r.note(), text("ui.lesson.second_new"));
-  r.tap(".selector .selector-new");
-  expect("then the holder's add button", r.note(), text("ui.lesson.mix_add", { card: slots.card }));
-  r.add("poultice");
-  expect("then the fight's", r.note(), text("ui.lesson.mix_add_more", { card: slots.task }));
-  r.add("hunt");
-  expect("then the bar, saying what the share is for", r.note(), text("ui.lesson.side_bar", { card: slots.card }));
-  r.tap(".lesson-next"); r.frame();
-  expect("then Save", r.note(), text("ui.lesson.second_save"));
-  expect("nothing was sent before Save", r.decided.length, 0);
-  r.tap(".editor .editor-head .primary");
-  const saved = r.decided.filter((d) => d.kind === "save_mix");
-  expect("Save saves a mix of both", saved.length === 1 && saved[0]?.kind === "save_mix" ? saved[0].mix.components.map((c) => (c.kind === "card_share" ? c.card : "")) : null, ["poultice", "hunt"]);
-  expect("and switches nothing", r.decided.some((d) => d.kind === "switch_mix"), false);
-  r.frame();
-  expect("then where switching is", r.note(), text("ui.lesson.second_run"));
-  r.tap(".lesson-next"); r.frame();
-  expect("last, the holder's figure at its share", r.note(), text("ui.lesson.side_face", { card: slots.card }));
-  r.tap(".lesson-next"); r.frame();
-  expect("done, and kept", r.keeps.lessonKept(SIDE_MIX) && r.keeps.lessonDone(SIDE_MIX), true);
+  expect("a touch on it is the end: done, and kept", r.keeps.lessonKept(SIDE_MIX) && r.keeps.lessonDone(SIDE_MIX), true);
+  expect("nothing was sent", r.decided.length, 0);
   r.screen.show({ ...step, view });
   r.frame();
   expect("the trigger is gone with it", r.trigger() !== null, false);

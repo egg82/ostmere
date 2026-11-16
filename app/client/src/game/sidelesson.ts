@@ -1,7 +1,7 @@
 // The side-holder's lesson (docs/design/opening-screen.md, "Lessons"): a card that holds a side while it runs
 // (CardInfo.kept) adds to that side's strength at its share of the mix, so a mix runs it beside the fight it helps. It
 // starts from that card's face the first time a fight of its side is served and a card that makes the fight is in play,
-// and walks the Mixes list's own New mix with those two cards.
+// and points at the Mixes control.
 import type { View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { COMBAT } from "./fights";
@@ -34,18 +34,11 @@ const label = (c: Catalog, id: string | undefined): string => c.cardLabel(id ?? 
 
 export const SIDE_LESSON: Lesson = {
   id: SIDE_MIX,
-  // once the player has a mix: the list and New mix are there to walk
+  // once the player has a mix: its Mixes control is there to point at
   may: (view) => view.mixes.length > 0,
   trigger: `[data-teach="side-mix"]`,
   steps: [
     { target: () => `[data-teach="side-mix"]`, line: (c, s) => c.text.fill(UI.lessonSideHold, { card: label(c, s["card"]), task: label(c, s["fight"]) }), ends: "read" },
-    { target: () => `[data-teach="mixes"]`, line: (c) => c.text.get(UI.lessonSecondOpen), ends: "touch" },
-    { target: () => `.selector .selector-new`, line: (c) => c.text.get(UI.lessonSecondNew), ends: "touch" },
-    { target: (s) => `.editor .add-card[data-card="${s["card"]}"]`, line: (c, s) => c.text.fill(UI.lessonMixAdd, { card: label(c, s["card"]) }), ends: "touch" },
-    { target: (s) => `.editor .add-card[data-card="${s["fight"]}"]`, line: (c, s) => c.text.fill(UI.lessonMixAddMore, { card: label(c, s["fight"]) }), ends: "touch" },
-    { target: () => `.editor .share-bar`, line: (c, s) => c.text.fill(UI.lessonSideBar, { card: label(c, s["card"]) }), ends: "read" },
-    { target: () => `.editor .editor-head .primary`, line: (c) => c.text.get(UI.lessonSecondSave), ends: "touch" },
-    { target: () => `[data-teach="mixes"]`, line: (c) => c.text.get(UI.lessonSecondRun), ends: "read" },
-    { target: (s) => `.card[data-card="${s["card"]}"] .card-upside`, line: (c, s) => c.text.fill(UI.lessonSideFace, { card: label(c, s["card"]) }), ends: "read" },
+    { target: () => `[data-teach="mixes"]`, line: (c, s) => c.text.fill(UI.lessonSideOpen, { card: label(c, s["card"]) }), ends: "touch" },
   ],
 };
