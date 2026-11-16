@@ -18,7 +18,7 @@ def png_size(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", head[16:24])
 
 
-def test_png_size_reads_a_known_file_and_refuses_a_non_png(tmp_path):
+def test_png_size_reads_a_known_file_and_refuses_a_non_png(tmp_path: Path):
     assert png_size(page.ICONS / "icon-192.png") == (192, 192)
     bad = tmp_path / "x.png"
     bad.write_bytes(b"not a png at all, just text padding")
