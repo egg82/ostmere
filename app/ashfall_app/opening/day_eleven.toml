@@ -663,7 +663,7 @@ n_day_b11 = "sat up with him. burned him by the scrub, away from the stone. no n
 # The journal's slots (docs/design/journal.md, "The content's side").
 j_n5_first = "{n5} gave the family's names at the gate. the child kept close to her"
 j_n5_catchup = "a family came in. {n5} talked for them"
-j_n6_first = "met {n6}, the husband. at the gate the three of them stood with a space between"
+j_n6_first = "met {n6}, the husband. at the gate they stood with a space between"
 j_n6_catchup = "met {n6}, the husband"
 j_n7_first = "met {n7}, the wife's brother. she gave his name for him"
 j_n7_catchup = "met {n7}, the wife's brother"
