@@ -12,3 +12,4 @@ typical: the end at 8.8m; B3 12.5h after it; 3 visits
   flatcheck []
   goals: 7 samples, 1 with a choice due, 0 of those with no goal the setup drives; weighting decides the order at 1 of 1 with a pair
   leaves naming only a speed level []
+  stretches of levels paying only speed past two, in 4 skills read: []

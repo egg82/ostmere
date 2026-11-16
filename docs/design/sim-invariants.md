@@ -46,7 +46,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | O12 | `opening/test_second_skill.py`: `test_the_skill_checks_cover_the_new_row_and_pass` | markers paid, no blank level, no runaway | shown + spiral | fails |
 | O13 | `opening/test_phase_pays.py`: work pays are adds | later phases' work pays never multiply | spiral | fails |
 | O14 | same: `test_every_level_of_every_phase_a_track_reaches_pays` | every level a track reaches pays | taste | fails until #112 makes it a readout |
-| O15 | same: no three speed-only levels running, and the loader's refusal | at least every third level brings something named | taste | fails until #109 makes it a readout |
+| O15 | `opening/report.py`, `samey_lines` | each later phase's longest stretch of levels paying only speed | taste | readout |
 | O16 | `opening/test_after_end.py`: `test_the_rest_offer_never_shows_before_the_end_lines_are_read` | the content's `after_end` gate holds the offer | correct: story order | fails |
 | O17 | `opening/test_first_rule_offer.py` | every route meets a rule offer before the end | babysit (the tool is taught) | fails |
 | O18 | the by_hand player past the end | actions between the offer and the door's glow | taste | readout |
@@ -73,7 +73,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D19 | `dayone/test_dayone_invariants.py` | a card showing every need met starts when tapped | shown | fails |
 | D20 | `dayone/test_dayone_aims.py`: `test_every_aim_is_stated_at_some_view` (`dayone/screen.py`) | every declared aim is stated; views with no aim are the readout's | shown (a stretch with no stated aim hides the next step) + taste | fails; the count is a readout |
 | D21 | `dayone/screen.py`, `early` | mechanics drawn in the first five minutes | taste | readout |
-| D22 | `dayone/test_dayone_level_pays.py`: `test_no_skill_pays_speed_alone_three_levels_running` | O15's rule on the levels day one reaches | taste | fails until #109 makes it a readout |
+| D22 | `dayone/report.py`, `runs_line` | O15's stretches on the levels day one reaches, past two running, per route | taste | readout |
 | D23 | `dayone/levelpays.py`, `speed_only_leaves` | leave points naming only a speed level | taste | readout |
 | D24 | `dayone/test_dayone_prestige.py` | a visit clicker ends level with an instant one inside the carry window | babysit | fails |
 | D25 | `dayone/test_dayone_absence.py`: `test_a_longer_absence_never_holds_fewer_arrivals` | a property of the page's arrival queue | shown (what a return holds) | fails |
