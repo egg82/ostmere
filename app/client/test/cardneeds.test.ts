@@ -65,3 +65,24 @@ function drainRow(store: string): { shown: boolean; text: string } {
 expect("the control store is never shown", base.unlocked.some((u) => u.category === "store" && u.id === "hurt"), false);
 expect("a drained store never shown draws its row", drainRow("hurt"), { shown: true, text: "Hurt 0/1" });
 expect("a drained hidden store does not", drainRow("clock").shown, false);
+
+// A reach stake (CardInfo.reach) draws its store against the next reach though the line is not in the ledger's
+// view of what to show: even while the card works, none once every reach is passed or the store has no line.
+function reachRow(have: number | null, run: Card["run"] = null): { shown: boolean; text: string; rootShown: boolean } {
+  const reach = { ...content, card_infos: content.card_infos.map((c) => (c.card === "stool"
+    ? { ...c, reach: { store: "wood", stops: [2 * Q, 5 * Q, 9 * Q] } } : c)) };
+  const card: Card = { ...stool, needs: [], run };
+  const line = have === null ? [] : [{ ...base.ledger[0]!, store: "wood", segment: { start: 0, start_value: have, rate: 0, limit: null } }];
+  const view: View = { ...base, cards: [card], completed: [], ledger: line };
+  const needs = new CardNeeds(testContext(undefined, new Catalog(reach)).ctx, "stool");
+  needs.draw(card, view, false);
+  needs.tick(card, view, 100);
+  const row = needs.root.querySelector<HTMLElement>(".card-need.reach");
+  return { shown: row !== null && !row.hidden, text: row?.textContent ?? "", rootShown: !needs.root.hidden };
+}
+
+expect("the reach row names the store and the next reach", reachRow(3 * Q), { shown: true, text: "Dead wood 3, next reach at 5", rootShown: true });
+expect("the next reach moves up once one is passed", reachRow(5 * Q).text, "Dead wood 5, next reach at 9");
+expect("it is drawn while the card works", reachRow(3 * Q, "full").rootShown, true);
+expect("none once every reach is passed", reachRow(9 * Q).shown, false);
+expect("none with no ledger line for the store", reachRow(null).shown, false);

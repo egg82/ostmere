@@ -73,6 +73,14 @@ class FightInfo(BaseModel):
     """The pool for one fight lost; empty: ui.fight.lost."""
 
 
+class ReachInfo(BaseModel):
+    """What a card with the stake reach fills: its face draws the store against the next stop (CONTRACT.txt, "Cards")."""
+
+    store: str
+    stops: list[int]
+    """Each reach's threshold on the store, in quantity units, in trigger order (ascending)."""
+
+
 class KeptInfo(BaseModel):
     """One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both."""
 
@@ -107,6 +115,9 @@ class CardInfo(BaseModel):
     """The stores its completions land or its flows fill, in content order: what a rule doing it is about first."""
     takes: list[str]
     """The stores its inputs, costs and drains take from, in content order."""
+    reach: ReachInfo | None
+    """Set on a card with the stake reach: the store its completions fill and the amounts at which its triggers pay. The
+    face draws the store's amount and the next stop, since a rising line is not in the ledger until it is full."""
     drains: list[str]
     """The stores its drains take from, in content order. A tap waits while one is at 0, so the face draws each as a
     have/need row (Card.needs holds it at quantity 1) unless the store is hidden."""

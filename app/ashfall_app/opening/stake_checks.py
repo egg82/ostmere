@@ -4,11 +4,12 @@ its first completion is a bare sink: it declares its `stake`, what it feeds, and
 whole content bears the stake out. Ids and fields only, never text. Raises ValueError naming the cards (refs.fail)."""
 from typing import TYPE_CHECKING
 
+from .convert import levels
 from .fight_refs import fights
 from .refs import conditions, fail
 
 if TYPE_CHECKING:
-    from .entries import CardEntry, ModifierEntry, OutcomeEntry
+    from .entries import CardEntry, ModifierEntry, OutcomeEntry, TriggerEntry
     from .schema import Opening
 
 
@@ -40,12 +41,22 @@ def check_stakes_hold(o: "Opening") -> None:
             fail(f"card {c.id}", "has the stake side but holds no entry on a side any fight is fought on")
 
 
+def _reach_triggers(o: "Opening", c: "CardEntry") -> list["TriggerEntry"]:
+    filled = {s.store for s in c.outcome.stores}
+    return [t for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "store"
+            and t.when.id in filled and t.outcome.modifiers]
+
+
 def reach_modifiers(o: "Opening", c: "CardEntry") -> list["ModifierEntry"]:
     """What a reach buys: the modifiers of the triggers on an at_least of a store the card's completions fill, in
     trigger order."""
-    filled = {s.store for s in c.outcome.stores}
-    return [m for t in o.triggers if t.when.test == "at_least" and t.when.subject_kind == "store"
-            and t.when.id in filled for m in t.outcome.modifiers]
+    return [m for t in _reach_triggers(o, c) for m in t.outcome.modifiers]
+
+
+def reach_stops(o: "Opening", c: "CardEntry") -> list[tuple[str, int]]:
+    """Each reach of a card with the stake reach: (the store it reads, its threshold in quantity units), in trigger
+    order. The face draws the store against the next of these (CardInfo.reach)."""
+    return [(str(t.when.id), levels(t.when)[0]) for t in _reach_triggers(o, c)]
 
 
 def bare(o: "Opening") -> set[str]:

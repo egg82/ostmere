@@ -561,6 +561,9 @@ THE CLIENT MAY
     skill's SkillBar.level is below its level (a skill not in view.skills reads as level one), and each of
     CardInfo.step_needs as ui.card.needs_step, short while that card's completions (view.cards or view.completed;
     absent, none) are below its count.
+    A card with CardInfo.reach also draws, even while it works, its store's amount (the ledger line in view.ledger, sampled)
+    against the first reach stop above it as ui.card.reach, and none once every stop is passed: a rising line joins the
+    ledger only once full, so the card is where the player reads how far the next reach is.
   - show on each skill row its next level and what it pays, from SkillInfo.levels (the first entry above
     SkillBar.level); a pays_key is words, "?" for a story unlock. Its {pct} slot (and {pct_b}) is LevelPays.change_bp.
   - when a skill's shown level (SkillPrestige.level_counted, else SkillBar.level) rises from one view to the next,
@@ -748,6 +751,7 @@ TEXT AND NUMBERS (one rule)
     ui.card.needs_spent {store}{have}{n}  the same, for a Need.spent need: nothing will bring the store again
     ui.card.needs_step {card}{have}{n}   a card's step need: the other card, its completions, the count wanted
     ui.card.needs_skill {skill}{have}{n}  a card's skill-level need: the skill's label, its level, the level wanted
+    ui.card.reach {store}{have}{n}  a reach stake's store: what there is, the next reach's amount
     ui.card.opens {when}            a card's need on a clock with a part of the day: when it opens
     ui.when.dawn | dawn_end | day | day_end | evening | evening_end | night | night_end   a condition on a clock with
                                     that part of the day (StoreInfo.clock) as a time: the part itself while the value

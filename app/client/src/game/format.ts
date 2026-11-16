@@ -40,6 +40,11 @@ export class Format {
     return this.text.fill(spent ? UI.needsSpent : UI.needs, { store, have: typeof have === "string" ? have : this.items(have), n });
   }
 
+  /** The store a reach stake fills: what there is (rounded down) and the next stop's amount. */
+  reach(store: string, have: number | string, stop: number): string {
+    return this.text.fill(UI.reach, { store, have: typeof have === "string" ? have : this.items(have), n: this.items(stop) });
+  }
+
   /** A card's step need: the other card's label, its completions and the count wanted. */
   needStep(card: string, have: number | string, count: number): string {
     return this.text.fill(UI.needsStep, { card, have: typeof have === "string" ? have : this.count(have), n: this.count(count) });

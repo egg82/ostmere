@@ -42,7 +42,7 @@ def test_every_tappable_card_draws_its_requires(content: Opening):
 
 @pytest.mark.parametrize("card", ["keep_vigil", "spar", "poultice"])
 def test_a_card_that_was_held_draws_every_require(content: Opening, card: str):
-    assert [x for x in undrawn(content) if x[0] == card] == []
+    assert [x for x in undrawn(content) if x[0] == "field_track"] == []
 
 
 def planted(o: Opening, card: str, *requires: ConditionEntry) -> Opening:
@@ -119,6 +119,19 @@ def test_a_new_undrawn_require_and_a_drawn_held_one_are_told_apart(content: Open
     assert len(new) == 1 and "take_stock after_time:" in new[0] and "draw it" in new[0]
     stale = wrong(content, {**held, "take_stock": {"store:roots": 1}})
     assert len(stale) == 1 and "stale, lower it" in stale[0]
+
+
+def test_a_reach_stake_draws_the_store_it_fills(content: Opening):
+    """A reach store is a rising line, not in the ledger until full: the face draws it against the next reach
+    (CardInfo.reach), so the store must be one the page may draw."""
+    assert "track_laid" in shown_stores(content)
+    assert [x for x in undrawn(content) if x[0] == "field_track"] == []
+
+
+def test_a_reach_store_the_face_cannot_draw_is_named(content: Opening):
+    stores = [s.model_copy(update={"hidden": True}) if s.id == "track_laid" else s for s in content.stores]
+    found = undrawn(content.model_copy(update={"stores": stores}))
+    assert [x for x in found if x[1] == "reach"] == [("field_track", "reach", "track_laid")]
 
 
 if __name__ == "__main__":

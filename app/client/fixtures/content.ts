@@ -134,6 +134,7 @@ const text: Record<string, string> = {
   "ui.frame.kept_out": "This browser won't keep your game inside this page.",
   "ui.frame.open": "Play Ostmere in its own tab",
   "ui.card.needs": "{store} {have}/{n}",
+  "ui.card.reach": "{store} {have}, next reach at {n}",
   "ui.card.needs_spent": "{store} {have}/{n}, none left",
   "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}", "ui.card.levelled": "{skill} {n} · {before} → {after}",
   "ui.chronicle.open": "Chronicle",
@@ -353,7 +354,7 @@ const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woo
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
   card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], kept: [], work_s: 5, inputs,
-  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), drains: [], skill_needs: [],
+  makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), reach: null, drains: [], skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
 
