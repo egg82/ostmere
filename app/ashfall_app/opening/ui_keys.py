@@ -30,6 +30,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.lesson.rule_do", "ui.lesson.rule_when", "ui.lesson.rule_add", "ui.lesson.rule_kept", "ui.lesson.rule_on",
     "ui.lesson.second_hint", "ui.lesson.second_open", "ui.lesson.second_new", "ui.lesson.second_add", "ui.lesson.second_bar",
     "ui.lesson.second_name", "ui.lesson.second_save", "ui.lesson.second_run",
+    "ui.lesson.side_hold", "ui.lesson.side_bar", "ui.lesson.side_face",
     "ui.lesson.cap_full", "ui.lesson.cap_rules", "ui.lesson.cap_new", "ui.lesson.cap_more", "ui.lesson.cap_levels",
     "ui.lesson.cap_reaches", "ui.lesson.cap_do",
     "ui.lesson.dry_line", "ui.lesson.dry_edit", "ui.lesson.dry_save", "ui.lesson.dry_rule",

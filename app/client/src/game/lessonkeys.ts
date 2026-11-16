@@ -26,6 +26,9 @@ export const LESSON_KEYS = {
   lessonSecondName: "ui.lesson.second_name",
   lessonSecondSave: "ui.lesson.second_save",   // saving runs nothing
   lessonSecondRun: "ui.lesson.second_run",   // switching is Run in the list
+  lessonSideHold: "ui.lesson.side_hold",   // "{card}{task}": a card that holds a side, and the fight it helps
+  lessonSideBar: "ui.lesson.side_bar",   // "{card}": each runs for its share of the time
+  lessonSideFace: "ui.lesson.side_face",   // "{card}": its face's figure is at its share
   lessonCapFull: "ui.lesson.cap_full",   // "{store}": the full line, what is lost past the top
   lessonCapRules: "ui.lesson.cap_rules",   // the Rules tab: a rule can move the hands on
   lessonCapNew: "ui.lesson.cap_new",

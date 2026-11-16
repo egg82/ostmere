@@ -9,10 +9,10 @@ import type { Catalog } from "./catalog";
 import type { Keeps } from "./keeps";
 import { anyReachesRule } from "./caphint";
 import { anySelfFedMix } from "./dryhint";
+import { nightsBegun, townMixAsMade } from "./lessonfacts";
 import { rulesTabDrawn } from "./orders";
+import { SIDE_LESSON } from "./sidelesson";
 import { UI } from "./text";
-
-const WHOLE_BP = 10000;
 
 /** What a lesson is about, read off its trigger's data attributes (`data-cards`, `data-task`, `data-watch`). */
 export type Subject = Readonly<Record<string, string>>;
@@ -63,6 +63,7 @@ export const TOWN_MIX = "town_mix";
 export const JOURNAL = "journal";
 export const JOURNAL_NUMBERS = "journal_numbers";
 export const PRESTIGE = "prestige";
+export { SIDE_MIX } from "./sidelesson";
 
 export const LESSONS: readonly Lesson[] = [
   {
@@ -133,6 +134,7 @@ export const LESSONS: readonly Lesson[] = [
       { target: () => `.cond-actions .primary`, line: (c) => c.text.get(UI.lessonRuleAdd), ends: "touch" },
     ],
   },
+  SIDE_LESSON,
   {
     id: DRY_STORE,
     // the first dry store a mix card stopped on that a card in play could refill (game/dryhint.ts; ui/ledger.ts marks its
@@ -223,20 +225,6 @@ export const LESSONS: readonly Lesson[] = [
     steps: [{ target: (s) => `[data-teach="prestige"][data-skill="${s["skill"]}"]`, line: (c, s) => c.text.fill(UI.lessonPrestige, { skill: c.skillLabel(s["skill"] ?? "") }), ends: "read" }],
   },
 ];
-
-/** The save's town mix is as the game made it: each person's whole time on one card (api CONTRACT.txt, "The town's mix"),
- * not split or moved to another task since. */
-function townMixAsMade(view: View): boolean {
-  const mix = view.mixes.find((m) => m.id === view.running_town_mix_id);
-  return mix !== undefined && mix.components.length > 0 && mix.components.every((c) => c.kind === "card_share" && c.share_bp === WHOLE_BP);
-}
-
-/** The nights the save has lived into: a night that has begun is a hidden store (a countdown) whose id is both an action
- * and a feature of view.unlocked. */
-function nightsBegun(view: View): number {
-  const features = new Set(view.unlocked.filter((u) => u.category === "feature").map((u) => u.id));
-  return view.unlocked.filter((u) => u.category === "action" && features.has(u.id)).length;
-}
 
 /** The lesson as it runs for this player and subject: its steps without those left out by a lesson they ended done
  * (`unlessDone`) or by the subject (`leftOut`), and `at`, each remaining step's index in the full list, which is what the
