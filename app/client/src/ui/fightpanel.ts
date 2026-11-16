@@ -36,9 +36,12 @@ export class FightPanel {
   constructor(private readonly catalog: Catalog, private readonly info: FightInfo, tally = false) {
     this.entries.hidden = true;
     this.tally.hidden = !tally;
-    const costs = [...info.loses, ...info.wounds].map((a) => `${Math.ceil(a.quantity / catalog.content.scales.quantity_per_item)} ${catalog.storeLabel(a.store)}`);
-    this.loss.textContent = this.catalog.text.fill(UI.fightOnLoss, { costs: costs.join(", ") });
-    this.loss.hidden = costs.length === 0;
+    const items = (a: { quantity: number }): string => catalog.format.level(a.quantity);
+    const costs = info.loses.map((a) => `${items(a)} ${catalog.storeLabel(a.store)}`);
+    const hurts = info.wounds.map((a) => catalog.text.fill(UI.fightOnWound, { store: catalog.storeLabel(a.store), n: items(a) }));
+    const words = [...(costs.length ? [catalog.text.fill(UI.fightOnLoss, { costs: costs.join(", ") })] : []), ...hurts];
+    this.loss.textContent = words.join("; ");
+    this.loss.hidden = words.length === 0;
     this.root.append(this.odds, this.vs, this.entries, this.loss, this.tally);
   }
 

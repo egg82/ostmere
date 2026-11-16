@@ -6552,6 +6552,24 @@
         ],
         "title": "StoreInfo"
       },
+      "StoreLevel": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "segment": {
+            "$ref": "#/components/schemas/Segment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "segment"
+        ],
+        "title": "StoreLevel",
+        "description": "A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole\nitems rounded up, as a level (CONTRACT.txt, \"FIGHTS\")."
+      },
       "StoreValue": {
         "properties": {
           "kind": {
@@ -7192,6 +7210,13 @@
             },
             "type": "array",
             "title": "Goal Rows"
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/StoreLevel"
+            },
+            "type": "array",
+            "title": "Levels"
           }
         },
         "type": "object",
@@ -7227,7 +7252,8 @@
           "offers",
           "fights",
           "goals",
-          "goal_rows"
+          "goal_rows",
+          "levels"
         ],
         "title": "View"
       },

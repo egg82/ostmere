@@ -13,6 +13,7 @@ import "../src/fights.css";
 import "../src/slider.css";
 import { wireBegin } from "../src/begin";
 import { fixtureContent, Q } from "./content";
+import { isFights, withHurtChip } from "./fights";
 import { isJournal, withJournal } from "./journal";
 import { isPrestige, withPrestige } from "./prestige";
 import { isSince, withSince } from "./since";
@@ -31,6 +32,7 @@ if (hash.has("kinded")) {
 }
 if (hash.has("swap")) for (const s of fixtureContent.store_infos) if (s.made_by.includes("tend")) s.made_by = [...s.made_by, "look"];
 const phase = (hash.get("phase") ?? "start") as Phase;
+if (isFights(phase)) Object.assign(fixtureContent, withHurtChip(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
 if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));

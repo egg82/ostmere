@@ -4,13 +4,14 @@
 //            a skill behind the 8) and one standing fight (raiders at the stores, 7.5% lost, 31 fought and 2 lost).
 //   fightnew, fightfirst: the same fights with none fought yet, and with one fought (odds unknown, then served).
 //            A poultice drains the hurt the hunt wounds, which is at 0: its tap waits on that drain.
+//   fighthurt: the fight phase with 1.5 hurt (the chip, its level, the poultice need), under withHurtChip's content.
 //   fightlater: the same fights 5 and 1 fights later (a window the arrival queue writes entries for), then a long one.
-import type { Card, Fight, Need, Step, Strength, View } from "../src/api/types";
+import type { Card, ChipInfo, Content, Fight, Need, Step, Strength, View } from "../src/api/types";
 import { Q } from "./content";
 import { fixtureStep, type Kept } from "./steps";
 
-export type FightsPhase = "fight" | "fightlater" | "fightmany" | "fightnew" | "fightfirst";
-export const FIGHTS: readonly FightsPhase[] = ["fight", "fightlater", "fightmany", "fightnew", "fightfirst"];
+export type FightsPhase = "fight" | "fightlater" | "fightmany" | "fightnew" | "fightfirst" | "fighthurt";
+export const FIGHTS: readonly FightsPhase[] = ["fight", "fightlater", "fightmany", "fightnew", "fightfirst", "fighthurt"];
 
 export function isFights(phase: string): phase is FightsPhase {
   return (FIGHTS as readonly string[]).includes(phase);
@@ -47,6 +48,13 @@ function poultice(card: Card, at: number): Card {
   };
 }
 
+/** The content with the hurt chip, which shows from a quarter hurt (the shipped chip's `when`). */
+export function withHurtChip(content: Content): Content {
+  const when = { kind: "at_least", watched: { kind: "store_value", store: "hurt" }, value: Q / 4, release: Q / 4, value_of_cap: false, release_of_cap: false } as const;
+  const chip: ChipInfo = { chip: "hurt", label_key: "chip.hurt", tone: "hurt", when, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null };
+  return { ...content, chip_infos: [...content.chip_infos, chip], text_entries: [...content.text_entries, { key: "chip.hurt", text: "hurt" }] };
+}
+
 export function fightsStep(phase: FightsPhase, at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fixtureStep("mid", at, kept, decisions);
   const extra = phase === "fight" ? 0 : phase === "fightlater" ? 3 : 40;
@@ -56,5 +64,8 @@ export function fightsStep(phase: FightsPhase, at: number, kept: Kept = {}, deci
       poultice(base.view.cards[0]!, at)],
     unlocked: [...base.view.unlocked, { category: "card", id: "hunt" }, { category: "card", id: "poultice" }, { category: "feature", id: "combat" }],
   };
-  return { ...base, view, lines: [] };
+  if (phase !== "fighthurt") return { ...base, view, lines: [] };
+  const hurt = 1.5 * Q;
+  const cards = view.cards.map((c) => (c.card === "poultice" ? { ...c, needs: c.needs.map((n) => (n.store === "hurt" ? { ...n, segment: { ...n.segment, start_value: hurt } } : n)) } : c));
+  return { ...base, view: { ...view, cards, chips: [...view.chips, "hurt"], levels: [{ store: "hurt", segment: { start: at, start_value: hurt, rate: 0, limit: null } }] }, lines: [] };
 }

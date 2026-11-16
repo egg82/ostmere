@@ -167,6 +167,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.fight.threat_unknown",
     "ui.fight.vs",
     "ui.fight.on_loss",
+    "ui.fight.on_wound",
     "ui.fight.base",
     "ui.fight.tally",
     "ui.fight.since",

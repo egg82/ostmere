@@ -85,6 +85,7 @@ export type SkillPrestige = S["SkillPrestige"];
 export type MenuNode = S["MenuNode"];
 export type NodeInfo = S["NodeInfo"];
 export type StandingInfo = S["StandingInfo"];
+export type StoreLevel = S["StoreLevel"];
 export type Strength = S["Strength"];
 export type SkillInfo = S["SkillInfo"];
 export type SpentShare = S["SpentShare"];
