@@ -265,7 +265,8 @@ turns it too: a smaller band would follow every rule that starts and stops besid
 
 def ride_along(v: View, rules: Rules, save: Save, verbs: tuple[Verb, ...], trips: tuple[Trip, ...]) -> tuple[Verb, ...]:
     """`verbs` with each SaveMix of a hands mix holding a trip given that trip at the share the running ledger shows
-    holding while the mix runs it (read_share), or its own share while its supply is full or arrives in bursts and no
+    holding while the mix runs it (read_share), no more than the edited mix's preview shows holding (tuned_share: the
+    read is of the running mix, whose other cards' parts the edit may change), or its own share while its supply is full or arrives in bursts and no
     other trip takes it (spilling, bursty, shared), when that is
     RETUNE_BP or more from its share, the mix's other cards scaled to leave it: a player editing the mix turns the
     trip's share in the same save."""
@@ -281,7 +282,7 @@ def ride_along(v: View, rules: Rules, save: Save, verbs: tuple[Verb, ...], trips
                 if (spilling(v, rules, save, trip) or bursty(rules, save, trip)) and not shared(rules, trip, trips):
                     share = trip.share_bp
                 elif card.by is RunBy.MIX:
-                    share = read_share(v, rules, save, trip, now)
+                    share = tuned_share(rules, save, trip, verb.mix, read_share(v, rules, save, trip, now))
                 else:
                     continue
                 if abs(share - now) >= RETUNE_BP:
@@ -336,8 +337,9 @@ def trip_mix(save: Save, trip: Trip, share: int, mix_id: MixId) -> Mix:
     return Mix(mix_id, (*scaled, CardShare(trip.card, share)))
 
 
-def tuned_share(rules: Rules, save: Save, trip: Trip) -> int:
-    """The largest share, up to the trip's own and in TUNE_STEP_BP steps, at which the page's preview of the mix shows
+def tuned_share(rules: Rules, save: Save, trip: Trip, edited: Mix | None = None, top: int | None = None) -> int:
+    """The largest share, up to `top` (the trip's own) and in TUNE_STEP_BP steps, at which the page's preview of the
+    mix (the active one, or `edited`, the mix a player is saving) shows
     none of its watched inputs falling: a player dragging the trip's share while reading the lines' rates. A share past
     that drinks a store dry and pauses, the dry store's handover giving the share back until it has refilled, which a
     player reads as a red line; one under it lets the store fill and spill. The preview is of the mix itself beside
@@ -351,14 +353,15 @@ def tuned_share(rules: Rules, save: Save, trip: Trip) -> int:
     held = next((b.completes_at for b in view(bare, rules).lanes if b.lane == HANDS and b.card is not None), None)
     if held is not None:   # the mix's rates show once the tap holding the hands lands
         bare = advance(bare, rules, held)
-    kept = watched(rules, save, trip)
+    kept, top = watched(rules, save, trip), trip.share_bp if top is None else top
     def holds(share: int) -> bool:
-        m = trip_mix(save, trip, share, MixId("preview"))
+        m = trip_mix(save, trip, share, MixId("preview")) if edited is None \
+            else Mix(MixId("preview"), with_share(edited, trip.card, share).components, edited.layer)
         shown = view(decide(decide(bare, rules, bare.time, SaveMix(m)), rules, bare.time, SwitchMix(m.id)), rules)
         return all(ln.net_per_hour >= 0 for ln in shown.ledger if ln.store in kept)
-    if holds(trip.share_bp):
-        return trip.share_bp
-    lo, hi = 0, trip.share_bp // TUNE_STEP_BP   # hi does not hold; lo holds, or is the floor
+    if holds(top):
+        return top
+    lo, hi = 0, top // TUNE_STEP_BP   # hi does not hold; lo holds, or is the floor
     while hi - lo > 1:
         mid = (lo + hi) // 2
         lo, hi = (mid, hi) if holds(mid * TUNE_STEP_BP) else (lo, mid)
