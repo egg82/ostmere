@@ -180,6 +180,20 @@ def test_head_answers_the_content_as_get_does_without_a_body(page_files: Path):
     assert_head_as_get(main.create_app(), ["/api/content"])
 
 
+def test_the_site_names_the_android_apps_signing_key_in_place(page_files: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.delenv("ASHFALL_ANDROID_KEY_SHA256", raising=False)
+    got = TestClient(web.create_app()).get("/.well-known/assetlinks.json", follow_redirects=False)
+    assert got.status_code == 200, "a redirect or a miss fails the link check"
+    assert got.headers["content-type"].split(";")[0] == "application/json"
+    assert got.json() == [{"relation": ["delegate_permission/common.handle_all_urls"],
+                           "target": {"namespace": "android_app", "package_name": "pub.yggdrasil.ostmere",
+                                      "sha256_cert_fingerprints": [page.RELEASE_KEY]}}]
+    assert page.RELEASE_KEY == "F6:3A:93:EA:EF:02:38:AA:C3:CA:EC:F4:6D:6E:8F:D6:6D:00:35:B6:24:F5:0F:C0:50:08:61:DF:8E:B6:F0:42"
+    monkeypatch.setenv("ASHFALL_ANDROID_KEY_SHA256", "AA:BB")
+    other = TestClient(web.create_app()).get("/.well-known/assetlinks.json").json()
+    assert other[0]["target"]["sha256_cert_fingerprints"] == ["AA:BB"]
+
+
 def test_the_web_pods_serve_the_worker_and_the_manifest_revalidated(page_files: Path):
     client = TestClient(web.create_app())
     sw = client.get("/sw.js")

@@ -10,7 +10,7 @@ from urllib.parse import parse_qs
 
 import anyio
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import Response
 from starlette.types import Scope
@@ -36,6 +36,15 @@ PRIVACY = inline_fonts((HERE / "static" / "privacy.html").read_text())
 ROBOTS = (HERE / "static" / "robots.txt").read_text()
 PUSH = HERE / "static" / "push"   # the service worker and web manifest, served from the root (reminders)
 LLMS = (HERE / "static" / "llms.txt").read_text()
+ANDROID_PACKAGE = "pub.yggdrasil.ostmere"   # the Android app (docs/design/android-app.md)
+RELEASE_KEY = "F6:3A:93:EA:EF:02:38:AA:C3:CA:EC:F4:6D:6E:8F:D6:6D:00:35:B6:24:F5:0F:C0:50:08:61:DF:8E:B6:F0:42"   # public
+
+
+def assetlinks(fingerprint: str) -> list[dict[str, object]]:
+    """The statement that lets the site open the Android app without a browser bar (Digital Asset Links)."""
+    return [{"relation": ["delegate_permission/common.handle_all_urls"],
+             "target": {"namespace": "android_app", "package_name": ANDROID_PACKAGE,
+                        "sha256_cert_fingerprints": [fingerprint]}}]
 CLIENT = HERE / "build" / "client"   # the bundled game (app/client/), copied in by the Containerfile; absent locally
 
 GZIP_MIN = 1024   # bytes: a smaller answer is sent as it is, by both servers (main.py, web/app.py)
@@ -169,6 +178,15 @@ def serve_shell(app: FastAPI, version: str) -> None:
     @app.get("/manifest.webmanifest", include_in_schema=False)
     def manifest() -> FileResponse:
         return FileResponse(PUSH / "manifest.webmanifest", media_type="application/manifest+json",
+                            headers={"Cache-Control": "public, no-cache"})
+
+    # The app's release key; ASHFALL_ANDROID_KEY_SHA256 names another (a different signing key). Answered in place:
+    # a redirect would fail the check.
+    fingerprint = os.environ.get("ASHFALL_ANDROID_KEY_SHA256", "") or RELEASE_KEY
+
+    @app.get("/.well-known/assetlinks.json", include_in_schema=False)
+    def asset_links() -> JSONResponse:
+        return JSONResponse(assetlinks(fingerprint), media_type="application/json",
                             headers={"Cache-Control": "public, no-cache"})
 
     @app.get("/favicon.ico", include_in_schema=False)
