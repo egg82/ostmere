@@ -85,6 +85,13 @@ People are the exception: villagers, visitors and
 anyone else with a will speak and act in active voice, since what they do is theirs. Consistency is per kind of line,
 not one voice for everything.
 
+**A line can be pictured on first read; only the turn is left out.** Narration, asks and talk name what they are
+about (which wall, whose pot, what is in the hands) plainly enough that the player sees the moment without rereading;
+spare means few words, never a missing referent. The reader completes the turn, not the scene. The journal is the
+exception: it is the player-character's own shorthand for things they were there for, so it stays clipped, and it is
+written in the past tense. (Owner, rating two leads' lines blind, 2026-11-15: "I prefer lines that give me an idea
+what they're referencing.")
+
 **Character creation is identity, never numbers:** at least a name and pronouns (every prompt is given them, so no
 line guesses), appearance if the visuals have room for it. Nothing chosen at creation affects progress, and all of it
 can be changed later (the elf lesson).

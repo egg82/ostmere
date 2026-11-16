@@ -11,6 +11,7 @@ with a one-line reason. Quote the words you mean. Do not rewrite anything.
 | **Canon** | contradicts a canon id (name it) | strains one (name it) | consistent |
 | **Rules** | breaks decisions.md (Never list, tone, tropes rule, spoiler rule) | bends one (name it) | clean |
 | **Overwrought** | ornate, stacked images, arch phrasing | one flourish too many | plain and exact |
+| **Pictured** (narration, asks, talk; the journal skips this row) | a reader can't tell what thing or place it means without rereading | one referent left vague (name it) | the moment is seen on first read |
 
 Then answer yes or no for each item, quoting the span that decides it:
 - **Changed?** Does the situation end different from how it started?
