@@ -1,4 +1,4 @@
-"""Later phases' level pays (opening/phase_pays.py): every level of every phase a skill's track reaches pays, its work
+"""Later phases' level pays (opening/phase_pays.py): no pay lies past the last phase a skill's track reaches, its work
 pays are adds, and the loader refuses a later phase's work pay written as a multiplier (docs/design/prestige-phases.md,
 "The loop", spiral 2). Static: read off the shipped content, with planted changes."""
 from typing import Literal
@@ -14,7 +14,8 @@ from ashfall_app.opening.phase_pays import (
     RETIRED_AT, check_phase_pays, expanded, expanded_id, find_id, find_items, find_line, staying_stores,
 )
 from ashfall_app.opening.prestige import NodeEntry
-from ashfall_app.opening.schema import Opening
+from ashfall_app.opening.schema import Opening, to_rules
+from tests.opening.blank_levels import blank_lines, level_pays, phase_blanks
 from tests.opening.report import samey_lines
 
 PREFIXES = ("t_pp_", "t_pf_")
@@ -37,20 +38,26 @@ def with_table(o: Opening, skill: str, **update: object) -> Opening:
                                                for pp in o.phase_pays]})
 
 
-def level_pays(o: Opening, skill: str) -> set[int]:
-    """The counted levels a skill's triggers wait for, not counting a retired find's, which waits out of reach."""
-    return {t.when.value for t in o.triggers
-            if t.when.subject_kind == "skill_level" and t.when.id == skill and t.when.value != RETIRED_AT}
-
-
-def test_every_level_of_every_phase_a_track_reaches_pays(shipped_opening: Opening):
+def test_the_levels_a_track_reaches_that_pay_nothing_are_reported_never_refused(shipped_opening: Opening):
+    """Which levels pay is the opening readout's figure (blank_levels.py), taste and not a check."""
     o = shipped_opening
     assert o.prestige is not None and o.phase_pays
+    skill = o.phase_pays[0].skill
+    last = o.prestige.top_level + 1
+    assert last in level_pays(o, skill)
+    bare = o.model_copy(update={"triggers": [t for t in o.triggers if not (t.when.id == skill and t.when.value == last)]})
+    check_phase_pays(bare)
+    assert phase_blanks(bare)[skill] == [last]
+    line = next(ln for ln in blank_lines(bare, to_rules(bare)) if ln.split()[0] == skill)
+    assert f"later phases [{last}]" in line
+
+
+def test_no_track_reaches_a_pay_past_its_last_phase(shipped_opening: Opening):
+    o = shipped_opening
+    assert o.prestige is not None
     top = o.prestige.top_level
     for pp in o.phase_pays:
-        ranks = sum(n.ranks for n in o.nodes if n.skill == pp.skill)
-        last = ranks * (top - 1) + top   # the last phase's top, counted
-        assert ranks >= 1 and set(range(top + 1, last + 1)) <= level_pays(o, pp.skill), pp.skill
+        last = sum(n.ranks for n in o.nodes if n.skill == pp.skill) * (top - 1) + top
         assert last + 1 not in level_pays(o, pp.skill), f"{pp.skill}: a pay past the last phase the track reaches"
 
 

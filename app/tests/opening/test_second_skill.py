@@ -10,7 +10,8 @@ import pytest
 from ashfall_app.engine import Rules, UnlockKind
 from ashfall_app.opening.schema import Opening, merge_chapters, to_rules
 from tests.dayone.growth import runaway
-from tests.opening.test_level_pays import mixed_skills, top_level, unmarked_levels, unpaid_markers
+from tests.opening.blank_levels import blank_lines, mixed_skills, top_level, unmarked_levels
+from tests.opening.test_level_pays import unpaid_markers
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "secondskill.toml"
 LORE = "t_lore"
@@ -61,11 +62,13 @@ def test_the_skill_arrives_with_an_outcome_and_its_first_card(variants: dict[str
 def test_the_skill_checks_cover_the_new_row_and_pass(variants: dict[str, tuple[Opening, Rules]]):
     o, rules = variants[""]
     assert LORE in mixed_skills(rules), "the check reads the new skill: a hands card trains it"
-    assert unpaid_markers(o, rules) == [] and unmarked_levels(o, rules) == [] and runaway(rules) == []
+    assert unpaid_markers(o, rules) == [] and runaway(rules) == []
 
 
-def test_a_level_left_blank_before_the_top_is_found(variants: dict[str, tuple[Opening, Rules]]):
+def test_a_level_left_blank_before_the_top_is_found_and_reported(variants: dict[str, tuple[Opening, Rules]]):
     assert unmarked_levels(*variants["skip"]) == [f"{LORE} 7"]
+    o, rules = variants["skip"]
+    assert next(ln for ln in blank_lines(o, rules) if ln.split()[0] == LORE).startswith(f"  {LORE:14s} row [7];")
 
 
 def test_a_marker_nothing_pays_is_found(variants: dict[str, tuple[Opening, Rules]]):
