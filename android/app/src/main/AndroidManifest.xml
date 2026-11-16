@@ -4,6 +4,7 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:manageSpaceActivity="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
         android:supportsRtl="true">
 
         <!-- Opens the site in a Trusted Web Activity; a phone with no TWA browser gets a Custom Tab (the library's
@@ -27,6 +28,15 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="ostmere.yggdrasil.pub" />
             </intent-filter>
+        </activity>
+
+        <!-- LauncherActivity enables this on every launch (its site-settings shortcut), so it must be declared: without
+             it the app crashes at start ("Component class ... does not exist"). Also the system's "Manage space"
+             screen for the app, which opens the site's data in the browser. -->
+        <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
+            <meta-data
+                android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"
+                android:value="https://ostmere.yggdrasil.pub/" />
         </activity>
     </application>
 </manifest>
