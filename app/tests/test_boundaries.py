@@ -31,7 +31,8 @@ ALLOWED: dict[str, set[str]] = {
     "page_config": {"reminders"},
     "reminders": {"clock", "db", "logs"},
     "saves": {"accounts", "clock", "db", "engine", "logs", "opening"},
-    "services": {"accounts", "saves"},
+    "services": {"accounts", "saves", "writer"},
+    "writer": {"logs"},
     "web": {"build_header", "head", "logs", "old_host"},
 }
 
