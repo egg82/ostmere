@@ -124,6 +124,47 @@ reminding is the point. Ostmere's carries no task and no miss.
   the voice pass before shipping: "The fire's lit if you want to stop by." "Whenever you like, the camp is there."
   Tapping opens `/`.
 
+## The hands-free notice
+
+The owner's ask (2026-11-16): opt-in, a notification when a long-running thing taking the hands has finished and the
+next task can be given, for the times a Plan isn't wanted and the player steers by hand.
+
+**Fit pass.** The same shape as the reminder: a pure question about stored state ("is this save's hands-free moment
+past, unseen and unsent?") polled by the same job, claimed once, sent over the same subscription by the same `Sender`.
+The moment itself is a forecast kind (engine `DESIGN.txt`, "Forecast"): the forecast already plays the save's future
+out instant by instant with nobody deciding, so the first instant the hands free up is one more thing it records, like
+`tops_out`. Nystrom's *Observer* (an event fired when the hands free up) does not fit, for the reason Event Queue
+did not: nothing runs at that moment, because nobody is on the page. **Fits into:** Reminders (device row, job,
+claim, sender, words pool), Forecast (one more kind). New: one forecast field, two save columns, one device flag.
+
+**When the hands are free.** At the first instant the hands lane runs no card the player tapped and Next (the queue)
+is empty, after an instant where one of those held. What runs then by itself (the player's mix, Rest, a rule's tap)
+does not count as busy: the player can give the next task. A notice goes only when the player gave the hands that
+work at least `min_busy_s` game seconds earlier (data beside the reminder choices; 10 minutes to start), so short
+taps made while watching send nothing.
+
+**Where it is computed.**
+- `Forecast.hands_free_at`: that instant, by `until`, or none (already free, or not free by `until`).
+- The forecast route keeps it on the save (`saves.hands_free_at`, game seconds, and the wall time it maps to), with
+  the forecast's `until`. A decision changes the future and the page asks a new forecast, which replaces it.
+- A task longer than the forecast's horizon: once the kept `until` has passed with no free time found, the job runs
+  the save's forecast itself and keeps the new answer. One account's latest save only (most recently written, not
+  deleted): the player is away from the game, not from a save.
+
+**Due and the claim.** Due when a device of the account has the notice on, `hands_free_at`'s wall time is past, the
+save's last write is before `hands_free_at` (a page left open advanced past it, so the player saw it), and the save
+holds no notice sent for this `hands_free_at`. The claim sets that sent marker in one `UPDATE ... WHERE` before the
+send, as the reminder's does. The absence reminder and this notice are independent; either can be on alone.
+
+**What the player sees.** In the Reminders row of Settings, a second choice for this device, off at first: "When the
+hands are free", with the line "One notification when a long task you gave the hands is done and nothing you planned
+comes next." The notification's words name no task, store or number (nothing from a save, so nothing spoils); title
+"Ostmere", a small pool like the reminder's, through the voice pass. Tapping opens `/`.
+
+**Delivery lag.** The job's schedule bounds how late a notice can be: every five minutes is too coarse for a task of
+a few minutes, so the CronJob moves to every minute when this ships (cluster repo, `iss/ashfall/reminders.yaml` and
+the second site's).
+
 ## Rejected, and why
 
 - **Email.** Accounts hold none, and asking for one breaks "a plain browser game" (`decisions.md`).
