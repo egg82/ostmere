@@ -7,12 +7,18 @@ from typing import Any
 
 from tests.shipped_ruleset import ShippedRuleset
 
+Json = dict[str, Any]
+
 FILE = Path(__file__).resolve().parents[1] / "client/fixtures/real_chip_cards.json"
 
 
-def shipped_slice(game: ShippedRuleset) -> dict[str, Any]:
-    content = game.make_game(game.opening, game.rs).content().model_dump(mode="json")
-    cards = [{"card": c["card"], "makes": c["makes"], "takes": c["takes"], "wounds": [w["store"] for w in (c["fight"] or {"wounds": []})["wounds"]]} for c in content["card_infos"]]
+def shipped_slice(game: ShippedRuleset) -> Json:
+    content: Json = game.make_game(game.opening, game.rs).content().model_dump(mode="json")
+    cards: list[Json] = []
+    for c in content["card_infos"]:
+        fight: Json | None = c["fight"]
+        wounds: list[Json] = fight["wounds"] if fight else []
+        cards.append({"card": c["card"], "makes": c["makes"], "takes": c["takes"], "wounds": [w["store"] for w in wounds]})
     chips = [{"chip": c["chip"], "when": c["when"]} for c in content["chip_infos"]]
     stores = [{"store": s["store"], "made_by": s["made_by"]} for s in content["store_infos"]]
     return {"cards": cards, "chips": chips, "stores": stores}
