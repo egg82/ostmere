@@ -51,14 +51,14 @@ const aimOf = (story: Story): string => story.aim.textContent ?? "";
 {
   const { ctx } = testContext(undefined, catalog);
   const waited: ArrivalKind[] = [];
-  const runs: Array<() => void> = [];
+  const runs: Array<(quiet: boolean) => void> = [];
   ctx.arrivals = { arrive: () => undefined, effect: (_n, kind, run) => { waited.push(kind); runs.push(run); }, line: () => undefined, busy: true };
   const story = new Story(ctx);
   story.update(without(mid, "tend"), null);
   expect("the first aim does not wait for the queue", [aimOf(story), waited.length], ["first aim", 0]);
   story.update(withCard(mid, "tend"), null);
   expect("a new aim waits its turn behind what is waiting", [aimOf(story), waited.length], ["first aim", 1]);
-  runs.forEach((r) => r());
+  runs.forEach((r) => r(false));
   expect("and shows at its turn", aimOf(story), "later aim");
 }
 

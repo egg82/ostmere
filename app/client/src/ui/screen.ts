@@ -179,11 +179,12 @@ export class Screen {
     const lines = step.lines;
     const lead = lines.length > 0;   // live, first or on a return alike: each line in turn, a planned moment in full
     if ((away && !first) || lead) this.reveal.collect();
-    else if (!first) this.reveal.cascade();   // a live step's consequences light link by link
+    else if (first) this.reveal.hush();   // the page's first draw is silent
+    else this.reveal.cascade();   // a live step's consequences light link by link
     if (away && !first) this.root.scrollTop = 0;   // a return opens at the top: no card row under the pinned strip
     const nodes = this.story.append(lines, lead, away && !first ? { view: step.view, prev: this.view } : null);
     this.story.written(step.journal_days);
-    if (lead) this.stripGlow.lead(this.reveal, nodes, away && !first, () => String(++this.lineIds));
+    if (lead) this.stripGlow.lead(this.reveal, nodes, away && !first, () => String(++this.lineIds), lines.map((l) => l.opens_beat));
     this.drawing = true;   // the end's lines join this batch rather than start one
     this.end.update(step.view, first);   // first, so the parts drawn next know whether the end is behind
     try {
@@ -201,7 +202,7 @@ export class Screen {
     this.story.appendKeys(keys, true, true).forEach((shown) => {
       if (!shown) return;
       this.lineIds += 1;
-      this.reveal.line([shown], String(this.lineIds), readingMs(shown.textContent ?? ""));
+      this.reveal.line([shown], String(this.lineIds), readingMs(shown.textContent ?? ""), "end");   // one strike per batch: the first of these
     });
     if (!this.drawing) this.reveal.start(performance.now());
   }
