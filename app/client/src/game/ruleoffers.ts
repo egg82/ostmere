@@ -114,14 +114,16 @@ export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: 
 /** What the full editor's When row offers past the chips and stores, each as the rule it starts from: the Camp's level
  * and each skill's, then each task in play (a count of times done). Only what the save holds, so the list grows with
  * the story; a done card is left out, since its count no longer moves. */
-/** The levels and tasks a rule may watch; and, for a rule tapping a person's lane (`then`), the cards of every other
- * lane, the hands' included, it may watch running: the one Running shape set_orders takes (CONTRACT.txt, "Decisions"). */
-export function subjectChoices(catalog: Catalog, view: View, then: OrderVerb | null = null): { levels: SubjectRule[]; tasks: SubjectRule[]; running: SubjectRule[] } {
+/** The levels and tasks a rule may watch; and, for a rule whose every action (`actions`: its verb and fallbacks) taps a
+ * card of one person's lane, the cards of every other lane, the hands' included, it may watch running: the one Running
+ * shape set_orders takes (CONTRACT.txt, "Decisions"). */
+export function subjectChoices(catalog: Catalog, view: View, actions: readonly (OrderVerb | null)[] = []): { levels: SubjectRule[]; tasks: SubjectRule[]; running: SubjectRule[] } {
   const camp = catalog.campStore;
   const hasCamp = camp !== null && view.ledger.some((l) => l.store === camp) && catalog.unlocked(view, "store", camp);
   const levels: SubjectRule[] = [...(hasCamp ? [{ kind: "camp" as const, n: 1 }] : []), ...view.skills.map((s) => ({ kind: "level" as const, skill: s.skill, n: 1 }))];
   const tasks = inSectionOrder(catalog, view.cards.map((c) => c.card), (c) => c).map((card): SubjectRule => ({ kind: "count", card, n: 1 }));
-  const lane = then?.kind === "tap_card" ? catalog.laneOf(then.card) : "hands";
+  const lanes = new Set(actions.map((a) => (a?.kind === "tap_card" ? catalog.laneOf(a.card) : "hands")));
+  const lane = lanes.size === 1 ? [...lanes][0]! : "hands";
   const running = lane === "hands" ? [] : inSectionOrder(catalog, view.cards.map((c) => c.card).filter((c) => catalog.laneOf(c) !== lane), (c) => c)
     .map((card): SubjectRule => ({ kind: "running", card, n: 1 }));
   return { levels, tasks, running };
