@@ -148,8 +148,9 @@ and you tune it, then hit go.
   store reaches a level. A rule made for the hands applies to people only where it keeps them working and the screen
   true; a person is never left idle because of a hands-only rule.
 - **A big town will not be tuned person by person** (owner, 2026-11-17): past a handful of people, per-person splits
-  become a chore. The owner's direction: the first few people keep their own split, and later people run one mix per
-  type of work (#337).
+  become a chore. The owner's direction: a few people keep their own split and the rest run one mix per type of work,
+  the type's cards set by what its people can and can't do (#337). Who keeps their own split is an authored mark per
+  person that the story can set and clear, never arrival order or a headcount.
 
 ## Automation is designed, not clicked
 
