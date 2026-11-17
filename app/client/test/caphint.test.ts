@@ -18,7 +18,7 @@ const withWood = (view: View, change: (l: View["ledger"][number]) => View["ledge
   ({ ...view, ledger: view.ledger.map((l) => (l.store === "wood" ? change(l) : l)) });
 const watching = (kind: "at_least" | "at_most", store: string): Order => ({
   when: { kind, watched: { kind: "store_value", store }, value: 10, release: kind === "at_least" ? 5 : 20, value_of_cap: false, release_of_cap: false },
-  then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [],
+  then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [], below_next: false,
 });
 
 expect("control: the fixture's wood is at its cap and fed by gather, a hands card", wood !== undefined && wood.segment.start_value === wood.cap

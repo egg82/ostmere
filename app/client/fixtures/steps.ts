@@ -49,17 +49,17 @@ const GATHER = solo("Gather by hand", "gather");
 const REST = solo("Rest by the fire", "tend");
 const low = (store: string, value: number, release: number): Order["when"] =>
   ({ kind: "at_most", watched: { kind: "store_value", store }, value: value * Q, release: release * Q, value_of_cap: false, release_of_cap: false });
-const WOOD_RULE: Order = { when: low("wood", 10, 20), then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [] };
-const WARMTH_RULE: Order = { when: low("warmth", 40, 60), then: { kind: "switch_mix", mix_id: REST.id }, unless: [], or_else: [] };
-const SHELTER_RULE: Order = { when: low("stone", 2, 6), then: { kind: "tap_card", card: "shelter" }, unless: [], or_else: [] };
-const OLD_WOOD_RULE: Order = { when: low("wood", 10, 10), then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [] };
+const WOOD_RULE: Order = { when: low("wood", 10, 20), then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [], below_next: false };
+const WARMTH_RULE: Order = { when: low("warmth", 40, 60), then: { kind: "switch_mix", mix_id: REST.id }, unless: [], or_else: [], below_next: false };
+const SHELTER_RULE: Order = { when: low("stone", 2, 6), then: { kind: "tap_card", card: "shelter" }, unless: [], or_else: [], below_next: false };
+const OLD_WOOD_RULE: Order = { when: low("wood", 10, 10), then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [], below_next: false };
 const WARM_RULE: Order = {
   when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 80 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false },
-  then: { kind: "switch_mix", mix_id: REST.id }, unless: [], or_else: [],
+  then: { kind: "switch_mix", mix_id: REST.id }, unless: [], or_else: [], below_next: false,
 };
 const REST_MIX = solo("Rest", "rest");
 const STOOLS = solo("Stools", "stool");
-const TIRED_RULE: Order = { when: TIRED, then: { kind: "switch_mix", mix_id: REST_MIX.id }, unless: [], or_else: [] };
+const TIRED_RULE: Order = { when: TIRED, then: { kind: "switch_mix", mix_id: REST_MIX.id }, unless: [], or_else: [], below_next: false };
 /** The end, this long before a rest phase's view: an older end, so a fresh page never replays its card. */
 const ENDED_AGO = 600;
 const EVENING: Mix = { id: "Evening", components: [{ kind: "card_share", card: "gather", share_bp: 5_000 }, { kind: "card_share", card: "tend", share_bp: 5_000 }] };
@@ -339,4 +339,4 @@ function ruleRuns(phase: Phase, view: View): RuleRun[] {
 
 /** rulestab's popped goal stint: gather until 30 wood. */
 const STINT_ORDER: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false },
-  then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [] };
+  then: { kind: "switch_mix", mix_id: GATHER.id }, unless: [], or_else: [], below_next: false };

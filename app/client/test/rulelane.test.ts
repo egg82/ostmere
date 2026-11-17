@@ -59,7 +59,7 @@ const ruled = dayTwoStep("ruled", 100).view;   // hands 0, 1; fetch always (pass
 }
 
 {  // a new rule on the lane goes just before its first always rule; a hands rule still goes last
-  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 20 * Q, release: 10 * Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "chop" }, unless: [], or_else: [] };
+  const rule: Order = { when: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 20 * Q, release: 10 * Q, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "chop" }, unless: [], or_else: [], below_next: false };
   const sent = ruleDecisions(ruled, catalog, null, rule)[0];
   const orders = sent?.kind === "set_orders" ? sent.orders : [];
   expect("placed before the lane's first always rule", orders.findIndex((o) => JSON.stringify(o) === JSON.stringify(rule)), 2);

@@ -115,8 +115,8 @@ expect("queued cards in order", queuedCards(at([], [tapOf("larder", 1), tapOf("l
   document.body.replaceChildren(tab.root);
   const rules = fixtureStep("rulestab", 100).view;
   tab.update({ ...rules, queue: [tapOf("larder", 1)] });
-  const order = [...tab.root.querySelector(".rules-list")!.children].map((n) => (["next-row", "otherwise"].find((c) => n.classList.contains(c)) ?? n.className.split(" ")[0]));
-  expect("rules (each off one with its why), Next, Otherwise", order, ["rules-row", "rule-why", "rules-row", "rule-why", "rules-row", "rules-next", "next-row", "otherwise"]);
+  const order = [...tab.root.querySelector(".rules-list")!.children].map((n) => (["next-head", "next-row", "otherwise"].find((c) => n.classList.contains(c)) ?? n.className.split(" ")[0]));
+  expect("rules (each off one with its why), Next's row at the bottom, Otherwise", order, ["rules-row", "rule-why", "rules-row", "rule-why", "rules-row", "next-head", "next-row", "otherwise"]);
 }
 
 // The strip names the head, in whichever row shows, and drops it when the queue empties.

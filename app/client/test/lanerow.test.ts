@@ -79,5 +79,5 @@ function saved(view: View, rule: number | null, card: string): { orders: Order[]
   const low = saved(ruled, 3, "chop");
   expect("a store rule keeps its condition", low.orders?.[3], { ...LANE_RULES[1], then: { kind: "tap_card", card: "chop" } });
   const fresh = saved(noAlways, null, "chop");
-  expect("a new always rule, appended", fresh.orders, [...noAlways.orders, { when: { kind: "after_time", at: 0 }, then: { kind: "tap_card", card: "chop" }, unless: [], or_else: [] }]);
+  expect("a new always rule, appended", fresh.orders, [...noAlways.orders, { when: { kind: "after_time", at: 0 }, then: { kind: "tap_card", card: "chop" }, unless: [], or_else: [], below_next: false }]);
 }

@@ -206,7 +206,7 @@ check("27 a copy of a rule holding a guard opens in the full editor, guards copi
   const shares = atMost("wood", 2500, 7500, true);
   const gather = { kind: "switch_mix" as const, mix_id: "Gather by hand" };
   const copied = (unless: Condition[]): FakeEl => {
-    const view: View = { ...rules, orders: [{ when: shares, then: gather, unless, or_else: [] }, ...rules.orders.slice(1)] };
+    const view: View = { ...rules, orders: [{ when: shares, then: gather, unless, or_else: [], below_next: false }, ...rules.orders.slice(1)] };
     const r = rig(view);
     one(r.root, ".rule-cond", 0).click();
     one(one(r.root, ".cond"), ".cond-actions .quiet", 1).click();

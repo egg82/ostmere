@@ -52,6 +52,8 @@ export const RULE_KEYS = {
   ruleNeedsDownTo: "ui.rule.needs_down_to", // "{store}{n}{have}": the same for a rule whose when is a share
   ruleNeedsUpTo: "ui.rule.needs_up_to", // "{store}{n}{have}"
   ruleOutranked: "ui.rule.outranked", // "{rule}": an earlier rule has the hands (its condition's words)
+  ruleNextHandle: "ui.rule.next_handle", // the accessible name of Next's row's handle (it moves, never removes)
+  ruleBehindNext: "ui.rule.behind_next", // "{task}": the rule is under Next and the queue has the hands (what it runs)
   rulePassedOver: "ui.rule.passed_over", // a rule whose mix is greyed or whose task is done
   ruleStuck: "ui.rule.stuck", // "{n}{store}": a rule holding the hands whose release cannot be reached for want of a store
   ruleUnfed: "ui.rule.unfed", // "{store}{n}": a rule's mix consumes a store none of its cards makes, so it may stop short

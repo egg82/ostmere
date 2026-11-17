@@ -34,7 +34,7 @@ const lean: Card = {
 /** "Under 2 stone, until `until`: tap tend", the rule making stone. */
 const rule = (until: number): Order => ({
   when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: until * Q, value_of_cap: false, release_of_cap: false },
-  then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [],
+  then: { kind: "tap_card", card: "tend" }, unless: [], or_else: [], below_next: false,
 });
 const ended = fixtureStep("restoffer", AT);
 const viewWith = (orders: Order[], on: boolean[]): View => ({ ...ended.view, cards: [...ended.view.cards, lean], orders, orders_on: on });

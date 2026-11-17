@@ -23,7 +23,7 @@ const ordersOf = (ds: Decision[]) => ds.flatMap((d) => (d.kind === "set_orders" 
 const added = addRule(mid, catalog, woodCard);
 const solo: Mix = { id: "Gather by hand", components: [{ kind: "card_share", card: "gather", share_bp: 10_000 }] };
 expect("hands offer saves a one-task mix", added[0], { kind: "save_mix", mix: solo });
-expect("then a rule runs it", ordersOf(added), [[{ when: woodCard.when, then: { kind: "switch_mix", mix_id: solo.id }, unless: [], or_else: [] }]]);
+expect("then a rule runs it", ordersOf(added), [[{ when: woodCard.when, then: { kind: "switch_mix", mix_id: solo.id }, unless: [], or_else: [], below_next: false }]]);
 
 // The same mix already saved: reused, nothing saved.
 const withSolo: View = { ...mid, mixes: [...mid.mixes, solo] };
@@ -34,13 +34,13 @@ const renamed = addRule(taken, catalog, woodCard)[0];
 expect("a taken name is not reused", renamed?.kind === "save_mix" ? renamed.mix.id : null, "Gather by hand 2");
 
 // A side-lane task stays a task rule.
-expect("bench offer is a task rule", ordersOf(addRule(mid, catalog, stoneCard)), [[{ when: stoneCard.when, then: stoneCard.then, unless: [], or_else: [] }]]);
+expect("bench offer is a task rule", ordersOf(addRule(mid, catalog, stoneCard)), [[{ when: stoneCard.when, then: stoneCard.then, unless: [], or_else: [], below_next: false }]]);
 
 // Finding, wording and grouping rules.
 expect("ruleFor finds the rule by its condition", ruleFor(list, woodCard), 0);
 expect("ruleFor misses", ruleFor(mid, woodCard), -1);
 expect("words", ruleWords(catalog, list.orders[0]!), { when: "Under 10 Dead wood, until 20", action: "Gather by hand" });
-expect("a condition that is not on a store is not drawn", ruleWords(catalog, { when: { kind: "after_time", at: 5 }, then: woodCard.then, unless: [], or_else: [] }), null);
+expect("a condition that is not on a store is not drawn", ruleWords(catalog, { when: { kind: "after_time", at: 5 }, then: woodCard.then, unless: [], or_else: [], below_next: false }), null);
 expect("hands rules", mixRules(list), [0, 1]);
 expect("task rules", taskRules(list), [2]);
 
@@ -81,7 +81,7 @@ if (other) expect("another saved mix edited is saved, not run", saveDecisions(li
 // store rule again, worded by its numbers.
 {
   const tired = fixtureContent.chip_infos.find((c) => c.chip === "tired")!.when;
-  const rest: Order = { when: tired, then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [] };
+  const rest: Order = { when: tired, then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [], below_next: false };
   expect("chip words in the list", ruleWords(catalog, rest), { when: "While tired", action: "Rest" });
   expect("chip words on the strip", ruleRunning(catalog, rest), "while tired");
   if (tired.kind === "after_time") throw new Error("a store condition");

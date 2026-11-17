@@ -183,6 +183,8 @@ class Order(BaseModel):
     """Guards, each the condition that blocks the rule (engine DESIGN.txt, "RULE GUARDS")."""
     or_else: list[OrderVerb] = Field(default=[], max_length=MAX_OR_ELSE)
     """Fallback actions, tried after `then` in this order."""
+    below_next: bool = False
+    """The rule sits under Next, the queue's row: a ready queue entry outranks it (CONTRACT.txt, "Next's row")."""
 
 
 class OrderGuard(BaseModel):

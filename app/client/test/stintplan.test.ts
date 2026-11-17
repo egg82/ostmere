@@ -74,7 +74,7 @@ async function plan(view: View, after: View | null, seeRules = true) {
 // Lately: an ended stint reads as its mix and goal, then what it ran and when its goal landed; one never seen starting only the landing
 {
   const at = base.at;
-  const run = (on: number | null): RuleRun => ({ order: { when: woodUntil, then: { kind: "switch_mix", mix_id: "b" }, unless: [], or_else: [] }, starts: on === null ? 0 : 1,
+  const run = (on: number | null): RuleRun => ({ order: { when: woodUntil, then: { kind: "switch_mix", mix_id: "b" }, unless: [], or_else: [], below_next: false }, starts: on === null ? 0 : 1,
     on_at: on, on_level: null, off_at: at - 4 * H, off_level: null, ended: "stint", made: [] });
   const lately = (runs: RuleRun[]): string[] => {
     const tab = new RulesTab({ ...testContext().ctx, ruleRuns: () => runs });

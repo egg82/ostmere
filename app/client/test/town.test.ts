@@ -101,7 +101,7 @@ function opened(view: View) {
   expect("a new mix, not named for the game's", mix?.id.startsWith("town:"), false);
   expect("with the card at half", mix?.components.map((c) => (c.kind === "card_share" ? c.share_bp : 0)), [5000]);
   const orders = got.decided[1]?.kind === "set_orders" ? got.decided[1].orders : [];
-  expect("then the always rule", orders.at(-1), { when: { kind: "after_time", at: 0 }, then: { kind: "switch_mix", mix_id: mix?.id }, unless: [], or_else: [] });
+  expect("then the always rule", orders.at(-1), { when: { kind: "after_time", at: 0 }, then: { kind: "switch_mix", mix_id: mix?.id }, unless: [], or_else: [], below_next: false });
 }
 
 {  // a town mix a leave emptied is still the town's: Change opens it, and it is not offered as a hands mix

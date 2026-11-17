@@ -9,6 +9,7 @@ import { answerWords, isAlways, newRuleAt } from "./lanes";
 import { LEDGER_FEATURE } from "./shown";
 import { readRule, ruleUntil, ruleWhen, type StoreRule } from "./storerule";
 import { readSubject, subjectWords } from "./subjectrule";
+import { nextUnder, withNextAt } from "./nextrow";
 import { UI } from "./text";
 
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
@@ -133,7 +134,7 @@ export function freeName(view: View, base: string): string {
  * a task on another lane is the rule's own task (CONTRACT.txt).
  */
 export function addRule(view: View, catalog: Catalog, card: OrderCard): Decision[] {
-  return ruleDecisions(view, catalog, null, { when: card.when, then: card.then, unless: [], or_else: [] });
+  return ruleDecisions(view, catalog, null, { when: card.when, then: card.then, unless: [], or_else: [], below_next: false });
 }
 
 /** Setting `order`, appended as the lowest priority (`index` null; on a ruled lane, just before its first always rule)
@@ -202,7 +203,8 @@ export function repointRule(view: View, index: number, mixId: string): Decision 
 }
 
 /** Rule `index` swapped with the rule before it (-1) or after it (+1) in `group` (the rules drawn together, the hands'
- * by default); the rules outside it keep their places. Null at an end. */
+ * by default); the rules outside it keep their places, and Next its slot (the hands' list moves past Next by
+ * nextrow.ts). Null at an end. */
 export function moveRule(view: View, index: number, step: -1 | 1, group: readonly number[] = mixRules(view)): Decision | null {
   const order = group;
   const at = order.indexOf(index);
@@ -210,7 +212,7 @@ export function moveRule(view: View, index: number, step: -1 | 1, group: readonl
   const mine = view.orders[index];
   const theirs = other === undefined ? undefined : view.orders[other];
   if (other === undefined || mine === undefined || theirs === undefined) return null;
-  return { kind: "set_orders", orders: view.orders.map((o, i) => (i === index ? theirs : i === other ? mine : o)) };
+  return { kind: "set_orders", orders: withNextAt(view.orders.map((o, i) => (i === index ? theirs : i === other ? mine : o)), nextUnder(view.orders)) };
 }
 
 /** Rule `index` moved to where rule `to` stands (both indexes into view.orders, both in `group`, the hands' by default),
@@ -223,7 +225,7 @@ export function reorderRule(view: View, index: number, to: number, group: readon
   const [mine] = moved.splice(from, 1);
   moved.splice(at, 0, mine!);
   const slot = new Map(hands.map((i, n) => [i, moved[n]!]));
-  return { kind: "set_orders", orders: view.orders.map((o, i) => slot.get(i) ?? o) };
+  return { kind: "set_orders", orders: withNextAt(view.orders.map((o, i) => slot.get(i) ?? o), nextUnder(view.orders)) };
 }
 
 /** How many rules run this mix. */
@@ -246,9 +248,10 @@ export function rulesFull(catalog: Catalog, view: View): boolean {
   return view.orders.length >= catalog.content.limits.max_orders;
 }
 
-/** The rules with `order` set: appended as the lowest priority (`index` null), or in place of rule `index`. */
+/** The rules with `order` set: appended as the lowest priority (`index` null, under Next when any rule is), or in place
+ * of rule `index`, on its side of Next. */
 export function setRule(view: View, index: number | null, order: Order): Decision {
-  return { kind: "set_orders", orders: index === null ? [...view.orders, order] : view.orders.map((o, i) => (i === index ? order : o)) };
+  return { kind: "set_orders", orders: index === null ? [...view.orders, order] : view.orders.map((o, i) => (i === index ? { ...order, below_next: o.below_next ?? false } : o)) };
 }
 
 /** Another rule (not `index`) already does exactly this. */
