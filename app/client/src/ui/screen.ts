@@ -11,7 +11,6 @@ import { NewMarks } from "../game/marks";
 import type { Keeps } from "../game/keeps";
 import type { Past } from "../game/chronicle";
 import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
-import { readingMs } from "../game/reading";
 import { HandStreak } from "../game/stall";
 import { Banner } from "./banner";
 import { CardGlow } from "./cardglow";
@@ -200,11 +199,7 @@ export class Screen {
   /** The end's lines (live or replayed on a return): strip only, each taking its turn in the queue like any line. */
   private endLines(keys: string[]): void {
     this.reveal.collect();
-    this.story.appendKeys(keys, true, true).forEach((shown) => {
-      if (!shown) return;
-      this.lineIds += 1;
-      this.reveal.line([shown], String(this.lineIds), readingMs(shown.textContent ?? ""), "end");   // one strike per batch: the first of these
-    });
+    this.stripGlow.end(this.reveal, this.story.appendKeys(keys, true, true), () => String(++this.lineIds));
     if (!this.drawing) this.reveal.start(performance.now());
   }
 
