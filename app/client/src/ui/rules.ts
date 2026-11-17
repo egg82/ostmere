@@ -241,6 +241,7 @@ export class RulesTab implements Part {
     const b = el("button", "rule-slot");
     b.type = "button";
     b.dataset.slot = String(slot);
+    b.title = label;   // the slot truncates: its full wording on hover, in the picker on touch
     b.append(el("span", fallbacks ? "rule-slot-name has-else" : "rule-slot-name", label || this.ctx.catalog.text.get(UI.handsIdle)), " ▾");
     b.addEventListener("click", () => {
       tapFeedback();
