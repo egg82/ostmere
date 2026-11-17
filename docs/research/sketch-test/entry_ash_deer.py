@@ -20,17 +20,18 @@ t = lambda x, y: A((x - 50) * S + 120, (y - 605) * S + 500)
 GROUND = 500
 wd = lambda *w: [x * S for x in w]
 J = {k: t(*v) for k, v in dict(
-    shoulder=(190, 335), elbow=(168, 410), knee=(150, 500), fet=(145, 572),
-    f_shoulder=(205, 335), f_elbow=(205, 412), f_knee=(214, 500), f_fet=(218, 574),
-    hip=(398, 340), stifle=(358, 435), hock=(434, 504), hfet=(432, 574),
-    f_hip=(404, 338), f_stifle=(366, 425), f_hock=(380, 504), f_hfet=(376, 576)).items()}
+    shoulder=(190, 335), elbow=(168, 410), knee=(152, 494), cannon=(151, 534), fet=(141, 568),
+    f_shoulder=(205, 335), f_elbow=(205, 412), f_knee=(214, 494), f_cannon=(216, 534), f_fet=(212, 570),
+    hip=(400, 346), stifle=(364, 432), hock=(452, 502), hfet=(436, 574),
+    f_hip=(396, 344), f_stifle=(352, 428), f_hock=(340, 506), f_hfet=(338, 576)).items()}
 WITHERS, NOSE = t(215, 302), t(50, 232)
-CHEST, HAM = (t(250, 362), 108 * S, 72 * S, -3), (t(388, 378), 48 * S, 58 * S, 10)
+CHEST, HAM = (t(250, 362), 108 * S, 72 * S, -3), (t(388, 382), 40 * S, 46 * S, 14)
 SKULL = (t(120, 214), 44 * S, 30 * S, 18)
 GESTURE = [NOSE + (6, -8), t(120, 205), t(175, 255), WITHERS, t(310, 308), t(420, 322), t(440, 350)]
 
 trunk = mk("trunk", [ell_poly(*CHEST), ell_poly(*HAM),
                      tube([t(290, 350), t(340, 345), t(392, 340)], wd(112, 114, 118)),                # loin
+                     tube([t(350, 334), t(400, 328), t(438, 340)], wd(80, 64, 48)),                   # croup, flat to the tail
                      tube([t(212, 332), t(190, 268), t(150, 212), SKULL[0]], wd(150, 118, 86, 62)),    # neck into skull
                      ell_poly(*SKULL),
                      tube([t(104, 219), t(76, 225), NOSE + (3, 0)], wd(46, 34, 24)),                  # muzzle
@@ -40,17 +41,16 @@ trunk = mk("trunk", [ell_poly(*CHEST), ell_poly(*HAM),
            18, z=3, lw=2.0,
            fur=[((t(130, 240)[0], t(130, 240)[1], t(215, 330)[0], t(215, 330)[1]), (0.2, 1.0), 1.4),    # the mane under the throat
                 ((t(380, 320)[0], t(380, 320)[1], t(440, 400)[0], t(440, 400)[1]), (0.5, 1.0), 0.8)])
-near_fore = mk("near_fore", limb([J["elbow"] + (2, -14), J["elbow"], J["knee"], J["fet"]], wd(54, 40, 24, 17),
-                                 knuckles=[(2, 9 * S)]) + hoof(J["fet"], (-0.5, 1), 27 * S),
+near_fore = mk("near_fore", limb([J["elbow"] + (2, -14), J["elbow"], J["knee"], J["cannon"], J["fet"]],
+                                 wd(54, 40, 22, 13, 15), knuckles=[(2, 10 * S), (4, 7 * S)]) + hoof(J["fet"], (-0.5, 1), 27 * S),
                4, z=2.5)
-far_fore = mk("far_fore", limb([J["f_shoulder"], J["f_elbow"], J["f_knee"], J["f_fet"]], wd(48, 36, 22, 15),
-                               knuckles=[(2, 8 * S)]) + hoof(J["f_fet"], (-0.5, 1), 25 * S), 4, z=1, tone=0.3, lw=1.3)
-near_hind = mk("near_hind", [tube([t(396, 372), t(366, 430)], wd(76, 54))] + limb([J["hip"], J["stifle"], J["hock"], J["hfet"]], wd(100, 64, 34, 19),
+far_fore = mk("far_fore", limb([J["f_shoulder"], J["f_elbow"], J["f_knee"], J["f_cannon"], J["f_fet"]],
+                               wd(48, 36, 20, 12, 14), knuckles=[(2, 9 * S), (4, 6 * S)]) + hoof(J["f_fet"], (-0.5, 1), 25 * S), 4, z=1, tone=0.3, lw=1.3)
+near_hind = mk("near_hind", limb([J["hip"], J["stifle"], J["hock"], J["hfet"]], wd(104, 66, 32, 17),
                                  knuckles=[(2, 12 * S)]) + hoof(J["hfet"], (-0.5, 1), 27 * S),
                5, z=2.8, tone=-0.12)
-far_hind = mk("far_hind", limb([J["f_hip"], J["f_stifle"], J["f_hock"], J["f_hfet"]], wd(90, 58, 30, 17),
+far_hind = mk("far_hind", limb([J["f_hip"], J["f_stifle"], J["f_hock"], J["f_hfet"]], wd(80, 46, 22, 14),
                                knuckles=[(2, 11 * S)]) + hoof(J["f_hfet"], (-0.5, 1), 25 * S), 4, z=1, tone=0.3, lw=1.3)
-tail = mk("tail", [tube([t(420, 322), t(434, 334), t(436, 354)], wd(10, 12, 7))], 3, z=4.5)
 
 
 def antler(name, dx, dy, z, tone, lw):
@@ -69,8 +69,7 @@ def antler(name, dx, dy, z, tone, lw):
 
 antler_far = antler("antler_far", 26, 8, 5.2, 0.3, 1.3)
 antler_near = antler("antler_near", 0, 0, 6.5, 0.0, 1.6)
-parts = [ground_shadow(150, 480, 496, 10), far_fore, far_hind, trunk, near_fore, near_hind, tail,
-         antler_far, antler_near]
+parts = [ground_shadow(150, 480, 496, 10), far_fore, far_hind, trunk, near_fore, near_hind, antler_far, antler_near]
 
 with L.figure(pen, (300, 300)):
     with pen.construction():
@@ -83,7 +82,7 @@ with L.figure(pen, (300, 300)):
             bones(pen, [J[k] for k in ch])
         pen.line([WITHERS + (0, 0), (WITHERS[0], GROUND)], w=0.4, wobble=0.4, overshoot=6)
 
-    ink_figure(pen, parts, SEED, hatch_t=0.55, form_parts=("tail",), part_t={"trunk": 0.6})
+    ink_figure(pen, parts, SEED, hatch_t=0.55, part_t={"trunk": 0.6})
     ear(pen, t(134, 222), t(154, 208), t(214, 206), w=2.0, hatch=9)
     ear(pen, t(146, 206), t(160, 198), t(218, 184), w=1.3, hatch=0)
     eye = [t(94, 210), t(102, 205), t(110, 208), t(103, 213)]
@@ -94,7 +93,11 @@ with L.figure(pen, (300, 300)):
     pen.line([t(92, 202), t(104, 199), t(118, 204)], w=0.7)
     tufts(pen, [t(150 + 60 * u, 232 + 70 * u * u + 20 * u) for u in np.linspace(0, 1, 14)], (0.3, 1.0),
           length=(6, 13), w=0.6)
-    pen.line([t(415, 345), t(428, 348), t(437, 344)], w=0.6, wobble=0.3)
+    flag = [t(434, 336), t(450, 344), t(454, 366), t(444, 378), t(436, 356)]
+    pen.line(flag + [flag[0]], w=1.1, wobble=0.3, passes=2)
+    for u in np.linspace(0.1, 0.9, 6):
+        q = t(436 + 12 * u, 342 + 28 * u)
+        pen.stroke(np.array([q, q + (1.5, 5)]), 0.5, taper=(0.1, 0.5), wobble=0.2)
 
 
 def s_track(pen):
