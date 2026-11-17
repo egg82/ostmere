@@ -143,7 +143,8 @@ def test_a_save_keeps_its_newest_chapter_through_writes_that_carry_none(game: Ga
     save = game.begin()["save"]["save_id"]
     when = {"kind": "at_most", "watched": {"kind": "store_value", "store": "wood"}, "value": 5, "release": 9,
             "value_of_cap": False, "release_of_cap": False}
-    rule: dict[str, object] = {"when": when, "then": {"kind": "tap_card", "card": "c"}, "unless": [], "or_else": []}
+    rule: dict[str, object] = {"when": when, "then": {"kind": "tap_card", "card": "c"}, "unless": [], "or_else": [],
+                               "below_next": False}
     chapter = {"left": 10, "back": 4000, "stores": [{"id": "wood", "was": 3, "now": 90}], "levels": [],
                "camp": {"id": "camp", "was": 1, "now": 2}, "rules": [{"order": rule, "came_on": True, "times": 2}]}
     assert put_save(game, save, {"chapter": chapter})["chapter"] == chapter
