@@ -210,10 +210,11 @@ Each step is one MR; each ships with its test, proven able to fail.
    row in each state and the iOS-not-installed sentence; the mention draws once, then not after a reload, a second
    device, or a tap. Copy goes through the `writing-craft` voice pass before this merges.
 6. **Live check** after deploy and the out-of-band steps: subscribe on a desktop browser, set the shortest
-   choice with a clock override in a test account, and watch one notification arrive and no second.
+   choice with a clock override in a test account, and watch one notification arrive and no second. Done: the owner
+   saw delivery and the iPhone Home Screen test work on real devices.
 
 **Out-of-band, by whom:** generating the VAPID pair and putting it in the secret store (the owner or the orchestrator, once, before
 step 6); the five manifest items above (the cluster session, `kubernetes-c3`, on both sites, before step 3 deploys
-anything that runs); the Home Screen test on an iPhone (the owner, given one; otherwise unproven on iOS and said so).
+anything that runs); the Home Screen test on an iPhone (the owner; done).
 Merging steps 1 to 5 deploys nothing that sends, since the job runs only where the CronJob exists and the sender is
 Null without keys.
