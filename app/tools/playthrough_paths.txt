@@ -220,6 +220,7 @@ app/ashfall_app/opening/keep_checks.py
 app/ashfall_app/opening/kind_checks.py
 app/ashfall_app/opening/leave_checks.py
 app/ashfall_app/opening/line_kinds.py
+app/ashfall_app/opening/line_only_checks.py
 app/ashfall_app/opening/lock.py
 app/ashfall_app/opening/lock_checks.py
 app/ashfall_app/opening/makers.py
