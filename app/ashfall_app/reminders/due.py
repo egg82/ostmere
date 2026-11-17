@@ -22,6 +22,12 @@ def in_window(hour: int, from_hour: int, until_hour: int) -> bool:
     return hour >= from_hour or hour < until_hour
 
 
+def open_now(now: datetime, tz: str, from_hour: int, until_hour: int) -> bool:
+    """Whether the device's local hour at `now` is inside its notification times."""
+    hour = local_hour(now, tz)
+    return hour is not None and in_window(hour, from_hour, until_hour)
+
+
 def due(visited_at: datetime, after: timedelta, last_sent_at: datetime | None, now: datetime, tz: str,
         from_hour: int, until_hour: int) -> bool:
     """True when the player has been away `after`, no reminder has gone since that visit, and the device's local hour
@@ -31,8 +37,7 @@ def due(visited_at: datetime, after: timedelta, last_sent_at: datetime | None, n
         return False
     if now < visited_at + after:
         return False
-    hour = local_hour(now, tz)
-    return hour is not None and in_window(hour, from_hour, until_hour)
+    return open_now(now, tz, from_hour, until_hour)
 
 
 def notice_due(free_at: int | None, wall: datetime | None, written_at: int, sent: int | None, now: datetime) -> bool:

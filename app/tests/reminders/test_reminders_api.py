@@ -9,7 +9,7 @@ def test_put_turns_reminders_on_and_answers_the_window(game: GameClient):
     game.begin()
     r = game.client.put("/api/reminders", json=on())
     assert r.status_code == 200, r.text
-    assert r.json() == {"window": WINDOW, "hands_free": False}
+    assert r.json() == WINDOW | {"hands_free": False}
     assert r.headers["cache-control"] == "no-store"
     [row] = rows(game)
     assert (row["endpoint"], row["tz"], row["after_hours"], row["send_from_hour"], row["send_until_hour"]) == (
@@ -20,7 +20,7 @@ def test_a_second_put_changes_the_window_and_keeps_one_row(game: GameClient):
     game.begin()
     game.client.put("/api/reminders", json=on())
     wraps = {"after_hours": 168, "send_from_hour": 22, "send_until_hour": 7}
-    assert game.client.put("/api/reminders", json=on(window=wraps)).json() == {"window": wraps, "hands_free": False}
+    assert game.client.put("/api/reminders", json=on(window=wraps)).json() == wraps | {"hands_free": False}
     assert [(x["after_hours"], x["send_from_hour"], x["send_until_hour"]) for x in rows(game)] == [(168, 22, 7)]
 
 
@@ -30,7 +30,7 @@ def test_a_put_without_a_window_refreshes_keys_and_answers_the_stored_window(gam
     fresh = on(window=None, tz="America/New_York") | {"p256dh": "BNew-key"}
     r = game.client.put("/api/reminders", json=fresh)
     assert r.status_code == 200, r.text
-    assert r.json() == {"window": WINDOW, "hands_free": False}
+    assert r.json() == WINDOW | {"hands_free": False}
     [row] = rows(game)
     assert (row["p256dh"], row["tz"]) == ("BNew-key", "America/New_York")
 
@@ -102,23 +102,40 @@ def test_the_endpoint_is_never_logged(game: GameClient, capsys: pytest.CaptureFi
     assert PUSH not in out.out + out.err and "BPk-key" not in out.out + out.err
 
 
+NOTICE_ONLY = {"after_hours": None, "send_from_hour": 22, "send_until_hour": 7}
+
+
 def test_the_hands_free_notice_can_be_on_with_the_absence_reminder_off(game: GameClient):
     game.begin()
-    r = game.client.put("/api/reminders", json=on(window=None) | {"hands_free": True})
+    r = game.client.put("/api/reminders", json=on(window=NOTICE_ONLY) | {"hands_free": True})
     assert r.status_code == 200, r.text
-    assert r.json() == {"window": None, "hands_free": True}
+    assert r.json() == NOTICE_ONLY | {"hands_free": True}
     [row] = rows(game)
-    assert (row["after_hours"], row["hands_free"]) == (None, True)
-    assert game.client.put("/api/reminders", json=on(window=None)).json() == {"window": None, "hands_free": True}
+    assert (row["after_hours"], row["hands_free"], row["send_from_hour"], row["send_until_hour"]) == (None, True, 22, 7)
+    assert game.client.put("/api/reminders", json=on(window=None)).json() == NOTICE_ONLY | {"hands_free": True}
 
 
-def test_turning_the_absence_reminder_off_keeps_the_notice_and_the_window_it_had(game: GameClient):
+def test_one_window_serves_both_kinds_and_the_last_one_sent_stands(game: GameClient):
     game.begin()
     wraps = {"after_hours": 72, "send_from_hour": 22, "send_until_hour": 7}
     both = game.client.put("/api/reminders", json=on(window=wraps) | {"hands_free": True}).json()
-    assert both == {"window": wraps, "hands_free": True}
-    assert game.client.put("/api/reminders", json=on(window=None) | {"hands_free": True}).json() == {
-        "window": None, "hands_free": True}
+    assert both == wraps | {"hands_free": True}
+    later = NOTICE_ONLY | {"send_from_hour": 6, "send_until_hour": 6, "hands_free": True}
+    assert game.client.put("/api/reminders", json=on(window=later)).json() == later
     [row] = rows(game)
-    assert (row["after_hours"], row["send_from_hour"], row["send_until_hour"]) == (None, 22, 7)
-    assert game.client.put("/api/reminders", json=on(window=wraps)).json() == {"window": wraps, "hands_free": False}
+    assert (row["after_hours"], row["send_from_hour"], row["send_until_hour"]) == (None, 6, 6)
+    assert game.client.put("/api/reminders", json=on(window=wraps)).json() == wraps | {"hands_free": False}
+
+
+def test_a_put_that_names_hours_apart_or_turns_nothing_on_is_refused(game: GameClient):
+    game.begin()
+    refused = [
+        on(window={"after_hours": 24, "send_from_hour": 9}),
+        on(window={"send_from_hour": 9, "send_until_hour": 21}),
+        on(window=NOTICE_ONLY) | {"hands_free": False},
+        on(window=None) | {"hands_free": True},
+    ]
+    for body in refused:
+        r = game.client.put("/api/reminders", json=body)
+        assert r.status_code == 422 and r.json()["code"] == "invalid_decision", (body, r.text)
+    assert rows(game) == []

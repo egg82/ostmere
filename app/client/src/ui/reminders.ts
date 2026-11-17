@@ -1,10 +1,11 @@
-// Reminders for this device, a row of the Settings sheet (docs/design/reminders.md, "What the player sees" and "The
-// hands-free notice"): two choices, each off at first and either on alone, sharing the browser's one subscription:
-// the absence reminder (its choices, the window slider and "Any time") and the hands-free notice. Turning either on
+// Notifications for this device, a section of the Settings sheet (docs/design/reminders.md, "What the player sees"):
+// the kinds, each its own choice, off at first and any combination (the reminder after an absence with its length
+// choices, and the hands-free notice), sharing the browser's one subscription; then one "Notification times" window
+// (the slider and "Any time"), shown once any kind is on and applying to all of them. Turning the first kind on
 // asks the browser's permission with the purpose already on screen. A server from before reminders offers no row; one without a VAPID key, or a
 // browser that cannot push, says so and offers nothing. On open the row checks the browser's subscription against
 // the server's, so it never shows on when either side has let go.
-import { httpReminders, type Reminder, type ReminderWindow, type RemindersApi } from "../api/reminders";
+import { httpReminders, type Reminder, type RemindersApi } from "../api/reminders";
 import { remindersConfig, type RemindersConfig } from "../app/pageconfig";
 import { browserEnv, current, pushCap, subscribe, zone, type PushCap, type Subscribed } from "../app/push";
 import { awayKey, REMINDER_KEYS as K } from "../game/reminderkeys";
@@ -53,10 +54,11 @@ export class ReminderRow {
   private readonly said = el("p", "reminders-said");
   private readonly controls = el("div", "reminders-controls");
   private readonly choices = el("fieldset", "reminders-away");
+  private readonly windowBox = el("fieldset", "reminders-window");
   private readonly anyTime = el("input");
   private readonly slider: HourSlider;
   private readonly windowSaid = el("p", "reminders-window-said");
-  private readonly button = el("button");
+  private readonly awayBox = el("input");
   private readonly handsBox = el("input");
   private away = START_AWAY;
   private on: { sub: PushSubscription; keys: Subscribed } | null = null;   // the server holds a row for it
@@ -73,17 +75,15 @@ export class ReminderRow {
     this.anyTime.addEventListener("change", () => { this.slider.disabled = this.anyTime.checked; this.sayWindow(); this.changed(false); });
     const any = el("label", "reminders-any");
     any.append(this.anyTime, text.get(K.remindersAnyTime));
-    const windowBox = el("fieldset", "reminders-window");
-    windowBox.append(el("legend", "", text.get(K.remindersWindow)), this.slider.root, this.windowSaid, any);
-    this.button.type = "button";
-    this.button.addEventListener("click", () => void this.keep(!this.absence, this.handsFree, true));
+    this.windowBox.append(el("legend", "", text.get(K.remindersWindow)), this.slider.root, this.windowSaid, any);
+    this.awayBox.type = "checkbox";
+    this.awayBox.addEventListener("change", () => void this.keep(this.awayBox.checked, this.handsFree));
     this.handsBox.type = "checkbox";
-    this.handsBox.addEventListener("change", () => void this.keep(this.absence, this.handsBox.checked, false));
-    const hands = el("label", "settings-choice reminders-hands");
-    hands.append(this.handsBox, el("span", "", text.get(K.remindersHandsFree)));
-    const handsPart = el("div", "reminders-hands-part");
-    handsPart.append(hands, el("p", "reminders-hands-said", text.get(K.remindersHandsFreeSaid)));
-    this.controls.append(this.choices, windowBox, this.button, handsPart);
+    this.handsBox.addEventListener("change", () => void this.keep(this.absence, this.handsBox.checked));
+    this.controls.append(
+      kind(this.awayBox, text.get(K.remindersAwayKind), text.get(K.remindersAwayKindSaid), "reminders-away-kind", this.choices),
+      kind(this.handsBox, text.get(K.remindersHandsFree), text.get(K.remindersHandsFreeSaid), "reminders-hands"),
+      this.windowBox);
     this.root.append(el("h3", "part-heading", text.get(K.remindersHeading)), this.said, this.controls);
     this.root.hidden = true;
     this.sayWindow();
@@ -105,7 +105,7 @@ export class ReminderRow {
   }
 
   focus(): void {
-    (this.controls.hidden ? this.root : this.choices.querySelector<HTMLInputElement>("input:checked") ?? this.root).focus();
+    (this.controls.hidden ? this.root : this.awayBox).focus();
   }
 
   private drawChoices(hours: number[]): void {
@@ -127,19 +127,21 @@ export class ReminderRow {
     const stored = held ? await this.deps.api.put(held.keys, this.deps.zone(), null).catch(() => undefined) : null;
     if (held && stored === null) await held.sub.unsubscribe().catch(() => false);
     this.on = held && stored ? held : null;
-    this.absence = Boolean(this.on && stored?.window);
+    this.absence = this.on !== null && stored?.after_hours != null;
     this.handsFree = Boolean(this.on && stored?.hands_free);
-    if (this.on && stored?.window) this.show(stored.window);
+    if (this.on && stored) this.show(stored);
     this.drawState(false);
   }
 
-  private show(w: ReminderWindow): void {
-    this.away = w.after_hours;
-    for (const input of this.choices.querySelectorAll<HTMLInputElement>("input")) input.checked = input.value === String(w.after_hours);
-    const any = w.send_from_hour === w.send_until_hour;
+  private show(r: Reminder): void {
+    if (r.after_hours !== null) {
+      this.away = r.after_hours;
+      for (const input of this.choices.querySelectorAll<HTMLInputElement>("input")) input.checked = input.value === String(r.after_hours);
+    }
+    const any = r.send_from_hour === r.send_until_hour;
     this.anyTime.checked = any;
     this.slider.disabled = any;
-    if (!any) this.slider.set({ from: w.send_from_hour, until: w.send_until_hour });
+    if (!any) this.slider.set({ from: r.send_from_hour, until: r.send_until_hour });
     this.sayWindow();
   }
 
@@ -148,25 +150,23 @@ export class ReminderRow {
     this.windowSaid.replaceChildren(...windowPhrase(this.text.get(K.remindersWindowSaid), this.slider.window));
   }
 
-  private picked(): ReminderWindow {
-    const w = this.slider.window;
-    return { after_hours: this.away, send_from_hour: w.from, send_until_hour: this.anyTime.checked ? w.from : w.until };
-  }
-
   private choice(absence: boolean, handsFree: boolean): Reminder {
-    return { window: absence ? this.picked() : null, hands_free: handsFree };
+    const w = this.slider.window;
+    return { after_hours: absence ? this.away : null, send_from_hour: w.from,
+      send_until_hour: this.anyTime.checked ? w.from : w.until, hands_free: handsFree };
   }
 
   private drawState(changedNow: boolean): void {
-    this.button.textContent = this.text.get(this.absence ? K.remindersOffButton : K.remindersOn);
-    this.button.className = this.absence ? "quiet" : "primary";
-    this.said.textContent = this.absence ? this.text.get(K.remindersIsOn)
-      : this.text.get(changedNow ? K.remindersIsOff : K.remindersLead);
+    const some = this.absence || this.handsFree;
+    this.awayBox.checked = this.absence;
     this.handsBox.checked = this.handsFree;
+    this.choices.hidden = !this.absence;
+    this.windowBox.hidden = !some;
+    this.said.textContent = this.text.get(some ? K.remindersIsOn : changedNow ? K.remindersIsOff : K.remindersLead);
   }
 
   private changed(settle: boolean): void {
-    if (!this.on || !this.absence) return;
+    if (!this.on) return;
     if (this.timer !== null) clearTimeout(this.timer);
     this.timer = setTimeout(() => { this.timer = null; void this.send(); }, settle ? SEND_AFTER_MS : 0);
   }
@@ -181,9 +181,9 @@ export class ReminderRow {
   }
 
   /** This browser with the absence reminder and the hands-free notice as given: subscribed first when neither was on,
-   * turned off and unsubscribed when neither is. `said`: the absence reminder is what changed, so the line says so. */
-  private async keep(absence: boolean, handsFree: boolean, said: boolean): Promise<void> {
-    if (!absence && !handsFree) return this.turnOff(said);
+   * turned off and unsubscribed when neither is. */
+  private async keep(absence: boolean, handsFree: boolean): Promise<void> {
+    if (!absence && !handsFree) return this.turnOff();
     const got = this.on ?? await this.deps.subscribe(this.key);
     if (!got) {
       this.drawState(false);
@@ -195,14 +195,14 @@ export class ReminderRow {
       this.on = got;
       this.absence = absence;
       this.handsFree = handsFree;
-      this.drawState(said);
+      this.drawState(true);
     } catch {
       this.drawState(false);
       this.said.textContent = this.text.get(K.remindersFailed);
     }
   }
 
-  private async turnOff(said: boolean): Promise<void> {
+  private async turnOff(): Promise<void> {
     const was = this.on;
     if (was) {
       try {
@@ -216,6 +216,16 @@ export class ReminderRow {
     }
     this.on = null;
     this.absence = this.handsFree = false;
-    this.drawState(said);
+    this.drawState(true);
   }
+}
+
+/** One kind: its checkbox and name, a line saying what it sends, and what only it needs (`extra`). */
+function kind(box: HTMLInputElement, name: string, said: string, cls: string, extra?: HTMLElement): HTMLElement {
+  const label = el("label", `settings-choice ${cls}`);
+  label.append(box, el("span", "", name));
+  const part = el("div", "reminders-kind");
+  part.append(label, el("p", "reminders-hands-said", said));
+  if (extra) part.append(extra);
+  return part;
 }

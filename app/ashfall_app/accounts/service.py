@@ -126,13 +126,11 @@ class PgAccounts:
             if choice is None:
                 kept = reminder_rows.refresh_device(conn, now, account_id, sub.endpoint, (sub.p256dh, sub.auth), sub.tz)
             else:
-                w = choice.window or reminder_rows.Window(0, 0, 0)
                 kept = reminder_rows.keep_device(conn, now, reminder_rows.NewDevice(
-                    account_id, sub.endpoint, sub.p256dh, sub.auth, None if choice.window is None else w.after_hours,
-                    sub.tz, w.send_from_hour, w.send_until_hour, choice.hands_free))
-        window = None if kept is None else kept.window
+                    account_id, sub.endpoint, sub.p256dh, sub.auth, choice.after_hours, sub.tz,
+                    choice.send_from_hour, choice.send_until_hour, choice.hands_free))
         logs.info(_log, "reminder.kept", account=account_id, picked=choice is not None, on=kept is not None,
-                  after_hours=None if window is None else window.after_hours,
+                  after_hours=None if kept is None else kept.after_hours,
                   hands_free=None if kept is None else kept.hands_free)
         return kept
 

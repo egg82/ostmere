@@ -1,7 +1,7 @@
 """One pass of the hands-free notice (docs/design/reminders.md, "The hands-free notice"), run by the reminders job: each
 account that takes it has its latest save read; one whose kept forecast has run out is forecast afresh (`refresh`, the
-Saves system's); one whose notice is due is claimed, then sent to each of the account's devices that take it. Every
-number of the pass is on its last line."""
+Saves system's); one whose notice is due and has a device inside its notification times is claimed, then sent to
+those devices; with none inside, it waits for a later run, unclaimed. Every number of the pass is on its last line."""
 
 import logging
 import time
@@ -15,7 +15,7 @@ from ..clock import Clock
 from ..db import handsfree as saves
 from ..db import reminders as store
 from .deliver import deliver
-from .due import notice_due
+from .due import notice_due, open_now
 from .sender import Sender
 from .words import notice_payload
 
@@ -46,12 +46,15 @@ def run_notices(engine: Engine, sender: Sender, clock: Clock, refresh: Callable[
     went: list[str] = []
     for s in ready:
         assert s.at is not None
+        with engine.connect() as conn:
+            takers = store.notice_targets(conn, s.account_id)
+        targets = [d.target for d in takers if open_now(now, d.tz, d.send_from_hour, d.send_until_hour)]
+        if not targets:
+            continue
         with engine.begin() as conn:
             claimed = saves.claim(conn, s.save_id, s.at)
         if not claimed:
             continue
-        with engine.connect() as conn:
-            targets = store.notice_targets(conn, s.account_id)
         went += [deliver(engine, sender, t, notice_payload(s.account_id, s.at), "notice") for t in targets]
     counts = NoticeCounts(len(found), refreshed, len(stale) - refreshed, len(ready), went.count("ok"),
                           went.count("gone"), went.count("error"))

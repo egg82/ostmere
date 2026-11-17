@@ -35,39 +35,38 @@ def _zone(tz: str) -> str:
 type Endpoint = Annotated[str, Field(max_length=1024), AfterValidator(_push_service)]
 
 
-class ReminderWindow(Request):
-    """When a reminder may come: once the player has been away `after_hours`, at a local hour from `send_from_hour` up
-    to `send_until_hour` (past midnight when from is later than until; equal: any hour)."""
-
-    after_hours: Annotated[int, AfterValidator(_offered)]
-    """One of /page-config.json's reminders.after_hours."""
-    send_from_hour: Hour
-    send_until_hour: Hour
-
-
 class ReminderOn(Request):
-    """This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys) and its time zone."""
+    """This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys), its time zone, and what it takes."""
 
     endpoint: Endpoint
     p256dh: Key
     auth: Key
     tz: Annotated[str, Field(min_length=1, max_length=64), AfterValidator(_zone)]
     """The device's IANA zone (Intl.DateTimeFormat().resolvedOptions().timeZone): the window's hours are its."""
-    window: ReminderWindow | None = None
-    """The absence reminder's window; null, that reminder off. Null with hands_free null: refresh a browser already on
-    (keys, zone, its account) and answer its choice; 404 when it is not on."""
+    after_hours: Annotated[int, AfterValidator(_offered)] | None = None
+    """The absence reminder: one of /page-config.json's reminders.after_hours; null, that reminder off."""
+    send_from_hour: Hour | None = None
+    send_until_hour: Hour | None = None
+    """The notification times, for every kind: a local hour from `send_from_hour` up to `send_until_hour`, past midnight
+    when from is later than until; equal: any hour. Both or neither."""
     hands_free: bool | None = None
-    """The hands-free notice on or off; null with a window: off."""
+    """The hands-free notice on or off; null is off, unless this is a refresh."""
 
     @model_validator(mode="after")
-    def _something_on(self) -> "ReminderOn":
-        if self.window is None and self.hands_free is False:
+    def _shape(self) -> "ReminderOn":
+        if self.refresh:
+            return self
+        if self.send_from_hour is None or self.send_until_hour is None:
+            raise ValueError("send_from_hour and send_until_hour go together, and with anything turned on")
+        if self.after_hours is None and not self.hands_free:
             raise ValueError("turn something on, or DELETE to turn this browser off")
         return self
 
     @property
     def refresh(self) -> bool:
-        return self.window is None and self.hands_free is None
+        """Nothing sent: refresh a browser already on (keys, zone, its account) and answer what it has on."""
+        return (self.after_hours is None and self.send_from_hour is None and self.send_until_hour is None
+                and self.hands_free is None)
 
 
 class ReminderOff(Request):
@@ -75,6 +74,8 @@ class ReminderOff(Request):
 
 
 class Reminder(BaseModel):
-    window: ReminderWindow | None
+    after_hours: int | None
     """Null: the absence reminder is off (the hands-free notice is on)."""
+    send_from_hour: int
+    send_until_hour: int
     hands_free: bool

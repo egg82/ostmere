@@ -1363,7 +1363,7 @@
             }
           },
           "404": {
-            "description": "not_found: no window sent and this browser is not on",
+            "description": "not_found: nothing sent and this browser is not on",
             "content": {
               "application/json": {
                 "schema": {
@@ -5421,15 +5421,24 @@
       },
       "Reminder": {
         "properties": {
-          "window": {
+          "after_hours": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ReminderWindow"
+                "type": "integer"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "title": "After Hours"
+          },
+          "send_from_hour": {
+            "type": "integer",
+            "title": "Send From Hour"
+          },
+          "send_until_hour": {
+            "type": "integer",
+            "title": "Send Until Hour"
           },
           "hands_free": {
             "type": "boolean",
@@ -5438,7 +5447,9 @@
         },
         "type": "object",
         "required": [
-          "window",
+          "after_hours",
+          "send_from_hour",
+          "send_until_hour",
           "hands_free"
         ],
         "title": "Reminder"
@@ -5476,10 +5487,31 @@
             "minLength": 1,
             "title": "Tz"
           },
-          "window": {
+          "after_hours": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ReminderWindow"
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After Hours"
+          },
+          "send_from_hour": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Hour"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "send_until_hour": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Hour"
               },
               {
                 "type": "null"
@@ -5507,30 +5539,7 @@
           "tz"
         ],
         "title": "ReminderOn",
-        "description": "This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys) and its time zone."
-      },
-      "ReminderWindow": {
-        "properties": {
-          "after_hours": {
-            "type": "integer",
-            "title": "After Hours"
-          },
-          "send_from_hour": {
-            "$ref": "#/components/schemas/Hour"
-          },
-          "send_until_hour": {
-            "$ref": "#/components/schemas/Hour"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "after_hours",
-          "send_from_hour",
-          "send_until_hour"
-        ],
-        "title": "ReminderWindow",
-        "description": "When a reminder may come: once the player has been away `after_hours`, at a local hour from `send_from_hour` up\nto `send_until_hour` (past midnight when from is later than until; equal: any hour)."
+        "description": "This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys), its time zone, and what it takes."
       },
       "RepeatedSwitch": {
         "properties": {

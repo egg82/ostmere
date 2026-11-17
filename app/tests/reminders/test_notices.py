@@ -31,13 +31,15 @@ class Recorder:
         return Delivery("ok")
 
 
-def taking(game: GameClient, hands_free: bool = True, after_hours: int | None = None) -> int:
-    """A game begun on a browser whose device takes the notice; the save's id."""
+def taking(game: GameClient, hands_free: bool = True, after_hours: int | None = None, tz: str = "UTC",
+           hours: tuple[int, int] = (0, 0)) -> int:
+    """A game begun on a browser whose device takes the notice, in the notification times `hours` (equal: any); the
+    save's id."""
     save: int = game.begin()["save"]["save_id"]
     with engine_of(game).begin() as conn:
         account = conn.exec_driver_sql("SELECT account_id FROM saves WHERE id = %s", (save,)).scalar_one()
-        store.insert_device(conn, game.clock(), store.NewDevice(account, PUSH + "one", "p", "a", after_hours, "UTC", 0, 0,
-                                                                hands_free=hands_free))
+        store.insert_device(conn, game.clock(), store.NewDevice(account, PUSH + "one", "p", "a", after_hours, tz,
+                                                                hours[0], hours[1], hands_free=hands_free))
     return save
 
 
@@ -124,3 +126,52 @@ def test_one_line_per_pass_and_never_an_endpoint(game: GameClient, shipped_rules
     runs = [ln for ln in out.splitlines() if "event=hands_free.run " in ln]
     assert len(runs) == 1 and " saves=1 refreshed=1 unrefreshed=0 due=0 sent=0 gone=0 failed=0 ms=" in runs[0]
     assert PUSH not in out
+
+
+def _freed(game: GameClient, rs: ShippedRuleset, sender: Recorder, hours: tuple[int, int],
+           tz: str = "UTC") -> datetime:
+    """A tap given now on a save whose device takes the notice in `hours`, forecast; the wall time the hands free up."""
+    save = taking(game, tz=tz, hours=hours)
+    game.decide(save, TAP, after=0)
+    go(game, rs, sender, game.clock())
+    free = kept(game)
+    assert free.wall is not None
+    return free.wall
+
+
+def _at(wall: datetime, days: int, hour: int) -> datetime:
+    return (wall + timedelta(days=days)).replace(hour=hour, minute=15, second=0, microsecond=0)
+
+
+@pytest.mark.parametrize("tz, hours, outside, inside", [
+    ("UTC", (9, 21), 23, 9),
+    ("UTC", (22, 6), 12, 3),   # wraps past midnight
+    ("Asia/Tokyo", (9, 21), 13, 3),   # the device's hours, not the server's: 13:15 UTC is 22:15 there
+])
+def test_a_notice_due_outside_the_notification_times_waits_and_goes_once_when_they_open(
+        game: GameClient, shipped_ruleset: ShippedRuleset, tz: str, hours: tuple[int, int], outside: int, inside: int):
+    sender = Recorder()
+    wall = _freed(game, shipped_ruleset, sender, tz=tz, hours=hours)
+    assert go(game, shipped_ruleset, sender, _at(wall, 1, outside)) == NoticeCounts(saves=1, due=1)
+    assert sender.sent == [] and kept(game).sent is None
+    assert go(game, shipped_ruleset, sender, _at(wall, 2, inside)) == NoticeCounts(saves=1, due=1, sent=1)
+    assert go(game, shipped_ruleset, sender, _at(wall, 2, inside) + timedelta(minutes=1)) == NoticeCounts(saves=1)
+    assert len(sender.sent) == 1
+
+
+def test_equal_ends_are_any_time_for_the_notice(game: GameClient, shipped_ruleset: ShippedRuleset):
+    sender = Recorder()
+    wall = _freed(game, shipped_ruleset, sender, hours=(5, 5))
+    assert go(game, shipped_ruleset, sender, _at(wall, 1, 12)) == NoticeCounts(saves=1, due=1, sent=1)
+
+
+def test_a_notice_goes_to_the_devices_inside_their_times_and_not_the_rest(game: GameClient,
+                                                                         shipped_ruleset: ShippedRuleset):
+    sender = Recorder()
+    wall = _freed(game, shipped_ruleset, sender, hours=(9, 21))
+    with engine_of(game).begin() as conn:
+        account = conn.exec_driver_sql("SELECT account_id FROM reminder_devices").scalar_one()
+        store.insert_device(conn, game.clock(), store.NewDevice(account, PUSH + "two", "p", "a", None, "UTC", 22, 6,
+                                                                hands_free=True))
+    assert go(game, shipped_ruleset, sender, _at(wall, 1, 3)) == NoticeCounts(saves=1, due=1, sent=1)
+    assert [endpoint for endpoint, _ in sender.sent] == [PUSH + "two"]

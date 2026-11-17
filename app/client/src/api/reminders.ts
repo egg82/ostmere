@@ -3,8 +3,8 @@ import type { Subscribed } from "../app/push";
 import { ApiFailure, request } from "./api";
 import type { components } from "../../generated/schema";
 
-export type ReminderWindow = components["schemas"]["ReminderWindow"];
-/** What this browser has on: the absence reminder's window (null: off) and the hands-free notice. */
+/** What this browser has on: the absence reminder (after_hours null: off), the hands-free notice, and the one
+ * notification times (send_from_hour up to send_until_hour; equal: any time) that hold for both. */
 export type Reminder = components["schemas"]["Reminder"];
 
 export interface RemindersApi {
@@ -18,7 +18,7 @@ const JSON_HEADERS = { "Content-Type": "application/json" } as const;
 export const httpReminders: RemindersApi = {
   async put(keys, tz, choice) {
     try {
-      const body = { ...keys, tz, window: choice?.window ?? null, hands_free: choice ? choice.hands_free : null };
+      const body = { ...keys, tz, ...(choice ?? { after_hours: null, send_from_hour: null, send_until_hour: null, hands_free: null }) };
       const r = await request("/api/reminders", { method: "PUT", headers: JSON_HEADERS, body: JSON.stringify(body) });
       return (await r.json()) as Reminder;
     } catch (e) {
