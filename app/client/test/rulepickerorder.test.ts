@@ -126,8 +126,9 @@ check("the quick add's action choice lists the same way", () => {
 });
 
 check("the full editor's tasks to count (When) list the same way", () => {
-  const { tab, root } = mount(view);
-  tab.open(view, 0);
+  const capped: View = { ...view, cards: view.cards.map((c) => ({ ...c, cap: c.cap ?? c.completions + 5 })) };   // only a capped task is counted
+  const { tab, root } = mount(capped);
+  tab.open(capped, 0);
   const seen = walk(one(root, ".cond .cond-stores"));
   const counted = q(root, ".cond-subject").flatMap((b) => (b.dataset.subject?.startsWith("task:") ? [b.dataset.subject.slice(5)] : []));
   expect("tasks offered", counted.length > 3, true);

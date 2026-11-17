@@ -5,7 +5,7 @@ A player who meets a need and goes to write a rule for it finds it there, not la
 Shown, per subject (`shown`): a chip once the band has drawn it (on, its offered_after held), and from then on, since
 the player who met it may write its rule after it clears; a store once the ledger could draw its line (the ledger is
 open, the store neither the Camp's nor hidden), and from then on, as the ledger keeps a line; the Camp while its line
-is held; a skill while its bar is drawn; a task's count while its card is in play. A store under two items is left out:
+is held; a skill while its bar is drawn; a capped task's count while its card is in play. A store under two items is left out:
 no band fits it, so no rule can watch it, at any time. Offered (`offered`): the page's ruleoffers.offeredSubjects and
 whenChoices(full) on the same view, mirrored here because the CI image that runs the plays has no node.
 
@@ -60,10 +60,10 @@ def drawable_lines(content: cm.Content, view: w.View) -> set[str]:
 
 
 def shown_now(content: cm.Content, view: w.View) -> set[str]:
-    """The subjects the page draws in `view` that stay shown only while drawn: the Camp, skills, tasks in play."""
+    """The subjects the page draws in `view` that stay shown only while drawn: the Camp, skills, capped tasks in play."""
     camp = content.camp.store if content.camp is not None else None
     found = {f"level:{s.skill}" for s in view.skills if _unlocked(view, "skill", s.skill)}
-    found |= {f"count:{c.card}" for c in view.cards}
+    found |= {f"count:{c.card}" for c in view.cards if c.cap is not None}
     if camp is not None and any(l.store == camp for l in view.ledger) and _unlocked(view, "store", camp):
         found.add("camp")
     return found
@@ -74,7 +74,7 @@ def offered(content: cm.Content, view: w.View) -> set[str]:
     camp = content.camp.store if content.camp is not None else None
     stores = {l.store for l in view.ledger if l.store != camp and _unlocked(view, "store", l.store) and _band_fits(content, l)}
     found = {f"store:{s}" for s in stores} | {f"chip:{c}" for c in _offered_chips(content, view)}
-    found |= {f"level:{s.skill}" for s in view.skills} | {f"count:{c.card}" for c in view.cards}
+    found |= {f"level:{s.skill}" for s in view.skills} | {f"count:{c.card}" for c in view.cards if c.cap is not None}
     if camp is not None and any(l.store == camp for l in view.ledger) and _unlocked(view, "store", camp):
         found.add("camp")
     return found

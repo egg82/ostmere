@@ -112,8 +112,10 @@ export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: 
 }
 
 /** What the full editor's When row offers past the chips and stores, each as the rule it starts from: the Camp's level
- * and each skill's, then each task in play (a count of times done). Only what the save holds, so the list grows with
- * the story; a done card is left out, since its count no longer moves. */
+ * and each skill's, then each task in play with a cap (a count of times done). Only what the save holds, so the list
+ * grows with the story; a done card is left out, since its count no longer moves. An uncapped task is left out too
+ * (owner, 2026-11-17): its count rises with every share of work it gets, so "once it is done n times" is soon true for
+ * good; "while it is running" is the rule for it. */
 /** The levels and tasks a rule may watch; and, for a rule whose every action (`actions`: its verb and fallbacks) taps a
  * card of one person's lane, the cards of every other lane, the hands' included, it may watch running: the one Running
  * shape set_orders takes (CONTRACT.txt, "Decisions"). */
@@ -121,7 +123,7 @@ export function subjectChoices(catalog: Catalog, view: View, actions: readonly (
   const camp = catalog.campStore;
   const hasCamp = camp !== null && view.ledger.some((l) => l.store === camp) && catalog.unlocked(view, "store", camp);
   const levels: SubjectRule[] = [...(hasCamp ? [{ kind: "camp" as const, n: 1 }] : []), ...view.skills.map((s) => ({ kind: "level" as const, skill: s.skill, n: 1 }))];
-  const tasks = inSectionOrder(catalog, view.cards.map((c) => c.card), (c) => c).map((card): SubjectRule => ({ kind: "count", card, n: 1 }));
+  const tasks = inSectionOrder(catalog, view.cards.filter((c) => c.cap !== null).map((c) => c.card), (c) => c).map((card): SubjectRule => ({ kind: "count", card, n: 1 }));
   const lanes = new Set(actions.map((a) => (a?.kind === "tap_card" ? catalog.laneOf(a.card) : "hands")));
   const lane = lanes.size === 1 ? [...lanes][0]! : "hands";
   const running = lane === "hands" ? [] : inSectionOrder(catalog, view.cards.map((c) => c.card).filter((c) => catalog.laneOf(c) !== lane), (c) => c)

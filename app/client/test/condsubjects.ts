@@ -28,12 +28,12 @@ export function keyOf(s: Subject): string {
 export const KINDS: readonly Kind[] = ["store_value", "card_count", "skill_level"];
 
 /** Every subject of KINDS the save holds whose value can still move: a store per ledger line, a skill per bar, a card
- * count per card in play (a done card's count is final). */
+ * count per capped card in play (a done card's count is final; an uncapped one's is soon past any n for good). */
 export function present(view: View): Subject[] {
   return [
     ...view.ledger.map((l): Subject => ({ kind: "store_value", store: l.store })),
     ...view.skills.map((s): Subject => ({ kind: "skill_level", skill: s.skill })),
-    ...view.cards.map((c): Subject => ({ kind: "card_count", card: c.card })),
+    ...view.cards.filter((c) => c.cap !== null).map((c): Subject => ({ kind: "card_count", card: c.card })),
   ];
 }
 

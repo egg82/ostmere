@@ -741,7 +741,7 @@ Run Evening when…                                 ✕
 Do    [Forage] [Cook roots] [Rest] [Main] [Evening]  the tasks, then the saved mixes
 When  [hungry] [tired] [dry wood 3 / 12] [stones 5 / 12] …     every chip shown so far, every store
 Levels  [Camp level 1] [Foraging level 2] …         the Camp and each skill, at the level each stands at
-Tasks   [Forage] [Cook roots] …                     each task in play, by its count of times done
+Tasks   [Hatchet] [Lean-to] …                       each task in play with a cap, by its count of times done
 [ When 3  Until 8                       ▾ ]         the levels, folded on a new rule; open when changing one
   [ falls below | reaches ]
   When  [−] 3 [+]      Until  [−] 8 [+]             stacked on a phone; 44 px targets

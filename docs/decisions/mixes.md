@@ -158,6 +158,10 @@ The Farmer Was Replaced and scripting past Clicker Heroes' anti-macro bits both 
 built by tapping: standing orders, a priority list of "when X, do Y" lines (FF12 gambit-style); a smarter list is
 a faster route.
 
+- **"Once a task is done n times" is offered only for a task with a cap** (owner, 2026-11-17). A task with no cap counts
+  a completion for every share of work it gets, so such a rule is soon true and stays true; it read as a rule that
+  waits for an end that never comes. "While a task is running" is the rule for a task that repeats.
+
 ## Cards, mixes, lanes, orders and modifiers, as built
 
 How these engine parts behave today, moved from their rows in `systems.md`.
