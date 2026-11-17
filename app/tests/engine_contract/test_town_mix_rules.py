@@ -7,8 +7,7 @@ from dataclasses import replace
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
-    QUANTITY_SCALE as Q, AfterTime, Order, Outcome, RunKind, Rules, Save, SwitchMix, TapCard, TriggerDef, TriggerId, Unlock, UnlockKind,
-    advance, decide, view,
+    QUANTITY_SCALE as Q, AfterTime, Order, RunKind, Rules, Save, SwitchMix, TapCard, advance, decide, view,
 )
 from town_mix_world import (
     A1, A2, AC, ALWAYS, B1, B2, C1, HM1, HM2, LA, LB, LC, TM, TM2, V, WORK, X, Y, always, card_view, count, hands_mixes, joiner, lane_card,
@@ -145,17 +144,3 @@ def test_invariant_57_holds_with_town_switches_among_the_orders(os: list[Order],
                 s2 = advance(s, r, t + dt)
                 assert _breaks_57(s2, r) is None
         s = advance(s, r, t)
-
-
-def test_a_greyed_town_mix_is_passed_over_and_listed():
-    """"Uncapped only" and "Running town mix": retiring a1 greys town:main; the next latched town order's mix runs
-    from that instant, and view.greyed_mixes names town:main."""
-    retire = TriggerDef(TriggerId("ret"), AfterTime(100), Outcome(unlocks=(Unlock(UnlockKind.RETIRED, A1),)))
-    r = world(TWO + (retire,), opening=())
-    s = start(r, orders(Order(ALWAYS, SwitchMix(TM)), Order(ALWAYS, SwitchMix(TM2))))
-    before, after = view(advance(s, r, 50), r), view(advance(s, r, 150), r)
-    assert (before.running_town_mix, before.town_mix_order, TM in before.greyed_mixes) == (TM, 0, False)
-    assert (after.running_town_mix, after.town_mix_order, TM in after.greyed_mixes) == (TM2, 1, True)
-    assert abs(stored(s, r, X, 150) - 100 * Q) <= 150 and abs(stored(s, r, V, 150) - 50 * Q) <= 150
-    alone = start(r, orders(Order(ALWAYS, SwitchMix(TM))))
-    assert view(advance(alone, r, 150), r).running_town_mix is None

@@ -83,4 +83,8 @@ def is_completed(save: Save, rules: Rules, card: CardId) -> bool:
 
 
 def greyed(save: Save, rules: Rules, mix: MixId) -> bool:
-    return any(is_completed(save, rules, s.card) for s in flatten_shares(save.mixes, mix))
+    """A hands mix holding a completed card is greyed whole; a town mix never is: a retired card stops only its own
+    share (mixruns._mix_run; DESIGN.txt, "THE TOWN'S MIX", "Uncapped only")."""
+    cards = index(rules).cards
+    return any(is_completed(save, rules, s.card) for s in flatten_shares(save.mixes, mix)
+               if s.card in cards and cards[s.card].lane == HANDS)

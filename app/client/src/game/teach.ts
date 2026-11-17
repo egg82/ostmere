@@ -8,7 +8,7 @@
 import type { Card, Mix, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { runningMix } from "./mix";
-import { flatCards } from "./town";
+import { flatCards, isTownMix } from "./town";
 
 /** Where the switch cue points: the Mixes list (a saved mix makes the store) or the running mix's editor (a card in play
  * makes it). `build` is the card waiting on `store`. */
@@ -31,7 +31,7 @@ export function switchCue(catalog: Catalog, view: View): SwitchCue | null {
     const store = stalledBuild(catalog, card);
     if (store === null) continue;
     const makers = new Set(catalog.stores.get(store)?.made_by ?? []);
-    const other = view.mixes.find((m) => m.id !== running?.id && m.id !== view.active_mix_id && !view.greyed_mix_ids.includes(m.id) && flatCards(view, m).some((c) => makers.has(c)));
+    const other = view.mixes.find((m) => m.id !== running?.id && m.id !== view.active_mix_id && !view.greyed_mix_ids.includes(m.id) && !isTownMix(catalog, view, m) && flatCards(view, m).some((c) => makers.has(c)));
     if (other) return { build: card.card, store, to: "mixes", mix: other.id };
     const maker = running ? view.cards.find((c) => makers.has(c.card) && catalog.mixable(c.card)) : undefined;
     if (maker) return { build: card.card, store, to: "edit", card: maker.card };

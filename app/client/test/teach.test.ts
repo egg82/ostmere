@@ -36,6 +36,10 @@ const nest: Mix = { id: "Outer", components: [{ kind: "sub_mix", mix_id: woodMix
 const innerRunning: View = { ...builds, running_mix_id: woodMix.id, mixes: [woodMix, nest] };   // it holds the hands, yet makes no wood now
 expect("a mix nesting the maker counts; the running one is never the answer", switchCue(catalog, innerRunning), { build: "lean_to", store: "wood", to: "mixes", mix: "Outer" });
 expect("the running mix alone: Edit", switchCue(catalog, { ...innerRunning, mixes: [woodMix] }), { build: "lean_to", store: "wood", to: "edit", card: "gather" });
+// a town mix is no answer: the Mixes list never shows it, and the engine refuses a switch to it
+const peopleWood = new Catalog({ ...fixtureContent, store_infos: fixtureContent.store_infos.map((s) => (s.store === "wood" ? { ...s, made_by: ["chop"] } : s)) });
+const townMix: Mix = { id: "town:main", components: [{ kind: "card_share", card: "chop", share_bp: 10_000 }] };
+expect("a town mix that makes the store is not the cue", switchCue(peopleWood, { ...runningOnly, mixes: [...runningOnly.mixes, townMix], cards: runningOnly.cards.filter((c) => c.card !== "gather") }), null);
 const lean = builds.cards.find((c) => c.card === "lean_to")!;
 const timed: Card = { ...lean, blocker: { ...lean.blocker!, ready_at: 900 } };
 expect("a build that will be ready by itself: no cue", switchCue(catalog, { ...builds, cards: builds.cards.map((c) => (c.card === "lean_to" ? timed : c)) }), null);
