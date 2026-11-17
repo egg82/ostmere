@@ -16,8 +16,10 @@ function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const kinded = new Catalog({ ...fixtureContent, offer_infos: fixtureContent.offer_infos.map((o) => (o.offer !== "ask" ? o
-  : { ...o, kind: "q", answers: o.answers.map((a) => ({ ...a, role: a.answer === "go" ? "yes" : "no" })) })) });
+// "ask" made a kind of its own, with a later offer of the kind ("ask_again") still to come, so the builder has work.
+const kindedInfos = fixtureContent.offer_infos.map((o) => (o.offer !== "ask" ? o
+  : { ...o, kind: "q", answers: o.answers.map((a) => ({ ...a, role: a.answer === "go" ? "yes" : "no" })) }));
+const kinded = new Catalog({ ...fixtureContent, offer_infos: [...kindedInfos, { ...kindedInfos.find((o) => o.offer === "ask")!, offer: "ask_again" }] });
 const open = dayTwoStep("offered", 100).view;
 const answeredWith = (answer: string): View => ({ ...open, offers: open.offers.map((o) => (o.offer === "ask" ? { ...o, answer } : o)) });
 

@@ -166,7 +166,7 @@ export class RulesTab implements Part {
     }
     const side = this.sides.now(view);
     const head = side === null ? [] : [sideSwitch(this.ctx.catalog, view, side, (to) => { this.sides.set(to); this.menu = null; this.draw(); })];
-    const write = (scope?: RuleSide): HTMLElement[] => (this.ctx.keeps.ruleSeen() ? [this.newRule(view, scope)] : []);
+    const write = (scope?: RuleSide): HTMLElement[] => (this.ctx.keeps.ruleSeen() && (scope !== "camp" || whoChoices(this.ctx, view).length > 0) ? [this.newRule(view, scope)] : []);
     this.list.replaceChildren(...head, ...(side === "camp" ? [] : [...this.handsRows(view), this.otherwiseRow(view), ...write(side ?? undefined)]));
     this.lanes.replaceChildren(...(side === "mine" ? [] : townSection(this.ctx, view, this.townRows(view))), ...laneSections(this.ctx, view, (i) => this.condButton(view, i), side), ...(side === "camp" ? write("camp") : []));
     this.lately.replaceChildren(...latelyRows(this.ctx.catalog, view, this.ctx.ruleRuns()));

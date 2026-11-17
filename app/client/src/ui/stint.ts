@@ -1,6 +1,6 @@
 // Goal stints (CONTRACT.txt, "Goal stints"): "run {mix} until {goal}" as a queue entry. The mix editor's "Run until…"
-// lists the goals the edit's dry run shows, each with its time if run, and under a store's goal that store's named
-// shares not yet reached (a share of its cap, which keeps up as the cap grows; no time is served for those); Next names
+// lists the goals the edit's dry run shows that land (one that never does would hold the queue for good), each with its
+// time if run, and under a store's goal that store's named shares not yet reached (a share of its cap, which keeps up as the cap grows; no time is served for those); Next names
 // a stint by its mix and goal, and the one that runs says when its goal lands or that it never does at today's rates,
 // and what binds it. Facts, never advice.
 import type { Condition, GoalRow, QueueEntry, View } from "../api/types";
@@ -13,11 +13,12 @@ import { UI } from "../game/text";
 import { el } from "./dom";
 import { binds, goalLabel, goalLeft } from "./goaltimes";
 
-/** One button per goal of `after` not met yet, each with its time if run, and under a store's its shares; `pick` takes
- * the chosen goal's `until`. */
+/** One button per goal of `after` not met yet that lands at its rates, each with its time if run, and under a store's
+ * its shares (a landing store goal means the store rises, so its cap's shares are reached too); `pick` takes the chosen
+ * goal's `until`. */
 export function goalPicker(catalog: Catalog, after: View, pick: (until: Condition) => void): HTMLElement {
   const list = el("div", "stint-goals");
-  list.append(...after.goal_rows.filter((r) => r.lands_at !== after.at).flatMap((r) => {
+  list.append(...after.goal_rows.filter((r) => r.lands_at !== null && r.lands_at !== after.at).flatMap((r) => {
     const b = el("button", "stint-goal");
     b.type = "button";
     b.append(el("span", "", goalLabel(catalog, r)), el("span", "stint-time", goalLeft(catalog, r, after.at)));

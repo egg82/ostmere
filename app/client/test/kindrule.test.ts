@@ -1,5 +1,5 @@
 // The answer rule on the page (CONTRACT.txt, "Offers"): the Rules tab's answers section builds one rule per offer kind,
-// and only once an offer of that kind has been answered; its buttons are the kind's roles worded by the kind's own
+// only once an offer of that kind has been answered, and only while one of the kind is still to be answered; its buttons are the kind's roles worded by the kind's own
 // labels; a tap sets (or, with a rule set, changes in place) an answer_kind order; the page builds no answer_offer.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
@@ -23,16 +23,19 @@ function mounted(root: HTMLElement): FakeEl {
   return node;
 }
 
-// The fixture's "ask" offer, made a kind of its own with roles on its two answers; "bank" stays unkinded.
-const kinded = new Catalog({ ...fixtureContent, offer_infos: fixtureContent.offer_infos.map((o) => (o.offer !== "ask" ? o
-  : { ...o, kind: "q", answers: o.answers.map((a) => ({ ...a, role: a.answer === "go" ? "yes" : "no" })) })) });
+// The fixture's "ask" offer, made a kind of its own with roles on its two answers; "bank" stays unkinded. `kinded` adds
+// a later offer of the kind, "ask_again", not yet shown; in `lastOfKind` "ask" is the kind's only offer.
+const kindedInfos = fixtureContent.offer_infos.map((o) => (o.offer !== "ask" ? o
+  : { ...o, kind: "q", answers: o.answers.map((a) => ({ ...a, role: a.answer === "go" ? "yes" : "no" })) }));
+const lastOfKind = new Catalog({ ...fixtureContent, offer_infos: kindedInfos });
+const kinded = new Catalog({ ...fixtureContent, offer_infos: [...kindedInfos, { ...kindedInfos.find((o) => o.offer === "ask")!, offer: "ask_again" }] });
 const open = dayTwoStep("offered", 100).view;
 const answered: View = { ...open, offers: open.offers.map((o) => (o.offer === "ask" ? { ...o, answer: "go" } : o)) };
 const rule: Order = { when: { kind: "after_time", at: 0 }, then: { kind: "answer_kind", offer_kind: "q", role: "yes" }, unless: [], or_else: [], below_next: false };
 const ruled: View = { ...answered, orders: [...answered.orders, rule], orders_on: [...answered.orders_on, false], order_states: [...answered.order_states, "on"] };
 
-function draw(view: View): { root: FakeEl; decided: Decision[] } {
-  const { ctx, got } = testContext(undefined, kinded);
+function draw(view: View, catalog = kinded): { root: FakeEl; decided: Decision[] } {
+  const { ctx, got } = testContext(undefined, catalog);
   const tab = new RulesTab(ctx);
   const root = mounted(tab.root);
   tab.update(view);
@@ -44,6 +47,10 @@ const builders = (root: FakeEl) => root.querySelectorAll(".kind-rule");
 {  // before any offer of the kind is answered the builder is absent, though the offer is open and shown
   expect("the offer is open", open.offers.some((o) => o.offer === "ask" && o.answer === null), true);
   expect("no builder", builders(draw(open).root).length, 0);
+}
+
+{  // once every offer of the kind is answered there is nothing left for the rule to answer: no builder
+  expect("no builder after the kind's last offer", builders(draw(answered, lastOfKind).root).length, 0);
 }
 
 {  // once one is answered: a row under Answers, a button per role worded by the kind's labels

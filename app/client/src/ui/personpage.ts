@@ -18,6 +18,7 @@ import type { PartContext, RuleTarget } from "./part";
 import { PersonMix } from "./personmix";
 import { condButton } from "./rulecond";
 import { taskRow } from "./rulelanes";
+import { laneRulable } from "./rulewho";
 
 /** A person's tasks: their cards in the view. */
 export function laneTasks(ctx: PartContext, view: View, lane: string): Card[] {
@@ -136,6 +137,6 @@ export class PersonPage {
       this.rules.append(b);
     };
     if (own.length === 0 && !this.joined(view)) add(catalog.text.get(UI.laneChange), { lane, rule: null });
-    if (!rulesFull(catalog, view)) add(`+ ${catalog.text.get(UI.ruleNew)}`, { newFor: lane });
+    if (!rulesFull(catalog, view) && laneRulable(catalog, view, lane)) add(`+ ${catalog.text.get(UI.ruleNew)}`, { newFor: lane });
   }
 }

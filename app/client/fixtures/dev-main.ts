@@ -6,7 +6,7 @@
 // #change (the ledger's Change), #covered (a ledger line's "covered"), #strip (the strip's "until …"). #due marks
 // recovery words due; #devices opens the "Another device" sheet; #settings the Settings sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
-// `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers (the answer rule's builder).
+// `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers, and adds a later ask of the kind ("ask_again") so the answer rule's builder shows.
 // #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page (#manydone finishes every card) and #town the Town tab (a phone's). #journal opens the Book on its Journal (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone). Phases asksone and asksmany open the Asks list (asks.ts); phase feel lands a chain on each tap (feel.ts).
 import "../src/controls.css";
 import "../src/game.css";
@@ -32,6 +32,8 @@ if (hash.has("kinded")) {
     o.kind = "q";
     for (const a of o.answers) a.role = a.answer === "go" ? "yes" : "no";
   }
+  const ask = fixtureContent.offer_infos.find((x) => x.offer === "ask");
+  if (ask) fixtureContent.offer_infos.push({ ...ask, offer: "ask_again" });
 }
 if (hash.has("swap")) for (const s of fixtureContent.store_infos) if (s.made_by.includes("tend")) s.made_by = [...s.made_by, "look"];
 const phase = (hash.get("phase") ?? "start") as Phase;

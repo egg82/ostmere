@@ -1,6 +1,9 @@
 // Who a new rule on Camp is for (docs/decisions/mixes.md, "Mine and Camp"): the town and each person whose hands a rule
-// can use, by name, as one picker in place of a New rule per kind. With one choice there is nothing to pick.
+// can use, by name, as one picker in place of a New rule per kind. With one choice there is nothing to pick. A person is
+// offered only while their lane holds a task a rule can do: a rule on Camp does their tasks and no mix.
 import type { View } from "../api/types";
+import type { Catalog } from "../game/catalog";
+import { doChoices } from "../game/ruleoffers";
 import { townCanSwitch, townRules, people } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
@@ -14,7 +17,13 @@ export interface Who {
 
 export function whoChoices(ctx: PartContext, view: View): Who[] {
   const { catalog } = ctx;
-  return [...(townRules(catalog, view).length > 0 && townCanSwitch(catalog, view) ? [{ town: true as const }] : []), ...people(catalog, view).map((lane) => ({ lane }))];
+  return [...(townRules(catalog, view).length > 0 && townCanSwitch(catalog, view) ? [{ town: true as const }] : []),
+    ...people(catalog, view).filter((lane) => laneRulable(catalog, view, lane)).map((lane) => ({ lane }))];
+}
+
+/** Whether a new rule for `lane` on Camp would offer anything to do. */
+export function laneRulable(catalog: Catalog, view: View, lane: string): boolean {
+  return doChoices(catalog, view, false, null, false, "camp", lane).length > 0;
 }
 
 export function whoPicker(ctx: PartContext, view: View, pick: (who: Who) => void, close: () => void): HTMLElement[] {

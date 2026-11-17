@@ -79,6 +79,15 @@ expect("none", controllingEntry(view({ queue: [] })), null);
   expect("disabled lists nothing", stintParts(catalog, after, true, true, () => {}, () => {}).length, 1);
 }
 
+// a goal that never lands at the edit's rates is not offered, nor its store's shares: such a stint would never pop and
+// would hold every entry behind it (docs/decisions/principles.md, "Every option offered works as worded")
+{
+  const after = view({ goal_rows: [wood(null, { per_hour: 0 }), level(100 + 2 * H)] });
+  const [, list] = stintParts(catalog, after, true, false, () => {}, () => {});
+  const goals = Array.from(list?.children ?? []) as HTMLElement[];
+  expect("only the goal that lands", goals.map((g) => g.textContent), ["Foraging 42 h"]);
+}
+
 // a store's goal also offers that store's named shares not yet reached; a share until is worded by its share and is
 // never taken for a row with the same numbers
 {
