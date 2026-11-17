@@ -90,11 +90,11 @@ for (const c of cases) {
   one(cond, '.cond-subject[data-subject="camp"]').click();
   const camp = q(cond, ".cond-subject-control .cond-level").find(shown)!.querySelector('[role="slider"]')!;
   expect("the Camp: only levels below the held one", camp.getAttribute("aria-valuenow"), camp.getAttribute("aria-valuemax"));
-  expect("a level with no top slides ten past where it stands", (() => {
+  expect("a level with no top slides from the next level to ten past where it stands", (() => {
     one(cond, '.cond-subject[data-subject="level:foraging"]').click();
     const h = q(cond, ".cond-subject-control .cond-level").find(shown)!.querySelector('[role="slider"]')!;
     return [h.getAttribute("aria-valuemin"), h.getAttribute("aria-valuemax")];
-  })(), ["1", "12"]);
+  })(), ["3", "12"]);
 }
 
 // A pick that shows a control brings it into view, centred in its scroll box (dom.bringIntoView), so on a desktop it

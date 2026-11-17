@@ -8,7 +8,7 @@ import type { Catalog } from "./catalog";
 import { sample } from "./clock";
 import { actionWords, chipOf, conditionWords } from "./orders";
 import { BP, isShare, levelWords, readRule } from "./storerule";
-import { readSubject, subjectName } from "./subjectrule";
+import { readSubject, subjectCard, subjectName } from "./subjectrule";
 import { UI } from "./text";
 
 /** A rule's actions in the order it tries them: `then`, then `or_else`. */
@@ -17,12 +17,12 @@ export const actionsOf = (order: Order): OrderVerb[] => [order.then, ...order.or
 /** A guard as a state: a chip's label ("tired"), "Forage is done 5 times", "Foraging is level 3 or more", or a store's
  * "smoked is full", "is empty", "is 10 or more", "is under 10", "is half or more", "is a quarter or less"; null for a
  * condition the page does not draw. */
-export function guardWords(catalog: Catalog, guard: Condition): string | null {
+export function guardWords(catalog: Catalog, view: View, guard: Condition): string | null {
   const { text, format } = catalog;
   const chip = chipOf(catalog, guard);
   if (chip) return catalog.label(chip.label_key);
   const subject = readSubject(catalog, guard);
-  if (subject?.kind === "count") return text.fill(subject.n === 1 ? UI.guardDoneOnce : UI.guardDone, { card: catalog.cardLabel(subject.card), n: format.count(subject.n) });
+  if (subject?.kind === "count") return text.fill(subject.n === 1 ? UI.guardDoneOnce : UI.guardDone, { card: subjectCard(catalog, view, subject.card), n: format.count(subject.n) });
   if (subject) return text.fill(UI.guardLevel, { name: subjectName(catalog, subject), n: format.count(subject.n) });
   const rule = readRule(guard, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
   if (!rule) return null;
@@ -35,11 +35,11 @@ export function guardWords(catalog: Catalog, guard: Condition): string | null {
 
 /** A rule's condition with its guards: "13 or more catch, until under 1, unless smoked is full, and unless tired". A
  * rule with no guard reads as its condition alone (orders.conditionWords). */
-export function ruleCondition(catalog: Catalog, order: Order): string | null {
-  const when = conditionWords(catalog, order.when);
+export function ruleCondition(catalog: Catalog, view: View, order: Order): string | null {
+  const when = conditionWords(catalog, view, order.when);
   if (when === null) return null;
   return order.unless.reduce((condition, g, j) => {
-    const guard = guardWords(catalog, g);
+    const guard = guardWords(catalog, view, g);
     return guard === null ? condition : catalog.text.fill(j === 0 ? UI.ruleUnless : UI.ruleAndUnless, { rule: condition, when: guard });
   }, when);
 }
@@ -68,7 +68,7 @@ function guardClause(catalog: Catalog, view: View, guard: Condition, letsGo: num
   const q = catalog.content.scales.quantity_per_item;
   const rule = chipOf(catalog, guard) || readSubject(catalog, guard) ? null : readRule(guard, q);
   const line = rule ? view.ledger.find((l) => l.store === rule.store) : undefined;
-  if (!rule || !line || letsGo === null) return catalog.text.fill(UI.guardWhile, { when: guardWords(catalog, guard) ?? "" });
+  if (!rule || !line || letsGo === null) return catalog.text.fill(UI.guardWhile, { when: guardWords(catalog, view, guard) ?? "" });
   const below = rule.test === "below";
   const n = below ? Math.floor(letsGo / q) + 1 : Math.floor(letsGo / q);
   const slots = { store: catalog.storeLabel(rule.store), n: catalog.format.count(n), have: catalog.format.items(sample(line.segment, t)) };

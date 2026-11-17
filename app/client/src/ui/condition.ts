@@ -17,7 +17,7 @@ import { subjectKey, type SubjectRule } from "../game/subjectrule";
 import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
 import { noteOrderRemoved, noteOrderSet, noteRuleChanged } from "../telemetry";
-import { draftOrder, editDraft, headingWords, keepOffered, sameRule, storeCap, type Draft } from "./conditiondraft";
+import { draftOrder, editDraft, headingWords, keepOffered, keptSubject, sameRule, storeCap, type Draft } from "./conditiondraft";
 import { Levels } from "./condlevels";
 import { RuleFact } from "./condfact";
 import { CondFoot } from "./condfoot";
@@ -227,7 +227,7 @@ export class ConditionEditor {
     markPressed(catalog, view, this.does, this.chips, pick, chip, rule);
     this.levels.fold.root.hidden = !this.full || draft.chip === true || chip !== undefined || rule.store === "";
     this.levels.draw(catalog, rule, this.cap(rule.store), storeItems(catalog, view, rule.store));
-    this.subject.draw(view, draft.chip ? undefined : draft.subject);
+    this.subject.draw(view, draft.chip ? undefined : draft.subject, keptSubject(catalog, view, draft));
     markSubject(this.chips, draft.subject);
     this.guards.draw(view, draft.unless, this.full);
     this.orElse.draw(view, draft.then, draft.orElse, this.full);

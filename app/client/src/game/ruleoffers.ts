@@ -10,7 +10,7 @@ import { inSectionOrder } from "./cardsections";
 import { rulesFull, sameCondition, soloCard } from "./orders";
 import { sample } from "./clock";
 import { seenChips } from "./shown";
-import { buildSubject, type SubjectRule } from "./subjectrule";
+import { buildSubject, subjectOpen, type SubjectRule } from "./subjectrule";
 import { relevantStores, type Relevant } from "./relevant";
 import type { RuleSide } from "./ruleside";
 import { flatCards, isTownMix } from "./town";
@@ -122,8 +122,10 @@ export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: 
 export function subjectChoices(catalog: Catalog, view: View, actions: readonly (OrderVerb | null)[] = []): { levels: SubjectRule[]; tasks: SubjectRule[]; running: SubjectRule[] } {
   const camp = catalog.campStore;
   const hasCamp = camp !== null && view.ledger.some((l) => l.store === camp) && catalog.unlocked(view, "store", camp);
-  const levels: SubjectRule[] = [...(hasCamp ? [{ kind: "camp" as const, n: 1 }] : []), ...view.skills.map((s) => ({ kind: "level" as const, skill: s.skill, n: 1 }))];
-  const tasks = inSectionOrder(catalog, view.cards.filter((c) => c.cap !== null).map((c) => c.card), (c) => c).map((card): SubjectRule => ({ kind: "count", card, n: 1 }));
+  const levels: SubjectRule[] = [...(hasCamp ? [{ kind: "camp" as const, n: 1 }] : []), ...view.skills.map((s) => ({ kind: "level" as const, skill: s.skill, n: 1 }))]
+    .filter((r) => subjectOpen(catalog, view, r));
+  const tasks = inSectionOrder(catalog, view.cards.filter((c) => c.cap !== null).map((c) => c.card), (c) => c).map((card): SubjectRule => ({ kind: "count", card, n: 1 }))
+    .filter((r) => subjectOpen(catalog, view, r));
   const lanes = new Set(actions.map((a) => (a?.kind === "tap_card" ? catalog.laneOf(a.card) : "hands")));
   const lane = lanes.size === 1 ? [...lanes][0]! : "hands";
   const running = lane === "hands" ? [] : inSectionOrder(catalog, view.cards.map((c) => c.card).filter((c) => catalog.laneOf(c) !== lane), (c) => c)

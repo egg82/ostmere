@@ -10,6 +10,7 @@
 import type { CampLevel, Condition, View } from "../api/types";
 import { sample } from "./clock";
 import type { Catalog } from "./catalog";
+import { shownLevel } from "./prestige";
 import { UI } from "./text";
 
 export type SubjectRule =
@@ -41,11 +42,18 @@ export function buildSubject(catalog: Catalog, rule: SubjectRule): Condition {
 
 /** The condition in the player's words: "Once Forage is done 3 times", "Once Forage is done", "Once Camp reaches
  * level 2". */
-export function subjectWords(catalog: Catalog, rule: SubjectRule): string {
+export function subjectWords(catalog: Catalog, view: View, rule: SubjectRule): string {
   const { text, format } = catalog;
-  if (rule.kind === "running") return text.fill(UI.ruleWhileRunning, { card: catalog.cardLabel(rule.card) });
-  if (rule.kind === "count") return text.fill(rule.n === 1 ? UI.ruleDoneOnce : UI.ruleDone, { card: catalog.cardLabel(rule.card), n: format.count(rule.n) });
+  if (rule.kind === "running") return text.fill(UI.ruleWhileRunning, { card: subjectCard(catalog, view, rule.card) });
+  if (rule.kind === "count") return text.fill(rule.n === 1 ? UI.ruleDoneOnce : UI.ruleDone, { card: subjectCard(catalog, view, rule.card), n: format.count(rule.n) });
   return text.fill(UI.ruleReachesLevel, { name: subjectName(catalog, rule), n: format.count(rule.n) });
+}
+
+/** A watched card as a sentence names it: a ruled lane's card with its lane, since a person's copy of a hands task
+ * shares the task's label. */
+export function subjectCard(catalog: Catalog, view: View, card: string): string {
+  const label = catalog.cardLabel(card);
+  return catalog.ruled(card) ? catalog.text.fill(UI.ruleLaneCard, { card: label, person: catalog.laneLabel(catalog.laneOf(card), view) }) : label;
 }
 
 /** What a rule watches, by name: the task's, the skill's, or the Camp store's. */
@@ -53,11 +61,12 @@ export function subjectName(catalog: Catalog, rule: SubjectRule): string {
   return rule.kind === "count" || rule.kind === "running" ? catalog.cardLabel(rule.card) : rule.kind === "level" ? catalog.skillLabel(rule.skill) : catalog.storeLabel(catalog.campStore ?? "");
 }
 
-/** Where the count or level stands in `view`: times done, the skill's level, the Camp's level as its bar counts it. */
+/** Where the count or level stands in `view`: times done, the skill's level counted across phases (as the engine's
+ * skill_level reads it), the Camp's level as its bar counts it. */
 export function subjectNow(catalog: Catalog, view: View, rule: SubjectRule): number {
   if (rule.kind === "running") return 0;
   if (rule.kind === "count") return [...view.cards, ...view.completed].find((c) => c.card === rule.card)?.completions ?? 0;
-  if (rule.kind === "level") return view.skills.find((s) => s.skill === rule.skill)?.level ?? 0;
+  if (rule.kind === "level") { const bar = view.skills.find((s) => s.skill === rule.skill); return bar ? shownLevel(bar) : 0; }
   const line = view.ledger.find((l) => l.store === catalog.campStore);
   const v = line ? sample(line.segment, view.at) : 0;
   return campLevels(catalog).filter((l) => (!l.held || lifted(view, l)) && v >= l.at).length;
@@ -76,17 +85,24 @@ function campTop(catalog: Catalog, view: View): number {
   return Math.max(1, held < 0 ? levels.length : held);
 }
 
-/** The values n may take: from 1 to a card's cap, to the Camp's last level a rule can name, or with no top. */
-export function subjectRange(catalog: Catalog, view: View, rule: SubjectRule): [number, number] {
-  if (rule.kind === "camp") return [1, campTop(catalog, view)];
+/** The values n may take: from one past where it stands now (a number already reached would be true for good), or
+ * from `kept`, the number a rule being changed holds, if lower; up to a card's cap, the Camp's last level a rule can
+ * name, or with no top. */
+export function subjectRange(catalog: Catalog, view: View, rule: SubjectRule, kept = Number.POSITIVE_INFINITY): [number, number] {
   if (rule.kind === "running") return [1, 1];
   const cap = rule.kind === "count" ? view.cards.find((c) => c.card === rule.card)?.cap ?? null : null;
-  return [1, cap ?? Number.POSITIVE_INFINITY];
+  const hi = rule.kind === "camp" ? campTop(catalog, view) : cap ?? Number.POSITIVE_INFINITY;
+  return [Math.min(subjectNow(catalog, view, rule) + 1, kept, hi), hi];
 }
 
-/** n held inside what the subject allows. */
-export function clampSubject(catalog: Catalog, view: View, rule: SubjectRule): SubjectRule {
-  const [lo, hi] = subjectRange(catalog, view, rule);
+/** The subject still has a number ahead to name. */
+export function subjectOpen(catalog: Catalog, view: View, rule: SubjectRule): boolean {
+  return rule.kind === "running" || subjectNow(catalog, view, rule) < subjectRange(catalog, view, rule)[1];
+}
+
+/** n held inside what the subject allows (`kept` as subjectRange has it). */
+export function clampSubject(catalog: Catalog, view: View, rule: SubjectRule, kept?: number): SubjectRule {
+  const [lo, hi] = subjectRange(catalog, view, rule, kept);
   return rule.kind === "running" ? rule : { ...rule, n: Math.min(hi, Math.max(lo, rule.n)) };
 }
 

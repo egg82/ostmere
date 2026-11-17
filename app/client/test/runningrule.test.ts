@@ -25,7 +25,7 @@ const view: View = { ...base, orders: [...base.orders, { when, then: { kind: "ta
 const at = view.orders.length - 1;
 if (!taskRules(view).includes(at)) failures.push("a running rule is not listed");
 if (ruleSideOf(catalog, view, at) !== "camp") failures.push("a running rule on a person's task is not on Camp");
-if (!(conditionWords(catalog, when) ?? "").includes(catalog.cardLabel(other))) failures.push(`its line reads ${conditionWords(catalog, when)}`);
+if (!(conditionWords(catalog, view, when) ?? "").includes(catalog.cardLabel(other))) failures.push(`its line reads ${conditionWords(catalog, view, when)}`);
 
 const running = subjectChoices(catalog, view, [{ kind: "tap_card", card: person }]).running;
 const want = sectioned(catalog, running, (r) => (r.kind === "running" ? r.card : null), view).flatMap((g) => [...(g.heading === "" ? [] : [`# ${g.heading}`]), ...g.items.map((r) => (r.kind === "running" ? catalog.cardLabel(r.card) : ""))]);

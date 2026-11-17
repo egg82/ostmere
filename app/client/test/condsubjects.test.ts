@@ -1,11 +1,12 @@
 // The condition editor offers every subject a save holds (automation is never earned or gated; nothing exists
-// in a save that a rule cannot watch): every store, the Camp's included, every skill, and every capped task in play by
+// in a save that a rule cannot watch): every store, the Camp's included while a level a rule can name is ahead, every skill, and every capped task in play by
 // its count (docs/decisions/mixes.md: an uncapped task's count is soon past any n for good), and every chip the save has shown, whether or not it shows now. Read through the real subject list,
 // ruleoffers.offeredSubjects and whenChoices in the full editor, on every fixture save. What is left out, and why, is
 // condsubjects.ts's KINDS.
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/catalog";
 import { offeredSubjects, whenChoices } from "../src/game/ruleoffers";
+import { subjectOpen } from "../src/game/subjectrule";
 import { KINDS, missing, present, SAVES } from "./condsubjects";
 
 const catalog = new Catalog(fixtureContent);
@@ -17,7 +18,7 @@ for (const { phase, view } of SAVES) {
   for (const s of present(view)) seen.set(s.kind, (seen.get(s.kind) ?? 0) + 1);
   const offered = offeredSubjects(catalog, view);
   for (const kind of KINDS) {
-    const left = missing(view, offered, kind);
+    const left = missing(view, offered, kind, subjectOpen(catalog, view, { kind: "camp", n: 1 }) ? null : catalog.campStore);
     if (left.length > 0) failures.push(`${phase}: ${kind} not offered: ${left.join(", ")}`);
   }
   const uncapped = new Set(view.cards.filter((c) => c.cap === null).map((c) => c.card));

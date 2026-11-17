@@ -49,7 +49,7 @@ const text = (root: HTMLElement, sel: string, i = 0) => root.querySelectorAll<HT
 
 // A guard reads as a state, by its subject and its level's form.
 {
-  const words = (c: Condition) => guardWords(catalog, c);
+  const words = (c: Condition) => guardWords(catalog, base, c);
   expect("full", words(FULL), "Smoked is full");
   expect("empty", words(atMost("smoked", 0, 0, true)), "Smoked is empty");
   expect("n or more", words(atLeast("smoked", 10 * Q, 9 * Q)), "Smoked is 10 or more");
@@ -67,9 +67,9 @@ const text = (root: HTMLElement, sel: string, i = 0) => root.querySelectorAll<HT
 // rule with neither reads as it always did.
 {
   const wood = base.orders[0]!;
-  expect("no guard: today's words", ruleCondition(catalog, wood), "Under 10 Dead wood, until 20");
-  expect("one guard", ruleCondition(catalog, { ...wood, unless: [FULL] }), "Under 10 Dead wood, until 20, unless Smoked is full");
-  expect("two guards", ruleCondition(catalog, { ...wood, unless: [FULL, TIRED] }), "Under 10 Dead wood, until 20, unless Smoked is full, and unless tired");
+  expect("no guard: today's words", ruleCondition(catalog, base, wood), "Under 10 Dead wood, until 20");
+  expect("one guard", ruleCondition(catalog, base, { ...wood, unless: [FULL] }), "Under 10 Dead wood, until 20, unless Smoked is full");
+  expect("two guards", ruleCondition(catalog, base, { ...wood, unless: [FULL, TIRED] }), "Under 10 Dead wood, until 20, unless Smoked is full, and unless tired");
   expect("no fallback: its one action", ruleActions(catalog, base, wood), "Gather by hand");
   expect("a fallback", ruleActions(catalog, base, { ...wood, or_else: [{ kind: "switch_mix", mix_id: "Rest" }] }), "Gather by hand, or else Rest");
   expect("two fallbacks", ruleActions(catalog, base, { ...wood, or_else: [{ kind: "switch_mix", mix_id: "Rest" }, { kind: "switch_mix", mix_id: "Rest by the fire" }] }), "Gather by hand, or else Rest, or else Rest by the fire");

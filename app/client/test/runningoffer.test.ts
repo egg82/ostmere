@@ -24,7 +24,7 @@ for (const { card } of persons) {
     const back = readSubject(catalog, when);
     if (when.kind === "after_time" || when.watched.kind !== "running" || when.kind !== "at_least" || when.value !== 1 || when.release !== 1) failures.push(`${subjectKey(rule)} builds ${JSON.stringify(when)}`);
     if (!back || subjectKey(back) !== subjectKey(rule)) failures.push(`${subjectKey(rule)} reads back as ${back ? subjectKey(back) : "nothing"}`);
-    if (rule.kind === "running" && !subjectWords(catalog, rule).includes(catalog.cardLabel(rule.card))) failures.push(`${subjectKey(rule)} words: ${subjectWords(catalog, rule)}`);
+    if (rule.kind === "running" && !subjectWords(catalog, view, rule).includes(catalog.cardLabel(rule.card))) failures.push(`${subjectKey(rule)} words: ${subjectWords(catalog, view, rule)}`);
   }
 }
 const hands = view.cards.find((c) => catalog.laneOf(c.card) === "hands")?.card ?? "";

@@ -21,7 +21,7 @@ export function condButton(ctx: PartContext, view: View, index: number, opens: C
   b.type = "button";
   if (view.orders_on[index] === true) b.dataset.teach = "rule-on";   // a lesson's mark of a rule at work
   b.classList.toggle("chip-rule", chipOf(ctx.catalog, order.when) !== undefined);
-  b.append(el("span", "rule-cond-text", always ?? ruleCondition(ctx.catalog, order) ?? ""), el("span", "rule-edit-mark", "✎"));
+  b.append(el("span", "rule-cond-text", always ?? ruleCondition(ctx.catalog, view, order) ?? ""), el("span", "rule-edit-mark", "✎"));
   b.querySelector(".rule-edit-mark")?.setAttribute("aria-hidden", "true");
   b.addEventListener("click", () => {
     tapFeedback();

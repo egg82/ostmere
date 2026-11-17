@@ -6,6 +6,7 @@ import { buildRule, readRule, ruleWhen, valid, type StoreRule } from "../src/gam
 import { conditionWords } from "../src/game/orders";
 import { Catalog } from "../src/game/catalog";
 import { withHurtChip } from "../fixtures/fights";
+import { fixtureStep } from "../fixtures/steps";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
@@ -30,4 +31,4 @@ for (const r of [rule("reaches", 2, 1), rule("below", 2, 3), rule("reaches", 3, 
 
 expect("the band rule is the one a ledger store has", [valid(rule("reaches", 2, 1), 3), valid(rule("reaches", 1, 1), 3)], [true, false]);
 expect("worded in items", ruleWhen(catalog, rule("reaches", 2, 1)), "2 or more hurt, until under 1");
-expect("a saved rule on hurt is read and worded in the same items", conditionWords(catalog, buildRule(rule("reaches", 2, 1), Q, true)), "2 or more hurt, until under 1");
+expect("a saved rule on hurt is read and worded in the same items", conditionWords(catalog, fixtureStep("full", 100).view, buildRule(rule("reaches", 2, 1), Q, true)), "2 or more hurt, until under 1");

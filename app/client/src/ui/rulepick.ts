@@ -37,7 +37,7 @@ export function slotPicker(ctx: PartContext, view: View, slot: Slot, on: PickerA
   close.setAttribute("aria-label", text.get(UI.close));
   close.addEventListener("click", () => on.close());
   const head = el("div", "cond-head");
-  head.append(el("h2", "panel-heading", order ? conditionWords(catalog, order.when) ?? "" : text.get(UI.ruleOtherwise)), close);
+  head.append(el("h2", "panel-heading", order ? conditionWords(catalog, view, order.when) ?? "" : text.get(UI.ruleOtherwise)), close);
   const group = el("div", "rule-picker");
   group.append(...rows, fresh);
   return [head, group];
