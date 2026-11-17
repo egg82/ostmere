@@ -98,7 +98,7 @@ for (const onPhone of [true, false]) {
   const shownNow = (): string[] => Array.from(ui.querySelector("ol.lines")?.children ?? [], (n) => n)
     .filter((n) => !n.classList.contains("held")).map((n) => n.textContent ?? "");
   screen.show({ ...fixtureStep("covered", 100), lines: [] });
-  const live = ["line.1", "line.2", "line.3"].map((key, seq): LogLine => ({ at: 200, seq, key, card: null }));
+  const live = ["line.1", "line.2", "line.3"].map((key, seq): LogLine => ({ at: 200, seq, key, card: null, opens_beat: false }));
   now = 1000;
   screen.show({ ...fixtureStep("covered", 200), lines: live });
   screen.tick(0);
@@ -182,7 +182,7 @@ for (const onPhone of [true, false]) {
   screen.show({ ...fixtureStep("mid", 100), lines: [] });   // a view short of the end: no end line follows
   const lines = (): string[] => Array.from(ui.querySelector("ol.lines")?.children ?? [], (n) => n.textContent ?? "");
   now = 1000;
-  const live: LogLine = { at: 200, seq: 50, key: "line.4", card: null };
+  const live: LogLine = { at: 200, seq: 50, key: "line.4", card: null, opens_beat: false };
   screen.show({ ...fixtureStep("mid", 200), lines: [live] });
   now = 100000;
   for (let i = 0; i < 12; i += 1) screen.tick(0);

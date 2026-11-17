@@ -85,7 +85,7 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
     if (d) decisions += 1;
     const s = stepOf(phase, now(), kept, decisions);
     const failed = d?.kind === "tap_card" && d.card === "look";
-    return Promise.resolve(failed ? { ...s, lines: [...s.lines, { at: now(), seq: s.lines.length, key: "line.4", card: "look" }] } : s);
+    return Promise.resolve(failed ? { ...s, lines: [...s.lines, { at: now(), seq: s.lines.length, key: "line.4", card: "look", opens_beat: false }] } : s);
   };
   return {
     content: () => Promise.resolve(fixtureContent),

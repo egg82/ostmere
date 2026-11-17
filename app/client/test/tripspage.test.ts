@@ -53,7 +53,7 @@ const away = "running:far_hunt|mix:far_hunt";
 // Arrivals: an uncapped trip's completions go to the chronicle, its finds (a trigger's line, no card) play on the band.
 {
   const catalog = new Catalog(fixtureContent);
-  const lines: LogLine[] = [{ at: 3000, seq: 0, key: "trip.done", card: "far_hunt" }, { at: 3001, seq: 1, key: "find.1", card: null }];
+  const lines: LogLine[] = [{ at: 3000, seq: 0, key: "trip.done", card: "far_hunt", opens_beat: false }, { at: 3001, seq: 1, key: "find.1", card: null, opens_beat: false }];
   const view: View = { ...base, cards: [trip({})] };
   expect("trip completion and find", awayLines(catalog, lines, view, { ...base, cards: [] }), ["chronicle", "band"]);
   const capped: View = { ...base, cards: [trip({ cap: 3 })] };

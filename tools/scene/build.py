@@ -65,7 +65,7 @@ BIRCH = "project:woodcutting|running:n1_cut"
 def layers(rng: random.Random) -> list[Layer]:
     """Every layer in draw order. `when` shows it, `until` hides it again (see the manifest's `conditions`)."""
     walls = ruin().getchannel("A")
-    return [*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls), *_light_layers()]
+    return [*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls), *light_layers()]
 
 
 def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
@@ -181,12 +181,12 @@ def _people_layers(walls: Image.Image) -> list[Layer]:
     ]
 
 
-def _light_layers() -> list[Layer]:
+def light_layers() -> list[Layer]:
     """The lights over everything, then the ash in the air."""
     return [
-        Layer(id="firelight", flicker=FLICKER, img=firelight(0.55), when="project:strike_fire", blend="screen", ungraded=True),
+        Layer(id="firelight", flicker=FLICKER, sound="fire", img=firelight(0.55), when="project:strike_fire", blend="screen", ungraded=True),
         Layer(id="firelight_fireback", flicker=FLICKER, img=firelight(0.25), when="project:build_fireback", blend="screen", ungraded=True),
-        Layer(id="firelight_dusk", flicker=FLICKER, img=firelight(0.7), when="end:showing", until="feature:morning", blend="screen", ungraded=True),
+        Layer(id="firelight_dusk", flicker=FLICKER, sound="evening", img=firelight(0.7), when="end:showing", until="feature:morning", blend="screen", ungraded=True),
         *d2.light_layers(),
         *d3.light_layers(),
         *d4.light_layers(),
@@ -222,6 +222,8 @@ def write_layers(rng: random.Random) -> list[Entry]:
             entry["front"] = True
         if "flicker" in layer and layer["flicker"]:
             entry["flicker"] = layer["flicker"]
+        if "sound" in layer:
+            entry["sound"] = layer["sound"]
         bottoms[layer["id"]] = box[3]
         out.append(entry)
     return depth.arrange(out, bottoms)

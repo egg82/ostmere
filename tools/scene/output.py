@@ -6,7 +6,7 @@ import json
 import os
 from collections.abc import Callable
 from pathlib import Path
-from typing import NotRequired, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 from PIL import Image, ImageChops
 
@@ -37,6 +37,7 @@ class Layer(TypedDict):
     ungraded: NotRequired[bool]
     front: NotRequired[bool]
     flicker: NotRequired[float]
+    sound: NotRequired[Literal["fire", "evening"]]
 
 
 class Entry(TypedDict):
@@ -51,6 +52,7 @@ class Entry(TypedDict):
     ungraded: NotRequired[bool]
     front: NotRequired[bool]
     flicker: NotRequired[float]
+    sound: NotRequired[Literal["fire", "evening"]]
     base: NotRequired[int]
 
 
