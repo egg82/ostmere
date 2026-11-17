@@ -8,7 +8,6 @@ import type { OrderCard, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import type { Keeps } from "./keeps";
 import { anyReachesRule } from "./caphint";
-import { anySelfFedMix } from "./dryhint";
 import { nightsBegun, townMixAsMade } from "./lessonfacts";
 import { rulesTabDrawn } from "./orders";
 import { SIDE_LESSON } from "./sidelesson";
@@ -139,8 +138,8 @@ export const LESSONS: readonly Lesson[] = [
     id: DRY_STORE,
     // the first dry store a mix card stopped on that a card in play could refill (game/dryhint.ts; ui/ledger.ts marks its
     // line), once rules are taught: walked on the running mix's own Edit, adding the maker; a rule is the other answer, in
-    // one line. A save with a mix that already feeds itself has done what this teaches
-    may: (view, keeps) => (keeps.lessonKept(FIRST_RULE) || view.orders.some((o) => o.then.kind === "switch_mix")) && !anySelfFedMix(view),
+    // one line. A save with a hands mix that already feeds itself has done what this teaches (dryCue reads that)
+    may: (view, keeps) => keeps.lessonKept(FIRST_RULE) || view.orders.some((o) => o.then.kind === "switch_mix"),
     trigger: `[data-teach="dry-line"]`,
     steps: [
       { target: (s) => `[data-teach="dry-line"][data-store="${s["store"]}"]`, line: (c, s) => c.text.fill(UI.lessonDryLine, { store: c.storeLabel(s["store"] ?? ""), card: c.cardLabel(s["card"] ?? "") }), ends: "read" },

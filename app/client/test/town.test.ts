@@ -93,7 +93,7 @@ const rig = (view: View) => pageRig(view);
   const noCarve = { ...capped, mixes: capped.mixes.map((m) => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "carve") })) };
   const { open, face, got, settle } = rig(noCarve);
   open(1);
-  expect("the face says what it is", face("carve").querySelector(".card-need.oneoff")?.textContent, "A one-off. Mason does it until it is finished, then goes back to their mix.");
+  expect("the face says what it is", face("carve").querySelector(".card-need.oneoff")?.textContent, "A one-off: they do it until it is finished, then go back to their mix.");
   face("carve").querySelector(".card-tap")?.click();
   const set = got.decided[0];
   expect("one decision, a rule and no mix", [got.decided.length, set?.kind], [1, "set_orders"]);

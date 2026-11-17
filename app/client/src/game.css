@@ -998,7 +998,6 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem 1rem; }
 .town-tab > .lane-rows, .town-tab .town, .town-tab .town > .hands-body { display: contents; }
 .town-tab > :not(.view-title, .lane-rows), .town-tab .lane-rows > :not(.town), .town-tab .town-people { grid-column: 1 / -1; }
-.town-tab .town .hands-row { grid-row: 1; grid-column: 2; }
 .town { display: block; min-height: 0; }
 /* a person: face and who, then their split, the split that runs now, and the card they work */
 .person-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "face who change" "split split split" "now now now" "track track track"; column-gap: .6rem; align-items: center; }
@@ -1018,10 +1017,6 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-key, .share-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: var(--t-meta); color: var(--ink); }
 .town-key-item::before, .share-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
 .town-key-item.idle::before { background: var(--track); border: 1px solid var(--ink-dim); box-sizing: border-box; }
-.town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as the hands' greyed .share-track */
-.town.greyed .town-name { color: var(--ink-dim); }
-.town.greyed .town-key-item::before { filter: saturate(.15) brightness(.6); }
-.town.greyed .town-status { color: var(--ink-hi); }   /* why it stopped: plain, not dimmed with it */
 .person-page { display: grid; gap: .9rem; align-content: start; }
 .person-page[hidden] { display: none; }
 .person-cards .card-list, .person-rules { display: grid; gap: .4rem; }

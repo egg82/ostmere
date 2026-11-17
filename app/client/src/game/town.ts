@@ -28,10 +28,9 @@ export function people(catalog: Catalog, view: View): string[] {
 
 /** A person as the strip draws them: the shares of the running town mix on their lane, the rest idle, and the card they
  * are on (a rule's tap first, else the share card the mix is running). */
-export function personOf(catalog: Catalog, view: View, lane: string, stopped: Mix | null = null): Person {
+export function personOf(catalog: Catalog, view: View, lane: string): Person {
   const own = view.cards.filter((c) => catalog.laneOf(c.card) === lane);
-  const held = stopped === null ? own.filter((c) => c.share_bp > 0).map((c) => ({ card: c.card, bp: c.share_bp }))
-    : stopped.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === lane ? [{ card: c.card, bp: c.share_bp }] : []));
+  const held = own.filter((c) => c.share_bp > 0).map((c) => ({ card: c.card, bp: c.share_bp }));
   const sharing = own.find((c) => c.by === "mix" && c.run === "full");
   const total = held.reduce((n, s) => n + s.bp, 0);
   return { lane, shares: held, idleBp: Math.max(0, catalog.content.scales.bp - total), running: view.lanes.find((l) => l.lane === lane)?.running_card ?? sharing?.card ?? null };
@@ -72,27 +71,12 @@ export function townNewRule(view: View, order: Order): Decision {
 }
 
 /** The one town mix holding everyone, which a person's edit changes: the one running, else the one the town's first always
- * rule names, greyed or not (a greyed mix is still the town's, and a rule passed over still points at it); null only when
- * there is none (a new one, under a new always rule). */
+ * rule names; null only when there is none (a new one, under a new always rule). */
 export function townMixToEdit(catalog: Catalog, view: View): Mix | null {
   const fromRule = view.orders.flatMap((o) => (townAlways(o) && o.then.kind === "switch_mix" ? [o.then.mix_id] : []))[0];
   const named = view.running_town_mix_id ?? fromRule ?? null;
   const mix = view.mixes.find((m) => m.id === named);
   return mix && isTownMix(catalog, view, mix) ? mix : null;
-}
-
-/** The town's mix when it is greyed (its always rule is passed over, so nobody runs shares): the mix the town's first
- * always rule names, else null. */
-export function townGreyed(catalog: Catalog, view: View): Mix | null {
-  const named = view.orders.flatMap((o) => (townAlways(o) && o.then.kind === "switch_mix" ? [o.then.mix_id] : []))[0];
-  const mix = view.mixes.find((m) => m.id === named);
-  return mix && view.greyed_mix_ids.includes(mix.id) && isTownMix(catalog, view, mix) ? mix : null;
-}
-
-/** The card a greyed town mix holds that is gone (retired), else null. */
-export function townStoppedBy(catalog: Catalog, view: View): string | null {
-  const mix = townGreyed(catalog, view);
-  return mix === null ? null : flatCards(view, mix).find((c) => !view.cards.some((v) => v.card === c)) ?? null;
 }
 
 /** The rules whose switch_mix names a town mix, in order: the town's, listed under its heading in the Rules tab. */

@@ -66,7 +66,7 @@ export const UI = {
   bookDone: "ui.book.done",   // the Book's page of what is finished
   handsIdle: "ui.hands.idle",
   laneIdle: "ui.lane.idle",   // a lane row while its lane is free
-  personOneOff: "ui.person.one_off",   // "{person}": a capped task on their page: a rule sets it, and they go back to their mix after
+  personOneOff: "ui.person.one_off",   // a capped task on their page: a rule sets it, and they go back to their mix after
   laneChange: "ui.lane.change",   // a lane row's way to the rule that sets its task
   ruleTownAlways: "ui.rule.town_always",   // "{mix}": the town's always rule
   ruleAlways: "ui.rule.always",   // "{card}": a lane's always rule

@@ -1128,7 +1128,7 @@ A LANE RUN BY RULES
     and ui.lane.change, which opens the person's page: their cards in view.cards on that lane drawn as the card panel
     draws a card, the rules that tap them (each opening the rule editor), and, once they have joined the town, their
     part of the town's mix as a share bar, a tap on an uncapped card joining it to the mix or taking it out and a tap on a
-    capped one adding or removing its always rule (ui.person.one_off {person}). The rule editor's simple view scoped to a lane picks the task: a card in
+    capped one adding or removing its always rule (ui.person.one_off). The rule editor's simple view scoped to a lane picks the task: a card in
     view.cards on that lane. Saving sends set_orders with that rule's tap_card changed in place (or a new always rule
     appended).
   - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that
@@ -1202,7 +1202,7 @@ OFFERS
   nor offer the answer rule for a kind before an offer of it has been answered.
 
   New text keys (Content.text_entries): ui.lane.idle | ui.lane.change   a lane row's free state and its Change
-                                    ui.person.one_off {person}   a capped task on a person's page
+                                    ui.person.one_off   a capped task on a person's page
                                     ui.rule.always {card}   a lane's always rule
                                     ui.rule.answer {answer} | ui.rule.answers | ui.rule.answer_next   a rule or queue entry that answers an
                                     offer (the answer's label), and the Rules tab's heading over such rules

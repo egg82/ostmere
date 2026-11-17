@@ -334,7 +334,7 @@ const text: Record<string, string> = {
   "line.7": "[fixture] a Camp level: the shelter holds the heat now.",
   "line.end": "[fixture] an end line.",
   // day two's shapes: a lane run by rules (its label changes once `yard` opens) and an offer with two answers
-  "ui.lane.idle": "idle", "ui.lane.change": "Change", "ui.person.one_off": "A one-off. {person} does it until it is finished, then goes back to their mix.", "ui.rule.always": "{card}, always",
+  "ui.lane.idle": "idle", "ui.lane.change": "Change", "ui.person.one_off": "A one-off: they do it until it is finished, then go back to their mix.", "ui.rule.always": "{card}, always",
   "ui.rule.answer": "Answer: {answer}", "ui.rule.answers": "Answers", "ui.rule.answer_next": "Next time someone asks:", "ui.rule.answered": "Answered: {answer}",
   "lane.helper": "Helper", "lane.helper.later": "Helper, settled", "card.chop": "Chop logs", "card.haul": "Haul water", "card.fetch": "Fetch once",
   "offer.ask": "[fixture] A question with two answers: which one?", "answer.wait": "Wait", "answer.go": "Go now", "kind.q.yes": "Say yes", "kind.q.no": "Say no", "offer.cost": "takes {d}",

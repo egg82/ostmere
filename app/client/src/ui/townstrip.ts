@@ -5,9 +5,9 @@
 // Each person's Change opens their page (personpage.ts), where their split is set. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../api/types";
-import { people, personOf, townGreyed, townStoppedBy } from "../game/town";
+import { people, personOf } from "../game/town";
 import { UI } from "../game/text";
-import { el, keyed, setText, tapFeedback } from "./dom";
+import { el, keyed, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
 import { dotChange } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
@@ -18,17 +18,14 @@ interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: H
 
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
-  private readonly status = el("span", "hands-text town-status");
   private readonly list = el("div", "town-people");
   private rows = new Map<string, PersonRow>();
   private view: View | null = null;
   private arrived = false;
 
   constructor(private readonly ctx: PartContext, private readonly openPage: (lane: string) => void) {
-    const head = el("div", "hands-row");
-    head.append(this.status);
     const body = el("div", "hands-body");
-    body.append(head, this.list);
+    body.append(this.list);
     this.root.append(body);
     this.root.hidden = true;
   }
@@ -43,10 +40,6 @@ export class TownStrip implements Part {
       this.root.hidden = false;
       this.ctx.arrivals.arrive(this.root, "feature", "town");
     }
-    const stopped = townStoppedBy(catalog, view);
-    this.root.classList.toggle("greyed", townGreyed(catalog, view) !== null);
-    setText(this.status, stopped === null ? "" : catalog.text.fill(UI.stopped, { card: catalog.cardLabel(stopped) }));
-    this.status.hidden = stopped === null;
     this.rows = keyed(this.list, present, (lane) => lane, this.rows, (lane) => this.make(lane));
     for (const lane of present) this.draw(lane, view);
     this.tick(view.at);
@@ -76,7 +69,7 @@ export class TownStrip implements Part {
     const { catalog } = this.ctx;
     const row = this.rows.get(lane);
     if (!row) return;
-    const person = personOf(catalog, view, lane, townGreyed(catalog, view));
+    const person = personOf(catalog, view, lane);
     const label = catalog.laneLabel(lane, view);
     drawWho(this.ctx, row, lane, label, person.running);
     const parts: Share[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
