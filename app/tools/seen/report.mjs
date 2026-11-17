@@ -21,7 +21,7 @@ for (const r of runs) {
   const strict = (l) => l.instances.some((x) => x.visibleStrict && x.near && x.aloneStrict);
   console.log(`strict (whole reading time, a tap does not close it): tap-written ${pct(tw.filter(strict).length, tw.length)}, all ${pct(lines.filter(strict).length, lines.length)}`);
   console.log(`window to themselves  ${pct(lines.filter(alone).length, lines.length)}   target >= 90%  (strict, to the end of the reading time: ${pct(lines.filter((l) => l.instances.some((x) => x.aloneStrict)).length, lines.length)})`);
-  console.log(`visible ${pct(lines.filter((l) => l.instances.some((x) => x.visible)).length, lines.length)}  near ${pct(lines.filter((l) => l.instances.some((x) => x.near)).length, lines.length)}  on a card ${lines.filter((l) => l.instances.some((x) => x.where === 'card')).length}`);
+  console.log(`visible ${pct(lines.filter((l) => l.instances.some((x) => x.visible)).length, lines.length)}  near ${pct(lines.filter((l) => l.instances.some((x) => x.near)).length, lines.length)}  on a card ${lines.filter((l) => l.instances.some((x) => x.where === 'card')).length}  in the column ${lines.filter((l) => l.instances.some((x) => x.where === 'column')).length}`);
   for (const l of lines.filter((x) => !x.seen)) {
     const comp = [...new Set(l.instances.flatMap((x) => x.competing ?? []))].join(',');
     console.log(`  not seen: ${l.key}${l.tapWritten ? ' (tap)' : ''} game ${l.game}: ${fails(l).join('+')}${comp ? ` [${comp}]` : ''} near ${l.instances.map((x) => `${x.where}:${x.nearPx}`).join(' ')}`);
