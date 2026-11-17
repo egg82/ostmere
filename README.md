@@ -1,17 +1,16 @@
 # The Breaking of Ostmere
 
-A single-player idle game for the browser, with a dark fantasy story that runs from the first tap to a real ending.
-You gather, build and set your hands to work, and the game keeps playing while you're away: you come back to full
-stores, finished work and the next piece of the story, never a pile of notifications. Play it at
-https://ostmere.yggdrasil.pub.
+A single-player idle game for the browser, with a dark fantasy story that runs from the first tap to an actual
+ending. You gather, build and put people to work, and everything keeps going while you're away. When you come back the
+stores are full, the work is done and the next piece of the story is waiting. It's at https://ostmere.yggdrasil.pub.
 
-It is one person's game, built mostly with Claude Code and published as it is. The whole story is in this
-repository, under `content/`. If you plan to play, don't read that folder.
+It's a one-person project, made mostly with Claude Code and published as it stands. The whole story is in this
+repository under `content/`, so if you mean to play, stay out of that folder.
 
 ## Run it locally
 
-You need Docker or Podman. The image is `ghcr.io/egg82/ostmere` (also `egg82/ostmere` on Docker Hub, linux/amd64),
-and its `dev` tag is the latest green `main`. Saves live in Postgres 18, created with the C locale.
+You need Docker or Podman. The image is `ghcr.io/egg82/ostmere` (also `egg82/ostmere` on Docker Hub, linux/amd64);
+`dev` is the latest green `main`. Saves live in Postgres 18, created with the C locale.
 
 ```sh
 docker network create ostmere
@@ -26,14 +25,14 @@ docker run -d --name ostmere --network ostmere -p 8080:8080 -e DATABASE_URL=$DB 
   ghcr.io/egg82/ostmere:dev
 ```
 
-Then open http://localhost:8080. The first visit makes an anonymous account held by a cookie; there are no
-passwords. Keep `ASHFALL_JOIN_KEY` the same across restarts, because transfer codes and recovery words are hashed
-under it. The app never migrates on start, so run `migrate` with each new image before starting it.
+Then open http://localhost:8080. Your first visit creates an anonymous account kept in a cookie; there are no
+passwords. Don't change `ASHFALL_JOIN_KEY` between restarts: transfer codes and recovery words are hashed under it.
+The app never migrates on start, so run `migrate` with each new image before you start it.
 
-The art is not in the repository. `tools/scene/` draws the scene from the Time Fantasy sprite packs, which are sold
-separately, and the app serves whatever is mounted at `/assets` (or the directory in `ASSETS_DIR`).
+The art isn't in the repository. `tools/scene/` draws the scene from the Time Fantasy sprite packs, which are sold
+separately, and the app serves whatever is mounted at `/assets` (or the directory named by `ASSETS_DIR`).
 
-Optional settings, each off until set:
+These settings are optional and off until set:
 
 | Feature | Settings |
 |---|---|
@@ -44,16 +43,16 @@ Optional settings, each off until set:
 
 ## Deploying your own
 
-The author runs it on Kubernetes across two sites, from manifests kept in a separate repository, with Flux
-deploying each new `main-<sha>-<timestamp>` image tag. Anything that runs a container works, as long as
-`python -m ashfall_app.db migrate` runs before each new version starts (an init container, say). The same image
+I run it on Kubernetes across two sites. The manifests live in a separate repository, and Flux deploys each new
+`main-<sha>-<timestamp>` image tag. Anything that runs a container will do, as long as
+`python -m ashfall_app.db migrate` finishes before the new version starts (an init container, say). The same image
 also runs `python -m ashfall_app.web`, a page-only server that keeps the page loading while the app or the database
-is down; you can skip it.
+is down. You can skip it.
 
 ## Working on it
 
 The server is Python 3.12 and FastAPI, in `app/ashfall_app/`. The browser client is TypeScript, in `app/client/`.
-The game's economy runs on a small discrete-event engine (`app/ashfall_app/engine/`) that imports nothing but
+The economy runs on a small discrete-event engine in `app/ashfall_app/engine/`, which imports nothing outside
 itself.
 
 ```sh
@@ -64,16 +63,17 @@ pyright
 cd client && npm ci && npm run typecheck && npm test && npm run build
 ```
 
-GitHub Actions runs the full suite and the scripted playthroughs on every pull request. `docs/engineering.md`
-covers how, and the structural gates CI holds the code to: file and function size, import boundaries, and a time
-limit per test.
+Before a pull request, run `app/tools/gates.sh` from the repo root as well. It runs the structural gates: file and
+function size, import boundaries and a time limit per test. GitHub Actions runs the full suite on every pull
+request, and the scripted playthroughs nightly and on pull requests labelled `playthroughs`.
+`docs/engineering.md` has the details.
 
 - `docs/decisions.md`: the design decisions, indexed, with one file per system in `docs/decisions/`.
 - `docs/systems.md`: each system, the question it answers and where it lives.
-- `docs/core-loop.md`: the core loop.
-- What's next: the Ostmere: Work board (https://github.com/users/egg82/projects/2), top first.
+- `docs/core-loop.md`: an early sketch of the core loop.
+- What's next: the Ostmere: Work board, top first (https://github.com/users/egg82/projects/2).
 
 ## License
 
-AGPL-3.0 (see [`LICENSE`](LICENSE)). Run it, change it and share it; anyone who distributes or serves a modified copy
-publishes its source under the same licence, with the copyright notices kept.
+AGPL-3.0, in [`LICENSE`](LICENSE). Run it, change it, share it. If you distribute or serve a modified copy, you
+publish its source under the same licence and keep the copyright notices.
