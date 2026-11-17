@@ -410,8 +410,7 @@ p.catching-up[hidden] { display: none; }
 .editor-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
 .editor-buttons { display: flex; align-items: center; gap: .5rem; flex: none; }   /* Save, Save as new and ✕ stay together: on a phone the group wraps as one */
 .editor-label { flex: 1 1 0; min-width: 8rem; display: flex; align-items: center; gap: .5rem; color: var(--ink); font-size: var(--t-meta); }
-.editor-name { flex: 1; min-width: 0; min-height: 2.4rem; box-sizing: border-box; padding: 0 .6rem; font: inherit; font-size: var(--t-body); color: var(--ink-hi); background: var(--bg); border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule); }
-.editor-name:focus { outline: none; box-shadow: inset 0 0 0 1px var(--ink-dim); }
+.editor-name { flex: 1; min-width: 0; }
 .editor-refuse { flex-basis: 100%; margin: 0; font-size: var(--t-meta); color: #d08a7c; }   /* why Save refuses the name: the .danger red */
 .editor-close { min-width: 2.4rem; min-height: 2.4rem; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; cursor: pointer; }
 .editor button:disabled { opacity: .45; cursor: not-allowed; }
@@ -532,6 +531,8 @@ p.catching-up[hidden] { display: none; }
 .devices-wordsform { display: flex; flex-direction: column; gap: .55rem; }
 .devices-wordsform .sheet-actions { margin-top: 0; }
 .devices-joinform { display: flex; gap: .5rem; align-items: flex-end; }
+.devices-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: .5rem; }
+.devices-input { flex: 1; min-width: 0; min-height: 2.75rem; }
 /* Games (ui/games.ts): the account's games, the one played marked, the deleted ones held under them */
 .games-sheet, .settings-sheet { max-width: min(28rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow-y: auto; }
 .games-sheet .panel-heading, .settings-sheet .panel-heading { margin: 0 0 .2rem; }
@@ -609,8 +610,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .chapter-link { margin: -.45rem 0; padding: .45rem 0; font: inherit; color: inherit; background: none; border: 0; text-decoration: underline; text-underline-offset: .2em; text-decoration-color: var(--ink-dim); cursor: pointer; }
 .chapter-link:hover { color: var(--ink-hi); }
 .chapter-link:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
-.feedback-field { display: block; width: 100%; box-sizing: border-box; min-height: 7rem; max-height: 50vh; resize: vertical; padding: .6rem .7rem; background: var(--bg); border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule); color: var(--ink-hi); font: inherit; font-size: var(--t-body); line-height: 1.4; }
-.feedback-field:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--ink-dim); }
+.feedback-field { display: block; width: 100%; min-height: 7rem; max-height: 50vh; resize: vertical; }
 .feedback-note { margin: .6rem 0 0; color: var(--ink); font-size: var(--t-meta); }
 .feedback-result { margin: .4rem 0 0; min-height: 1.4em; }   /* its room is kept: Send does not jump when the line lands */
 .selector { max-width: min(44rem, calc(100vw - 2rem)); max-height: 85vh; overflow-y: auto; }

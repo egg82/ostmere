@@ -1,0 +1,29 @@
+/* The native controls the page draws (checkbox, radio, text and number fields, textarea, the select's open list), each a real
+   input drawn from game.css's tokens. The selectors weigh nothing (:where), so a class beside one sets its size and place.
+   The box is the front page's keep box; a field is the editor's name field; the ring is the buttons' focus ring. */
+:where(input[type="checkbox"], input[type="radio"]):not(.sr) {
+  appearance: none; margin: 0; width: 1.25rem; height: 1.25rem; flex: none; display: grid; place-content: center; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--ink-dim); border-radius: 2px;
+}
+:where(input[type="radio"]):not(.sr) { border-radius: 50%; }
+:where(input[type="checkbox"], input[type="radio"]):not(.sr):hover:not(:disabled) { border-color: var(--ink-hi); }
+:where(label):hover > :where(input[type="checkbox"], input[type="radio"]):not(.sr):not(:disabled) { border-color: var(--ink-hi); }
+:where(input[type="checkbox"], input[type="radio"]):not(.sr):checked { border-color: var(--ink); }
+:where(input[type="checkbox"], input[type="radio"]):not(.sr):checked::after { content: ""; width: .55rem; height: .55rem; background: var(--ink-hi); }
+:where(input[type="radio"]):not(.sr):checked::after { border-radius: 50%; }
+:where(input[type="checkbox"], input[type="radio"]):not(.sr):focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 1px; }
+:where(input[type="checkbox"], input[type="radio"]):not(.sr):disabled { opacity: .35; cursor: default; }
+
+:where(input:not([type]), input[type="text"], input[type="password"], input[type="search"], input[type="number"], textarea):not(.sr) {
+  appearance: none; box-sizing: border-box; min-height: 2.4rem; padding: 0 .6rem; font: inherit; font-size: var(--t-body); color: var(--ink-hi);
+  background: var(--bg); border: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--rule);
+}
+:where(input[type="number"]):not(.sr) { -moz-appearance: textfield; }
+:where(input[type="number"]):not(.sr)::-webkit-inner-spin-button, :where(input[type="number"]):not(.sr)::-webkit-outer-spin-button { appearance: none; margin: 0; }
+:where(textarea):not(.sr) { padding: .6rem .7rem; line-height: 1.4; }
+:where(input:not([type]), input[type="text"], input[type="password"], input[type="search"], input[type="number"], textarea):not(.sr):hover:not(:disabled) { box-shadow: inset 0 0 0 1px var(--ink-dim); }
+:where(input:not([type]), input[type="text"], input[type="password"], input[type="search"], input[type="number"], textarea):not(.sr):focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 1px; }
+:where(input:not([type]), input[type="text"], input[type="password"], input[type="search"], input[type="number"], textarea):not(.sr):disabled { opacity: .45; cursor: not-allowed; }
+:where(input, textarea)::placeholder { color: var(--ink-dim); }
+
+:where(select) option { background: var(--raise); color: var(--ink-hi); }
