@@ -25,7 +25,7 @@ export function stintFacts(catalog: Catalog, run: RuleRun, t: number): string {
 }
 
 /** The gains the server served (at most two), worded; "" for none. */
-function madeFact(catalog: Catalog, run: RuleRun): string {
+export function madeFact(catalog: Catalog, run: RuleRun): string {
   const { text, format } = catalog;
   const [a, b] = run.made;
   if (!a) return "";

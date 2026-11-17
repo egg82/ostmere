@@ -56,3 +56,11 @@ const tiredRun: RuleRun = { order: tired!, starts: 1, on_at: at - 65, on_level: 
   expect("a rule the view lacks", draw(base, [gone]).lately(), []);
   expect("no entries", draw(base, []).lately(), []);
 }
+
+// A rule that let go lists what its mix made while it was on, last, as an ended stint's entry does; a rule with no gain lists none.
+{
+  const made = { ...woodRun, made: [{ store: "wood", quantity: 12 * Q + 7 }] };
+  const [row] = draw(base, [made]).lately().slice(2);
+  expect("what the mix made", row, "ran 4 times · came on at 2 Dead wood, 3 h ago · let go at 20 Dead wood, 2 h ago · made 12 Dead wood");
+  expect("no gain, no fact", draw(base, [woodRun]).lately()[2]?.includes("made"), false);
+}

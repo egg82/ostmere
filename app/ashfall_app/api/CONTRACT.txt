@@ -256,17 +256,19 @@ RULE RUNS
   THE CLIENT MAY word it as the ended stint's line and, in place of ui.stint.landed, ui.stint.dry {ago} (frame time -
   off_at).
   New text key: ui.stint.dry {ago}   a stint the game handed back.
-  Made: RuleRun gains made [Amount {store, quantity}], [] on every entry but an ended stint's. On one, what the save
-  gained while it ran: for each store that a card in the stint's mix (at a share above 0) makes, by its makes or its
-  outcome's stores, both at the instant the stint began to run and at the instant it popped, that store's amount at
-  the pop less its amount at the start, in quantity units. Net, not gross: what other work took from the store or its
+  Made: RuleRun gains made [Amount {store, quantity}], [] on every entry but an ended stint's and a rule's whose
+  action (`then`) is a switch_mix, once it has let go. On one, what the save gained while it ran: for each store that
+  a card in the mix (at a share above 0) makes, by its makes or its outcome's stores, both at the instant the stint
+  began to run (the rule came on) and at the instant it popped (the rule let go), that store's amount at the end less
+  its amount at the start, in quantity units. A rule's made is that of its last run: [] from its next start until
+  its next let-go, and from a let-go no recorded start preceded. Net, not gross: what other work took from the store or its
   cap threw away meanwhile is not counted back, and work on other lanes in the window is counted in, so it is the
   save's gain in those stores, never a claim about what the mix alone did. Only gains of at least one whole item
-  (QUANTITY_SCALE) are listed, the goal's store first (the store the stint's until reads, when it reads one), then the
-  largest gains, ties in content store order, at most 2. An ended stint with no on_at has made []. Entries the server
+  (QUANTITY_SCALE) are listed, the goal's store first (the store the stint's until or the rule's when reads, when it
+  reads one), then the largest gains, ties in content store order, at most 2. An ended stint with no on_at has made []. Entries the server
   kept before this field read [].
-  THE CLIENT MAY add the made fact last, after ui.stint.landed: ui.stint.made {n}{store} for one entry, and
-  ui.stint.made_two {n}{store}{m}{store_b} for two, {n} and {m} in whole items rounded down, {store} and {store_b}
+  THE CLIENT MAY add the made fact last, after ui.stint.landed (on a rule's entry, after its let-go
+  fact): ui.stint.made {n}{store} for one entry, and ui.stint.made_two {n}{store}{m}{store_b} for two, {n} and {m} in whole items rounded down, {store} and {store_b}
   the stores' labels as they stand in a sentence; nothing when made is [].
   New text keys (Content.text_entries): ui.stint.made {n}{store} | ui.stint.made_two {n}{store}{m}{store_b}   what
                                     an ended stint's save gained while it ran.
