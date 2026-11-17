@@ -12,6 +12,7 @@
           the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
   journal_days  tests/saves/test_journal_days.py (and the tests in `also`)  tests/saves/MUTANTS_journal_days.txt
           specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
+  queue   tests/writer/test_queue.py  tests/writer/MUTANTS_queue.txt  specs tools/queue_mutants/
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); a claim is read from either, and a claim of a row outside the suite's rows is the sibling's.
 
@@ -52,47 +53,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
 
+from tools.mutant_suites import SUITES, Suite
+
 APP = Path(__file__).resolve().parents[1]
-CONTRACT = "tests/engine_contract"
 ROW = re.compile(r"^ ?(\d+) \S")
 """A row starts in the first three columns (continuation lines are indented past them); its name fills columns 3-18."""
 FAILED = re.compile(r"^FAILED (\S+)", re.M)
-
-
-@dataclass(frozen=True)
-class Suite:
-    mutants: str
-    tests: str
-    specs: str
-    first: int = 0
-    last: int = 10**6
-    also: tuple[str, ...] = ()
-    """Globs under app/ of test files run with the suite's own, whose claims they do not make."""
-    home: str = CONTRACT
-    """The directory under app/ holding the suite's MUTANTS file and its own tests."""
-
-
-LEAVES_ALSO = ("tests/engine/test_leaves_impl.py", "tests/engine/test_retired_chores_impl.py",
-               "tests/opening/test_leaves_loader.py", "tests/opening/test_retired_chores_loader.py")
-SUITES = {
-    "held": Suite("MUTANTS_held.txt", "test_held_*.py", "held_mutants"),
-    "drains": Suite("MUTANTS_drains.txt", "test_drains_*.py", "drains_mutants"),
-    "spent": Suite("MUTANTS_spent.txt", "test_spent_*.py", "spent_mutants"),
-    "heldspeed": Suite("MUTANTS_heldspeed.txt", "test_heldspeed_*.py", "heldspeed_mutants"),
-    "share": Suite("MUTANTS_share.txt", "test_share_levels_*.py", "share_mutants"),
-    "guards": Suite("MUTANTS_guards.txt", "test_guards_*.py", "guards_mutants"),
-    "or_else": Suite("MUTANTS_or_else.txt", "test_or_else_*_contract.py", "or_else_mutants"),
-    "leaves": Suite("MUTANTS_leaves.txt", "test_leaves_*.py", "leaves_mutants", 1, 20,
-                    ("tests/engine_contract/test_retire_*.py", *LEAVES_ALSO)),
-    "retire": Suite("MUTANTS_leaves.txt", "test_retire_*.py", "retire_mutants", 21, 33,
-                    ("tests/engine_contract/test_leaves_*.py", *LEAVES_ALSO)),
-    "clocks": Suite("MUTANTS_clocks.txt", "test_failover.py", "clocks_mutants", also=(
-        "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/db/test_hands_free.py",
-        "tests/reminders/test_sender.py", "tests/dayone/test_dayone_forecast.py"), home="tests/db"),
-    "journal_days": Suite("MUTANTS_journal_days.txt", "test_journal_days.py", "journal_days_mutants", also=(
-        "tests/saves/test_journal_*.py", "tests/db/test_journal_*.py", "tests/db/test_decision_lock_span.py",
-        "tests/db/test_save_journal_migrate.py", "tests/test_journal_days_wire.py"), home="tests/saves"),
-}
 
 
 def rows(suite: Suite) -> dict[int, str]:
