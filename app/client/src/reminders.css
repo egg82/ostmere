@@ -9,8 +9,7 @@
 .reminders-away { display: flex; flex-wrap: wrap; gap: .4rem .5rem; }
 .reminders-choice, .reminders-any { display: inline-flex; align-items: center; gap: .4rem; min-height: 2.75rem; padding: 0 .7rem; border-radius: 2px; background: var(--raise); box-shadow: var(--drop); cursor: pointer; }
 .reminders-choice:has(input:checked) { background: var(--press); color: var(--ink-hi); }
-.reminders-choice:has(input:focus-visible), .reminders-any:has(input:focus-visible) { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
-.reminders-choice input, .reminders-any input { accent-color: var(--ember); width: 1.1rem; height: 1.1rem; margin: 0; }
+.reminders-choice:hover, .reminders-any:hover { background: var(--press); color: var(--ink-hi); }   /* the buttons' hover */
 .reminders-any { margin-top: .4rem; }
 .hour-slider { position: relative; padding: .9rem .9rem 0; touch-action: none; user-select: none; }
 .hour-track { position: relative; height: .6rem; background: var(--track); cursor: pointer; }

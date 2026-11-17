@@ -1,4 +1,5 @@
 // The front page's entry (bundled to game.js, served at /build/<build>/): the game against the real server.
+import "./controls.css";
 import "./game.css";
 import "./front.css";
 import "./fights.css";
