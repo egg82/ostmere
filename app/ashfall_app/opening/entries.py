@@ -270,6 +270,9 @@ class TriggerEntry(Entry):
     """A season's turn: an `after_time` trigger the season checks read (season_checks.py). Words only to the engine."""
     requires: list[ConditionEntry] = []
     """Must also hold when `when` does, each on an unlock or a runner (engine TriggerDef.requires)."""
+    line_only: bool = False
+    """It exists to say its line once and gates nothing: lines only, and no condition names it (line_only_checks.py).
+    The goals walk leaves it out. Words only to the engine."""
 
 
 class OrderCardEntry(Entry):

@@ -14,8 +14,8 @@ per-PR set: `tests` (two shards, on a `postgres:18.6` container, production's ve
 `playthrough-smoke` (the opening's representative routes), `engine-bench`, `saves-forward`, strict `pyright` and
 `client`, while `app-image` builds `app/Containerfile` beside them. The whole-game playthroughs (`playthrough`,
 `chapter-saves`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
-nightly on `main`, on a pull request labelled `playthroughs`, and on a manual dispatch. Label a pull request whose
-change a balance or pacing invariant could catch when it should not wait for the night. A pull request builds the
+nightly on `main`, on a manual dispatch, and on a pull request that touches a path the playthroughs depend on
+(`app/tools/playthrough_paths.txt`, generated) or carries the `playthroughs` label, which forces it. A pull request builds the
 image and pushes nothing. On `main` the image is pushed by
 digest alone, and once `ci-ok` is green `release` tags that digest `dev` and `main-<sha8>-<commit ts>`, so the deploy
 waits for green; commit timestamps may not go backwards, because the tags are ordered by string, and `release` refuses
@@ -128,6 +128,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/test_decision_citations.py` | a decision title quoted after `decisions.md` (or bare, closing a parenthesis) is an index entry or starts exactly one heading or bold lead in `docs/decisions/`; the index and those files' `##` headings agree | none |
 | `app/tests/test_scene_stores.py` | a scene layer's `store:` condition names only a store the opening unlocks (the page reads it from the ledger, which lists only unlocked stores) | none (its held list is in the test and only shrinks) |
 | `app/tests/test_canon_ids.py` | every `C-<area>-<n>` and `D-<n>` id cited in the repo's text is a row of `content/canon.jsonl` or `content/decisions.jsonl`; canon rows keep their fields, a status of canon or tentative, and a source (`file#heading`) that resolves; decision rows keep their fields, status, date and by | none |
+| `app/tests/test_playthrough_paths.py` | every path the playthrough-marked tests depend on (computed by `app/tools/playthrough_paths.py`) is covered by the committed `app/tools/playthrough_paths.txt`, which CI's `changes` job reads to make a pull request run the playthroughs; regenerate with `python -m tools.playthrough_paths --write` from `app/` | none (the list is generated) |
 | `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
 The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.

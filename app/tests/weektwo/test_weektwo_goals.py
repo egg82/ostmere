@@ -9,6 +9,7 @@ import pytest
 from ashfall_app.engine import AtLeast
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
+from tests.goals import walk as walk_module
 from tests.goals.walk import Met, misses, served_nothing, taps, unjudged, walk
 from tests.weektwo.routes import FIFTEEN_PUSH_ROUTES
 
@@ -75,3 +76,16 @@ def test_a_beat_lands_with_a_tapped_card_only_when_it_waits_on_nothing_else(fift
 
 def _beat(found: list[Met], trigger: str) -> Met:
     return next(x for x in found if x.trigger == trigger)
+
+
+@pytest.mark.parametrize("fifteen_route", ["whenever"], indirect=True)
+def test_a_line_only_trigger_is_the_only_gate_the_walk_leaves_out(fifteen_route: tuple[str, DayTwoPlayer],
+                                                                  monkeypatch: pytest.MonkeyPatch):
+    """The control: unmarked, the same trigger is a gate the walk counts, and with no step starting it, unjudged."""
+    _, p = fifteen_route
+    o = walk_module.content()
+    marked = [t.id for t in o.triggers if t.line_only]
+    assert marked and not {m.trigger for m in walk(p.history, p.rules)} & set(marked)
+    unmarked = o.model_copy(update={"triggers": [t.model_copy(update={"line_only": False}) for t in o.triggers]})
+    monkeypatch.setattr(walk_module, "content", lambda: unmarked)
+    assert set(marked) <= {m.trigger for m in walk(p.history, p.rules)}
