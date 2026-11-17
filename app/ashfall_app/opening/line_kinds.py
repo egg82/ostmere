@@ -42,7 +42,7 @@ def check_line_kinds(o: "Opening") -> None:
 
 def check_beat_lines(o: "Opening") -> None:
     """Fails for a beat's first line that is no story line, or one that opens two beats."""
-    known, seen = set(line_keys(o)), {}
+    known, seen = set(line_keys(o)), dict[str, str]()
     for beat, keys in o.beat_lines.items():
         for key in keys:
             if key not in known or o.line_kinds.get(key) != "story":
