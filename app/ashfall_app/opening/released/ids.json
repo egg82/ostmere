@@ -2434,7 +2434,7 @@
   445716000000,
   668736000000
  ],
- "digest": "66fa2b66ad6ff28de3a65c568e4f18b03ec96df6c336ca4dea288d8d5923ce3f",
+ "digest": "2539af9ad1830a456bdcaca73a00413b65fa1c453023b4464d4bea0e72763b93",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -4518,6 +4518,8 @@
    "t_reach_3",
    "t_reach_4",
    "t_reach_5",
+   "t_reach_6",
+   "t_reach_7",
    "t_ridge",
    "t_ring",
    "t_ring_closed",
@@ -30747,6 +30749,56 @@
    "stores": [],
    "unlocks": []
   },
+  "t_reach_6": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_6",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_reach_7": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 11000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_reach_7",
+     "target": {
+      "@": "WorkRef",
+      "card": "hunt_wolf"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_ridge": {
    "@": "Outcome",
    "lines": [
@@ -33983,7 +34035,7 @@
    "unlocks": []
   }
  },
- "release": 73,
+ "release": 74,
  "renames": [
   {
    "from": "t_stock_open",
@@ -34623,7 +34675,7 @@
   "stranger_clock": 3456000000,
   "tallow": 21600000,
   "tinder_fungus": 3600000,
-  "track_laid": 36000000000,
+  "track_laid": 63000000000,
   "walk": 3600000,
   "walk_out": 270000000,
   "warmth": 36000000,

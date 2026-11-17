@@ -73,7 +73,7 @@ outcome = { stores = [{ store = "track_laid", items = 1 }] }
 [[stores]]
 id = "track_laid"
 label_key = "store_track_laid"
-cap_items = 10000
+cap_items = 17500
 
 [[triggers]]
 id = "t_track_laid"

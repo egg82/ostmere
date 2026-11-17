@@ -227,6 +227,18 @@ id = "t_reach_5"
 when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 10000 }
 outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_5" }] }
 
+# The track runs on past 10 000 (issue #40): laying went on once the old last reach was laid, and all of it was lost to
+# the cap. The steps keep growing by 500.
+[[triggers]]
+id = "t_reach_6"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 13500 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_6" }] }
+
+[[triggers]]
+id = "t_reach_7"
+when = { test = "at_least", subject_kind = "store", id = "track_laid", value = 17500 }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "track_reach_7" }] }
+
 [[cards]]
 id = "make_spear"
 presentation = "craft"
