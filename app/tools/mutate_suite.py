@@ -12,6 +12,7 @@
           the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
   journal_days  tests/saves/test_journal_days.py (and the tests in `also`)  tests/saves/MUTANTS_journal_days.txt
           specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
+  queue   tests/writer/test_queue.py  tests/writer/MUTANTS_queue.txt  specs tools/queue_mutants/
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); a claim is read from either, and a claim of a row outside the suite's rows is the sibling's.
 
@@ -19,25 +20,23 @@ From app/:  python -m tools.mutate_suite SUITE --check
               exits 1 unless every row is claimed by a test marked @kills(row), every claim names a row and every spec
               plants (a gate on the suite's own coverage; it plants nothing, runs no test).
             python -m tools.mutate_suite [SUITE] --plants
-              the last of those alone, for every suite when none is named (CI): exits 1, naming each mutant whose
-              anchor occurs other than once.
+              the last of those alone, for every suite when none is named (CI): exits 1, naming each mutant whose anchor occurs other than once.
             python -m tools.mutate_suite SUITE --run [--only 1,5] [--specs DIR]
-              copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing
-              skipped (a suite that skipped its database tests would let every mutant survive), then for each row
-              applies DIR/mNN.py (default the suite's specs directory) and runs the suite.
+              copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing skipped (a
+              suite that skipped its database tests would let every mutant survive), then for each row applies DIR/mNN.py
+              (default the suite's specs directory) and runs the suite.
 
 A row may have variants, DIR/mNN.py and DIR/mNNx.py (one letter or more), each planted alone: the row passes when
 every variant is KILLED, and one of the row's own claimed tests is red in some variant.
 A spec is a module with EDITS, a list of (path under app/, old text, new text); each `old` must occur exactly once.
 A spec may instead set EQUIVALENT to the reason no test can tell the mutant apart; it is then reported, never run.
 A spec that moves every rules digest sets RELOCK = True: the session's release-lock fixture would refuse the shipped
-content before any test ran, so the copy's lock is rewritten (content_lock.py --write) after planting, and the row's
-own tests must then go red.
+content before any test ran, so the copy's lock is rewritten (content_lock.py --write) after planting, and the row's own tests must then go red.
 Outcomes, kept apart on purpose: KILLED (pytest exit 1 and a failing test), SURVIVED (exit 0), BROKEN (any other exit,
 or a failure that is a collection or import error, which says the edit was malformed, not that a test noticed),
 NOT PLANTED (no spec, or an anchor missing or not unique), EQUIVALENT. Only KILLED counts, and a row's @kills tests
-must be among the ones that failed ("claim unmet" otherwise). Exit 1 unless every row run was KILLED with its claim met
-or recorded EQUIVALENT.
+must be among the ones that failed ("claim unmet" otherwise). Exit 1 unless every row run was KILLED with its claim met or
+recorded EQUIVALENT.
 """
 import argparse
 import ast
@@ -92,6 +91,7 @@ SUITES = {
     "journal_days": Suite("MUTANTS_journal_days.txt", "test_journal_days.py", "journal_days_mutants", also=(
         "tests/saves/test_journal_*.py", "tests/db/test_journal_*.py", "tests/db/test_decision_lock_span.py",
         "tests/db/test_save_journal_migrate.py", "tests/test_journal_days_wire.py"), home="tests/saves"),
+    "queue": Suite("MUTANTS_queue.txt", "test_queue.py", "queue_mutants", home="tests/writer"),
 }
 
 

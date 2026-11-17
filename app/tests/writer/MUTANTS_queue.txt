@@ -1,0 +1,9 @@
+Wrong implementations of the writer's queue and budget (writer/queue.py, writer/budget.py), each planted alone in a
+scratch copy by tools/mutate_suite.py's `queue` suite (specs tools/queue_mutants/): tests/writer/test_queue.py. Each
+must go red.
+
+ 1 no save cap     queue.py: a world's own allowance is never checked
+ 2 no global cap   queue.py: the day's global budget is never checked
+ 3 flat share      budget.py: a world weighs 1 whatever its returning days
+ 4 uncapped share  budget.py: the weight has no cap
+ 5 abandoned runs  queue.py: a job for a world not played today is queued
