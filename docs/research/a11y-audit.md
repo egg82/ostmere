@@ -103,6 +103,9 @@ Grep of `src/` and `game.css`: one `title=` (`ui/hands.ts:158`, the running mix'
 - Affordance revealed by hover: `.feedback-open`, `.devices-open`, `.games-open` are borderless text until hovered
   (`game.css:190`, its own comment: "words only until it is hovered"); on touch they read as plain text, not buttons.
   `.share-divider::before` brightens on hover or focus only (`:254`).
+  Re-checked: that is a colour change on a bar that is already drawn (4 px, `--ink-hi`) at rest, and no rule in
+  `game.css`, `fights.css`, `front.css`, `reminders.css` or `controls.css` reveals content, a control or an outline on
+  `:hover` alone: each `:hover` rule is paired with `:focus-visible`, or only brightens something already visible.
 
 Fixed (hover-reachable): the four panel-foot words (`.feedback-open`, `.devices-open`, `.games-open`, `.settings-open`) are
 underlined at rest, as `.asks-more` is, so touch reads them as buttons; they, `.share-divider` and `.sound-button` take
@@ -118,7 +121,7 @@ haptic, `navigator.vibrate(8)` in `tapFeedback()` (`ui/dom.ts:58`, called from `
 and it carries no information. Chromium logs a blocked-vibrate error when it fires before the first user tap (seen in
 the first-mix state). The "sound never carries information alone" rule is vacuous today.
 
-## 6. Pinned stage (3 failures, 1 overlap)
+## 6. Pinned stage (3 failures and 1 overlap, all fixed but one residual)
 
 The stage is 382 px tall at 390 wide (set from the art's aspect by `ui/headseat.ts:19`, not from the viewport) and the
 hands strip pins under it at 96 px: **478 px pinned at every height**, 57% of 844. Measured (`stage.json`):
@@ -139,6 +142,26 @@ Failures when the layout viewport shrinks (a keyboard that resizes the layout, o
 2. **Mix editor:** at 520 the name field and its save button are cut by the bottom edge (`v-mixeditor-520.png`);
    at 420 the editor is 37 px tall.
 3. **Hands strip** is cut by the bottom edge at 420 (its bottom is at 478; `v-mixeditor-420.png`).
+
+Fixed since: a phone collapses the scene band while an editor has the screen (`scene-aside`, `ui/tabs.ts`), so the pin is
+the head, the line and the hands strip, with the editors starting 256 px down at 390 wide. Re-measured in a fixture build
+at 390 wide (`.cond-body` is the condition editor's choice area, which scrolls above its foot):
+
+| Viewport height | Mix editor | Condition editor choice area | Foot |
+|---|---|---|---|
+| 844 | 588 px | 491 | visible |
+| 500 | 244 px, name and Save in view | 147 | visible |
+| 420 | 164 px, name and Save in view | 67 | visible |
+
+Failures 1 to 3 are gone down to 420: the foot is on screen (it sits in the fixed editor, not below the fold), the mix
+editor's name field and Save stay in view, and the strip ends at 217 px, far above these bottom edges. Below that it
+returns: at 360 tall the choice area is 29 px and the condition editor's foot (to 382) is cut by the bottom edge. A
+desktop 1440 wide is unchanged.
+
+The overlap: at 844 the note for the bar step sat over the editor's Name, Save and close (the placement took the spot
+with the least covered area, and every spot hid something). It now takes the spot that covers fewest controls
+(`ui/lessons.ts`, `place`), which is below the bar. Still true at 500 tall: no spot below fits, so the note sits over
+the editor's head until the player taps Got it, which that step asks for first.
 
 Corrections to the proposal's premise: the condition editor has **no text input** (only buttons), so it never raises a
 keyboard. Keyboard cases in this client are the mix editor's name field (`ui/editor.ts:27`), the feedback textarea

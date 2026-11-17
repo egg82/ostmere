@@ -52,6 +52,31 @@ expect("the tabs below, room on the left: beside", placed(wide, [{ cls: "tabs", 
 const crowded = box(150, 20, 80, 30);
 expect("none clear: the least covered", placed(crowded, [{ cls: "tabs", rect: box(100, 70, 300, 30) }, { cls: "chip", rect: box(20, 10, 120, 50), sibling: true }]), [150, 58]);
 
+{  // No spot is clear: the note goes where it takes fewer taps from the player, though it covers more of a sibling
+  fakeDocument.body.replaceChildren();
+  const keeps = keepsOf(NEW_FLAT);
+  const lessons = new Lessons({ catalog: new Catalog(fixtureContent), glow: new Glow(), keeps }, document.body, () => undefined, document, () => 0);
+  const row = document.createElement("div");
+  const offer = document.createElement("button");
+  Object.assign(offer.dataset, { teach: "mix-offer", cards: "stand look" });
+  Object.assign(offer, { rect: target });
+  const chip = document.createElement("div");
+  chip.className = "chip";
+  Object.assign(chip, { rect: box(150, 270, 40, 20) });
+  row.append(offer, chip);
+  const tabs = document.createElement("div");
+  tabs.className = "tabs";
+  Object.assign(tabs, { rect: box(100, 340, 200, 40) });
+  const taps = [box(200, 240, 40, 30), box(250, 240, 40, 30)].map((rect) => Object.assign(document.createElement("button"), { rect }));
+  document.body.append(row, tabs, ...taps);
+  const rects = taps.map((t, i) => [t, [box(200, 240, 40, 30), box(250, 240, 40, 30)][i]!] as const);
+  Object.assign(fakeDocument, { elementsFromPoint: (x: number, y: number) => rects.filter(([, r]) => r.left <= x && x <= r.right && r.top <= y && y <= r.bottom).map(([t]) => t) });
+  Object.assign(lessons.root, { rect: box(0, 0, 200, 60) });
+  lessons.update(noMix);
+  lessons.tick();
+  expect("above covers less of the chip but two buttons: below", [parseInt(lessons.root.style.left, 10), parseInt(lessons.root.style.top, 10)], [150, 338]);
+  delete (fakeDocument as { elementsFromPoint?: unknown }).elementsFromPoint;
+}
 {  // the next step's control (the mix lesson's first Add entry) already on show under the control: the note goes above it
   fakeDocument.body.replaceChildren();
   const lessons = new Lessons({ catalog: new Catalog(fixtureContent), glow: new Glow(), keeps: keepsOf(NEW_FLAT) }, document.body, () => undefined, document, () => 0);

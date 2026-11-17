@@ -5,11 +5,12 @@
 import type { Order, RuleRun, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { chipOf, ruleWords, storeRule } from "../game/orders";
+import { unplacedKey } from "../game/nextrow";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
 import { madeFact, stintFacts, stintLine } from "./stintlately";
 
-const same = (a: Order, b: Order): boolean => JSON.stringify(a) === JSON.stringify(b);
+const same = (a: Order, b: Order): boolean => unplacedKey(a) === unplacedKey(b);
 
 /** The entries to draw: those whose rule the view still has, and those the game ended (their rule is gone). */
 export function shownRuns(view: View, runs: readonly RuleRun[]): RuleRun[] {

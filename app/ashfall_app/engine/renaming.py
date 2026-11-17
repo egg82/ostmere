@@ -101,7 +101,7 @@ def renamed_save(save: Save, m: Renamer) -> Save:
         mixes=tuple(_mix(x, m) for x in save.mixes),
         pauses=tuple(Pause(m.runner(p.runner), m.store(p.store), p.resume_at) for p in save.pauses),
         orders=tuple(Order(condition(o.when, m), _verb(o.then, m), tuple(condition(g, m) for g in o.unless),
-                           tuple(_verb(a, m) for a in o.or_else))
+                           tuple(_verb(a, m) for a in o.or_else), o.below_next)
                      for o in save.orders),
         queue=tuple(QueueEntry(_verb(e.verb, m), condition(e.until, m)) for e in save.queue),
         modifiers=tuple(modifier(x, m) for x in save.modifiers),

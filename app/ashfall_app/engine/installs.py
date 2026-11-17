@@ -9,6 +9,7 @@ from .counts import completions
 from .ids import CardId
 from .lanes import TapCard
 from .orders import AfterTime, AtLeast, CardCount, Latch, Order, OrderVerb, QueueEntry, initial_latch, pruned, rule_on
+from .orders import placed, unplaced
 from .rules import Rules
 from .state import Save
 
@@ -26,7 +27,7 @@ def installed(save: Save, installs: tuple[RuleInstall, ...]) -> Save:
     top = 0
     for ri in installs:
         order = always_rule(ri)
-        if order in orders:
+        if order in map(unplaced, orders):
             continue
         at = top if ri.first else len(orders)
         top += ri.first
@@ -34,7 +35,7 @@ def installed(save: Save, installs: tuple[RuleInstall, ...]) -> Save:
         latches.insert(at, initial_latch(order.when, None, save.time))
     if len(orders) == len(save.orders):
         return save
-    return replace(save, orders=tuple(orders), latches=tuple(latches))
+    return replace(save, orders=placed(tuple(orders)), latches=tuple(latches))
 
 
 def without_taps(save: Save, cards: Collection[CardId]) -> Save:

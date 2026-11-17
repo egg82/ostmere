@@ -198,13 +198,14 @@ def from_condition(c: w.Condition, rules: e.Rules) -> e.Condition:
 
 def order(o: e.Order) -> w.Order:
     return w.Order(when=condition(o.when), then=order_verb(o.then), unless=[condition(g) for g in o.unless],
-                   or_else=[order_verb(a) for a in o.or_else])
+                   or_else=[order_verb(a) for a in o.or_else], below_next=o.below_next)
 
 
 def from_order(o: w.Order, rules: e.Rules) -> e.Order:
     lane = _tap_lane([o.then, *o.or_else], rules)
     return e.Order(_page_built(o.when, rules, lane), from_order_verb(o.then),
-                   tuple(_page_built(g, rules, lane) for g in o.unless), tuple(from_order_verb(a) for a in o.or_else))
+                   tuple(_page_built(g, rules, lane) for g in o.unless), tuple(from_order_verb(a) for a in o.or_else),
+                   o.below_next)
 
 
 def _card_lane(card: str, rules: e.Rules) -> e.LaneId | None:

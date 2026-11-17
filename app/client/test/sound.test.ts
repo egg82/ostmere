@@ -11,7 +11,7 @@ import { browserSoundSwitch } from "../src/audio/mute";
 import { bindSilence } from "../src/audio/page";
 import type { Slot, SlotName } from "../src/audio/slots";
 
-interface Log { ramps: [number, number][]; sources: { rate: number; started: boolean }[]; calls: string[]; time: number }
+interface Log { ramps: [number, number][]; sources: { rate: number; started: boolean; when?: number }[]; calls: string[]; time: number }
 
 function fakeContext(log: Log): ContextLike {
   const param = () => ({
@@ -25,10 +25,10 @@ function fakeContext(log: Log): ContextLike {
     destination: {},
     createGain: () => ({ gain: param(), connect() {} }),
     createBufferSource() {
-      const s = { rate: 1, started: false };
+      const s: Log["sources"][number] = { rate: 1, started: false };
       log.sources.push(s);
       return {
-        buffer: null, connect() {}, start() { s.started = true; },
+        buffer: null, loop: false, connect() {}, start(when?: number) { s.started = true; s.when = when; },
         playbackRate: { set value(v: number) { s.rate = v; }, get value() { return s.rate; } },
       };
     },
@@ -89,6 +89,16 @@ async function rig(over: Partial<Record<SlotName, Slot>>) {
   assert.equal(log.sources[1]!.rate, 1.25 * 6 / 5);
 }
 
+// A delayed sound starts on the audio clock that far on; its cut fades it over CUT_MS
+{
+  const { log, player } = await rig({ tick: slot("sound/tick.ogg") });
+  const cut = player.play("tick", 1, 270);
+  assert.equal(log.sources.length, 1);
+  assert.equal(log.sources[0]!.when, 10.27);
+  cut();
+  assert.deepEqual(log.ramps.at(-1), [0, 50]);
+}
+
 // Silent ramps to zero in 50 ms, then suspends; waiting sounds are dropped; unsilencing resumes
 {
   const { log, timers, player } = await rig({ tap: slot("sound/tap.ogg") });
@@ -142,7 +152,7 @@ async function rig(over: Partial<Record<SlotName, Slot>>) {
   sound().play("tap");
   sound().play("tick", 1.5);
   const played: string[] = [];
-  registerSound({ play: (s) => { played.push(s); } });
+  registerSound({ play: (s) => { played.push(s); return () => undefined; }, loop: () => ({ setLevel: () => undefined }), piece: () => ({ setLevel: () => undefined, stop: () => undefined, onEnd: () => undefined }) });
   sound().play("first");
   assert.deepEqual(played, ["first"]);
   resetSound();

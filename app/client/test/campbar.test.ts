@@ -111,7 +111,7 @@ check("a marker naming a locked store shows no words, only that there is a next"
   const c = lifted(["take_stock"]);
   const { ctx } = testContext(undefined, c);
   const got: string[] = [];
-  const b = new CampBar({ ...ctx, arrivals: { arrive: (_n, kind, id) => { got.push(`arrive:${kind}:${id}`); }, effect: (_n, _k, run) => { got.push("effect"); run(); }, line: () => undefined, busy: false } });
+  const b = new CampBar({ ...ctx, arrivals: { arrive: (_n, kind, id) => { got.push(`arrive:${kind}:${id}`); }, effect: (_n, _k, run) => { got.push("effect"); run(false); }, line: () => undefined, busy: false } });
   b.update(at(10, []));
   b.tick(AT);
   expect("no level yet: not drawn", b.root.hidden, true);

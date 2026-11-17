@@ -1,13 +1,15 @@
 // Why a rule is off (docs/design/opening-screen.md, "The Rules tab"): a quiet line under its row, from the view's
 // order_states (CONTRACT.txt), in the ledger's grammar. A waiting store rule names what it waits for and what the store
 // holds now, sampled from its ledger line as the ledger samples it; a paused rule names where its guards let go
-// (game/guardwords.ts), and a rule with fallbacks that is on names the one it runs past its first.
+// (game/guardwords.ts), a rule waiting under Next names what the queue runs, and a rule with fallbacks that is on names
+// the one it runs past its first.
 import type { Order, RuleDry, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { sample } from "../game/clock";
 import { alwaysWords } from "../game/lanes";
 import { actionsOf, pausedWords } from "../game/guardwords";
-import { actionWords, chipOf, conditionWords, storeRule } from "../game/orders";
+import { actionWords, chipOf, conditionWords, mixLabel, storeRule } from "../game/orders";
+import { controllingEntry } from "../game/queue";
 import { levelWords, needsKey, readRule } from "../game/storerule";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
@@ -21,6 +23,7 @@ export function whyOff(catalog: Catalog, view: View, index: number, t: number): 
   if (state === "on") return dryWords(catalog, order, view.order_dry[index]?.holding ? view.order_dry[index] : null) ?? doingWords(catalog, view, index);
   if (state === "passed_over") return catalog.text.get(order.or_else.length > 0 ? UI.rulePassedOverAll : UI.rulePassedOver);
   if (state === "paused") return pausedWords(catalog, view, index, t);
+  if (state === "behind_next") return behindNext(catalog, view);
   if (state === "outranked") {
     const by = outrankedBy(catalog, view, index);
     const rule = by ? alwaysWords(catalog, by) ?? conditionWords(catalog, by.when) : null;
@@ -52,6 +55,15 @@ function doingWords(catalog: Catalog, view: View, index: number): string | null 
   if (doing === null) return catalog.text.get(UI.ruleOnNone);
   const action = actionsOf(order)[doing];
   return doing === 0 || !action ? null : catalog.text.fill(UI.ruleOnDoing, { task: actionWords(catalog, action) });
+}
+
+/** "outranked by Next · {task}": the rule is under Next and the queue has the hands, running its controlling entry (a
+ * task, or a goal stint's mix). */
+function behindNext(catalog: Catalog, view: View): string {
+  const at = controllingEntry(view);
+  const verb = at === null ? undefined : view.queue[at]?.verb;
+  const task = verb === undefined ? "" : verb.kind === "switch_mix" ? mixLabel(catalog, verb.mix_id) : actionWords(catalog, verb);
+  return catalog.text.fill(UI.ruleBehindNext, { task });
 }
 
 /** The earlier rule that has what rule `index` would run: orders[mix_order] for a mix rule, orders[LaneBar.order] of

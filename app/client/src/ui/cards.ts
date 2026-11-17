@@ -17,6 +17,7 @@ import { UI } from "../game/text";
 import { CardGroups } from "./cardgroups";
 import { makeRow, upsideWords, type Row } from "./cardrow";
 import { el, pulse, setText } from "./dom";
+import { sing } from "../audio/cues";
 import { completionRung, play } from "./ladder";
 import { cardHintsNow, hintCard } from "./cardhint";
 import type { NewMarks } from "../game/marks";
@@ -64,6 +65,7 @@ export class Cards implements Part {
     const row = this.rows.get(card);
     if (!row || row.done) return;
     pulse(row.node, "tap-failed");
+    sing("failed");
     const blocker = row.card.blocker;
     if (!blocker) return;
     const mark = row.needs.shows(blocker.condition) ?? (keptReadyAt(view, row.card, this.ctx.catalog.content.scales.quantity_per_item) !== null ? row.foot : null);
@@ -115,7 +117,7 @@ export class Cards implements Part {
         row.card = card;
         if (card.completions > before.completions && prev) {
           const rung = completionRung(before.by, row.byOrder === true);   // as it ran until now: the restyle below moves it on
-          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung), "finish", rung === "tap");
+          this.ctx.arrivals.effect(row.node, "card", (quiet) => play(row.node, rung, quiet), "finish", rung);
         }
       } else {
         const done = view.completed.find((c) => c.card === row.id);

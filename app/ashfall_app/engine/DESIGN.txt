@@ -3337,3 +3337,54 @@ REJECTED, AND WHY (or else)
   "No memory"); a stored choice would be state with no home and a second "until".
 - Expanding the rules into one-action orders inside the save: the latch, the rule log, the page and SetOrders' equality
   all speak of one rule; expansion lives in the reading, not the saved shape.
+
+NEXT'S ROW (the queue as a row among the hands' rules: issue #320). Where this part and an entry above disagree, this
+part holds; "Next's row" in code points here.
+
+FIT PASS
+- The row is an instance of Standing orders: order sequence is already the priority among rules, and the queue was the
+  last place in it. The row makes the queue's place one the player sets. No new event kind, verb, Save field or part:
+  the place is a field on the orders, as each rule's place is its index.
+
+CHOICES (Next's row)
+- Shape: Order.below_next, False by default, so a save whose rules all sit above Next (every save before the row) is
+  the queue at the bottom and keeps its text (left out of the codec while False; FORMAT unchanged). The player sets
+  it in SetOrders; nothing reads it off what a rule does. orders.placed keeps the flag a run to the end of the orders
+  (Next is one row): SetOrders, an install's append and a join's town rule pass through it, so a rule appended, the
+  lowest priority, lands under Next once any rule does. Town rules and other lanes' rules carry the flag where they
+  sit, and it changes nothing for them: the queue is the hands' plan.
+- Where a rule sits is not what it is: SetOrders keeps a rule's latch across a move past Next, the rule log names it
+  unplaced (orders.unplaced) so the move logs nothing, and an install or join matches it unplaced.
+- Running hands mix (replaces "Order mix" and "Queue mix" on which mix runs): the mix of the first hands mix rule that
+  is on above Next; else the queue's mix; else that of the first one on under Next; else save.active. mix_order is the
+  rule whose mix that is (None while the queue's or the player's own runs).
+- Evaluation's controlling verb (replaces the order in "Evaluation applies every verb"): the answer orders (wherever
+  they sit: they take no hands); the taps of rules on above Next; the controlling queue entry's tap or answer when it
+  can act (a tap: ready and its speed above 0) and no mix rule above Next runs; the taps of rules on under Next (a
+  hands tap waits while the queue has the hands); then the controlling entry as before, which waits while an order's
+  mix runs except under CURE CUT-IN. A queue switch is never the early source: its mix runs by the running mix, and
+  its no-op verb is read last, so it cannot end a loop before the rules under Next have acted.
+- A ready entry takes the hands when the task under way ends, never mid-task: a tap can act only on a free lane, so it
+  starts at that task's landing, ahead of the rules under Next; a hands mix under Next yields to it as to any tap.
+- Passed over as a row, never inside the queue: a controlling entry that cannot act holds nothing, so the rules under
+  Next run; the entries behind it still wait (the queue head is never passed over).
+- order_states: BEHIND_NEXT for a rule under Next that acts on the hands, is on, and would be ON (or outranked by
+  nothing but the queue's mix) while the queue has the hands (plan.next_runs: its mix runs, or the hands run the
+  controlling entry's tap). Rules above Next read as before.
+- No new cascade: the queue taking the hands from a rule under it fills the hands lane, and the rule's mix coming back
+  at the entry's pop is the running mix changing at a QUEUE_POP, which "Queue mix" already bounds. The firing cap and
+  its waits are unchanged.
+
+INVARIANTS (Next's row; numbered on from 175)
+176. At the bottom: a save whose orders are all above Next encodes, evaluates, logs and reads exactly as before the row
+     existed; a logged SetOrders without the flag keeps its text.
+177. Above wins: a rule above Next that is on outranks the queue exactly as every rule did at the bottom.
+178. Under waits: while the controlling entry can act or its mix runs, no rule under Next starts a hands tap or runs its
+     hands mix; once the entry pops, they act again at that instant.
+
+REJECTED, AND WHY (Next's row)
+- An index of Next on Save: a new Save field (docs/systems.md, "The engine"), and every insertion or removal of a rule
+  would have to move it; a flag moves with the rules it marks.
+- A sentinel order standing for Next: every reader of the orders would have to skip it.
+- Inferring the place from a rule's card (cures above, replenishers below): placement is the player's, never read off
+  wording or effect (issue #320).

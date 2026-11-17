@@ -43,11 +43,12 @@ SHAPE: dict[str, list[tuple[str, str, bool]]] = {
                          ("tz", TEXT, False), ("send_from_hour", INT, False), ("send_until_hour", INT, False),
                          ("visited_at", WHEN, False), ("last_sent_at", WHEN, True), ("created_at", WHEN, False),
                          ("hands_free", BOOL, False)],
+    "writer_day": [("day", "date", False), ("save_id", TEXT, False), ("weight", INT, False), ("spent", INT, False)],
 }
 KEYS = {"accounts": ["id"], "sessions": ["id"], "saves": ["id"], "save_lines": ["save_id", "n"],
         "save_decisions": ["save_id", "n"], "save_snapshots": ["save_id", "day"],
         "save_manifests": ["rules_digest"], "save_journal": ["save_id", "day"], "tries": ["id"],
-        "feedback": ["id"], "transfer_codes": ["id"], "reminder_devices": ["id"]}
+        "feedback": ["id"], "transfer_codes": ["id"], "reminder_devices": ["id"], "writer_day": ["day", "save_id"]}
 
 
 def columns(url: str) -> dict[str, list[tuple[str, str, bool]]]:

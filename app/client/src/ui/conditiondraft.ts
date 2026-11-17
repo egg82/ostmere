@@ -59,7 +59,7 @@ export function draftOrder(catalog: Catalog, view: View | null, draft: Draft | n
   const kind = (v: OrderVerb) => (handsTap(catalog, v) ? "switch_mix" : v.kind);   // a hands task is saved as its solo mix
   const orElse = draft.orElse.map((v) => savedVerb(view, catalog, v));
   if (orElse.some((v) => kind(v) !== kind(then))) return null;
-  const rest = { then, unless: draft.unless, or_else: orElse };
+  const rest = { then, unless: draft.unless, or_else: orElse, below_next: false };   // setRule keeps an edited rule's side of Next
   if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, ...rest };
   if (draft.subject) return { when: buildSubject(catalog, draft.subject), ...rest };
   if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store))) return null;

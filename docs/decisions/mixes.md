@@ -176,11 +176,18 @@ every verb"). A story outcome installs a ruled lane's always rule as an ordinary
 one-off as a When ready entry (engine `DESIGN.txt`, "Installed rule", "Queued one-off";
 `app/ashfall_app/engine/installs.py`); a new save has neither, and nothing installs a rule that watches a store.
 Content order cards are never built for the player: they feed the first rule's lesson and the hint dots. Where each
-order stands (on, waiting, outranked, passed over) is served on the View as order_states (`engine.plan.order_states`),
+order stands (on, waiting, outranked, passed over, behind Next) is served on the View as order_states (`engine.plan.order_states`),
 and the Rules tab says why a rule is off under it (`app/client/src/ui/rulewhy.ts`). The page queues one tap of a step
 that will turn ready by itself (When ready, held until its next completion), and a mix until a goal row lands (a goal
 stint: a queued switch runs over the player's mix until it pops, engine `DESIGN.txt`, "Queue mix";
 `app/client/src/ui/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
+Next is a row among the hands' rules, moved like one (owner: not taking the next planned thing when it is ready feels
+off, but Plan should not jump every rule: a rule that cures tiredness still comes first). Rules above it outrank a ready
+entry; rules under it wait while one has the hands and pick up again after it pops. A ready entry takes the hands when
+the task under way ends, never mid-task, and a head that cannot act holds nothing, so the rules under Next run while it
+waits (the entries behind it still wait inside the queue). Where the row sits is the player's alone (`Order.below_next`,
+engine `DESIGN.txt`, "NEXT'S ROW"), never read off a rule's card or wording; every save starts with it at the bottom,
+which is the queue as it always was, and the why-line names Next when it is what outranks a rule.
 One queue, two ways in (owner: planning what to build next is where Plan is most useful): Next's Plan adds
 either kind of entry, cards first. It lists the steps When ready takes, picked through the card's own path, ready now
 ones included (a build planned while the hands are busy runs after the task under way), then the steps it would take

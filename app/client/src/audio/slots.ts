@@ -12,6 +12,9 @@ export interface Slot {
   pitch: number;
 }
 
+export type BedName = "wind" | "fire";
+export type PieceName = "evening";
+
 const none = (gain: number): Slot => ({ asset: null, gain, pitch: 1 });
 
 // Loudness steps from the map: soft is the tap's level, medium 4 dB above it, full 8 dB above it.
@@ -28,4 +31,18 @@ export const SLOTS: Readonly<Record<SlotName, Slot>> = {
   failed: none(10 ** (-4 / 20)),
   page: none(1),
   settle: none(1),
+};
+
+// The bed sits under the tap, felt more than heard; the owner's ear sets these.
+const UNDER = 10 ** (-12 / 20);
+
+/** The looping beds, each at its fixed gain; the fire's is scaled by its layer's alpha. */
+export const BEDS: Readonly<Record<BedName, Slot>> = {
+  wind: none(UNDER),
+  fire: none(UNDER),
+};
+
+/** The evening piece sits between the bed and the tap; the owner's ear sets it. */
+export const PIECES: Readonly<Record<PieceName, Slot>> = {
+  evening: none(10 ** (-8 / 20)),
 };

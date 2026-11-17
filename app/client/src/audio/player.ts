@@ -1,7 +1,9 @@
 // One-shot player over Web Audio. One context, made by `start()` at the first tap; every slot with an asset is
 // decoded then, and a slot not decoded when its moment comes is skipped, since silence is better than late.
-import { SLOTS, type Slot, type SlotName } from "./slots";
+import { BEDS, PIECES, SLOTS, type BedName, type PieceName, type Slot, type SlotName } from "./slots";
 import type { Sound } from "./locator";
+import { createLoops } from "./loop";
+import { createPieces } from "./piece";
 
 /** Hidden or muted: everything ramps to silence in this long, then the context suspends. */
 export const CUT_MS = 50;
@@ -16,8 +18,11 @@ export interface NodeLike { connect(to: unknown): unknown }
 export interface GainLike extends NodeLike { gain: ParamLike }
 export interface SourceLike extends NodeLike {
   buffer: unknown;
+  loop: boolean;
   playbackRate: { value: number };
   start(when?: number): void;
+  stop?(when?: number): void;
+  onended?: (() => void) | null;
 }
 export interface ContextLike {
   currentTime: number;
@@ -37,6 +42,10 @@ export interface PlayerDeps {
   /** Runs `fn` after `ms`; the suspend that follows the ramp. */
   after?: (fn: () => void, ms: number) => void;
   slots?: Readonly<Record<SlotName, Slot>>;
+  beds?: Readonly<Record<BedName, Slot>>;
+  pieces?: Readonly<Record<PieceName, Slot>>;
+  /** Wall-clock milliseconds, for how long a piece was cut off. */
+  now?: () => number;
 }
 
 export interface Player extends Sound {
@@ -46,22 +55,28 @@ export interface Player extends Sound {
   setSilent(silent: boolean): void;
 }
 
+/** Decodes every entry with an asset into `buffers`; one that fails to load or decode is skipped. */
+async function decodeAll(c: ContextLike, entries: [SlotName | BedName | PieceName, Slot][], fetchBytes: PlayerDeps["fetchBytes"], buffers: Map<SlotName | BedName | PieceName, unknown>): Promise<void> {
+  for (const [name, slot] of entries) {
+    if (slot.asset === null) continue;
+    try { buffers.set(name, await c.decodeAudioData(await fetchBytes(slot.asset))); } catch { /* skipped */ }
+  }
+}
+
 export function createPlayer(deps: PlayerDeps): Player {
   const slots = deps.slots ?? SLOTS;
   const after = deps.after ?? ((fn, ms) => { setTimeout(fn, ms); });
-  const buffers = new Map<SlotName, unknown>();
+  const beds = deps.beds ?? BEDS;
+  const pieceSlots = deps.pieces ?? PIECES;
+  const buffers = new Map<SlotName | BedName | PieceName, unknown>();
   let ctx: ContextLike | null = null;
   let master: GainLike | null = null;
   let silent = false;
   let starting: Promise<void> | null = null;
   let cuts = 0;
 
-  async function decodeAll(c: ContextLike): Promise<void> {
-    for (const [name, slot] of Object.entries(slots) as [SlotName, Slot][]) {
-      if (slot.asset === null) continue;
-      try { buffers.set(name, await c.decodeAudioData(await deps.fetchBytes(slot.asset))); } catch { /* skipped */ }
-    }
-  }
+  const pieces = createPieces({ context: () => ctx, master: () => master, buffer: (name) => buffers.get(name), silent: () => silent, now: deps.now ?? (() => performance.now()) }, pieceSlots);
+  const loops = createLoops({ context: () => ctx, master: () => master, buffer: (name) => buffers.get(name) }, beds);
 
   function ramp(to: number): void {
     if (!ctx || !master) return;
@@ -80,13 +95,15 @@ export function createPlayer(deps: PlayerDeps): Player {
         master = c.createGain();
         master.connect(c.destination);
         if (silent) master.gain.value = 0;
-        await decodeAll(c);
+        await decodeAll(c, [...Object.entries(slots), ...Object.entries(beds), ...Object.entries(pieceSlots)] as [SlotName | BedName | PieceName, Slot][], deps.fetchBytes, buffers);
+        loops.attachAll();
       })();
       return starting;
     },
     setSilent(next) {
       if (next === silent) return;
       silent = next;
+      pieces.silence(next);
       const mine = ++cuts;
       if (!ctx) return;
       if (next) {
@@ -97,10 +114,12 @@ export function createPlayer(deps: PlayerDeps): Player {
         ramp(1);
       }
     },
-    play(name, pitch = 1) {
+    loop: loops.loop,
+    piece: pieces.piece,
+    play(name, pitch = 1, delayMs = 0) {
       try {
         const buffer = buffers.get(name);
-        if (silent || !ctx || !master || buffer === undefined) return;
+        if (silent || !ctx || !master || buffer === undefined) return () => undefined;
         const slot = slots[name];
         const gain = ctx.createGain();
         gain.gain.value = slot.gain;
@@ -109,8 +128,17 @@ export function createPlayer(deps: PlayerDeps): Player {
         src.buffer = buffer;
         src.playbackRate.value = slot.pitch * pitch;
         src.connect(gain);
-        src.start();
+        src.start(ctx.currentTime + delayMs / 1000);
+        const c = ctx;
+        return () => {
+          try {
+            gain.gain.cancelScheduledValues(c.currentTime);
+            gain.gain.setValueAtTime(gain.gain.value, c.currentTime);
+            gain.gain.linearRampToValueAtTime(0, c.currentTime + CUT_MS / 1000);
+          } catch { /* already gone */ }
+        };
       } catch { /* a sound must never break the tap that asked for it */ }
+      return () => undefined;
     },
   };
 }

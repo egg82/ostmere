@@ -16,6 +16,9 @@ import { remindersConfig } from "./app/pageconfig";
 import { browserEnv, pushCap } from "./app/push";
 import { ReminderMention } from "./ui/remindermention";
 import { ReminderRow } from "./ui/reminders";
+import { createBed } from "./audio/bed";
+import { onSing } from "./audio/cues";
+import { createEvening } from "./audio/evening";
 import { browserSoundSwitch } from "./audio/mute";
 import { SettingsSheet } from "./ui/settings";
 import { soundControl } from "./ui/soundcontrol";
@@ -119,6 +122,10 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
 /** One animation frame loop sampling the view against the session's clock, drawing the screen and scene in hand; and a
  * return asked for when the page is shown again. */
 function run(session: Session, screen: () => Screen | null, scene: () => Scene | null): void {
+  const bed = createBed();
+  const evening = createEvening();
+  onSing((voice, now) => evening.cue(voice, now));
+  addEventListener("pointerdown", () => bed.firstTap(), { once: true, capture: true });
   let last = performance.now();
   const frame = (now: number) => {
     const dt = Math.min(0.1, (now - last) / 1000);
@@ -129,11 +136,15 @@ function run(session: Session, screen: () => Screen | null, scene: () => Scene |
       const t = session.clock.sampleTime(view);
       screen()?.tick(t);
       scene()?.draw(t, dt);
+      bed.follow(scene()?.soundAlpha("fire") ?? 0);
+      const s = scene();
+      if (s) evening.frame({ shown: s.soundShown("evening"), grade: s.gradeNow().id, easeS: s.gradeNow().easeS, endShowing: screen()?.endShowing ?? false }, now);
     }
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
   document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") evening.away();
     if (document.visibilityState === "visible" && session.view) void session.advance(true);   // reopening: what it brings is revealed in turn
   });
 }

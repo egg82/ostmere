@@ -142,6 +142,14 @@ ENDPOINTS
   order_guards[i][j] {on, lets_go} for guard j of orders[i], `on` its latch and `lets_go` the quantity of the watched
   store it lets go at as the engine reads it now (a share level read against the cap now), null off a store;
   order_doing[i], the index in the rule's actions (then, then or_else) of the one it runs now, else null.
+  Next's row: an Order may carry below_next (false when left out, always served). The rules with it are the ones under
+  Next, the queue's row in the hands' list; set_orders makes every rule after the first with it carry it too, so the
+  rules under Next are a run to the end and a rule appended lands there. A rule's latch is kept when only below_next
+  changes, and a rule_run's `order` never carries it. Rules above Next outrank a ready queue entry as every rule does
+  with none set (Next at the bottom, as in every save from before it); rules under it wait while the controlling
+  entry can act or its goal stint runs, and act again when it pops. An entry that cannot act holds nothing, so the
+  rules under Next run, while the entries behind it in the queue still wait. order_states[i] is `behind_next` for a
+  hands rule under Next whose condition holds while the queue has the hands (engine DESIGN.txt, "NEXT'S ROW").
   SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
   save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
   answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.
@@ -624,7 +632,8 @@ THE CLIENT MAY
     waiting (its condition does not hold), outranked (its condition holds and an earlier rule has the hands or the
     lane: orders[mix_order] for a mix rule, orders[LaneBar.order] of its card's lane for a rule that taps a card),
     passed_over (its mix is greyed, its task completed, or its offer answered, whatever its condition), paused (its
-    condition holds and a guard of its `unless` holds; it resumes when the last lets go). on is not off.
+    condition holds and a guard of its `unless` holds; it resumes when the last lets go), behind_next (its condition
+    holds and the queue has the hands: Next's row). on is not off.
   - offer the first mix: once view.unlocked holds the feature Content.first_mix.feature and view.mixes is
     empty, offer first_mix.card_ids (those in view.cards) as one control. The player's tap on it sends save_mix with the
     id from text `ui.mix.default`, those cards in that order at an even split of Scales.bp (the remainder to the
@@ -822,6 +831,9 @@ TEXT AND NUMBERS (one rule)
                                     (DRY RULES)
     ui.rule.outranked {rule} | ui.rule.passed_over   why a rule is off: an earlier rule has the hands (its condition's
                                     words), or what it runs is done
+    ui.rule.behind_next {task}       why a rule under Next is off: the queue has the hands ({task}: what it runs, a
+                                    task's or a goal stint's words)
+    ui.rule.next_handle              the accessible name of Next's row's handle in the Rules tab (it moves the row)
     ui.rule.otherwise | ui.rule.on | ui.rule.up | ui.rule.down | ui.rule.handle   the Rules tab's default row, a rule on
                                     now, reordering (ui.rule.handle: the accessible name of a rule's drag handle)
     ui.mix.used_by {n} | ui.mix.used_by_one   the Mixes list's note on a mix rules run (several, one)

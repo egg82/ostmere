@@ -26,10 +26,10 @@ const sent = (d: Decision | undefined): Order[] => (d?.kind === "set_orders" ? d
 const base = withSecondMix(townStep("town").view);   // a second town mix, so the town's rules show
 const always = base.orders.findIndex((o) => o.then.kind === "switch_mix" && o.then.mix_id === "town:main");
 const TOWN_THEN: Order["then"] = { kind: "switch_mix", mix_id: "town:main" };
-const first: Order = { when: { kind: "after_time", at: 0 }, then: TOWN_THEN, unless: [], or_else: [] };
+const first: Order = { when: { kind: "after_time", at: 0 }, then: TOWN_THEN, unless: [], or_else: [], below_next: false };
 const WHEN = base.orders.find((o) => o.when.kind !== "after_time")!.when;   // a store rule the day-two page has
-const mine: Order = { when: WHEN, then: TOWN_THEN, unless: [], or_else: [] };
-const other: Order = { when: { ...WHEN, watched: { kind: "store_value", store: "wood" } } as Order["when"], then: TOWN_THEN, unless: [], or_else: [] };
+const mine: Order = { when: WHEN, then: TOWN_THEN, unless: [], or_else: [], below_next: false };
+const other: Order = { when: { ...WHEN, watched: { kind: "store_value", store: "wood" } } as Order["when"], then: TOWN_THEN, unless: [], or_else: [], below_next: false };
 
 /** The town view with two town rules above its always rule, so the always rule is the last of three. */
 function twoRules(): View {

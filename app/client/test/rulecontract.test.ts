@@ -62,7 +62,7 @@ const ledgerLine = (v: View, store: string): LedgerLine => ({ ...v.ledger[0]!, s
 const withStore = (v: View, id: string): View => ({
   ...v, ledger: [...v.ledger, ledgerLine(v, id)], unlocked: [...v.unlocked, { category: "store", id }],
 });
-const tiredRule: Order = { when: fixtureContent.chip_infos.find((c) => c.chip === "tired")!.when, then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [] };
+const tiredRule: Order = { when: fixtureContent.chip_infos.find((c) => c.chip === "tired")!.when, then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [], below_next: false };
 
 /** Put a part's root on the page and return it as the fake element it is under test. */
 function mounted(el: HTMLElement): FakeEl {
@@ -328,7 +328,7 @@ await check("7 More options: levels (folded) and the rate fact come back", () =>
 // ---------------------------------------------------------------- 8: editing an existing rule
 
 await check("8 editing a store rule opens the full editor", () => {
-  const rules: Order[] = [{ when: store("wood", 10, 20), then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [] }];
+  const rules: Order[] = [{ when: store("wood", 10, 20), then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [], below_next: false }];
   const v = viewWith((x) => x, rules);
   const r = rig(v);
   one(r.root, ".rules-list .rule-cond", 0).click();
@@ -340,7 +340,7 @@ await check("8 editing a store rule opens the full editor", () => {
 });
 
 await check("8 editing a chip's rule shows only Do, the sentence and Remove", () => {
-  const rules: Order[] = [{ when: chipWhen("tired"), then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [] }];
+  const rules: Order[] = [{ when: chipWhen("tired"), then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [], below_next: false }];
   const r = rig(viewWith((x) => x, rules));
   one(r.root, ".rules-list .rule-cond", 0).click();
   const cond = one(r.root, ".cond");
@@ -355,7 +355,7 @@ await check("8 editing a chip's rule shows only Do, the sentence and Remove", ()
 // ---------------------------------------------------------------- 9: the Rules tab has no mix chips
 
 await check("9 no mix chips; a slot is set only through its picker", () => {
-  const rules: Order[] = [{ when: store("wood", 10, 20), then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [] }];
+  const rules: Order[] = [{ when: store("wood", 10, 20), then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [], below_next: false }];
   const r = rig(viewWith((x) => x, rules));
   expect("no mix chips", q(r.root, ".mix-chip").length, 0);
   expect("no picker until the slot is tapped", q(r.root, ".rule-picker").length, 0);

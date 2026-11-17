@@ -112,7 +112,7 @@ const one = (root: FakeEl, sel: string, n = 0): FakeEl => {
   expect("what it does pressed", q(cond, ".cond-mix, .cond-task").filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.textContent), ["Rest"]);
   one(cond, ".cond-task[data-card=\"gather\"]").click();   // the task of the saved solo mix "Gather by hand"
   one(cond, ".cond-actions .primary").click();
-  expect("Save keeps the chip's condition, with the new mix", sent(r.decided[0])?.[2], { when: TIRED, then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [] });
+  expect("Save keeps the chip's condition, with the new mix", sent(r.decided[0])?.[2], { when: TIRED, then: { kind: "switch_mix", mix_id: "Gather by hand" }, unless: [], or_else: [], below_next: false });
   const s = rig();
   one(s.root, ".rules-list .rule-cond", 2).click();
   one(s.root, ".cond-actions .danger").click();
@@ -223,7 +223,7 @@ expect("a task rule doesn't move", reorderRule(tab, 3, 0), null);
   r.tab.open(tab, 1);
   expect("open(1): rule 1's editor", one(r.root, ".cond-heading").textContent, "Run Rest by the fire when…");
   r.tab.open(tab, null);
-  expect("open(null): the list", q(r.root, ".rules-list > .rules-row").length, 4);
+  expect("open(null): the list", q(r.root, ".rules-list > .rules-row").filter((n) => !n.classList.contains("next-head")).length, 4);
 
   const red = fixtureStep("redrule", 100).view;   // the wood rule set, its line still red
   const decided: Decision[] = [], opened: (number | null)[] = [];

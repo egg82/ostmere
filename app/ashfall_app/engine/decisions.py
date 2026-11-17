@@ -21,6 +21,7 @@ from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
 from .offerstate import acting, refusal
 from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, listed, rule_on
+from .orders import placed, unplaced
 from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
@@ -66,10 +67,11 @@ def apply_order_verb(save: Save, rules: Rules, verb: OrderVerb) -> tuple[Save, t
 
 
 def controlling_verb(save: Save, rules: Rules) -> OrderVerb | None:
-    """The verb evaluation applies next, from the first of its sources that has one: the answer orders, the tap orders,
-    then the queue (DESIGN.txt, "Orders", "Order mix"; TOWNSFOLK, INSTALLED RULES AND OFFERS, "Evaluation applies
-    every verb")."""
-    for source in (_answer_order_verb, _tap_order_verb, _queue_verb):
+    """The verb evaluation applies next, from the first of its sources that has one: the answer orders, the tap orders
+    above Next, the queue's entry when it can act, the tap orders under Next, then the queue's entry that waits
+    (DESIGN.txt, "Orders", "Order mix", "Next's row"; TOWNSFOLK, INSTALLED RULES AND OFFERS, "Evaluation applies every
+    verb")."""
+    for source in (_answer_order_verb, _tap_above, _ready_queue_verb, _tap_below, _queue_verb):
         verb = source(save, rules)
         if verb is not None:
             return verb
@@ -83,6 +85,16 @@ def _answer_order_verb(save: Save, rules: Rules) -> AnswerOffer | None:
         if rule_on(latch) and isinstance(order.then, (AnswerOffer, AnswerKind)) and (found := acting(save, rules, order.then)):
             return found
     return None
+
+
+def _tap_above(save: Save, rules: Rules) -> TapCard | None:
+    """The tap orders above Next: all of them while Next is at the bottom."""
+    return _tap_order_verb(plan.on_side(save, below=False), rules)
+
+
+def _tap_below(save: Save, rules: Rules) -> TapCard | None:
+    """The tap orders under Next that may act now (plan.under_next)."""
+    return _tap_order_verb(plan.under_next(save, rules), rules) if plan.next_placed(save) else None
 
 
 def _tap_order_verb(save: Save, rules: Rules) -> TapCard | None:
@@ -106,6 +118,19 @@ def _queue_verb(save: Save, rules: Rules) -> OrderVerb | None:
     up a hands task with kept work (_resumes)."""
     verb = plan.live_queue_verb(save, rules)
     return verb if plan.mix_order(save, rules) is None or _resumes(save, rules, verb) else None
+
+
+def _ready_queue_verb(save: Save, rules: Rules) -> TapCard | AnswerOffer | None:
+    """The controlling queue entry's tap or answer when it can act now and no order's mix above Next runs: then it comes
+    before the orders under Next, whose mix it yields as any tap does (DESIGN.txt, "Next's row"). A switch is never
+    this: the queue's mix runs by plan.running_mix_id, and its no-op verb is read last (_queue_verb)."""
+    verb = plan.live_queue_verb(save, rules)
+    running = plan.mix_order(save, rules)
+    if running is not None and not save.orders[running].below_next:
+        return None
+    if isinstance(verb, TapCard):
+        return verb if _can_act(save, rules, verb) else None
+    return verb if isinstance(verb, AnswerOffer) and acting(save, rules, verb) is not None else None
 
 
 def _resumes(save: Save, rules: Rules, verb: OrderVerb | None) -> bool:
@@ -221,7 +246,7 @@ def _applied(save: Save, rules: Rules, verb: PlanVerb) -> tuple[Save, bool]:
                 check_order_verb(rules, save.mixes, a)
             check_actions(rules, save.mixes, o.actions)
         latches = tuple(_kept_latch(save, rules, o) for o in verb.orders)
-        return with_running_mix(save, rules, replace(save, orders=verb.orders, latches=latches)), True
+        return with_running_mix(save, rules, replace(save, orders=placed(verb.orders), latches=latches)), True
     for e in verb.entries:
         refuse_by_hand(e.verb)
         check_condition(rules, e.until)
@@ -240,7 +265,8 @@ def _kept_latch(save: Save, rules: Rules, order: Order) -> Latch:
     """The latch of the first order in save.orders equal to `order` (guards included), matched as rulelog.py matches
     them, so a kept or moved rule holds its place in every band; else latch_now of its `when` and of each guard, for a
     new or edited one (DESIGN.txt, "Rule changes", "RULE GUARDS")."""
-    for old, on in zip(save.orders, save.latches):
+    order = unplaced(order)
+    for old, on in zip(map(unplaced, save.orders), save.latches):
         if old == order:
             return on
     return latch_of(latch_now(save, rules, order.when), tuple(latch_now(save, rules, g) for g in order.unless))
