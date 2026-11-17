@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "track", "required": true, "text": ["tracks, walking"]},
+  {"kind": "study", "id": "hoof", "required": true, "text": ["fore hoof, front"]},
+  {"kind": "label", "anchor": [218, 71], "text": ["antlers"]},
+  {"kind": "label", "anchor": [230, 215], "text": ["neck thick"]},
+  {"kind": "label", "anchor": [450, 275], "text": ["tail short"]}
+]
