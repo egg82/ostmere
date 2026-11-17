@@ -2033,7 +2033,12 @@ export interface components {
             /** Runner */
             runner: string;
         };
-        /** Running */
+        /**
+         * Running
+         * @description 1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card
+         *     on one lane other than the hands, watching a card of another lane (the hands' or another person's); every other
+         *     order's, and every queue entry's, is 422 invalid_decision (CONTRACT.txt, "Decisions").
+         */
         Running: {
             /**
              * @description discriminator enum property added by openapi-typescript

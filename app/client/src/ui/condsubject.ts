@@ -13,19 +13,20 @@ import { el, setText } from "./dom";
 import { ValueSlider } from "./valueslider";
 
 /** The Levels and Tasks heads and their buttons; each button carries data-subject, read back to mark the one chosen. */
-export function subjectRows(catalog: Catalog, view: View, choices: { levels: SubjectRule[]; tasks: SubjectRule[] }, pick: (r: SubjectRule) => void): HTMLElement[] {
+export function subjectRows(catalog: Catalog, view: View, choices: { levels: SubjectRule[]; tasks: SubjectRule[]; running?: SubjectRule[] }, pick: (r: SubjectRule) => void): HTMLElement[] {
   const button = (rule: SubjectRule): HTMLElement => {
     const b = el("button", "quiet cond-subject");
     b.type = "button";
     b.dataset.subject = subjectKey(rule);
     b.append(el("span", "", subjectName(catalog, rule)));
-    if (rule.kind !== "count") b.append(el("span", "cond-amount", catalog.text.fill(UI.level, { n: catalog.format.count(subjectNow(catalog, view, rule)) })));
+    if (rule.kind === "level" || rule.kind === "camp") b.append(el("span", "cond-amount", catalog.text.fill(UI.level, { n: catalog.format.count(subjectNow(catalog, view, rule)) })));
     b.addEventListener("click", () => pick(defaultSubject(catalog, view, rule)));
     return b;
   };
   const head = (key: string, rules: SubjectRule[]) => (rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rules.map(button)]);
   const tasks = sectioned(catalog, choices.tasks, (r) => (r.kind === "count" ? r.card : null), view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
-  return [...head(UI.ruleLevels, choices.levels), ...(tasks.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleTasks)), ...tasks])];
+  return [...head(UI.ruleLevels, choices.levels), ...(tasks.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleTasks)), ...tasks]),
+    ...head(UI.ruleRunning, choices.running ?? [])];
 }
 
 /** Pressed on the subject button that is `rule`'s. */
@@ -76,8 +77,8 @@ export class SubjectControl {
   draw(view: View, rule: SubjectRule | undefined): void {
     this.view = view;
     this.rule = rule ?? null;
-    this.root.hidden = rule === undefined;
-    if (!rule) return;
+    this.root.hidden = rule === undefined || rule.kind === "running";
+    if (!rule || rule.kind === "running") return;
     this.times.root.hidden = rule.kind !== "count";
     this.level.root.hidden = rule.kind === "count";
     const [lo, top] = subjectRange(this.catalog, view, rule);
