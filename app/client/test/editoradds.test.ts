@@ -1,6 +1,6 @@
 // The mix editor's + Add lists the cards that can join in the page's order (docs/decisions/principles.md, "Every option
 // offered works as worded"): the Tasks page's sections, a section's cards by shown name. Fed the cards in reverse.
-import { install } from "./fake-dom";
+import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
@@ -20,8 +20,9 @@ const reversed = { ...base, cards: [...base.cards].reverse() };
 const empty = { id: "none", components: [] };
 
 const fold = new AddFold(catalog, new NewMarks(), () => document.createElement("div"), () => undefined);
+document.body.replaceChildren(fold.root);
 fold.draw(reversed, empty);
-const offered = (fold.root as unknown as { querySelectorAll(s: string): { dataset: Record<string, string> }[] }).querySelectorAll(".add-card").map((b) => b.dataset["card"] ?? "");
+const offered = (fakeDocument.body.firstElementChild as FakeEl).querySelectorAll(".add-card").map((b) => b.dataset.card ?? "");
 const byName = (cards: string[]): string[] => [...cards].sort((a, b) => catalog.cardLabel(a).localeCompare(catalog.cardLabel(b)));
 const craft = (c: string): boolean => catalog.cards.get(c)?.presentation === "craft";
 const ids = free.map((c) => c.card);
