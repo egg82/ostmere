@@ -17,7 +17,7 @@ from tests.daythree.chapter import Later
 from tests.daytwo import abs_band
 from tests.daytwo.checks import returns
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import capcheck, checks, daily
+from tests.dayone import caploss, capcheck, checks, daily
 from tests.dayone.parity import Measured, Present, replay_pair
 from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
@@ -140,6 +140,11 @@ def exit_save(p: DayTwoPlayer, chapter: Later = EIGHT) -> Save:
 def cap_loss(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, tuple[int, ...]]:
     camp = c3.opening3().camp
     return capcheck.failing(exit_save(p, chapter), p.rules, (camp.store,) if camp else ())
+
+
+def away_shares(p: DayTwoPlayer, chapter: Later, hours: int = 24) -> dict[str, float]:
+    """Each store's share of its making lost to its cap over `hours` away from the chapter's last decision (caploss)."""
+    return {s: x.share for s, x in caploss.absences(exit_save(p, chapter), p.rules, (hours,))[hours].items()}
 
 
 def cap_unwanted(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, tuple[int, ...]]:
