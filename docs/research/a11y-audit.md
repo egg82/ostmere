@@ -104,6 +104,13 @@ Grep of `src/` and `game.css`: one `title=` (`ui/hands.ts:158`, the running mix'
   (`game.css:190`, its own comment: "words only until it is hovered"); on touch they read as plain text, not buttons.
   `.share-divider::before` brightens on hover or focus only (`:254`).
 
+Fixed (hover-reachable): the four panel-foot words (`.feedback-open`, `.devices-open`, `.games-open`, `.settings-open`) are
+underlined at rest, as `.asks-more` is, so touch reads them as buttons; they, `.share-divider` and `.sound-button` take
+the `2px var(--ink-hi)` focus ring (their focus look was a colour change with `outline: none`); a line's rule mark, whose
+mask would clip its own ring, rings its line; `.rule-slot` carries a `title` like `.hands-mix-name`. Every one of these
+was already a focusable `button` (the divider has `tabindex=0`), so tap and keyboard reached them. Not verified in a
+render: `.share-divider` and `.sound-button` did not appear in the fixture page (test-covered only).
+
 ## 5. Sound alone (0)
 
 No audio exists in the client: no `AudioContext`, `new Audio`, `<audio>` or `.play(`. The only non-visual channel is

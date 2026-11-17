@@ -83,6 +83,7 @@ const text = (root: HTMLElement, sel: string, i = 0) => root.querySelectorAll<HT
   const { root } = draw(view);
   expect("the condition with its guard", text(root, ".rules-list .rule-cond-text"), "Under 10 Dead wood, until 20, unless Smoked is full");
   expect("the mix with its fallback", text(root, ".rules-list .rule-slot-name"), "Gather by hand, or else Rest");
+  expect("the slot carries its whole wording, which it truncates", root.querySelector<HTMLElement>(".rules-list .rule-slot")?.title, "Gather by hand, or else Rest");
   expect("the task rule's fallback", text(root, ".task-rule .rule-action"), "Smoke the catch, or else Smoke roots");
 }
 
