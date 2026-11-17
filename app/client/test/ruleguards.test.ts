@@ -70,9 +70,9 @@ const text = (root: HTMLElement, sel: string, i = 0) => root.querySelectorAll<HT
   expect("no guard: today's words", ruleCondition(catalog, wood), "Under 10 Dead wood, until 20");
   expect("one guard", ruleCondition(catalog, { ...wood, unless: [FULL] }), "Under 10 Dead wood, until 20, unless Smoked is full");
   expect("two guards", ruleCondition(catalog, { ...wood, unless: [FULL, TIRED] }), "Under 10 Dead wood, until 20, unless Smoked is full, and unless tired");
-  expect("no fallback: its one action", ruleActions(catalog, wood), "Gather by hand");
-  expect("a fallback", ruleActions(catalog, { ...wood, or_else: [{ kind: "switch_mix", mix_id: "Rest" }] }), "Gather by hand, or else Rest");
-  expect("two fallbacks", ruleActions(catalog, { ...wood, or_else: [{ kind: "switch_mix", mix_id: "Rest" }, { kind: "switch_mix", mix_id: "Rest by the fire" }] }), "Gather by hand, or else Rest, or else Rest by the fire");
+  expect("no fallback: its one action", ruleActions(catalog, base, wood), "Gather by hand");
+  expect("a fallback", ruleActions(catalog, base, { ...wood, or_else: [{ kind: "switch_mix", mix_id: "Rest" }] }), "Gather by hand, or else Rest");
+  expect("two fallbacks", ruleActions(catalog, base, { ...wood, or_else: [{ kind: "switch_mix", mix_id: "Rest" }, { kind: "switch_mix", mix_id: "Rest by the fire" }] }), "Gather by hand, or else Rest, or else Rest by the fire");
 }
 
 // The row draws the sentence: the guards in the condition's button, the fallbacks in the mix's slot; a task rule's

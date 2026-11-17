@@ -33,6 +33,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "skills": [*_skills(o.skills, ch.skill_levels), *ch.skills],
         "standing": [*o.standing, *ch.standing],
         "sides": [*o.sides, *ch.sides], "threats": [*o.threats, *ch.threats], "lanes": [*o.lanes, *ch.lanes],
+        "town_later_labels": [*o.town_later_labels, *ch.town_later_labels],
         "cards": expand([*_held(o.cards, ch.while_running), *ch.cards], town, {x.id for x in lanes}, {x.id for x in ch.lanes}, len(ch.town_cards)),
         "town_cards": town,
         "chips": [*o.chips, *ch.chips], "triggers": [*o.triggers, *ch.triggers],

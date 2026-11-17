@@ -821,7 +821,7 @@ TEXT AND NUMBERS (one rule)
     ui.rule.quick_down {store}{test}{n}{task}{m} | ui.rule.quick_up {store}{test}{n}{task}{m} | ui.rule.falls_to |
     ui.rule.reaches_to   the quick add's sentence, by its test, each slot a control; its two tests' words
     ui.rule.copy                     a rule being changed: a new rule from it, to change before adding
-    ui.rule.side_mine   the Rules tab's switch, Mine | Camp (Camp is ui.town.title)
+    ui.rule.side_mine   the Rules tab's switch, Mine | Camp (Camp is the town's name)
     ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
     ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
     ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits
@@ -1554,7 +1554,7 @@ THE TOWN'S MIX
   Once people join, the townsfolk's lanes are run by one mix whose shares are people's time: each share is a part of
   one person's time, the person being the lane its card is on (engine DESIGN.txt, "THE TOWN'S MIX"). It is an
   ordinary saved mix in view.mixes; which one runs is set by a rule, never by the player's switch.
-  Content: game_mix_ids, the mix ids the content's joins make: the game's own mixes, worded by ui.town.title and
+  Content: game_mix_ids, the mix ids the content's joins make: the game's own mixes, worded by the town's name and
   changed on a person's page; every other saved mix is the player's. limits.reserved_mix_prefix ("town:"): a new
   mix id beginning so is the game's. Nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane):
   that lane's person has joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
@@ -1596,8 +1596,9 @@ THE TOWN'S MIX
     immediately before the town's first always rule. With one town mix a town rule has nothing to switch to, so the
     page draws none of them and offers no new one (the always rule still runs). A greyed town mix is drawn as the
     hands' greyed mix is: the strip says it stopped and which card retired.
-  - name the town everywhere by ui.town.title: its tab, its view's title, its rules' heading and a mix in
-    Content.game_mix_ids.
+  - name the town everywhere by one name: its tab, its view's title, the Rules page's switch and heading, and a mix in
+    Content.game_mix_ids. The name is the text of the label_key of the last of Content.town_later_labels
+    ([LaneLabel], as a lane's later_labels) whose `after` view.unlocked holds, else ui.town.title.
   THE CLIENT MAY NOT:
   - list a town mix in the Mixes list or open it in the mix editor, offer switch_mix of one there, or put one in the
     queue. A name typed in the mix editor that begins limits.reserved_mix_prefix, or is another saved mix's, is

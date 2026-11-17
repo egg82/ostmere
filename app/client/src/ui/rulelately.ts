@@ -19,9 +19,9 @@ export function shownRuns(view: View, runs: readonly RuleRun[]): RuleRun[] {
 
 /** An ended entry's one line: its rule worded, and why the game removed it (the person: the name of the lane of the card
  * the rule taps, else the lane's label). */
-export function endedLine(catalog: Catalog, run: RuleRun): string {
+export function endedLine(catalog: Catalog, view: View, run: RuleRun): string {
   const { text } = catalog;
-  const words = ruleWords(catalog, run.order);
+  const words = ruleWords(catalog, view, run.order);
   const rule = words ? `${words.when} → ${words.action}` : "";
   if (run.ended !== "left") return text.fill(UI.ruleEndedSeason, { rule });
   const lane = run.order.then.kind === "tap_card" ? catalog.laneOf(run.order.then.card) : "";
@@ -52,11 +52,11 @@ export function latelyRows(catalog: Catalog, view: View, runs: readonly RuleRun[
   const shown = shownRuns(view, runs);
   if (shown.length === 0) return [];
   const rows = shown.flatMap((run, i) => {
-    if (run.ended !== null && run.ended !== "stint" && run.ended !== "dry") return [el("div", "lately-rule lately-line", endedLine(catalog, run))];
-    const words = ruleWords(catalog, run.order);
+    if (run.ended !== null && run.ended !== "stint" && run.ended !== "dry") return [el("div", "lately-rule lately-line", endedLine(catalog, view, run))];
+    const words = ruleWords(catalog, view, run.order);
     const facts = el("div", "lately-facts lately-line", runFacts(catalog, run, view.at));
     facts.dataset.run = String(i);
-    const rule = run.ended === "stint" || run.ended === "dry" ? stintLine(catalog, run) : words ? `${words.when} → ${words.action}` : "";
+    const rule = run.ended === "stint" || run.ended === "dry" ? stintLine(catalog, view, run) : words ? `${words.when} → ${words.action}` : "";
     return [el("div", "lately-rule lately-line", rule), facts];
   });
   return [el("h3", "rules-next lately-line", catalog.text.get(UI.ruleLately)), ...rows];

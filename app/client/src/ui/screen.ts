@@ -247,7 +247,7 @@ export class Screen {
     if (prev && (view.orders.length > prev.orders.length || view.queue.length > prev.queue.length)) this.flight.landed(this.tabs.rules, this.tabs.on === "rules");
     this.low.hidden = this.ledger.root.hidden;   // nothing under the strip until the ledger has something to show
     const more = window.matchMedia(PHONE).matches && !(this.ledger.root.hidden && this.skills.root.hidden);
-    if (!this.town.draw(more, prev !== null && this.tabs.on !== "town") && this.tabs.on === "town") this.pick("cards");
+    if (!this.town.draw(view, more, prev !== null && this.tabs.on !== "town") && this.tabs.on === "town") this.pick("cards");
     this.cardGlow.place(view);
   }
 

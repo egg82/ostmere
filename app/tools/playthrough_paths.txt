@@ -32,6 +32,7 @@ app/ashfall_app/api/goal_models.py
 app/ashfall_app/api/goalrows.py
 app/ashfall_app/api/goals.py
 app/ashfall_app/api/journal_models.py
+app/ashfall_app/api/lane_infos.py
 app/ashfall_app/api/lessonlog.py
 app/ashfall_app/api/levels.py
 app/ashfall_app/api/limits.py

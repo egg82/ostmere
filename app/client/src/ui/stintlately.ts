@@ -1,14 +1,14 @@
 // A stint that popped at its goal, in Lately (CONTRACT.txt, "Rule runs", "Ended stint"): its mix and goal as Next words
 // them, then how long it ran, when its goal landed and what the save gained while it ran. Facts the save recorded.
-import type { RuleRun } from "../api/types";
+import type { RuleRun, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { mixLabel } from "../game/orders";
 import { UI } from "../game/text";
 import { untilLabel } from "./stint";
 
 /** "{mix} until {goal}", read off the entry's order: its switch and its until. */
-export function stintLine(catalog: Catalog, run: RuleRun): string {
-  const mix = run.order.then.kind === "switch_mix" ? mixLabel(catalog, run.order.then.mix_id) : "";
+export function stintLine(catalog: Catalog, view: View, run: RuleRun): string {
+  const mix = run.order.then.kind === "switch_mix" ? mixLabel(catalog, view, run.order.then.mix_id) : "";
   return catalog.text.fill(UI.stintEntry, { mix, goal: untilLabel(catalog, run.order.when) });
 }
 

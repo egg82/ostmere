@@ -85,9 +85,9 @@ export function editDraft(catalog: Catalog, view: View, index: number): Draft | 
 }
 
 /** The editor's heading: a chip's rule as the chip, a rule being changed by what it runs, else "New rule". */
-export function headingWords(catalog: Catalog, draft: Draft): string {
+export function headingWords(catalog: Catalog, view: View, draft: Draft): string {
   return draft.chip && draft.opened ? conditionWords(catalog, draft.opened.when) ?? ""
-    : draft.index !== null && draft.then ? catalog.text.fill(UI.ruleHeading, { mix: actionWords(catalog, draft.then) })
+    : draft.index !== null && draft.then ? catalog.text.fill(UI.ruleHeading, { mix: actionWords(catalog, view, draft.then) })
       : catalog.text.get(UI.ruleNew);
 }
 

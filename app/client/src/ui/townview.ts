@@ -2,8 +2,8 @@
 // (ui/lanerows.ts: the town strip, then a row per lane run by rules) under the view's title, and on a phone the ledger
 // and skills after them (ui/partseat.ts). The rail and the main screen never list anyone's jobs: this is their home.
 import type { Catalog } from "../game/catalog";
-import { UI } from "../game/text";
-import { el } from "./dom";
+import type { View } from "../api/types";
+import { el, setText } from "./dom";
 import { markNew, unmark } from "./fresh";
 import type { LaneRows } from "./lanerows";
 
@@ -13,14 +13,20 @@ export class TownView {
   private rows = 0;
   private fresh = 0;
 
-  constructor(catalog: Catalog, private readonly lanes: LaneRows, private readonly tab: HTMLButtonElement) {
-    this.root.append(el("h2", "view-title", catalog.text.get(UI.townTitle)), lanes.root);
+  private readonly title = el("h2", "view-title");
+
+  constructor(private readonly catalog: Catalog, private readonly lanes: LaneRows, private readonly tab: HTMLButtonElement) {
+    this.root.append(this.title, lanes.root);
   }
 
   /** Whether the tab shows: once a person or a lane is drawn, or `more` holds (a phone's ledger or skills); until then its
    * slot is kept unseen, so nothing moves. `unseen`: the panel is out of sight and this is not the first view. The tab wears
-   * the quiet dot while a person's Change does, coming when more of them do, as a row's arrival dots it (`unseen`). */
-  draw(more: boolean, unseen: boolean): boolean {
+   * the quiet dot while a person's Change does, coming when more of them do, as a row's arrival dots it (`unseen`). The
+   * view's title and the tab wear the town's name as `view` unlocked it. */
+  draw(view: View, more: boolean, unseen: boolean): boolean {
+    const name = this.catalog.townTitle(view);
+    setText(this.title, name);
+    setText(this.tab, name);
     const rows = this.lanes.count;
     const shows = rows > 0 || more;
     this.tab.style.visibility = shows ? "" : "hidden";

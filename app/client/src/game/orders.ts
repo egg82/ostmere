@@ -66,19 +66,19 @@ export function ruleFor(view: View, card: OrderCard): number {
 }
 
 /** A rule's two halves in the player's words: its condition and what it runs (a mix's name or a task's label). */
-export function ruleWords(catalog: Catalog, order: Order): { when: string; action: string } | null {
+export function ruleWords(catalog: Catalog, view: View, order: Order): { when: string; action: string } | null {
   const when = conditionWords(catalog, order.when);
-  return when === null ? null : { when, action: actionWords(catalog, order.then) };
+  return when === null ? null : { when, action: actionWords(catalog, view, order.then) };
 }
 
 /** A mix as the player reads it: one the game made (Content.game_mix_ids) as the town's title, any other by its name. */
-export function mixLabel(catalog: Catalog, id: string): string {
-  return catalog.content.game_mix_ids.includes(id) ? catalog.text.get(UI.townTitle) : id;
+export function mixLabel(catalog: Catalog, view: View, id: string): string {
+  return catalog.content.game_mix_ids.includes(id) ? catalog.townTitle(view) : id;
 }
 
-export function actionWords(catalog: Catalog, then: OrderVerb): string {
+export function actionWords(catalog: Catalog, view: View, then: OrderVerb): string {
   if (then.kind === "answer_offer" || then.kind === "answer_kind") return answerWords(catalog, then);   // set by an answer or another client; the page builds none
-  return then.kind === "switch_mix" ? mixLabel(catalog, then.mix_id) : catalog.cardLabel(then.card);
+  return then.kind === "switch_mix" ? mixLabel(catalog, view, then.mix_id) : catalog.cardLabel(then.card);
 }
 
 /** The hands' rules, in priority order: each runs a mix (and is drawn as a row of the Rules tab). */

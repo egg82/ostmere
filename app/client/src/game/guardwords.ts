@@ -45,8 +45,8 @@ export function ruleCondition(catalog: Catalog, order: Order): string | null {
 }
 
 /** What a rule does: "Smoke the catch, or else Smoke roots"; a rule with no fallback reads as its one action. */
-export function ruleActions(catalog: Catalog, order: Order): string {
-  return order.or_else.reduce((first, verb) => catalog.text.fill(UI.ruleOrElse, { a: first, b: actionWords(catalog, verb) }), actionWords(catalog, order.then));
+export function ruleActions(catalog: Catalog, view: View, order: Order): string {
+  return order.or_else.reduce((first, verb) => catalog.text.fill(UI.ruleOrElse, { a: first, b: actionWords(catalog, view, verb) }), actionWords(catalog, view, order.then));
 }
 
 /** The why line of a paused rule at `t`: "paused until smoked is under 19 · now 20", "paused while tired", one clause

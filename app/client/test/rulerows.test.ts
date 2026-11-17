@@ -15,9 +15,9 @@ const catalog = new Catalog(fixtureContent);
 const step = fixtureStep("rulestab", 200_000);
 const [tired, wood] = step.rule_runs;
 if (!tired || !wood) throw new Error("rulestab's runs: the tired rule and the wood rule");
-const words = (i: number): string => { const w = ruleWords(catalog, step.rule_runs[i]!.order)!; return `${w.when} → ${w.action}`; };
+const words = (i: number): string => { const w = ruleWords(catalog, step.view, step.rule_runs[i]!.order)!; return `${w.when} → ${w.action}`; };
 
-const got = ruleEntries(catalog, step.rule_runs);
+const got = ruleEntries(catalog, step.view, step.rule_runs);
 const of = (rule: string): Array<[string, number, string | null]> =>
   got.filter((e) => e.entry.text.startsWith(rule)).map((e) => [e.entry.text, e.entry.at, e.entry.cause]);
 expect("a rule that came on and has not let go: one entry, no cause for a chip's rule", of(words(0)),
@@ -25,6 +25,6 @@ expect("a rule that came on and has not let go: one entry, no cause for a chip's
 expect("a store rule that came on and let go: two entries, each with the store's level then", of(words(1)),
   [[`${words(1)} came on`, wood.on_at, `2 ${catalog.storeLabel("wood")}`], [`${words(1)} let go`, wood.off_at, `20 ${catalog.storeLabel("wood")}`]]);
 expect("every entry is a rule's", [...new Set(got.map((e) => e.entry.kind))], ["rule"]);
-expect("the ids are the same from one Step to the next", ruleEntries(catalog, step.rule_runs).map((e) => e.id), got.map((e) => e.id));
+expect("the ids are the same from one Step to the next", ruleEntries(catalog, step.view, step.rule_runs).map((e) => e.id), got.map((e) => e.id));
 expect("and differ from each other", new Set(got.map((e) => e.id)).size, got.length);
-expect("no runs, no entries", ruleEntries(catalog, []), []);
+expect("no runs, no entries", ruleEntries(catalog, step.view, []), []);

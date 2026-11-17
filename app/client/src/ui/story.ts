@@ -112,7 +112,7 @@ export class Story implements Part {
   update(view: View, prev: View | null): void {
     const { catalog } = this.ctx;
     this.nowAt = Math.max(this.nowAt, view.at);
-    this.chronicle.seen(this.nowAt);
+    this.chronicle.seen(this.nowAt, view);
     this.chronicle.waiting(view.offers.filter((o) => o.answer === null).length);
     const carried = catalog.content.feature_infos.filter((f) => f.label_key && catalog.unlocked(view, "feature", f.feature));
     this.journal.update(view);
@@ -126,12 +126,12 @@ export class Story implements Part {
     this.aimLine.update(view);
     this.fightLines(view, prev);
     this.topLines(view, prev);
-    this.ruleLines();
+    this.ruleLines(view);
   }
 
   /** Each rule's latest start and let-go the chronicle does not hold yet (game/rulerows.ts). */
-  private ruleLines(): void {
-    for (const { id, entry } of ruleEntries(this.ctx.catalog, this.ctx.ruleRuns())) {
+  private ruleLines(view: View): void {
+    for (const { id, entry } of ruleEntries(this.ctx.catalog, view, this.ctx.ruleRuns())) {
       if (this.ruled.has(id)) continue;
       this.ruled.add(id);
       this.chronicle.add(entry);

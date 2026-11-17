@@ -10,6 +10,9 @@ end_feature = "cart_news"
 # (steps 12230, 18350, 27530, 41300, 61950 after day one's last, 8150). Appended only: a released threshold never moves.
 curve_items = [36630, 54980, 82510, 123810, 185760]
 
+# The camp is the town's name from B3, when the first person arrives and the town is founded from it.
+town_later_labels = [{ after = { unlock_kind = "feature", id = "n1" }, label_key = "town_title_town" }]
+
 # ---------- her lane ----------
 
 # The first person who works for the camp: a lane run by the player's rules (engine DESIGN.txt, "Ruled lane"). "She"
@@ -713,6 +716,7 @@ l_tighter_rack = "level"
 # ---------- lines ----------
 lane_n1 = "Her hands"
 lane_n1_named = "{n1}'s hands"
+town_title_town = "Town"
 name_n1 = "Lucy"
 store_evening_2 = "evening"
 store_night_2 = "night"

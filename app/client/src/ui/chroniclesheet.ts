@@ -4,7 +4,7 @@
 // newest open when there is no chapter). Lines run oldest first within each. Each line carries its cause beneath it.
 // Under Story, a stretch ends with how many entries it holds of each other filter, and each count opens that filter.
 import { agoWords } from "../game/ago";
-import type { Visit } from "../api/types";
+import type { View, Visit } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { added, filtersOf, held, inStrip, stretches, tally, type Entry, type Filter, type Stretch } from "../game/chronicle";
 import { awayTitle, filterCount, filterLabel } from "../game/chronwords";
@@ -32,6 +32,8 @@ export class ChronicleSheet implements BookPage {
   /** How many asks wait now: the chapter's waiting row. */
   private asks = 0;
   private shown = false;
+  /** The latest view, whose unlocks word the town's name in a chapter's rules. */
+  private view: View | null = null;
 
   /** `showWaiting`: what the chapter's waiting count opens (the asks on the page), after `leave` takes the Book away. */
   constructor(private readonly catalog: Catalog, private readonly keeps: Keeps, private readonly showWaiting: () => void,
@@ -77,8 +79,9 @@ export class ChronicleSheet implements BookPage {
   }
 
   /** The page's latest game second, so a stretch's "ago" reads against it. */
-  seen(at: number): void {
+  seen(at: number, view: View): void {
     this.now = Math.max(this.now, at);
+    this.view = view;
   }
 
   /** The stretches are cut from every entry, so a stretch keeps its title and state whatever the filter; the filter
@@ -100,10 +103,10 @@ export class ChronicleSheet implements BookPage {
   /** The newest return's chapter, its stretch taken out of `all`; null with no return kept. */
   private chapter(all: Stretch[]): ChapterView | null {
     const visit = this.keeps.visits().reduce<Visit | null>((n, v) => (n === null || v.left > n.left ? v : n), null);
-    if (visit === null) return null;
+    if (visit === null || this.view === null) return null;
     const lines = all.at(-1)?.visit?.left === visit.left ? all.pop()!.lines : [];
     const figures = this.keeps.chapter();
-    return { visit, lines, figures: figures?.left === visit.left ? figures : null, waiting: this.asks };
+    return { visit, view: this.view, lines, figures: figures?.left === visit.left ? figures : null, waiting: this.asks };
   }
 
   private waitingShown(): void {

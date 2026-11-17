@@ -165,7 +165,7 @@ export class RulesTab implements Part {
       return;
     }
     const side = this.sides.now(view);
-    const head = side === null ? [] : [sideSwitch(this.ctx.catalog, side, (to) => { this.sides.set(to); this.menu = null; this.draw(); })];
+    const head = side === null ? [] : [sideSwitch(this.ctx.catalog, view, side, (to) => { this.sides.set(to); this.menu = null; this.draw(); })];
     const write = (scope?: RuleSide): HTMLElement[] => (this.ctx.keeps.ruleSeen() ? [this.newRule(view, scope)] : []);
     this.list.replaceChildren(...head, ...(side === "camp" ? [] : [...this.handsRows(view), this.otherwiseRow(view), ...write(side ?? undefined)]));
     this.lanes.replaceChildren(...(side === "mine" ? [] : townSection(this.ctx, view, this.townRows(view))), ...laneSections(this.ctx, view, (i) => this.condButton(view, i), side), ...(side === "camp" ? write("camp") : []));
@@ -180,7 +180,7 @@ export class RulesTab implements Part {
   private handsRows(view: View): HTMLElement[] {
     const head = nextHead(this.ctx.catalog, this.itemsOf(view, NEXT), this.menu === NEXT, () => this.handle(view, NEXT, UI.ruleNextHandle), (step) => this.move(view, NEXT, step));
     return nextItems(view, handsGroup(this.ctx.catalog, view)).flatMap((i) => (i === NEXT ? nextRows(this.ctx, view, this.plan, this.order, head)
-      : this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view.orders[i]!), view.orders[i]!.or_else.length > 0)], false)));
+      : this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view, view.orders[i]!), view.orders[i]!.or_else.length > 0)], false)));
   }
 
   /** The ≡ of row `index` (a rule's, or NEXT), draggable. */

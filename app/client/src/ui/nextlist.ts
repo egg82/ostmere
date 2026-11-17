@@ -27,7 +27,7 @@ export function nextRows(ctx: PartContext, view: View, plan: StintPlan, order: N
     row.dataset["next"] = String(i);
     const hue = entry.verb.kind === "tap_card" ? catalog.rank(entry.verb.card) % 6 : 5;
     const end = runsNow(view, entry) ? el("span", "next-running", catalog.text.get(UI.queueRunning)) : removeButton(ctx, view, i);
-    const words = entry.verb.kind === "switch_mix" ? stintWords(catalog, view, entry) : actionWords(catalog, entry.verb);
+    const words = entry.verb.kind === "switch_mix" ? stintWords(catalog, view, entry) : actionWords(catalog, view, entry.verb);
     const action = el("b", `rule-action hue-${hue}`, words);
     const facts = stintFacts(catalog, view, i);
     if (facts !== null) action.append(el("span", "next-facts", facts));

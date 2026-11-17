@@ -2884,6 +2884,13 @@
           "first_mix": {
             "$ref": "#/components/schemas/FirstMix"
           },
+          "town_later_labels": {
+            "items": {
+              "$ref": "#/components/schemas/LaneLabel"
+            },
+            "type": "array",
+            "title": "Town Later Labels"
+          },
           "game_mix_ids": {
             "items": {
               "type": "string"
@@ -2923,6 +2930,7 @@
           "camp",
           "people",
           "first_mix",
+          "town_later_labels",
           "game_mix_ids",
           "transfer_code_s"
         ],

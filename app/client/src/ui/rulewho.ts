@@ -27,7 +27,7 @@ export function whoPicker(ctx: PartContext, view: View, pick: (who: Who) => void
   head.append(el("h2", "panel-heading cond-heading", catalog.text.get(UI.ruleNew)), x);
   const row = el("div", "cond-mixes rules-who");
   for (const who of whoChoices(ctx, view)) {
-    const b = el("button", "quiet cond-task", who.town ? catalog.text.get(UI.townTitle) : catalog.laneLabel(who.lane ?? "", view));
+    const b = el("button", "quiet cond-task", who.town ? catalog.townTitle(view) : catalog.laneLabel(who.lane ?? "", view));
     b.type = "button";
     b.addEventListener("click", () => { tapFeedback(); pick(who); });
     row.append(b);

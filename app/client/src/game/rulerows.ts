@@ -2,7 +2,7 @@
 // each run's last start and last let-go, the rule in the player's words, and as cause the store's level then (a chip's
 // rule or a count or level rule has none: its words already say what it waits on). The runs are a summary, so starts a
 // later start replaced before any page saw them are not entries. Pure.
-import type { Order, RuleRun } from "../api/types";
+import type { Order, RuleRun, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import type { Entry } from "./chronicle";
 import { chipOf, ruleWords, storeRule } from "./orders";
@@ -15,14 +15,14 @@ export interface RuleEntry {
 }
 
 /** A rule in the player's words, "when → action"; null when it cannot be worded. */
-export function ruleText(catalog: Catalog, order: Order): string | null {
-  const words = ruleWords(catalog, order);
+export function ruleText(catalog: Catalog, view: View, order: Order): string | null {
+  const words = ruleWords(catalog, view, order);
   return words === null ? null : `${words.when} → ${words.action}`;
 }
 
-export function ruleEntries(catalog: Catalog, runs: readonly RuleRun[]): RuleEntry[] {
+export function ruleEntries(catalog: Catalog, view: View, runs: readonly RuleRun[]): RuleEntry[] {
   return runs.flatMap((run) => {
-    const rule = ruleText(catalog, run.order);
+    const rule = ruleText(catalog, view, run.order);
     if (rule === null) return [];
     const store = chipOf(catalog, run.order.when) ? null : storeRule(catalog, run.order)?.store ?? null;
     const cause = (level: number | null): string | null => (store === null || level === null ? null

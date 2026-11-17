@@ -28,7 +28,7 @@ export function townSection(ctx: PartContext, view: View, rows: TownRows): HTMLE
   const rules = townRules(catalog, view);
   if (rules.length === 0 || !townCanSwitch(catalog, view)) return [];
   const section = el("section", "rules-lane rules-town");
-  section.append(el("h2", "panel-heading", catalog.text.get(UI.townTitle)), ...rules.flatMap((i) => rows.row(i, townBody(ctx, view, i, rows.cond))));
+  section.append(el("h2", "panel-heading", catalog.townTitle(view)), ...rules.flatMap((i) => rows.row(i, townBody(ctx, view, i, rows.cond))));
   return [section];
 }
 
@@ -36,6 +36,6 @@ function townBody(ctx: PartContext, view: View, index: number, cond: (index: num
   const { catalog } = ctx;
   const order = view.orders[index]!;
   const mixId = order.then.kind === "switch_mix" ? order.then.mix_id : "";
-  if (order.when.kind === "after_time" && order.when.at === 0) return [el("span", "rule-when", catalog.text.fill(UI.ruleTownAlways, { mix: mixLabel(catalog, mixId) }))];
-  return [cond(index), el("span", "rule-arrow", "→"), el("span", order.or_else.length > 0 ? "rule-slot-name has-else" : "rule-slot-name", ruleActions(catalog, order))];
+  if (order.when.kind === "after_time" && order.when.at === 0) return [el("span", "rule-when", catalog.text.fill(UI.ruleTownAlways, { mix: mixLabel(catalog, view, mixId) }))];
+  return [cond(index), el("span", "rule-arrow", "→"), el("span", order.or_else.length > 0 ? "rule-slot-name has-else" : "rule-slot-name", ruleActions(catalog, view, order))];
 }

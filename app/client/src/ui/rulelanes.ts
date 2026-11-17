@@ -54,7 +54,7 @@ export function taskRow(ctx: PartContext, view: View, index: number, cond: (inde
   const remove = el("button", "quiet", catalog.text.get(UI.orderRemove));
   remove.type = "button";
   remove.addEventListener("click", () => { tapFeedback(); noteOrderRemoved(); ctx.actions.decide(removeRule(view, index)); });
-  const does = isAlways(order) ? [] : [el("span", "rule-arrow", "→"), el("b", `rule-action hue-${hue}`, ruleActions(catalog, order))];
+  const does = isAlways(order) ? [] : [el("span", "rule-arrow", "→"), el("b", `rule-action hue-${hue}`, ruleActions(catalog, view, order))];
   const lane = ruledLaneOf(catalog, order);   // on a ruled lane, ● is the rule whose task it runs now, as on the hands
   const on = lane === null ? view.orders_on[index] === true && view.order_states[index] !== "paused" : view.lanes.find((l) => l.lane === lane)?.order === index;
   row.append(ruleDot(catalog, on), cond(index), ...does, remove);

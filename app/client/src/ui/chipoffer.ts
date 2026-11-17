@@ -29,12 +29,12 @@ export class ChipOffer {
     if (shown && (!chipCardOpen(view, shown, behind) || !guidedRule(view, this.ctx.keeps, shown) || waits(shown))) this.drop();
     if (this.card) return;
     const head = chipCards(this.ctx.catalog, view, behind)[0];
-    if (head && guidedRule(view, this.ctx.keeps, head) && !waits(head)) this.draw(head);
+    if (head && guidedRule(view, this.ctx.keeps, head) && !waits(head)) this.draw(view, head);
   }
 
-  private draw(card: OrderCard): void {
+  private draw(view: View, card: OrderCard): void {
     const { catalog } = this.ctx;
-    const words = ruleWords(catalog, { when: card.when, then: card.then, unless: [], or_else: [], below_next: false });
+    const words = ruleWords(catalog, view, { when: card.when, then: card.then, unless: [], or_else: [], below_next: false });
     if (!words) return;
     const sentence = el("p", "rule-sentence");
     const hue = card.then.kind === "tap_card" ? catalog.rank(card.then.card) % 6 : 5;

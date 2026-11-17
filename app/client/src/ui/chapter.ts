@@ -4,7 +4,7 @@
 // labels opening their filters, the waiting row's count showing what waits, then the people section when anyone came
 // or went (the lines that tell it, taken out of the lines above), then the counts of the filters no row opens. With figures kept and nothing at all to show, one line says so; with none kept (a return from before they
 // were), it says nothing, since nothing is known.
-import type { Chapter, Visit } from "../api/types";
+import type { Chapter, View, Visit } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { held, tally, type Entry, type Filter } from "../game/chronicle";
 import { awaySpan, chapterRows, filterCount, SECTION_LABEL, type ChapterSection } from "../game/chronwords";
@@ -13,6 +13,8 @@ import { el } from "./dom";
 
 export interface ChapterView {
   visit: Visit;
+  /** The latest view: its unlocks word the town's name in the rules. */
+  view: View;
   lines: Entry[];
   /** The return's kept figures; null when this return has none. */
   figures: Chapter | null;
@@ -35,9 +37,9 @@ export function chapterNode(catalog: Catalog, c: ChapterView, filter: Filter | n
   head.append(el("h3", "chapter-title", text.get(UI.chapter)), el("span", "v-ago", awaySpan(text, c.visit.back - c.visit.left)));
   const people = filter === "story" ? c.lines.filter((l) => l.person) : [];
   item.append(head, ...held(c.lines, filter).filter((l) => !people.includes(l)).map((l) => act.line(l)));
-  if (c.figures && c.lines.length === 0 && chapterRows(catalog, c.figures, 0).length === 0) item.append(el("p", "chapter-still", text.get(UI.chapterStill)));
+  if (c.figures && c.lines.length === 0 && chapterRows(catalog, c.view, c.figures, 0).length === 0) item.append(el("p", "chapter-still", text.get(UI.chapterStill)));
   if (filter !== "story") return item;
-  const rows = chapterRows(catalog, c.figures, c.waiting);
+  const rows = chapterRows(catalog, c.view, c.figures, c.waiting);
   const counted = tally(c.lines);
   if (rows.length > 0) item.append(rowsNode(catalog, rows, counted.map(([f]) => f), act));
   if (people.length > 0) item.append(peopleNode(catalog, people, act));

@@ -285,6 +285,9 @@ class Content(BaseModel):
     people: PeopleInfo | None
     """The bands a day's mention is worded from (CONTRACT.txt, "People"); null until a chapter declares [people]."""
     first_mix: FirstMix
+    town_later_labels: list[LaneLabel]
+    """The town's name once `after` is unlocked: the label_key of the last whose `after` view.unlocked holds, else
+    ui.town.title (CONTRACT.txt, "The town's mix")."""
     game_mix_ids: list[str]
     """The mix ids the game makes (the town's mixes its joins make): the game's own, worded by ui.town.title and changed
     in the town's editor. Every other saved mix is the player's (CONTRACT.txt, "The town's mix")."""

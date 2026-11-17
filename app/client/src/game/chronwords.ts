@@ -1,7 +1,7 @@
 // The words the chronicle wears: how long the player was away, its filters, how many entries of one a stretch holds,
 // what caused a line (CONTRACT.txt, "Line causes"), worded from the served cause, never from the line, and the "Since
 // you left" chapter's figures as rows (game/chapter.ts). Pure.
-import type { Chapter, Condition, LineCause } from "../api/types";
+import type { Chapter, Condition, LineCause, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import type { Filter } from "./chronicle";
 import { ruleText } from "./rulerows";
@@ -35,7 +35,7 @@ export const SECTION_LABEL: Readonly<Record<ChapterSection, string>> = {
 
 /** The chapter's rows, each only when it has something: the stores gained then lost ("+326 Dead wood"), the Camp's
  * and each skill's level ("Camp 1 → 2"), each rule that ran, and how many asks wait now. */
-export function chapterRows(catalog: Catalog, chapter: Chapter | null, waiting: number): Array<[ChapterSection, string[]]> {
+export function chapterRows(catalog: Catalog, view: View, chapter: Chapter | null, waiting: number): Array<[ChapterSection, string[]]> {
   const { text, format } = catalog;
   const per = catalog.content.scales.quantity_per_item;
   const rows: Array<[ChapterSection, string[]]> = [];
@@ -47,7 +47,7 @@ export function chapterRows(catalog: Catalog, chapter: Chapter | null, waiting: 
     rows.push(["levels", [...(chapter.camp ? [level(catalog.storeLabel(chapter.camp.id), chapter.camp.was, chapter.camp.now)] : []),
       ...chapter.levels.map((l) => level(catalog.skillLabel(l.id), l.was, l.now))]]);
     rows.push(["rules", chapter.rules.flatMap((r) => {
-      const rule = ruleText(catalog, r.order);
+      const rule = ruleText(catalog, view, r.order);
       if (rule === null) return [];
       if (r.came_on && r.times > 1) return [text.fill(UI.chapterTimes, { rule, n: format.count(r.times) })];
       return [text.fill(r.came_on ? UI.chronRuleOn : UI.chronRuleOff, { rule })];
