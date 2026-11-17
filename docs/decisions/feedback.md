@@ -38,8 +38,9 @@ Feedback: null is silent. The ladder (`docs/design/opening-screen.md`, "The feed
 `app/client/src/ui/ladder.ts`: event kind to rung to effect. A failed tap (`api.models.Step`, its failed_tap) pulses its
 card red and the need that stopped it (`app/client/src/ui/cards.ts`); the effect's numbers are tokens in
 `app/client/src/game.css`. **A refused tap never has text**: the engine emits no line for it and the content has no
-refusal lines. A tap that lands puts its line in the strip and the chronicle, never under the card, so each tap outcome
-has one home. A card sinks on a press and settles on release (`app/client/src/ui/cardrow.ts`); a level shows on the
+refusal lines. A story line has one home on screen, the strip (and the chronicle and the journal), never under a card or anywhere
+else beside the cards: a line under its card, and later the newest line atop the card column, were each tried and
+were too much (owner). A card sinks on a press and settles on release (`app/client/src/ui/cardrow.ts`); a level shows on the
 card it speeds up, old → new (`app/client/src/ui/cardlevel.ts`, from `app/client/src/game/levelled.ts`); and a live
 step's chain lights link by link at the link pace of the arrival queue that also paces returns and story lines
 (`app/client/src/ui/reveal.ts`).
