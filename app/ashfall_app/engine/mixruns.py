@@ -2,7 +2,7 @@
 cards' shares with how each runs now. Semantics: DESIGN.txt, "Order mix" and "THE TOWN'S MIX"."""
 from collections.abc import Callable
 
-from .counts import greyed
+from .counts import greyed, is_retired
 from .ids import HANDS, CardId, LaneId, MixId, StoreId
 from .index import index
 from .memo import SaveMemo
@@ -96,7 +96,7 @@ def _entries(save: Save, rules: Rules, shares: tuple[CardShare, ...], mix: MixId
 
 
 def _mix_run(save: Save, rules: Rules, card: CardId, paused_on: StoreId | None, grey: bool, handed: bool) -> Run:
-    if grey:
+    if grey or is_retired(save, rules, card):
         return Run(RunKind.GREYED, 0, 1)
     if paused_on is not None:
         return Run(RunKind.PAUSED, 0, 1, paused_on)

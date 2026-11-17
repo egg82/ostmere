@@ -1878,12 +1878,17 @@ CHOICES (the town's mix)
   on. SaveMix of a TOWN mix refuses (InvalidVerbError): a card on a lane not joined, a card with a cap, and any lane
   whose flattened shares sum above BP. A HANDS mix is checked as before (sum <= BP). The engine never moves a share
   between people, nor between cards (Shares: idle is shown, never redistributed).
-- Uncapped only: a TOWN mix holds no capped card (refused above), so it greys only by retirement (Greyed mix, Retired,
-  unchanged). A person's one-off is their lane's rule tap (the day-two idiom: an installed first=True always rule),
+- Uncapped only: a TOWN mix holds no capped card (refused above), so only retirement takes a card out of it, and a
+  retired card stops only its own share: the mix is never greyed (counts.greyed reads a mix's HANDS cards only), the
+  card's Run is GREYED (0/1, as in a greyed hands mix), its share idles for that person and is shown, never handed to
+  another person or card (Town share), and the mix keeps running for everyone else. A HANDS mix holding a completed
+  or retired card still greys whole, unchanged (Greyed mix). A person's one-off is their lane's rule tap (the day-two idiom: an installed first=True always rule),
   which yields their shares while it runs and passes over once done. Why: a town mix greyed by a finished build
-  would idle every person in it until a visit, the 2 AM test's failure, for work a tap rule already does.
+  would idle every person in it until a visit, the 2 AM test's failure, for work a tap rule already does; and the
+  hands' grey-whole exists to send the player to the editor and falls through to the queue or orders, where the
+  town has nothing to fall to.
 - Running town mix: plan.running_town_mix_id(save, rules) is the mix of the first order, in sequence, whose latch is
-  true, whose verb is a SwitchMix of a TOWN mix and whose mix is not greyed; else None (nobody runs shares). The
+  true, whose verb is a SwitchMix of a TOWN mix (a town mix is never greyed); else None (nobody runs shares). The
   hands' running mix (Order mix) reads only SwitchMix orders of HANDS mixes, then the queue mix, then save.active; so orders of one
   layer never change the other's running mix, and order sequence is priority within a layer only. Everything Order
   mix says of the hands' pushdown holds for the town's: a pure function of latches and greying, rates rebuilt and
@@ -1941,7 +1946,7 @@ CHOICES (the town's mix)
 - Read model (view.py): View gains running_town_mix: MixId | None (plan.running_town_mix_id) and town_mix_order: int
   | None (the index into save.orders of the order whose town mix runs; None when none does). CardView for a card of
   the running town mix carries its share and run state exactly as a hands mix card's (by MIX, or YIELDED while its
-  lane taps). greyed_mixes lists greyed TOWN mixes too. runs_out_at stays the hands' running mix only. Coverage
+  lane taps). greyed_mixes lists greyed HANDS mixes only; a retired card of a town mix leaves View.cards and its person's share shows as idle. runs_out_at stays the hands' running mix only. Coverage
   (all_covered) counts a running town card as a running supplier, as a running hands card.
 - Codec: FORMAT unchanged. Save's fields are unchanged (app/tests/held/save_fields.json); a TOWN mix is a Mix in
   save.mixes; JOINED is one more UnlockKind value; Outcome gains `joins` (rules and released outcomes only, never a
@@ -1973,7 +1978,7 @@ INVARIANTS (the town's mix; numbered on from 89)
     unused remainder of L's BP idles; while L taps, each is YIELDED with its share unchanged.
 91. Never trains: no rules with a skill or XP line on a ruled-lane card pass validation, so in any save no skill's
     XP rate depends on a town mix, a join or a ruled lane's tap.
-92. A rule on the town fires as on a lane: (a) view.running_town_mix is the mix of the first latched, ungreyed
+92. A rule on the town fires as on a lane: (a) view.running_town_mix is the mix of the first latched
     SwitchMix order of a TOWN mix, else None; view.running_mix is computed with every TOWN-mix order removed, and
     running_town_mix with every HANDS-mix order removed and save.active ignored. (b) A tap order on a joined lane L
     acts at exactly the instants it would if L ran no shares (L free of taps, card ready, speed above 0), and
@@ -2162,7 +2167,8 @@ shares a leave landing at the rebase instant removes".)
 REJECTED, AND WHY (leaves)
 - A lane left idle (the person gone, the lane kept with its rules and shares): a person-shaped hole in the Rules tab
   and the town strip, with no reason on it.
-- Greying the town's mix (a retirement as today): every lane stops for one person, until a visit.
+- Greying the town's mix on a retirement (as a hands mix does): every lane stops for one person, until a visit. Chosen
+  instead: the retired card's own share stops (Uncapped only).
 - Moving the leaver's shares to another person: a person's shares are their own time (THE TOWN'S MIX, "Town share").
 - A lane-less stand-in (the person kept as a card with no lane): a person the player never set to work, which content
   cannot always use.
