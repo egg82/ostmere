@@ -20,23 +20,25 @@ From app/:  python -m tools.mutate_suite SUITE --check
               exits 1 unless every row is claimed by a test marked @kills(row), every claim names a row and every spec
               plants (a gate on the suite's own coverage; it plants nothing, runs no test).
             python -m tools.mutate_suite [SUITE] --plants
-              the last of those alone, for every suite when none is named (CI): exits 1, naming each mutant whose anchor occurs other than once.
+              the last of those alone, for every suite when none is named (CI): exits 1, naming each mutant whose
+              anchor occurs other than once.
             python -m tools.mutate_suite SUITE --run [--only 1,5] [--specs DIR]
-              copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing skipped (a
-              suite that skipped its database tests would let every mutant survive), then for each row applies DIR/mNN.py
-              (default the suite's specs directory) and runs the suite.
+              copies app/ to a scratch directory, requires the unmutated suite to be green there with nothing
+              skipped (a suite that skipped its database tests would let every mutant survive), then for each row
+              applies DIR/mNN.py (default the suite's specs directory) and runs the suite.
 
 A row may have variants, DIR/mNN.py and DIR/mNNx.py (one letter or more), each planted alone: the row passes when
 every variant is KILLED, and one of the row's own claimed tests is red in some variant.
 A spec is a module with EDITS, a list of (path under app/, old text, new text); each `old` must occur exactly once.
 A spec may instead set EQUIVALENT to the reason no test can tell the mutant apart; it is then reported, never run.
 A spec that moves every rules digest sets RELOCK = True: the session's release-lock fixture would refuse the shipped
-content before any test ran, so the copy's lock is rewritten (content_lock.py --write) after planting, and the row's own tests must then go red.
+content before any test ran, so the copy's lock is rewritten (content_lock.py --write) after planting, and the row's
+own tests must then go red.
 Outcomes, kept apart on purpose: KILLED (pytest exit 1 and a failing test), SURVIVED (exit 0), BROKEN (any other exit,
 or a failure that is a collection or import error, which says the edit was malformed, not that a test noticed),
 NOT PLANTED (no spec, or an anchor missing or not unique), EQUIVALENT. Only KILLED counts, and a row's @kills tests
-must be among the ones that failed ("claim unmet" otherwise). Exit 1 unless every row run was KILLED with its claim met or
-recorded EQUIVALENT.
+must be among the ones that failed ("claim unmet" otherwise). Exit 1 unless every row run was KILLED with its claim met
+or recorded EQUIVALENT.
 """
 import argparse
 import ast
