@@ -32,8 +32,9 @@ class Ended(Enum):
 class RuleChange:
     """`level`: the amount of the store the order's condition reads, at `time` (after the instant's outcomes), in
     quantity units; None when its condition reads no store. `ended`: set only on an order an outcome removed, which
-    reads `on` False, as a let-go does. `levels`: on a goal stint's start and its STINT end only, the amount at `time`
-    (quantity units) of each store its mix's cards make (their makes and outcome stores), in rules.stores order."""
+    reads `on` False, as a let-go does. `levels`: on the start and let-go of a rule whose action switches a mix, and on
+    a goal stint's start and its STINT end, the amount at `time` (quantity units) of each store its mix's cards make
+    (their makes and outcome stores), in rules.stores order."""
 
     time: int
     order: Order
@@ -49,7 +50,7 @@ def rule_changes(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, .
     if before.orders == after.orders and before.latches == after.latches and before.queue == after.queue:
         return ()
     retired = _retired_cards(before, after, rules)
-    latched = tuple(RuleChange(after.time, o, when_latch(on), _level(after, rules, o))
+    latched = tuple(RuleChange(after.time, o, when_latch(on), _level(after, rules, o), None, _rule_levels(after, rules, o))
                     for o, on in zip(after.orders, after.latches) if when_latch(on) != _was_on(before, o, retired))
     return latched + _ended(before, after, rules) + _stints(before, after, rules)
 
@@ -71,11 +72,19 @@ def _stints(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, ...]:
     return tuple(changes)
 
 
+def _rule_levels(save: Save, rules: Rules, order: Order) -> tuple[tuple[StoreId, int], ...]:
+    return _verb_levels(save, rules, order.then) if isinstance(order.then, SwitchMix) else ()
+
+
 def _made_levels(save: Save, rules: Rules, entry: QueueEntry) -> tuple[tuple[StoreId, int], ...]:
-    """The amount now of each store a card in the stint's mix makes, at a share above 0, in rules.stores order."""
     assert isinstance(entry.verb, SwitchMix)
+    return _verb_levels(save, rules, entry.verb)
+
+
+def _verb_levels(save: Save, rules: Rules, verb: SwitchMix) -> tuple[tuple[StoreId, int], ...]:
+    """The amount now of each store a card in the verb's mix makes, at a share above 0, in rules.stores order."""
     cards = index(rules).cards
-    made = {f.store for share in flatten_shares(save.mixes, entry.verb.mix) if share.share_bp > 0
+    made = {f.store for share in flatten_shares(save.mixes, verb.mix) if share.share_bp > 0
             for f in (*cards[share.card].makes, *cards[share.card].outcome.stores)}
     return tuple((st.id, subject_value(save, rules, StoreValue(st.id))) for st in rules.stores if st.id in made)
 

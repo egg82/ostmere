@@ -3,8 +3,8 @@ rule changes (engine DESIGN.txt, "Rule changes") and kept on the save's row. A r
 condition and verb, since rules have no id: a reorder keeps its entry, an edit makes another rule. The write that adds
 to it prunes it: an entry whose rule the save no longer has goes, unless the game ended the rule (it stays, `ended`
 set), and past KEPT, the entries changed longest ago go. A slice of a long absence that stops short of now adds without
-pruning (gathered), so slices end as one write would. A goal stint's entry keeps, while it runs, the levels its start
-reported, and once it lands, what the save gained in those stores while it ran (`made`)."""
+pruning (gathered), so slices end as one write would. A goal stint's or mix-switching rule's entry keeps, while
+it runs, the levels its start reported, and once it lands or lets go, what the save gained in those stores (`made`)."""
 
 from dataclasses import dataclass, replace
 
@@ -23,8 +23,8 @@ class RuleRun:
     """A rule's starts since its entry began, its last start and its last let-go, each with the level of the store its
     condition reads (None for one on no store). off_at is None until it first lets go. `ended`: the game removed the
     rule (engine RuleChange.ended), off_at being when; on_at is None only on an ended rule that never came on.
-    on_levels: a running goal stint's levels at its start (engine RuleChange.levels); made: an ended stint's gains
-    (stint_made), () on every other entry."""
+    on_levels: a running mix-switching rule's or goal stint's levels at its start (engine RuleChange.levels); made: the
+    gains of an ended stint, or of a mix-switching rule's last run once it lets go (stint_made), () otherwise."""
 
     order: e.Order
     starts: int
@@ -71,7 +71,8 @@ def gathered(runs: tuple[RuleRun, ...], changes: tuple[e.RuleChange, ...]) -> tu
                                   live.off_at if live else None, live.off_level if live else None,
                                   on_levels=c.levels)
         elif live is not None:
-            by[c.order] = replace(live, off_at=c.time, off_level=c.level)
+            by[c.order] = replace(live, off_at=c.time, off_level=c.level, on_levels=(),
+                                  made=stint_made(c.order, live.on_levels, c.levels))
     return tuple(by.values())
 
 
