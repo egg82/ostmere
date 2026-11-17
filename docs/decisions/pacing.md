@@ -135,8 +135,9 @@ use that teaches it, and every number can show where it comes from (some of Orb'
     foraging reaches level 16 by day three's end;
   - arcana (60, 10, 300): at 900 story gates are met before the page states them (the check that every gate met was
     stated), one of them by a level find that lands the moment its own gate opens;
-  - melee (the hunts 2, spar 300): its levels speed the hunt, and at 900 the hunts leave day six's end, and spar with
-    the day-fifteen hunt leave day fifteen's, losing pelt to its cap (the cap-loss check);
+  - melee (the hunts 2, spar 300): its levels speed the hunt, and at 900 the hunts leave day five's end losing pelt to
+    its cap, and with spar and the day-fifteen hunt day fifteen's end loses `wraps_sewn` to its cap, the pelt sink having
+    filled (the cap-loss check);
   - cooking (stew 36, fungus_stew 18, catch_broth 300): at 900 stew leaves the babysitter with no dry wood on day five,
     the cold chip shown and no cure on offer (the week's cures check), and fungus_stew leaves days nine, eleven and
     twelve losing smoked to its cap; day fifteen's barley_stew is at 900;
