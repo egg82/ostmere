@@ -2,7 +2,8 @@
 # docs/engineering.md ("Scope and test budget"): the suite, one smoke route, pyright, the client, the engine and save
 # checks, and the app image. A pull request that changes only docs runs `docs`, the tests that read them. The whole-game
 # playthroughs and the chapter saves they read are the full run: nightly (nightly.yml calls this file with full), on a
-# pull request labelled `playthroughs`, and on a manual dispatch. On main, once everything is green, `release` tags the
+# pull request labelled `playthroughs` or changing a path in app/tools/playthrough_paths.txt, and on a manual dispatch.
+# On main, once everything is green, `release` tags the
 # image already pushed by digest: `dev` and `main-<sha8>-<commit-timestamp>`, the tag Flux image automation sorts on.
 # Pull requests build the image and push nothing.
 #

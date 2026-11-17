@@ -65,7 +65,8 @@ cd client && npm ci && npm run typecheck && npm test && npm run build
 
 Before a pull request, run `app/tools/gates.sh` from the repo root as well. It runs the structural gates: file and
 function size, import boundaries and a time limit per test. GitHub Actions runs the full suite on every pull
-request, and the scripted playthroughs nightly and on pull requests labelled `playthroughs`.
+request, and the scripted playthroughs nightly, on pull requests that change a file they depend on
+(`app/tools/playthrough_paths.txt`), and on pull requests labelled `playthroughs`.
 `docs/engineering.md` has the details.
 
 - `docs/decisions.md`: the design decisions, indexed, with one file per system in `docs/decisions/`.
