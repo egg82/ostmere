@@ -13,6 +13,7 @@ export interface Slot {
 }
 
 export type BedName = "wind" | "fire";
+export type PieceName = "evening";
 
 const none = (gain: number): Slot => ({ asset: null, gain, pitch: 1 });
 
@@ -39,4 +40,9 @@ const UNDER = 10 ** (-12 / 20);
 export const BEDS: Readonly<Record<BedName, Slot>> = {
   wind: none(UNDER),
   fire: none(UNDER),
+};
+
+/** The evening piece sits between the bed and the tap; the owner's ear sets it. */
+export const PIECES: Readonly<Record<PieceName, Slot>> = {
+  evening: none(10 ** (-8 / 20)),
 };

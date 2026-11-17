@@ -1,6 +1,6 @@
 // The sound locator: callers ask for `sound()` and never learn whether audio exists. The default plays nothing, so a
 // page without audio (tests, a browser that refuses it, sound not started yet) is silent, not broken.
-import type { BedName, SlotName } from "./slots";
+import type { BedName, PieceName, SlotName } from "./slots";
 
 export interface Sound {
   /** Play a slot's one-shot `delayMs` from now, on the audio clock. `pitch` multiplies the slot's own ratio (a chain's
@@ -8,6 +8,17 @@ export interface Sound {
   play(slot: SlotName, pitch?: number, delayMs?: number): () => void;
   /** A looping bed, silent until `setLevel`. Never throws. */
   loop(bed: BedName): Loop;
+  /** A piece of music, begun now and silent until `setLevel`; it plays once and ends on its own. Never throws. */
+  piece(name: PieceName): Piece;
+}
+
+export interface Piece {
+  /** Ramp the piece to `level` (0 to 1, against its slot's gain) over `rampMs`; 0 ms is at once. */
+  setLevel(level: number, rampMs: number): void;
+  /** Fade out over `rampMs`, then end. */
+  stop(rampMs: number): void;
+  /** `fn` runs once when the piece is over, by its last note or by `stop`. A piece that never began is over at once. */
+  onEnd(fn: () => void): void;
 }
 
 export interface Loop {
@@ -16,7 +27,8 @@ export interface Loop {
 }
 
 const NOTHING = (): void => undefined;
-const NULL_SOUND: Sound = { play: () => NOTHING, loop: () => ({ setLevel: NOTHING }) };
+const NULL_PIECE: Piece = { setLevel: NOTHING, stop: NOTHING, onEnd: NOTHING };
+const NULL_SOUND: Sound = { play: () => NOTHING, loop: () => ({ setLevel: NOTHING }), piece: () => NULL_PIECE };
 const NO_REFRESH = (): void => undefined;
 
 let current: Sound = NULL_SOUND;

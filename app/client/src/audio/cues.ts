@@ -48,8 +48,18 @@ function knock(nowMs: number): () => void {
   return sound().play("tap", 2 ** (semis / 12));
 }
 
+type Listener = (voice: Voice, nowMs: number) => void;
+const listeners: Listener[] = [];
+
+/** `fn` hears every voice sung (the evening piece ducks under the story cue and the strike). Returns its removal. */
+export function onSing(fn: Listener): () => void {
+  listeners.push(fn);
+  return () => { listeners.splice(listeners.indexOf(fn), 1); };
+}
+
 /** Plays `voice` now, or `delayMs` on. Returns the cut for what has not begun. */
 export function sing(voice: Voice, delayMs = 0, nowMs = performance.now()): () => void {
+  for (const fn of listeners) fn(voice, nowMs);
   switch (voice) {
     case "knock": return knock(nowMs);
     case "new": return sound().play("first", 1, delayMs);

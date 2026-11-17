@@ -92,4 +92,4 @@ export function pickGrade(grades: Record<string, SceneGrade>, holds: (when: stri
   return chosen;
 }
 
-const GRADE_S = 2.5;
+export const GRADE_S = 2.5;
