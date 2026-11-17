@@ -9,8 +9,9 @@ import type { Glow } from "./fresh";
 import type { LaneTarget } from "./laneedit";
 import type { Arrivals } from "./reveal";
 
-/** What the Rules tab opens on: its list (null), a rule's condition editor, a new rule's, or a lane's task editor. */
-export type RuleTarget = number | "new" | null | LaneTarget;
+/** What the Rules tab opens on: its list (null), a rule's condition editor, a new rule's (for one person's lane, `newFor`),
+ * or a lane's task editor. */
+export type RuleTarget = number | "new" | null | LaneTarget | { newFor: string };
 
 export interface Part {
   readonly root: HTMLElement;
