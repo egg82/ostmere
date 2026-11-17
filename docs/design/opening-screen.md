@@ -31,6 +31,13 @@ beside them. Nothing the player needs during play sits in a far corner.
   fight go to the chronicle alone. The chronicle is one tap away (the tabs' Book, which opens on it: in the rail on a
   desktop, the bottom bar on a phone), dotted while a line it holds left the strip entirely before the player touched anything after it
   showed. A new line slides in once, about 200 ms (no slide under reduced motion).
+- **The newest line by the cards (desktop only).** The strip is a long way from the cards on a desktop, so the strip's
+  newest shown line is drawn again as one line at the top of the card column, just under the hands strip
+  (`ui/cardline.ts`, fed by `Story.trim`, so it follows the strip's own order and text). The next line replaces it when
+  the arrival queue releases that one; a line drawn still on a restored page is not shown. Its row is as tall as the
+  tallest story line at the column's width, so nothing moves. The strip stays the record; a phone draws none (its
+  strip is pinned a thumb away from the cards). Why: `docs/research/story-to-the-eyes.md`, "What to try in Ashfall"; the
+  "was it seen" probe (`app/tools/seen/`) measures it.
 - **The chronicle** (`ui/chroniclesheet.ts`; `decisions.md`, "The chronicle and unwrap, as built") is the Book's first
   page (The Book, below): a row of filters once two kinds have entries: Story,
   Finds, Levels, Rules, Fights, Town talk, each once it has one, and All. It opens on Story, at the top, newest first.

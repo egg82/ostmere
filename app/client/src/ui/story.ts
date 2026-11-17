@@ -29,6 +29,7 @@ import { ChronicleSheet } from "./chroniclesheet";
 import { chipHints } from "../game/hints";
 import { markNew, unmark } from "./fresh";
 import { fitting } from "./stripfit";
+import { CardLine, storyTexts } from "./cardline";
 import type { Part, PartContext } from "./part";
 import { inStrip, type EntryKind, type Past } from "../game/chronicle";
 import { causeWords } from "../game/chronwords";
@@ -46,6 +47,8 @@ export class Story implements Part {
   private readonly aimLine: AimLine;
   private readonly lines = el("ol", "lines");
   private readonly roomCell = el("div", "strip-room");
+  /** The newest shown line again, at the top of the card column on a desktop (Screen seats it). */
+  readonly cardLine: CardLine;
   /** The Feedback button: Screen seats it at the panel's foot. */
   readonly feedbackButton: HTMLButtonElement;
   private readonly camp: CampBar;
@@ -78,25 +81,17 @@ export class Story implements Part {
     this.book = new Book(ctx.catalog, this.chronicle, leaveBook);
     this.journal = new Journal(ctx, this.book.tab);
     this.journal.seat(this.book.page(this.journal));
+    const texts = storyTexts(ctx.catalog);   // every story line the content can write: the strip's cell holds them unseen, so it is as tall as the tallest and no arrival moves it
+    this.cardLine = new CardLine(texts);
+    this.roomCell.setAttribute("aria-hidden", "true");
+    this.roomCell.append(...texts.map((t) => el("span", "", t)));
     this.lines.setAttribute("aria-live", "polite");
     this.book.tab.addEventListener("click", () => unmark(this.book.tab));
     for (const t of TOUCHES) document.addEventListener(t, () => { this.touchedAt = performance.now(); }, { capture: true });
     const feedback = new FeedbackSheet(ctx);
     this.feedbackButton = feedback.button;
     this.head.append(this.camp.root, this.chips);
-    this.root.append(this.room(), this.lines, this.book.sheet, feedback.root);
-  }
-
-  /** Every story line the content can write (a day's mention among them), unseen in the strip's one cell with the shown line: the cell is as tall as
-   * the tallest of them at the strip's width, so no line is cut and none arriving changes the strip's height. */
-  private room(): HTMLElement {
-    const room = this.roomCell;
-    room.setAttribute("aria-hidden", "true");
-    const { content, text } = this.ctx.catalog;
-    const bands = [...content.people?.came ?? [], ...content.people?.went ?? []].flatMap((b) => b.keys);   // a day's mention
-    const texts = new Set([...content.line_infos.filter((l) => inStrip(l.kind)).map((l) => l.key), ...bands].map((k) => text.get(k)).filter((t) => t));
-    room.append(...[...texts].map((t) => el("span", "", t)));
-    return room;
+    this.root.append(this.roomCell, this.lines, this.book.sheet, feedback.root);
   }
 
   /** Written days a Step or Opened carried: the journal's days pages hold them from the next update. */
@@ -260,6 +255,8 @@ export class Story implements Part {
     const now = performance.now();
     const shown = [...this.lines.children].filter((n) => !n.classList.contains("held"));
     for (const n of shown) if (!this.shownAt.has(n) && !n.classList.contains("still")) this.shownAt.set(n, now);
+    const newest = [...shown].reverse().find((n) => this.shownAt.has(n));   // a line drawn still (a restored page) is not news
+    if (newest) this.cardLine.show(newest.textContent ?? "");
     const spans = shown.map((n) => n.getBoundingClientRect());
     const keep = fitting(spans, this.roomCell.getBoundingClientRect().height);
     for (const gone of shown.slice(0, shown.length - keep)) {

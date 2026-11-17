@@ -28,7 +28,7 @@ const page = await ctx.newPage();
 // the server takes a write only from its own https origin (accounts/csrf.py); this loopback is http, so a write says it is
 await page.route('**/api/**', (r) => { const h = r.request().headers(); r.continue(h.origin ? { headers: { ...h, origin: 'https://127.0.0.1:18771' } } : {}); });
 await page.addInitScript({ path: new URL('./probe.js', import.meta.url).pathname });
-if (NO_STRIP) await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.lines{visibility:hidden !important}'; document.head.append(s); }));
+if (NO_STRIP) await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.lines, .card-newest{visibility:hidden !important}'; document.head.append(s); }));
 const content = await (await page.request.get(BASE + 'api/content')).json();
 const text = Object.fromEntries(content.text_entries.map((e) => [e.key, e.text]));
 const byTitle = Object.fromEntries(content.card_infos.map((c) => [text[c.label_key], c.card]));
