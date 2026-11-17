@@ -25,6 +25,7 @@ from .prestige import check_phase_spans
 from .order_checks import check_order_cards
 from .refs import check_refs, fail, ids_by_kind, need, outcomes
 from .leave_checks import check_leaves
+from .line_only_checks import check_line_only
 from .people_checks import check_people
 from .replace_checks import check_replacements
 from .retire_checks import check_retired_chores
@@ -70,6 +71,7 @@ def check_structure(o: "Opening") -> None:
     check_stakes(o)
     check_clocks(o)
     check_season_turns(o)
+    check_line_only(o)
     check_retired_chores(o)
     check_replacements(o)
     check_choices(o)

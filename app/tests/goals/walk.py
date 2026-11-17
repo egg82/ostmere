@@ -3,7 +3,8 @@
 each trigger that fires between two moments, reads the earlier one. Beats are named by trigger id only (CLAUDE.md,
 "Never spoil the owner").
 
-A beat is a trigger whose outcome is story (opening/goals.py, `story`). Shown means View.goals (api/goals.py) marked
+A beat is a trigger whose outcome is story (opening/goals.py, `story`), unless the trigger is marked `line_only`: it
+only says its line once and gates nothing, so it is no beat. Shown means View.goals (api/goals.py) marked
 the store, card or skill it waits on, or, for a wait on the clock, served the wait line with a time no later than the
 beat (or stopped, naming the dry store) and naming every store whose running dry pauses that clock. Not beats here: a
 beat on an unlock (it lands with what gives it), on a lane's rules (the lesson is the step), on the Camp's store (its
@@ -98,10 +99,11 @@ def walk(history: Sequence[tuple[Save, View]], rules: Rules, served: Served = go
     camp = None if o.camp is None else o.camp.store
     gd = goal_defs(o, rules)
     starts = _starts(o, rules)
+    line_only = {t.id for t in o.triggers if t.line_only}
     out: list[Met] = []
     for (a, va), (b, _) in zip(history, history[1:]):
         fired = [i for i, (x, y) in enumerate(zip(a.fired, b.fired)) if y and not x]
-        gates = [rules.triggers[i] for i in fired if _gate(rules.triggers[i], camp, gd)]
+        gates = [rules.triggers[i] for i in fired if rules.triggers[i].id not in line_only and _gate(rules.triggers[i], camp, gd)]
         if not gates:
             continue
         pend = {str(p.trigger): p for p in pending(a, rules)}
