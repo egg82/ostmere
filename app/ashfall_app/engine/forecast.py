@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 
 from .gates import store_cap
 from .handlers import ignore
+from .handsfree import hands_after, hands_at_start
 from .ids import SkillId, StoreId
 from .instant import resolve_instant
 from .motion import store_segment
@@ -42,6 +43,11 @@ class Forecast:
     top, a mastered one (prestige.mastered: no click waits at its top), and every skill under rules with no prestige,
     are absent. Its level_ups end at that top: the levels its
     carried XP passes wait for the click and are not level-ups (DESIGN.txt, "PRESTIGE PHASES")."""
+    hands_free_at: int | None = None
+    """The first instant the player's work stops holding the hands (handsfree.py: no tap the player started runs on
+    HANDS and the queue is empty), after the forecast began with it holding them; None when it did not (already free)
+    or they are not free by `until`. Unlike the times above it depends on where the forecast begins, since the save does
+    not record who started the tap running there."""
 
 
 def forecast(save: Save, rules: Rules, until: int, stores: tuple[StoreId, ...] = (),
@@ -52,7 +58,7 @@ def forecast(save: Save, rules: Rules, until: int, stores: tuple[StoreId, ...] =
     fills: dict[StoreId, list[int]] = {st: [] for st in stores}
     empties: dict[StoreId, list[int]] = {st: [] for st in stores}
     tops, topped = _topping(save, rules), dict[SkillId, int]()
-    s, n = save, 0
+    s, n, hands = save, 0, hands_at_start(save, rules)
     while True:
         upcoming = [ev for ev in events(s, rules) if ev.time > s.time]
         nxt = min((ev.time for ev in upcoming), default=None)
@@ -60,9 +66,10 @@ def forecast(save: Save, rules: Rules, until: int, stores: tuple[StoreId, ...] =
         _window(s, rules, end, ups, fills, empties)
         _tops_in(s, end, tops, topped)
         if nxt is None or nxt > until or n >= MAX_INSTANTS or (stop is not None and stop()):
-            return Forecast(end, _kept(ups), _kept(fills), _kept(empties), topped)
+            return Forecast(end, _kept(ups), _kept(fills), _kept(empties), topped, hands.free_at)
         arrivals = [ev for ev in upcoming if ev.time == nxt]   # one instant, as api._advance resolves it
-        s, n = resolve_instant(rebuild(shift(s, rules, nxt), rules), rules, arrivals, False, ignore), n + 1
+        after = resolve_instant(rebuild(shift(s, rules, nxt), rules), rules, arrivals, False, ignore)
+        s, n, hands = after, n + 1, hands_after(hands, s, after, arrivals, rules)
 
 
 def _topping(save: Save, rules: Rules) -> dict[SkillId, int]:

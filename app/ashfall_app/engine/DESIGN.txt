@@ -195,6 +195,17 @@ CHOICES (each with its reason)
   player can trust draws the forecast's. It is the save's own future while nobody decides, so a forecast made
   earlier on the same path lists the same times. Bounded by `until`, MAX_INSTANTS and an optional stop asked before each
   instant (then `until` is where it stopped); past it nothing is listed, never estimated. Read only: it returns no save.
+  Hands free (handsfree.py, docs/design/reminders.md "The hands-free notice"): hands_free_at is the first instant
+  the player's work stops holding the hands, after the forecast began with it holding them; None when it began free
+  or they are not free by `until`. The player's work holds them while save.queue holds an entry (a goal stint
+  included, and a dead entry, which is still the plan) or HANDS runs a tap the player started, by their own TapCard
+  or by a queue entry; a tap an order or an outcome started, and the mix, do not hold them. No save field says who
+  started the tap HANDS runs, so where the forecast begins it is the player's unless an order that is on taps that
+  card (plan.lane_order); a tap starting inside the forecast (the card changed, or HANDS' TAP_DONE arrived at that
+  instant) is the queue's when an entry before or after the instant taps its card and no order that is on does,
+  since evaluation applies an order's tap before the queue's, and a running tap keeps what it was when it started.
+  So a rule's tap that runs on after its rule let go is still the rule's inside a forecast, but reads as the player's
+  where one begins: unlike the other kinds, hands_free_at can depend on where the forecast begins.
 - Read model (view.py): ledger lines, bars, project cards with their first blocker and when it clears, chips shown
   (and chips_seen, read off Save.chips_seen) and the unlock set are derived from the save at its time and never stored. Ledger: net_per_hour is the sum of the
   contributions, unclamped, so overflow at a cap shows; falling is the segment's rate < 0 (what the store actually
