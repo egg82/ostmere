@@ -61,10 +61,8 @@ export function createEvening(): Evening {
 
   return {
     frame(f, now) {
-      const reset = prev === null;
       const rose = f.shown && prev === false;
       prev = f.shown;
-      if (reset) return;
       if (rose) {
         armed = { grade: f.grade, entryAt: now - endAt < ENTRY_AFTER_END_MS ? endAt + ENTRY_AFTER_END_MS : now };
         grade = f.grade;
