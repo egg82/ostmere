@@ -1061,8 +1061,9 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
   THE CLIENT MAY:
   - in the mix editor, offer ui.stint.run under the goal rows, never while Save is unavailable, the queue is at
     max_queue, or the editor makes a mix for a rule. Pressed, it lists each row of the edit's dry run whose lands_at
-    is not the dry run's `at` (a met goal would pop at once): the goal (ui.goal.store, ui.goal.level) and its time
-    left in the dry run (ui.goal.never for null), never sorted or marked as better; under a store's row, after
+    is neither null (an Unreachable stint would never pop, and would hold every entry behind it) nor the dry run's
+    `at` (a met goal would pop at once): the goal (ui.goal.store, ui.goal.level) and its time left in the dry run,
+    never sorted or marked as better; under a store's row (one that lands: the store rises), after
     ui.stint.or_until, the named shares of that store's cap (a quarter, half, three quarters, full) its whole items
     have not reached, each an until at_least {store_value, value = release = b, both flags true} with no time (none
     is served for it). Picking one sends save_mix (with saveDecisions' renames) when the edit differs from the saved
@@ -1191,15 +1192,17 @@ OFFERS
   - list the answer order in the Rules tab: every always rule (after_time 0) that answers an offer, in list order, under
     ui.rule.answers, each as ui.rule.answer with no arrow.
   - build one answer rule per offer kind, in the Rules tab's answers section, once an offer of that kind has been
-    answered in the view (an open offer is not enough): a row with that offer's question (set apart from an open
-    offer's), ui.rule.answered {answer} with the label of the answer that offer was given, the line
+    answered in the view (an open offer is not enough) and while one of the kind is still to answer (an offer of
+    Content.offer_infos the view does not hold answered, open or not yet shown): a row with that offer's question (set
+    apart from an open offer's), ui.rule.answered {answer} with the label of the answer that offer was given, the line
     ui.rule.answer_next (the buttons answer the kind's later offers), and one button per role,
     each worded by the kind's own label for the role (Content.offer_kinds). A tap sets the kind's rule to that role
     (an always rule, appended; a rule already set for the kind is changed in place), and Remove takes it away. The
     rule reads as ui.rule.answer with the kind's label for the role; an answer_offer rule reads with that answer's own
     label, which was written for that one ask.
   THE CLIENT MAY NOT build an answer_offer rule (no editor offers one; the order is set by a story moment or a tool),
-  nor offer the answer rule for a kind before an offer of it has been answered.
+  nor offer the answer rule for a kind before an offer of it has been answered, or once every offer of it has been (the
+  rule would wait for an ask that never comes).
 
   New text keys (Content.text_entries): ui.lane.idle | ui.lane.change   a lane row's free state and its Change
                                     ui.person.one_off   a capped task on a person's page

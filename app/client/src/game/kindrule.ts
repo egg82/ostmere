@@ -1,5 +1,6 @@
 // The answer rule (CONTRACT.txt, "Offers"): one rule per offer kind, "answer this way whenever someone asks it again".
-// The page offers to build it only once an offer of the kind has been answered, and names each role by the kind's own
+// The page offers to build it only once an offer of the kind has been answered, and only while an offer of the kind is
+// still to be answered (after the last, the rule would wait for an ask that never comes), and names each role by the kind's own
 // label for it, written for whoever asks. Reads the view and the content only.
 import type { View } from "../api/types";
 import type { Catalog } from "./catalog";
@@ -7,12 +8,15 @@ import type { Catalog } from "./catalog";
 /** One button of the builder: a role of the kind, worded by the kind's label for it. */
 export interface RoleChoice { role: string; label_key: string | undefined }
 
-/** The kinds the builder is offered for, in content order: those with an offer answered in the view. */
+/** The kinds the builder is offered for, in content order: those with an offer answered in the view and an offer of the
+ * content still to answer (open, or not yet shown). */
 export function answeredKinds(catalog: Catalog, view: View): string[] {
+  const done = new Set(view.offers.filter((o) => o.answer !== null).map((o) => o.offer));
+  const left = new Set(catalog.content.offer_infos.filter((o) => o.kind !== null && !done.has(o.offer)).map((o) => o.kind));
   const kinds: string[] = [];
   for (const o of view.offers) {
     const kind = catalog.offers.get(o.offer)?.kind ?? null;
-    if (o.answer !== null && kind !== null && !kinds.includes(kind)) kinds.push(kind);
+    if (o.answer !== null && kind !== null && left.has(kind) && !kinds.includes(kind)) kinds.push(kind);
   }
   return kinds;
 }
