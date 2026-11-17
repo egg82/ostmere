@@ -1,16 +1,16 @@
 // A kept bonus leads to the strength it feeds (CardInfo.kept[].side; docs/decisions/principles.md, "Make what is already
-// there tappable before adding words"): in the town editor a row's bonus line, and on a card's face its upside, is a
+// there tappable before adding words"): on a person's page a task's bonus line, and on a card's face its upside, is a
 // button once a fight of that side is served, and a tap opens that side's strength sheet, the same rows the fight's own
 // strength figure opens. With no fight showing (the feature off, or none served) it is plain text.
-import { fakeDocument, type FakeEl, install, pointer } from "./fake-dom";
+import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
+import { pageRig, type PageRig } from "./personrig";
 import { fightsStep } from "../fixtures/fights";
 import { townStep } from "../fixtures/town";
 import type { Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { Cards } from "../src/ui/cards";
 import { Glow } from "../src/ui/fresh";
-import { LaneRows } from "../src/ui/lanerows";
 import { NewMarks } from "../src/game/marks";
 import { fixtureContent } from "../fixtures/content";
 
@@ -33,22 +33,17 @@ const fought = fightsStep("fight", 100).view;
 const sheet = ["Your hands", "base strength6", "Hatchet+50%", "Foraging+25%", "Stool50%+12.5%", "Cold×0.8"];
 const texts = (nodes: FakeEl[]): string[] => nodes.map((n) => n.textContent);
 
-/** The town editor open on a view with the haul card keeping the hands' strength; the helper's haul row. */
-function editor(view: View): { row: () => FakeEl; rows: LaneRows } {
-  const { ctx } = testContext(new Glow(), withCard("haul", { upside_key: "up.kept", change_bp: [5000], kept }));
-  const rows = new LaneRows(ctx);
-  document.body.replaceChildren(rows.root, rows.town.root);
-  rows.update(view);
-  (fakeDocument.body.firstElementChild as FakeEl).querySelector(".town-change")?.click();
-  for (const track of fakeDocument.body.children[1]?.querySelectorAll(".share-track") ?? []) track.rect = { left: 0, top: 0, width: 1000, height: 20, right: 1000, bottom: 20 };
-  const row = (): FakeEl => ((fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl).querySelectorAll(".town-card").find((r) => r.dataset.card === "haul") as FakeEl;
-  return { row, rows };
+/** A person's page open on a view with the haul card keeping the hands' strength; its settle and haul face. */
+function editor(view: View): { row: () => FakeEl; rig: PageRig } {
+  const rig = pageRig(view, withCard("haul", { upside_key: "up.kept", change_bp: [5000], kept }));
+  rig.open(0);
+  return { row: () => rig.face("haul"), rig };
 }
 const town = townStep("town").view;
 const withFights: View = { ...town, fights: fought.fights, unlocked: [...town.unlocked, { category: "feature", id: "combat" }] };
 
 {  // a fight of the side is served: the line is a button, and a tap opens that side's strength under it
-  const { row } = editor(withFights);
+  const { row, rig } = editor(withFights);
   const link = row().querySelector("button.bonus-link");
   expect("the line is a button", link?.textContent.endsWith("strength while kept"), true);
   expect("shut until tapped", row().querySelector(".fight-entries")?.hidden, true);
@@ -56,11 +51,8 @@ const withFights: View = { ...town, fights: fought.fights, unlocked: [...town.un
   link?.click();
   expect("a tap opens the side's strength", texts(row().querySelectorAll(".fight-entries li")), sheet);
   expect("and says so open", row().querySelector(".bonus-link")?.getAttribute("aria-expanded"), "true");
-  const divider = ((fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl).querySelector(".share-divider") as FakeEl;
-  divider.dispatchEvent(pointer("pointerdown", 600, 10));
-  divider.dispatchEvent(pointer("pointermove", 650, 10));
-  divider.dispatchEvent(pointer("pointerup", 650, 10));
-  expect("a dragged share redraws the row, the sheet stays open", texts(row().querySelectorAll(".fight-entries li")), sheet);
+  rig.rows.update(withFights);
+  expect("a new view redraws the face, the sheet stays open", texts(row().querySelectorAll(".fight-entries li")), sheet);
   row().querySelector(".bonus-link")?.click();
   expect("a second tap shuts it", row().querySelector(".fight-entries")?.hidden, true);
 }
@@ -68,7 +60,7 @@ const withFights: View = { ...town, fights: fought.fights, unlocked: [...town.un
 {  // no fight showing for the side: plain text, nothing to tap
   const { row } = editor({ ...withFights, fights: [] });
   expect("no fight served: no button", row().querySelector("button.bonus-link"), null);
-  expect("the words stay", row().querySelector(".town-card-upside")?.textContent.endsWith("strength while kept"), true);
+  expect("the words stay", row().querySelector(".card-upside")?.textContent.endsWith("strength while kept"), true);
   const { row: off } = editor({ ...withFights, unlocked: town.unlocked });
   expect("combat off: no button", off().querySelector("button.bonus-link"), null);
 }

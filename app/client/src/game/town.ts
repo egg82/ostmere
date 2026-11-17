@@ -71,10 +71,11 @@ export function townNewRule(view: View, order: Order): Decision {
   return { kind: "set_orders", orders: at < 0 ? [...view.orders, order] : [...view.orders.slice(0, at), order, ...view.orders.slice(at)] };
 }
 
-/** The mix Change opens: the one running, else the one the town's first always rule not passed over points at; null
- * when there is none (a new one, under a new always rule). */
+/** The one town mix holding everyone, which a person's edit changes: the one running, else the one the town's first always
+ * rule names, greyed or not (a greyed mix is still the town's, and a rule passed over still points at it); null only when
+ * there is none (a new one, under a new always rule). */
 export function townMixToEdit(catalog: Catalog, view: View): Mix | null {
-  const fromRule = view.orders.flatMap((o, i) => (townAlways(o) && o.then.kind === "switch_mix" && view.order_states[i] !== "passed_over" ? [o.then.mix_id] : []))[0];
+  const fromRule = view.orders.flatMap((o) => (townAlways(o) && o.then.kind === "switch_mix" ? [o.then.mix_id] : []))[0];
   const named = view.running_town_mix_id ?? fromRule ?? null;
   const mix = view.mixes.find((m) => m.id === named);
   return mix && isTownMix(catalog, view, mix) ? mix : null;
@@ -101,11 +102,6 @@ export function townRules(catalog: Catalog, view: View): number[] {
     const mix = then.kind === "switch_mix" ? view.mixes.find((m) => m.id === then.mix_id) : undefined;
     return mix && isTownMix(catalog, view, mix) ? [i] : [];
   });
-}
-
-/** The cards a person may be given as tasks: theirs, in play, with no cap (a capped card is refused in a town mix). */
-export function townTasks(catalog: Catalog, view: View, lane: string): string[] {
-  return view.cards.filter((c) => catalog.laneOf(c.card) === lane && c.cap === null).map((c) => c.card);
 }
 
 /** Basis points of a person's time the mix gives their cards. */

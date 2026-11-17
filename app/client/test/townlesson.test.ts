@@ -1,6 +1,6 @@
-// The town's lesson (game/lessons.ts, TOWN_MIX), as lessons-as-data on the strip's and the town editor's own controls:
-// it starts when the strip's Change shows, walks Change, the person's bar, Save, and the strip once more, and is kept on
-// the account when done or skipped, never again. Run against the rendered strip and editor, not stand-in controls.
+// The town's lesson (game/lessons.ts, TOWN_MIX), as lessons-as-data on the strip's and a person's page's own controls:
+// it starts when a person's Change shows, walks Change, the person's bar, and the strip once more, and is kept on
+// the account when done or skipped, never again. Run against the rendered strip and page, not stand-in controls.
 import { fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
@@ -28,7 +28,7 @@ function rig(account: Flat = NEW_FLAT) {
   const { ctx, got } = testContext();
   const rows = new LaneRows(ctx);
   fakeDocument.body.replaceChildren();
-  document.body.append(rows.root, rows.town.root);
+  document.body.append(rows.root, rows.page.root);
   rows.update(view);
   const sent: Flat[] = [];
   const keeps = keepsOf(account, sent);
@@ -38,7 +38,7 @@ function rig(account: Flat = NEW_FLAT) {
   const line = (): string => (lessons.root.hidden ? "" : lessons.root.querySelector(".lesson-line")?.textContent ?? "");
   /** Every control the lesson names, given a size (the fake DOM has no layout). */
   const lay = (): void => {
-    for (const sel of [".town-change", ".town-editor .town-bar", ".town-editor .editor-head .primary", ".town .town-people"])
+    for (const sel of [".person-change", ".person-page .town-bar", ".town .town-people"])
       for (const n of document.querySelectorAll(sel)) Object.assign(n, { rect: { left: 10, top: 10, width: 80, height: 30, right: 90, bottom: 40 } });
   };
   const tick = (t: number): void => { lay(); clock = t; lessons.tick(); };
@@ -46,27 +46,24 @@ function rig(account: Flat = NEW_FLAT) {
   return { rows, lessons, keeps, sent, line, text, tick, got, gotIt };
 }
 
-{  // the lesson is data: its trigger and four steps, each naming a control of the strip or the town editor
+{  // the lesson is data: its trigger and three steps, each naming a control of the strip or a person's page
   const lesson = LESSONS.find((l) => l.id === TOWN_MIX);
   expect("the lesson exists", lesson?.trigger, '[data-teach="town-change"]');
   expect("its steps", lesson?.steps.map((s) => [s.target({}), s.ends]), [
-    ['[data-teach="town-change"]', "touch"], [".town-editor .town-bar", "read"], [".town-editor .editor-head .primary", "touch"], [".town .town-people", "read"]]);
+    ['[data-teach="town-change"]', "touch"], [".person-page .town-bar", "read"], [".town .town-people", "read"]]);
 }
 
 {  // walked to the end: done, kept, and it does not start again
   const r = rig();
   r.tick(0);
-  expect("starts on the strip's Change", r.line(), r.text("ui.lesson.town_change"));
-  document.querySelector<HTMLElement>(".town-change")?.click();   // the real control: opens the town editor too
+  expect("starts on a person's Change", r.line(), r.text("ui.lesson.town_change"));
+  document.querySelector<HTMLElement>(".person-change")?.click();   // the real control: opens their page too
   r.tick(1);
   expect("the person's bar", r.line(), r.text("ui.lesson.town_bar"));
   r.tick(10 * 60_000);
   expect("a read step waits for a tap on the note", r.line(), r.text("ui.lesson.town_bar"));
   r.gotIt();
   r.tick(10 * 60_000 + 1);
-  expect("then Save", r.line(), r.text("ui.lesson.town_save"));
-  document.querySelector<HTMLElement>(".town-editor .editor-head .primary")?.click();
-  r.tick(10 * 60_000 + 2);
   expect("then the strip", r.line(), r.text("ui.lesson.town_runs"));
   r.gotIt();
   r.tick(10 * 60_000 + 3);

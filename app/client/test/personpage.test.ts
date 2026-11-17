@@ -46,14 +46,14 @@ const CHOP = 4;
   expect("it is the person's", page.querySelector(".town-title")?.textContent, "Helper");
   expect("a face per task", page.querySelectorAll(".person-cards .card").map((c) => c.dataset.card), ["chop", "haul"]);
   expect("a face only: no tap", page.querySelectorAll(".person-cards .card-tap").every((b) => b.disabled === true), true);
-  expect("no mix before the join", page.querySelector(".town-editor")?.hidden, true);
+  expect("no mix before the join", page.querySelector(".person-mix")?.hidden, true);
   const want = taskRules(ruled).filter((i) => ruledLaneOf(ctx.catalog, ruled.orders[i]!) === "helper");
   expect("a row per rule that taps their cards", want.length > 1 && page.querySelectorAll(".person-rules .task-rule").length, want.length);
   page.querySelectorAll(".person-rules .rule-cond").find((b) => b.textContent?.includes("Chop"))?.click();
   expect("a rule opens in the Rules tab", got.opened[0], { lane: "helper", rule: CHOP });
 }
 
-{  // a joined person: their cards, their part of the town's mix and nothing of the others'; Save keeps the rest of the mix
+{  // a joined person: their cards, their split and nothing of the others'; a change keeps the rest of the mix, with no Save
   const both = townStep("town").view;
   const { root, page, got } = rig(both);
   const changes = root.querySelectorAll(".person-change");
@@ -61,11 +61,12 @@ const CHOP = 4;
   changes[0]!.click();
   expect("the page opens", page.hidden, false);
   expect("their cards", page.querySelectorAll(".person-cards .card").map((c) => c.dataset.card), ["chop", "haul"]);
-  expect("only their split", texts(page.querySelectorAll(".town-person .town-name")), ["Helper"]);
-  page.querySelector(".editor-buttons .primary")?.click();
+  expect("only their split", texts(page.querySelectorAll(".person-mix .share-key-item")), ["Chop logs 60%", "Haul water 30%", "Helper, idle 10%"]);
+  expect("no Save", page.querySelectorAll(".editor-buttons .primary").length, 0);
+  page.querySelectorAll(".person-cards .card-tap")[1]?.click();
   const mix = saved(got.decided[0]);
-  expect("the whole mix is saved", mix?.components.map((c) => (c.kind === "card_share" ? c.card : null)), ["chop", "haul", "hew", "carve"]);
-  expect("the page closes", page.hidden, true);
+  expect("the whole mix is sent, the mason's shares in it", mix?.components.map((c) => (c.kind === "card_share" ? c.card : null)), ["chop", "hew", "carve"]);
+  expect("the page stays open", page.hidden, false);
 }
 
 {  // the dot on a joined person's Change clears once their page is opened

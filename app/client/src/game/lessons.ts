@@ -152,14 +152,13 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: TOWN_MIX,
-    // the town's mix, the first time its strip shows (ui/townstrip.ts marks Change): taught on the strip and the town editor's own controls;
+    // the town's mix, the first time its strip shows (ui/townstrip.ts marks each person's Change): taught on the strip and the person page's bar;
     // not while the save's town mix has been split any other way than the game made it (townMixAsMade)
     may: (view) => townMixAsMade(view),
     trigger: `[data-teach="town-change"]`,
     steps: [
       { target: () => `[data-teach="town-change"]`, line: (c) => c.text.get(UI.lessonTownChange), ends: "touch" },
-      { target: () => `.town-editor .town-bar`, line: (c) => c.text.get(UI.lessonTownBar), ends: "read" },
-      { target: () => `.town-editor .editor-head .primary`, line: (c) => c.text.get(UI.lessonTownSave), ends: "touch" },
+      { target: () => `.person-page .town-bar`, line: (c) => c.text.get(UI.lessonTownBar), ends: "read" },
       { target: () => `.town .town-people`, line: (c) => c.text.get(UI.lessonTownRuns), ends: "read" },
     ],
   },

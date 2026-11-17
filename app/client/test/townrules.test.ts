@@ -33,7 +33,7 @@ function rules(view: View, side: RuleSide = "camp") {
 }
 function strip(view: View) {
   const { ctx } = testContext();
-  const s = new TownStrip(ctx, () => undefined, () => undefined);
+  const s = new TownStrip(ctx, () => undefined);
   document.body.replaceChildren(s.root);
   s.update(view);
   return fakeDocument.body.firstElementChild as FakeEl;

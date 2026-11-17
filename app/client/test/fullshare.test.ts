@@ -1,10 +1,9 @@
 // One task can take the whole of a mix: a divider beside the idle rest reaches 100% by drag and by arrow key, the task
 // keeps 1% while it stays, and a person at 100% (no idle left) can drag down or add a task, which takes its slice from theirs.
 import { fakeDocument, type FakeEl, FakeEvent, install, pointer } from "./fake-dom";
-import { testContext } from "./context";
+import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
-import type { Mix, View } from "../src/api/types";
-import { LaneRows } from "../src/ui/lanerows";
+import type { Decision, Mix, View } from "../src/api/types";
 import { ShareBar } from "../src/ui/sharebar";
 
 install();
@@ -62,16 +61,9 @@ function bar(task: number): { divider: FakeEl; commits: number[][]; bar: ShareBa
 const both = townStep("town").view;   // helper: chop 60%, haul 30%, 10% idle; mason: hew 70%, carve 20%
 
 function opened(view: View) {
-  const { ctx, got } = testContext();
-  const rows = new LaneRows(ctx);
-  document.body.replaceChildren(rows.root, rows.town.root);
-  const root = fakeDocument.body.firstElementChild as FakeEl;
-  rows.update(view);
-  root.querySelector(".town-change")?.click();
-  const editor = fakeDocument.body.children[1] as FakeEl;
-  const person = (i: number): FakeEl => editor.querySelectorAll(".town-person")[i] as FakeEl;
-  for (const track of editor.querySelectorAll(".share-track")) track.rect = { left: 0, top: 0, width: 1000, height: 20, right: 1000, bottom: 20 };
-  return { editor, got, person };
+  const rig = pageRig(view);
+  rig.open(0);
+  return rig;
 }
 
 /** The town mix with the helper holding chop alone at `chop`. */
@@ -79,34 +71,28 @@ function chopAlone(chop: number): View {
   const alone = (m: Mix): Mix => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "haul").map((c) => (c.kind === "card_share" && c.card === "chop" ? { ...c, share_bp: chop } : c)) });
   return { ...both, mixes: both.mixes.map((m) => (m.id === "town:main" ? alone(m) : m)) };
 }
-const shown = (p: FakeEl): string[] => p.querySelectorAll(".town-card-share").map((n) => n.textContent ?? "");
+const shares = (d: Decision | undefined, card: string): number[] => (d?.kind === "save_mix" ? d.mix.components.flatMap((c) => (c.kind === "card_share" && c.card === card ? [c.share_bp] : [])) : []);
 
-{  // a person's one task drags to 100% and Save sends it with no idle
-  const { editor, got, person } = opened(chopAlone(9000));
-  const divider = person(0).querySelectorAll(".share-divider")[0] as FakeEl;
+{  // a person's one task drags to 100% and the let-go sends it with no idle
+  const { page, got } = opened(chopAlone(9000));
+  const divider = page.querySelectorAll(".share-divider")[0] as FakeEl;
   divider.dispatchEvent(pointer("pointerdown", 900, 10));
   divider.dispatchEvent(pointer("pointermove", 1000, 10));
   divider.dispatchEvent(pointer("pointerup", 1000, 10));
-  expect("the task shows the whole", shown(person(0)), ["100%"]);
-  editor.querySelector(".editor-head .primary")?.click();
-  const d = got.decided[0];
-  const sent = d?.kind === "save_mix" ? d.mix.components.flatMap((c) => (c.kind === "card_share" && c.card === "chop" ? [c.share_bp] : [])) : null;
-  expect("Save sends 100%", sent, [10_000]);
+  expect("the let-go sends 100%", shares(got.decided[0], "chop"), [10_000]);
 }
 {  // from 100% the task drags down, idle reappearing
-  const { person } = opened(chopAlone(10_000));
-  const dividers = person(0).querySelectorAll(".share-divider");
+  const { page, got } = opened(chopAlone(10_000));
+  const dividers = page.querySelectorAll(".share-divider");
   expect("a divider beside the empty idle", dividers.length, 1);
   const divider = dividers[0] as FakeEl;
   divider.dispatchEvent(pointer("pointerdown", 1000, 10));
   divider.dispatchEvent(pointer("pointermove", 400, 10));
   divider.dispatchEvent(pointer("pointerup", 400, 10));
-  expect("the task came down", shown(person(0)), ["40%"]);
+  expect("the task came down", shares(got.decided[0], "chop"), [4000]);
 }
 {  // from 100% a task can be added; it takes its slice from the one there, as the hands' editor does
-  const { person } = opened(chopAlone(10_000));
-  const add = person(0).querySelector('.town-add[data-card="haul"]') as FakeEl;
-  expect("Add is on at 100%", add.disabled, false);
-  add.click();
-  expect("an equal slice from the task", shown(person(0)), ["50%", "50%"]);
+  const { face, got } = opened(chopAlone(10_000));
+  face("haul").querySelector(".card-tap")?.click();
+  expect("an equal slice from the task", [shares(got.decided[0], "chop"), shares(got.decided[0], "haul")], [[5000], [5000]]);
 }

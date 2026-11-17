@@ -1,13 +1,13 @@
 // A card that takes from no store says so where a cost would be (ui/cardneeds.ts takesNothing; docs/decisions/principles.md):
-// on its face, while it works too, and on a Camp person's rows. Read off CardInfo.takes, never a label.
-import { fakeDocument, type FakeEl, install } from "./fake-dom";
+// on its face, while it works too, and on a person's page. Read off CardInfo.takes, never a label.
+import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { townStep } from "../fixtures/town";
 import type { Card, Content, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { CardNeeds } from "../src/ui/cardneeds";
-import { LaneRows } from "../src/ui/lanerows";
+import { pageRig } from "./personrig";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });
@@ -44,13 +44,7 @@ expect("a card with no upside drawn says nothing", face([], null, null), undefin
 expect("a card with an input does not", face(["roots"], null), undefined);
 expect("nor one with a drain", face(["hurt"], null), undefined);
 
-const catalog = new Catalog(content);
-const { ctx } = testContext(undefined, catalog);
-const rows = new LaneRows(ctx);
-document.body.replaceChildren(rows.root, rows.town.root);
-const editor = fakeDocument.body.children[1] as FakeEl;
-rows.update(step.view);
-(fakeDocument.body.firstElementChild as FakeEl).querySelector(".town-change")?.click();
-const row = editor.querySelector('.town-card[data-card="haul"]') ?? editor.querySelector('.town-add[data-card="haul"]');
-expect("a Camp person's task says so too", row?.querySelector(".card-need.nothing")?.textContent, SAYS);
-expect("a Camp task with no upside has none", editor.querySelector('.town-card[data-card="chop"]')?.querySelector(".card-need.nothing") ?? null, null);
+const { open, face: pageFace } = pageRig(step.view, new Catalog(content));
+open(0);
+expect("a person's task says so too", pageFace("haul").querySelector(".card-need.nothing")?.textContent, SAYS);
+expect("a task with no upside has none", pageFace("chop").querySelector(".card-need.nothing") ?? null, null);

@@ -194,12 +194,12 @@ the cards, and no rail.
 ## The Town view
 
 The town's people get a room of their own (`ui/townview.ts`): the Town tab on every frame, the desktop's taking the
-middle and the right beside the rail. Its title and the town mix's Change share the first row; under them a row per
+middle and the right beside the rail. Its title and the note of a stopped mix share the first row; under them a row per
 person who has joined (`ui/townstrip.ts`): their face (the ask's, so a person looks the same wherever they appear), who
-they are and what they work now, their time split into the cards that hold a share with the idle rest, the split that
+they are and what they work now, their own Change, their time split into the cards that hold a share with the idle rest, the split that
 runs now while one of their cards is stopped, and the bar of the card they work. Then a row per lane run by rules whose
 person has not joined (`ui/lanerows.ts`, below), in the same row form (`ui/personrow.ts`) with its own Change where a
-split would be. On a desktop what each works sits over its card's bar, on the right. On a phone the ledger and skills follow. Change opens the town editor in
+split would be. On a desktop what each works sits over its card's bar, on the right. On a phone the ledger and skills follow. Change opens the person's page in
 the view's place. These rows are their one home: the main screen and the rail never list anyone's jobs, and the Rules
 tab keeps the town's rules, not its people, and only once the town has a second mix to switch to (with one, a town rule
 has nothing to do, so neither they nor a New rule for them are drawn). A row arriving while another tab is open dots Town (the new-card dot), never
@@ -269,15 +269,18 @@ real share, see the editor).
 view, under the town's people, in their row form: a face, the lane's label (a later label once its unlock is held), what it
 does (the task's name, or `idle`), the task's bar, and `Change`. A row arrives through the arrival queue the first time
 its lane is in view, then stays. `Change` opens the person's
-page (`ui/personpage.ts`), which takes the card area's place and is laid out as the Tasks page is: the person's cards
-drawn in full by the Tasks panel's card face (`ui/cardpick.ts`, a lane's crafts in their section after the rest), then
-their part of the town's mix in the town editor once they have joined, then the rules that tap their cards, each a
-button into the Rules tab. Every person's row, joined or not, has its own Change, and a quiet dot on it marks a task not
-yet in front of the player until their page is opened. A rule's button opens the lane's task editor: the rule editor's
+page (`ui/personpage.ts`), which takes the card area's place and is laid out as the Tasks page is: once the person has
+joined, their split of the town's mix as a share bar (`ui/personmix.ts`); their cards drawn in full by the Tasks panel's card
+face (`ui/cardpick.ts`, a lane's crafts in their section after the rest), a tap on one joining it to their time or taking it
+out, a divider setting the split, each change sent as it is made with no Save; then the rules that tap their cards, each a
+button into the Rules tab. A capped card, a one-off, is never in the town's mix (a mix greyed by a finished build would idle the
+person: `engine/DESIGN.txt`, "THE TOWN'S MIX"); its tap adds or takes out the always rule that has the person do it, and its face
+says they do it until it is finished and then go back to their mix. Every person's row, joined or not, has its own Change, and a quiet dot on it marks a task not
+yet in front of the player until their page is opened; the Town tab wears the same dot while any person's does. A rule's button opens the lane's task editor: the rule editor's
 simple view with only `Do` (the lane's tasks as the same card faces), the rule's sentence and Save; Save changes that
 rule's task in place (its condition kept) or adds the always rule. The lane's tasks are never cards in Tasks or Done:
 the page and the editor are their only way in. Fits into: the Town view (`ui/lanerows.ts`, owned by `ui/hands.ts`), the
-Rules tab's editor (`ui/laneedit.ts`), the town editor (`ui/townedit.ts`, scoped to one person).
+Rules tab's editor (`ui/laneedit.ts`), the hands' share bar (`ui/sharebar.ts`).
 
 ## Asks
 

@@ -2,7 +2,7 @@
 // one row per person present: their face and who, their time split into the cards that hold a share (each with its
 // share) and the idle remainder, under it the split that runs now while a card of theirs is stopped (runningnow.ts),
 // and the card they are working now with its bar, sampled as the card panel samples it.
-// Change at the head opens the town's mix in the town editor; each person's own Change opens their page (personpage.ts). A lane that has joined has no row of its own any more (lanerows.ts);
+// Each person's Change opens their page (personpage.ts), where their split is set. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../api/types";
 import { people, personOf, townGreyed, townStoppedBy } from "../game/town";
@@ -19,20 +19,14 @@ interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: H
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
   private readonly status = el("span", "hands-text town-status");
-  private readonly change = el("button", "hands-edit town-change");
   private readonly list = el("div", "town-people");
   private rows = new Map<string, PersonRow>();
   private view: View | null = null;
   private arrived = false;
 
-  constructor(private readonly ctx: PartContext, edit: () => void, private readonly openPage: (lane: string) => void) {
-    const { text } = ctx.catalog;
-    this.change.type = "button";
-    this.change.dataset.teach = "town-change";   // a lesson's mark of the way into the town's mix
-    setText(this.change, text.get(UI.townChange));
-    this.change.addEventListener("click", () => { tapFeedback(); edit(); });
+  constructor(private readonly ctx: PartContext, private readonly openPage: (lane: string) => void) {
     const head = el("div", "hands-row");
-    head.append(this.status, this.change);
+    head.append(this.status);
     const body = el("div", "hands-body");
     body.append(head, this.list);
     this.root.append(body);
@@ -72,6 +66,7 @@ export class TownStrip implements Part {
     row.node.insertBefore(now.root, row.track);
     const change = el("button", "hands-edit lane-change person-change", this.ctx.catalog.text.get(UI.laneChange));
     change.type = "button";
+    change.dataset.teach = "town-change";   // a lesson's mark of the way into the town's mix
     change.addEventListener("click", () => { tapFeedback(); this.openPage(lane); });
     row.node.insertBefore(change, row.track);
     return { ...row, split, now, change };
