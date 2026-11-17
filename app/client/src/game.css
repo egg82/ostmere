@@ -1027,6 +1027,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .person-page[hidden] { display: none; }
 .person-cards .card-list, .person-rules { display: grid; gap: .4rem; }
 .person-cards .rules-label { margin: .8rem 0 0; font-size: var(--t-meta); color: var(--ink); }
+.person-cards .card .card-tap:disabled { opacity: 1; cursor: default; }   /* a face to read, not a control that is off */
 .person-page .town-editor { gap: .6rem; }
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }
 .town-split { display: grid; gap: 1rem; }

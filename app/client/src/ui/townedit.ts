@@ -42,6 +42,7 @@ export class TownEditor {
     close.setAttribute("aria-label", text.get(UI.close));
     close.addEventListener("click", () => this.close());
     if (embedded) {
+      this.root.classList.remove("editor");   // the page is the editor: a phone seats it over the screen, once
       const buttons = el("div", "editor-buttons");
       buttons.append(this.save);
       this.root.append(this.body, buttons);

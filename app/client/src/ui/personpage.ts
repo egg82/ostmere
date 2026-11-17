@@ -11,7 +11,7 @@ import { UI } from "../game/text";
 import { people } from "../game/town";
 import { pickRow } from "./cardpick";
 import { sectionHead } from "./condrows";
-import { el, setText, tapFeedback } from "./dom";
+import { el, revealBelow, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
 import type { PartContext } from "./part";
 import { condButton } from "./rulecond";
@@ -31,7 +31,7 @@ export function dotChange(ctx: PartContext, view: View, lane: string, change: HT
 }
 
 export class PersonPage {
-  readonly root = el("section", "person-page");
+  readonly root = el("section", "editor person-page");
   private readonly heading = el("span", "town-title");
   private readonly cards = el("div", "person-cards");
   private readonly rules = el("div", "person-rules");
@@ -63,6 +63,12 @@ export class PersonPage {
     this.ctx.keeps.keepLaneTasksSeen(laneTasks(this.ctx, view, lane).map((c) => c.card));
     if (this.joined(view)) this.mix.show(view, lane);
     this.draw();
+  }
+
+  /** Once shown: the page's top is in view, clear of a phone's pinned strip, whatever the Town tab was scrolled to. */
+  reveal(): void {
+    const pinned = document.querySelector<HTMLElement>(".panel-top");
+    if (pinned) revealBelow(this.root, pinned, [".game", ".panel"].flatMap((s) => document.querySelector<HTMLElement>(s) ?? []));
   }
 
   close(): void {

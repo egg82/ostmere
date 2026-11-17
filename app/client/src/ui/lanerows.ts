@@ -34,7 +34,11 @@ export class LaneRows implements Part {
   constructor(private readonly ctx: PartContext, changed: () => void = () => undefined) {
     this.town = new TownEditor(ctx, changed);
     this.page = new PersonPage(ctx, changed);
-    this.open = (lane) => { if (this.raw) this.page.show(this.raw, lane); changed(); };
+    this.open = (lane) => {
+      if (this.raw) this.page.show(this.raw, lane);
+      changed();
+      this.page.reveal();
+    };
     this.strip = new TownStrip(ctx, () => { if (this.raw) this.town.show(this.raw); changed(); }, this.open);
   }
 
