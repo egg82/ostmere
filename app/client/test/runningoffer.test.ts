@@ -15,7 +15,7 @@ if (persons.length < 2 || !view.cards.some((c) => catalog.laneOf(c.card) === "ha
 
 for (const { card } of persons) {
   const lane = catalog.laneOf(card);
-  const offered = subjectChoices(catalog, view, { kind: "tap_card", card }).running;
+  const offered = subjectChoices(catalog, view, [{ kind: "tap_card", card }]).running;
   const want = view.cards.filter((c) => catalog.laneOf(c.card) !== lane).map((c) => c.card).sort();
   const got = offered.map((r) => (r.kind === "running" ? r.card : `not running: ${r.kind}`)).sort();
   if (JSON.stringify(got) !== JSON.stringify(want)) failures.push(`${card}: offered ${got.join(",")}, want ${want.join(",")}`);
@@ -29,7 +29,12 @@ for (const { card } of persons) {
 }
 const hands = view.cards.find((c) => catalog.laneOf(c.card) === "hands")?.card ?? "";
 for (const [name, then] of [["a hands tap", { kind: "tap_card" as const, card: hands }], ["a mix switch", { kind: "switch_mix" as const, mix_id: view.mixes[0]?.id ?? "" }], ["no action", null]] as const) {
-  const n = subjectChoices(catalog, view, then).running.length;
+  const n = subjectChoices(catalog, view, [then]).running.length;
   if (n !== 0) failures.push(`${name} is offered ${n} running cards`);
 }
+const [first, other] = [persons[0]!.card, persons.find((c) => catalog.laneOf(c.card) !== catalog.laneOf(persons[0]!.card))!.card];
+const taps = (...cards: string[]) => cards.map((card) => ({ kind: "tap_card" as const, card }));
+if (subjectChoices(catalog, view, taps(first, other)).running.length !== 0) failures.push("a fallback on another lane is offered running");
+if (subjectChoices(catalog, view, [...taps(first), { kind: "switch_mix", mix_id: view.mixes[0]!.id }]).running.length !== 0) failures.push("a mix-switch fallback is offered running");
+if (subjectChoices(catalog, view, taps(first, first)).running.length === 0) failures.push("a fallback on the same lane lost the offer");
 if (failures.length > 0) throw new Error(failures.slice(0, 5).join("; "));

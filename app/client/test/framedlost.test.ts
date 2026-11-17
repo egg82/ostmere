@@ -26,7 +26,7 @@ const save = { save_id: 7, number: 1, decisions: 0, game_time: 0, ended_at: null
 
 function apiWhose(forecast: () => Promise<never>, advance: () => Promise<Step> = () => Promise.resolve(step())): GameApi {
   const away = (): Promise<never> => Promise.reject(new Error("not in these tests"));
-  return {
+  return { mixRows: () => Promise.reject(new Error("not in these tests")),
     content: () => Promise.resolve(fixtureContent),
     me: () => Promise.resolve({ account: null, saves: [], max_saves: 5, kept_days: 30 }),
     begin: () => Promise.resolve({ save, presentation: NEW_SAVE, step: step() }),

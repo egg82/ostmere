@@ -113,6 +113,8 @@ export const UI = {
   namedByOrder: "ui.mix.named_by_order",
   usedBy: "ui.mix.used_by", // "{n}": the Mixes list's note on a mix several rules run
   usedByOne: "ui.mix.used_by_one",
+  mixEarlier: "ui.mix.earlier", // "{mix}", "{when}": the player's own earlier best for a goal, with the mix that set it
+  mixNets: "ui.mix.nets", // "{n}": a mix's store net rates, joined
   nested: "ui.mix.nested",
   cardCount: "ui.card.count", // "{n}/{cap}"
   cardLevelled: "ui.card.levelled", // "{skill}{n}{before}{after}": a level on the card it speeds up, its old and new time

@@ -8,6 +8,7 @@ from sqlalchemy.exc import OperationalError
 
 from ashfall_app.db import accounts as a
 from ashfall_app.db import saves as s
+from ashfall_app.db import savewrite as sw
 from ashfall_app.db import step
 from ashfall_app.db import tries as t
 from ashfall_app.db.engine import open_database
@@ -116,7 +117,7 @@ def test_a_save_is_read_back_as_written_and_only_by_its_account(conn: Connection
     got = s.save(conn, sid, acc)
     assert got is not None and (got.state, got.build, got.release, got.started_at) == ("S", "b", 7, T0)
     assert s.save(conn, sid, other) is None and s.save(conn, sid, None) == got
-    s.write(conn, sid, T0 + DAY, s.Written(state="S2", format=4, rules_digest="e", decisions=2, game_time=50,
+    sw.write(conn, sid, T0 + DAY, s.Written(state="S2", format=4, rules_digest="e", decisions=2, game_time=50,
                                             ended_at=40, build="c", release=9, camp_level=2))
     got = s.save(conn, sid, acc, lock=True)
     assert got is not None and (got.state, got.rules_digest, got.decisions, got.game_time, got.ended_at, got.build,
@@ -128,7 +129,7 @@ def test_saves_of_lists_live_saves_most_recently_written_first(conn: Connection)
     first = s.insert_save(conn, acc, T0, written())
     second = s.insert_save(conn, acc, T0 + DAY, written())
     assert [x.id for x in s.saves_of(conn, acc)] == [second, first]
-    s.write(conn, first, T0 + 2 * DAY, written())
+    sw.write(conn, first, T0 + 2 * DAY, written())
     assert [x.id for x in s.saves_of(conn, acc)] == [first, second]
     conn.execute(saves.update().where(saves.c.id == first).values(deleted_at=T0))
     assert [x.id for x in s.saves_of(conn, acc)] == [second] and s.save(conn, first, acc) is None
@@ -237,8 +238,8 @@ def test_a_save_begun_without_a_number_takes_the_next_when_written(conn: Connect
     acc = a.create_account(conn, T0)
     first, second = s.insert_save(conn, acc, T0, written()), s.insert_save(conn, acc, T0, written())
     conn.execute(saves.update().where(saves.c.id == first).values(number=None))   # as the build before numbers made it
-    s.write(conn, first, T0 + DAY, written())
-    s.write(conn, second, T0 + DAY, written())
+    sw.write(conn, first, T0 + DAY, written())
+    sw.write(conn, second, T0 + DAY, written())
     assert [r.number for r in s.saves_of(conn, acc)] == [2, 3]
 
 

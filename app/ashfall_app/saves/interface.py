@@ -11,6 +11,7 @@ from typing import Protocol
 from .. import engine as e
 from .journal import ComposedDay
 from .journal_rules import JournalRules
+from .mixbest import Best
 from .repeats import RepeatRules, Repeats
 from .ruleruns import RuleRun
 
@@ -47,6 +48,9 @@ class Ruleset:
     """Text keys retired since a stored line was written: such a line is dropped."""
     journal: JournalRules | None = None
     """The journal's subjects and habits (journal_rules.py); None composes no days."""
+    mix_marks: Callable[[e.Save, e.MixId], tuple[tuple[str, int], ...]] | None = None
+    """Each open goal a saved mix lands, as a goal key and the game time it lands (the api's: saves/mixbest.py keeps
+    the best); None keeps none."""
 
 
 @dataclass(frozen=True)
@@ -222,6 +226,10 @@ class Saves(Protocol):
         stops short is written as a plain advance, the verb not applied: Behind."""
         ...
 
+    def mix_best(self, account_id: int, save_id: int) -> tuple[Best, ...]:
+        """The save's kept earlier best per goal (mixbest.py), as last written."""
+        ...
+
     def dry_run(self, account_id: int, save_id: int, verbs: tuple[e.Verb, ...]) -> e.Save:
         """The save after these verbs, applied in order now. Nothing is written. Behind when the advance to now
         stops short (its Played is the save as written)."""
@@ -269,6 +277,9 @@ class NullSaves:
         raise Unavailable("no database")
 
     def dry_run(self, account_id: int, save_id: int, verbs: tuple[e.Verb, ...]) -> e.Save:
+        raise Unavailable("no database")
+
+    def mix_best(self, account_id: int, save_id: int) -> tuple[Best, ...]:
         raise Unavailable("no database")
 
     def stored(self, account_id: int, save_id: int) -> e.Save:

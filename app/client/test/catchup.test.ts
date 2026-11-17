@@ -46,7 +46,7 @@ function harness(script: { open?: Step; advances?: Step[]; decides?: (Step | Api
     if (!step) throw new Error(`${call} asked more often than the script allows: ${log.calls.join()}`);
     return step;
   };
-  const api: GameApi = {
+  const api: GameApi = { mixRows: () => Promise.reject(new Error("not in these tests")),
     content: () => { log.calls.push("content"); return Promise.resolve(fixtureContent); },
     me: () => Promise.reject(new Error("not in these tests")),
     begin: () => { log.calls.push("begin"); return Promise.resolve({ save: save(), presentation: NEW_SAVE, step: script.begin ?? slice(0, null, []) }); },

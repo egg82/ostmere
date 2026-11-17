@@ -1,5 +1,5 @@
 // What every part of the game screen is: redrawn from each new View, and sampled every frame in between.
-import type { Condition, Decision, LogLine, Repeats, RuleRun, View } from "../api/types";
+import type { Condition, Decision, LogLine, MixRows, Repeats, RuleRun, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import type { Keeps } from "../game/keeps";
 import type { Subject } from "../game/lessons";
@@ -9,8 +9,9 @@ import type { Glow } from "./fresh";
 import type { LaneTarget } from "./laneedit";
 import type { Arrivals } from "./reveal";
 
-/** What the Rules tab opens on: its list (null), a rule's condition editor, a new rule's, or a lane's task editor. */
-export type RuleTarget = number | "new" | null | LaneTarget;
+/** What the Rules tab opens on: its list (null), a rule's condition editor, a new rule's (for one person's lane, `newFor`),
+ * or a lane's task editor. */
+export type RuleTarget = number | "new" | null | LaneTarget | { newFor: string };
 
 export interface Part {
   readonly root: HTMLElement;
@@ -23,6 +24,8 @@ export interface Actions {
   decide(decision: Decision): void;
   /** The view after these decisions, not kept (Session.dryRun). */
   dryRun(decisions: Decision[]): Promise<View | null>;
+  /** Each saved mix's numbers as if it ran from now, and the earlier best per goal; null when unknown. */
+  mixRows(): Promise<MixRows | null>;
   /** Open the mix editor on a saved mix (null: the running one). */
   editMix(mixId: string | null): void;
   /** Open the editor on a new mix; with a rule's index, saving points that rule at it. */

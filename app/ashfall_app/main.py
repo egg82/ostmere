@@ -5,6 +5,7 @@ import logging
 import os
 from collections.abc import AsyncGenerator, Mapping
 from contextlib import asynccontextmanager
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -109,6 +110,7 @@ def create_app(clock: Clock = system) -> FastAPI:
     opening = checked_opening()
     rs = ruleset(opening, load_renames(), os.environ.get("BUILD_VERSION", "dev"), load_lock().release)
     game = Game(opening, rs)
+    rs = replace(rs, mix_marks=game.mixes.marks)
     logs.info(logging.getLogger("ashfall.app"), "app.start", rules=rs.digest, version=rs.build, release=rs.release)
     database = db.from_env(os.environ)
     services = wire(database, rs, clock)

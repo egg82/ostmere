@@ -3,12 +3,13 @@
 // ● and "running" (or how long it runs) mark the one running now. A mix rules run says how many ("used by 2 rules") where Delete would be: a rule's mix can't be deleted. A
 // greyed mix (it holds a retired or completed card) can't be run, only edited or deleted. New mix last. The rules
 // themselves are the Rules tab's (rules.ts).
-import type { Mix, View } from "../api/types";
+import type { Mix, MixRow, MixRows, View } from "../api/types";
 import { mixesFull, mixNamedBy } from "../game/mix";
 import { rulesUsing } from "../game/orders";
 import { isTownMix } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
+import { goalLabel, goalLeft } from "./goaltimes";
 import { segmentSpecs } from "./hands";
 import { keyItem } from "./sharebar";
 import type { PartContext } from "./part";
@@ -18,6 +19,7 @@ export class MixSelector {
   private readonly list = el("div", "sheet-mixes");
   private view: View | null = null;
   private asking: string | null = null;
+  private numbers: MixRows | null = null;
 
   constructor(private readonly ctx: PartContext) {
     const close = el("button", "quiet", ctx.catalog.text.get(UI.close));
@@ -32,8 +34,14 @@ export class MixSelector {
   show(view: View): void {
     this.view = view;
     this.asking = null;
+    this.numbers = null;
     this.draw();
     if (!this.root.open) this.root.showModal();
+    void this.ctx.actions.mixRows().then((rows) => {
+      if (rows === null || !this.root.open) return;
+      this.numbers = rows;
+      this.draw();
+    });
   }
 
   update(view: View): void {
@@ -86,7 +94,32 @@ export class MixSelector {
     const tools = el("span", "selector-tools");
     tools.append(edit, ...this.deleteControls(view, mix.id));
     row.append(run, tools);
+    const row_ = this.numbers?.rows.find((r) => r.id === mix.id);
+    if (row_ && !greyed) row.append(...this.numbersOf(row_));
     return row;
+  }
+
+  /** One mix's own numbers, never a score: when each open goal lands under it (and the earlier best for that goal,
+   * with the mix that set it), then each store's net per minute. */
+  private numbersOf(r: MixRow): HTMLElement[] {
+    const { catalog } = this.ctx;
+    const { text, format } = catalog;
+    const at = this.numbers?.at ?? 0;
+    const best = new Map((this.numbers?.best ?? []).map((b) => [b.goal, b]));
+    const lines = r.goals.filter((g) => g.lands_at !== null && g.lands_at > at).flatMap((g) => {
+      const kept = best.get(`${g.kind}|${g.store ?? ""}|${g.skill ?? ""}|${g.target}`);
+      const mine = el("div", "totals-row goal-row mix-goal");
+      mine.append(el("span", "totals-store", goalLabel(catalog, g)), el("span", "", goalLeft(catalog, g, at)));
+      if (!kept || kept.lands_at <= at) return [mine];
+      return [mine, el("div", "goal-binds", text.fill(UI.mixEarlier, { mix: kept.mix_id, when: format.duration(kept.lands_at - at) }))];
+    });
+    const nets = r.nets.filter((n) => n.per_hour !== 0).map((n) => `${catalog.storeLabel(n.store)} ${format.perMinute(n.per_hour)}`);
+    const out = [...lines];
+    if (nets.length > 0) out.push(el("div", "goal-binds mix-nets", text.fill(UI.mixNets, { n: nets.join(", ") })));
+    if (r.runs_out_at !== null) out.push(el("div", "goal-binds", format.runs(r.runs_out_at, at)));
+    const box = el("div", "mix-numbers");
+    box.append(...out);
+    return [box];
   }
 
   /** The mix's split as a small bar of hues, and its legend beneath naming each task and its share. */

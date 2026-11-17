@@ -4,7 +4,7 @@
 import { FIRST_MIX, FIRST_RULE, JOURNAL } from "../src/game/lessons";
 import { FIXTURE_CODE, fixtureDevices } from "./devices";
 import { ApiFailure, type GameApi } from "../src/api/api";
-import type { AccountPresentation, AccountSettings, Decision, Mix, SaveInfo, SavePresentation, Step } from "../src/api/types";
+import type { AccountPresentation, AccountSettings, Decision, GoalRow, Mix, SaveInfo, SavePresentation, Step } from "../src/api/types";
 import { fixtureContent } from "./content";
 import { CHRONICLE_VISITS, chronicleStep, isChronicle } from "./chronicle";
 import { dayOneStep, isDayOne } from "./dayone";
@@ -99,6 +99,24 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
     open: () => Promise.reject(new ApiFailure("not_found", "fixture: no saves to open")),
     advance: () => step(null),
     savedView: () => Promise.reject(new ApiFailure("not_found", "fixture: no saves to show")),
+    mixRows: () => step(null).then(({ view }) => {   // authored, not the engine's: each mix a little slower than the one before
+      const own = view.mixes.filter((m) => !m.id.startsWith("town:"));
+      const base: GoalRow[] = view.goal_rows.length > 0 ? view.goal_rows : [
+        { kind: "store" as const, store: "wood", skill: null, target: 20_000, lands_at: view.at + 5400, per_hour: 36_000, limit: null,
+          until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 20_000, release: 20_000 } as GoalRow["until"] },
+        { kind: "level" as const, store: null, skill: "foraging", target: 3, lands_at: view.at + 9000, per_hour: 12_000, limit: null,
+          until: { kind: "at_least", watched: { kind: "skill_level", skill: "foraging" }, value: 3, release: 3 } as GoalRow["until"] },
+      ];
+      const rows = own.map((m, i) => ({
+        id: m.id,
+        goals: base.map((g) => ({ ...g, lands_at: g.lands_at === null ? null : g.lands_at + i * 900 })),
+        nets: base.flatMap((g) => g.store === null ? [] : [{ store: g.store, per_hour: g.per_hour + i * 120 }]),
+        runs_out_at: i === 0 ? null : view.at + 7 * 3600,
+      }));
+      const best = base.flatMap((g) => g.lands_at === null || own.length === 0 ? [] : [{
+        goal: `${g.kind}|${g.store ?? ""}|${g.skill ?? ""}|${g.target}`, mix_id: own[0]?.id ?? "", lands_at: g.lands_at - 300, saved_at: view.at - 3600 }]);
+      return { at: view.at, rows, best };
+    }),
     forecast: () => step(null).then((s) => ({   // the phase's own view carries the forecast it is drawn with
       decisions: s.decisions, forecast: s.view.forecast ?? { horizon_at: s.view.at + 6 * 3600, level_ups: [], tops_out: [], fills: [], empties: [] },
     })),
