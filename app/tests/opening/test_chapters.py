@@ -156,3 +156,25 @@ def test_a_rule_past_the_cap_it_is_offered_at_fails_the_load(tmp_path: Path, old
     its offer), never under the roots' first cap. One past that, or offered before the larder, fails."""
     with pytest.raises(ValueError, match="never let go"):
         load_with(broken_chapter(tmp_path, old, new))
+
+
+# ---------- a rising rule is judged against the cap its store has when it is offered ----------
+
+ROOTS_RULE = 'offered_after = { unlock_kind = "feature", id = "roots_to_stock" }\n'
+
+
+def with_rising_roots_rule(value: int) -> tuple[str, str]:
+    """The roots rule kept, and beside it an at_least on a card that takes roots, offered once the larder is open."""
+    return ROOTS_RULE, ROOTS_RULE + (f'\n[[order_cards]]\nstore = "roots"\ntap_card = "cook_roots"\n'
+                                     f'when = {{ test = "at_least", subject_kind = "store", id = "roots", value = {value} }}\n'
+                                     'offered_after = { unlock_kind = "feature", id = "roots_to_stock" }\n')
+
+
+def test_a_rising_rule_above_the_first_cap_but_within_the_offer_time_cap_loads(tmp_path: Path):
+    """The roots hold 8 to begin with and 16 once the larder is offered: 12 is reachable."""
+    load_with(broken_chapter(tmp_path, *with_rising_roots_rule(12)))
+
+
+def test_a_rising_rule_past_the_offer_time_cap_fails_the_load(tmp_path: Path):
+    with pytest.raises(ValueError, match="past the store's cap when it is offered"):
+        load_with(broken_chapter(tmp_path, *with_rising_roots_rule(17)))
