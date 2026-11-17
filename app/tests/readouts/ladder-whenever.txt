@@ -1,5 +1,5 @@
 == whenever: the edge at game day 14.07
-  scavenging: level 21 of 22 (77.36% of the phase)
+  scavenging: level 21 of 22 (77.28% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.01 d
@@ -19,9 +19,9 @@
     L18   3.49 d  gap   0.99 d
     L19   4.79 d  gap   1.30 d
     L20   6.79 d  gap   2.00 d
-    L21  12.30 d  gap   5.51 d
+    L21  12.31 d  gap   5.51 d
     top L22: not by the edge
-  woodcutting: level 37 of 43 (9.58% of the phase)
+  woodcutting: level 37 of 43 (9.49% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.01 d  gap   0.00 d
     L4    0.01 d  gap   0.00 d
@@ -51,13 +51,13 @@
     L28  12.25 d  gap   0.00 d
     L29  12.27 d  gap   0.01 d
     L30  12.30 d  gap   0.03 d
-    L31  12.34 d  gap   0.04 d
+    L31  12.35 d  gap   0.04 d
     L32  12.41 d  gap   0.07 d
     L33  12.51 d  gap   0.10 d
     L34  12.67 d  gap   0.16 d
     L35  12.91 d  gap   0.24 d
-    L36  13.25 d  gap   0.34 d
-    L37  13.86 d  gap   0.62 d
+    L36  13.26 d  gap   0.34 d
+    L37  13.89 d  gap   0.63 d
     top L43: not by the edge
   foraging: level 7 of 22 (0.22% of the phase)
     L2    0.05 d  gap   0.05 d
@@ -75,7 +75,7 @@
     L6    8.60 d  gap   3.14 d
     L7   12.39 d  gap   3.78 d
     top L22: not by the edge
-  arcana: level 13 of 22 (2.94% of the phase)
+  arcana: level 13 of 22 (2.93% of the phase)
     L2    5.41 d  gap   5.41 d
     L3    5.42 d  gap   0.01 d
     L4    5.45 d  gap   0.03 d
@@ -87,13 +87,13 @@
     L10   8.37 d  gap   0.58 d
     L11   9.27 d  gap   0.90 d
     L12  10.80 d  gap   1.53 d
-    L13  13.15 d  gap   2.35 d
+    L13  13.16 d  gap   2.36 d
     top L22: not by the edge
   melee: level 5 of 22 (0.08% of the phase)
     L2    7.57 d  gap   7.57 d
     L3    8.50 d  gap   0.93 d
     L4   10.81 d  gap   2.31 d
-    L5   12.85 d  gap   2.04 d
+    L5   12.85 d  gap   2.05 d
     top L22: not by the edge
   card share of the running mixes by day, percent (. none, ~ under 0.5)
     day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15

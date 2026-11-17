@@ -1,8 +1,8 @@
 chapter eight: 6 visits on typical
-   V31 gap   4.2 h  spend 23  decide  2
+   V31 gap   4.2 h  spend 16  decide  2
    V32 gap   3.2 h  spend 34  decide  2
    V33 gap   9.2 h  spend 36  decide  1
    V34 gap   4.2 h  spend 28  decide  2
    V35 gap   3.2 h  spend 32  decide  0
-   V36 gap   9.2 h  spend 24  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 117, decide 6; 8h+: 2 returns, spend 60, decide 2
+   V36 gap   9.2 h  spend 29  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 110, decide 6; 8h+: 2 returns, spend 65, decide 2
