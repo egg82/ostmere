@@ -58,7 +58,9 @@ const laneCards = ruled.cards.filter((c) => c.card === "chop" || c.card === "hau
   info.presentation = "craft";   // the fixture's lane tasks are actions, which Plan leaves to the mix; a craft is offered
   const view: View = { ...ruled, queue: [], ended_at: 1 };
   const open = (): FakeEl => {
-    (plan as unknown as { step: unknown }).step = { mix: null, after: null };
+    const closed = el("div");
+    closed.append(...plan.rows(view));
+    mounted(closed).querySelector(".stint-plan")?.click();   // + Plan
     const box = el("div");
     box.append(...plan.rows(view));
     return mounted(box);
@@ -77,7 +79,7 @@ const laneCards = ruled.cards.filter((c) => c.card === "chop" || c.card === "hau
   info.presentation = was;
 }
 
-{  // the dot: on Change while a task of the lane has not been seen; Change's press (or the editor opening) clears it
+{  // the dot: on Change while a task of the lane has not been seen; opening the person's page keeps them and clears it
   const { ctx } = testContext();
   const rows = new LaneRows(ctx);
   const root = mounted(rows.root);
@@ -85,13 +87,9 @@ const laneCards = ruled.cards.filter((c) => c.card === "chop" || c.card === "hau
   expect("a new task: the dot", root.querySelectorAll(".lane-change .new-dot").length, 1);
   rows.update(ruled);
   expect("not drawn twice", root.querySelectorAll(".lane-change .new-dot").length, 1);
+  expect("unseen before the page opens", laneCards.every((c) => ctx.keeps.laneTaskSeen(c.card)), false);
   root.querySelector(".lane-change")?.click();
-  expect("the editor's opening keeps the tasks seen", laneCards.every((c) => ctx.keeps.laneTaskSeen(c.card)), false);
-  const tab = new RulesTab(ctx);
-  mounted(tab.root);
-  tab.update(ruled);
-  tab.open(ruled, { lane: "helper", rule: 4 });
-  expect("the lane's tasks are kept seen", laneCards.every((c) => ctx.keeps.laneTaskSeen(c.card)), true);
+  expect("the page's opening keeps the tasks seen", laneCards.every((c) => ctx.keeps.laneTaskSeen(c.card)), true);
   rows.update(ruled);
   expect("the dot is gone", root.querySelectorAll(".lane-change .new-dot").length, 0);
 }

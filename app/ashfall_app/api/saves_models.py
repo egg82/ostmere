@@ -125,8 +125,8 @@ class SavePresentation(BaseModel):
     lines_touched: list[Id] = Field(default=[], max_length=MAX_LIST)
     """The stores whose ledger line's quiet dot the player has touched: each is marked once."""
     lane_tasks_seen: list[Id] = Field(default=[], max_length=MAX_LIST)
-    """The tasks of lanes run by rules that the player has had in front of them in the lane's editor (its Change): a lane
-    with a task not listed here carries a quiet dot on its Town row."""
+    """The tasks of lanes run by rules that the player has had in front of them on the person's page (their Change): a
+    person with a task not listed here carries a quiet dot on Change in their Town row."""
     lessons: list[Id] = Field(default=[], max_length=MAX_LIST)
     """The lessons done or skipped in this save (the page's game/lessons.ts ids): each comes once."""
     lesson_ends: list[LessonEnd] = Field(default=[], max_length=MAX_LIST)

@@ -1,8 +1,8 @@
 // A lane run by rules (CONTRACT.txt, "A lane run by rules"; docs/design/opening-screen.md, the hands strip's lane
 // rows): a row under the hands strip per ruled lane, its label (the last later label whose unlock is held), what it
-// does (the running card, or idle) and Change, which opens the rule editor's simple view scoped to that lane on
-// orders[LaneBar.order], else the lane's first always rule not passed over, else a new always rule. Saving there
-// changes that rule's tap_card in place, or appends a new always rule.
+// does (the running card, or idle) and Change, which opens the person's page (personpage.ts). The rule editor's simple
+// view scoped to a lane, which the page's rule buttons open, changes that rule's tap_card in place, or appends a new
+// always rule.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayTwoStep, LANE_RULES } from "../fixtures/daytwo";
@@ -42,22 +42,21 @@ const sentOrders = (d: Decision | undefined): Order[] | null => (d?.kind === "se
   expect("free: idle", root.querySelector(".lane-row .town-doing")?.textContent, "idle");
 }
 
-/** What Change asks for on this view. */
+/** What Change does on this view: the person's page opens, and the Rules tab is not asked for. */
 function changeOf(view: View): unknown {
   const { ctx, got } = testContext();
   const rows = new LaneRows(ctx);
   const root = mounted(rows.root);
   rows.update(view);
+  rows.page.root.hidden = true;
   root.querySelector(".lane-change")?.click();
-  return got.opened[0];
+  return { page: rows.page.open, heading: rows.page.root.querySelector(".town-title")?.textContent, rules: got.opened.length };
 }
 
-expect("Change: the rule the lane runs now", changeOf(ruled), { lane: "helper", rule: CHOP });
-expect("Change, the lane free: its first always rule not passed over", changeOf(offered), { lane: "helper", rule: CHOP });
-const lowRuns = { ...ruled, lanes: ruled.lanes.map((l) => (l.lane === "helper" ? { ...l, running_card: "haul", order: 3 } : l)) };
-expect("Change: a store rule the lane runs now", changeOf(lowRuns), { lane: "helper", rule: 3 });
+expect("Change opens the person's page", changeOf(ruled), { page: true, heading: "Helper", rules: 0 });
+expect("Change opens it with the lane free", changeOf(offered), { page: true, heading: "Helper, settled", rules: 0 });
+
 const noAlways = { ...offered, orders: offered.orders.slice(0, 4), orders_on: offered.orders_on.slice(0, 4), order_states: offered.order_states.slice(0, 4) };
-expect("Change, no always rule left to act: a new one", changeOf(noAlways), { lane: "helper", rule: null });
 
 /** The Rules tab opened on the lane's simple view; pick `card`, Save; what was sent. */
 function saved(view: View, rule: number | null, card: string): { orders: Order[] | null; tasks: string[] } {

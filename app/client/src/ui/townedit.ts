@@ -20,6 +20,8 @@ export class TownEditor {
   private readonly save = el("button", "primary");
   private readonly body = el("div", "town-split");
   private view: View | null = null;
+  /** The one person this edit is scoped to (a person's page, personpage.ts), else null: everyone. */
+  private lane: string | null = null;
   private local: Mix | null = null;
   private isNew = false;
   private readonly bars = new Map<string, ShareBar>();
@@ -28,7 +30,8 @@ export class TownEditor {
   /** A divider is held: a new view waits for the let-go, so the bar under the finger is not rebuilt. */
   private held = false;
 
-  constructor(private readonly ctx: PartContext, private readonly closed: () => void) {
+  /** `embedded`: a part of a person's page, which has the head and the ✕; Save sits under the person. */
+  constructor(private readonly ctx: PartContext, private readonly closed: () => void, embedded = false) {
     const { text } = ctx.catalog;
     this.root.hidden = true;
     this.save.type = "button";
@@ -38,6 +41,12 @@ export class TownEditor {
     close.type = "button";
     close.setAttribute("aria-label", text.get(UI.close));
     close.addEventListener("click", () => this.close());
+    if (embedded) {
+      const buttons = el("div", "editor-buttons");
+      buttons.append(this.save);
+      this.root.append(this.body, buttons);
+      return;
+    }
     const buttons = el("div", "editor-buttons");
     buttons.append(this.save, close);
     const head = el("div", "editor-head");
@@ -49,8 +58,10 @@ export class TownEditor {
     return !this.root.hidden;
   }
 
-  /** Opens on the town's mix (the running one, else the first always rule's), else on a new one. */
-  show(view: View): void {
+  /** Opens on the town's mix (the running one, else the first always rule's), else on a new one; with `lane`, drawn for
+   * that person alone (the rest of the mix is kept as it is). */
+  show(view: View, lane: string | null = null): void {
+    this.lane = lane;
     const mix = townMixToEdit(this.ctx.catalog, view);
     this.view = view;
     this.isNew = mix === null;
@@ -91,7 +102,7 @@ export class TownEditor {
     if (!view || !local) return;
     const { catalog } = this.ctx;
     this.save.disabled = local.components.length === 0;
-    this.body.replaceChildren(...people(catalog, view).map((lane) => this.person(lane, view, local)));
+    this.body.replaceChildren(...people(catalog, view).filter((lane) => this.lane === null || lane === this.lane).map((lane) => this.person(lane, view, local)));
   }
 
   private person(lane: string, view: View, mix: Mix): HTMLElement {

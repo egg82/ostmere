@@ -52,7 +52,6 @@ export class LaneEditor {
     this.card = then?.kind === "tap_card" ? then.card : null;
     setText(this.save, this.ctx.catalog.text.get(target.rule === null ? UI.orderAdd : UI.save));
     this.draw();
-    this.ctx.keeps.keepLaneTasksSeen(this.tasks(view).map((c) => c.card));
   }
 
   /** A new view while open: the lane's cards follow it. A rule that is gone closes. */

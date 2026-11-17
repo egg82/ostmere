@@ -38,15 +38,6 @@ export function ruledLanes(catalog: Catalog, view: View): View["lanes"] {
   return view.lanes.filter((l) => catalog.lanes.get(l.lane)?.ruled === true);
 }
 
-/** The rule a lane's Change opens: the one whose task the lane runs now, else its first always rule not passed over
- * (the one that acts next); null for a new always rule. */
-export function changeTarget(catalog: Catalog, view: View, lane: string): number | null {
-  const now = view.lanes.find((l) => l.lane === lane)?.order ?? null;
-  if (now !== null && view.orders[now]) return now;
-  const next = view.orders.findIndex((o, i) => isAlways(o) && ruledLaneOf(catalog, o) === lane && view.order_states[i] !== "passed_over");
-  return next >= 0 ? next : null;
-}
-
 /** Rule `index` set to tap `card`, its condition kept; or (null) a new always rule tapping `card`, appended. */
 export function laneTask(view: View, index: number | null, card: string): Decision {
   const then = { kind: "tap_card" as const, card };

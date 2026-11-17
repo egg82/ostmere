@@ -902,11 +902,10 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .town-people { gap: 0; }
   .town-tab { row-gap: 0; }
   .town-tab > .view-title { padding-bottom: .6rem; }
-  .town-tab .person-row { grid-template-columns: 2.5rem minmax(6rem, 10rem) minmax(0, 1fr) minmax(6rem, 9rem); grid-template-areas: "face name split doing" "face name now track"; column-gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
+  .town-tab .person-row { grid-template-columns: 2.5rem minmax(6rem, 10rem) minmax(0, 1fr) minmax(6rem, 9rem) auto; grid-template-areas: "face name split doing change" "face name now track change"; column-gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
   .town-tab .person-row > .town-who { display: contents; }   /* the name beside the face; what they work over its bar, on the right */
   .town-tab .person-row .town-name { grid-area: name; font-size: var(--t-body); }
   .town-tab .person-row .town-doing { grid-area: doing; font-size: var(--t-meta); }
-  .town-tab .person-row > .lane-change { grid-area: split; justify-self: start; }
   .town-tab .person-row > .lane-bar { margin-top: 0; }
   .town-face .ask-face { width: 2.5rem; height: 2.5rem; font: 400 1.25rem/1 "IM Fell English SC", Georgia, serif; }
 }
@@ -1024,6 +1023,11 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town.greyed .town-status { color: var(--ink-hi); }   /* why it stopped: plain, not dimmed with it */
 .town-editor { display: grid; gap: .9rem; align-content: start; }
 .town-editor[hidden] { display: none; }
+.person-page { display: grid; gap: .9rem; align-content: start; }
+.person-page[hidden] { display: none; }
+.person-cards .card-list, .person-rules { display: grid; gap: .4rem; }
+.person-cards .rules-label { margin: .8rem 0 0; font-size: var(--t-meta); color: var(--ink); }
+.person-page .town-editor { gap: .6rem; }
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }
 .town-split { display: grid; gap: 1rem; }
 .town-split .town-person { display: grid; gap: .5rem; }
