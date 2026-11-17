@@ -13,7 +13,7 @@ const SMOKED_FULL = { kind: "at_least" as const, watched: { kind: "store_value" 
 const WOOD_UNDER_5 = { kind: "at_most" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 5 * Q - 1, release: 6 * Q - 1, value_of_cap: false, release_of_cap: false };
 const SMOKE: Order = {
   when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 2 * Q, release: Q, value_of_cap: false, release_of_cap: false },
-  then: { kind: "tap_card", card: "smoke_catch" }, unless: [SMOKED_FULL, WOOD_UNDER_5], or_else: [{ kind: "tap_card", card: "smoke_roots" }],
+  then: { kind: "tap_card", card: "smoke_catch" }, unless: [SMOKED_FULL, WOOD_UNDER_5], or_else: [{ kind: "tap_card", card: "smoke_roots" }], below_next: false,
 };
 
 function line(at: number, store: string, items: number, cap: number): LedgerLine {

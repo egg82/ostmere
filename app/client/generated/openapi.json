@@ -5315,6 +5315,11 @@
             "maxItems": 2,
             "title": "Or Else",
             "default": []
+          },
+          "below_next": {
+            "type": "boolean",
+            "title": "Below Next",
+            "default": false
           }
         },
         "type": "object",
@@ -5408,7 +5413,8 @@
           "waiting",
           "outranked",
           "paused",
-          "passed_over"
+          "passed_over",
+          "behind_next"
         ],
         "title": "OrderState",
         "description": "Where a rule stands now, so the page can say why one is off (CONTRACT.txt, \"THE CLIENT MAY\")."

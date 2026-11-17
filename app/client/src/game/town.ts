@@ -157,7 +157,7 @@ export function townSaveDecisions(view: View, edited: Mix, isNew: boolean): Deci
   if (!isNew) return [save];
   const then = { kind: "switch_mix" as const, mix_id: edited.id };
   const at = view.orders.findIndex(townAlways);
-  const orders = at >= 0 ? view.orders.map((o, i) => (i === at ? { ...o, then } : o)) : [...view.orders, { when: ALWAYS, then, unless: [], or_else: [] }];
+  const orders = at >= 0 ? view.orders.map((o, i) => (i === at ? { ...o, then } : o)) : [...view.orders, { when: ALWAYS, then, unless: [], or_else: [], below_next: false }];
   return [save, { kind: "set_orders", orders }];
 }
 

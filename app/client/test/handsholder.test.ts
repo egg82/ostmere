@@ -92,7 +92,7 @@ const meta = (): { until: string; then: string; runs: boolean } =>
 
 {  // a rule's tap on the hands, repeating (no end): the card, no time, and where the rule lets go
   const order = { when: { kind: "at_most" as const, watched: { kind: "store_value" as const, store: "wood" }, value: 10_000, release: 20_000, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card" as const, card: "gather" }, unless: [], or_else: [] };
+    then: { kind: "tap_card" as const, card: "gather" }, unless: [], or_else: [], below_next: false };
   const ruled: View = { ...mid, orders: [order], orders_on: [true], order_states: ["on"],
     lanes: mid.lanes.map((l) => (l.lane === "hands" ? { ...l, running_card: "gather", completes_at: null, order: 0 } : l)) };
   hands.update(ruled);

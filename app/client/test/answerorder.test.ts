@@ -23,7 +23,7 @@ function mounted(root: HTMLElement): FakeEl {
   return node;
 }
 
-const answer = (offer: string, a: string): Order => ({ when: { kind: "after_time", at: 0 }, then: { kind: "answer_offer", offer, answer: a }, unless: [], or_else: [] });
+const answer = (offer: string, a: string): Order => ({ when: { kind: "after_time", at: 0 }, then: { kind: "answer_offer", offer, answer: a }, unless: [], or_else: [], below_next: false });
 const bank: Offer = { offer: "bank", answer: null, answers: [{ answer: "hers", card: null, takes_s: null }, { answer: "his", card: null, takes_s: null }] };
 const base = dayTwoStep("offered", 100).view;
 const order: Order[] = [answer("bank", "his"), answer("ask", "go")];

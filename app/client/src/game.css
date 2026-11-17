@@ -747,6 +747,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .task-rule .rule-action { flex: 0 1 auto; min-width: 0; margin-right: .3rem; }
 /* Next: the queue's taps, between the hands rules and Otherwise (nextlist.ts) */
 .rules-next { margin: .3rem 0 0 2.1rem; font-size: var(--t-meta); font-weight: 500; color: var(--ink); }
+.next-head .rules-next { margin: 0 0 0 .3rem; }   /* Next's row heads its lines and moves like a rule (ui/nextlist.ts) */
 .next-row .rule-action { flex: 1 1 auto; min-width: 0; margin-right: .3rem; }
 .next-row .quiet { flex: none; min-height: 2.4rem; padding: 0 .8rem; }
 .next-running { flex: none; min-height: 2.4rem; padding: 0 .8rem; display: flex; align-items: center; font-size: var(--t-meta); color: var(--ink); }

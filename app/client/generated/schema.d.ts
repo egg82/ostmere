@@ -1835,6 +1835,11 @@ export interface components {
              * @default []
              */
             or_else: components["schemas"]["OrderVerb"][];
+            /**
+             * Below Next
+             * @default false
+             */
+            below_next: boolean;
         };
         /**
          * OrderCard
@@ -1867,7 +1872,7 @@ export interface components {
          * @description Where a rule stands now, so the page can say why one is off (CONTRACT.txt, "THE CLIENT MAY").
          * @enum {string}
          */
-        OrderState: "on" | "waiting" | "outranked" | "paused" | "passed_over";
+        OrderState: "on" | "waiting" | "outranked" | "paused" | "passed_over" | "behind_next";
         OrderVerb: components["schemas"]["SwitchMix"] | components["schemas"]["TapCard"] | components["schemas"]["AnswerOffer"] | components["schemas"]["AnswerKind"];
         /**
          * ParkedPick

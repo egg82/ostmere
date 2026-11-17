@@ -139,6 +139,11 @@ class Order:
     or_else: tuple[OrderVerb, ...] = ()
     """Fallbacks: the rule acts through the first of `actions` that can act (DESIGN.txt, "OR ELSE"). Every action is
     the same kind of verb, taps of one lane or mixes of one layer; a rule answering an offer has none."""
+    below_next: bool = False
+    """The rule sits under Next, the queue's row in the hands' list: a ready queue entry outranks it (DESIGN.txt, "Next's
+    row"). Set by the player alone, never read off what the rule does. It is where the rule sits, as its index is, so
+    readers that ask whether two rules are the same rule compare them unplaced. Orders keep it as a run to the end
+    (placed)."""
 
     @property
     def actions(self) -> tuple[OrderVerb, ...]:
@@ -220,6 +225,18 @@ def pruned(order: Order, drop: Callable[[OrderVerb], bool]) -> Order | None:
     if not actions:
         return None
     return order if actions == order.actions else replace(order, then=actions[0], or_else=actions[1:])
+
+
+def placed(orders: tuple[Order, ...]) -> tuple[Order, ...]:
+    """The orders with every rule after one below Next below it too: Next is one row, so a rule appended (the lowest
+    priority) lands under it once any rule does (DESIGN.txt, "Next's row")."""
+    first = next((i for i, o in enumerate(orders) if o.below_next), len(orders))
+    return tuple(o if i < first or o.below_next else replace(o, below_next=True) for i, o in enumerate(orders))
+
+
+def unplaced(order: Order) -> Order:
+    """The rule without where it sits relative to Next: what it is, for matching a rule across a move."""
+    return replace(order, below_next=False) if order.below_next else order
 
 
 def latch_of(when: bool, guards: tuple[bool, ...]) -> Latch:

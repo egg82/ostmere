@@ -11,7 +11,7 @@ from .index import index
 from .lanes import TapCard
 from .mixes import CardShare, Mix, SwitchMix, flatten_shares
 from .installs import without_actions
-from .orders import AfterTime, Order, OrderVerb, initial_latch
+from .orders import AfterTime, Order, OrderVerb, initial_latch, placed, unplaced
 from .rules import Rules
 from .state import Save
 from .unlocks import Unlock, UnlockKind, unlock_key
@@ -44,9 +44,9 @@ def _with_town_rule(save: Save, mix: MixId) -> Save:
         return save
     save = replace(save, mixes=(*save.mixes, Mix(mix, ())))
     rule = Order(AfterTime(0), SwitchMix(mix))
-    if rule in save.orders:
+    if rule in map(unplaced, save.orders):
         return save
-    return replace(save, orders=(*save.orders, rule),
+    return replace(save, orders=placed((*save.orders, rule)),
                    latches=(*save.latches, initial_latch(rule.when, None, save.time)))
 
 

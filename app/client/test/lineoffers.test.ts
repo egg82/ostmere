@@ -66,7 +66,7 @@ const marks = (root: HTMLElement): number => root.querySelectorAll(".new-dot").l
   expect("rising: the line is marked, with no row and nothing built", [marks(r.root), offers(r.root), r.decided], [1, [], []]);
   r.ledger.update(at(catchLine(1, -4)), null);
   expect("kept through a dip", marks(r.root), 1);
-  const set = [...smoking.orders, { when: CATCH.when, then: CATCH.then, unless: [], or_else: [] }];
+  const set = [...smoking.orders, { when: CATCH.when, then: CATCH.then, unless: [], or_else: [], below_next: false }];
   r.ledger.update(at(catchLine(2, 3), set), null);
   expect("gone once its rule is set", marks(r.root), 0);
   r.ledger.update(at(catchLine(1, 0)), null);

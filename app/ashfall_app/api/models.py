@@ -70,6 +70,8 @@ class OrderState(StrEnum):
     """Its condition holds and a guard (Order.unless) holds too: it resumes when the last guard lets go."""
     PASSED_OVER = "passed_over"
     """It cannot act whatever its condition: its mix is greyed (in greyed_mix_ids), or its task is completed."""
+    BEHIND_NEXT = "behind_next"
+    """A hands rule under Next whose condition holds while the queue has the hands (CONTRACT.txt, "Next's row")."""
 
 
 class RunBy(StrEnum):

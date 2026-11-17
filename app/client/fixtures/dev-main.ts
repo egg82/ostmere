@@ -55,7 +55,12 @@ const shared = (v: View): View => (hash.has("shares") ? { ...v, orders: v.orders
 // #goalrows: a store goal on wood (30, an hour off), for the goal pickers (ui/stint.ts) with a store's shares under it.
 const woodGoal = (v: View): View => (!hash.has("goalrows") ? v : { ...v, goal_rows: [{ kind: "store", store: "wood", skill: null, target: 30 * Q,
   lands_at: v.at + 3600, per_hour: 60_000, limit: null, until: { kind: "at_least", watched: { kind: "store_value", store: "wood" }, value: 30 * Q, release: 30 * Q, value_of_cap: false, release_of_cap: false } }] });
-const asStep = (s: Step): Step => ({ ...s, view: woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view))) });
+// #nextrow: Next's row moved up above the third rule, a Larder build queued, and that rule waiting behind Next
+// (CONTRACT.txt, "Next's row"), for the Rules tab with the row between two rules.
+const larder = { kind: "at_least" as const, watched: { kind: "card_count" as const, card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false };
+const nextRow = (v: View): View => (!hash.has("nextrow") ? v : { ...v, orders: v.orders.map((o, i) => ({ ...o, below_next: i >= 2 })),
+  queue: [{ verb: { kind: "tap_card", card: "larder" }, until: larder }], order_states: v.order_states.map((s, i) => (i === 2 && s === "on" ? "behind_next" : s)) });
+const asStep = (s: Step): Step => ({ ...s, view: nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view)))) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,

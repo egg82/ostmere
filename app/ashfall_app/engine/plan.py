@@ -1,11 +1,12 @@
 """Reading the player's plan: which verbs are dead, which cards orders and the queue would tap, and which mix runs.
 Reads only."""
+from dataclasses import replace
 from enum import Enum
 
 from .answers import AnswerKind, AnswerOffer
 from .counts import greyed, is_completed
 from .offerstate import is_answered
-from .ids import CardId, LaneId, MixId
+from .ids import HANDS, CardId, LaneId, MixId
 from .index import index
 from .lanes import TapCard
 from .memo import SaveMemo
@@ -94,10 +95,56 @@ def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | 
     return None
 
 
+def next_placed(save: Save) -> bool:
+    """Some rule sits under Next: the row is off the bottom (DESIGN.txt, "Next's row")."""
+    return any(o.below_next for o in save.orders)
+
+
+def on_side(save: Save, below: bool) -> Save:
+    """`save` with the rules on the other side of Next off (their latches false), for the readers that walk the orders
+    in sequence to read one side at a time; `save` itself above a Next at the bottom (DESIGN.txt, "Next's row")."""
+    if not below and not next_placed(save):
+        return save
+    return replace(save, latches=tuple(on if o.below_next is below else False for o, on in zip(save.orders, save.latches)))
+
+
+def under_next(save: Save, rules: Rules) -> Save:
+    """on_side(save, below=True), and while the queue has the hands (next_runs) the rules tapping on them off too: they
+    wait for the entry (DESIGN.txt, "Next's row")."""
+    side = on_side(save, below=True)
+    if not next_runs(save, rules):
+        return side
+    cards = index(rules).cards
+    hands = tuple(any(isinstance(a, TapCard) and a.card in cards and cards[a.card].lane == HANDS for a in o.actions)
+                  for o in save.orders)
+    return replace(side, latches=tuple(False if h else on for h, on in zip(hands, side.latches)))
+
+
+def _hands_rule(save: Save, rules: Rules) -> tuple[int, MixId] | None:
+    """The order whose hands mix runs: the first on above Next; else, while the queue runs no mix, the first on under
+    Next (DESIGN.txt, "Next's row")."""
+    above = _mix_rule(on_side(save, below=False), rules, MixLayer.HANDS)
+    if above is not None or not next_placed(save) or queue_mix_id(save, rules) is not None:
+        return above
+    return _mix_rule(on_side(save, below=True), rules, MixLayer.HANDS)
+
+
 def mix_order(save: Save, rules: Rules) -> int | None:
-    """The index of the order whose hands mix runs; None while the player's own mix runs."""
-    rule = _mix_rule(save, rules, MixLayer.HANDS)
+    """The index of the order whose hands mix runs; None while the queue's or the player's own mix runs."""
+    rule = _hands_rule(save, rules)
     return None if rule is None else rule[0]
+
+
+def next_runs(save: Save, rules: Rules) -> bool:
+    """The queue has the hands now: its mix runs (no order's mix above Next runs), or the hands run the controlling
+    entry's task."""
+    i = controlling_entry(save, rules)
+    if i is None:
+        return False
+    verb = save.queue[i].verb
+    if isinstance(verb, TapCard):
+        return next(ls.card for ls in save.lanes if ls.lane == HANDS) == verb.card
+    return queue_mix_id(save, rules) is not None and _mix_rule(on_side(save, below=False), rules, MixLayer.HANDS) is None
 
 
 def town_mix_order(save: Save, rules: Rules) -> int | None:
@@ -112,9 +159,10 @@ _RUNNING_TOWN_MIX: SaveMemo[MixId | None] = SaveMemo(4)
 
 
 def running_mix_id(save: Save, rules: Rules) -> MixId | None:
-    """The mix the hands run now: the mix of mix_order's order, else queue_mix_id, else the player's own (save.active)."""
+    """The mix the hands run now: the mix of mix_order's order, else queue_mix_id, else the player's own (save.active).
+    An order under Next runs its mix only while the queue runs none (_hands_rule)."""
     def build() -> MixId | None:
-        rule = _mix_rule(save, rules, MixLayer.HANDS)
+        rule = _hands_rule(save, rules)
         if rule is not None:
             return rule[1]
         queued = queue_mix_id(save, rules)
@@ -155,6 +203,9 @@ class OrderState(Enum):
     holds while its card's lane runs the task of an earlier order (lane_order)."""
     PASSED_OVER = "passed_over"
     """Every action it lists is dead (is_dead): it cannot act whatever its condition."""
+    BEHIND_NEXT = "behind_next"
+    """A rule under Next that acts on the hands, whose condition holds while the queue has them (next_runs): it would
+    otherwise be on, or be outranked by nothing but the queue's mix (DESIGN.txt, "Next's row")."""
 
 
 def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
@@ -162,8 +213,20 @@ def order_states(save: Save, rules: Rules) -> tuple[OrderState, ...]:
     running = {MixLayer.HANDS: mix_order(save, rules), MixLayer.TOWN: town_mix_order(save, rules)}
     cards = index(rules).cards
     lanes = {lane: lane_order(save, rules, lane) for lane in index(rules).lanes}
+    queued = next_runs(save, rules)
+
+    def on_hands(o: Order) -> bool:
+        verb = o.then
+        if isinstance(verb, SwitchMix):
+            return _layer_of(save, rules, verb.mix) is MixLayer.HANDS
+        return isinstance(verb, TapCard) and verb.card in cards and cards[verb.card].lane == HANDS
 
     def state(i: int, o: Order, latch: Latch) -> OrderState:
+        found = _state(i, o, latch)
+        held = found is OrderState.ON or (found is OrderState.OUTRANKED and running[MixLayer.HANDS] is None)
+        return OrderState.BEHIND_NEXT if o.below_next and queued and held and on_hands(o) else found
+
+    def _state(i: int, o: Order, latch: Latch) -> OrderState:
         verb = o.then
         if all(is_dead(save, rules, a) for a in o.actions):
             return OrderState.PASSED_OVER
@@ -187,7 +250,7 @@ def order_doing(save: Save, rules: Rules) -> tuple[int | None, ...]:
     this rule (lane_order) or the running mix being that mix by this rule; else None. Presentation only."""
     doing: dict[int, OrderVerb] = {}
     for layer in MixLayer:
-        rule = _mix_rule(save, rules, layer)
+        rule = _hands_rule(save, rules) if layer is MixLayer.HANDS else _mix_rule(save, rules, layer)
         if rule is not None:
             doing[rule[0]] = SwitchMix(rule[1])
     for ls in save.lanes:

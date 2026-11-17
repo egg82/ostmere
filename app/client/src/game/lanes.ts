@@ -41,7 +41,7 @@ export function ruledLanes(catalog: Catalog, view: View): View["lanes"] {
 /** Rule `index` set to tap `card`, its condition kept; or (null) a new always rule tapping `card`, appended. */
 export function laneTask(view: View, index: number | null, card: string): Decision {
   const then = { kind: "tap_card" as const, card };
-  if (index === null) return { kind: "set_orders", orders: [...view.orders, { when: ALWAYS, then, unless: [], or_else: [] }] };
+  if (index === null) return { kind: "set_orders", orders: [...view.orders, { when: ALWAYS, then, unless: [], or_else: [], below_next: false }] };
   return { kind: "set_orders", orders: view.orders.map((o, i) => (i === index ? { ...o, then } : o)) };
 }
 
@@ -49,7 +49,7 @@ export function laneTask(view: View, index: number | null, card: string): Decisi
 export function setKindRule(view: View, kind: string, role: string): Decision {
   const then = { kind: "answer_kind" as const, offer_kind: kind, role };
   const at = kindRuleAt(view, kind);
-  if (at < 0) return { kind: "set_orders", orders: [...view.orders, { when: ALWAYS, then, unless: [], or_else: [] }] };
+  if (at < 0) return { kind: "set_orders", orders: [...view.orders, { when: ALWAYS, then, unless: [], or_else: [], below_next: false }] };
   return { kind: "set_orders", orders: view.orders.map((o, i) => (i === at ? { ...o, then } : o)) };
 }
 
