@@ -93,7 +93,7 @@ const run = (order: typeof wood, starts: number, on: number | null, off: number 
   const saves: SavePresentation[] = [];
   const api: GameApi = {
     content: () => Promise.resolve(fixtureContent), me: none, begin: () => Promise.resolve<NewSave>({ save, presentation: NEW_SAVE, step: first }), open: none,
-    savedView: none, advance: () => Promise.resolve(back), forecast: none, decide: none, dryRun: none, sendFeedback: none, makeCode: none, makeWords: none,
+    savedView: none, advance: () => Promise.resolve(back), forecast: none, mixRows: none, decide: none, dryRun: none, sendFeedback: none, makeCode: none, makeWords: none,
     join: none, games: none, deleteGame: none, restoreGame: none, devices: none, removeDevice: none, putMePresentation: none, putMeSettings: none,
     putSavePresentation: (_id, p) => { saves.push(p); return Promise.resolve(p); },
   };

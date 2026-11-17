@@ -20,6 +20,7 @@ from ..saves.journal import ComposedDay
 from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
 from .goalrows import goal_rows
+from .mixrows import MixNumbers
 from .levels import levels
 from .scenestores import scene_stores
 from .ruledry import order_dry
@@ -44,6 +45,7 @@ class Game:
         self._content = _content(opening, rs.rules, rs.digest)
         self._sources = store_sources(opening)
         self._goals = goal_defs(opening, rs.rules)
+        self.mixes = MixNumbers(rs.rules, self._goals)
         self._beat_openers = frozenset(k for keys in opening.beat_lines.values() for k in keys)
 
     def content(self) -> cm.Content:

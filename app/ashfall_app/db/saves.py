@@ -9,8 +9,7 @@ from typing import Any
 from datetime import datetime
 
 from sqlalchemy import (
-    CTE, ColumnElement, Connection, Label, Row, ScalarSelect, Update, and_, bindparam, case, delete, func, insert,
-    or_, select, update,
+    CTE, ColumnElement, Connection, Label, Row, ScalarSelect, and_, delete, func, insert, or_, select, update,
 )
 
 from .manifests import held_for, whole
@@ -36,6 +35,8 @@ class SaveRecord:
     deleted_at: datetime | None
     rule_runs: Any = None
     """What the rules did lately (saves/ruleruns.py), as JSONB reads back; None until a write that keeps it."""
+    mix_best: Any = None
+    """The earlier best per goal (saves/mixbest.py), as JSONB reads back."""
     presentation: Any = None
     """What the page keeps about the save's teaching (api/CONTRACT.txt, SavePresentation), as JSONB reads back."""
 
@@ -70,6 +71,8 @@ class Written:
     camp_level: int
     rule_runs: Any = None
     """saves/ruleruns.py's stored form."""
+    mix_best: Any = None
+    """saves/mixbest.py's stored form; None leaves the stored one."""
 
 
 @dataclass(frozen=True)
@@ -103,7 +106,7 @@ class SnapshotRecord:
 _COLUMNS = (saves.c.id, saves.c.account_id, saves.c.started_at, saves.c.updated_at, saves.c.state, saves.c.format,
             saves.c.rules_digest, saves.c.decisions, saves.c.game_time, saves.c.ended_at, saves.c.build,
             saves.c.release, saves.c.number, saves.c.camp_level, saves.c.deleted_at, saves.c.rule_runs,
-            saves.c.presentation, held_for(saves.c.state, saves.c.rules_digest).label("manifest"))
+            saves.c.mix_best, saves.c.presentation, held_for(saves.c.state, saves.c.rules_digest).label("manifest"))
 
 
 LISTED = (saves.c.id, saves.c.started_at, saves.c.updated_at, saves.c.decisions, saves.c.game_time, saves.c.ended_at,
@@ -121,10 +124,10 @@ def _record(r: Row[Any]) -> SaveRecord:
                       state=whole(r.state, r.manifest),
                       format=r.format, rules_digest=r.rules_digest, decisions=r.decisions, game_time=r.game_time,
                       ended_at=r.ended_at, build=r.build, release=r.release, number=r.number, camp_level=r.camp_level,
-                      deleted_at=r.deleted_at, rule_runs=r.rule_runs, presentation=r.presentation)
+                      deleted_at=r.deleted_at, rule_runs=r.rule_runs, mix_best=r.mix_best, presentation=r.presentation)
 
 
-def _next_number(account_id: int | ColumnElement[int]) -> ScalarSelect[Any]:
+def next_number(account_id: int | ColumnElement[int]) -> ScalarSelect[Any]:
     """The highest number among the account's saves, deleted ones included, plus one (1 for its first)."""
     held = saves.alias("held")
     return (select(func.coalesce(func.max(held.c.number), 0) + 1).where(held.c.account_id == account_id)
@@ -135,8 +138,8 @@ def insert_save(conn: Connection, account_id: int, now: datetime, w: Written) ->
     return int(conn.execute(insert(saves).values(
         account_id=account_id, created_at=now, started_at=now, updated_at=now, state=w.state, format=w.format,
         rules_digest=w.rules_digest, decisions=w.decisions, game_time=w.game_time, ended_at=w.ended_at, build=w.build,
-        release=w.release, camp_level=w.camp_level, rule_runs=w.rule_runs,
-        number=_next_number(account_id)).returning(saves.c.id)).scalar_one())
+        release=w.release, camp_level=w.camp_level, rule_runs=w.rule_runs, mix_best=w.mix_best,
+        number=next_number(account_id)).returning(saves.c.id)).scalar_one())
 
 
 def save(conn: Connection, save_id: int, account_id: int | None, lock: bool = False,
@@ -210,33 +213,6 @@ def kept_saves(conn: Connection, batch: int = 200) -> Iterator[SaveRecord]:
         if len(rows) < batch:
             return
         after = rows[-1].id
-
-
-WRITING: Update = update(saves).where(saves.c.id == bindparam("w_save_id", type_=saves.c.id.type)).values(
-    {c.name: bindparam(f"w_{c.name}", type_=c.type) for c in (
-        saves.c.updated_at, saves.c.state, saves.c.format, saves.c.rules_digest, saves.c.decisions, saves.c.game_time,
-        saves.c.ended_at, saves.c.build, saves.c.release, saves.c.camp_level, saves.c.rule_runs)}
-    | {"number": func.coalesce(saves.c.number, _next_number(saves.c.account_id))}
-    | {c.name: case((saves.c.decisions == bindparam("w_decisions", type_=saves.c.decisions.type), c), else_=None)
-       for c in (saves.c.hands_free_at, saves.c.hands_free_wall, saves.c.hands_free_until)})
-"""The statement that writes the save, built once with bound parameters (`writing`), so SQLAlchemy keys and compiles
-it once, not on every write; one begun by a build before numbers takes the next number now. A write with a decision
-drops the kept hands-free answer (db/handsfree.py): the decision changed the save's future."""
-
-_WRITE = WRITING.returning(*LISTED)
-
-
-def writing(save_id: int, now: datetime, w: Written) -> dict[str, Any]:
-    """`WRITING`'s parameters."""
-    return {"w_save_id": save_id, "w_updated_at": now, "w_state": w.state, "w_format": w.format,
-            "w_rules_digest": w.rules_digest, "w_decisions": w.decisions, "w_game_time": w.game_time,
-            "w_ended_at": w.ended_at, "w_build": w.build, "w_release": w.release, "w_camp_level": w.camp_level,
-            "w_rule_runs": w.rule_runs}
-
-
-def write(conn: Connection, save_id: int, now: datetime, w: Written) -> Listed:
-    """Writes the save, alone (a step's write is db/step.py). The row as written."""
-    return as_listed(conn.execute(_WRITE, writing(save_id, now, w)).one())
 
 
 def append_lines(conn: Connection, save_id: int, lines: Sequence[tuple[int, str]]) -> None:

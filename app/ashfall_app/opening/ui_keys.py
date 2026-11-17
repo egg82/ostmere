@@ -104,6 +104,8 @@ UI_KEYS: tuple[str, ...] = (
     "ui.rule.handle",
     "ui.mix.used_by",
     "ui.mix.used_by_one",
+    "ui.mix.earlier",
+    "ui.mix.nets",
     "ui.rule.below",
     "ui.rule.below_until",
     "ui.rule.reaches",

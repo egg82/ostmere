@@ -12,6 +12,7 @@ from ashfall_app import engine as e
 from ashfall_app.api.convert import verb
 from ashfall_app.api.saves_models import DecisionRequest
 from ashfall_app.db import saves as rows
+from ashfall_app.db import savewrite
 from ashfall_app.db.engine import open_database
 from ashfall_app.saves.write import written
 from ashfall_app.engine.ids import CardId, MixId
@@ -96,7 +97,7 @@ def at_the_cap(game: GameClient, pg_url: str, shipped_ruleset: ShippedRuleset) -
                 request = DecisionRequest.model_validate({"decision": flat_mix(n), "after": decide.done})
                 save = e.decide(save, rs.rules, save.time, verb(request.decision, rs.rules))
             assert len(save.mixes) == 64, "control: the save is at the cap"
-            rows.write(conn, decide.save, row.updated_at, written(save, 64, rs))
+            savewrite.write(conn, decide.save, row.updated_at, written(save, 64, rs))
     finally:
         database.close()
     decide.done = 64

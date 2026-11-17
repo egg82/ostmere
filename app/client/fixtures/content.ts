@@ -299,7 +299,7 @@ const text: Record<string, string> = {
   "ui.yes": "Yes",
   "ui.no": "No",
   "ui.mix.named_by_order": "a rule uses it",
-  "ui.mix.used_by": "used by {n} rules", "ui.mix.used_by_one": "used by a rule",
+  "ui.mix.used_by": "used by {n} rules", "ui.mix.used_by_one": "used by a rule", "ui.mix.earlier": "earlier: {mix}, in {when}", "ui.mix.nets": "per minute: {n}",
   "ui.mix.nested": "inside another mix",
   "ui.card.count": "{n}/{cap}",
   "ui.card.retired": "retired",

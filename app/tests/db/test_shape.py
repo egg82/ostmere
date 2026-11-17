@@ -22,7 +22,7 @@ SHAPE: dict[str, list[tuple[str, str, bool]]] = {
               ("ended_at", BIG, True), ("deleted_at", WHEN, True),
               ("build", TEXT, True), ("release", INT, True), ("number", INT, True), ("camp_level", INT, True),
               ("rule_runs", JSON, True), ("presentation", JSON, False), ("hands_free_at", BIG, True),
-              ("hands_free_wall", WHEN, True), ("hands_free_until", BIG, True), ("hands_free_sent", BIG, True)],
+              ("hands_free_wall", WHEN, True), ("hands_free_until", BIG, True), ("hands_free_sent", BIG, True), ("mix_best", JSON, True)],
     "save_lines": [("save_id", BIG, False), ("n", INT, False), ("at", BIG, False), ("key", TEXT, False)],
     "save_decisions": [("save_id", BIG, False), ("n", INT, False), ("at", BIG, False), ("wall", WHEN, False),
                        ("kind", TEXT, False), ("verb", JSON, False), ("rules_digest", TEXT, False),
