@@ -453,7 +453,7 @@ levels = [{ level = 14, pays_key = "pays_find_for_14" }]
 
 [[skill_levels]]
 skill = "woodcutting"
-levels = [{ level = 25, pays_key = "pays_find_wc_25" }]
+levels = [{ level = 24, pays_key = "pays_wc_cordwood" }, { level = 25, pays_key = "pays_find_wc_25" }]
 
 [[skill_levels]]
 skill = "scavenging"
@@ -496,6 +496,69 @@ id = "t_find_melee_8"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 8 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }]
 outcome = { stores = [{ store = "cord", items = 2 }], line_keys = ["l_find_antler"] }
+
+# ---------- damp wood's sink past woodcutting's first top ----------
+
+# A reach stake on the hearth's lane (issue #40): woodcutting comes back faster after its first top and damp wood overfills.
+# Level 24 counts across phases, so it opens at the first click. Its order card comes on with damp wood full and takes a
+# whole store at a time, so it takes only what would overflow, and the hands' cards that take damp wood keep theirs.
+# On the hearth's lane, so it never takes the hands' time.
+[[triggers]]
+id = "t_cordwood"
+when = { test = "at_least", subject_kind = "skill_level", id = "woodcutting", value = 24 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "spar", value = 1 },
+]
+outcome = { unlocks = [{ unlock_kind = "card", id = "stack_cordwood" }, { unlock_kind = "store", id = "cordwood" }] }
+
+[[cards]]
+id = "stack_cordwood"
+lane = "hearth"
+presentation = "action"
+label_key = "c_stack_cordwood"
+upside_key = "up_stack_cordwood"
+stake = "reach"
+work_s = 45
+inputs = [{ store = "damp_wood", items = 8 }]
+outcome = { stores = [{ store = "cordwood", items = 1 }] }
+
+# Its cap is the last reach.
+[[stores]]
+id = "cordwood"
+label_key = "store_cordwood"
+cap_items = 5000
+
+[[order_cards]]
+store = "damp_wood"
+tap_card = "stack_cordwood"
+when = { test = "at_least", subject_kind = "store", id = "damp_wood", value = 18, release = 10 }
+offered_after = { unlock_kind = "card", id = "stack_cordwood" }
+
+[[triggers]]
+id = "t_cordwood_1"
+when = { test = "at_least", subject_kind = "store", id = "cordwood", value = 500 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "cordwood_1" }] }
+
+[[triggers]]
+id = "t_cordwood_2"
+when = { test = "at_least", subject_kind = "store", id = "cordwood", value = 1250 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "cordwood_2" }] }
+
+[[triggers]]
+id = "t_cordwood_3"
+when = { test = "at_least", subject_kind = "store", id = "cordwood", value = 2250 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "cordwood_3" }] }
+
+[[triggers]]
+id = "t_cordwood_4"
+when = { test = "at_least", subject_kind = "store", id = "cordwood", value = 3500 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "cordwood_4" }] }
+
+[[triggers]]
+id = "t_cordwood_5"
+when = { test = "at_least", subject_kind = "store", id = "cordwood", value = 5000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "cordwood_5" }] }
 
 # ---------- the journal ----------
 
@@ -693,6 +756,10 @@ a_sun_rack_fire = "She keeps it by the fire"
 a_sun_rack_fire_cost = "{pct} wood burned"
 pays_find_for_14 = "wild barley, {pct} foraging speed"
 pays_find_wc_25 = "a dead birch, {pct} woodcutting speed"
+pays_wc_cordwood = "wood to stack, {pct} woodcutting speed"
+c_stack_cordwood = "Stack wood to season"
+up_stack_cordwood = "{pct} warmth lost to the cold at each reach of wood stacked"
+store_cordwood = "wood stacked"
 pays_find_scav_25 = "an iron hinge, {pct} scavenging speed"
 pays_find_cook_11 = "a thick pot, {pct} cooking speed"
 pays_find_melee_8 = "an antler, {pct} hunting speed"
