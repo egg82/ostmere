@@ -150,11 +150,11 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lane_tasks_seen: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
-  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
+  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lane_tasks_seen: the tasks of lanes run by rules the player has had in front of them on the person's page (a person with a task not listed has a quiet dot on Change in their Town row); lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
   ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
   when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
   second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
@@ -1110,10 +1110,11 @@ A LANE RUN BY RULES
   THE CLIENT MAY, for each lane in view.lanes whose LaneInfo.ruled is true:
   - draw it as a row under the hands strip, the hands strip's shape: its label, what it does (the label of
     running_card, or ui.lane.idle while free), the running card's bar (its Card in view.cards, sampled as any bar),
-    and ui.lane.change, which opens the rule editor's simple view scoped to that lane on orders[LaneBar.order], else
-    on the lane's first always rule that is not passed_over (the one that acts next), else on a new always rule. The
-    simple view picks the task: a card in view.cards on that lane. Saving sends set_orders with that rule's tap_card
-    changed in place (or the new always rule appended).
+    and ui.lane.change, which opens the person's page: their cards in view.cards on that lane drawn as the card panel
+    draws a card, the rules that tap them (each opening the rule editor), and, once they have joined the town, their
+    part of the town's mix in the town editor. The rule editor's simple view scoped to a lane picks the task: a card in
+    view.cards on that lane. Saving sends set_orders with that rule's tap_card changed in place (or a new always rule
+    appended).
   - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that
     lane's tasks.
   - in the Rules tab, list the rules that tap a card on that lane under the lane's label, in their view.orders order;
