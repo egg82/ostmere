@@ -263,8 +263,10 @@ export class Lessons implements Part {
     const fits = (s: Spot): boolean => s.left >= GUTTER_PX && s.left + w <= vw - GUTTER_PX && s.top >= 0 && s.top + h <= window.innerHeight;
     const covered = this.neighbours(target).map((n) => n.getBoundingClientRect());
     const hidden = (s: Spot): number => covered.reduce((sum, c) => sum + Math.max(0, Math.min(s.left + w, c.right) - Math.max(s.left, c.left)) * Math.max(0, Math.min(s.top + h, c.bottom) - Math.max(s.top, c.top)), 0);
+    const taps = Array.from(this.doc.querySelectorAll("button, input, textarea, a, [tabindex]")).filter((n) => n !== target && !this.root.contains(n) && onShow(n) && inSight(this.doc, n, this.root)).map((n) => n.getBoundingClientRect());
+    const pressed = (s: Spot): number => taps.filter((c) => Math.min(s.left + w, c.right) > Math.max(s.left, c.left) && Math.min(s.top + h, c.bottom) > Math.max(s.top, c.top)).length;   // taps the note would take from the player
     const room = spots.filter(fits);
-    const spot = room.find((s) => hidden(s) === 0) ?? room.sort((a, b) => hidden(a) - hidden(b))[0] ?? { left: across, top: Math.max(GUTTER_PX, r.top - GAP_PX - h) };
+    const spot = room.find((s) => hidden(s) === 0) ?? room.sort((a, b) => pressed(a) - pressed(b) || hidden(a) - hidden(b))[0] ?? { left: across, top: Math.max(GUTTER_PX, r.top - GAP_PX - h) };
     this.root.style.left = `${Math.round(spot.left)}px`;
     this.root.style.top = `${Math.round(spot.top)}px`;
   }
