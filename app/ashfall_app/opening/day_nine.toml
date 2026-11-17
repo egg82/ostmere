@@ -194,6 +194,7 @@ on_line_key = "l_draughty"
 # The flaps held down is said once, the first time: the rule pegs them every cycle after.
 [[triggers]]
 id = "t_draughty_off"
+line_only = true
 when = { test = "at_most", subject_kind = "store", id = "wind_torn", value = 11 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "chip", id = "draughty", value = 1 }]
 outcome = { line_keys = ["l_draughty_off"] }

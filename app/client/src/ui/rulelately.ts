@@ -7,7 +7,7 @@ import type { Catalog } from "../game/catalog";
 import { chipOf, ruleWords, storeRule } from "../game/orders";
 import { UI } from "../game/text";
 import { el, setText } from "./dom";
-import { stintFacts, stintLine } from "./stintlately";
+import { madeFact, stintFacts, stintLine } from "./stintlately";
 
 const same = (a: Order, b: Order): boolean => JSON.stringify(a) === JSON.stringify(b);
 
@@ -41,6 +41,8 @@ export function runFacts(catalog: Catalog, run: RuleRun, t: number): string {
   const parts = [run.starts === 1 ? text.get(UI.ruleRanOnce) : text.fill(UI.ruleRan, { n: format.count(run.starts) })];
   if (run.on_at !== null) parts.push(when(UI.ruleCameOn, UI.ruleCameOnAt, run.on_at, run.on_level));
   if (run.off_at !== null && run.off_at >= (run.on_at ?? 0)) parts.push(when(UI.ruleLetGo, UI.ruleLetGoAt, run.off_at, run.off_level));
+  const made = madeFact(catalog, run);
+  if (made) parts.push(made);
   return parts.join(" · ");
 }
 

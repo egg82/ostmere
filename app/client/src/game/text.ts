@@ -137,6 +137,9 @@ export const UI = {
   settingsHeading: "ui.settings.heading",
   settingsDevice: "ui.settings.device", // the group heading for the choices this device keeps
   settingsEvery: "ui.settings.every", // the group heading for the choices every game shares
+  soundOn: "ui.sound.on", // the speaker button's name while sound is on (it mutes)
+  soundOff: "ui.sound.off", // the speaker button's name while sound is off (it unmutes)
+  soundRow: "ui.sound.row", // the Settings checkbox for the same switch
   codeLead: "ui.devices.code_lead",
   codeNote: "ui.devices.code_note", // "{d}": how long the code still works
   codeGone: "ui.devices.code_gone",

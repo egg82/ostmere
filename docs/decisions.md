@@ -103,6 +103,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 
 - [Public, eventually: every save its own, on one budget](decisions/writer.md): four layers, cheapest first, under one global daily Claude budget.
 - [Content is a pipeline](decisions/writer.md): authored, Claude-written and generated content; a line is written for every moment it can appear.
+- [The live client](decisions/writer.md): the API key turns the writer live; the model per kind is data; no retries, any failure plays the stand-in.
 
 ## Saves
 
