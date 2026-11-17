@@ -3,8 +3,7 @@
 **Play it: https://ostmere.yggdrasil.pub**
 
 A single-player idle game for the browser, with a dark fantasy story that runs from the first tap to an ending. It
-keeps running while you're away: close the tab, and the game works out what your people did in the meantime and
-shows you when you return. It's a one-person project, made mostly with Claude Code and published as it stands.
+keeps running while you're away: close the tab, and when you come back it tells you what your people did. It's a one-person project, made mostly with Claude Code and published as it stands.
 
 ![The opening on a desktop: the scene on the left, the first cards on the right](docs/images/desktop.webp)
 
@@ -15,19 +14,19 @@ The whole story is in this repository under `content/`, so if you mean to play, 
 You start with almost nothing and a few things to do. The game is a set of small systems, each introduced by a short
 lesson on its real controls the first time it matters. You can skip any lesson.
 
-- **Cards.** Every kind of work is a card. Tap one to do it by hand; it takes a few seconds and shows what it takes and
-  what it makes. A card that can't run yet shows what it is waiting for, such as a count still short.
+- **Cards.** Every kind of work is a card. Tap one to do it by hand. It shows what it takes, what it makes and how long
+  it runs, and a card that can't run yet says what it waits for.
 - **Mixes.** When tapping by hand gets tedious, pick several cards and split your time between them. They all progress
   at once at different rates, and a live ledger shows what the mix uses and makes per hour as you change the shares.
   Mixes are saved with a name, so you can keep one for each purpose and switch between them. Tapping a card by hand
   pauses the mix while your hands are busy.
-- **Rules.** The Rules tab shows up a few minutes in. A rule is a tapped-together "when this happens, do that": when a
+- **Rules.** A rule is a tapped-together "when this happens, do that": when a
   store runs low, switch to the mix that refills it. Rules are kept in priority order. The first whose condition holds takes the hands, and when it lets go
   your own mix comes back.
 - **Plan and Next.** Next, in the Rules tab, is a short queue for what the hands do after the current job. Plan adds a
-  card or a mix to it, including a card that isn't ready yet, which starts as soon as it can.
-- **People.** The people who join you get their own page in the Town. Each has a face, a job, and a time split into
-  cards just like yours, which you edit the same way.
+  card or a mix to it, including a card that isn't ready yet, which waits its turn and runs once it is.
+- **People.** Once someone joins you, their row in the Town opens a page of their own: their cards, the mix that
+  splits their time, and the rules that run them.
 - **The Book.** Where the game writes things down. The Chronicle lists what happened and what caused it, with a summary
   of the time since you were last here. The Journal holds the notes the game writes as you learn things.
 
@@ -37,7 +36,7 @@ lesson on its real controls the first time it matters. You can skip any lesson.
 
 # For developers
 
-Everything below is for running, deploying and changing the code. Playing needs none of it.
+Everything below is for running, deploying and changing the code.
 
 ## Run it locally
 
@@ -67,8 +66,8 @@ The app never migrates on start. If the database is behind the image, it refuses
 `migrate` with each new image first. To start over: `docker rm -fv ostmere ostmere-db && docker network rm ostmere`.
 
 The art isn't in the repository. `tools/scene/` draws the scene from the Time Fantasy sprite packs, which are sold
-separately, and the app serves whatever is mounted at `/assets` (or the directory named by `ASSETS_DIR`). Without it
-the game still plays, with the scene drawn as an empty frame.
+separately, and the app serves whatever is mounted at `/assets` (or the directory named by `ASSETS_DIR`): the scene, the
+journal's sketches and the sound. Without it the game still plays, silent, with the scene drawn as an empty frame.
 
 These settings are optional and off until set:
 
@@ -124,5 +123,5 @@ change a file they depend on (`app/tools/playthrough_paths.txt`), and on pull re
 
 ## License
 
-AGPL-3.0, in [`LICENSE`](LICENSE). Run it, change it, share it. If you distribute or serve a modified copy, you
+AGPL-3.0, in [`LICENSE`](LICENSE). If you distribute or serve a modified copy, you
 publish its source under the same licence and keep the copyright notices.
