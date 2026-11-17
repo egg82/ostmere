@@ -1309,7 +1309,7 @@
           "game"
         ],
         "summary": "Put Reminder",
-        "description": "Reminders on for this browser with the window sent, or, with none, its keys refreshed; its window.",
+        "description": "Reminders on for this browser as sent, or, with nothing sent, its keys refreshed; what it has on.",
         "operationId": "put_reminder",
         "requestBody": {
           "content": {
@@ -1343,7 +1343,7 @@
             }
           },
           "422": {
-            "description": "invalid_decision: not a push service, an IANA zone or an offered absence",
+            "description": "invalid_decision: not a push service, an IANA zone or an offered absence, or nothing turned on",
             "content": {
               "application/json": {
                 "schema": {
@@ -1406,7 +1406,7 @@
             }
           },
           "422": {
-            "description": "invalid_decision: not a push service, an IANA zone or an offered absence",
+            "description": "invalid_decision: not a push service, an IANA zone or an offered absence, or nothing turned on",
             "content": {
               "application/json": {
                 "schema": {
@@ -5422,12 +5422,24 @@
       "Reminder": {
         "properties": {
           "window": {
-            "$ref": "#/components/schemas/ReminderWindow"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReminderWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hands_free": {
+            "type": "boolean",
+            "title": "Hands Free"
           }
         },
         "type": "object",
         "required": [
-          "window"
+          "window",
+          "hands_free"
         ],
         "title": "Reminder"
       },
@@ -5473,6 +5485,17 @@
                 "type": "null"
               }
             ]
+          },
+          "hands_free": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hands Free"
           }
         },
         "additionalProperties": false,

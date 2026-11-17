@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
-from ..db.reminders import Window
+from ..db.reminders import Choice
 
 type Json = dict[str, object]
 
@@ -212,9 +212,9 @@ class Accounts(Protocol):
         """Ends one of the account's sessions, which signs that browser out; False when it is not this account's."""
         ...
 
-    def keep_reminder(self, account_id: int, sub: Subscription, window: Window | None) -> Window | None:
-        """Turns reminders on for the browser `sub` names, with `window`; with None, refreshes the keys of a browser
-        already on and answers its window, or None when it is not on. Either way the row becomes the account's."""
+    def keep_reminder(self, account_id: int, sub: Subscription, choice: Choice | None) -> Choice | None:
+        """Turns reminders on for the browser `sub` names, as `choice` says; with None, refreshes the keys of a browser
+        already on and answers its choice, or None when it is not on. Either way the row becomes the account's."""
         ...
 
     def drop_reminder(self, account_id: int, endpoint: str) -> bool:
@@ -263,7 +263,7 @@ class NullAccounts:
     def remove_device(self, account_id: int, session_id: int) -> bool:
         return False
 
-    def keep_reminder(self, account_id: int, sub: Subscription, window: Window | None) -> Window | None:
+    def keep_reminder(self, account_id: int, sub: Subscription, choice: Choice | None) -> Choice | None:
         raise AccountsUnavailable("no database")
 
     def drop_reminder(self, account_id: int, endpoint: str) -> bool:

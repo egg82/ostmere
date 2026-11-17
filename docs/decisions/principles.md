@@ -47,11 +47,13 @@ feeling they must babysit it, staying up at 2 AM for a timer to set up the next 
   A finished thing joins the unwrap. Idle Fantasy is the phone's top notifier because a worker holds one session and a
   crop waits when ripe.
 - **No notifications unless the player asks.** Nothing ever waits on you, so there is nothing to tell, and nothing is
-  on until the player turns it on. Two opt-ins may exist. A **reminder to play** after an absence the player picks,
+  on until the player turns it on. Three opt-ins may exist. A **reminder to play** after an absence the player picks,
   so the game never begs or bothers players who don't want it: one notification per absence,
   none after it until the player returns, an invitation that names no loss, no countdown and nothing from a save. One
-  early mention points at the setting, shown once whether or not it is taken (`design/reminders.md`). And a digest of
-  story moments. Never a daily one, a badge, or a message that something is waiting.
+  early mention points at the setting, shown once whether or not it is taken (`design/reminders.md`). A **hands-free
+  notice**, for a player steering by hand: one notification when a long task the player gave the hands is done
+  and nothing they planned follows (owner, 2026-11-16), never mentioned or offered, only found in Settings. And a
+  digest of story moments. Never a daily one, a badge, or any other message that something is waiting.
 - **Make what is already there tappable before adding words.** A way to reach more (a breakdown, the total a bonus
   feeds, what a job does) is the existing figure or line made tappable and marked tappable the way the screen's
   other tappable words are, not a new line or label beside it. Something new goes on screen only when nothing

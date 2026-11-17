@@ -11,6 +11,7 @@ from sqlalchemy import Engine
 from .. import logs
 from ..clock import Clock
 from ..db import reminders as store
+from .deliver import deliver
 from .due import due
 from .sender import Sender
 from .words import payload
@@ -45,17 +46,9 @@ def run(engine: Engine, sender: Sender, clock: Clock) -> Counts:
             claimed = store.claim(conn, d.id, d.visited_at, now)
         if not claimed:
             continue
-        delivery = sender.send(d.endpoint, d.p256dh, d.auth, payload(d.account_id, d.visited_at))
-        if delivery.kind == "ok":
-            sent += 1
-        elif delivery.kind == "gone":
-            gone += 1
-            logs.info(log, "reminders.gone", device=d.id, status=delivery.status)
-            with engine.begin() as conn:
-                store.delete_device(conn, d.id)
-        else:
-            failed += 1
-            logs.warning(log, "reminders.send_failed", device=d.id, status=delivery.status, why=delivery.why)
+        went = deliver(engine, sender, store.Target(d.id, d.endpoint, d.p256dh, d.auth),
+                       payload(d.account_id, d.visited_at), "reminder")
+        sent, gone, failed = sent + (went == "ok"), gone + (went == "gone"), failed + (went == "error")
     with engine.begin() as conn:
         pruned = store.delete_unvisited_before(conn, now - RETENTION, PRUNE_BATCH)
     counts = Counts(len(ready), sent, gone, failed, pruned)

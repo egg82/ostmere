@@ -89,6 +89,13 @@ saves = Table(
     Column("rule_runs", JSONB, nullable=True),
     # What the page keeps about this save's teaching (api/CONTRACT.txt, SavePresentation): it only grows.
     Column("presentation", JSONB, nullable=False, server_default=_EMPTY),
+    # The hands-free notice (saves/handsfree.py): the kept forecast's hands-free instant (game seconds, and the wall
+    # time it maps to), the game time that forecast reached (null: none kept since the last decision), and the instant
+    # a notice was sent for.
+    Column("hands_free_at", BigInteger, nullable=True),
+    _when("hands_free_wall", nullable=True),
+    Column("hands_free_until", BigInteger, nullable=True),
+    Column("hands_free_sent", BigInteger, nullable=True),
     Index("ix_saves_account_id", "account_id"),
     Index("ix_saves_deleted_at", "deleted_at", postgresql_where=text("deleted_at IS NOT NULL")),
 )
@@ -177,9 +184,9 @@ feedback = Table(
     Index("ix_feedback_created_at", "created_at"),
 )
 
-# A device with reminders on (reminders/); no row is off. `visited_at` is the player's last visit, `last_sent_at` the
-# claim that sent this absence's one reminder (db/reminders.py). Rows whose visit is over 180 days old are deleted by the
-# job that sends.
+# A device with reminders on (reminders/); no row is off. `after_hours` null: the absence reminder is off and the
+# hands-free notice (`hands_free`) on. `visited_at` is the player's last visit, `last_sent_at` the claim that sent this
+# absence's one reminder (db/reminders.py). Rows whose visit is over 180 days old are deleted by the job that sends.
 reminder_devices = Table(
     "reminder_devices", metadata,
     Column("id", BigInteger, Identity(always=True), primary_key=True),
@@ -187,15 +194,17 @@ reminder_devices = Table(
     Column("endpoint", Text, nullable=False, unique=True),
     Column("p256dh", Text, nullable=False),
     Column("auth", Text, nullable=False),
-    Column("after_hours", Integer, nullable=False),
+    Column("after_hours", Integer, nullable=True),
     Column("tz", Text, nullable=False),
     Column("send_from_hour", Integer, nullable=False),
     Column("send_until_hour", Integer, nullable=False),
     _when("visited_at"),
     _when("last_sent_at", nullable=True),
     _when("created_at"),
+    Column("hands_free", Boolean, nullable=False, server_default=text("false")),
     CheckConstraint("send_from_hour BETWEEN 0 AND 23 AND send_until_hour BETWEEN 0 AND 23",
                     name="ck_reminder_devices_send_hours"),
+    CheckConstraint("after_hours IS NOT NULL OR hands_free", name="ck_reminder_devices_something_on"),
     Index("ix_reminder_devices_account_id", "account_id"),
     Index("ix_reminder_devices_visited_at", "visited_at"),
 )

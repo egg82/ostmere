@@ -33,6 +33,14 @@ def after_hours() -> tuple[int, ...]:
     return tuple(found)
 
 
+@cache
+def min_busy_s() -> int:
+    """How long before the hands come free the player must have given them that work for a hands-free notice to go,
+    in game seconds (hands_free.json): short taps made while watching send nothing."""
+    found: dict[str, int] = json.loads(Path(__file__).with_name("hands_free.json").read_text(encoding="utf-8"))
+    return found["min_busy_s"]
+
+
 def _decodes(s: str, size: int) -> bool:
     try:
         raw = _b64url(s)

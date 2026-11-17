@@ -18,17 +18,17 @@ DAY_S = 86_400
 PROBES = (mul(LaneSpeed(HANDS), 7000, "probe"), add(RateRef(G, FlowKind.MAKE, X), -2500, "probe"))
 RUNS = 3   # a half day on the save, then an eighth under each probe
 RECORDED = {   # per save, the fingerprint of each run
-    0: ('d946938ef9fc1191', 'c7b25c75d1334dcc', 'b0769cb3e4be9ef8'),
-    1: ('4b070151fe85068e', 'e43fa7dfb2733edc', 'f35eeea0126c8539'),
-    2: ('cfabda43f1ece36e', '344fd2c0038beda8', '6925bf900602798c'),
-    3: ('b1e5cbd231fcdd01', '4dc087966a108f87', '372945c9b4c6739a'),
-    4: ('b3f39dc07684b3aa', 'a58249735f8fee4c', '6e41a9526cac092e'),
-    5: ('64675e92382367f4', '34168420f682435f', '0430f17b64e936ba'),
-    6: ('1c90df9fd5c136ba', '62d516edccbdfbb4', '13397f6c4b244b7e'),
-    7: ('ccf532712552d3ea', '5963ec172af4c88f', '4f078689fdae77de'),
-    8: ('f301e11dbce5560d', 'a9605aa0dd89aab5', 'e5c5e9b711ae0561'),
-    9: ('8fe27b32e76f831e', 'd353bdce88ad0e0a', 'e017124b8b486ec8'),
-    10: ('9104f37d5501c5e1', '7f50f54751873f51', '9c7d2144f19e6527'),
+    0: ('04d597517629818b', '44850b184e1ad758', '978cb4d310902b6d'),
+    1: ('e9e3adeaf6e3ac61', '08179576dd2fb3ff', '32e48c3111690062'),
+    2: ('9e5c20592435788c', 'cc62f755d59b9157', 'd7ad5e9932f2f68c'),
+    3: ('d77cb00a3023a042', '122107069020802d', 'ed551cbadfa7e065'),
+    4: ('42058c61f7e2e259', 'cdae0dd41b90948c', '8ebcf5b6ce146fc2'),
+    5: ('24b66f13245aeb37', '0cc5734059b35e04', '7b428d53b46120b8'),
+    6: ('8c40eaaffff65221', '4eb74a3106717890', 'ef91723c1a039145'),
+    7: ('1c37116ddf1bd671', 'e5ed8dec09bc3a76', 'ba4955271fa47c5b'),
+    8: ('86bb0a57c40d10ab', '5e2ec108736c1705', 'bd74867ed5c9a6c4'),
+    9: ('11199db09289625e', '7d9a8a30e7509e66', '2fbb439d820f95ce'),
+    10: ('5f93679b1f5619aa', 'b21d97733cc9d012', '7dfd50fb08ddad6f'),
 }
 
 

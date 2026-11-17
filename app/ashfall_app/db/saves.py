@@ -9,8 +9,8 @@ from typing import Any
 from datetime import datetime
 
 from sqlalchemy import (
-    CTE, ColumnElement, Connection, Label, Row, ScalarSelect, Update, and_, bindparam, delete, func, insert, or_,
-    select, update,
+    CTE, ColumnElement, Connection, Label, Row, ScalarSelect, Update, and_, bindparam, case, delete, func, insert,
+    or_, select, update,
 )
 
 from .manifests import held_for, whole
@@ -216,9 +216,12 @@ WRITING: Update = update(saves).where(saves.c.id == bindparam("w_save_id", type_
     {c.name: bindparam(f"w_{c.name}", type_=c.type) for c in (
         saves.c.updated_at, saves.c.state, saves.c.format, saves.c.rules_digest, saves.c.decisions, saves.c.game_time,
         saves.c.ended_at, saves.c.build, saves.c.release, saves.c.camp_level, saves.c.rule_runs)}
-    | {"number": func.coalesce(saves.c.number, _next_number(saves.c.account_id))})
+    | {"number": func.coalesce(saves.c.number, _next_number(saves.c.account_id))}
+    | {c.name: case((saves.c.decisions == bindparam("w_decisions", type_=saves.c.decisions.type), c), else_=None)
+       for c in (saves.c.hands_free_at, saves.c.hands_free_wall, saves.c.hands_free_until)})
 """The statement that writes the save, built once with bound parameters (`writing`), so SQLAlchemy keys and compiles
-it once, not on every write; one begun by a build before numbers takes the next number now."""
+it once, not on every write; one begun by a build before numbers takes the next number now. A write with a decision
+drops the kept hands-free answer (db/handsfree.py): the decision changed the save's future."""
 
 _WRITE = WRITING.returning(*LISTED)
 
@@ -257,7 +260,7 @@ def decisions_after(conn: Connection, save_id: int, n: int) -> list[DecisionReco
     """The save's logged decisions numbered above `n`, in order (those not yet pruned)."""
     rows = conn.execute(select(save_decisions).where(save_decisions.c.save_id == save_id, save_decisions.c.n > n)
                         .order_by(save_decisions.c.n))
-    return [_decision(r) for r in rows]
+    return [decision_record(r) for r in rows]
 
 
 def recent_decisions(conn: Connection, save_id: int, since: dict[str, int]) -> list[DecisionRecord]:
@@ -265,10 +268,10 @@ def recent_decisions(conn: Connection, save_id: int, since: dict[str, int]) -> l
     c = save_decisions.c
     rows = conn.execute(select(save_decisions).where(c.save_id == save_id, or_(
         *(and_(c.kind == kind, c.at >= at) for kind, at in since.items()))).order_by(c.n))
-    return [_decision(r) for r in rows]
+    return [decision_record(r) for r in rows]
 
 
-def _decision(r: Row[Any]) -> DecisionRecord:
+def decision_record(r: Row[Any]) -> DecisionRecord:
     return DecisionRecord(n=r.n, at=r.at, kind=r.kind, verb=r.verb, rules_digest=r.rules_digest, context=r.context)
 
 

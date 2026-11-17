@@ -14,3 +14,4 @@ tools/mutate_suite.py's `clocks` suite. Each must go red, before and after a tes
  9 410 not gone    reminders/sender.py: a 410 is an error, not a gone subscription
 10 every minute    engine/forecast.py: the forecast resolves an instant every minute even when nothing happens
 11 cap of 4        engine/forecast.py: MAX_INSTANTS is 4, so a forecast stops long before its horizon
+12 free twice     db/handsfree.py: a hands-free claim ignores an earlier send, so two jobs both win

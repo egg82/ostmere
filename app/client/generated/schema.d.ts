@@ -403,7 +403,7 @@ export interface paths {
         get?: never;
         /**
          * Put Reminder
-         * @description Reminders on for this browser with the window sent, or, with none, its keys refreshed; its window.
+         * @description Reminders on for this browser as sent, or, with nothing sent, its keys refreshed; what it has on.
          */
         put: operations["put_reminder"];
         post?: never;
@@ -1889,7 +1889,9 @@ export interface components {
         };
         /** Reminder */
         Reminder: {
-            window: components["schemas"]["ReminderWindow"];
+            window: components["schemas"]["ReminderWindow"] | null;
+            /** Hands Free */
+            hands_free: boolean;
         };
         /** ReminderOff */
         ReminderOff: {
@@ -1907,6 +1909,8 @@ export interface components {
             /** Tz */
             tz: string;
             window?: components["schemas"]["ReminderWindow"] | null;
+            /** Hands Free */
+            hands_free?: boolean | null;
         };
         /**
          * ReminderWindow
@@ -3696,7 +3700,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description invalid_decision: not a push service, an IANA zone or an offered absence */
+            /** @description invalid_decision: not a push service, an IANA zone or an offered absence, or nothing turned on */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -3745,7 +3749,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description invalid_decision: not a push service, an IANA zone or an offered absence */
+            /** @description invalid_decision: not a push service, an IANA zone or an offered absence, or nothing turned on */
             422: {
                 headers: {
                     [name: string]: unknown;

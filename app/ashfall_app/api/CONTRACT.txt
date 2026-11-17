@@ -396,26 +396,37 @@ YOUR DEVICES
     renew the session. The page offers the removal on every row, this one included, and asks first for this one.
 
 REMINDERS
-  Off until the player turns them on. A browser with reminders on is one row, keyed by its Web Push endpoint, and gets
-  one notification once it has been away the hours it picked, then none until it comes back. Both routes are writes
+  Off until the player turns them on. A browser with reminders on is one row, keyed by its Web Push endpoint. It holds
+  two choices, either on alone: the absence reminder, one notification once the browser has been away the hours it
+  picked, then none until it comes back; and the hands-free notice (below). Both routes are writes
   (csrf.py's rules hold), carry the endpoint only in the body, and answer Cache-Control: no-store; without a database,
   503 save_unavailable.
   /page-config.json names `reminders`: {public_key, after_hours: [int]} when the server can send them, null when it
   cannot (the page says reminders are not available here). A page that finds no `reminders` key at all is on a build
   from before reminders and offers no setting.
-  ReminderOn {endpoint, p256dh, auth, tz, window: ReminderWindow | null}
+  ReminderOn {endpoint, p256dh, auth, tz, window: ReminderWindow | null, hands_free: bool | null}
     endpoint, p256dh, auth  PushSubscription.toJSON()'s endpoint and keys. The endpoint must be https on a browser push
                    service (FCM, Mozilla, Apple, Windows), or 422.
     tz             the device's IANA time zone, or 422: the window's hours are local to it.
     window         ReminderWindow {after_hours, send_from_hour, send_until_hour}: after_hours one of page-config's
                    reminders.after_hours; the hours 0-23, from up to until, past midnight when from is later, any hour
-                   when they are equal. Null refreshes a browser already on (its keys and zone) and answers its window;
-                   404 not_found when it is not on, so the page shows the setting off.
-  PUT /api/reminders -> Reminder {window}: the browser's row, made or changed; it becomes this account's whichever
-    account held it, and counts as a visit.
+                   when they are equal. Null: the absence reminder off (the window last sent is kept for when it
+                   comes back on).
+    hands_free     the hands-free notice on or off; null with a window is off. A window null and hands_free false
+                   turns nothing on: 422 (DELETE turns the browser off). Both null refreshes a browser already on
+                   (its keys and zone) and answers what it has on; 404 not_found when it is not on, so the page shows
+                   the setting off.
+  PUT /api/reminders -> Reminder {window: ReminderWindow | null, hands_free}: the browser's row, made or changed; it
+    becomes this account's whichever account held it, and counts as a visit. window null: the absence reminder is off.
   DELETE /api/reminders, ReminderOff {endpoint} -> 204, whether or not it was on; another account's row is untouched.
   POST /api/saves/{id}/open and /advance mark the account's browsers visited (at most once per ten minutes); a
   reminder is due from the latest visit.
+  The hands-free notice: one notification to each of the account's browsers with it on, when a long task the player
+  gave the hands of the account's latest save (the most recently written, not deleted) is done and nothing they
+  planned comes next (engine DESIGN.txt, "Forecast", Hands free), unless the player gave that work less than
+  reminders/hands_free.json's min_busy_s game seconds before, or the save was written at or after that moment (a page
+  left open showed it). One per moment. The job forecasts the save after each decision and whenever the last forecast's
+  reach has passed; it names no task, store or number.
 
 SAVES ACROSS RELEASES AND PODS
   A save written under older rules (a deploy changed the content) is carried over, never refused: the server rebases
@@ -875,6 +886,8 @@ FORECAST
   at most once a minute, so a run of taps costs one forecast, not one each.
   forecast.tops_out lists, for each skill below its phase's top and not mastered, the instant it reaches that top
   ("tops out in"), by horizon_at; level_ups stop at a phase's top (PRESTIGE PHASES). Empty without prestige.
+  The page's forecast does not carry when the hands come free (engine DESIGN.txt, "Forecast", Hands free): the
+  reminders job forecasts the save itself for the hands-free notice (REMINDERS), so this call stays a read.
 
 PRESTIGE PHASES (engine DESIGN.txt, "PRESTIGE PHASES")
   SkillBar.prestige is null when the content has no prestige, and SkillBar is then the curve's alone. Otherwise a
