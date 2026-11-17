@@ -45,6 +45,8 @@ export const RULE_KEYS = {
   ruleReachesLevel: "ui.rule.reaches_level", // "{name}{n}": a rule on a skill's or the Camp's level
   ruleLevels: "ui.rule.levels", // the full editor's When heads: the skills and the Camp, then the tasks
   ruleTasks: "ui.rule.tasks",
+  ruleRunning: "ui.rule.running", // the When head of other lanes' tasks a person's rule may run alongside
+  ruleWhileRunning: "ui.rule.while_running", // "{card}": a person's rule on another lane's task running
   ruleTimes: "ui.rule.times", // the stepper of a count, and of a level
   ruleLevel: "ui.rule.level",
   ruleNeedsBelow: "ui.rule.needs_below", // "{store}{n}{have}": why an "under n" rule is off, and what the store holds now

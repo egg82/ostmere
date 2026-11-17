@@ -43,7 +43,7 @@ const AFTER: Record<Away, Record<string, number>> = {
 };
 
 function lines(...at: Array<[string, number]>): LogLine[] {
-  return at.map(([key, t], seq) => ({ at: t, seq, key, card: null }));
+  return at.map(([key, t], seq) => ({ at: t, seq, key, card: null, opens_beat: false }));
 }
 
 function viewAt(base: View, at: number, stores: Record<string, number>, levels: [number, number], ask: boolean): View {

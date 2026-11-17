@@ -1,8 +1,9 @@
 """The pacing simulator's readouts, reported against their committed text (docs/design/sim-invariants.md). A readout
-prints the rhythm of play, which is taste: it is read by a person and never fails a build. Its text is committed under
+prints the rhythm of play, which is taste: what it says is never judged against a threshold. Its text is committed under
 readouts/; when today's text differs, `check` reports the diff as a ReadoutChanged warning (pytest's warnings summary,
-so the job's log shows it) and writes the new text under READOUTS_OUT for the job to keep. Only a readout that rendered
-nothing fails: that is a broken play, not a change of taste. Writing the text again commits the new rhythm.
+so the job's log shows it) and writes the new text under READOUTS_OUT, which the job uploads and then fails on: a
+committed text that differs from what the code renders is stale. A readout that rendered nothing fails too. Refresh with
+`python -m tools.readouts_pull <run-id>` from app/, or write the text again locally to commit the new rhythm.
 
     python -m tests.readout_snapshot --write              # from app/: every package's readouts
     python -m tests.readout_snapshot --write dayone ...   # only the named packages
@@ -38,7 +39,7 @@ SHOWN = 60
 
 
 class ReadoutChanged(UserWarning):
-    """Today's readout differs from the committed text: a report for a person to read, never a failure."""
+    """Today's readout differs from the committed text: the test warns; the job fails after uploading it."""
 
 
 def path(name: str, root: Path = DIR) -> Path:
@@ -54,8 +55,8 @@ def differences(name: str, text: str, root: Path = DIR) -> list[str]:
 
 def check(name: str, text: str, root: Path = DIR) -> list[str]:
     """Report how `text` differs from the committed readout, and return the diff: a ReadoutChanged warning carrying the
-    diff's first lines, and the new text written under OUT_ENV when it is set. Never fails on a difference, a readout
-    with no committed text included. An empty readout fails: a play that rendered nothing is broken."""
+    diff's first lines, and the new text written under OUT_ENV when it is set. The test never fails on a difference
+    (the job does, after the upload), a readout with no committed text included. An empty readout fails: a broken play."""
     assert text.strip(), f"readout {name} rendered nothing"
     diff = differences(name, text, root)
     if not diff:

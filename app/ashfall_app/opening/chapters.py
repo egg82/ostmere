@@ -20,6 +20,9 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
     kinds = sorted(set(o.line_kinds) & set(ch.line_kinds))
     if kinds:
         raise ValueError(f"chapter line_kinds: keys already have a kind: {kinds}")
+    beats = sorted(set(o.beat_lines) & set(ch.beat_lines))
+    if beats:
+        raise ValueError(f"chapter beat_lines: beats already have a first line: {beats}")
     camp = _camp(o.camp, ch.camp_levels)
     town, lanes = [*o.town_cards, *ch.town_cards], [*o.lanes, *ch.lanes]
     stores = [*o.stores, *ch.stores]
@@ -42,6 +45,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "camp": camp, "curve_items": [*o.curve_items, *ch.curve_items], "aims": [*o.aims, *ch.aims],
         "phase_pays": [*o.phase_pays, *ch.phase_pays],
         "text": {**o.text, **ch.text}, "line_kinds": {**o.line_kinds, **ch.line_kinds},
+        "beat_lines": {**o.beat_lines, **ch.beat_lines},
     }))
 
 

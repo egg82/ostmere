@@ -112,9 +112,13 @@ ENDPOINTS
   DELETE /api/reminders               ReminderOff -> 204: reminders off for this browser. 401 no_account.
   Decisions (discriminated by `kind`): tap_card (a tap, a craft, a story step), switch_mix, save_mix, delete_mix,
   set_orders, set_queue, answer_offer (OFFERS below), prestige, undo_pick and move_pick (PRESTIGE PHASES). Orders and queue
-  entries take switch_mix, tap_card and answer_offer. Their conditions take no `running`
-  subject (the page never builds one): set_orders or set_queue with one is 422 invalid_decision. A view still
-  carries `running` subjects, in blockers and in saves that hold them.
+  entries take switch_mix, tap_card and answer_offer. A `running` subject is taken in exactly one shape: an order (in
+  `when` or `unless`) whose every action is a tap_card of a card on one lane other than the hands, watching a card
+  of a different lane (the hands' or another person's). Its verb cannot start or stop the card it watches, and its tap
+  runs on when it lets go, so the instant settles. Every other `running` condition is 422 invalid_decision: a queue
+  entry's, a mix switch's or an answer's, a hands tap's, a rule tapping on two lanes, a watched card on the rule's own
+  lane, or a standing action watched. Why: two mix orders on a running card flip each other forever within one instant
+  (engine DESIGN.txt, "Order mix"). A view carries `running` subjects, in blockers, rules and saves.
   Share levels: at_least and at_most carry value_of_cap and release_of_cap (bool, false when left out, always
   served). True says that level is basis points, 0..10000, of the watched store's cap at the moment the condition is
   read, not a quantity, so the rule keeps up as the cap grows (engine DESIGN.txt, "SHARE LEVELS": the store's whole
@@ -154,11 +158,11 @@ ENDPOINTS
   journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
   the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
   before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
-  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
+  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lane_tasks_seen: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
   all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
   is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
   seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
-  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
+  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lane_tasks_seen: the tasks of lanes run by rules the player has had in front of them on the person's page (a person with a task not listed has a quiet dot on Change in their Town row); lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
   ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
   when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
   second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
@@ -183,6 +187,10 @@ ENDPOINTS
   as that time (ui.when.*), never as an amount. A key is written in one place or by one skill's levels; any other
   sharing fails the content's load. The page words a cause under its line in the chronicle and never parses a line's
   words for one.
+  Beat lines: LogLine.opens_beat is true on a story beat's first line (a beat of content/beats.yaml, weekly and season
+  turns included) and false on every other line: side layers, mini-stories, people's and daily lines. The content authors
+  it in `[beat_lines]`, a beat's id to the first-line key of each way it can be told, each a story line opening one beat
+  only; the page never takes a beat from a key or a line's words. The end's first line is Content.end_line_keys[0].
   AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
   game of the account; the page then starts no lesson and shows no hint that only a lesson gives (a guided offer is its
   one tap), and on again, each save's lessons go on from what it keeps. A PUT replaces the settings whole.
@@ -494,7 +502,7 @@ join's too_many_saves.
   409 last_save         deleting the account's only live save.
   422 invalid_decision  a busy lane (unless Card.cuts_in), a locked, completed or retired card, a tap_card of a card on a ruled lane (A LANE
                         RUN BY RULES), an answer_offer the offer cannot take (OFFERS), a bad mix, deleting a mix something
-                        still names, an order or queue condition watching `running`, a feedback text empty or over 2000 characters, or a request that does not
+                        still names, an order or queue condition watching `running` outside the one shape Decisions takes, a feedback text empty or over 2000 characters, or a request that does not
                         fit the models.
   429 rate_limited      too many new accounts just now: at most 10 an hour from one client address (an IPv6
                         address counts by its /64, and its /48 is held to 30 an hour) and 200 an hour in all; a limit that cannot be counted refuses. On POST /api/saves only when it would make an
@@ -694,7 +702,10 @@ THE CLIENT MAY
                                                        Content.camp store, value = release = camp_levels[n-1].at, n
                                                        below the first held level not yet lifted
     on a card in view.cards, a skill in view.skills, and the Camp store once its line is in and unlocked. It writes
-    none on an Unlocked (unlocks only grow, so one the save holds is always true) or a Running (422 invalid_decision, above).
+    none on an Unlocked (unlocks only grow, so one the save holds is always true), and a Running only as below.
+  - on a lane's rule whose actions tap that lane's cards, offer "while {card} is running" (ui.rule.while_running) for
+    each card in view.cards on another lane, the hands' included, that a tap or a mix can run: at_least(Running),
+    value = release = 1. Nowhere else (422 invalid_decision, Decisions).
   - never draw a ledger line for a store whose StoreInfo.hidden is true (the engine's bookkeeping: a clock, a countdown),
     whatever it would ask; AnswerInfo.gains holds no hidden store.
   - draw a store's ledger line from when it first asks something (red, or carrying an order card's offer) or is
@@ -829,6 +840,7 @@ TEXT AND NUMBERS (one rule)
     ui.hands.until_up_to {store}{m} | ui.hands.until_down_to {store}{m}   the same two, the until a share level
     ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
+    ui.rule.while_running {card} | ui.rule.running   a person's rule on another lane's task running, and its When head
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
     ui.chronicle.open | ui.tab.cards | ui.tab.book   the chronicle's sheet, and the tabs: Tasks and Book (the
                                     chronicle's sheet); the town's tab (its people and lanes, and on a phone the ledger
@@ -1110,10 +1122,11 @@ A LANE RUN BY RULES
   THE CLIENT MAY, for each lane in view.lanes whose LaneInfo.ruled is true:
   - draw it as a row under the hands strip, the hands strip's shape: its label, what it does (the label of
     running_card, or ui.lane.idle while free), the running card's bar (its Card in view.cards, sampled as any bar),
-    and ui.lane.change, which opens the rule editor's simple view scoped to that lane on orders[LaneBar.order], else
-    on the lane's first always rule that is not passed_over (the one that acts next), else on a new always rule. The
-    simple view picks the task: a card in view.cards on that lane. Saving sends set_orders with that rule's tap_card
-    changed in place (or the new always rule appended).
+    and ui.lane.change, which opens the person's page: their cards in view.cards on that lane drawn as the card panel
+    draws a card, the rules that tap them (each opening the rule editor), and, once they have joined the town, their
+    part of the town's mix in the town editor. The rule editor's simple view scoped to a lane picks the task: a card in
+    view.cards on that lane. Saving sends set_orders with that rule's tap_card changed in place (or a new always rule
+    appended).
   - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that
     lane's tasks.
   - in the Rules tab, list the rules that tap a card on that lane under the lane's label, in their view.orders order;

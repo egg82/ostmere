@@ -247,9 +247,13 @@ sample, which leaves the seam alone; whether it still crackles after that is for
 
 - The view has to say which line is a beat's first line, as an explicit field: a served line (`LogLine` in
   `app/ashfall_app/api/models.py`) carries only its key and card, and the client must not guess beats from keys.
+  Built: `LogLine.opens_beat`, from each chapter's `[beat_lines]` table. The opening's end is not a served line, so
+  its first line is still the first of the end's line keys.
 - A scene layer says what it sounds as, an explicit field beside `flicker`: the fire's bed on the first firelight
-  layer, the evening piece on the evening's. The page never reads a layer's id to decide.
-- A cascade has to know a tap started it, as its completion's rung does (`completionRung`).
+  layer, the evening piece on the evening's. The page never reads a layer's id to decide. Built: `sound` on a
+  layer, `fire` on the first firelight and `evening` on every dusk firelight.
+- A cascade has to know a tap started it, as its completion's rung does (`completionRung`). Built:
+  `Reveal.tapStarted`.
 - The part that starts the evening piece keeps the last view it saw while the page was in view; the first view after
   the page is shown only resets it.
 - habits' tap ladder and reward sounds are candidates like any others, screened and picked by ear, never defaults.

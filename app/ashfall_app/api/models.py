@@ -192,6 +192,9 @@ class LogLine(BaseModel):
     card: str | None
     """The card whose completion, tap or failed tap wrote the line, however it was run (a tap, the mix, a rule);
     null for a chip's line, a trigger's and the opening's first lines."""
+    opens_beat: bool
+    """The line is a story beat's first line (CONTRACT.txt, "Beat lines"); false for side layers, mini-stories and every
+    other line."""
 
 
 class View(BaseModel):

@@ -114,6 +114,8 @@ class Opening(Entry):
     """Every line and label, by key. Input only: the API serves it as a list of TextEntry."""
     line_kinds: dict[str, LineKind]
     """The kind of each log line in this file's `text`, by key (line_kinds.py)."""
+    beat_lines: dict[str, list[str]] = {}
+    """A story beat's id (content/beats.yaml) to the key of its first line, one per way it can be told."""
 
 
 class SkillLevelsEntry(Entry):
@@ -172,6 +174,7 @@ class Chapter(Entry):
     card an earlier one shipped (Safe under the release lock: the card pays more)."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
+    beat_lines: dict[str, list[str]] = {}
 
 
 def load_opening(path: Path = OPENING, chapters: tuple[Path, ...] = CHAPTERS) -> Opening:

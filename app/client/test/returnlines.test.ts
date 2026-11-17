@@ -30,7 +30,7 @@ function returned(lines: LogLine[]): { screen: Screen; landed: Step } {
 }
 
 const text = (key: string): string => catalog.text.get(key);
-const at = (keys: string[]): LogLine[] => keys.map((key, seq) => ({ at: 3400, seq, key, card: null }));
+const at = (keys: string[]): LogLine[] => keys.map((key, seq) => ({ at: 3400, seq, key, card: null, opens_beat: false }));
 
 // Two lines on return: the first at once, the second only after the first's reading time.
 {

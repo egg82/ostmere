@@ -5,7 +5,8 @@
 //   skill level n      at_least(skill_level(skill), n, n)
 //   Camp level n       at_least(store_value(camp), at, at), `at` the level's Content.camp.camp_levels entry; only the
 //                      levels below the first held one still waiting to be lifted, which the bar would not count yet
-// No rule watches Running: set_orders refuses it (an order on what its own mix stops would flip at every instant).
+//   while card runs    at_least(running(card), 1, 1), only on a rule tapping a person's lane, watching a card of another
+//                      lane (ruleoffers.subjectChoices); set_orders refuses every other Running (CONTRACT.txt, "Decisions")
 import type { CampLevel, Condition, View } from "../api/types";
 import { sample } from "./clock";
 import type { Catalog } from "./catalog";
@@ -14,7 +15,8 @@ import { UI } from "./text";
 export type SubjectRule =
   | { kind: "count"; card: string; n: number }
   | { kind: "level"; skill: string; n: number }
-  | { kind: "camp"; n: number };
+  | { kind: "camp"; n: number }
+  | { kind: "running"; card: string; n: number };
 
 /** The subject rule a condition is, or null for any other (a store rule, a chip's, a time). */
 export function readSubject(catalog: Catalog, when: Condition): SubjectRule | null {
@@ -22,6 +24,7 @@ export function readSubject(catalog: Catalog, when: Condition): SubjectRule | nu
   const w = when.watched;
   if (w.kind === "card_count") return { kind: "count", card: w.card, n: when.value };
   if (w.kind === "skill_level") return { kind: "level", skill: w.skill, n: when.value };
+  if (w.kind === "running") return when.value === 1 ? { kind: "running", card: w.runner, n: 1 } : null;
   if (w.kind !== "store_value" || w.store !== catalog.campStore) return null;
   const level = campLevels(catalog).findIndex((l) => l.at === when.value);
   return level < 0 ? null : { kind: "camp", n: level + 1 };
@@ -30,6 +33,7 @@ export function readSubject(catalog: Catalog, when: Condition): SubjectRule | nu
 /** The condition for a subject rule. */
 export function buildSubject(catalog: Catalog, rule: SubjectRule): Condition {
   if (rule.kind === "count") return { kind: "at_least", watched: { kind: "card_count", card: rule.card }, value: rule.n, release: rule.n, value_of_cap: false, release_of_cap: false };
+  if (rule.kind === "running") return { kind: "at_least", watched: { kind: "running", runner: rule.card }, value: 1, release: 1, value_of_cap: false, release_of_cap: false };
   if (rule.kind === "level") return { kind: "at_least", watched: { kind: "skill_level", skill: rule.skill }, value: rule.n, release: rule.n, value_of_cap: false, release_of_cap: false };
   const at = campLevels(catalog)[rule.n - 1]?.at ?? 0;
   return { kind: "at_least", watched: { kind: "store_value", store: catalog.campStore ?? "" }, value: at, release: at, value_of_cap: false, release_of_cap: false };
@@ -39,17 +43,19 @@ export function buildSubject(catalog: Catalog, rule: SubjectRule): Condition {
  * level 2". */
 export function subjectWords(catalog: Catalog, rule: SubjectRule): string {
   const { text, format } = catalog;
+  if (rule.kind === "running") return text.fill(UI.ruleWhileRunning, { card: catalog.cardLabel(rule.card) });
   if (rule.kind === "count") return text.fill(rule.n === 1 ? UI.ruleDoneOnce : UI.ruleDone, { card: catalog.cardLabel(rule.card), n: format.count(rule.n) });
   return text.fill(UI.ruleReachesLevel, { name: subjectName(catalog, rule), n: format.count(rule.n) });
 }
 
 /** What a rule watches, by name: the task's, the skill's, or the Camp store's. */
 export function subjectName(catalog: Catalog, rule: SubjectRule): string {
-  return rule.kind === "count" ? catalog.cardLabel(rule.card) : rule.kind === "level" ? catalog.skillLabel(rule.skill) : catalog.storeLabel(catalog.campStore ?? "");
+  return rule.kind === "count" || rule.kind === "running" ? catalog.cardLabel(rule.card) : rule.kind === "level" ? catalog.skillLabel(rule.skill) : catalog.storeLabel(catalog.campStore ?? "");
 }
 
 /** Where the count or level stands in `view`: times done, the skill's level, the Camp's level as its bar counts it. */
 export function subjectNow(catalog: Catalog, view: View, rule: SubjectRule): number {
+  if (rule.kind === "running") return 0;
   if (rule.kind === "count") return [...view.cards, ...view.completed].find((c) => c.card === rule.card)?.completions ?? 0;
   if (rule.kind === "level") return view.skills.find((s) => s.skill === rule.skill)?.level ?? 0;
   const line = view.ledger.find((l) => l.store === catalog.campStore);
@@ -73,6 +79,7 @@ function campTop(catalog: Catalog, view: View): number {
 /** The values n may take: from 1 to a card's cap, to the Camp's last level a rule can name, or with no top. */
 export function subjectRange(catalog: Catalog, view: View, rule: SubjectRule): [number, number] {
   if (rule.kind === "camp") return [1, campTop(catalog, view)];
+  if (rule.kind === "running") return [1, 1];
   const cap = rule.kind === "count" ? view.cards.find((c) => c.card === rule.card)?.cap ?? null : null;
   return [1, cap ?? Number.POSITIVE_INFINITY];
 }
@@ -80,7 +87,7 @@ export function subjectRange(catalog: Catalog, view: View, rule: SubjectRule): [
 /** n held inside what the subject allows. */
 export function clampSubject(catalog: Catalog, view: View, rule: SubjectRule): SubjectRule {
   const [lo, hi] = subjectRange(catalog, view, rule);
-  return { ...rule, n: Math.min(hi, Math.max(lo, rule.n)) };
+  return rule.kind === "running" ? rule : { ...rule, n: Math.min(hi, Math.max(lo, rule.n)) };
 }
 
 /** Where a new rule on the subject starts: the next count or level from now. */
@@ -90,5 +97,5 @@ export function defaultSubject(catalog: Catalog, view: View, rule: SubjectRule):
 
 /** One key per subject, whatever its n. */
 export function subjectKey(rule: SubjectRule): string {
-  return rule.kind === "count" ? `task:${rule.card}` : rule.kind === "level" ? `level:${rule.skill}` : "camp";
+  return rule.kind === "running" ? `running:${rule.card}` : rule.kind === "count" ? `task:${rule.card}` : rule.kind === "level" ? `level:${rule.skill}` : "camp";
 }

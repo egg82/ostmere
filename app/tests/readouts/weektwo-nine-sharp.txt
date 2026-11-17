@@ -9,4 +9,4 @@ beats sharp (pace_scale 1): B10 day 8.65, target_day 11
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       9       7       0       4       0      14       2     36
-  2      29       5       2       2       0       7       3     48
+  2      30       5       2       2       0       7       3     49

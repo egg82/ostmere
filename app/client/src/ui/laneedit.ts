@@ -3,12 +3,14 @@
 // view.cards; the rule's condition stays as it is. Save sends set_orders with that rule's tap_card changed in place,
 // or a new always rule appended. Its parts are the condition editor's (condition.ts): the head, the Do row (condrows.ts)
 // and the pinned foot with the sentence and Save.
-import type { Order, View } from "../api/types";
+import type { Card, Order, View } from "../api/types";
 import { ALWAYS, alwaysWords, laneTask } from "../game/lanes";
 import { conditionWords } from "../game/orders";
 import { UI } from "../game/text";
 import { noteOrderSet, noteRuleChanged } from "../telemetry";
-import { doRow } from "./condrows";
+import { sectionHead } from "./condrows";
+import { pickRow } from "./cardpick";
+import { sectioned } from "../game/cardsections";
 import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 
@@ -59,6 +61,11 @@ export class LaneEditor {
     this.draw();
   }
 
+  /** The lane's tasks: its cards in the view. */
+  private tasks(view: View): Card[] {
+    return view.cards.filter((c) => this.ctx.catalog.laneOf(c.card) === this.target.lane);
+  }
+
   /** The rule as Save would set it, or null while no task is chosen. */
   private order(): Order | null {
     if (this.card === null) return null;
@@ -71,9 +78,13 @@ export class LaneEditor {
     if (!view) return;
     const { catalog } = this.ctx;
     setText(this.heading, catalog.laneLabel(this.target.lane, view));
-    const tasks = view.cards.filter((c) => catalog.laneOf(c.card) === this.target.lane).map((c) => ({ kind: "task" as const, card: c.card }));
-    this.does.replaceChildren(...doRow(catalog, view, tasks, (c) => this.pick(c.kind === "task" ? c.card : null)));
-    for (const b of this.does.querySelectorAll<HTMLButtonElement>(".cond-task")) b.setAttribute("aria-pressed", String(b.dataset.card === this.card));
+    const tasks = this.tasks(view);
+    this.does.replaceChildren(el("span", "rules-label", catalog.text.get(UI.ruleDo)), ...sectioned(catalog, tasks, (c) => c.card, view).flatMap((g) => {
+      const list = el("div", "card-list");
+      list.append(...g.items.map((c) => pickRow(this.ctx, c, view, () => this.pick(c.card))));
+      return [...sectionHead(g.heading), list];
+    }));
+    for (const tap of this.does.querySelectorAll<HTMLButtonElement>(".card-tap")) tap.setAttribute("aria-pressed", String(tap.closest<HTMLElement>(".card")?.dataset.card === this.card));
     const order = this.order();
     const hue = this.card === null ? 5 : catalog.rank(this.card) % 6;
     const always = order ? alwaysWords(catalog, order) : null;

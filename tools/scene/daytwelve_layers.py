@@ -67,5 +67,5 @@ def light_layers() -> list[Layer]:
     return [
         Layer(id="lamp_light", img=made.lamp_light(), when=LAMPS, blend="screen", ungraded=True),
         Layer(id="warm_glow_14", img=day3_world.warm_glow(146), when=NIGHT_14, blend="screen"),
-        Layer(id="firelight_dusk_14", flicker=FLICKER, img=firelight(0.7), when=NIGHT_14, blend="screen", ungraded=True),
+        Layer(id="firelight_dusk_14", flicker=FLICKER, sound="evening", img=firelight(0.7), when=NIGHT_14, blend="screen", ungraded=True),
     ]

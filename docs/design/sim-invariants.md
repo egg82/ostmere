@@ -11,9 +11,12 @@ mechanics only: no content.
 - **shown**: a number or state the page shows does not come true.
 
 Everything else about the rhythm of play is **taste**. Taste never fails on a threshold. It is printed as a readout,
-and the readout's text is committed beside it: when it changes, CI reports the diff and never fails; a person reads
-it and commits the new text by writing it again. No band or target is set for a rhythm. Scripted players who skip the tools are
-reported, never held to a floor; the one check on them is that they land measurably behind.
+and the readout's text is committed beside it: when it differs from what the code renders, the job fails
+after uploading the new text, and `python -m tools.readouts_pull <run-id>` (from `app/`) writes it into place to
+commit. What a readout says is never failed on; only that the committed text is stale. The full playthroughs run only on
+PRs labelled `playthroughs`, so an unlabelled change can leave a readout stale until the next labelled PR refreshes it.
+No band or target is set for a rhythm. Scripted players who skip the tools are reported, never held to a floor; the one
+check on them is that they land measurably behind.
 
 Two more classes:
 
@@ -197,7 +200,7 @@ Taste readouts print every route a package plays on a push.
 - **Compared** by `app/tests/readout_snapshot.py`, `check`, in each package's `test_<package>_readouts.py`, in the job
   that already plays the routes: `playthrough`, `playthrough-day-two`, `playthrough-week-one`, `playthrough-week-two`.
   Week one's chapter readouts are compared in `weekone/test_weekone_routes.py` and day one's rebase readout last in
-  `dayone/test_dayone_rebase.py`, after the setups whose readings they reuse. A difference is reported, never failed: a
+  `dayone/test_dayone_rebase.py`, after the setups whose readings they reuse. A difference is reported by the test and fails its job after the upload: a
   `ReadoutChanged` warning carries the diff's first lines (pytest's warnings summary, in the job's log) and, when
   `READOUTS_OUT` is set, the new text is written there and kept as the job's artifact. A package's committed files must
   be exactly the readouts it writes, and an empty readout fails (a broken play, not taste).
