@@ -47,7 +47,7 @@ export const RULE_KEYS = {
   ruleTasks: "ui.rule.tasks",
   ruleRunning: "ui.rule.running", // the When head of other lanes' tasks a person's rule may run alongside
   ruleWhileRunning: "ui.rule.while_running", // "{card}": a person's rule on another lane's task running
-  ruleLaneCard: "ui.rule.lane_card", // "{card}{lane}": a ruled lane's card in a rule's words, told apart from the hands' card of its label
+  ruleLaneCard: "ui.rule.lane_card", // "{card}{person}": a ruled lane's card in a rule's words, told apart from the hands' card of its label
   ruleTimes: "ui.rule.times", // the stepper of a count, and of a level
   ruleLevel: "ui.rule.level",
   ruleNeedsBelow: "ui.rule.needs_below", // "{store}{n}{have}": why an "under n" rule is off, and what the store holds now

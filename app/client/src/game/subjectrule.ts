@@ -53,7 +53,7 @@ export function subjectWords(catalog: Catalog, view: View, rule: SubjectRule): s
  * shares the task's label. */
 export function subjectCard(catalog: Catalog, view: View, card: string): string {
   const label = catalog.cardLabel(card);
-  return catalog.ruled(card) ? catalog.text.fill(UI.ruleLaneCard, { card: label, lane: catalog.laneLabel(catalog.laneOf(card), view) }) : label;
+  return catalog.ruled(card) ? catalog.text.fill(UI.ruleLaneCard, { card: label, person: catalog.laneLabel(catalog.laneOf(card), view) }) : label;
 }
 
 /** What a rule watches, by name: the task's, the skill's, or the Camp store's. */
