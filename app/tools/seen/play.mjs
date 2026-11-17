@@ -3,7 +3,9 @@
 // starts one), at WxH (default 1280x800): taps what glows, the obvious one-off steps, the Set and Both offers;
 // gathers/scavenges by need before the mix; adds new mixable cards to the mix; edits the greyed mix; adds the ledger's
 // rules; plays on two minutes past the end. Every new thing is logged with its wall and game minute, with a
-// screenshot after each burst, into OUT/<name>/.
+// screenshot after each burst, into OUT/<name>/. ROUTE=lazy (4th arg): the player leaves the mix running, taps what
+// glows or is ready only after a long pause (20-45 s) and gathers by hand about one pass in four. STRIP=off hides the story
+// strip (a control: the probe must then report a lower seen share; this build has no card line to turn off).
 // The pass: every story line the server sends is classed tap-written when it lands at the instant a tap of the bot's
 // own lands (the card it tapped, by tap or failed, completing at that game second), and, when the server names the
 // card that wrote it (LogLine.card), only when that is the card. The probe's verdict for each line it saw show is
@@ -11,7 +13,9 @@
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 
-const [NAME = 'run', VIEW = '1280x800', MAXMIN = '40'] = process.argv.slice(2);
+const [NAME = 'run', VIEW = '1280x800', MAXMIN = '40', ROUTE = 'default'] = process.argv.slice(2);
+const LAZY = ROUTE === 'lazy';   // taps far apart, by-hand gathers rare: the mix does most of the work
+const NO_STRIP = process.env.STRIP === 'off';   // the control: the story strip never shows, so no line can be seen
 const [VW, VH] = VIEW.split('x').map(Number);
 const BASE = 'http://127.0.0.1:18771/';
 const DIR = `${process.env.OUT ?? '/vp'}/${NAME}`;
@@ -21,7 +25,10 @@ fs.mkdirSync(`${DIR}/states`, { recursive: true });
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: VW, height: VH }, deviceScaleFactor: 1 });
 const page = await ctx.newPage();
+// the server takes a write only from its own https origin (accounts/csrf.py); this loopback is http, so a write says it is
+await page.route('**/api/**', (r) => { const h = r.request().headers(); r.continue(h.origin ? { headers: { ...h, origin: 'https://127.0.0.1:18771' } } : {}); });
 await page.addInitScript({ path: new URL('./probe.js', import.meta.url).pathname });
+if (NO_STRIP) await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.lines{visibility:hidden !important}'; document.head.append(s); }));
 const content = await (await page.request.get(BASE + 'api/content')).json();
 const text = Object.fromEntries(content.text_entries.map((e) => [e.key, e.text]));
 const byTitle = Object.fromEntries(content.card_infos.map((c) => [text[c.label_key], c.card]));
@@ -127,7 +134,7 @@ await page.addInitScript(() => {
 const sleep = (ms) => page.waitForTimeout(ms);
 let rngS = 12345;
 const rnd = () => { rngS = (rngS * 1103515245 + 12345) % 2147483648; return rngS / 2147483648; };
-const think = () => sleep(2500 + rnd() * 2500);
+const think = () => sleep(LAZY ? 20000 + rnd() * 25000 : 2500 + rnd() * 2500);
 
 async function snapshot() {
   return page.evaluate(() => {
@@ -279,7 +286,7 @@ while (Date.now() < deadline) {
   if (rack) { await tapCard(rack.i, 'rack ready'); await think(); continue; }
   // one early try of an unready step a newcomer would poke (seen 10 s or more)
   const poke = s.cards.find((c) => oneOff(c) && /unready/.test(c.cls) && !c.disabled && !tried.has(idOf(c)) && ['ring_it', 'strike_fire', 'roast_roots'].includes(idOf(c)) && Date.now() - (seenAt.get(idOf(c)) ?? Date.now()) > 10000);
-  if (poke) { tried.add(idOf(poke)); await tapCard(poke.i, 'early try'); await think(); continue; }
+  if (poke && !LAZY) { tried.add(idOf(poke)); await tapCard(poke.i, 'early try'); await think(); continue; }
   // roots for the roast: forage by hand (it is not in the mix), when the roast lacks roots
   const roastC = s.cards.find((c) => idOf(c) === 'roast_roots' && !/done/.test(c.cls));
   const forageC = s.cards.find((c) => idOf(c) === 'forage' && !c.disabled);
@@ -296,7 +303,7 @@ while (Date.now() < deadline) {
     let pick = null;
     if (gather && scav) pick = wantStone && !wantWood ? scav : wantWood && !wantStone ? gather : rnd() < 0.5 ? gather : scav;
     else pick = gather ?? scav;
-    if (pick) { await tapCard(pick.i, 'by hand'); await think(); continue; }
+    if (pick && (!LAZY || rnd() < 0.25)) { await tapCard(pick.i, 'by hand'); await think(); continue; }
   }
   await sleep(1500);   // waiting: the mix and the rack run
 }
@@ -317,7 +324,7 @@ const unmatched = probed.filter((_, k) => !used.has(k)).map((p) => keysOf(p.text
 const rate = (xs, f) => `${xs.filter(f).length}/${xs.length}`;
 const tw = seen.filter((l) => l.tapWritten);
 const summary = {
-  name: NAME, view: VIEW, lines: seen.length, tapWritten: tw.length,
+  name: NAME, view: VIEW, route: ROUTE, strip: NO_STRIP ? 'off' : 'on', lines: seen.length, tapWritten: tw.length,
   seen_all: rate(seen, (l) => l.seen), seen_tapWritten: rate(tw, (l) => l.seen), seen_other: rate(seen.filter((l) => !l.tapWritten), (l) => l.seen),
   alone_all: rate(seen, (l) => l.instances.some((x) => x.alone)), aloneStrict_all: rate(seen, (l) => l.instances.some((x) => x.aloneStrict)),
   visible_all: rate(seen, (l) => l.instances.some((x) => x.visible)), near_all: rate(seen, (l) => l.instances.some((x) => x.near)),
