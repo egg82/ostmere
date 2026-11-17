@@ -873,7 +873,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .stage { position: relative; flex: 1 1 0; min-height: 0; height: auto; display: flex; flex-direction: column; }
   .stage > .scene-head { padding: .6rem 1.75rem 0; }   /* above the art, never on it: its text in line with the aim's and the strip's */
   .scene-box { position: relative; inset: auto; flex: 1 1 0; min-height: 0; align-items: center; padding: 1rem; }
-  .scene-head:not(:has(.chip, .camp:not([hidden]), .new-dot, .sound-button)) { display: none; }   /* an empty row stays off the art, but never a dotted feature or the speaker */
+  .scene-head:not(:has(.chip, .camp:not([hidden]), .sound-button, .new-dot)) { display: none; }   /* an empty row stays off the art, but never a dotted feature or the speaker */
   .left > .aim { padding: .6rem 1.75rem 0; }   /* over the art's column, its text in line with the strip's */
   .left > .strip { flex: none; padding: .55rem 1.75rem .65rem; }
   .end-dock { position: absolute; left: auto; right: 1rem; bottom: 1rem; width: calc(var(--panel-w) - 2rem); padding-bottom: 1.4rem; box-shadow: 0 .8rem 2rem rgba(0, 0, 0, .6); }
