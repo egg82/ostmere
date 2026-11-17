@@ -20,7 +20,7 @@ def served() -> tuple[Content, dict[str, list[int]]]:
     return Game(o, ruleset(o, load_renames(), "dev", 1)).content(), stops
 
 
-STAKES = {"field_track": "track_laid", "sew_wraps": "wraps_sewn"}
+STAKES = {"field_track": "track_laid", "sew_wraps": "wraps_sewn", "stack_windbreak": "windbreak"}
 """Each card with the stake reach, by its hands' id, and the store it fills (its town copies fill the same)."""
 
 

@@ -2042,6 +2042,7 @@
   "smoke_catch": null,
   "smoke_roots": null,
   "spar": null,
+  "stack_windbreak": null,
   "stand_up": 3,
   "stew": null,
   "stone_ring": null,
@@ -2217,6 +2218,7 @@
   "smoke_catch": "smoke",
   "smoke_roots": "smoke",
   "spar": "hands",
+  "stack_windbreak": "hands",
   "stand_up": "hands",
   "stew": "hands",
   "stone_ring": "hands",
@@ -2392,6 +2394,7 @@
   "smoke_catch": true,
   "smoke_roots": true,
   "spar": true,
+  "stack_windbreak": false,
   "stand_up": false,
   "stew": true,
   "stone_ring": true,
@@ -2434,7 +2437,7 @@
   445716000000,
   668736000000
  ],
- "digest": "2539af9ad1830a456bdcaca73a00413b65fa1c453023b4464d4bea0e72763b93",
+ "digest": "1fc38a4856b0ce6fb8ea91533315c3a77372b3d2ea4f19ebdfe708500848f42f",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -2655,6 +2658,7 @@
    "smoke_catch",
    "smoke_roots",
    "spar",
+   "stack_windbreak",
    "stand_up",
    "stew",
    "stone_ring",
@@ -3642,6 +3646,7 @@
    "wattle",
    "wind_left",
    "wind_torn",
+   "windbreak",
    "wire",
    "wraps_sewn",
    "z1_clock"
@@ -4631,6 +4636,12 @@
    "t_wet_hollow",
    "t_wind",
    "t_wind_rises",
+   "t_windbreak",
+   "t_windbreak_1",
+   "t_windbreak_2",
+   "t_windbreak_3",
+   "t_windbreak_4",
+   "t_windbreak_5",
    "t_wire_1",
    "t_wire_2",
    "t_wire_3",
@@ -33511,6 +33522,184 @@
     }
    ]
   },
+  "t_windbreak": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "stack_windbreak",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "windbreak",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "store"
+     }
+    }
+   ]
+  },
+  "t_windbreak_1": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "windbreak_1",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_windbreak_2": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "windbreak_2",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_windbreak_3": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "windbreak_3",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_windbreak_4": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "windbreak_4",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_windbreak_5": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "windbreak_5",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_wire_1": {
    "@": "Outcome",
    "lines": [
@@ -34035,7 +34224,7 @@
    "unlocks": []
   }
  },
- "release": 74,
+ "release": 75,
  "renames": [
   {
    "from": "t_stock_open",
@@ -34683,6 +34872,7 @@
   "wattle": 86400000,
   "wind_left": 604800000,
   "wind_torn": 64800000,
+  "windbreak": 28800000000,
   "wire": 10800000,
   "wraps_sewn": 144000000,
   "z1_clock": 3456000000

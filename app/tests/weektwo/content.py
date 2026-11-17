@@ -36,9 +36,9 @@ FIFTEEN = Landings(
      "T3": ("t_walls",), "B14": ("t_b14",)}, {}, {}, {})
 LAST_NIGHT, HUNT_BEAR, BEAR_SIGN = CardId("sit_last_night"), CardId("hunt_bear"), StoreId("bear_sign")
 CUT_STAKES = CardId("cut_stakes")
-ORDER_STORES = ("stakes", "roof_ash", "cord", "pelt", "wind_torn", "stones", "tallow")
+ORDER_STORES = ("stakes", "roof_ash", "cord", "pelt", "wind_torn", "stones", "tallow", "dry_wood")
 """The stores whose content order cards a route that takes rules sets once offered: the builds', the two chips', the
-old man's cord and the lamps'."""
+old man's cord, the lamps' and the windbreak's."""
 ORDER_STORES_FIFTEEN = ("ashed_ground", "ripe", "rime")
 """Day fifteen's besides (the hall's is on stakes): her sowing, her reaping and her covers."""
 ASKS_EIGHT = ((OfferId("o_posts"), AnswerId("o_posts_cord")),)

@@ -726,6 +726,16 @@
       "wounds": []
     },
     {
+      "card": "stack_windbreak",
+      "makes": [
+        "windbreak"
+      ],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "make_bay2",
       "makes": [
         "bay2"
@@ -2024,6 +2034,12 @@
     {
       "store": "dawn_6",
       "made_by": []
+    },
+    {
+      "store": "windbreak",
+      "made_by": [
+        "stack_windbreak"
+      ]
     },
     {
       "store": "day_6",

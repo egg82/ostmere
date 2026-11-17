@@ -62,6 +62,66 @@ line_keys = ["l_stones_1", "l_stones_2", "l_stones_done"]
 [cards.finished]
 modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "add_bp", amount_bp = 5000, source = "hearth_stones" }]
 
+# ---------- the dry wood's sink past the fire ----------
+
+# The track's shape, a reach stake (issue #40), as day_six.toml's sew_wraps: the stone's dry wood outruns the fire, the
+# watches and the stews, so each run stacks some into a windbreak, and each reach of wood stacked takes a tenth off
+# what the cold takes of warmth. Run by its order card from 12 dry wood (the store's first cap, the most a rising order
+# card may wait for), above every build's and chore's take (the largest is 10), so those are served first and it
+# stacks only the surplus; a small lot leaves the fire 8. A tap as short as the stone's keeps the hands' time it costs
+# small (sew_wraps: a long tap moved the routes' track share). Its cap is the last reach, above what the stone's
+# surplus stacks by day fifteen's end. Opened with the stone, so its rule is set before the surplus starts.
+[[triggers]]
+id = "t_windbreak"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "arcana", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "stack_windbreak" }, { unlock_kind = "store", id = "windbreak" }] }
+
+[[cards]]
+id = "stack_windbreak"
+presentation = "action"
+label_key = "c_stack_windbreak"
+upside_key = "up_stack_windbreak"
+stake = "reach"
+work_s = 20
+inputs = [{ store = "dry_wood", items = 4 }]
+outcome = { stores = [{ store = "windbreak", items = 4 }] }
+
+[[stores]]
+id = "windbreak"
+label_key = "store_windbreak"
+cap_items = 8000
+
+[[order_cards]]
+store = "dry_wood"
+tap_card = "stack_windbreak"
+when = { test = "at_least", subject_kind = "store", id = "dry_wood", value = 12, release = 12 }
+offered_after = { unlock_kind = "card", id = "stack_windbreak" }
+
+[[triggers]]
+id = "t_windbreak_1"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 200 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "windbreak_1" }] }
+
+[[triggers]]
+id = "t_windbreak_2"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 800 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "windbreak_2" }] }
+
+[[triggers]]
+id = "t_windbreak_3"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 2000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "windbreak_3" }] }
+
+[[triggers]]
+id = "t_windbreak_4"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 4000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "windbreak_4" }] }
+
+[[triggers]]
+id = "t_windbreak_5"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 8000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "windbreak_5" }] }
+
 # ---------- Arcana's levels ----------
 
 # Each pay aims at another lane; speed levels pay the skill's own cards a tenth faster. The stone's card is on the
@@ -553,6 +613,9 @@ c_hand_on_stone = "Dry damp wood at the stone"
 l_stone_first = "a palm on the hearth's stone, a wet stick in the other. it dries."
 c_hearth_stones = "Heat stones for the pot"
 up_hearth_stones = "{pct} stew from the pot"
+c_stack_windbreak = "Stack dry wood into a windbreak"
+up_stack_windbreak = "{pct} warmth lost to the cold at each reach of the windbreak"
+store_windbreak = "windbreak"
 l_stones_1 = "you lift hot stones off the hearth with a doubled cloth."
 l_stones_2 = "more stones round the pot. nobody holds one long."
 l_stones_done = "clay into the gaps. the ring is left to dry."
