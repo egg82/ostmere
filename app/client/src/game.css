@@ -993,8 +993,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 /* The town (ui/townstrip.ts): under the hands strip one block per person present: their time as a bar of
    the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
    .hands, .hands-label, .lane-bar, .card-fill; new: the person block and its segments. */
-/* the Town tab: its title and the stopped note share the first row; the town's people and lanes, then a phone's ledger and skills,
-   span it below */
+/* the Town tab: its title, then the town's people and lanes, then a phone's ledger and skills,
+   below it, across the row */
 .town-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem 1rem; }
 .town-tab > .lane-rows, .town-tab .town, .town-tab .town > .hands-body { display: contents; }
 .town-tab > :not(.view-title, .lane-rows), .town-tab .lane-rows > :not(.town), .town-tab .town-people { grid-column: 1 / -1; }

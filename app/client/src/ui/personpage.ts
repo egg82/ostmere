@@ -135,7 +135,7 @@ export class PersonPage {
       b.addEventListener("click", () => { tapFeedback(); actions.openRules(target); });
       this.rules.append(b);
     };
-    if (own.length === 0) add(catalog.text.get(UI.laneChange), { lane, rule: null });
+    if (own.length === 0 && !this.joined(view)) add(catalog.text.get(UI.laneChange), { lane, rule: null });
     if (!rulesFull(catalog, view)) add(`+ ${catalog.text.get(UI.ruleNew)}`, { newFor: lane });
   }
 }

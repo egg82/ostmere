@@ -69,6 +69,20 @@ const CHOP = 4;
   expect("the page stays open", page.hidden, false);
 }
 
+{  // a person with no task rule: before the join their page offers Change (it sets the lane's task); once joined it does not, their split is the bar
+  const noRules = (v: View): View => {
+    const keep = v.orders.map((o) => o.then.kind !== "tap_card");
+    return { ...v, orders: v.orders.filter((_, i) => keep[i]), orders_on: v.orders_on.filter((_, i) => keep[i]), order_states: v.order_states.filter((_, i) => keep[i]), order_guards: v.order_guards.filter((_, i) => keep[i]), order_doing: v.order_doing.filter((_, i) => keep[i]) };
+  };
+  const labels = (page: FakeEl): string[] => texts(page.querySelectorAll(".person-rules > button"));
+  const before = rig(noRules(ruled));
+  before.root.querySelector(".lane-change")?.click();
+  expect("before the join: Change sets the lane's task", labels(before.page).includes("Change"), true);
+  const joined = rig(noRules(townStep("town").view));
+  joined.root.querySelectorAll(".person-change")[0]!.click();
+  expect("joined: no second Change, the rule button stays", [labels(joined.page).includes("Change"), labels(joined.page).some((t) => t.includes("New rule"))], [false, true]);
+}
+
 {  // the dot on a joined person's Change clears once their page is opened
   const both = townStep("town").view;
   const { root, ctx } = rig(both);
