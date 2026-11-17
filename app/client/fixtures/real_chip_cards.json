@@ -963,6 +963,16 @@
       "wounds": []
     },
     {
+      "card": "sew_wraps",
+      "makes": [
+        "wraps_sewn"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "sit_fire_7",
       "makes": [],
       "takes": [],
@@ -2080,6 +2090,12 @@
     {
       "store": "pelt_6h",
       "made_by": []
+    },
+    {
+      "store": "wraps_sewn",
+      "made_by": [
+        "sew_wraps"
+      ]
     },
     {
       "store": "day_7",

@@ -2034,6 +2034,7 @@
   "search_coat": 1,
   "set_snare": 3,
   "set_snare_4": 1,
+  "sew_wraps": null,
   "sit_fire_7": 1,
   "sit_last_night": 1,
   "sit_up": 1,
@@ -2208,6 +2209,7 @@
   "search_coat": "hands",
   "set_snare": "hands",
   "set_snare_4": "hands",
+  "sew_wraps": "hands",
   "sit_fire_7": "hands",
   "sit_last_night": "hands",
   "sit_up": "hands",
@@ -2382,6 +2384,7 @@
   "search_coat": false,
   "set_snare": false,
   "set_snare_4": false,
+  "sew_wraps": false,
   "sit_fire_7": false,
   "sit_last_night": false,
   "sit_up": false,
@@ -2431,7 +2434,7 @@
   445716000000,
   668736000000
  ],
- "digest": "c41029e9d2fe0090d3d1905bc96470a9a21200f8cc1f9b4394b3b29725a418cb",
+ "digest": "66fa2b66ad6ff28de3a65c568e4f18b03ec96df6c336ca4dea288d8d5923ce3f",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -2644,6 +2647,7 @@
    "search_coat",
    "set_snare",
    "set_snare_4",
+   "sew_wraps",
    "sit_fire_7",
    "sit_last_night",
    "sit_up",
@@ -3639,6 +3643,7 @@
    "wind_left",
    "wind_torn",
    "wire",
+   "wraps_sewn",
    "z1_clock"
   ],
   "subject": [
@@ -4628,6 +4633,12 @@
    "t_wire_2",
    "t_wire_3",
    "t_woodcutting_2",
+   "t_wraps",
+   "t_wraps_1",
+   "t_wraps_2",
+   "t_wraps_3",
+   "t_wraps_4",
+   "t_wraps_5",
    "to_camp_10",
    "to_camp_11",
    "to_camp_12",
@@ -33518,6 +33529,184 @@
    "stores": [],
    "unlocks": []
   },
+  "t_wraps": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "sew_wraps",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "wraps_sewn",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "store"
+     }
+    }
+   ]
+  },
+  "t_wraps_1": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "wraps_1",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_wraps_2": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "wraps_2",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_wraps_3": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "wraps_3",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_wraps_4": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "wraps_4",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
+  "t_wraps_5": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 9000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "wraps_5",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "chill",
+      "store": "warmth"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "to_camp_10": {
    "@": "Outcome",
    "lines": [],
@@ -33794,7 +33983,7 @@
    "unlocks": []
   }
  },
- "release": 72,
+ "release": 73,
  "renames": [
   {
    "from": "t_stock_open",
@@ -34443,6 +34632,7 @@
   "wind_left": 604800000,
   "wind_torn": 64800000,
   "wire": 10800000,
+  "wraps_sewn": 144000000,
   "z1_clock": 3456000000
  }
 }

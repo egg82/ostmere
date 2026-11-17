@@ -8,12 +8,12 @@ beats typical (pace_scale 1): B14 day 15.31, target_day 16
   away V67->V68: 1 ['trigger t_b14']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      12       5       0       4       0      14       3     38
+  1      12       5       0       5       0      15       3     40
   2      19       6       2       2       0       5       2     36
   3      13       1       0       0       0       2       3     19
-  4       6       0       0       0       0       0       3      9
-  5      15       5       0       0       0      37       1     58
+  4       5       0       1       0       0       0       2      8
+  5      16       5       0       0       0      37       2     60
   6      20       5       1       2       0       6       2     36
   7       3       2       0       0       0       8       1     14
-  8       9       3       0       2       0       3       2     19
-  9      12       1       2       3       0      13       2     33
+  8       9       3       0       2       0       3       1     18
+  9      12       1       2       3       0      13       1     32

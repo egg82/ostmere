@@ -38,8 +38,8 @@ beats sharp (pace_scale 1): B12 day 9.95, target_day 13
   away V120->V121: 1 ['trigger t_s4']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1       9       7       0       4       0      14       2     36
-  2      30       5       2       2       0       7       3     49
+  1       8       7       0       4       0      14       2     35
+  2      31       5       2       2       0       7       3     50
   3      21       4       0       0       0      36       3     64
   4      20       5       0       0       0       5       2     32
   5       0       2       0       2       0       9       0     13

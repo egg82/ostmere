@@ -55,13 +55,10 @@ TRACK_ROOTS_GAP = ("content gap: roots lose over half their making away from the
                    "them faster than field_track takes them at the share its other inputs allow (issue #40)")
 STONE_DRY_GAP = ("content gap: dry_wood loses over half its making away from the chapter's end; hand_on_stone fills it, "
                  "and only the fire, the watches and the stews take dry wood (issue #40)")
-HUNT_PELT_GAP = ("content gap: pelt loses over half its making 24 h away from day twelve's end; hunt_wolf fills it, and "
-                 "no pelt sink is in reach (hide_flaps and pelt_bedding are built, hall waits on beams) "
-                 "(issue #40)")
 """The cap-loss content gaps held as strict xfails, one reason per store over the chapters it fails in; each goes red
 once its sink lands."""
 PART_STEPS = 1
-PARTS = {"eight": 13, "nine": 7, "eleven": 8, "twelve": 12, "fifteen": 12}
+PARTS = {"eight": 13, "nine": 7, "eleven": 7, "twelve": 12, "fifteen": 13}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
 each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
 than its parts hold fails `decided_in`."""

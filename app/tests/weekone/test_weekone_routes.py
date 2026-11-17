@@ -74,12 +74,9 @@ def test_a_chapters_visit_readout_is_reported(week_counts: Counts, chapter: str,
 
 STONE_DRY = ("content gap: dry_wood loses over half its making 24 h away from day four's end; hand_on_stone fills it, "
              "and over the absence only the fire and n4_watch take dry wood (issue #40)")
-HUNT_PELT = ("content gap: pelt loses over half its making 24 h away from day six's end; hunt_wolf fills it, and no "
-             "sink takes pelt once pelt_bedding is built (issue #40)")
 
 
-@pytest.mark.parametrize("chapter", [pytest.param("four", marks=pytest.mark.xfail(strict=True, reason=STONE_DRY)), "five",
-                                     pytest.param("six", marks=pytest.mark.xfail(strict=True, reason=HUNT_PELT))])
+@pytest.mark.parametrize("chapter", [pytest.param("four", marks=pytest.mark.xfail(strict=True, reason=STONE_DRY)), "five", "six"])
 def test_no_gathered_store_loses_over_half_its_making_away_from_the_chapters_end(week_checks: Checks, chapter: str):
     _, loss = week_checks
     assert loss[chapter] == {}

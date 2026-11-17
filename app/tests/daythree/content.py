@@ -69,12 +69,12 @@ def keeps() -> tuple[Keep, ...]:
     return tuple(Keep(CardId(card), StoreId(store), max(floor, need(rules3(), StoreId(store)))) for card, store, floor in KEPT)
 
 
-def order_cards(op: Opening) -> tuple[tuple[Unlock, Order], ...]:
-    """The chapter's order cards that tap a card once offered, as the page fills them in (opening/convert.py)."""
+def order_cards(op: Opening, stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order], ...]:
+    """The chapter's order cards on `stores` that tap a card once offered, as the page fills them in (opening/convert.py)."""
     cards = {c.id for c in op.cards}
     out: list[tuple[Unlock, Order]] = []
     for oc in op.order_cards:
-        if oc.store in ORDER_STORES and oc.tap_card is not None and oc.offered_after is not None:
+        if oc.store in stores and oc.tap_card is not None and oc.offered_after is not None:
             after = Unlock(UnlockKind(oc.offered_after.unlock_kind), oc.offered_after.id)
             out.append((after, Order(condition(oc.when, cards), TapCard(CardId(oc.tap_card)))))
     return tuple(out)

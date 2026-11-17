@@ -51,9 +51,14 @@ def test_the_bears_hunts_end_with_their_pool(twelve_route: Route):
     assert all(getattr(c, "card", None) != w2.HUNT_BEAR for c in base.components)
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.TRACK_STONES_GAP + "; " + verdicts.HUNT_PELT_GAP)
+@pytest.mark.xfail(strict=True, reason="; ".join((verdicts.TRACK_STONES_GAP, verdicts.TRACK_ROOTS_GAP, verdicts.STONE_DRY_GAP)))
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_twelves_end(twelve_loss: dict[str, tuple[int, ...]]):
     assert twelve_loss == {}
+
+
+def test_pelt_loses_at_most_half_its_making_away_from_day_twelves_end(twelve_loss: dict[str, tuple[int, ...]]):
+    """The store the check above passes for (sew_wraps takes the hunts' surplus), held while the others are gaps."""
+    assert "pelt" not in twelve_loss
 
 
 def test_every_chip_shown_in_day_twelve_has_a_cure(twelve_cures: list[str]):
