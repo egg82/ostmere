@@ -227,9 +227,10 @@ def _ready_events(save: Save, rules: Rules) -> list[Event]:
 
 def _cardless_waits(save: Save, rules: Rules) -> bool:
     """A verb with no card could act: a true order's AnswerOffer or AnswerKind that can act, or, while no order's mix
-    runs, a controlling queue entry's AnswerOffer that can act."""
+    above Next runs, a controlling queue entry's AnswerOffer that can act (DESIGN.txt, "Next's row")."""
     if any(rule_on(latch) and isinstance(o.then, (AnswerOffer, AnswerKind)) and acting(save, rules, o.then) is not None
            for o, latch in zip(save.orders, save.latches)):
         return True
-    queued = live_queue_verb(save, rules) if mix_order(save, rules) is None else None
+    running = mix_order(save, rules)
+    queued = live_queue_verb(save, rules) if running is None or save.orders[running].below_next else None
     return isinstance(queued, AnswerOffer) and acting(save, rules, queued) is not None

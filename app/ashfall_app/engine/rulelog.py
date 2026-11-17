@@ -1,7 +1,7 @@
 """Rule starts and let-gos: an order's `when` latch turning true (it comes on) or false (it lets go) across one instant
 or one decision (DESIGN.txt, "Rule changes"; a guard pausing it is not one: "RULE GUARDS"), and an order the game
-removed (DESIGN.txt, "Retired chores", "Logged"). Orders have no id, so a change names the order itself, matched
-across the two saves by equality: a reorder keeps it, an edit makes it another order."""
+removed (DESIGN.txt, "Retired chores", "Logged"). Orders have no id, so a change names the order itself, unplaced, matched
+across the two saves by equality: a reorder or a move past Next keeps it, an edit makes it another order."""
 from dataclasses import dataclass
 from enum import Enum
 
@@ -11,7 +11,7 @@ from .ids import CardId, StoreId
 from .index import index
 from .lanes import TapCard
 from .mixes import SwitchMix, flatten_shares
-from .orders import AfterTime, Order, QueueEntry, StoreValue, pruned, when_latch
+from .orders import AfterTime, Order, QueueEntry, StoreValue, pruned, unplaced, when_latch
 from .plan import controlling_entry
 from .rules import Rules
 from .state import Save
@@ -51,7 +51,7 @@ def rule_changes(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, .
         return ()
     retired = _retired_cards(before, after, rules)
     latched = tuple(RuleChange(after.time, o, when_latch(on), _level(after, rules, o), None, _rule_levels(after, rules, o))
-                    for o, on in zip(after.orders, after.latches) if when_latch(on) != _was_on(before, o, retired))
+                    for o, on in zip(map(unplaced, after.orders), after.latches) if when_latch(on) != _was_on(before, o, retired))
     return latched + _ended(before, after, rules) + _stints(before, after, rules)
 
 
@@ -100,7 +100,8 @@ def _stint_order(entry: QueueEntry) -> Order:
 
 def _ended(before: Save, after: Save, rules: Rules) -> tuple[RuleChange, ...]:
     retired = _retired_cards(before, after, rules)
-    gone = [o for o in dict.fromkeys(before.orders) if _kept(o, retired) not in after.orders]
+    kept = tuple(map(unplaced, after.orders))
+    gone = [o for o in dict.fromkeys(map(unplaced, before.orders)) if _kept(o, retired) not in kept]
     if not gone:
         return ()
     went = left_lanes(after) - left_lanes(before)
@@ -127,7 +128,7 @@ def _kept(order: Order, retired: frozenset[CardId]) -> Order | None:
 
 
 def _was_on(save: Save, order: Order, retired: frozenset[CardId]) -> bool:
-    return next((when_latch(on) for o, on in zip(save.orders, save.latches)
+    return next((when_latch(on) for o, on in zip(map(unplaced, save.orders), save.latches)
                  if order in (o, _kept(o, retired))), False)
 
 
