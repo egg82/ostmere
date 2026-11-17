@@ -22,8 +22,9 @@ const TOUCHES = ["click", "keydown"] as const;
 export interface Arrivals {
   arrive(node: HTMLElement, kind: ArrivalKind, id: string, holdMs?: number): void;
   /** A one-off change on `node` (a ring, a burst, the glow): `run` now, or at its turn after what is waiting; with a
-   * `link`, at its turn in the step's cascade. */
-  effect(node: HTMLElement, kind: ArrivalKind, run: () => void, link?: Link): void;
+   * `link`, at its turn in the step's cascade; `tap`, it is a tap's completion (the ladder's `tap` rung), which makes the
+   * cascade one a tap started. */
+  effect(node: HTMLElement, kind: ArrivalKind, run: () => void, link?: Link, tap?: boolean): void;
   /** A story line: first in its batch, holding what follows for `readMs`. */
   line(nodes: HTMLElement[], id: string, readMs: number): void;
   /** Something is waiting its turn. */
@@ -44,6 +45,8 @@ export class Reveal implements Arrivals {
   private readonly links = new ArrivalQueue<Held>(LINK_PACE);
   /** A live step's draw is under way and its links join one chain; what they are, sent so far. */
   private chain: Held[] | null = null;
+  /** The last cascade begun was set off by a tap: one of its links is a tap's completion. */
+  tapStarted = false;
   private collecting = false;
   private listening = false;
   private readonly skip = (e?: Event): void => {
@@ -57,8 +60,9 @@ export class Reveal implements Arrivals {
     return this.collecting || !this.queue.quiet(performance.now());
   }
 
-  effect(node: HTMLElement, kind: ArrivalKind, run: () => void, link?: Link): void {
+  effect(node: HTMLElement, kind: ArrivalKind, run: () => void, link?: Link, tap = false): void {
     if (!this.busy && link && this.chain) {
+      if (tap) this.tapStarted = true;
       const held: Held = { node, run };
       this.chain.push(held);
       this.links.push(kind, `link:${this.chain.length}`, LINKS.indexOf(link), held);
@@ -99,6 +103,7 @@ export class Reveal implements Arrivals {
   /** A live step with no batch is being drawn: its links make one cascade, set off at start(). */
   cascade(): void {
     this.chain = [];
+    this.tapStarted = false;
   }
 
   /** The batch is drawn: begin showing it (the first thing at once), and the cascade's links. */

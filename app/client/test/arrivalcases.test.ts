@@ -29,7 +29,7 @@ for (const c of cases.away_lines) {
     ...fixtureContent,
     chip_infos: c.chips.map((ch) => ({ ...fixtureContent.chip_infos[0]!, chip: ch.chip, on_line_key: ch.on, off_line_key: ch.off })),
   });
-  const lines: LogLine[] = c.lines.map(([key, card], i) => ({ at: 3000 + i, seq: 0, key, card }));
+  const lines: LogLine[] = c.lines.map(([key, card], i) => ({ at: 3000 + i, seq: 0, key, card, opens_beat: false }));
   const view: View = { ...base, chips: c.shown, cards: c.cards.map(cardView) };
   const prev: View = { ...base, cards: c.cards_before.map(cardView) };
   expect(c.name, awayLines(catalog, lines, view, prev), c.expect);

@@ -175,6 +175,10 @@ ENDPOINTS
   as that time (ui.when.*), never as an amount. A key is written in one place or by one skill's levels; any other
   sharing fails the content's load. The page words a cause under its line in the chronicle and never parses a line's
   words for one.
+  Beat lines: LogLine.opens_beat is true on a story beat's first line (a beat of content/beats.yaml, weekly and season
+  turns included) and false on every other line: side layers, mini-stories, people's and daily lines. The content authors
+  it in `[beat_lines]`, a beat's id to the first-line key of each way it can be told, each a story line opening one beat
+  only; the page never takes a beat from a key or a line's words. The end's first line is Content.end_line_keys[0].
   AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
   game of the account; the page then starts no lesson and shows no hint that only a lesson gives (a guided offer is its
   one tap), and on again, each save's lessons go on from what it keeps. A PUT replaces the settings whole.

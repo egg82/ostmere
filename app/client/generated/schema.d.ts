@@ -1523,6 +1523,8 @@ export interface components {
             key: string;
             /** Card */
             card: string | null;
+            /** Opens Beat */
+            opens_beat: boolean;
         };
         /**
          * Mark

@@ -73,7 +73,7 @@ const MIX: Mix = {
 };
 
 function lines(at: number, ...keys: string[]): LogLine[] {
-  return keys.map((key, seq) => ({ at, seq, key, card: null }));
+  return keys.map((key, seq) => ({ at, seq, key, card: null, opens_beat: false }));
 }
 
 const still = (at: number, value = 0) => ({ start: at, start_value: value, rate: 0, limit: null });

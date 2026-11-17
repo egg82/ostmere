@@ -636,6 +636,12 @@ after = { unlock_kind = "feature", id = "drift" }
 
 # ---------- text ----------
 
+# The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
+# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+[beat_lines]
+B8 = ["l_b8_1"]
+B9 = ["l_b9_1"]
+
 [line_kinds]
 l_ring_scored = "story"
 l_stage_1 = "story"

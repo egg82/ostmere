@@ -37,3 +37,15 @@ def check_line_kinds(o: "Opening") -> None:
     """Fails, naming the key, for a log line with no kind."""
     for key in sorted(set(line_keys(o)) - o.line_kinds.keys()):
         fail(f"line {key}", "has no kind in [line_kinds]")
+    check_beat_lines(o)
+
+
+def check_beat_lines(o: "Opening") -> None:
+    """Fails for a beat's first line that is no story line, or one that opens two beats."""
+    known, seen = set(line_keys(o)), {}
+    for beat, keys in o.beat_lines.items():
+        for key in keys:
+            if key not in known or o.line_kinds.get(key) != "story":
+                fail(f"beat {beat}", f"first line {key} is not a story line")
+            if seen.setdefault(key, beat) != beat:
+                fail(f"beat {beat}", f"first line {key} also opens {seen[key]}")

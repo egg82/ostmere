@@ -17,7 +17,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 
 const catalog = new Catalog(fixtureContent);
 const text = (key: string): string => catalog.text.get(key);
-const line = (key: string, seq: number): LogLine => ({ at: 100 + seq, seq, key, card: null });
+const line = (key: string, seq: number): LogLine => ({ at: 100 + seq, seq, key, card: null, opens_beat: false });
 
 const screen = new Screen(catalog, () => undefined, () => Promise.resolve(null), new Keeps());
 document.body.replaceChildren(screen.root);

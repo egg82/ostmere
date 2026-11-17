@@ -30,7 +30,7 @@ const offered = dayTwoStep("offered", 100);
 const answered = dayTwoStep("answered", 100).view;
 const one = asksStep("asksone", 100).view;
 const many = asksStep("asksmany", 100).view;
-const LINE: LogLine = { at: 100, seq: 0, key: "line.offer", card: null };
+const LINE: LogLine = { at: 100, seq: 0, key: "line.offer", card: null, opens_beat: false };
 const settle = (): Promise<void> => new Promise((done) => setTimeout(done, 0));
 
 /** The list drawn for `lines` as the Step's lines, with what was sent to the arrival queue. */

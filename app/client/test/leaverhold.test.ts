@@ -49,7 +49,7 @@ const people = (screen: Screen): string[] => [...screen.root.querySelectorAll(".
 }
 {
   const screen = rig();
-  screen.show(left([{ at: before.view.at + 10, seq: 0, key: "line.1", card: null }]));
+  screen.show(left([{ at: before.view.at + 10, seq: 0, key: "line.1", card: null, opens_beat: false }]));
   expect("the moment's line is still waiting: the person stays", people(screen), ["Helper", "Mason"]);
   fakeDocument.body.dispatchEvent(new FakeEvent("keydown", { key: "Escape" }));
   expect("the lines dismissed: the person goes", people(screen), ["Helper"]);

@@ -13,7 +13,7 @@ function check(ok: boolean, what: string): void {
 }
 
 const TAP: Decision = { kind: "tap_card", card: "stand" };
-const line = (at: number): LogLine => ({ at, seq: 0, key: `line.${at}`, card: null });
+const line = (at: number): LogLine => ({ at, seq: 0, key: `line.${at}`, card: null, opens_beat: false });
 const slice = (at: number, to: number | null, decisions = 0): Step =>
   ({ ...fixtureStep("standing", at, {}, decisions), save_id: 7, lines: [line(at)], catching_up_to: to });
 const save = { save_id: 7, number: 1, decisions: 0, game_time: 0, ended_at: null, started_at: "2026-10-17T09:00:00Z", played_at: "2026-10-17T09:00:00Z", camp_level: 0 };

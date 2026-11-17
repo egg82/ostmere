@@ -43,7 +43,7 @@ const ONE = ["came.one.a", "came.one.b"];
   expect("and which comes first is shuffled, not fixed", orders.size, 2);
 }
 
-const line = (key: string, at: number, seq = 0): LogLine => ({ at, seq, key, card: null });
+const line = (key: string, at: number, seq = 0): LogLine => ({ at, seq, key, card: null, opens_beat: false });
 
 function returned(lines: LogLine[], now: number): Screen {
   const keeps = new Keeps({ save: { ...NEW_SAVE, visits: [{ left: 1100, back: 1700 }], chapter: null } });
