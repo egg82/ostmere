@@ -3,7 +3,7 @@
 // side; every set_orders keeps the rules under Next a run to the end. A rule under Next that waits says so.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
-import type { Decision, Order, QueueEntry, RuleRun, View } from "../src/api/types";
+import type { Decision, QueueEntry, RuleRun, View } from "../src/api/types";
 import { NEXT, nextItems, placeItems, reorderedItems, steppedItems, unplacedKey } from "../src/game/nextrow";
 import { moveRule, setRule } from "../src/game/orders";
 import { RulesTab } from "../src/ui/rules";
@@ -80,7 +80,7 @@ expect("swap across the line keeps the line", flags(moveRule(under(base, 1), 0, 
 // Lately: a rule_run's order is served without the row, and still finds its rule under Next.
 {
   const view = under(base, 0);
-  const run = { order: { ...view.orders[2]!, below_next: false } as Order, starts: 1, on_at: 5, off_at: null, level: null, off_level: null, ended: null } as unknown as RuleRun;
+  const run: RuleRun = { order: { ...view.orders[2]!, below_next: false }, starts: 1, on_at: 5, on_level: null, off_at: null, off_level: null, ended: null, made: [] };
   expect("matched unplaced", shownRuns(view, [run]).length, 1);
   expect("the key drops only the row", unplacedKey(view.orders[2]!) === unplacedKey({ ...view.orders[2]!, below_next: false }), true);
 }

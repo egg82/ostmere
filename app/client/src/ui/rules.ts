@@ -10,24 +10,24 @@
 // Once a second person has hands, a switch at the top, Mine | Camp (ruleswitch.ts), shows one side at a time
 // (game/ruleside.ts), kept per device (app/ruleside.ts); it follows a rule the player adds or opens.
 import type { Condition, Decision, View } from "../api/types";
-import { mixRules, moveRule, pointSlot, removeRule, reorderRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
+import { mixRules, pointSlot, removeRule, rulesFull, type RuleSlot as Slot } from "../game/orders";
 import { UI } from "../game/text";
 import { actionsOf, ruleActions } from "../game/guardwords";
-import { Slider, shiftOf } from "./ruleslide";
+import { Slider } from "./ruleslide";
 import { noteOrderRemoved, noteRuleChanged } from "../telemetry";
 import { ConditionEditor } from "./condition";
 import { el, tapFeedback } from "./dom";
 import { LaneEditor } from "./laneedit";
 import type { RuleSide } from "../game/ruleside";
-import { townRules } from "../game/town";
 import { browserSide, type SideKept } from "../app/ruleside";
 import { condButton } from "./rulecond";
-import { ruleMenu } from "./rulemenu";
+import { ruleHandle, ruleMenu } from "./rulemenu";
 import { shape } from "./ruleshape";
 import { RuleSides, sideSwitch } from "./ruleswitch";
 import { whoChoices, whoPicker, type Who } from "./rulewho";
-import { nextRows } from "./nextlist";
-import { NEXT, itemShift, nextItems, placeItems, reorderedItems, steppedItems } from "../game/nextrow";
+import { nextHead, nextRows } from "./nextlist";
+import { NEXT, nextItems, reorderedItems, steppedItems } from "../game/nextrow";
+import { handsGroup, itemsMoved, itemsOf } from "./handsitems";
 import { NextOrder } from "./nextorder";
 import { StintPlan } from "./stintplan";
 import type { Part, PartContext, RuleTarget } from "./part";
@@ -71,7 +71,7 @@ export class RulesTab implements Part {
     this.plan = new StintPlan(ctx, () => this.draw());
     this.drag = new RuleDrag({
       root: this.root, view: () => this.view, group: (view, rule) => this.itemsOf(view, rule),
-      dropped: (what, target) => this.dropped(this.view!, what.rule, Number(target.dataset.rule)),
+      dropped: (what, target) => this.sendItems(this.view!, what.rule, reorderedItems(this.itemsOf(this.view!, what.rule), what.rule, Number(target.dataset.rule))),
       ended: () => { this.pressing = false; this.draw(); },
     });
     this.order = new NextOrder(ctx, this.root, () => this.view, () => { this.pressing = false; this.draw(); });
@@ -124,52 +124,16 @@ export class RulesTab implements Part {
     if (!this.drag.active && this.view && this.mode.kind !== "edit" && this.shape(this.view) !== this.drawn) this.draw();
   }
 
-  /** The rules drawn together with rule `index`, in order: the town's rules, or the hands' (none when it is neither). */
-  private groupOf(view: View, index: number): number[] {
-    const town = townRules(this.ctx.catalog, view);
-    const group = town.includes(index) ? town : mixRules(view).filter((i) => !town.includes(i));
-    return group.includes(index) ? group : [];
-  }
-
-  /** The hands' rules, those not the town's, in order. */
-  private handsGroup(view: View): number[] {
-    const town = townRules(this.ctx.catalog, view);
-    return mixRules(view).filter((i) => !town.includes(i));
-  }
-
-  /** Next's row is drawn: the queue or Plan has a line, or the player moved the row off the bottom. */
-  private nextDrawn(view: View, items: readonly number[]): boolean {
-    return view.queue.length > 0 || this.plan.rows(view).length > 0 || items[items.length - 1] !== NEXT;
-  }
-
-  /** The rows moved together with `index` (a rule's, or NEXT), in order: the hands' rules with Next's row among them
-   * while it is drawn, or the town's rules; none when it is neither. */
+  /** The rows moved with `index` (ui/handsitems.ts). */
   private itemsOf(view: View, index: number): number[] {
-    const hands = this.handsGroup(view);
-    if (index !== NEXT && !hands.includes(index)) return this.groupOf(view, index);
-    const items = nextItems(view, hands);
-    const drawn = this.nextDrawn(view, items) ? items : hands;
-    return drawn.includes(index) ? drawn : [];
+    return itemsOf(this.ctx.catalog, view, index, view.queue.length > 0 || this.plan.rows(view).length > 0);
   }
 
-  /** `items`, the hands' rows, are now `moved`: the decision (rules into their new slots, the rules after Next under
-   * it), its slide, and where `item` lands (its row's index after the redraw). */
-  private sendItems(view: View, moved: number[] | null, item: number): number | null {
-    if (moved === null) return null;
-    const hands = this.handsGroup(view);
-    const decision = placeItems(view, hands, moved);
-    if (decision === null) return null;
-    this.send(decision, itemShift(hands, moved));
-    return item === NEXT ? NEXT : hands[moved.filter((i) => i !== NEXT).indexOf(item)]!;
-  }
-
-  private dropped(view: View, rule: number, target: number): void {
-    const items = this.itemsOf(view, rule);
-    if (rule !== NEXT && !this.handsGroup(view).includes(rule)) {
-      this.send(reorderRule(view, rule, target, items), shiftOf(items, rule, target));
-      return;
-    }
-    this.sendItems(view, reorderedItems(items, rule, target), rule);
+  /** The rows moved with `item` now `moved`, sent; where `item`'s row lands, or null when nothing moved. */
+  private sendItems(view: View, item: number, moved: number[] | null): number | null {
+    const m = itemsMoved(this.ctx.catalog, view, item, moved);
+    if (m) this.send(m.decision, m.shift);
+    return m ? m.lands : null;
   }
 
   private shape(view: View): string {
@@ -213,36 +177,14 @@ export class RulesTab implements Part {
   /** The hands' rules, one row each, and Next's rows where its row sits (the town's are drawn under its heading,
    * ruletown.ts). */
   private handsRows(view: View): HTMLElement[] {
-    const items = nextItems(view, this.handsGroup(view));
-    const kept = items[items.length - 1] !== NEXT;
-    return items.flatMap((i) => (i === NEXT ? nextRows(this.ctx, view, this.plan, this.order, this.nextHead(view), kept)
+    const head = nextHead(this.ctx.catalog, this.itemsOf(view, NEXT), this.menu === NEXT, () => this.handle(view, NEXT, UI.ruleNextHandle), (step) => this.move(view, NEXT, step));
+    return nextItems(view, handsGroup(this.ctx.catalog, view)).flatMap((i) => (i === NEXT ? nextRows(this.ctx, view, this.plan, this.order, head)
       : this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view.orders[i]!), view.orders[i]!.or_else.length > 0)], false)));
   }
 
-  /** Next's row's ≡ (moved as a rule's is, never removed; the gap while no rule is there to move past) and its menu. */
-  private nextHead(view: View): { handle: HTMLElement; under: HTMLElement[] } {
-    const items = this.itemsOf(view, NEXT);
-    if (items.length < 2) return { handle: el("span", "rule-handle-gap"), under: [] };
-    const handle = this.handle(view, NEXT, UI.ruleNextHandle);
-    if (this.menu !== NEXT) return { handle, under: [] };
-    const first = items[0] === NEXT, last = items[items.length - 1] === NEXT;
-    return { handle, under: [ruleMenu(this.ctx.catalog, { first, last, move: (step) => this.move(view, NEXT, step) })] };
-  }
-
-  /** The ≡ of row `index` (a rule's, or NEXT): tap for its menu, arrow keys move it, drag to reorder. */
+  /** The ≡ of row `index` (a rule's, or NEXT), draggable. */
   private handle(view: View, index: number, label: string): HTMLButtonElement {
-    const handle = el("button", "rule-handle", "≡");
-    handle.type = "button";
-    handle.dataset.rule = String(index);
-    handle.setAttribute("aria-label", this.ctx.catalog.text.get(label));
-    handle.setAttribute("aria-expanded", String(this.menu === index));
-    handle.addEventListener("click", () => { tapFeedback(); this.menu = this.menu === index ? null : index; this.draw(); });
-    handle.addEventListener("keydown", (e) => {
-      const step = e.key === "ArrowUp" ? -1 : e.key === "ArrowDown" ? 1 : 0;
-      if (step === 0) return;
-      e.preventDefault();
-      this.move(view, index, step);
-    });
+    const handle = ruleHandle(this.ctx.catalog.text.get(label), index, this.menu === index, () => { this.menu = this.menu === index ? null : index; this.draw(); }, (step) => this.move(view, index, step));
     this.drag.attach(handle, () => ({ rule: index }));
     return handle;
   }
@@ -260,7 +202,7 @@ export class RulesTab implements Part {
    * menu under it when open. The town's rules are drawn so too, `town` marking which mix is running. */
   private ruleRow(view: View, index: number, body: HTMLElement[], town: boolean): HTMLElement[] {
     const { catalog } = this.ctx;
-    const group = town ? this.groupOf(view, index) : this.itemsOf(view, index);
+    const group = this.itemsOf(view, index);
     const first = group[0] === index, last = group[group.length - 1] === index;
     const on = town ? view.town_mix_order : view.mix_order;
     const row = el("div", town ? "rules-row town-rule" : "rules-row");
@@ -281,20 +223,10 @@ export class RulesTab implements Part {
   /** Row `index` (a rule's, or NEXT) one place up or down; its handle keeps the focus, and its menu stays open if it
    * was, where it lands. */
   private move(view: View, index: number, step: -1 | 1): void {
-    if (index === NEXT || this.handsGroup(view).includes(index)) {
-      const to = this.sendItems(view, steppedItems(this.itemsOf(view, index), index, step), index);
-      if (to === null) return;
-      this.focus = to;
-      if (this.menu === index) this.menu = to;
-      return;
-    }
-    const group = this.groupOf(view, index);
-    const d = moveRule(view, index, step, group);
-    const to = group[group.indexOf(index) + step];
-    if (!d || to === undefined) return;
+    const to = this.sendItems(view, index, steppedItems(this.itemsOf(view, index), index, step));
+    if (to === null) return;
     this.focus = to;
     if (this.menu === index) this.menu = to;
-    this.send(d, shiftOf(group, index, to));
   }
 
   /** A rule's condition: the button of rulecond.ts, opening the lane's task editor or the condition editor. */

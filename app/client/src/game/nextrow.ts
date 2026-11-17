@@ -23,15 +23,14 @@ export function nextItems(view: View, group: readonly number[]): number[] {
   return at < 0 ? [...group, NEXT] : [...group.slice(0, at), NEXT, ...group.slice(at)];
 }
 
-/** The rules of `items` (NEXT among them) put into the slots of `group` in that order, the rules after NEXT under it;
- * the rules outside the group keep their places. Null when nothing changes. */
-export function placeItems(view: View, group: readonly number[], items: readonly number[]): Decision | null {
+/** The rules of `items` put into the slots of `group` in that order, the rules outside the group keeping their places:
+ * with NEXT among them, the rules after it are under Next; without (the town's rules), Next keeps its slot. */
+export function placeItems(view: View, group: readonly number[], items: readonly number[]): Decision {
   const rules = items.filter((i) => i !== NEXT);
   const slot = new Map(group.map((g, n) => [g, view.orders[rules[n]!]!]));
   const above = items.indexOf(NEXT);
-  const at = above < 0 || above >= group.length ? view.orders.length : group[above]!;
-  const orders = withNextAt(view.orders.map((o, i) => slot.get(i) ?? o), at);
-  return JSON.stringify(orders) === JSON.stringify(withNextAt(view.orders, nextUnder(view.orders))) ? null : { kind: "set_orders", orders };
+  const at = above < 0 ? nextUnder(view.orders) : above >= group.length ? view.orders.length : group[above]!;
+  return { kind: "set_orders", orders: withNextAt(view.orders.map((o, i) => slot.get(i) ?? o), at) };
 }
 
 /** `items` with `item` (a rule's index or NEXT) one place up (-1) or down (+1); null at an end. */
