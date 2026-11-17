@@ -652,6 +652,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .cond-heading { margin: 0 !important; overflow-wrap: anywhere; }
 .cond-mixes > .card-list { flex: 1 1 100%; }   /* the lane editor's tasks, drawn as cards (ui/cardpick.ts) */
 .card.pick .card-tap[aria-pressed="true"] { box-shadow: inset 0 0 0 1px var(--ink-dim); }
+.card.pick { flex-direction: column; }   /* a kept bonus's line sits under the tap, as .card.fighting seats it */
 .card.pick .card-head { padding-right: 0; }
 .cond-mixes, .cond-stores, .cond-tests { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
 :is(.sheet, .rules) .cond-store, :is(.sheet, .rules) .cond-subject, :is(.sheet, .rules) .cond-mix, :is(.sheet, .rules) .cond-task, :is(.sheet, .rules) .cond-test, :is(.sheet, .rules) :is(.cond-form, .cond-preset) { min-height: 2.75rem; padding: 0 .8rem; display: inline-flex; align-items: center; gap: .5rem;
