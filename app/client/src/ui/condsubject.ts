@@ -24,9 +24,11 @@ export function subjectRows(catalog: Catalog, view: View, choices: { levels: Sub
     return b;
   };
   const head = (key: string, rules: SubjectRule[]) => (rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rules.map(button)]);
-  const tasks = sectioned(catalog, choices.tasks, (r) => (r.kind === "count" ? r.card : null), view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
-  return [...head(UI.ruleLevels, choices.levels), ...(tasks.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleTasks)), ...tasks]),
-    ...head(UI.ruleRunning, choices.running ?? [])];
+  const cards = (key: string, rules: SubjectRule[]) => {   // under its head, by section as the Tasks page has them, each by name
+    const rows = sectioned(catalog, rules, (r) => (r.kind === "count" || r.kind === "running" ? r.card : null), view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
+    return rows.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rows];
+  };
+  return [...head(UI.ruleLevels, choices.levels), ...cards(UI.ruleTasks, choices.tasks), ...cards(UI.ruleRunning, choices.running ?? [])];
 }
 
 /** Pressed on the subject button that is `rule`'s. */
