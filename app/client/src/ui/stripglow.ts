@@ -11,14 +11,14 @@ export class StripGlow {
   /** Each of `nodes` first in the queue, in the strip, held for its reading time (a null, or a node not in the strip, is
    * skipped: a return's chip or task line, game/awaylines.ts). `id` gives each a queue id. On a return the first is held
    * READING.returnFirst times longer and the strip glows for that hold. */
-  lead(arrivals: Arrivals, nodes: Array<HTMLElement | null>, returned: boolean, id: () => string): void {
+  lead(arrivals: Arrivals, nodes: Array<HTMLElement | null>, returned: boolean, id: () => string, opens: readonly boolean[] = []): void {
     let first = returned;
-    for (const shown of nodes) {
+    for (const [i, shown] of nodes.entries()) {
       if (!shown?.isConnected) continue;
       const hold = readingMs(shown.textContent ?? "", first);
       if (first) this.light(performance.now(), hold);
       first = false;
-      arrivals.line([shown], id(), hold);
+      arrivals.line([shown], id(), hold, opens[i] ? "beat" : undefined);
     }
   }
 

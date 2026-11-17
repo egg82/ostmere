@@ -100,6 +100,7 @@ export class RulesTab implements Part {
   open(view: View, rule: RuleTarget, offered?: Condition): void {
     this.view = view;
     this.menu = null;
+    if (rule !== null && typeof rule === "object" && "newFor" in rule) { this.sides.follow(view, "camp"); this.openNew(view, "camp", { lane: rule.newFor }); return; }
     if (rule !== null && typeof rule === "object") { this.openLane(view, rule.lane, rule.rule); return; }
     if (typeof rule === "number") this.sides.follow(view, rule);
     if (rule === "new") this.cond.openNew(view, offered);

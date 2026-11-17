@@ -26,7 +26,7 @@ function harness(slices: Step[], decide: (after: number) => Step) {
   let i = 0;
   const next = (): Step => { const s = slices[i++]; if (!s) throw new Error("no more slices"); return s; };
   const unused = () => Promise.reject(new Error("not in these tests"));
-  const api: GameApi = {
+  const api: GameApi = { mixRows: () => Promise.reject(new Error("not in these tests")),
     content: () => Promise.resolve(fixtureContent),
     me: unused, begin: unused,
     open: () => { calls.push("open"); return Promise.resolve({ save, was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: next() }); },

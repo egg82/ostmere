@@ -28,7 +28,7 @@ from ..db import saves as rows
 from ..db import unit
 from ..db.journal import Seen
 from . import games as held
-from . import journal_write, write
+from . import journal_write, mixbest, write
 from .games import info
 from .interface import (
     MAX_SAVES, Behind, DecisionsLimited, Games, Info, Invalid, LastSave, NotFound, Opened, PastLine, Played, Ruleset,
@@ -191,6 +191,14 @@ class PgSaves:
         except e.InvalidVerbError as ex:
             raise Invalid(str(ex)) from ex
         return save
+
+    def mix_best(self, account_id: int, save_id: int) -> tuple[mixbest.Best, ...]:
+        """The save's kept earlier best per goal (mixbest.py), as last written."""
+        with unit.read(self._engine) as conn:
+            row = rows.save(conn, save_id, account_id)
+        if row is None:
+            raise NotFound(f"save {save_id}")
+        return mixbest.from_json(row.mix_best)
 
     def stored(self, account_id: int, save_id: int) -> e.Save:
         with unit.read(self._engine) as conn:

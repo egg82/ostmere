@@ -18,6 +18,6 @@ export interface WhenPicks {
 export function draftWhenRow(catalog: Catalog, view: View, full: boolean, draft: Draft | null, pick: WhenPicks): HTMLElement[] {
   const editing = draft?.index === null || draft?.subject ? null : draft?.rule.store ?? null;
   const offer = whenChoices(catalog, view, full, ruleCards(view, draft?.then ?? null), editing);
-  const subjects = full ? subjectRows(catalog, view, subjectChoices(catalog, view, draft?.then ?? null), pick.subject) : [];
+  const subjects = full ? subjectRows(catalog, view, subjectChoices(catalog, view, draft ? [draft.then, ...draft.orElse] : []), pick.subject) : [];
   return draft?.chip === true ? [] : whenRow(catalog, offer.chips, offer.stores, pick.chip, pick.store, subjects);
 }

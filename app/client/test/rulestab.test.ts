@@ -41,7 +41,7 @@ function context(decided: Decision[], opened: (number | null)[], newMix: (number
   return {
     catalog,
     actions: {
-      decide: (d: Decision) => decided.push(d), dryRun: () => Promise.resolve(null), editMix: () => undefined,
+      decide: (d: Decision) => decided.push(d), dryRun: () => Promise.resolve(null), mixRows: () => Promise.resolve(null), editMix: () => undefined,
       newMix: (r: number | null) => newMix.push(r), openSelector: () => undefined, openRules: (r: number | null) => opened.push(r),
       orderSent: () => undefined, highlight: () => undefined,
     },

@@ -6,14 +6,14 @@
 import type { Card, View } from "../api/types";
 import { sectioned } from "../game/cardsections";
 import { ruledLaneOf } from "../game/lanes";
-import { taskRules } from "../game/orders";
+import { rulesFull, taskRules } from "../game/orders";
 import { UI } from "../game/text";
 import { people } from "../game/town";
 import { pickRow } from "./cardpick";
 import { sectionHead } from "./condrows";
 import { el, revealBelow, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
-import type { PartContext } from "./part";
+import type { PartContext, RuleTarget } from "./part";
 import { condButton } from "./rulecond";
 import { taskRow } from "./rulelanes";
 import { TownEditor } from "./townedit";
@@ -104,11 +104,13 @@ export class PersonPage {
     const own = taskRules(view).filter((i) => ruledLaneOf(catalog, view.orders[i]!) === lane);
     const opens = { lane: (l: string, rule: number) => actions.openRules({ lane: l, rule }), edit: (rule: number) => actions.openRules(rule) };
     this.rules.replaceChildren(...own.map((i) => taskRow(this.ctx, view, i, (rule) => condButton(this.ctx, view, rule, opens))));
-    if (own.length === 0) {
-      const add = el("button", "quiet", catalog.text.get(UI.laneChange));
-      add.type = "button";
-      add.addEventListener("click", () => { tapFeedback(); actions.openRules({ lane, rule: null }); });
-      this.rules.append(add);
-    }
+    const add = (label: string, target: RuleTarget): void => {
+      const b = el("button", "quiet", label);
+      b.type = "button";
+      b.addEventListener("click", () => { tapFeedback(); actions.openRules(target); });
+      this.rules.append(b);
+    };
+    if (own.length === 0) add(catalog.text.get(UI.laneChange), { lane, rule: null });
+    if (!rulesFull(catalog, view)) add(`+ ${catalog.text.get(UI.ruleNew)}`, { newFor: lane });
   }
 }

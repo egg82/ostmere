@@ -97,10 +97,10 @@ export function createPlayer(deps: PlayerDeps): Player {
         ramp(1);
       }
     },
-    play(name, pitch = 1) {
+    play(name, pitch = 1, delayMs = 0) {
       try {
         const buffer = buffers.get(name);
-        if (silent || !ctx || !master || buffer === undefined) return;
+        if (silent || !ctx || !master || buffer === undefined) return () => undefined;
         const slot = slots[name];
         const gain = ctx.createGain();
         gain.gain.value = slot.gain;
@@ -109,8 +109,17 @@ export function createPlayer(deps: PlayerDeps): Player {
         src.buffer = buffer;
         src.playbackRate.value = slot.pitch * pitch;
         src.connect(gain);
-        src.start();
+        src.start(ctx.currentTime + delayMs / 1000);
+        const c = ctx;
+        return () => {
+          try {
+            gain.gain.cancelScheduledValues(c.currentTime);
+            gain.gain.setValueAtTime(gain.gain.value, c.currentTime);
+            gain.gain.linearRampToValueAtTime(0, c.currentTime + CUT_MS / 1000);
+          } catch { /* already gone */ }
+        };
       } catch { /* a sound must never break the tap that asked for it */ }
+      return () => undefined;
     },
   };
 }

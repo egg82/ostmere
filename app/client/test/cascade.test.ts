@@ -157,7 +157,7 @@ console.log("cascade: ok");
   r.start(0);
   expect("no tap's link: not a tap's cascade", r.tapStarted, false);
   r.cascade();
-  r.effect(node(), "card", () => undefined, "finish", true);
+  r.effect(node(), "card", () => undefined, "finish", "tap");
   r.effect(node(), "store", () => undefined, "store");
   r.start(0);
   expect("a tap's completion started it", r.tapStarted, true);

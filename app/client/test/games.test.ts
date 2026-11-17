@@ -25,7 +25,7 @@ function rig(begin: () => Promise<NewSave> = no) {
   const games = fixtureGames();
   const calls: string[] = [];
   const api: GameApi = {
-    content: no, me: no, begin: () => { calls.push("begin"); return begin(); }, open: no, savedView: no, advance: no, forecast: no, decide: no, dryRun: no, putMePresentation: no, putMeSettings: no, putSavePresentation: no,
+    content: no, me: no, begin: () => { calls.push("begin"); return begin(); }, open: no, savedView: no, advance: no, forecast: no, mixRows: no, decide: no, dryRun: no, putMePresentation: no, putMeSettings: no, putSavePresentation: no,
     sendFeedback: no, makeCode: no, makeWords: no, join: no, devices: no, removeDevice: no,
     games: () => { calls.push("games"); return games.games(); },
     deleteGame: (id) => { calls.push(`delete ${id}`); return games.deleteGame(id); },

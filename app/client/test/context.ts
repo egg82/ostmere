@@ -29,11 +29,11 @@ export interface Recorded {
 
 export function testContext(glow = new Glow(), catalog = new Catalog(fixtureContent)): { ctx: PartContext; got: Recorded } {
   const got: Recorded = { decided: [], sent: [], opened: [], edited: [], feedback: [], lit: [] };
-  const arrivals: Arrivals = { arrive: () => undefined, effect: (_node, _kind, run) => run(), line: () => undefined, busy: false };
+  const arrivals: Arrivals = { arrive: () => undefined, effect: (_node, _kind, run) => run(false), line: () => undefined, busy: false };
   const ctx: PartContext = {
     catalog,
     actions: {
-      decide: (d) => { got.decided.push(d); }, dryRun: () => Promise.resolve(null), editMix: (id) => { got.edited.push(id); },
+      decide: (d) => { got.decided.push(d); }, dryRun: () => Promise.resolve(null), mixRows: () => Promise.resolve(null), editMix: (id) => { got.edited.push(id); },
       newMix: () => undefined, openSelector: () => undefined, openRules: (rule) => { got.opened.push(rule); },
       orderSent: (node) => { got.sent.push(node); }, highlight: (cards) => { got.lit.push(cards); },
       sendFeedback: (text) => { got.feedback.push(text); return Promise.resolve(true); },

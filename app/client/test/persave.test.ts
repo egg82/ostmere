@@ -57,7 +57,7 @@ const mixLine = catalog.text.get("ui.lesson.mix_offer");
   const none = (): Promise<never> => Promise.reject(new Error("not in this test"));
   let older = false;   // an older pod's open answers no presentation
   const api: GameApi = {
-    content: () => Promise.resolve(fixtureContent), me: none, savedView: none, advance: none, forecast: none, decide: none, dryRun: none,
+    content: () => Promise.resolve(fixtureContent), me: none, savedView: none, advance: none, forecast: none, mixRows: none, decide: none, dryRun: none,
     open: () => Promise.resolve<Opened>(older ? JSON.parse(JSON.stringify({ save, was: step.view, history: [], step })) : { save, was: step.view, history: [], presentation: ALL_KEPT, step }),
     begin: () => Promise.resolve<NewSave>({ save: { ...save, save_id: 4, number: 2 }, presentation: NEW_SAVE, step: { ...step, save_id: 4 } }),
     putMePresentation: none, putMeSettings: none, putSavePresentation: (_id, p) => Promise.resolve(p), sendFeedback: none, makeCode: none,

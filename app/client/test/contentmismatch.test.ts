@@ -16,7 +16,7 @@ const none = (): void => undefined;
 
 function apiOf(content: () => Promise<Content>, open: () => Promise<unknown>): GameApi {
   return {
-    content, open, me: unused, begin: unused, savedView: unused, advance: unused, forecast: unused, decide: unused, dryRun: unused,
+    content, open, me: unused, begin: unused, savedView: unused, advance: unused, forecast: unused, mixRows: unused, decide: unused, dryRun: unused,
     putMePresentation: unused, putMeSettings: unused, putSavePresentation: unused, sendFeedback: unused, makeCode: unused, makeWords: unused, games: unused, deleteGame: unused,
     restoreGame: unused, join: unused, devices: unused, removeDevice: unused,
   } as GameApi;

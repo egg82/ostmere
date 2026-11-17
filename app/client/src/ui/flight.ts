@@ -3,6 +3,7 @@
 // copy waiting, the target only pulses. The flight answers the player's own tap, so it goes at once; the target's
 // pulse is an arrival like any other and takes its turn behind a line (reveal.ts).
 import { reducedMotion } from "./dom";
+import { sing } from "../audio/cues";
 import { play } from "./ladder";
 import { markNew } from "./fresh";
 import type { Arrivals } from "./reveal";
@@ -52,7 +53,7 @@ export class Flight {
   }
 
   private arrive(target: HTMLElement): void {
-    this.arrivals.effect(target, "feature", () => play(target, "first"));
+    this.arrivals.effect(target, "feature", () => { play(target, "first", true); sing("settle"); });
   }
 
   private drop(): void {

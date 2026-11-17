@@ -68,6 +68,9 @@ ENDPOINTS
                                       save has had another decision since). A tap_card of a card that is not ready
                                       is a failed tap: it takes no time, changes nothing and emits no line, and
                                       Step.failed_tap names the card (null on every other Step).
+  POST /api/saves/{save_id}/mix-rows  MixRows {at, rows, best} (MIX ROWS below): each of the player's own saved mixes
+                                      as if it ran from now, and the earlier best per goal. Writes nothing; 409
+                                      catching_up while the save is still behind.
   POST /api/saves/{save_id}/forecast  ForecastAnswer {decisions, forecast}: the save advanced to now and what lands
                                       from there if the player changes nothing (FORECAST below).
   POST /api/saves/{save_id}/dry-run   DryRunRequest {decisions} -> View: what the save would show after these
@@ -1684,3 +1687,15 @@ SPENT
                                     ui.mix.running_now            the label of the split that runs now
                                     ui.mix.from {pct} {card}      a receiving card's gain, naming its source
                                     ui.mix.waiting {card}         a stopped card's part of the split that runs now
+
+MIX ROWS (POST /api/saves/{save_id}/mix-rows)
+  The Mixes list's numbers: separate per mix, never one score. rows: one MixRow per saved mix of the player's own (a
+  town mix and a greyed one have none), in saved order: goals (the View.goal_rows rows under that mix, as if it
+  were switched to now), nets (each ledger store's net per hour, rate units, unclamped) and runs_out_at (View.runs_out_at
+  under it, null: indefinitely). best: the player's own earlier best per goal, from MixBest {goal, mix_id, lands_at,
+  saved_at}: when a mix is saved (a save_mix decision) each open goal it lands is projected, at the rates as set then,
+  and a goal's entry is replaced only by a strictly earlier landing (a tie stays with the earlier mix). mix_id is the
+  name the mix had when saved; editing or deleting that mix later does not change the entry. `goal` is the goal's
+  key: kind, store, skill and target joined with '|' (empty for a null). The page words it "earlier", never as a
+  verdict, and computes no rate or time. Kept on the save's row (saves.mix_best), so it survives every save round
+  trip; a save written before it has none.

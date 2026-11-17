@@ -13,6 +13,7 @@ from ashfall_app.db import accounts as a
 from ashfall_app.db import handsfree as hf
 from ashfall_app.db import reminders as r
 from ashfall_app.db import saves as s
+from ashfall_app.db import savewrite as sw
 from ashfall_app.db.engine import open_database
 from tests.db.test_reminders import waiting_on_a_lock
 from tests.kills import kills
@@ -68,10 +69,10 @@ def test_keep_after_a_decision_was_written_keeps_nothing(engine: Engine):
 def test_a_write_with_a_decision_drops_the_kept_answer_and_an_advance_keeps_it(engine: Engine):
     save, _ = kept_save(engine)
     with engine.begin() as conn:
-        s.write(conn, save, T0, replace(WRITTEN, game_time=1500))
+        sw.write(conn, save, T0, replace(WRITTEN, game_time=1500))
     assert only(engine).at == AT
     with engine.begin() as conn:
-        s.write(conn, save, T0, replace(WRITTEN, game_time=1600, decisions=2))
+        sw.write(conn, save, T0, replace(WRITTEN, game_time=1600, decisions=2))
     found = only(engine)
     assert (found.at, found.wall, found.until) == (None, None, None) and found.stale(T0)
 
@@ -101,7 +102,7 @@ def test_a_claim_marks_the_instant_once(engine: Engine):
 def test_nothing_to_claim_once_the_save_was_written_at_or_past_the_instant(engine: Engine):
     save, _ = kept_save(engine)
     with engine.begin() as conn:
-        s.write(conn, save, T0, replace(WRITTEN, game_time=AT))
+        sw.write(conn, save, T0, replace(WRITTEN, game_time=AT))
         assert not hf.claim(conn, save, AT)
 
 
