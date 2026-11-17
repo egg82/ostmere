@@ -2098,6 +2098,11 @@ export interface components {
              */
             lines_touched: components["schemas"]["Id"][];
             /**
+             * Lane Tasks Seen
+             * @default []
+             */
+            lane_tasks_seen: components["schemas"]["Id"][];
+            /**
              * Lessons
              * @default []
              */

@@ -11,6 +11,7 @@ import { type Leaver, leaversOf, withLeavers } from "../game/leaving";
 import { people } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
+import { markNew, unmark } from "./fresh";
 import type { Part, PartContext } from "./part";
 import { drawBar, drawWho, personRow, type PersonRow } from "./personrow";
 import { TownEditor } from "./townedit";
@@ -21,6 +22,7 @@ export class LaneRows implements Part {
   readonly town: TownEditor;
   private readonly strip: TownStrip;
   private readonly rows = new Map<string, PersonRow>();
+  private readonly changes = new Map<string, HTMLElement>();
   /** What is drawn: the view with the people who are leaving still in it. */
   private view: View | null = null;
   /** The view as the game has it: what Change and the town editor work on. */
@@ -57,6 +59,7 @@ export class LaneRows implements Part {
     this.town.update(raw);
     for (const bar of ruledLanes(catalog, view).filter((b) => !joined.includes(b.lane))) {
       drawWho(this.ctx, this.rows.get(bar.lane) ?? this.add(bar.lane), bar.lane, catalog.laneLabel(bar.lane, view), bar.running_card);
+      this.dot(view, bar.lane);
     }
     this.tick(view.at);
   }
@@ -71,6 +74,15 @@ export class LaneRows implements Part {
     }
   }
 
+  /** The quiet dot on Change while a task of the lane has not been in front of the player; the editor's opening keeps them. */
+  private dot(view: View, lane: string): void {
+    const change = this.changes.get(lane);
+    if (!change) return;
+    const tasks = view.cards.filter((c) => this.ctx.catalog.laneOf(c.card) === lane).map((c) => c.card);
+    if (tasks.some((c) => !this.ctx.keeps.laneTaskSeen(c))) markNew(change, () => this.ctx.keeps.keepLaneTasksSeen(tasks));
+    else unmark(change);
+  }
+
   private add(lane: string): PersonRow {
     const row = personRow("lane-row", lane);
     const change = el("button", "hands-edit lane-change", this.ctx.catalog.text.get(UI.laneChange));
@@ -80,6 +92,7 @@ export class LaneRows implements Part {
       tapFeedback();
       this.ctx.actions.openRules({ lane, rule: changeTarget(this.ctx.catalog, this.view, lane) });
     });
+    this.changes.set(lane, change);
     row.node.insertBefore(change, row.track);
     this.root.append(row.node);
     this.rows.set(lane, row);

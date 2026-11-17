@@ -51,8 +51,8 @@ export function upsideWords(catalog: Catalog, card: Card): string | null {
   return catalog.text.fill(info.upside_key, card.share_bp > 0 ? catalog.format.figuresAt(info, card.share_bp) : catalog.format.figures(info.change_bp));
 }
 
-/** A new row for `card`: its nodes, wired to tap it. */
-export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row {
+/** A new row for `card`: its nodes, wired to tap it, or to `onTap` (a choice among cards: no When ready, no fight). */
+export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTap?: () => void): Row {
   const { catalog } = ctx;
   const info = catalog.cards.get(card.card);
   const node = el("div", `card card-${info?.presentation ?? "action"} hue-${catalog.rank(card.card) % 6}`);
@@ -81,10 +81,12 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card): Row
   tap.append(row.needs.root, track, row.foot);
   tap.addEventListener("click", () => {
     tapFeedback();
-    ctx.actions.decide({ kind: "tap_card", card: card.card });
+    if (onTap) onTap();
+    else ctx.actions.decide({ kind: "tap_card", card: card.card });
   });
   pressable(tap, node);
-  if (row.fight) seatFight(node, tap, row.ready, row.fight, row.bonus);
+  if (onTap) node.append(tap);
+  else if (row.fight) seatFight(node, tap, row.ready, row.fight, row.bonus);
   else if (row.bonus) seatFight(node, tap, row.ready, null, row.bonus);
   else node.append(tap, row.ready);
   return row;

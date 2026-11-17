@@ -66,8 +66,8 @@ function saved(view: View, rule: number | null, card: string): { orders: Order[]
   const root = mounted(tab.root);
   tab.update(view);
   tab.open(view, { lane: "helper", rule });
-  const tasks = root.querySelectorAll(".cond-task").map((b) => b.dataset.card ?? "");
-  root.querySelector(`.cond-task[data-card="${card}"]`)?.click();
+  const tasks = root.querySelectorAll(".pick").map((b) => b.dataset.card ?? "");
+  root.querySelectorAll(".pick").find((b) => b.dataset.card === card)?.querySelector(".card-tap")?.click();
   root.querySelector(".cond-actions .primary")?.click();
   return { orders: sentOrders(got.decided[0]), tasks };
 }
