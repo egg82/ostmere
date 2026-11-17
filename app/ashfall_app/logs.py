@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from types import TracebackType
 from typing import Any, final
 
-_QUIET = ("urllib3", "httpx", "httpcore", "asyncio")   # their own lines carry URLs: warnings only
+_QUIET = ("urllib3", "httpx", "httpx2", "httpcore", "asyncio")   # their own lines carry URLs: warnings only
 _MAX = 300
 # The probes, not worth a line each: the app's, and the web pods'.
 _BARE = ("/healthz", "/webz")

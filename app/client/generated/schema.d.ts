@@ -1986,8 +1986,9 @@ export interface components {
          *     came on. `ended` "stint" is a goal stint that popped at its goal (CONTRACT.txt, "Rule runs"): `order` is
          *     {when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to
          *     control), off_at when its goal landed; "dry" is one the game handed back because its card ran out of input: the same,
-         *     off_at when it did. `made`, on an ended stint only: what the save gained, from on_at to off_at,
-         *     in the stores its mix's cards make, the goal's store first, then the largest, at most two; [] otherwise.
+         *     off_at when it did. `made`, on an ended stint and on a rule whose `then` switches a mix, once it
+         *     has let go: what the save gained, from on_at to off_at, in the stores its mix's cards make, the goal's store
+         *     first, then the largest, at most two; [] otherwise.
          */
         RuleRun: {
             order: components["schemas"]["Order"];

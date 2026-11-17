@@ -36,6 +36,7 @@ from .saves.ruleset import ruleset
 from .saves.service import PgSaves
 from .services import Services
 from .web import page
+from .writer.live import build_writer
 
 HERE = Path(__file__).parent
 CHANGES = HERE / "build" / "changes.txt"   # written by CI before the image build (.github/workflows/ci.yml); absent locally
@@ -83,7 +84,7 @@ def wire(database: db.Database | None, rs: Ruleset, clock: Clock) -> Services:
     rs = registered(database.engine, rs)
     key = rate_key()
     accounts = PgAccounts(database.engine, clock, key, join_key(os.environ), max_saves=MAX_SAVES)
-    return Services(accounts=accounts, saves=PgSaves(database.engine, rs, clock))
+    return Services(accounts=accounts, saves=PgSaves(database.engine, rs, clock), writer=build_writer(os.environ))
 
 
 def join_key(env: Mapping[str, str]) -> bytes | None:

@@ -37,3 +37,11 @@ gets the list of states it can fire in, generated from the content's gates and f
 order of a choice and tapping early (not only the scripted path); the writer and the voice pass both see it, and a
 line ships only if it is true in all of them. The easter-egg lines for early taps come last, from the full map of
 what can be tried when.
+
+## The live client
+
+`ANTHROPIC_API_KEY` in the app's environment turns the writer live; without it the locator keeps `NullClient`. The
+model id per job kind, the effort, `max_tokens` and the timeout are `app/ashfall_app/writer/live.json` (`default`
+answers a kind with no entry), so changing a kind's model is a data edit that the blind model test feeds. The call
+does not retry: a timeout, an API error, a refusal, a reply cut off at `max_tokens` and an empty reply each raise,
+and the stand-in plays, because a late line is worth less than the player's wait and the queue's budget counts calls.

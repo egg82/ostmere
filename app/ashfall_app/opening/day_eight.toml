@@ -290,6 +290,7 @@ on_line_key = "l_ash_laden"
 # The roofs coming clear is said once, the first time: the rule clears them every cycle after.
 [[triggers]]
 id = "t_roofs_cleared"
+line_only = true
 when = { test = "at_most", subject_kind = "store", id = "roof_ash", value = 15 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "chip", id = "ash_laden", value = 1 }]
 outcome = { line_keys = ["l_ash_cleared"] }

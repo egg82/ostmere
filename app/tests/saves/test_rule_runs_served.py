@@ -44,7 +44,9 @@ def test_a_rule_that_comes_on_is_kept_and_served_and_an_edit_drops_it(open_saves
     p = decide(open_saves, account, p, clock, e.SaveMix(e.Mix(M0, (e.CardShare(A, e.BP),))))
     p = decide(open_saves, account, p, clock, e.SetOrders((always,)))
     level = e.segment(p.save, open_rs.rules, store).start_value
-    assert p.rule_runs == (RuleRun(always, 1, p.save.time, level),)
+    [run] = p.rule_runs
+    assert run.on_levels, "a running mix-switching rule keeps the levels of its mix's stores from its start, off the wire"
+    assert p.rule_runs == (RuleRun(always, 1, p.save.time, level, on_levels=run.on_levels),)
     clock.tick(600)
     later = open_saves.advance(account, p.save_id)
     assert later.rule_runs == p.rule_runs   # read back off the row: nothing changed since

@@ -16,7 +16,9 @@ import { remindersConfig } from "./app/pageconfig";
 import { browserEnv, pushCap } from "./app/push";
 import { ReminderMention } from "./ui/remindermention";
 import { ReminderRow } from "./ui/reminders";
+import { browserSoundSwitch } from "./audio/mute";
 import { SettingsSheet } from "./ui/settings";
+import { soundControl } from "./ui/soundcontrol";
 import { GamesSheet } from "./ui/games";
 import { Screen } from "./ui/screen";
 
@@ -58,7 +60,7 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
       games?.root.remove();
       games = gamesSheet(api, catalog, session, step.save_id);
       settings?.root.remove();
-      settings = new SettingsSheet(catalog.text, new ReminderRow(catalog.text), browserStraight(), skipLessons(keeps, () => screen?.redraw()));
+      settings = settingsSheet(catalog, screen, keeps);
       screen.foot.append(devices.button, games.button, settings.button);   // beside Feedback, in the panel's last row
       host.append(devices.root, games.root, settings.root);
       catching?.hide();
@@ -142,6 +144,13 @@ function takeDown(...parts: ({ readonly root: HTMLElement } | null)[]): void {
 }
 
 /** The Games sheet of the save this page plays: a switch or a new game plays in place, and the tab keeps its game. */
+/** The Settings sheet, with the speaker button seated on the scene's head when a sound is there to switch. */
+function settingsSheet(catalog: Catalog, screen: Screen, keeps: Keeps): SettingsSheet {
+  const sound = soundControl(catalog.text, browserSoundSwitch());
+  if (sound) screen.root.querySelector(".scene-head")?.append(sound.button);   // the head: ui/story.ts, seated by ui/headseat.ts
+  return new SettingsSheet(catalog.text, new ReminderRow(catalog.text), browserStraight(), skipLessons(keeps, () => screen.redraw()), sound);
+}
+
 function gamesSheet(api: GameApi, catalog: Catalog, session: Session, playing: number): GamesSheet {
   return new GamesSheet(api, catalog.text, {
     playing: () => playing,

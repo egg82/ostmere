@@ -86,6 +86,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.devices.list_heading", "ui.devices.list_lead", "ui.devices.list_this", "ui.devices.list_seen",
     "ui.devices.list_remove", "ui.devices.list_remove_ask", "ui.devices.list_remove_yes", "ui.devices.list_remove_no",
     "ui.settings.open", "ui.settings.heading", "ui.settings.device", "ui.settings.every",
+    "ui.sound.on", "ui.sound.off", "ui.sound.row",
     "ui.games.open", "ui.games.heading", "ui.games.name", "ui.games.unnumbered", "ui.games.camp", "ui.games.dates",
     "ui.games.playing", "ui.games.switch", "ui.games.delete", "ui.games.delete_ask", "ui.games.start_over", "ui.games.start_over_ask", "ui.games.cancel", "ui.games.new",
     "ui.games.full", "ui.games.limited", "ui.games.credits_stains", "ui.games.deleted_heading", "ui.games.kept",

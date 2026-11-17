@@ -1,0 +1,10 @@
+Wrong implementations of the writer's live client (writer/live.py), each planted alone in a scratch copy by
+tools/mutate_suite.py's `live` suite (specs tools/live_mutants/): tests/writer/test_live.py. Each must go red.
+
+ 1 swallowed API error   live.py: an API error status answers the stand-in from inside the client instead of raising
+ 2 swallowed timeout     live.py: a timeout answers the stand-in from inside the client instead of raising
+ 3 empty reply accepted  live.py: a reply with no text is returned as the line
+ 4 literal model         live.py: the model is a literal, not the config's
+ 5 live without a key    live.py: the live client is built when the key is missing
+ 6 key in the log        live.py: the success line carries the API key
+ 7 cut-off line played   live.py: a reply that stopped at max_tokens is returned as the line
