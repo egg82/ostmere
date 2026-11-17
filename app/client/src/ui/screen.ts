@@ -136,7 +136,7 @@ export class Screen {
     this.rules = new RulesTab(ctx);
     this.rulesGlow = new GlowWhile(this.glow, this.tabs.rules);
     this.town = new TownView(catalog, this.hands.lanes, this.tabs.town);
-    this.area.append(this.cards.root, this.town.root, this.rules.root, this.story.book.view, this.editor.root, this.hands.lanes.town.root, this.hands.lanes.page.root);
+    this.area.append(this.cards.root, this.town.root, this.rules.root, this.story.book.view, this.editor.root, this.hands.lanes.page.root);
     this.pinned.append(this.hands.root);
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);

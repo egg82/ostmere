@@ -1,4 +1,4 @@
-// A person's time as the town draws it (townstrip.ts, townedit.ts): a bar split into the cards that hold a share and the
+// A person's time as the town draws it (townstrip.ts): a bar split into the cards that hold a share and the
 // idle rest, each part as wide as its share, and under it a key naming each part with its share, so a narrow part's name
 // is never cut off on a phone.
 import { el } from "./dom";

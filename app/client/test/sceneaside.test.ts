@@ -57,14 +57,14 @@ const tab = (root: FakeEl, name: string): void => one(root, `.tabs [data-tab="${
 }
 {  // the mix editor
   const { root, aside } = fresh();
-  const edit = root.querySelectorAll(".hands-edit").find((b) => !b.classList.contains("town-change") && !b.classList.contains("person-change"));
+  const edit = root.querySelectorAll(".hands-edit").find((b) => !b.classList.contains("person-change"));
   if (!edit) throw new Error("no mix edit");
   edit.click();
   expect("the mix editor: the scene is aside", aside(), true);
   tab(root, "cards");
   expect("Tasks closes it and the scene returns", aside(), false);
 }
-{  // a person's page, and the town editor (camp editing)
+{  // a person's page
   const { root, aside } = fresh();
   tab(root, "town");
   one(root, ".person-change").click();
@@ -72,10 +72,9 @@ const tab = (root: FakeEl, name: string): void => one(root, `.tabs [data-tab="${
   tab(root, "cards");
   expect("Tasks: the scene returns", aside(), false);
   tab(root, "town");
-  one(root, ".town-change").click();
-  expect("the town editor: the scene is aside", aside(), true);
+  one(root, ".person-change").click();
   tab(root, "book");
-  expect("Book keeps the editor's state", aside(), true);
+  expect("Book keeps the page's state", aside(), true);
   tab(root, "cards");
   expect("Tasks: the scene returns", aside(), false);
 }

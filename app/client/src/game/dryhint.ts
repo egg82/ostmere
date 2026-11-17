@@ -7,6 +7,7 @@ import type { Mix, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { holdsCard, runningMix } from "./mix";
 import { editShown } from "./shown";
+import { isTownMix } from "./town";
 
 /** The lesson's subject: the dry store, the mix card stopped on it, and a card in play that makes it. */
 export interface DryCue {
@@ -26,7 +27,7 @@ function makerFor(catalog: Catalog, view: View, mix: Mix, makers: readonly strin
  * could refill; null when none is, or the strip's Edit has not come. */
 export function dryCue(catalog: Catalog, view: View): DryCue | null {
   const mix = runningMix(view);
-  if (mix === null || !editShown(catalog, view)) return null;
+  if (mix === null || !editShown(catalog, view) || anySelfFedMix(catalog, view)) return null;
   const lines = new Map(view.ledger.map((l) => [l.store, l]));
   for (const card of view.cards) {
     if (card.run !== "paused" || card.share_bp === 0 || !catalog.mixable(card.card)) continue;
@@ -40,9 +41,9 @@ export function dryCue(catalog: Catalog, view: View): DryCue | null {
   return null;
 }
 
-/** Some saved mix already holds a card in play and a maker of one of its needs (Need.makers): the save has done what the
- * lesson teaches. */
-export function anySelfFedMix(view: View): boolean {
-  return view.mixes.some((mix) => view.cards.some((c) => holdsCard(mix, c.card)
+/** Some saved hands mix already holds a card in play and a maker of one of its needs (Need.makers): the save has done
+ * what the lesson teaches. A town mix is the town's, never the hands': it does not count. */
+export function anySelfFedMix(catalog: Catalog, view: View): boolean {
+  return view.mixes.filter((m) => !isTownMix(catalog, view, m)).some((mix) => view.cards.some((c) => holdsCard(mix, c.card)
     && c.needs.some((n) => n.makers.some((m) => m !== c.card && holdsCard(mix, m)))));
 }

@@ -5,7 +5,8 @@
 import { fakeDocument, FakeEvent, install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import type { Decision, Order, View } from "../src/api/types";
+import { townStep } from "../fixtures/town";
+import type { Card, Decision, Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { anySelfFedMix, dryCue } from "../src/game/dryhint";
 import { Keeps } from "../src/game/keeps";
@@ -53,8 +54,16 @@ expect("before the first rule's lesson (and no hands rule): it waits", mayStart(
 const handsRule: Order = { when: { kind: "at_most", watched: { kind: "store_value", store: "warmth" }, value: 10, release: 20, value_of_cap: false, release_of_cap: false }, then: { kind: "switch_mix", mix_id: "Stools" }, unless: [], or_else: [], below_next: false };
 expect("a save with a hands rule is past the first rule: it may start", mayStart(lesson, { ...dry, orders: [handsRule], orders_on: [false], order_states: ["waiting"] }, keepsOf({ ...NEW_FLAT, lessons: [FIRST_MIX] })), true);
 const fed = { ...dry, mixes: dry.mixes.map((m) => (m.id === "Stools" ? { ...m, components: [...m.components, { kind: "card_share" as const, card: "gather", share_bp: 5000 }] } : m)) };
-expect("control: no saved mix feeds itself in the fixture", anySelfFedMix(dry), false);
-expect("a saved mix holding stool and gather has done what it teaches", [anySelfFedMix(fed), mayStart(lesson, fed, keepsOf(TAUGHT))], [true, false]);
+expect("control: no saved mix feeds itself in the fixture", anySelfFedMix(catalog, dry), false);
+expect("a saved mix holding stool and gather has done what it teaches: no cue", [anySelfFedMix(catalog, fed), dryCue(catalog, fed)], [true, null]);
+{  // a town mix is the town's, never the hands': one holding a card and its maker does not stand for the hands' mix
+  const town = townStep("town").view;
+  const townFed: View = { ...dry, mixes: [...dry.mixes, ...town.mixes.filter((m) => m.id === "town:main")], cards: [...dry.cards, ...town.cards] };
+  const feeds = (c: Card): Card => ({ ...c, needs: [{ store: "wood", quantity: 1, segment: dry.ledger[0]!.segment, gate: null, makers: ["haul"], spent: false }] });
+  const ruledFed: View = { ...townFed, cards: townFed.cards.map((c) => (c.card === "chop" ? feeds(c) : c)) };
+  expect("control: a town mix holding chop and its maker haul is self-fed in itself", ruledFed.mixes.some((m) => m.id === "town:main"), true);
+  expect("it does not count: the hands' lesson still has its cue", [anySelfFedMix(catalog, ruledFed), dryCue(catalog, ruledFed)?.maker], [false, "gather"]);
+}
 
 function rig(view: View, keeps: Keeps) {
   const decided: Decision[] = [];

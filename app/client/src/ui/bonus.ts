@@ -25,7 +25,7 @@ export class Bonus {
     const same = words === this.words && was === (strength !== null);
     this.words = words;
     this.strength = strength;
-    if (!strength) this.open = false;
+    if (!strength && was) this.open = false;
     if (!same) this.line.replaceChildren(strength ? this.button() : el("span", this.css, words), this.sheet);
     this.fill();
   }

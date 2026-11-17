@@ -51,8 +51,9 @@ export function upsideWords(catalog: Catalog, card: Card): string | null {
   return catalog.text.fill(info.upside_key, card.share_bp > 0 ? catalog.format.figuresAt(info, card.share_bp) : catalog.format.figures(info.change_bp));
 }
 
-/** A new row for `card`: its nodes, wired to tap it, or to `onTap` (a choice among cards: no When ready, no fight). */
-export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTap?: () => void): Row {
+/** A new row for `card`: its nodes, wired to tap it, or to `onTap` (a choice among cards: no When ready, no fight).
+ * `strengthOpen`: the cards whose upside line has its strength sheet open, kept by a page that redraws its rows. */
+export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTap?: () => void, strengthOpen?: Set<string>): Row {
   const { catalog } = ctx;
   const info = catalog.cards.get(card.card);
   const node = el("div", `card card-${info?.presentation ?? "action"} hue-${catalog.rank(card.card) % 6}`);
@@ -72,7 +73,7 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTa
   const words = upsideWords(catalog, card);
   if (words !== null) {
     if (side) {   // beside the tap, never inside the button: a button holds no button
-      row.bonus = new Bonus(catalog, side, "card-upside");
+      row.bonus = new Bonus(catalog, side, "card-upside", (open) => { if (open) strengthOpen?.add(card.card); else strengthOpen?.delete(card.card); }, strengthOpen?.has(card.card));
       row.bonus.draw(words, null);
     } else tap.append(row.upside = el("span", "card-upside", words));
   }
@@ -85,7 +86,7 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTa
     else ctx.actions.decide({ kind: "tap_card", card: card.card });
   });
   pressable(tap, node);
-  if (onTap) node.append(tap);
+  if (onTap) node.append(tap, ...(row.bonus ? [row.bonus.line] : []));   // a choice among cards: the upside line beside the tap, as seatFight seats it
   else if (row.fight) seatFight(node, tap, row.ready, row.fight, row.bonus);
   else if (row.bonus) seatFight(node, tap, row.ready, null, row.bonus);
   else node.append(tap, row.ready);

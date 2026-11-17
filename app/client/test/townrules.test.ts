@@ -9,7 +9,6 @@ import type { View } from "../src/api/types";
 import type { SideKept } from "../src/app/ruleside";
 import type { RuleSide } from "../src/game/ruleside";
 import { RulesTab } from "../src/ui/rules";
-import { TownStrip } from "../src/ui/townstrip";
 
 install();
 const camp: SideKept = { get: () => "camp", set: () => undefined };   // the town is drawn on Camp
@@ -30,13 +29,6 @@ function rules(view: View, side: RuleSide = "camp") {
   document.body.replaceChildren(tab.root);
   tab.update(view);
   return { root: fakeDocument.body.firstElementChild as FakeEl, got };
-}
-function strip(view: View) {
-  const { ctx } = testContext();
-  const s = new TownStrip(ctx, () => undefined, () => undefined);
-  document.body.replaceChildren(s.root);
-  s.update(view);
-  return fakeDocument.body.firstElementChild as FakeEl;
 }
 
 {  // the town's rule is listed under the town's heading, worded as its always rule, and not among the hands' rules
@@ -71,13 +63,3 @@ function strip(view: View) {
   expect("and not the one on", root.querySelectorAll(".town-rule.active").length, 0);
 }
 
-{  // greyed: the strip greys its bars, names the card, and still shows each person's split
-  const s = strip(greyed);
-  expect("greyed class", s.classList.contains("greyed"), true);
-  expect("the reason", s.querySelector(".town-status")?.textContent, "stopped · Haul water done");
-  expect("status shown", s.querySelector(".town-status")?.hidden, false);
-  expect("the split is the mix's, not an empty one", texts(s.querySelectorAll(".town-person")[0]!.querySelectorAll(".town-key-item")), ["Chop logs 60%", "Haul water 30%", "Helper, idle 10%"]);
-  const live = strip(both);
-  expect("a running town is not greyed", live.classList.contains("greyed"), false);
-  expect("and has no reason", live.querySelector(".town-status")?.hidden, true);
-}

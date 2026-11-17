@@ -990,15 +990,14 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .lesson-note.reads { cursor: pointer; }
 .lesson-go.lesson-go { background: var(--press); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi) !important; font-weight: 500; }
 
-/* The town (ui/townstrip.ts, ui/townedit.ts): under the hands strip one block per person present: their time as a bar of
+/* The town (ui/townstrip.ts): under the hands strip one block per person present: their time as a bar of
    the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
    .hands, .hands-label, .lane-bar, .card-fill; new: the person block and its segments. */
-/* the Town tab: its title and Change share the first row; the town's people and lanes, then a phone's ledger and skills,
-   span it below */
+/* the Town tab: its title, then the town's people and lanes, then a phone's ledger and skills,
+   below it, across the row */
 .town-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem 1rem; }
 .town-tab > .lane-rows, .town-tab .town, .town-tab .town > .hands-body { display: contents; }
 .town-tab > :not(.view-title, .lane-rows), .town-tab .lane-rows > :not(.town), .town-tab .town-people { grid-column: 1 / -1; }
-.town-tab .town .hands-row { grid-row: 1; grid-column: 2; }
 .town { display: block; min-height: 0; }
 /* a person: face and who, then their split, the split that runs now, and the card they work */
 .person-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "face who change" "split split split" "now now now" "track track track"; column-gap: .6rem; align-items: center; }
@@ -1018,22 +1017,13 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-key, .share-key { display: flex; flex-wrap: wrap; gap: .1rem .9rem; margin-top: .3rem; font-size: var(--t-meta); color: var(--ink); }
 .town-key-item::before, .share-key-item::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .35rem; background: var(--hue); }
 .town-key-item.idle::before { background: var(--track); border: 1px solid var(--ink-dim); box-sizing: border-box; }
-.town.greyed .town-seg { filter: saturate(.15) brightness(.6); }   /* as the hands' greyed .share-track */
-.town.greyed .town-name { color: var(--ink-dim); }
-.town.greyed .town-key-item::before { filter: saturate(.15) brightness(.6); }
-.town.greyed .town-status { color: var(--ink-hi); }   /* why it stopped: plain, not dimmed with it */
-.town-editor { display: grid; gap: .9rem; align-content: start; }
-.town-editor[hidden] { display: none; }
 .person-page { display: grid; gap: .9rem; align-content: start; }
 .person-page[hidden] { display: none; }
 .person-cards .card-list, .person-rules { display: grid; gap: .4rem; }
 .person-cards .rules-label { margin: .8rem 0 0; font-size: var(--t-meta); color: var(--ink); }
 .person-cards .card .card-tap:disabled { opacity: 1; cursor: default; }   /* a face to read, not a control that is off */
-.person-page .town-editor { gap: .6rem; }
+.person-cards .card-share { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--ink-hi); }   /* the share a task holds, on its face */
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }
-.town-split { display: grid; gap: 1rem; }
-.town-split .town-person { display: grid; gap: .5rem; }
-.town-split .town-shares { height: 1.4rem; }
 /* The split that runs now (ui/runningnow.ts): the town's split shapes, a stopped card's slice a greyed sliver; once
    arrived its row keeps its room while the splits match, so nothing under a finger moves. */
 .running-now { margin-top: .3rem; }
@@ -1043,12 +1033,3 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-seg.stopped { flex: 0 0 .5rem; filter: saturate(.15) brightness(.6); }
 .town-key-item.stopped { color: var(--ink-dim); }
 .town-key-item.stopped::before { filter: saturate(.15) brightness(.6); }
-.town-cards { display: grid; gap: .35rem; }
-.town-card { display: flex; align-items: center; gap: .5rem; }
-.town-card-what .card-need, .town-add .card-need { font-size: var(--t-meta); color: var(--ink); }
-.town-card-what { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
-.town-card-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-hi); }
-.town-card-share { min-width: 3.2rem; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink-hi); }
-.town-drop { flex: none; min-width: 2.75rem; min-height: 2.75rem; padding: 0; font-size: var(--t-story); }
-.town-add:disabled { opacity: .45; cursor: default; }
-.town-add { min-height: 2.6rem; padding: .2rem .8rem; border-left: 4px solid var(--hue); display: flex; flex-direction: column; align-items: flex-start; text-align: left; }

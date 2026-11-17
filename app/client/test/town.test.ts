@@ -1,16 +1,15 @@
-// The town's mix on the page (CONTRACT.txt, "The town's mix"; game/town.ts, ui/townstrip.ts, ui/townedit.ts): in the Town
+// The town's mix on the page (CONTRACT.txt, "The town's mix"; game/town.ts, ui/townstrip.ts, ui/personpage.ts): in the Town
 // tab, once people have joined, one block per person: their face and who, their shares and the idle rest, the card they are on;
-// Change opens the town editor, one split per person; before the join the page is day two's lane row. The views are the
+// each person's Change opens their page, where their tasks join or leave their split; before the join the page is day two's lane row. The views are the
 // engine's own (fixtures/townwire.ts: helper tapping Haul by a rule, shares yielded; mason on shares).
-import { fakeDocument, type FakeEl, install } from "./fake-dom";
-import { testContext } from "./context";
+import { type FakeEl, install } from "./fake-dom";
 import { dayTwoStep } from "../fixtures/daytwo";
 import { townStep } from "../fixtures/town";
-import type { Card, Decision, Mix, View } from "../src/api/types";
+import type { Card, Mix, View } from "../src/api/types";
 import { panelView } from "../src/game/lanes";
 import { Catalog } from "../src/game/catalog";
 import { fixtureContent } from "../fixtures/content";
-import { LaneRows } from "../src/ui/lanerows";
+import { pageRig, savedMix, shareOf, texts } from "./personrig";
 import { isTownMix, townMixToEdit } from "../src/game/town";
 
 install();
@@ -25,16 +24,7 @@ const both = townStep("town").view;
 const helperOnly = townStep("townone").view;
 const before = dayTwoStep("ruled", 100).view;
 
-function rig(view: View) {
-  const { ctx, got } = testContext();
-  const rows = new LaneRows(ctx);
-  document.body.replaceChildren(rows.root, rows.town.root);
-  const root = fakeDocument.body.firstElementChild as FakeEl;
-  rows.update(view);
-  return { rows, root, got, editor: fakeDocument.body.children[1] as FakeEl };
-}
-const texts = (nodes: FakeEl[]): string[] => nodes.map((n) => n.textContent ?? "");
-const saved = (d: Decision | undefined): Mix | null => (d?.kind === "save_mix" ? d.mix : null);
+const rig = (view: View) => pageRig(view);
 
 {  // before the first join: day two's row, no strip
   const { root } = rig(before);
@@ -65,43 +55,80 @@ const saved = (d: Decision | undefined): Mix | null => (d?.kind === "save_mix" ?
   expect("no ruled-lane card in the panel", cards.filter((c) => ["chop", "haul", "hew", "carve"].includes(c)), []);
 }
 
-/** Change, then the editor's state. */
-function opened(view: View) {
-  const r = rig(view);
-  r.root.querySelector(".town-change")?.click();
-  return r;
+{  // every person's Change opens their page; the camp has none of its own
+  const { root, page, open } = rig(both);
+  expect("no camp-wide Change", root.querySelectorAll(".town-change").length, 0);
+  expect("a Change per person", root.querySelectorAll(".person-change").length, 2);
+  open(1);
+  expect("the second person's page is open", [page.hidden, texts(page.querySelectorAll(".editor-head .town-title"))], [false, ["Mason"]]);
+  expect("their split is its bar, theirs alone", texts((page.querySelector(".person-mix") as FakeEl).querySelectorAll(".share-key-item")), ["Hew stone 70%", "Carve beams 20%", "Mason, idle 10%"]);
 }
 
-{  // Change opens the town's mix: a split per person, only that person's own uncapped cards to add
-  const { editor } = opened(both);
-  expect("the editor is open", editor.hidden, false);
-  expect("a split per person", texts(editor.querySelectorAll(".town-person .town-name")), ["Helper", "Mason"]);
-  expect("the first person's rows", texts((editor.querySelectorAll(".town-person")[0] as FakeEl).querySelectorAll(".town-card-name")), ["Chop logs", "Haul water"]);
+{  // the page offers every task of the person's lane, a share on those the mix holds
+  const { open, face } = rig(both);
+  const page = open(0);
+  expect("the helper's tasks", page.querySelectorAll(".person-cards .card").map((c) => c.dataset.card), ["chop", "haul"]);
+  expect("shares on the faces", [shareOf(face("chop")), shareOf(face("haul"))], ["60%", "30%"]);
+}
+
+{  // a task the mix does not hold joins by a tap on its face and leaves by another; each is sent as it is made
+  const { open, face, got, settle } = rig(helperOnly);
+  const page = open(0);
+  const { cards } = helperOnly;
+  const lone = { ...helperOnly, mixes: helperOnly.mixes.map((m) => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "haul") })) };
+  expect("fixture: haul is a task of the helper", cards.some((c) => c.card === "haul"), true);
+  const next = settle(lone);
+  face("haul").querySelector(".card-tap")?.click();
+  expect("one decision, the mix with haul in it", got.decided.length, 1);
+  expect("haul joined with what was free", savedMix(got.decided[0])?.components.flatMap((c) => (c.kind === "card_share" && c.card === "haul" ? [c.share_bp] : [])), [4000]);
+  const after = settle(next);
+  expect("it is on the face, and the page was not closed", [shareOf(face("haul")), page.hidden], ["40%", false]);
+  face("haul").querySelector(".card-tap")?.click();
+  expect("a second tap takes it out", savedMix(got.decided[0])?.components.some((c) => c.kind === "card_share" && c.card === "haul"), false);
+  expect("and the view's cards are as they were", after.cards.length, next.cards.length);
+}
+
+{  // a capped card is never held by a town mix: its tap sets the person's always rule for it, and a second takes it out
   const capped = { ...both, cards: both.cards.map((c) => (c.card === "carve" ? { ...c, cap: 3 } : c)) };
-  const { editor: ed2 } = opened({ ...capped, mixes: capped.mixes.map((m) => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || (c.card !== "hew" && c.card !== "carve")) })) });
-  expect("a capped card is not offered; hew is, carve is not", ed2.querySelectorAll(".town-add").map((b) => b.dataset.card), ["hew"]);
-}
-
-{  // Save sends the town's mix as it stands
-  const { editor, got } = opened(both);
-  editor.querySelector(".editor-head .primary")?.click();
-  const mix = saved(got.decided[0]);
-  expect("the town's mix is saved", mix?.id, "town:main");
-  expect("its shares", mix?.components.map((c) => (c.kind === "card_share" ? [c.card, c.share_bp] : null)), [["chop", 6000], ["haul", 3000], ["hew", 7000], ["carve", 2000]]);
-  expect("the editor closes", editor.hidden, true);
-  expect("one decision", got.decided.length, 1);
+  const noCarve = { ...capped, mixes: capped.mixes.map((m) => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "carve") })) };
+  const { open, face, got, settle } = rig(noCarve);
+  open(1);
+  expect("the face says what it is", face("carve").querySelector(".card-need.oneoff")?.textContent, "A one-off: they do it until it is finished, then go back to their mix.");
+  face("carve").querySelector(".card-tap")?.click();
+  const set = got.decided[0];
+  expect("one decision, a rule and no mix", [got.decided.length, set?.kind], [1, "set_orders"]);
+  expect("an always rule tapping it, appended", set?.kind === "set_orders" ? set.orders.at(-1) : null, { when: { kind: "after_time", at: 0 }, then: { kind: "tap_card", card: "carve" }, unless: [], or_else: [], below_next: false });
+  settle(noCarve);
+  expect("it is pressed once the rule is there", face("carve").querySelector(".card-tap")?.getAttribute("aria-pressed"), "true");
+  face("carve").querySelector(".card-tap")?.click();
+  expect("a second tap takes the rule out", got.decided[0]?.kind === "set_orders" ? got.decided[0].orders.length : -1, noCarve.orders.length);
 }
 
 {  // no town mix yet: a new one, and the town's always rule pointed at it (saved, then the rules)
   const none = { ...both, mixes: both.mixes.filter((m) => m.id !== "town:main"), running_town_mix_id: null, town_mix_order: null, orders: both.orders.filter((o) => o.then.kind !== "switch_mix" || o.then.mix_id !== "town:main") };
-  const { editor, got } = opened(none);
-  editor.querySelector('.town-add[data-card="chop"]')?.click();
-  editor.querySelector(".editor-head .primary")?.click();
-  const mix = saved(got.decided[0]);
+  const { open, face, got } = rig(none);
+  open(0);
+  face("chop").querySelector(".card-tap")?.click();
+  const mix = savedMix(got.decided[0]);
   expect("a new mix, not named for the game's", mix?.id.startsWith("town:"), false);
   expect("with the card at half", mix?.components.map((c) => (c.kind === "card_share" ? c.share_bp : 0)), [5000]);
   const orders = got.decided[1]?.kind === "set_orders" ? got.decided[1].orders : [];
   expect("then the always rule", orders.at(-1), { when: { kind: "after_time", at: 0 }, then: { kind: "switch_mix", mix_id: mix?.id }, unless: [], or_else: [], below_next: false });
+}
+
+{  // a greyed town mix is still the one mix holding everyone: a person's edit saves it, and the others' shares stay under the always rule
+  const at = both.orders.findIndex((o) => o.then.kind === "switch_mix" && o.then.mix_id === "town:main");
+  const grey: View = {   // as fixtures/town.ts greys the helper's town: the mix greyed, its rule passed over, Haul retired
+    ...both, running_town_mix_id: null, town_mix_order: null, greyed_mix_ids: ["town:main"],
+    order_states: both.order_states.map((st, i) => (i === at ? "passed_over" : st)), cards: both.cards.filter((c) => c.card !== "haul"),
+  };
+  const { open, face, got } = rig(grey);
+  expect("fixture: the mix is greyed and its rule passed over", [grey.greyed_mix_ids, grey.running_town_mix_id], [["town:main"], null]);
+  open(0);
+  face("chop").querySelector(".card-tap")?.click();
+  expect("one decision, the mix saved and no new always rule", [got.decided.length, got.decided[0]?.kind], [1, "save_mix"]);
+  const mix = savedMix(got.decided[0]);
+  expect("it is the town's mix, the mason's shares still in it", [mix?.id, mix?.components.flatMap((c) => (c.kind === "card_share" && (c.card === "hew" || c.card === "carve") ? [c.card, c.share_bp] : []))], ["town:main", ["hew", 7000, "carve", 2000]]);
 }
 
 {  // a town mix a leave emptied is still the town's: Change opens it, and it is not offered as a hands mix

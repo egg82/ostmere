@@ -1,14 +1,14 @@
-// A kept bonus shows what its share gives (CONTRACT.txt, {pct}; CardInfo.kept): in the town editor a card that holds
+// A kept bonus shows what its share gives (CONTRACT.txt, {pct}; CardInfo.kept): on a person's page a card that holds
 // an entry while it runs words that entry at the person's share, rounded down once as the engine rounds it, and the
 // figure follows the share as it is dragged; a change the card does not hold stays as served.
-import { fakeDocument, type FakeEl, install, pointer } from "./fake-dom";
+import { type FakeEl, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
+import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import type { Content } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { Glow } from "../src/ui/fresh";
 import { makeRow } from "../src/ui/cardrow";
-import { LaneRows } from "../src/ui/lanerows";
 import { WhenReady } from "../src/ui/whenready";
 import { fixtureContent } from "../fixtures/content";
 
@@ -27,34 +27,31 @@ function withCard(card: string, over: Partial<Content["card_infos"][number]>, te
   });
 }
 
-/** Opens the town editor on haul with the given info and returns its row. */
-function editorRow(over: Partial<Content["card_infos"][number]>, text: string): () => FakeEl {
+const town = townStep("town").view;
+
+/** A person's page on haul with the given info: its face, and a divider drag that lands in the view as the engine serves it. */
+function pageFace(over: Partial<Content["card_infos"][number]>, text: string): { face: () => FakeEl; drag: (x0: number, x1: number) => void } {
   const catalog = withCard("haul", { upside_key: "up.kept", ...over }, { "up.kept": text });
-  const { ctx } = testContext(new Glow(), catalog);
-  const rows = new LaneRows(ctx);
-  document.body.replaceChildren(rows.root, rows.town.root);
-  rows.update(townStep("town").view);
-  (fakeDocument.body.firstElementChild as FakeEl).querySelector(".town-change")?.click();
-  for (const track of fakeDocument.body.children[1]?.querySelectorAll(".share-track") ?? []) track.rect = { left: 0, top: 0, width: 1000, height: 20, right: 1000, bottom: 20 };
-  return () => {
-    const helper = (fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl;
-    return helper.querySelectorAll(".town-card").find((r) => r.dataset.card === "haul") as FakeEl;
+  const rig = pageRig(town, catalog, new Glow());
+  const page = rig.open(0);
+  let view = town;
+  return {
+    face: () => rig.face("haul"),
+    drag: (x0, x1) => {
+      const divider = page.querySelector(".share-divider") as FakeEl;
+      divider.dispatchEvent(pointer("pointerdown", x0, 10));
+      divider.dispatchEvent(pointer("pointermove", x1, 10));
+      divider.dispatchEvent(pointer("pointerup", x1, 10));
+      view = rig.settle(view);
+    },
   };
 }
-const shareOf = (row: FakeEl): string => row.querySelector(".town-card-share")?.textContent ?? "";
-/** The helper's chop|haul divider dragged from x0 to x1 on a 1000px bar. */
-function drag(x0: number, x1: number): void {
-  const helper = (fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl;
-  const divider = helper.querySelector(".share-divider") as FakeEl;
-  divider.dispatchEvent(pointer("pointerdown", x0, 10));
-  divider.dispatchEvent(pointer("pointermove", x1, 10));
-  divider.dispatchEvent(pointer("pointerup", x1, 10));
-}
-const upsideOf = (row: FakeEl): string => row.querySelector(".town-card-upside")?.textContent ?? "";
+const shareOf = (row: FakeEl): string => row.querySelector(".card-share")?.textContent ?? "";
+const upsideOf = (row: FakeEl): string => row.querySelector(".card-upside")?.textContent ?? "";
 const held = [{ side: "gap", lane: null, amount_bp: 5000, slot: 0 }];
 
 {  // a held amount is worded at the share, and follows it
-  const row = editorRow({ change_bp: [5000], kept: held }, "{pct} strength while kept");
+  const { face: row, drag } = pageFace({ change_bp: [5000], kept: held }, "{pct} strength while kept");
   const share = Number.parseFloat(shareOf(row()));
   expect("the haul share is a percent the test can scale", share > 0 && share < 100, true);
   expect("at its share, not the full amount", upsideOf(row()), `+${share / 2}% strength while kept`);
@@ -67,24 +64,24 @@ const held = [{ side: "gap", lane: null, amount_bp: 5000, slot: 0 }];
 }
 
 {  // a change the card does not hold stays as served, beside the one it does
-  const row = editorRow({ change_bp: [1500, 5000], kept: [{ ...held[0]!, slot: 1 }] }, "{pct} work, {pct_b} strength");
+  const { face: row, drag } = pageFace({ change_bp: [1500, 5000], kept: [{ ...held[0]!, slot: 1 }] }, "{pct} work, {pct_b} strength");
   const share = Number.parseFloat(shareOf(row()));
   expect("only the held figure scales", upsideOf(row()), `+15% work, +${share / 2}% strength`);
 }
 
 {  // a card that holds nothing reads as it always did
-  const row = editorRow({ change_bp: [5000], kept: [] }, "{pct} strength");
+  const { face: row, drag } = pageFace({ change_bp: [5000], kept: [] }, "{pct} strength");
   expect("no held entry, the served figure", upsideOf(row()), "+50% strength");
 }
 
 {  // rounded down once, on the whole amount: a figure that does not divide is cut, not rounded
-  const row = editorRow({ change_bp: [3333], kept: [{ side: "gap", lane: null, amount_bp: 3333, slot: 0 }] }, "{pct} strength");
+  const { face: row, drag } = pageFace({ change_bp: [3333], kept: [{ side: "gap", lane: null, amount_bp: 3333, slot: 0 }] }, "{pct} strength");
   const bp = Number.parseFloat(shareOf(row())) * 100;
   expect("the engine's floor", upsideOf(row()), `+${Math.floor((3333 * bp) / 10000) / 100}% strength`);
 }
 
 {  // an unscaled change equal to a held amount stays as served: only the held slot scales
-  const row = editorRow({ change_bp: [5000, 5000], kept: [{ ...held[0]!, slot: 1 }] }, "{pct} work, {pct_b} strength");
+  const { face: row, drag } = pageFace({ change_bp: [5000, 5000], kept: [{ ...held[0]!, slot: 1 }] }, "{pct} work, {pct_b} strength");
   const share = Number.parseFloat(shareOf(row()));
   expect("the equal change at another slot is not scaled", upsideOf(row()), `+50% work, +${share / 2}% strength`);
 }

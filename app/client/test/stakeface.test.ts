@@ -1,12 +1,10 @@
-// A card shows what it is for where its share is set (CONTRACT.txt, the card panel and {pct}): in the town editor a
-// card's upside sits under its name, filled from its change_bp, and a card with none shows none.
-import { fakeDocument, type FakeEl, install } from "./fake-dom";
-import { testContext } from "./context";
+// A card shows what it is for where its share is set (CONTRACT.txt, the card panel and {pct}): on a person's page a
+// card's upside sits on its face, filled from its change_bp, and a card with none shows none.
+import { install } from "./fake-dom";
+import { pageRig } from "./personrig";
 import { townStep } from "../fixtures/town";
 import type { Content } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { Glow } from "../src/ui/fresh";
-import { LaneRows } from "../src/ui/lanerows";
 import { fixtureContent } from "../fixtures/content";
 
 install();
@@ -26,13 +24,8 @@ function withCard(card: string, over: Partial<Content["card_infos"][number]>, te
 
 {  // the upside under the name, from change_bp; none where the card names none
   const catalog = withCard("haul", { upside_key: "up.watch", change_bp: [5000] }, { "up.watch": "{pct} strength while kept" });
-  const { ctx } = testContext(new Glow(), catalog);
-  const rows = new LaneRows(ctx);
-  document.body.replaceChildren(rows.root, rows.town.root);
-  rows.update(townStep("town").view);
-  (fakeDocument.body.firstElementChild as FakeEl).querySelector(".town-change")?.click();
-  const helper = (fakeDocument.body.children[1] as FakeEl).querySelectorAll(".town-person")[0] as FakeEl;
-  const rowOf = (card: string): FakeEl => helper.querySelectorAll(".town-card").find((r) => r.dataset.card === card) as FakeEl;
-  expect("haul's upside under its name", rowOf("haul").querySelectorAll(".town-card-upside").map((n) => n.textContent), ["+50% strength while kept"]);
-  expect("chop names none", rowOf("chop").querySelectorAll(".town-card-upside").length, 0);
+  const { open, face } = pageRig(townStep("town").view, catalog);
+  open(0);
+  expect("haul's upside on its face", face("haul").querySelectorAll(".card-upside").map((n) => n.textContent), ["+50% strength while kept"]);
+  expect("chop names none", face("chop").querySelectorAll(".card-upside").length, 0);
 }

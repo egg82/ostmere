@@ -1,5 +1,5 @@
 // An editor never shows beside a tab it does not belong to: it takes the card area while open, and the tab row stays
-// live (a phone's bottom bar), so a tap on another tab leaves it closed (the town's from Camp, the mix's from Tasks).
+// live (a phone's bottom bar), so a tap on another tab leaves it closed (a person's page from Camp, the mix's from Tasks).
 import { FakeEl, fakeDocument, install } from "./fake-dom";
 import { townStep } from "../fixtures/town";
 import { Catalog } from "../src/game/catalog";
@@ -40,14 +40,14 @@ const tap = (top: FakeEl, sel: string): void => {
   b.click();
 };
 const mixEdit = (top: FakeEl): FakeEl => {
-  const b = top.querySelectorAll(".hands-edit").find((x) => !x.classList.contains("town-change"));
+  const b = top.querySelectorAll(".hands-edit").find((x) => !x.classList.contains("person-change"));
   if (!b) throw new Error("no Edit button");
   return b;
 };
-/** Which editors the page draws: "camp" (the town's) and "mix". */
+/** Which editors the page draws: "person" (a person's page) and "mix". */
 function showing(top: FakeEl): string[] {
   const out: string[] = [];
-  for (const e of top.querySelectorAll(".editor")) if (drawn(e, top)) out.push(e.classList.contains("town-editor") ? "camp" : "mix");
+  for (const e of top.querySelectorAll(".editor")) if (drawn(e, top)) out.push(e.classList.contains("person-page") ? "person" : "mix");
   return out;
 }
 
@@ -59,10 +59,10 @@ for (const onPhone of [false, true]) {
   screen.show(townStep("town"));
 
   tap(top, '[data-tab="town"]');
-  tap(top, ".town-change");
-  expect(`${where}: Change opens Camp's editor`, showing(top), ["camp"]);
+  tap(top, ".person-change");
+  expect(`${where}: Change opens the person's page`, showing(top), ["person"]);
   tap(top, '[data-tab="cards"]');
-  expect(`${where}: Camp's editor is gone on Tasks`, showing(top), []);
+  expect(`${where}: the page is gone on Tasks`, showing(top), []);
   tap(top, '[data-tab="town"]');
   expect(`${where}: and does not return with Camp`, showing(top), []);
 

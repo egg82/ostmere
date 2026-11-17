@@ -2,12 +2,12 @@
 // one row per person present: their face and who, their time split into the cards that hold a share (each with its
 // share) and the idle remainder, under it the split that runs now while a card of theirs is stopped (runningnow.ts),
 // and the card they are working now with its bar, sampled as the card panel samples it.
-// Change at the head opens the town's mix in the town editor; each person's own Change opens their page (personpage.ts). A lane that has joined has no row of its own any more (lanerows.ts);
+// Each person's Change opens their page (personpage.ts), where their split is set. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../api/types";
-import { people, personOf, townGreyed, townStoppedBy } from "../game/town";
+import { people, personOf } from "../game/town";
 import { UI } from "../game/text";
-import { el, keyed, setText, tapFeedback } from "./dom";
+import { el, keyed, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
 import { dotChange } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
@@ -18,23 +18,14 @@ interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: H
 
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
-  private readonly status = el("span", "hands-text town-status");
-  private readonly change = el("button", "hands-edit town-change");
   private readonly list = el("div", "town-people");
   private rows = new Map<string, PersonRow>();
   private view: View | null = null;
   private arrived = false;
 
-  constructor(private readonly ctx: PartContext, edit: () => void, private readonly openPage: (lane: string) => void) {
-    const { text } = ctx.catalog;
-    this.change.type = "button";
-    this.change.dataset.teach = "town-change";   // a lesson's mark of the way into the town's mix
-    setText(this.change, text.get(UI.townChange));
-    this.change.addEventListener("click", () => { tapFeedback(); edit(); });
-    const head = el("div", "hands-row");
-    head.append(this.status, this.change);
+  constructor(private readonly ctx: PartContext, private readonly openPage: (lane: string) => void) {
     const body = el("div", "hands-body");
-    body.append(head, this.list);
+    body.append(this.list);
     this.root.append(body);
     this.root.hidden = true;
   }
@@ -49,10 +40,6 @@ export class TownStrip implements Part {
       this.root.hidden = false;
       this.ctx.arrivals.arrive(this.root, "feature", "town");
     }
-    const stopped = townStoppedBy(catalog, view);
-    this.root.classList.toggle("greyed", townGreyed(catalog, view) !== null);
-    setText(this.status, stopped === null ? "" : catalog.text.fill(UI.stopped, { card: catalog.cardLabel(stopped) }));
-    this.status.hidden = stopped === null;
     this.rows = keyed(this.list, present, (lane) => lane, this.rows, (lane) => this.make(lane));
     for (const lane of present) this.draw(lane, view);
     this.tick(view.at);
@@ -72,6 +59,7 @@ export class TownStrip implements Part {
     row.node.insertBefore(now.root, row.track);
     const change = el("button", "hands-edit lane-change person-change", this.ctx.catalog.text.get(UI.laneChange));
     change.type = "button";
+    change.dataset.teach = "town-change";   // a lesson's mark of the way into the town's mix
     change.addEventListener("click", () => { tapFeedback(); this.openPage(lane); });
     row.node.insertBefore(change, row.track);
     return { ...row, split, now, change };
@@ -81,7 +69,7 @@ export class TownStrip implements Part {
     const { catalog } = this.ctx;
     const row = this.rows.get(lane);
     if (!row) return;
-    const person = personOf(catalog, view, lane, townGreyed(catalog, view));
+    const person = personOf(catalog, view, lane);
     const label = catalog.laneLabel(lane, view);
     drawWho(this.ctx, row, lane, label, person.running);
     const parts: Share[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
