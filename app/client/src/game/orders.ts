@@ -104,9 +104,9 @@ export function rulesTabDrawn(view: View, ruleSeen: boolean): boolean {
   return rulesListed(view) || (ruleSeen && view.unlocked.some((u) => u.category === "feature" && u.id === LEDGER_FEATURE));
 }
 
-/** A rule the page draws: its condition is on a store's amount, a count or a level. */
+/** A rule the page draws: its condition is on a store's amount, a count, a level or a task running. */
 function drawn(order: Order): boolean {
-  return order.when.kind !== "after_time" && ["store_value", "card_count", "skill_level"].includes(order.when.watched.kind);
+  return order.when.kind !== "after_time" && ["store_value", "card_count", "skill_level", "running"].includes(order.when.watched.kind);
 }
 
 /** The rule whose task the hands are doing now (its first or a fallback), or -1. */
