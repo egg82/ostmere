@@ -152,7 +152,7 @@ async function rig(over: Partial<Record<SlotName, Slot>>) {
   sound().play("tap");
   sound().play("tick", 1.5);
   const played: string[] = [];
-  registerSound({ play: (s) => { played.push(s); return () => undefined; }, loop: () => ({ setLevel: () => undefined }) });
+  registerSound({ play: (s) => { played.push(s); return () => undefined; }, loop: () => ({ setLevel: () => undefined }), piece: () => ({ setLevel: () => undefined, stop: () => undefined, onEnd: () => undefined }) });
   sound().play("first");
   assert.deepEqual(played, ["first"]);
   resetSound();

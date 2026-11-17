@@ -6,8 +6,8 @@
 // grow with the window; a frame is drawn only when a fade is moving or a flickering light is showing (flicker.ts).
 import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
-import { soundAlphaOf, type Drawn } from "./drawn";
-import { depthOrder, fadeStep, isGlow, passOf, pickGrade, gradeStep, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
+import { soundAlphaOf, soundShownOf, type Drawn } from "./drawn";
+import { depthOrder, fadeStep, isGlow, passOf, pickGrade, gradeStep, GRADE_S, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
 import { COVER, place, type Crop } from "./crop";
 import { focusOf } from "./focus";
 import { fetchManifest, roomAbove } from "./room";
@@ -66,7 +66,7 @@ export class Scene {
         image.onerror = () => resolve();
       }));
       image.src = new URL(layer.src, base).href;
-      return { layer, image, alpha: 0, glow: 1 };
+      return { layer, image, alpha: 0, shown: false, glow: 1 };
     });
     this.loaded = Promise.all(arrived).then(() => undefined);
     canvas.width = w;
@@ -129,6 +129,11 @@ export class Scene {
   /** The alpha the first layer that sounds as `sound` is drawn at, flicker aside (0 where none does). */
   soundAlpha(sound: NonNullable<SceneLayer["sound"]>): number { return soundAlphaOf(this.layers, this.manifest.layers, sound); }
 
+  /** Whether the first layer that sounds as `sound` is wanted now, as of the last frame drawn. */
+  soundShown(sound: NonNullable<SceneLayer["sound"]>): boolean { return soundShownOf(this.layers, this.manifest.layers, sound); }
+  /** The grade in force and the seconds it takes to move into. */
+  gradeNow(): { id: string; easeS: number } { return { id: this.gradeId, easeS: this.to?.ease_s ?? GRADE_S }; }
+
   update(view: View): void {
     this.facts.observe(view);
   }
@@ -143,6 +148,7 @@ export class Scene {
     for (const drawn of this.layers) {
       const { layer } = drawn;
       const shown = this.facts.holds(layer.when, t, q) && !(layer.until && this.facts.holds(layer.until, t, q));
+      drawn.shown = shown;
       const alpha = shown ? Math.min(1, drawn.alpha + step) : Math.max(0, drawn.alpha - step);
       if (alpha !== drawn.alpha) {
         drawn.alpha = alpha;

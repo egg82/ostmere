@@ -25,6 +25,11 @@ export class TheEnd {
     private readonly read: () => void = () => undefined,
   ) {}
 
+  /** The end's lines are queued or showing, inside their READ_MS. */
+  get showing(): boolean {
+    return this.reading;
+  }
+
   /** The end is recorded and its lines have been read, or it is an older end a reopened page does not replay. */
   get behind(): boolean {
     return this.handled && !this.reading;

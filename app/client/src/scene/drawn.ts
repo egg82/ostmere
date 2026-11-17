@@ -5,6 +5,8 @@ export interface Drawn {
   layer: SceneLayer;
   image: HTMLImageElement;
   alpha: number;
+  /** Wanted this frame: its `when` holds and its `until` does not (alpha is where its fade has got to). */
+  shown: boolean;
   /** The flicker's level this frame (1 where the layer is steady), scaling alpha when drawn. */
   glow: number;
 }
@@ -13,4 +15,10 @@ export interface Drawn {
 export function soundAlphaOf(drawn: readonly Drawn[], layers: readonly SceneLayer[], sound: NonNullable<SceneLayer["sound"]>): number {
   const layer = soundLayer(layers, sound);
   return drawn.find((d) => d.layer === layer)?.alpha ?? 0;
+}
+
+/** Whether the first of `layers` that sounds as `sound` is wanted now, by its field alone. */
+export function soundShownOf(drawn: readonly Drawn[], layers: readonly SceneLayer[], sound: NonNullable<SceneLayer["sound"]>): boolean {
+  const layer = soundLayer(layers, sound);
+  return drawn.find((d) => d.layer === layer)?.shown ?? false;
 }
