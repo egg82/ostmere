@@ -33,7 +33,6 @@ export interface Evening {
 
 export function createEvening(): Evening {
   let prev: boolean | null = null;   // null: nothing seen yet since the page came into view
-  let played = false;   // this evening has had its piece
   let armed: { grade: string; entryAt: number } | null = null;
   let piece: Piece | null = null;
   let grade = "";
@@ -65,10 +64,8 @@ export function createEvening(): Evening {
       const reset = prev === null;
       const rose = f.shown && prev === false;
       prev = f.shown;
-      if (reset) { played = f.shown; return; }
-      if (!f.shown) played = false;
-      if (rose && !played) {
-        played = true;
+      if (reset) return;
+      if (rose) {
         armed = { grade: f.grade, entryAt: now - endAt < ENTRY_AFTER_END_MS ? endAt + ENTRY_AFTER_END_MS : now };
         grade = f.grade;
       }

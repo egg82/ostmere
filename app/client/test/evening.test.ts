@@ -223,11 +223,14 @@ function begun() { clock.now = 0; wall = 0; srcs = []; registerSound(player); co
   near("faded in over 2.5 s", heard(src), PIECES.evening.gain);
   clock.now = 90;
   near("steady for its length", heard(src), PIECES.evening.gain);
-  src.onended?.();   // its last note
-  const again = createEvening();
-  again.frame(DAY, 0);
-  again.frame(EVE, 100);
-  expect("it was not looped", srcs.filter((s) => s.started).length, 2);
+  expect("it is not looped", (src as unknown as { loop?: boolean }).loop ?? false, false);
+  const own = player.piece("evening");
+  let over = 0;
+  own.onEnd(() => { over += 1; });
+  srcs[srcs.length - 1]!.onended?.();   // its last note
+  expect("its last note ends it, once", over, 1);
+  srcs[srcs.length - 1]!.onended?.();
+  expect("and only once", over, 1);
 }
 {
   begun();
