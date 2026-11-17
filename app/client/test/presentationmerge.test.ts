@@ -22,7 +22,7 @@ async function rig(answer: (sent: AccountPresentation) => Promise<Account>, answ
   const saves: [number, SavePresentation][] = [];
   const api: GameApi = {
     content: () => Promise.resolve(fixtureContent), me: none, begin: () => Promise.resolve<NewSave>({ save, presentation: NEW_SAVE, step: first }), open: none,
-    savedView: none, advance: none, forecast: none, decide: none, dryRun: none, sendFeedback: none, makeCode: none, makeWords: none, join: none,
+    savedView: none, advance: none, forecast: none, mixRows: none, decide: none, dryRun: none, sendFeedback: none, makeCode: none, makeWords: none, join: none,
     games: none, deleteGame: none, restoreGame: none, devices: none, removeDevice: none,
     putMePresentation: (p) => { sent.push(p); return answer(p); },
     putMeSettings: none,

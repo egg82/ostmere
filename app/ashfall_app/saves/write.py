@@ -15,7 +15,8 @@ from ..db import saves as rows
 from ..db.journal import Seen
 from ..db.manifests import without
 from ..db.step import Log, write_step
-from . import journal_write
+from ..engine.codec import Json
+from . import journal_write, mixbest
 from .interface import Played, Ruleset
 from .repeats import Logged, Repeats, count, hands_cards, since
 from .ruleruns import RuleRun, gathered, merged, pruned, runs_from_json, runs_to_json, standing
@@ -64,14 +65,25 @@ def numbered(first: tuple[e.Line, ...], then: tuple[e.Line, ...]) -> tuple[e.Lin
     return first + tuple(replace(ln, seq=ln.seq + sum(1 for f in first if f.time == ln.time)) for ln in then)
 
 
-def written(save: e.Save, decisions: int, rs: Ruleset, runs: tuple[RuleRun, ...] = ()) -> rows.Written:
+def written(save: e.Save, decisions: int, rs: Ruleset, runs: tuple[RuleRun, ...] = (),
+            best: Json = None) -> rows.Written:
     """The row of `save` under `rs`: its state without the manifest when `rs` holds it apart, whole otherwise."""
     state = e.encode(save, rs.rules)
     if rs.held_manifest is not None:
         state = without(state, rs.held_manifest)
     return rows.Written(state=state, format=e.FORMAT, rules_digest=rs.digest, decisions=decisions,
                         game_time=save.time, ended_at=save.ended_at, build=rs.build, release=rs.release,
-                        camp_level=camp_level(save, rs), rule_runs=runs_to_json(runs))
+                        camp_level=camp_level(save, rs), rule_runs=runs_to_json(runs), mix_best=best)
+
+
+def _best(row: rows.SaveRecord, step: Step, rs: Ruleset) -> Json:
+    """The save's kept best after a SaveMix step (mixbest.py), None (leave what is stored) for any other step."""
+    verb = step.verb
+    if rs.mix_marks is None or not isinstance(verb, e.SaveMix):
+        return None
+    mix = verb.mix.id
+    return mixbest.to_json(mixbest.merged(mixbest.from_json(row.mix_best), mix, step.save.time,
+                                          rs.mix_marks(step.save, mix)))
 
 
 def camp_level(save: e.Save, rs: Ruleset) -> int:
@@ -85,13 +97,14 @@ def persist(conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: Ste
     none."""
     save_id, decisions = row.id, row.decisions + (step.verb is not None)
     before = runs_from_json(row.rule_runs)
+    best = _best(row, step, rs)
     if step.catching_up_to is None:
         runs = merged(before, step.rule_changes, standing(step.save.orders, step.save.queue))
     else:
         runs = gathered(before, step.rule_changes)
     days, journaled = journal_write.composed(conn, row, seen, step.lines, step.save.time, rs)
     listed, recent = write_step(
-        conn, save_id, now, written(step.save, decisions, rs, runs), [(ln.time, str(ln.key)) for ln in step.lines],
+        conn, save_id, now, written(step.save, decisions, rs, runs, best), [(ln.time, str(ln.key)) for ln in step.lines],
         None if step.verb is None else _log_of(decisions, step, rs, now),
         None if rs.repeats is None else since(rs.repeats, step.save.time), journaled)
     played = Played(save_id=save_id, decisions=decisions, save=step.save, lines=step.lines, failed=step.failed,

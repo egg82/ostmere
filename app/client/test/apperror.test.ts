@@ -17,7 +17,7 @@ const save = { save_id: 7, number: 1, decisions: 0, game_time: 0, ended_at: null
 const none = (): Promise<never> => Promise.reject(new Error("not in this test"));
 const api: GameApi = {
   content: () => Promise.resolve(fixtureContent), me: none, begin: () => Promise.resolve<NewSave>({ save, presentation: NEW_SAVE, step: { ...step(0), lines: [] } }),
-  open: none, savedView: none, advance: httpApi.advance, forecast: none, decide: httpApi.decide, dryRun: none, putMePresentation: none, putMeSettings: none, putSavePresentation: none, sendFeedback: none,
+  open: none, savedView: none, advance: httpApi.advance, forecast: none, mixRows: none, decide: httpApi.decide, dryRun: none, putMePresentation: none, putMeSettings: none, putSavePresentation: none, sendFeedback: none,
   makeCode: none, makeWords: none, join: none, games: none, deleteGame: none, restoreGame: none,
   devices: none, removeDevice: none,
 };

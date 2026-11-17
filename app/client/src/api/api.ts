@@ -3,7 +3,7 @@
 // session cookie names the account, so nothing here carries a state.
 import { reportError, stepHeaders } from "../telemetry";
 import type {
-  Account, AccountPresentation, AccountSettings, ApiError, Content, Decision, Devices, ErrorCode, FeedbackRequest, ForecastAnswer, Games, JoinWay, Joined,
+  Account, AccountPresentation, AccountSettings, ApiError, Content, Decision, Devices, ErrorCode, FeedbackRequest, ForecastAnswer, MixRows, Games, JoinWay, Joined,
   MergeSummary, Me, NewSave, Opened, RecoveryWords, SavePresentation, Step, TransferCode, View,
 } from "./types";
 
@@ -20,6 +20,8 @@ export interface GameApi {
   savedView(saveId: number): Promise<View>;
   /** The save advanced to now and what lands from there if the player changes nothing (CONTRACT.txt, "Forecast"). */
   forecast(saveId: number): Promise<ForecastAnswer>;
+  /** The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal (CONTRACT.txt, "Mix rows"); nothing is written. */
+  mixRows(saveId: number): Promise<MixRows>;
   /** `after`: the Step.decisions the page last saw (409 stale when another page decided since). */
   decide(saveId: number, decision: Decision, after: number): Promise<Step>;
   /** The view after these decisions, applied now; nothing is written (the mix editor's "after" totals). */
@@ -127,6 +129,7 @@ export const httpApi: GameApi = {
   open: (id) => call<Opened>(save(id, "open"), post(undefined, stepHeaders(null))),
   advance: (id) => call<Step>(save(id, "advance"), post(undefined, stepHeaders(null))),
   forecast: (id) => call<ForecastAnswer>(save(id, "forecast"), post()),
+  mixRows: (id) => call<MixRows>(save(id, "mix-rows"), post()),
   decide: (id, decision, after) => call<Step>(save(id, "decisions"), post({ decision, after }, stepHeaders(decision))),
   savedView: (id) => call<View>(save(id, "view"), { method: "GET" }),
   dryRun: (id, decisions) => call<View>(save(id, "dry-run"), post({ decisions })),

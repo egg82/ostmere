@@ -47,7 +47,7 @@ async function rig(ids: number[], beginRefusal?: ApiFailure) {
     savedView: (id) => { calls.push(`view ${id}`); return Promise.resolve(view); },
     open: (id) => { calls.push(`open ${id}`); return no(); },
     begin: () => { calls.push("begin"); return beginRefusal ? Promise.reject(beginRefusal) : Promise.resolve({ save: save(99), presentation: NEW_SAVE, step: fixtureStep("standing", 100, {}, 0) }); },
-    advance: no, forecast: no, decide: no, dryRun: no, putMePresentation: no, putMeSettings: no, putSavePresentation: no, sendFeedback: no, makeCode: no, makeWords: no,
+    advance: no, forecast: no, mixRows: no, decide: no, dryRun: no, putMePresentation: no, putMeSettings: no, putSavePresentation: no, sendFeedback: no, makeCode: no, makeWords: no,
     join: no, devices: no, removeDevice: no, games: no, restoreGame: no,
     deleteGame: (id) => { calls.push(`delete ${id}`); live = live.filter((x) => x.save_id !== id); return Promise.resolve({ saves: live, deleted: [], max_saves: 5, kept_days: 30 }); },
   };

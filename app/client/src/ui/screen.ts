@@ -5,9 +5,8 @@
 // samples it every frame. The one glow on a card is placed here (CardInfo.glows, the first time it is ready with its lane
 // free); the strip places its offers' glows, the Rules tab's label takes it once a rule has come on and let go until the
 // tab is opened, and a running lesson's step takes it (lessons.ts).
-import type { Condition, Decision, JournalDay, Step, View } from "../api/types";
+import type { Condition, Decision, JournalDay, MixRows, Step, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
-import { nudgeTarget } from "../game/cues";
 import { NewMarks } from "../game/marks";
 import type { Keeps } from "../game/keeps";
 import type { Past } from "../game/chronicle";
@@ -25,7 +24,7 @@ import { FeatureCard } from "./featurecard";
 import { OrderFires } from "./fires";
 import { Flight } from "./flight";
 import { Glow, GlowWhile, markNew } from "./fresh";
-import { IdleNudge } from "./nudge";
+import { IdleNudge, nudgeNode } from "./nudge";
 import { Lessons } from "./lessons";
 import { Hands } from "./hands";
 import { Asks } from "./asks";
@@ -59,10 +58,7 @@ export class Screen {
   private readonly fires = new OrderFires();
   private readonly reveal = new Reveal();
   private readonly glow = new Glow(this.reveal);   // the reveal first: the glow waits its turn there
-  private readonly nudge = new IdleNudge(this.glow, () => {
-    const card = this.view ? nudgeTarget(this.catalog, this.view) : null;
-    return (card && this.cards.node(card)) || null;
-  });
+  private readonly nudge = new IdleNudge(this.glow, () => this.view && nudgeNode(this.catalog, this.view, (c) => this.cards.node(c)));
   private readonly streak = new HandStreak();
   private readonly parts: Part[];
   private readonly story: Story;
@@ -97,6 +93,7 @@ export class Screen {
     private readonly catalog: Catalog, decide: (decision: Decision) => void,
     dryRun: (decisions: Decision[]) => Promise<View | null>, private readonly keeps: Keeps,
     sendFeedback: (text: string) => Promise<boolean> = () => Promise.resolve(false),
+    mixRows: () => Promise<MixRows | null> = () => Promise.resolve(null),
   ) {
     const actions: Actions = {
       decide: (d) => {
@@ -107,6 +104,7 @@ export class Screen {
         decide(d);
       },
       dryRun,
+      mixRows,
       editMix: (id) => this.openEditor(id),
       newMix: (rule) => this.openEditor(null, true, rule),
       openSelector: () => { if (this.view) this.selector.show(this.view); },

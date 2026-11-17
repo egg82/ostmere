@@ -41,7 +41,7 @@ const unused = (): Promise<never> => Promise.reject(new Error("not in this test"
 /** The page opened on a save whose history is `history`, its one kept return RETURN: the off-lines on the band and in
  * the chapter (every filter). */
 async function opened(history: PastLine[]): Promise<{ band: number; chapter: number }> {
-  const api: GameApi = {
+  const api: GameApi = { mixRows: () => Promise.reject(new Error("not in these tests")),
     content: () => Promise.resolve(content),
     me: unused, begin: unused,
     open: () => Promise.resolve({ save, was, history, presentation: { ...NEW_SAVE, visits: [RETURN] }, journal_days: [], step: now }),

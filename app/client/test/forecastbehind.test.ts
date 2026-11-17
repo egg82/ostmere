@@ -16,7 +16,7 @@ const step = (at: number, to: number | null): Step =>
   ({ ...fixtureStep("mid", at, {}, 0), save_id: 7, rules_digest: fixtureContent.rules_digest, catching_up_to: to });
 const unused = () => Promise.reject(new Error("not in this test"));
 const calls: string[] = [];
-const api: GameApi = {
+const api: GameApi = { mixRows: () => Promise.reject(new Error("not in these tests")),
   content: () => Promise.resolve(fixtureContent),
   me: unused,
   begin: () => Promise.resolve({ save: { save_id: 7, number: 1, decisions: 0, game_time: 0, ended_at: null, started_at: "2026-10-17T09:00:00Z", played_at: "2026-10-17T09:00:00Z", camp_level: 0 }, presentation: NEW_SAVE, step: step(AT, null) }),

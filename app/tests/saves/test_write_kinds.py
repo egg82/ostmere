@@ -9,7 +9,7 @@ import pytest
 
 from ashfall_app import engine as e
 from ashfall_app import main
-from ashfall_app.db import saves as rows
+from ashfall_app.db import savewrite
 from ashfall_app.opening.schema import CHAPTERS, Opening, load_opening
 from ashfall_app.saves import write
 from ashfall_app.saves.interface import Ruleset
@@ -51,7 +51,7 @@ def shown(game: GameClient, rs: Ruleset) -> tuple[int, int]:
     save = e.new_save(rs.rules)
     held = sorted((*save.unlocked, e.Unlock(e.UnlockKind.OFFER, OFFER)), key=e.unlock_key)
     with game.app.state.db.engine.begin() as conn:
-        rows.write(conn, save_id, game.clock(), write.written(replace(save, unlocked=tuple(held)), 0, rs))
+        savewrite.write(conn, save_id, game.clock(), write.written(replace(save, unlocked=tuple(held)), 0, rs))
     return save_id, 0
 
 
