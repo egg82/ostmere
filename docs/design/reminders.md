@@ -102,15 +102,18 @@ reminding is the point. Ostmere's carries no task and no miss.
 
 ## What the player sees
 
-- **The setting** sits in the Settings sheet (`app/client/src/ui/settings.ts`, a panel-foot button beside Games) as a row for this device, off at first:
-  "Reminders" with the choices **12 hours, a day, 3 days, a week** (data, one file) and the line "One notification when
-  you've been away that long. None after it until you're back." Beside the absence length sits the window the
-  reminder may arrive in, the player's own: a slider with two handles over the 24 hours, **from** and **until**, first at 9 and 21 (where the
-  setting starts, not a rule). Each handle's label shows 24-hour time with 12-hour time beneath it ("21:00", and below
-  it "9 PM"). When the start handle sits past the end handle the window wraps past midnight, and the shaded span shows
-  that (from 22 until 7). **Any time** is a separate choice beside the slider, which stores equal ends. Turning it on asks the browser's permission, with the
-  purpose already on screen: "Ostmere sends one notification after you've been away for the time you pick." Turning
-  it off deletes the row and says "Reminders are off."
+- **The section** sits in the Settings sheet (`app/client/src/ui/settings.ts`, under "This device"): "Notifications", off at
+  first. First the kinds, each its own checkbox, in any combination: **When you've been away** (with the line "One
+  notification when you've been away that long. None after it until you're back." and, while it is on, the choices **12
+  hours, a day, 3 days, a week**, data, one file) and **When your hands are free** (below). Then one **Notification
+  times** window, shown once any kind is on and applying to all of them: a slider with two handles over the 24 hours,
+  **from** and **until**, first at 9 and 21 (where the setting starts, not a rule). Each handle's label shows 24-hour
+  time with 12-hour time beneath it ("21:00", and below it "9 PM"). When the start handle sits past the end handle the
+  window wraps past midnight, and the shaded span shows that (from 22 until 7). **Any time** is a separate choice beside
+  the slider, which stores equal ends. Ticking the first kind asks the browser's permission, with the purpose already on
+  screen: "Ostmere only notifies you about what you pick here, and only at the times you set." Unticking the last kind
+  deletes the row and says "Notifications are off." The window is stored on the device row whether or not the absence
+  reminder is on, and every write carries it, so the last hours sent stand.
 - **The single mention.** After the opening's end lines have been read and no lesson holds the glow, one quiet row
   with a button: "If you'd like a nudge to come back, there's a setting for it." / `Open settings`. The button opens the Settings sheet with the row focused. No dot, glow or
   badge (`decisions.md`, "Shown in the design"). It is shown once per account. The store is a new bool in
@@ -155,13 +158,19 @@ taps made while watching send nothing.
 
 **Due and the claim.** Due when a device of the account has the notice on, `hands_free_at`'s wall time is past, the
 save's last write is before `hands_free_at` (a page left open advanced past it, so the player saw it), and the save
-holds no notice sent for this `hands_free_at`. The claim sets that sent marker in one `UPDATE ... WHERE` before the
-send, as the reminder's does. The absence reminder and this notice are independent; either can be on alone.
+holds no notice sent for this `hands_free_at`. The notice goes only inside a device's notification times, read as the
+absence reminder reads them (local hour in the device's zone, wrapping past midnight, equal ends meaning any hour). The
+job asks the account's devices first: with none inside its times the notice is not claimed, so it waits and goes on
+the first run that finds one open. Then the claim sets the sent marker in one `UPDATE ... WHERE` before the send, as
+the reminder's does, and the notice goes to the devices inside their times at that moment; a device outside its own
+times when the claim is made gets nothing for that moment (one marker per save, not per device). The absence reminder
+and this notice are independent; either can be on alone.
 
-**What the player sees.** In the Reminders row of Settings, a second choice for this device, off at first: "When your
-hands are free", with the line "One notification when a long task you gave your hands is done and nothing you planned
-comes next." (The game's own words say "your hands".) The notification's words name no task, store or number (nothing from a save, so nothing spoils); title
-"Ostmere", a small pool like the reminder's, through the voice pass. Tapping opens `/`.
+**What the player sees.** In the Notifications section of Settings, a second kind for this device, off at first: "When
+your hands are free", with the line "One notification when a long task you gave your hands is done and nothing you
+planned comes next." (The game's own words say "your hands".) The notification's words name no task, store or number
+(nothing from a save, so nothing spoils); title "Ostmere", a small pool like the reminder's, through the voice pass.
+Tapping opens `/`.
 
 **Delivery lag.** The job's schedule bounds how late a notice can be: every five minutes is too coarse for a task of
 a few minutes, so the CronJob moves to every minute when this ships (cluster repo, `iss/ashfall/reminders.yaml` and

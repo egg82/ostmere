@@ -12,8 +12,6 @@ export const REMINDER_KEYS = {
   remindersUntil: "ui.reminders.until",   // the end handle's name
   remindersWindowSaid: "ui.reminders.window_said",   // "{from} until {until}": the window in words, each a time
   remindersAnyTime: "ui.reminders.any_time",
-  remindersOn: "ui.reminders.turn_on",
-  remindersOffButton: "ui.reminders.turn_off",
   remindersIsOn: "ui.reminders.is_on",
   remindersIsOff: "ui.reminders.is_off",
   remindersUnavailable: "ui.reminders.unavailable",   // no VAPID key on this server
@@ -21,6 +19,8 @@ export const REMINDER_KEYS = {
   remindersDenied: "ui.reminders.denied",
   remindersNone: "ui.reminders.none",   // this browser has no Web Push
   remindersFailed: "ui.reminders.failed",
+  remindersAwayKind: "ui.reminders.away_kind",   // the absence reminder's choice
+  remindersAwayKindSaid: "ui.reminders.away_kind_said",   // the line under it: what it sends
   remindersHandsFree: "ui.reminders.hands_free",   // the hands-free notice's choice
   remindersHandsFreeSaid: "ui.reminders.hands_free_said",   // the line under it: what it sends
   remindersMention: "ui.reminders.mention",

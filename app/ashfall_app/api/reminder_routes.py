@@ -4,11 +4,11 @@ from fastapi import APIRouter, Request, Response
 
 from .. import services
 from ..accounts.interface import AccountsUnavailable, Subscription
-from ..db.reminders import Choice, Window
+from ..db.reminders import Choice
 from . import session
 from .error_models import ApiError
 from .errors import not_found, unavailable
-from .reminders_models import Reminder, ReminderOff, ReminderOn, ReminderWindow
+from .reminders_models import Reminder, ReminderOff, ReminderOn
 
 _ERRORS: dict[int | str, dict[str, object]] = {
     401: {"model": ApiError, "description": "no_account"},
@@ -17,7 +17,7 @@ _ERRORS: dict[int | str, dict[str, object]] = {
     503: {"model": ApiError, "description": "save_unavailable: no database (Retry-After)"},
 }
 _PUT_ERRORS: dict[int | str, dict[str, object]] = {
-    **_ERRORS, 404: {"model": ApiError, "description": "not_found: no window sent and this browser is not on"}}
+    **_ERRORS, 404: {"model": ApiError, "description": "not_found: nothing sent and this browser is not on"}}
 
 
 def add_reminder_routes(router: APIRouter) -> None:
@@ -26,19 +26,16 @@ def add_reminder_routes(router: APIRouter) -> None:
         """Reminders on for this browser as sent, or, with nothing sent, its keys refreshed; what it has on."""
         found = session.account(request)
         sub = Subscription(body.endpoint, body.p256dh, body.auth, body.tz)
-        w = body.window
-        window = None if w is None else Window(w.after_hours, w.send_from_hour, w.send_until_hour)
-        picked = None if body.refresh else Choice(window, bool(body.hands_free))
+        picked = None if body.refresh else Choice(body.after_hours, body.send_from_hour or 0, body.send_until_hour or 0,
+                                                   bool(body.hands_free))
         try:
             kept = services.of(request).accounts.keep_reminder(found, sub, picked)
         except AccountsUnavailable as ex:
             raise unavailable(str(ex)) from ex
         if kept is None:
             raise not_found("reminders are not on for this browser")
-        k = kept.window
-        return Reminder(window=None if k is None else ReminderWindow(
-            after_hours=k.after_hours, send_from_hour=k.send_from_hour, send_until_hour=k.send_until_hour),
-            hands_free=kept.hands_free)
+        return Reminder(after_hours=kept.after_hours, send_from_hour=kept.send_from_hour,
+                        send_until_hour=kept.send_until_hour, hands_free=kept.hands_free)
 
     @router.delete("/reminders", status_code=204, response_class=Response, operation_id="delete_reminder",
                    responses=_ERRORS)

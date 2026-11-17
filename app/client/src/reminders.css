@@ -1,4 +1,4 @@
-/* Reminders (ui/reminders.ts) in the Settings sheet, and their one mention (ui/remindermention.ts). Shares
+/* Notifications (ui/reminders.ts) in the Settings sheet, and their one mention (ui/remindermention.ts). Shares
    game.css's tokens; only the slider and the row's layout are new. */
 .reminders-part { margin: 1rem 0 .5rem; }
 .devices-part > .reminders-part { margin: 0; }   /* in a Settings group, the group's own gap spaces it */
@@ -28,5 +28,7 @@
 .reminder-mention { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .8rem; padding: .4rem .75rem; color: var(--ink); }
 .reminder-mention button { min-height: 2.75rem; }
 @media (prefers-reduced-motion: reduce) { .hour-handle, .hour-span { transition: none; } }
-.reminders-hands-part { margin-top: 1rem; }   /* the hands-free notice: a kept choice like Settings' own (.settings-choice) */
+.reminders-kind { margin-bottom: 1rem; }   /* a kind: a kept choice like Settings' own (.settings-choice), its line, what only it needs */
 .reminders-hands-said { margin: .1rem 0 0; color: var(--ink-dim); font-size: var(--t-meta); }
+.reminders-away[hidden] { display: none; }
+.reminders-kind .reminders-away { margin-top: .6rem; }

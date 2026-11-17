@@ -1889,7 +1889,12 @@ export interface components {
         };
         /** Reminder */
         Reminder: {
-            window: components["schemas"]["ReminderWindow"] | null;
+            /** After Hours */
+            after_hours: number | null;
+            /** Send From Hour */
+            send_from_hour: number;
+            /** Send Until Hour */
+            send_until_hour: number;
             /** Hands Free */
             hands_free: boolean;
         };
@@ -1900,7 +1905,7 @@ export interface components {
         };
         /**
          * ReminderOn
-         * @description This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys) and its time zone.
+         * @description This browser's push subscription (PushSubscription.toJSON()'s endpoint and keys), its time zone, and what it takes.
          */
         ReminderOn: {
             endpoint: components["schemas"]["Endpoint"];
@@ -1908,20 +1913,12 @@ export interface components {
             auth: components["schemas"]["Key"];
             /** Tz */
             tz: string;
-            window?: components["schemas"]["ReminderWindow"] | null;
+            /** After Hours */
+            after_hours?: number | null;
+            send_from_hour?: components["schemas"]["Hour"] | null;
+            send_until_hour?: components["schemas"]["Hour"] | null;
             /** Hands Free */
             hands_free?: boolean | null;
-        };
-        /**
-         * ReminderWindow
-         * @description When a reminder may come: once the player has been away `after_hours`, at a local hour from `send_from_hour` up
-         *     to `send_until_hour` (past midnight when from is later than until; equal: any hour).
-         */
-        ReminderWindow: {
-            /** After Hours */
-            after_hours: number;
-            send_from_hour: components["schemas"]["Hour"];
-            send_until_hour: components["schemas"]["Hour"];
         };
         /**
          * RepeatedSwitch
@@ -3691,7 +3688,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description not_found: no window sent and this browser is not on */
+            /** @description not_found: nothing sent and this browser is not on */
             404: {
                 headers: {
                     [name: string]: unknown;

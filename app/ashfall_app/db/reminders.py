@@ -28,8 +28,8 @@ class DeviceRecord:
 
 @dataclass(frozen=True)
 class NewDevice:
-    """after_hours None: the absence reminder off, so `hands_free` must be on; the send hours are then kept as the row
-    has them (a new row takes these)."""
+    """after_hours None: the absence reminder off, so `hands_free` must be on. The send hours are the device's window for
+    both kinds."""
 
     account_id: int
     endpoint: str
@@ -51,20 +51,13 @@ def insert_device(conn: Connection, now: datetime, new: NewDevice) -> int:
 
 
 @dataclass(frozen=True)
-class Window:
-    """What the player picked for a device: the absence in hours and the hours a reminder may arrive in."""
+class Choice:
+    """What the player picked for a device: the absence in hours (None: that reminder off), the hands-free notice, and
+    the hours any notification may arrive in. A row always has one kind on."""
 
-    after_hours: int
+    after_hours: int | None
     send_from_hour: int
     send_until_hour: int
-
-
-@dataclass(frozen=True)
-class Choice:
-    """What the player turned on for a device: the absence reminder with its window (None: off), and the hands-free
-    notice. A row always has one of them on."""
-
-    window: Window | None
     hands_free: bool
 
 
@@ -83,18 +76,17 @@ _CHOICE = (rd.c.after_hours, rd.c.send_from_hour, rd.c.send_until_hour, rd.c.han
 
 
 def _choice(row: Row[Any]) -> Choice:
-    window = None if row.after_hours is None else Window(row.after_hours, row.send_from_hour, row.send_until_hour)
-    return Choice(window, row.hands_free)
+    return Choice(row.after_hours, row.send_from_hour, row.send_until_hour, row.hands_free)
 
 
 def keep_device(conn: Connection, now: datetime, new: NewDevice) -> Choice:
     """The device with the player's pick, visited `now`, whoever held its endpoint before (a browser has one
     subscription, and it follows the browser's session)."""
-    hours: dict[str, object] = dict(send_from_hour=new.send_from_hour, send_until_hour=new.send_until_hour)
     values: dict[str, object] = dict(account_id=new.account_id, p256dh=new.p256dh, auth=new.auth, tz=new.tz,
-                                     after_hours=new.after_hours, hands_free=new.hands_free, visited_at=now)
-    q = pg_insert(rd).values(endpoint=new.endpoint, created_at=now, **values, **hours).on_conflict_do_update(
-        index_elements=[rd.c.endpoint], set_=values if new.after_hours is None else values | hours)
+                                     after_hours=new.after_hours, send_from_hour=new.send_from_hour,
+                                     send_until_hour=new.send_until_hour, hands_free=new.hands_free, visited_at=now)
+    q = pg_insert(rd).values(endpoint=new.endpoint, created_at=now, **values).on_conflict_do_update(
+        index_elements=[rd.c.endpoint], set_=values)
     return _choice(conn.execute(q.returning(*_CHOICE)).one())
 
 
@@ -155,8 +147,19 @@ class Target:
     auth: str
 
 
-def notice_targets(conn: Connection, account_id: int) -> list[Target]:
+@dataclass(frozen=True)
+class NoticeTarget:
+    """A device that takes the hands-free notice, with the window it may arrive in."""
+
+    target: Target
+    tz: str
+    send_from_hour: int
+    send_until_hour: int
+
+
+def notice_targets(conn: Connection, account_id: int) -> list[NoticeTarget]:
     """The account's devices that take the hands-free notice."""
-    q = select(rd.c.id, rd.c.endpoint, rd.c.p256dh, rd.c.auth).where(rd.c.account_id == account_id, rd.c.hands_free
-                                                                     ).order_by(rd.c.id)
-    return [Target(r.id, r.endpoint, r.p256dh, r.auth) for r in conn.execute(q)]
+    q = select(rd.c.id, rd.c.endpoint, rd.c.p256dh, rd.c.auth, rd.c.tz, rd.c.send_from_hour, rd.c.send_until_hour
+               ).where(rd.c.account_id == account_id, rd.c.hands_free).order_by(rd.c.id)
+    return [NoticeTarget(Target(r.id, r.endpoint, r.p256dh, r.auth), r.tz, r.send_from_hour, r.send_until_hour)
+            for r in conn.execute(q)]

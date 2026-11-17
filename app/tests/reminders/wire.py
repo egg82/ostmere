@@ -12,7 +12,7 @@ WINDOW = {"after_hours": 24, "send_from_hour": 9, "send_until_hour": 21}
 
 
 def on(endpoint: str = PUSH + "one", window: dict[str, Any] | None = WINDOW, tz: str = "Europe/Paris") -> dict[str, Any]:
-    return {"endpoint": endpoint, "p256dh": "BPk-key_1", "auth": "auth_1", "tz": tz, "window": window}
+    return {"endpoint": endpoint, "p256dh": "BPk-key_1", "auth": "auth_1", "tz": tz} | (window or {})
 
 
 def engine_of(game: GameClient) -> Engine:
