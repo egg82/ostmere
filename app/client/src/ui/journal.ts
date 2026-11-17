@@ -6,6 +6,7 @@
 // the numbers are View.fights'. Turning to it and turning its pages send nothing; when it is left, the book notes of every
 // page turned to are kept as read in one write, and the newest day turned to in another.
 import type { JournalDay, View } from "../api/types";
+import { sing } from "../audio/cues";
 import { joinDays } from "../game/days";
 import { bookmarkPage, bookmarksOf, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, type NumbersRow, type Page, type Reading, type Section } from "../game/journal";
 import { wantedOf } from "../game/pagemarks";
@@ -151,7 +152,10 @@ export class Journal implements BookPage {
       else this.turnedDay = Math.max(this.turnedDay ?? n.day, n.day);
     }
     this.draw(true);
-    if (by !== 0) this.slide(by);
+    if (by !== 0) {
+      this.slide(by);
+      sing("page");
+    }
   }
 
   /** A turned page slides in from the side turned toward and fades in (the CSS, off under reduced motion). */

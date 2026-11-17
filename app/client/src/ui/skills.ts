@@ -36,7 +36,7 @@ export class Skills implements Part {
       row.node.classList.toggle("story", story.has(bar.skill));   // the story mark (game/story.ts)
       const before = shownLevel(row.bar);
       row.draw(bar);
-      if (prev && known.has(bar.skill) && shownLevel(bar) > before) this.ctx.arrivals.effect(row.node, "skill", () => play(row.node, "level"), "level");
+      if (prev && known.has(bar.skill) && shownLevel(bar) > before) this.ctx.arrivals.effect(row.node, "skill", (quiet) => play(row.node, "level", quiet), "level", "level");
       if (prev && !known.has(bar.skill)) this.ctx.arrivals.arrive(row.node, "skill", bar.skill);
     }
     this.sheet.update(view);

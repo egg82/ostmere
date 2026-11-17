@@ -29,7 +29,7 @@ export interface Recorded {
 
 export function testContext(glow = new Glow(), catalog = new Catalog(fixtureContent)): { ctx: PartContext; got: Recorded } {
   const got: Recorded = { decided: [], sent: [], opened: [], edited: [], feedback: [], lit: [] };
-  const arrivals: Arrivals = { arrive: () => undefined, effect: (_node, _kind, run) => run(), line: () => undefined, busy: false };
+  const arrivals: Arrivals = { arrive: () => undefined, effect: (_node, _kind, run) => run(false), line: () => undefined, busy: false };
   const ctx: PartContext = {
     catalog,
     actions: {

@@ -3,11 +3,13 @@
 import type { SlotName } from "./slots";
 
 export interface Sound {
-  /** Play a slot's one-shot now. `pitch` multiplies the slot's own ratio (a chain's rising ticks). Never throws. */
-  play(slot: SlotName, pitch?: number): void;
+  /** Play a slot's one-shot `delayMs` from now, on the audio clock. `pitch` multiplies the slot's own ratio (a chain's
+   * rising ticks). Never throws. Returns a cut: it fades the sound over CUT_MS, so one not yet begun never sounds. */
+  play(slot: SlotName, pitch?: number, delayMs?: number): () => void;
 }
 
-const NULL_SOUND: Sound = { play() { /* silence */ } };
+const NOTHING = (): void => undefined;
+const NULL_SOUND: Sound = { play: () => NOTHING };
 const NO_REFRESH = (): void => undefined;
 
 let current: Sound = NULL_SOUND;
