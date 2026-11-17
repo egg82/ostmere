@@ -1,6 +1,6 @@
 // The "was it seen" probe (docs/research/story-to-the-eyes.md, "The 'was it seen' probe"), injected into the game page
 // before it loads (Playwright addInitScript). It watches every story line instance that shows (the band's `.lines li`
-// and, where a build has them, `.card-line` and the card column's `.card-newest` line) and, through that line's reading window, records whether it was
+// and, where a build has them, `.card-line`) and, through that line's reading window, records whether it was
 //   visible: its box wholly in the viewport, the page visible, and elementFromPoint at its start, middle and end hitting
 //            it (nothing covers it), on at least 90% of 100 ms samples until its reading time ends or the player taps
 //            again (`visibleStrict`: to the end of the reading time);
@@ -30,7 +30,7 @@
     taps.push(lastTap.t);
   }, true);
 
-  const isLine = (n) => n instanceof Element && n.matches('.lines li, .card-line, .card-newest > span:not(.card-newest-room)');
+  const isLine = (n) => n instanceof Element && n.matches('.lines li, .card-line');
   const showing = (n) => n.isConnected && !n.classList.contains('held') && !n.classList.contains('still');
 
   function pointToBox(x, y, b) {
@@ -77,7 +77,7 @@
       ev = { text, t: now, readMs: readMs(text), instances: [] };
       lines.push(ev);
     }
-    const where = n.classList.contains('card-line') ? 'card' : n.parentElement?.classList.contains('card-newest') ? 'column' : 'band';
+    const where = n.classList.contains('card-line') ? 'card' : 'band';
     const fw = firstWord(n);
     const tap = lastTap;
     const nearPx = tap ? Math.min(pointToBox(tap.x, tap.y, fw), tap.bar ? boxToBox(tap.bar, fw) : Infinity) : Infinity;

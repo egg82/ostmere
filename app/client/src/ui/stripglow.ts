@@ -22,11 +22,6 @@ export class StripGlow {
     }
   }
 
-  /** The end's lines, each in turn in the queue like any line, in the strip only (a null is skipped). */
-  end(arrivals: Arrivals, nodes: Array<HTMLElement | null>, id: () => string): void {
-    for (const shown of nodes) if (shown) arrivals.line([shown], id(), readingMs(shown.textContent ?? ""), "end");   // one strike per batch: the first of these
-  }
-
   /** Lit now, for `ms`. */
   light(nowMs: number, ms: number): void {
     this.strip.classList.add("glow");

@@ -136,11 +136,6 @@ p.catching-up[hidden] { display: none; }
 :is(.sound-button, .feedback-open, .devices-open, .games-open, .settings-open, .share-divider):focus-visible, .line:has(.line-rule:focus-visible) { outline: 2px solid var(--ink-hi); outline-offset: 2px; }   /* the rule mark is a mask, which would clip its own ring: the line it sits on carries it */
 
 /* ---------- the panel ---------- */
-.card-newest { display: grid; margin: 0; padding: 0 0 .5rem; border-bottom: 1px solid var(--rule); font-size: var(--t-story); font-style: italic; line-height: 1.35; color: var(--ink-hi); }   /* the strip's newest line at the card column's top (ui/cardline.ts); the unseen room holds the tallest line */
-.card-newest > * { grid-area: 1 / 1; min-width: 0; }
-.card-newest-room { display: grid; visibility: hidden; align-self: start; }
-.card-newest-room > span { grid-area: 1 / 1; }
-.card-newest > span:not(.card-newest-room) { align-self: start; animation: line-in .2s ease-out backwards; --line-from-x: 0; --line-from-y: .4rem; }
 .panel { padding: 0 1rem calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 1rem; }
 .panel-top { position: sticky; top: var(--scene-vh); z-index: 3; margin: 0 -1rem; padding: .5rem 1rem; background: var(--bg); border-bottom: 1px solid var(--rule); }
 .panel-heading { margin: 0 0 .4rem; font-size: var(--t-meta); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }   /* a group's label */
