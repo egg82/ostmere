@@ -1,12 +1,13 @@
-// A store's name leads a ledger line, a mix-editor totals row, a card's need and a condition-editor store button, so
-// it is capitalised there (Catalog.storeTitle); in a sentence ("Under 5 damp wood") the content's own lowercase label
-// stands (Catalog.storeLabel).
+// A store's name leads a ledger line, a mix-editor totals row, a card's need, a condition-editor store button and a
+// card's contribution in a mix-editor row, so it is capitalised there (Catalog.storeTitle); in a sentence ("Under 5
+// damp wood") the content's own lowercase label stands (Catalog.storeLabel).
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, LedgerLine } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
 import { CardNeeds } from "../src/ui/cardneeds";
 import { whenRow } from "../src/ui/condrows";
+import { entryRows } from "../src/ui/editorrows";
 import { Glow } from "../src/ui/fresh";
 import { Ledger } from "../src/ui/ledger";
 import { install } from "./fake-dom";
@@ -43,3 +44,10 @@ expect("a card's need", needs.root.querySelector(".card-need")?.textContent, "De
 
 const when = whenRow(catalog, [], ["wood"], () => {}, () => {});
 expect("the condition editor's store button", when.filter((b) => b.dataset.store === "wood").map((b) => b.querySelector("span")?.textContent), ["Dead wood"]);
+
+const mix = mid.mixes.find((m) => m.components.some((c) => c.kind === "card_share"));
+const part1 = mix?.components.find((c) => c.kind === "card_share");
+if (!mix || part1?.kind !== "card_share") throw new Error("the mid view should carry a mix with a card");
+const contributing = { ...wood, contributions: [{ runner: part1.card, per_hour: 120 * Q }] };
+const rows = entryRows(ctx, mix, mid, { ...mid, ledger: [contributing] }, () => {});
+expect("a card's contribution in the mix editor", rows[0]?.querySelector(".entry-does")?.textContent?.startsWith("Dead wood "), true);

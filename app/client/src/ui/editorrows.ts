@@ -18,7 +18,7 @@ export function entryRows(ctx: PartContext, mix: Mix, view: View, after: View | 
     const does = el("span", "entry-does");
     if (c.kind === "card_share" && after) {
       const parts = after.ledger.flatMap((l) => l.contributions.filter((k) => k.runner === c.card && k.per_hour !== 0)
-        .map((k) => `${catalog.storeLabel(l.store)} ${catalog.format.perMinute(k.per_hour)}`));
+        .map((k) => `${catalog.storeTitle(l.store)} ${catalog.format.perMinute(k.per_hour)}`));
       setText(does, parts.join(" · "));
     }
     const remove = el("button", "entry-remove", "✕");
