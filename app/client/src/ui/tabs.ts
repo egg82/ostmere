@@ -36,9 +36,10 @@ export class PanelTabs {
   }
 
   /** The tab `on`'s panel shown and its button pressed, the others hidden and not; while the editor is open (`editing`)
-   * no panel shows. `root` learns the tab on (game.css: the desktop's Town view takes the middle and the right). */
+   * no panel shows. `root` learns the tab on (game.css: the desktop's Town view takes the middle and the right) and whether an editor has the screen (the Rules tab or `editing`: a phone's scene steps aside). */
   show(editing: boolean, panels: Readonly<Record<Tab, HTMLElement>>, root: HTMLElement): void {
     root.dataset.tab = this.on;
+    root.classList.toggle("scene-aside", editing || this.on === "rules");   // an editor has the screen: game.css gives a phone's art room to it
     for (const [button, tab] of [[this.cards, "cards"], [this.town, "town"], [this.rules, "rules"], [this.book, "book"]] as const) {
       const panel = panels[tab];
       panel.hidden = editing || this.on !== tab;
