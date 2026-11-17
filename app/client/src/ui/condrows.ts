@@ -17,7 +17,7 @@ export const sectionHead = (heading: string): HTMLElement[] => (heading === "" ?
  * Tasks page's section headings with the mixes last (game/cardsections.ts); `click` goes on each. */
 export function choiceButtons(catalog: Catalog, view: View, choices: DoChoice[], cls: (c: DoChoice) => string, click: (c: DoChoice) => void): HTMLElement[] {
   return sectioned(catalog, choices, (c) => (c.kind === "task" ? c.card : null), view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map((c) => {
-    const b = el("button", cls(c), c.kind === "task" ? catalog.cardLabel(c.card) : mixLabel(catalog, c.mix));
+    const b = el("button", cls(c), c.kind === "task" ? catalog.cardLabel(c.card) : mixLabel(catalog, view, c.mix));
     b.type = "button";
     if (c.kind === "task") b.dataset.card = c.card;
     else { b.dataset.mix = c.mix; b.disabled = view.greyed_mix_ids.includes(c.mix); }
@@ -56,7 +56,7 @@ export function whenRow(catalog: Catalog, chips: ChipInfo[], stores: string[], o
 export function footRow(catalog: Catalog, view: View, index: number | null, then: OrderVerb | null, order: Order | null, foot: { sentence: HTMLElement | null; note: HTMLElement; save: HTMLButtonElement }): void {
   const hue = then?.kind === "tap_card" ? catalog.rank(then.card) % 6 : 5;
   foot.sentence?.replaceChildren(...(then ? [el("span", "", order ? ruleCondition(catalog, order) ?? "" : ""), " → ",
-    el("b", `rule-action hue-${hue}`, order ? ruleActions(catalog, order) : actionWords(catalog, then))] : []));
+    el("b", `rule-action hue-${hue}`, order ? ruleActions(catalog, view, order) : actionWords(catalog, view, then))] : []));
   const dup = order !== null && ruleExists(view, index, order);
   setText(foot.note, dup ? catalog.text.get(UI.ruleExists) : "");
   foot.save.disabled = order === null || dup;

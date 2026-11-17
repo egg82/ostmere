@@ -130,7 +130,7 @@ export class ConditionEditor {
   }
 
   private drawHeading(): void {
-    if (this.draft) setText(this.heading, headingWords(this.ctx.catalog, this.draft));
+    if (this.draft && this.view) setText(this.heading, headingWords(this.ctx.catalog, this.view, this.draft));
   }
 
   /** Do: the tasks (and, in the full editor, the saved mixes) as one row. */
@@ -258,7 +258,7 @@ export class ConditionEditor {
 
   private drawFact(): void {
     const draft = this.draft;
-    this.fact.show(draft?.then && this.full && !this.chipNow() ? draft.rule.store : null, draft?.then ? actionWords(this.ctx.catalog, draft.then) : "", this.view);
+    this.fact.show(draft?.then && this.full && !this.chipNow() ? draft.rule.store : null, draft?.then && this.view ? actionWords(this.ctx.catalog, this.view, draft.then) : "", this.view);
   }
 
   private commit(): void {

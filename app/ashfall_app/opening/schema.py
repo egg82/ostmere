@@ -30,7 +30,7 @@ from .camp_entries import CampEntry, CampLevelEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LaneEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, ChipEntry, Entry, LaneEntry, LaneLabelEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
 from .store_entries import StoreEntry
@@ -74,6 +74,8 @@ class Opening(Entry):
     hands_label_key: str
     """The label of the HANDS lane, which is never declared in `lanes`."""
     lanes: list[LaneEntry] = []
+    town_later_labels: list[LaneLabelEntry] = []
+    """The town's shown name once `after` is unlocked (the last one held wins), else `ui.town.title`: a chapter's."""
     cards: list[CardEntry]
     town_cards: list[TownCardEntry] = []
     """Only what chapters.merge carries; the opening's own file holds none (load_opening refuses it)."""
@@ -139,6 +141,7 @@ class Chapter(Entry):
     sides: list[SideEntry] = []
     threats: list[ThreatEntry] = []
     lanes: list[LaneEntry] = []
+    town_later_labels: list[LaneLabelEntry] = []
     cards: list[CardEntry] = []
     town_cards: list[TownCardEntry] = []
     """Cards expanded once per lane at the merge (town.py)."""

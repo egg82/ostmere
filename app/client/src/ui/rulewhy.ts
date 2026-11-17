@@ -54,7 +54,7 @@ function doingWords(catalog: Catalog, view: View, index: number): string | null 
   const doing = view.order_doing[index] ?? null;
   if (doing === null) return catalog.text.get(UI.ruleOnNone);
   const action = actionsOf(order)[doing];
-  return doing === 0 || !action ? null : catalog.text.fill(UI.ruleOnDoing, { task: actionWords(catalog, action) });
+  return doing === 0 || !action ? null : catalog.text.fill(UI.ruleOnDoing, { task: actionWords(catalog, view, action) });
 }
 
 /** "outranked by Next · {task}": the rule is under Next and the queue has the hands, running its controlling entry (a
@@ -62,7 +62,7 @@ function doingWords(catalog: Catalog, view: View, index: number): string | null 
 function behindNext(catalog: Catalog, view: View): string {
   const at = controllingEntry(view);
   const verb = at === null ? undefined : view.queue[at]?.verb;
-  const task = verb === undefined ? "" : verb.kind === "switch_mix" ? mixLabel(catalog, verb.mix_id) : actionWords(catalog, verb);
+  const task = verb === undefined ? "" : verb.kind === "switch_mix" ? mixLabel(catalog, view, verb.mix_id) : actionWords(catalog, view, verb);
   return catalog.text.fill(UI.ruleBehindNext, { task });
 }
 

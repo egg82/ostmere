@@ -23,7 +23,7 @@ export function ruleMark(box: HTMLElement, rule: () => number, open: (index: num
 /** Shows the mark for rule `index` (-1: none), read aloud as the rule's sentence. */
 export function setRuleMark(mark: HTMLButtonElement, catalog: Catalog, view: View, index: number): void {
   const order = view.orders[index];
-  const words = order ? ruleWords(catalog, order) : null;
+  const words = order ? ruleWords(catalog, view, order) : null;
   mark.hidden = !order;
   mark.setAttribute("aria-label", words ? `${words.when} → ${words.action}` : "");
 }

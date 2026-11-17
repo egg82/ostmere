@@ -184,7 +184,7 @@ export class Hands implements Part {
     }
     markStopped(this.ctx, mix, view, greyed, this.edit);
     setText(this.status, tapped ? "" : greyed ? this.stopped(mix, view) : spentNote(this.ctx.catalog, view));
-    setText(this.then, tapped ? "" : thenWords(this.ctx, this.holder));
+    setText(this.then, tapped ? "" : thenWords(this.ctx, view, this.holder));
     this.then.title = this.then.textContent ?? "";
     this.then.hidden = this.then.title === "";
     this.drawName(mix.id);
@@ -203,7 +203,7 @@ export class Hands implements Part {
    * is itself the way to the Mixes list ("Main ▾"), where elsewhere "Mixes ▾" sits before it. */
   private drawName(id: string): void {
     const phone = window.matchMedia(PHONE).matches;
-    const label = this.holder.kind === "tap" ? thenWords(this.ctx, this.holder) || id : id;
+    const label = this.holder.kind === "tap" && this.view ? thenWords(this.ctx, this.view, this.holder) || id : id;
     setText(this.nameText, label);
     this.nameText.title = label;
     setText(this.name, `${phone ? label : this.ctx.catalog.text.get(UI.mixesHeading)} ▾`);

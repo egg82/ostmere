@@ -32,7 +32,7 @@ export function letGo(ctx: PartContext, view: View, holder: Holder): string | nu
 }
 
 /** "then {mix}": the mix the hands go back to, or "" when nothing holds them or nothing else comes back. */
-export function thenWords(ctx: PartContext, holder: Holder): string {
+export function thenWords(ctx: PartContext, view: View, holder: Holder): string {
   const back = holder.kind === "own" ? null : holder.then;
-  return back === null ? "" : ctx.catalog.text.fill(UI.handsThen, { mix: mixLabel(ctx.catalog, back) });
+  return back === null ? "" : ctx.catalog.text.fill(UI.handsThen, { mix: mixLabel(ctx.catalog, view, back) });
 }

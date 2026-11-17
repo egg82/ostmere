@@ -206,6 +206,7 @@ def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
         yield f"lane {x.id}", x.label_key
         yield from ((f"lane {x.id}", lb.label_key) for lb in x.later_labels)
         yield from ((f"lane {x.id}", k) for k in (x.name_key,) if k is not None)
+    yield from (("town title", lb.label_key) for lb in o.town_later_labels)
     for c in o.cards:
         singles = (c.label_key, c.upside_key)
         yield from ((f"card {c.id}", k) for k in (*singles, *c.line_keys) if k is not None)

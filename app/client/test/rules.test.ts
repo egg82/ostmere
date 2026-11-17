@@ -39,8 +39,8 @@ expect("bench offer is a task rule", ordersOf(addRule(mid, catalog, stoneCard)),
 // Finding, wording and grouping rules.
 expect("ruleFor finds the rule by its condition", ruleFor(list, woodCard), 0);
 expect("ruleFor misses", ruleFor(mid, woodCard), -1);
-expect("words", ruleWords(catalog, list.orders[0]!), { when: "Under 10 Dead wood, until 20", action: "Gather by hand" });
-expect("a condition that is not on a store is not drawn", ruleWords(catalog, { when: { kind: "after_time", at: 5 }, then: woodCard.then, unless: [], or_else: [], below_next: false }), null);
+expect("words", ruleWords(catalog, list, list.orders[0]!), { when: "Under 10 Dead wood, until 20", action: "Gather by hand" });
+expect("a condition that is not on a store is not drawn", ruleWords(catalog, list, { when: { kind: "after_time", at: 5 }, then: woodCard.then, unless: [], or_else: [], below_next: false }), null);
 expect("hands rules", mixRules(list), [0, 1]);
 expect("task rules", taskRules(list), [2]);
 
@@ -82,13 +82,13 @@ if (other) expect("another saved mix edited is saved, not run", saveDecisions(li
 {
   const tired = fixtureContent.chip_infos.find((c) => c.chip === "tired")!.when;
   const rest: Order = { when: tired, then: { kind: "switch_mix", mix_id: "Rest" }, unless: [], or_else: [], below_next: false };
-  expect("chip words in the list", ruleWords(catalog, rest), { when: "While tired", action: "Rest" });
+  expect("chip words in the list", ruleWords(catalog, list, rest), { when: "While tired", action: "Rest" });
   expect("chip words on the strip", ruleRunning(catalog, rest), "while tired");
   if (tired.kind === "after_time") throw new Error("a store condition");
   const shuffled = JSON.parse(JSON.stringify({ release: tired.release, watched: tired.watched, value: tired.value, kind: tired.kind })) as Order["when"];
   expect("field order does not matter", chipOf(catalog, shuffled)?.chip, "tired");
   const nudged: Order = { ...rest, when: { ...tired, release: tired.release + Q } };
-  expect("one level off reads as numbers", ruleWords(catalog, nudged)?.when, "Under 3 Energy, until 7");
+  expect("one level off reads as numbers", ruleWords(catalog, list, nudged)?.when, "Under 3 Energy, until 7");
   expect("one level off: the strip's numbers", ruleRunning(catalog, nudged), "until 7 Energy");
   expect("a store rule on the strip", ruleRunning(catalog, list.orders[0]!), "until 20 Dead wood");
 }

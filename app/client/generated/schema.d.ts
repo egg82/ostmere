@@ -979,6 +979,8 @@ export interface components {
             camp: components["schemas"]["CampInfo"] | null;
             people: components["schemas"]["PeopleInfo"] | null;
             first_mix: components["schemas"]["FirstMix"];
+            /** Town Later Labels */
+            town_later_labels: components["schemas"]["LaneLabel"][];
             /** Game Mix Ids */
             game_mix_ids: string[];
             /** Transfer Code S */

@@ -108,7 +108,7 @@ const tap = (s: Screen, sel: string): void => (s.root.querySelector(sel) as HTML
   tap(screen, '.chron-filter[data-filter="rules"]');
   const found = stretches(screen).map(shown).flat();
   expect("what the rules did is under Rules, each start and let-go once however many Steps repeat it",
-    found.length, ruleEntries(catalog, first.rule_runs).length);
+    found.length, ruleEntries(catalog, first.view, first.rule_runs).length);
   expect("each with the store's level then, where its rule is a store's", found.filter((r) => r.includes(" ↳ ")).length > 0, true);
 }
 {

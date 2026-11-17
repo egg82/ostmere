@@ -200,7 +200,7 @@ export class Ledger implements Part {
     row.box.classList.toggle("alarm", red);
     row.box.classList.toggle("rising", line.net_per_hour > 0);
     const { card, rule, shown } = offer;
-    this.inline(row, shown ? card : undefined);
+    this.inline(row, view, shown ? card : undefined);
     row.rule = lineRule(view, line);
     setRuleMark(row.mark, this.ctx.catalog, view, row.rule);
     row.box.classList.toggle("ruled", row.rule >= 0);
@@ -247,9 +247,9 @@ export class Ledger implements Part {
 
   /** The line's guide to the first rule's lesson, shown under it while the line is red (or its card kept) and no rule
    * is set on its store and test, and gone when it is not: the card's rule and Show me. */
-  private inline(row: Row, card: OrderCard | undefined): void {
+  private inline(row: Row, view: View, card: OrderCard | undefined): void {
     const { catalog } = this.ctx;
-    const words = card ? ruleWords(catalog, { when: card.when, then: card.then, unless: [], or_else: [], below_next: false }) : null;
+    const words = card ? ruleWords(catalog, view, { when: card.when, then: card.then, unless: [], or_else: [], below_next: false }) : null;
     const guide = card !== undefined && this.view !== null && guidedRule(this.view, this.ctx.keeps, card);
     const waits = guide && ruleWaits(card, this.ctx.lesson(), this.ctx.lessonSubject());   // guided, it waits out another lesson or offer
     const key = card && words && guide && !waits ? `${words.when}|${words.action}` : "";

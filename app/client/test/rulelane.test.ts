@@ -70,7 +70,7 @@ const ruled = dayTwoStep("ruled", 100).view;   // hands 0, 1; fetch always (pass
 }
 
 {  // a rule or a queue entry that answers an offer has words of its own, in the Rules tab and in Next
-  expect("an answer's words", actionWords(catalog, { kind: "answer_offer", offer: "ask", answer: "go" }), "Answer: Go now");
+  expect("an answer's words", actionWords(catalog, ruled, { kind: "answer_offer", offer: "ask", answer: "go" }), "Answer: Go now");
   const answers: View = { ...ruled, queue: [{ verb: { kind: "answer_offer", offer: "ask", answer: "wait" }, until: { kind: "at_least", watched: { kind: "card_count", card: "haul" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } }] };
   const { ctx } = testContext();
   const tab = new RulesTab(ctx);

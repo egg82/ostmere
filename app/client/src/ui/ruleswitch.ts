@@ -7,10 +7,10 @@ import { landedSide, ruleSideOf, sideSwitchShown, type RuleSide } from "../game/
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 
-export function sideSwitch(catalog: Catalog, side: RuleSide, pick: (side: RuleSide) => void): HTMLElement {
+export function sideSwitch(catalog: Catalog, view: View, side: RuleSide, pick: (side: RuleSide) => void): HTMLElement {
   const box = el("div", "rules-side");
-  for (const [which, label] of [["mine", UI.ruleSideMine], ["camp", UI.townTitle]] as const) {
-    const b = el("button", "cond-test rules-side-pick", catalog.text.get(label));
+  for (const [which, label] of [["mine", catalog.text.get(UI.ruleSideMine)], ["camp", catalog.townTitle(view)]] as const) {
+    const b = el("button", "cond-test rules-side-pick", label);
     b.type = "button";
     b.dataset.side = which;
     b.setAttribute("aria-pressed", String(which === side));

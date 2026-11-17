@@ -3,7 +3,7 @@
 import type { CardInfo, ChipInfo, LaneInfo, LineCause, LineInfo, Mention, NodeInfo, OfferInfo, OrderCard, Content, SideInfo, SkillInfo, StoreInfo, ThreatInfo, View } from "../api/types";
 import { Format } from "./format";
 import type { LineKind } from "./chronicle";
-import { Text } from "./text";
+import { Text, UI } from "./text";
 
 function byId<T, K extends keyof T>(items: T[], key: K): Map<T[K], T> {
   return new Map(items.map((item) => [item[key], item]));
@@ -130,6 +130,12 @@ export class Catalog {
     const info = this.lanes.get(lane);
     const later = view ? info?.later_labels.filter((l) => this.unlocked(view, l.after.category, l.after.id)).at(-1) : undefined;
     return this.label(later?.label_key ?? info?.label_key);
+  }
+
+  /** The town's shown name: the last of Content.town_later_labels whose unlock `view` holds, else ui.town.title. */
+  townTitle(view: View): string {
+    const later = this.content.town_later_labels.filter((l) => this.unlocked(view, l.after.category, l.after.id)).at(-1);
+    return this.text.get(later?.label_key ?? UI.townTitle);
   }
 
   /** A card on a lane whose task the player's rules set, never their tap. */

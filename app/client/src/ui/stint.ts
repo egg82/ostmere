@@ -61,7 +61,7 @@ export function stintParts(catalog: Catalog, after: View | null, open: boolean, 
 
 /** A switch entry's words in Next: "{mix} until {goal}". */
 export function stintWords(catalog: Catalog, view: View, entry: QueueEntry): string {
-  const mix = entry.verb.kind === "switch_mix" ? mixLabel(catalog, entry.verb.mix_id) : "";
+  const mix = entry.verb.kind === "switch_mix" ? mixLabel(catalog, view, entry.verb.mix_id) : "";
   const row = stintRow(view, entry.until);
   return catalog.text.fill(UI.stintEntry, { mix, goal: row ? goalLabel(catalog, row) : untilLabel(catalog, entry.until) });
 }

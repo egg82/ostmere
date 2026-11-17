@@ -36,7 +36,7 @@ export class ElseEditor {
     head.append(el("span", "rules-label", text.get(UI.ruleElseLabel)), el("span", "cond-else-hint", text.get(UI.ruleElseHint)));
     const held = orElse.map((v, i) => {
       const row = el("div", "cond-else-row");
-      const words = actionWords(catalog, v);
+      const words = actionWords(catalog, view, v);
       const drop = button("quiet cond-else-drop", text.get(UI.orderRemove), () => { this.adding = false; this.change(orElse.filter((_, j) => j !== i)); });
       drop.setAttribute("aria-label", `${text.get(UI.orderRemove)} ${words}`);
       row.append(el("span", "cond-else-words", words), drop);

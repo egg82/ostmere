@@ -512,6 +512,7 @@ export const fixtureContent: Content = {
   },
   camp: { store: "camp", camp_levels: [{ at: 50 * Q, pays_key: "pays.wall", pays_from: 3 * Q, pays_to: 5 * Q, change_bp: [], held: false, lifted_by: [], names: [] }, { at: 200 * Q, pays_key: "pays.unknown", pays_from: null, pays_to: null, change_bp: [], held: true, lifted_by: [], names: [] }] },
   first_mix: { feature: "mix", card_ids: ["gather", "tend"] },
+  town_later_labels: [],
   game_mix_ids: ["town:main"],   // the town fixtures' mix (fixtures/townwire.ts), made by their joins
   transfer_code_s: 600,
 };

@@ -35,6 +35,11 @@ if (hash.has("kinded")) {
 }
 if (hash.has("swap")) for (const s of fixtureContent.store_infos) if (s.made_by.includes("tend")) s.made_by = [...s.made_by, "look"];
 const phase = (hash.get("phase") ?? "start") as Phase;
+// #townname: the content's later town name ("Town", after a feature the view may unlock), #founded unlocking it.
+if (hash.has("townname")) {
+  fixtureContent.town_later_labels.push({ after: { category: "feature", id: "founded" }, label_key: "ui.town.later" });
+  fixtureContent.text_entries.push({ key: "ui.town.later", text: "Town" });
+}
 if (isFights(phase)) Object.assign(fixtureContent, withHurtChip(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
@@ -60,7 +65,8 @@ const woodGoal = (v: View): View => (!hash.has("goalrows") ? v : { ...v, goal_ro
 const larder = { kind: "at_least" as const, watched: { kind: "card_count" as const, card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false };
 const nextRow = (v: View): View => (!hash.has("nextrow") ? v : { ...v, orders: v.orders.map((o, i) => ({ ...o, below_next: i >= 2 })),
   queue: [{ verb: { kind: "tap_card", card: "larder" }, until: larder }], order_states: v.order_states.map((s, i) => (i === 2 && s === "on" ? "behind_next" : s)) });
-const asStep = (s: Step): Step => ({ ...s, view: nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view)))) });
+const founded = (v: View): View => (hash.has("founded") ? { ...v, unlocked: [...v.unlocked, { category: "feature", id: "founded" }] } : v);
+const asStep = (s: Step): Step => ({ ...s, view: founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view))))) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,

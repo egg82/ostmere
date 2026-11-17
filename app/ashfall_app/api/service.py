@@ -20,6 +20,7 @@ from ..saves.journal import ComposedDay
 from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
 from .goalrows import goal_rows
+from .lane_infos import lane_infos, later_labels
 from .mixrows import MixNumbers
 from .levels import levels
 from .scenestores import scene_stores
@@ -171,11 +172,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                      for s in o.skills],
         node_infos=[cm.NodeInfo(node=n.id, skill=n.skill, label_key=n.label_key, change=cm.NodeChange(
             target=cm.NodeTarget(n.changes.target), id=n.changes.id, store=n.changes.store)) for n in o.nodes],
-        lane_infos=[cm.LaneInfo(lane=e.HANDS, label_key=o.hands_label_key, ruled=False, later_labels=[], name_key=None,
-                                told=None),
-                    *(cm.LaneInfo(lane=x.id, label_key=x.label_key, ruled=x.ruled, later_labels=[
-                        cm.LaneLabel(after=convert.unlock(authored.unlock(lb.after)), label_key=lb.label_key)
-                        for lb in x.later_labels], name_key=x.name_key, told=x.told) for x in o.lanes)],
+        lane_infos=lane_infos(o), town_later_labels=later_labels(o.town_later_labels),
         offer_infos=_offer_infos(o),
         offer_kinds=[cm.OfferKindInfo(kind=k.kind, roles=[cm.KindRole(role=r.role, label_key=r.label_key) for r in k.roles])
                      for k in o.offer_kinds],

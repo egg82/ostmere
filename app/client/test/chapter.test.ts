@@ -59,17 +59,17 @@ const run = (order: typeof wood, starts: number, on: number | null, off: number 
   expect("a held Camp level is not counted", chapterOf(fixtureContent, prev, [], next, []).camp, null);
 
   const store = (id: string) => catalog.storeLabel(id);
-  const rows = chapterRows(catalog, c, 2);
+  const rows = chapterRows(catalog, next, c, 2);
   expect("rows: stores gained then lost, the Camp before the skills, each rule, the asks waiting", rows, [
     ["stores", [`+326 ${store("wood")}`, `−26 ${store("warmth")}`]],
     ["levels", [`${store("camp")} 1 → 2`, `${catalog.skillLabel("foraging")} 2 → 4`]],
-    ["rules", [text.fill(UI.chapterTimes, { rule: ruleText(catalog, wood)!, n: "2" }), text.fill(UI.chronRuleOff, { rule: ruleText(catalog, tired)! })]],
+    ["rules", [text.fill(UI.chapterTimes, { rule: ruleText(catalog, next, wood)!, n: "2" }), text.fill(UI.chronRuleOff, { rule: ruleText(catalog, next, tired)! })]],
     ["waiting", ["2 asks"]],
   ]);
-  expect("a rule that came on once says so without a count", chapterRows(catalog, { ...c, rules: [{ order: wood, came_on: true, times: 1 }] }, 0)[2],
-    ["rules", [text.fill(UI.chronRuleOn, { rule: ruleText(catalog, wood)! })]]);
-  expect("only what has something; one ask", chapterRows(catalog, { left: 0, back: 1, stores: [], levels: [], camp: null, rules: [] }, 1), [["waiting", ["1 ask"]]]);
-  expect("no figures kept: only what waits", chapterRows(catalog, null, 0), []);
+  expect("a rule that came on once says so without a count", chapterRows(catalog, next, { ...c, rules: [{ order: wood, came_on: true, times: 1 }] }, 0)[2],
+    ["rules", [text.fill(UI.chronRuleOn, { rule: ruleText(catalog, next, wood)! })]]);
+  expect("only what has something; one ask", chapterRows(catalog, next, { left: 0, back: 1, stores: [], levels: [], camp: null, rules: [] }, 1), [["waiting", ["1 ask"]]]);
+  expect("no figures kept: only what waits", chapterRows(catalog, next, null, 0), []);
 }
 {
   const chapter: Chapter = { left: 100, back: 4000, stores: [], levels: [], camp: null, rules: [] };

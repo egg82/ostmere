@@ -37,7 +37,7 @@ export class PersonMix {
   private edited(): { mix: Mix; isNew: boolean } {
     const view = this.view as View;
     const found = townMixToEdit(this.ctx.catalog, view);
-    const mix = structuredClone(found ?? newTownMix(view, this.ctx.catalog.text.get(UI.townTitle)));
+    const mix = structuredClone(found ?? newTownMix(view, this.ctx.catalog.townTitle(view)));
     mix.components = mix.components.filter((c) => c.kind !== "card_share" || view.cards.some((v) => v.card === c.card));
     return { mix, isNew: found === null };
   }

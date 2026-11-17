@@ -34,15 +34,15 @@ const dots = (): [boolean[], boolean] => [changes().map(dot), dot(tabs.town)];
 const town = townStep("town").view;
 ctx.keeps.keepLaneTasksSeen(town.cards.map((c) => c.card));
 rows.update(town);
-view.draw(false, false);
+view.draw(town, false, false);
 expect("every task seen: no dot", dots(), [[false, false], false]);
 
 const newTask: View = { ...town, cards: [...town.cards, { ...haul, card: "mend", share_bp: 0 }] };
 rows.update(newTask);
-view.draw(false, true);
+view.draw(newTask, false, true);
 expect("a new task of the helper's: their Change and the tab wear the dot", dots(), [[true, false], true]);
 
 changes()[0]?.click();
 rows.update(newTask);
-view.draw(false, true);
+view.draw(newTask, false, true);
 expect("their page opened: both are clear", dots(), [[false, false], false]);
