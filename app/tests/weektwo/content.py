@@ -65,6 +65,7 @@ twelve)")."""
 ASKS_FIFTEEN = ((OfferId("o_sun_rack"), AnswerId("o_sun_rack_sun")), (OfferId("o_door_ice"), AnswerId("o_door_ice_shave")))
 """Day fifteen's two asks, as every route answers them."""
 PULL_BEAMS, HUNT_DEER = CardId("pull_beams"), CardId("hunt_deer")
+CORDWOOD = CardId("stack_cordwood")
 BEAMS = {"typical": 1500, "sharp": 3000}
 """The hands' share of pulling beams a route adds once shown (S4's visit); a route not named follows typical. The ruin's
 pool is finite, so its share yields once it is spent (decisions.md, "A mix keeps going without a dry store")."""
@@ -115,6 +116,12 @@ def order_cards(rules_cards: tuple[tuple[Unlock, Order], ...] = (),
     """`rules_cards`, and the content's order cards on `stores`, each as the page fills it in, offered after its
     unlock."""
     return (*rules_cards, *c3.order_cards(c3.opening3(), stores))
+
+
+def cordwood_rule() -> tuple[tuple[Unlock, Order], ...]:
+    """Damp wood's sink's order card (day_fifteen.toml, stack_cordwood), offered once woodcutting's first top opens it.
+    Of damp wood's order cards only this one: n1_cut's is her first rule, taught on day two."""
+    return tuple(x for x in c3.order_cards(c3.opening3(), ("damp_wood",)) if x[1].then == TapCard(CORDWOOD))
 
 
 def own(knobs: WeekTwoKnobs):
@@ -194,7 +201,7 @@ def day_fifteen(route: str) -> Later:
         start="S4", stop="B14",
         sinks=Chapter(trips=(*twelve.sinks.trips, STEW_BARLEY), comforts=twelve.sinks.comforts,
                       arrivals=twelve.sinks.arrivals),
-        steps=(), order_cards=order_cards(twelve.order_cards, ORDER_STORES_FIFTEEN), keeps=twelve.keeps,
+        steps=(), order_cards=(*order_cards(twelve.order_cards, ORDER_STORES_FIFTEEN), *cordwood_rule()), keeps=twelve.keeps,
         landed=FIFTEEN.of, news=("B13", "SL22", "T1", "T3", "T2", "SL23", "B14"),
         answers=(*twelve.answers, *ASKS_FIFTEEN),
         shares=(*twelve.shares, Share(PULL_BEAMS, BEAMS.get(route, BEAMS["typical"])), Share(HUNT_DEER, DEER_SHARE)),

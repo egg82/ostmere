@@ -62,6 +62,15 @@ CLEAR = 0.25
 does not tip it over."""
 
 
+DAMP_CLEAR = 0.35
+"""The most damp wood loses over 24 h away from day fifteen's end: well clear of the check's half."""
+
+
+def test_damp_wood_loses_well_under_half_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
+    """stack_cordwood takes only what woodcutting makes past the hands' cards once its first top lifts it."""
+    assert fifteen_shares["damp_wood"] <= DAMP_CLEAR
+
+
 def test_track_laid_loses_at_most_a_quarter_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
     """The track runs on past 10 000, where field_track kept laying into a full store."""
     assert fifteen_shares["track_laid"] <= CLEAR
