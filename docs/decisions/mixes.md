@@ -143,6 +143,13 @@ and you tune it, then hit go.
   mix returns. Nothing says "paused because…", on a card or the strip: the bar already shows what runs
   (`docs/design/opening-screen.md`, "The hands strip").
 - One mechanism for both layers: your mix runs your day, the town's mix runs its buildings and people.
+- **A person's mix is the simple version of yours, on purpose** (owner, 2026-11-17: "Multiple people is complicated
+  enough"). Each person has one split in the one town mix: no saved mixes of their own, and no rule switches it when a
+  store reaches a level. A rule made for the hands applies to people only where it keeps them working and the screen
+  true; a person is never left idle because of a hands-only rule.
+- **A big town will not be tuned person by person** (owner, 2026-11-17): past a handful of people, per-person splits
+  become a chore. The owner's direction: the first few people keep their own split, and later people run one mix per
+  type of work (#337).
 
 ## Automation is designed, not clicked
 
