@@ -1,15 +1,17 @@
 // Next's "+ Plan" (CONTRACT.txt, "Goal stints"; docs/design/opening-screen.md, "The Rules tab"): the two kinds of entry
-// the queue holds. First the cards "When ready" takes, ready now ones included, each picked through the card's own
-// path (game/queue.whenReady); then the steps it would take but for what they wait on, off, each saying what in its
-// face's words (game/needwords.ts, which the face draws from too); then the saved hands mixes: a mix picked lists the goals it would run to (the dry run of
+// the queue holds. The cards "When ready" takes, ready now ones included, each picked through the card's own
+// path (game/queue.whenReady), and the steps it would take but for what they wait on, off, each saying what in its
+// face's words (game/needwords.ts, which the face draws from too), together under the Tasks page's section headings; then the saved hands mixes: a mix picked lists the goals it would run to (the dry run of
 // switching to it, or the live view's when it already runs), and a goal picked queues the stint at the end of Next.
 import type { Card, View } from "../api/types";
+import { sectioned } from "../game/cardsections";
 import { planCards, queueFull, queueStint, whenReady } from "../game/queue";
 import { isTownMix } from "../game/town";
 import { UI } from "../game/text";
 import { waitWords } from "../game/needwords";
 import { el, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
+import { sectionHead } from "./condrows";
 import { goalPicker } from "./stint";
 
 type Step = { mix: string | null; after: View | null };
@@ -46,8 +48,9 @@ export class StintPlan {
     const head = el("div", "cond-head");
     head.append(el("h3", "rules-next", mix === null ? catalog.text.get(UI.queuePlan) : catalog.text.fill(UI.stintWhich, { mix })), close);
     if (mix === null) {
-      const waiting = cards.waiting.flatMap((c) => { const words = waitWords(catalog, view, c); return words === null ? [] : [this.cardRow(view, c, words)]; });
-      return [head, ...cards.now.map((c) => this.cardRow(view, c, null)), ...waiting, ...mixes.map((m) => this.mixButton(view, m.id))];
+      const offered = [...cards.now.map((c) => ({ c, words: null })), ...cards.waiting.flatMap((c) => { const words = waitWords(catalog, view, c); return words === null ? [] : [{ c, words }]; })];
+      const cardRows = sectioned(catalog, offered, (o) => o.c.card, view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map((o) => this.cardRow(view, o.c, o.words))]);
+      return [head, ...cardRows, ...mixes.map((m) => this.mixButton(view, m.id))];
     }
     return after === null ? [head] : [head, goalPicker(catalog, after, (until) => {
       tapFeedback();

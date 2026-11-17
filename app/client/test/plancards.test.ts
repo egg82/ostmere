@@ -67,21 +67,26 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
   expect("ready now on a free lane: the face leaves it to a tap", button.hidden, true);
 }
 
-// What Plan lists: the cards it takes, then the waiting ones with their face's words, then the mixes.
+// What Plan lists: every card it offers once, under its section's heading (the Tasks page's order, a section by name),
+// those it takes with When ready and the waiting ones off with their face's words; the mixes last.
 {
   const plan = planner(view);
   plan.rows()[0]?.click();
   const rows = plan.rows();
-  expect("the cards it takes first, ready now included, in the page's order; the mixes last", [...rows.slice(0, 3), ...rows.slice(-2)].map((r) => r.textContent),
-    ["Plan✕", "StoolWhen ready", "LarderWhen ready", "a", "b"]);
-  const waits = rows.slice(3, -2) as HTMLButtonElement[];
+  const name = (r: HTMLElement) => r.querySelector(".selector-name")?.textContent ?? "";
+  const cardRows = rows.slice(1, -2);
+  const heads = cardRows.filter((r) => !r.className.includes("plan-card")).map((r) => r.textContent);
+  expect("one heading per section, the craft section's", heads, ["Craft"]);
+  expect("the cards in the page's order, crafts under their heading by name; the mixes last",
+    [rows[0]!.textContent, ...cardRows.map((r) => r.className.includes("plan-card") ? name(r) : r.textContent), ...rows.slice(-2).map((r) => r.textContent)],
+    ["Plan✕", "Look around", "Craft", "Hatchet", "Larder", "Lean-to", "Stool", "a", "b"]);
+  const waits = cardRows.filter((r) => r.className.includes("plan-card") && (r as HTMLButtonElement).disabled) as HTMLButtonElement[];
   const faceSays = (card: Card): string => {
     const face = new CardNeeds(testContext().ctx, card.card);
     face.draw(card, view, false);
     face.tick(card, view, view.at);
     return face.shows(card.blocker!.condition)?.textContent ?? "(no row)";
   };
-  const name = (r: HTMLElement) => r.querySelector(".selector-name")?.textContent ?? "";
   const said = waits.map((r) => { const c = view.cards.find((k) => catalog.cardLabel(k.card) === name(r))!; return name(r) + faceSays(c); });
   expect("between them each waiting step, saying what its face says", waits.map((r) => r.textContent), said);
   expect("the lean-to among them", waits.some((r) => name(r) === "Lean-to"), true);

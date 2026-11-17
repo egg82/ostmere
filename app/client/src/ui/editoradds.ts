@@ -4,6 +4,7 @@
 import type { View, Mix } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import type { NewMarks } from "../game/marks";
+import { inSectionOrder } from "../game/cardsections";
 import { holdsCard } from "../game/mix";
 import { UI } from "../game/text";
 import { acted, el, setText } from "./dom";
@@ -39,7 +40,7 @@ export class AddFold {
   /** The cards that can join: on the hands, in play, not in the edit yet; tapped, or dragged onto the bar. */
   draw(view: View, mix: Mix): void {
     const { catalog } = this;
-    const free = view.cards.filter((c) => catalog.mixable(c.card) && !holdsCard(mix, c.card));
+    const free = inSectionOrder(catalog, view.cards.filter((c) => catalog.mixable(c.card) && !holdsCard(mix, c.card)), (c) => c.card);
     const key = free.map((c) => (this.marks.has(c.card) ? `${c.card}*` : c.card)).join("|");
     if (key === this.key) return;   // kept across views, so a card being dragged in stays under the finger
     this.key = key;
