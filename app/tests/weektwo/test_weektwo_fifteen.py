@@ -52,7 +52,7 @@ def test_b13_is_held_to_the_calendar(fifteen_route: Route):
     assert p.landed_at["B13"] - p.history[0][0].time == B13_S, f"{name}: B13 at 336 h"
 
 
-@pytest.mark.xfail(strict=True, reason="; ".join((verdicts.TRACK_STONES_GAP, verdicts.TRACK_ROOTS_GAP, verdicts.STONE_DRY_GAP)))
+@pytest.mark.xfail(strict=True, reason="; ".join((verdicts.TRACK_STONES_GAP, verdicts.TRACK_ROOTS_GAP)))
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
     assert fifteen_loss == {}
 
@@ -69,6 +69,11 @@ DAMP_CLEAR = 0.35
 def test_damp_wood_loses_well_under_half_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
     """stack_cordwood takes only what woodcutting makes past the hands' cards once its first top lifts it."""
     assert fifteen_shares["damp_wood"] <= DAMP_CLEAR
+
+
+def test_dry_wood_loses_at_most_half_its_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
+    """Held while the check above is a gap: stack_windbreak takes the stone's surplus."""
+    assert "dry_wood" not in fifteen_loss
 
 
 def test_track_laid_loses_at_most_a_quarter_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
