@@ -25,7 +25,7 @@ ALLOWED: dict[str, set[str]] = {
     "jobs": {"clock", "db", "logs", "opening", "reminders", "saves"},
     "main": {
         "accounts", "api", "build_header", "client_errors", "clock", "db", "feedback", "head", "logs", "opening",
-        "old_host", "page_config", "saves", "services", "web",
+        "old_host", "page_config", "saves", "services", "web", "writer",
     },
     "opening": {"engine"},
     "page_config": {"reminders"},

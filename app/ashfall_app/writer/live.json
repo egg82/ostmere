@@ -1,0 +1,6 @@
+{
+  "models": {"default": "claude-sonnet-5-5"},
+  "effort": "low",
+  "max_tokens": 1024,
+  "timeout_s": 30
+}

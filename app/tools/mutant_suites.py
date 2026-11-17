@@ -38,4 +38,5 @@ SUITES = {
         "tests/saves/test_journal_*.py", "tests/db/test_journal_*.py", "tests/db/test_decision_lock_span.py",
         "tests/db/test_save_journal_migrate.py", "tests/test_journal_days_wire.py"), home="tests/saves"),
     "queue": Suite("MUTANTS_queue.txt", "test_queue.py", "queue_mutants", home="tests/writer"),
+    "live": Suite("MUTANTS_live.txt", "test_live.py", "live_mutants", home="tests/writer"),
 }
