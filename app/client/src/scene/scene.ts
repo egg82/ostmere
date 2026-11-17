@@ -131,7 +131,6 @@ export class Scene {
 
   /** Whether the first layer that sounds as `sound` is wanted now, as of the last frame drawn. */
   soundShown(sound: NonNullable<SceneLayer["sound"]>): boolean { return soundShownOf(this.layers, this.manifest.layers, sound); }
-
   /** The grade in force and the seconds it takes to move into. */
   gradeNow(): { id: string; easeS: number } { return { id: this.gradeId, easeS: this.to?.ease_s ?? GRADE_S }; }
 
