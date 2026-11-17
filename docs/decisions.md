@@ -37,6 +37,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 - [Fun, but never vying for attention](decisions/principles.md): attention earns nothing; the 2 AM test, no offline cap, no daily resets, no notifications unless asked, calm shown in the design.
 - [Cascades are the peak](decisions/principles.md): the best moment is a good build setting off a deterministic chain reaction.
 - [Progress is stated, never hinted](decisions/principles.md): every gate on progress, and the next step with how far along it is, is on screen in plain words.
+- [Every option offered works as worded](decisions/principles.md): no option that can't do what it says, no option offered twice, long lists in the game's own order.
 - [No blind permanent choices](decisions/principles.md): every choice is a tradeoff; a weight that can't be seen when chosen is free to change later.
 - [Built on habits](decisions/principles.md): what comes from habits and what is new code here.
 - [Never](decisions/principles.md): store-shaped mechanics, card framing, and the lines the story never crosses.

@@ -104,10 +104,25 @@ as what is next, not as a store like any other. A wait on the clock alone shows 
 requirement that can refuse its tap before the tap: a store as have/need, a level or a step as its row, a night or
 other part of the day as when it opens ("Opens after dark"), any other clock as its countdown; a card the content
 can show with a requirement its face cannot draw fails the build (`app/tests/opening/test_requires_shown.py`, whose
-held list only shrinks). The same holds for rules: a subject the player can see is one a rule can watch.
+held list only shrinks). The same holds for rules: a subject the player can see is one a rule can watch, in a form
+that works for it (a task that repeats by its running, not by a count it soon passes for good).
 **Progress uses mechanics native to the genre and fits the game's type and story**: a milestone is a build,
 a level or a count, never a state of the screen; the opening's end is its last steps done, not every ledger line white,
 since getting by is good enough in this story.
+
+## Every option offered works as worded
+
+**The game never sets the player up to fail with a choice it offers** (owner, 2026-11-17: "we don't want to set players
+up for failure with poor wording or duplicate cards or choices"). Every option in a picker, editor or list:
+
+- does what its words say, in the situation it is offered in: no rule that reads as waiting for an end the task never
+  reaches, no choice that can never come true or is already true for good;
+- appears once: the same card, task or choice is not offered twice in one list, under two names or two headings;
+- is found where the player looks: a list long enough to scan is ordered the way the rest of the game orders it
+  (by section under its heading, by name inside each).
+
+An option that fails one of these is left out, or reworded until it holds; leaving it in with a caveat beside it is
+not a fix.
 
 ## No blind permanent choices
 
