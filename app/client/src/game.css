@@ -80,6 +80,9 @@ p.catching-up[hidden] { display: none; }
    ui/headseat.ts): above the art, under the head's row on a phone */
 .aim { flex: none; box-sizing: content-box; height: 1.3em; margin: 0; padding: 0 .75rem .35rem; font-size: var(--t-meta); font-style: italic; line-height: 1.3; color: var(--ink-hi); text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .aim.aim-new { animation: arrive .9s ease-out; }
+.sound-button { flex: none; min-width: 2.4rem; min-height: 2.4rem; padding: 0; cursor: pointer; font-size: 1.2rem; line-height: 1; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; }   /* the speaker (ui/soundcontrol.ts), the head's last item; struck through while sound is off */
+.sound-button:hover, .sound-button:focus-visible { color: var(--ink-hi) !important; background: var(--press); outline: none; }
+.sound-button.off { color: var(--ink-dim) !important; text-decoration: line-through; }
 .chips { display: flex; flex-wrap: wrap; gap: .9rem; margin-left: auto; }   /* after the Camp bar, against the Chronicle: a chip coming or going never moves the bar's left edge */
 /* a chip is a state, not a control: its glyph and words, no frame */
 .chip { font-size: var(--t-meta); padding: .1rem 0; color: var(--ink); text-shadow: 0 1px 3px #000; }

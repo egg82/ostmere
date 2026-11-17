@@ -850,6 +850,9 @@ TEXT AND NUMBERS (one rule)
                                     (this device, every game): the checkbox that skips the front page on this device
                                     (shown in this sheet and on the front page), and the checkbox that turns lessons off
                                     in every game of the account (AccountSettings.lessons, checked when it is false)
+    ui.sound.on | ui.sound.off | ui.sound.row
+                                    the speaker button's name in each state (it mutes, then unmutes), and the Sound
+                                    checkbox in Settings' this-device group; both are drawn only once sound exists
     ui.games.played {when}          the front page's list of games: a row's last-played line, {when} one of the ui.time.*
                                     words (the list's heading is ui.games.heading, the phone's button ui.games.open)
     ui.front.continue               the front page's button, in Begin's place, on a browser that has games
