@@ -13,6 +13,7 @@
   journal_days  tests/saves/test_journal_days.py (and the tests in `also`)  tests/saves/MUTANTS_journal_days.txt
           specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
   queue   tests/writer/test_queue.py  tests/writer/MUTANTS_queue.txt  specs tools/queue_mutants/
+  live    tests/writer/test_live.py  tests/writer/MUTANTS_live.txt  specs tools/live_mutants/
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); a claim is read from either, and a claim of a row outside the suite's rows is the sibling's.
 
