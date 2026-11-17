@@ -1,8 +1,9 @@
-// The Rules tab's mix picker (docs/design/opening-screen.md, "The Rules tab"): choosing a slot's mix, every saved mix
-// (greyed ones off) with the current one marked, or a new mix.
+// The Rules tab's mix picker (docs/design/opening-screen.md, "The Rules tab"): choosing a slot's mix, every saved hands mix
+// (a town mix is set by a rule on the town; greyed ones off) with the current one marked, or a new mix.
 import type { Order, View } from "../api/types";
 import { conditionWords, type RuleSlot as Slot } from "../game/orders";
 import { mixesFull } from "../game/mix";
+import { isTownMix } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
@@ -21,7 +22,7 @@ export function slotPicker(ctx: PartContext, view: View, slot: Slot, on: PickerA
   const { text } = catalog;
   const order: Order | undefined = slot === "otherwise" ? undefined : view.orders[slot];
   const current = slot === "otherwise" ? view.active_mix_id : order?.then.kind === "switch_mix" ? order.then.mix_id : null;
-  const rows = view.mixes.map((m) => {
+  const rows = view.mixes.filter((m) => !isTownMix(catalog, view, m)).map((m) => {
     const b = el("button", "selector-run");
     b.type = "button";
     b.disabled = view.greyed_mix_ids.includes(m.id);
