@@ -1,8 +1,8 @@
 # Sound map
 
 Where the game makes a sound, how loud, how often, where it stays quiet, how each sound lands on its picture, and what
-a recording must measure to be a candidate. Nothing here is built yet; candidates are screened against this map, and
-the owner picks each sound by ear.
+a recording must measure to be a candidate. The ladder's one-shots and the bed under the scene are wired, silent until a sound is picked; the evening piece is not
+built. Candidates are screened against this map, and the owner picks each sound by ear.
 
 Fits into: Feedback (`docs/systems.md`). Each one-shot is one more field on a ladder rung in
 `app/client/src/ui/ladder.ts`, fixed like the rung's effect, and the null is silence. The fire's bed and the evening
