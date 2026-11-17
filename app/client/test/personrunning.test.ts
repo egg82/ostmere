@@ -53,7 +53,7 @@ const running = (cond: FakeEl): string[] => cond.querySelectorAll(".cond-subject
   cond.querySelector(".cond-actions .primary")?.click();
   const set = decided.at(-1);
   expect("saved as the one Running shape on the helper's tap", set?.kind === "set_orders" ? set.orders.at(-1) : set,
-    { when: { kind: "at_least", watched: { kind: "running", runner: "hew" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "chop" }, unless: [], or_else: [] });
+    { when: { kind: "at_least", watched: { kind: "running", runner: "hew" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false }, then: { kind: "tap_card", card: "chop" }, unless: [], or_else: [], below_next: false });
 }
 
 {  // a hands rule, a mix, or a person's rule with a fallback on another lane: none
