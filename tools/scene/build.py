@@ -65,7 +65,7 @@ BIRCH = "project:woodcutting|running:n1_cut"
 def layers(rng: random.Random) -> list[Layer]:
     """Every layer in draw order. `when` shows it, `until` hides it again (see the manifest's `conditions`)."""
     walls = ruin().getchannel("A")
-    return [*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls), *_light_layers()]
+    return [*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls), *light_layers()]
 
 
 def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
@@ -181,7 +181,7 @@ def _people_layers(walls: Image.Image) -> list[Layer]:
     ]
 
 
-def _light_layers() -> list[Layer]:
+def light_layers() -> list[Layer]:
     """The lights over everything, then the ash in the air."""
     return [
         Layer(id="firelight", flicker=FLICKER, sound="fire", img=firelight(0.55), when="project:strike_fire", blend="screen", ungraded=True),

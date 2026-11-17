@@ -1,6 +1,5 @@
 """tools/scene: a layer says what it sounds as (docs/design/sound.md, "What wiring needs"): the fire's bed on the first
 firelight, the evening piece on each evening's firelight, and nothing else."""
-import random
 import sys
 from pathlib import Path
 
@@ -10,7 +9,7 @@ import build   # tools/scene, on the path from the line above
 
 
 def sounds() -> dict[str, str | None]:
-    return {layer["id"]: layer.get("sound") for layer in build.layers(random.Random(build.SEED))}
+    return {layer["id"]: layer.get("sound") for layer in build.light_layers()}
 
 
 def test_the_first_firelight_sounds_as_the_fire_and_each_evenings_as_the_evening():
