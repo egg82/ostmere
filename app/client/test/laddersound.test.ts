@@ -26,7 +26,7 @@ function record(): void {
   played = [];
   cuts = 0;
   resetCues();
-  registerSound({ play: (slot, pitch = 1, delay = 0) => { played.push({ slot, pitch, delay }); return () => { cuts += 1; }; } });
+  registerSound({ play: (slot, pitch = 1, delay = 0) => { played.push({ slot, pitch, delay }); return () => { cuts += 1; }; }, loop: () => ({ setLevel: () => undefined }) });
 }
 const slots = (): string[] => played.map((p) => p.slot);
 

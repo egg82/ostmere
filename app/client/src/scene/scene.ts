@@ -6,6 +6,7 @@
 // grow with the window; a frame is drawn only when a fade is moving or a flickering light is showing (flicker.ts).
 import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
+import { soundAlphaOf, type Drawn } from "./drawn";
 import { depthOrder, fadeStep, isGlow, passOf, pickGrade, gradeStep, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
 import { COVER, place, type Crop } from "./crop";
 import { focusOf } from "./focus";
@@ -21,14 +22,6 @@ export const SCENE_MANIFEST = `${SCENE_BASE}manifest.json`;
 const FADE_S = 0.8;
 /** The frame around the canvas (.scene-frame in game.css): its padding and border, both sides, in CSS px. */
 const FRAME_PX = 10;
-
-interface Drawn {
-  layer: SceneLayer;
-  image: HTMLImageElement;
-  alpha: number;
-  /** The flicker's level this frame (1 where the layer is steady), scaling alpha when drawn. */
-  glow: number;
-}
 
 export class Scene {
   private readonly facts: SceneFacts;
@@ -132,6 +125,9 @@ export class Scene {
     this.day = day;
     this.shownDirty = true;
   }
+
+  /** The alpha the first layer that sounds as `sound` is drawn at, flicker aside (0 where none does). */
+  soundAlpha(sound: NonNullable<SceneLayer["sound"]>): number { return soundAlphaOf(this.layers, this.manifest.layers, sound); }
 
   update(view: View): void {
     this.facts.observe(view);

@@ -28,7 +28,7 @@ function fakeContext(log: Log): ContextLike {
       const s: Log["sources"][number] = { rate: 1, started: false };
       log.sources.push(s);
       return {
-        buffer: null, connect() {}, start(when?: number) { s.started = true; s.when = when; },
+        buffer: null, loop: false, connect() {}, start(when?: number) { s.started = true; s.when = when; },
         playbackRate: { set value(v: number) { s.rate = v; }, get value() { return s.rate; } },
       };
     },
@@ -152,7 +152,7 @@ async function rig(over: Partial<Record<SlotName, Slot>>) {
   sound().play("tap");
   sound().play("tick", 1.5);
   const played: string[] = [];
-  registerSound({ play: (s) => { played.push(s); return () => undefined; } });
+  registerSound({ play: (s) => { played.push(s); return () => undefined; }, loop: () => ({ setLevel: () => undefined }) });
   sound().play("first");
   assert.deepEqual(played, ["first"]);
   resetSound();
