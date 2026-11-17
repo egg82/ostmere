@@ -1,5 +1,5 @@
 """The opening's readout (report.py) reported against its committed text (tests/readout_snapshot.py): a change in how the opening
-moves is reported, never failed; commit it with `python -m tests.readout_snapshot --write opening`."""
+moves is reported by the test and fails its job after the upload; commit it with `python -m tests.readout_snapshot --write opening`."""
 import pytest
 
 from tests import readout_snapshot as rs

@@ -46,7 +46,7 @@ export function laneSections(ctx: PartContext, view: View, cond: (index: number)
   });
 }
 
-function taskRow(ctx: PartContext, view: View, index: number, cond: (index: number) => HTMLElement): HTMLElement {
+export function taskRow(ctx: PartContext, view: View, index: number, cond: (index: number) => HTMLElement): HTMLElement {
   const { catalog } = ctx;
   const order = view.orders[index]!;
   const row = el("div", "rules-row task-rule");

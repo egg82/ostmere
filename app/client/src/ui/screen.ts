@@ -136,7 +136,7 @@ export class Screen {
     this.rules = new RulesTab(ctx);
     this.rulesGlow = new GlowWhile(this.glow, this.tabs.rules);
     this.town = new TownView(catalog, this.hands.lanes, this.tabs.town);
-    this.area.append(this.cards.root, this.town.root, this.rules.root, this.story.book.view, this.editor.root, this.hands.lanes.town.root);
+    this.area.append(this.cards.root, this.town.root, this.rules.root, this.story.book.view, this.editor.root, this.hands.lanes.town.root, this.hands.lanes.page.root);
     this.pinned.append(this.hands.root);
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);
@@ -274,11 +274,11 @@ export class Screen {
 
   private closeEditors(): void {
     if (this.editor.open) this.editor.close();
-    if (this.hands.lanes.town.open) this.hands.lanes.town.close();
+    this.hands.lanes.closeEditors();
   }
 
   private showTab(): void {
-    const editing = this.editor.open || this.hands.lanes.town.open;
+    const editing = this.editor.open || this.hands.lanes.editing;
     this.root.classList.toggle("editing", editing);
     if (this.tabs.on !== "book") this.story.book.closed();
     this.tabs.show(editing, { cards: this.cards.root, town: this.town.root, rules: this.rules.root, book: this.story.book.view }, this.root);

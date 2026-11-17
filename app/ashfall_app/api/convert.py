@@ -202,8 +202,21 @@ def order(o: e.Order) -> w.Order:
 
 
 def from_order(o: w.Order, rules: e.Rules) -> e.Order:
-    return e.Order(_page_built(o.when, rules), from_order_verb(o.then), tuple(_page_built(g, rules) for g in o.unless),
-                   tuple(from_order_verb(a) for a in o.or_else))
+    lane = _tap_lane([o.then, *o.or_else], rules)
+    return e.Order(_page_built(o.when, rules, lane), from_order_verb(o.then),
+                   tuple(_page_built(g, rules, lane) for g in o.unless), tuple(from_order_verb(a) for a in o.or_else))
+
+
+def _card_lane(card: str, rules: e.Rules) -> e.LaneId | None:
+    return next((c.lane for c in rules.cards if c.id == card), None)
+
+
+def _tap_lane(actions: list[w.OrderVerb], rules: e.Rules) -> e.LaneId | None:
+    """The lane a rule taps on when every action is a tap_card of a known card on one lane other than the hands; else
+    None. Only such a rule may watch a card running (CONTRACT.txt, "Decisions")."""
+    lanes = {_card_lane(a.card, rules) if isinstance(a, w.TapCard) else None for a in actions}
+    lane = lanes.pop() if len(lanes) == 1 else None
+    return None if lane == e.HANDS else lane
 
 
 def from_order_verb(v: w.OrderVerb) -> e.OrderVerb:
@@ -248,11 +261,19 @@ def verb(d: w.Decision, rules: e.Rules) -> e.Verb:
             return e.MovePick(e.SkillId(d.skill), e.NodeId(d.node), e.NodeId(d.to))
 
 
-def _page_built(c: w.Condition, rules: e.Rules) -> e.Condition:
-    """An order's or queue entry's condition: a Running subject is refused (CONTRACT.txt, "Decisions"). The page
-    never builds one, and an order that watches what its own switch stops would flip at every instant."""
+def _page_built(c: w.Condition, rules: e.Rules, lane: e.LaneId | None = None) -> e.Condition:
+    """An order's or queue entry's condition. A Running subject is taken only on a rule that taps on `lane`, a lane
+    other than the hands, and only on a card of another lane (CONTRACT.txt, "Decisions"): such a rule's verb cannot
+    start or stop the card it watches, and its tap runs on when it lets go, so the instant settles. Any other, a mix
+    switch above all, could stop what it watches and flip at every instant (engine DESIGN.txt, "Order mix")."""
     if not isinstance(c, w.AfterTime) and isinstance(c.watched, w.Running):
-        raise e.InvalidVerbError("an order or queue condition cannot watch whether something is running")
+        if lane is None:
+            raise e.InvalidVerbError("only a rule tapping a card on a person's lane can watch whether a card is running")
+        watched = _card_lane(c.watched.runner, rules)
+        if watched is None:
+            raise e.InvalidVerbError(f"a rule can watch only a card running, and {c.watched.runner} is not a card")
+        if watched == lane:
+            raise e.InvalidVerbError("a rule cannot watch a card on its own lane running: its tap would stop it")
     return from_condition(c, rules)
 
 

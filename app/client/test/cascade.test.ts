@@ -148,3 +148,19 @@ const lit = (ns: HTMLElement[]): boolean[] => ns.map((n) => n.querySelector(".li
   expect("then the skill row", [state(), lit([skill])], [["landed", "levelled", "burst"], [true]]);
 }
 console.log("cascade: ok");
+
+{  // a cascade knows whether a tap started it: from a link sent as a tap's, never from what the link is
+  const r = new Reveal();
+  r.cascade();
+  r.effect(node(), "card", () => undefined, "finish");
+  r.effect(node(), "store", () => undefined, "store");
+  r.start(0);
+  expect("no tap's link: not a tap's cascade", r.tapStarted, false);
+  r.cascade();
+  r.effect(node(), "card", () => undefined, "finish", true);
+  r.effect(node(), "store", () => undefined, "store");
+  r.start(0);
+  expect("a tap's completion started it", r.tapStarted, true);
+  r.cascade();
+  expect("the next cascade starts unmarked", r.tapStarted, false);
+}

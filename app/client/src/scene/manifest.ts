@@ -16,6 +16,9 @@ export interface SceneLayer {
   front?: boolean;
   /** A light that varies as it burns: how far (0 to 1) its alpha may dip. Absent, it is steady. */
   flicker?: number;
+  /** What the layer sounds as (docs/design/sound.md): the fire's bed on a fire's firelight, the evening's piece on an
+   * evening's. Absent, it is silent. */
+  sound?: "fire" | "evening";
   /** The y of the art's ground contact (its feet): layers that have one are drawn in order of it (see depthOrder). */
   base?: number;
 }
@@ -48,6 +51,11 @@ export type Pass = "base" | "ungraded" | "front";
 /** The pass a layer is drawn in: the base (graded), the lights over it, or the front canvas over both. */
 export function passOf(layer: SceneLayer): Pass {
   return layer.front ? "front" : layer.ungraded ? "ungraded" : "base";
+}
+
+/** The first layer that sounds as `sound`, by its field alone, never its id. */
+export function soundLayer(layers: readonly SceneLayer[], sound: NonNullable<SceneLayer["sound"]>): SceneLayer | undefined {
+  return layers.find((l) => l.sound === sound);
 }
 
 /** A glow laid over the scene (an ungraded layer with a blend): it lights figures in front of the fire too. */

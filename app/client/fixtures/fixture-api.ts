@@ -36,7 +36,7 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
   const now = (): number => Math.floor((Date.now() - began) / 1000);
   const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first) || isChronicle(first) || isSince(first) || isAsks(first) || isLedgerRules(first) || isGuards(first) || isFeel(first);   // the repeat offers come only after the lessons
   const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lines_touched: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [],
+  const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lines_touched: [], lane_tasks_seen: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [],
     newest_day_read: first === "journalweeks" || first === "journaltoday" ? READ_TO : null };
   const settings: AccountSettings = { lessons: true };
   const info = (): SaveInfo => ({
@@ -85,7 +85,7 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
     if (d) decisions += 1;
     const s = stepOf(phase, now(), kept, decisions);
     const failed = d?.kind === "tap_card" && d.card === "look";
-    return Promise.resolve(failed ? { ...s, lines: [...s.lines, { at: now(), seq: s.lines.length, key: "line.4", card: "look" }] } : s);
+    return Promise.resolve(failed ? { ...s, lines: [...s.lines, { at: now(), seq: s.lines.length, key: "line.4", card: "look", opens_beat: false }] } : s);
   };
   return {
     content: () => Promise.resolve(fixtureContent),

@@ -16,6 +16,6 @@ const LINES: Array<[string, number]> = [
 
 export function chronicleStep(at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fixtureStep("rulestab", at, kept, decisions);
-  const lines: LogLine[] = LINES.map(([key, t], seq) => ({ at: t, seq, key, card: null }));
+  const lines: LogLine[] = LINES.map(([key, t], seq) => ({ at: t, seq, key, card: null, opens_beat: false }));
   return { ...base, lines };
 }

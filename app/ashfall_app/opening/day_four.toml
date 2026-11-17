@@ -361,6 +361,11 @@ after = { unlock_kind = "feature", id = "arcana" }
 
 # ---------- text ----------
 
+# The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
+# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+[beat_lines]
+B6 = ["l_b6_1"]
+
 [line_kinds]
 l_morning_5 = "story"
 l_fog_1 = "story"

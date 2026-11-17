@@ -46,6 +46,7 @@ class Game:
         self._sources = store_sources(opening)
         self._goals = goal_defs(opening, rs.rules)
         self.mixes = MixNumbers(rs.rules, self._goals)
+        self._beat_openers = frozenset(k for keys in opening.beat_lines.values() for k in keys)
 
     def content(self) -> cm.Content:
         return self._content
@@ -78,7 +79,7 @@ class Game:
         return w.Step(
             save_id=played.save_id, decisions=played.decisions, rules_digest=self._rs.digest, build=self._rs.build,
             view=self.view(played.save),
-            lines=[w.LogLine(at=ln.time, seq=ln.seq, key=ln.key, card=ln.card) for ln in played.lines],
+            lines=[self.log_line(ln) for ln in played.lines],
             failed_tap=played.failed,
             repeats=w.Repeats(taps=[w.RepeatedTap(card=c, count=n) for c, n in played.repeats.taps],
                               switches=[w.RepeatedSwitch(chip=chip, mix_id=mix, count=n)
@@ -89,6 +90,9 @@ class Game:
                                  made=[cm.Amount(store=st, quantity=n) for st, n in r.made])
                        for r in played.rule_runs],
             catching_up_to=played.catching_up_to, journal_days=self.journal_days(played.days))
+
+    def log_line(self, ln: e.Line) -> w.LogLine:
+        return w.LogLine(at=ln.time, seq=ln.seq, key=ln.key, card=ln.card, opens_beat=ln.key in self._beat_openers)
 
     def journal_days(self, days: tuple[ComposedDay, ...]) -> list[jm.JournalDay]:
         """The written ones of `days`, each note in the hand and with the sketch its slot names now."""

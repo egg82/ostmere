@@ -44,7 +44,7 @@ const logged = (screen: Screen): string[] => {
 /** V4's lines in the order they landed: the tired chip's on-line before the beats. */
 function v4(): LogLine[] {
   const keys = ["l_tired", ...BEATS];
-  return keys.map((key, i) => ({ at: 3000 + i * 10, seq: 0, key, card: null }));
+  return keys.map((key, i) => ({ at: 3000 + i * 10, seq: 0, key, card: null, opens_beat: false }));
 }
 
 function returned(lines: LogLine[], chips: string[]): Screen {
@@ -108,7 +108,7 @@ check("a tap advances, Escape skips", () => {
 
 // A repeat task's line (an uncapped card wrote it) goes to the chronicle, not the band.
 check("a repeat task's line takes no turn", () => {
-  const lines: LogLine[] = [{ at: 3000, seq: 0, key: "l_rest_done", card: "rest" }, { at: 3010, seq: 1, key: "l_b3_1", card: null }];
+  const lines: LogLine[] = [{ at: 3000, seq: 0, key: "l_rest_done", card: "rest", opens_beat: false }, { at: 3010, seq: 1, key: "l_b3_1", card: null, opens_beat: false }];
   const screen = returned(lines, []);
   const t0 = performance.now();
   at(screen, t0 + 10);
@@ -127,7 +127,7 @@ check("the on-line and the last off-line", () => {
   const screen = new Screen(new Catalog(offContent), () => undefined, () => Promise.resolve(null), new Keeps());
   document.body.replaceChildren(screen.root);
   screen.show(dayOneStep("returned", 100));
-  const lines: LogLine[] = ["l_tired", "l_rested", "l_rested"].map((key, i) => ({ at: 3000 + i, seq: 0, key, card: null }));
+  const lines: LogLine[] = ["l_tired", "l_rested", "l_rested"].map((key, i) => ({ at: 3000 + i, seq: 0, key, card: null, opens_beat: false }));
   const landed = dayOneStep("landed", 4000);
   screen.show({ ...landed, lines, view: { ...landed.view, chips: [] } }, true);
   const log = logged(screen);
@@ -147,7 +147,7 @@ check("a tap on the band skips", () => {
 
 // A repeat task that left the view while away (put away, say) is still a repeat task: the view before says so.
 check("a repeat task known from the view before", () => {
-  const lines: LogLine[] = [{ at: 3000, seq: 0, key: "l_rest_done", card: "rest" }, { at: 3010, seq: 1, key: "l_b3_1", card: null }];
+  const lines: LogLine[] = [{ at: 3000, seq: 0, key: "l_rest_done", card: "rest", opens_beat: false }, { at: 3010, seq: 1, key: "l_b3_1", card: null, opens_beat: false }];
   const screen = new Screen(catalog, () => undefined, () => Promise.resolve(null), new Keeps());
   document.body.replaceChildren(screen.root);
   screen.show(dayOneStep("returned", 100));

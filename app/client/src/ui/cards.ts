@@ -115,7 +115,7 @@ export class Cards implements Part {
         row.card = card;
         if (card.completions > before.completions && prev) {
           const rung = completionRung(before.by, row.byOrder === true);   // as it ran until now: the restyle below moves it on
-          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung), "finish");
+          this.ctx.arrivals.effect(row.node, "card", () => play(row.node, rung), "finish", rung === "tap");
         }
       } else {
         const done = view.completed.find((c) => c.card === row.id);

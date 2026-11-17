@@ -107,7 +107,7 @@ expect("a store never shown with no countdown: the card alone", marked("larder")
   expect("the card is red", cardNode(screen, "look").classList.contains("tap-failed"), true);
 
   const line = fixtureContent.text_entries.find((t) => t.key === "line.3")?.text ?? "";
-  screen.show({ ...base, view, lines: [{ at: AT, seq: 0, key: "line.3", card: "look" }], failed_tap: null } as Step);
+  screen.show({ ...base, view, lines: [{ at: AT, seq: 0, key: "line.3", card: "look", opens_beat: false }], failed_tap: null } as Step);
   screen.tick(AT);
   expect("a tap that lands says its line in the strip", strip(), [line]);
   expect("and not under the card", cardNode(screen, "look").textContent, words);
