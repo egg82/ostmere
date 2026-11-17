@@ -20,6 +20,8 @@ export interface EveningFrame {
   /** The grade in force and the seconds it takes to move into. */
   grade: string;
   easeS: number;
+  /** The end's lines are queued or showing: its strike owns the piece's first hearing. */
+  endShowing: boolean;
 }
 
 export interface Evening {
@@ -64,10 +66,12 @@ export function createEvening(): Evening {
       const rose = f.shown && prev === false;
       prev = f.shown;
       if (rose) {
-        armed = { grade: f.grade, entryAt: now - endAt < ENTRY_AFTER_END_MS ? endAt + ENTRY_AFTER_END_MS : now };
+        const entryAt = !f.endShowing ? now : Number.isFinite(endAt) ? Math.max(now, endAt + ENTRY_AFTER_END_MS) : Infinity;
+        armed = { grade: f.grade, entryAt };
         grade = f.grade;
       }
       if ((armed || piece) && f.grade !== grade) { leave(f.easeS); return; }
+      if (armed && !f.endShowing && armed.entryAt === Infinity) armed.entryAt = now;   // the lines ended with no strike
       if (armed && now >= armed.entryAt) begin();
       if (piece && ducked && now >= duckUntil) { ducked = false; piece.setLevel(1, DUCK_BACK_MS); }
     },

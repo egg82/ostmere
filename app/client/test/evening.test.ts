@@ -33,8 +33,9 @@ function recording(): Sound {
     },
   };
 }
-const DAY: EveningFrame = { shown: false, grade: "warm", easeS: 2.5 };
+const DAY: EveningFrame = { shown: false, grade: "warm", easeS: 2.5, endShowing: false };
 const EVE: EveningFrame = { ...DAY, shown: true, grade: "dusk", easeS: 40 };
+const END: EveningFrame = { ...EVE, endShowing: true };   // the opening's end: its lines are queued or showing
 const last = (m: Made) => m.calls[m.calls.length - 1];
 function fresh() { made = []; registerSound(recording()); return createEvening(); }
 
@@ -63,25 +64,42 @@ function fresh() { made = []; registerSound(recording()); return createEvening()
   expect("it starts with the layer", made.length, 1);
   expect("silent, then fading in over GRADE_S", made[0]!.calls, [["level", 0, 0], ["level", 1, GRADE_S * 1000]]);
   // the opening's end: the strike first, the piece 4 s on
-  const s = fresh();
-  s.frame(DAY, 0);
-  s.cue("end", 1000);
-  s.frame(EVE, 1000);
-  s.frame(EVE, 1000 + ENTRY_AFTER_END_MS - 1);
+  const s1 = fresh();
+  s1.frame(DAY, 0);
+  s1.cue("end", 1000);
+  s1.frame(END, 1000);
+  s1.frame(END, 1000 + ENTRY_AFTER_END_MS - 1);
   expect("before the strike is over: nothing", made.length, 0);
-  s.frame(EVE, 1000 + ENTRY_AFTER_END_MS);
+  s1.frame(END, 1000 + ENTRY_AFTER_END_MS);
   expect("4 s after the strike", made.length, 1);
-  // the strike after the piece has begun (the end's line queued behind others): the piece ducks under it
+  // the layer wanted while the end's line is still queued: the strike owns the first hearing
   const l = fresh();
   l.frame(DAY, 0);
-  l.frame(EVE, 1000);
-  l.cue("end", 2000);
-  expect("a later strike ducks the piece already playing", last(made[0]!)![1] < 1, true);
+  l.frame(END, 1000);
+  for (let t = 1100; t < 15000; t += 100) l.frame(END, t);
+  expect("wanted while the end's line is queued: nothing before the strike", made.length, 0);
+  l.cue("end", 15000);
+  l.frame(END, 15000 + ENTRY_AFTER_END_MS - 1);
+  expect("not before 4 s after the strike", made.length, 0);
+  l.frame(END, 15000 + ENTRY_AFTER_END_MS);
+  expect("first enters 4 s after the end cue", made.length, 1);
+  // the end's lines over with no strike ever sung: the piece is no longer held
+  const q = fresh();
+  q.frame(DAY, 0);
+  q.frame(END, 1000);
+  q.frame(EVE, 21000);
+  expect("lines over, no strike: it enters", made.length, 1);
+  // a strike after it has begun (a later evening's end) ducks it
+  const k = fresh();
+  k.frame(DAY, 0);
+  k.frame(EVE, 1000);
+  k.cue("end", 2000);
+  expect("a strike over a playing piece ducks it", last(made[0]!)![1] < 1, true);
   // hidden while it waits: dropped
   const d = fresh();
   d.frame(DAY, 0);
   d.cue("end", 0);
-  d.frame(EVE, 0);
+  d.frame(END, 0);
   d.away();
   d.frame(EVE, 9000);
   d.frame(EVE, 9100);
@@ -154,7 +172,7 @@ function fresh() { made = []; registerSound(recording()); return createEvening()
   const w = fresh();
   w.frame(DAY, 0);
   w.cue("end", 0);
-  w.frame(EVE, 0);
+  w.frame(END, 0);
   w.frame({ ...EVE, grade: "night" }, 1000);
   w.frame({ ...EVE, grade: "night" }, 6000);
   expect("never in the night's grade", made.length, 0);

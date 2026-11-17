@@ -138,7 +138,7 @@ function run(session: Session, screen: () => Screen | null, scene: () => Scene |
       scene()?.draw(t, dt);
       bed.follow(scene()?.soundAlpha("fire") ?? 0);
       const s = scene();
-      if (s) evening.frame({ shown: s.soundShown("evening"), grade: s.gradeNow().id, easeS: s.gradeNow().easeS }, now);
+      if (s) evening.frame({ shown: s.soundShown("evening"), grade: s.gradeNow().id, easeS: s.gradeNow().easeS, endShowing: screen()?.endShowing ?? false }, now);
     }
     requestAnimationFrame(frame);
   };
