@@ -9,7 +9,7 @@ from tests.dayone.sinks import Chapter, Trip
 HAND_ON_STONE, STONES, HURT = CardId("hand_on_stone"), StoreId("stones"), StoreId("hurt")
 WOODSHED, HEARTH_STONES = CardId("woodshed"), CardId("hearth_stones")
 SPEAR, BEDDING = CardId("make_spear"), CardId("pelt_bedding")
-HUNT = CardId("hunt_wolf")
+HUNT, SEW = CardId("hunt_wolf"), CardId("sew_wraps")
 DIG_BED = CardId("n3_dig_bed")
 
 FOUR = Landings(
@@ -32,6 +32,12 @@ STONE_DAMP = Trip(HAND_ON_STONE, c3.DAMP_WOOD, share_bp=2500, reserve_for=(c3.DR
 moves to another of its supplies."""
 BED_RULE = (Unlock(UnlockKind.CARD, DIG_BED), Order(AfterTime(0), TapCard(DIG_BED)))
 """Her bed on her lane is dug by a rule of the player's (a capped card is never a share)."""
+
+
+def sew_rule() -> tuple[tuple[Unlock, Order], ...]:
+    """The pelts' sink's order card (day_six.toml, sew_wraps), offered once the bedding is built. Of pelt's order cards
+    only this one: hide_flaps' shows at G2 and is day eight's to set (weektwo/content.py, ORDER_STORES)."""
+    return tuple(x for x in c3.order_cards(c3.opening3(), ("pelt",)) if x[1].then == TapCard(SEW))
 
 
 def day_four() -> Later:
@@ -59,7 +65,7 @@ def day_six() -> Later:
         sinks=Chapter(trips=(STONE_DAMP, TRACK_STONES), comforts=(*c3.COMFORTS, WOODSHED, HEARTH_STONES, SPEAR, BEDDING),
                       arrivals=ANSWERS),
         steps=(CardId("b7_stand"), CardId("sit_fire_7")),
-        order_cards=(*c3.order_cards(c3.opening3()), BED_RULE), keeps=c3.keeps(),
+        order_cards=(*c3.order_cards(c3.opening3()), BED_RULE, *sew_rule()), keeps=c3.keeps(),
         landed=SIX.of, news=("A27", "G1", "A30", "G2", "SL12", "SL13", "SL14"),
         answers=((OfferId("o_pelt"), AnswerId("o_pelt_give")),),
         shares=(Share(CardId("hunt_wolf"), 1500),), cures=(Cure(CardId("poultice"), HURT),))

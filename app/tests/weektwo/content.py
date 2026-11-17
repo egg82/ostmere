@@ -6,7 +6,6 @@ from ashfall_app.engine import (
     View,
 )
 from ashfall_app.engine.rates import store_value
-from ashfall_app.opening.convert import condition
 from tests.daythree import content as c3
 from tests.daythree.chapter import Landings, Later, Share
 from tests.dayone.policy import Move
@@ -115,14 +114,7 @@ def order_cards(rules_cards: tuple[tuple[Unlock, Order], ...] = (),
                 stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order], ...]:
     """`rules_cards`, and the content's order cards on `stores`, each as the page fills it in, offered after its
     unlock."""
-    op = c3.opening3()
-    cards = {c.id for c in op.cards}
-    out = list(rules_cards)
-    for oc in op.order_cards:
-        if oc.store in stores and oc.tap_card is not None and oc.offered_after is not None:
-            after = Unlock(UnlockKind(oc.offered_after.unlock_kind), oc.offered_after.id)
-            out.append((after, Order(condition(oc.when, cards), TapCard(CardId(oc.tap_card)))))
-    return tuple(out)
+    return (*rules_cards, *c3.order_cards(c3.opening3(), stores))
 
 
 def own(knobs: WeekTwoKnobs):

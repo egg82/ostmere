@@ -133,6 +133,65 @@ cap = 1
 inputs = [{ store = "pelt", items = 1 }]
 line_keys = ["l_pelt_given"]
 
+# ---------- the pelts' sink after the bedding ----------
+
+# The track's shape, a reach stake (issue #40): each run sews two pelts into a wrap, and each reach of wraps sewn takes a
+# tenth off what the cold takes of warmth. Run by its order card from 8 pelts, so the builds and chores that take pelts
+# (day_eight.toml's hide_flaps, at 2) are served first and it takes only the hunt's surplus. A short tap: a longer one
+# (600 s on the hands, or on her lane) moved the routes' track share and overflowed the track's stores. A trigger, not the
+# bedding's finish, so a save past the bedding gets it when this file merges.
+[[triggers]]
+id = "t_wraps"
+when = { test = "at_least", subject_kind = "card_count", id = "pelt_bedding", value = 6 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "sew_wraps" }, { unlock_kind = "store", id = "wraps_sewn" }] }
+
+[[cards]]
+id = "sew_wraps"
+presentation = "action"
+label_key = "c_sew_wraps"
+upside_key = "up_sew_wraps"
+stake = "reach"
+work_s = 300
+inputs = [{ store = "pelt", items = 2 }]
+outcome = { stores = [{ store = "wraps_sewn", items = 1 }] }
+
+# Its cap is the last reach.
+[[stores]]
+id = "wraps_sewn"
+label_key = "store_wraps_sewn"
+cap_items = 40
+
+[[order_cards]]
+store = "pelt"
+tap_card = "sew_wraps"
+when = { test = "at_least", subject_kind = "store", id = "pelt", value = 8, release = 8 }
+offered_after = { unlock_kind = "card", id = "sew_wraps" }
+
+[[triggers]]
+id = "t_wraps_1"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 4 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_1" }] }
+
+[[triggers]]
+id = "t_wraps_2"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 10 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_2" }] }
+
+[[triggers]]
+id = "t_wraps_3"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 18 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_3" }] }
+
+[[triggers]]
+id = "t_wraps_4"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 28 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_4" }] }
+
+[[triggers]]
+id = "t_wraps_5"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 40 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_5" }] }
+
 # ---------- the day's length, held to the calendar ----------
 
 # Game hours since morning 7, in twentieths; six hours is the day's least.
@@ -300,6 +359,9 @@ a_pelt_keep_cost = "nothing"
 l_pelt_kept = "{n3} lays sacking over the bare earth by the hearth and weights it."
 c_give_pelt = "Give {n3} a pelt"
 l_pelt_given = "{n3} lays the pelt over the bare earth by the hearth and weights it."
+c_sew_wraps = "Sew pelts into wraps"
+up_sew_wraps = "{pct} warmth lost to the cold at each reach of wraps sewn"
+store_wraps_sewn = "wraps sewn"
 store_day_7 = "day"
 action_day_7 = "Day"
 store_night_7 = "night"
