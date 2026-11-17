@@ -34,7 +34,7 @@ const text = (key: string): string => catalog.text.get(key);
 function fresh(): { screen: Screen; root: FakeEl; aside: () => boolean } {
   const screen = new Screen(catalog, () => undefined, () => Promise.resolve(null), new Keeps());
   document.body.replaceChildren(screen.root);
-  screen.show(townStep("town", 100));
+  screen.show(townStep("town", {}, 100));
   const root = fakeDocument.body.firstElementChild as FakeEl;
   return { screen, root, aside: () => root.classList.contains("scene-aside") };
 }
