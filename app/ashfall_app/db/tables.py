@@ -87,6 +87,8 @@ saves = Table(
     Column("camp_level", Integer, nullable=True),
     # What the rules did lately (saves/ruleruns.py): null until a write of a build that keeps it.
     Column("rule_runs", JSONB, nullable=True),
+    # The player's own earlier best per goal, set when a mix is saved (saves/mixbest.py): null until one is.
+    Column("mix_best", JSONB, nullable=True),
     # What the page keeps about this save's teaching (api/CONTRACT.txt, SavePresentation): it only grows.
     Column("presentation", JSONB, nullable=False, server_default=_EMPTY),
     # The hands-free notice (saves/handsfree.py): the kept forecast's hands-free instant (game seconds, and the wall

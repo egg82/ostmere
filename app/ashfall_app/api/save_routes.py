@@ -17,6 +17,7 @@ from .errors import (
     catching_up, invalid_decision, last_save, no_account, not_found, rate_limited, stale, too_many_saves, unavailable,
 )
 from .error_models import ApiError
+from .mixrow_models import MixRows
 from .models import ForecastAnswer, Step, View
 from .saves_models import (
     Account, AccountPresentation, AccountSettings, DecisionRequest, DryRunRequest, Me, NewSave, Opened, PastLine,
@@ -207,6 +208,16 @@ def add_unwritten_routes(router: APIRouter, game: Game) -> None:
             saves = services.of(request).saves
             stop = saves.forecast_stop()
             return game.forecast(saves.current(found, save_id, stop), stop)
+
+    @router.post("/saves/{save_id}/mix-rows", response_model=MixRows, operation_id="mix_rows",
+                 responses=_FORECAST_ERRORS)
+    def mix_rows(request: Request, save_id: SaveId) -> MixRows:
+        """The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal
+        (CONTRACT.txt, "Mix rows"). Nothing is written; 409 catching_up while the save is still behind."""
+        found = session.account(request)
+        with answered(game):
+            saves = services.of(request).saves
+            return game.mixes.rows(saves.current(found, save_id, saves.forecast_stop()), saves.mix_best(found, save_id))
 
     @router.get("/saves/{save_id}/view", response_model=View, operation_id="saved_view", responses=_SAVE_ERRORS)
     def saved_view(request: Request, save_id: SaveId) -> View:

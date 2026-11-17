@@ -74,7 +74,7 @@ def test_two_alternating_full_sets_of_lessons_log_each_lesson_once(game: GameCli
 def test_a_new_save_keeps_no_lesson_another_save_kept(game: GameClient):
     """Lessons are per save: a second game of the account starts with nothing kept about its teaching."""
     first = game.begin()
-    assert first["presentation"] == {"rule_seen": False, "mix_offered": [], "lines_touched": [], "lessons": [],
+    assert first["presentation"] == {"rule_seen": False, "mix_offered": [], "lines_touched": [], "lane_tasks_seen": [], "lessons": [],
                                      "lesson_ends": [], "visits": [], "chapter": None, "newest_day_read": None}
     put_save(game, first["save"]["save_id"], {"lessons": ["first_mix", "first_rule"], "rule_seen": True,
                                               "lesson_ends": [end("first_mix"), end("first_rule")]})

@@ -211,6 +211,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/saves/{save_id}/mix-rows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mix Rows
+         * @description The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal
+         *     (CONTRACT.txt, "Mix rows"). Nothing is written; 409 catching_up while the save is still behind.
+         */
+        post: operations["mix_rows"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/saves/{save_id}/view": {
         parameters: {
             query?: never;
@@ -1523,6 +1544,8 @@ export interface components {
             key: string;
             /** Card */
             card: string | null;
+            /** Opens Beat */
+            opens_beat: boolean;
         };
         /**
          * Mark
@@ -1595,6 +1618,43 @@ export interface components {
             id: string;
             /** Components */
             components: (components["schemas"]["CardShare"] | components["schemas"]["SubMix"])[];
+        };
+        /**
+         * MixBest
+         * @description The earliest landing the player's own saved mixes gave a goal, as projected when each was saved.
+         */
+        MixBest: {
+            /** Goal */
+            goal: string;
+            /** Mix Id */
+            mix_id: string;
+            /** Lands At */
+            lands_at: number;
+            /** Saved At */
+            saved_at: number;
+        };
+        /**
+         * MixRow
+         * @description One saved mix of the player's own as if it ran from now (CONTRACT.txt, "Mix rows").
+         */
+        MixRow: {
+            /** Id */
+            id: string;
+            /** Goals */
+            goals: components["schemas"]["GoalRow"][];
+            /** Nets */
+            nets: components["schemas"]["StoreNet"][];
+            /** Runs Out At */
+            runs_out_at: number | null;
+        };
+        /** MixRows */
+        MixRows: {
+            /** At */
+            at: number;
+            /** Rows */
+            rows: components["schemas"]["MixRow"][];
+            /** Best */
+            best: components["schemas"]["MixBest"][];
         };
         /**
          * MovePick
@@ -2031,7 +2091,12 @@ export interface components {
             /** Runner */
             runner: string;
         };
-        /** Running */
+        /**
+         * Running
+         * @description 1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card
+         *     on one lane other than the hands, watching a card of another lane (the hands' or another person's); every other
+         *     order's, and every queue entry's, is 422 invalid_decision (CONTRACT.txt, "Decisions").
+         */
         Running: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -2097,6 +2162,11 @@ export interface components {
              * @default []
              */
             lines_touched: components["schemas"]["Id"][];
+            /**
+             * Lane Tasks Seen
+             * @default []
+             */
+            lane_tasks_seen: components["schemas"]["Id"][];
             /**
              * Lessons
              * @default []
@@ -2360,6 +2430,13 @@ export interface components {
             /** Store */
             store: string;
             segment: components["schemas"]["Segment"];
+        };
+        /** StoreNet */
+        StoreNet: {
+            /** Store */
+            store: string;
+            /** Per Hour */
+            per_hour: number;
         };
         /** StoreValue */
         StoreValue: {
@@ -3087,6 +3164,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ForecastAnswer"];
+                };
+            };
+            /** @description no_account */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description not_found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description catching_up, with the save as stored as `step` */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description invalid_decision (a request that does not fit the models included) */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description save_unavailable (Retry-After) */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    mix_rows: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                save_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MixRows"];
                 };
             };
             /** @description no_account */

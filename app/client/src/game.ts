@@ -53,7 +53,7 @@ export function play(api: GameApi, host: HTMLElement, what: Play, sceneManifest 
       screen?.root.remove();
       scene = null;
       const catalog = new Catalog(content);
-      screen = new Screen(catalog, (d) => void session.decide(d), (ds) => session.dryRun(ds), keeps, (t) => session.feedback(t));
+      screen = new Screen(catalog, (d) => void session.decide(d), (ds) => session.dryRun(ds), keeps, (t) => session.feedback(t), () => session.mixRows());
       host.append(screen.root);
       devices?.root.remove();
       devices = new Devices(api, catalog.text, catalog.format, content.transfer_code_s, keeps, what.account ?? null);

@@ -79,5 +79,5 @@ def figure_layers(away: str, n1_jobs: str) -> list[Layer]:
 
 
 def light_layers() -> list[Layer]:
-    return [Layer(id="firelight_dusk_2", flicker=FLICKER, img=firelight(0.7), when="feature:dusk_2", until=MORNING, blend="screen",
+    return [Layer(id="firelight_dusk_2", flicker=FLICKER, sound="evening", img=firelight(0.7), when="feature:dusk_2", until=MORNING, blend="screen",
                   ungraded=True)]

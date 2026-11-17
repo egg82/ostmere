@@ -131,9 +131,9 @@ def figure_layers(away: str) -> list[Layer]:
 
 def light_layers() -> list[Layer]:
     return [
-        Layer(id="firelight_dusk_3", flicker=FLICKER, img=firelight(0.7), when="action:evening_3", until=MORNING_4, blend="screen",
+        Layer(id="firelight_dusk_3", flicker=FLICKER, sound="evening", img=firelight(0.7), when="action:evening_3", until=MORNING_4, blend="screen",
               ungraded=True),
-        Layer(id="firelight_dusk_4", flicker=FLICKER, img=firelight(0.7), when="action:evening_4", until="feature:morning_5",
+        Layer(id="firelight_dusk_4", flicker=FLICKER, sound="evening", img=firelight(0.7), when="action:evening_4", until="feature:morning_5",
               blend="screen", ungraded=True),
         Layer(id="watch_light", img=fire.watch_light(), when=WATCH_LIT, blend="screen", ungraded=True),
     ]

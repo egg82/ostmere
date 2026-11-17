@@ -45,7 +45,7 @@ def light_layers() -> list[Layer]:
     to morning 13."""
     return [
         Layer(id="warm_glow_12", img=day3_world.warm_glow(146), when=NIGHT_12, until=d12.MORNING, blend="screen"),
-        Layer(id="firelight_dusk_12", flicker=FLICKER, img=firelight(0.7), when=NIGHT_12, until=d12.MORNING, blend="screen",
+        Layer(id="firelight_dusk_12", flicker=FLICKER, sound="evening", img=firelight(0.7), when=NIGHT_12, until=d12.MORNING, blend="screen",
               ungraded=True),
     ]
 

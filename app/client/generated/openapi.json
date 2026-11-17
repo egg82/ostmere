@@ -660,6 +660,91 @@
         }
       }
     },
+    "/api/saves/{save_id}/mix-rows": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Mix Rows",
+        "description": "The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal\n(CONTRACT.txt, \"Mix rows\"). Nothing is written; 409 catching_up while the save is still behind.",
+        "operationId": "mix_rows",
+        "parameters": [
+          {
+            "name": "save_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 9007199254740992,
+              "minimum": 1,
+              "title": "Save Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MixRows"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "no_account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_decision (a request that does not fit the models included)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "save_unavailable (Retry-After)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "catching_up, with the save as stored as `step`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/saves/{save_id}/view": {
       "get": {
         "tags": [
@@ -4451,6 +4536,10 @@
               }
             ],
             "title": "Card"
+          },
+          "opens_beat": {
+            "type": "boolean",
+            "title": "Opens Beat"
           }
         },
         "type": "object",
@@ -4458,7 +4547,8 @@
           "at",
           "seq",
           "key",
-          "card"
+          "card",
+          "opens_beat"
         ],
         "title": "LogLine"
       },
@@ -4647,6 +4737,106 @@
           "components"
         ],
         "title": "Mix"
+      },
+      "MixBest": {
+        "properties": {
+          "goal": {
+            "type": "string",
+            "title": "Goal"
+          },
+          "mix_id": {
+            "type": "string",
+            "title": "Mix Id"
+          },
+          "lands_at": {
+            "type": "integer",
+            "title": "Lands At"
+          },
+          "saved_at": {
+            "type": "integer",
+            "title": "Saved At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "goal",
+          "mix_id",
+          "lands_at",
+          "saved_at"
+        ],
+        "title": "MixBest",
+        "description": "The earliest landing the player's own saved mixes gave a goal, as projected when each was saved."
+      },
+      "MixRow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "goals": {
+            "items": {
+              "$ref": "#/components/schemas/GoalRow"
+            },
+            "type": "array",
+            "title": "Goals"
+          },
+          "nets": {
+            "items": {
+              "$ref": "#/components/schemas/StoreNet"
+            },
+            "type": "array",
+            "title": "Nets"
+          },
+          "runs_out_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runs Out At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "goals",
+          "nets",
+          "runs_out_at"
+        ],
+        "title": "MixRow",
+        "description": "One saved mix of the player's own as if it ran from now (CONTRACT.txt, \"Mix rows\")."
+      },
+      "MixRows": {
+        "properties": {
+          "at": {
+            "type": "integer",
+            "title": "At"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/MixRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          },
+          "best": {
+            "items": {
+              "$ref": "#/components/schemas/MixBest"
+            },
+            "type": "array",
+            "title": "Best"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "rows",
+          "best"
+        ],
+        "title": "MixRows"
       },
       "MovePick": {
         "properties": {
@@ -5804,7 +5994,8 @@
         "required": [
           "runner"
         ],
-        "title": "Running"
+        "title": "Running",
+        "description": "1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card\non one lane other than the hands, watching a card of another lane (the hands' or another person's); every other\norder's, and every queue entry's, is 422 invalid_decision (CONTRACT.txt, \"Decisions\")."
       },
       "SaveId": {
         "type": "integer",
@@ -5924,6 +6115,15 @@
             "type": "array",
             "maxItems": 512,
             "title": "Lines Touched",
+            "default": []
+          },
+          "lane_tasks_seen": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Lane Tasks Seen",
             "default": []
           },
           "lessons": {
@@ -6627,6 +6827,24 @@
         ],
         "title": "StoreLevel",
         "description": "A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole\nitems rounded up, as a level (CONTRACT.txt, \"FIGHTS\")."
+      },
+      "StoreNet": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "per_hour": {
+            "type": "integer",
+            "title": "Per Hour"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "per_hour"
+        ],
+        "title": "StoreNet"
       },
       "StoreValue": {
         "properties": {

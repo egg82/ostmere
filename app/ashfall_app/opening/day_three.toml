@@ -1011,6 +1011,11 @@ keys = ["mention_went_many_1", "mention_went_many_2"]
 
 # ---------- text ----------
 
+# The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
+# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+[beat_lines]
+B5 = ["l_b5_1"]
+
 [line_kinds]
 l_edge_1 = "story"
 l_edge_2 = "story"

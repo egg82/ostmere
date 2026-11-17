@@ -52,6 +52,9 @@ After merging a pull request that changes a readout, the merging session runs `p
 `app/tests/readouts/ANCHOR` against the owner's direction (`docs/design/drift-judge.md`). Nothing in CI runs it or
 calls a model.
 
+A job whose readout differs from its committed text fails after uploading what the code now renders;
+`python -m tools.readouts_pull <run-id>` (from `app/`) copies a red run's readouts into `app/tests/readouts/` to commit.
+
 ## Patterns
 
 The aim behind every rule here, as in habits: **make bugs hard to create and easy to find.** That is what KISS,

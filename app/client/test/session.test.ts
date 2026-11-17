@@ -32,7 +32,7 @@ function harness(content: Content = fixtureContent, fail: (call: string, n: numb
     const e = fail(call, log.calls.filter((c) => c === call).length);
     return e ? Promise.reject(e) : Promise.resolve(value());
   };
-  const api: GameApi = {
+  const api: GameApi = { mixRows: () => Promise.reject(new Error("not in these tests")),
     content: () => answer("content", () => ({ ...content, rules_digest: rules.digest })),
     me: () => answer("me", () => ({ account: null, saves: [], max_saves: 5, kept_days: 30 })),
     begin: () => answer("begin", () => ({ save: save(), presentation: NEW_SAVE, step: { ...step(0), lines: [] } })),

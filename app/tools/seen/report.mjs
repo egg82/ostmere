@@ -15,7 +15,7 @@ for (const r of runs) {
   const tw = lines.filter((l) => l.tapWritten);
   const alone = (l) => l.instances.some((x) => x.alone);
   const fails = (l) => (l.shown ? ['visible', 'near', 'alone'].filter((c) => !l.instances.some((x) => x[c])) : ['never shown']);
-  console.log(`\n== ${r.summary.name} (${r.summary.view}) ${r.file}`);
+  console.log(`\n== ${r.summary.name} (${r.summary.view}${r.summary.route ? `, ${r.summary.route} route, strip ${r.summary.strip}` : ''}) ${r.file}`);
   console.log(`tap-written seen      ${pct(tw.filter((l) => l.seen).length, tw.length)}   target >= 80%`);
   console.log(`all lines seen        ${pct(lines.filter((l) => l.seen).length, lines.length)}`);
   const strict = (l) => l.instances.some((x) => x.visibleStrict && x.near && x.aloneStrict);

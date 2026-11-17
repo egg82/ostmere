@@ -22,7 +22,7 @@ const api: GameApi = {
   open: () => Promise.resolve({ save, was: fixtureStep("mid", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: slice(100, 500, fixtureContent.rules_digest) }),
   savedView: () => Promise.reject(new Error("unused")),
   advance: () => Promise.resolve(slice(500, null, "new")),
-  forecast: unused, decide: unused, dryRun: unused, putMePresentation: unused, putMeSettings: unused, putSavePresentation: unused, sendFeedback: unused, makeCode: unused,
+  forecast: unused, mixRows: unused, decide: unused, dryRun: unused, putMePresentation: unused, putMeSettings: unused, putSavePresentation: unused, sendFeedback: unused, makeCode: unused,
   makeWords: unused, games: unused, deleteGame: unused, restoreGame: unused, join: unused, devices: unused, removeDevice: unused,
 };
 const started: string[] = [];

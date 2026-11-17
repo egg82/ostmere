@@ -15,6 +15,7 @@ from sqlalchemy import Engine
 from .. import engine as e
 from ..clock import Clock
 from ..db import saves as rows
+from ..db import savewrite
 from . import write
 from .interface import NotFound, Ruleset
 from .load import load
@@ -85,7 +86,7 @@ def restore(engine: Engine, rs: Ruleset, clock: Clock, save_id: int, day: int, u
             raise NotFound(f"save {save_id}")
         with keep.open("x") as f:
             json.dump(asdict(row), f, default=str)
-        rows.write(conn, save_id, clock(), write.written(save, n, rs))
+        savewrite.write(conn, save_id, clock(), write.written(save, n, rs))
         rows.delete_decisions_above(conn, save_id, n)
         rows.delete_snapshots_above(conn, save_id, n)
     return n

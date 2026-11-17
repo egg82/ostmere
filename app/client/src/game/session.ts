@@ -6,7 +6,7 @@
 // absence comes back in slices (Step.catching_up_to): the page asks advance again at once until one reaches now, holding
 // its decisions and the forecast until then, and draws the slices as one return.
 import { ApiFailure, type GameApi } from "../api/api";
-import type { Content, Decision, NewSave, PastLine, SavePresentation, Step, View } from "../api/types";
+import type { Content, Decision, MixRows, NewSave, PastLine, SavePresentation, Step, View } from "../api/types";
 import { Asking } from "./asking";
 import { chapterOf } from "./chapter";
 import { Clock } from "./clock";
@@ -112,6 +112,16 @@ export class Session {
     if (this.saveId === null || decisions.length === 0) return null;
     try {
       return await this.api.dryRun(this.saveId, decisions);
+    } catch {
+      return null;
+    }
+  }
+
+  /** The Mixes list's numbers (Actions.mixRows); null when there is no game or the server refuses. */
+  async mixRows(): Promise<MixRows | null> {
+    if (this.saveId === null) return null;
+    try {
+      return await this.api.mixRows(this.saveId);
     } catch {
       return null;
     }

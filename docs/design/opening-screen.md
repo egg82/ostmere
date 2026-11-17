@@ -268,12 +268,16 @@ real share, see the editor).
 **A lane run by rules** (a townsperson who works: api `CONTRACT.txt`, "A lane run by rules") gets a row in the Town
 view, under the town's people, in their row form: a face, the lane's label (a later label once its unlock is held), what it
 does (the task's name, or `idle`), the task's bar, and `Change`. A row arrives through the arrival queue the first time
-its lane is in view, then stays. `Change` opens the Rules tab on the
-lane's task editor: the rule editor's simple view with only `Do`, the lane's own tasks, the rule's sentence and Save. It
-opens on the rule the lane runs now, else the lane's first always rule that is not passed over, else a new always rule;
-Save changes that rule's task in place (its condition kept) or adds the always rule. The lane's tasks are never cards in
-Tasks or Done: the row and its editor are their only way in. Fits into: the Town view (`ui/lanerows.ts`, owned by
-`ui/hands.ts`), the Rules tab's editor (`ui/laneedit.ts`), `game/lanes.ts` for what Change opens.
+its lane is in view, then stays. `Change` opens the person's
+page (`ui/personpage.ts`), which takes the card area's place and is laid out as the Tasks page is: the person's cards
+drawn in full by the Tasks panel's card face (`ui/cardpick.ts`, a lane's crafts in their section after the rest), then
+their part of the town's mix in the town editor once they have joined, then the rules that tap their cards, each a
+button into the Rules tab. Every person's row, joined or not, has its own Change, and a quiet dot on it marks a task not
+yet in front of the player until their page is opened. A rule's button opens the lane's task editor: the rule editor's
+simple view with only `Do` (the lane's tasks as the same card faces), the rule's sentence and Save; Save changes that
+rule's task in place (its condition kept) or adds the always rule. The lane's tasks are never cards in Tasks or Done:
+the page and the editor are their only way in. Fits into: the Town view (`ui/lanerows.ts`, owned by `ui/hands.ts`), the
+Rules tab's editor (`ui/laneedit.ts`), the town editor (`ui/townedit.ts`, scoped to one person).
 
 ## Asks
 

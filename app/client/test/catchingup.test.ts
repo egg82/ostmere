@@ -13,7 +13,7 @@ function check(ok: boolean, what: string): void {
 }
 
 const TAP: Decision = { kind: "tap_card", card: "stand" };
-const line = (at: number): LogLine => ({ at, seq: 0, key: `line.${at}`, card: null });
+const line = (at: number): LogLine => ({ at, seq: 0, key: `line.${at}`, card: null, opens_beat: false });
 const slice = (at: number, to: number | null, decisions = 0): Step =>
   ({ ...fixtureStep("standing", at, {}, decisions), save_id: 7, lines: [line(at)], catching_up_to: to });
 const save = { save_id: 7, number: 1, decisions: 0, game_time: 0, ended_at: null, started_at: "2026-10-17T09:00:00Z", played_at: "2026-10-17T09:00:00Z", camp_level: 0 };
@@ -26,7 +26,7 @@ function harness(slices: Step[], decide: (after: number) => Step) {
   let i = 0;
   const next = (): Step => { const s = slices[i++]; if (!s) throw new Error("no more slices"); return s; };
   const unused = () => Promise.reject(new Error("not in these tests"));
-  const api: GameApi = {
+  const api: GameApi = { mixRows: () => Promise.reject(new Error("not in these tests")),
     content: () => Promise.resolve(fixtureContent),
     me: unused, begin: unused,
     open: () => { calls.push("open"); return Promise.resolve({ save, was: fixtureStep("start", 40).view, history: [], presentation: NEW_SAVE, journal_days: [], step: next() }); },

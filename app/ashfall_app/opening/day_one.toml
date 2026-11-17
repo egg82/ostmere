@@ -988,6 +988,18 @@ offered_after = { unlock_kind = "card", id = "cook_roots" }
 # ---------- text ----------
 # Labels and lines after the voice pass (content/team/drafts/voice-notes.md); picks in content/team/drafts/selection.md.
 
+# The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
+# key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+[beat_lines]
+H1 = ["l_night_1"]
+H2 = ["l_morning"]
+H3 = ["l_look_out_1"]
+H4 = ["l_snare_1"]
+H5 = ["l_camp_daylight"]
+H6 = ["l_smoke_1"]
+H7 = ["l_prints_1"]
+B3 = ["l_b3_1"]
+
 [line_kinds]
 l_wc_faster = "level"
 l_scav_faster = "level"

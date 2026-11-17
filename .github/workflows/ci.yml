@@ -2,7 +2,8 @@
 # docs/engineering.md ("Scope and test budget"): the suite, one smoke route, pyright, the client, the engine and save
 # checks, and the app image. A pull request that changes only docs runs `docs`, the tests that read them. The whole-game
 # playthroughs and the chapter saves they read are the full run: nightly (nightly.yml calls this file with full), on a
-# pull request labelled `playthroughs`, and on a manual dispatch. On main, once everything is green, `release` tags the
+# pull request labelled `playthroughs` or changing a path in app/tools/playthrough_paths.txt, and on a manual dispatch.
+# On main, once everything is green, `release` tags the
 # image already pushed by digest: `dev` and `main-<sha8>-<commit-timestamp>`, the tag Flux image automation sorts on.
 # Pull requests build the image and push nothing.
 #
@@ -224,6 +225,12 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Fail when a readout differs from its committed text
+        if: always() && hashFiles('readouts-new/**') != ''
+        run: |
+          ls readouts-new | sed 's/^/readout differs from its committed text: /'
+          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
+          exit 1
 
   # Full run only. The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays
   # each representative route once per session and they share it). Split by which session-scoped plays a test shares,
@@ -265,6 +272,12 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Fail when a readout differs from its committed text
+        if: always() && hashFiles('readouts-new/**') != ''
+        run: |
+          ls readouts-new | sed 's/^/readout differs from its committed text: /'
+          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
+          exit 1
 
   # The saved ends week two's chapters play on (app/tests/weektwo/ends.py), written by tools/chapter_saves.py and cached
   # under their key (ends.key(): the rules, the engine's source, the play code), so a run whose key is cached unpacks it
@@ -374,6 +387,12 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Fail when a readout differs from its committed text
+        if: always() && hashFiles('readouts-new/**') != ''
+        run: |
+          ls readouts-new | sed 's/^/readout differs from its committed text: /'
+          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
+          exit 1
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
@@ -413,6 +432,12 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Fail when a readout differs from its committed text
+        if: always() && hashFiles('readouts-new/**') != ''
+        run: |
+          ls readouts-new | sed 's/^/readout differs from its committed text: /'
+          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
+          exit 1
   # Week two's plays (tests/weektwo/routes.py), each chapter played on from the saved end of the one before
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
@@ -454,6 +479,12 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Fail when a readout differs from its committed text
+        if: always() && hashFiles('readouts-new/**') != ''
+        run: |
+          ls readouts-new | sed 's/^/readout differs from its committed text: /'
+          echo "refresh: cd app && python -m tools.readouts_pull ${{ github.run_id }}"
+          exit 1
   # The engine's speed gate (tools/bench_ab.py): this tree's `reading` and `steps` against the base's, timed in turn in
   # this one job, so the runner's CPU type and load cancel. The base is the merge-base with the target branch on a pull
   # request, and the previous tip of main on a push. `steps` needs the Postgres.

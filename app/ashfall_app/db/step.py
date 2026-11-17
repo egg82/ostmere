@@ -19,7 +19,8 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSONB, aggregate_order_by, insert as pg_insert
 
 from .journal import DAY_S
-from .saves import LISTED, WRITING, DecisionRecord, Listed, Written, as_listed, writing
+from .savewrite import WRITING, writing
+from .saves import LISTED, DecisionRecord, Listed, Written, as_listed
 from .tables import save_decisions, save_journal, save_lines, save_snapshots, saves
 
 

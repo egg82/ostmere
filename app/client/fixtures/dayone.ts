@@ -70,7 +70,7 @@ function rising(at: number, view: View): View {
 
 /** The lines of a moment that landed while the page was shut, played in turn on the return. */
 function returnLines(at: number): LogLine[] {
-  return ["line.1", "line.2", "line.4"].map((key, seq) => ({ at: at - 600, seq, key, card: null }));
+  return ["line.1", "line.2", "line.4"].map((key, seq) => ({ at: at - 600, seq, key, card: null, opens_beat: false }));
 }
 
 export function dayOneStep(phase: DayOnePhase, at: number, kept: Kept = {}, decisions = 0): Step {

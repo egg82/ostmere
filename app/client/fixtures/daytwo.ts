@@ -57,6 +57,6 @@ function dayTwo(phase: DayTwoPhase, v: View, at: number, kept: Kept): View {
 
 export function dayTwoStep(phase: DayTwoPhase, at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fixtureStep("restrule", at, { ...kept, orders: undefined }, decisions);
-  const lines = phase === "offered" ? [{ at, seq: 0, key: "line.offer", card: null }] : phase === "answered" ? [{ at, seq: 0, key: "line.4", card: null }] : [];
+  const lines = phase === "offered" ? [{ at, seq: 0, key: "line.offer", card: null, opens_beat: false }] : phase === "answered" ? [{ at, seq: 0, key: "line.4", card: null, opens_beat: false }] : [];
   return { ...base, view: dayTwo(phase, base.view, at, kept), lines };
 }
