@@ -22,7 +22,7 @@ ALLOWED: dict[str, set[str]] = {
     "client_errors": {"logs"},
     "db": {"logs"},
     "feedback": {"accounts", "api", "clock", "db", "logs"},
-    "jobs": {"clock", "db", "logs", "reminders"},
+    "jobs": {"clock", "db", "logs", "opening", "reminders", "saves"},
     "main": {
         "accounts", "api", "build_header", "client_errors", "clock", "db", "feedback", "head", "logs", "opening",
         "old_host", "page_config", "saves", "services", "web",

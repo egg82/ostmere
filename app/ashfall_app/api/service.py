@@ -14,6 +14,7 @@ from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
 from ..opening.stake_checks import reach_modifiers, reach_stops
 from ..opening.schema import Opening
+from ..saves.handsfree import HORIZON_S
 from ..saves.interface import Played, Ruleset
 from ..saves.journal import ComposedDay
 from ..saves.journal_rules import DIARY_HAND, Look
@@ -34,8 +35,7 @@ from . import models as w
 
 PLAIN = Look(DIARY_HAND, None)
 """How a note is drawn whose slot gives no hand or sketch (a crowd's mention), or whose subject the content dropped."""
-FORECAST_S = 6 * 3600
-"""How far ahead a view forecasts levels and full stores (CONTRACT.txt, "Forecast"): past it the page draws no time."""
+FORECAST_S = HORIZON_S
 
 
 class Game:

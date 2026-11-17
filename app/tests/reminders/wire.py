@@ -23,7 +23,7 @@ def engine_of(game: GameClient) -> Engine:
 def rows(game: GameClient) -> list[dict[str, Any]]:
     with engine_of(game).connect() as c:
         found = c.exec_driver_sql(
-            "SELECT account_id, endpoint, p256dh, tz, after_hours, send_from_hour, send_until_hour, visited_at "
+            "SELECT account_id, endpoint, p256dh, tz, after_hours, send_from_hour, send_until_hour, visited_at, hands_free "
             "FROM reminder_devices ORDER BY id")
         keys = list(found.keys())
         return [dict(zip(keys, r, strict=True)) for r in found]

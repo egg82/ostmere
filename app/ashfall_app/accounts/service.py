@@ -119,18 +119,22 @@ class PgAccounts:
             logs.info(_log, "device.removed", account=account_id, session=session_id)
         return removed
 
-    def keep_reminder(self, account_id: int, sub: Subscription, window: reminder_rows.Window | None) -> reminder_rows.Window | None:
+    def keep_reminder(self, account_id: int, sub: Subscription,
+                      choice: reminder_rows.Choice | None) -> reminder_rows.Choice | None:
         now = self._clock()
         with unit.begin(self._engine) as conn:
-            if window is None:
+            if choice is None:
                 kept = reminder_rows.refresh_device(conn, now, account_id, sub.endpoint, (sub.p256dh, sub.auth), sub.tz)
             else:
+                w = choice.window or reminder_rows.Window(0, 0, 0)
                 kept = reminder_rows.keep_device(conn, now, reminder_rows.NewDevice(
-                    account_id, sub.endpoint, sub.p256dh, sub.auth, window.after_hours, sub.tz, window.send_from_hour,
-                    window.send_until_hour))
-        logs.info(_log, "reminder.kept", account=account_id, picked=window is not None, on=kept is not None,
-                  after_hours=None if kept is None else kept.after_hours)
-        return None if kept is None else kept
+                    account_id, sub.endpoint, sub.p256dh, sub.auth, None if choice.window is None else w.after_hours,
+                    sub.tz, w.send_from_hour, w.send_until_hour, choice.hands_free))
+        window = None if kept is None else kept.window
+        logs.info(_log, "reminder.kept", account=account_id, picked=choice is not None, on=kept is not None,
+                  after_hours=None if window is None else window.after_hours,
+                  hands_free=None if kept is None else kept.hands_free)
+        return kept
 
     def drop_reminder(self, account_id: int, endpoint: str) -> bool:
         with unit.begin(self._engine) as conn:

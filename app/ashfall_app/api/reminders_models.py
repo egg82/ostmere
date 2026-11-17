@@ -2,7 +2,7 @@
 from typing import Annotated
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from pydantic import AfterValidator, BaseModel, Field
+from pydantic import AfterValidator, BaseModel, Field, model_validator
 
 from ..reminders.config import after_hours
 from ..reminders.push_hosts import is_push_service
@@ -54,7 +54,20 @@ class ReminderOn(Request):
     tz: Annotated[str, Field(min_length=1, max_length=64), AfterValidator(_zone)]
     """The device's IANA zone (Intl.DateTimeFormat().resolvedOptions().timeZone): the window's hours are its."""
     window: ReminderWindow | None = None
-    """Null: refresh a browser already on (keys, zone, its account) and answer its window; 404 when it is not on."""
+    """The absence reminder's window; null, that reminder off. Null with hands_free null: refresh a browser already on
+    (keys, zone, its account) and answer its choice; 404 when it is not on."""
+    hands_free: bool | None = None
+    """The hands-free notice on or off; null with a window: off."""
+
+    @model_validator(mode="after")
+    def _something_on(self) -> "ReminderOn":
+        if self.window is None and self.hands_free is False:
+            raise ValueError("turn something on, or DELETE to turn this browser off")
+        return self
+
+    @property
+    def refresh(self) -> bool:
+        return self.window is None and self.hands_free is None
 
 
 class ReminderOff(Request):
@@ -62,4 +75,6 @@ class ReminderOff(Request):
 
 
 class Reminder(BaseModel):
-    window: ReminderWindow
+    window: ReminderWindow | None
+    """Null: the absence reminder is off (the hands-free notice is on)."""
+    hands_free: bool

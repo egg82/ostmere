@@ -33,3 +33,12 @@ def due(visited_at: datetime, after: timedelta, last_sent_at: datetime | None, n
         return False
     hour = local_hour(now, tz)
     return hour is not None and in_window(hour, from_hour, until_hour)
+
+
+def notice_due(free_at: int | None, wall: datetime | None, written_at: int, sent: int | None, now: datetime) -> bool:
+    """True when the save's kept hands-free instant `free_at` (game seconds; `wall` the time it maps to) has passed,
+    the save was last written before it (`written_at`, game seconds: a page left open advanced past it, so the player
+    saw it), and no notice went for it. One notice per instant, however often it is asked."""
+    if free_at is None or wall is None or sent == free_at:
+        return False
+    return wall <= now and written_at < free_at
