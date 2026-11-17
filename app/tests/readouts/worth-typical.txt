@@ -31,8 +31,8 @@
           tuner moments 2: card 1, goal landed 1, mix edited 1, set grew 1
   day 15  visits 3  keeper: +25.9h 62%  +24.8h 64%  +23.9h 65%
           tuner moments 0
-  day 16  visits 3  keeper: +26.1h 72%  +123.8h 92%  +107.6h 83%
-          tuner moments 3: ask 1, card 1, mix edited 1, prestige 1, set grew 3
+  day 16  visits 3  keeper: +26.1h 72%  +124.7h 92%  +108.2h 83%
+          tuner moments 3: ask 1, card 2, mix edited 2, prestige 1, set grew 3
   worth by route, percent by decile (threshold 25%)
     keeper                     n=66: 1 23 34 46 49 53 59 66 72 79 92
     tuner                      n=66: 0 5 6 12 19 24 59 80 96 100 100
@@ -42,7 +42,7 @@
     no cause                   n= 9: 1 2 2 2 6 6 7 10 10 11 12
     a cause                    n=57: 0 3 4 8 11 57 89 98 100 100 100
   kept rates come true over the absence after (XP gained / XP the rates promised), by decile
-    0.11 0.58 0.74 0.82 0.84 0.88 0.92 0.97 1.00 1.02 1.81
+    0.11 0.58 0.75 0.82 0.84 0.88 0.92 0.97 1.00 1.02 1.81
   moments per visit (opening = to B3 seen)
     opening   0 of  2 = 0.00   opening 0.00
     week 1   17 of 29 = 0.59   opening 0.00
@@ -117,5 +117,5 @@
   V64   14.53     2   14.0h  +24.8h 64%   +1.6h 11%    +0.8h 6%     +51.6h 79%    0.64   card,chore,mix edited
   V65   14.67     2   12.9h  +23.9h 65%   +1.8h 12%    +0.2h 2%     +48.7h 79%    0.78   
   V66   15.05     3   10.0h  +26.1h 72%   never        never        never         0.84  *card,ask,mix edited,set grew
-  V67   15.23     2   10.9h  +123.8h 92%  never        never        never         0.69  *prestige,set grew
-  V68   15.36     3   22.5h  +107.6h 83%  never        never        never            -  *set grew
+  V67   15.23     2   10.9h  +124.7h 92%  never        never        never         0.81  *card,prestige,mix edited,set grew
+  V68   15.36     3   22.5h  +108.2h 83%  never        never        never            -  *set grew
