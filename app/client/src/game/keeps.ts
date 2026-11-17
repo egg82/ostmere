@@ -25,7 +25,7 @@ export interface Kept {
 
 const NOWHERE: KeepsSink = {};
 export const NEW_ACCOUNT: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
-export const NEW_SAVE: SavePresentation = { rule_seen: false, mix_offered: [], lines_touched: [], lessons: [], lesson_ends: [], visits: [], newest_day_read: null };
+export const NEW_SAVE: SavePresentation = { rule_seen: false, mix_offered: [], lines_touched: [], lane_tasks_seen: [], lessons: [], lesson_ends: [], visits: [], newest_day_read: null };
 export const NEW_SETTINGS: AccountSettings = { lessons: true };
 
 export class Keeps {
@@ -117,6 +117,18 @@ export class Keeps {
   keepLineTouched(store: string): void {
     if (this.lineTouched(store)) return;
     this.keepSave({ ...this.save, lines_touched: [...(this.save.lines_touched ?? []), store] });
+  }
+
+  /** The lane's task has been in front of the player in the lane's editor in this save: it does not dot the lane's row. */
+  laneTaskSeen(card: string): boolean {
+    return (this.save.lane_tasks_seen ?? []).includes(card);
+  }
+
+  /** The tasks that opened in the lane's editor, kept as one write; nothing is sent when none is new. */
+  keepLaneTasksSeen(cards: Iterable<string>): void {
+    const fresh = [...new Set(cards)].filter((c) => !this.laneTaskSeen(c));
+    if (fresh.length === 0) return;
+    this.keepSave({ ...this.save, lane_tasks_seen: [...(this.save.lane_tasks_seen ?? []), ...fresh] });
   }
 
   /** The rule offer for this repeated switch has been answered: it is not offered again. */

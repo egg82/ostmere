@@ -58,7 +58,7 @@ def test_a_save_from_before_lessons_were_per_save_opens_with_none_kept(pg_url: s
         old.client.cookies.update(cookies)
         opened = old.client.post(f"/api/saves/{save_id}/open")
         assert opened.status_code == 200, opened.text
-        assert opened.json()["presentation"] == {"rule_seen": False, "mix_offered": [], "lines_touched": [],
+        assert opened.json()["presentation"] == {"rule_seen": False, "mix_offered": [], "lines_touched": [], "lane_tasks_seen": [],
                                                  "lessons": [], "lesson_ends": [], "visits": [], "chapter": None,
                                                  "newest_day_read": None}
         account = old.client.get("/api/me").json()["account"]

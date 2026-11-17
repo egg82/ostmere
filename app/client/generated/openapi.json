@@ -5926,6 +5926,15 @@
             "title": "Lines Touched",
             "default": []
           },
+          "lane_tasks_seen": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "title": "Lane Tasks Seen",
+            "default": []
+          },
           "lessons": {
             "items": {
               "$ref": "#/components/schemas/Id"
