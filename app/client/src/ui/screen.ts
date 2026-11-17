@@ -207,11 +207,7 @@ export class Screen {
     if (!this.drawing) this.reveal.start(performance.now());
   }
 
-  /** The end's lines are queued or showing (TheEnd.showing). */
-  get endShowing(): boolean {
-    return this.end.showing;
-  }
-
+  get endShowing(): boolean { return this.end.showing; }   // TheEnd.showing
   /** Something is still waiting its turn or a line is being read: not a moment to reload the page. */
   get revealing(): boolean {
     return this.reveal.busy;
