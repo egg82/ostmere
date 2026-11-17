@@ -9,6 +9,7 @@ from datetime import date
 
 from .. import logs
 from . import budget as budgets
+from .counts import DayCounts, MemoryCounts
 from .service import Writer
 
 log = logging.getLogger("ashfall.writer")
@@ -22,12 +23,16 @@ class Job:
 
 
 class Queue:
-    """Counts live in memory and reset with the day; a restart forgets them (persistence lands with the live client)."""
+    """Today's visits and spent calls are `counts`, read back on every step, so a restarted or second process picks
+up where the day stands; the default keeps them in memory. Queued jobs are in memory only: one lost with its process
+is answered by its stand-in, as a job over a cap is."""
 
-    def __init__(self, writer: Writer, today: Callable[[], date], budget: budgets.Budget = budgets.DEFAULT) -> None:
+    def __init__(self, writer: Writer, today: Callable[[], date], budget: budgets.Budget = budgets.DEFAULT,
+                 counts: DayCounts | None = None) -> None:
         self.writer = writer
         self.today = today
         self.budget = budget
+        self.counts = counts if counts is not None else MemoryCounts()
         self._pending: deque[Job] = deque()
         self._day = today()
         self._visits: dict[str, int] = {}
@@ -37,6 +42,7 @@ class Queue:
         """The save's player came back today, `returning_days` days they have come back before."""
         self._roll()
         self._visits[save_id] = budgets.weight(self.budget, returning_days)
+        self.counts.visit(self._day, save_id, self._visits[save_id])
 
     def enqueue(self, job: Job) -> bool:
         """False, and nothing queued, for a save whose player has not come back today."""
@@ -59,6 +65,7 @@ class Queue:
                 out.append((job, job.stand_in))
                 continue
             self._spent[job.save_id] = self._spent.get(job.save_id, 0) + 1
+            self.counts.spend(self._day, job.save_id)
             text = self.writer.write(job.kind, job.stand_in)
             self._log("run", job, "ok")
             out.append((job, text))
@@ -76,9 +83,9 @@ class Queue:
         return None
 
     def _roll(self) -> None:
-        if self.today() != self._day:
-            self._day = self.today()
-            self._visits, self._spent = {}, {}
+        """Today's counts as the store has them."""
+        self._day = self.today()
+        self._visits, self._spent = self.counts.load(self._day)
 
     def _log(self, event: str, job: Job, reason: str) -> None:
         logs.info(log, f"writer.job.{event}", kind=job.kind, save=logs.tag(job.save_id), reason=reason,

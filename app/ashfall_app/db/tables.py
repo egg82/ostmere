@@ -8,8 +8,8 @@ integer clock. Text sorts by byte: the database is created with C collation and 
 from datetime import datetime
 
 from sqlalchemy import (
-    BigInteger, Boolean, CheckConstraint, Column, ForeignKey, Identity, Index, Integer, LargeBinary, MetaData, Table,
-    Text, text,
+    BigInteger, Boolean, CheckConstraint, Column, Date, ForeignKey, Identity, Index, Integer, LargeBinary, MetaData,
+    PrimaryKeyConstraint, Table, Text, text,
 )
 from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
 
@@ -209,4 +209,15 @@ reminder_devices = Table(
     CheckConstraint("after_hours IS NOT NULL OR hands_free", name="ck_reminder_devices_something_on"),
     Index("ix_reminder_devices_account_id", "account_id"),
     Index("ix_reminder_devices_visited_at", "visited_at"),
+)
+
+# The writer queue's counts for today (writer/counts.py): a world's weight from its visit and the calls it has spent.
+# `save_id` is the queue's own text id, not a key: a deleted save's rows go with the day. Visiting deletes earlier days.
+writer_day = Table(
+    "writer_day", metadata,
+    Column("day", Date, nullable=False),
+    Column("save_id", Text, nullable=False),
+    Column("weight", Integer, nullable=False),
+    Column("spent", Integer, nullable=False),
+    PrimaryKeyConstraint("day", "save_id"),
 )
