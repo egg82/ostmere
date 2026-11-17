@@ -3,7 +3,7 @@ tests, which their CI job's timeout budgets): `eight_route` takes its route by i
 route's per-visit counts (its heavy steps read first, a part to a setup, `week_part`), `eight_loss` its cap-loss check
 at the chapter's end, `eight_marks` its visits marked for the readout, `two_am_eight_run` the 2 AM replay pair;
 the `nine_`, `eleven_`, `twelve_` and `fifteen_` fixtures the same for days nine, eleven, twelve and fifteen,
-`twelve_cures` and `fifteen_cures` the cures gate over typical's day twelve and day fifteen, `twelve_ladder` a route's ladder readout, `fifteen_worth` typical's worth readout, and `rebased_eight`, `rebased_nine`, `rebased_eleven` and `rebased_twelve` typical's saved
+`twelve_cures` and `fifteen_cures` the cures gate over typical's day twelve and day fifteen, `twelve_ladder` a route's ladder readout, `fifteen_worth` typical's worth readout, `fifteen_shares` the share of each store's making lost 24 h from typical's day-fifteen end, and `rebased_eight`, `rebased_nine`, `rebased_eleven` and `rebased_twelve` typical's saved
 day-eight end loaded under day nine, its day-nine end under day eleven, its day-eleven end under day twelve and its
 day-twelve end under day fifteen; `chapter_end` a chapter's play
 beside its saved end and `rebased_inputs` a saved rebased save's stamped inputs beside today's (ends.py). A test reading
@@ -31,7 +31,7 @@ EIGHT_PLAYS = frozenset({"eight_route", "eight_counts", "week_part", "eight_loss
                          "eleven_counts", "eleven_loss", "two_am_eleven_run", "rebased_nine", "twelve_route",
                          "twelve_counts", "twelve_loss", "two_am_twelve_run", "rebased_eleven", "rebased_twelve",
                          "twelve_cures", "twelve_ladder", "eleven_marks", "twelve_marks", "chapter_end", "rebased_inputs",
-                         "fifteen_route", "fifteen_counts", "fifteen_loss", "two_am_fifteen_run", "fifteen_cures",
+                         "fifteen_route", "fifteen_counts", "fifteen_loss", "fifteen_shares", "two_am_fifteen_run", "fifteen_cures",
                          "fifteen_marks", "fifteen_worth"})
 
 
@@ -310,6 +310,11 @@ def fifteen_marks() -> dict[str, str]:
 @pytest.fixture(scope="session")
 def fifteen_loss() -> dict[str, tuple[int, ...]]:
     return verdicts.cap_loss(fifteen("typical"), verdicts.FIFTEEN)
+
+
+@pytest.fixture(scope="session")
+def fifteen_shares() -> dict[str, float]:
+    return verdicts.away_shares(fifteen("typical"), verdicts.FIFTEEN)
 
 
 @pytest.fixture(scope="session")

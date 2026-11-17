@@ -52,9 +52,19 @@ def test_b13_is_held_to_the_calendar(fifteen_route: Route):
     assert p.landed_at["B13"] - p.history[0][0].time == B13_S, f"{name}: B13 at 336 h"
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.STONE_DRY_GAP)
+@pytest.mark.xfail(strict=True, reason="; ".join((verdicts.TRACK_STONES_GAP, verdicts.TRACK_ROOTS_GAP, verdicts.STONE_DRY_GAP)))
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
     assert fifteen_loss == {}
+
+
+CLEAR = 0.25
+"""The most a store given a sink for day fifteen loses over 24 h away: half the check's limit, so a change to the route
+does not tip it over."""
+
+
+def test_track_laid_loses_at_most_a_quarter_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
+    """The track runs on past 10 000, where field_track kept laying into a full store."""
+    assert fifteen_shares["track_laid"] <= CLEAR
 
 
 def test_every_chip_shown_in_day_fifteen_has_a_cure(fifteen_cures: list[str]):
