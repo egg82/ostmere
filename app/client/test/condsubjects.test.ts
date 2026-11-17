@@ -1,6 +1,6 @@
 // The condition editor offers every subject a save holds (automation is never earned or gated; nothing exists
-// in a save that a rule cannot watch): every store, the Camp's included, every skill, and every task in play by its
-// count, and every chip the save has shown, whether or not it shows now. Read through the real subject list,
+// in a save that a rule cannot watch): every store, the Camp's included, every skill, and every capped task in play by
+// its count (docs/decisions/mixes.md: an uncapped task's count is soon past any n for good), and every chip the save has shown, whether or not it shows now. Read through the real subject list,
 // ruleoffers.offeredSubjects and whenChoices in the full editor, on every fixture save. What is left out, and why, is
 // condsubjects.ts's KINDS.
 import { fixtureContent } from "../fixtures/content";
@@ -12,6 +12,7 @@ const catalog = new Catalog(fixtureContent);
 
 const seen = new Map(KINDS.map((k) => [k, 0]));
 const failures: string[] = [];
+let uncappedSeen = 0;
 for (const { phase, view } of SAVES) {
   for (const s of present(view)) seen.set(s.kind, (seen.get(s.kind) ?? 0) + 1);
   const offered = offeredSubjects(catalog, view);
@@ -19,7 +20,12 @@ for (const { phase, view } of SAVES) {
     const left = missing(view, offered, kind);
     if (left.length > 0) failures.push(`${phase}: ${kind} not offered: ${left.join(", ")}`);
   }
+  const uncapped = new Set(view.cards.filter((c) => c.cap === null).map((c) => c.card));
+  uncappedSeen += uncapped.size;
+  const counted = offered.flatMap((s) => (s.kind === "card_count" && uncapped.has(s.card) ? [s.card] : []));
+  if (counted.length > 0) failures.push(`${phase}: an uncapped task offered by its count: ${counted.join(", ")}`);
 }
+if (uncappedSeen < 5) throw new Error(`only ${uncappedSeen} uncapped cards seen across ${SAVES.length} saves: the check looked at nothing`);
 let chipsSeen = 0;
 for (const { phase, view } of SAVES) {
   const offered = new Set(whenChoices(catalog, view, true, [], null).chips.map((c) => c.chip));

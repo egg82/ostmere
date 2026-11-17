@@ -115,8 +115,8 @@ for (const c of cases) {
   const control = one(cond, ".cond-subject-control");
   one(cond, '.cond-subject[data-subject="level:foraging"]').click();
   expect("a level: its slider centred", scrolls(control), centred);
-  one(cond, '.cond-subject[data-subject="task:gather"]').click();
+  one(cond, '.cond-subject[data-subject="task:shelter"]').click();   // a capped task: only those are counted
   expect("a task: centred again", scrolls(control), [...centred, ...centred]);
-  one(cond, '.cond-subject[data-subject="task:gather"]').click();
+  one(cond, '.cond-subject[data-subject="task:shelter"]').click();
   expect("the same task again: no scroll", scrolls(control).length, 2);
 }
