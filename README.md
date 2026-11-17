@@ -31,8 +31,6 @@ lesson on its real controls the first time it matters. You can skip any lesson.
 - **The Book.** Where the game writes things down. The Chronicle lists what happened and what caused it, with a summary
   of the time since you were last here. The Journal holds the notes the game writes as you learn things.
 
-![The Rules tab a few minutes in: what the hands do next, and what they do otherwise](docs/images/rules.webp)
-
 ![The same opening on a phone](docs/images/phone.webp)
 
 ---
