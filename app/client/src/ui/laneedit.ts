@@ -89,7 +89,7 @@ export class LaneEditor {
     const hue = this.card === null ? 5 : catalog.rank(this.card) % 6;
     const always = order ? alwaysWords(catalog, order) : null;
     this.sentence.replaceChildren(...(order === null ? [] : always !== null ? [el("b", `rule-action hue-${hue}`, always)]
-      : [el("span", "", conditionWords(catalog, order.when) ?? ""), " → ", el("b", `rule-action hue-${hue}`, catalog.cardLabel(this.card ?? ""))]));
+      : [el("span", "", conditionWords(catalog, view, order.when) ?? ""), " → ", el("b", `rule-action hue-${hue}`, catalog.cardLabel(this.card ?? ""))]));
     const was = this.target.rule === null ? undefined : view.orders[this.target.rule]?.then;
     this.save.disabled = order === null || (was?.kind === "tap_card" && was.card === this.card);
   }

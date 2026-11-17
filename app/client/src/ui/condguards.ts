@@ -49,7 +49,7 @@ export class GuardEditor {
     head.append(el("span", "rules-label", text.get(UI.ruleUnlessLabel)), el("span", "cond-guards-hint", text.get(UI.ruleUnlessHint)));
     const held = unless.map((g, i) => {
       const row = el("div", "cond-guard");
-      const words = guardWords(catalog, g) ?? "";
+      const words = guardWords(catalog, view, g) ?? "";
       const drop = button("quiet cond-guard-drop", text.get(UI.orderRemove), () => this.change(unless.filter((_, j) => j !== i)));
       drop.setAttribute("aria-label", `${text.get(UI.orderRemove)} ${words}`);
       row.append(el("span", "cond-guard-words", words), drop);
@@ -74,15 +74,15 @@ export class GuardEditor {
       return b;
     });
     row.append(...chips, ...stores, ...subjectRows(catalog, view, subjectChoices(catalog, view), (r) => this.add(buildSubject(catalog, r))));
-    pick.append(row, ...(this.picked ? this.levels(this.picked) : []));
+    pick.append(row, ...(this.picked ? this.levels(view, this.picked) : []));
     return pick;
   }
 
   /** The picked store's test and level, and the button that adds it. */
-  private levels(g: Guard): HTMLElement[] {
+  private levels(view: View, g: Guard): HTMLElement[] {
     const { catalog } = this.ctx;
     const { text } = catalog;
-    const cap = storeCap(catalog, this.view, g.store);
+    const cap = storeCap(catalog, view, g.store);
     const items = catalog.isLevel(g.store);
     const q = catalog.content.scales.quantity_per_item;
     const tests = el("div", "cond-tests");
@@ -94,7 +94,7 @@ export class GuardEditor {
     this.level.draw(catalog, g.level, cap, (l) => guardValid({ ...g, level: l }, cap), () => otherForm(g, cap), items);
     const done = button("primary cond-guard-done", text.get(UI.ruleUnlessDone), () => this.add(buildGuard(g, q, items)));
     done.disabled = !guardValid(g, cap);
-    const words = el("span", "cond-guard-words", guardWords(catalog, buildGuard(g, q, items)) ?? levelWords(catalog, g.level));
+    const words = el("span", "cond-guard-words", guardWords(catalog, view, buildGuard(g, q, items)) ?? levelWords(catalog, g.level));
     return [el("div", "cond-label cond-guard-store", catalog.storeTitle(g.store)), tests, this.level.root, words, done];
   }
 

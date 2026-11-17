@@ -28,17 +28,18 @@ export function keyOf(s: Subject): string {
 export const KINDS: readonly Kind[] = ["store_value", "card_count", "skill_level"];
 
 /** Every subject of KINDS the save holds whose value can still move: a store per ledger line, a skill per bar, a card
- * count per capped card in play (a done card's count is final; an uncapped one's is soon past any n for good). */
-export function present(view: View): Subject[] {
+ * count per capped card in play (a done card's count is final; an uncapped one's is soon past any n for good). `camp`
+ * is the Camp store, left out once no level a rule can name is ahead (the store still moves; no rule on it would). */
+export function present(view: View, camp: string | null = null): Subject[] {
   return [
-    ...view.ledger.map((l): Subject => ({ kind: "store_value", store: l.store })),
+    ...view.ledger.filter((l) => l.store !== camp).map((l): Subject => ({ kind: "store_value", store: l.store })),
     ...view.skills.map((s): Subject => ({ kind: "skill_level", skill: s.skill })),
     ...view.cards.filter((c) => c.cap !== null).map((c): Subject => ({ kind: "card_count", card: c.card })),
   ];
 }
 
 /** The saved subjects of `kind` the offered ones leave out, as keys. */
-export function missing(view: View, offered: readonly Subject[], kind: Kind): string[] {
+export function missing(view: View, offered: readonly Subject[], kind: Kind, camp: string | null = null): string[] {
   const have = new Set(offered.map(keyOf));
-  return present(view).filter((s) => s.kind === kind).map(keyOf).filter((k) => !have.has(k));
+  return present(view, camp).filter((s) => s.kind === kind).map(keyOf).filter((k) => !have.has(k));
 }

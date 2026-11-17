@@ -67,6 +67,7 @@ export class SubjectControl {
   private readonly level: SubjectNumber;
   private rule: SubjectRule | null = null;
   private view: View | null = null;
+  private kept: number | undefined;
 
   constructor(private readonly catalog: Catalog, private readonly changed: (rule: SubjectRule) => void) {
     const { text } = catalog;
@@ -75,15 +76,16 @@ export class SubjectControl {
     this.root.append(this.times.root, this.level.root);
   }
 
-  /** Shows `rule`'s number over what the subject allows; hidden with no subject chosen. */
-  draw(view: View, rule: SubjectRule | undefined): void {
+  /** Shows `rule`'s number over what the subject allows (`kept` as subjectRange has it); hidden with no subject chosen. */
+  draw(view: View, rule: SubjectRule | undefined, kept?: number): void {
     this.view = view;
     this.rule = rule ?? null;
+    this.kept = kept;
     this.root.hidden = rule === undefined || rule.kind === "running";
     if (!rule || rule.kind === "running") return;
     this.times.root.hidden = rule.kind !== "count";
     this.level.root.hidden = rule.kind === "count";
-    const [lo, top] = subjectRange(this.catalog, view, rule);
+    const [lo, top] = subjectRange(this.catalog, view, rule, kept);
     const hi = Number.isFinite(top) ? top : Math.max(rule.n, subjectNow(this.catalog, view, rule) + OPEN_REACH);
     (rule.kind === "count" ? this.times : this.level).draw(this.catalog, rule.n, lo, hi);
   }
@@ -91,7 +93,7 @@ export class SubjectControl {
   private set(n: number): void {
     const { rule, view } = this;
     if (!rule || !view) return;
-    const next = clampSubject(this.catalog, view, { ...rule, n });
+    const next = clampSubject(this.catalog, view, { ...rule, n }, this.kept);
     if (next.n !== rule.n) this.changed(next);
   }
 }

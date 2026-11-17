@@ -3,7 +3,7 @@ import type { ChipInfo, Condition, Order, OrderVerb, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { actionWords, chipOf, conditionWords, handsTap, savedVerb, storeRule } from "../game/orders";
 import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } from "../game/storerule";
-import { buildSubject, readSubject, type SubjectRule } from "../game/subjectrule";
+import { buildSubject, readSubject, subjectKey, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
 import { ruleCards, whenChoices } from "../game/ruleoffers";
 import type { RuleSide } from "../game/ruleside";
@@ -86,7 +86,7 @@ export function editDraft(catalog: Catalog, view: View, index: number): Draft | 
 
 /** The editor's heading: a chip's rule as the chip, a rule being changed by what it runs, else "New rule". */
 export function headingWords(catalog: Catalog, view: View, draft: Draft): string {
-  return draft.chip && draft.opened ? conditionWords(catalog, draft.opened.when) ?? ""
+  return draft.chip && draft.opened ? conditionWords(catalog, view, draft.opened.when) ?? ""
     : draft.index !== null && draft.then ? catalog.text.fill(UI.ruleHeading, { mix: actionWords(catalog, view, draft.then) })
       : catalog.text.get(UI.ruleNew);
 }
@@ -98,4 +98,12 @@ export function keepOffered(catalog: Catalog, view: View, draft: Draft, chip: Ch
   if (chip ? offer.chips.includes(chip) : offer.stores.includes(draft.rule.store)) return;
   draft.rule = defaultRule("", "below", 0);
   draft.opened = undefined;
+}
+
+/** The number the rule being changed holds on the draft's subject, kept reachable on its slider though already reached;
+ * undefined for a new rule or another subject. */
+export function keptSubject(catalog: Catalog, view: View, draft: Draft): number | undefined {
+  const when = draft.index === null ? undefined : view.orders[draft.index]?.when;
+  const saved = when ? readSubject(catalog, when) : null;
+  return saved && draft.subject && subjectKey(saved) === subjectKey(draft.subject) ? saved.n : undefined;
 }

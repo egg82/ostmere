@@ -844,6 +844,7 @@ TEXT AND NUMBERS (one rule)
     ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
     ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
     ui.rule.while_running {card} | ui.rule.running   a person's rule on another lane's task running, and its When head
+    ui.rule.lane_card {card}{lane}   a ruled lane's card as a subject rule or guard names it, its lane beside it
     ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
     ui.chronicle.open | ui.tab.cards | ui.tab.book   the chronicle's sheet, and the tabs: Tasks and Book (the
                                     chronicle's sheet); the town's tab (its people and lanes, and on a phone the ledger

@@ -55,7 +55,7 @@ export function whenRow(catalog: Catalog, chips: ChipInfo[], stores: string[], o
  * given, left as it is), the note when the same rule already exists, and Save off until the rule is whole and new. */
 export function footRow(catalog: Catalog, view: View, index: number | null, then: OrderVerb | null, order: Order | null, foot: { sentence: HTMLElement | null; note: HTMLElement; save: HTMLButtonElement }): void {
   const hue = then?.kind === "tap_card" ? catalog.rank(then.card) % 6 : 5;
-  foot.sentence?.replaceChildren(...(then ? [el("span", "", order ? ruleCondition(catalog, order) ?? "" : ""), " → ",
+  foot.sentence?.replaceChildren(...(then ? [el("span", "", order ? ruleCondition(catalog, view, order) ?? "" : ""), " → ",
     el("b", `rule-action hue-${hue}`, order ? ruleActions(catalog, view, order) : actionWords(catalog, view, then))] : []));
   const dup = order !== null && ruleExists(view, index, order);
   setText(foot.note, dup ? catalog.text.get(UI.ruleExists) : "");

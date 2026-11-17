@@ -34,11 +34,11 @@ export function chipOf(catalog: Catalog, when: Condition): ChipInfo | undefined 
 
 /** A rule's condition in the player's words: as its chip (ui.rule.chip) when it is a chip's, else as a subject rule
  * (a count or a level), else as a store rule; null for a condition the page does not draw. */
-export function conditionWords(catalog: Catalog, when: Condition): string | null {
+export function conditionWords(catalog: Catalog, view: View, when: Condition): string | null {
   const chip = chipOf(catalog, when);
   if (chip) return catalog.text.fill(UI.ruleChip, { chip: catalog.label(chip.label_key) });
   const subject = readSubject(catalog, when);
-  if (subject) return subjectWords(catalog, subject);
+  if (subject) return subjectWords(catalog, view, subject);
   const rule = readRule(when, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
   return rule === null ? null : ruleWhen(catalog, rule);
 }
@@ -67,7 +67,7 @@ export function ruleFor(view: View, card: OrderCard): number {
 
 /** A rule's two halves in the player's words: its condition and what it runs (a mix's name or a task's label). */
 export function ruleWords(catalog: Catalog, view: View, order: Order): { when: string; action: string } | null {
-  const when = conditionWords(catalog, order.when);
+  const when = conditionWords(catalog, view, order.when);
   return when === null ? null : { when, action: actionWords(catalog, view, order.then) };
 }
 

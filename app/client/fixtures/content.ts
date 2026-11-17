@@ -54,7 +54,7 @@ const text: Record<string, string> = {
   "ui.rule.ended_season": "{rule} · ended with the season", "ui.rule.ended_left": "{rule} · ended when {person} left",
   "ui.rule.chip": "While {chip}", "ui.hands.while_chip": "while {chip}",
   "ui.rule.done": "Once {card} is done {n} times", "ui.rule.done_once": "Once {card} is done", "ui.rule.reaches_level": "Once {name} reaches level {n}",
-  "ui.rule.levels": "Levels", "ui.rule.tasks": "Tasks", "ui.rule.running": "Running", "ui.rule.while_running": "While {card} is running", "ui.rule.times": "Times", "ui.rule.level": "Level",
+  "ui.rule.levels": "Levels", "ui.rule.tasks": "Tasks", "ui.rule.running": "Running", "ui.rule.while_running": "While {card} is running", "ui.rule.lane_card": "{card} ({lane})", "ui.rule.times": "Times", "ui.rule.level": "Level",
   "ui.rule.up": "Move up", "ui.rule.down": "Move down",
   "ui.close": "Not now",
   "ui.devices.open": "Another device",

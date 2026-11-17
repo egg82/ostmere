@@ -26,7 +26,7 @@ export function whyOff(catalog: Catalog, view: View, index: number, t: number): 
   if (state === "behind_next") return behindNext(catalog, view);
   if (state === "outranked") {
     const by = outrankedBy(catalog, view, index);
-    const rule = by ? alwaysWords(catalog, by) ?? conditionWords(catalog, by.when) : null;
+    const rule = by ? alwaysWords(catalog, by) ?? conditionWords(catalog, view, by.when) : null;
     return rule === null ? null : catalog.text.fill(UI.ruleOutranked, { rule });
   }
   if (chipOf(catalog, order.when)) return null;
