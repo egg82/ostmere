@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 def check_order_cards(o: "Opening", ids: dict[str, list[str]]) -> None:
     """Each order card names a known store and exactly one of tap_card and switch_mix, with a `when` on its own store.
     `ids` is ids_by_kind(o)."""
-    chain = Chain(o) if any(oc.when.test == "at_most" and oc.when.release is not None for oc in o.order_cards) else None
+    chain = Chain(o) if any(oc.when.test == "at_least" or oc.when.release is not None for oc in o.order_cards) else None
     for oc in o.order_cards:
         where = f"order card for {oc.store}"
         need(where, "store", oc.store, ids["store"])
@@ -30,14 +30,14 @@ def check_order_cards(o: "Opening", ids: dict[str, list[str]]) -> None:
             fail(where, "its when has every: a rule's levels are whole items")
         cap = next((s.cap_items for s in o.stores if s.id == oc.store), None)
         if oc.when.test == "at_least":
-            _check_rising_card(o, where, oc, cap)
+            _check_rising_card(o, where, oc, chain)
         elif cap is not None and oc.when.release is not None \
                 and levels(oc.when)[1] >= offer_cap(o, oc.store, oc.offered_after, chain) * QUANTITY_SCALE:
             fail(where, "its release is at or past the store's cap when it is offered, so the rule would never let go")
         check_chip_card(o, where, oc)
 
 
-def _check_rising_card(o: "Opening", where: str, oc: "OrderCardEntry", cap: int | None) -> None:
+def _check_rising_card(o: "Opening", where: str, oc: "OrderCardEntry", chain: Chain | None) -> None:
     """An at_least card is the rule for a full or rising line, or for a chip that shows while its store is high: it taps
     a card that takes that store (so the rule spends what fills), comes on at a level the store can reach, and lets go
     above 0 (a store never goes under 0)."""
@@ -46,7 +46,7 @@ def _check_rising_card(o: "Opening", where: str, oc: "OrderCardEntry", cap: int 
         fail(where, "an at_least card taps a card")
     if not any(a.store == oc.store for a in card.inputs) and not any(f.store == oc.store for f in card.costs):
         fail(where, f"card {card.id} does not take {oc.store}, so the rule would not spend what fills")
-    if cap is not None and levels(oc.when)[0] > units(cap):
-        fail(where, "its value is past the store's cap, so the rule would never come on")
+    if levels(oc.when)[0] > offer_cap(o, oc.store, oc.offered_after, chain) * QUANTITY_SCALE:
+        fail(where, "its value is past the store's cap when it is offered, so the rule would never come on")
     if oc.when.release is not None and levels(oc.when)[1] < units(1):
         fail(where, "its release is under one, so the rule would never let go")
