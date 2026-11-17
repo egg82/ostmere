@@ -1,15 +1,22 @@
 // The sound locator: callers ask for `sound()` and never learn whether audio exists. The default plays nothing, so a
 // page without audio (tests, a browser that refuses it, sound not started yet) is silent, not broken.
-import type { SlotName } from "./slots";
+import type { BedName, SlotName } from "./slots";
 
 export interface Sound {
   /** Play a slot's one-shot `delayMs` from now, on the audio clock. `pitch` multiplies the slot's own ratio (a chain's
    * rising ticks). Never throws. Returns a cut: it fades the sound over CUT_MS, so one not yet begun never sounds. */
   play(slot: SlotName, pitch?: number, delayMs?: number): () => void;
+  /** A looping bed, silent until `setLevel`. Never throws. */
+  loop(bed: BedName): Loop;
+}
+
+export interface Loop {
+  /** Ramp the bed to `level` (0 to 1, against its slot's gain) over `rampMs`; 0 ms is at once. */
+  setLevel(level: number, rampMs: number): void;
 }
 
 const NOTHING = (): void => undefined;
-const NULL_SOUND: Sound = { play: () => NOTHING };
+const NULL_SOUND: Sound = { play: () => NOTHING, loop: () => ({ setLevel: NOTHING }) };
 const NO_REFRESH = (): void => undefined;
 
 let current: Sound = NULL_SOUND;

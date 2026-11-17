@@ -38,7 +38,7 @@ const sheet = (sound = soundControl(text, browserSoundSwitch(() => storage))) =>
 
 {  // a sound registered: both appear, each flips the shared switch and the other follows
   let refreshes = 0;
-  registerSound({ play: () => () => undefined }, () => { refreshes++; });
+  registerSound({ play: () => () => undefined, loop: () => ({ setLevel: () => undefined }) }, () => { refreshes++; });
   const mute = browserSoundSwitch(() => storage);
   const control = soundControl(text, mute)!;
   const s = sheet(control);
@@ -57,7 +57,7 @@ const sheet = (sound = soundControl(text, browserSoundSwitch(() => storage))) =>
 }
 
 {  // storage that throws: the control still draws, on, and a tap cannot keep an off
-  registerSound({ play: () => () => undefined });
+  registerSound({ play: () => () => undefined, loop: () => ({ setLevel: () => undefined }) });
   const broken = browserSoundSwitch(() => { throw new Error("blocked"); });
   const control = soundControl(text, broken)!;
   control.button.click();
