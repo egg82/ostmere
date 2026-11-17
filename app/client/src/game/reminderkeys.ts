@@ -21,6 +21,8 @@ export const REMINDER_KEYS = {
   remindersDenied: "ui.reminders.denied",
   remindersNone: "ui.reminders.none",   // this browser has no Web Push
   remindersFailed: "ui.reminders.failed",
+  remindersHandsFree: "ui.reminders.hands_free",   // the hands-free notice's choice
+  remindersHandsFreeSaid: "ui.reminders.hands_free_said",   // the line under it: what it sends
   remindersMention: "ui.reminders.mention",
   remindersMentionOpen: "ui.reminders.mention_open",
 } as const;
