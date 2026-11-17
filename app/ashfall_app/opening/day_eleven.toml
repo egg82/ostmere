@@ -4,6 +4,9 @@
 version = 1
 end_feature = "ditch_dug"
 
+# The camp's shown name grows into the town's once the first families have come in.
+town_later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "town_title_town" }]
+
 # ---------- the man behind them, with B10's moment ----------
 
 # He comes in with B10 (its condition and requires, so one moment), apart from the family's offer: an arrival with no
@@ -613,6 +616,7 @@ c_n5_build_hut = "Build a hut"
 store_hut = "hut"
 lane_n5 = "The woman's hands"
 lane_n5_named = "{n5}'s hands"
+town_title_town = "Town"
 name_n5 = "Thomasina"
 lane_n6 = "Her husband's hands"
 lane_n6_named = "{n6}'s hands"

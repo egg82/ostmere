@@ -13,11 +13,11 @@ def labelled(o: Opening, label: LaneLabelEntry) -> Opening:
     return o.model_copy(update={"town_later_labels": [*o.town_later_labels, label]})
 
 
-def test_the_town_is_named_by_the_first_arrival_and_the_content_serves_it(shipped_opening: Opening):
+def test_the_town_is_named_once_the_first_families_have_come_and_the_content_serves_it(shipped_opening: Opening):
     o = shipped_opening
-    assert [(x.after.unlock_kind, x.after.id, o.text[x.label_key]) for x in o.town_later_labels] == [("feature", "n1", "Town")]
+    assert [(x.after.unlock_kind, x.after.id, o.text[x.label_key]) for x in o.town_later_labels] == [("feature", "family_joined", "Town")]
     served = Game(o, ruleset(o, [], "test", 1)).content().town_later_labels
-    assert [(x.after.id, x.label_key) for x in served] == [("n1", "town_title_town")]
+    assert [(x.after.id, x.label_key) for x in served] == [("family_joined", "town_title_town")]
 
 
 def test_a_later_title_must_name_an_unlock_the_content_has(shipped_opening: Opening):
@@ -27,6 +27,6 @@ def test_a_later_title_must_name_an_unlock_the_content_has(shipped_opening: Open
 
 
 def test_a_later_title_must_name_a_text_key(shipped_opening: Opening):
-    unlock = UnlockEntry(unlock_kind="feature", id="n1")
+    unlock = UnlockEntry(unlock_kind="feature", id="family_joined")
     with pytest.raises(ValueError, match="town_title_nowhere"):
         check_opening(labelled(shipped_opening, LaneLabelEntry(after=unlock, label_key="town_title_nowhere")))
