@@ -1,5 +1,6 @@
 """Reading the player's plan: which verbs are dead, which cards orders and the queue would tap, and which mix runs.
 Reads only."""
+from dataclasses import replace
 from enum import Enum
 
 from .answers import AnswerKind, AnswerOffer
@@ -82,25 +83,50 @@ def _layer_of(save: Save, rules: Rules, mix: MixId) -> MixLayer:
     return mix_layer(rules, save.mixes, mix) if mix in {m.id for m in save.mixes} else MixLayer.HANDS
 
 
-def _mix_rule(save: Save, rules: Rules, layer: MixLayer, below: bool | None = None) -> tuple[int, MixId] | None:
+def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | None:
     """The first order that is on and lists a SwitchMix to a saved mix of `layer` that is not greyed, as (its index,
     the first such mix it lists): the order whose mix runs over the player's (DESIGN.txt, "Order mix", "OR ELSE").
-    Orders of the other layer never change this layer's running mix. `below`: only the orders on that side of Next."""
+    Orders of the other layer never change this layer's running mix."""
     saved = {m.id for m in save.mixes}
     for i, a, latch in listed(save.orders, save.latches):
         if rule_on(latch) and isinstance(a, SwitchMix) and a.mix in saved and not greyed(save, rules, a.mix) \
-                and mix_layer(rules, save.mixes, a.mix) is layer and below in (None, save.orders[i].below_next):
+                and mix_layer(rules, save.mixes, a.mix) is layer:
             return i, a.mix
     return None
+
+
+def next_placed(save: Save) -> bool:
+    """Some rule sits under Next: the row is off the bottom (DESIGN.txt, "Next's row")."""
+    return any(o.below_next for o in save.orders)
+
+
+def on_side(save: Save, below: bool) -> Save:
+    """`save` with the rules on the other side of Next off (their latches false), for the readers that walk the orders
+    in sequence to read one side at a time; `save` itself above a Next at the bottom (DESIGN.txt, "Next's row")."""
+    if not below and not next_placed(save):
+        return save
+    return replace(save, latches=tuple(on if o.below_next is below else False for o, on in zip(save.orders, save.latches)))
+
+
+def under_next(save: Save, rules: Rules) -> Save:
+    """on_side(save, below=True), and while the queue has the hands (next_runs) the rules tapping on them off too: they
+    wait for the entry (DESIGN.txt, "Next's row")."""
+    side = on_side(save, below=True)
+    if not next_runs(save, rules):
+        return side
+    cards = index(rules).cards
+    hands = tuple(any(isinstance(a, TapCard) and a.card in cards and cards[a.card].lane == HANDS for a in o.actions)
+                  for o in save.orders)
+    return replace(side, latches=tuple(False if h else on for h, on in zip(hands, side.latches)))
 
 
 def _hands_rule(save: Save, rules: Rules) -> tuple[int, MixId] | None:
     """The order whose hands mix runs: the first on above Next; else, while the queue runs no mix, the first on under
     Next (DESIGN.txt, "Next's row")."""
-    above = _mix_rule(save, rules, MixLayer.HANDS, below=False)
-    if above is not None or queue_mix_id(save, rules) is not None:
+    above = _mix_rule(on_side(save, below=False), rules, MixLayer.HANDS)
+    if above is not None or not next_placed(save) or queue_mix_id(save, rules) is not None:
         return above
-    return _mix_rule(save, rules, MixLayer.HANDS, below=True)
+    return _mix_rule(on_side(save, below=True), rules, MixLayer.HANDS)
 
 
 def mix_order(save: Save, rules: Rules) -> int | None:
@@ -118,7 +144,7 @@ def next_runs(save: Save, rules: Rules) -> bool:
     verb = save.queue[i].verb
     if isinstance(verb, TapCard):
         return next(ls.card for ls in save.lanes if ls.lane == HANDS) == verb.card
-    return queue_mix_id(save, rules) is not None and _mix_rule(save, rules, MixLayer.HANDS, below=False) is None
+    return queue_mix_id(save, rules) is not None and _mix_rule(on_side(save, below=False), rules, MixLayer.HANDS) is None
 
 
 def town_mix_order(save: Save, rules: Rules) -> int | None:

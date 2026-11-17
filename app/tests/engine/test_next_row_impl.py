@@ -124,6 +124,18 @@ def test_a_goal_stint_runs_over_a_rule_under_next(below: bool):
         assert after.queue == () and view(after, r).running_mix == CHOPPING
 
 
+def test_a_hands_tap_rule_under_next_waits_while_a_goal_stint_runs():
+    """A rule under Next tapping SHED on the hands: while the stint (resting until an item of food, at 100) runs, the
+    tap waits; at the pop it starts."""
+    r = world()
+    s = decide(planned(r, ()), r, 0, SetQueue((QueueEntry(SwitchMix(RESTING), AtLeast(StoreValue(FOOD), Q, Q)),)))
+    s = decide(s, r, 0, SetOrders((under_next(Order(AfterTime(0), TapCard(SHED))),)))
+    a = advance(s, r, 50)
+    assert hands(a) is None and view(a, r).running_mix == RESTING
+    assert view(a, r).order_states == (OrderState.BEHIND_NEXT,)
+    assert hands(advance(s, r, 100)) == SHED
+
+
 def test_a_tap_rule_under_next_acts_while_the_head_cannot():
     """A rule under Next that taps CHOP on the hands while wood is low: BUILD at the head needs wood, so Next is passed
     over and the rule's tap starts at once; at its landing (100, an item of wood) BUILD is ready and takes the hands

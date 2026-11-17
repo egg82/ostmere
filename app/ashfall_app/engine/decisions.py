@@ -20,7 +20,8 @@ from .installs import requeued
 from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
 from .offerstate import acting, refusal
-from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, listed, placed, rule_on, unplaced
+from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, listed, rule_on
+from .orders import placed, unplaced
 from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
@@ -87,21 +88,20 @@ def _answer_order_verb(save: Save, rules: Rules) -> AnswerOffer | None:
 
 
 def _tap_above(save: Save, rules: Rules) -> TapCard | None:
-    return _tap_order_verb(save, rules, below=False)
+    """The tap orders above Next: all of them while Next is at the bottom."""
+    return _tap_order_verb(plan.on_side(save, below=False), rules)
 
 
 def _tap_below(save: Save, rules: Rules) -> TapCard | None:
-    return _tap_order_verb(save, rules, below=True)
+    """The tap orders under Next that may act now (plan.under_next)."""
+    return _tap_order_verb(plan.under_next(save, rules), rules) if plan.next_placed(save) else None
 
 
-def _tap_order_verb(save: Save, rules: Rules, below: bool) -> TapCard | None:
-    """The first TapCard that can act (ready, and its speed above 0) listed by an order on `below`'s side of Next that is
-    on, orders in order and each order's actions in list order; taps that cannot act are skipped, never chosen
-    (DESIGN.txt, "OR ELSE"). Under Next, a hands tap waits while the queue has the hands (Next's row)."""
-    held = below and plan.next_runs(save, rules)
-    for i, verb, latch in listed(save.orders, save.latches):
-        if save.orders[i].below_next is below and rule_on(latch) and isinstance(verb, TapCard) \
-                and _can_act(save, rules, verb) and not (held and index(rules).cards[verb.card].lane == HANDS):
+def _tap_order_verb(save: Save, rules: Rules) -> TapCard | None:
+    """The first TapCard that can act (ready, and its speed above 0) listed by an order that is on, orders in order and
+    each order's actions in list order; taps that cannot act are skipped, never chosen (DESIGN.txt, "OR ELSE")."""
+    for _, verb, latch in listed(save.orders, save.latches):
+        if rule_on(latch) and isinstance(verb, TapCard) and _can_act(save, rules, verb):
             return verb
     return None
 
@@ -265,8 +265,9 @@ def _kept_latch(save: Save, rules: Rules, order: Order) -> Latch:
     """The latch of the first order in save.orders equal to `order` (guards included), matched as rulelog.py matches
     them, so a kept or moved rule holds its place in every band; else latch_now of its `when` and of each guard, for a
     new or edited one (DESIGN.txt, "Rule changes", "RULE GUARDS")."""
-    for old, on in zip(save.orders, save.latches):
-        if unplaced(old) == unplaced(order):
+    order = unplaced(order)
+    for old, on in zip(map(unplaced, save.orders), save.latches):
+        if old == order:
             return on
     return latch_of(latch_now(save, rules, order.when), tuple(latch_now(save, rules, g) for g in order.unless))
 

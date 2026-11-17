@@ -8,9 +8,8 @@ from .cards import RuleInstall
 from .counts import completions
 from .ids import CardId
 from .lanes import TapCard
-from .orders import (
-    AfterTime, AtLeast, CardCount, Latch, Order, OrderVerb, QueueEntry, initial_latch, placed, pruned, rule_on, unplaced,
-)
+from .orders import AfterTime, AtLeast, CardCount, Latch, Order, OrderVerb, QueueEntry, initial_latch, pruned, rule_on
+from .orders import placed, unplaced
 from .rules import Rules
 from .state import Save
 
