@@ -225,7 +225,7 @@ must never connect the two.
 | Id | Kind | Thread | Gate | What happens (facts) | Decision or spend |
 |---|---|---|---|---|---|
 | SL9 | find | th-magic | Arcana 2 | Wood laid on the drying wall where the stone shows through the ash dries first. | the faster rack invites a re-tune: the stone card's share against the rack's |
-| SL10 | arc (n3, 1 of 3) | th-town | M1 + 1 game h | She turns a strip of ground at the stone's edge with a flat stone, edges it with stones, and lays seed out on a cloth beside it in rows, and ties it up again unplanted. | her share at the bed (`n3_dig_bed`: 6 stones a stage, 3 stages; each stage her lane ×1.07, and the third builds turned ground) against her foraging |
+| SL10 | arc (n3, 1 of 3) | th-town | M1 + 1 game h | She turns a strip of ground at the stone's edge with a flat stone, edges it with stones, and lays seed out on a cloth beside it in rows, and ties it up again unplanted. | her share at the bed (`n3_dig_bed`: 6 stones a stage, 3 stages; each stage her foraging ×1.07, and the third builds turned ground) against her foraging |
 | SL11 | arc (n4, his one moment) | th-survive | M1 + 3 game h | The old man settles at Lucy's watch fire with his leg out straight and feeds it. Lucy stands there a while, then goes back to the roots. | Lucy's share can come off the watch to gathering, his on it; or both at the fire |
 
 ## B7 (`b7.toml`): wolves at the edge of the firelight

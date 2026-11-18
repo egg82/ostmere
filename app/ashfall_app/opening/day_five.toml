@@ -444,7 +444,7 @@ label_key = "action_pair_3h"
 makes = [{ store = "pair_3h", items_per_hour = 20 }]
 
 # SL10: her bed at the stone's edge, a build on her lane that a rule of the player's taps (a capped card is never a
-# share). Each bed dug speeds her lane, as day two's shelter speeds n1's (its card's outcome, so the face shows the
+# share). Each bed dug speeds her foraging (its card's outcome, so the face shows the
 # figure); the third makes turned ground.
 [[triggers]]
 id = "t_seed"
