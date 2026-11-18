@@ -2434,7 +2434,7 @@
   445716000000,
   668736000000
  ],
- "digest": "f76ea7fb1868a79014686e22af63f5a98c2bd538eb77205dddeee850db87dab2",
+ "digest": "85e0dbeb97a9834117b20c608051474c790067100e1d15364573c5f488340b9e",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -4583,6 +4583,7 @@
    "t_stock_open",
    "t_stock_ready",
    "t_stock_shown",
+   "t_stone_family_dry",
    "t_stone_first",
    "t_stone_open",
    "t_stool_first",
@@ -32240,6 +32241,36 @@
     }
    ]
   },
+  "t_stone_family_dry": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 5000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "stone_family_dry",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "make"
+      },
+      "runner": "hand_on_stone",
+      "store": "dry_wood"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_stone_first": {
    "@": "Outcome",
    "lines": [
@@ -34084,7 +34115,7 @@
    "unlocks": []
   }
  },
- "release": 77,
+ "release": 78,
  "renames": [
   {
    "from": "t_stock_open",

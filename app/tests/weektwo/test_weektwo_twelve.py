@@ -51,14 +51,8 @@ def test_the_bears_hunts_end_with_their_pool(twelve_route: Route):
     assert all(getattr(c, "card", None) != w2.HUNT_BEAR for c in base.components)
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.STONE_DRY_GAP)
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_twelves_end(twelve_loss: dict[str, tuple[int, ...]]):
     assert twelve_loss == {}
-
-
-def test_roots_and_stones_lose_under_half_their_making_away_from_day_twelves_end(twelve_loss: dict[str, tuple[int, ...]]):
-    """t_track_family scales the track's takes to the family's three foragers; dry_wood stays the gap held above."""
-    assert not {"roots", "stones"} & set(twelve_loss)
 
 
 def test_pelt_loses_at_most_half_its_making_away_from_day_twelves_end(twelve_loss: dict[str, tuple[int, ...]]):

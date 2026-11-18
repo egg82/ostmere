@@ -14,7 +14,6 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.parity import Measured, compare
 from tests.weektwo.rebased import Rebased, fired, rules12
 from tests.weektwo.routes import FIFTEEN_PUSH_ROUTES
-from tests.weektwo import verdicts
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
@@ -52,14 +51,8 @@ def test_b13_is_held_to_the_calendar(fifteen_route: Route):
     assert p.landed_at["B13"] - p.history[0][0].time == B13_S, f"{name}: B13 at 336 h"
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.STONE_DRY_GAP)
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
     assert fifteen_loss == {}
-
-
-def test_roots_and_stones_lose_under_half_their_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
-    """t_track_family scales the track's takes to the family's three foragers; dry_wood stays the gap held above."""
-    assert not {"roots", "stones"} & set(fifteen_loss)
 
 
 CLEAR = 0.25
