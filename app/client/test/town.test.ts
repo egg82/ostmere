@@ -93,7 +93,7 @@ const rig = (view: View) => pageRig(view);
   const noCarve = { ...capped, mixes: capped.mixes.map((m) => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "carve") })) };
   const { open, face, got, settle } = rig(noCarve);
   open(1);
-  expect("the face says what it is", face("carve").querySelector(".card-need.oneoff")?.textContent, "A one-off: they do it until it is finished, then go back to their mix.");
+  expect("the face carries no note of its own", face("carve").querySelector(".card-need.oneoff"), null);
   face("carve").querySelector(".card-tap")?.click();
   const set = got.decided[0];
   expect("one decision, a rule and no mix", [got.decided.length, set?.kind], [1, "set_orders"]);
@@ -111,7 +111,7 @@ const rig = (view: View) => pageRig(view);
   face("chop").querySelector(".card-tap")?.click();
   const mix = savedMix(got.decided[0]);
   expect("a new mix, not named for the game's", mix?.id.startsWith("town:"), false);
-  expect("with the card at half", mix?.components.map((c) => (c.kind === "card_share" ? c.share_bp : 0)), [5000]);
+  expect("their only card takes all their time", mix?.components.map((c) => (c.kind === "card_share" ? c.share_bp : 0)), [10000]);
   const orders = got.decided[1]?.kind === "set_orders" ? got.decided[1].orders : [];
   expect("then the always rule", orders.at(-1), { when: { kind: "after_time", at: 0 }, then: { kind: "switch_mix", mix_id: mix?.id }, unless: [], or_else: [], below_next: false });
 }

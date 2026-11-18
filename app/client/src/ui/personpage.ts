@@ -104,7 +104,6 @@ export class PersonPage {
     const face = pickRow(this.ctx, card, view, tap, this.strengthOpen);
     if (capped) {
       face.querySelector(".card-tap")?.setAttribute("aria-pressed", String(oneOffRule(catalog, view, this.lane, card.card) >= 0));
-      face.querySelector(".card-tap")?.append(el("span", "card-need oneoff", catalog.text.get(UI.personOneOff)));
       return face;
     }
     face.querySelector(".card-tap")?.setAttribute("aria-pressed", String(share !== undefined));

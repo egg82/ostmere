@@ -17,6 +17,7 @@ TEND = '''[[cards]]
 id = "t_tend"
 presentation = "action"
 label_key = "t_c_tend"
+upside_key = "t_up_tend"
 work_s = 30
 inputs = [{ store = "t_bitten", items = 1 }]
 

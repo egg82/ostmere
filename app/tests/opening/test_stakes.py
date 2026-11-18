@@ -1,6 +1,7 @@
 """The loader's stake check (opening/stake_checks.py): an uncapped card that takes stores and gives nothing by itself
 declares what it feeds and says it on its face, and the whole content bears a side stake out. Each refusal is a card
-merged onto the opening alone, beside a control that passes."""
+merged onto the opening alone, beside a control that passes. Any card that takes stores and shows nothing gained says
+what it is for with an upside_key, stake or not (decisions.md, "Every option offered works as worded")."""
 from typing import Any
 
 import pytest
@@ -43,10 +44,23 @@ def test_a_declared_stake_with_its_upside_passes():
 @pytest.mark.parametrize("gives", [
     {"outcome": {"stores": [{"store": "damp_wood", "items": 1}]}},
     {"makes": [{"store": "damp_wood", "items_per_hour": 1}]},
-    {"cap": 2},
+    {"cap": 2, "upside_key": "t_up"},
 ])
 def test_a_card_that_gives_something_or_has_a_cap_is_no_sink(gives: dict[str, Any]):
     check_stakes(merged({**SINK, **gives}))
+
+
+@pytest.mark.parametrize("silent", [
+    {"cap": 2},
+    {"cap": 3, "finished": {"unlocks": [{"unlock_kind": "feature", "id": "t_feat"}]}},
+])
+def test_a_card_that_shows_nothing_gained_needs_an_upside(silent: dict[str, Any]):
+    with pytest.raises(ValueError, match="cards t_sink: take stores and show nothing gained"):
+        check_stakes(merged({**SINK, **silent}))
+
+
+def test_a_narrative_card_is_its_own_story_and_needs_no_upside():
+    check_stakes(merged({**SINK, "cap": 1, "presentation": "narrative"}))
 
 
 def test_a_card_that_takes_nothing_is_no_sink():
@@ -57,7 +71,7 @@ def test_a_card_read_past_its_first_completion_is_no_sink():
     def reading(value: int) -> dict[str, Any]:
         return {"id": "t_read", "when": {"test": "at_least", "subject_kind": "card_count", "id": "t_sink", "value": value},
                 "outcome": {"line_keys": ["t_l"]}}
-    check_stakes(merged(SINK, triggers=[reading(2)]))
+    check_stakes(merged({**SINK, "upside_key": "t_up"}, triggers=[reading(2)]))
     with pytest.raises(ValueError, match="cards t_sink: "):
         check_stakes(merged(SINK, triggers=[reading(1)]))
 
@@ -65,7 +79,7 @@ def test_a_card_read_past_its_first_completion_is_no_sink():
 def test_a_card_that_takes_a_chips_store_is_a_cure_not_a_sink():
     chip = {"id": "t_wet", "label_key": "t_ch", "tone": "cold", "when": {"test": "at_least", "subject_kind": "store",
                                                                              "id": "dry_wood", "value": 3}}
-    check_stakes(merged(SINK, chips=[chip]))
+    check_stakes(merged({**SINK, "upside_key": "t_up"}, chips=[chip]))
 
 
 def test_a_side_stake_needs_an_entry_on_a_fought_side_once_any_fight_exists():
@@ -106,6 +120,6 @@ def test_a_reach_stake_needs_a_trigger_on_the_store_it_fills_that_pays_a_modifie
 def test_a_card_that_takes_a_fights_wound_is_a_cure_not_a_sink():
     wounding = {**FIGHT, "fight": {**FIGHT["fight"], "wounds": [{"store": "dry_wood", "items": 1}]}}
     threat = [{"id": "t_rats", "label_key": "t_t", "base": 4}]
-    check_stakes(merged(SINK, sides=[SIDE], threats=threat, standing=[wounding]))
+    check_stakes(merged({**SINK, "upside_key": "t_up"}, sides=[SIDE], threats=threat, standing=[wounding]))
     with pytest.raises(ValueError, match="cards t_sink: "):
         check_stakes(merged(SINK, sides=[SIDE], threats=threat, standing=[FIGHT]))
