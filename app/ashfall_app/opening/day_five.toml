@@ -444,7 +444,8 @@ label_key = "action_pair_3h"
 makes = [{ store = "pair_3h", items_per_hour = 20 }]
 
 # SL10: her bed at the stone's edge, a build on her lane that a rule of the player's taps (a capped card is never a
-# share); it makes turned ground and nothing else.
+# share). Each bed dug speeds her lane, as day two's shelter speeds n1's (its card's outcome, so the face shows the
+# figure); the third makes turned ground.
 [[triggers]]
 id = "t_seed"
 when = { test = "at_least", subject_kind = "store", id = "pair_3h", value = 20 }
@@ -459,6 +460,7 @@ upside_key = "up_n3_dig_bed"
 work_s = 3600
 cap = 3
 inputs = [{ store = "stones", items = 6 }]
+outcome = { modifiers = [{ target = "lane", id = "n3", kind = "mul_bp", amount_bp = 10700, source = "n3_dig_bed" }] }
 line_keys = ["l_dig_bed_1", "l_dig_bed_2", "l_dig_bed_done"]
 [cards.finished]
 unlocks = [{ unlock_kind = "feature", id = "turned_ground" }]
@@ -599,7 +601,7 @@ store_pair_3h = "clock"
 action_pair_3h = "Clock"
 l_seed = "{n3} sets seed out on a cloth, then ties it shut."
 c_n3_dig_bed = "Dig a garden bed"
-up_n3_dig_bed = "ground turned for planting, once all three are dug"
+up_n3_dig_bed = "{pct} her work speed with each bed"
 l_dig_bed_1 = "the top of the ground comes up in clods."
 l_dig_bed_2 = "stones go round the edge, flat side out."
 l_dig_bed_done = "the woman rakes it flat and leaves it bare."
