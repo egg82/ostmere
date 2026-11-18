@@ -963,12 +963,16 @@ FIT PASS
   sequence (first true rule that can act).
 
 CHOICES (townsfolk, installed rules, offers)
-- Ruled lane: LaneDef.ruled (bool, default False). A player's TapCard of a card on a ruled lane raises
-  InvalidVerbError ("set by rules"); an order, the queue or an Outcome taps it as on any lane. A ruled lane is a
+- Ruled lane: LaneDef.ruled (bool, default False). A player's TapCard of an uncapped card on a ruled lane raises
+  InvalidVerbError ("set by rules"); an order, the queue or an Outcome taps it as on any lane. A one-off (a card
+  with a cap) the player taps as a hands one-off: one completion, the lane held until it lands (refused while the
+  lane is busy, as any tap), then free for the lane's rules and the person's share of the town's mix. No rule is
+  made for it, so nothing is left in the orders once it lands. A ruled lane is a
   declared lane (never HANDS), so its cards are never mixable (SaveMix already rejects off-HANDS cards). Nothing
   else differs: rates, LaneSpeed, dry pauses (other lanes, rules order), landings, READY. Why: the person works by
-  the player's rules, not under their finger; a hand tap would also make the row's "what the lane is doing" a third
-  source.
+  the player's rules, not under their finger; a repeating hand tap would also make the row's "what the lane is
+  doing" a third source. A one-off is the exception (owner, 2026-11-17): its count means one completion per tap, as
+  on the hands, and the page draws the lane's tap as the hands strip draws a hands tap.
 - The lane's task is its first rule that can act: at each landing on the lane, evaluation taps the card of the first
   true tap order on that lane whose card is ready (unchanged rule, Orders). A task change (a SetOrders editing the
   rule) takes effect at the lane's next landing: the card running runs to its completion (no cancel, KNOWN GAPS

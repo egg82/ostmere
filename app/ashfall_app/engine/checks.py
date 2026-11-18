@@ -146,9 +146,10 @@ def check_discrete(rules: Rules, subject: Unlocked | Running) -> None:
 
 
 def check_hand_tap(rules: Rules, verb: TapCard) -> None:
-    """A player's tap: a card on a ruled lane is set by rules, never tapped by hand (DESIGN.txt, "Ruled lane")."""
+    """A player's tap: an uncapped card on a ruled lane is set by rules, never tapped by hand; a one-off (a card with a
+    cap) is tapped for one completion, as on the hands (DESIGN.txt, "Ruled lane")."""
     card = index(rules).cards.get(verb.card)
-    require(card is None or card.lane not in index(rules).ruled, f"card {verb.card} is set by rules")
+    require(card is None or card.cap is not None or card.lane not in index(rules).ruled, f"card {verb.card} is set by rules")
 
 
 def check_queue_verb(rules: Rules, mixes: tuple[Mix, ...], verb: OrderVerb) -> None:

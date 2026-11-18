@@ -1,17 +1,22 @@
 // A person's split on their page (personpage.ts): the hands' ShareBar over the cards that hold a share of their time, the
 // last divider against the idle rest. The town's mix holds every person's shares; this edits one person's and sends the
 // mix as it is made, with no Save (CONTRACT.txt, "The town's mix"; game/town.ts). A card joins or leaves by a tap on its
-// face on the page, `toggle`; nothing moves a share from one person to another.
+// face on the page, `toggle`; nothing moves a share from one person to another. While a one-off holds the person's lane the
+// bar is that card alone with its time left and "then {split}" under it, as the hands strip draws a tap (handsheld.ts).
 import type { Mix, View } from "../api/types";
+import { laneOneOff } from "../game/holder";
 import { UI } from "../game/text";
 import { dropTownCard, given, joinTownCard, newTownMix, townMixToEdit, townSaveDecisions, withTownShares } from "../game/town";
-import { el } from "./dom";
+import { el, setText } from "./dom";
+import { tapBar } from "./handsheld";
 import type { PartContext } from "./part";
 import { ShareBar, type SegmentSpec } from "./sharebar";
+import { thenSplit } from "./townsplit";
 
 export class PersonMix {
   readonly root = el("section", "person-mix");
   private readonly bar: ShareBar;
+  private readonly then = el("span", "hands-then person-then");
   private view: View | null = null;
   private lane = "";
   /** A divider is held: a new view waits for the let-go, so the bar under the finger is not rebuilt. */
@@ -29,7 +34,8 @@ export class PersonMix {
         this.send(withTownShares(catalog, this.edited().mix, this.lane, shares));
       },
     });
-    this.root.append(this.bar.root);
+    this.then.hidden = true;
+    this.root.append(this.bar.root, this.then);
   }
 
   /** The mix this page edits: the town's, else a new one a save points the town's always rule at; a card the view no
@@ -59,8 +65,26 @@ export class PersonMix {
     if (!this.held) this.draw();
   }
 
+  /** A holding one-off's bar moves on with the clock: its time left. */
+  tick(t: number): void {
+    const view = this.view;
+    const tap = view && laneOneOff(view, this.lane);
+    if (tap && !this.held) {
+      const bar = tapBar(this.ctx, tap.card, tap.endsAt, t);
+      this.bar.set(bar.specs, bar.shares);
+    }
+  }
+
   private draw(): void {
     const { catalog } = this.ctx;
+    const view = this.view as View;
+    const tap = laneOneOff(view, this.lane);
+    setText(this.then, tap ? thenSplit(this.ctx, view, this.lane) : "");
+    this.then.hidden = tap === null;
+    if (tap) {
+      this.tick(view.at);
+      return;
+    }
     const { mix } = this.edited();
     const label = catalog.laneLabel(this.lane, this.view as View);
     const cards = mix.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === this.lane ? [c] : []));

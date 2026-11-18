@@ -88,20 +88,35 @@ const rig = (view: View) => pageRig(view);
   expect("and the view's cards are as they were", after.cards.length, next.cards.length);
 }
 
-{  // a capped card is never held by a town mix: its tap sets the person's always rule for it, and a second takes it out
-  const capped = { ...both, cards: both.cards.map((c) => (c.card === "carve" ? { ...c, cap: 3 } : c)) };
+{  // a capped card is never held by a town mix: its tap does its next completion, as a hands one-off, and makes no rule
+  const capped = { ...both, cards: both.cards.map((c) => (c.card === "carve" ? { ...c, cap: 3, share_bp: 0 } : c)) };
   const noCarve = { ...capped, mixes: capped.mixes.map((m) => ({ ...m, components: m.components.filter((c) => c.kind !== "card_share" || c.card !== "carve") })) };
-  const { open, face, got, settle } = rig(noCarve);
+  const { open, face, got, settle, root, page, rows } = rig(noCarve);
   open(1);
   expect("the face carries no note of its own", face("carve").querySelector(".card-need.oneoff"), null);
   face("carve").querySelector(".card-tap")?.click();
-  const set = got.decided[0];
-  expect("one decision, a rule and no mix", [got.decided.length, set?.kind], [1, "set_orders"]);
-  expect("an always rule tapping it, appended", set?.kind === "set_orders" ? set.orders.at(-1) : null, { when: { kind: "after_time", at: 0 }, then: { kind: "tap_card", card: "carve" }, unless: [], or_else: [], below_next: false });
-  settle(noCarve);
-  expect("it is pressed once the rule is there", face("carve").querySelector(".card-tap")?.getAttribute("aria-pressed"), "true");
-  face("carve").querySelector(".card-tap")?.click();
-  expect("a second tap takes the rule out", got.decided[0]?.kind === "set_orders" ? got.decided[0].orders.length : -1, noCarve.orders.length);
+  expect("one decision, a tap of it", got.decided, [{ kind: "tap_card", card: "carve" }]);
+  const ends = noCarve.at + 600;
+  const held: View = {   // as the engine serves the tap: the mason's lane holds carve until it lands
+    ...noCarve,
+    lanes: noCarve.lanes.map((l) => (l.lane === "mason" ? { ...l, running_card: "carve", completes_at: ends, order: null } : l)),
+    cards: noCarve.cards.map((c) => (c.card === "carve" ? { ...c, by: "tap" as const, completes_at: ends, bar: { start: noCarve.at, start_value: 0, rate: 1, limit: 600 }, bar_total: 600 } : c)),
+  };
+  settle(held, []);
+  const tap = face("carve").querySelector(".card-tap");
+  expect("running, pressed, and not tapped again while it runs", [face("carve").classList.contains("running"), tap?.getAttribute("aria-pressed"), tap?.disabled], [true, "true", true]);
+  const mason = root.querySelectorAll(".town-person")[1] as FakeEl;
+  const left = (s: number): string => catalog.format.duration(s);
+  expect("the Town row's split is the one-off alone, its time left, then their split", texts(mason.querySelectorAll(".town-key > span")), [`Carve beams ${left(600)}`, "then Hew stone 70%"]);
+  const mix = page.querySelector(".person-mix") as FakeEl;
+  expect("so is their bar on the page", [texts(mix.querySelectorAll(".share-key-item")), mix.querySelector(".person-then")?.textContent], [[`Carve beams ${left(600)}`], "then Hew stone 70%"]);
+  rows.tick(noCarve.at + 150);
+  expect("the row counts down", texts(mason.querySelectorAll(".town-key > span"))[0], `Carve beams ${left(450)}`);
+  expect("and the page's bar", texts(mix.querySelectorAll(".share-key-item")), [`Carve beams ${left(450)}`]);
+  expect("the card counts down and fills", [face("carve").querySelector(".card-foot")?.textContent, (face("carve").querySelector(".card-fill") as FakeEl).style.transform], [left(450), "scaleX(0.25)"]);
+  settle(noCarve, []);
+  expect("once it lands their split is back", texts(mason.querySelectorAll(".town-key > span")), ["Hew stone 70%", "Mason, idle 30%"]);
+  expect("and the page's bar", mix.querySelector(".person-then")?.hidden, true);
 }
 
 {  // no town mix yet: a new one, and the town's always rule pointed at it (saved, then the rules)

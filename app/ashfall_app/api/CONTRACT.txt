@@ -1105,8 +1105,11 @@ A LANE RUN BY RULES
   lane is free or no rule taps what it runs. completes_at is when the running tap ends; null while the lane is free
   and while it repeats its task (a rule that would start the same card again at each completion: engine DESIGN.txt,
   "REPEATING TAPS"), when the running card's Card.bar has no limit and is sampled modulo bar_total as a mix bar is.
-  - tap_card from the player of a card whose CardInfo.lane is a ruled lane: 422 invalid_decision, nothing written.
-    Rules may tap it; a queue entry may not (set_queue with one is 422: the queue is the hands' plan).
+  - tap_card from the player of an uncapped card whose CardInfo.lane is a ruled lane: 422 invalid_decision, nothing
+    written. Rules may tap it; a queue entry may not (set_queue with one is 422: the queue is the hands' plan). A
+    capped card there (a one-off) the player taps as on the hands: one completion, the lane's LaneBar holding it
+    (order null, completes_at its landing) and the person's shares yielded until it lands, no rule made; refused
+    while the lane is busy, as any tap.
   - The lane's always rule: an order {when: after_time {time: 0}, then: tap_card c}, c a card on that lane. It is on
     from the moment it is set and never lets go. Rules on a lane act first match: at each of the lane's landings the
     first rule that is on and whose card is ready starts it, so a rule below the always rule acts only while the
@@ -1130,7 +1133,10 @@ A LANE RUN BY RULES
     and ui.lane.change, which opens the person's page: their cards in view.cards on that lane drawn as the card panel
     draws a card, the rules that tap them (each opening the rule editor), and, once they have joined the town, their
     part of the town's mix as a share bar, a tap on an uncapped card joining it to the mix or taking it out and a tap on a
-    capped one adding or removing its always rule. The rule editor's simple view scoped to a lane picks the task: a card in
+    capped one sending tap_card for its next completion. While a one-off holds the lane (its LaneBar's
+    running_card a capped card, whoever started it), the share bar, on the page and on the person's Town row, is that
+    card alone with its time left and ui.hands.then {mix} naming the split they go back to, as the hands strip draws a
+    tap; the card on the page counts down and fills its bar as the card panel's does. The rule editor's simple view scoped to a lane picks the task: a card in
     view.cards on that lane. Saving sends set_orders with that rule's tap_card changed in place (or a new always rule
     appended).
   - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that

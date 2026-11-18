@@ -45,18 +45,6 @@ export function laneTask(view: View, index: number | null, card: string): Decisi
   return { kind: "set_orders", orders: view.orders.map((o, i) => (i === index ? { ...o, then } : o)) };
 }
 
-/** The always rule that taps `card` on `lane` (a person's one-off), or -1. */
-export function oneOffRule(catalog: Catalog, view: View, lane: string, card: string): number {
-  return view.orders.findIndex((o) => isAlways(o) && o.then.kind === "tap_card" && o.then.card === card && ruledLaneOf(catalog, o) === lane);
-}
-
-/** A tap on a person's capped card: its always rule taken out when there is one, else added. The person does it until it
- * is finished, then goes back to their mix (a town mix holds no capped card, CONTRACT.txt, "The town's mix"). */
-export function toggleOneOff(catalog: Catalog, view: View, lane: string, card: string): Decision {
-  const at = oneOffRule(catalog, view, lane, card);
-  return at < 0 ? laneTask(view, null, card) : { kind: "set_orders", orders: view.orders.filter((_, i) => i !== at) };
-}
-
 /** The decision that makes `kind` answered by `role`: its rule changed in place, or an always rule appended. */
 export function setKindRule(view: View, kind: string, role: string): Decision {
   const then = { kind: "answer_kind" as const, offer_kind: kind, role };

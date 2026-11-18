@@ -15,7 +15,7 @@ import { panelView } from "../game/lanes";
 import { keptReadyAt, waitsOnUnseen } from "../game/ready";
 import { UI } from "../game/text";
 import { CardGroups } from "./cardgroups";
-import { makeRow, upsideWords, type Row } from "./cardrow";
+import { barFraction, footWords, makeRow, upsideWords, waitAt, type Row } from "./cardrow";
 import { el, pulse, setText } from "./dom";
 import { sing } from "../audio/cues";
 import { completionRung, play } from "./ladder";
@@ -135,16 +135,12 @@ export class Cards implements Part {
   tick(t: number): void {
     this.wait.tick(t);
     this.sweep();
-    const { format } = this.ctx.catalog;
     for (const row of this.rows.values()) {
       const { card } = row;
       if (row.done) continue;
-      const span = card.bar_total;
-      const v = sample(card.bar, t);
-      const done = span > 0 ? (((v % span) + span) % span) / span : 0;
-      row.fill.style.transform = `scaleX(${done})`;
-      const wait = card.by === "tap" ? card.completes_at : this.view ? keptReadyAt(this.view, card, this.ctx.catalog.content.scales.quantity_per_item) : null;
-      if (!levelShown(row, performance.now())) setText(row.foot, wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "");
+      row.fill.style.transform = `scaleX(${barFraction(card, t)})`;
+      const wait = waitAt(this.ctx, this.view, card);
+      if (!levelShown(row, performance.now())) setText(row.foot, footWords(this.ctx, wait, card, t));
       this.markClock(row, wait !== null && this.view !== null && waitsOnUnseen(this.view, card));
       row.needs.tick(card, this.view, t);
     }

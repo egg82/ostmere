@@ -91,6 +91,7 @@ export class LaneRows implements Part {
     const view = this.view;
     if (!view) return;
     this.strip.tick(t);
+    this.page.tick(t);
     for (const bar of view.lanes) {
       const row = this.rows.get(bar.lane);
       if (row) drawBar(row, view, bar.running_card, t);

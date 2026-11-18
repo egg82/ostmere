@@ -13,7 +13,7 @@ from ashfall_app.engine import (
 
 X = StoreId("x")
 HELPER = LaneId("helper")
-H, A, B = CardId("h"), CardId("a"), CardId("b")
+H, A, B, C = CardId("h"), CardId("a"), CardId("b"), CardId("c")
 ALWAYS = AfterTime(0)
 
 
@@ -25,11 +25,22 @@ def world(ruled: bool = True) -> Rules:
     return r
 
 
-def test_the_player_never_taps_a_ruled_lane():
+def test_the_player_never_taps_a_ruled_lanes_uncapped_card():
     r = world()
     with pytest.raises(InvalidVerbError, match="set by rules"):
         decide(new_save(r), r, 0, TapCard(A))
     assert decide(new_save(world(False)), world(False), 0, TapCard(A)).lanes[1].card == A   # control: unruled
+
+
+def test_the_player_taps_a_ruled_lanes_one_off_for_one_completion():
+    """A capped card on a ruled lane taps as a hands one-off: one of its three completions, no rule left behind."""
+    r = replace(world(), cards=(*world().cards, CardDef(C, 10, lane=HELPER, cap=3)))
+    validate_rules(r)
+    s = decide(new_save(r), r, 0, TapCard(C))
+    assert s.lanes[1].card == C and s.orders == ()
+    after = advance(s, r, 50)
+    assert after.lanes[1].card is None and after.orders == ()
+    assert next(c for c in view(after, r).cards if c.card == C).completions == 1
 
 
 def test_the_queue_never_names_a_ruled_lanes_card():

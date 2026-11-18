@@ -1,7 +1,12 @@
 // A person's time as the town draws it (townstrip.ts): a bar split into the cards that hold a share and the
 // idle rest, each part as wide as its share, and under it a key naming each part with its share, so a narrow part's name
-// is never cut off on a phone.
+// is never cut off on a phone. While a one-off holds the person's lane, the bar is that card alone (heldSplit), as the hands
+// strip draws a tap (handsheld.ts).
+import type { View } from "../api/types";
+import { UI } from "../game/text";
+import { personOf } from "../game/town";
 import { el } from "./dom";
+import type { PartContext } from "./part";
 
 export interface Part { text: string; bp: number; hue: number; idle: boolean }
 
@@ -15,4 +20,21 @@ export function splitOf(parts: Part[]): { bar: HTMLElement; key: HTMLElement } {
     key.append(el("span", `town-key-item hue-${p.hue}${p.idle ? " idle" : ""}`, p.text));
   }
   return { bar, key };
+}
+
+/** The person's split as parts: each card that holds a share, then the idle rest. */
+export function splitParts(ctx: PartContext, view: View, lane: string): Part[] {
+  const { catalog } = ctx;
+  const person = personOf(catalog, view, lane);
+  const parts: Part[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
+  if (person.idleBp > 0) parts.push({ text: `${catalog.text.fill(UI.townIdle, { person: catalog.laneLabel(lane, view) })} ${catalog.format.share(person.idleBp)}`, bp: person.idleBp, hue: 5, idle: true });
+  return parts;
+}
+
+/** "then {split}": what the person goes back to once the tap holding their lane lands, their shares (idle when they
+ * have none). */
+export function thenSplit(ctx: PartContext, view: View, lane: string): string {
+  const parts = splitParts(ctx, view, lane);
+  const working = parts.filter((p) => !p.idle);
+  return ctx.catalog.text.fill(UI.handsThen, { mix: (working.length > 0 ? working : parts).map((p) => p.text).join(", ") });
 }

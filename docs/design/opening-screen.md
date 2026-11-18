@@ -274,8 +274,10 @@ joined, their split of the town's mix as a share bar (`ui/personmix.ts`); their 
 face (`ui/cardpick.ts`, a lane's crafts in their section after the rest), a tap on one joining it to their time or taking it
 out, a divider setting the split, each change sent as it is made with no Save; then the rules that tap their cards, each a
 button into the Rules tab. A capped card, a one-off, is never in the town's mix (a mix greyed by a finished build would idle the
-person: `engine/DESIGN.txt`, "THE TOWN'S MIX"); its tap adds or takes out the always rule that has the person do it, and its face
-says they do it until it is finished and then go back to their mix. Every person's row, joined or not, has its own Change, and a quiet dot on it marks a task not
+person: `engine/DESIGN.txt`, "THE TOWN'S MIX"); a tap on it has the person do its next completion, as a tap on one of
+yours does, with no rule made, and then they go back to their mix. While it runs the card
+counts down and fills its bar as a Tasks card does, and their split bar, on the page and on their Town row, is that card
+alone with its time left and "then {their split}", as the hands strip draws a tap. Every person's row, joined or not, has its own Change, and a quiet dot on it marks a task not
 yet in front of the player until their page is opened; the Town tab wears the same dot while any person's does. A rule's button opens the lane's task editor: the rule editor's
 simple view with only `Do` (the lane's tasks as the same card faces), the rule's sentence and Save; Save changes that
 rule's task in place (its condition kept) or adds the always rule. The lane's tasks are never cards in Tasks or Done:
@@ -644,8 +646,8 @@ Rack                                                   each side lane's task rul
   `Remove` at its end.
 - **A lane run by rules** has its section under its label like any side lane, every rule that taps one of its tasks in
   list order. Its always rule reads `{task}, always` (the task is in the words, so no `→`), a button that opens the
-  lane's task editor; its ● marks the rule the lane runs now. A one-off whose task is done stays listed, `passed over`,
-  until removed. A new rule on that lane (written, or an offer's `Add rule`) goes just before the lane's first always
+  lane's task editor; its ● marks the rule the lane runs now. A rule on a one-off whose task is done (an installed
+  rule, or one the player wrote) stays listed, `passed over`, until removed. A new rule on that lane (written, or an offer's `Add rule`) goes just before the lane's first always
   rule, so it can act. `outranked by …` names the rule the lane runs now: its condition, or its always words.
 - A rule or a queue entry that answers an offer (set by an answer, never by this page) reads `Answer: {answer}`; such
   rules sit last, under `Answers`. An always answer rule (the answer
