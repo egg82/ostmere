@@ -1,4 +1,4 @@
-== worth on typical: 68 visits to the edge at game day 15.36
+== worth on typical: 69 visits to the edge at game day 15.75
   worth: how much later a route's mix lands the last of the set (the open goals that are a choice on skills the
   player's mix trains) than the best setup, in hours and as a share of the route's time; never: a goal unserved
   day  1  visits 5  keeper: -  -  +0.2h 20%  +0.7h 50%  +0.7h 12%
@@ -9,46 +9,46 @@
           tuner moments 3: ask 1, goal landed 1, set grew 1
   day  4  visits 4  keeper: +0.1h 4%  +26.4h 78%  +8.0h 25%  +8.0h 34%
           tuner moments 2: card 2, chore 1, goal landed 2
-  day  5  visits 5  keeper: +10.0h 46%  +9.7h 52%  +3.2h 44%  +8.5h 23%  +9.2h 26%
+  day  5  visits 5  keeper: +10.0h 46%  +9.7h 52%  +3.2h 44%  +8.4h 23%  +9.4h 27%
           tuner moments 3: ask 1, card 2, goal landed 1, mix edited 1, set grew 1
-  day  6  visits 3  keeper: +31.4h 50%  +31.4h 53%  +31.7h 56%
+  day  6  visits 3  keeper: +31.5h 50%  +31.4h 53%  +31.7h 56%
           tuner moments 1: ask 1, card 1, goal landed 1, set grew 1
-  day  7  visits 5  keeper: +27.4h 57%  +27.4h 62%  +27.4h 66%  +21.6h 66%  +28.9h 37%
+  day  7  visits 5  keeper: +27.4h 57%  +27.4h 62%  +27.4h 66%  +21.6h 66%  +29.0h 38%
           tuner moments 3: card 2, goal landed 3, mix edited 1, set grew 2
-  day  8  visits 4  keeper: +30.6h 40%  +31.0h 46%  +30.9h 48%  +23.7h 33%
+  day  8  visits 4  keeper: +30.6h 40%  +31.1h 46%  +31.0h 48%  +23.7h 33%
           tuner moments 2: card 1, goal landed 1, mix edited 1, set grew 2
-  day  9  visits 5  keeper: +19.9h 34%  +88.2h 71%  +40.2h 32%  +59.8h 60%  +12.4h 26%
+  day  9  visits 5  keeper: +19.9h 34%  +88.0h 71%  +39.1h 31%  +59.9h 60%  +12.5h 26%
           tuner moments 2: ask 1, goal landed 1, mix edited 1, set grew 1
-  day 10  visits 4  keeper: +12.4h 27%  +12.1h 33%  +12.3h 38%  +75.0h 79%
-          tuner moments 1: ask 1, set grew 1
-  day 11  visits 4  keeper: +47.4h 57%  +45.4h 59%  +44.1h 61%  +40.3h 64%
-          tuner moments 1: ask 1, goal landed 1
-  day 12  visits 5  keeper: +89.2h 83%  +37.3h 56%  +116.7h 59%  +88.6h 53%  +103.1h 53%
-          tuner moments 3: ask 1, card 2, goal landed 1, mix edited 3, set grew 2
-  day 13  visits 4  keeper: +75.5h 48%  +101.2h 56%  +196.1h 72%  +54.6h 43%
-          tuner moments 1: ask 1, mix edited 1, set grew 1
-  day 14  visits 5  keeper: +54.0h 44%  +45.5h 45%  +44.3h 48%  +27.6h 57%  +26.3h 58%
+  day 10  visits 4  keeper: +12.4h 27%  +12.2h 33%  +14.8h 42%  +14.8h 45%
+          tuner moments 0
+  day 11  visits 4  keeper: +138.1h 80%  +128.6h 78%  +126.2h 79%  +119.5h 81%
+          tuner moments 2: ask 2, card 1, goal landed 2, set grew 1
+  day 12  visits 5  keeper: +112.8h 83%  +93.7h 73%  +315.3h 79%  +89.1h 53%  +103.0h 53%
+          tuner moments 2: ask 1, card 2, goal landed 2, mix edited 1
+  day 13  visits 4  keeper: +114.0h 57%  +138.7h 62%  +96.6h 55%  +56.6h 43%
+          tuner moments 1: set grew 1
+  day 14  visits 5  keeper: +56.1h 44%  +55.5h 45%  +46.2h 48%  +28.7h 57%  +27.5h 58%
           tuner moments 1: card 1, goal landed 1, mix edited 1
-  day 15  visits 3  keeper: +227.5h 88%  +20.6h 61%  +23.0h 66%
-          tuner moments 1: ask 1, card 1, set grew 1
-  day 16  visits 3  keeper: +21.3h 70%  +85.8h 83%  +31.4h 64%
-          tuner moments 3: ask 1, card 2, mix edited 1, prestige 1, set grew 2
+  day 15  visits 3  keeper: +197.3h 86%  +21.8h 61%  +24.4h 66%
+          tuner moments 2: ask 1, card 2, chore 1, mix edited 1, set grew 2
+  day 16  visits 4  keeper: +20.7h 70%  +31.5h 63%  +90.9h 81%  +84.6h 82%
+          tuner moments 3: card 1, goal landed 1, none found 1, prestige 1, set grew 2
   worth by route, percent by decile (threshold 25%)
-    keeper                     n=66: 1 23 33 41 46 50 56 59 64 71 88
-    tuner                      n=66: 0 3 6 9 12 21 57 73 94 100 100
-    fresh (control: little)    n=66: 0 2 3 5 10 12 59 94 100 100 100
-    once (control: a lot)      n=66: 0 29 47 100 100 100 100 100 100 100 100
+    keeper                     n=67: 1 25 33 42 46 52 56 61 70 79 86
+    tuner                      n=67: 0 3 5 12 16 23 59 73 94 100 100
+    fresh (control: little)    n=67: 0 2 3 5 9 12 59 94 100 100 100
+    once (control: a lot)      n=67: 0 30 47 100 100 100 100 100 100 100 100
   fresh's worth by cause, percent by decile
-    no cause                   n=10: 1 2 2 2 6 6 6 6 10 11 12
-    a cause                    n=56: 0 2 4 5 12 57 89 100 100 100 100
+    no cause                   n=11: 1 2 2 2 6 6 7 10 11 12 100
+    a cause                    n=56: 0 2 4 5 11 56 81 94 100 100 100
   kept rates come true over the absence after (XP gained / XP the rates promised), by decile
-    0.11 0.58 0.75 0.82 0.85 0.88 0.93 0.98 1.00 1.00 1.79
+    0.11 0.58 0.75 0.84 0.86 0.87 0.92 0.96 1.00 1.00 1.79
   moments per visit (opening = to B3 seen)
     opening   0 of  2 = 0.00   opening 0.00
     week 1   17 of 29 = 0.59   opening 0.00
-    week 2   11 of 31 = 0.35   opening 0.00
-    week 3    4 of  6 = 0.67   opening 0.00
-  longest stretch with no moment: day 11.59 to 12.98 (1.38 d)
+    week 2   10 of 31 = 0.32   opening 0.00
+    week 3    5 of  7 = 0.71   opening 0.00
+  longest stretch with no moment: day 12.46 to 13.84 (1.38 d)
   per visit (* tuner takes the best setup)
   visit   day  goals  best    keeper       tuner        fresh        once         came  causes
   V1     0.02     0       -  -            -            -            -                -   
@@ -71,51 +71,52 @@
   V18    3.98     2   15.7h  +8.0h 34%    +2.1h 12%    +2.1h 12%    +5.3h 25%     0.84   
   V19    4.16     2   11.9h  +10.0h 46%   +3.2h 21%    +1.4h 11%    +3.5h 23%     1.00   card,skill,mix edited
   V20    4.29     2    9.1h  +9.7h 52%    +3.9h 30%    +1.1h 11%    +3.1h 25%     0.62  *card,ask
-  V21    4.67     3    4.2h  +3.2h 44%    never        never        never         0.76  *card,mix edited,set grew
-  V22    4.85     3   28.8h  +8.5h 23%    +51.0h 64%   +51.0h 64%   never         0.86  *goal landed
-  V23    4.98     3   25.5h  +9.2h 26%    +1.2h 5%     +1.2h 5%     never         0.85   card,skill,chore,mix edited
-  V24    5.37     4   31.5h  +31.4h 50%   never        never        never         0.88  *goal landed,card,ask,set grew
+  V21    4.67     3    4.2h  +3.2h 44%    never        never        never         0.75  *card,mix edited,set grew
+  V22    4.85     3   29.0h  +8.4h 23%    +50.9h 64%   +50.9h 64%   never         0.86  *goal landed
+  V23    4.98     3   25.3h  +9.4h 27%    +1.4h 5%     +1.4h 5%     never         0.85   card,skill,chore,mix edited
+  V24    5.37     4   31.5h  +31.5h 50%   never        never        never         0.88  *goal landed,card,ask,set grew
   V25    5.54     4   27.9h  +31.4h 53%   +1.7h 6%     +1.7h 6%     never         0.84   
-  V26    5.67     3   24.9h  +31.7h 56%   +3.3h 12%    +1.6h 6%     never         0.94   
-  V27    6.06     4   20.5h  +27.4h 57%   +34.8h 63%   never        never         0.88  *goal landed,set grew
+  V26    5.67     3   25.0h  +31.7h 56%   +3.3h 12%    +1.6h 6%     never         0.94   
+  V27    6.06     4   20.5h  +27.4h 57%   +34.7h 63%   never        never         0.88  *goal landed,set grew
   V28    6.23     4   16.8h  +27.4h 62%   +2.1h 11%    +2.1h 11%    never         0.84   
-  V29    6.37     4   14.1h  +27.4h 66%   +3.6h 21%    +1.6h 10%    never         0.94   
-  V30    6.75     3   11.2h  +21.6h 66%   +45.1h 80%   +89.2h 89%   never         0.94  *goal landed,card
-  V31    6.93     4   48.3h  +28.9h 37%   never        never        never         0.74  *goal landed,card,mix edited,set grew
+  V29    6.37     4   14.1h  +27.4h 66%   +3.6h 20%    +1.6h 10%    never         0.94   
+  V30    6.75     3   11.2h  +21.6h 66%   +45.3h 80%   +89.5h 89%   never         0.94  *goal landed,card
+  V31    6.93     4   48.3h  +29.0h 38%   never        never        never         0.74  *goal landed,card,mix edited,set grew
   V32    7.06     5   46.6h  +30.6h 40%   never        never        never         1.00  *card,mix edited,set grew
-  V33    7.44     4   37.0h  +31.0h 46%   +3.6h 9%     +3.6h 9%     never         0.76   card,chore
-  V34    7.62     4   34.0h  +30.9h 48%   +4.7h 12%    +1.1h 3%     never         0.99   card,ask
-  V35    7.75     5   47.4h  +23.7h 33%   +126.1h 73%  never        never         0.92  *goal landed,set grew
-  V36    8.13     5   39.1h  +19.9h 34%   +1.6h 4%     +1.6h 4%     never         0.86   card,ask,chore
-  V37    8.31     4   35.4h  +88.2h 71%   +2.6h 7%     +0.9h 2%     never         0.44   card
-  V38    8.44     5   86.4h  +40.2h 32%   +411.8h 83%  never        never         1.79  *set grew
-  V39    8.82     5   39.7h  +59.8h 60%   +672.8h 94%  +672.8h 94%  never         0.85  *goal landed,ask,mix edited
-  V40    9.00     5   35.9h  +12.4h 26%   +0.8h 2%     +0.8h 2%     never         1.00   ask
+  V33    7.44     4   37.0h  +31.1h 46%   +3.6h 9%     +3.6h 9%     never         0.76   card,chore
+  V34    7.62     4   33.9h  +31.0h 48%   +4.8h 12%    +1.2h 4%     never         0.99   card,ask
+  V35    7.75     5   47.5h  +23.7h 33%   +125.9h 73%  never        never         0.92  *goal landed,set grew
+  V36    8.13     5   39.1h  +19.9h 34%   +1.8h 4%     +1.8h 4%     never         0.86   card,ask,chore
+  V37    8.31     4   35.8h  +88.0h 71%   +2.3h 6%     +0.5h 1%     never         0.44   card
+  V38    8.44     5   87.5h  +39.1h 31%   +410.7h 82%  never        never         1.79  *set grew
+  V39    8.82     5   39.7h  +59.9h 60%   +673.5h 94%  +673.5h 94%  never         0.85  *goal landed,ask,mix edited
+  V40    9.00     5   35.9h  +12.5h 26%   +0.8h 2%     +0.8h 2%     never         1.01   ask
   V41    9.13     5   32.8h  +12.4h 27%   +1.5h 4%     +0.7h 2%     never         0.88   
-  V42    9.52     5   25.0h  +12.1h 33%   +3.2h 11%    +1.9h 7%     never         1.00   ask
-  V43    9.69     4   20.6h  +12.3h 38%   +4.4h 18%    +1.4h 6%     never         0.82   
-  V44    9.82     5   20.0h  +75.0h 79%   +96.4h 83%   never        never         0.93  *ask,set grew
-  V45   10.21     5   35.1h  +47.4h 57%   +522.2h 94%  +522.2h 94%  never         0.86  *goal landed,ask
-  V46   10.38     5   31.6h  +45.4h 59%   +1.4h 4%     +1.4h 4%     never         0.93   card,ask
-  V47   10.52     5   28.6h  +44.1h 61%   +2.6h 8%     +1.2h 4%     never         0.68   ask
-  V48   10.90     5   22.5h  +40.3h 64%   +5.2h 19%    +2.8h 11%    never         0.96   card,ask
-  V49   11.07     3   18.1h  +89.2h 83%   +7.2h 29%    +2.4h 12%    never         1.00  *mix edited
-  V50   11.21     4   29.3h  +37.3h 56%   never        never        never         0.64  *card,mix edited,set grew
-  V51   11.59     4   80.0h  +116.7h 59%  never        never        never         0.82  *goal landed,card,ask,mix edited,set grew
-  V52   11.77     4   78.4h  +88.6h 53%   +0.0h 0%     +0.0h 0%     never         0.93   card,mix edited
-  V53   11.90     4   89.9h  +103.1h 53%  +0.7h 1%     +0.7h 1%     never         0.99   ask
-  V54   12.28     3   80.9h  +75.5h 48%   +5.5h 6%     +3.9h 5%     never         0.77   card,ask
-  V55   12.46     4   79.0h  +101.2h 56%  +5.6h 7%     never        never         1.00   set grew
-  V56   12.59     3   75.1h  +196.1h 72%  +7.9h 10%    +1.4h 2%     never         1.00   ask
-  V57   12.98     4   72.7h  +54.6h 43%   +118.0h 62%  never        never         1.00  *ask,mix edited,set grew
-  V58   13.15     4   69.1h  +54.0h 44%   +1.2h 2%     +1.2h 2%     never         0.98   
-  V59   13.28     4   56.5h  +45.5h 45%   +1.7h 3%     +0.7h 1%     never         0.98   card
-  V60   13.67     4   48.8h  +44.3h 48%   +4.3h 8%     +2.6h 5%     never         0.98   ask
-  V61   13.84     3   20.6h  +27.6h 57%   +30.2h 59%   +25.9h 56%   never         0.79  *goal landed,card,mix edited
-  V62   13.98     3   19.4h  +26.3h 58%   +0.2h 1%     +0.2h 1%     never         0.89   
-  V63   14.36     4   30.9h  +227.5h 88%  never        never        never         1.74  *card,ask,set grew
-  V64   14.53     3   13.2h  +20.6h 61%   +0.7h 5%     +0.7h 5%     never         0.75   card,chore,mix edited
-  V65   14.67     3   12.0h  +23.0h 66%   +0.9h 7%     +0.2h 2%     never         0.85   
-  V66   15.05     4    8.9h  +21.3h 70%   never        never        never         0.82  *card,ask,mix edited,set grew
-  V67   15.23     2   17.6h  +85.8h 83%   never        never        never         1.41  *card,prestige
-  V68   15.36     4   17.8h  +31.4h 64%   never        never        never            -  *set grew
+  V42    9.52     5   24.9h  +12.2h 33%   +3.3h 12%    +2.0h 7%     never         1.01   ask
+  V43    9.69     4   20.3h  +14.8h 42%   +4.7h 19%    +1.7h 8%     never         0.82   mix edited
+  V44    9.82     4   17.7h  +14.8h 45%   +5.4h 23%    +1.0h 5%     never         0.94   ask
+  V45   10.21     5   34.5h  +138.1h 80%  +77.3h 69%   never        never         0.86  *goal landed,ask,set grew
+  V46   10.38     5   36.8h  +128.6h 78%  +552.6h 94%  +552.6h 94%  never         0.97  *goal landed,card,ask
+  V47   10.52     5   33.7h  +126.2h 79%  +1.9h 5%     +1.9h 5%     never         0.66   ask
+  V48   10.90     5   27.6h  +119.5h 81%  +5.1h 16%    +3.4h 11%    never         0.96   card,ask
+  V49   11.07     5   23.7h  +112.8h 83%  +6.6h 22%    +1.9h 7%     never         1.00   
+  V50   11.21     5   34.1h  +93.7h 73%   +178.5h 84%  +987.0h 97%  never         0.77  *goal landed,card
+  V51   11.59     5   83.2h  +315.3h 79%  +1418.7h 94% +1418.7h 94% never         0.86  *goal landed,card,ask,mix edited
+  V52   11.77     5   80.4h  +89.1h 53%   +0.0h 0%     +0.0h 0%     never         0.92   card,mix edited
+  V53   11.90     5   93.0h  +103.0h 53%  +0.0h 0%     +0.0h 0%     never         1.00   ask
+  V54   12.28     4   85.4h  +114.0h 57%  +3.3h 4%     +3.3h 4%     never         0.78   goal landed,card,ask,mix edited
+  V55   12.46     5   84.0h  +138.7h 62%  +342.3h 80%  never        never         1.00  *set grew
+  V56   12.59     4   80.3h  +96.6h 55%   +2.1h 3%     +2.1h 3%     never         0.91   ask
+  V57   12.98     4   74.3h  +56.6h 43%   +4.2h 5%     +2.1h 3%     never         1.00   ask,mix edited
+  V58   13.15     4   70.7h  +56.1h 44%   +5.3h 7%     +1.1h 2%     never         0.97   
+  V59   13.28     4   68.2h  +55.5h 45%   +6.0h 8%     +0.6h 1%     never         1.10   card
+  V60   13.67     4   50.4h  +46.2h 48%   +7.5h 13%    +2.6h 5%     never         0.98   ask
+  V61   13.84     3   21.3h  +28.7h 57%   +34.1h 62%   +26.7h 56%   never         0.79  *goal landed,card,mix edited
+  V62   13.98     3   20.1h  +27.5h 58%   +0.2h 1%     +0.2h 1%     never         0.88   
+  V63   14.36     3   31.3h  +197.3h 86%  never        never        never         1.60  *card,ask,set grew
+  V64   14.53     3   13.9h  +21.8h 61%   never        never        never         0.75  *card,chore,mix edited,set grew
+  V65   14.67     3   12.7h  +24.4h 66%   +0.3h 2%     +0.3h 2%     never         0.85   
+  V66   15.05     2    8.9h  +20.7h 70%   +1.3h 13%    +1.1h 11%    +35.8h 80%    0.73   card,ask,mix edited
+  V67   15.23     1   18.7h  +31.5h 63%   never        never        +21.5h 54%    0.87  *
+  V68   15.36     3   21.0h  +90.9h 81%   never        never        never         0.87  *card,prestige,set grew
+  V69   15.75     4   18.6h  +84.6h 82%   never        never        never            -  *goal landed,set grew
