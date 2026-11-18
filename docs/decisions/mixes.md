@@ -146,7 +146,9 @@ and you tune it, then hit go.
 - **A person's mix is the simple version of yours, on purpose** (owner, 2026-11-17: "Multiple people is complicated
   enough"). Each person has one split in the one town mix: no saved mixes of their own, and no rule switches it when a
   store reaches a level. A rule made for the hands applies to people only where it keeps them working and the screen
-  true; a person is never left idle because of a hands-only rule.
+  true; a person is never left idle because of a hands-only rule. A person's one-off is tapped as yours is (owner,
+  2026-11-17: "what's the point of 1/3 if, when I tap it, it's going to go to completion regardless?"): each tap is
+  one completion, no rule is made, and while it holds them their bar is that card with "then {their split}".
 - **A big town will not be tuned person by person** (owner, 2026-11-17): past a handful of people, per-person splits
   become a chore. The owner's direction: a few people keep their own split and the rest run one mix per type of work,
   the type's cards set by what its people can and can't do (#337). Who keeps their own split is an authored mark per

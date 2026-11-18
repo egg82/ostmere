@@ -1,16 +1,19 @@
 // A person's page (docs/design/opening-screen.md, "The Town view"): opened by Change on their Town row, laid out as the
 // Tasks page is: once they have joined the town their split as a share bar (personmix.ts), then every task of theirs
-// in full, as the Tasks panel draws a card (cardpick.ts), then the rules that run them (rulelanes.ts), each a button
-// into the Rules tab. A tap on a task joins it to their time or takes it out; a capped task, which the town's mix never
-// holds (CONTRACT.txt, "The town's mix"), adds or takes out the always rule that has them do it. It takes the card area's place while open; its
+// in full, as the Tasks panel draws a card (cardpick.ts), its bar and countdown moving with the clock, then the rules
+// that run them (rulelanes.ts), each a button into the Rules tab. A tap on a task joins it to their time or takes it
+// out; a capped task, which the town's mix never holds (CONTRACT.txt, "The town's mix"), is tapped for its next
+// completion, as a hands one-off is, and their split comes back once it lands. It takes the card area's place while open; its
 // one root is what a tab would seat later. Opening it is what clears the quiet dot on the person's row.
 import type { Card, View } from "../api/types";
 import { sectioned } from "../game/cardsections";
-import { oneOffRule, ruledLaneOf, toggleOneOff } from "../game/lanes";
+import { laneTap } from "../game/holder";
+import { ruledLaneOf } from "../game/lanes";
 import { rulesFull, taskRules } from "../game/orders";
 import { UI } from "../game/text";
 import { people } from "../game/town";
-import { pickRow } from "./cardpick";
+import { pickFace, tickFace } from "./cardpick";
+import type { Row } from "./cardrow";
 import { sectionHead } from "./condrows";
 import { el, revealBelow, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
@@ -44,6 +47,8 @@ export class PersonPage {
   private readonly mix: PersonMix;
   private view: View | null = null;
   private lane = "";
+  /** The faces drawn, which tick moves on. */
+  private faces: Row[] = [];
   /** The tasks whose upside line has its strength sheet open: a redraw keeps them open. */
   private readonly strengthOpen = new Set<string>();
 
@@ -91,6 +96,13 @@ export class PersonPage {
     this.draw();
   }
 
+  /** The clock moved: each face's bar and countdown, and a holding tap's time left on the split. */
+  tick(t: number): void {
+    if (!this.open || !this.view) return;
+    for (const row of this.faces) tickFace(this.ctx, row, this.view, t);
+    this.mix.tick(t);
+  }
+
   private joined(view: View): boolean {
     return people(this.ctx.catalog, view).includes(this.lane);
   }
@@ -98,22 +110,33 @@ export class PersonPage {
   /** A task's face: with the person in the town, a tap (see the top); the share it holds is on the face. */
   private face(card: Card, view: View, joined: boolean, share: number | undefined): HTMLElement {
     const { catalog, actions } = this.ctx;
-    if (!joined) return pickRow(this.ctx, card, view, undefined, this.strengthOpen);
+    if (!joined) return this.kept(pickFace(this.ctx, card, view, undefined, this.strengthOpen)).node;
     const capped = card.cap !== null;
-    const tap = capped ? () => actions.decide(toggleOneOff(catalog, view, this.lane, card.card)) : () => this.mix.toggle(card.card);
-    const face = pickRow(this.ctx, card, view, tap, this.strengthOpen);
+    const tap = capped ? () => actions.decide({ kind: "tap_card", card: card.card }) : () => this.mix.toggle(card.card);
+    const row = this.kept(pickFace(this.ctx, card, view, tap, this.strengthOpen));
+    const face = row.node;
     if (capped) {
-      face.querySelector(".card-tap")?.setAttribute("aria-pressed", String(oneOffRule(catalog, view, this.lane, card.card) >= 0));
+      const held = laneTap(view, this.lane);
+      face.classList.toggle("running", held?.card === card.card);
+      row.tap.disabled = held !== null;   // as the card panel's: one tap at a time on the lane
+      row.tap.setAttribute("aria-pressed", String(held?.card === card.card));
       return face;
     }
-    face.querySelector(".card-tap")?.setAttribute("aria-pressed", String(share !== undefined));
+    row.tap.setAttribute("aria-pressed", String(share !== undefined));
     if (share !== undefined) face.querySelector(".card-head")?.append(el("span", "card-share", catalog.format.share(share)));
     return face;
+  }
+
+  private kept(row: Row): Row {
+    this.faces.push(row);
+    if (this.view) tickFace(this.ctx, row, this.view, this.view.at);
+    return row;
   }
 
   private draw(): void {
     const { view, lane } = this;
     if (!view) return;
+    this.faces = [];
     const { catalog, actions } = this.ctx;
     const label = catalog.laneLabel(lane, view);
     setText(this.heading, label);

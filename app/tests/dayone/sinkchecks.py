@@ -30,16 +30,17 @@ def needs_met_blocked(views: Iterable[View]) -> tuple[int, list[str]]:
 
 
 def tap_fails(save: Save, rules: Rules) -> list[str]:
-    """Each card showing every need met and no blocker, on a free lane the player taps (not a ruled one, whose cards
-    rules set: engine DESIGN.txt, "Ruled lane"), whose tap does not start it: the verb is refused, or the lane does not
-    hold the card with a landing time."""
+    """Each card showing every need met and no blocker, on a free lane, that the player taps (not an uncapped card of a
+    ruled lane, which rules set: engine DESIGN.txt, "Ruled lane"), whose tap does not start it: the verb is refused, or
+    the lane does not hold the card with a landing time."""
     v = view(save, rules)
     ruled = {lane.id for lane in rules.lanes if lane.ruled}
-    free = {b.lane for b in v.lanes if b.card is None and b.lane not in ruled}
+    free = {b.lane for b in v.lanes if b.card is None}
     lanes = {c.id: c.lane for c in rules.cards}
     out: list[str] = []
     for c in v.cards:
-        if c.blocker is not None or lanes[c.card] not in free or (c.cap is not None and c.completions >= c.cap):
+        if c.blocker is not None or lanes[c.card] not in free or (c.cap is None and lanes[c.card] in ruled) \
+                or (c.cap is not None and c.completions >= c.cap):
             continue
         try:
             after = view(decide(save, rules, save.time, TapCard(c.card)), rules)

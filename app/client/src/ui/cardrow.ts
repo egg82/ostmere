@@ -1,6 +1,8 @@
 // One card's row in the card panel (cards.ts): its nodes and what the panel keeps about it between views.
-import type { Card } from "../api/types";
+import type { Card, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
+import { sample } from "../game/clock";
+import { keptReadyAt } from "../game/ready";
 import { Bonus } from "./bonus";
 import { CardNeeds } from "./cardneeds";
 import { el, tapFeedback } from "./dom";
@@ -91,4 +93,22 @@ export function makeRow(ctx: PartContext, whenReady: WhenReady, card: Card, onTa
   else if (row.bonus) seatFight(node, tap, row.ready, null, row.bonus);
   else node.append(tap, row.ready);
   return row;
+}
+
+/** How far `card`'s one bar is through its span at `t` (Card.bar modulo bar_total), 0 to 1. */
+export function barFraction(card: Card, t: number): number {
+  const span = card.bar_total;
+  const v = sample(card.bar, t);
+  return span > 0 ? (((v % span) + span) % span) / span : 0;
+}
+
+/** When the card's foot counts down to: a running tap's landing, else when it turns ready by itself; null for none. */
+export function waitAt(ctx: PartContext, view: View | null, card: Card): number | null {
+  return card.by === "tap" ? card.completes_at : view ? keptReadyAt(view, card, ctx.catalog.content.scales.quantity_per_item) : null;
+}
+
+/** The card's foot at `t`: the countdown to waitAt, else its tap time. */
+export function footWords(ctx: PartContext, wait: number | null, card: Card, t: number): string {
+  const { format } = ctx.catalog;
+  return wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "";
 }

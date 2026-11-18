@@ -12,14 +12,28 @@ export type Holder =
   | { kind: "rule"; order: number; then: string | null }
   | { kind: "stint"; entry: number; then: string | null };
 
+/** The tap holding `lane` (whoever started it), or null while the lane is free: a person's one-off holds their lane as a
+ * hands tap holds the hands (CONTRACT.txt, "A lane run by rules"). */
+export function laneTap(view: View, lane: string): { card: string; endsAt: number | null; order: number | null } | null {
+  const bar = view.lanes.find((l) => l.lane === lane);
+  return bar?.running_card ? { card: bar.running_card, endsAt: bar.completes_at, order: bar.order } : null;
+}
+
+/** The one-off holding a person's `lane`: laneTap when its card has a cap, else null. A tap that repeats (a rule on an
+ * uncapped card) has no end, and the person's split stays their bar. */
+export function laneOneOff(view: View, lane: string): ReturnType<typeof laneTap> {
+  const tap = laneTap(view, lane);
+  return tap && view.cards.some((c) => c.card === tap.card && c.cap !== null) ? tap : null;
+}
+
 /** The holder of the hands, as the engine decides it (engine DESIGN.txt, "Order mix", "Queue mix"): a hands tap
  * yields whichever mix runs; a rule's mix runs over a stint's, and a stint's over the player's. */
 export function handsHolder(view: View): Holder {
-  const lane = view.lanes.find((l) => l.lane === "hands");
+  const tap = laneTap(view, "hands");
   const stint = stintEntry(view);
   const stintMix = stint === null ? null : switchedTo(view, stint);
   const back = (mix: string | null): string | null => (mix === view.running_mix_id ? null : mix);
-  if (lane?.running_card) return { kind: "tap", card: lane.running_card, endsAt: lane.completes_at, order: lane.order, then: view.running_mix_id };
+  if (tap) return { kind: "tap", ...tap, then: view.running_mix_id };
   if (view.mix_order !== null) return { kind: "rule", order: view.mix_order, then: back(stintMix ?? view.active_mix_id) };
   if (stint !== null) return { kind: "stint", entry: stint, then: back(view.active_mix_id) };
   return { kind: "own" };

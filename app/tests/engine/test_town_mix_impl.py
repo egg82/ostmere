@@ -113,6 +113,21 @@ def test_a_town_mix_is_saved_only_for_joined_uncapped_cards_within_each_persons_
     decide(s2, both, 1001, SaveMix(Mix(TOWN, (CardShare(A1, BP), CardShare(A2, BP)))))   # two people, each whole
 
 
+def test_a_persons_one_off_tapped_by_hand_yields_their_share_for_one_completion():
+    """p1 in the town on a1; the player taps the capped c1 (cap 2): a1 yields while it runs, then the mix takes p1
+    back with c1 at 1 of 2 and no rule made."""
+    r = world(joins=(Join(P1, TOWN),))
+    s = advance(decide(new_save(r), r, 0, SetOrders((Order(ALWAYS, TapCard(A1)),))), r, 1001)
+    orders = s.orders
+    s = decide(s, r, 1001, TapCard(C1))
+    a1 = next(c for c in view(s, r).cards if c.card == A1)
+    assert s.lanes[1].card == C1 and a1.run == RunKind.YIELDED and s.orders == orders
+    after = advance(s, r, 1051)
+    a1 = next(c for c in view(after, r).cards if c.card == A1)
+    assert after.lanes[1].card is None and a1.run == RunKind.FULL and after.orders == orders
+    assert next(c for c in view(after, r).cards if c.card == C1).completions == 1
+
+
 def test_a_town_mix_is_the_towns_never_the_players_or_the_queues():
     r = world(joins=(Join(P1, TOWN),))
     s = advance(decide(new_save(r), r, 0, SetOrders((Order(ALWAYS, TapCard(A1)),))), r, 1001)

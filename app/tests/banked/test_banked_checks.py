@@ -6,7 +6,7 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import (
-    BP, AfterTime, CardId, CardShare, Flow, InvalidVerbError, LaneDef, LaneId, Mix, MixId, RunKind, Rules, Save, SaveMix,
+    BP, AfterTime, CardId, CardShare, Flow, InvalidVerbError, LaneDef, LaneId, Mix, MixId, Outcome, RunKind, Rules, Save, SaveMix,
     StoreDef, SwitchMix, TapCard, Verb, advance, decide, new_save, view,
 )
 from tests.banked.chapter import CAP, COMFORT, GATHER, TRIP, WOOD, rules
@@ -114,12 +114,12 @@ def test_a_trip_on_a_spent_store_is_not_judged_by_dry_unreached():
 
 
 def test_a_card_on_a_ruled_lane_is_not_judged_by_a_tap_the_player_cannot_make():
-    """A ruled lane's cards are set by rules, and the engine refuses the player's tap of one ("set by rules"), so
-    showing one ready is not a tap that fails; the same card on a lane the player taps is still judged."""
+    """A ruled lane's uncapped cards are set by rules, and the engine refuses the player's tap of one ("set by rules"),
+    so showing one ready is not a tap that fails; the same card on a lane the player taps is still judged."""
     r = rules(trip_cost=1)
     lane = LaneId("p1")
     def on(ruled: bool) -> Rules:
-        cards = tuple(replace(c, lane=lane) if c.id == COMFORT else c for c in r.cards)
+        cards = tuple(replace(c, lane=lane, cap=None, finished=Outcome()) if c.id == COMFORT else c for c in r.cards)
         return replace(r, cards=cards, lanes=(*r.lanes, LaneDef(lane, ruled=ruled)))
     ruled = on(True)
     s = gathered(ruled)

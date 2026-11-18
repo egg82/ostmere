@@ -1,20 +1,23 @@
 // The town's people (docs/design/opening-screen.md, "The Town view"): first in the Town tab, once a person has joined,
 // one row per person present: their face and who, their time split into the cards that hold a share (each with its
-// share) and the idle remainder, under it the split that runs now while a card of theirs is stopped (runningnow.ts),
+// share) and the idle remainder (while a one-off holds their lane, that card alone with its time left and "then {split}",
+// as the hands strip draws a tap), under it the split that runs now while a card of theirs is stopped (runningnow.ts),
 // and the card they are working now with its bar, sampled as the card panel samples it.
 // Each person's Change opens their page (personpage.ts), where their split is set. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../api/types";
+import { laneOneOff } from "../game/holder";
 import { people, personOf } from "../game/town";
 import { UI } from "../game/text";
-import { el, keyed, tapFeedback } from "./dom";
+import { el, keyed, setText, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
 import { dotChange } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
 import { RunningNow } from "./runningnow";
-import { splitOf, type Part as Share } from "./townsplit";
+import { splitOf, splitParts, thenSplit } from "./townsplit";
 
-interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: HTMLElement }
+/** `held`: while a tap holds the lane, its key item, which tick words with the time left. */
+interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: HTMLElement; held: { item: HTMLElement; card: string; endsAt: number | null } | null }
 
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
@@ -48,7 +51,16 @@ export class TownStrip implements Part {
   tick(t: number): void {
     const view = this.view;
     if (!view) return;
-    for (const [lane, row] of this.rows) drawBar(row, view, personOf(this.ctx.catalog, view, lane).running, t);
+    for (const [lane, row] of this.rows) {
+      drawBar(row, view, personOf(this.ctx.catalog, view, lane).running, t);
+      if (row.held) setText(row.held.item, this.heldWords(row.held.card, row.held.endsAt, t));
+    }
+  }
+
+  /** A holding tap's key: its card, and its time left while it has an end. */
+  private heldWords(card: string, endsAt: number | null, t: number): string {
+    const { catalog } = this.ctx;
+    return endsAt === null ? catalog.cardLabel(card) : `${catalog.cardLabel(card)} ${catalog.format.duration(endsAt - t)}`;
   }
 
   private make(lane: string): PersonRow {
@@ -62,7 +74,7 @@ export class TownStrip implements Part {
     change.dataset.teach = "town-change";   // a lesson's mark of the way into the town's mix
     change.addEventListener("click", () => { tapFeedback(); this.openPage(lane); });
     row.node.insertBefore(change, row.track);
-    return { ...row, split, now, change };
+    return { ...row, split, now, change, held: null };
   }
 
   private draw(lane: string, view: View): void {
@@ -72,9 +84,10 @@ export class TownStrip implements Part {
     const person = personOf(catalog, view, lane);
     const label = catalog.laneLabel(lane, view);
     drawWho(this.ctx, row, lane, label, person.running);
-    const parts: Share[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
-    if (person.idleBp > 0) parts.push({ text: `${catalog.text.fill(UI.townIdle, { person: label })} ${catalog.format.share(person.idleBp)}`, bp: person.idleBp, hue: 5, idle: true });
-    const { bar, key } = splitOf(parts);
+    const tap = laneOneOff(view, lane);
+    const { bar, key } = splitOf(tap ? [{ text: "", bp: catalog.content.scales.bp, hue: catalog.rank(tap.card) % 6, idle: false }] : splitParts(this.ctx, view, lane));
+    row.held = tap && { item: key.firstElementChild as HTMLElement, card: tap.card, endsAt: tap.endsAt };
+    if (tap) key.append(el("span", "town-key-then", thenSplit(this.ctx, view, lane)));
     row.split.replaceChildren(bar, key);
     row.now.update(view);
     dotChange(this.ctx, view, lane, row.change);
