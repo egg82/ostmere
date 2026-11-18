@@ -39,7 +39,7 @@ N4_WATCH = (11.5 * T, 6.65 * T)
 """Where each sits a watch at the watch fire, facing the track (Lucy's is `daythree_poses.WATCHING`)."""
 BAY2_WORK = (4.3 * T, 8.95 * T)
 """Where a townsperson stands to lay the second bay's poles."""
-TURNED_WORK = (11.3 * T, 7.75 * T)
+TURNED_WORK = (12.3 * T, 7.9 * T)
 """Where she digs: at the turned ground's near edge."""
 
 
