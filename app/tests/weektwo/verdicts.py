@@ -51,8 +51,6 @@ TRACK_STONES_GAP = ("content gap: stones lose over half their making away from t
                     "and field_track, their only sink, is held to the share its roots take allows (about 5400 roots an "
                     "hour at its full share against about 1330 made), where it takes about 110 stones an hour of about "
                     "260 made (issue #40)")
-TRACK_ROOTS_GAP = ("content gap: roots lose over half their making away from the chapter's end; the lane foragers fill "
-                   "them faster than field_track takes them at the share its other inputs allow (issue #40)")
 STONE_DRY_GAP = ("content gap: dry_wood loses over half its making away from the chapter's end; hand_on_stone fills it, "
                  "and only the fire, the watches and the stews take dry wood (issue #40)")
 """The cap-loss content gaps held as strict xfails, one reason per store over the chapters it fails in; each goes red
