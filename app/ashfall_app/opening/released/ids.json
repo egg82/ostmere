@@ -2434,7 +2434,7 @@
   445716000000,
   668736000000
  ],
- "digest": "2539af9ad1830a456bdcaca73a00413b65fa1c453023b4464d4bea0e72763b93",
+ "digest": "ed956bdbb6debc073b75403f588a6f49b617661f3fc823f978899b1da4f9004d",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -4597,6 +4597,7 @@
    "t_tired",
    "t_town_broth",
    "t_town_fungus_stew",
+   "t_track_family",
    "t_track_laid",
    "t_track_roots",
    "t_track_roots_2",
@@ -32652,6 +32653,54 @@
     }
    ]
   },
+  "t_track_family": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 20000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_family_roots",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "field_track",
+      "store": "roots"
+     }
+    },
+    {
+     "@": "Modifier",
+     "amount_bp": 35000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "track_family_stones",
+     "target": {
+      "@": "RateRef",
+      "kind": {
+       "@": "FlowKind",
+       "v": "cost"
+      },
+      "runner": "field_track",
+      "store": "stones"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
+  },
   "t_track_laid": {
    "@": "Outcome",
    "lines": [],
@@ -34035,7 +34084,7 @@
    "unlocks": []
   }
  },
- "release": 74,
+ "release": 75,
  "renames": [
   {
    "from": "t_stock_open",
