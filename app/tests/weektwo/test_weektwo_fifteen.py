@@ -52,9 +52,14 @@ def test_b13_is_held_to_the_calendar(fifteen_route: Route):
     assert p.landed_at["B13"] - p.history[0][0].time == B13_S, f"{name}: B13 at 336 h"
 
 
-@pytest.mark.xfail(strict=True, reason="; ".join((verdicts.TRACK_STONES_GAP, verdicts.TRACK_ROOTS_GAP, verdicts.STONE_DRY_GAP)))
+@pytest.mark.xfail(strict=True, reason=verdicts.STONE_DRY_GAP)
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
     assert fifteen_loss == {}
+
+
+def test_roots_and_stones_lose_under_half_their_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
+    """t_track_family scales the track's takes to the family's three foragers; dry_wood stays the gap held above."""
+    assert not {"roots", "stones"} & set(fifteen_loss)
 
 
 CLEAR = 0.25

@@ -1,5 +1,5 @@
 == typical: the edge at game day 13.84
-  scavenging: level 21 of 22 (75.57% of the phase)
+  scavenging: level 21 of 22 (75.56% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.01 d
@@ -21,7 +21,7 @@
     L20   6.82 d  gap   2.02 d
     L21  11.66 d  gap   4.84 d
     top L22: not by the edge
-  woodcutting: level 21 of 22 (94.55% of the phase)
+  woodcutting: level 21 of 22 (94.53% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.01 d  gap   0.00 d
     L4    0.01 d  gap   0.00 d
@@ -43,7 +43,7 @@
     L20   7.65 d  gap   2.33 d
     L21   9.92 d  gap   2.27 d
     top L22: not by the edge
-  foraging: level 11 of 22 (1.10% of the phase)
+  foraging: level 11 of 22 (1.13% of the phase)
     L2    0.05 d  gap   0.05 d
     L3    0.14 d  gap   0.10 d
     L4    0.34 d  gap   0.19 d
@@ -118,14 +118,13 @@
     rest                    19  25  31  34  44  15  14  12  27  14  27  12  14  16
     scavenge                19  25  15  17  11  15  14  12  10  14  11  12  14  16
     sew_wraps                .   .   .   .   .   .   .   .   .  17   .   .   .   .
-    smoke_roots              .   .   .   .   .   .   .   .   .   .   .   .  17   .
     stew                     .   .   .   .   .   .   .   .   .   .   .   .   .  17
     walk_ridge              17   .   .   .   .   .   .   .   .   .   .   .   .   .
     watch_fire               .   .   .  17   .   .   .   .   .   .   .   .   .   .
     weave_wattle            25   .   .   .   .   .   .   .   .   .   .   .   .   .
     woodcutting             19  25  15  17  11  15  14  12  10  14  11  13  14  16
     woodshed                 .   .   .  17  17   .   .   .   .   .   .   .   .   .
-  quiet since: clay_hearth day 4, cure_hearth day 5, cut_stakes day 13, gap_fire day 10, hunt_bear day 14, larder_floor day 3, make_bay day 3, make_bay2 day 6, n2_stakes day 12, n4_cord day 10, n6_stakes day 13, palisade day 12, pot_shelf day 5, rack_roof day 4, sew_wraps day 11, smoke_roots day 14, walk_ridge day 2, watch_fire day 5, weave_wattle day 2, woodshed day 6
+  quiet since: clay_hearth day 4, cure_hearth day 5, cut_stakes day 13, gap_fire day 10, hunt_bear day 14, larder_floor day 3, make_bay day 3, make_bay2 day 6, n2_stakes day 12, n4_cord day 10, n6_stakes day 13, palisade day 12, pot_shelf day 5, rack_roof day 4, sew_wraps day 11, walk_ridge day 2, watch_fire day 5, weave_wattle day 2, woodshed day 6
   XP by source per band of game days, percent of the skill's XP
     scavenging     d1-2   scavenge 63, field_track 37
     scavenging     d3-5   field_track 73, scavenge 27
@@ -136,7 +135,7 @@
     woodcutting    d6-9   woodcutting 65, cut_stakes 35
     woodcutting    d10+   woodcutting 59, cut_stakes 41
     cooking        d6-9   fungus_stew 100
-    cooking        d10+   stew 59, smoke_roots 29, fungus_stew 12
+    cooking        d10+   stew 83, fungus_stew 17
     arcana         d3-5   hand_on_stone 100
     arcana         d6-9   hand_on_stone 100
     arcana         d10+   hand_on_stone 100

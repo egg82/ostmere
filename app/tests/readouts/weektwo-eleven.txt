@@ -2,6 +2,6 @@ chapter eleven: 5 visits on typical
    V46 gap   4.2 h  spend 33  decide  3
    V47 gap   3.2 h  spend 33  decide  1
    V48 gap   9.2 h  spend 50  decide  5
-   V49 gap   4.2 h  spend 50  decide  0  [wait, 4 lines]
-   V50 gap   3.2 h  spend 50  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 166, decide 5; 8h+: 1 returns, spend 50, decide 5
+   V49 gap   4.2 h  spend 49  decide  0  [wait, 4 lines]
+   V50 gap   3.2 h  spend 49  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 164, decide 5; 8h+: 1 returns, spend 50, decide 5

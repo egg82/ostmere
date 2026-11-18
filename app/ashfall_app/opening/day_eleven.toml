@@ -263,6 +263,16 @@ unlocks = [
   { unlock_kind = "retired", id = "n7_gather", replaced_by = "n7_cut" },
 ]
 
+# The track's takes follow what the camp makes (day_five.toml, t_track_roots): three more foragers from the join.
+[[triggers]]
+id = "t_track_family"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "field_track", flow = "cost", store = "roots", kind = "mul_bp", amount_bp = 20000, source = "track_family_roots" },
+  { target = "rate", id = "field_track", flow = "cost", store = "stones", kind = "mul_bp", amount_bp = 35000, source = "track_family_stones" },
+]
+
 # Their track from the join (day_three.toml, the town's track card).
 [[triggers]]
 id = "t_family_track"
