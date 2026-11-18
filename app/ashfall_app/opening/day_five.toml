@@ -455,6 +455,7 @@ id = "n3_dig_bed"
 lane = "n3"
 presentation = "craft"
 label_key = "c_n3_dig_bed"
+upside_key = "up_n3_dig_bed"
 work_s = 3600
 cap = 3
 inputs = [{ store = "stones", items = 6 }]
@@ -598,6 +599,7 @@ store_pair_3h = "clock"
 action_pair_3h = "Clock"
 l_seed = "{n3} sets seed out on a cloth, then ties it shut."
 c_n3_dig_bed = "Dig a garden bed"
+up_n3_dig_bed = "ground turned for planting, once all three are dug"
 l_dig_bed_1 = "the top of the ground comes up in clods."
 l_dig_bed_2 = "stones go round the edge, flat side out."
 l_dig_bed_done = "the woman rakes it flat and leaves it bare."

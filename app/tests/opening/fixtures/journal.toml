@@ -66,6 +66,7 @@ fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_hunt", loses = [{ 
 id = "t_tend"
 presentation = "action"
 label_key = "t_c_tend"
+upside_key = "t_up_tend"
 work_s = 30
 inputs = [{ store = "t_bitten", items = 1 }]
 
@@ -133,3 +134,4 @@ t_a_dusk = "Dusk falling"
 t_a_raid = "Rats at the stores"
 t_c_hunt = "Hunt"
 t_c_tend = "Tend bites"
+t_up_tend = "bites tended"

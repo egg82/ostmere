@@ -24,6 +24,16 @@ def check_stakes(o: "Opening") -> None:
     for c in o.cards:
         if c.stake is not None and c.upside_key is None:
             fail(f"card {c.id}", "has a stake and no upside_key, so its face does not say what it feeds")
+    silent = [c.id for c in o.cards if c.presentation != "narrative" and c.inputs and c.upside_key is None and not _shows_gain(c)]
+    if silent:
+        fail(f"cards {', '.join(silent)}", "take stores and show nothing gained on their face: each says what it is for "
+                                           "with an upside_key (decisions.md, \"Every option offered works as worded\")")
+
+
+def _shows_gain(c: "CardEntry") -> bool:
+    """The card's face or ledger shows what it gives: stores or modifiers it pays, a flow, a drain, XP, a held entry."""
+    paid = (c.outcome.stores, c.outcome.modifiers, c.finished.stores, c.finished.modifiers)
+    return any(paid) or bool(c.makes or c.drains or c.skill or c.while_running)
 
 
 def check_stakes_hold(o: "Opening") -> None:

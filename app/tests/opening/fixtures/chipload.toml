@@ -24,6 +24,7 @@ id = "t_shovel"
 lane = "t_helper"
 presentation = "action"
 label_key = "t_c_shovel"
+upside_key = "t_up_shovel"
 work_s = 600
 inputs = [{ store = "t_load", items = 8 }]
 
@@ -51,4 +52,5 @@ t_s_load = "Load"
 t_a_settle = "Settling"
 t_l_helper = "Helper"
 t_c_shovel = "Shovel"
+t_up_shovel = "the load cleared"
 t_ch_laden = "Laden"

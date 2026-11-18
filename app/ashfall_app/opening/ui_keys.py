@@ -21,7 +21,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.tab.cards",
     "ui.tab.book", "ui.book.done",
     "ui.hands.idle",
-    "ui.lane.idle", "ui.lane.change", "ui.person.one_off", "ui.rule.always",
+    "ui.lane.idle", "ui.lane.change", "ui.rule.always",
     "ui.town.title", "ui.town.idle", "ui.rule.town_always",
     "ui.card.needs_step", "ui.card.takes_nothing",
     "ui.mix.both",

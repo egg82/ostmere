@@ -203,6 +203,7 @@ outcome = { line_keys = ["l_draughty_off"] }
 id = "peg_flaps"
 presentation = "action"
 label_key = "c_peg_flaps"
+upside_key = "up_peg_flaps"
 work_s = 120
 inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
 
@@ -211,6 +212,7 @@ id = "n1_peg_flaps"
 lane = "n1"
 presentation = "action"
 label_key = "c_n1_peg_flaps"
+upside_key = "up_peg_flaps"
 work_s = 1200
 inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
 
@@ -670,6 +672,7 @@ chip_draughty_cost = "{pct} rest recovery"
 l_draughty = "air slips through the bays where the flaps lift."
 l_draughty_off = "the flap hems are weighted down."
 c_peg_flaps = "Peg the flaps down"
+up_peg_flaps = "the torn flaps held down, and rest recovers in full again"
 c_n1_peg_flaps = "Peg the flaps down"
 camp_pays_14 = "stew holds {to}, was {from}"
 l_camp_14 = "the stew pot rides lower on its hook. it holds more than it did."

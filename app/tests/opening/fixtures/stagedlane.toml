@@ -26,6 +26,7 @@ id = "t_raise"
 lane = "t_builder"
 presentation = "craft"
 label_key = "t_c_raise"
+upside_key = "t_up_raise"
 work_s = 60
 cap = 3
 inputs = [{ store = "t_logs", items = 4 }]
@@ -62,5 +63,6 @@ t_s_logs = "Logs"
 t_l_builder = "Builder"
 t_l_hauler = "Hauler"
 t_c_raise = "Raise"
+t_up_raise = "a wall raised"
 t_c_sweep = "Sweep"
 t_c_haul = "Haul"
