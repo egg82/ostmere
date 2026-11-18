@@ -56,7 +56,7 @@ STONE_DRY_GAP = ("content gap: dry_wood loses over half its making away from the
 """The cap-loss content gaps held as strict xfails, one reason per store over the chapters it fails in; each goes red
 once its sink lands."""
 PART_STEPS = 1
-PARTS = {"eight": 13, "nine": 7, "eleven": 7, "twelve": 12, "fifteen": 15}
+PARTS = {"eight": 13, "nine": 7, "eleven": 7, "twelve": 11, "fifteen": 14}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
 each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
 than its parts hold fails `decided_in`."""
