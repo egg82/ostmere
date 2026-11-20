@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import json
 import os
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Literal, NotRequired, TypedDict
 
 from PIL import Image, ImageChops
 
+import builds
 import depth
 import grades
 import kit
@@ -165,6 +166,55 @@ def check_footing(entries: list[Entry]) -> None:
                          + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
 
 
+def check_builds(entries: list[Entry]) -> None:
+    """No two builds share `builds.MIN_SHARED` pixels at any stage, bar the pairs `builds.HELD_CROWDED` holds, and every
+    layer is classified (`builds.unsorted`). Fails too when no stage showed two builds together: nothing was compared."""
+    if bad := builds.unsorted(entries):
+        raise ValueError(f"layers in no build and not in builds.NOT_BUILDS, or named there and gone: {bad}")
+    masks: dict[tuple[str, ...], Image.Image] = {}
+    by_id = {e["id"]: e for e in entries}
+
+    def union(ids: Sequence[str]) -> Image.Image:
+        key = tuple(ids)
+        if key not in masks:
+            masks[key] = Image.new("1", (W, H))
+            for i in ids:
+                masks[key] = ImageChops.lighter(masks[key], _alpha_mask(by_id[i]))
+        return masks[key]
+
+    def shared(a: Sequence[str], b: Sequence[str]) -> int:
+        first, second = union(a), union(b)
+        if not (box := first.getbbox()) or not second.getbbox() or not _meets(box, second.getbbox()):
+            return 0
+        return ImageChops.logical_and(first, second).histogram()[255]
+
+    faults: dict[tuple[str, str], str] = {}
+    compared = 0
+    for stage, state in STAGES.items():
+        shown = [e for e in entries if holds(e["when"], state) and not ("until" in e and holds(e["until"], state))]
+        compared += len({builds.MEMBER_OF[e["id"]] for e in shown if e["id"] in builds.MEMBER_OF}) > 1
+        for a, b, px in builds.crowded(shown, shared):
+            faults.setdefault((a, b), f"{stage}, {px} px")
+    if not compared:
+        raise ValueError("no stage shows two builds together: the overlap check looked at nothing")
+    if new := {pair: at for pair, at in faults.items() if pair not in builds.HELD_CROWDED}:
+        raise ValueError("builds drawn over each other: " + "; ".join(f"{a} and {b} ({at})" for (a, b), at in new.items()))
+    if stale := builds.HELD_CROWDED - faults.keys():
+        raise ValueError(f"builds.HELD_CROWDED holds pairs that no longer overlap, drop them: {sorted(stale)}")
+
+
+def _meets(a: tuple[int, int, int, int], b: tuple[int, int, int, int] | None) -> bool:
+    return b is not None and a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
+
+
+def _alpha_mask(e: Entry) -> Image.Image:
+    """The layer's drawn pixels, placed on the scene's canvas."""
+    alpha = Image.open(OUT / e["src"].split("?")[0]).convert("RGBA").getchannel("A")
+    out = Image.new("1", (W, H))
+    out.paste(kit.point(alpha, lambda v: 255 if v else 0).convert("1"), (e["x"], e["y"]))
+    return out
+
+
 def _overlap(entries: list[Entry], footing: bool = False) -> Callable[[str, str], bool]:
     """Whether two layers' pixels meet; with `footing`, whether the first's bottom `depth.FEET` rows meet the second's."""
     masks: dict[str, Image.Image] = {}
@@ -172,9 +222,7 @@ def _overlap(entries: list[Entry], footing: bool = False) -> Callable[[str, str]
 
     def mask(e: Entry) -> Image.Image:
         if e["id"] not in masks:
-            alpha = Image.open(OUT / e["src"].split("?")[0]).convert("RGBA").getchannel("A")
-            masks[e["id"]] = Image.new("1", (W, H))
-            masks[e["id"]].paste(kit.point(alpha, lambda v: 255 if v else 0).convert("1"), (e["x"], e["y"]))
+            masks[e["id"]] = _alpha_mask(e)
         return masks[e["id"]]
 
     def feet(e: Entry) -> Image.Image:
