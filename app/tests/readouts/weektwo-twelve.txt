@@ -1,14 +1,14 @@
 chapter twelve: 12 visits on typical
-   V50 gap   3.2 h  spend 50  decide  1
-   V51 gap   9.2 h  spend 52  decide  2  [wait, 12 lines]
-   V52 gap   4.2 h  spend 52  decide  1  [wait, 5 lines]
-   V53 gap   3.2 h  spend 51  decide  1
-   V54 gap   9.2 h  spend 26  decide  4
-   V55 gap   4.2 h  spend 51  decide  0
-   V56 gap   3.2 h  spend 59  decide  1
-   V57 gap   9.2 h  spend 44  decide  2
-   V58 gap   4.2 h  spend 44  decide  0
-   V59 gap   3.2 h  spend 51  decide  1
-   V60 gap   9.2 h  spend 44  decide  1
-   V61 gap   4.2 h  spend 44  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 402, decide 5; 8h+: 4 returns, spend 166, decide 9
+   V50 gap   3.2 h  spend 56  decide  1
+   V51 gap   9.2 h  spend 58  decide  2  [wait, 12 lines]
+   V52 gap   4.2 h  spend 59  decide  1
+   V53 gap   3.2 h  spend 57  decide  1
+   V54 gap   9.2 h  spend 28  decide  4
+   V55 gap   4.2 h  spend 57  decide  0
+   V56 gap   3.2 h  spend 66  decide  1
+   V57 gap   9.2 h  spend 49  decide  2
+   V58 gap   4.2 h  spend 34  decide  0
+   V59 gap   3.2 h  spend 57  decide  1
+   V60 gap   9.2 h  spend 49  decide  1
+   V61 gap   4.2 h  spend 49  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 435, decide 5; 8h+: 4 returns, spend 184, decide 9

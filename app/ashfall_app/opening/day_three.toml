@@ -573,7 +573,7 @@ cap_items = 1
 # XP. Defined once; a lane joins by appending to `lanes`, and expands where its lane is declared (town.py).
 [[town_cards]]
 id = "{lane}_forage"
-lanes = ["n2", "n3", "n5", "n6", "n7"]
+lanes = ["n2", "n3", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_forage"
 work_s = 120
@@ -589,7 +589,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 
 [[town_cards]]
 id = "{lane}_cut"
-lanes = ["n2", "n5", "n6", "n7"]
+lanes = ["n2", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_woodcutting"
 work_s = 12
@@ -659,7 +659,7 @@ outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split
 # digging, so his lane has no clay card.
 [[town_cards]]
 id = "{lane}_dig_clay"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_dig_clay"
 work_s = 10
@@ -667,7 +667,7 @@ outcome = { stores = [{ store = "clay", items = 1 }] }
 
 [[town_cards]]
 id = "{lane}_stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
@@ -681,7 +681,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 # and makes, with no skill, filling the same store. The old man's leg rules out the walk, as it does the digging.
 [[town_cards]]
 id = "{lane}_field_track"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_field_track"
 upside_key = "up_field_track"

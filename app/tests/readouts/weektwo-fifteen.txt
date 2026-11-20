@@ -1,11 +1,11 @@
 chapter fifteen: 9 visits on typical
-   V61 gap   4.2 h  spend 44  decide  1
-   V62 gap   3.2 h  spend 52  decide  0  [wait, 3 lines]
-   V63 gap   9.2 h  spend 29  decide  2  [wait, 7 lines]
-   V64 gap   4.2 h  spend 52  decide  2  [wait, 5 lines]
-   V65 gap   3.2 h  spend 45  decide  0  [wait, 4 lines]
-   V66 gap   9.2 h  spend 53  decide  1  [wait, 6 lines]
-   V67 gap   4.2 h  spend 53  decide  0  [wait, 1 lines]
-   V68 gap   3.2 h  spend 54  decide  0  [wait, 6 lines]
-   V69 gap   9.2 h  spend 55  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 300, decide 3; 8h+: 3 returns, spend 137, decide 3
+   V61 gap   4.2 h  spend 49  decide  1
+   V62 gap   3.2 h  spend 58  decide  0  [wait, 2 lines]
+   V63 gap   9.2 h  spend 32  decide  2  [wait, 7 lines]
+   V64 gap   4.2 h  spend 58  decide  1  [wait, 6 lines]
+   V65 gap   3.2 h  spend 32  decide  0  [wait, 4 lines]
+   V66 gap   9.2 h  spend 57  decide  1  [wait, 6 lines]
+   V67 gap   4.2 h  spend 50  decide  0  [wait, 1 lines]
+   V68 gap   3.2 h  spend 51  decide  0  [wait, 5 lines]
+   V69 gap   9.2 h  spend 51  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 298, decide 2; 8h+: 3 returns, spend 140, decide 3

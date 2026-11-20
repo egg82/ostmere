@@ -114,6 +114,23 @@ def test_marking_a_person_with_no_share_gives_them_the_marks_card():
     assert (rate(s, r), crew(s, r)) == (UNIT, 0)
 
 
+def test_unmarking_a_person_with_the_groups_card_starts_the_group_at_a_whole_split():
+    r = world(own(P1, A1), own(P2, A2), (1000, Outcome(marks=(Mark(P1, False, GWORK), Mark(P2, False, GWORK)))))
+    s = at(r, 1500)
+    assert share_cards(s) == [(A1, 10000), (A2, 10000), (GWORK, 10000)]
+    assert (rate(s, r), crew(s, r)) == (2 * UNIT, 2)
+
+
+def test_unmarking_adds_no_share_when_the_group_already_has_one():
+    r = world(unmarked(P1), own(P2, A2), (1000, Outcome(marks=(Mark(P2, False, GWORK),))))
+    assert share_cards(at(r, 1500)).count((GWORK, 10000)) == 1
+
+
+def test_an_unmarking_card_is_one_on_the_persons_group():
+    with pytest.raises(Exception, match="not an uncapped card on its group"):
+        world(own(P1, A1), (1000, Outcome(marks=(Mark(P1, False, A1),))))
+
+
 def test_a_mark_on_a_person_not_joined_changes_nothing():
     r = world((1000, Outcome(marks=(Mark(P1, False),))))
     assert at(r, 1500).mixes == ()

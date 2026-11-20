@@ -76,7 +76,7 @@ outcome = { stores = [{ store = "stakes", items = 1 }] }
 # Stakes on the townsfolk's lanes; the three who come in day eleven expand where their lanes are declared.
 [[town_cards]]
 id = "{lane}_stakes"
-lanes = ["n1", "n2", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_lane_stakes"
 work_s = 1200
@@ -213,7 +213,7 @@ outcome = { stores = [{ store = "fungus", items = 2 }] }
 # Picking on her lane and on the three who come in day eleven, expanded where their lanes are declared.
 [[town_cards]]
 id = "{lane}_pick"
-lanes = ["n3", "n5", "n6", "n7"]
+lanes = ["n3", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_lane_pick"
 work_s = 120
@@ -235,7 +235,7 @@ outcome = { stores = [{ store = "stew", items = 3 }] }
 # The fungus pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
 id = "{lane}_fungus_stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_fungus_stew"
 upside_key = "up_stew"

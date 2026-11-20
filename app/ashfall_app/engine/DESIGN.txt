@@ -2232,8 +2232,8 @@ CHOICES (groups)
   - Join.own_split: bool = True: the person's mark as they join. True keeps every released join meaning what it did.
   - Outcome.marks: tuple[Mark, ...] = (), Mark(lane, own_split: bool, card: CardId | None = None): sets or clears a
     joined person's mark; allowed in a trigger's and an answer's outcome only; lands after `joins`, before `queues`.
-    `card`, as Join's, is an uncapped card on the person's own lane given BP when the mark is set and the town mix holds
-    no share of theirs.
+    `card`, as Join's, is an uncapped card given BP when the town mix holds no share on the lane it is on: setting the
+    mark, a card on the person's own lane; clearing it, a card on their group (as an unmarked join's is).
   - LaneState.own_split: bool = True: the mark itself, on the lane's own state ("not a Save field": the
     PhaseState-on-SkillState precedent in PRESTIGE PHASES). Written only by a join and a Mark.
   - Every field is left out of the codec and the rules digest while at its default. "General" is content, not an
@@ -2262,8 +2262,8 @@ CHOICES (groups)
   always rules (they would yield the person for good), and gives the join's share to G instead of L: if the town mix
   holds no share of a card on G, append CardShare(card, BP), `card` being the join's, which must be on G. So the first
   member starts the group at a whole split, and every later member adds output under the split already set.
-- Mark (engine/marks.py): set LaneState.own_split; when setting it True and the town mix holds no share on L, append
-  CardShare(card, BP) if the mark names a card. A mark on a lane not joined, or left, changes nothing (as a join of a
+- Mark (engine/marks.py): set LaneState.own_split; when the town mix holds no share on L (setting it True) or on G
+  (clearing it), append CardShare(card, BP) if the mark names a card, which is on L or on G respectively. A mark on a lane not joined, or left, changes nothing (as a join of a
   joined lane does).
 - Verbs (engine/verbs.py, plan checks): SaveMix of a TOWN mix treats G as a lane: G's shares sum to at most BP, no
   capped card. A card on G is accepted whether or not G has members. SetOrders, installs, starts and the queue refuse
@@ -2280,7 +2280,7 @@ CHOICES (groups)
   skill"); "{where}: taps {card}, a card on a pooled lane" for a start, an install or a queue of one; "{where}: leaves
   {lane}, a pooled lane, which is never a person"; "{where}: only a trigger's or an answer's outcome marks a person";
   "{where}: marks {lane}, which is not a declared person's lane"; "{where}: unmarks {lane}, which has no group";
-  "{where}: marks {lane} with {card}, which is not an uncapped card on the lane"; and "{where}: a join is not valid" for
+  "{where}: marks {lane} with {card}, which is not an uncapped card on the lane" (on its group, for an unmarking); and "{where}: a join is not valid" for
   a join of a pooled lane, or an unmarked join whose lane has no group or whose card is not an uncapped card on that
   group.
 - Codec: FORMAT unchanged. The fields above are left out while default (LaneDef.pooled, LaneDef.group, Join.own_split,

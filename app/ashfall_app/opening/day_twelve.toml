@@ -51,6 +51,7 @@ modifiers = [
   { target = "rate", id = "n5_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
   { target = "rate", id = "n6_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
   { target = "rate", id = "n7_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
+  { target = "rate", id = "g_hearth_pick", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 7500, source = "dig_cellar" },
 ]
 
 # "When stakes reach 16, dig": a stage whenever a stage's stakes are in, the shoring allowing; passed over at the cap.
@@ -539,7 +540,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
 # The broth, an everyday job everyone takes (day three's pot).
 [[town_cards]]
 id = "{lane}_catch_broth"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_catch_broth"
 upside_key = "up_stew"

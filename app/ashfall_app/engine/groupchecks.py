@@ -32,7 +32,7 @@ def check_groups(rules: "Rules") -> None:
 
 def check_group_outcome(rules: "Rules", o: Outcome, where: str, once_only: bool) -> None:
     """In any outcome: no start, install or queue taps a pooled lane's card. In a trigger's or an answer's (`once_only`)
-    alone: marks, each of a declared person's lane, its card an uncapped one on that lane, an unmarking only for a
+    alone: marks, each of a declared person's lane, its card an uncapped one on that lane (on its group for an unmarking), an unmarking only for a
     lane with a group."""
     pooled_cards = _pooled_cards(rules)
     for card in (*o.starts, *(i.card for i in o.orders), *o.queues):
@@ -71,9 +71,11 @@ def _check_mark(rules: "Rules", m: Mark, where: str) -> None:
     if not m.own_split and _group_of(rules, m.lane) is None:
         raise InvalidRulesError(f"{where}: unmarks {m.lane}, which has no group")
     capped = {c.id for c in rules.cards if c.cap is not None}
-    on_lane = {c.id for c in rules.cards if c.lane == m.lane}
+    home = m.lane if m.own_split else _group_of(rules, m.lane)
+    on_lane = {c.id for c in rules.cards if c.lane == home}
     if m.card is not None and (m.card not in on_lane or m.card in capped):
-        raise InvalidRulesError(f"{where}: marks {m.lane} with {m.card}, which is not an uncapped card on the lane")
+        raise InvalidRulesError(f"{where}: marks {m.lane} with {m.card}, which is not an uncapped card on "
+                                f"{'the lane' if m.own_split else 'its group'}")
 
 
 def _pooled_cards(rules: "Rules") -> set[CardId]:

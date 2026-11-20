@@ -77,6 +77,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n5_named" }]
 name_key = "name_n5"
+group = "g_field"
 
 [[lanes]]
 id = "n6"
@@ -85,6 +86,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n6_named" }]
 name_key = "name_n6"
+group = "g_field"
 
 [[lanes]]
 id = "n7"
@@ -93,6 +95,23 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n7_named" }]
 name_key = "name_n7"
+group = "g_hearth"
+
+# The two groups the three work in (decisions/people.md, "Groups"): each holds the jobs its people do and not the ones
+# they cannot, and is tied to the hand who looks after it (t_family_groups).
+[[lanes]]
+id = "g_field"
+label_key = "lane_g_field"
+ruled = true
+pooled = true
+tied = "n2"
+
+[[lanes]]
+id = "g_hearth"
+label_key = "lane_g_hearth"
+ruled = true
+pooled = true
+tied = "n3"
 
 # A34 on her lane, the same real time and stores as A33.
 [[cards]]
@@ -119,7 +138,7 @@ cap_items = 1
 # split).
 [[town_cards]]
 id = "{lane}_watch"
-lanes = ["n5", "n6", "n7"]
+lanes = ["n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_lane_watch"
 upside_key = "up_watch"
@@ -280,6 +299,20 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 [triggers.outcome]
 modifiers = [
   { target = "rate", id = "hand_on_stone", flow = "make", store = "dry_wood", kind = "mul_bp", amount_bp = 5000, source = "stone_family_dry" },
+]
+
+# The same moment, the family go to their groups: neither keeps a split of their own, and the story says why. Its own
+# trigger, as t_family_joins' outcome is released. Each group starts at one whole share: the field crew foraging, the
+# hearth at the picking.
+[[triggers]]
+id = "t_family_groups"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+[triggers.outcome]
+line_keys = ["l_group_1", "l_group_2"]
+marks = [
+  { lane = "n5", own_split = false, card = "g_field_forage" },
+  { lane = "n6", own_split = false, card = "g_field_forage" },
+  { lane = "n7", own_split = false, card = "g_hearth_pick" },
 ]
 
 # Their track from the join (day_three.toml, the town's track card).
@@ -601,6 +634,8 @@ l_hut_go = "story"
 l_hut_theirs = "story"
 l_join3_1 = "story"
 l_join3_2 = "story"
+l_group_1 = "story"
+l_group_2 = "story"
 l_guard_ask = "story"
 l_guard_n2_1 = "story"
 l_guard_n2_2 = "story"
@@ -642,9 +677,13 @@ lane_n6_named = "{n6}'s hands"
 name_n6 = "Richard"
 lane_n7 = "Her brother's hands"
 lane_n7_named = "{n7}'s hands"
+lane_g_field = "The field crew"
+lane_g_hearth = "The hearth crew"
 name_n7 = "John"
 l_join3_1 = "the woman gives names: {n5}, {n6}, {n7}."
 l_join3_2 = "asked his name, the man who came with them looks at the fire."
+l_group_1 = "{n2} takes {n5} and {n6} out to the wood's edge. they are to work to his word, not to a split each, until they know the ground"
+l_group_2 = "{n3} sets {n7} beside her at the pot and the picking. he is to do as she does, and she will tell him when it is enough"
 action_n5_eating = "{n5}'s share"
 action_n6_eating = "{n6}'s share"
 action_n7_eating = "{n7}'s share"
