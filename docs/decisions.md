@@ -109,7 +109,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 ## Saves
 
 - [Multiple saves, each its own run](decisions/saves.md): several saves, each its own seed and clock, around the same spine.
-- [Developed live, forward-only by preference](decisions/saves.md): changes apply forward with no per-change machinery, and a deploy never resets a game.
+- [Developed live; saves bend to the design, not the reverse](decisions/saves.md): a design never bends to keep a live save's continuity (patch or reset the save instead), no per-change machinery, and a deploy never resets a game.
 - [Saves never die with a device](decisions/saves.md): the server writes the save on every decision; the page never holds the only copy.
 - [A database failover is replayed once, or answered 503](decisions/saves.md): how a request survives a Postgres failover between the two sites, and what was rejected.
 - [Saves and the page shell, as built](decisions/saves.md): rebase at load, manifests stored once, bounded catch-up, several games; the front page, boot guard and self-update.

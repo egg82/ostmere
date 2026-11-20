@@ -11,15 +11,16 @@ around them, and some content in `content/` varies per save so a replay still su
 side on their own clocks; since nothing waits on the player, two saves never ask for twice the attention. Longevity
 comes from replays like these and from expansions.
 
-## Developed live, forward-only by preference
+## Developed live; saves bend to the design, not the reverse
 
-As with habits: players are told it is in heavy development; a change prefers to apply forward only, so what a save
-already has keeps its timing and nothing already shown changes under the player; a retroactive change stays possible
-when genuinely needed. **No machinery for it:** no per-change start dates or flags on saves (habits went too far
-with those and it became too much). When a change needs to be retroactive, just make it. **A deploy never resets
+The game is in alpha and wide changes are expected. A design is chosen on its own merits, never bent to keep a live
+save's continuity: when the cleaner change would leave an existing save behind (an outcome it already fired, a bar it
+already has), make the change and patch or reset that save, the owner's included. **No machinery for it:** no
+per-change start dates, current-save flags or compatibility paths in the engine (habits went too far with those and it
+became too much). **A deploy never resets
 a game:** a save made under older rules loads under the new ones (the preview, which keeps no save, restarted a
 friend's game when content shipped while their tab sat idle).
-The forward-only line is a save's last write, not the deploy: time away runs under the rules in force when the player
+New rules take over at a save's last write, not at the deploy: time away runs under the rules in force when the player
 returns, which is fine while the game is still being developed.
 
 ## Saves never die with a device

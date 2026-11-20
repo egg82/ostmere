@@ -80,7 +80,7 @@ it cannot remove or rewrite one. The stored rows are the journal's state: how of
 count over them. Rows are earned history, like lines, and never pruned.
 
 What is on the page stays. A later change to the habits or the slots applies from the next note composed
-(`decisions.md`, "Developed live, forward-only by preference"): ink does not move when the tuning does. If such a change
+(`docs/decisions/saves.md`, "Developed live"): ink does not move when the tuning does. If such a change
 lands while a day is open and its recomposed page no longer begins with the notes stored, the stored notes stand and
 the day gains nothing more; the next day composes under the new rules. A row stored before notes were written as the
 day goes (`through` unset) is a day composed whole, and is never recomposed; the day in progress when this ships is
