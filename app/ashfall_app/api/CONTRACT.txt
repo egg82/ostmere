@@ -74,7 +74,10 @@ ENDPOINTS
   POST /api/saves/{save_id}/forecast  ForecastAnswer {decisions, forecast}: the save advanced to now and what lands
                                       from there if the player changes nothing (FORECAST below).
   POST /api/saves/{save_id}/dry-run   DryRunRequest {decisions} -> View: what the save would show after these
-                                      decisions, applied in order now. Nothing is written (the mix editor's "after").
+                                      decisions, applied in order at the save's time as last written: the instant
+                                      the page's view shows, so a figure read before -> after compares one moment.
+                                      Nothing is written (the mix editor's "after"); 409 catching_up while the save is
+                                      still behind.
   GET  /api/saves/{save_id}/view      View: the save as last written, at its own time (rebased in memory if the rules
                                       changed since), not advanced to now. Nothing is written: no played_at change, no
                                       decision counted. Never 409 catching_up. 404 for a save the account does not

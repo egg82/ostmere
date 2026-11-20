@@ -179,8 +179,9 @@ def test_a_dry_run_shows_the_decisions_and_writes_nothing(saves: PgSaves, engine
     clock.tick(5)
     before = stored(engine, info.save_id)
     after = saves.dry_run(account, info.save_id, (STAND,))
-    assert after.time == 5 and next(ln for ln in after.lanes if ln.lane == e.HANDS).card == "stand_up"
-    assert saves.dry_run(account, info.save_id, ()).time == 5
+    # at the save's written instant (0), not the clock's 5: the instant the page's view shows
+    assert after.time == 0 and next(ln for ln in after.lanes if ln.lane == e.HANDS).card == "stand_up"
+    assert saves.dry_run(account, info.save_id, ()).time == 0
     with pytest.raises(Invalid):
         saves.dry_run(account, info.save_id, (STAND, STAND))   # the lane is busy after the first
     assert stored(engine, info.save_id) == before

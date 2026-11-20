@@ -175,16 +175,15 @@ class PgSaves:
             raise DecisionsLimited(refusal.scope, refusal.retry_after_s)
 
     def current(self, account_id: int, save_id: int, stop: Callable[[], bool]) -> Played:
-        row, done = self._read_now(account_id, save_id, stop)
+        row, _, done = self._read_now(account_id, save_id, stop)
         return Played(save_id=save_id, decisions=row.decisions, save=done.save, lines=())
 
     def forecast_stop(self) -> Callable[[], bool]:
         return self._stop_for()
 
     def dry_run(self, account_id: int, save_id: int, verbs: tuple[e.Verb, ...]) -> e.Save:
-        _, done = self._read_now(account_id, save_id, self._stop_for())
-        save = done.save
-        at = save.time
+        _, save, _ = self._read_now(account_id, save_id, self._stop_for())   # refused while the save is behind
+        at = save.time   # the save as last written: the instant the page's view shows, so before and after are one moment
         try:
             for verb in verbs:
                 save = e.decide(save, self._rs.rules, at, verb)
@@ -207,8 +206,9 @@ class PgSaves:
             raise NotFound(f"save {save_id}")
         return load(row, self._rs).save
 
-    def _read_now(self, account_id: int, save_id: int, stop: Callable[[], bool]) -> tuple[rows.SaveRecord, e.Step]:
-        """The save as stored and advanced to now in memory, nothing written; Behind (the save as written) when that
+    def _read_now(self, account_id: int, save_id: int, stop: Callable[[], bool]
+                  ) -> tuple[rows.SaveRecord, e.Save, e.Step]:
+        """The save as stored (loaded under these rules), and advanced to now in memory, nothing written; Behind (the save as written) when that
         stops short. The replay holds no connection: the row is read and released first, and a refusal reads the
         save's repeats in a second short transaction."""
         now = self._clock()
@@ -223,7 +223,7 @@ class PgSaves:
         if done.stopped_short:
             with unit.begin(self._engine) as conn:
                 raise Behind(write.as_written(conn, row, loaded.save, self._rs, to))
-        return row, done
+        return row, loaded.save, done
 
     @contextmanager
     def _locked(self, account_id: int, save_id: int, now: datetime,

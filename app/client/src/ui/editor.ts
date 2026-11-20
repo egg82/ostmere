@@ -133,6 +133,7 @@ export class MixEditor {
     if (!this.open || !this.local) return;
     if (this.from !== null && !view.mixes.some((m) => m.id === this.from)) { this.close(); return; }   // deleted
     this.draw();
+    this.preview.schedule();   // the after must be of this view's instant (CONTRACT.txt, dry-run), not the last one's
   }
 
   private setShares(shares: number[]): void {
