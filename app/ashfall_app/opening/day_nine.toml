@@ -497,29 +497,11 @@ catchup = { keys = ["j_b9_catchup"] }
 
 # ---------- B10: the ring closed ----------
 
-# B10 on the last stage, as the ring's closing, so they are one moment. t_b10_floor and its clock are a released floor
-# nothing reads now (Q4: a sharp route may lead).
+# B10 on the last stage, as the ring's closing, so they are one moment.
 [[triggers]]
 id = "t_ring_closed"
 when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 12 }
 outcome = { unlocks = [{ unlock_kind = "feature", id = "ring_closed" }] }
-
-[[triggers]]
-id = "t_b10_floor"
-when = { test = "after_time", value = 756000 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "b10_floor" }] }
-
-# Never drawn: hours past the floor.
-[[stores]]
-id = "b10_floor"
-label_key = "store_b10_floor"
-cap_items = 8760
-hidden = true
-
-[[standing]]
-id = "b10_floor"
-label_key = "action_b10_floor"
-makes = [{ store = "b10_floor", items_per_hour = 1 }]
 
 [[triggers]]
 id = "t_b10"
@@ -676,8 +658,6 @@ up_peg_flaps = "the torn flaps held down, and rest recovers in full again"
 c_n1_peg_flaps = "Peg the flaps down"
 camp_pays_14 = "stew holds {to}, was {from}"
 l_camp_14 = "the stew pot rides lower on its hook. it holds more than it did."
-store_b10_floor = "clock"
-action_b10_floor = "Clock"
 store_ask_wait = "clock"
 action_ask_wait = "Clock"
 o_posts = "The first stretch of palisade holds. {n4} flexes raw hands."

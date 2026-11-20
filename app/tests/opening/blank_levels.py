@@ -1,7 +1,6 @@
 """The levels that pay nothing (docs/design/sim-invariants.md, O14): a level in a skill's row with no marker drawn, and a
 level of a later phase no trigger waits for. A figure for the opening's readout (report.py), never a check: that every
 level pays is taste. What a drawn marker shows is kept by `unpaid_markers` (test_level_pays.py)."""
-from ashfall_app.opening.phase_pays import RETIRED_AT
 from ashfall_app.opening.schema import Opening
 from ashfall_app.engine import Rules
 
@@ -31,9 +30,8 @@ def unmarked_levels(o: Opening, rules: Rules) -> list[str]:
 
 
 def level_pays(o: Opening, skill: str) -> set[int]:
-    """The counted levels a skill's triggers wait for, not counting a retired find's, which waits out of reach."""
-    return {t.when.value for t in o.triggers
-            if t.when.subject_kind == "skill_level" and t.when.id == skill and t.when.value != RETIRED_AT}
+    """The counted levels a skill's triggers wait for."""
+    return {t.when.value for t in o.triggers if t.when.subject_kind == "skill_level" and t.when.id == skill}
 
 
 def phase_blanks(o: Opening) -> dict[str, list[int]]:

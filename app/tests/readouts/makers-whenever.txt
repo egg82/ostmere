@@ -5,11 +5,6 @@
   ashed_ground
     d6-9   made       3  at cap   0%  n3_ash_ground 100
     d10+   made      16  at cap   0%  n3_ash_ground 100
-  b10_floor
-    d6-9   made       4  at cap   0%  b10_floor 100
-    d10+   made     124  at cap   0%  b10_floor 100
-  b12_floor
-    d10+   made      88  at cap   0%  b12_floor 100
   b9_clock
     d10+   made     116  at cap   0%  b9_clock 100
   bay
@@ -204,8 +199,6 @@
     d3-5   made      80  at cap   6%  sign_2h 100
     d6-9   made    1920  at cap 100%  sign_2h 100
     d10+   made    2480  at cap 100%  sign_2h 100
-  sign_clock
-    d10+   made      56  at cap   0%  sign_clock 100
   smoked
     d1-2   made      73  at cap  17%  smoke_catch 96, smoke_roots 4
     d3-5   made     216  at cap   0%  smoke_catch 100

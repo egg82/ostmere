@@ -73,9 +73,9 @@ def test_a_text_with_a_slot_too_few_or_too_many_is_caught(content: Content):
 
 
 HIDDEN = {
-    "ask_wait", "b10_floor", "b9_clock", "drift_clock", "drift_left", "e2_clock", "roof_ash", "wind_left",
+    "ask_wait", "b9_clock", "drift_clock", "drift_left", "e2_clock", "roof_ash", "wind_left",
     "guard_made", "night_12", "stranger_clock", "z1_clock",
-    "b12_floor", "bear_season", "dig_clock", "morning_13", "night_14", "sign_clock",
+    "bear_season", "dig_clock", "morning_13", "night_14",
     "clear_clock", "frost_left", "grow_left", "night_15", "rime", "roof_wind_left", "meals",
 }
 
