@@ -100,6 +100,8 @@ p.catching-up[hidden] { display: none; }
 .kept-list { position: absolute; z-index: 5; top: 100%; right: 0; min-width: 11rem; max-width: min(18rem, 90vw); margin: .25rem 0 0; padding: .4rem .7rem; list-style: none; font-size: var(--t-meta); line-height: 1.35; color: var(--ink); background: var(--raise); border-radius: 2px; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .55); }
 .kept-list[hidden] { display: none; }
 .kept-list li { padding: .2rem 0; }
+.kept-name, .kept-effect { display: block; }
+.kept-effect { color: var(--ink-dim); }
 .kept .new-dot { top: .35rem; left: auto; right: -.6rem; }
 
 /* the Camp bar: the level in the title face, its bar ember (it is the player's), not a control */

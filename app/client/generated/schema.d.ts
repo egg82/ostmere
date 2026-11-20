@@ -1108,6 +1108,10 @@ export interface components {
             hint_key: string | null;
             /** Label Key */
             label_key: string | null;
+            /** Effect Key */
+            effect_key: string | null;
+            /** Change Bp */
+            change_bp: number[];
             feature_card: components["schemas"]["FeatureCard"] | null;
         };
         /** FeedbackRequest */

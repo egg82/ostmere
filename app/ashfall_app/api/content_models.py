@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from .fight_models import SideInfo as SideInfo, ThreatInfo as ThreatInfo
+from .feature_models import FeatureCard as FeatureCard, FeatureInfo
 from .find_models import FindInfo as FindInfo
 from .camp_models import CampInfo, CampLevel as CampLevel
 from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, NoteInfo as NoteInfo, Section as Section
@@ -206,23 +207,6 @@ class ChipInfo(BaseModel):
     whatever outcome also shows it)."""
     offered_after: Unlock | None
     """Drawn only once view.unlocked holds this (its cure is on screen), as an OrderCard's offered_after."""
-
-
-class FeatureCard(BaseModel):
-    title_key: str
-    line_keys: list[str]
-    button_key: str
-    """Its one button, which puts the card away."""
-
-
-class FeatureInfo(BaseModel):
-    feature: str
-    hint_key: str | None
-    """A banner shown once when the feature unlocks."""
-    label_key: str | None
-    """A thing the player carries, shown with the chips once the feature unlocks."""
-    feature_card: FeatureCard | None
-    """A card shown once when the feature unlocks, after what came with it (CONTRACT.txt, "A feature's card")."""
 
 
 class AimInfo(BaseModel):

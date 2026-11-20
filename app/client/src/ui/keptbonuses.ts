@@ -1,5 +1,6 @@
 // The camp header's one control for the permanent bonuses carried (FeatureInfo.label_key; chips are the passing states,
-// ui/chipnode.ts): a count that opens their list. The header keeps what changes; these only ever grow, and every figure
+// ui/chipnode.ts): a count that opens their list, each bonus with what it does (FeatureInfo.effect_key, figured as an
+// answer's cost is). The header keeps what changes; these only ever grow, and every figure
 // that uses them counts them whether or not the list is open.
 import type { Content } from "../api/types";
 import type { Catalog } from "../game/catalog";
@@ -39,8 +40,10 @@ export class KeptBonuses {
     if (ids.length === 0) this.toggle(false);
     setText(this.button, this.catalog.text.fill(UI.keptBonuses, { n: String(ids.length) }));
     this.list.replaceChildren(...features.map((f) => {
-      const li = el("li", "", this.catalog.label(f.label_key));
+      const li = el("li", "");
       li.dataset["keep"] = f.feature;
+      li.append(el("span", "kept-name", this.catalog.label(f.label_key)));
+      if (f.effect_key) li.append(el("span", "kept-effect", this.catalog.text.fill(f.effect_key, this.catalog.format.figures(f.change_bp))));
       return li;
     }));
     if (first) this.arrive(this.root, ids[0]!);

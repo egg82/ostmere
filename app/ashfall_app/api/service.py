@@ -10,7 +10,6 @@ from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
 from ..opening.makers import card_makes, card_takes, made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
-from ..opening.feature_entries import FeatureCardEntry
 from ..opening.refs import outcomes
 from ..opening.stake_checks import reach_modifiers, reach_stops
 from ..opening.schema import Opening
@@ -19,6 +18,8 @@ from ..saves.interface import Played, Ruleset
 from ..saves.journal import ComposedDay
 from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
+from .changes import changes as _changes
+from .feature_infos import feature_info
 from .goalrows import goal_rows
 from .lane_infos import lane_infos, later_labels
 from .mixrows import MixNumbers
@@ -155,9 +156,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                on_line_key=c.on_line_key, off_line_key=c.off_line_key,
                                offered_after=None if c.offered_after is None
                                else convert.unlock(authored.unlock(c.offered_after))) for c in o.chips],
-        feature_infos=[cm.FeatureInfo(feature=f.id, hint_key=f.hint_key, label_key=f.label_key,
-                                      feature_card=_card(f.card))
-                       for f in o.features],
+        feature_infos=[feature_info(o, f) for f in o.features],
         order_cards=[cm.OrderCard(
             store=c.store, when=convert.condition(authored.condition(c.when, cards)),
             then=_card_verb(c),
@@ -218,12 +217,6 @@ def _journal(o: Opening) -> cm.JournalInfo | None:
         for x in o.entries])
 
 
-def _changes(mods: list[ModifierEntry]) -> list[int]:
-    """The modifiers' signed changes in basis points (a multiplier of 11000 is +1000, an addition of 5000 is +5000),
-    each distinct value once in authored order: what a text's {pct} and {pct_b} slots are filled from."""
-    return list(dict.fromkeys(m.amount_bp - (e.BP if m.kind == "mul_bp" else 0) for m in mods))
-
-
 def _kept_infos(c: CardEntry, o: Opening) -> list[cm.KeptInfo]:
     slots = _card_slots(c, o)
     return [cm.KeptInfo(side=w.side, lane=w.lane, amount_bp=w.amount_bp, slot=slots.index((w.amount_bp, True))) for w in c.while_running]
@@ -277,12 +270,6 @@ def _named(mods: list[ModifierEntry], cards: set[str]) -> list[w.Unlock]:
         if m.store is not None:
             found.append(w.Unlock(category=w.UnlockKind.STORE, id=m.store))
     return list({(u.category, u.id): u for u in found}.values())
-
-
-def _card(card: FeatureCardEntry | None) -> cm.FeatureCard | None:
-    if card is None:
-        return None
-    return cm.FeatureCard(title_key=card.title_key, line_keys=list(card.line_keys), button_key=card.button_key)
 
 
 def _units_or_none(items: int | None) -> int | None:

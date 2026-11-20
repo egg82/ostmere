@@ -3299,6 +3299,24 @@
             ],
             "title": "Label Key"
           },
+          "effect_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effect Key"
+          },
+          "change_bp": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Change Bp"
+          },
           "feature_card": {
             "anyOf": [
               {
@@ -3315,6 +3333,8 @@
           "feature",
           "hint_key",
           "label_key",
+          "effect_key",
+          "change_bp",
           "feature_card"
         ],
         "title": "FeatureInfo"
