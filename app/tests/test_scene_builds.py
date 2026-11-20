@@ -12,6 +12,7 @@ sys.path.insert(0, str(SCENE))
 import builds   # tools/scene, on the path from the line above
 import output
 from output import Entry
+from stages import STAGES
 
 
 def entry(layer_id: str, x: int = 0, blend: str = "") -> Entry:
@@ -43,6 +44,7 @@ def scene(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, cellar_at: int) -> li
     """Every classified layer as a 1px sprite far apart, and the cellar and the dry stack 10x10 with the cellar at
     `cellar_at`."""
     monkeypatch.setattr(output, "OUT", tmp_path)
+    monkeypatch.setattr(output, "STAGES", dict(list(STAGES.items())[:1]))
     entries: list[Entry] = []
     for n, name in enumerate([*builds.MEMBER_OF, *builds.NOT_BUILDS]):
         big = name in ("cellar_1", "dry_wood_1")
@@ -59,11 +61,12 @@ def test_builds_drawn_over_each_other_fail_the_check(tmp_path: Path, monkeypatch
         output.check_builds(scene(tmp_path, monkeypatch, cellar_at=5))
 
 
-def test_the_check_passes_when_the_builds_are_clear_or_the_overlap_is_held(tmp_path: Path,
-                                                                         monkeypatch: pytest.MonkeyPatch):
-    """Controls: the cellar clear of the stack passes with nothing held; on it, it passes while the pair is held."""
+def test_the_check_passes_when_the_builds_are_clear(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(builds, "HELD_CROWDED", frozenset[tuple[str, str]]())
     output.check_builds(scene(tmp_path, monkeypatch, cellar_at=10))
+
+
+def test_the_check_passes_while_the_overlap_is_held(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(builds, "HELD_CROWDED", frozenset[tuple[str, str]]({("cellar", "dry_wood_1")}))
     output.check_builds(scene(tmp_path, monkeypatch, cellar_at=5))
 
