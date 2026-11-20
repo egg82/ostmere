@@ -1,7 +1,5 @@
 """The dry rule's cost, as built (engine DESIGN.txt, "Pause"): it pauses one consumer at a time and reads the store's
-net after each, but rebuilds the save once, when it is done. A running-mix change clears every pause and the stores
-that ran dry pause their consumers again at that instant, so on a save with several stores held empty for good this
-rule runs at most instants (issue 400)."""
+net after each, but rebuilds the save once, when it is done."""
 import pytest
 
 from ashfall_app.engine import (

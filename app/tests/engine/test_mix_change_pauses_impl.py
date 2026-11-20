@@ -30,7 +30,6 @@ def world(fill: int) -> tuple[Rules, Save]:
     return r, decide(s, r, 0, SwitchMix(MixId("a")))
 
 
-@pytest.mark.xfail(strict=True, reason="a mix change clears every pause")
 def test_a_mix_change_leaves_a_refilling_store_s_pause_until_its_resume():
     """x refills at a quarter of the eater's cost, so it empties at 4,800 s and an hour of the eater's cost is back at
     19,200 s. A switch at 7,200 s, with x a sixth refilled, leaves the eater paused; it resumes at 19,200 s and not
@@ -43,23 +42,22 @@ def test_a_mix_change_leaves_a_refilling_store_s_pause_until_its_resume():
     assert advance(s, r, 19_200).pauses == ()
 
 
-@pytest.mark.xfail(strict=True, reason="a mix change clears every pause")
 def test_a_mix_change_rebuilds_once_with_a_store_held_empty_for_good(monkeypatch: pytest.MonkeyPatch):
     """Nothing refills x: the switch keeps the eater's pause, so the dry rule has nothing to do at that instant."""
     r, s = world(0)
     s = advance(s, r, 7200)
     calls: list[str] = []
-    for mod in (decisions, handlers):
-        real = mod.rebuild
+    real = decisions.rebuild
 
-        def counted(save: Save, rules: Rules, real=real, name=mod.__name__) -> Save:
-            calls.append(name)
-            return real(save, rules)
+    def counted(save: Save, rules: Rules) -> Save:
+        calls.append(str(save.time))
+        return real(save, rules)
 
-        monkeypatch.setattr(mod, "rebuild", counted)
+    monkeypatch.setattr(decisions, "rebuild", counted)
+    monkeypatch.setattr(handlers, "rebuild", counted)
     s = decide(s, r, 7200, SwitchMix(MixId("b")))
     assert [p.runner for p in s.pauses] == [EAT]
-    assert calls == ["ashfall_app.engine.decisions"]
+    assert calls == ["7200"]
 
 
 def test_a_mix_change_clears_a_pause_on_a_store_its_cards_touch():
