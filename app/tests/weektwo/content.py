@@ -90,6 +90,7 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("ring_closed")),
         Split("n2", (("n2_stakes", 5000), ("n2_watch", 5000)), card("make_hut")),
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
+        Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
@@ -104,6 +105,7 @@ SHARP = WeekTwoKnobs(
         Split("n2", (("n2_forage", 10000),), feature("ring_closed")),
         Split("n2", (("n2_stakes", 10000),), card("make_hut")),
         Split("n2", (("n2_watch", 10000),), feature("family_joined")),
+        Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
     ))
 KNOBS = {"sharp": SHARP}
 """Each route's split; a route not named follows typical."""
