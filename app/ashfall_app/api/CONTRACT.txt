@@ -1600,11 +1600,8 @@ THE TOWN'S MIX
     rule pointed at it.
   - teach it once, the first time the strip shows, with a lesson on the strip and the person's page
     (decisions.md, "Lessons"), skippable and never repeated in a save, kept in the save as other lessons are.
-  - in the Rules tab, once view.mixes holds a second town mix, list the rules whose switch_mix names a town mix under
-    ui.town.title, in view.orders order, and word an always one as ui.rule.town_always {mix}; a new town rule goes
-    immediately before the town's first always rule. With one town mix a town rule has nothing to switch to, so the
-    page draws none of them and offers no new one (the always rule still runs). A greyed town mix is drawn as the
-    hands' greyed mix is: the strip says it stopped and which card retired.
+  - draw no town rule in the Rules tab and offer no new one: the town's always rule runs the container and is listed
+    nowhere. A greyed town mix is drawn as the hands' greyed mix is: the strip says it stopped and which card retired.
   - name the town everywhere by one name: its tab, its view's title, the Rules page's switch and heading, and a mix in
     Content.game_mix_ids. The name is the text of the label_key of the last of Content.town_later_labels
     ([LaneLabel], as a lane's later_labels) whose `after` view.unlocked holds, else ui.town.title.
@@ -1623,7 +1620,6 @@ THE TOWN'S MIX
 
   New text keys (Content.text_entries): ui.town.title   the strip's heading
                                     ui.town.idle {person}   a person's unshared remainder
-                                    ui.rule.town_always {mix}   the town's always rule
                                     ui.mix.name_reserved {prefix} | ui.mix.name_taken   the mix editor's name refused
   The lesson's lines are content text keys like the other lessons'.
 

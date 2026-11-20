@@ -1,11 +1,11 @@
 // The Rules page's Mine | Camp switch (docs/decisions/mixes.md, "Mine and Camp"; ui/ruleswitch.ts, game/ruleside.ts):
 // a rule is on the side of the lane its action runs on, the switch shows only once a second person has hands and keeps
 // its side per device, a new rule offers its side's tasks alone, and a rule the player saves lands on its own side.
-// The views are the engine's own town (fixtures/town.ts) over the day-two page, a second town mix making the town's rules show.
+// The views are the engine's own town (fixtures/town.ts) over the day-two page.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
-import { townStep, withSecondMix } from "../fixtures/town";
+import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import type { SideKept } from "../src/app/ruleside";
 import { landedSide, ruleSideOf, type RuleSide } from "../src/game/ruleside";
@@ -19,7 +19,7 @@ function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const both = withSecondMix(townStep("town").view);
+const both = townStep("town").view;
 const alone = fixtureStep("restrule", 0).view;   // the player alone: no person has hands
 const memory = (side: RuleSide = "mine"): SideKept & { side: RuleSide } => ({ side, get() { return this.side; }, set(s) { this.side = s; } });
 
@@ -49,10 +49,10 @@ const personRule = both.orders.findIndex((o) => o.then.kind === "tap_card" && ca
 {  // a save with a hands rule and a town rule puts each under its side
   const mine = rules(both, memory("mine")).root;
   expect("Mine lists the hands rule", ids(mine.querySelectorAll(".rules-list .rules-row")).includes(String(handsRule)), true);
-  expect("Mine has no town rule", ids(mine.querySelectorAll(".town-rule")), []);
+  expect("Mine has no town rule", ids(mine.querySelectorAll(".rules-row")).includes(String(townRule)), false);
   expect("Mine has no person's task", mine.querySelectorAll(".task-rule").length, 0);
   const camp = rules(both, memory("camp")).root;
-  expect("Camp lists the town rule", ids(camp.querySelectorAll(".town-rule")), [String(townRule)]);
+  expect("Camp has no town rule", ids(camp.querySelectorAll(".rules-row")).includes(String(townRule)), false);
   expect("Camp lists the person's task", camp.querySelectorAll(".task-rule").length > 0, true);
   expect("Camp has no hands rule", ids(camp.querySelectorAll(".rules-row")).includes(String(handsRule)), false);
   expect("Camp has no Otherwise", camp.querySelectorAll(".otherwise").length, 0);
@@ -71,8 +71,8 @@ const personRule = both.orders.findIndex((o) => o.then.kind === "tap_card" && ca
   expect("Mine is pressed", root.querySelector(".rules-side-pick[aria-pressed=\"true\"]")?.dataset.side, "mine");
   pick(root, "camp");
   expect("kept", kept.side, "camp");
-  expect("Camp is shown", ids(root.querySelectorAll(".town-rule")), [String(townRule)]);
-  expect("a new page on this device opens on Camp", rules(both, kept).root.querySelectorAll(".town-rule").length, 1);
+  expect("Camp is shown", root.querySelectorAll(".task-rule").length > 0, true);
+  expect("a new page on this device opens on Camp", rules(both, kept).root.querySelectorAll(".task-rule").length > 0, true);
 }
 
 {  // a new rule offers its side's tasks alone; Camp has one New rule, asking who it is for by name
@@ -85,13 +85,10 @@ const personRule = both.orders.findIndex((o) => o.then.kind === "tap_card" && ca
   const doing = (root: FakeEl): string[] => root.querySelectorAll(".cond-task").map((b) => b.dataset.card ?? "");
   const camp = open("camp");
   const who = camp.querySelectorAll(".rules-who button");
-  expect("Camp asks for the town and each person by name", who.map((b) => b.textContent), ["Camp", ...people(cat, both).map((l) => cat.laneLabel(l, both))]);
-  who[1]?.click();
+  expect("Camp asks for each person by name", who.map((b) => b.textContent), people(cat, both).map((l) => cat.laneLabel(l, both)));
+  who[0]?.click();
   const first = people(cat, both)[0]!;
   expect("a person's New rule offers that person's tasks alone", doing(camp).length > 0 && doing(camp).every((c) => cat.laneOf(c) === first), true);
-  const town = open("camp");
-  town.querySelectorAll(".rules-who button")[0]?.click();
-  expect("the town's offers its mixes", town.querySelectorAll(".cond-mix").length > 0, true);
   const mine = doing(open("mine"));
   expect("Mine offers tasks", mine.length > 0, true);
   expect("Mine offers none of a person's", mine.some((c) => cat.ruled(c)), false);

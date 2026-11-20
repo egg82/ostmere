@@ -39,7 +39,6 @@ const plus = (v: View, cards: string[], mixes: View["mixes"] = []): View =>
 const half = fixtureContent.scales.bp / 2;
 const town = (id: string, a: string, b: string) => ({ id, components: [{ kind: "card_share" as const, card: a, share_bp: half }, { kind: "card_share" as const, card: b, share_bp: half }] });
 const crew = town("Town crew", "chop", "haul");
-const crew2 = town("Town rest", "chop", "fetch");
 /** `v` with rule `i`'s then and or_else set. */
 const rule = (v: View, i: number, then: OrderVerb, or_else: OrderVerb[], unless: Order["unless"] = v.orders[i]!.unless): View =>
   ({ ...v, orders: v.orders.map((o, j) => (j === i ? { ...o, then, or_else, unless } : o)) });
@@ -100,12 +99,6 @@ check("28 a tap on a lane is offered that lane's tasks alone, never a mix", () =
   const r = rig(plus(rule(guarded, 3, tap("smoke_catch"), []), ["smoke_catch", "smoke_roots", "hew", "shelter"], [crew]));
   const got = offered(openRule(r, 3));
   expect("only the other smoke task", got, ["smoke_roots"]);
-});
-
-check("28 a town mix is offered the town's mixes alone", () => {
-  const view = plus(rule(base, 0, mix("Town crew"), []), [], [crew, crew2]);
-  const got = offered(openRule(rig(view), 0));
-  expect("the other town mix", got, ["Town rest"]);
 });
 
 check("28 the first action is not offered as its own fallback, nor one already listed", () => {

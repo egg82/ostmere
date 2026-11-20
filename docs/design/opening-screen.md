@@ -201,8 +201,7 @@ runs now while one of their cards is stopped, and the bar of the card they work.
 person has not joined (`ui/lanerows.ts`, below), in the same row form (`ui/personrow.ts`) with its own Change where a
 split would be. On a desktop what each works sits over its card's bar, on the right. On a phone the ledger and skills follow. Change opens the person's page in
 the view's place. These rows are their one home: the main screen and the rail never list anyone's jobs, and the Rules
-tab keeps the town's rules, not its people, and only once the town has a second mix to switch to (with one, a town rule
-has nothing to do, so neither they nor a New rule for them are drawn). A row arriving while another tab is open dots Town (the new-card dot), never
+tab keeps the rules of their tasks, not their people. A row arriving while another tab is open dots Town (the new-card dot), never
 on the first view.
 
 At a town's size the view scrolls in its own column with the panel's fade at its foot; the rail keeps its one Town

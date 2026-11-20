@@ -127,8 +127,8 @@ and you tune it, then hit go.
   discovery stays the way in.
 - **The Rules page switches between Mine and Camp** (owner, 2026-11-15): once a second person has hands, a switch at the top of the
   list shows one side at a time, the player's own rules or everyone else's, with the same editor and controls; the camp's
-  rules are as first-class as the player's. A rule's side is the lane its action runs on (a task on a person's lane, or a
-  town mix, `engine.plan.mix_layer`), never its wording; a new rule offers its side's tasks, a person's by name on Camp. The
+  rules are as first-class as the player's. A rule's side is the lane its action runs on (a task on a person's lane),
+  never its wording; a new rule offers its side's tasks, a person's by name on Camp. The
   side is kept per device and follows a rule the player adds or opens (`app/client/src/game/ruleside.ts`).
 - **Lessons are kept per save, and a player who knows the game can turn them off**. A new game
   teaches everything again from each lesson's own moment, whatever another game kept; one account-wide setting, on by

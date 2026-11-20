@@ -10,7 +10,6 @@ import type { ChipInfo, Condition, Order, View } from "../api/types";
 import { choiceVerb } from "../game/elsechoices";
 import { actionWords, chipOf, removeRule, ruleDecisions, ruleExists, rulesFull, savedVerb } from "../game/orders";
 import type { RuleSide } from "../game/ruleside";
-import { townNewRule } from "../game/town";
 import { startRule } from "../game/levelrule";
 import { chosen, doChoices, storeItems, type DoChoice } from "../game/ruleoffers";
 import { subjectKey, type SubjectRule } from "../game/subjectrule";
@@ -70,13 +69,12 @@ export class ConditionEditor {
   }
 
   /** A new rule, nothing chosen yet: the simple view. Given an offered condition (a guided rule), it starts at that
-   * condition's levels, a chip's as the chip. `town`: a rule on the town, which does one of the town's mixes, so it
-   * opens on the full editor, where the mixes are. */
-  openNew(view: View, offered?: Condition, town = false, scope?: RuleSide, lane?: string): void {
-    this.full = town;
+   * condition's levels, a chip's as the chip. */
+  openNew(view: View, offered?: Condition, scope?: RuleSide, lane?: string): void {
+    this.full = false;
     const rule = offered ? readRule(offered, this.ctx.catalog.content.scales.quantity_per_item, (s) => this.ctx.catalog.isLevel(s)) : null;
     const opened = offered && rule && chipOf(this.ctx.catalog, offered) ? { rule, when: offered } : undefined;
-    this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, town, scope, lane, unless: [], orElse: [] });
+    this.start(view, { index: null, then: null, rule: rule ?? defaultRule("", "below", 0), opened, scope, lane, unless: [], orElse: [] });
   }
 
   /** Rule `index` as conditiondraft.editDraft opens it, in the full editor; false for a rule it does not open. */
@@ -135,7 +133,7 @@ export class ConditionEditor {
 
   /** Do: the tasks (and, in the full editor, the saved mixes) as one row. */
   private drawDo(view: View): void {
-    this.does.replaceChildren(...doRow(this.ctx.catalog, view, doChoices(this.ctx.catalog, view, this.full, this.draft?.then ?? null, this.draft?.town === true, this.draft?.scope, this.draft?.lane), (c) => this.setDo(c)));
+    this.does.replaceChildren(...doRow(this.ctx.catalog, view, doChoices(this.ctx.catalog, view, this.full, this.draft?.then ?? null, this.draft?.scope, this.draft?.lane), (c) => this.setDo(c)));
   }
 
   private setDo(c: DoChoice): void {
@@ -233,7 +231,7 @@ export class ConditionEditor {
     this.orElse.draw(view, draft.then, draft.orElse, this.full);
     this.drawSentence(view);
     this.drawFact();
-    this.foot.showDry(view, draft.index, this.order(), draft.town === true);
+    this.foot.showDry(view, draft.index, this.order());
   }
 
   /** The foot's sentence: in the quick add, the rule as one line of choices (condquick.ts), else as it reads. */
@@ -251,7 +249,7 @@ export class ConditionEditor {
   private async preview(): Promise<void> {
     const { draft, view } = this;
     const then = draft?.then && view ? savedVerb(view, this.ctx.catalog, draft.then) : null;
-    if (!this.full || then?.kind !== "switch_mix" || draft?.chip || draft?.town || this.chipNow()) return;   // a town mix is set by a rule alone: nothing to run for a number
+    if (!this.full || then?.kind !== "switch_mix" || draft?.chip || this.chipNow()) return;
     if (!view?.ledger.some((l) => l.store === draft?.rule.store)) return;
     await this.fact.ask(then.mix_id, () => this.drawFact());
   }
@@ -268,7 +266,7 @@ export class ConditionEditor {
     tapFeedback();
     if (draft.index === null) noteOrderSet();
     else noteRuleChanged();
-    const decisions = draft.town && draft.index === null ? [townNewRule(view, order)] : ruleDecisions(view, this.ctx.catalog, draft.index, order);
+    const decisions = ruleDecisions(view, this.ctx.catalog, draft.index, order);
     for (const d of decisions) this.ctx.actions.decide(d);
     this.done();
   }

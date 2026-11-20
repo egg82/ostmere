@@ -23,7 +23,7 @@ export function quickTest(catalog: Catalog, view: View, then: OrderVerb | null, 
 export function quickTask(catalog: Catalog, view: View, draft: Draft, chip: boolean): string | null {
   const task = taskOf(catalog, view, draft.then);
   const { n, m } = draft.rule;
-  if (chip || draft.chip || draft.subject || draft.town || draft.unless.length > 0 || draft.orElse.length > 0 || m === null || isShare(n) === catalog.isLevel(draft.rule.store) || isShare(m) === catalog.isLevel(draft.rule.store) || task === null) return null;
+  if (chip || draft.chip || draft.subject || draft.unless.length > 0 || draft.orElse.length > 0 || m === null || isShare(n) === catalog.isLevel(draft.rule.store) || isShare(m) === catalog.isLevel(draft.rule.store) || task === null) return null;
   return whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores.includes(draft.rule.store) ? task : null;
 }
 
@@ -34,7 +34,7 @@ export function quickParts(catalog: Catalog, view: View, draft: Draft, chip: boo
   const { rule } = draft;
   if (task === null || rule.m === null) return null;
   const stores = whenChoices(catalog, view, false, ruleCards(view, draft.then), null).stores;
-  const tasks = doChoices(catalog, view, false, draft.then, false, draft.scope, draft.lane).flatMap((c) => (c.kind === "task" ? [c.card] : []));
+  const tasks = doChoices(catalog, view, false, draft.then, draft.scope, draft.lane).flatMap((c) => (c.kind === "task" ? [c.card] : []));
   const m = rule.m;
   const can = (which: "n" | "m", l: Level) => sameLevel(tryRule({ ...rule, m, [which]: l }, cap)?.[which] ?? null, l);
   const items = catalog.isLevel(rule.store) ? cap : null;

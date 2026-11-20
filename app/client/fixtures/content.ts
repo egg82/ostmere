@@ -267,7 +267,7 @@ const text: Record<string, string> = {
   "ui.lesson.cap_levels": "Set when the rule comes on and when it lets go.",
   "ui.lesson.cap_reaches": "Pick reaches. The rule comes on once {store} is full.",
   "ui.lesson.cap_do": "Pick what your hands do instead.",
-  "ui.town.title": "Camp", "ui.town.idle": "{person}, idle", "ui.rule.town_always": "Otherwise, {mix}",
+  "ui.town.title": "Camp", "ui.town.idle": "{person}, idle",
   "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Drag a divider to change a share.",
   "ui.lesson.town_runs": "Each person shows what they are doing now.",
   "lane.mason": "Mason", "card.hew": "Hew stone", "card.carve": "Carve beams",

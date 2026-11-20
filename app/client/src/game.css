@@ -735,10 +735,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .rules-label { margin-right: .2rem; font-size: var(--t-meta); color: var(--ink); }
 .rules-list, .rules-lane { display: flex; flex-direction: column; gap: 2px; }
 .rules-lane .panel-heading { margin: .3rem 0 .1rem; }
-.rules-town .rules-new { margin-bottom: .5rem; }   /* the next section (a lane) starts under it, not against it */
 .rules-row { display: flex; align-items: center; gap: .3rem; min-height: 2.9rem; padding: .3rem .4rem .3rem .1rem; border-bottom: 1px solid var(--rule); }
 .rules-row.greyed .rule-slot, .rules-row.greyed .rule-slot-name, .rules-row.greyed .rule-when { opacity: .55; }
-.town-rule .rule-slot-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-hi); }
 .rules-row .selector-dot { flex: none; width: .8rem; }
 .rules-row .selector-dot:empty { display: none; }   /* only the rule on now carries it */
 .rule-handle { flex: none; width: 1.8rem; height: 2.75rem; padding: 0; font: inherit; font-size: var(--t-display); line-height: 1; color: var(--ink); background: transparent; border: 0; cursor: grab; touch-action: none; }
