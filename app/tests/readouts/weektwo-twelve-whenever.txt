@@ -1,4 +1,4 @@
-beats whenever (pace_scale 1): B12 day 12, target_day 13
+beats whenever (pace_scale 1): B12 day 12.01, target_day 13
   away V47->V48: 3 ['trigger t_b12', 'trigger t_bear_sign', 'trigger offer_o_spoil']
   away V48->V49: 1 ['trigger offer_o_shaft']
   away V49->V50: 2 ['trigger t_lamps', 'trigger offer_o_cold_air']
@@ -12,7 +12,7 @@ day    line feature    chip   store   skill    card   level  total
   2      20       4       2       3       0       6       2     37
   3       7       0       0       0       0       0       4     11
   4      17       3       0       0       0       2       2     24
-  5      15       4       0       0       0      37       2     58
+  5      17       4       0       0       0      48       2     71
   6      16       3       2       2       0       4       0     27
   7       7       4       0       0       0      10       3     24
   8       8       4       0       2       0       3       2     19

@@ -43,7 +43,7 @@
     L20   7.65 d  gap   2.33 d
     L21   9.93 d  gap   2.28 d
     top L22: not by the edge
-  foraging: level 10 of 22 (0.94% of the phase)
+  foraging: level 10 of 22 (0.90% of the phase)
     L2    0.05 d  gap   0.05 d
     L3    0.14 d  gap   0.10 d
     L4    0.34 d  gap   0.19 d
@@ -54,13 +54,14 @@
     L9    8.20 d  gap   3.44 d
     L10   8.65 d  gap   0.45 d
     top L22: not by the edge
-  cooking: level 7 of 22 (0.29% of the phase)
+  cooking: level 8 of 22 (0.29% of the phase)
     L2    0.92 d  gap   0.92 d
     L3    1.48 d  gap   0.56 d
     L4    2.60 d  gap   1.12 d
     L5    5.15 d  gap   2.55 d
     L6    7.66 d  gap   2.51 d
     L7   10.01 d  gap   2.35 d
+    L8   13.75 d  gap   3.74 d
     top L22: not by the edge
   arcana: level 12 of 22 (2.13% of the phase)
     L2    4.21 d  gap   4.21 d
@@ -89,6 +90,8 @@
     cut_stakes               .   .   .   .   .   .   .  15  13  17  16  13   .   .
     field_track              .  24  39  31  29  37  36  30  23  18  17  16  13  22
     fungus_stew              .   .   .   .   .   .   .   2   3   3   2   2   2   2
+    g_field_forage           .   .   .   .   .   .   .   .   .   .  67 117 200 200
+    g_hearth_pick            .   .   .   .   .   .   .   .   .   .  33 100 100 100
     gap_fire                 .   .   .   .   .   .   .   .  17   .   .   .   .   .
     hand_on_stone            .   .   .   .   5   7   7   6   5   8  14  14  13  14
     hunt_bear                .   .   .   .   .   .   .   .   .   .   .   5  19   .
@@ -106,11 +109,8 @@
     n3_pick                  .   .   .   .   .   .   .  38  40  40  40  40  40  40
     n4_cord                  .   .   .   .   .   .   .  17  17   .   .   .   .   .
     n4_watch                 .   .   .   .  50 100 100 100 100 100 100 100 100 100
-    n5_forage                .   .   .   .   .   .   .   .   .   .  33 100 100 100
     n6_stakes                .   .   .   .   .   .   .   .   .   .   .  83   .   .
-    n6_watch                 .   .   .   .   .   .   .   .   .   .  33 100 100 100
     n7_guard                 .   .   .   .   .   .   .   .   .   .   . 100 100 100
-    n7_pick                  .   .   .   .   .   .   .   .   .   .  33 100 100 100
     palisade                 .   .   .   .   .   .   .   .   .   .  17   .   .   .
     pot_shelf                .   .   .  17   .   .   .   .   .   .   .   .   .   .
     rack_roof                .   .  17   .   .   .   .   .   .   .   .   .   .   .
@@ -151,7 +151,7 @@
     shape 7, wins 1: cut_stakes 15, field_track 30, hand_on_stone 6, hunt_wolf 13, rest 12, scavenge 12, woodcutting 12
     shape 8, wins 10: cut_stakes 15, field_track 29, fungus_stew 3, hand_on_stone 6, hunt_wolf 12, rest 12, scavenge 12, woodcutting 12
     shape 9, wins 17: cut_stakes 17, field_track 18, fungus_stew 3, hand_on_stone 7, hunt_wolf 14, rest 14, scavenge 14, woodcutting 14
-    shape 10, wins 1: cut_stakes 13, field_track 14, fungus_stew 2, hand_on_stone 12, hunt_bear 15, hunt_wolf 11, rest 11, scavenge 11, woodcutting 11
-    shape 11, wins 13: field_track 17, fungus_stew 2, hand_on_stone 14, hunt_bear 17, hunt_wolf 13, rest 12, scavenge 12, woodcutting 12
+    shape 10, wins 2: cut_stakes 13, field_track 14, fungus_stew 2, hand_on_stone 12, hunt_bear 15, hunt_wolf 11, rest 11, scavenge 11, woodcutting 11
+    shape 11, wins 12: field_track 17, fungus_stew 2, hand_on_stone 14, hunt_bear 17, hunt_wolf 13, rest 12, scavenge 12, woodcutting 12
     shape 12, wins 0: field_track 22, fungus_stew 2, hand_on_stone 13, hunt_wolf 16, rest 15, scavenge 15, woodcutting 15
-  one shape always wins: no, shape 1 wins 15, shape 3 wins 9, shape 5 wins 5, shape 6 wins 12, shape 7 wins 1, shape 8 wins 10, shape 9 wins 17, shape 10 wins 1, shape 11 wins 13
+  one shape always wins: no, shape 1 wins 15, shape 3 wins 9, shape 5 wins 5, shape 6 wins 12, shape 7 wins 1, shape 8 wins 10, shape 9 wins 17, shape 10 wins 2, shape 11 wins 12

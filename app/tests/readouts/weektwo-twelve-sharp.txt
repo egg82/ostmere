@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B12 day 9.95, target_day 13
+beats sharp (pace_scale 1): B12 day 9.94, target_day 13
   away V84->V85: 1 ['trigger offer_o_spoil']
   away V85->V86: 0 []
   away V86->V87: 1 ['trigger t_ring_open']
@@ -40,8 +40,8 @@ days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       8       7       0       4       0      14       2     35
   2      31       5       2       2       0       7       3     50
-  3      21       4       0       0       0      36       3     64
+  3      23       4       0       0       0      47       3     77
   4      20       5       0       0       0       5       2     32
   5       0       2       0       2       0       1       0      5
-  6       4       1       0       0       0       9       2     16
-  7       1       0       0       0       0       0       1      2
+  6       4       1       0       0       0       9       1     15
+  7       1       0       0       0       0       0       2      3
