@@ -4,7 +4,8 @@ import pytest
 
 from ashfall_app.api.service import Game
 from ashfall_app.opening.checks import check_opening
-from ashfall_app.opening.entries import LaneLabelEntry, UnlockEntry
+from ashfall_app.opening.entries import UnlockEntry
+from ashfall_app.opening.lane_entries import LaneLabelEntry
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 

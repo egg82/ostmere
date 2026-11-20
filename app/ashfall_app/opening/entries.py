@@ -100,28 +100,6 @@ class UnlockEntry(Entry):
     teaches a mix still holding the retired card to swap it for this one."""
 
 
-class LaneLabelEntry(Entry):
-    """The lane row's label once `after` is unlocked (the last one held wins, as aims do)."""
-
-    after: UnlockEntry
-    label_key: str
-
-
-class LaneEntry(Entry):
-    """A lane besides the hands. ruled: a townsperson who works, whose task the player's rules set; its cards have no
-    skill and no XP, and fill the camp store as hands cards do (engine DESIGN.txt, "Ruled lane")."""
-
-    id: str
-    label_key: str
-    ruled: bool = False
-    later_labels: list[LaneLabelEntry] = []
-    name_key: str | None = None
-    """The person's name, as a label writes it: the page fills a text's `{<lane id>}` slot with it (api/CONTRACT.txt,
-    "Text and numbers")."""
-    told: Literal["line", "mention"] | None = None
-    """How a ruled lane's person coming and going is written: in its outcome's story line, or a day's mention (people.py)."""
-
-
 class ConditionEntry(Entry):
     """One condition in the order vocabulary. subject_kind picks the subject; `id` names it (a store, skill, card,
     action, a ruled lane for "lane_rules", or for "unlocked" the unlock's id with unlock_kind). Thresholds in whole items for stores."""
@@ -174,6 +152,19 @@ class JoinEntry(Entry):
     mix: str
     card: str | None = None
     counted: bool = False
+    own_split: bool
+    """Whether the person keeps their own split as they arrive: authored on every join, never defaulted. False needs
+    the lane to have a `group`, and `card` (if any) is then a card on that group."""
+
+
+class MarkEntry(Entry):
+    """A joined person's mark set or cleared (engine Mark): `own_split` False hands the person to their lane's `group`;
+    `card` is an uncapped card on the person's own lane, given a share when the mark is set and the town mix holds none
+    of theirs."""
+
+    lane: str
+    own_split: bool
+    card: str | None = None
 
 
 class LeaveEntry(Entry):
@@ -204,6 +195,8 @@ class OutcomeEntry(Entry):
     """Chores' cures whose orders go at a season's turn; only there (retire_checks.py)."""
     leaves: list[LeaveEntry] = []
     """Only in a trigger's or an answer's outcome, one per lane across the content (leave_checks.py)."""
+    marks: list[MarkEntry] = []
+    """Only in a trigger's or an answer's outcome (group_checks.py)."""
 
 
 class CardEntry(Entry):

@@ -13,10 +13,16 @@ class LaneDef:
     """A lane other than HANDS (declaring HANDS is invalid). It runs one tap at a time and never touches the player's
     time; only a ruled lane has a mix, the town's, once its person has joined (DESIGN.txt, "THE TOWN'S MIX"). ruled: a
     townsperson's lane, whose task the player's rules set and which the player never taps by hand (DESIGN.txt, "Ruled
-    lane")."""
+    lane").
+
+    pooled: a ruled lane that is never a person: the group its members' cards sit on (DESIGN.txt, "GROUPS (pooled
+    lanes)"). It never joins and never taps. group: on a person's ruled lane, the pooled lane that is their group. The
+    codec and the rules digest leave both out while at their defaults."""
 
     id: LaneId
     ruled: bool = False
+    pooled: bool = False
+    group: LaneId | None = None
 
 
 @dataclass(frozen=True)

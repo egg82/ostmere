@@ -21,6 +21,7 @@ from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
+from .groups import with_group_unlocks
 from .people import PeopleEntry, with_mentions
 from .checks import check_content, check_opening, check_structure
 from .line_kinds import LineKind
@@ -30,9 +31,10 @@ from .camp_entries import CampEntry, CampLevelEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LaneEntry, LaneLabelEntry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, ChipEntry, Entry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
+from .lane_entries import LaneEntry, LaneLabelEntry
 from .store_entries import StoreEntry
 from .feature_entries import AimEntry, FeatureCardEntry, FeatureEntry
 
@@ -203,7 +205,7 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         merged, end = _merged(states[-1], chapter)
         states.append(merged)
         ends.append(end)
-    states[-1] = with_mentions(states[-1])
+    states[-1] = with_group_unlocks(with_mentions(states[-1]))
     last: list[str] = [e for e in ends if e is not None][-1:]
     if last and opening.end_card is not None:
         states[-1] = _with_end_card(states[-1], last[0], opening.end_card)

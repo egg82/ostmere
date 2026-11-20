@@ -52,12 +52,12 @@ outcome = { stores = [{ store = "t_heap", items = 1 }] }
 [[triggers]]
 id = "t_q1_comes"
 when = { test = "after_time", value = 200 }
-outcome = { line_keys = ["t_l_comes"], joins = [{ lane = "t_q1", mix = "town:main" }] }
+outcome = { line_keys = ["t_l_comes"], joins = [{ lane = "t_q1", mix = "town:main", own_split = true }] }
 
 [[triggers]]
 id = "t_q2_comes"
 when = { test = "after_time", value = 300 }
-outcome = { joins = [{ lane = "t_q2", mix = "town:main" }] }
+outcome = { joins = [{ lane = "t_q2", mix = "town:main", own_split = true }] }
 
 [[triggers]]
 id = "t_q1_goes"

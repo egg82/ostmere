@@ -2,7 +2,7 @@
 rules", "The town's mix")."""
 from .. import engine as e
 from ..opening import convert as authored
-from ..opening.entries import LaneLabelEntry
+from ..opening.lane_entries import LaneLabelEntry
 from ..opening.schema import Opening
 from . import content_models as cm
 from . import convert

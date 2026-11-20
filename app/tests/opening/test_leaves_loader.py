@@ -18,7 +18,7 @@ PLANTS = (
     ("a lane left twice", "trigger t_depart: leaves t_p1, which another outcome already leaves",
      ((LEAVES, 'leaves = [{ lane = "t_p1", stops = ["t_tend"] }, { lane = "t_p1" }]'),)),
     ("a lane joined by the outcome that leaves it", "trigger t_depart: joins t_p2 in the outcome that leaves it",
-     ((LEAVES, 'leaves = [{ lane = "t_p2" }], joins = [{ lane = "t_p2", mix = "town:main" }]'),)),
+     ((LEAVES, 'leaves = [{ lane = "t_p2" }], joins = [{ lane = "t_p2", mix = "town:main", own_split = true }]'),)),
     ("a stop that is not a standing action", "trigger t_depart: leaves t_p1, stopping t_p1_work, which is not a "
      "standing action", ((LEAVES, 'leaves = [{ lane = "t_p1", stops = ["t_p1_work"] }]'),)),
     ("a card's outcome", "card t_once: only a trigger's or an answer's outcome has a person leave",

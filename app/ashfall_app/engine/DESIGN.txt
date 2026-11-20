@@ -2199,6 +2199,132 @@ KNOWN GAPS (leaves)
 - A town mix the player named in a save from before Mix.layer, if the player empties it with a SaveMix (a leave sets
   the layer), reads as HANDS: nothing had set its layer. Decided by: a save that does it.
 
+GROUPS (pooled lanes: many people who do the same work under one split; blind tests from this part alone). Where this part and an entry above disagree, this part holds. Examples
+name ids only; who is in a group, who keeps their own split and when is content's.
+
+FIT PASS
+- A group is a Type Object over people (Nystrom, Type Object): the group owns the cards its members can do and one
+  split; a person points at their group. The group never changes for a person in play (LaneDef.group is authored), so
+  there is no "can the type change" machinery, and no parent groups: nothing to share yet. What does change, the mark
+  (a person keeps their own split or not), is State on the person, not part of their type (Type Object's See Also:
+  State).
+- It extends Lanes and THE TOWN'S MIX, no new system: a group is a lane of a new kind (pooled), its split is
+  CardShares in the town mix that already holds each person's, and the one reader that turns people into runs is
+  engine/mixruns.py _town_entries. It is the share unit of "people" that THE TOWN'S MIX's KNOWN GAPS, "Pooled work",
+  asked for.
+- Nystrom's near-death attack is the typed object selectively overriding the type's behaviour, which is the mark.
+
+CHOICES (groups)
+- The data:
+  - LaneDef.pooled: bool = False. A pooled lane is ruled, is never a person, never joins or leaves, never taps, and
+    holds only uncapped cards with no XP.
+  - LaneDef.group: LaneId | None = None. On a person's ruled lane, the pooled lane that is their group. One value, so
+    one group per person. A pooled lane has no group.
+  - Join.own_split: bool = True: the person's mark as they join. True keeps every released join meaning what it did.
+  - Outcome.marks: tuple[Mark, ...] = (), Mark(lane, own_split: bool, card: CardId | None = None): sets or clears a
+    joined person's mark; allowed in a trigger's and an answer's outcome only; lands after `joins`, before `queues`.
+    `card`, as Join's, is an uncapped card on the person's own lane given BP when the mark is set and the town mix holds
+    no share of theirs.
+  - LaneState.own_split: bool = True: the mark itself, on the lane's own state ("not a Save field": the
+    PhaseState-on-SkillState precedent in PRESTIGE PHASES). Written only by a join and a Mark.
+  - Every field is left out of the codec and the rules digest while at its default. "General" is content, not an
+    engine case: content declares a pooled lane for people with no specialty and sets `group` to it.
+- How a group's split runs (engine/mixruns.py, _town_entries):
+  - Members of pooled lane G at instant t: person lanes L with LaneDef.group == G, JOINED, not LEFT, LaneState.own_split
+    False. Free members: members whose lane holds no tap.
+  - A CardShare of a card on G is basis points of EACH member's time. Its card runs at effective share
+    share_bp x free_members. Pauses, waiting, spent gains and greying are worked at the per-member share on G as a lane
+    (spent.yielded already groups by lane), and the crew factor multiplies last. No members: the share idles and is shown,
+    as a share on an unjoined lane is. Members but none free: YIELDED.
+  - The multiplier sits on the share, not on Run: Run requires 0 <= num <= den, while modified_rate takes the share as a
+    plain factor, so a share above BP is arithmetic the formula already does.
+  - Speed: a group card's work and lines read the pooled lane's own LaneSpeed(G); a member's LaneSpeed(L) applies to
+    their own cards only. One stack per card, as today: a weighted sum of members' speeds would make every member's
+    modifiers an input to another lane's rate.
+  - A marked person (own_split True) runs their CardShares on their own lane exactly as today and adds nothing to G. An
+    unmarked person's own-lane shares stay in the town mix, idle and kept; re-marked, the split they had comes back. The
+    engine never deletes a person's shares on a mark change ("a saved mix never quietly starts doing something else").
+  - A tap on a member's own lane (a one-off from a rule or an outcome) takes the whole person: free_members drops by one
+    until it lands and the group card keeps running on the rest. This is "a tap yields that person's shares" applied to
+    pooled time.
+  - Rates change only at instants that already rebuild rates: a join, a leave, a mark (an outcome instant), a tap start
+    and a tap landing. No new event kind.
+- Join (engine/joins.py): a join with own_split False sets LaneState.own_split False, still removes the lane's uncapped
+  always rules (they would yield the person for good), and gives the join's share to G instead of L: if the town mix
+  holds no share of a card on G, append CardShare(card, BP), `card` being the join's, which must be on G. So the first
+  member starts the group at a whole split, and every later member adds output under the split already set.
+- Mark (engine/marks.py): set LaneState.own_split; when setting it True and the town mix holds no share on L, append
+  CardShare(card, BP) if the mark names a card. A mark on a lane not joined, or left, changes nothing (as a join of a
+  joined lane does).
+- Verbs (engine/verbs.py, plan checks): SaveMix of a TOWN mix treats G as a lane: G's shares sum to at most BP, no
+  capped card. A card on G is accepted whether or not G has members. SetOrders, installs, starts and the queue refuse
+  any TapCard of a card on a pooled lane.
+- View (engine/view.py, viewparts.py): LaneBar gains own_split (person lanes only); CardView of a group card gains crew
+  (free_members) beside its share and run, so the page can say "x3" and the ledger's rate is the total.
+- Validation (InvalidRulesError; one message per rule): "lane {id}: a pooled lane is a ruled lane"; "lane {id}: a
+  pooled lane has no group"; "lane {id}: only a ruled lane has a group"; "lane {id}: group {g} is not a pooled lane";
+  "card {id}: a card on a pooled lane has no cap" (a pooled card with XP is refused by "a card on a ruled lane trains no
+  skill"); "{where}: taps {card}, a card on a pooled lane" for a start, an install or a queue of one; "{where}: leaves
+  {lane}, a pooled lane, which is never a person"; "{where}: only a trigger's or an answer's outcome marks a person";
+  "{where}: marks {lane}, which is not a declared person's lane"; "{where}: unmarks {lane}, which has no group";
+  "{where}: marks {lane} with {card}, which is not an uncapped card on the lane"; and "{where}: a join is not valid" for
+  a join of a pooled lane, or an unmarked join whose lane has no group or whose card is not an uncapped card on that
+  group.
+- Codec: FORMAT unchanged. The fields above are left out while default (LaneDef.pooled, LaneDef.group, Join.own_split,
+  LaneState.own_split, and Outcome.marks while empty); Mark joins the codec's outcome classes. Save's fields are
+  unchanged (app/tests/held/save_fields.json). A save written before this part decodes with every own_split True.
+- Save storage: the group's split is CardShares in the town mix (save.mixes); the mark is LaneState.own_split
+  (save.lanes). No Save field.
+- Rebase: step 3 renames a Mark's lane (LANE) and card (CARD) beside a Join's; step 6 lands a Mark whose trigger is
+  already true at the rebase instant, as it lands joins and installs. A person whose `group` content later changes
+  contributes to the new group from the rebase instant. No migration: every existing LaneState decodes with own_split
+  True, every released join with own_split True, no released lane is pooled.
+- Release lock: ids.json gains `lane_pooled` (the pooled lanes released). Forbidden: a released lane's `pooled`
+  changing either way (a pooled lane's shares are counted per member, a person lane's per person). Safe: adding a pooled
+  lane, adding cards to one, and setting or changing a released person's `group` (nothing saved names membership; their
+  time moves to the new group's split at the rebase). Moving a released card onto or off a pooled lane is already
+  forbidden (a released card may not move between ruled lanes).
+- Content (the loader): LaneEntry gains `pooled` and `group`; a pooled lane has a label_key (the group's name on
+  screen) and no name_key, group or told ("lane {id}: a pooled lane is ruled and has no name_key, group or told"); a
+  group names a pooled lane. JoinEntry gains `own_split`, required on every join (the released joins say `true`): the
+  mark is authored per person, never defaulted by arrival order or a count. OutcomeEntry gains `marks`, a list of
+  {lane, own_split, card?}, refused outside a trigger's and an answer's outcome. A join with own_split false, or a mark
+  clearing it, needs its lane to have a `group`, and the loader adds the group's cards to that outcome's unlocks (unlocks
+  only grow, so a second member's copy is a no-op): the loader expanding a lane's cards where it is joined, as town.py
+  does for person lanes.
+- Who sets and clears the mark: only content, through Join.own_split (as a person arrives) and Outcome.marks on triggers
+  and answers (the story's later moments). Never arrival order, never a headcount, never the player.
+
+INVARIANTS (groups; numbered on from 178)
+179. Crew equals people: k unmarked members of G with split S give, at every t and any slicing, the same stores and card
+    work as k marked people each running S on identical own cards. (The pooled form of 93, "Tap equals share".)
+180. A tap on one member lowers G's cards to (k-1)/k and restores them at its landing; no other lane changes.
+181. A mark change never removes or changes a CardShare: clearing then setting a mark with no decision between gives
+    the save it started from, the latch and lane state aside.
+182. Byte identity: a save and rules with no pooled lane, no Mark and every own_split True encode, rebase and advance
+    exactly as before this part (proved by the committed saves' hashes, the rules digest and the saves-forward job).
+183. Validation: InvalidRulesError for each rule listed under Validation, and for no valid rules.
+
+REJECTED, AND WHY (groups)
+- Job tags on per-person cards (each card names a job; a group's split gives each member's card of that job the share):
+  content must author one card per person per job, the copy chore this part removes, and loader-made per-person card ids
+  would be carried by the release lock for ever.
+- A mix per group (each group its own TOWN Mix and always rule): THE TOWN'S MIX turned down a mix per person for the same
+  reason; the town mix stays the one container.
+- The mark as an unlock: unlocks only grow, and the mark is set and cleared.
+- The mark as the notable tier: notables never die (a promise to the player); the mark is given and taken by the story.
+  Fusing them would expose a person to death on losing the mark. The two fields stay separate.
+- Ability per person inside a group (an exception list on every group card): ability lives on the group, so a person
+  who cannot do a general thing belongs to a group without it.
+- Pooling "loses who is doing what" (THE TOWN'S MIX's REJECTED): the scene and lines still know who is in a group and
+  what it runs, so each member can be drawn at the group's cards in proportion. Derived for display; no rate needs it.
+
+KNOWN GAPS (groups)
+- A marked person's share of a group card (they keep their own split yet do their group's everyday work): not built; a
+  marked person runs only the cards written for them. Decided by: the owner's answer.
+- A group with several LaneSpeed aims on its members' lanes: a member's speed never reaches a group card. Decided by:
+  the first content that aims a LaneSpeed at a person lane.
+
 OFFER KINDS (answering a later offer by rule). Where this part and an entry above disagree, this part holds. Examples
 name ids only.
 

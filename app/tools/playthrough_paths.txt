@@ -114,6 +114,7 @@ app/ashfall_app/engine/flows.py
 app/ashfall_app/engine/forecast.py
 app/ashfall_app/engine/gates.py
 app/ashfall_app/engine/gone.py
+app/ashfall_app/engine/groupchecks.py
 app/ashfall_app/engine/handlers.py
 app/ashfall_app/engine/handsfree.py
 app/ashfall_app/engine/heldentries.py
@@ -218,16 +219,19 @@ app/ashfall_app/opening/fight_entries.py
 app/ashfall_app/opening/fight_refs.py
 app/ashfall_app/opening/find_checks.py
 app/ashfall_app/opening/goals.py
+app/ashfall_app/opening/groups.py
 app/ashfall_app/opening/journal_checks.py
 app/ashfall_app/opening/journal_entries.py
 app/ashfall_app/opening/keep_checks.py
 app/ashfall_app/opening/kind_checks.py
+app/ashfall_app/opening/lane_entries.py
 app/ashfall_app/opening/leave_checks.py
 app/ashfall_app/opening/line_kinds.py
 app/ashfall_app/opening/line_only_checks.py
 app/ashfall_app/opening/lock.py
 app/ashfall_app/opening/lock_checks.py
 app/ashfall_app/opening/makers.py
+app/ashfall_app/opening/move_convert.py
 app/ashfall_app/opening/name_checks.py
 app/ashfall_app/opening/offer_caps.py
 app/ashfall_app/opening/offer_entries.py

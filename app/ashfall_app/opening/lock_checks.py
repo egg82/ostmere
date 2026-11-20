@@ -165,6 +165,10 @@ def _ruled(lock: Lock, now: Lock, fwd: Forwarding) -> list[Problem]:
         y = _fwd(fwd, "lane", x)
         if y in now.lane_ruled and now.lane_ruled[y] != was:
             found.append(Problem("forbidden", f"lane {x}'s ruled changed: a new lane id instead"))
+    for x in lock.ids.get("lane", []):
+        y = _fwd(fwd, "lane", x)
+        if y in now.lane_ruled and (x in lock.lane_pooled) != (y in now.lane_pooled):
+            found.append(Problem("forbidden", f"lane {x}'s pooled changed: a new lane id instead"))
     for x, lane in lock.card_lanes.items():
         y = _fwd(fwd, "card", x)
         if y in now.card_lanes and lock.lane_ruled.get(lane, False) != now.lane_ruled.get(now.card_lanes[y], False):
