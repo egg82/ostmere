@@ -120,8 +120,8 @@ Practice already agrees with Part A on several points; two gaps are worth a test
   reach rather than asking testers whether they noticed.
 - **Return visits.** The queue held day two until day one is shared and testers' feedback is in, and says to
   judge notifications from the returns in the telemetry. That is the right order for finding 4.
-- **Fix, then retest.** Small lines ship unreviewed and the game is developed live (`decisions.md`, "Developed live,
-  forward-only by preference"); fast fixes are the condition RITE needs.
+- **Fix, then retest.** Small lines ship unreviewed and the game is developed live (`decisions.md`, "Developed live;
+  saves bend to the design, not the reverse"); fast fixes are the condition RITE needs.
 
 **Gaps and conflicts**
 - **No stopping rule.** Testers arrive as "one tester session per change" with no statement of when a lesson is
