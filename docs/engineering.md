@@ -232,7 +232,7 @@ requests reach both builds. What holds:
 - The bundle's path names its build, and a page loads only its own (`docs/systems.md`, Page shell). There is no
   unversioned /build/ path. The web pods' probes read `/webz` (the image's bundle, never the assets volume).
 - A save is written by one request at a time (its row is locked for the transaction), and only forward. Builds are
-  ordered by content release, the release lock's number, which every change of the rules raises. A pod asked for a
+  ordered by release, `BUILD_RELEASE` (the CI run number, 0 locally; `saves/ruleset.py`). A pod asked for a
   save last written by a later release answers `save_unavailable` and writes nothing, and the page asks again until a
   newer pod answers (`app/ashfall_app/saves/load.py`). The app does not start while a live save fails to rebase under
   its rules.
@@ -276,13 +276,11 @@ an example, check which side it is on.
   Firefox kept drawing the first scene. Assets are requested by versioned URLs (a content hash or the build in the
   query), so a new file is a new URL and no cached copy can outlive its build.
 - **Generated files never share a directory with hand-edited ones.**
-- **A release never strands a save.** The release lock (`app/ashfall_app/opening/released/ids.json`, written only by
-  `app/tools/content_lock.py --write`) holds every content id ever released; renames go in `opening/renames.toml`.
-  Adding, retuning, rewording, raising a cap or moving a card is safe; renaming or removing an id needs a mapping (a
-  card is retired, never removed); reusing an id, lowering a cap, changing a released threshold or trigger outcome, or
-  bumping the save format (`engine.codec.FORMAT`) without an upgrade is forbidden. `tests/opening/test_released.py` and the server's start both check
-  it, and the `saves-forward` CI job loads the previous commit's opening-depth saves with the pushed code. The classes in full:
-  engine `DESIGN.txt`, "Release lock".
+- **Content may change any id or outcome.** There is no release lock. A change that renames or removes an id adds an
+  entry to `opening/renames.toml`, or a live save that used it fails to rebase and the build does not start (the one
+  before keeps serving). A bump of the save format (`engine.codec.FORMAT`) adds a step to `engine/upgrade.py`, which
+  `tests/engine/test_rebase_impl.py` checks. The `saves-forward` CI job loads the previous commit's opening-depth saves
+  with the pushed code. The rebase's rules: engine `DESIGN.txt`, "Rebase".
 - **Loading is the whole promise to a save in progress.** A change may move where a running game stands (a card it
   already shows, the order two beats land in), and no code, flag or date check is added to keep one game, or the games
   of one period, as they were (it's an alpha, and habits bloated on exactly those one-offs). Avoid surprising
