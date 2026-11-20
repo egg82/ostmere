@@ -7,7 +7,7 @@
 import type { View } from "../api/types";
 import { ruledLanes } from "../game/lanes";
 import { type Leaver, leaversOf, withLeavers } from "../game/leaving";
-import { people } from "../game/town";
+import { groups, marked, people } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
@@ -52,13 +52,13 @@ export class LaneRows implements Part {
   get fresh(): number {
     const { view } = this;
     if (!view) return 0;
-    const lanes = [...people(this.ctx.catalog, view), ...this.rows.keys()];
+    const lanes = [...marked(this.ctx.catalog, view), ...groups(this.ctx.catalog, view), ...this.rows.keys()];
     return lanes.filter((lane) => hasNewTask(this.ctx, view, lane)).length;
   }
 
   /** How many rows are drawn: the town's people, then each lane run by rules that has no person in the town. */
   get count(): number {
-    return (this.view ? people(this.ctx.catalog, this.view).length : 0) + this.rows.size;
+    return (this.view ? marked(this.ctx.catalog, this.view).length + groups(this.ctx.catalog, this.view).length : 0) + this.rows.size;
   }
 
   /** `prev`: the view before; a person it had who has left stays drawn until the lines the moment brought are read. */
@@ -79,7 +79,7 @@ export class LaneRows implements Part {
     if (joined.length > 0 && !this.strip.root.isConnected) this.root.prepend(this.strip.root);   // before the first join the page is day two's
     this.strip.update(view);
     this.page.update(raw);
-    for (const bar of ruledLanes(catalog, view).filter((b) => !joined.includes(b.lane))) {
+    for (const bar of ruledLanes(catalog, view).filter((b) => !joined.includes(b.lane) && catalog.lanes.get(b.lane)?.pooled !== true)) {
       drawWho(this.ctx, this.rows.get(bar.lane) ?? this.add(bar.lane), bar.lane, catalog.laneLabel(bar.lane, view), bar.running_card);
       const change = this.changes.get(bar.lane);
       if (change) dotChange(this.ctx, view, bar.lane, change);

@@ -26,11 +26,48 @@ export function people(catalog: Catalog, view: View): string[] {
   return view.lanes.filter((l) => catalog.lanes.get(l.lane)?.ruled === true && catalog.unlocked(view, "joined", l.lane)).map((l) => l.lane);
 }
 
+/** Whether `lane` is a person who has handed their split to their group (LaneBar.own_split false). */
+function unmarked(view: View, lane: string): boolean {
+  return view.lanes.find((l) => l.lane === lane)?.own_split === false;
+}
+
+/** The people who run their own split, as the strip draws a row each: the people present, minus the group's members. */
+export function marked(catalog: Catalog, view: View): string[] {
+  return people(catalog, view).filter((lane) => !unmarked(view, lane));
+}
+
+/** A group's members: the people present whose mark is off and whose LaneInfo.group is `group`. A marked person who names
+ * the group is not one (CONTRACT.txt, "GROUPS"). */
+export function members(catalog: Catalog, view: View, group: string): string[] {
+  return people(catalog, view).filter((lane) => unmarked(view, lane) && catalog.lanes.get(lane)?.group === group);
+}
+
+/** The groups with at least one member, in view order: a row each. */
+export function groups(catalog: Catalog, view: View): string[] {
+  return view.lanes.filter((l) => catalog.lanes.get(l.lane)?.pooled === true && members(catalog, view, l.lane).length > 0).map((l) => l.lane);
+}
+
+/** The person a row or page for `lane` stands for: the person themselves, or a group of one's only member; null for a group
+ * of more. */
+export function soloOf(catalog: Catalog, view: View, lane: string): string | null {
+  if (catalog.lanes.get(lane)?.pooled !== true) return lane;
+  const all = members(catalog, view, lane);
+  return all.length === 1 ? all[0]! : null;
+}
+
+/** A group's free members now, as its cards serve it (Card.crew); null when it serves none. */
+export function crewOf(catalog: Catalog, view: View, group: string): number | null {
+  return view.cards.find((c) => catalog.laneOf(c.card) === group && c.crew !== null)?.crew ?? null;
+}
+
 /** A person as the strip draws them: the shares of the running town mix on their lane, the rest idle, and the card they
- * are on (a rule's tap first, else the share card the mix is running). */
+ * are on (a rule's tap first, else the share card the mix is running). A group's shares are the mix's own: each is a part
+ * of each member's time, where the group card's served share is the total over its crew. */
 export function personOf(catalog: Catalog, view: View, lane: string): Person {
   const own = view.cards.filter((c) => catalog.laneOf(c.card) === lane);
-  const held = own.filter((c) => c.share_bp > 0).map((c) => ({ card: c.card, bp: c.share_bp }));
+  const mix = catalog.lanes.get(lane)?.pooled === true ? townMixToEdit(catalog, view) : null;
+  const saved = (card: string): number => mix?.components.find((c) => c.kind === "card_share" && c.card === card)?.share_bp ?? 0;
+  const held = own.flatMap((c) => { const bp = mix ? saved(c.card) : c.share_bp; return bp > 0 ? [{ card: c.card, bp }] : []; });
   const sharing = own.find((c) => c.by === "mix" && c.run === "full");
   const total = held.reduce((n, s) => n + s.bp, 0);
   return { lane, shares: held, idleBp: Math.max(0, catalog.content.scales.bp - total), running: view.lanes.find((l) => l.lane === lane)?.running_card ?? sharing?.card ?? null };

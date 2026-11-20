@@ -1,20 +1,24 @@
-// A person's page (docs/design/opening-screen.md, "The Town view"): opened by Change on their Town row, laid out as the
+// A person's page, or a group's (docs/design/opening-screen.md, "The Town view"): opened by Change on their Town row, laid out as the
 // Tasks page is: once they have joined the town their split as a share bar (personmix.ts), then every task of theirs
 // in full, as the Tasks panel draws a card (cardpick.ts), its bar and countdown moving with the clock, then the rules
 // that run them (rulelanes.ts), each a button into the Rules tab. A tap on a task joins it to their time or takes it
 // out; a capped task, which the town's mix never holds (CONTRACT.txt, "The town's mix"), is tapped for its next
 // completion, as a hands one-off is, and their split comes back once it lands. It takes the card area's place while open; its
 // one root is what a tab would seat later. Opening it is what clears the quiet dot on the person's row.
+// A group's page is this page for a pooled lane's id: the group's split as the one bar with the crew under it, its tasks as
+// faces, its members (groupmembers.ts) in place of rules (no rule names a pooled lane); a group of one is titled with the
+// member's name.
 import type { Card, View } from "../api/types";
 import { sectioned } from "../game/cardsections";
 import { laneTap } from "../game/holder";
 import { ruledLaneOf } from "../game/lanes";
 import { rulesFull, taskRules } from "../game/orders";
 import { UI } from "../game/text";
-import { people } from "../game/town";
+import { members, people, soloOf } from "../game/town";
 import { pickFace, tickFace } from "./cardpick";
 import type { Row } from "./cardrow";
 import { sectionHead } from "./condrows";
+import { GroupMembers } from "./groupmembers";
 import { el, revealBelow, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
 import type { PartContext, RuleTarget } from "./part";
@@ -45,6 +49,7 @@ export class PersonPage {
   private readonly cards = el("div", "person-cards");
   private readonly rules = el("div", "person-rules");
   private readonly mix: PersonMix;
+  private readonly members: GroupMembers;
   private view: View | null = null;
   private lane = "";
   /** The faces drawn, which tick moves on. */
@@ -55,13 +60,14 @@ export class PersonPage {
   constructor(private readonly ctx: PartContext, private readonly closed: () => void) {
     this.root.hidden = true;
     this.mix = new PersonMix(ctx);
+    this.members = new GroupMembers(ctx);
     const close = el("button", "editor-close", "✕");
     close.type = "button";
     close.setAttribute("aria-label", ctx.catalog.text.get(UI.close));
     close.addEventListener("click", () => this.close());
     const head = el("div", "editor-head");
     head.append(this.heading, close);
-    this.root.append(head, this.mix.root, this.cards, this.rules);
+    this.root.append(head, this.mix.root, this.members.root, this.cards, this.rules);
   }
 
   get open(): boolean {
@@ -101,10 +107,17 @@ export class PersonPage {
     if (!this.open || !this.view) return;
     for (const row of this.faces) tickFace(this.ctx, row, this.view, t);
     this.mix.tick(t);
+    this.members.tick(t);
   }
 
+  private pooled(): boolean {
+    return this.ctx.catalog.lanes.get(this.lane)?.pooled === true;
+  }
+
+  /** The person is in the town; a group, with a member in it. */
   private joined(view: View): boolean {
-    return people(this.ctx.catalog, view).includes(this.lane);
+    const { catalog } = this.ctx;
+    return this.pooled() ? members(catalog, view, this.lane).length > 0 : people(catalog, view).includes(this.lane);
   }
 
   /** A task's face: with the person in the town, a tap (see the top); the share it holds is on the face. */
@@ -138,9 +151,11 @@ export class PersonPage {
     if (!view) return;
     this.faces = [];
     const { catalog, actions } = this.ctx;
-    const label = catalog.laneLabel(lane, view);
+    const label = catalog.laneLabel(soloOf(catalog, view, lane) ?? lane, view);
     setText(this.heading, label);
     const joined = this.joined(view);
+    this.members.root.hidden = !this.pooled();
+    if (this.pooled()) this.members.update(view, lane);
     this.mix.root.hidden = !joined;
     if (joined) this.mix.show(view, lane);
     const held = joined ? this.mix.shares() : new Map<string, number>();
@@ -158,7 +173,7 @@ export class PersonPage {
       b.addEventListener("click", () => { tapFeedback(); actions.openRules(target); });
       this.rules.append(b);
     };
-    if (own.length === 0 && !this.joined(view)) add(catalog.text.get(UI.laneChange), { lane, rule: null });
-    if (!rulesFull(catalog, view) && laneRulable(catalog, view, lane)) add(`+ ${catalog.text.get(UI.ruleNew)}`, { newFor: lane });
+    if (own.length === 0 && !this.joined(view) && !this.pooled()) add(catalog.text.get(UI.laneChange), { lane, rule: null });
+    if (!this.pooled() && !rulesFull(catalog, view) && laneRulable(catalog, view, lane)) add(`+ ${catalog.text.get(UI.ruleNew)}`, { newFor: lane });
   }
 }

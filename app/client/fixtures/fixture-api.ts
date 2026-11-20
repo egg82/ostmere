@@ -13,6 +13,7 @@ import { fightsStep, isFights } from "./fights";
 import { fixtureGames } from "./games";
 import { isJournal, journalStep, READ_TO } from "./journal";
 import { isPrestige, prestigeStep } from "./prestige";
+import { isGroups, groupsStep } from "./groups";
 import { isTown, townStep } from "./town";
 import { fixtureStep, type Kept, type Phase } from "./steps";
 import { SINCE_VISITS, isSince, sinceBack, sinceStep } from "./since";
@@ -22,7 +23,7 @@ import { feelStep, isFeel } from "./feel";
 import { guardsStep, isGuards } from "./guards";
 
 const stepOf = (phase: Phase, at: number, kept: Kept = {}, decisions = 0): Step =>
-  (isFeel(phase) ? feelStep(at, kept, decisions) : isAsks(phase) ? asksStep(phase, at, kept, decisions) : isLedgerRules(phase) ? ledgerRulesStep(phase, at, kept, decisions) : isGuards(phase) ? guardsStep(phase, at, kept, decisions) : isChronicle(phase) ? chronicleStep(at, kept, decisions) : isSince(phase) ? sinceStep(phase, at, kept, decisions) : isFights(phase) ? fightsStep(phase, at, kept, decisions) : isJournal(phase) ? journalStep(phase, at, kept, decisions) : isDayOne(phase) ? dayOneStep(phase, at, kept, decisions) : isDayTwo(phase) ? dayTwoStep(phase, at, kept, decisions) : isTown(phase) ? townStep(phase, kept, decisions) : isPrestige(phase) ? prestigeStep(phase, at, kept, decisions) : fixtureStep(phase, at, kept, decisions));
+  (isFeel(phase) ? feelStep(at, kept, decisions) : isAsks(phase) ? asksStep(phase, at, kept, decisions) : isLedgerRules(phase) ? ledgerRulesStep(phase, at, kept, decisions) : isGuards(phase) ? guardsStep(phase, at, kept, decisions) : isChronicle(phase) ? chronicleStep(at, kept, decisions) : isSince(phase) ? sinceStep(phase, at, kept, decisions) : isFights(phase) ? fightsStep(phase, at, kept, decisions) : isJournal(phase) ? journalStep(phase, at, kept, decisions) : isDayOne(phase) ? dayOneStep(phase, at, kept, decisions) : isDayTwo(phase) ? dayTwoStep(phase, at, kept, decisions) : isTown(phase) ? townStep(phase, kept, decisions) : isGroups(phase) ? groupsStep() : isPrestige(phase) ? prestigeStep(phase, at, kept, decisions) : fixtureStep(phase, at, kept, decisions));
 
 /** `unavailable`: every step after Begin answers 503 (the page's reconnecting state). `seen`: the player has seen a
  * rule come on and let go (writing rules is open). `limited`: a send of feedback answers 429. `due`: recovery words
@@ -34,7 +35,7 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
   let decisions = 0;
   let began = Date.now();
   const now = (): number => Math.floor((Date.now() - began) / 1000);
-  const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isPrestige(first) || isChronicle(first) || isSince(first) || isAsks(first) || isLedgerRules(first) || isGuards(first) || isFeel(first);   // the repeat offers come only after the lessons
+  const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isGroups(first) || isPrestige(first) || isChronicle(first) || isSince(first) || isAsks(first) || isLedgerRules(first) || isGuards(first) || isFeel(first);   // the repeat offers come only after the lessons
   const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
   const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lines_touched: [], lane_tasks_seen: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [],
     newest_day_read: first === "journalweeks" || first === "journaltoday" ? READ_TO : null };

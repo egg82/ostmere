@@ -17,6 +17,7 @@ import "../src/reminders.css";
 import { wireBegin } from "../src/begin";
 import { fixtureContent, Q } from "./content";
 import { isFights, withHurtChip } from "./fights";
+import { isGroups, withGroups } from "./groups";
 import { isJournal, withJournal } from "./journal";
 import { isPrestige, withPrestige } from "./prestige";
 import { isSince, MANY, withSince } from "./since";
@@ -44,6 +45,7 @@ if (hash.has("townname")) {
   fixtureContent.text_entries.push({ key: "ui.town.later", text: "Town" });
 }
 if (isFights(phase)) Object.assign(fixtureContent, withHurtChip(fixtureContent));
+if (isGroups(phase)) Object.assign(fixtureContent, withGroups(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
 MANY.n = Number(hash.get("stores") ?? 0);

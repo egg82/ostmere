@@ -21,7 +21,8 @@ export function runningNow(catalog: Catalog, view: View, lane: string): RunningP
   if (!own.some((c) => c.run === "paused" || c.run === "spent")) return null;
   return own.map((c) => {
     const stopped = c.run === "paused" || c.run === "spent";
-    const bp = stopped ? 0 : c.share_bp + c.gained.reduce((n, g) => n + g.share_bp, 0);
+    const each = (bp: number): number => Math.round(bp / Math.max(c.crew ?? 1, 1));   // a group card serves its shares as totals over its crew
+    const bp = stopped ? 0 : each(c.share_bp) + c.gained.reduce((n, g) => n + each(g.share_bp), 0);
     return { card: c.card, bp, from: c.gained, stopped };
   });
 }

@@ -22,19 +22,25 @@ export function splitOf(parts: Part[]): { bar: HTMLElement; key: HTMLElement } {
   return { bar, key };
 }
 
-/** The person's split as parts: each card that holds a share, then the idle rest. */
-export function splitParts(ctx: PartContext, view: View, lane: string): Part[] {
+/** The person's split as parts: each card that holds a share, then the idle rest. `who`: the lane whose label names the idle
+ * part, the group's own member while a group is one person's. */
+export function splitParts(ctx: PartContext, view: View, lane: string, who = lane): Part[] {
   const { catalog } = ctx;
   const person = personOf(catalog, view, lane);
   const parts: Part[] = person.shares.map((s) => ({ text: `${catalog.cardLabel(s.card)} ${catalog.format.share(s.bp)}`, bp: s.bp, hue: catalog.rank(s.card) % 6, idle: false }));
-  if (person.idleBp > 0) parts.push({ text: `${catalog.text.fill(UI.townIdle, { person: catalog.laneLabel(lane, view) })} ${catalog.format.share(person.idleBp)}`, bp: person.idleBp, hue: 5, idle: true });
+  if (person.idleBp > 0) parts.push({ text: `${catalog.text.fill(UI.townIdle, { person: catalog.laneLabel(who, view) })} ${catalog.format.share(person.idleBp)}`, bp: person.idleBp, hue: 5, idle: true });
   return parts;
 }
 
 /** "then {split}": what the person goes back to once the tap holding their lane lands, their shares (idle when they
  * have none). */
-export function thenSplit(ctx: PartContext, view: View, lane: string): string {
-  const parts = splitParts(ctx, view, lane);
+export function thenSplit(ctx: PartContext, view: View, lane: string, who = lane): string {
+  return ctx.catalog.text.fill(UI.handsThen, { mix: splitWords(ctx, view, lane, who) });
+}
+
+/** The split in words: the cards that hold a share, each with it (all of the parts when none does). */
+export function splitWords(ctx: PartContext, view: View, lane: string, who = lane): string {
+  const parts = splitParts(ctx, view, lane, who);
   const working = parts.filter((p) => !p.idle);
-  return ctx.catalog.text.fill(UI.handsThen, { mix: (working.length > 0 ? working : parts).map((p) => p.text).join(", ") });
+  return (working.length > 0 ? working : parts).map((p) => p.text).join(", ");
 }
