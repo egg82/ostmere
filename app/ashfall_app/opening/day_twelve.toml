@@ -612,6 +612,13 @@ when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "dig", value = 1 }]
 outcome = { stores = [{ store = "pelt", items = 1 }], line_keys = ["l_find_gap_wolf"] }
 
+# The last night's larder room comes to 72, not 60: with the family eating, the rack's lumps outran the smoked they
+# eat once it sat full, and a day away lost over half its making to the cap.
+[[triggers]]
+id = "t_larder_last_night"
+when = { test = "at_least", subject_kind = "card_count", id = "sit_last_night", value = 1 }
+outcome = { modifiers = [{ target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 12000, source = "larder_last_night" }] }
+
 # ---------- the journal ----------
 
 [[subjects]]
@@ -656,7 +663,7 @@ modifiers = [{ target = "cap", id = "fungus", kind = "mul_bp", amount_bp = 15000
 at_items = 2700000
 pays_key = "camp_pays_16"
 pays_from = 45
-pays_to = 60
+pays_to = 72
 held = true
 lifted_by = ["sit_last_night"]
 line_keys = ["l_camp_16"]

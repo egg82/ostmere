@@ -273,6 +273,15 @@ modifiers = [
   { target = "rate", id = "field_track", flow = "cost", store = "stones", kind = "mul_bp", amount_bp = 35000, source = "track_family_stones" },
 ]
 
+# The stone's dry wood follows the track's takes: hand_on_stone made two to three times what the family era uses.
+[[triggers]]
+id = "t_stone_family_dry"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "hand_on_stone", flow = "make", store = "dry_wood", kind = "mul_bp", amount_bp = 5000, source = "stone_family_dry" },
+]
+
 # Their track from the join (day_three.toml, the town's track card).
 [[triggers]]
 id = "t_family_track"

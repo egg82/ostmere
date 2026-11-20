@@ -37,14 +37,8 @@ def test_the_family_joins_three_lanes_and_the_tally_reads_nine(eleven_route: Rou
     assert store_value(s, StoreId("arrivals")) == units(9)
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.STONE_DRY_GAP)
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_elevens_end(eleven_loss: dict[str, tuple[int, ...]]):
     assert eleven_loss == {}
-
-
-def test_roots_and_stones_lose_under_half_their_making_away_from_day_elevens_end(eleven_loss: dict[str, tuple[int, ...]]):
-    """t_track_family scales the track's takes to the family's three foragers; dry_wood stays the gap held above."""
-    assert not {"roots", "stones"} & set(eleven_loss)
 
 
 def test_the_babysitter_ends_no_further_ahead_across_day_eleven(two_am_eleven_run: tuple[Measured, Measured]):
