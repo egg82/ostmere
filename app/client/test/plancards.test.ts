@@ -119,7 +119,7 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
     const face = new CardNeeds(testContext(undefined, clocked).ctx, "larder");
     face.draw(card, v, false);
     face.tick(card, v, v.at);
-    expect(`${label}: waiting, and taken`, planCards(clocked, v).includes(card), true);
+    expect(`${label}: waiting on a store never shown, so not offered`, [planCards(clocked, v).includes(card), whenReady(clocked, v, "larder")], [false, null]);
     expect(`${label}: Plan's words are the face's`, waitWords(clocked, v, card), face.shows(card.blocker!.condition)?.textContent ?? "(no row)");
   }
   expect("the night's words", waitWords(clocked, view, onNight(null)), "Opens after dark");
