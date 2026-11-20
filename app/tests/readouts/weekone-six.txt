@@ -1,5 +1,5 @@
 chapter six: 9 visits on typical
-   V23 gap   3.2 h  spend 21  decide  2
+   V23 gap   3.2 h  spend 18  decide  2
    V24 gap   9.2 h  spend 24  decide  2
    V25 gap   4.2 h  spend 24  decide  1
    V26 gap   3.2 h  spend 24  decide  1
@@ -8,4 +8,4 @@ chapter six: 9 visits on typical
    V29 gap   3.2 h  spend 24  decide  1
    V30 gap   9.2 h  spend 24  decide  0
    V31 gap   4.2 h  spend 16  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 133, decide 6; 8h+: 3 returns, spend 72, decide 3
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 130, decide 6; 8h+: 3 returns, spend 72, decide 3
