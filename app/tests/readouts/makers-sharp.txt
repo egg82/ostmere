@@ -85,7 +85,7 @@
     d10+   made     116  at cap   0%  drift_clock 100
   dry_wood
     d1-2   made     341  at cap   0%  lay_to_dry 100
-    d3-5   made     637  at cap  17%  hand_on_stone 74, lay_to_dry 26
+    d3-5   made     637  at cap   6%  hand_on_stone 74, lay_to_dry 26
     d6-9   made    1406  at cap  71%  hand_on_stone 100
     d10+   made    3842  at cap  72%  hand_on_stone 100
   energy

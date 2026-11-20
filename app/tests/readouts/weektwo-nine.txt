@@ -2,12 +2,12 @@ chapter nine: 11 visits on typical
    V36 gap   9.2 h  spend 29  decide  2  [wait, 11 lines]
    V37 gap   4.2 h  spend 29  decide  2
    V38 gap   3.2 h  spend 23  decide  0  [wait, 3 lines]
-   V39 gap   9.2 h  spend 19  decide  2
-   V40 gap   4.2 h  spend 25  decide  1
+   V39 gap   9.2 h  spend 27  decide  2
+   V40 gap   4.2 h  spend 29  decide  1
    V41 gap   3.2 h  spend 33  decide  0
    V42 gap   9.2 h  spend 33  decide  2
    V43 gap   4.2 h  spend 32  decide  1
    V44 gap   3.2 h  spend 26  decide  2
    V45 gap   9.2 h  spend 33  decide  1
    V46 gap   4.2 h  spend 33  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 7 returns, spend 201, decide 7; 8h+: 4 returns, spend 114, decide 7
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 7 returns, spend 205, decide 7; 8h+: 4 returns, spend 122, decide 7

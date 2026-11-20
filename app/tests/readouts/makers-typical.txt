@@ -83,7 +83,7 @@
   dry_wood
     d1-2   made     330  at cap   0%  lay_to_dry 100
     d3-5   made     446  at cap   0%  hand_on_stone 53, lay_to_dry 47
-    d6-9   made    1365  at cap  58%  hand_on_stone 100
+    d6-9   made    1365  at cap  42%  hand_on_stone 100
     d10+   made    2192  at cap  47%  hand_on_stone 100
   energy
     d1-2   made   25615  at cap  67%  rest 100
