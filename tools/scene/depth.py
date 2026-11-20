@@ -144,6 +144,18 @@ def on_walls(entries: Sequence[Entry], footing_overlap: Callable[[str, str], boo
             if w.get("base", -1) <= f.get("base", 0) and footing_overlap(f["id"], w["id"])]
 
 
+WATCH_FIRE = frozenset({"watch_ring", "watch_laid", "watch_lit"})
+"""The watch fire's stones, kindling and flames: a small fire on open ground, never on the hearth or the fireback."""
+
+
+def fire_on_walls(entries: Sequence[Entry], overlap: Callable[[str, str], bool]) -> list[tuple[str, str]]:
+    """Pairs (fire, wall) of `entries` (arranged, all shown at once) whose pixels meet: the watch fire laid over the
+    stone or clay of the camp fire's wall, whichever of the two the page draws on top."""
+    walls = [e["id"] for e in entries if e["id"] in WALLS]
+    return [(f["id"], w) for f in entries if f["id"] in WATCH_FIRE for w in walls if overlap(f["id"], w)]
+
+
 def missing_walls(entries: Sequence[Entry]) -> list[str]:
-    """Names in `WALLS` that no layer of the whole scene (`entries`, every stage) has: a stale table checks nothing."""
-    return sorted(WALLS - {e["id"] for e in entries})
+    """Names in `WALLS` or `WATCH_FIRE` that no layer of the whole scene (`entries`, every stage) has: a stale table
+    checks nothing."""
+    return sorted((WALLS | WATCH_FIRE) - {e["id"] for e in entries})

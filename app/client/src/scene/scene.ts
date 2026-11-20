@@ -2,12 +2,12 @@
 // manifest live on the assets volume, never in git or the bundle). Each layer shows while its `when` holds and its
 // `until` does not, fading in and out; a grade (a filter plus an overlay colour) is chosen the same way. This
 // module draws; what is true comes from SceneFacts. With no manifest, the game plays with no scene drawn.
-// The canvas is the art's own size (manifest.size) and CSS scales it up, pixelated, so the cost of a frame does not
+// The canvas is the shown part of the art's size (manifest.views; the whole art with none) and CSS scales it up, pixelated, so the cost of a frame does not
 // grow with the window; a frame is drawn only when a fade is moving or a flickering light is showing (flicker.ts).
 import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
-import { soundAlphaOf, soundShownOf, type Drawn } from "./drawn";
-import { depthOrder, fadeStep, isGlow, passOf, pickGrade, gradeStep, GRADE_S, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
+import { drawLayers, soundAlphaOf, soundShownOf, type Drawn } from "./drawn";
+import { depthOrder, fadeStep, isGlow, pickGrade, gradeStep, pickView, GRADE_S, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
 import { COVER, place, type Crop } from "./crop";
 import { focusOf } from "./focus";
 import { fetchManifest, roomAbove } from "./room";
@@ -43,6 +43,7 @@ export class Scene {
   private cover = false;   // the box asks to be covered (game.css's --cover: a phone's stage)
   private fixed: [number, number] | null = null;
   private day = 1;
+  private view: [number, number];   // the part of the art shown, from its top-left: the canvases are this size (chooseView)
   private gradeId = "";
   private from: SceneGrade | null = null;
   private to: SceneGrade | null = null;
@@ -56,7 +57,7 @@ export class Scene {
     private readonly manifest: SceneManifest, base: string, private readonly quantityPerItem: number,
   ) {
     this.facts = new SceneFacts();
-    const [w, h] = manifest.size;
+    const [w, h] = this.view = pickView(manifest, () => false);
     const arrived: Promise<void>[] = [];
     this.layers = depthOrder(manifest.layers).map((layer) => {
       const image = new Image();
@@ -143,6 +144,7 @@ export class Scene {
     const { ctx, baseCtx, frontCtx, frontBaseCtx } = this;
     if (!ctx || !baseCtx || !frontCtx || !frontBaseCtx) return;
     const q = this.quantityPerItem;
+    this.chooseView(t);
     const reduced = reducedMotion();
     const step = fadeStep(dt, FADE_S, reduced);
     for (const drawn of this.layers) {
@@ -173,6 +175,16 @@ export class Scene {
     }
   }
 
+  /** The part of the art shown: widened when a view's `when` holds. The canvases are that size, so a layer past it is not drawn. */
+  private chooseView(t: number): void {
+    const size = pickView(this.manifest, (when) => this.facts.holds(when, t, this.quantityPerItem));
+    if (size[0] === this.view[0] && size[1] === this.view[1]) return;
+    this.view = size;
+    for (const c of [this.canvas, this.base, this.front, this.frontBase]) [c.width, c.height] = size;
+    this.baseDirty = this.shownDirty = true;
+    this.fit();
+  }
+
   /** Light that flickers is redrawn at the clock's pace while it shows; with nothing flickering or under reduced motion
    * the clock's steps stop moving the picture, so no frame is drawn for it. */
   private flicker(dt: number, reduced: boolean): void {
@@ -188,28 +200,16 @@ export class Scene {
   }
 
   private composeBase(ctx: CanvasRenderingContext2D, frontCtx: CanvasRenderingContext2D): void {
-    const [w, h] = this.manifest.size;
+    const [w, h] = this.view;
     ctx.clearRect(0, 0, w, h);
     frontCtx.clearRect(0, 0, w, h);
-    this.drawLayers(ctx, "base");
-    this.drawLayers(frontCtx, "front");
-  }
-
-  private drawLayers(ctx: CanvasRenderingContext2D, pass: Pass, only: (layer: SceneLayer) => boolean = () => true): void {
-    for (const { layer, image, alpha, glow } of this.layers) {
-      if (passOf(layer) !== pass || !only(layer)) continue;
-      if (alpha <= 0 || !image.complete || image.naturalWidth === 0) continue;
-      ctx.globalAlpha = alpha * glow;
-      ctx.globalCompositeOperation = (layer.blend ?? "source-over") as GlobalCompositeOperation;
-      ctx.drawImage(image, layer.x, layer.y);
-    }
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = "source-over";
+    drawLayers(ctx, this.layers, "base");
+    drawLayers(frontCtx, this.layers, "front");
   }
 
   /** The base with the grade over it, easing from the previous grade to the current one. */
   private present(ctx: CanvasRenderingContext2D, frontCtx: CanvasRenderingContext2D): void {
-    const [w, h] = this.manifest.size;
+    const [w, h] = this.view;
     ctx.clearRect(0, 0, w, h);
     frontCtx.clearRect(0, 0, w, h);
     for (const [target, source, op] of [[ctx, this.base, "source-over"], [frontCtx, this.frontBase, "source-atop"]] as const) {
@@ -217,8 +217,8 @@ export class Scene {
       this.paintGraded(target, source, op, this.to, this.fade);
       target.globalAlpha = 1;
     }
-    this.drawLayers(ctx, "ungraded");
-    this.drawLayers(frontCtx, "ungraded", isGlow);
+    drawLayers(ctx, this.layers, "ungraded");
+    drawLayers(frontCtx, this.layers, "ungraded", isGlow);
     frontCtx.globalCompositeOperation = "destination-in";   // the glows were drawn on clear canvas too: keep them on the figures only
     frontCtx.drawImage(this.frontBase, 0, 0);
     frontCtx.globalCompositeOperation = "source-over";
@@ -226,7 +226,7 @@ export class Scene {
 
   /** `source` with the grade over it; `op` keeps the overlay and the wash on the source's own pixels (the front canvas is mostly clear). */
   private paintGraded(ctx: CanvasRenderingContext2D, source: HTMLCanvasElement, op: GlobalCompositeOperation, grade: SceneGrade | null, alpha: number): void {
-    const [w, h] = this.manifest.size;
+    const [w, h] = this.view;
     ctx.globalAlpha = alpha;
     if (this.canFilter) ctx.filter = lightFilter(grade?.filter ?? "none", this.day);
     ctx.drawImage(source, 0, 0);
@@ -260,7 +260,7 @@ export class Scene {
   /** Size the canvas, in CSS px, to the largest scale of the art that fits the box: whole device pixels once that is 2x or more. */
   private fit(): void {
     const box = this.canvas.parentElement?.parentElement;
-    const [w, h] = this.manifest.size;
+    const [w, h] = this.view;
     if (!box) return;
     const dpr = window.devicePixelRatio || 1;
     const style = getComputedStyle(box);
@@ -291,7 +291,7 @@ export class Scene {
     const shown = this.layers.filter((d) => d.alpha > 0 && d.image.complete).map(({ layer, image }) => ({
       id: layer.id, x: layer.x, y: layer.y, w: image.naturalWidth, h: image.naturalHeight,
     }));
-    const placed = place([box.clientWidth, box.clientHeight], dpr, this.manifest.size, { ...crop, focus: this.fixed ?? focusOf(shown) });
+    const placed = place([box.clientWidth, box.clientHeight], dpr, this.view, { ...crop, focus: this.fixed ?? focusOf(shown) });
     Object.assign(this.canvas.style, {
       width: `${placed.width}px`, height: `${placed.height}px`, left: `${placed.left}px`, top: `${placed.top}px`,
     });

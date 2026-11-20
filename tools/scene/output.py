@@ -13,6 +13,7 @@ from PIL import Image, ImageChops
 import depth
 import grades
 import kit
+import views
 from drift import source_digest
 from place import H, W, canvas
 from storeset import write_list
@@ -72,16 +73,23 @@ def check_conditions(entries: list[Entry]) -> None:
     never holding, so a typo would hide a layer without a word."""
     for e in entries:
         for field in ("when", "until"):
-            for term in (e.get(field) or "always").split("|"):
-                for atom in term.split("&"):
-                    kind = atom.partition(":")[0]
-                    if kind not in KINDS or (kind != "always" and ":" not in atom):
-                        raise ValueError(f"{e['id']}.{field}: unknown condition {atom!r}")
+            _check_condition(f"{e['id']}.{field}", e.get(field))
+    for v in views.VIEWS:
+        _check_condition(f"view {v.id}.when", v.when)
+
+
+def _check_condition(label: str, cond: str | None) -> None:
+    for term in (cond or "always").split("|"):
+        for atom in term.split("&"):
+            kind = atom.partition(":")[0]
+            if kind not in KINDS or (kind != "always" and ":" not in atom):
+                raise ValueError(f"{label}: unknown condition {atom!r}")
 
 
 def write_manifest(entries: list[Entry]) -> None:
     manifest = {
         "size": [W, H],
+        "views": views.manifest(),
         "pixelated": True,
         "layers": entries,
         "source": source_digest(),
@@ -132,11 +140,12 @@ def check_depth(entries: list[Entry]) -> None:
 
 
 def check_footing(entries: list[Entry]) -> None:
-    """No figure's footing lies on a wall it stands in front of (depth.on_walls), in any stage: a seat or a spot a wall's
-    courses grow over later fails here, naming the stage. Fails too when no stage had a figure and a wall together."""
+    """No figure's footing lies on a wall it stands in front of (depth.on_walls), and no watch fire lies on any wall
+    (depth.fire_on_walls), in any stage: a seat or a spot a wall's courses grow over later fails here, naming the
+    stage. Fails too when no stage had a figure and a wall together."""
     if gone := depth.missing_walls(entries):
-        raise ValueError(f"depth.WALLS names layers the scene no longer has: {gone}")
-    overlap = _overlap(entries, footing=True)
+        raise ValueError(f"depth.WALLS or depth.WATCH_FIRE names layers the scene no longer has: {gone}")
+    overlap, whole = _overlap(entries, footing=True), _overlap(entries)
     faults: dict[tuple[str, str], str] = {}
     met = 0
     for stage, state in STAGES.items():
@@ -144,10 +153,13 @@ def check_footing(entries: list[Entry]) -> None:
         met += any(e["id"] in depth.WALLS for e in shown) and any(e["id"].startswith("figure_") for e in shown)
         for pair in depth.on_walls(shown, overlap):
             faults.setdefault(pair, stage)
+        for pair in depth.fire_on_walls(shown, whole):
+            faults.setdefault(pair, stage)
     if not met:
         raise ValueError("no stage shows a figure and a wall together: the footing check looked at nothing")
     if faults:
-        raise ValueError("a figure's feet lie on a wall: " + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
+        raise ValueError("a figure's feet or the watch fire lie on a wall: "
+                         + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
 
 
 def _overlap(entries: list[Entry], footing: bool = False) -> Callable[[str, str], bool]:
@@ -190,6 +202,6 @@ def write_previews(entries: list[Entry]) -> None:
     """Each stage at 2x (960 wide, the desktop size) and scaled to 390 wide (a phone)."""
     PREVIEW.mkdir(parents=True, exist_ok=True)
     for stage, state in STAGES.items():
-        img = composite(entries, state)
-        kit.resize(img, (W * 2, H * 2)).save(PREVIEW / f"{stage}.png", optimize=True)
+        w, h = views.pick(state).size
+        kit.resize(composite(entries, state).crop((0, 0, w, h)), (w * 2, h * 2)).save(PREVIEW / f"{stage}.png", optimize=True)
 

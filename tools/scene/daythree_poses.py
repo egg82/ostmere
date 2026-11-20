@@ -14,7 +14,7 @@ from daytwo_poses import Who, person
 from dayone_poses import N1
 from figures import figure, from_behind
 from kit import T
-from place import FIRE, H, W
+from place import FIRE, H, W, WATCH
 from tints import WOOD
 
 N2: Who = ("timefantasy_characters/timefantasy_characters/sheets/npc1.png", 3)
@@ -29,9 +29,9 @@ EDGE_OF_LIGHT = (7.2 * T, 8.75 * T)
 """Where the newcomer stands the first time: below the fire at the light's edge, clear of the wall and the heaps."""
 AT_THE_FIRE = (FIRE[0] - 1.75 * T, FIRE[1] + 0.55 * T)
 """Where he stands once he has stayed: the fire's left, the side the player has left to him."""
-WATCHING = (10.4 * T, 5.65 * T)
+WATCHING = (WATCH[0] + 1.0 * T, WATCH[1] + 0.1 * T)
 """Where Lucy keeps the watch: beside the watch fire, facing the track."""
-LAYING = {"bay": (2.7 * T, 8.75 * T), "watch": (8.7 * T, 5.9 * T)}
+LAYING = {"bay": (2.7 * T, 8.75 * T), "watch": (WATCH[0] - 0.7 * T, WATCH[1] + 0.35 * T)}
 """Where a townsperson stands to lay the bay's poles, or the watch fire's stones."""
 
 
