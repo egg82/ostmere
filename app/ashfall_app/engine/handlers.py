@@ -18,7 +18,7 @@ from .phaseevents import carry_ended, topped_out
 from .mixes import flatten_shares
 from .plan import controlling_entry, queue_mix_id, running_mix_id
 from .rates import FULL, contribution, lane_state, running, store_value, tapped_cards
-from .rebuild import rebuild
+from .rebuild import rebuild, store_rate
 from .requires import first_unmet
 from .schedule import settled_entries
 from .rules import Rules
@@ -122,26 +122,32 @@ def _pause_until_not_dry(save: Save, rules: Rules, store: StoreId, landing: froz
     saved share, so nothing of a yield is written into a Pause (DESIGN.txt, "SPENT"). A paused tapped
     card ends its tap at once (work.interrupt); the flag says whether one did."""
     ix = index(rules)
-    interrupted = False
-    while _dry(save, store):
+    interrupted, built = False, True
+    dry = _dry(save, store)
+    while dry:
         now = running(save, rules)
         paused = {p.runner for p in save.pauses} | set(landing) | drainers(rules, store)
-        consumers = [a for a in reversed(list(now.shares)) if a not in paused
-                     and contribution(save, rules, a, store, now.shares[a], now.runs[a]) < 0]
-        if not consumers:
-            return save, interrupted
-        a = consumers[0]
+        a = next((a for a in reversed(list(now.shares)) if a not in paused
+                  and contribution(save, rules, a, store, now.shares[a], now.runs[a]) < 0), None)
+        if a is None:
+            break
         saved = now.shares[a] - sum(g.share_bp for g in now.gained.get(a, ()))
         full_cost = -contribution(save, rules, a, store, saved, replace(FULL, speed=now.runs[a].speed))
         resume_at = min(store_cap(save, rules, store), full_cost * SECONDS_PER_HOUR)
         pauses = tuple(sorted(save.pauses + (Pause(a, store, resume_at),), key=lambda p: ix.runner_pos[p.runner]))
-        save = rebuild(replace(save, pauses=pauses), rules)
+        save, built = replace(save, pauses=pauses), False
         lane = _tapped_lane(save, rules, a)
-        if lane is not None:
-            save, interrupted = interrupt(save, rules, lane), True
-            if lane == HANDS:
-                save = requeued(save, rules, CardId(a))
-    return save, interrupted
+        rate = None if lane is not None else store_rate(save, rules, store)
+        if rate is None:
+            save, built = rebuild(save, rules), True
+            if lane is not None:
+                save, interrupted = interrupt(save, rules, lane), True
+                if lane == HANDS:
+                    save = requeued(save, rules, CardId(a))
+            dry = _dry(save, store)
+        else:
+            dry = store_value(save, store) == 0 and rate < 0
+    return (save if built else rebuild(save, rules)), interrupted
 
 
 def _hand_back_dry_stint(save: Save, rules: Rules) -> Save:

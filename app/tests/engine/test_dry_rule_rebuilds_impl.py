@@ -32,7 +32,6 @@ def test_the_dry_rule_pauses_the_last_three_eaters_and_holds_x_at_0():
     assert segment(s, r, X).start_value == 0 and segment(s, r, X).rate == 0
 
 
-@pytest.mark.xfail(strict=True, reason="issue 400: the dry rule rebuilds the save after every pause")
 def test_pausing_three_consumers_rebuilds_the_save_once(monkeypatch: pytest.MonkeyPatch):
     r, s = world()
     s = advance(s, r, 4799)
