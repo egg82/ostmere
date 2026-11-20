@@ -4,6 +4,7 @@ from hypothesis import given, strategies as st
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, CardShare, Rules, RunKind, Save, advance, view,
 )
+from tests.kills import kills
 from groups_world import (
     GA, GB, OFF_S, P1, P2, P3, PEOPLE, Q1, X, Y, card_view, crew_triggers, join, lane_state, own, save_mix, split_mix, start,
     stored, tap_order, tap_orders, work, world,
@@ -30,6 +31,7 @@ def _crew_work(s: Save, r: Rules, k: int, t: int, w: str) -> int:
     return sum(work(s, r, own(p, w), t) for p in PEOPLE[:k])
 
 
+@kills(11)
 @given(k=st.integers(1, 3), t=st.integers(0, 3000))
 def test_179_crew_equals_people_stores_and_work(k: int, t: int):
     gr, gs = _group(k)
@@ -53,6 +55,7 @@ def test_179_crew_equals_people_at_any_slicing(k: int, cuts: list[int]):
         assert work(gs, gr, GA, t) == _crew_work(ps, pr, k, t, "a")
 
 
+@kills(15)
 def test_179_a_marked_person_adds_nothing_to_the_group():
     """Two unmarked members and one marked person running SPLIT on their own cards equal three marked people."""
     r = world((join(P1, GA, False), join(P2, GA, False), join(P3, own(P3, "a"), True)))
@@ -104,6 +107,7 @@ def _tapped(k: int):
     return r, s
 
 
+@kills(12)
 @given(k=st.integers(1, 3), t=st.integers(0, 200))
 def test_180_a_tap_on_one_member_lowers_the_group_to_k_minus_1_over_k(k: int, t: int):
     r, s = _tapped(k)

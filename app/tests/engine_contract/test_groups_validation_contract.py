@@ -88,8 +88,6 @@ def test_183_a_queue_of_a_pooled_card_is_refused():
         validate_rules(world(check=False, **_queued_pooled_card()))
 
 
-@pytest.mark.xfail(strict=True, reason="finding: the queue's own rule ('a queued one-off is a hands card with a cap') "
-                   "fires first, so the listed message for a queued pooled card is never given")
 def test_183_a_queue_of_a_pooled_card_names_the_pooled_lane():
     refused("taps ga, a card on a pooled lane", **_queued_pooled_card())
 

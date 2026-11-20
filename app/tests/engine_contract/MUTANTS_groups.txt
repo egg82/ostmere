@@ -12,8 +12,12 @@ MUTANTS_drains.txt does. `@kills(row)` on a test claims the row.
  8 pooled join       a join of a pooled lane is valid.                                              [183]
  9 mark always saved a lane's own_split is written into every save's encoding, at its default too.  [182]
 10 bar on pool       the lane bar shows a mark on a pooled lane, which is no person.                ["View"]
+11 crew not multiplied a group card's share is not multiplied by its free members.                 [179]
+12 tap keeps member  a tap on a member does not take them out of the crew.                          [180]
+13 mark drops shares a mark change removes the person's own shares from the town mix.              [181]
+14 member speed      a group card runs at its members' lane speed as well as the group's.          ["Speed"]
+15 marked in crew    a marked person counts in their group's crew.                                  [179]
 
-Run against the engine at ece48db: rows 1-10, 10 plants (tools/groups_mutants/mNN.py), all KILLED by the blind suite.
-Rows 1-10 reach the validation, codec and view code only: the plants for the crew, tap and mark behaviour live in the
-rate and mark code, which the suite's writer did not open.
+Run against the engine with S3: rows 1-15, 15 plants (tools/groups_mutants/mNN.py), all KILLED by the blind suite.
+Rows 11-15 (crew, tap, mark, speed) were anchored by the implementer after the suite was written.
   python -m tools.mutate_suite groups --run

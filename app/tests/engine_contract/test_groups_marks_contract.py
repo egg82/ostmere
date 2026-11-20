@@ -5,6 +5,7 @@ from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, AfterTime, CardShare, Join, Leave, Mark, Mix, Order, Outcome, SetOrders, TapCard, TriggerDef, TriggerId, Unlock,
     LaneBar, LaneId, Save, UnlockKind, advance, decide, view,
 )
+from tests.kills import kills
 from groups_world import (
     ALWAYS, GA, GB, P1, P2, P3, TOWN, X, Y, card_view, crew_triggers, join, lane_state, mark, own, split_mix, start, stored, world,
 )
@@ -33,6 +34,7 @@ def test_181_clearing_then_setting_in_one_instant_gives_the_save_it_started_from
     assert stored(s, r, X, 500) == stored(s0, r0, X, 500) and stored(s, r, Y, 500) == stored(s0, r0, Y, 500)
 
 
+@kills(13)
 def test_181_a_mark_change_never_changes_a_share():
     r, s = _unmarked_pair(mark(P1, False, at=10), mark(P1, True, at=30))
     before = s.mixes

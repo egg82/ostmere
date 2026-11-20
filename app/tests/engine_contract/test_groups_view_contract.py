@@ -49,6 +49,7 @@ def test_a_group_card_runs_at_the_pooled_lanes_speed():
     assert stored(s, r, X, 100) == 2 * 100 * Q // 2
 
 
+@kills(14)
 def test_a_members_speed_never_reaches_a_group_card_but_reaches_their_own():
     r = world((*crew_triggers(2), _slow(P1, 5000)))
     s = start(r, split_mix((GA, BP)))
