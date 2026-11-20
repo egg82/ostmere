@@ -18,6 +18,7 @@ PYTEST_GATES=(
   app/tests/test_doc_citations.py
   app/tests/test_decision_citations.py
   app/tests/test_canon_ids.py
+  app/tests/test_scene_depth.py
   app/tests/test_scene_stores.py
   app/tests/test_playthrough_paths.py
 )
