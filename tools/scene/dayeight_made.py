@@ -24,15 +24,16 @@ POST = (128, 12, 144, 58)
 """A wall end seen edge-on: the gate's posts."""
 LOG = (153, 12, 161, 46)
 """The top of one log of the face, point and all: a stake."""
-STRETCHES = {3: [(392, 450, 146)], 6: [(450, 488, 145)], 9: [(250, 278, 149), (304, 330, 147)]}
+STRETCHES = {3: [(392, 450, 146)], 6: [(450, 488, 145), (488, 628, 147)],
+             9: [(250, 278, 149), (304, 330, 147), (628, 768, 147)]}
 """The palisade's states by the stage that finishes each: runs of (left x, right x, feet y). The rim past the wall stub
-first, then the rest of it, then the gap's two sides; stage 12 is the gate between them."""
+first, then the rest of it out to the art's right edge, then the gap's two sides; stage 12 is the gate between them."""
 GATE = (278, 304, 149)
 STAKES = (712, 338)
 """The stakes' stack: its bottom-left, on open ground at the camp's far right edge."""
-GAP_AT = (270, 346)
-"""The gap fire's centre: open ground below the hearth, clear of its walls and of every build and figure shown from the
-fire's stage on."""
+GAP_AT = (340, 405)
+"""The gap fire's centre: open ground at the camp's lower middle, far from the hearth and the watch fire, clear of every
+build and figure shown from the fire's stage on."""
 GAP_FIRE = (round(GAP_AT[0] - WATCH[0]), round(GAP_AT[1] - WATCH[1]))
 """The gap fire from the watch fire's spot, which its art is drawn at."""
 ASH_HEAP = (620, 430)

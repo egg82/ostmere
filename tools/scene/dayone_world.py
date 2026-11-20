@@ -57,7 +57,7 @@ def ridge_shape(walls: Image.Image, square: bool = True) -> Image.Image:
     return behind(soft(m, 0.6, (60, 110, 150), (64, 68, 82)), walls)
 
 
-FOG_BANDS = [(-20, 28, 120, 40), (90, 34, 250, 48), (156, 46, 260, 62), (-10, 48, 80, 58)]
+FOG_BANDS = [(-20, 28, 120, 40), (90, 34, 250, 48), (156, 46, 260, 62), (-10, 48, 80, 58), (250, 38, 400, 54)]
 """The fog's long bands, ellipses at the art's 1x grain, the third clear of the track; each lies on the low ground
 along its lowest edge, which is its depth (fog_ground)."""
 STEAM = [(190, 50), (226, 60), (104, 40)]

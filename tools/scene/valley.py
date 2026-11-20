@@ -133,9 +133,14 @@ below the rim with their bases under the rim haze, so they rise out of it rather
     for sprite, x, y in [(kit.tile(b, 0, 7, 1, 2), 5.0, 1.4), (kit.tile(b, 1, 7, 1, 3), 6.9, 0.5),
                          (kit.tile(b, 0, 7, 1, 2), 8.6, 1.2), (kit.tile(b, 1, 7, 1, 3), 9.9, 0.9),
                          (kit.tile(b, 0, 7, 1, 2), 11.0, 1.3), (kit.tile(b, 1, 7, 1, 3), 13.6, 0.7),
-                         (kit.tile(b, 0, 7, 1, 2), 1.9, 1.1), (kit.tile(b, 4, 3), 7.7, 2.7), (kit.tile(b, 4, 3), 10.4, 2.9)]:
+                         (kit.tile(b, 0, 7, 1, 2), 1.9, 1.1), (kit.tile(b, 4, 3), 7.7, 2.7), (kit.tile(b, 4, 3), 10.4, 2.9),
+                         (kit.tile(b, 0, 7, 1, 2), 15.4, 1.3), (kit.tile(b, 1, 7, 1, 3), 16.9, 0.6),
+                         (kit.tile(b, 0, 7, 1, 2), 18.2, 1.2), (kit.tile(b, 1, 7, 1, 3), 19.6, 0.9),
+                         (kit.tile(b, 0, 7, 1, 2), 21.0, 1.3), (kit.tile(b, 1, 7, 1, 3), 22.5, 0.7),
+                         (kit.tile(b, 4, 3), 16.0, 2.8), (kit.tile(b, 4, 3), 20.4, 2.9)]:
         put(far, sprite, x * T, y * T)
-    for sprite, x, base in [(kit.tile(b, 2, 7, 2, 5), 5.4, LIP - 10), (kit.tile(b, 2, 7, 2, 5), 13.3, LIP - 10)]:
+    for sprite, x, base in [(kit.tile(b, 2, 7, 2, 5), 5.4, LIP - 10), (kit.tile(b, 2, 7, 2, 5), 13.3, LIP - 10),
+                        (kit.tile(b, 2, 7, 2, 5), 20.0, LIP - 10)]:
         small = kit.resize(sprite, (sprite.width * 11 // 20, sprite.height * 11 // 20))
         put(far, small, x * T, base - small.height)
     far = kit.grade(far, **TREES)

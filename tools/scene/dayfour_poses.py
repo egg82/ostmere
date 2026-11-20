@@ -10,7 +10,7 @@ from PIL import Image, ImageOps
 
 import kit
 from daythree_poses import N2, away_on_the_track, laying, shovel, staff
-from dayfour_made import TURNED
+from dayfour_made import BAY2, TURNED
 from daytwo import cut
 from daytwo_poses import Who, person
 from dayone_poses import N1
@@ -38,7 +38,7 @@ N1_FAR = (7.8 * T, 5.4 * T)
 N2_WATCH = (WATCH[0] + 1.1 * T, WATCH[1] + 0.85 * T)
 N4_WATCH = (WATCH[0] - 1.7 * T, WATCH[1] + 1.1 * T)
 """Where each sits a watch at the watch fire, facing the track (Lucy's is `daythree_poses.WATCHING`)."""
-BAY2_WORK = (4.3 * T, 8.95 * T)
+BAY2_WORK = (BAY2[0] + 68, BAY2[1] + 39)
 """Where a townsperson stands to lay the second bay's poles."""
 TURNED_WORK = (TURNED[0] + 0.6 * T, TURNED[1] + 1.5 * T)
 """Where she digs: at the turned ground's near edge."""
