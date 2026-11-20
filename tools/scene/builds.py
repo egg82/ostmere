@@ -21,7 +21,7 @@ MIN_SHARED = 30
 NOT_BUILDS = frozenset({
     "ruin", "ridge_shape", "ridge_bare", "track", "dead_field", "frost", "cairns_1", "cairns_2", "cairns_3", "kill",
     "wolf_prints", "ring_prints", "ridge_shapes", "road_smoke", "cleared", "prints", "watch_ring_ghost",
-    "gap_ring_ghost", "rim_haze", "valley_fog_1", "valley_fog_2", "valley_fog_3", "valley_fog_4", "stream_steam_1",
+    "gap_ring_ghost", "rim_haze", "valley_fog_1", "valley_fog_2", "valley_fog_3", "valley_fog_4", "valley_fog_5", "stream_steam_1",
     "stream_steam_2", "stream_steam_3", "wolf_gap", "palisade_3", "palisade_6", "palisade_9", "palisade_12",
     "scored_line", "roof_posts", "lean_to_ghost", "larder_ghost", "smoke_rack_ghost", "n1_shelter_ghost",
     "woodstack_ghost", "bay_ghost", "bay2_ghost", "hut_ghost", "lamp_1", "lamp_2", "lamps_lit", "vigil_body",

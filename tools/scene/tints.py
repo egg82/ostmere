@@ -17,7 +17,7 @@ ACCENT = kit.Grade(sat=0.1, mul=(0.97, 1.0, 1.03), bright=1.12, contrast=1.05)
 """Stones carried in and the ring: a brighter cool neutral grey against the dull ground."""
 BAKES: dict[str, kit.Grade | None] = {
     "cleared": None, "ruin": None, "roof_posts": STONE, "birch_log": None, "birch_stump": None, "ring": ACCENT, "fireback": STONE, "fire_laid": WOOD, "fire_lit": FIRE_HOT,
-    **{f"stones_{i}": ACCENT for i in (1, 2, 3)}, "ridge_shape": None, "rim_haze": None, **{f"valley_fog_{i}": None for i in (1, 2, 3, 4)},
+    **{f"stones_{i}": ACCENT for i in (1, 2, 3)}, "ridge_shape": None, "rim_haze": None, **{f"valley_fog_{i}": None for i in (1, 2, 3, 4, 5)},
     **{f"stream_steam_{i}": None for i in (1, 2, 3)}, "figure_away_track": None, "figure_hunting": None, "prints": None, "smoke_plume": None, "larder": None, "larder_ghost": None,
     "ridge_bare": None, "woodstack": None, "woodstack_ghost": None,
     "track": None, "dead_field": None, "frost": None, **{f"cairns_{i}": None for i in (1, 2, 3)},

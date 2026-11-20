@@ -98,7 +98,7 @@ def eyes() -> Image.Image:
     img = Image.new("RGBA", (W // 2, H // 2))
     px = img.load()
     assert px is not None
-    for x, y in ((232, 98), (236, 120), (104, 143), (138, 143), (196, 143)):
+    for x, y in ((232, 98), (236, 120), (104, 143), (138, 143), (196, 143), (330, 104), (340, 124)):
         for dx in (0, 3):
             px[x + dx, y] = (232, 138, 54, 255)
     return kit.up(img)

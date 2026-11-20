@@ -132,7 +132,7 @@ def creature_layers() -> list[Layer]:
     """The beasts: a pair of wolves at the light's edge between B7's two beats, then the rat at the larder and the
     crows (on the roof's ridge once it is built, in the hang if not) while combat runs."""
     return [
-        Layer(id="wolf_edge_1", img=beasts.wolf("left", (404, 285)), when="feature:wolves", until=COMBAT),
+        Layer(id="wolf_edge_1", img=beasts.wolf("left", (668, 300)), when="feature:wolves", until=COMBAT),
         Layer(id="wolf_edge_2", img=beasts.wolf("right", (150, 285)), when="feature:wolves", until=COMBAT),
         Layer(id="rat_larder", img=beasts.rat("left", (190, 206)), when=COMBAT),
         Layer(id="crows_roof", img=_crows((160, 216), (178, 216)), when=f"{COMBAT}&{ROOFED}"),
