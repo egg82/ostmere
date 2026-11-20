@@ -3,6 +3,7 @@ cards' shares with how each runs now. Semantics: DESIGN.txt, "Order mix" and "TH
 from collections.abc import Callable
 
 from .counts import greyed, is_retired
+from .groups import crewed, present
 from .ids import HANDS, CardId, LaneId, MixId, StoreId
 from .index import index
 from .memo import SaveMemo
@@ -13,8 +14,6 @@ from .requires import first_unmet
 from .rules import Rules
 from .spent import spend, yielded
 from .state import Save
-from .unlocked import is_unlocked
-from .unlocks import Unlock, UnlockKind
 
 
 def _busy(save: Save, lane: LaneId) -> bool:
@@ -80,10 +79,9 @@ def _town_entries(save: Save, rules: Rules) -> tuple[Entries, Gains]:
     if mix is None:
         return (), {}
     cards = index(rules).cards
-    present = tuple(s for s in flatten_shares(save.mixes, mix.id)
-                    if is_unlocked(save, rules, Unlock(UnlockKind.JOINED, cards[s.card].lane)))
-    entries = _entries(save, rules, present, mix.id, lambda card: _busy(save, cards[card].lane))
-    return yielded(entries, lambda card: cards[card].lane)
+    shares = present(save, rules, flatten_shares(save.mixes, mix.id))
+    entries = _entries(save, rules, shares, mix.id, lambda card: _busy(save, cards[card].lane))
+    return crewed(save, rules, *yielded(entries, lambda card: cards[card].lane))
 
 
 def _entries(save: Save, rules: Rules, shares: tuple[CardShare, ...], mix: MixId, handed: Callable[[CardId], bool]

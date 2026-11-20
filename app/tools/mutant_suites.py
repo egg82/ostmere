@@ -27,6 +27,7 @@ SUITES = {
     "share": Suite("MUTANTS_share.txt", "test_share_levels_*.py", "share_mutants"),
     "guards": Suite("MUTANTS_guards.txt", "test_guards_*.py", "guards_mutants"),
     "or_else": Suite("MUTANTS_or_else.txt", "test_or_else_*_contract.py", "or_else_mutants"),
+    "groups": Suite("MUTANTS_groups.txt", "test_groups_*_contract.py", "groups_mutants"),
     "leaves": Suite("MUTANTS_leaves.txt", "test_leaves_*.py", "leaves_mutants", 1, 20,
                     ("tests/engine_contract/test_retire_*.py", *LEAVES_ALSO)),
     "retire": Suite("MUTANTS_leaves.txt", "test_retire_*.py", "retire_mutants", 21, 33,

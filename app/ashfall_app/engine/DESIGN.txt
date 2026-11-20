@@ -2261,6 +2261,10 @@ CHOICES (groups)
   any TapCard of a card on a pooled lane.
 - View (engine/view.py, viewparts.py): LaneBar gains own_split (person lanes only); CardView of a group card gains crew
   (free_members) beside its share and run, so the page can say "x3" and the ledger's rate is the total.
+  While crew is above 0, the card's share_bp and `gained` are the totals over the free members (the card runs at
+  them: saved share x crew), and crew is 0 with no free member (members all tapped, or none): then the share is the
+  per-member one, a full run is YIELDED with members and the card is absent from the running mix with none. crew is
+  None on a card of no pooled lane.
 - Validation (InvalidRulesError; one message per rule): "lane {id}: a pooled lane is a ruled lane"; "lane {id}: a
   pooled lane has no group"; "lane {id}: only a ruled lane has a group"; "lane {id}: group {g} is not a pooled lane";
   "card {id}: a card on a pooled lane has no cap" (a pooled card with XP is refused by "a card on a ruled lane trains no

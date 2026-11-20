@@ -71,7 +71,9 @@ def _check_saveable(save: Save, rules: Rules, mixes: tuple[Mix, ...], mix: Mix, 
         require(not is_completed(save, rules, s.card), f"mix {mix.id}: card {s.card} is completed")
         if layer is MixLayer.TOWN:
             require(cards[s.card].cap is None, f"mix {mix.id}: card {s.card} has a cap")
-            require(is_joined(save, rules, cards[s.card].lane), f"mix {mix.id}: card {s.card}'s person has not joined")
+            lane = cards[s.card].lane
+            require(lane in index(rules).pooled or is_joined(save, rules, lane),
+                    f"mix {mix.id}: card {s.card}'s person has not joined")
 
 
 def check_delete(save: Save, mix: MixId) -> None:
@@ -166,9 +168,12 @@ def check_queue_verb(rules: Rules, mixes: tuple[Mix, ...], verb: OrderVerb) -> N
 def check_order_verb(rules: Rules, mixes: tuple[Mix, ...], verb: OrderVerb) -> None:
     """A SwitchMix names a saved mix; an AnswerOffer a declared offer and one of its answers (one not shown yet is
     accepted: planning ahead); a TapCard is checked only when applied (an order may name a card that is locked today
-    and unlocked by the time it fires)."""
+    and unlocked by the time it fires), and never one on a pooled lane (DESIGN.txt, "GROUPS (pooled lanes)")."""
     if isinstance(verb, SwitchMix):
         check_switch(mixes, verb)
+    if isinstance(verb, TapCard):
+        card = index(rules).cards.get(verb.card)
+        require(card is None or card.lane not in index(rules).pooled, f"card {verb.card} is on a pooled lane")
     if isinstance(verb, AnswerOffer):
         pair = index(rules).answers.get(verb.answer)
         require(pair is not None and pair[0] == verb.offer, f"answer {verb.answer} is not one of offer {verb.offer}'s")

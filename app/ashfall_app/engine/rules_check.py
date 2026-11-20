@@ -223,6 +223,7 @@ def _check_outcome(
     _require(installs or not o.joins, f"{where}: only a trigger's or an answer's outcome joins a person")
     _require(all(join_problem(rules, j) is None for j in o.joins), f"{where}: a join is not valid")
     _require(queues or not o.queues, f"{where}: only an answer's outcome queues a one-off")
+    check_group_outcome(rules, o, where, installs)
     _require(all(lanes.get(q) == HANDS and q in capped for q in o.queues),
              f"{where}: a queued one-off is a hands card with a cap")
     _check_amounts(rules, o.stores, where)
@@ -234,7 +235,6 @@ def _check_outcome(
     _require(all(q in {c.id for c in rules.cards} for q in o.starts), f"{where}: outcome starts an unknown card")
     check_retire(rules, o, where, trigger is not None)
     check_leaves(rules, o, where, installs)
-    check_group_outcome(rules, o, where, installs)
 
 
 def _check_modifiers(

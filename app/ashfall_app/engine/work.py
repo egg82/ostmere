@@ -6,7 +6,7 @@ Every function returns a rebuilt save (rates recomputed at save.time) or reads o
 from dataclasses import replace
 
 from . import counts, discrete, gates
-from .cards import Blocker, CapRaise, CardDef, CardState, LaneState, Outcome
+from .cards import Blocker, CapRaise, CardDef, CardState, Outcome
 from .conditions import is_true, rise_time
 from .errors import InvalidVerbError
 from .gates import shown_chips, store_cap, tap_speed
@@ -15,6 +15,7 @@ from .index import index
 from .installs import installed, queued, without_taps
 from .joins import joined
 from .leaves import left, present_installs
+from .marks import marked
 from .plan import candidates
 from .lanes import TapCard
 from .inputs import input_rest
@@ -94,7 +95,7 @@ def tap(save: Save, rules: Rules, verb: TapCard, by_player: bool) -> Save:
         return save
     lane = index(rules).cards[verb.card].lane
     speed = tap_speed(save, rules, verb.card) if lane == HANDS else None
-    occupied = tuple(LaneState(lane, verb.card, speed) if ls.lane == lane else ls for ls in save.lanes)
+    occupied = tuple(replace(ls, card=verb.card, speed=speed) if ls.lane == lane else ls for ls in save.lanes)
     stilled = tuple(replace(cs, work=Segment(save.time, cs.work.start_value, 0)) if cs.card == verb.card else cs
                     for cs in save.cards)
     return rebuild(replace(save, lanes=occupied, cards=stilled), rules)
@@ -205,7 +206,7 @@ def _refusal(save: Save, rules: Rules, card: CardId) -> str | None:
 
 
 def _free(save: Save, lane: LaneId) -> Save:
-    return replace(save, lanes=tuple(LaneState(ls.lane) if ls.lane == lane else ls for ls in save.lanes))
+    return replace(save, lanes=tuple(replace(ls, card=None, speed=None) if ls.lane == lane else ls for ls in save.lanes))
 
 
 def written_by(c: CardDef) -> frozenset[LineKey]:
@@ -220,12 +221,12 @@ def _lines(key: LineKey | None) -> tuple[LineKey, ...]:
 
 
 def _apply(save: Save, rules: Rules, o: Outcome, with_stores: bool) -> tuple[Save, tuple[LineKey, ...]]:
-    """The outcome in field order (retire_orders, leaves, orders, joins, queues); with_stores False leaves its stores out (a card's ran as rates)."""
+    """The outcome in field order (retire_orders, leaves, orders, joins, marks, queues); with_stores False leaves its stores out (a card's ran as rates)."""
     if with_stores:
         save = replace(save, stores=tuple(_paid(save, rules, st, o) for st in save.stores))
     save = _raise(_unlock(replace(save, modifiers=save.modifiers + o.modifiers), rules, o.unlocks), o.raises)
     save = left(without_taps(save, o.retire_orders), rules, o.leaves)
-    save = joined(installed(save, present_installs(save, rules, o.orders)), rules, o.joins)
+    save = marked(joined(installed(save, present_installs(save, rules, o.orders)), rules, o.joins), rules, o.marks)
     save = rebuild(_end_retired_taps(queued(save, rules, o.queues), rules), rules)
     for card in o.starts:
         save = tap(save, rules, TapCard(card), False)

@@ -24,6 +24,7 @@ from .phaseview import skill_bar
 from .plan import (
     OrderState, lane_order, mix_order, order_doing, order_states, running_mix_id, running_town_mix_id, town_mix_order,
 )
+from .groups import group_crew
 from .mixruns import mix_entries, mix_gains, town_entries
 from .rates import Running, contribution, lane_state, running, unlocked_standing
 from .rules import Rules
@@ -180,15 +181,17 @@ def _standing(save: Save, rules: Rules, now: Running) -> tuple[StandingBar, ...]
 
 def _lanes(save: Save, rules: Rules) -> tuple[LaneBar, ...]:
     bars: list[LaneBar] = []
+    ix = index(rules)
     for ls in save.lanes:
         if not _lane_shown(save, rules, ls.lane) or is_left(save, ls.lane):
             continue
+        mark = ls.own_split if ls.lane in ix.ruled and ls.lane not in ix.pooled else None
         if ls.card is None:
-            bars.append(LaneBar(ls.lane, None, None))
+            bars.append(LaneBar(ls.lane, None, None, own_split=mark))
             continue
         seg = work_segment(save, ls.card)
         bars.append(LaneBar(ls.lane, ls.card, None if seg.limit is None else reach_time(seg, seg.limit),
-                            lane_order(save, rules, ls.lane)))
+                            lane_order(save, rules, ls.lane), mark))
     return tuple(bars)
 
 
@@ -231,7 +234,7 @@ def _card_view(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
         share_bp=share - sum(g.share_bp for g in gained), run=run,
         blocker=blocker(save, rules, c.id), tap_s=tap_seconds(save, rules, c.id), needs=_needs(save, rules, c),
         cuts_in=cuts_in(save, rules, c.id), speed=tap_work_speed(save, rules, c.id),
-        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained)
+        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained, crew=group_crew(save, rules, c.lane))
 
 
 def _run_by(save: Save, c: CardDef, tapped: bool) -> RunBy | None:
