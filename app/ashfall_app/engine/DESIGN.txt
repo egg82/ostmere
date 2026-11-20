@@ -46,7 +46,7 @@ CHOICES (each with its reason)
   true its mix runs over the player's (Order mix). An order that cannot act is passed over, as a gambit with no
   target is, so order sequence is priority among orders of one kind that can act; a tap order and a mix order never
   compete. The queue head is never passed over (the queue is the plan: it waits, also while an order taps or an
-  order's mix runs). A verb that changes nothing is not an error. READY falls at the first
+  order's mix runs), unless nothing will make it ready (Never ready). A verb that changes nothing is not an error. READY falls at the first
   time a TapCard named by a true order or by the queue head, unlocked, unspent and on a free lane, turns ready
   (its Blocker's ready_at), so nothing waits on an unready project into idleness. Content and the page never build
   an always-true condition (api/CONTRACT.txt, "a store rule"), so no order they make shadows the queue forever; the
@@ -353,7 +353,8 @@ REJECTED, AND WHY (the alternative turned down for each decision above)
 - Rejecting locked projects in SetOrders and SetQueue: planning ahead is the route, and the verb cannot act anyway.
 - Only completions evaluating: a multi-push project would leave its lane idle until some latch moved.
 - A player's TapCard evaluating: every tap would undo the player's own manual switch made a moment before.
-- Passing over the queue head that cannot act, like an order: the queue is the plan, and skipping reorders it.
+- Passing over the queue head that cannot act, like an order: the queue is the plan, and skipping reorders it. (Only a
+  head with no ready time is passed over: Never ready.)
 - When ready holding a staged card to its cap (one entry for every remaining stage), with or without a later stage
   stepping aside for ready entries behind it: played on the week-one routes, typical's B5 and B6 landed a visit later
   (83.2 to 86.4 h, 103.0 to 112.2 h; stepping aside changed neither), and eight visits of days four to six were left
@@ -539,6 +540,12 @@ CHOICES (cards)
   deleting the active one leaves no mix active, clears every pause if the running mix changed, and evaluates at once.
   Why: the decision (docs/decisions.md, "The mix") that a saved mix never quietly runs something else, and the 2 AM
   test's "falls through".
+- Never ready: a queue entry tapping a card whose blocker has no ready time (a material nothing makes under the current
+  rates) is stuck, not dead: it stays queued and is passed over like a dead entry for the first entry that is not, so
+  the hands work what can run (plan.is_stuck, controlling_entry). It controls again once a ready time exists, and when
+  every live entry is stuck the first of them controls and the hands wait: nothing can run. An entry with a ready time
+  still holds the queue. Why: the player may queue any unlocked card (the page's Plan); an entry that cannot yet run must
+  never hold the hands idle behind it.
 - Order mix: save.active is the player's own mix; only the player's SwitchMix and DeleteMix write it, so no order
   and no queue entry ever changes it. The running mix is the mix of the first order, in sequence, whose latch is
   true, whose verb is a SwitchMix and whose mix is not greyed; else the queue mix (below); else save.active

@@ -1,6 +1,6 @@
 // Plan adds a card too (ui/stintplan.ts, game/queue.ts; docs/design/opening-screen.md, "The Rules tab"): one queue, two
 // ways in. A card's When ready and Plan's pick of the same card send the same entry; Plan lists the cards it could take
-// now, then those still waiting with what they wait on in their face's words, then the mixes.
+// now, one that waits saying what in its face's words, then the mixes.
 import { install } from "./fake-dom";
 import { TAUGHT, testContext } from "./context";
 import { keepsOf } from "./kept";
@@ -8,7 +8,7 @@ import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Mix, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
-import { planCards } from "../src/game/queue";
+import { planCards, whenReady } from "../src/game/queue";
 import { waitWords } from "../src/game/needwords";
 import { CardNeeds } from "../src/ui/cardneeds";
 import { StintPlan } from "../src/ui/stintplan";
@@ -80,7 +80,7 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
   expect("the cards in the page's order, crafts under their heading by name; the mixes last",
     [rows[0]!.textContent, ...cardRows.map((r) => r.className.includes("plan-card") ? name(r) : r.textContent), ...rows.slice(-2).map((r) => r.textContent)],
     ["Plan✕", "Look around", "Craft", "Hatchet", "Larder", "Lean-to", "Stool", "a", "b"]);
-  const waits = cardRows.filter((r) => r.className.includes("plan-card") && (r as HTMLButtonElement).disabled) as HTMLButtonElement[];
+  const waits = cardRows.filter((r) => r.className.includes("plan-card") && (r.querySelector(".selector-note")?.textContent ?? "") !== "When ready") as HTMLButtonElement[];
   const faceSays = (card: Card): string => {
     const face = new CardNeeds(testContext().ctx, card.card);
     face.draw(card, view, false);
@@ -90,16 +90,17 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
   const said = waits.map((r) => { const c = view.cards.find((k) => catalog.cardLabel(k.card) === name(r))!; return name(r) + faceSays(c); });
   expect("between them each waiting step, saying what its face says", waits.map((r) => r.textContent), said);
   expect("the lean-to among them", waits.some((r) => name(r) === "Lean-to"), true);
-  expect("a waiting card is off", waits.every((r) => r.disabled), true);
-  waits.forEach((r) => r.click());
-  expect("and sends nothing", plan.got.decided, []);
+  expect("a waiting card is on", waits.every((r) => !r.disabled), true);
+  waits.find((r) => name(r) === "Lean-to")!.click();
+  expect("and picking it queues it, with no ready time to wait for", plan.got.decided.map((d) => JSON.stringify(d)), [JSON.stringify(whenReady(catalog, view, "lean_to"))]);
+  expect("the entry is the lean-to's tap", whenReady(catalog, view, "lean_to")?.kind, "set_queue");
 }
 
 // Plan opens on a card alone (no mix to run), and not before the end, when no card could be taken.
 {
   expect("a card to plan and no mix: offered", planner({ ...view, mixes: [] }).rows().map((r) => r.textContent), ["+ Plan"]);
-  expect("only a waiting card and no mix: nothing", planner({ ...view, mixes: [], cards: [lean] }).rows(), []);
-  expect("a card queued already is not offered again", planner({ ...view, mixes: [], cards: [lean, larder], queue: [{ verb: { kind: "tap_card", card: "larder" },
+  expect("only a card nothing makes ready and no mix: offered", planner({ ...view, mixes: [], cards: [lean] }).rows().map((r) => r.textContent), ["+ Plan"]);
+  expect("a card queued already is not offered again", planner({ ...view, mixes: [], cards: [larder], queue: [{ verb: { kind: "tap_card", card: "larder" },
     until: { kind: "at_least", watched: { kind: "card_count", card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } }] }).rows(), []);
 }
 
@@ -118,7 +119,7 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
     const face = new CardNeeds(testContext(undefined, clocked).ctx, "larder");
     face.draw(card, v, false);
     face.tick(card, v, v.at);
-    expect(`${label}: waiting, never taken now`, planCards(clocked, v).waiting.includes(card), true);
+    expect(`${label}: waiting on a store never shown, so not offered`, [planCards(clocked, v).includes(card), whenReady(clocked, v, "larder")], [false, null]);
     expect(`${label}: Plan's words are the face's`, waitWords(clocked, v, card), face.shows(card.blocker!.condition)?.textContent ?? "(no row)");
   }
   expect("the night's words", waitWords(clocked, view, onNight(null)), "Opens after dark");
