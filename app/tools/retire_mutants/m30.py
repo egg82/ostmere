@@ -4,4 +4,3 @@ EDITS: list[tuple[str, str, str]] = [
      '("Outcome", "joins"), ("Outcome", "retire_orders"),',
      '("Outcome", "joins"),'),
 ]
-RELOCK = True

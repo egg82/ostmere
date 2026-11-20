@@ -64,8 +64,7 @@ RUNS
   and the implementation's own tests (engine/test_leaves_impl.py, engine/test_retired_chores_impl.py,
   opening/test_leaves_loader.py, opening/test_retired_chores_loader.py); only the suite's own tests make claims.
 - Against the implementation: all 33 rows KILLED in every planted variant, each by a test that claims the row; no
-  survivors and no equivalent mutants. Rows 18 and 30 move every rules digest, so their specs rewrite the copy's
-  release lock (RELOCK). Not planted: row 3's rate-form wind-back and row 6's level 0 (the variants that read the
+  survivors and no equivalent mutants. Not planted: row 3's rate-form wind-back and row 6's level 0 (the variants that read the
   stores' history, which no edit of one line reaches).
 - First runs found three gaps in the suite itself, closed here: the install-on-a-left-lane test compared an order's verb
   with a RuleInstall (always unequal), nothing observed Unlocked(ACTION) of a stopped action (row 14), and the

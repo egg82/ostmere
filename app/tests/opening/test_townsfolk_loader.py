@@ -17,8 +17,8 @@ TEXT = FIXTURE.read_text()
 
 
 def shipped() -> Opening:
-    """The session's shipped opening: conftest's autouse patch makes `checked_opening` return it."""
-    return main.checked_opening()
+    """The session's shipped opening: conftest's autouse patch makes `load_opening` return it."""
+    return main.load_opening()
 
 
 @cache

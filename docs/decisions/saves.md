@@ -71,7 +71,7 @@ How these stand today, moved from their rows in `systems.md`.
 
 Saves: a save under older rules is rebased when it next loads (format upgrades chained, then renames: engine
 `DESIGN.txt`, "Rebase"), by data it carries (a manifest of the rules it was written under) and content's renames
-table: forward-only with no per-change flags. The release lock (`engineering.md`) keeps every rebase total. A
+table: forward-only with no per-change flags. A change of ids needs a `renames.toml` entry or the rebase fails (`engineering.md`). A
 retroactive change is a later data migration. Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
 with its decision log, lines and day snapshots, and each rules digest's manifest once, put back into a row stored
 without it when it is read (`app/ashfall_app/db/manifests.py`). A build writes rows without its manifest once its

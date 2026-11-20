@@ -4,14 +4,13 @@ counted levels (engine phases.level_counted). The engine sees only the triggers.
 
 Expanded: each phase from 2 to the last a skill's track reaches (its ranks + 1; a finished track rests at its top),
 each level 2..top_level, at a counted level past the curve's last level; the curve's own levels keep their authored
-pays. Each expansion has a fixed id (`expanded_id`, `find_id`), so the release lock holds its outcome like any
-trigger's, and an entry stays on the Opening so a chapter that adds ranks expands only the phases they add.
+pays. Each expansion has a fixed id (`expanded_id`, `find_id`), and an entry stays on the Opening so a chapter that adds ranks expands only the phases they add.
 
 A later phase's find is the skill's staple good in an amount that grows by phase, with a line from the skill's pool
 chosen by how many finds the track has paid (`find_line`), so no line comes twice running. Phases once paid finds at
-`expanded_id` that gave story goods under one line each; those outcomes are released and cannot change. Each is kept
-(`retired_finds`) under its id and gated at RETIRED_AT, a counted level no skill reaches, so it never fires again, and
-the find is a new trigger under `find_id` that also carries the speed.
+`expanded_id` that gave story goods under one line each. Each is kept (`retired_finds`) under its id and gated at
+RETIRED_AT, a counted level no skill reaches, so it never fires again and a save that fired it still rebases, and the
+find is a new trigger under `find_id` that also carries the speed.
 
 Checked (check_phase_pays): a later phase's work pay is an add, never a multiplier (docs/design/prestige-phases.md,
 "The loop", spiral 2), and speeds a card that exists (which skill's card is a readout, tests/opening/speed_reach.py); the find's store is one a card that stays available consumes (`staying_stores`)."""
@@ -54,7 +53,7 @@ class PhaseFindEntry(Entry):
 
 
 class RetiredFindEntry(Entry):
-    """A find a phase once paid, as released: kept so its trigger's outcome stays what it was, and never fires."""
+    """A find a phase once paid: its trigger is kept so a save that fired it rebases, and never fires again."""
 
     level: int = Field(ge=2)
     line_key: str

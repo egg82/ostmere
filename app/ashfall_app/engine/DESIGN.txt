@@ -797,7 +797,7 @@ REJECTED, AND WHY (the end)
   anyway, and a save made under rules with no end could already be past it, so the first advance would date the end
   to the reload.
 
-SAVES ACROSS RELEASES (FORMAT 4, rebase, the release lock). Where this part and an entry above disagree, this part
+SAVES ACROSS RELEASES (FORMAT 4, rebase). Where this part and an entry above disagree, this part
 holds.
 
 FIT PASS
@@ -807,8 +807,7 @@ FIT PASS
   it is loaded (Minecraft's DataFixerUpper), and a table of renamed content ids shipped with each release (Factorio's
   migration files); the save names content by id, never by list position. Here the chain is UPGRADES (format), the
   table is content (renames.toml), and the manifest is what turns the save's two positional tuples into ids.
-- The engine owns the rebase because it is the one place a save crosses rules, beside decode; content owns the table
-  and the release lock, which keeps every rebase a release can meet total.
+- The engine owns the rebase because it is the one place a save crosses rules, beside decode; content owns the table.
 
 CHOICES (saves across releases)
 - Manifest: encode writes, beside FORMAT and the digest, the slice of the rules a later rebase needs, taken from the
@@ -850,7 +849,7 @@ CHOICES (saves across releases)
      name a card no rules have: "Orders"); a modifier's source is a label and never raises;
   5. build the canonical save under the new rules, at the same time: stores in rules order, each at its value, a new
      store at its initial value, a value above its store's cap under the save's stack (reachable only by lowering a
-     cap, which the lock forbids) clamped to it; skills in rules order, XP kept up to the curve's last threshold, a new
+     cap) clamped to it; skills in rules order, XP kept up to the curve's last threshold, a new
      skill at XP 0; chips, chips_seen and fired in rules order by id, a new chip unlatched and unseen and a new
      trigger unfired; lanes HANDS
      then rules.lanes, a new lane free, and a lane holding a tapped card whose CardDef.lane is now
@@ -876,34 +875,14 @@ CHOICES (saves across releases)
   unlocks nothing reads once the note is gone.
 - Forward-only: what the save had at its last write stands; the time away after it runs under the new rules (the first
   advance after a rebase). A change meant to be retroactive is a later data migration, never a flag on saves.
-- Release lock (content, beside the engine): app/ashfall_app/opening/released/ids.json, written only by
-  app/tools/content_lock.py --write, holds every id ever released by kind (store, skill, standing, card, lane, chip,
-  trigger, feature, and line: every text key a log line can carry), each store's and card's cap, the curve's
-  thresholds, each trigger's outcome, and every rename applied. The server checks the content, renames.toml and the
-  lock at start; tests/opening/test_released.py runs the same check in CI. Each change falls in one class:
-  Safe (green): add any id; reword text; retune rates, costs, inputs, XP, modifiers and gates; raise any cap (a capped
-  card made uncapped included); append curve levels; retire a card by an outcome (Unlock RETIRED); reorder
-  declarations; change a card's work_s or lane.
-  Needs a mapping (red until renames.toml maps it): rename any id; remove a released id of any kind but card. A removed
-  card is red with "retire it instead"; mapping it to a new card id is a rename, and fine. A line key is retired by a
-  `line` entry with no `to`: no text shows it, and a stored line carrying it is dropped when a save opens. A journal
-  note or entry is retired by a `note` or `entry` entry with no `to`: nothing writes it and a save keeps its unlock; a
-  retired note retires its loader-made trigger too (Retired). No other kind is retired.
-  Forbidden after launch (red): reuse a released or renamed-away id (a rename's target is always a new id); lower a
-  store's or a card's cap (an uncapped card given a cap included); change or remove a released curve threshold; change
-  a released trigger's outcome, compared after renames (add a new trigger instead; this also catches inserting a camp
-  level, since camp triggers are numbered); change an id's kind; drop a released rename; bump FORMAT without an
-  UPGRADES entry.
-  Lock out of date (red, "run tools/content_lock.py --write"): the lock is not what --write would write for this
-  content (a new id, a raised cap, an appended threshold, a new trigger or rename, or any change of the rules at all:
-  the lock also holds the content release, a number --write raises by one whenever the rules digest differs from the
-  one it last recorded, which orders builds for the server's saves: api/CONTRACT.txt, "Saves across releases and
-  pods"). --write refuses while any other
-  class is red. Before cutover (LAUNCHED False in the tool) --reset rewrites the lock from the content alone; after
-  cutover, never.
+- No release lock: content may rename, remove or rewrite any id or outcome. A save naming an id the new rules lack fails
+  the rebase at step 4 unless renames.toml maps it, and the app does not start while a live save fails to rebase. Every
+  FORMAT bump needs an UPGRADES entry (tests/engine/test_rebase_impl.py). The release number that orders builds for the
+  server's saves is the CI run number: api/CONTRACT.txt, "Saves across releases and pods".
 
 INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; R renames and retirements; s a save the
-engine returned under r; "allowed" means a change the release lock passes, with R its renames)
+engine returned under r; "allowed" means a change that renames or removes no id R does not map, lowers no cap, moves no
+curve threshold and changes no outcome a save has landed: the changes the retired release lock passed)
 47. Identity: rebase(encode(s, r), r, R) == s for any R, and rebase_logged's lines are empty.
 48. Idempotent: for s2 = rebase(x, r2, R), rebase(encode(s2, r2), r2, R) == s2.
 49. Nothing earned taken back, for an allowed change from r to r2 and s2 = rebase(encode(s, r), r2, R), each id read
@@ -934,7 +913,7 @@ REJECTED, AND WHY (saves across releases)
 - A deploy job that snapshots every save under the old rules (the systems row as it stood): it needs the old code at
   deploy time and touches every save at once; the rebase needs only the text, at the save's next load.
 - Per-change flags or start dates on saves: docs/decisions.md, "Developed live" (no machinery).
-- Dropping an id the new rules lack: earned state lost with no error; the lock turns the same change red in CI.
+- Dropping an id the new rules lack: earned state lost with no error.
 - Resetting fired for a renamed or retuned trigger: its outcome would land twice.
 - Positional chips and fired with a copy of the old rules in each save: the whole rules tree per save for the few
   facts a rebase reads.
@@ -948,8 +927,6 @@ REJECTED, AND WHY (saves across releases)
   may be days of game time away.
 - The full rebase (with evaluation) when the digest is the same: identity would break, since evaluation at load acts
   for the player where a player's tap deliberately does not evaluate.
-- A digest of each trigger's outcome in the lock: renaming an id the outcome names changes the digest, so a mapped
-  rename would read as a changed outcome. The lock keeps the outcome itself and compares the two after renames.
 
 KNOWN GAPS (saves across releases)
 - A card moved off HANDS stays in the saved mixes that hold it (a saved mix is never quietly edited:
@@ -1019,8 +996,7 @@ CHOICES (townsfolk, installed rules, offers)
   nothing here assumes it. Without offers the controlling verb is the tap order, then the queue; the AnswerOffer step
   joins in front when offers land. The rule it follows is the one the SetOrders latch change followed (Rule changes):
   - The stored save is the save. Loading is the whole promise (engineering.md, "Rules from day one"): every live save
-    decodes exactly as before (FORMAT and the rules digest do not change, so there is no rebase and no release is
-    raised: the release lock numbers rules, never engine code), and its time away from its last write runs under the
+    decodes exactly as before (FORMAT and the rules digest do not change, so there is no rebase), and its time away from its last write runs under the
     new evaluation, forward only. Nothing is rewritten, no flag marks old saves.
   - A save written by the old build may stand at an instant with a ready order left unapplied. It stays so until the
     next instant that evaluates (a landing, a latch, a READY, a trigger, a SetOrders), exactly as under the old build;
@@ -1104,8 +1080,6 @@ CHOICES (townsfolk, installed rules, offers)
   rules encoding while empty (as `joins`), so rules without one keep their digest. FORMAT unchanged, Save's fields
   unchanged. Rebase: step 3 renames its card ids (CARD) in released outcomes; step 6 lands a turn already true at the
   rebase instant, so a save past it loses the orders then, and rebase_logged lists each as ended.
-- Release lock: a released trigger's outcome includes its retire_orders (already forbidden to change), so a release
-  that retires chores at a turn already released does so on a new trigger.
 - Content (the loader): OutcomeEntry gains `retire_orders`, a list of card ids. Refused (ValueError, refs.fail's
   "where: message" shape) on any outcome but a trigger's with `season = true`: "trigger {id}: retires orders but is
   not a season's turn" (for an answer or a card, where the other refusals name it, "card {id}", "card {id} finished"
@@ -1202,22 +1176,8 @@ CHOICES (townsfolk, installed rules, offers)
   rebase instant, forward only. rebase_logged's Step carries that instant's rule changes beside its lines (rulelog
   over the step-5 save and the result, each at the save's time), so the server's rule runs list an installed rule
   from the rebase; rebase returns only the save.
-- Release lock: ids.json gains the kinds `offer` and `answer`, and each answer's outcome is kept as a trigger's is.
-  Safe: add an offer, add an answer to an offer. Needs a mapping: rename or remove an offer
-  or answer id. A rename of an offer in renames.toml carries the offer only: the loader derives the rename of its
-  trigger ("offer_" + old to "offer_" + new) and adds it to the renames it passes, and the lock records both as
-  applied. Forbidden: change a released answer's outcome (compared after renames, as a trigger's; saves that
-  already answered would keep the old one); move a released answer to another offer (compared after renames, as an
-  id's kind is); and change a released trigger's outcome, which now includes its installs. An install added to a
-  moment already released goes on a new trigger, never into the released card's outcome: a save past that card
-  never lands it again. Also forbidden, narrowing three classes the lock calls Safe elsewhere: change a released
-  lane's `ruled`, either way; move a released card onto or off a ruled lane; and, for a card a released `queues`
-  names, move it off HANDS or make it uncapped. Each would leave released content that validation refuses (a
-  RuleInstall's card off a ruled lane, a queued card off HANDS or uncapped), which only a forbidden outcome change
-  could fix, or a save's queue entry tapping a card now on a ruled lane, which would hold that save's queue forever.
-  Why forbid rather than have rebase settle such entries: a rebase that drops entries from the player's plan is the
-  silent loss the lock exists to prevent, and a person who becomes a lane, or stops being one, is a new lane id,
-  which is free.
+- Renames: a rename of an offer in renames.toml carries the offer only: the loader derives the rename of its trigger
+  ("offer_" + old to "offer_" + new) and adds it to the renames it passes.
 - Content (the loader, app/ashfall_app/opening): LaneEntry gains `ruled` (default false) and `later_labels`, a list
   of {after: UnlockEntry, label_key} (the row's label once `after` is unlocked; the last held one wins, as aims). A
   card on a ruled lane has no skill and no XP (a loader check: townsfolk do not level, docs/decisions.md, "You and the
@@ -1316,8 +1276,6 @@ REJECTED, AND WHY (townsfolk, installed rules, offers)
 - Holding the evaluation fix for day two's release, whose rules change raises the release and so keeps the two builds
   off one save during the rollout: day one would keep its defect until then, and the mixing it avoids is minutes of
   forward-only, valid writes, which the latch change already accepted.
-- Raising the content release for an engine-only change (a forced bump in the lock): the lock numbers rules, and a
-  number that also moved for code would stop saying which content a save was written under.
 - A third evaluation order (queue before tap orders, or answers last): an answer's outcome may start a card, which
   should take its lane before a tap order fills it; tap orders before the queue is the existing rule.
 - An install record (a set of install ids in the save) so an outcome landing twice installs once: a new Save field
@@ -1408,10 +1366,6 @@ CHOICES (the Camp)
   steps after them; so a save's stack, kept by rebase (invariant 49), holds a prefix of the new chain, and each new
   to_camp trigger already true fires at the rebase instant (invariant 50) and lands the rest. A save that landed the
   released last level gets the next level's room at its load.
-- Release lock: adding a Camp level above the last released one is Safe (its camp_m and to_camp_m are new triggers).
-  The lock holds each trigger's outcome, so a change that would alter a released step's raise (a released at_items
-  retuned, B moved, a level inserted) turns a released to_camp trigger's outcome red. lifted_by is not in the lock: a
-  lift rides card outcomes, which are Safe to retune, so turning lifted_by into a list or adding a card to it is Safe.
 - Codec: none. to_camp_m is a TriggerDef like any other, carried by the manifest and Save.fired; no Save field and no
   FORMAT change.
 
@@ -1685,9 +1639,8 @@ CHOICES (fights)
   stays. Confirmed against codec.py: a Target tag is one entry in its class table, and rules_digest leaves sides and
   threats out of the rules' encoding while empty, so rules that declare none keep their digest and old saves decode as
   they were (tests/engine/test_pre_fights_save.py).
-- Rebase: a release that adds a FightDef to a released card changes what its lines pay (Safe, as a retuned lump);
-  adding a ThreatStrength entry to a released trigger's outcome changes a locked outcome and is refused by the lock.
-  A ramp step is always a new trigger.
+- Rebase: a release that adds a FightDef to a released card changes what its lines pay; a
+  ramp step is always a new trigger.
 - Held entries: a card's while_running entries join the stack the odds are read from, scaled by the card's share of
   its lane's time while it runs (ENTRIES HELD WHILE A CARD RUNS, the last part).
 
@@ -1976,10 +1929,6 @@ CHOICES (the town's mix)
   step 4 checks the lane against the manifest's lanes. Mix ids are never renamed ("town:" ids included). Step 6
   lands a join whose trigger is already true at the rebase instant, as an install: a save past the moment gets
   Unlock(JOINED), the mix and its rule, and its first uncapped always rule as the share, keeping every other rule.
-- Release lock, beyond what it forbids today (a released outcome's change, `ruled` either way, a card onto or off
-  a ruled lane): forbidden to give a cap to a released uncapped card on a ruled lane, to give one an XP line, and to
-  move a released card from one ruled lane to another. Each would leave saved TOWN mixes that SaveMix refuses, or a
-  share counted against the wrong person, which no rebase step may repair without dropping the player's split.
 - Content (the loader): OutcomeEntry gains `joins`, a list of {lane, mix, card (optional)}, refused outside a
   trigger's or an answer's outcome; `mix` begins "town:". The loader's own XP check on ruled-lane cards stays as a
   clearer message ahead of the engine's.
@@ -2086,7 +2035,7 @@ CHOICES (leaves)
   counted only when present, whatever rules.opening is). Only Outcome.leaves adds it (validation refuses it in any
   Outcome.unlocks and in Rules.opening). A lane's person is present when JOINED is held and LEFT is not; a ruled lane
   with LEFT held is gone, joined or not. Unlocks only grow, so a leave is for good: a person who returns is a new lane
-  id (the release lock already makes a new lane id free).
+  id.
 - Each leave, in tuple order, when Unlock(LEFT, lane) is not yet held, at that instant:
   1. add Unlock(LEFT, lane);
   2. the lane's tap ends: the lane is freed, and the running card's completion is dropped: no push line, no outcome,
@@ -2127,9 +2076,6 @@ CHOICES (leaves)
   step 4 checks them against the manifest. Step 6 lands a leave whose trigger is already true at the rebase instant,
   so a save past the moment loads with the person gone: LEFT held, the lane's orders and shares removed (each order
   logged ended LEFT in rebase_logged), its tap ended unpaid.
-- Release lock: a released trigger's or answer's outcome includes its leaves (already forbidden to change). Also
-  forbidden: moving a released card onto or off a lane a released leave names (a saved mix would hold a share the
-  leave no longer removes, or lose one it should keep).
 - Content (the loader): OutcomeEntry gains `leaves`, a list of {lane, stops (default [])}, refused outside a
   trigger's or an answer's outcome; lane a ruled lane, stops standing action ids; ValueError naming the trigger or
   answer and the lane ("trigger {id}: leaves {lane}, which is not a ruled lane"; "trigger {id}: leaves {lane}, which
@@ -2155,8 +2101,6 @@ CHOICES (leaves)
     lane in the outcome that leaves it, "{where}: joins {lane} in the outcome that leaves it": the engine lands it
     as nothing (leaves come before joins), so content naming both is a mistake. A join of the lane in a later
     outcome is not checked (KNOWN GAPS, the first gap).
-  - Release lock: moving a released card onto or off a lane a leave names is already forbidden for every ruled lane
-    (opening/lock_checks.py, the ruled-lane rule), so nothing is added.
 
 INVARIANTS (leaves; numbered on from 147. Invariant 27 now reads "... except one on ANSWERED, ANSWER, JOINED or LEFT,
 which is true only once the save holds it"; invariant 49 now reads, for mixes: "mixes equal those of s less the
@@ -2292,11 +2236,6 @@ CHOICES (groups)
   already true at the rebase instant, as it lands joins and installs. A person whose `group` content later changes
   contributes to the new group from the rebase instant. No migration: every existing LaneState decodes with own_split
   True, every released join with own_split True, no released lane is pooled.
-- Release lock: ids.json gains `lane_pooled` (the pooled lanes released). Forbidden: a released lane's `pooled`
-  changing either way (a pooled lane's shares are counted per member, a person lane's per person). Safe: adding a pooled
-  lane, adding cards to one, and setting or changing a released person's `group` (nothing saved names membership; their
-  time moves to the new group's split at the rebase). Moving a released card onto or off a pooled lane is already
-  forbidden (a released card may not move between ruled lanes).
 - Content (the loader): LaneEntry gains `pooled` and `group`; a pooled lane has a label_key (the group's name on
   screen) and no name_key, group or told ("lane {id}: a pooled lane is ruled and has no name_key, group or told"); a
   group names a pooled lane. JoinEntry gains `own_split`, required on every join (the released joins say `true`): the
@@ -2321,7 +2260,7 @@ INVARIANTS (groups; numbered on from 178)
 REJECTED, AND WHY (groups)
 - Job tags on per-person cards (each card names a job; a group's split gives each member's card of that job the share):
   content must author one card per person per job, the copy chore this part removes, and loader-made per-person card ids
-  would be carried by the release lock for ever.
+  would stay in the content for ever.
 - A mix per group (each group its own TOWN Mix and always rule): THE TOWN'S MIX turned down a mix per person for the same
   reason; the town mix stays the one container.
 - The mark as an unlock: unlocks only grow, and the mark is set and cleared.
@@ -2383,17 +2322,11 @@ CHOICES (offer kinds)
   unkinded, which is what it was. (The plan called for a format upgrade that adds none; with the optional keys there
   is nothing for one to do, and a bump would change the FORMAT every released save and test is pinned to.) AnswerKind
   joins the codec's classes and _VERB_TYPES; Save's fields are unchanged (app/tests/held/save_fields.json).
-- Rebase: a kind and a role are never renamed (the release lock forbids changing one), so renaming passes an
+- Rebase: a kind and a role are never renamed (changing one fails the rebase), so renaming passes an
   AnswerKind through. Step 4 also checks that an offer the manifest gives a kind has, in the new rules, that same
   kind, and each answer the manifest gives a role the same role (RebaseError(OFFER, id) for the offer); an offer the
   manifest gives no kind may have gained one. A save's AnswerKind order is then valid under the new rules because
   its kind and roles are.
-- Release lock: ids.json gains `offer_kinds` (offer id to kind, kinded offers only) and `answer_roles` (answer id to
-  role, answers with a role only). Safe: give a kind, and roles on its answers, to a released offer that had none; a
-  new kinded offer; a new answer with a role. Forbidden: change or remove a released offer's kind; change or remove
-  a released answer's role (offer and answer ids compared after renames, as an id's kind is). Why forbidden: a saved
-  order may hold AnswerKind(kind, role) and means it against every offer of the kind, past and to come, so the
-  meaning of a name is as fixed as an id's.
 - Content (the loader, app/ashfall_app/opening): OfferEntry gains `kind` (optional) and AnswerEntry `role` (optional).
   The loader fails, naming the offer, for a role on an offer without a kind, a kinded offer's answer without a role,
   two answers of one offer with one role, and two offers of one kind whose role sets differ. Day three's arrival
@@ -2425,8 +2358,6 @@ INVARIANTS (offer kinds)
     for rules with kinds, decode(encode(s, r), r) == s, the manifest's offers carry kind and roles, and rebase of a
     save written under rules without the kind into rules that give a kinded offer one is accepted and loses nothing;
     rebase into rules that change a kind or a role the manifest names raises RebaseError.
-107. Release lock: giving a kind to a released offer that had none is Safe; changing or removing a released offer's
-    kind, and changing or removing a released answer's role, is Forbidden.
 
 REJECTED, AND WHY (offer kinds)
 - Resolving the AnswerKind to the offer at SetOrders and storing an AnswerOffer: it names one offer, which is the
@@ -2678,10 +2609,6 @@ CHOICES (entries held while a card runs)
   field, no manifest change (the manifest's cards carry id, work_s, lane and cap), FORMAT unchanged.
 - Rebase: nothing new; no save holds a held entry, so step 3 has nothing to rename, and a side's id is read from the
   rules.
-- Release lock: adding while_running to a released card is Safe (it pays more, as a retuned lump); retuning or
-  removing an entry is Safe too, as retuning modifiers is. Safe means the lock check reports no needs_mapping and no
-  forbidden problem; it does report out_of_date until tools/content_lock.py --write runs, because the rules digest
-  changes, and --write then raises the content release as for any rules change. ids.json gains no field.
 - Content (the loader, app/ashfall_app/opening): CardEntry gains `while_running: list[WhileRunningEntry] = []`,
   WhileRunningEntry {side: str, amount_bp: int, at least 1 by the schema} in entries.py beside CardEntry (not in
   fight_entries.py beside SideEntry: fight_entries imports Entry from entries and CardEntry names this type, so that
@@ -2716,8 +2643,7 @@ those sourced "held:" + a card.)
 116. Validation: InvalidRulesError for a WhileRunning naming an undeclared side, amount_bp below 1, one side twice in
     one card, and any rules Modifier whose source begins "held:"; InvalidVerbError for new_save given a starting stack
     entry with that source.
-117. Lock and rebase: adding while_running to a released card passes the release lock as Safe, and rebasing any save
-    the engine returned under the old rules into those rules succeeds with its time, store values, card work and
+117. Rebase: rebasing any save the engine returned under the old rules into those rules succeeds with its time, store values, card work and
     unlock set unchanged.
 118. View: View.held lists exactly the cards with h(c) > 0, in rules order, with share_bp = h(c) and entries equal to
     their held entries in the stack; the wire's Strength.sources carries each held entry once with source the card
@@ -2821,7 +2747,6 @@ CHOICES (held speed)
   only through the rates and work times it changes, and through CardInfo.change_bp (CONTRACT.txt, "upside_of").
 - Codec: HeldSpeed joins the rules encoding's classes; a StandingDef's `while_running` is left out while empty, as a
   card's is, so rules that declare none keep their digest. No Save field, no manifest change, FORMAT unchanged.
-- Release lock: adding a HeldSpeed to a released card or standing action is Safe, as adding a WhileRunning is.
 
 INVARIANTS (held speed; numbered on from 155. Invariants 110-118 hold for standing holders and HeldSpeed as below.)
 156. Held exactly while running, standing: for a standing action a with while_running, the effective stack holds,
@@ -2922,8 +2847,6 @@ CHOICES (drains)
   digest, their manifest and every save's text; a non-empty drains is in the rules encoding and so in rules_digest.
   Amount is already a codec class. No Save field, no manifest change (cards carry id, work_s, lane, cap), FORMAT
   unchanged, no upgrade. Rebase: nothing new (a drain is in the rules, never the save).
-- Release lock: adding, retuning or removing a drain on a released card, and moving a store from its inputs to its
-  drains, is Safe (no id, cap, threshold or trigger outcome changes); the lock reports out_of_date until --write.
 
 CHOICES (fractions at the loader)
 - FlowEntry.every_hours (>= 1, default 1): items_per_hour items every every_hours hours, the Flow's rate
@@ -3124,13 +3047,13 @@ CHOICES (spent)
   say there is one (docs/decisions.md, "Every bad state has a cure in reach"). Covered is unchanged.
 - Codec: nothing. Run is not in a save; Save's fields are unchanged (app/tests/held/save_fields.json); Pause is as it
   was. FORMAT, the manifest, the rules encoding and rules_digest are unchanged. Rebase: nothing new.
-- Release lock: nothing new is locked (no rule shape changes). Shipping is a behaviour change, as "Shipping the
-  evaluation change" was: the stored save is the save, every live save decodes exactly as before, and a saved mix
-  holding a paused card runs differently from the deploy on, forward only, from its last write. That is the decision's
-  own point (docs/decisions.md: a re-tune is only ever set off by something the player chose): the player chose the
-  split; a dry store did not. Replays from a snapshot across the deploy diverge for such saves (saves/support.py's
-  `replay` reports no match) until their pre-release snapshots age out. The commit carries its exposure: the
-  playthroughs and the simulator re-run, every held counter that moves named and brought to the lead, never raised.
+- Shipping is a behaviour change, as "Shipping the evaluation change" was: the stored save is the save, every live save
+  decodes exactly as before, and a saved mix holding a paused card runs differently from the deploy on, forward only,
+  from its last write. That is the decision's own point (docs/decisions.md: a re-tune is only ever set off by something
+  the player chose): the player chose the split; a dry store did not. Replays from a snapshot across the deploy diverge
+  for such saves (saves/support.py's `replay` reports no match) until their pre-release snapshots age out. The commit
+  carries its exposure: the playthroughs and the simulator re-run, every held counter that moves named and brought to
+  the lead, never raised.
 
 INVARIANTS (spent; numbered on from 132. Invariant 41 now reads: "a line is starved iff its store is at 0 and a
 runner that is not a spent card is paused on it, or a candidate tap is blocked on it". Invariants 16 and 19 hold
@@ -3257,7 +3180,7 @@ CHOICES (prestige phases)
   skill's index, ordered right after LEVEL_UP (phaseevents.py). Neither makes orders evaluate: no condition reads
   topped_at.
 - Rebase keeps each skill's phase, its XP held at or under the phase's ceiling; picks are renamed as IdKind.NODE.
-  The release lock holds node ids as any content id (kind "node", so renames.toml can name a node's rename), and no
+  Node ids are content ids like any other (kind "node", so renames.toml can name a node's rename), and no
   rules modifier, nor a new save's starting one, may be sourced NODE_PREFIX: only a pick's entry is.
 - A finished track: the skill is mastered. Prestige is refused TRACK_DONE for good, and the skill rests at its top,
   its XP stopping at the carry's end as at any top.

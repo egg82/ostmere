@@ -26,8 +26,8 @@ KEPT_DAYS = 30
 @dataclass(frozen=True)
 class Ruleset:
     """What a pod plays saves under: the content's rules and renames, the opening's first lines, its build, and the
-    content release its rules are (the release lock's number, which every content change raises): a save last written
-    under a later release is not this pod's to write."""
+    release number (`ruleset.build_release`, later builds higher): a save last written under a later release is not
+    this pod's to write."""
 
     rules: e.Rules
     digest: str

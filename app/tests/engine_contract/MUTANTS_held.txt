@@ -47,9 +47,6 @@ the rules. Record each run below the list as MUTANTS.txt does (planted, red, sur
                    fight's drain stays at the guarded rate after the guard pauses).                   [110, 112]
 22 between events  the entry is scaled by a share sampled at the read time from a rate (a work speed) rather than
                    discrete state, so g moves between two instants with no event.  [112, 113]
-23 lock red        the release lock counts while_running as part of a released card (a field in ids.json, or the
-                   card's outcome compared with it), so adding an entry to a released card reports forbidden or
-                   needs_mapping instead of out_of_date alone, and --write refuses.                     [117]
 24 rebase writes   the manifest carries each card's while_running, or rebase writes the held entries into
                    s2.modifiers: rebasing a save from rules without the entry into rules with it raises
                    (StateFormatError, RebaseError), or returns a save whose modifiers differ from s's.  [117, 114]
@@ -59,9 +56,5 @@ RUNS
   (specs tools/held_mutants/mNN.py, each a list of (path, old, new) edits against the implementation, one per row).
   `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against a reference model written from DESIGN.txt in a scratch copy (not the implementation): rows 1-22 all red, and 16 single-clause
-  variants of rows 12, 16, 17, 18, 19 and 20 red; no survivors, no equivalent mutants. Against the implementation (engine/heldentries.py and its callers): rows 1-24 all KILLED, each with a test that claims it
+  variants of rows 12, 16, 17, 18, 19 and 20 red; no survivors, no equivalent mutants. Against the implementation (engine/heldentries.py and its callers): rows 1-22 and 24 all KILLED, each with a test that claims it
   red; no survivors, no equivalent mutants.
-- Since the shipped content holds while_running cards, row 23 is red before any test: the release-lock session fixture
-  refuses the shipped content (forbidden: the watch cards' caps went down), so the runner scores it BROKEN and its own
-  tests never run. Row 20 moves every digest and rewrites the copy's lock (RELOCK); row 23's plant makes --write refuse,
-  so it cannot.

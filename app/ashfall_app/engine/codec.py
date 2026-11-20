@@ -50,7 +50,6 @@ _CLASSES: dict[str, Callable[..., object]] = {c.__name__: c for c in (
 )}
 _OUTCOMES = _CLASSES | {c.__name__: c for c in (
     Outcome, Amount, CapRaise, RuleInstall, Join, Mark, Leave, OfferDef, AnswerDef, WhileRunning, HeldSpeed)}
-"""Saves never hold an outcome; the release lock keeps released ones (from_json)."""
 _VERBS = _CLASSES | {c.__name__: c for c in (SaveMix, DeleteMix, SetOrders, SetQueue, Prestige, UndoPick, MovePick)}
 _VERB_TYPES = (
     SwitchMix, SaveMix, DeleteMix, SetOrders, SetQueue, TapCard, AnswerOffer, AnswerKind, Prestige, UndoPick, MovePick)

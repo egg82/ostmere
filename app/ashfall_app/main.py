@@ -26,14 +26,12 @@ from .db import engine as db
 from .feedback.routes import routes as feedback_routes
 from .feedback.service import PgFeedback
 from .old_host import OldHostRedirect
-from .opening.lock import load_lock
-from .opening.lock_checks import release_problems
 from .opening.renames import load_renames
-from .opening.schema import Opening, load_opening
+from .opening.schema import load_opening
 from .saves.check import check
 from .saves.interface import MAX_SAVES, Ruleset
 from .saves.manifest import registered
-from .saves.ruleset import ruleset
+from .saves.ruleset import build_release, ruleset
 from .saves.service import PgSaves
 from .services import Services
 from .web import page
@@ -63,14 +61,6 @@ def read_changes(path: Path) -> list[Change]:
         if subject:
             changes.append(Change(date=date, subject=subject))
     return changes
-
-
-def checked_opening() -> Opening:
-    opening = load_opening()
-    found = release_problems(opening)
-    if found:   # tests/opening/test_released.py holds the same check in CI: a deploy never gets here
-        raise ValueError("the opening breaks the release lock: " + "; ".join(f"{p.cls}: {p.message}" for p in found))
-    return opening
 
 
 def wire(database: db.Database | None, rs: Ruleset, clock: Clock) -> Services:
@@ -107,8 +97,8 @@ def rate_key() -> bytes | None:
 
 def create_app(clock: Clock = system) -> FastAPI:
     logs.setup()
-    opening = checked_opening()
-    rs = ruleset(opening, load_renames(), os.environ.get("BUILD_VERSION", "dev"), load_lock().release)
+    opening = load_opening()
+    rs = ruleset(opening, load_renames(), os.environ.get("BUILD_VERSION", "dev"), build_release())
     game = Game(opening, rs)
     rs = replace(rs, mix_marks=game.mixes.marks)
     logs.info(logging.getLogger("ashfall.app"), "app.start", rules=rs.digest, version=rs.build, release=rs.release)

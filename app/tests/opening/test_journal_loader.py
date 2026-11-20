@@ -9,8 +9,6 @@ from ashfall_app.engine import (
     AtLeast, EntryId, IdKind, NoteId, Rename, Rules, Save, TriggerId, Unlock, Unlocked, UnlockKind, advance, encode,
     new_save, rebase, TriggerDef,
 )
-from ashfall_app.opening.lock import snapshot
-from ashfall_app.opening.lock_checks import problems
 from ashfall_app.opening.renames import RenameEntry, engine_renames, load_renames
 from ashfall_app.opening.schema import Opening, load_opening, to_rules
 from tests.opening.bookless import bookless_opening
@@ -193,7 +191,7 @@ def test_a_later_note_whose_gate_holds_first_waits_for_the_entry_then_lands_at_i
     assert unlocked(at(r, 300), UnlockKind.ENTRY) == {PAGE_A, PAGE_B}
 
 
-# ---------- 4: renames and the release lock ----------
+# ---------- 4: renames ----------
 
 RENAMED = (("j_page_a", "j_leaf_a"), ("j_note_a1", "j_line_a1"))
 
@@ -219,14 +217,3 @@ def test_a_renamed_entry_and_note_carry_their_unlocks_across_a_rebase(tmp_path: 
 def test_a_note_rename_in_the_file_carries_its_trigger_rename(tmp_path: Path):
     path = written(tmp_path / "renames.toml", '[[renames]]\nkind = "note"\nfrom = "x"\nto = "y"\n')
     assert Rename(IdKind.TRIGGER, "note_x", "note_y") in set(engine_renames(load_renames(path)))
-
-
-def test_a_released_note_that_goes_needs_its_mapping_and_a_mapped_one_does_not(tmp_path: Path):
-    was = snapshot(load(FIXTURE), rules_of(FIXTURE), load_renames())
-    gone = edited(tmp_path, ('[[notes]]\nid = "j_note_a2"\nentry = "j_page_a"\ngate = { test = "after_time", value = 100 }\n'
-                             'hand = "pencil"\nsketch = "j_note_sketch"\n', ""), ('j_note_a2 = "A later thing, in pencil, with a small drawing."\n', ""))
-    now = snapshot(load(gone), rules_of(gone), load_renames())
-    ps = problems(was, now, load_renames())
-    assert any(p.cls == "needs_mapping" and "note j_note_a2" in p.message for p in ps), ps
-    mapped = [*load_renames(), RenameEntry.model_validate({"kind": "note", "from": "j_note_a2", "to": "j_note_b1"})]
-    assert not any(p.cls == "needs_mapping" and "note j_note_a2" in p.message for p in problems(was, now, mapped))

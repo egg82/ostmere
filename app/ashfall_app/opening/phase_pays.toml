@@ -10,8 +10,8 @@ version = 1
 # A find is the skill's staple: a store one of its own training cards spends for the rest of the game (the loader
 # refuses any other), in an amount that grows by `items_per_phase` each phase, under a line from the pool that says the
 # skill is getting better, never a story object, since a later phase lands at a different moment of the story for each
-# player. `retired_finds` are what phases 2 up to `retired_through` once paid: released, so their triggers stay as they
-# were under their old ids, gated out of reach. Their lines stay below only because those triggers name them.
+# player. `retired_finds` are what phases 2 up to `retired_through` once paid: their triggers stay under their old ids,
+# gated out of reach, so a save that fired one still rebases. Their lines stay below only because those triggers name them.
 
 [[phase_pays]]
 skill = "woodcutting"

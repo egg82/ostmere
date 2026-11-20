@@ -11,11 +11,10 @@ from pathlib import Path
 from .. import logs
 from ..clock import system
 from ..db.engine import open_database
-from ..opening.lock import load_lock
 from ..opening.renames import load_renames
 from ..opening.schema import load_opening
 from .check import check
-from .ruleset import ruleset
+from .ruleset import build_release, ruleset
 from .strip import strip
 from .support import replay, restore
 
@@ -44,7 +43,7 @@ def main(argv: list[str]) -> int:
         print("DATABASE_URL is not set", file=sys.stderr)
         return 2
     logs.setup()
-    rs = ruleset(load_opening(), load_renames(), os.environ.get("BUILD_VERSION", "dev"), load_lock().release)
+    rs = ruleset(load_opening(), load_renames(), os.environ.get("BUILD_VERSION", "dev"), build_release())
     database = open_database(url)
     try:
         if args.command == "check":

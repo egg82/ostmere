@@ -8,8 +8,8 @@ sim-invariants.md). Skills, node ids and counts only (CLAUDE.md, "Never spoil th
 import sys
 from collections import defaultdict
 
-from ashfall_app.main import checked_opening
 from ashfall_app.opening.prestige import NodeEntry
+from ashfall_app.opening.schema import load_opening
 
 NAMES = ("tracks",)
 
@@ -43,7 +43,7 @@ def render(nodes: list[NodeEntry]) -> str:
 
 
 def readouts() -> dict[str, str]:
-    return {"tracks": render(checked_opening().nodes)}
+    return {"tracks": render(load_opening().nodes)}
 
 
 if __name__ == "__main__":

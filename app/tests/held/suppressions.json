@@ -5,12 +5,6 @@
  "app/ashfall_app/engine/codec.py": {
   "cast": 1
  },
- "app/ashfall_app/opening/lock.py": {
-  "cast": 1
- },
- "app/ashfall_app/opening/lock_checks.py": {
-  "cast": 1
- },
  "app/client/test/arrivals.test.ts": {
   "as-unknown-as": 1
  },

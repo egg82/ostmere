@@ -11,7 +11,6 @@ from sqlalchemy import Engine
 from .. import clock, logs
 from ..db.engine import open_database
 from ..db.handsfree import Latest
-from ..opening.lock import load_lock
 from ..opening.renames import load_renames
 from ..opening.schema import load_opening
 from ..reminders.config import load_config, min_busy_s
@@ -20,7 +19,7 @@ from ..reminders.run import run
 from ..reminders.sender import WebPushSender
 from ..saves import handsfree
 from ..saves.interface import Ruleset
-from ..saves.ruleset import ruleset
+from ..saves.ruleset import build_release, ruleset
 from ..saves.service import wall_budget
 
 log = logging.getLogger("ashfall.reminders")
@@ -54,6 +53,6 @@ def refresher(engine: Engine, build: str) -> Callable[[Latest], bool]:
 
     def refresh(latest: Latest) -> bool:
         if not held:
-            held.append(ruleset(load_opening(), load_renames(), build, load_lock().release))
+            held.append(ruleset(load_opening(), load_renames(), build, build_release()))
         return handsfree.refresh(engine, held[0], latest, min_busy_s(), wall_budget())
     return refresh

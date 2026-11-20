@@ -77,7 +77,7 @@ saves = Table(
     Column("game_time", BigInteger, nullable=False),
     Column("ended_at", BigInteger, nullable=True),
     _when("deleted_at", nullable=True),
-    # The build that last wrote the save, and the content release it wrote it under (the release lock's number): a pod
+    # The build that last wrote the save, and the release it wrote it under (saves/ruleset.py `build_release`): a pod
     # of an earlier release must not write over it.
     Column("build", Text, nullable=True),
     Column("release", Integer, nullable=True),

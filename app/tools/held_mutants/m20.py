@@ -4,4 +4,3 @@ EDITS: list[tuple[str, str, str]] = [
      '            if runner.get("while_running") == []:',
      '            if False:'),
 ]
-RELOCK = True

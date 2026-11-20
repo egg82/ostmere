@@ -1,12 +1,11 @@
 """Town cards (ashfall_app/opening/town.py): one definition expands to a card per lane at the merge. The rules digest
-the lock records is the proof that moving week one's copies into entries changed structure only."""
+is the proof that an expansion changed nothing it should not."""
 from pathlib import Path
 
 import pytest
 
 from ashfall_app.engine import rules_digest
 from ashfall_app.opening.convert import build_rules
-from ashfall_app.opening.lock import load_lock
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening, to_rules
 from ashfall_app.opening.town import TownCardEntry, undeclared_lanes
 from tests.opening.playthrough import opening
@@ -29,18 +28,18 @@ def digest(o: Opening) -> str:
 
 
 @pytest.fixture(scope="module")
-def digests(tmp_path_factory: pytest.TempPathFactory) -> tuple[str, str, str]:
-    """The digest of the chapters reloaded with an unedited copy of day three, of the cached shipped opening, and the
-    lock's, computed once."""
+def digests(tmp_path_factory: pytest.TempPathFactory) -> tuple[str, str]:
+    """The digest of the chapters reloaded with an unedited copy of day three and of the cached shipped opening,
+    computed once."""
     same = planted(tmp_path_factory.mktemp("town"), 'label_key = "c_woodcutting"', 'label_key = "c_woodcutting"')
-    return digest(same), digest(opening()), load_lock().digest
+    return digest(same), digest(opening())
 
 
-def test_the_shipped_content_digest_is_the_lock_s(digests: tuple[str, str, str]):
-    """The control for the dropped-lane test: the unedited chapters match the recorded digest, so a difference below
+def test_an_unedited_reload_has_the_shipped_digest(digests: tuple[str, str]):
+    """The control for the dropped-lane test: the unedited chapters match the shipped digest, so a difference below
     is the edit's."""
-    same, shipped, locked = digests
-    assert same == shipped == locked
+    same, shipped = digests
+    assert same == shipped
 
 
 @pytest.fixture(scope="module")
@@ -57,8 +56,7 @@ def test_an_expansion_that_drops_a_lane_changes_the_digest(dropped_lane: tuple[O
     the rules are built without the checks: the digest alone has to see it."""
     o, dropped, shipped, without = dropped_lane
     assert len(dropped.cards) == len(o.cards) - 1
-    assert shipped == load_lock().digest
-    assert without != load_lock().digest
+    assert without != shipped
 
 
 def test_an_expansion_that_collides_with_an_id_fails_the_loader_naming_it(tmp_path: Path):

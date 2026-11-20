@@ -7,7 +7,7 @@ import pytest
 from ashfall_app.api.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.checks import check_opening
-from ashfall_app.opening.lock import line_keys
+from ashfall_app.opening.line_kinds import line_keys
 from ashfall_app.opening.refs import outcomes
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from ashfall_app.saves.ruleset import ruleset
