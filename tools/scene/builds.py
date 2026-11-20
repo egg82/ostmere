@@ -69,7 +69,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
-HELD_CROWDED = frozenset({("cellar", "dry_wood_1"), ("cellar", "wood_drying")})
+HELD_CROWDED: frozenset[tuple[str, str]] = frozenset()
 """Pairs of builds (sorted) that share `MIN_SHARED` pixels today, held so the check stays on for the rest: may only shrink."""
 
 MEMBER_OF = {layer: build for build, layers in BUILDS.items() for layer in layers}

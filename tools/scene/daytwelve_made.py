@@ -18,7 +18,7 @@ from daytwo import cut
 from place import H, W, canvas, put
 from tints import SOIL, STONE, WOOD
 
-CELLAR = (74, 147)
+CELLAR = (88, 147)
 """The cellar's mouth: its centre at the ruin's north wall, where the wall's foot meets the camp's floor."""
 PIT = (18, 11)
 """The pit at the art's 1x grain: its width, and how far it reaches out from the wall's foot when dug through."""
@@ -30,8 +30,8 @@ HEAD, LEFT, RIGHT, BOARD = (377, 33, 455, 42), (376, 42, 382, 93), (448, 42, 455
 """The boarded doorway's head timber, its two posts, and one of the boards nailed across it."""
 DOOR_H = 22
 """How much of the posts stands above the stair."""
-SPOIL_AT = (CELLAR[0] + 20, CELLAR[1] + 24)
-"""The spoil's heap: its bottom-left, right of the pit and out from the wall."""
+SPOIL_AT = (CELLAR[0] - 50, CELLAR[1] + 24)
+"""The spoil's heap: its bottom-left, left of the pit and out from the wall."""
 LANTERNS = "cavesandmines_TFcolor_update_8.24/_tfrecolor_8.24/1X/tilesets/tileB_cave2.png"
 UNLIT, LIT = (116, 52, 123, 59), (116, 68, 123, 75)
 """The mine sheet's small hanging lantern (1x), dark and burning."""
