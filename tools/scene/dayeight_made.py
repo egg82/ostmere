@@ -30,8 +30,8 @@ first, then the rest of it, then the gap's two sides; stage 12 is the gate betwe
 GATE = (278, 304, 149)
 STAKES = (424, 182)
 """The stakes' stack: its bottom-left, inside the rim's stretch, right of the woodshed and above the birch."""
-GAP_AT = (9.4 * T - 30, 5.55 * T - 14)
-"""The gap fire's centre: in the gap's mouth, where the wolves come."""
+GAP_AT = (506, 282)
+"""The gap fire's centre: open ground at the camp's right edge, clear of the hearth's walls, the builds and the figures."""
 GAP_FIRE = (round(GAP_AT[0] - WATCH[0]), round(GAP_AT[1] - WATCH[1]))
 """The gap fire from the watch fire's spot, which its art is drawn at."""
 ASH_HEAP = (112, 272)
