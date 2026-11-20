@@ -69,14 +69,16 @@ export class GroupMembers {
     node.append(face(this.ctx, lane, name), who);
     if (tap) node.append(el("span", "hands-then group-then", catalog.text.fill(UI.handsThen, { mix: split })));
     const held = laneTap(view, lane);
+    const tasks = el("span", "group-tasks");
     for (const c of view.cards.filter((x) => x.cap !== null && catalog.laneOf(x.card) === lane)) {
       const b = el("button", "quiet group-task", catalog.cardLabel(c.card));
       b.type = "button";
       b.dataset.card = c.card;
       b.disabled = held !== null;
       b.addEventListener("click", () => { tapFeedback(); actions.decide({ kind: "tap_card", card: c.card }); });
-      node.append(b);
+      tasks.append(b);
     }
+    if (tasks.children.length > 0) node.append(tasks);
     return { node, doing, held: tap && { card: tap.card, endsAt: tap.endsAt } };
   }
 }

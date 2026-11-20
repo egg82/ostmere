@@ -20,7 +20,7 @@ import { RunningNow } from "./runningnow";
 import { splitOf, splitParts, thenSplit } from "./townsplit";
 
 /** How many members' faces a group's row stacks. */
-const FACES = 3;
+const FACES = 2;
 
 /** `held`: while a tap holds the lane, its key item, which tick words with the time left. */
 interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: HTMLElement; held: { item: HTMLElement; card: string; endsAt: number | null } | null }

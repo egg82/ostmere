@@ -115,6 +115,15 @@ buries the people who matter under a roll call once groups arrive; a count thres
 the owner ruled out; and wording the mention on the page from the view's joined unlocks, which carry no time, so a
 return spanning days would collapse into one line at the wrong second.
 
+**The mark: who keeps their own split.** A person's lane carries a second authored field beside `told`: whether they run
+their own split or are handed to their group (`LaneBar.own_split`; a group is a pooled lane their lane names, so each
+person is in one group). The story sets and clears it, on the join and in a later outcome, never by arrival order or a
+headcount, and the page never sets it. It is not the notable tier: notables never die, a promise to the player, while the
+mark is given and taken by the story, so fusing them would make losing a mark expose a person to death. Content will often
+mark notables; the two fields stay separate. The Town view draws a row per marked person and per group
+(`docs/design/opening-screen.md`, "The Town view"); a group's page may name a person tied to it from an authored field when
+content has one.
+
 **Who can do which job.** Everyday work (cooking a stew, digging clay, weaving wattle) goes to most people by default,
 withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled
 or story-bound work goes to whoever the story fits (owner, 2026-11-14). No person's list holds a job another beats

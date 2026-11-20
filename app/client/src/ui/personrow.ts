@@ -29,7 +29,9 @@ export function personRow(kind: string, lane: string): PersonRow {
   const count = el("span", "town-count");
   const doing = el("span", "hands-text town-doing");
   const who = el("div", "town-who");
-  who.append(name, count, doing);
+  const ident = el("span", "town-ident");
+  ident.append(name, count);
+  who.append(ident, doing);
   const track = el("div", "card-track lane-bar");   // the card's own bar, as the card panel draws it
   const fill = el("span", "card-fill lane-fill");
   track.append(fill);
