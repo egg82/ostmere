@@ -1,11 +1,12 @@
 """DESIGN.txt, "Orders", "Never ready": a queue entry whose tap nothing will ever make ready (no ready time) waits where
 it is and the entries behind it run; with nothing else runnable the hands are idle because nothing can run."""
-import pytest
-
 from ashfall_app.engine import (
-    HANDS, QUANTITY_SCALE as Q, Amount, AtLeast, CardCount, CardDef, CardId, PacingCurve, QueueEntry, Rules, Save,
-    SetQueue, SkillDef, SkillId, StoreDef, StoreId, TapCard, advance, decide, new_save, validate_rules,
+    BP, HANDS, QUANTITY_SCALE as Q, Amount, AtLeast, CardCount, CardDef, CardId, PacingCurve, QueueEntry, Rules, Save,
+    SetQueue, SkillDef, SkillId, StoreDef, StoreId, StoreValue, SwitchMix, MixId, Mix, CardShare, SaveMix, TapCard, advance, decide, new_save,
+    validate_rules,
 )
+
+from ashfall_app.engine import plan
 
 STONE = StoreId("stone")
 FENCE, SHED = CardId("fence"), CardId("shed")
@@ -28,7 +29,6 @@ def hands(s: Save) -> CardId | None:
     return next(ls.card for ls in s.lanes if ls.lane == HANDS)
 
 
-@pytest.mark.xfail(strict=True, reason="the queue head is never passed over, even one nothing will make ready")
 def test_an_entry_nothing_makes_ready_does_not_hold_the_entries_behind_it():
     r = world()
     s = queued(r, FENCE, SHED)
@@ -41,3 +41,11 @@ def test_with_only_such_an_entry_the_hands_are_idle_and_the_entry_stays():
     r = world()
     after = advance(queued(r, FENCE), r, 500)
     assert hands(after) is None and [e.verb for e in after.queue] == [TapCard(FENCE)]
+
+
+def test_a_goal_stint_behind_such_an_entry_waits_behind_it():
+    r = world()
+    s = decide(new_save(r), r, 0, SaveMix(Mix(MixId("m"), (CardShare(SHED, BP),))))
+    s = decide(s, r, 0, SetQueue((QueueEntry(TapCard(FENCE), AtLeast(CardCount(FENCE), 1, 1)),
+                                            QueueEntry(SwitchMix(MixId("m")), AtLeast(StoreValue(STONE), Q, Q)))))
+    assert plan.controlling_entry(s, r) == 0

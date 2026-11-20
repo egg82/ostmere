@@ -29,9 +29,34 @@ def is_dead(save: Save, rules: Rules, verb: OrderVerb) -> bool:
     return verb.card in index(rules).cards and is_completed(save, rules, verb.card)
 
 
-def controlling_entry(save: Save, rules: Rules) -> int | None:
-    """The index of the first queue entry that is not dead: the one that controls and whose `until` is watched."""
+def is_stuck(save: Save, rules: Rules, verb: OrderVerb) -> bool:
+    """A tap whose card nothing will make ready under the current rates (a blocker with no ready time): its entry is kept
+    and the ones behind it run (DESIGN.txt, "Never ready")."""
+    from .work import blocker  # deferred: work -> plan
+    if not isinstance(verb, TapCard) or verb.card not in index(rules).cards:
+        return False
+    b = blocker(save, rules, verb.card)
+    return b is not None and b.ready_at is None
+
+
+def first_live_entry(save: Save, rules: Rules) -> int | None:
+    """The index of the first queue entry that is not dead: a stint's mix runs from it, whatever its tap neighbours wait on
+    (reading rates, so it never asks whether a tap is stuck)."""
     return next((i for i, e in enumerate(save.queue) if not is_dead(save, rules, e.verb)), None)
+
+
+def controlling_entry(save: Save, rules: Rules) -> int | None:
+    """The index of the entry that controls and whose `until` is watched: the first live one, or, past stuck taps, the first
+    live tap that is not stuck (a stint behind a stuck tap waits behind it)."""
+    first = first_live_entry(save, rules)
+    if first is None:
+        return None
+    for i in range(first, len(save.queue)):
+        verb = save.queue[i].verb
+        if is_dead(save, rules, verb) or is_stuck(save, rules, verb):
+            continue
+        return i if i == first or isinstance(verb, TapCard) else first
+    return first
 
 
 def live_queue_verb(save: Save, rules: Rules) -> OrderVerb | None:
@@ -43,7 +68,8 @@ def live_queue_verb(save: Save, rules: Rules) -> OrderVerb | None:
 def queue_mix_id(save: Save, rules: Rules) -> MixId | None:
     """The saved hands mix the controlling queue entry switches to, when that entry is a SwitchMix: it runs over the
     player's own until the entry pops, as an order's mix does while latched (DESIGN.txt, "Queue mix")."""
-    verb = live_queue_verb(save, rules)
+    i = first_live_entry(save, rules)
+    verb = None if i is None else save.queue[i].verb
     if not isinstance(verb, SwitchMix) or verb.mix not in {m.id for m in save.mixes}:
         return None
     return verb.mix if mix_layer(rules, save.mixes, verb.mix) is MixLayer.HANDS else None
