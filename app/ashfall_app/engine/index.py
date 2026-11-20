@@ -31,6 +31,8 @@ class RulesIndex:
     """Where a runner's lines run: a card's lane, None for a standing action."""
     ruled: frozenset[LaneId]
     """The lanes the player's rules run (LaneDef.ruled)."""
+    pooled: frozenset[LaneId]
+    """The ruled lanes that are groups (LaneDef.pooled)."""
     offers: dict[OfferId, OfferDef]
     answers: dict[AnswerId, tuple[OfferId, AnswerDef]]
     """Each answer with the offer it answers."""
@@ -74,6 +76,7 @@ def _build(rules: Rules) -> RulesIndex:
         lane_pos={lane: i for i, lane in enumerate(lanes)},
         runner_lane=runner_lane,
         ruled=frozenset(d.id for d in rules.lanes if d.ruled),
+        pooled=frozenset(d.id for d in rules.lanes if d.pooled),
         offers={o.id: o for o in rules.offers},
         answers={a.id: (o.id, a) for o in rules.offers for a in o.answers},
         town_mixes=frozenset(j.mix for o in _joining(rules) for j in o.joins),

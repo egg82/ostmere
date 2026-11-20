@@ -154,7 +154,9 @@ def _lanes(save: Save, rules: Rules) -> tuple[LaneState, ...]:
     found: list[LaneState] = []
     for lane in index(rules).lanes:
         ls = old.get(lane)
-        found.append(ls if ls is not None and (ls.card is None or cards[ls.card].lane == lane) else LaneState(lane))
+        if ls is None:
+            ls = LaneState(lane)
+        found.append(ls if ls.card is None or cards[ls.card].lane == lane else replace(ls, card=None, speed=None))
     return tuple(found)
 
 

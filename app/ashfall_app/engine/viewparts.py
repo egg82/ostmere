@@ -110,6 +110,9 @@ class LaneBar:
     card: CardId | None
     completes_at: int | None
     order: int | None = None
+    own_split: bool | None = field(default=None, repr=False)
+    """A person's mark (LaneState.own_split); None on HANDS, a pooled lane and any lane that is no person. Left out of
+    the repr, so the recorded fingerprints stay those of a game with no group."""
 
 
 class RunBy(Enum):
@@ -171,6 +174,10 @@ class CardView:
     gained: tuple[SpentShare, ...] = field(default=(), repr=False)
     """What each paused or spent card of its mix on its lane gives it now, as explain()'s `gained`; () when none. Left
     out of the repr with spent_store, so the recorded fingerprints stay those of a game with no spent card."""
+    crew: int | None = field(default=None, repr=False)
+    """A group card's free members now (DESIGN.txt, "GROUPS (pooled lanes)"); None on any other card. While it is above
+    0, share_bp and `gained` are the totals over those members: the card runs at them. Left out of the repr as the
+    fields above are."""
 
 
 @dataclass(frozen=True)

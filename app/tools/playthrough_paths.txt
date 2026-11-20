@@ -115,6 +115,7 @@ app/ashfall_app/engine/forecast.py
 app/ashfall_app/engine/gates.py
 app/ashfall_app/engine/gone.py
 app/ashfall_app/engine/groupchecks.py
+app/ashfall_app/engine/groups.py
 app/ashfall_app/engine/handlers.py
 app/ashfall_app/engine/handsfree.py
 app/ashfall_app/engine/heldentries.py
@@ -130,6 +131,7 @@ app/ashfall_app/engine/leaveparts.py
 app/ashfall_app/engine/leaves.py
 app/ashfall_app/engine/lumps.py
 app/ashfall_app/engine/manifest.py
+app/ashfall_app/engine/marks.py
 app/ashfall_app/engine/memo.py
 app/ashfall_app/engine/mixes.py
 app/ashfall_app/engine/mixruns.py

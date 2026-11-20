@@ -33,8 +33,10 @@ def joined(save: Save, rules: Rules, joins: tuple[Join, ...]) -> Save:
 def _join(save: Save, rules: Rules, j: Join) -> Save:
     unlocked = set(save.unlocked) | {Unlock(UnlockKind.JOINED, j.lane)}
     save = _with_town_rule(replace(save, unlocked=tuple(sorted(unlocked, key=unlock_key))), j.mix)
-    share = _share_card(save, rules, j)
-    return _with_share(_without_always_rules(save, rules, j.lane), rules, j, share)
+    if j.own_split:
+        return with_share(_without_always_rules(save, rules, j.lane), rules, j.lane, j.mix, _share_card(save, rules, j))
+    save = replace(save, lanes=tuple(replace(ls, own_split=False) if ls.lane == j.lane else ls for ls in save.lanes))
+    return with_share(_without_always_rules(save, rules, j.lane), rules, _group(rules, j.lane), j.mix, j.card)
 
 
 def _with_town_rule(save: Save, mix: MixId) -> Save:
@@ -73,10 +75,15 @@ def _without_always_rules(save: Save, rules: Rules, lane: LaneId) -> Save:
     return without_actions(save, lambda o, a: _always_rule_card(rules, lane, o, a) is not None)
 
 
-def _with_share(save: Save, rules: Rules, j: Join, card: CardId | None) -> Save:
-    """The share card at BP in the mix, unless the mix already holds a share of a card on the lane."""
+def _group(rules: Rules, lane: LaneId) -> LaneId | None:
+    return next((d.group for d in rules.lanes if d.id == lane), None)
+
+
+def with_share(save: Save, rules: Rules, lane: LaneId | None, mix: MixId, card: CardId | None) -> Save:
+    """The share card at BP in the mix, unless the mix already holds a share of a card on `lane` (a person's lane, or
+    the group an unmarked person's share goes to)."""
     cards = index(rules).cards
-    if card is None or any(cards[s.card].lane == j.lane for s in flatten_shares(save.mixes, j.mix)):
+    if card is None or any(cards[s.card].lane == lane for s in flatten_shares(save.mixes, mix)):
         return save
     return replace(save, mixes=tuple(
-        replace(m, components=(*m.components, CardShare(card, BP))) if m.id == j.mix else m for m in save.mixes))
+        replace(m, components=(*m.components, CardShare(card, BP))) if m.id == mix else m for m in save.mixes))

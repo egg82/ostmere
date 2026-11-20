@@ -11,7 +11,6 @@ from .answering import answered
 from .answers import AnswerKind, AnswerOffer
 from .conditions import subject_value
 from .errors import InvalidVerbError
-from .cards import LaneState
 from .counts import completions, unit, work_value
 from .cure_reading import cures_shown
 from .ids import HANDS, CardId, LaneId, LineKey
@@ -198,7 +197,7 @@ def cut_in(save: Save, rules: Rules) -> Save:
 
 
 def _freed(save: Save, lane: LaneId) -> Save:
-    return replace(save, lanes=tuple(LaneState(ls.lane) if ls.lane == lane else ls for ls in save.lanes))
+    return replace(save, lanes=tuple(replace(ls, card=None, speed=None) if ls.lane == lane else ls for ls in save.lanes))
 
 
 def candidates(save: Save, rules: Rules) -> tuple[CardId, ...]:
