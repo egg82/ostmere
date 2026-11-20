@@ -1017,6 +1017,20 @@ GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; 
   the after row's line: ui.goal.limited with the limit's store and in_per_hour per minute, else the store's label or
   ui.goal.xp with per_hour per minute. Never better, best, faster or any other verdict.
 
+STORE ROWS (the same dry run as GOAL ROWS; api/storerows.py)
+  view.store_rows is one row per view.ledger store, in ledger order, read at the rates as set exactly as goal_rows are
+  (a tap of the hands set aside, every runner counted): one simulation, two readouts.
+  - per_hour: the store's net, unclamped; it can differ from its LedgerLine.net_per_hour while a tap holds the hands.
+  - heading, at: empties when the net is below 0 and the store holds something, at the time it reaches 0 (at view.at
+    for a store already at 0 and falling); fills when the net is above 0 and the store is under its LedgerLine.cap, at
+    the time it reaches the cap; else steady with at null. Linear in the rates as set: nothing projects an input running
+    dry later or an order taking the hands.
+  - mixed: a card of the hands' running mix makes or costs the store. In a dry run of an edit that is the edit's mix.
+  THE CLIENT MAY, in the mix editor, list under the goals each store whose row has mixed in the dry run or whose
+  per_hour or heading the edit changes (ui.store.steady, ui.store.empty): the store, per_hour per minute now and after, and the heading
+  (ui.ledger.empties {d}, ui.ledger.fills {d}, ui.store.steady; ui.store.empty at 0), the heading marked only when its direction
+  changes. Never better, best, faster or any other verdict.
+
 DRY RULES (docs/decisions.md, "A rule that cannot let go says so"; api/ruledry.py)
   view.order_dry[i] is null or {store, holding} for orders[i]; the server decides, the client only words it. It is set
   only for a rule whose `when` is at_most on a store_value and whose `then` is a switch_mix (a rule releases when the

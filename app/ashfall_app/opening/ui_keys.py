@@ -49,6 +49,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.mix.now",
     "ui.mix.after",
     "ui.goal.head", "ui.goal.store", "ui.goal.level", "ui.goal.never", "ui.goal.limited", "ui.goal.xp",
+    "ui.store.steady", "ui.store.empty",
     "ui.stint.run", "ui.stint.entry", "ui.stint.which", "ui.stint.ran", "ui.stint.landed", "ui.stint.dry",
     "ui.stint.made", "ui.stint.made_two",
     "ui.mix.spent", "ui.mix.running_now", "ui.mix.from", "ui.mix.waiting",

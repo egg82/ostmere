@@ -32,6 +32,7 @@ from .journal_models import JournalDay
 from .need_models import Blocker as Blocker, Need as Need
 from .offer_models import Offer as Offer, OfferAnswer as OfferAnswer
 from .goal_models import Goal as Goal, GoalKind as GoalKind, GoalLimit as GoalLimit, GoalRow as GoalRow, RuleDry as RuleDry
+from .store_models import Heading as Heading, StoreRow as StoreRow
 from .repeat_models import RepeatedSwitch as RepeatedSwitch, RepeatedTap as RepeatedTap, Repeats as Repeats
 from .rulerun_models import RuleRun as RuleRun
 from .spent_models import SpentShare as SpentShare
@@ -258,6 +259,8 @@ class View(BaseModel):
     """What the next beat waits on, unmet: at most one step of work, then at most one clock (CONTRACT.txt, "Goals")."""
     goal_rows: list[GoalRow]
     """Each goal a mix can move, when it lands at the rates as set and what binds it (CONTRACT.txt, "Goal rows")."""
+    store_rows: list[StoreRow]
+    """Each ledger store's net as set and where it heads (CONTRACT.txt, "Store rows")."""
     levels: list[StoreLevel]
     """Each store a lost fight adds to, then each store the scene reads that the ledger does not list, as its segment
     (CONTRACT.txt, "FIGHTS", "read a level")."""

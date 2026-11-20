@@ -30,6 +30,7 @@ export type FeedbackRequest = S["FeedbackRequest"];
 export type Fight = S["Fight"];
 export type Goal = S["Goal"];
 export type GoalRow = S["GoalRow"];
+export type StoreRow = S["StoreRow"];
 export type MixBest = S["MixBest"];
 export type MixRow = S["MixRow"];
 export type MixRows = S["MixRows"];

@@ -16,14 +16,16 @@ function expect(label: string, got: unknown, want: unknown): void {
 const wait = (ms: number): Promise<void> => new Promise((done) => setTimeout(done, ms));
 const q = (root: FakeEl, sel: string): FakeEl[] => root.querySelectorAll(sel);
 
-const base = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
+const step = fixtureStep("rulestab", 100, { orders: [], extra: [] }).view;
+const woodRow = (per_hour: number) => ({ store: "wood", per_hour, heading: "steady" as const, at: null, mixed: false });
+const base: View = { ...step, store_rows: [woodRow(0)] };
 const MIX = "Morning <b>fire</b> & wood";   // gather 60%, tend 40%
 
 /** The engine's answer to a dry run, stood in: wood's rate follows the first card's share. */
 function answer(decisions: Decision[]): View {
   const saved = decisions.find((d) => d.kind === "save_mix");
   const first = saved?.kind === "save_mix" ? saved.mix.components[0]?.share_bp ?? 0 : 0;
-  return { ...base, ledger: base.ledger.map((l) => (l.store === "wood" ? { ...l, net_per_hour: l.net_per_hour + first - 6000 } : l)) };
+  return { ...base, store_rows: [woodRow(first - 6000)] };
 }
 
 const { ctx } = testContext();
@@ -53,7 +55,7 @@ for (const x of [590, 580, 570, 560, 550, 540, 530, 520, 510, 500]) {
 expect("numbers show while the divider moves without pausing", last.length > 0, true);
 editor.update(base);   // the page's next view arrives mid-drag
 expect("a new view mid-drag keeps them", after().length > 0, true);
-const later: View = { ...base, at: base.at + 60, ledger: base.ledger.map((l) => ({ ...l })) };
+const later: View = { ...base, at: base.at + 60, store_rows: base.store_rows.map((r) => ({ ...r })) };
 editor.update(later);
 expect("a later view (a step landing) keeps them", after().length > 0, true);
 for (const x of [330, 310]) { divider.dispatchEvent(pointer("pointermove", x, 10)); editor.update({ ...later, at: later.at + x }); }

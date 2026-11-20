@@ -1331,6 +1331,11 @@ export interface components {
          * @enum {string}
          */
         Hand: "ink" | "pencil";
+        /**
+         * Heading
+         * @enum {string}
+         */
+        Heading: "empties" | "fills" | "steady";
         /** Health */
         Health: {
             /** Status */
@@ -2449,6 +2454,21 @@ export interface components {
             /** Per Hour */
             per_hour: number;
         };
+        /**
+         * StoreRow
+         * @description One ledger store under the setup as set: its net per hour with every runner counted, and where that takes it.
+         */
+        StoreRow: {
+            /** Store */
+            store: string;
+            /** Per Hour */
+            per_hour: number;
+            heading: components["schemas"]["Heading"];
+            /** At */
+            at: number | null;
+            /** Mixed */
+            mixed: boolean;
+        };
         /** StoreValue */
         StoreValue: {
             /**
@@ -2665,6 +2685,8 @@ export interface components {
             goals: components["schemas"]["Goal"][];
             /** Goal Rows */
             goal_rows: components["schemas"]["GoalRow"][];
+            /** Store Rows */
+            store_rows: components["schemas"]["StoreRow"][];
             /** Levels */
             levels: components["schemas"]["StoreLevel"][];
         };

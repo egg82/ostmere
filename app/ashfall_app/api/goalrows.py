@@ -38,7 +38,7 @@ def _store(save: e.Save, rules: e.Rules, now: Running, store: str, target: int, 
     left = target - e.segment(save, rules, sid).start_value
     reachable = cap is None or target <= cap
     return g.GoalRow(kind=g.GoalKind.STORE, store=store, skill=None, target=target,
-                     lands_at=_lands(save.time, left, net) if reachable else None, per_hour=net,
+                     lands_at=lands(save.time, left, net) if reachable else None, per_hour=net,
                      limit=None if left <= 0 else limit(save, rules, now, sr.movers(rules, now, sid, None), shown),
                      until=w.AtLeast(watched=w.StoreValue(store=store), value=target, release=target))
 
@@ -58,12 +58,12 @@ def _level(save: e.Save, rules: e.Rules, now: Running, skill: str, target: int, 
     left = xp - value_at(st.xp, save.time)
     counted = level_counted(rules.curve, rules.prestige, phase_state(save, rules, sid).phase, xp)
     return g.GoalRow(kind=g.GoalKind.LEVEL, store=None, skill=skill, target=target,
-                     lands_at=_lands(save.time, left, rate), per_hour=rate,
+                     lands_at=lands(save.time, left, rate), per_hour=rate,
                      limit=None if left <= 0 else limit(save, rules, now, sr.movers(rules, now, None, sid), shown),
                      until=w.AtLeast(watched=w.SkillLevel(skill=skill), value=counted, release=counted))
 
 
-def _lands(t: int, left: int, per_hour: int) -> int | None:
+def lands(t: int, left: int, per_hour: int) -> int | None:
     """A rate in rate units moves a quantity by that many units a second (engine/units.py)."""
     if left <= 0:
         return t

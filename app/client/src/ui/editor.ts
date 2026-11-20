@@ -21,6 +21,7 @@ import { AddFold } from "./editoradds";
 import { entryRows } from "./editorrows";
 import { afterHead, totalsRows } from "./editortotals";
 import { goalRows } from "./goaltimes";
+import { storeRows } from "./storetimes";
 import { MixPreview } from "./mixpreview";
 import { ShareBar } from "./sharebar";
 import { stintParts } from "./stint";
@@ -271,7 +272,9 @@ export class MixEditor {
     if (!view) return;
     const { catalog } = this.ctx;
     const unknown = this.preview.unknown ? [el("p", "totals-unknown", catalog.text.get(UI.forecastUnknown))] : [];
-    this.totals.replaceChildren(...unknown, ...totalsRows(catalog, view, after, from), ...goalRows(catalog, view, after, afterHead(catalog, view, from)));
+    const second = afterHead(catalog, view, from);
+    this.totals.replaceChildren(...unknown, ...totalsRows(catalog, view, after, from), ...goalRows(catalog, view, after, second),
+      ...storeRows(catalog, view, after, second));
     const off = this.save.disabled || queueFull(catalog, view);
     this.stint.hidden = this.forRule !== null;
     this.stint.replaceChildren(...stintParts(catalog, after, this.picking, off, () => { this.picking = !this.picking; this.drawTotals(); }, (r) => this.runUntil(r)));

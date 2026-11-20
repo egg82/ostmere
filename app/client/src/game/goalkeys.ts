@@ -8,6 +8,8 @@ export const GOAL_ROW_KEYS = {
   goalNever: "ui.goal.never",   // a goal the rates as set do not land
   goalLimited: "ui.goal.limited",   // "{store} {n}": the dry store a card moving the goal waits on, and what comes in
   goalXp: "ui.goal.xp",   // "{n}": a level goal's own line
+  storeSteady: "ui.store.steady",   // a store the rates as set leave where it is (ui/storetimes.ts)
+  storeEmpty: "ui.store.empty",   // a store at 0 and still falling
   stintRun: "ui.stint.run",   // the mix editor's button that lists goals to run the mix until (ui/stint.ts)
   stintOrUntil: "ui.stint.or_until",   // before a store goal's named shares in that list: run until the store is that full instead
   stintEntry: "ui.stint.entry",   // "{mix} until {goal}": a goal stint in Next
