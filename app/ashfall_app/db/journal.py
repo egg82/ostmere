@@ -24,9 +24,8 @@ class DayRecord:
     gap: str | None
     marks: Any
     """The kinds of mark its page carries, as JSON reads back: a list of strings."""
-    through: int | None = None
-    """The save time it was composed through; before the day's end while it is still being written; None for a day
-    composed whole before notes were written as the day goes."""
+    through: int
+    """The save time it was composed through; before the day's end while it is still being written."""
 
 
 @dataclass(frozen=True)

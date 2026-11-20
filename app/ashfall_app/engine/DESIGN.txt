@@ -2244,7 +2244,7 @@ INVARIANTS (groups; numbered on from 178)
 181. A mark change never removes or changes a CardShare: clearing then setting a mark with no decision between gives
     the save it started from, the latch and lane state aside.
 182. Byte identity: a save and rules with no pooled lane, no Mark and every own_split True encode, rebase and advance
-    exactly as before this part (proved by the committed saves' hashes, the rules digest and the saves-forward job).
+    exactly as before this part (proved by the committed saves' hashes, the rules digest and the golden saves).
 183. Validation: InvalidRulesError for each rule listed under Validation, and for no valid rules.
 
 REJECTED, AND WHY (groups)
