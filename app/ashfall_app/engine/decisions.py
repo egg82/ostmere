@@ -17,7 +17,8 @@ from .ids import HANDS, CardId, LaneId, LineKey
 from .index import index
 from .installs import requeued
 from .lanes import TapCard
-from .mixes import Mix, MixLayer, SwitchMix, flatten_shares
+from .mixes import Mix, MixLayer, SwitchMix
+from .mixpauses import re_paused, with_running_mix
 from .offerstate import acting, refusal
 from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, listed, rule_on
 from .orders import placed, unplaced
@@ -25,9 +26,7 @@ from .sharelevels import read_levels
 from .prestige import applied
 from .prestigeverbs import MovePick, Prestige, UndoPick, refuse_by_hand
 from .rates import lane_state
-from .rebuild import rebuild
 from .rules import Rules
-from .sides import costs, makes
 from .state import Save
 from .verbs import DeleteMix, SaveMix, SetOrders, SetQueue, Verb
 from .work import blocker, interrupt, ready, tap, tap_seconds
@@ -43,28 +42,6 @@ def switch(save: Save, rules: Rules, verb: SwitchMix) -> Save:
     if verb.mix == save.active:
         return save
     return with_running_mix(save, rules, replace(save, active=verb.mix))
-
-
-def with_running_mix(before: Save, rules: Rules, after: Save) -> Save:
-    """`after`, with its pauses re-decided (re_paused) and rates rebuilt if its running mix is not `before`'s, else as
-    given."""
-    if (plan.running_mix_id(after, rules), plan.running_town_mix_id(after, rules)) == (
-            plan.running_mix_id(before, rules), plan.running_town_mix_id(before, rules)):
-        return after
-    return re_paused(before, rules, after)
-
-
-def re_paused(before: Save, rules: Rules, after: Save) -> Save:
-    """`after` rebuilt with the pauses a change of the running mixes can move cleared: those on a store a card of
-    `before`'s or `after`'s running mixes makes or costs (the dry rule pauses again at once where it is still dry).
-    Any other pause stands until its RESUME (DESIGN.txt, "Running dry")."""
-    moved = {st for save in (before, after) for card in _running_cards(save, rules) for st in makes(rules, card) | costs(rules, card)}
-    return rebuild(replace(after, pauses=tuple(p for p in after.pauses if p.store not in moved)), rules)
-
-
-def _running_cards(save: Save, rules: Rules) -> set[CardId]:
-    mixes = {plan.running_mix_id(save, rules), plan.running_town_mix_id(save, rules)}
-    return {s.card for m in mixes if m is not None for s in flatten_shares(save.mixes, m)}
 
 
 def apply_order_verb(save: Save, rules: Rules, verb: OrderVerb) -> tuple[Save, tuple[LineKey, ...]]:

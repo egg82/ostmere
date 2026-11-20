@@ -8,7 +8,7 @@ from ashfall_app.engine import (
     SkillDef, SkillId, StandingDef, StoreDef, StoreId, SwitchMix, advance, decide, new_save, per_hour, segment,
     validate_rules,
 )
-from ashfall_app.engine import decisions, handlers
+from ashfall_app.engine import handlers, mixpauses
 
 X, Y, Z = StoreId("x"), StoreId("y"), StoreId("z")
 EAT, FILL = ActionId("eat"), ActionId("fill")
@@ -47,14 +47,14 @@ def test_a_mix_change_rebuilds_once_with_a_store_held_empty_for_good(monkeypatch
     r, s = world(0)
     s = advance(s, r, 7200)
     calls: list[str] = []
-    real = decisions.rebuild
+    real = mixpauses.rebuild
 
     def counted(save: Save, rules: Rules) -> Save:
         calls.append(str(save.time))
         return real(save, rules)
 
-    monkeypatch.setattr(decisions, "rebuild", counted)
-    monkeypatch.setattr(handlers, "rebuild", counted)
+    for module in (mixpauses, handlers):
+        monkeypatch.setattr(f"{module.__name__}.rebuild", counted)
     s = decide(s, r, 7200, SwitchMix(MixId("b")))
     assert [p.runner for p in s.pauses] == [EAT]
     assert calls == ["7200"]

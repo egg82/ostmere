@@ -180,7 +180,7 @@ def town_mix_order(save: Save, rules: Rules) -> int | None:
 
 
 _RUNNING_MIX: SaveMemo[MixId | None] = SaveMemo(4)
-"""A few saves: a handler's save is compared with the one before it (decisions.with_running_mix)."""
+"""A few saves: a handler's save is compared with the one before it (mixpauses.with_running_mix)."""
 _RUNNING_TOWN_MIX: SaveMemo[MixId | None] = SaveMemo(4)
 
 

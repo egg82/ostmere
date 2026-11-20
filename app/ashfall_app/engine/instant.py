@@ -7,7 +7,8 @@ from dataclasses import replace
 
 from . import retap
 from .end import with_end
-from .decisions import apply_order_verb, controlling_verb, with_running_mix
+from .decisions import apply_order_verb, controlling_verb
+from .mixpauses import with_running_mix
 from .events import CascadeLimit, Event, EventKind
 from .handlers import Emit, handle, ignore, landing_cards
 from .ids import CardId, LaneId, LineKey

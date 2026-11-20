@@ -1,5 +1,7 @@
 """The forecast route's Game keeps the last forecast's path of the few saves forecast last and hands it to the next
 forecast of that save (engine forecast.py, `kept`), so the page's forecast a minute on resolves only what is new."""
+from collections.abc import Callable
+
 import pytest
 
 from ashfall_app import engine as e
@@ -16,9 +18,10 @@ def test_each_save_s_next_forecast_is_handed_its_last_path(shipped_ruleset: Ship
     made: list[e.ForecastPath | None] = []
     real = e.forecast
 
-    def spied(save: e.Save, *rest: object) -> e.Forecast:
-        handed.append((save.time, rest[-1]))  # type: ignore[arg-type]
-        f = real(save, *rest)  # type: ignore[arg-type]
+    def spied(save: e.Save, rules: e.Rules, until: int, stores: tuple[e.StoreId, ...] = (),
+              stop: Callable[[], bool] | None = None, kept: e.ForecastPath | None = None) -> e.Forecast:
+        handed.append((save.time, kept))
+        f = real(save, rules, until, stores, stop, kept)
         made.append(f.path)
         return f
 
