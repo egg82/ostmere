@@ -1,7 +1,8 @@
 // The player's queue as the page builds it (docs/systems.md, "Standing orders and the queue"; engine DESIGN.txt,
-// "Orders"): "When ready" lines up one tap of a step that is not ready yet but will be by itself (its blocker has a
-// ready time), held until that tap's completion. The engine starts the head the moment it turns ready and never passes
-// it over; while it waits the mix runs on. Every edit sends the whole list back (set_queue replaces it).
+// "Orders"): "When ready" lines up one tap of any step the player could not simply tap now, held until that tap's
+// completion. The engine starts the head the moment it turns ready and passes over only an entry nothing will make
+// ready (DESIGN.txt, "Never ready"); while it waits the mix runs on. Every edit sends the whole list back (set_queue
+// replaces it).
 import type { Card, Condition, Decision, GoalRow, QueueEntry, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { keptReadyAt, waitsOnUnseen } from "./ready";
@@ -13,7 +14,7 @@ export function queuedCards(view: View): string[] {
 
 /** The card's own "When ready" button is offered while the queue has room on a card Plan takes (queueable) that the
  * player cannot simply tap now: one unready with a ready time, or one ready now whose lane runs another tap (so it
- * runs after that task). */
+ * runs after that task). Plan takes the rest too; the face promises only what it can keep. */
 export function canQueue(catalog: Catalog, view: View, card: Card): boolean {
   return !queueFull(catalog, view) && onFace(catalog, view, card);
 }
@@ -26,22 +27,14 @@ export function queueFull(catalog: Catalog, view: View): boolean {
 /** Whether the card's face would offer "When ready" if the queue had room. */
 export function onFace(catalog: Catalog, view: View, card: Card): boolean {
   if (!queueable(catalog, view, card)) return false;
-  if (card.blocker !== null) return true;
+  if (card.blocker !== null) return keptReadyAt(view, card, catalog.content.scales.quantity_per_item) !== null && !waitsOnUnseen(view, card);
   const running = view.lanes.find((l) => l.lane === catalog.laneOf(card.card))?.running_card ?? null;
   return running !== null && running !== card.card;
 }
 
 /** Whether "When ready" takes `card`, from Plan or its face: a step (not work done again and again, which is the mix's)
- * after the end, not at its cap and not already queued, that is ready now or unready with a ready time the page can see
- * kept (game/ready.ts) and not waiting on a store the player has never seen (a clock: what it opens must open in front
- * of the player). */
+ * after the end, not at its cap and not already queued, whatever it waits on: an entry that cannot run yet waits. */
 export function queueable(catalog: Catalog, view: View, card: Card): boolean {
-  return plannableStep(catalog, view, card)
-    && (card.blocker === null || (keptReadyAt(view, card, catalog.content.scales.quantity_per_item) !== null && !waitsOnUnseen(view, card)));
-}
-
-/** A step "When ready" could take, whatever it waits on: after the end, not an action, short of its cap, not queued. */
-function plannableStep(catalog: Catalog, view: View, card: Card): boolean {
   return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action"
     && (card.cap === null || card.completions < card.cap) && !queuedCards(view).includes(card.card);
 }
@@ -53,13 +46,9 @@ export function whenReady(catalog: Catalog, view: View, id: string): Decision | 
   return card !== undefined && !queueFull(catalog, view) && queueable(catalog, view, card) ? queueTap(view, card) : null;
 }
 
-/** The cards Plan lists, each in the page's order: those "When ready" takes (ready now or with a kept ready time), then
- * the steps it would take but for what they wait on (no ready time the page can see kept, or a store never shown). */
-export function planCards(catalog: Catalog, view: View): { now: Card[]; waiting: Card[] } {
-  if (queueFull(catalog, view)) return { now: [], waiting: [] };
-  const now = view.cards.filter((c) => queueable(catalog, view, c));
-  const waiting = view.cards.filter((c) => c.blocker !== null && !now.includes(c) && plannableStep(catalog, view, c));
-  return { now, waiting };
+/** The cards Plan lists, in the page's order: every step "When ready" takes. */
+export function planCards(catalog: Catalog, view: View): Card[] {
+  return queueFull(catalog, view) ? [] : view.cards.filter((c) => queueable(catalog, view, c));
 }
 
 /** The queue with one more tap of `card` at its end, held until that tap completes. */
