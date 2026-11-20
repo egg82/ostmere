@@ -49,7 +49,7 @@ the rules. Record each run below the list as MUTANTS.txt does (planted, red, sur
                    discrete state, so g moves between two instants with no event.  [112, 113]
 24 rebase writes   the manifest carries each card's while_running, or rebase writes the held entries into
                    s2.modifiers: rebasing a save from rules without the entry into rules with it raises
-                   (StateFormatError, RebaseError), or returns a save whose modifiers differ from s's.  [117, 114]
+                   (StateFormatError), or returns a save whose modifiers differ from s's.  [117, 114]
 
 RUNS
 - Suite tests/engine_contract/test_held_*.py (blind, written from DESIGN.txt and CONTRACT.txt alone). Run: python -m tools.mutate_suite held --run

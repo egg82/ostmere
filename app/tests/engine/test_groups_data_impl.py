@@ -1,5 +1,5 @@
 """Groups as data (engine DESIGN.txt, "GROUPS (pooled lanes)"): the fields, their codec and digest absence at defaults,
-validation and renames. Nothing runs differently yet: the running is the next slice's. Each refusal has the good case
+and validation. Nothing runs differently yet: the running is the next slice's. Each refusal has the good case
 (`world`) beside it."""
 from dataclasses import replace
 
