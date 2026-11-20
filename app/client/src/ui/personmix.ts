@@ -6,7 +6,7 @@
 import type { Mix, View } from "../api/types";
 import { laneOneOff } from "../game/holder";
 import { UI } from "../game/text";
-import { dropTownCard, given, joinTownCard, newTownMix, townMixToEdit, townSaveDecisions, withTownShares } from "../game/town";
+import { crewOf, dropTownCard, given, joinTownCard, newTownMix, soloOf, townMixToEdit, townSaveDecisions, withTownShares } from "../game/town";
 import { el, setText } from "./dom";
 import { tapBar } from "./handsheld";
 import type { PartContext } from "./part";
@@ -17,6 +17,8 @@ export class PersonMix {
   readonly root = el("section", "person-mix");
   private readonly bar: ShareBar;
   private readonly then = el("span", "hands-then person-then");
+  /** A group's page: how many free members each share is of, beside the split. */
+  private readonly each = el("span", "hands-then person-each");
   private view: View | null = null;
   private lane = "";
   /** A divider is held: a new view waits for the let-go, so the bar under the finger is not rebuilt. */
@@ -35,7 +37,7 @@ export class PersonMix {
       },
     });
     this.then.hidden = true;
-    this.root.append(this.bar.root, this.then);
+    this.root.append(this.bar.root, this.each, this.then);
   }
 
   /** The mix this page edits: the town's, else a new one a save points the town's always rule at; a card the view no
@@ -79,6 +81,10 @@ export class PersonMix {
     const { catalog } = this.ctx;
     const view = this.view as View;
     const tap = laneOneOff(view, this.lane);
+    const pooled = catalog.lanes.get(this.lane)?.pooled === true;
+    const crew = pooled ? crewOf(catalog, view, this.lane) : null;
+    this.each.hidden = !pooled;
+    setText(this.each, !pooled ? "" : crew === null || crew === 0 ? catalog.text.get(UI.townBusy) : catalog.text.fill(UI.townEach, { n: String(crew) }));
     setText(this.then, tap ? thenSplit(this.ctx, view, this.lane) : "");
     this.then.hidden = tap === null;
     if (tap) {
@@ -86,7 +92,7 @@ export class PersonMix {
       return;
     }
     const { mix } = this.edited();
-    const label = catalog.laneLabel(this.lane, this.view as View);
+    const label = catalog.laneLabel(soloOf(catalog, view, this.lane) ?? this.lane, view);
     const cards = mix.components.flatMap((c) => (c.kind === "card_share" && catalog.laneOf(c.card) === this.lane ? [c] : []));
     const specs: SegmentSpec[] = cards.map((c) => ({ key: c.card, label: catalog.cardLabel(c.card), hue: catalog.rank(c.card) }));
     specs.push({ key: `idle:${this.lane}`, label: catalog.text.fill(UI.townIdle, { person: label }), hue: 5, idle: true });   // always there, so a full person has a divider to drag down

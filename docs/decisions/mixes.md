@@ -149,10 +149,18 @@ and you tune it, then hit go.
   true; a person is never left idle because of a hands-only rule. A person's one-off is tapped as yours is (owner,
   2026-11-17: "what's the point of 1/3 if, when I tap it, it's going to go to completion regardless?"): each tap is
   one completion, no rule is made, and while it holds them their bar is that card with "then {their split}".
-- **A big town will not be tuned person by person** (owner, 2026-11-17): past a handful of people, per-person splits
-  become a chore. The owner's direction: a few people keep their own split and the rest run one mix per type of work,
-  the type's cards set by what its people can and can't do (#337). Who keeps their own split is an authored mark per
-  person that the story can set and clear, never arrival order or a headcount.
+- **A big town will not be tuned person by person** (owner, 2026-11-17). A few people keep their own split (the marked
+  four to five: the first four keep theirs, the owner's call) and the rest run one split per type of work, a group: a
+  pooled lane holding the cards its members can do, each share a part of each free member's time, so a member added
+  raises the output with no retuning. Who keeps their own split is an authored mark per person that the story sets and
+  clears, never arrival order or a headcount. The player sees their own mix, a page per marked person and a page per
+  group; the town mix stays the engine's container and is never a thing named on screen. A group page shows one share
+  bar and the crew size as the multiplier beside it; a group of one draws as that person; a big group shows a count with
+  its members a tap away (`docs/design/opening-screen.md`, "The Town view"). Rejected: job tags on per-person cards
+  (content authors a card per person per job, the chore again); a mix per group (a running mix and always rule each, which
+  the town mix already declined per person); the mark as an unlock (unlocks only grow); per-member exceptions inside a
+  group (a person who cannot do a general job belongs to a group without it); whole-camp switching between town mixes
+  (#63, closed).
 
 ## Automation is designed, not clicked
 

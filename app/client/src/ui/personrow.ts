@@ -14,6 +14,8 @@ export interface PersonRow {
   track: HTMLElement;
   faceSlot: HTMLElement;
   name: HTMLElement;
+  /** A group's head count; empty on a person. */
+  count: HTMLElement;
   doing: HTMLElement;
   fill: HTMLElement;
 }
@@ -24,19 +26,23 @@ export function personRow(kind: string, lane: string): PersonRow {
   node.dataset.lane = lane;
   const faceSlot = el("span", "town-face");
   const name = el("span", "town-name");
+  const count = el("span", "town-count");
   const doing = el("span", "hands-text town-doing");
   const who = el("div", "town-who");
-  who.append(name, doing);
+  const ident = el("span", "town-ident");
+  ident.append(name, count);
+  who.append(ident, doing);
   const track = el("div", "card-track lane-bar");   // the card's own bar, as the card panel draws it
   const fill = el("span", "card-fill lane-fill");
   track.append(fill);
   node.append(faceSlot, who, track);
-  return { node, track, faceSlot, name, doing, fill };
+  return { node, track, faceSlot, name, count, doing, fill };
 }
 
 /** Who the row is (`label`, the lane's) and the card they work now, or idle. */
 export function drawWho(ctx: PartContext, row: PersonRow, lane: string, label: string, running: string | null): void {
   setText(row.name, label);
+  setText(row.count, "");
   row.faceSlot.replaceChildren(face(ctx, lane, label));
   setText(row.doing, running ? ctx.catalog.cardLabel(running) : ctx.catalog.text.get(UI.laneIdle));
   row.doing.classList.toggle("idle", running === null);

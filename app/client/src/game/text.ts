@@ -83,6 +83,9 @@ export const UI = {
   ...REMINDER_KEYS,
   townTitle: "ui.town.title",   // the camp's shown name, one home: its tab, its view's and rules' heading, its mix's label
   townIdle: "ui.town.idle",   // "{person}": a person's unshared remainder
+  townCount: "ui.town.count",   // "{n}": a group's head count on its row
+  townEach: "ui.town.each",   // "{n}": under a group's split, how many free members each share is of
+  townBusy: "ui.town.busy",   // under a group's split while every member is on a one-off of their own
   edit: "ui.mix.edit",
   editMix: "ui.mix.edit_mix",
   save: "ui.mix.save",
