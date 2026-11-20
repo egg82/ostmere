@@ -150,8 +150,10 @@ def test_the_watch_fire_meeting_a_wall_is_reported_and_one_clear_of_it_is_not():
 
 
 def test_a_wall_name_gone_from_the_whole_scene_is_reported():
-    """The control: WALLS is checked against every layer of the scene, not each stage's, and a gone name is named."""
-    layers = [entry(name) for name in depth.WALLS - {"fireback"}]
-    assert depth.missing_walls(layers) == ["fireback"]
-    assert depth.missing_walls([entry(name) for name in depth.WALLS]) == []
+    """The control: the names the footing check relies on (the walls and the watch fire's layers) are checked against
+    every layer of the scene, not each stage's, and a gone name is named."""
+    names = depth.WALLS | depth.WATCH_FIRE
+    assert depth.missing_walls([entry(name) for name in names - {"fireback"}]) == ["fireback"]
+    assert depth.missing_walls([entry(name) for name in names - {"watch_ring"}]) == ["watch_ring"]
+    assert depth.missing_walls([entry(name) for name in names]) == []
 
