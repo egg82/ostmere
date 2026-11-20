@@ -235,6 +235,7 @@ sketch = "gutter_knot"
 [[triggers]]
 id = "t_lamps"
 when = { test = "at_least", subject_kind = "store", id = "tallow", value = 2 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_shaft", value = 1 }]
 outcome = { line_keys = ["l_lamps"], unlocks = [{ unlock_kind = "card", id = "tallow_lamps" }] }
 
 # Three stages, the last holding the gap; run by its order card, as hide_flaps is.
@@ -315,7 +316,10 @@ id = "o_shaft"
 text_key = "o_shaft"
 askers = ["n7"]
 gate = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 16 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cradle", value = 1 }]
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cradle", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "cellar", value = 1 },
+]
 
 [[offers.answers]]
 id = "o_shaft_bind"
@@ -526,6 +530,10 @@ outcome = { line_keys = ["l_s4_1", "l_s4_2", "l_s4_3"], unlocks = [{ unlock_kind
 [[triggers]]
 id = "t_broth_open"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 20 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "tallow_lamps", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cold_air", value = 1 },
+]
 outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
 
 # The broth, an everyday job everyone takes (day three's pot).
