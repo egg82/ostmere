@@ -17,6 +17,7 @@ app/ashfall_app/accounts/words.txt
 app/ashfall_app/api/CONTRACT.txt
 app/ashfall_app/api/__init__.py
 app/ashfall_app/api/camp_models.py
+app/ashfall_app/api/changes.py
 app/ashfall_app/api/content_models.py
 app/ashfall_app/api/convert.py
 app/ashfall_app/api/decision_models.py
@@ -24,6 +25,8 @@ app/ashfall_app/api/device_routes.py
 app/ashfall_app/api/devices_models.py
 app/ashfall_app/api/error_models.py
 app/ashfall_app/api/errors.py
+app/ashfall_app/api/feature_infos.py
+app/ashfall_app/api/feature_models.py
 app/ashfall_app/api/fight_models.py
 app/ashfall_app/api/find_models.py
 app/ashfall_app/api/forecast_models.py

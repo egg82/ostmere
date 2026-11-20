@@ -732,7 +732,8 @@ THE CLIENT MAY
     place: running low on it misses the bonus and asks nothing.
   - mark what is new with a quiet dot (no number, no pulse), cleared once seen or tapped, and put the one glow on at
     most one control at a time: on a card whose CardInfo.glows is true, the first time it is ready with its lane
-    free or Card.cuts_in true, and on the first-mix offer. Show a feature with a label_key, once unlocked, with the chips.
+    free or Card.cuts_in true, and on the first-mix offer. Show a feature with a label_key, once unlocked, with the chips;
+    a carried one with an effect_key says what it does: that text filled from FeatureInfo.change_bp as an answer's cost is.
 THE CLIENT MAY NOT
   - simulate: no rule, rate, cap, completion or unlock is computed on the page (a mix bar's modulo is sampling, not
     a completion: the count is Card.completions). Past next_event_at, ask again.
