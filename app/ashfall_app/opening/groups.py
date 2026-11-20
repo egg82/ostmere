@@ -11,7 +11,8 @@ if TYPE_CHECKING:
 
 
 def check_groups(o: "Opening") -> None:
-    """A pooled lane is ruled, has no name, group or `told`; a group names a pooled lane; marks only in a trigger's or an
+    """A pooled lane is ruled, has no name, group or `told`; a group names a pooled lane; `tied` is on a pooled lane only and
+    names a ruled person; marks only in a trigger's or an
     answer's outcome, each of a ruled person's lane; an unmarked join or an unmarking needs a group on the lane."""
     pooled = {x.id for x in o.lanes if x.pooled}
     people = {x.id: x for x in o.lanes if x.ruled and not x.pooled}
@@ -21,6 +22,10 @@ def check_groups(o: "Opening") -> None:
             fail(f"lane {x.id}", "a pooled lane is ruled and has no name_key, group or told")
         if x.group is not None and x.group not in pooled:
             fail(f"lane {x.id}", f"group {x.group} is not a pooled lane")
+        if x.tied is not None and not x.pooled:
+            fail(f"lane {x.id}", "tied is only on a pooled lane")
+        if x.tied is not None and x.tied not in people:
+            fail(f"lane {x.id}", f"tied {x.tied} is not a ruled person's lane")
     once = {f"trigger {t.id}" for t in o.triggers} | {f"answer {a.id}" for x in o.offers for a in x.answers}
     for where, out in outcomes(o):
         for j in out.joins:

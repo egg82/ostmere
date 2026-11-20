@@ -1647,6 +1647,9 @@ GROUPS (engine DESIGN.txt, "GROUPS (pooled lanes)")
   tap_card of one of its cards is 422 invalid_decision). A person's LaneInfo.group names the pooled lane that is their
   group; null on every other lane. Both are fixed by content. Who is in a group is not served as a list: a member is a
   person present (THE TOWN'S MIX) whose LaneBar.own_split is false and whose LaneInfo.group is that lane.
+  LaneInfo.tied, on a pooled lane, is the lane id of the one person the content ties to the group (a townsperson who
+  looks after it); null when none, and on every other lane. It is fixed by content and says nothing of who is in the
+  group.
   LaneBar.own_split is a person's mark: true runs their own split (every person today), false hands them to their
   group. It is null on hands, on a pooled lane and on a lane that is no person. A marked person's lane and cards read
   exactly as THE TOWN'S MIX says; an unmarked person's own shares stay in the town mix, idle, and come back when they

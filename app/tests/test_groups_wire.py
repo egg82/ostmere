@@ -46,6 +46,12 @@ def test_the_content_serves_the_pooled_lane_and_each_persons_group():
     assert (lanes["hands"].pooled, lanes["hands"].group) == (False, None)
 
 
+def test_the_content_serves_the_person_a_group_is_tied_to():
+    lanes = {x.lane: x for x in game().content().lane_infos}
+    assert lanes["t_crew"].tied == "t_m2"
+    assert [lanes[k].tied for k in ("t_m1", "t_m2", "t_m3", "hands")] == [None] * 4
+
+
 def test_the_view_serves_each_persons_mark():
     marks = {b.lane: b.own_split for b in wire().lanes}
     assert {k: marks[k] for k in ("t_m1", "t_m2", "t_m3")} == {"t_m1": False, "t_m2": True, "t_m3": False}

@@ -1464,6 +1464,8 @@ export interface components {
             pooled: boolean;
             /** Group */
             group: string | null;
+            /** Tied */
+            tied: string | null;
         };
         /** LaneLabel */
         LaneLabel: {

@@ -192,6 +192,8 @@ class LaneInfo(BaseModel):
     "GROUPS"). Never joins, never taps."""
     group: str | None
     """On a person's lane, the pooled lane that is their group; null for every other lane."""
+    tied: str | None
+    """On a pooled lane, the lane of the one person tied to the group (CONTRACT.txt, "GROUPS"); null when none is."""
 
 
 class ChipInfo(BaseModel):

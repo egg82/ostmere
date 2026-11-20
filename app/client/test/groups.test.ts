@@ -116,3 +116,15 @@ const marked = (view: View, lane: string, own: boolean): View => ({ ...view, lan
   page.querySelector(".group-count")?.click();
   expect("a tap shows them", [page.querySelector(".group-lines")?.hidden, texts(page.querySelectorAll(".group-line .town-name"))], [false, ["Smith", "Scribe", "Nan", "Ole"]]);
 }
+
+{  // the person a group is tied to: one line on its page naming them, only once they are in the town, never when none is set
+  const tiedLine = (view: View, c = catalog): string[] => texts(rig(view, c).open(4).querySelectorAll(".group-tied").filter((n) => !n.hidden));
+  expect("set and met: the line", tiedLine(groupsView()), ["With Nan"]);
+  const none = new Catalog({ ...withGroups(), lane_infos: withGroups().lane_infos.map((l) => (l.lane === "crew" ? { ...l, tied: null } : l)) });
+  expect("unset: no line", tiedLine(groupsView(), none), []);
+  const view = groupsView();
+  const unmet: View = { ...view, unlocked: view.unlocked.filter((u) => !(u.category === "joined" && u.id === "nan")) };
+  expect("set, not yet met: no line", tiedLine(unmet), []);
+  const apart = new Catalog({ ...withGroups(), lane_infos: withGroups().lane_infos.map((l) => (l.lane === "crew" ? { ...l, tied: "smith" } : l)) });
+  expect("tied to a person who is not a member: still named", tiedLine(groupsView(), apart), ["With Smith"]);
+}

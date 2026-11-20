@@ -1055,6 +1055,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-face.stack .ask-face { outline: 2px solid var(--bg); }
 .person-each { display: block; margin-top: .3rem; color: var(--ink); }   /* "each of 3": how many free members each share is of */
 .group-members { display: grid; gap: .5rem; justify-items: start; }
+.group-tied { margin: 0; font-size: var(--t-meta); color: var(--ink); }
+.group-tied[hidden] { display: none; }
 .group-lines { display: grid; gap: .5rem; width: 100%; }
 .group-lines[hidden] { display: none; }
 .group-line { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .2rem .6rem; align-items: center; }

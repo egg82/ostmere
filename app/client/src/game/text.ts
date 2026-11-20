@@ -85,6 +85,7 @@ export const UI = {
   townIdle: "ui.town.idle",   // "{person}": a person's unshared remainder
   townCount: "ui.town.count",   // "{n}": a group's head count on its row
   townEach: "ui.town.each",   // "{n}": under a group's split, how many free members each share is of
+  townTied: "ui.town.tied",   // "{name}": a group page's line naming the one person tied to it
   townBusy: "ui.town.busy",   // under a group's split while every member is on a one-off of their own
   edit: "ui.mix.edit",
   editMix: "ui.mix.edit_mix",
