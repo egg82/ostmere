@@ -40,6 +40,9 @@ from . import models as w
 PLAIN = Look(DIARY_HAND, None)
 """How a note is drawn whose slot gives no hand or sketch (a crowd's mention), or whose subject the content dropped."""
 FORECAST_S = HORIZON_S
+KEPT_PATHS = 2
+"""Saves whose last forecast's path a Game keeps: about 20 MB each on a save some 200 instants a game hour busy, in a
+pod of 256 MiB."""
 
 
 class Game:
@@ -50,6 +53,9 @@ class Game:
         self._goals = goal_defs(opening, rs.rules)
         self.mixes = MixNumbers(rs.rules, self._goals)
         self._beat_openers = frozenset(k for keys in opening.beat_lines.values() for k in keys)
+        self._paths: dict[int, e.ForecastPath] = {}
+        """The last forecast's path of the few saves forecast last, so the page's forecast a minute on resolves only the
+        instants past that one's reach (engine forecast.py, `kept`)."""
 
     def content(self) -> cm.Content:
         return self._content
@@ -75,7 +81,10 @@ class Game:
         "Forecast")."""
         save, rules = played.save, self._rs.rules
         shown = tuple(e.StoreId(u.id) for u in save.unlocked if u.kind is e.UnlockKind.STORE)
-        f = e.forecast(save, rules, save.time + FORECAST_S, shown, stop)
+        f = e.forecast(save, rules, save.time + FORECAST_S, shown, stop, self._paths.get(played.save_id))
+        if f.path is not None:
+            paths = {k: p for k, p in self._paths.items() if k != played.save_id} | {played.save_id: f.path}
+            self._paths = dict(list(paths.items())[-KEPT_PATHS:])
         return w.ForecastAnswer(decisions=played.decisions, forecast=convert.forecast(f))
 
     def step(self, played: Played) -> w.Step:

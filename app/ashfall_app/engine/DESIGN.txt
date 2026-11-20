@@ -199,6 +199,11 @@ CHOICES (each with its reason)
   player can trust draws the forecast's. It is the save's own future while nobody decides, so a forecast made
   earlier on the same path lists the same times. Bounded by `until`, MAX_INSTANTS and an optional stop asked before each
   instant (then `until` is where it stopped); past it nothing is listed, never estimated. Read only: it returns no save.
+  Kept path: a Forecast carries the instants it resolved (ForecastPath), and a later forecast handed it (`kept`) takes
+  those after its own save instead of resolving them, when its save is on that path: the last of them at or before its
+  time, shifted to it, equals it. The answer is the same as without `kept`; MAX_INSTANTS counts the taken instants, and
+  stop is asked only before the ones it resolves. Why: the page forecasts every minute, and on a busy save each forecast
+  resolved hundreds of instants the last one had.
   Hands free (handsfree.py, docs/design/reminders.md "The hands-free notice"): hands_free_at is the first instant
   the player's work stops holding the hands, after the forecast began with it holding them; None when it began free
   or they are not free by `until`. The player's work holds them while save.queue holds an entry (a goal stint

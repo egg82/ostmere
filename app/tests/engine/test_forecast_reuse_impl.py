@@ -44,7 +44,6 @@ def counted(monkeypatch: pytest.MonkeyPatch) -> list[int]:
     return times
 
 
-@pytest.mark.xfail(strict=True, reason="a forecast cannot be handed an earlier one's path")
 def test_a_forecast_a_minute_on_resolves_only_the_instants_past_the_last_one(monkeypatch: pytest.MonkeyPatch):
     r, s = world()
     first = forecast(s, r, s.time + 3 * H, (WOOD,))
@@ -56,7 +55,6 @@ def test_a_forecast_a_minute_on_resolves_only_the_instants_past_the_last_one(mon
     assert times and all(t > first.until for t in times)
 
 
-@pytest.mark.xfail(strict=True, reason="a forecast cannot be handed an earlier one's path")
 def test_a_path_the_save_left_is_not_reused(monkeypatch: pytest.MonkeyPatch):
     r, s = world()
     first = forecast(s, r, s.time + 3 * H, (WOOD,))
@@ -67,7 +65,6 @@ def test_a_path_the_save_left_is_not_reused(monkeypatch: pytest.MonkeyPatch):
     assert fresh.path is not None and len(times) == len(fresh.path.legs) - 1
 
 
-@pytest.mark.xfail(strict=True, reason="a forecast cannot be handed an earlier one's path")
 def test_reused_instants_count_toward_max_instants():
     """mend lands 60 times an hour: a ten-hour forecast stops at MAX_INSTANTS, and so does one handed that path."""
     r, s = world()
@@ -79,7 +76,6 @@ def test_reused_instants_count_toward_max_instants():
     assert again.path is not None and len(again.path.legs) == MAX_INSTANTS + 1
 
 
-@pytest.mark.xfail(strict=True, reason="a forecast cannot be handed an earlier one's path")
 def test_a_shorter_forecast_stops_at_its_own_until_on_a_longer_path():
     r, s = world()
     first = forecast(s, r, s.time + 3 * H, (WOOD,))
