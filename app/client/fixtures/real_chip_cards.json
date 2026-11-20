@@ -1528,6 +1528,113 @@
       "wounds": []
     },
     {
+      "card": "g_field_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "g_field_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "g_field_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "dig_cellar",
       "makes": [],
       "takes": [
@@ -1710,7 +1817,8 @@
         "n7_gather",
         "n7_cut",
         "n6_gather",
-        "n6_cut"
+        "n6_cut",
+        "g_field_cut"
       ]
     },
     {
@@ -1751,7 +1859,8 @@
         "n3_forage",
         "n5_forage",
         "n7_forage",
-        "n6_forage"
+        "n6_forage",
+        "g_field_forage"
       ]
     },
     {
@@ -1841,7 +1950,8 @@
         "n4_weave_wattle",
         "n5_weave_wattle",
         "n7_weave_wattle",
-        "n6_weave_wattle"
+        "n6_weave_wattle",
+        "g_hearth_weave_wattle"
       ]
     },
     {
@@ -1887,7 +1997,8 @@
         "n3_field_track",
         "n5_field_track",
         "n7_field_track",
-        "n6_field_track"
+        "n6_field_track",
+        "g_field_field_track"
       ]
     },
     {
@@ -1905,7 +2016,8 @@
         "n3_dig_clay",
         "n5_dig_clay",
         "n7_dig_clay",
-        "n6_dig_clay"
+        "n6_dig_clay",
+        "g_hearth_dig_clay"
       ]
     },
     {
@@ -1958,6 +2070,9 @@
         "n6_catch_broth",
         "n6_stew",
         "n6_fungus_stew",
+        "g_hearth_catch_broth",
+        "g_hearth_stew",
+        "g_hearth_fungus_stew",
         "catch_broth"
       ]
     },
@@ -2113,7 +2228,8 @@
         "cut_stakes",
         "n5_stakes",
         "n7_stakes",
-        "n6_stakes"
+        "n6_stakes",
+        "g_field_stakes"
       ]
     },
     {
@@ -2146,7 +2262,8 @@
         "pick_fungus",
         "n5_pick",
         "n7_pick",
-        "n6_pick"
+        "n6_pick",
+        "g_hearth_pick"
       ]
     },
     {
