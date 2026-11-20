@@ -33,8 +33,8 @@ CARVED, PLAIN = (4, 5, 6), 3
 """The face's grained and carved middle rows, and the plain row each is planed to."""
 CUT = (108, 60, 74, 255)
 """The carving's own dark, for the mark."""
-BOARD_AT = (334, 212)
-"""The board's post foot: by the fire, behind the stool, on the bare ground between the watch fire and the woodshed."""
+BOARD_AT = (648, 208)
+"""The board's post foot: on the bare ground at the camp's right edge, above the raised beds."""
 
 
 def _walls() -> Image.Image:

@@ -35,13 +35,13 @@ GAP_AT = (270, 346)
 fire's stage on."""
 GAP_FIRE = (round(GAP_AT[0] - WATCH[0]), round(GAP_AT[1] - WATCH[1]))
 """The gap fire from the watch fire's spot, which its art is drawn at."""
-ASH_HEAP = (150, 322)
-"""The ash off the roofs: its bottom-left, on open ground below the smoke rack."""
+ASH_HEAP = (620, 430)
+"""The ash off the roofs: its bottom-left, on open ground at the camp's far right, below the turned ground."""
 ASHED = kit.Grade(sat=0.25, mul=(0.94, 0.94, 0.98), bright=0.55, contrast=1.05)
 """Her ground with the ash worked in: the turned soil gone grey-black."""
 ASH_PALE = kit.Grade(sat=0.05, mul=(1.0, 1.0, 1.02), bright=1.7, contrast=0.8)
-SNARE_4 = (-34, 36)
-"""The fourth snare from the first: down the run, below the turned ground."""
+SNARE_4 = (243, 86)
+"""The fourth snare from the first: on open ground at the camp's right edge, between the turned ground and the stakes."""
 
 
 def _run(left: int, right: int, feet: int) -> Image.Image:
