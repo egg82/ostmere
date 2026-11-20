@@ -1907,6 +1907,17 @@
   "field_track": null,
   "forage": null,
   "fungus_stew": null,
+  "g_field_cut": null,
+  "g_field_field_track": null,
+  "g_field_forage": null,
+  "g_field_stakes": null,
+  "g_field_watch": null,
+  "g_hearth_catch_broth": null,
+  "g_hearth_dig_clay": null,
+  "g_hearth_fungus_stew": null,
+  "g_hearth_pick": null,
+  "g_hearth_stew": null,
+  "g_hearth_weave_wattle": null,
   "gap_fire": 2,
   "gather_wood": null,
   "give_pelt": 1,
@@ -2082,6 +2093,17 @@
   "field_track": "hands",
   "forage": "hands",
   "fungus_stew": "hands",
+  "g_field_cut": "g_field",
+  "g_field_field_track": "g_field",
+  "g_field_forage": "g_field",
+  "g_field_stakes": "g_field",
+  "g_field_watch": "g_field",
+  "g_hearth_catch_broth": "g_hearth",
+  "g_hearth_dig_clay": "g_hearth",
+  "g_hearth_fungus_stew": "g_hearth",
+  "g_hearth_pick": "g_hearth",
+  "g_hearth_stew": "g_hearth",
+  "g_hearth_weave_wattle": "g_hearth",
   "gap_fire": "hands",
   "gather_wood": "hands",
   "give_pelt": "hands",
@@ -2257,6 +2279,17 @@
   "field_track": true,
   "forage": true,
   "fungus_stew": true,
+  "g_field_cut": false,
+  "g_field_field_track": false,
+  "g_field_forage": false,
+  "g_field_stakes": false,
+  "g_field_watch": false,
+  "g_hearth_catch_broth": false,
+  "g_hearth_dig_clay": false,
+  "g_hearth_fungus_stew": false,
+  "g_hearth_pick": false,
+  "g_hearth_stew": false,
+  "g_hearth_weave_wattle": false,
   "gap_fire": false,
   "gather_wood": false,
   "give_pelt": false,
@@ -2434,7 +2467,7 @@
   445716000000,
   668736000000
  ],
- "digest": "1169785114667fd1c10926be5af948d60c8038ca81b3c3f630fff4ccc07f2da4",
+ "digest": "098a75fb6ecbaefa3efdba2f99de91708c8c5daacd73d6558f5a45f07b515ee9",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -2520,6 +2553,17 @@
    "field_track",
    "forage",
    "fungus_stew",
+   "g_field_cut",
+   "g_field_field_track",
+   "g_field_forage",
+   "g_field_stakes",
+   "g_field_watch",
+   "g_hearth_catch_broth",
+   "g_hearth_dig_clay",
+   "g_hearth_fungus_stew",
+   "g_hearth_pick",
+   "g_hearth_stew",
+   "g_hearth_weave_wattle",
    "gap_fire",
    "gather_wood",
    "give_pelt",
@@ -2784,6 +2828,8 @@
    "woodstack"
   ],
   "lane": [
+   "g_field",
+   "g_hearth",
    "hearth",
    "n1",
    "n2",
@@ -3001,6 +3047,8 @@
    "l_gate_road",
    "l_give_pelt_fail",
    "l_green_birch",
+   "l_group_1",
+   "l_group_2",
    "l_guard_ask",
    "l_guard_n2_1",
    "l_guard_n2_2",
@@ -3843,6 +3891,7 @@
    "t_fallen_gable",
    "t_family_chores",
    "t_family_cuts",
+   "t_family_groups",
    "t_family_joins",
    "t_family_track",
    "t_find_arc_11",
@@ -4658,8 +4707,13 @@
    "to_camp_9"
   ]
  },
- "lane_pooled": [],
+ "lane_pooled": [
+  "g_field",
+  "g_hearth"
+ ],
  "lane_ruled": {
+  "g_field": true,
+  "g_hearth": true,
   "hearth": false,
   "n1": true,
   "n2": true,
@@ -9696,6 +9750,129 @@
      "kind": {
       "@": "UnlockKind",
       "v": "retired"
+     }
+    }
+   ]
+  },
+  "t_family_groups": {
+   "@": "Outcome",
+   "lines": [
+    "l_group_1",
+    "l_group_2"
+   ],
+   "marks": [
+    {
+     "@": "Mark",
+     "card": "g_field_forage",
+     "lane": "n5",
+     "own_split": false
+    },
+    {
+     "@": "Mark",
+     "card": "g_field_forage",
+     "lane": "n6",
+     "own_split": false
+    },
+    {
+     "@": "Mark",
+     "card": "g_hearth_pick",
+     "lane": "n7",
+     "own_split": false
+    }
+   ],
+   "modifiers": [],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": [
+    {
+     "@": "Unlock",
+     "id": "g_field_forage",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_field_cut",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_field_field_track",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_field_stakes",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_field_watch",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_hearth_weave_wattle",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_hearth_catch_broth",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_hearth_dig_clay",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_hearth_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_hearth_pick",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
+     }
+    },
+    {
+     "@": "Unlock",
+     "id": "g_hearth_fungus_stew",
+     "kind": {
+      "@": "UnlockKind",
+      "v": "card"
      }
     }
    ]
@@ -34168,7 +34345,7 @@
    "unlocks": []
   }
  },
- "release": 81,
+ "release": 82,
  "renames": [
   {
    "from": "t_stock_open",

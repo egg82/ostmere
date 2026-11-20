@@ -123,7 +123,7 @@ offered_after = { unlock_kind = "feature", id = "n1" }
 # here and the hands' card is. Everyday work goes to everyone the story does not rule out.
 [[town_cards]]
 id = "{lane}_weave_wattle"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_weave_wattle"
 work_s = 180

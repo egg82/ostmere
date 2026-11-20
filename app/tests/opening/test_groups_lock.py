@@ -31,7 +31,7 @@ def with_new_lane(lock: Lock, pooled: bool) -> Lock:
 
 
 def test_the_unchanged_content_has_nothing_forbidden():
-    assert released().lane_pooled == [] and forbidden(released(), released()) == []
+    assert PERSON not in released().lane_pooled and forbidden(released(), released()) == []
 
 
 def test_a_released_lane_becoming_pooled_is_forbidden():
