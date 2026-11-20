@@ -11,7 +11,7 @@ which fails unless every job the run was meant to run passed. `.github/workflows
 and every push to `main`. Its `changes` job sorts the run: a pull request that changes only `docs/`, top-level
 Markdown or `LICENSE` runs `docs` (the citation tests and the household-names guard), and anything else runs the
 per-PR set: `tests` (two shards, on a `postgres:18.6` container, production's version), `shards-cover`,
-`playthrough-smoke` (the opening's representative routes), `engine-bench`, `saves-forward`, strict `pyright` and
+`playthrough-smoke` (the opening's representative routes), `engine-bench`, strict `pyright` and
 `client`, while `app-image` builds `app/Containerfile` beside them. The whole-game playthroughs (`playthrough`,
 `chapter-saves`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
 nightly on `main`, on a manual dispatch, and on a pull request that touches a path the playthroughs depend on
@@ -281,8 +281,8 @@ an example, check which side it is on.
   and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for) is a
   step on the upgrade chain, `engine/upgrade.py`, as a bump of the save format (`engine.codec.FORMAT`) is;
   `tests/engine/test_rebase_impl.py` checks every format has one. A renamed trigger is a new one to a save: if its
-  condition already holds it fires again. The `saves-forward` CI job loads the previous commit's opening-depth saves
-  with the pushed code. The rebase's rules: engine `DESIGN.txt`, "Rebase".
+  condition already holds it fires again. The golden saves (`app/tools/golden_saves.py`) run each older format through
+  the chain. The rebase's rules: engine `DESIGN.txt`, "Rebase".
 - **Loading is the whole promise to a save in progress.** A change may move where a running game stands (a card it
   already shows, the order two beats land in), and no code, flag or date check is added to keep one game, or the games
   of one period, as they were (it's an alpha, and habits bloated on exactly those one-offs). Avoid surprising
