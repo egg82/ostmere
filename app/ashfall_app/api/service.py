@@ -10,7 +10,7 @@ from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
 from ..opening.makers import card_makes, card_takes, made_by
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
-from ..opening.feature_entries import FeatureCardEntry
+from ..opening.feature_entries import FeatureCardEntry, FeatureEntry
 from ..opening.refs import outcomes
 from ..opening.stake_checks import reach_modifiers, reach_stops
 from ..opening.schema import Opening
@@ -155,9 +155,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                on_line_key=c.on_line_key, off_line_key=c.off_line_key,
                                offered_after=None if c.offered_after is None
                                else convert.unlock(authored.unlock(c.offered_after))) for c in o.chips],
-        feature_infos=[cm.FeatureInfo(feature=f.id, hint_key=f.hint_key, label_key=f.label_key,
-                                      feature_card=_card(f.card))
-                       for f in o.features],
+        feature_infos=[_feature_info(o, f) for f in o.features],
         order_cards=[cm.OrderCard(
             store=c.store, when=convert.condition(authored.condition(c.when, cards)),
             then=_card_verb(c),
@@ -207,6 +205,15 @@ def _offer_infos(o: Opening) -> list[cm.OfferInfo]:
                       change_bp=_changes(a.outcome.modifiers),
                       gains=[cm.AnswerGain(store=s.store, quantity=e.units(s.items)) for s in a.outcome.stores if s.store not in hidden])
         for a in x.answers]) for x in o.offers]
+
+
+def _feature_info(o: Opening, f: FeatureEntry) -> cm.FeatureInfo:
+    """A feature's effect is the answer that unlocks it: that answer's cost text and its modifiers' changes."""
+    answer = next((a for x in o.offers for a in x.answers if a.outcome.modifiers
+                   and any(u.unlock_kind == "feature" and u.id == f.id for u in a.outcome.unlocks)), None)
+    return cm.FeatureInfo(feature=f.id, hint_key=f.hint_key, label_key=f.label_key, feature_card=_card(f.card),
+                          effect_key=None if answer is None else answer.cost_key,
+                          change_bp=[] if answer is None else _changes(answer.outcome.modifiers))
 
 
 def _journal(o: Opening) -> cm.JournalInfo | None:

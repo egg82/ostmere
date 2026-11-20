@@ -71,7 +71,7 @@ const WORDS: Record<string, string> = {
 export function withJournal(content: Content): Content {
   return {
     ...content,
-    feature_infos: [...content.feature_infos, { feature: BOOK, hint_key: null, label_key: "feature.book", feature_card: null }],
+    feature_infos: [...content.feature_infos, { feature: BOOK, hint_key: null, label_key: "feature.book", effect_key: null, change_bp: [], feature_card: null }],
     text_entries: [...content.text_entries, ...Object.entries(WORDS).map(([key, text]) => ({ key, text }))],
     journal: {
       feature: BOOK,

@@ -40,7 +40,7 @@ function check(ok: boolean, what: string): void {
 const card = { title_key: "ui.close", line_keys: ["ui.chronicle.open", "ui.tab.cards"], button_key: "ui.tab.book" };
 const content: Content = {
   ...fixtureContent,
-  feature_infos: [...fixtureContent.feature_infos, { feature: "day_done", hint_key: null, label_key: null, feature_card: card }],
+  feature_infos: [...fixtureContent.feature_infos, { feature: "day_done", hint_key: null, label_key: null, effect_key: null, change_bp: [], feature_card: card }],
 };
 const base = fixtureStep("covered", 900).view;
 const without: View = base;
