@@ -14,8 +14,6 @@ from ..db import journal as rows
 from ..db.saves import SaveRecord
 from ..db.step import JournalDay
 from .interface import Ruleset
-from .journal_composer.history import read
-from .journal_composer.order import page_order
 from .journal import DAY_S, MARK_KINDS, ComposedDay, Line, Note, compose_day
 from .journal_rules import JournalRules
 
@@ -65,7 +63,7 @@ def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: S
 
 
 def _open(r: rows.DayRecord) -> bool:
-    return r.through is not None and r.through < (r.day + 1) * DAY_S
+    return r.through < (r.day + 1) * DAY_S
 
 
 def _extended(save_id: int, was: ComposedDay | None, page: ComposedDay,
@@ -103,15 +101,8 @@ def fed(pairs: Sequence[tuple[int, str]], j: JournalRules) -> list[Line]:
     return sorted((Line(key, at, source) for at, key in pairs for source in j.sources.get(key, ())), key=lambda ln: ln.at)
 
 
-def written(conn: Connection, save_id: int, seen: rows.Seen | None, rs: Ruleset) -> tuple[ComposedDay, ...]:
-    """The save's stored days that have notes, oldest first, each in page order (statement 18): a day stored whole before
-    notes were written as the day goes is read in the order of its time, its row untouched. The days are `seen`'s when
-    the locking statement read them fresh, read again otherwise."""
+def written(conn: Connection, save_id: int, seen: rows.Seen | None) -> tuple[ComposedDay, ...]:
+    """The save's stored days that have notes, oldest first, as stored. The days are `seen`'s when the locking statement
+    read them fresh, read again otherwise."""
     found = seen.days if seen is not None and seen.fresh else rows.days(conn, save_id)
-    stored = [day_of(r) for r in found]
-    j = rs.journal
-    if j is None or not any(d.notes for d, r in zip(stored, found) if r.through is None):
-        return tuple(d for d in stored if d.notes)
-    history = read(fed(rows.lines_of(conn, save_id, keys(rs), len(stored) * DAY_S), j), j.subjects)
-    return tuple(page_order(d, stored[:d.day], history, j.subjects) if r.through is None else d
-                 for d, r in zip(stored, found) if d.notes)
+    return tuple(d for d in map(day_of, found) if d.notes)

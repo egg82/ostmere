@@ -1,5 +1,5 @@
 """The journal's rows (db/journal.py, db/step.py): a step's statement stores its days beside its lines, a day still being
-written is appended to and never rewritten, a day closed or stored whole is left as stored, the save's locking
+written is appended to and never rewritten, a closed day is left as stored, the save's locking
 statement reads every stored day and the lines asked; it says when its snapshot is older than the row it locked; and
 deleting a save for good takes its days with it."""
 import threading
@@ -95,10 +95,10 @@ def test_a_locking_read_that_waited_on_another_write_says_its_snapshot_is_stale(
 
 
 @kills(10)
-def test_a_day_closed_or_stored_whole_is_left_as_stored(conn: Connection):
+def test_a_closed_day_is_left_as_stored(conn: Connection):
     _, sid = new_save(conn)
     step.write_step(conn, sid, T0, written(), [], None, None, [step.JournalDay(0, NOTES_A, None, [], 86400)])
-    conn.execute(insert(save_journal).values(save_id=sid, day=1, notes=NOTES_A, gap=None))
+    conn.execute(insert(save_journal).values(save_id=sid, day=1, notes=NOTES_A, gap=None, through=2 * 86400))
     step.write_step(conn, sid, T0 + DAY, written(decisions=1), [(9, "k")], None, None,
                     [step.JournalDay(0, NOTES_B, None, [], 86400), step.JournalDay(1, NOTES_B, None, [], 2 * 86400),
                      step.JournalDay(2, NOTES_B, None, [], 2 * 86400 + 5)])

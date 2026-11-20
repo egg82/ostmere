@@ -11,13 +11,12 @@ and its wire (api/service.py, accounts/presentation.py), each planted alone in a
  7 one cause       journal_write.py: a line of two causes feeds only the first's subject
  8 open day        journal_write.py: the day the step stops in is composed as ended, its end written early
  9 blanks carried  journal_write.py: Opened carries blank and gap days too
-10 closed appended db/step.py: a day closed, or stored whole, is appended to like one still being written
+10 closed appended db/step.py: a day closed is appended to like one still being written
 11 not stored      write.py: the composed days are not stored
 12 blanks served   api/service.py: a day not written is served
 13 all ink         api/service.py: every note is served in ink, whatever its slot names
 14 day read falls  presentation.py: a PUT's newest_day_read replaces the kept one, lower or null
 15 open forgets    saves/service.py: Opened carries no stored day
-16 reordered       journal_write.py: a day written as it went is put in the old page order when read
 
 Equivalent, and so not in the code: filtering the stored or the step's lines to before the end of the step's own day
 (each day is composed from the lines before its own end only).
