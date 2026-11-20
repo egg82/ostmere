@@ -19,7 +19,7 @@ import { keepsOf, NEW_FLAT, type Flat } from "./kept";
     expect("no entry: Book is no lesson's trigger yet", none.tab().dataset["teach"], undefined);
     const one = rig({ notes: ["note_a1"], phone });
     expect("an entry: the Journal's button in the Book", one.button()?.textContent, text("ui.journal.heading"));
-    expect("an entry: nothing by the chips", [one.q(".chip.keep"), one.q(".scene-head button")], [null, null]);
+    expect("an entry: nothing by the chips", [one.q(".chip.keep"), one.q(".scene-head .chips")?.querySelector(".chips > button")], [null, null]);
     expect("Book's tab is the lesson's trigger", one.tab().dataset["teach"], "journal");
   }
 }

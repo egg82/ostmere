@@ -93,6 +93,14 @@ p.catching-up[hidden] { display: none; }
 .chip-cost { display: block; line-height: 1.15; color: var(--ink); }   /* what the chip costs, under its word */
 .chip.keep { position: relative; }   /* a thing carried (FeatureInfo.label_key), with its dot */
 .chip.keep::before { content: "▤"; }
+.kept { position: relative; }   /* the permanent bonuses behind one count (ui/keptbonuses.ts), its dot (new-dot) at the count's end */
+.kept-button { padding: .1rem 0; font: inherit; font-size: var(--t-meta); color: var(--ink); text-shadow: 0 1px 3px #000; background: transparent; border: 0; text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; cursor: pointer; }
+.kept-button::before { content: "▤"; margin-right: .3em; display: inline-block; text-decoration: none; }
+.kept-button:hover, .kept-button:focus-visible, .kept-button[aria-expanded="true"] { color: var(--ink-hi); text-decoration-color: var(--ink-hi); }
+.kept-list { position: absolute; z-index: 5; top: 100%; right: 0; min-width: 11rem; max-width: min(18rem, 90vw); margin: .25rem 0 0; padding: .4rem .7rem; list-style: none; font-size: var(--t-meta); line-height: 1.35; color: var(--ink); background: var(--raise); border-radius: 2px; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .55); }
+.kept-list[hidden] { display: none; }
+.kept-list li { padding: .2rem 0; }
+.kept .new-dot { top: .35rem; left: auto; right: -.6rem; }
 
 /* the Camp bar: the level in the title face, its bar ember (it is the player's), not a control */
 .camp { flex: 1 1 8rem; min-width: 7rem; font-size: var(--t-meta); color: var(--ink); }

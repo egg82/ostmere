@@ -6,6 +6,7 @@ import type { Catalog } from "../game/catalog";
 import { sample } from "../game/clock";
 import { chipStore } from "../game/ruleoffers";
 import { el, setText } from "./dom";
+import type { PartContext } from "./part";
 
 const LEVEL = "chip-level";
 
@@ -29,4 +30,19 @@ export function drawLevels(catalog: Catalog, band: HTMLElement, view: View, t: n
     const served = view.levels.find((l) => l.store === level.dataset["store"]);
     setText(level, served ? ` ${catalog.format.level(sample(served.segment, t))}` : "");
   }
+}
+
+/** A node of the band's row, by its key: `chip:<id>`, or `keep:<id>` for the book carried (ui/story.ts). */
+export function bandItem(ctx: PartContext, key: string): HTMLElement {
+  const [kind, id = ""] = key.split(":");
+  const { catalog } = ctx;
+  if (kind === "chip") {
+    const node = chipNode(catalog, id);
+    ctx.arrivals.arrive(node, "chip", id);
+    return node;
+  }
+  const node = el("span", "chip keep", catalog.label(catalog.content.feature_infos.find((f) => f.feature === id)?.label_key));
+  node.dataset["keep"] = id;
+  ctx.arrivals.arrive(node, "feature", id);
+  return node;
 }
