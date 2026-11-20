@@ -173,7 +173,9 @@ schedule. An ordinary absence is roughly a day or two: a guideline like "one, ma
 return, which an edge case may bend a little. A prestige bonus is a node with a few ranks that the player completes
 (completing a node beats a bonus that repeats without end); the finite track bounds the total. The click is only by hand, never queued (a queued click is an auto-prestige
 with an extra step). XP past the top carries into the next phase for about two days and never past that phase's top,
-so an ordinary absence loses nothing and a long one leaves one click waiting, never a stack. No
+so an ordinary absence loses nothing and a long one leaves one click waiting, never a stack. A pushed-past skill
+opens with a quick run of levels, because the new phase's first steps are small while every bonus from the phases
+before still counts; it settles within about an hour. That burst is wanted, as the reward for pushing past. No
 interruption ever stops work to keep a player from idling one skill (OSRS's random events, rejected as an offline cap
 in disguise). Breadth comes from the web: a skill's later methods need what other skills make, so a one-track mix
 runs into the web, and the dry-store rule moves its share on; seasons' chores and options do the rest.
