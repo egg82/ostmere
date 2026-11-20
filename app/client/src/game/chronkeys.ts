@@ -20,6 +20,8 @@ export const CHRONICLE_KEYS = {
   chapterAsks: "ui.chapter.asks", // "{n}"
   chapterPeople: "ui.chapter.people",
   chapterStill: "ui.chapter.still", // nothing changed while the player was away
+  chapterMore: "ui.chapter.more", // "+{n} more": the stores row's control for the figures past the first few
+  chapterFewer: "ui.chapter.fewer", // the same control once they are all shown
   chronEarlier: "ui.chronicle.earlier",
   chronNow: "ui.chronicle.now",
   chronStory: "ui.chronicle.story",

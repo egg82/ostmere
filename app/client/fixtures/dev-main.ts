@@ -7,7 +7,7 @@
 // recovery words due; #devices opens the "Another device" sheet; #settings the Settings sheet; #join=CODE is a join link; #have opens "I have a code".
 // #kept=a,b marks those lessons kept in the new save (the stopped-mix lesson needs the mix's: #phase=greyed&kept=first_mix); #swap lets
 // `look` make what `tend` made, so the stopped row offers a swap. #kinded makes the fixture's "ask" offer a kind of its own, roles "no" and "yes" on its answers, and adds a later ask of the kind ("ask_again") so the answer rule's builder shows.
-// #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page (#manydone finishes every card) and #town the Town tab (a phone's). #journal opens the Book on its Journal (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone). Phases asksone and asksmany open the Asks list (asks.ts); phase feel lands a chain on each tap (feel.ts).
+// #chronicle opens the Chronicle (phase chronicle fills it); #done opens the Book on its Done page (#manydone finishes every card) and #town the Town tab (a phone's). #journal opens the Book on its Journal (phases journal, journallesson). #prestigesheet opens the first skill row's Prestige or Choose (phases prestige, prestigeowed). #games opens the Games sheet. #catchup answers the first decision as a long absence coming back in slow slices. #back shows the page again 1.5 s in (a return: phases sincelong, sinceshort, sincenone, sincemany with #stores=N extra stores). Phases asksone and asksmany open the Asks list (asks.ts); phase feel lands a chain on each tap (feel.ts).
 import "../src/controls.css";
 import "../src/game.css";
 import "../src/front.css";
@@ -19,7 +19,7 @@ import { fixtureContent, Q } from "./content";
 import { isFights, withHurtChip } from "./fights";
 import { isJournal, withJournal } from "./journal";
 import { isPrestige, withPrestige } from "./prestige";
-import { isSince, withSince } from "./since";
+import { isSince, MANY, withSince } from "./since";
 import { fixtureApi } from "./fixture-api";
 import { catchingUpApi } from "./catchup";
 import { fixtureManifestUrl } from "./scene-manifest";
@@ -45,6 +45,7 @@ if (hash.has("townname")) {
 if (isFights(phase)) Object.assign(fixtureContent, withHurtChip(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
+MANY.n = Number(hash.get("stores") ?? 0);
 if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));
 const fixture = fixtureApi(phase, hash.has("stale"), hash.has("seen"), hash.has("limited"), hash.has("due"));
 const kept = (hash.get("kept") ?? "").split(",").filter((l) => l.length > 0);

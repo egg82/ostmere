@@ -197,6 +197,8 @@ const text: Record<string, string> = {
   "ui.chapter.ask": "{n} ask",
   "ui.chapter.asks": "{n} asks",
   "ui.chapter.still": "Nothing changed.",
+  "ui.chapter.more": "+{n} more",
+  "ui.chapter.fewer": "fewer",
   "ui.chronicle.earlier": "Earlier",
   "ui.chronicle.now": "Now",
   "ui.chronicle.story": "Story",

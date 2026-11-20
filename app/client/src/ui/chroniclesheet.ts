@@ -25,6 +25,7 @@ export class ChronicleSheet implements BookPage {
   private entries: Entry[] = [];
   /** The filter shown; null: every entry. */
   private filter: Filter | null = "story";
+  private storesOpen = false;
   /** The latest game second the page has seen: the stretch's "now". */
   private now = 0;
   /** Stretches the player opened or folded by hand, by id: a stretch drawn again, under any filter, keeps its state. */
@@ -96,7 +97,7 @@ export class ChronicleSheet implements BookPage {
     const last = chapter ? null : all.at(-1);
     const drawn = all.filter((s) => held(s.lines, this.filter).length > 0).reverse();
     const top = chapter && (this.filter === "story" || this.filter === null || held(chapter.lines, this.filter).length > 0)
-      ? [chapterNode(this.catalog, chapter, this.filter, { line: (l) => this.line(l), pick: (f) => this.pick(f), showWaiting: () => this.waitingShown() })] : [];
+      ? [chapterNode(this.catalog, chapter, this.filter, { line: (l) => this.line(l), pick: (f) => this.pick(f), showWaiting: () => this.waitingShown(), storesOpen: this.storesOpen, toggleStores: () => { this.storesOpen = !this.storesOpen; this.redraw(); } })] : [];
     this.list.replaceChildren(...top, ...drawn.map((s, i) => this.stretch(s, s === last, top.length === 0 && i === 0)));
   }
 

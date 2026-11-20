@@ -8,13 +8,17 @@ import type { Content, LedgerLine, LogLine, RuleRun, Step, View, Visit } from ".
 import { Q } from "./content";
 import { fixtureStep, type Kept } from "./steps";
 
-const AWAY = { sincelong: 54 * 60, sinceshort: 40 * 60, sincenone: 35 * 60, sincejoin: 3 * 3600, sincemention: 5 * 3600 } as const;
+const AWAY = { sincelong: 54 * 60, sinceshort: 40 * 60, sincenone: 35 * 60, sincejoin: 3 * 3600, sincemention: 5 * 3600, sincemany: 54 * 60 } as const;
 type Away = keyof typeof AWAY;
 export type SincePhase = Away | `${Away}back`;
 export const isSince = (phase: string): phase is SincePhase => phase.startsWith("since") && (phase.replace(/back$/, "") in AWAY);
 const away = (phase: SincePhase): Away => phase.replace(/back$/, "") as Away;
 /** The phase the page lands on when it is shown again after `phase`. */
 export const sinceBack = (phase: SincePhase): SincePhase | null => (phase.endsWith("back") ? null : `${away(phase)}back`);
+
+/** sincemany: how many extra stores the return moves (dev-main's #stores=N), each a neutral "Store 1" … that gains. */
+export const MANY = { n: 0 };
+const extra = (i: number): string => `many${i}`;
 
 /** An earlier return, before Begin, so the chronicle has an older stretch under the chapter. */
 export const SINCE_VISITS: Visit[] = [{ left: -9000, back: -5400 }];
@@ -25,7 +29,13 @@ export function withSince(content: Content): Partial<Content> {
   if (!camp) return {};
   const [first, second] = camp.camp_levels;
   if (!first || !second) return {};
-  return { camp: { ...camp, camp_levels: [first, { ...second, held: false }, { ...second, at: 600 * Q, held: true }] } };
+  const wood = content.store_infos.find((s) => s.store === "wood");
+  const more = wood ? Array.from({ length: MANY.n }, (_, i) => ({ ...wood, store: extra(i), label_key: `store.${extra(i)}`, made_by: [] })) : [];
+  return {
+    store_infos: [...content.store_infos, ...more],
+    text_entries: [...content.text_entries, ...more.map((m, i) => ({ key: m.label_key, text: `Store ${i + 1}` }))],
+    camp: { ...camp, camp_levels: [first, { ...second, held: false }, { ...second, at: 600 * Q, held: true }] },
+  };
 }
 
 const still = (line: LedgerLine, items: number): LedgerLine => ({
@@ -40,16 +50,20 @@ const AFTER: Record<Away, Record<string, number>> = {
   sincenone: BEFORE,
   sincejoin: { wood: 52, warmth: 38, stone: 3, camp: 60 },
   sincemention: { wood: 52, warmth: 38, stone: 3, camp: 60 },
+  sincemany: { wood: 340, warmth: 12, stone: 25, camp: 230 },
 };
 
 function lines(...at: Array<[string, number]>): LogLine[] {
   return at.map(([key, t], seq) => ({ at: t, seq, key, card: null, opens_beat: false }));
 }
 
-function viewAt(base: View, at: number, stores: Record<string, number>, levels: [number, number], ask: boolean): View {
+function viewAt(base: View, at: number, stores: Record<string, number>, levels: [number, number], ask: boolean, gained = 0): View {
+  const wood = base.ledger.find((l) => l.store === "wood");
+  const more = wood ? Array.from({ length: MANY.n }, (_, i) => still({ ...wood, store: extra(i) }, gained * (i + 3))) : [];
   return {
     ...base, at, next_event_at: null,
-    ledger: base.ledger.map((l) => still(l, stores[l.store] ?? 0)),
+    ledger: [...base.ledger.map((l) => still(l, stores[l.store] ?? 0)), ...more],
+    unlocked: [...base.unlocked, ...more.map((m) => ({ category: "store" as const, id: m.store }))],
     skills: base.skills.map((s, i) => ({ ...s, level: levels[i] ?? s.level, next_level_at: null, xp: { ...s.xp, rate: 0 } })),
     offers: ask ? [{ offer: "ask", answer: null, answers: [{ answer: "wait", card: null, takes_s: null }, { answer: "go", card: "haul", takes_s: 750 }] }] : [],
   };
@@ -76,13 +90,13 @@ export function sinceStep(phase: SincePhase, at: number, kept: Kept = {}, decisi
   }
   const back = at + AWAY[which];
   const left = back - AWAY[which];
-  const long = which === "sincelong";
+  const long = which === "sincelong" || which === "sincemany";
   const said = long ? lines(["line.1", left + 600], ["line.6", left + 1200], ["line.7", left + 1800], ["line.offer", back - 300], ["line.2", back - 100])
     : which === "sinceshort" ? lines(["line.4", back - 200])
     : which === "sincejoin" ? lines(["line.4", back - 2000], ["line.joins", back - 200])
     : which === "sincemention" ? lines(["line.4", back - 4000], ["people.joined.mason", back - 3000], ["people.joined.helper", back - 3000]) : [];
   return {
-    ...base, view: viewAt(base.view, back, AFTER[which], long ? [4, 2] : [2, 1], long), lines: said,
+    ...base, view: viewAt(base.view, back, AFTER[which], long ? [4, 2] : [2, 1], long, which === "sincemany" ? 5 : 0), lines: said,
     rule_runs: long ? runs(base.view, left, back) : runs(base.view, left, null),
   };
 }
