@@ -12,6 +12,7 @@ id = "t_crew"
 label_key = "t_l_crew"
 ruled = true
 pooled = true
+tied = "t_m2"
 
 [[lanes]]
 id = "t_m1"

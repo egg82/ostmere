@@ -4294,6 +4294,17 @@
               }
             ],
             "title": "Group"
+          },
+          "tied": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tied"
           }
         },
         "type": "object",
@@ -4305,7 +4316,8 @@
           "name_key",
           "told",
           "pooled",
-          "group"
+          "group",
+          "tied"
         ],
         "title": "LaneInfo",
         "description": "Every lane, \"hands\" included. Its label is the label_key of the last of later_labels whose `after`\nview.unlocked holds, else label_key (CONTRACT.txt, \"A lane run by rules\")."

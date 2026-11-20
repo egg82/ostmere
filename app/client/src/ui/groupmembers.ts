@@ -4,7 +4,7 @@
 // A group of a few opens its list; a bigger one is a count with the names a tap away.
 import type { View } from "../api/types";
 import { laneOneOff, laneTap } from "../game/holder";
-import { members } from "../game/town";
+import { members, people } from "../game/town";
 import { UI } from "../game/text";
 import { face } from "./asknode";
 import { el, setText, tapFeedback } from "./dom";
@@ -18,6 +18,7 @@ interface Line { node: HTMLElement; doing: HTMLElement; held: { card: string; en
 
 export class GroupMembers {
   readonly root = el("section", "group-members");
+  private readonly tied = el("p", "group-tied");
   private readonly toggle = el("button", "quiet group-count");
   private readonly list = el("div", "group-lines");
   private lines = new Map<string, Line>();
@@ -31,13 +32,17 @@ export class GroupMembers {
       this.list.hidden = !this.opened;
       this.toggle.setAttribute("aria-expanded", String(this.opened));
     });
-    this.root.append(this.toggle, this.list);
+    this.root.append(this.tied, this.toggle, this.list);
   }
 
   /** Draws `group`'s members as of `view`. */
   update(view: View, group: string): void {
     const { catalog } = this.ctx;
     const all = members(catalog, view, group);
+    const tied = catalog.lanes.get(group)?.tied ?? null;
+    const met = tied !== null && people(catalog, view).includes(tied);
+    this.tied.hidden = !met;
+    setText(this.tied, met ? catalog.text.fill(UI.townTied, { name: catalog.laneLabel(tied, view) }) : "");
     setText(this.toggle, catalog.text.fill(UI.townCount, { n: String(all.length) }));
     const open = this.opened ?? all.length <= OPEN_UP_TO;
     this.list.hidden = !open;

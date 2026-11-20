@@ -29,3 +29,6 @@ class LaneEntry(Entry):
     has no `name_key` and no `told` (engine DESIGN.txt, "GROUPS (pooled lanes)")."""
     group: str | None = None
     """On a person's ruled lane, the pooled lane that is their group."""
+    tied: str | None = None
+    """On a pooled lane, the person's lane the group is tied to: one townsperson who looks after it (api/CONTRACT.txt,
+    "GROUPS"). Authored, never inferred."""
