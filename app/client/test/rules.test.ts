@@ -56,7 +56,7 @@ const removed = removeRule(list, 1);
 expect("remove keeps the others", removed.kind === "set_orders" ? removed.orders : null, [list.orders[0], list.orders[2]]);
 
 // The hands doing a rule's task.
-const tapping: View = { ...list, lanes: [{ lane: "hands", running_card: "shelter", completes_at: 200, order: null }] };
+const tapping: View = { ...list, lanes: [{ lane: "hands", running_card: "shelter", completes_at: 200, order: null, own_split: null }] };
 expect("handsRule needs the rule on and its card on the hands", handsRule(tapping), 2);
 expect("handsRule: off", handsRule({ ...tapping, orders_on: [false, false, false] }), -1);
 

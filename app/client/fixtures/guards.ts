@@ -32,7 +32,7 @@ export function guardsStep(_phase: GuardsPhase, at: number, kept: Kept = {}, dec
     order_doing: [null, null, 0, 1],
     unlocked: [...v.unlocked, ...["smoke_catch", "smoke_roots"].map((id) => ({ category: "card" as const, id })), ...["catch", "smoked", "roots"].map((id) => ({ category: "store" as const, id }))],
     ledger: [...v.ledger, line(at, "catch", 4, 6), line(at, "smoked", 12, 12), line(at, "roots", 6, 24)],
-    lanes: [...v.lanes, { lane: "smoke", running_card: "smoke_roots", completes_at: at + 40, order: 3 }],
+    lanes: [...v.lanes, { lane: "smoke", running_card: "smoke_roots", completes_at: at + 40, order: 3, own_split: null }],
   };
   return { ...base, view };
 }

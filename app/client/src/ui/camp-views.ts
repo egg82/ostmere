@@ -16,7 +16,7 @@ function campView(running: string | null, done: [string, number][], stores: [str
   const cards: Card[] = [];
   return {
     at: 0, next_event_at: null, skills: [], standing: [], cards, completed, greyed_mix_ids: [], chips: [], chips_seen: [],
-    lanes: [{ lane: "hands", running_card: running, completes_at: null, order: null }],
+    lanes: [{ lane: "hands", running_card: running, completes_at: null, order: null, own_split: null }],
     ledger: stores.map(([store, items]) => ({
       store, segment: { ...still, start_value: items * quantityPerItem }, net_per_hour: 0, contributions: [], empties_at: null,
       fills_at: null, falling: false, covered: true, starved: false, cap: 12 * quantityPerItem,

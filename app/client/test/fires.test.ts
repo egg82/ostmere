@@ -7,7 +7,7 @@ import { OrderFires } from "../src/ui/fires";
 
 const card = fixtureContent.order_cards[0]!;
 const base: View = { ...fixtureStep("covered", 100).view, orders: [{ when: card.when, then: card.then, unless: [], or_else: [], below_next: false }], orders_on: [true] };
-const idle: LaneBar = { lane: "hands", running_card: null, completes_at: null, order: null };
+const idle: LaneBar = { lane: "hands", running_card: null, completes_at: null, order: null, own_split: null };
 const running: LaneBar = { ...idle, running_card: "gather" };
 const before: View = { ...base, lanes: [idle] };
 const after: View = { ...base, lanes: [running] };

@@ -38,7 +38,7 @@ expect("at the bound: no New rule, one plain line", [count(full, ".rules-new"), 
   [0, ["That is all the room there is for rules"]]);
 
 const larder: Card = {
-  card: "larder", completions: 0, cap: 1, bar: { start: 100, start_value: 0, rate: 0, limit: null }, bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1,
+  card: "larder", completions: 0, cap: 1, bar: { start: 100, start_value: 0, rate: 0, limit: null }, bar_total: 20, by: null, completes_at: null, share_bp: 0, run: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 20, speed: 1,
   blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 12, release: 12, value_of_cap: false, release_of_cap: false }, ready_at: 400 }, needs: [],
 };
 const ended = fixtureStep("restoffer", 100).view;

@@ -22,7 +22,7 @@ const still = (at: number, value = 0) => ({ start: at, start_value: value, rate:
 function card(at: number, id: string, over: Partial<Card> = {}): Card {
   return {
     card: id, completions: 0, cap: 1, bar: still(at), bar_total: 20 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-    blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: BP, needs: [], ...over,
+    blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 20, speed: BP, needs: [], ...over,
   };
 }
 
@@ -60,7 +60,7 @@ function rising(at: number, view: View): View {
   return {
     ...view,
     ledger: [...view.ledger, line(at, "catch", 2, 3, 6), line(at, "smoked", 2, 0, 12), line(at, "roots", 6, 0, 24)],
-    lanes: [...view.lanes, { lane: "smoke", running_card: null, completes_at: null, order: null }],
+    lanes: [...view.lanes, { lane: "smoke", running_card: null, completes_at: null, order: null, own_split: null }],
     cards: [...view.cards, card(at, "smoke_catch", { cap: null }), card(at, "smoke_roots", { cap: null }),
       short(at, "take_stock", "smoked", 6, 2, null, { needs: [{ store: "smoked", quantity: 6 * Q, segment: still(at, 2 * Q), gate: null, makers: ["smoke_catch", "smoke_roots"], spent: false }, { store: "roots", quantity: 15 * Q, segment: still(at, 6 * Q), gate: null, makers: [], spent: false }] })],
     unlocked: [...view.unlocked, { category: "card", id: "smoke_catch" }, { category: "card", id: "smoke_roots" }, { category: "store", id: "catch" },

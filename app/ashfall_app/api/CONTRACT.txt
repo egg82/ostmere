@@ -1641,6 +1641,37 @@ THE TOWN'S MIX
                                     ui.mix.name_reserved {prefix} | ui.mix.name_taken   the mix editor's name refused
   The lesson's lines are content text keys like the other lessons'.
 
+GROUPS (engine DESIGN.txt, "GROUPS (pooled lanes)")
+  Many people may do the same work under one split. A group is a pooled lane: LaneInfo.pooled is true, its label_key
+  is the group's name, and it has no name_key and no told. It never joins, never leaves and is never tapped (a
+  tap_card of one of its cards is 422 invalid_decision). A person's LaneInfo.group names the pooled lane that is their
+  group; null on every other lane. Both are fixed by content. Who is in a group is not served as a list: a member is a
+  person present (THE TOWN'S MIX) whose LaneBar.own_split is false and whose LaneInfo.group is that lane.
+  LaneBar.own_split is a person's mark: true runs their own split (every person today), false hands them to their
+  group. It is null on hands, on a pooled lane and on a lane that is no person. A marked person's lane and cards read
+  exactly as THE TOWN'S MIX says; an unmarked person's own shares stay in the town mix, idle, and come back when they
+  are marked again. Only the story sets the mark; no decision does.
+  The group's split is saved shares of the town mix on the group's cards, each a part of EACH member's time. Card.crew
+  is a group card's free members now (members holding no tap); null on a card of no pooled lane. While crew is above 0,
+  Card.share_bp and Card.gained are the totals over those members (the card runs at them: the saved share times crew);
+  at crew 0 they are the per-member share, and a card of a group with members but none free is yielded. A group with no
+  members shows its cards' shares idle, as a share on a lane not joined does. A group card's work and speed are the
+  group lane's own; a member's lane speed applies to their own cards only.
+  Decisions: save_mix of a town mix treats a pooled lane as a person: its shares sum to at most 10000 and hold no
+  capped card, and a card of a group is accepted whether or not it has members. Nothing else is new.
+  THE CLIENT MAY:
+  - read a group's split off view.mixes on the group's cards, and draw each card's rate as its Card.share_bp (the
+    total) beside its crew ("each of crew people").
+  - show, before any change, the rate a member's arrival will give: it is the saved share times crew + 1.
+  THE CLIENT MAY NOT:
+  - tap a card of a pooled lane, set a rule on one, or set the mark.
+  - infer a group's members from anything but LaneBar.own_split and LaneInfo.group, or a group's name from a person's.
+  - give a group's shares a sum over 10000, or a capped card.
+
+  Rejected, and why (groups on the wire):
+  - A group object on the view (members, crew, split): the lanes, the cards and the mix already carry each fact.
+  - A member count on LaneBar or LaneInfo: the crew moves with taps, and it is read where the rate is, on the card.
+
 LEAVES
   A person may leave the town at a story moment (engine DESIGN.txt, "LEAVES"), for good. Unlock categories gain left
   (id a lane): that lane's person has left. The people present (THE TOWN'S MIX) are the ruled lanes whose joined

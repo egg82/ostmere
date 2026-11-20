@@ -1,0 +1,98 @@
+# A test chapter merged onto the shipped opening (tests/test_groups_wire.py): a pooled lane t_crew with one card and
+# three people in that group, t_m1 and t_m3 joining without their own split and t_m2 joining marked. Not story: the ids and words are the tests' own. The planted variants are edits of this file.
+version = 1
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[lanes]]
+id = "t_crew"
+label_key = "t_l_crew"
+ruled = true
+pooled = true
+
+[[lanes]]
+id = "t_m1"
+label_key = "t_l_m1"
+ruled = true
+told = "line"
+group = "t_crew"
+
+[[lanes]]
+id = "t_m2"
+label_key = "t_l_m2"
+ruled = true
+told = "line"
+group = "t_crew"
+
+[[lanes]]
+id = "t_m3"
+label_key = "t_l_m3"
+ruled = true
+told = "line"
+group = "t_crew"
+
+[[cards]]
+id = "t_crew_work"
+lane = "t_crew"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_m1_work"
+lane = "t_m1"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_m2_work"
+lane = "t_m2"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_m3_work"
+lane = "t_m3"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[triggers]]
+id = "t_m1_comes"
+when = { test = "after_time", value = 100 }
+outcome = { line_keys = ["t_l_m1_comes"], unlocks = [{ unlock_kind = "card", id = "t_m1_work" }], joins = [{ lane = "t_m1", mix = "town:main", card = "t_crew_work", counted = true, own_split = false }] }
+
+[[triggers]]
+id = "t_m2_comes"
+when = { test = "after_time", value = 200 }
+outcome = { line_keys = ["t_l_m2_comes"], unlocks = [{ unlock_kind = "card", id = "t_m2_work" }], joins = [{ lane = "t_m2", mix = "town:main", card = "t_m2_work", counted = true, own_split = true }] }
+
+[[triggers]]
+id = "t_m3_comes"
+when = { test = "after_time", value = 300 }
+outcome = { line_keys = ["t_l_m3_comes"], unlocks = [{ unlock_kind = "card", id = "t_m3_work" }], joins = [{ lane = "t_m3", mix = "town:main", card = "t_crew_work", counted = true, own_split = false }] }
+
+[line_kinds]
+t_l_m1_comes = "story"
+t_l_m2_comes = "story"
+t_l_m3_comes = "story"
+
+[text]
+t_s_heap = "Heap"
+t_l_crew = "Crew"
+t_l_m1 = "First"
+t_l_m2 = "Second"
+t_l_m3 = "Third"
+t_c_work = "Work"
+t_l_m1_comes = "One comes."
+t_l_m2_comes = "Two comes."
+t_l_m3_comes = "Three comes."

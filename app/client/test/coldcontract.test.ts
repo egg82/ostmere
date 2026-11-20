@@ -196,7 +196,7 @@ for (const onPhone of [true, false]) {
   const base: View = fixtureStep("restrule", AT).view;
   const card = (id: string, over: Partial<Card> = {}): Card => ({
     card: id, completions: 0, cap: 1, bar: { start: AT, start_value: 0, rate: 0, limit: null }, bar_total: 20, by: null,
-    completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1, needs: [], ...over,
+    completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 20, speed: 1, needs: [], ...over,
   });
   const only = (c: Card[], completed: View["completed"] = []): View => ({ ...base, cards: c, completed });
   const classes = (cards: Cards, id: string): string[] => (cards.node(id)?.closest(".card")?.className ?? "").split(" ").filter(Boolean);
@@ -233,7 +233,7 @@ for (const onPhone of [true, false]) {
   expect("run by a tap on first draw: not untapped", untapped(drawnTap, "take_stock"), false);
 
   // A busy hands lane: a card is flat and can't be tapped, unless it cuts in (Card.cuts_in).
-  const hands = { lane: "hands", running_card: "gather", completes_at: AT + 5, order: null };
+  const hands = { lane: "hands", running_card: "gather", completes_at: AT + 5, order: null, own_split: null };
   const onBusy = (cuts: boolean): Cards => draw({ ...only([card("take_stock", { cuts_in: cuts })]), lanes: [hands] });
   const flat = onBusy(false);
   expect("busy lane: flat", classes(flat, "take_stock").includes("busy"), true);

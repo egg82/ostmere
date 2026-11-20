@@ -187,6 +187,11 @@ class LaneInfo(BaseModel):
     """The person's name, filling every text's {<lane>} slot (CONTRACT.txt, "Text and numbers"); null: no name."""
     told: Literal["line", "mention"] | None
     """How a person's coming and going is written (CONTRACT.txt, "People"); null for a lane that is not a person."""
+    pooled: bool
+    """A group, not a person: the lane its members' shared cards sit on, labelled with the group's name (CONTRACT.txt,
+    "GROUPS"). Never joins, never taps."""
+    group: str | None
+    """On a person's lane, the pooled lane that is their group; null for every other lane."""
 
 
 class ChipInfo(BaseModel):

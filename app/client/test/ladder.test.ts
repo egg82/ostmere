@@ -20,7 +20,7 @@ const base = fixtureStep("restrule", AT).view;
 const ID = "take_stock";
 const card = (completions: number, by: Card["by"]): Card => ({
   card: ID, completions, cap: null, bar: { start: AT, start_value: 0, rate: 0, limit: null }, bar_total: 20, by,
-  completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 20, speed: 1, needs: [],
+  completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 20, speed: 1, needs: [],
 });
 const viewOf = (c: Card): View => ({ ...base, cards: [...base.cards, c] });
 const PULSES = RUNGS.flatMap((r) => (LADDER[r].pulse ? [LADDER[r].pulse] : []));
