@@ -7,7 +7,6 @@ from functools import cache
 from pathlib import Path
 
 from ashfall_app import engine as e
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import load_opening, to_rules
 
 GOLDEN = Path(__file__).resolve().parent / "golden"
@@ -28,7 +27,7 @@ def todays_rules() -> e.Rules:
 def golden(name: str, rules: e.Rules | None = None) -> e.Save:
     """A golden save (`f7/05-seed0-end526`) under today's opening (or `rules`), rebased if written under older rules."""
     text = (GOLDEN / f"{name}.json").read_text().strip()
-    return e.rebase(text, rules or todays_rules(), engine_renames(load_renames()))
+    return e.rebase(text, rules or todays_rules())
 
 
 def never() -> Stop:

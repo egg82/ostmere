@@ -1,7 +1,7 @@
 """Golden saves (golden/f<FORMAT>/, written by tools/save_corpus.py; every format's are kept, so a FORMAT bump runs
 the older ones through UPGRADES for real) load under today's opening and under a test change of it
-(a new card a new trigger unlocks, a renamed store with its mapping, a retuned work_s), keep everything they had
-earned, and run on (engine DESIGN.txt, "Rebase", invariants 49 to 51).
+(a new card a new trigger unlocks, a renamed store, a retuned work_s), keep everything they had earned under an id
+both rules declare, drop the old store, and run on (engine DESIGN.txt, "Rebase", invariants 49 to 51).
 
 Pushes advance each save one game day (the per-test ceiling, tests/conftest.py); the nightly tests-deep run sets SAVES_DAYS=30, and the
 saves-forward CI job advances the saves of the commit before a push 30 days with the pushed code."""
@@ -12,16 +12,17 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import (
-    BP, FORMAT, OLDEST_FORMAT, Rules, Save, Step, StoreId, TriggerId, Unlock, UnlockKind, advance, rebase, rebase_logged,
+    BP, FORMAT, OLDEST_FORMAT, AfterTime, IdKind, Order, Rules, Save, Step, StoreId, StoreValue, TriggerId, Unlock,
+    UnlockKind, advance, rebase, rebase_logged,
 )
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import load_opening, to_rules
-from tests.saves.changes import RENAMES, RETUNED, changed_opening
+from tests.saves.changes import RETUNED, changed_opening
 
 GOLDEN = Path(__file__).resolve().parent / "golden"
 SAVES = sorted(p for f in range(OLDEST_FORMAT, FORMAT + 1) for p in (GOLDEN / f"f{f}").glob("*.json"))
 DAYS = int(os.environ.get("SAVES_DAYS", "1"))
 DAY_S = 86_400
+ROOTS = StoreId("roots")
 
 
 @cache
@@ -40,7 +41,7 @@ def text(path: Path) -> str:
 
 def loaded(path: Path) -> Save:
     """The golden save under today's opening: decoded if it is today's format and rules, else rebased."""
-    return rebase(text(path), today(), engine_renames(load_renames()))
+    return rebase(text(path), today())
 
 
 @pytest.fixture(scope="module")
@@ -60,7 +61,7 @@ def test_the_golden_saves_cover_the_opening_and_every_readable_format(all_loaded
 
 @pytest.fixture
 def under_todays_opening(path: Path) -> Save:
-    return rebase_logged(text(path), today(), engine_renames(load_renames())).save
+    return rebase_logged(text(path), today()).save
 
 
 @pytest.mark.parametrize("path", SAVES, ids=lambda p: p.stem)
@@ -71,7 +72,7 @@ def test_a_golden_save_runs_on_under_todays_opening(path: Path, under_todays_ope
 
 @pytest.fixture
 def under_the_change(path: Path) -> Step:
-    return rebase_logged(text(path), changed(), RENAMES)
+    return rebase_logged(text(path), changed())
 
 
 @pytest.mark.parametrize("path", SAVES, ids=lambda p: p.stem)
@@ -80,6 +81,8 @@ def test_a_golden_save_survives_a_content_change(path: Path, all_loaded: dict[Pa
     step = under_the_change
     after = step.save
     _kept(before, after)
+    today_dropped = dict(rebase_logged(text(path), today()).dropped)   # what the save's own rules had and today's lack
+    assert dict(step.dropped) == {**today_dropped, IdKind.STORE: today_dropped.get(IdKind.STORE, 0) + 1}
     assert Unlock(UnlockKind.CARD, "gather_more") in after.unlocked
     assert after.fired[[t.id for t in changed().triggers].index(TriggerId("t_gather_more"))]
     assert changed().cards[0].lines[0] in [ln.key for ln in step.lines]
@@ -93,12 +96,14 @@ def test_a_golden_save_runs_on_under_a_content_change(path: Path, under_the_chan
 
 
 def _kept(before: Save, after: Save) -> None:
-    """Invariants 49 and 51 for this change: nothing earned is taken back, and the retuned card's bar is rescaled."""
+    """Invariants 49 and 51 for this change: nothing earned under an id both rules declare is taken back, the dropped
+    store goes, and the retuned card's bar is rescaled."""
     assert after.time == before.time and after.ended_at == before.ended_at
-    rename = {StoreId("roots"): StoreId("tubers")}
     now = {st.store: st.segment.start_value for st in after.stores}
+    assert ROOTS not in now
     for st in before.stores:
-        assert now[rename.get(st.store, st.store)] >= st.segment.start_value, st.store
+        if st.store != ROOTS:
+            assert now[st.store] >= st.segment.start_value, st.store
     xp = {st.skill: st.xp.start_value for st in after.skills}
     assert all(xp[st.skill] >= st.xp.start_value for st in before.skills)
     work = {cs.card: cs for cs in after.cards}
@@ -108,11 +113,12 @@ def _kept(before: Save, after: Save) -> None:
             n, rem = divmod(w, 45 * BP)
             w = n * 60 * BP + rem * 60 // 45
         assert (work[cs.card].work.start_value, work[cs.card].raised) == (w, cs.raised), cs.card
-    assert set(before.unlocked) <= {_unrename(u) for u in after.unlocked}
+    assert {u for u in before.unlocked if u != Unlock(UnlockKind.STORE, ROOTS)} <= set(after.unlocked)
     fired = dict(zip((t.id for t in changed().triggers), after.fired))
     assert all(fired[t.id] for t, f in zip(today().triggers, before.fired) if f)
-    assert [m.id for m in after.mixes] == [m.id for m in before.mixes] and len(after.orders) == len(before.orders)
+    assert [m.id for m in after.mixes] == [m.id for m in before.mixes]
+    assert after.orders == tuple(o for o in before.orders if ROOTS not in _stores(o))
 
 
-def _unrename(u: Unlock) -> Unlock:
-    return Unlock(u.kind, "roots") if u.kind is UnlockKind.STORE and u.id == "tubers" else u
+def _stores(o: Order) -> set[StoreId]:
+    return {c.subject.store for c in (o.when, *o.unless) if not isinstance(c, AfterTime) and isinstance(c.subject, StoreValue)}

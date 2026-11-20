@@ -40,7 +40,7 @@ def test_the_find_names_its_line_and_the_line_holds_the_slot_once():
 
 def test_the_content_serves_the_amount_found_in_quantity():
     o = everything()
-    served = [x for x in Game(o, ruleset(o, [], "test", 1)).content().find_infos if x.line_key == LINE]
+    served = [x for x in Game(o, ruleset(o, "test", 1)).content().find_infos if x.line_key == LINE]
     items = next(t.outcome.stores[0].items for t in o.triggers if t.id == FIND)
     assert [(x.store, x.quantity) for x in served] == [("dry_wood", items * e.QUANTITY_SCALE)]
 

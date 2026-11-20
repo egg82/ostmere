@@ -58,12 +58,11 @@ Mixes hold cards (CardShare); every "action" below is a card with continuous lin
                 with no cascade; orders_on not the latches; runs_out_at read from save.active.
                                                               [order_mix, ordering, cards_*, engine/*]
 
-21 rebase       unknown ids dropped silently; fired reset; orders, mixes or sources left unrenamed; chips and
-                fired read by position; renames applied whatever their kind, or to undeclared ids; RETIRED
-                unlocks unrenamed; one rename step, not the chain; the error naming the new id; no work
-                rescale; a moved card left on its lane; a new store at 0; no clamp, or clamped to the raw
-                cap; no evaluation or no lines at the rebase instant; full rebase under the same rules;
-                the canonical-text and length checks dropped.                                            [rebase]
+21 rebase       an id the new rules lack failing the rebase, or left in orders, the queue, mixes, modifiers,
+                pauses, lanes or unlocks; ids dropped whatever their kind, or undeclared ones dropped; fired
+                reset; chips and fired read by position; no work rescale; a moved card left on its lane; a new
+                store at 0; no clamp, or clamped to the raw cap; no evaluation or no lines at the rebase
+                instant; full rebase under the same rules; the canonical-text and length checks dropped.  [rebase]
 
 22 fights       loss_bp rounded down; loses (costs) left unscaled by loss_bp, or wounds, or only the fought tally
                 scaled; win and loss swapped; P over T; inputs scaled by the odds; a tap's odds live, not kept

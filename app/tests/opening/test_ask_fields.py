@@ -9,14 +9,13 @@ from ashfall_app.api.line_models import AnswerCause, WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.opening.ask_checks import check_asks
 from ashfall_app.opening.offer_entries import OfferEntry
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 
 
 @pytest.fixture(scope="module")
 def served(shipped_opening: Opening) -> dict[str, OfferInfo]:
-    content: Content = Game(shipped_opening, ruleset(shipped_opening, load_renames(), "dev", 1)).content()
+    content: Content = Game(shipped_opening, ruleset(shipped_opening, "dev", 1)).content()
     return {x.offer: x for x in content.offer_infos}
 
 

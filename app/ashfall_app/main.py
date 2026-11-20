@@ -26,7 +26,6 @@ from .db import engine as db
 from .feedback.routes import routes as feedback_routes
 from .feedback.service import PgFeedback
 from .old_host import OldHostRedirect
-from .opening.renames import load_renames
 from .opening.schema import load_opening
 from .saves.check import check
 from .saves.interface import MAX_SAVES, Ruleset
@@ -64,14 +63,14 @@ def read_changes(path: Path) -> list[Change]:
 
 
 def wire(database: db.Database | None, rs: Ruleset, clock: Clock) -> Services:
-    """The systems on the database, after every live save is checked to rebase under these rules (a build that would
-    strand a save does not start, so the build before it keeps serving) and this build's manifest is stored; their
-    nulls without a database."""
+    """The systems on the database, after every live save is checked to be readable (a rebase drops what the rules
+    lack, so only a corrupt save fails it: a build that cannot read one does not start, and the build before it keeps
+    serving) and this build's manifest is stored; their nulls without a database."""
     if database is None:
         return Services()
     if check(database.engine, rs).failed:
         database.close()
-        raise RuntimeError("saves.check: a live save does not rebase under this build's rules")
+        raise RuntimeError("saves.check: a live save cannot be read")
     rs = registered(database.engine, rs)
     key = rate_key()
     accounts = PgAccounts(database.engine, clock, key, join_key(os.environ), max_saves=MAX_SAVES)
@@ -98,7 +97,7 @@ def rate_key() -> bytes | None:
 def create_app(clock: Clock = system) -> FastAPI:
     logs.setup()
     opening = load_opening()
-    rs = ruleset(opening, load_renames(), os.environ.get("BUILD_VERSION", "dev"), build_release())
+    rs = ruleset(opening, os.environ.get("BUILD_VERSION", "dev"), build_release())
     game = Game(opening, rs)
     rs = replace(rs, mix_marks=game.mixes.marks)
     logs.info(logging.getLogger("ashfall.app"), "app.start", rules=rs.digest, version=rs.build, release=rs.release)

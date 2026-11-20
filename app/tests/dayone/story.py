@@ -10,7 +10,6 @@ from functools import cache
 from pathlib import Path
 
 from ashfall_app.engine import Line, Rules, Save, advance_logged, next_event, rebase_logged
-from ashfall_app.opening.renames import engine_renames, load_renames
 from tests.dayone.beats import BEATS_YAML, STORY, landed
 from tests.dayone.checks import absence_unlocks, one_per_moment, opens
 from tests.dayone.player import DayOnePlayer
@@ -69,7 +68,7 @@ def rebased(path: Path, away: int, rules: Rules) -> Rebased:
     """Rebase at the save's own time (new content's triggers fire then), then the time away with nobody deciding,
     event by event."""
     old = path.read_text().strip()
-    step = rebase_logged(old, rules, engine_renames(load_renames()))
+    step = rebase_logged(old, rules)
     s = step.save
     r = Rebased(path.stem, s, step.lines, [])
     before = set(_manifest_triggers(old))

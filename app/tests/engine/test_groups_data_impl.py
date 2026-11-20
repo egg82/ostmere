@@ -1,17 +1,16 @@
 """Groups as data (engine DESIGN.txt, "GROUPS (pooled lanes)"): the fields, their codec and digest absence at defaults,
-validation and renames. Nothing runs differently yet: the running is the next slice's. Each refusal has the good case
+and validation. Nothing runs differently yet: the running is the next slice's. Each refusal has the good case
 (`world`) beside it."""
 from dataclasses import replace
 
 import pytest
 
 from ashfall_app.engine import (
-    QUANTITY_SCALE as Q, AfterTime, CardDef, CardId, Flow, IdKind, InvalidRulesError, Join, LaneDef, LaneId,
-    LaneState, Leave, Mark, MixId, Outcome, PacingCurve, Rename, RuleInstall, Rules, SkillDef, SkillId, StoreDef, StoreId, TriggerDef,
+    QUANTITY_SCALE as Q, AfterTime, CardDef, CardId, Flow, InvalidRulesError, Join, LaneDef, LaneId,
+    LaneState, Leave, Mark, MixId, Outcome, PacingCurve, RuleInstall, Rules, SkillDef, SkillId, StoreDef, StoreId, TriggerDef,
     TriggerId, decode, encode, new_save, rules_digest, validate_rules,
 )
 from ashfall_app.engine.codec import canonical, from_json, to_json
-from ashfall_app.engine.renaming import Renamer, renamed_outcome
 
 X = StoreId("x")
 G, P1, P2 = LaneId("g"), LaneId("p1"), LaneId("p2")
@@ -58,15 +57,6 @@ def test_each_field_set_is_written_read_back_and_moves_the_digest():
     assert '"own_split":false' in encode(save, r)
     unpooled = world(Outcome(), lanes=(LaneDef(G, True), LaneDef(P1, True, group=None), LaneDef(P2, True)))
     assert rules_digest(unpooled) != rules_digest(world(Outcome()))
-
-
-def test_a_mark_and_an_unmarked_join_keep_their_fields_through_a_rename():
-    o = Outcome(joins=(Join(P1, TOWN, GWORK, own_split=False),), marks=(Mark(P2, False, A2),))
-    m = Renamer([Rename(IdKind.LANE, "p1", "q1"), Rename(IdKind.LANE, "p2", "q2"), Rename(IdKind.CARD, "a2", "b2")],
-                cards=("gwork", "a2"))
-    got = renamed_outcome(o, m)
-    assert got.joins == (Join(LaneId("q1"), TOWN, GWORK, own_split=False),)
-    assert got.marks == (Mark(LaneId("q2"), False, CardId("b2")),)
 
 
 def test_the_good_world_validates():

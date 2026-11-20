@@ -30,7 +30,6 @@ from typing import Any
 from ashfall_app import engine as e
 from ashfall_app.db.manifests import whole
 from ashfall_app.db.saves import DecisionRecord, SaveRecord, SnapshotRecord
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.interface import Ruleset, Unavailable
 from ashfall_app.saves.load import load
@@ -170,7 +169,7 @@ def main(argv: list[str]) -> int:
     p = argparse.ArgumentParser(prog="python -m tools.replay_check")
     p.add_argument("dump", type=Path)
     args = p.parse_args(argv)
-    rs = ruleset(load_opening(), load_renames(), "replay_check", build_release())
+    rs = ruleset(load_opening(), "replay_check", build_release())
     found = check_dump(rs, json.loads(args.dump.read_text()))
     for text in report(found):
         print(text, flush=True)

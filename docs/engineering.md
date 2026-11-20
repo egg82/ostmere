@@ -234,8 +234,8 @@ requests reach both builds. What holds:
 - A save is written by one request at a time (its row is locked for the transaction), and only forward. Builds are
   ordered by release, `BUILD_RELEASE` (the CI run number, 0 locally; `saves/ruleset.py`). A pod asked for a
   save last written by a later release answers `save_unavailable` and writes nothing, and the page asks again until a
-  newer pod answers (`app/ashfall_app/saves/load.py`). The app does not start while a live save fails to rebase under
-  its rules.
+  newer pod answers (`app/ashfall_app/saves/load.py`). The app does not start while a live save's stored text cannot be
+  read (`app/ashfall_app/saves/check.py`): a rebase drops what the rules lack, so only corruption fails it.
 - Nothing shared between pods lives in process memory; the only per-pod state is a log-flood guard
   (`client_errors.RateLimit`) and the cap on recovery words hashed at once (`app/ashfall_app/accounts/words.py`), both
   per pod by design.
@@ -276,10 +276,12 @@ an example, check which side it is on.
   Firefox kept drawing the first scene. Assets are requested by versioned URLs (a content hash or the build in the
   query), so a new file is a new URL and no cached copy can outlive its build.
 - **Generated files never share a directory with hand-edited ones.**
-- **Content may change any id or outcome.** There is no release lock. A change that renames or removes an id adds an
-  entry to `opening/renames.toml`, or a live save that used it fails to rebase and the build does not start (the one
-  before keeps serving). A bump of the save format (`engine.codec.FORMAT`) adds a step to `engine/upgrade.py`, which
-  `tests/engine/test_rebase_impl.py` checks. The `saves-forward` CI job loads the previous commit's opening-depth saves
+- **Content may change any id or outcome.** There is no release lock and no renames table: a save that held an id the
+  rules no longer have loses it at its next load (logged as `save.dropped`, with the save id and a count per kind),
+  and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for) is a
+  step on the upgrade chain, `engine/upgrade.py`, as a bump of the save format (`engine.codec.FORMAT`) is;
+  `tests/engine/test_rebase_impl.py` checks every format has one. A renamed trigger is a new one to a save: if its
+  condition already holds it fires again. The `saves-forward` CI job loads the previous commit's opening-depth saves
   with the pushed code. The rebase's rules: engine `DESIGN.txt`, "Rebase".
 - **Loading is the whole promise to a save in progress.** A change may move where a running game stands (a card it
   already shows, the order two beats land in), and no code, flag or date check is added to keep one game, or the games

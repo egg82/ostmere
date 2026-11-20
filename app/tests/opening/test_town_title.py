@@ -17,7 +17,7 @@ def labelled(o: Opening, label: LaneLabelEntry) -> Opening:
 def test_the_town_is_named_once_the_first_families_have_come_and_the_content_serves_it(shipped_opening: Opening):
     o = shipped_opening
     assert [(x.after.unlock_kind, x.after.id, o.text[x.label_key]) for x in o.town_later_labels] == [("feature", "family_joined", "Town")]
-    served = Game(o, ruleset(o, [], "test", 1)).content().town_later_labels
+    served = Game(o, ruleset(o, "test", 1)).content().town_later_labels
     assert [(x.after.id, x.label_key) for x in served] == [("family_joined", "town_title_town")]
 
 

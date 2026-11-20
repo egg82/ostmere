@@ -1,5 +1,4 @@
 """Every error the engine raises. All are EngineError, so a caller can catch the engine's failures in one place."""
-from .ids import IdKind
 
 
 class EngineError(Exception):
@@ -23,13 +22,3 @@ class TimeOrderError(EngineError):
 class StateFormatError(EngineError):
     """codec.decode() was given text encode() did not produce under these rules: bad shape, another format, or a save
     made under other rules (a rules change between requests)."""
-
-
-class RebaseError(EngineError):
-    """rebase() met an id the save's manifest declares that the new rules, after the renames, do not (or a cycle of
-    renames): `kind` and `id` name it as the save had it. Nothing is dropped instead (DESIGN.txt, "Rebase")."""
-
-    def __init__(self, kind: IdKind, id: str) -> None:
-        super().__init__(f"{kind.value} {id} is not in the new rules and no rename maps it")
-        self.kind = kind
-        self.id = id

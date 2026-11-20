@@ -54,7 +54,7 @@ def test_no_lane_label_shows_a_raw_slot(everything: Opening):
 
 def test_the_content_serves_each_lanes_name_key(shipped_opening: Opening):
     o = shipped_opening
-    infos = {x.lane: x.name_key for x in Game(o, ruleset(o, [], "test", 1)).content().lane_infos}
+    infos = {x.lane: x.name_key for x in Game(o, ruleset(o, "test", 1)).content().lane_infos}
     assert infos["n2"] == "name_n2" and infos["hands"] is None and infos["n1"] == "name_n1"
 
 

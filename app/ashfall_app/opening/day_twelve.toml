@@ -92,24 +92,7 @@ outcome = { line_keys = ["l_steps_1", "l_steps_2"] }
 
 # ---------- B12: the cellar ----------
 
-# B12 on the last stage. t_b12_floor and its clock are a released floor nothing reads now, as B10's.
-[[triggers]]
-id = "t_b12_floor"
-when = { test = "after_time", value = 900000 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "b12_floor" }] }
-
-# Never drawn: hours past the floor.
-[[stores]]
-id = "b12_floor"
-label_key = "store_b12_floor"
-cap_items = 8760
-hidden = true
-
-[[standing]]
-id = "b12_floor"
-label_key = "action_b12_floor"
-makes = [{ store = "b12_floor", items_per_hour = 1 }]
-
+# B12 on the last stage.
 [[triggers]]
 id = "t_b12"
 when = { test = "at_least", subject_kind = "card_count", id = "dig_cellar", value = 4 }
@@ -152,25 +135,6 @@ unlocks = [
   { unlock_kind = "card", id = "hunt_bear" },
   { unlock_kind = "feature", id = "combat" },
 ]
-
-# Hours since the bear's sign, starting with it (t_bear_sign's condition, so one moment). Nothing reads it.
-[[triggers]]
-id = "t_sign_clock"
-when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "bear_season", value = 1 }]
-outcome = { unlocks = [{ unlock_kind = "action", id = "sign_clock" }] }
-
-# Never drawn: hours since the bear's sign (SL20).
-[[stores]]
-id = "sign_clock"
-label_key = "store_sign_clock"
-cap_items = 8760
-hidden = true
-
-[[standing]]
-id = "sign_clock"
-label_key = "action_sign_clock"
-makes = [{ store = "sign_clock", items_per_hour = 1 }]
 
 # The hunts left this season: a pool nothing refills.
 [[stores]]
@@ -795,15 +759,11 @@ l_dig_1 = "you dig at the ruin's north wall before anyone asks where."
 l_dig_2 = "only then do you look round. nobody minds."
 l_steps_1 = "under the ash, the spade rings on cut stone."
 l_steps_2 = "whole steps lead down. cold air comes up dry."
-store_b12_floor = "clock"
-action_b12_floor = "Clock"
 l_b12_1 = "square, dry, dug for food. not a crumb, not a mouse."
 l_b12_2 = "a board scored in fives. the last group has four."
 l_b12_3 = "a stool in the corner, short on the same leg as the one at the fire."
 store_bear_season = "clock"
 action_bear_season = "Clock"
-store_sign_clock = "clock"
-action_sign_clock = "Clock"
 l_bear_sign = "the fungus is eaten off a dead birch. claw marks above your reach."
 store_bear_sign = "bear sign"
 store_tallow = "tallow"

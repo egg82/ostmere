@@ -160,7 +160,7 @@ CHOICES (each with its reason)
   not a project's own action. Features are page parts the engine only switches on; the feature vocabulary is the
   feature ids the opening and the outcomes unlock (Rules declares no features). The kinds entry (an EntryId) and note
   (a NoteId) are the journal's pages and the notes written on them (api CONTRACT.txt, "JOURNAL"): ordinary kinds, held
-  and gated like a feature, known where the rules mention them, renamed through IdKinds ENTRY and NOTE, and never read
+  and gated like a feature, known where the rules mention them, kept by a rebase as the save had them, and never read
   by the engine beyond a gate's Unlocked. Rules.opening None means no gating
   (everything unlocked), so rules without an opening (tests, bare simulator economies) need no unlock data; the view
   then reports the effective set (View.unlocked).
@@ -804,10 +804,10 @@ FIT PASS
 - An instance of Saves (docs/systems.md). It replaces that row's "a deploy snapshots every save under the old rules",
   which needs the old code running at deploy time, with a rebase at load, which needs only what the save carries.
 - How games do it: a version number in the save and a chain of one-step upgrade functions run on the raw data before
-  it is loaded (Minecraft's DataFixerUpper), and a table of renamed content ids shipped with each release (Factorio's
-  migration files); the save names content by id, never by list position. Here the chain is UPGRADES (format), the
-  table is content (renames.toml), and the manifest is what turns the save's two positional tuples into ids.
-- The engine owns the rebase because it is the one place a save crosses rules, beside decode; content owns the table.
+  it is loaded (Minecraft's DataFixerUpper); the save names content by id, never by list position. Here the chain is
+  UPGRADES, the one place a save is transformed on purpose (a format change, or a content change worth carrying a save
+  across), and the manifest is what turns the save's two positional tuples into ids.
+- The engine owns the rebase because it is the one place a save crosses rules, beside decode.
 
 CHOICES (saves across releases)
 - Manifest: encode writes, beside FORMAT and the digest, the slice of the rules a later rebase needs, taken from the
@@ -828,84 +828,75 @@ CHOICES (saves across releases)
   still to land, is not said. UPGRADES[8] (FORMAT 9) drops holds from every saved mix (docs/decisions.md, "No hold on a
   line"), so a mix that held a card runs it at its full share; a logged SaveMix whose mix carries an empty holds
   reads back as the same verb without it (verb_from_json), so old decision logs still replay.
-- Rebase: rebase(text, rules, renames) -> Save, pure (engine/rebase.py); rebase_logged(text, rules, renames) -> Step,
-  its save that same Save and its lines those of step 6, all at the save's time, seq from 0. renames is a tuple of
-  Rename and Retired. RebaseError is an EngineError carrying .kind (an IdKind) and .id. rebase, rebase_logged, Rename, IdKind,
-  Retired, RebaseError, UPGRADES and OLDEST_FORMAT are exported by the engine package. When the text's format is FORMAT and
-  its digest is rules_digest(rules), the result is decode(text, rules) with no lines, renames unread: the save is
-  already under these rules. Otherwise, in order:
+- Rebase: rebase(text, rules) -> Save, pure (engine/rebase.py); rebase_logged(text, rules) -> Step, its save that same
+  Save, its lines those of step 6, all at the save's time, seq from 0, and Step.dropped how many ids of each kind step 3
+  found gone (IdKind order, kinds with none left out). rebase, rebase_logged, IdKind, UPGRADES and OLDEST_FORMAT are
+  exported by the engine package. When the text's format is FORMAT and its digest is rules_digest(rules), the result is
+  decode(text, rules) with no lines and nothing dropped: the save is already under these rules. Otherwise, in order:
   1. upgrade the envelope to FORMAT (above);
   2. decode it loosely: an envelope of exactly format, rules, manifest and save; a well-formed manifest; a Save; the
      text exactly the canonical encoding of that envelope; len(save.chips), len(save.chips_seen) and len(save.fired)
      equal to the manifest's chips and triggers. Anything else raises StateFormatError. The digest is not checked;
-  3. rename every id in the save (Renames, below): stores, skills, runners (standing actions and cards: in RateRef,
-     WorkRef, Pause, Running, LaneState, CardState, CardShare, TapCard, CardCount), lanes (LaneState, LaneSpeed),
-     store ids wherever they appear (StoreState, Pause, StoreValue, RateRef, StoreCap), skills (SkillState,
-     SkillLevel), the unlock set and Unlocked subjects, chips and triggers (through the manifest), and modifiers'
-     targets and sources. Mix ids are the player's names and are never renamed;
-  4. an id the manifest declares that, renamed, the new rules do not declare raises RebaseError(kind, id), id as the
-     save had it: nothing is ever dropped, but a trigger a Retired names (renamed), whose fired flag goes at step 5
-     while everything its outcome landed stays. An id the manifest does not declare passes through as it is (an order may
-     name a card no rules have: "Orders"); a modifier's source is a label and never raises;
+  3. find the gone ids: each id the manifest declares (IdKind: stores, skills, standing actions, cards, lanes, chips,
+     triggers, features, offers, answers) that the new rules do not, and each answer the new rules put under another
+     offer than the manifest did;
+  4. drop what names one (engine/dropping.py): an order or queue entry whose condition names a gone id (its latch with
+     it), an action naming one (TapCard, AnswerOffer; the order goes when no action is left), an AnswerKind whose kind
+     and role no offer of the new rules has, a modifier aimed at one (RateRef runner or store, WorkRef, LaneSpeed,
+     StoreCap; the save's and each tap's kept speed entries), a pause of or on one, a mix's share of a gone card (the
+     mix stays, its id the player's), a lane's tap of a gone card (the lane freed) and an unlock of one. A runner is
+     gone by the kind the manifest declares it. What no manifest declares stays as it is: an order naming a card no
+     rules have ("Orders"), a modifier's source (a label), a journal entry or note unlock, a prestige pick (picks count
+     the phase's clicks; one on a node the rules lack holds nothing);
   5. build the canonical save under the new rules, at the same time: stores in rules order, each at its value, a new
-     store at its initial value, a value above its store's cap under the save's stack (reachable only by lowering a
-     cap) clamped to it; skills in rules order, XP kept up to the curve's last threshold, a new
-     skill at XP 0; chips, chips_seen and fired in rules order by id, a new chip unlatched and unseen and a new
-     trigger unfired; lanes HANDS
-     then rules.lanes, a new lane free, and a lane holding a tapped card whose CardDef.lane is now
-     another lane freed, as an interrupt: its work is kept and nothing lands; every CardState kept (raised included),
-     and when the card's work_s changed from W to W' its work rescaled with c = work // (W * BP) and rem = work %
-     (W * BP) to c * W' * BP + rem * W' // W, so completions are kept and the bar stays at its fraction, rounded down;
-     pauses in runner order; the unlock set sorted; mixes, orders, latches, queue, active, modifiers, cascade_count,
-     last_cascade and ended_at kept as renamed;
+     store at its initial value, a value above its store's cap under the save's stack (a lowered cap) clamped to it;
+     skills in rules order, XP held at or under the phase's ceiling, a new skill at XP 0; chips, chips_seen and fired in
+     rules order by id, a new chip unlatched and unseen and a new trigger unfired; lanes HANDS then rules.lanes, a new
+     lane free, and a lane holding a tapped card whose CardDef.lane is now another lane freed, as an interrupt: its work
+     is kept and nothing lands; every CardState of a card the rules declare kept (raised included), and when the card's
+     work_s changed from W to W' its work rescaled with c = work // (W * BP) and rem = work % (W * BP) to c * W' * BP +
+     rem * W' // W, so completions are kept and the bar stays at its fraction, rounded down; pauses in runner order;
+     the unlock set sorted; mixes, orders, latches, queue, active, modifiers, cascade_count, last_cascade and ended_at
+     kept as step 4 left them;
   6. rebuild at that time, then resolve the instant with evaluation (orders and the queue evaluate, as after a
      landing): a new trigger already true fires and a new chip already true latches at the save's time and their lines
      are emitted ("new content just appears"); a trigger fired in the old save stays fired, so no outcome lands twice;
   7. the caller encodes the result under the new rules (new digest, new manifest).
-  A RebaseError or StateFormatError returns nothing, so a failed rebase is never written.
-- Renames: Rename(kind, old, new), kind an IdKind: STORE, SKILL, STANDING, CARD, LANE, CHIP, TRIGGER, FEATURE, SOURCE.
-  Each id is renamed by the renames of its own kind: a runner by STANDING or CARD as the manifest declares it (a runner
-  the manifest does not declare by neither); an Unlock by its UnlockKind (ACTION by STANDING, RETIRED by CARD, the rest
-  by their own); a modifier's source by SOURCE. Applied transitively: a -> b and b -> c map a to c, so one table holding
-  every rename ever released maps a save from any older release. A cycle raises RebaseError(kind, id). Content keeps the
-  table in app/ashfall_app/opening/renames.toml.
-- Retired: Retired(trigger), a trigger gone from the rules for good. A save that fired it keeps what its outcome
-  landed (its unlocks, its stores) and loses only the flag; one that had not never gets the outcome. Content retires
-  only the triggers it made for journal notes it retired (renames.toml: a `note` with no `to`), whose outcomes are
-  unlocks nothing reads once the note is gone.
+  Only a StateFormatError fails a rebase (a text no encode gave: corruption), and it returns nothing, so a failed
+  rebase is never written. A save never fails to load because content moved.
 - Forward-only: what the save had at its last write stands; the time away after it runs under the new rules (the first
-  advance after a rebase). A change meant to be retroactive is a later data migration, never a flag on saves.
-- No release lock: content may rename, remove or rewrite any id or outcome. A save naming an id the new rules lack fails
-  the rebase at step 4 unless renames.toml maps it, and the app does not start while a live save fails to rebase. Every
-  FORMAT bump needs an UPGRADES entry (tests/engine/test_rebase_impl.py). The release number that orders builds for the
-  server's saves is the CI run number: api/CONTRACT.txt, "Saves across releases and pods".
+  advance after a rebase). A change meant to be retroactive, or one that should carry a save's progress across a
+  rename, is a step on UPGRADES (run once on the envelope at load), never a flag on saves.
+- No release lock and no renames: content may rename, remove or rewrite any id or outcome; a renamed id is a new one,
+  and the save's progress under the old id is dropped. Every FORMAT bump needs an UPGRADES entry
+  (tests/engine/test_rebase_impl.py). The release number that orders builds for the server's saves is the CI run
+  number: api/CONTRACT.txt, "Saves across releases and pods".
 
-INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; R renames and retirements; s a save the
-engine returned under r; "allowed" means a change that renames or removes no id R does not map, lowers no cap, moves no
-curve threshold and changes no outcome a save has landed: the changes the retired release lock passed)
-47. Identity: rebase(encode(s, r), r, R) == s for any R, and rebase_logged's lines are empty.
-48. Idempotent: for s2 = rebase(x, r2, R), rebase(encode(s2, r2), r2, R) == s2.
-49. Nothing earned taken back, for an allowed change from r to r2 and s2 = rebase(encode(s, r), r2, R), each id read
-    through R: s2.time == s.time; every store of s holds at least its value in s; every skill's XP is at least its XP
-    in s; every card's completions and raised equal those in s; s2.unlocked holds every unlock of s; every trigger
-    fired in s is fired in s2 unless R retires it; ended_at and mixes equal those of s; s2.orders is s.orders plus only what a
-    RuleInstall landing at the rebase instant adds (invariant 59); and s2.modifiers begins with s.modifiers
-    (latches, the queue and active are as resolving the instant under r2 leaves them).
+INVARIANTS (saves across releases; numbered on from 46. r, r2, r3 valid rules; s a save the engine returned under r;
+"kept" ids are those both rules declare, "gone" ids those step 3 finds)
+47. Identity: rebase(encode(s, r), r) == s, and rebase_logged's lines and dropped are empty.
+48. Idempotent: for s2 = rebase(x, r2), rebase(encode(s2, r2), r2) == s2.
+49. Kept ids keep what was earned, for s2 = rebase(encode(s, r), r2): s2.time == s.time; every kept store holds its
+    value in s, or its cap in r2 under s2's stack when that is lower; every kept skill's XP is its XP in s, or the
+    ceiling of its phase in r2 when that is lower; every kept card's completions and raised equal those in s; s2.unlocked
+    holds every unlock of s naming no gone id; every kept trigger fired in s is fired in s2; ended_at equals that of s;
+    s2.mixes are s.mixes without shares of gone cards; s2.orders is s.orders as step 4 left them, plus only what a
+    RuleInstall landing at the rebase instant adds (invariant 59); and s2.modifiers begins with s.modifiers aimed at
+    no gone id (latches, the queue and active are as resolving the instant under r2 leaves them).
 50. New content defaults: in s2, a store new in r2 holds its initial value and a skill new in r2 XP 0, unless an
     outcome landing at the rebase instant adds to it; a trigger new in r2 whose condition holds in s2 is fired (its
     outcome landed once, at s.time); a chip new in r2 whose condition holds in s2 is latched.
-51. Rescaled work: a card whose work_s changed from W to W' has work c * W' * BP + rem * W' // W in s2 (c and rem from
-    its work in s), so CardCount is unchanged.
+51. Rescaled work: a kept card whose work_s changed from W to W' has work c * W' * BP + rem * W' // W in s2 (c and rem
+    from its work in s), so CardCount is unchanged.
 52. Moved lanes: a lane in s whose card's lane differs in r2 is free in s2, and that card's work is kept (rescaled as
     51).
-53. Unknown ids: when an id the manifest of encode(s, r) declares is neither declared by r2 nor renamed by R to an id
-    r2 declares, nor a trigger R retires, rebase raises RebaseError naming that id's kind and id; it never returns a
-    save without it.
-54. Composition: for allowed changes r -> r2 (renames R1) and r2 -> r3 (renames R2), rebase(encode(s, r), r3, R1 + R2)
-    succeeds whenever rebasing through r2 does, and 49 holds between s and the result. The two results need not be
-    equal (the instant through r2 resolves under r2, and rescaled bars round twice).
-55. Logged: rebase_logged(x, r2, R).save == rebase(x, r2, R); every line's and every rule change's time is the
-    save's time (rule changes: TOWNSFOLK, INSTALLED RULES AND OFFERS, "Rebase").
+53. Gone ids: no gone id is named anywhere in s2's orders, queue, mixes, pauses, lanes, modifiers' targets or unlock
+    set, and rebase_logged counts each under its kind; the rebase never fails for one.
+54. Composition: for r -> r2 and r2 -> r3, rebase(encode(s, r), r3) succeeds as rebasing through r2 does, and 49
+    holds between s and the result for ids all three declare. The two results need not be equal (the instant
+    through r2 resolves under r2, and rescaled bars round twice).
+55. Logged: rebase_logged(x, r2).save == rebase(x, r2); every line's and every rule change's time is the save's time
+    (rule changes: TOWNSFOLK, INSTALLED RULES AND OFFERS, "Rebase").
 56. Formats: UPGRADES has an entry for every format from OLDEST_FORMAT below FORMAT; a text of another format outside
     [OLDEST_FORMAT, FORMAT], or one that is not some envelope's canonical text, raises StateFormatError.
 
@@ -913,8 +904,11 @@ REJECTED, AND WHY (saves across releases)
 - A deploy job that snapshots every save under the old rules (the systems row as it stood): it needs the old code at
   deploy time and touches every save at once; the rebase needs only the text, at the save's next load.
 - Per-change flags or start dates on saves: docs/decisions.md, "Developed live" (no machinery).
-- Dropping an id the new rules lack: earned state lost with no error.
-- Resetting fired for a renamed or retuned trigger: its outcome would land twice.
+- Failing the rebase on an id the new rules lack, with a table of renames to map it: every content change that moved
+  an id needed an entry, and a missed one kept the app from starting. While the game is in alpha a save losing
+  progress under a renamed id is accepted ("wait, this is different"); a rename worth carrying a save across is an
+  UPGRADES step.
+- Resetting fired for a retuned trigger: its outcome would land twice. (A renamed trigger is a new one and fires again.)
 - Positional chips and fired with a copy of the old rules in each save: the whole rules tree per save for the few
   facts a rebase reads.
 - Work kept as absolute units through a work_s change: a retune would silently change completion counts, granting or
@@ -1078,7 +1072,7 @@ CHOICES (townsfolk, installed rules, offers)
   lane's).
 - Codec and rebase: Outcome gains `retire_orders` (rules and released outcomes only, never a save), left out of the
   rules encoding while empty (as `joins`), so rules without one keep their digest. FORMAT unchanged, Save's fields
-  unchanged. Rebase: step 3 renames its card ids (CARD) in released outcomes; step 6 lands a turn already true at the
+  unchanged. Rebase: step 6 lands a turn already true at the
   rebase instant, so a save past it loses the orders then, and rebase_logged lists each as ended.
 - Content (the loader): OutcomeEntry gains `retire_orders`, a list of card ids. Refused (ValueError, refs.fail's
   "where: message" shape) on any outcome but a trigger's with `season = true`: "trigger {id}: retires orders but is
@@ -1101,7 +1095,7 @@ CHOICES (townsfolk, installed rules, offers)
   allowed only as a trigger's when (an offer's gate is one): validation refuses it in a chip, a card's requires and a
   trigger's requires, and SetOrders and SetQueue refuse it in a condition (InvalidVerbError), so no save holds it
   and the codec, FORMAT and the wire are unchanged. save.orders changes only at a SetOrders and at an install (which
-  adds only AfterTime(0) orders), and a rebase rename keeps each card's lane, so the count changes only at a
+  adds only AfterTime(0) orders), and a rebase drops only orders naming gone ids, so the count changes only at a
   decision: rise_time is None, the pending check at that instant fires the trigger, and its lines land in that
   decision's Step.lines. Forecasts and what-if forks never fire it. A rule the player later removes has still
   landed the line (a trigger fires once). Its definition needs a known ruled lane (InvalidRulesError); a save that
@@ -1162,22 +1156,20 @@ CHOICES (townsfolk, installed rules, offers)
   its lane started now from its current work at a full share (tap_seconds' formula, read for a locked card too),
   None without a card or at speed 0. LaneBar gains `order` (Lane order, above).
 - Codec: FORMAT is 7. The manifest gains `offers`, [{"id": offer id, "answers": [answer ids]}] in rules order, so a
-  rebase can rename and check offer and answer ids. UPGRADES[6] adds "offers": [] to a format 6 manifest and changes
+  rebase can find gone offer and answer ids. UPGRADES[6] adds "offers": [] to a format 6 manifest and changes
   nothing else: a format 6 save predates offers, so its unlock set holds none of the three kinds and its orders and
   queue no AnswerOffer. Outcome gains `orders` and `queues` (rules and released outcomes only, never a save).
   AnswerOffer, RuleInstall, OfferDef and AnswerDef join the codec's classes (AnswerOffer in
   saves' orders and the decision log; the rest in released outcomes and the rules digest). Save's fields are
   unchanged (app/tests/held/save_fields.json).
-- Rebase: IdKind gains OFFER and ANSWER. Step 3 renames Unlock(OFFER) and Unlock(ANSWERED) by OFFER, Unlock(ANSWER)
-  by ANSWER, and AnswerOffer's two ids likewise, wherever an OrderVerb appears (orders, queue). Step 4 checks them
-  against the manifest's offers as for every declared id, and also raises RebaseError(ANSWER, id) for an answer the
-  save's manifest puts under one offer that, renamed, the new rules put under another. Step 6 (evaluation) is where
+- Rebase: IdKind gains OFFER and ANSWER. Step 3 finds them gone as every declared id, and an answer the save's
+  manifest puts under one offer that the new rules put under another gone too; step 4 drops Unlock(OFFER) and
+  Unlock(ANSWERED) of a gone offer, Unlock(ANSWER) of a gone answer, and an AnswerOffer naming either, wherever an
+  OrderVerb appears (orders, queue). Step 6 (evaluation) is where
   a new trigger already true installs its rule, so a save already past a moment that installs one gets it at the
   rebase instant, forward only. rebase_logged's Step carries that instant's rule changes beside its lines (rulelog
   over the step-5 save and the result, each at the save's time), so the server's rule runs list an installed rule
   from the rebase; rebase returns only the save.
-- Renames: a rename of an offer in renames.toml carries the offer only: the loader derives the rename of its trigger
-  ("offer_" + old to "offer_" + new) and adds it to the renames it passes.
 - Content (the loader, app/ashfall_app/opening): LaneEntry gains `ruled` (default false) and `later_labels`, a list
   of {after: UnlockEntry, label_key} (the row's label once `after` is unlocked; the last held one wins, as aims). A
   card on a ruled lane has no skill and no XP (a loader check: townsfolk do not level, docs/decisions.md, "You and the
@@ -1214,7 +1206,7 @@ condition is false for a known id, except one on ANSWERED or ANSWER, which is tr
     already holds it (a repeated install lands once), every new latch True.
     The result equals the same save given SetOrders with that list at T, but for the outcome's other parts.
 60. Once: on any run, each RuleInstall (one place in one trigger's or one answer's outcome) lands at most once; after a
-    SetOrders without its order, no later advance, decision, or rebase under an allowed change puts that order back
+    SetOrders without its order, no later advance, decision, or rebase that keeps that trigger puts that order back
     through the same RuleInstall. (A different trigger installing an equal order may add it again.)
 61. Offers: Unlock(ANSWERED, o) and Unlock(ANSWER, a) enter the unlock set at the same instant, only by an applied
     AnswerOffer(o, a), and at most one answer of o is ever in it. An open offer stays open across every advance in
@@ -1925,8 +1917,7 @@ CHOICES (the town's mix)
   save.mixes; JOINED is one more UnlockKind value; Outcome gains `joins` (rules and released outcomes only, never a
   save); Join joins the codec's classes. A save written before this part holds no JOINED and no TOWN mix, so it
   decodes as before.
-- Rebase: step 3 renames Unlock(JOINED) by LANE, and Join's lane and card in released outcomes as installs' are;
-  step 4 checks the lane against the manifest's lanes. Mix ids are never renamed ("town:" ids included). Step 6
+- Rebase: step 4 drops Unlock(JOINED) of a gone lane. Mix ids are never dropped ("town:" ids included). Step 6
   lands a join whose trigger is already true at the rebase instant, as an install: a save past the moment gets
   Unlock(JOINED), the mix and its rule, and its first uncapped always rule as the share, keeping every other rule.
 - Content (the loader): OutcomeEntry gains `joins`, a list of {lane, mix, card (optional)}, refused outside a
@@ -1970,8 +1961,8 @@ INVARIANTS (the town's mix; numbered on from 89)
     "town:" id; of a saved mix's id with cards of the other layer; for a player's SwitchMix of a TOWN mix; and for
     SetQueue with one.
 97. Rebase: for s past the moment whose trigger holds a Join of L, rebasing s into rules that add that trigger gives
-    the save invariant 94 describes, at the save's time; rebasing a save already holding Unlock(JOINED, L) through a
-    rename of L gives Unlock(JOINED, L') and changes nothing else about the town.
+    the save invariant 94 describes, at the save's time; rebasing a save already holding Unlock(JOINED, L) into rules
+    that lack L drops that unlock and changes nothing else about the town.
 
 REJECTED, AND WHY (the town's mix)
 - A mix per person (each ruled lane its own mix): "one mix whose shares are people's time"
@@ -2072,8 +2063,7 @@ CHOICES (leaves)
   never a save), left out of the rules encoding while empty (as `joins`), so rules without a leave keep their
   digest; Leave joins the codec's classes. Save's fields are unchanged (app/tests/held/save_fields.json). A save
   written before this part holds no LEFT and decodes as before.
-- Rebase: step 3 renames Unlock(LEFT) by LANE, and a Leave's lane (LANE) and stops (ACTION) in released outcomes;
-  step 4 checks them against the manifest. Step 6 lands a leave whose trigger is already true at the rebase instant,
+- Rebase: step 4 drops Unlock(LEFT) of a gone lane. Step 6 lands a leave whose trigger is already true at the rebase instant,
   so a save past the moment loads with the person gone: LEFT held, the lane's orders and shares removed (each order
   logged ended LEFT in rebase_logged), its tap ended unpaid.
 - Content (the loader): OutcomeEntry gains `leaves`, a list of {lane, stops (default [])}, refused outside a
@@ -2232,7 +2222,7 @@ CHOICES (groups)
   unchanged (app/tests/held/save_fields.json). A save written before this part decodes with every own_split True.
 - Save storage: the group's split is CardShares in the town mix (save.mixes); the mark is LaneState.own_split
   (save.lanes). No Save field.
-- Rebase: step 3 renames a Mark's lane (LANE) and card (CARD) beside a Join's; step 6 lands a Mark whose trigger is
+- Rebase: step 6 lands a Mark whose trigger is
   already true at the rebase instant, as it lands joins and installs. A person whose `group` content later changes
   contributes to the new group from the rebase instant. No migration: every existing LaneState decodes with own_split
   True, every released join with own_split True, no released lane is pooled.
@@ -2322,11 +2312,9 @@ CHOICES (offer kinds)
   unkinded, which is what it was. (The plan called for a format upgrade that adds none; with the optional keys there
   is nothing for one to do, and a bump would change the FORMAT every released save and test is pinned to.) AnswerKind
   joins the codec's classes and _VERB_TYPES; Save's fields are unchanged (app/tests/held/save_fields.json).
-- Rebase: a kind and a role are never renamed (changing one fails the rebase), so renaming passes an
-  AnswerKind through. Step 4 also checks that an offer the manifest gives a kind has, in the new rules, that same
-  kind, and each answer the manifest gives a role the same role (RebaseError(OFFER, id) for the offer); an offer the
-  manifest gives no kind may have gained one. A save's AnswerKind order is then valid under the new rules because
-  its kind and roles are.
+- Rebase: an offer may gain, lose or change its kind and its answers' roles; step 4 drops an AnswerKind (an order's
+  action, the order going when none is left) whose kind and role no offer of the new rules has, so every AnswerKind a
+  save keeps is one SetOrders would accept under them.
 - Content (the loader, app/ashfall_app/opening): OfferEntry gains `kind` (optional) and AnswerEntry `role` (optional).
   The loader fails, naming the offer, for a role on an offer without a kind, a kinded offer's answer without a role,
   two answers of one offer with one role, and two offers of one kind whose role sets differ. Day three's arrival
@@ -2357,7 +2345,7 @@ INVARIANTS (offer kinds)
 106. Codec: for rules with no kind, encode, the digest and the manifest text are those of the engine before this part;
     for rules with kinds, decode(encode(s, r), r) == s, the manifest's offers carry kind and roles, and rebase of a
     save written under rules without the kind into rules that give a kinded offer one is accepted and loses nothing;
-    rebase into rules that change a kind or a role the manifest names raises RebaseError.
+    rebase into rules where no offer has a kind and role a rule of the save answers drops that rule.
 
 REJECTED, AND WHY (offer kinds)
 - Resolving the AnswerKind to the offer at SetOrders and storing an AnswerOffer: it names one offer, which is the
@@ -2607,7 +2595,7 @@ CHOICES (entries held while a card runs)
 - Codec: the rules encoding leaves `while_running` out while empty (as a None `fight`), so rules without it keep
   their digest and every save its text; WhileRunning joins the codec's classes for the rules encoding only. No Save
   field, no manifest change (the manifest's cards carry id, work_s, lane and cap), FORMAT unchanged.
-- Rebase: nothing new; no save holds a held entry, so step 3 has nothing to rename, and a side's id is read from the
+- Rebase: nothing new; no save holds a held entry, so step 4 has nothing to drop, and a side's id is read from the
   rules.
 - Content (the loader, app/ashfall_app/opening): CardEntry gains `while_running: list[WhileRunningEntry] = []`,
   WhileRunningEntry {side: str, amount_bp: int, at least 1 by the schema} in entries.py beside CardEntry (not in
@@ -3179,8 +3167,8 @@ CHOICES (prestige phases)
   CARRY_END (the carry's end while XP still rises: rebuilt, XP rate 0), both solved off the XP segment, sequence the
   skill's index, ordered right after LEVEL_UP (phaseevents.py). Neither makes orders evaluate: no condition reads
   topped_at.
-- Rebase keeps each skill's phase, its XP held at or under the phase's ceiling; picks are renamed as IdKind.NODE.
-  Node ids are content ids like any other (kind "node", so renames.toml can name a node's rename), and no
+- Rebase keeps each skill's phase, its XP held at or under the phase's ceiling, and its picks as they are: a pick on a
+  node the new rules lack holds nothing (DESIGN.txt, "Rebase", step 4). No
   rules modifier, nor a new save's starting one, may be sourced NODE_PREFIX: only a pick's entry is.
 - A finished track: the skill is mastered. Prestige is refused TRACK_DONE for good, and the skill rests at its top,
   its XP stopping at the carry's end as at any top.
@@ -3350,7 +3338,7 @@ CHOICES (rule guards)
   log a pair of lines per item. View.orders_on stays the `when` latch. View.order_guards[i] is one GuardView per
   guard: `on` its latch, `lets_go` the quantity it lets go at as read now (its release, a share read off the cap
   now), None off a store. It is left out of View's repr, so the recorded fingerprints are unchanged.
-- Renames rename the ids inside a guard as inside `when`.
+- A rebase drops a rule whose guard names a gone id, as one whose `when` does.
 
 INVARIANTS (rule guards; numbered on from 168. on(i) is rule_on(s.latches[i]).)
 168. Unchanged without guards: a save whose orders hold no guard has bool latches and encodes, evaluates, logs and
@@ -3400,7 +3388,7 @@ CHOICES (or else)
   lane's always rules take the matching actions out of each rule's list, the rule keeping its place and its latch;
   a rule left with none is removed with its latch. A rule a retirement only trimmed is not logged as ended, nor as
   coming on (rulelog matches it through the same trim). LaneRules counts a rule once if any action taps the lane.
-- Renames rename the ids inside `or_else` as inside `then`.
+- A rebase takes an action naming a gone id out of `or_else` as out of `then`; the rule goes when none is left.
 
 INVARIANTS (or else; numbered on from 172. listed(s) is orders.listed(s.orders, s.latches).)
 173. Unchanged without fallbacks: a save whose orders hold no fallback encodes, evaluates, logs and reads exactly as

@@ -4,7 +4,6 @@ import pytest
 
 from ashfall_app.api.content_models import Content
 from ashfall_app.api.service import Game
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import CHAPTERS, load_opening
 from ashfall_app.saves.ruleset import ruleset
 
@@ -12,7 +11,7 @@ from ashfall_app.saves.ruleset import ruleset
 @pytest.fixture(scope="module")
 def content() -> Content:
     o = load_opening(chapters=CHAPTERS)
-    return Game(o, ruleset(o, load_renames(), "dev", 1)).content()
+    return Game(o, ruleset(o, "dev", 1)).content()
 
 
 def test_a_feature_carries_the_cost_text_and_changes_of_its_answer(content: Content):

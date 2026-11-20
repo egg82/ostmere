@@ -138,39 +138,29 @@ def test_another_accounts_save_or_a_deleted_one_is_not_found(saves: PgSaves, eng
 def test_open_returns_what_was_seen_the_last_lines_and_the_time_away(saves: PgSaves, engine: Engine, account: int,
                                                                     clock: FakeClock, rs: Ruleset):
     info, _ = saves.create(account)
+    keys = sorted(rs.line_keys)
     with engine.begin() as conn:
-        rows.append_lines(conn, info.save_id, [(0, f"k{i}") for i in range(250)])
+        rows.append_lines(conn, info.save_id, [(0, keys[i % len(keys)]) for i in range(250)])
     saves.decide(account, info.save_id, STAND, after=0)
     was = stored(engine, info.save_id)
     clock.tick(3600)
     opened = saves.open(account, info.save_id)
     assert opened.was == e.decode(was.state, rs.rules) and opened.was.time == 0
-    assert len(opened.history) == 200 and opened.history[-1].key == "k249" and opened.history[0].n == 50 + len(rs.start_lines)
+    assert len(opened.history) == 200 and opened.history[-1].key == keys[249 % len(keys)]
+    assert opened.history[0].n == 50 + len(rs.start_lines)
     assert opened.played.save.time == 3600 and [ln.key for ln in opened.played.lines][0] == "l_up_1"
     assert (opened.info.decisions, opened.info.game_time) == (1, 3600)
     assert stored(engine, info.save_id).game_time == 3600   # open writes like an advance
 
 
-def test_open_serves_renamed_text_keys_under_their_new_names(engine: Engine, rs: Ruleset, clock: FakeClock,
-                                                            account: int):
-    from dataclasses import replace
-    saves = PgSaves(engine, replace(rs, line_renames={"k_old": "k_new"}), clock)
+def test_open_drops_stored_lines_whose_text_key_the_content_lacks(saves: PgSaves, engine: Engine, rs: Ruleset,
+                                                                   account: int):
+    known = sorted(rs.line_keys)[0]
     info, _ = saves.create(account)
     with engine.begin() as conn:
-        rows.append_lines(conn, info.save_id, [(0, "k_old"), (0, "k_other")])
-    assert [p.key for p in saves.open(account, info.save_id).history][-2:] == ["k_new", "k_other"]
-
-
-def test_open_drops_stored_lines_whose_text_key_is_retired(engine: Engine, rs: Ruleset, clock: FakeClock,
-                                                           account: int):
-    from dataclasses import replace
-    saves = PgSaves(engine, replace(rs, line_renames={"k_old": "k_gone"}, retired_lines=frozenset({"k_gone", "k_x"})),
-                    clock)
-    info, _ = saves.create(account)
-    with engine.begin() as conn:
-        rows.append_lines(conn, info.save_id, [(0, "k_x"), (0, "k_old"), (0, "k_other")])
-    assert [p.key for p in saves.open(account, info.save_id).history][-1:] == ["k_other"]
-    assert not {"k_x", "k_gone"} & {p.key for p in saves.open(account, info.save_id).history}
+        rows.append_lines(conn, info.save_id, [(0, "l_gone_from_content"), (0, known)])
+    history = [p.key for p in saves.open(account, info.save_id).history]
+    assert history[-1] == known and "l_gone_from_content" not in history
 
 
 def test_a_dry_run_shows_the_decisions_and_writes_nothing(saves: PgSaves, engine: Engine, account: int,

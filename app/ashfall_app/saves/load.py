@@ -47,13 +47,12 @@ def load(row: SaveRecord, rs: Ruleset) -> Loaded:
         raise Unavailable("a later release")
     t0 = time.perf_counter()
     try:
-        done = e.rebase_logged(row.state, rs.rules, rs.renames)
-    except e.RebaseError as ex:
-        logs.error(_log, "save.rebase_failed", save=row.id, kind=ex.kind.value, id=ex.id)
-        raise Unavailable("rebase failed") from ex
+        done = e.rebase_logged(row.state, rs.rules)
     except e.StateFormatError as ex:
         logs.error(_log, "save.rebase_failed", save=row.id, kind="format", id=None)
         raise Unavailable("rebase failed") from ex
+    if done.dropped:
+        logs.info(_log, "save.dropped", save=row.id, **{k.value: n for k, n in done.dropped})
     logs.info(_log, "save.rebased", save=row.id, **{"from": row.rules_digest[:12]}, to=rs.digest[:12],
               format_from=row.format, lines=len(done.lines), ms=int((time.perf_counter() - t0) * 1000))
     return Loaded(done.save, done.lines, True, done.rule_changes)

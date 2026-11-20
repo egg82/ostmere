@@ -4,7 +4,6 @@ import pytest
 
 from ashfall_app.api.content_models import Content
 from ashfall_app.api.service import Game
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.ruleset import ruleset
 
@@ -17,7 +16,7 @@ def served() -> tuple[Content, dict[str, list[int]]]:
     for t in o.triggers:
         if t.when.test == "at_least" and t.when.subject_kind == "store" and t.when.id is not None:
             stops.setdefault(t.when.id, []).append(t.when.value)
-    return Game(o, ruleset(o, load_renames(), "dev", 1)).content(), stops
+    return Game(o, ruleset(o, "dev", 1)).content(), stops
 
 
 STAKES = {"field_track": "track_laid", "sew_wraps": "wraps_sewn"}

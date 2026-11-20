@@ -22,7 +22,7 @@ ASK, YES, NO = e.OfferId("t_ask"), e.AnswerId("t_yes"), e.AnswerId("t_no")
 
 @cache
 def game() -> Game:
-    return Game(loaded(), ruleset(loaded(), [], "test", 1))
+    return Game(loaded(), ruleset(loaded(), "test", 1))
 
 
 def test_the_content_serves_the_ruled_lane_and_the_offer():

@@ -111,7 +111,7 @@ def test_the_checker_can_fail():
 
 
 def test_the_real_resolvers_can_fail():
-    assert path_exists("docs/systems.md") and path_exists("DESIGN.txt") and path_exists("opening/renames.toml")
+    assert path_exists("docs/systems.md") and path_exists("DESIGN.txt") and path_exists("opening/phase_pays.toml")
     assert not path_exists("docs/no-such-file.md") and not path_exists("no_such_file.py")
     assert symbol_exists("Save.ended_at") and symbol_exists("ashfall_app.engine.state.Save")
     assert not symbol_exists("Save.no_such_field") and not symbol_exists("NoSuchThing.x")

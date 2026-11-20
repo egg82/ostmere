@@ -6,13 +6,12 @@ from dataclasses import replace
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
-    BP, QUANTITY_SCALE as Q, AfterTime, AtLeast, CardId, CardShare, IdKind, Join, LaneId, Mix, Order, Outcome, Rename, StoreValue, SwitchMix,
+    BP, QUANTITY_SCALE as Q, AfterTime, AtLeast, CardShare, LaneId, Mix, Order, StoreValue, SwitchMix,
     RunKind, TapCard, Unlock, UnlockKind, advance, decide, encode, rebase, view,
 )
-from ashfall_app.engine.renaming import Renamer, renamed_outcome
 from town_mix_world import (
     A1, A2, AC, ALWAYS, B1, BIG, LA, LB, TM, TM2, TOWN_RULE, V, X, Y, always, card_view, count, joined, joiner, orders,
-    start, stored, sub_rules, sub_save, work_done, world,
+    start, stored, sub_rules, work_done, world,
 )
 
 JOIN_AT = 205
@@ -116,34 +115,23 @@ def test_a_save_past_a_joins_trigger_rebased_into_rules_that_add_it_has_the_join
         assert work_done(got, r2, A1, t) == work_done(s, r1, A1, t)
 
 
-def test_a_released_outcome_through_renames_renames_its_joins_lane_and_card():
-    """Invariant 97 ("Rebase": Join's lane and card in released outcomes are renamed as installs' are; mix ids never):
-    what the release lock forwards a released outcome through."""
-    joined_out = Outcome(joins=(Join(LA, TM, A1),))
-    got = renamed_outcome(joined_out, Renamer((Rename(IdKind.LANE, "la", "la2"), Rename(IdKind.CARD, "a1", "a9")), cards=("a1",)))
-    assert got == Outcome(joins=(Join(LaneId("la2"), TM, CardId("a9")),))
-
-
-def test_a_rename_of_a_lane_renames_the_join_a_trigger_has_yet_to_land():
-    """Invariant 97 ("Rebase": Join's lane is renamed as installs' are): a save before the join, rebased through a
-    rename of la to la2, joins la2 when the trigger fires."""
+def test_a_save_before_the_join_joins_the_lane_the_new_rules_name():
+    """Invariant 97: a save before the join, rebased into rules where the joining trigger names la2 in place of la,
+    joins la2 when the trigger fires."""
     r = world((joiner("ja", LA, TM, A1, 100),))
     s = advance(start(r), r, 50)
-    got = rebase(encode(s, r), sub_rules(r, {"la": "la2"}), (Rename(IdKind.LANE, "la", "la2"),))
+    got = rebase(encode(s, r), sub_rules(r, {"la": "la2"}))
     later = advance(got, sub_rules(r, {"la": "la2"}), 300)
     assert not joined(got, LA) and Unlock(UnlockKind.JOINED, LaneId("la2")) in later.unlocked
 
 
-def test_a_rename_of_a_joined_lane_renames_its_unlock_and_changes_nothing_else():
-    """Invariant 97: rebasing a save holding Unlock(JOINED, la) through a rename of la to la2 gives
-    Unlock(JOINED, la2); the town's mix and rule stay as they were (mix ids are never renamed)."""
+def test_a_joined_lane_the_new_rules_lack_loses_its_unlock_and_keeps_the_rest():
+    """Invariant 97: rebasing a save holding Unlock(JOINED, la) into rules that have la2 in its place drops the unlock
+    (its trigger stays fired, so la2 is not joined); the town's mix and rule stay as they were."""
     r = world((joiner("ja", LA, TM, A1, 100),))
     s = advance(start(r), r, 300)
-    ids = {"la": "la2"}
-    r2 = sub_rules(r, ids)
-    got = rebase(encode(s, r), r2, (Rename(IdKind.LANE, "la", "la2"),))
-    assert Unlock(UnlockKind.JOINED, LaneId("la2")) in got.unlocked
-    assert Unlock(UnlockKind.JOINED, LA) not in got.unlocked
-    want = sub_save(s, ids)
-    assert (got.unlocked, got.orders, got.latches, got.mixes) == (want.unlocked, want.orders, want.latches, want.mixes)
+    got = rebase(encode(s, r), sub_rules(r, {"la": "la2"}))
+    assert Unlock(UnlockKind.JOINED, LA) in s.unlocked and Unlock(UnlockKind.JOINED, LA) not in got.unlocked
+    assert Unlock(UnlockKind.JOINED, LaneId("la2")) not in got.unlocked
+    assert (got.orders, got.latches, got.mixes) == (s.orders, s.latches, s.mixes)
     assert got.orders == (TOWN_RULE,) and got.time == s.time

@@ -8,7 +8,7 @@ from typing import TypeGuard
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, AfterTime, Amount, CardDef, CardId, CardShare, Flow, Join, LaneDef, LaneId, Mix, MixId,
     Order, Outcome, PacingCurve, Rules, Save, SaveMix, SetOrders, SkillDef, SkillId, StoreDef, StoreId, SwitchMix,
-    TapCard, TriggerDef, TriggerId, Unlock, UnlockKind, Verb, advance, decide, new_save, per_hour, segment, unlock_key,
+    TapCard, TriggerDef, TriggerId, Unlock, UnlockKind, Verb, advance, decide, new_save, per_hour, segment,
     value_at, view,
 )
 
@@ -115,10 +115,3 @@ def sub_rules(r: Rules, ids: Mapping[str, str]) -> Rules:
     out = _sub(r, ids)
     assert isinstance(out, Rules)
     return out
-
-
-def sub_save(s: Save, ids: Mapping[str, str]) -> Save:
-    """What a save says under renamed ids, the unlock set re-sorted."""
-    out = _sub(s, ids)
-    assert isinstance(out, Save)
-    return replace(out, unlocked=tuple(sorted(out.unlocked, key=unlock_key)))

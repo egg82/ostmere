@@ -14,7 +14,7 @@ BEATS = Path(__file__).resolve().parents[2] / "content" / "beats.yaml"
 
 def game() -> tuple[Game, dict[str, list[str]]]:
     o = load_opening()
-    return Game(o, replace(ruleset(o, [], "test", 1))), o.beat_lines
+    return Game(o, replace(ruleset(o, "test", 1))), o.beat_lines
 
 
 def served(g: Game, key: str) -> bool:
@@ -37,7 +37,7 @@ def test_a_beat_with_two_ways_to_be_told_opens_on_either():
 
 def test_the_field_follows_the_content_not_the_key():
     o = load_opening()
-    g = Game(o, replace(ruleset(o, [], "test", 1)))
+    g = Game(o, replace(ruleset(o, "test", 1)))
     assert served(g, "l_b3_1") and not served(g, "l_b3_1_but_not_authored")
 
 

@@ -7,10 +7,10 @@ import pytest
 
 from ashfall_app.opening.checks import check_structure
 from ashfall_app.opening.entries import (
-    CardEntry, ConditionEntry, ItemAmount, ModifierEntry, OutcomeEntry, TriggerEntry, UnlockEntry,
+    CardEntry, ConditionEntry, ModifierEntry, OutcomeEntry, TriggerEntry, UnlockEntry,
 )
 from ashfall_app.opening.phase_pays import (
-    RETIRED_AT, check_phase_pays, expanded, expanded_id, find_id, find_items, find_line, staying_stores,
+    check_phase_pays, expanded, expanded_id, find_id, find_items, find_line, staying_stores,
 )
 from ashfall_app.opening.prestige import NodeEntry
 from ashfall_app.opening.schema import Opening, to_rules
@@ -77,14 +77,14 @@ def test_a_new_phase_finds_at_its_first_level(shipped_opening: Opening):
     for pp in o.phase_pays:
         ranks = sum(n.ranks for n in o.nodes if n.skill == pp.skill)
         assert all(by_id[find_id(pp.skill, p, 2)].outcome.line_keys for p in range(3, ranks + 2)), pp.skill
-        live = [t for t in o.triggers if t.when.id == pp.skill and t.id.startswith(PREFIXES) and t.when.value != RETIRED_AT]
+        live = [t for t in o.triggers if t.when.id == pp.skill and t.id.startswith(PREFIXES)]
         assert any(t.outcome.line_keys for t in live), pp.skill
 
 
 def test_the_rows_name_each_expanded_level(shipped_opening: Opening):
     o = shipped_opening
     rows = {(s.id, lv.level) for s in o.skills for lv in s.levels}
-    made = {(t.when.id, t.when.value) for t in o.triggers if t.id.startswith(PREFIXES) and t.when.value != RETIRED_AT}
+    made = {(t.when.id, t.when.value) for t in o.triggers if t.id.startswith(PREFIXES)}
     assert made and made <= rows
 
 
@@ -197,18 +197,6 @@ def test_a_finds_amount_grows_with_the_phase_and_is_the_staple(shipped_opening: 
         assert all(len(g) == 1 and g[0].store == pp.find.store for g in got), pp.skill
         assert [g[0].items for g in got] == [find_items(pp.find, p) for p in range(3, ranks + 2)], pp.skill
         assert pp.find.items_per_phase >= 1 and got[0][0].items > pp.find.items, pp.skill
-
-
-def test_a_retired_find_waits_out_of_reach_with_its_old_outcome(shipped_opening: Opening):
-    o = shipped_opening
-    by_id = {t.id: t for t in o.triggers}
-    for pp in o.phase_pays:
-        assert pp.retired_finds and pp.retired_through >= 2, pp.skill
-        for old in pp.retired_finds:
-            t = by_id[expanded_id(pp.skill, 3, old.level)]
-            assert t.when.value == RETIRED_AT and t.outcome.line_keys == [old.line_key], (pp.skill, old.level)
-            assert t.outcome.stores == [ItemAmount(store=old.store, items=old.items)], (pp.skill, old.level)
-        assert expanded_id(pp.skill, pp.retired_through + 1, pp.retired_finds[0].level) not in by_id, pp.skill
 
 
 def test_every_shipped_find_is_a_good_a_staying_card_consumes(shipped_opening: Opening):

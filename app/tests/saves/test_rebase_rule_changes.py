@@ -21,8 +21,7 @@ def rules(installs: bool) -> e.Rules:
 
 
 def ruleset(r: e.Rules) -> Ruleset:
-    return Ruleset(rules=r, digest=e.rules_digest(r), renames=(), start_lines=(), line_renames={}, build="b",
-                   release=2)
+    return Ruleset(rules=r, digest=e.rules_digest(r), start_lines=(), line_keys=frozenset(), build="b", release=2)
 
 
 def row(save: e.Save, r: e.Rules) -> SaveRecord:

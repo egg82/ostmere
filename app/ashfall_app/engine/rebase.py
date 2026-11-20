@@ -1,22 +1,22 @@
-"""Rebase: a save written under other rules, made a save under these, losing nothing it had earned.
+"""Rebase: a save written under other rules, made a save under these, what the new rules lack dropped.
 
-Semantics and its seven steps: DESIGN.txt, "Rebase". Pure; a failure (RebaseError, StateFormatError) returns nothing,
-so a failed rebase is never written.
+Semantics and its seven steps: DESIGN.txt, "Rebase". Pure; only a text no encode gave fails (StateFormatError), and a
+failed rebase is never written.
 """
 import json
 from dataclasses import replace
 
 from .api import Step, numbered, recorder
 from .codec import ENVELOPE, FORMAT, READ_ERRORS, Json, canonical, decode, rules_digest, save_from_json
-from .errors import RebaseError, StateFormatError
+from .dropping import Gone, dropped_save
+from .errors import StateFormatError
 from .gates import store_cap
 from .handlers import Emit, ignore
-from .ids import AnswerId, CardId, IdKind, OfferId, SkillId
+from .ids import CardId, IdKind, SkillId
 from .index import index
 from .instant import resolve_instant
-from .manifest import Manifest, ManifestOffer, declared, read_manifest
+from .manifest import Manifest, declared, read_manifest
 from .rebuild import rebuild
-from .renaming import Rename, Renamer, Retired, renamed_save
 from .rulelog import rule_changes
 from .rules import Rules
 from .segments import Segment
@@ -28,42 +28,34 @@ from .unlocks import unlock_key
 from .upgrade import upgrade
 
 
-def rebase(text: str, rules: Rules, renames: tuple[Rename | Retired, ...] = ()) -> Save:
+def rebase(text: str, rules: Rules) -> Save:
     """The save `text` holds, under `rules`: decode(text, rules) when it was written under them; otherwise upgraded,
-    renamed, reshaped and its instant resolved with evaluation (DESIGN.txt, "Rebase"). RebaseError for an id the
-    save's rules declared that these lack and no rename maps or retirement retires; StateFormatError for a text no
-    encode gave."""
-    return _rebase(text, rules, renames, ignore)
+    what these rules lack dropped, reshaped and its instant resolved with evaluation (DESIGN.txt, "Rebase").
+    StateFormatError for a text no encode gave."""
+    return _rebased(text, rules, ignore)[1]
 
 
-def rebase_logged(text: str, rules: Rules, renames: tuple[Rename | Retired, ...] = ()) -> Step:
-    """rebase(), plus the lines its instant emitted (all at the save's time, seq from 0) and its rule changes: each
-    order's latch that the instant turned, a rule an outcome installed included (DESIGN.txt, "Rebase" in part
-    "TOWNSFOLK, INSTALLED RULES AND OFFERS")."""
+def rebase_logged(text: str, rules: Rules) -> Step:
+    """rebase(), plus the lines its instant emitted (all at the save's time, seq from 0), its rule changes (each
+    order's latch that the instant turned, a rule an outcome installed included: DESIGN.txt, "Rebase" in part
+    "TOWNSFOLK, INSTALLED RULES AND OFFERS") and how many ids of each kind it dropped."""
     lines, emit = recorder()
-    before, after = _rebased(text, rules, renames, emit)
-    return Step(after, numbered(lines), rule_changes=rule_changes(before, after, rules))
+    before, after, gone = _rebased(text, rules, emit)
+    return Step(after, numbered(lines), rule_changes=rule_changes(before, after, rules), dropped=gone.counts())
 
 
-def _rebase(text: str, rules: Rules, renames: tuple[Rename | Retired, ...], emit: Emit) -> Save:
-    return _rebased(text, rules, renames, emit)[1]
-
-
-def _rebased(text: str, rules: Rules, renames: tuple[Rename | Retired, ...], emit: Emit) -> tuple[Save, Save]:
-    """The save before step 6 (the reshaped save, or the decoded one) and the result."""
+def _rebased(text: str, rules: Rules, emit: Emit) -> tuple[Save, Save, Gone]:
+    """The save before step 6 (the reshaped save, or the decoded one), the result, and what was dropped."""
     envelope = _read(text)
     if envelope.get("format") == FORMAT and envelope.get("rules") == rules_digest(rules):
         same = decode(text, rules)
-        return same, same
+        return same, same, Gone({k: frozenset() for k in IdKind})
     manifest, save = _loose(upgrade(envelope))
-    m = Renamer((r for r in renames if isinstance(r, Rename)), manifest.standing, (c.id for c in manifest.cards))
-    _check_known(m, manifest, rules, frozenset(r.trigger for r in renames if isinstance(r, Retired)))
-    chips = tuple(m.id(IdKind.CHIP, c) for c in manifest.chips)
-    triggers = tuple(m.id(IdKind.TRIGGER, t) for t in manifest.triggers)
-    work_s = {CardId(m.id(IdKind.CARD, c.id)): c.work_s for c in manifest.cards}
-    shaped = _reshape(renamed_save(save, m), rules, dict(zip(chips, zip(save.chips, save.chips_seen))),
-                      dict(zip(triggers, save.fired)), work_s)
-    return shaped, resolve_instant(rebuild(shaped, rules), rules, [], True, emit)
+    gone = _gone(manifest, rules)
+    work_s = {CardId(c.id): c.work_s for c in manifest.cards}
+    shaped = _reshape(dropped_save(save, gone, rules), rules, dict(zip(manifest.chips, zip(save.chips, save.chips_seen))),
+                      dict(zip(manifest.triggers, save.fired)), work_s)
+    return shaped, resolve_instant(rebuild(shaped, rules), rules, [], True, emit), gone
 
 
 def _read(text: str) -> dict[str, Json]:
@@ -92,38 +84,19 @@ def _loose(envelope: dict[str, Json]) -> tuple[Manifest, Save]:
     return manifest, save
 
 
-def _check_known(m: Renamer, manifest: Manifest, rules: Rules, retired: frozenset[str]) -> None:
-    """Step 4: every id the manifest declares is declared by the new rules once renamed, or is a trigger they retired
-    (its fired flag goes with it at step 5; what it landed stays). An answer the save's rules put under one offer stays
-    under that offer (renamed), and a kind or role the save's rules gave stays (an offer that had none may gain one:
-    DESIGN.txt, "OFFER KINDS")."""
+def _gone(manifest: Manifest, rules: Rules) -> Gone:
+    """Step 3's ids: each the manifest declares and the rules do not, and each answer the rules put under another offer
+    than the manifest did."""
     now = declared(rules)
-    for kind, ids in manifest.declared().items():
-        for x in ids:
-            y = m.id(kind, x)
-            if y not in now[kind] and not (kind is IdKind.TRIGGER and y in retired):
-                raise RebaseError(kind, x)
-    under = {a.id: o.id for o in rules.offers for a in o.answers}
-    for o in manifest.offers:
-        for a in o.answers:
-            if under[AnswerId(m.id(IdKind.ANSWER, a))] != m.id(IdKind.OFFER, o.id):
-                raise RebaseError(IdKind.ANSWER, a)
-        _check_kind(m, o, rules)
-
-
-def _check_kind(m: Renamer, o: ManifestOffer, rules: Rules) -> None:
-    """The kind the manifest gave offer `o`, and each answer's role, are the new rules' (RebaseError(OFFER) if not)."""
-    if o.kind is None:
-        return
-    now = index(rules).offers[OfferId(m.id(IdKind.OFFER, o.id))]
-    roles = {a.id: a.role for a in now.answers}
-    if now.kind != o.kind or any(roles[AnswerId(m.id(IdKind.ANSWER, a))] != r for a, r in zip(o.answers, o.roles)):
-        raise RebaseError(IdKind.OFFER, o.id)
+    ids = {kind: frozenset(x for x in xs if x not in now[kind]) for kind, xs in manifest.declared().items()}
+    under: dict[str, str] = {a.id: o.id for o in rules.offers for a in o.answers}
+    moved = frozenset(a for o in manifest.offers for a in o.answers if under.get(a, o.id) != o.id)
+    return Gone({**ids, IdKind.ANSWER: ids[IdKind.ANSWER] | moved})
 
 
 def _reshape(save: Save, rules: Rules, chips: dict[str, tuple[bool, bool]], fired: dict[str, bool],
              work_s: dict[CardId, int]) -> Save:
-    """Step 5: the canonical save under the new rules, at the save's time, every id already renamed."""
+    """Step 5: the canonical save under the new rules, at the save's time, what they lack already dropped."""
     t = save.time
     stores = {st.store: st.segment.start_value for st in save.stores}
     xp = {st.skill: st.xp.start_value for st in save.skills}

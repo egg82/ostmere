@@ -9,14 +9,13 @@ from ashfall_app.api.line_causes import line_infos
 from ashfall_app.api.line_models import LineCause, WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.opening.face_checks import shown_stores, timed_stores
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 
 
 @pytest.fixture(scope="module")
 def served(shipped_opening: Opening) -> Content:
-    return Game(shipped_opening, ruleset(shipped_opening, load_renames(), "dev", 1)).content()
+    return Game(shipped_opening, ruleset(shipped_opening, "dev", 1)).content()
 
 
 def named(content: Content) -> list[tuple[str, str]]:

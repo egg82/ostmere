@@ -6,10 +6,9 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import (
-    AtLeast, EntryId, IdKind, NoteId, Rename, Rules, Save, TriggerId, Unlock, Unlocked, UnlockKind, advance, encode,
-    new_save, rebase, TriggerDef,
+    AtLeast, EntryId, IdKind, NoteId, Rules, Save, TriggerId, Unlock, Unlocked, UnlockKind, advance, encode,
+    new_save, rebase_logged, TriggerDef,
 )
-from ashfall_app.opening.renames import RenameEntry, engine_renames, load_renames
 from ashfall_app.opening.schema import Opening, load_opening, to_rules
 from tests.opening.bookless import bookless_opening
 
@@ -191,29 +190,21 @@ def test_a_later_note_whose_gate_holds_first_waits_for_the_entry_then_lands_at_i
     assert unlocked(at(r, 300), UnlockKind.ENTRY) == {PAGE_A, PAGE_B}
 
 
-# ---------- 4: renames ----------
+# ---------- 4: a changed journal ----------
 
 RENAMED = (("j_page_a", "j_leaf_a"), ("j_note_a1", "j_line_a1"))
 
 
-def renamed_entries() -> list[RenameEntry]:
-    pairs = [("entry", "j_page_a", "j_leaf_a"), ("note", "j_note_a1", "j_line_a1")]
-    return [RenameEntry.model_validate({"kind": k, "from": a, "to": b}) for k, a, b in pairs]
-
-
-def test_a_renamed_entry_and_note_carry_their_unlocks_across_a_rebase(tmp_path: Path):
+def test_a_save_keeps_the_pages_and_notes_it_wrote_when_the_journal_renames_them(tmp_path: Path):
+    """No manifest declares a page or a note, so their unlocks stay as the save had them; the trigger the loader made
+    for the old note is one the new rules lack, and goes."""
     old = rules_of(FIXTURE)
     s = at(old, 300)
     text = TEXT
     for a, b in RENAMED:
         text = text.replace(a, b)
     new = rules_of(written(tmp_path / "journal.toml", text))
-    renames = (*engine_renames(renamed_entries()), Rename(IdKind.TRIGGER, "note_j_note_a1", "note_j_line_a1"))
-    got = rebase(encode(s, old), new, renames)
-    assert unlocked(got, UnlockKind.ENTRY) == {"j_leaf_a", "j_page_b"}
-    assert unlocked(got, UnlockKind.NOTE) == {"j_line_a1", "j_note_a2", "j_note_b1"}
-
-
-def test_a_note_rename_in_the_file_carries_its_trigger_rename(tmp_path: Path):
-    path = written(tmp_path / "renames.toml", '[[renames]]\nkind = "note"\nfrom = "x"\nto = "y"\n')
-    assert Rename(IdKind.TRIGGER, "note_x", "note_y") in set(engine_renames(load_renames(path)))
+    step = rebase_logged(encode(s, old), new)
+    assert {"j_page_a", "j_page_b"} <= unlocked(step.save, UnlockKind.ENTRY)
+    assert {"j_note_a1", "j_note_a2", "j_note_b1"} <= unlocked(step.save, UnlockKind.NOTE)
+    assert (IdKind.TRIGGER, 1) in step.dropped

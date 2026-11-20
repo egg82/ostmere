@@ -7,10 +7,8 @@ each level 2..top_level, at a counted level past the curve's last level; the cur
 pays. Each expansion has a fixed id (`expanded_id`, `find_id`), and an entry stays on the Opening so a chapter that adds ranks expands only the phases they add.
 
 A later phase's find is the skill's staple good in an amount that grows by phase, with a line from the skill's pool
-chosen by how many finds the track has paid (`find_line`), so no line comes twice running. Phases once paid finds at
-`expanded_id` that gave story goods under one line each. Each is kept (`retired_finds`) under its id and gated at
-RETIRED_AT, a counted level no skill reaches, so it never fires again and a save that fired it still rebases, and the
-find is a new trigger under `find_id` that also carries the speed.
+chosen by how many finds the track has paid (`find_line`), so no line comes twice running. A find's level is one
+trigger under `find_id` that carries the speed as well.
 
 Checked (check_phase_pays): a later phase's work pay is an add, never a multiplier (docs/design/prestige-phases.md,
 "The loop", spiral 2), and speeds a card that exists (which skill's card is a readout, tests/opening/speed_reach.py); the find's store is one a card that stays available consumes (`staying_stores`)."""
@@ -26,10 +24,6 @@ from .refs import fail, outcomes
 
 if TYPE_CHECKING:
     from .schema import Opening
-
-RETIRED_AT = 10_000
-"""The counted level a retired find's trigger waits for: far past any track."""
-
 
 class PhaseSpeedEntry(Entry):
     """A change to `id`'s (a card's) work that every later phase's level lands."""
@@ -52,15 +46,6 @@ class PhaseFindEntry(Entry):
     lines: list[str] = Field(min_length=2)
 
 
-class RetiredFindEntry(Entry):
-    """A find a phase once paid: its trigger is kept so a save that fired it rebases, and never fires again."""
-
-    level: int = Field(ge=2)
-    line_key: str
-    store: str
-    items: int = Field(ge=1)
-
-
 class PhasePaysEntry(Entry):
     """`skill`'s pays in every phase from 2: `speed` at each level, the row reading `speed_key`, and at a find's level
     the find as well."""
@@ -69,9 +54,6 @@ class PhasePaysEntry(Entry):
     speed: list[PhaseSpeedEntry] = Field(min_length=1)
     speed_key: str
     find: PhaseFindEntry
-    retired_finds: list[RetiredFindEntry] = []
-    retired_through: int = Field(default=0, ge=0)
-    """The last phase that shipped the retired finds; later phases never had them."""
 
 
 def expanded_id(skill: str, phase: int, level: int) -> str:
@@ -125,19 +107,14 @@ def _levels(o: "Opening", skill: str) -> list[tuple[int, int, int]]:
 
 def _triggers(pp: PhasePaysEntry, phase: int, level: int, counted: int) -> list[TriggerEntry]:
     """The triggers of one later-phase level: its speed alone (`expanded_id`), or at a find's level the speed with the
-    find (`find_id`), and, for a phase that shipped the old find there, that find's retired trigger as well."""
-    speed = _speed(pp, expanded_id(pp.skill, phase, level))
+    find (`find_id`)."""
     if level not in pp.find.levels:
-        return [_trigger(pp, expanded_id(pp.skill, phase, level), counted, OutcomeEntry(modifiers=speed))]
+        tid = expanded_id(pp.skill, phase, level)
+        return [_trigger(pp, tid, counted, OutcomeEntry(modifiers=_speed(pp, tid)))]
     find, tid = pp.find, find_id(pp.skill, phase, level)
-    out = [_trigger(pp, tid, counted, OutcomeEntry(
+    return [_trigger(pp, tid, counted, OutcomeEntry(
         modifiers=_speed(pp, tid), stores=[ItemAmount(store=find.store, items=find_items(find, phase))],
         line_keys=[find_line(find, phase, level)]))]
-    old = next((r for r in pp.retired_finds if r.level == level), None)
-    if old is not None and phase <= pp.retired_through:
-        out.append(_trigger(pp, expanded_id(pp.skill, phase, level), RETIRED_AT, OutcomeEntry(
-            modifiers=speed, stores=[ItemAmount(store=old.store, items=old.items)], line_keys=[old.line_key])))
-    return out
 
 
 def _speed(pp: PhasePaysEntry, tid: str) -> list[ModifierEntry]:

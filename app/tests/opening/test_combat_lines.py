@@ -40,7 +40,7 @@ def test_every_fight_has_both_pools_and_they_are_lines(everything: Opening):
 
 def test_the_content_serves_each_fights_pools(everything: Opening):
     o = everything
-    content = Game(o, ruleset(o, [], "test", 1)).content()
+    content = Game(o, ruleset(o, "test", 1)).content()
     hunt = next(c for c in content.card_infos if c.card == "hunt_wolf").fight
     rats = next(a for a in content.standing_infos if a.action == "rats").fight
     assert hunt is not None and hunt.won_line_keys == [f"l_fight_hunt_won_{i}" for i in (1, 2, 3)]
@@ -77,7 +77,7 @@ def unworded(o: Opening, content: Content) -> list[str]:
 
 def test_every_side_strengths_source_has_a_label_the_fight_panel_shows(everything: Opening):
     o = everything
-    content = Game(o, ruleset(o, [], "test", 1)).content()
+    content = Game(o, ruleset(o, "test", 1)).content()
     assert len(side_sources(o)) >= 6 and unworded(o, content) == []
     no_melee = content.model_copy(update={"skill_infos": [s for s in content.skill_infos if s.skill != "melee"]})
     assert unworded(o, no_melee) == ["trigger t_melee_2: melee", "trigger t_melee_4: melee"]

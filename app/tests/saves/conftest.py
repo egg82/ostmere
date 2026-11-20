@@ -12,7 +12,7 @@ from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.saves.changes import RENAMES, changed_opening
+from tests.saves.changes import changed_opening
 from tests.shipped_ruleset import ShippedRuleset
 
 
@@ -38,7 +38,7 @@ def rs(shipped_ruleset: ShippedRuleset) -> Ruleset:
 @pytest.fixture(scope="session")
 def rs_changed() -> Ruleset:
     """The test change (tests/saves/changes.py) as a later build, b3, of release 3."""
-    return replace(ruleset(changed_opening(), [], "b3", 3), renames=RENAMES)
+    return ruleset(changed_opening(), "b3", 3)
 
 
 @pytest.fixture

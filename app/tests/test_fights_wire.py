@@ -39,7 +39,7 @@ def game_of(r: e.Rules) -> Game:
     o = load_opening()
     o = o.model_copy(update={"sides": [*o.sides, SideEntry(id=HAND, label_key="side.hand", base=300)],
                              "threats": [*o.threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100)]})
-    return Game(o, replace(ruleset(o, [], "test", 1), rules=r))
+    return Game(o, replace(ruleset(o, "test", 1), rules=r))
 
 
 @cache

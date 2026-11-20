@@ -8,7 +8,7 @@ from .answers import AnswerKind, AnswerOffer
 from .context import DecisionContext, context_from_json, context_to_json, decision_context
 from .codec import FORMAT, decode, encode, rules_digest, verb_from_json, verb_to_json
 from .errors import (
-    EngineError, InvalidRulesError, InvalidVerbError, RebaseError, StateFormatError, TimeOrderError,
+    EngineError, InvalidRulesError, InvalidVerbError, StateFormatError, TimeOrderError,
 )
 from .events import CascadeLimit, Event, EventKind
 from .cards import (
@@ -35,7 +35,6 @@ from .offers import AnswerDef, OfferDef
 from .plan import OrderState
 from .rebase import rebase, rebase_logged
 from .rulelog import Ended, RuleChange
-from .renaming import Rename, Retired
 from .powers import explain_strength, strength
 from .strengthmath import StrengthExplanation
 from .nodes import NODE_PREFIX, NodeDef, NodeTarget, PrestigeDef
@@ -65,8 +64,8 @@ __all__ = [
     "new_save", "next_event", "segment", "value", "xp",
     "DecisionContext", "context_from_json", "context_to_json", "decision_context",
     "FORMAT", "decode", "encode", "rules_digest", "verb_from_json", "verb_to_json",
-    "OLDEST_FORMAT", "UPGRADES", "Ended", "Rename", "Retired", "RuleChange", "rebase", "rebase_logged",
-    "EngineError", "InvalidRulesError", "InvalidVerbError", "RebaseError", "StateFormatError", "TimeOrderError",
+    "OLDEST_FORMAT", "UPGRADES", "Ended", "RuleChange", "rebase", "rebase_logged",
+    "EngineError", "InvalidRulesError", "InvalidVerbError", "StateFormatError", "TimeOrderError",
     "CascadeLimit", "Event", "EventKind",
     "HELD_PREFIX", "Amount", "Blocker", "CapRaise", "CardDef", "CardState", "FightDef", "Join", "LaneState", "Leave", "Mark", "Outcome",
     "RuleInstall", "WhileRunning", "HeldSpeed",

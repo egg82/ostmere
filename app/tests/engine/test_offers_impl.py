@@ -10,7 +10,7 @@ from ashfall_app.engine import (
     HANDS, QUANTITY_SCALE as Q, AfterTime, AnswerDef, AnswerId, AnswerOffer, AtLeast, CardCount, CardDef, CardId,
     InvalidRulesError, InvalidVerbError, LaneDef, LaneId, LineKey, OfferDef, OfferId, Order, Outcome, PacingCurve,
     QueueEntry, RuleInstall, Rules, SetQueue, SkillDef, SkillId, StoreDef, StoreId, TapCard, TriggerDef, TriggerId,
-    Unlock, UnlockKind, Unlocked, IdKind, RebaseError, Rename, advance, decide, decide_logged, encode, new_save, rebase,
+    Unlock, UnlockKind, Unlocked, IdKind, advance, decide, decide_logged, encode, new_save, rebase_logged,
     validate_rules, view,
 )
 
@@ -127,24 +127,24 @@ def test_the_hands_lane_is_not_ruled_by_an_offer():
     assert HANDS not in {d.id for d in world().lanes}
 
 
-def test_a_rebase_renames_an_offer_and_its_answers_and_keeps_the_answer_given():
+def test_a_rebase_into_rules_that_lack_an_answered_offer_drops_the_answer_given():
     r = world()
     s = decide(advance(new_save(r), r, 10), r, 10, AnswerOffer(O, YES))
     p, sure = OfferId("p"), AnswerId("sure")
     show = replace(r.triggers[0], outcome=Outcome(unlocks=(Unlock(UnlockKind.OFFER, p),), lines=(LineKey("l_asked"),)))
     after = replace(r.triggers[1], when=AtLeast(Unlocked(Unlock(UnlockKind.ANSWERED, p)), 1, 1))
     new = replace(r, triggers=(show, after), offers=(OfferDef(p, (AnswerDef(sure), AnswerDef(NO))),))
-    renames = (Rename(IdKind.OFFER, O, p), Rename(IdKind.ANSWER, YES, sure))
-    got = rebase(encode(s, r), new, renames)
-    assert Unlock(UnlockKind.ANSWERED, p) in got.unlocked and Unlock(UnlockKind.ANSWER, sure) in got.unlocked
-    assert view(got, new).offers[0].answer == sure
+    step = rebase_logged(encode(s, r), new)
+    assert {Unlock(UnlockKind.ANSWERED, O), Unlock(UnlockKind.ANSWER, YES)} <= set(s.unlocked)   # control
+    assert not {u for u in step.save.unlocked if u.kind in (UnlockKind.ANSWERED, UnlockKind.ANSWER)}
+    assert step.dropped == ((IdKind.OFFER, 1), (IdKind.ANSWER, 2))   # yes renamed, no moved to p
 
 
-def test_a_rebase_that_moves_an_answer_to_another_offer_raises():
+def test_an_answer_moved_to_another_offer_is_dropped_and_its_offer_stays_answered():
     r = world()
-    s = advance(new_save(r), r, 10)
+    s = decide(advance(new_save(r), r, 10), r, 10, AnswerOffer(O, YES))
     moved = replace(r, offers=(OfferDef(O, (AnswerDef(AnswerId("a1")), AnswerDef(NO))),
                                OfferDef(OfferId("p"), (AnswerDef(YES), AnswerDef(AnswerId("a2"))))))
-    with pytest.raises(RebaseError) as e:
-        rebase(encode(s, r), moved)
-    assert (e.value.kind, e.value.id) == (IdKind.ANSWER, YES)
+    step = rebase_logged(encode(s, r), moved)
+    assert Unlock(UnlockKind.ANSWER, YES) in s.unlocked and Unlock(UnlockKind.ANSWER, YES) not in step.save.unlocked
+    assert Unlock(UnlockKind.ANSWERED, O) in step.save.unlocked and step.dropped == ((IdKind.ANSWER, 1),)

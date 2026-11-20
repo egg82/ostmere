@@ -1,8 +1,8 @@
 """Every kept save (live, or deleted and still held, so a restore never strands one) dry-rebased under a build's
-rules, writing nothing (`python -m ashfall_app.saves check`). The app
-runs it at start, so a build that would strand a save never turns ready and the build before it keeps serving. A save
-already under these rules is fine as it is; one a later build wrote is not this build's to read (a rollback), and is
-counted apart."""
+rules, writing nothing (`python -m ashfall_app.saves check`). A rebase drops what the rules lack, so only a stored text
+no encode gave (corruption) fails it. The app runs it at start, so a build that cannot read a save never turns ready
+and the build before it keeps serving. A save already under these rules is fine as it is; one a later build wrote is
+not this build's to read (a rollback), and is counted apart."""
 
 import logging
 import time
@@ -49,10 +49,7 @@ def check(engine: Engine, rs: Ruleset) -> Checked:
 
 def _rebases(row: rows.SaveRecord, rs: Ruleset) -> bool:
     try:
-        e.rebase(row.state, rs.rules, rs.renames)
-    except e.RebaseError as ex:
-        logs.error(_log, "save.rebase_failed", save=row.id, kind=ex.kind.value, id=ex.id)
-        return False
+        e.rebase(row.state, rs.rules)
     except e.StateFormatError:
         logs.error(_log, "save.rebase_failed", save=row.id, kind="format", id=None)
         return False

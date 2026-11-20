@@ -1,7 +1,7 @@
 Gate mutants for the rebase (engine DESIGN.txt, part SAVES ACROSS RELEASES), each applied alone
 and run against tests/engine/test_rebase_impl.py and tests/saves. All must go red.
 
-drop_unknown            rebase.py: an id the new rules lack is skipped instead of raising RebaseError     killed
+drop_unknown            dropping.py: an order naming an id the new rules lack is kept, not dropped        killed
 reset_fired             rebase.py: every trigger rebased unfired                                           killed
 
 The blind contract suite (tests/engine_contract/test_rebase.py) alone also kills drop_unknown and reset_fired.

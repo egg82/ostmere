@@ -47,8 +47,8 @@ TOWN_PREFIX = "town:"
 
 
 class IdKind(Enum):
-    """The kinds of id a rename names (DESIGN.txt, "Renames"): each id is renamed by renames of its own kind. STANDING
-    is a standing action's id (ActionId); SOURCE a modifier's source, a label that is renamed but never checked."""
+    """The kinds of id a save's manifest declares (DESIGN.txt, "Manifest"); rebase drops each one the new rules lack.
+    STANDING is a standing action's id (ActionId)."""
 
     STORE = "store"
     SKILL = "skill"
@@ -58,9 +58,5 @@ class IdKind(Enum):
     CHIP = "chip"
     TRIGGER = "trigger"
     FEATURE = "feature"
-    SOURCE = "source"
     OFFER = "offer"
     ANSWER = "answer"
-    ENTRY = "entry"
-    NOTE = "note"
-    NODE = "node"

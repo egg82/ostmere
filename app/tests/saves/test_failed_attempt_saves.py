@@ -10,7 +10,6 @@ from typing import Any
 import pytest
 
 from ashfall_app.engine import Rules, RunBy, advance, rebase, view
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import DAY_ONE, load_opening, to_rules
 
 CAPTURED = sorted((Path(__file__).resolve().parent / "captured").glob("f5-*.json"))
@@ -33,7 +32,7 @@ def test_the_captured_saves_are_there_and_each_holds_a_failed_attempt():
 def test_a_save_mid_failed_attempt_loads_with_that_lane_free_and_nothing_else_changed(path: Path):
     text = path.read_text().strip()
     raw: dict[str, Any] = json.loads(text)["save"]
-    save = rebase(text, today(), engine_renames(load_renames()))
+    save = rebase(text, today())
     was = {ls["lane"]: ls for ls in raw["lanes"]}
     for ls in save.lanes:
         assert ls.card == (None if was[ls.lane]["failed"] else was[ls.lane]["card"]), ls.lane

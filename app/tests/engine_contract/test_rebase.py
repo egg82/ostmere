@@ -1,9 +1,10 @@
-"""Invariants 47 to 56: a save crossing releases (DESIGN.txt, part "SAVES ACROSS RELEASES"). Written blind from the
-spec. The new rules are generated rules transformed the way a release may change them: ids added, renamed (with the
-Rename that maps them), work_s changed, a card moved to another lane, caps raised, declarations reordered.
+"""Invariants 47 to 56: a save crossing releases (DESIGN.txt, part "SAVES ACROSS RELEASES"). The new rules are
+generated rules transformed the way content changes them: ids added, renamed (so the old id is gone), work_s changed,
+a card moved to another lane, caps raised, declarations reordered.
 
-The renaming oracle (`sub`) replaces id strings by value, so every world here keeps its id strings distinct across
-kinds, line keys and mix names; the one test about kinds sharing a string checks its fields by hand."""
+The renaming helper (`sub`) replaces id strings by value, and the dropping oracle (`named`) reads id strings by value,
+so every world here keeps its id strings distinct across kinds, line keys and mix names; the one test about kinds
+sharing a string checks its fields by hand."""
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass, fields, is_dataclass, replace
@@ -15,13 +16,14 @@ from hypothesis import given, strategies as st
 from hypothesis.strategies import DrawFn
 
 import ashfall_app.engine as engine
+from ashfall_app.engine.codec import to_json
 from ashfall_app.engine import (
     BP, FORMAT, HANDS, OLDEST_FORMAT, UPGRADES, ActionId, AfterTime, Amount, AnswerDef, AnswerId, AnswerOffer, AtLeast,
     AtMost, CapRaise, CardCount, OfferDef, OfferId,
-    CardDef, CardId, CardShare, ChipDef, ChipId, EngineError, EntryId, FeatureId, Flow, FlowKind, IdKind,
+    CardDef, CardId, CardShare, ChipDef, ChipId, EntryId, FeatureId, Flow, FlowKind, IdKind,
     InvalidVerbError, LaneDef, LaneState, LaneId, LaneSpeed, LineKey, Mix, MixId, Modifier, ModifierKind, NoteId, Order,
     Outcome,
-    PacingCurve, QueueEntry, RateRef, RebaseError, Rename, Rules, Running, Save, SaveMix, SetOrders, SetQueue,
+    PacingCurve, QueueEntry, RateRef, Rules, Running, Save, SaveMix, SetOrders, SetQueue,
     SkillDef, SkillId, SkillLevel, SourceId, StandingDef, StateFormatError, StoreCap, StoreDef, StoreId, StoreValue,
     SubMix, SwitchMix, TapCard, TriggerDef, TriggerId, Unlock, UnlockKind, Unlocked, WorkRef, advance, decide, decode,
     encode, new_save, rebase, rebase_logged, unlock_key, validate_rules,
@@ -49,10 +51,33 @@ def sub[T](v: T, ids: Mapping[str, str]) -> T:
     return cast(T, _sub(v, ids))  # cast -- _sub returns the shape it was given, which a TypeVar cannot say
 
 
-def renamed_save(s: Save, ids: Mapping[str, str]) -> Save:
-    """What a save says under renamed ids: every id replaced, the unlock set re-sorted (DESIGN.txt step 5)."""
-    out = sub(s, ids)
-    return replace(out, unlocked=tuple(sorted(out.unlocked, key=unlock_key)))
+def named(v: object) -> set[str]:
+    """Every id string a part of a save names, as the codec writes it: class tags and a modifier's source (a label)
+    left out."""
+    return _names(to_json(v))
+
+
+def _names(v: Json) -> set[str]:
+    if isinstance(v, str):
+        return {v}
+    if isinstance(v, list):
+        return {x for item in v for x in _names(item)}
+    if isinstance(v, dict):
+        return {x for k, item in v.items() if k not in ("@", "source") for x in _names(item)}
+    return set()
+
+
+def kept_orders(s: Save, gone: frozenset[str]) -> tuple[Order, ...]:
+    """Step 3's orders, by value: an order whose conditions name a gone id goes, an action naming one is taken out of
+    its list, and an order with no action left goes."""
+    out: list[Order] = []
+    for o in s.orders:
+        if named((o.when, o.unless)) & gone:
+            continue
+        actions = [a for a in (o.then, *o.or_else) if not named(a) & gone]
+        if actions:
+            out.append(replace(o, then=actions[0], or_else=tuple(actions[1:])))
+    return tuple(out)
 
 
 def store_value(s: Save, store: str) -> int:
@@ -122,27 +147,30 @@ def assert_canonical(s: Save, r: Rules) -> None:
         assert c.work.start == s.time
 
 
-def assert_nothing_taken(s: Save, r: Rules, s2: Save, r2: Rules, ids: Mapping[str, str]) -> None:
-    """Invariant 49, each id read through the renames."""
-    def n(x: str) -> str:
-        return ids.get(x, x)
-
+def assert_nothing_taken(s: Save, r: Rules, s2: Save, r2: Rules, gone: frozenset[str]) -> None:
+    """Invariant 49 for every id both rules declare; each gone id named nowhere in s2 (step 3)."""
     assert s2.time == s.time
     for x in s.stores:
-        assert store_value(s2, n(x.store)) >= x.segment.start_value, x.store
+        if x.store not in gone:
+            assert store_value(s2, x.store) >= x.segment.start_value, x.store
     for k in s.skills:
-        assert xp_of(s2, n(k.skill)) >= k.xp.start_value, k.skill
+        if k.skill not in gone:
+            assert xp_of(s2, k.skill) >= k.xp.start_value, k.skill
     for c in r.cards:
-        assert done(s2, r2, n(c.id)) == done(s, r, c.id), c.id
-        assert raised_of(s2, n(c.id)) == raised_of(s, c.id), c.id
-    assert {sub(u, ids) for u in s.unlocked} <= set(s2.unlocked)
+        if c.id not in gone:
+            assert done(s2, r2, c.id) == done(s, r, c.id), c.id
+            assert raised_of(s2, c.id) == raised_of(s, c.id), c.id
+    assert {u for u in s.unlocked if u.id not in gone} <= set(s2.unlocked)
     for t in r.triggers:
-        if fired(s, r, t.id):
-            assert fired(s2, r2, n(t.id)), t.id
+        if fired(s, r, t.id) and t.id not in gone:
+            assert fired(s2, r2, t.id), t.id
     assert s2.ended_at == s.ended_at
-    assert s2.mixes == sub(s.mixes, ids)
-    assert s2.orders == sub(s.orders, ids)
-    assert s2.modifiers[: len(s.modifiers)] == sub(s.modifiers, ids)
+    assert s2.mixes == tuple(replace(m, components=tuple(c for c in m.components if not named(c) & gone))
+                             for m in s.mixes)
+    assert s2.orders == kept_orders(s, gone)
+    kept = tuple(m for m in s.modifiers if not named(m) & gone)
+    assert s2.modifiers[: len(kept)] == kept
+    assert not named((s2.orders, s2.queue, s2.mixes, s2.pauses, s2.lanes, s2.modifiers, s2.unlocked)) & gone
 
 
 # ---- envelope helpers ------------------------------------------------------------------------------------------
@@ -189,9 +217,8 @@ def tagged(v: Json) -> bool:
 @dataclass(frozen=True)
 class Release:
     rules: Rules
-    renames: tuple[Rename, ...]
     ids: dict[str, str]
-    """Old id string -> new id string, for every id renamed (any kind)."""
+    """Old id string -> new id string, for every id renamed (any kind): the old ones are gone."""
     new_store: StoreDef
     new_skill: SkillId
     new_card: CardId
@@ -199,20 +226,15 @@ class Release:
 
 @st.composite
 def release_st(draw: DrawFn, r: Rules, sources: tuple[str, ...], tag: str) -> Release:
-    """An allowed change (DESIGN.txt, "Release lock", Safe and mapped renames): rename some stores, cards, skills and
-    sources; change some work_s; raise some caps; add a store, a skill and a card; append a curve level; reorder the
-    stores and the cards. The generated ids (s0, c0, k0, src0) are distinct strings across kinds, so `sub` is exact."""
+    """A content change: rename some stores, cards and skills (the old ids gone) and some sources; change some work_s;
+    raise some caps; add a store, a skill and a card; append a curve level; reorder the stores and the cards. The
+    generated ids (s0, c0, k0, src0) are distinct strings across kinds, so `sub` is exact."""
     ids: dict[str, str] = {}
-    renames: list[Rename] = []
-    groups: list[tuple[IdKind, list[str]]] = [
-        (IdKind.STORE, [d.id for d in r.stores]), (IdKind.CARD, [c.id for c in r.cards]),
-        (IdKind.SKILL, [k.id for k in r.skills]), (IdKind.SOURCE, list(sources)),
-    ]
-    for kind, names in groups:
+    groups: list[list[str]] = [[d.id for d in r.stores], [c.id for c in r.cards], [k.id for k in r.skills], list(sources)]
+    for names in groups:
         for old in names:
             if draw(st.booleans()):
                 ids[old] = f"{old}_{tag}"
-                renames.append(Rename(kind, old, ids[old]))
     r2 = sub(r, ids)
     cards = [replace(c, work_s=draw(st.integers(1, 100_000))) if draw(st.booleans()) else c for c in r2.cards]
     stores = [replace(d, cap=d.cap + Q * draw(st.integers(0, 5))) for d in r2.stores]
@@ -226,7 +248,12 @@ def release_st(draw: DrawFn, r: Rules, sources: tuple[str, ...], tag: str) -> Re
         r2, stores=tuple(draw(st.permutations(stores))), cards=tuple(draw(st.permutations(cards))),
         skills=r2.skills + (SkillDef(new_skill),), curve=PacingCurve(th + (th[-1] + draw(st.integers(1, Q)),)),
     )
-    return Release(out, tuple(renames), ids, new_store, new_skill, new_card.id)
+    return Release(out, ids, new_store, new_skill, new_card.id)
+
+
+def gone_of(rel: Release, sources: tuple[str, ...] = ()) -> frozenset[str]:
+    """The ids the release renamed, its sources left out (a source is a label: never dropped)."""
+    return frozenset(rel.ids) - set(sources)
 
 
 def sources_of(s: Save) -> tuple[str, ...]:
@@ -353,7 +380,7 @@ def rich_saves() -> tuple[Save, ...]:
     return tuple(out)
 
 
-RICH_IDS: dict[str, tuple[IdKind, str]] = {
+RICH_IDS: dict[str, tuple[IdKind | None, str]] = {
     "x": (IdKind.STORE, "x_v2"), "ember": (IdKind.STORE, "ember_v2"), "y": (IdKind.STORE, "y_v2"),
     "z": (IdKind.STORE, "z_v2"),
     "k0": (IdKind.SKILL, "k0_v2"), "fire": (IdKind.STANDING, "fire_v2"), "rack": (IdKind.LANE, "rack_v2"),
@@ -363,12 +390,14 @@ RICH_IDS: dict[str, tuple[IdKind, str]] = {
     "t2": (IdKind.TRIGGER, "t2_v2"), "offer1": (IdKind.OFFER, "offer1_v2"), "ans1": (IdKind.ANSWER, "ans1_v2"),
     "ans2": (IdKind.ANSWER, "ans2_v2"),
     "journal": (IdKind.FEATURE, "journal_v2"), "ledger": (IdKind.FEATURE, "ledger_v2"),
-    "page": (IdKind.ENTRY, "page_v2"), "note1": (IdKind.NOTE, "note1_v2"),
-    "tool": (IdKind.SOURCE, "tool_v2"), "rackmod": (IdKind.SOURCE, "rackmod_v2"),
-    "shelf": (IdKind.SOURCE, "shelf_v2"), "damp": (IdKind.SOURCE, "damp_v2"), "p.out": (IdKind.SOURCE, "p.out_v2"),
+    "page": (None, "page_v2"), "note1": (None, "note1_v2"),
+    "tool": (None, "tool_v2"), "rackmod": (None, "rackmod_v2"), "shelf": (None, "shelf_v2"), "damp": (None, "damp_v2"),
+    "p.out": (None, "p.out_v2"),
 }
 """Every id of the rich world, its kind and a new name (the chip's effect source is its id, so renaming the chip in the
-rules renames that source with it, as validation requires)."""
+rules renames that source with it, as validation requires). None: a kind no manifest declares (a journal page or note,
+a modifier's source), never dropped."""
+DECLARED = {old: kind for old, (kind, _) in RICH_IDS.items() if kind is not None}
 
 SPARE = StoreDef(StoreId("spare"), Q, 0)
 
@@ -382,47 +411,43 @@ def plus_spare(r: Rules) -> Rules:
 
 @few(10)
 @given(w=world_st())
-def test_rebase_under_the_same_rules_is_the_save_and_reads_no_renames(w: tuple[Scenario, Save, Release]):
-    """Invariant 47: rebase(encode(s, r), r, R) == s for any R (a cycle included: renames are not read), with no
-    lines."""
-    sc, s, rel = w
+def test_rebase_under_the_same_rules_is_the_save(w: tuple[Scenario, Save, Release]):
+    """Invariant 47: rebase(encode(s, r), r) == s, with no lines and nothing dropped."""
+    sc, s, _ = w
     text = encode(s, sc.rules)
-    cycle = (Rename(IdKind.STORE, "s0", "zz"), Rename(IdKind.STORE, "zz", "s0"))
-    for renames in ((), rel.renames, rel.renames + cycle):
-        assert rebase(text, sc.rules, renames) == s
-        step = rebase_logged(text, sc.rules, renames)
-        assert step.save == s
-        assert step.lines == ()
+    assert rebase(text, sc.rules) == s
+    step = rebase_logged(text, sc.rules)
+    assert step.save == s and step.lines == () and step.dropped == ()
 
 
 @few(10)
 @given(w=world_st())
 def test_rebasing_twice_is_rebasing_once(w: tuple[Scenario, Save, Release]):
-    """Invariant 48: for s2 = rebase(x, r2, R), rebase(encode(s2, r2), r2, R) == s2."""
+    """Invariant 48: for s2 = rebase(x, r2), rebase(encode(s2, r2), r2) == s2."""
     sc, s, rel = w
-    s2 = rebase(encode(s, sc.rules), rel.rules, rel.renames)
-    assert rebase(encode(s2, rel.rules), rel.rules, rel.renames) == s2
+    s2 = rebase(encode(s, sc.rules), rel.rules)
+    assert rebase(encode(s2, rel.rules), rel.rules) == s2
 
 
 def test_identity_on_a_rich_save():
     """Invariant 47 over every kind of state (chips, fired, lanes, unlocks, raised caps)."""
     r = rich_rules()
     for s in rich_saves():
-        assert rebase(encode(s, r), r, ()) == s
+        assert rebase(encode(s, r), r) == s
 
 
-# ---- 49, 50, 51: an allowed release over generated worlds -------------------------------------------------------
+# ---- 49, 50, 51: a content change over generated worlds ---------------------------------------------------------
 
 @few(15)
 @given(w=world_st())
-def test_an_allowed_release_takes_nothing_earned_back(w: tuple[Scenario, Save, Release]):
-    """Invariant 49 under renames, retuned work_s, raised caps, added ids, an appended level and reordered stores and
-    cards; the result is canonical under the new rules (step 5)."""
+def test_a_change_takes_back_nothing_earned_under_a_kept_id(w: tuple[Scenario, Save, Release]):
+    """Invariant 49 under renames (the old ids dropped), retuned work_s, raised caps, added ids, an appended level and
+    reordered stores and cards; the result is canonical under the new rules (step 4)."""
     sc, s, rel = w
     validate_rules(rel.rules)
-    s2 = rebase(encode(s, sc.rules), rel.rules, rel.renames)
+    s2 = rebase(encode(s, sc.rules), rel.rules)
     assert_canonical(s2, rel.rules)
-    assert_nothing_taken(s, sc.rules, s2, rel.rules, rel.ids)
+    assert_nothing_taken(s, sc.rules, s2, rel.rules, gone_of(rel, sources_of(s)))
 
 
 @few(15)
@@ -431,7 +456,7 @@ def test_new_stores_and_skills_start_at_their_defaults(w: tuple[Scenario, Save, 
     """Invariant 50: a new store holds its initial value, a new skill XP 0, a new card no work (no outcome lands at a
     contract_gen world's rebase instant)."""
     sc, s, rel = w
-    s2 = rebase(encode(s, sc.rules), rel.rules, rel.renames)
+    s2 = rebase(encode(s, sc.rules), rel.rules)
     assert store_value(s2, rel.new_store.id) == rel.new_store.initial
     assert xp_of(s2, rel.new_skill) == 0
     assert work_of(s2, rel.new_card) == 0
@@ -440,116 +465,92 @@ def test_new_stores_and_skills_start_at_their_defaults(w: tuple[Scenario, Save, 
 @few(15)
 @given(w=world_st())
 def test_a_work_s_change_keeps_completions_and_rescales_the_bar(w: tuple[Scenario, Save, Release]):
-    """Invariant 51: work c * W' * BP + rem * W' // W, so CardCount is unchanged; unchanged work_s keeps the work."""
+    """Invariant 51: work c * W' * BP + rem * W' // W, so CardCount is unchanged; unchanged work_s keeps the work; a
+    renamed card is a new one, with no work."""
     sc, s, rel = w
-    s2 = rebase(encode(s, sc.rules), rel.rules, rel.renames)
+    s2 = rebase(encode(s, sc.rules), rel.rules)
     for c in sc.rules.cards:
         new = rel.ids.get(c.id, c.id)
-        expect = rescaled(work_of(s, c.id), c.work_s, work_s_of(rel.rules, new))
+        expect = 0 if c.id in rel.ids else rescaled(work_of(s, c.id), c.work_s, work_s_of(rel.rules, new))
         assert work_of(s2, new) == expect, (c.id, c.work_s, work_s_of(rel.rules, new))
 
 
 @few(10)
 @given(w=world_st())
 def test_a_raised_store_cap_keeps_every_value(w: tuple[Scenario, Save, Release]):
-    """Step 5: each store at its value; only a lowered cap could clamp, and an allowed release never lowers one."""
+    """Step 4: each kept store at its value (only a lowered cap could clamp, and this change raises them); a renamed
+    one is a new store, at its initial value."""
     sc, s, rel = w
-    s2 = rebase(encode(s, sc.rules), rel.rules, rel.renames)
+    s2 = rebase(encode(s, sc.rules), rel.rules)
+    initial: dict[str, int] = {d.id: d.initial for d in rel.rules.stores}
     for x in s.stores:
-        assert store_value(s2, rel.ids.get(x.store, x.store)) == x.segment.start_value
+        new = rel.ids.get(x.store, x.store)
+        assert store_value(s2, new) == (initial[new] if x.store in rel.ids else x.segment.start_value)
 
 
 # ---- 54: composition across skipped releases -------------------------------------------------------------------
 
 @few(10)
 @given(data=st.data())
-def test_a_save_skipping_a_release_rebases_with_every_rename_ever_released(data: st.DataObject):
-    """Invariant 54: rebase(encode(s, r), r3, R1 + R2) succeeds whenever rebasing through r2 does, and 49 holds
-    between s and both results, ids read through the composed renames (a -> b in R1, b -> c in R2 maps a to c).
-    The two results need not be equal (DESIGN.txt 54). The leg to r2 had only R1; the table at r3 holds both."""
+def test_a_save_skipping_a_change_rebases_straight_to_the_latest(data: st.DataObject):
+    """Invariant 54: rebase(encode(s, r), r3) succeeds as rebasing through r2 does, and 49 holds between s and both
+    results for every id all three rules declare. The two results need not be equal (DESIGN.txt 54)."""
     sc, s, rel1 = data.draw(world_st())
-    s_mid = rebase(encode(s, sc.rules), rel1.rules, rel1.renames)
+    s_mid = rebase(encode(s, sc.rules), rel1.rules)
     rel2 = data.draw(release_st(rel1.rules, sources_of(s_mid), "b"))
-    every = rel1.renames + rel2.renames
-    composed = {old: rel2.ids.get(new, new) for old, new in rel1.ids.items()} | {
-        old: new for old, new in rel2.ids.items() if old not in rel1.ids.values()}
-    through = rebase(encode(s_mid, rel1.rules), rel2.rules, every)
-    direct = rebase(encode(s, sc.rules), rel2.rules, every)
+    gone = gone_of(rel1, sources_of(s)) | gone_of(rel2, sources_of(s_mid))
+    through = rebase(encode(s_mid, rel1.rules), rel2.rules)
+    direct = rebase(encode(s, sc.rules), rel2.rules)
     assert_canonical(direct, rel2.rules)
-    assert_nothing_taken(s, sc.rules, direct, rel2.rules, composed)
-    assert_nothing_taken(s, sc.rules, through, rel2.rules, composed)
+    assert_nothing_taken(s, sc.rules, direct, rel2.rules, gone)
+    assert_nothing_taken(s, sc.rules, through, rel2.rules, gone)
 
 
-# ---- 53: unknown ids, chains and cycles ------------------------------------------------------------------------
+# ---- 53: ids the new rules lack are dropped --------------------------------------------------------------------
 
 @few(10)
 @given(data=st.data())
-def test_a_declared_id_the_new_rules_lack_raises_naming_it(data: st.DataObject):
-    """Invariant 53 over generated worlds: a store, card or skill gone from the new rules with no rename raises
-    RebaseError(kind, id), an EngineError; never a save without it."""
+def test_a_declared_id_the_new_rules_lack_is_dropped_and_counted(data: st.DataObject):
+    """Invariant 53 over generated worlds: a store, card or skill gone from the new rules is named nowhere in the
+    result, and rebase_logged counts it under its kind."""
     sc, s, _ = data.draw(world_st())
     r = sc.rules
     kind, old = data.draw(st.sampled_from(
         [(IdKind.STORE, str(d.id)) for d in r.stores] + [(IdKind.CARD, str(c.id)) for c in r.cards]
         + [(IdKind.SKILL, str(k.id)) for k in r.skills]))
     r2 = sub(r, {old: f"{old}_gone"})
-    with pytest.raises(RebaseError) as raised:
-        rebase(encode(s, r), r2, ())
-    assert isinstance(raised.value, EngineError)
-    assert (raised.value.kind, raised.value.id) == (kind, old)
+    step = rebase_logged(encode(s, r), r2)
+    assert step.dropped == ((kind, 1),)
+    assert_nothing_taken(s, r, step.save, r2, frozenset({old}))
 
 
-NOT_DECLARED = (IdKind.SOURCE, IdKind.ENTRY, IdKind.NOTE)
-"""The kinds the manifest does not declare: a source is a label, an entry and a note are known where the rules write
-them, and the release lock (not the rebase) keeps a released one from going."""
-
-
-@pytest.mark.parametrize("old", sorted(k for k, (kind, _) in RICH_IDS.items() if kind not in NOT_DECLARED))
-def test_every_declared_kind_raises_when_its_id_is_gone(old: str):
-    """Invariant 53 for every kind the manifest declares (store, skill, standing, lane, card, chip, trigger, feature),
-    on a save that holds every kind of state."""
+@pytest.mark.parametrize("old", sorted(DECLARED))
+def test_every_declared_kind_is_dropped_when_its_id_is_gone(old: str):
+    """Invariant 53 for every kind the manifest declares (store, skill, standing, lane, card, chip, trigger, feature,
+    offer, answer), on a save that holds every kind of state: named nowhere after, counted, and the save runs on."""
     r = rich_rules()
     s = rich_saves()[-1]
-    with pytest.raises(RebaseError) as raised:
-        rebase(encode(s, r), sub(r, {old: f"{old}_gone"}), ())
-    assert (raised.value.kind, raised.value.id) == (RICH_IDS[old][0], old)
+    r2 = sub(r, {old: f"{old}_gone"})
+    step = rebase_logged(encode(s, r), r2)
+    moved = ((IdKind.ANSWER, 2),) if old == "offer1" else ()   # its answers now stand under offer1_gone: gone too
+    assert step.dropped == ((DECLARED[old], 1), *moved)
+    assert not named((step.save.orders, step.save.queue, step.save.mixes, step.save.pauses, step.save.lanes,
+                      step.save.modifiers, step.save.unlocked)) & {old}
+    advance(step.save, r2, step.save.time + 3600)
 
 
-def test_a_source_is_a_label_and_never_raises():
-    """Step 4: a modifier's source is a label: gone from the rules with no rename, it passes through as it is."""
+def test_a_source_is_a_label_and_is_never_dropped():
+    """Step 3: a modifier's source is a label: gone from the rules, it stays on the save's modifiers as it is."""
     r = rich_rules()
     s = rich_saves()[-1]
-    s2 = rebase(encode(s, r), sub(plus_spare(r), {"p.out": "p.out_gone"}), ())
+    s2 = rebase(encode(s, r), sub(plus_spare(r), {"p.out": "p.out_gone"}))
     assert [m.source for m in s2.modifiers[: len(s.modifiers)]] == [m.source for m in s.modifiers]
 
 
-def test_renames_apply_transitively_and_errors_name_the_saves_id():
-    """Renames: a -> b and b -> c map a to c; a chain ending at an id the rules lack raises with the id as the save
-    had it."""
-    r = rich_rules()
-    s = rich_saves()[-1]
-    chain = (Rename(IdKind.STORE, "x", "x_b"), Rename(IdKind.STORE, "x_b", "x_c"))
-    s2 = rebase(encode(s, r), sub(r, {"x": "x_c"}), chain)
-    assert store_value(s2, "x_c") == store_value(s, "x")
-    with pytest.raises(RebaseError) as raised:
-        rebase(encode(s, r), sub(r, {"x": "x_d"}), chain)
-    assert (raised.value.kind, raised.value.id) == (IdKind.STORE, "x")
-
-
-def test_a_rename_cycle_raises():
-    """Renames: a cycle raises RebaseError of the cycle's kind."""
-    r = rich_rules()
-    s = rich_saves()[-1]
-    cycle = (Rename(IdKind.CARD, "g", "g_v2"), Rename(IdKind.CARD, "g_v2", "g"))
-    with pytest.raises(RebaseError) as raised:
-        rebase(encode(s, r), sub(r, {"g": "g_v2"}), cycle)
-    assert raised.value.kind is IdKind.CARD
-
-
-# ---- step 3: renames applied everywhere, by kind -----------------------------------------------------------------
+# ---- step 3: drops applied everywhere, by kind -------------------------------------------------------------------
 
 def test_the_rich_world_holds_every_kind_of_state():
-    """The fixture check: the saves below do hold what the rename tests claim to cover."""
+    """The fixture check: the saves below do hold what the drop tests claim to cover."""
     saves = rich_saves()
     kinds = {u.kind for s in saves for u in s.unlocked} | {u.kind for s in (joined_save(), left_save()) for u in s.unlocked}
     assert kinds == set(UnlockKind)   # the rich world has no ruled lane: the join fixtures supply JOINED and LEFT
@@ -559,25 +560,30 @@ def test_the_rich_world_holds_every_kind_of_state():
     assert any(m.source == "p.out" for s in saves for m in s.modifiers)
 
 
-def test_renaming_every_id_renames_it_everywhere_in_the_save():
-    """Step 3: every id of every kind renamed (stores, skills, standing, cards, lanes, chips, triggers, features,
-    sources) gives the same save as rebasing under the unrenamed rules, with the ids replaced: in stores, skills,
-    pauses, lanes, card states, mixes (CardShare), orders' conditions and verbs, the queue, the unlock set,
-    modifiers' targets and sources, and chips and fired by id. Mix ids are never renamed."""
+def test_rules_lacking_every_id_drop_it_everywhere_in_the_save():
+    """Step 3: every id of every kind gone (stores, skills, standing, cards, lanes, chips, triggers, features, offers,
+    answers) is named nowhere in the result: not in pauses, lanes, mixes (CardShare), orders' conditions and verbs, the
+    queue, the unlock set or modifiers' targets; stores, skills, chips and fired are the new rules'. Mix ids are the
+    player's and stay. Each kind is counted."""
     r = plus_spare(rich_rules())
     ids = {old: new for old, (_, new) in RICH_IDS.items()}
-    renames = tuple(Rename(kind, old, new) for old, (kind, new) in RICH_IDS.items())
     r2 = sub(r, ids)
     validate_rules(r2)
+    counts: dict[IdKind, int] = {}
+    for kind in DECLARED.values():
+        counts[kind] = counts.get(kind, 0) + 1
     for s in rich_saves()[1:]:
-        text = encode(s, rich_rules())
-        assert rebase(text, r2, renames) == renamed_save(rebase(text, r, ()), ids)
+        step = rebase_logged(encode(s, rich_rules()), r2)
+        assert not named((step.save.orders, step.save.queue, step.save.mixes, step.save.pauses, step.save.lanes,
+                          step.save.modifiers, step.save.unlocked)) & set(DECLARED)
+        assert [m.id for m in step.save.mixes] == [m.id for m in s.mixes]
+        assert dict(step.dropped) == counts
+        assert_canonical(step.save, r2)
 
 
-def test_each_id_is_renamed_only_by_renames_of_its_kind():
-    """Renames: a store and a card sharing the id string `dup`, and a source `dup`; a STORE rename moves the store
-    alone (StoreState, the flow's RateRef store), never the card (CardShare, CardState, RateRef runner) or the
-    source."""
+def test_a_gone_store_leaves_a_card_of_the_same_id_alone():
+    """Step 3 reads each id by its kind: a store and a card sharing the id string `dup`; the store gone takes the
+    modifier aimed at its rate (RateRef's store), never the card (CardShare, CardState)."""
     dup = "dup"
     r = Rules((StoreDef(StoreId(dup), 10 * Q),), (SkillDef(K),), (), PacingCurve((Q,)),
               cards=(CardDef(CardId(dup), 60, makes=(Flow(StoreId(dup), 1000),)),))
@@ -588,12 +594,12 @@ def test_each_id_is_renamed_only_by_renames_of_its_kind():
     s = advance(s, r, 30)
     r2 = replace(r, stores=(StoreDef(StoreId("dup_s"), 10 * Q),),
                  cards=(CardDef(CardId(dup), 60, makes=(Flow(StoreId("dup_s"), 1000),)),))
-    s2 = rebase(encode(s, r), r2, (Rename(IdKind.STORE, dup, "dup_s"),))
-    assert [x.store for x in s2.stores] == ["dup_s"]
-    assert store_value(s2, "dup_s") == store_value(s, dup)
+    step = rebase_logged(encode(s, r), r2)
+    s2 = step.save
+    assert [x.store for x in s2.stores] == ["dup_s"] and step.dropped == ((IdKind.STORE, 1),)
     assert work_of(s2, dup) == work_of(s, dup) > 0
     assert s2.mixes == s.mixes
-    assert s2.modifiers == (mod(RateRef(CardId(dup), FlowKind.MAKE, StoreId("dup_s")), ModifierKind.ADD_BP, 100, dup),)
+    assert s2.modifiers == ()
 
 
 def standing_world() -> tuple[Rules, Save]:
@@ -604,41 +610,26 @@ def standing_world() -> tuple[Rules, Save]:
     return r, s
 
 
-def test_a_runner_is_renamed_by_the_kind_the_manifest_declares():
-    """Renames: a standing action is renamed by STANDING, never by CARD (in RateRef, Running, the ACTION unlock)."""
+def test_a_gone_standing_action_takes_what_names_it():
+    """Step 3: a standing action gone takes the modifier aimed at its rate, the order watching it run and its ACTION
+    unlock; under rules that keep it (the control) each stays."""
     r, s = standing_world()
-    s_card = rebase(encode(s, r), plus_spare(r), (Rename(IdKind.CARD, FIRE, "fire_v2"),))
-    assert s_card.modifiers == s.modifiers and s_card.orders == s.orders and s_card.unlocked == s.unlocked
-    ids = {"fire": "fire_v2"}
-    s_std = rebase(encode(s, r), sub(plus_spare(r), ids), (Rename(IdKind.STANDING, FIRE, "fire_v2"),))
-    assert s_std.modifiers == sub(s.modifiers, ids)
-    assert s_std.orders == sub(s.orders, ids)
-    assert Unlock(UnlockKind.ACTION, "fire_v2") in s_std.unlocked
-    assert Unlock(UnlockKind.ACTION, FIRE) not in s_std.unlocked
+    kept = rebase(encode(s, r), plus_spare(r))
+    assert kept.modifiers == s.modifiers and kept.orders == s.orders and kept.unlocked == s.unlocked
+    step = rebase_logged(encode(s, r), sub(plus_spare(r), {"fire": "fire_v2"}))
+    assert step.save.modifiers == () and step.save.orders == ()
+    assert Unlock(UnlockKind.ACTION, FIRE) not in step.save.unlocked and step.dropped == ((IdKind.STANDING, 1),)
 
 
-def test_an_id_the_manifest_does_not_declare_passes_through_unrenamed():
-    """Step 4 and Renames: an order or queue entry naming a card no rules have keeps it as it is, even when a CARD
-    rename names that id (a runner the manifest does not declare is renamed by neither kind)."""
+def test_an_id_the_manifest_does_not_declare_passes_through():
+    """Step 3: an order or queue entry naming a card no rules have keeps it as it is, while another card goes."""
     r = Rules((StoreDef(X, 10 * Q),), (SkillDef(K),), (), PacingCurve((Q,)), cards=(CardDef(W, 60),))
     ghost = TapCard(CardId("ghost"))
     s = new_save(r)
     s = decide(s, r, 0, SetOrders((Order(AfterTime(10**9), ghost),)))
     s = decide(s, r, 0, SetQueue((QueueEntry(ghost, AfterTime(10**9)),)))
-    renames = (Rename(IdKind.CARD, W, "w_v2"), Rename(IdKind.CARD, "ghost", "ghost_v2"))
-    s2 = rebase(encode(s, r), sub(r, {"w": "w_v2"}), renames)
+    s2 = rebase(encode(s, r), sub(r, {"w": "w_v2"}))
     assert s2.orders == s.orders and s2.queue == s.queue
-
-
-def test_source_renames_rename_sources_and_unknown_ones_change_nothing():
-    """Renames: a modifier's source is renamed by SOURCE; a source no rename names, and a SOURCE rename naming no
-    source, change nothing."""
-    r, _ = standing_world()
-    s = new_save(r, (mod(RateRef(FIRE, FlowKind.COST, X), ModifierKind.MUL_BP, 9000, "damp"),
-                     mod(RateRef(FIRE, FlowKind.COST, X), ModifierKind.ADD_BP, 100, "keep")))
-    renames = (Rename(IdKind.SOURCE, "damp", "damp_v2"), Rename(IdKind.SOURCE, "nowhere", "anywhere"))
-    s2 = rebase(encode(s, r), plus_spare(r), renames)
-    assert [m.source for m in s2.modifiers] == ["damp_v2", "keep"]
 
 
 # ---- 50 and step 6: new content appears, earned content stays ----------------------------------------------------
@@ -674,7 +665,7 @@ def test_new_content_starts_at_defaults_and_what_is_already_true_lands_once_at_t
     s = rich_saves()[i]
     r2 = with_new_content(r)
     validate_rules(r2)
-    step = rebase_logged(encode(s, r), r2, ())
+    step = rebase_logged(encode(s, r), r2)
     s2 = step.save
     assert store_value(s2, SALT) == 3 * Q and store_value(s2, ASH) == Q
     assert xp_of(s2, "k9") == 0
@@ -690,19 +681,21 @@ def test_new_content_starts_at_defaults_and_what_is_already_true_lands_once_at_t
     assert "t8.fired" not in keys and "t0.fired" not in keys and "t1.fired" not in keys
 
 
-def test_a_fired_trigger_stays_fired_through_a_rename_and_a_retune():
-    """Step 6 and REJECTED ("Resetting fired for a renamed or retuned trigger"): t1, fired in the save, renamed and
-    given another condition that holds, is fired in the result, its outcome (one y, a retirement) does not land again
-    and its line is not emitted."""
+def test_a_fired_trigger_stays_fired_through_a_retune_and_a_renamed_one_is_new():
+    """Step 6: t1, fired in the save and given another condition that holds, is fired in the result, its outcome (one
+    y, a retirement) does not land again and its line is not emitted. Renamed, it is a trigger the save never fired:
+    it fires at the rebase instant and its line is emitted (the old id is dropped)."""
     r = rich_rules()
     s = next(x for x in rich_saves() if fired(x, r, T1))
-    t1 = r.triggers[1]
-    moved = replace(t1, id=TriggerId("t1_v2"), when=AtLeast(StoreValue(X), 0, 0))
-    r2 = replace(r, triggers=(moved, r.triggers[0], *r.triggers[2:]))
-    step = rebase_logged(encode(s, r), r2, (Rename(IdKind.TRIGGER, T1, "t1_v2"),))
-    assert fired(step.save, r2, "t1_v2") and fired(step.save, r2, T0) == fired(s, r, T0)
+    retuned = replace(r.triggers[1], when=AtLeast(StoreValue(X), 0, 0))
+    r2 = replace(r, triggers=(retuned, r.triggers[0], *r.triggers[2:]))
+    step = rebase_logged(encode(s, r), r2)
+    assert fired(step.save, r2, T1) and fired(step.save, r2, T0) == fired(s, r, T0)
     assert store_value(step.save, Y) == store_value(s, Y)
     assert "t1.fired" not in [ln.key for ln in step.lines]
+    r3 = replace(r2, triggers=(replace(retuned, id=TriggerId("t1_v2")), *r2.triggers[1:]))
+    renamed = rebase_logged(encode(s, r), r3)
+    assert fired(renamed.save, r3, "t1_v2") and "t1.fired" in [ln.key for ln in renamed.lines]
 
 
 # ---- 51, 52: work_s and lanes, by example ----------------------------------------------------------------------
@@ -723,7 +716,7 @@ def test_a_work_s_change_rescales_a_part_done_bar(w_new: int, expect: int):
     r, s = mixed_world(901)
     assert work_of(s, W) == 9_010_000
     r2 = replace(r, cards=(replace(r.cards[0], work_s=w_new),))
-    s2 = rebase(encode(s, r), plus_spare(r2), ())
+    s2 = rebase(encode(s, r), plus_spare(r2))
     assert work_of(s2, W) == expect
     assert done(s2, r2, W) == 1
 
@@ -742,7 +735,7 @@ def test_a_card_moved_to_another_lane_frees_its_lane_and_keeps_its_work():
     s = advance(s, r, 250)
     assert lane_of(s, HANDS).card == W
     r2 = replace(r, cards=tuple(replace(c, lane=RACK) if c.id == W else c for c in r.cards))
-    step = rebase_logged(encode(s, r), r2, ())
+    step = rebase_logged(encode(s, r), r2)
     assert lane_of(step.save, HANDS).card is None and lane_of(step.save, RACK).card is None
     assert work_of(step.save, W) == work_of(s, W)
     assert step.lines == ()
@@ -752,7 +745,7 @@ def test_a_lane_keeps_its_tap_when_its_card_stays():
     """The control for 52: the same tap under rules that only add a store keeps HANDS busy with w."""
     r = lanes_world()
     s = advance(decide(new_save(r), r, 0, TapCard(W)), r, 250)
-    s2 = rebase(encode(s, r), plus_spare(r), ())
+    s2 = rebase(encode(s, r), plus_spare(r))
     assert lane_of(s2, HANDS).card == W and work_of(s2, W) == work_of(s, W)
 
 
@@ -763,9 +756,9 @@ def test_a_value_above_a_lowered_cap_is_clamped_under_the_saves_stack():
     doubles the cap keeps the value."""
     r = Rules((StoreDef(X, 10 * Q, 8 * Q),), (SkillDef(K),), (), PacingCurve((Q,)))
     lowered = replace(r, stores=(StoreDef(X, 5 * Q, 0),))
-    assert store_value(rebase(encode(new_save(r), r), lowered, ()), X) == 5 * Q
+    assert store_value(rebase(encode(new_save(r), r), lowered), X) == 5 * Q
     doubled = new_save(r, (mod(StoreCap(X), ModifierKind.MUL_BP, 2 * BP, "shelf"),))
-    assert store_value(rebase(encode(doubled, r), lowered, ()), X) == 8 * Q
+    assert store_value(rebase(encode(doubled, r), lowered), X) == 8 * Q
 
 
 def test_xp_is_kept_up_to_the_last_threshold():
@@ -773,8 +766,8 @@ def test_xp_is_kept_up_to_the_last_threshold():
     level keeps all 3)."""
     r, s = mixed_world(3600)
     assert xp_of(s, K) == 3 * Q
-    assert xp_of(rebase(encode(s, r), replace(r, curve=PacingCurve((Q, 2 * Q))), ()), K) == 2 * Q
-    assert xp_of(rebase(encode(s, r), replace(r, curve=PacingCurve((Q, 10 * Q, 20 * Q))), ()), K) == 3 * Q
+    assert xp_of(rebase(encode(s, r), replace(r, curve=PacingCurve((Q, 2 * Q)))), K) == 2 * Q
+    assert xp_of(rebase(encode(s, r), replace(r, curve=PacingCurve((Q, 10 * Q, 20 * Q)))), K) == 3 * Q
 
 
 # ---- 55: logged ------------------------------------------------------------------------------------------------
@@ -786,8 +779,8 @@ def test_rebase_logged_is_rebase_with_lines_at_the_saves_time(i: int):
     s = rich_saves()[i]
     r2 = with_new_content(r)
     text = encode(s, r)
-    step = rebase_logged(text, r2, ())
-    assert step.save == rebase(text, r2, ())
+    step = rebase_logged(text, r2)
+    assert step.save == rebase(text, r2)
     assert step.lines and all(ln.time == s.time for ln in step.lines)
     assert [ln.seq for ln in step.lines] == list(range(len(step.lines)))
 
@@ -795,13 +788,12 @@ def test_rebase_logged_is_rebase_with_lines_at_the_saves_time(i: int):
 # ---- 56 and the envelope: formats, the manifest, the loose decode -----------------------------------------------
 
 def test_the_engine_exports_the_rebase_surface():
-    """Rebase: rebase, rebase_logged, Rename, IdKind, RebaseError, UPGRADES and OLDEST_FORMAT are exported; IdKind has
-    the fourteen kinds."""
-    for name in ("rebase", "rebase_logged", "Rename", "IdKind", "RebaseError", "UPGRADES", "OLDEST_FORMAT"):
+    """Rebase: rebase, rebase_logged, IdKind, UPGRADES and OLDEST_FORMAT are exported; IdKind has the ten kinds a
+    manifest declares."""
+    for name in ("rebase", "rebase_logged", "IdKind", "UPGRADES", "OLDEST_FORMAT"):
         assert name in engine.__all__, name
     assert {k.name for k in IdKind} == {
-        "STORE", "SKILL", "STANDING", "CARD", "LANE", "CHIP", "TRIGGER", "FEATURE", "SOURCE", "OFFER", "ANSWER", "ENTRY", "NOTE", "NODE"}
-    assert issubclass(RebaseError, EngineError)
+        "STORE", "SKILL", "STANDING", "CARD", "LANE", "CHIP", "TRIGGER", "FEATURE", "OFFER", "ANSWER"}
 
 
 def test_upgrades_cover_every_format_a_rebase_reads():
@@ -822,7 +814,7 @@ def test_encode_writes_the_manifest_beside_format_and_digest():
         assert env["format"] == FORMAT
         assert not tagged(env["manifest"])
     assert envs[0]["manifest"] == envs[1]["manifest"]
-    assert set(RICH_IDS) - {k for k, (kind, _) in RICH_IDS.items() if kind in NOT_DECLARED} <= strings(envs[0]["manifest"])
+    assert set(DECLARED) <= strings(envs[0]["manifest"])
 
 
 def reformat(text: str, edit: str) -> str:
@@ -866,14 +858,14 @@ def test_a_text_that_is_not_some_envelopes_canonical_text_raises_state_format_er
     s = rich_saves()[-1]
     text = encode(s, r)
     r2 = plus_spare(r)
-    assert rebase(text, r2, ()) is not None
+    assert rebase(text, r2) is not None
     bad = reformat(text, edit)
     assert bad != text
     for target in (r2,) if edit in LENGTH_EDITS else (r, r2):
         with pytest.raises(StateFormatError):
-            rebase(bad, target, ())
+            rebase(bad, target)
         with pytest.raises(StateFormatError):
-            rebase_logged(bad, target, ())
+            rebase_logged(bad, target)
 
 
 def test_the_digest_is_not_checked_by_the_loose_decode():
@@ -884,7 +876,7 @@ def test_the_digest_is_not_checked_by_the_loose_decode():
     env = envelope(text)
     env["rules"] = "0" * 64
     r2 = plus_spare(r)
-    assert rebase(canonical(env), r2, ()) == rebase(text, r2, ())
+    assert rebase(canonical(env), r2) == rebase(text, r2)
 
 
 def test_decode_still_refuses_a_save_from_other_rules():

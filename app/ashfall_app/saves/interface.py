@@ -25,16 +25,15 @@ KEPT_DAYS = 30
 
 @dataclass(frozen=True)
 class Ruleset:
-    """What a pod plays saves under: the content's rules and renames, the opening's first lines, its build, and the
+    """What a pod plays saves under: the content's rules, the opening's first lines, its build, and the
     release number (`ruleset.build_release`, later builds higher): a save last written under a later release is not
     this pod's to write."""
 
     rules: e.Rules
     digest: str
-    renames: tuple[e.Rename | e.Retired, ...]
     start_lines: tuple[e.LineKey, ...]
-    line_renames: dict[str, str]
-    """Text keys renamed since a stored line was written, to the key they are now."""
+    line_keys: frozenset[str]
+    """Every text key a log line can carry under this content: a stored line carrying another is dropped."""
     build: str
     release: int
     camp_triggers: tuple[int, ...] = ()
@@ -44,8 +43,6 @@ class Ruleset:
     held_manifest: str | None = None
     """These rules' manifest as canonical text, when save_manifests holds it as their digest's (saves/manifest.py
     `registered`): a save written then leaves it out of `state`. None: saves are written whole."""
-    retired_lines: frozenset[str] = frozenset()
-    """Text keys retired since a stored line was written: such a line is dropped."""
     journal: JournalRules | None = None
     """The journal's subjects and habits (journal_rules.py); None composes no days."""
     mix_marks: Callable[[e.Save, e.MixId], tuple[tuple[str, int], ...]] | None = None
