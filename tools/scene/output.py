@@ -140,11 +140,12 @@ def check_depth(entries: list[Entry]) -> None:
 
 
 def check_footing(entries: list[Entry]) -> None:
-    """No figure's footing lies on a wall it stands in front of (depth.on_walls), in any stage: a seat or a spot a wall's
-    courses grow over later fails here, naming the stage. Fails too when no stage had a figure and a wall together."""
+    """No figure's footing lies on a wall it stands in front of (depth.on_walls), and no watch fire lies on any wall
+    (depth.fire_on_walls), in any stage: a seat or a spot a wall's courses grow over later fails here, naming the
+    stage. Fails too when no stage had a figure and a wall together."""
     if gone := depth.missing_walls(entries):
-        raise ValueError(f"depth.WALLS names layers the scene no longer has: {gone}")
-    overlap = _overlap(entries, footing=True)
+        raise ValueError(f"depth.WALLS or depth.WATCH_FIRE names layers the scene no longer has: {gone}")
+    overlap, whole = _overlap(entries, footing=True), _overlap(entries)
     faults: dict[tuple[str, str], str] = {}
     met = 0
     for stage, state in STAGES.items():
@@ -152,10 +153,13 @@ def check_footing(entries: list[Entry]) -> None:
         met += any(e["id"] in depth.WALLS for e in shown) and any(e["id"].startswith("figure_") for e in shown)
         for pair in depth.on_walls(shown, overlap):
             faults.setdefault(pair, stage)
+        for pair in depth.fire_on_walls(shown, whole):
+            faults.setdefault(pair, stage)
     if not met:
         raise ValueError("no stage shows a figure and a wall together: the footing check looked at nothing")
     if faults:
-        raise ValueError("a figure's feet lie on a wall: " + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
+        raise ValueError("a figure's feet or the watch fire lie on a wall: "
+                         + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
 
 
 def _overlap(entries: list[Entry], footing: bool = False) -> Callable[[str, str], bool]:

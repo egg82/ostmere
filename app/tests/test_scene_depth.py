@@ -140,6 +140,15 @@ def test_feet_clear_of_a_wall_or_hidden_behind_it_are_not_on_it():
     assert depth.on_walls(layers, lambda a, b: False) == []
 
 
+def test_the_watch_fire_meeting_a_wall_is_reported_and_one_clear_of_it_is_not():
+    """The planted failure: the fire's stones on the fireback or a hearth course; controls: clear of both, and another
+    layer on a wall is not the fire."""
+    layers = [entry("clay_hearth_2"), standing("fireback", 190), standing("watch_ring", 205), standing("birch_log", 210)]
+    on = footing_on(("watch_ring", "fireback"), ("watch_ring", "clay_hearth_2"), ("birch_log", "fireback"))
+    assert depth.fire_on_walls(layers, on) == [("watch_ring", "clay_hearth_2"), ("watch_ring", "fireback")]
+    assert depth.fire_on_walls(layers, lambda a, b: False) == []
+
+
 def test_a_wall_name_gone_from_the_whole_scene_is_reported():
     """The control: WALLS is checked against every layer of the scene, not each stage's, and a gone name is named."""
     layers = [entry(name) for name in depth.WALLS - {"fireback"}]
