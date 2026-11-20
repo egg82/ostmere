@@ -140,20 +140,28 @@ def test_feet_clear_of_a_wall_or_hidden_behind_it_are_not_on_it():
     assert depth.on_walls(layers, lambda a, b: False) == []
 
 
-def test_the_watch_fire_meeting_a_wall_is_reported_and_one_clear_of_it_is_not():
-    """The planted failure: the fire's stones on the fireback or a hearth course; controls: clear of both, and another
-    layer on a wall is not the fire."""
-    layers = [entry("clay_hearth_2"), standing("fireback", 190), standing("watch_ring", 205), standing("birch_log", 210)]
-    on = footing_on(("watch_ring", "fireback"), ("watch_ring", "clay_hearth_2"), ("birch_log", "fireback"))
-    assert depth.fire_on_walls(layers, on) == [("watch_ring", "clay_hearth_2"), ("watch_ring", "fireback")]
+def open_fire(layer_id: str, base: int) -> Entry:
+    made = standing(layer_id, base)
+    made["open_fire"] = True
+    return made
+
+
+def test_an_open_fire_meeting_a_wall_is_reported_and_one_clear_of_it_is_not():
+    """The planted failure: a layer authored `open_fire` on the fireback or a hearth course, whatever its id; controls:
+    clear of both, and another layer on a wall is not a fire."""
+    layers = [entry("clay_hearth_2"), standing("fireback", 190), open_fire("any_fire", 205), standing("birch_log", 210)]
+    on = footing_on(("any_fire", "fireback"), ("any_fire", "clay_hearth_2"), ("birch_log", "fireback"))
+    assert depth.fire_on_walls(layers, on) == [("any_fire", "clay_hearth_2"), ("any_fire", "fireback")]
     assert depth.fire_on_walls(layers, lambda a, b: False) == []
+    assert depth.fire_on_walls([standing("watch_ring", 205), *layers[:2]], lambda a, b: True) == []
 
 
 def test_a_wall_name_gone_from_the_whole_scene_is_reported():
-    """The control: the names the footing check relies on (the walls and the watch fire's layers) are checked against
-    every layer of the scene, not each stage's, and a gone name is named."""
-    names = depth.WALLS | depth.WATCH_FIRE
-    assert depth.missing_walls([entry(name) for name in names - {"fireback"}]) == ["fireback"]
-    assert depth.missing_walls([entry(name) for name in names - {"watch_ring"}]) == ["watch_ring"]
-    assert depth.missing_walls([entry(name) for name in names]) == []
+    """The control: the walls the footing check relies on are checked against every layer of the scene, not each
+    stage's, and a gone name is named; so is a scene where no layer is an `open_fire` (the fire check would see nothing)."""
+    fire = open_fire("any_fire", 205)
+    walls = [entry(name) for name in depth.WALLS]
+    assert depth.missing_walls([e for e in walls if e["id"] != "fireback"] + [fire]) == ["fireback"]
+    assert depth.missing_walls(walls) == ["open_fire"]
+    assert depth.missing_walls([*walls, fire]) == []
 

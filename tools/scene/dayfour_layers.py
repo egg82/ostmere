@@ -32,7 +32,7 @@ AWAY_JOBS = HUNT
 away pose shows."""
 COMFORTS = {"woodshed": "running:woodshed", "make_bay2": "running:make_bay2", "make_spear": "running:make_spear",
             "pelt_bedding": "running:pelt_bedding", "hearth_stones": "running:hearth_stones"}
-WORK = {"woodshed": (12.4 * T, 6.9 * T), "make_bay2": poses.BAY2_WORK, "make_spear": (2.4 * T, 8.2 * T),
+WORK = {"woodshed": (made.SHED[0] + 1.6 * T, made.SHED[1] + 2.0 * T), "make_bay2": poses.BAY2_WORK, "make_spear": (made.SPEAR_FOOT[0] + 4.8, made.SPEAR_FOOT[1] + 16.4),
         "pelt_bedding": (2.7 * T, 8.75 * T), "hearth_stones": (FIRE[0] + 1.4 * T, FIRE[1] + 1.6 * T)}
 """Where the player stands to work each, facing it."""
 HANDS_AWAY = [HAND, *COMFORTS.values()]

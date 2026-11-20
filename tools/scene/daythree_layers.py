@@ -36,7 +36,7 @@ NIGHT_3, MORNING_4, NIGHT_4 = "feature:night_3", "feature:morning_4", "feature:n
 COMFORTS = {"larder_floor": "running:larder_floor", "rack_roof": "running:rack_roof",
             "raised_bed": "running:raised_bed", "clay_hearth": "running:clay_hearth",
             "watch_fire": "running:watch_fire", "make_bay": "running:make_bay"}
-WORK = {"larder_floor": (5.0 * T, 6.55 * T), "rack_roof": (6.0 * T, 8.85 * T), "raised_bed": (2.0 * T, 6.0 * T),
+WORK = {"larder_floor": (5.0 * T, 6.55 * T), "rack_roof": (6.0 * T, 8.85 * T), "raised_bed": (made.BED[0] + 1.75 * T, made.BED[1] + 0.8 * T),
         "clay_hearth": (FIRE[0] + 1.0 * T, FIRE[1] + 1.5 * T), "watch_fire": (WATCH[0] + 0.9 * T, WATCH[1] + 0.5 * T),
         "make_bay": (2.7 * T, 8.75 * T)}
 """Where the player stands to work each comfort, facing it."""
@@ -102,11 +102,11 @@ def made_layers() -> list[Layer]:
         Layer(id="bay", img=bay, when=BAY_BUILT),
         Layer(id="bay_ghost", img=dayone.ghost(bay), when="running:make_bay|running:n2_build_bay", until=BAY_BUILT),
         *_staged("rack_roof", [made.rack_roof(n) for n in (1, 2)], [1, 2]),
-        Layer(id="watch_ring", img=ring, when=WATCH_RING),
+        Layer(id="watch_ring", img=ring, when=WATCH_RING, open_fire=True),
         Layer(id="watch_ring_ghost", img=dayone.ghost(ring), when="running:watch_fire|running:n1_build_watch",
-              until=WATCH_RING),
-        Layer(id="watch_laid", img=fire.watch_laid(), when=WATCH_RING, until=WATCH_LIT),
-        Layer(id="watch_lit", img=fire.watch_lit(), when=WATCH_LIT, ungraded=True),
+              until=WATCH_RING, open_fire=True),
+        Layer(id="watch_laid", img=fire.watch_laid(), when=WATCH_RING, until=WATCH_LIT, open_fire=True),
+        Layer(id="watch_lit", img=fire.watch_lit(), when=WATCH_LIT, ungraded=True, open_fire=True),
     ]
 
 

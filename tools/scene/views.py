@@ -19,7 +19,10 @@ class View:
 
 
 VIEWS = (View("camp", (15 * T, 9 * T), None),
-         View("room_for_two", (18 * T, 11 * T), "project:make_room"))
+         View("room_for_two", (18 * T, 11 * T), "project:make_room"),
+         View("rack_roof", (20 * T, 12 * T), "pushes:rack_roof@1"),
+         View("make_bay2", (22 * T, 13 * T), "project:make_bay2"),
+         View("drift", (24 * T, 14 * T), "feature:drift"))
 EXTENT = (max(v.size[0] for v in VIEWS), max(v.size[1] for v in VIEWS))
 """The art's own size: the canvas every layer is drawn on."""
 

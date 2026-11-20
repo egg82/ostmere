@@ -55,8 +55,8 @@ def birch_layers(log: Image.Image, stump: Image.Image, birch: str) -> list[Layer
 def figure_layers(away: str) -> list[Layer]:
     """`away` is day one's hands-out-working condition: the digging pose steps aside for it, as the builds do."""
     return [
-        Layer(id="pyre", img=made.pyre(), when=MORNING, until=BURNING),
-        Layer(id="pyre_flames", img=made.pyre_flames(), when=MORNING, until=BURNING, ungraded=True),
+        Layer(id="pyre", img=made.pyre(), when=MORNING, until=BURNING, open_fire=True),
+        Layer(id="pyre_flames", img=made.pyre_flames(), when=MORNING, until=BURNING, ungraded=True, open_fire=True),
         Layer(id="figure_digging_cellar", img=poses.digging(), when=DIG, until=away),
         Layer(id="wolf_sitting", img=world.sitter(), when=SITTER, until=DAWN),
     ]
