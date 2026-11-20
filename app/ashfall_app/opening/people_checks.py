@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 def check_people(o: "Opening") -> None:
     for x in o.lanes:
-        if x.ruled and x.told is None:
+        if x.ruled and not x.pooled and x.told is None:
             fail(f"lane {x.id}", "is a person with no `told`: say whether their coming and going is a line or a mention")
         if not x.ruled and x.told is not None:
             fail(f"lane {x.id}", "is told but is not a ruled lane: only a person comes and goes")

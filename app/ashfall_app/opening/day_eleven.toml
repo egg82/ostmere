@@ -243,9 +243,9 @@ unlocks = [
   { unlock_kind = "action", id = "z1_clock" },
 ]
 joins = [
-  { lane = "n5", mix = "town:camp", card = "n5_forage" },
-  { lane = "n6", mix = "town:camp", card = "n6_watch" },
-  { lane = "n7", mix = "town:camp", card = "n7_pick" },
+  { lane = "n5", mix = "town:camp", card = "n5_forage", own_split = true },
+  { lane = "n6", mix = "town:camp", card = "n6_watch", own_split = true },
+  { lane = "n7", mix = "town:camp", card = "n7_pick", own_split = true },
 ]
 
 # Their cutting takes the place of their gathering by hand from the join, as the first two's does (choice_checks.py).

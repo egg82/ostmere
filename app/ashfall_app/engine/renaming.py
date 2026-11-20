@@ -7,7 +7,7 @@ left as it is (an order may name a card no rules have).
 from collections.abc import Iterable
 from dataclasses import dataclass, replace
 
-from .cards import Amount, CapRaise, CardState, Join, LaneState, Leave, Outcome, RuleInstall
+from .cards import Amount, CapRaise, CardState, Join, LaneState, Leave, Mark, Outcome, RuleInstall
 from .errors import RebaseError
 from .answers import AnswerOffer
 from .ids import ActionId, AnswerId, CardId, IdKind, LaneId, NodeId, OfferId, Runner, SkillId, SourceId, StoreId, TriggerId
@@ -118,8 +118,10 @@ def renamed_outcome(o: Outcome, m: Renamer) -> Outcome:
         unlocks=tuple(m.unlock(u) for u in o.unlocks), modifiers=tuple(modifier(x, m) for x in o.modifiers),
         raises=tuple(CapRaise(m.card(r.card), r.by) for r in o.raises), starts=tuple(m.card(c) for c in o.starts),
         orders=tuple(RuleInstall(m.card(i.card), i.first) for i in o.orders), queues=tuple(m.card(c) for c in o.queues),
-        joins=tuple(Join(LaneId(m.id(IdKind.LANE, j.lane)), j.mix, None if j.card is None else m.card(j.card))
-                    for j in o.joins),
+        joins=tuple(Join(LaneId(m.id(IdKind.LANE, j.lane)), j.mix, None if j.card is None else m.card(j.card),
+                         j.own_split) for j in o.joins),
+        marks=tuple(Mark(LaneId(m.id(IdKind.LANE, k.lane)), k.own_split, None if k.card is None else m.card(k.card))
+                    for k in o.marks),
         retire_orders=tuple(m.card(c) for c in o.retire_orders),
         leaves=tuple(Leave(LaneId(m.id(IdKind.LANE, x.lane)), tuple(ActionId(m.id(IdKind.STANDING, a)) for a in x.stops))
                      for x in o.leaves))

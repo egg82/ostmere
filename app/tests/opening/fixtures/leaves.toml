@@ -44,7 +44,7 @@ makes = [{ store = "t_heap", items_per_hour = 30 }]
 [[triggers]]
 id = "t_arrive"
 when = { test = "after_time", value = 100 }
-outcome = { line_keys = ["t_l_arrive"], unlocks = [{ unlock_kind = "card", id = "t_p1_work" }, { unlock_kind = "card", id = "t_p2_work" }, { unlock_kind = "action", id = "t_tend" }], joins = [{ lane = "t_p1", mix = "town:main", card = "t_p1_work" }, { lane = "t_p2", mix = "town:main", card = "t_p2_work" }] }
+outcome = { line_keys = ["t_l_arrive"], unlocks = [{ unlock_kind = "card", id = "t_p1_work" }, { unlock_kind = "card", id = "t_p2_work" }, { unlock_kind = "action", id = "t_tend" }], joins = [{ lane = "t_p1", mix = "town:main", card = "t_p1_work", own_split = true }, { lane = "t_p2", mix = "town:main", card = "t_p2_work", own_split = true }] }
 
 [[triggers]]
 id = "t_depart"

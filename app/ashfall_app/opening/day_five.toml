@@ -395,7 +395,7 @@ unlocks = [
   { unlock_kind = "action", id = "n4_eating" },
   { unlock_kind = "action", id = "pair_3h" },
 ]
-joins = [{ lane = "n3", mix = "town:camp", card = "n3_forage" }, { lane = "n4", mix = "town:camp", card = "n4_watch" }]
+joins = [{ lane = "n3", mix = "town:camp", card = "n3_forage", own_split = true }, { lane = "n4", mix = "town:camp", card = "n4_watch", own_split = true }]
 
 [[subjects]]
 id = "s_n3_joined"

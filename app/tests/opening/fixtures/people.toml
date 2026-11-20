@@ -57,12 +57,12 @@ makes = [{ store = "t_heap", items_per_hour = 30 }]
 [[triggers]]
 id = "t_q1_comes"
 when = { test = "after_time", value = 100 }
-outcome = { line_keys = ["t_l_comes"], unlocks = [{ unlock_kind = "card", id = "t_q1_work" }], joins = [{ lane = "t_q1", mix = "town:main", card = "t_q1_work" }] }
+outcome = { line_keys = ["t_l_comes"], unlocks = [{ unlock_kind = "card", id = "t_q1_work" }], joins = [{ lane = "t_q1", mix = "town:main", card = "t_q1_work", own_split = true }] }
 
 [[triggers]]
 id = "t_pair_comes"
 when = { test = "after_time", value = 200 }
-outcome = { unlocks = [{ unlock_kind = "card", id = "t_q2_work" }, { unlock_kind = "card", id = "t_q3_work" }], joins = [{ lane = "t_q2", mix = "town:main", card = "t_q2_work" }, { lane = "t_q3", mix = "town:main", card = "t_q3_work" }] }
+outcome = { unlocks = [{ unlock_kind = "card", id = "t_q2_work" }, { unlock_kind = "card", id = "t_q3_work" }], joins = [{ lane = "t_q2", mix = "town:main", card = "t_q2_work", own_split = true }, { lane = "t_q3", mix = "town:main", card = "t_q3_work", own_split = true }] }
 
 [[triggers]]
 id = "t_q3_goes"

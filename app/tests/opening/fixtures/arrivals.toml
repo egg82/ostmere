@@ -56,12 +56,12 @@ outcome = { stores = [{ store = "t_arrivals", items = 1 }] }
 [[triggers]]
 id = "t_second_arrives"
 when = { test = "after_time", value = 300 }
-outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "t_p2_work" }] }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "t_p2_work", own_split = true }] }
 
 [[triggers]]
 id = "t_third_arrives"
 when = { test = "after_time", value = 500 }
-outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p3_work" }], joins = [{ lane = "t_p3", mix = "town:main", card = "t_p3_work" }] }
+outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p3_work" }], joins = [{ lane = "t_p3", mix = "town:main", card = "t_p3_work", own_split = true }] }
 
 [[triggers]]
 id = "t_gate_on_two"

@@ -3,9 +3,9 @@ vocabulary check conditions share with the player's verbs. validate_rules (rules
 """
 from typing import TYPE_CHECKING
 
-from .cards import Amount, CardDef, Join, Outcome
+from .cards import Amount, CardDef, Outcome
 from .errors import InvalidRulesError
-from .ids import HANDS, TOWN_PREFIX, CardId, TriggerId
+from .ids import HANDS, TriggerId
 from .modifiers import (
     LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef, lowers_cap,
     lowers_threat,
@@ -15,6 +15,7 @@ from .orders import (
 )
 from .cardsides import card_costs, card_makes
 from .drains import check_drains
+from .groupchecks import check_group_outcome, check_groups, join_problem
 from .fightcheck import check_fight, check_no_odds_source, check_tallies, check_while_running, standing_stores
 from .planchecks import check_leaves, check_one_leave_each, check_retire
 from .unlocks import PRESENT_ONLY, Unlock, UnlockKind
@@ -63,6 +64,7 @@ def check_parts(rules: "Rules") -> None:
     """Raise InvalidRulesError for any constraint on lanes, cards, chips, triggers and the opening (DESIGN.txt,
     "Validation of cards")."""
     _check_ids(rules)
+    check_groups(rules)
     for card in rules.cards:
         _check_card(rules, card)
     for a in rules.standing:
@@ -219,7 +221,7 @@ def _check_outcome(
     _require(installs or not o.orders, f"{where}: only a trigger's or an answer's outcome installs a rule")
     _require(all(lanes.get(i.card) in ruled for i in o.orders), f"{where}: an installed rule taps a card on a ruled lane")
     _require(installs or not o.joins, f"{where}: only a trigger's or an answer's outcome joins a person")
-    _require(all(_join_problem(rules, j, capped) is None for j in o.joins), f"{where}: a join is not valid")
+    _require(all(join_problem(rules, j) is None for j in o.joins), f"{where}: a join is not valid")
     _require(queues or not o.queues, f"{where}: only an answer's outcome queues a one-off")
     _require(all(lanes.get(q) == HANDS and q in capped for q in o.queues),
              f"{where}: a queued one-off is a hands card with a cap")
@@ -232,17 +234,7 @@ def _check_outcome(
     _require(all(q in {c.id for c in rules.cards} for q in o.starts), f"{where}: outcome starts an unknown card")
     check_retire(rules, o, where, trigger is not None)
     check_leaves(rules, o, where, installs)
-
-
-def _join_problem(rules: "Rules", j: Join, capped: set[CardId]) -> str | None:
-    """Why `j` cannot be a join, or None: its lane is a declared ruled lane, its mix id a town one, its card (if any)
-    an uncapped card on that lane (DESIGN.txt, "THE TOWN'S MIX", invariant 96)."""
-    if j.lane not in {d.id for d in rules.lanes if d.ruled}:
-        return "lane is not a declared ruled lane"
-    if not j.mix.startswith(TOWN_PREFIX):
-        return f"mix does not begin {TOWN_PREFIX!r}"
-    on_lane = {c.id for c in rules.cards if c.lane == j.lane}
-    return None if j.card is None or (j.card in on_lane and j.card not in capped) else "card is not an uncapped card on the lane"
+    check_group_outcome(rules, o, where, installs)
 
 
 def _check_modifiers(

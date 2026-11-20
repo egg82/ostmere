@@ -46,6 +46,8 @@ class Lock(BaseModel):
     """The rules digest of that release's content."""
     lane_ruled: dict[str, bool] = {}
     """Each declared lane's LaneDef.ruled."""
+    lane_pooled: list[str] = []
+    """Every released pooled lane, sorted."""
     card_lanes: dict[str, str] = {}
     """Each card's lane ("hands" included)."""
     card_xp: dict[str, bool] = {}
@@ -81,6 +83,7 @@ def snapshot(o: Opening, rules: Rules, renames: list[RenameEntry]) -> Lock:
         release=1,
         digest=rules_digest(rules),
         lane_ruled={d.id: d.ruled for d in rules.lanes},
+        lane_pooled=sorted(d.id for d in rules.lanes if d.pooled),
         card_lanes={c.id: c.lane for c in rules.cards},
         card_xp={c.id: c.skill is not None or c.xp_per_hour > 0 for c in rules.cards},
         answer_outcomes={str(a.id): _json_value(forwarded(a.outcome, fwd)) for x in rules.offers for a in x.answers},
@@ -104,6 +107,7 @@ def merged(lock: Lock, now: Lock) -> Lock:
         release=lock.release + (now.digest != lock.digest),
         digest=now.digest,
         lane_ruled={**lock.lane_ruled, **now.lane_ruled},
+        lane_pooled=sorted(set(lock.lane_pooled) | set(now.lane_pooled)),
         card_lanes={**lock.card_lanes, **now.card_lanes},
         card_xp={**lock.card_xp, **now.card_xp},
         answer_outcomes={**lock.answer_outcomes, **now.answer_outcomes},

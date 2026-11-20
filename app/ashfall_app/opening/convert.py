@@ -4,12 +4,13 @@ from typing import TYPE_CHECKING
 
 from ..engine import (
     BP, HANDS, ActionId, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, SideStrength, ThreatDef, ThreatId, ThreatStrength, AfterTime, AnswerDef, AnswerId, KindId, OfferDef, OfferId, RoleId, Amount, AtLeast, AtMost, CapRaise, CardCount, CardDef, CardId, ChipDef, ChipId,
-    Condition, Join, Leave, MixId, FeatureId, Flow, FlowKind, LaneDef, LaneId, LaneRules, LaneSpeed, LineKey, Modifier, ModifierKind, Outcome, PacingCurve,
+    Condition, FeatureId, Flow, FlowKind, LaneDef, LaneId, LaneRules, LaneSpeed, LineKey, Modifier, ModifierKind, Outcome, PacingCurve,
     RateRef, RuleInstall, Rules, Runner, Running, SkillDef, SkillId, SkillLevel, SourceId, StandingDef, StoreCap, StoreDef,
     StoreId, StoreValue, Subject, Target, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind, WorkRef, ceil_div,
     per_hour, units,
 )
 from ..engine.units import QUANTITY_SCALE
+from . import move_convert
 from .prestige import node_def, prestige_def
 
 if TYPE_CHECKING:
@@ -32,7 +33,7 @@ def build_rules(o: "Opening") -> Rules:
         sides=tuple(SideDef(SideId(s.id), s.base) for s in o.sides),
         threats=tuple(ThreatDef(ThreatId(t.id), t.base) for t in o.threats),
         curve=PacingCurve(tuple(units(n) for n in o.curve_items)),
-        lanes=tuple(LaneDef(LaneId(x.id), x.ruled) for x in o.lanes),
+        lanes=tuple(LaneDef(LaneId(x.id), x.ruled, x.pooled, None if x.group is None else LaneId(x.group)) for x in o.lanes),
         cards=tuple(_with_camp(_with_lifts(_card(c, cards), o.camp), o.camp, ruled) for c in o.cards),
         chips=tuple(_chip(c, cards) for c in o.chips),
         triggers=tuple(_trigger(t, cards) for t in o.triggers) + _camp_triggers(o.camp, cards)
@@ -225,9 +226,8 @@ def _outcome(o: "OutcomeEntry", cards: set[str]) -> Outcome:
         raises=tuple(CapRaise(CardId(r.card), r.by) for r in o.raises), starts=tuple(CardId(s) for s in o.starts),
         lines=tuple(LineKey(k) for k in o.line_keys),
         orders=tuple(RuleInstall(CardId(i.tap_card), i.first) for i in o.orders), queues=tuple(CardId(q) for q in o.queues),
-        joins=tuple(Join(LaneId(j.lane), MixId(j.mix), None if j.card is None else CardId(j.card)) for j in o.joins),
-        retire_orders=tuple(CardId(c) for c in o.retire_orders),
-        leaves=tuple(Leave(LaneId(x.lane), tuple(ActionId(a) for a in x.stops)) for x in o.leaves))
+        joins=move_convert.joins(o.joins), marks=move_convert.marks(o.marks),
+        retire_orders=tuple(CardId(c) for c in o.retire_orders), leaves=move_convert.leaves(o.leaves))
 
 
 def _runner(id_: str, cards: set[str]) -> Runner:

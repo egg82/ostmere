@@ -91,6 +91,20 @@ class Join:
     lane: LaneId
     mix: MixId
     card: CardId | None = None
+    own_split: bool = True
+    """The person's mark as they join: False puts them in their lane's group, `card` (on that group) being the share
+    the group's split starts with when the town mix holds none (DESIGN.txt, "GROUPS (pooled lanes)"). The codec leaves
+    it out while True."""
+
+
+@dataclass(frozen=True)
+class Mark:
+    """Set or clear a joined person's mark (Join.own_split) from now on; `card` is as Join's, an uncapped card on the
+    person's own lane (DESIGN.txt, "GROUPS (pooled lanes)")."""
+
+    lane: LaneId
+    own_split: bool
+    card: CardId | None = None
 
 
 @dataclass(frozen=True)
@@ -130,6 +144,9 @@ class Outcome:
     joins: tuple[Join, ...] = ()
     retire_orders: tuple[CardId, ...] = ()
     leaves: tuple[Leave, ...] = ()
+    marks: tuple[Mark, ...] = ()
+    """People's marks set or cleared, after joins and before queues (only in a trigger's or an answer's outcome:
+    validation; the codec leaves the field out while empty)."""
 
 
 @dataclass(frozen=True)
@@ -213,6 +230,9 @@ class LaneState:
     lane: LaneId
     card: CardId | None = None
     speed: tuple[Modifier, ...] | None = None
+    own_split: bool = True
+    """A person's mark: True runs their own split, False leaves it to their group (DESIGN.txt, "GROUPS (pooled
+    lanes)"). Written only by a join and a Mark; the codec leaves it out while True."""
 
 
 @dataclass(frozen=True)

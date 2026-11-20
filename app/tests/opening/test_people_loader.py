@@ -32,7 +32,7 @@ PLANTS = (
      (('t_l_comes = "story"', 't_l_comes = "find"'),)),
     ("a line person's leaving with no line", "trigger t_q3_goes: left t_q3, a line person, and writes no story line",
      (('label_key = "t_l_q3"\nruled = true\ntold = "mention"', 'label_key = "t_l_q3"\nruled = true\ntold = "line"'),
-      ('card = "t_q3_work" }] }', 'card = "t_q3_work", counted = true }] }'))),
+      ('card = "t_q3_work", own_split = true }] }', 'card = "t_q3_work", counted = true, own_split = true }] }'))),
     ("a mention with no bands", "lane t_q2: is a mention, and the content has no [people] bands to word it",
      (('[[people.came]]\nat_least = 1\nkeys = ["t_came_one"]\n\n[[people.came]]\nat_least = 2\n'
        'keys = ["t_came_some_a", "t_came_some_b"]\n\n[[people.went]]\nat_least = 1\nkeys = ["t_went_one"]\n', ''),)),
@@ -83,7 +83,7 @@ def test_the_served_lines_say_which_tell_a_person_and_which_are_mentions():
 
 def test_a_counted_join_needs_no_line_of_its_own(tmp_path: Path):
     """The person came earlier and was told then: the join only moves them into the town's mix."""
-    load_with(edited(tmp_path, (COMES, NO_LINE), ('card = "t_q1_work" }] }', 'card = "t_q1_work", counted = true }] }'),
+    load_with(edited(tmp_path, (COMES, NO_LINE), ('card = "t_q1_work", own_split = true }] }', 'card = "t_q1_work", counted = true, own_split = true }] }'),
                      (Q1_SUBJECT, "")))
 
 

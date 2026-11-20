@@ -24,6 +24,7 @@ from .phase_pays import check_phase_pays
 from .prestige import check_phase_spans
 from .order_checks import check_order_cards
 from .refs import check_refs, fail, ids_by_kind, need, outcomes
+from .groups import check_groups
 from .leave_checks import check_leaves
 from .line_only_checks import check_line_only
 from .people_checks import check_people
@@ -76,6 +77,7 @@ def check_structure(o: "Opening") -> None:
     check_replacements(o)
     check_choices(o)
     check_leaves(o)
+    check_groups(o)
     check_people(o)
     check_aims(o)
     check_journal(o)
@@ -175,8 +177,8 @@ def _check_installs(cards: dict[str, "CardEntry"], ruled: set[str], where: str, 
 
 def _check_joins(cards: dict[str, "CardEntry"], ruled: set[str], where: str, out: "OutcomeEntry", installs: bool
                  ) -> None:
-    """A join names a ruled lane, a town mix id and, when it names a card, an uncapped card on that lane; only a
-    trigger's or an answer's outcome joins (engine DESIGN.txt, "THE TOWN'S MIX", "Join")."""
+    """A join names a ruled lane, a town mix id and, when it names a card, an uncapped card on that lane (on its group
+    when the join is unmarked: groups.py); only a trigger's or an answer's outcome joins (engine DESIGN.txt, "THE TOWN'S MIX", "Join")."""
     if out.joins and not installs:
         fail(where, "only a trigger's or an answer's outcome joins a person")
     for j in out.joins:
@@ -185,7 +187,7 @@ def _check_joins(cards: dict[str, "CardEntry"], ruled: set[str], where: str, out
             fail(where, f"a join's mix {j.mix} does not begin {TOWN_PREFIX!r}")
         if j.card is not None:
             need(where, "card", j.card, list(cards))
-            if cards[j.card].lane != j.lane or cards[j.card].cap is not None:
+            if j.own_split and (cards[j.card].lane != j.lane or cards[j.card].cap is not None):
                 fail(where, f"a join's card {j.card} is not an uncapped card on lane {j.lane}")
 
 

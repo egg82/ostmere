@@ -1,0 +1,83 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_groups_loader.py): a pooled lane t_crew with one
+# card, a person t_m1 in that group who joins without their own split and later is marked and unmarked, and a person
+# t_m2 with no group. Not story: the ids and words are the tests' own. The planted variants are edits of this file.
+version = 1
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[lanes]]
+id = "t_crew"
+label_key = "t_l_crew"
+ruled = true
+pooled = true
+
+[[lanes]]
+id = "t_m1"
+label_key = "t_l_m1"
+ruled = true
+told = "line"
+group = "t_crew"
+
+[[lanes]]
+id = "t_m2"
+label_key = "t_l_m2"
+ruled = true
+told = "line"
+
+[[cards]]
+id = "t_crew_work"
+lane = "t_crew"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_m1_work"
+lane = "t_m1"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[cards]]
+id = "t_m2_work"
+lane = "t_m2"
+presentation = "action"
+label_key = "t_c_work"
+work_s = 60
+makes = [{ store = "t_heap", items_per_hour = 30 }]
+
+[[triggers]]
+id = "t_m1_comes"
+when = { test = "after_time", value = 100 }
+outcome = { line_keys = ["t_l_comes"], unlocks = [{ unlock_kind = "card", id = "t_m1_work" }], joins = [{ lane = "t_m1", mix = "town:main", card = "t_crew_work", counted = true, own_split = false }] }
+
+[[triggers]]
+id = "t_m2_comes"
+when = { test = "after_time", value = 200 }
+outcome = { line_keys = ["t_l_comes"], unlocks = [{ unlock_kind = "card", id = "t_m2_work" }], joins = [{ lane = "t_m2", mix = "town:main", card = "t_m2_work", counted = true, own_split = true }] }
+
+[[triggers]]
+id = "t_m1_apart"
+when = { test = "after_time", value = 300 }
+outcome = { marks = [{ lane = "t_m1", own_split = true, card = "t_m1_work" }] }
+
+[[triggers]]
+id = "t_m1_back"
+when = { test = "after_time", value = 400 }
+outcome = { marks = [{ lane = "t_m1", own_split = false }] }
+
+[line_kinds]
+t_l_comes = "story"
+
+[text]
+t_s_heap = "Heap"
+t_l_crew = "Crew"
+t_l_m1 = "First"
+t_l_m2 = "Second"
+t_c_work = "Work"
+t_l_comes = "Someone comes."
