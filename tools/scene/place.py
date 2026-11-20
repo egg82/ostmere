@@ -37,8 +37,8 @@ def put(img: Image.Image, sprite: Image.Image, x: float, y: float) -> None:
     img.alpha_composite(sprite, (int(x), int(y)))
 
 
-WATCH = (15.9 * T, 6.9 * T)
-"""The watch fire's centre: open ground at the camp's right edge, facing out."""
+WATCH = (17.9 * T, 6.0 * T)
+"""The watch fire's centre: open ground at the camp's right edge (inside the first frame the rack roof widens to), facing out."""
 LIE = (1.75 * T, 4.75 * T)
 """Where the figure lies and gets up: its feet, under the roof, against the wall."""
 GAP = (8.15 * T, 5.35 * T)
