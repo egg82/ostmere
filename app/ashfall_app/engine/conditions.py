@@ -61,6 +61,19 @@ def change_time(save: Save, rules: Rules, cond: Condition, latch: bool) -> int |
     return _fall_time(save, rules, cond) if latch else rise_time(save, rules, cond)
 
 
+def changes_now(save: Save, rules: Rules, cond: Condition, latch: bool) -> bool:
+    """change_time(save, rules, cond, latch) == save.time, read off the values now: a latch rises now only while the
+    condition holds, and releases now only while its subject is past the release, since reaching a value from short of
+    it takes a second at least (every segment starts at save.time)."""
+    if not latch:
+        return is_true(save, rules, cond)
+    if isinstance(cond, AfterTime):
+        return False
+    cond = read_levels(save, rules, cond)
+    v = subject_value(save, rules, cond.subject)
+    return v < cond.release if isinstance(cond, AtLeast) else v > cond.release
+
+
 def rise_time(save: Save, rules: Rules, cond: Condition) -> int | None:
     return save.time if is_true(save, rules, cond) else unmet_rise_time(save, rules, cond)
 

@@ -5,7 +5,7 @@ interrupted, a capped card completed, a trigger fired, a chip showed or hid, a R
 from collections.abc import Callable, Iterable
 from dataclasses import replace
 
-from .conditions import all_true, change_time, rise_time
+from .conditions import all_true, changes_now, rise_time
 from .counts import unit, work_segment, work_value
 from .events import Event, EventKind
 from .gates import is_unlocked, store_cap
@@ -217,7 +217,7 @@ def _requires_changed(save: Save, rules: Rules, card: CardId) -> tuple[Save, boo
 
 def _chip_changed(save: Save, rules: Rules, i: int, emit: Emit) -> Save:
     chip = rules.chips[i]
-    if change_time(save, rules, chip.when, save.chips[i]) != save.time:
+    if not changes_now(save, rules, chip.when, save.chips[i]):
         return save
     on = not save.chips[i]
     save = rebuild(replace(save, chips=save.chips[:i] + (on,) + save.chips[i + 1:]), rules)

@@ -12,6 +12,7 @@ from ashfall_app.engine import (
     StoreValue, SwitchMix, advance, decide, new_save, per_hour, validate_rules,
 )
 from ashfall_app.engine import motion
+from ashfall_app.engine.lumps import Terms
 from ashfall_app.engine.schedule import events, pending
 
 X, Y = StoreId("x"), StoreId("y")
@@ -34,20 +35,19 @@ def world() -> tuple[Rules, Save]:
     return r, decide(s, r, 0, SetOrders((Order(AtLeast(StoreValue(Y), 5 * Q, 3 * Q), SwitchMix(MixId("b"))),)))
 
 
-@pytest.mark.xfail(strict=True, reason="pending solves the stores' motion for resumes and latches")
 @pytest.mark.parametrize("t", [3600, 7200, 18_000, 18_001, 25_200, 32_400])
 def test_pending_solves_no_store_motion_and_matches_events(t: int, monkeypatch: pytest.MonkeyPatch):
     r, s = world()
     s = advance(s, r, t)
     fresh = replace(s)   # a save object no memo has seen, as a handler's is
     built: list[int] = []
-    real = motion._segments
+    real = motion.lump_terms   # what store_segment reads first when it solves a save's motion
 
-    def counted(save: Save, rules: Rules) -> dict[StoreId, object]:
+    def counted(save: Save, rules: Rules) -> dict[StoreId, Terms]:
         built.append(save.time)
-        return real(save, rules)  # type: ignore[return-value]
+        return real(save, rules)
 
-    monkeypatch.setattr(motion, "_segments", counted)
+    monkeypatch.setattr(motion, "lump_terms", counted)
     now = pending(fresh, r)
     assert built == []
     monkeypatch.undo()

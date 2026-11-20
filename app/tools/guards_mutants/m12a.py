@@ -24,8 +24,8 @@ def _plain(save, rules, c):
      '''        g = change_time(save, rules, _plain(save, rules, cond), on)
 '''),
     ('ashfall_app/engine/latches.py',
-     '''        if change_time(save, rules, cond, on) == save.time:
+     '''        if changes_now(save, rules, cond, on):
 ''',
-     '''        if change_time(save, rules, _plain(save, rules, cond), on) == save.time:
+     '''        if changes_now(save, rules, _plain(save, rules, cond), on):
 '''),
 ]

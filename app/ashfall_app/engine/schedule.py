@@ -1,7 +1,7 @@
 """Every event the current segments imply, at or after save.time. One at save.time is pending: it must be handled
 before the instant is resolved. A resolved save has none pending.
 """
-from .conditions import can_fall, change_time, is_true, rise_time
+from .conditions import can_fall, change_time, changes_now, is_true, rise_time
 from .counts import unit, work_segment
 from .events import Event, EventKind
 from .ids import CardId
@@ -11,7 +11,7 @@ from .memo import SaveMemo
 from .answers import AnswerKind, AnswerOffer
 from .mixes import flatten_shares
 from .offerstate import acting
-from .latches import latch_change_time
+from .latches import flipped_now, latch_change_time
 from .orders import Condition, OrderVerb, rule_on
 from .phaseevents import phase_events
 from .phases import next_level_xp
@@ -76,20 +76,32 @@ def _answered(save: Save, rules: Rules, verb: OrderVerb) -> bool:
 
 def pending(save: Save, rules: Rules) -> list[Event]:
     """The events at save.time, in events() order, equal to filtering events(). An instant asks after every handler,
-    of saves it never asks the rest of, so the two kinds that cost most are found at now alone: a trigger on a level
-    not yet reached, and a READY on any blocker but a pause, rise strictly later, because every segment starts at
-    save.time (rebuild, shift) and reach_time from short of a target takes a second at least."""
+    of saves it never asks the rest of, so what can only be due later is never solved: every segment starts at
+    save.time (rebuild, shift) and reach_time from short of a target takes a second at least. So a trigger on a level
+    not yet reached and a READY on any blocker but a pause rise strictly later; a resume, a chip's latch and a rule's
+    are due now only when the values now say so (conditions.changes_now), read without the stores' motion; and a
+    requires never turns now (its release is its value), so REQUIRES is never pending."""
     if _EVENTS.holds(save, rules):
         return [e for e in events(save, rules) if e.time == save.time]
-    found = _store_events_now(save) + _resume_events(save, rules) + _completion_events(save, rules)
+    found = _store_events_now(save) + _resume_now(save, rules) + _completion_events(save, rules)
     found += _tap_events(save, rules) + _level_events(save, rules) + phase_events(save, rules)
-    found += _requires_events(save, rules)
-    found += _chip_events(save, rules) + triggers_now(save, rules) + _ready_now(save, rules)
+    found += [Event(save.time, EventKind.CHIP, i, chip.id)
+              for i, (chip, latch) in enumerate(zip(rules.chips, save.chips)) if changes_now(save, rules, chip.when, latch)]
+    found += triggers_now(save, rules) + _ready_now(save, rules)
     found += watch_events(save, rules)
-    for i, (order, latch) in enumerate(zip(save.orders, save.latches)):
-        if latch_change_time(save, rules, order, latch) == save.time:
-            found.append(Event(save.time, EventKind.LATCH, i, str(i)))
+    found += [Event(save.time, EventKind.LATCH, i, str(i))
+              for i, (order, latch) in enumerate(zip(save.orders, save.latches))
+              if flipped_now(save, rules, order, latch) is not None]
     return [e for e in found + _pop_events(save, rules) if e.time == save.time]
+
+
+def _resume_now(save: Save, rules: Rules) -> list[Event]:
+    """_resume_events at save.time, read off the stores' values: reaching a resume level from below takes a second at
+    least."""
+    pos = index(rules).runner_pos
+    values = {st.store: st.segment.start_value for st in save.stores}
+    return [Event(save.time, EventKind.RESUME, pos[p.runner], p.runner) for p in save.pauses
+            if values[p.store] >= p.resume_at]
 
 
 
