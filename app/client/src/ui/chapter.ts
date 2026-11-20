@@ -26,7 +26,13 @@ export interface ChapterActions {
   line(entry: Entry): HTMLElement;
   pick(filter: Filter): void;
   showWaiting(): void;
+  /** Whether the stores row shows every figure; the sheet keeps it across redraws. */
+  storesOpen: boolean;
+  toggleStores(): void;
 }
+
+/** The stores row shows this many figures before a "+N more" control holds the rest. */
+export const STORES_SHOWN = 6;
 
 const OPENS: Partial<Record<ChapterSection, Filter>> = { levels: "levels", rules: "rules" };
 
@@ -58,10 +64,18 @@ function rowsNode(catalog: Catalog, rows: Array<[ChapterSection, string[]]>, fil
     else label.textContent = catalog.text.get(SECTION_LABEL[section]);
     const value = el("dd");
     value.dataset["section"] = section;
-    said.forEach((s, i) => {
+    const folded = section === "stores" && said.length > STORES_SHOWN;
+    (folded && !act.storesOpen ? said.slice(0, STORES_SHOWN) : said).forEach((s, i) => {
       if (i > 0 && section !== "rules") value.append(" ", el("span", "chapter-sep", "·"), " ");
       value.append(section === "waiting" ? button("chapter-link", s, () => act.showWaiting()) : el("span", "chapter-item", s));
     });
+    if (folded) {
+      const { text } = catalog;
+      const more = button("chapter-link", act.storesOpen ? text.get(UI.chapterFewer) : text.fill(UI.chapterMore, { n: String(said.length - STORES_SHOWN) }), () => act.toggleStores());
+      more.setAttribute("aria-expanded", String(act.storesOpen));
+      more.dataset["more"] = "stores";
+      value.append(" ", el("span", "chapter-sep", "·"), " ", more);
+    }
     list.append(label, value);
   }
   return list;

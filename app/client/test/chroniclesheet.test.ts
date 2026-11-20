@@ -11,6 +11,7 @@ import { Catalog } from "../src/game/catalog";
 import { Keeps, NEW_SAVE } from "../src/game/keeps";
 import { ruleEntries } from "../src/game/rulerows";
 import { UI } from "../src/game/text";
+import { STORES_SHOWN } from "../src/ui/chapter";
 import { Screen } from "../src/ui/screen";
 
 install();
@@ -138,4 +139,23 @@ const tap = (s: Screen, sel: string): void => (s.root.querySelector(sel) as HTML
   tap(s, '.chron-filter[data-filter="story"]');
   tap(s, '.chapter-rows dd[data-section="waiting"] button');
   expect("the waiting count leaves the Book for Tasks to show what waits", [s.root.querySelector<HTMLElement>(".book-tab")?.hidden, s.root.querySelector("button[data-tab=\"cards\"]")?.getAttribute("aria-pressed")], [true, "true"]);
+}
+{
+  const ids = ["wood", "warmth", "stone", "damp_wood", "energy", "catch", "smoked", "roots"];
+  const figures: Chapter = { left: 1100, back: 1700, stores: ids.map((id, i) => ({ id, was: Q, now: (i + 3) * Q })), levels: [], camp: null, rules: [] };
+  const s = opened([line("line.1", 1800), line("line.7", 1900)], 2500, [{ left: 1100, back: 1700 }], figures);
+  const items = (): string[] => [...s.root.querySelectorAll<HTMLElement>('.chapter-rows dd[data-section="stores"] .chapter-item')].map((n) => n.textContent ?? "");
+  const more = (): HTMLElement | null => s.root.querySelector<HTMLElement>('.chapter-rows button[data-more="stores"]');
+  expect("a stores row longer than the fold shows the first figures", items().length, STORES_SHOWN);
+  expect("and a control counting the rest", more()?.textContent, text(UI.chapterMore).replace("{n}", String(ids.length - STORES_SHOWN)));
+  tap(s, '.chapter-rows button[data-more="stores"]');
+  expect("opened, every store figure is there, in the order it was", items(), ids.map((id, i) => `+${i + 2} ${catalog.storeLabel(id)}`));
+  expect("the control then offers to fold", [more()?.textContent, more()?.getAttribute("aria-expanded")], [text(UI.chapterFewer), "true"]);
+  tap(s, '.chron-filter[data-filter="all"]');
+  tap(s, '.chron-filter[data-filter="story"]');
+  expect("opened stays open across a redraw", items().length, ids.length);
+  tap(s, '.chapter-rows button[data-more="stores"]');
+  expect("folded again", items().length, STORES_SHOWN);
+  const few = opened([line("line.1", 1800)], 2500, [{ left: 1100, back: 1700 }], { ...figures, stores: figures.stores.slice(0, STORES_SHOWN) });
+  expect("a row that fits has no control", few.root.querySelector('.chapter-rows button[data-more="stores"]'), null);
 }
