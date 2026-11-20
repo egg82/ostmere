@@ -31,8 +31,18 @@ export interface SceneGrade {
   ease_s?: number;
 }
 
-export interface SceneManifest {
+/** How much of the art shows, from its top-left corner: the first is the default and a later one whose `when` holds
+ * replaces it, so the frame only grows (tools/scene/views.py). */
+export interface SceneView {
+  id: string;
   size: [number, number];
+  when: string | null;
+}
+
+export interface SceneManifest {
+  /** The art's own size: every view is within it. */
+  size: [number, number];
+  views?: SceneView[];
   pixelated?: boolean;
   layers: SceneLayer[];
   /** In order: the first is the default; a later one whose `when` holds replaces it. */
@@ -89,6 +99,14 @@ export function pickGrade(grades: Record<string, SceneGrade>, holds: (when: stri
   const entries = Object.entries(grades);
   let chosen = entries[0];
   for (const entry of entries.slice(1)) if (entry[1].when && holds(entry[1].when)) chosen = entry;
+  return chosen;
+}
+
+/** The size of the part of the art shown: the last view whose `when` holds, else the first, else the whole art. */
+export function pickView(manifest: SceneManifest, holds: (when: string) => boolean): [number, number] {
+  const views = manifest.views ?? [];
+  let chosen = views[0]?.size ?? manifest.size;
+  for (const view of views.slice(1)) if (view.when && holds(view.when)) chosen = view.size;
   return chosen;
 }
 

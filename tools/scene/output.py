@@ -13,6 +13,7 @@ from PIL import Image, ImageChops
 import depth
 import grades
 import kit
+import views
 from drift import source_digest
 from place import H, W, canvas
 from storeset import write_list
@@ -72,16 +73,23 @@ def check_conditions(entries: list[Entry]) -> None:
     never holding, so a typo would hide a layer without a word."""
     for e in entries:
         for field in ("when", "until"):
-            for term in (e.get(field) or "always").split("|"):
-                for atom in term.split("&"):
-                    kind = atom.partition(":")[0]
-                    if kind not in KINDS or (kind != "always" and ":" not in atom):
-                        raise ValueError(f"{e['id']}.{field}: unknown condition {atom!r}")
+            _check_condition(f"{e['id']}.{field}", e.get(field))
+    for v in views.VIEWS:
+        _check_condition(f"view {v.id}.when", v.when)
+
+
+def _check_condition(label: str, cond: str | None) -> None:
+    for term in (cond or "always").split("|"):
+        for atom in term.split("&"):
+            kind = atom.partition(":")[0]
+            if kind not in KINDS or (kind != "always" and ":" not in atom):
+                raise ValueError(f"{label}: unknown condition {atom!r}")
 
 
 def write_manifest(entries: list[Entry]) -> None:
     manifest = {
         "size": [W, H],
+        "views": views.manifest(),
         "pixelated": True,
         "layers": entries,
         "source": source_digest(),
@@ -190,6 +198,6 @@ def write_previews(entries: list[Entry]) -> None:
     """Each stage at 2x (960 wide, the desktop size) and scaled to 390 wide (a phone)."""
     PREVIEW.mkdir(parents=True, exist_ok=True)
     for stage, state in STAGES.items():
-        img = composite(entries, state)
-        kit.resize(img, (W * 2, H * 2)).save(PREVIEW / f"{stage}.png", optimize=True)
+        w, h = views.pick(state).size
+        kit.resize(composite(entries, state).crop((0, 0, w, h)), (w * 2, h * 2)).save(PREVIEW / f"{stage}.png", optimize=True)
 

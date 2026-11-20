@@ -5,8 +5,9 @@ from __future__ import annotations
 from PIL import Image
 
 from kit import T
+from views import EXTENT
 
-W, H = 15 * T, 9 * T
+W, H = EXTENT
 FIRE = (8.5 * T, 6.95 * T)
 """The fire's centre: the ring, laid fire, flames, fireback and light all hang off it."""
 
