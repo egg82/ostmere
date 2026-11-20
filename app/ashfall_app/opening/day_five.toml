@@ -40,6 +40,13 @@ id = "t_track_roots_2"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }
 outcome = { modifiers = [{ target = "rate", id = "field_track", flow = "cost", store = "roots", kind = "mul_bp", amount_bp = 15000, source = "track_roots_2" }] }
 
+# The stone fills dry_wood faster than the fire and the watch take it, so a day away from day four's end lost over half
+# its making to the cap: the pile room comes to 2x with the stone.
+[[triggers]]
+id = "t_stone_pile"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "arcana", value = 1 }
+outcome = { modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 20000, source = "stone_pile" }] }
+
 [[triggers]]
 id = "t_stone_first"
 when = { test = "at_least", subject_kind = "card_count", id = "hand_on_stone", value = 1 }
