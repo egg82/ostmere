@@ -12,7 +12,6 @@ from ashfall_app.engine import (
     QUANTITY_SCALE as Q, CardId, Rules, Save, SideId, SideStrength, StoreId, Unlock, UnlockKind, advance,
     explain_strength, rebase, segment, view,
 )
-from ashfall_app.opening.renames import engine_renames, load_renames
 from tests.daythree.content import rules3
 
 CAPTURED = Path(__file__).resolve().parent / "captured" / "f9-track-side.json"
@@ -26,7 +25,7 @@ def today() -> Rules:
 
 @cache
 def loaded() -> Save:
-    return rebase(CAPTURED.read_text().strip(), today(), engine_renames(load_renames()))
+    return rebase(CAPTURED.read_text().strip(), today())
 
 
 def completions(save: Save) -> int:

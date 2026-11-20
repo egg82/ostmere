@@ -6,8 +6,8 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import (
-    AtLeast, Flow, IdKind, NodeDef, NodeId, PacingCurve, Prestige, PrestigeDef, PrestigeRefusal, PrestigeRefused,
-    RateRef, Rename, Rules, Save, SkillDef, SkillId, SkillLevel, StandingDef, StoreCap, StoreDef, StoreId, UndoPick,
+    AtLeast, Flow, NodeDef, NodeId, PacingCurve, Prestige, PrestigeDef, PrestigeRefusal, PrestigeRefused,
+    RateRef, Rules, Save, SkillDef, SkillId, SkillLevel, StandingDef, StoreCap, StoreDef, StoreId, UndoPick,
     ActionId, FlowKind, Unlock, UnlockKind, advance, decide, encode, new_save, next_event, per_hour, rebase, units,
     validate_rules, value,
 )
@@ -210,10 +210,13 @@ def test_an_owed_pick_cannot_be_undone_again():
     assert refused(undone, RULES, 100 * H, UndoPick(GATHER)) is PrestigeRefusal.NOTHING_TO_UNDO
 
 
-def test_a_rebase_keeps_the_phase_and_renames_its_picks():
+def test_a_rebase_keeps_the_phase_and_a_pick_of_a_node_the_rules_lack_holds_nothing():
+    """A pick is kept whatever its node (picks count the phase's clicks), and one on a node the new rules lack, here
+    renamed, gives nothing: the cap is the unpicked one."""
     s = decide(START, RULES, 100 * H, Prestige(GATHER, A))
     assert rebase(encode(s, RULES), RULES) == s
     renamed = replace(RULES, nodes=(replace(RULES.nodes[0], id=NodeId("a2")), *RULES.nodes[1:]))
-    moved = rebase(encode(s, RULES), renamed, (Rename(IdKind.NODE, "a", "a2"),))
-    assert phase_state(moved, renamed, GATHER).picks == (NodeId("a2"),)
-    assert store_cap(moved, renamed, WOOD) == units(11_000)
+    moved = rebase(encode(s, RULES), renamed)
+    assert phase_state(moved, renamed, GATHER).picks == (A,) and phase_state(moved, renamed, GATHER).phase == 2
+    assert store_cap(s, RULES, WOOD) == units(11_000)   # control: the pick raised it under the old rules
+    assert store_cap(moved, renamed, WOOD) == store_cap(START, RULES, WOOD)

@@ -13,7 +13,6 @@ from ashfall_app.engine import (
 )
 from ashfall_app.engine.gates import store_cap
 from ashfall_app.engine.segments import Segment
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import DAY_ONE, DAY_TWO, OPENING, Opening, load_opening, to_rules
 from tests.opening.test_day_two import with_day_two
 
@@ -81,7 +80,7 @@ def test_a_save_past_day_ones_lift_reaches_camp_7_at_its_rebase():
     """Fault 1: the save keeps day one's raise; day two's rules must give it Camp 7's room at the load."""
     s = past_day_ones_lift()
     assert store_cap(s, day_one(), CAMP) >= units(54000)   # control: day one's lift landed
-    s2 = rebase(encode(s, day_one()), day_two(), engine_renames(load_renames()))
+    s2 = rebase(encode(s, day_one()), day_two())
     assert store_cap(s2, day_two(), CAMP) >= at(7)
 
 

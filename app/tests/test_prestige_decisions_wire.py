@@ -40,7 +40,7 @@ def test_neither_is_an_order_or_queue_verb(verb: dict[str, str]):
 
 
 def test_a_refused_prestige_is_422_invalid_decision_naming_why(shipped_opening: Opening):
-    game = Game(shipped_opening, ruleset(shipped_opening, [], "test", 1))
+    game = Game(shipped_opening, ruleset(shipped_opening, "test", 1))
     with pytest.raises(GameError) as found:
         with answered(game):
             e.decide(START, RULES, H, e.Prestige(GATHER, A))
@@ -66,7 +66,7 @@ def test_the_row_serves_topped_at_and_pick_owed():
 
 def test_content_serves_each_node_as_authored(shipped_opening: Opening):
     def content(o: Opening) -> cm.Content:
-        return Game(o, ruleset(shipped_opening, [], "test", 1)).content()
+        return Game(o, ruleset(shipped_opening, "test", 1)).content()
 
     assert [n.node for n in content(shipped_opening).node_infos] == [n.id for n in shipped_opening.nodes]
     nodes = [NodeEntry(id="n_cap", skill="s", label_key="node.cap", changes=NodeChangeEntry(target="cap", id="wood"),

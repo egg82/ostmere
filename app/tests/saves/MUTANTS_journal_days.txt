@@ -8,7 +8,6 @@ and its wire (api/service.py, accounts/presentation.py), each planted alone in a
  3 appends replace db/step.py: a day still being written has its stored notes replaced, not appended to
  4 lines ahead     journal_write.py: lines stored past the step's save time are composed
  5 own lines       journal_write.py: the step's own lines, not yet stored, are left out
- 6 no renames      journal_write.py: a stored line under a key renamed since feeds nothing
  7 one cause       journal_write.py: a line of two causes feeds only the first's subject
  8 open day        journal_write.py: the day the step stops in is composed as ended, its end written early
  9 blanks carried  journal_write.py: Opened carries blank and gap days too

@@ -459,12 +459,14 @@ REMINDERS
 SAVES ACROSS RELEASES AND PODS
   A save written under older rules (a deploy changed the content) is carried over, never refused: the server rebases
   it when it is next read (engine DESIGN.txt, "Rebase") and answers under the current rules, with any lines new
-  content landed at the save's own time first. Each decision, advance and open is one transaction holding the save's
+  content landed at the save's own time first. What the current rules no longer have is dropped from the save (one log
+  line, save.dropped, names the save and how many ids of each kind went), and a stored log line whose text key the
+  content no longer has is left out of the history served. Each decision, advance and open is one transaction holding the save's
   row, so two requests on one save run one after the other, on any pod. Builds are ordered by release: a
   number CI gives each image build (BUILD_RELEASE, the workflow run number; 0 for a local run), so a later build always
   has a higher one, even one that changes only numbers. Each save records the release it was last
   written under. A pod answers 503 save_unavailable (Retry-After) for a save of a later release than its own, and for
-  one it cannot rebase, and writes nothing: mid-deploy the next try reaches a pod of the later release. A save of the
+  one whose stored text it cannot read, and writes nothing: mid-deploy the next try reaches a pod of the later release. A save of the
   pod's own release or an earlier one is read exactly, or rebased forward, and written. A 4xx or 5xx answer writes
   nothing, except a 409, whose Step is written as an advance; so a decision is applied once, and a 409 or 5xx means
   it was not, bar one 503: a database switchover that loses the COMMIT (below, ERRORS).
@@ -518,8 +520,8 @@ join's too_many_saves.
                         account), with Retry-After; and POST /api/saves/{save_id}/decisions past the decisions a
                         save takes (Request limits), with Retry-After.
   503 save_unavailable  retryable (Retry-After, seconds): no database (any endpoint that needs to know the account or
-                        a save, Begin included), a save of a later release, a rebase that failed, or the database
-                        switching over (its writable member changed or is unreachable). A request that meets the
+                        a save, Begin included), a save of a later release, a save whose text cannot be read, or the
+                        database switching over (its writable member changed or is unreachable). A request that meets the
                         switchover runs once more on a fresh connection, unless a write of its own may already have
                         committed; one not run again, or that meets it again, answers 503 with Retry-After 3. A 503
                         from a lost COMMIT may have taken effect: asking again then answers 409 stale for a decision.
@@ -1379,12 +1381,12 @@ JOURNAL
       without a label_key: refused.
     - a note with no [text] entry, or whose text holds a digit: refused by the existing text checks (Text and
       numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
-    - entry and note ids are content ids like any other: renamed by renames.toml under the id kinds entry and note. An entry
-      or note leaves only by retirement (renames.toml, an entry with no `to`): a save keeps its unlock, and a retired note's trigger goes with it (engine DESIGN.txt,
-      "Retired").
+    - entry and note ids are content ids like any other, and content may rename or remove one: a save keeps the unlock
+      it had (no manifest declares them), and the trigger the loader made for a removed note is dropped with it (engine
+      DESIGN.txt, "Rebase").
 
-  Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY), renamed
-  through IdKind ENTRY and NOTE; engine DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
+  Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY); engine
+  DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
   them as any unlock (subject "unlocked" with unlock_kind entry or note), so a gate on several entries is one Unlocked
   condition each, and no count store mirrors them.
 
@@ -1528,8 +1530,7 @@ JOURNAL
      digit. Control: the same fixture without the plant loads.
   3. On fixture rules, a save reaching a first note's gate holds the entry and note unlocks from that instant; a
      later note whose gate holds first is not unlocked until the entry is, then lands at that instant.
-  4. Renames: an entry and a note renamed in renames.toml carry their unlocks across a rebase; a released note id
-     removed without a rename fails tests/opening/test_released.py.
+  4. A changed journal: a save keeps the entry and note unlocks it had across a rebase into rules that rename them.
   5. Wire: Content.journal is null for rules with no [journal] and served in content order otherwise; openapi.json
      names JournalInfo, EntryInfo, NoteInfo and the Hand enum as components; the field-names test holds; journal_read
      round-trips through PUT /api/me/presentation, refused past MAX_LIST or with a name a Name refuses.

@@ -14,7 +14,6 @@ from ashfall_app.opening.schema import CHAPTERS, Opening, load_opening
 from ashfall_app.saves import write
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset
-from ashfall_app.opening.renames import load_renames
 from tests.game_client import GameClient, game_client
 
 OFFER, ANSWER = "o_cart", "o_cart_go"
@@ -33,7 +32,7 @@ def day_two_opening() -> Opening:
 
 @pytest.fixture(scope="module")
 def day_two_rs() -> Ruleset:
-    return ruleset(day_two_opening(), load_renames(), "dev", 0)
+    return ruleset(day_two_opening(), "dev", 0)
 
 
 @pytest.fixture

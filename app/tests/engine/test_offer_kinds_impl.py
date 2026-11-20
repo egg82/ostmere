@@ -9,7 +9,7 @@ import pytest
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, AfterTime, AnswerDef, AnswerId, AnswerKind, AnswerOffer, CardDef, CardId, InvalidRulesError,
     InvalidVerbError, KindId, LineKey, OfferDef, OfferId, Order, OrderState, Outcome, PacingCurve, QueueEntry,
-    RebaseError, RoleId, Rules, Save, SetOrders, SetQueue, SkillDef, SkillId, StoreDef, StoreId, TriggerDef, TriggerId,
+    RoleId, Rules, Save, SetOrders, SetQueue, SkillDef, SkillId, StoreDef, StoreId, TriggerDef, TriggerId,
     Unlock, UnlockKind, advance, advance_logged, decide, decide_logged, decode, encode, new_save, rebase, rules_digest,
     validate_rules, view,
 )
@@ -225,10 +225,12 @@ def test_a_save_rebases_into_rules_that_give_an_offer_a_kind_and_keeps_its_rule(
 
 
 @pytest.mark.parametrize("change", [other_kind, renamed_roles], ids=["kind changed", "roles changed"])
-def test_a_save_cannot_rebase_into_rules_that_change_a_kind_or_a_role_it_was_written_with(
-        change: Callable[[OfferDef], OfferDef]):
+def test_a_rule_answering_a_kind_and_role_the_new_rules_lack_is_dropped(change: Callable[[OfferDef], OfferDef]):
+    """The offer and its answers stay (their ids are the new rules'); the rule naming the kind and role no offer has
+    any more goes, and one naming a pair the new rules still have stays (the control: the rebase into the same shape)."""
     old_rules = world({"a1": 10}, (offer("a1", ASK),))
-    old = encode(new_save(old_rules), old_rules)
+    s = decide(new_save(old_rules), old_rules, 0, SetOrders((RULE,)))
     changed = world({"a1": 10}, (change(offer("a1", ASK)),))
-    with pytest.raises(RebaseError):
-        rebase(old, changed)
+    assert rebase(encode(s, old_rules), changed).orders == ()
+    same = world({"a1": 11}, (offer("a1", ASK),))
+    assert rebase(encode(s, old_rules), same).orders == (RULE,)

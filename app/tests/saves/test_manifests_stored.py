@@ -103,7 +103,7 @@ def test_an_oldest_format_golden_text_stored_stripped_rebases_as_the_whole_text(
         save_id = rows.insert_save(conn, account, clock(), written)
     row = record(engine, save_id)
     assert row.state == text
-    assert load(row, rs).save == e.rebase(text, rs.rules, rs.renames)
+    assert load(row, rs).save == e.rebase(text, rs.rules)
 
 
 def test_a_stripped_save_with_no_manifest_held_is_unavailable_and_fails_the_check(

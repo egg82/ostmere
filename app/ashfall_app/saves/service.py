@@ -116,11 +116,11 @@ class PgSaves:
         t0, now, stop = time.perf_counter(), self._clock(), self._stop_for()
         with self._locked(account_id, save_id, now, visited=True, history=HISTORY) as (conn, row, seen):
             loaded = load(row, self._rs)
-            renamed, retired = self._rs.line_renames, self._rs.retired_lines
+            known = self._rs.line_keys
             last = seen.history if seen is not None and seen.fresh and seen.history is not None else None
-            history = tuple(PastLine(n=ln.n, at=ln.at, key=key)
+            history = tuple(PastLine(n=ln.n, at=ln.at, key=ln.key)
                             for ln in (rows.last_lines(conn, save_id, HISTORY) if last is None else last)
-                            if (key := renamed.get(ln.key, ln.key)) not in retired)
+                            if ln.key in known)
             days = journal_write.written(conn, save_id, seen, self._rs)
             played, now_row = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now)
         logs.info(_log, "save.opened", account=account_id, save=save_id, game_at=played.save.time,

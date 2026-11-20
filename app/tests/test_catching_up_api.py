@@ -8,7 +8,6 @@ import pytest
 from sqlalchemy import Engine
 
 from ashfall_app.db import saves as rows
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset
@@ -35,7 +34,7 @@ def serve(game: GameClient, opening: Opening, stop_for: MakeStop) -> tuple[Engin
     """Gives the app a saves service whose requests stop by `stop_for`; the engine, the ruleset and the signed-in account."""
     begun = game.begin()["save"]["save_id"]
     engine: Engine = game.app.state.db.engine
-    rs = ruleset(opening, load_renames(), "dev", 0)
+    rs = ruleset(opening, "dev", 0)
     with engine.connect() as conn:
         row = rows.save(conn, begun, None)
     assert row is not None

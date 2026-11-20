@@ -1,9 +1,10 @@
-"""A save across rules and builds: rebased forward at load and written under the new rules; one a later build wrote, or
-one that cannot be rebased, is unavailable and nothing is written; the start check counts each kind."""
+"""A save across rules and builds: rebased forward at load (what the rules lack dropped and logged) and written under
+the new rules; one a later build wrote, or one whose text is corrupt, is unavailable and nothing is written; the start
+check counts each kind."""
 from dataclasses import replace
 
 import pytest
-from sqlalchemy import Engine
+from sqlalchemy import Engine, text
 
 from ashfall_app import engine as e
 from ashfall_app import logs
@@ -68,18 +69,36 @@ def test_a_save_under_the_pods_own_rules_is_read_whoever_wrote_it(engine: Engine
     assert stored(engine, info.save_id).build == "b2"
 
 
-def test_a_save_that_cannot_be_rebased_is_unavailable_and_logged(engine: Engine, account: int, clock: FakeClock,
-                                                                 rs: Ruleset, rs_changed: Ruleset,
-                                                                 capsys: pytest.CaptureFixture[str]):
-    """Written under rules with a card these rules lack (no rename maps it), by an earlier build."""
+def test_a_save_holding_ids_these_rules_lack_loads_and_logs_what_it_dropped(
+        engine: Engine, account: int, clock: FakeClock, rs: Ruleset, rs_changed: Ruleset,
+        capsys: pytest.CaptureFixture[str]):
+    """Written by an earlier build under rules with a store, a card and a trigger these rules lack: it loads, and one
+    line names the save and how many ids of each kind went."""
     logs.setup()
     info, _ = PgSaves(engine, replace(rs_changed, release=1), clock).create(account)
+    clock.tick(5)
+    assert PgSaves(engine, rs, clock).advance(account, info.save_id).save.time == 5
+    assert stored(engine, info.save_id).rules_digest == rs.digest
+    lines = [ln for ln in capsys.readouterr().out.splitlines() if "event=save.dropped" in ln]
+    assert len(lines) == 1 and f"save={info.save_id} store=1 card=1 trigger=1" in lines[0], lines
+
+
+def corrupt(engine: Engine, save_id: int) -> None:
+    with engine.begin() as conn:
+        conn.execute(text("UPDATE saves SET state = :s WHERE id = :id"), {"s": "{not a save", "id": save_id})
+
+
+def test_a_save_whose_text_is_corrupt_is_unavailable_and_logged(engine: Engine, account: int, clock: FakeClock,
+                                                               rs: Ruleset, capsys: pytest.CaptureFixture[str]):
+    logs.setup()
+    info, _ = PgSaves(engine, replace(rs, release=1, digest="0" * 64), clock).create(account)
+    corrupt(engine, info.save_id)
     before = stored(engine, info.save_id)
     with pytest.raises(Unavailable):
         PgSaves(engine, rs, clock).advance(account, info.save_id)
     assert stored(engine, info.save_id) == before
     out = capsys.readouterr().out
-    assert f"event=save.rebase_failed save={info.save_id} kind=" in out and "level=error" in out
+    assert f"event=save.rebase_failed save={info.save_id} kind=format" in out and "level=error" in out
 
 
 def test_the_start_check_counts_every_kind_of_save(engine: Engine, account: int, clock: FakeClock, rs: Ruleset,
@@ -88,12 +107,14 @@ def test_the_start_check_counts_every_kind_of_save(engine: Engine, account: int,
     PgSaves(engine, rs, clock).create(account)                                  # exact
     PgSaves(engine, replace(rs, release=1, digest="0" * 64), clock).create(account)   # a stale digest: rebases
     PgSaves(engine, rs_changed, clock).create(account)                          # a later build's
-    PgSaves(engine, replace(rs_changed, release=1), clock).create(account)   # cannot rebase
+    PgSaves(engine, replace(rs_changed, release=1), clock).create(account)   # rebases, dropping what rs lacks
+    broken, _ = PgSaves(engine, replace(rs, release=1, digest="0" * 64), clock).create(account)
+    corrupt(engine, broken.save_id)                                             # cannot be read
     done = check(engine, rs)
-    assert (done.total, done.ok, done.failed, done.newer) == (4, 2, 1, 1)
-    assert "event=saves.check total=4 ok=2 failed=1 newer=1" in capsys.readouterr().out
+    assert (done.total, done.ok, done.failed, done.newer) == (5, 3, 1, 1)
+    assert "event=saves.check total=5 ok=3 failed=1 newer=1" in capsys.readouterr().out
     clean = check(engine, rs_changed)
-    assert (clean.total, clean.ok, clean.failed, clean.newer) == (4, 4, 0, 0)
+    assert (clean.total, clean.ok, clean.failed, clean.newer) == (5, 4, 1, 0)
 
 
 def test_a_save_another_build_of_the_same_time_wrote_under_other_rules_is_rebased(

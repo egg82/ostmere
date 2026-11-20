@@ -15,7 +15,6 @@ from ashfall_app.opening.ui_keys import UI_KEYS
 from ashfall_app.opening.convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
 from ashfall_app.opening.schema import B7, CHAPTERS, DAY_ELEVEN, DAY_FIVE, DAY_FOUR, DAY_SIX, DAY_TWELVE
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.playthrough import Player, opening, opening_rules
 
@@ -33,7 +32,7 @@ def content(client: TestClient) -> Content:
 @pytest.fixture(scope="module")
 def game_wire() -> Game:
     o = opening()
-    return Game(o, ruleset(o, load_renames(), "dev", 1))
+    return Game(o, ruleset(o, "dev", 1))
 
 
 def shipped(always: list[str], *later: tuple[Path, list[str]]) -> list[str]:

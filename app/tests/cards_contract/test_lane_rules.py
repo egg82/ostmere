@@ -221,11 +221,11 @@ def test_9_a_save_holding_a_qualifying_order_fires_the_new_trigger_at_the_rebase
     new = replace(old, triggers=old.triggers + (her_trigger(),))
     validate_rules(new)
     held = advance(started(old, SetOrders((RULE,))), old, 500)
-    assert her(rebase_logged(encode(held, old), new, ())) == [500]
+    assert her(rebase_logged(encode(held, old), new)) == [500]
     removed = advance(decide(held, old, 500, SetOrders(())), old, 600)
-    assert her(rebase_logged(encode(removed, old), new, ())) == []
+    assert her(rebase_logged(encode(removed, old), new)) == []
     always_only = advance(started(old, SetOrders((always(T1),))), old, 500)
-    assert her(rebase_logged(encode(always_only, old), new, ())) == []
+    assert her(rebase_logged(encode(always_only, old), new)) == []
 
 
 def test_9_the_rebased_save_fires_it_once():
@@ -233,7 +233,7 @@ def test_9_the_rebased_save_fires_it_once():
     old = town(gated=False)
     new = replace(old, triggers=old.triggers + (her_trigger(),))
     held = advance(started(old, SetOrders((RULE,))), old, 500)
-    step = rebase_logged(encode(held, old), new, ())
+    step = rebase_logged(encode(held, old), new)
     assert her(step) == [500]
     assert her(advance_logged(step.save, new, 1100)) == []
     assert her(set_orders(step.save, new, 1100, always(T1), RULE)) == []

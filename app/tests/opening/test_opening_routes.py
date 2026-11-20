@@ -16,7 +16,6 @@ from ashfall_app.engine import (
     decide_logged, new_save, rules_digest, units,
 )
 from ashfall_app.main import create_app
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.game_client import GameClient
@@ -39,7 +38,7 @@ def client() -> TestClient:
 @pytest.fixture(scope="module")
 def game_wire() -> Game:
     o = load_opening()
-    return Game(o, ruleset(o, load_renames(), "dev", 1))
+    return Game(o, ruleset(o, "dev", 1))
 
 
 def tap(card: str) -> Json:

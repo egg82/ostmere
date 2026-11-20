@@ -31,7 +31,7 @@ def opening() -> Opening:
 
 
 def game() -> Game:
-    return Game(opening(), ruleset(opening(), [], "test", 1))
+    return Game(opening(), ruleset(opening(), "test", 1))
 
 
 def wire() -> w.View:

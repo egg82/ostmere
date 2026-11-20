@@ -4,7 +4,6 @@ does, with the same lines and rule changes in turn."""
 from pathlib import Path
 
 from ashfall_app.engine import Line, RuleChange, advance_logged, decode, encode, rebase
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import Opening, to_rules
 
 GOLDEN = Path(__file__).resolve().parent / "golden"
@@ -29,7 +28,7 @@ def _every(k: int):
 
 def test_slices_with_a_round_trip_between_equal_one_advance(shipped_opening: Opening):
     rules = to_rules(shipped_opening)
-    save = rebase(_end_save().read_text().strip(), rules, engine_renames(load_renames()))
+    save = rebase(_end_save().read_text().strip(), rules)
     t = save.time + SPAN_S
     whole = advance_logged(save, rules, t)
     lines: list[Line] = []

@@ -20,7 +20,7 @@ FIXTURE = Path(__file__).resolve().parent / "opening" / "fixtures" / "journal.to
 
 def game_of(*chapters: Path) -> Game:
     o = load_opening(bookless_opening(), chapters)
-    return Game(o, replace(ruleset(o, [], "test", 1)))
+    return Game(o, replace(ruleset(o, "test", 1)))
 
 
 @cache

@@ -9,7 +9,6 @@ import pytest
 from ashfall_app.api.content_models import AnswerInfo, Content
 from ashfall_app.api.service import Game
 from ashfall_app.engine import QUANTITY_SCALE
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, load_opening
 from ashfall_app.saves.ruleset import ruleset
 
@@ -19,7 +18,7 @@ GAIN = ("{gain}", "{gain_b}")
 
 def served(chapters: tuple[Path, ...]) -> Content:
     o = load_opening(chapters=chapters)
-    return Game(o, ruleset(o, load_renames(), "dev", 1)).content()
+    return Game(o, ruleset(o, "dev", 1)).content()
 
 
 @pytest.fixture(scope="module")

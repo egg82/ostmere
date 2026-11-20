@@ -4,8 +4,8 @@ and the session's shared fixtures.
 `create_app()` loads and checks every shipped chapter (~0.2 s, ~4x on the slow CI node), so a session builds that once
 (`shipped_opening`) and every test's `create_app()` reuses it; a test that wants other content still patches
 `main.load_opening` itself.
-Likewise the Ruleset and Game for that content (`shipped_ruleset`, tests/shipped_ruleset.py): a test under other
-renames or opening gets its own.
+Likewise the Ruleset and Game for that content (`shipped_ruleset`, tests/shipped_ruleset.py): a test under another
+opening gets its own.
 
 Also the Postgres fixtures: `pg_url` (a database of the test's own, migrated) and `pg_empty` (tests/pg.py), and
 `game`: the app on such a database (tests/game_client.py).

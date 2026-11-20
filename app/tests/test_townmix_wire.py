@@ -48,7 +48,7 @@ def joined_save() -> e.Save:
 
 def game(rules: e.Rules) -> Game:
     """The townsfolk chapter's content over the fixture's rules: the wire reads only the rules and the save."""
-    return Game(loaded(), replace(ruleset(loaded(), [], "test", 1), rules=rules))
+    return Game(loaded(), replace(ruleset(loaded(), "test", 1), rules=rules))
 
 
 def town_mix(*shares: tuple[str, int]) -> w.SaveMix:

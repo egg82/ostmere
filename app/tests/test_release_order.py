@@ -63,8 +63,8 @@ RELEASE = 0
 def builds(shipped_opening: Opening, shipped_ruleset: ShippedRuleset, retuned: Opening) -> tuple[Built, Built]:
     """Each build's Ruleset and Game, built once in setup: the older's is the session's shipped one under its name, the
     newer's the real builders' on the retune, a release on."""
-    old = shipped_ruleset.ruleset(shipped_opening, shipped_ruleset.renames, "old", RELEASE)
-    new = ruleset(retuned, shipped_ruleset.renames, "new", RELEASE + 1)
+    old = shipped_ruleset.ruleset(shipped_opening, "old", RELEASE)
+    new = ruleset(retuned, "new", RELEASE + 1)
     return (old, shipped_ruleset.make_game(shipped_opening, old)), (new, Game(retuned, new))
 
 

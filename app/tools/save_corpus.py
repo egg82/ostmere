@@ -1,7 +1,7 @@
 """Saves from playthrough checkpoints, written as encoded texts: the golden saves, and the CI job saves-forward's input.
 
     python tools/save_corpus.py <dir>            # write NN-seed-time.json, one encoded save each, under this commit's rules
-    python tools/save_corpus.py --load <dir>     # rebase each under this commit's rules and renames, advance it 30 days
+    python tools/save_corpus.py --load <dir>     # rebase each under this commit's rules, advance it 30 days
 
 With DATABASE_URL set, --load goes the way a player's save does: each is stored as a row (migrating that database
 first), the app's start check runs over them, and each is opened through the saves service 30 days after it was last
@@ -26,7 +26,6 @@ from ashfall_app.engine import Rules, Save, advance, encode, new_save, rebase
 from ashfall_app.saves.check import check
 from ashfall_app.saves.ruleset import build_release, ruleset
 from ashfall_app.saves.service import PgSaves
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import load_opening, to_rules
 from tests.opening.playthrough import Player
 
@@ -66,13 +65,13 @@ def write(out: Path) -> int:
 
 def load(src: Path, days: int = 30) -> int:
     """Each save rebased under this commit's rules and advanced `days` game days; 1 if any fails."""
-    rules, renames = to_rules(load_opening()), engine_renames(load_renames())
+    rules = to_rules(load_opening())
     failed = 0
     paths = sorted(src.glob("*.json"))
     for path in paths:
         started = time.perf_counter()
         try:
-            save = rebase(path.read_text().strip(), rules, renames)
+            save = rebase(path.read_text().strip(), rules)
             advance(save, rules, save.time + days * DAY_S)
         except Exception as e:   # report every save, not only the first that fails
             failed += 1
@@ -94,7 +93,7 @@ def load_db(src: Path, url: str, days: int = 30) -> int:
     """--load through the database (above); 1 if the check or any open fails."""
     logs.setup()
     migrate(url)
-    rs = ruleset(load_opening(), load_renames(), "saves-forward", build_release())
+    rs = ruleset(load_opening(), "saves-forward", build_release())
     database = open_database(url)
     clock, began, ids = _Clock(), datetime(2026, 1, 1, tzinfo=UTC), list[tuple[str, int, int]]()
     with database.engine.begin() as conn:

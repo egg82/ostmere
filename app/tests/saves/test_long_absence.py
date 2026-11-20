@@ -10,7 +10,6 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import Rules, Save, rebase
-from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import load_opening, to_rules
 from tests.saves.absence import advanced_counted
 
@@ -35,7 +34,7 @@ def opening_rules() -> Rules:
 
 @pytest.fixture(scope="module")
 def end_save(opening_rules: Rules) -> Save:
-    return rebase(_end_save().read_text().strip(), opening_rules, engine_renames(load_renames()))
+    return rebase(_end_save().read_text().strip(), opening_rules)
 
 
 @pytest.fixture(scope="module")

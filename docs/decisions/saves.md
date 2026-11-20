@@ -69,10 +69,11 @@ replay would have to rebuild the body the route class already holds).
 
 How these stand today, moved from their rows in `systems.md`.
 
-Saves: a save under older rules is rebased when it next loads (format upgrades chained, then renames: engine
-`DESIGN.txt`, "Rebase"), by data it carries (a manifest of the rules it was written under) and content's renames
-table: forward-only with no per-change flags. A change of ids needs a `renames.toml` entry or the rebase fails (`engineering.md`). A
-retroactive change is a later data migration. Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
+Saves: a save under older rules is rebased when it next loads (format upgrades chained, then what the current rules
+lack dropped: engine `DESIGN.txt`, "Rebase"), by data it carries (a manifest of the rules it was written under):
+forward-only with no per-change flags. Content may rename or remove any id; a save loses its progress under an id that
+went, and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for,
+a retroactive change) is a step on the upgrade chain (`app/ashfall_app/engine/upgrade.py`). Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
 with its decision log, lines and day snapshots, and each rules digest's manifest once, put back into a row stored
 without it when it is read (`app/ashfall_app/db/manifests.py`). A build writes rows without its manifest once its
 start finds it held (`app/ashfall_app/saves/manifest.py`); `python -m ashfall_app.saves strip` does the same for older

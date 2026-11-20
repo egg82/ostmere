@@ -13,7 +13,7 @@ from .decisions import apply_verb, failed_tap, latch_now
 from .errors import TimeOrderError
 from .events import Event
 from .handlers import Emit, ignore
-from .ids import CardId, LineKey, SkillId, StoreId
+from .ids import CardId, IdKind, LineKey, SkillId, StoreId
 from .index import index
 from .instant import resolve_instant
 from .motion import store_segment
@@ -189,6 +189,8 @@ class Step:
     stopped_short: bool = False
     """advance_logged with a stop only: the stop ended it with instants at or before t still to resolve, so save.time
     is the last resolved instant's, < t (DESIGN.txt, "Bounded advance")."""
+    dropped: tuple[tuple[IdKind, int], ...] = ()
+    """rebase_logged only: how many ids of each kind the save's rules declared and these lack (DESIGN.txt, "Rebase")."""
 
 
 def advance_logged(save: Save, rules: Rules, t: int, stop: Callable[[], bool] | None = None) -> Step:

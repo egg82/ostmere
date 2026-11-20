@@ -129,17 +129,6 @@ def test_a_habits_or_slots_change_leaves_every_stored_note_as_it_was(engine: Eng
     assert after[4:] != reference(engine, save_id, time, JOURNAL, tuple(after[:4]))[4:]
 
 
-@kills(6)
-def test_a_line_stored_under_a_key_renamed_since_feeds_the_subject_of_its_new_key(
-        engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
-    saves = PgSaves(engine, journaled(replace(rs, line_renames={"l_old_work": "l_work"})), clock, stop_for=never)
-    save_id = saves.create(account)[0].save_id
-    store_lines(engine, save_id, ((DAY_S + 5, "l_old_work"),))
-    clock.tick(2 * DAY_S)
-    played = saves.advance(account, save_id)
-    assert [n.subject for n in played.days[1].notes] == ["s_work"]
-
-
 @kills(1, 2, 7)
 def test_two_steps_racing_on_one_save_store_each_day_once(pg_url: str, engine: Engine, rs: Ruleset,
                                                           clock: FakeClock, account: int):

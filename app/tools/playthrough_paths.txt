@@ -109,6 +109,7 @@ app/ashfall_app/engine/cure_reading.py
 app/ashfall_app/engine/decisions.py
 app/ashfall_app/engine/discrete.py
 app/ashfall_app/engine/drains.py
+app/ashfall_app/engine/dropping.py
 app/ashfall_app/engine/end.py
 app/ashfall_app/engine/errors.py
 app/ashfall_app/engine/events.py
@@ -163,7 +164,6 @@ app/ashfall_app/engine/prestigeverbs.py
 app/ashfall_app/engine/rates.py
 app/ashfall_app/engine/rebase.py
 app/ashfall_app/engine/rebuild.py
-app/ashfall_app/engine/renaming.py
 app/ashfall_app/engine/requires.py
 app/ashfall_app/engine/retap.py
 app/ashfall_app/engine/rulelog.py
@@ -250,8 +250,6 @@ app/ashfall_app/opening/phase_pays.toml
 app/ashfall_app/opening/prestige.py
 app/ashfall_app/opening/prestige.toml
 app/ashfall_app/opening/refs.py
-app/ashfall_app/opening/renames.py
-app/ashfall_app/opening/renames.toml
 app/ashfall_app/opening/replace_checks.py
 app/ashfall_app/opening/retire_checks.py
 app/ashfall_app/opening/schema.py

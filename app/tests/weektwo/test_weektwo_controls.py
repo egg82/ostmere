@@ -12,7 +12,6 @@ import pytest
 
 from ashfall_app.engine import CardId, CardShare, Mix, Rules, Save, SaveMix, SetQueue, TapCard, decide, rebase, view
 from ashfall_app.engine.codec import canonical
-from ashfall_app.opening.renames import engine_renames, load_renames
 from tests.daythree import counters as c3
 from tests.daythree import shifts, visits
 from tests.daythree.content import rules3
@@ -86,7 +85,7 @@ def pack_save(rules: Rules) -> tuple[Save, int]:
     minute without them. The town's split, which the examples below are written for, is the capture's. And when its
     next visit starts."""
     raw = json.loads(PACK_SAVE.read_text())
-    at = rebase(canonical(raw["save"]), rules, engine_renames(load_renames()))
+    at = rebase(canonical(raw["save"]), rules)
     mix = next(m for m in at.mixes if m.id == at.active)
     for trip, share in [(t, sinks.tuned_share(rules, at, t)) for t in v2.EIGHT.sinks.trips]:
         mix = sinks.with_share(mix, trip.card, share)

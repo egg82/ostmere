@@ -9,7 +9,6 @@ from ashfall_app.api.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.entries import ModifierEntry
 from ashfall_app.opening.schema import load_opening
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.edited import Edit, edited, same
 
@@ -19,7 +18,7 @@ SLOTS = ("{pct}", "{pct_b}")
 @pytest.fixture(scope="module")
 def content() -> Content:
     o = load_opening()
-    return Game(o, ruleset(o, load_renames(), "dev", 1)).content()
+    return Game(o, ruleset(o, "dev", 1)).content()
 
 
 def worded(content: Content) -> list[tuple[str, str, list[int]]]:
@@ -74,7 +73,7 @@ def test_a_camp_level_with_a_pct_slot_is_served_the_change(content: Content):
 
 def served_card_changes(card: str, data: Edit = same) -> list[int]:
     o = edited(data=data)
-    return {c.card: c.change_bp for c in Game(o, ruleset(o, load_renames(), "dev", 1)).content().card_infos}[card]
+    return {c.card: c.change_bp for c in Game(o, ruleset(o, "dev", 1)).content().card_infos}[card]
 
 
 def test_a_staged_build_is_served_the_change_its_stages_outcome_carries():
@@ -131,6 +130,6 @@ def test_a_kept_entry_names_its_slot_and_an_equal_unscaled_change_has_another(co
     same_amount = ModifierEntry(target="rate", id="x", flow="make", store="x", kind="add_bp", amount_bp=5000, source="x")
     cards = [c.model_copy(update={"outcome": c.outcome.model_copy(update={"modifiers": [same_amount]})}) if c.id == "n4_watch" else c
              for c in o.cards]
-    served = Game(o.model_copy(update={"cards": cards}), ruleset(o, load_renames(), "dev", 1)).content()
+    served = Game(o.model_copy(update={"cards": cards}), ruleset(o, "dev", 1)).content()
     watch = next(c for c in served.card_infos if c.card == "n4_watch")
     assert (watch.change_bp, [k.slot for k in watch.kept]) == ([5000, 5000], [1, 1])

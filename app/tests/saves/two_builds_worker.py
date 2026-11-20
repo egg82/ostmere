@@ -11,7 +11,6 @@ from datetime import datetime
 
 from ashfall_app import engine as e
 from ashfall_app.db.engine import open_database
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.interface import SaveError
 from ashfall_app.saves.ruleset import ruleset
@@ -28,7 +27,7 @@ class Clock:
 
 def main() -> None:
     opening = retuned_opening() if os.environ["RULES"] == "retuned" else load_opening()
-    rs = ruleset(opening, load_renames(), os.environ["BUILD_VERSION"], int(os.environ["RELEASE"]))
+    rs = ruleset(opening, os.environ["BUILD_VERSION"], int(os.environ["RELEASE"]))
     clock = Clock()
     database = open_database(os.environ["ASHFALL_TEST_DB"], max_size=1)
     saves = PgSaves(database.engine, rs, clock)

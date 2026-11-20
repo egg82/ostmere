@@ -11,7 +11,6 @@ from ashfall_app.engine import AtLeast, CardCount, Condition, SkillLevel, StoreV
 from ashfall_app.engine.index import index
 from ashfall_app.engine.viewparts import CardView
 from ashfall_app.engine.work import unmet_conditions
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.daytwo.player import DayTwoPlayer
@@ -22,7 +21,7 @@ pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 
 @pytest.fixture(scope="module")
 def stores(shipped_opening: Opening) -> dict[str, StoreInfo]:
-    content = Game(shipped_opening, ruleset(shipped_opening, load_renames(), "dev", 1)).content()
+    content = Game(shipped_opening, ruleset(shipped_opening, "dev", 1)).content()
     return {s.store: s for s in content.store_infos}
 
 

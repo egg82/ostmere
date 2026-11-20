@@ -23,11 +23,11 @@ _log = logging.getLogger(__name__)
 
 
 def keys(rs: Ruleset) -> list[str]:
-    """The line keys a stored line may carry and feed a subject: the subjects' keys, and the keys renamed into them."""
+    """The line keys a stored line may carry and feed a subject: the subjects' keys."""
     j = rs.journal
     if j is None:
         return []
-    return sorted({*j.sources, *(old for old, new in rs.line_renames.items() if new in j.sources)})
+    return sorted(j.sources)
 
 
 def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: Sequence[e.Line], time: int,
@@ -44,7 +44,7 @@ def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: S
         found, keyed = seen.days, seen.lines
     else:
         found, keyed = rows.days(conn, row.id), rows.lines_of(conn, row.id, keys(rs), time + 1)
-    history = fed([*keyed, *((ln.time, str(ln.key)) for ln in lines)], rs, j)
+    history = fed([*keyed, *((ln.time, str(ln.key)) for ln in lines)], j)
     history = history[:bisect_right([ln.at for ln in history], time)]
     stored = [day_of(r) for r in found]
     start = len(stored) - (1 if found and _open(found[-1]) else 0)
@@ -97,11 +97,10 @@ def stored_form(d: ComposedDay, through: int) -> JournalDay:
                       list(d.marks), through)
 
 
-def fed(pairs: Sequence[tuple[int, str]], rs: Ruleset, j: JournalRules) -> list[Line]:
-    """The lines, (game second, key), as the composer reads them: renamed, retired ones dropped, one per source, by game
-    second and, within one, in the order given."""
-    return sorted((Line(key, at, source) for at, old in pairs if (key := rs.line_renames.get(old, old)) not in rs.retired_lines
-                   for source in j.sources.get(key, ())), key=lambda ln: ln.at)
+def fed(pairs: Sequence[tuple[int, str]], j: JournalRules) -> list[Line]:
+    """The lines, (game second, key), as the composer reads them: one per source, by game second and, within one, in
+    the order given."""
+    return sorted((Line(key, at, source) for at, key in pairs for source in j.sources.get(key, ())), key=lambda ln: ln.at)
 
 
 def written(conn: Connection, save_id: int, seen: rows.Seen | None, rs: Ruleset) -> tuple[ComposedDay, ...]:
@@ -113,6 +112,6 @@ def written(conn: Connection, save_id: int, seen: rows.Seen | None, rs: Ruleset)
     j = rs.journal
     if j is None or not any(d.notes for d, r in zip(stored, found) if r.through is None):
         return tuple(d for d in stored if d.notes)
-    history = read(fed(rows.lines_of(conn, save_id, keys(rs), len(stored) * DAY_S), rs, j), j.subjects)
+    history = read(fed(rows.lines_of(conn, save_id, keys(rs), len(stored) * DAY_S), j), j.subjects)
     return tuple(page_order(d, stored[:d.day], history, j.subjects) if r.through is None else d
                  for d, r in zip(stored, found) if d.notes)
