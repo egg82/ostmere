@@ -102,11 +102,11 @@ def made_layers() -> list[Layer]:
         Layer(id="bay", img=bay, when=BAY_BUILT),
         Layer(id="bay_ghost", img=dayone.ghost(bay), when="running:make_bay|running:n2_build_bay", until=BAY_BUILT),
         *_staged("rack_roof", [made.rack_roof(n) for n in (1, 2)], [1, 2]),
-        Layer(id="watch_ring", img=ring, when=WATCH_RING),
+        Layer(id="watch_ring", img=ring, when=WATCH_RING, open_fire=True),
         Layer(id="watch_ring_ghost", img=dayone.ghost(ring), when="running:watch_fire|running:n1_build_watch",
-              until=WATCH_RING),
-        Layer(id="watch_laid", img=fire.watch_laid(), when=WATCH_RING, until=WATCH_LIT),
-        Layer(id="watch_lit", img=fire.watch_lit(), when=WATCH_LIT, ungraded=True),
+              until=WATCH_RING, open_fire=True),
+        Layer(id="watch_laid", img=fire.watch_laid(), when=WATCH_RING, until=WATCH_LIT, open_fire=True),
+        Layer(id="watch_lit", img=fire.watch_lit(), when=WATCH_LIT, ungraded=True, open_fire=True),
     ]
 
 

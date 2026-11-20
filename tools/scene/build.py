@@ -223,6 +223,8 @@ def write_layers(rng: random.Random) -> list[Entry]:
             entry["flicker"] = layer["flicker"]
         if "sound" in layer:
             entry["sound"] = layer["sound"]
+        if layer.get("open_fire"):
+            entry["open_fire"] = True
         bottoms[layer["id"]] = box[3]
         out.append(entry)
     return depth.arrange(out, bottoms)

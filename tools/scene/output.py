@@ -29,7 +29,8 @@ PREVIEW = ASSETS / "previews/scene"
 class Layer(TypedDict):
     """A drawn layer before it is cut out and written: `until` hides it again, `blend` is a mix-blend-mode, `ungraded`
     layers are drawn over the grade, and `front`
-    layers over those: they stand in front of the lights, on the page's second canvas."""
+    layers over those: they stand in front of the lights, on the page's second canvas. `open_fire` marks a fire's
+    layers (ring, kindling, flames, ghosts) that stand on open ground: no stage may lay one over a wall."""
     id: str
     img: Image.Image
     when: str
@@ -39,6 +40,7 @@ class Layer(TypedDict):
     front: NotRequired[bool]
     flicker: NotRequired[float]
     sound: NotRequired[Literal["fire", "evening"]]
+    open_fire: NotRequired[bool]
 
 
 class Entry(TypedDict):
@@ -54,6 +56,7 @@ class Entry(TypedDict):
     front: NotRequired[bool]
     flicker: NotRequired[float]
     sound: NotRequired[Literal["fire", "evening"]]
+    open_fire: NotRequired[bool]
     base: NotRequired[int]
 
 
@@ -140,11 +143,11 @@ def check_depth(entries: list[Entry]) -> None:
 
 
 def check_footing(entries: list[Entry]) -> None:
-    """No figure's footing lies on a wall it stands in front of (depth.on_walls), and no watch fire lies on any wall
+    """No figure's footing lies on a wall it stands in front of (depth.on_walls), and no `open_fire` layer lies on any wall
     (depth.fire_on_walls), in any stage: a seat or a spot a wall's courses grow over later fails here, naming the
     stage. Fails too when no stage had a figure and a wall together."""
     if gone := depth.missing_walls(entries):
-        raise ValueError(f"depth.WALLS or depth.WATCH_FIRE names layers the scene no longer has: {gone}")
+        raise ValueError(f"depth.WALLS names layers the scene no longer has, or no layer is `open_fire`: {gone}")
     overlap, whole = _overlap(entries, footing=True), _overlap(entries)
     faults: dict[tuple[str, str], str] = {}
     met = 0
@@ -158,7 +161,7 @@ def check_footing(entries: list[Entry]) -> None:
     if not met:
         raise ValueError("no stage shows a figure and a wall together: the footing check looked at nothing")
     if faults:
-        raise ValueError("a figure's feet or the watch fire lie on a wall: "
+        raise ValueError("a figure's feet or an open fire lie on a wall: "
                          + "; ".join(f"{f} on {w} ({s})" for (f, w), s in faults.items()))
 
 
