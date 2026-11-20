@@ -6,6 +6,7 @@ from dataclasses import replace
 from ashfall_app.engine import (
     LaneDef, Rules, Save, advance, decode, encode, rebase, rules_digest,
 )
+from tests.kills import kills
 from groups_world import G, GA, P1, P2, cards, join, lane_state, mark, own, split_mix, start, world
 
 KEYS = ("pooled", "group", "own_split", "marks")
@@ -15,6 +16,7 @@ def _text(rules: Rules, save: Save) -> str:
     return encode(save, rules)
 
 
+@kills(9)
 def test_182_rules_and_saves_with_no_group_encode_without_any_group_field():
     rules = world((join(P1, own(P1, "a"), True),), lanes=(LaneDef(P1, True),), cards=tuple(c for c in cards() if c.lane == P1))
     save = advance(start(rules), rules, 100)

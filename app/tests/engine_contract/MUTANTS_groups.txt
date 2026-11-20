@@ -1,0 +1,19 @@
+Wrong implementations of GROUPS (engine DESIGN.txt, "GROUPS (pooled lanes)", invariants 179-183), to plant one at a time
+in a scratch copy; a test written blind from that part alone must go red for each. Record each run below the list as
+MUTANTS_drains.txt does. `@kills(row)` on a test claims the row.
+
+ 1 unruled pool     a pooled lane may be declared unruled: its `ruled` is never checked.           [183]
+ 2 group any lane    a group may name any lane, not only a pooled one.                              [183]
+ 3 capped pool card a card on a pooled lane may carry a cap.                                      [183]
+ 4 pooled start      a start of a pooled card is not refused (installs and queues still are).       [183]
+ 5 mark anywhere     a mark is allowed in any outcome, a card's included.                           [183]
+ 6 unmark no group   a mark may clear the mark of a lane with no group.                             [183]
+ 7 mark capped card  a mark's card may be a capped card or one off the lane.                        [183]
+ 8 pooled join       a join of a pooled lane is valid.                                              [183]
+ 9 mark always saved a lane's own_split is written into every save's encoding, at its default too.  [182]
+10 bar on pool       the lane bar shows a mark on a pooled lane, which is no person.                ["View"]
+
+Run against the engine at ece48db: rows 1-10, 10 plants (tools/groups_mutants/mNN.py), all KILLED by the blind suite.
+Rows 1-10 reach the validation, codec and view code only: the plants for the crew, tap and mark behaviour live in the
+rate and mark code, which the suite's writer did not open.
+  python -m tools.mutate_suite groups --run

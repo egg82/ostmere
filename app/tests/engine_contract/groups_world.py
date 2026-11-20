@@ -12,7 +12,7 @@ from typing import Any
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, AfterTime, CardDef, CardId, CardShare, Flow, Join, LaneDef, LaneId, Mark, Mix, MixId,
     Order, Outcome, PacingCurve, Rules, Save, SaveMix, SetOrders, SkillDef, SkillId, StoreDef, StoreId, SwitchMix, TapCard,
-    TriggerDef, TriggerId, CardView, LaneState, advance, decide, new_save, per_hour, segment, validate_rules, value_at, view,
+    TriggerDef, TriggerId, CardView, Verb, LaneState, advance, decide, new_save, per_hour, segment, validate_rules, value_at, view,
 )
 
 G = LaneId("g")
@@ -81,10 +81,10 @@ def split_mix(*shares: tuple[CardId, int]) -> SaveMix:
     return save_mix([CardShare(c, bp) for c, bp in shares])
 
 
-def start(r: Rules, *verbs: object) -> Save:
+def start(r: Rules, *verbs: Verb) -> Save:
     s = new_save(r)
     for v in verbs:
-        s = decide(s, r, 0, v)  # type: ignore[arg-type]
+        s = decide(s, r, 0, v)
     return s
 
 

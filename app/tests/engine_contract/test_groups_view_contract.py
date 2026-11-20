@@ -8,6 +8,7 @@ from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, AfterTime, CardShare, HANDS, InvalidVerbError, Modifier, ModifierKind, LaneSpeed, Order, Outcome, QueueEntry,
     LaneId, RunKind, SetOrders, SetQueue, SourceId, TapCard, TriggerDef, TriggerId, Verb, decide, view,
 )
+from tests.kills import kills
 from groups_world import (
     ALWAYS, G, GA, GB, P1, P2, X, card_view, crew_triggers, join, own, split_mix, start, stored, world,
 )
@@ -26,6 +27,7 @@ def test_the_crew_is_none_on_a_card_of_no_pooled_lane():
     assert card_view(s, r, own(P1, "a"), 10).crew is None
 
 
+@kills(10)
 def test_the_lane_bar_shows_the_mark_on_person_lanes_only():
     r = world((join(P1, GA, False), join(P2, own(P2, "a"), True)))
     bars = {b.lane: b for b in view(start(r), r).lanes}

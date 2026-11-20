@@ -6,6 +6,7 @@
   share   tests/engine_contract/test_share_levels_*.py  MUTANTS_share.txt  specs tools/share_mutants/
   guards  tests/engine_contract/test_guards_*.py  MUTANTS_guards.txt  specs tools/guards_mutants/
   or_else tests/engine_contract/test_or_else_*_contract.py  MUTANTS_or_else.txt  specs tools/or_else_mutants/
+  groups  tests/engine_contract/test_groups_*_contract.py  MUTANTS_groups.txt  specs tools/groups_mutants/
   leaves  tests/engine_contract/test_leaves_*.py  MUTANTS_leaves.txt  rows 1-20   specs tools/leaves_mutants/
   retire  tests/engine_contract/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
   clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/

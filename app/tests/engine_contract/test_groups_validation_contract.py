@@ -10,6 +10,7 @@ from ashfall_app.engine import (
     AfterTime, AnswerDef, AnswerId, CardDef, CardId, Flow, InvalidRulesError, Join, LaneDef, LaneId, Leave, Mark,
     OfferDef, OfferId, Outcome, RuleInstall, SkillId, TriggerDef, TriggerId, validate_rules,
 )
+from tests.kills import kills
 from groups_world import (
     G, GA, P1, P2, PER_SECOND, Q1, TOWN, WORK, X, cards, join, lanes, mark, off, own, world,
 )
@@ -38,6 +39,7 @@ def test_183_valid_group_rules_validate():
     validate_rules(world())
 
 
+@kills(1)
 def test_183_a_pooled_lane_is_a_ruled_lane():
     refused("lane g: a pooled lane is a ruled lane", lanes=lanes_with(LaneDef(G, False, pooled=True)))
 
@@ -51,10 +53,12 @@ def test_183_only_a_ruled_lane_has_a_group():
     refused("lane q1: only a ruled lane has a group", lanes=lanes_with(LaneDef(Q1, False, group=G)))
 
 
+@kills(2)
 def test_183_a_group_is_a_pooled_lane():
     refused("lane p1: group p2 is not a pooled lane", lanes=lanes_with(LaneDef(P1, True, group=P2)))
 
 
+@kills(3)
 def test_183_a_card_on_a_pooled_lane_has_no_cap():
     capped = CardDef(GA, WORK, lane=G, cap=1, makes=(Flow(X, PER_SECOND),))
     refused("card ga: a card on a pooled lane has no cap", cards=(capped, *cards()[1:]))
@@ -65,6 +69,7 @@ def test_183_a_pooled_card_with_xp_is_refused_as_a_ruled_lane_card_that_trains_a
     refused("a card on a ruled lane trains no skill", cards=(trains, *cards()[1:]))
 
 
+@kills(4)
 def test_183_a_start_of_a_pooled_card_is_refused():
     refused("taps ga, a card on a pooled lane", triggers=trigger(Outcome(starts=(GA,))))
 
@@ -93,6 +98,7 @@ def test_183_a_pooled_lane_never_leaves():
     refused("leaves g, a pooled lane, which is never a person", triggers=trigger(Outcome(leaves=(Leave(G),))))
 
 
+@kills(5)
 def test_183_only_a_trigger_or_an_answer_marks_a_person():
     card = replace(cards()[2], outcome=Outcome(marks=(Mark(P1, False),)))
     refused("only a trigger's or an answer's outcome marks a person", cards=(*cards()[:2], card, *cards()[3:]))
@@ -111,16 +117,19 @@ def test_183_a_pooled_lane_is_not_a_declared_persons_lane():
     refused("marks g, which is not a declared person's lane", triggers=trigger(Outcome(marks=(Mark(G, True),))))
 
 
+@kills(6)
 def test_183_an_unmark_needs_a_group():
     refused("unmarks q1, which has no group", triggers=trigger(Outcome(marks=(Mark(Q1, False),))))
 
 
+@kills(7)
 @pytest.mark.parametrize("card", [GA, off(P1), CardId("nope")])
 def test_183_a_marks_card_is_an_uncapped_card_on_the_lane(card: CardId):
     refused("marks p1 with " + card + ", which is not an uncapped card on the lane",
             triggers=trigger(Outcome(marks=(Mark(P1, True, card),))))
 
 
+@kills(8)
 def test_183_a_join_of_a_pooled_lane_is_not_valid():
     refused("a join is not valid", triggers=trigger(Outcome(joins=(Join(G, TOWN, GA),))))
 
