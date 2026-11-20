@@ -15,7 +15,7 @@ from daytwo_poses import Who, person
 from dayone_poses import N1
 from figures import figure
 from kit import T
-from place import BY_FIRE
+from place import BY_FIRE, WATCH
 
 SHEETS = "timefantasy_characters/timefantasy_characters/sheets/"
 N3: Who = (SHEETS + "npc4.png", 0)
@@ -25,17 +25,17 @@ N4: Who = (SHEETS + "npc3.png", 1)
 CAVES = "cavesandmines_TFcolor_update_8.24/_tfrecolor_8.24/1X/tilesets/tileB_cave2.png"
 FARM = "tf_farmandfort/rpgmaker_VXa/tileB_farmA.png"
 
-PAIR_AT = (8.2 * T, 8.95 * T)
+PAIR_AT = (8.2 * T, 9.7 * T)
 """Where she stands the first time: at the light's edge below the hearth."""
-PAIR_SITS = (9.35 * T, 8.75 * T)
+PAIR_SITS = (9.35 * T, 9.5 * T)
 """Where he sits: beside her, his stick across his knees."""
-N3_BY_FIRE = (7.1 * T, 8.9 * T)
-N4_BY_FIRE = (10.0 * T, 8.9 * T)
+N3_BY_FIRE = (7.1 * T, 9.65 * T)
+N4_BY_FIRE = (10.0 * T, 9.65 * T)
 """Where each of them keeps once joined, below the hearth's two ends: her standing, him seated."""
 N1_FAR = (7.8 * T, 5.4 * T)
 """Lucy's far mark: seated behind the hearth's far wall and the fireback, above their tops, looking at the fire."""
-N2_WATCH = (10.5 * T, 6.4 * T)
-N4_WATCH = (11.5 * T, 6.65 * T)
+N2_WATCH = (WATCH[0] + 1.1 * T, WATCH[1] + 0.85 * T)
+N4_WATCH = (WATCH[0] - 1.7 * T, WATCH[1] + 1.1 * T)
 """Where each sits a watch at the watch fire, facing the track (Lucy's is `daythree_poses.WATCHING`)."""
 BAY2_WORK = (4.3 * T, 8.95 * T)
 """Where a townsperson stands to lay the second bay's poles."""

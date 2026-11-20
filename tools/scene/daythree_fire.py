@@ -12,7 +12,7 @@ import kit
 from dayone import CAMP, art
 from kit import T
 from parts import campfire_split
-from place import FIRE, H, W, canvas, put
+from place import FIRE, H, W, WATCH, canvas, put
 
 CLAY_HI, CLAY, CLAY_DK, CLAY_SHADE, MORTAR, OUTLINE = ((198, 153, 91, 255), (179, 117, 75, 255), (157, 95, 62, 255),
                                                      (125, 86, 67, 255), (108, 60, 74, 255), (53, 64, 72, 255))
@@ -21,8 +21,6 @@ HEARTH_R = (22, 12)
 """The hearth's wall on the floor, half-width and half-depth in 1x pixels, round the fire's ring."""
 COURSE = 3
 """One course's height in 1x pixels; a stage lays one more (the last two, with the rim)."""
-WATCH = (9.4 * T, 5.55 * T)
-"""The watch fire's centre: just inside the gap, on the camp side, facing the track."""
 WATCH_SCALE = 0.7
 POT_AT = (FIRE[0] + 0.85 * T, FIRE[1] - 0.45 * T)
 """The pot's top-left: on the hearth's rim at the fire's right, clear of the stool."""

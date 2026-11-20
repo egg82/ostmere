@@ -13,8 +13,8 @@ import dayfour_made as d4made
 import dayone
 import kit
 from daytwo import cut
-from kit import FORT
-from place import canvas, put
+from kit import FORT, T
+from place import WATCH, canvas, put
 
 FACE = (32, 12, 128, 52)
 """The fort wall's plain upper face: pointed logs, cut above its loopholes, a little shorter than a person."""
@@ -30,8 +30,10 @@ first, then the rest of it, then the gap's two sides; stage 12 is the gate betwe
 GATE = (278, 304, 149)
 STAKES = (424, 182)
 """The stakes' stack: its bottom-left, inside the rim's stretch, right of the woodshed and above the birch."""
-GAP_FIRE = (-30, -14)
-"""The gap fire from the watch fire's spot: in the gap's mouth, where the wolves come."""
+GAP_AT = (9.4 * T - 30, 5.55 * T - 14)
+"""The gap fire's centre: in the gap's mouth, where the wolves come."""
+GAP_FIRE = (round(GAP_AT[0] - WATCH[0]), round(GAP_AT[1] - WATCH[1]))
+"""The gap fire from the watch fire's spot, which its art is drawn at."""
 ASH_HEAP = (112, 272)
 """The ash off the roofs: its bottom-left, below the bays."""
 ASHED = kit.Grade(sat=0.25, mul=(0.94, 0.94, 0.98), bright=0.55, contrast=1.05)

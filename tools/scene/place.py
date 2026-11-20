@@ -4,10 +4,16 @@ from __future__ import annotations
 
 from PIL import Image
 
+import kit
 from kit import T
-from views import EXTENT
+from views import EXTENT, VIEWS
 
 W, H = EXTENT
+FRAME = VIEWS[0].size
+"""The camp's first frame: art drawn only to the first widening sits inside it."""
+BEYOND_SEED = 29
+"""Seeds the random art drawn past the first frame, so it never moves the rolls of the art inside it (the shared
+generator is read for the first frame's art alone)."""
 FIRE = (8.5 * T, 6.95 * T)
 """The fire's centre: the ring, laid fire, flames, fireback and light all hang off it."""
 
@@ -16,10 +22,23 @@ def canvas() -> Image.Image:
     return Image.new("RGBA", (W, H))
 
 
+def specks(n: int, colour: tuple[int, int, int], seed: int) -> Image.Image:
+    """Ash hanging over the whole art: the first frame's specks as they were drawn for it, then as many more over the rest."""
+    img = canvas()
+    img.alpha_composite(kit.ash(FRAME, n, colour, seed))
+    if more := round(n * (W * H - FRAME[0] * FRAME[1]) / (FRAME[0] * FRAME[1])):
+        rest = kit.ash((W, H), more, colour, BEYOND_SEED)
+        rest.paste((0, 0, 0, 0), (0, 0, *FRAME))
+        img.alpha_composite(rest)
+    return img
+
+
 def put(img: Image.Image, sprite: Image.Image, x: float, y: float) -> None:
     img.alpha_composite(sprite, (int(x), int(y)))
 
 
+WATCH = (15.9 * T, 6.9 * T)
+"""The watch fire's centre: open ground at the camp's right edge, facing out."""
 LIE = (1.75 * T, 4.75 * T)
 """Where the figure lies and gets up: its feet, under the roof, against the wall."""
 GAP = (8.15 * T, 5.35 * T)
@@ -40,5 +59,5 @@ LIP = 4.5 * T
 """Where the camp's floor ends at the wall's foot: past it the ground is lower."""
 CREST = 3.35 * T
 """The far crest across the low ground: the line the ridge light sits on."""
-LOWEST_HEAD = 0.33 * H
+LOWEST_HEAD = 0.33 * FRAME[1]
 """The story strip lies along the art's top, so no figure's head may sit above this line (the strip's clearance)."""

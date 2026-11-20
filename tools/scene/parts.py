@@ -14,7 +14,7 @@ import valley
 from dayone_world import behind
 from figures import Held, figure
 from kit import ASH_B, FORT, T
-from place import FIRE, H, LIP, SEAT, W, canvas, put
+from place import BEYOND_SEED, FIRE, FRAME, H, LIP, SEAT, W, canvas, put
 from tints import CLEARED, GROUND, STONE
 
 
@@ -22,10 +22,12 @@ def ground(rng: random.Random) -> Image.Image:
     """Grey ash over everything; here and there the stone shows through it."""
     a5 = kit.load("tf_ashlands/2x_RMVX/tf_A5_ashlands_2.png")
     img = canvas()
-    for r in range(9):
-        for c in range(15):
-            stone = False
-            put(img, kit.tile(a5, rng.choice([1, 2, 3, 4, 5]), 0 if stone else 1), c * T, r * T)
+    beyond = random.Random(BEYOND_SEED)
+    cells = [(r, c) for r in range(H // T) for c in range(W // T)]
+    cells.sort(key=lambda rc: rc[0] >= FRAME[1] // T or rc[1] >= FRAME[0] // T)
+    for r, c in cells:
+        roll = beyond if r >= FRAME[1] // T or c >= FRAME[0] // T else rng
+        put(img, kit.tile(a5, roll.choice([1, 2, 3, 4, 5]), 1), c * T, r * T)
     return kit.grade(kit.calm(img, 0.6), **GROUND)
 
 
@@ -107,7 +109,8 @@ def cleared(rng: random.Random) -> Image.Image:
         for r in range(-3, 2):
             put(patch, kit.tile(a5, rng.choice([1, 2, 3, 4, 5]), 0), FIRE[0] + c * T, FIRE[1] + r * T)
     mask = kit.radial(patch.size, (FIRE[0], FIRE[1] - 4), 3.3 * T, 255, 0, squash=0.66)
-    noise = Image.frombytes("L", patch.size, bytes(rng.randrange(256) for _ in range(W * H)))
+    noise = Image.new("L", patch.size)
+    noise.paste(Image.frombytes("L", FRAME, bytes(rng.randrange(256) for _ in range(FRAME[0] * FRAME[1]))))
     edge = ImageChops.add(mask, Image.eval(noise, lambda v: v // 6))       # ragged: noise nudges the cut
     patch.putalpha(Image.eval(edge, lambda v: 255 if v > 120 else 0))
     return kit.grade(kit.calm(patch, 0.6), **CLEARED)

@@ -18,7 +18,7 @@ from dayone_poses import build_at
 from kit import T
 from output import Layer
 from parts import FLICKER, firelight
-from place import FIRE
+from place import FIRE, WATCH
 
 EDGE = "running:walk_edge"
 BAY_BUILT = "project:make_bay|project:n2_build_bay"
@@ -37,7 +37,7 @@ COMFORTS = {"larder_floor": "running:larder_floor", "rack_roof": "running:rack_r
             "raised_bed": "running:raised_bed", "clay_hearth": "running:clay_hearth",
             "watch_fire": "running:watch_fire", "make_bay": "running:make_bay"}
 WORK = {"larder_floor": (5.0 * T, 6.55 * T), "rack_roof": (6.0 * T, 8.85 * T), "raised_bed": (2.0 * T, 6.0 * T),
-        "clay_hearth": (FIRE[0] + 1.0 * T, FIRE[1] + 1.5 * T), "watch_fire": (10.3 * T, 6.05 * T),
+        "clay_hearth": (FIRE[0] + 1.0 * T, FIRE[1] + 1.5 * T), "watch_fire": (WATCH[0] + 0.9 * T, WATCH[1] + 0.5 * T),
         "make_bay": (2.7 * T, 8.75 * T)}
 """Where the player stands to work each comfort, facing it."""
 HANDS_AWAY = list(COMFORTS.values())

@@ -24,7 +24,6 @@ import dayfour_layers as d4
 import daythree_layers as d3
 import daytwo_layers as d2
 import dayone_world as world
-import kit
 import night
 import props
 import trips
@@ -32,7 +31,7 @@ from figures import figure
 from output import OUT, Entry, Layer, bake, check_conditions, check_depth, check_footing, write_manifest, write_previews
 from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, FLICKER, firelight,
                    rack, ruin, seated_at_work, stones_heap, stool, wood_drying)
-from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST
+from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST, specks
 from tints import WOOD
 
 SEED = 7
@@ -194,7 +193,7 @@ def light_layers() -> list[Layer]:
         *d11.light_layers(),
         *d12.light_layers(),
         Layer(id="ridge_light", img=night.ridge_light((W, H), RIDGE), when="end:showing", until="feature:morning", blend="screen"),
-        Layer(id="ash", img=kit.ash((W, H), 420, (196, 188, 176), SEED), when="always"),
+        Layer(id="ash", img=specks(420, (196, 188, 176), SEED), when="always"),
     ]
 
 

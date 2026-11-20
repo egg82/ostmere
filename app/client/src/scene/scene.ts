@@ -6,8 +6,8 @@
 // grow with the window; a frame is drawn only when a fade is moving or a flickering light is showing (flicker.ts).
 import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
-import { soundAlphaOf, soundShownOf, type Drawn } from "./drawn";
-import { depthOrder, fadeStep, isGlow, passOf, pickGrade, gradeStep, pickView, GRADE_S, type Pass, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
+import { drawLayers, soundAlphaOf, soundShownOf, type Drawn } from "./drawn";
+import { depthOrder, fadeStep, isGlow, pickGrade, gradeStep, pickView, GRADE_S, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
 import { COVER, place, type Crop } from "./crop";
 import { focusOf } from "./focus";
 import { fetchManifest, roomAbove } from "./room";
@@ -43,8 +43,7 @@ export class Scene {
   private cover = false;   // the box asks to be covered (game.css's --cover: a phone's stage)
   private fixed: [number, number] | null = null;
   private day = 1;
-  /** The part of the art shown, from its top-left: the canvases are this size (chooseView). */
-  private view: [number, number];
+  private view: [number, number];   // the part of the art shown, from its top-left: the canvases are this size (chooseView)
   private gradeId = "";
   private from: SceneGrade | null = null;
   private to: SceneGrade | null = null;
@@ -204,20 +203,8 @@ export class Scene {
     const [w, h] = this.view;
     ctx.clearRect(0, 0, w, h);
     frontCtx.clearRect(0, 0, w, h);
-    this.drawLayers(ctx, "base");
-    this.drawLayers(frontCtx, "front");
-  }
-
-  private drawLayers(ctx: CanvasRenderingContext2D, pass: Pass, only: (layer: SceneLayer) => boolean = () => true): void {
-    for (const { layer, image, alpha, glow } of this.layers) {
-      if (passOf(layer) !== pass || !only(layer)) continue;
-      if (alpha <= 0 || !image.complete || image.naturalWidth === 0) continue;
-      ctx.globalAlpha = alpha * glow;
-      ctx.globalCompositeOperation = (layer.blend ?? "source-over") as GlobalCompositeOperation;
-      ctx.drawImage(image, layer.x, layer.y);
-    }
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = "source-over";
+    drawLayers(ctx, this.layers, "base");
+    drawLayers(frontCtx, this.layers, "front");
   }
 
   /** The base with the grade over it, easing from the previous grade to the current one. */
@@ -230,8 +217,8 @@ export class Scene {
       this.paintGraded(target, source, op, this.to, this.fade);
       target.globalAlpha = 1;
     }
-    this.drawLayers(ctx, "ungraded");
-    this.drawLayers(frontCtx, "ungraded", isGlow);
+    drawLayers(ctx, this.layers, "ungraded");
+    drawLayers(frontCtx, this.layers, "ungraded", isGlow);
     frontCtx.globalCompositeOperation = "destination-in";   // the glows were drawn on clear canvas too: keep them on the figures only
     frontCtx.drawImage(this.frontBase, 0, 0);
     frontCtx.globalCompositeOperation = "source-over";

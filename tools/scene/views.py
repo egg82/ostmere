@@ -18,7 +18,8 @@ class View:
     when: str | None
 
 
-VIEWS = (View("camp", (15 * T, 9 * T), None),)
+VIEWS = (View("camp", (15 * T, 9 * T), None),
+         View("room_for_two", (18 * T, 11 * T), "project:make_room"))
 EXTENT = (max(v.size[0] for v in VIEWS), max(v.size[1] for v in VIEWS))
 """The art's own size: the canvas every layer is drawn on."""
 

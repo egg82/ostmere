@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw
 import kit
 from kit import T
 import rim
-from place import CREST, H, LIP, W, canvas, put
+from place import BEYOND_SEED, CREST, H, LIP, W, canvas, put
 
 HAZE = (104, 112, 124)
 """The distance colour, cool grey-blue; the further the ground, the more of it."""
@@ -44,9 +44,12 @@ def _floor(rng: random.Random, grade: kit.Grade) -> Image.Image:
     """The ash tiles laid half a tile off the camp's grid, so no seam or tile lines up with the camp floor's."""
     a5 = kit.load("tf_ashlands/2x_RMVX/tf_A5_ashlands_2.png")
     img = canvas()
+    beyond = random.Random(BEYOND_SEED)
     for r in range(-1, 6):
         for c in range(-1, 16):
             put(img, kit.tile(a5, rng.choice([1, 2, 3, 4, 5]), 1), c * T + T // 2, r * T + T // 2)
+        for c in range(16, W // T + 1):
+            put(img, kit.tile(a5, beyond.choice([1, 2, 3, 4, 5]), 1), c * T + T // 2, r * T + T // 2)
     return kit.grade(kit.calm(img, 0.7), **grade)
 
 

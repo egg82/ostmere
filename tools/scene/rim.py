@@ -7,7 +7,7 @@ import random
 from PIL import Image
 
 import kit
-from place import LIP, W, canvas, put
+from place import BEYOND_SEED, FRAME, LIP, W, canvas, put
 
 WALL_FOOT = 146
 """The row the walls stand on: under a wall the edge never drops below it, or the low ground shows under the wall."""
@@ -66,10 +66,12 @@ def coping(rng: random.Random, rim: list[int]) -> Image.Image:
     strip = _coping_strip()
     img = canvas()
     x = -rng.randrange(40)
+    beyond = random.Random(BEYOND_SEED)
     while x < W:
-        width = rng.randint(5, 18)
-        if x >= 0 and rng.random() > 0.2:
-            _lay_segment(img, strip, rim, x, width, rng)
+        roll = rng if x < FRAME[0] else beyond
+        width = roll.randint(5, 18)
+        if x >= 0 and roll.random() > 0.2:
+            _lay_segment(img, strip, rim, x, width, roll)
         x += width
     return img
 
@@ -100,10 +102,15 @@ def strewn(rng: random.Random, rim: list[int], walls: Image.Image) -> Image.Imag
     """A few rocks and tufts on or hanging over the rim, only where no wall hides them, none touching another."""
     sheet = kit.load(kit.ASH_B)
     img = canvas()
-    for x in _spread(rng, _open_columns(walls), 26):
-        c, r = rng.choice(STONES if rng.random() < 0.6 else TUFTS)
-        small = kit.tile(sheet, c, r)
-        if rng.random() < 0.5:
-            small = small.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        _sit(img, small, x, rim, rng.choice([1, 2, 4, 6]))
+    beyond = random.Random(BEYOND_SEED)
+    spots = _open_columns(walls)
+    inside = _spread(rng, [x for x in spots if x < FRAME[0]], 26)
+    outside = _spread(beyond, [x for x in spots if x >= FRAME[0] and all(abs(x - p) >= 26 for p in inside)], 26)
+    for roll, xs in ((rng, inside), (beyond, outside)):
+        for x in xs:
+            c, r = roll.choice(STONES if roll.random() < 0.6 else TUFTS)
+            small = kit.tile(sheet, c, r)
+            if roll.random() < 0.5:
+                small = small.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            _sit(img, small, x, rim, roll.choice([1, 2, 4, 6]))
     return img
