@@ -6,7 +6,7 @@ beats sharp (pace_scale 1): B12 day 9.95, target_day 13
   away V88->V89: 1 ['trigger t_b12']
   away V89->V90: 1 ['trigger offer_o_shaft']
   away V90->V91: 0 []
-  away V91->V92: 2 ['trigger t_broth_open', 'trigger t_town_broth']
+  away V91->V92: 1 ['trigger offer_o_cold_air']
   away V92->V93: 0 []
   away V93->V94: 1 ['trigger offer_o_lean_to']
   away V94->V95: 0 []
@@ -16,7 +16,7 @@ beats sharp (pace_scale 1): B12 day 9.95, target_day 13
   away V98->V99: 1 ['trigger offer_o_crows']
   away V99->V100: 0 []
   away V100->V101: 0 []
-  away V101->V102: 1 ['trigger t_lamps']
+  away V101->V102: 3 ['trigger t_lamps', 'trigger t_broth_open', 'trigger t_town_broth']
   away V102->V103: 0 []
   away V103->V104: 1 ['trigger offer_o_sag']
   away V104->V105: 0 []
@@ -42,6 +42,6 @@ day    line feature    chip   store   skill    card   level  total
   2      31       5       2       2       0       7       3     50
   3      21       4       0       0       0      36       3     64
   4      20       5       0       0       0       5       2     32
-  5       0       2       0       2       0       9       0     13
-  6       4       1       0       0       0       1       2      8
+  5       0       2       0       2       0       1       0      5
+  6       4       1       0       0       0       9       2     16
   7       1       0       0       0       0       0       1      2
