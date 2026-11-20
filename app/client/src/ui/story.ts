@@ -1,7 +1,7 @@
 // The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
-// costs; each once its cure is on screen, game/shown.ts), what the player carries (a feature with a label, dotted
-// when it arrives, until the journal's first entry moves it into the Book). The Book (ui/book.ts) holds the chronicle and
+// costs; each once its cure is on screen, game/shown.ts), the permanent bonuses the player carries (a feature with a
+// label) behind one count (ui/keptbonuses.ts), and the book, dotted when it arrives, until the journal's first entry moves it into the Book. The Book (ui/book.ts) holds the chronicle and
 // the journal; its tab is dotted when a line left the strip before the player touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
 // first, the older dimmer, in room kept for the tallest story line the content can write (Content.line_infos, laid out
 // unseen in the strip's one cell; ui/stripfit.ts counts how many fit, at least the newest). The Feedback button
@@ -20,7 +20,8 @@ import { shownChips } from "../game/shown";
 import { UI } from "../game/text";
 import { AimLine } from "./aim";
 import { CampBar } from "./camp";
-import { chipNode, drawLevels } from "./chipnode";
+import { bandItem, drawLevels } from "./chipnode";
+import { KeptBonuses } from "./keptbonuses";
 import { el, keyed } from "./dom";
 import { FeedbackSheet } from "./feedback";
 import { Book } from "./book";
@@ -43,6 +44,7 @@ export class Story implements Part {
   /** The Camp bar and chips: on the art's top, or just above the art on a phone (ui/headseat.ts seats it). */
   readonly head = el("div", "scene-head");
   private readonly chips = el("div", "chips");
+  private readonly kept: KeptBonuses;
   private readonly aimLine: AimLine;
   private readonly lines = el("ol", "lines");
   private readonly roomCell = el("div", "strip-room");
@@ -83,6 +85,8 @@ export class Story implements Part {
     for (const t of TOUCHES) document.addEventListener(t, () => { this.touchedAt = performance.now(); }, { capture: true });
     const feedback = new FeedbackSheet(ctx);
     this.feedbackButton = feedback.button;
+    this.kept = new KeptBonuses(ctx.catalog, (node, id) => ctx.arrivals.arrive(node, "feature", id));
+    this.chips.append(this.kept.root);
     this.head.append(this.camp.root, this.chips);
     this.root.append(this.room(), this.lines, this.book.sheet, feedback.root);
   }
@@ -116,9 +120,10 @@ export class Story implements Part {
     this.chronicle.waiting(view.offers.filter((o) => o.answer === null).length);
     const carried = catalog.content.feature_infos.filter((f) => f.label_key && catalog.unlocked(view, "feature", f.feature));
     this.journal.update(view);
-    const inBook = (f: string): boolean => this.journal.shown && f === catalog.content.journal?.feature;
-    const items = [...shownChips(catalog, view).map((c) => `chip:${c}`), ...carried.filter((f) => !inBook(f.feature)).map((f) => `keep:${f.feature}`)];
-    this.chipRows = keyed(this.chips, items, (k) => k, this.chipRows, (k) => ({ node: this.item(k) }));
+    const book = catalog.content.journal?.feature;
+    const items = [...shownChips(catalog, view).map((c) => `chip:${c}`), ...carried.filter((f) => f.feature === book && !this.journal.shown).map((f) => `keep:${f.feature}`)];
+    this.kept.update(carried.filter((f) => f.feature !== book));
+    this.chipRows = keyed(this.chips, items, (k) => k, this.chipRows, (k) => ({ node: bandItem(this.ctx, k) }));
     this.seen = view;
     drawLevels(catalog, this.chips, view, view.at);
     this.hintChips(view);
@@ -281,19 +286,5 @@ export class Story implements Part {
       if (hint && !this.touchedChips.has(chip)) markNew(row.node, () => { this.touchedChips.add(chip); if (hint.switch) keeps.keepSwitchOffered(hint.switch); });
       else unmark(row.node);
     }
-  }
-
-  private item(key: string): HTMLElement {
-    const [kind, id = ""] = key.split(":");
-    const { catalog } = this.ctx;
-    if (kind === "chip") {
-      const node = chipNode(catalog, id);
-      this.ctx.arrivals.arrive(node, "chip", id);
-      return node;
-    }
-    const node = el("span", "chip keep", catalog.label(catalog.content.feature_infos.find((f) => f.feature === id)?.label_key));
-    node.dataset["keep"] = id;
-    this.ctx.arrivals.arrive(node, "feature", id);
-    return node;
   }
 }

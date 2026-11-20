@@ -25,6 +25,7 @@ const text: Record<string, string> = {
   "ui.heading.craft": "Craft",
   "ui.heading.orders": "Rules",
   "ui.heading.mixes": "Mixes",
+  "ui.chip.kept": "{n} kept",
   "ui.mix.runs": "runs {d}",
   "ui.mix.runs_indefinitely": "runs as set",
   "ui.mix.idle": "Idle",

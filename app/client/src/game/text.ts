@@ -20,6 +20,7 @@ export const UI = {
   durationS: "ui.duration.s", // "{s} …"
   perMinute: "ui.rate.per_minute", // "{n}/min"
   amount: "ui.store.amount", // "{n} of {cap}"
+  keptBonuses: "ui.chip.kept", // "{n} kept": the camp header's one control for the permanent bonuses carried
   empties: "ui.ledger.empties", // "{d}" until a falling store is empty
   fills: "ui.ledger.fills", // "{d}" until a rising store is full
   level: "ui.skill.level", // "{n}"
