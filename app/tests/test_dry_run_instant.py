@@ -2,14 +2,13 @@
 dry-run), so every figure the page reads as before → after compares two views of one moment. Answered at the
 server's now instead, a card's tap_s (the rest of its current completion) had counted down by the seconds between the
 two, and a preview listed every running card as moved, or nothing, by when its request landed (#380)."""
-import pytest
+from typing import Any
 
 from tests.game_client import GameClient
 
-SET_NO_ORDERS = {"kind": "set_orders", "orders": []}
+SET_NO_ORDERS: dict[str, Any] = {"kind": "set_orders", "orders": []}
 
 
-@pytest.mark.xfail(strict=True, reason="#380: the dry run is advanced to the server's now")
 def test_a_dry_run_that_changes_nothing_answers_the_view_the_page_holds(game: GameClient):
     begun = game.begin()
     save_id = begun["save"]["save_id"]
