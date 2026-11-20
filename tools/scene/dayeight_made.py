@@ -31,9 +31,9 @@ first, then the rest of it out to the art's right edge, then the gap's two sides
 GATE = (278, 304, 149)
 STAKES = (712, 338)
 """The stakes' stack: its bottom-left, on open ground at the camp's far right edge."""
-GAP_AT = (291, 358)
-"""The gap fire's centre: on the gate's line, the nearest open ground to it (the hearth's stones, its seated figures and
-the birch log hold the ground between), clear of every build and figure shown from the fire's stage on."""
+GAP_AT = (340, 405)
+"""The gap fire's centre: open ground at the camp's lower middle, far from the hearth and the watch fire, clear of every
+build and figure shown from the fire's stage on."""
 GAP_FIRE = (round(GAP_AT[0] - WATCH[0]), round(GAP_AT[1] - WATCH[1]))
 """The gap fire from the watch fire's spot, which its art is drawn at."""
 ASH_HEAP = (620, 430)
