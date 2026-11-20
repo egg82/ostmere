@@ -159,8 +159,8 @@ class JoinEntry(Entry):
 
 class MarkEntry(Entry):
     """A joined person's mark set or cleared (engine Mark): `own_split` False hands the person to their lane's `group`;
-    `card` is an uncapped card on the person's own lane, given a share when the mark is set and the town mix holds none
-    of theirs."""
+    `card` is an uncapped card given a share when the town mix holds none on its lane: on the person's own lane when
+    the mark is set, on their group when it is cleared."""
 
     lane: str
     own_split: bool
