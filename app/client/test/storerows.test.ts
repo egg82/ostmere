@@ -40,7 +40,9 @@ expect("nothing moved, nothing mixed", storeRows(catalog, at([row("wood", 60, "s
 
 // a store already at 0 and falling reads empty, and the camp's own store is never listed
 {
-  const now = at([row("wood", 0, "steady", null), { ...row(catalog.campStore, 0, "steady", null) }]);
-  const then = at([row("wood", -30, "empties", 100), row(catalog.campStore, -5, "empties", 200)]);
+  const camp = catalog.campStore;
+  if (camp === null) throw new Error("the fixture content has no camp store");
+  const now = at([row("wood", 0, "steady", null), row(camp, 0, "steady", null)]);
+  const then = at([row("wood", -30, "empties", 100), row(camp, -5, "empties", 200)]);
   expect("empty now, no camp row", out(storeRows(catalog, now, then, "if run")).text, ["per minutenow→if run", "Dead wood0/min→-0.5/min", "empty"]);
 }
