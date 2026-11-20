@@ -2434,7 +2434,7 @@
   445716000000,
   668736000000
  ],
- "digest": "85e0dbeb97a9834117b20c608051474c790067100e1d15364573c5f488340b9e",
+ "digest": "78edaa59af09d12fbed050618b49c06b80de3fa598c729cff23d57ee19ece5fb",
  "ids": {
   "answer": [
    "o_bank_hers",
@@ -3911,6 +3911,7 @@
    "t_hungry",
    "t_joins",
    "t_lamps",
+   "t_larder_last_night",
    "t_late_7",
    "t_lee_lichen",
    "t_lichen",
@@ -11487,6 +11488,31 @@
      }
     }
    ]
+  },
+  "t_larder_last_night": {
+   "@": "Outcome",
+   "lines": [],
+   "modifiers": [
+    {
+     "@": "Modifier",
+     "amount_bp": 12000,
+     "kind": {
+      "@": "ModifierKind",
+      "v": "mul_bp"
+     },
+     "source": "larder_last_night",
+     "target": {
+      "@": "StoreCap",
+      "store": "smoked"
+     }
+    }
+   ],
+   "orders": [],
+   "queues": [],
+   "raises": [],
+   "starts": [],
+   "stores": [],
+   "unlocks": []
   },
   "t_late_7": {
    "@": "Outcome",
@@ -34115,7 +34141,7 @@
    "unlocks": []
   }
  },
- "release": 78,
+ "release": 79,
  "renames": [
   {
    "from": "t_stock_open",
