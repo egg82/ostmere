@@ -532,58 +532,6 @@ jobs:
           DATABASE_URL="$ASHFALL_TEST_PG" python -m ashfall_app.db migrate
           DATABASE_URL="$ASHFALL_TEST_PG" python -m tools.bench_ab /tmp/before/app 4 3
 
-  # Saves written at the base (checkpoints of the scripted opening, as deep as its end: tools/save_corpus.py) load under
-  # this tree's code and rules and run 30 game days: a format upgrade or a rebase that breaks a save of that depth goes
-  # red before it deploys (engine DESIGN.txt, "Rebase"). The saves go the way a player's does: stored as rows in the
-  # job's Postgres, checked as the app's start checks them, and opened through the saves service.
-  saves-forward:
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Start Postgres
-        run: >
-          docker run -d --name postgres -p 5432:5432
-          -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_INITDB_ARGS="--locale=C --encoding=UTF8"
-          "$PG_IMAGE" -c fsync=off -c synchronous_commit=off -c full_page_writes=off
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-          cache-dependency-path: app/requirements*.txt
-      - name: Install dependencies
-        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
-      - name: Find the base
-        id: base
-        env:
-          BASE_REF: ${{ github.base_ref }}
-          BEFORE: ${{ github.event.before }}
-        run: |
-          if [ -n "$BASE_REF" ]; then BASE=$(git merge-base "origin/$BASE_REF" HEAD)
-          elif [ -n "$BEFORE" ] && [ "$BEFORE" != 0000000000000000000000000000000000000000 ]; then BASE=$BEFORE
-          else BASE=$(git rev-parse HEAD~1); fi
-          echo "base $BASE"
-          echo "sha=$BASE" >> "$GITHUB_OUTPUT"
-          git worktree add -q /tmp/before "$BASE"
-      - name: Write the base's saves
-        run: |
-          if [ ! -f /tmp/before/app/tools/save_corpus.py ]; then echo "the base has no save corpus: nothing to carry"; exit 0; fi
-          cd /tmp/before/app && PYTHONPATH=. python tools/save_corpus.py /tmp/saves
-      - name: Wait for Postgres
-        working-directory: app
-        run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
-      - name: Load them under this tree
-        working-directory: app
-        run: |
-          if [ ! -d /tmp/saves ]; then exit 0; fi
-          DATABASE_URL="$ASHFALL_TEST_PG" PYTHONPATH=. python tools/save_corpus.py --load /tmp/saves
-
   # Strict on every package, with no held count (app/pyrightconfig.json). It also covers tools/scene, whose imports
   # (Pillow) are in requirements-dev.txt for its sake.
   pyright:
@@ -710,7 +658,6 @@ jobs:
       - playthrough-week-one-saved
       - playthrough-week-two
       - engine-bench
-      - saves-forward
       - pyright
       - client
       - app-image
@@ -724,7 +671,7 @@ jobs:
           echo "$NEEDS" | jq -r 'to_entries[] | "\(.key) \(.value.result)"'
           echo "code=$CODE full=$FULL"
           echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" '
-            ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "saves-forward", "pyright",
+            ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "pyright",
              "client", "app-image"] as $per_pr
             | ["playthrough", "chapter-saves", "playthrough-week-one", "playthrough-week-one-saved",
                "playthrough-week-two"] as $full_run

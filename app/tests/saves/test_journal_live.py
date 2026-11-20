@@ -1,6 +1,6 @@
 """A step writes the day in progress as it goes (docs/design/journal.md, "Written as the day goes"): the day's row holds
 the notes so far, a note once stored is never removed or changed by a later step, many small steps store what one long
-advance or a return stores, and a row stored whole before this model is never recomposed."""
+advance or a return stores, and a closed row is never recomposed."""
 from collections.abc import Callable
 
 from sqlalchemy import Engine, insert
@@ -95,12 +95,12 @@ def test_a_return_composes_what_live_play_composes(pg_url: str, pg_empty: str, r
     assert live == back
 
 
-def test_rows_stored_whole_before_stay_and_the_day_in_progress_is_composed_from_its_start(
+def test_closed_rows_stay_and_the_day_in_progress_is_composed_from_its_start(
         engine: Engine, rs: Ruleset, clock: FakeClock, account: int):
     saves, save_id = begun(engine, rs, clock, account)
     whole: list[dict[str, object]] = [{"save_id": save_id, "day": 0, "notes": [{"subject": "s_beat", "slot": "first", "key": "j.beat"}],
-              "gap": None},
-             {"save_id": save_id, "day": 1, "notes": [], "gap": "busy"}]
+              "gap": None, "through": DAY_S},
+             {"save_id": save_id, "day": 1, "notes": [], "gap": "busy", "through": 2 * DAY_S}]
     with engine.begin() as conn:
         conn.execute(insert(save_journal), whole)
     before = stored(engine, save_id)

@@ -115,7 +115,7 @@ def _journal() -> CTE:
         index_elements=["save_id", "day"],
         set_={"notes": t.notes.op("||")(new.notes), "marks": t.marks.op("||")(new.marks),
               "gap": func.coalesce(t.gap, new.gap), "through": new.through},
-        where=and_(t.through.is_not(None), t.through < (t.day + 1) * DAY_S),
+        where=t.through < (t.day + 1) * DAY_S,
     ).returning(save_journal.c.day).cte("journaled")
 
 
