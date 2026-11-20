@@ -2,7 +2,7 @@
 
 Semantics: DESIGN.txt, "FORMAT is 6", "Codec" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS" (FORMAT 7), and
 "Speed" (FORMAT 8) and "Codec" (FORMAT 9). UPGRADES[f] turns an envelope of format f into one of format f + 1. Every format
-from OLDEST_FORMAT below FORMAT has an entry (tests/engine/test_rebase_impl.py and the release lock check it).
+from OLDEST_FORMAT below FORMAT has an entry (tests/engine/test_rebase_impl.py checks it).
 """
 from collections.abc import Callable
 
@@ -80,7 +80,7 @@ UPGRADES: dict[int, Callable[[Json], Json]] = {
 
 
 def missing_upgrades() -> list[int]:
-    """Formats from OLDEST_FORMAT below FORMAT with no UPGRADES entry: each one a release-blocking gap."""
+    """Formats from OLDEST_FORMAT below FORMAT with no UPGRADES entry: each one a gap that strands saves of that format."""
     return [f for f in range(OLDEST_FORMAT, FORMAT) if f not in UPGRADES]
 
 

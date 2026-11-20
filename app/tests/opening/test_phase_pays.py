@@ -9,7 +9,6 @@ from ashfall_app.opening.checks import check_structure
 from ashfall_app.opening.entries import (
     CardEntry, ConditionEntry, ItemAmount, ModifierEntry, OutcomeEntry, TriggerEntry, UnlockEntry,
 )
-from ashfall_app.opening.lock_checks import release_problems
 from ashfall_app.opening.phase_pays import (
     RETIRED_AT, check_phase_pays, expanded, expanded_id, find_id, find_items, find_line, staying_stores,
 )
@@ -175,15 +174,6 @@ def test_the_load_runs_the_check(shipped_opening: Opening):
         check_structure(with_table(shipped_opening, "melee", speed=mul))
 
 
-def test_a_released_table_entry_changed_breaks_the_release_lock(shipped_opening: Opening):
-    """The expansions are ordinary released triggers: a table edit that changes one's outcome is refused."""
-    pp = next(p for p in shipped_opening.phase_pays if p.skill == "foraging")
-    more = [s.model_copy(update={"amount_bp": s.amount_bp + 100}) for s in pp.speed]
-    found = release_problems(expanded(stripped(with_table(shipped_opening, "foraging", speed=more))))
-    assert any(p.cls == "forbidden" and expanded_id("foraging", 2, 5) in p.message for p in found)
-    assert release_problems(expanded(stripped(shipped_opening))) == []
-
-
 def test_no_find_line_comes_twice_in_a_row_and_the_pool_is_used(shipped_opening: Opening):
     """The lines a skill's track pays, in the order the player meets them across every phase it reaches."""
     o = shipped_opening
@@ -209,7 +199,7 @@ def test_a_finds_amount_grows_with_the_phase_and_is_the_staple(shipped_opening: 
         assert pp.find.items_per_phase >= 1 and got[0][0].items > pp.find.items, pp.skill
 
 
-def test_a_retired_find_waits_out_of_reach_with_its_released_outcome(shipped_opening: Opening):
+def test_a_retired_find_waits_out_of_reach_with_its_old_outcome(shipped_opening: Opening):
     o = shipped_opening
     by_id = {t.id: t for t in o.triggers}
     for pp in o.phase_pays:

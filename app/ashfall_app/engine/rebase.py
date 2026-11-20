@@ -177,7 +177,7 @@ def _cards(save: Save, rules: Rules, work_s: dict[CardId, int]) -> tuple[CardSta
 
 
 def _clamped(save: Save, rules: Rules) -> Save:
-    """A store above its cap under the save's stack (only a lowered cap reaches it, which the release lock forbids)
+    """A store above its cap under the save's stack (only a lowered cap reaches it)
     held at that cap."""
     return replace(save, stores=tuple(
         replace(st, segment=replace(st.segment, start_value=min(st.segment.start_value, store_cap(save, rules, st.store))))

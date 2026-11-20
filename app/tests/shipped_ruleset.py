@@ -1,11 +1,10 @@
 """The shipped opening's Ruleset and Game, built once per session so `create_app()` does not build them for every test
 (about two thirds of its CPU). A build name changes only the Ruleset's `build` (and so a Game's content tag), so each
-build seen gets the shipped rules under its name, once. A test that patches the lock or renames, or patches the opening,
+build seen gets the shipped rules under its name, once. A test that patches the renames, or patches the opening,
 gets its own Ruleset from the real builders."""
 from dataclasses import replace
 
 from ashfall_app.api.service import Game
-from ashfall_app.opening.lock import load_lock
 from ashfall_app.opening.renames import RenameEntry, load_renames
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.interface import Ruleset
@@ -18,7 +17,7 @@ class ShippedRuleset:
     def __init__(self, opening: Opening) -> None:
         self.opening = opening
         self.renames = load_renames()
-        self.release = load_lock().release
+        self.release = 0
         self.rs = ruleset(opening, self.renames, BUILD, self.release)
         self._by_build = {BUILD: self.rs}
         self._games = {BUILD: Game(opening, self.rs)}

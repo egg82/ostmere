@@ -8,7 +8,6 @@ from sqlalchemy import Engine
 from ashfall_app import engine as e
 from ashfall_app import main
 from ashfall_app.api.service import Game
-from ashfall_app.opening.lock import load_lock
 from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
@@ -55,7 +54,7 @@ def test_a_forecast_asked_over_the_api_is_cut_by_the_saves_stop(own_game: None, 
     save = game.begin()["save"]["save_id"]
     game.clock.tick(seconds=30)
     engine: Engine = game.app.state.db.engine
-    rs = ruleset(shipped_opening, load_renames(), "dev", load_lock().release)
+    rs = ruleset(shipped_opening, load_renames(), "dev", 0)
     old = game.app.state.services
     game.app.state.services = Services(accounts=old.accounts, saves=PgSaves(engine, rs, game.clock, stop_for=every(1)))
     cut = game.client.post(f"/api/saves/{save}/forecast").json()["forecast"]["horizon_at"]
@@ -68,7 +67,7 @@ def test_a_forecast_request_spends_one_time_budget_on_the_read_and_the_replay(ga
     save = game.begin()["save"]["save_id"]
     game.clock.tick(seconds=30)
     engine: Engine = game.app.state.db.engine
-    rs = ruleset(shipped_opening, load_renames(), "dev", load_lock().release)
+    rs = ruleset(shipped_opening, load_renames(), "dev", 0)
     made: list[int] = []
 
     def stop_for() -> Callable[[], bool]:

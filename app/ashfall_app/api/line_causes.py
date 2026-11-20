@@ -5,8 +5,8 @@ from collections.abc import Iterable
 
 from ..opening import convert as authored
 from ..opening.entries import ConditionEntry
+from ..opening.line_kinds import line_keys
 from ..opening.face_checks import shown_stores, timed_stores
-from ..opening.lock import line_keys
 from ..opening.offer_entries import OfferEntry
 from ..opening.people import mention_keys, person_keys
 from ..opening.refs import fail

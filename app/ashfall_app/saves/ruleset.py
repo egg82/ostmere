@@ -1,6 +1,6 @@
-"""The Ruleset a pod plays saves under, from the opening's content and renames, the build's name, and the content
-release the release lock numbers this content (opening/lock.py; the app's start refuses content the lock does not
-hold, so the number is this content's)."""
+"""The Ruleset a pod plays saves under, from the opening's content and renames, the build's name, and its release
+number (`build_release`)."""
+import os
 
 from .. import engine as e
 from ..opening.convert import camp_trigger_id
@@ -9,6 +9,12 @@ from ..opening.schema import Opening, to_rules
 from .interface import Ruleset
 from .journal_rules import journal_rules
 from .repeats import RepeatRules
+
+
+def build_release() -> int:
+    """This build's place in deploy order: CI numbers each image build (BUILD_RELEASE), later builds higher. A save
+    written by a later release than a pod's own is left to the later pod (saves/load.py `newer`). 0 for a local run."""
+    return int(os.environ.get("BUILD_RELEASE", "0"))
 
 
 def ruleset(opening: Opening, renames: list[RenameEntry], build: str, release: int) -> Ruleset:

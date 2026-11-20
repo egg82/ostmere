@@ -23,9 +23,8 @@ from ashfall_app.db import saves as rows
 from ashfall_app.db.engine import open_database
 from ashfall_app.db.migrate import migrate
 from ashfall_app.engine import Rules, Save, advance, encode, new_save, rebase
-from ashfall_app.opening.lock import load_lock
 from ashfall_app.saves.check import check
-from ashfall_app.saves.ruleset import ruleset
+from ashfall_app.saves.ruleset import build_release, ruleset
 from ashfall_app.saves.service import PgSaves
 from ashfall_app.opening.renames import engine_renames, load_renames
 from ashfall_app.opening.schema import load_opening, to_rules
@@ -95,7 +94,7 @@ def load_db(src: Path, url: str, days: int = 30) -> int:
     """--load through the database (above); 1 if the check or any open fails."""
     logs.setup()
     migrate(url)
-    rs = ruleset(load_opening(), load_renames(), "saves-forward", load_lock().release)
+    rs = ruleset(load_opening(), load_renames(), "saves-forward", build_release())
     database = open_database(url)
     clock, began, ids = _Clock(), datetime(2026, 1, 1, tzinfo=UTC), list[tuple[str, int, int]]()
     with database.engine.begin() as conn:

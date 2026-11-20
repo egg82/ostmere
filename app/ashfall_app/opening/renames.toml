@@ -1,17 +1,15 @@
-# Every id renamed or removed-with-a-mapping since release, never deleted once released (engine DESIGN.txt, "Renames",
-# "Release lock"). One entry per rename:
+# Every id renamed or removed-with-a-mapping since release, never deleted once released (engine DESIGN.txt,
+# "Renames"). One entry per rename:
 #
 #   [[renames]]
 #   kind = "store"      # store, skill, standing, card, lane, chip, trigger, feature, entry, note, line (a log line's
 #                       # text key), subject (a journal subject's id), or slot_key (a text key a journal slot writes)
 #   from = "old_id"
-#   to = "new_id"       # always a new id: reusing a released one is forbidden
+#   to = "new_id"       # the id it is now
 #
 # A `line` entry with no `to` retires the text key: nothing shows it, and a stored line carrying it is dropped. A `note`
 # or `entry` with no `to` retires a journal note or page: nothing writes it, a save keeps its unlock, and a retired
 # note's trigger goes from a save that fired it.
-#
-# Then run `python tools/content_lock.py --write` (from app/) so the release lock records it.
 [[renames]]
 kind = "trigger"
 from = "t_stock_open"

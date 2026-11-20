@@ -27,7 +27,7 @@ def warm_request_paths(shipped_opening: Opening, shipped_ruleset: ShippedRuleset
     try:
         with pytest.MonkeyPatch.context() as mp:
             mp.setenv("ASHFALL_RATE_KEY", "warm-request-paths")
-            mp.setattr(main, "checked_opening", lambda: shipped_opening)
+            mp.setattr(main, "load_opening", lambda: shipped_opening)
             mp.setattr(main, "ruleset", shipped_ruleset.ruleset)
             mp.setattr(main, "Game", shipped_ruleset.make_game)
             with pod(url, "warm-request-paths") as warm:

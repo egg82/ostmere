@@ -24,7 +24,7 @@ def order(kind: str, role: str) -> dict[str, object]:
 def kinded(pg_url: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[GameClient]:
     def opening() -> Opening:
         return load_opening(chapters=(*CHAPTERS, FIXTURE))
-    monkeypatch.setattr(main, "checked_opening", opening)
+    monkeypatch.setattr(main, "load_opening", opening)
     with game_client(pg_url, monkeypatch) as found:
         yield found
 

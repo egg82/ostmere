@@ -1,8 +1,7 @@
 """renames.toml: every id content has renamed since release, as `{kind, from, to}` entries (hand-edited).
 
-The engine's rebase reads them (as engine Renames) to load a save made under older rules; the release lock reads them
-to tell a rename from a removal (engine DESIGN.txt, "Renames", "Release lock"). Entries are never removed once
-released: one table maps a save from any older release.
+The engine's rebase reads them (as engine Renames) to load a save made under older rules (engine DESIGN.txt,
+"Renames"). Entries are never removed once released: one table maps a save from any older release.
 """
 import tomllib
 from pathlib import Path
@@ -16,12 +15,12 @@ from .entries import Entry
 
 RENAMES = Path(__file__).resolve().parent / "renames.toml"
 
-type LockKind = Literal["store", "skill", "standing", "card", "lane", "chip", "trigger", "feature", "line", "offer",
+type RenameKind = Literal["store", "skill", "standing", "card", "lane", "chip", "trigger", "feature", "line", "offer",
                         "answer", "entry", "note", "node", "subject", "slot_key"]
-"""The kinds of id the release lock holds: the engine's IdKinds a save can name, and the content's own: `line`, a text
+"""The kinds of id a rename names: the engine's IdKinds a save can name, and the content's own: `line`, a text
 key a log line can carry, and the journal's `subject` ids and `slot_key`s (text keys its slots write), which a stored
 day names."""
-LOCAL_KINDS: tuple[LockKind, ...] = ("line", "subject", "slot_key")
+LOCAL_KINDS: tuple[RenameKind, ...] = ("line", "subject", "slot_key")
 """The kinds no save's engine state names, so the engine's rebase never sees their renames."""
 
 
@@ -34,7 +33,7 @@ class RenameEntry(Entry):
     that carries it is dropped when a save opens; a journal `note` or `entry` is written nowhere any more, and a save
     keeps the unlock it had (a retired note retires the trigger the loader made for it too)."""
 
-    kind: LockKind
+    kind: RenameKind
     old: str = Field(alias="from")
     new: str | None = Field(default=None, alias="to")
 
@@ -58,7 +57,7 @@ def load_renames(path: Path = RENAMES) -> list[RenameEntry]:
 def with_made(entries: list[RenameEntry]) -> list[RenameEntry]:
     """Each entry, an offer's followed by the rename of the trigger that shows it ("offer_" + old to "offer_" + new; a
     note's likewise with "note_", and a retired note by the retirement of its trigger), which the loader makes and the
-    file never names (engine DESIGN.txt, "Release lock" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS")."""
+    file never names."""
     return [d for r in entries for d in (r, *_made_trigger(r))]
 
 

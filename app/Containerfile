@@ -27,6 +27,9 @@ RUN python -m compileall -q ashfall_app
 # The commit this image is built from (CI passes it); /healthz reports it.
 ARG BUILD_VERSION=dev
 ENV BUILD_VERSION=$BUILD_VERSION
+# This build's place in deploy order (CI passes the run number); a pod leaves a save of a later one alone.
+ARG BUILD_RELEASE=0
+ENV BUILD_RELEASE=$BUILD_RELEASE
 
 USER 1000
 EXPOSE 8080

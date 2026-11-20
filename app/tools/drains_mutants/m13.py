@@ -4,4 +4,3 @@ EDITS: list[tuple[str, str, str]] = [
      '            if runner.get("drains") == []:\n',
      '            if False:\n'),
 ]
-RELOCK = True

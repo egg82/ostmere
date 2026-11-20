@@ -176,7 +176,7 @@ class Chapter(Entry):
     content's end card is attached to the last shipped chapter's (merge_chapters)."""
     while_running: dict[str, list[WhileRunningEntry]] = {}
     """Entries held while an earlier card runs, by card id, after any it holds: a side this chapter declares raised by a
-    card an earlier one shipped (Safe under the release lock: the card pays more)."""
+    card an earlier one shipped (the card pays more)."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
     beat_lines: dict[str, list[str]] = {}

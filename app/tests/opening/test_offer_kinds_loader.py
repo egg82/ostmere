@@ -1,6 +1,6 @@
-"""Offer kinds through the loader and the release lock, on a test chapter (fixtures/askkinds.toml; engine DESIGN.txt,
+"""Offer kinds through the loader, on a test chapter (fixtures/askkinds.toml; engine DESIGN.txt,
 part "OFFER KINDS"): the content's kind and roles reach the rules, a kind whose offers differ in roles fails the load,
-a rule for the kind answers both offers as each shows, and each release-lock class has a planted release."""
+a rule for the kind answers both offers as each shows."""
 from pathlib import Path
 
 import pytest
@@ -9,9 +9,6 @@ from ashfall_app.engine import (
     AfterTime, AnswerId, AnswerKind, AnswerOffer, KindId, OfferId, Order, RoleId, Rules, Save, SetOrders, UnlockKind,
     advance, decide, new_save,
 )
-from ashfall_app.opening.lock import Lock, snapshot
-from ashfall_app.opening.lock_checks import Problem, problems
-from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening, merge_chapters, to_rules
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "askkinds.toml"
@@ -32,22 +29,6 @@ def variant(tmp_path: Path, *edits: tuple[str, str]) -> Path:
     path = tmp_path / "askkinds.toml"
     path.write_text(text)
     return path
-
-
-def lock_of(base: Opening, path: Path) -> Lock:
-    """The lock of `base` (the shipped content, loaded once per session) with the chapter at `path` merged on."""
-    o = merge_chapters(base, (path,))
-    return snapshot(o, to_rules(o), load_renames())
-
-
-def forbidden(was: Lock, now: Lock) -> list[Problem]:
-    return [p for p in problems(was, now, load_renames()) if p.cls == "forbidden"]
-
-
-@pytest.fixture(scope="module")
-def released(shipped_opening: Opening) -> Lock:
-    """The lock of the unedited fixture chapter, built once in setup."""
-    return lock_of(shipped_opening, FIXTURE)
 
 
 @pytest.fixture(scope="module")
@@ -90,30 +71,3 @@ PLANTS = [
 def test_a_kind_whose_offers_differ_in_roles_fails_the_loader(shipped_opening: Opening, tmp_path: Path, edit: tuple[str, str], message: str):
     with pytest.raises(ValueError, match=f"offer q_second: .*{message}"):
         merge_chapters(shipped_opening, (variant(tmp_path, edit),))
-
-
-def unkinded(tmp_path: Path) -> Path:
-    declared = '[[offer_kinds]]\nkind = "q_ask"\nroles = [{ role = "yes", label_key = "q_k_yes" }, { role = "no", label_key = "q_k_no" }]\n\n'
-    return variant(tmp_path, (declared, ""), ("kind = \"q_ask\"\n", ""), ("role = \"yes\"\n", ""), ("role = \"no\"\n", ""))
-
-
-def test_giving_a_kind_to_released_offers_that_had_none_is_safe(shipped_opening: Opening, released: Lock, tmp_path: Path):
-    assert forbidden(lock_of(shipped_opening, unkinded(tmp_path)), released) == []
-
-
-def test_a_released_offers_kind_changed_is_forbidden(shipped_opening: Opening, released: Lock, tmp_path: Path):
-    found = forbidden(released, lock_of(shipped_opening, variant(tmp_path, ('kind = "q_ask"', 'kind = "q_other"'))))
-    assert any("offer q_first's kind changed or went" in p.message for p in found), found
-
-
-def test_a_released_offers_kind_removed_is_forbidden(shipped_opening: Opening, released: Lock, tmp_path: Path):
-    found = forbidden(released, lock_of(shipped_opening, unkinded(tmp_path)))
-    assert any("offer q_first's kind changed or went" in p.message for p in found), found
-    assert any("answer q_first_yes's role changed or went" in p.message for p in found), found
-
-
-def test_a_released_answers_role_changed_is_forbidden(shipped_opening: Opening, released: Lock, tmp_path: Path):
-    both = variant(tmp_path, ('role = "yes"', 'role = "ja"'))
-    found = forbidden(released, lock_of(shipped_opening, both))
-    assert any("answer q_first_yes's role changed or went" in p.message for p in found), found
-    assert not any("kind changed" in p.message for p in found)

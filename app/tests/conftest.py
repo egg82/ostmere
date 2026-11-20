@@ -3,9 +3,9 @@ and the session's shared fixtures.
 
 `create_app()` loads and checks every shipped chapter (~0.2 s, ~4x on the slow CI node), so a session builds that once
 (`shipped_opening`) and every test's `create_app()` reuses it; a test that wants other content still patches
-`main.checked_opening` itself.
-Likewise the Ruleset and Game for that content (`shipped_ruleset`, tests/shipped_ruleset.py): a test under another
-lock, renames or opening gets its own.
+`main.load_opening` itself.
+Likewise the Ruleset and Game for that content (`shipped_ruleset`, tests/shipped_ruleset.py): a test under other
+renames or opening gets its own.
 
 Also the Postgres fixtures: `pg_url` (a database of the test's own, migrated) and `pg_empty` (tests/pg.py), and
 `game`: the app on such a database (tests/game_client.py).
@@ -34,18 +34,18 @@ def pytest_configure(config: pytest.Config) -> None:
 
 @pytest.fixture(scope="session")
 def shipped_opening() -> Opening:
-    """The shipped content, loaded and release-lock checked once per session."""
-    return main.checked_opening()
+    """The shipped content, loaded once per session."""
+    return main.load_opening()
 
 
 @pytest.fixture(scope="session")
 def townsfolk_opening(shipped_opening: Opening) -> Opening:
     """The townsfolk test chapter's content on the session's shipped opening, built once per session:
-    tests/opening/test_townsfolk_loader.py's `loaded` is cached and its `shipped` reads `checked_opening`, so a module
+    tests/opening/test_townsfolk_loader.py's `loaded` is cached and its `shipped` reads `load_opening`, so a module
     using them requests this."""
     from tests.opening.test_townsfolk_loader import loaded
     with pytest.MonkeyPatch.context() as patch:
-        patch.setattr(main, "checked_opening", lambda: shipped_opening)
+        patch.setattr(main, "load_opening", lambda: shipped_opening)
         return loaded()
 
 
@@ -74,7 +74,7 @@ def closes_its_pools() -> Iterator[None]:
 @pytest.fixture(autouse=True)
 def app_reuses_the_shipped_opening(shipped_opening: Opening, shipped_ruleset: ShippedRuleset,
                                    monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(main, "checked_opening", lambda: shipped_opening)
+    monkeypatch.setattr(main, "load_opening", lambda: shipped_opening)
     monkeypatch.setattr(main, "ruleset", shipped_ruleset.ruleset)
     monkeypatch.setattr(main, "Game", shipped_ruleset.make_game)
 

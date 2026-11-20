@@ -21,13 +21,13 @@ WORKED = 400   # after the third join (300): two members of the group, one marke
 @pytest.fixture(scope="module", autouse=True)
 def _shipped(shipped_opening: Opening):
     with pytest.MonkeyPatch.context() as patch:
-        patch.setattr(main, "checked_opening", lambda: shipped_opening)
+        patch.setattr(main, "load_opening", lambda: shipped_opening)
         yield
 
 
 @cache
 def opening() -> Opening:
-    return merge_chapters(main.checked_opening(), (FIXTURE,))
+    return merge_chapters(main.load_opening(), (FIXTURE,))
 
 
 def game() -> Game:

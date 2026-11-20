@@ -4,4 +4,3 @@ EDITS: list[tuple[str, str, str]] = [
      '("Outcome", "retire_orders"),\n                                 ("Outcome", "leaves"), ("OfferDef", "kind"),',
      '("Outcome", "retire_orders"),\n                                 ("OfferDef", "kind"),'),
 ]
-RELOCK = True

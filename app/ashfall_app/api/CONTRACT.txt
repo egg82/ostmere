@@ -460,9 +460,9 @@ SAVES ACROSS RELEASES AND PODS
   A save written under older rules (a deploy changed the content) is carried over, never refused: the server rebases
   it when it is next read (engine DESIGN.txt, "Rebase") and answers under the current rules, with any lines new
   content landed at the save's own time first. Each decision, advance and open is one transaction holding the save's
-  row, so two requests on one save run one after the other, on any pod. Builds are ordered by content release: a
-  number the release lock (opening/released/ids.json) raises by one whenever the content's rules change, so a later
-  content always has a higher one, even one that changes only numbers. Each save records the release it was last
+  row, so two requests on one save run one after the other, on any pod. Builds are ordered by release: a
+  number CI gives each image build (BUILD_RELEASE, the workflow run number; 0 for a local run), so a later build always
+  has a higher one, even one that changes only numbers. Each save records the release it was last
   written under. A pod answers 503 save_unavailable (Retry-After) for a save of a later release than its own, and for
   one it cannot rebase, and writes nothing: mid-deploy the next try reaches a pod of the later release. A save of the
   pod's own release or an earlier one is read exactly, or rebased forward, and written. A 4xx or 5xx answer writes
@@ -1379,10 +1379,8 @@ JOURNAL
       without a label_key: refused.
     - a note with no [text] entry, or whose text holds a digit: refused by the existing text checks (Text and
       numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
-    - entry and note ids are content ids like any other: new ids only across chapters, kept by the release lock, and
-      renamed by renames.toml under the id kinds entry and note. A note_ trigger's outcome is locked as any trigger's,
-      so a released entry keeps its first note. A released entry or note leaves only by retirement (renames.toml, an
-      entry with no `to`): a save keeps its unlock, and a retired note's trigger goes with it (engine DESIGN.txt,
+    - entry and note ids are content ids like any other: renamed by renames.toml under the id kinds entry and note. An entry
+      or note leaves only by retirement (renames.toml, an entry with no `to`): a save keeps its unlock, and a retired note's trigger goes with it (engine DESIGN.txt,
       "Retired").
 
   Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY), renamed

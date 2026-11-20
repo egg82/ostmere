@@ -153,8 +153,7 @@ unlocks = [
   { unlock_kind = "feature", id = "combat" },
 ]
 
-# Hours since the bear's sign, starting with it (t_bear_sign's condition, so one moment). Nothing reads it; its ids are
-# released, so it stays (opening/lock_checks.py).
+# Hours since the bear's sign, starting with it (t_bear_sign's condition, so one moment). Nothing reads it.
 [[triggers]]
 id = "t_sign_clock"
 when = { test = "at_least", subject_kind = "store", id = "dig_clock", value = 5 }

@@ -33,9 +33,6 @@ A row may have variants, DIR/mNN.py and DIR/mNNx.py (one letter or more), each p
 every variant is KILLED, and one of the row's own claimed tests is red in some variant.
 A spec is a module with EDITS, a list of (path under app/, old text, new text); each `old` must occur exactly once.
 A spec may instead set EQUIVALENT to the reason no test can tell the mutant apart; it is then reported, never run.
-A spec that moves every rules digest sets RELOCK = True: the session's release-lock fixture would refuse the shipped
-content before any test ran, so the copy's lock is rewritten (content_lock.py --write) after planting, and the row's
-own tests must then go red.
 Outcomes, kept apart on purpose: KILLED (pytest exit 1 and a failing test), SURVIVED (exit 0), BROKEN (any other exit,
 or a failure that is a collection or import error, which says the edit was malformed, not that a test noticed),
 NOT PLANTED (no spec, or an anchor missing or not unique), EQUIVALENT. Only KILLED counts, and a row's @kills tests
@@ -195,16 +192,7 @@ def run_one(spec: Path, suite: Suite, base: Path) -> Outcome:
         why = plant(app, list(mod.EDITS))
         if why is not None:
             return Outcome("NOT PLANTED", detail=why)
-        if getattr(mod, "RELOCK", False) and (why := relock(app)) is not None:
-            return Outcome("BROKEN", detail=why)
         return classify(*pytest(app, suite))
-
-
-def relock(app: Path) -> str | None:
-    """Rewrite the copy's release lock for the planted engine; None on success, else why not."""
-    run = subprocess.run([sys.executable, "tools/content_lock.py", "--write"], cwd=app,
-                         env={"PYTHONPATH": str(app), "PATH": "/usr/bin:/bin"}, capture_output=True, text=True, check=False)
-    return None if run.returncode == 0 else f"content_lock --write exit {run.returncode}\n{run.stdout[-800:]}{run.stderr[-800:]}"
 
 
 def run(suite: Suite, only: set[int], specs: Path, failing: bool) -> int:

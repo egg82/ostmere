@@ -1,8 +1,7 @@
-"""Two builds mid-deploy, through HTTP, on one database: the older serves the released content (today's opening, at the
-lock's release), the newer the release after it, a numbers-only retune of it (tests/saves/changes.py, retuned_opening)
-that the older could rebase back from without an error. Once the newer has written a save, the older answers 503
-save_unavailable for it and writes nothing (CONTRACT.txt, "Saves across releases and pods"): builds are ordered by
-release, never by digest alone."""
+"""Two builds mid-deploy, through HTTP, on one database: the older serves today's opening, the newer the release after it, a numbers-only retune of it
+(tests/saves/changes.py, retuned_opening) that the older could rebase back from without an error. Once the newer has
+written a save, the older answers 503 save_unavailable for it and writes nothing (CONTRACT.txt, "Saves across releases
+and pods"): builds are ordered by release, never by digest alone."""
 from collections.abc import Callable, Generator
 from contextlib import contextmanager
 
@@ -14,7 +13,6 @@ from sqlalchemy import select
 from ashfall_app import main
 from ashfall_app.api.service import Game
 from ashfall_app.db.tables import saves
-from ashfall_app.opening.lock import load_lock
 from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset
@@ -39,8 +37,8 @@ def app(pg_url: str, build: str, opening: Opening, release: int, built: Built) -
         mp.setenv("DATABASE_URL", pg_url)
         mp.setenv("ASHFALL_RATE_KEY", RATE_KEY)
         mp.setenv("BUILD_VERSION", build)
-        mp.setattr(main, "checked_opening", lambda: opening)
-        mp.setattr(main, "load_lock", lambda: load_lock().model_copy(update={"release": release}))
+        mp.setattr(main, "load_opening", lambda: opening)
+        mp.setenv("BUILD_RELEASE", str(release))
         mp.setattr(main, "ruleset", built_ruleset(built))
         mp.setattr(main, "Game", built_game(built))
         made = main.create_app()
@@ -58,7 +56,7 @@ def retuned() -> Opening:
     return retuned_opening()
 
 
-RELEASE = load_lock().release
+RELEASE = 0
 
 
 @pytest.fixture(scope="module")

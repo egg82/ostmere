@@ -49,5 +49,4 @@ RUNS
   tools.mutate_suite drains --run (specs tools/drains_mutants/mNN.py, each a list of (path, old, new) edits against the
   implementation, one per row). `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against the implementation: rows 1-24 all KILLED, each with a test that claims it red; no survivors, no equivalent
-  mutants. Row 13 moves every rules digest, so the release-lock fixture would refuse the shipped content before any
-  test ran; its spec rewrites the copy's lock (RELOCK) and the pinned pre-drains fixture's test then goes red alone.
+  mutants. Row 13 moves every rules digest, so the pinned pre-drains fixture's test goes red alone.
