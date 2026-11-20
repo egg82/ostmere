@@ -14,11 +14,11 @@ export class DryNote {
   constructor(private readonly ctx: PartContext) {}
 
   /** The line for `order` at `index` (null: a new rule) of `view`, or nothing: only a rule that lets go as a store rises
-   * can say, a town rule is set by a rule alone, and a rule that already exists is not written. */
-  async show(view: View | null, index: number | null, order: Order | null, town: boolean): Promise<void> {
+   * can say, and a rule that already exists is not written. */
+  async show(view: View | null, index: number | null, order: Order | null): Promise<void> {
     const seq = ++this.seq;
     const { catalog, actions } = this.ctx;
-    if (!view || !order || town || order.when.kind !== "at_most" || ruleExists(view, index, order)) { setText(this.root, ""); return; }
+    if (!view || !order || order.when.kind !== "at_most" || ruleExists(view, index, order)) { setText(this.root, ""); return; }
     const at = index ?? newRuleAt(catalog, view, order) ?? view.orders.length;
     const after = await actions.dryRun(ruleDecisions(view, catalog, index, order));
     if (seq === this.seq) setText(this.root, (after && dryWords(catalog, order, after.order_dry[at] ?? null)) ?? "");

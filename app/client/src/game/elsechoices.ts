@@ -26,7 +26,7 @@ export function elseChoices(catalog: Catalog, view: View, then: OrderVerb | null
   const where = then === null ? null : side(catalog, view, then);
   if (then === null || where === null) return [];
   const taken = [then, ...held].map((v) => chosen(catalog, view, v));
-  return doChoices(catalog, view, true, then, where === "town").filter((c) => side(catalog, view, choiceVerb(c)) === where && !taken.some((t) => same(t, c)));
+  return doChoices(catalog, view, true, then).filter((c) => side(catalog, view, choiceVerb(c)) === where && !taken.some((t) => same(t, c)));
 }
 
 /** The fallbacks `held` that still stand after `then` changed: those on its side, not `then` itself, once each. */

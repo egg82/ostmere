@@ -7,7 +7,6 @@ import { buildSubject, readSubject, subjectKey, type SubjectRule } from "../game
 import { UI } from "../game/text";
 import { ruleCards, whenChoices } from "../game/ruleoffers";
 import type { RuleSide } from "../game/ruleside";
-import { isTownMix } from "../game/town";
 
 export interface Draft {
   /** The rule being changed, or null for a new one. */
@@ -20,8 +19,6 @@ export interface Draft {
   opened?: { rule: StoreRule; when: Condition };
   /** The edited rule is a chip's: only what it does can change. */
   chip?: boolean;
-  /** A rule on the town: it does a town mix and nothing else. */
-  town?: boolean;
   /** A new rule made on one side of the Rules page: it offers that side's tasks alone. */
   scope?: RuleSide;
   /** With `scope` Camp: the one person the rule is for. */
@@ -72,16 +69,15 @@ export function editDraft(catalog: Catalog, view: View, index: number): Draft | 
   const order = view.orders[index];
   if (!order) return null;
   const { then } = order;
-  const town = then.kind === "switch_mix" && view.mixes.some((m) => m.id === then.mix_id && isTownMix(catalog, view, m));
   const subject = readSubject(catalog, order.when);
   const kept = { unless: order.unless, orElse: order.or_else };
-  if (subject) return { index, then, rule: defaultRule("", "below", 0), subject, town, ...kept };
+  if (subject) return { index, then, rule: defaultRule("", "below", 0), subject, ...kept };
   const rule = storeRule(catalog, order);
   if (!rule) return null;
   const chip = chipOf(catalog, order.when) !== undefined;
   const clamped = chip ? rule : clampRule(rule, storeCap(catalog, view, rule.store));
   const opened = sameRule(clamped, rule) ? { rule, when: order.when } : undefined;
-  return { index, then, rule: clamped, opened, chip, town, ...kept };
+  return { index, then, rule: clamped, opened, chip, ...kept };
 }
 
 /** The editor's heading: a chip's rule as the chip, a rule being changed by what it runs, else "New rule". */

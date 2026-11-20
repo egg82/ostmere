@@ -53,21 +53,9 @@ export function isTownMix(catalog: Catalog, view: View, mix: Mix): boolean {
   return cards.length > 0 ? cards.every((c) => catalog.ruled(c)) : catalog.content.game_mix_ids.includes(mix.id);
 }
 
-/** The town has a second mix a rule could switch to: until then a town rule has nothing to do. */
-export function townCanSwitch(catalog: Catalog, view: View): boolean {
-  return view.mixes.filter((m) => isTownMix(catalog, view, m)).length > 1;
-}
-
 /** The town's always rule: after_time 0, switching a mix. */
 function townAlways(order: Order): boolean {
   return order.when.kind === "after_time" && order.when.at === 0 && order.then.kind === "switch_mix";
-}
-
-/** The rules with a new town rule set: immediately before the town's first always rule, else appended
- * (CONTRACT.txt, "The town's mix"). */
-export function townNewRule(view: View, order: Order): Decision {
-  const at = view.orders.findIndex(townAlways);
-  return { kind: "set_orders", orders: at < 0 ? [...view.orders, order] : [...view.orders.slice(0, at), order, ...view.orders.slice(at)] };
 }
 
 /** The one town mix holding everyone, which a person's edit changes: the one running, else the one the town's first always
@@ -77,15 +65,6 @@ export function townMixToEdit(catalog: Catalog, view: View): Mix | null {
   const named = view.running_town_mix_id ?? fromRule ?? null;
   const mix = view.mixes.find((m) => m.id === named);
   return mix && isTownMix(catalog, view, mix) ? mix : null;
-}
-
-/** The rules whose switch_mix names a town mix, in order: the town's, listed under its heading in the Rules tab. */
-export function townRules(catalog: Catalog, view: View): number[] {
-  return view.orders.flatMap((o, i) => {
-    const then = o.then;
-    const mix = then.kind === "switch_mix" ? view.mixes.find((m) => m.id === then.mix_id) : undefined;
-    return mix && isTownMix(catalog, view, mix) ? [i] : [];
-  });
 }
 
 /** Basis points of a person's time the mix gives their cards. */

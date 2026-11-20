@@ -51,7 +51,7 @@ export class CondFoot {
   }
 
   /** The dry run's line for `order` (conddry.ts). */
-  showDry(view: View | null, index: number | null, order: Order | null, town: boolean): void {
-    void this.dry.show(view, index, order, town);
+  showDry(view: View | null, index: number | null, order: Order | null): void {
+    void this.dry.show(view, index, order);
   }
 }

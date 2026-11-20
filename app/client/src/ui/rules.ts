@@ -1,6 +1,5 @@
 // The Rules tab (docs/design/opening-screen.md, "The Rules tab"): every rule the player has, one line each, beside
-// Tasks and Completed. The hands rules, top priority first (the town's rules, ruletown.ts, are drawn as these are, in
-// their own order): ≡ (drag to reorder; tap for Move up · Move down · Remove; arrow keys move it), the condition as a
+// Tasks and Completed. The hands rules, top priority first: ≡ (drag to reorder; tap for Move up · Move down · Remove; arrow keys move it), the condition as a
 // button that opens the condition editor (condition.ts) in the tab, → and the mix slot, which opens a picker. Among
 // them Next, what the queue will tap (nextlist.ts, ordered by nextorder.ts), a row moved like a rule (game/nextrow.ts:
 // the rules under it wait for a ready head), at the bottom until moved. Then "Otherwise", the player's own mix, whose
@@ -27,14 +26,13 @@ import { RuleSides, sideSwitch } from "./ruleswitch";
 import { whoChoices, whoPicker, type Who } from "./rulewho";
 import { nextHead, nextRows } from "./nextlist";
 import { NEXT, nextItems, reorderedItems, steppedItems } from "../game/nextrow";
-import { handsGroup, itemsMoved, itemsOf } from "./handsitems";
+import { itemsMoved, itemsOf } from "./handsitems";
 import { NextOrder } from "./nextorder";
 import { StintPlan } from "./stintplan";
 import type { Part, PartContext, RuleTarget } from "./part";
 import { RuleDrag } from "./ruledrag";
 import { slotPicker } from "./rulepick";
 import { laneSections, ruleDot } from "./rulelanes";
-import { townSection, type TownRows } from "./ruletown";
 import { latelyRows, retickLately } from "./rulelately";
 import { retickWhy, whyLine } from "./rulewhy";
 
@@ -127,12 +125,12 @@ export class RulesTab implements Part {
 
   /** The rows moved with `index` (ui/handsitems.ts). */
   private itemsOf(view: View, index: number): number[] {
-    return itemsOf(this.ctx.catalog, view, index, view.queue.length > 0 || this.plan.rows(view).length > 0);
+    return itemsOf(view, index, view.queue.length > 0 || this.plan.rows(view).length > 0);
   }
 
   /** The rows moved with `item` now `moved`, sent; where `item`'s row lands, or null when nothing moved. */
   private sendItems(view: View, item: number, moved: number[] | null): number | null {
-    const m = itemsMoved(this.ctx.catalog, view, item, moved);
+    const m = itemsMoved(view, item, moved);
     if (m) this.send(m.decision, m.shift);
     return m ? m.lands : null;
   }
@@ -168,19 +166,18 @@ export class RulesTab implements Part {
     const head = side === null ? [] : [sideSwitch(this.ctx.catalog, view, side, (to) => { this.sides.set(to); this.menu = null; this.draw(); })];
     const write = (scope?: RuleSide): HTMLElement[] => (this.ctx.keeps.ruleSeen() && (scope !== "camp" || whoChoices(this.ctx, view).length > 0) ? [this.newRule(view, scope)] : []);
     this.list.replaceChildren(...head, ...(side === "camp" ? [] : [...this.handsRows(view), this.otherwiseRow(view), ...write(side ?? undefined)]));
-    this.lanes.replaceChildren(...(side === "mine" ? [] : townSection(this.ctx, view, this.townRows(view))), ...laneSections(this.ctx, view, (i) => this.condButton(view, i), side), ...(side === "camp" ? write("camp") : []));
+    this.lanes.replaceChildren(...laneSections(this.ctx, view, (i) => this.condButton(view, i), side), ...(side === "camp" ? write("camp") : []));
     this.lately.replaceChildren(...latelyRows(this.ctx.catalog, view, this.ctx.ruleRuns()));
     this.slider.play(view);
     if (this.focus !== null) this.list.querySelector<HTMLElement>(`.rule-handle[data-rule="${this.focus}"]`)?.focus();
     this.focus = null;
   }
 
-  /** The hands' rules, one row each, and Next's rows where its row sits (the town's are drawn under its heading,
-   * ruletown.ts). */
+  /** The hands' rules, one row each, and Next's rows where its row sits. */
   private handsRows(view: View): HTMLElement[] {
     const head = nextHead(this.ctx.catalog, this.itemsOf(view, NEXT), this.menu === NEXT, () => this.handle(view, NEXT, UI.ruleNextHandle), (step) => this.move(view, NEXT, step));
-    return nextItems(view, handsGroup(this.ctx.catalog, view)).flatMap((i) => (i === NEXT ? nextRows(this.ctx, view, this.plan, this.order, head)
-      : this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view, view.orders[i]!), view.orders[i]!.or_else.length > 0)], false)));
+    return nextItems(view, mixRules(view)).flatMap((i) => (i === NEXT ? nextRows(this.ctx, view, this.plan, this.order, head)
+      : this.ruleRow(view, i, [this.condButton(view, i), el("span", "rule-arrow", "→"), this.slot(i, ruleActions(this.ctx.catalog, view, view.orders[i]!), view.orders[i]!.or_else.length > 0)])));
   }
 
   /** The ≡ of row `index` (a rule's, or NEXT), draggable. */
@@ -190,23 +187,14 @@ export class RulesTab implements Part {
     return handle;
   }
 
-  /** What the town's section needs of the tab: a rule's condition button, a rule's row (the hands' own, ≡ and menu
-   * included, around the town's words). */
-  private townRows(view: View): TownRows {
-    return {
-      cond: (i) => this.condButton(view, i),
-      row: (i, body) => this.ruleRow(view, i, body, true),
-    };
-  }
-
   /** A rule on one line: ≡, ●, `body` (the hands': its condition, which opens the editor, → and its mix slot), and ≡'s
-   * menu under it when open. The town's rules are drawn so too, `town` marking which mix is running. */
-  private ruleRow(view: View, index: number, body: HTMLElement[], town: boolean): HTMLElement[] {
+   * menu under it when open. */
+  private ruleRow(view: View, index: number, body: HTMLElement[]): HTMLElement[] {
     const { catalog } = this.ctx;
     const group = this.itemsOf(view, index);
     const first = group[0] === index, last = group[group.length - 1] === index;
-    const on = town ? view.town_mix_order : view.mix_order;
-    const row = el("div", town ? "rules-row town-rule" : "rules-row");
+    const on = view.mix_order;
+    const row = el("div", "rules-row");
     row.dataset.rule = String(index);
     row.classList.toggle("active", on === index);
     row.classList.toggle("greyed", actionsOf(view.orders[index]!).every((a) => a.kind === "switch_mix" && view.greyed_mix_ids.includes(a.mix_id)));
@@ -293,7 +281,7 @@ export class RulesTab implements Part {
   }
 
   private openNew(view: View, scope: RuleSide | undefined, who?: Who): void {
-    this.cond.openNew(view, undefined, who?.town === true, scope, who?.lane);
+    this.cond.openNew(view, undefined, scope, who?.lane);
     this.mode = { kind: "edit" };
     this.draw();
   }

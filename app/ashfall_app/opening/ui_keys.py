@@ -22,7 +22,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.tab.book", "ui.book.done",
     "ui.hands.idle",
     "ui.lane.idle", "ui.lane.change", "ui.rule.always",
-    "ui.town.title", "ui.town.idle", "ui.rule.town_always",
+    "ui.town.title", "ui.town.idle",
     "ui.card.needs_step", "ui.card.takes_nothing",
     "ui.mix.both",
     "ui.lesson.tag", "ui.lesson.skip", "ui.lesson.next", "ui.lesson.show", "ui.lesson.mix_offer", "ui.lesson.mix_add", "ui.lesson.mix_add_more",

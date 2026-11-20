@@ -66,15 +66,14 @@ export function ruleCards(view: View, then: OrderVerb | null): string[] {
 }
 
 /** What the Do row offers: the tasks in the Tasks page's sections, each by name (game/cardsections.ts), then (with
- * More options) the saved mixes that are not a task offered. A town
- * rule (`town`) offers the town's mixes alone; any other, never a town mix (it is set by a rule on the town). A new rule
+ * More options) the saved mixes that are not a task offered, never a town mix. A new rule
  * made on one side of the Rules page (`scope`) offers that side's tasks alone (one person's, given their `lane`), and on Camp no
  * saved mix (they are the hands'). */
-export function doChoices(catalog: Catalog, view: View, full: boolean, then: OrderVerb | null, town = false, scope?: RuleSide, lane?: string): DoChoice[] {
+export function doChoices(catalog: Catalog, view: View, full: boolean, then: OrderVerb | null, scope?: RuleSide, lane?: string): DoChoice[] {
   const keep = taskOf(catalog, view, then);
-  const tasks = town ? [] : ruleTasks(catalog, view, keep).filter((c) => scope === undefined || c === keep || (catalog.ruled(c) === (scope === "camp") && (lane === undefined || catalog.laneOf(c) === lane)));
+  const tasks = ruleTasks(catalog, view, keep).filter((c) => scope === undefined || c === keep || (catalog.ruled(c) === (scope === "camp") && (lane === undefined || catalog.laneOf(c) === lane)));
   const shown = new Set(tasks);
-  const mixes = (full || town) && (scope !== "camp" || town) ? view.mixes.filter((m) => isTownMix(catalog, view, m) === town && !shown.has(soloCard(m, catalog.content.scales.bp) ?? "")) : [];
+  const mixes = full && scope !== "camp" ? view.mixes.filter((m) => !isTownMix(catalog, view, m) && !shown.has(soloCard(m, catalog.content.scales.bp) ?? "")) : [];
   const all = [...tasks.map((card) => ({ kind: "task" as const, card })), ...mixes.map((m) => ({ kind: "mix" as const, mix: m.id }))];
   return inSectionOrder(catalog, all, (c) => (c.kind === "task" ? c.card : null));
 }
