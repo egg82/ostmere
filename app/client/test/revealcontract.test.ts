@@ -207,7 +207,7 @@ const unlockOf = (category: Unlock["category"], id: string): Unlock => ({ catego
   const rising = (store: string, items: number, cap: number, runner = "gather"): LedgerLine => flat(store, {
     segment: { start: AT, start_value: items * Q, rate: 30 * R, limit: cap * Q }, net_per_hour: 30 * R, contributions: [{ runner, per_hour: 30 * R }], cap: cap * Q,
   });
-  const hands = (running: string | null) => ({ lane: "hands", running_card: running, completes_at: null, order: null });
+  const hands = (running: string | null) => ({ lane: "hands", running_card: running, completes_at: null, order: null, own_split: null });
   const withLine = (line: LedgerLine, running: string | null = null, extraUnlocked: Unlock[] = []): View => ({
     ...mid.view, at: AT, ledger: [line], lanes: [hands(running)], orders: [], orders_on: [],
     unlocked: [...mid.view.unlocked, unlockOf("feature", "ledger"), unlockOf("store", line.store), ...extraUnlocked],

@@ -16,14 +16,14 @@ export function isTown(phase: string): phase is TownPhase {
   return (TOWN as readonly string[]).includes(phase);
 }
 
-/** The wire predates Card.speed: a card's speed as if its tap_s were a whole completion (nothing here reads it). */
-const withSpeed = (c: TownWire["cards"][number]): View["cards"][number] => ({ ...c, speed: c.tap_s === null ? 0 : c.bar_total / c.tap_s });
+/** The wire predates Card.speed and Card.crew: a card's speed as if its tap_s were a whole completion (nothing here reads it), no group. */
+const withSpeed = (c: TownWire["cards"][number]): View["cards"][number] => ({ ...c, speed: c.tap_s === null ? 0 : c.bar_total / c.tap_s, crew: null });
 
 /** The hands' own rules, mixes and cards stand as the day-two page has them; the wire's follow them, its rule indexes moved. */
 function town(phase: TownPhase, v: View): View {
   const { joined, ...wire } = TOWN_WIRE[phase === "town" ? "two" : "one"];
   const shift = v.orders.length;
-  const lanes = wire.lanes.filter((l) => l.lane !== "hands").map((l) => ({ ...l, order: l.order === null ? null : l.order + shift }));
+  const lanes = wire.lanes.filter((l) => l.lane !== "hands").map((l) => ({ ...l, own_split: true, order: l.order === null ? null : l.order + shift }));
   return {
     ...v, at: wire.at, lanes: [...v.lanes, ...lanes], cards: [...v.cards, ...wire.cards.map(withSpeed)], mixes: [...v.mixes, ...wire.mixes],
     orders: [...v.orders, ...wire.orders.map((o) => ({ ...o, unless: [], or_else: [], below_next: false }))],

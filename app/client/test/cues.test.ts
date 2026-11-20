@@ -12,11 +12,11 @@ function expect(label: string, got: unknown, want: unknown): void {
 const still = { start: 0, start_value: 0, rate: 0, limit: null };
 const card = (id: string, over: Partial<Card> = {}): Card => ({
   card: id, completions: 0, cap: null, bar: still, bar_total: 5 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-  blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: BP, needs: [], ...over,
+  blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 5, speed: BP, needs: [], ...over,
 });
 const blocked = { condition: { kind: "after_time" as const, at: 99 }, ready_at: 99 };
 const view = (over: Partial<View> = {}): View => ({
-  at: 0, next_event_at: null, ledger: [], skills: [], standing: [], lanes: [{ lane: "hands", running_card: null, completes_at: null, order: null }],
+  at: 0, next_event_at: null, ledger: [], skills: [], standing: [], lanes: [{ lane: "hands", running_card: null, completes_at: null, order: null, own_split: null }],
   cards: [], completed: [], greyed_mix_ids: [], chips: [], chips_seen: [], unlocked: [], all_covered: true, ended_at: null, mixes: [], active_mix_id: null,
   runs_out_at: null, running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], levels: [],
   forecast: { horizon_at: 0, level_ups: [], tops_out: [], fills: [], empties: [] }, ...over,
@@ -27,7 +27,7 @@ const catalog = new Catalog(fixtureContent);
 expect("marked and ready", glowTarget(catalog, view({ cards: [card("gather"), card("stand")] }), new Set()), "stand");
 expect("unmarked cards never glow", glowTarget(catalog, view({ cards: [card("gather"), card("tend")] }), new Set()), null);
 expect("not while unready", glowTarget(catalog, view({ cards: [card("stand", { blocker: blocked })] }), new Set()), null);
-const busy = view({ cards: [card("stand")], lanes: [{ lane: "hands", running_card: "gather", completes_at: 5, order: null }] });
+const busy = view({ cards: [card("stand")], lanes: [{ lane: "hands", running_card: "gather", completes_at: 5, order: null, own_split: null }] });
 expect("not while its lane is busy", glowTarget(catalog, busy, new Set()), null);
 expect("while it cuts in on the busy lane", glowTarget(catalog, { ...busy, cards: [card("stand", { cuts_in: true })] }, new Set()), "stand");
 expect("once each", glowTarget(catalog, view({ cards: [card("stand")] }), new Set(["stand"])), null);
@@ -67,7 +67,7 @@ const line: LedgerLine = {
     { runner: "shelter", per_hour: -10 }], empties_at: 10, fills_at: null, falling: true, covered: false, starved: false, cap: 40 * Q,
 };
 expect("the largest drain", largestDrain(line, view()), "shelter");
-const tapping = view({ lanes: [{ lane: "hands", running_card: "shelter", completes_at: 5, order: null }] });
+const tapping = view({ lanes: [{ lane: "hands", running_card: "shelter", completes_at: 5, order: null, own_split: null }] });
 expect("not the hands' tap", largestDrain(line, tapping), null);
 expect("nothing draws", largestDrain({ ...line, contributions: [{ runner: "gather", per_hour: 3 }] }, view()), null);
 

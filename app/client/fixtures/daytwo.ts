@@ -24,7 +24,7 @@ export const LANE_RULES: Order[] = [always("fetch"), HAUL_LOW, always("chop"), a
 function laneCard(at: number, id: string, running: boolean): Card {
   return {
     card: id, completions: running ? 2 : 0, cap: null, bar: { start: at, start_value: running ? 4 * BP : 0, rate: running ? BP : 0, limit: null },
-    bar_total: 12 * BP, by: running ? "tap" : null, completes_at: running ? at + 8 : null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 12, speed: BP, needs: [],
+    bar_total: 12 * BP, by: running ? "tap" : null, completes_at: running ? at + 8 : null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 12, speed: BP, needs: [],
   };
 }
 
@@ -46,7 +46,7 @@ function dayTwo(phase: DayTwoPhase, v: View, at: number, kept: Kept): View {
     : o.then.kind === "tap_card" && o.then.card === "fetch" ? "passed_over" : o.when.kind !== "after_time" ? "waiting"
       : order !== null && order < i ? "outranked" : "on");
   const on = (o: Order): boolean => (o.then.kind === "switch_mix" ? v.orders_on[own(o)] ?? false : o.when.kind === "after_time");
-  const lane: LaneBar = { lane: "helper", running_card: busy ? "chop" : null, completes_at: busy ? at + 8 : null, order };
+  const lane: LaneBar = { lane: "helper", running_card: busy ? "chop" : null, completes_at: busy ? at + 8 : null, order, own_split: null };
   return {
     ...v, orders, orders_on: orders.map(on), order_states: orders.map(state),
     lanes: [...v.lanes, lane], cards: [...v.cards, laneCard(at, "chop", busy), laneCard(at, "haul", false)],

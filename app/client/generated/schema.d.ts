@@ -804,6 +804,8 @@ export interface components {
             spent_store: string | null;
             /** Gained */
             gained: components["schemas"]["SpentShare"][];
+            /** Crew */
+            crew: number | null;
         };
         /**
          * CardCount
@@ -1432,6 +1434,8 @@ export interface components {
             completes_at: number | null;
             /** Order */
             order: number | null;
+            /** Own Split */
+            own_split: boolean | null;
         };
         /**
          * LaneInfo
@@ -1451,6 +1455,10 @@ export interface components {
             name_key: string | null;
             /** Told */
             told: ("line" | "mention") | null;
+            /** Pooled */
+            pooled: boolean;
+            /** Group */
+            group: string | null;
         };
         /** LaneLabel */
         LaneLabel: {

@@ -4,8 +4,8 @@
 // its always rule). The generator is the scenario in the 3e notes; a hand-edit here would break its totals.
 import type { View } from "../src/api/types";
 
-/** Captured before Card.speed and Order.unless and or_else were served: town.ts fills them in. */
-export type TownWire = Pick<View, "at" | "lanes" | "mixes" | "orders_on" | "order_states" | "running_town_mix_id" | "town_mix_order" | "greyed_mix_ids"> & { orders: Omit<View["orders"][number], "unless" | "or_else" | "below_next">[]; cards: Omit<View["cards"][number], "speed">[]; joined: { category: "joined"; id: string }[] };
+/** Captured before Card.speed, Card.crew, LaneBar.own_split and Order.unless and or_else were served: town.ts fills them in. */
+export type TownWire = Pick<View, "at" | "mixes" | "orders_on" | "order_states" | "running_town_mix_id" | "town_mix_order" | "greyed_mix_ids"> & { lanes: Omit<View["lanes"][number], "own_split">[]; orders: Omit<View["orders"][number], "unless" | "or_else" | "below_next">[]; cards: Omit<View["cards"][number], "speed" | "crew">[]; joined: { category: "joined"; id: string }[] };
 
 export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
  "two": {

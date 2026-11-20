@@ -2293,6 +2293,17 @@
             },
             "type": "array",
             "title": "Gained"
+          },
+          "crew": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crew"
           }
         },
         "type": "object",
@@ -2312,7 +2323,8 @@
           "cuts_in",
           "speed",
           "spent_store",
-          "gained"
+          "gained",
+          "crew"
         ],
         "title": "Card",
         "description": "An unlocked card that is not completed: one entry of the card panel, the same whether tapped, mixed or idle.\nTappable iff blocker is null and its lane's LaneBar has no running_card or cuts_in is true."
@@ -4188,6 +4200,17 @@
               }
             ],
             "title": "Order"
+          },
+          "own_split": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Own Split"
           }
         },
         "type": "object",
@@ -4195,7 +4218,8 @@
           "lane",
           "running_card",
           "completes_at",
-          "order"
+          "order",
+          "own_split"
         ],
         "title": "LaneBar",
         "description": "Which card a lane is tapping, and when the tap ends. The bar is the card's own (Card.bar)."
@@ -4246,6 +4270,21 @@
               }
             ],
             "title": "Told"
+          },
+          "pooled": {
+            "type": "boolean",
+            "title": "Pooled"
+          },
+          "group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group"
           }
         },
         "type": "object",
@@ -4255,7 +4294,9 @@
           "ruled",
           "later_labels",
           "name_key",
-          "told"
+          "told",
+          "pooled",
+          "group"
         ],
         "title": "LaneInfo",
         "description": "Every lane, \"hands\" included. Its label is the label_key of the last of later_labels whose `after`\nview.unlocked holds, else label_key (CONTRACT.txt, \"A lane run by rules\")."

@@ -489,11 +489,11 @@ export const fixtureContent: Content = {
     kind: "q", roles: [{ role: "yes", label_key: "kind.q.yes" }, { role: "no", label_key: "kind.q.no" }],
   }],
   lane_infos: [
-    { lane: "hands", label_key: "lane.hands", ruled: false, later_labels: [], name_key: null, told: null },
-    { lane: "bench", label_key: "lane.bench", ruled: false, later_labels: [], name_key: null, told: null },
-    { lane: "smoke", label_key: "lane.smoke", ruled: false, later_labels: [], name_key: null, told: null },
-    { lane: "helper", label_key: "lane.helper", ruled: true, later_labels: [{ after: { category: "feature", id: "yard" }, label_key: "lane.helper.later" }], name_key: null, told: "mention" },
-    { lane: "mason", label_key: "lane.mason", ruled: true, later_labels: [], name_key: null, told: "mention" },
+    { lane: "hands", label_key: "lane.hands", ruled: false, later_labels: [], name_key: null, told: null, pooled: false, group: null },
+    { lane: "bench", label_key: "lane.bench", ruled: false, later_labels: [], name_key: null, told: null, pooled: false, group: null },
+    { lane: "smoke", label_key: "lane.smoke", ruled: false, later_labels: [], name_key: null, told: null, pooled: false, group: null },
+    { lane: "helper", label_key: "lane.helper", ruled: true, later_labels: [{ after: { category: "feature", id: "yard" }, label_key: "lane.helper.later" }], name_key: null, told: "mention", pooled: false, group: null },
+    { lane: "mason", label_key: "lane.mason", ruled: true, later_labels: [], name_key: null, told: "mention", pooled: false, group: null },
   ],
   end_line_keys: ["line.end"],
   line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")

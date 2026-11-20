@@ -81,11 +81,11 @@ const still = (at: number, value = 0) => ({ start: at, start_value: value, rate:
 function card(at: number, id: string, over: Partial<Card> = {}): Card {
   return {
     card: id, completions: 0, cap: null, bar: still(at), bar_total: 5 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-    blocker: null, cuts_in: false, spent_store: null, gained: [], tap_s: 5, speed: BP, needs: [], ...over,
+    blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 5, speed: BP, needs: [], ...over,
   };
 }
 
-const freeHands = { lane: "hands", running_card: null, completes_at: null, order: null };
+const freeHands = { lane: "hands", running_card: null, completes_at: null, order: null, own_split: null };
 
 function base(at: number): View {
   return {
@@ -101,7 +101,7 @@ function standing(at: number): View {
     ...base(at),
     next_event_at: at + 6,
     cards: [card(at, "stand", { cap: 3, completions: 1, by: "tap", bar: { start: at, start_value: 0, rate: BP, limit: 6 * BP }, bar_total: 6 * BP, completes_at: at + 6 })],
-    lanes: [{ lane: "hands", running_card: "stand", completes_at: at + 6, order: null }],
+    lanes: [{ lane: "hands", running_card: "stand", completes_at: at + 6, order: null, own_split: null }],
   };
 }
 
@@ -143,7 +143,7 @@ function mid(at: number, mix: Mix, covered: boolean, plan: Plan): View {
       { skill: "firecraft", xp: { start: at, start_value: 40, rate: 1, limit: null }, level: 1, level_xp: 0, next_level_xp: 100, next_level_at: at + 60, prestige: null },
     ],
     standing: [],
-    lanes: [freeHands, { lane: "bench", running_card: "shelter", completes_at: at + 12, order: null }],
+    lanes: [freeHands, { lane: "bench", running_card: "shelter", completes_at: at + 12, order: null, own_split: null }],
     cards: [
       card(at, "look", { blocker: { condition: { kind: "at_least", watched: { kind: "store_value", store: "stone" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false }, ready_at: null }, needs: [need(at, "stone", 4, 3)] }),
       mixed("gather", 5),

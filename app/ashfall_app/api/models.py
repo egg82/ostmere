@@ -133,6 +133,9 @@ class LaneBar(BaseModel):
     completes_at: int | None
     order: int | None
     """Index into orders of the rule whose task the lane runs now; null while free or no rule taps what it runs."""
+    own_split: bool | None
+    """A person's mark: true runs their own split, false hands them to their group (CONTRACT.txt, "GROUPS"); null on
+    hands, on a pooled lane and on any lane that is no person."""
 
 
 class Card(BaseModel):
@@ -176,6 +179,9 @@ class Card(BaseModel):
     """The store a spent card is stopped on; null unless run is spent."""
     gained: list[SpentShare]
     """What each spent card of its mix on its lane gives it now, in mix order; empty when none (CONTRACT.txt, "SPENT")."""
+    crew: int | None
+    """A group card's free members now (CONTRACT.txt, "GROUPS"); null on a card of no pooled lane. While above 0,
+    share_bp and gained are the totals over those members; 0 with no free member."""
 
 
 class CompletedCard(BaseModel):
