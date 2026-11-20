@@ -10,7 +10,7 @@ from .counts import card_state, effective_cap, repeating, unit
 from .gates import stack_inputs, store_cap
 from .ids import ActionId, CardId, Runner, SkillId, StoreId
 from .index import index
-from .lumps import NO_TERMS, Terms, forgiven, lump_terms, motion, moving_lumps
+from .lumps import NO_TERMS, Terms, forgiven, lump_lines, lump_terms, motion, moving_lumps
 from .memo import PartsMemo
 from .modifiers import FlowKind, RateRef
 from .motion import keep_segments, store_segment
@@ -61,6 +61,17 @@ def rebuild(save: Save, rules: Rules) -> Save:
     keep_running(rebuilt, rules, now)
     keep_segments(rebuilt, rules, motions)
     return rebuilt
+
+
+def store_rate(save: Save, rules: Rules, store: StoreId) -> int | None:
+    """The rate rebuild(save, rules) gives `store`, read without rebuilding the rest; None when a lump line moves the
+    store, as its cards' work would need rebuilding too. Like rebuild it reads the save's values, never its rates."""
+    if lump_lines(rules, store):
+        return None
+    v = next(st.segment.start_value for st in save.stores if st.store == store)
+    flow = flow_net(save, rules, running(save, rules), store)
+    rest = Segment(save.time, 0, 0)
+    return _store_motion(save, rules, index(rules).stores[store], v, flow, NO_TERMS, lambda c: rest).rate
 
 
 def _rates(save: Save, rules: Rules, now: Running) -> _Rates:
