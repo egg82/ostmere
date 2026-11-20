@@ -13,7 +13,7 @@ import dayfour_made as d4made
 import dayone
 import kit
 from daytwo import cut
-from kit import FORT, T
+from kit import FORT
 from place import WATCH, canvas, put
 
 FACE = (32, 12, 128, 52)
@@ -28,14 +28,15 @@ STRETCHES = {3: [(392, 450, 146)], 6: [(450, 488, 145)], 9: [(250, 278, 149), (3
 """The palisade's states by the stage that finishes each: runs of (left x, right x, feet y). The rim past the wall stub
 first, then the rest of it, then the gap's two sides; stage 12 is the gate between them."""
 GATE = (278, 304, 149)
-STAKES = (424, 182)
-"""The stakes' stack: its bottom-left, inside the rim's stretch, right of the woodshed and above the birch."""
-GAP_AT = (506, 282)
-"""The gap fire's centre: open ground at the camp's right edge, clear of the hearth's walls, the builds and the figures."""
+STAKES = (712, 338)
+"""The stakes' stack: its bottom-left, on open ground at the camp's far right edge."""
+GAP_AT = (270, 346)
+"""The gap fire's centre: open ground below the hearth, clear of its walls and of every build and figure shown from the
+fire's stage on."""
 GAP_FIRE = (round(GAP_AT[0] - WATCH[0]), round(GAP_AT[1] - WATCH[1]))
 """The gap fire from the watch fire's spot, which its art is drawn at."""
-ASH_HEAP = (112, 272)
-"""The ash off the roofs: its bottom-left, below the bays."""
+ASH_HEAP = (150, 322)
+"""The ash off the roofs: its bottom-left, on open ground below the smoke rack."""
 ASHED = kit.Grade(sat=0.25, mul=(0.94, 0.94, 0.98), bright=0.55, contrast=1.05)
 """Her ground with the ash worked in: the turned soil gone grey-black."""
 ASH_PALE = kit.Grade(sat=0.05, mul=(1.0, 1.0, 1.02), bright=1.7, contrast=0.8)

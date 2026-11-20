@@ -28,7 +28,7 @@ N1_OFF = f"{STOOL}|{N1_WALK}"
 N1_BUSY = "|".join([N1_OFF, *TASKS.values(), NIGHT])
 """Day one's N1 by the fire gives way to any of her day-two poses."""
 BUILDS = {"n1_shelter": "running:build_shelter", "woodstack": "running:build_woodstack"}
-WORK = {"n1_shelter": (3.4 * T, 8.65 * T), "woodstack": (12.5 * T, 5.05 * T)}
+WORK = {"n1_shelter": (daytwo.SHELTER[0] + 1.0 * T, daytwo.SHELTER[1] + 2.4 * T), "woodstack": (12.5 * T, 5.05 * T)}
 """Where the player stands to build each, facing it."""
 HANDS_AWAY = [STOOL, WALK, *BUILDS.values()]
 """Day two's hands jobs that take the player off the stool; the walk takes them out of the scene."""

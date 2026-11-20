@@ -36,7 +36,7 @@ NIGHT_3, MORNING_4, NIGHT_4 = "feature:night_3", "feature:morning_4", "feature:n
 COMFORTS = {"larder_floor": "running:larder_floor", "rack_roof": "running:rack_roof",
             "raised_bed": "running:raised_bed", "clay_hearth": "running:clay_hearth",
             "watch_fire": "running:watch_fire", "make_bay": "running:make_bay"}
-WORK = {"larder_floor": (5.0 * T, 6.55 * T), "rack_roof": (6.0 * T, 8.85 * T), "raised_bed": (2.0 * T, 6.0 * T),
+WORK = {"larder_floor": (5.0 * T, 6.55 * T), "rack_roof": (6.0 * T, 8.85 * T), "raised_bed": (made.BED[0] + 1.75 * T, made.BED[1] + 0.8 * T),
         "clay_hearth": (FIRE[0] + 1.0 * T, FIRE[1] + 1.5 * T), "watch_fire": (WATCH[0] + 0.9 * T, WATCH[1] + 0.5 * T),
         "make_bay": (2.7 * T, 8.75 * T)}
 """Where the player stands to work each comfort, facing it."""

@@ -13,9 +13,8 @@ from tints import ACCENT, WOOD
 
 TENT = "tf_farmandfort/rpgmaker_VXa/tileB_tent.png"
 OUTSIDE = "TimeFantasy_TILES_6.24.17/RPGMAKER/RMVX/tileB_outside.png"
-SHELTER = (2.4 * T, 6.25 * T)
-"""Her shelter's top-left: beside the lean-to on its open side, its foot on the lean-to's ground line, short of the
-smoke rack."""
+SHELTER = (15.4 * T, 9.0 * T)
+"""Her shelter's top-left: open ground below the watch fire, at the camp's right edge."""
 WOODSTACK = (10.35 * T, 3.55 * T)
 """The woodstack's top-left: at the foot of the wall stub past the gap, behind the carried-in stones."""
 

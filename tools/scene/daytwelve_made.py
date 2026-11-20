@@ -46,8 +46,8 @@ LOGS = (144, 52, 157, 62)
 TORCH = "TimeFantasy_TILES_6.24.17/TILESETS/animated/torch.png"
 FLAME = (4, 1, 13, 15)
 """The torch sheet's loose flame (1x)."""
-PYRE = (452, 238)
-"""The pyre's foot: at the scrub's edge on the scene's right, past the stump and the snares' run."""
+PYRE = (720, 270)
+"""The pyre's foot: open ground at the scene's far right, past the woodshed."""
 SEED = 112
 PIT_DARK, LIP, DOOR_DARK = (30, 26, 26, 255), (84, 74, 66, 255), (24, 22, 24, 255)
 

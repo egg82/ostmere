@@ -18,8 +18,8 @@ from daytwo import cut
 FLOOR = (140, 176)
 """The larder's floor, top-left in scene pixels: flagstones laid round and behind the larder and spilling right."""
 FLOOR_SIZE = (84, 28)
-BED = (8, 166)
-"""The raised bed's top-left: the open ground above the lean-to, under the roof's shadow."""
+BED = (572, 220)
+"""The raised bed's top-left: open ground right of the watch fire, at the camp's edge."""
 BAY = (5, 240)
 """The bay's top-left: against the lean-to's foot, its roof joining the lean-to's."""
 Cell = tuple[int, int, int, int]

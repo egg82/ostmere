@@ -14,26 +14,26 @@ from PIL import Image, ImageOps
 import dayone
 import daythree_made as day3
 import kit
-from daytwo import OUTSIDE, cut, hide_frame
+from daytwo import OUTSIDE, SHELTER, cut, hide_frame
 from dayone import art, placed
 from kit import ASH_B
 from place import canvas, put
 from tints import ACCENT
 
 FARM = "tf_farmandfort/rpgmaker_VXa/tileB_farmA.png"
-SHED = (346, 156)
-"""The woodshed's top-left: below the woodstack at the wall stub, right of the watch fire, clear of the scrub."""
+SHED = (570, 296)
+"""The woodshed's top-left: open ground past the camp's right edge, below the watch fire."""
 BAY2 = (70, 247)
 """The second bay's top-left: beside the first, its open side to the left."""
-TURNED = (374, 204)
-"""The turned ground's top-left: on the ground the hearth's warmth reaches, right of the stool."""
+TURNED = (628, 348)
+"""The turned ground's top-left: open ground below the camp."""
 POT_STONES = (312, 229)
 """Where the hearth stones ring the pot: its base on the hearth's rim."""
 PEGGED = [(142, 272), (172, 273)]
 """Where pelts are pegged out flat on the ground under the rack."""
 BAY_FLOORS = [(22, 266), (79, 266), (24, 228)]
 """A pelt's place on each floor, in the order pelts are laid: the first bay, the second, the lean-to."""
-SPEAR_FOOT = (72, 246)
+SPEAR_FOOT = (round(SHELTER[0]) - 5, round(SHELTER[1]) + 46)
 
 
 def woodshed(stage: int) -> Image.Image:
