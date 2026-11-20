@@ -451,6 +451,8 @@ p.catching-up[hidden] { display: none; }
 .totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
 .totals-runs { font-size: var(--t-meta); color: var(--ink); }
 .goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
+.goal-binds.heading-turned { color: var(--ember-hot); }   /* a store whose heading the edit turns (ui/storetimes.ts) */
+.goal-binds.heading-turned.empties { color: var(--alarm); }
 .editor-adds { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 .editor-add-label { font-size: var(--t-meta); color: var(--ink); }
 .editor > .editor-adds { flex-direction: column; align-items: flex-start; }

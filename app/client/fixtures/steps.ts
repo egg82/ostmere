@@ -92,7 +92,7 @@ function base(at: number): View {
     at, next_event_at: null, ledger: [], skills: [], standing: [], lanes: [freeHands],
     cards: [card(at, "stand", { cap: 3 })], completed: [], greyed_mix_ids: [],
     chips: [], chips_seen: [], unlocked: [{ category: "card", id: "stand" }], all_covered: true, ended_at: null, mixes: [], active_mix_id: null, runs_out_at: null,
-    running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], levels: [], forecast: { horizon_at: at + 6 * 3600, level_ups: [], tops_out: [], fills: [], empties: [] },
+    running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], store_rows: [], levels: [], forecast: { horizon_at: at + 6 * 3600, level_ups: [], tops_out: [], fills: [], empties: [] },
   };
 }
 
@@ -165,7 +165,7 @@ function mid(at: number, mix: Mix, covered: boolean, plan: Plan): View {
     ],
     all_covered: covered, ended_at: covered ? at : null, mixes: [mix, ...plan.mixes.filter((m) => m.id !== mix.id)], active_mix_id: mix.id,
     runs_out_at: covered ? null : at + 5_400, running_mix_id: plan.running ?? mix.id, mix_order: plan.order, running_town_mix_id: null, town_mix_order: null,
-    orders_on: plan.on, order_states: statesOf(plan), order_guards: plan.orders.map(() => []), order_doing: plan.orders.map(() => null), order_dry: [], orders: plan.orders, queue: [], offers: [], fights: [], goals: [], goal_rows: [], levels: [],
+    orders_on: plan.on, order_states: statesOf(plan), order_guards: plan.orders.map(() => []), order_doing: plan.orders.map(() => null), order_dry: [], orders: plan.orders, queue: [], offers: [], fights: [], goals: [], goal_rows: [], store_rows: [], levels: [],
     // foraging's next level lands as its bar says; firecraft's is pushed back by the rule that takes the hands first
     forecast: { horizon_at: at + 6 * 3600, level_ups: [{ skill: "foraging", at: at + 70 }, { skill: "firecraft", at: at + 1_500 }], tops_out: [], fills: [{ store: "warmth", at: at + 744 }], empties: [{ store: "wood", at: at + 420 }] },
   };

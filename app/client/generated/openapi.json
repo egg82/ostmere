@@ -3919,6 +3919,15 @@
         "title": "Hand",
         "description": "How a note is written; each is a style the page owns, so a new one is page work as well as content."
       },
+      "Heading": {
+        "type": "string",
+        "enum": [
+          "empties",
+          "fills",
+          "steady"
+        ],
+        "title": "Heading"
+      },
       "Health": {
         "properties": {
           "status": {
@@ -6880,6 +6889,46 @@
         ],
         "title": "StoreNet"
       },
+      "StoreRow": {
+        "properties": {
+          "store": {
+            "type": "string",
+            "title": "Store"
+          },
+          "per_hour": {
+            "type": "integer",
+            "title": "Per Hour"
+          },
+          "heading": {
+            "$ref": "#/components/schemas/Heading"
+          },
+          "at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "At"
+          },
+          "mixed": {
+            "type": "boolean",
+            "title": "Mixed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "store",
+          "per_hour",
+          "heading",
+          "at",
+          "mixed"
+        ],
+        "title": "StoreRow",
+        "description": "One ledger store under the setup as set: its net per hour with every runner counted, and where that takes it."
+      },
       "StoreValue": {
         "properties": {
           "kind": {
@@ -7521,6 +7570,13 @@
             "type": "array",
             "title": "Goal Rows"
           },
+          "store_rows": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRow"
+            },
+            "type": "array",
+            "title": "Store Rows"
+          },
           "levels": {
             "items": {
               "$ref": "#/components/schemas/StoreLevel"
@@ -7563,6 +7619,7 @@
           "fights",
           "goals",
           "goal_rows",
+          "store_rows",
           "levels"
         ],
         "title": "View"

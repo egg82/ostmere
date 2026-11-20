@@ -21,6 +21,7 @@ from . import convert
 from .changes import changes as _changes
 from .feature_infos import feature_info
 from .goalrows import goal_rows
+from .storerows import store_rows
 from .lane_infos import lane_infos, later_labels
 from .mixrows import MixNumbers
 from .levels import levels
@@ -66,7 +67,7 @@ class Game:
         v = e.view(save, rules)
         open_goals = goals(save, rules, v, self._goals)
         return convert.view(save, v, sources(save, rules, v, self._sources), open_goals,
-                            goal_rows(save, rules, v, open_goals), order_dry(save, rules, v),
+                            goal_rows(save, rules, v, open_goals), order_dry(save, rules, v), store_rows(save, rules, v),
                             levels(save, rules, v, scene_stores()))
 
     def forecast(self, played: Played, stop: Callable[[], bool]) -> w.ForecastAnswer:

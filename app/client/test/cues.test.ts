@@ -18,7 +18,7 @@ const blocked = { condition: { kind: "after_time" as const, at: 99 }, ready_at: 
 const view = (over: Partial<View> = {}): View => ({
   at: 0, next_event_at: null, ledger: [], skills: [], standing: [], lanes: [{ lane: "hands", running_card: null, completes_at: null, order: null }],
   cards: [], completed: [], greyed_mix_ids: [], chips: [], chips_seen: [], unlocked: [], all_covered: true, ended_at: null, mixes: [], active_mix_id: null,
-  runs_out_at: null, running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], levels: [],
+  runs_out_at: null, running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], store_rows: [], levels: [],
   forecast: { horizon_at: 0, level_ups: [], tops_out: [], fills: [], empties: [] }, ...over,
 });
 
