@@ -16,7 +16,7 @@ from .cards import (
     Outcome, RuleInstall, WhileRunning,
 )
 from .flows import Flow
-from .forecast import Forecast, forecast
+from .forecast import Forecast, ForecastPath, forecast
 from .ids import (
     HANDS, TOWN_PREFIX, ActionId, AnswerId, CardId, ChipId, EntryId, FeatureId, IdKind, KindId, LaneId, LineKey, MixId, NodeId, NoteId, OfferId, RoleId, Runner, SkillId,
     SideId, SourceId, StoreId, ThreatId, TriggerId,
@@ -72,7 +72,7 @@ __all__ = [
     "RuleInstall", "WhileRunning", "HeldSpeed",
     "AnswerDef", "OfferDef",
     "Flow",
-    "Forecast", "forecast",
+    "Forecast", "ForecastPath", "forecast",
     "HANDS", "TOWN_PREFIX", "ActionId", "AnswerId", "CardId", "ChipId", "EntryId", "FeatureId", "NoteId", "IdKind", "KindId", "LaneId", "LineKey", "MixId", "OfferId", "RoleId",
     "NodeId", "Runner", "SideId", "SkillId", "SourceId", "ThreatId",
     "StoreId", "TriggerId",

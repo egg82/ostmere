@@ -139,6 +139,7 @@ app/ashfall_app/engine/manifest.py
 app/ashfall_app/engine/marks.py
 app/ashfall_app/engine/memo.py
 app/ashfall_app/engine/mixes.py
+app/ashfall_app/engine/mixpauses.py
 app/ashfall_app/engine/mixruns.py
 app/ashfall_app/engine/modifiers.py
 app/ashfall_app/engine/motion.py

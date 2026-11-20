@@ -34,9 +34,13 @@ CHOICES (each with its reason)
   reach_time's answer, the start of its segment, which a sample carries forward to the sample's time.
 - Running dry, no order: consumers pause last-in-mix first until the store's net >= 0; each resumes when the
   store refills to one hour of its cost (or the cap). A paused action makes, costs and trains nothing; a paused
-  mix card's share goes to the rest of its mix until it resumes (SPENT). A change of the running mix (CARDS, "Order mix"), or SaveMix of it, clears all pauses (re-pausing at once if
-  still dry). Mix order is priority the player already wrote; the hour is hysteresis, so dry never chatters at
-  one instant. The rest of the mix keeps running, as the docs ask.
+  mix card's share goes to the rest of its mix until it resumes (SPENT). A change of the running mix (CARDS, "Order mix"), or SaveMix of it, clears the pauses on every store a card of the old or the new running mixes makes or
+  costs (re-pausing at once if still dry, in the new mix's order); a pause on any other store stands until its
+  RESUME, since nothing the change moves reaches that store. Mix order is priority the player already wrote; the hour
+  is hysteresis, so dry never chatters at one instant. The rest of the mix keeps running, as the docs ask. Why: a
+  store held empty for good (a clock run out) would otherwise pause its consumers again at every mix change, much of
+  a catch-up's time on a save whose rules switch mixes often, and a refilling store's consumer would restart below
+  its hour at a switch that moves nothing on that store.
 - Orders: latched conditions with an explicit release (hysteresis). Evaluation runs once at any instant where a
   latch changes, the queue pops, a project lands (every TAP_DONE: a push, a completion), a
   trigger fires or a READY event falls, and right after SetOrders or SetQueue; never after a player's SwitchMix,
@@ -195,6 +199,11 @@ CHOICES (each with its reason)
   player can trust draws the forecast's. It is the save's own future while nobody decides, so a forecast made
   earlier on the same path lists the same times. Bounded by `until`, MAX_INSTANTS and an optional stop asked before each
   instant (then `until` is where it stopped); past it nothing is listed, never estimated. Read only: it returns no save.
+  Kept path: a Forecast carries the instants it resolved (ForecastPath), and a later forecast handed it (`kept`) takes
+  those after its own save instead of resolving them, when its save is on that path: the last of them at or before its
+  time, shifted to it, equals it. The answer is the same as without `kept`; MAX_INSTANTS counts the taken instants, and
+  stop is asked only before the ones it resolves. Why: the page forecasts every minute, and on a busy save each forecast
+  resolved hundreds of instants the last one had.
   Hands free (handsfree.py, docs/design/reminders.md "The hands-free notice"): hands_free_at is the first instant
   the player's work stops holding the hands, after the forecast began with it holding them; None when it began free
   or they are not free by `until`. The player's work holds them while save.queue holds an entry (a goal stint
@@ -537,7 +546,7 @@ CHOICES (cards)
   how the page's "when ready" entry for a one-off (tap c until c's count reaches 1) leaves the queue: c is dead from
   the instant it completes, the instant its `until` holds. The player may still switch to a greyed mix
   (nothing runs). DeleteMix removes a saved mix not nested in another and not named by an order or queue entry;
-  deleting the active one leaves no mix active, clears every pause if the running mix changed, and evaluates at once.
+  deleting the active one leaves no mix active, clears the pauses (Running dry) if the running mix changed, and evaluates at once.
   Why: the decision (docs/decisions.md, "The mix") that a saved mix never quietly runs something else, and the 2 AM
   test's "falls through".
 - Never ready: a queue entry tapping a card whose blocker has no ready time (a material nothing makes under the current
@@ -557,8 +566,8 @@ CHOICES (cards)
   a mix order never compete: a HANDS tap yields whichever mix runs, and a tap on another lane runs beside it. The
   queue waits while an order's mix runs, except an entry taking up a hands task with kept work (CURE CUT-IN).
   Whenever the running mix changes (a latch rising or releasing, a mix
-  greying or un-greying, SetOrders, SaveMix, a switch, a delete), every pause clears and rates are rebuilt at that
-  instant, as a switch does; a change that leaves the running mix as it was clears nothing. A player's switch while
+  greying or un-greying, SetOrders, SaveMix, a switch, a delete), its pauses clear (Running dry) and rates are rebuilt
+  at that instant, as a switch does; a change that leaves the running mix as it was clears nothing. A player's switch while
   an order's mix runs sets only save.active, the mix that comes back. The queue head still pops on its `until` while
   an order's mix runs; only its verb waits. Only the
   player's own mix can be greyed while it runs: a greyed order mix is never the running one. Below the firing cap a
@@ -654,8 +663,8 @@ INVARIANTS (cards; numbered on from 33)
     to a mix that is not greyed, else the controlling queue entry's mix when that entry is a SwitchMix, else
     s.active, and mix_order is that order's index (None otherwise); no evaluation ever changes s.active (only the
     player's SwitchMix and DeleteMix do); while no such order is latched and no queue entry is a SwitchMix, every
-    segment equals that of the same save with its SwitchMix orders removed. When the
-    running mix changes at an instant, pauses are cleared there; a player's switch that leaves it unchanged changes
+    segment equals that of the same save with its SwitchMix orders removed. When the running mix changes at an
+    instant, its pauses are cleared there (Running dry); a player's switch that leaves it unchanged changes
     only s.active.
 44. Kinds don't shadow: an order's TapCard that can act acts whether or not an earlier order's mix runs, and a mix
     order's mix runs whether or not an earlier order taps.
@@ -1903,7 +1912,7 @@ CHOICES (the town's mix)
   hands' running mix (Order mix) reads only SwitchMix orders of HANDS mixes, then the queue mix, then save.active; so orders of one
   layer never change the other's running mix, and order sequence is priority within a layer only. Everything Order
   mix says of the hands' pushdown holds for the town's: a pure function of latches and greying, rates rebuilt and
-  every pause cleared when either running mix changes, a latch change past the firing cap waits (Firing cap).
+  pauses cleared (Running dry) when either running mix changes, a latch change past the firing cap waits (Firing cap).
 - Verbs: a player's SwitchMix of a TOWN mix raises InvalidVerbError ("set by rules"), as a player's TapCard on a
   ruled lane does; SetQueue refuses an entry whose verb is a SwitchMix of a TOWN mix (the queue is the hands' plan);
   SetOrders accepts one (it is the town's rule) when the mix is in save.mixes, as for any SwitchMix, so a town mix's

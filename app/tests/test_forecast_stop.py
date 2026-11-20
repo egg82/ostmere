@@ -6,6 +6,8 @@ import pytest
 from sqlalchemy import Engine
 
 from ashfall_app import engine as e
+from ashfall_app import main
+from ashfall_app.api.service import Game
 from ashfall_app.opening.lock import load_lock
 from ashfall_app.opening.renames import load_renames
 from ashfall_app.opening.schema import Opening
@@ -40,15 +42,25 @@ def test_a_stop_that_never_fires_changes_nothing(full: e.Forecast):
     assert forecast(lambda: False) == full
 
 
-def test_a_forecast_asked_over_the_api_is_cut_by_the_saves_stop(game: GameClient, shipped_opening: Opening):
+@pytest.fixture
+def own_game(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The app gets a Game of its own, keeping no forecast path from another test's save that equals this one."""
+    monkeypatch.setattr(main, "Game", Game)
+
+
+def test_a_forecast_asked_over_the_api_is_cut_by_the_saves_stop(own_game: None, game: GameClient,
+                                                               shipped_opening: Opening):
+    """The cut one is asked first: a forecast handed the path of an earlier one on the same save takes its instants
+    without asking the stop (engine forecast.py, `kept`), so the whole one asked after it reaches past it."""
     save = game.begin()["save"]["save_id"]
     game.clock.tick(seconds=30)
-    whole = game.client.post(f"/api/saves/{save}/forecast").json()["forecast"]["horizon_at"]
     engine: Engine = game.app.state.db.engine
     rs = ruleset(shipped_opening, load_renames(), "dev", load_lock().release)
     old = game.app.state.services
     game.app.state.services = Services(accounts=old.accounts, saves=PgSaves(engine, rs, game.clock, stop_for=every(1)))
     cut = game.client.post(f"/api/saves/{save}/forecast").json()["forecast"]["horizon_at"]
+    game.app.state.services = old
+    whole = game.client.post(f"/api/saves/{save}/forecast").json()["forecast"]["horizon_at"]
     assert cut < whole
 
 

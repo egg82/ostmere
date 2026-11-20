@@ -6,8 +6,8 @@ EDITS: list[tuple[str, str, str]] = [
      '''    t = None if any(guard_latches(latch)) else change_time(save, rules, order.when, when_latch(latch))
 '''),
     ('ashfall_app/engine/latches.py',
-     '''    if change_time(save, rules, order.when, when) == save.time:
+     '''    if changes_now(save, rules, order.when, when):
 ''',
-     '''    if not any(guards) and change_time(save, rules, order.when, when) == save.time:
+     '''    if not any(guards) and changes_now(save, rules, order.when, when):
 '''),
 ]
