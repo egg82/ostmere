@@ -228,7 +228,7 @@ presentation = "action"
 label_key = "c_reap"
 work_s = 300
 skill = "foraging"
-xp_per_hour = 300
+xp_per_hour = 900
 inputs = [{ store = "ripe", items = 3 }]
 outcome = { stores = [{ store = "barley", items = 2 }] }
 
@@ -349,7 +349,7 @@ presentation = "action"
 label_key = "c_hunt_deer"
 work_s = 2400
 skill = "melee"
-xp_per_hour = 2
+xp_per_hour = 900
 inputs = [{ store = "smoked", items = 1 }, { store = "deer_down", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 4 }, { store = "cord", items = 1 }] }
 fight = { side = "hands", threat = "ash_deer", lost = "deer_lost", won_line_keys = ["l_fight_deer_won_1", "l_fight_deer_won_2"], lost_line_keys = ["l_fight_deer_lost_1", "l_fight_deer_lost_2"] }
