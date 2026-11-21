@@ -10,7 +10,7 @@ HAND_ON_STONE, STONES, HURT = CardId("hand_on_stone"), StoreId("stones"), StoreI
 WOODSHED, HEARTH_STONES = CardId("woodshed"), CardId("hearth_stones")
 SPEAR, BEDDING = CardId("make_spear"), CardId("pelt_bedding")
 HUNT, SEW = CardId("hunt_wolf"), CardId("sew_wraps")
-DIG_BED = CardId("n3_dig_bed")
+DIG_BED, WINDBREAK = CardId("n3_dig_bed"), CardId("build_windbreak")
 
 FOUR = Landings(
     {"L1": ("t_morning_5",), "L2": ("t_sign",), "L3": ("t_shed_stack",), "SL8": ("t_his_watch",)},
@@ -40,6 +40,12 @@ def sew_rule() -> tuple[tuple[Unlock, Order], ...]:
     return tuple(x for x in c3.order_cards(c3.opening3(), ("pelt",)) if x[1].then == TapCard(SEW))
 
 
+def windbreak_rule() -> tuple[tuple[Unlock, Order], ...]:
+    """The stones' sink's order card (day_five.toml, build_windbreak), offered once the pair join. Of stones' order
+    cards only this one: gap_fire's is day nine's to set (weektwo/content.py, ORDER_STORES)."""
+    return tuple(x for x in c3.order_cards(c3.opening3(), ("stones",)) if x[1].then == TapCard(WINDBREAK))
+
+
 def day_four() -> Later:
     return Later(
         start="B5", stop="B6",
@@ -55,7 +61,7 @@ def day_five() -> Later:
         sinks=Chapter(trips=(STONE_DAMP, TRACK_STONES), comforts=(*c3.COMFORTS, WOODSHED, HEARTH_STONES),
                       arrivals=ANSWERS),
         steps=(CardId("bank_fire_6"), CardId("make_bay2")),
-        order_cards=(*c3.order_cards(c3.opening3()), BED_RULE), keeps=c3.keeps(),
+        order_cards=(*c3.order_cards(c3.opening3()), BED_RULE, *windbreak_rule()), keeps=c3.keeps(),
         landed=FIVE.of, news=("M2", "O-pair", "A25", "M1", "A29", "B7", "SL9", "SL10", "SL11"))
 
 
@@ -65,7 +71,7 @@ def day_six() -> Later:
         sinks=Chapter(trips=(STONE_DAMP, TRACK_STONES), comforts=(*c3.COMFORTS, WOODSHED, HEARTH_STONES, SPEAR, BEDDING),
                       arrivals=ANSWERS),
         steps=(CardId("b7_stand"), CardId("sit_fire_7")),
-        order_cards=(*c3.order_cards(c3.opening3()), BED_RULE, *sew_rule()), keeps=c3.keeps(),
+        order_cards=(*c3.order_cards(c3.opening3()), BED_RULE, *windbreak_rule(), *sew_rule()), keeps=c3.keeps(),
         landed=SIX.of, news=("A27", "G1", "A30", "G2", "SL12", "SL13", "SL14"),
         answers=((OfferId("o_pelt"), AnswerId("o_pelt_give")),),
         shares=(Share(CardId("hunt_wolf"), 1500),), cures=(Cure(CardId("poultice"), HURT),))

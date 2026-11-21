@@ -4,9 +4,9 @@
     d10+   made      60  at cap   0%  n2_clear_roofs 100
   ashed_ground
     d6-9   made       3  at cap   0%  n3_ash_ground 100
-    d10+   made      14  at cap   0%  n3_ash_ground 100
+    d10+   made      13  at cap   0%  n3_ash_ground 100
   b9_clock
-    d10+   made     116  at cap   0%  b9_clock 100
+    d10+   made     108  at cap   0%  b9_clock 100
   bay
     d3-5   made       1  at cap  61%  make_bay 100
   bay2
@@ -14,237 +14,234 @@
   bay_clock
     d3-5   made    1040  at cap  67%  bay_clock 100
     d6-9   made    1920  at cap 100%  bay_clock 100
-    d10+   made    2480  at cap 100%  bay_clock 100
+    d10+   made    2320  at cap 100%  bay_clock 100
   bear_lost
     d10+   made       3  at cap   0%  hunt_bear 100
   bear_season
-    d10+   made      76  at cap   0%  bear_season 100
+    d10+   made      68  at cap   0%  bear_season 100
   camp
     d1-2   made  253414  at cap  42%  n1_forage 31, woodcutting 17, rest 17, scavenge 17, n1_walk_ridge 7, build_shelter 6, weave_wattle 6
     d3-5   made  743710  at cap  50%  n1_forage 42, n2_forage 23, field_track 10, woodcutting 4, rest 4, scavenge 4, make_bay 4, larder_floor 2, pot_shelf 2, watch_fire 2, wood_stack 2
     d6-9   made 1714890  at cap  29%  n1_forage 23, n4_watch 15, n2_forage 14, n3_forage 11, field_track 4, n3_pick 4, n2_stakes 4, n2_clear_roofs 4, woodcutting 3, rest 3, scavenge 3, n4_cord 3, hand_on_stone 2, sew_wraps 2, n3_ash_ground 1, n1_peg_flaps 1, other 4
-    d10+   made 3263509  at cap  61%  n1_forage 16, n4_watch 14, n7_guard 9, g_field_forage 8, n2_clear_roofs 7, g_field_watch 7, n3_forage 6, n3_pick 5, n2_watch 4, n3_ash_ground 3, n2_forage 3, n6_stakes 3, hand_on_stone 2, field_track 2, woodcutting 2, rest 2, scavenge 2, n2_stakes 2, other 5
+    d10+   made 3023720  at cap  66%  n1_forage 17, n4_watch 14, n7_guard 8, n2_clear_roofs 8, g_field_forage 8, g_field_watch 7, n3_forage 6, n3_pick 6, n2_watch 3, n3_ash_ground 3, n6_stakes 3, n2_forage 3, hand_on_stone 2, n2_stakes 2, woodcutting 2, rest 2, scavenge 2, field_track 2, other 5
   catch
     d1-2   made     108  at cap   0%  snare_1 33, snare_2 33, snare_3 33
     d3-5   made     216  at cap   0%  snare_1 33, snare_2 33, snare_3 33
     d6-9   made     437  at cap   0%  hunt_wolf 34, snare_1 22, snare_2 22, snare_3 22
-    d10+   made     866  at cap   0%  hunt_wolf 44, snare_1 14, snare_2 14, snare_3 14, snare_4 12, hunt_bear 1
+    d10+   made     815  at cap   0%  hunt_wolf 44, snare_1 14, snare_2 14, snare_3 14, snare_4 12, hunt_bear 1
   clay
     d3-5   made      28  at cap  61%  dig_clay 100
     d6-9   made       8  at cap  21%  dig_clay 100
-  clear_clock
-    d10+   made       4  at cap   0%  clear_clock 100
   cord
     d6-9   made      41  at cap  17%  n4_cord 100
-    d10+   made      24  at cap   6%  n4_cord 100
+    d10+   made      24  at cap   3%  n4_cord 100
   crows_fought
     d6-9   made      60  at cap   0%  crows 100
-    d10+   made     124  at cap   0%  crows 100
+    d10+   made     116  at cap   0%  crows 100
   crows_lost
     d6-9   made      12  at cap   0%  crows 100
-    d10+   made      25  at cap   0%  crows 100
+    d10+   made      23  at cap   0%  crows 100
   damp_wood
     d1-2   made   80457  at cap  83%  woodcutting 100
     d3-5   made   77954  at cap  72%  woodcutting 100
     d6-9   made  123618  at cap  54%  woodcutting 100
-    d10+   made  178798  at cap  84%  woodcutting 100
+    d10+   made  167456  at cap  79%  woodcutting 100
   dawn_5
     d3-5   made     160  at cap  11%  dawn_5 100
     d6-9   made    1920  at cap 100%  dawn_5 100
-    d10+   made    2480  at cap 100%  dawn_5 100
+    d10+   made    2320  at cap 100%  dawn_5 100
   dawn_6
     d6-9   made    1680  at cap  88%  dawn_6 100
-    d10+   made    2480  at cap 100%  dawn_6 100
+    d10+   made    2320  at cap 100%  dawn_6 100
   dawn_7
     d6-9   made    1200  at cap  62%  dawn_7 100
-    d10+   made    2480  at cap 100%  dawn_7 100
+    d10+   made    2320  at cap 100%  dawn_7 100
   day_5
     d3-5   made     160  at cap   0%  day_5 100
     d6-9   made    1920  at cap  92%  day_5 100
-    d10+   made    2480  at cap 100%  day_5 100
+    d10+   made    2320  at cap 100%  day_5 100
   day_6
     d6-9   made    1680  at cap  71%  day_6 100
-    d10+   made    2480  at cap 100%  day_6 100
+    d10+   made    2320  at cap 100%  day_6 100
   day_7
     d6-9   made    1200  at cap  58%  day_7 100
-    d10+   made    2480  at cap 100%  day_7 100
+    d10+   made    2320  at cap 100%  day_7 100
   dig_clock
-    d10+   made      60  at cap   0%  dig_clock 100
+    d10+   made      52  at cap   0%  dig_clock 100
   drift_clock
     d6-9   made      48  at cap   0%  drift_clock 100
-    d10+   made     124  at cap   0%  drift_clock 100
+    d10+   made     116  at cap   0%  drift_clock 100
   dry_wood
     d1-2   made     270  at cap   0%  lay_to_dry 100
     d3-5   made     330  at cap   0%  lay_to_dry 100
     d6-9   made    2247  at cap  29%  hand_on_stone 95, lay_to_dry 5
-    d10+   made    3026  at cap  77%  hand_on_stone 100
+    d10+   made    2792  at cap  69%  hand_on_stone 100
   energy
     d1-2   made   43183  at cap  92%  rest 100
     d3-5   made   42582  at cap  67%  rest 100
     d6-9   made   68380  at cap  83%  rest 100
-    d10+   made   99755  at cap  87%  rest 100
+    d10+   made   88836  at cap  83%  rest 100
   evening
     d1-2   made    3520  at cap  92%  evening 100
     d3-5   made    5760  at cap 100%  evening 100
     d6-9   made    7680  at cap 100%  evening 100
-    d10+   made    9920  at cap 100%  evening 100
+    d10+   made    9280  at cap 100%  evening 100
   evening_2
     d1-2   made     480  at cap  50%  evening_2 100
     d3-5   made    1440  at cap 100%  evening_2 100
     d6-9   made    1920  at cap 100%  evening_2 100
-    d10+   made    2480  at cap 100%  evening_2 100
+    d10+   made    2320  at cap 100%  evening_2 100
   evening_3
     d3-5   made    1360  at cap  94%  evening_3 100
     d6-9   made    1920  at cap 100%  evening_3 100
-    d10+   made    2480  at cap 100%  evening_3 100
+    d10+   made    2320  at cap 100%  evening_3 100
   evening_4
     d3-5   made     240  at cap  17%  evening_4 100
     d6-9   made    1920  at cap 100%  evening_4 100
-    d10+   made    2480  at cap 100%  evening_4 100
+    d10+   made    2320  at cap 100%  evening_4 100
   fullness
     d1-2   made     287  at cap   8%  cook_roots 98, roast_roots 2
     d3-5   made     406  at cap   0%  cook_roots 100
     d6-9   made     553  at cap   0%  cook_roots 100
-    d10+   made     714  at cap   0%  cook_roots 100
+    d10+   made     679  at cap   0%  cook_roots 100
   fungus
     d6-9   made     624  at cap  50%  n3_pick 100
-    d10+   made    1495  at cap  90%  n3_pick 95, g_hearth_pick 5
+    d10+   made    1492  at cap  97%  n3_pick 94, g_hearth_pick 6
   hearth_dry
     d3-5   made       4  at cap  33%  cure_hearth 100
   hearth_wet
     d3-5   made       4  at cap   0%  clay_hearth 100
   hunt_lost
     d6-9   made       9  at cap   0%  hunt_wolf 100
-    d10+   made      31  at cap   0%  hunt_wolf 100
+    d10+   made      30  at cap   0%  hunt_wolf 100
   hurt
     d6-9   made       9  at cap   0%  hunt_wolf 100
-    d10+   made      37  at cap  26%  hunt_wolf 84, hunt_bear 16
+    d10+   made      36  at cap  24%  hunt_wolf 83, hunt_bear 17
   hut
-    d10+   made       1  at cap  65%  make_hut 100
+    d10+   made       1  at cap  62%  make_hut 100
   morning_13
-    d10+   made    1200  at cap  48%  morning_13 100
+    d10+   made    1040  at cap  45%  morning_13 100
   n1_worked
     d1-2   made     772  at cap  50%  n1_forage 100
     d3-5   made    2614  at cap 100%  n1_forage 99, other 1
     d6-9   made    3451  at cap 100%  n1_forage 99, other 1
-    d10+   made    4287  at cap 100%  n1_forage 100
+    d10+   made    4047  at cap 100%  n1_forage 100
   n2_hour
     d3-5   made     880  at cap  61%  n2_hour 100
     d6-9   made    1920  at cap 100%  n2_hour 100
-    d10+   made    2480  at cap 100%  n2_hour 100
+    d10+   made    2320  at cap 100%  n2_hour 100
   night
     d1-2   made     880  at cap  92%  night 100
     d3-5   made    1440  at cap 100%  night 100
     d6-9   made    1920  at cap 100%  night 100
-    d10+   made    2480  at cap 100%  night 100
+    d10+   made    2320  at cap 100%  night 100
   night_12
-    d10+   made    1360  at cap  52%  night_12 100
-  night_14
-    d10+   made     160  at cap   6%  night_14 100
+    d10+   made    1200  at cap  48%  night_12 100
   night_2
     d1-2   made     480  at cap  50%  night_2 100
     d3-5   made    1440  at cap 100%  night_2 100
     d6-9   made    1920  at cap 100%  night_2 100
-    d10+   made    2480  at cap 100%  night_2 100
+    d10+   made    2320  at cap 100%  night_2 100
   night_3
     d3-5   made    1360  at cap  94%  night_3 100
     d6-9   made    1920  at cap 100%  night_3 100
-    d10+   made    2480  at cap 100%  night_3 100
+    d10+   made    2320  at cap 100%  night_3 100
   night_4
     d3-5   made     240  at cap  11%  night_4 100
     d6-9   made    1920  at cap 100%  night_4 100
-    d10+   made    2480  at cap 100%  night_4 100
+    d10+   made    2320  at cap 100%  night_4 100
   night_5
     d6-9   made    1760  at cap  88%  night_5 100
-    d10+   made    2480  at cap 100%  night_5 100
+    d10+   made    2320  at cap 100%  night_5 100
   night_6
     d6-9   made    1360  at cap  71%  night_6 100
-    d10+   made    2480  at cap 100%  night_6 100
+    d10+   made    2320  at cap 100%  night_6 100
   night_7
     d6-9   made    1040  at cap  54%  night_7 100
-    d10+   made    2480  at cap 100%  night_7 100
+    d10+   made    2320  at cap 100%  night_7 100
   pack_fought
-    d10+   made     116  at cap   0%  pack 100
+    d10+   made     108  at cap   0%  pack 100
   pack_lost
-    d10+   made      25  at cap   0%  pack 100
+    d10+   made      23  at cap   0%  pack 100
   pair_3h
     d6-9   made    1600  at cap  79%  pair_3h 100
-    d10+   made    2480  at cap 100%  pair_3h 100
+    d10+   made    2320  at cap 100%  pair_3h 100
   pelt
     d6-9   made      50  at cap   0%  hunt_wolf 100
-    d10+   made     129  at cap   0%  hunt_wolf 98, hunt_bear 2
+    d10+   made     122  at cap   0%  hunt_wolf 98, hunt_bear 2
   pelt_6h
     d6-9   made    1200  at cap  54%  pelt_6h 100
-    d10+   made    2480  at cap 100%  pelt_6h 100
+    d10+   made    2320  at cap 100%  pelt_6h 100
   r1_clock
     d6-9   made      60  at cap   0%  r1_clock 100
-    d10+   made     124  at cap   0%  r1_clock 100
+    d10+   made     116  at cap   0%  r1_clock 100
   rats_fought
     d6-9   made      60  at cap   0%  rats 100
-    d10+   made     124  at cap   0%  rats 100
+    d10+   made     116  at cap   0%  rats 100
   rats_lost
     d6-9   made      14  at cap   0%  rats 100
-    d10+   made      27  at cap   0%  rats 100
-  rime
-    d10+   made       4  at cap   0%  frost 100
+    d10+   made      25  at cap   0%  rats 100
   roof_ash
     d6-9   made      96  at cap   0%  ashfall 100
-    d10+   made     240  at cap   0%  ashfall 100
+    d10+   made     232  at cap   0%  ashfall 100
   roots
     d1-2   made   18595  at cap  42%  n1_forage 99, other 1
     d3-5   made   99624  at cap 100%  n1_forage 62, n2_forage 38
     d6-9   made  181500  at cap  96%  n1_forage 45, n2_forage 29, n3_forage 26
-    d10+   made  236313  at cap 100%  n1_forage 43, g_field_forage 21, n3_forage 20, n2_forage 15
+    d10+   made  219573  at cap 100%  n1_forage 44, g_field_forage 21, n3_forage 20, n2_forage 15
   sign_2h
     d3-5   made      80  at cap   6%  sign_2h 100
     d6-9   made    1920  at cap 100%  sign_2h 100
-    d10+   made    2480  at cap 100%  sign_2h 100
+    d10+   made    2320  at cap 100%  sign_2h 100
   smoked
     d1-2   made      73  at cap  17%  smoke_catch 96, smoke_roots 4
     d3-5   made     216  at cap   0%  smoke_catch 100
     d6-9   made     436  at cap   0%  smoke_catch 100
-    d10+   made     864  at cap   3%  smoke_catch 100
+    d10+   made     820  at cap   0%  smoke_catch 100
   stakes
     d6-9   made     117  at cap   0%  n2_stakes 73, cut_stakes 27
-    d10+   made     192  at cap   0%  n2_stakes 39, n6_stakes 38, cut_stakes 24
+    d10+   made     192  at cap   0%  n2_stakes 39, n6_stakes 37, cut_stakes 24
   stew
     d3-5   made      45  at cap   0%  stew 100
     d6-9   made      94  at cap   0%  fungus_stew 57, stew 43
-    d10+   made     289  at cap   0%  fungus_stew 52, stew 48
+    d10+   made     280  at cap   0%  fungus_stew 52, stew 48
   stones
     d1-2   made   16297  at cap  83%  scavenge 100
     d3-5   made   17515  at cap  67%  scavenge 100
-    d6-9   made   29891  at cap  92%  scavenge 100
-    d10+   made   36154  at cap  94%  scavenge 100
+    d6-9   made   29891  at cap  83%  scavenge 100
+    d10+   made   34407  at cap  66%  scavenge 100
   stranger_clock
-    d10+   made    1760  at cap  32%  stranger_clock 100
+    d10+   made    1600  at cap  28%  stranger_clock 100
   tallow
     d10+   made       6  at cap   0%  hunt_bear 100
   track_laid
     d3-5   made    3017  at cap   0%  field_track 100
     d6-9   made    2305  at cap   0%  field_track 100
-    d10+   made    1825  at cap   0%  field_track 100
+    d10+   made    1560  at cap   0%  field_track 100
   walk
     d1-2   made       1  at cap   0%  n1_walk_ridge 100
   walk_out
     d1-2   made      80  at cap   0%  walk_out 100
     d3-5   made    1440  at cap 100%  walk_out 100
     d6-9   made    1920  at cap 100%  walk_out 100
-    d10+   made    2480  at cap 100%  walk_out 100
+    d10+   made    2320  at cap 100%  walk_out 100
   warmth
     d1-2   made  316800  at cap  92%  fire 100
     d3-5   made  518400  at cap 100%  fire 100
     d6-9   made  691200  at cap 100%  fire 100
-    d10+   made  892800  at cap 100%  fire 100
+    d10+   made  835200  at cap 100%  fire 100
   watch_done
     d3-5   made       2  at cap  11%  watch_fire 100
   wattle
     d1-2   made      96  at cap   0%  weave_wattle 100
   wind_torn
     d6-9   made      48  at cap   4%  wind 100
-    d10+   made     120  at cap   0%  wind 100
+    d10+   made     116  at cap   0%  wind 100
+  windbreak
+    d6-9   made    6162  at cap   0%  build_windbreak 100
+    d10+   made    8760  at cap   0%  build_windbreak 100
   wraps_sewn
     d6-9   made       9  at cap   0%  sew_wraps 100
-    d10+   made      51  at cap  35%  sew_wraps 100
+    d10+   made      49  at cap   0%  sew_wraps 100
   z1_clock
-    d10+   made    1600  at cap  26%  z1_clock 100
+    d10+   made    1440  at cap  21%  z1_clock 100

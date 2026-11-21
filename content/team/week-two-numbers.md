@@ -115,7 +115,7 @@ gathered store's making. What drinks each store, by chapter:
 | Store | Day eight | Day nine | Day eleven | Day twelve |
 |---|---|---|---|---|
 | damp wood | `hand_on_stone` (held); stakes on two lanes and the hands; cord | the same | stakes on three lanes; the hut | stakes; the dig's shoring |
-| stones | the palisade (6 a stage); the track | the palisade; `gap_fire` | the hut (12) | the track |
+| stones | the palisade (6 a stage); the track; `build_windbreak` | the palisade; `gap_fire`; `build_windbreak` | the hut (12); `build_windbreak` | the track; `build_windbreak` |
 | roots | five mouths; the rats; the track | the same | eight mouths | eight mouths; the rats, less after B12 |
 | fungus | `fungus_stew` | the same | the pot for eight | the same; B12 raises its cap |
 | stakes | the palisade (24 a stage, run by its order) | the same | the hut (24); `n6_posts` (12) | the dig (12 a stage) |
