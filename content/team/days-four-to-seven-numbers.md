@@ -102,7 +102,7 @@ each gathered store's making (banked-time plan item 2). What drinks each overflo
 | Store | Day four | Day five | Day six |
 |---|---|---|---|
 | damp wood (about 2 200/h made) | the track (180/h at 50%); woodshed stages | `hand_on_stone`, 18 per 20 s for 1 dry wood, held, so it drinks only what passes the hold; the second bay | the same; `pelt_bedding` |
-| stones (about 400/h) | the track (90/h at 50%); woodshed stages | `n3_dig_bed`, `hearth_stones`, the second bay | the same |
+| stones (about 400/h) | the track (90/h at 50%); woodshed stages | `n3_dig_bed`, `hearth_stones`, the second bay; from M1 `build_windbreak` (12 a run on the hearth's lane, by its order card on full stones) | the same |
 | roots (about 800/h) | the track (90/h at 50%); stew | the same; four mouths (`n2_eating`, and the pair's eating at the same rate each) | `rats` (2 per lost fight), `poultice` |
 | dry wood (the rack's making, plus the stone's) | fire, the watch fires | the stone adds 2 per 20 s; `hearth_stones` none | `make_spear`; the watch fires |
 | smoked | (day three's) | | `hunt_wolf` (1 per hunt), `crows`; the strip empties it at B7 |
