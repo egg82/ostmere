@@ -9,3 +9,5 @@ chapter fifteen: 9 visits on typical
    V68 gap   3.2 h  spend 50  decide  0  [wait, 3 lines]
    V69 gap   9.2 h  spend 61  decide  0  [edge]
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 302, decide 4; 8h+: 3 returns, spend 140, decide 3
+  cap loss at the end, away 8 h: damp_wood 22%, dry_wood 33%, roots 29%, stones 23%
+  cap loss at the end, away 24 h: cord 11%, damp_wood 24%, dry_wood 33%, roots 28%, smoked 14%, stones 23%
