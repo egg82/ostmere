@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B12 day 9.94, target_day 13
+beats sharp (pace_scale 1): B12 day 9.95, target_day 13
   away V84->V85: 1 ['trigger offer_o_spoil']
   away V85->V86: 0 []
   away V86->V87: 1 ['trigger t_ring_open']

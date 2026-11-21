@@ -154,7 +154,7 @@ pools running out, so nothing is retired and no saved mix greys at the turn.
 |---|---|---|---|---|---|---|---|
 | `pick_fungus` | hands | B8 | none | 30 | 1 bloom | 2 fungus | Foraging |
 | `n3_pick` (town card) | n3, later n5-n7 | B8 | none | 120 | 1 bloom | 1 fungus | |
-| `fungus_stew` | hands | B8 | none | 40 | 6 fungus, 1 dry wood | 3 stew | Cooking |
+| `fungus_stew` | hands | B8 | none | 40 | 6 fungus, 1 dry wood | 2 stew | Cooking |
 | `clear_roofs` | hands | B8 | none | 120 | 16 roof ash | 4 ash | |
 | `n2_clear_roofs` | n2 | B8 | none | 1200 | 16 roof ash | 4 ash | |
 | `n3_ash_ground` | n3 | SL15 | none | 1800 | 4 ash | 1 ashed ground | |

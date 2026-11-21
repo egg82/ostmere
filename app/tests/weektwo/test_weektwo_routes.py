@@ -35,7 +35,6 @@ def test_a_part_of_a_chapters_counting_is_read(week_part: verdicts.Decided):
     assert 0 < len(week_part) <= verdicts.PART_STEPS
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.TRACK_STONES_GAP)
 def test_no_gathered_store_loses_over_half_its_making_away_from_the_chapters_end(eight_loss: dict[str, tuple[int, ...]]):
     assert eight_loss == {}
 
