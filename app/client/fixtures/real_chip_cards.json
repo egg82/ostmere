@@ -717,6 +717,16 @@
       "wounds": []
     },
     {
+      "card": "build_windbreak",
+      "makes": [
+        "windbreak"
+      ],
+      "takes": [
+        "stones"
+      ],
+      "wounds": []
+    },
+    {
       "card": "hearth_stones",
       "makes": [],
       "takes": [
@@ -2139,6 +2149,12 @@
     {
       "store": "dawn_6",
       "made_by": []
+    },
+    {
+      "store": "windbreak",
+      "made_by": [
+        "build_windbreak"
+      ]
     },
     {
       "store": "day_6",
