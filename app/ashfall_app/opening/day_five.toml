@@ -56,8 +56,11 @@ outcome = { line_keys = ["l_stone_first"] }
 
 # A reach stake on the hearth's lane (issue #40), the cordwood shape: scavenging in the hands' mix makes more stones than
 # the track takes from here to week two's end. Shown when the pair join (five round the fire), its own moment. Its order
-# card comes on with stones full (cap 18 for certain once warm_ground is in, hence the requires) and takes 12, so it takes only what would overflow and the track keeps 6.
-# Off the hands, and never in the mix, so the track's share is set as before. Lots of 12 a run keep the absence runs fast.
+# card comes on with stones full (cap 18 for certain once warm_ground is in, hence the requires), so it takes only what
+# would overflow. Off the hands and never in the mix, so the track's share is set as before. A run takes 6, never more:
+# it draws over its bar beside any tap that needs stones, and while the hands tap nothing makes them, so the 12 it leaves
+# must cover a tap's whole need or that tap's drawn landing slips (a 12-stone lot did, under hearth_stones). 240 s a run
+# keeps the absence runs fast enough.
 [[triggers]]
 id = "t_windbreak"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }
@@ -71,15 +74,15 @@ presentation = "action"
 label_key = "c_build_windbreak"
 upside_key = "up_build_windbreak"
 stake = "reach"
-work_s = 300
-inputs = [{ store = "stones", items = 12 }]
-outcome = { stores = [{ store = "windbreak", items = 12 }] }
+work_s = 240
+inputs = [{ store = "stones", items = 6 }]
+outcome = { stores = [{ store = "windbreak", items = 6 }] }
 
 # Its cap is the last reach.
 [[stores]]
 id = "windbreak"
 label_key = "store_windbreak"
-cap_items = 30000
+cap_items = 18000
 
 [[order_cards]]
 store = "stones"
@@ -89,32 +92,32 @@ offered_after = { unlock_kind = "card", id = "build_windbreak" }
 
 [[triggers]]
 id = "t_windbreak_1"
-when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 1500 }
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 1000 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_1" }] }
 
 [[triggers]]
 id = "t_windbreak_2"
-when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 4000 }
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 2500 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_2" }] }
 
 [[triggers]]
 id = "t_windbreak_3"
-when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 8000 }
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 5000 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_3" }] }
 
 [[triggers]]
 id = "t_windbreak_4"
-when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 13000 }
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 8000 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_4" }] }
 
 [[triggers]]
 id = "t_windbreak_5"
-when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 20000 }
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 12000 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_5" }] }
 
 [[triggers]]
 id = "t_windbreak_6"
-when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 30000 }
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 18000 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_6" }] }
 
 # Hot stones into the pot: staged on the hands, queued When ready, on the cards with B6 and needing Arcana 4 (its
