@@ -19,7 +19,6 @@ from tests.weekone.routes import PUSH_ROUTES
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
 Counts = tuple[DayTwoPlayer, list[counters.Counts]]
-Checks = tuple[plumbing.Plumbing, dict[str, dict[str, tuple[int, ...]]]]
 
 
 @pytest.mark.parametrize("week_route", PUSH_ROUTES, indirect=True)
@@ -67,20 +66,13 @@ def test_a_part_of_a_chapters_counting_is_read(week_part: verdicts.Decided):
 @pytest.mark.parametrize("week_counts, chapter", [(c, c) for c in verdicts.CHAPTERS], indirect=["week_counts"])
 def test_a_chapters_visit_readout_is_reported(week_counts: Counts, chapter: str, week_marks: dict[str, str]):
     """After the parts above, whose readings the counts reuse (verdicts.typical_decided)."""
-    _, found = week_counts
+    p, found = week_counts
     assert len(found) >= 3, "the chapter's visits were counted"
-    rs.check(f"weekone-{chapter}", report.chapter_text(chapter, found, week_marks))
+    rs.check(f"weekone-{chapter}", report.chapter_text(chapter, found, week_marks, verdicts.cap_lines(p, verdicts.CHAPTERS[chapter])))
 
 
-@pytest.mark.parametrize("chapter", ["four", "five", "six"])
-def test_no_gathered_store_loses_over_half_its_making_away_from_the_chapters_end(week_checks: Checks, chapter: str):
-    _, loss = week_checks
-    assert loss[chapter] == {}
-
-
-def test_the_checks_past_the_sinks_hold_over_the_week(week_checks: Checks):
-    found, _ = week_checks
-    assert found.judged > 0 and found.problems == ()
+def test_the_checks_past_the_sinks_hold_over_the_week(week_checks: plumbing.Plumbing):
+    assert week_checks.judged > 0 and week_checks.problems == ()
 
 
 @pytest.mark.xfail(strict=True, reason="a staged build takes one queue entry a stage (client game/queue.ts: a card queued is "

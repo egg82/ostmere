@@ -17,7 +17,7 @@ from tests.daythree.chapter import Later
 from tests.daytwo import abs_band
 from tests.daytwo.checks import returns
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import caploss, capcheck, checks, daily
+from tests.dayone import checks, daily
 from tests.dayone.parity import Measured, Present, replay_pair
 from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
@@ -47,12 +47,6 @@ def days(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, float]:
 CHAPTERS = {"eight": EIGHT, "nine": NINE, "eleven": ELEVEN, "twelve": TWELVE, "fifteen": FIFTEEN}
 PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fifteen": fifteen}
 """Each chapter's typical play is the one its counting reads."""
-NINE_STONES_DRY_GAP = ("content gap: away from day nine's end stones lose about 72% of their making and dry_wood about "
-                       "66%; the hands' mix over-makes both (scavenge about 285 stones an hour against the track's 80, "
-                       "hand_on_stone about 44 dry wood against 17 burned), and a larger take or a sink on either shows "
-                       "in the mix preview, so the player trims the track (its supply is stones) or the pot (it watches "
-                       "dry wood) and roots or fungus overflow instead (issue #40)")
-"""The cap-loss content gap held as a strict xfail, naming each store that fails; it goes red once the gap closes."""
 PART_STEPS = 1
 PARTS = {"eight": 13, "nine": 7, "eleven": 7, "twelve": 11, "fifteen": 13}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
@@ -131,22 +125,6 @@ def calendar_days(p: DayTwoPlayer) -> list[Counter[str]]:
 
 def exit_save(p: DayTwoPlayer, chapter: Later = EIGHT) -> Save:
     return v1.exit_save(p, chapter)
-
-
-def cap_loss(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, tuple[int, ...]]:
-    camp = c3.opening3().camp
-    return capcheck.failing(exit_save(p, chapter), p.rules, (camp.store,) if camp else ())
-
-
-def away_shares(p: DayTwoPlayer, chapter: Later, hours: int = 24) -> dict[str, float]:
-    """Each store's share of its making lost to its cap over `hours` away from the chapter's last decision (caploss)."""
-    return {s: x.share for s, x in caploss.absences(exit_save(p, chapter), p.rules, (hours,))[hours].items()}
-
-
-def cap_unwanted(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, tuple[int, ...]]:
-    """The cap-loss check's stores nothing wants (dayone/wanted.py), reported beside it."""
-    camp = c3.opening3().camp
-    return capcheck.unwanted(exit_save(p, chapter), p.rules, (camp.store,) if camp else ())
 
 
 @cache

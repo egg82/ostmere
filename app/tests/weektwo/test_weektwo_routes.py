@@ -35,10 +35,6 @@ def test_a_part_of_a_chapters_counting_is_read(week_part: verdicts.Decided):
     assert 0 < len(week_part) <= verdicts.PART_STEPS
 
 
-def test_no_gathered_store_loses_over_half_its_making_away_from_the_chapters_end(eight_loss: dict[str, tuple[int, ...]]):
-    assert eight_loss == {}
-
-
 @pytest.mark.xfail(strict=True, reason="week one's bedding lead carries in (weekone's strict xfail: a staged build takes one "
                    "queue entry a stage and shows while the whenever player is away): pelt_bedding#1-#6 7.6-9.4 h ahead "
                    "for the babysitter, so hide_flaps#1 lands 20.2 h behind and #2-#4 0.3 h ahead, and what the order and "

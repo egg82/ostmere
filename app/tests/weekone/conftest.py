@@ -79,10 +79,9 @@ def week_marks() -> dict[str, str]:
 
 
 @pytest.fixture(scope="session")
-def week_checks() -> tuple[plumbing.Plumbing, dict[str, dict[str, tuple[int, ...]]]]:
-    """The typical route's checks past the sinks and its cap-loss check at each chapter's end, computed in setup."""
-    p = week1("typical")
-    return verdicts.plumbed(p), verdicts.cap_loss(p)
+def week_checks() -> plumbing.Plumbing:
+    """The typical route's checks past the sinks, computed in setup."""
+    return verdicts.plumbed(week1("typical"))
 
 
 @pytest.fixture(scope="session")

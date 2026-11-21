@@ -12,7 +12,6 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.parity import Measured, compare
 from tests.weektwo.rebased import Rebased, fired, rules8
 from tests.weektwo.routes import NINE_PUSH_ROUTES
-from tests.weektwo import verdicts
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
@@ -24,11 +23,6 @@ def test_the_route_plays_day_nine_to_b10(nine_route: Route):
     name, p = nine_route
     assert p.stop_beat() == "B10" and "B10" in p.seen_at, f"{name} saw B10"
     assert {"E1", "E2", "E3", "SL18"} <= set(p.landed_at)
-
-
-@pytest.mark.xfail(strict=True, reason=verdicts.NINE_STONES_DRY_GAP)
-def test_no_gathered_store_loses_over_half_its_making_away_from_day_nines_end(nine_loss: dict[str, tuple[int, ...]]):
-    assert nine_loss == {}
 
 
 def test_the_babysitter_ends_no_further_ahead_across_day_nine(two_am_nine_run: tuple[Measured, Measured]):

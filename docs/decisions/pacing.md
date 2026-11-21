@@ -80,7 +80,7 @@ use that teaches it, and every number can show where it comes from (some of Orb'
 - **What the hands make while away has somewhere to go from the first leave**. Day one offers a sink from the opening's end: an uncapped card in the mix that
   takes damp wood, feeding a staged comfort that its order card builds a stage at a time while the player is away,
   shown unready from the end. So a return shows what the mix built, more for a better mix and more for a day away
-  than a night away. The cap-loss check still reads chapter ends only: day one's leave points are a readout.
+  than a night away. Cap loss is printed in the readouts, at day one's leave points and at each chapter's end.
 - **A sink shows what it buys**. A card that takes stores trades them for something the player can see: what it
   makes, a fight's odds, a chip it clears, or a stake on its face. A card that takes stores to feed something else
   says what in its upside, and the thing is real. A side stake holds a side a fight is fought on while it runs: a
@@ -127,17 +127,17 @@ use that teaches it, and every number can show where it comes from (some of Orb'
 - Every skill is paced to one shared target, which the simulator reports per skill (`tests/dayone/growth.py`,
   `climb_hours`): woodcutting's 900 XP an hour at a full share, under the prestige floor (`opening/prestige.py`,
   `check_phase_spans`), so how fast a skill climbs on a route is the share of the hands the player gives it, not which
-  skill it is. The slow skills' methods sit below it where raising them turns an invariant red; each skill's reason,
+  skill it is. The slow skills' methods sit below it where raising them turns an invariant red or shows in a readout; each skill's reason,
   measured on the push routes:
   - scavenging, 360: none needed. Its track card holds about a quarter of the hands all story, so at 360 it climbs
     with woodcutting, and at 900 the typical route crosses two of its phases by game day 14;
-  - foraging, 300: at 900 the typical route's day two ends losing damp wood to its cap (the cap-loss check), and its
+  - foraging, 300: at 900 the typical route's day two ends losing damp wood to its cap (the cap-loss readout), and its
     foraging reaches level 16 by day three's end;
   - arcana (60, 10, 300): at 900 story gates are met before the page states them (the check that every gate met was
     stated), one of them by a level find that lands the moment its own gate opens;
   - melee (the hunts 2, spar 300): its levels speed the hunt, and at 900 the hunts leave day five's end losing pelt to
     its cap, and with spar and the day-fifteen hunt day fifteen's end loses `wraps_sewn` to its cap, the pelt sink having
-    filled (the cap-loss check);
+    filled (the cap-loss readout);
   - cooking (stew 36, fungus_stew 18, catch_broth 300): at 900 stew leaves the babysitter with no dry wood on day five,
     the cold chip shown and no cure on offer (the week's cures check), and fungus_stew leaves days nine, eleven and
     twelve losing smoked to its cap; day fifteen's barley_stew is at 900;

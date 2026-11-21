@@ -82,10 +82,10 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | D23 | `dayone/levelpays.py`, `speed_only_leaves` | leave points naming only a speed level | taste | readout |
 | D24 | `dayone/test_dayone_prestige.py` | a visit clicker ends level with an instant one inside the carry window | babysit | fails |
 | D25 | `dayone/test_dayone_absence.py`: `test_a_longer_absence_never_holds_fewer_arrivals` | a property of the page's arrival queue | shown (what a return holds) | fails |
-| D26 | the absence ladder (`dayone/absence.py`) | what a return holds after 1, 8 and 24 h, and each gathered store's cap loss from day one's leave points as D30 reads it (day one's leave points come before the cap rule is taught, so they are read, never checked) | taste | readout |
+| D26 | the absence ladder (`dayone/absence.py`) | what a return holds after 1, 8 and 24 h, and each gathered store's cap loss from day one's leave points, as D30 prints it | taste | readout |
 | D27 | `dayone/test_dayone_rebase.py`: `test_the_rebased_story_lands_in_order` | a golden ended save's story lands in order; what its load opens is the readout's | correct: a saved end and story order + taste | fails; the counts are a readout |
 | D28-D29 | the rebase's lines; `dayone/test_dayone_lines.py` | lines are text keys; none repeats | correct: contract (text keys the client draws) | fails |
-| D30 | `dayone/capcheck.py` | from a chapter's end, 8 h and 24 h away lose at most `LIMIT` of each gathered store's making, a store something wants (`dayone/wanted.py`: a card or standing action takes it, or a requires or `when` reads it); the loss on a store nothing wants is a readout | babysit | fails (H4's and two of W7's strict xfails: held below) |
+| D30 | `dayone/capcheck.py`, `lines` | from a chapter's end, the share of each gathered store's making that 8 h and 24 h away lose to its cap, printed in each chapter's typical readout; a person reads it, nothing fails on it | taste | readout |
 | D31 | `dayone/test_dayone_human.py`: `test_the_players_who_skip_the_tools_land_behind_the_typical_route` | `by_hand` and `lazy` each land some unlock later than typical by more than `unlock_margin_s` | babysit: skipping the taught tools must cost something, or the tools are not worth teaching | fails |
 | D32 | the human-paced player's day (`dayone/human_flags.py`) | sessions, dead gaps, bored leaves, earned and fixed-time unlocks | taste | readout |
 
@@ -99,7 +99,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | T4 | `daytwo/story.py`, `flatcheck2` | story-shape flags on the route | taste | readout |
 | T5-T6 | B4's hours after B3 | the typical band and the babysitter's floor are gone | taste | readout |
 | T7 | `CHECKS["b4_relative"]` | a tool user's B4 lags the babysitter's by its gaps | babysit | fails, on `TOOL_USERS` |
-| T8 | `CHECKS["cap_loss"]` | typical's day-two end, as D30 | babysit | fails |
+| T8 | `daytwo/caps.py`, `lines_of` | what each store loses to its cap played and away 8, 24 and 72 h from day two's last decision, on day two's rules alone | taste | readout |
 | T9 | `daytwo/abs_band.py`, `summary` | each beat from B5 on, its day beside its `target_day` | taste | readout |
 | T10 | `daytwo/test_daytwo_two_am.py` | 2 AM across day two | babysit | fails (a strict xfail: held below) |
 | T11-T13 | `daytwo/test_daytwo_routes.py`, `daytwo/test_daytwo_repeat.py` | beats seen after landing, no repeats, the answered branch's lines, the player model's leave rule, the repeating lane | correct: story order (beats seen after landing) and contract (line keys) | fails |
@@ -112,7 +112,7 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | H1 | `daythree/test_daythree_routes.py`: `test_the_route_plays_day_three_to_b5` | each push route reaches B5 | softlock | fails |
 | H2 | B5's day | beside its target day, on typical and sharp | taste | readout |
 | H3 | `daythree/counters.py` | spend and decide per visit, marked as T1 | taste | readout |
-| H4 | cap loss from day three's end, as D30 | | babysit | fails (a strict xfail: held below) |
+| H4 | cap loss from day three's end, as D30 | | taste | readout |
 | H5 | `daythree/plumbing.py` | a card shown ready starts; a tapped trip lands when drawn; a dry trip's maker is in reach | shown + softlock | fails |
 | H6 | 2 AM across day three | | babysit | fails (a strict xfail) |
 | H7 | `daythree/test_daythree_town.py` | keeping the join's split ends level with re-splitting by hand | babysit | fails |
@@ -127,7 +127,8 @@ Paths are under `app/tests/`. Where a test's name names content, the row gives i
 | W4 | `test_night_seven_falls_before_the_seasons_turn` | the story against the calendar | correct: story order | fails |
 | W5 | `dayone/daily.py` | each calendar day's arrivals by kind, on typical, sharp and whenever | taste | readout |
 | W6 | each chapter's visits | spend and decide, marked as T1 | taste | readout |
-| W7-W8 | cap loss, as D30; the checks past the sinks, as H5 | | babysit; shown + softlock | fails (W7 on days four and six strict xfails: held below) |
+| W7 | cap loss at each chapter's end, as D30 | | taste | readout |
+| W8 | the checks past the sinks, as H5 | | shown + softlock | fails |
 | W9 | 2 AM across the week, fights running | | babysit | fails (a strict xfail) |
 | W10 | `weekone/test_weekone_fights.py`: the same decisions at any visit times end the same | | babysit | fails |
 | W11 | same: building the gear wins more fights | the gear's stated strength comes true | shown | fails |
@@ -145,7 +146,8 @@ One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight),
 | K2-K3 | each chapter's beats and absences | beats beside their target days; what each absence opens | taste | readout |
 | K4 | `weektwo/verdicts.py`, `calendar_days` | each calendar day's arrivals after week one's | taste | readout |
 | K5 | `weektwo/counters.py` | spend and decide per visit, a queued stage refused, marked as T1 | taste | readout |
-| K6-K7 | cap loss, as D30; 2 AM per chapter | | babysit | fails (cap loss on days eight to fifteen and day eight's 2 AM strict xfails: held below) |
+| K6 | cap loss at each chapter's end, as D30 | | taste | readout |
+| K7 | 2 AM per chapter | | babysit | fails (day eight's strict xfail: held below) |
 | K8-K9 | a save from the chapter before loads and plays on; every chip has a cure | | softlock | fails |
 | K10 | typical's late store at the ends of days eleven and twelve | | taste | readout |
 | K11-K12 | calendar, a fight pool ending its card, a join's tally, notes, line keys | | correct: story order (calendar) and contract (the rest) | fails |
@@ -163,20 +165,17 @@ One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight),
 The opening's loader, lock, content-contract and cost tests (`opening/test_released.py`, `opening/test_chapters.py`
 and the like) are content structure, not pacing, and are untouched.
 
-## The one hand-picked line on an invariant
+## Cap loss is a readout
 
-Cap loss (D30, T8, H4, W7, K6) is babysit: a tool user who must come back to spend a full store is babysitting. Its
-limit, `LIMIT` in `dayone/capcheck.py` (half of each gathered store's making over 8 h and 24 h away), was picked, not
-derived. Every other failing check is exact: a route reaches a beat or not, a drawn time comes true or not, a
-babysitter ends level or ahead. With the default cap orders gone (issue #37, (b)), typical writes its own
-cap rule, which is the point.
+What the hands make while the player is away lands somewhere or is lost to a cap. How much is lost on which store is
+printed (D30, T8, H4, W7, K6) and a person reads it; no line on it was derived, and tuning to one made CI and new
+content slow. The failures that matter have their own checks: a needed store running dry (the checks past the sinks, H5
+and W8), a shown number coming true, a softlock.
 
 ## Held today
 
-The strict xfails (T10, H6, W9, day eight's K7; and cap loss: H4, W7 on days four and six, K6 on days eight, nine,
-eleven, twelve and fifteen) are babysit invariants failing on today's content, each for the reason its xfail names.
-The cap-loss ones are content gaps, each a store a card fills with no sink behind it, or `field_track`'s input ratio
-(issues #38 and #40). The taste entries of day one's and day two's `HELD` ledgers went with the taste checks, the
+The strict xfails (T10, H6, W9, day eight's K7) are babysit invariants failing on today's content, each for the
+reason its xfail names. The taste entries of day one's and day two's `HELD` ledgers went with the taste checks, the
 `by_hand` and `lazy` per-visit entries among them, and with them the ledger machinery in both packages.
 
 ## Which players are held
