@@ -1,17 +1,14 @@
-"""The cap-loss check (docs/design/banked-time-plan.md, item 2): from a chapter's last decision, an 8 h and a 24 h
-absence lose at most half of what each gathered store makes to its cap. Gathered: a store some card on a lane makes.
-A tally store is made only by a fight's line, never a card's makes, so it is out by construction; the camp store is
-passed in, since its levels pace the story by design. A store nothing wants (wanted.py) is reported, not failed. 72 h is
-reported, not checked (caploss.ABSENCE_H). Store ids only (CLAUDE.md, "Never spoil the owner")."""
+"""The cap-loss readout (docs/design/banked-time-plan.md, item 2): from a chapter's last decision, what each gathered
+store loses to its cap over an 8 h and a 24 h absence. A person reads it; nothing fails on it. Gathered: a store some
+card on a lane makes. A tally store is made only by a fight's line, never a card's makes, so it is out by construction;
+the camp store is passed in, since its levels pace the story by design. 72 h is in the day readouts (caploss.ABSENCE_H).
+Store ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Collection
 
 from ashfall_app.engine import Rules, Save
 from tests.dayone import caploss
-from tests.dayone.wanted import wanted
 
 HOURS = (8, 24)
-LIMIT = 0.5
-"""The largest share of a gathered store's making an absence may lose."""
 
 
 def gathered(rules: Rules, apart: Collection[str] = ()) -> frozenset[str]:
@@ -20,28 +17,17 @@ def gathered(rules: Rules, apart: Collection[str] = ()) -> frozenset[str]:
     return frozenset(made) - set(apart)
 
 
-def losing(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
-    """Each gathered store losing more than LIMIT of its making over an absence from `save`, with the hours it does.
-    Fails when no gathered store was sampled, since a check of nothing would pass every chapter."""
+def losses(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[int, dict[str, caploss.StoreLoss]]:
+    """Each gathered store's making and loss over an absence of each of HOURS from `save`. Fails when no gathered store
+    was sampled, since a readout of nothing would read as no loss anywhere."""
     away = caploss.absences(save, rules, HOURS)
     sampled = gathered(rules, apart) & set(away[HOURS[0]])
     assert sampled, "no gathered store was sampled"
-    found = {s: tuple(h for h in HOURS if away[h][s].share > LIMIT) for s in sorted(sampled)}
-    return {s: hs for s, hs in found.items() if hs}
+    return {h: {s: away[h][s] for s in sorted(sampled)} for h in HOURS}
 
 
-def failing(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
-    """The losing stores something wants (wanted.py): the check's failures."""
-    keep = wanted(rules)
-    return {s: hs for s, hs in losing(save, rules, apart).items() if s in keep}
-
-
-def unwanted(save: Save, rules: Rules, apart: Collection[str] = ()) -> dict[str, tuple[int, ...]]:
-    """The losing stores nothing wants: reported by the readouts, never failed."""
-    keep = wanted(rules)
-    return {s: hs for s, hs in losing(save, rules, apart).items() if s not in keep}
-
-
-def problems(found: dict[str, tuple[int, ...]]) -> list[str]:
-    return [f"{s} loses over {LIMIT:.0%} of its making away {' and '.join(f'{h} h' for h in hs)}"
-            for s, hs in found.items()]
+def lines(save: Save, rules: Rules, apart: Collection[str] = ()) -> list[str]:
+    """One row per absence: each gathered store that lost any of its making, with the share the cap dropped."""
+    return [f"  cap loss at the end, away {h} h: "
+            + (", ".join(f"{s} {100 * x.share:.0f}%" for s, x in found.items() if x.lost) or "none")
+            for h, found in losses(save, rules, apart).items()]

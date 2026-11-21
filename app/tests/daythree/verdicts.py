@@ -1,7 +1,7 @@
-"""Day three's checks on a played route (docs/design/day-three-plan.md, item 7; docs/design/sim-invariants.md): what
-each gathered store loses to its cap away from the route's last decision (dayone/capcheck.py), the checks past the
-sinks over its saves (plumbing.py), and the 2 AM test across the chapter; and the counts the readout prints (report.py)
-for every visit from the one B4 is seen in. Ids and numbers only (CLAUDE.md, "Never spoil the owner")."""
+"""Day three's checks on a played route (docs/design/day-three-plan.md, item 7; docs/design/sim-invariants.md): the
+checks past the sinks over its saves (plumbing.py) and the 2 AM test across the chapter; and the counts the readout
+prints (report.py) for every visit from the one B4 is seen in. Ids and numbers only (CLAUDE.md, "Never spoil the
+owner")."""
 from functools import cache
 
 from ashfall_app.engine import Verb
@@ -9,7 +9,6 @@ from tests.daythree import content as c3
 from tests.daythree import counters, plumbing, visits
 from tests.daythree.routes import day3
 from tests.daytwo.player import QUEUEABLE, DayTwoPlayer, visit_seen
-from tests.dayone import capcheck
 from tests.dayone.parity import Measured, Present, babysat, replay
 
 BOOSTS = (*QUEUEABLE, *c3.COMFORTS)
@@ -28,11 +27,6 @@ def b4_visit(p: DayTwoPlayer) -> int:
 
 def chapter_counts(p: DayTwoPlayer) -> list[counters.Counts]:
     return [counters.count(v, p.rules) for v in visits.visits_of(p)][b4_visit(p) - 1:]
-
-
-def cap_loss(p: DayTwoPlayer) -> dict[str, tuple[int, ...]]:
-    camp = c3.opening3().camp
-    return capcheck.failing(p.history[-1][0], p.rules, (camp.store,) if camp else ())
 
 
 def start(p: DayTwoPlayer) -> int:

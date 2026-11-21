@@ -284,7 +284,6 @@ app/ashfall_app/saves/journal_composer/history.py
 app/ashfall_app/saves/journal_composer/ledger.py
 app/ashfall_app/saves/journal_composer/marks.py
 app/ashfall_app/saves/journal_composer/numbers.py
-app/ashfall_app/saves/journal_composer/order.py
 app/ashfall_app/saves/journal_composer/owed.py
 app/ashfall_app/saves/journal_composer/own.py
 app/ashfall_app/saves/journal_composer/page.py
@@ -361,7 +360,6 @@ app/tests/dayone/test_dayone_routes.py
 app/tests/dayone/test_dayone_schedule.py
 app/tests/dayone/test_dayone_two_am.py
 app/tests/dayone/verdicts.py
-app/tests/dayone/wanted.py
 app/tests/daythree/chapter.py
 app/tests/daythree/conftest.py
 app/tests/daythree/content.py
@@ -395,7 +393,6 @@ app/tests/daytwo/policy.py
 app/tests/daytwo/report.py
 app/tests/daytwo/routes.py
 app/tests/daytwo/story.py
-app/tests/daytwo/test_daytwo_caps.py
 app/tests/daytwo/test_daytwo_readouts.py
 app/tests/daytwo/test_daytwo_repeat.py
 app/tests/daytwo/test_daytwo_routes.py

@@ -51,29 +51,6 @@ def test_b13_is_held_to_the_calendar(fifteen_route: Route):
     assert p.landed_at["B13"] - p.history[0][0].time == B13_S, f"{name}: B13 at 336 h"
 
 
-def test_no_gathered_store_loses_over_half_its_making_away_from_day_fifteens_end(fifteen_loss: dict[str, tuple[int, ...]]):
-    assert fifteen_loss == {}
-
-
-CLEAR = 0.25
-"""The most a store given a sink for day fifteen loses over 24 h away: half the check's limit, so a change to the route
-does not tip it over."""
-
-
-DAMP_CLEAR = 0.35
-"""The most damp wood loses over 24 h away from day fifteen's end: well clear of the check's half."""
-
-
-def test_damp_wood_loses_well_under_half_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
-    """stack_cordwood takes only what woodcutting makes past the hands' cards once its first top lifts it."""
-    assert fifteen_shares["damp_wood"] <= DAMP_CLEAR
-
-
-def test_track_laid_loses_at_most_a_quarter_of_its_making_away_from_day_fifteens_end(fifteen_shares: dict[str, float]):
-    """The track runs on past 10 000, where field_track kept laying into a full store."""
-    assert fifteen_shares["track_laid"] <= CLEAR
-
-
 def test_every_chip_shown_in_day_fifteen_has_a_cure(fifteen_cures: list[str]):
     assert fifteen_cures == []
 

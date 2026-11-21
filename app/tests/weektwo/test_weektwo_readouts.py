@@ -11,6 +11,8 @@ from tests.daythree import counters
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weekone.report import chapter_text
+from tests.weekone.verdicts import cap_lines
+from tests.weektwo import verdicts
 from tests.weektwo import report
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
@@ -55,24 +57,24 @@ def test_a_day_fifteen_route_readout_is_reported(week_days: Days, name: str):
 
 def test_day_eights_visit_readout_is_reported(eight_counts: Counts, eight_marks: dict[str, str]):
     assert len(eight_counts[1]) >= 3, "the chapter's visits were counted"
-    rs.check("weektwo-eight", chapter_text("eight", eight_counts[1], eight_marks))
+    rs.check("weektwo-eight", chapter_text("eight", eight_counts[1], eight_marks, cap_lines(eight_counts[0], verdicts.CHAPTERS["eight"])))
 
 
 def test_day_nines_visit_readout_is_reported(nine_counts: Counts, nine_marks: dict[str, str]):
     assert len(nine_counts[1]) >= 3, "the chapter's visits were counted"
-    rs.check("weektwo-nine", chapter_text("nine", nine_counts[1], nine_marks))
+    rs.check("weektwo-nine", chapter_text("nine", nine_counts[1], nine_marks, cap_lines(nine_counts[0], verdicts.CHAPTERS["nine"])))
 
 
 def test_day_elevens_visit_readout_is_reported(eleven_counts: Counts, eleven_marks: dict[str, str]):
     assert len(eleven_counts[1]) >= 3, "the chapter's visits were counted"
-    rs.check("weektwo-eleven", chapter_text("eleven", eleven_counts[1], eleven_marks))
+    rs.check("weektwo-eleven", chapter_text("eleven", eleven_counts[1], eleven_marks, cap_lines(eleven_counts[0], verdicts.CHAPTERS["eleven"])))
 
 
 def test_day_twelves_visit_readout_is_reported(twelve_counts: Counts, twelve_marks: dict[str, str]):
     assert len(twelve_counts[1]) >= 3, "the chapter's visits were counted"
-    rs.check("weektwo-twelve", chapter_text("twelve", twelve_counts[1], twelve_marks))
+    rs.check("weektwo-twelve", chapter_text("twelve", twelve_counts[1], twelve_marks, cap_lines(twelve_counts[0], verdicts.CHAPTERS["twelve"])))
 
 
 def test_day_fifteens_visit_readout_is_reported(fifteen_counts: Counts, fifteen_marks: dict[str, str]):
     assert len(fifteen_counts[1]) >= 3, "the chapter's visits were counted"
-    rs.check("weektwo-fifteen", chapter_text("fifteen", fifteen_counts[1], fifteen_marks))
+    rs.check("weektwo-fifteen", chapter_text("fifteen", fifteen_counts[1], fifteen_marks, cap_lines(fifteen_counts[0], verdicts.CHAPTERS["fifteen"])))

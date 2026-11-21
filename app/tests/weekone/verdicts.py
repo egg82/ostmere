@@ -117,17 +117,17 @@ def chapter_counts(p: DayTwoPlayer) -> dict[str, list[counters.Counts]]:
 
 
 def exit_save(p: DayTwoPlayer, later: Later) -> Save:
-    """The save at the end of the visit the chapter's last beat is seen in: where its cap-loss check starts."""
+    """The save at the end of the visit the chapter's last beat is seen in: where its cap-loss readout starts."""
     last = span(p, later)[1]
     save = p.visits[last - 1].exit
     assert save is not None
     return save
 
 
-def cap_loss(p: DayTwoPlayer) -> dict[str, dict[str, tuple[int, ...]]]:
+def cap_lines(p: DayTwoPlayer, later: Later) -> list[str]:
+    """The readout's rows for what each gathered store loses to its cap away from the chapter's end (capcheck.lines)."""
     camp = c3.opening3().camp
-    apart = (camp.store,) if camp else ()
-    return {n: capcheck.failing(exit_save(p, c), p.rules, apart) for n, c in CHAPTERS.items()}
+    return capcheck.lines(exit_save(p, later), p.rules, (camp.store,) if camp else ())
 
 
 def plumbed(p: DayTwoPlayer) -> plumbing.Plumbing:

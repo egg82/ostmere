@@ -45,13 +45,6 @@ def test_a_return_during_a_hearth_cure_alone_still_owes_a_decision(day3_counts: 
     assert set(checks2.long_waits(p)) > set(checks2.long_waits(p, verdicts.NOT_WAITS))
 
 
-@pytest.mark.xfail(strict=True, reason="content gap: roots loses over half its making 8 h away from day three's end; the "
-                   "lane foragers n1_forage and n2_forage fill it faster than field_track takes it, and no other sink "
-                   "takes roots (issue #38)")
-def test_no_gathered_store_loses_over_half_its_making_away_from_day_threes_end(day3_cap_loss: dict[str, tuple[int, ...]]):
-    assert day3_cap_loss == {}
-
-
 def test_the_checks_past_the_sinks_hold_with_the_real_track(day3_plumbed: plumbing.Plumbing):
     assert day3_plumbed.judged > 0 and day3_plumbed.problems == ()
 

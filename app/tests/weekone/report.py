@@ -21,7 +21,7 @@ from tests.daythree.report import absence_line
 from tests.daytwo import abs_band
 from tests.daytwo import checks as checks2
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import capcheck, daily
+from tests.dayone import daily
 from tests.weekone import verdicts
 from tests.weekone.routes import week1
 
@@ -41,13 +41,14 @@ def route_text(name: str, p: DayTwoPlayer, days: list[Counter[str]]) -> str:
     return "\n".join(out) + "\n"
 
 
-def chapter_text(chapter: str, found: list[counters.Counts], marked: dict[str, str]) -> str:
+def chapter_text(chapter: str, found: list[counters.Counts], marked: dict[str, str], loss: list[str]) -> str:
     """A chapter's visits on the typical route: spend and decide per visit and per absence, the edge of written
-    content and returns during a long wait marked."""
+    content and returns during a long wait marked, and what the gathered stores lose to their caps away from its end
+    (`loss`, verdicts.cap_lines)."""
     out = [f"chapter {chapter}: {len(found)} visits on typical"]
     out += [f"  {c.label:>4} gap {c.gap / 3600:5.1f} h  {counters.line(c)}" + (f"  [{marked[c.label]}]" if c.label in marked else "")
             for c in found]
-    return "\n".join([*out, absence_line(found)]) + "\n"
+    return "\n".join([*out, absence_line(found), *loss]) + "\n"
 
 
 def readouts() -> dict[str, str]:
@@ -56,7 +57,7 @@ def readouts() -> dict[str, str]:
     marked = checks2.marks(p, first=1)
     for chapter in verdicts.CHAPTERS:
         texts[f"weekone-{chapter}"] = chapter_text(chapter, verdicts.counts_of(p, chapter, verdicts.typical_decided(chapter)),
-                                                   marked)
+                                                   marked, verdicts.cap_lines(p, verdicts.CHAPTERS[chapter]))
     return texts
 
 
@@ -69,14 +70,9 @@ def route_report(name: str, p: DayTwoPlayer) -> None:
     print(f"  fights: {fought(p)}")
     print(route_text(name, p, verdicts.calendar_days(p)), end="")
     print(f"  night 7: {verdicts.night_seven(p) or 'before the turn'}")
-    camp = c3.opening3().camp
     marked = checks2.marks(p, first=1)
     for chapter, found in verdicts.chapter_counts(p).items():
-        print(chapter_text(chapter, found, marked), end="")
-        save, apart = verdicts.exit_save(p, verdicts.CHAPTERS[chapter]), (camp.store,) if camp else ()
-        failing = capcheck.failing(save, p.rules, apart)
-        print(f"    cap_loss at the end: {'FAIL ' + '; '.join(capcheck.problems(failing)) if failing else 'ok'}")
-        print(f"    cap_loss on stores nothing wants: {'; '.join(capcheck.problems(capcheck.unwanted(save, p.rules, apart))) or 'none'}")
+        print(chapter_text(chapter, found, marked, verdicts.cap_lines(p, verdicts.CHAPTERS[chapter])), end="")
 
 
 def line_states(plays: dict[str, DayTwoPlayer]) -> list[str]:

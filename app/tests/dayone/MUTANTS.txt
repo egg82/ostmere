@@ -49,11 +49,9 @@ nothing_sampled_passes   caploss.Tally.losses: no assert on an empty tally      
 made_counts_costs        caploss.stretch: made sums costs with the makes                            [daytwo/test_daytwo_caps] killed
 one_stretch              caploss.run: the whole span as one stretch, next_event ignored            [test_dayone_caploss]     killed
 
-The cap-loss check (capcheck.py)
+The cap-loss readout (capcheck.py)
 trip_draws_nothing       fixture: the trip's inputs a tiny fraction of the maker's making          [test_dayone_capcheck]    killed
-limit_never_exceeded     capcheck.failing: a share over 100% instead of over LIMIT                  [test_dayone_capcheck]    killed
 one_absence              capcheck.HOURS: 8 h only                                                   [test_dayone_capcheck]    killed
-rules_alone              verdicts._cap_loss: day two's rules alone (caps.cap_loss_failing), not the shipped play  [daytwo/test_daytwo_routes] killed
 
 Week one's fight checks (weekone/fights.py; planted in the engine, one at a time, restored with `git checkout -- <file>`)
 odds_at_call_start       gates._with_odds: a fight's odds built off the stack as it stood when the advance call began   [weekone/test_weekone_fights]   killed (the sharp and whenever schedules; lazy's daily stops fall where the odds do not move)

@@ -12,3 +12,5 @@ typical: 10 visits from V6
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 70, decide 6; 8h+: 4 returns, spend 48, decide 7
   beats typical (pace_scale 1): B5 day 3.29, target_day 4
   lost to caps: played 54%, away 8 h 8%, away 24 h 8%, away 72 h 39%
+  cap loss at the end, away 8 h: damp_wood 20%, roots 55%, stones 28%
+  cap loss at the end, away 24 h: damp_wood 22%, roots 49%, smoked 44%, stones 31%

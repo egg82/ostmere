@@ -11,3 +11,5 @@ chapter nine: 11 visits on typical
    V45 gap   9.2 h  spend 33  decide  1
    V46 gap   4.2 h  spend 33  decide  1  [edge]
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 7 returns, spend 205, decide 7; 8h+: 4 returns, spend 122, decide 7
+  cap loss at the end, away 8 h: damp_wood 7%, dry_wood 66%, fungus 29%, roots 45%, smoked 45%, stones 72%
+  cap loss at the end, away 24 h: damp_wood 7%, dry_wood 66%, fungus 29%, roots 45%, smoked 45%, stones 72%

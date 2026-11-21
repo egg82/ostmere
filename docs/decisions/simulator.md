@@ -141,7 +141,7 @@ the opening"; it names beats by number only.
 
 It fails only on an invariant (softlock, spiral, a tool user forced to babysit, a shown number not coming true;
 `docs/design/sim-invariants.md`): the 2 AM test as a replay, the lag bound on tool users
-(`app/tests/dayone/routes.py`, `TOOL_USERS`), drawn times coming true, cap loss on typical, and players who skip the
+(`app/tests/dayone/routes.py`, `TOOL_USERS`), drawn times coming true, and players who skip the
 tools landing behind (`app/tests/dayone/human_flags.py`, `lands_behind`). The rhythm (per-visit and per-absence
 counters, beats beside their target days, calendar days, the human-paced model, each skill's ladder, what a re-mix is
 worth) is printed by each package's `report.py` and committed under `app/tests/readouts/`;

@@ -34,8 +34,8 @@ class Return:
     lost: float | None = None
     """The share of what every store made that its cap dropped (caploss.py), for the hours it measures."""
     gathered: tuple[tuple[str, float], ...] = ()
-    """Each gathered store that lost any of its making, with its share, as the cap-loss check reads it (capcheck.py:
-    the camp store apart), for the hours that check measures."""
+    """Each gathered store that lost any of its making, with its share, as the cap-loss readout reads it (capcheck.py:
+    the camp store apart), for the hours it measures."""
 
     @property
     def total(self) -> int:
@@ -149,12 +149,10 @@ def absences(rules: Rules, save: Save, hours: tuple[int, ...]) -> tuple[Return, 
 
 
 def gathered_losses(losses: Mapping[str, caploss.StoreLoss], rules: Rules) -> tuple[tuple[str, float], ...]:
-    """The gathered stores (capcheck.gathered, the camp store apart) that lost any of their making, with each share; a
-    store nothing wants (wanted.py) is marked, since the check does not fail it."""
+    """The gathered stores (capcheck.gathered, the camp store apart) that lost any of their making, with each share."""
     camp = opening().camp
-    kept, wanted = capcheck.gathered(rules, (camp.store,) if camp else ()), capcheck.wanted(rules)
-    return tuple((s if s in wanted else f"{s} (unwanted)", loss.share) for s, loss in losses.items()
-                 if s in kept and loss.lost > 0)
+    kept = capcheck.gathered(rules, (camp.store,) if camp else ())
+    return tuple((s, loss.share) for s, loss in losses.items() if s in kept and loss.lost > 0)
 
 
 def last_beat(p: HumanPlayer, time: int) -> str:
@@ -187,9 +185,9 @@ def lines_of(points: list[Point]) -> list[str]:
 
 
 def cap_lines(points: list[Point]) -> list[str]:
-    """Each leave point's gathered stores losing to their caps, as the cap-loss check reads a chapter's end. Day one's
-    leave points come before the cap rule is taught and before most sinks exist, so they are reported, never checked."""
-    out = ["\ncap loss as capcheck.py reads it, from each leave point (reported; the check reads a chapter's end)"]
+    """Each leave point's gathered stores losing to their caps, as the cap-loss readout reads a chapter's end. Day one's
+    leave points come before the cap rule is taught and before most sinks exist."""
+    out = ["\ncap loss as capcheck.py reads it, from each leave point"]
     for pt in points:
         for r in pt.returns:
             if r.hours in capcheck.HOURS:

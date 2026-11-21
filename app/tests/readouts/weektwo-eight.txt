@@ -6,3 +6,5 @@ chapter eight: 6 visits on typical
    V35 gap   3.2 h  spend 35  decide  0
    V36 gap   9.2 h  spend 29  decide  1  [edge]
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 113, decide 5; 8h+: 2 returns, spend 65, decide 2
+  cap loss at the end, away 8 h: damp_wood 13%, dry_wood 3%, roots 10%, smoked 26%, stew 33%, stones 45%
+  cap loss at the end, away 24 h: cord 2%, damp_wood 11%, dry_wood 2%, roots 7%, smoked 21%, stew 34%, stones 46%

@@ -9,7 +9,7 @@ V3 after H6              4.96    1h        0       0       0       0       0    
 V3 after H6              4.96    8h        4       2       0       0       0       1       3     10      22.7         0   15%
 V3 after H6              4.96   24h        4       2       0       0       0       1       4     11      23.2         0   64%
 
-cap loss as capcheck.py reads it, from each leave point (reported; the check reads a chapter's end)
+cap loss as capcheck.py reads it, from each leave point
 V1 after H1               8h  damp_wood 69%, stones 96%
 V1 after H1              24h  damp_wood 76%, stones 99%, wattle 50%
 V2 after H5               8h  damp_wood 73%, smoked 26%, stones 96%

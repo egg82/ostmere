@@ -30,7 +30,7 @@ from tests.daythree.chapter import Later
 from tests.daytwo import abs_band
 from tests.daytwo import checks as checks2
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import capcheck, daily
+from tests.dayone import daily
 from tests.weekone import verdicts as v1
 from tests.weekone.report import chapter_text, fought
 from tests.weektwo import verdicts
@@ -76,7 +76,8 @@ def readouts() -> dict[str, str]:
                                                            None if chapter == "eight" else verdicts.calendar_days(p))
         p = play("typical")
         found = verdicts.counts(p, verdicts.CHAPTERS[chapter], verdicts.typical_decided(chapter))
-        texts[f"weektwo-{chapter}"] = chapter_text(chapter, found, checks2.marks(p, first=1))
+        texts[f"weektwo-{chapter}"] = chapter_text(chapter, found, checks2.marks(p, first=1),
+                                                   v1.cap_lines(p, verdicts.CHAPTERS[chapter]))
     return texts
 
 
@@ -92,9 +93,7 @@ def route_report(name: str, seed: int, p: DayTwoPlayer, chapter: Later = verdict
         print(f"    {c.label:>4} gap {c.gap / 3600:5.1f} h  {counters.line(c)}")
     print(absence_line(found))
     print("    unlocks per absence: " + "; ".join(f"{a} {len(u)}" for a, u in verdicts.absences(p, chapter)))
-    failing = verdicts.cap_loss(p, chapter)
-    print(f"    cap_loss at the end: {'FAIL ' + '; '.join(capcheck.problems(failing)) if failing else 'ok'}")
-    print(f"    cap_loss on stores nothing wants: {'; '.join(capcheck.problems(verdicts.cap_unwanted(p, chapter))) or 'none'}")
+    print("\n".join(v1.cap_lines(p, chapter)))
 
 
 def line_states(plays: dict[str, DayTwoPlayer]) -> list[str]:
