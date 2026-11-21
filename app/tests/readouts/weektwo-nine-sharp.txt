@@ -1,6 +1,6 @@
 beats sharp (pace_scale 1): B10 day 8.66, target_day 11
   away V69->V70: 3 ['trigger t_old_wire', 'trigger t_open_side', 'trigger t_wind']
-  away V70->V71: 1 ['card set_snare_4']
+  away V70->V71: 2 ['trigger offer_o_bark', 'card set_snare_4']
   away V71->V72: 0 []
   away V72->V73: 1 ['trigger offer_o_footing']
   away V73->V74: 0 []
