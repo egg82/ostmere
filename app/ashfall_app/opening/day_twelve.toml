@@ -164,7 +164,7 @@ presentation = "action"
 label_key = "c_hunt_bear"
 work_s = 2400
 skill = "melee"
-xp_per_hour = 2
+xp_per_hour = 900
 inputs = [{ store = "smoked", items = 2 }, { store = "bear_sign", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }, { store = "tallow", items = 2 }] }
 fight = { side = "hands", threat = "ash_bear", lost = "bear_lost", wounds = [{ store = "hurt", items = 2 }], won_line_keys = ["l_fight_bear_won_1", "l_fight_bear_won_2"], lost_line_keys = ["l_fight_bear_lost_1", "l_fight_bear_lost_2"] }
@@ -567,7 +567,7 @@ presentation = "action"
 label_key = "c_spar"
 work_s = 600
 skill = "melee"
-xp_per_hour = 300
+xp_per_hour = 900
 requires = [{ test = "at_least", subject_kind = "store", id = "drift_clock", value = 163 }]
 
 # ---------- levels and finds ----------

@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B12 day 9.94, target_day 13
+beats sharp (pace_scale 1): B12 day 9.95, target_day 13
   away V84->V85: 1 ['trigger offer_o_spoil']
   away V85->V86: 0 []
   away V86->V87: 1 ['trigger t_ring_open']
@@ -16,9 +16,9 @@ beats sharp (pace_scale 1): B12 day 9.94, target_day 13
   away V98->V99: 1 ['trigger offer_o_crows']
   away V99->V100: 0 []
   away V100->V101: 0 []
-  away V101->V102: 3 ['trigger t_lamps', 'trigger t_broth_open', 'trigger t_town_broth']
+  away V101->V102: 0 []
   away V102->V103: 0 []
-  away V103->V104: 1 ['trigger offer_o_sag']
+  away V103->V104: 4 ['trigger t_lamps', 'trigger t_broth_open', 'trigger t_town_broth', 'trigger offer_o_sag']
   away V104->V105: 0 []
   away V105->V106: 0 []
   away V106->V107: 0 []
@@ -38,10 +38,10 @@ beats sharp (pace_scale 1): B12 day 9.94, target_day 13
   away V120->V121: 1 ['trigger t_s4']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1       8       7       0       4       0      14       2     35
-  2      31       5       2       2       0       7       3     50
-  3      25       4       0       0       0      48       3     80
-  4      18       5       0       0       0       4       2     29
-  5       0       2       0       2       0       1       0      5
-  6       4       1       0       0       0       9       2     16
-  7       1       0       0       0       0       0       1      2
+  1       9       7       0       4       0      14       3     37
+  2      30       5       2       2       0       7       2     48
+  3      24       4       0       0       0      48       2     78
+  4      19       5       0       0       0       4       3     31
+  5       0       2       1       2       0       1       1      7
+  6       3       1       0       0       0       9       2     15
+  7       2       0       0       0       0       0       1      3

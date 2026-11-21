@@ -3,15 +3,15 @@ opening  +-0.18h (20:00)   10.8m   53 notable, first 0s
     at +s: 0=card 0=chip 0=chip 25=card 36=card 51=card 51=card 51=feature 66=card 100=skill 138=card 138=card 138=card 172=feature 181 181 236=feature 273=level 292=level 305=action 305=card 305=chip 305=feature 305=order_card 314 380=level 396=card 396=card 396=card 396=feature 396=skill 405 420=action 420=card 420=card 420=order_card 420=skill 431 456=card 487 491 502=card 508 530=level 546=level 565=card 565=feature 601=feature 620=level 646=beat:H1 646=card 646=card 646=feature
 V1       +0.00h (20:10)    0.3m    7 notable, first 0s
     at +s: 0=beat:H1 0=card 0=card 0=feature 13 17 20
-    leave +0.01h (20:11): payoff named: card screen_fire in 145m, full damp_wood in 4m, full stones in 3m, full wattle in 145m, level scavenging in 4m, level woodcutting in 3m, level foraging in 57m; story question open: C-promise-16
+    leave +0.01h (20:11): payoff named: card screen_fire in 145m, full damp_wood in 4m, full stones in 3m, full wattle in 145m, level scavenging in 4m, level woodcutting in 3m, level foraging in 56m; story question open: C-promise-16
 V2       +3.10h (23:16)    3.0m   29 notable, first 0s
-    at +s: 0=beat:H2 0=card 0=card 0=feature 0=feature 0=level 0=level 0=level 0=level 0=level 46=beat:H3 46=card 64=action 64=beat:H4 64=card 79=action 94=action 105=beat:H5 105=card 105=card 105=card 116 136=feature 172=card 172=feature 172=feature 172=order_card 172=skill 180
-    leave +3.15h (23:19): payoff named: card lay_to_dry in 1m, card smoke_catch in 78m, card screen_fire in 104m, full damp_wood in 2m, full stones in 6m, full wattle in 104m, level scavenging in 49m, level woodcutting in 46m, level foraging in 6m; story question open: C-promise-16
-V3       +4.93h (01:06)    1.8m   10 notable, first 0s
-    at +s: 0=action 0=beat:H6 0=card 0=level 0=level 0=level 21=control 25 28 52=feature
-    leave +4.96h (01:08): payoff named: card smoke_catch in 49m, card screen_fire in 141m, full damp_wood in 0m, full stones in 2m, full wattle in 141m, level scavenging in 77m, level woodcutting in 63m, level foraging in 176m; story question open: C-promise-16
+    at +s: 0=beat:H2 0=card 0=card 0=feature 0=feature 0=level 0=level 0=level 0=level 0=level 49=beat:H3 49=card 67=action 67=beat:H4 67=card 82=action 97=action 108=beat:H5 108=card 108=card 108=card 119 139=feature 175=card 175=feature 175=feature 175=order_card 175=skill 183
+    leave +3.15h (23:19): payoff named: card lay_to_dry in 1m, card smoke_catch in 78m, card screen_fire in 104m, full damp_wood in 2m, full stones in 6m, full wattle in 104m, level scavenging in 49m, level woodcutting in 46m, level foraging in 146m; story question open: C-promise-16
+V3       +4.93h (01:06)    1.8m    9 notable, first 0s
+    at +s: 0=action 0=beat:H6 0=card 0=level 0=level 18=control 22 25 49=feature
+    leave +4.96h (01:08): payoff named: card smoke_catch in 49m, card screen_fire in 141m, full damp_wood in 0m, full stones in 2m, full wattle in 141m, level scavenging in 77m, level woodcutting in 63m, level foraging in 30m; story question open: C-promise-16
 V4       +7.44h (03:37)    1.9m   16 notable, first 0s
-    at +s: 0=beat:H7 0=card 0=feature 0=level 0=level 16 21=level 85=action 85=beat:B3 85=card 85=card 85=card 85=card 85=card 85=card 85=feature
+    at +s: 0=beat:H7 0=card 0=feature 0=level 0=level 0=level 16 85=action 85=beat:B3 85=card 85=card 85=card 85=card 85=card 85=card 85=feature
     leave +7.47h (03:39): payoff named: card smoke_catch in 59m, card screen_fire in 136m, full damp_wood in 5m, full roots in 0m, full stones in 141m, full wattle in 136m, level scavenging in 134m, level woodcutting in 102m; story question open: C-promise-16
 0 dead stretches; 0 bored leaves of 4
 unlocks, earned (typical lands it sooner than by_hand) or fixed-time

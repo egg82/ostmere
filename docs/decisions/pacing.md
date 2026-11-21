@@ -131,13 +131,14 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   measured on the push routes:
   - scavenging, 360: none needed. Its track card holds about a quarter of the hands all story, so at 360 it climbs
     with woodcutting, and at 900 the typical route crosses two of its phases by game day 14;
-  - foraging, 300: at 900 the typical route's day two ends losing damp wood to its cap (the cap-loss readout), and its
-    foraging reaches level 16 by day three's end;
+  - foraging: 900, except the opening's `forage` card at 385. At 390 day two's repeat check fails
+    (`test_daytwo_repeat`: her lane's landings and task switches differ), at 400 the first helper's card has stopped a minute after she joins
+    the town's mix (`test_n1_joins_town_blind`), and at 420 the fifteenth chapter's whenever route meets two gates
+    before the page states them (the check that every gate met was stated);
   - arcana (60, 10, 300): at 900 story gates are met before the page states them (the check that every gate met was
     stated), one of them by a level find that lands the moment its own gate opens;
-  - melee (the hunts 2, spar 300): its levels speed the hunt, and at 900 the hunts leave day five's end losing pelt to
-    its cap, and with spar and the day-fifteen hunt day fifteen's end loses `wraps_sewn` to its cap, the pelt sink having
-    filled (the cap-loss readout);
+  - melee: 900 on the hunts and spar. Its levels speed the hunt, so the cap-loss readout shows where pelt and
+    `wraps_sewn` meet their caps;
   - cooking (stew 36, fungus_stew 18, catch_broth 300): at 900 stew leaves the babysitter with no dry wood on day five,
     the cold chip shown and no cure on offer (the week's cures check), and fungus_stew leaves days nine, eleven and
     twelve losing smoked to its cap; day fifteen's barley_stew is at 900;

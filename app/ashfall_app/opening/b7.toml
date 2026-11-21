@@ -192,7 +192,7 @@ presentation = "action"
 label_key = "c_hunt_wolf"
 work_s = 1200
 skill = "melee"
-xp_per_hour = 2
+xp_per_hour = 900
 inputs = [{ store = "smoked", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }] }
 fight = { side = "hands", threat = "lone_wolf", lost = "hunt_lost", wounds = [{ store = "hurt", items = 1 }], won_line_keys = ["l_fight_hunt_won_1", "l_fight_hunt_won_2", "l_fight_hunt_won_3"], lost_line_keys = ["l_fight_hunt_lost_1", "l_fight_hunt_lost_2", "l_fight_hunt_lost_3"] }
