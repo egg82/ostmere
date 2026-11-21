@@ -31,8 +31,8 @@ the crafts at first show: make_stool blocked, build_fireback blocked
 each skill's climb at a full share of its fastest runner
   arcana            619 h to the curve's top, x3.00 the fastest
   cooking           619 h to the curve's top, x3.00 the fastest
-  foraging          619 h to the curve's top, x3.00 the fastest
-  melee             619 h to the curve's top, x3.00 the fastest
+  foraging          206 h to the curve's top, x1.00 the fastest
+  melee             206 h to the curve's top, x1.00 the fastest
   scavenging        516 h to the curve's top, x2.50 the fastest
   woodcutting       206 h to the curve's top, x1.00 the fastest
 each later phase's longest stretch of levels paying only speed

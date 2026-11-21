@@ -1,8 +1,7 @@
-beats typical (pace_scale 1): B12 day 11.67, target_day 13
-  away V50->V51: 2 ['trigger t_bear_sign', 'trigger offer_o_spoil']
-  away V51->V52: 1 ['trigger t_b12']
-  away V52->V53: 1 ['trigger offer_o_shaft']
-  away V53->V54: 2 ['trigger t_lamps', 'trigger offer_o_cold_air']
+beats typical (pace_scale 1): B12 day 12.01, target_day 13
+  away V51->V52: 1 ['trigger offer_o_spoil']
+  away V52->V53: 0 []
+  away V53->V54: 2 ['trigger t_b12', 'trigger offer_o_shaft']
   away V54->V55: 0 []
   away V55->V56: 1 ['trigger offer_o_lye']
   away V56->V57: 1 ['trigger offer_o_wet']
@@ -12,11 +11,11 @@ beats typical (pace_scale 1): B12 day 11.67, target_day 13
   away V60->V61: 1 ['trigger t_s4']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      12       5       0       5       0      15       3     40
-  2      19       6       2       2       0       5       2     36
-  3      13       1       0       0       0       2       3     19
-  4       5       0       0       0       0       0       1      6
-  5      18       5       0       0       0      48       2     73
-  6      20       5       1       2       0       6       2     36
-  7       3       2       0       0       0       8       1     14
-bloom at the end of day eleven 395.7, of day twelve 0.0
+  1      11       5       0       5       0      15       3     39
+  2      20       6       2       2       0       5       3     38
+  3      13       1       1       0       0       2       1     18
+  4       5       0       1       0       0       0       3      9
+  5      18       5       0       0       0      48       0     71
+  6      15       3       1       2       0       4       2     27
+  7       7       4       0       0       0      10       2     23
+bloom at the end of day eleven 293.3, of day twelve 0.0

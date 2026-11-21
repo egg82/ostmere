@@ -1,4 +1,4 @@
-beats typical (pace_scale 1): B14 day 15.39, target_day 16
+beats typical (pace_scale 1): B14 day 15.44, target_day 16
   away V61->V62: 0 []
   away V62->V63: 3 ['trigger t_b13', 'trigger t_sow', 'trigger offer_o_sun_rack']
   away V63->V64: 2 ['trigger t_beds', 'trigger t_frost']
@@ -9,12 +9,12 @@ beats typical (pace_scale 1): B14 day 15.39, target_day 16
   away V68->V69: 1 ['trigger t_b14']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      12       5       0       5       0      15       3     40
-  2      19       6       2       2       0       5       2     36
-  3      13       1       0       0       0       2       3     19
-  4       5       0       0       0       0       0       1      6
-  5      18       5       0       0       0      48       2     73
-  6      20       5       1       2       0       6       2     36
-  7       3       2       0       0       0       8       1     14
-  8       9       3       0       2       0       3       1     18
-  9      13       1       0       3       0      13       2     32
+  1      11       5       0       5       0      15       3     39
+  2      20       6       2       2       0       5       3     38
+  3      13       1       1       0       0       2       1     18
+  4       5       0       1       0       0       0       3      9
+  5      18       5       0       0       0      48       0     71
+  6      15       3       1       2       0       4       2     27
+  7       7       4       0       0       0      10       2     23
+  8      10       3       0       2       0       3       1     19
+  9      12       1       2       3       0      13       3     34
