@@ -52,6 +52,71 @@ id = "t_stone_first"
 when = { test = "at_least", subject_kind = "card_count", id = "hand_on_stone", value = 1 }
 outcome = { line_keys = ["l_stone_first"] }
 
+# ---------- stones' sink: the windbreak ----------
+
+# A reach stake on the hearth's lane (issue #40), the cordwood shape: scavenging in the hands' mix makes more stones than
+# the track takes from here to week two's end. Shown when the pair join (five round the fire), its own moment. Its order
+# card comes on with stones full (cap 18 for certain once warm_ground is in, hence the requires) and takes 12, so it takes only what would overflow and the track keeps 6.
+# Off the hands, and never in the mix, so the track's share is set as before. Lots of 12 a run keep the absence runs fast.
+[[triggers]]
+id = "t_windbreak"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "warm_ground", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "build_windbreak" }, { unlock_kind = "store", id = "windbreak" }] }
+
+[[cards]]
+id = "build_windbreak"
+lane = "hearth"
+presentation = "action"
+label_key = "c_build_windbreak"
+upside_key = "up_build_windbreak"
+stake = "reach"
+work_s = 300
+inputs = [{ store = "stones", items = 12 }]
+outcome = { stores = [{ store = "windbreak", items = 12 }] }
+
+# Its cap is the last reach.
+[[stores]]
+id = "windbreak"
+label_key = "store_windbreak"
+cap_items = 30000
+
+[[order_cards]]
+store = "stones"
+tap_card = "build_windbreak"
+when = { test = "at_least", subject_kind = "store", id = "stones", value = 18, release = 18 }
+offered_after = { unlock_kind = "card", id = "build_windbreak" }
+
+[[triggers]]
+id = "t_windbreak_1"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 1500 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_1" }] }
+
+[[triggers]]
+id = "t_windbreak_2"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 4000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_2" }] }
+
+[[triggers]]
+id = "t_windbreak_3"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 8000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_3" }] }
+
+[[triggers]]
+id = "t_windbreak_4"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 13000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_4" }] }
+
+[[triggers]]
+id = "t_windbreak_5"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 20000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_5" }] }
+
+[[triggers]]
+id = "t_windbreak_6"
+when = { test = "at_least", subject_kind = "store", id = "windbreak", value = 30000 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9500, source = "windbreak_6" }] }
+
 # Hot stones into the pot: staged on the hands, queued When ready, on the cards with B6 and needing Arcana 4 (its
 # level's marker says so). The last stage makes a pot four stew, after the clay hearth's three.
 [[cards]]
@@ -566,6 +631,9 @@ up_hearth_stones = "{pct} stew from the pot"
 l_stones_1 = "you lift hot stones off the hearth with a doubled cloth."
 l_stones_2 = "more stones round the pot. nobody holds one long."
 l_stones_done = "clay into the gaps. the ring is left to dry."
+c_build_windbreak = "Stack stones into a windbreak"
+up_build_windbreak = "{pct} warmth lost to the cold at each reach of windbreak"
+store_windbreak = "windbreak stones"
 pays_drying_wall = "{pct} drying speed"
 pays_arc_faster = "{pct} arcana speed"
 pays_hearth_stones = "hot stones for the pot"

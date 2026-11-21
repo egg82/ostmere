@@ -159,7 +159,7 @@ outcome = { stores = [{ store = "wraps_sewn", items = 1 }] }
 [[stores]]
 id = "wraps_sewn"
 label_key = "store_wraps_sewn"
-cap_items = 40
+cap_items = 130
 
 [[order_cards]]
 store = "pelt"
@@ -191,6 +191,34 @@ outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store =
 id = "t_wraps_5"
 when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 40 }
 outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_5" }] }
+
+# The wraps run on past 40 (issue #40): the hunts keep bringing pelts and the town keeps growing, and past the old last
+# reach every wrap sewn was lost to the cap. The steps keep growing.
+
+[[triggers]]
+id = "t_wraps_6"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 54 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_6" }] }
+
+[[triggers]]
+id = "t_wraps_7"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 70 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_7" }] }
+
+[[triggers]]
+id = "t_wraps_8"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 88 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_8" }] }
+
+[[triggers]]
+id = "t_wraps_9"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 108 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_9" }] }
+
+[[triggers]]
+id = "t_wraps_10"
+when = { test = "at_least", subject_kind = "store", id = "wraps_sewn", value = 130 }
+outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9000, source = "wraps_10" }] }
 
 # ---------- the day's length, held to the calendar ----------
 
