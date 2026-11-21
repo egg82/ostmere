@@ -1,5 +1,5 @@
 == sharp: the edge at game day 13.82
-  scavenging: level 21 of 22 (67.28% of the phase)
+  scavenging: level 21 of 22 (66.87% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.01 d
@@ -19,9 +19,9 @@
     L18   3.50 d  gap   0.80 d
     L19   4.96 d  gap   1.46 d
     L20   8.54 d  gap   3.59 d
-    L21  13.70 d  gap   5.16 d
+    L21  13.77 d  gap   5.23 d
     top L22: not by the edge
-  woodcutting: level 35 of 43 (4.60% of the phase)
+  woodcutting: level 35 of 43 (4.52% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.00 d
@@ -42,22 +42,22 @@
     L19   5.32 d  gap   1.55 d
     L20   7.11 d  gap   1.78 d
     L21   8.99 d  gap   1.88 d
-    L22  13.13 d  gap   4.14 d
-    L23  13.17 d  gap   0.04 d
+    L22  13.14 d  gap   4.16 d
+    L23  13.17 d  gap   0.03 d
     L24  13.17 d  gap   0.00 d
     L25  13.17 d  gap   0.00 d
     L26  13.17 d  gap   0.00 d
     L27  13.17 d  gap   0.00 d
     L28  13.17 d  gap   0.00 d
-    L29  13.17 d  gap   0.00 d
-    L30  13.20 d  gap   0.03 d
-    L31  13.24 d  gap   0.04 d
-    L32  13.30 d  gap   0.06 d
-    L33  13.38 d  gap   0.08 d
-    L34  13.50 d  gap   0.13 d
-    L35  13.70 d  gap   0.19 d
+    L29  13.19 d  gap   0.02 d
+    L30  13.22 d  gap   0.02 d
+    L31  13.25 d  gap   0.04 d
+    L32  13.31 d  gap   0.06 d
+    L33  13.39 d  gap   0.08 d
+    L34  13.52 d  gap   0.13 d
+    L35  13.71 d  gap   0.19 d
     top L43: not by the edge
-  foraging: level 8 of 22 (0.45% of the phase)
+  foraging: level 8 of 22 (0.42% of the phase)
     L2    0.05 d  gap   0.05 d
     L3    0.15 d  gap   0.10 d
     L4    0.24 d  gap   0.10 d
@@ -66,16 +66,16 @@
     L7    4.24 d  gap   1.62 d
     L8    4.28 d  gap   0.04 d
     top L22: not by the edge
-  cooking: level 8 of 22 (0.36% of the phase)
+  cooking: level 8 of 22 (0.37% of the phase)
     L2    0.86 d  gap   0.86 d
     L3    1.41 d  gap   0.56 d
     L4    2.52 d  gap   1.11 d
     L5    4.75 d  gap   2.23 d
-    L6    7.38 d  gap   2.63 d
-    L7    9.70 d  gap   2.33 d
-    L8   12.13 d  gap   2.43 d
+    L6    7.36 d  gap   2.61 d
+    L7    9.71 d  gap   2.35 d
+    L8   12.02 d  gap   2.31 d
     top L22: not by the edge
-  arcana: level 13 of 22 (3.11% of the phase)
+  arcana: level 13 of 22 (3.23% of the phase)
     L2    3.93 d  gap   3.93 d
     L3    4.09 d  gap   0.16 d
     L4    4.17 d  gap   0.08 d
@@ -87,7 +87,7 @@
     L10   6.64 d  gap   0.91 d
     L11   7.88 d  gap   1.24 d
     L12   9.88 d  gap   2.00 d
-    L13  12.05 d  gap   2.17 d
+    L13  12.06 d  gap   2.17 d
     top L22: not by the edge
   melee: level 5 of 22 (0.10% of the phase)
     L2    5.74 d  gap   5.74 d
@@ -102,12 +102,12 @@
     cut_stakes               .   .   .   .   .   .   5  23  18  23   5   .   .   .
     dig_cellar               .   .   .   .   .   .   .   .   .  17   .   .   .   .
     dig_clay                 .  17   .   .   .   .   .   .   .   .   .   .   .   .
-    field_track              .  15  31  31  20  14  16   9   7   9  15  13  14  18
+    field_track              .  15  31  31  20  14  16   9   7   9  15  13  15  15
     fungus_stew              .   .   .   .   .   .   .   2   2   2   3   2   3   3
     g_field_forage           .   .   .   .   .   .   .   .   .  67  83 100 100 100
     g_field_watch            .   .   .   .   .   .   .   .   .  67  83 100 100 100
     g_hearth_pick            .   .   .   .   .   .   .   .   . 100 100 100 100 100
-    hand_on_stone            .   .   .   .   9   9  11  11   9  11  16  15  14  14
+    hand_on_stone            .   .   .   .   9   9  11  11   9  11  16  15  16  17
     hunt_bear                .   .   .   .   .   .   .   .   .   .   .  12   8   .
     hunt_wolf                .   .   .   .   2  12  14   8   6   8  13  12  13  14
     make_bay                 .  33   .   .   .   .   .   .   .   .   .   .   .   .
@@ -128,17 +128,17 @@
     n6_posts                 .   .   .   .   .   .   .   .   .  17   .   .   .   .
     n6_stakes                .   .   .   .   .   .   .   .   .  50  33   .   .   .
     n7_guard                 .   .   .   .   .   .   .   .   . 100 100 100 100 100
-    palisade                 .   .   .   .   .   .   .  33  17   .   .   .   .   .
+    palisade                 .   .   .   .   .   .   .  17  17   .   .   .   .   .
     pelt_bedding             .   .   .   .   .  33   .   .   .   .   .   .   .   .
     pot_shelf                .   .  17   .   .   .   .   .   .   .   .   .   .   .
-    rest                    31  73  45  45  34  33  18  27  41  27  16  15  17  17
-    scavenge                14   6  12  12  17  16  18  10   8  10  16  15  17  17
+    rest                    31  73  45  45  34  33  18  27  41  27  16  15  16  17
+    scavenge                14   6  12  12  17  16  18  10   8  10  16  15  16  17
     set_snare_4              .   .   .   .   .   .   .   .  17   .   .   .   .   .
     walk_ridge              17   .   .   .   .   .   .   .   .   .   .   .   .   .
     watch_fire               .  17   .   .   .   .   .   .   .   .   .   .   .   .
     weave_wattle            25   .   .   .   .   .   .   .   .   .   .   .   .   .
     wood_stack               .   .  17   .   .   .   .   .   .   .   .   .   .   .
-    woodcutting             14   6  12  12  17  16  18  10   8  10  16  15  17  17
+    woodcutting             14   6  12  12  17  16  18  10   8  10  16  15  16  17
     woodshed                 .   .   .  33   .   .   .   .   .   .   .   .   .   .
   quiet since: build_woodstack day 2, cure_hearth day 5, cut_stakes day 12, dig_cellar day 11, dig_clay day 3, hunt_bear day 14, make_bay day 3, make_bay2 day 6, make_hut day 10, n1_cut day 2, n1_peg_flaps day 10, n2_forage day 8, n2_stakes day 10, n4_cord day 10, n6_posts day 11, n6_stakes day 12, palisade day 10, pelt_bedding day 7, pot_shelf day 4, set_snare_4 day 10, walk_ridge day 2, watch_fire day 3, weave_wattle day 2, wood_stack day 4, woodshed day 5
   XP by source per band of game days, percent of the skill's XP
@@ -148,7 +148,7 @@
     scavenging     d10+   scavenge 53, field_track 47
     woodcutting    d1-2   woodcutting 100
     woodcutting    d3-5   woodcutting 100
-    woodcutting    d6-9   woodcutting 55, cut_stakes 45
+    woodcutting    d6-9   woodcutting 53, cut_stakes 47
     woodcutting    d10+   woodcutting 73, cut_stakes 27
     foraging       d1-2   dig_clay 100
     cooking        d6-9   fungus_stew 100
