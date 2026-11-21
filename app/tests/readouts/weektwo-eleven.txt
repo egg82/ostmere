@@ -1,10 +1,9 @@
-chapter eleven: 6 visits on typical
-   V46 gap   4.2 h  spend 33  decide  3
-   V47 gap   3.2 h  spend 29  decide  1
-   V48 gap   9.2 h  spend 49  decide  4
-   V49 gap   4.2 h  spend 39  decide  1  [wait, 3 lines]
-   V50 gap   3.2 h  spend 22  decide  2
-   V51 gap   9.2 h  spend 61  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 123, decide 7; 8h+: 2 returns, spend 110, decide 5
-  cap loss at the end, away 8 h: damp_wood 1%, dry_wood 15%, fungus 82%, roots 90%, smoked 50%, stones 81%, wraps_sewn 100%
-  cap loss at the end, away 24 h: damp_wood 2%, dry_wood 37%, fungus 72%, roots 88%, smoked 47%, stones 82%, wraps_sewn 100%
+chapter eleven: 5 visits on typical
+   V47 gap   3.2 h  spend 30  decide  4
+   V48 gap   9.2 h  spend 42  decide  5
+   V49 gap   4.2 h  spend 49  decide  2  [wait, 3 lines]
+   V50 gap   3.2 h  spend 42  decide  0
+   V51 gap   9.2 h  spend 34  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 3 returns, spend 121, decide 6; 8h+: 2 returns, spend 76, decide 6
+  cap loss at the end, away 8 h: damp_wood 7%, fungus 76%, roots 48%, smoked 46%, wraps_sewn 100%
+  cap loss at the end, away 24 h: damp_wood 5%, fungus 66%, roots 34%, smoked 45%, wraps_sewn 100%
