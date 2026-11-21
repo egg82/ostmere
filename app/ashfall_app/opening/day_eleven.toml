@@ -509,13 +509,13 @@ outcome = { line_keys = ["l_guard_n7_1", "l_guard_n7_2"], stores = [{ store = "g
 
 # ---------- SL19: the posts that lean ----------
 
-# Four hours after Z1, once O-guard is answered, so it waits on a visit and no absence brings Z1 and SL19.
+# When O-guard is answered: that answer is given in the player's presence, so SL19 lands in view and no absence brings
+# Z1 and SL19 together.
 # Her husband's own build on his lane, set going by a rule of the player's (a capped card is never a share), against the
 # stakes the next build will want.
 [[triggers]]
 id = "t_posts"
-when = { test = "at_least", subject_kind = "store", id = "z1_clock", value = 80 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_guard", value = 1 }]
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_guard", value = 1 }
 outcome = { line_keys = ["l_leaning_posts"], unlocks = [{ unlock_kind = "card", id = "n6_posts" }] }
 
 [[cards]]
