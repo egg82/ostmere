@@ -47,12 +47,12 @@ def days(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, float]:
 CHAPTERS = {"eight": EIGHT, "nine": NINE, "eleven": ELEVEN, "twelve": TWELVE, "fifteen": FIFTEEN}
 PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fifteen": fifteen}
 """Each chapter's typical play is the one its counting reads."""
-TRACK_STONES_GAP = ("content gap: stones lose over half their making away from the chapter's end; scavenge fills them "
-                    "and field_track, their only sink, is held to the share its roots take allows (about 5400 roots an "
-                    "hour at its full share against about 1330 made), where it takes about 110 stones an hour of about "
-                    "260 made (issue #40)")
-"""The cap-loss content gaps held as strict xfails, one reason per store over the chapters it fails in; each goes red
-once its sink lands."""
+NINE_STONES_DRY_GAP = ("content gap: away from day nine's end stones lose about 72% of their making and dry_wood about "
+                       "66%; the hands' mix over-makes both (scavenge about 285 stones an hour against the track's 80, "
+                       "hand_on_stone about 44 dry wood against 17 burned), and a larger take or a sink on either shows "
+                       "in the mix preview, so the player trims the track (its supply is stones) or the pot (it watches "
+                       "dry wood) and roots or fungus overflow instead (issue #40)")
+"""The cap-loss content gap held as a strict xfail, naming each store that fails; it goes red once the gap closes."""
 PART_STEPS = 1
 PARTS = {"eight": 13, "nine": 7, "eleven": 7, "twelve": 11, "fifteen": 13}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so

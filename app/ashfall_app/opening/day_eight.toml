@@ -230,7 +230,7 @@ work_s = 40
 skill = "cooking"
 xp_per_hour = 18
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 3 }] }
+outcome = { stores = [{ store = "stew", items = 2 }] }
 
 # The fungus pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
@@ -242,7 +242,7 @@ upside_key = "up_stew"
 upside_of = "n2_eating"
 work_s = 40
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 3 }] }
+outcome = { stores = [{ store = "stew", items = 2 }] }
 
 # With the hands' fungus pot.
 [[triggers]]

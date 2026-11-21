@@ -26,7 +26,7 @@ def test_the_route_plays_day_nine_to_b10(nine_route: Route):
     assert {"E1", "E2", "E3", "SL18"} <= set(p.landed_at)
 
 
-@pytest.mark.xfail(strict=True, reason=verdicts.TRACK_STONES_GAP)
+@pytest.mark.xfail(strict=True, reason=verdicts.NINE_STONES_DRY_GAP)
 def test_no_gathered_store_loses_over_half_its_making_away_from_day_nines_end(nine_loss: dict[str, tuple[int, ...]]):
     assert nine_loss == {}
 
