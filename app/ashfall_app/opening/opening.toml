@@ -282,7 +282,7 @@ presentation = "action"
 label_key = "c_forage"
 work_s = 5
 skill = "foraging"
-xp_per_hour = 390
+xp_per_hour = 385
 outcome = { stores = [{ store = "roots", items = 1 }] }
 
 [[cards]]

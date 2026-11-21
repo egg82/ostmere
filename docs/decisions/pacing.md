@@ -131,9 +131,10 @@ use that teaches it, and every number can show where it comes from (some of Orb'
   measured on the push routes:
   - scavenging, 360: none needed. Its track card holds about a quarter of the hands all story, so at 360 it climbs
     with woodcutting, and at 900 the typical route crosses two of its phases by game day 14;
-  - foraging: 900, except the opening's `forage` card at 390. At 400 the first helper's card has stopped a minute
-    after she joins the town's mix (`test_n1_joins_town_blind`), and at 420 the fifteenth chapter's whenever route
-    meets two gates before the page states them (the check that every gate met was stated);
+  - foraging: 900, except the opening's `forage` card at 385. At 390 day two's repeat check fails
+    (`test_daytwo_repeat`: her lane's landings and task switches differ), at 400 the first helper's card has stopped a minute after she joins
+    the town's mix (`test_n1_joins_town_blind`), and at 420 the fifteenth chapter's whenever route meets two gates
+    before the page states them (the check that every gate met was stated);
   - arcana (60, 10, 300): at 900 story gates are met before the page states them (the check that every gate met was
     stated), one of them by a level find that lands the moment its own gate opens;
   - melee: 900 on the hunts and spar. Its levels speed the hunt, so the cap-loss readout shows where pelt and
