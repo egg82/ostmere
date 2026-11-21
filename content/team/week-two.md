@@ -358,7 +358,7 @@ and burns him at first light, and Lucy cuts his mark on a board with no name bes
 |---|---|---|---|---|
 | 11a (3-5 min, the rest of B10's visit) | answers **O-family**: **Make room** (`make_hut`, hands) / **Let them build** (`n5_build_hut`) | O-family at B10; the arrival kind's rule answers it at once where the player set one (week 1, plan items 10-12) | four figures at the gate, one sitting apart | l_hut_go, l_hut_theirs |
 | 11b (4-6 min) | reads Z1; **splits** the town's mix across seven; answers **O-guard** ({n2} or {n7}) | Z1 at the hut done (arrivals 9); O-guard with Z1 | eight at the fire; the stranger lying apart, wrapped | l_join3_1, l_join3_2 (Z1), l_guard_ask |
-| 11c (3-5 min) | reads Z2; reads SL19 and gives the husband the leftover stakes or not | Z2 at `arm_n2` or `arm_n7` done (queued by the answer); SL19 at Z1 + 4 h once O-guard is answered | the guard at the gap fire with the spear; the husband walking the ring | l_guard_1, l_guard_2 (Z2), l_posts (SL19) |
+| 11c (3-5 min) | reads Z2; reads SL19 and gives the husband the leftover stakes or not | Z2 at `arm_n2` or `arm_n7` done (queued by the answer); SL19 when O-guard is answered | the guard at the gap fire with the spear; the husband walking the ring | l_guard_1, l_guard_2 (Z2), l_posts (SL19) |
 | 11d (3-5 min) | reads Z3; queues **Keep the vigil** (A31) When ready, shown unready with its countdown | Z3 at `stranger_clock` ≥ 20 (hours from B10) once Z1 has landed; dusk 12 at 22 after Z3; A31 on the cards from Z3 | crows on the ridge; him covered | l_count (Z3), l_night_12 |
 | 11e (3-5 min) | taps or has queued A31; reads B11; meets the dig (its order card) | B11 at A31 and Z2; `dig_cellar` with A31's finish | night grade; the vigil, then a fire at the scrub's edge at first light; a board by the fire with one mark | l_b11_1 to l_b11_3, l_dig_open |
 
@@ -433,7 +433,7 @@ that B12's mirrors; no line connects the two. The crows' count is the tallymen's
 
 | Id | Kind | Thread | Gate | What happens (facts) | Decision or spend |
 |---|---|---|---|---|---|
-| SL19 | arc (n6) | th-town | Z1 + 4 h, once O-guard is answered | The husband walks the ring with a hand on each post, stops at three that lean, and asks for the stakes left over. | `n6_posts` (his lane, cap 1, 12 stakes, 3600 s; "Gap +50%") against the dig's stakes |
+| SL19 | arc (n6) | th-town | when O-guard is answered | The husband walks the ring with a hand on each post, stops at three that lean, and asks for the stakes left over. | `n6_posts` (his lane, cap 1, 12 stakes, 3600 s; "Gap +50%") against the dig's stakes |
 
 ### The asks (day eleven)
 

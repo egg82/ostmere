@@ -1,6 +1,6 @@
 beats whenever (pace_scale 1): B11 day 11.57, target_day 12
   away V43->V44: 2 ['trigger t_family_joins', 'trigger t_family_cuts']
-  away V44->V45: 1 ['trigger t_posts']
+  away V44->V45: 1 ['trigger offer_o_ditch']
   away V45->V46: 1 ['trigger t_count']
   away V46->V47: 0 []
 days after week one's 6 with no arrival but lines: []
@@ -9,4 +9,4 @@ day    line feature    chip   store   skill    card   level  total
   2      20       4       2       3       0       6       2     37
   3       7       0       0       0       0       0       4     11
   4      17       3       0       0       0       2       2     24
-  5      17       4       0       0       0      48       2     71
+  5      18       4       0       0       0      48       2     72
