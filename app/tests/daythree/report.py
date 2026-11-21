@@ -20,7 +20,7 @@ from tests.daytwo import abs_band
 from tests.daytwo import checks as checks2
 from tests.daytwo.player import DayTwoPlayer, visit_seen
 from tests.daytwo.routes import ROUTES
-from tests.dayone import caploss, checks
+from tests.dayone import capcheck, caploss, checks
 from tests.dayone.player import DayOnePlayer
 from tests.dayone.report import row
 
@@ -47,8 +47,10 @@ def cap_loss_lines(p: DayOnePlayer, start: int) -> list[str]:
     tally = caploss.Tally()
     caploss.between(history, p.rules, tally)
     away = caploss.absences(history[-1], p.rules)
+    camp = c3.opening3().camp
     return [f"  lost to caps: played {100 * caploss.total_share(tally.losses()):.0f}%, "
-            + ", ".join(f"away {h} h {100 * caploss.total_share(away[h]):.0f}%" for h in caploss.ABSENCE_H)]
+            + ", ".join(f"away {h} h {100 * caploss.total_share(away[h]):.0f}%" for h in caploss.ABSENCE_H),
+            *capcheck.lines(history[-1], p.rules, (camp.store,) if camp else ())]
 
 
 def beats_line(name: str, p: DayOnePlayer) -> str:

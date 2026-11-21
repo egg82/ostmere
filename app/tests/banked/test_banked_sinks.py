@@ -1,6 +1,6 @@
 """The sink policies (tests/dayone/sinks.py) on the fixture chapter, by route: typical and sharp mix the trip and queue
 the comfort, lazy does neither, and no route sets an order for the arrival offer (it is of no kind, and the page builds
-no per-offer rule), so it waits for a visit. The cap-loss check (dayone/capcheck.py) tells the two apart."""
+no per-offer rule), so it waits for a visit. The cap-loss readout (dayone/capcheck.py) tells the two apart."""
 import pytest
 
 from ashfall_app.engine import (
@@ -71,8 +71,10 @@ def test_the_check_tells_a_mixed_trip_from_none():
     """After the same visits, away 8 h and 24 h: the typical player's trip draws the wood down; the lazy player's sits
     at its cap and loses what the gatherer makes."""
     r = rules()
-    assert capcheck.failing(route("typical", 4 * H).save, r) == {}
-    assert capcheck.failing(route("lazy", 4 * H).save, r) == {"wood": (8, 24)}
+    typical, lazy = capcheck.losses(route("typical", 4 * H).save, r), capcheck.losses(route("lazy", 4 * H).save, r)
+    for h in capcheck.HOURS:
+        assert typical[h]["wood"].lost == 0
+        assert lazy[h]["wood"].share > 0.5
 
 
 def test_the_chapter_names_what_the_policies_read():
