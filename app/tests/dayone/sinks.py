@@ -353,15 +353,8 @@ def tuned_share(rules: Rules, save: Save, trip: Trip, edited: Mix | None = None,
     that drinks a store dry and pauses, the dry store's handover giving the share back until it has refilled, which a
     player reads as a red line; one under it lets the store fill and spill. The preview is of the mix itself beside
     the other lanes and the town's mix, with no hands mix rule running over it, no rule or queue entry tapping on the
-    hands, and from when a tap holding the hands lands; the floor is one step."""
-    hands = {c.id for c in rules.cards if c.lane == HANDS}
-    town = {m.id for m in save.mixes if str(m.id).startswith(TOWN_PREFIX)}
-    own = tuple(o for o in save.orders if not (isinstance(o.then, SwitchMix) and o.then.mix not in town)
-                and not (isinstance(o.then, TapCard) and o.then.card in hands))
-    bare = decide(decide(save, rules, save.time, SetOrders(own)), rules, save.time, SetQueue(()))
-    held = next((b.completes_at for b in view(bare, rules).lanes if b.lane == HANDS and b.card is not None), None)
-    if held is not None:   # the mix's rates show once the tap holding the hands lands
-        bare = advance(bare, rules, held)
+    hands, and from when a tap holding the hands, or a store rule's tap on a town lane, lands; the floor is one step."""
+    bare = preview_base(rules, save)
     kept, top = watched(rules, save, trip), trip.share_bp if top is None else top
     def holds(share: int) -> bool:
         m = trip_mix(save, trip, share, MixId("preview")) if edited is None \
@@ -375,6 +368,20 @@ def tuned_share(rules: Rules, save: Save, trip: Trip, edited: Mix | None = None,
         mid = (lo + hi) // 2
         lo, hi = (mid, hi) if holds(mid * TUNE_STEP_BP) else (lo, mid)
     return max(lo, 1) * TUNE_STEP_BP
+
+
+def preview_base(rules: Rules, save: Save) -> Save:
+    """`save` as the preview shows it: the hands' mix rule, tap orders on the hands and queue entries left out, and
+    advanced to when a tap holding the hands, or a store rule's tap on a town lane, lands."""
+    hands = {c.id for c in rules.cards if c.lane == HANDS}
+    town = {m.id for m in save.mixes if str(m.id).startswith(TOWN_PREFIX)}
+    by_rule = {o.then.card for o in save.orders if isinstance(o.then, TapCard) and not isinstance(o.when, AfterTime)}
+    own = tuple(o for o in save.orders if not (isinstance(o.then, SwitchMix) and o.then.mix not in town)
+                and not (isinstance(o.then, TapCard) and (o.then.card in hands or not isinstance(o.when, AfterTime))))
+    bare = decide(decide(save, rules, save.time, SetOrders(own)), rules, save.time, SetQueue(()))
+    held = max((b.completes_at for b in view(bare, rules).lanes if b.card is not None and b.completes_at is not None
+                and (b.lane == HANDS or b.card in by_rule)), default=None)
+    return bare if held is None else advance(bare, rules, held)
 
 
 def without(base: Mix, cards: frozenset[CardId], mix_id: MixId) -> Mix | None:

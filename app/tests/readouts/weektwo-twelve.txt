@@ -1,15 +1,15 @@
 chapter twelve: 11 visits on typical
-   V51 gap   9.2 h  spend 61  decide  1
-   V52 gap   4.2 h  spend 60  decide  2  [wait, 4 lines]
-   V53 gap   3.2 h  spend 60  decide  0  [wait, 3 lines]
-   V54 gap   9.2 h  spend 60  decide  4
-   V55 gap   4.2 h  spend 59  decide  0
-   V56 gap   3.2 h  spend 59  decide  1
-   V57 gap   9.2 h  spend 38  decide  2
-   V58 gap   4.2 h  spend 22  decide  1
-   V59 gap   3.2 h  spend 34  decide  1
-   V60 gap   9.2 h  spend 34  decide  1
-   V61 gap   4.2 h  spend 34  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 7 returns, spend 328, decide 5; 8h+: 4 returns, spend 193, decide 8
-  cap loss at the end, away 8 h: damp_wood 0%, dry_wood 57%, roots 85%, smoked 36%, stones 81%, wraps_sewn 100%
-  cap loss at the end, away 24 h: damp_wood 0%, dry_wood 58%, roots 86%, smoked 57%, stones 82%, wraps_sewn 100%
+   V51 gap   9.2 h  spend 34  decide  1
+   V52 gap   4.2 h  spend 35  decide  2  [wait, 5 lines]
+   V53 gap   3.2 h  spend 51  decide  2  [wait, 5 lines]
+   V54 gap   9.2 h  spend 37  decide  1
+   V55 gap   4.2 h  spend 52  decide  2
+   V56 gap   3.2 h  spend 52  decide  1
+   V57 gap   9.2 h  spend 52  decide  1
+   V58 gap   4.2 h  spend 51  decide  0
+   V59 gap   3.2 h  spend 42  decide  3
+   V60 gap   9.2 h  spend 20  decide  1
+   V61 gap   4.2 h  spend 49  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 7 returns, spend 332, decide 11; 8h+: 4 returns, spend 143, decide 4
+  cap loss at the end, away 8 h: damp_wood 23%, dry_wood 41%, roots 73%, smoked 37%, stones 71%, wraps_sewn 100%
+  cap loss at the end, away 24 h: damp_wood 23%, dry_wood 41%, roots 74%, smoked 58%, stones 71%, wraps_sewn 100%

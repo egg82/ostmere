@@ -1,10 +1,11 @@
-beats whenever (pace_scale 1): B14 day 15.55, target_day 16
+beats whenever (pace_scale 1): B14 day 15.57, target_day 16
   away V54->V55: 2 ['trigger t_sow', 'trigger t_frost']
   away V55->V56: 2 ['trigger t_beds', 'trigger t_deer']
   away V56->V57: 0 []
   away V57->V58: 0 []
   away V58->V59: 0 []
-  away V59->V60: 1 ['trigger t_b14']
+  away V59->V60: 0 []
+  away V60->V61: 1 ['trigger t_b14']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      27      11       0       5       1      21       2     67
@@ -16,3 +17,4 @@ day    line feature    chip   store   skill    card   level  total
   7       7       4       1       0       0      10       1     23
   8       8       4       0       2       0       3       3     20
   9      14       1       0       4       0      14       2     35
+ 10       6       1       0       0       0       0       1      8
