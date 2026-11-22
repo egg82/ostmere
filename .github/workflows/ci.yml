@@ -105,8 +105,8 @@ jobs:
       - working-directory: app
         run: python -m pytest -q tests/test_doc_citations.py tests/test_decision_citations.py tests/test_gates_command.py tests/test_household_names.py
 
-  # Two shards (app/tools/shards.py): a is tests/saves, accounts and api_contract, the heaviest; b is everything else,
-  # so a new test directory runs in b. `shards-cover` fails if the two together are not the whole suite.
+  # Three shards (app/tools/shards.py): a is tests/saves, accounts and api_contract; c is tests/opening; b is everything
+  # else, so a new test directory runs in b. `shards-cover` fails if the three together are not the whole suite.
   tests:
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -115,7 +115,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [a, b]
+        shard: [a, b, c]
     env:
       # app/tests/test_household_names.py: the names, held only as this secret; unset (forks), it skips.
       OSTMERE_HOUSEHOLD_NAMES: ${{ secrets.OSTMERE_HOUSEHOLD_NAMES }}
@@ -141,7 +141,7 @@ jobs:
         working-directory: app
         run: python -m tools.shards "${{ matrix.shard }}" -q -m "not playthrough" --durations=25 --durations-min=1
 
-  # Collection only (no database): the shards of `tests` together collect exactly what one unsharded run does, and
+  # Collection only (no database): the three shards of `tests` together collect exactly what one unsharded run does, and
   # week two's shards (app/tools/weektwo_shards.py) select each week-two test exactly once; their names are handed to
   # `playthrough-week-two` as its matrix, so the shards checked are the shards run.
   shards-cover:
