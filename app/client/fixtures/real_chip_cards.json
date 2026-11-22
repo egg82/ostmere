@@ -2714,6 +2714,631 @@
       ],
       "takes": [],
       "wounds": []
+    },
+    {
+      "card": "n10_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n11_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n11_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n11_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n11_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n12_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n12_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n12_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n12_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n8_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n8_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n8_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n8_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n9_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n9_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n9_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n9_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
     }
   ],
   "chips": [
@@ -2847,7 +3472,12 @@
         "n7_cut",
         "n6_gather",
         "n6_cut",
-        "g_field_cut"
+        "g_field_cut",
+        "n10_cut",
+        "n11_cut",
+        "n12_cut",
+        "n8_cut",
+        "n9_cut"
       ]
     },
     {
@@ -2897,7 +3527,12 @@
         "n5_forage",
         "n7_forage",
         "n6_forage",
-        "g_field_forage"
+        "g_field_forage",
+        "n10_forage",
+        "n11_forage",
+        "n12_forage",
+        "n8_forage",
+        "n9_forage"
       ]
     },
     {
@@ -2993,7 +3628,12 @@
         "n5_weave_wattle",
         "n7_weave_wattle",
         "n6_weave_wattle",
-        "g_hearth_weave_wattle"
+        "g_hearth_weave_wattle",
+        "n10_weave_wattle",
+        "n11_weave_wattle",
+        "n12_weave_wattle",
+        "n8_weave_wattle",
+        "n9_weave_wattle"
       ]
     },
     {
@@ -3040,7 +3680,12 @@
         "n5_field_track",
         "n7_field_track",
         "n6_field_track",
-        "g_field_field_track"
+        "g_field_field_track",
+        "n10_field_track",
+        "n11_field_track",
+        "n12_field_track",
+        "n8_field_track",
+        "n9_field_track"
       ]
     },
     {
@@ -3060,7 +3705,12 @@
         "n7_dig_clay",
         "n6_dig_clay",
         "g_hearth_dig_clay",
-        "cut_steps"
+        "cut_steps",
+        "n10_dig_clay",
+        "n11_dig_clay",
+        "n12_dig_clay",
+        "n8_dig_clay",
+        "n9_dig_clay"
       ]
     },
     {
@@ -3126,7 +3776,22 @@
         "g_hearth_fungus_stew",
         "catch_broth",
         "barley_stew",
-        "keep_count"
+        "keep_count",
+        "n10_stew",
+        "n10_fungus_stew",
+        "n10_catch_broth",
+        "n11_stew",
+        "n11_fungus_stew",
+        "n11_catch_broth",
+        "n12_stew",
+        "n12_fungus_stew",
+        "n12_catch_broth",
+        "n8_stew",
+        "n8_fungus_stew",
+        "n8_catch_broth",
+        "n9_stew",
+        "n9_fungus_stew",
+        "n9_catch_broth"
       ]
     },
     {
@@ -3303,7 +3968,12 @@
         "n5_stakes",
         "n7_stakes",
         "n6_stakes",
-        "g_field_stakes"
+        "g_field_stakes",
+        "n10_stakes",
+        "n11_stakes",
+        "n12_stakes",
+        "n8_stakes",
+        "n9_stakes"
       ]
     },
     {
@@ -3345,7 +4015,12 @@
         "n5_pick",
         "n7_pick",
         "n6_pick",
-        "g_hearth_pick"
+        "g_hearth_pick",
+        "n10_pick",
+        "n11_pick",
+        "n12_pick",
+        "n8_pick",
+        "n9_pick"
       ]
     },
     {
@@ -3509,7 +4184,12 @@
         "n5_reap",
         "n7_reap",
         "n6_reap",
-        "reap"
+        "reap",
+        "n10_reap",
+        "n11_reap",
+        "n12_reap",
+        "n8_reap",
+        "n9_reap"
       ]
     },
     {
@@ -3555,7 +4235,12 @@
         "n5_clear_road",
         "n7_clear_road",
         "n6_clear_road",
-        "shovel_road"
+        "shovel_road",
+        "n10_clear_road",
+        "n11_clear_road",
+        "n12_clear_road",
+        "n8_clear_road",
+        "n9_clear_road"
       ]
     },
     {
@@ -3568,6 +4253,18 @@
     },
     {
       "store": "torn_clock",
+      "made_by": []
+    },
+    {
+      "store": "b15_clock",
+      "made_by": []
+    },
+    {
+      "store": "choir_clock",
+      "made_by": []
+    },
+    {
+      "store": "starer_clock",
       "made_by": []
     }
   ]

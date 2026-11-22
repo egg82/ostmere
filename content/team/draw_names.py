@@ -32,7 +32,8 @@ REJECTED = {"Grace"}
 """Virtue and common-noun names."""
 CAST = {"Lucy", "Margaret", "Sorrel"}
 """Given names the cast already holds (content/cast.md)."""
-PEOPLE = (("n2", MEN), ("n3", WOMEN), ("n4", MEN), ("n5", WOMEN), ("n6", MEN), ("n7", MEN))
+PEOPLE = (("n2", MEN), ("n3", WOMEN), ("n4", MEN), ("n5", WOMEN), ("n6", MEN), ("n7", MEN),
+          ("n8", WOMEN), ("n9", WOMEN), ("n10", WOMEN), ("n11", MEN), ("n12", WOMEN))
 """Each light-tier person with a name_key, in the order they join, and the table their name comes from."""
 
 
