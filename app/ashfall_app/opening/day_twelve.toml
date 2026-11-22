@@ -569,6 +569,7 @@ outcome = { stores = [{ store = "dry_wood", items = 1 }] }
 
 [[cards]]
 id = "spar"
+only_player = "self"
 presentation = "action"
 label_key = "c_spar"
 work_s = 600
