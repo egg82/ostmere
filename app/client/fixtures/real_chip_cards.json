@@ -260,6 +260,14 @@
       "wounds": []
     },
     {
+      "card": "n1_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "n1_reap",
       "makes": [
         "barley"
@@ -589,6 +597,14 @@
       "wounds": []
     },
     {
+      "card": "n2_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "n2_reap",
       "makes": [
         "barley"
@@ -778,6 +794,14 @@
       "wounds": []
     },
     {
+      "card": "n3_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "n3_reap",
       "makes": [
         "barley"
@@ -882,6 +906,14 @@
       "takes": [
         "dry_wood"
       ],
+      "wounds": []
+    },
+    {
+      "card": "n4_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
       "wounds": []
     },
     {
@@ -1189,6 +1221,14 @@
       "wounds": []
     },
     {
+      "card": "n5_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "n5_reap",
       "makes": [
         "barley"
@@ -1344,6 +1384,14 @@
       "wounds": []
     },
     {
+      "card": "n7_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "n7_reap",
       "makes": [
         "barley"
@@ -1474,6 +1522,14 @@
       "takes": [
         "stakes"
       ],
+      "wounds": []
+    },
+    {
+      "card": "n6_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
       "wounds": []
     },
     {
@@ -1870,6 +1926,113 @@
         "damp_wood"
       ],
       "wounds": []
+    },
+    {
+      "card": "mark_road",
+      "makes": [],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n2_mark_road",
+      "makes": [],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "shovel_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "cut_road",
+      "makes": [],
+      "takes": [
+        "cleared",
+        "stones",
+        "stakes",
+        "cord",
+        "beams"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "hall_hearth",
+      "makes": [],
+      "takes": [
+        "stones",
+        "clay"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "try_stone",
+      "makes": [],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "warm_beds",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "rime"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "cut_steps",
+      "makes": [
+        "clay"
+      ],
+      "takes": [
+        "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "smoke_hole",
+      "makes": [
+        "ash"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "dig_beam",
+      "makes": [
+        "beams"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "reset_snares",
+      "makes": [
+        "catch"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "take_child",
+      "makes": [
+        "dry_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "keep_count",
+      "makes": [
+        "stew"
+      ],
+      "takes": [],
+      "wounds": []
     }
   ],
   "chips": [
@@ -2011,7 +2174,8 @@
       "made_by": [
         "lay_to_dry",
         "hand_on_stone",
-        "stone_ring"
+        "stone_ring",
+        "take_child"
       ]
     },
     {
@@ -2033,7 +2197,8 @@
       "made_by": [
         "scavenge",
         "field_track",
-        "pull_beams"
+        "pull_beams",
+        "shovel_road"
       ]
     },
     {
@@ -2087,7 +2252,8 @@
       "made_by": [
         "scavenge",
         "field_track",
-        "pull_beams"
+        "pull_beams",
+        "shovel_road"
       ]
     },
     {
@@ -2104,7 +2270,8 @@
       "made_by": [
         "hunt_wolf",
         "hunt_bear",
-        "hunt_deer"
+        "hunt_deer",
+        "reset_snares"
       ]
     },
     {
@@ -2206,7 +2373,8 @@
         "n5_dig_clay",
         "n7_dig_clay",
         "n6_dig_clay",
-        "g_hearth_dig_clay"
+        "g_hearth_dig_clay",
+        "cut_steps"
       ]
     },
     {
@@ -2263,7 +2431,8 @@
         "g_hearth_stew",
         "g_hearth_fungus_stew",
         "catch_broth",
-        "barley_stew"
+        "barley_stew",
+        "keep_count"
       ]
     },
     {
@@ -2467,7 +2636,9 @@
       "store": "ash",
       "made_by": [
         "clear_roofs",
-        "n2_clear_roofs"
+        "n2_clear_roofs",
+        "warm_beds",
+        "smoke_hole"
       ]
     },
     {
@@ -2571,7 +2742,8 @@
     {
       "store": "beams",
       "made_by": [
-        "pull_beams"
+        "pull_beams",
+        "dig_beam"
       ]
     },
     {
@@ -2632,6 +2804,35 @@
       "made_by": [
         "stack_cordwood"
       ]
+    },
+    {
+      "store": "table_clock",
+      "made_by": []
+    },
+    {
+      "store": "cleared",
+      "made_by": [
+        "n1_clear_road",
+        "n2_clear_road",
+        "n3_clear_road",
+        "n4_clear_road",
+        "n5_clear_road",
+        "n7_clear_road",
+        "n6_clear_road",
+        "shovel_road"
+      ]
+    },
+    {
+      "store": "rows_black_left",
+      "made_by": []
+    },
+    {
+      "store": "tear_left",
+      "made_by": []
+    },
+    {
+      "store": "torn_clock",
+      "made_by": []
     }
   ]
 }

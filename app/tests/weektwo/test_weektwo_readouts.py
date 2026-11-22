@@ -55,6 +55,12 @@ def test_a_day_fifteen_route_readout_is_reported(week_days: Days, name: str):
     rs.check(f"weektwo-fifteen-{name}", report.route_text("fifteen", name, *week_days))
 
 
+@pytest.mark.parametrize("week_days, name", [(("sixteen", r), r) for r in report.ROUTES], indirect=["week_days"],
+                         ids=report.ROUTES)
+def test_a_day_sixteen_route_readout_is_reported(week_days: Days, name: str):
+    rs.check(f"weektwo-sixteen-{name}", report.route_text("sixteen", name, *week_days))
+
+
 def test_day_eights_visit_readout_is_reported(eight_counts: Counts, eight_marks: dict[str, str]):
     assert len(eight_counts[1]) >= 3, "the chapter's visits were counted"
     rs.check("weektwo-eight", chapter_text("eight", eight_counts[1], eight_marks, cap_lines(eight_counts[0], verdicts.CHAPTERS["eight"])))
@@ -78,3 +84,8 @@ def test_day_twelves_visit_readout_is_reported(twelve_counts: Counts, twelve_mar
 def test_day_fifteens_visit_readout_is_reported(fifteen_counts: Counts, fifteen_marks: dict[str, str]):
     assert len(fifteen_counts[1]) >= 3, "the chapter's visits were counted"
     rs.check("weektwo-fifteen", chapter_text("fifteen", fifteen_counts[1], fifteen_marks, cap_lines(fifteen_counts[0], verdicts.CHAPTERS["fifteen"])))
+
+
+def test_day_sixteens_visit_readout_is_reported(sixteen_counts: Counts, sixteen_marks: dict[str, str]):
+    assert len(sixteen_counts[1]) >= 3, "the chapter's visits were counted"
+    rs.check("weektwo-sixteen", chapter_text("sixteen", sixteen_counts[1], sixteen_marks, cap_lines(sixteen_counts[0], verdicts.CHAPTERS["sixteen"])))

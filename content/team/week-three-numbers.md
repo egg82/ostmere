@@ -305,3 +305,27 @@ stew as a trip, both asks answered with the first answer), seed 0:
 
 The hall's fourth stage lands before the deer's clock on typical and sharp, so `beats.yaml` authors T3 before T2 (D-139
 accepts 15d, T2's visit, as near_untouched). Smoked's sink is the table (day sixteen); its lever comes there.
+
+**Day sixteen (`day_sixteen.toml`, shipped in `CHAPTERS`), applied:**
+
+- The road takes the same at every stage: 12 cleared, 6 stones, 4 stakes, 2 cord (the markers; without them all of
+  cord's making went to the cap once the hall was up) and 2 beams every 5 stages, so 120, 60, 40, 20 and 4. Cleared caps
+  at 24; `shovel_road` (hands, 450 s) and the town card (1800 s) each make 1.
+- A35 at Arcana 13 (the placeholder held: typical reaches 13 at 427 h). B15's 349 h floor needs no clock: T5's gate
+  (`clear_clock` 50, 386 h) is later. T6 on the fifth cover by either hand, once T5. T4 drains 6 ripe, T6 4 pelts.
+- `warm_beds` trains Spellcraft at 360 XP an hour, 30 a cure at 300 s, so level 2 (60) takes two cures and level 4
+  (160) about six; its row runs to the curve's top, speed from 5. The table's cost stays at 2 smoked an hour.
+- The jobs as reworked (D-144); O-road's walk 900 s on the hands, 3600 s on his lane.
+
+**Measured** by the simulator (`tests/weektwo/report.py --sixteen`, the readouts `weektwo-sixteen*`), seed 0:
+
+| Route | B14 | T4 | T5 | T6 | B15 | Visits | Cap loss at B15's visit (8 h / 24 h) |
+|---|---|---|---|---|---|---|---|
+| typical | 371.6 | 377.8 | 386.0 | 394.5 | 427.6 (band 408-432) | 10, one with nothing to decide | barley 28/31%, cord 32/7%, dry wood 54/56%, roots 65/63%, smoked 21/34%, stones 23/25% |
+| sharp | 366.5 | 370.5 | 386.0 | | 386.0 (floor 349: T5 binds) | 8 | roots 97/96%, stones 93/94% (a local play before the road's cord) |
+| whenever | 368.5 | 373.3 | 386.0 | | 394.2 (Arcana 13 by B14) | 3 | dry wood 57/61%, smoked 33/34% (the same) |
+
+Sharp and whenever reach B15 before their fifth cover, so T6 and SL26 land past the chapter's edge on those routes.
+Smoked loses a fifth to a third of its making to the cap: the raise per arrival group (day eighteen) is its lever. On
+typical two absences bring three moments (the road found, SL25 and a job; T5 with its note and a job), over the target
+of two; the jobs' countdown is the lever if that should hold.

@@ -34,6 +34,7 @@ each skill's climb at a full share of its fastest runner
   foraging          206 h to the curve's top, x1.00 the fastest
   melee             206 h to the curve's top, x1.00 the fastest
   scavenging        206 h to the curve's top, x1.00 the fastest
+  spellcraft        516 h to the curve's top, x2.50 the fastest
   woodcutting       206 h to the curve's top, x1.00 the fastest
 each later phase's longest stretch of levels paying only speed
   woodcutting    2 levels in a row pay only speed
@@ -49,6 +50,7 @@ each skill's levels that pay nothing: unmarked in its row, and unwaited-for in t
   cooking        row none; later phases none
   arcana         row none; later phases none
   melee          row none; later phases none
+  spellcraft     row none; later phases none
 each skill's track nodes by size, in basis points per rank
   woodcutting    2500bp x7
   scavenging     2500bp x6

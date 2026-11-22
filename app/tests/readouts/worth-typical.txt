@@ -32,7 +32,7 @@
   day 15  visits 3  keeper: +21.7h 33%  +44.8h 52%  +53.6h 57%
           tuner moments 0
   day 16  visits 4  keeper: +31.6h 48%  +29.7h 48%  +29.4h 49%  +69.4h 60%
-          tuner moments 2: set grew 2
+          tuner moments 2: ask 1, set grew 2
   worth by route, percent by decile (threshold 25%)
     keeper                     n=67: 1 23 28 40 46 50 56 65 75 80 85
     tuner                      n=67: 0 4 5 6 12 24 57 77 87 100 100
@@ -119,4 +119,4 @@
   V66   15.05     4   34.5h  +31.6h 48%   +4.0h 10%    +1.7h 5%     never         0.88   card,ask,mix edited
   V67   15.22     5   32.7h  +29.7h 48%   never        never        never         0.77  *set grew
   V68   15.36     4   30.5h  +29.4h 49%   +0.7h 2%     +0.7h 2%     never         0.81   
-  V69   15.74     5   45.9h  +69.4h 60%   never        never        never            -  *set grew
+  V69   15.74     5   45.9h  +69.4h 60%   never        never        never            -  *ask,set grew

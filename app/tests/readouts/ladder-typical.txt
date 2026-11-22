@@ -96,6 +96,8 @@
     L19  11.87 d  gap   2.66 d
     L20  13.48 d  gap   1.62 d
     top L22: not by the edge
+  spellcraft: level 1 of 22 (0.00% of the phase)
+    top L22: not by the edge
   card share of the running mixes by day, percent (. none, ~ under 0.5)
     day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14
     build_windbreak          .   .   .   .  17 100 100  67  67  83  83   .  83  83

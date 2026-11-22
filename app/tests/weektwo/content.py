@@ -1,4 +1,4 @@
-"""Days eight, nine, eleven, twelve and fifteen as the routes play them (daythree/chapter.Later): which content step is which story id, read off a save,
+"""Days eight, nine, eleven, twelve, fifteen and sixteen as the routes play them (daythree/chapter.Later): which content step is which story id, read off a save,
 and the chapter's sinks, order cards, shares and each route's split of the town, on the rules day three loads (every
 chapter in writing merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import (
@@ -34,6 +34,10 @@ TWELVE = Landings(
 FIFTEEN = Landings(
     {"B13": ("t_b13",), "SL22": ("t_sow",), "T1": ("t_frost",), "T2": ("t_deer",), "SL23": ("t_beams",),
      "T3": ("t_walls",), "B14": ("t_b14",)}, {}, {}, {})
+SIXTEEN = Landings(
+    {"T4": ("t_rows_black",), "SL24": ("t_road_marked",), "SL25": ("t_hall_hearth",), "T5": ("t_rime_ring",),
+     "T6": ("t_covers_torn",), "SL26": ("t_sun_back",), "B15": ("t_b15",)},
+    {"A36": ("mark_road", "n2_mark_road"), "A35": ("try_stone",)}, {}, {"O-road": OfferId("o_road")})
 LAST_NIGHT, HUNT_BEAR, BEAR_SIGN = CardId("sit_last_night"), CardId("hunt_bear"), StoreId("bear_sign")
 CUT_STAKES = CardId("cut_stakes")
 ORDER_STORES = ("stakes", "roof_ash", "cord", "pelt", "wind_torn", "stones", "tallow")
@@ -64,6 +68,17 @@ ASKS_TWELVE = tuple((OfferId(o), AnswerId(a)) for o, a in (
 twelve)")."""
 ASKS_FIFTEEN = ((OfferId("o_sun_rack"), AnswerId("o_sun_rack_sun")), (OfferId("o_door_ice"), AnswerId("o_door_ice_shave")))
 """Day fifteen's two asks, as every route answers them."""
+ORDER_STORES_SIXTEEN = ("cleared",)
+"""Day sixteen's: the road's. The working's rule on the frost is on rime, so day fifteen's set it once offered."""
+ROAD = {"typical": AnswerId("o_road_you"), "sharp": AnswerId("o_road_n2")}
+"""Who walks the old road, as each route answers it (a route not named follows typical): both answers measured."""
+JOBS = ("j_steps", "j_smoke_hole", "j_wedged", "j_snares", "j_ridge", "j_tally")
+JOB_NO = {"sharp": "j_ridge"}
+"""Lucy's jobs, each answered yes when it shows, but for the one each route here declines, so both answers are
+measured (week-three-plan item 6)."""
+TRY_STONE, SHOVEL_ROAD = CardId("try_stone"), CardId("shovel_road")
+SHOVEL = {"typical": 1000, "sharp": 2000}
+"""The hands' share of shovelling the road a route adds once shown (SL24); a route not named follows typical."""
 PULL_BEAMS, HUNT_DEER = CardId("pull_beams"), CardId("hunt_deer")
 CORDWOOD = CardId("stack_cordwood")
 BEAMS = {"typical": 1500, "sharp": 3000}
@@ -91,6 +106,7 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_stakes", 5000), ("n2_watch", 5000)), card("make_hut")),
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
+        Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
@@ -106,6 +122,7 @@ SHARP = WeekTwoKnobs(
         Split("n2", (("n2_stakes", 10000),), card("make_hut")),
         Split("n2", (("n2_watch", 10000),), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
+        Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
     ))
 KNOBS = {"sharp": SHARP}
 """Each route's split; a route not named follows typical."""
@@ -208,3 +225,26 @@ def day_fifteen(route: str) -> Later:
         answers=(*twelve.answers, *ASKS_FIFTEEN),
         shares=(*twelve.shares, Share(PULL_BEAMS, BEAMS.get(route, BEAMS["typical"])), Share(HUNT_DEER, DEER_SHARE)),
         cures=twelve.cures, own=twelve.own)
+
+
+def asks_sixteen(route: str) -> tuple[tuple[OfferId, AnswerId], ...]:
+    """O-road as the route answers it, then Lucy's jobs: yes but for the route's one no."""
+    no = JOB_NO.get(route)
+    return ((OfferId("o_road"), ROAD.get(route, ROAD["typical"])),
+            *((OfferId(j), AnswerId(f"{j}_{'no' if j == no else 'yes'}")) for j in JOBS))
+
+
+def day_sixteen(route: str) -> Later:
+    """B14 to B15's visit: day fifteen's sinks, rules and split carried on, the road by its order card and half of his
+    lane on clearing its bed once found, the hands shovelling it at a share, the working's rule beside the covers' once
+    offered, O-road and the jobs answered when they show, and the field stone tapped the moment it is ready."""
+    fifteen = day_fifteen(route)
+    return Later(
+        start="B14", stop="B15",
+        sinks=fifteen.sinks,
+        steps=(TRY_STONE,), order_cards=(*fifteen.order_cards, *order_cards(stores=ORDER_STORES_SIXTEEN)),
+        keeps=fifteen.keeps,
+        landed=SIXTEEN.of, news=("O-road", "A36", "T4", "SL24", "SL25", "T5", "T6", "SL26", "A35", "B15"),
+        answers=(*fifteen.answers, *asks_sixteen(route)),
+        shares=(*fifteen.shares, Share(SHOVEL_ROAD, SHOVEL.get(route, SHOVEL["typical"]))),
+        cures=fifteen.cures, own=fifteen.own)
