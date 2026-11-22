@@ -440,15 +440,15 @@ day_sixteen:
   - {id: B14,  kind: ref,    visit: 15f, target_hour: 0}
   - {id: O-road, kind: offer, target_day: 16, visit: 15f, target_hour: 0, gate: {beat: B14},
      moves: [PC, N1], thread: {id: th-network, at: start}}
-  - {id: A36,  kind: action, visit: 15f, target_hour: 0.3, gate: {offer: O-road}}                    # walk the old road, either answer (A37 on his lane)
-  - {id: T4,   kind: beat,   region: R1, target_day: 16, weekly: false, visit: 16a, target_hour: 4, gate: {hours_after: {beat: B14, hours: 4}},
+  - {id: A36,  kind: action, visit: 16a, target_hour: 6.5, gate: {offer: O-road}}                    # walk the old road, either answer (A37 on his lane)
+  - {id: T4,   kind: beat,   region: R1, target_day: 16, weekly: false, visit: 16a, target_hour: 6.2, gate: {hours_after: {beat: B14, hours: 4}},
      turn: down, outcome: "no", cost: stores, opens: [C-promise-29], moves: [PC, N2], thread: {id: th-town, at: middle}, register: grim}
-  - {id: T5,   kind: beat,   region: R1, target_day: 17, weekly: false, visit: 16d, target_hour: 14, gate: {all: [{hours_after: {beat: B13, hours: 50}}, {beat: T4}]},
+  - {id: T5,   kind: beat,   region: R1, target_day: 17, weekly: false, visit: 16d, target_hour: 14.4, gate: {all: [{hours_after: {beat: B13, hours: 50}}, {beat: T4}]},
      turn: up, cost: none, advances: [C-promise-29], moves: [PC], thread: {id: th-magic, at: middle}, register: wonder}
-  - {id: T6,   kind: beat,   region: R1, target_day: 17, weekly: false, visit: 16f, target_hour: 22, gate: {all: [{completions: {card: n3_cover_beds, n: 5}}, {beat: T5}]},
+  - {id: T6,   kind: beat,   region: R1, target_day: 17, weekly: false, visit: 16f, target_hour: 22.9, gate: {all: [{completions: {card: n3_cover_beds, n: 5}}, {beat: T5}]},
      turn: down, outcome: "no", cost: stores, advances: [C-promise-29], moves: [PC, N2], thread: {id: th-town, at: middle}, register: grim}
-  - {id: A35,  kind: action, visit: 16i, target_hour: 46, gate: {all: [{skill_level: {skill: arcana, level: 13}}, {beat: T5}]}}   # the field stone
-  - {id: B15,  kind: ref,    visit: 16i, target_hour: 46}
+  - {id: A35,  kind: action, visit: 16i, target_hour: 56.0, gate: {all: [{skill_level: {skill: arcana, level: 13}}, {beat: T5}]}}   # the field stone
+  - {id: B15,  kind: ref,    visit: 16i, target_hour: 56.0}
 
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
 # "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.
