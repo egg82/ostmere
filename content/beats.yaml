@@ -120,8 +120,8 @@ beats:
      turn: down, outcome: "yes_but", advances: [C-promise-7], pays: [C-promise-6, C-promise-28], cost: stores, moves: [N1, N2, PC], thread: {id: th-survive, at: end}, register: warm}
   - {id: B15, region: R1, target_day: 18, weekly: false, unlocks: {skill: spellcraft}, gate: {all: [{project: A35}, {beat: B13}]},
      turn: up, outcome: "no", advances: [C-promise-1], pays: [C-promise-29], cost: time, moves: [PC], thread: {id: th-magic, at: middle}, register: wonder}
-  - {id: B16, region: R1, target_day: 19, weekly: false, gate: {all: [{arrivals: 15}, {tier: belonging}]},
-     turn: down, advances: [C-promise-2, C-promise-5], cost: trust, moves: [PC], thread: {id: th-past, at: middle}, register: dread}
+  - {id: B16, region: R1, target_day: 19, weekly: false, gate: {all: [{arrivals: 15}, {tier: belonging}, {hours_after: {arrival: 15, hours: 8}}]},
+     turn: down, advances: [C-promise-2, C-promise-5], pays: [C-promise-30], cost: trust, moves: [PC], thread: {id: th-past, at: middle}, register: dread}
   - {id: B17, region: R1, target_day: 20, weekly: true, gate: {project: P3},
      turn: down, outcome: "yes_but", opens: [C-promise-9], cost: people, moves: [PC], thread: {id: th-network, at: start}, register: grim}
   # week 4
@@ -450,6 +450,24 @@ day_sixteen:
   - {id: A35,  kind: action, visit: 16i, target_hour: 56.0, gate: {all: [{skill_level: {skill: arcana, level: 13}}, {beat: T5}]}}   # the field stone
   - {id: B15,  kind: ref,    visit: 16i, target_hour: 56.0}
 
+# Day eighteen: from B15 (the field stone) to B16, the empty place. Spec: content/team/week-three.md, "Day eighteen".
+# Ids only. Kinds as day_two:. target_hour: game hours after B15 lands, typical route, measured by the week-two
+# simulator (tests/weektwo/report.py --eighteen). B16 (the closing ref) pays day_eighteen_near_promise.
+day_eighteen_near_promise: C-promise-30
+day_eighteen:
+  - {id: B15,  kind: ref,    visit: 16i, target_hour: 0}
+  - {id: T7,   kind: beat,   region: R1, target_day: 18, weekly: false, visit: 18a, target_hour: 2.1, gate: {hours_after: {beat: B15, hours: 2}},
+     turn: up, cost: people, opens: [C-promise-30], moves: [PC, N1], thread: {id: th-town, at: middle}, register: warm}
+  - {id: O-choir, kind: offer, target_day: 18, visit: 18a, target_hour: 2.1, gate: {beat: T7},
+     moves: [PC], thread: {id: th-town, at: middle}}
+  - {id: T8,   kind: beat,   region: R1, target_day: 18, weekly: false, visit: 18b, target_hour: 7.2, gate: {all: [{offer: O-choir}, {hours_after: {beat: T7, hours: 3}}]},
+     turn: down, outcome: "no", cost: stores, advances: [C-promise-30], moves: [N2], thread: {id: th-town, at: middle}, register: grim}
+  - {id: T9,   kind: beat,   region: R1, target_day: 18, weekly: false, visit: 18c, target_hour: 10.2, gate: {all: [{offer: O-choir}, {hours_after: {beat: T7, hours: 6}}]},
+     turn: up, cost: people, advances: [C-promise-30], moves: [PC], thread: {id: th-network, at: middle}, register: wry}
+  - {id: O-cutter, kind: offer, target_day: 18, visit: 18c, target_hour: 10.2, gate: {beat: T9},
+     moves: [PC], thread: {id: th-network, at: middle}}
+  - {id: B16,  kind: ref,    visit: 18f, target_hour: 24.6}
+
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
 # "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.
 #   kind: find | trip | arc | comfort | thread;  offers: decision | spend | both
@@ -478,6 +496,7 @@ side_layer:
   - {id: SL24, kind: thread,  chapter: day_sixteen, thread: th-network, offers: both,   gate: {completions: {card: mark_road, n: 1}}}   # or n2_mark_road
   - {id: SL25, kind: comfort, chapter: day_sixteen, thread: th-survive, offers: decision, gate: {hours_after: {beat: B14, hours: 10}}}
   - {id: SL26, kind: arc,     chapter: day_sixteen, thread: th-town,  offers: decision, gate: {hours_after: {beat: T6, hours: 3}}}
+  - {id: SL27, kind: thread,  chapter: day_eighteen, thread: th-magic, offers: decision, gate: {completions: {card: warm_beds, n: 1}}}
 
 # Side beats: building falls (a maxed building's prestige) and season-gated set pieces. Not on the critical path;
 # each fires once when eligible. The simulator counts them toward "new things per week".

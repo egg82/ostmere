@@ -1,5 +1,5 @@
 """Every input a card is held back on says where it comes from (docs/decisions.md, "Progress is stated, never hinted"):
-on each push route's play from the start through day sixteen, the edge of written content, at every moment the player
+on each push route's play from the start through day eighteen, the edge of written content, at every moment the player
 saw, each input short on a card waiting on its blocker, not running, and on the card panel (not a ruled lane's task)
 has its gate drawn in its place, a maker in play, or is drawn used up: nothing in play can make it again and every
 grant of it has fired (View Need.gate, makers and spent, api/sources.py). A store the player never sees
@@ -16,7 +16,7 @@ from ashfall_app.engine import Rules, Save, View, value_at
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.weektwo.routes import SIXTEEN_PUSH_ROUTES
+from tests.weektwo.routes import EIGHTEEN_PUSH_ROUTES
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Served = Callable[[Save, Rules, View, Mapping[str, StoreSources]], Mapping[tuple[str, str], Source]]
@@ -71,20 +71,20 @@ def walk(history: Sequence[tuple[Save, View]], rules: Rules, served: Served = so
 
 
 @pytest.fixture
-def walked(sixteen_route: tuple[str, DayTwoPlayer]) -> tuple[Walk, Walk]:
+def walked(eighteen_route: tuple[str, DayTwoPlayer]) -> tuple[Walk, Walk]:
     """The route's walk as served, and the control's."""
-    _, p = sixteen_route
+    _, p = eighteen_route
     return walk(p.history, p.rules), walk(p.history, p.rules, served_nothing)
 
 
-@pytest.mark.parametrize("sixteen_route", SIXTEEN_PUSH_ROUTES, indirect=True)
+@pytest.mark.parametrize("eighteen_route", EIGHTEEN_PUSH_ROUTES, indirect=True)
 def test_every_short_input_shows_its_gate_a_maker_or_used_up(walked: tuple[Walk, Walk]):
     w, _ = walked
     assert w.judged > 1000 and w.gated, f"judged {w.judged} short inputs, {len(w.gated)} gated: the walk is blind"
     assert w.missed == {}, f"short with no gate, no maker and not spent (card:store -> first hour): {w.missed}"
 
 
-@pytest.mark.parametrize("sixteen_route", SIXTEEN_PUSH_ROUTES, indirect=True)
+@pytest.mark.parametrize("eighteen_route", EIGHTEEN_PUSH_ROUTES, indirect=True)
 def test_the_walk_fails_a_view_that_serves_no_source(walked: tuple[Walk, Walk]):
     """The control: with nothing served, every gated and every spent input and many made ones are missed, the first
     within an hour."""

@@ -1,10 +1,11 @@
 """Week two's plays (routes.py) and what the verdicts read off them, built once per session in a fixture's setup (playthrough
 tests, which their CI job's timeout budgets): `eight_route` takes its route by indirect parametrization, `eight_counts` the typical
 route's per-visit counts (its heavy steps read first, a part to a setup, `week_part`), `eight_marks` its visits marked for the readout, `two_am_eight_run` the 2 AM replay pair;
-the `nine_`, `eleven_`, `twelve_`, `fifteen_` and `sixteen_` fixtures the same for days nine, eleven, twelve, fifteen and
-sixteen, `twelve_cures`, `fifteen_cures` and `sixteen_cures` the cures gate over typical's days twelve, fifteen and sixteen, `twelve_ladder` a route's ladder readout, `fifteen_worth` typical's worth readout, and `rebased_eight`, `rebased_nine`, `rebased_eleven`, `rebased_twelve` and `rebased_fifteen` typical's
+the `nine_`, `eleven_`, `twelve_`, `fifteen_`, `sixteen_` and `eighteen_` fixtures the same for days nine, eleven, twelve,
+fifteen, sixteen and eighteen, `twelve_cures`, `fifteen_cures`, `sixteen_cures` and `eighteen_cures` the cures gate over typical's days twelve, fifteen, sixteen and eighteen, `twelve_ladder` a route's ladder readout, `fifteen_worth` typical's worth readout, and `rebased_eight`, `rebased_nine`, `rebased_eleven`, `rebased_twelve`, `rebased_fifteen` and `rebased_sixteen` typical's
 saved day-eight end loaded under day nine, its day-nine end under day eleven, its day-eleven end under day twelve, its
-day-twelve end under day fifteen and its day-fifteen end under day sixteen; `chapter_end` a chapter's play
+day-twelve end under day fifteen, its day-fifteen end under day sixteen and its day-sixteen end under day eighteen;
+`chapter_end` a chapter's play
 beside its saved end and `rebased_inputs` a saved rebased save's stamped inputs beside today's (ends.py). A test reading
 one is marked playthrough."""
 from collections import Counter
@@ -23,7 +24,7 @@ from tests.dayone import cures
 from tests.ladder import readout
 from tests.worth import readout as worth
 from tests.weektwo.rebased import Rebased
-from tests.weektwo.routes import CHAPTERS, eleven, fifteen, nine, saved_end, sixteen, twelve, week2
+from tests.weektwo.routes import CHAPTERS, eighteen, eleven, fifteen, nine, saved_end, sixteen, twelve, week2
 
 EIGHT_PLAYS = frozenset({"eight_route", "eight_counts", "week_part", "two_am_eight_run", "nine_route", "nine_counts",
                          "nine_marks", "eight_marks", "two_am_nine_run", "week_days", "rebased_eight", "eleven_route",
@@ -32,10 +33,12 @@ EIGHT_PLAYS = frozenset({"eight_route", "eight_counts", "week_part", "two_am_eig
                          "twelve_cures", "twelve_ladder", "eleven_marks", "twelve_marks", "chapter_end", "rebased_inputs",
                          "fifteen_route", "fifteen_counts", "two_am_fifteen_run", "fifteen_cures",
                          "fifteen_marks", "fifteen_worth", "sixteen_route", "sixteen_counts", "two_am_sixteen_run",
-                         "sixteen_cures", "sixteen_marks", "rebased_fifteen"})
+                         "sixteen_cures", "sixteen_marks", "rebased_fifteen", "eighteen_route", "eighteen_counts",
+                         "two_am_eighteen_run", "eighteen_cures", "eighteen_marks", "rebased_sixteen"})
 
 
-ROUTE_PLAYS = ("eight_route", "nine_route", "eleven_route", "twelve_route", "fifteen_route", "sixteen_route")
+ROUTE_PLAYS = ("eight_route", "nine_route", "eleven_route", "twelve_route", "fifteen_route", "sixteen_route",
+               "eighteen_route")
 """The route fixtures in the order their plays build on each other (each chapter's play is the one before it played on)."""
 
 
@@ -48,7 +51,7 @@ def played_first(item: pytest.Item) -> tuple[int, int]:
 
 
 AFTER = {"rebased_eight": "nine", "rebased_nine": "eleven", "rebased_eleven": "twelve", "rebased_twelve": "twelve",
-         "rebased_fifteen": "sixteen"}
+         "rebased_fifteen": "sixteen", "rebased_sixteen": "eighteen"}
 """The chapter whose play each saved-end fixture's test plays on."""
 
 
@@ -339,3 +342,38 @@ def sixteen_cures() -> list[str]:
 @pytest.fixture(scope="session")
 def rebased_fifteen() -> Rebased:
     return rebased.from_saved("fifteen")
+
+
+@pytest.fixture(scope="session")
+def eighteen_route(request: pytest.FixtureRequest) -> tuple[str, DayTwoPlayer]:
+    name: str = request.param
+    return name, eighteen(name)
+
+
+@pytest.fixture(scope="session")
+def eighteen_counts() -> tuple[DayTwoPlayer, list[counters.Counts]]:
+    p = eighteen("typical")
+    return p, verdicts.counts(p, verdicts.EIGHTEEN, verdicts.typical_decided("eighteen"))
+
+
+@pytest.fixture(scope="session")
+def eighteen_marks() -> dict[str, str]:
+    """The typical route's visits marked for the readout (daytwo/checks.marks), read in setup."""
+    return checks2.marks(eighteen("typical"), first=1)
+
+
+@pytest.fixture(scope="session")
+def two_am_eighteen_run() -> tuple[Measured, Measured]:
+    return verdicts.two_am(0, "eighteen")
+
+
+@pytest.fixture(scope="session")
+def eighteen_cures() -> list[str]:
+    """The cures gate over typical's play from B15's landing: every chip shown has a cure on offer."""
+    p = eighteen("typical")
+    return cures.uncured(p, p.landed_at["B15"])
+
+
+@pytest.fixture(scope="session")
+def rebased_sixteen() -> Rebased:
+    return rebased.from_saved("sixteen")

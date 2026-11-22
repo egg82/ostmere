@@ -1,4 +1,4 @@
-"""Every subject the page has shown in a chapter of week two and days fifteen and sixteen is one the full condition editor offers
+"""Every subject the page has shown in a chapter of week two and days fifteen, sixteen and eighteen is one the full condition editor offers
 (tests/rule_subjects.py; week one's own is test_weekone_rule_subjects.py). Each chapter's typical play is read from
 the save it starts on, so a chapter costs its own play alone. Ids only (CLAUDE.md, "Never spoil the owner")."""
 import pytest
@@ -58,6 +58,11 @@ def sixteen_views(sixteen_route: Route) -> list[w.View]:
     return chapter_views("sixteen", sixteen_route)
 
 
+@pytest.fixture(scope="session")
+def eighteen_views(eighteen_route: Route) -> list[w.View]:
+    return chapter_views("eighteen", eighteen_route)
+
+
 @pytest.mark.parametrize("eight_route", TYPICAL, indirect=True)
 def test_every_subject_shown_on_day_eight_is_offered(content: cm.Content, eight_views: list[w.View]):
     assert rule_subjects.unoffered(content, eight_views) == []
@@ -86,3 +91,8 @@ def test_every_subject_shown_on_day_fifteen_is_offered(content: cm.Content, fift
 @pytest.mark.parametrize("sixteen_route", TYPICAL, indirect=True)
 def test_every_subject_shown_on_day_sixteen_is_offered(content: cm.Content, sixteen_views: list[w.View]):
     assert rule_subjects.unoffered(content, sixteen_views) == []
+
+
+@pytest.mark.parametrize("eighteen_route", TYPICAL, indirect=True)
+def test_every_subject_shown_on_day_eighteen_is_offered(content: cm.Content, eighteen_views: list[w.View]):
+    assert rule_subjects.unoffered(content, eighteen_views) == []
