@@ -137,8 +137,9 @@ use that teaches it, and every number can show where it comes from (some of Orb'
     before the page states them (the check that every gate met was stated);
   - arcana (60, 10, 300): at 900 story gates are met before the page states them (the check that every gate met was
     stated), one of them by a level find that lands the moment its own gate opens;
-  - melee: 900 on the hunts and spar. Its levels speed the hunt, so the cap-loss readout shows where pelt and
-    `wraps_sewn` meet their caps;
+  - melee: 900 on the hunts and spar. Its levels speed the hunt and, from level 5, add 500 bp each to the hands' side
+    strength, so lost hunt fights fall with melee (the makers readout's `hunt_lost`) and the cap-loss readout shows
+    where pelt and `wraps_sewn` meet their caps;
   - cooking (stew 36, fungus_stew 18, catch_broth 300): at 900 stew leaves the babysitter with no dry wood on day five,
     the cold chip shown and no cure on offer (the week's cures check), and fungus_stew leaves days nine, eleven and
     twelve losing smoked to its cap; day fifteen's barley_stew is at 900;

@@ -324,27 +324,27 @@ levels = [
   { level = 2, pays_key = "pays_hunt_side" },
   { level = 3, pays_key = "pays_melee_find" },
   { level = 4, pays_key = "pays_hunt_side" },
-  { level = 5, pays_key = "pays_hunt_faster" },
-  { level = 6, pays_key = "pays_hunt_faster" },
-  { level = 7, pays_key = "pays_hunt_faster" },
-  { level = 8, pays_key = "pays_hunt_faster" },
-  { level = 9, pays_key = "pays_hunt_faster" },
-  { level = 10, pays_key = "pays_hunt_faster" },
-  { level = 11, pays_key = "pays_hunt_faster" },
-  { level = 12, pays_key = "pays_hunt_faster" },
-  { level = 13, pays_key = "pays_hunt_faster" },
-  { level = 14, pays_key = "pays_hunt_faster" },
-  { level = 15, pays_key = "pays_hunt_faster" },
-  { level = 16, pays_key = "pays_hunt_faster" },
-  { level = 17, pays_key = "pays_hunt_faster" },
-  { level = 18, pays_key = "pays_hunt_faster" },
-  { level = 19, pays_key = "pays_hunt_faster" },
-  { level = 20, pays_key = "pays_hunt_faster" },
-  { level = 21, pays_key = "pays_hunt_faster" },
-  { level = 22, pays_key = "pays_hunt_faster" },
-  { level = 23, pays_key = "pays_hunt_faster" },
-  { level = 24, pays_key = "pays_hunt_faster" },
-  { level = 25, pays_key = "pays_hunt_faster" },
+  { level = 5, pays_key = "pays_hunt_stronger" },
+  { level = 6, pays_key = "pays_hunt_stronger" },
+  { level = 7, pays_key = "pays_hunt_stronger" },
+  { level = 8, pays_key = "pays_hunt_stronger" },
+  { level = 9, pays_key = "pays_hunt_stronger" },
+  { level = 10, pays_key = "pays_hunt_stronger" },
+  { level = 11, pays_key = "pays_hunt_stronger" },
+  { level = 12, pays_key = "pays_hunt_stronger" },
+  { level = 13, pays_key = "pays_hunt_stronger" },
+  { level = 14, pays_key = "pays_hunt_stronger" },
+  { level = 15, pays_key = "pays_hunt_stronger" },
+  { level = 16, pays_key = "pays_hunt_stronger" },
+  { level = 17, pays_key = "pays_hunt_stronger" },
+  { level = 18, pays_key = "pays_hunt_stronger" },
+  { level = 19, pays_key = "pays_hunt_stronger" },
+  { level = 20, pays_key = "pays_hunt_stronger" },
+  { level = 21, pays_key = "pays_hunt_stronger" },
+  { level = 22, pays_key = "pays_hunt_stronger" },
+  { level = 23, pays_key = "pays_hunt_stronger" },
+  { level = 24, pays_key = "pays_hunt_stronger" },
+  { level = 25, pays_key = "pays_hunt_stronger" },
 ]
 
 [[triggers]]
@@ -366,107 +366,107 @@ outcome = { modifiers = [{ target = "side", id = "hands", kind = "add_bp", amoun
 [[triggers]]
 id = "t_melee_5"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 5 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_5" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_5" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_6"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 6 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_6" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_6" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_7"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 7 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_7" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_7" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_8"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 8 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_8" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_8" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_9"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 9 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_9" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_9" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_10"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 10 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_10" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_10" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_11"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 11 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_11" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_11" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_12"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 12 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_12" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_12" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_13"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 13 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_13" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_13" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_14"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 14 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_14" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_14" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_15"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 15 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_15" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_15" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_16"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 16 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_16" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_16" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_17"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 17 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_17" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_17" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_18"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 18 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_18" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_18" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_19"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 19 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_19" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_19" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_20"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 20 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_20" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_20" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_21"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 21 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_21" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_21" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_22"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 22 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_22" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_22" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_23"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 23 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_23" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_23" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_24"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 24 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_24" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_24" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 [[triggers]]
 id = "t_melee_25"
 when = { test = "at_least", subject_kind = "skill_level", id = "melee", value = 25 }
-outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_25" }] }
+outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", amount_bp = 11000, source = "melee_25" }, { target = "side", id = "hands", kind = "add_bp", amount_bp = 500, source = "melee" }] }
 
 # ---------- the journal ----------
 
@@ -583,6 +583,7 @@ skill_melee = "Melee"
 pays_hunt_side = "{pct} hunting strength"
 pays_melee_find = "a pelt"
 pays_hunt_faster = "{pct} hunting speed"
+pays_hunt_stronger = "{pct} hunting speed, {pct_b} hunting strength"
 l_melee_3 = "a wolf lies stiff under the thorn. you take the pelt."
 l_combat_first = "{n2} looks from his headless shaft to the thorn."
 l_hurt = "you favour one side and lift with the other."

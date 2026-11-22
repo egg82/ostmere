@@ -6,8 +6,8 @@ chapter six: 9 visits on typical
    V27 gap   9.2 h  spend 25  decide  1
    V28 gap   4.2 h  spend 25  decide  1
    V29 gap   3.2 h  spend 25  decide  1
-   V30 gap   9.2 h  spend 25  decide  0
+   V30 gap   9.2 h  spend 25  decide  0  [wait, 2 lines]
    V31 gap   4.2 h  spend 24  decide  0  [edge]
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 143, decide 6; 8h+: 3 returns, spend 75, decide 3
-  cap loss at the end, away 8 h: damp_wood 5%, dry_wood 31%, roots 40%, smoked 30%, stones 13%
-  cap loss at the end, away 24 h: damp_wood 5%, dry_wood 33%, roots 39%, smoked 48%, stones 13%
+  cap loss at the end, away 8 h: damp_wood 5%, dry_wood 41%, roots 31%, smoked 34%, stones 18%
+  cap loss at the end, away 24 h: damp_wood 5%, dry_wood 40%, roots 31%, smoked 51%, stones 17%

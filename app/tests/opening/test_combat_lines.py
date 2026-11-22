@@ -80,4 +80,4 @@ def test_every_side_strengths_source_has_a_label_the_fight_panel_shows(everythin
     content = Game(o, ruleset(o, "test", 1)).content()
     assert len(side_sources(o)) >= 6 and unworded(o, content) == []
     no_melee = content.model_copy(update={"skill_infos": [s for s in content.skill_infos if s.skill != "melee"]})
-    assert unworded(o, no_melee) == ["trigger t_melee_2: melee", "trigger t_melee_4: melee"]
+    assert unworded(o, no_melee) == [f"trigger t_melee_{n}: melee" for n in (2, 4, *range(5, 26))]
