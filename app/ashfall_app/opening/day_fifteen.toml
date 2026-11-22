@@ -49,7 +49,7 @@ outcome = { stores = [{ store = "beams", items = 1 }] }
 [[town_cards]]
 id = "{lane}_pull_beams"
 twin_of = "pull_beams"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_pull_beams"
 work_s = 1200
@@ -263,7 +263,7 @@ outcome = { stores = [{ store = "barley", items = 2 }] }
 [[town_cards]]
 id = "{lane}_reap"
 twin_of = "reap"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
 presentation = "action"
 label_key = "c_lane_reap"
 work_s = 1200
@@ -294,7 +294,7 @@ outcome = { stores = [{ store = "stew", items = 4 }] }
 [[town_cards]]
 id = "{lane}_barley_stew"
 twin_of = "barley_stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_barley_stew"
 upside_key = "up_stew"
@@ -372,7 +372,7 @@ inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
 [[town_cards]]
 id = "{lane}_cover_beds"
 twin_of = "cover_beds"
-lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "g_field"]
+lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_cover_beds"
 upside_key = "up_cover_beds"
@@ -620,7 +620,7 @@ outcome = { stores = [{ store = "cordwood", items = 1 }] }
 [[town_cards]]
 id = "{lane}_stack_cordwood"
 twin_of = "stack_cordwood"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_stack_cordwood"
 upside_key = "up_stack_cordwood"

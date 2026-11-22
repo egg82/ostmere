@@ -1,4 +1,4 @@
-"""Days eight, nine, eleven, twelve, fifteen and sixteen as the routes play them (daythree/chapter.Later): which content step is which story id, read off a save,
+"""Days eight, nine, eleven, twelve, fifteen, sixteen and eighteen as the routes play them (daythree/chapter.Later): which content step is which story id, read off a save,
 and the chapter's sinks, order cards, shares and each route's split of the town, on the rules day three loads (every
 chapter in writing merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import (
@@ -38,6 +38,10 @@ SIXTEEN = Landings(
     {"T4": ("t_rows_black",), "SL24": ("t_road_marked",), "SL25": ("t_hall_hearth",), "T5": ("t_rime_ring",),
      "T6": ("t_covers_torn",), "SL26": ("t_sun_back",), "B15": ("t_b15",)},
     {"A36": ("mark_road", "n2_mark_road"), "A35": ("try_stone",)}, {}, {"O-road": OfferId("o_road")})
+EIGHTEEN = Landings(
+    {"SL27": ("t_first_working",), "T8": ("t_pot_out",), "arr15": ("t_starer",), "B16": ("t_b16",)}, {}, {},
+    {"T7": OfferId("o_choir"), "O-choir": OfferId("o_choir"), "T9": OfferId("o_cutter"), "O-cutter": OfferId("o_cutter")})
+"""T7 and T9 are their offers' showing (each offer carries its beat's lines); arr15 the fifteenth arrival."""
 LAST_NIGHT, HUNT_BEAR, BEAR_SIGN = CardId("sit_last_night"), CardId("hunt_bear"), StoreId("bear_sign")
 CUT_STAKES = CardId("cut_stakes")
 ORDER_STORES = ("stakes", "roof_ash", "cord", "pelt", "wind_torn", "stones", "tallow")
@@ -248,3 +252,24 @@ def day_sixteen(route: str) -> Later:
         answers=(*fifteen.answers, *asks_sixteen(route)),
         shares=(*fifteen.shares, Share(SHOVEL_ROAD, SHOVEL.get(route, SHOVEL["typical"]))),
         cures=fifteen.cures, own=fifteen.own)
+
+
+CHOIR = {"typical": AnswerId("o_choir_road"), "sharp": AnswerId("o_choir_beds")}
+CUTTER = {"typical": AnswerId("o_cutter_beds"), "sharp": AnswerId("o_cutter_road")}
+"""Where the newcomers go first, as each route answers (a route not named follows typical): both answers of each
+measured. The whenever player sets the kind's rule from its first answer, which answers the second."""
+
+
+def day_eighteen(route: str) -> Later:
+    """B15 to B16's visit: day sixteen's sinks, rules, split and shares carried on, and the two arrival offers answered
+    when they show; the newcomers' shares are their joins'."""
+    sixteen = day_sixteen(route)
+    arrivals = ((OfferId("o_choir"), CHOIR.get(route, CHOIR["typical"])),
+                (OfferId("o_cutter"), CUTTER.get(route, CUTTER["typical"])))
+    return Later(
+        start="B15", stop="B16",
+        sinks=Chapter(trips=sixteen.sinks.trips, comforts=sixteen.sinks.comforts,
+                      arrivals=(*sixteen.sinks.arrivals, *arrivals)),
+        steps=(), order_cards=sixteen.order_cards, keeps=sixteen.keeps,
+        landed=EIGHTEEN.of, news=("SL27", "T7", "O-choir", "T8", "T9", "O-cutter", "arr15", "B16"),
+        answers=sixteen.answers, shares=sixteen.shares, cures=sixteen.cures, own=sixteen.own)

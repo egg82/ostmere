@@ -15,7 +15,7 @@ from ashfall_app.opening.ui_keys import UI_KEYS
 from ashfall_app.opening.convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
 from ashfall_app.opening.schema import (
-    B7, CHAPTERS, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,
+    B7, CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,
 )
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.playthrough import Player, opening, opening_rules
@@ -118,13 +118,16 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
     (warmth)."""
     made = {s.store: s.made_by for s in content.store_infos}
     assert made["stones"] == shipped(["scavenge", "n1_scavenge", "n2_scavenge"], (DAY_FIVE, ["n3_scavenge"]),
-                                     (DAY_ELEVEN, ["n5_scavenge", "n7_scavenge", "n6_scavenge", "g_field_scavenge"]))
-    assert made["roots"] == shipped(["forage", "n1_forage", "n2_forage"], (DAY_FIVE, ["n3_forage"]), (DAY_ELEVEN, ["n5_forage", "n7_forage", "n6_forage", "g_field_forage"]))
+                                     (DAY_ELEVEN, ["n5_scavenge", "n7_scavenge", "n6_scavenge", "g_field_scavenge"]),
+                                     (DAY_EIGHTEEN, ["n10_scavenge", "n11_scavenge", "n12_scavenge", "n8_scavenge", "n9_scavenge"]))
+    assert made["roots"] == shipped(["forage", "n1_forage", "n2_forage"], (DAY_FIVE, ["n3_forage"]), (DAY_ELEVEN, ["n5_forage", "n7_forage", "n6_forage", "g_field_forage"]),
+                                    (DAY_EIGHTEEN, ["n10_forage", "n11_forage", "n12_forage", "n8_forage", "n9_forage"]))
     assert made["dry_wood"] == shipped(["lay_to_dry"], (DAY_FIVE, ["hand_on_stone"]), (DAY_TWELVE, ["stone_ring"]),
                                       (DAY_SIXTEEN, ["take_child"]))
     assert made["damp_wood"] == shipped(["gather_wood", "woodcutting", "n1_gather", "n1_cut", "n2_gather", "n2_cut"],
                                         (DAY_FIVE, ["n3_gather"]),
-                                        (DAY_ELEVEN, ["n5_gather", "n5_cut", "n7_gather", "n7_cut", "n6_gather", "n6_cut", "g_field_cut"]))
+                                        (DAY_ELEVEN, ["n5_gather", "n5_cut", "n7_gather", "n7_cut", "n6_gather", "n6_cut", "g_field_cut"]),
+                                        (DAY_EIGHTEEN, ["n10_cut", "n11_cut", "n12_cut", "n8_cut", "n9_cut"]))
     assert made["flint"] == shipped(["scavenge", "field_track"], (DAY_FIFTEEN, ["pull_beams"]), (DAY_SIXTEEN, ["shovel_road"]))
     assert made["nails"] == ["scavenge"]
     assert made["warmth"] == []

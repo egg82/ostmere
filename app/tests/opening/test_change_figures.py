@@ -111,7 +111,7 @@ def test_every_track_card_is_served_what_its_reach_pays(content: Content):
     declares."""
     cards = {c.card: c.change_bp for c in content.card_infos}
     track = sorted(c for c in cards if c.endswith("field_track"))
-    assert len(track) == 8 and [cards[c] for c in track] == [[1000]] * 8
+    assert len(track) == 13 and [cards[c] for c in track] == [[1000]] * 13
 
 
 def test_a_card_that_holds_entries_serves_them_and_the_rest_serve_none(content: Content):

@@ -585,7 +585,7 @@ cap_items = 1
 [[town_cards]]
 id = "{lane}_forage"
 twin_of = "forage"
-lanes = ["n2", "n3", "n5", "n6", "n7", "g_field"]
+lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_forage"
 work_s = 120
@@ -603,7 +603,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 [[town_cards]]
 id = "{lane}_cut"
 twin_of = "woodcutting"
-lanes = ["n2", "n5", "n6", "n7", "g_field"]
+lanes = ["n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_woodcutting"
 work_s = 12
@@ -612,7 +612,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 [[town_cards]]
 id = "{lane}_scavenge"
 twin_of = "scavenge"
-lanes = ["n2", "n3", "n5", "n6", "n7", "g_field"]
+lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_scavenge"
 work_s = 48
@@ -675,7 +675,7 @@ outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split
 [[town_cards]]
 id = "{lane}_dig_clay"
 twin_of = "dig_clay"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_dig_clay"
 work_s = 10
@@ -684,7 +684,7 @@ outcome = { stores = [{ store = "clay", items = 1 }] }
 [[town_cards]]
 id = "{lane}_stew"
 twin_of = "stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
@@ -699,7 +699,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 [[town_cards]]
 id = "{lane}_field_track"
 twin_of = "field_track"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_field_track"
 upside_key = "up_field_track"

@@ -30,7 +30,7 @@ def test_shipped_content_passes(opening: Opening):
     check_opening(opening)
 
 
-@pytest.mark.parametrize("slot", ["{zzz}", "{n9}", "{pct}", "{n}", "{d}"])
+@pytest.mark.parametrize("slot", ["{zzz}", "{n99}", "{pct}", "{n}", "{d}"])
 def test_a_line_holding_a_slot_nothing_fills_is_refused(opening: Opening, slot: str):
     key = line_key(opening)
     with pytest.raises(ValueError, match=rf"text {key}.*{slot}"):

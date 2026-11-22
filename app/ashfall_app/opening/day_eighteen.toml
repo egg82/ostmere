@@ -1,0 +1,670 @@
+# Day eighteen: from B15 (the field stone) through SL27, T7-T9 and the arrivals the table draws to B16 (the empty
+# place), as data merged after day_sixteen.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the
+# owner. Spec: content/team/week-three.md, "Day eighteen"; numbers: content/team/week-three-numbers.md.
+version = 1
+end_feature = "place_empty"
+
+# ---------- clocks ----------
+
+# Never drawn: game hours since B15, for O-choir's moment.
+[[stores]]
+id = "b15_clock"
+label_key = "store_b15_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "b15_clock"
+label_key = "action_b15_clock"
+makes = [{ store = "b15_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_b15_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "spellcraft", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "b15_clock" }] }
+
+# The count of who has come held 10 since day three; the table draws a fifteenth, so from the roof on it holds 20.
+[[triggers]]
+id = "t_hall_count"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "belonging", value = 1 }
+outcome = { modifiers = [{ target = "cap", id = "arrivals", kind = "mul_bp", amount_bp = 20000, source = "t_hall_count" }] }
+
+[[triggers]]
+id = "t_b15_2h"
+when = { test = "at_least", subject_kind = "store", id = "b15_clock", value = 2 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "b15_2h" }] }
+
+# Never drawn: game hours since the three joined, for T8 and O-cutter.
+[[stores]]
+id = "choir_clock"
+label_key = "store_choir_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "choir_clock"
+label_key = "action_choir_clock"
+makes = [{ store = "choir_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_choir_6h"
+when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 6 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "choir_6h" }] }
+
+# Never drawn: game hours since the fifteenth arrival sat down, for B16.
+[[stores]]
+id = "starer_clock"
+label_key = "store_starer_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "starer_clock"
+label_key = "action_starer_clock"
+makes = [{ store = "starer_clock", items_per_hour = 1 }]
+
+# B16's sharp floor (week-three-numbers.md, "Landing bands"): the fifteenth arrival never sits down before 369 h of save
+# time, so B16 never lands before 377 h.
+[[triggers]]
+id = "t_floor_starer"
+when = { test = "after_time", value = 1328400 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "starer_floor" }] }
+
+# ---------- SL27: the first working ----------
+
+[[triggers]]
+id = "t_first_working"
+when = { test = "at_least", subject_kind = "card_count", id = "warm_beds", value = 1 }
+outcome = { line_keys = ["l_first_working_1", "l_first_working_2"] }
+
+# ---------- the kind of ask the arrivals are ----------
+
+# Where a newcomer goes to work first: the food or the building. Not the arrival kind (day three's), whose roles ask who
+# builds a newcomer's room; the hall houses these. A rule set on the first answers every later ask of the kind, so an
+# arrival the table draws while the player is away starts work at once. Either answer is a share in the town's split,
+# changed there at any time.
+[[offer_kinds]]
+kind = "work"
+roles = [{ role = "food", label_key = "k_work_food" }, { role = "build", label_key = "k_work_build" }]
+
+# ---------- T7 and O-choir: three at the door ----------
+
+# The tier's count reaches 24 meals, two hours past B15, once the road is found (the "build" answer's work is clearing
+# it). All three join on either answer, each at a whole share: reaping the beds, or clearing the road's bed. The table
+# feeds three more, a smoked an hour (week-three.md, "The table").
+[[offers]]
+id = "o_choir"
+text_key = "o_choir"
+kind = "work"
+gate = { test = "at_least", subject_kind = "store", id = "meals", value = 24 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "b15_2h", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "road_marked", value = 1 },
+]
+line_keys = ["l_choir_1", "l_choir_2"]
+
+[[offers.answers]]
+id = "o_choir_beds"
+label_key = "a_choir_beds"
+cost_key = "a_table_cost"
+role = "food"
+[offers.answers.outcome]
+line_keys = ["l_choir_beds"]
+stores = [{ store = "arrivals", items = 3 }]
+unlocks = [
+  { unlock_kind = "feature", id = "choir_joined" },
+  { unlock_kind = "card", id = "n8_reap" },
+  { unlock_kind = "card", id = "n9_reap" },
+  { unlock_kind = "card", id = "n10_reap" },
+]
+joins = [
+  { lane = "n8", mix = "town:camp", card = "n8_reap", own_split = true },
+  { lane = "n9", mix = "town:camp", card = "n9_reap", own_split = true },
+  { lane = "n10", mix = "town:camp", card = "n10_reap", own_split = true },
+]
+modifiers = [{ target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_choir_beds" }]
+
+[[offers.answers]]
+id = "o_choir_road"
+label_key = "a_choir_road"
+cost_key = "a_table_cost"
+role = "build"
+[offers.answers.outcome]
+line_keys = ["l_choir_road"]
+stores = [{ store = "arrivals", items = 3 }]
+unlocks = [
+  { unlock_kind = "feature", id = "choir_joined" },
+  { unlock_kind = "card", id = "n8_clear_road" },
+  { unlock_kind = "card", id = "n9_clear_road" },
+  { unlock_kind = "card", id = "n10_clear_road" },
+]
+joins = [
+  { lane = "n8", mix = "town:camp", card = "n8_clear_road", own_split = true },
+  { lane = "n9", mix = "town:camp", card = "n9_clear_road", own_split = true },
+  { lane = "n10", mix = "town:camp", card = "n10_clear_road", own_split = true },
+]
+modifiers = [{ target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_choir_road" }]
+
+# Townsfolk the player's rules set, as the family.
+[[lanes]]
+id = "n8"
+label_key = "lane_n8"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "feature", id = "choir_joined" }, label_key = "lane_n8_named" }]
+name_key = "name_n8"
+
+[[lanes]]
+id = "n9"
+label_key = "lane_n9"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "feature", id = "choir_joined" }, label_key = "lane_n9_named" }]
+name_key = "name_n9"
+
+[[lanes]]
+id = "n10"
+label_key = "lane_n10"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "feature", id = "choir_joined" }, label_key = "lane_n10_named" }]
+name_key = "name_n10"
+
+# Their everyday work from the join (decisions/people.md, "Who can do which job"): every town card the family has, but
+# gathering by hand, which their cutting beats outright (choice_checks.py). Each eats stew and roots as the pair do; the
+# table is the meat on top. Its own trigger, as the answers' outcomes are released.
+[[triggers]]
+id = "t_choir_settles"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "action", id = "choir_clock" },
+  { unlock_kind = "action", id = "n8_eating" },
+  { unlock_kind = "action", id = "n9_eating" },
+  { unlock_kind = "action", id = "n10_eating" },
+  { unlock_kind = "card", id = "n8_reap" },
+  { unlock_kind = "card", id = "n8_clear_road" },
+  { unlock_kind = "card", id = "n8_forage" },
+  { unlock_kind = "card", id = "n8_cut" },
+  { unlock_kind = "card", id = "n8_stakes" },
+  { unlock_kind = "card", id = "n8_watch" },
+  { unlock_kind = "card", id = "n8_pick" },
+  { unlock_kind = "card", id = "n8_field_track" },
+  { unlock_kind = "card", id = "n8_weave_wattle" },
+  { unlock_kind = "card", id = "n8_dig_clay" },
+  { unlock_kind = "card", id = "n8_stew" },
+  { unlock_kind = "card", id = "n8_fungus_stew" },
+  { unlock_kind = "card", id = "n8_catch_broth" },
+  { unlock_kind = "card", id = "n9_reap" },
+  { unlock_kind = "card", id = "n9_clear_road" },
+  { unlock_kind = "card", id = "n9_forage" },
+  { unlock_kind = "card", id = "n9_cut" },
+  { unlock_kind = "card", id = "n9_stakes" },
+  { unlock_kind = "card", id = "n9_watch" },
+  { unlock_kind = "card", id = "n9_pick" },
+  { unlock_kind = "card", id = "n9_field_track" },
+  { unlock_kind = "card", id = "n9_weave_wattle" },
+  { unlock_kind = "card", id = "n9_dig_clay" },
+  { unlock_kind = "card", id = "n9_stew" },
+  { unlock_kind = "card", id = "n9_fungus_stew" },
+  { unlock_kind = "card", id = "n9_catch_broth" },
+  { unlock_kind = "card", id = "n10_reap" },
+  { unlock_kind = "card", id = "n10_clear_road" },
+  { unlock_kind = "card", id = "n10_forage" },
+  { unlock_kind = "card", id = "n10_cut" },
+  { unlock_kind = "card", id = "n10_stakes" },
+  { unlock_kind = "card", id = "n10_watch" },
+  { unlock_kind = "card", id = "n10_pick" },
+  { unlock_kind = "card", id = "n10_field_track" },
+  { unlock_kind = "card", id = "n10_weave_wattle" },
+  { unlock_kind = "card", id = "n10_dig_clay" },
+  { unlock_kind = "card", id = "n10_stew" },
+  { unlock_kind = "card", id = "n10_fungus_stew" },
+  { unlock_kind = "card", id = "n10_catch_broth" },
+]
+
+# The everyday cards whose player's card may not be unlocked yet: each once its player's card is (the town twins'
+# idiom, day_fifteen.toml).
+[[triggers]]
+id = "t_choir_scavenge"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "scavenge", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_scavenge" }, { unlock_kind = "card", id = "n9_scavenge" }, { unlock_kind = "card", id = "n10_scavenge" }] }
+
+[[triggers]]
+id = "t_choir_build_windbreak"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "build_windbreak", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_build_windbreak" }, { unlock_kind = "card", id = "n9_build_windbreak" }, { unlock_kind = "card", id = "n10_build_windbreak" }] }
+
+[[triggers]]
+id = "t_choir_sew_wraps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "sew_wraps", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_sew_wraps" }, { unlock_kind = "card", id = "n9_sew_wraps" }, { unlock_kind = "card", id = "n10_sew_wraps" }] }
+
+[[triggers]]
+id = "t_choir_cord"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "twist_cord", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_cord" }, { unlock_kind = "card", id = "n9_cord" }, { unlock_kind = "card", id = "n10_cord" }] }
+
+[[triggers]]
+id = "t_choir_clear_roofs"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "clear_roofs", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_clear_roofs" }, { unlock_kind = "card", id = "n9_clear_roofs" }, { unlock_kind = "card", id = "n10_clear_roofs" }] }
+
+[[triggers]]
+id = "t_choir_peg_flaps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "peg_flaps", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_peg_flaps" }, { unlock_kind = "card", id = "n9_peg_flaps" }, { unlock_kind = "card", id = "n10_peg_flaps" }] }
+
+[[triggers]]
+id = "t_choir_pull_beams"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "pull_beams", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_pull_beams" }, { unlock_kind = "card", id = "n9_pull_beams" }, { unlock_kind = "card", id = "n10_pull_beams" }] }
+
+[[triggers]]
+id = "t_choir_barley_stew"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "barley_stew", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_barley_stew" }, { unlock_kind = "card", id = "n9_barley_stew" }, { unlock_kind = "card", id = "n10_barley_stew" }] }
+
+[[triggers]]
+id = "t_choir_cover_beds"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "cover_beds", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_cover_beds" }, { unlock_kind = "card", id = "n9_cover_beds" }, { unlock_kind = "card", id = "n10_cover_beds" }] }
+
+[[triggers]]
+id = "t_choir_stack_cordwood"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stack_cordwood", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n8_stack_cordwood" }, { unlock_kind = "card", id = "n9_stack_cordwood" }, { unlock_kind = "card", id = "n10_stack_cordwood" }] }
+
+[[standing]]
+id = "n8_eating"
+label_key = "action_n8_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n8", amount_bp = 1500 }]
+
+[[standing]]
+id = "n9_eating"
+label_key = "action_n9_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n9", amount_bp = 1500 }]
+
+[[standing]]
+id = "n10_eating"
+label_key = "action_n10_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n10", amount_bp = 1500 }]
+
+# ---------- T8: the pot ----------
+
+# Three hours past the join: a line and a scene, never a store taken (the table's cost rose at the join).
+[[triggers]]
+id = "t_pot_out"
+when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 3 }
+outcome = { line_keys = ["l_pot_out_1", "l_pot_out_2"] }
+
+# ---------- T9 and O-cutter: the man and his sister ----------
+
+# The tier's count at 40, six hours past the three's join. Both join on either answer: he to the road, his always rule
+# installed (he has cut roads: first out, not faster); her first work by the answer, the kind's roles. The table feeds
+# two more.
+[[offers]]
+id = "o_cutter"
+text_key = "o_cutter"
+kind = "work"
+gate = { test = "at_least", subject_kind = "store", id = "meals", value = 40 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "choir_6h", value = 1 }]
+line_keys = ["l_road_pair_1", "l_road_pair_2", "l_road_pair_3"]
+
+[[offers.answers]]
+id = "o_cutter_beds"
+label_key = "a_pair_beds"
+cost_key = "a_table_cost"
+role = "food"
+[offers.answers.outcome]
+line_keys = ["l_road_pair_beds"]
+stores = [{ store = "arrivals", items = 2 }]
+unlocks = [
+  { unlock_kind = "feature", id = "pair_joined_road" },
+  { unlock_kind = "card", id = "n11_clear_road" },
+  { unlock_kind = "card", id = "n12_reap" },
+]
+orders = [{ tap_card = "n11_clear_road", first = true }]
+joins = [
+  { lane = "n11", mix = "town:camp", card = "n11_clear_road", own_split = true },
+  { lane = "n12", mix = "town:camp", card = "n12_reap", own_split = true },
+]
+modifiers = [{ target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_cutter_beds" }]
+
+[[offers.answers]]
+id = "o_cutter_road"
+label_key = "a_pair_road"
+cost_key = "a_table_cost"
+role = "build"
+[offers.answers.outcome]
+line_keys = ["l_road_pair_road"]
+stores = [{ store = "arrivals", items = 2 }]
+unlocks = [
+  { unlock_kind = "feature", id = "pair_joined_road" },
+  { unlock_kind = "card", id = "n11_clear_road" },
+  { unlock_kind = "card", id = "n12_clear_road" },
+]
+orders = [{ tap_card = "n11_clear_road", first = true }]
+joins = [
+  { lane = "n11", mix = "town:camp", card = "n11_clear_road", own_split = true },
+  { lane = "n12", mix = "town:camp", card = "n12_clear_road", own_split = true },
+]
+modifiers = [{ target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_cutter_road" }]
+
+[[lanes]]
+id = "n11"
+label_key = "lane_n11"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined_road" }, label_key = "lane_n11_named" }]
+name_key = "name_n11"
+
+[[lanes]]
+id = "n12"
+label_key = "lane_n12"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined_road" }, label_key = "lane_n12_named" }]
+name_key = "name_n12"
+
+# Their everyday work from the join, as the three's.
+[[triggers]]
+id = "t_cutter_settles"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "action", id = "n11_eating" },
+  { unlock_kind = "action", id = "n12_eating" },
+  { unlock_kind = "card", id = "n11_reap" },
+  { unlock_kind = "card", id = "n11_clear_road" },
+  { unlock_kind = "card", id = "n11_forage" },
+  { unlock_kind = "card", id = "n11_cut" },
+  { unlock_kind = "card", id = "n11_stakes" },
+  { unlock_kind = "card", id = "n11_watch" },
+  { unlock_kind = "card", id = "n11_pick" },
+  { unlock_kind = "card", id = "n11_field_track" },
+  { unlock_kind = "card", id = "n11_weave_wattle" },
+  { unlock_kind = "card", id = "n11_dig_clay" },
+  { unlock_kind = "card", id = "n11_stew" },
+  { unlock_kind = "card", id = "n11_fungus_stew" },
+  { unlock_kind = "card", id = "n11_catch_broth" },
+  { unlock_kind = "card", id = "n12_reap" },
+  { unlock_kind = "card", id = "n12_clear_road" },
+  { unlock_kind = "card", id = "n12_forage" },
+  { unlock_kind = "card", id = "n12_cut" },
+  { unlock_kind = "card", id = "n12_stakes" },
+  { unlock_kind = "card", id = "n12_watch" },
+  { unlock_kind = "card", id = "n12_pick" },
+  { unlock_kind = "card", id = "n12_field_track" },
+  { unlock_kind = "card", id = "n12_weave_wattle" },
+  { unlock_kind = "card", id = "n12_dig_clay" },
+  { unlock_kind = "card", id = "n12_stew" },
+  { unlock_kind = "card", id = "n12_fungus_stew" },
+  { unlock_kind = "card", id = "n12_catch_broth" },
+]
+
+# The same, for the pair.
+[[triggers]]
+id = "t_cutter_scavenge"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "scavenge", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_scavenge" }, { unlock_kind = "card", id = "n12_scavenge" }] }
+
+[[triggers]]
+id = "t_cutter_build_windbreak"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "build_windbreak", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_build_windbreak" }, { unlock_kind = "card", id = "n12_build_windbreak" }] }
+
+[[triggers]]
+id = "t_cutter_sew_wraps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "sew_wraps", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_sew_wraps" }, { unlock_kind = "card", id = "n12_sew_wraps" }] }
+
+[[triggers]]
+id = "t_cutter_cord"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "twist_cord", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_cord" }, { unlock_kind = "card", id = "n12_cord" }] }
+
+[[triggers]]
+id = "t_cutter_clear_roofs"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "clear_roofs", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_clear_roofs" }, { unlock_kind = "card", id = "n12_clear_roofs" }] }
+
+[[triggers]]
+id = "t_cutter_peg_flaps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "peg_flaps", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_peg_flaps" }, { unlock_kind = "card", id = "n12_peg_flaps" }] }
+
+[[triggers]]
+id = "t_cutter_pull_beams"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "pull_beams", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_pull_beams" }, { unlock_kind = "card", id = "n12_pull_beams" }] }
+
+[[triggers]]
+id = "t_cutter_barley_stew"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "barley_stew", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_barley_stew" }, { unlock_kind = "card", id = "n12_barley_stew" }] }
+
+[[triggers]]
+id = "t_cutter_cover_beds"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "cover_beds", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_cover_beds" }, { unlock_kind = "card", id = "n12_cover_beds" }] }
+
+[[triggers]]
+id = "t_cutter_stack_cordwood"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stack_cordwood", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "n11_stack_cordwood" }, { unlock_kind = "card", id = "n12_stack_cordwood" }] }
+
+[[standing]]
+id = "n11_eating"
+label_key = "action_n11_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n11", amount_bp = 1500 }]
+
+[[standing]]
+id = "n12_eating"
+label_key = "action_n12_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n12", amount_bp = 1500 }]
+
+# ---------- the fifteenth arrival ----------
+
+# The tier's count at 56, the pair joined, past the floor: he comes in and sits down, an arrival with no lane (B10's
+# stranger), no offer and nothing asked. His clock starts.
+[[triggers]]
+id = "t_starer"
+when = { test = "at_least", subject_kind = "store", id = "meals", value = 56 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined_road", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "starer_floor", value = 1 },
+]
+outcome = { line_keys = ["l_starer_in"], stores = [{ store = "arrivals", items = 1 }], unlocks = [{ unlock_kind = "action", id = "starer_clock" }] }
+
+# ---------- B16: the empty place ----------
+
+# The morning after: eight hours on his clock. He is the fifteenth (beats.yaml's arrivals 15): his trigger waits on the
+# pair, who wait on the three. Nothing in the numbers changes: the snares are re-tied, not set.
+[[triggers]]
+id = "t_b16"
+when = { test = "at_least", subject_kind = "store", id = "starer_clock", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "belonging", value = 1 }]
+outcome = { line_keys = ["l_b16_1", "l_b16_2", "l_b16_3"], unlocks = [{ unlock_kind = "feature", id = "place_empty" }] }
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b16"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b16" }
+first = { keys = ["n_day_b16"] }
+catchup = { keys = ["j_b16_catchup"] }
+late = { keys = ["j_b16_late"] }
+
+[[subjects]]
+id = "s_n8_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n8", way = "joined" }
+first = { keys = ["j_n8_first"] }
+catchup = { keys = ["j_n8_catchup"] }
+
+[[subjects]]
+id = "s_n9_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n9", way = "joined" }
+first = { keys = ["j_n9_first"] }
+catchup = { keys = ["j_n9_catchup"] }
+
+[[subjects]]
+id = "s_n10_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n10", way = "joined" }
+first = { keys = ["j_n10_first"] }
+catchup = { keys = ["j_n10_catchup"] }
+
+[[subjects]]
+id = "s_n11_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n11", way = "joined" }
+first = { keys = ["j_n11_first"] }
+catchup = { keys = ["j_n11_catchup"] }
+
+[[subjects]]
+id = "s_n12_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n12", way = "joined" }
+first = { keys = ["j_n12_first"] }
+catchup = { keys = ["j_n12_catchup"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "starer_floor"
+
+[[features]]
+id = "b15_2h"
+
+[[features]]
+id = "choir_6h"
+
+[[features]]
+id = "choir_joined"
+
+[[features]]
+id = "pair_joined_road"
+
+[[features]]
+id = "place_empty"
+
+# ---------- text ----------
+
+[beat_lines]
+B16 = ["l_b16_1"]
+
+[line_kinds]
+l_first_working_1 = "story"
+l_first_working_2 = "story"
+l_choir_1 = "story"
+l_choir_2 = "story"
+l_choir_beds = "story"
+l_choir_road = "story"
+l_pot_out_1 = "story"
+l_pot_out_2 = "story"
+l_road_pair_1 = "story"
+l_road_pair_2 = "story"
+l_road_pair_3 = "story"
+l_road_pair_beds = "story"
+l_road_pair_road = "story"
+l_starer_in = "story"
+l_b16_1 = "story"
+l_b16_2 = "story"
+l_b16_3 = "story"
+
+[text]
+store_b15_clock = "clock"
+action_b15_clock = "Clock"
+store_choir_clock = "clock"
+action_choir_clock = "Clock"
+store_starer_clock = "clock"
+action_starer_clock = "Clock"
+l_first_working_1 = "you lay one hand on the camp stone and the other flat on a bed."
+l_first_working_2 = "the rime clears off it like breath off glass. that hand comes up grey."
+k_work_food = "They work the food"
+k_work_build = "They work the building"
+o_choir = "Three women have come for the table. Where do they work first?"
+l_choir_1 = "three women sing for their supper at the hall door. each verse, they wait out a bar."
+l_choir_2 = "{n8}, {n9} and {n10}. they followed the hall's light down the valley."
+a_choir_beds = "To the beds"
+a_choir_road = "To the road"
+a_table_cost = "{pct} smoked at the table"
+l_choir_beds = "by morning the three are out among the beds."
+l_choir_road = "by morning the three are shovelling ash off the road."
+lane_n8 = "The first woman's hands"
+lane_n8_named = "{n8}'s hands"
+name_n8 = "Alice"
+lane_n9 = "The second woman's hands"
+lane_n9_named = "{n9}'s hands"
+name_n9 = "Elizabeth"
+lane_n10 = "The third woman's hands"
+lane_n10_named = "{n10}'s hands"
+name_n10 = "Joan"
+action_n8_eating = "{n8}'s share"
+action_n9_eating = "{n9}'s share"
+action_n10_eating = "{n10}'s share"
+l_pot_out_1 = "{n3} counts heads against the pot and ladles out, herself last."
+l_pot_out_2 = "the ladle comes up empty. she sits down with the bowl anyway."
+o_cutter = "A man and his sister have come along the old road. He takes the road; where does she work first?"
+l_road_pair_1 = "a man and his sister come in along the old road, an axe on his shoulder."
+l_road_pair_2 = "{n11} says he has cut roads. he looks along the marked line and calls it crooked."
+l_road_pair_3 = "at first light he is out on it ahead of everyone. {n12} watches him go."
+a_pair_beds = "She goes to the beds"
+a_pair_road = "She goes to the road"
+l_road_pair_beds = "{n12} goes down to the beds."
+l_road_pair_road = "{n12} takes a shovel and goes out after him."
+lane_n11 = "The man's hands"
+lane_n11_named = "{n11}'s hands"
+name_n11 = "Robert"
+lane_n12 = "His sister's hands"
+lane_n12_named = "{n12}'s hands"
+name_n12 = "Anne"
+action_n11_eating = "{n11}'s share"
+action_n12_eating = "{n12}'s share"
+l_starer_in = "at supper a newcomer sits down at the table's end. nobody asks him anything."
+l_b16_1 = "all through supper the newcomer stares at you across the table. he says nothing."
+l_b16_2 = "in the morning his place is empty, his bowl unwashed."
+l_b16_3 = "in the near runs every snare is re-tied, with the knot your hands tie."
+n_day_b16 = "a man ate with us and looked at me the whole meal. said nothing. gone by morning, his bowl not washed. the near snares retied in the night"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b16_catchup = "a man ate with us and was gone by morning"
+j_b16_late = "nobody saw him go"
+j_n8_first = "three women sang at the door for their supper. {n8} took the low part"
+j_n8_catchup = "three women came in at dusk, singing"
+j_n9_first = "{n9} sings the high part. ate fastest of anyone"
+j_n9_catchup = "met {n9}, one of the three"
+j_n10_first = "{n10} keeps time on the table with two fingers"
+j_n10_catchup = "met {n10}, one of the three"
+j_n11_first = "{n11} came in on the old road with an axe. says he cut roads once"
+j_n11_catchup = "a man came in on the old road with an axe"
+j_n12_first = "{n12}, his sister. hardly a word out of her"
+j_n12_catchup = "met {n12}, his sister"

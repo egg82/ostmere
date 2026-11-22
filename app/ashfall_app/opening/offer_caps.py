@@ -1,7 +1,6 @@
 """The cap a store has for certain when something is offered: its own cap with the cap modifiers of every outcome that
 must already have happened (the chain of what unlocks it, what each outcome waits on, and the camp levels a certain
 card lifts). A rule offered then may let go above the store's first cap, never above this."""
-from collections import deque
 from typing import TYPE_CHECKING
 
 from .convert import amount, levels
@@ -47,23 +46,36 @@ class Chain:
         self.before = self._solve()
 
     def _solve(self) -> dict[str, frozenset[str]]:
-        """A worklist: an outcome is worked again only when one it waits on shrank."""
-        before = {w: frozenset(self.out) for w in self.out}
-        users: dict[str, set[str]] = {}
-        for w, conds in self.waits.items():
-            for x in {x for ways in conds for x in ways}:
-                users.setdefault(x, set()).add(w)
-        todo, queued = deque(self.waits), set(self.waits)
+        """A worklist: an outcome is solved again only when an outcome its conditions read has shrunk. Each set only
+        shrinks from everything, so this reaches the same greatest fixpoint as sweeping until nothing changes. The
+        sets are held as bit masks over the outcomes while solving."""
+        names = list(self.out)
+        bit = {w: 1 << i for i, w in enumerate(names)}
+        everything = (1 << len(names)) - 1
+        before = dict.fromkeys(names, everything)
+        conds = {w: [ways for ways in c if ways] for w, c in self.waits.items()}
+        readers: dict[str, set[str]] = {}
+        for w, c in self.waits.items():
+            for ways in c:
+                for x in ways:
+                    readers.setdefault(x, set()).add(w)
+        todo, queued = list(self.waits), set(self.waits)
         while todo:
-            w = todo.popleft()
+            w = todo.pop()
             queued.discard(w)
-            new = frozenset({w}).union(*(_common(before, ways) for ways in self.waits[w] if ways))
+            new = bit[w]
+            for ways in conds[w]:
+                common = everything
+                for x in ways:
+                    common &= before[x]
+                new |= common
             if new != before[w]:
                 before[w] = new
-                fresh = users.get(w, set()) - queued
-                todo.extend(fresh)
-                queued |= fresh
-        return before
+                for r in readers.get(w, ()):
+                    if r not in queued:
+                        todo.append(r)
+                        queued.add(r)
+        return {w: _names(m, names) for w, m in before.items()}
 
     def unlockers(self, unlock_kind: str, id_: str) -> list[str]:
         return self.unlocked_by.get((unlock_kind, id_), [])
@@ -113,6 +125,16 @@ class Chain:
                 if lv.held and lv.lifted_by:
                     done = done | _common(self.before, [f"card {c} finished" for c in lv.lifted_by])
         return [*(m for w in sorted(done) for m in self.out[w].modifiers), *mods]
+
+
+def _names(mask: int, names: list[str]) -> frozenset[str]:
+    """The outcomes whose bits are set in `mask`, bit i being names[i]."""
+    out: list[str] = []
+    while mask:
+        low = mask & -mask
+        out.append(names[low.bit_length() - 1])
+        mask ^= low
+    return frozenset(out)
 
 
 def _common(before: dict[str, frozenset[str]], ways: list[str]) -> frozenset[str]:

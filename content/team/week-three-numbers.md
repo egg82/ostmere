@@ -329,3 +329,21 @@ Sharp and whenever reach B15 before their fifth cover, so T6 and SL26 land past 
 Smoked loses a fifth to a third of its making to the cap: the raise per arrival group (day eighteen) is its lever. On
 typical two absences bring three moments (the road found, SL25 and a job; T5 with its note and a job), over the target
 of two; the jobs' countdown is the lever if that should hold.
+
+**Day eighteen (`day_eighteen.toml`, shipped in `CHAPTERS`), applied:**
+
+- The table's meal counts held at the placeholders (24, 40, 56) and its cost at 2 smoked an hour, +1 at each group's
+  join (an `add_bp` 5000 on its cost per join, so 3 then 4). Typical has 56 meals by B15, so on typical the arrivals
+  wait on the answers' visits; on sharp the counts bind (B15 at 386 h, 19.5 meals).
+- The five who join each eat a stew and a root an hour (n3's and n4's shape); the table is the meat on top.
+- O-choir and O-cutter are offers of a new kind (D-145). B16's floor is the fifteenth arrival's (369 h); B16 lands
+  8 h after him.
+
+**Measured** by the simulator (the readouts `weektwo-eighteen*`), seed 0: B16 lands at 443.0 h on typical (band
+432-456), 430.5 h on sharp (floor 369; the meal counts bind) and 439.7 h on whenever, where the kind's rule answered
+O-cutter while the player was away. Typical has 5 visits, one with nothing to decide. Cap loss at B16's visit (8 h /
+24 h): barley 25/15%, cleared 100/100%, damp wood 11/12%, dry wood 61/61%, roots 96/96%, smoked 23/29%, stones 96/96%.
+A scratch play of typical (day sixteen replayed from main's saved ends, then rebased onto this content) has the road's
+tenth stretch laid by B16: with the three women on the road and the cutter's rule, the road outruns its band
+(B17 456-480), so cleared and stones have no sink left. Day nineteen's lever is the road's length (its stretches or
+cleared per stretch), not a new sink.

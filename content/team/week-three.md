@@ -447,6 +447,14 @@ The arrival kind's rule answers either at the instant it shows where the player 
 starer is no offer: he comes in and sits down (`t_starer`, arrivals +1, a scene figure at the table's end), and no line
 says he asked.
 
+**Reworked before shipping (D-145).** The arrival kind's roles ask who builds a newcomer's room ("You build it" / "They
+build it"); the hall houses these, so a rule set on that kind would answer a different question. O-choir and O-cutter
+are offers of their own kind, `work` (roles food and build: where a newcomer goes to work first), so a rule set on the
+first answers the second while the player is away. One kind needs one set of roles, so the sister's answers are the
+beds (food) or the road (build), not the beds or the pot. Each answer is a share in the town's split, changed there at
+any time. All five get every everyday town card the family has but gathering by hand, which their cutting beats; each
+eats a stew and a root an hour, as the pair do, and the table's smoked is the meat on top.
+
 **Who they are** (light tier; souls from the save's seed, Claude-off stand-ins; names from `names.jsonl` by the seed;
 lines say "the three women" until T7 gives their names, "the man" and "his sister" until T9):
 
