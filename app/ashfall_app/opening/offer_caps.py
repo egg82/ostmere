@@ -1,6 +1,7 @@
 """The cap a store has for certain when something is offered: its own cap with the cap modifiers of every outcome that
 must already have happened (the chain of what unlocks it, what each outcome waits on, and the camp levels a certain
 card lifts). A rule offered then may let go above the store's first cap, never above this."""
+from collections import deque
 from typing import TYPE_CHECKING
 
 from .convert import amount, levels
@@ -46,14 +47,22 @@ class Chain:
         self.before = self._solve()
 
     def _solve(self) -> dict[str, frozenset[str]]:
+        """A worklist: an outcome is worked again only when one it waits on shrank."""
         before = {w: frozenset(self.out) for w in self.out}
-        changed = True
-        while changed:
-            changed = False
-            for w, conds in self.waits.items():
-                new = frozenset({w}).union(*(_common(before, ways) for ways in conds if ways))
-                if new != before[w]:
-                    before[w], changed = new, True
+        users: dict[str, set[str]] = {}
+        for w, conds in self.waits.items():
+            for x in {x for ways in conds for x in ways}:
+                users.setdefault(x, set()).add(w)
+        todo, queued = deque(self.waits), set(self.waits)
+        while todo:
+            w = todo.popleft()
+            queued.discard(w)
+            new = frozenset({w}).union(*(_common(before, ways) for ways in self.waits[w] if ways))
+            if new != before[w]:
+                before[w] = new
+                fresh = users.get(w, set()) - queued
+                todo.extend(fresh)
+                queued |= fresh
         return before
 
     def unlockers(self, unlock_kind: str, id_: str) -> list[str]:
