@@ -236,7 +236,7 @@ class CardEntry(Entry):
     steps (docs/design/opening-screen.md, "Dots and the one glow"), said where the card is authored."""
     twin_of: str | None = None
     """On a townsperson's lane: the player's card this one is the town's version of (player_checks.py)."""
-    only_player: Literal["story", "self", "fight", "magic", "station", "project"] | None = None
+    only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None
     """On a player's lane: why no townsperson has this card, as a tag (player_checks.py)."""
 
 

@@ -217,7 +217,7 @@ label_key = "lane_rack"
 # The story steps by hand: stand (three pushes, each moving the figure), look, the coat.
 [[cards]]
 id = "stand_up"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_stand_up"
 work_s = 3
@@ -228,7 +228,7 @@ finished = { unlocks = [{ unlock_kind = "card", id = "look_around" }] }
 
 [[cards]]
 id = "look_around"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_look_around"
 work_s = 4
@@ -239,7 +239,7 @@ finished = { unlocks = [{ unlock_kind = "card", id = "search_coat" }] }
 # Coat before wood: the book is always found, so later lines can rely on it.
 [[cards]]
 id = "search_coat"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_search_coat"
 work_s = 3
@@ -310,7 +310,7 @@ outcome = { stores = [{ store = "dry_wood", items = 3 }] }
 # The fire plan, shown at the wall's first batch: clear, ring, strike. Ring and strike can be tried too early.
 [[cards]]
 id = "clear_spot"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_clear_spot"
 work_s = 3
@@ -320,7 +320,7 @@ finished = { unlocks = [{ unlock_kind = "feature", id = "mix" }] }
 
 [[cards]]
 id = "ring_it"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_ring_it"
 work_s = 3
@@ -332,7 +332,7 @@ finished = { unlocks = [{ unlock_kind = "feature", id = "ring" }] }
 
 [[cards]]
 id = "strike_fire"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_strike_fire"
 work_s = 4
@@ -358,7 +358,7 @@ unlocks = [
 # The edge retires gathering by hand and brings woodcutting and the choice of two crafts, both in view at once.
 [[cards]]
 id = "knap_edge"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_knap_edge"
 work_s = 3
@@ -378,7 +378,7 @@ unlocks = [
 
 [[cards]]
 id = "roast_roots"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_roast_roots"
 work_s = 4
@@ -395,7 +395,7 @@ modifiers = [{ target = "rate", id = "hunger", flow = "cost", store = "fullness"
 # end; the order is the choice. The first built opens reading by the fire.
 [[cards]]
 id = "make_stool"
-only_player = "story"
+only_player = "alone"
 presentation = "craft"
 label_key = "c_make_stool"
 upside_key = "up_stool"
@@ -431,7 +431,7 @@ modifiers = [
 
 [[cards]]
 id = "read_by_fire"
-only_player = "story"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_read_by_fire"
 work_s = 6
