@@ -5,7 +5,7 @@ import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { asksStep } from "../fixtures/asks";
 import type { Content, OfferInfo, View } from "../src/api/types";
-import { answerFigures, askCause, askedBy, openAsks } from "../src/game/asks";
+import { answerFigures, answerPcts, askCause, askedBy, openAsks } from "../src/game/asks";
 import { Catalog } from "../src/game/catalog";
 
 install();
@@ -39,6 +39,12 @@ const info = (offer: string): OfferInfo => {
 {  // what led to it
   expect("a gate, as a line's cause", askCause(catalog, info("bank")), "Tend the fire ×3");
   expect("none", askCause(catalog, info("trade")), null);
+}
+
+{  // a lasting change's slots: the total now → once given where the server read it, else the answer's own change
+  expect("a shift", answerPcts(catalog, [1000], [{ now_bp: 1500, after_bp: 2650 }]), { pct: "+15% → +26.5%" });
+  expect("none read for the first, the second read", answerPcts(catalog, [1000, -500], [null, { now_bp: 0, after_bp: -500 }]), { pct: "+10%", pct_b: "0% → -5%" });
+  expect("no shifts served", answerPcts(catalog, [500], []), { pct: "+5%" });
 }
 
 {  // the figures an answer moves

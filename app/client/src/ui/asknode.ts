@@ -3,7 +3,7 @@
 // each figure it moves, before → after (game/asks.ts); then the texts the offer has where it differs from the usual
 // (waiting, expiry, permanence). Anything the content leaves out is not drawn. A tap sends answer_offer.
 import type { Offer, OfferInfo, View } from "../api/types";
-import { askCause, askedBy } from "../game/asks";
+import { answerPcts, askCause, askedBy } from "../game/asks";
 import { el, setText, tapFeedback } from "./dom";
 import type { PartContext } from "./part";
 
@@ -72,14 +72,16 @@ function drawWho(ctx: PartContext, who: HTMLElement, view: View, info: OfferInfo
   who.replaceChildren(...faces, el("span", "ask-names", names));
 }
 
-/** An answer's cost text: {d} from takes_s (the text left out while that is null), {pct} from change_bp, {gain} from
- * gains (CONTRACT.txt, "OFFERS"). */
+/** An answer's cost text: {d} from takes_s (the text left out while that is null), {pct} from change_bp, as now → after
+ * where the offer's shifts name it (game/asks.ts, answerPcts), {gain} from gains (CONTRACT.txt, "OFFERS"). */
 function costText(ctx: PartContext, info: OfferInfo | undefined, shown: Offer, answer: string): string {
   const { catalog } = ctx;
   const served = info?.answers.find((i) => i.answer === answer);
-  const takes = shown.answers.find((a) => a.answer === answer)?.takes_s ?? null;
+  const given = shown.answers.find((a) => a.answer === answer);
+  const takes = given?.takes_s ?? null;
   if (!served || (takes === null && catalog.text.get(served.cost_key).includes("{d}"))) return "";
   return catalog.text.fill(served.cost_key, {
-    d: takes === null ? "" : catalog.format.duration(takes), ...catalog.format.figures(served.change_bp), ...catalog.format.gains(served.gains),
+    d: takes === null ? "" : catalog.format.duration(takes), ...answerPcts(catalog, served.change_bp, given?.shifts ?? []),
+    ...catalog.format.gains(served.gains),
   });
 }

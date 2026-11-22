@@ -5,12 +5,23 @@ from pydantic import BaseModel
 from .line_models import LineCause
 
 
+class AnswerShift(BaseModel):
+    """One lasting change an open offer's answer makes, as the total on its target: `now_bp` today and `after_bp` once
+    the answer is given, signed changes in basis points (a +15% total is 1500), as AnswerInfo.change_bp."""
+
+    now_bp: int
+    after_bp: int
+
+
 class OfferAnswer(BaseModel):
     answer: str
     card: str | None
     """The card the answer sets running; null for none."""
     takes_s: int | None
     """Seconds one completion of that card would take started now; null without a card."""
+    shifts: list[AnswerShift | None]
+    """One per entry of AnswerInfo.change_bp, in its order: that change's target now and after the answer; null where the
+    entries of one change aim at targets that stand differently. Empty once the offer is answered."""
 
 
 class Offer(BaseModel):
