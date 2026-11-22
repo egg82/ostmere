@@ -466,7 +466,7 @@ day_eighteen:
      turn: up, cost: people, advances: [C-promise-30], moves: [PC], thread: {id: th-network, at: middle}, register: wry}
   - {id: O-cutter, kind: offer, target_day: 18, visit: 18c, target_hour: 10.2, gate: {beat: T9},
      moves: [PC], thread: {id: th-network, at: middle}}
-  - {id: B16,  kind: ref,    visit: 18f, target_hour: 24.6}
+  - {id: B16,  kind: ref,    visit: 18f, target_hour: 15.4}
 
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
 # "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.

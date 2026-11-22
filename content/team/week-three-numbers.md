@@ -339,11 +339,11 @@ of two; the jobs' countdown is the lever if that should hold.
 - O-choir and O-cutter are offers of a new kind (D-145). B16's floor is the fifteenth arrival's (369 h); B16 lands
   8 h after him.
 
-**Measured** on a scratch play (main's saved day-fifteen ends, day sixteen played under the rules without day
-eighteen, its end rebased onto them; seed 0). The simulator's readouts (`weektwo-eighteen*`) replace it:
-
-| Route | B15 | T7 | T8 | T9 | the fifteenth | B16 |
-|---|---|---|---|---|---|---|
-| typical | 427.6 | 429.7 | 434.8 | 437.8 | 444.2 | 452.2 (band 432-456) |
-| sharp | 386.0 | 390.5 | 394.6 | 406.5 | 422.5 | 430.5 (floor 369: the meal counts bind) |
-| whenever | 394.2 | 396.2 | 408.9 | 411.9 | 424.5 | 432.5 (the kind's rule answered O-cutter while away) |
+**Measured** by the simulator (the readouts `weektwo-eighteen*`), seed 0: B16 lands at 443.0 h on typical (band
+432-456), 430.5 h on sharp (floor 369; the meal counts bind) and 439.7 h on whenever, where the kind's rule answered
+O-cutter while the player was away. Typical has 5 visits, one with nothing to decide. Cap loss at B16's visit (8 h /
+24 h): barley 25/15%, cleared 100/100%, damp wood 11/12%, dry wood 61/61%, roots 96/96%, smoked 23/29%, stones 96/96%.
+A scratch play of typical (day sixteen replayed from main's saved ends, then rebased onto this content) has the road's
+tenth stretch laid by B16: with the three women on the road and the cutter's rule, the road outruns its band
+(B17 456-480), so cleared and stones have no sink left. Day nineteen's lever is the road's length (its stretches or
+cleared per stretch), not a new sink.
