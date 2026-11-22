@@ -806,6 +806,8 @@ TEXT AND NUMBERS (one rule)
     ui.card.needs_skill {skill}{have}{n}  a card's skill-level need: the skill's label, its level, the level wanted
     ui.card.reach {store}{have}{n}  a reach stake's store: what there is, the next reach's amount
     ui.card.opens {when}            a card's need on a clock with a part of the day: when it opens
+    ui.card.opens_in {d}            the foot of a card waiting on a ready time (Blocker.ready_at): when it opens, as a duration; a
+                                    running tap (Card.by "tap") keeps its bare timer
     ui.card.takes_nothing           a card whose CardInfo.takes is empty, in a need's place (its face, a Camp person's rows)
     ui.when.dawn | dawn_end | day | day_end | evening | evening_end | night | night_end   a condition on a clock with
                                     that part of the day (StoreInfo.clock) as a time: the part itself while the value
