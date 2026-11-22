@@ -1923,6 +1923,25 @@
         "title": "AnswerOffer",
         "description": "Answer a shown, open offer (CONTRACT.txt, \"Offers\"): 422 when the answer is not one of the offer's, or the\noffer is not shown or already answered."
       },
+      "AnswerShift": {
+        "properties": {
+          "now_bp": {
+            "type": "integer",
+            "title": "Now Bp"
+          },
+          "after_bp": {
+            "type": "integer",
+            "title": "After Bp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "now_bp",
+          "after_bp"
+        ],
+        "title": "AnswerShift",
+        "description": "One lasting change an open offer's answer makes, as the total on its target: `now_bp` today and `after_bp` once\nthe answer is given, signed changes in basis points (a +15% total is 1500), as AnswerInfo.change_bp."
+      },
       "ApiError": {
         "properties": {
           "code": {
@@ -5197,13 +5216,28 @@
               }
             ],
             "title": "Takes S"
+          },
+          "shifts": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AnswerShift"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Shifts"
           }
         },
         "type": "object",
         "required": [
           "answer",
           "card",
-          "takes_s"
+          "takes_s",
+          "shifts"
         ],
         "title": "OfferAnswer"
       },

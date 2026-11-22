@@ -98,6 +98,7 @@ app/ashfall_app/engine/IMPL-QUESTIONS.txt
 app/ashfall_app/engine/__init__.py
 app/ashfall_app/engine/answering.py
 app/ashfall_app/engine/answers.py
+app/ashfall_app/engine/answershifts.py
 app/ashfall_app/engine/api.py
 app/ashfall_app/engine/cards.py
 app/ashfall_app/engine/cardsides.py

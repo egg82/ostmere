@@ -200,14 +200,26 @@ class CompletedCard:
 
 
 @dataclass(frozen=True)
+class AnswerShift:
+    """What an open offer's answer does to one lasting change: its target's total change in basis points (modifiers.
+    total_change_bp over the effective stack) now and with the answer's entries added."""
+
+    now_bp: int
+    after_bp: int
+
+
+@dataclass(frozen=True)
 class AnswerView:
     """One answer of a shown offer: the card it sets running (offerstate.answer_card, None for none) and takes_s, the
     seconds one completion of that card would take on its lane started now at a full share (tap_seconds' formula, for a
-    locked card too), None without a card or at speed 0."""
+    locked card too), None without a card or at speed 0. shifts: one per distinct change of the answer's modifiers, in
+    the order of offerstate.answer_changes; None where entries of one change aim at targets standing differently. Empty
+    for an answer already given."""
 
     answer: AnswerId
     card: CardId | None
     takes_s: int | None
+    shifts: tuple[AnswerShift | None, ...] = ()
 
 
 @dataclass(frozen=True)

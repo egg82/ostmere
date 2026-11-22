@@ -65,6 +65,7 @@ export type OrderGuard = S["OrderGuard"];
 export type OrderState = S["OrderState"];
 export type OrderVerb = S["OrderVerb"];
 export type Offer = S["Offer"];
+export type AnswerShift = S["AnswerShift"];
 export type OfferInfo = S["OfferInfo"];
 export type OfferedSwitch = S["OfferedSwitch"];
 export type LessonEnd = S["LessonEnd"];

@@ -1155,6 +1155,11 @@ CHOICES (townsfolk, installed rules, offers)
   the offer's answer order, card the answer's card, takes_s the seconds one completion of that card would take on
   its lane started now from its current work at a full share (tap_seconds' formula, read for a locked card too),
   None without a card or at speed 0. LaneBar gains `order` (Lane order, above).
+- Answer shifts (answershifts.py): AnswerView gains `shifts`, for an open offer one entry per distinct change of the
+  answer's modifiers (amount_bp, less BP for a multiplier), in authored order: AnswerShift(now_bp, after_bp), the
+  target's total change over the effective stack now and with the answer's entries added (modifiers.total_change_bp:
+  additions sum and floor at 0, multipliers compound, rounded down). None where entries of one change aim at targets
+  that stand differently; () once the offer is answered.
 - Codec: FORMAT is 7. The manifest gains `offers`, [{"id": offer id, "answers": [answer ids]}] in rules order, so a
   rebase can find gone offer and answer ids. UPGRADES[6] adds "offers": [] to a format 6 manifest and changes
   nothing else: a format 6 save predates offers, so its unlock set holds none of the three kinds and its orders and

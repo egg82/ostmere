@@ -30,7 +30,7 @@ from .decision_models import (
 from .fight_models import Fight as Fight, StoreLevel as StoreLevel, Strength as Strength, StrengthEntry as StrengthEntry, StrengthKind as StrengthKind
 from .journal_models import JournalDay
 from .need_models import Blocker as Blocker, Need as Need
-from .offer_models import Offer as Offer, OfferAnswer as OfferAnswer
+from .offer_models import AnswerShift as AnswerShift, Offer as Offer, OfferAnswer as OfferAnswer
 from .goal_models import Goal as Goal, GoalKind as GoalKind, GoalLimit as GoalLimit, GoalRow as GoalRow, RuleDry as RuleDry
 from .store_models import Heading as Heading, StoreRow as StoreRow
 from .repeat_models import RepeatedSwitch as RepeatedSwitch, RepeatedTap as RepeatedTap, Repeats as Repeats

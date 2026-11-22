@@ -1,6 +1,6 @@
 // What an ask says of itself (CONTRACT.txt, "OFFERS"): which asks are open and in what order, who asks, what led to it,
 // and each figure an answer moves, now → once given, read off a dry run of that answer, never computed here. Pure.
-import type { OfferInfo, View } from "../api/types";
+import type { AnswerShift, OfferInfo, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { causeWords } from "./chronwords";
 import { UI } from "./text";
@@ -24,6 +24,16 @@ export function askedBy(catalog: Catalog, view: View, info: OfferInfo): string {
 /** What led to the ask, worded as a chronicle line's cause. Null when the content gives none or the page cannot word it. */
 export function askCause(catalog: Catalog, info: OfferInfo): string | null {
   return causeWords(catalog, info.cause);
+}
+
+/** An answer's {pct} and {pct_b} slots: each served change, or where the server read its target's total, that total now
+ * → once given (OfferAnswer.shifts; the answer's own change when it names none, never computed here). */
+export function answerPcts(catalog: Catalog, changesBp: readonly number[], shifts: readonly (AnswerShift | null)[]): Record<string, string> {
+  const { text, format } = catalog;
+  return Object.fromEntries(changesBp.slice(0, 2).map((bp, i) => {
+    const s = shifts[i];
+    return [i === 0 ? "pct" : "pct_b", s ? text.fill(UI.askShift, { before: format.change(s.now_bp), after: format.change(s.after_bp) }) : format.change(bp)];
+  }));
 }
 
 /** Each figure that differs between the view and the dry run of an answer: a store's net rate, then its cap (the

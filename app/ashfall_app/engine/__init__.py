@@ -55,7 +55,7 @@ from .spent import spent_stores
 from .view import View, view
 from .fightview import FightView
 from .viewparts import (
-    AnswerView, CardView, CompletedCard, Contribution, GuardView, HeldView, LaneBar, LedgerLine, MenuNode, Need, OfferView, RunBy,
+    AnswerShift, AnswerView, CardView, CompletedCard, Contribution, GuardView, HeldView, LaneBar, LedgerLine, MenuNode, Need, OfferView, RunBy,
     SkillBar, SkillPhase, StandingBar,
 )
 
@@ -95,6 +95,6 @@ __all__ = [
     "DeleteMix", "SaveMix", "SetOrders", "SetQueue", "Verb",
     "CardView", "CompletedCard", "Contribution", "GuardView", "HeldView", "LaneBar", "LedgerLine", "MenuNode", "Need", "RunBy", "SkillBar", "SkillPhase",
     "StandingBar",
-    "AnswerKind", "AnswerOffer", "AnswerView", "OfferView", "FightView",
+    "AnswerKind", "AnswerOffer", "AnswerShift", "AnswerView", "OfferView", "FightView",
     "View", "store_need", "view", "Pending", "pending", "spent_stores",
 ]

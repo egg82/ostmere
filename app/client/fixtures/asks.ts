@@ -2,19 +2,19 @@
 // bank offer open alone, with every optional field; asksmany: all three fixture offers open, the bare one shown first and
 // "2 more" behind it. An answer the page sends is kept (the ask leaves the list), and a dry run of one shows what it
 // moves: hers the wood's rate and Rest's time, his the wood's cap, keep Rest's time.
-import type { Offer, Step, View } from "../src/api/types";
+import type { AnswerShift, Offer, Step, View } from "../src/api/types";
 import { dayTwoStep } from "./daytwo";
 import type { Kept } from "./steps";
 
 export type AsksPhase = "asksone" | "asksmany";
 export const isAsks = (phase: string): phase is AsksPhase => phase === "asksone" || phase === "asksmany";
 
-const open = (offer: string, takes: Record<string, [string | null, number | null]>): Offer => ({
-  offer, answer: null, answers: Object.entries(takes).map(([answer, [card, takes_s]]) => ({ answer, card, takes_s })),
+const open = (offer: string, takes: Record<string, [string | null, number | null]>, shifts: Record<string, AnswerShift[]> = {}): Offer => ({
+  offer, answer: null, answers: Object.entries(takes).map(([answer, [card, takes_s]]) => ({ answer, card, takes_s, shifts: shifts[answer] ?? [] })),
 });
 const ASK = open("ask", { wait: [null, null], go: ["haul", 750] });
-const BANK = open("bank", { hers: [null, null], his: [null, null] });
-const TRADE = open("trade", { keep: [null, null], swap: [null, null] });
+const BANK = open("bank", { hers: [null, null], his: [null, null] }, { hers: [{ now_bp: 1500, after_bp: 2650 }], his: [{ now_bp: 0, after_bp: -1000 }] });
+const TRADE = open("trade", { keep: [null, null], swap: [null, null] }, { keep: [{ now_bp: 1000, after_bp: 1500 }] });
 
 /** What a given answer moves, as the engine's view would show it after. */
 function moved(view: View, answer: string): View {
