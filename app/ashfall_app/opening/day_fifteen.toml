@@ -405,10 +405,12 @@ makes = [{ store = "meals", items_per_hour = 1 }]
 # ---------- the camp's asks while the hall goes up ----------
 
 # Offers of no kind, as day twelve's asks, but not in its chain: each shows when its moment comes, whatever else is
-# open. The rack once the sun is out (the turn); the door the morning after the first hard frost (T2's clock).
+# open. The rack once the sun is out (the turn); the door the morning after the first hard frost (T2's clock). Each
+# answer sets a lasting change against a lasting change, never a lump (principles.md, "No blind permanent choices").
 [[offers]]
 id = "o_door_ice"
 text_key = "o_door_ice"
+askers = ["n6"]
 gate = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 18 }
 
 [[offers.answers]]
@@ -416,18 +418,20 @@ id = "o_door_ice_shave"
 label_key = "a_door_ice_shave"
 cost_key = "a_door_ice_shave_cost"
 [offers.answers.outcome]
-modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_door_ice_shave" }]
+modifiers = [
+  { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10300, source = "o_door_ice_shave" },
+  { target = "lane", id = "n6", kind = "mul_bp", amount_bp = 9000, source = "o_door_ice_shave" },
+]
 
 [[offers.answers]]
 id = "o_door_ice_hide"
 label_key = "a_door_ice_hide"
 cost_key = "a_door_ice_hide_cost"
-[offers.answers.outcome]
-stores = [{ store = "dry_wood", items = 6 }]
 
 [[offers]]
 id = "o_sun_rack"
 text_key = "o_sun_rack"
+askers = ["n3"]
 gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }
 
 [[offers.answers]]
@@ -436,14 +440,14 @@ label_key = "a_sun_rack_sun"
 cost_key = "a_sun_rack_sun_cost"
 [offers.answers.outcome]
 unlocks = [{ unlock_kind = "feature", id = "rack_sunned" }]
-modifiers = [{ target = "side", id = "rack", kind = "add_bp", amount_bp = 1000, source = "rack_sunned" }]
+modifiers = [{ target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "rack_sunned" }]
 
 [[offers.answers]]
 id = "o_sun_rack_fire"
 label_key = "a_sun_rack_fire"
 cost_key = "a_sun_rack_fire_cost"
 [offers.answers.outcome]
-modifiers = [{ target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 9500, source = "o_sun_rack_fire" }]
+modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 11000, source = "o_sun_rack_fire" }]
 
 # ---------- levels and finds ----------
 
@@ -749,15 +753,15 @@ l_b14_1 = "roof on, door hung. everyone eats inside, at one table."
 l_b14_2 = "{n3} dishes out. the pot goes round once. Lucy's seat faces the door."
 l_b14_3 = "the pot's bottom shows from every seat."
 o_door_ice = "The hut door has frozen in its frame. {n6} looks it over."
-a_door_ice_shave = "He shaves the frame"
-a_door_ice_shave_cost = "{pct} rest"
-a_door_ice_hide = "He burns the door, hangs a hide"
-a_door_ice_hide_cost = "dry wood now"
+a_door_ice_shave = "He shaves the frame each frost"
+a_door_ice_shave_cost = "{pct} your work, {pct_b} from {n6}"
+a_door_ice_hide = "He hangs a hide in the gap"
+a_door_ice_hide_cost = "nothing"
 o_sun_rack = "{n3} says meat dries faster in sunlight than over the coals."
 a_sun_rack_sun = "She moves the rack into the sun"
-a_sun_rack_sun_cost = "{pct} rack strength"
-a_sun_rack_fire = "She keeps it by the fire"
-a_sun_rack_fire_cost = "{pct} wood burned"
+a_sun_rack_sun_cost = "{pct} smoked"
+a_sun_rack_fire = "She keeps it over the pot"
+a_sun_rack_fire_cost = "{pct} stew"
 pays_find_for_14 = "wild barley, {pct} foraging speed"
 pays_find_wc_25 = "a dead birch, {pct} woodcutting speed"
 pays_wc_cordwood = "wood to stack, {pct} woodcutting speed"

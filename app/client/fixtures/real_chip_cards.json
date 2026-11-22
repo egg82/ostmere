@@ -260,6 +260,16 @@
       "wounds": []
     },
     {
+      "card": "n1_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n1_catch_broth",
       "makes": [
         "stew"
@@ -579,6 +589,16 @@
       "wounds": []
     },
     {
+      "card": "n2_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n2_catch_broth",
       "makes": [
         "stew"
@@ -758,6 +778,16 @@
       "wounds": []
     },
     {
+      "card": "n3_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n3_catch_broth",
       "makes": [
         "stew"
@@ -851,6 +881,16 @@
       "makes": [],
       "takes": [
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n4_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
       ],
       "wounds": []
     },
@@ -1149,6 +1189,16 @@
       "wounds": []
     },
     {
+      "card": "n5_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n5_catch_broth",
       "makes": [
         "stew"
@@ -1294,6 +1344,16 @@
       "wounds": []
     },
     {
+      "card": "n7_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n7_catch_broth",
       "makes": [
         "stew"
@@ -1413,6 +1473,16 @@
       "makes": [],
       "takes": [
         "stakes"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
       ],
       "wounds": []
     },
@@ -1709,6 +1779,97 @@
       "makes": [],
       "takes": [],
       "wounds": []
+    },
+    {
+      "card": "pull_beams",
+      "makes": [
+        "beams"
+      ],
+      "takes": [
+        "ruin_beams"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "hall",
+      "makes": [],
+      "takes": [
+        "stakes",
+        "stones",
+        "cord",
+        "beams",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_sow",
+      "makes": [],
+      "takes": [
+        "ashed_ground"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "barley_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "barley",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "hunt_deer",
+      "makes": [
+        "catch",
+        "cord"
+      ],
+      "takes": [
+        "smoked",
+        "deer_down"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "stack_cordwood",
+      "makes": [
+        "cordwood"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
     }
   ],
   "chips": [
@@ -1809,6 +1970,20 @@
         "value_of_cap": false,
         "release_of_cap": false
       }
+    },
+    {
+      "chip": "frosted",
+      "when": {
+        "kind": "at_least",
+        "watched": {
+          "kind": "store_value",
+          "store": "rime"
+        },
+        "value": 43200000,
+        "release": 43200000,
+        "value_of_cap": false,
+        "release_of_cap": false
+      }
     }
   ],
   "stores": [
@@ -1857,7 +2032,8 @@
       "store": "flint",
       "made_by": [
         "scavenge",
-        "field_track"
+        "field_track",
+        "pull_beams"
       ]
     },
     {
@@ -1910,7 +2086,8 @@
       "store": "wire",
       "made_by": [
         "scavenge",
-        "field_track"
+        "field_track",
+        "pull_beams"
       ]
     },
     {
@@ -1918,14 +2095,16 @@
       "made_by": [
         "forage",
         "dig_clay",
-        "pick_fungus"
+        "pick_fungus",
+        "reap"
       ]
     },
     {
       "store": "catch",
       "made_by": [
         "hunt_wolf",
-        "hunt_bear"
+        "hunt_bear",
+        "hunt_deer"
       ]
     },
     {
@@ -2083,7 +2262,8 @@
         "g_hearth_catch_broth",
         "g_hearth_stew",
         "g_hearth_fungus_stew",
-        "catch_broth"
+        "catch_broth",
+        "barley_stew"
       ]
     },
     {
@@ -2252,7 +2432,8 @@
       "store": "cord",
       "made_by": [
         "twist_cord",
-        "n4_cord"
+        "n4_cord",
+        "hunt_deer"
       ]
     },
     {
@@ -2380,6 +2561,77 @@
     {
       "store": "night_14",
       "made_by": []
+    },
+    {
+      "store": "ruin_beams",
+      "made_by": [
+        "sit_last_night"
+      ]
+    },
+    {
+      "store": "beams",
+      "made_by": [
+        "pull_beams"
+      ]
+    },
+    {
+      "store": "frost_left",
+      "made_by": []
+    },
+    {
+      "store": "grow_left",
+      "made_by": []
+    },
+    {
+      "store": "roof_wind_left",
+      "made_by": []
+    },
+    {
+      "store": "rime",
+      "made_by": []
+    },
+    {
+      "store": "clear_clock",
+      "made_by": []
+    },
+    {
+      "store": "ripe",
+      "made_by": []
+    },
+    {
+      "store": "barley",
+      "made_by": [
+        "n1_reap",
+        "n2_reap",
+        "n3_reap",
+        "n4_reap",
+        "n5_reap",
+        "n7_reap",
+        "n6_reap",
+        "reap"
+      ]
+    },
+    {
+      "store": "night_15",
+      "made_by": []
+    },
+    {
+      "store": "deer_down",
+      "made_by": []
+    },
+    {
+      "store": "deer_lost",
+      "made_by": []
+    },
+    {
+      "store": "meals",
+      "made_by": []
+    },
+    {
+      "store": "cordwood",
+      "made_by": [
+        "stack_cordwood"
+      ]
     }
   ]
 }

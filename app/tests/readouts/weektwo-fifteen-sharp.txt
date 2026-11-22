@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B14 day 15.23, target_day 16
+beats sharp (pace_scale 1): B14 day 15.27, target_day 16
   away V121->V122: 0 []
   away V122->V123: 0 []
   away V123->V124: 2 ['trigger t_b13', 'trigger offer_o_sun_rack']
@@ -21,4 +21,4 @@ day    line feature    chip   store   skill    card   level  total
   6       3       1       0       0       0       9       1     14
   7       2       0       0       0       0       0       2      4
   8       9       3       0       2       0       3       0     17
-  9      13       1       2       4       0      14       3     37
+  9      13       1       0       4       0      14       3     35

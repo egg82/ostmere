@@ -251,8 +251,19 @@ order:
 
 | Id | Who asks, and what (facts) | Answers (what each changes) |
 |---|---|---|
-| `o_door_ice` | Richard: the hut's door froze in the night. Shave the frame, or hang a hide over the gap instead? | rest 5% faster · 1 pelt back from the bedding |
-| `o_sun_rack` | Mary: the meat dries quicker in the sun than at the fire. Move the rack into the light, or keep it at the fire where she can watch it? | the rack +10% · dry wood 5% further |
+| `o_door_ice` | Richard: the hut's door froze in the night. Shave the frame every frost, or hang a hide over the gap instead? | the hands +3%, Richard's lane −10% (his mornings at the frame) · nothing changes |
+| `o_sun_rack` | Mary: the meat dries quicker in the sun than at the fire. Move the rack into the light, or keep it over the pot? | smoked from the smoke lane +10% · stew +10% (the drippings go in the pot) |
+
+**Reworked before shipping (D-143).** Both asks first set a weak rate against a near-dead one: rest +5% (rest is
+about a fiftieth of the hands' time, so the gain was worth minutes a week) against 6 dry wood once, and the rack's
+side +10% against the fire burning 5% less dry wood, which loses about a quarter of its making to the cap at the
+chapter's end (`weektwo-fifteen` readout), so the saving was worth nothing. The owner's rule (`principles.md`, "No
+blind permanent choices"): never a lump beside a lasting change, and each answer gives up something the player would
+miss. Now each sets one lasting change against another. The door trades a person's time for the player's: the hands
+are about four of a town lane in work (a hands card's bar is a quarter of its town copy's), so +3% of them is about
+a tenth of Richard, and which is worth more turns on what his split is doing. The rack trades two food rates: stew
+runs dry between visits through the chapter (0 at 365 h on typical, measured) while smoked sits near its cap until
+the table starts drawing it at B14 and the arrivals it brings eat it after, so stew pays now and smoked later.
 
 ## Day sixteen (B14 → B15): can the beds be kept from the frost?
 
