@@ -27,6 +27,7 @@ SHARDS: dict[str, frozenset[str]] = {
     "twelve-typical": frozenset({"twelve-typical"}),
     "twelve": frozenset({"twelve"}),
     "fifteen": frozenset({"fifteen"}),
+    "sixteen": frozenset({"sixteen"}),
     "makers": frozenset({"makers"}),
 }
 ENV = "WEEKTWO_SHARD"

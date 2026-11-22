@@ -5,7 +5,8 @@ day eight's moves (DayOnePlayer.play_on). The one difference from a play from th
 visit wait until that moment (the week-one play leaves once nothing of its own is left to act on). Played once per
 pytest session, in a fixture's setup (docs/engineering.md, "Fast from the start"). Day nine's play is day eight's copied
 the same way at B9's visit and given day nine, day eleven's day nine's at B10's visit, and day twelve's day eleven's at B11's.
-Day fifteen's is day twelve's copied at S4's visit and given day fifteen, the first of week three's.
+Day fifteen's is day twelve's copied at S4's visit and given day fifteen, the first of week three's, and day sixteen's
+day fifteen's copied at B14's.
 Each chapter plays on from the saved end of the one before (ends.py) where the route's is saved and the saves are present, so a session plays each
 chapter once and week one not at all; `played` is the same chain from the start, which the saved ends are written from."""
 import copy
@@ -27,6 +28,8 @@ TWELVE_PUSH_ROUTES = NINE_PUSH_ROUTES
 """Day twelve's, the same."""
 FIFTEEN_PUSH_ROUTES = NINE_PUSH_ROUTES
 """Day fifteen's, the same."""
+SIXTEEN_PUSH_ROUTES = NINE_PUSH_ROUTES
+"""Day sixteen's, the same."""
 REPORT_ROUTES = ("typical", "sharp", "evenings", "whenever", "babysitter")
 
 
@@ -41,14 +44,15 @@ def play_on(p: DayTwoPlayer, laters: tuple[Later, ...]) -> DayTwoPlayer:
     return q
 
 
-CHAPTERS = ("eight", "nine", "eleven", "twelve", "fifteen")
-"""Week two's chapters and week three's first, in the order their plays build on each other."""
-BEFORE = {"eight": "week1", "nine": "eight", "eleven": "nine", "twelve": "eleven", "fifteen": "twelve"}
+CHAPTERS = ("eight", "nine", "eleven", "twelve", "fifteen", "sixteen")
+"""Week two's chapters and week three's first two, in the order their plays build on each other."""
+BEFORE = {"eight": "week1", "nine": "eight", "eleven": "nine", "twelve": "eleven", "fifteen": "twelve",
+          "sixteen": "fifteen"}
 SAVED = {"week1": PUSH_ROUTES, "eight": NINE_PUSH_ROUTES, "nine": ELEVEN_PUSH_ROUTES, "eleven": TWELVE_PUSH_ROUTES,
-         "twelve": FIFTEEN_PUSH_ROUTES}
+         "twelve": FIFTEEN_PUSH_ROUTES, "fifteen": SIXTEEN_PUSH_ROUTES}
 """The routes whose end of each chapter is saved (ends.py): the ones the next chapter plays on a push, seed 0."""
 DAYS = {"eight": w2.day_eight, "nine": w2.day_nine, "eleven": w2.day_eleven, "twelve": w2.day_twelve,
-        "fifteen": w2.day_fifteen}
+        "fifteen": w2.day_fifteen, "sixteen": w2.day_sixteen}
 
 
 def laters(chapter: str, name: str) -> tuple[Later, ...]:
@@ -112,5 +116,10 @@ def twelve(name: str, seed: int = 0) -> DayTwoPlayer:
 
 
 def fifteen(name: str, seed: int = 0) -> DayTwoPlayer:
-    """Day twelve's play played on through day fifteen to B14's visit, the edge of written content."""
+    """Day twelve's play played on through day fifteen to B14's visit."""
     return from_saved("fifteen", name, seed)
+
+
+def sixteen(name: str, seed: int = 0) -> DayTwoPlayer:
+    """Day fifteen's play played on through day sixteen to B15's visit, the edge of written content."""
+    return from_saved("sixteen", name, seed)
