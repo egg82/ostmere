@@ -123,8 +123,8 @@ work_s = 1800
 outcome = { stores = [{ store = "cleared", items = 1 }] }
 
 # P3: ten stretches, each the same take (a card's inputs are one per stage), so the totals are week-three.md's: 120
-# cleared, 60 stones, 40 stakes, 4 beams (the ruin's last four, after the hall's eight). Stages 7, 8 and 10 carry
-# day nineteen's beats.
+# cleared, 60 stones, 40 stakes, 4 beams (the ruin's last four, after the hall's eight), and 20 cord for the markers
+# (SL26's), cord's sink once the hall is up. Stages 7, 8 and 10 carry day nineteen's beats.
 [[cards]]
 id = "cut_road"
 presentation = "craft"
@@ -136,6 +136,7 @@ inputs = [
   { store = "cleared", items = 12 },
   { store = "stones", items = 6 },
   { store = "stakes", items = 4 },
+  { store = "cord", items = 2 },
   { store = "beams", items = 2, every = 5 },
 ]
 line_keys = ["l_road_1", "l_road_2", "l_road_3", "l_road_4", "l_road_5", "l_road_6", "l_road_7", "l_road_8",
@@ -648,7 +649,7 @@ presentation = "action"
 label_key = "c_take_child"
 work_s = 1800
 cap = 1
-outcome = { stores = [{ store = "energy", items = 3 }] }
+outcome = { stores = [{ store = "dry_wood", items = 4 }] }
 line_keys = ["l_take_child"]
 
 [[offers]]
@@ -872,7 +873,7 @@ o_j_ridge = "Lucy says somebody should take the child up the ridge to see the su
 a_j_ridge_yes = "You take them"
 l_j_ridge_yes = "you are halfway up the ridge before you think about it."
 c_take_child = "Take the child up the ridge"
-l_take_child = "the child watches the sun clear the ridge and says nothing all the way down."
+l_take_child = "the child watches the sun clear the ridge. you carry deadwood down."
 o_j_tally = "Lucy says somebody has to keep count of the bowls against the pot each night."
 a_j_tally_yes = "You keep it"
 l_j_tally_yes = "you have a stick and a knife out before she is done."

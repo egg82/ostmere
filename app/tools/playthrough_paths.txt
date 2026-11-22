@@ -218,6 +218,7 @@ app/ashfall_app/opening/day_four.toml
 app/ashfall_app/opening/day_nine.toml
 app/ashfall_app/opening/day_one.toml
 app/ashfall_app/opening/day_six.toml
+app/ashfall_app/opening/day_sixteen.toml
 app/ashfall_app/opening/day_three.toml
 app/ashfall_app/opening/day_twelve.toml
 app/ashfall_app/opening/day_two.toml
@@ -485,6 +486,7 @@ app/tests/weektwo/test_weektwo_readouts.py
 app/tests/weektwo/test_weektwo_routes.py
 app/tests/weektwo/test_weektwo_rule_subjects.py
 app/tests/weektwo/test_weektwo_saved.py
+app/tests/weektwo/test_weektwo_sixteen.py
 app/tests/weektwo/test_weektwo_twelve.py
 app/tests/weektwo/test_worth_readouts.py
 app/tests/weektwo/verdicts.py

@@ -342,6 +342,19 @@ Every route answers yes in the simulator except `j_ridge` on sharp (a no is meas
 start with B14 (O-road with it), each next one on day nine's countdown after the last answer and the last job's finish,
 through day nineteen; the last waits for B16.
 
+**Reworked before shipping (D-144).** Each yes above paid a lasting rate (stew 5% faster, the snares +10%) for a few
+minutes of hands, against a no that costs nothing: a lasting gain bought once beats nothing every time, so the no was
+beaten outright (`principles.md`, "No blind permanent choices"). Each job now pays a one-off sized to the hands' time
+it takes, so the yes is worth it only when the town is short of what it brings and there is room to keep it:
+`cut_steps` 4 clay (and takes its 2 stones), `smoke_hole` 4 ash, `dig_beam` 1 beam, `reset_snares` 3 catch,
+`take_child` 4 dry wood (deadwood carried down; energy would have put a one-off job among the tired chip's cures),
+`keep_count` 4 stew. `j_cellar_steps` and `j_frames` had no one-off that fits and stay out; day sixteen ships the
+other six, in table order, each on the countdown after the last is answered (O-road's answer starts it; a queued job
+needs no wait of its own, since it lands within the countdown). The yes pool is one line per job's yes, and each no
+has its own line: the engine has no line pool on an answer, and six distinct lines already never repeat in a row.
+O-road's walk is 900 s on the hands against 3600 s on his lane, the hands' quarter, so neither answer is the cheaper
+one by its bar alone.
+
 ### The beats
 
 | Id | Visit | Gate | What happens (the facts) | Turn · outcome · register · cost · moves · promise · thread |
