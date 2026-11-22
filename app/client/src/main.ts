@@ -5,6 +5,7 @@ import "./front.css";
 import "./fights.css";
 import "./reminders.css";
 import "./slider.css";
+import "./map.css";
 import { boot } from "./app/boot";
 
 boot();

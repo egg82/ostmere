@@ -16,7 +16,7 @@ import { HandStreak } from "../game/stall";
 import { Banner } from "./banner";
 import { CardGlow } from "./cardglow";
 import { Cards } from "./cards";
-import { Completed } from "./completed";
+import { bookPages } from "./bookpages";
 import { el, revealBelow } from "./dom";
 import { MixEditor } from "./editor";
 import { TheEnd } from "./end";
@@ -63,7 +63,7 @@ export class Screen {
   private readonly parts: Part[];
   private readonly story: Story;
   private readonly cards: Cards;
-  private readonly completed: Completed;
+  private readonly bookPages: Part[];
   private readonly skills: Skills;
   private readonly town: TownView;
   private readonly ledger: Ledger;
@@ -124,7 +124,7 @@ export class Screen {
     const marks = new NewMarks();
     this.cardGlow = new CardGlow(catalog, this.glow, (card) => this.cards.node(card));
     this.cards = new Cards(ctx, marks, () => { if (this.tabs.on !== "cards" || this.editor.open) markNew(this.tabs.cards, () => undefined); });
-    this.completed = new Completed(ctx, this.story.book);
+    this.bookPages = bookPages(ctx, this.story.book);
     this.ledger = new Ledger(ctx);
     this.editor = new MixEditor(ctx, () => this.showTab(), marks);
     this.selector = new MixSelector(ctx);
@@ -141,7 +141,7 @@ export class Screen {
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);
     panel.append(this.banner.root, this.pinned, this.hands.rows, this.asks.root, this.ledger.asks, this.area);   // a phone's mix controls and the asks under the strip, unpinned; then a phone's red and full ledger lines
-    this.parts = [this.story, this.hands, this.asks, this.cards, this.completed, this.rules, this.skills, this.ledger,
+    this.parts = [this.story, this.hands, this.asks, this.cards, ...this.bookPages, this.rules, this.skills, this.ledger,
       new FeatureCard(catalog, this.reveal, this.root), new MoreCue(panel, this.area), (this.lessons = new Lessons(ctx, this.root, () => this.redraw()))];
 
     const frame = el("div", "scene-frame");

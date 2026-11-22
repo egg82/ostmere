@@ -1589,7 +1589,7 @@ MAP
   an unnamed place.
 
   The stamps: /assets/art/map/manifest.json, {stamp: [{src, w, h}]}, each image ink on transparent at
-  /assets/art/map/<src>, w by h pixels at the sheet's base scale, plus "home": the town's own. Made by
+  /assets/art/map/<src>, w by h pixels at the sheet's base scale. Made by
   tools/mapstamps.py from the Widman 2.1 PNG pack (docs/research/art-sourcing.md, CC0, outside the repo) and seeded
   with the art kind (engineering.md, bulk assets); never in git or the image.
 
@@ -1602,7 +1602,8 @@ MAP
     at least two cells each way from the town, widened along the longer side to fill the sheet.
   - choose each place's art from its stamp kind's variants by a shuffle bag keyed by the save and the kind, walked
     over every place of the kind in content order, revealed or not, so a place keeps its art as others are revealed,
-    and no variant repeats on a sheet until every variant of the kind is used. The town's art is home's.
+    and no variant repeats on a sheet until every variant of the kind is used. The town is a village: the first draw
+    of that bag is its art, the village places' after it.
   - put each label in clear space beside its place, with a dark halo: the first of the spots tried (right, left,
     below, above, then the same further out) whose box crosses no stamp, no other label and not the sheet's edge. A
     label that finds no such spot is not drawn on the sheet.

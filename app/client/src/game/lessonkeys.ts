@@ -61,5 +61,9 @@ export const LESSON_KEYS = {
   journalCreatures: "ui.journal.creatures",
   journalPlaces: "ui.journal.places",
   journalDay: "ui.journal.day", // a day's heading on a days page: "Day {n}"
+  bookMap: "ui.book.map",   // the Map page's button in the Book's row
+  mapHeading: "ui.map.heading",   // the heading of the list of places beside the map
+  lessonMapOpen: "ui.lesson.map_open",   // the Map's button: places found go on it
+  lessonMapPlaces: "ui.lesson.map_places",   // the sheet: home is the warm mark
   lessonClock: "ui.lesson.clock",   // the countdown of a wait the player is not shown the store of: the night
 } as const;

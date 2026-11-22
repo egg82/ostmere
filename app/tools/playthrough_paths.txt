@@ -41,6 +41,8 @@ app/ashfall_app/api/levels.py
 app/ashfall_app/api/limits.py
 app/ashfall_app/api/line_causes.py
 app/ashfall_app/api/line_models.py
+app/ashfall_app/api/map_infos.py
+app/ashfall_app/api/map_models.py
 app/ashfall_app/api/mixrow_models.py
 app/ashfall_app/api/mixrows.py
 app/ashfall_app/api/models.py
@@ -237,6 +239,8 @@ app/ashfall_app/opening/leave_checks.py
 app/ashfall_app/opening/line_kinds.py
 app/ashfall_app/opening/line_only_checks.py
 app/ashfall_app/opening/makers.py
+app/ashfall_app/opening/map_checks.py
+app/ashfall_app/opening/map_entries.py
 app/ashfall_app/opening/move_convert.py
 app/ashfall_app/opening/name_checks.py
 app/ashfall_app/opening/offer_caps.py

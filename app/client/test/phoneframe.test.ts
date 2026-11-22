@@ -51,7 +51,7 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
   expect("Book opens as a sheet", book.open, true);
   expect("on the chronicle", [one(".book .chronicle").hidden, one(".book .completed").hidden], [false, true]);
   const pages = book.querySelectorAll(".book-page");
-  expect("its pages: the chronicle, the journal (nothing written), Done", pages.map((p) => `${p.dataset["page"]}${p.hidden ? "" : "+"}`), ["chronicle+", "journal", "done+"]);
+  expect("its pages: the chronicle, the journal (nothing written), Done, the Map (no place)", pages.map((p) => `${p.dataset["page"]}${p.hidden ? "" : "+"}`), ["chronicle+", "journal", "done+", "map"]);
   pages[2]?.click();
   expect("Done turns to the finished cards", [one(".book .chronicle").hidden, one(".book .completed").hidden], [true, false]);
   book.close();
@@ -71,7 +71,7 @@ function screenOn(phone: boolean, phase: "full" | "start"): Screen {
 }
 {
   screenOn(true, "start");
-  expect("nothing finished: no Done page", one("dialog.book-sheet").querySelectorAll(".book-page").map((p) => p.hidden), [false, true, true]);
+  expect("nothing finished: no Done page (nor a Map: no place)", one("dialog.book-sheet").querySelectorAll(".book-page").map((p) => p.hidden), [false, true, true, true]);
 }
 {
   screenOn(false, "full");

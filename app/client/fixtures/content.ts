@@ -355,6 +355,8 @@ const text: Record<string, string> = {
   "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places", "ui.journal.day": "Day {n}",
   "ui.lesson.journal_open": "What you learn gets written in here.", "ui.lesson.journal_notes": "A dot here means a new note.",
   "ui.lesson.journal_numbers": "Exact numbers once you've fought it. Unknown until then.",
+  "ui.book.map": "Map", "ui.map.heading": "Places found", "ui.lesson.map_open": "Places you find get marked on here.",
+  "ui.lesson.map_places": "The warm mark is home. Everything else sits where it lies from there.",
   "ui.prestige.tops_out": "tops out in {d}",
   "ui.prestige.top": "at its top",
   "ui.prestige.mastered": "mastered",

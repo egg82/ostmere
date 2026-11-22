@@ -61,6 +61,7 @@ export const CLOCK = "clock";
 export const TOWN_MIX = "town_mix";
 export const JOURNAL = "journal";
 export const JOURNAL_NUMBERS = "journal_numbers";
+export const MAP = "map";
 export const PRESTIGE = "prestige";
 export { SIDE_MIX } from "./sidelesson";
 
@@ -213,6 +214,16 @@ export const LESSONS: readonly Lesson[] = [
     may: (_view, keeps) => keeps.lessonKept(JOURNAL),
     trigger: `.journal .journal-numbers`,
     steps: [{ target: () => `.journal .journal-numbers`, line: (c) => c.text.get(UI.lessonJournalNumbers), ends: "read" }],
+  },
+  {
+    id: MAP,
+    // the Map's own button in the Book's row, the first time it is on show (it shows once a place is revealed); then its sheet
+    may: () => true,
+    trigger: `[data-teach="map"]`,
+    steps: [
+      { target: () => `[data-teach="map"]`, line: (c) => c.text.get(UI.lessonMapOpen), ends: "touch" },
+      { target: () => `.map-sheet`, line: (c) => c.text.get(UI.lessonMapPlaces), ends: "read" },
+    ],
   },
   {
     id: PRESTIGE,
