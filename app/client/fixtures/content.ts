@@ -219,7 +219,7 @@ const text: Record<string, string> = {
   "ui.cause.camp": "Camp level {n}",
   "ui.cause.time": "time",
   "ui.cause.answer": "your answer",
-  "ui.asks.heading": "Asks", "ui.asks.more": "{n} more", "ui.ask.figure": "{name} {before} → {after}", "ui.ask.answer_was": "your answer: {answer}",
+  "ui.asks.heading": "Asks", "ui.asks.more": "{n} more", "ui.ask.figure": "{name} {before} → {after}",
   "ui.feedback.open": "Feedback",
   "ui.feedback.prompt": "What's working, what isn't, what confused you",
   "ui.feedback.note": "Sent with your game's progress and this build. No name goes with it.",
@@ -480,10 +480,10 @@ export const fixtureContent: Content = {
     // every optional field: two askers, a cause, and the three texts (expiry stands for a later engine's; the content refuses one today)
     askers: ["helper", "mason"], cause: { kind: "when", when: { kind: "at_least", watched: { kind: "card_count", card: "tend" }, value: 3, release: 3, value_of_cap: false, release_of_cap: false } },
     waiting_key: "offer.bank.waiting", expiry_key: "offer.bank.expiry", permanence_key: "offer.bank.permanence",
-  }, {   // the third, for a list of several: one asker, its cause an earlier answer
+  }, {   // the third, for a list of several: one asker, no cause
     offer: "trade", text_key: "offer.trade", kind: null, line_keys: [],
     answers: [{ answer: "keep", label_key: "answer.keep", cost_key: "offer.keep.effect", change_bp: [500], gains: [], role: null }, { answer: "swap", label_key: "answer.swap", cost_key: "offer.swap.effect", change_bp: [], gains: [{ store: "stone", quantity: 3 * Q }], role: null }],
-    askers: ["mason"], cause: { kind: "answer", offer: "bank" }, waiting_key: null, expiry_key: null, permanence_key: null,
+    askers: ["mason"], cause: null, waiting_key: null, expiry_key: null, permanence_key: null,
   }],
   offer_kinds: [{   // the kind the tests and #kinded make of the "ask" offer: "go" is the role yes, "wait" the role no
     kind: "q", roles: [{ role: "yes", label_key: "kind.q.yes" }, { role: "no", label_key: "kind.q.no" }],

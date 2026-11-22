@@ -5,7 +5,7 @@ import pytest
 
 from ashfall_app.api.content_models import Content, OfferInfo
 from ashfall_app.api.line_causes import line_infos
-from ashfall_app.api.line_models import AnswerCause, WhenCause
+from ashfall_app.api.line_models import WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.opening.ask_checks import check_asks
 from ashfall_app.opening.offer_entries import OfferEntry
@@ -40,15 +40,17 @@ def test_a_gate_the_page_can_word_is_the_cause(shipped_opening: Opening, served:
     assert got.when.watched.kind == "card_count" and got.when.watched.card == x.gate.id
 
 
-def test_a_hidden_gate_names_the_answer_it_follows(shipped_opening: Opening, served: dict[str, OfferInfo]) -> None:
+def test_an_earlier_answer_it_requires_is_no_cause(shipped_opening: Opening, served: dict[str, OfferInfo]) -> None:
+    """A chain gate only sequences the offer: the page shows no cause rather than an answer that reads as unrelated."""
     x = hidden_gated(shipped_opening)
-    after = next(c.id for c in x.requires if c.unlock_kind == "answered")
-    assert served[x.id].cause == AnswerCause(offer=after or "")
+    assert any(c.unlock_kind == "answered" for c in x.requires), "control: the offer requires an earlier answer"
+    assert served[x.id].cause is None
 
 
 def test_an_offers_lines_carry_the_offers_cause(shipped_opening: Opening, served: dict[str, OfferInfo]) -> None:
-    """A line moved from the offer that writes it onto a hidden-gated one takes that offer's cause."""
-    x = hidden_gated(shipped_opening)
+    """A line moved from the offer that writes it onto a card-count-gated one takes that offer's cause."""
+    x = next(x for x in shipped_opening.offers if x.gate.subject_kind == "card_count")
+    assert served[x.id].cause is not None, "control: the cause is something to carry"
     giver = next(g for g in shipped_opening.offers if g.line_keys)
     moved = {giver.id: giver.model_copy(update={"line_keys": []}), x.id: x.model_copy(update={"line_keys": giver.line_keys})}
     o = shipped_opening.model_copy(update={"offers": [moved.get(g.id, g) for g in shipped_opening.offers]})

@@ -21,14 +21,9 @@ export function askedBy(catalog: Catalog, view: View, info: OfferInfo): string {
   }));
 }
 
-/** What led to the ask, worded as a chronicle line's cause; an earlier answer is named by its label. Null when the
- * content gives none or the page cannot word it. */
-export function askCause(catalog: Catalog, view: View, info: OfferInfo): string | null {
-  const cause = info.cause;
-  if (cause?.kind !== "answer") return causeWords(catalog, cause);
-  const given = view.offers.find((o) => o.offer === cause.offer)?.answer;
-  const label = catalog.offers.get(cause.offer)?.answers.find((a) => a.answer === given)?.label_key;
-  return label ? catalog.text.fill(UI.askAnswerWas, { answer: catalog.label(label) }) : causeWords(catalog, cause);
+/** What led to the ask, worded as a chronicle line's cause. Null when the content gives none or the page cannot word it. */
+export function askCause(catalog: Catalog, info: OfferInfo): string | null {
+  return causeWords(catalog, info.cause);
 }
 
 /** Each figure that differs between the view and the dry run of an answer: a store's net rate, then its cap (the
