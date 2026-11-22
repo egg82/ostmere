@@ -1,7 +1,8 @@
 // The split a mix runs now, under the split the player set (CONTRACT.txt, "SPENT"; docs/decisions.md, "A mix keeps
 // going without a dry store"): shown only while a card of the mix is stopped, its slice greyed and each other card's
 // gain named by its source. It arrives through the arrival queue the first time; after that its row keeps its room
-// while it shows nothing, so its coming and going never moves what is under a finger. One per lane: the hands strip
+// while it shows nothing on a desktop, and gives it back on a phone (game.css), where the pinned strip's height is the
+// cards' room to scroll. One per lane: the hands strip
 // has one under its bar, each person of the town one under theirs. The numbers are the view's; it adds none.
 import type { View } from "../api/types";
 import { type RunningPart, runningNow } from "../game/spent";

@@ -872,6 +872,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .panel-top { padding-block: .3rem .4rem; }
   .hands { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .hands .share-key { margin-top: .2rem; }
+  .running-now.matched { display: none; }   /* the pinned strip gives the row's height back, so the cards keep their room to scroll */
   .hands-rows > .hands-meta { margin-top: .3rem; }   /* the mix's controls, under the pinned bar */
   .panel-top:has(> .hands.held) ~ .hands-rows > .hands-meta { visibility: hidden; }   /* they arrive with the strip */
   .hands-bar-row :is(.hands-name, .hands-mix-name) { flex: 0 1 auto; max-width: 45%; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 2rem; }   /* "Main ▾" beside the bar: a long name truncates */
@@ -1039,7 +1040,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .person-cards .card-share { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--ink-hi); }   /* the share a task holds, on its face */
 .town-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); flex: 1 1 auto; }
 /* The split that runs now (ui/runningnow.ts): the town's split shapes, a stopped card's slice a greyed sliver; once
-   arrived its row keeps its room while the splits match, so nothing under a finger moves. */
+   arrived its row keeps its room while the splits match on a desktop; a phone's pinned strip gives it back. */
 .running-now { margin-top: .3rem; }
 .running-now.matched { visibility: hidden; }
 .running-label { display: block; font-size: var(--t-meta); color: var(--ink); }
