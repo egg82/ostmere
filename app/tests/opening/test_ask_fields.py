@@ -7,6 +7,8 @@ from ashfall_app.api.content_models import Content, OfferInfo
 from ashfall_app.api.line_causes import line_infos
 from ashfall_app.api.line_models import WhenCause
 from ashfall_app.api.service import Game
+from ashfall_app.engine import new_save
+from ashfall_app.engine.answershifts import answer_shifts
 from ashfall_app.opening.ask_checks import check_asks
 from ashfall_app.opening.offer_entries import OfferEntry
 from ashfall_app.opening.schema import Opening
@@ -82,3 +84,17 @@ def test_an_asker_named_twice_fails(shipped_opening: Opening) -> None:
     lane = next(lane.id for lane in shipped_opening.lanes if lane.ruled)
     with pytest.raises(ValueError, match="twice"):
         check_asks(planted(shipped_opening, askers=[lane, lane]))
+
+
+def test_an_answers_shifts_line_up_with_its_changes(shipped_opening: Opening) -> None:
+    """OfferAnswer.shifts has one entry per AnswerInfo.change_bp, which the page reads slot by slot."""
+    rs = ruleset(shipped_opening, "dev", 1)
+    r, save = rs.rules, new_save(rs.rules)
+    served = {a.answer: a for x in Game(shipped_opening, rs).content().offer_infos for a in x.answers}
+    checked = 0
+    for o in r.offers:
+        for a in o.answers:
+            got = answer_shifts(save, r, a)
+            assert len(got) == len(served[a.id].change_bp), a.id
+            checked += bool(got)
+    assert checked > 10, "control: the shipped answers make lasting changes"

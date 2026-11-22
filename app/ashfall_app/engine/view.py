@@ -35,6 +35,8 @@ from .cardsides import card_costs
 from .coverage import all_covered, covered
 from .units import BP
 from .state import Save
+from .answershifts import answer_shifts
+from .offers import OfferDef
 from .offerstate import answer_card, answer_given, is_shown
 from .unlocks import PRESENT_ONLY, Unlock, UnlockKind, unlock_key
 from .viewparts import (
@@ -202,10 +204,14 @@ def _lane_shown(save: Save, rules: Rules, lane: LaneId) -> bool:
 
 
 def _offers(save: Save, rules: Rules) -> tuple[OfferView, ...]:
-    return tuple(OfferView(o.id, answer_given(save, rules, o.id),
-                           tuple(AnswerView(a.id, card := answer_card(a), None if card is None
-                                            else tap_seconds(save, rules, card)) for a in o.answers))
-                 for o in rules.offers if is_shown(save, rules, o.id))
+    return tuple(_offer(save, rules, o) for o in rules.offers if is_shown(save, rules, o.id))
+
+
+def _offer(save: Save, rules: Rules, o: OfferDef) -> OfferView:
+    given = answer_given(save, rules, o.id)
+    return OfferView(o.id, given, tuple(
+        AnswerView(a.id, card := answer_card(a), None if card is None else tap_seconds(save, rules, card),
+                   () if given else answer_shifts(save, rules, a)) for a in o.answers))
 
 
 def _unlocked(save: Save, rules: Rules) -> tuple[Unlock, ...]:

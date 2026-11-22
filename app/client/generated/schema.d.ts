@@ -654,6 +654,17 @@ export interface components {
             answer: string;
         };
         /**
+         * AnswerShift
+         * @description One lasting change an open offer's answer makes, as the total on its target: `now_bp` today and `after_bp` once
+         *     the answer is given, signed changes in basis points (a +15% total is 1500), as AnswerInfo.change_bp.
+         */
+        AnswerShift: {
+            /** Now Bp */
+            now_bp: number;
+            /** After Bp */
+            after_bp: number;
+        };
+        /**
          * ApiError
          * @description Every error's body (CONTRACT.txt, ERRORS).
          */
@@ -1785,6 +1796,8 @@ export interface components {
             card: string | null;
             /** Takes S */
             takes_s: number | null;
+            /** Shifts */
+            shifts: (components["schemas"]["AnswerShift"] | null)[];
         };
         /** OfferInfo */
         OfferInfo: {

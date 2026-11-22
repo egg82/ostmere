@@ -99,6 +99,20 @@ class Modifier:
     source: SourceId
 
 
+def change_bp(m: Modifier) -> int:
+    """The entry's signed change in basis points: a multiplier of 11_000 is +1_000, an addition of 5_000 is +5_000."""
+    return m.amount_bp - (BP if m.kind is ModifierKind.MUL_BP else 0)
+
+
+def total_change_bp(stack: tuple[Modifier, ...], target: Target) -> int:
+    """What the entries of `stack` aimed at `target` change it by, as modified_rate combines them (additions sum, floored
+    at 0, then multipliers compound), in basis points rounded down."""
+    aimed = [m for m in stack if m.target == target]
+    adds = sum(m.amount_bp for m in aimed if m.kind is ModifierKind.ADD_BP)
+    muls = [m.amount_bp for m in aimed if m.kind is ModifierKind.MUL_BP]
+    return max(0, BP + adds) * prod(muls) // BP ** len(muls) - BP
+
+
 def lowers_cap(m: Modifier) -> bool:
     """An entry aimed at a StoreCap that would lower it: add_bp below 0, mul_bp below BP (DESIGN.txt, "Store caps")."""
     return isinstance(m.target, StoreCap) and m.amount_bp < (BP if m.kind is ModifierKind.MUL_BP else 0)

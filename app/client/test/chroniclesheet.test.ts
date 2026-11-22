@@ -24,7 +24,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 const catalog = new Catalog(fixtureContent);
 const text = (key: string): string => catalog.text.get(key);
 const line = (key: string, at: number): LogLine => ({ at, seq: 0, key, card: null, opens_beat: false });
-const ASK: Offer = { offer: "ask", answer: null, answers: [{ answer: "wait", card: null, takes_s: null }] };
+const ASK: Offer = { offer: "ask", answer: null, answers: [{ answer: "wait", card: null, takes_s: null, shifts: [] }] };
 
 function opened(lines: LogLine[], now: number, visits: Array<{ left: number; back: number }>, chapter: Chapter | null = null, offers: Offer[] = []): Screen {
   const keeps = new Keeps({ save: { ...NEW_SAVE, visits, chapter } });

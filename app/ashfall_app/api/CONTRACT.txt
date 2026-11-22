@@ -1185,9 +1185,13 @@ OFFERS
   writes only where this offer differs from the usual, null otherwise: waiting_key, what waiting costs (usually
   nothing: an open offer pauses only itself); expiry_key, when it goes (usually never; the content refuses one while
   the engine has no offer expiry); permanence_key, what the answer settles for good, for a choice to weigh. View: offers [Offer
-  {offer, answer, answers: [OfferAnswer {answer, card, takes_s}]}], every offer shown so far, in content order:
+  {offer, answer, answers: [OfferAnswer {answer, card, takes_s, shifts}]}], every offer shown so far, in content order:
   answer null while it is open, else the answer given; per answer, the card it sets running (null for none) and
-  takes_s, the seconds one completion of that card would take started now (null without a card).
+  takes_s, the seconds one completion of that card would take started now (null without a card), and shifts: one entry
+  per AnswerInfo.change_bp, in its order, AnswerShift {now_bp, after_bp}, the total change on that change's target now
+  and once the answer is given (signed basis points, so +15% is 1500); null where the entries of one change aim at
+  targets standing differently; empty once answered. The page fills a cost text's {pct} and {pct_b} with "now → after"
+  (ui.ask.shift {before}{after}) where a shift is given, else with the change itself, and computes no total.
   AnswerInfo.change_bp is the answer's modifiers as signed changes in basis points, each distinct value once in
   authored order, as LevelPays.change_bp; AnswerInfo.gains the stores its outcome puts in, one entry per authored
   store line in authored order, quantity in quantity units. Both are empty for an answer without any.

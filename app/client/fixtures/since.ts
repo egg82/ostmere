@@ -65,7 +65,7 @@ function viewAt(base: View, at: number, stores: Record<string, number>, levels: 
     ledger: [...base.ledger.map((l) => still(l, stores[l.store] ?? 0)), ...more],
     unlocked: [...base.unlocked, ...more.map((m) => ({ category: "store" as const, id: m.store }))],
     skills: base.skills.map((s, i) => ({ ...s, level: levels[i] ?? s.level, next_level_at: null, xp: { ...s.xp, rate: 0 } })),
-    offers: ask ? [{ offer: "ask", answer: null, answers: [{ answer: "wait", card: null, takes_s: null }, { answer: "go", card: "haul", takes_s: 750 }] }] : [],
+    offers: ask ? [{ offer: "ask", answer: null, answers: [{ answer: "wait", card: null, takes_s: null, shifts: [] }, { answer: "go", card: "haul", takes_s: 750, shifts: [] }] }] : [],
   };
 }
 

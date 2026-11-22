@@ -30,8 +30,8 @@ function laneCard(at: number, id: string, running: boolean): Card {
 
 function offerOf(phase: DayTwoPhase): Offer[] {
   if (phase === "ruled") return [];
-  if (phase === "bank") return [{ offer: "bank", answer: null, answers: [{ answer: "hers", card: null, takes_s: null }, { answer: "his", card: null, takes_s: null }] }];
-  return [{ offer: "ask", answer: phase === "answered" ? "wait" : null, answers: [{ answer: "wait", card: null, takes_s: null }, { answer: "go", card: "haul", takes_s: 750 }] }];
+  if (phase === "bank") return [{ offer: "bank", answer: null, answers: [{ answer: "hers", card: null, takes_s: null, shifts: [{ now_bp: 1500, after_bp: 2650 }] }, { answer: "his", card: null, takes_s: null, shifts: [{ now_bp: 0, after_bp: -1000 }] }] }];
+  return [{ offer: "ask", answer: phase === "answered" ? "wait" : null, answers: [{ answer: "wait", card: null, takes_s: null, shifts: [] }, { answer: "go", card: "haul", takes_s: 750, shifts: [] }] }];
 }
 
 const same = (a: Order, b: Order): boolean => JSON.stringify(a) === JSON.stringify(b);

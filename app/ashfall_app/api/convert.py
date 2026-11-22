@@ -82,6 +82,10 @@ def _lanes(lanes: Iterable[e.LaneBar]) -> list[w.LaneBar]:
         own_split=b.own_split) for b in lanes]
 
 
+def _shift(s: e.AnswerShift | None) -> w.AnswerShift | None:
+    return None if s is None else w.AnswerShift(now_bp=s.now_bp, after_bp=s.after_bp)
+
+
 def _need(card: str, n: e.Need, sources: Mapping[tuple[str, str], Source]) -> w.Need:
     src = sources.get((card, str(n.store)))
     return w.Need(store=n.store, quantity=n.quantity, segment=segment(n.segment),
@@ -148,7 +152,8 @@ def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | No
         orders=[order(o) for o in save.orders],
         queue=[w.QueueEntry(verb=order_verb(q.verb), until=condition(q.until)) for q in save.queue],
         offers=[w.Offer(offer=o.offer, answer=o.answer,
-                        answers=[w.OfferAnswer(answer=a.answer, card=a.card, takes_s=a.takes_s) for a in o.answers])
+                        answers=[w.OfferAnswer(answer=a.answer, card=a.card, takes_s=a.takes_s, shifts=[_shift(s) for s in a.shifts])
+                                 for a in o.answers])
                 for o in v.offers],
         fights=_fights(v.fights, v.held), goals=list(goals), goal_rows=list(goal_rows),
         store_rows=list(store_rows), levels=list(levels))
