@@ -44,11 +44,39 @@ xp_per_hour = 900
 inputs = [{ store = "ruin_beams", items = 1 }]
 outcome = { stores = [{ store = "beams", items = 1 }] }
 
+# Hauling beams is everyday work for anyone who can lift them (decisions/people.md, "Who can do which job"); his leg
+# rules it out. Out at the ruin, so the field group's.
+[[town_cards]]
+id = "{lane}_pull_beams"
+twin_of = "pull_beams"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_field"]
+presentation = "action"
+label_key = "c_pull_beams"
+work_s = 1200
+inputs = [{ store = "ruin_beams", items = 1 }]
+outcome = { stores = [{ store = "beams", items = 1 }] }
+
+[[triggers]]
+id = "t_town_beams"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "pull_beams", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_pull_beams" },
+  { unlock_kind = "card", id = "n2_pull_beams" },
+  { unlock_kind = "card", id = "n3_pull_beams" },
+  { unlock_kind = "card", id = "n5_pull_beams" },
+  { unlock_kind = "card", id = "n6_pull_beams" },
+  { unlock_kind = "card", id = "n7_pull_beams" },
+  { unlock_kind = "card", id = "g_field_pull_beams" },
+]
+
 # P2, the week's joint project on the hands: eight stages, each the same take (a card's inputs are one per stage), so
 # the totals are week-three.md's: 112 stakes, 24 stones, 16 cord, 8 beams, 4 pelts. Run by its order card (below), so
 # no stage is queued: stage 4 T3, stage 8 B14. No floor: the hall shows at S4 (331 h), past sharp's 308.8 h.
 [[cards]]
 id = "hall"
+only_player = "project"
 presentation = "craft"
 label_key = "c_hall"
 upside_key = "up_hall"
@@ -234,6 +262,7 @@ outcome = { stores = [{ store = "barley", items = 2 }] }
 
 [[town_cards]]
 id = "{lane}_reap"
+twin_of = "reap"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_reap"
@@ -260,6 +289,35 @@ skill = "cooking"
 xp_per_hour = 900
 inputs = [{ store = "barley", items = 4 }, { store = "dry_wood", items = 1 }]
 outcome = { stores = [{ store = "stew", items = 4 }] }
+
+# The barley pot, an everyday job everyone takes (day three's pot).
+[[town_cards]]
+id = "{lane}_barley_stew"
+twin_of = "barley_stew"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_barley_stew"
+upside_key = "up_stew"
+upside_of = "n2_eating"
+work_s = 600
+inputs = [{ store = "barley", items = 4 }, { store = "dry_wood", items = 1 }]
+outcome = { stores = [{ store = "stew", items = 4 }] }
+
+[[triggers]]
+id = "t_town_barley_stew"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "barley_stew", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_barley_stew" },
+  { unlock_kind = "card", id = "n2_barley_stew" },
+  { unlock_kind = "card", id = "n3_barley_stew" },
+  { unlock_kind = "card", id = "n4_barley_stew" },
+  { unlock_kind = "card", id = "n5_barley_stew" },
+  { unlock_kind = "card", id = "n6_barley_stew" },
+  { unlock_kind = "card", id = "n7_barley_stew" },
+  { unlock_kind = "card", id = "g_hearth_barley_stew" },
+]
 
 # ---------- T1: night 15, the frost ----------
 
@@ -302,6 +360,7 @@ inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
 
 [[cards]]
 id = "n3_cover_beds"
+twin_of = "cover_beds"
 lane = "n3"
 presentation = "action"
 label_key = "c_n3_cover_beds"
@@ -345,6 +404,7 @@ base = 10
 # The hands against a herd that runs: a loss is the deer getting away, no hurt, the smoked carried out spent.
 [[cards]]
 id = "hunt_deer"
+only_player = "fight"
 presentation = "action"
 label_key = "c_hunt_deer"
 work_s = 2400
@@ -529,6 +589,34 @@ stake = "reach"
 work_s = 45
 inputs = [{ store = "damp_wood", items = 8 }]
 outcome = { stores = [{ store = "cordwood", items = 1 }] }
+
+# Stacking wood is everyday work, the windbreak's kind: the same lanes.
+[[town_cards]]
+id = "{lane}_stack_cordwood"
+twin_of = "stack_cordwood"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_stack_cordwood"
+upside_key = "up_stack_cordwood"
+stake = "reach"
+work_s = 45
+inputs = [{ store = "damp_wood", items = 8 }]
+outcome = { stores = [{ store = "cordwood", items = 1 }] }
+
+[[triggers]]
+id = "t_town_cordwood"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "stack_cordwood", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_stack_cordwood" },
+  { unlock_kind = "card", id = "n2_stack_cordwood" },
+  { unlock_kind = "card", id = "n3_stack_cordwood" },
+  { unlock_kind = "card", id = "n5_stack_cordwood" },
+  { unlock_kind = "card", id = "n6_stack_cordwood" },
+  { unlock_kind = "card", id = "n7_stack_cordwood" },
+  { unlock_kind = "card", id = "g_hearth_stack_cordwood" },
+]
 
 # Its cap is the last reach.
 [[stores]]

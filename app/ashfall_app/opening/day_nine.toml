@@ -49,6 +49,7 @@ outcome = { line_keys = ["l_gap_fire_1"], unlocks = [{ unlock_kind = "card", id 
 
 [[cards]]
 id = "gap_fire"
+only_player = "project"
 presentation = "craft"
 label_key = "c_gap_fire"
 upside_key = "up_gap_fire"
@@ -78,6 +79,7 @@ outcome = { line_keys = ["l_old_wire"], stores = [{ store = "wire", items = 2 }]
 
 [[cards]]
 id = "set_snare_4"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_set_snare_4"
 work_s = 600
@@ -209,6 +211,7 @@ inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { 
 
 [[cards]]
 id = "n1_peg_flaps"
+twin_of = "peg_flaps"
 lane = "n1"
 presentation = "action"
 label_key = "c_n1_peg_flaps"

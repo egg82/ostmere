@@ -253,6 +253,7 @@ app/ashfall_app/opening/people.py
 app/ashfall_app/opening/people_checks.py
 app/ashfall_app/opening/phase_pays.py
 app/ashfall_app/opening/phase_pays.toml
+app/ashfall_app/opening/player_checks.py
 app/ashfall_app/opening/prestige.py
 app/ashfall_app/opening/prestige.toml
 app/ashfall_app/opening/refs.py

@@ -10,6 +10,7 @@ from .band_checks import check_bands
 from .camp_checks import check_camp
 from .chip_checks import check_chips
 from .choice_checks import check_choices
+from .player_checks import check_player_only
 from .face_checks import check_clocks
 from .convert import build_rules
 from .fight_checks import check_fight_content
@@ -77,6 +78,7 @@ def check_structure(o: "Opening") -> None:
     check_retired_chores(o)
     check_replacements(o)
     check_choices(o)
+    check_player_only(o)
     check_leaves(o)
     check_groups(o)
     check_people(o)

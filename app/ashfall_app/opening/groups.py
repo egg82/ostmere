@@ -45,17 +45,18 @@ def check_groups(o: "Opening") -> None:
 
 def with_group_unlocks(o: "Opening") -> "Opening":
     """`o` with each outcome that hands a person to their group (an unmarked join, an unmarking) also unlocking the
-    group's cards: unlocks only grow, so a second member's copy is a no-op."""
+    group's cards: unlocks only grow, so a second member's copy is a no-op. A group card some outcome unlocks by name is
+    left to that outcome: a later chapter's job reaches the group with the hands' card, not at a join before it."""
     group_of = {x.id: x.group for x in o.lanes if x.group is not None}
     if not group_of:
         return o
+    named = {u.id for _, out in outcomes(o) for u in out.unlocks if u.unlock_kind == "card"}
 
     def out(x: OutcomeEntry) -> OutcomeEntry:
         lanes = [j.lane for j in x.joins if not j.own_split] + [m.lane for m in x.marks if not m.own_split]
-        have = {u.id for u in x.unlocks if u.unlock_kind == "card"}
         added = [UnlockEntry(unlock_kind="card", id=c.id)
                  for g in dict.fromkeys(group_of[lane] for lane in lanes if lane in group_of)
-                 for c in o.cards if c.lane == g and c.id not in have]
+                 for c in o.cards if c.lane == g and c.id not in named]
         return x.model_copy(update={"unlocks": [*x.unlocks, *added]}) if added else x
 
     return o.model_copy(update={

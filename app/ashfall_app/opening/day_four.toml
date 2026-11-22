@@ -159,6 +159,7 @@ inputs = [{ store = "dry_wood", items = 1 }]
 # Staged on the hands, queued When ready; each stage up to a full store. Stage 2 is L3, stage 3 SL7.
 [[cards]]
 id = "woodshed"
+only_player = "project"
 presentation = "craft"
 label_key = "c_woodshed"
 upside_key = "up_woodshed"
@@ -198,6 +199,7 @@ outcome = { line_keys = ["l_night_5"], unlocks = [{ unlock_kind = "feature", id 
 # sit_up, whose label this one shares. Its finish opens Arcana and starts the clock to morning 6.
 [[cards]]
 id = "sit_up_5"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_up"
 work_s = 5

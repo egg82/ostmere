@@ -40,6 +40,7 @@ cap_items = 12
 # its order card (below), so no stage is queued; it lands B10 in day nine.
 [[cards]]
 id = "palisade"
+only_player = "project"
 presentation = "craft"
 label_key = "c_palisade"
 upside_key = "up_palisade"
@@ -76,6 +77,7 @@ outcome = { stores = [{ store = "stakes", items = 1 }] }
 # Stakes on the townsfolk's lanes; the three who come in day eleven expand where their lanes are declared.
 [[town_cards]]
 id = "{lane}_stakes"
+twin_of = "cut_stakes"
 lanes = ["n1", "n2", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_lane_stakes"
@@ -95,6 +97,7 @@ outcome = { stores = [{ store = "cord", items = 1 }] }
 # making nothing and an earlier file cannot name a store this one declares.
 [[cards]]
 id = "n4_cord"
+twin_of = "twist_cord"
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_cord"
@@ -114,6 +117,7 @@ offered_after = { unlock_kind = "card", id = "n4_cord" }
 # is queued (one queue entry a stage let a babysitter land week 1's staged builds ahead of a player who queues).
 [[cards]]
 id = "hide_flaps"
+only_player = "project"
 presentation = "craft"
 label_key = "c_hide_flaps"
 upside_key = "up_hide_flaps"
@@ -213,6 +217,7 @@ outcome = { stores = [{ store = "fungus", items = 2 }] }
 # Picking on her lane and on the three who come in day eleven, expanded where their lanes are declared.
 [[town_cards]]
 id = "{lane}_pick"
+twin_of = "pick_fungus"
 lanes = ["n3", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_lane_pick"
@@ -235,6 +240,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 # The fungus pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
 id = "{lane}_fungus_stew"
+twin_of = "fungus_stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_fungus_stew"
@@ -310,6 +316,7 @@ outcome = { stores = [{ store = "ash", items = 4 }] }
 
 [[cards]]
 id = "n2_clear_roofs"
+twin_of = "clear_roofs"
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_clear_roofs"

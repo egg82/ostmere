@@ -35,6 +35,7 @@ makes = [{ store = "dig_clock", items_per_hour = 1 }]
 # typical leaves some bloom at night 14 (week-two.md, "Fungus as food").
 [[cards]]
 id = "dig_cellar"
+only_player = "project"
 presentation = "craft"
 label_key = "c_dig_cellar"
 upside_key = "up_dig_cellar"
@@ -160,6 +161,7 @@ base = 16
 # A fight card on the hands whose pool ends it, as everything has a cap: the player's to seek, never a raid.
 [[cards]]
 id = "hunt_bear"
+only_player = "fight"
 presentation = "action"
 label_key = "c_hunt_bear"
 work_s = 2400
@@ -205,6 +207,7 @@ outcome = { line_keys = ["l_lamps"], unlocks = [{ unlock_kind = "card", id = "ta
 # Three stages, the last holding the gap; run by its order card, as hide_flaps is.
 [[cards]]
 id = "tallow_lamps"
+only_player = "project"
 presentation = "craft"
 label_key = "c_tallow_lamps"
 upside_key = "up_tallow_lamps"
@@ -472,6 +475,7 @@ outcome = { line_keys = ["l_night_14"], unlocks = [{ unlock_kind = "action", id 
 # the clock itself, so its countdown shows from S3.
 [[cards]]
 id = "sit_last_night"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_last_night"
 work_s = 5
@@ -503,6 +507,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "catch_broth" }] }
 # The broth, an everyday job everyone takes (day three's pot).
 [[town_cards]]
 id = "{lane}_catch_broth"
+twin_of = "catch_broth"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_catch_broth"
@@ -553,6 +558,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 
 [[cards]]
 id = "stone_ring"
+only_player = "magic"
 presentation = "action"
 label_key = "c_stone_ring"
 work_s = 60
