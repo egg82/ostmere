@@ -1,4 +1,4 @@
-beats whenever (pace_scale 1): B14 day 15.31, target_day 16
+beats whenever (pace_scale 1): B14 day 15.35, target_day 16
   away V53->V54: 2 ['trigger t_b13', 'trigger offer_o_sun_rack']
   away V54->V55: 2 ['trigger t_sow', 'trigger t_frost']
   away V55->V56: 2 ['trigger t_beds', 'trigger t_deer']

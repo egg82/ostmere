@@ -31,23 +31,23 @@
           tuner moments 3: ask 1, card 1, goal landed 1, mix edited 1, set grew 1
   day 15  visits 3  keeper: +21.7h 33%  +44.8h 52%  +53.6h 57%
           tuner moments 0
-  day 16  visits 4  keeper: +32.5h 48%  +49.6h 43%  +30.3h 49%  +71.5h 60%
-          tuner moments 3: set grew 3
+  day 16  visits 4  keeper: +31.6h 48%  +29.7h 48%  +29.4h 49%  +69.4h 60%
+          tuner moments 2: set grew 2
   worth by route, percent by decile (threshold 25%)
-    keeper                     n=67: 1 23 28 40 45 50 56 65 75 80 85
-    tuner                      n=67: 0 4 5 8 13 30 59 78 94 100 100
-    fresh (control: little)    n=67: 0 2 4 5 10 38 64 94 100 100 100
+    keeper                     n=67: 1 23 28 40 46 50 56 65 75 80 85
+    tuner                      n=67: 0 4 5 6 12 24 57 77 87 100 100
+    fresh (control: little)    n=67: 0 2 3 5 6 31 61 92 100 100 100
     once (control: a lot)      n=67: 0 30 47 100 100 100 100 100 100 100 100
   fresh's worth by cause, percent by decile
-    no cause                   n= 8: 0 1 1 2 5 5 5 5 10 10 12
-    a cause                    n=59: 0 2 4 5 18 57 90 98 100 100 100
+    no cause                   n= 9: 0 1 2 2 2 5 5 5 5 10 12
+    a cause                    n=58: 0 2 4 5 18 52 81 95 100 100 100
   kept rates come true over the absence after (XP gained / XP the rates promised), by decile
-    0.11 0.58 0.68 0.77 0.83 0.85 0.88 0.92 0.94 1.00 1.79
+    0.11 0.58 0.68 0.77 0.83 0.85 0.88 0.91 0.93 1.00 1.79
   moments per visit (opening = to B3 seen)
     opening   0 of  2 = 0.00   opening 0.00
     week 1   19 of 29 = 0.66   opening 0.00
     week 2   12 of 31 = 0.39   opening 0.00
-    week 3    3 of  7 = 0.43   opening 0.00
+    week 3    2 of  7 = 0.29   opening 0.00
   longest stretch with no moment: day 13.97 to 15.22 (1.25 d)
   per visit (* tuner takes the best setup)
   visit   day  goals  best    keeper       tuner        fresh        once         came  causes
@@ -116,7 +116,7 @@
   V63   14.36     3   43.7h  +21.7h 33%   +2.0h 4%     +2.0h 4%     never         0.62   card,ask,mix edited
   V64   14.53     4   41.8h  +44.8h 52%   +2.1h 5%     never        never         0.68   card,chore,mix edited,set grew
   V65   14.67     4   40.3h  +53.6h 57%   +2.5h 6%     +0.4h 1%     never         0.77   
-  V66   15.05     4   35.5h  +32.5h 48%   +4.1h 10%    +1.7h 5%     never         0.79   card,ask,mix edited
-  V67   15.22     4   65.1h  +49.6h 43%   never        never        never         1.54  *set grew
-  V68   15.36     4   31.6h  +30.3h 49%   never        never        never         0.81  *set grew
-  V69   15.74     5   47.7h  +71.5h 60%   never        never        never            -  *set grew
+  V66   15.05     4   34.5h  +31.6h 48%   +4.0h 10%    +1.7h 5%     never         0.88   card,ask,mix edited
+  V67   15.22     5   32.7h  +29.7h 48%   never        never        never         0.77  *set grew
+  V68   15.36     4   30.5h  +29.4h 49%   +0.7h 2%     +0.7h 2%     never         0.81   
+  V69   15.74     5   45.9h  +69.4h 60%   never        never        never            -  *set grew
