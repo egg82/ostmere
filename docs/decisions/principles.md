@@ -133,6 +133,13 @@ work out the cost themselves ("oh, right, that makes sense"); afterwards the fac
 option's card shows its time as it now stands, and the ledger's numbers show what the order did. Weighty choices still
 show their weight up front (below).
 
+**Items now beside a lasting percentage is not a tradeoff** (owner: "I have never needed or felt like I needed items
+right away instead of a permanent percentage"). A lump earns its place only where the player is short of it at that
+moment: a cost on the page waiting on that store, or a store the chapter runs dry. Otherwise each answer gives up
+something the player would miss, such as a rate on one store against a rate on another, a person's time, or a door
+the other answer opens. **An answer that changes a percentage shows the one it changes**, as now → after ("Stew
++15% → +20%"), so the player can see what they are adding to or giving up.
+
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
 
