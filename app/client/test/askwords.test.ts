@@ -1,5 +1,5 @@
 // What an ask says of itself (game/asks.ts; CONTRACT.txt, "OFFERS"): who asks by name (a lane's name text, else its
-// label as it reads now), what led to it (a line's cause, an earlier answer by its label), and the figures an answer
+// label as it reads now), what led to it (a line's cause), and the figures an answer
 // moves, read off a dry run against the view (rates, then caps, then card times, never the Camp's store).
 import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
@@ -37,10 +37,8 @@ const info = (offer: string): OfferInfo => {
 }
 
 {  // what led to it
-  expect("a gate, as a line's cause", askCause(catalog, view, info("bank")), "Tend the fire ×3");
-  expect("an earlier answer, by its label", askCause(catalog, asksStep("asksmany", 100, { answered: ["bank:his"] }).view, info("trade")), "your answer: His");
-  expect("an earlier offer not answered in the view: the plain cause", askCause(catalog, view, info("trade")), "your answer");
-  expect("none", askCause(catalog, view, info("ask")), null);
+  expect("a gate, as a line's cause", askCause(catalog, info("bank")), "Tend the fire ×3");
+  expect("none", askCause(catalog, info("trade")), null);
 }
 
 {  // the figures an answer moves

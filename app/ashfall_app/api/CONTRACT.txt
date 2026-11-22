@@ -1179,9 +1179,9 @@ OFFERS
   [OfferKindInfo {kind, roles: [KindRole {role, label_key}]}], one per kind in content order, a label for each role
   written for whoever asks: the words of the rule that answers the kind (the content refuses a kind without one for
   each of its roles). askers: the ruled lanes whose
-  people ask (empty when no one person does). cause: what led to the offer, a LineCause (Line causes): its gate, or for
-  a gate the page cannot word (Line causes: a store never shown, a lane's rules) the first offer whose answer it requires, as answer
-  {offer}; null with neither, and the offer's lines carry the same cause. The three *_key fields are text the content
+  people ask (empty when no one person does). cause: what led to the offer, a LineCause (Line causes): its gate;
+  null for a gate the page cannot word (Line causes: a store never shown, a lane's rules), and an earlier answer the
+  offer requires is never its cause. The offer's lines carry the same cause. The three *_key fields are text the content
   writes only where this offer differs from the usual, null otherwise: waiting_key, what waiting costs (usually
   nothing: an open offer pauses only itself); expiry_key, when it goes (usually never; the content refuses one while
   the engine has no offer expiry); permanence_key, what the answer settles for good, for a choice to weigh. View: offers [Offer

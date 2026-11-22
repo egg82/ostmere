@@ -48,7 +48,7 @@ export function askNode(ctx: PartContext, offer: string): AskNode {
   node.append(who, el("p", "ask-text", catalog.label(info?.text_key)), cause, answers, facts);
   const refresh = (view: View, figures: ReadonlyMap<string, string[]>): void => {
     if (info) drawWho(ctx, who, view, info);
-    const led = info ? askCause(catalog, view, info) : null;
+    const led = info ? askCause(catalog, info) : null;
     setText(cause, led ?? "");
     cause.hidden = led === null;
     const shown = view.offers.find((o) => o.offer === offer);

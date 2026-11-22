@@ -58,13 +58,9 @@ def worded_stores(o: Opening) -> frozenset[str]:
 
 
 def offer_cause(x: OfferEntry, cards: set[str], worded: frozenset[str]) -> LineCause | None:
-    """What led to an offer: its gate, unless the page cannot word it (worded_stores, _when); then the first offer whose
-    answer it requires."""
-    gate = _when(x.gate, cards, worded)
-    if gate is not None:
-        return gate
-    after = next((c.id for c in x.requires if c.subject_kind == "unlocked" and c.unlock_kind == "answered"), None)
-    return None if after is None else AnswerCause(offer=after)
+    """What led to an offer: its gate, unless the page cannot word it (worded_stores, _when); then none. An earlier
+    answer it requires only sequences it, and reads as unrelated beside it."""
+    return _when(x.gate, cards, worded)
 
 
 def _shared(a: LineCause, b: LineCause | None) -> SkillCause | None:
