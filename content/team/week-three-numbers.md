@@ -329,3 +329,21 @@ Sharp and whenever reach B15 before their fifth cover, so T6 and SL26 land past 
 Smoked loses a fifth to a third of its making to the cap: the raise per arrival group (day eighteen) is its lever. On
 typical two absences bring three moments (the road found, SL25 and a job; T5 with its note and a job), over the target
 of two; the jobs' countdown is the lever if that should hold.
+
+**Day eighteen (`day_eighteen.toml`, shipped in `CHAPTERS`), applied:**
+
+- The table's meal counts held at the placeholders (24, 40, 56) and its cost at 2 smoked an hour, +1 at each group's
+  join (an `add_bp` 5000 on its cost per join, so 3 then 4). Typical has 56 meals by B15, so on typical the arrivals
+  wait on the answers' visits; on sharp the counts bind (B15 at 386 h, 19.5 meals).
+- The five who join each eat a stew and a root an hour (n3's and n4's shape); the table is the meat on top.
+- O-choir and O-cutter are offers of a new kind (D-145). B16's floor is the fifteenth arrival's (369 h); B16 lands
+  8 h after him.
+
+**Measured** on a scratch play (main's saved day-fifteen ends, day sixteen played under the rules without day
+eighteen, its end rebased onto them; seed 0). The simulator's readouts (`weektwo-eighteen*`) replace it:
+
+| Route | B15 | T7 | T8 | T9 | the fifteenth | B16 |
+|---|---|---|---|---|---|---|
+| typical | 427.6 | 429.7 | 434.8 | 437.8 | 444.2 | 452.2 (band 432-456) |
+| sharp | 386.0 | 390.5 | 394.6 | 406.5 | 422.5 | 430.5 (floor 369: the meal counts bind) |
+| whenever | 394.2 | 396.2 | 408.9 | 411.9 | 424.5 | 432.5 (the kind's rule answered O-cutter while away) |
