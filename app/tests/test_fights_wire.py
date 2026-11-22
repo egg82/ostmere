@@ -11,7 +11,7 @@ from ashfall_app.api import content_models as cm
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
 from ashfall_app.opening.fight_entries import SideEntry, ThreatEntry
-from ashfall_app.opening.schema import load_opening, to_rules
+from ashfall_app.opening.schema import Opening, load_opening, to_rules
 from ashfall_app.saves.ruleset import ruleset
 
 HAND, WOLF = e.SideId("hand"), e.ThreatId("wolf")
@@ -22,8 +22,13 @@ GEAR = e.Modifier(e.SideStrength(HAND), e.ModifierKind.MUL_BP, 2 * e.BP, e.Sourc
 
 
 @cache
+def shipped() -> Opening:
+    return load_opening()
+
+
+@cache
 def rules() -> e.Rules:
-    base = to_rules(load_opening())
+    base = to_rules(shipped())
     lost, fought, raid_lost = (e.StoreId(s) for s in ("dry_wood", "damp_wood", "stones"))
     cards = tuple(replace(c, fight=e.FightDef(HAND, WOLF, lost, loses=LOSES, wounds=WOUNDS)) if c.id == HUNT else c
                   for c in base.cards)
@@ -36,7 +41,7 @@ def rules() -> e.Rules:
 
 
 def game_of(r: e.Rules) -> Game:
-    o = load_opening()
+    o = shipped()
     o = o.model_copy(update={"sides": [*o.sides, SideEntry(id=HAND, label_key="side.hand", base=300)],
                              "threats": [*o.threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100)]})
     return Game(o, replace(ruleset(o, "test", 1), rules=r))
@@ -61,8 +66,8 @@ def test_the_content_serves_the_sides_threats_and_each_runners_fight():
                         wounds=[cm.Amount(store="nails", quantity=2 * Q)], won_line_keys=[], lost_line_keys=[])
     assert [x.card for x in c.card_infos if x.fight == info] == ["gather_wood"]
     assert [x.action for x in c.standing_infos if x.fight == info] == ["chill"]
-    shipped = to_rules(load_opening())   # control: nothing else carries one, beyond what the content ships
-    real = sum(r.fight is not None for r in (*shipped.cards, *shipped.standing))
+    base = to_rules(shipped())   # control: nothing else carries one, beyond what the content ships
+    real = sum(r.fight is not None for r in (*base.cards, *base.standing))
     assert sum(x.fight is not None for x in (*c.card_infos, *c.standing_infos)) == real + 2
 
 
