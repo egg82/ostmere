@@ -119,7 +119,8 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
     made = {s.store: s.made_by for s in content.store_infos}
     assert made["stones"] == ["scavenge", "n1_scavenge", "n2_scavenge"]
     assert made["roots"] == shipped(["forage", "n1_forage", "n2_forage"], (DAY_FIVE, ["n3_forage"]), (DAY_ELEVEN, ["n5_forage", "n7_forage", "n6_forage", "g_field_forage"]))
-    assert made["dry_wood"] == shipped(["lay_to_dry"], (DAY_FIVE, ["hand_on_stone"]), (DAY_TWELVE, ["stone_ring"]))
+    assert made["dry_wood"] == shipped(["lay_to_dry"], (DAY_FIVE, ["hand_on_stone"]), (DAY_TWELVE, ["stone_ring"]),
+                                      (DAY_SIXTEEN, ["take_child"]))
     assert made["damp_wood"] == shipped(["gather_wood", "woodcutting", "n1_gather", "n1_cut", "n2_gather", "n2_cut"],
                                         (DAY_FIVE, ["n3_gather"]),
                                         (DAY_ELEVEN, ["n5_gather", "n5_cut", "n7_gather", "n7_cut", "n6_gather", "n6_cut", "g_field_cut"]))
