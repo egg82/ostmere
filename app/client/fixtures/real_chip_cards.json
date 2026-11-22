@@ -299,6 +299,15 @@
       "wounds": []
     },
     {
+      "card": "n1_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n1_stack_cordwood",
       "makes": [
         "cordwood"
@@ -330,6 +339,16 @@
       "wounds": []
     },
     {
+      "card": "n1_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n1_fungus_stew",
       "makes": [
         "stew"
@@ -337,6 +356,16 @@
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
       ],
       "wounds": []
     },
@@ -687,6 +716,15 @@
       "wounds": []
     },
     {
+      "card": "n2_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n2_stack_cordwood",
       "makes": [
         "cordwood"
@@ -708,9 +746,29 @@
       "wounds": []
     },
     {
+      "card": "n2_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n2_stakes",
       "makes": [
         "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_cord",
+      "makes": [
+        "cord"
       ],
       "takes": [
         "damp_wood"
@@ -956,6 +1014,26 @@
       "wounds": []
     },
     {
+      "card": "n3_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n3_pick",
       "makes": [
         "fungus"
@@ -973,6 +1051,16 @@
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
       ],
       "wounds": []
     },
@@ -1008,6 +1096,14 @@
       "card": "n3_gather",
       "makes": [
         "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n3_scavenge",
+      "makes": [
+        "stones"
       ],
       "takes": [],
       "wounds": []
@@ -1091,6 +1187,15 @@
       "wounds": []
     },
     {
+      "card": "n4_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n4_catch_broth",
       "makes": [
         "stew"
@@ -1098,6 +1203,16 @@
       "takes": [
         "catch",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n4_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
       ],
       "wounds": []
     },
@@ -1434,6 +1549,15 @@
       "wounds": []
     },
     {
+      "card": "n5_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n5_stack_cordwood",
       "makes": [
         "cordwood"
@@ -1484,6 +1608,14 @@
       "card": "n5_cut",
       "makes": [
         "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n5_scavenge",
+      "makes": [
+        "stones"
       ],
       "takes": [],
       "wounds": []
@@ -1550,6 +1682,16 @@
       "wounds": []
     },
     {
+      "card": "n5_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n5_pick",
       "makes": [
         "fungus"
@@ -1567,6 +1709,26 @@
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
       ],
       "wounds": []
     },
@@ -1648,6 +1810,15 @@
       "wounds": []
     },
     {
+      "card": "n7_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n7_stack_cordwood",
       "makes": [
         "cordwood"
@@ -1698,6 +1869,14 @@
       "card": "n7_cut",
       "makes": [
         "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n7_scavenge",
+      "makes": [
+        "stones"
       ],
       "takes": [],
       "wounds": []
@@ -1764,6 +1943,16 @@
       "wounds": []
     },
     {
+      "card": "n7_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n7_pick",
       "makes": [
         "fungus"
@@ -1781,6 +1970,26 @@
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
       ],
       "wounds": []
     },
@@ -1840,6 +2049,15 @@
       "wounds": []
     },
     {
+      "card": "n6_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n6_stack_cordwood",
       "makes": [
         "cordwood"
@@ -1890,6 +2108,14 @@
       "card": "n6_cut",
       "makes": [
         "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n6_scavenge",
+      "makes": [
+        "stones"
       ],
       "takes": [],
       "wounds": []
@@ -1956,6 +2182,16 @@
       "wounds": []
     },
     {
+      "card": "n6_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n6_pick",
       "makes": [
         "fungus"
@@ -1973,6 +2209,26 @@
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
       ],
       "wounds": []
     },
@@ -2009,9 +2265,26 @@
       "wounds": []
     },
     {
+      "card": "g_field_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_field_cut",
       "makes": [
         "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "g_field_scavenge",
+      "makes": [
+        "stones"
       ],
       "takes": [],
       "wounds": []
@@ -2035,6 +2308,16 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
       ],
       "wounds": []
     },
@@ -2128,6 +2411,16 @@
       "wounds": []
     },
     {
+      "card": "g_hearth_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_hearth_pick",
       "makes": [
         "fungus"
@@ -2145,6 +2438,16 @@
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_hearth_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
       ],
       "wounds": []
     },
@@ -2561,7 +2864,12 @@
       "made_by": [
         "scavenge",
         "n1_scavenge",
-        "n2_scavenge"
+        "n2_scavenge",
+        "n3_scavenge",
+        "n5_scavenge",
+        "n7_scavenge",
+        "n6_scavenge",
+        "g_field_scavenge"
       ]
     },
     {
@@ -3001,8 +3309,15 @@
     {
       "store": "cord",
       "made_by": [
+        "n1_cord",
+        "n2_cord",
+        "n3_cord",
         "twist_cord",
         "n4_cord",
+        "n5_cord",
+        "n7_cord",
+        "n6_cord",
+        "g_hearth_cord",
         "hunt_deer"
       ]
     },
@@ -3036,8 +3351,14 @@
     {
       "store": "ash",
       "made_by": [
+        "n1_clear_roofs",
+        "n3_clear_roofs",
         "clear_roofs",
         "n2_clear_roofs",
+        "n5_clear_roofs",
+        "n7_clear_roofs",
+        "n6_clear_roofs",
+        "g_field_clear_roofs",
         "warm_beds",
         "smoke_hole"
       ]

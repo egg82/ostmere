@@ -368,6 +368,32 @@ upside_key = "up_cover_beds"
 work_s = 1800
 inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
 
+# Covering the beds is everyday work, everyone's as the reaping is, at her lane's pace.
+[[town_cards]]
+id = "{lane}_cover_beds"
+twin_of = "cover_beds"
+lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "g_field"]
+presentation = "action"
+label_key = "c_cover_beds"
+upside_key = "up_cover_beds"
+work_s = 1800
+inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
+
+[[triggers]]
+id = "t_town_covers"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "cover_beds", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_cover_beds" },
+  { unlock_kind = "card", id = "n2_cover_beds" },
+  { unlock_kind = "card", id = "n4_cover_beds" },
+  { unlock_kind = "card", id = "n5_cover_beds" },
+  { unlock_kind = "card", id = "n6_cover_beds" },
+  { unlock_kind = "card", id = "n7_cover_beds" },
+  { unlock_kind = "card", id = "g_field_cover_beds" },
+]
+
 # "When frosted, {n3} covers the beds": its `when` the chip's.
 [[order_cards]]
 store = "rime"

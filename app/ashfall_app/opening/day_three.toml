@@ -612,7 +612,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 [[town_cards]]
 id = "{lane}_scavenge"
 twin_of = "scavenge"
-lanes = ["n2"]
+lanes = ["n2", "n3", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_scavenge"
 work_s = 48

@@ -105,6 +105,27 @@ work_s = 900
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
 
+# Twisting cord is everyday work sitting down: everyone's, at his lane's pace.
+[[town_cards]]
+id = "{lane}_cord"
+twin_of = "twist_cord"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_twist_cord"
+work_s = 900
+inputs = [{ store = "damp_wood", items = 2 }]
+outcome = { stores = [{ store = "cord", items = 1 }] }
+
+[[triggers]]
+id = "t_town_cord"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "twist_cord", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_cord" },
+  { unlock_kind = "card", id = "n2_cord" },
+  { unlock_kind = "card", id = "n3_cord" },
+]
+
 # His cord by a rule: under a stage's worth twice over he twists until near full, so a full stack sends him back to his
 # share (the watch) instead of filling past the cap (week-two-numbers.md, "Cap loss": the stakes lanes' shape).
 [[order_cards]]
@@ -323,6 +344,26 @@ label_key = "c_n2_clear_roofs"
 work_s = 1200
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
+
+# Clearing roofs is everyday work for anyone who can climb, at his lane's pace; the old man's leg rules it out.
+[[town_cards]]
+id = "{lane}_clear_roofs"
+twin_of = "clear_roofs"
+lanes = ["n1", "n3", "n5", "n6", "n7", "g_field"]
+presentation = "action"
+label_key = "c_clear_roofs"
+work_s = 1200
+inputs = [{ store = "roof_ash", items = 16 }]
+outcome = { stores = [{ store = "ash", items = 4 }] }
+
+[[triggers]]
+id = "t_town_roofs"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "clear_roofs", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_clear_roofs" },
+  { unlock_kind = "card", id = "n3_clear_roofs" },
+]
 
 # "When ash-laden, he clears the roofs": day one's hunger card on his lane (D-91's shape), its `when` the chip's.
 [[order_cards]]

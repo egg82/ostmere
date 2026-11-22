@@ -219,6 +219,27 @@ upside_key = "up_peg_flaps"
 work_s = 1200
 inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
 
+# Pegging flaps down at the shelters is everyday work, everyone's, at her lane's pace.
+[[town_cards]]
+id = "{lane}_peg_flaps"
+twin_of = "peg_flaps"
+lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_peg_flaps"
+upside_key = "up_peg_flaps"
+work_s = 1200
+inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { store = "stones", items = 4 }]
+
+[[triggers]]
+id = "t_town_flaps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "peg_flaps", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n2_peg_flaps" },
+  { unlock_kind = "card", id = "n3_peg_flaps" },
+  { unlock_kind = "card", id = "n4_peg_flaps" },
+]
+
 # "When draughty, {n1} pegs the flaps again": the chore's suggested rule (ash_laden's shape on her lane).
 [[order_cards]]
 store = "wind_torn"

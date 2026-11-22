@@ -53,6 +53,15 @@ id = "t_stone_first"
 when = { test = "at_least", subject_kind = "card_count", id = "hand_on_stone", value = 1 }
 outcome = { line_keys = ["l_stone_first"] }
 
+# Scavenging on her lane once the pair join (day_three.toml's town card; his leg rules it out).
+[[triggers]]
+id = "t_town_scavenge"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n3_scavenge" },
+]
+
 # ---------- stones' sink: the windbreak ----------
 
 # A reach stake on the hearth's lane (issue #40), the cordwood shape: scavenging in the hands' mix makes more stones than
