@@ -273,7 +273,7 @@ whenever player end week three with the same stores and tallies, or the report n
 Each chapter's applied numbers and its measured bands, density, absences, cap loss, 2 AM test and calendar days, in
 week two's shape.
 
-**Day fifteen (`day_fifteen.toml`, in IN_WRITING), applied:**
+**Day fifteen (`day_fifteen.toml`, shipped in `CHAPTERS`), applied:**
 
 - The hall takes the same at every stage (a card's inputs are per stage): 16 stakes, 3 stones, 2 cord, 1 beam and half
   a pelt, so 128 stakes, 24 stones, 16 cord, 8 beams, 4 pelts; its order card at stakes 16. The beams are taken from the
@@ -285,11 +285,12 @@ week two's shape.
 - The table (2 smoked an hour), `meals` and `aim_table` open with B14, as "The table" says ("Opened by B14"), so smoked
   has its sink from the chapter's end; the table's raise per arrival group, O-road and what `meals` draws stay day
   sixteen's and later.
-- `o_door_ice`'s second answer gives 6 dry wood (the door burned, a hide hung), not a pelt. Neither ask is in day
-  twelve's chain or fills `ask_wait`: `o_sun_rack` shows with B13 (the sun), `o_door_ice` at `clear_clock` 18 (the
+- The asks as reworked (D-143): `o_door_ice` is the hands ×1.03 and n6's lane ×0.90 against nothing; `o_sun_rack`
+  is `smoke_catch`'s smoked ×1.10 against `stew`'s ×1.10. Neither ask is in day twelve's chain or fills `ask_wait`: `o_sun_rack` shows with B13 (the sun), `o_door_ice` at `clear_clock` 18 (the
   morning after night 15), not on hall stages that only spaced them apart.
-- B14's feature carries the edge's end card (`dayend15_*`); once the chapter ships, week two's (`dayend14`) drops its
-  still-being-written line.
+- B14's feature (`belonging`) carries the content's one end card, moved there from day twelve's by shipping the
+  chapter. Day fifteen merges after day twelve and before prestige, whose phase pays expand over every skill row before
+  them.
 - Foraging's find is at 14: 15 pays a find already. The other four are as "Levels and finds".
 
 **Measured** on a scratch route (a scratch script, not the simulator: week two's routes from S4's
