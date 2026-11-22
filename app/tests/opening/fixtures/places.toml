@@ -1,0 +1,38 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_places.py): two places on the world map, one named
+# and revealed by a trigger's feature, one unnamed and revealed by a card. Not story: the ids and words are the tests'
+# own. The planted variants are edits of this file.
+version = 1
+end_feature = "m_road"
+
+[[features]]
+id = "m_road"
+
+[[cards]]
+id = "m_scout"
+presentation = "action"
+label_key = "m_c_scout"
+work_s = 60
+
+[[triggers]]
+id = "m_road_on"
+when = { test = "after_time", value = 100 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "m_road" }, { unlock_kind = "card", id = "m_scout" }] }
+
+[[places]]
+id = "m_hamlet"
+stamp = "village"
+at = [2, -1]
+reveal = { unlock_kind = "feature", id = "m_road" }
+label_key = "m_p_hamlet"
+
+[[places]]
+id = "m_woods"
+stamp = "forest"
+at = [-3, 4]
+reveal = { unlock_kind = "card", id = "m_scout" }
+
+[line_kinds]
+
+[text]
+m_c_scout = "Scout"
+m_p_hamlet = "A hamlet"

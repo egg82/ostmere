@@ -17,6 +17,7 @@ from ..engine import Rules, validate_rules
 from .chapters import merge
 from .fight_entries import SideEntry, ThreatEntry
 from .journal_entries import JournalDecl, JournalEntry, NoteEntry
+from .map_entries import PlaceEntry
 from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
@@ -92,6 +93,7 @@ class Opening(Entry):
     notes: list[NoteEntry] = []
     subjects: list[SubjectEntry] = []
     """What the journal's days are written about (subject_entries.py)."""
+    places: list[PlaceEntry] = []
     start: list[UnlockEntry]
     """The unlock set a new save starts with (Rules.opening)."""
     camp: CampEntry | None = None
@@ -157,6 +159,7 @@ class Chapter(Entry):
     entries: list[JournalEntry] = []
     notes: list[NoteEntry] = []
     subjects: list[SubjectEntry] = []
+    places: list[PlaceEntry] = []
     camp_levels: list[CampLevelEntry] = []
     """A level at a held level's at_items replaces it; the rest are added after the last."""
     prestige: PrestigeEntry | None = None

@@ -14,6 +14,7 @@ from .face_checks import check_clocks
 from .convert import build_rules
 from .fight_checks import check_fight_content
 from .journal_checks import check_journal
+from .map_checks import check_places
 from .keep_checks import check_kept_needs
 from .fight_refs import check_fights, fights
 from .kind_checks import check_kinds
@@ -81,6 +82,7 @@ def check_structure(o: "Opening") -> None:
     check_people(o)
     check_aims(o)
     check_journal(o)
+    check_places(o)
     check_subjects(o)
     check_bands(o)
     check_kept_needs(o)
@@ -225,6 +227,7 @@ def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
         for n, lv in enumerate(o.camp.levels, start=1):
             yield from ((f"camp level {n}", k) for k in (lv.pays_key, *lv.line_keys))
     yield from ((f"aim {a.id}", a.text_key) for a in o.aims)
+    yield from ((f"place {p.id}", p.label_key) for p in o.places if p.label_key is not None)
     for x in o.offers:
         yield from ((f"offer {x.id}", k) for k in (x.text_key, *x.line_keys, x.waiting_key, x.expiry_key, x.permanence_key)
                     if k is not None)

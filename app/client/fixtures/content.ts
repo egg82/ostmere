@@ -510,6 +510,7 @@ export const fixtureContent: Content = {
   ],
   aim_infos: [],
   journal: null,
+  places: [],
   people: {   // CONTRACT.txt, "PEOPLE"
     came: [{ at_least: 1, keys: ["came.one.a", "came.one.b"] }, { at_least: 2, keys: ["came.few"] }],
     went: [{ at_least: 1, keys: ["went.one"] }],
