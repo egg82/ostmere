@@ -1,0 +1,890 @@
+# Day sixteen: from B14 (the hall roofed) through T4-T6 and SL24-SL26 to B15 (the field stone), as data merged after
+# day_fifteen.toml (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec:
+# content/team/week-three.md, "Day sixteen"; numbers: content/team/week-three-numbers.md.
+version = 1
+end_feature = "spellcraft"
+
+# ---------- the table's clock ----------
+
+# Never drawn: game hours since B14, for the chapter's own steps (T4, SL25).
+[[stores]]
+id = "table_clock"
+label_key = "store_table_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "table_clock"
+label_key = "action_table_clock"
+makes = [{ store = "table_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_table_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "belonging", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "table_clock" }] }
+
+# ---------- O-road and SL24: the old road ----------
+
+# With B14 (its feature, so one moment): who walks the old road to mark it. Either answer marks it; each is a stretch of
+# someone's time, the hands' a quarter of his (a hands card's bar is a quarter of its town copy's). Each answer starts
+# the countdown Lucy's jobs wait on.
+[[offers]]
+id = "o_road"
+text_key = "o_road"
+askers = ["n1"]
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "belonging", value = 1 }
+line_keys = ["l_road_ask"]
+
+[[offers.answers]]
+id = "o_road_you"
+label_key = "a_road_you"
+cost_key = "a_road_you_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+unlocks = [{ unlock_kind = "card", id = "mark_road" }]
+queues = ["mark_road"]
+
+[[offers.answers]]
+id = "o_road_n2"
+label_key = "a_road_n2"
+cost_key = "a_road_n2_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+unlocks = [{ unlock_kind = "card", id = "n2_mark_road" }]
+orders = [{ tap_card = "n2_mark_road", first = true }]
+
+# A36 on the hands, A37 on his lane.
+[[cards]]
+id = "mark_road"
+presentation = "narrative"
+label_key = "c_mark_road"
+work_s = 900
+cap = 1
+
+[[cards]]
+id = "n2_mark_road"
+lane = "n2"
+presentation = "narrative"
+label_key = "c_n2_mark_road"
+work_s = 3600
+cap = 1
+
+# Either walk marks it.
+[[triggers]]
+id = "t_marked_you"
+when = { test = "at_least", subject_kind = "card_count", id = "mark_road", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "road_marked" }] }
+
+[[triggers]]
+id = "t_marked_n2"
+when = { test = "at_least", subject_kind = "card_count", id = "n2_mark_road", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "road_marked" }] }
+
+# SL24: the road found. P3, the week's last joint project, on the hands, run by its order card; the town clears its bed.
+[[triggers]]
+id = "t_road_marked"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "road_marked", value = 1 }
+[triggers.outcome]
+line_keys = ["l_road_marked"]
+unlocks = [
+  { unlock_kind = "store", id = "cleared" },
+  { unlock_kind = "card", id = "cut_road" },
+  { unlock_kind = "card", id = "shovel_road" },
+  { unlock_kind = "card", id = "n1_clear_road" },
+  { unlock_kind = "card", id = "n2_clear_road" },
+  { unlock_kind = "card", id = "n3_clear_road" },
+  { unlock_kind = "card", id = "n4_clear_road" },
+  { unlock_kind = "card", id = "n5_clear_road" },
+  { unlock_kind = "card", id = "n6_clear_road" },
+  { unlock_kind = "card", id = "n7_clear_road" },
+]
+
+# The road's bed cleared of ash, ahead of the stretches laid on it.
+[[stores]]
+id = "cleared"
+label_key = "store_cleared"
+cap_items = 24
+
+[[cards]]
+id = "shovel_road"
+presentation = "action"
+label_key = "c_shovel_road"
+work_s = 450
+skill = "scavenging"
+xp_per_hour = 900
+outcome = { stores = [{ store = "cleared", items = 1 }] }
+
+[[town_cards]]
+id = "{lane}_clear_road"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
+presentation = "action"
+label_key = "c_lane_clear_road"
+work_s = 1800
+outcome = { stores = [{ store = "cleared", items = 1 }] }
+
+# P3: ten stretches, each the same take (a card's inputs are one per stage), so the totals are week-three.md's: 120
+# cleared, 60 stones, 40 stakes, 4 beams (the ruin's last four, after the hall's eight). Stages 7, 8 and 10 carry
+# day nineteen's beats.
+[[cards]]
+id = "cut_road"
+presentation = "craft"
+label_key = "c_cut_road"
+upside_key = "up_cut_road"
+work_s = 2400
+cap = 10
+inputs = [
+  { store = "cleared", items = 12 },
+  { store = "stones", items = 6 },
+  { store = "stakes", items = 4 },
+  { store = "beams", items = 2, every = 5 },
+]
+line_keys = ["l_road_1", "l_road_2", "l_road_3", "l_road_4", "l_road_5", "l_road_6", "l_road_7", "l_road_8",
+             "l_road_9", "l_road_10"]
+
+# "When the road's bed reaches 12, lay a stretch": passed over at the cap.
+[[order_cards]]
+store = "cleared"
+tap_card = "cut_road"
+when = { test = "at_least", subject_kind = "store", id = "cleared", value = 12, release = 12 }
+offered_after = { unlock_kind = "card", id = "cut_road" }
+
+# ---------- T4: the outer rows ----------
+
+# B14 + 4 h. The frost under the covers takes a few hours' barley from the beds: a drain of six ripe on its own pool (the
+# visitor's idiom), pausing while the beds are bare, the same whether watched or not.
+[[triggers]]
+id = "t_rows_black"
+when = { test = "at_least", subject_kind = "store", id = "table_clock", value = 4 }
+outcome = { line_keys = ["l_rows_black_1", "l_rows_black_2"], stores = [{ store = "rows_black_left", items = 6 }], unlocks = [{ unlock_kind = "feature", id = "rows_lost" }, { unlock_kind = "action", id = "rows_black" }] }
+
+[[stores]]
+id = "rows_black_left"
+label_key = "store_rows_black_left"
+cap_items = 6
+hidden = true
+
+[[standing]]
+id = "rows_black"
+label_key = "action_rows_black"
+costs = [{ store = "rows_black_left", items_per_hour = 6 }, { store = "ripe", items_per_hour = 6 }]
+
+# ---------- SL25: the hall's hearth ----------
+
+# B14 + 10 h: a hearth for the hall, against the stones the road wants.
+[[triggers]]
+id = "t_hall_hearth"
+when = { test = "at_least", subject_kind = "store", id = "table_clock", value = 10 }
+outcome = { line_keys = ["l_hall_hearth"], unlocks = [{ unlock_kind = "card", id = "hall_hearth" }] }
+
+[[cards]]
+id = "hall_hearth"
+presentation = "craft"
+label_key = "c_hall_hearth"
+upside_key = "up_hall_hearth"
+work_s = 1800
+cap = 1
+inputs = [{ store = "stones", items = 8 }, { store = "clay", items = 4 }]
+line_keys = ["l_stage_hall_hearth"]
+[cards.finished]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 11000, source = "hall_hearth" }]
+
+# ---------- T5: the rime stops short ----------
+
+# Morning 18 on the season's clock, once T4 has landed. The field stone shows with it (A35), glowing, its countdown the
+# Arcana level; T5's clock (386 h) is past B15's sharp floor (349 h), so no floor of its own is needed.
+[[triggers]]
+id = "t_rime_ring"
+when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 50 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rows_lost", value = 1 }]
+outcome = { line_keys = ["l_rime_stone_1", "l_rime_stone_2"], unlocks = [{ unlock_kind = "feature", id = "rime_ring" }, { unlock_kind = "card", id = "try_stone" }] }
+
+# ---------- T6: the covers tear ----------
+
+# The fifth cover by either hand, once T5: the hides tear along the frost line, four pelts drawn on their own pool (the
+# visitor's idiom), pausing at no pelts.
+[[triggers]]
+id = "t_torn_n3"
+when = { test = "at_least", subject_kind = "card_count", id = "n3_cover_beds", value = 5 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "feature", id = "covers_torn" }] }
+
+[[triggers]]
+id = "t_torn_hands"
+when = { test = "at_least", subject_kind = "card_count", id = "cover_beds", value = 5 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "feature", id = "covers_torn" }] }
+
+[[triggers]]
+id = "t_covers_torn"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "covers_torn", value = 1 }
+outcome = { line_keys = ["l_covers_torn"], stores = [{ store = "tear_left", items = 4 }], unlocks = [{ unlock_kind = "action", id = "tear" }, { unlock_kind = "action", id = "torn_clock" }] }
+
+[[stores]]
+id = "tear_left"
+label_key = "store_tear_left"
+cap_items = 4
+hidden = true
+
+[[standing]]
+id = "tear"
+label_key = "action_tear"
+costs = [{ store = "tear_left", items_per_hour = 4 }, { store = "pelt", items_per_hour = 4 }]
+
+# Never drawn: game hours since T6, for SL26.
+[[stores]]
+id = "torn_clock"
+label_key = "store_torn_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "torn_clock"
+label_key = "action_torn_clock"
+makes = [{ store = "torn_clock", items_per_hour = 1 }]
+
+# ---------- SL26: his back to the sun ----------
+
+[[triggers]]
+id = "t_sun_back"
+when = { test = "at_least", subject_kind = "store", id = "torn_clock", value = 3 }
+outcome = { line_keys = ["l_sun_back"] }
+
+# ---------- the season's threat step ----------
+
+# Two days into the season the pack comes in a quarter stronger (the threat's step, never the defence's), the ramp idiom
+# of day nine's. Its page is written at the first fight after it (the pack fights an hour).
+[[triggers]]
+id = "t_pack_clear"
+when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 40 }
+outcome = { modifiers = [{ target = "threat", id = "wolf_pack", kind = "add_bp", amount_bp = 2500, source = "t_pack_clear" }] }
+
+[[entries]]
+id = "e_greycoat"
+section = "creatures"
+sketch = "greycoat"
+hand = "ink"
+runners = ["pack"]
+
+[[notes]]
+id = "n_greycoat_1"
+entry = "e_greycoat"
+gate = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 41 }
+hand = "ink"
+
+# ---------- B15: the field stone ----------
+
+# A35, a first-of-its-kind step: shown with T5, ready at Arcana 13.
+[[cards]]
+id = "try_stone"
+presentation = "narrative"
+label_key = "c_try_stone"
+work_s = 60
+cap = 1
+glows = true
+requires = [{ test = "at_least", subject_kind = "skill_level", id = "arcana", value = 13 }]
+
+# B15: the second magic skill opens on its first card, a cure for the season's chip.
+[[triggers]]
+id = "t_b15"
+when = { test = "at_least", subject_kind = "card_count", id = "try_stone", value = 1 }
+outcome = { line_keys = ["l_b15_1", "l_b15_2", "l_b15_3"], unlocks = [{ unlock_kind = "feature", id = "spellcraft" }, { unlock_kind = "card", id = "warm_beds" }] }
+
+[[skills]]
+id = "spellcraft"
+label_key = "skill_spellcraft"
+levels = [
+  { level = 2, pays_key = "pays_spell_faster" },
+  { level = 3, pays_key = "pays_find_spell_3" },
+  { level = 4, pays_key = "pays_spell_4" },
+  { level = 5, pays_key = "pays_spell_faster" },
+  { level = 6, pays_key = "pays_spell_faster" },
+  { level = 7, pays_key = "pays_spell_faster" },
+  { level = 8, pays_key = "pays_spell_faster" },
+  { level = 9, pays_key = "pays_spell_faster" },
+  { level = 10, pays_key = "pays_spell_faster" },
+  { level = 11, pays_key = "pays_spell_faster" },
+  { level = 12, pays_key = "pays_spell_faster" },
+  { level = 13, pays_key = "pays_spell_faster" },
+  { level = 14, pays_key = "pays_spell_faster" },
+  { level = 15, pays_key = "pays_spell_faster" },
+  { level = 16, pays_key = "pays_spell_faster" },
+  { level = 17, pays_key = "pays_spell_faster" },
+  { level = 18, pays_key = "pays_spell_faster" },
+  { level = 19, pays_key = "pays_spell_faster" },
+  { level = 20, pays_key = "pays_spell_faster" },
+  { level = 21, pays_key = "pays_spell_faster" },
+  { level = 22, pays_key = "pays_spell_faster" },
+  { level = 23, pays_key = "pays_spell_faster" },
+  { level = 24, pays_key = "pays_spell_faster" },
+  { level = 25, pays_key = "pays_spell_faster" },
+]
+
+# The camp stone's heat moved into the beds through the player's hands: a cure for the frost, no pelts, its tithe in
+# ash, which is her ground's input. It cuts in, as any cure; the player's time is its cost.
+[[cards]]
+id = "warm_beds"
+presentation = "action"
+label_key = "c_warm_beds"
+upside_key = "up_cover_beds"
+work_s = 300
+skill = "spellcraft"
+xp_per_hour = 360
+inputs = [{ store = "rime", items = 12 }]
+outcome = { stores = [{ store = "ash", items = 2 }] }
+
+# "When frosted, warm the beds": its `when` the chip's, offered beside the covers' card.
+[[order_cards]]
+store = "rime"
+tap_card = "warm_beds"
+chip = "frosted"
+when = { test = "at_least", subject_kind = "store", id = "rime", value = 12 }
+offered_after = { unlock_kind = "card", id = "warm_beds" }
+
+[[triggers]]
+id = "t_spell_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 2 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_2" }] }
+
+[[triggers]]
+id = "t_spell_3"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 3 }
+outcome = { stores = [{ store = "ashed_ground", items = 4 }], line_keys = ["l_find_spell_3"] }
+
+[[triggers]]
+id = "t_spell_4"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 4 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 13333, source = "spellcraft_4" }] }
+
+# From 5 each level a tenth faster, the row marked to the curve's top as Arcana's (day_five.toml).
+[[triggers]]
+id = "t_spell_5"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 5 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_5" }] }
+
+[[triggers]]
+id = "t_spell_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 6 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_6" }] }
+
+[[triggers]]
+id = "t_spell_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 7 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_7" }] }
+
+[[triggers]]
+id = "t_spell_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 8 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_8" }] }
+
+[[triggers]]
+id = "t_spell_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 9 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_9" }] }
+
+[[triggers]]
+id = "t_spell_10"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 10 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_10" }] }
+
+[[triggers]]
+id = "t_spell_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_11" }] }
+
+[[triggers]]
+id = "t_spell_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_12" }] }
+
+[[triggers]]
+id = "t_spell_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_13" }] }
+
+[[triggers]]
+id = "t_spell_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_14" }] }
+
+[[triggers]]
+id = "t_spell_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_15" }] }
+
+[[triggers]]
+id = "t_spell_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_16" }] }
+
+[[triggers]]
+id = "t_spell_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_17" }] }
+
+[[triggers]]
+id = "t_spell_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_18" }] }
+
+[[triggers]]
+id = "t_spell_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_19" }] }
+
+[[triggers]]
+id = "t_spell_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_20" }] }
+
+[[triggers]]
+id = "t_spell_21"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 21 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_21" }] }
+
+[[triggers]]
+id = "t_spell_22"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 22 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_22" }] }
+
+[[triggers]]
+id = "t_spell_23"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 23 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_23" }] }
+
+[[triggers]]
+id = "t_spell_24"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 24 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_24" }] }
+
+[[triggers]]
+id = "t_spell_25"
+when = { test = "at_least", subject_kind = "skill_level", id = "spellcraft", value = 25 }
+outcome = { modifiers = [{ target = "work", id = "warm_beds", kind = "mul_bp", amount_bp = 11000, source = "spellcraft_25" }] }
+
+# ---------- the warm ground's page ----------
+
+# Later lines under day three's, in the player's hand.
+[[notes]]
+id = "n_ground_3"
+entry = "e_warm_ground"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }
+
+[[notes]]
+id = "n_ground_4"
+entry = "e_warm_ground"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "spellcraft", value = 1 }
+
+# ---------- Lucy's jobs ----------
+
+# From O-road's answer, one at a time on day nine's countdown (ask_wait): each shows once the last is answered and the
+# countdown has run out. Offers of no kind whose yes queues a short hands job (o_pelt's idiom) and whose no costs
+# nothing. Each job pays a one-off, never a lasting bonus, so a no is never beaten outright (principles.md, "No blind
+# permanent choices"): whether the hands' time is worth what it brings depends on what the town is short of.
+[[offers]]
+id = "j_steps"
+text_key = "o_j_steps"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_road", value = 1 }]
+
+[[offers.answers]]
+id = "j_steps_yes"
+label_key = "a_j_steps_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_steps_yes"]
+unlocks = [{ unlock_kind = "card", id = "cut_steps" }]
+queues = ["cut_steps"]
+
+[[offers.answers]]
+id = "j_steps_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_steps_no"]
+
+[[cards]]
+id = "cut_steps"
+presentation = "action"
+label_key = "c_cut_steps"
+work_s = 1200
+cap = 1
+inputs = [{ store = "stones", items = 2 }]
+outcome = { stores = [{ store = "clay", items = 4 }] }
+line_keys = ["l_cut_steps"]
+
+[[offers]]
+id = "j_smoke_hole"
+text_key = "o_j_smoke_hole"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_steps", value = 1 }]
+
+[[offers.answers]]
+id = "j_smoke_hole_yes"
+label_key = "a_j_smoke_hole_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_smoke_hole_yes"]
+unlocks = [{ unlock_kind = "card", id = "smoke_hole" }]
+queues = ["smoke_hole"]
+
+[[offers.answers]]
+id = "j_smoke_hole_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_smoke_hole_no"]
+
+[[cards]]
+id = "smoke_hole"
+presentation = "action"
+label_key = "c_smoke_hole"
+work_s = 600
+cap = 1
+outcome = { stores = [{ store = "ash", items = 4 }] }
+line_keys = ["l_smoke_hole"]
+
+[[offers]]
+id = "j_wedged"
+text_key = "o_j_wedged"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_smoke_hole", value = 1 }]
+
+[[offers.answers]]
+id = "j_wedged_yes"
+label_key = "a_j_wedged_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_wedged_yes"]
+unlocks = [{ unlock_kind = "card", id = "dig_beam" }]
+queues = ["dig_beam"]
+
+[[offers.answers]]
+id = "j_wedged_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_wedged_no"]
+
+[[cards]]
+id = "dig_beam"
+presentation = "action"
+label_key = "c_dig_beam"
+work_s = 1800
+cap = 1
+outcome = { stores = [{ store = "beams", items = 1 }] }
+line_keys = ["l_dig_beam"]
+
+[[offers]]
+id = "j_snares"
+text_key = "o_j_snares"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_wedged", value = 1 }]
+
+[[offers.answers]]
+id = "j_snares_yes"
+label_key = "a_j_snares_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_snares_yes"]
+unlocks = [{ unlock_kind = "card", id = "reset_snares" }]
+queues = ["reset_snares"]
+
+[[offers.answers]]
+id = "j_snares_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_snares_no"]
+
+[[cards]]
+id = "reset_snares"
+presentation = "action"
+label_key = "c_reset_snares"
+work_s = 900
+cap = 1
+outcome = { stores = [{ store = "catch", items = 3 }] }
+line_keys = ["l_reset_snares"]
+
+[[offers]]
+id = "j_ridge"
+text_key = "o_j_ridge"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_snares", value = 1 }]
+
+[[offers.answers]]
+id = "j_ridge_yes"
+label_key = "a_j_ridge_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_ridge_yes"]
+unlocks = [{ unlock_kind = "card", id = "take_child" }]
+queues = ["take_child"]
+
+[[offers.answers]]
+id = "j_ridge_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_ridge_no"]
+
+[[cards]]
+id = "take_child"
+presentation = "action"
+label_key = "c_take_child"
+work_s = 1800
+cap = 1
+outcome = { stores = [{ store = "energy", items = 3 }] }
+line_keys = ["l_take_child"]
+
+[[offers]]
+id = "j_tally"
+text_key = "o_j_tally"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_ridge", value = 1 }]
+
+[[offers.answers]]
+id = "j_tally_yes"
+label_key = "a_j_tally_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_tally_yes"]
+unlocks = [{ unlock_kind = "card", id = "keep_count" }]
+queues = ["keep_count"]
+
+[[offers.answers]]
+id = "j_tally_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_tally_no"]
+
+[[cards]]
+id = "keep_count"
+presentation = "action"
+label_key = "c_keep_count"
+work_s = 300
+cap = 1
+outcome = { stores = [{ store = "stew", items = 4 }] }
+line_keys = ["l_keep_count"]
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b15"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b15" }
+first = { keys = ["n_day_b15"] }
+catchup = { keys = ["j_b15_catchup"] }
+late = { keys = ["j_b15_late"] }
+
+[[subjects]]
+id = "s_road"
+kind = "routine"
+source = { source_kind = "card", id = "cut_road" }
+mark = "mud"
+first = { keys = ["j_road_first"] }
+repeat = { keys = ["j_road_again_1", "j_road_again_2", "j_road_again_3"] }
+catchup = { keys = ["j_road_catchup"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "road_marked"
+
+[[features]]
+id = "rows_lost"
+
+[[features]]
+id = "rime_ring"
+
+[[features]]
+id = "covers_torn"
+
+[[features]]
+id = "spellcraft"
+
+[[features]]
+id = "t_pack_clear"
+label_key = "feature_t_pack_clear"
+
+# ---------- aims ----------
+
+# After day fifteen's aim_table: the road found, find where it goes.
+[[aims]]
+id = "aim_road"
+text_key = "aim_road"
+after = { unlock_kind = "feature", id = "road_marked" }
+
+# ---------- text ----------
+
+[beat_lines]
+B15 = ["l_b15_1"]
+
+[line_kinds]
+l_road_ask = "story"
+l_road_marked = "story"
+l_road_1 = "story"
+l_road_2 = "story"
+l_road_3 = "story"
+l_road_4 = "story"
+l_road_5 = "story"
+l_road_6 = "story"
+l_road_7 = "story"
+l_road_8 = "story"
+l_road_9 = "story"
+l_road_10 = "story"
+l_rows_black_1 = "story"
+l_rows_black_2 = "story"
+l_hall_hearth = "story"
+l_stage_hall_hearth = "story"
+l_rime_stone_1 = "story"
+l_rime_stone_2 = "story"
+l_covers_torn = "story"
+l_sun_back = "story"
+l_b15_1 = "story"
+l_b15_2 = "story"
+l_b15_3 = "story"
+l_find_spell_3 = "find"
+l_j_steps_yes = "story"
+l_j_smoke_hole_yes = "story"
+l_j_wedged_yes = "story"
+l_j_snares_yes = "story"
+l_j_ridge_yes = "story"
+l_j_tally_yes = "story"
+l_j_steps_no = "story"
+l_j_smoke_hole_no = "story"
+l_j_wedged_no = "story"
+l_j_snares_no = "story"
+l_j_ridge_no = "story"
+l_j_tally_no = "story"
+l_cut_steps = "story"
+l_smoke_hole = "story"
+l_dig_beam = "story"
+l_reset_snares = "story"
+l_take_child = "story"
+l_keep_count = "story"
+
+[text]
+store_table_clock = "clock"
+action_table_clock = "Clock"
+o_road = "The old road past the ridge needs walking and marking."
+l_road_ask = "lucy says a road runs under the ash past the ridge. she looks at you."
+a_road_you = "You walk it"
+a_road_you_cost = "{d} of your time"
+a_road_n2 = "{n2} walks it"
+a_road_n2_cost = "{d} of his time"
+c_mark_road = "Walk the old road"
+c_n2_mark_road = "Walk the old road"
+l_road_marked = "past the ridge, a dent wider than a cart runs straight over the next hill."
+store_cleared = "road cleared"
+c_shovel_road = "Shovel the road"
+c_lane_clear_road = "Clear the road"
+c_cut_road = "Lay the road"
+up_cut_road = "a road over the ridge"
+l_road_1 = "shovels bite down through the ash to packed ground."
+l_road_2 = "the old bed shows underneath, set with flat stones."
+l_road_3 = "new stones go in where the old ones sank."
+l_road_4 = "a row of stakes marks the edge of the cut."
+l_road_5 = "the cut climbs toward the stream's mist."
+l_road_6 = "two beams span the warm stream."
+l_road_7 = "ash is banked high along both sides."
+l_road_8 = "the stretch past the stream is tamped level."
+l_road_9 = "markers lead up the far slope."
+l_road_10 = "the road tops the ridge."
+l_rows_black_1 = "in the night, frost got under the covers at the far end."
+l_rows_black_2 = "the outer rows hang black. {n3} pulls them up and takes them to the fire."
+store_rows_black_left = "clock"
+action_rows_black = "Frost"
+l_hall_hearth = "at the hall's end, the fire still sits on bare ash."
+c_hall_hearth = "Lay a hearth"
+up_hall_hearth = "{pct} rest"
+l_stage_hall_hearth = "flat stones ring the hall's fire."
+l_rime_stone_1 = "rime whitens every stone in the valley, the field stones too."
+l_rime_stone_2 = "it stops a hand short of the camp stone, all the way round, as if drawn."
+l_covers_torn = "the hides froze to the beds and tear when lifted. half go on the fire."
+store_tear_left = "clock"
+action_tear = "Frost"
+store_torn_clock = "clock"
+action_torn_clock = "Clock"
+l_sun_back = "back to the sun, {n4} strips to the waist. says it's warmer than it looks."
+n_greycoat_1 = "one dead at the gap. the toes on its forefeet longer than a wolf's. the others sat down before they ran"
+c_try_stone = "Warm the beds from a stone"
+l_b15_1 = "you kneel at the beds and lay a hand on a field stone, as at the kindling."
+l_b15_2 = "the stone goes cold under your palm, colder than the frost. nothing warms."
+l_b15_3 = "a fist of grey ash lies where your hand was. the camp stone has never gone cold."
+skill_spellcraft = "Spellcraft"
+feature_t_pack_clear = "Pack's cold season"
+pays_spell_faster = "{pct} spellcraft speed"
+pays_find_spell_3 = "ash worked into her ground"
+pays_spell_4 = "{pct} speed warming the beds"
+c_warm_beds = "Warm the beds"
+l_find_spell_3 = "by morning, the ash off your hands is dug into {n3}'s ground."
+n_ground_3 = "rime on every stone in the valley but this one. it stops a hand short, all round"
+n_ground_4 = "a field stone goes cold if you take its heat. this one never has. ash on my hand both times"
+o_j_steps = "Lucy says somebody has to cut steps down the bank to the open water."
+a_j_steps_yes = "You cut them"
+a_job_yes_cost = "{d} of your time"
+a_job_no = "Someone else"
+a_job_no_cost = "nothing"
+l_j_steps_no = "lucy nods and goes to find someone."
+l_j_smoke_hole_no = "lucy looks up at the ridge, then round for someone."
+l_j_wedged_no = "lucy goes off to ask someone else."
+l_j_snares_no = "lucy says someone will be up early, then."
+l_j_ridge_no = "lucy says she'll find someone to take them."
+l_j_tally_no = "lucy says she'll get someone counting."
+l_j_steps_yes = "you are looking for a flat stone before she has finished."
+c_cut_steps = "Cut steps to the water"
+l_cut_steps = "steps down the bank, and clay to the knees."
+o_j_smoke_hole = "Lucy says somebody has to get up on the hall's ridge and open the smoke hole."
+a_j_smoke_hole_yes = "You go up"
+l_j_smoke_hole_yes = "you are on the roof before anyone holds the ladder."
+c_smoke_hole = "Open the smoke hole"
+l_smoke_hole = "soot slides off the ridge in sheets."
+o_j_wedged = "Lucy says somebody has to dig out the beam wedged under the ruin's wall."
+a_j_wedged_yes = "You dig it out"
+l_j_wedged_yes = "you nod, and somehow the shovel is in your hand."
+c_dig_beam = "Dig out the wedged beam"
+l_dig_beam = "the beam comes free, and half the wall with it."
+o_j_snares = "Lucy says the snares freeze open, and somebody has to set them at first light."
+a_j_snares_yes = "You set them"
+l_j_snares_yes = "you go out ahead of the light."
+c_reset_snares = "Set the snares at first light"
+l_reset_snares = "two of the snares held something. the rest are set fresh."
+o_j_ridge = "Lucy says somebody should take the child up the ridge to see the sun come over."
+a_j_ridge_yes = "You take them"
+l_j_ridge_yes = "you are halfway up the ridge before you think about it."
+c_take_child = "Take the child up the ridge"
+l_take_child = "the child watches the sun clear the ridge and says nothing all the way down."
+o_j_tally = "Lucy says somebody has to keep count of the bowls against the pot each night."
+a_j_tally_yes = "You keep it"
+l_j_tally_yes = "you have a stick and a knife out before she is done."
+c_keep_count = "Keep the bowl count"
+l_keep_count = "your notches catch a bowl going round twice."
+aim_road = "find where the old road goes."
+n_day_b15 = "knelt at the beds with my hand on a field stone. it went cold. grey ash where my hand had been. the camp stone never has"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b15_catchup = "tried a field stone at the beds. it went cold"
+j_b15_late = "the camp stone has never once gone cold"
+j_road_first = "started on the old road past the ridge. shovelled down to its bed"
+j_road_again_1 = "more of the road"
+j_road_again_2 = "the road. shovelled, laid stones, shovelled"
+j_road_again_3 = "on the road till dark. ash in everything"
+j_road_catchup = "worked on the road"

@@ -289,7 +289,8 @@ def test_a_chip_order_card_without_after_end_still_loads(tmp_path: Path):
     """The control: the chip rules are what fail above, not the edit."""
     o = load_opening(broken(tmp_path, CHIP_CARD, CHIP_CARD.replace("after_end = true", "after_end = false")))
     assert [(c.chip, c.after_end) for c in o.order_cards if c.chip] == \
-        [("tired", False), ("hungry", True), ("ash_laden", False), ("draughty", False), ("frosted", False)]
+        [("tired", False), ("hungry", True), ("ash_laden", False), ("draughty", False), ("frosted", False),
+         ("frosted", False)]
 
 
 def chips_with_tired_moved() -> list[ChipEntry]:
