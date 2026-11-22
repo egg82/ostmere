@@ -133,6 +133,12 @@ work out the cost themselves ("oh, right, that makes sense"); afterwards the fac
 option's card shows its time as it now stands, and the ledger's numbers show what the order did. Weighty choices still
 show their weight up front (below).
 
+**A one-off never stands against a lasting bonus.** A mix refills any store, so items now lose to a percentage
+forever every time (owner: "even if my stores ran dry I can probably just adjust a mix and get it back. Why trade a
+permanent bonus for a one-off?"). Lasting goes against lasting: a rate on one store against a rate on another, a
+person's time, or a door the other answer opens. A one-off answer appears only where no answer lasts. **An answer that changes a percentage shows the one it changes**, as now → after ("Stew
++15% → +20%"), so the player can see what they are adding to or giving up.
+
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
 
