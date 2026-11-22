@@ -34,6 +34,7 @@ export const UI = {
   needsSpent: "ui.card.needs_spent", // "{store} {have}/{n}": a card's need on a store nothing will bring again
   needsSkill: "ui.card.needs_skill", // "{skill} level {have}/{n}": a card held back by a skill level
   reach: "ui.card.reach", // "{store} {have}, next reach at {n}": the store a reach stake fills, against its next stop
+  opensIn: "ui.card.opens_in", // "{d}": the foot of a card waiting to open, apart from a running card's bare timer
   takesNothing: "ui.card.takes_nothing", // a card that takes from no store: its only price is its share of time
   needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
   ledgerHeading: "ui.heading.ledger",

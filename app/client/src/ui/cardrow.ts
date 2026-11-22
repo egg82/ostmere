@@ -5,6 +5,7 @@ import { sample } from "../game/clock";
 import { keptReadyAt } from "../game/ready";
 import { Bonus } from "./bonus";
 import { CardNeeds } from "./cardneeds";
+import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import { FightPanel, seatFight } from "./fightpanel";
 import type { PartContext } from "./part";
@@ -107,8 +108,11 @@ export function waitAt(ctx: PartContext, view: View | null, card: Card): number 
   return card.by === "tap" ? card.completes_at : view ? keptReadyAt(view, card, ctx.catalog.content.scales.quantity_per_item) : null;
 }
 
-/** The card's foot at `t`: the countdown to waitAt, else its tap time. */
+/** The card's foot at `t`: a running tap's timer bare; a card waiting to open, "Opens in" and the time (never the same
+ * words as a timer); else its tap time. */
 export function footWords(ctx: PartContext, wait: number | null, card: Card, t: number): string {
-  const { format } = ctx.catalog;
-  return wait !== null ? format.duration(wait - t) : card.tap_s !== null ? format.duration(card.tap_s) : "";
+  const { format, text } = ctx.catalog;
+  if (wait === null) return card.tap_s !== null ? format.duration(card.tap_s) : "";
+  const left = format.duration(wait - t);
+  return card.by === "tap" ? left : text.fill(UI.opensIn, { d: left });
 }

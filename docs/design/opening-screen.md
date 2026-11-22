@@ -721,7 +721,8 @@ While tired → Rest
 
 After the end, a step (not work done again and again, which is the mix's) that is unready but will be ready by itself
 (its blocker has a ready time, drawn as the card's countdown) carries a small `When ready` button over the free right
-end of its foot, beside the tap target. A ready time is a promise, so it is drawn only while the page can see it kept:
+end of its foot, beside the tap target. A waiting card's foot reads `Opens in 2h`; only a running tap's foot is the bare
+timer. A ready time is a promise, so it is drawn only while the page can see it kept:
 a rule on the store the card waits on that is on and lets go below the need stops the store short, and then the card
 shows its need and maker with no countdown and no `When ready`. A step waiting on a store the player has never been
 shown (the night) is a clock, not something to plan around: it draws when it opens and its countdown, with no

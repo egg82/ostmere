@@ -7,6 +7,7 @@ import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Order, View } from "../src/api/types";
 import { Catalog } from "../src/game/catalog";
+import { UI } from "../src/game/text";
 import { Keeps } from "../src/game/keeps";
 import { canQueue } from "../src/game/queue";
 import { Screen } from "../src/ui/screen";
@@ -48,7 +49,8 @@ function foot(view: View): string {
   const node = [...screen.root.querySelectorAll(".card")].find((n) => n.querySelector(".card-title")?.textContent === title);
   return node?.querySelector(".card-foot")?.textContent ?? "(no card)";
 }
-const countdown = catalog.format.duration(52);
+const opens = (s: number): string => catalog.text.fill(UI.opensIn, { d: catalog.format.duration(s) });
+const countdown = opens(52);
 
 // The controls: no rule, a rule that is off, a rule that lets go at or past the need. The engine's time stands.
 expect("no rule: When ready", canQueue(catalog, viewWith([], []), lean), true);
@@ -82,7 +84,7 @@ const capped = (fills: { store: string; at: number }[], cap = 10): View => ({
   forecast: { horizon_at: AT + 3600, level_ups: [], tops_out: [], fills, empties: [] },
 });
 check("a need of the whole cap: the forecast's fill", () => {
-  expect("the countdown", foot(capped([{ store: "stone", at: AT + 90 }])), catalog.format.duration(90));
+  expect("the countdown", foot(capped([{ store: "stone", at: AT + 90 }])), opens(90));
   expect("When ready", canQueue(catalog, capped([{ store: "stone", at: AT + 90 }]), full), true);
 });
 check("a need of the whole cap, no fill by the horizon: no countdown, no When ready", () => {
