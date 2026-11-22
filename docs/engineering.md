@@ -10,7 +10,7 @@ Every change reaches `main` through a pull request (`gh pr create`), and branch 
 which fails unless every job the run was meant to run passed. `.github/workflows/ci.yml` runs on every pull request
 and every push to `main`. Its `changes` job sorts the run: a pull request that changes only `docs/`, top-level
 Markdown or `LICENSE` runs `docs` (the citation tests and the household-names guard), and anything else runs the
-per-PR set: `tests` (two shards, on a `postgres:18.6` container, production's version), `shards-cover`,
+per-PR set: `tests` (three shards, on a `postgres:18.6` container, production's version), `shards-cover`,
 `playthrough-smoke` (the opening's representative routes), `engine-bench`, strict `pyright` and
 `client`, while `app-image` builds `app/Containerfile` beside them. The whole-game playthroughs (`playthrough`,
 `chapter-saves`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
@@ -209,9 +209,9 @@ suite still runs in seconds.
   about 115 ms (create its database 26 ms, drop it 38 ms, boot the app 85 ms). Tried and left out: caching the opening per
   session (7-8%, inside the box's ~20% run-to-run noise) and one reused database truncated between tests (no gain, and
   three tests rename a table).
-- **`tests` runs as two parallel shards** (`app/tools/shards.py`): shard a is `tests/saves`, `tests/accounts` and
-  `tests/api_contract`, the heaviest; shard b is everything else, as an `--ignore` of those paths, so a new test
-  directory lands in b. The `shards-cover` job fails unless the two collect exactly what one run does.
+- **`tests` runs as three parallel shards** (`app/tools/shards.py`): shard a is `tests/saves`, `tests/accounts` and
+  `tests/api_contract`; shard c is `tests/opening`; shard b is everything else, as an `--ignore` of those paths, so a
+  new test directory lands in b. The `shards-cover` job fails unless the three collect exactly what one run does.
 - **Test jobs install from pip's cache**, keyed on `requirements*.txt`, so a job spends seconds, not minutes, on
   `pip install`.
 - **The engine's speed gets a budget in CI, as a diff against the merge-base.** `app/tools/bench_ab.py` runs `reading`
