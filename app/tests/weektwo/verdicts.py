@@ -49,7 +49,7 @@ CHAPTERS = {"eight": EIGHT, "nine": NINE, "eleven": ELEVEN, "twelve": TWELVE, "f
 PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fifteen": fifteen, "sixteen": sixteen}
 """Each chapter's typical play is the one its counting reads."""
 PART_STEPS = 1
-PARTS = {"eight": 14, "nine": 8, "eleven": 9, "twelve": 12, "fifteen": 14, "sixteen": 30}
+PARTS = {"eight": 14, "nine": 8, "eleven": 9, "twelve": 12, "fifteen": 14, "sixteen": 8}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
 each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
 than its parts hold fails `decided_in`."""

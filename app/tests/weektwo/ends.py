@@ -113,9 +113,8 @@ READINGS: dict[str, tuple[Span, ...]] = {
     "readings-fifteen-a": (("fifteen", 0, 12),),
     "readings-fifteen-b": (("fifteen", 12, 13),),
     "readings-fifteen-c": (("fifteen", 13, None),),
-    "readings-sixteen-a": (("sixteen", 0, 6),),
-    "readings-sixteen-b": (("sixteen", 6, 12),),
-    "readings-sixteen-c": (("sixteen", 12, None),),
+    "readings-sixteen-a": (("sixteen", 0, 4),),
+    "readings-sixteen-b": (("sixteen", 4, None),),
 }
 """The typical route's heavy-step readings (verdicts.decided_in) saved beside the ends, in parts CI writes in jobs of
 their own: no reading needs another, and day twelve's take minutes each. Each chapter's spans run from 0 with no gap and
