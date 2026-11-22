@@ -322,8 +322,8 @@ accepts 15d, T2's visit, as near_untouched). Smoked's sink is the table (day six
 | Route | B14 | T4 | T5 | T6 | B15 | Visits | Cap loss at B15's visit (8 h / 24 h) |
 |---|---|---|---|---|---|---|---|
 | typical | 371.6 | 377.8 | 386.0 | 394.5 | 427.6 (band 408-432) | 10, one with nothing to decide | barley 28/31%, cord 32/7%, dry wood 54/56%, roots 65/63%, smoked 21/34%, stones 23/25% |
-| sharp | 366.5 | 370.5 | 386.0 | | 386.0 (floor 349: T5 binds) | 8 | roots 97/96%, stones 93/94% |
-| whenever | 368.5 | 373.3 | 386.0 | | 394.2 (Arcana 13 by B14) | 3 | dry wood 57/61%, smoked 33/34% |
+| sharp | 366.5 | 370.5 | 386.0 | | 386.0 (floor 349: T5 binds) | 8 | roots 97/96%, stones 93/94% (a local play before the road's cord) |
+| whenever | 368.5 | 373.3 | 386.0 | | 394.2 (Arcana 13 by B14) | 3 | dry wood 57/61%, smoked 33/34% (the same) |
 
 Sharp and whenever reach B15 before their fifth cover, so T6 and SL26 land past the chapter's edge on those routes.
 Smoked loses a fifth to a third of its making to the cap: the raise per arrival group (day eighteen) is its lever. On

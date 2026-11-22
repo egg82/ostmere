@@ -171,7 +171,8 @@ costs = [{ store = "rows_black_left", items_per_hour = 6 }, { store = "ripe", it
 
 # ---------- SL25: the hall's hearth ----------
 
-# B14 + 10 h: a hearth for the hall, against the stones the road wants.
+# B14 + 10 h: a hearth for the hall, against the stones the road wants. On the hands alone, as the hall it stands in: a
+# one-off build, and a town twin per lane would let each person lay one.
 [[triggers]]
 id = "t_hall_hearth"
 when = { test = "at_least", subject_kind = "store", id = "table_clock", value = 10 }
