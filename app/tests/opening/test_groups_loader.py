@@ -78,6 +78,16 @@ def test_handing_a_person_to_their_group_unlocks_the_groups_cards_once():
     assert cards["t_m2_comes"] == ["t_m2_work"] and cards["t_m1_apart"] == []
 
 
+def test_a_group_card_an_outcome_names_is_left_to_it(tmp_path: Path):
+    named = edited(tmp_path, ('outcome = { marks = [{ lane = "t_m1", own_split = true, card = "t_m1_work" }] }',
+                              'outcome = { unlocks = [{ unlock_kind = "card", id = "t_crew_work" }], marks = [{ lane = "t_m1", '
+                              'own_split = true, card = "t_m1_work" }] }'))
+    cards = {str(t.id): [u.id for u in t.outcome.unlocks if u.kind is UnlockKind.CARD]
+             for t in to_rules(load_with(named)).triggers}
+    assert cards["t_m1_comes"] == ["t_m1_work"] and cards["t_m1_back"] == []
+    assert cards["t_m1_apart"] == ["t_crew_work"]
+
+
 @pytest.mark.parametrize(("message", "edits"), [(m, e) for _, m, e in PLANTS], ids=[n for n, _, _ in PLANTS])
 def test_the_loader_refuses(tmp_path: Path, message: str, edits: tuple[tuple[str, str], ...]):
     with pytest.raises(ValueError, match=message):

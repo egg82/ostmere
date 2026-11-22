@@ -63,6 +63,7 @@ cap = 1
 
 [[cards]]
 id = "n2_mark_road"
+twin_of = "mark_road"
 lane = "n2"
 presentation = "narrative"
 label_key = "c_n2_mark_road"
@@ -116,6 +117,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 
 [[town_cards]]
 id = "{lane}_clear_road"
+twin_of = "shovel_road"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_lane_clear_road"
@@ -127,6 +129,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 # (SL26's), cord's sink once the hall is up. Stages 7, 8 and 10 carry day nineteen's beats.
 [[cards]]
 id = "cut_road"
+only_player = "project"
 presentation = "craft"
 label_key = "c_cut_road"
 upside_key = "up_cut_road"
@@ -180,6 +183,7 @@ outcome = { line_keys = ["l_hall_hearth"], unlocks = [{ unlock_kind = "card", id
 
 [[cards]]
 id = "hall_hearth"
+only_player = "project"
 presentation = "craft"
 label_key = "c_hall_hearth"
 upside_key = "up_hall_hearth"
@@ -278,6 +282,7 @@ hand = "ink"
 # A35, a first-of-its-kind step: shown with T5, ready at Arcana 13.
 [[cards]]
 id = "try_stone"
+only_player = "magic"
 presentation = "narrative"
 label_key = "c_try_stone"
 work_s = 60
@@ -325,6 +330,7 @@ levels = [
 # ash, which is her ground's input. It cuts in, as any cure; the player's time is its cost.
 [[cards]]
 id = "warm_beds"
+only_player = "magic"
 presentation = "action"
 label_key = "c_warm_beds"
 upside_key = "up_cover_beds"
@@ -509,6 +515,7 @@ line_keys = ["l_j_steps_no"]
 
 [[cards]]
 id = "cut_steps"
+only_player = "story"
 presentation = "action"
 label_key = "c_cut_steps"
 work_s = 1200
@@ -544,6 +551,7 @@ line_keys = ["l_j_smoke_hole_no"]
 
 [[cards]]
 id = "smoke_hole"
+only_player = "story"
 presentation = "action"
 label_key = "c_smoke_hole"
 work_s = 600
@@ -578,6 +586,7 @@ line_keys = ["l_j_wedged_no"]
 
 [[cards]]
 id = "dig_beam"
+only_player = "story"
 presentation = "action"
 label_key = "c_dig_beam"
 work_s = 1800
@@ -612,6 +621,7 @@ line_keys = ["l_j_snares_no"]
 
 [[cards]]
 id = "reset_snares"
+only_player = "story"
 presentation = "action"
 label_key = "c_reset_snares"
 work_s = 900
@@ -646,6 +656,7 @@ line_keys = ["l_j_ridge_no"]
 
 [[cards]]
 id = "take_child"
+only_player = "story"
 presentation = "action"
 label_key = "c_take_child"
 work_s = 1800
@@ -680,6 +691,7 @@ line_keys = ["l_j_tally_no"]
 
 [[cards]]
 id = "keep_count"
+only_player = "story"
 presentation = "action"
 label_key = "c_keep_count"
 work_s = 300

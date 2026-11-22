@@ -168,6 +168,7 @@ label_key = "lane_smoke"
 # A11: on offer through the night, retired at morning if untapped.
 [[cards]]
 id = "sit_up"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_sit_up"
 work_s = 20
@@ -177,6 +178,7 @@ line_keys = ["l_sit_up"]
 # A12: H3.
 [[cards]]
 id = "look_out"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_look_out"
 work_s = 5
@@ -188,6 +190,7 @@ finished = { line_keys = ["l_look_out_2"], unlocks = [{ unlock_kind = "card", id
 # A13 and the two later snares: a wire each (Scavenging 4, 5, 6). The first is H4.
 [[cards]]
 id = "set_snare"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_set_snare"
 work_s = 8
@@ -198,6 +201,7 @@ line_keys = ["l_snare_1", "l_snare_2", "l_snare_3"]
 # A14, H5: the camp by daylight, after the first snare; it brings the two builds and the rack into view.
 [[cards]]
 id = "look_over_camp"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_look_over_camp"
 work_s = 5
@@ -210,6 +214,7 @@ finished = { unlocks = [{ unlock_kind = "card", id = "build_lean_to" }, { unlock
 # toward stock_ready, the roots rule's offer.
 [[cards]]
 id = "build_lean_to"
+only_player = "project"
 presentation = "craft"
 label_key = "c_build_lean_to"
 upside_key = "up_lean_to"
@@ -226,6 +231,7 @@ modifiers = [
 
 [[cards]]
 id = "build_larder"
+only_player = "project"
 presentation = "craft"
 label_key = "c_build_larder"
 upside_key = "up_larder"
@@ -249,6 +255,7 @@ modifiers = [
 # rule's card.
 [[cards]]
 id = "build_smoke_rack"
+only_player = "project"
 presentation = "craft"
 label_key = "c_build_smoke_rack"
 work_s = 30
@@ -268,6 +275,7 @@ unlocks = [
 
 [[cards]]
 id = "smoke_catch"
+only_player = "station"
 lane = "smoke"
 presentation = "action"
 label_key = "c_smoke_catch"
@@ -282,6 +290,7 @@ outcome = { stores = [{ store = "smoked", items = 2 }] }
 # roots can always smoke some.
 [[cards]]
 id = "smoke_roots"
+only_player = "station"
 lane = "smoke"
 presentation = "action"
 label_key = "c_smoke_roots"
@@ -295,6 +304,7 @@ outcome = { stores = [{ store = "smoked", items = 2 }] }
 # step the player took once is the one they take again. Opened by t_cook.
 [[cards]]
 id = "cook_roots"
+only_player = "self"
 presentation = "action"
 label_key = "c_roast_roots"
 work_s = 4
@@ -307,6 +317,7 @@ outcome = { stores = [{ store = "fullness", items = 7 }] }
 # is its blocker) and When ready has a time to wait for.
 [[cards]]
 id = "take_stock"
+only_player = "alone"
 presentation = "narrative"
 label_key = "c_take_stock"
 work_s = 10
@@ -866,6 +877,7 @@ outcome = { stores = [{ store = "wattle", items = 1 }] }
 # One stage a completion, each a full store of wattle, so its countdown is the wattle line's fill; the last pays. Tapped by its order card, so no stage is queued.
 [[cards]]
 id = "screen_fire"
+only_player = "project"
 presentation = "craft"
 label_key = "c_screen_fire"
 upside_key = "up_screen_fire"

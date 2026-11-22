@@ -65,6 +65,7 @@ unlocks = [
 # Staged on the hands, queued When ready, a pelt a stage; its last stage (SL14) makes rest a fifth faster.
 [[cards]]
 id = "pelt_bedding"
+only_player = "project"
 presentation = "craft"
 label_key = "c_pelt_bedding"
 upside_key = "up_pelt_bedding"
@@ -126,6 +127,7 @@ line_keys = ["l_pelt_kept"]
 
 [[cards]]
 id = "give_pelt"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_give_pelt"
 work_s = 5
@@ -154,6 +156,31 @@ stake = "reach"
 work_s = 300
 inputs = [{ store = "pelt", items = 2 }]
 outcome = { stores = [{ store = "wraps_sewn", items = 1 }] }
+
+# Sewing is everyday work, sitting down: everyone's (decisions/people.md, "Who can do which job"). The family's
+# copies unlock in day eleven.
+[[town_cards]]
+id = "{lane}_sew_wraps"
+twin_of = "sew_wraps"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_sew_wraps"
+upside_key = "up_sew_wraps"
+stake = "reach"
+work_s = 300
+inputs = [{ store = "pelt", items = 2 }]
+outcome = { stores = [{ store = "wraps_sewn", items = 1 }] }
+
+[[triggers]]
+id = "t_town_wraps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "sew_wraps", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_sew_wraps" },
+  { unlock_kind = "card", id = "n2_sew_wraps" },
+  { unlock_kind = "card", id = "n3_sew_wraps" },
+  { unlock_kind = "card", id = "n4_sew_wraps" },
+]
 
 # Its cap is the last reach.
 [[stores]]
@@ -284,6 +311,7 @@ outcome = { line_keys = ["l_night_7"], unlocks = [{ unlock_kind = "feature", id 
 # with B6; its first hunt keeps G2 after G1. Its finish lifts Camp 12 and lands the chapter's end feature.
 [[cards]]
 id = "sit_fire_7"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_fire_7"
 work_s = 5

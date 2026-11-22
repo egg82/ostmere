@@ -32,6 +32,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "walk_edge" }] }
 # store's worth away), and starts the evening's clock.
 [[cards]]
 id = "walk_edge"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_walk_edge"
 work_s = 5
@@ -105,6 +106,7 @@ unlocks = [
 # with the track; the level is the simulator's, day-three-numbers.md). The first scrap, so the scrap line shows here.
 [[cards]]
 id = "track_end"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_track_end"
 work_s = 5
@@ -143,6 +145,7 @@ offered_after = { unlock_kind = "store", id = "clay" }
 # Staged crafts on the hands, queued When ready; each stage up to a full store. Each names only its upside.
 [[cards]]
 id = "larder_floor"
+only_player = "project"
 presentation = "craft"
 label_key = "c_larder_floor"
 upside_key = "up_larder_floor"
@@ -156,6 +159,7 @@ modifiers = [{ target = "cap", id = "roots", kind = "mul_bp", amount_bp = 15000,
 
 [[cards]]
 id = "rack_roof"
+only_player = "project"
 presentation = "craft"
 label_key = "c_rack_roof"
 upside_key = "up_rack_roof"
@@ -174,6 +178,7 @@ modifiers = [{ target = "lane", id = "rack", kind = "mul_bp", amount_bp = 12500,
 # hearth's idiom), not a requires, so the card's needs show it.
 [[cards]]
 id = "wood_stack"
+only_player = "project"
 presentation = "craft"
 label_key = "c_wood_stack"
 upside_key = "up_wood_stack"
@@ -186,6 +191,7 @@ modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 150
 
 [[cards]]
 id = "pot_shelf"
+only_player = "project"
 presentation = "craft"
 label_key = "c_pot_shelf"
 upside_key = "up_pot_shelf"
@@ -225,6 +231,7 @@ outcome = { stores = [{ store = "shelf_ready", items = 3 }] }
 # could not wait on the next course. 10 stones, so the first course can be queued the return the clay comes in (D-105).
 [[cards]]
 id = "clay_hearth"
+only_player = "project"
 presentation = "craft"
 label_key = "c_clay_hearth"
 upside_key = "up_clay_hearth"
@@ -246,6 +253,7 @@ label_key = "lane_hearth"
 # they stood. A card's lump lands whole at any bar (engine DESIGN.txt, "Rate form").
 [[cards]]
 id = "cure_hearth"
+only_player = "project"
 lane = "hearth"
 presentation = "action"
 label_key = "c_cure_hearth"
@@ -392,6 +400,7 @@ outcome = { line_keys = ["l_night_4"], unlocks = [{ unlock_kind = "feature", id 
 # A20, B5: bank the hearth in night 4, at B5's Foraging level (beats.yaml). Its finish lifts Camp 10.
 [[cards]]
 id = "bank_hearth"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_bank_hearth"
 work_s = 5
@@ -420,6 +429,7 @@ outcome = { stores = [{ store = "watch_done", items = 1 }] }
 # Hers: four times the hands' bar, at her lane's speed (each lump a whole rate at 1.0 and 1.2).
 [[cards]]
 id = "n1_build_watch"
+twin_of = "watch_fire"
 lane = "n1"
 presentation = "craft"
 label_key = "c_n1_build_watch"
@@ -555,6 +565,7 @@ name_key = "name_n2"
 # A24 on his lane, the same real time and stores as A23.
 [[cards]]
 id = "n2_build_bay"
+twin_of = "make_bay"
 lane = "n2"
 presentation = "craft"
 label_key = "c_n2_build_bay"
@@ -573,6 +584,7 @@ cap_items = 1
 # XP. Defined once; a lane joins by appending to `lanes`, and expands where its lane is declared (town.py).
 [[town_cards]]
 id = "{lane}_forage"
+twin_of = "forage"
 lanes = ["n2", "n3", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_forage"
@@ -581,6 +593,7 @@ outcome = { stores = [{ store = "roots", items = 24 }] }
 
 [[town_cards]]
 id = "{lane}_gather"
+twin_of = "gather_wood"
 lanes = ["n2", "n3", "n5", "n6", "n7"]
 presentation = "action"
 label_key = "c_gather_wood"
@@ -589,6 +602,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 
 [[town_cards]]
 id = "{lane}_cut"
+twin_of = "woodcutting"
 lanes = ["n2", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_woodcutting"
@@ -597,7 +611,8 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 
 [[town_cards]]
 id = "{lane}_scavenge"
-lanes = ["n2"]
+twin_of = "scavenge"
+lanes = ["n2", "n3", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_scavenge"
 work_s = 48
@@ -659,6 +674,7 @@ outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split
 # digging, so his lane has no clay card.
 [[town_cards]]
 id = "{lane}_dig_clay"
+twin_of = "dig_clay"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_dig_clay"
@@ -667,6 +683,7 @@ outcome = { stores = [{ store = "clay", items = 1 }] }
 
 [[town_cards]]
 id = "{lane}_stew"
+twin_of = "stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_stew"
@@ -681,6 +698,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 # and makes, with no skill, filling the same store. The old man's leg rules out the walk, as it does the digging.
 [[town_cards]]
 id = "{lane}_field_track"
+twin_of = "field_track"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_field_track"

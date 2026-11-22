@@ -40,6 +40,7 @@ cap_items = 12
 # its order card (below), so no stage is queued; it lands B10 in day nine.
 [[cards]]
 id = "palisade"
+only_player = "project"
 presentation = "craft"
 label_key = "c_palisade"
 upside_key = "up_palisade"
@@ -76,6 +77,7 @@ outcome = { stores = [{ store = "stakes", items = 1 }] }
 # Stakes on the townsfolk's lanes; the three who come in day eleven expand where their lanes are declared.
 [[town_cards]]
 id = "{lane}_stakes"
+twin_of = "cut_stakes"
 lanes = ["n1", "n2", "n5", "n6", "n7", "g_field"]
 presentation = "action"
 label_key = "c_lane_stakes"
@@ -95,12 +97,34 @@ outcome = { stores = [{ store = "cord", items = 1 }] }
 # making nothing and an earlier file cannot name a store this one declares.
 [[cards]]
 id = "n4_cord"
+twin_of = "twist_cord"
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_cord"
 work_s = 900
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
+
+# Twisting cord is everyday work sitting down: everyone's, at his lane's pace.
+[[town_cards]]
+id = "{lane}_cord"
+twin_of = "twist_cord"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_twist_cord"
+work_s = 900
+inputs = [{ store = "damp_wood", items = 2 }]
+outcome = { stores = [{ store = "cord", items = 1 }] }
+
+[[triggers]]
+id = "t_town_cord"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "twist_cord", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_cord" },
+  { unlock_kind = "card", id = "n2_cord" },
+  { unlock_kind = "card", id = "n3_cord" },
+]
 
 # His cord by a rule: under a stage's worth twice over he twists until near full, so a full stack sends him back to his
 # share (the watch) instead of filling past the cap (week-two-numbers.md, "Cap loss": the stakes lanes' shape).
@@ -114,6 +138,7 @@ offered_after = { unlock_kind = "card", id = "n4_cord" }
 # is queued (one queue entry a stage let a babysitter land week 1's staged builds ahead of a player who queues).
 [[cards]]
 id = "hide_flaps"
+only_player = "project"
 presentation = "craft"
 label_key = "c_hide_flaps"
 upside_key = "up_hide_flaps"
@@ -213,6 +238,7 @@ outcome = { stores = [{ store = "fungus", items = 2 }] }
 # Picking on her lane and on the three who come in day eleven, expanded where their lanes are declared.
 [[town_cards]]
 id = "{lane}_pick"
+twin_of = "pick_fungus"
 lanes = ["n3", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_lane_pick"
@@ -235,6 +261,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 # The fungus pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
 id = "{lane}_fungus_stew"
+twin_of = "fungus_stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_fungus_stew"
@@ -310,12 +337,33 @@ outcome = { stores = [{ store = "ash", items = 4 }] }
 
 [[cards]]
 id = "n2_clear_roofs"
+twin_of = "clear_roofs"
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_clear_roofs"
 work_s = 1200
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
+
+# Clearing roofs is everyday work for anyone who can climb, at his lane's pace; the old man's leg rules it out.
+[[town_cards]]
+id = "{lane}_clear_roofs"
+twin_of = "clear_roofs"
+lanes = ["n1", "n3", "n5", "n6", "n7", "g_field"]
+presentation = "action"
+label_key = "c_clear_roofs"
+work_s = 1200
+inputs = [{ store = "roof_ash", items = 16 }]
+outcome = { stores = [{ store = "ash", items = 4 }] }
+
+[[triggers]]
+id = "t_town_roofs"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "clear_roofs", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_clear_roofs" },
+  { unlock_kind = "card", id = "n3_clear_roofs" },
+]
 
 # "When ash-laden, he clears the roofs": day one's hunger card on his lane (D-91's shape), its `when` the chip's.
 [[order_cards]]

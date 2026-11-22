@@ -31,6 +31,7 @@ name_key = "name_n1"
 # and her first forage done within V1's 60 s.
 [[cards]]
 id = "n1_forage"
+twin_of = "forage"
 lane = "n1"
 presentation = "action"
 label_key = "c_forage"
@@ -39,6 +40,7 @@ outcome = { stores = [{ store = "roots", items = 24 }, { store = "n1_worked", it
 
 [[cards]]
 id = "n1_gather"
+twin_of = "gather_wood"
 lane = "n1"
 presentation = "action"
 label_key = "c_gather_wood"
@@ -47,6 +49,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }, { store = "n1_worked",
 
 [[cards]]
 id = "n1_cut"
+twin_of = "woodcutting"
 lane = "n1"
 presentation = "action"
 label_key = "c_woodcutting"
@@ -55,6 +58,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }, { store = "n1_worked",
 
 [[cards]]
 id = "n1_scavenge"
+twin_of = "scavenge"
 lane = "n1"
 presentation = "action"
 label_key = "c_scavenge"
@@ -67,6 +71,7 @@ outcome = { stores = [{ store = "stones", items = 8 }, { store = "n1_worked", it
 # as a rate rounded down, so any other length lands the walk short of one and B4 never fires.
 [[cards]]
 id = "n1_walk_ridge"
+twin_of = "walk_ridge"
 lane = "n1"
 presentation = "narrative"
 label_key = "c_n1_walk_ridge"
@@ -123,6 +128,7 @@ offered_after = { unlock_kind = "feature", id = "n1" }
 # here and the hands' card is. Everyday work goes to everyone the story does not rule out.
 [[town_cards]]
 id = "{lane}_weave_wattle"
+twin_of = "weave_wattle"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "g_hearth"]
 presentation = "action"
 label_key = "c_weave_wattle"
@@ -146,6 +152,7 @@ unlocks = [
 # night's clock starts before it, so a B3 landed while away never brings the night with it.
 [[cards]]
 id = "give_stool"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_give_stool"
 work_s = 5
@@ -218,6 +225,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "raised_bed" }] }
 # A16, J4: the two builds in view, unready, so either can be queued before it can be afforded (the 2 AM test).
 [[cards]]
 id = "make_room"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_make_room"
 work_s = 5
@@ -232,6 +240,7 @@ unlocks = [{ unlock_kind = "card", id = "build_shelter" }, { unlock_kind = "card
 # the need is a mix switch for the player and a task switch for her. The shelter opens the offer.
 [[cards]]
 id = "build_shelter"
+only_player = "project"
 presentation = "craft"
 label_key = "c_build_shelter"
 upside_key = "up_shelter"
@@ -245,6 +254,7 @@ modifiers = [{ target = "lane", id = "n1", kind = "mul_bp", amount_bp = 12000, s
 
 [[cards]]
 id = "build_woodstack"
+only_player = "project"
 presentation = "craft"
 label_key = "c_build_woodstack"
 upside_key = "up_woodstack"
@@ -260,6 +270,7 @@ modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 200
 # opens before them. Opened with the player there, so it turns ready in a visit, never in an absence (the 2 AM test).
 [[cards]]
 id = "raised_bed"
+only_player = "project"
 presentation = "craft"
 label_key = "c_raised_bed"
 upside_key = "up_raised_bed"

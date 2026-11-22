@@ -126,6 +126,8 @@ content has one.
 
 **Who can do which job.** Everyday work (cooking a stew, digging clay, weaving wattle) goes to most people by default,
 withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled
-or story-bound work goes to whoever the story fits (owner, 2026-11-14). No person's list holds a job another beats
+or story-bound work goes to whoever the story fits (owner, 2026-11-14). Every card on a player's lane has a town copy
+naming it in `twin_of`, or an `only_player` tag saying why not (alone, story, self, fight, magic, station, project), checked by
+`app/ashfall_app/opening/player_checks.py` and `app/tests/opening/test_player_only.py`. No person's list holds a job another beats
 outright (the same outcome, at least as fast, at no extra cost), checked by `app/ashfall_app/opening/choice_checks.py`.
 Balance follows these: wide access is retuned in costs and rates, never withheld to save a number.

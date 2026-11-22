@@ -116,6 +116,7 @@ tied = "n3"
 # A34 on her lane, the same real time and stores as A33.
 [[cards]]
 id = "n5_build_hut"
+twin_of = "make_hut"
 lane = "n5"
 presentation = "craft"
 label_key = "c_n5_build_hut"
@@ -327,6 +328,79 @@ unlocks = [
   { unlock_kind = "card", id = "n7_field_track" },
 ]
 
+# Scavenging, the roofs, cord and the flaps on the family's lanes and their group, once the hands have each.
+[[triggers]]
+id = "t_family_scavenge"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_scavenge" },
+  { unlock_kind = "card", id = "n6_scavenge" },
+  { unlock_kind = "card", id = "n7_scavenge" },
+  { unlock_kind = "card", id = "g_field_scavenge" },
+]
+
+[[triggers]]
+id = "t_family_roofs"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "clear_roofs", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_clear_roofs" },
+  { unlock_kind = "card", id = "n6_clear_roofs" },
+  { unlock_kind = "card", id = "n7_clear_roofs" },
+  { unlock_kind = "card", id = "g_field_clear_roofs" },
+]
+
+[[triggers]]
+id = "t_family_cord"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "twist_cord", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_cord" },
+  { unlock_kind = "card", id = "n6_cord" },
+  { unlock_kind = "card", id = "n7_cord" },
+  { unlock_kind = "card", id = "g_hearth_cord" },
+]
+
+[[triggers]]
+id = "t_family_flaps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "peg_flaps", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_peg_flaps" },
+  { unlock_kind = "card", id = "n6_peg_flaps" },
+  { unlock_kind = "card", id = "n7_peg_flaps" },
+  { unlock_kind = "card", id = "g_hearth_peg_flaps" },
+]
+
+# The windbreak and the wraps on the family's lanes and their group, once the hands have each.
+[[triggers]]
+id = "t_family_windbreak"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "build_windbreak", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_build_windbreak" },
+  { unlock_kind = "card", id = "n6_build_windbreak" },
+  { unlock_kind = "card", id = "n7_build_windbreak" },
+  { unlock_kind = "card", id = "g_hearth_build_windbreak" },
+]
+
+[[triggers]]
+id = "t_family_wraps"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "sew_wraps", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n5_sew_wraps" },
+  { unlock_kind = "card", id = "n6_sew_wraps" },
+  { unlock_kind = "card", id = "n7_sew_wraps" },
+  { unlock_kind = "card", id = "g_hearth_sew_wraps" },
+]
+
 # Their everyday jobs from the join: the weaving, clay and both pots.
 [[triggers]]
 id = "t_family_chores"
@@ -455,6 +529,7 @@ queues = ["arm_n7"]
 
 [[cards]]
 id = "arm_n2"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_arm_n2"
 work_s = 600
@@ -463,6 +538,7 @@ inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
 
 [[cards]]
 id = "arm_n7"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_arm_n7"
 work_s = 600
@@ -564,6 +640,7 @@ outcome = { line_keys = ["l_night_12"], unlocks = [{ unlock_kind = "action", id 
 # B10's floor (210 h) keeps it past B11's sharp floor.
 [[cards]]
 id = "keep_vigil"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_keep_vigil"
 work_s = 5

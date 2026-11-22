@@ -19,6 +19,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "hand_on_stone" }, { unlock_
 # sized for its small share (Arcana 4 about M1).
 [[cards]]
 id = "hand_on_stone"
+only_player = "magic"
 presentation = "action"
 label_key = "c_hand_on_stone"
 work_s = 20
@@ -52,6 +53,15 @@ id = "t_stone_first"
 when = { test = "at_least", subject_kind = "card_count", id = "hand_on_stone", value = 1 }
 outcome = { line_keys = ["l_stone_first"] }
 
+# Scavenging on her lane once the pair join (day_three.toml's town card; his leg rules it out).
+[[triggers]]
+id = "t_town_scavenge"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pair_joined", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n3_scavenge" },
+]
+
 # ---------- stones' sink: the windbreak ----------
 
 # A reach stake on the hearth's lane (issue #40), the cordwood shape: scavenging in the hands' mix makes more stones than
@@ -77,6 +87,31 @@ stake = "reach"
 work_s = 240
 inputs = [{ store = "stones", items = 6 }]
 outcome = { stores = [{ store = "windbreak", items = 6 }] }
+
+# Stacking stones is everyday work (decisions/people.md, "Who can do which job"): the hearth's card on a
+# townsperson's lane at its takes and makes. His leg rules it out, as it does the digging; the family's copies
+# unlock in day eleven.
+[[town_cards]]
+id = "{lane}_build_windbreak"
+twin_of = "build_windbreak"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "g_hearth"]
+presentation = "action"
+label_key = "c_build_windbreak"
+upside_key = "up_build_windbreak"
+stake = "reach"
+work_s = 240
+inputs = [{ store = "stones", items = 6 }]
+outcome = { stores = [{ store = "windbreak", items = 6 }] }
+
+[[triggers]]
+id = "t_town_windbreak"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "build_windbreak", value = 1 }
+[triggers.outcome]
+unlocks = [
+  { unlock_kind = "card", id = "n1_build_windbreak" },
+  { unlock_kind = "card", id = "n2_build_windbreak" },
+  { unlock_kind = "card", id = "n3_build_windbreak" },
+]
 
 # Its cap is the last reach.
 [[stores]]
@@ -124,6 +159,7 @@ outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store =
 # level's marker says so). The last stage makes a pot four stew, after the clay hearth's three.
 [[cards]]
 id = "hearth_stones"
+only_player = "magic"
 presentation = "craft"
 label_key = "c_hearth_stones"
 upside_key = "up_hearth_stones"
@@ -415,6 +451,7 @@ unlocks = [
 # A26 on her lane, the same real time and stores as A25.
 [[cards]]
 id = "n3_build_bay"
+twin_of = "make_bay2"
 lane = "n3"
 presentation = "craft"
 label_key = "c_n3_build_bay"

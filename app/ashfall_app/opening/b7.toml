@@ -17,6 +17,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "bank_fire_6" }] }
 # A29, B7: bank the fire in night 6. Its finish starts the strip and its clock and moves the aim.
 [[cards]]
 id = "bank_fire_6"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_bank_fire_6"
 work_s = 5
@@ -72,6 +73,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "b7_stand" }] }
 # A27: drive them off. A beat never rolls, so no fight table. Its finish opens combat and all of the week's fights.
 [[cards]]
 id = "b7_stand"
+only_player = "story"
 presentation = "narrative"
 label_key = "c_b7_stand"
 work_s = 20
@@ -188,6 +190,7 @@ cap_items = 10000
 # work divides one item's quantity units.
 [[cards]]
 id = "hunt_wolf"
+only_player = "fight"
 presentation = "action"
 label_key = "c_hunt_wolf"
 work_s = 1200
@@ -241,6 +244,7 @@ outcome = { modifiers = [{ target = "work", id = "hunt_wolf", kind = "mul_bp", a
 
 [[cards]]
 id = "make_spear"
+only_player = "fight"
 presentation = "craft"
 label_key = "c_make_spear"
 upside_key = "up_make_spear"
@@ -252,6 +256,7 @@ modifiers = [{ target = "side", id = "hands", kind = "add_bp", amount_bp = 15000
 
 [[cards]]
 id = "poultice"
+only_player = "self"
 presentation = "action"
 label_key = "c_poultice"
 work_s = 60

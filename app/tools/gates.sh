@@ -14,6 +14,7 @@ PYTEST_GATES=(
   app/tests/test_suppressions.py
   app/tests/test_save_fields.py
   app/tests/opening/test_requires_shown.py
+  app/tests/opening/test_player_only.py
   app/tests/test_boundaries.py
   app/tests/test_doc_citations.py
   app/tests/test_decision_citations.py
