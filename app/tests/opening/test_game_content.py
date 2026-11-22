@@ -14,7 +14,7 @@ from ashfall_app.main import create_app
 from ashfall_app.opening.ui_keys import UI_KEYS
 from ashfall_app.opening.convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
-from ashfall_app.opening.schema import B7, CHAPTERS, DAY_ELEVEN, DAY_FIVE, DAY_FOUR, DAY_SIX, DAY_TWELVE
+from ashfall_app.opening.schema import B7, CHAPTERS, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_SIX, DAY_TWELVE
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.playthrough import Player, opening, opening_rules
 
@@ -121,7 +121,8 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
     assert made["damp_wood"] == shipped(["gather_wood", "woodcutting", "n1_gather", "n1_cut", "n2_gather", "n2_cut"],
                                         (DAY_FIVE, ["n3_gather"]),
                                         (DAY_ELEVEN, ["n5_gather", "n5_cut", "n7_gather", "n7_cut", "n6_gather", "n6_cut", "g_field_cut"]))
-    assert made["flint"] == ["scavenge", "field_track"] and made["nails"] == ["scavenge"]
+    assert made["flint"] == shipped(["scavenge", "field_track"], (DAY_FIFTEEN, ["pull_beams"]))
+    assert made["nails"] == ["scavenge"]
     assert made["warmth"] == []
 
 
@@ -156,7 +157,8 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
     assert [f.feature for f in content.feature_infos if f.label_key] == shipped(
         ["book", "t_rats_drift", "posts_fire", "margin_watch", "posts_deep", "lookout", "watch_fed", "skin_post", "t_pack_step"],
         (DAY_ELEVEN, ["door_gate", "ditch_dug"]),
-        (DAY_TWELVE, ["spoil_ring", "shaft_bound", "meat_below", "rack_kept", "crows_off", "crows_kept"]))
+        (DAY_TWELVE, ["spoil_ring", "shaft_bound", "meat_below", "rack_kept", "crows_off", "crows_kept"]),
+        (DAY_FIFTEEN, ["rack_sunned"]))
     authored = opening().camp
     assert content.camp is not None and authored is not None
     assert [lv.held for lv in content.camp.camp_levels] == [lv.held for lv in authored.levels]
@@ -177,8 +179,8 @@ def test_the_fixed_ui_text_is_served_and_has_no_digit(content: Content):
 def test_the_rest_offer_is_served_as_the_tired_chips_after_the_end(content: Content):
     """The second mix's offer: rest on energy, answering the tired chip with the chip's own `when` (so the page words
     it as the chip), waiting for the end; day one's hunger rule is the same shape on the hungry chip; day eight's roofs
-    card and day nine's wind card answer their chips as their own `when` and do not wait; the ledger's cards answer no chip and never
-    wait for it."""
+    card, day nine's wind card and day fifteen's covers card answer their chips as their own `when` and do not wait; the
+    ledger's cards answer no chip and never wait for it."""
     chips = {c.chip: c for c in content.chip_infos}
     rest = next(c for c in content.order_cards if c.chip is not None)
     assert (rest.store, rest.chip, rest.after_end, rest.then.model_dump()) == \
@@ -192,8 +194,10 @@ def test_the_rest_offer_is_served_as_the_tired_chips_after_the_end(content: Cont
     assert (roofs.store, roofs.after_end, roofs.when) == ("roof_ash", False, chips["ash_laden"].when)
     draughty = next(c for c in content.order_cards if c.chip == "draughty")
     assert (draughty.store, draughty.after_end, draughty.when) == ("wind_torn", False, chips["draughty"].when)
+    frosted = next(c for c in content.order_cards if c.chip == "frosted")
+    assert (frosted.store, frosted.after_end, frosted.when) == ("rime", False, chips["frosted"].when)
     assert all(chip is None and not after_end
-               for _, chip, after_end in others if chip not in ("hungry", "ash_laden", "draughty"))
+               for _, chip, after_end in others if chip not in ("hungry", "ash_laden", "draughty", "frosted"))
     assert all(c.when != chips["tired"].when for c in chips.values() if c.chip != "tired")
 
 

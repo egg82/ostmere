@@ -54,9 +54,10 @@ DAY_FIFTEEN = Path(__file__).resolve().parent / "day_fifteen.toml"
 PRESTIGE = Path(__file__).resolve().parent / "prestige.toml"
 PHASE_PAYS = Path(__file__).resolve().parent / "phase_pays.toml"
 CHAPTERS = (DAY_ONE, DAY_TWO, DAY_THREE, DAY_FOUR, DAY_FIVE, B7, DAY_SIX, DAY_EIGHT, DAY_NINE, DAY_ELEVEN,
-            DAY_TWELVE, PRESTIGE, PHASE_PAYS)
-"""The chapters after the opening, merged on in this order (Chapter): what ships."""
-IN_WRITING: tuple[Path, ...] = (DAY_FIFTEEN,)
+            DAY_TWELVE, DAY_FIFTEEN, PRESTIGE, PHASE_PAYS)
+"""The chapters after the opening, merged on in this order (Chapter): what ships. Prestige and its phase pays come
+last, since the phase pays expand over every skill row the chapters before them wrote."""
+IN_WRITING: tuple[Path, ...] = ()
 """Chapters whose structure is in but whose lines are not, merged after CHAPTERS only by tests; each moves into
 CHAPTERS once no text of it is UNWRITTEN (tests/opening/test_day_two.py) and its pacing holds."""
 UNWRITTEN = "[day two: line to write]"

@@ -1,6 +1,7 @@
 """The content's one end card (opening.toml's end_card) sits on the end_feature of the last shipped chapter and nowhere
 else: content runs on past every earlier chapter, so shipping a chapter moves the card with no hand edit. A chapter in
-IN_WRITING is not shipped; it takes the card once it moves into CHAPTERS."""
+IN_WRITING is not shipped; it takes the card once it moves into CHAPTERS, as the last shipped chapter took it from the
+one before."""
 import tomllib
 from pathlib import Path
 from typing import Any, NamedTuple
@@ -34,11 +35,13 @@ def test_one_feature_carries_the_card_the_last_shipped_chapters_end_feature():
     assert carriers(CHAPTERS) == [last_end(CHAPTERS)]
 
 
-def test_a_chapter_moving_from_writing_into_shipped_takes_the_card_with_it():
-    before = carriers(CHAPTERS)
-    after = carriers((*CHAPTERS, *IN_WRITING))
-    assert IN_WRITING and len(before) == 1 and len(after) == 1
-    assert after == [last_end(IN_WRITING)] and after != before
+def test_a_chapter_moving_into_shipped_takes_the_card_with_it():
+    """Shipping the last chapter with an end_feature moved the card off the one before it, with no hand edit."""
+    last = max(i for i, p in enumerate(CHAPTERS) if with_end(p).end is not None)
+    before = carriers((*CHAPTERS[:last], *CHAPTERS[last + 1:]))
+    after = carriers(CHAPTERS)
+    assert len(before) == 1 and len(after) == 1
+    assert after == [with_end(CHAPTERS[last]).end] and after != before
 
 
 def test_every_chapter_with_features_declares_an_end_feature_among_them():
