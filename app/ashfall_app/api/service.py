@@ -23,6 +23,7 @@ from .feature_infos import feature_info
 from .goalrows import goal_rows
 from .storerows import store_rows
 from .lane_infos import lane_infos, later_labels
+from .map_infos import place_infos
 from .mixrows import MixNumbers
 from .levels import levels
 from .scenestores import scene_stores
@@ -187,7 +188,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                      for k in o.offer_kinds],
         end_line_keys=list(o.end_line_keys),
         line_infos=line_infos(o),
-        journal=_journal(o),
+        journal=_journal(o), places=place_infos(o),
         aim_infos=[cm.AimInfo(aim=a.id, text_key=a.text_key,
                               after=None if a.after is None else convert.unlock(authored.unlock(a.after)))
                    for a in o.aims],

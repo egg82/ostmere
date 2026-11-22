@@ -11,6 +11,7 @@ from .find_models import FindInfo as FindInfo
 from .camp_models import CampInfo, CampLevel as CampLevel
 from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, NoteInfo as NoteInfo, Section as Section
 from .line_models import LineInfo, PeopleInfo
+from .map_models import PlaceInfo, Stamp as Stamp
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
 from .skill_models import LevelPays as LevelPays, NodeChange as NodeChange, NodeInfo, NodeTarget as NodeTarget, SkillInfo
@@ -272,6 +273,8 @@ class Content(BaseModel):
     aim_infos: list[AimInfo]
     journal: JournalInfo | None
     """The book, its pages and their notes (CONTRACT.txt, "JOURNAL"); null until a chapter declares [journal]."""
+    places: list[PlaceInfo]
+    """Every place on the world map, in content order (CONTRACT.txt, "MAP"); empty when no chapter declares one."""
     camp: CampInfo | None
     people: PeopleInfo | None
     """The bands a day's mention is worded from (CONTRACT.txt, "People"); null until a chapter declares [people]."""

@@ -978,6 +978,8 @@ export interface components {
             /** Aim Infos */
             aim_infos: components["schemas"]["AimInfo"][];
             journal: components["schemas"]["JournalInfo"] | null;
+            /** Places */
+            places: components["schemas"]["PlaceInfo"][];
             camp: components["schemas"]["CampInfo"] | null;
             people: components["schemas"]["PeopleInfo"] | null;
             first_mix: components["schemas"]["FirstMix"];
@@ -1932,6 +1934,23 @@ export interface components {
             went: components["schemas"]["PeopleBand"][];
         };
         /**
+         * PlaceInfo
+         * @description A place on the world map, in content order: drawn once view.unlocked holds `reveal`, at whole cells east and north
+         *     of the town (which stands at 0, 0).
+         */
+        PlaceInfo: {
+            /** Place */
+            place: string;
+            stamp: components["schemas"]["Stamp"];
+            /** East */
+            east: number;
+            /** North */
+            north: number;
+            reveal: components["schemas"]["Unlock"];
+            /** Label Key */
+            label_key: string | null;
+        };
+        /**
          * Prestige
          * @description By hand only, never an order's or a queue entry's verb (CONTRACT.txt, "PRESTIGE PHASES"): one rank into `node`
          *     on `skill`'s track. At the skill's top it is the click into the next phase; with SkillPrestige.pick_owed it fills
@@ -2370,6 +2389,12 @@ export interface components {
             /** Share Bp */
             share_bp: number;
         };
+        /**
+         * Stamp
+         * @description The kind of stamp a place is drawn with: each is art the page owns (/assets/art/map/manifest.json).
+         * @enum {string}
+         */
+        Stamp: "village" | "town" | "city" | "fort" | "stronghold" | "hill_village" | "crossing" | "mountain" | "range" | "forest" | "tree";
         /**
          * StandingBar
          * @description An unlocked standing action, maker or consumer: full, or paused by a dry store.

@@ -40,7 +40,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "features": [*o.features, *ch.features], "order_cards": [*o.order_cards, *ch.order_cards],
         "offers": [*o.offers, *ch.offers], "offer_kinds": [*o.offer_kinds, *ch.offer_kinds],
         "journal": _once("journal", o.journal, ch.journal), "entries": [*o.entries, *ch.entries], "notes": [*o.notes, *ch.notes],
-        "subjects": [*o.subjects, *ch.subjects],
+        "subjects": [*o.subjects, *ch.subjects], "places": [*o.places, *ch.places],
         "prestige": _once("prestige", o.prestige, ch.prestige), "nodes": [*o.nodes, *ch.nodes],
         "people": _once("people", o.people, ch.people),
         "camp": camp, "curve_items": [*o.curve_items, *ch.curve_items], "aims": [*o.aims, *ch.aims],

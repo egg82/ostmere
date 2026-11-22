@@ -1556,6 +1556,114 @@ JOURNAL
       tests/test_client_contrast.py passes with the hand's colours on the parchment.
   13. Each sketch is looked at, by process.md's method, before its entry ships.
 
+MAP
+  The world map (docs/decisions.md, "A world map"): a page of the Book showing where the town is and where the places
+  found so far lie from it, drawn from engraved stamps placed by code. A place is content; whether it is revealed is
+  view.unlocked's (its reveal unlock), so View gains nothing and no decision changes. Fits into Town map and world map
+  (its first caller: a module until a second caller or variant), the page shell (a Book page), Unlocks and Lessons.
+  What stands where inside the town is not this section.
+
+  In the chapter files:
+    [[places]]          id, stamp, at, reveal, label_key
+      id                a PlaceId, a content id like any other, unique among places
+      stamp             the kind of stamp drawn for it, a closed set the page owns art for: "village" | "town" |
+                        "city" | "fort" | "stronghold" | "hill_village" | "crossing" | "mountain" | "range" |
+                        "forest" | "tree"
+      at                [east, north]: whole cells from the town, which stands at [0, 0], north up; each from
+                        -MAP_REACH to MAP_REACH (8). Coarse on purpose: the content says roughly where, the page
+                        places the art.
+      reveal            {unlock_kind, id}: the unlock that reveals it, written as an aim's `after`. unlock_kind is
+                        one of feature, card, skill, store, chip, action (some outcome or the start adds it) or
+                        entry (a journal page, which its first note writes).
+      label_key         optional: the place's name, a text key; absent for a place drawn unnamed (a forest, a range).
+
+  The opening's checks (each naming the place, never text):
+    - a place with no reveal, or a stamp outside the set: refused by the shape.
+    - a reveal of another unlock kind; a reveal naming an id its kind does not know; a reveal of a kind other than
+      entry that no outcome and not the start adds (nothing would ever reveal it): refused, naming the place.
+    - two places on one cell, in one chapter or across chapters, or a place on the town's cell [0, 0]: refused,
+      naming both places (the one place).
+    - an at outside the reach: refused.
+    - a label_key that is not in text: refused by the text checks.
+
+  Content.places: [PlaceInfo {place, stamp, east, north, reveal: Unlock, label_key}], every place in content order
+  (chapters in load order); empty when no chapter declares one. stamp is a closed enum, Stamp. label_key is null for
+  an unnamed place.
+
+  The stamps: /assets/art/map/manifest.json, {stamp: [{src, w, h}]}, each image ink on transparent at
+  /assets/art/map/<src>, w by h pixels at the sheet's base scale. Made by
+  tools/mapstamps.py from the Widman 2.1 PNG pack (docs/research/art-sourcing.md, CC0, outside the repo) and seeded
+  with the art kind (engineering.md, bulk assets); never in git or the image.
+
+  THE CLIENT MAY:
+  - offer the Map as the Book's last page, its button worded ui.book.map, while view.unlocked holds the reveal of at
+    least one place; until then it has no button, and nothing of it is drawn or fetched.
+  - draw the sheet, north up: the town's stamp at [0, 0], in the warm ink of what is the player's own, labelled with
+    the town's shown name (THE TOWN'S MIX: ui.town.title or its later label); then each revealed place's stamp at its
+    cell, in the cool ink of what was found. The frame holds every revealed cell and the town with a cell of margin,
+    at least two cells each way from the town, widened along the longer side to fill the sheet.
+  - choose each place's art from its stamp kind's variants by a shuffle bag keyed by the save and the kind, walked
+    over every place of the kind in content order, revealed or not, so a place keeps its art as others are revealed,
+    and no variant repeats on a sheet until every variant of the kind is used. The town is a village: the first draw
+    of that bag is its art, the village places' after it.
+  - put each label in clear space beside its place, with a dark halo: the first of the spots tried (right, left,
+    below, above, then the same further out) whose box crosses no stamp, no other label and not the sheet's edge. A
+    label that finds no such spot is not drawn on the sheet.
+  - list the revealed places that have a label, in content order after the town, beside the sheet on a desktop and
+    under it on a phone; a tap on a row marks its place on the sheet until another row is tapped or the page is left.
+  - dot the Book's tab when a place is revealed after the first view, until the Book is opened.
+  - teach the page once, the first time its button is on show: a lesson on the button itself (ui.lesson.map_open),
+    then on the sheet (ui.lesson.map_places); kept in the save as other lessons are.
+  - load the manifest when the page is first offered; a manifest or image that fails to load leaves the sheet's
+    stamps undrawn (the labels and the list stay) and is reported to /api/client-errors once.
+  THE CLIENT MAY NOT:
+  - draw, label or list a place view.unlocked does not reveal, or say how many places are still to find.
+  - draw two stamps whose boxes cross, or a label over a stamp or another label.
+  - send anything because of the page: opening it, and tapping rows, cause no decision, advance, dry run or
+    presentation write (the lesson's own keep aside).
+  - put a place's name only on hover: every label drawn is text on the sheet or in the list.
+
+  Rejected, and why:
+  - A map feature to switch the page on: the first revealed place already says it ("the screen arrives when it means
+    something"), as the journal's first entry does the book's.
+  - Pixel or fractional positions: the content would be laying out art; a coarse cell keeps placement in code and
+    makes "two places on one spot" a check.
+  - The revealed places on the View: each reveal is already in view.unlocked.
+  - The variant chosen in content: the pool and the no-repeat rule are the page's (decisions.md, "A world map").
+  - Filler terrain between places drawn by code: geography the content has not written; the sheet shows only what
+    is found.
+  - Any unlock kind as a reveal: offers, answers and joins are added by triggers the loader makes or by other
+    outcome parts, so "something reveals it" could not be checked from the content alone; an outcome there unlocks a
+    feature instead.
+
+  Text keys (Content.text_entries): ui.book.map                  the Map page's button in the Book's row
+                                    ui.map.heading               the list of places' heading
+                                    ui.lesson.map_open | ui.lesson.map_places   the map's lesson
+
+  Acceptance (server tests under app/tests, client tests under app/client/test, as their neighbours):
+  1. A fixture chapter with two places, one labelled and one not, loads: Content.places holds both in content order
+     with their stamp, east, north, reveal and label_key (null for the unnamed one).
+  2. Planted, each fails the load and names the place: no reveal; a stamp outside the set; a reveal of kind offer;
+     a reveal of an unknown feature; a reveal of a feature nothing unlocks; two places on one cell in one chapter;
+     two on one cell across two chapters; a place at [0, 0]; an at past the reach; a label_key not in text. Control:
+     the fixture without the plant loads, and a reveal of a journal entry loads.
+  3. The shipped content declares no place: Content.places is empty; openapi.json names PlaceInfo and the Stamp enum
+     as components; the field-names test holds.
+  4. With no place revealed the Book has no Map button and no request goes to /assets/art/map/; once one is revealed
+     the button shows, last in the row, and the dot is on the Book's tab.
+  5. Stamp choices are equal across two calls for one save; a place keeps its variant when another place of its kind
+     is revealed; with no more places of a kind than its variants, no two share one; past that, none repeats before
+     every variant has been used.
+  6. Over a fixed set of sheets (a phone's and a desktop's size; neighbouring places, long labels, places at the
+     reach), no two stamp boxes cross, no label box crosses a stamp box, another label or the sheet's edge, and each
+     stamp lies inside the sheet; a label with no spot is left off the sheet while its place is still listed.
+  7. The map's lesson starts on the Map button's first showing, walks its two steps, is kept in the save, and never
+     returns once kept.
+  8. Renders at 390x844 and 3840x2160 of a fixture with places revealed, looked at (headless-render), repeated with
+     the browser set to prefer light (the game's one dark theme) and not differing; no name is reachable only by
+     hover.
+  9. The stamps made by tools/mapstamps.py are looked at, on the sheet, before they ship.
+
 BANKED TIME
   Where production past a cap goes: trips, comforts and arrivals, each a card or an offer the wire already carries
   (engine DESIGN.txt, "BANKED TIME"). Nothing new on the wire: no model, field, feature or text key. A trip is a

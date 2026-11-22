@@ -13,6 +13,7 @@ import "../src/game.css";
 import "../src/front.css";
 import "../src/fights.css";
 import "../src/slider.css";
+import "../src/map.css";
 import "../src/reminders.css";
 import { wireBegin } from "../src/begin";
 import { fixtureContent, Q } from "./content";
@@ -20,6 +21,7 @@ import { isFights, withHurtChip } from "./fights";
 import { isGroups, withGroups } from "./groups";
 import { isJournal, withJournal } from "./journal";
 import { isPrestige, withPrestige } from "./prestige";
+import { placesView, withPlaces } from "./places";
 import { isSince, MANY, withSince } from "./since";
 import { runningMixOf, storeRowsFor } from "./storerows";
 import { fixtureApi } from "./fixture-api";
@@ -48,6 +50,7 @@ if (isFights(phase)) Object.assign(fixtureContent, withHurtChip(fixtureContent))
 if (isGroups(phase)) Object.assign(fixtureContent, withGroups(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
+if (hash.has("places")) Object.assign(fixtureContent, withPlaces(fixtureContent));
 MANY.n = Number(hash.get("stores") ?? 0);
 if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));
 const fixture = fixtureApi(phase, hash.has("stale"), hash.has("seen"), hash.has("limited"), hash.has("due"));
@@ -74,7 +77,9 @@ const nextRow = (v: View): View => (!hash.has("nextrow") ? v : { ...v, orders: v
 const founded = (v: View): View => (hash.has("founded") ? { ...v, unlocked: [...v.unlocked, { category: "feature", id: "founded" }] } : v);
 // #storerows: the stores' rows of the running mix, and of an edit's dry run (storerows.ts), for the editor's store section.
 const rows = (v: View, mix = runningMixOf(v)): View => (hash.has("storerows") ? { ...v, store_rows: storeRowsFor(v, mix) } : v);
-const asStep = (s: Step): Step => ({ ...s, view: rows(founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view)))))) });
+// #places[=N]: the map's fixture places, the first N revealed (places.ts)
+const placed = (v: View): View => (hash.has("places") ? placesView(v, hash.get("places") ? Number(hash.get("places")) : undefined) : v);
+const asStep = (s: Step): Step => ({ ...s, view: placed(rows(founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view))))))) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const saved = ds.find((d) => d.kind === "save_mix"); if (saved?.kind === "save_mix") v = rows({ ...woodGoal(v), goal_rows: woodGoal(v).goal_rows.map((g) => ({ ...g, lands_at: g.lands_at === null || !hash.has("storerows") ? g.lands_at : g.lands_at - 1800 })) }, saved.mix); const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,
@@ -95,6 +100,7 @@ if (hash.has("settings")) clickWhenShown(".settings-open");
 if (hash.has("journal")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page[data-page=journal]"));
 if (hash.has("chronicle")) clickWhenShown(".tabs [data-tab=book]");
 if (hash.has("town")) clickWhenShown(".tabs [data-tab=town]");
+if (hash.has("map")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page[data-page=map]"));
 if (hash.has("done")) clickWhenShown(".tabs [data-tab=book]", () => clickWhenShown(".book-page[data-page=done]"));
 if (hash.has("back")) window.setTimeout(() => document.dispatchEvent(new Event("visibilitychange")), 1500);
 if (hash.has("prestigesheet")) clickWhenShown(".skill-foot .primary");

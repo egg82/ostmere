@@ -2873,6 +2873,13 @@
               }
             ]
           },
+          "places": {
+            "items": {
+              "$ref": "#/components/schemas/PlaceInfo"
+            },
+            "type": "array",
+            "title": "Places"
+          },
           "camp": {
             "anyOf": [
               {
@@ -2939,6 +2946,7 @@
           "line_infos",
           "aim_infos",
           "journal",
+          "places",
           "camp",
           "people",
           "first_mix",
@@ -5622,6 +5630,50 @@
         ],
         "title": "PeopleInfo"
       },
+      "PlaceInfo": {
+        "properties": {
+          "place": {
+            "type": "string",
+            "title": "Place"
+          },
+          "stamp": {
+            "$ref": "#/components/schemas/Stamp"
+          },
+          "east": {
+            "type": "integer",
+            "title": "East"
+          },
+          "north": {
+            "type": "integer",
+            "title": "North"
+          },
+          "reveal": {
+            "$ref": "#/components/schemas/Unlock"
+          },
+          "label_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "place",
+          "stamp",
+          "east",
+          "north",
+          "reveal",
+          "label_key"
+        ],
+        "title": "PlaceInfo",
+        "description": "A place on the world map, in content order: drawn once view.unlocked holds `reveal`, at whole cells east and north\nof the town (which stands at 0, 0)."
+      },
       "Prestige": {
         "properties": {
           "kind": {
@@ -6670,6 +6722,24 @@
         ],
         "title": "SpentShare",
         "description": "The part, share_bp, of spent card `card`'s share that the card holding this entry runs now."
+      },
+      "Stamp": {
+        "type": "string",
+        "enum": [
+          "village",
+          "town",
+          "city",
+          "fort",
+          "stronghold",
+          "hill_village",
+          "crossing",
+          "mountain",
+          "range",
+          "forest",
+          "tree"
+        ],
+        "title": "Stamp",
+        "description": "The kind of stamp a place is drawn with: each is art the page owns (/assets/art/map/manifest.json)."
       },
       "StandingBar": {
         "properties": {

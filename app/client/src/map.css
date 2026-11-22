@@ -1,0 +1,29 @@
+/* The Book's Map page (ui/mappage.ts; CONTRACT.txt, "MAP"). The sheet is the dark ground of the game, on a hairline like
+   every group but the scene; its stamps are masks filled with ink: warm for the town (the player's own), cool for what
+   was found (docs/decisions.md, "Art: a drawn, living town over bars"). Labels are text with a halo of the ground. */
+.map-page { --map-ground: var(--stage); --map-found: #a3a7a9; --map-home: var(--ember-hot);
+  display: grid; gap: .9rem 1.75rem; padding: .9rem 0; }
+.map-sheet { position: relative; height: min(58vh, 34rem); background: var(--map-ground); border: 1px solid var(--rule); overflow: hidden; }
+.map-stamps, .map-labels { position: absolute; inset: 0; }
+.map-stamp { position: absolute; background: var(--map-found);
+  -webkit-mask: var(--art) center / 100% 100% no-repeat; mask: var(--art) center / 100% 100% no-repeat; }
+.map-stamp.home { background: var(--map-home); }
+.map-ring { position: absolute; box-sizing: border-box; border: 1px dashed var(--ink-hi); border-radius: 50%; pointer-events: none; }
+.map-label { position: absolute; white-space: nowrap; font-size: var(--t-body); line-height: 1.25; color: var(--ink-hi);
+  text-shadow: 0 0 2px var(--map-ground), 0 0 3px var(--map-ground), 0 0 6px var(--map-ground); pointer-events: none; }
+.map-label.marked { text-decoration: underline; text-underline-offset: .2em; }
+.map-heading { margin: 0 0 .25rem; font-size: var(--t-meta); font-weight: 400; color: var(--ink-dim); }
+.map-list { list-style: none; margin: 0; padding: 0; }
+.map-row { display: flex; align-items: center; gap: .6rem; width: 100%; min-height: 2.75rem; padding: 0; background: none;
+  border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; text-align: left; cursor: pointer; color: var(--ink); }
+.map-row::before { content: ""; flex: none; width: .45rem; height: .45rem; border-radius: 50%; background: var(--map-found); }
+.map-row.home::before { background: var(--map-home); }
+.map-row[aria-pressed="true"] { color: var(--ink-hi); }
+.map-row[aria-pressed="true"]::before { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--ink-hi); }
+.map-row:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
+
+/* a desktop or a landscape phone: the Book is a view, the sheet fills it and the list sits beside it */
+@media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
+  .map-page { grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem); align-items: start; }
+  .map-sheet { height: max(20rem, calc(100dvh - 9rem)); }
+}
