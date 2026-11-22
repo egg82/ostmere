@@ -23,6 +23,12 @@ id = "t_b15_clock"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "spellcraft", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "b15_clock" }] }
 
+# The count of who has come held 10 since day three; the table draws a fifteenth, so from the roof on it holds 20.
+[[triggers]]
+id = "t_hall_count"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "belonging", value = 1 }
+outcome = { modifiers = [{ target = "cap", id = "arrivals", kind = "mul_bp", amount_bp = 20000, source = "t_hall_count" }] }
+
 [[triggers]]
 id = "t_b15_2h"
 when = { test = "at_least", subject_kind = "store", id = "b15_clock", value = 2 }
