@@ -122,8 +122,8 @@ beats:
      turn: up, outcome: "no", advances: [C-promise-1], pays: [C-promise-29], cost: time, moves: [PC], thread: {id: th-magic, at: middle}, register: wonder}
   - {id: B16, region: R1, target_day: 19, weekly: false, gate: {all: [{arrivals: 15}, {tier: belonging}, {hours_after: {arrival: 15, hours: 8}}]},
      turn: down, advances: [C-promise-2, C-promise-5], pays: [C-promise-30], cost: trust, moves: [PC], thread: {id: th-past, at: middle}, register: dread}
-  - {id: B17, region: R1, target_day: 20, weekly: true, gate: {project: P3},
-     turn: down, outcome: "yes_but", opens: [C-promise-9], cost: people, moves: [PC], thread: {id: th-network, at: start}, register: grim}
+  - {id: B17, region: R1, target_day: 20, weekly: true, gate: {all: [{project: P3}, {beat: B16}, {save_hours: 389}]},
+     turn: down, outcome: "yes_but", opens: [C-promise-9], pays: [C-promise-31], cost: people, moves: [PC], thread: {id: th-network, at: start}, register: grim}
   # week 4
   - {id: B18, region: R2, target_day: 22, weekly: false, gate: {region_open: R2},
      turn: up, outcome: "yes_but", advances: [C-promise-3, C-promise-9], cost: stores, moves: [PC], thread: {id: th-network, at: middle}, register: wonder}
@@ -468,6 +468,28 @@ day_eighteen:
      moves: [PC], thread: {id: th-network, at: middle}}
   - {id: B16,  kind: ref,    visit: 18f, target_hour: 15.4}
 
+# Day nineteen: from B16 (the empty place) to B17, the road over the top, then night 21 to T13, week three's last beat,
+# which pays its own near promise (no closing ref, as day_twelve_night:). Spec: content/team/week-three.md, "Day
+# nineteen". Ids only. Kinds as day_two:. target_hour: game hours after the list's first ref lands, typical route,
+# measured by the week-two simulator (tests/weektwo/report.py --nineteen). B17 (the closing ref) pays
+# day_nineteen_near_promise. P3's stretches over the top are cut_over's.
+day_nineteen_near_promise: C-promise-31
+day_nineteen:
+  - {id: B16,  kind: ref,    visit: 18f, target_hour: 0}
+  - {id: T10,  kind: beat,   region: R1, target_day: 19, weekly: false, visit: 19a, target_hour: 6, gate: {completions: {card: cut_over, n: 1}},
+     turn: up, cost: none, opens: [C-promise-31], moves: [PC], thread: {id: th-network, at: middle}, register: wonder}
+  - {id: T11,  kind: beat,   region: R1, target_day: 20, weekly: false, visit: 19b, target_hour: 14, gate: {completions: {card: cut_over, n: 3}},
+     turn: up, outcome: "yes", cost: time, advances: [C-promise-31], moves: [PC], thread: {id: th-network, at: middle}, register: warm}
+  - {id: B17,  kind: ref,    visit: 19d, target_hour: 25}
+day_nineteen_night_near_promise: C-promise-32
+day_nineteen_night:
+  - {id: B17,  kind: ref,    visit: 19d, target_hour: 0}
+  - {id: T12,  kind: beat,   region: R1, target_day: 20, weekly: false, visit: 20a, target_hour: 4, gate: {hours_after: {beat: B17, hours: 4}},
+     turn: down, cost: none, opens: [C-promise-32], moves: [PC], thread: {id: th-town, at: middle}, register: grim}
+  - {id: A38,  kind: action, visit: 21a, target_hour: 31, gate: {all: [{save_hours: 499}, {beat: T12}]}}   # sit with her, night 21
+  - {id: T13,  kind: beat,   region: R1, target_day: 21, weekly: false, visit: 21a, target_hour: 31, gate: {all: [{project: A38}, {beat: T12}]},
+     turn: up, outcome: "yes_but", cost: none, pays: [C-promise-32], moves: [PC, N1], thread: {id: th-town, at: middle}, register: warm}
+
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
 # "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.
 #   kind: find | trip | arc | comfort | thread;  offers: decision | spend | both
@@ -497,6 +519,7 @@ side_layer:
   - {id: SL25, kind: comfort, chapter: day_sixteen, thread: th-survive, offers: decision, gate: {hours_after: {beat: B14, hours: 10}}}
   - {id: SL26, kind: arc,     chapter: day_sixteen, thread: th-town,  offers: decision, gate: {hours_after: {beat: T6, hours: 3}}}
   - {id: SL27, kind: thread,  chapter: day_eighteen, thread: th-magic, offers: decision, gate: {completions: {card: warm_beds, n: 1}}}
+  - {id: SL28, kind: arc,     chapter: day_nineteen, thread: th-town,  offers: decision, gate: {hours_after: {beat: T11, hours: 4}}}
 
 # Side beats: building falls (a maxed building's prestige) and season-gated set pieces. Not on the critical path;
 # each fires once when eligible. The simulator counts them toward "new things per week".

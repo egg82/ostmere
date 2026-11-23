@@ -6,7 +6,7 @@ beats typical (pace_scale 1): B14 day 15.47, target_day 16
   away V65->V66: 1 ['trigger t_deer']
   away V66->V67: 0 []
   away V67->V68: 0 []
-  away V68->V69: 5 ['trigger t_b14', 'trigger t_rows_black', 'trigger t_floor_starer', 'trigger offer_o_road', 'trigger note_n_greycoat_1']
+  away V68->V69: 4 ['trigger t_b14', 'trigger t_rows_black', 'trigger offer_o_road', 'trigger note_n_greycoat_1']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      12       5       0       5       0      22       3     47

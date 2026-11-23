@@ -1,0 +1,41 @@
+beats sharp (pace_scale 1): B17 day 19, target_day 20
+  away V157->V158: 0 []
+  away V158->V159: 0 []
+  away V159->V160: 0 []
+  away V160->V161: 0 []
+  away V161->V162: 1 ['trigger t_cloth']
+  away V162->V163: 0 []
+  away V163->V164: 0 []
+  away V164->V165: 0 []
+  away V165->V166: 0 []
+  away V166->V167: 2 ['trigger t_b17', 'trigger t_lamp_out']
+  away V167->V168: 0 []
+  away V168->V169: 0 []
+  away V169->V170: 0 []
+  away V170->V171: 0 []
+  away V171->V172: 0 []
+  away V172->V173: 0 []
+  away V173->V174: 0 []
+  away V174->V175: 0 []
+  away V175->V176: 0 []
+  away V176->V177: 0 []
+  away V177->V178: 0 []
+  away V178->V179: 0 []
+  away V179->V180: 0 []
+  away V180->V181: 1 ['trigger t_t13']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1       9       7       0       4       0      17       3     40
+  2      30       5       2       2       0      12       2     53
+  3      24       4       0       0       0      72       2    102
+  4      19       5       0       0       0       4       4     32
+  5       0       2       1       2       0       1       1      7
+  6       3       1       0       0       0       9       1     14
+  7       2       0       0       0       0       0       2      4
+  8       9       3       0       2       0      10       0     24
+  9      13       1       0       4       0      36       3     57
+ 10      22       3       0       1       0      15       2     43
+ 11      21       2       1       0       0     119       2    145
+ 12      11       1       0       0       0       2       3     17
+ 13       6       0       2       0       0       1       4     13
+ 14       7       2       1       0       0       1       1     12

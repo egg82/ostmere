@@ -2716,224 +2716,10 @@
       "wounds": []
     },
     {
-      "card": "n10_weave_wattle",
+      "card": "n11_first_out",
       "makes": [
-        "wattle"
-      ],
-      "takes": [
+        "cleared",
         "damp_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_forage",
-      "makes": [
-        "roots"
-      ],
-      "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "n10_cut",
-      "makes": [
-        "damp_wood"
-      ],
-      "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "n10_scavenge",
-      "makes": [
-        "stones"
-      ],
-      "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "n10_dig_clay",
-      "makes": [
-        "clay"
-      ],
-      "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "n10_stew",
-      "makes": [
-        "stew"
-      ],
-      "takes": [
-        "roots",
-        "smoked"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_field_track",
-      "makes": [
-        "track_laid"
-      ],
-      "takes": [
-        "damp_wood",
-        "stones",
-        "roots"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_build_windbreak",
-      "makes": [
-        "windbreak"
-      ],
-      "takes": [
-        "stones"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_sew_wraps",
-      "makes": [
-        "wraps_sewn"
-      ],
-      "takes": [
-        "pelt"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_stakes",
-      "makes": [
-        "stakes"
-      ],
-      "takes": [
-        "damp_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_cord",
-      "makes": [
-        "cord"
-      ],
-      "takes": [
-        "damp_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_pick",
-      "makes": [
-        "fungus"
-      ],
-      "takes": [
-        "bloom"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_fungus_stew",
-      "makes": [
-        "stew"
-      ],
-      "takes": [
-        "fungus",
-        "dry_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_clear_roofs",
-      "makes": [
-        "ash"
-      ],
-      "takes": [
-        "roof_ash"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_peg_flaps",
-      "makes": [],
-      "takes": [
-        "wind_torn",
-        "pelt",
-        "stones"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_watch",
-      "makes": [],
-      "takes": [
-        "dry_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_catch_broth",
-      "makes": [
-        "stew"
-      ],
-      "takes": [
-        "catch",
-        "dry_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_pull_beams",
-      "makes": [
-        "beams"
-      ],
-      "takes": [
-        "ruin_beams"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_reap",
-      "makes": [
-        "barley"
-      ],
-      "takes": [
-        "ripe"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_barley_stew",
-      "makes": [
-        "stew"
-      ],
-      "takes": [
-        "barley",
-        "dry_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_cover_beds",
-      "makes": [],
-      "takes": [
-        "rime",
-        "pelt"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_stack_cordwood",
-      "makes": [
-        "cordwood"
-      ],
-      "takes": [
-        "damp_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "n10_clear_road",
-      "makes": [
-        "cleared"
       ],
       "takes": [],
       "wounds": []
@@ -3155,6 +2941,229 @@
     },
     {
       "card": "n11_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_weave_wattle",
+      "makes": [
+        "wattle"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_cut",
+      "makes": [
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_scavenge",
+      "makes": [
+        "stones"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_dig_clay",
+      "makes": [
+        "clay"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n10_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "roots",
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_field_track",
+      "makes": [
+        "track_laid"
+      ],
+      "takes": [
+        "damp_wood",
+        "stones",
+        "roots"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_build_windbreak",
+      "makes": [
+        "windbreak"
+      ],
+      "takes": [
+        "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_sew_wraps",
+      "makes": [
+        "wraps_sewn"
+      ],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_cord",
+      "makes": [
+        "cord"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_pick",
+      "makes": [
+        "fungus"
+      ],
+      "takes": [
+        "bloom"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_fungus_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_clear_roofs",
+      "makes": [
+        "ash"
+      ],
+      "takes": [
+        "roof_ash"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_peg_flaps",
+      "makes": [],
+      "takes": [
+        "wind_torn",
+        "pelt",
+        "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_watch",
+      "makes": [],
+      "takes": [
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_catch_broth",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "catch",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_pull_beams",
+      "makes": [
+        "beams"
+      ],
+      "takes": [
+        "ruin_beams"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_barley_stew",
+      "makes": [
+        "stew"
+      ],
+      "takes": [
+        "barley",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_cover_beds",
+      "makes": [],
+      "takes": [
+        "rime",
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_stack_cordwood",
+      "makes": [
+        "cordwood"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_clear_road",
       "makes": [
         "cleared"
       ],
@@ -3829,6 +3838,40 @@
       ],
       "takes": [],
       "wounds": []
+    },
+    {
+      "card": "cut_over",
+      "makes": [],
+      "takes": [
+        "cleared",
+        "stones",
+        "stakes",
+        "cord"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n11_first_over",
+      "makes": [
+        "cleared",
+        "damp_wood"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "road_cloths",
+      "makes": [],
+      "takes": [
+        "pelt"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "sit_road_end",
+      "makes": [],
+      "takes": [],
+      "wounds": []
     }
   ],
   "chips": [
@@ -3963,11 +4006,13 @@
         "n6_gather",
         "n6_cut",
         "g_field_cut",
-        "n10_cut",
+        "n11_first_out",
         "n11_cut",
+        "n10_cut",
         "n12_cut",
         "n8_cut",
-        "n9_cut"
+        "n9_cut",
+        "n11_first_over"
       ]
     },
     {
@@ -3990,8 +4035,8 @@
         "n7_scavenge",
         "n6_scavenge",
         "g_field_scavenge",
-        "n10_scavenge",
         "n11_scavenge",
+        "n10_scavenge",
         "n12_scavenge",
         "n8_scavenge",
         "n9_scavenge"
@@ -4023,8 +4068,8 @@
         "n7_forage",
         "n6_forage",
         "g_field_forage",
-        "n10_forage",
         "n11_forage",
+        "n10_forage",
         "n12_forage",
         "n8_forage",
         "n9_forage"
@@ -4124,8 +4169,8 @@
         "n7_weave_wattle",
         "n6_weave_wattle",
         "g_hearth_weave_wattle",
-        "n10_weave_wattle",
         "n11_weave_wattle",
+        "n10_weave_wattle",
         "n12_weave_wattle",
         "n8_weave_wattle",
         "n9_weave_wattle"
@@ -4176,8 +4221,8 @@
         "n7_field_track",
         "n6_field_track",
         "g_field_field_track",
-        "n10_field_track",
         "n11_field_track",
+        "n10_field_track",
         "n12_field_track",
         "n8_field_track",
         "n9_field_track"
@@ -4201,8 +4246,8 @@
         "n6_dig_clay",
         "g_hearth_dig_clay",
         "cut_steps",
-        "n10_dig_clay",
         "n11_dig_clay",
+        "n10_dig_clay",
         "n12_dig_clay",
         "n8_dig_clay",
         "n9_dig_clay"
@@ -4272,14 +4317,14 @@
         "catch_broth",
         "barley_stew",
         "keep_count",
-        "n10_stew",
-        "n10_fungus_stew",
-        "n10_catch_broth",
-        "n10_barley_stew",
         "n11_stew",
         "n11_fungus_stew",
         "n11_catch_broth",
         "n11_barley_stew",
+        "n10_stew",
+        "n10_fungus_stew",
+        "n10_catch_broth",
+        "n10_barley_stew",
         "n12_stew",
         "n12_fungus_stew",
         "n12_catch_broth",
@@ -4369,8 +4414,8 @@
         "n7_build_windbreak",
         "n6_build_windbreak",
         "g_hearth_build_windbreak",
-        "n10_build_windbreak",
         "n11_build_windbreak",
+        "n10_build_windbreak",
         "n12_build_windbreak",
         "n8_build_windbreak",
         "n9_build_windbreak"
@@ -4454,8 +4499,8 @@
         "n7_sew_wraps",
         "n6_sew_wraps",
         "g_hearth_sew_wraps",
-        "n10_sew_wraps",
         "n11_sew_wraps",
+        "n10_sew_wraps",
         "n12_sew_wraps",
         "n8_sew_wraps",
         "n9_sew_wraps"
@@ -4479,8 +4524,8 @@
         "n7_stakes",
         "n6_stakes",
         "g_field_stakes",
-        "n10_stakes",
         "n11_stakes",
+        "n10_stakes",
         "n12_stakes",
         "n8_stakes",
         "n9_stakes"
@@ -4499,8 +4544,8 @@
         "n6_cord",
         "g_hearth_cord",
         "hunt_deer",
-        "n10_cord",
         "n11_cord",
+        "n10_cord",
         "n12_cord",
         "n8_cord",
         "n9_cord"
@@ -4531,8 +4576,8 @@
         "n7_pick",
         "n6_pick",
         "g_hearth_pick",
-        "n10_pick",
         "n11_pick",
+        "n10_pick",
         "n12_pick",
         "n8_pick",
         "n9_pick"
@@ -4551,8 +4596,8 @@
         "g_field_clear_roofs",
         "warm_beds",
         "smoke_hole",
-        "n10_clear_roofs",
         "n11_clear_roofs",
+        "n10_clear_roofs",
         "n12_clear_roofs",
         "n8_clear_roofs",
         "n9_clear_roofs"
@@ -4668,8 +4713,8 @@
         "g_field_pull_beams",
         "pull_beams",
         "dig_beam",
-        "n10_pull_beams",
         "n11_pull_beams",
+        "n10_pull_beams",
         "n12_pull_beams",
         "n8_pull_beams",
         "n9_pull_beams"
@@ -4710,8 +4755,8 @@
         "n7_reap",
         "n6_reap",
         "reap",
-        "n10_reap",
         "n11_reap",
+        "n10_reap",
         "n12_reap",
         "n8_reap",
         "n9_reap"
@@ -4744,8 +4789,8 @@
         "n6_stack_cordwood",
         "g_hearth_stack_cordwood",
         "stack_cordwood",
-        "n10_stack_cordwood",
         "n11_stack_cordwood",
+        "n10_stack_cordwood",
         "n12_stack_cordwood",
         "n8_stack_cordwood",
         "n9_stack_cordwood"
@@ -4766,15 +4811,21 @@
         "n7_clear_road",
         "n6_clear_road",
         "shovel_road",
-        "n10_clear_road",
+        "n11_first_out",
         "n11_clear_road",
+        "n10_clear_road",
         "n12_clear_road",
         "n8_clear_road",
-        "n9_clear_road"
+        "n9_clear_road",
+        "n11_first_over"
       ]
     },
     {
       "store": "rows_black_left",
+      "made_by": []
+    },
+    {
+      "store": "covers_torn",
       "made_by": []
     },
     {
@@ -4790,11 +4841,43 @@
       "made_by": []
     },
     {
+      "store": "b15_2h",
+      "made_by": []
+    },
+    {
       "store": "choir_clock",
       "made_by": []
     },
     {
+      "store": "choir_6h",
+      "made_by": []
+    },
+    {
       "store": "starer_clock",
+      "made_by": []
+    },
+    {
+      "store": "starer_floor",
+      "made_by": []
+    },
+    {
+      "store": "cut_night_clock",
+      "made_by": []
+    },
+    {
+      "store": "b17_clock",
+      "made_by": []
+    },
+    {
+      "store": "r2_clock",
+      "made_by": []
+    },
+    {
+      "store": "b17_floor",
+      "made_by": []
+    },
+    {
+      "store": "night_21",
       "made_by": []
     }
   ]

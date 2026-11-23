@@ -1,4 +1,4 @@
-"""Days eight, nine, eleven, twelve, fifteen, sixteen and eighteen as the routes play them (daythree/chapter.Later): which content step is which story id, read off a save,
+"""Days eight, nine, eleven, twelve, fifteen, sixteen, eighteen and nineteen as the routes play them (daythree/chapter.Later): which content step is which story id, read off a save,
 and the chapter's sinks, order cards, shares and each route's split of the town, on the rules day three loads (every
 chapter in writing merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import (
@@ -42,6 +42,10 @@ EIGHTEEN = Landings(
     {"SL27": ("t_first_working",), "T8": ("t_pot_out",), "arr15": ("t_starer",), "B16": ("t_b16",)}, {}, {},
     {"T7": OfferId("o_choir"), "O-choir": OfferId("o_choir"), "T9": OfferId("o_cutter"), "O-cutter": OfferId("o_cutter")})
 """T7 and T9 are their offers' showing (each offer carries its beat's lines); arr15 the fifteenth arrival."""
+NINETEEN = Landings(
+    {"T10": ("t_far_hills",), "T11": ("t_cut_night",), "SL28": ("t_cloth",), "B17": ("t_b17",), "T12": ("t_lamp_out",),
+     "T13": ("t_t13",)},
+    {"A38": ("sit_road_end",)}, {}, {})
 LAST_NIGHT, HUNT_BEAR, BEAR_SIGN = CardId("sit_last_night"), CardId("hunt_bear"), StoreId("bear_sign")
 CUT_STAKES = CardId("cut_stakes")
 ORDER_STORES = ("stakes", "roof_ash", "cord", "pelt", "wind_torn", "stones", "tallow")
@@ -111,6 +115,8 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
+        *(Split(n, ((f"{n}_reap", 5000), (f"{n}_forage", 5000)), feature("r2_open")) for n in ("n8", "n9", "n10")),
+        Split("n2", (("n2_watch", 5000), ("n2_forage", 5000)), feature("r2_open")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
@@ -127,7 +133,10 @@ SHARP = WeekTwoKnobs(
         Split("n2", (("n2_watch", 10000),), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
+        Split("n12", (("n12_reap", 5000), ("n12_forage", 5000)), feature("r2_open")),
+        Split("n2", (("n2_watch", 10000),), feature("r2_open")),
     ))
+"""Once the road is over the top (B17) both routes take the lanes they had clearing it to the beds and the roots."""
 KNOBS = {"sharp": SHARP}
 """Each route's split; a route not named follows typical."""
 HANDS = {"typical": (1500, 0), "sharp": (3000, 0)}
@@ -273,3 +282,22 @@ def day_eighteen(route: str) -> Later:
         steps=(), order_cards=sixteen.order_cards, keeps=sixteen.keeps,
         landed=EIGHTEEN.of, news=("SL27", "T7", "O-choir", "T8", "T9", "O-cutter", "arr15", "B16"),
         answers=sixteen.answers, shares=sixteen.shares, cures=sixteen.cures, own=sixteen.own)
+
+
+OVER, ROAD_CLOTHS, SIT_ROAD_END = CardId("cut_over"), CardId("road_cloths"), CardId("sit_road_end")
+CLOTHS_RULE = (Unlock(UnlockKind.CARD, ROAD_CLOTHS), Order(AfterTime(0), TapCard(ROAD_CLOTHS)))
+"""Her cloth on her lane is tied by a rule of the player's once shown (a capped card is never a share), as his posts were."""
+
+
+def day_nineteen(route: str) -> Later:
+    """B16 to T13's visit, the end of week three: day eighteen's sinks, rules, split and shares carried on (the road over
+    the top is its order card's, on cleared), her cloth by a rule once shown, and night 21's step queued When ready once
+    it shows. The hands keep their share of shovelling: taking it out once the road is over set the trips' retune
+    fighting the shares at two visits, minutes of play each."""
+    eighteen = day_eighteen(route)
+    return Later(
+        start="B16", stop="T13",
+        sinks=eighteen.sinks,
+        steps=(SIT_ROAD_END,), order_cards=(*eighteen.order_cards, CLOTHS_RULE), keeps=eighteen.keeps,
+        landed=NINETEEN.of, news=("T10", "T11", "SL28", "B17", "T12", "A38", "T13"),
+        answers=eighteen.answers, shares=eighteen.shares, cures=eighteen.cures, own=eighteen.own, queued=(SIT_ROAD_END,))

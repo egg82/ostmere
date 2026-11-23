@@ -265,6 +265,13 @@ def retune_trips(v: View, rules: Rules, save: Save, trips: list[Trip], marks: Ma
     return "decision", ((SaveMix(final),) if now.active == save.active else (SaveMix(final), SwitchMix(final.id)))
 
 
+def near(a: Mix, b: Mix) -> bool:
+    """The same cards, each share within one tuning step of the other's."""
+    sa = {c.card: c.share_bp for c in a.components if isinstance(c, CardShare)}
+    sb = {c.card: c.share_bp for c in b.components if isinstance(c, CardShare)}
+    return sa.keys() == sb.keys() and all(abs(sa[k] - sb[k]) < TUNE_STEP_BP for k in sa)
+
+
 TUNE_STEP_BP = 100
 """The finest share step a player sets the trip at while reading its inputs' lines."""
 RETUNE_BP = 500

@@ -1,0 +1,356 @@
+# Day nineteen: from B16 (the empty place) through T10, T11, SL28 and B17 (the road over the top) to T13, the end of
+# story day 21 and of week three, as data merged after day_eighteen.toml (schema.Chapter, chapters.merge). Story
+# spoilers: never shown to the owner. Spec: content/team/week-three.md, "Day nineteen"; numbers:
+# content/team/week-three-numbers.md.
+version = 1
+end_feature = "week_three_end"
+
+# ---------- the road over the top ----------
+
+# The road's ten stretches top the ridge; these take it over and down the far side, the chapter's long goal (D-149).
+# Shown the morning after the fifteenth arrival, so its stretches and their beats come after B16 on every route, and
+# laid by its own order card. Each stretch takes three of the road's: the bed is rock and roots past the top, and the
+# cleared bed ahead holds twice what it did so a stretch's worth can be banked. His rule moves over to it, first out as
+# before, and is passed over once the last stretch is laid.
+[[triggers]]
+id = "t_over_shown"
+when = { test = "at_least", subject_kind = "card_count", id = "cut_road", value = 10 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "place_empty", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_over_shown"]
+unlocks = [{ unlock_kind = "card", id = "cut_over" }, { unlock_kind = "card", id = "n11_first_over" }]
+modifiers = [{ target = "cap", id = "cleared", kind = "mul_bp", amount_bp = 20000, source = "t_over_shown" }]
+orders = [{ tap_card = "n11_first_over", first = true }]
+
+[[cards]]
+id = "cut_over"
+only_player = "project"
+presentation = "craft"
+label_key = "c_cut_over"
+upside_key = "up_cut_over"
+work_s = 2400
+cap = 6
+inputs = [
+  { store = "cleared", items = 36 },
+  { store = "stones", items = 10 },
+  { store = "stakes", items = 4 },
+  { store = "cord", items = 2 },
+]
+
+# "When the road's bed reaches 36, lay a stretch over the top": passed over at the cap.
+[[order_cards]]
+store = "cleared"
+tap_card = "cut_over"
+when = { test = "at_least", subject_kind = "store", id = "cleared", value = 36, release = 36 }
+offered_after = { unlock_kind = "card", id = "cut_over" }
+
+[[cards]]
+id = "n11_first_over"
+lane = "n11"
+twin_of = "shovel_road"
+presentation = "action"
+label_key = "c_n11_first_over"
+work_s = 1800
+requires = [{ test = "at_most", subject_kind = "card_count", id = "cut_over", value = 5 }]
+outcome = { stores = [{ store = "cleared", items = 1 }, { store = "damp_wood", items = 1 }] }
+
+# ---------- T10: the far hills ----------
+
+[[triggers]]
+id = "t_far_hills"
+when = { test = "at_least", subject_kind = "card_count", id = "cut_over", value = 1 }
+outcome = { line_keys = ["l_far_hills_1", "l_far_hills_2"] }
+
+# ---------- T11 and SL28: a stretch a day ----------
+
+# Never drawn: game hours since T11, for SL28.
+[[stores]]
+id = "cut_night_clock"
+label_key = "store_cut_night_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "cut_night_clock"
+label_key = "action_cut_night_clock"
+makes = [{ store = "cut_night_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_cut_night"
+when = { test = "at_least", subject_kind = "card_count", id = "cut_over", value = 3 }
+outcome = { line_keys = ["l_cut_night_1", "l_cut_night_2"], unlocks = [{ unlock_kind = "action", id = "cut_night_clock" }] }
+
+# SL28, four hours on: his sister's cloth on his marker stakes. A one-off on her lane, two pelts, the stretches still to
+# lay a quarter quicker for the hands.
+[[triggers]]
+id = "t_cloth"
+when = { test = "at_least", subject_kind = "store", id = "cut_night_clock", value = 4 }
+outcome = { line_keys = ["l_cloth_1", "l_cloth_2"], unlocks = [{ unlock_kind = "card", id = "road_cloths" }] }
+
+[[cards]]
+id = "road_cloths"
+lane = "n12"
+presentation = "craft"
+label_key = "c_road_cloths"
+upside_key = "up_road_cloths"
+work_s = 1800
+cap = 1
+inputs = [{ store = "pelt", items = 2 }]
+outcome = { modifiers = [{ target = "work", id = "cut_over", kind = "mul_bp", amount_bp = 12500, source = "road_cloths" }] }
+
+# ---------- B17: the last stretch ----------
+
+# Never drawn: game hours since B17, for T12, and R2's days for week four's gates (D-138).
+[[stores]]
+id = "b17_clock"
+label_key = "store_b17_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "b17_clock"
+label_key = "action_b17_clock"
+makes = [{ store = "b17_clock", items_per_hour = 1 }]
+
+[[stores]]
+id = "r2_clock"
+label_key = "store_r2_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "r2_clock"
+label_key = "action_r2_clock"
+makes = [{ store = "r2_clock", items_per_hour = 1 }]
+
+# B17's sharp floor (389 h: week-three-numbers.md, "Landing bands"), as a hidden clock's latch (day_eighteen.toml's
+# starer_floor): machinery, no moment of its own.
+[[stores]]
+id = "b17_floor"
+label_key = "store_b17_floor"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "b17_floor"
+label_key = "action_b17_floor"
+makes = [{ store = "b17_floor", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_floor_b17"
+when = { test = "after_time", value = 1400400 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "b17_floor" }] }
+
+# The last stretch laid, after B16, past the floor. He leaves
+# the town at that instant (plan item 4), his eating with him; the next region opens, and the map with it.
+[[triggers]]
+id = "t_b17"
+when = { test = "at_least", subject_kind = "card_count", id = "cut_over", value = 6 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "place_empty", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "b17_floor", value = 1 },
+]
+[triggers.outcome]
+line_keys = ["l_b17_1", "l_b17_2", "l_b17_3", "l_b17_4", "l_b17_5"]
+unlocks = [
+  { unlock_kind = "feature", id = "r2_open" },
+  { unlock_kind = "action", id = "r2_clock" },
+  { unlock_kind = "action", id = "b17_clock" },
+]
+leaves = [{ lane = "n11", stops = ["n11_eating"] }]
+
+# ---------- T12: the lamp ----------
+
+# The season's clock runs from B13; the requirement says so, so sit_road_end's countdown is drawn on its face.
+[[triggers]]
+id = "t_lamp_out"
+when = { test = "at_least", subject_kind = "store", id = "b17_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "clear_clock", value = 1 }]
+outcome = { line_keys = ["l_lamp_out_1", "l_lamp_out_2"], unlocks = [{ unlock_kind = "feature", id = "lamp_out" }, { unlock_kind = "card", id = "sit_road_end" }] }
+
+# ---------- night 21 and T13 ----------
+
+# Dusk 21 at 498 h on the calendar, a hidden clock the scene's night grade reads, so it opens nothing to see.
+[[stores]]
+id = "night_21"
+label_key = "store_night_21"
+cap_items = 20
+hidden = true
+clock = "night"
+
+[[standing]]
+id = "night_21"
+label_key = "action_night_21"
+makes = [{ store = "night_21", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_night_21"
+when = { test = "after_time", value = 1792800 }
+outcome = { line_keys = ["l_night_21"], unlocks = [{ unlock_kind = "action", id = "night_21" }] }
+
+# A38, an hour into night 21 on the season's clock (B13 at 336 h on every route); T12 opens it, and its require reads
+# the clock itself, so its countdown shows from T12 (week two's A32).
+[[cards]]
+id = "sit_road_end"
+only_player = "story"
+presentation = "narrative"
+label_key = "c_sit_road_end"
+work_s = 5
+cap = 1
+glows = true
+requires = [{ test = "at_least", subject_kind = "store", id = "clear_clock", value = 163 }]
+
+# T13: the night sat; week three's last beat, the chapter's end feature.
+[[triggers]]
+id = "t_t13"
+when = { test = "at_least", subject_kind = "card_count", id = "sit_road_end", value = 1 }
+outcome = { line_keys = ["l_t13_1", "l_t13_2", "l_t13_3", "l_t13_4"], unlocks = [{ unlock_kind = "feature", id = "week_three_end" }] }
+
+# ---------- the Camp ----------
+
+# Lifted by the road's last stretch over the top.
+[[camp_levels]]
+at_items = 4200000
+pays_key = "camp_pays_18"
+pays_from = 48
+pays_to = 72
+held = true
+lifted_by = ["cut_over"]
+line_keys = ["l_camp_18"]
+modifiers = [{ target = "cap", id = "cleared", kind = "mul_bp", amount_bp = 15000, source = "camp_18" }]
+
+# Held at a "?" past week three's content, a goal on screen.
+[[camp_levels]]
+at_items = 5100000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- the map ----------
+
+# The map's first sheet (api/CONTRACT.txt, "MAP"), drawn from B17: the ridge the road goes over, north of the town, and
+# the hills past it, unnamed.
+[[places]]
+id = "p_ridge"
+stamp = "mountain"
+at = [0, 2]
+reveal = { unlock_kind = "feature", id = "r2_open" }
+label_key = "place_ridge"
+
+[[places]]
+id = "p_far_hills"
+stamp = "range"
+at = [1, 5]
+reveal = { unlock_kind = "feature", id = "r2_open" }
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_past_ridge"
+text_key = "aim_past_ridge"
+after = { unlock_kind = "feature", id = "r2_open" }
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b17"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b17" }
+first = { keys = ["n_day_b17"] }
+catchup = { keys = ["j_b17_catchup"] }
+late = { keys = ["j_b17_late"] }
+
+[[subjects]]
+id = "s_n11_left"
+kind = "person"
+source = { source_kind = "lane", id = "n11", way = "left" }
+first = { keys = ["j_n11_left_first"] }
+catchup = { keys = ["j_n11_left_catchup"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "r2_open"
+
+[[features]]
+id = "lamp_out"
+
+[[features]]
+id = "week_three_end"
+
+# ---------- text ----------
+
+[beat_lines]
+T10 = ["l_far_hills_1"]
+T11 = ["l_cut_night_1"]
+B17 = ["l_b17_1"]
+T12 = ["l_lamp_out_1"]
+T13 = ["l_t13_1"]
+
+[line_kinds]
+l_over_shown = "story"
+l_far_hills_1 = "story"
+l_far_hills_2 = "story"
+l_cut_night_1 = "story"
+l_cut_night_2 = "story"
+l_cloth_1 = "story"
+l_cloth_2 = "story"
+l_b17_1 = "story"
+l_b17_2 = "story"
+l_b17_3 = "story"
+l_b17_4 = "story"
+l_b17_5 = "story"
+l_lamp_out_1 = "story"
+l_lamp_out_2 = "story"
+l_night_21 = "story"
+l_t13_1 = "story"
+l_t13_2 = "story"
+l_t13_3 = "story"
+l_t13_4 = "story"
+l_camp_18 = "level"
+
+[text]
+store_cut_night_clock = "clock"
+action_cut_night_clock = "Clock"
+store_b17_clock = "clock"
+action_b17_clock = "Clock"
+store_r2_clock = "clock"
+store_b17_floor = "clock"
+action_b17_floor = "Clock"
+action_r2_clock = "Clock"
+store_night_21 = "night"
+action_night_21 = "Night"
+c_cut_over = "Lay the road over the top"
+up_cut_over = "the road down the far side"
+c_n11_first_over = "Out first over the top"
+l_over_shown = "past the top the ground is rock and old roots. the cut goes slower."
+l_far_hills_1 = "from the road's head, past the ridge: a line of grey hills, far off."
+l_far_hills_2 = "nobody here has seen them. {n11} looks a while, then goes back to cutting."
+l_cut_night_1 = "the cut goes over the top a stretch a day, {n11} out ahead of everyone."
+l_cut_night_2 = "from the hall door at night it shows as a pale line in the starlight."
+l_cloth_1 = "{n12} ties a strip of cloth to every marker stake he set."
+l_cloth_2 = "after dark you can follow the line by them."
+c_road_cloths = "Cloth on the markers"
+up_road_cloths = "{pct} speed laying the road"
+l_b17_1 = "{n11} goes out alone at first light to start the last stretch."
+l_b17_2 = "by dark he is not back."
+l_b17_3 = "when the last stretch is laid, his axe is in its last stump."
+l_b17_4 = "his prints go on down the far side, a wolf's either side of them, close."
+l_b17_5 = "past the hill it is grey as far as you can see."
+l_lamp_out_1 = "at dusk {n12} carries a lamp out to the end of the road."
+l_lamp_out_2 = "she sits by it facing the far side, and is still there when the light goes."
+l_night_21 = "the light goes. stars, and a lamp at the end of the road."
+c_sit_road_end = "Sit with her"
+l_t13_1 = "you walk out along the road in the starlight and sit with her by the lamp."
+l_t13_2 = "it burns down. at first light she gets up and walks back with you."
+l_t13_3 = "at the fire she tells Lucy his name."
+l_t13_4 = "Lucy cuts a second mark in the board, and his name beside it."
+camp_pays_18 = "road cleared holds {to}, was {from}"
+l_camp_18 = "the shovels get a rack of their own by the road's start."
+place_ridge = "The ridge"
+aim_past_ridge = "see what lies past the grey."
+n_day_b17 = "{n11} went out alone to the last stretch and wasn't back by dark. his axe in the last stump. his tracks go on down the far side, wolf tracks either side. grey past the hill"
+# The journal's slots (docs/design/journal.md, "The content's side").
+j_b17_catchup = "the road is over the ridge. {n11} went ahead and didn't come back"
+j_b17_late = "the axe is still in the stump"
+j_n11_left_first = "{n11}'s bedroll still rolled up by the door"
+j_n11_left_catchup = "{n11} went over the ridge ahead of us"

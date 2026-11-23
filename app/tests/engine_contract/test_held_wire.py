@@ -11,8 +11,8 @@ from ashfall_app import engine as e
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
 from ashfall_app.opening.fight_entries import SideEntry, ThreatEntry
-from ashfall_app.opening.schema import load_opening, to_rules
-from ashfall_app.saves.ruleset import ruleset
+from ashfall_app.opening.schema import Opening, load_opening
+from ashfall_app.saves.ruleset import Ruleset, ruleset
 from held_world import kills, wr
 
 HAND, WOLF = e.SideId("hand"), e.ThreatId("wolf")
@@ -24,23 +24,30 @@ HELD_BP = 2500
 
 
 @cache
+def world() -> tuple[Opening, Ruleset]:
+    """The shipped opening with the test's side and threat, and its ruleset: loaded and built once for the rules and
+    the game."""
+    o = load_opening()
+    o = o.model_copy(update={"sides": [*o.sides, SideEntry(id=HAND, label_key="side.hand", base=300)],
+                             "threats": [*o.threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100)]})
+    return o, ruleset(o, "test", 1)
+
+
+@cache
 def rules() -> e.Rules:
-    base = to_rules(load_opening())
+    base = world()[1].rules
     lost = e.StoreId("dry_wood")
     cards = tuple(replace(c, fight=e.FightDef(HAND, WOLF, lost), while_running=(wr(HAND, HELD_BP),)) if c.id == CARD else c
                   for c in base.cards)
-    assert base.opening is not None
+    assert base.opening is not None and e.SideDef(HAND, 300) in base.sides and e.ThreatDef(WOLF, 100) in base.threats
     opening = (*base.opening, e.Unlock(e.UnlockKind.CARD, CARD))
-    return replace(base, cards=cards, opening=opening, sides=(*base.sides, e.SideDef(HAND, 300)),
-                   threats=(*base.threats, e.ThreatDef(WOLF, 100)))
+    return replace(base, cards=cards, opening=opening)
 
 
 @cache
 def game() -> Game:
-    o = load_opening()
-    o = o.model_copy(update={"sides": [*o.sides, SideEntry(id=HAND, label_key="side.hand", base=300)],
-                             "threats": [*o.threats, ThreatEntry(id=WOLF, label_key="threat.wolf", base=100)]})
-    return Game(o, replace(ruleset(o, "test", 1), rules=rules()))
+    o, rs = world()
+    return Game(o, replace(rs, rules=rules()))
 
 
 @pytest.fixture(scope="module", autouse=True)
