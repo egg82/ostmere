@@ -39,7 +39,7 @@ label_key = "action_b15_2h"
 makes = [{ store = "b15_2h", items_per_hour = 1 }]
 
 [[triggers]]
-id = "t_b15_2h"
+id = "t_b15_2h_clock"
 when = { test = "at_least", subject_kind = "store", id = "b15_clock", value = 2 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "b15_2h" }] }
 
@@ -75,7 +75,7 @@ label_key = "action_choir_6h"
 makes = [{ store = "choir_6h", items_per_hour = 1 }]
 
 [[triggers]]
-id = "t_choir_6h"
+id = "t_choir_6h_clock"
 when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 6 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "choir_6h" }] }
 
@@ -108,7 +108,7 @@ label_key = "action_starer_floor"
 makes = [{ store = "starer_floor", items_per_hour = 1 }]
 
 [[triggers]]
-id = "t_floor_starer"
+id = "t_starer_floor_clock"
 when = { test = "after_time", value = 1328400 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "starer_floor" }] }
 

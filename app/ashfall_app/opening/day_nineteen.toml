@@ -161,9 +161,11 @@ leaves = [{ lane = "n11", stops = ["n11_eating"] }]
 
 # ---------- T12: the lamp ----------
 
+# The season's clock runs from B13; the requirement says so, so sit_road_end's countdown is drawn on its face.
 [[triggers]]
 id = "t_lamp_out"
 when = { test = "at_least", subject_kind = "store", id = "b17_clock", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "clear_clock", value = 1 }]
 outcome = { line_keys = ["l_lamp_out_1", "l_lamp_out_2"], unlocks = [{ unlock_kind = "feature", id = "lamp_out" }, { unlock_kind = "card", id = "sit_road_end" }] }
 
 # ---------- night 21 and T13 ----------

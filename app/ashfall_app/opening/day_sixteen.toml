@@ -221,13 +221,13 @@ label_key = "action_covers_torn"
 makes = [{ store = "covers_torn", items_per_hour = 1 }]
 
 [[triggers]]
-id = "t_torn_n3"
+id = "t_torn_n3_clock"
 when = { test = "at_least", subject_kind = "card_count", id = "n3_cover_beds", value = 5 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }]
 outcome = { unlocks = [{ unlock_kind = "action", id = "covers_torn" }] }
 
 [[triggers]]
-id = "t_torn_hands"
+id = "t_torn_hands_clock"
 when = { test = "at_least", subject_kind = "card_count", id = "cover_beds", value = 5 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }]
 outcome = { unlocks = [{ unlock_kind = "action", id = "covers_torn" }] }
