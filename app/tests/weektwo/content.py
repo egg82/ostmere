@@ -289,19 +289,15 @@ CLOTHS_RULE = (Unlock(UnlockKind.CARD, ROAD_CLOTHS), Order(AfterTime(0), TapCard
 """Her cloth on her lane is tied by a rule of the player's once shown (a capped card is never a share), as his posts were."""
 
 
-def road_over(save: Save) -> bool:
-    return feature("r2_open") in set(save.unlocked)
-
-
 def day_nineteen(route: str) -> Later:
     """B16 to T13's visit, the end of week three: day eighteen's sinks, rules, split and shares carried on (the road over
-    the top is its order card's, on cleared), the hands' shovelling taken out once the road is over (B17), her cloth by a
-    rule once shown, and night 21's step queued When ready once it shows."""
+    the top is its order card's, on cleared), her cloth by a rule once shown, and night 21's step queued When ready once
+    it shows. The hands keep their share of shovelling: taking it out once the road is over set the trips' retune
+    fighting the shares at two visits, minutes of play each."""
     eighteen = day_eighteen(route)
-    shares = tuple(Share(s.card, s.share_bp, road_over) if s.card == SHOVEL_ROAD else s for s in eighteen.shares)
     return Later(
         start="B16", stop="T13",
         sinks=eighteen.sinks,
         steps=(SIT_ROAD_END,), order_cards=(*eighteen.order_cards, CLOTHS_RULE), keeps=eighteen.keeps,
         landed=NINETEEN.of, news=("T10", "T11", "SL28", "B17", "T12", "A38", "T13"),
-        answers=eighteen.answers, shares=shares, cures=eighteen.cures, own=eighteen.own, queued=(SIT_ROAD_END,))
+        answers=eighteen.answers, shares=eighteen.shares, cures=eighteen.cures, own=eighteen.own, queued=(SIT_ROAD_END,))
