@@ -1,6 +1,6 @@
-beats whenever (pace_scale 1): B14 day 15.66, target_day 16
-  away V54->V55: 3 ['trigger t_sow', 'trigger t_frost', 'trigger t_town_covers']
-  away V55->V56: 3 ['trigger t_beds', 'trigger t_town_barley_stew', 'trigger t_deer']
+beats whenever (pace_scale 1): B14 day 15.64, target_day 16
+  away V54->V55: 5 ['trigger t_sow', 'trigger t_beds', 'trigger t_town_barley_stew', 'trigger t_frost_beds', 'trigger t_town_covers']
+  away V55->V56: 1 ['trigger t_deer']
   away V56->V57: 0 []
   away V57->V58: 0 []
   away V58->V59: 0 []
@@ -16,5 +16,5 @@ day    line feature    chip   store   skill    card   level  total
   6      15       3       0       2       0       4       2     26
   7       7       4       2       0       0      10       1     24
   8       8       4       0       2       0      10       3     27
-  9      14       1       0       4       0      36       2     57
- 10       9       2       0       0       0       0       3     14
+  9      15       1       0       4       0      36       2     58
+ 10       9       2       0       0       0       0       2     13

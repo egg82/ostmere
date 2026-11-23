@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B16 day 17.94, target_day 19
+beats sharp (pace_scale 1): B16 day 17.93, target_day 19
   away V140->V141: 0 []
   away V141->V142: 0 []
   away V142->V143: 1 ['trigger offer_o_choir']
@@ -11,11 +11,11 @@ beats sharp (pace_scale 1): B16 day 17.94, target_day 19
   away V149->V150: 0 []
   away V150->V151: 0 []
   away V151->V152: 0 []
-  away V152->V153: 1 ['trigger t_covers_torn']
+  away V152->V153: 0 []
   away V153->V154: 0 []
   away V154->V155: 0 []
   away V155->V156: 0 []
-  away V156->V157: 0 []
+  away V156->V157: 2 ['trigger t_b16', 'trigger t_over_shown']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       9       7       0       4       0      17       3     40
@@ -26,6 +26,6 @@ day    line feature    chip   store   skill    card   level  total
   6       3       1       0       0       0       9       1     14
   7       2       0       0       0       0       0       2      4
   8       9       3       0       2       0      10       0     24
-  9      13       1       0       4       0      36       3     57
- 10      22       3       0       1       0      15       2     43
- 11      21       2       1       0       0     119       2    145
+  9      14       1       0       4       0      36       3     58
+ 10      21       3       2       1       0      15       2     44
+ 11      24       2       0       0       0     119       2    147
