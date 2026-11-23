@@ -327,6 +327,8 @@ jobs:
             names: readings-sixteen-b
           - part: readings-eighteen
             names: readings-eighteen
+          - part: readings-nineteen
+            names: readings-nineteen
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:

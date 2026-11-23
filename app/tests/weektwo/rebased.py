@@ -2,9 +2,9 @@
 (docs/design/week-two-plan.md, item 13: "a save rebased from each earlier chapter's end loads and plays on"). The save is
 the route's own: its decisions from the start replayed under the rules without the next chapter to the end of the visit
 the chapter's last beat is seen in, each verb applied as it was (a verb that no longer fits fails the replay): day
-eight's end under the shipped chapters without days nine to eighteen, day nine's without days eleven to eighteen, day
-eleven's without days twelve to eighteen, day twelve's without days fifteen to eighteen, day fifteen's without days
-sixteen and eighteen, day sixteen's without day eighteen. The replay is written once, by tools/chapter_saves.py,
+eight's end under the shipped chapters without days nine to nineteen, day nine's without days eleven to nineteen, day
+eleven's without days twelve to nineteen, day twelve's without days fifteen to nineteen, day fifteen's without days
+sixteen to nineteen, day sixteen's without days eighteen and nineteen, day eighteen's without day nineteen. The replay is written once, by tools/chapter_saves.py,
 and the tests read it back (from_saved, ends.py). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -19,14 +19,15 @@ from ashfall_app.engine import (
 from ashfall_app.engine.codec import Json, canonical
 from ashfall_app.opening.convert import build_rules
 from ashfall_app.opening.schema import (
-    CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_NINE, DAY_SIXTEEN, DAY_TWELVE, OPENING, load_opening,
+    CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_NINE, DAY_NINETEEN, DAY_SIXTEEN, DAY_TWELVE, OPENING,
+    load_opening,
 )
 from tests.daythree.content import rules3
 from tests.daytwo.player import DayTwoPlayer
 from tests.weekone import verdicts as v1
 from tests.weektwo import ends
 from tests.weektwo.routes import played
-from tests.weektwo.verdicts import EIGHT, ELEVEN, FIFTEEN, NINE, SIXTEEN, TWELVE
+from tests.weektwo.verdicts import EIGHT, EIGHTEEN, ELEVEN, FIFTEEN, NINE, SIXTEEN, TWELVE
 
 PLAYED_ON_S = 24 * 3600
 
@@ -43,14 +44,14 @@ class Rebased:
 
 @cache
 def rules8() -> Rules:
-    """The rules through day eight: the shipped chapters without days nine to eighteen, day eight the last of them."""
-    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_NINE, DAY_ELEVEN, DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN))))
+    """The rules through day eight: the shipped chapters without days nine to nineteen, day eight the last of them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_NINE, DAY_ELEVEN, DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN))))
 
 
 @cache
 def rules9() -> Rules:
-    """The rules through day nine: the shipped chapters without days eleven to eighteen, day nine the last of them."""
-    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_ELEVEN, DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN))))
+    """The rules through day nine: the shipped chapters without days eleven to nineteen, day nine the last of them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_ELEVEN, DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN))))
 
 
 def known(order: Order, rules: Rules) -> bool:
@@ -104,8 +105,8 @@ def nine_end(p: DayTwoPlayer) -> int:
 
 @cache
 def rules11() -> Rules:
-    """The rules through day eleven: the shipped chapters without days twelve to eighteen, day eleven the last of them."""
-    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN))))
+    """The rules through day eleven: the shipped chapters without days twelve to nineteen, day eleven the last of them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN))))
 
 
 def eleven_end(p: DayTwoPlayer) -> int:
@@ -115,8 +116,8 @@ def eleven_end(p: DayTwoPlayer) -> int:
 
 @cache
 def rules12() -> Rules:
-    """The rules through day twelve: the shipped chapters without days fifteen to eighteen, day twelve the last of them."""
-    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN))))
+    """The rules through day twelve: the shipped chapters without days fifteen to nineteen, day twelve the last of them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN))))
 
 
 def twelve_end(p: DayTwoPlayer) -> int:
@@ -126,9 +127,9 @@ def twelve_end(p: DayTwoPlayer) -> int:
 
 @cache
 def rules15() -> Rules:
-    """The rules through day fifteen: the shipped chapters without days sixteen and eighteen, day fifteen the last of
+    """The rules through day fifteen: the shipped chapters without days sixteen to nineteen, day fifteen the last of
     them."""
-    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_SIXTEEN, DAY_EIGHTEEN))))
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN))))
 
 
 def fifteen_end(p: DayTwoPlayer) -> int:
@@ -138,8 +139,9 @@ def fifteen_end(p: DayTwoPlayer) -> int:
 
 @cache
 def rules16() -> Rules:
-    """The rules through day sixteen: the shipped chapters without day eighteen, day sixteen the last of them."""
-    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c != DAY_EIGHTEEN)))
+    """The rules through day sixteen: the shipped chapters without days eighteen and nineteen, day sixteen the last of
+    them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c not in (DAY_EIGHTEEN, DAY_NINETEEN))))
 
 
 def sixteen_end(p: DayTwoPlayer) -> int:
@@ -147,10 +149,22 @@ def sixteen_end(p: DayTwoPlayer) -> int:
     return v1.exit_save(p, SIXTEEN).time
 
 
+@cache
+def rules18() -> Rules:
+    """The rules through day eighteen: the shipped chapters without day nineteen, day eighteen the last of them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c != DAY_NINETEEN)))
+
+
+def eighteen_end(p: DayTwoPlayer) -> int:
+    """The end of the visit B16 is seen in."""
+    return v1.exit_save(p, EIGHTEEN).time
+
+
 ENDS: dict[str, Callable[[DayTwoPlayer], int]] = {"eight": eight_end, "nine": nine_end, "eleven": eleven_end,
-                                                  "twelve": twelve_end, "fifteen": fifteen_end, "sixteen": sixteen_end}
+                                                  "twelve": twelve_end, "fifteen": fifteen_end, "sixteen": sixteen_end,
+                                                  "eighteen": eighteen_end}
 OLD: dict[str, Callable[[], Rules]] = {"eight": rules8, "nine": rules9, "eleven": rules11, "twelve": rules12,
-                                       "fifteen": rules15, "sixteen": rules16}
+                                       "fifteen": rules15, "sixteen": rules16, "eighteen": rules18}
 """Each saved chapter's end and the rules its save is written under: the shipped chapters without the ones after it."""
 
 

@@ -212,6 +212,7 @@ app/ashfall_app/opening/choice_checks.py
 app/ashfall_app/opening/convert.py
 app/ashfall_app/opening/day_eight.toml
 app/ashfall_app/opening/day_eighteen.toml
+app/ashfall_app/opening/day_nineteen.toml
 app/ashfall_app/opening/day_eleven.toml
 app/ashfall_app/opening/day_fifteen.toml
 app/ashfall_app/opening/day_five.toml
@@ -479,6 +480,7 @@ app/tests/weektwo/test_ladder_readouts.py
 app/tests/weektwo/test_makers_readouts.py
 app/tests/weektwo/test_weektwo_controls.py
 app/tests/weektwo/test_weektwo_eighteen.py
+app/tests/weektwo/test_weektwo_nineteen.py
 app/tests/weektwo/test_weektwo_eleven.py
 app/tests/weektwo/test_weektwo_fifteen.py
 app/tests/weektwo/test_weektwo_goals.py
