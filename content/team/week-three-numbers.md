@@ -364,3 +364,8 @@ latches are hidden clocks under new ids (D-150).
 readouts `weektwo-nineteen*` replace these): typical B16 443.0, T10 445.0, T11 450.9, SL28 454.9, B17 460.1 (band
 456-480), T12 464.1, T13 499.0; sharp B16 430.5, B17 456.1 (floor 389), T13 499.0; whenever B16 439.8, B17 452.6,
 T13 504.1. Largest absence: typical 2, sharp 2, whenever 4 in day eighteen (was 6), 2 in day nineteen.
+
+**O-sun (D-152), applied:** shown at B17 + 12 h; the light in the hall door keeps the table's meals ×1.25, the cellar
+smoked's cap ×1.5. **Measured** (readouts `weektwo-nineteen*`, seed 0): it lands alone in typical's V86 → V87,
+sharp's V170 → V171 and whenever's V71 → V72, and typical's V87 now decides 1, where V85-V91 had none. The largest
+absence in day nineteen stays 2 on every route; no beat moves.
