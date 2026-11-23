@@ -187,11 +187,13 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "clear_clock" }] }
 
 # ---------- SL22: her beds ----------
 
-# Two hours after the turn: her sowing, a staged card on her ruled lane run by its order card (week-three-plan item 8).
+# Two hours after the turn: her sowing, a staged card on her ruled lane run by the always rule this installs (week-three-plan
+# item 8): the beds open on the first sown, so it is not left to the player to offer her the order card below.
 [[triggers]]
 id = "t_sow"
 when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 2 }
-outcome = { line_keys = ["l_sow"], unlocks = [{ unlock_kind = "card", id = "n3_sow" }] }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "store", id = "ashed_ground", value = 1 }]
+outcome = { line_keys = ["l_sow"], unlocks = [{ unlock_kind = "card", id = "n3_sow" }], orders = [{ tap_card = "n3_sow", first = true }] }
 
 # Six beds, each taking her dark ground. Every finished bed raises the beds' growing a full base's worth (item 9), so
 # six beds grow seven halves an hour; the ground she made all week two sows the first five.
@@ -327,7 +329,15 @@ unlocks = [
 [[triggers]]
 id = "t_frost"
 when = { test = "at_least", subject_kind = "store", id = "rime", value = 12 }
-outcome = { line_keys = ["l_night_15", "l_frost_1", "l_frost_2"], unlocks = [{ unlock_kind = "action", id = "night_15" }, { unlock_kind = "chip", id = "frosted" }, { unlock_kind = "card", id = "cover_beds" }, { unlock_kind = "card", id = "n3_cover_beds" }] }
+outcome = { line_keys = ["l_night_15", "l_frost_1", "l_frost_2"], unlocks = [{ unlock_kind = "action", id = "night_15" }] }
+
+# The chip and both its cures wait for the beds: the frost's lines about them, the chip and the covers open with the beds
+# while the frost still runs, at T1's instant when they are already open.
+[[triggers]]
+id = "t_frost_beds"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "night_15", value = 1 }, { test = "at_least", subject_kind = "running", id = "frost", value = 1 }]
+outcome = { line_keys = ["l_frost_beds"], unlocks = [{ unlock_kind = "chip", id = "frosted" }, { unlock_kind = "card", id = "cover_beds" }, { unlock_kind = "card", id = "n3_cover_beds" }] }
 
 # Night 15, a hidden clock the scene's night grade reads until morning 16 (clear_clock 18, T2's instant).
 [[stores]]
@@ -786,6 +796,7 @@ l_b13_3 = "story"
 l_sow = "story"
 l_night_15 = "story"
 l_frost_1 = "story"
+l_frost_beds = "story"
 l_frost_2 = "story"
 l_deer = "story"
 l_fight_deer_won_1 = "fight"
@@ -841,7 +852,8 @@ c_reap = "Reap"
 c_lane_reap = "Reap"
 c_barley_stew = "Cook barley stew"
 l_night_15 = "dusk, and the cold comes down after it."
-l_frost_1 = "rime on everything past the warm ground. {n3}'s beds are white."
+l_frost_1 = "rime on everything past the warm ground."
+l_frost_beds = "{n3}'s beds are white."
 l_frost_2 = "the hut door is frozen in its frame. nine sit round one fire, three deep."
 store_night_15 = "night"
 action_night_15 = "Night"
@@ -911,4 +923,4 @@ j_hall_again_3 = "on the hall all day. my shoulders were done in"
 j_hall_catchup = "worked on the hall"
 j_hall_wrong = "lucy paced the hall out in the dark, counting under her breath. eleven paces. corner posts up beside the bays"
 j_hall_right = "lucy's count for the hall was nine paces. i wrote eleven. must have misheard her counting"
-j_frost_first = "frost on everything past the warm ground. {n3}'s beds gone white. the hut door froze in its frame, so nine of us round the one fire, three deep"
+j_frost_first = "frost on everything past the warm ground. the hut door froze in its frame, so nine of us round the one fire, three deep"

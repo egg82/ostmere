@@ -1,9 +1,9 @@
-beats sharp (pace_scale 1): B14 day 15.27, target_day 16
+beats sharp (pace_scale 1): B14 day 15.26, target_day 16
   away V121->V122: 0 []
   away V122->V123: 0 []
   away V123->V124: 2 ['trigger t_b13', 'trigger offer_o_sun_rack']
-  away V124->V125: 1 ['trigger t_sow']
-  away V125->V126: 4 ['trigger t_beds', 'trigger t_town_barley_stew', 'trigger t_frost', 'trigger t_town_covers']
+  away V124->V125: 3 ['trigger t_sow', 'trigger t_beds', 'trigger t_town_barley_stew']
+  away V125->V126: 2 ['trigger t_frost_beds', 'trigger t_town_covers']
   away V126->V127: 0 []
   away V127->V128: 0 []
   away V128->V129: 0 []
@@ -21,4 +21,4 @@ day    line feature    chip   store   skill    card   level  total
   6       3       1       0       0       0       9       1     14
   7       2       0       0       0       0       0       2      4
   8       9       3       0       2       0      10       0     24
-  9      13       1       0       4       0      36       3     57
+  9      14       1       0       4       0      36       3     58
