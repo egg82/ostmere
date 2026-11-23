@@ -143,6 +143,7 @@ gate = { test = "at_least", subject_kind = "store", id = "meals", value = 24 }
 requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "b15_2h", value = 1 },
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "road_marked", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 },
 ]
 line_keys = ["l_choir_1", "l_choir_2"]
 
@@ -381,7 +382,10 @@ id = "o_cutter"
 text_key = "o_cutter"
 kind = "work"
 gate = { test = "at_least", subject_kind = "store", id = "meals", value = 40 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "choir_6h", value = 1 }]
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "choir_6h", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 },
+]
 line_keys = ["l_road_pair_1", "l_road_pair_2", "l_road_pair_3"]
 
 [[offers.answers]]

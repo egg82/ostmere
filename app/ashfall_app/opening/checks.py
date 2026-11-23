@@ -38,6 +38,7 @@ from .stake_checks import check_stakes, check_stakes_hold
 from .subject_checks import check_subjects
 from .tally_checks import check_tallies
 from .ui_keys import UI_KEYS
+from .unlock_order_checks import check_unlock_order
 
 if TYPE_CHECKING:
     from .entries import CardEntry, OutcomeEntry
@@ -93,11 +94,12 @@ def check_structure(o: "Opening") -> None:
 
 def check_content(o: "Opening") -> None:
     """The costly checks, which hold of a line or a fight on its own and need no prefix: the text's rules (a digit, a
-    slot, a fixed key), a prestige phase outlasting an ordinary absence (prestige.check_phase_spans), and every fight's
+    slot, a fixed key), nothing named ahead of the store or action it names (unlock_order_checks.py), a prestige phase outlasting an ordinary absence (prestige.check_phase_spans), and every fight's
     cure reachable (fight_checks.py, which builds the Rules); and every side stake held on a fought side, which a later
     chapter may add (stake_checks.py). The merge runs them once, on the last state."""
     _check_text(o)
     check_stakes_hold(o)
+    check_unlock_order(o)
     if o.prestige is not None:
         check_phase_spans(build_rules(o))
     if any(True for _ in fights(o)):
