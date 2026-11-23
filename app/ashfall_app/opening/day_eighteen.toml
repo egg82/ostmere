@@ -236,6 +236,7 @@ name_key = "name_n10"
 [[triggers]]
 id = "t_choir_settles"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_choir", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
 [triggers.outcome]
 unlocks = [
   { unlock_kind = "action", id = "choir_clock" },
@@ -479,6 +480,7 @@ name_key = "name_n12"
 [[triggers]]
 id = "t_cutter_settles"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_cutter", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
 [triggers.outcome]
 unlocks = [
   { unlock_kind = "action", id = "n11_eating" },
