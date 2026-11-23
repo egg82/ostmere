@@ -341,7 +341,9 @@ levels = [
 ]
 
 # The camp stone's heat moved into the beds through the player's hands: a cure for the frost, no pelts, its tithe in
-# ash, which is her ground's input. It cuts in, as any cure; the player's time is its cost.
+# ash, which is her ground's input. It cuts in, as any cure; the player's time is its cost. It takes half a cover's
+# rime, so at the chip's 12 it and her covers' rule, both "when frosted", fit in the rime there together: drawn dry,
+# both would pause until the rime's cap, and this one would hold the head of the queue meanwhile.
 [[cards]]
 id = "warm_beds"
 only_player = "magic"
@@ -351,7 +353,7 @@ upside_key = "up_cover_beds"
 work_s = 300
 skill = "spellcraft"
 xp_per_hour = 360
-inputs = [{ store = "rime", items = 12 }]
+inputs = [{ store = "rime", items = 6 }]
 outcome = { stores = [{ store = "ash", items = 2 }] }
 
 # "When frosted, warm the beds": its `when` the chip's, offered beside the covers' card.
