@@ -347,3 +347,20 @@ A scratch play of typical (day sixteen replayed from main's saved ends, then reb
 tenth stretch laid by B16: with the three women on the road and the cutter's rule, the road outruns its band
 (B17 456-480), so cleared and stones have no sink left. Day nineteen's lever is the road's length (its stretches or
 cleared per stretch), not a new sink.
+
+**Day eighteen, reworked with day nineteen:** O-choir's answers keep beds ×1.25 or all road clearing ×1.25, O-cutter's
+×1.10 either way (D-146, D-147); his rule's card stops being ready once the road's stretches are laid (D-148); the
+latches are hidden clocks under new ids (D-150).
+
+**Day nineteen (`day_nineteen.toml`, shipped in `CHAPTERS`), applied:**
+
+- The road over the top (`cut_over`, D-149): 6 stretches of 36 cleared, 10 stones, 4 stakes, 2 cord, 2400 s on the
+  hands, shown at B16 once the road's ten are laid; cleared's cap ×2 with it. T10 at its first stretch, T11 at its
+  third, B17 at its sixth (with B16 and the 389 h floor). Camp 18 (cleared 48 → 72) lifted by its last stretch.
+- SL28 at T11 + 4 h: `road_cloths` on her lane, 2 pelts, the stretches ×1.25 faster.
+- T12 at B17 + 4 h; night 21 at 498 h; A38 at `clear_clock` 163 (499 h); T13 on A38.
+
+**Measured** on scratch plays (main's saved day-sixteen ends rebased onto this content, seed 0; the simulator's
+readouts `weektwo-nineteen*` replace these): typical B16 443.0, T10 445.0, T11 450.9, SL28 454.9, B17 460.1 (band
+456-480), T12 464.1, T13 499.0; sharp B16 430.5, B17 456.1 (floor 389), T13 499.0; whenever B16 439.8, B17 452.6,
+T13 504.1. Largest absence: typical 2, sharp 2, whenever 4 in day eighteen (was 6), 2 in day nineteen.
