@@ -46,3 +46,18 @@ changes()[0]?.click();
 rows.update(newTask);
 view.draw(newTask, false, true);
 expect("their page opened: both are clear", dots(), [[false, false], false]);
+
+{  // the page opened between two draws (nothing redrew): a task that arrives next still dots the tab
+  const { ctx: c2 } = testContext(undefined, new Catalog(content));
+  const t2 = new PanelTabs(c2.catalog, document.createElement("button"), () => undefined);
+  const r2 = new LaneRows(c2);
+  const v2 = new TownView(c2.catalog, r2, t2.town);
+  document.body.replaceChildren(t2.root, v2.root, r2.page.root);
+  r2.update(town);
+  v2.draw(town, false, false);
+  const all = fakeDocument.body.querySelectorAll(".person-change");
+  all.forEach((n) => n.click());   // every person's page opened and closed: their tasks are kept, no draw follows
+  r2.update(newTask);
+  v2.draw(newTask, false, true);
+  expect("the tab dots for the new task", dot(t2.town), true);
+}

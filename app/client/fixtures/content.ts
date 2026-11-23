@@ -380,6 +380,10 @@ const text: Record<string, string> = {
   "ui.prestige.cap": "{store} holds {before} → {after}",
   "ui.prestige.reached": "{skill} reached its top {d} ago.",
   "ui.prestige.reached_now": "{skill} reached its top.",
+  "ui.job.new": "{person} has something new to try: {card}.",
+  "ui.job.new_many": "{person} has a few new things to try.",
+  "ui.job.new_town": "Something new for the town to try: {card}.",
+  "ui.job.new_all": "The town has a few new things to try.",
   "ui.lesson.prestige": "{skill} is at its top. Push past lifts the top. Its level and everything it gave you stay.",
   "card.poultice": "Make a poultice", "store.hurt": "hurt", "card.hunt": "Hunt the ridge", "card.hunt.up": "meat and hide", "standing.raiders": "Raiders at the stores", "side.hands": "Your hands", "threat.wolves": "Wolves", "threat.raiders": "Raiders",
 };

@@ -131,3 +131,17 @@ naming it in `twin_of`, or an `only_player` tag saying why not (alone, story, se
 `app/ashfall_app/opening/player_checks.py` and `app/tests/opening/test_player_only.py`. No person's list holds a job another beats
 outright (the same outcome, at least as fast, at no extra cost), checked by `app/ashfall_app/opening/choice_checks.py`.
 Balance follows these: wide access is retuned in costs and rates, never withheld to save a number.
+
+- **A new job is said once.** A job offered to someone nobody has set to it is told in the story strip once, in the page's
+  own words; the owner missed that a villager could take a new craft among the Town tab's many dots.
+  - The job is the unit, not the lane: one town-card definition fans out over many lanes, so cards sharing a label key on
+    lanes of the town are one job. One line names the job and the person when one person has it, the job alone when it
+    fans over several, and a person's several jobs or the town's several name no job. Never a line per lane or card.
+  - One line per step, so a step offering many jobs reads as one line, with no count and no "!".
+  - Not an offer: a card that arrives at work (a mix, rule, queue entry or run holds it), a card of someone who joins in the
+    same step (the arrival's own lines say it), the player's own cards, and the first view of a page.
+  - The dot follows: a person's Change and the Town tab wear the quiet dot while a task of theirs is unseen, kept across
+    reloads; the tab dots again whenever a task arrives that the last draw did not hold. The tab's dot comes only after
+    the first view, so a reload leaves Change as the marker.
+  - Fit: the page already words some lines itself from `ui.*` templates (a skill's top, a fight tally); this is one more,
+    off the card's label and the lane's name, with no authored line per card.
