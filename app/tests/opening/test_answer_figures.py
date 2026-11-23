@@ -11,6 +11,7 @@ from ashfall_app.api.service import Game
 from ashfall_app.engine import QUANTITY_SCALE
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, load_opening
 from ashfall_app.saves.ruleset import ruleset
+from tests.shipped_ruleset import ShippedRuleset
 
 PCT = ("{pct}", "{pct_b}")
 GAIN = ("{gain}", "{gain_b}")
@@ -22,14 +23,14 @@ def served(chapters: tuple[Path, ...]) -> Content:
 
 
 @pytest.fixture(scope="module")
-def content() -> Content:
-    return served(CHAPTERS)
+def content(shipped_ruleset: ShippedRuleset) -> Content:
+    return shipped_ruleset.make_game(shipped_ruleset.opening, shipped_ruleset.rs).content()
 
 
 @pytest.fixture(scope="module")
-def in_writing() -> Content:
-    """With day nine merged, whose answers grant stores and install two modifiers (its lines are not written yet)."""
-    return served((*CHAPTERS, *IN_WRITING))
+def in_writing(content: Content) -> Content:
+    """With the chapters in writing merged: the shipped content itself while none is in writing."""
+    return served((*CHAPTERS, *IN_WRITING)) if IN_WRITING else content
 
 
 def answers(content: Content) -> dict[str, AnswerInfo]:

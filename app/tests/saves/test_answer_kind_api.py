@@ -3,6 +3,7 @@
 does not have, or a kind no offer declares, is a 422 that writes nothing; the player cannot send it as a decision;
 Content.offer_infos carries each offer's kind and each answer's role."""
 from collections.abc import Iterator
+from functools import cache
 from pathlib import Path
 
 import pytest
@@ -20,10 +21,14 @@ def order(kind: str, role: str) -> dict[str, object]:
         {"when": {"kind": "after_time", "at": 0}, "then": {"kind": "answer_kind", "offer_kind": kind, "role": role}}]}
 
 
+@cache
+def opening() -> Opening:
+    """The shipped chapters with the test chapter merged on, loaded once for the module's tests."""
+    return load_opening(chapters=(*CHAPTERS, FIXTURE))
+
+
 @pytest.fixture
 def kinded(pg_url: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[GameClient]:
-    def opening() -> Opening:
-        return load_opening(chapters=(*CHAPTERS, FIXTURE))
     monkeypatch.setattr(main, "load_opening", opening)
     with game_client(pg_url, monkeypatch) as found:
         yield found
