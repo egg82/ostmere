@@ -93,10 +93,12 @@ def test_a_reveal_by_a_journal_entry_loads(tmp_path: Path):
     assert [p.id for p in load_opening(OPENING, (FIXTURE, second)).places] == ["m_hamlet", "m_woods", "m_ford"]
 
 
-# ---------- 3: the shipped content has none ----------
+# ---------- 3: the shipped content's places ----------
 
-def test_the_shipped_content_declares_no_place(shipped_ruleset: ShippedRuleset):
-    assert shipped_ruleset.make_game(shipped_ruleset.opening, shipped_ruleset.rs).content().places == []
+def test_the_shipped_content_serves_its_places_in_content_order(shipped_ruleset: ShippedRuleset):
+    places = shipped_ruleset.make_game(shipped_ruleset.opening, shipped_ruleset.rs).content().places
+    assert [(p.place, p.stamp, p.reveal.id, p.label_key) for p in places] == [
+        ("p_ridge", Stamp.MOUNTAIN, "r2_open", "place_ridge"), ("p_far_hills", Stamp.RANGE, "r2_open", None)]
 
 
 def test_the_spec_names_the_maps_components():

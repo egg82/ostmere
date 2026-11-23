@@ -78,7 +78,8 @@ HIDDEN = {
     "bear_season", "dig_clock", "morning_13", "night_14",
     "clear_clock", "frost_left", "grow_left", "night_15", "rime", "roof_wind_left", "meals",
     "table_clock", "rows_black_left", "tear_left", "torn_clock",
-    "b15_clock", "choir_clock", "starer_clock",
+    "b15_clock", "choir_clock", "starer_clock", "covers_torn", "b15_2h", "choir_6h", "starer_floor",
+    "cut_night_clock", "b17_clock", "r2_clock", "b17_floor", "night_21",
 }
 
 

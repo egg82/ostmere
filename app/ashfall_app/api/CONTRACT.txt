@@ -1651,8 +1651,8 @@ MAP
      a reveal of an unknown feature; a reveal of a feature nothing unlocks; two places on one cell in one chapter;
      two on one cell across two chapters; a place at [0, 0]; an at past the reach; a label_key not in text. Control:
      the fixture without the plant loads, and a reveal of a journal entry loads.
-  3. The shipped content declares no place: Content.places is empty; openapi.json names PlaceInfo and the Stamp enum
-     as components; the field-names test holds.
+  3. The shipped content's places are served in content order (day nineteen's first sheet); openapi.json names
+     PlaceInfo and the Stamp enum as components; the field-names test holds.
   4. With no place revealed the Book has no Map button and no request goes to /assets/art/map/; once one is revealed
      the button shows, last in the row, and the dot is on the Book's tab.
   5. Stamp choices are equal across two calls for one save; a place keeps its variant when another place of its kind
