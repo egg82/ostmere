@@ -1,8 +1,8 @@
 beats typical (pace_scale 1): B16 day 18.46, target_day 19
-  away V77->V78: 2 ['trigger t_b15_2h', 'trigger offer_o_choir']
+  away V77->V78: 1 ['trigger offer_o_choir']
   away V78->V79: 0 []
-  away V79->V80: 2 ['trigger t_choir_6h', 'trigger offer_o_cutter']
-  away V80->V81: 1 ['trigger t_b16']
+  away V79->V80: 1 ['trigger offer_o_cutter']
+  away V80->V81: 2 ['trigger t_b16', 'trigger t_over_shown']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      12       5       0       5       0      22       3     47
@@ -14,6 +14,6 @@ day    line feature    chip   store   skill    card   level  total
   7       7       3       0       0       0      10       1     21
   8      10       4       0       2       0      10       2     28
   9      12       1       2       3       0      28       1     47
- 10      13       4       0       1       0      12       1     31
- 11      15       2       0       1       0      13       1     32
- 12      16       3       0       0       0      71       4     94
+ 10      13       3       0       1       0      12       1     30
+ 11      15       1       0       1       0      13       1     31
+ 12      16       1       1       0       0      71       4     93

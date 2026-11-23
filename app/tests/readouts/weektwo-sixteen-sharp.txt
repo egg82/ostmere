@@ -1,6 +1,6 @@
 beats sharp (pace_scale 1): B15 day 16.08, target_day 18
   away V133->V134: 3 ['trigger t_marked_n2', 'trigger t_road_marked', 'trigger offer_j_steps']
-  away V134->V135: 3 ['trigger t_rows_black', 'trigger t_floor_starer', 'trigger offer_j_smoke_hole']
+  away V134->V135: 2 ['trigger t_rows_black', 'trigger offer_j_smoke_hole']
   away V135->V136: 1 ['trigger offer_j_wedged']
   away V136->V137: 1 ['trigger offer_j_snares']
   away V137->V138: 1 ['trigger offer_j_ridge']
@@ -17,4 +17,4 @@ day    line feature    chip   store   skill    card   level  total
   7       2       0       0       0       0       0       2      4
   8       9       3       0       2       0      10       0     24
   9      13       1       0       4       0      36       3     57
- 10      22       4       0       1       0      15       2     44
+ 10      22       3       0       1       0      15       2     43

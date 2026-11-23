@@ -1,9 +1,9 @@
 chapter eighteen: 5 visits on typical
    V77 gap   3.2 h  spend 83  decide  1  [wait, 4 lines]
-   V78 gap   9.0 h  spend 92  decide  2  [wait, 5 lines]
-   V79 gap   4.2 h  spend 53  decide  0  [wait, 4 lines]
-   V80 gap   3.2 h  spend 89  decide  1  [wait, 7 lines]
-   V81 gap   9.2 h  spend 116  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 3 returns, spend 225, decide 2; 8h+: 2 returns, spend 208, decide 3
-  cap loss at the end, away 8 h: barley 25%, cleared 100%, damp_wood 11%, dry_wood 61%, roots 96%, smoked 23%, stones 96%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: barley 15%, cleared 100%, damp_wood 12%, dry_wood 61%, roots 96%, smoked 29%, stones 96%, windbreak 100%, wraps_sewn 100%
+   V78 gap   9.0 h  spend 92  decide  1  [wait, 5 lines]
+   V79 gap   4.2 h  spend 102  decide  0  [wait, 6 lines]
+   V80 gap   3.2 h  spend 64  decide  1  [wait, 6 lines]
+   V81 gap   9.2 h  spend 118  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 3 returns, spend 249, decide 2; 8h+: 2 returns, spend 210, decide 2
+  cap loss at the end, away 8 h: barley 43%, damp_wood 6%, dry_wood 48%, roots 72%, smoked 27%, stones 63%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: barley 45%, cleared 5%, damp_wood 6%, dry_wood 53%, roots 68%, smoked 28%, stones 65%, windbreak 100%, wraps_sewn 100%
