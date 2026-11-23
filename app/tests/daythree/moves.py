@@ -142,10 +142,20 @@ def move(v: View, save: Save, rules: Rules, later: Later, knobs: sinks.SinkKnobs
     held = waiting(v, rules, later)
     if later.own is not None and (mine := later.own(v, save, rules)) is not None:
         return mine
-    found = (sinks.answer_offers(v, rules, save.orders, (*later.sinks.arrivals, *later.answers), False)
-             or release(v, save, rules, later) or step(v, later) or queue_step(v, save, later)
-             or sinks.move(v, rules, save, later.sinks, knobs, held, kept, marks)
-             or (share(v, save, later) if knobs.mix_trips else None) or cure(v, save, later)
-             or (order_card(save, later) if takes_rules else None) or keep(v, save, later) or by_hand(v, save, later, knobs))
-    return (found[0], sinks.ride_along(v, rules, save, found[1], later.sinks.trips)) if found else None
+    def carried(m: Move | None) -> Move | None:
+        """`m` with the trips' shares carried on it, or None when that leaves the active mix as it stands: the player
+        sees the same mix and saves nothing."""
+        if m is None:
+            return None
+        verbs = sinks.ride_along(v, rules, save, m[1], later.sinks.trips)
+        active = next((x for x in save.mixes if x.id == save.active), None)
+        same = active is not None and all(isinstance(x, SaveMix) and x.mix.id == active.id and sinks.near(x.mix, active)
+                                          for x in verbs)
+        return None if same else (m[0], verbs)
+    return (carried(sinks.answer_offers(v, rules, save.orders, (*later.sinks.arrivals, *later.answers), False))
+            or carried(release(v, save, rules, later)) or carried(step(v, later)) or carried(queue_step(v, save, later))
+            or carried(sinks.move(v, rules, save, later.sinks, knobs, held, kept, marks))
+            or carried(share(v, save, later) if knobs.mix_trips else None) or carried(cure(v, save, later))
+            or carried(order_card(save, later) if takes_rules else None) or carried(keep(v, save, later))
+            or carried(by_hand(v, save, later, knobs)))
 
