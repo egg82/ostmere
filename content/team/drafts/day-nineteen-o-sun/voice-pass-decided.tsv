@@ -1,0 +1,9 @@
+key	reader	verdict	reason
+l_last_sun	first	checked, kept	the reader's "asks how to use" states the turn (the critic's 0 for that shape); "a few days of pale sun left" is a count of days, true at any hour
+l_last_sun_light	first	checked, kept	"lit every night" is a habit, true by day; the reader's cut loses that the light is kept for good
+l_last_sun_cellar	first	kept	
+o_last_sun	first	edited	the reader's put both answers in the text, which the answer rows already show; Lucy's question, outright, as o_j_steps's shape
+a_last_sun_light	first	edited	"in the hall door", the place seen down the valley (l_choir_2's canon), not "in the hall"
+a_last_sun_cellar	first	kept	
+a_last_sun_light_cost	first	edited	"table meals" names a count the page never draws; what the meals do instead, in the table's own words (up_table)
+a_last_sun_cellar_cost	first	edited	"smoked meat" reads as a rate beside "{pct} smoked"; the cap is what changes, so "held"

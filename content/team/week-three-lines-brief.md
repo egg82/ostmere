@@ -236,6 +236,15 @@ present or on return. Special: the week's ★; the grey is the last fact; nobody
 **l_lamp_out** (T12). Fields: down · grim · opens the near question. Facts: at dusk `{n12}` takes a lamp along the road to
 its end and sits by it facing the far side; still there when the light goes.
 
+**l_last_sun** (O-sun's line, H). Facts: lucy; the sun lower and paler each day; a few days of it left; she turns to
+the player with it. States: on return, any hour, after B17 and T12. Special: prefers neither answer and names neither.
+
+**l_last_sun_light / l_last_sun_cellar** (each answer). Facts: a lamp burns in the hall's open door every night from
+then on, seen far down the valley; or the last days go to smoking meat and hanging it in rows from the cellar's beams.
+Special: nobody arrives in the light's line and it never echoes the sister's lamp; the cellar's never says it will be
+enough. Drafts, critic and picks: `drafts/day-nineteen-o-sun/` (the proposers and the voice pass were
+Gemini 3.1 Pro, run by a leaf agent that could not start Sonnet proposers).
+
 **l_night_21**. Facts: the light going; stars; a lamp at the end of the road.
 
 **l_sit_road_end_fail** (A38's failed tap before night: the voice pass's).

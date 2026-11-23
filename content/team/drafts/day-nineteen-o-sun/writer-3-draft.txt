@@ -1,0 +1,4 @@
+l_last_sun = "lucy ignores the pale sun. she turns to you."
+l_last_sun_alt = "nobody mentions the sun. lucy looks to you."
+l_last_sun_light = "an open door shines down the valley. no one looks."
+l_last_sun_cellar = "meat fills the cellar. no one says why."

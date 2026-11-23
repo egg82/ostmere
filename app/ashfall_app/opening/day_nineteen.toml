@@ -168,6 +168,35 @@ when = { test = "at_least", subject_kind = "store", id = "b17_clock", value = 4 
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "clear_clock", value = 1 }]
 outcome = { line_keys = ["l_lamp_out_1", "l_lamp_out_2"], unlocks = [{ unlock_kind = "feature", id = "lamp_out" }, { unlock_kind = "card", id = "sit_road_end" }] }
 
+# ---------- the last of the sun ----------
+
+# Lucy's question for the season's last days (D-152), B17 + 12 h so it is its own moment after T12 on every route. Each
+# answer keeps something for good, aimed at what the town meets after the turn: a light kept in the hall door draws
+# travellers to the table sooner (as the hall's light drew T7's three; week four's arrivals wait on meals, as week
+# three's did), the cellar banks half again as much meat for the dark. A bigger town eats more, so neither answer covers the other.
+[[offers]]
+id = "o_last_sun"
+text_key = "o_last_sun"
+askers = ["n1"]
+gate = { test = "at_least", subject_kind = "store", id = "b17_clock", value = 12 }
+line_keys = ["l_last_sun"]
+
+[[offers.answers]]
+id = "o_last_sun_light"
+label_key = "a_last_sun_light"
+cost_key = "a_last_sun_light_cost"
+[offers.answers.outcome]
+line_keys = ["l_last_sun_light"]
+modifiers = [{ target = "rate", id = "table", flow = "make", store = "meals", kind = "mul_bp", amount_bp = 12500, source = "o_last_sun_light" }]
+
+[[offers.answers]]
+id = "o_last_sun_cellar"
+label_key = "a_last_sun_cellar"
+cost_key = "a_last_sun_cellar_cost"
+[offers.answers.outcome]
+line_keys = ["l_last_sun_cellar"]
+modifiers = [{ target = "cap", id = "smoked", kind = "mul_bp", amount_bp = 15000, source = "o_last_sun_cellar" }]
+
 # ---------- night 21 and T13 ----------
 
 # Dusk 21 at 498 h on the calendar, a hidden clock the scene's night grade reads, so it opens nothing to see.
@@ -301,6 +330,9 @@ l_b17_4 = "story"
 l_b17_5 = "story"
 l_lamp_out_1 = "story"
 l_lamp_out_2 = "story"
+l_last_sun = "story"
+l_last_sun_light = "story"
+l_last_sun_cellar = "story"
 l_night_21 = "story"
 l_t13_1 = "story"
 l_t13_2 = "story"
@@ -338,6 +370,14 @@ l_b17_4 = "his prints go on down the far side, a wolf's either side of them, clo
 l_b17_5 = "past the hill it is grey as far as you can see."
 l_lamp_out_1 = "at dusk {n12} carries a lamp out to the end of the road."
 l_lamp_out_2 = "she sits by it facing the far side, and is still there when the light goes."
+l_last_sun = "a few days of pale sun left. lucy turns to you."
+o_last_sun = "The sun has a few days left. Lucy asks what the town should do with them."
+a_last_sun_light = "A lamp in the hall door"
+a_last_sun_cellar = "Fill the cellar"
+a_last_sun_light_cost = "{pct} travellers drawn to the table"
+a_last_sun_cellar_cost = "{pct} smoked held"
+l_last_sun_light = "a lamp hangs in the hall door now, lit every night."
+l_last_sun_cellar = "smoked meat hangs in rows from the cellar beams."
 l_night_21 = "the light goes. stars, and a lamp at the end of the road."
 c_sit_road_end = "Sit with her"
 l_t13_1 = "you walk out along the road in the starlight and sit with her by the lamp."

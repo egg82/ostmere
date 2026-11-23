@@ -45,7 +45,7 @@ EIGHTEEN = Landings(
 NINETEEN = Landings(
     {"T10": ("t_far_hills",), "T11": ("t_cut_night",), "SL28": ("t_cloth",), "B17": ("t_b17",), "T12": ("t_lamp_out",),
      "T13": ("t_t13",)},
-    {"A38": ("sit_road_end",)}, {}, {})
+    {"A38": ("sit_road_end",)}, {}, {"O-sun": OfferId("o_last_sun")})
 LAST_NIGHT, HUNT_BEAR, BEAR_SIGN = CardId("sit_last_night"), CardId("hunt_bear"), StoreId("bear_sign")
 CUT_STAKES = CardId("cut_stakes")
 ORDER_STORES = ("stakes", "roof_ash", "cord", "pelt", "wind_torn", "stones", "tallow")
@@ -287,6 +287,9 @@ def day_eighteen(route: str) -> Later:
 OVER, ROAD_CLOTHS, SIT_ROAD_END = CardId("cut_over"), CardId("road_cloths"), CardId("sit_road_end")
 CLOTHS_RULE = (Unlock(UnlockKind.CARD, ROAD_CLOTHS), Order(AfterTime(0), TapCard(ROAD_CLOTHS)))
 """Her cloth on her lane is tied by a rule of the player's once shown (a capped card is never a share), as his posts were."""
+LAST_SUN = {"typical": AnswerId("o_last_sun_light"), "sharp": AnswerId("o_last_sun_cellar")}
+"""Lucy's question for the season's last days, as each route answers it in the visit it shows (a route not named follows
+typical): both answers measured."""
 
 
 def day_nineteen(route: str) -> Later:
@@ -295,9 +298,10 @@ def day_nineteen(route: str) -> Later:
     it shows. The hands keep their share of shovelling: taking it out once the road is over set the trips' retune
     fighting the shares at two visits, minutes of play each."""
     eighteen = day_eighteen(route)
+    last_sun = (OfferId("o_last_sun"), LAST_SUN.get(route, LAST_SUN["typical"]))
     return Later(
         start="B16", stop="T13",
         sinks=eighteen.sinks,
         steps=(SIT_ROAD_END,), order_cards=(*eighteen.order_cards, CLOTHS_RULE), keeps=eighteen.keeps,
-        landed=NINETEEN.of, news=("T10", "T11", "SL28", "B17", "T12", "A38", "T13"),
-        answers=eighteen.answers, shares=eighteen.shares, cures=eighteen.cures, own=eighteen.own, queued=(SIT_ROAD_END,))
+        landed=NINETEEN.of, news=("T10", "T11", "SL28", "B17", "T12", "O-sun", "A38", "T13"),
+        answers=(*eighteen.answers, last_sun), shares=eighteen.shares, cures=eighteen.cures, own=eighteen.own, queued=(SIT_ROAD_END,))
