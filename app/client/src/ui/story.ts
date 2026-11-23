@@ -14,6 +14,7 @@ import { DayMentions } from "../game/people";
 import { awayLines, pastLines, type Placement } from "../game/awaylines";
 import { entries, poolLine, type Window } from "../game/fights";
 import { toppedSince } from "../game/prestige";
+import { jobLine, newJobs } from "../game/newjobs";
 import { readingMs } from "../game/reading";
 import type { Catalog } from "../game/catalog";
 import { shownChips } from "../game/shown";
@@ -131,6 +132,7 @@ export class Story implements Part {
     this.aimLine.update(view);
     this.fightLines(view, prev);
     this.topLines(view, prev);
+    this.jobLines(view, prev);
     this.ruleLines(view);
   }
 
@@ -141,6 +143,12 @@ export class Story implements Part {
       this.ruled.add(id);
       this.chronicle.add(entry);
     }
+  }
+
+  /** A job first offered to a person of the town since the last view: one line for the step, never a count (game/newjobs.ts). */
+  private jobLines(view: View, prev: View | null): void {
+    const said = jobLine(this.ctx.catalog, view, newJobs(this.ctx.catalog, prev, view));
+    if (said !== null) this.say(said, `job:${view.at}`, "story", null);
   }
 
   /** A skill that reached its phase's top since the last view: one line, saying how long ago when that was a return

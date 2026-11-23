@@ -11,7 +11,7 @@ import { groups, marked, people } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import type { Part, PartContext } from "./part";
-import { dotChange, hasNewTask, PersonPage } from "./personpage";
+import { dotChange, hasNewTask, laneTasks, PersonPage } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow } from "./personrow";
 import { TownStrip } from "./townstrip";
 
@@ -48,12 +48,13 @@ export class LaneRows implements Part {
     this.page.close();
   }
 
-  /** How many people and lanes wear the dot on their Change: the Town tab dots while any does (townview.ts). */
-  get fresh(): number {
+  /** The tasks not yet in front of the player, of the people and lanes that wear the dot on their Change: the Town tab dots
+   * while any exists, and when one arrives that the last draw did not hold (townview.ts). */
+  get fresh(): Set<string> {
     const { view } = this;
-    if (!view) return 0;
+    if (!view) return new Set();
     const lanes = [...marked(this.ctx.catalog, view), ...groups(this.ctx.catalog, view), ...this.rows.keys()];
-    return lanes.filter((lane) => hasNewTask(this.ctx, view, lane)).length;
+    return new Set(lanes.filter((lane) => hasNewTask(this.ctx, view, lane)).flatMap((lane) => laneTasks(this.ctx, view, lane)).map((c) => c.card).filter((c) => !this.ctx.keeps.laneTaskSeen(c)));
   }
 
   /** How many rows are drawn: the town's people, then each lane run by rules that has no person in the town. */

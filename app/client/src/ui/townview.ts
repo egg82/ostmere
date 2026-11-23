@@ -11,7 +11,7 @@ export class TownView {
   readonly root = el("section", "town-tab");
   /** How many people and lanes are drawn: one more where the player can't see it dots the tab. */
   private rows = 0;
-  private fresh = 0;
+  private fresh = new Set<string>();
 
   private readonly title = el("h2", "view-title");
 
@@ -21,7 +21,7 @@ export class TownView {
 
   /** Whether the tab shows: once a person or a lane is drawn, or `more` holds (a phone's ledger or skills); until then its
    * slot is kept unseen, so nothing moves. `unseen`: the panel is out of sight and this is not the first view. The tab wears
-   * the quiet dot while a person's Change does, coming when more of them do, as a row's arrival dots it (`unseen`). The
+   * the quiet dot while a person's Change does, coming when a task arrives that the last draw did not hold, as a row's arrival dots it (`unseen`). The
    * view's title and the tab wear the town's name as `view` unlocked it. */
   draw(view: View, more: boolean, unseen: boolean): boolean {
     const name = this.catalog.townTitle(view);
@@ -33,8 +33,8 @@ export class TownView {
     if (unseen && rows > this.rows) markNew(this.tab, () => undefined);
     this.rows = rows;
     const fresh = this.lanes.fresh;
-    if (fresh === 0) unmark(this.tab);
-    else if (fresh > this.fresh && unseen) markNew(this.tab, () => undefined);
+    if (fresh.size === 0) unmark(this.tab);
+    else if (unseen && [...fresh].some((card) => !this.fresh.has(card))) markNew(this.tab, () => undefined);
     this.fresh = fresh;
     return shows;
   }

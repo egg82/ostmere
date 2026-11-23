@@ -27,6 +27,10 @@ export const UI = {
   skillNextIn: "ui.skill.next_in", // "{pays} {d}": what the next level pays, and the forecast's time to it
   skillNone: "ui.skill.none", // a skill row with nothing ahead in this content
   nextUnnamed: "ui.next.unnamed", // a Camp marker whose pays names something the player has not met
+  jobNew: "ui.job.new", // "{person}{card}": the story line when one card is first offered a person nobody has set to it
+  jobNewMany: "ui.job.new_many", // "{person}": the same, when one person is offered several jobs in one step
+  jobNewTown: "ui.job.new_town", // "{card}": the same, when one job is offered several people
+  jobNewAll: "ui.job.new_all", // the same, when several jobs are offered several people in one step
   goalIn: "ui.goal.in", // "{d}": the time left on the wait line (ui/waitline.ts)
   goalWhile: "ui.goal.while", // "{store}": the wait line's clock runs while this store holds some
   goalPaused: "ui.goal.paused", // "{store}": the wait line's clock stopped on this dry store

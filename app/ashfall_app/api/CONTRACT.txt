@@ -965,6 +965,9 @@ PRESTIGE PHASES (engine DESIGN.txt, "PRESTIGE PHASES")
                                     | ui.prestige.cap {store}{before}{after}   a node's change, before and after one rank
                                     ui.prestige.reached {skill}{d} | ui.prestige.reached_now {skill}   a return's line
                                     ui.lesson.prestige {skill}   the Push past control's lesson
+                                    ui.job.new {person}{card} | ui.job.new_many {person} | ui.job.new_town {card} | ui.job.new_all   the
+                                    story line when a job (cards sharing a label_key) is first offered townspeople nobody has set
+                                    to it: one line per step (game/newjobs.ts)
 
 THE END
   view.ended_at is the game time the end happened: the first instant the content's end feature was unlocked, as the

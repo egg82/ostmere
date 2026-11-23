@@ -20,7 +20,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.feedback.thanks", "ui.feedback.later",
     "ui.tab.cards",
     "ui.tab.book", "ui.book.done",
-    "ui.hands.idle",
+    "ui.hands.idle", "ui.job.new", "ui.job.new_many", "ui.job.new_town", "ui.job.new_all",
     "ui.lane.idle", "ui.lane.change", "ui.rule.always",
     "ui.town.title", "ui.town.idle", "ui.town.count", "ui.town.each", "ui.town.busy", "ui.town.tied",
     "ui.card.needs_step", "ui.card.takes_nothing",
