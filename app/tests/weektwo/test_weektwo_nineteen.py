@@ -7,12 +7,13 @@ under today's and plays on with nobody deciding. The rhythm is the readouts' (te
 (CLAUDE.md, "Never spoil the owner")."""
 import pytest
 
-from ashfall_app.engine import CardId, TapCard, Unlock, UnlockKind
+from ashfall_app.engine import AnswerId, CardId, TapCard, Unlock, UnlockKind
 from ashfall_app.engine.counts import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.parity import Measured, compare
+from tests.weektwo.content import LAST_SUN
 from tests.weektwo.rebased import Rebased, fired, rules18
 from tests.weektwo.routes import NINETEEN_PUSH_ROUTES
 
@@ -47,6 +48,19 @@ def test_b17_lands_at_the_last_stretch_and_the_cutter_leaves_no_rule(nineteen_ro
     lanes = {c.id: str(c.lane) for c in p.rules.cards}
     taps = [o for o in p.save.orders if isinstance(o.then, TapCard) and lanes.get(o.then.card) == "n11"]
     assert taps == [], f"{name}: a rule on the cutter's lane outlived him"
+
+
+@pytest.mark.parametrize("nineteen_route", NINETEEN_PUSH_ROUTES, indirect=True)
+def test_the_last_sun_shows_after_t12_and_is_answered_in_its_visit(nineteen_route: Route):
+    """O-sun (D-152) is its own moment after T12 and the route's answer is given before the next return."""
+    name, p = nineteen_route
+    shown = p.landed_at["O-sun"]
+    assert shown > p.landed_at["T12"], f"{name}: O-sun after T12"
+    answer = LAST_SUN.get(name, LAST_SUN["typical"])
+    answered = next((s.time for s, _ in p.history if Unlock(UnlockKind.ANSWER, AnswerId(answer)) in set(s.unlocked)), None)
+    assert answered is not None, f"{name}: O-sun answered {answer}"
+    visit = next(v for v in p.visits if v.start <= p.seen_at["O-sun"] <= v.end)
+    assert visit.start <= answered <= visit.end, f"{name}: answered in the visit it showed"
 
 
 @pytest.mark.parametrize("nineteen_route", NINETEEN_PUSH_ROUTES, indirect=True)

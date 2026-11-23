@@ -486,6 +486,8 @@ day_nineteen_night:
   - {id: B17,  kind: ref,    visit: 19d, target_hour: 0}
   - {id: T12,  kind: beat,   region: R1, target_day: 20, weekly: false, visit: 20a, target_hour: 4, gate: {hours_after: {beat: B17, hours: 4}},
      turn: down, cost: none, opens: [C-promise-32], moves: [PC], thread: {id: th-town, at: middle}, register: grim}
+  - {id: O-sun, kind: offer, target_day: 20, visit: 20b, target_hour: 12, gate: {hours_after: {beat: B17, hours: 12}},
+     moves: [PC, N1], thread: {id: th-town, at: middle}}
   - {id: A38,  kind: action, visit: 21a, target_hour: 31, gate: {all: [{save_hours: 499}, {beat: T12}]}}   # sit with her, night 21
   - {id: T13,  kind: beat,   region: R1, target_day: 21, weekly: false, visit: 21a, target_hour: 31, gate: {all: [{project: A38}, {beat: T12}]},
      turn: up, outcome: "yes_but", cost: none, pays: [C-promise-32], moves: [PC, N1], thread: {id: th-town, at: middle}, register: warm}

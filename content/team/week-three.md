@@ -508,7 +508,7 @@ and sits with her, and at first light she comes back and gives his name for the 
 | 19c | 3-9 h | the road near the top; levels; Camp 18's marker | | side SL28 |
 | 19d | 3-9 h | the last stretch; his axe; grey beyond | (B17) | B17 (pays) |
 | 20a | 3-9 h | his sister with a lamp at the road's end | will she go after him? | T12 (opens) |
-| 20b-20d | 3-9 h each | jobs; the beds' last days; the deer gone | | |
+| 20b-20d | 3-9 h each | lucy's question (O-sun); the beds' last days; the deer gone | | |
 | 21a | 0-9 h | night 21; the player at the road's end | (week four) | T13 (pays) |
 
 ### Timeline
@@ -520,7 +520,7 @@ and sits with her, and at first light she comes back and gives his name for the 
 | 19c (3-5 min) | reads SL28; her share; levels and finds; Camp 18's marker held ("?") | SL28 at T11 + 4 h | strips of cloth on the marker stakes | l_cloth (SL28) |
 | 19d (3-6 min) | reads B17; the map opens (its lesson); re-tunes the lanes now he is gone | B17 at `cut_road` stage 10, B16, save time ≥ 389 h; n11 leaves; `r2_open`, `r2_clock`, the map | the road over the ridge, an axe in a stump, grey hills | l_b17_1 to l_b17_3, l_map_first |
 | 20a (3-5 min) | reads T12; a job | T12 at B17 + 4 h | a lamp at the road's end at dusk, a figure by it | l_lamp_out (T12) |
-| 20b-20d (3-5 min each) | jobs; the barley's last reaping; the deer gone or hunted out; Camp 18 lifted | Camp 18 by the road's last stage; the beds' last day | | |
+| 20b-20d (3-5 min each) | answers O-sun; the barley's last reaping; the deer gone or hunted out | O-sun at B17 + 12 h; the beds' last day | | l_last_sun, then l_last_sun_light or l_last_sun_cellar |
 | 21a (3-5 min) | taps or has queued **Sit with her** (A38), shown unready from T12 with its countdown; reads T13; the week's end card | dusk 21 at save time ≥ 498 h; A38 at `clear_clock` ≥ 163 (499 h); T13 at A38's finish | night grade, stars, two at the road's end; first light; the board by the fire with two marks | l_night_21, l_t13_1 to l_t13_3 |
 
 ### The road (P3) (fit pass)
@@ -578,6 +578,22 @@ B17's wolves are the greycoats' habit (walking with, waiting to be asked in), ne
 note or to S3 by a line. Nobody says he is dead; the board says it at T13. No line says the wolves took him, nor that
 he walked on to anywhere: both readings stay open. B17 is the week's ★: the ceremony (the feedback ladder's
 big-moment rung), the map opening on it.
+
+### The last of the sun (O-sun) (fit pass)
+
+**What it is:** Lucy's question for the season's last days, the one decision between B17 and night 21 (D-152).
+**Instance of:** an offer of no kind whose answers each install a lasting modifier (day fifteen's asks, O-choir's
+lasting halves). **Fits into:** Offers, Modifiers; no new system. Shown at B17 + 12 h on the hidden B17 clock, so on
+every route it is a moment of its own after T12.
+
+| Answer | Keeps for good | Into week four |
+|---|---|---|
+| A light in the hall door (`o_last_sun_light`) | the table's meals ×1.25 | week four's arrivals wait on meals, as week three's (D-132), so they come sooner; more mouths at the table |
+| Fill the cellar (`o_last_sun_cellar`) | smoked's cap ×1.5 | the beds and the deer stop at the turn; a deeper larder carries the table and the eating through long absences |
+
+Neither covers the other: the light grows the smoked bill the cellar banks against. The routes answer it in its
+visit, typical the light and sharp the cellar, so both are measured. Week four's writer: keep the next arrivals on
+meals, or this answer's half goes dead.
 
 ### Side layer (day nineteen)
 
@@ -659,7 +675,7 @@ C-promise-30, 19c does not, 20b-20d touch none (between two near questions).
   stage finishes land while away on typical; each is revealed in order, one at a time.
 - **Per absence, at most two unlocks:** night 14 → 15a brings B13 (its cards and the chore rules' removal are one
   moment) and SL22 (B13 + 2 h); T1 is ten hours on, its own absence; T7 and O-choir are one moment, T9 and O-cutter one;
-  the starer's arrival and B16 are 8 h apart; B17's leave, R2 and the map are one moment. A return that brings an
+  the starer's arrival and B16 are 8 h apart; B17's leave, R2 and the map are one moment. O-sun (B17 + 12 h) is a moment of its own. A return that brings an
   arrival answered by rule and its next job counts two.
 - **The 2 AM test:** the hall and its beams are on screen from S4's visit, before the turn; B13's cards open onto the
   beds (empty until she sows), a finite herd and the ruin's pool; the table is a flow; the field stone (A35) shows with
@@ -762,6 +778,7 @@ Decisions to record:
 - D-137: week three ends at night 21, dusk on the calendar's 498 h.
 - D-138: R2's opening is content (a feature and a clock store) until a second region's ramp needs time-in-region.
 - D-139: ACCEPTED EXCEPTIONS: near_untouched at 15a, 15c, 15d, 16b, 16c, 16e, 16g, 16h, 18a, 18e, 19c, 20b-20d.
+- D-152 (later): O-sun, the light in the hall door against the cellar, at B17 + 12 h.
 
 ## For the owner
 

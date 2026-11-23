@@ -1,0 +1,4 @@
+l_last_sun = "few days of pale sun remain. lucy turns to you."
+l_last_sun_alt = "the pale disc weakens. lucy looks your way."
+l_last_sun_light = "a hall door lamp shines into the deep valley."
+l_last_sun_cellar = "smoked meat hangs in rows from cellar beams."

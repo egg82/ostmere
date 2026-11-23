@@ -12,7 +12,7 @@ beats sharp (pace_scale 1): B17 day 19, target_day 20
   away V167->V168: 0 []
   away V168->V169: 0 []
   away V169->V170: 0 []
-  away V170->V171: 0 []
+  away V170->V171: 1 ['trigger offer_o_last_sun']
   away V171->V172: 0 []
   away V172->V173: 0 []
   away V173->V174: 0 []
@@ -38,4 +38,4 @@ day    line feature    chip   store   skill    card   level  total
  11      21       2       1       0       0     119       2    145
  12      11       1       0       0       0       2       3     17
  13       6       0       2       0       0       1       4     13
- 14       7       2       1       0       0       1       1     12
+ 14       9       2       1       0       0       1       1     14

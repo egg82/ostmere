@@ -1,0 +1,9 @@
+key	verdict	text	reason
+l_last_sun	changed	lucy asks how to use the last of the pale sun.	avoids assuming the sun is currently up to be true at any hour.
+l_last_sun_light	changed	a lamp hangs in the hall door.	removes 'lit every night' so it remains true if read during the day.
+l_last_sun_cellar	kept	smoked meat hangs in rows from the cellar beams.	meets all constraints perfectly.
+o_last_sun	UI	Lucy asks whether to hang a lamp in the hall or fill the cellar.	UI label
+a_last_sun_light	UI	Hang a lamp in the hall	UI label
+a_last_sun_cellar	UI	Fill the cellar	UI label
+a_last_sun_light_cost	UI	{pct} table meals	UI label
+a_last_sun_cellar_cost	UI	{pct} smoked meat	UI label

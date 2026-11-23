@@ -1,0 +1,4 @@
+l_last_sun = "lucy asks how to spend the pale disc."
+l_last_sun_alt = "lucy leaves the cost of the pale sun to you."
+l_last_sun_light = "the open door burns oil to light the valley."
+l_last_sun_cellar = "sun trades for meat. rows hang in the cellar."
