@@ -33,7 +33,7 @@ export const NOTE_B = "note_b1";
 export const PAGE_C = "page_c";
 export const NOTE_C = "note_c1";
 export const NOTES_D = ["note_d1", "note_d2"];
-export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null })), marks: [] };
+export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null, count: null })), marks: [] };
 
 /** Placeholder words for WEEKS, in a diarist's voice (never shipped). */
 const WEEK_WORDS: Record<string, string> = {
@@ -109,7 +109,7 @@ export const READ_TO = 4;
 
 
 const note = (key: string, slot: JournalDay["day_notes"][number]["slot"] = "first", hand: "ink" | "pencil" = "ink", sketch: string | null = null) =>
-  ({ subject: `s_${key}`, slot, key: `wk_${key}`, hand, sketch });
+  ({ subject: `s_${key}`, slot, key: `wk_${key}`, hand, sketch, count: null });
 
 /** Days 0 to 15 with gaps: a short day (1), days that fill the first page, a late addition (day 6 for day 5), a
  * misremembering (day 7) corrected on day 14, a gap from day 9 to 12 caught up on day 13; every kind of mark on some

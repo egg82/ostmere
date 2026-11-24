@@ -423,7 +423,7 @@ export const fixtureContent: Content = {
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],
   threat_infos: [{ threat: "wolves", label_key: "threat.wolves" }, { threat: "raiders", label_key: "threat.raiders" }],
-  standing_infos: [{ action: "raiders", label_key: "standing.raiders", skill: null, fight: { side: "hands", threat: "raiders", loses: [{ store: "stone", quantity: 2 * Q }], wounds: [], won_line_keys: [], lost_line_keys: [] } }],
+  standing_infos: [{ action: "raiders", label_key: "standing.raiders", skill: null, fight: { side: "hands", threat: "raiders", loses: [{ store: "stone", quantity: 2 * Q }], wounds: [], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null } }],
   card_infos: [
     card("stand", "hands", "narrative"),
     card("look", "hands", "narrative", [{ store: "stone", quantity: 4 * Q }]),
@@ -444,7 +444,7 @@ export const fixtureContent: Content = {
     card("take_stock", "hands", "narrative"),
     card("look_out", "hands", "narrative"),
     card("forage", "hands", "action"),
-    { ...card("hunt", "hands", "action"), fight: { side: "hands", threat: "wolves", loses: [{ store: "wood", quantity: 3 * Q }], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [] } },
+    { ...card("hunt", "hands", "action"), fight: { side: "hands", threat: "wolves", loses: [{ store: "wood", quantity: 3 * Q }], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null } },
     { ...card("poultice", "hands", "action", [{ store: "roots", quantity: 6 * Q }]), takes: ["roots", "hurt"] },
     card("chop", "helper", "action"), card("haul", "helper", "action"), card("fetch", "helper", "narrative"), card("hew", "mason", "action"), card("carve", "mason", "action"),   // the ruled lane's tasks
   ],

@@ -39,7 +39,8 @@ export class FightPanel {
     const items = (a: { quantity: number }): string => catalog.format.level(a.quantity);
     const costs = info.loses.map((a) => `${items(a)} ${catalog.storeLabel(a.store)}`);
     const hurts = info.wounds.map((a) => catalog.text.fill(UI.fightOnWound, { store: catalog.storeLabel(a.store), n: items(a) }));
-    const words = [...(costs.length ? [catalog.text.fill(UI.fightOnLoss, { costs: costs.join(", ") })] : []), ...hurts];
+    const own = info.on_loss_key ? catalog.text.get(info.on_loss_key) : null;   // LOSS LINES: the card's words
+    const words = own !== null ? [own] : [...(costs.length ? [catalog.text.fill(UI.fightOnLoss, { costs: costs.join(", ") })] : []), ...hurts];
     this.loss.textContent = words.join("; ");
     this.loss.hidden = words.length === 0;
     this.root.append(this.odds, this.vs, this.entries, this.loss, this.tally);

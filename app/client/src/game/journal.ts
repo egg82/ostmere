@@ -17,6 +17,8 @@ export interface PageNote {
   hand: Hand;
   sketch: string | null;
   day: number | null;
+  /** A fold note's lost fights, drawn beside its words (CONTRACT.txt, "LOSS LINES"); null on every other note. */
+  count: number | null;
 }
 
 /** A page written: a days page (its id the first day on it), or an entry's page with the notes written on it so far,
@@ -53,7 +55,7 @@ export function pagesOf(catalog: Catalog, view: View, days: readonly JournalDay[
     .filter((e) => catalog.unlocked(view, "entry", e.entry))
     .map((e) => ({ id: e.entry, section: e.section, sketch: e.sketch, runners: e.runners, notes: e.notes
       .filter((n) => catalog.unlocked(view, "note", n.note))
-      .map((n) => ({ id: n.note, key: n.note, hand: n.hand, sketch: n.sketch, day: null })) }));
+      .map((n) => ({ id: n.note, key: n.note, hand: n.hand, sketch: n.sketch, day: null, count: null })) }));
   return [...daysPages(catalog, days), ...SECTIONS.flatMap(({ section }) => written.filter((p) => p.section === section))];
 }
 
@@ -67,7 +69,8 @@ function daysPages(catalog: Catalog, days: readonly JournalDay[]): Page[] {
     const notes = onPage.flatMap((d) => {
       const start = placed.get(d.day) ?? 0;
       placed.set(d.day, start + d.day_notes.length);
-      return d.day_notes.map((n, i) => ({ id: `${d.day}.${start + i}`, key: n.key, hand: n.hand, sketch: n.sketch, day: d.day }));
+      return d.day_notes.map((n, i) => ({ id: `${d.day}.${start + i}`, key: n.key, hand: n.hand, sketch: n.sketch, day: d.day,
+        count: n.count ?? null }));
     });
     return { id: from === 0 ? `days:${first.day}` : `days:${first.day}.${from}`, section: "days", sketch: null, runners: [], notes };
   });

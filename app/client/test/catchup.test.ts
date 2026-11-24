@@ -25,7 +25,7 @@ function slice(at: number, to: number | null, keys: string[], decisions = 0, day
   return Object.assign({}, base, { lines, save_id: 7, journal_days: days.map(written) }, extra);
 }
 
-const written = (day: number): JournalDay => ({ day, day_notes: [{ subject: "s", slot: "first", key: "line.1", hand: "ink", sketch: null }], marks: [] });
+const written = (day: number): JournalDay => ({ day, day_notes: [{ subject: "s", slot: "first", key: "line.1", hand: "ink", sketch: null, count: null }], marks: [] });
 
 interface Landed { keys: string[]; prevAt: number; away: boolean; at: number; decisions: number; days: number[] }
 interface Log {
