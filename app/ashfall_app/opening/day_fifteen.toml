@@ -368,6 +368,7 @@ label_key = "c_cover_beds"
 upside_key = "up_cover_beds"
 work_s = 600
 inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
+outcome = { stores = [{ store = "beds_covered", items = 1 }] }
 
 [[cards]]
 id = "n3_cover_beds"
@@ -378,6 +379,16 @@ label_key = "c_n3_cover_beds"
 upside_key = "up_cover_beds"
 work_s = 1800
 inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
+outcome = { stores = [{ store = "beds_covered", items = 1 }] }
+
+# Every cover by anyone counts toward the fifth (day_sixteen.toml's tear): a tally the cover cards add to, read by no
+# card, so the town's covers spend the rime toward it rather than past it (opening/finite_checks.py).
+[[stores]]
+id = "beds_covered"
+label_key = "store_beds_covered"
+cap_items = 5
+hidden = true
+tally = true
 
 # Covering the beds is everyday work, everyone's as the reaping is, at her lane's pace.
 [[town_cards]]
@@ -389,6 +400,7 @@ label_key = "c_cover_beds"
 upside_key = "up_cover_beds"
 work_s = 1800
 inputs = [{ store = "rime", items = 12 }, { store = "pelt", items = 2 }]
+outcome = { stores = [{ store = "beds_covered", items = 1 }] }
 
 [[triggers]]
 id = "t_town_covers"
@@ -836,6 +848,7 @@ l_b13_1 = "the wind comes round in the night, cold off the far side."
 l_b13_2 = "a pale disc shows through the sky. the posts have shadows. so do you."
 l_b13_3 = "the family stand looking up. Lucy, {n2} and {n4} keep working."
 store_frost_left = "clock"
+store_beds_covered = "beds covered"
 store_grow_left = "clock"
 store_roof_wind_left = "clock"
 store_rime = "rime"

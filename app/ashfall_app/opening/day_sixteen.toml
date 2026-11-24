@@ -207,9 +207,9 @@ outcome = { line_keys = ["l_rime_stone_1", "l_rime_stone_2"], unlocks = [{ unloc
 
 # ---------- T6: the covers tear ----------
 
-# The fifth cover by either hand, once T5: the hides tear along the frost line, four pelts drawn on their own pool (the
-# visitor's idiom), pausing at no pelts. Either hand's fifth starts a hidden clock as a latch, machinery and no moment
-# of its own, so the tear is one moment whichever gets there first.
+# The fifth cover by anyone (day_fifteen.toml's tally), once T5: the hides tear along the frost line, four pelts drawn on
+# their own pool (the visitor's idiom), pausing at no pelts. The fifth starts a hidden clock as a latch, machinery and no
+# moment of its own.
 [[stores]]
 id = "covers_torn"
 label_key = "store_covers_torn"
@@ -222,14 +222,8 @@ label_key = "action_covers_torn"
 makes = [{ store = "covers_torn", items_per_hour = 1 }]
 
 [[triggers]]
-id = "t_torn_n3_clock"
-when = { test = "at_least", subject_kind = "card_count", id = "n3_cover_beds", value = 5 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }]
-outcome = { unlocks = [{ unlock_kind = "action", id = "covers_torn" }] }
-
-[[triggers]]
-id = "t_torn_hands_clock"
-when = { test = "at_least", subject_kind = "card_count", id = "cover_beds", value = 5 }
+id = "t_torn_clock"
+when = { test = "at_least", subject_kind = "store", id = "beds_covered", value = 5 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "rime_ring", value = 1 }]
 outcome = { unlocks = [{ unlock_kind = "action", id = "covers_torn" }] }
 
@@ -350,11 +344,12 @@ only_player = "magic"
 presentation = "action"
 label_key = "c_warm_beds"
 upside_key = "up_cover_beds"
-work_s = 300
+# Slower than a cover (600), so covering is the fast trade and warming the pelt-free slow one; both count toward the tally.
+work_s = 900
 skill = "spellcraft"
 xp_per_hour = 360
 inputs = [{ store = "rime", items = 6 }]
-outcome = { stores = [{ store = "ash", items = 2 }] }
+outcome = { stores = [{ store = "ash", items = 2 }, { store = "beds_covered", items = 1 }] }
 
 # "When frosted, warm the beds": its `when` the chip's, offered beside the covers' card.
 [[order_cards]]

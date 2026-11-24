@@ -5,7 +5,7 @@ Below rates and work in the import order, so both read the same derived facts (D
 from .cards import CardDef, CardState
 from .gone import left_cards
 from .ids import HANDS, CardId, MixId
-from .index import index
+from .index import derived, index
 from .memo import PartsMemo, SaveMemo
 from .mixes import flatten_shares
 from .rules import Rules
@@ -80,6 +80,24 @@ def is_completed(save: Save, rules: Rules, card: CardId) -> bool:
         return True
     cap = effective_cap(save, rules, card)
     return cap is not None and completions(save, rules, card) >= cap
+
+
+def completed_cards(save: Save, rules: Rules) -> frozenset[CardId]:
+    """Every card of the rules is_completed holds for, read in one pass over the capped cards."""
+    cards = index(rules).cards
+    retired = _RETIRED.get((save.unlocked, rules), lambda: _retired(save, rules))
+    states = _CARDS.get(save, None, lambda: {cs.card: cs for cs in save.cards})
+    out = {CardId(c) for c in retired if c in cards}
+    for card, cap, per in derived(rules, "_capped_cards", _capped):
+        cs = states.get(card)
+        if (cap <= 0) if cs is None else cs.work.start_value // per >= cap + cs.raised:
+            out.add(card)
+    return frozenset(out)
+
+
+def _capped(rules: Rules) -> tuple[tuple[CardId, int, int], ...]:
+    """Each capped card with its cap and its work units in one completion."""
+    return tuple((c.id, c.cap, unit(c)) for c in rules.cards if c.cap is not None)
 
 
 def greyed(save: Save, rules: Rules, mix: MixId) -> bool:

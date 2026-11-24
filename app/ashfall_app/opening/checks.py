@@ -3,7 +3,7 @@ every fraction exact. Raises ValueError naming the entry. Imports the schema for
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
-from ..engine import HANDS, TOWN_PREFIX
+from ..engine import HANDS, TOWN_PREFIX, StoreId
 from .aims import check_aims
 from .ask_checks import check_asks
 from .band_checks import check_bands
@@ -106,7 +106,7 @@ def check_content(o: "Opening") -> None:
     check_unlock_order(o)
     check_loss_order(o)
     rules = build_rules(o)
-    check_finite_supply(rules)
+    check_finite_supply(rules, frozenset(StoreId(s.id) for s in o.stores if s.tally))
     if o.prestige is not None:
         check_phase_spans(rules)
     if any(True for _ in fights(o)):

@@ -4,7 +4,7 @@ from the save at one instant, never stored (DESIGN.txt, "SPENT")."""
 from collections.abc import Callable
 
 from .cardsides import card_makes
-from .counts import is_completed
+from .counts import completed_cards, is_completed
 from .fightlines import fight_costs
 from .gone import stopped
 from .ids import CardId, LaneId, Runner, StoreId
@@ -63,7 +63,7 @@ reads."""
 
 def _live(save: Save, rules: Rules) -> dict[StoreId, list[frozenset[StoreId]]]:
     """Each store's makers in play, as the stores each takes."""
-    completed = frozenset(c.id for c in rules.cards if is_completed(save, rules, c.id))
+    completed = completed_cards(save, rules)
     return _LIVE.get((save.unlocked, rules), lambda: {
         x: [takes for runner, u, takes in found if _in_play(save, rules, runner, u)]
         for x, found in _makers(rules).items()}, completed)

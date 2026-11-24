@@ -256,7 +256,7 @@ work_s = 40
 skill = "cooking"
 xp_per_hour = 18
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 2 }] }
+outcome = { stores = [{ store = "stew", items = 2 }, { store = "fungus_stews", items = 1 }] }
 
 # The fungus pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
@@ -269,7 +269,7 @@ upside_key = "up_stew"
 upside_of = "n2_eating"
 work_s = 40
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 2 }] }
+outcome = { stores = [{ store = "stew", items = 2 }, { store = "fungus_stews", items = 1 }] }
 
 # With the hands' fungus pot.
 [[triggers]]
@@ -290,10 +290,18 @@ id = "t_howls"
 when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 6 }
 outcome = { line_keys = ["l_howls"] }
 
-# U2: the first fungus stew, by tap or mix.
+# U2: the first fungus stew, by tap, mix or anyone's pot: a tally every fungus pot adds to, so a town pot spends the
+# fungus toward it rather than past it (opening/finite_checks.py).
+[[stores]]
+id = "fungus_stews"
+label_key = "store_fungus_stews"
+cap_items = 1
+hidden = true
+tally = true
+
 [[triggers]]
 id = "t_caps"
-when = { test = "at_least", subject_kind = "card_count", id = "fungus_stew", value = 1 }
+when = { test = "at_least", subject_kind = "store", id = "fungus_stews", value = 1 }
 outcome = { line_keys = ["l_caps_1", "l_caps_2"] }
 
 # ---------- the roofs: a chip with a rule-run cure ----------
@@ -780,6 +788,7 @@ action_drift_clock = "Clock"
 feature_t_rats_drift = "Rats' season"
 store_bloom = "fungus on the stumps"
 store_fungus = "fungus"
+store_fungus_stews = "fungus stews"
 c_pick_fungus = "Pick fungus"
 c_lane_pick = "Pick fungus"
 c_fungus_stew = "Cook fungus stew"
