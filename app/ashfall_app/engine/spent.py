@@ -53,7 +53,7 @@ def _spent(save: Save, rules: Rules) -> frozenset[StoreId]:
 
 def unmade(save: Save, rules: Rules, store: StoreId) -> bool:
     """No maker in play can make the store (Makers): a pool, which only outcomes fill (DESIGN.txt, "FULL OUTPUT")."""
-    return not _live(save, rules).get(store)
+    return not any(_in_play(save, rules, runner, u) for runner, u, _ in _makers(rules).get(store, ()))
 
 
 _LIVE: PartsMemo[dict[StoreId, list[frozenset[StoreId]]]] = PartsMemo(4)
@@ -98,13 +98,13 @@ def _all_makers(rules: Rules) -> dict[StoreId, list[Maker]]:
 
 def spend(save: Save, rules: Rules, entries: tuple[Entry, ...]) -> tuple[Entry, ...]:
     """`entries` with each PAUSED run on a spent store made SPENT, a full pause never (DESIGN.txt, "FULL OUTPUT", "Run");
-    the store set is read only when a run is paused."""
-    if not any(run.kind is RunKind.PAUSED for _, _, run in entries):
+    the store set is read only when a run is paused dry."""
+    cards = index(rules).cards
+    dry = {card for card, _, run in entries if run.kind is RunKind.PAUSED and run.store not in card_makes(cards[card])}
+    if not dry:
         return entries
     spent = spent_stores(save, rules)
-    cards = index(rules).cards
-    return tuple((card, share, Run(RunKind.SPENT, 0, 1, run.store))
-                 if run.kind is RunKind.PAUSED and run.store in spent and run.store not in card_makes(cards[card])
+    return tuple((card, share, Run(RunKind.SPENT, 0, 1, run.store)) if card in dry and run.store in spent
                  else (card, share, run)
                  for card, share, run in entries)
 
