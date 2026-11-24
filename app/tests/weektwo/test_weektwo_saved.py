@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import rules_digest
+from tools import chapter_saves
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
@@ -34,6 +35,16 @@ def test_the_saved_ends_are_every_end_the_chain_needs_on_todays_rules(todays_rul
     if ends.available():
         assert set(ends.golden().iterdir()) == wanted, ends.REWRITE
         assert ends.manifest_rules() == todays_rules, f"the saved ends were written under other rules: {ends.REWRITE}"
+
+
+def test_every_saved_file_is_written_by_a_part():
+    """chapter_saves --write PART writes each file; a file in no part would exist only in a full local write."""
+    in_parts = [c for chapters in chapter_saves.REBASED.values() for c in chapters]
+    assert sorted(in_parts) == sorted(rebased.OLD), "each rebased save in exactly one part"
+    assert {n for names in SAVED.values() for n in names} <= chapter_saves.ROUTES
+    assert set(ends.READINGS) <= chapter_saves.ALL and set(chapter_saves.REBASED) <= chapter_saves.ALL
+    assert {c for c in rebased.OLD} <= {c for c, names in SAVED.items() if "typical" in names}, \
+        "a rebased part reads typical's saved end at its chapter"
 
 
 def test_each_chapters_readings_run_from_its_first_heavy_step_with_no_gap_and_the_last_open():
