@@ -14,6 +14,7 @@ from .rates import exact_net, running, store_value, tapped_cards
 from .rebuild import rebuild
 from .rules import Rules
 from .segments import reach_time
+from .spent import unmade
 from .state import Pause, Save
 
 
@@ -41,8 +42,9 @@ def resume_time(save: Save, rules: Rules, pause: Pause) -> int | None:
 
 
 def full_cards(save: Save, rules: Rules, landing: frozenset[CardId] = frozenset()) -> list[CardId]:
-    """The full cards, in running order: fillable, holding no Pause, not landing at this instant, their work moving,
-    and every outcome store at its cap with an exact net above 0. A tap is never full: it runs its one completion."""
+    """The full cards, in running order: fillable, drawing a pool (an input store no maker in play can make), holding no
+    Pause, not landing at this instant, their work moving, and every outcome store at its cap with an exact net above 0.
+    A tap is never full: it runs its one completion."""
     cards = _fillable(rules)
     if not cards:
         return []
@@ -54,7 +56,7 @@ def full_cards(save: Save, rules: Rules, landing: frozenset[CardId] = frozenset(
         if c is None or c.id in paused or c.id in landing or work_segment(save, c.id).rate <= 0:
             continue
         if all(store_value(save, s) >= store_cap(save, rules, s) and exact_net(save, rules, now, s) > 0
-               for s in outcome_stores(c)):
+               for s in outcome_stores(c)) and any(unmade(save, rules, a.store) for a in c.inputs):
             found.append(c.id)
     return found
 

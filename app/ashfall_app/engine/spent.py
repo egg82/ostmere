@@ -51,6 +51,11 @@ def _spent(save: Save, rules: Rules) -> frozenset[StoreId]:
     return frozenset(spent)
 
 
+def unmade(save: Save, rules: Rules, store: StoreId) -> bool:
+    """No maker in play can make the store (Makers): a pool, which only outcomes fill (DESIGN.txt, "FULL OUTPUT")."""
+    return not _live(save, rules).get(store)
+
+
 _LIVE: PartsMemo[dict[StoreId, list[frozenset[StoreId]]]] = PartsMemo(4)
 """Kept while the unlock set and the rules are the same objects and the same cards are completed: all that _in_play
 reads."""

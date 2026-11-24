@@ -142,3 +142,12 @@ def test_a_tap_of_a_full_paused_mix_card_runs_and_the_pause_stands():
     a = advance(decide(s, rules, 100, TapCard(PULL)), rules, 500)
     assert _used(a) == 5 * Q
     assert [p.runner for p in a.pauses] == [PULL]
+
+
+def test_a_card_drawing_a_store_something_in_play_makes_keeps_the_cap_loss():
+    """Fillable card: only a card drawing a pool pauses full. A card in play that can make p (idle, never run) makes p no
+    pool, so pull runs on at the full store, as gathering does."""
+    refill = CardDef(OTHER, 10, outcome=Outcome(stores=(Amount(P, Q),)))
+    rules = _rules(_pull(Y), refill)
+    a = advance(_mixed(rules, (PULL, BP)), rules, 1000)
+    assert _used(a) == 100 * Q and a.pauses == ()

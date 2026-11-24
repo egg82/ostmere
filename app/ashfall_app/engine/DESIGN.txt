@@ -3481,6 +3481,12 @@ CHOICES (full output)
   full: each completion counts toward its cap and lands its discrete effects, so it is never lost entirely. A card with
   no inputs gathers and keeps CHOICES "Cap": the overflow is lost and the waste is a visible fact for an order. Standing
   actions are no fillable runners (they take costs, not inputs).
+- Pools only: the rule reads a fillable card only while one of its input stores is a pool, a store no maker in play
+  can make (SPENT, "Makers", read now: spent.unmade). A card turning a store something in play refills keeps CHOICES
+  "Cap": what it wastes comes back. Why: the loss that cannot be undone is of a pool; and every full pause shows a
+  falling line while its store drains to the resume level, which on a store a maker keeps full would be a red line
+  for nothing. Whether a store is a pool can change as makers come into play; a full pause made while it was one lifts
+  by its resume rule as any.
 - Outcome stores: the card's Outcome.stores, the per-completion amounts. Its flow makes (the camp bar every hands card
   fills by its work) and its fight's tallies and wounds are no outcome here: by-products of the work, as XP is. A card
   whose only full stores are those runs on.
@@ -3523,8 +3529,8 @@ CHOICES (full output)
 INVARIANTS (full output; numbered on from 178)
 179. Nothing spent on nothing: in a resolved save, no running fillable card holding no Pause has every outcome store at
      its cap with an exact net above 0.
-180. Gathering kept: a card with no inputs, a capped card and a standing action are never paused full; rules with no
-     fillable card advance exactly as before this part.
+180. Gathering kept: a card with no inputs, a capped card, a standing action and a card drawing no pool are never
+     paused full; rules with no fillable card drawing a pool advance exactly as before this part.
 181. A by-product never stalls: a fillable card with an outcome store below its cap is never paused full.
 182. Room resumes: a full pause lifts at the first instant one of its card's outcome stores is at or below half its cap.
 183. Inputs kept: while a card holds a full pause its input stores take nothing from it.
@@ -3534,6 +3540,8 @@ REJECTED, AND WHY (full output)
   lock), its other yields lost with it.
 - Clamping the inputs to what the outputs can hold (paying part of a completion): a completion's inputs are paid in
   proportion to its work (Rate form); a second rate on the inputs would split one bar into two.
+- Every fillable card, pool or not: a renewable store's maker would show a falling line through each pause's band
+  and the economy everywhere would shift for losses that come back.
 - Every runner that takes anything, standing actions and flow costs included: chores and the body's needs would stop
   at a full store and stall XP, which CHOICES "Cap" keeps for gathering; the pools issue #438 names are all drawn by
   card inputs.
