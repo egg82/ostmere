@@ -97,10 +97,10 @@ def test_a_full_card_gives_its_share_to_the_rest_of_its_mix():
     assert _store(a, Z) == (4 + 92) * Q
 
 
-def test_the_pause_lifts_when_the_store_falls_to_half_its_cap():
-    """Invariant 182: a standing chore eats 36 y an hour. The card fills y, pauses, and resumes only once y is down to 2
-    items (half of 4), never sooner; over the hour the pool pays for what y holds plus what was eaten, and at most under a
-    second's make more at each pause (KNOWN GAPS)."""
+def test_the_pause_lifts_when_the_store_has_room_for_a_completion():
+    """Invariant 182: a standing chore eats 36 y an hour. The card fills y, pauses, and resumes only once y is down to 3
+    items (room for one completion's 1), never sooner; over the hour the pool pays for what y holds plus what was eaten,
+    and at most under a second's make more at each pause (KNOWN GAPS)."""
     eat = StandingDef(ActionId("eat"), costs=(Flow(Y, per_hour(36)),))
     rules = _rules(_pull(Y), standing=(eat,))
     s = _mixed(rules, (PULL, BP))
@@ -118,8 +118,8 @@ def test_the_pause_lifts_when_the_store_falls_to_half_its_cap():
         else:
             assert y < 4 * Q   # never running at a full store
         was_paused = bool(s.pauses)
-    assert resumed_at and max(resumed_at) <= 2 * Q
-    assert min(paused_lows) > 2 * Q
+    assert resumed_at and max(resumed_at) <= 3 * Q
+    assert min(paused_lows) > 3 * Q
     lost = _used(s) - _store(s, Y) - 36 * Q   # KNOWN GAPS: under a second of make lost at each pause
     assert 0 <= lost < pauses * Q // 10
 
@@ -155,7 +155,7 @@ def test_a_card_drawing_a_store_something_in_play_makes_keeps_the_cap_loss():
 
 
 def test_a_store_drained_below_a_full_pause_reads_covered():
-    """Read model: while the chore eats y down toward half its cap, the card paused full will refill it, so y's falling
+    """Read model: while the chore eats y down toward its resume level, the card paused full will refill it, so y's falling
     line is covered (white), not one that needs the player."""
     eat = StandingDef(ActionId("eat"), costs=(Flow(Y, per_hour(36)),))
     rules = _rules(_pull(Y), standing=(eat,))

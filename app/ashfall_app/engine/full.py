@@ -1,5 +1,6 @@
-"""The full rule (DESIGN.txt, "FULL OUTPUT"): a fillable card whose every outcome store is full pauses, keeping its
-inputs, and resumes once one of those stores falls to half its cap. A full pause is a Pause on a store its card makes.
+"""The full rule (DESIGN.txt, "FULL OUTPUT"): a fillable card drawing a pool whose every outcome store is full pauses,
+keeping its inputs, and resumes once one of those stores has room for a whole completion of it. A full pause is a Pause
+on a store its card makes.
 """
 from dataclasses import replace
 
@@ -10,6 +11,8 @@ from .gates import store_cap
 from .ids import CardId, StoreId
 from .index import derived, index
 from .motion import store_segment
+from .lumps import lump_amount
+from .modifiers import FlowKind, RateRef
 from .rates import exact_net, running, store_value, tapped_cards
 from .rebuild import rebuild
 from .rules import Rules
@@ -24,20 +27,22 @@ def is_full_pause(rules: Rules, pause: Pause) -> bool:
     return card is not None and pause.store in card_makes(card)
 
 
-def resume_level(save: Save, rules: Rules, store: StoreId) -> int:
-    """Half the store's cap now, rounded down: a full pause lifts once an outcome store is at or below it."""
-    return store_cap(save, rules, store) // 2
+def resume_level(save: Save, rules: Rules, card: CardDef, store: StoreId) -> int:
+    """The store's cap now less one completion of the card's outcome on it: a full pause lifts once that much is room."""
+    return max(0, store_cap(save, rules, store) - lump_amount(save, rules, card, RateRef(card.id, FlowKind.MAKE, store)))
 
 
 def has_room(save: Save, rules: Rules, pause: Pause) -> bool:
     """Some outcome store of the full pause's card is at or below its resume level now."""
-    return any(store_value(save, s) <= resume_level(save, rules, s) for s in _outcomes(rules, pause))
+    card = _card(rules, pause)
+    return any(store_value(save, s) <= resume_level(save, rules, card, s) for s in outcome_stores(card))
 
 
 def resume_time(save: Save, rules: Rules, pause: Pause) -> int | None:
     """The first time an outcome store of the full pause's card falls to its resume level, on the current segments."""
-    times = [save.time if store_value(save, s) <= (lvl := resume_level(save, rules, s))
-             else reach_time(store_segment(save, rules, s), lvl) for s in _outcomes(rules, pause)]
+    card = _card(rules, pause)
+    times = [save.time if store_value(save, s) <= (lvl := resume_level(save, rules, card, s))
+             else reach_time(store_segment(save, rules, s), lvl) for s in outcome_stores(card)]
     return min((t for t in times if t is not None), default=None)
 
 
@@ -66,14 +71,14 @@ def pause_full(save: Save, rules: Rules, landing: frozenset[CardId]) -> Save:
     while found := full_cards(save, rules, landing):
         card = index(rules).cards[found[-1]]
         first = outcome_stores(card)[0]
-        pauses = save.pauses + (Pause(card.id, first, resume_level(save, rules, first)),)
+        pauses = save.pauses + (Pause(card.id, first, resume_level(save, rules, card, first)),)
         pos = index(rules).runner_pos
         save = rebuild(replace(save, pauses=tuple(sorted(pauses, key=lambda p: pos[p.runner]))), rules)
     return save
 
 
-def _outcomes(rules: Rules, pause: Pause) -> tuple[StoreId, ...]:
-    return outcome_stores(index(rules).cards[CardId(pause.runner)])
+def _card(rules: Rules, pause: Pause) -> CardDef:
+    return index(rules).cards[CardId(pause.runner)]
 
 
 def _fillable(rules: Rules) -> dict[CardId, CardDef]:
