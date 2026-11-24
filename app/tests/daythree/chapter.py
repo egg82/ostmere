@@ -6,7 +6,7 @@ neither holds a trip nor queues comforts does both by hand (moves.py)."""
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 
-from ashfall_app.engine import AnswerId, CardId, OfferId, Order, Rules, Save, StoreId, Unlock, UnlockKind, View
+from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Order, Rules, Save, StoreId, Unlock, UnlockKind, View
 from ashfall_app.engine.work import completions
 from tests.dayone.policy import Move
 from tests.dayone.sinks import Chapter
@@ -63,6 +63,15 @@ class Cure:
 
 
 @dataclass(frozen=True)
+class ChipRule:
+    """A rule the player writes on a chip no order card answers (a season's chore): the chip's own condition, tapping
+    its cure on the lane the route chose (moves.chip_rule)."""
+
+    chip: ChipId
+    cure: CardId
+
+
+@dataclass(frozen=True)
 class Later:
     start: str
     """The beat the chapter's moves start at."""
@@ -88,3 +97,5 @@ class Later:
     queued: tuple[CardId, ...] = ()
     """One-off steps queued When ready once shown unready with a countdown (a presence step in a story night), rather
     than tapped when ready, so one that turns ready while the player is away still lands then."""
+    chip_rules: tuple[ChipRule, ...] = ()
+    """Rules a route that takes rules writes on chips with no order card, from the visit each chip is first seen."""
