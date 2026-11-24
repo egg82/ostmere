@@ -8,7 +8,7 @@ from .counts import is_completed
 from .fightlines import fight_costs
 from .gone import stopped
 from .ids import CardId, LaneId, Runner, StoreId
-from .index import derived
+from .index import derived, index
 from .memo import PartsMemo, SaveMemo
 from .mixes import SpentShare
 from .modifiers import Run, RunKind
@@ -92,12 +92,15 @@ def _all_makers(rules: Rules) -> dict[StoreId, list[Maker]]:
 
 
 def spend(save: Save, rules: Rules, entries: tuple[Entry, ...]) -> tuple[Entry, ...]:
-    """`entries` with each PAUSED run on a spent store made SPENT; the store set is read only when a run is paused."""
+    """`entries` with each PAUSED run on a spent store made SPENT, a full pause never (DESIGN.txt, "FULL OUTPUT", "Run");
+    the store set is read only when a run is paused."""
     if not any(run.kind is RunKind.PAUSED for _, _, run in entries):
         return entries
     spent = spent_stores(save, rules)
+    cards = index(rules).cards
     return tuple((card, share, Run(RunKind.SPENT, 0, 1, run.store))
-                 if run.kind is RunKind.PAUSED and run.store in spent else (card, share, run)
+                 if run.kind is RunKind.PAUSED and run.store in spent and run.store not in card_makes(cards[card])
+                 else (card, share, run)
                  for card, share, run in entries)
 
 

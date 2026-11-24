@@ -7,6 +7,7 @@ from dataclasses import replace
 
 from . import counts, discrete, gates
 from .cards import Blocker, CapRaise, CardDef, CardState, Outcome
+from .cardsides import card_makes
 from .conditions import is_true, rise_time
 from .errors import InvalidVerbError
 from .gates import shown_chips, store_cap, tap_speed
@@ -20,7 +21,7 @@ from .plan import candidates
 from .lanes import TapCard
 from .inputs import input_rest
 from .modifiers import Modifier, RunKind
-from .orders import AtLeast, Condition, DiscreteSubject, StoreValue
+from .orders import AtLeast, AtMost, Condition, DiscreteSubject, StoreValue
 from .rates import FULL, lane_state, running, store_value, work_line
 from .rebuild import rebuild
 from .rules import Rules
@@ -47,7 +48,9 @@ def unmet_conditions(save: Save, rules: Rules, card: CardId) -> tuple[Condition,
                               for store, q in input_rest(save, rules, c) if store_value(save, store) < q]
     found += [cond for cond in c.requires if not is_true(save, rules, cond)]
     pause = next((p for p in save.pauses if p.runner == card), None)
-    if pause is not None:
+    if pause is not None and pause.store in card_makes(c):   # a full pause (DESIGN.txt, "FULL OUTPUT", "Taps")
+        found.append(AtMost(StoreValue(pause.store), pause.resume_at, pause.resume_at))
+    elif pause is not None:
         found.append(AtLeast(StoreValue(pause.store), pause.resume_at, pause.resume_at))
     return tuple(found)
 

@@ -4,6 +4,8 @@ before the instant is resolved. A resolved save has none pending.
 from .conditions import can_fall, change_time, changes_now, is_true, rise_time
 from .counts import unit, work_segment
 from .events import Event, EventKind
+from .full import full_cards, has_room, is_full_pause, resume_time
+from .cardsides import outcome_stores
 from .ids import CardId
 from .index import index
 from .motion import store_segment
@@ -21,7 +23,7 @@ from .rates import tapped_cards
 from .retap import watch_events
 from .rules import Rules
 from .segments import reach_time
-from .state import Save
+from .state import Pause, Save
 from .triggers import trigger_events, triggers_now
 from .work import blocker, tappable
 
@@ -39,7 +41,8 @@ def _events(save: Save, rules: Rules) -> list[Event]:
     """STORE_LIMIT, RESUME (a paused runner's store refills), COMPLETION (each running capped card's next completion),
     TAP_DONE (a tapped card's next completion), LEVEL_UP, TOP_OUT and CARRY_END (phaseevents.py), REQUIRES (each running card's requires
     changing truth), CHIP, TRIGGER, LATCH (a CardCount solved off the work segment), QUEUE_POP, READY."""
-    found = _store_events(save, rules) + _resume_events(save, rules) + _completion_events(save, rules)
+    found = _store_events(save, rules) + _full_events(save, rules) + _resume_events(save, rules)
+    found += _completion_events(save, rules)
     found += _tap_events(save, rules) + _level_events(save, rules) + phase_events(save, rules)
     found += _requires_events(save, rules)
     found += _chip_events(save, rules) + trigger_events(save, rules) + _ready_events(save, rules)
@@ -83,7 +86,8 @@ def pending(save: Save, rules: Rules) -> list[Event]:
     requires never turns now (its release is its value), so REQUIRES is never pending."""
     if _EVENTS.holds(save, rules):
         return [e for e in events(save, rules) if e.time == save.time]
-    found = _store_events_now(save) + _resume_now(save, rules) + _completion_events(save, rules)
+    found = _store_events_now(save) + _full_events(save, rules) + _resume_now(save, rules)
+    found += _completion_events(save, rules)
     found += _tap_events(save, rules) + _level_events(save, rules) + phase_events(save, rules)
     found += [Event(save.time, EventKind.CHIP, i, chip.id)
               for i, (chip, latch) in enumerate(zip(rules.chips, save.chips)) if changes_now(save, rules, chip.when, latch)]
@@ -101,7 +105,18 @@ def _resume_now(save: Save, rules: Rules) -> list[Event]:
     pos = index(rules).runner_pos
     values = {st.store: st.segment.start_value for st in save.stores}
     return [Event(save.time, EventKind.RESUME, pos[p.runner], p.runner) for p in save.pauses
-            if values[p.store] >= p.resume_at]
+            if (has_room(save, rules, p) if is_full_pause(rules, p) else values[p.store] >= p.resume_at)]
+
+
+def _full_events(save: Save, rules: Rules) -> list[Event]:
+    """A STORE_LIMIT now while a card is full, subject the last full card's first outcome store (DESIGN.txt, "FULL
+    OUTPUT", "When it runs"): a store reaching its cap is one already, a store standing at its cap is not."""
+    found = full_cards(save, rules)
+    if not found:
+        return []
+    store = outcome_stores(index(rules).cards[found[-1]])[0]
+    i = next(i for i, st in enumerate(save.stores) if st.store == store)
+    return [Event(save.time, EventKind.STORE_LIMIT, i, store)]
 
 
 
@@ -143,11 +158,15 @@ def _resume_events(save: Save, rules: Rules) -> list[Event]:
     found: list[Event] = []
     pos = index(rules).runner_pos
     for p in save.pauses:
-        seg = store_segment(save, rules, p.store)
-        t = save.time if seg.start_value >= p.resume_at else reach_time(seg, p.resume_at)
+        t = resume_time(save, rules, p) if is_full_pause(rules, p) else _dry_resume_time(save, rules, p)
         if t is not None:
             found.append(Event(t, EventKind.RESUME, pos[p.runner], p.runner))
     return found
+
+
+def _dry_resume_time(save: Save, rules: Rules, p: Pause) -> int | None:
+    seg = store_segment(save, rules, p.store)
+    return save.time if seg.start_value >= p.resume_at else reach_time(seg, p.resume_at)
 
 
 def _completion_events(save: Save, rules: Rules) -> list[Event]:
