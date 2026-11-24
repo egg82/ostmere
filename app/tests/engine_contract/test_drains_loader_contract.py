@@ -183,7 +183,7 @@ def test_an_every_that_does_not_divide_value_or_release_exactly_is_refused(
 PLAIN = {
     "after_time": '{ test = "after_time", value = 10 }',
     "a skill level": '{ test = "at_least", subject_kind = "skill_level", id = "t_k", value = 2 }',
-    "a card count": '{ test = "at_least", subject_kind = "card_count", id = "t_cure", value = 2 }',
+    "a card count": '{ test = "at_least", subject_kind = "card_count", id = "t_stoke", value = 2 }',
     "an unlock": '{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "t_cure", value = 1 }',
     "a running card": '{ test = "at_least", subject_kind = "running", id = "t_cure", value = 1 }',
     "a lane's rules": '{ test = "at_least", subject_kind = "lane_rules", id = "t_helper", value = 1 }',
