@@ -41,6 +41,8 @@ def chip_rule(v: View, save: Save, rules: Rules, later: Later) -> Move | None:
     """A chip rule set, first in the orders, at the first decision once its chip has shown (View.chips_seen, so a chip
     that showed while the player was away is answered on their return) and its cure is in play (the editor offers
     only those), whether or not the chip shows now."""
+    if not later.chip_rules:
+        return None   # keeps the week-two plays' per-move cost where it was (they run near their CI timeout)
     seen, in_play = set(v.chips_seen), {c.card for c in v.cards}
     for cr in later.chip_rules:
         order = Order(next(c.when for c in rules.chips if c.id == cr.chip), TapCard(cr.cure))
