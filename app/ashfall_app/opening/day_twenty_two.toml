@@ -89,9 +89,9 @@ levels = [
   { level = 10, pays_key = "pays_way_faster" },
   { level = 11, pays_key = "pays_find_way_11" },
   { level = 12, pays_key = "pays_way_faster" },
-  { level = 13, pays_key = "pays_find_way_13" },
+  { level = 13, pays_key = "pays_way_faster" },
   { level = 14, pays_key = "pays_way_faster" },
-  { level = 15, pays_key = "pays_way_faster" },
+  { level = 15, pays_key = "pays_find_way_15" },
   { level = 16, pays_key = "pays_way_faster" },
   { level = 17, pays_key = "pays_way_faster" },
   { level = 18, pays_key = "pays_way_faster" },
@@ -161,21 +161,21 @@ id = "t_way_12"
 when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 12 }
 outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 10200, source = "wayfinding_12" }] }
 
-# Seen far off and drawn on the map unnamed (week four's first owner question, defaulted).
 [[triggers]]
 id = "t_way_13"
 when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 13 }
-outcome = { line_keys = ["l_find_way_13"], unlocks = [{ unlock_kind = "feature", id = "square_hill_seen" }] }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 10200, source = "wayfinding_13" }] }
 
 [[triggers]]
 id = "t_way_14"
 when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 14 }
 outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 10200, source = "wayfinding_14" }] }
 
+# Seen far off and drawn on the map unnamed (week four's first owner question, defaulted).
 [[triggers]]
 id = "t_way_15"
 when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 15 }
-outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 10200, source = "wayfinding_15" }] }
+outcome = { line_keys = ["l_find_way_15"], unlocks = [{ unlock_kind = "feature", id = "square_hill_seen" }] }
 
 [[triggers]]
 id = "t_way_16"
@@ -639,7 +639,7 @@ l_b19_1 = "story"
 l_b19_2 = "story"
 l_b19_3 = "story"
 l_find_way_11 = "find"
-l_find_way_13 = "find"
+l_find_way_15 = "find"
 
 [text]
 store_ashwood_trips = "walks out"
@@ -647,7 +647,7 @@ store_charwood = "charwood"
 c_walk_ashwood = "Walk the Ashwood"
 skill_wayfinding = "Wayfinding"
 pays_find_way_11 = "a find"
-pays_find_way_13 = "a find"
+pays_find_way_15 = "a find"
 pays_way_8 = "{pct} speed walking the Ashwood"
 pays_way_faster = "{pct} speed walking the Ashwood"
 store_dawn_22 = "dawn"
@@ -696,7 +696,7 @@ l_b19_1 = "at dusk someone walks in behind you, sleeves pulled down over their h
 l_b19_2 = "they take {n3}'s bowl and a blanket, and sleep by the fire outside the hall."
 l_b19_3 = "asked their name, they say they don't have one to give."
 l_find_way_11 = "half-buried by the old road, a carved stone, its face worn blank."
-l_find_way_13 = "from a dead tree on a rise: far off, a hill with something square on top."
+l_find_way_15 = "from a dead tree on a rise: far off, a hill with something square on top."
 n_day_b18 = "over the ridge, a dead wood. an elk walking that shouldn't be. the one they brought in went on the fire"
 j_b18_catchup = "we've been walking out past the ridge into the dead wood"
 j_b18_late = "drag-marks to every warm patch"
