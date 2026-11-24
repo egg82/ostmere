@@ -32,8 +32,9 @@ def test_the_spec_names_the_days_and_requires_them_on_step_and_opened():
     for model in ("Step", "Opened"):
         assert "journal_days" in schemas[model]["required"]
         assert schemas[model]["properties"]["journal_days"]["items"] == {"$ref": "#/components/schemas/JournalDay"}
-    assert schemas["DayNote"]["required"] == ["subject", "slot", "key", "hand", "sketch"]
-    assert schemas["Slot"]["enum"] == ["first", "repeat", "catchup", "mention", "late", "misremember", "correction"]
+    assert schemas["DayNote"]["required"] == ["subject", "slot", "key", "hand", "sketch", "count"]
+    assert schemas["Slot"]["enum"] == ["first", "repeat", "catchup", "mention", "late", "misremember", "correction",
+                                       "loss", "fold"]
     day_read = schemas["SavePresentation"]["properties"]["newest_day_read"]
     assert {"type": "integer", "minimum": 0, "maximum": 2**53 // DAY_S} in day_read["anyOf"]
 
@@ -53,7 +54,8 @@ def test_a_step_carries_the_written_days_it_composed_and_an_open_every_one_store
     assert [d["day"] for d in days] == [1], "day 1 holds the beat; days 0 and 2 are blank and not served"
     [note] = days[0]["day_notes"]
     assert note["key"] in told.first
-    assert note == {"subject": subject, "slot": "first", "key": note["key"], "hand": look.hand, "sketch": look.sketch}
+    assert note == {"subject": subject, "slot": "first", "key": note["key"], "hand": look.hand, "sketch": look.sketch,
+                    "count": None}
     game.clock.tick(DAY_S)
     opened = game.client.post(f"/api/saves/{save_id}/open")
     assert opened.status_code == 200, opened.text
@@ -70,9 +72,9 @@ def test_each_note_is_in_its_slots_hand_and_sketch_and_one_whose_slot_names_none
     notes = (Note("s_a", "first", "k.1"), Note("s_crowd", "mention", "k.2"), Note("s_a", "late", "k.3"))
     served = game.journal_days((ComposedDay(0, (), "busy"), ComposedDay(1, notes, None, ("soot", "smudge")), ComposedDay(2, (), None)))
     assert served == [jm.JournalDay(day=1, day_notes=[
-        jm.DayNote(subject="s_a", slot=jm.Slot.FIRST, key="k.1", hand=jm.Hand.PENCIL, sketch="j_sketch"),
-        jm.DayNote(subject="s_crowd", slot=jm.Slot.MENTION, key="k.2", hand=jm.Hand.INK, sketch=None),
-        jm.DayNote(subject="s_a", slot=jm.Slot.LATE, key="k.3", hand=jm.Hand.INK, sketch=None)], marks=[jm.Mark.SOOT, jm.Mark.SMUDGE])]
+        jm.DayNote(subject="s_a", slot=jm.Slot.FIRST, key="k.1", hand=jm.Hand.PENCIL, sketch="j_sketch", count=None),
+        jm.DayNote(subject="s_crowd", slot=jm.Slot.MENTION, key="k.2", hand=jm.Hand.INK, sketch=None, count=None),
+        jm.DayNote(subject="s_a", slot=jm.Slot.LATE, key="k.3", hand=jm.Hand.INK, sketch=None, count=None)], marks=[jm.Mark.SOOT, jm.Mark.SMUDGE])]
 
 
 def test_a_step_that_writes_no_note_carries_no_day(game: GameClient):

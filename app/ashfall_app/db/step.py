@@ -31,7 +31,7 @@ class JournalDay:
     the gap if it broke off. `through`: the save time it is composed through."""
 
     day: int
-    notes: list[dict[str, str | int]]
+    notes: Sequence[Mapping[str, str | int]]
     gap: str | None
     marks: list[str]
     through: int
