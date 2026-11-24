@@ -26,12 +26,13 @@ TRIP, TWIN, COUNT, ORE, RELIC = CardId("t_trip"), CardId("t_scout_trip"), StoreI
 H = 3600
 
 
-def loaded(shipped: Opening, old: str = "", new: str = "", count: int = 1) -> tuple[Opening, Rules]:
+def loaded(shipped: Opening, old: str = "", new: str = "", count: int = 1,
+           more: tuple[tuple[str, str, int], ...] = ()) -> tuple[Opening, Rules]:
     top = top_level(to_rules(shipped))
     text = FIXTURE.read_text()
-    if old:
-        assert text.count(old) == count, f"anchor is not unique: {old!r}"
-        text = text.replace(old, new)
+    for a, b, n in ((old, new, count), *more) if old else more:
+        assert text.count(a) == n, f"anchor is not unique: {a!r}"
+        text = text.replace(a, b)
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / FIXTURE.name
         path.write_text(text.replace("\n[text]\n", "\n" + rows(top) + "\n[text]\n", 1))
@@ -162,6 +163,7 @@ def test_a_trip_whose_materials_sit_at_their_caps_keeps_running_and_counting(shi
 def test_without_a_count_store_the_same_trip_pauses_full(shipped_opening: Opening):
     """The control: the trip's outcome holds the ore alone, which is at its cap, so every output is full and it pauses."""
     count = ', { store = "t_trips", items = 1 }'
-    _, r = loaded(shipped_opening, old=count, new="", count=2)
+    finds = ('id = "t_trips", value =', 'id = "t_ore", value =', 2)
+    _, r = loaded(shipped_opening, old=count, new="", count=2, more=(finds,))
     s = advance(hands_trip(r, BP), r, 200 + 5 * 600)
     assert next(c for c in view(s, r).cards if c.card == TRIP).run == RunKind.PAUSED

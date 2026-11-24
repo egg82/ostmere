@@ -6,7 +6,7 @@ import pytest
 
 from ashfall_app.engine import (
     QUANTITY_SCALE as Q, ActionId, AfterTime, AnswerDef, AnswerId, AtLeast, Amount, CardCount, CardDef, CardId, Flow,
-    OfferDef, OfferId, Outcome, PacingCurve, Rules, SkillDef, SkillId, StandingDef, StoreDef, StoreId, TriggerDef,
+    OfferDef, OfferId, Outcome, PacingCurve, Rules, SkillDef, SkillId, StandingDef, StoreDef, StoreId, StoreValue, TriggerDef,
     TriggerId, per_hour,
 )
 from ashfall_app.opening.convert import build_rules
@@ -22,15 +22,46 @@ def shipped_rules(shipped_opening: Opening) -> Rules:
     return build_rules(shipped_opening)
 
 
-def test_the_shipped_content_passes(shipped_rules: Rules) -> None:
-    check_finite_supply(shipped_rules)
+@pytest.fixture(scope="module")
+def tallies(shipped_opening: Opening) -> frozenset[StoreId]:
+    return frozenset(StoreId(s.id) for s in shipped_opening.stores if s.tally)
 
 
-def test_the_beams_store_back_at_eight_fails(shipped_rules: Rules) -> None:
+def test_the_shipped_content_passes(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
+    check_finite_supply(shipped_rules, tallies)
+
+
+def test_the_beams_store_back_at_eight_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
     """The planted case of the issue: beams held 8 while the hall and the road take 12 of the ruin's 12."""
     stores = tuple(replace(d, cap=8 * Q) if d.id == StoreId("beams") else d for d in shipped_rules.stores)
     with pytest.raises(ValueError, match="store ruin_beams: .*into beams, whose cap is below"):
-        check_finite_supply(replace(shipped_rules, stores=stores))
+        check_finite_supply(replace(shipped_rules, stores=stores), tallies)
+
+
+def _reads_card(rules: Rules, trigger: str, card: str, n: int) -> Rules:
+    """The shipped rules with `trigger` reading `card`'s count again, as before its tally."""
+    when = AtLeast(CardCount(CardId(card)), n, n)
+    return replace(rules, triggers=tuple(replace(t, when=when) if str(t.id) == trigger else t for t in rules.triggers))
+
+
+def test_the_first_fungus_stew_read_off_the_hands_card_alone_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
+    with pytest.raises(ValueError, match="store fungus: .*n\\d+_fungus_stew can spend it without limit"):
+        check_finite_supply(_reads_card(shipped_rules, "t_caps", "fungus_stew", 1), tallies)
+
+
+def test_the_fifth_cover_read_off_the_hands_card_alone_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
+    with pytest.raises(ValueError, match="store rime: .*n\\d+_cover_beds can spend it without limit"):
+        check_finite_supply(_reads_card(shipped_rules, "t_torn_clock", "cover_beds", 5), tallies)
+
+
+def test_a_warming_that_does_not_count_toward_the_cover_tally_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
+    """warm_beds spends the season's rime too, so it must add to the tally the fifth-cover trigger reads."""
+    def uncounted(c: CardDef) -> CardDef:
+        outcome = replace(c.outcome, stores=tuple(a for a in c.outcome.stores if a.store != StoreId("beds_covered")))
+        return replace(c, outcome=outcome)
+    cards = tuple(uncounted(c) if str(c.id) == "warm_beds" else c for c in shipped_rules.cards)
+    with pytest.raises(ValueError, match="store rime: .*warm_beds can spend it without limit"):
+        check_finite_supply(replace(shipped_rules, cards=cards), tallies)
 
 
 def _rules(*cards: CardDef, pool: int = 12, made_cap: int = 12, needed: int = 8, extra: tuple[TriggerDef, ...] = (),
@@ -114,3 +145,49 @@ def test_a_consumer_stopping_on_another_pool_spends_only_what_that_pool_lets_it(
     check_finite_supply(_rules(_pull(), pool=10, standing=(eat,), extra=fill))
     with pytest.raises(ValueError, match="store (made|pool): finite"):
         check_finite_supply(_rules(_pull(), pool=9, standing=(eat,), extra=fill))
+
+
+# A trigger reading an uncapped card's count (issue #438's follow-up): the count is a need like a project's, so a pool
+# the card's town twins also draw fails while the trigger counts the card alone; a tally every copy adds to passes.
+FUNGUS, TALLY = StoreId("fungus"), StoreId("tally")
+STEW, TWIN = CardId("stew"), CardId("n1_stew")
+
+
+def _copies(pool: int, take: int, read: int, tally: bool, *more: TriggerDef) -> Rules:
+    """A pool of `pool` items no maker refills, drawn `take` a completion by an uncapped card and its twin; a trigger
+    reads `read` of the card's count, or of a tally both add to."""
+    out = Outcome(stores=(Amount(TALLY, Q),)) if tally else Outcome()
+    cards = tuple(CardDef(c, 60, inputs=(Amount(FUNGUS, take * Q),), outcome=out) for c in (STEW, TWIN))
+    when = AtLeast(StoreValue(TALLY), read * Q, read * Q) if tally else AtLeast(CardCount(STEW), read, read)
+    stores = (StoreDef(FUNGUS, 1000 * Q, pool * Q), StoreDef(TALLY, read * Q))
+    return Rules(stores, (SkillDef(SkillId("k")),), (), PacingCurve((10**15,)), cards=cards,
+                 triggers=(TriggerDef(TriggerId("first"), when, Outcome()), *more))
+
+
+def test_a_first_completion_read_while_a_twin_draws_the_same_pool_fails() -> None:
+    """The first stew: one completion is all progress reads, but the twin can spend the whole pool before it."""
+    with pytest.raises(ValueError, match="store fungus: finite and needed by progress, but n1_stew can spend it"):
+        check_finite_supply(_copies(600, 6, 1, tally=False))
+
+
+def test_a_fifth_completion_read_on_either_of_two_cards_fails() -> None:
+    """The fifth cover by either hand: each trigger counts one card, and the other's covers spend the pool past it."""
+    other = TriggerDef(TriggerId("either"), AtLeast(CardCount(TWIN), 5, 5), Outcome())
+    with pytest.raises(ValueError, match="store fungus: finite and needed by progress, but .* can spend it without limit"):
+        check_finite_supply(_copies(170, 12, 5, False, other))
+
+
+def test_a_tally_every_copy_adds_to_passes() -> None:
+    check_finite_supply(_copies(600, 6, 1, tally=True), frozenset({TALLY}))
+    check_finite_supply(_copies(170, 12, 5, tally=True), frozenset({TALLY}))
+
+
+def test_a_tally_the_pool_cannot_fill_fails() -> None:
+    with pytest.raises(ValueError, match="store (fungus|tally): finite"):
+        check_finite_supply(_copies(48, 12, 5, tally=True), frozenset({TALLY}))
+
+
+def test_an_uncapped_cards_own_later_completions_spend_after_its_count() -> None:
+    """With no twin and nothing else needing the pool, the card's completions past its count harm nothing."""
+    rules = _copies(600, 6, 1, tally=False)
+    check_finite_supply(replace(rules, cards=rules.cards[:1]))

@@ -115,6 +115,9 @@
   fungus
     d6-9   made     179  at cap  17%  n3_pick 97, g_hearth_pick 3
     d10+   made     655  at cap   3%  n3_pick 100
+  fungus_stews
+    d6-9   made      29  at cap  42%  fungus_stew 100
+    d10+   made     108  at cap 100%  fungus_stew 100
   hearth_dry
     d1-2   made       1  at cap  17%  cure_hearth 100
     d3-5   made       3  at cap  61%  cure_hearth 100

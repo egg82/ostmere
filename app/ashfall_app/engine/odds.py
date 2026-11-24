@@ -7,7 +7,7 @@ from .index import derived
 from .modifiers import FlowKind, Modifier, ModifierKind, RateRef, SideStrength, ThreatStrength
 from .rules import Rules
 from .state import Save
-from .strengthmath import explain_over
+from .strengthmath import Strength, explain_over, values_over
 from .units import BP, ceil_div
 
 
@@ -21,8 +21,11 @@ def is_odds(m: Modifier) -> bool:
 
 def loss_bp(fight: FightDef, stack: tuple[Modifier, ...], rules: Rules) -> int:
     """The share of fights lost, rounded up so the odds never favour the player: ceil(BP * T / (T + P))."""
-    p = explain_over(stack, rules, SideStrength(fight.side)).value
-    t = explain_over(stack, rules, ThreatStrength(fight.threat)).value
+    return _loss(explain_over(stack, rules, SideStrength(fight.side)).value,
+                 explain_over(stack, rules, ThreatStrength(fight.threat)).value)
+
+
+def _loss(p: int, t: int) -> int:
     return ceil_div(BP * t, t + p)
 
 
@@ -44,6 +47,12 @@ def _fighters(rules: Rules) -> tuple[tuple[Runner, FightDef, tuple[RateRef, ...]
 def _losses(runner: Runner, f: FightDef) -> tuple[RateRef, ...]:
     return (*(RateRef(runner, FlowKind.COST, x.store) for x in fight_costs(f)),
             *(RateRef(runner, FlowKind.MAKE, x.store) for x in fight_makes(f) if x.store != f.fought))
+
+
+def _strengths(rules: Rules) -> frozenset[Strength]:
+    """Every side and threat a fight runner's odds read."""
+    return frozenset(s for _, f, _, _ in derived(rules, "_fighters", _fighters)
+                     for s in (SideStrength(f.side), ThreatStrength(f.threat)))
 
 
 def has_fights(rules: Rules) -> bool:
@@ -76,12 +85,15 @@ def odds_entries(save: Save, rules: Rules, stack: tuple[Modifier, ...]) -> tuple
     """The MUL_BP entries every fight runner's lines carry now: win_bp on what a win brings, loss_bp on what a loss
     costs. `stack` is the effective stack without them."""
     out: list[Modifier] = []
+    strengths: dict[Strength, int] | None = None
     for runner, fight, wins, losses in derived(rules, "_fighters", _fighters):
         kept = _kept(save, runner)
         if kept:
             out.extend(kept)
             continue
-        lose = loss_bp(fight, stack, rules)
+        if strengths is None:
+            strengths = values_over(stack, rules, derived(rules, "_fight_strengths", _strengths))
+        lose = _loss(strengths[SideStrength(fight.side)], strengths[ThreatStrength(fight.threat)])
         out.extend(Modifier(ref, ModifierKind.MUL_BP, BP - lose, odds_source(runner)) for ref in wins)
         out.extend(Modifier(ref, ModifierKind.MUL_BP, lose, odds_source(runner)) for ref in losses)
     return tuple(out)

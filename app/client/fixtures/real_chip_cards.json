@@ -330,7 +330,9 @@
     },
     {
       "card": "n1_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -381,7 +383,8 @@
     {
       "card": "n1_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -777,7 +780,9 @@
     },
     {
       "card": "n2_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -838,7 +843,8 @@
     {
       "card": "n2_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -1136,7 +1142,8 @@
     {
       "card": "n3_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -1296,7 +1303,9 @@
     },
     {
       "card": "n4_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -1327,7 +1336,8 @@
     {
       "card": "n4_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -1519,7 +1529,8 @@
     {
       "card": "fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -1688,7 +1699,9 @@
     },
     {
       "card": "n5_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -1842,7 +1855,8 @@
     {
       "card": "n5_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -1979,7 +1993,9 @@
     },
     {
       "card": "n7_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -2133,7 +2149,8 @@
     {
       "card": "n7_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -2248,7 +2265,9 @@
     },
     {
       "card": "n6_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -2402,7 +2421,8 @@
     {
       "card": "n6_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -2464,7 +2484,9 @@
     },
     {
       "card": "g_field_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -2631,7 +2653,8 @@
     {
       "card": "g_hearth_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -2768,7 +2791,9 @@
     },
     {
       "card": "cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -2777,7 +2802,9 @@
     },
     {
       "card": "n3_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -2856,7 +2883,8 @@
     {
       "card": "warm_beds",
       "makes": [
-        "ash"
+        "ash",
+        "beds_covered"
       ],
       "takes": [
         "rime"
@@ -3040,7 +3068,8 @@
     {
       "card": "n11_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -3120,7 +3149,9 @@
     },
     {
       "card": "n11_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -3293,7 +3324,8 @@
     {
       "card": "n10_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -3373,7 +3405,9 @@
     },
     {
       "card": "n10_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -3546,7 +3580,8 @@
     {
       "card": "n12_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -3626,7 +3661,9 @@
     },
     {
       "card": "n12_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -3799,7 +3836,8 @@
     {
       "card": "n8_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -3879,7 +3917,9 @@
     },
     {
       "card": "n8_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -4052,7 +4092,8 @@
     {
       "card": "n9_fungus_stew",
       "makes": [
-        "stew"
+        "stew",
+        "fungus_stews"
       ],
       "takes": [
         "fungus",
@@ -4132,7 +4173,9 @@
     },
     {
       "card": "n9_cover_beds",
-      "makes": [],
+      "makes": [
+        "beds_covered"
+      ],
       "takes": [
         "rime",
         "pelt"
@@ -5011,6 +5054,25 @@
       ]
     },
     {
+      "store": "fungus_stews",
+      "made_by": [
+        "n1_fungus_stew",
+        "n2_fungus_stew",
+        "n3_fungus_stew",
+        "n4_fungus_stew",
+        "fungus_stew",
+        "n5_fungus_stew",
+        "n7_fungus_stew",
+        "n6_fungus_stew",
+        "g_hearth_fungus_stew",
+        "n11_fungus_stew",
+        "n10_fungus_stew",
+        "n12_fungus_stew",
+        "n8_fungus_stew",
+        "n9_fungus_stew"
+      ]
+    },
+    {
       "store": "ash",
       "made_by": [
         "n1_clear_roofs",
@@ -5192,6 +5254,26 @@
     {
       "store": "night_15",
       "made_by": []
+    },
+    {
+      "store": "beds_covered",
+      "made_by": [
+        "n1_cover_beds",
+        "n2_cover_beds",
+        "n4_cover_beds",
+        "n5_cover_beds",
+        "n7_cover_beds",
+        "n6_cover_beds",
+        "g_field_cover_beds",
+        "cover_beds",
+        "n3_cover_beds",
+        "warm_beds",
+        "n11_cover_beds",
+        "n10_cover_beds",
+        "n12_cover_beds",
+        "n8_cover_beds",
+        "n9_cover_beds"
+      ]
     },
     {
       "store": "deer_down",
