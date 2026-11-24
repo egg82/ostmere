@@ -54,6 +54,16 @@ def test_the_fifth_cover_read_off_the_hands_card_alone_fails(shipped_rules: Rule
         check_finite_supply(_reads_card(shipped_rules, "t_torn_clock", "cover_beds", 5), tallies)
 
 
+def test_a_warming_that_does_not_count_toward_the_cover_tally_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
+    """warm_beds spends the season's rime too, so it must add to the tally the fifth-cover trigger reads."""
+    def uncounted(c: CardDef) -> CardDef:
+        outcome = replace(c.outcome, stores=tuple(a for a in c.outcome.stores if a.store != StoreId("beds_covered")))
+        return replace(c, outcome=outcome)
+    cards = tuple(uncounted(c) if str(c.id) == "warm_beds" else c for c in shipped_rules.cards)
+    with pytest.raises(ValueError, match="store rime: .*warm_beds can spend it without limit"):
+        check_finite_supply(replace(shipped_rules, cards=cards), tallies)
+
+
 def _rules(*cards: CardDef, pool: int = 12, made_cap: int = 12, needed: int = 8, extra: tuple[TriggerDef, ...] = (),
            standing: tuple[StandingDef, ...] = (), offers: tuple[OfferDef, ...] = (), build_cap: int | None = None) -> Rules:
     """A pool filled once by a trigger, drawn into `made` by `pull` (1 for 1), and a project `build` taking one `made`

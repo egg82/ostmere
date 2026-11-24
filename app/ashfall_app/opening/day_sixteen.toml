@@ -344,11 +344,12 @@ only_player = "magic"
 presentation = "action"
 label_key = "c_warm_beds"
 upside_key = "up_cover_beds"
-work_s = 300
+# Slower than a cover (600), so covering is the fast trade and warming the pelt-free slow one; both count toward the tally.
+work_s = 900
 skill = "spellcraft"
 xp_per_hour = 360
 inputs = [{ store = "rime", items = 6 }]
-outcome = { stores = [{ store = "ash", items = 2 }] }
+outcome = { stores = [{ store = "ash", items = 2 }, { store = "beds_covered", items = 1 }] }
 
 # "When frosted, warm the beds": its `when` the chip's, offered beside the covers' card.
 [[order_cards]]
