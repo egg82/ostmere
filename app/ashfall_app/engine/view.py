@@ -31,7 +31,7 @@ from .rules import Rules
 from .rules_check import features
 from .segments import Segment, reach_time
 from .sharelevels import read_levels
-from .cardsides import card_costs
+from .cardsides import card_costs, card_makes
 from .coverage import all_covered, covered
 from .units import BP
 from .state import Save
@@ -119,7 +119,7 @@ def view(save: Save, rules: Rules) -> View:
     mixed = _mixed(save, rules)
     return View(
         time=save.time, next_event=next_event(save, rules), ledger=ledger, skills=_skills(save, rules),
-        standing=_standing(save, rules, now), lanes=_lanes(save, rules),
+        standing=_standing(save, rules, now), lanes=lane_bars(save, rules),
         cards=tuple(_card_view(save, rules, now, mixed, c) for c in unlocked_cards
                     if not is_completed(save, rules, c.id)),
         completed=tuple(CompletedCard(c.id, completions(save, rules, c.id)) for c in unlocked_cards
@@ -143,6 +143,11 @@ def _order_guards(save: Save, rules: Rules) -> tuple[tuple[GuardView, ...], ...]
         return read_levels(save, rules, cond).release
     return tuple(tuple(GuardView(on, lets_go(g)) for g, on in zip(o.unless, guard_latches(latch)))
                  for o, latch in zip(save.orders, save.latches))
+
+
+def ledger(save: Save, rules: Rules) -> tuple[LedgerLine, ...]:
+    """View.ledger alone, for a reader that needs no other part of the read model."""
+    return _ledger(save, rules, running(save, rules))
 
 
 def _ledger(save: Save, rules: Rules, now: Running) -> tuple[LedgerLine, ...]:
@@ -181,7 +186,8 @@ def _standing(save: Save, rules: Rules, now: Running) -> tuple[StandingBar, ...]
     return tuple(StandingBar(a.id, now.runs[a.id].kind) for a in unlocked_standing(save, rules))
 
 
-def _lanes(save: Save, rules: Rules) -> tuple[LaneBar, ...]:
+def lane_bars(save: Save, rules: Rules) -> tuple[LaneBar, ...]:
+    """View.lanes alone, for a reader that needs no other part of the read model."""
     bars: list[LaneBar] = []
     ix = index(rules)
     for ls in save.lanes:
@@ -240,7 +246,14 @@ def _card_view(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
         share_bp=share - sum(g.share_bp for g in gained), run=run,
         blocker=blocker(save, rules, c.id), tap_s=tap_seconds(save, rules, c.id), needs=_needs(save, rules, c),
         cuts_in=cuts_in(save, rules, c.id), speed=tap_work_speed(save, rules, c.id),
-        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained, crew=group_crew(save, rules, c.lane))
+        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained, crew=group_crew(save, rules, c.lane),
+        full_store=_full_store(mixed, c, run))
+
+
+def _full_store(mixed: dict[CardId, tuple[int, Run]], c: CardDef, run: RunKind | None) -> StoreId | None:
+    """The store a full pause stopped the card on: a paused run on a store the card makes (DESIGN.txt, "FULL OUTPUT")."""
+    store = mixed[c.id][1].store if run is RunKind.PAUSED else None
+    return store if store is not None and store in card_makes(c) else None
 
 
 def _run_by(save: Save, c: CardDef, tapped: bool) -> RunBy | None:

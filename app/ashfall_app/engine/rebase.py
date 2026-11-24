@@ -10,6 +10,7 @@ from .api import Step, numbered, recorder
 from .codec import ENVELOPE, FORMAT, READ_ERRORS, Json, canonical, decode, rules_digest, save_from_json
 from .dropping import Gone, dropped_save
 from .errors import StateFormatError
+from .full import is_full_pause
 from .gates import store_cap
 from .handlers import Emit, ignore
 from .ids import CardId, IdKind, SkillId
@@ -110,7 +111,7 @@ def _reshape(save: Save, rules: Rules, chips: dict[str, tuple[bool, bool]], fire
         chips_seen=tuple(chips.get(c.id, (False, False))[1] for c in rules.chips),
         fired=tuple(fired.get(x.id, False) for x in rules.triggers),
         lanes=_lanes(save, rules), cards=_cards(save, rules, work_s),
-        pauses=tuple(sorted(save.pauses, key=lambda p: pos[p.runner])),
+        pauses=tuple(sorted((p for p in save.pauses if not is_full_pause(rules, p)), key=lambda p: pos[p.runner])),
         unlocked=tuple(sorted(set(save.unlocked), key=unlock_key)))
     return _clamped(save, rules)
 

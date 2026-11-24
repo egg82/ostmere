@@ -22,6 +22,7 @@ from .kind_checks import check_kinds
 from .line_kinds import check_line_kinds
 from .loss_checks import check_loss_lines, check_loss_order
 from .find_checks import check_finds
+from .finite_checks import check_finite_supply
 from .name_checks import check_names, without_slots
 from .phase_pays import check_phase_pays
 from .prestige import check_phase_spans
@@ -97,16 +98,19 @@ def check_structure(o: "Opening") -> None:
 def check_content(o: "Opening") -> None:
     """The costly checks, which hold of a line or a fight on its own and need no prefix: the text's rules (a digit, a
     slot, a fixed key), nothing named ahead of the store or action it names (unlock_order_checks.py), a prestige phase outlasting an ordinary absence (prestige.check_phase_spans), and every fight's
-    cure reachable (fight_checks.py, which builds the Rules); and every side stake held on a fought side, which a later
-    chapter may add (stake_checks.py). The merge runs them once, on the last state."""
+    cure reachable (fight_checks.py, which builds the Rules); every side stake held on a fought side, which a later
+    chapter may add (stake_checks.py); and no finite store a player can soft-lock progress out of (finite_checks.py).
+    The merge runs them once, on the last state."""
     _check_text(o)
     check_stakes_hold(o)
     check_unlock_order(o)
     check_loss_order(o)
+    rules = build_rules(o)
+    check_finite_supply(rules)
     if o.prestige is not None:
-        check_phase_spans(build_rules(o))
+        check_phase_spans(rules)
     if any(True for _ in fights(o)):
-        check_fight_content(build_rules(o))
+        check_fight_content(rules)
 
 
 def _check_unique(o: "Opening") -> None:

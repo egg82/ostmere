@@ -17,6 +17,7 @@ app/ashfall_app/accounts/words.txt
 app/ashfall_app/api/CONTRACT.txt
 app/ashfall_app/api/__init__.py
 app/ashfall_app/api/camp_models.py
+app/ashfall_app/api/card_models.py
 app/ashfall_app/api/changes.py
 app/ashfall_app/api/chip_infos.py
 app/ashfall_app/api/content_models.py
@@ -122,6 +123,7 @@ app/ashfall_app/engine/fightlines.py
 app/ashfall_app/engine/fightview.py
 app/ashfall_app/engine/flows.py
 app/ashfall_app/engine/forecast.py
+app/ashfall_app/engine/full.py
 app/ashfall_app/engine/gates.py
 app/ashfall_app/engine/gone.py
 app/ashfall_app/engine/groupchecks.py
@@ -234,6 +236,8 @@ app/ashfall_app/opening/fight_checks.py
 app/ashfall_app/opening/fight_entries.py
 app/ashfall_app/opening/fight_refs.py
 app/ashfall_app/opening/find_checks.py
+app/ashfall_app/opening/finite_checks.py
+app/ashfall_app/opening/finite_runners.py
 app/ashfall_app/opening/goals.py
 app/ashfall_app/opening/groups.py
 app/ashfall_app/opening/journal_checks.py

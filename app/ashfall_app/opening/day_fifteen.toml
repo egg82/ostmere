@@ -29,10 +29,11 @@ id = "ruin_beams"
 label_key = "store_ruin_beams"
 cap_items = 12
 
+# Holds every beam the hall and the road take (8 and 4), so pulling ahead loses none at the cap (finite_checks.py).
 [[stores]]
 id = "beams"
 label_key = "store_beams"
-cap_items = 8
+cap_items = 12
 
 [[cards]]
 id = "pull_beams"

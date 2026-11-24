@@ -233,7 +233,8 @@ def _running(save: Save, rules: Rules) -> Running:
     gained: dict[Runner, tuple[SpentShare, ...]] = {c: g for c, g in gains.items() if c not in tapped} if gains else {}
     for card in tapped:
         kept = lane_state(save, index(rules).cards[card].lane).speed
-        shares[card], runs[card] = BP, _tap_run(save, rules, card, paused.get(card), kept)
+        dry = paused.get(card) if paused.get(card) not in makes(rules, card) else None   # a tap runs past a full pause
+        shares[card], runs[card] = BP, _tap_run(save, rules, card, dry, kept)
     return Running(shares, runs, gained)
 
 

@@ -817,6 +817,8 @@ export interface components {
             gained: components["schemas"]["SpentShare"][];
             /** Crew */
             crew: number | null;
+            /** Full Store */
+            full_store: string | null;
         };
         /**
          * CardCount

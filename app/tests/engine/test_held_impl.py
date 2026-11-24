@@ -5,15 +5,19 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import (
-    BP, AfterTime, CardId, CardShare, InvalidRulesError, InvalidVerbError, Mix, Modifier, ModifierKind, Outcome,
-    Rules, RunKind, Save, SaveMix, SideId, SideStrength, SourceId, TapCard, ThreatStrength, TriggerDef, TriggerId,
+    BP, AfterTime, AtLeast, CardId, CardShare, InvalidRulesError, InvalidVerbError, Mix, Modifier, ModifierKind, Outcome,
+    Rules, RunKind, Save, SaveMix, SideId, SkillId, SkillLevel, SideStrength, SourceId, TapCard, ThreatStrength, TriggerDef, TriggerId,
     Unlock, UnlockKind, WhileRunning, advance, decide, decode, encode, explain_strength, new_save, rebase,
     rules_digest, validate_rules, view,
 )
 from ashfall_app.engine.gates import effective_stack, stack_inputs
+from ashfall_app.engine.heldentries import held_cards
 from held_impl_world import (
     B1, CAP, DEF, GUARD, HAND, HUNT, LA, M, NEED, TM, WARM, WATCH, WET, WOLF, joined, mixed, world,
 )
+
+
+K = SkillId("k")
 
 
 def held(s: Save, r: Rules, side: SideId = HAND) -> list[Modifier]:
@@ -176,3 +180,16 @@ def test_the_stack_inputs_follow_the_held_state_and_rules_without_it_keep_their_
     assert stack_inputs(mixed(r, (GUARD, 2000)), r)[-1] is stack_inputs(low, r)[-1]
     plain = world(held=False)
     assert len(stack_inputs(new_save(plain), plain)) == 3 + 1   # rules, modifiers, unlocks, and the one fight tap's speed
+
+
+def test_a_save_differing_only_in_its_skills_reads_what_is_held_by_their_levels():
+    """held_cards is kept across saves alike but for their skills (the menu's one-more-pick saves): a requires on a
+    skill level still reads the level of the save asked about."""
+    r = replace(world(), cards=tuple(replace(c, requires=(AtLeast(SkillLevel(K), 2, 2),)) if c.id == NEED else c
+                                     for c in world().cards))
+    s = mixed(r, (NEED, 5000), (GUARD, 5000))
+    up = replace(s, skills=tuple(replace(k, xp=replace(k.xp, start_value=10**15)) for k in s.skills))
+    alike = replace(s, skills=tuple(replace(k) for k in s.skills))
+    assert held_cards(s, r) == {GUARD: 5000}
+    assert held_cards(up, r) == {GUARD: 5000, NEED: 5000}
+    assert held_cards(alike, r) is held_cards(s, r)

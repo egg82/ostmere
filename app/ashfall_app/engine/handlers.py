@@ -8,6 +8,7 @@ from dataclasses import replace
 from .conditions import all_true, changes_now, rise_time
 from .counts import unit, work_segment, work_value
 from .events import Event, EventKind
+from .full import has_room, is_full_pause, pause_full
 from .gates import is_unlocked, store_cap
 from .ids import HANDS, CardId, LaneId, LineKey, Runner, StoreId
 from .index import index
@@ -83,7 +84,8 @@ def _dispatch(save: Save, rules: Rules, event: Event, emit: Emit, landing: froze
     if event.kind is EventKind.TRIGGER:
         return _trigger_fired(save, rules, event.sequence, emit)
     if event.kind is EventKind.STORE_LIMIT:
-        paused, interrupted = _pause_until_not_dry(save, rules, StoreId(event.subject), landing)
+        dried, interrupted = _pause_until_not_dry(save, rules, StoreId(event.subject), landing)
+        paused = pause_full(dried, rules, landing)
         handed = _hand_back_dry_stint(paused, rules)
         return handed, interrupted or handed is not paused
     if event.kind is EventKind.RESUME:
@@ -173,8 +175,12 @@ def _tapped_lane(save: Save, rules: Rules, runner: Runner) -> LaneId | None:
 
 
 def _resume(save: Save, rules: Rules, runner: str) -> Save:
+    """A dry pause lifts at its resume level, a full one once an outcome store has room (DESIGN.txt, "FULL OUTPUT")."""
     pause = next((p for p in save.pauses if p.runner == runner), None)
-    if pause is None or store_value(save, pause.store) < pause.resume_at:
+    if pause is None:
+        return save
+    full = is_full_pause(rules, pause)
+    if not has_room(save, rules, pause) if full else store_value(save, pause.store) < pause.resume_at:
         return save
     return rebuild(replace(save, pauses=tuple(p for p in save.pauses if p.runner != runner)), rules)
 

@@ -169,7 +169,7 @@ const text: Record<string, string> = {
   "ui.card.needs": "{store} {have}/{n}",
   "ui.card.reach": "{store} {have}, next reach at {n}",
   "ui.card.needs_spent": "{store} {have}/{n}, none left",
-  "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}", "ui.card.opens_in": "Opens in {d}", "ui.card.takes_nothing": "Takes nothing", "ui.card.levelled": "{skill} {n} · {before} → {after}",
+  "ui.card.needs_skill": "{skill} level {have}/{n}", "ui.card.needs_step": "{card} {have}/{n}", "ui.card.opens_in": "Opens in {d}", "ui.card.takes_nothing": "Takes nothing", "ui.card.no_room": "{store} is full", "ui.card.levelled": "{skill} {n} · {before} → {after}",
   "ui.chronicle.open": "Chronicle",
   "ui.chronicle.away": "Away {d}",
   "ui.chronicle.away_m": "{m}m",

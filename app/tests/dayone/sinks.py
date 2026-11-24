@@ -10,8 +10,9 @@ from dataclasses import dataclass
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE, AfterTime, AnswerId, AnswerKind, AnswerOffer, AtLeast, AtMost, CardCount, CardId, CardShare,
     CardView, LedgerLine, Mix, MixId, OfferId, Order, QueueEntry, Rules, Save, SaveMix, SetOrders, SetQueue, StoreId,
-    HANDS, TOWN_PREFIX, RunBy, RunKind, StoreValue, SwitchMix, TapCard, Verb, View, advance, decide, value_at, view,
+    HANDS, TOWN_PREFIX, RunBy, StoreValue, SwitchMix, TapCard, Verb, View, advance, decide, value_at, view,
 )
+from ashfall_app.engine.view import lane_bars, ledger
 from tests.dayone.policy import Move, lane_free
 
 
@@ -165,7 +166,7 @@ def retune_trip(v: View, rules: Rules, save: Save, trip: Trip, marks: Marks) -> 
         if marks.get(trip.card) == RAISED:
             return None
         fight = fights_a_rule(v, rules, save, trip)
-        if save.active != untuned_id(trip) and card.run is not RunKind.PAUSED and not line.starved and not fight \
+        if save.active != untuned_id(trip) and not paused_dry(rules, save, trip.card) and not line.starved and not fight \
                 and not outdrawn(save, trip, line):
             return None
         share = trip.share_bp if not fight and bursty(rules, save, trip) else tuned_share(rules, save, trip)
@@ -245,6 +246,13 @@ def rule_let_go(v: View, rules: Rules, save: Save, trip: Trip) -> bool:
         if store in ruled and store in lines and value_at(lines[store].segment, v.time) > o.when.release:
             return True
     return False
+
+
+def paused_dry(rules: Rules, save: Save, card: CardId) -> bool:
+    """The card holds a Pause on a store it takes. A full pause, on a store it pays (engine DESIGN.txt, "FULL OUTPUT"),
+    is no supply running short, so no share is tuned for it."""
+    pays = {a.store for c in rules.cards if c.id == card for a in c.outcome.stores}
+    return any(p.runner == card and p.store not in pays for p in save.pauses)
 
 
 def retune_trips(v: View, rules: Rules, save: Save, trips: list[Trip], marks: Marks) -> Move | None:
@@ -366,8 +374,8 @@ def tuned_share(rules: Rules, save: Save, trip: Trip, edited: Mix | None = None,
     def holds(share: int) -> bool:
         m = trip_mix(save, trip, share, MixId("preview")) if edited is None \
             else Mix(MixId("preview"), with_share(edited, trip.card, share).components, edited.layer)
-        shown = view(decide(decide(bare, rules, bare.time, SaveMix(m)), rules, bare.time, SwitchMix(m.id)), rules)
-        return all(ln.net_per_hour >= 0 for ln in shown.ledger if ln.store in kept)
+        shown = ledger(decide(decide(bare, rules, bare.time, SaveMix(m)), rules, bare.time, SwitchMix(m.id)), rules)
+        return all(ln.net_per_hour >= 0 for ln in shown if ln.store in kept)
     if holds(top):
         return top
     lo, hi = 0, top // TUNE_STEP_BP   # hi does not hold; lo holds, or is the floor
@@ -386,7 +394,7 @@ def preview_base(rules: Rules, save: Save) -> Save:
     own = tuple(o for o in save.orders if not (isinstance(o.then, SwitchMix) and o.then.mix not in town)
                 and not (isinstance(o.then, TapCard) and (o.then.card in hands or not isinstance(o.when, AfterTime))))
     bare = decide(decide(save, rules, save.time, SetOrders(own)), rules, save.time, SetQueue(()))
-    held = max((b.completes_at for b in view(bare, rules).lanes if b.card is not None and b.completes_at is not None
+    held = max((b.completes_at for b in lane_bars(bare, rules) if b.card is not None and b.completes_at is not None
                 and (b.lane == HANDS or b.card in by_rule)), default=None)
     return bare if held is None else advance(bare, rules, held)
 

@@ -12,7 +12,8 @@
 // rulestab (restrule with three hands rules, the tired one on, and the bench task rule: the Rules tab full),
 // ruleoffer (mid, for the rule lesson: the first set_orders moves it to ruleon), ruleon (the rules the page set, all at work),
 // capfull (full with the bench's stone rule set, so this game's Rules tab is drawn: the cap rule's lesson may start),
-// drystore (a one-card mix of stool stopped on dry wood, gather in play and not in it: the dry store's lesson may start).
+// drystore (a one-card mix of stool stopped on dry wood, gather in play and not in it: the dry store's lesson may start),
+// fullpause (dry's shape, but the mix's first card stopped because wood, which it fills, is full: Card.full_store).
 import type { Card, LedgerLine, LogLine, Mix, Need, Order, OrderState, QueueEntry, RuleRun, Step, View } from "../src/api/types";
 import { BP, fixtureContent, Q, R, TIRED } from "./content";
 import type { DayOnePhase } from "./dayone";
@@ -30,7 +31,7 @@ import type { GroupsPhase } from "./groups";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | GroupsPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | GuardsPhase | FeelPhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "fullpause" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | GroupsPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | GuardsPhase | FeelPhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];
@@ -82,7 +83,7 @@ const still = (at: number, value = 0) => ({ start: at, start_value: value, rate:
 function card(at: number, id: string, over: Partial<Card> = {}): Card {
   return {
     card: id, completions: 0, cap: null, bar: still(at), bar_total: 5 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-    blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 5, speed: BP, needs: [], ...over,
+    blocker: null, cuts_in: false, spent_store: null, full_store: null, gained: [], crew: null, tap_s: 5, speed: BP, needs: [], ...over,
   };
 }
 
@@ -282,11 +283,13 @@ function variant(phase: Phase, view: View, at: number): View {
       unlocked: [...view.unlocked, { category: "retired", id: "tend" }],
     };
   }
-  if (phase === "dry") {   // the mix's first card paused on a dry store, its share run by the rest (CONTRACT.txt, "SPENT")
+  if (phase === "dry" || phase === "fullpause") {   // the mix's first card paused on a dry store, or a full one (CONTRACT.txt, "FULL OUTPUT"), its share run by the rest
     const [stop, ...rest] = view.cards.filter((c) => c.share_bp > 0);
     const total = rest.reduce((n, c) => n + c.share_bp, 0);
     const gain = (c: Card): number => (stop && total > 0 ? Math.floor((stop.share_bp * c.share_bp) / total) : 0);
-    return { ...view, cards: view.cards.map((c) => (c === stop ? { ...c, run: "paused" as const, by: null }
+    const full = phase === "fullpause" ? "wood" : null;
+    const ledger = full === null ? view.ledger : view.ledger.map((l) => (l.store === full ? store(at, full, 40, 0, 40, true) : l));
+    return { ...view, ledger, cards: view.cards.map((c) => (c === stop ? { ...c, run: "paused" as const, by: null, full_store: full }
       : rest.includes(c) ? { ...c, gained: stop ? [{ card: stop.card, share_bp: gain(c) }] : [] } : c)) };
   }
   if (phase === "drystore") return dryStore(view, at);

@@ -4,7 +4,7 @@ The read model's ledger (view.py) and View.all_covered read it, so "every line w
 DESIGN.txt, "Read model" and "Starved line".
 """
 from .answers import AnswerKind, AnswerOffer
-from .cardsides import card_makes
+from .cardsides import card_makes, outcome_stores
 from .gates import is_unlocked
 from .ids import CardId, StoreId
 from .index import index
@@ -19,11 +19,18 @@ from .work import starved
 
 
 def covered(save: Save, rules: Rules, store: StoreId) -> bool:
-    """Some order's verb (latched or not) or the queue's controlling entry makes this store; a dead verb covers
-    nothing."""
+    """Some order's verb (latched or not) or the queue's controlling entry makes this store, a dead verb covering
+    nothing; or a card paused full pays it, and resumes as it falls (DESIGN.txt, "FULL OUTPUT", "Read model")."""
     queued = live_queue_verb(save, rules)
     verbs = [a for o in save.orders for a in o.actions] + ([] if queued is None else [queued])
-    return any(_makes(save, rules, v, store) for v in verbs if not is_dead(save, rules, v))
+    made = any(_makes(save, rules, v, store) for v in verbs if not is_dead(save, rules, v))
+    return made or _held_full(save, rules, store)
+
+
+def _held_full(save: Save, rules: Rules, store: StoreId) -> bool:
+    cards = index(rules).cards
+    return any((c := cards.get(CardId(p.runner))) is not None and p.store in card_makes(c) and store in outcome_stores(c)
+               for p in save.pauses)
 
 
 def all_covered(save: Save, rules: Rules) -> bool:

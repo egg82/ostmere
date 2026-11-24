@@ -178,6 +178,9 @@ class CardView:
     """A group card's free members now (DESIGN.txt, "GROUPS (pooled lanes)"); None on any other card. While it is above
     0, share_bp and `gained` are the totals over those members: the card runs at them. Left out of the repr as the
     fields above are."""
+    full_store: StoreId | None = field(default=None, repr=False)
+    """The store a full pause stopped the card on (DESIGN.txt, "FULL OUTPUT"): its run is PAUSED on a store it makes;
+    None on any other card. Left out of the repr as the fields above are."""
 
 
 @dataclass(frozen=True)

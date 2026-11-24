@@ -49,6 +49,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 100,
     "needs": []
@@ -71,6 +72,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 50,
     "needs": []
@@ -93,6 +95,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 25,
     "needs": []
@@ -115,6 +118,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 10,
     "needs": []
@@ -239,6 +243,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 100,
     "needs": []
@@ -261,6 +266,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 50,
     "needs": []
@@ -283,6 +289,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 50,
     "needs": []
@@ -305,6 +312,7 @@ export const TOWN_WIRE: Record<"two" | "one", TownWire> = {
     "blocker": null,
     "cuts_in": false,
     "spent_store": null,
+    "full_store": null,
     "gained": [],
     "tap_s": 60,
     "needs": []

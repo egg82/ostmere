@@ -40,6 +40,7 @@ export const UI = {
   reach: "ui.card.reach", // "{store} {have}, next reach at {n}": the store a reach stake fills, against its next stop
   opensIn: "ui.card.opens_in", // "{d}": the foot of a card waiting to open, apart from a running card's bare timer
   takesNothing: "ui.card.takes_nothing", // a card that takes from no store: its only price is its share of time
+  noRoom: "ui.card.no_room", // "{store}": a full-paused card's face: every store it fills is full (CONTRACT.txt, "FULL OUTPUT")
   needsStep: "ui.card.needs_step", // "{card} {have}/{n}": a card held back by another card's completions
   ledgerHeading: "ui.heading.ledger",
   ledgerYours: "ui.ledger.yours", // the ledger's group of the player's own stores
