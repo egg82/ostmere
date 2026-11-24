@@ -352,7 +352,7 @@ const text: Record<string, string> = {
   "ui.fight.on_loss": "a loss costs {costs}", "ui.fight.on_wound": "lose, and you're {store} +{n}", "ui.fight.base": "base strength", "ui.fight.tally": "{fought} fought, {lost} lost", "ui.fight.since": "{fought} fought, {lost} lost",
   "ui.fight.won": "{runner}: won", "ui.fight.lost": "{runner}: lost",
   "ui.journal.heading": "Journal", "ui.journal.prev": "Prev", "ui.journal.next": "Next",
-  "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places", "ui.journal.day": "Day {n}",
+  "ui.journal.days": "Days", "ui.journal.creatures": "Creatures", "ui.journal.places": "Places", "ui.journal.day": "Day {n}", "ui.journal.fold": "and again",
   "ui.lesson.journal_open": "What you learn gets written in here.", "ui.lesson.journal_notes": "A dot here means a new note.",
   "ui.lesson.journal_numbers": "Exact numbers once you've fought it. Unknown until then.",
   "ui.book.map": "Map", "ui.map.heading": "Places found", "ui.lesson.map_open": "Places you find get marked on here.",
