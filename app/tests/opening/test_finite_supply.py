@@ -44,9 +44,17 @@ def _reads_card(rules: Rules, trigger: str, card: str, n: int) -> Rules:
     return replace(rules, triggers=tuple(replace(t, when=when) if str(t.id) == trigger else t for t in rules.triggers))
 
 
+def _no_walk_fungus(rules: Rules) -> Rules:
+    """The shipped rules with fungus a season's pool again: the ashwood walk and its twin keep their other finds."""
+    def dry(c: CardDef) -> CardDef:
+        outcome = replace(c.outcome, stores=tuple(a for a in c.outcome.stores if a.store != StoreId("fungus")))
+        return replace(c, outcome=outcome)
+    return replace(rules, cards=tuple(dry(c) if str(c.id).endswith("walk_ashwood") else c for c in rules.cards))
+
+
 def test_the_first_fungus_stew_read_off_the_hands_card_alone_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
     with pytest.raises(ValueError, match="store fungus: .*n\\d+_fungus_stew can spend it without limit"):
-        check_finite_supply(_reads_card(shipped_rules, "t_caps", "fungus_stew", 1), tallies)
+        check_finite_supply(_reads_card(_no_walk_fungus(shipped_rules), "t_caps", "fungus_stew", 1), tallies)
 
 
 def test_the_fifth_cover_read_off_the_hands_card_alone_fails(shipped_rules: Rules, tallies: frozenset[StoreId]) -> None:
