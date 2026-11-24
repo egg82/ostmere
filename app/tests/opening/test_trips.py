@@ -4,14 +4,14 @@ trip. What the loader and its checks accept, what the player-only check refuses,
 lands the instant the nth trip completes however the count is split, and a trip whose materials sit at their caps keeps
 running and counting."""
 import tempfile
-from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 
 from ashfall_app.engine import (
-    BP, QUANTITY_SCALE, CardId, CardShare, Mix, MixId, RunKind, Rules, Save, SaveMix, StoreId, SwitchMix, advance, value_at, decide, new_save, view,
+    BP, QUANTITY_SCALE, CardId, CardShare, Mix, MixId, RunKind, Rules, Save, Segment, SaveMix, StoreId, SwitchMix, advance, value_at, decide, new_save, view,
 )
+from ashfall_app.engine.segments import reach_time
 from ashfall_app.engine.work import completions
 from ashfall_app.opening.checks import check_opening
 from ashfall_app.opening.player_checks import check_player_only
@@ -22,7 +22,7 @@ from tests.opening.test_level_pays import unpaid_markers
 from tests.opening.test_second_skill import rows
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "trips.toml"
-TRIP, TWIN, COUNT, ORE = CardId("t_trip"), CardId("t_scout_trip"), StoreId("t_trips"), StoreId("t_ore")
+TRIP, TWIN, COUNT, ORE, RELIC = CardId("t_trip"), CardId("t_scout_trip"), StoreId("t_trips"), StoreId("t_ore"), StoreId("t_relics")
 H = 3600
 
 
@@ -96,45 +96,56 @@ def value(s: Save, store: StoreId) -> int:
     return value_at(next(x.segment for x in s.stores if x.store == store), s.time)
 
 
-def first_second(held: Callable[[int], bool], lo: int, hi: int) -> int:
-    """The first whole second in (lo, hi] where a predicate that only goes from false to true holds."""
-    assert held(hi) and not held(lo)
-    while hi - lo > 1:
-        mid = (lo + hi) // 2
-        lo, hi = (lo, mid) if held(mid) else (mid, hi)
-    return hi
+@pytest.fixture(scope="module")
+def without_scout(shipped_opening: Opening) -> Rules:
+    """The same chapter with the scout arriving long after every probe below."""
+    return loaded(shipped_opening, *NO_SCOUT)[1]
 
 
-def count_rate(shipped: Opening, share: int | None, scout: bool) -> int:
-    """The count store's rate with the hands' trip at `share` (or off) and the scout's twin running (or not)."""
-    _, r = loaded(shipped, *(("", "") if scout else NO_SCOUT))
-    s = hands_trip(r, share) if share else advance(new_save(r), r, 200)
-    return next(x.segment.rate for x in advance(s, r, 1000).stores if x.store == COUNT)
+def count_segment(s: Save, r: Rules, at: int) -> Segment:
+    """The count's segment at `at`."""
+    return next(x.segment for x in advance(s, r, at).stores if x.store == COUNT)
+
+
+def reached_at(s: Save, r: Rules, target: int) -> int:
+    """The second the count first holds `target`: the segment's exact reach time, re-read at the second before it until
+    the rate holds across it (a level, or a completion, can change the rate on the way)."""
+    at = 200
+    while True:
+        landed = reach_time(count_segment(s, r, at), target)
+        assert landed is not None
+        if landed - 1 <= at:
+            return landed
+        at = landed - 1
 
 
 @pytest.mark.parametrize(("share", "scout"), [(BP, True), (BP // 2, True), (BP // 3, True), (BP, False), (None, True)])
 def test_the_nth_find_lands_the_second_the_count_reaches_n_however_it_is_split(
-        shipped_opening: Opening, share: int | None, scout: bool):
+        shipped_plus: tuple[Opening, Rules], without_scout: Rules, share: int | None, scout: bool):
     """The hands' trip at `share` and the twin on its lane (or either alone) add to one count; the find on n lands the
-    second that count first reaches n, not a second sooner or later, whichever card's work made it."""
-    _, r = loaded(shipped_opening, *(("", "") if scout else NO_SCOUT))
-
-    def at(t: int) -> Save:
-        s = hands_trip(r, share) if share else advance(new_save(r), r, 200)
-        return advance(s, r, t)
-
+    second that count first reaches n (the segment's exact reach time), not a second sooner or later, whichever card's
+    work made it."""
+    r = shipped_plus[1] if scout else without_scout
+    s = hands_trip(r, share) if share else advance(new_save(r), r, 200)
     for n, relics_then in ((3, 1), (5, 3)):
-        landed = first_second(lambda t: value(at(t), StoreId("t_relics")) >= relics_then * QUANTITY_SCALE, 200, 40_000)
-        assert value(at(landed), COUNT) >= n * QUANTITY_SCALE > value(at(landed - 1), COUNT)
+        landed = reached_at(s, r, n * QUANTITY_SCALE)
+        assert value(advance(s, r, landed - 1), RELIC) < relics_then * QUANTITY_SCALE
+        assert value(advance(s, r, landed), RELIC) >= relics_then * QUANTITY_SCALE
 
 
-def test_the_count_is_the_sum_of_what_each_card_adds(shipped_opening: Opening):
+def test_the_count_is_the_sum_of_what_each_card_adds(shipped_plus: tuple[Opening, Rules], without_scout: Rules):
     """Alone the hands' trip adds at one rate and the twin at another; together, and at any share between, the count's
     rate is the shares' sum, so how the work is split between them cannot move a find except through the sum."""
-    hands, twin = count_rate(shipped_opening, BP, False), count_rate(shipped_opening, None, True)
+    r = shipped_plus[1]
+
+    def rate(rules: Rules, share: int | None) -> int:
+        s = hands_trip(rules, share) if share else advance(new_save(rules), rules, 200)
+        return count_segment(s, rules, 1100).rate
+
+    hands, twin = rate(without_scout, BP), rate(r, None)
     assert hands > 0 < twin and hands != twin
-    assert count_rate(shipped_opening, BP, True) == hands + twin
-    assert count_rate(shipped_opening, BP // 2, True) == hands // 2 + twin
+    assert rate(r, BP) == hands + twin
+    assert rate(r, BP // 2) == hands // 2 + twin
 
 
 def test_a_trip_whose_materials_sit_at_their_caps_keeps_running_and_counting(shipped_plus: tuple[Opening, Rules]):
