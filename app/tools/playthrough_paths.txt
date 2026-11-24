@@ -212,12 +212,12 @@ app/ashfall_app/opening/choice_checks.py
 app/ashfall_app/opening/convert.py
 app/ashfall_app/opening/day_eight.toml
 app/ashfall_app/opening/day_eighteen.toml
-app/ashfall_app/opening/day_nineteen.toml
 app/ashfall_app/opening/day_eleven.toml
 app/ashfall_app/opening/day_fifteen.toml
 app/ashfall_app/opening/day_five.toml
 app/ashfall_app/opening/day_four.toml
 app/ashfall_app/opening/day_nine.toml
+app/ashfall_app/opening/day_nineteen.toml
 app/ashfall_app/opening/day_one.toml
 app/ashfall_app/opening/day_six.toml
 app/ashfall_app/opening/day_sixteen.toml
@@ -242,6 +242,7 @@ app/ashfall_app/opening/lane_entries.py
 app/ashfall_app/opening/leave_checks.py
 app/ashfall_app/opening/line_kinds.py
 app/ashfall_app/opening/line_only_checks.py
+app/ashfall_app/opening/loss_checks.py
 app/ashfall_app/opening/makers.py
 app/ashfall_app/opening/map_checks.py
 app/ashfall_app/opening/map_entries.py
@@ -292,6 +293,7 @@ app/ashfall_app/saves/journal_composer/bag.py
 app/ashfall_app/saves/journal_composer/day.py
 app/ashfall_app/saves/journal_composer/history.py
 app/ashfall_app/saves/journal_composer/ledger.py
+app/ashfall_app/saves/journal_composer/losses.py
 app/ashfall_app/saves/journal_composer/marks.py
 app/ashfall_app/saves/journal_composer/numbers.py
 app/ashfall_app/saves/journal_composer/owed.py
@@ -299,6 +301,7 @@ app/ashfall_app/saves/journal_composer/own.py
 app/ashfall_app/saves/journal_composer/page.py
 app/ashfall_app/saves/journal_composer/telling.py
 app/ashfall_app/saves/journal_rules.py
+app/ashfall_app/saves/journal_tallies.py
 app/ashfall_app/saves/journal_write.py
 app/ashfall_app/saves/load.py
 app/ashfall_app/saves/manifest.py
@@ -481,13 +484,13 @@ app/tests/weektwo/test_ladder_readouts.py
 app/tests/weektwo/test_makers_readouts.py
 app/tests/weektwo/test_weektwo_controls.py
 app/tests/weektwo/test_weektwo_eighteen.py
-app/tests/weektwo/test_weektwo_nineteen.py
 app/tests/weektwo/test_weektwo_eleven.py
 app/tests/weektwo/test_weektwo_fifteen.py
 app/tests/weektwo/test_weektwo_goals.py
 app/tests/weektwo/test_weektwo_inputs.py
 app/tests/weektwo/test_weektwo_lines.py
 app/tests/weektwo/test_weektwo_nine.py
+app/tests/weektwo/test_weektwo_nineteen.py
 app/tests/weektwo/test_weektwo_readouts.py
 app/tests/weektwo/test_weektwo_routes.py
 app/tests/weektwo/test_weektwo_rule_subjects.py

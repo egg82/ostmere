@@ -27,11 +27,11 @@ from .tables import save_decisions, save_journal, save_lines, save_snapshots, sa
 @dataclass(frozen=True)
 class JournalDay:
     """What a step stores of a day: for a day the save does not hold, the day (its notes in page order, each {subject,
-    slot, key}, its gap and its marks); for a day still being written, what it adds, the notes and marks to append and
+    slot, key} and a fold note's count, its gap and its marks); for a day still being written, what it adds, the notes and marks to append and
     the gap if it broke off. `through`: the save time it is composed through."""
 
     day: int
-    notes: list[dict[str, str]]
+    notes: Sequence[Mapping[str, str | int]]
     gap: str | None
     marks: list[str]
     through: int

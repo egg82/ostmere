@@ -1,8 +1,10 @@
 """One game day composed as it goes (the contract in `saves/journal.py`): its start, each of its moments in order, and,
-once it has ended, its end. Each step only appends to the page (statement 22)."""
+once it has ended, its end, the loss runners' notes last (losses.py). Each step only appends to the page (statement
+22)."""
 from collections.abc import Sequence
 
-from ..journal import DAY_S, ComposedDay, Habits, Line, Subject, roll
+from ..journal import DAY_S, ComposedDay, Habits, Line, Loss, Subject, roll
+from . import losses as told_losses
 from .history import History, Moment, away, changed, moments, read
 from .ledger import settledness
 from .numbers import budget, diligence
@@ -12,7 +14,7 @@ from .page import Page
 
 
 def compose(save_id: int, day: int, lines: Sequence[Line], composed: Sequence[ComposedDay],
-            subjects: Sequence[Subject], habits: Habits, ended: bool) -> ComposedDay:
+            subjects: Sequence[Subject], habits: Habits, ended: bool, losses: Sequence[Loss] = ()) -> ComposedDay:
     _refuse(day, lines, composed)
     history = read(lines, subjects)
     page = Page(save_id, day, composed, {s.id: s for s in subjects}, habits)
@@ -29,6 +31,7 @@ def compose(save_id: int, day: int, lines: Sequence[Line], composed: Sequence[Co
             return page.done()
     if ended:
         _end(page, history, room, diligent, crowds)
+        page.notes += told_losses.notes(save_id, composed, page.notes, losses)
     return page.done()
 
 

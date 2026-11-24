@@ -237,6 +237,7 @@ export class Journal implements BookPage {
       }
       const node = el("div", `journal-note hand-${info.hand}`);
       node.append(el("p", "journal-words", text.get(info.key)));
+      if (info.count !== null) node.append(el("span", "journal-count", String(info.count)));   // beside, never inside
       if (info.sketch) node.append(this.image(info.sketch, "journal-note-sketch"));
       node.style.setProperty("--tilt", `${look.tiltDeg.toFixed(2)}deg`);
       node.style.setProperty("--indent", `${look.indentRem.toFixed(2)}rem`);

@@ -12,7 +12,7 @@
 import type { JournalDay, LogLine, Mention, View } from "../api/types";
 import { DayMentions } from "../game/people";
 import { awayLines, pastLines, type Placement } from "../game/awaylines";
-import { entries, poolLine, type Window } from "../game/fights";
+import { entries, lostPool, poolLine, type Window } from "../game/fights";
 import { toppedSince } from "../game/prestige";
 import { jobLine, newJobs } from "../game/newjobs";
 import { readingMs } from "../game/reading";
@@ -174,7 +174,7 @@ export class Story implements Part {
     const fight = (runner: string) => catalog.cards.get(runner)?.fight ?? standing(runner)?.fight ?? null;
     const causes: Array<string | null> = [];   // each entry's cause, in the order entries() words them: a pool's line
     const one = (runner: string, kind: "won" | "lost", k: number): string => {   // names no runner, ui.fight.* does
-      const pool = (kind === "won" ? fight(runner)?.won_line_keys : fight(runner)?.lost_line_keys) ?? [];
+      const pool = kind === "won" ? fight(runner)?.won_line_keys ?? [] : lostPool(fight(runner));
       causes.push(pool.length > 0 ? name(runner) : null);
       if (pool.length > 0) return text.get(poolLine(save, runner, kind, pool, k));
       return text.fill(kind === "won" ? UI.fightWon : UI.fightLost, { runner: name(runner) });

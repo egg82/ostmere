@@ -16,6 +16,7 @@ from ..db.step import JournalDay
 from .interface import Ruleset
 from .journal import DAY_S, MARK_KINDS, ComposedDay, Line, Note, compose_day
 from .journal_rules import JournalRules
+from .journal_tallies import Tallies
 
 _log = logging.getLogger(__name__)
 
@@ -28,16 +29,17 @@ def keys(rs: Ruleset) -> list[str]:
     return sorted(j.sources)
 
 
-def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: Sequence[e.Line], time: int,
-             rs: Ruleset) -> tuple[tuple[ComposedDay, ...], list[JournalDay]]:
-    """The days a step leaving the save at game time `time` adds notes to, as they now stand, oldest first; and what it
-    stores. `seen` is what the save's locking statement read of its journal (db/journal.py `locked`); `lines` are the
-    step's own, not yet stored. When that read was not fresh (the lock waited on another write), the days and lines are
+def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: Sequence[e.Line], began: e.Save,
+             after: e.Save, rs: Ruleset) -> tuple[tuple[ComposedDay, ...], list[JournalDay]]:
+    """The days a step from `began` to `after` (game time `time`) adds notes to, as they now stand, oldest first; and
+    what it stores. `seen` is what the save's locking statement read of its journal (db/journal.py `locked`); `lines`
+    are the step's own, not yet stored; the loss runners' tallies at each day's end are read between the two saves. When that read was not fresh (the lock waited on another write), the days and lines are
     read again here under the lock, so a step that waited on another, or runs again after a failover, extends what that
     one stored."""
-    j = rs.journal
+    j, time = rs.journal, after.time
     if j is None or seen is None:
         return (), []
+    tallies = Tallies(began, after, rs.rules, j.losses)
     if seen.fresh:
         found, keyed = seen.days, seen.lines
     else:
@@ -52,7 +54,7 @@ def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: S
     for d in range(start, time // DAY_S + 1):
         end = (d + 1) * DAY_S
         page = compose_day(row.id, d, tuple(ln for ln in history if ln.at < end), tuple(days), j.subjects, j.habits,
-                           ended=time >= end)
+                           ended=time >= end, losses=tallies.at(end) if time >= end else ())
         now, added = _extended(row.id, stored[d] if d < len(stored) else None, page, min(time, end))
         days.append(now)
         if added is not None:
@@ -85,13 +87,14 @@ def _extended(save_id: int, was: ComposedDay | None, page: ComposedDay,
 
 
 def day_of(r: rows.DayRecord) -> ComposedDay:
-    return ComposedDay(r.day, tuple(Note(n["subject"], n["slot"], n["key"]) for n in r.notes),
+    return ComposedDay(r.day, tuple(Note(n["subject"], n["slot"], n["key"], n.get("count")) for n in r.notes),
                        "busy" if r.gap == "busy" else "away" if r.gap == "away" else None,
                        tuple(k for m in r.marks for k in MARK_KINDS if k == m))
 
 
 def stored_form(d: ComposedDay, through: int) -> JournalDay:
-    return JournalDay(d.day, [{"subject": n.subject, "slot": n.slot, "key": n.key} for n in d.notes], d.gap,
+    return JournalDay(d.day, [{"subject": n.subject, "slot": n.slot, "key": n.key,
+                               **({} if n.count is None else {"count": n.count})} for n in d.notes], d.gap,
                       list(d.marks), through)
 
 

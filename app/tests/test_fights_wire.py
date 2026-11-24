@@ -63,7 +63,8 @@ def test_the_content_serves_the_sides_threats_and_each_runners_fight():
     assert [x for x in c.side_infos if x.side == "hand"] == [cm.SideInfo(side="hand", label_key="side.hand")]
     assert [x for x in c.threat_infos if x.threat == "wolf"] == [cm.ThreatInfo(threat="wolf", label_key="threat.wolf")]
     info = cm.FightInfo(side="hand", threat="wolf", loses=[cm.Amount(store="fullness", quantity=3 * Q)],
-                        wounds=[cm.Amount(store="nails", quantity=2 * Q)], won_line_keys=[], lost_line_keys=[])
+                        wounds=[cm.Amount(store="nails", quantity=2 * Q)], won_line_keys=[], lost_line_keys=[],
+                        loss_pool=None, loss_notes=None, on_loss_key=None)
     assert [x.card for x in c.card_infos if x.fight == info] == ["gather_wood"]
     assert [x.action for x in c.standing_infos if x.fight == info] == ["chill"]
     base = to_rules(shipped())   # control: nothing else carries one, beyond what the content ships

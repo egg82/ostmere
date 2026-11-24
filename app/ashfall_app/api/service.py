@@ -111,7 +111,8 @@ class Game:
         """The written ones of `days`, each note in the hand and with the sketch its slot names now."""
         looks = {} if self._rs.journal is None else self._rs.journal.looks
         return [jm.JournalDay(day=d.day, day_notes=[
-            jm.DayNote(subject=n.subject, slot=jm.Slot(n.slot), key=n.key, hand=jm.Hand(look.hand), sketch=look.sketch)
+            jm.DayNote(subject=n.subject, slot=jm.Slot(n.slot), key=n.key, hand=jm.Hand(look.hand), sketch=look.sketch,
+                       count=n.count)
             for n in d.notes for look in (looks.get((n.subject, n.slot), PLAIN),)],
             marks=[jm.Mark(k) for k in d.marks]) for d in days if d.notes]
 
@@ -122,7 +123,10 @@ def _fight(f: e.FightDef | None, entry: FightEntry | None) -> cm.FightInfo | Non
     return cm.FightInfo(side=f.side, threat=f.threat, loses=[cm.Amount(store=a.store, quantity=a.quantity) for a in f.loses],
                         wounds=[cm.Amount(store=a.store, quantity=a.quantity) for a in f.wounds],
                         won_line_keys=[] if entry is None else list(entry.won_line_keys),
-                        lost_line_keys=[] if entry is None else list(entry.lost_line_keys))
+                        lost_line_keys=[] if entry is None else list(entry.lost_line_keys),
+                        loss_pool=None if entry is None else entry.loss_pool,
+                        loss_notes=None if entry is None else entry.loss_notes,
+                        on_loss_key=None if entry is None else entry.on_loss_key)
 
 
 def _finds(o: Opening) -> list[cm.FindInfo]:

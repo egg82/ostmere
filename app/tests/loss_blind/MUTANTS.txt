@@ -1,0 +1,25 @@
+Blind tests for LOSS LINES (api/CONTRACT.txt; docs/design/week-four-plan.md, item 2).
+Tests: app/tests/loss_blind/test_loss_notes_blind.py (composer, L1-L6), app/client/test/losslinesblind.test.ts (lostPool,
+the chronicle's wording, FightPanel's on-loss line). Each mutant is a one-site throwaway edit; the tests were run, the
+edit reverted. KILLED = at least one test went red.
+
+The plan's five
+ M1 a plain fight's loss labelled from the card pool   fights.ts lostPool: a fight with no loss_pool falls back to the
+                                                       last pool seen                                      KILLED (client)
+ M2 notes per fight, not per whole unit                losses.notes: one loss note per owed fight          KILLED (8 tests)
+ M3 notes drawn from the engine's state                losses.key: candidates[loss.lost % n] for the hash  KILLED (5)
+ M4 a key repeated in a row                            losses.key: the last drawn key stays a candidate    KILLED (2)
+ M5 folds nothing                                      losses.notes: no fold note                          KILLED (9)
+
+Added
+ M6 told ignores fold counts                           losses.told                                         KILLED (5)
+ M7 fold notes count as draws                          losses.key: no slot != "fold" filter                KILLED (1)
+ M8 round never advances                               losses.key: round_no = 0                            KILLED (4)
+ M9 runners not in id order                            losses.notes: sorted() dropped                      KILLED (1)
+ M10 a single owed fight writes nothing                losses.notes: owed < 2                              KILLED (7)
+ M11 a pooled card ignores its pool                    fights.ts lostPool: lost_line_keys only             KILLED (client)
+ M12 the page's own notes (a trigger subject's pool    losses.notes: `page` left out of `before`           KILLED (1)
+     note) are not draws
+
+Total: 12 of 12 killed. M1 and M11 are killed by lostPool's unit checks; the chronicle checks alone are not what kills M1
+(the story call site was not mutated separately).

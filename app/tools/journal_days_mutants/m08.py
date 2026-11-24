@@ -2,6 +2,6 @@
 ends."""
 EDITS: list[tuple[str, str, str]] = [
     ('ashfall_app/saves/journal_write.py',
-     'ended=time >= end)',
-     'ended=True)'),
+     'ended=time >= end, losses',
+     'ended=True, losses'),
 ]

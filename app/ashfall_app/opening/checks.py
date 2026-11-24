@@ -20,6 +20,7 @@ from .keep_checks import check_kept_needs
 from .fight_refs import check_fights, fights
 from .kind_checks import check_kinds
 from .line_kinds import check_line_kinds
+from .loss_checks import check_loss_lines, check_loss_order
 from .find_checks import check_finds
 from .name_checks import check_names, without_slots
 from .phase_pays import check_phase_pays
@@ -80,6 +81,7 @@ def check_structure(o: "Opening") -> None:
     check_replacements(o)
     check_choices(o)
     check_player_only(o)
+    check_loss_lines(o)
     check_leaves(o)
     check_groups(o)
     check_people(o)
@@ -100,6 +102,7 @@ def check_content(o: "Opening") -> None:
     _check_text(o)
     check_stakes_hold(o)
     check_unlock_order(o)
+    check_loss_order(o)
     if o.prestige is not None:
         check_phase_spans(build_rules(o))
     if any(True for _ in fights(o)):
