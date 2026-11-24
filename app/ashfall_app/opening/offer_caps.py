@@ -1,6 +1,7 @@
 """The cap a store has for certain when something is offered: its own cap with the cap modifiers of every outcome that
 must already have happened (the chain of what unlocks it, what each outcome waits on, and the camp levels a certain
 card lifts). A rule offered then may let go above the store's first cap, never above this."""
+from collections.abc import Iterator, Mapping
 from typing import TYPE_CHECKING
 
 from .convert import amount, levels
@@ -45,7 +46,7 @@ class Chain:
         self.waits = {w: self._wait_ways(w) for w in self.out}
         self.before = self._solve()
 
-    def _solve(self) -> dict[str, frozenset[str]]:
+    def _solve(self) -> "Before":
         """A worklist: an outcome is solved again only when an outcome its conditions read has shrunk. Each set only
         shrinks from everything, so this reaches the same greatest fixpoint as sweeping until nothing changes. The
         sets are held as bit masks over the outcomes while solving."""
@@ -75,7 +76,7 @@ class Chain:
                     if r not in queued:
                         todo.append(r)
                         queued.add(r)
-        return {w: _names(m, names) for w, m in before.items()}
+        return Before(before, names)
 
     def unlockers(self, unlock_kind: str, id_: str) -> list[str]:
         return self.unlocked_by.get((unlock_kind, id_), [])
@@ -127,6 +128,24 @@ class Chain:
         return [*(m for w in sorted(done) for m in self.out[w].modifiers), *mods]
 
 
+class Before(Mapping[str, frozenset[str]]):
+    """Chain.before: each outcome's solved mask, read out as names only when asked for (most never are)."""
+
+    def __init__(self, masks: dict[str, int], names: list[str]) -> None:
+        self._masks, self._names, self._read = masks, names, dict[str, frozenset[str]]()
+
+    def __getitem__(self, where: str) -> frozenset[str]:
+        if where not in self._read:
+            self._read[where] = _names(self._masks[where], self._names)
+        return self._read[where]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._masks)
+
+    def __len__(self) -> int:
+        return len(self._masks)
+
+
 def _names(mask: int, names: list[str]) -> frozenset[str]:
     """The outcomes whose bits are set in `mask`, bit i being names[i]."""
     out: list[str] = []
@@ -137,7 +156,7 @@ def _names(mask: int, names: list[str]) -> frozenset[str]:
     return frozenset(out)
 
 
-def _common(before: dict[str, frozenset[str]], ways: list[str]) -> frozenset[str]:
+def _common(before: Before, ways: list[str]) -> frozenset[str]:
     """What every one of `ways` has behind it."""
     sets = [before[w] for w in ways]
     return sets[0].intersection(*sets[1:])
