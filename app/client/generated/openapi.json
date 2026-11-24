@@ -2700,6 +2700,10 @@
                 "type": "null"
               }
             ]
+          },
+          "chore": {
+            "type": "boolean",
+            "title": "Chore"
           }
         },
         "type": "object",
@@ -2712,7 +2716,8 @@
           "change_bp",
           "on_line_key",
           "off_line_key",
-          "offered_after"
+          "offered_after",
+          "chore"
         ],
         "title": "ChipInfo"
       },

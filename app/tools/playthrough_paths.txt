@@ -19,6 +19,7 @@ app/ashfall_app/api/__init__.py
 app/ashfall_app/api/camp_models.py
 app/ashfall_app/api/card_models.py
 app/ashfall_app/api/changes.py
+app/ashfall_app/api/chip_infos.py
 app/ashfall_app/api/content_models.py
 app/ashfall_app/api/convert.py
 app/ashfall_app/api/decision_models.py
@@ -211,6 +212,7 @@ app/ashfall_app/opening/chapters.py
 app/ashfall_app/opening/checks.py
 app/ashfall_app/opening/chip_checks.py
 app/ashfall_app/opening/choice_checks.py
+app/ashfall_app/opening/chores.py
 app/ashfall_app/opening/convert.py
 app/ashfall_app/opening/day_eight.toml
 app/ashfall_app/opening/day_eighteen.toml

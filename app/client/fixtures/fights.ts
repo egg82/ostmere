@@ -50,7 +50,7 @@ function poultice(card: Card, at: number): Card {
 /** The content with the hurt chip, which shows from a quarter hurt (the shipped chip's `when`). */
 export function withHurtChip(content: Content): Content {
   const when = { kind: "at_least", watched: { kind: "store_value", store: "hurt" }, value: Q / 4, release: Q / 4, value_of_cap: false, release_of_cap: false } as const;
-  const chip: ChipInfo = { chip: "hurt", label_key: "chip.hurt", tone: "hurt", when, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null };
+  const chip: ChipInfo = { chip: "hurt", label_key: "chip.hurt", tone: "hurt", when, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null, chore: false };
   return { ...content, chip_infos: [...content.chip_infos, chip], text_entries: [...content.text_entries, { key: "chip.hurt", text: "hurt" }] };
 }
 

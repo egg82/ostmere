@@ -9,6 +9,8 @@ import { chipCards } from "./cues";
 import { FIRST_MIX, FIRST_RULE, guided, guidedRule, SECOND_MIX } from "./lessons";
 import type { Keeps } from "./keeps";
 import { holdsCard, mixesFull } from "./mix";
+import { ruleFor, rulesFull } from "./orders";
+import { shownChips } from "./shown";
 import { sideCue, SIDE_MIX, type SideCue } from "./sidelesson";
 import { hintedSwitch, ruleTasks } from "./ruleoffers";
 
@@ -42,11 +44,25 @@ export function sideMixCue(catalog: Catalog, view: View, keeps: Keeps): SideCue 
 /** What a chip's mark is for: a mix switch the player keeps making under it, or a rule its card could answer. */
 export interface ChipHint { chip: string; switch: RepeatedSwitch | null }
 
+/** The chores with no order card in the content (ChipInfo.chore) that the band draws now, while no rule is set on their
+ * store and test and a rule can be added: the rule is the player's to write, so the mark on the chip is all the page
+ * offers (docs/decisions/clock.md, "Each season brings its own chores"). */
+export function choreChips(catalog: Catalog, view: View): string[] {
+  if (rulesFull(catalog, view)) return [];
+  return shownChips(catalog, view).filter((id) => {
+    const info = catalog.chips.get(id);
+    return info?.chore === true && !catalog.chipCards.some((c) => c.chip === id) && ruleFor(view, info) < 0;
+  });
+}
+
 /** The chips to mark now, none during a lesson or before the first rule's is behind: the chip of a switch the player keeps
- * making by hand, and the chips of the order cards the strip would have offered (cues.chipCards). */
+ * making by hand, the chips of the order cards the strip would have offered (cues.chipCards), and the chores no card
+ * answers (choreChips). */
 export function chipHints(catalog: Catalog, view: View, keeps: Keeps, lesson: string | null, switches: readonly RepeatedSwitch[], endBehind: boolean): ChipHint[] {
   if (lesson !== null || guided(FIRST_RULE, view, keeps)) return [];
   const made = hintedSwitch(catalog, view, switches, (s) => keeps.switchOffered(s));
   const cards = chipCards(catalog, view, endBehind).filter((c) => c.chip !== null && !guidedRule(view, keeps, c));
-  return [...(made ? [{ chip: made.chip, switch: made }] : []), ...cards.map((c) => ({ chip: c.chip ?? "", switch: null }))];
+  const chores = choreChips(catalog, view).filter((c) => c !== made?.chip);
+  return [...(made ? [{ chip: made.chip, switch: made }] : []), ...cards.map((c) => ({ chip: c.chip ?? "", switch: null })),
+    ...chores.map((chip) => ({ chip, switch: null }))];
 }
