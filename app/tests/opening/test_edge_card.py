@@ -31,15 +31,21 @@ def last_end(chapters: tuple[Path, ...]) -> str:
     return [c.end for c in map(with_end, chapters) if c.end is not None][-1]
 
 
-def test_one_feature_carries_the_card_the_last_shipped_chapters_end_feature():
-    assert carriers(CHAPTERS) == [last_end(CHAPTERS)]
+@pytest.fixture(scope="module")
+def shipped() -> list[str]:
+    """The card carriers under every shipped chapter: one full load, shared by the tests that read it."""
+    return carriers(CHAPTERS)
 
 
-def test_a_chapter_moving_into_shipped_takes_the_card_with_it():
+def test_one_feature_carries_the_card_the_last_shipped_chapters_end_feature(shipped: list[str]):
+    assert shipped == [last_end(CHAPTERS)]
+
+
+def test_a_chapter_moving_into_shipped_takes_the_card_with_it(shipped: list[str]):
     """Shipping the last chapter with an end_feature moved the card off the one before it, with no hand edit."""
     last = max(i for i, p in enumerate(CHAPTERS) if with_end(p).end is not None)
     before = carriers((*CHAPTERS[:last], *CHAPTERS[last + 1:]))
-    after = carriers(CHAPTERS)
+    after = shipped
     assert len(before) == 1 and len(after) == 1
     assert after == [with_end(CHAPTERS[last]).end] and after != before
 
