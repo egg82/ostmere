@@ -33,6 +33,7 @@ def check_fights(o: "Opening") -> None:
             need(where, "store", a.store, ids["store"])
             if (a.items * QUANTITY_SCALE) % a.every != 0:
                 fail(where, f"{a.items} per {a.every} {a.store} does not divide exactly into quantity units")
-        for key in (*f.won_line_keys, *f.lost_line_keys):
+        for key in (*f.won_line_keys, *f.lost_line_keys, *(f.loss_pool or ()), *(f.loss_notes or ()),
+                    *([] if f.on_loss_key is None else [f.on_loss_key])):
             if key not in o.text:
                 fail(where, f"key {key!r} is not in text")

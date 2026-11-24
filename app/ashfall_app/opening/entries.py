@@ -72,6 +72,11 @@ class FightEntry(Entry):
     ui.fight.won. Words only: the engine never reads it."""
     lost_line_keys: list[str] = []
     """The same for one fight lost; empty: ui.fight.lost."""
+    loss_pool: list[str] | None = None
+    """With loss_notes, on_loss_key and loss_after, all or none: api/CONTRACT.txt, "LOSS LINES" (loss_checks.py)."""
+    loss_notes: list[str] | None = None
+    on_loss_key: str | None = None
+    loss_after: str | None = None
 
 
 class StandingEntry(Entry):
