@@ -52,5 +52,8 @@ class OfferEntry(Entry):
     expiry_key: str | None = None
     """When the offer goes unanswered; None says nothing, and every offer has None until the engine has offer expiry
     (engine DESIGN.txt, KNOWN GAPS)."""
+    gates_read_feature: list[str] = []
+    """Features that later gates read in place of this offer's answers: each is unlocked by the finish of a card every
+    answer unlocks, and no condition anywhere reads this offer as answered or one of its answers (ask_checks.py)."""
     permanence_key: str | None = None
     """What the answer settles for good, for an offer whose permanence the player should weigh; None says nothing."""
