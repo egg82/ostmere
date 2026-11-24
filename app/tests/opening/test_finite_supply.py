@@ -34,10 +34,10 @@ def test_the_beams_store_back_at_eight_fails(shipped_rules: Rules) -> None:
 
 
 def _rules(*cards: CardDef, pool: int = 12, made_cap: int = 12, needed: int = 8, extra: tuple[TriggerDef, ...] = (),
-           standing: tuple[StandingDef, ...] = (), offers: tuple[OfferDef, ...] = ()) -> Rules:
+           standing: tuple[StandingDef, ...] = (), offers: tuple[OfferDef, ...] = (), build_cap: int | None = None) -> Rules:
     """A pool filled once by a trigger, drawn into `made` by `pull` (1 for 1), and a project `build` taking one `made`
     a stage over `needed` stages, all of them read by a trigger."""
-    build = CardDef(BUILD, 60, inputs=(Amount(MADE, Q),), cap=needed)
+    build = CardDef(BUILD, 60, inputs=(Amount(MADE, Q),), cap=build_cap or needed)
     stores = (StoreDef(POOL, 100 * Q), StoreDef(MADE, made_cap * Q), StoreDef(OTHER, 100 * Q))
     triggers = (TriggerDef(TriggerId("fill"), AfterTime(0), Outcome(stores=(Amount(POOL, pool * Q),))),
                 TriggerDef(TriggerId("done"), AtLeast(CardCount(BUILD), needed, needed), Outcome()), *extra)
@@ -91,3 +91,26 @@ def test_a_converter_into_a_store_smaller_than_progress_needs_fails() -> None:
 def test_a_standing_clock_drawing_a_pool_is_not_held_to_its_cap() -> None:
     clock = StandingDef(ActionId("clock"), costs=(Flow(POOL, per_hour(1)),), makes=(Flow(MADE, per_hour(1)),))
     check_finite_supply(_rules(standing=(clock,), made_cap=2))
+
+
+
+def test_a_required_cards_own_later_completions_spend_too_late_to_matter() -> None:
+    """build may run 12 stages and progress reads 8: its last 4 come after its 8, so a pool of 8 is enough. A second
+    project reading all 4 of its stages could be starved by them, so with it the pool needs 16."""
+    check_finite_supply(_rules(_pull(), pool=8, build_cap=12))
+    other = CardDef(CardId("build2"), 60, inputs=(Amount(MADE, Q),), cap=4)
+    read = (TriggerDef(TriggerId("b2"), AtLeast(CardCount(CardId("build2")), 4, 4), Outcome()),)
+    with pytest.raises(ValueError, match="store (made|pool): finite"):
+        check_finite_supply(_rules(_pull(), other, pool=15, build_cap=12, extra=read))
+    check_finite_supply(_rules(_pull(), other, pool=16, build_cap=12, extra=read))
+
+
+def test_a_consumer_stopping_on_another_pool_spends_only_what_that_pool_lets_it() -> None:
+    """A standing chore eats 1 of the pool an hour while its own clock (2 hours) lasts: it can spend 2, so a pool of 10
+    covers the 8 and a pool of 9 does not."""
+    clock = StoreId("other")
+    eat = StandingDef(ActionId("eat"), costs=(Flow(POOL, per_hour(1)), Flow(clock, per_hour(1))))
+    fill = (TriggerDef(TriggerId("clock"), AfterTime(0), Outcome(stores=(Amount(clock, 2 * Q),))),)
+    check_finite_supply(_rules(_pull(), pool=10, standing=(eat,), extra=fill))
+    with pytest.raises(ValueError, match="store (made|pool): finite"):
+        check_finite_supply(_rules(_pull(), pool=9, standing=(eat,), extra=fill))

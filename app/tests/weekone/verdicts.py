@@ -50,7 +50,7 @@ def span(p: DayTwoPlayer, later: Later) -> tuple[int, int]:
     return first, last
 
 
-PARTS = {"four": 9, "five": 16, "six": 9}
+PARTS = {"four": 9, "five": 16, "six": 11}
 """How many parts a chapter's counting is split into, one per step that changes the mix or queue (the counter's run-ons
 cost one to two minutes each; everything else it reads is cheap): each part is its own test's setup, so no test setup
 passes the per-test timeout on a slow node. A chapter with more such steps than parts fails `counts_of`."""

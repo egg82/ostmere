@@ -9,8 +9,9 @@ Rules, ids and fields only, base amounts (finite_runners.py). Raises ValueError 
 - Required: a capped card (a project or a told step: its cap says it ends) whose completions a trigger's condition
   reads at_least n needs those n completions' takes. A finite store progress needs makes its converters (uncapped runners drawing a
   pool into it) need what its other supply leaves short.
-- Optional: every other consumer. A capped one spends at most the rest of its cap, anything else without limit. A
-  converter also stockpiles up to its target's cap, which counts when the pool has another use.
+- Optional: every other consumer. A capped one spends at most the rest of its cap, one stopping on another finite
+  store at most what that store lets it run, anything else without limit. A converter also stockpiles up to its
+  target's cap, which counts when the pool has another use.
 - Caps: a card converting a pool into a store whose cap is below what progress needs of it can lose the pool at that
   cap: the engine's full rule stops a mix card whose every outcome store is full (engine DESIGN.txt, "FULL OUTPUT"), but
   not a tap, nor a card a by-product keeps running. A standing action converting a pool is the world's clock, not the
@@ -116,18 +117,35 @@ class _Reading:
                 self._check_cap(store, u, r)
 
     def _optional(self, store: StoreId, targets: list[StoreId]) -> Fraction:
+        """What else can spend the store. A required card's completions past those progress reads come after them, so
+        they can spend only what the other required cards need: the one finishing last spends its rest too late."""
         spent = Fraction(0)
+        rests: list[Fraction] = []
         for r in self.all:
             if store not in r.takes or (r.units is None and store in r.stops and set(r.gives) & set(targets)):
                 continue
-            if r.units is None:
+            units = self._units(r, store)
+            if units is None:
                 fail(f"store {store}", f"finite and needed by progress, but {r.id} can spend it without limit")
-            spent += max(0, r.units - self.required.get(r.id, 0)) * r.takes[store]
+            rest = max(0, units - self.required.get(r.id, 0)) * r.takes[store]
+            if r.id in self.required:
+                rests.append(rest)
+            else:
+                spent += rest
+        spent += sum(rests, Fraction(0)) - min(rests, default=Fraction(0))
         uses = len(targets) + (1 if self._direct(store) > 0 else 0)
         if uses > 1:
             spent += sum((self.caps[u] / max(r.gives[u] / r.takes[store] for r in self._path(store, u))
                           for u in targets), Fraction(0))
         return spent
+
+    def _units(self, r: Runner, store: StoreId) -> Fraction | None:
+        """How many units a runner can run while `store` lasts: its cap, or what the first other finite store it stops
+        on runs out at."""
+        if r.units is not None:
+            return Fraction(r.units)
+        pools = [s for s in r.stops if s in self.finite and s != store]
+        return min((self.total(s) / r.takes[s] for s in pools), default=None)
 
     def _check_cap(self, store: StoreId, target: StoreId, r: Runner) -> None:
         if self.caps[target] < self.demand(target) and r.card is not None:
