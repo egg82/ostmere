@@ -6,7 +6,7 @@ from dataclasses import replace
 from typing import TypedDict
 
 from ashfall_app.engine import (
-    ActionId, AfterTime, AnswerDef, AnswerId, Amount, CardDef, CardId, FightDef, Flow, LaneDef, LaneId, OfferDef,
+    ActionId, AfterTime, AnswerDef, AtLeast, CardCount, AnswerId, Amount, CardDef, CardId, FightDef, Flow, LaneDef, LaneId, OfferDef,
     OfferId, Outcome, PacingCurve, Rules, SideDef, SideId, SkillDef, SkillId, StandingDef, StoreDef, StoreId,
     ThreatDef, ThreatId, TriggerDef, TriggerId, Unlock, UnlockKind,
 )
@@ -14,7 +14,7 @@ from tests.dayone.sinks import Chapter, Trip
 
 RATE, HOUR = 3600, 3600
 CAP = 4 * RATE * HOUR
-WOOD, FOUND = StoreId("wood"), StoreId("found")
+WOOD, FOUND, RELICS = StoreId("wood"), StoreId("found"), StoreId("relics")
 GATHER, TRIP, COMFORT = CardId("gather"), CardId("trip"), CardId("comfort")
 CLEAR, RAID, SIDE = CardId("clear"), ActionId("raid"), LaneId("side")
 HAND, WOLF = SideId("hand"), ThreatId("wolf")
@@ -36,12 +36,12 @@ class Times(TypedDict, total=False):
 
 
 def rules(trip_at: int = HOUR // 2, comfort_at: int = HOUR // 2, offer_at: int = 4 * HOUR, trip_cost: int = 8,
-          fights: bool = False, clear_at: int = HOUR // 2) -> Rules:
+          fights: bool = False, clear_at: int = HOUR // 2, finds: int = 0) -> Rules:
     """Each sink is shown by a trigger at the given second of game time. The gatherer makes 2 RATE at full speed into a
     wood store of 4 RATE-hours; the trip takes `trip_cost` (8) RATE-hours of wood per completion, more than the store holds, so in the mix it runs the store dry and waits for it to fill;
     a tappable trip costs 1; the comfort takes 3. `fights`: the trip is a fight on a side level with its threat, a standing
     raid takes wood, and a fight card (CLEAR, shown at `clear_at`, a lane of its own, 12 hours, takes 1 wood) joins the
-    comfort among the sinks."""
+    comfort among the sinks. `finds`: that many finds, one at every second trip, each a trigger on AtLeast(CardCount(trip), n) adding one relic (engine DESIGN "BANKED TIME", "Finds")."""
     sk = SkillId("k0")
     cards = (CardDef(GATHER, 60, skill=sk, xp_per_hour=0, makes=(Flow(WOOD, 2 * RATE),)),
              CardDef(TRIP, HOUR, inputs=(Amount(WOOD, trip_cost * RATE * HOUR),), makes=(Flow(FOUND, RATE),)),
@@ -49,12 +49,15 @@ def rules(trip_at: int = HOUR // 2, comfort_at: int = HOUR // 2, offer_at: int =
     cards, standing, sides = _fights(cards) if fights else (cards, (), ())
     shown = ((cards[1], trip_at), (cards[2], comfort_at), *((c, clear_at) for c in cards[3:]))
     shows = [(TriggerId(f"show_{c.id}"), t, Outcome(unlocks=(Unlock(UnlockKind.CARD, str(c.id)),))) for c, t in shown]
+    found = tuple(TriggerDef(TriggerId(f"find_{n}"), AtLeast(CardCount(TRIP), n, n), Outcome(stores=(Amount(RELICS, RATE * HOUR),)))
+                  for n in range(2, 2 * finds + 1, 2))
     shows.append((TriggerId("show_newcomer"), offer_at, Outcome(unlocks=(Unlock(UnlockKind.OFFER, str(NEWCOMER)),))))
     return Rules(
         (StoreDef(WOOD, CAP, 0), StoreDef(FOUND, 10**9 * RATE * HOUR),
+         *(StoreDef(s, 10**9 * RATE * HOUR) for s in ((RELICS,) if finds else ())),
          *(StoreDef(s, 10**9 * RATE * HOUR) for s in ((LOST, RAID_LOST, CLEAR_LOST, RAIDS) if fights else ()))),
         (SkillDef(sk),), standing, PacingCurve((10**15,)), 1000,
-        cards=cards, triggers=tuple(TriggerDef(i, AfterTime(t), o) for i, t, o in shows),
+        cards=cards, triggers=(*(TriggerDef(i, AfterTime(t), o) for i, t, o in shows), *found),
         opening=(Unlock(UnlockKind.STORE, str(WOOD)), Unlock(UnlockKind.STORE, str(FOUND)),
                  Unlock(UnlockKind.CARD, str(GATHER)), Unlock(UnlockKind.SKILL, "k0"),
                  *(Unlock(UnlockKind.ACTION, str(a.id)) for a in standing)),

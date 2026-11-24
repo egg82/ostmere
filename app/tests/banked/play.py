@@ -19,10 +19,10 @@ class Played:
     visits: tuple[Visit, ...] = ()
 
 
-def play(visits: tuple[Visit, ...], knobs: sinks.SinkKnobs, until: int, fights: bool = False, **times: Unpack[Times]) -> Played:
+def play(visits: tuple[Visit, ...], knobs: sinks.SinkKnobs, until: int, fights: bool = False, finds: int = 0, **times: Unpack[Times]) -> Played:
     """The route from a new save through `visits` (start, end), then on with nobody deciding to `until`. A visit's moves
     are made at its start and again at its end (what showed while it lasted), each decision after another until the view shows nothing left to do."""
-    r = rules(fights=fights, **times)
+    r = rules(fights=fights, finds=finds, **times)
     p = Played(new_save(r), visits=visits)
     for start, end in (v for v in visits if v[0] <= until):
         for at in (start, min(end, until)):
