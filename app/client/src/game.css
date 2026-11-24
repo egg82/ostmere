@@ -507,7 +507,7 @@ p.catching-up[hidden] { display: none; }
 .journal-note.hand-pencil { color: var(--hand-pencil); background: var(--parchment); }
 .journal-words { flex: 1 1 55%; min-width: 0; margin: 0; }
 .journal-note:has(.journal-count) .journal-words { flex: 0 1 auto; }
-.journal-count { flex: none; align-self: baseline; margin-left: .6rem; font: 400 1rem/1.3 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-ink); }
+.journal-count { flex: none; align-self: baseline; margin-left: .6rem; font: 400 1rem/1.3 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--hand-ink); background: var(--parchment); }
 .journal-day { margin: 0 0 -.5rem; font: 400 1.35rem/1.2 "Reenie Beanie", "Segoe Print", cursive; color: var(--hand-pencil); background: var(--parchment); }   /* a day's heading on a days page, in the pencil; on a phone it sits in the column's .8rem gap, pulled to its first note */
 .journal-day:not(:first-child) { margin-top: .1rem; }
 .journal-note-sketch { flex: none; display: block; max-width: 40%; max-height: 8rem; object-fit: contain; }
