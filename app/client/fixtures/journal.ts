@@ -33,7 +33,7 @@ export const NOTE_B = "note_b1";
 export const PAGE_C = "page_c";
 export const NOTE_C = "note_c1";
 export const NOTES_D = ["note_d1", "note_d2"];
-export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null })), marks: [] };
+export const DAY_D: JournalDay = { day: 0, day_notes: NOTES_D.map((key) => ({ subject: "s_first_night", slot: "first" as const, key, hand: "ink" as const, sketch: null, count: null })), marks: [] };
 
 /** Placeholder words for WEEKS, in a diarist's voice (never shipped). */
 const WEEK_WORDS: Record<string, string> = {
@@ -53,6 +53,7 @@ const WEEK_WORDS: Record<string, string> = {
   catch_fox: "The fox took two of the hens.",
   walk: "Walked the whole ridge to the far stones and back before dark, and saw nobody the whole way, not even smoke.",
   frost: "First frost. The ground rang under the axe.",
+  gone: "couldn't find the word for it.",
 };
 
 const WORDS: Record<string, string> = {
@@ -109,11 +110,11 @@ export const READ_TO = 4;
 
 
 const note = (key: string, slot: JournalDay["day_notes"][number]["slot"] = "first", hand: "ink" | "pencil" = "ink", sketch: string | null = null) =>
-  ({ subject: `s_${key}`, slot, key: `wk_${key}`, hand, sketch });
+  ({ subject: `s_${key}`, slot, key: `wk_${key}`, hand, sketch, count: null });
 
 /** Days 0 to 15 with gaps: a short day (1), days that fill the first page, a late addition (day 6 for day 5), a
- * misremembering (day 7) corrected on day 14, a gap from day 9 to 12 caught up on day 13; every kind of mark on some
- * day. */
+ * misremembering (day 7) corrected on day 14, a gap from day 9 to 12 caught up on day 13; a loss note and a fold of
+ * three (day 16, LOSS LINES); every kind of mark on some day. */
 export const WEEKS: JournalDay[] = [
   { day: 0, day_notes: [note("roof"), note("well", "first", "ink", "note_sketch")], marks: ["mud"] },
   { day: 1, day_notes: [note("rain")], marks: ["water"] },
@@ -127,6 +128,8 @@ export const WEEKS: JournalDay[] = [
   { day: 13, day_notes: [note("catch_roof", "catchup"), note("catch_well", "catchup"), note("catch_fox", "catchup"), note("frost")], marks: ["smudge"] },
   { day: 14, day_notes: [note("count_fix", "correction", "pencil")], marks: [] },
   { day: 15, day_notes: [note("rain", "repeat")], marks: ["soot"] },
+  { day: 16, day_notes: [note("walk", "repeat"), note("gone", "loss", "pencil"),
+    { subject: "hunt", slot: "fold", key: "ui.journal.fold", hand: "pencil", sketch: null, count: 3 }], marks: [] },
 ];
 
 /** journaltoday's day still being written: WEEKS' day 5 with its first note so far. */

@@ -111,7 +111,7 @@ from typing import Literal
 type SubjectKind = Literal["beat", "person", "routine", "worry", "crowd"]
 type SourceKind = Literal["trigger", "card", "lane", "mentions"]
 type Way = Literal["joined", "left"]
-type SlotName = Literal["first", "repeat", "catchup", "mention", "late", "misremember", "correction"]
+type SlotName = Literal["first", "repeat", "catchup", "mention", "late", "misremember", "correction", "loss", "fold"]
 type Gap = Literal["busy", "away"]
 type Purpose = Literal["write", "late", "misremember", "mark"]
 type MarkKind = Literal["blood", "soot", "water", "mud", "smudge"]
@@ -220,6 +220,18 @@ class Note:
     subject: str
     slot: SlotName
     key: str
+    count: int | None = None
+    """A fold note's lost fights (api/CONTRACT.txt, "LOSS LINES"); None on every other."""
+
+
+@dataclass(frozen=True)
+class Loss:
+    """A card whose lost fights the journal tells (api/CONTRACT.txt, "LOSS LINES"): its pool, and its lost tally floored
+    to whole fights at the end of the day composed."""
+
+    runner: str
+    keys: tuple[str, ...]
+    lost: int
 
 
 @dataclass(frozen=True)
@@ -249,14 +261,16 @@ def compose_day(
     subjects: tuple[Subject, ...],
     habits: Habits,
     ended: bool = True,
+    losses: tuple[Loss, ...] = (),
 ) -> ComposedDay:
     """Compose game day `day` of save `save_id` as it stands (the module docstring's contract).
 
     `lines`: the save's lines known so far with `at < (day + 1) * DAY_S`, in the order stored. `composed`: the stored
     rows for days 0 .. day - 1, oldest first. `subjects`: the content's, ids distinct and no two with one source.
-    `ended`: every line of the day is known, so its end is composed.
+    `ended`: every line of the day is known, so its end is composed. `losses`: the loss runners, whose notes a day's end
+    writes by api/CONTRACT.txt, "LOSS LINES", L1-L6 (journal_composer/losses.py).
     Raises ValueError when a line is at or past the day's end, or `composed` is not exactly days 0 .. day - 1 in order.
     """
     from .journal_composer.day import compose  # the implementation imports this module's types
 
-    return compose(save_id, day, lines, composed, subjects, habits, ended)
+    return compose(save_id, day, lines, composed, subjects, habits, ended, losses)

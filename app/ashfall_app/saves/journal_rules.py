@@ -13,6 +13,17 @@ from .journal import Band, Fade, Habits, MarkRates, Press, Source, Subject
 
 DIARY_HAND = "ink"
 """The hand of a note whose slot names none: the `days` pages' own."""
+LOSS_LOOK_HAND = "pencil"
+"""The hand of a loss or fold note (api/CONTRACT.txt, "LOSS LINES"): a jotting beside the day's own notes."""
+
+
+@dataclass(frozen=True)
+class LossRunner:
+    """A card whose fight carries loss_notes: its id, its lost tally store and its pool."""
+
+    runner: str
+    tally: str
+    keys: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -29,7 +40,9 @@ class JournalRules:
     """Each line key a subject's source writes, to those sources: one outcome joining two `line` people writes lines of
     two causes, each a person subject's. A key no subject feeds from is absent."""
     looks: dict[tuple[str, str], Look]
-    """(subject, slot) to the hand and sketch its notes are drawn in, for every slot the content gives one."""
+    """(subject, slot) to the hand and sketch its notes are drawn in, for every slot the content gives one, and for each
+    loss runner's loss and fold notes."""
+    losses: tuple[LossRunner, ...] = ()
 
 
 def journal_rules(o: Opening) -> JournalRules:
@@ -37,10 +50,12 @@ def journal_rules(o: Opening) -> JournalRules:
     for s in o.subjects:
         for k in dict.fromkeys(_keys(o, s.source)):
             sources[k] = (*sources.get(k, ()), _source(s.source))
+    losses = tuple(LossRunner(c.id, c.fight.lost, tuple(c.fight.loss_notes))
+                   for c in o.cards if c.fight is not None and c.fight.loss_notes is not None)
+    looks = {(s.id, name): Look(slot.hand or DIARY_HAND, slot.sketch) for s in o.subjects for name, slot in _slots(s)}
+    looks |= {(r.runner, slot): Look(LOSS_LOOK_HAND, None) for r in losses for slot in ("loss", "fold")}
     return JournalRules(subjects=tuple(_subject(s) for s in o.subjects), habits=habits(o.journal_habits),
-                        sources=sources,
-                        looks={(s.id, name): Look(slot.hand or DIARY_HAND, slot.sketch)
-                               for s in o.subjects for name, slot in _slots(s)})
+                        sources=sources, looks=looks, losses=losses)
 
 
 def habits(h: JournalHabitsEntry) -> Habits:

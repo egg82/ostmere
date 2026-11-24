@@ -245,6 +245,7 @@ app/ashfall_app/opening/lane_entries.py
 app/ashfall_app/opening/leave_checks.py
 app/ashfall_app/opening/line_kinds.py
 app/ashfall_app/opening/line_only_checks.py
+app/ashfall_app/opening/loss_checks.py
 app/ashfall_app/opening/makers.py
 app/ashfall_app/opening/map_checks.py
 app/ashfall_app/opening/map_entries.py
@@ -295,6 +296,7 @@ app/ashfall_app/saves/journal_composer/bag.py
 app/ashfall_app/saves/journal_composer/day.py
 app/ashfall_app/saves/journal_composer/history.py
 app/ashfall_app/saves/journal_composer/ledger.py
+app/ashfall_app/saves/journal_composer/losses.py
 app/ashfall_app/saves/journal_composer/marks.py
 app/ashfall_app/saves/journal_composer/numbers.py
 app/ashfall_app/saves/journal_composer/owed.py
@@ -302,6 +304,7 @@ app/ashfall_app/saves/journal_composer/own.py
 app/ashfall_app/saves/journal_composer/page.py
 app/ashfall_app/saves/journal_composer/telling.py
 app/ashfall_app/saves/journal_rules.py
+app/ashfall_app/saves/journal_tallies.py
 app/ashfall_app/saves/journal_write.py
 app/ashfall_app/saves/load.py
 app/ashfall_app/saves/manifest.py

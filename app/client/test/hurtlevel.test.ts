@@ -19,7 +19,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 }
 
 const AT = 100;
-const wound: FightInfo = { side: "hands", threat: "wolves", loses: [], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [] };
+const wound: FightInfo = { side: "hands", threat: "wolves", loses: [], wounds: [{ store: "hurt", quantity: Q }], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null };
 const content: Content = withHurtChip(fixtureContent);
 const catalog = new Catalog(content);
 

@@ -73,6 +73,10 @@ class FightInfo(BaseModel):
     """The arrival queue's pool for one fight won; empty: ui.fight.won."""
     lost_line_keys: list[str]
     """The pool for one fight lost; empty: ui.fight.lost."""
+    loss_pool: list[str] | None
+    """With loss_notes and on_loss_key: set on a card that tells its losses from its own pools, else null (LOSS LINES)."""
+    loss_notes: list[str] | None
+    on_loss_key: str | None
 
 
 class ReachInfo(BaseModel):

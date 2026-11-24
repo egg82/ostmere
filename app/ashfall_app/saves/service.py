@@ -156,8 +156,8 @@ class PgSaves:
                     logs.info(_log, "save.decision", **fields, n=row.decisions, game_at=step.save.time,
                               result="invalid", lines=0, rebased=loaded.rebased, ms=_ms(t0))
                     raise Invalid(str(ex)) from ex
-                step = write.Step(done.save, write.numbered(step.lines, done.lines), verb, done.failed, done.context,
-                                  step.rule_changes + done.rule_changes)
+                step = write.Step(done.save, write.numbered(step.lines, done.lines), verb, step.began, done.failed,
+                                  done.context, step.rule_changes + done.rule_changes)
             played = self._write(conn, row, seen, step, now).played
         logs.info(_log, "save.decision", **fields, n=played.decisions, game_at=played.save.time,
                   result="stale" if stale else "behind" if behind else "ok", lines=len(played.lines),
@@ -245,7 +245,7 @@ class PgSaves:
     def _advanced(self, row: rows.SaveRecord, loaded: Loaded, now: datetime, stop: Callable[[], bool]) -> write.Step:
         to = game_now(row.started_at, now, loaded.save.time)
         done = e.advance_logged(loaded.save, self._rs.rules, to, stop)
-        return write.Step(done.save, write.numbered(loaded.lines, done.lines), None,
+        return write.Step(done.save, write.numbered(loaded.lines, done.lines), None, loaded.save,
                           rule_changes=loaded.rule_changes + done.rule_changes,
                           catching_up_to=to if done.stopped_short else None)
 

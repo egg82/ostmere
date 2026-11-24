@@ -37,7 +37,7 @@ export class Threats {
 
   private make(fight: Fight, info: StandingInfo | undefined): Row {
     const node = el("div", "threat");
-    const panel = new FightPanel(this.ctx.catalog, info?.fight ?? { side: fight.side, threat: fight.threat, loses: [], wounds: [], won_line_keys: [], lost_line_keys: [] }, true);
+    const panel = new FightPanel(this.ctx.catalog, info?.fight ?? { side: fight.side, threat: fight.threat, loses: [], wounds: [], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null }, true);
     node.append(el("span", "threat-name", this.ctx.catalog.label(info?.label_key)), panel.root);
     return { node, panel };
   }

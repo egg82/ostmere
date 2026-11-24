@@ -75,6 +75,8 @@ class Slot(StrEnum):
     LATE = "late"
     MISREMEMBER = "misremember"
     CORRECTION = "correction"
+    LOSS = "loss"
+    FOLD = "fold"
 
 
 class DayNote(BaseModel):
@@ -88,6 +90,8 @@ class DayNote(BaseModel):
     """Resolved: the slot's own, else ink."""
     sketch: str | None
     """A small drawing beside the note, /assets/journal/<sketch>.png; null for none."""
+    count: int | None
+    """On a fold note, the lost fights it folds (at least 1), drawn beside its words; null on every other (LOSS LINES)."""
 
 
 class JournalDay(BaseModel):

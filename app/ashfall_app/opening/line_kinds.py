@@ -29,7 +29,7 @@ def line_keys(o: "Opening") -> list[str]:
     if o.camp is not None:
         keys += [k for lv in o.camp.levels for k in lv.line_keys]
     for _, f in fights(o):
-        keys += [*f.won_line_keys, *f.lost_line_keys]
+        keys += [*f.won_line_keys, *f.lost_line_keys, *(f.loss_pool or ())]
     return keys
 
 
