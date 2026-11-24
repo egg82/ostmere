@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B17 day 18.94, target_day 20
+beats sharp (pace_scale 1): B17 day 18.98, target_day 20
   away V157->V158: 0 []
   away V158->V159: 0 []
   away V159->V160: 0 []
@@ -33,9 +33,9 @@ day    line feature    chip   store   skill    card   level  total
   6       4       1       1       0       0       9       1     16
   7       1       0       0       0       0       0       2      3
   8       9       3       0       2       0      10       1     25
-  9      14       1       1       4       0      36       3     59
- 10      22       3       0       1       0      15       3     44
+  9      14       1       0       4       0      36       2     57
+ 10      21       3       2       1       0      15       2     44
  11      24       2       0       0       0     119       2    147
- 12       6       1       1       0       0       2       3     13
- 13      11       1       0       0       0       1       4     17
- 14       4       1       1       0       0       1       1      8
+ 12       7       1       2       0       0       2       2     14
+ 13      11       1       0       0       0       1       3     16
+ 14       4       1       1       0       0       1       2      9
