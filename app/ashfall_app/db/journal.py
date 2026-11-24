@@ -20,7 +20,7 @@ DAY_S = 86400
 class DayRecord:
     day: int
     notes: Any
-    """The day's notes in page order, as JSON reads back: a list of {subject, slot, key}."""
+    """The day's notes in page order, as JSON reads back: a list of {subject, slot, key}, a fold note with its count."""
     gap: str | None
     marks: Any
     """The kinds of mark its page carries, as JSON reads back: a list of strings."""

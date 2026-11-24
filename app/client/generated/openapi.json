@@ -3019,6 +3019,17 @@
               }
             ],
             "title": "Sketch"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count"
           }
         },
         "type": "object",
@@ -3027,7 +3038,8 @@
           "slot",
           "key",
           "hand",
-          "sketch"
+          "sketch",
+          "count"
         ],
         "title": "DayNote",
         "description": "A note on a written day, in page order. Its words are the text entry `key`."
@@ -3489,6 +3501,45 @@
             },
             "type": "array",
             "title": "Lost Line Keys"
+          },
+          "loss_pool": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loss Pool"
+          },
+          "loss_notes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loss Notes"
+          },
+          "on_loss_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On Loss Key"
           }
         },
         "type": "object",
@@ -3498,7 +3549,10 @@
           "loses",
           "wounds",
           "won_line_keys",
-          "lost_line_keys"
+          "lost_line_keys",
+          "loss_pool",
+          "loss_notes",
+          "on_loss_key"
         ],
         "title": "FightInfo",
         "description": "The odds a fight card or standing action runs under (CONTRACT.txt, \"FIGHTS\"): the strengths' ids, and what one lost\nfight costs. The strengths themselves are View.fights."
@@ -6733,7 +6787,9 @@
           "mention",
           "late",
           "misremember",
-          "correction"
+          "correction",
+          "loss",
+          "fold"
         ],
         "title": "Slot",
         "description": "The occasion a day's note was written for (docs/design/journal.md, \"The content's side\")."

@@ -40,6 +40,8 @@ class Step:
     save: e.Save
     lines: tuple[e.Line, ...]
     verb: e.Verb | None
+    began: e.Save
+    """The save the step advanced from, as loaded (the journal reads the lost tallies between, journal_tallies.py)."""
     failed: e.CardId | None = None
     context: e.DecisionContext | None = None
     rule_changes: tuple[e.RuleChange, ...] = ()
@@ -102,7 +104,7 @@ def persist(conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: Ste
         runs = merged(before, step.rule_changes, standing(step.save.orders, step.save.queue))
     else:
         runs = gathered(before, step.rule_changes)
-    days, journaled = journal_write.composed(conn, row, seen, step.lines, step.save.time, rs)
+    days, journaled = journal_write.composed(conn, row, seen, step.lines, step.began, step.save, rs)
     listed, recent = write_step(
         conn, save_id, now, written(step.save, decisions, rs, runs, best), [(ln.time, str(ln.key)) for ln in step.lines],
         None if step.verb is None else _log_of(decisions, step, rs, now),

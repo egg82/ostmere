@@ -1021,6 +1021,8 @@ export interface components {
             hand: components["schemas"]["Hand"];
             /** Sketch */
             sketch: string | null;
+            /** Count */
+            count: number | null;
         };
         Decision: components["schemas"]["SwitchMix"] | components["schemas"]["TapCard"] | components["schemas"]["SaveMix"] | components["schemas"]["DeleteMix"] | components["schemas"]["SetOrders"] | components["schemas"]["SetQueue"] | components["schemas"]["AnswerOffer"] | components["schemas"]["Prestige"] | components["schemas"]["UndoPick"] | components["schemas"]["MovePick"];
         /** DecisionRequest */
@@ -1173,6 +1175,12 @@ export interface components {
             won_line_keys: string[];
             /** Lost Line Keys */
             lost_line_keys: string[];
+            /** Loss Pool */
+            loss_pool: string[] | null;
+            /** Loss Notes */
+            loss_notes: string[] | null;
+            /** On Loss Key */
+            on_loss_key: string | null;
         };
         /**
          * Figure
@@ -2391,7 +2399,7 @@ export interface components {
          * @description The occasion a day's note was written for (docs/design/journal.md, "The content's side").
          * @enum {string}
          */
-        Slot: "first" | "repeat" | "catchup" | "mention" | "late" | "misremember" | "correction";
+        Slot: "first" | "repeat" | "catchup" | "mention" | "late" | "misremember" | "correction" | "loss" | "fold";
         /**
          * SpentShare
          * @description The part, share_bp, of spent card `card`'s share that the card holding this entry runs now.
