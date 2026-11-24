@@ -1,0 +1,730 @@
+# Day twenty-two: week three's last visit (the walk shown at T13), then I1, the season's turn at 504 h, through B18 (the
+# first walk), SL29, I2, I3, I4 and SL30 to B19 (the stranger home), as data merged after day_nineteen.toml
+# (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/week-four.md, "Day
+# twenty-two"; numbers: content/team/week-four-numbers.md.
+version = 1
+end_feature = "stranger_home"
+
+# ---------- T13's visit: the walk shown ----------
+
+# On week three's end: the walk over the ridge, shown unready with its countdown to the turn (D-156), so every route can
+# queue it or set its share before the night's absence.
+[[triggers]]
+id = "t_walk_shown"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "week_three_end", value = 1 }
+[triggers.outcome]
+line_keys = ["l_walk_shown"]
+unlocks = [
+  { unlock_kind = "card", id = "walk_ashwood" },
+  { unlock_kind = "store", id = "charwood" },
+]
+
+# Every walk's outcome adds one, hands or town, so the finds read one number whoever walked (D-158).
+[[stores]]
+id = "ashwood_trips"
+label_key = "store_ashwood_trips"
+cap_items = 8760
+tally = true
+
+# Dead hardwood, dry to the heart: the post's timber (day twenty-three).
+[[stores]]
+id = "charwood"
+label_key = "store_charwood"
+cap_items = 24
+
+# Dawn 22, the hour before the turn, in twentieths of an hour (day four's dawn_5): the walk opens at its end, and the
+# face says "opens at dawn" where a countdown beside the walk's supplies could not be drawn.
+[[stores]]
+id = "dawn_22"
+label_key = "store_dawn_22"
+cap_items = 20
+clock = "dawn"
+
+[[standing]]
+id = "dawn_22"
+label_key = "action_dawn_22"
+makes = [{ store = "dawn_22", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_dawn_22"
+when = { test = "after_time", value = 1810800 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_22" }] }
+
+# A day out over the ridge and back, alone: an uncapped trip in the mix, its supplies what the table eats, ready from
+# the turn (D-156).
+[[cards]]
+id = "walk_ashwood"
+presentation = "action"
+label_key = "c_walk_ashwood"
+work_s = 3600
+skill = "wayfinding"
+xp_per_hour = 360
+inputs = [{ store = "smoked", items = 2 }]
+requires = [{ test = "at_least", subject_kind = "store", id = "dawn_22", value = 20 }]
+outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", items = 1 }, { store = "ashwood_trips", items = 1 }] }
+
+# Anyone with two good legs can walk it; his leg rules him out.
+[[town_cards]]
+id = "{lane}_walk_ashwood"
+twin_of = "walk_ashwood"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13"]
+presentation = "action"
+label_key = "c_walk_ashwood"
+work_s = 14400
+inputs = [{ store = "smoked", items = 2 }]
+outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", items = 1 }, { store = "ashwood_trips", items = 1 }] }
+
+[[skills]]
+id = "wayfinding"
+label_key = "skill_wayfinding"
+levels = [
+  { level = 2, pays_key = "pays_way_faster" },
+  { level = 3, pays_key = "pays_find_way_3" },
+  { level = 4, pays_key = "pays_way_faster" },
+  { level = 5, pays_key = "pays_find_way_5" },
+  { level = 6, pays_key = "pays_way_faster" },
+  { level = 7, pays_key = "pays_way_faster" },
+  { level = 8, pays_key = "pays_way_8" },
+  { level = 9, pays_key = "pays_way_faster" },
+  { level = 10, pays_key = "pays_way_faster" },
+  { level = 11, pays_key = "pays_way_faster" },
+  { level = 12, pays_key = "pays_way_faster" },
+  { level = 13, pays_key = "pays_way_faster" },
+  { level = 14, pays_key = "pays_way_faster" },
+  { level = 15, pays_key = "pays_way_faster" },
+  { level = 16, pays_key = "pays_way_faster" },
+  { level = 17, pays_key = "pays_way_faster" },
+  { level = 18, pays_key = "pays_way_faster" },
+  { level = 19, pays_key = "pays_way_faster" },
+  { level = 20, pays_key = "pays_way_faster" },
+  { level = 21, pays_key = "pays_way_faster" },
+  { level = 22, pays_key = "pays_way_faster" },
+  { level = 23, pays_key = "pays_way_faster" },
+  { level = 24, pays_key = "pays_way_faster" },
+  { level = 25, pays_key = "pays_way_faster" },
+]
+
+[[triggers]]
+id = "t_way_2"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 2 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_2" }] }
+
+[[triggers]]
+id = "t_way_3"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 3 }
+outcome = { line_keys = ["l_find_way_3"] }
+
+[[triggers]]
+id = "t_way_4"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 4 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_4" }] }
+
+# Seen far off and drawn on the map unnamed (week four's first owner question, defaulted).
+[[triggers]]
+id = "t_way_5"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 5 }
+outcome = { line_keys = ["l_find_way_5"], unlocks = [{ unlock_kind = "feature", id = "square_hill_seen" }] }
+
+[[triggers]]
+id = "t_way_6"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 6 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_6" }] }
+
+[[triggers]]
+id = "t_way_7"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 7 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_7" }] }
+
+[[triggers]]
+id = "t_way_8"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 8 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 13333, source = "wayfinding_8" }] }
+
+# From 9 each level a tenth faster, the row marked to the curve's top as Spellcraft's (day_sixteen.toml).
+[[triggers]]
+id = "t_way_9"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 9 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_9" }] }
+
+[[triggers]]
+id = "t_way_10"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 10 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_10" }] }
+
+[[triggers]]
+id = "t_way_11"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 11 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_11" }] }
+
+[[triggers]]
+id = "t_way_12"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 12 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_12" }] }
+
+[[triggers]]
+id = "t_way_13"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 13 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_13" }] }
+
+[[triggers]]
+id = "t_way_14"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 14 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_14" }] }
+
+[[triggers]]
+id = "t_way_15"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 15 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_15" }] }
+
+[[triggers]]
+id = "t_way_16"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 16 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_16" }] }
+
+[[triggers]]
+id = "t_way_17"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 17 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_17" }] }
+
+[[triggers]]
+id = "t_way_18"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 18 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_18" }] }
+
+[[triggers]]
+id = "t_way_19"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 19 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_19" }] }
+
+[[triggers]]
+id = "t_way_20"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 20 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_20" }] }
+
+[[triggers]]
+id = "t_way_21"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 21 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_21" }] }
+
+[[triggers]]
+id = "t_way_22"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 22 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_22" }] }
+
+[[triggers]]
+id = "t_way_23"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 23 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_23" }] }
+
+[[triggers]]
+id = "t_way_24"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 24 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_24" }] }
+
+[[triggers]]
+id = "t_way_25"
+when = { test = "at_least", subject_kind = "skill_level", id = "wayfinding", value = 25 }
+outcome = { modifiers = [{ target = "work", id = "walk_ashwood", kind = "mul_bp", amount_bp = 11000, source = "wayfinding_25" }] }
+
+# ---------- I1: the season's turn ----------
+
+# I1 at 504 h. What only the season brings draws a pool this turn fills (season_checks): the film's hours, the hour of
+# thaw that takes the last season's rime, the fish under the fog. No rate is raised. The Clear's chore rules go (D-154,
+# retire_checks), and the arrivals' count may run past 20 (D-164).
+[[triggers]]
+id = "t_i1"
+season = true
+when = { test = "after_time", value = 1814400 }
+[triggers.outcome]
+line_keys = ["l_i1_1", "l_i1_2", "l_i1_3"]
+stores = [
+  { store = "still_left", items = 168 },
+  { store = "thaw_left", items = 1 },
+  { store = "fish_rising", items = 24 },
+]
+unlocks = [
+  { unlock_kind = "feature", id = "still" },
+  { unlock_kind = "action", id = "settle" },
+  { unlock_kind = "action", id = "thaw" },
+]
+modifiers = [{ target = "cap", id = "arrivals", kind = "mul_bp", amount_bp = 20000, source = "t_i1" }]
+retire_orders = ["cover_beds", "n3_cover_beds", "warm_beds"]
+
+# Never drawn: the season's hours of settling ash left. I1 fills it; the settling draws it, so it ends at 672 h.
+[[stores]]
+id = "still_left"
+label_key = "store_still_left"
+cap_items = 168
+hidden = true
+
+# Never drawn: the hour of thaw that empties the rime.
+[[stores]]
+id = "thaw_left"
+label_key = "store_thaw_left"
+cap_items = 1
+hidden = true
+
+# Never drawn but by its cures: ash settled on the open meat, the face of the chip below.
+[[stores]]
+id = "film"
+label_key = "store_film"
+cap_items = 24
+hidden = true
+
+# The pale fish under the fog: a pool nothing refills (the deer's shape); nothing waits on it.
+[[stores]]
+id = "fish_rising"
+label_key = "store_fish_rising"
+cap_items = 24
+
+[[standing]]
+id = "settle"
+label_key = "action_settle"
+costs = [{ store = "still_left", items_per_hour = 1 }]
+makes = [{ store = "film", items_per_hour = 1 }]
+
+[[standing]]
+id = "thaw"
+label_key = "action_thaw"
+costs = [{ store = "thaw_left", items_per_hour = 1 }, { store = "rime", items_per_hour = 24 }]
+
+# Never drawn: game hours since the turn, for the season's own steps (clear_clock's shape).
+[[stores]]
+id = "still_clock"
+label_key = "store_still_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "still_clock"
+label_key = "action_still_clock"
+makes = [{ store = "still_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_still_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "still", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "still_clock" }] }
+
+# The pack comes close in the fog: its strength steps up a quarter on the season's clock (the Clear's step's shape).
+[[triggers]]
+id = "t_still_step"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 40 }
+outcome = { modifiers = [{ target = "threat", id = "wolf_pack", kind = "add_bp", amount_bp = 2500, source = "t_still_step" }] }
+
+# ---------- B18: the first walk ----------
+
+[[triggers]]
+id = "t_b18"
+when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "r2_open", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_b18_1", "l_b18_2", "l_b18_3", "l_map_ashwood"]
+unlocks = [
+  { unlock_kind = "feature", id = "ashwood" },
+  { unlock_kind = "skill", id = "wayfinding" },
+  { unlock_kind = "store", id = "ashwood_trips" },
+  { unlock_kind = "card", id = "n1_walk_ashwood" },
+  { unlock_kind = "card", id = "n2_walk_ashwood" },
+  { unlock_kind = "card", id = "n3_walk_ashwood" },
+  { unlock_kind = "card", id = "n5_walk_ashwood" },
+  { unlock_kind = "card", id = "n6_walk_ashwood" },
+  { unlock_kind = "card", id = "n7_walk_ashwood" },
+  { unlock_kind = "card", id = "n8_walk_ashwood" },
+  { unlock_kind = "card", id = "n9_walk_ashwood" },
+  { unlock_kind = "card", id = "n10_walk_ashwood" },
+  { unlock_kind = "card", id = "n12_walk_ashwood" },
+]
+
+# ---------- SL29: the fish ----------
+
+[[triggers]]
+id = "t_fish"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 6 }
+[triggers.outcome]
+line_keys = ["l_fish"]
+unlocks = [
+  { unlock_kind = "store", id = "fish_rising" },
+  { unlock_kind = "card", id = "fog_fish" },
+  { unlock_kind = "card", id = "n1_fog_fish" },
+  { unlock_kind = "card", id = "n2_fog_fish" },
+  { unlock_kind = "card", id = "n3_fog_fish" },
+  { unlock_kind = "card", id = "n4_fog_fish" },
+  { unlock_kind = "card", id = "n5_fog_fish" },
+  { unlock_kind = "card", id = "n6_fog_fish" },
+  { unlock_kind = "card", id = "n7_fog_fish" },
+  { unlock_kind = "card", id = "n8_fog_fish" },
+  { unlock_kind = "card", id = "n9_fog_fish" },
+  { unlock_kind = "card", id = "n10_fog_fish" },
+  { unlock_kind = "card", id = "n12_fog_fish" },
+]
+
+[[cards]]
+id = "fog_fish"
+presentation = "action"
+label_key = "c_fog_fish"
+work_s = 1200
+skill = "foraging"
+xp_per_hour = 900
+inputs = [{ store = "fish_rising", items = 1 }]
+outcome = { stores = [{ store = "catch", items = 2 }] }
+
+[[town_cards]]
+id = "{lane}_fog_fish"
+twin_of = "fog_fish"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13"]
+presentation = "action"
+label_key = "c_fog_fish"
+work_s = 4800
+inputs = [{ store = "fish_rising", items = 1 }]
+outcome = { stores = [{ store = "catch", items = 2 }] }
+
+# ---------- I2: the film on the meat ----------
+
+# The film at the chip's 12, I1 + 12 h on every route: the chip and its cures, and no order card (D-155): the chip's
+# first showing carries its hint dot, and the rule is the player's to write. Left alone the table makes three quarters
+# of its meals while it shows.
+[[triggers]]
+id = "t_film"
+when = { test = "at_least", subject_kind = "store", id = "film", value = 12 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "still", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "table", value = 1 },
+]
+[triggers.outcome]
+line_keys = ["l_film_1", "l_film_2"]
+unlocks = [
+  { unlock_kind = "chip", id = "ashed" },
+  { unlock_kind = "card", id = "wash_meat" },
+  { unlock_kind = "card", id = "n1_wash_meat" },
+  { unlock_kind = "card", id = "n2_wash_meat" },
+  { unlock_kind = "card", id = "n3_wash_meat" },
+  { unlock_kind = "card", id = "n4_wash_meat" },
+  { unlock_kind = "card", id = "n5_wash_meat" },
+  { unlock_kind = "card", id = "n6_wash_meat" },
+  { unlock_kind = "card", id = "n7_wash_meat" },
+  { unlock_kind = "card", id = "n8_wash_meat" },
+  { unlock_kind = "card", id = "n9_wash_meat" },
+  { unlock_kind = "card", id = "n10_wash_meat" },
+  { unlock_kind = "card", id = "n12_wash_meat" },
+]
+
+[[chips]]
+id = "ashed"
+label_key = "chip_ashed"
+tone = "cold"
+when = { test = "at_least", subject_kind = "store", id = "film", value = 12 }
+effects = [{ target = "rate", id = "table", flow = "make", store = "meals", kind = "mul_bp", amount_bp = 7500, source = "ashed" }]
+cost_key = "chip_ashed_cost"
+
+[[cards]]
+id = "wash_meat"
+presentation = "action"
+label_key = "c_wash_meat"
+upside_key = "up_wash_meat"
+work_s = 600
+skill = "cooking"
+xp_per_hour = 900
+inputs = [{ store = "film", items = 12 }]
+
+# Washing the meat is everyday work, everyone's.
+[[town_cards]]
+id = "{lane}_wash_meat"
+twin_of = "wash_meat"
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13"]
+presentation = "action"
+label_key = "c_wash_meat"
+upside_key = "up_wash_meat"
+work_s = 2400
+inputs = [{ store = "film", items = 12 }]
+
+# ---------- I3 and I4: someone out in the fog ----------
+
+[[triggers]]
+id = "t_bowl"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 26 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ashwood", value = 1 }]
+outcome = { line_keys = ["l_bowl"], unlocks = [{ unlock_kind = "feature", id = "bowl_found" }] }
+
+# Never drawn: game hours since I4, for B19's three.
+[[stores]]
+id = "pace_clock"
+label_key = "store_pace_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "pace_clock"
+label_key = "action_pace_clock"
+makes = [{ store = "pace_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_pace"
+when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 4 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "bowl_found", value = 1 }]
+outcome = { line_keys = ["l_pace_1", "l_pace_2"], unlocks = [{ unlock_kind = "action", id = "pace_clock" }] }
+
+# B19's two clocks beside its count, each a hidden clock's latch (D-150): machinery, no moment of its own.
+[[stores]]
+id = "pace_3h"
+label_key = "store_pace_3h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "pace_3h"
+label_key = "action_pace_3h"
+makes = [{ store = "pace_3h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_pace_3h"
+when = { test = "at_least", subject_kind = "store", id = "pace_clock", value = 3 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "pace_3h" }] }
+
+[[stores]]
+id = "still_30"
+label_key = "store_still_30"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "still_30"
+label_key = "action_still_30"
+makes = [{ store = "still_30", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_still_30"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 30 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "still_30" }] }
+
+# SL30, texture: the three sing at supper on the season's thirtieth hour.
+[[triggers]]
+id = "t_singing"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 30 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_choir", value = 1 }]
+outcome = { line_keys = ["l_sing_1", "l_sing_2"] }
+
+# ---------- B19: the stranger home ----------
+
+# Six walks, I4 + 3 h, the season's thirtieth hour: they walk in behind the player and stay. A lane of their own from
+# here, an arrival counted.
+[[triggers]]
+id = "t_b19"
+when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 6 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "pace_3h", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "still_30", value = 1 },
+]
+[triggers.outcome]
+line_keys = ["l_b19_1", "l_b19_2", "l_b19_3"]
+stores = [{ store = "arrivals", items = 1 }]
+unlocks = [
+  { unlock_kind = "feature", id = "stranger_home" },
+  { unlock_kind = "action", id = "n13_eating" },
+  { unlock_kind = "card", id = "n13_forage" },
+  { unlock_kind = "card", id = "n13_walk_ashwood" },
+  { unlock_kind = "card", id = "n13_fog_fish" },
+  { unlock_kind = "card", id = "n13_wash_meat" },
+]
+joins = [{ lane = "n13", mix = "town:camp", card = "n13_forage", own_split = true }]
+
+[[lanes]]
+id = "n13"
+label_key = "lane_n13"
+ruled = true
+told = "line"
+
+[[standing]]
+id = "n13_eating"
+label_key = "action_n13_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n13", amount_bp = 1500 }]
+
+# ---------- the map ----------
+
+[[places]]
+id = "p_ashwood"
+stamp = "forest"
+at = [1, 3]
+reveal = { unlock_kind = "feature", id = "ashwood" }
+label_key = "place_ashwood"
+
+[[places]]
+id = "p_square_hill"
+stamp = "hill_village"
+at = [3, 7]
+reveal = { unlock_kind = "feature", id = "square_hill_seen" }
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_ashwood"
+text_key = "aim_ashwood"
+after = { unlock_kind = "feature", id = "ashwood" }
+
+# ---------- the journal ----------
+
+[[entries]]
+id = "e_ashwood"
+section = "places"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_ashwood_1"
+entry = "e_ashwood"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ashwood", value = 1 }
+
+[[entries]]
+id = "e_pilgrim"
+section = "creatures"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_pilgrim_1"
+entry = "e_pilgrim"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ashwood", value = 1 }
+
+[[subjects]]
+id = "s_b18"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b18" }
+first = { keys = ["n_day_b18"] }
+catchup = { keys = ["j_b18_catchup"] }
+late = { keys = ["j_b18_late"] }
+
+[[subjects]]
+id = "s_b19"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b19" }
+first = { keys = ["n_day_b19"] }
+catchup = { keys = ["j_b19_catchup"] }
+late = { keys = ["j_b19_late"] }
+
+[[subjects]]
+id = "s_n13_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n13", way = "joined" }
+first = { keys = ["j_n13_first"] }
+catchup = { keys = ["j_n13_catchup"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "still"
+
+[[features]]
+id = "ashwood"
+
+[[features]]
+id = "square_hill_seen"
+
+[[features]]
+id = "bowl_found"
+
+[[features]]
+id = "stranger_home"
+
+[[features]]
+id = "t_still_step"
+label_key = "feature_t_still_step"
+
+# ---------- text ----------
+
+[beat_lines]
+I1 = ["l_i1_1"]
+B18 = ["l_b18_1"]
+I2 = ["l_film_1"]
+I3 = ["l_bowl"]
+I4 = ["l_pace_1"]
+B19 = ["l_b19_1"]
+
+[line_kinds]
+l_walk_shown = "story"
+l_i1_1 = "story"
+l_i1_2 = "story"
+l_i1_3 = "story"
+l_b18_1 = "story"
+l_b18_2 = "story"
+l_b18_3 = "story"
+l_map_ashwood = "story"
+l_fish = "story"
+l_film_1 = "story"
+l_film_2 = "story"
+l_bowl = "story"
+l_pace_1 = "story"
+l_pace_2 = "story"
+l_sing_1 = "story"
+l_sing_2 = "story"
+l_b19_1 = "story"
+l_b19_2 = "story"
+l_b19_3 = "story"
+l_find_way_3 = "find"
+l_find_way_5 = "find"
+
+[text]
+store_ashwood_trips = "walks out"
+store_charwood = "charwood"
+c_walk_ashwood = "Walk the Ashwood"
+skill_wayfinding = "Wayfinding"
+pays_find_way_3 = "a find"
+pays_find_way_5 = "a find"
+pays_way_8 = "{pct} speed walking the Ashwood"
+pays_way_faster = "{pct} speed walking the Ashwood"
+store_dawn_22 = "dawn"
+action_dawn_22 = "Dawn"
+store_still_left = "season left"
+store_thaw_left = "thaw"
+store_film = "film"
+store_fish_rising = "fish rising"
+action_settle = "Ash settling"
+action_thaw = "Thaw"
+store_still_clock = "clock"
+action_still_clock = "Clock"
+c_fog_fish = "Lift fish from the stream"
+chip_ashed = "ash on the meat"
+chip_ashed_cost = "{pct} meals from the table"
+c_wash_meat = "Wash the meat"
+up_wash_meat = "the meat clean again"
+store_pace_clock = "clock"
+action_pace_clock = "Clock"
+store_pace_3h = "clock"
+action_pace_3h = "Clock"
+store_still_30 = "clock"
+action_still_30 = "Clock"
+lane_n13 = "The stranger"
+action_n13_eating = "the stranger's share"
+place_ashwood = "The Ashwood"
+feature_t_still_step = "Pack close in the fog"
+aim_ashwood = "see what the wood holds."
+l_walk_shown = "past where it was laid, the road goes on down into the grey."
+l_i1_1 = "in the night the wind drops, and by morning it hasn't come back."
+l_i1_2 = "ash hangs in the air without falling. the hall's smoke goes straight up."
+l_i1_3 = "you can hear the stream at the valley's far end. nobody talks above a murmur."
+l_b18_1 = "over the ridge the grey turns to trees, dead trunks standing as they died."
+l_b18_2 = "by the old road a dead elk walks, very slowly, toward a warm patch."
+l_b18_3 = "{n3} looks along the back of the elk {n2} drags in, and it goes on the fire whole."
+l_map_ashwood = "the wood past the ridge goes on the map."
+l_fish = "pale fish hang under the fog on the warm stream, close enough to lift out."
+l_film_1 = "ash settles out of the air onto anything left open."
+l_film_2 = "{n3} scrapes the meat on the racks with a thumbnail, looks, and sets it aside."
+l_bowl = "the bowl left by the fire is empty by morning, rinsed, set upside down."
+l_pace_1 = "on the way back, someone in the fog at the trees keeps level with you."
+l_pace_2 = "you stop, and they stop. you walk on, and so do they."
+l_sing_1 = "at supper the three women sing, and the hills send it back."
+l_sing_2 = "Lucy puts a hand on the nearest one's arm. they stop."
+l_b19_1 = "at dusk someone walks in behind you, sleeves pulled down over their hands."
+l_b19_2 = "they take {n3}'s bowl and a blanket, and sleep by the fire outside the hall."
+l_b19_3 = "asked their name, they say they don't have one to give."
+l_find_way_3 = "half-buried by the old road, a carved stone, its face worn blank."
+l_find_way_5 = "from a dead tree on a rise: far off, a hill with something square on top."
+n_ashwood_1 = "dead trunks still standing. shelf fungus up them like stairs. warm patches where the ash is thin"
+n_pilgrim_1 = "walks slower than anything alive. fungus down the spine. drag-marks to every warm patch. nobody eats one"
+n_day_b18 = "over the ridge, a dead wood. an elk walking that shouldn't be. the one they brought in went on the fire"
+j_b18_catchup = "we've been walking out past the ridge into the dead wood"
+j_b18_late = "drag-marks to every warm patch"
+n_day_b19 = "someone walked in behind me at dusk and sat across the fire. no name to give. sleeps outside"
+j_b19_catchup = "someone came in out of the fog and stayed"
+j_b19_late = "they still sleep by the fire, not in the hall"
+j_n13_first = "a blanket folded by the fire in the morning"
+j_n13_catchup = "the one from the fog works with us now"

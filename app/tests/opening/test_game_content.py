@@ -16,6 +16,7 @@ from ashfall_app.opening.convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
 from ashfall_app.opening.schema import (
     B7, CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_NINETEEN, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,
+    DAY_TWENTY_TWO,
 )
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.playthrough import Player, opening, opening_rules
@@ -121,7 +122,8 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
                                      (DAY_ELEVEN, ["n5_scavenge", "n7_scavenge", "n6_scavenge", "g_field_scavenge"]),
                                      (DAY_EIGHTEEN, ["n11_scavenge", "n10_scavenge", "n12_scavenge", "n8_scavenge", "n9_scavenge"]))
     assert made["roots"] == shipped(["forage", "n1_forage", "n2_forage"], (DAY_FIVE, ["n3_forage"]), (DAY_ELEVEN, ["n5_forage", "n7_forage", "n6_forage", "g_field_forage"]),
-                                    (DAY_EIGHTEEN, ["n11_forage", "n10_forage", "n12_forage", "n8_forage", "n9_forage"]))
+                                    (DAY_EIGHTEEN, ["n11_forage", "n10_forage", "n12_forage", "n8_forage", "n9_forage"]),
+                                    (DAY_TWENTY_TWO, ["n13_forage"]))
     assert made["dry_wood"] == shipped(["lay_to_dry"], (DAY_FIVE, ["hand_on_stone"]), (DAY_TWELVE, ["stone_ring"]),
                                       (DAY_SIXTEEN, ["take_child"]))
     assert made["damp_wood"] == shipped(["gather_wood", "woodcutting", "n1_gather", "n1_cut", "n2_gather", "n2_cut"],
@@ -166,7 +168,7 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
         ["book", "t_rats_drift", "posts_fire", "margin_watch", "posts_deep", "lookout", "watch_fed", "skin_post", "t_pack_step"],
         (DAY_ELEVEN, ["door_gate", "ditch_dug"]),
         (DAY_TWELVE, ["spoil_ring", "shaft_bound", "meat_below", "rack_kept", "crows_off", "crows_kept"]),
-        (DAY_FIFTEEN, ["rack_sunned"]), (DAY_SIXTEEN, ["t_pack_clear"]))
+        (DAY_FIFTEEN, ["rack_sunned"]), (DAY_SIXTEEN, ["t_pack_clear"]), (DAY_TWENTY_TWO, ["t_still_step"]))
     authored = opening().camp
     assert content.camp is not None and authored is not None
     assert [lv.held for lv in content.camp.camp_levels] == [lv.held for lv in authored.levels]
