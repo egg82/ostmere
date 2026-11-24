@@ -7,16 +7,14 @@ from .cards import CardDef
 from .cardsides import card_makes, fillable, outcome_stores
 from .counts import work_segment
 from .gates import store_cap
-from .ids import HANDS, CardId, StoreId
+from .ids import CardId, StoreId
 from .index import derived, index
-from .installs import requeued
 from .motion import store_segment
 from .rates import exact_net, running, store_value, tapped_cards
 from .rebuild import rebuild
 from .rules import Rules
 from .segments import reach_time
 from .state import Pause, Save
-from .work import interrupt
 
 
 def is_full_pause(rules: Rules, pause: Pause) -> bool:
@@ -44,12 +42,12 @@ def resume_time(save: Save, rules: Rules, pause: Pause) -> int | None:
 
 def full_cards(save: Save, rules: Rules, landing: frozenset[CardId] = frozenset()) -> list[CardId]:
     """The full cards, in running order: fillable, holding no Pause, not landing at this instant, their work moving,
-    and every outcome store at its cap with an exact net above 0."""
+    and every outcome store at its cap with an exact net above 0. A tap is never full: it runs its one completion."""
     cards = _fillable(rules)
     if not cards:
         return []
     now = running(save, rules)
-    paused = {p.runner for p in save.pauses}
+    paused = {p.runner for p in save.pauses} | set(tapped_cards(save, rules))
     found: list[CardId] = []
     for r in now.shares:
         c = cards.get(CardId(r))
@@ -61,23 +59,15 @@ def full_cards(save: Save, rules: Rules, landing: frozenset[CardId] = frozenset(
     return found
 
 
-def pause_full(save: Save, rules: Rules, landing: frozenset[CardId]) -> tuple[Save, bool]:
-    """Pause the full cards, last in running order first, re-reading after each, until none is full. A paused tapped
-    card's tap ends at once (work.interrupt) and a hands tap goes back to the queue's front; the flag says whether one
-    did."""
-    interrupted = False
+def pause_full(save: Save, rules: Rules, landing: frozenset[CardId]) -> Save:
+    """Pause the full cards, last in running order first, re-reading after each, until none is full."""
     while found := full_cards(save, rules, landing):
         card = index(rules).cards[found[-1]]
         first = outcome_stores(card)[0]
         pauses = save.pauses + (Pause(card.id, first, resume_level(save, rules, first)),)
         pos = index(rules).runner_pos
         save = rebuild(replace(save, pauses=tuple(sorted(pauses, key=lambda p: pos[p.runner]))), rules)
-        lane = card.lane if card.id in tapped_cards(save, rules) else None
-        if lane is not None:
-            save, interrupted = interrupt(save, rules, lane), True
-            if lane == HANDS:
-                save = requeued(save, rules, card.id)
-    return save, interrupted
+    return save
 
 
 def _outcomes(rules: Rules, pause: Pause) -> tuple[StoreId, ...]:

@@ -27,10 +27,9 @@ def test_the_shipped_content_passes(shipped_rules: Rules) -> None:
 
 
 def test_the_beams_store_back_at_eight_fails(shipped_rules: Rules) -> None:
-    """The planted case of the issue: beams held 8 while the hall and the road take 12 and the ruin holds exactly 12,
-    so the ruin has no completion to spare for what the full rule's pauses cost."""
+    """The planted case of the issue: beams held 8 while the hall and the road take 12 of the ruin's 12."""
     stores = tuple(replace(d, cap=8 * Q) if d.id == StoreId("beams") else d for d in shipped_rules.stores)
-    with pytest.raises(ValueError, match="store ruin_beams: .*one completion's input to spare"):
+    with pytest.raises(ValueError, match="store ruin_beams: .*into beams, whose cap is below"):
         check_finite_supply(replace(shipped_rules, stores=stores))
 
 
@@ -83,17 +82,10 @@ def test_a_capped_optional_consumer_counts_its_whole_cap() -> None:
         check_finite_supply(_rules(_pull(), side(5)))
 
 
-def test_a_converter_with_a_by_product_into_a_small_store_fails() -> None:
-    """made holds 4 of the 8 needed; pull also yields `other`, so the full rule never stops it at made's cap."""
-    check_finite_supply(_rules(_pull(), made_cap=4, pool=13))
-    with pytest.raises(ValueError, match="nothing stops it at that cap"):
-        check_finite_supply(_rules(_pull(PULL, MADE, OTHER), made_cap=4, pool=13))
-
-
-def test_relying_on_the_full_rule_needs_one_completion_to_spare() -> None:
-    with pytest.raises(ValueError, match="one completion's input to spare"):
-        check_finite_supply(_rules(_pull(), made_cap=4, pool=8))
-    check_finite_supply(_rules(_pull(), made_cap=4, pool=9))
+def test_a_converter_into_a_store_smaller_than_progress_needs_fails() -> None:
+    """made holds 4 of the 8 needed: a tap, or a by-product keeping the card running, would lose the pool at that cap."""
+    with pytest.raises(ValueError, match="pull draws it into made, whose cap is below"):
+        check_finite_supply(_rules(_pull(), made_cap=4, pool=13))
 
 
 def test_a_standing_clock_drawing_a_pool_is_not_held_to_its_cap() -> None:

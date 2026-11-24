@@ -123,13 +123,22 @@ def test_the_pause_lifts_when_the_store_falls_to_half_its_cap():
     assert 0 <= lost < pauses * Q // 10
 
 
-def test_a_tap_into_a_full_store_is_paused_and_frees_the_hands():
-    """Taps: y starts full; the player's tap starts, the full rule pauses it at that instant, the hands are free, and
-    nothing is drawn; a second tap while the pause holds is a failed tap (the save unchanged)."""
+def test_a_tap_runs_its_one_completion_at_a_full_store():
+    """Taps: a tap is never full and a full pause holds no tap. y starts full: the player's tap runs one completion,
+    drawing one item, and y's overflow is lost."""
     rules = _rules(_pull(Y), y0=4)
     s = decide(new_save(rules), rules, 0, TapCard(PULL))
-    assert [p.runner for p in s.pauses] == [PULL]
-    assert all(ls.card is None for ls in s.lanes)
+    assert s.pauses == ()
     a = advance(s, rules, 500)
-    assert _used(a) == 0
-    assert decide(a, rules, 500, TapCard(PULL)) == a
+    assert _used(a) == Q and _store(a, Y) == 4 * Q and _done(a, PULL) == 1
+
+
+def test_a_tap_of_a_full_paused_mix_card_runs_and_the_pause_stands():
+    """The mix card pauses full at t = 40; the player taps it at 100: one completion is drawn, and once the tap lands the
+    card is paused in its mix again."""
+    rules = _rules(_pull(Y))
+    s = advance(_mixed(rules, (PULL, BP)), rules, 100)
+    assert [p.runner for p in s.pauses] == [PULL]
+    a = advance(decide(s, rules, 100, TapCard(PULL)), rules, 500)
+    assert _used(a) == 5 * Q
+    assert [p.runner for p in a.pauses] == [PULL]

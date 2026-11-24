@@ -102,11 +102,12 @@ def check_content(o: "Opening") -> None:
     _check_text(o)
     check_stakes_hold(o)
     check_unlock_order(o)
-    check_finite_supply(build_rules(o))
+    rules = build_rules(o)
+    check_finite_supply(rules)
     if o.prestige is not None:
-        check_phase_spans(build_rules(o))
+        check_phase_spans(rules)
     if any(True for _ in fights(o)):
-        check_fight_content(build_rules(o))
+        check_fight_content(rules)
 
 
 def _check_unique(o: "Opening") -> None:

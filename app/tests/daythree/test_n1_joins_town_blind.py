@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import pytest
 
 from ashfall_app.engine import (
-    BP, QUANTITY_SCALE as Q, AfterTime, CardId, CardShare, LaneId, Order, Rules, Save, StoreId, TapCard, Unlock,
+    BP, QUANTITY_SCALE as Q, AfterTime, CardId, CardShare, LaneId, Order, Rules, RunKind, Save, StoreId, TapCard, Unlock,
     UnlockKind, advance, view,
 )
 from ashfall_app.engine.rates import store_value
@@ -98,8 +98,12 @@ def test_her_other_rules_stay_when_her_always_rule_goes(instant: Instant):
 
 
 def lane_card(save: Save, rules: Rules) -> CardId | None:
-    (bar,) = [b for b in view(save, rules).lanes if b.lane == N1]
-    return bar.card
+    """The card her lane runs: its tap, or else the one card the town's mix runs there at a full share."""
+    v = view(save, rules)
+    (bar,) = [b for b in v.lanes if b.lane == N1]
+    hers = {c.id for c in rules.cards if c.lane == N1}
+    full = [c.card for c in v.cards if c.card in hers and c.run is RunKind.FULL and c.share_bp == BP]
+    return bar.card if bar.card is not None else (full[0] if len(full) == 1 else None)
 
 
 def work(save: Save, rules: Rules, card: CardId) -> int:

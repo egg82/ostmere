@@ -11,10 +11,10 @@ Rules, ids and fields only, base amounts (finite_runners.py). Raises ValueError 
   pool into it) need what its other supply leaves short.
 - Optional: every other consumer. A capped one spends at most the rest of its cap, anything else without limit. A
   converter also stockpiles up to its target's cap, which counts when the pool has another use.
-- Caps: a card converting a pool loses it at its target's cap unless the target holds all progress needs of it, or the
-  engine's full rule stops it (a fillable card whose one outcome store is the target: engine DESIGN.txt, "FULL OUTPUT"),
-  and then the pool keeps one completion's input to spare for the under-a-second loss at each pause (KNOWN GAPS there).
-  A standing action converting a pool is the world's clock, not the player's choice: what it loses at a cap passes.
+- Caps: a card converting a pool into a store whose cap is below what progress needs of it can lose the pool at that
+  cap: the engine's full rule stops a mix card whose every outcome store is full (engine DESIGN.txt, "FULL OUTPUT"), but
+  not a tap, nor a card a by-product keeps running. A standing action converting a pool is the world's clock, not the
+  player's choice: what it loses at a cap passes.
 
 Not read: an uncapped card's count a trigger reads (a reaction to repeatable work, which that card's town twins can
 also spend the pool on), and outcomes (triggers, capped cards) landing on a store at its cap.
@@ -22,7 +22,6 @@ also spend the pool on), and outcomes (triggers, capped cards) landing on a stor
 from fractions import Fraction
 
 from ..engine import AtLeast, CardCount, Rules, StoreId
-from ..engine.cardsides import fillable, outcome_stores
 from .finite_runners import Runner, runners, sure_outcomes, sure_unlocks
 from .refs import fail
 
@@ -114,7 +113,7 @@ class _Reading:
                                    f"{_items(self.demand(store))} and what else can spend it leaves {_items(spare)}")
         for u in targets:
             for r in self._path(store, u):
-                self._check_cap(store, u, r, spare)
+                self._check_cap(store, u, r)
 
     def _optional(self, store: StoreId, targets: list[StoreId]) -> Fraction:
         spent = Fraction(0)
@@ -130,15 +129,10 @@ class _Reading:
                           for u in targets), Fraction(0))
         return spent
 
-    def _check_cap(self, store: StoreId, target: StoreId, r: Runner, spare: Fraction) -> None:
-        if self.caps[target] >= self.demand(target) or r.card is None:
-            return
-        if not fillable(r.card) or outcome_stores(r.card) != (target,):
-            fail(f"store {store}", f"{r.id} draws it into {target}, whose cap is below what progress needs of it, and "
-                                   "nothing stops it at that cap")
-        if spare < r.takes[store]:
-            fail(f"store {store}", f"{r.id} draws it into {target} and stops at that cap, which costs under a second "
-                                   "of its work each time: the store needs one completion's input to spare")
+    def _check_cap(self, store: StoreId, target: StoreId, r: Runner) -> None:
+        if self.caps[target] < self.demand(target) and r.card is not None:
+            fail(f"store {store}", f"{r.id} draws it into {target}, whose cap is below what progress needs of it, so "
+                                   "a tap or a by-product can lose it at that cap")
 
 
 def _finite(sure: list[Runner], stores: set[StoreId]) -> set[StoreId]:
