@@ -48,9 +48,9 @@ def story(out: Outcome) -> bool:
 
 
 def _clocks(o: "Opening") -> frozenset[str]:
-    """Stores no card fills, and hidden ones: what moves them is time (a standing action) or what comes by itself (a
-    fight's tally), not work."""
-    return frozenset(s.id for s in o.stores if s.hidden or not card_made(o, s.id))
+    """Stores no card fills, and hidden ones but a tally the cards add to: what moves them is time (a standing action)
+    or what comes by itself (a fight's tally), not work."""
+    return frozenset(s.id for s in o.stores if not card_made(o, s.id) or (s.hidden and not s.tally))
 
 
 def _fed_by(o: "Opening", store: str) -> tuple[str, ...]:
