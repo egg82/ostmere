@@ -121,6 +121,7 @@ app/ashfall_app/engine/fightlines.py
 app/ashfall_app/engine/fightview.py
 app/ashfall_app/engine/flows.py
 app/ashfall_app/engine/forecast.py
+app/ashfall_app/engine/full.py
 app/ashfall_app/engine/gates.py
 app/ashfall_app/engine/gone.py
 app/ashfall_app/engine/groupchecks.py
@@ -212,12 +213,12 @@ app/ashfall_app/opening/choice_checks.py
 app/ashfall_app/opening/convert.py
 app/ashfall_app/opening/day_eight.toml
 app/ashfall_app/opening/day_eighteen.toml
-app/ashfall_app/opening/day_nineteen.toml
 app/ashfall_app/opening/day_eleven.toml
 app/ashfall_app/opening/day_fifteen.toml
 app/ashfall_app/opening/day_five.toml
 app/ashfall_app/opening/day_four.toml
 app/ashfall_app/opening/day_nine.toml
+app/ashfall_app/opening/day_nineteen.toml
 app/ashfall_app/opening/day_one.toml
 app/ashfall_app/opening/day_six.toml
 app/ashfall_app/opening/day_sixteen.toml
@@ -232,6 +233,8 @@ app/ashfall_app/opening/fight_checks.py
 app/ashfall_app/opening/fight_entries.py
 app/ashfall_app/opening/fight_refs.py
 app/ashfall_app/opening/find_checks.py
+app/ashfall_app/opening/finite_checks.py
+app/ashfall_app/opening/finite_runners.py
 app/ashfall_app/opening/goals.py
 app/ashfall_app/opening/groups.py
 app/ashfall_app/opening/journal_checks.py
@@ -481,13 +484,13 @@ app/tests/weektwo/test_ladder_readouts.py
 app/tests/weektwo/test_makers_readouts.py
 app/tests/weektwo/test_weektwo_controls.py
 app/tests/weektwo/test_weektwo_eighteen.py
-app/tests/weektwo/test_weektwo_nineteen.py
 app/tests/weektwo/test_weektwo_eleven.py
 app/tests/weektwo/test_weektwo_fifteen.py
 app/tests/weektwo/test_weektwo_goals.py
 app/tests/weektwo/test_weektwo_inputs.py
 app/tests/weektwo/test_weektwo_lines.py
 app/tests/weektwo/test_weektwo_nine.py
+app/tests/weektwo/test_weektwo_nineteen.py
 app/tests/weektwo/test_weektwo_readouts.py
 app/tests/weektwo/test_weektwo_routes.py
 app/tests/weektwo/test_weektwo_rule_subjects.py
