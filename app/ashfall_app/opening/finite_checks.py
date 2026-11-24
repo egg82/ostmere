@@ -6,23 +6,24 @@ Rules, ids and fields only, base amounts (finite_runners.py). Raises ValueError 
   largest such set, as the engine's spent stores are found). Its supply: its initial value, the triggers' and sure
   finished outcomes, sure capped cards' gives times their cap, and each pool a converter draws times the best ratio.
   Answers count for nothing: the player may decline them.
-- Required: a capped card (a project or a told step: its cap says it ends) whose completions a trigger's condition
-  reads at_least n needs those n completions' takes. A finite store progress needs makes its converters (uncapped runners drawing a
-  pool into it) need what its other supply leaves short.
-- Optional: every other consumer. A capped one spends at most the rest of its cap, one stopping on another finite
-  store at most what that store lets it run, anything else without limit. A converter also stockpiles up to its
+- Required: a card whose completions a trigger's condition reads at_least n needs those n completions' takes, capped
+  or not: every trigger's outcome is content landing (a beat, a find, an unlock), and an uncapped card's count is no
+  less a wait than a project's. A finite store progress needs makes its converters (uncapped runners drawing a pool into
+  it) need what its other supply leaves short; a required converter's own count is met by those draws or adds to them.
+- Optional: every other consumer, and a required card's completions past its count. A capped one spends at most the
+  rest of its cap, one stopping on another finite store at most what that store lets it run, anything else without
+  limit: so a pool a card's town twins also draw fails while the trigger counts that card alone. A converter also stockpiles up to its
   target's cap, which counts when the pool has another use.
 - Caps: a card converting a pool into a store whose cap is below what progress needs of it can lose the pool at that
   cap: the engine's full rule stops a mix card whose every outcome store is full (engine DESIGN.txt, "FULL OUTPUT"), but
   not a tap, nor a card a by-product keeps running. A standing action converting a pool is the world's clock, not the
   player's choice: what it loses at a cap passes.
 
-Not read: an uncapped card's count a trigger reads (a reaction to repeatable work, which that card's town twins can
-also spend the pool on), and outcomes (triggers, capped cards) landing on a store at its cap.
+Not read: outcomes (triggers, capped cards) landing on a store at its cap.
 """
 from fractions import Fraction
 
-from ..engine import AtLeast, CardCount, Rules, StoreId
+from ..engine import AtLeast, CardCount, Rules, StoreId, StoreValue
 from .finite_runners import Runner, runners, sure_outcomes, sure_unlocks
 from .refs import fail
 
@@ -30,18 +31,20 @@ ONCE = StoreId("")
 """The key of a store's supply that lands once (initial, outcomes, capped cards), beside one key per pool."""
 
 
-def check_finite_supply(rules: Rules) -> None:
-    _Reading(rules).check()
+def check_finite_supply(rules: Rules, tallies: frozenset[StoreId] = frozenset()) -> None:
+    """`tallies`: the content's tally stores (StoreEntry.tally), whose reads by triggers are needs."""
+    _Reading(rules, tallies).check()
 
 
 class _Reading:
-    def __init__(self, rules: Rules) -> None:
+    def __init__(self, rules: Rules, tallies: frozenset[StoreId] = frozenset()) -> None:
         self.rules = rules
         self.caps = {d.id: d.cap for d in rules.stores}
         self.all = runners(rules)
         self.sure = [r for r in self.all if r.sure]
         self.finite = _finite(self.sure, set(self.caps))
         self.required = _required(rules)
+        self.reads = _reads(rules, tallies)
         self.outcomes = list(sure_outcomes(rules, sure_unlocks(rules)))
         self._supply: dict[StoreId, dict[StoreId, Fraction]] = {}
         self._demand: dict[StoreId, Fraction] = {}
@@ -86,12 +89,27 @@ class _Reading:
         """What progress needs of the store, consumed."""
         if store not in self._demand:
             self._demand[store] = Fraction(0)
-            self._demand[store] = self._direct(store) + sum(self._via(store, u) for u in self._targets(store))
+            targets = self._targets(store)
+            via = sum((self._via(store, u) for u in targets), Fraction(0))
+            self._demand[store] = (self._direct(store, targets) + max(via, self._counted(store, targets))
+                                   + self.reads.get(store, Fraction(0)))
         return self._demand[store]
 
-    def _direct(self, store: StoreId) -> Fraction:
-        return sum((Fraction(self.required[r.id]) * r.takes[store] for r in self.all
-                    if store in r.takes and r.id in self.required), Fraction(0))
+    def _direct(self, store: StoreId, targets: list[StoreId] | None = None) -> Fraction:
+        """The required takes of the store by runners that are no converter into a needed target."""
+        conv = self._converters(store, self._targets(store) if targets is None else targets)
+        return sum((self._need(r, store) for r in self.all if r.id in self.required and store in r.takes and r not in conv),
+                   Fraction(0))
+
+    def _counted(self, store: StoreId, targets: list[StoreId]) -> Fraction:
+        """The required takes by converters into a needed target: their counted completions are draws into it."""
+        return sum((self._need(r, store) for r in self._converters(store, targets) if r.id in self.required), Fraction(0))
+
+    def _need(self, r: Runner, store: StoreId) -> Fraction:
+        return Fraction(self.required[r.id]) * r.takes[store]
+
+    def _converters(self, store: StoreId, targets: list[StoreId]) -> list[Runner]:
+        return [r for r in self.all if r.units is None and store in r.stops and set(r.gives) & set(targets)]
 
     def _path(self, store: StoreId, target: StoreId) -> list[Runner]:
         return [r for r in self.all if r.units is None and store in r.stops and target in r.gives]
@@ -120,24 +138,37 @@ class _Reading:
         """What else can spend the store. A required card's completions past those progress reads come after them, so
         they can spend only what the other required cards need: the one finishing last spends its rest too late."""
         spent = Fraction(0)
-        rests: list[Fraction] = []
+        rests: list[tuple[Fraction | None, str]] = []
+        conv = self._converters(store, targets)
         for r in self.all:
-            if store not in r.takes or (r.units is None and store in r.stops and set(r.gives) & set(targets)):
+            if store not in r.takes or r in conv:
                 continue
             units = self._units(r, store)
-            if units is None:
-                fail(f"store {store}", f"finite and needed by progress, but {r.id} can spend it without limit")
-            rest = max(0, units - self.required.get(r.id, 0)) * r.takes[store]
             if r.id in self.required:
-                rests.append(rest)
+                rests.append((None if units is None else max(0, units - self.required[r.id]) * r.takes[store], r.id))
+            elif units is None:
+                fail(f"store {store}", f"finite and needed by progress, but {r.id} can spend it without limit")
             else:
-                spent += rest
-        spent += sum(rests, Fraction(0)) - min(rests, default=Fraction(0))
-        uses = len(targets) + (1 if self._direct(store) > 0 else 0)
+                spent += units * r.takes[store]
+        read = 1 if store in self.reads else 0
+        spent += self._early_rests(store, rests, len(targets) + len(rests) + read)
+        uses = len(targets) + (1 if self._direct(store) > 0 else 0) + read
         if uses > 1:
             spent += sum((self.caps[u] / max(r.gives[u] / r.takes[store] for r in self._path(store, u))
                           for u in targets), Fraction(0))
         return spent
+
+    def _early_rests(self, store: StoreId, rests: list[tuple[Fraction | None, str]], needs: int) -> Fraction:
+        """What required cards' completions past their counts can spend before every count is met: all but the one
+        finishing last (worst case: the smallest rest). One with no limit fails while anything else needs the store."""
+        if not rests:
+            return Fraction(0)
+        free = sorted((r for r in rests if r[0] is None), key=lambda r: r[1])
+        if free and needs > 1:
+            fail(f"store {store}", f"finite and needed by progress, but {free[0][1]} can spend it without limit "
+                                   "past its own count, before another need of it is met")
+        sized = [q for q, _ in rests if q is not None]
+        return sum(sized, Fraction(0)) - (min(sized, default=Fraction(0)) if not free else Fraction(0))
 
     def _units(self, r: Runner, store: StoreId) -> Fraction | None:
         """How many units a runner can run while `store` lasts: its cap, or what the first other finite store it stops
@@ -166,13 +197,23 @@ def _finite(sure: list[Runner], stores: set[StoreId]) -> set[StoreId]:
 
 
 def _required(rules: Rules) -> dict[str, int]:
-    """Each capped card a trigger's condition reads at_least n completions of, at its largest n."""
-    capped = {str(c.id) for c in rules.cards if c.cap is not None}
+    """Each card a trigger's condition reads at_least n completions of, at its largest n."""
     found: dict[str, int] = {}
     for t in rules.triggers:
         for cond in (t.when, *t.requires):
-            if isinstance(cond, AtLeast) and isinstance(cond.subject, CardCount) and str(cond.subject.card) in capped:
+            if isinstance(cond, AtLeast) and isinstance(cond.subject, CardCount):
                 found[str(cond.subject.card)] = max(found.get(str(cond.subject.card), 0), cond.value)
+    return found
+
+
+def _reads(rules: Rules, tallies: frozenset[StoreId]) -> dict[StoreId, Fraction]:
+    """Each tally store a trigger's condition reads at_least n of, at its largest n: the count must reach n."""
+    found: dict[StoreId, Fraction] = {}
+    for t in rules.triggers:
+        for cond in (t.when, *t.requires):
+            if isinstance(cond, AtLeast) and isinstance(cond.subject, StoreValue) and cond.subject.store in tallies:
+                store = cond.subject.store
+                found[store] = max(found.get(store, Fraction(0)), Fraction(cond.value))
     return found
 
 
