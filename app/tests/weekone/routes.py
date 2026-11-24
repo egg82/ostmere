@@ -13,9 +13,9 @@ from tests.dayone.schedules import HOUR, schedule
 from tests.dayone.sinks import SINKS, SinkKnobs
 from tests.weekone import content as w1
 
-HORIZON_S = 22 * 24 * HOUR
+HORIZON_S = 30 * 24 * HOUR
 """Long enough for the lazy route, which reaches B7 late if at all, and for the later weeks' plays on from these, which
-end by week three's last night (504 h at the latest)."""
+end by week four's last night (672 h at the latest)."""
 PUSH_ROUTES = ("typical", "sharp", "babysitter", "whenever")
 
 
