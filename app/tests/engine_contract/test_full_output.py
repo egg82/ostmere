@@ -6,7 +6,8 @@ Every card here takes 10 s a completion, so at a full share it pays 1 item of ea
 second. The pool p holds far more than any test draws; y and z are the outcome stores."""
 from ashfall_app.engine import (
     BP, QUANTITY_SCALE as Q, ActionId, Amount, CardDef, CardId, CardShare, Flow, Mix, MixId, Outcome, PacingCurve,
-    Rules, RunKind, Save, SaveMix, SkillDef, SkillId, StandingDef, StoreDef, StoreId, SwitchMix, TapCard, advance, decide, explain_work, new_save, per_hour, validate_rules,
+    Rules, RunKind, Save, SaveMix, SkillDef, SkillId, StandingDef, StoreDef, StoreId, SwitchMix, TapCard, advance, decide,
+    explain_work, new_save, per_hour, validate_rules, view,
 )
 
 P, Y, Z = StoreId("p"), StoreId("y"), StoreId("z")
@@ -151,3 +152,14 @@ def test_a_card_drawing_a_store_something_in_play_makes_keeps_the_cap_loss():
     rules = _rules(_pull(Y), refill)
     a = advance(_mixed(rules, (PULL, BP)), rules, 1000)
     assert _used(a) == 100 * Q and a.pauses == ()
+
+
+def test_a_store_drained_below_a_full_pause_reads_covered():
+    """Read model: while the chore eats y down toward half its cap, the card paused full will refill it, so y's falling
+    line is covered (white), not one that needs the player."""
+    eat = StandingDef(ActionId("eat"), costs=(Flow(Y, per_hour(36)),))
+    rules = _rules(_pull(Y), standing=(eat,))
+    a = advance(_mixed(rules, (PULL, BP)), rules, 100)
+    assert [p.runner for p in a.pauses] == [PULL]
+    line = next(ln for ln in view(a, rules).ledger if ln.store == Y)
+    assert line.falling and line.covered

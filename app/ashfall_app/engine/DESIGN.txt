@@ -3511,6 +3511,9 @@ CHOICES (full output)
   refills. Pause.resume_at holds the first store's level at the pause, for a reader; the resume reads the caps now.
 - Run: a full-paused card reads PAUSED with `store` its Pause's store, and gives its share as any giver. It is never
   SPENT: spent.spend reads only pauses on a store the card takes. Its line is never starved (a full store is not 0).
+- Read model: every outcome store of a full-paused card reads covered (coverage.covered), since the card resumes as
+  the store falls: the band down to the resume level is a store being drawn as planned, not one that needs the
+  player, so its falling line is white.
 - Taps: a tap is never full, and a full pause is no blocker: a tap, whoever starts it (the player, an order, the
   queue), runs its one completion at a full store and its overflow is lost, as CHOICES "Cap" says; the card's Run
   while tapped ignores a full pause (rates._tap_run reads dry pauses only). A tap is a choice of one completion with
