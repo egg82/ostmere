@@ -2,13 +2,13 @@
 typical route's heavy-step readings (ends.READINGS).
 
     python tools/chapter_saves.py --write    # from app/, with PYTHONPATH=.: write all of them under ends.key()
-    python tools/chapter_saves.py --write typical readings-early   # only those parts: routes' ends (typical's with the
-                                                                   # rebased saves) and readings parts by name
+    python tools/chapter_saves.py --write typical rebased-early readings-early   # only those parts, by name: a route's
+                                                       # ends, typical's rebased saves (they read typical's saved ends) or readings
     python tools/chapter_saves.py --key      # print the key
 
 The directory is named by the key, so a change to what the saves depend on is a new directory and no save outlives it.
 CI builds it once per key (tools/saves_cache.py), each part in a job of its own, since no route's plays and no reading
-need another; locally, run it to make week two's job fast.
+need another; the rebased parts read typical's saved ends, so they run once typical's part has. Locally, run it to make week two's job fast.
 """
 import os
 import sys
@@ -16,11 +16,15 @@ import time
 
 from tests.daythree.content import rules3
 from tests.weektwo import counters, ends, rebased, verdicts
-from tests.weektwo.routes import SAVED, played
+from tests.weektwo.routes import SAVED, laters, played
 
 ROUTES = frozenset(name for names in SAVED.values() for name in names)
 """Every route with a saved end."""
-ALL = ROUTES | frozenset(ends.READINGS)
+REBASED: dict[str, tuple[str, ...]] = {"rebased-early": ("eight", "nine", "eleven", "twelve"),
+                                       "rebased-late": ("fifteen", "sixteen", "eighteen")}
+"""typical's rebased saves (ends.rebased_path), by part: each chapter's save, replayed from the decisions of typical's
+saved end at it, so a part needs typical's ends and not typical's play from the start."""
+ALL = ROUTES | frozenset(ends.READINGS) | frozenset(REBASED)
 """Every part `--write` takes by name."""
 
 
@@ -34,8 +38,8 @@ def write(parts: frozenset[str] = ALL) -> int:
     for old in ends.golden().iterdir() if parts == ALL else ():
         old.unlink()
     write_ends(parts & ROUTES)
-    if "typical" in parts:
-        write_rebased()
+    for name in sorted(parts & frozenset(REBASED)):
+        write_rebased(name)
     for name in sorted(parts & frozenset(ends.READINGS)):
         write_readings(name)
     ends.manifest().write_text(ends.manifest_json(rules3()))
@@ -53,10 +57,11 @@ def write_ends(routes: frozenset[str]) -> None:
                   f"cpu_s={time.process_time() - started:.1f}", flush=True)
 
 
-def write_rebased() -> None:
-    for chapter in rebased.OLD:
+def write_rebased(name: str) -> None:
+    for chapter in REBASED[name]:
         started = time.process_time()
-        text = ends.rebased_json(rebased.written(chapter, played(chapter, "typical")))
+        saved = ends.load(chapter, "typical", laters(chapter, "typical"))
+        text = ends.rebased_json(rebased.written(chapter, saved))
         ends.rebased_path(chapter).write_text(text)
         print(f"event=chapter_saves.rebased chapter={chapter} bytes={len(text)} "
               f"cpu_s={time.process_time() - started:.1f}", flush=True)
