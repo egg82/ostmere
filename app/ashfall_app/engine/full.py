@@ -60,8 +60,10 @@ def full_cards(save: Save, rules: Rules, landing: frozenset[CardId] = frozenset(
         c = cards.get(CardId(r))
         if c is None or c.id in paused or c.id in landing or work_segment(save, c.id).rate <= 0:
             continue
-        if all(store_value(save, s) >= store_cap(save, rules, s) and exact_net(save, rules, now, s) > 0
-               for s in outcome_stores(c)) and any(unmade(save, rules, a.store) for a in c.inputs):
+        outs = outcome_stores(c)
+        if all(store_value(save, s) >= store_cap(save, rules, s) for s in outs) \
+                and any(unmade(save, rules, a.store) for a in c.inputs) \
+                and all(exact_net(save, rules, now, s) > 0 for s in outs):   # the costly read last
             found.append(c.id)
     return found
 

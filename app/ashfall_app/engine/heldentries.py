@@ -2,12 +2,14 @@
 WHILE A CARD RUNS", "HELD SPEED"): derived from the save's discrete state wherever the stack is read, never stored.
 Reads only the lanes' taps, the running mixes, the unlock set and the pauses, never a rate, so building the stack never
 recurses into rates.running."""
+from dataclasses import fields
+
 from .cards import HELD_PREFIX, CardDef, Held, HeldSpeed
 from .counts import is_completed
 from .gone import stopped
 from .ids import CardId, Runner, SourceId
 from .index import derived
-from .memo import SaveMemo
+from .memo import PartsMemo, SaveMemo
 from .mixruns import mix_entries, town_entries
 from .modifiers import LaneSpeed, Modifier, ModifierKind, RunKind, SideStrength
 from .rules import Rules, StandingDef
@@ -32,11 +34,21 @@ def held_cards(save: Save, rules: Rules) -> dict[Runner, int]:
     """Each holder with a share above 0, in holders order, and its share h: for a card, BP while a lane holds a tap of
     it, else its flattened share in its layer's running mix when that share runs in full; for a standing action, BP
     while it runs (unlocked, not stopped, not paused)."""
-    return _SHARES.get(save, rules, lambda: _held_cards(save, rules))
+    return _SHARES.get(save, rules, lambda: _BY_STATE.get(
+        (rules, *(getattr(save, f) for f in _KEYED)), lambda: _held_cards(save, rules), _levels(save)))
 
 
 _SHARES: SaveMemo[dict[Runner, int]] = SaveMemo(4)
 """Callers never change what it returns."""
+_KEYED = tuple(f.name for f in fields(Save) if f.name not in ("time", "skills"))
+_BY_STATE: PartsMemo[dict[Runner, int]] = PartsMemo(4)
+"""Kept across saves that differ only in their skills' picks: what is held reads the skills only through the levels a
+card's requires may name (_levels), never the stack. The read model's menu builds a save with one more pick per node
+(phaseview._menu_node), each a miss of _SHARES."""
+
+
+def _levels(save: Save) -> tuple[object, ...]:
+    return save.time, tuple((st.skill, st.phase.phase, st.xp.start_value) for st in save.skills)
 
 
 def _held_cards(save: Save, rules: Rules) -> dict[Runner, int]:

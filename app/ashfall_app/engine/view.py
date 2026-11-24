@@ -119,7 +119,7 @@ def view(save: Save, rules: Rules) -> View:
     mixed = _mixed(save, rules)
     return View(
         time=save.time, next_event=next_event(save, rules), ledger=ledger, skills=_skills(save, rules),
-        standing=_standing(save, rules, now), lanes=_lanes(save, rules),
+        standing=_standing(save, rules, now), lanes=lane_bars(save, rules),
         cards=tuple(_card_view(save, rules, now, mixed, c) for c in unlocked_cards
                     if not is_completed(save, rules, c.id)),
         completed=tuple(CompletedCard(c.id, completions(save, rules, c.id)) for c in unlocked_cards
@@ -143,6 +143,11 @@ def _order_guards(save: Save, rules: Rules) -> tuple[tuple[GuardView, ...], ...]
         return read_levels(save, rules, cond).release
     return tuple(tuple(GuardView(on, lets_go(g)) for g, on in zip(o.unless, guard_latches(latch)))
                  for o, latch in zip(save.orders, save.latches))
+
+
+def ledger(save: Save, rules: Rules) -> tuple[LedgerLine, ...]:
+    """View.ledger alone, for a reader that needs no other part of the read model."""
+    return _ledger(save, rules, running(save, rules))
 
 
 def _ledger(save: Save, rules: Rules, now: Running) -> tuple[LedgerLine, ...]:
@@ -181,7 +186,8 @@ def _standing(save: Save, rules: Rules, now: Running) -> tuple[StandingBar, ...]
     return tuple(StandingBar(a.id, now.runs[a.id].kind) for a in unlocked_standing(save, rules))
 
 
-def _lanes(save: Save, rules: Rules) -> tuple[LaneBar, ...]:
+def lane_bars(save: Save, rules: Rules) -> tuple[LaneBar, ...]:
+    """View.lanes alone, for a reader that needs no other part of the read model."""
     bars: list[LaneBar] = []
     ix = index(rules)
     for ls in save.lanes:
