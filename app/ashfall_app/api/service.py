@@ -19,6 +19,7 @@ from ..saves.journal import ComposedDay
 from ..saves.journal_rules import DIARY_HAND, Look
 from . import convert
 from .changes import changes as _changes
+from .chip_infos import chip_infos
 from .feature_infos import feature_info
 from .goalrows import goal_rows
 from .storerows import store_rows
@@ -165,12 +166,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                         if r.subject_kind == "card_count" and r.test == "at_least" and r.id is not None],
             glows=c.glows, fight=_fight(card_fights.get(e.CardId(c.id)), c.fight), replaced_by=replacements.get(c.id))
             for c in o.cards],
-        chip_infos=[cm.ChipInfo(chip=c.id, label_key=c.label_key, tone=c.tone,
-                               when=convert.condition(authored.condition(c.when, cards)), cost_key=c.cost_key,
-                               change_bp=_changes(c.effects),
-                               on_line_key=c.on_line_key, off_line_key=c.off_line_key,
-                               offered_after=None if c.offered_after is None
-                               else convert.unlock(authored.unlock(c.offered_after))) for c in o.chips],
+        chip_infos=chip_infos(o, rules),
         feature_infos=[feature_info(o, f) for f in o.features],
         order_cards=[cm.OrderCard(
             store=c.store, when=convert.condition(authored.condition(c.when, cards)),

@@ -2,12 +2,12 @@
 the way the page shows it: an offer answered when it shows, a one-off step the moment it is ready or queued When ready
 where the chapter asks (Later.queued) (before a comfort
 is queued: a ready glowing step is tapped first, cutting in on the queue's or a rule's task: Card.cuts_in), the sink moves its knobs ask for (dayone/sinks.py), an order card
-set once offered (a route that takes rules), a card kept up by
+set once offered and a chip rule once its chip has shown (a route that takes rules), a card kept up by
 hand, and, for a route that does not use the queue or the trip's hold, a comfort tapped once ready and the trip tapped
 until its first run lands. Ids come from the chapter (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import (
-    BP, AtLeast, CardShare, Mix, MixId, Rules, Save, SaveMix, SetOrders, StoreId, StoreValue, SwitchMix, TapCard, View, units,
-    value_at,
+    BP, AtLeast, CardShare, Mix, MixId, Order, Rules, Save, SaveMix, SetOrders, StoreId, StoreValue, SwitchMix, TapCard, View,
+    units, value_at,
 )
 from tests.daythree.chapter import Later
 from tests.dayone import sinks
@@ -33,6 +33,20 @@ def order_card(save: Save, later: Later) -> Move | None:
     held = set(save.unlocked)
     for after, order in later.order_cards:
         if after in held and order not in save.orders:
+            return "decision", (SetOrders((order, *save.orders)),)
+    return None
+
+
+def chip_rule(v: View, save: Save, rules: Rules, later: Later) -> Move | None:
+    """A chip rule set, first in the orders, at the first decision once its chip has shown (View.chips_seen, so a chip
+    that showed while the player was away is answered on their return) and its cure is in play (the editor offers
+    only those), whether or not the chip shows now."""
+    if not later.chip_rules:
+        return None   # keeps the week-two plays' per-move cost where it was (they run near their CI timeout)
+    seen, in_play = set(v.chips_seen), {c.card for c in v.cards}
+    for cr in later.chip_rules:
+        order = Order(next(c.when for c in rules.chips if c.id == cr.chip), TapCard(cr.cure))
+        if cr.chip in seen and cr.cure in in_play and order not in save.orders:
             return "decision", (SetOrders((order, *save.orders)),)
     return None
 
@@ -156,6 +170,7 @@ def move(v: View, save: Save, rules: Rules, later: Later, knobs: sinks.SinkKnobs
             or carried(release(v, save, rules, later)) or carried(step(v, later)) or carried(queue_step(v, save, later))
             or carried(sinks.move(v, rules, save, later.sinks, knobs, held, kept, marks))
             or carried(share(v, save, later) if knobs.mix_trips else None) or carried(cure(v, save, later))
-            or carried(order_card(save, later) if takes_rules else None) or carried(keep(v, save, later))
+            or carried(order_card(save, later) if takes_rules else None)
+            or carried(chip_rule(v, save, rules, later) if takes_rules else None) or carried(keep(v, save, later))
             or carried(by_hand(v, save, later, knobs)))
 

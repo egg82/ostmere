@@ -57,9 +57,9 @@ export function storeRule(catalog: Catalog, order: Order): StoreRule | null {
   return readSubject(catalog, order.when) ? null : readRule(order.when, catalog.content.scales.quantity_per_item, (s) => catalog.isLevel(s));
 }
 
-/** The rule already set on an order card's store and test (whatever its levels, which the player may have changed,
- * and whatever it does), or -1. */
-export function ruleFor(view: View, card: OrderCard): number {
+/** The rule already set on an order card's (or a chip's) store and test (whatever its levels, which the player may have
+ * changed, and whatever it does), or -1. */
+export function ruleFor(view: View, card: Pick<OrderCard, "when">): number {
   const key = (o: Pick<Order, "when">) => (o.when.kind === "after_time" || o.when.watched.kind !== "store_value" ? null : `${o.when.kind}|${o.when.watched.store}`);
   const want = key(card);
   return want === null ? -1 : view.orders.findIndex((o) => key(o) === want);
