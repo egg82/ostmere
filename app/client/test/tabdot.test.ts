@@ -19,7 +19,7 @@ const AT = 100;
 const base = fixtureStep("restrule", AT);
 const arriving: Card = {
   card: "take_stock", completions: 0, cap: 1, bar: { start: AT, start_value: 0, rate: 0, limit: null }, bar_total: 20, by: null,
-  completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 20, speed: 1, needs: [],
+  completes_at: null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, full_store: null, gained: [], crew: null, tap_s: 20, speed: 1, needs: [],
 };
 const withCard: Step = { ...base, view: { ...base.view, cards: [...base.view.cards, arriving] } };
 

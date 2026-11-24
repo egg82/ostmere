@@ -17,6 +17,7 @@ app/ashfall_app/accounts/words.txt
 app/ashfall_app/api/CONTRACT.txt
 app/ashfall_app/api/__init__.py
 app/ashfall_app/api/camp_models.py
+app/ashfall_app/api/card_models.py
 app/ashfall_app/api/changes.py
 app/ashfall_app/api/content_models.py
 app/ashfall_app/api/convert.py

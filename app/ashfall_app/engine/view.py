@@ -31,7 +31,7 @@ from .rules import Rules
 from .rules_check import features
 from .segments import Segment, reach_time
 from .sharelevels import read_levels
-from .cardsides import card_costs
+from .cardsides import card_costs, card_makes
 from .coverage import all_covered, covered
 from .units import BP
 from .state import Save
@@ -240,7 +240,14 @@ def _card_view(save: Save, rules: Rules, now: Running, mixed: dict[CardId, tuple
         share_bp=share - sum(g.share_bp for g in gained), run=run,
         blocker=blocker(save, rules, c.id), tap_s=tap_seconds(save, rules, c.id), needs=_needs(save, rules, c),
         cuts_in=cuts_in(save, rules, c.id), speed=tap_work_speed(save, rules, c.id),
-        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained, crew=group_crew(save, rules, c.lane))
+        spent_store=mixed[c.id][1].store if run is RunKind.SPENT else None, gained=gained, crew=group_crew(save, rules, c.lane),
+        full_store=_full_store(mixed, c, run))
+
+
+def _full_store(mixed: dict[CardId, tuple[int, Run]], c: CardDef, run: RunKind | None) -> StoreId | None:
+    """The store a full pause stopped the card on: a paused run on a store the card makes (DESIGN.txt, "FULL OUTPUT")."""
+    store = mixed[c.id][1].store if run is RunKind.PAUSED else None
+    return store if store is not None and store in card_makes(c) else None
 
 
 def _run_by(save: Save, c: CardDef, tapped: bool) -> RunBy | None:

@@ -24,7 +24,7 @@ export const LANE_RULES: Order[] = [always("fetch"), HAUL_LOW, always("chop"), a
 function laneCard(at: number, id: string, running: boolean): Card {
   return {
     card: id, completions: running ? 2 : 0, cap: null, bar: { start: at, start_value: running ? 4 * BP : 0, rate: running ? BP : 0, limit: null },
-    bar_total: 12 * BP, by: running ? "tap" : null, completes_at: running ? at + 8 : null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 12, speed: BP, needs: [],
+    bar_total: 12 * BP, by: running ? "tap" : null, completes_at: running ? at + 8 : null, share_bp: 0, run: null, blocker: null, cuts_in: false, spent_store: null, full_store: null, gained: [], crew: null, tap_s: 12, speed: BP, needs: [],
   };
 }
 

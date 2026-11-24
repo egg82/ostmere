@@ -22,7 +22,7 @@ const still = (at: number, value = 0) => ({ start: at, start_value: value, rate:
 function card(at: number, id: string, over: Partial<Card> = {}): Card {
   return {
     card: id, completions: 0, cap: 1, bar: still(at), bar_total: 20 * BP, by: null, completes_at: null, share_bp: 0, run: null,
-    blocker: null, cuts_in: false, spent_store: null, gained: [], crew: null, tap_s: 20, speed: BP, needs: [], ...over,
+    blocker: null, cuts_in: false, spent_store: null, full_store: null, gained: [], crew: null, tap_s: 20, speed: BP, needs: [], ...over,
   };
 }
 

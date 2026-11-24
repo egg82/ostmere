@@ -1,6 +1,6 @@
 """FULL OUTPUT (engine DESIGN.txt, invariants 179-183): a card with inputs and no cap pauses when every one of its outcome
-stores is full, keeps its inputs, gives its share to the rest of its mix, and resumes when one store falls to half its
-cap. Written from that part alone, through the engine's public names.
+stores is full, keeps its inputs, gives its share to the rest of its mix, and resumes when one store has room for a
+whole completion. Written from that part alone, through the engine's public names.
 
 Every card here takes 10 s a completion, so at a full share it pays 1 item of each lump every 10 s: Q / 10 units a
 second. The pool p holds far more than any test draws; y and z are the outcome stores."""

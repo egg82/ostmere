@@ -2323,6 +2323,17 @@
               }
             ],
             "title": "Crew"
+          },
+          "full_store": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Store"
           }
         },
         "type": "object",
@@ -2343,7 +2354,8 @@
           "speed",
           "spent_store",
           "gained",
-          "crew"
+          "crew",
+          "full_store"
         ],
         "title": "Card",
         "description": "An unlocked card that is not completed: one entry of the card panel, the same whether tapped, mixed or idle.\nTappable iff blocker is null and its lane's LaneBar has no running_card or cuts_in is true."

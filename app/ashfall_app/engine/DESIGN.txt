@@ -3513,6 +3513,8 @@ CHOICES (full output)
   a reader; the resume reads the levels now.
 - Run: a full-paused card reads PAUSED with `store` its Pause's store, and gives its share as any giver. It is never
   SPENT: spent.spend reads only pauses on a store the card takes. Its line is never starved (a full store is not 0).
+- View: CardView.full_store is the Pause's store while the card's run is PAUSED on a store it makes, None otherwise;
+  the card face words it (api CONTRACT.txt, "FULL OUTPUT"), since a full pause is no blocker and draws no need row.
 - Read model: every outcome store of a full-paused card reads covered (coverage.covered), since the card resumes as
   the store falls: the band down to the resume level is a store being drawn as planned, not one that needs the
   player, so its falling line is white.
@@ -3571,7 +3573,5 @@ KNOWN GAPS (full output)
   Closing it needs the card's work limited where its stores fill, as Inputs against a dry store's mirror gap does.
   Interim: the loader's finite-supply check asks a converter's target to hold all progress needs of it, so the loss
   is only ever of what progress does not need.
-- The page draws no words for a full pause: the mix card reads paused, its share given to the rest of its mix, and
-  the ledger shows the store at its cap. Decided by: the owner seeing a stopped card.
 - Modifiers that raise an outcome amount are read through the exact net, as everything is; the loader's check reads
   base amounts (opening/finite_checks.py).
