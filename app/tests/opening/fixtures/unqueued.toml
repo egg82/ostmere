@@ -1,0 +1,57 @@
+# A test chapter, merged onto the opening alone (tests/opening/test_offer_unqueued.py): an offer whose first answer
+# queues a one-off and unlocks it, and whose second unlocks the same one-off without queuing it; the one-off's finish
+# unlocks a feature, which a later trigger reads in place of the answers. Not story: the ids and words are the tests' own.
+version = 1
+end_feature = "t_job_done"
+
+[[stores]]
+id = "t_heap"
+label_key = "t_s_heap"
+cap_items = 20
+
+[[features]]
+id = "t_job_done"
+
+[[offers]]
+id = "t_help"
+text_key = "t_o_help"
+gate = { test = "after_time", value = 100 }
+gates_read_feature = ["t_job_done"]
+
+[[offers.answers]]
+id = "t_help_now"
+label_key = "t_a_now"
+cost_key = "t_a_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "t_job" }]
+queues = ["t_job"]
+
+[[offers.answers]]
+id = "t_help_later"
+label_key = "t_a_later"
+cost_key = "t_a_cost"
+[offers.answers.outcome]
+unlocks = [{ unlock_kind = "card", id = "t_job" }]
+
+[[cards]]
+id = "t_job"
+only_player = "story"
+presentation = "action"
+label_key = "t_c_job"
+work_s = 60
+cap = 1
+[cards.finished]
+unlocks = [{ unlock_kind = "feature", id = "t_job_done" }]
+
+[[triggers]]
+id = "t_after_job"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "t_job_done", value = 1 }
+outcome = { stores = [{ store = "t_heap", items = 1 }] }
+
+[text]
+t_s_heap = "Heap"
+t_o_help = "A question"
+t_a_now = "Now"
+t_a_later = "Later"
+t_a_cost = "takes a little"
+t_c_job = "The job"
