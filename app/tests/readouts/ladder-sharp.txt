@@ -1,5 +1,5 @@
 == sharp: the edge at game day 13.82
-  scavenging: level 20 of 22 (65.60% of the phase)
+  scavenging: level 20 of 22 (65.59% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.01 d
@@ -20,7 +20,7 @@
     L19   4.93 d  gap   1.43 d
     L20   8.34 d  gap   3.41 d
     top L22: not by the edge
-  woodcutting: level 21 of 22 (98.62% of the phase)
+  woodcutting: level 21 of 22 (98.64% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.00 d
@@ -42,14 +42,14 @@
     L20   7.18 d  gap   1.81 d
     L21   9.07 d  gap   1.89 d
     top L22: not by the edge
-  foraging: level 8 of 22 (0.42% of the phase)
+  foraging: level 8 of 22 (0.39% of the phase)
     L2    0.05 d  gap   0.05 d
     L3    0.10 d  gap   0.05 d
     L4    0.24 d  gap   0.15 d
     L5    0.53 d  gap   0.29 d
     L6    1.00 d  gap   0.47 d
     L7    2.61 d  gap   1.61 d
-    L8   10.14 d  gap   7.53 d
+    L8   10.08 d  gap   7.46 d
     top L22: not by the edge
   cooking: level 8 of 22 (0.32% of the phase)
     L2    0.86 d  gap   0.86 d
@@ -57,8 +57,8 @@
     L4    2.52 d  gap   1.11 d
     L5    4.75 d  gap   2.23 d
     L6    6.93 d  gap   2.18 d
-    L7    9.85 d  gap   2.92 d
-    L8   12.96 d  gap   3.11 d
+    L7    9.84 d  gap   2.91 d
+    L8   12.91 d  gap   3.07 d
     top L22: not by the edge
   arcana: level 13 of 22 (2.90% of the phase)
     L2    3.93 d  gap   3.93 d
@@ -74,7 +74,7 @@
     L12  10.13 d  gap   2.06 d
     L13  12.58 d  gap   2.45 d
     top L22: not by the edge
-  melee: level 19 of 22 (42.96% of the phase)
+  melee: level 19 of 22 (42.98% of the phase)
     L2    4.75 d  gap   4.75 d
     L3    4.75 d  gap   0.00 d
     L4    4.76 d  gap   0.00 d
@@ -91,14 +91,14 @@
     L15   5.90 d  gap   0.35 d
     L16   6.43 d  gap   0.53 d
     L17   7.56 d  gap   1.13 d
-    L18   9.81 d  gap   2.25 d
-    L19  11.59 d  gap   1.78 d
+    L18   9.78 d  gap   2.22 d
+    L19  11.59 d  gap   1.81 d
     top L22: not by the edge
   spellcraft: level 1 of 22 (0.00% of the phase)
     top L22: not by the edge
   card share of the running mixes by day, percent (. none, ~ under 0.5)
     day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14
-    build_windbreak          .   .   .   .  83  83 100  83  67  50  83 100 100 100
+    build_windbreak          .   .   .   .  83  83 100  83  67  50 100  67  83 100
     build_woodstack         17   .   .   .   .   .   .   .   .   .   .   .   .   .
     cure_hearth              .  67 100  17   .   .   .   .   .   .   .   .   .   .
     cut_stakes               .   .   .   .   .   .   5  23  18  23   5   .   .   .
@@ -122,9 +122,9 @@
     n2_forage                .  17 100 100 100 100  83   .   .   .   .   .   .   .
     n2_stakes                .   .   .   .   .   .  17 100 100   .   .   .   .   .
     n2_watch                 .   .   .   .   .   .   .   .   . 100 100 100 100 100
-    n3_ash_ground            .   .   .   .   .   .   .   9  29  33  22  22  27  23
-    n3_forage                .   .   .   .  83 100 100  84  58  67  66  74  75  71
-    n3_pick                  .   .   .   .   .   .   .  38  40  40  42  40  42  42
+    n3_ash_ground            .   .   .   .   .   .   .   9  31  33  22  24  24  25
+    n3_forage                .   .   .   .  83 100 100  84  62  67  58  62  71  77
+    n3_pick                  .   .   .   .   .   .   .  38  40  40  43  43  42  42
     n4_cord                  .   .   .   .   .   .  17  33  17   .   .   .   .   .
     n4_watch                 .   .   .   .  83 100 100 100 100 100 100 100 100 100
     n6_posts                 .   .   .   .   .   .   .   .   .  17   .   .   .   .

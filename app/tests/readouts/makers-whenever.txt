@@ -22,8 +22,8 @@
   camp
     d1-2   made  253414  at cap  42%  n1_forage 31, woodcutting 17, rest 17, scavenge 17, n1_walk_ridge 7, build_shelter 6, weave_wattle 6
     d3-5   made  743710  at cap  50%  n1_forage 42, n2_forage 23, field_track 10, woodcutting 4, rest 4, scavenge 4, make_bay 4, larder_floor 2, pot_shelf 2, watch_fire 2, wood_stack 2
-    d6-9   made 1728041  at cap  33%  n1_forage 23, n4_watch 15, n3_forage 14, n2_forage 14, field_track 5, n2_stakes 4, n2_clear_roofs 4, woodcutting 3, rest 3, scavenge 3, n4_cord 3, n3_ash_ground 2, hand_on_stone 2, cut_stakes 1, other 5
-    d10+   made 3010703  at cap  62%  n1_forage 17, n4_watch 14, n3_forage 10, n7_guard 8, n2_clear_roofs 8, g_field_forage 8, g_field_watch 7, n2_watch 3, n3_ash_ground 3, n6_stakes 3, n2_forage 3, hand_on_stone 2, woodcutting 2, rest 2, scavenge 2, n2_stakes 2, field_track 2, hunt_wolf 1, cut_stakes 1, n3_pick 1, other 2
+    d6-9   made 1728047  at cap  33%  n1_forage 23, n4_watch 15, n2_forage 14, n3_forage 14, field_track 5, n2_stakes 4, n2_clear_roofs 4, woodcutting 3, rest 3, scavenge 3, n4_cord 3, hand_on_stone 2, n3_ash_ground 2, n3_pick 2, cut_stakes 1, other 5
+    d10+   made 3019341  at cap  62%  n1_forage 17, n4_watch 14, n3_forage 10, n7_guard 8, n2_clear_roofs 8, g_field_forage 8, g_field_watch 7, n2_watch 3, n3_ash_ground 3, n6_stakes 3, n2_forage 3, hand_on_stone 2, woodcutting 2, rest 2, scavenge 2, n2_stakes 2, field_track 2, n3_pick 1, hunt_wolf 1, cut_stakes 1, other 2
   catch
     d1-2   made     108  at cap   0%  snare_1 33, snare_2 33, snare_3 33
     d3-5   made     216  at cap   0%  snare_1 33, snare_2 33, snare_3 33
@@ -105,8 +105,8 @@
     d6-9   made     553  at cap   0%  cook_roots 100
     d10+   made     679  at cap   0%  cook_roots 100
   fungus
-    d6-9   made     164  at cap  12%  n3_pick 100
-    d10+   made     448  at cap   0%  n3_pick 98, g_hearth_pick 2
+    d6-9   made     167  at cap  12%  n3_pick 100
+    d10+   made     455  at cap   3%  n3_pick 98, g_hearth_pick 2
   hearth_dry
     d3-5   made       4  at cap  33%  cure_hearth 100
   hearth_wet
@@ -187,8 +187,8 @@
   roots
     d1-2   made   18595  at cap  42%  n1_forage 99, other 1
     d3-5   made   99624  at cap 100%  n1_forage 62, n2_forage 38
-    d6-9   made  193032  at cap  96%  n1_forage 43, n3_forage 30, n2_forage 27
-    d10+   made  241685  at cap 100%  n1_forage 40, n3_forage 28, g_field_forage 19, n2_forage 13
+    d6-9   made  192864  at cap  96%  n1_forage 43, n3_forage 30, n2_forage 27
+    d10+   made  241570  at cap 100%  n1_forage 40, n3_forage 28, g_field_forage 19, n2_forage 13
   sign_2h
     d3-5   made      80  at cap   6%  sign_2h 100
     d6-9   made    1920  at cap 100%  sign_2h 100
