@@ -1610,7 +1610,7 @@ LOSS LINES
     of ui.fight.on_loss and ui.fight.on_wound (such a fight has no loses and no wounds). On every other fight the
     on-loss line is FIGHTS' as before.
   - in the chronicle, word each lost entry of a runner whose fight has loss_pool from loss_pool, exactly as FIGHTS
-    words a lost entry from lost_line_keys: the k-th lost fight reads pool[bag[k mod n]], the same seeded bag keyed by
+    words a lost entry from lost_line_keys: the k-th lost fight (k from 0, the runner's first lost fight ever) reads pool[bag[k mod n]], the same seeded bag keyed by
     the save, the runner, "lost" and floor(k / n), with pool = loss_pool and n its size. Which entries of a window read
     as lost, the won entries and the summary line (ui.fight.since) are FIGHTS' unchanged. A runner whose fight has no
     loss_pool words its lost entries as FIGHTS says (its lost_line_keys, else ui.fight.lost), never from any loss_pool.
@@ -1632,7 +1632,8 @@ LOSS LINES
   its id, its pool (loss_notes, authored order) and `lost`: its lost tally floored to whole fights at the day's end,
   game second (day + 1) * 86400, read off the save advanced to that second (FIGHTS invariant 81: the same however the
   steps fell). Its keys are picked by the composer's own hashed draws (Chance), never by the engine.
-    L1. Only a day composed with its end (ended, and not broken off into a gap) gets loss notes, written at its end
+    L1. Only a day composed with its end (ended, and not broken off into a gap: a non-null gap, as saves/journal.py's
+        contract sets it) gets loss notes, written at its end
         after the corrections, runners in id order. A day that broke off gets none; what it owed is owed to the next
         day that ends.
     L2. A runner's told count is the number of its loss notes plus the sum of its fold notes' counts, over every
@@ -1646,7 +1647,8 @@ LOSS LINES
         are these is written.
     L5. The key. drawn: every note of the stored days and of the page so far, oldest first in page order, of any
         subject, whose slot is not "fold" and whose key is in the pool, so a trigger subject's note from the pool
-        counts as a draw. size = the pool's size, r = len(drawn) // size, used = the keys in drawn[r * size:]. The
+        counts as a draw, and so does a loss note written earlier at this same day's end for a runner before this one
+        in id order when its key is in this pool. size = the pool's size, r = len(drawn) // size, used = the keys in drawn[r * size:]. The
         candidates are the pool's keys not in used; when used is empty, drawn is not and size >= 2, the last drawn
         key is not a candidate (no key twice in a row). The key is the candidate whose SHA-256 of the UTF-8 bytes of
         f"{save_id}|journal|loss|{runner}|{r}|{key}" is smallest, compared as bytes. Each round of size draws uses
