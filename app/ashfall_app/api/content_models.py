@@ -219,6 +219,10 @@ class ChipInfo(BaseModel):
     whatever outcome also shows it)."""
     offered_after: Unlock | None
     """Drawn only once view.unlocked holds this (its cure is on screen), as an OrderCard's offered_after."""
+    chore: bool
+    """A season's chore: every maker of the store it watches is a standing action a season's turn opens. One with no
+    order card arrives with the hint dot alone, and its rule is the player's to write (docs/decisions/clock.md, "Each
+    season brings its own chores")."""
 
 
 class AimInfo(BaseModel):

@@ -934,6 +934,8 @@ export interface components {
             /** Off Line Key */
             off_line_key: string | null;
             offered_after: components["schemas"]["Unlock"] | null;
+            /** Chore */
+            chore: boolean;
         };
         /**
          * CompletedCard

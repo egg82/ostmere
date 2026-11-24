@@ -13,7 +13,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 const watch = (store: string) => ({ kind: "store_value" as const, store });
 const rising = (store: string): Condition => ({ kind: "at_least", watched: watch(store), value: 4 * Q, release: 2 * Q, value_of_cap: false, release_of_cap: false });
 const falling = (store: string): Condition => ({ kind: "at_most", watched: watch(store), value: 1 * Q, release: 3 * Q, value_of_cap: false, release_of_cap: false });
-const chip = (id: string, when: Condition): ChipInfo => ({ chip: id, label_key: `chip.${id}`, tone: "cold", when, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null });
+const chip = (id: string, when: Condition): ChipInfo => ({ chip: id, label_key: `chip.${id}`, tone: "cold", when, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null, chore: false });
 
 // smoke_roots takes roots and damp_wood and makes smoked; "stocked" rises with roots, "dry" falls with damp_wood.
 const catalog = new Catalog({ ...fixtureContent, chip_infos: [...fixtureContent.chip_infos, chip("stocked", rising("roots")), chip("dry", falling("damp_wood")), chip("heaped", rising("smoked"))] });

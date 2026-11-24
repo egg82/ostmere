@@ -6,6 +6,7 @@ from collections.abc import Callable
 from .. import engine as e
 from ..accounts import codes
 from ..opening import convert as authored
+from ..opening.chores import chores
 from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
 from ..opening.makers import card_makes, card_takes, made_by
@@ -140,6 +141,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
     card_fights = {c.id: c.fight for c in rules.cards}
     standing_fights = {a.id: a.fight for a in rules.standing}
     replacements = {u.id: u.replaced_by for _, out in outcomes(o) for u in out.unlocks if u.replaced_by is not None}
+    chore_chips = set(chores(o, rules))
     return cm.Content(
         rules_digest=digest,
         scales=cm.Scales(quantity_per_item=e.QUANTITY_SCALE, rate_per_item_hour=e.RATE_SCALE, bp=e.BP),
@@ -170,7 +172,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                change_bp=_changes(c.effects),
                                on_line_key=c.on_line_key, off_line_key=c.off_line_key,
                                offered_after=None if c.offered_after is None
-                               else convert.unlock(authored.unlock(c.offered_after))) for c in o.chips],
+                               else convert.unlock(authored.unlock(c.offered_after)),
+                               chore=c.id in chore_chips) for c in o.chips],
         feature_infos=[feature_info(o, f) for f in o.features],
         order_cards=[cm.OrderCard(
             store=c.store, when=convert.condition(authored.condition(c.when, cards)),
