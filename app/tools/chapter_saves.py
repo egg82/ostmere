@@ -21,7 +21,7 @@ from tests.weektwo.routes import SAVED, laters, played
 ROUTES = frozenset(name for names in SAVED.values() for name in names)
 """Every route with a saved end."""
 REBASED: dict[str, tuple[str, ...]] = {"rebased-early": ("eight", "nine", "eleven", "twelve"),
-                                       "rebased-late": ("fifteen", "sixteen", "eighteen")}
+                                       "rebased-late": ("fifteen", "sixteen", "eighteen", "nineteen")}
 """typical's rebased saves (ends.rebased_path), by part: each chapter's save, replayed from the decisions of typical's
 saved end at it, so a part needs typical's ends and not typical's play from the start."""
 ALL = ROUTES | frozenset(ends.READINGS) | frozenset(REBASED)

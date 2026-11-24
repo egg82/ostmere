@@ -495,7 +495,7 @@ day_nineteen_night:
 # Day twenty-two: from B17 (the walk shown at T13's visit) through I1, the season's turn at 504 h, B18 (the first walk) and I2-I4 to
 # B19, which pays the day's near promise. Spec: content/team/week-four.md, "Day twenty-two". Ids only. Kinds as
 # day_two:. target_hour: game hours after the list's first ref lands, typical route, measured by the week-two simulator
-# (tests/weektwo/report.py --twenty-two). The walks are walk_ashwood and its town twins, counted on ashwood_trips.
+# (tests/weektwo/report.py --twentytwo). The walks are walk_ashwood and its town twins, counted on ashwood_trips.
 day_twenty_two_near_promise: C-promise-33
 day_twenty_two:
   - {id: B17,  kind: ref,    visit: 19d, target_hour: 0}
