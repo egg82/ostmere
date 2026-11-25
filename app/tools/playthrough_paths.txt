@@ -512,6 +512,8 @@ app/tests/weektwo/test_weektwo_saved.py
 app/tests/weektwo/test_weektwo_sixteen.py
 app/tests/weektwo/test_weektwo_twelve.py
 app/tests/weektwo/test_weektwo_twentythree.py
+app/ashfall_app/opening/day_twenty_five.toml
+app/tests/weektwo/test_weektwo_twentyfive.py
 app/tests/weektwo/test_weektwo_twentytwo.py
 app/tests/weektwo/test_worth_readouts.py
 app/tests/weektwo/verdicts.py

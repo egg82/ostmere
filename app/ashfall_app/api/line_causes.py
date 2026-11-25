@@ -44,7 +44,7 @@ def _causes(o: Opening) -> dict[str, LineCause]:
         put(t.outcome.line_keys, _when(t.when, cards, worded))
     for x in o.offers:
         put(x.line_keys, offer_cause(x, cards, worded))
-        put([k for a in x.answers for k in a.outcome.line_keys], AnswerCause(offer=x.id))
+        put(dict.fromkeys(k for a in x.answers for k in a.outcome.line_keys), AnswerCause(offer=x.id))
     for ch in o.chips:
         put([*([] if ch.on_line_key is None else [ch.on_line_key]), *ch.off_line_keys], _when(ch.when, cards, worded))
     for i, lv in enumerate(o.camp.levels if o.camp is not None else []):

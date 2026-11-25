@@ -64,17 +64,19 @@ def person_keys(o: "Opening") -> set[str]:
 
 def with_mentions(o: "Opening") -> "Opening":
     """`o` with each outcome that moves a mention person ending in that person's mention line, the line's kind story and
-    its text empty: the page words it."""
+    its text empty: the page words it. Idempotent: a state already given its mention lines (the shipped content, merged
+    on again with a test chapter) is given none twice."""
     mention = told(o, "mention")
     if not mention:
         return o
     added = sorted(mention_keys(o))
-    clash = [k for k in added if k in o.text]
+    given = {k for x in _outcomes(o) for k in x.line_keys}
+    clash = [k for k in added if k in o.text and k not in given]
     if clash:
         raise ValueError(f"text: keys a mention line takes: {clash}")
 
     def out(x: OutcomeEntry) -> OutcomeEntry:
-        keys = [mention_key(w, lane) for w, lane in moves(x) if lane in mention]
+        keys = [k for k in (mention_key(w, lane) for w, lane in moves(x) if lane in mention) if k not in x.line_keys]
         return x.model_copy(update={"line_keys": [*x.line_keys, *keys]}) if keys else x
 
     return o.model_copy(update={

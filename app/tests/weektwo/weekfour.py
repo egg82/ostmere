@@ -94,3 +94,40 @@ def day_twenty_three(route: str) -> Later:
         news=("SL31", "I5", "O-fiddle", "I6", "O-book", "SL32", "I7", "SL33", "A39", "B20"),
         answers=(*twentytwo.answers, *asks), shares=twentytwo.shares, cures=twentytwo.cures,
         own=book_later(twentytwo.own), queued=(GO_WALLOW,), chip_rules=twentytwo.chip_rules)
+
+
+TWENTY_FIVE = Landings(
+    {"I8": ("t_bowl_set",), "SL35": ("t_sister_road",), "I10": ("t_thanks",), "B21": ("t_b21",)},
+    {}, {}, {"I9": OfferId("o_walkers"), "O-walkers": OfferId("o_walkers"), "O-widowers": OfferId("o_widowers")})
+"""I9 is its offer's showing (the offer carries the beat's lines)."""
+HUNT_BOAR, POST_DOOR = CardId("hunt_boar"), CardId("post_door")
+BOAR_SHARE = {"typical": 2000, "sharp": 2500}
+"""The hands' share of the boar hunt a route sets once shown (I8): the pooled fight in the mix by the route's choice
+(week-four-plan item 7; a route not named follows typical)."""
+WALKERS = {"typical": AnswerId("o_walkers_food"), "sharp": AnswerId("o_walkers_build")}
+WIDOWERS = {"typical": AnswerId("o_widowers_build"), "sharp": AnswerId("o_widowers_food")}
+"""Where each group works first, as each route answers (a route not named follows typical): both answers measured on
+each offer. The whenever player's kind rule, set in week three, answers them."""
+LATER_JOBS = ("j_midden", "j_leaning_wall", "j_steam_hole")
+LATER_JOB_NO = {"sharp": "j_leaning_wall"}
+"""Lucy's jobs from B20, each answered yes when it shows, but for the one each route here declines."""
+
+
+def day_twenty_five(route: str) -> Later:
+    """B20's visit to B21's: day twenty-three's sinks, rules, split and shares carried on, the boar hunt at the route's
+    share once shown, the walkers and widowers by the route's answers (or the kind's rule), Lucy's jobs answered when
+    they show, and the post's door tapped once ready."""
+    twentythree = day_twenty_three(route)
+    groups = ((OfferId("o_walkers"), WALKERS.get(route, WALKERS["typical"])),
+              (OfferId("o_widowers"), WIDOWERS.get(route, WIDOWERS["typical"])))
+    no = LATER_JOB_NO.get(route)
+    jobs = tuple((OfferId(j), AnswerId(f"{j}_{'no' if j == no else 'yes'}")) for j in LATER_JOBS)
+    return Later(
+        start="B20", stop="B21",
+        sinks=Chapter(trips=twentythree.sinks.trips, comforts=twentythree.sinks.comforts,
+                      arrivals=(*twentythree.sinks.arrivals, *groups)),
+        steps=(POST_DOOR,), order_cards=twentythree.order_cards, keeps=twentythree.keeps, landed=TWENTY_FIVE.of,
+        news=("I8", "I9", "O-walkers", "SL35", "I10", "O-widowers", "B21"),
+        answers=(*twentythree.answers, *jobs),
+        shares=(*twentythree.shares, Share(HUNT_BOAR, BOAR_SHARE.get(route, BOAR_SHARE["typical"]))),
+        cures=twentythree.cures, own=twentythree.own, chip_rules=twentythree.chip_rules)
