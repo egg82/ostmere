@@ -117,9 +117,9 @@ class Save:
     """The unlock set, sorted by unlocks.unlock_key; only grows. Ignored when rules.opening is None."""
     chips: tuple[bool, ...] = ()
     """chips[i] is the latch of rules.chips[i]."""
-    chips_seen: tuple[bool, ...] = ()
-    """chips_seen[i] is True once rules.chips[i] has shown (time 0 included); it never resets, so the chip's on_line
-    plays once per save (DESIGN.txt, "Chips")."""
+    chips_seen: tuple[int, ...] = ()
+    """chips_seen[i] is 0 until rules.chips[i] first shows (time 0 included), then 1 plus the times it has said an off
+    line; it never falls, so the chip's on_line plays once per save and its off lines take turns (DESIGN.txt, "Chips")."""
     fired: tuple[bool, ...] = ()
     """fired[i] is True once rules.triggers[i] has fired; it never resets."""
     ended_at: int | None = None

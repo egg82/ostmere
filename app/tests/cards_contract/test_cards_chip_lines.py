@@ -2,6 +2,7 @@
 often it clears and shows again, whether its latch rising or its unlock showed it; its off_line each time it stops
 showing. The chip itself shows every time."""
 import json
+from dataclasses import replace
 
 from ashfall_app.engine import (
     Amount, AtMost, CardDef, CardId, ChipDef, ChipId, Flow, LineKey, Outcome, Save, StandingDef, StoreDef, StoreId,
@@ -23,7 +24,7 @@ def world(locked: bool = False) -> Rules:
         standing=[StandingDef(DRAIN, costs=(Flow(E, Q),))],
         cards=[CardDef(R, 1, outcome=Outcome(stores=(Amount(E, 7 * Q),))),
                CardDef(U, 1, cap=1, outcome=Outcome(unlocks=(Unlock(UnlockKind.CHIP, TIRED),)))],
-        chips=[ChipDef(TIRED, AtMost(StoreValue(E), 3 * Q, 6 * Q), on_line=ON, off_line=OFF)],
+        chips=[ChipDef(TIRED, AtMost(StoreValue(E), 3 * Q, 6 * Q), on_line=ON, off_lines=(OFF,))],
         opening=opening if locked else None)
 
 
@@ -75,6 +76,6 @@ def test_a_format_4_save_whose_chip_showed_never_plays_its_on_line_again():
                             for ls in doc["save"]["lanes"]]
     old = json.dumps({**doc, "format": 4}, sort_keys=True, separators=(",", ":"))
     s2 = rebase(old, r)
-    assert s2 == s
+    assert s.chips_seen == (2,) and s2 == replace(s, chips_seen=(1,))   # no count of off lines said survives format 4
     keys, shown = cycles(r, 2, s2, s2.time)
     assert shown == 2 and ON not in keys

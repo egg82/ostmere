@@ -46,7 +46,7 @@ def world(p: str = "", lay_s: int = 40, extra_trigger: bool = False) -> Rules:
                CardDef(CardId(p + "old"), 5)),
         chips=(ChipDef(chip, AtMost(StoreValue(food), 5 * Q, 6 * Q),
                        (Modifier(LaneSpeed(rack), ModifierKind.MUL_BP, 5_000, SourceId(p + "cold")),),
-                       LineKey("cold.on"), LineKey("cold.off")),),
+                       LineKey("cold.on"), (LineKey("cold.off"),)),),
         triggers=tuple(triggers),
         opening=None,
     )

@@ -1,7 +1,7 @@
 """Format upgrades: one function per old FORMAT, chained on the envelope's JSON before anything is decoded.
 
 Semantics: DESIGN.txt, "FORMAT is 6", "Codec" in part "TOWNSFOLK, INSTALLED RULES AND OFFERS" (FORMAT 7), and
-"Speed" (FORMAT 8) and "Codec" (FORMAT 9). UPGRADES[f] turns an envelope of format f into one of format f + 1. Every format
+"Speed" (FORMAT 8), "Codec" (FORMAT 9) and "Chips" (FORMAT 10). UPGRADES[f] turns an envelope of format f into one of format f + 1. Every format
 from OLDEST_FORMAT below FORMAT has an entry (tests/engine/test_rebase_impl.py checks it).
 """
 from collections.abc import Callable
@@ -75,8 +75,18 @@ def _no_holds(envelope: Json) -> Json:
     return {**envelope, "format": 9, "save": {**save, "mixes": kept}}
 
 
+def _seen_counts(envelope: Json) -> Json:
+    """Format 9 to 10: chips_seen counts (state.py): a chip seen reads 1, its off lines not yet said, and one never
+    seen 0."""
+    if not isinstance(envelope, dict) or not isinstance(save := envelope.get("save"), dict) \
+            or not isinstance(seen := save.get("chips_seen"), list) or not all(isinstance(s, bool) for s in seen):
+        raise StateFormatError("not a format 9 save envelope")
+    counts: list[Json] = [int(s is True) for s in seen]
+    return {**envelope, "format": 10, "save": {**save, "chips_seen": counts}}
+
+
 UPGRADES: dict[int, Callable[[Json], Json]] = {
-    4: _chips_seen, 5: _no_failed_attempts, 6: _no_offers, 7: _no_kept_speed, 8: _no_holds}
+    4: _chips_seen, 5: _no_failed_attempts, 6: _no_offers, 7: _no_kept_speed, 8: _no_holds, 9: _seen_counts}
 
 
 def missing_upgrades() -> list[int]:

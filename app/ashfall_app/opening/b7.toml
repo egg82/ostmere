@@ -198,7 +198,7 @@ skill = "melee"
 xp_per_hour = 900
 inputs = [{ store = "smoked", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }] }
-fight = { side = "hands", threat = "lone_wolf", lost = "hunt_lost", wounds = [{ store = "hurt", items = 1 }], won_line_keys = ["l_fight_hunt_won_1", "l_fight_hunt_won_2", "l_fight_hunt_won_3"], lost_line_keys = ["l_fight_hunt_lost_1", "l_fight_hunt_lost_2", "l_fight_hunt_lost_3"] }
+fight = { side = "hands", threat = "lone_wolf", lost = "hunt_lost", wounds = [{ store = "hurt", items = 1 }], won_line_keys = ["l_fight_hunt_won_1", "l_fight_hunt_won_2", "l_fight_hunt_won_3", "l_fight_hunt_won_4", "l_fight_hunt_won_5", "l_fight_hunt_won_6"], lost_line_keys = ["l_fight_hunt_lost_1", "l_fight_hunt_lost_2", "l_fight_hunt_lost_3", "l_fight_hunt_lost_4", "l_fight_hunt_lost_5", "l_fight_hunt_lost_6"] }
 
 # ---------- the track's reach ----------
 
@@ -290,19 +290,19 @@ effects = [
 ]
 cost_key = "chip_hurt_cost"
 on_line_key = "l_hurt"
-off_line_key = "l_healed"
+off_line_keys = ["l_healed", "l_healed_2", "l_healed_3", "l_healed_4", "l_healed_5", "l_healed_6"]
 
 # ---------- the pests ----------
 
 [[standing]]
 id = "rats"
 label_key = "action_rats"
-fight = { side = "larder", threat = "ashrats", lost = "rats_lost", fought = "rats_fought", fights_per_hour = 1, loses = [{ store = "roots", items = 2 }], won_line_keys = ["l_fight_rats_won_1", "l_fight_rats_won_2", "l_fight_rats_won_3"], lost_line_keys = ["l_fight_rats_lost_1", "l_fight_rats_lost_2", "l_fight_rats_lost_3"] }
+fight = { side = "larder", threat = "ashrats", lost = "rats_lost", fought = "rats_fought", fights_per_hour = 1, loses = [{ store = "roots", items = 2 }], won_line_keys = ["l_fight_rats_won_1", "l_fight_rats_won_2", "l_fight_rats_won_3", "l_fight_rats_won_4", "l_fight_rats_won_5", "l_fight_rats_won_6"], lost_line_keys = ["l_fight_rats_lost_1", "l_fight_rats_lost_2", "l_fight_rats_lost_3", "l_fight_rats_lost_4", "l_fight_rats_lost_5", "l_fight_rats_lost_6"] }
 
 [[standing]]
 id = "crows"
 label_key = "action_crows"
-fight = { side = "rack", threat = "crows", lost = "crows_lost", fought = "crows_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_crows_won_1", "l_fight_crows_won_2", "l_fight_crows_won_3"], lost_line_keys = ["l_fight_crows_lost_1", "l_fight_crows_lost_2", "l_fight_crows_lost_3"] }
+fight = { side = "rack", threat = "crows", lost = "crows_lost", fought = "crows_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_crows_won_1", "l_fight_crows_won_2", "l_fight_crows_won_3", "l_fight_crows_won_4", "l_fight_crows_won_5", "l_fight_crows_won_6"], lost_line_keys = ["l_fight_crows_lost_1", "l_fight_crows_lost_2", "l_fight_crows_lost_3", "l_fight_crows_lost_4", "l_fight_crows_lost_5", "l_fight_crows_lost_6"] }
 
 # ---------- the ramp's clock ----------
 
@@ -524,6 +524,11 @@ l_melee_3 = "find"
 l_combat_first = "story"
 l_hurt = "body"
 l_healed = "body"
+l_healed_2 = "body"
+l_healed_3 = "body"
+l_healed_4 = "body"
+l_healed_5 = "body"
+l_healed_6 = "body"
 l_poultice = "story"
 l_fight_hunt_won_1 = "fight"
 l_fight_hunt_lost_1 = "fight"
@@ -533,16 +538,34 @@ l_fight_crows_won_1 = "fight"
 l_fight_crows_lost_1 = "fight"
 l_fight_hunt_won_2 = "fight"
 l_fight_hunt_won_3 = "fight"
+l_fight_hunt_won_4 = "fight"
+l_fight_hunt_won_5 = "fight"
+l_fight_hunt_won_6 = "fight"
 l_fight_hunt_lost_2 = "fight"
 l_fight_hunt_lost_3 = "fight"
+l_fight_hunt_lost_4 = "fight"
+l_fight_hunt_lost_5 = "fight"
+l_fight_hunt_lost_6 = "fight"
 l_fight_rats_won_2 = "fight"
 l_fight_rats_won_3 = "fight"
+l_fight_rats_won_4 = "fight"
+l_fight_rats_won_5 = "fight"
+l_fight_rats_won_6 = "fight"
 l_fight_rats_lost_2 = "fight"
 l_fight_rats_lost_3 = "fight"
+l_fight_rats_lost_4 = "fight"
+l_fight_rats_lost_5 = "fight"
+l_fight_rats_lost_6 = "fight"
 l_fight_crows_won_2 = "fight"
 l_fight_crows_won_3 = "fight"
+l_fight_crows_won_4 = "fight"
+l_fight_crows_won_5 = "fight"
+l_fight_crows_won_6 = "fight"
 l_fight_crows_lost_2 = "fight"
 l_fight_crows_lost_3 = "fight"
+l_fight_crows_lost_4 = "fight"
+l_fight_crows_lost_5 = "fight"
+l_fight_crows_lost_6 = "fight"
 
 [text]
 # ---------- lines: [day two: line to write] ----------
@@ -593,6 +616,11 @@ l_melee_3 = "a wolf lies stiff under the thorn. you take the pelt."
 l_combat_first = "{n2} looks from his headless shaft to the thorn."
 l_hurt = "you favour one side and lift with the other."
 l_healed = "you reach with both arms and don't notice."
+l_healed_2 = "you shoulder a load on the side that hurt."
+l_healed_3 = "the scab is gone. the new skin is paler."
+l_healed_4 = "you roll over in the night without waking."
+l_healed_5 = "you lift the full pot off the fire one-handed."
+l_healed_6 = "you crouch by the fire and stand up in one go."
 l_poultice = "you mash roots into clay and press it on."
 l_fight_hunt_won_1 = "you skin the wolf and carry the meat home."
 l_fight_hunt_lost_1 = "the wolf is quicker. you walk back without it."
@@ -603,16 +631,34 @@ l_fight_crows_lost_1 = "you wave an arm. the crows take their pick anyway."
 aim_keep = "keep what's left from the wolves."
 l_fight_hunt_won_2 = "the wolf's pelt goes up on stakes to dry."
 l_fight_hunt_won_3 = "you run the wolf down in the scrub."
+l_fight_hunt_won_4 = "you corner the wolf against the rocks and end it."
+l_fight_hunt_won_5 = "a wolf over one shoulder, its legs tied."
+l_fight_hunt_won_6 = "its prints in the ash lead you straight to it."
 l_fight_hunt_lost_2 = "you close on the wolf. it's already past you."
 l_fight_hunt_lost_3 = "the wolf knocks you flat and is gone."
+l_fight_hunt_lost_4 = "the tracks run out on bare rock."
+l_fight_hunt_lost_5 = "you wait downwind till dark. nothing comes."
+l_fight_hunt_lost_6 = "the wolf circles you. you back away."
 l_fight_rats_won_2 = "you wedge a flat rock in the gap the rats use."
 l_fight_rats_won_3 = "a stick, a boot. the rats leave the roots be."
+l_fight_rats_won_4 = "a rat bolts from the larder with nothing in its teeth."
+l_fight_rats_won_5 = "you pack the rat hole shut with clay."
+l_fight_rats_won_6 = "the roots lie covered. the rats move on."
 l_fight_rats_lost_2 = "roots lie bitten through, the ends dragged away."
 l_fight_rats_lost_3 = "the rats tunnel under. the larder is lighter."
+l_fight_rats_lost_4 = "droppings, and a gap where the roots were."
+l_fight_rats_lost_5 = "the rats have had the fattest roots."
+l_fight_rats_lost_6 = "a root gnawed hollow lies by the larder."
 l_fight_crows_won_2 = "a stone at the crows, and the strips hang untouched."
 l_fight_crows_won_3 = "the crows leave the rack and croak from the thorn."
+l_fight_crows_won_4 = "a crow lands on the pole and thinks better of it."
+l_fight_crows_won_5 = "you clap twice. not one crow stays."
+l_fight_crows_won_6 = "you sit by the rack till the crows give up."
 l_fight_crows_lost_2 = "black wings lift off a bare pole."
 l_fight_crows_lost_3 = "you retie what the crows pulled. fewer strips hang."
+l_fight_crows_lost_4 = "a strip lies in the ash, pecked to string."
+l_fight_crows_lost_5 = "a crow flaps off, a strip trailing from its beak."
+l_fight_crows_lost_6 = "a gap on the rack, and a black feather under it."
 n_day_b7 = "eyes past the firelight all night. counted them to pass the time. lost count. started again"
 n_ground_2 = "banked the fire on the warm ground. it keeps its coals there like nowhere else in camp"
 # The journal's slots (docs/design/journal.md, "The content's side").

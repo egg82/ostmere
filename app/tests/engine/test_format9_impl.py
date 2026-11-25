@@ -31,7 +31,7 @@ def test_a_format_8_save_with_empty_holds_loads_as_the_same_save_and_runs_on_ide
     s = decide(decide(new_save(r), r, 0, SaveMix(MIX)), r, 0, SwitchMix(MIX.id))
     s = advance(s, r, 500)
     old = as_format_8(encode(s, r))
-    assert FORMAT == 9 and '"holds":[]' in old
+    assert FORMAT >= 9 and '"holds":[]' in old
     loaded = rebase(old, r)
     assert loaded == s
     assert advance(loaded, r, 50_000) == advance(s, r, 50_000)

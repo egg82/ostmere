@@ -34,12 +34,12 @@ PLANTS = (
      (('label_key = "t_l_q3"\nruled = true\ntold = "mention"', 'label_key = "t_l_q3"\nruled = true\ntold = "line"'),
       ('card = "t_q3_work", own_split = true }] }', 'card = "t_q3_work", counted = true, own_split = true }] }'))),
     ("a mention with no bands", "lane t_q2: is a mention, and the content has no [people] bands to word it",
-     (('[[people.came]]\nat_least = 1\nkeys = ["t_came_one"]\n\n[[people.came]]\nat_least = 2\n'
-       'keys = ["t_came_some_a", "t_came_some_b"]\n\n[[people.went]]\nat_least = 1\nkeys = ["t_went_one"]\n', ''),)),
+     (('[[people.came]]\nat_least = 1\nkeys = ["t_came_one", "t_came_one_2", "t_came_one_3", "t_came_one_4", "t_came_one_5", "t_came_one_6"]\n\n[[people.came]]\nat_least = 2\n'
+       'keys = ["t_came_some_a", "t_came_some_b", "t_came_some_b_3", "t_came_some_b_4", "t_came_some_b_5", "t_came_some_b_6"]\n\n[[people.went]]\nat_least = 1\nkeys = ["t_went_one", "t_went_one_2", "t_went_one_3", "t_went_one_4", "t_went_one_5", "t_went_one_6"]\n', ''),)),
     ("bands not starting at one", "people came: bands start at one person and rise",
-     (('at_least = 1\nkeys = ["t_came_one"]', 'at_least = 3\nkeys = ["t_came_one"]'),)),
+     (('at_least = 1\nkeys = ["t_came_one", "t_came_one_2", "t_came_one_3", "t_came_one_4", "t_came_one_5", "t_came_one_6"]', 'at_least = 3\nkeys = ["t_came_one", "t_came_one_2", "t_came_one_3", "t_came_one_4", "t_came_one_5", "t_came_one_6"]'),)),
     ("a band key with no text", "people went: key 't_went_none' is not in text",
-     (('keys = ["t_went_one"]', 'keys = ["t_went_none"]'),)),
+     (('keys = ["t_went_one", "t_went_one_2", "t_went_one_3", "t_went_one_4", "t_went_one_5", "t_went_one_6"]', 'keys = ["t_went_none"]'),)),
 )
 
 

@@ -1005,27 +1005,27 @@ after = { unlock_kind = "feature", id = "warm_ground" }
 # went that day, one of its lines drawn by a seeded shuffle. Words, never a count: a number is not the voice.
 [[people.came]]
 at_least = 1
-keys = ["mention_came_one_1", "mention_came_one_2", "mention_came_one_3"]
+keys = ["mention_came_one_1", "mention_came_one_2", "mention_came_one_3", "mention_came_one_4", "mention_came_one_5", "mention_came_one_6"]
 
 [[people.came]]
 at_least = 2
-keys = ["mention_came_few_1", "mention_came_few_2", "mention_came_few_3"]
+keys = ["mention_came_few_1", "mention_came_few_2", "mention_came_few_3", "mention_came_few_4", "mention_came_few_5", "mention_came_few_6"]
 
 [[people.came]]
 at_least = 5
-keys = ["mention_came_many_1", "mention_came_many_2", "mention_came_many_3"]
+keys = ["mention_came_many_1", "mention_came_many_2", "mention_came_many_3", "mention_came_many_4", "mention_came_many_5", "mention_came_many_6"]
 
 [[people.went]]
 at_least = 1
-keys = ["mention_went_one_1", "mention_went_one_2", "mention_went_one_3"]
+keys = ["mention_went_one_1", "mention_went_one_2", "mention_went_one_3", "mention_went_one_4", "mention_went_one_5", "mention_went_one_6"]
 
 [[people.went]]
 at_least = 2
-keys = ["mention_went_few_1", "mention_went_few_2", "mention_went_few_3"]
+keys = ["mention_went_few_1", "mention_went_few_2", "mention_went_few_3", "mention_went_few_4", "mention_went_few_5", "mention_went_few_6"]
 
 [[people.went]]
 at_least = 5
-keys = ["mention_went_many_1", "mention_went_many_2"]
+keys = ["mention_went_many_1", "mention_went_many_2", "mention_went_many_3", "mention_went_many_4", "mention_went_many_5", "mention_went_many_6"]
 
 # ---------- text ----------
 
@@ -1226,20 +1226,39 @@ n_ground_1 = "the ground was warm out to four paces round the hearth, then cold 
 mention_came_one_1 = "one more bowl goes round the pot."
 mention_came_one_2 = "a stranger comes in out of the ash, and stays."
 mention_came_one_3 = "someone new sleeps on the far side of the fire."
+mention_came_one_4 = "a new bedroll is laid out by the fire."
+mention_came_one_5 = "someone you don't know yet eats with you."
+mention_came_one_6 = "one more pair of hands at the woodpile."
 mention_came_few_1 = "a few more come in off the road. the pot stretches."
 mention_came_few_2 = "new faces at the fire. nobody asks where from."
 mention_came_few_3 = "the ladle scrapes bottom sooner."
+mention_came_few_4 = "a handful walk in together, carrying what they could."
+mention_came_few_5 = "everyone shuffles back to widen the ring."
+mention_came_few_6 = "bedrolls crowd in closer at night."
 mention_came_many_1 = "a crowd comes in, ash to the knees."
 mention_came_many_2 = "more come than there are blankets."
 mention_came_many_3 = "too many new faces to learn in a day."
+mention_came_many_4 = "the camp fills faster than the woodpile."
+mention_came_many_5 = "people sleep back to back by the fire."
+mention_came_many_6 = "they come in a long file, one behind the next."
 mention_went_one_1 = "a place at the fire stands empty."
 mention_went_one_2 = "one bowl fewer goes round the pot."
 mention_went_one_3 = "a bedroll by the fire stays rolled up."
+mention_went_one_4 = "a bowl stays dry by the pot."
+mention_went_one_5 = "one voice fewer at the fire."
+mention_went_one_6 = "a pair of boots is gone from the fireside."
 mention_went_few_1 = "a few places at the fire stand empty."
 mention_went_few_2 = "the camp is quieter by a few voices."
 mention_went_few_3 = "the stores stretch further, for the wrong reason."
+mention_went_few_4 = "the ring at the fire closes up a little."
+mention_went_few_5 = "a few bowls go back on the stack unused."
+mention_went_few_6 = "a few bedrolls are rolled up and gone."
 mention_went_many_1 = "a whole side of the fire sits empty."
 mention_went_many_2 = "the pot goes round fast. too many are gone."
+mention_went_many_3 = "half the bedrolls are gone."
+mention_went_many_4 = "the fire is too big for who is left."
+mention_went_many_5 = "you count heads and stop early."
+mention_went_many_6 = "no one waits for the ladle."
 # The journal's slots (docs/design/journal.md, "The content's side").
 j_n2_first = "a man came up to the light, looking at the pot more than at us. alone. his spear had no head. {n2}. that made three to feed"
 j_n2_catchup = "{n2} came, and stayed"

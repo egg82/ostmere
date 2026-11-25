@@ -169,7 +169,7 @@ def world_st(draw: Draw, max_firings: int | None = None) -> Rules:
     cards = [_card(draw, plan, c, stores, lockable, targets) for c in ids]
     chips = [ChipDef(k, draw(_condition(stores, ids, True)), tuple(draw(st.lists(_modifier(targets, k), max_size=2))),
                      LineKey(f"{k}.on") if draw(st.booleans()) else None,
-                     LineKey(f"{k}.off") if draw(st.booleans()) else None) for k in chip_ids]
+                     tuple(LineKey(f"{k}.off{i}") for i in range(draw(st.integers(0, 3))))) for k in chip_ids]
     triggers = [TriggerDef(TriggerId(f"t{i}"), draw(_condition(stores, ids, False)),
                            draw(_discrete_outcome(plan, None, lockable, targets, f"t{i}", f"t{i}.fired")))
                 for i in range(draw(st.integers(0, 1)))]
@@ -348,7 +348,7 @@ def rule_keys(r: Rules) -> set[str]:
     for c in r.cards:
         found |= set(c.lines) | set(c.outcome.lines) | set(c.finished.lines)
     for k in r.chips:
-        found |= {x for x in (k.on_line, k.off_line) if x}
+        found |= {x for x in (k.on_line, *k.off_lines) if x}
     for t in r.triggers:
         found |= set(t.outcome.lines)
     return found

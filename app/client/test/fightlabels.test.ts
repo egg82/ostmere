@@ -1,7 +1,8 @@
 // Which fights of a window read as lost is the page's draw over the engine's exact count (CONTRACT.txt, "FIGHTS";
 // engine DESIGN.txt, "FIGHTS"): the same on every call, and exactly the served lost count. The checker runs on the real
 // labeller and on two planted ones, which it must reject: a draw that rolls fresh each call, and one that ignores the count.
-import { entries, labels, oddsOf, poolLine, windows, type Window } from "../src/game/fights";
+import { readFileSync } from "node:fs";
+import { bagged, entries, labels, oddsOf, poolLine, windows, type Window } from "../src/game/fights";
 import { fightsStep } from "../fixtures/fights";
 
 function expect(label: string, got: unknown, want: unknown): void {
@@ -68,6 +69,21 @@ expect("the same k reads the same line", poolLine(3, "hunt", "lost", pool, 6), p
 const orders = new Set([1, 2, 3, 4, 5, 6].map((save) => [0, 1, 2, 3].map((k) => poolLine(save, "hunt", "won", pool, k)).join("")));
 if (orders.size < 3) throw new Error(`the save does not move the pool's order: ${orders.size} orders`);
 expect("a one-line pool is that line", poolLine(1, "hunt", "won", ["only"], 5), "only");
+
+// No line twice in a row, across a round's end too; a pool of two takes turns. The draws the engine's port is held to
+// (engine/rotation.py, tests/engine/test_format10_impl.py) are fixtures/bag_cases.json, taken from this function.
+for (const n of [3, 6, 7]) {
+  const six = Array.from({ length: n }, (_, i) => `l${i}`);
+  for (const key of ["hurt|off", "a|b", "pack|won"]) {
+    const drawn = Array.from({ length: 60 * n }, (_, k) => bagged(key, six, k));
+    const twice = drawn.findIndex((x, i) => i > 0 && x === drawn[i - 1]);
+    expect(`${key} over ${n} never says one line twice in a row`, twice, -1);
+  }
+}
+const pair = (key: string) => [0, 1, 2, 3].map((k) => bagged(key, ["x", "y"], k));
+expect("a pool of two takes turns", ["a", "b", "c"].every((key) => pair(key)[0] !== pair(key)[1] && pair(key)[0] === pair(key)[2]), true);
+const bagCases = JSON.parse(readFileSync("fixtures/bag_cases.json", "utf8")) as { cases: Array<{ key: string; pool: string[]; draws: string[] }> };
+for (const c of bagCases.cases) expect(`the recorded draws of ${c.key}`, c.draws.map((_, k) => bagged(c.key, c.pool, k)), c.draws);
 
 // Each entry's k counts the runner's wins and losses since it first ran: fought - lost before the window, then on.
 const counted: Array<[string, number]> = [];

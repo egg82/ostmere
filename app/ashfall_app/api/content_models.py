@@ -214,9 +214,9 @@ class ChipInfo(BaseModel):
     change_bp: list[int]
     """The chip's effects as signed changes in basis points, as LevelPays.change_bp: the slots of cost_key."""
     on_line_key: str | None
-    off_line_key: str | None
-    """The lines the chip writes as it turns on and off (a LogLine with card null and one of these keys is the chip's,
-    whatever outcome also shows it)."""
+    off_line_keys: list[str]
+    """The lines the chip writes as it turns on (once a save) and off (one of off_line_keys each time, in turn); a
+    LogLine with card null and one of these keys is the chip's, whatever outcome also shows it."""
     offered_after: Unlock | None
     """Drawn only once view.unlocked holds this (its cure is on screen), as an OrderCard's offered_after."""
     chore: bool
