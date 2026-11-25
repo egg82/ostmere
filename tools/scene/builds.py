@@ -24,7 +24,7 @@ NOT_BUILDS = frozenset({
     "gap_ring_ghost", "rim_haze", "valley_fog_1", "valley_fog_2", "valley_fog_3", "valley_fog_4", "valley_fog_5", "stream_steam_1",
     "stream_steam_2", "stream_steam_3", "wolf_gap", "palisade_3", "palisade_6", "palisade_9", "palisade_12",
     "scored_line", "roof_posts", "lean_to_ghost", "larder_ghost", "smoke_rack_ghost", "n1_shelter_ghost",
-    "woodstack_ghost", "bay_ghost", "bay2_ghost", "hut_ghost", "lamp_1", "lamp_2", "lamps_lit", "vigil_body",
+    "woodstack_ghost", "bay_ghost", "bay2_ghost", "hut_ghost", "hall_ghost", "lamp_1", "lamp_2", "lamps_lit", "vigil_body",
     "pyre_flames", "wolf_sitting", "wolf_edge_1", "wolf_edge_2", "rat_larder", "crows_roof", "crows_hang",
 })
 """Layers that are not a build: the backdrop and the world beyond it, marks on the ground, the palisade, the lamps,
@@ -66,6 +66,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "snare_2": ("snare_2",),
     "snare_3": ("snare_3",),
     "pyre": ("pyre",),
+    "hall": ("hall_1", "hall_2", "hall_3", "hall_4"),
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
