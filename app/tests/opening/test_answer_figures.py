@@ -82,6 +82,7 @@ HIDDEN = {
     "b15_clock", "choir_clock", "starer_clock", "covers_torn", "b15_2h", "choir_6h", "starer_floor",
     "cut_night_clock", "b17_clock", "r2_clock", "b17_floor", "night_21", "fungus_stews", "beds_covered",
     "still_left", "thaw_left", "film", "still_clock", "pace_clock", "pace_3h", "still_30",
+    "sorrel_clock", "sorrel_4h", "sorrel_12h", "cache_torn", "night_24",
 }
 
 
