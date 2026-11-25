@@ -88,7 +88,7 @@ def _check_slots(o: "Opening", s: "SubjectEntry") -> None:
         fail(where, "has one of misremember and correction: they are written together")
     if s.misremember is not None and s.kind != "routine":
         fail(where, f"is a {s.kind}, and only a routine is misremembered")
-    for name, slot in _slots(s):
+    for name, slot in slots_of(s):
         for key in slot.keys:
             if key not in o.text:
                 fail(where, f"{name} key {key!r} is not in text")
@@ -96,7 +96,7 @@ def _check_slots(o: "Opening", s: "SubjectEntry") -> None:
             check_sketch(f"{where} {name}", slot.sketch)
 
 
-def _slots(s: "SubjectEntry") -> list[tuple[str, "SlotEntry"]]:
+def slots_of(s: "SubjectEntry") -> list[tuple[str, "SlotEntry"]]:
     named = [("first", s.first), ("repeat", s.repeat), ("catchup", s.catchup), ("late", s.late),
              ("misremember", s.misremember), ("correction", s.correction)]
     return [(name, slot) for name, slot in named if slot is not None]
