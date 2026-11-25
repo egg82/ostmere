@@ -348,6 +348,8 @@ jobs:
             names: readings-twentyfive-c
           - part: readings-twentyfive-d
             names: readings-twentyfive-d
+          - part: readings-twentyfive-e
+            names: readings-twentyfive-e
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       PART: ${{ matrix.part }}
