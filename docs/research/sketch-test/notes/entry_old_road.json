@@ -1,0 +1,6 @@
+[
+  {"kind": "study", "id": "section", "required": true, "text": ["across it"]},
+  {"kind": "study", "id": "stake", "text": ["stake"]},
+  {"kind": "label", "anchor": [450, 400], "text": ["stake"]},
+  {"kind": "label", "anchor": [330, 222], "text": ["over the top"]}
+]
