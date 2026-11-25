@@ -158,6 +158,22 @@ export function townSaveDecisions(view: View, edited: Mix, isNew: boolean): Deci
   return [save, { kind: "set_orders", orders }];
 }
 
+/** The mix a person's edit changes, as the edit starts from it: the town's (a card the view no longer has left out), else
+ * a new one, named `title`, that a save points the town's always rule at. */
+export function townEdit(catalog: Catalog, view: View, title: string): { mix: Mix; isNew: boolean } {
+  const found = townMixToEdit(catalog, view);
+  const mix = structuredClone(found ?? newTownMix(view, title));
+  mix.components = mix.components.filter((c) => c.kind !== "card_share" || view.cards.some((v) => v.card === c.card));
+  return { mix, isNew: found === null };
+}
+
+/** The decisions that join `card` to its person's time, as a tap on its face does; [] when it cannot join. */
+export function townJoin(catalog: Catalog, view: View, title: string, card: string): Decision[] {
+  const { mix, isNew } = townEdit(catalog, view, title);
+  const next = joinTownCard(catalog, mix, card);
+  return next ? townSaveDecisions(view, next, isNew) : [];
+}
+
 /** A new town mix: no cards, a name no saved mix has. */
 export function newTownMix(view: View, name: string): Mix {
   return { id: freeName(view, name), components: [] };

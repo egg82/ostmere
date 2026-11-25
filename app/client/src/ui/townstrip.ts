@@ -4,12 +4,13 @@
 // their face and who, their time split into the cards that hold a share (each with its
 // share) and the idle remainder (while a one-off holds their lane, that card alone with its time left and "then {split}",
 // as the hands strip draws a tap), under it the split that runs now while a card of theirs is stopped (runningnow.ts),
-// and the card they are working now with its bar, sampled as the card panel samples it.
+// and the card they are working now with its bar, sampled as the card panel samples it. A person whose held cards are all
+// stopped reads "nothing to do" with what each is stopped on and the tasks they could run now (stucknote.ts).
 // Each person's Change opens their page (personpage.ts), where their split is set. A lane that has joined has no row of its own any more (lanerows.ts);
 // the strip comes through the arrival queue once, then stays. It takes its numbers from the view and adds none.
 import type { View } from "../api/types";
 import { laneOneOff } from "../game/holder";
-import { groups, marked, members, personOf, soloOf } from "../game/town";
+import { groups, marked, members, personOf, soloOf, townJoin } from "../game/town";
 import { UI } from "../game/text";
 import { face } from "./asknode";
 import { el, keyed, setText, tapFeedback } from "./dom";
@@ -17,13 +18,15 @@ import type { Part, PartContext } from "./part";
 import { dotChange } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
 import { RunningNow } from "./runningnow";
+import { StuckNote } from "./stucknote";
+import { wastedOn } from "../game/wasted";
 import { splitOf, splitParts, thenSplit } from "./townsplit";
 
 /** How many members' faces a group's row stacks. */
 const FACES = 2;
 
 /** `held`: while a tap holds the lane, its key item, which tick words with the time left. */
-interface PersonRow extends Row { split: HTMLElement; now: RunningNow; change: HTMLElement; held: { item: HTMLElement; card: string; endsAt: number | null } | null }
+interface PersonRow extends Row { split: HTMLElement; now: RunningNow; stuck: StuckNote; change: HTMLElement; held: { item: HTMLElement; card: string; endsAt: number | null } | null }
 
 export class TownStrip implements Part {
   readonly root = el("section", "hands town");
@@ -82,12 +85,30 @@ export class TownStrip implements Part {
     const now = new RunningNow(this.ctx, lane);
     row.node.insertBefore(split, row.track);
     row.node.insertBefore(now.root, row.track);
+    const stuck = new StuckNote(this.ctx, (card) => this.join(card), () => this.openPage(lane));
+    row.node.insertBefore(stuck.root, row.track);
     const change = el("button", "hands-edit lane-change person-change", this.ctx.catalog.text.get(UI.laneChange));
     change.type = "button";
     change.dataset.teach = "town-change";   // a lesson's mark of the way into the town's mix
     change.addEventListener("click", () => { tapFeedback(); this.openPage(lane); });
     row.node.insertBefore(change, row.track);
-    return { ...row, split, now, change, held: null };
+    return { ...row, split, now, stuck, change, held: null };
+  }
+
+  /** A task offered a person with nothing to do: it joins their time, as a tap on its face on their page does. */
+  private join(card: string): void {
+    const view = this.view;
+    if (!view) return;
+    for (const d of townJoin(this.ctx.catalog, view, this.ctx.catalog.townTitle(view), card)) this.ctx.actions.decide(d);
+  }
+
+  /** Under the split, while the card the row works runs on a share into full stores: that its work is wasted. */
+  private wastedLine(row: PersonRow, view: View, lane: string): HTMLElement[] {
+    const { catalog } = this.ctx;
+    const on = view.cards.find((c) => c.card === this.runningOf(view, lane));
+    const store = on ? wastedOn(catalog, view, on) : null;
+    row.doing.classList.toggle("wasted", store !== null);
+    return on && store !== null ? [el("p", "stuck-line wasted-line", catalog.text.fill(UI.townWasted, { card: catalog.cardLabel(on.card), store: catalog.storeLabel(store) }))] : [];
   }
 
   /** A group of more than one: its own label, a stack of its first members' faces and the head count. */
@@ -111,8 +132,12 @@ export class TownStrip implements Part {
     const { bar, key } = splitOf(tap ? [{ text: "", bp: catalog.content.scales.bp, hue: catalog.rank(tap.card) % 6, idle: false }] : splitParts(this.ctx, view, lane, solo ?? lane));
     row.held = tap && { item: key.firstElementChild as HTMLElement, card: tap.card, endsAt: tap.endsAt };
     if (tap) key.append(el("span", "town-key-then", thenSplit(this.ctx, view, lane, solo ?? lane)));
-    row.split.replaceChildren(bar, key);
+    row.split.replaceChildren(bar, key, ...this.wastedLine(row, view, lane));
     row.now.update(view);
+    const stuck = solo !== null && row.stuck.update(view, solo);
+    row.node.classList.toggle("stuck", stuck);
+    row.doing.classList.toggle("stuck", stuck);
+    if (stuck) setText(row.doing, catalog.text.get(UI.townStuck));
     dotChange(this.ctx, view, lane, row.change);
   }
 }

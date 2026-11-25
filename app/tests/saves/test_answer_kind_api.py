@@ -3,15 +3,15 @@
 does not have, or a kind no offer declares, is a 422 that writes nothing; the player cannot send it as a decision;
 Content.offer_infos carries each offer's kind and each answer's role."""
 from collections.abc import Iterator
-from functools import cache
 from pathlib import Path
 
 import pytest
 
 from ashfall_app import main
 from ashfall_app.db import saves as rows
-from ashfall_app.opening.schema import CHAPTERS, Opening, load_opening
+from ashfall_app.opening.schema import CHAPTERS, load_opening
 from tests.game_client import GameClient, game_client
+from tests.shipped_ruleset import ShippedRuleset
 
 FIXTURE = Path(__file__).resolve().parent.parent / "opening" / "fixtures" / "askkinds.toml"
 
@@ -21,21 +21,18 @@ def order(kind: str, role: str) -> dict[str, object]:
         {"when": {"kind": "after_time", "at": 0}, "then": {"kind": "answer_kind", "offer_kind": kind, "role": role}}]}
 
 
-@cache
-def opening() -> Opening:
-    """The shipped chapters with the test chapter merged on, loaded once for the module's tests."""
-    return load_opening(chapters=(*CHAPTERS, FIXTURE))
-
-
 @pytest.fixture(scope="module")
-def loaded() -> Opening:
-    """The load, timed as a shared fixture rather than inside whichever test comes first."""
-    return opening()
+def kinded_rules() -> ShippedRuleset:
+    """The shipped chapters with the test chapter merged on: loaded, with its Ruleset and Game, once for the module's
+    tests (the session's shipped rules are for the shipped opening only)."""
+    return ShippedRuleset(load_opening(chapters=(*CHAPTERS, FIXTURE)))
 
 
 @pytest.fixture
-def kinded(pg_url: str, monkeypatch: pytest.MonkeyPatch, loaded: Opening) -> Iterator[GameClient]:
-    monkeypatch.setattr(main, "load_opening", opening)
+def kinded(pg_url: str, kinded_rules: ShippedRuleset, monkeypatch: pytest.MonkeyPatch) -> Iterator[GameClient]:
+    monkeypatch.setattr(main, "load_opening", lambda: kinded_rules.opening)
+    monkeypatch.setattr(main, "ruleset", kinded_rules.ruleset)
+    monkeypatch.setattr(main, "Game", kinded_rules.make_game)
     with game_client(pg_url, monkeypatch) as found:
         yield found
 

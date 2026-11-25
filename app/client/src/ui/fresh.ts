@@ -25,10 +25,18 @@ export function unmark(node: HTMLElement): void {
   node.querySelector(":scope > .new-dot")?.remove();
 }
 
+/** How a control takes the glow: one that `yields` gives it up to a control that `outranks` it (a story step the content
+ * marks takes it from the shown ask, which keeps its outline). */
+export interface GlowRank {
+  yields?: boolean;
+  outranks?: boolean;
+}
+
 /** The one glow on the page. It comes on at its turn in the arrival queue, so it never lands while a line is read. */
 export class Glow {
   private node: HTMLElement | null = null;
   private waiting: HTMLElement | null = null;
+  private yields = false;
 
   constructor(private readonly arrivals: Arrivals | null = null) {}
 
@@ -36,23 +44,31 @@ export class Glow {
     return (this.node !== null && this.node.isConnected) || this.waiting !== null;
   }
 
-  /** Puts the glow on `node` unless another control has it (or is about to); it goes when `node` is used. */
-  offer(node: HTMLElement): boolean {
+  /** Puts the glow on `node` unless another control has it (or is about to) and does not yield to `node`; it goes when
+   * `node` is used. */
+  offer(node: HTMLElement, rank: GlowRank = {}): boolean {
+    if (rank.outranks === true && this.yields && this.busy && this.node !== node && this.waiting !== node) {
+      this.waiting = null;   // a yielding control still waiting for its turn gives up that turn
+      this.clear();
+    }
     if (this.busy) return this.node === node || this.waiting === node;
     if (this.arrivals?.busy) {
       this.waiting = node;
+      this.yields = rank.yields === true;
       this.arrivals.effect(node, "card", () => {   // its turn: it takes the glow (offering again could queue it again)
+        if (this.waiting !== node) return;   // outranked while it waited
         this.waiting = null;
-        if (!this.busy) this.place(node);
+        if (!this.busy) this.place(node, rank);
       });
       return true;
     }
-    this.place(node);
+    this.place(node, rank);
     return true;
   }
 
-  private place(node: HTMLElement): void {
+  private place(node: HTMLElement, rank: GlowRank): void {
     this.node = node;
+    this.yields = rank.yields === true;
     node.classList.add("glow");
     const clear = (): void => this.clear(node);
     node.addEventListener("click", clear, { once: true });
@@ -71,7 +87,7 @@ export class GlowWhile {
   private pending = false;
   private was = false;
 
-  constructor(private readonly glow: Glow, private readonly node: HTMLElement) {}
+  constructor(private readonly glow: Glow, private readonly node: HTMLElement, private readonly rank: GlowRank = {}) {}
 
   update(want: boolean): void {
     if (want && !this.was) this.pending = true;
@@ -83,7 +99,7 @@ export class GlowWhile {
   /** Every frame: offer it once nothing holds it back. */
   tick(): void {
     if (!this.pending || this.node.closest(".held")) return;
-    if (this.glow.offer(this.node)) this.pending = false;
+    if (this.glow.offer(this.node, this.rank)) this.pending = false;
   }
 
   used(): void {

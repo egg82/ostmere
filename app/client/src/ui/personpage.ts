@@ -7,7 +7,8 @@
 // one root is what a tab would seat later. Opening it is what clears the quiet dot on the person's row.
 // A group's page is this page for a pooled lane's id: the group's split as the one bar with the crew under it, its tasks as
 // faces, its members (groupmembers.ts) in place of rules (no rule names a pooled lane); a group of one is titled with the
-// member's name.
+// member's name. While every card holding their time is stopped, the note under the split says so
+// and offers the tasks they could run now (stucknote.ts).
 import type { Card, View } from "../api/types";
 import { sectioned } from "../game/cardsections";
 import { laneTap } from "../game/holder";
@@ -23,6 +24,7 @@ import { el, revealBelow, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
 import type { PartContext, RuleTarget } from "./part";
 import { PersonMix } from "./personmix";
+import { StuckNote } from "./stucknote";
 import { condButton } from "./rulecond";
 import { taskRow } from "./rulelanes";
 import { laneRulable } from "./rulewho";
@@ -51,6 +53,7 @@ export class PersonPage {
   private readonly rules = el("div", "person-rules");
   private readonly mix: PersonMix;
   private readonly members: GroupMembers;
+  private readonly stuck: StuckNote;
   private view: View | null = null;
   private lane = "";
   /** The faces drawn, which tick moves on. */
@@ -65,13 +68,14 @@ export class PersonPage {
     this.mix = new PersonMix(ctx);
     this.members = new GroupMembers(ctx);
     this.untilDone = new WhenReady(ctx);
+    this.stuck = new StuckNote(ctx, (card) => this.mix.toggle(card), () => this.cards.scrollIntoView?.({ block: "start", behavior: "smooth" }));
     const close = el("button", "editor-close", "✕");
     close.type = "button";
     close.setAttribute("aria-label", ctx.catalog.text.get(UI.close));
     close.addEventListener("click", () => this.close());
     const head = el("div", "editor-head");
     head.append(this.heading, close);
-    this.root.append(head, this.mix.root, this.members.root, this.cards, this.rules);
+    this.root.append(head, this.mix.root, this.stuck.root, this.members.root, this.cards, this.rules);
   }
 
   get open(): boolean {
@@ -165,6 +169,8 @@ export class PersonPage {
     if (this.pooled()) this.members.update(view, lane);
     this.mix.root.hidden = !joined;
     if (joined) this.mix.show(view, lane);
+    const solo = soloOf(catalog, view, lane);
+    if (!(joined && solo !== null && this.stuck.update(view, solo))) this.stuck.root.hidden = true;
     const held = joined ? this.mix.shares() : new Map<string, number>();
     this.cards.replaceChildren(...sectioned(catalog, laneTasks(this.ctx, view, lane), (c) => c.card, view).flatMap((g) => {
       const list = el("div", "card-list");

@@ -4,9 +4,10 @@ import type { SpentShare, View } from "../api/types";
 import type { Catalog } from "./catalog";
 import { UI } from "./text";
 
-/** The strip's note on a spent card: the store it is stopped on, which nothing can make again; "" when none is. */
+/** The hands strip's note on a spent card of the hands' mix: the store it is stopped on, which nothing can make again; ""
+ * when none is. A townsperson's spent card is theirs to show (game/stuck.ts), never the hands'. */
 export function spentNote(catalog: Catalog, view: View): string {
-  const store = view.cards.find((c) => c.run === "spent")?.spent_store;
+  const store = view.cards.find((c) => c.run === "spent" && catalog.mixable(c.card))?.spent_store;
   return store ? catalog.text.fill(UI.spent, { store: catalog.storeLabel(store) }) : "";
 }
 

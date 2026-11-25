@@ -5,7 +5,7 @@ import { inUse } from "../game/marks";
 import type { Glow } from "./fresh";
 
 /** The glow goes on a card the content marks, the first time it is ready with its lane free, while nothing else
- * has it; once per card, and never on one already put to work or done (glowTarget). A card put to work by a mix, a
+ * has it but the shown ask (which yields it: GlowRank); once per card, and never on one already put to work or done (glowTarget). A card put to work by a mix, a
  * rule or the queue loses it, as a click does (fresh.ts). */
 export class CardGlow {
   private readonly glowed = new Set<string>();
@@ -19,6 +19,6 @@ export class CardGlow {
     }
     const card = glowTarget(this.catalog, view, this.glowed);
     const node = card ? this.node(card) : undefined;
-    if (card && node && this.glow.offer(node)) this.glowed.add(card);
+    if (card && node && this.glow.offer(node, { outranks: true })) this.glowed.add(card);
   }
 }
