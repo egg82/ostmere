@@ -340,6 +340,8 @@ jobs:
             names: readings-twentytwo-a
           - part: readings-twentytwo-b
             names: readings-twentytwo-b
+          - part: readings-twentytwo-c
+            names: readings-twentytwo-c
           - part: readings-twentythree
             names: readings-twentythree
     env:
