@@ -72,6 +72,22 @@ def test_a_check_failure_names_the_chapter_that_broke_it_though_a_later_chapter_
     assert str(shipped_order.value).endswith(f" (in {DAY_ONE.name})")
 
 
+@pytest.mark.xfail(strict=True, reason="#462: the first partial world's own error is reported instead of the real one")
+def test_a_content_error_in_a_late_chapter_names_it_with_the_real_message(tmp_path: Path):
+    """Early prefixes of the shipped chapters fail the content check as partial worlds; the error named is still the
+    full state's own, against the chapter that brought it."""
+    last = CHAPTERS[-3]
+    text = last.read_text()
+    assert text.count("\n[text]\n") == 1, f"anchor is not unique in {last.name}"
+    plant = tmp_path / last.name
+    plant.write_text(text.replace("\n[text]\n", '\n[text]\nt_digit_probe = "Day 9"\n'))
+    chapters = tuple(plant if c == last else c for c in CHAPTERS)
+    with pytest.raises(ValueError) as e:
+        load_opening(OPENING, chapters)
+    assert "t_digit_probe" in str(e.value) and "holds a digit" in str(e.value)
+    assert str(e.value).endswith(f" (in {last.name})")
+
+
 EARLY = '[[cards]]\nid = "t_early"\nlane = "t_late"\npresentation = "action"\nlabel_key = "t_c_early"\nwork_s = 60\ncap = 1\n\n[text]\nt_c_early = "Early"\n'
 LATE = '[[lanes]]\nid = "t_late"\nlabel_key = "t_l_late"\nruled = true\ntold = "line"\n\n[text]\nt_l_late = "Late"\n'
 
