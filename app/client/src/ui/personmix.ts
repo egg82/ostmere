@@ -6,7 +6,7 @@
 import type { Mix, View } from "../api/types";
 import { laneOneOff } from "../game/holder";
 import { UI } from "../game/text";
-import { crewOf, dropTownCard, given, joinTownCard, newTownMix, soloOf, townMixToEdit, townSaveDecisions, withTownShares } from "../game/town";
+import { crewOf, dropTownCard, given, joinTownCard, soloOf, townEdit, townSaveDecisions, withTownShares } from "../game/town";
 import { el, setText } from "./dom";
 import { tapBar } from "./handsheld";
 import type { PartContext } from "./part";
@@ -44,10 +44,7 @@ export class PersonMix {
    * longer has is not in it. */
   private edited(): { mix: Mix; isNew: boolean } {
     const view = this.view as View;
-    const found = townMixToEdit(this.ctx.catalog, view);
-    const mix = structuredClone(found ?? newTownMix(view, this.ctx.catalog.townTitle(view)));
-    mix.components = mix.components.filter((c) => c.kind !== "card_share" || view.cards.some((v) => v.card === c.card));
-    return { mix, isNew: found === null };
+    return townEdit(this.ctx.catalog, view, this.ctx.catalog.townTitle(view));
   }
 
   private send(next: Mix | null): void {

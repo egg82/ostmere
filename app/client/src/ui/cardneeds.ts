@@ -16,7 +16,8 @@
 // A card that shows an upside (CardInfo.upside_key) and takes from no store (CardInfo.takes empty: no inputs, costs or
 // drains) says so in a need's place, while it works too: a benefit with no cost beside it reads as a cost not shown (takesNothing).
 // A card a full pause stopped (Card.full_store: every store it fills is full) says which store has no room, in a need's
-// place and quiet: it starts again by itself as the store is drawn down (CONTRACT.txt, "FULL OUTPUT").
+// place and quiet: it starts again by itself as the store is drawn down (CONTRACT.txt, "FULL OUTPUT"). A spent card
+// (Card.spent_store) says in the same place which store nothing makes now, unless that store's need row is drawn.
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
 // what its blocker names (shows()).
 import type { Card, Condition, LedgerLine, Need, View } from "../api/types";
@@ -74,14 +75,14 @@ export class CardNeeds {
     const kind = (n: Need): string => { const k = needKind(catalog, view, n); return k === "store" ? "" : k; };
     this.needs = card.needs;
     this.nothing = takesNothing(catalog, this.id, card.needs);
-    const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|") + `|${card.full_store ?? ""}`;
+    const shape = card.needs.map((n) => `${n.store}:${n.quantity}:${kind(n)}:${JSON.stringify(n.gate)}`).join("|") + `|${card.full_store ?? ""}|${card.spent_store ?? ""}`;
     if (shape !== this.shape) {
       this.shape = shape;
       this.stores = card.needs.map((n) => n.store);
       this.storeRows = card.needs.map((n, i) => this.storeRow(`card-need ${kind(n)}`.trim(), i));
       const skills = skillNeeds.map(() => el("span", "card-need skill"));
       const steps = stepNeeds.map(() => el("span", "card-need step"));
-      this.root.replaceChildren(...this.storeRows, ...skills, ...steps, ...(this.nothing ? [this.nothing] : []), ...(info?.reach ? [this.reach] : []), ...(card.full_store !== null ? [this.noRoom] : []));
+      this.root.replaceChildren(...this.storeRows, ...skills, ...steps, ...(this.nothing ? [this.nothing] : []), ...(info?.reach ? [this.reach] : []), ...(card.full_store !== null || card.spent_store !== null ? [this.noRoom] : []));
     }
     card.needs.forEach((need, i) => {
       const row = this.storeRows[i];
@@ -144,10 +145,16 @@ export class CardNeeds {
     });
   }
 
+  /** Why a stopped card stopped, in a need's place: no room in a full store, or a spent store nothing makes now, unless
+   * that store's own need row already says so. */
   private drawNoRoom(card: Card): void {
-    const store = card.full_store;
-    this.noRoom.hidden = store === null;
-    if (store !== null) setText(this.noRoom, this.ctx.catalog.text.fill(UI.noRoom, { store: this.ctx.catalog.storeTitle(store) }));
+    const { catalog } = this.ctx;
+    const full = card.full_store;
+    const spent = card.spent_store !== null && this.storeRows[this.stores.indexOf(card.spent_store)]?.hidden !== false ? card.spent_store : null;
+    this.noRoom.hidden = full === null && spent === null;
+    this.noRoom.classList.toggle("spent", full === null && spent !== null);
+    if (full !== null) setText(this.noRoom, catalog.text.fill(UI.noRoom, { store: catalog.storeTitle(full) }));
+    else if (spent !== null) setText(this.noRoom, catalog.text.fill(UI.cardSpentOn, { store: catalog.storeLabel(spent) }));
   }
 
   private tickReach(t: number): void {
