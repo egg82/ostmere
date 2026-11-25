@@ -174,7 +174,7 @@ await check("2 When: the chips the task makes, then stores of at least two items
 });
 
 await check("2 a store of less than two items is not offered", () => {
-  const tiny = { store: "spark", label_key: "store.spark", cap: 1 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null };
+  const tiny = { store: "spark", label_key: "store.spark", cap: 1 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null, group_key: null };
   const content: Content = { ...fixtureContent, store_infos: [...fixtureContent.store_infos, tiny],
     text_entries: [...fixtureContent.text_entries, { key: "store.spark", text: "Spark" }] };
   const v = viewWith((x) => ({ ...x, ledger: [...x.ledger, { ...ledgerLine(x, "spark"), cap: 1 * Q }] }));

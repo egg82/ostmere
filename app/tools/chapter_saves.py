@@ -23,7 +23,10 @@ from tests.weektwo.routes import BEFORE, SAVED, laters, play_on, played
 
 LINKS: dict[str, tuple[str, str, str | None]] = {"sharp-a": ("sharp", "week1", "eighteen"),
                                                  "sharp-b": ("sharp", "eighteen", "twentytwo"),
-                                                 "sharp-c": ("sharp", "twentytwo", None)}
+                                                 "sharp-c": ("sharp", "twentytwo", None),
+                                                 "whenever-a": ("whenever", "week1", "eighteen"),
+                                                 "whenever-b": ("whenever", "eighteen", "twentytwo"),
+                                                 "whenever-c": ("whenever", "twentytwo", None)}
 """A route's chain in links, by part: (route, the link's first chapter, the next link's first or None for all the rest),
 in SAVED's order. CI writes each in a job after the one before, since the whole chain runs past one job's cap; a link
 after the first plays on from the saved end before its first chapter, which the link before wrote."""

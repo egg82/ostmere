@@ -1,7 +1,6 @@
 """Wire models of the game's static content, fetched once (GET /api/content): text, the stores, cards, chips, skills,
 lanes, the Camp bar and the first mix. The conventions in models.py hold here."""
 from enum import StrEnum
-from typing import Literal
 
 from pydantic import BaseModel
 
@@ -15,6 +14,7 @@ from .line_models import LineInfo, PeopleInfo
 from .map_models import PlaceInfo, Stamp as Stamp
 from .models import Condition, OrderVerb, Unlock
 from .need_models import SkillNeed as SkillNeed, StepNeed as StepNeed
+from .store_info_models import StoreInfo as StoreInfo
 from .skill_models import LevelPays as LevelPays, NodeChange as NodeChange, NodeInfo, NodeTarget as NodeTarget, SkillInfo
 from .offer_models import AnswerGain as AnswerGain, AnswerInfo as AnswerInfo, KindRole as KindRole, OfferInfo, OfferKindInfo as OfferKindInfo
 
@@ -138,30 +138,6 @@ class CardInfo(BaseModel):
     """Set on a fight card (CONTRACT.txt, "FIGHTS")."""
     replaced_by: str | None
     """The card that takes this one's place once it retires, when the content names one: a greyed mix is fixed by the swap."""
-
-
-class StoreInfo(BaseModel):
-    store: str
-    label_key: str
-    cap: int
-    """The cap a new game starts with; LedgerLine.cap is the cap now."""
-    made_by: list[str]
-    """The cards that make it, in card order: by what a completion lands or a make flow, or by training the skill
-    whose level pays it, or by the completion a find waits on."""
-    hidden: bool
-    """The engine's bookkeeping (a clock, a countdown), never seen: no ledger line, in no served figure (AnswerInfo.gains)."""
-    tally: bool
-    """A count the game keeps (arrivals): no ledger line, but a card's need on it is drawn as have/need."""
-    clock: Literal["dawn", "day", "evening", "night"] | None
-    """The part of the story's day this clock counts through: a condition on it reads as that time (ui.when.*), never as
-    an amount (CONTRACT.txt, "Cards", "Line causes")."""
-    bonus_bp: int | None
-    """Set on a store only eaters take from (standing actions, or a station's cards that take and make nothing), each
-    holding a lane speed while it runs: that speed change, in basis points. Its ledger line is a bonus, never red, and
-    says the bonus is off once dry (CONTRACT.txt, "Ledger")."""
-    group_key: str | None
-    """The label of the one ledger row this store shares with the stores of the same key, which opens on a tap to show
-    each (CONTRACT.txt, "Ledger"); null: a row of its own."""
 
 
 class StandingInfo(BaseModel):

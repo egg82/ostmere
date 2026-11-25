@@ -288,9 +288,9 @@ jobs:
   # when they are missing or stale (ASHFALL_REQUIRE_SAVED). Typical's rebased saves are the one exception: they replay
   # typical's decisions from its saved ends, so `chapter-saves-rebased` runs once typical's part has written them
   # (replaying typical's play beside them would pay the play twice). A route whose chain runs past one job's cap is
-  # written in links (chapter_saves.LINKS), each its own job after the one before: `chapter-saves-sharp-a` to `-c`, each
-  # starting from the ends the link before uploaded. They share these steps (the YAML anchor), set by PART, NAMES and
-  # AFTER (the part whose artifact a link starts from).
+  # written in links (chapter_saves.LINKS), each its own job after the one before: `chapter-saves-sharp-a` to `-c` and
+  # `chapter-saves-whenever-a` to `-c`, each starting from the ends the link before uploaded. They share these steps
+  # (the YAML anchor), set by PART, NAMES and AFTER (the part whose artifact a link starts from).
   chapter-saves:
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -302,8 +302,8 @@ jobs:
         include:
           - part: typical
             names: typical
-          - part: whenever
-            names: whenever babysitter
+          - part: babysitter
+            names: babysitter
           - part: readings-early
             names: readings-early
           - part: readings-twelve-a
@@ -419,6 +419,40 @@ jobs:
       AFTER: sharp-b
     steps: *chapter-saves-steps
 
+  chapter-saves-whenever-a:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: whenever-a
+      NAMES: whenever-a
+      AFTER: ""
+    steps: *chapter-saves-steps
+
+  chapter-saves-whenever-b:
+    needs: chapter-saves-whenever-a
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: whenever-b
+      NAMES: whenever-b
+      AFTER: whenever-a
+    steps: *chapter-saves-steps
+
+  chapter-saves-whenever-c:
+    needs: chapter-saves-whenever-b
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: whenever-c
+      NAMES: whenever-c
+      AFTER: whenever-b
+    steps: *chapter-saves-steps
+
   chapter-saves-rebased:
     needs: chapter-saves
     runs-on: ubuntu-latest
@@ -507,7 +541,7 @@ jobs:
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
-    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-rebased, playthrough-week-one]
+    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, playthrough-week-one]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -553,7 +587,7 @@ jobs:
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-rebased, shards-cover]
+    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, shards-cover]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -767,6 +801,9 @@ jobs:
       - chapter-saves-sharp-a
       - chapter-saves-sharp-b
       - chapter-saves-sharp-c
+      - chapter-saves-whenever-a
+      - chapter-saves-whenever-b
+      - chapter-saves-whenever-c
       - chapter-saves-rebased
       - playthrough-week-one
       - playthrough-week-one-saved
@@ -788,6 +825,7 @@ jobs:
             ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "pyright",
              "client", "app-image"] as $per_pr
             | ["playthrough", "chapter-saves", "chapter-saves-sharp-a", "chapter-saves-sharp-b", "chapter-saves-sharp-c",
+               "chapter-saves-whenever-a", "chapter-saves-whenever-b", "chapter-saves-whenever-c",
                "chapter-saves-rebased", "playthrough-week-one", "playthrough-week-one-saved",
                "playthrough-week-two"] as $full_run
             | (["changes"] + (if $code == "true" then $per_pr else ["docs"] end)

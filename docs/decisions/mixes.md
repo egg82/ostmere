@@ -218,8 +218,8 @@ one-off as a When ready entry (engine `DESIGN.txt`, "Installed rule", "Queued on
 `app/ashfall_app/engine/installs.py`); a new save has neither, and nothing installs a rule that watches a store.
 Content order cards are never built for the player: they feed the first rule's lesson and the hint dots. Where each
 order stands (on, waiting, outranked, passed over, behind Next) is served on the View as order_states (`engine.plan.order_states`),
-and the Rules tab says why a rule is off under it (`app/client/src/ui/rulewhy.ts`). The page queues one tap of a step
-that will turn ready by itself (When ready, held until its next completion), and a mix until a goal row lands (a goal
+and the Rules tab says why a rule is off under it (`app/client/src/ui/rulewhy.ts`). The page queues one run of a card
+(held until its count is one past the runs planned before it), and a mix until a goal row lands (a goal
 stint: a queued switch runs over the player's mix until it pops, engine `DESIGN.txt`, "Queue mix";
 `app/client/src/ui/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
 Next is a row among the hands' rules, moved like one (owner: not taking the next planned thing when it is ready feels
@@ -230,9 +230,17 @@ waits (the entries behind it still wait inside the queue). Where the row sits is
 engine `DESIGN.txt`, "NEXT'S ROW"), never read off a rule's card or wording; every save starts with it at the bottom,
 which is the queue as it always was, and the why-line names Next when it is what outranks a rule.
 One queue, two ways in (owner: planning what to build next is where Plan is most useful): Next's Plan adds
-either kind of entry, cards first. It lists the steps When ready takes, picked through the card's own path, ready now
-ones included (a build planned while the hands are busy runs after the task under way), then the steps it would take
-but for what they wait on, off, each saying what in its card's face words, then the mixes. A card's When ready stays as
+either kind of entry, cards first. It lists every card the queue takes, picked through the card's own path: steps and
+work done again and again, ready now ones included (a build planned while the hands are busy runs after the task under
+way), and a card a lane runs now. Each pick is one run of the card, counted after the runs already planned: the tap
+under way and its earlier entries, so a running card's adds one more run after that tap (owner: "I start a thing, then
+go 'oh I should add this to the plan so I don't have to tap as much'"). More runs are more picks, and the queue's order
+says what happens in between; Next draws runs of one card one after another as one row, "once" or ×N, whose Remove and
+≡ act on one entry. Each entry is checked when its turn comes, never when it is queued: one that cannot run then waits,
+and one whose card reached its cap leaves the queue at that instant (engine `DESIGN.txt`, "Greyed mix"). Plan offers a
+capped card only while one more run fits under its cap. Not a card on a ruled lane (the queue is the hands' plan, and
+the server refuses it). Then the steps it would take but for what they wait on, off, each saying what in its card's
+face words, then the mixes. A card's When ready stays as
 a shortcut into the same queue, offered where a tap cannot do the job: on a step not ready yet, or ready while its lane
 runs another tap. While a staged card a tap started is running, its face offers Until done in When ready's place
 (owner, #464: the moment to decide is right after the first tap). It sends the plan the card would have had were it

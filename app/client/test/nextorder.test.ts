@@ -51,7 +51,7 @@ function rig(view: View): { root: FakeEl; decided: Decision[]; handles: () => Fa
   expect("mid-drag: a ghost follows", fakeDocument.querySelectorAll(".drag-ghost").length, 1);
   expect("mid-drag: the drop mark is after the last", r.rows().map((n) => n.classList.contains("drop-after")), [false, false, true]);
   handle.dispatchEvent(pointer("pointerup", 10, 120));
-  expect("the drop sends the first entry last", queueOf(r.decided[0]), [B, C, A]);
+  expect("the drop sends the first entry last, the larder's runs keeping their counts in order", queueOf(r.decided[0]), [B, A, C]);
   expect("the ghost is gone", fakeDocument.querySelectorAll(".drag-ghost").length, 0);
 }
 

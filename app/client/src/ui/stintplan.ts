@@ -1,7 +1,7 @@
 // Next's "+ Plan" (CONTRACT.txt, "Goal stints"; docs/design/opening-screen.md, "The Rules tab"): the two kinds of entry
 // the queue holds. Every card "When ready" takes, each picked through the card's own path (game/queue.whenReady); one
 // the page cannot promise a ready time for says what it waits on in its face's words (game/needwords.ts, which the
-// face draws from too), under the Tasks page's section headings; then the saved hands mixes: a mix picked lists the
+// face draws from too), under the Tasks page's section headings; then the saved hands mixes, under "Run until…": a mix picked lists the
 // goals it would run to (the dry run of switching to it, or the live view's when it already runs), and a goal picked
 // queues the stint at the end of Next.
 import type { Card, View } from "../api/types";
@@ -52,7 +52,8 @@ export class StintPlan {
     if (mix === null) {
       const offered = cards.map((c) => ({ c, words: this.words(view, c) }));
       const cardRows = sectioned(catalog, offered, (o) => o.c.card, view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map((o) => this.cardRow(view, o.c, o.words))]);
-      return [head, ...cardRows, ...mixes.map((m) => this.mixButton(view, m.id))];
+      const mixHead = sectionHead(mixes.length === 0 ? "" : catalog.text.get(UI.stintRun));   // a mix may bear a card's name
+      return [head, ...cardRows, ...mixHead, ...mixes.map((m) => this.mixButton(view, m.id))];
     }
     return after === null ? [head] : [head, goalPicker(catalog, after, (until) => {
       tapFeedback();
@@ -73,7 +74,7 @@ export class StintPlan {
     const { catalog } = this.ctx;
     const b = el("button", "selector-run plan-card");
     b.type = "button";
-    b.append(el("span", "selector-name", catalog.cardLabel(card.card)), ...(catalog.ruled(card.card) ? [el("span", "plan-lane", catalog.laneLabel(catalog.laneOf(card.card), view))] : []),
+    b.append(el("span", "selector-name", catalog.cardLabel(card.card)),
       el("span", "selector-note", waits ?? catalog.text.get(UI.queueWhenReady)));
     b.addEventListener("click", () => {
       const decision = whenReady(catalog, view, card.card);

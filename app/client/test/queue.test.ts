@@ -101,10 +101,10 @@ expect("queued cards in order", queuedCards(at([], [tapOf("larder", 1), tapOf("l
 // Next: a heading and a line per entry, Remove sends the rest; nothing for an empty queue.
 {
   const { ctx, got } = testContext();
-  const view = at([], [tapOf("larder", 1), tapOf("lean_to", 2)]);
+  const view = at([], [tapOf("larder", 1), tapOf("lean_to", 1)]);
   expect("empty: nothing", nextRows(ctx, at([]), new StintPlan(ctx, () => {}), idle(ctx)).length, 0);
   const rows = nextRows(ctx, view, new StintPlan(ctx, () => {}), idle(ctx));
-  expect("heading and two lines", rows.map((r) => r.textContent), ["Next", "≡LarderRemove", "≡Lean-toRemove"]);
+  expect("heading and two lines", rows.map((r) => r.textContent), ["Next", "≡Larder onceRemove", "≡Lean-to onceRemove"]);
   rows[2]!.querySelector<HTMLElement>(".quiet")?.click();
   expect("Remove the second", got.decided, [{ kind: "set_queue", entries: [tapOf("larder", 1)] }]);
 }

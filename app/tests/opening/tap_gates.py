@@ -44,6 +44,8 @@ class _Reach:
         self.rules = rules
         self.held = {Unlock(UnlockKind.FEATURE, f) for f in automation}
         self.got: set[Unlock] = set(rules.opening or ())
+        self._cards: list[CardDef] = []
+        self._cards_at = -1
         grew = True
         while grew:
             before = len(self.got)
@@ -54,7 +56,11 @@ class _Reach:
         return self.rules.opening is None or Unlock(kind, id) in self.got
 
     def cards(self) -> list[CardDef]:
-        return [c for c in self.rules.cards if self.has(UnlockKind.CARD, c.id)]
+        """The cards reachable now. `got` only grows, so its size says when the list is stale."""
+        if self._cards_at != len(self.got):
+            self._cards = [c for c in self.rules.cards if self.has(UnlockKind.CARD, c.id)]
+            self._cards_at = len(self.got)
+        return self._cards
 
     def _brings(self, outcome: Outcome) -> bool:
         return bool(self.held & set(outcome.unlocks))

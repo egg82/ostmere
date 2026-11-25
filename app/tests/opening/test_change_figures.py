@@ -8,7 +8,7 @@ import pytest
 from ashfall_app.api.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.entries import ModifierEntry
-from ashfall_app.opening.schema import load_opening
+from ashfall_app.opening.schema import Opening, load_opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.edited import Edit, edited, same
 
@@ -123,10 +123,10 @@ def test_a_card_that_holds_entries_serves_them_and_the_rest_serve_none(content: 
     assert [c.card for c in content.card_infos if not c.kept and c.card == "stew"] == ["stew"]
 
 
-def test_a_kept_entry_names_its_slot_and_an_equal_unscaled_change_has_another(content: Content):
+def test_a_kept_entry_names_its_slot_and_an_equal_unscaled_change_has_another(content: Content, shipped_opening: Opening):
     for c in (c for c in content.card_infos if c.kept):
         assert all(c.change_bp[k.slot] == k.amount_bp for k in c.kept), c.card
-    o = load_opening()
+    o = shipped_opening
     same_amount = ModifierEntry(target="rate", id="x", flow="make", store="x", kind="add_bp", amount_bp=5000, source="x")
     cards = [c.model_copy(update={"outcome": c.outcome.model_copy(update={"modifiers": [same_amount]})}) if c.id == "n4_watch" else c
              for c in o.cards]
