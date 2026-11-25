@@ -24,8 +24,41 @@ id = "t_kept_clock"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "kept_clock" }] }
 
-# A latch, never drawn: started at B20 + 24 h, so the door can wait on it beside the post's count (a requirement reads
-# only an unlock; day_twenty_three.toml's sorrel_16h). Machinery, no moment of its own.
+# Latches, never drawn: started at B20 + 4 h, + 12 h and + 24 h, so the first job, O-walkers and the door can wait on
+# them beside a store condition (a requirement reads only an unlock; day_twenty_three.toml's sorrel_16h). Machinery, no
+# moment of their own. Measured on typical: without them O-walkers and the first job both showed in B20's own absence.
+[[stores]]
+id = "kept_4h"
+label_key = "store_kept_4h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "kept_4h"
+label_key = "action_kept_4h"
+makes = [{ store = "kept_4h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_kept_4h"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 4 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "kept_4h" }] }
+
+[[stores]]
+id = "kept_12h"
+label_key = "store_kept_12h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "kept_12h"
+label_key = "action_kept_12h"
+makes = [{ store = "kept_12h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_kept_12h"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 12 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "kept_12h" }] }
+
 [[stores]]
 id = "kept_24h"
 label_key = "store_kept_24h"
@@ -98,7 +131,7 @@ outcome = { modifiers = [{ target = "threat", id = "ash_boar", kind = "add_bp", 
 
 # ---------- I9 and O-walkers: four at the gate ----------
 
-# The tier's count at 230 meals, once kept. All four join on either answer as one pooled group, its share the answer's
+# The tier's count at 230 meals, from B20 + 12 h (after I8's evening). All four join on either answer as one pooled group, its share the answer's
 # card (GROUPS: the group's cards come with the join); what the answer keeps is D-147's size, as O-fiddle's. The table
 # feeds four more.
 [[offers]]
@@ -106,7 +139,7 @@ id = "o_walkers"
 text_key = "o_walkers"
 kind = "work"
 gate = { test = "at_least", subject_kind = "store", id = "meals", value = 230 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }]
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "kept_12h", value = 1 }]
 line_keys = ["l_walkers_1", "l_walkers_2"]
 
 [[offers.answers]]
@@ -368,8 +401,9 @@ group = "g_widowers"
 
 # ---------- Lucy's jobs ----------
 
-# From B20, the player's name first on her list: three more, one at a time on day nine's countdown after the last
-# answer, as day twenty-three's. Each yes queues a short hands job paying a one-off, each no costs nothing.
+# From B20 + 4 h, the player's name first on her list: three more, one at a time on day nine's countdown after the last
+# answer, set to its twelve-hour top so they fall across the chapter's returns rather than in its first day. Each yes
+# queues a short hands job paying a one-off, each no costs nothing.
 [[offers]]
 id = "j_midden"
 text_key = "o_j_midden"
@@ -377,7 +411,7 @@ askers = ["n1"]
 gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
 requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_show_fish", value = 1 },
-  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "kept_4h", value = 1 },
 ]
 
 [[offers.answers]]
@@ -385,7 +419,7 @@ id = "j_midden_yes"
 label_key = "a_j_midden_yes"
 cost_key = "a_job_yes_cost"
 [offers.answers.outcome]
-stores = [{ store = "ask_wait", items = 3 }]
+stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_midden_yes"]
 unlocks = [{ unlock_kind = "card", id = "dig_midden" }]
 queues = ["dig_midden"]
@@ -395,7 +429,7 @@ id = "j_midden_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
-stores = [{ store = "ask_wait", items = 3 }]
+stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_midden_no"]
 
 [[cards]]
@@ -421,7 +455,7 @@ id = "j_leaning_wall_yes"
 label_key = "a_j_leaning_wall_yes"
 cost_key = "a_job_yes_cost"
 [offers.answers.outcome]
-stores = [{ store = "ask_wait", items = 3 }]
+stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_leaning_wall_yes"]
 unlocks = [{ unlock_kind = "card", id = "pull_wall" }]
 queues = ["pull_wall"]
@@ -431,7 +465,7 @@ id = "j_leaning_wall_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
-stores = [{ store = "ask_wait", items = 3 }]
+stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_leaning_wall_no"]
 
 [[cards]]
@@ -457,7 +491,7 @@ id = "j_steam_hole_yes"
 label_key = "a_j_steam_hole_yes"
 cost_key = "a_job_yes_cost"
 [offers.answers.outcome]
-stores = [{ store = "ask_wait", items = 3 }]
+stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_steam_hole_yes"]
 unlocks = [{ unlock_kind = "card", id = "steam_hole" }]
 queues = ["steam_hole"]
@@ -467,7 +501,7 @@ id = "j_steam_hole_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
-stores = [{ store = "ask_wait", items = 3 }]
+stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_steam_hole_no"]
 
 [[cards]]
@@ -647,6 +681,10 @@ l_b21_4 = "story"
 [text]
 store_kept_clock = "clock"
 action_kept_clock = "Clock"
+store_kept_4h = "clock"
+action_kept_4h = "Clock"
+store_kept_12h = "clock"
+action_kept_12h = "Clock"
 store_kept_24h = "clock"
 action_kept_24h = "Clock"
 l_bowl_set = "{n3} sets your bowl at your place. {n4} asks if you're going out after the pigs again."

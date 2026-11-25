@@ -83,7 +83,7 @@ HIDDEN = {
     "cut_night_clock", "b17_clock", "r2_clock", "b17_floor", "night_21", "fungus_stews", "beds_covered",
     "still_left", "thaw_left", "film", "still_clock", "pace_clock", "pace_3h", "still_30",
     "sorrel_clock", "sorrel_12h", "sorrel_16h", "cache_torn", "night_24",
-    "kept_clock", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait",
+    "kept_clock", "kept_4h", "kept_12h", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait",
 }
 
 
