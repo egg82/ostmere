@@ -9,18 +9,19 @@ from sqlalchemy import Engine
 from ashfall_app import engine as e
 from ashfall_app.api.mixrows import goal_key
 from ashfall_app.api.service import Game
+from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.opening.playthrough import opening
 
 A, B = e.CardId("gather_wood"), e.CardId("scavenge")
 FAST, SLOW, OTHER = e.MixId("fast"), e.MixId("slow"), e.MixId("other")
 
 
-@pytest.fixture
-def game(rs: Ruleset) -> Game:
-    return Game(opening(), replace(rs, rules=replace(rs.rules, opening=None)))
+@pytest.fixture(scope="module")
+def game(rs: Ruleset, shipped_opening: Opening) -> Game:
+    """Built once for the module's tests; they only read it."""
+    return Game(shipped_opening, replace(rs, rules=replace(rs.rules, opening=None)))
 
 
 @pytest.fixture
