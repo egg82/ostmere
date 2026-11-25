@@ -21,7 +21,7 @@ export function startRule(catalog: Catalog, view: View | null, then: OrderVerb |
   const from = view && test === "reaches" ? take(catalog, view, then, store) : 0;
   for (let items = from; from > 0 && items <= cap; items++) {
     const rule: StoreRule = { store, test, n: { items }, m: { items: 1 } };
-    if (valid(rule, cap)) return rule;
+    if (valid(rule, cap, catalog.risesInSteps(store))) return rule;
   }
   return itemsRule(store, test, cap);
 }

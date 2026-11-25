@@ -57,6 +57,11 @@ export class Catalog {
   }
 
   /** Whether the store is a level: one a lost fight adds to, shown by its chip and read in whole items rounded up. */
+  /** Nothing that runs raises the store, so a rule on it may let go where it came on (StoreInfo.rises_in_steps). */
+  risesInSteps(store: string): boolean {
+    return this.stores.get(store)?.rises_in_steps === true;
+  }
+
   isLevel(store: string): boolean {
     return this.levels.has(store);
   }

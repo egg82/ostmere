@@ -701,7 +701,9 @@ THE CLIENT MAY
     until half), in items only on a store too small for those to keep a band; either level of any rule can be turned
     into the other form where it reads now. The page builds only rules whose levels, read against the store's cap now
     (LedgerLine.cap) as the engine reads them, have a band of at least one item inside the cap, so never one that is
-    always true or flips at one level, and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
+    always true or flips at one level on a flow; on a store with StoreInfo.rises_in_steps (nothing that runs raises
+    it, so it cannot flip that way) the band may be none, the rule letting go where it came on ("{n} or more {store}"
+    lets go under n: reaches 1 on a level is on above none and off at none), and only on a store in view.unlocked with a ledger line, the Camp store excepted, or on
     the store of the rule being edited even without a ledger line (its cap from StoreInfo). It may
     write rules once it has seen one of the player's rules come on and then let go (view.orders_on), and draws no
     rule whose `when` is not on a StoreValue or one of the subject rules below, except a lane's always rule (A LANE

@@ -4,8 +4,9 @@
 // as the cap grows and is worded as one (empty, a quarter, half, three quarters, full, or a percentage). Whole-item
 // levels keep the ±1 conventions that put each crossing on the amount the page shows; a share is reached at the share
 // itself, from either side ("down to a quarter", "until empty"). A rule the page builds always has a band of at least
-// one item and is never always true; one read back with no band (an order card without a release) is worded without
-// "until".
+// one item and is never always true, except on a store that rises only in steps (StoreInfo.rises_in_steps), which cannot
+// flip at one level on a flow: there it may let go where it came on. One read back with no band (an order card without
+// a release) is worded without "until".
 import type { Condition } from "../api/types";
 import type { Catalog } from "./catalog";
 import { UI } from "./text";
@@ -87,32 +88,33 @@ export function levelAt(l: Level, cap: number): number {
 const inRange = (l: Level, cap: number): boolean => (isShare(l) ? l.share >= 0 && l.share <= BP : l.items >= 1 && l.items <= cap);
 
 /** The page builds the rule: every level in range, a band of at least one item inside 0..cap, and never always true
- * (CONTRACT.txt, "a store rule"). */
-export function valid(rule: StoreRule, cap: number): boolean {
+ * (CONTRACT.txt, "a store rule"). `steps`: the store rises only in steps, so the band may be none. */
+export function valid(rule: StoreRule, cap: number, steps = false): boolean {
   const m = rule.m;
   if (cap < 2 || m === null || !inRange(rule.n, cap) || !inRange(m, cap)) return false;
-  const on = shownAt(rule.n, rule.test, "on", cap), off = shownAt(m, rule.test, "off", cap);
-  return rule.test === "below" ? on >= 0 && off >= on + 2 && off <= cap : on <= cap && off >= 0 && off <= on - 2;
+  const on = shownAt(rule.n, rule.test, "on", cap), off = shownAt(m, rule.test, "off", cap), gap = steps ? 1 : 2;
+  return rule.test === "below" ? on >= 0 && off >= on + gap && off <= cap : on <= cap && off >= 0 && off <= on - gap;
 }
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
 
 /** The rule held inside what the store allows: an amount `n` inside its range, then an amount `m` brought next to it
- * (a missing m gets the default); a share is never moved. */
-export function clampRule(rule: StoreRule, cap: number): StoreRule {
+ * (a missing m gets the default, or on a store that rises in steps, `steps`, lets go where it came on); a share is
+ * never moved. */
+export function clampRule(rule: StoreRule, cap: number, steps = false): StoreRule {
   if (cap < 2) return rule;
-  const below = rule.test === "below";
-  const n = isShare(rule.n) ? rule.n : { items: below ? clamp(rule.n.items, 1, cap - 1) : clamp(rule.n.items, 2, cap) };
-  const m = rule.m ?? defaultUntil(rule.test);
+  const below = rule.test === "below", gap = steps ? 1 : 2;
+  const n = isShare(rule.n) ? rule.n : { items: below ? clamp(rule.n.items, 1, cap + 1 - gap) : clamp(rule.n.items, gap, cap) };
+  const m = rule.m ?? (steps ? n : defaultUntil(rule.test));
   if (isShare(m)) return { ...rule, n, m };
   const on = shownAt(n, rule.test, "on", cap);
-  return { ...rule, n, m: { items: below ? clamp(m.items, on + 2, cap) : clamp(m.items, 1, on - 1) } };
+  return { ...rule, n, m: { items: below ? clamp(m.items, on + gap, cap) : clamp(m.items, 1, on + 1 - gap) } };
 }
 
 /** `rule` held as clampRule holds it, or null when that is still not a rule the page builds. */
-export function tryRule(rule: StoreRule, cap: number): StoreRule | null {
-  const held = clampRule(rule, cap);
-  return valid(held, cap) ? held : null;
+export function tryRule(rule: StoreRule, cap: number, steps = false): StoreRule | null {
+  const held = clampRule(rule, cap, steps);
+  return valid(held, cap, steps) ? held : null;
 }
 
 /** Where a new rule starts, as shares: down to a quarter, until three quarters; or up to full, until half. On a store

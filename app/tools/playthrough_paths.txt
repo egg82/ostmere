@@ -71,6 +71,7 @@ app/ashfall_app/api/setrates.py
 app/ashfall_app/api/skill_models.py
 app/ashfall_app/api/sources.py
 app/ashfall_app/api/spent_models.py
+app/ashfall_app/api/store_info_models.py
 app/ashfall_app/api/store_models.py
 app/ashfall_app/api/storerows.py
 app/ashfall_app/build_header.py
