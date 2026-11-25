@@ -121,7 +121,8 @@ READINGS: dict[str, tuple[Span, ...]] = {
     "readings-nineteen-b": (("nineteen", 5, None),),
     "readings-twentytwo-a": (("twentytwo", 0, 4),),
     "readings-twentytwo-b": (("twentytwo", 4, 8),),
-    "readings-twentytwo-c": (("twentytwo", 8, None),),
+    "readings-twentytwo-c": (("twentytwo", 8, 12),),
+    "readings-twentytwo-d": (("twentytwo", 12, None),),
     "readings-twentythree": (("twentythree", 0, None),),
 }
 """The typical route's heavy-step readings (verdicts.decided_in) saved beside the ends, in parts CI writes in jobs of
