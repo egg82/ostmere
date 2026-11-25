@@ -1,0 +1,5 @@
+[
+  {"kind": "study", "id": "section", "required": true, "text": ["side on"]},
+  {"kind": "study", "id": "plan", "text": ["plan"]},
+  {"kind": "label", "anchor": [257, 345], "text": ["cut stone"]}
+]

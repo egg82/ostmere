@@ -106,6 +106,7 @@ outcome = { line_keys = ["l_b12_1", "l_b12_2", "l_b12_3"], unlocks = [{ unlock_k
 [[entries]]
 id = "e_cellar"
 section = "places"
+sketch = "cellar"
 hand = "ink"
 runners = []
 
