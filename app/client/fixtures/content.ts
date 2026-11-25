@@ -311,7 +311,7 @@ const text: Record<string, string> = {
   "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}",
   "ui.ledger.starved": "ran dry",
   "ui.ledger.unfed": "ran dry · {pct} work speed off",
-  "ui.queue.when_ready": "When ready", "ui.queue.queued": "in Next", "ui.queue.running": "under way", "ui.queue.move": "Move up or down", "ui.queue.heading": "Next", "ui.queue.plan": "Plan", "ui.queue.full": "Next is full", "ui.hands.next": "next: {card}", "ui.hands.then": "then {mix}", "ui.hands.until_goal": "until {goal}",
+  "ui.queue.when_ready": "When ready", "ui.queue.queued": "in Next", "ui.queue.until_done": "Until done", "ui.queue.running": "under way", "ui.queue.move": "Move up or down", "ui.queue.heading": "Next", "ui.queue.plan": "Plan", "ui.queue.full": "Next is full", "ui.hands.next": "next: {card}", "ui.hands.then": "then {mix}", "ui.hands.until_goal": "until {goal}",
   "store.catch": "Catch", "store.smoked": "Smoked", "store.roots": "Roots", "store.clock": "Clock", "lane.smoke": "Smoke",
   "card.lean_to": "Lean-to", "card.lean_to.up": "Rest under cover", "card.larder": "Larder", "card.larder.up": "Food keeps",
   "card.smoke_catch": "Smoke the catch", "card.smoke_roots": "Smoke roots", "card.take_stock": "Take stock", "card.look_out": "Look out", "card.forage": "Forage",

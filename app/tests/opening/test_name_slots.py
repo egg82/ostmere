@@ -22,7 +22,7 @@ def with_text(o: Opening, **text: str) -> Opening:
 def test_every_person_who_joins_has_a_name_and_their_named_label_is_theirs(everything: Opening):
     o = everything
     named = {x.id: x for x in o.lanes if x.name_key is not None}
-    assert set(named) == {"n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"}
+    assert set(named) == {"n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "n14", "n15"}
     for lane in named.values():
         assert lane.name_key is not None and o.text[lane.name_key]
         assert o.text[lane.later_labels[-1].label_key] == "{%s}'s hands" % lane.id

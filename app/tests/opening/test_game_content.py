@@ -16,7 +16,7 @@ from ashfall_app.opening.convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
 from ashfall_app.opening.schema import (
     B7, CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_NINETEEN, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,
-    DAY_TWENTY_TWO,
+    DAY_TWENTY_THREE, DAY_TWENTY_TWO,
 )
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.playthrough import Player, opening, opening_rules
@@ -160,7 +160,8 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
     assert [c.card for c in content.card_infos if c.glows] == shipped(
         ["stand_up", "strike_fire", "give_stool", "walk_edge", "track_end", "bank_hearth"],
         (DAY_FOUR, ["sit_up_5"]), (DAY_FIVE, ["hand_on_stone"]), (B7, ["bank_fire_6", "b7_stand"]), (DAY_SIX, ["sit_fire_7"]), (DAY_ELEVEN, ["keep_vigil"]),
-        (DAY_TWELVE, ["sit_last_night"]), (DAY_SIXTEEN, ["try_stone"]), (DAY_NINETEEN, ["sit_road_end"]))
+        (DAY_TWELVE, ["sit_last_night"]), (DAY_SIXTEEN, ["try_stone"]), (DAY_NINETEEN, ["sit_road_end"]),
+        (DAY_TWENTY_THREE, ["go_wallow"]))
     roots = next(c for c in content.order_cards if c.store == "roots")
     assert roots.offered_after is not None and (roots.offered_after.category, roots.offered_after.id) == ("action", "eating")
     assert next(c for c in content.order_cards if c.store == "dry_wood").offered_after is None

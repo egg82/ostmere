@@ -87,3 +87,13 @@ def test_tapped_later_the_feature_lands_as_the_queued_one_does(rules: Rules):
 def test_the_loader_refuses(tmp_path: Path, message: str, edits: tuple[tuple[str, str], ...]):
     with pytest.raises(ValueError, match=message):
         load_with(edited(tmp_path, *edits))
+
+
+def test_the_shipped_book_offer_is_one():
+    """O-book (day_twenty_three.toml): both answers unlock bind_book, only the first queues it, and what reads the book
+    reads its finish (D-162)."""
+    from tests.opening.playthrough import opening
+    book = next(x for x in opening().offers if x.id == "o_book")
+    assert book.gates_read_feature == ["book_given"]
+    assert [[u.id for u in a.outcome.unlocks] for a in book.answers] == [["bind_book"], ["bind_book"]]
+    assert [a.outcome.queues for a in book.answers] == [["bind_book"], []]

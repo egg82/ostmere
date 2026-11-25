@@ -99,7 +99,8 @@ def test_the_shipped_content_serves_its_places_in_content_order(shipped_ruleset:
     places = shipped_ruleset.make_game(shipped_ruleset.opening, shipped_ruleset.rs).content().places
     assert [(p.place, p.stamp, p.reveal.id, p.label_key) for p in places] == [
         ("p_ridge", Stamp.MOUNTAIN, "r2_open", "place_ridge"), ("p_far_hills", Stamp.RANGE, "r2_open", None),
-        ("p_ashwood", Stamp.FOREST, "ashwood", "place_ashwood"), ("p_square_hill", Stamp.HILL_VILLAGE, "square_hill_seen", None)]
+        ("p_ashwood", Stamp.FOREST, "ashwood", "place_ashwood"), ("p_square_hill", Stamp.HILL_VILLAGE, "square_hill_seen", None),
+        ("p_warm_patch", Stamp.FORT, "post_shown", "place_warm_patch")]
 
 
 def test_the_spec_names_the_maps_components():

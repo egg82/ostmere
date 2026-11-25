@@ -123,6 +123,7 @@ cap_items = 24
 id = "shovel_road"
 presentation = "action"
 label_key = "c_shovel_road"
+upside_key = "up_shovel_road"
 work_s = 450
 skill = "scavenging"
 xp_per_hour = 900
@@ -131,9 +132,10 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 [[town_cards]]
 id = "{lane}_clear_road"
 twin_of = "shovel_road"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15"]
 presentation = "action"
 label_key = "c_lane_clear_road"
+upside_key = "up_shovel_road"
 work_s = 1800
 outcome = { stores = [{ store = "cleared", items = 1 }] }
 
@@ -356,7 +358,7 @@ id = "warm_beds"
 only_player = "magic"
 presentation = "action"
 label_key = "c_warm_beds"
-upside_key = "up_cover_beds"
+upside_key = "up_warm_beds"
 # Slower than a cover (600), so covering is the fast trade and warming the pelt-free slow one; both count toward the tally.
 work_s = 900
 skill = "spellcraft"
@@ -832,6 +834,7 @@ l_road_marked = "past the ridge, a dent wider than a cart runs straight over the
 n_road_found = "a dent in the ash past the ridge, wider than a cart, straight as a stretched cord, over the next hill. lucy calls it the old road. a yard of ash on it, at a guess"
 store_cleared = "road cleared"
 c_shovel_road = "Shovel the road"
+up_shovel_road = "the ash off a stretch of road, ready to lay"
 c_lane_clear_road = "Clear the road"
 c_cut_road = "Lay the road"
 up_cut_road = "a road over the ridge"
@@ -874,6 +877,7 @@ pays_spell_faster = "{pct} spellcraft speed"
 pays_find_spell_3 = "ash worked into her ground"
 pays_spell_4 = "{pct} speed warming the beds"
 c_warm_beds = "Warm the beds"
+up_warm_beds = "the rime off the beds with no pelts spent, slower than a cover"
 l_find_spell_3 = "by morning, the ash off your hands is dug into {n3}'s ground."
 n_ground_3 = "rime on every stone in the valley but this one. it stops a hand short, all round"
 n_ground_4 = "a field stone goes cold if you take its heat. this one never has. ash on my hand both times"
