@@ -225,8 +225,8 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
     if chapters:
         try:
             check_content(states[-1])
-        except ValueError:
-            _fail_naming_chapter(states, chapters)
+        except ValueError as e:
+            _fail_naming_chapter(states, chapters, e)
     return states[-1]
 
 
@@ -255,13 +255,19 @@ def _merged(opening: Opening, chapter: Path) -> tuple[Opening, str | None]:
     return merged, ch.end_feature
 
 
-def _fail_naming_chapter(states: list[Opening], chapters: tuple[Path, ...]) -> NoReturn:
+def _fail_naming_chapter(states: list[Opening], chapters: tuple[Path, ...], error: ValueError) -> NoReturn:
+    """Raise the full state's own error, naming the first chapter whose state fails with that same message. Early
+    states fail on their own as partial worlds, so a different message is not this error and is skipped; when no
+    prefix reproduces it (a later pass, such as the group unlocks, brought it) the last chapter is named."""
+    named = chapters[-1]
     for chapter, state in zip(chapters, states[1:]):
         try:
             check_content(state)
         except ValueError as e:
-            raise ValueError(f"{e} (in {chapter.name})") from e
-    raise AssertionError("the merged opening failed its content check but no chapter's state did")
+            if str(e) == str(error):
+                named = chapter
+                break
+    raise ValueError(f"{error} (in {named.name})") from error
 
 
 def to_rules(opening: Opening) -> Rules:

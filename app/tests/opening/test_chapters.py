@@ -72,7 +72,6 @@ def test_a_check_failure_names_the_chapter_that_broke_it_though_a_later_chapter_
     assert str(shipped_order.value).endswith(f" (in {DAY_ONE.name})")
 
 
-@pytest.mark.xfail(strict=True, reason="#462: the first partial world's own error is reported instead of the real one")
 def test_a_content_error_in_a_late_chapter_names_it_with_the_real_message(tmp_path: Path):
     """Early prefixes of the shipped chapters fail the content check as partial worlds; the error named is still the
     full state's own, against the chapter that brought it."""
