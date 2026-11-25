@@ -350,8 +350,11 @@ it takes, so the yes is worth it only when the town is short of what it brings a
 `take_child` 4 dry wood (deadwood carried down; energy would have put a one-off job among the tired chip's cures),
 `keep_count` 4 stew. `j_cellar_steps` and `j_frames` had no one-off that fits and stay out; day sixteen ships the
 other six, in table order, each on the countdown after the last is answered (O-road's answer starts it; a queued job
-needs no wait of its own, since it lands within the countdown). The yes pool is one line per job's yes, and each no
-has its own line: the engine has no line pool on an answer, and six distinct lines already never repeat in a row.
+needs no wait of its own, since it lands within the countdown). On the countdown alone all six landed within days
+sixteen and seventeen, so the last two wait on the season's clock instead, in stretches with no build to queue:
+`j_ridge` at 477 h, in the last days of sun after typical's B17, and `j_tally` at 522 h, between I2 and B19. The yes
+pool is one line per job's yes, and each no has its own line: the engine has no line pool on an answer, and six
+distinct lines already never repeat in a row.
 O-road's walk is 900 s on the hands against 3600 s on his lane, the hands' quarter, so neither answer is the cheaper
 one by its bar alone.
 
