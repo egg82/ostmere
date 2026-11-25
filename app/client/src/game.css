@@ -1023,6 +1023,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-face { grid-area: face; display: flex; }
 .person-row > .town-who { grid-area: who; }
 .person-row > .town-split-of { grid-area: split; }
+.town-split-of > .wasted-line { margin-top: .25rem; color: var(--ember-hot); }
 .person-row > .running-now { grid-area: now; }
 .person-row > .lane-change { grid-area: change; }
 .person-row > .lane-bar { grid-area: track; margin-top: .3rem; }
@@ -1069,7 +1070,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .stuck-offers button:hover { background: var(--press); }
 .stuck-offers .stuck-offer { border-left: 3px solid var(--hue); }
 .stuck-offers .stuck-more { color: var(--ink); }
-.town-doing.stuck { color: var(--ember-hot); }
+.town-doing.stuck, .town-doing.wasted { color: var(--ember-hot); }
+.card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/wasted.ts) */
 .town-ident { display: flex; align-items: baseline; gap: .6rem; margin-right: auto; }
 .town-count { font-size: var(--t-meta); color: var(--ink); }   /* a group's head count, beside its label */
 .town-face.stack .ask-face + .ask-face { margin-left: -.45rem; }   /* a group's members' faces overlap into one stack */

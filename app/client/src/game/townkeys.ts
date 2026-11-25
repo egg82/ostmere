@@ -8,4 +8,6 @@ export const TOWN_KEYS = {
   townCanDo: "ui.town.can_do",   // the label before the tasks they could run now, each a one-tap join
   townMore: "ui.town.more",   // "{n}": the strip's way to the page, past the offers it shows
   cardSpentOn: "ui.card.spent_on",   // "{store}": a spent card's face, where its needs sit
+  cardWasted: "ui.card.wasted",   // "{store}": a card running on a share while every store it makes is full (game/wasted.ts)
+  townWasted: "ui.town.wasted",   // "{card}{store}": a person's row while the card they work makes only into full stores
 } as const;

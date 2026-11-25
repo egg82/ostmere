@@ -19,6 +19,7 @@ import { dotChange } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow as Row } from "./personrow";
 import { RunningNow } from "./runningnow";
 import { StuckNote } from "./stucknote";
+import { wastedOn } from "../game/wasted";
 import { splitOf, splitParts, thenSplit } from "./townsplit";
 
 /** How many members' faces a group's row stacks. */
@@ -101,6 +102,15 @@ export class TownStrip implements Part {
     for (const d of townJoin(this.ctx.catalog, view, this.ctx.catalog.townTitle(view), card)) this.ctx.actions.decide(d);
   }
 
+  /** Under the split, while the card the row works runs on a share into full stores: that its work is wasted. */
+  private wastedLine(row: PersonRow, view: View, lane: string): HTMLElement[] {
+    const { catalog } = this.ctx;
+    const on = view.cards.find((c) => c.card === this.runningOf(view, lane));
+    const store = on ? wastedOn(catalog, view, on) : null;
+    row.doing.classList.toggle("wasted", store !== null);
+    return on && store !== null ? [el("p", "stuck-line wasted-line", catalog.text.fill(UI.townWasted, { card: catalog.cardLabel(on.card), store: catalog.storeLabel(store) }))] : [];
+  }
+
   /** A group of more than one: its own label, a stack of its first members' faces and the head count. */
   private drawCrowd(row: PersonRow, view: View, group: string): void {
     const { catalog } = this.ctx;
@@ -122,7 +132,7 @@ export class TownStrip implements Part {
     const { bar, key } = splitOf(tap ? [{ text: "", bp: catalog.content.scales.bp, hue: catalog.rank(tap.card) % 6, idle: false }] : splitParts(this.ctx, view, lane, solo ?? lane));
     row.held = tap && { item: key.firstElementChild as HTMLElement, card: tap.card, endsAt: tap.endsAt };
     if (tap) key.append(el("span", "town-key-then", thenSplit(this.ctx, view, lane, solo ?? lane)));
-    row.split.replaceChildren(bar, key);
+    row.split.replaceChildren(bar, key, ...this.wastedLine(row, view, lane));
     row.now.update(view);
     const stuck = solo !== null && row.stuck.update(view, solo);
     row.node.classList.toggle("stuck", stuck);
