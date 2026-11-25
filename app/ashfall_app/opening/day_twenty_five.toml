@@ -60,7 +60,7 @@ cap_items = 20000
 [[threats]]
 id = "ash_boar"
 label_key = "threat_ash_boar"
-base = 14
+base = 5
 
 # The hands against the boar at the warm patch: a won hunt brings meat and a hide, a lost one is told as the player's
 # death and costs only the smoked carried out (no loses, no wounds).
@@ -267,7 +267,7 @@ modifiers = [{ target = "cap", id = "charwood", kind = "mul_bp", amount_bp = 150
 
 # Held at a "?" past the chapter, a goal on screen.
 [[camp_levels]]
-at_items = 5400000
+at_items = 6000000
 pays_key = "pays_unknown"
 held = true
 
