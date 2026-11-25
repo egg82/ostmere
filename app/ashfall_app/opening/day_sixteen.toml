@@ -100,6 +100,18 @@ unlocks = [
   { unlock_kind = "card", id = "n7_clear_road" },
 ]
 
+# The road's page, on SL24's condition (one moment with it), whoever walked it.
+[[entries]]
+id = "e_old_road"
+section = "places"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_road_found"
+entry = "e_old_road"
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "road_marked", value = 1 }
+
 # The road's bed cleared of ash, ahead of the stretches laid on it.
 [[stores]]
 id = "cleared"
@@ -816,6 +828,7 @@ a_road_n2_cost = "{d} of his time"
 c_mark_road = "Walk the old road"
 c_n2_mark_road = "Walk the old road"
 l_road_marked = "past the ridge, a dent wider than a cart runs straight over the next hill."
+n_road_found = "a dent in the ash past the ridge, wider than a cart, straight as a stretched cord, over the next hill. lucy calls it the old road. a yard of ash on it, at a guess"
 store_cleared = "road cleared"
 c_shovel_road = "Shovel the road"
 c_lane_clear_road = "Clear the road"

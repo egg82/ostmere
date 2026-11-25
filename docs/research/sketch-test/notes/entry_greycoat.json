@@ -1,0 +1,8 @@
+[
+  {"kind": "crossed", "required": true, "text": []},
+  {"kind": "study", "id": "foot", "required": true, "text": ["fore foot. toes", "long, print too"]},
+  {"kind": "study", "id": "sitting", "required": true, "text": ["sat like this"]},
+  {"kind": "label", "anchor": [176, 498], "text": ["toes long"]},
+  {"kind": "label", "anchor": [176, 330], "text": ["sits straight up"]},
+  {"kind": "label", "anchor": [300, 330], "text": ["coat grey, rough"]}
+]
