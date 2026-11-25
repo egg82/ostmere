@@ -30,6 +30,6 @@ BAKES: dict[str, kit.Grade | None] = {
     "ash_heap": None, **{f"ashed_{i}": None for i in (1, 2, 3)}, "gap_ring": ACCENT, "gap_ring_ghost": ACCENT,
     **{f"roof_ash_{r}": None for r in ("bay", "bay2", "lean_to", "n1_shelter", "woodshed", "rack_roof")},
     "hut": None, "hut_ghost": None, **{f"cellar_{i}": None for i in (1, 2, 3, 4)}, "lamp_1": None, "lamp_2": None,
-    "lamps_lit": None, "pyre": None, "pyre_flames": FIRE_HOT, "fungus_torn": None, "claw_marks": None, "wolf_sitting": None,
+    "lamps_lit": None, **{f"hall_{i}": None for i in (1, 2, 3, 4)}, "hall_ghost": None, "pyre": None, "pyre_flames": FIRE_HOT, "fungus_torn": None, "claw_marks": None, "wolf_sitting": None,
 }
 """Per-layer grade baked in (the page's grades sit on top); layers not named take WOOD, figures take CLOTHES."""
