@@ -27,7 +27,7 @@ const content: Content = {
   ...fixtureContent,
   text_entries: [...fixtureContent.text_entries, { key: OFF, text: OFF_TEXT }],
   line_infos: [...fixtureContent.line_infos, { key: OFF, kind: "body" as const, cause: null, person: false, mention: null }],
-  chip_infos: fixtureContent.chip_infos.map((c) => (c.chip === "tired" ? { ...c, off_line_key: OFF } : c)),
+  chip_infos: fixtureContent.chip_infos.map((c) => (c.chip === "tired" ? { ...c, off_line_keys: [OFF] } : c)),
 };
 const RETURN = { left: 1000, back: 4000 };
 const inReturn: PastLine[] = Array.from({ length: 12 }, (_, i) => ({ n: i + 1, at: 1100 + i * 240, key: OFF }));

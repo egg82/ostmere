@@ -46,7 +46,7 @@ def _causes(o: Opening) -> dict[str, LineCause]:
         put(x.line_keys, offer_cause(x, cards, worded))
         put([k for a in x.answers for k in a.outcome.line_keys], AnswerCause(offer=x.id))
     for ch in o.chips:
-        put([k for k in (ch.on_line_key, ch.off_line_key) if k is not None], _when(ch.when, cards, worded))
+        put([*([] if ch.on_line_key is None else [ch.on_line_key]), *ch.off_line_keys], _when(ch.when, cards, worded))
     for i, lv in enumerate(o.camp.levels if o.camp is not None else []):
         put(lv.line_keys, CampCause(level=i + 1))
     return found

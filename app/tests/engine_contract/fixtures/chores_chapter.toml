@@ -77,15 +77,25 @@ outcome = { @CLOSE@ }
 # t_helper is told by a mention (the content's people check): a leaving here writes no story line of its own.
 [[people.came]]
 at_least = 1
-keys = ["t_came"]
+keys = ["t_came", "t_came_2", "t_came_3", "t_came_4", "t_came_5", "t_came_6"]
 
 [[people.went]]
 at_least = 1
-keys = ["t_went"]
+keys = ["t_went", "t_went_2", "t_went_3", "t_went_4", "t_went_5", "t_went_6"]
 
 [text]
 t_came = "One more."
+t_came_2 = "One more, way two."
+t_came_3 = "One more, way three."
+t_came_4 = "One more, way four."
+t_came_5 = "One more, way five."
+t_came_6 = "One more, way six."
 t_went = "One fewer."
+t_went_2 = "One fewer, way two."
+t_went_3 = "One fewer, way three."
+t_went_4 = "One fewer, way four."
+t_went_5 = "One fewer, way five."
+t_went_6 = "One fewer, way six."
 t_s_fuel = "Fuel"
 t_s_pool = "Pool"
 t_s_y = "Yield"

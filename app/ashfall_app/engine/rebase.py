@@ -95,7 +95,7 @@ def _gone(manifest: Manifest, rules: Rules) -> Gone:
     return Gone({**ids, IdKind.ANSWER: ids[IdKind.ANSWER] | moved})
 
 
-def _reshape(save: Save, rules: Rules, chips: dict[str, tuple[bool, bool]], fired: dict[str, bool],
+def _reshape(save: Save, rules: Rules, chips: dict[str, tuple[bool, int]], fired: dict[str, bool],
              work_s: dict[CardId, int]) -> Save:
     """Step 5: the canonical save under the new rules, at the save's time, what they lack already dropped."""
     t = save.time
@@ -107,8 +107,8 @@ def _reshape(save: Save, rules: Rules, chips: dict[str, tuple[bool, bool]], fire
         save,
         stores=tuple(StoreState(d.id, Segment(t, stores.get(d.id, d.initial), 0)) for d in rules.stores),
         skills=tuple(_skill(t, rules, d.id, xp.get(d.id, 0), phases.get(d.id, FIRST_PHASE)) for d in rules.skills),
-        chips=tuple(chips.get(c.id, (False, False))[0] for c in rules.chips),
-        chips_seen=tuple(chips.get(c.id, (False, False))[1] for c in rules.chips),
+        chips=tuple(chips.get(c.id, (False, 0))[0] for c in rules.chips),
+        chips_seen=tuple(chips.get(c.id, (False, 0))[1] for c in rules.chips),
         fired=tuple(fired.get(x.id, False) for x in rules.triggers),
         lanes=_lanes(save, rules), cards=_cards(save, rules, work_s),
         pauses=tuple(sorted((p for p in save.pauses if not is_full_pause(rules, p)), key=lambda p: pos[p.runner])),

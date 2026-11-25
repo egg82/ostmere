@@ -84,10 +84,15 @@ function shuffled<T>(xs: T[], next: () => number): T[] {
 }
 
 /** The k-th draw of a shuffle bag: `pool` shuffled by a draw keyed by `key` and the round floor(k / n), so each item
- * comes once before any repeats, the same on every device. */
+ * comes once before any repeats, the same on every device. A round's first is swapped with its second when it would
+ * repeat the last round's last, so no item comes twice in a row; a pool of two keeps its first round's order. The
+ * engine draws the same bag (engine/rotation.py). */
 export function bagged(key: string, pool: readonly string[], k: number): string {
+  if (pool.length <= 2) return shuffled([...pool], seeded(`${key}|0`))[k % pool.length] ?? "";
   const round = Math.floor(k / pool.length);
-  return shuffled([...pool], seeded(`${key}|${round}`))[k % pool.length] ?? "";
+  const bag = shuffled([...pool], seeded(`${key}|${round}`));
+  if (round > 0 && bag[0] === shuffled([...pool], seeded(`${key}|${round - 1}`)).at(-1)) [bag[0], bag[1]] = [bag[1] as string, bag[0] as string];
+  return bag[k % pool.length] ?? "";
 }
 
 /** The pool's line for the runner's k-th fight of a kind (won or lost, counted from 0 since it first ran): a shuffle

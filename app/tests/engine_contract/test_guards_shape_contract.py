@@ -11,7 +11,7 @@ import pytest
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import (
-    BP, AnswerDef, AnswerId, AnswerOffer, AtLeast, AtMost, Condition, InvalidVerbError, LaneId, LaneRules, OfferDef, OfferId,
+    BP, FORMAT, AnswerDef, AnswerId, AnswerOffer, AtLeast, AtMost, Condition, InvalidVerbError, LaneId, LaneRules, OfferDef, OfferId,
     Order, Outcome, Rules, Save, SetOrders, SkillLevel, StoreValue, SwitchMix, TapCard, advance, advance_logged,
     decide, decode, encode, verb_from_json, verb_to_json,
 )
@@ -42,6 +42,11 @@ def _old() -> dict[str, object]:
     return json.loads(FIXTURE.read_text())
 
 
+def _old_save() -> str:
+    """The old save's text as today's FORMAT writes it: a save with no chips changed only its format number since."""
+    return str(_old()["save"]).replace('"format":9,', f'"format":{FORMAT},', 1)
+
+
 def _old_json(key: str) -> Any:
     return json.loads(FIXTURE.read_text())[key]
 
@@ -58,8 +63,8 @@ def test_a_save_without_guards_encodes_to_its_old_text_with_bool_latches():
     fields existed, and its latches are bare bools."""
     r = _rules()
     s = play(r)[4]
-    assert encode(s, r) == _old()["save"]
-    assert decode(str(_old()["save"]), r) == s
+    assert encode(s, r) == _old_save()
+    assert decode(_old_save(), r) == s
     assert s.latches and all(type(x) is bool for x in s.latches)
 
 
@@ -71,7 +76,7 @@ def test_an_order_given_empty_lists_is_the_order_without_them_and_keeps_the_old_
     assert explicit == ORDERS
     r = _rules()
     s = advance(start(r, explicit), r, 4)
-    assert encode(s, r) == _old()["save"]
+    assert encode(s, r) == _old_save()
     assert verb_to_json(SetOrders(explicit)) == _old()["set_orders"]
 
 
@@ -89,7 +94,8 @@ def test_saves_without_guards_follow_the_old_path():
     """Statement 4 (beside the existing suites, which are the statement): the world played from 0 to 40 with guard-free
     orders, mixes, taps and a share level reaches the saves, and emits the lines, the engine gave before guards."""
     r = _rules()
-    got = {str(t): hashlib.sha256(encode(s, r).encode()).hexdigest() for t, s in play(r).items()}
+    old = (f'"format":{FORMAT},', '"format":9,')   # the fixture's texts were written at FORMAT 9
+    got = {str(t): hashlib.sha256(encode(s, r).replace(*old, 1).encode()).hexdigest() for t, s in play(r).items()}
     assert got == _old()["trajectory"]
     assert len(advance_logged(play(r)[0], r, max(PLAYS)).lines) == _old()["lines"]
     assert int(str(_old()["lines"])) > 0   # the lines compared are not an empty list

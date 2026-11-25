@@ -44,7 +44,7 @@ def test_the_manifest_and_save_fields_do_not_move_for_a_drain():
     r = world(cure())
     assert json.loads(json.dumps(manifest(r))) == json.loads(json.dumps(manifest(world(cure(drains=())))))
     assert '"drains"' not in json.dumps(manifest(r))
-    assert FORMAT == 9 and "drains" not in {f.name for f in fields(Save)}
+    assert FORMAT == 10 and "drains" not in {f.name for f in fields(Save)}
 
 
 @kills(12)

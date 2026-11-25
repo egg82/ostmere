@@ -27,7 +27,7 @@ const cardView = (c: CardCase): View["cards"][number] => ({ ...base.cards[0]!, c
 for (const c of cases.away_lines) {
   const catalog = new Catalog({
     ...fixtureContent,
-    chip_infos: c.chips.map((ch) => ({ ...fixtureContent.chip_infos[0]!, chip: ch.chip, on_line_key: ch.on, off_line_key: ch.off })),
+    chip_infos: c.chips.map((ch) => ({ ...fixtureContent.chip_infos[0]!, chip: ch.chip, on_line_key: ch.on, off_line_keys: ch.off === null ? [] : [ch.off] })),
   });
   const lines: LogLine[] = c.lines.map(([key, card], i) => ({ at: 3000 + i, seq: 0, key, card, opens_beat: false }));
   const view: View = { ...base, chips: c.shown, cards: c.cards.map(cardView) };

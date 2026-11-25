@@ -31,7 +31,7 @@ CARD_B = CardDef(CB, 50, skill=K, xp_per_hour=100, makes=(Flow(Y, 1000),), costs
                  lines=(LineKey("cb.tap"),))
 CARD_R = CardDef(RB, 30, lane=RACK, cap=3, outcome=Outcome(starts=(CA,)))  # a rack completion may start a hands card
 CHIP = ChipDef(CH, AtMost(StoreValue(X), Q, 2 * Q), (mul(LaneSpeed(HANDS), 5000, "ch"),), LineKey("ch.on"),
-               LineKey("ch.off"))
+               (LineKey("ch.off"),))
 TRIGGER = TriggerDef(TR, AtLeast(CardCount(CA), 1, 1), Outcome(unlocks=(Unlock(UnlockKind.CHIP, CH),), starts=(CA,),
                                                                raises=(CapRaise(CA, 1),)))
 OPENING = (Unlock(UnlockKind.STORE, X), Unlock(UnlockKind.SKILL, K), Unlock(UnlockKind.ACTION, FIRE),

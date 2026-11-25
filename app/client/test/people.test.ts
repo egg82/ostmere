@@ -39,8 +39,9 @@ const ONE = ["came.one.a", "came.one.b"];
   expect("the same day reads the same every time", day(5), day(5));
   expect("each pair of days takes both of the band's lines, in a seeded order", [0, 2, 4, 6].map((d) => [day(d), day(d + 1)].sort()),
     [ONE, ONE, ONE, ONE]);
-  const orders = new Set([0, 2, 4, 6, 8, 10].map((d) => day(d)));
-  expect("and which comes first is shuffled, not fixed", orders.size, 2);
+  expect("never the same line two days running", [0, 1, 2, 3, 4, 5].every((d) => day(d) !== day(d + 1)), true);
+  const firsts = new Set([1, 2, 3, 4, 5, 6, 7, 8].map((save) => mentionKey(people, save, { ...one, day: 0 })));
+  expect("and which comes first is the save's draw, not fixed", firsts.size, 2);
 }
 
 const line = (key: string, at: number, seq = 0): LogLine => ({ at, seq, key, card: null, opens_beat: false });

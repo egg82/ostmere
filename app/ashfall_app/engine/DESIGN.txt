@@ -138,7 +138,11 @@ CHOICES (each with its reason)
   save, whichever of its latch rising and its unlock came second (at an Outcome that unlocks it, after the Outcome's
   lines), and never again: Save.chips_seen[i] records that chip i has shown (time 0 included, whose lines are not
   returned) and never resets. Why: a chip can clear and show again every cycle while the player is away, and the line
-  says something once. off_line each time it stops being shown (its latch releasing, since unlocks only grow).
+  says something once. Each time it stops being shown (its latch releasing, since unlocks only grow), one of its
+  off_lines: the k-th draw of a shuffle bag over them keyed by the chip (engine/rotation.py, the page's own draw for a
+  fight's pool), k the off lines it has said, which chips_seen[i] counts above its 1. Each line comes once a round
+  and none twice in a row. Why: a chip that clears every cycle says its off line every cycle, and one line said
+  fifteen times reads as a stuck record; a count in the save keeps the turns exact across saves and devices.
 - Triggers: content gates. Each fires once per save, at the first instant its condition is true, applying an
   Outcome. A find "earned" at a level or a count is a trigger: deterministic, so it shows the moment it is earned.
   Its requires (none by default) must also hold then, each on an Unlocked or Running subject: discrete, so no rise
@@ -331,7 +335,8 @@ INVARIANTS (testable properties; r = valid rules, s = any save the engine return
 28. Chips: a chip shows iff unlocked and latched; while shown, explain() of every line its effects target lists
     them with source == the chip's id; once hidden they are absent. A HANDS tap's speed entries are those of its
     start instead (Speed). Hysteresis as in 14. Its on_line is emitted only
-    at the first instant it shows in the save, and not at all if that is time 0.
+    at the first instant it shows in the save, and not at all if that is time 0. Across its hides while unlocked, its
+    off lines come each once in every run of len(off_lines), and never the same twice in a row.
 29. Triggers fire once: each fires at most once per save, at the first instant its condition is true, and its
     outcome lands exactly once even if the condition falls and rises again.
 30. Codec: decode(encode(s, r), r) == s; encode(s1, r) == encode(s2, r) iff s1 == s2; decode of any text that is
@@ -814,9 +819,9 @@ CHOICES (saves across releases)
   rules it encodes under: stores (id, StoreDef.cap), skills, standing actions, lanes besides HANDS, cards (id, work_s,
   lane, cap), chips and triggers in rules order, and the feature vocabulary (sorted). Plain JSON, untagged, so an
   upgrade edits it as data. Save.chips[i] is the latch of the manifest's chip i, Save.chips_seen[i] whether it has
-  shown, and Save.fired[i] the state of its trigger i; every other tuple in the save already names its ids. decode is unchanged in kind: the manifest is part of
+  shown and how many off lines it has said, and Save.fired[i] the state of its trigger i; every other tuple in the save already names its ids. decode is unchanged in kind: the manifest is part of
   the text it re-encodes and compares. Data, not a flag per change (docs/decisions.md, "Developed live": no machinery).
-- FORMAT is 9 (Mix without holds; 8 added LaneState.speed, 7 the manifest's offers, 6 took the failed attempt off
+- FORMAT is 10 (chips_seen counts; 9 Mix without holds, 8 added LaneState.speed, 7 the manifest's offers, 6 took the failed attempt off
   LaneState, 5 added Save.chips_seen, 4 the manifest). OLDEST_FORMAT is 4, the first format a rebase reads. UPGRADES[f] (engine/upgrade.py)
   turns an envelope of format f into one of format f + 1, as JSON, before anything is decoded; a rebase chains them
   from the text's format up to FORMAT. Every format from OLDEST_FORMAT below FORMAT has an entry (a test and the release
@@ -827,7 +832,9 @@ CHOICES (saves across releases)
   UPGRADES[5] drops failed and failed_timer from each lane and frees a lane that held a failed attempt; its line,
   still to land, is not said. UPGRADES[8] (FORMAT 9) drops holds from every saved mix (docs/decisions.md, "No hold on a
   line"), so a mix that held a card runs it at its full share; a logged SaveMix whose mix carries an empty holds
-  reads back as the same verb without it (verb_from_json), so old decision logs still replay.
+  reads back as the same verb without it (verb_from_json), so old decision logs still replay. UPGRADES[9] (FORMAT 10)
+  turns each chips_seen flag into a count, 1 for a chip seen and 0 for one not: its off lines start their turns
+  from the first.
 - Rebase: rebase(text, rules) -> Save, pure (engine/rebase.py); rebase_logged(text, rules) -> Step, its save that same
   Save, its lines those of step 6, all at the save's time, seq from 0, and Step.dropped how many ids of each kind step 3
   found gone (IdKind order, kinds with none left out). rebase, rebase_logged, IdKind, UPGRADES and OLDEST_FORMAT are

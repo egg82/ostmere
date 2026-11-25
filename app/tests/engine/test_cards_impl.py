@@ -202,9 +202,9 @@ def test_order_on_card_count_fires_at_the_exact_second():
 def test_codec_round_trip_and_format():
     r = rules()
     s = advance(mixed(r, (CHOP, 3000), (CRAFT, 3000)), r, 123)
-    assert decode(encode(s, r), r) == s and FORMAT == 9
+    assert decode(encode(s, r), r) == s and FORMAT == 10
     with pytest.raises(StateFormatError):
-        decode(encode(s, r).replace('"format":9', '"format":8'), r)
+        decode(encode(s, r).replace('"format":10', '"format":9'), r)
 
 
 def test_explain_work_names_the_share():

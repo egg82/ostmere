@@ -15,13 +15,14 @@ class ChipDef:
     """A status shown while it is unlocked and its latched condition is true; while shown, `effects` join every rate's
     stack. Each effect's source is the chip's id (validated), so explain() names the chip. Its latch is kept whether
     or not it is unlocked. on_line is emitted the first time it becomes shown in the save (whichever of its latch rising
-    and its unlock came second) and never again, off_line each time it stops being shown (DESIGN.txt, "Chips")."""
+    and its unlock came second) and never again; each time it stops being shown, one of off_lines, drawn in turn from
+    them (rotation.bagged; DESIGN.txt, "Chips")."""
 
     id: ChipId
     when: Condition
     effects: tuple[Modifier, ...] = ()
     on_line: LineKey | None = None
-    off_line: LineKey | None = None
+    off_lines: tuple[LineKey, ...] = ()
 
 
 @dataclass(frozen=True)

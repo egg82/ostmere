@@ -122,7 +122,7 @@ check("the on-line and the last off-line", () => {
     ...content,
     text_entries: [...content.text_entries, { key: "l_rested", text: placeholder("l_rested") }],
     line_infos: [...content.line_infos, { key: "l_rested", kind: "body" as const, cause: null, person: false, mention: null }],
-    chip_infos: content.chip_infos.map((c) => (c.chip === "tired" ? { ...c, on_line_key: "l_tired", off_line_key: "l_rested" } : c)),
+    chip_infos: content.chip_infos.map((c) => (c.chip === "tired" ? { ...c, on_line_key: "l_tired", off_line_keys: ["l_rested"] } : c)),
   };
   const screen = new Screen(new Catalog(offContent), () => undefined, () => Promise.resolve(null), new Keeps());
   document.body.replaceChildren(screen.root);

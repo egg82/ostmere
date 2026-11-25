@@ -46,7 +46,7 @@ def new_save(rules: Rules, modifiers: tuple[Modifier, ...] = ()) -> Save:
         skills=tuple(SkillState(s.id, Segment(0, 0, 0)) for s in rules.skills),
         mixes=(), active=None, pauses=(), orders=(), latches=(), queue=(), modifiers=modifiers,
         lanes=tuple(LaneState(lane) for lane in index(rules).lanes), unlocked=opening,
-        chips=(False,) * len(rules.chips), chips_seen=(False,) * len(rules.chips), fired=(False,) * len(rules.triggers),
+        chips=(False,) * len(rules.chips), chips_seen=(0,) * len(rules.chips), fired=(False,) * len(rules.triggers),
     )
     save, _ = first_shown(replace(save, chips=tuple(latch_now(save, rules, c.when) for c in rules.chips)), rules)
     return resolve_instant(rebuild(save, rules), rules, [], False)

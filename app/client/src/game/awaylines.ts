@@ -50,7 +50,7 @@ function chipLines(catalog: Catalog): Map<string, { chip: string; on: boolean }>
   const found = new Map<string, { chip: string; on: boolean }>();
   for (const c of catalog.content.chip_infos) {
     if (c.on_line_key) found.set(c.on_line_key, { chip: c.chip, on: true });
-    if (c.off_line_key) found.set(c.off_line_key, { chip: c.chip, on: false });
+    for (const k of c.off_line_keys) found.set(k, { chip: c.chip, on: false });
   }
   return found;
 }

@@ -51,16 +51,16 @@ def test_saves_round_trip(cases: list[tuple[Rules, list[Save]]]):
             assert decode(encode(s, r), r) == s, s.time
 
 
-def test_the_text_is_canonical_json_of_format_9_carrying_the_digest(cases: list[tuple[Rules, list[Save]]]):
-    """codec: sorted keys, no whitespace, FORMAT 9, rules_digest(r) and the manifest in the envelope, and the card state
+def test_the_text_is_canonical_json_of_format_10_carrying_the_digest(cases: list[tuple[Rules, list[Save]]]):
+    """codec: sorted keys, no whitespace, FORMAT 10, rules_digest(r) and the manifest in the envelope, and the card state
     tagged by its class."""
-    assert FORMAT == 9
+    assert FORMAT == 10
     for r, saves in cases:
         for s in saves:
             text = encode(s, r)
             doc = json.loads(text)
             assert json.dumps(doc, sort_keys=True, separators=(",", ":")) == text
-            assert doc["format"] == 9 and doc["rules"] == rules_digest(r)
+            assert doc["format"] == 10 and doc["rules"] == rules_digest(r)
             assert set(doc) == {"format", "rules", "manifest", "save"}
             assert doc["manifest"]["cards"] == [{"id": c.id, "work_s": c.work_s, "lane": c.lane, "cap": c.cap}
                                                 for c in r.cards]
@@ -70,12 +70,12 @@ def test_the_text_is_canonical_json_of_format_9_carrying_the_digest(cases: list[
 
 
 def test_an_older_format_save_raises(cases: list[tuple[Rules, list[Save]]]):
-    """FORMAT is 9 (a mix without holds), and an envelope of another format (the projects-era 1, the cards-era 2, the
-    end's 3, the manifest's 4, chips_seen's 5, no failed attempt's 6, the offers' 7, a tap's kept speed's 8, or 10) raises StateFormatError even when its save
-    part is a save of these rules."""
+    """FORMAT is 10 (chips_seen counts), and an envelope of another format (the projects-era 1, the cards-era 2, the
+    end's 3, the manifest's 4, chips_seen's 5, no failed attempt's 6, the offers' 7, a tap's kept speed's 8, a mix
+    without holds' 9, or 11) raises StateFormatError even when its save part is a save of these rules."""
     for r, saves in cases:
         doc = json.loads(encode(saves[-1], r))
-        for other in (1, 2, 3, 4, 5, 6, 7, 8, 10):
+        for other in (1, 2, 3, 4, 5, 6, 7, 8, 9, 11):
             bad = json.dumps({**doc, "format": other}, sort_keys=True, separators=(",", ":"))
             assert bad != encode(saves[-1], r)
             with pytest.raises(StateFormatError):

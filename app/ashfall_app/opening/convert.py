@@ -239,7 +239,7 @@ def _chip(c: "ChipEntry", cards: set[str]) -> ChipDef:
     return ChipDef(
         ChipId(c.id), condition(c.when, cards), tuple(modifier(m, cards) for m in c.effects),
         None if c.on_line_key is None else LineKey(c.on_line_key),
-        None if c.off_line_key is None else LineKey(c.off_line_key))
+        tuple(LineKey(k) for k in c.off_line_keys))
 
 
 def _trigger(t: "TriggerEntry", cards: set[str]) -> TriggerDef:

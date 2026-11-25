@@ -167,7 +167,7 @@ def rich_rules() -> Rules:
         ],
         lanes=[RACK],
         chips=[ChipDef(COLD, AtLeast(StoreValue(Z), 2 * Q, Q), (mul(LaneSpeed(HANDS), 5000, "cold"),),
-                       LineKey("cold.on"), LineKey("cold.off"))],
+                       LineKey("cold.on"), (LineKey("cold.off"),))],
         triggers=[TriggerDef(T0, AtLeast(CardCount(P), 1, 1),
                              Outcome(unlocks=(Unlock(UnlockKind.CHIP, COLD),), lines=(LineKey("t0.fired"),)))],
         opening=[Unlock(UnlockKind.STORE, X), Unlock(UnlockKind.STORE, Y), Unlock(UnlockKind.STORE, Z),

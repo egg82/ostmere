@@ -14,10 +14,10 @@ OLD = Path(__file__).parent / "fixtures" / "pre_fights_f8.txt"
 
 def test_a_save_written_before_fights_loads_unchanged_and_re_encodes_to_the_same_text_at_todays_format():
     text = OLD.read_text().strip()
-    assert FORMAT == 9
+    assert FORMAT == 10
     save = rebase(text, RULES)
     assert save.time == 100 and save.modifiers == (Modifier(StoreCap(S), ModifierKind.ADD_BP, 500, SourceId("belt")),)
-    assert encode(save, RULES) == text.replace('"format":8', '"format":9', 1)
+    assert encode(save, RULES) == text.replace('"format":8', '"format":10', 1)
 
 
 def test_declaring_a_side_or_a_threat_changes_the_rules_digest_and_the_new_targets_round_trip():

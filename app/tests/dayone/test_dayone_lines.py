@@ -25,3 +25,12 @@ def test_only_a_repeat_tasks_lines_may_repeat():
     for second in (None, once):
         assert repeated(rules, [Line(0, 0, key, task), Line(1, 0, key, second)]) != []
     assert repeated(rules, [Line(0, 0, key), Line(1, 0, LineKey("other"))]) == []
+
+
+def test_a_chips_off_pool_may_repeat_and_its_on_line_may_not():
+    rules = opening_rules()
+    hurt = next(c for c in rules.chips if c.off_lines)
+    off, on = hurt.off_lines[0], hurt.on_line
+    assert on is not None
+    assert repeated(rules, [Line(0, 0, off), Line(1, 0, off)]) == []
+    assert repeated(rules, [Line(0, 0, on), Line(1, 0, on)]) != []

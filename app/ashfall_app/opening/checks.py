@@ -11,6 +11,7 @@ from .camp_checks import check_camp
 from .chip_checks import check_chips
 from .choice_checks import check_choices
 from .player_checks import check_player_only
+from .pool_checks import check_pools
 from .face_checks import check_clocks
 from .convert import build_rules
 from .fight_checks import check_fight_content
@@ -86,6 +87,7 @@ def check_structure(o: "Opening") -> None:
     check_leaves(o)
     check_groups(o)
     check_people(o)
+    check_pools(o)
     check_aims(o)
     check_journal(o)
     check_places(o)
@@ -226,7 +228,7 @@ def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
         singles = (c.label_key, c.upside_key)
         yield from ((f"card {c.id}", k) for k in (*singles, *c.line_keys) if k is not None)
     for ch in o.chips:
-        yield from ((f"chip {ch.id}", k) for k in (ch.label_key, ch.cost_key, ch.on_line_key, ch.off_line_key)
+        yield from ((f"chip {ch.id}", k) for k in (ch.label_key, ch.cost_key, ch.on_line_key, *ch.off_line_keys)
                     if k is not None)
     for f in o.features:
         yield from ((f"feature {f.id}", k) for k in (f.hint_key, f.label_key) if k is not None)
