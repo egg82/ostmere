@@ -338,8 +338,10 @@ jobs:
             names: readings-twentytwo-a
           - part: readings-twentytwo-b
             names: readings-twentytwo-b
-          - part: readings-twentythree
-            names: readings-twentythree
+          - part: readings-twentythree-a
+            names: readings-twentythree-a
+          - part: readings-twentythree-b
+            names: readings-twentythree-b
           - part: readings-twentyfive-a
             names: readings-twentyfive-a
           - part: readings-twentyfive-b
