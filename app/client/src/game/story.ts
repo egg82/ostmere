@@ -12,6 +12,8 @@ export interface StoryMarks {
   /** Store goals on a store the player has no line for yet: stated as a line of their own (ui/goals.ts), the cards
    * that make it marked. */
   unlined: Goal[];
+  /** Card fights a beat waits on the lost tally of: the card is marked and the wait line states the count. */
+  fights: Goal[];
   clock: Goal | null;
 }
 
@@ -20,12 +22,14 @@ export function storyMarks(catalog: Catalog, view: View): StoryMarks {
   const stores = view.goals.filter((g) => g.kind === "store" && g.store !== null && lined(g.store)).map((g) => g.store as string);
   const clock = view.goals.find((g) => g.kind === "clock") ?? null;
   const unlined = view.goals.filter((g) => g.kind === "store" && g.store !== null && !lined(g.store));
+  const fights = view.goals.filter((g) => g.kind === "fight" && g.card !== null);
   const makers = unlined.flatMap((g) => catalog.stores.get(g.store ?? "")?.made_by ?? []);
   return {
-    cards: new Set([...view.goals.flatMap((g) => (g.kind === "card" && g.card !== null ? [g.card] : [])), ...makers]),
+    cards: new Set([...view.goals.flatMap((g) => ((g.kind === "card" || g.kind === "fight") && g.card !== null ? [g.card] : [])), ...makers]),
     stores: new Set([...stores, ...(clock?.feeds ?? []).filter(lined)]),
     skills: new Set(view.goals.flatMap((g) => (g.kind === "level" && g.skill !== null ? [g.skill] : []))),
     unlined,
+    fights,
     clock,
   };
 }

@@ -305,6 +305,7 @@ function variant(phase: Phase, view: View, at: number): View {
     { kind: "card", store: null, card: "look", skill: null, target: 1, value: null, at: null, feeds: [] },
     { kind: "store", store: "wood", card: null, skill: null, target: 30 * Q, value: { start: at, start_value: 14 * Q, rate: 0, limit: null }, at: null, feeds: [] },
     { kind: "level", store: null, card: null, skill: "foraging", target: 3, value: null, at: null, feeds: [] },
+    { kind: "fight", store: "hurt", card: "far_hunt", skill: null, target: 3 * Q, value: { start: at, start_value: Q, rate: 0, limit: null }, at: null, feeds: [] },
     { kind: "clock", store: null, card: null, skill: null, target: 0, value: null, at: at + 2 * 3600 + 10 * 60, feeds: ["wood"] }] };
   if (phase === "restoffer" || phase === "restrule" || phase === "restaway" || phase === "rulestab") {
     const tired = phase !== "restaway";

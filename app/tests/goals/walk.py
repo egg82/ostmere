@@ -199,6 +199,8 @@ def _unseen(d: GoalDef, at: int | None, m: _Moment) -> bool:
         return at is None and not stopped(m.save, m.rules, d)
     if d.kind == "card":
         return d.subject not in {str(c.card) for c in m.view.cards}
+    if d.kind == "fight":
+        return d.subject not in {str(c.card) for c in m.view.cards}
     return d.kind == "level" and d.subject not in {str(b.skill) for b in m.view.skills}
 
 
@@ -210,8 +212,8 @@ def _shown(d: GoalDef, by: int, at: int | None, shown: list[g.Goal], unlocked: s
         return any(x.kind == g.GoalKind.CLOCK and (
             (x.at is not None and x.at <= by and (x.at != at or feeds <= set(x.feeds)))
             or (x.at is None and at is None and feeds <= set(x.feeds))) for x in shown)
-    return any((x.store, x.card, x.skill)[("store", "card", "level").index(d.kind)] == d.subject
-               for x in shown if x.kind != g.GoalKind.CLOCK)
+    return any({"store": x.store, "card": x.card, "level": x.skill, "fight": x.card}[d.kind] == d.subject
+               for x in shown if x.kind.value == d.kind)
 
 
 def misses(met: Sequence[Met]) -> list[str]:

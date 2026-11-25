@@ -311,7 +311,7 @@ const text: Record<string, string> = {
   "ui.card.retired": "retired",
   "ui.ledger.full": "full",
   "ui.camp.pays": "level {level}: {pays}",
-  "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}",
+  "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}", "ui.goal.lost": "{card}: {n} lost",
   "ui.ledger.starved": "ran dry",
   "ui.ledger.unfed": "ran dry · {pct} work speed off",
   "ui.queue.when_ready": "When ready", "ui.queue.queued": "in Next", "ui.queue.until_done": "Until done", "ui.queue.running": "under way", "ui.queue.move": "Move up or down", "ui.queue.move_one": "Move one up or down", "ui.queue.once": "{card} once", "ui.queue.runs": "{card} ×{n}", "ui.queue.remove_one": "Remove one", "ui.queue.heading": "Next", "ui.queue.plan": "Plan", "ui.queue.full": "Next is full", "ui.hands.next": "next: {card}", "ui.hands.then": "then {mix}", "ui.hands.until_goal": "until {goal}",

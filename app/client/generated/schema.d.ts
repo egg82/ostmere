@@ -1292,9 +1292,10 @@ export interface components {
         /**
          * Goal
          * @description One thing an open story beat waits on: a store's amount reaching `target` (store, value), a card's completions
-         *     reaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), or a wait on
-         *     the clock alone landing at `at`. The page marks the store's line, the card or the skill's row; a store with no line
-         *     yet, and the clock, it states as a line of their own, the clock's naming what keeps it moving.
+         *     reaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), a card's fight
+         *     lost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock alone landing at
+         *     `at`. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the
+         *     clock, it states as a line of their own, the clock's naming what keeps it moving.
          */
         Goal: {
             kind: components["schemas"]["GoalKind"];
@@ -1316,7 +1317,7 @@ export interface components {
          * GoalKind
          * @enum {string}
          */
-        GoalKind: "store" | "card" | "level" | "clock";
+        GoalKind: "store" | "card" | "level" | "clock" | "fight";
         /**
          * GoalLimit
          * @description A store a card moving the goal waits on, dry: the line that holds the goal back while it stays dry.
