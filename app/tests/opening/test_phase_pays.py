@@ -211,7 +211,7 @@ def test_a_find_of_a_good_only_one_off_cards_or_standing_actions_use_is_refused(
     taken = {x.store for c in o.cards if c.cap is None for x in (*c.inputs, *c.drains, *c.costs)}
     capped = {x.store for c in o.cards if c.cap is not None for x in (*c.inputs, *c.drains, *c.costs)}
     standing = {x.store for a in o.standing for x in a.costs}
-    for store in ("flint", "wire", "stew"):   # only a one-off card, or only a standing action, takes each
+    for store in ("flint", "wire", "warmth"):   # only a one-off card, or only a standing action, takes each
         assert store in capped | standing and store not in taken, store
         with pytest.raises(ValueError, match=f"phase_pays woodcutting: finds {store}, which no card that stays"):
             check_phase_pays(with_table(o, "woodcutting", find=pp.find.model_copy(update={"store": store})))

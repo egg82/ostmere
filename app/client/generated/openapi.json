@@ -2408,6 +2408,17 @@
             ],
             "title": "Upside Key"
           },
+          "variant_of": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant Of"
+          },
           "change_bp": {
             "items": {
               "type": "integer"
@@ -2504,6 +2515,7 @@
           "presentation",
           "label_key",
           "upside_key",
+          "variant_of",
           "change_bp",
           "kept",
           "work_s",
@@ -4341,6 +4353,10 @@
             "type": "boolean",
             "title": "Ruled"
           },
+          "station": {
+            "type": "boolean",
+            "title": "Station"
+          },
           "later_labels": {
             "items": {
               "$ref": "#/components/schemas/LaneLabel"
@@ -4406,6 +4422,7 @@
           "lane",
           "label_key",
           "ruled",
+          "station",
           "later_labels",
           "name_key",
           "told",
@@ -7064,6 +7081,17 @@
               }
             ],
             "title": "Bonus Bp"
+          },
+          "group_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Key"
           }
         },
         "type": "object",
@@ -7075,7 +7103,8 @@
           "hidden",
           "tally",
           "clock",
-          "bonus_bp"
+          "bonus_bp",
+          "group_key"
         ],
         "title": "StoreInfo"
       },

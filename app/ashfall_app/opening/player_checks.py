@@ -37,7 +37,7 @@ def counted(c: "CardEntry", tallies: set[str]) -> list[tuple[str, int, int]]:
 
 
 def town_lanes(o: "Opening") -> set[str]:
-    return {x.id for x in o.lanes if x.ruled}
+    return {x.id for x in o.lanes if x.ruled and not x.station}
 
 
 def unmarked(o: "Opening") -> list["CardEntry"]:

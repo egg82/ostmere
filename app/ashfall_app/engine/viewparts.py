@@ -150,7 +150,7 @@ class CardView:
     ready, and otherwise is what a failed tap now would fail on; it ignores the lane. cuts_in: a tap now starts it
     although its lane is busy (decisions.cuts_in). tap_s: seconds a tap started now
     takes (the rest of the current completion); None when the speed is 0. needs: what one completion needs, inputs,
-    then requires, one entry per store at the larger quantity."""
+    then requires, then a dry Pause's store at its resume level, one entry per store at the largest quantity."""
 
     card: CardId
     completions: int

@@ -231,8 +231,8 @@ later_labels = [{ after = { unlock_kind = "answered", id = "o_choir" }, label_ke
 name_key = "name_n10"
 
 # Their everyday work from the join (decisions/people.md, "Who can do which job"): every town card the family has, but
-# gathering by hand, which their cutting beats outright (choice_checks.py). Each eats stew and roots as the pair do; the
-# table is the meat on top. Its own trigger, as the answers' outcomes are released.
+# gathering by hand, which their cutting beats outright (choice_checks.py). Each eats roots, and from the pot
+# (t_pot_eat_choir); the table is the meat on top. Its own trigger, as the answers' outcomes are released.
 [[triggers]]
 id = "t_choir_settles"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_choir", value = 1 }
@@ -349,20 +349,17 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "n8_stack_cordwood" }, { unl
 [[standing]]
 id = "n8_eating"
 label_key = "action_n8_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n8", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n9_eating"
 label_key = "action_n9_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n9", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n10_eating"
 label_key = "action_n10_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n10", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 # ---------- T8: the pot ----------
 
@@ -577,14 +574,12 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "n11_stack_cordwood" }, { un
 [[standing]]
 id = "n11_eating"
 label_key = "action_n11_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n11", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n12_eating"
 label_key = "action_n12_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n12", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 # ---------- the fifteenth arrival ----------
 
@@ -682,6 +677,34 @@ l_starer_in = "story"
 l_b16_1 = "story"
 l_b16_2 = "story"
 l_b16_3 = "story"
+
+# The pot's three more mouths, as the family's (day eleven, t_pot_eat_family).
+[[triggers]]
+id = "t_pot_eat_choir"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n8_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = 30000, source = "t_pot_eat_choir" },
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = 30000, source = "t_pot_eat_choir" },
+  { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = 30000, source = "t_pot_eat_choir" },
+  { target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = 30000, source = "t_pot_eat_choir" },
+]
+
+# And two more.
+[[triggers]]
+id = "t_pot_eat_cutters"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n11_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_cutters" },
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_cutters" },
+  { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_cutters" },
+  { target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_cutters" },
+]
+
+[while_running]
+pot_stew = [{ lane = "n8", amount_bp = 1500 }, { lane = "n9", amount_bp = 1500 }, { lane = "n10", amount_bp = 1500 }, { lane = "n11", amount_bp = 1500 }, { lane = "n12", amount_bp = 1500 }]
+pot_fungus_stew = [{ lane = "n8", amount_bp = 1000 }, { lane = "n9", amount_bp = 1000 }, { lane = "n10", amount_bp = 1000 }, { lane = "n11", amount_bp = 1000 }, { lane = "n12", amount_bp = 1000 }]
 
 [text]
 store_b15_clock = "clock"

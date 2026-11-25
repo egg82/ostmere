@@ -43,6 +43,8 @@ def check_stakes_hold(o: "Opening") -> None:
     for c in o.cards:
         if c.stake == "reach" and not reach_modifiers(o, c):
             fail(f"card {c.id}", "has the stake reach but no trigger on a store it fills pays a modifier")
+        if c.stake == "speed" and not any(w.lane is not None for w in c.while_running):
+            fail(f"card {c.id}", "has the stake speed but holds no lane's speed while it runs")
     fought = {f.side for _, f in fights(o)}
     if not fought:
         return

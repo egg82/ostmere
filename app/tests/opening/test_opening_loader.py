@@ -62,7 +62,7 @@ def test_authoring_units_become_the_engines_fixed_point():
 
 @pytest.mark.parametrize("chapters", [(), None], ids=["opening alone", "with its chapters"])
 def test_every_hands_card_fills_the_camp_and_no_other_card_does(chapters: tuple[Path, ...] | None):
-    """The Camp bar fills by work done (a make flow on every hands card and every card of a ruled lane), and each level is a trigger on the store,
+    """The Camp bar fills by work done (a make flow on every hands card and every card of a ruled lane but a station's), and each level is a trigger on the store,
     except a held one nothing lifts, which the content never reaches: the opening alone ends on one, and so do its
     chapters (a goal on screen the next chapter lifts), so the exception is exercised either way; a held level a step
     lifts is a trigger like the rest."""
@@ -70,7 +70,7 @@ def test_every_hands_card_fills_the_camp_and_no_other_card_does(chapters: tuple[
     assert o.camp is not None
     rules = to_rules(o)
     camp = StoreId(o.camp.store)
-    fills = {HANDS, *(LaneId(x.id) for x in o.lanes if x.ruled)}
+    fills = {HANDS, *(LaneId(x.id) for x in o.lanes if x.ruled and not x.station)}
     for c in rules.cards:
         flows = [f.per_hour for f in c.makes if f.store == camp]
         assert flows == ([per_hour(o.camp.items_per_hour)] if c.lane in fills else []), c.id

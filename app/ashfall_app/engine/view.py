@@ -292,4 +292,8 @@ def _needs(save: Save, rules: Rules, c: CardDef) -> tuple[Need, ...]:
     for cond in c.requires:
         if (need := store_need(cond)) is not None:
             want[need[0]] = max(want.get(need[0], 0), need[1])
+    taken = card_costs(c)
+    for p in save.pauses:   # a dry pause refuses a tap until its store is back at the resume level, so the face draws it
+        if p.runner == c.id and p.store in taken:
+            want[p.store] = max(want.get(p.store, 0), p.resume_at)
     return tuple(Need(s, q, store_segment(save, rules, s)) for s, q in want.items())

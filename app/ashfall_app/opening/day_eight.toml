@@ -250,13 +250,49 @@ outcome = { stores = [{ store = "fungus", items = 1 }] }
 id = "fungus_stew"
 presentation = "action"
 label_key = "c_fungus_stew"
-upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_key = "up_fungus_stew"
+upside_of = "pot_fungus_stew"
+variant_of = "stew"
 work_s = 40
 skill = "cooking"
 xp_per_hour = 18
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 2 }, { store = "fungus_stews", items = 1 }] }
+outcome = { stores = [{ store = "stew_fungus", items = 2 }, { store = "fungus_stews", items = 1 }] }
+
+# Its own store, holding what the stew store does once camp 14 lands: a second pot's worth to switch to.
+[[stores]]
+id = "stew_fungus"
+label_key = "store_stew_fungus"
+cap_items = 36
+group_key = "store_group_stew"
+
+# The fungus pot on the fire: it goes twice as far for a smaller lift (day three's pot, t_pot_on).
+[[cards]]
+id = "pot_fungus_stew"
+only_player = "station"
+lane = "pot"
+presentation = "action"
+label_key = "c_pot_fungus_stew"
+upside_key = "up_pot_fungus_stew"
+stake = "speed"
+work_s = 60
+costs = [{ store = "stew_fungus", items_per_hour = 1, every_hours = 2 }]
+while_running = [{ lane = "n2", amount_bp = 1000 }, { lane = "n3", amount_bp = 1000 }, { lane = "n4", amount_bp = 1000 }]
+
+[[triggers]]
+id = "t_pot_fungus"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "fungus_stew", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "pot_stew", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "pot_fungus_stew" }] }
+
+# Its eating counts the mouths already fed (day five, t_pot_eat_pair).
+[[triggers]]
+id = "t_pot_fungus_pair"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n3_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = 20000, source = "t_pot_fungus_pair" },
+]
 
 # The fungus pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
@@ -265,11 +301,11 @@ twin_of = "fungus_stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "g_hearth"]
 presentation = "action"
 label_key = "c_fungus_stew"
-upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_key = "up_fungus_stew"
+upside_of = "pot_fungus_stew"
 work_s = 40
 inputs = [{ store = "fungus", items = 6 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 2 }, { store = "fungus_stews", items = 1 }] }
+outcome = { stores = [{ store = "stew_fungus", items = 2 }, { store = "fungus_stews", items = 1 }] }
 
 # With the hands' fungus pot.
 [[triggers]]
@@ -798,6 +834,10 @@ store_fungus_stews = "fungus stews"
 c_pick_fungus = "Pick fungus"
 c_lane_pick = "Pick fungus"
 c_fungus_stew = "Cook fungus stew"
+up_fungus_stew = "{pct} work speed for anyone who eats it, going twice as far, while it's in the pot"
+store_stew_fungus = "fungus stew"
+c_pot_fungus_stew = "Fungus stew"
+up_pot_fungus_stew = "{pct} work speed for anyone who eats, at half the stew"
 l_howls = "howls, answering each other. prints circle the rack, not the fire."
 l_caps_1 = "{n3} sorts the picked fungus. half of it goes in the fire."
 l_caps_2 = "the stew pot goes round and comes back with some left."

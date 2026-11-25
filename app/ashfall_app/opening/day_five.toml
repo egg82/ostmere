@@ -533,14 +533,12 @@ first = { keys = ["j_ridge_first"] }
 [[standing]]
 id = "n3_eating"
 label_key = "action_n3_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n3", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n4_eating"
 label_key = "action_n4_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n4", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 # ---------- SL10, SL11 ----------
 
@@ -658,6 +656,18 @@ l_dig_bed_2 = "story"
 l_dig_bed_done = "story"
 l_old_watch = "story"
 l_night_6 = "story"
+
+# The pot's two more mouths: each pot card's eating rises by a whole first eater's for each (day three, t_pot_on).
+[[triggers]]
+id = "t_pot_eat_pair"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n3_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_pair" },
+]
+
+[while_running]
+pot_stew = [{ lane = "n3", amount_bp = 1500 }, { lane = "n4", amount_bp = 1500 }]
 
 [text]
 # ---------- lines: [day two: line to write] ----------

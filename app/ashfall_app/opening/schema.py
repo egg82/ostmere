@@ -32,10 +32,11 @@ from .camp_entries import CampEntry, CampLevelEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LevelPaysEntry, OrderCardEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, ChipEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
 from .lane_entries import LaneEntry, LaneLabelEntry
+from .order_entries import OrderCardEntry
 from .store_entries import StoreEntry
 from .feature_entries import AimEntry, FeatureCardEntry, FeatureEntry
 

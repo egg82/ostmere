@@ -196,7 +196,10 @@ def check_refs(o: "Opening") -> None:
         _check_modifier(ids, where, m)
     for where, u in _unlocks(o):
         need(where, u.unlock_kind, u.id, _unlock_ids(ids, u.unlock_kind))
-    holding = [a.id for a in o.standing if a.while_running]
+    holding = [a.id for a in (*o.standing, *o.cards) if a.while_running]
+    variants = [c.id for c in o.cards]
     for c in o.cards:
         if c.upside_of is not None:
-            need(f"card {c.id} upside_of", "standing action with while_running", c.upside_of, holding)
+            need(f"card {c.id} upside_of", "runner with while_running", c.upside_of, holding)
+        if c.variant_of is not None:
+            need(f"card {c.id} variant_of", "card", c.variant_of, variants)

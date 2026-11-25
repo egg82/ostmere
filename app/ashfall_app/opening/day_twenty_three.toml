@@ -180,14 +180,12 @@ name_key = "name_n15"
 [[standing]]
 id = "n14_eating"
 label_key = "action_n14_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n14", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n15_eating"
 label_key = "action_n15_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n15", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 # ---------- I6: the cache torn up, and the post ----------
 
@@ -555,6 +553,22 @@ l_b20_2 = "story"
 l_b20_3 = "story"
 l_b20_4 = "story"
 l_b20_5 = "story"
+
+# The pot's two more mouths, as the family's (day eleven, t_pot_eat_family).
+[[triggers]]
+id = "t_pot_eat_last"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n14_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_last" },
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_last" },
+  { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_last" },
+  { target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = 20000, source = "t_pot_eat_last" },
+]
+
+[while_running]
+pot_stew = [{ lane = "n14", amount_bp = 1500 }, { lane = "n15", amount_bp = 1500 }]
+pot_fungus_stew = [{ lane = "n14", amount_bp = 1000 }, { lane = "n15", amount_bp = 1000 }]
 
 [text]
 store_sorrel_clock = "clock"

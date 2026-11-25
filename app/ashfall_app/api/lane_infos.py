@@ -14,7 +14,7 @@ def later_labels(labels: list[LaneLabelEntry]) -> list[cm.LaneLabel]:
 
 def lane_infos(o: Opening) -> list[cm.LaneInfo]:
     hands = cm.LaneInfo(lane=e.HANDS, label_key=o.hands_label_key, ruled=False, later_labels=[], name_key=None, told=None,
-                        pooled=False, group=None, tied=None)
+                        pooled=False, group=None, tied=None, station=False)
     return [hands, *(cm.LaneInfo(lane=x.id, label_key=x.label_key, ruled=x.ruled, later_labels=later_labels(x.later_labels),
                                  name_key=x.name_key, told=x.told, pooled=x.pooled, group=x.group,
-                                 tied=x.tied) for x in o.lanes)]
+                                 tied=x.tied, station=x.station) for x in o.lanes)]
