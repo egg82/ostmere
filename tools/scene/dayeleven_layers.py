@@ -37,6 +37,7 @@ def made_layers() -> list[Layer]:
         Layer(id="hut_ghost", img=made.hut(building=True), when=BUILDING, until=BUILT),
         Layer(id="hut", img=made.hut(), when=BUILT),
         Layer(id="tally_board", img=made.tally_board(), when="feature:b11"),
+        Layer(id="n6_posts", img=made.posts_set(), when="project:n6_posts"),
     ]
 
 

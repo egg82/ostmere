@@ -68,6 +68,8 @@ def made_layers() -> list[Layer]:
         Layer(id="ash_heap", img=made.ash_heap(), when="store:ash"),
         *[Layer(id=f"ashed_{n}", img=made.ashed(n), when=f"store:ashed_ground&pushes:n3_dig_bed@{n}") for n in (1, 2, 3)],
         Layer(id="snare_4", img=made.snare_4(), when="action:snare_4"),
+        Layer(id="hide_flaps_1", img=made.hide_flap(1, day3.bay()), when="pushes:hide_flaps@2"),
+        Layer(id="hide_flaps_2", img=made.hide_flap(2, day4.bay2()), when="pushes:hide_flaps@4"),
         *[Layer(id=f"roof_ash_{r}", img=world.roof_ash(img), when="|".join(f"chip:ash_laden&{c}" for c in ROOFS[r].split("|")))
           for r, img in _roofs().items()],
     ]

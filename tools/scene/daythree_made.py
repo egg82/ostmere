@@ -1,7 +1,8 @@
 """Day three's built things, warm because the camp made them: the larder's stone floor, the smoke rack's roof, the
-raised bed and the bay against the lean-to. Each staged build is drawn as additive layers (`stage` 1..n draws only what
-that stage adds), so a stage's layer shows from its push and the earlier ones stay under it.
-Drawn at the packs' 1x grain in day one's palette and scaled with NEAREST.
+raised bed, the bay against the lean-to, the wood stack and the pot shelf. Each staged build is drawn as additive layers
+(`stage` 1..n draws only what that stage adds), so a stage's layer shows from its push and the earlier ones stay under it.
+Drawn at the packs' 1x grain in day one's palette and scaled with NEAREST, but for the stack and the shelf, which are
+the kit's own firewood, stones, pot and bowl.
 Story spoilers (content/team/day-three.md, Art): never shown to the owner."""
 from __future__ import annotations
 
@@ -13,13 +14,22 @@ import dayone
 import kit
 from dayone import (RACK, STONE_GAP, STONE_PALE, STONE_TOP, WOOD_HI, WOOD_LINE, WOOD_MID,
                     art, placed)
-from daytwo import cut
+from daytwo import cut, firewood, footing
+from kit import FORT
+from place import canvas, put
+from tints import WOOD
 
 FLOOR = (140, 176)
 """The larder's floor, top-left in scene pixels: flagstones laid round and behind the larder and spilling right."""
 FLOOR_SIZE = (84, 28)
 BED = (572, 220)
 """The raised bed's top-left: open ground right of the watch fire, at the camp's edge."""
+STACK = (158, 201)
+"""The wood stack's foot, left end: on the larder floor's flagstones, whose second course readies the stack."""
+SHELF = (316, 217)
+"""The pot shelf's foot, left end: against the hearth's right side, whose second course readies the shelf."""
+POTS = [(324, 3, 350, 25), (454, 8, 476, 22)]
+"""Farm and Fort's iron pot and wooden bowl (fortA, its top row): what the shelf holds."""
 BAY = (5, 240)
 """The bay's top-left: against the lean-to's foot, its roof joining the lean-to's."""
 Cell = tuple[int, int, int, int]
@@ -134,3 +144,26 @@ HIDE_ROLL = ([".nnnnnn.", "nphhhhhn", "npplllln", "nphmmmmn", ".nnnnnn."],
 def bay() -> Image.Image:
     """A second, lower lean-to against the lean-to's foot, open to the right."""
     return placed(dayone.shelter(34, 21, 13), BAY)
+
+
+def wood_stack(stage: int) -> Image.Image:
+    """What stage `stage` adds to the wood stack: Time Fantasy's low pair of split logs, its pyramid beside the pair,
+    then a second pair in front."""
+    pyramid, pair = firewood()
+    piece, dx, dy = [(pair, 0, 0), (pyramid, 26, 0), (pair, 12, 6)][stage - 1]
+    out = canvas()
+    put(out, piece, STACK[0] + dx, STACK[1] + dy - piece.height)
+    return out
+
+
+def pot_shelf(stage: int) -> Image.Image:
+    """What stage `stage` adds to the pot shelf: a course of the Ashlands' stones in the world's grey, the iron pot on
+    it, the bowl beside the pot. Only the pots take the made things' warm grade, so the layers are not baked."""
+    out = canvas()
+    if stage == 1:
+        stones = footing(12)
+        put(out, stones, SHELF[0], SHELF[1] - stones.height)
+        return out
+    pot = kit.grade(cut(FORT, POTS[stage - 2]), **WOOD)
+    put(out, pot, SHELF[0] + (0 if stage == 2 else 14), SHELF[1] - 10 - pot.height + (0 if stage == 2 else 6))
+    return out

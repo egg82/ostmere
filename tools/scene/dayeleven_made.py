@@ -12,6 +12,7 @@ import kit
 from daytwo import cut, footing
 from dayone_poses import outlined
 from dayone import SHADOW, gable, ghost
+from dayeight_made import LOG
 from kit import FORT
 from place import canvas, put
 from tints import WOOD
@@ -35,6 +36,10 @@ CUT = (108, 60, 74, 255)
 """The carving's own dark, for the mark."""
 BOARD_AT = (190, 405)
 """The board's post foot: on the bare ground below the camp's left."""
+POSTS = [(500, 152), (516, 151), (532, 152)]
+"""Each new post's foot: on the ash before the palisade, right of the hut, where the three posts leaned."""
+FRESH = kit.Grade(sat=WOOD["sat"], mul=WOOD["mul"], bright=1.15, contrast=WOOD["contrast"])
+"""The made things' warm grade a step lighter: new-cut wood against the weathered wall."""
 
 
 def _walls() -> Image.Image:
@@ -94,4 +99,17 @@ def tally_board() -> Image.Image:
     board = outlined(kit.up(sign))
     out = canvas()
     put(out, board, BOARD_AT[0] - board.width / 2, BOARD_AT[1] - board.height)
+    return out
+
+
+def posts_set() -> Image.Image:
+    """The three posts that leaned, set again: a stake (one log of Farm and Fort's fort wall, as the palisade's are)
+    driven before each, and a course of the Ashlands' stones packed round their feet. The stones keep the world's cool
+    grey and only the wood takes the warm grade, fresher than the wall's, so the layer is not baked."""
+    stake = kit.grade(cut(FORT, LOG), **FRESH)
+    out = canvas()
+    for x, foot in POSTS:
+        put(out, stake, x - stake.width / 2, foot - stake.height)
+    stones = footing(POSTS[-1][0] - POSTS[0][0])
+    put(out, stones, POSTS[0][0] - 8, max(f for _, f in POSTS) - stones.height + 4)
     return out

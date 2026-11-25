@@ -34,12 +34,13 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "campfire": (
         "ring", "fire_laid", "clay_hearth_1", "clay_hearth_2", "clay_hearth_3", "hearth_stones_1", "hearth_stones_2",
         "hearth_stones_3", "stones_1", "stones_2", "stones_3", "fireback", "clay_hearth_1_front",
-        "clay_hearth_2_front", "clay_hearth_3_front", "stew_pot", "fire_lit", "stool",
+        "clay_hearth_2_front", "clay_hearth_3_front", "stew_pot", "fire_lit", "stool", "pot_shelf_1", "pot_shelf_2",
+        "pot_shelf_3",
     ),
-    "larder_floor": ("larder_floor_1", "larder_floor_2", "larder_floor_3"),
+    "larder_floor": ("larder_floor_1", "larder_floor_2", "larder_floor_3", "wood_stack_1", "wood_stack_2", "wood_stack_3"),
     "raised_bed": ("raised_bed_1", "raised_bed_2", "raised_bed_3"),
     "watch_ring": ("watch_ring", "watch_laid", "watch_lit"),
-    "plot": ("turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2", "ashed_3"),
+    "plot": ("turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2", "ashed_3", "beds_1", "beds_2", "beds_3"),
     "pelt_pegged_1": ("pelt_pegged_1",),
     "pelt_pegged_2": ("pelt_pegged_2",),
     "gap_ring": ("gap_ring", "gap_laid", "gap_lit"),
@@ -47,7 +48,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "damp_wood_1": ("damp_wood_1", "damp_wood_2", "damp_wood_3"),
     "dry_wood_1": ("dry_wood_1", "dry_wood_2"),
     "wood_drying": ("wood_drying", "rack"),
-    "lean_to": ("lean_to", "bay", "pelt_in_bay_1", "pelt_in_bay_3", "roof_ash_bay", "roof_ash_lean_to"),
+    "lean_to": ("lean_to", "bay", "pelt_in_bay_1", "pelt_in_bay_3", "roof_ash_bay", "roof_ash_lean_to", "hide_flaps_1"),
     "larder": ("larder",),
     "smoke_rack": (
         "smoke_rack", "rack_roof_1", "rack_roof_2", "roof_ash_rack_roof", "meat_on_rack", "meat_on_rack_again",
@@ -55,7 +56,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "n1_shelter": ("n1_shelter", "spear_leaning", "roof_ash_n1_shelter"),
     "woodstack": ("woodstack",),
     "woodshed_1": ("woodshed_1", "woodshed_2", "woodshed_3", "roof_ash_woodshed"),
-    "bay2": ("bay2", "pelt_in_bay_2", "roof_ash_bay2"),
+    "bay2": ("bay2", "pelt_in_bay_2", "roof_ash_bay2", "hide_flaps_2"),
     "stakes": ("stakes_1", "stakes_2"),
     "ash_heap": ("ash_heap",),
     "snare_4": ("snare_4",),
@@ -66,18 +67,18 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "snare_2": ("snare_2",),
     "snare_3": ("snare_3",),
     "pyre": ("pyre",),
-    "hall": ("hall_1", "hall_2", "hall_3", "hall_4"),
+    "hall": ("hall_1", "hall_2", "hall_3", "hall_4", "hall_hearth"),
+    "n6_posts": ("n6_posts",),
+    "road": ("road_1", "road_2", "road_3", "road_4", "road_over_1", "road_over_2", "road_cloths"),
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
-NO_SCENE: frozenset[str] = frozenset({"post_door"})
+NO_SCENE: frozenset[str] = frozenset({"post_door", "post", "bind_book"})
 """Builds (craft cards with a cap, app/tests/test_scene_shown.py) the player makes that stand nowhere in the scene:
-`post_door` is the post's, a map stamp and not a scene stamp (content/team/week-four.md, Art)."""
+`post` and `post_door` are out in the wood, a map stamp and not a scene stamp (content/team/week-four.md, Art);
+`bind_book` is a book handed to a person, which the journal shows, not the camp."""
 
-HELD_UNSHOWN: frozenset[str] = frozenset({
-    "bind_book", "cut_over", "cut_road", "hall_hearth", "hide_flaps", "n3_sow", "n6_posts", "post", "pot_shelf",
-    "road_cloths", "screen_fire", "wood_stack",
-})
+HELD_UNSHOWN: frozenset[str] = frozenset({"screen_fire"})
 """Builds with no scene state today, held so the check stays on for the rest: may only shrink."""
 
 HELD_CROWDED: frozenset[tuple[str, str]] = frozenset()

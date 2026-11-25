@@ -27,7 +27,8 @@ FLAT = frozenset({
     "larder_floor_1", "larder_floor_2", "larder_floor_3", "raised_bed_1",
     "raised_bed_2", "raised_bed_3", "turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2",
     "ashed_3", "pelt_pegged_1", "pelt_pegged_2", "gap_ring", "gap_ring_ghost", "watch_ring", "watch_ring_ghost",
-    "cellar_1", "cellar_2", "cellar_3", "cellar_4",
+    "cellar_1", "cellar_2", "cellar_3", "cellar_4", "road_1", "road_2", "road_3", "road_4", "road_over_1", "road_over_2",
+    "road_cloths",
 })
 """Lie on the ground or are the backdrop: drawn first, in manifest order, under everything that stands."""
 
@@ -57,7 +58,7 @@ PART_OF: Mapping[str, str] = {
     "fungus_torn": "birch_log", "claw_marks": "birch_log", "birch_stump": "birch_log", "pyre_flames": "pyre",
     "lamp_1": "palisade_9", "lamp_2": "palisade_9", "lamps_lit": "palisade_9", "gap_laid": "gap_ring", "gap_lit": "gap_ring",
     "watch_laid": "watch_ring", "watch_lit": "watch_ring", "clay_hearth_2_front": "clay_hearth_1_front",
-    "clay_hearth_3_front": "clay_hearth_2_front",
+    "clay_hearth_3_front": "clay_hearth_2_front", "hide_flaps_1": "bay", "hide_flaps_2": "bay2", "hall_hearth": "hall_4",
 }
 """Layers drawn as part of another layer's art, to the layer they belong to."""
 
