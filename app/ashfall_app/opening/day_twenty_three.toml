@@ -1,0 +1,641 @@
+# Day twenty-three: from B19 (the stranger home) through SL31, I5 and O-fiddle, I6 (the post shown), O-book, SL32, I7,
+# SL33 (night 24) and A39 to B20, as data merged after day_twenty_two.toml (schema.Chapter, chapters.merge). Story
+# spoilers: never shown to the owner. Spec: content/team/week-four.md, "Day twenty-three"; numbers:
+# content/team/week-four-numbers.md.
+version = 1
+end_feature = "kept"
+
+# ---------- clocks ----------
+
+# Never drawn: game hours since B19, for SL31, I5, I6 and O-book.
+[[stores]]
+id = "sorrel_clock"
+label_key = "store_sorrel_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "sorrel_clock"
+label_key = "action_sorrel_clock"
+makes = [{ store = "sorrel_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_sorrel_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "stranger_home", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_clock" }] }
+
+# Latches, never drawn: hidden clocks started at B19 + 12 h and + 16 h, so an offer or trigger can wait on them beside a
+# store condition (a requirement reads only an unlock). Machinery, no moment of their own (day_eighteen.toml's).
+[[stores]]
+id = "sorrel_16h"
+label_key = "store_sorrel_16h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "sorrel_16h"
+label_key = "action_sorrel_16h"
+makes = [{ store = "sorrel_16h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_sorrel_16h"
+when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 16 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_16h" }] }
+
+[[stores]]
+id = "sorrel_12h"
+label_key = "store_sorrel_12h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "sorrel_12h"
+label_key = "action_sorrel_12h"
+makes = [{ store = "sorrel_12h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_sorrel_12h"
+when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 12 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_12h" }] }
+
+# ---------- SL31: a name ----------
+
+[[triggers]]
+id = "t_named"
+when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 6 }
+outcome = { line_keys = ["l_named"], unlocks = [{ unlock_kind = "feature", id = "sorrel_named" }] }
+
+[lane_labels]
+n13 = [{ after = { unlock_kind = "feature", id = "sorrel_named" }, label_key = "lane_n13_named" }]
+
+# ---------- I5 and O-fiddle: a man and his wife ----------
+
+# The tier's count at 175 meals, B19 + 12 h, so SL31 has the return before it. Both join on either answer, their first
+# work by the answer (the kind's roles, day_eighteen.toml) and all their everyday work with it (the pot, the stakes,
+# the road's bed, the walk, the fish and the wash), one moment; what the answer keeps is D-147's size: the rack's smoke
+# a tenth more, or all clearing a tenth faster. The table feeds two more.
+[[offers]]
+id = "o_fiddle"
+text_key = "o_fiddle"
+kind = "work"
+gate = { test = "at_least", subject_kind = "store", id = "meals", value = 175 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "sorrel_12h", value = 1 }]
+line_keys = ["l_fiddle_1", "l_fiddle_2"]
+
+[[offers.answers]]
+id = "o_fiddle_food"
+label_key = "a_fiddle_food"
+cost_key = "a_fiddle_food_cost"
+role = "food"
+[offers.answers.outcome]
+line_keys = ["l_fiddle_food"]
+stores = [{ store = "arrivals", items = 2 }]
+unlocks = [
+  { unlock_kind = "action", id = "n14_eating" },
+  { unlock_kind = "action", id = "n15_eating" },
+  { unlock_kind = "card", id = "n14_fungus_stew" },
+  { unlock_kind = "card", id = "n14_stakes" },
+  { unlock_kind = "card", id = "n14_clear_road" },
+  { unlock_kind = "card", id = "n14_walk_ashwood" },
+  { unlock_kind = "card", id = "n14_fog_fish" },
+  { unlock_kind = "card", id = "n14_wash_meat" },
+  { unlock_kind = "card", id = "n15_fungus_stew" },
+  { unlock_kind = "card", id = "n15_stakes" },
+  { unlock_kind = "card", id = "n15_clear_road" },
+  { unlock_kind = "card", id = "n15_walk_ashwood" },
+  { unlock_kind = "card", id = "n15_fog_fish" },
+  { unlock_kind = "card", id = "n15_wash_meat" },
+]
+joins = [
+  { lane = "n14", mix = "town:camp", card = "n14_fog_fish", own_split = true },
+  { lane = "n15", mix = "town:camp", card = "n15_fungus_stew", own_split = true },
+]
+modifiers = [
+  { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_food" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_fiddle_food" },
+]
+
+[[offers.answers]]
+id = "o_fiddle_build"
+label_key = "a_fiddle_build"
+cost_key = "a_fiddle_build_cost"
+role = "build"
+[offers.answers.outcome]
+line_keys = ["l_fiddle_build"]
+stores = [{ store = "arrivals", items = 2 }]
+unlocks = [
+  { unlock_kind = "action", id = "n14_eating" },
+  { unlock_kind = "action", id = "n15_eating" },
+  { unlock_kind = "card", id = "n14_fungus_stew" },
+  { unlock_kind = "card", id = "n14_stakes" },
+  { unlock_kind = "card", id = "n14_clear_road" },
+  { unlock_kind = "card", id = "n14_walk_ashwood" },
+  { unlock_kind = "card", id = "n14_fog_fish" },
+  { unlock_kind = "card", id = "n14_wash_meat" },
+  { unlock_kind = "card", id = "n15_fungus_stew" },
+  { unlock_kind = "card", id = "n15_stakes" },
+  { unlock_kind = "card", id = "n15_clear_road" },
+  { unlock_kind = "card", id = "n15_walk_ashwood" },
+  { unlock_kind = "card", id = "n15_fog_fish" },
+  { unlock_kind = "card", id = "n15_wash_meat" },
+]
+joins = [
+  { lane = "n14", mix = "town:camp", card = "n14_clear_road", own_split = true },
+  { lane = "n15", mix = "town:camp", card = "n15_stakes", own_split = true },
+]
+modifiers = [
+  { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n1_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n2_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n3_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n4_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n5_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n6_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n7_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n8_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n9_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n10_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_fiddle_build" },
+]
+
+[[lanes]]
+id = "n14"
+label_key = "lane_n14"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "answered", id = "o_fiddle" }, label_key = "lane_n14_named" }]
+name_key = "name_n14"
+
+[[lanes]]
+id = "n15"
+label_key = "lane_n15"
+ruled = true
+told = "line"
+later_labels = [{ after = { unlock_kind = "answered", id = "o_fiddle" }, label_key = "lane_n15_named" }]
+name_key = "name_n15"
+
+[[standing]]
+id = "n14_eating"
+label_key = "action_n14_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n14", amount_bp = 1500 }]
+
+[[standing]]
+id = "n15_eating"
+label_key = "action_n15_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n15", amount_bp = 1500 }]
+
+# ---------- I6: the cache torn up, and the post ----------
+
+# Fourteen walks, B19 + 16 h, a return after O-fiddle's. The walks' cache is rooted out: six smoked over two hours on
+# a drain of its own that pauses at empty (the visitor's idiom), never a store a gate reads. The post (P4) shows with
+# its order card, the warm patch goes on the map, and the stretch's aim turns to it.
+[[triggers]]
+id = "t_cache"
+when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 14 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "sorrel_16h", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_cache_1", "l_cache_2", "l_post_shown"]
+stores = [{ store = "cache_torn", items = 6 }]
+unlocks = [
+  { unlock_kind = "feature", id = "post_shown" },
+  { unlock_kind = "action", id = "cache_torn" },
+  { unlock_kind = "card", id = "post" },
+]
+
+# Never drawn but by its drain: the meat the boar took from the cache.
+[[stores]]
+id = "cache_torn"
+label_key = "store_cache_torn"
+cap_items = 6
+hidden = true
+
+[[standing]]
+id = "cache_torn"
+label_key = "action_cache_torn"
+costs = [{ store = "cache_torn", items_per_hour = 3 }, { store = "smoked", items_per_hour = 3 }]
+
+# P4: twelve stages of the same take, charwood the walks' (no beams: finite pools). Its last stage is week five's B22;
+# stage 1 is I7. Run by its order card, so no stage is queued (D-119).
+[[cards]]
+id = "post"
+only_player = "project"
+presentation = "craft"
+label_key = "c_post"
+upside_key = "up_post"
+work_s = 2400
+cap = 12
+inputs = [
+  { store = "charwood", items = 10 },
+  { store = "cleared", items = 6 },
+  { store = "stakes", items = 4 },
+  { store = "stones", items = 3 },
+  { store = "cord", items = 2 },
+]
+
+# "When charwood reaches 10, build the post": passed over at the cap.
+[[order_cards]]
+store = "charwood"
+tap_card = "post"
+when = { test = "at_least", subject_kind = "store", id = "charwood", value = 10, release = 10 }
+offered_after = { unlock_kind = "card", id = "post" }
+
+# ---------- I7: the ring ----------
+
+[[triggers]]
+id = "t_post_ring"
+when = { test = "at_least", subject_kind = "card_count", id = "post", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "post_shown", value = 1 }]
+outcome = { line_keys = ["l_post_ring_1", "l_post_ring_2"], unlocks = [{ unlock_kind = "feature", id = "ring_up" }] }
+
+# ---------- O-book ----------
+
+# Day twenty-four's morning. Either answer leaves the book's making on the tasks: the first queues it, the second only
+# shows it, and tapping it later is the same as the first. What reads the book reads its finish, never the answer
+# (D-162, gates_read_feature).
+[[offers]]
+id = "o_book"
+text_key = "o_book"
+askers = ["n13"]
+gate = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 24 }
+line_keys = ["l_book_ask"]
+gates_read_feature = ["book_given"]
+
+[[offers.answers]]
+id = "o_book_make"
+label_key = "a_book_make"
+cost_key = "a_book_make_cost"
+[offers.answers.outcome]
+line_keys = ["l_book_yes"]
+unlocks = [{ unlock_kind = "card", id = "bind_book" }]
+queues = ["bind_book"]
+
+[[offers.answers]]
+id = "o_book_later"
+label_key = "a_book_later"
+cost_key = "a_book_later_cost"
+[offers.answers.outcome]
+line_keys = ["l_book_no"]
+unlocks = [{ unlock_kind = "card", id = "bind_book" }]
+
+[[cards]]
+id = "bind_book"
+only_player = "story"
+presentation = "craft"
+label_key = "c_bind_book"
+upside_key = "up_bind_book"
+work_s = 1800
+cap = 1
+inputs = [{ store = "pelt", items = 2 }, { store = "cord", items = 2 }]
+line_keys = ["l_book_given"]
+[cards.finished]
+unlocks = [{ unlock_kind = "feature", id = "book_given" }]
+
+# ---------- SL32: the second working ----------
+
+# Moving the air, not heat: like into like, the stream's run into the air over the racks, so the tithe is small. A
+# second cure for the film beside the wash: the player's time against a lane's.
+[[triggers]]
+id = "t_stir"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 44 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "chip", id = "ashed", value = 1 }]
+outcome = { line_keys = ["l_stir_air"], unlocks = [{ unlock_kind = "card", id = "stir_air" }] }
+
+[[cards]]
+id = "stir_air"
+only_player = "magic"
+presentation = "action"
+label_key = "c_stir_air"
+upside_key = "up_wash_meat"
+work_s = 900
+skill = "spellcraft"
+xp_per_hour = 360
+inputs = [{ store = "film", items = 12 }]
+outcome = { stores = [{ store = "ash", items = 2 }] }
+
+# ---------- Lucy's jobs ----------
+
+# From B19 + 28 h, the return after O-book's, then one at a time on day nine's countdown (ask_wait), as day sixteen's:
+# each yes queues a short hands job paying a one-off, each no costs nothing.
+[[offers]]
+id = "j_drag_marks"
+text_key = "o_j_drag_marks"
+askers = ["n1"]
+gate = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 28 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "post_shown", value = 1 }]
+
+[[offers.answers]]
+id = "j_drag_marks_yes"
+label_key = "a_j_drag_marks_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_drag_marks_yes"]
+unlocks = [{ unlock_kind = "card", id = "follow_marks" }]
+queues = ["follow_marks"]
+
+[[offers.answers]]
+id = "j_drag_marks_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_drag_marks_no"]
+
+[[cards]]
+id = "follow_marks"
+only_player = "story"
+presentation = "action"
+label_key = "c_follow_marks"
+work_s = 900
+cap = 1
+outcome = { stores = [{ store = "charwood", items = 3 }] }
+line_keys = ["l_follow_marks"]
+
+[[offers]]
+id = "j_show_fish"
+text_key = "o_j_show_fish"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_drag_marks", value = 1 }]
+
+[[offers.answers]]
+id = "j_show_fish_yes"
+label_key = "a_j_show_fish_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_show_fish_yes"]
+unlocks = [{ unlock_kind = "card", id = "show_fish" }]
+queues = ["show_fish"]
+
+[[offers.answers]]
+id = "j_show_fish_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_show_fish_no"]
+
+[[cards]]
+id = "show_fish"
+only_player = "story"
+presentation = "action"
+label_key = "c_show_fish"
+work_s = 600
+cap = 1
+outcome = { stores = [{ store = "catch", items = 3 }] }
+line_keys = ["l_show_fish"]
+
+# ---------- SL33: night 24 ----------
+
+# The season's sixty-fourth hour, dusk 24 on the calendar: the rooting heard, and a hidden clock the scene's night
+# grade reads (day_nineteen.toml's night_21), one moment.
+[[stores]]
+id = "night_24"
+label_key = "store_night_24"
+cap_items = 20
+hidden = true
+clock = "night"
+
+[[standing]]
+id = "night_24"
+label_key = "action_night_24"
+makes = [{ store = "night_24", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_rooting"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 64 }
+outcome = { line_keys = ["l_rooting", "l_night_24"], unlocks = [{ unlock_kind = "action", id = "night_24" }] }
+
+# ---------- A39 and B20 ----------
+
+# Dawn 25, the hour before the season's seventy-second, in twentieths of an hour (day_twenty_two.toml's dawn_22): A39
+# opens at its end, and the face says "opens at dawn" beside its supplies.
+[[stores]]
+id = "dawn_25"
+label_key = "store_dawn_25"
+cap_items = 20
+clock = "dawn"
+
+[[standing]]
+id = "dawn_25"
+label_key = "action_dawn_25"
+makes = [{ store = "dawn_25", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_dawn_25"
+when = { test = "after_time", value = 2070000 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_25" }] }
+
+# Lucy asks the room with SL33, the season's sixty-fourth hour, once the ring is up: A39 shown unready with its
+# countdown, queueable When ready. The card is the yes; the choice is when (D-159).
+[[triggers]]
+id = "t_go_ask"
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 64 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ring_up", value = 1 }]
+outcome = { line_keys = ["l_go_ask"], unlocks = [{ unlock_kind = "card", id = "go_wallow" }] }
+
+# A story step, no FightDef and no roll (DESIGN "FIGHTS": a beat's outcome never carries odds); its supplies are spent.
+[[cards]]
+id = "go_wallow"
+only_player = "story"
+presentation = "action"
+label_key = "c_go_wallow"
+upside_key = "up_go_wallow"
+work_s = 3600
+cap = 1
+glows = true
+inputs = [{ store = "smoked", items = 2 }]
+requires = [{ test = "at_least", subject_kind = "store", id = "dawn_25", value = 20 }]
+
+# B20: A39 finished, B19 behind it (it waits on I7, which waits on I6's fourteen walks, past B19's six).
+[[triggers]]
+id = "t_b20"
+when = { test = "at_least", subject_kind = "card_count", id = "go_wallow", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "stranger_home", value = 1 }]
+outcome = { line_keys = ["l_b20_1", "l_b20_2", "l_b20_3", "l_b20_4", "l_b20_5"], unlocks = [{ unlock_kind = "feature", id = "kept" }] }
+
+# ---------- the map ----------
+
+[[places]]
+id = "p_warm_patch"
+stamp = "fort"
+at = [2, 4]
+reveal = { unlock_kind = "feature", id = "post_shown" }
+label_key = "place_warm_patch"
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_post"
+text_key = "aim_post"
+after = { unlock_kind = "feature", id = "post_shown" }
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b20"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b20" }
+first = { keys = ["n_day_b20"] }
+catchup = { keys = ["j_b20_catchup"] }
+late = { keys = ["j_b20_late"] }
+
+[[subjects]]
+id = "s_n14_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n14", way = "joined" }
+first = { keys = ["j_n14_first"] }
+catchup = { keys = ["j_n14_catchup"] }
+
+[[subjects]]
+id = "s_n15_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n15", way = "joined" }
+first = { keys = ["j_n15_first"] }
+catchup = { keys = ["j_n15_catchup"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "sorrel_named"
+
+[[features]]
+id = "post_shown"
+
+[[features]]
+id = "ring_up"
+
+[[features]]
+id = "book_given"
+
+[[features]]
+id = "kept"
+
+# ---------- text ----------
+
+[beat_lines]
+I5 = ["l_fiddle_1"]
+I6 = ["l_cache_1"]
+I7 = ["l_post_ring_1"]
+B20 = ["l_b20_1"]
+
+[line_kinds]
+l_named = "story"
+l_fiddle_1 = "story"
+l_fiddle_2 = "story"
+l_fiddle_food = "story"
+l_fiddle_build = "story"
+l_cache_1 = "story"
+l_cache_2 = "story"
+l_post_shown = "story"
+l_post_ring_1 = "story"
+l_post_ring_2 = "story"
+l_book_ask = "story"
+l_book_yes = "story"
+l_book_no = "story"
+l_book_given = "story"
+l_stir_air = "story"
+l_j_drag_marks_yes = "story"
+l_j_drag_marks_no = "story"
+l_follow_marks = "story"
+l_j_show_fish_yes = "story"
+l_j_show_fish_no = "story"
+l_show_fish = "story"
+l_rooting = "story"
+l_night_24 = "story"
+l_go_ask = "story"
+l_b20_1 = "story"
+l_b20_2 = "story"
+l_b20_3 = "story"
+l_b20_4 = "story"
+l_b20_5 = "story"
+
+[text]
+store_sorrel_clock = "clock"
+action_sorrel_clock = "Clock"
+store_sorrel_16h = "clock"
+action_sorrel_16h = "Clock"
+store_sorrel_12h = "clock"
+action_sorrel_12h = "Clock"
+lane_n13_named = "{n13}'s hands"
+l_named = "{n3} calls the stranger {n13}, after the sour leaf they ate a handful of."
+o_fiddle = "A man and his wife have come for the table. Where do they work first?"
+l_fiddle_1 = "a man and his wife come down the road, a bundle tied in cloth on his back."
+l_fiddle_2 = "a fiddle, {n14} says. he doesn't untie it. not in air like this, {n15} says."
+a_fiddle_food = "To the food"
+a_fiddle_build = "To the building"
+a_fiddle_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
+a_fiddle_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
+l_fiddle_food = "{n15} is at the racks before her bundle is down."
+l_fiddle_build = "{n14} takes a shovel and asks where the bed runs."
+lane_n14 = "The man's hands"
+lane_n14_named = "{n14}'s hands"
+name_n14 = "Walter"
+lane_n15 = "His wife's hands"
+lane_n15_named = "{n15}'s hands"
+name_n15 = "Edith"
+action_n14_eating = "{n14}'s share"
+action_n15_eating = "{n15}'s share"
+l_cache_1 = "the cache at the warm patch is rooted out of the ground, the sacks torn open."
+l_cache_2 = "the ground round it is churned. the tracks are a pig's, wider than a hand."
+l_post_shown = "Lucy says somebody should put a post out there, with a store that shuts."
+store_cache_torn = "cache"
+action_cache_torn = "The cache torn up"
+c_post = "Build the post"
+up_post = "a post at the warm patch"
+l_post_ring_1 = "a ring of charwood stakes stands at the warm patch, the next sack inside it."
+l_post_ring_2 = "by morning the ground is churned all round the ring. the sack hangs where it was."
+o_book = "{n13} watches you write. Make them a book of their own?"
+a_book_make = "Make them one"
+a_book_later = "Not now"
+a_book_make_cost = "pelts and cord, and {d} of your time"
+a_book_later_cost = "nothing yet"
+l_book_ask = "{n13} watches you write at the fire, the way you'd watch someone eat."
+l_book_yes = "you cut birch bark into leaves and sew them into a hide."
+l_book_no = "you close your book."
+c_bind_book = "Make a book"
+up_bind_book = "a book for {n13}"
+l_book_given = "{n13} takes it in both hands, says thank you, and doesn't open it while you're there."
+l_stir_air = "one hand flat in the stream, the other over the racks. the air moves once, and the film lifts."
+c_stir_air = "Move the air"
+o_j_drag_marks = "Lucy says somebody has to follow the drag-marks from the warm patch and see where they go."
+a_j_drag_marks_yes = "You follow them"
+l_j_drag_marks_yes = "you are at the trees' edge before she has finished."
+l_j_drag_marks_no = "lucy nods and goes to find someone."
+c_follow_marks = "Follow the drag-marks"
+l_follow_marks = "the marks go from warm patch to warm patch. you bring back dead wood."
+o_j_show_fish = "Lucy says somebody has to show the newcomers where the fish rise under the fog."
+a_j_show_fish_yes = "You show them"
+l_j_show_fish_yes = "you take them down to the stream."
+l_j_show_fish_no = "lucy says she'll take them herself."
+c_show_fish = "Show them the fish"
+l_show_fish = "they lift a fish each out by hand, and you one more."
+store_night_24 = "night"
+action_night_24 = "Night"
+l_rooting = "in the night the town hears them in the wood over the ridge, as near as the yard."
+l_night_24 = "people stand at the hall door and listen. nobody goes out."
+store_dawn_25 = "dawn"
+action_dawn_25 = "Dawn"
+l_go_ask = "in the morning Lucy says somebody has to go after them. she looks at you."
+c_go_wallow = "Go after them"
+up_go_wallow = "whatever is tearing up the cache"
+l_b20_1 = "under the trees every sound is close and from nowhere."
+l_b20_2 = "rooting to the left, then behind you, then all round."
+l_b20_3 = "it comes out of the fog from the side you weren't facing."
+l_b20_4 = "first light. the warm stone at camp, ash in your mouth. Lucy by the fire."
+l_b20_5 = "she looks a long while. \"Kept, are you.\" next morning your name tops her list."
+place_warm_patch = "The warm patch"
+aim_post = "a post out at the trees."
+n_day_b20 = "went after the pigs in the fog. woke on the warm stone at first light. lucy said two words. my name is first on her list now"
+j_b20_catchup = "i went after the pigs in the fog and woke at the stone"
+j_b20_late = "first on lucy's list every morning since"
+j_n14_first = "{n14} carries a fiddle wrapped in cloth and won't untie it"
+j_n14_catchup = "a man came down the road with a fiddle"
+j_n15_first = "{n15} does the talking for both of them"
+j_n15_catchup = "met {n15}, his wife"

@@ -134,6 +134,7 @@ export const UI = {
   unfed: "ui.ledger.unfed", // "{pct}": a dry store that only feeds a bonus (StoreInfo.bonus_bp), the bonus it holds back
   queueWhenReady: "ui.queue.when_ready", // a step's button that lines up its tap for when it turns ready
   queueQueued: "ui.queue.queued", // the same button once the tap is in the queue
+  queueUntilDone: "ui.queue.until_done", // the same button on a staged card a tap runs: run it on to its cap
   queueRunning: "ui.queue.running", // a Next entry whose tap a lane already runs, in Remove's place
   queueMove: "ui.queue.move", // a Next entry's ≡, for screen readers: it drags, or moves by the arrow keys
   queueHeading: "ui.queue.heading", // the Rules tab's list of what the queue taps next

@@ -118,6 +118,7 @@ TYPICAL = WeekTwoKnobs(
         *(Split(n, ((f"{n}_reap", 5000), (f"{n}_forage", 5000)), feature("r2_open")) for n in ("n8", "n9", "n10")),
         Split("n2", (("n2_watch", 5000), ("n2_forage", 5000)), feature("r2_open")),
         Split("n9", (("n9_walk_ashwood", 2500), ("n9_forage", 7500)), feature("ashwood")),
+        Split("n13", (("n13_walk_ashwood", 5000), ("n13_forage", 5000)), feature("sorrel_named")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
@@ -137,6 +138,7 @@ SHARP = WeekTwoKnobs(
         Split("n12", (("n12_reap", 5000), ("n12_forage", 5000)), feature("r2_open")),
         Split("n2", (("n2_watch", 10000),), feature("r2_open")),
         Split("n12", (("n12_walk_ashwood", 5000), ("n12_forage", 5000)), feature("ashwood")),
+        Split("n13", (("n13_walk_ashwood", 5000), ("n13_fog_fish", 5000)), feature("sorrel_named")),
     ))
 """Once the road is over the top (B17) both routes take the lanes they had clearing it to the beds and the roots; once
 the town can walk the Ashwood (B18) each puts one of them on the walk beside the roots, the beds being over."""

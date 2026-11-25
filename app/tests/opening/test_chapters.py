@@ -178,3 +178,16 @@ def test_a_rising_rule_above_the_first_cap_but_within_the_offer_time_cap_loads(t
 def test_a_rising_rule_past_the_offer_time_cap_fails_the_load(tmp_path: Path):
     with pytest.raises(ValueError, match="past the store's cap when it is offered"):
         load_with(broken_chapter(tmp_path, *with_rising_roots_rule(17)))
+
+
+def test_a_chapter_gives_an_earlier_lane_a_later_label_and_refuses_an_unknown_lane(tmp_path: Path):
+    """Chapter.lane_labels: day twenty-three names day twenty-two's lane; a label for a lane nobody declared fails."""
+    from ashfall_app.opening.schema import DAY_TWENTY_THREE
+    n13 = next(x for x in opening().lanes if x.id == "n13")
+    assert [lb.after.id for lb in n13.later_labels] == ["sorrel_named"]
+    text = DAY_TWENTY_THREE.read_text()
+    assert text.count("\nn13 = [{ after") == 1
+    planted = tmp_path / DAY_TWENTY_THREE.name
+    planted.write_text(text.replace("\nn13 = [{ after", "\nn99 = [{ after"))
+    with pytest.raises(ValueError, match=r"lane_labels: unknown lanes \['n99'\]"):
+        load_opening(OPENING, tuple(planted if c == DAY_TWENTY_THREE else c for c in CHAPTERS))
