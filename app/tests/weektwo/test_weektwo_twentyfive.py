@@ -14,11 +14,14 @@ from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.parity import Measured, compare
 from tests.weektwo.rebased import Rebased, fired, rules23
+from tests.weektwo import weekfour as w4
 from tests.weektwo.routes import TWENTYFIVE_PUSH_ROUTES
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
 GROUPS = ("o_walkers", "o_widowers")
+ANSWERING = ("typical", "sharp")
+"""The routes whose answers to the groups weekfour names."""
 
 
 def test_a_save_from_day_twenty_threes_end_loads_under_day_twenty_five_and_plays_on(rebased_twentythree: Rebased):
@@ -43,12 +46,17 @@ def test_the_hunt_runs_the_door_lifts_camp_19_and_both_groups_join(twentyfive_ro
     assert {Unlock(UnlockKind.ANSWERED, o) for o in GROUPS} <= set(p.save.unlocked), f"{name}: both groups answered"
 
 
-def test_each_groups_answers_are_both_measured():
-    """Typical and sharp answer each group the other way (weekfour.WALKERS, WIDOWERS)."""
-    from tests.weektwo.routes import twentyfive
-    given = {name: {str(v.answer) for _, _, v in twentyfive(name).decisions
-                    if isinstance(v, AnswerOffer) and str(v.offer) in GROUPS} for name in ("typical", "sharp")}
-    assert given["typical"] | given["sharp"] == {f"{o}_{a}" for o in GROUPS for a in ("food", "build")}, given
+def test_typical_and_sharp_answer_each_group_the_other_way():
+    """Between them the two routes give every answer to both groups (weekfour.WALKERS, WIDOWERS)."""
+    given = {str(w4.WALKERS[r]) for r in ANSWERING} | {str(w4.WIDOWERS[r]) for r in ANSWERING}
+    assert given == {f"{o}_{a}" for o in GROUPS for a in ("food", "build")}, given
+
+
+@pytest.mark.parametrize("twentyfive_route", ANSWERING, indirect=True)
+def test_the_route_answers_each_group_its_way(twentyfive_route: Route):
+    name, p = twentyfive_route
+    given = {str(v.answer) for _, _, v in p.decisions if isinstance(v, AnswerOffer) and str(v.offer) in GROUPS}
+    assert given == {str(w4.WALKERS[name]), str(w4.WIDOWERS[name])}, name
 
 
 def test_every_chip_shown_in_day_twenty_five_has_a_cure(twentyfive_cures: list[str]):
