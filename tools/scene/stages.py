@@ -167,6 +167,24 @@ STAGES["56_hall_raised"] = STAGES["52_week_end"].then({"running:hall"} | _built(
 STAGES["56_hall_walls"] = STAGES["56_hall_raised"].then(_built("hall", 4))
 STAGES["56_hall_roofing"] = STAGES["56_hall_walls"].then(_built("hall", 6))
 STAGES["57_hall_built"] = STAGES["56_hall_roofing"].then(_built("hall", 8) | {"project:hall"}, {"running:hall"})
+# Builds finished on the day each can be (day-three.md, week-two.md and week-three.md, Art), then all of them at once.
+STAGES["31_stack_shelf"] = STAGES["31_warm_ground"].then(_built("wood_stack", 3) | _built("pot_shelf", 3)
+                                                         | {"project:wood_stack", "project:pot_shelf"})
+STAGES["42_flaps"] = STAGES["42_roofs_cleared"].then(_built("hide_flaps", 4) | {"project:hide_flaps"})
+STAGES["48_posts_set"] = STAGES["48_count"].then({"project:n6_posts"})
+STAGES["58_sown"] = STAGES["57_hall_built"].then(_built("n3_sow", 1))
+STAGES["58_green"] = STAGES["58_sown"].then(_built("n3_sow", 3))
+STAGES["58_ripe"] = STAGES["58_green"].then(_built("n3_sow", 6) | {"project:n3_sow"})
+STAGES["59_hall_hearth"] = STAGES["58_ripe"].then({"project:hall_hearth"})
+STAGES["60_road_cut"] = STAGES["59_hall_hearth"].then(_built("cut_road", 3))
+STAGES["60_road_half"] = STAGES["60_road_cut"].then(_built("cut_road", 6))
+STAGES["60_road_far"] = STAGES["60_road_half"].then(_built("cut_road", 8))
+STAGES["61_road_head"] = STAGES["60_road_far"].then(_built("cut_road", 10) | {"project:cut_road"})
+STAGES["62_cloths"] = STAGES["61_road_head"].then(_built("cut_over", 3) | {"project:road_cloths"})
+STAGES["63_over_top"] = STAGES["62_cloths"].then(_built("cut_over", 6) | {"project:cut_over"})
+STAGES["64_all_built"] = STAGES["63_over_top"].then(STAGES["31_stack_shelf"].facts - STAGES["31_warm_ground"].facts
+                                                    | STAGES["42_flaps"].facts - STAGES["42_roofs_cleared"].facts
+                                                    | {"project:n6_posts"})
 
 
 def holds(cond: str | None, state: State) -> bool:

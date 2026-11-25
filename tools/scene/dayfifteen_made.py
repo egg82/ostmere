@@ -1,8 +1,11 @@
-"""Day fifteen's built thing, warm because the camp made it: the hall, in four states by its stages. Its walls and roof
-are Time Fantasy's village longhouse cut down to the camp's builds' size (the kit's is three times the hut's): its log
-wall from the doorway to the left end with the right end's log ends, under its ridge beam, a band of its shingles and
-its eave, in the made things' warm grade; it stands on a course of the Ashlands' stones, as the hut does. Nothing is
-drawn. Story spoilers (content/team/week-three.md, Art): never shown to the owner."""
+"""Days fifteen and sixteen's built things, warm because the camp made them: the hall, in four states by its stages, the
+hearth at its end, and her beds sown. The hall's walls and roof are Time Fantasy's village longhouse cut down to the
+camp's builds' size (the kit's is three times the hut's): its log wall from the doorway to the left end with the right
+end's log ends, under its ridge beam, a band of its shingles and its eave, in the made things' warm grade; it stands on
+a course of the Ashlands' stones, as the hut does. The hearth shows as Farm and Fort's stone chimney through the hall's
+roof at its right end, the beds as Farm and Fort's wheat at three of its growth stages on her turned ground. Nothing is
+drawn.
+Story spoilers (content/team/week-three.md, Art): never shown to the owner."""
 from __future__ import annotations
 
 from PIL import Image
@@ -11,7 +14,8 @@ import kit
 from dayone import ghost
 from daytwo import footing
 from place import canvas, put
-from tints import WOOD
+from dayfour_made import TURNED
+from tints import STONE, WOOD
 
 LONGHOUSE = "village_longhouse"
 """The curated longhouse (1x, 144x90): rows 8-15 its ridge beam, 16-56 shingles, 57-60 the eave, 61-88 the log wall."""
@@ -27,6 +31,16 @@ STONES_H = 16
 """The stone course's height (the footing's), which the walls sit half into."""
 RISEN = 7
 """The wall's courses (1x rows, from its foot) stood at stage 2: the first logs on the stones."""
+CHIMNEY = ("tf_farmandfort/rpgmaker_VXa/tileB_farmB.png", (128, 131, 160, 171))
+"""Farm and Fort's stone chimney stack, its cap and upper courses, cut clear of the plastered wall it is drawn against."""
+CHIMNEY_AT = (716, 160)
+"""The chimney's bottom-left: through the hall's roof over its right end, its foot among the shingles."""
+WHEAT = "curated/buildings/village_crop_wheat.png"
+SOWN = [(5, 21, 10, 29), (37, 14, 44, 24), (53, 5, 60, 19)]
+"""The wheat strip's growth stages (1x) for the beds' three states, sown, green and ripe: the first shoot, the young
+plant's top, the ripe ear and the top of its stalk (the rest stands in the soil, below the mound's crown)."""
+MOUNDS_ROW, ROWS = 3, 3
+"""Her turned ground: three soil mounds in a row, three rows (dayfour_made.turned's layout)."""
 
 
 def _band(top: int, bottom: int) -> Image.Image:
@@ -81,4 +95,26 @@ def hall(stage: int) -> Image.Image:
     baked."""
     out = ghost(_timber(4)) if stage == 0 else _timber(stage)
     out.alpha_composite(_stones())
+    return out
+
+
+def hall_hearth() -> Image.Image:
+    """The chimney rising through the hall's roof over its right end, in the world's grey (the stone is not the camp's
+    wood, so the layer is not baked)."""
+    sheet, box = CHIMNEY
+    stack = kit.grade(kit.load(sheet).crop(box), **STONE)
+    out = canvas()
+    put(out, stack, CHIMNEY_AT[0], CHIMNEY_AT[1] - stack.height)
+    return out
+
+
+def beds(state: int) -> Image.Image:
+    """Her turned ground sown (`state` 1), green (2) and ripe (3): two plants on the crown of each mound, far rows first."""
+    plant = kit.up(kit.load(WHEAT).crop(SOWN[state - 1]))
+    out = canvas()
+    for row in range(1, ROWS + 1):
+        for i in range(MOUNDS_ROW):
+            x, y = TURNED[0] + i * 21 + (row % 2) * 6, TURNED[1] + (row - 1) * 11
+            for dx in (4, 12):
+                put(out, plant, x + dx, y + 12 - plant.height)
     return out

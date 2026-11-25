@@ -6,7 +6,7 @@ Nothing is drawn.
 Story spoilers (content/team/week-two.md, Art): never shown to the owner."""
 from __future__ import annotations
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 import daythree_fire as fire
 import dayfour_made as d4made
@@ -43,6 +43,9 @@ ASHED = kit.Grade(sat=0.25, mul=(0.94, 0.94, 0.98), bright=0.55, contrast=1.05)
 ASH_PALE = kit.Grade(sat=0.05, mul=(1.0, 1.0, 1.02), bright=1.7, contrast=0.8)
 SNARE_4 = (243, 86)
 """The fourth snare from the first: on open ground at the camp's right edge, between the turned ground and the stakes."""
+FLAPS = [(48, 250), (68, 341)]
+"""Each flap's top-left, over the dark of a bay's open side: the first bay's (open to the right), then the second's."""
+FLAP = (18, 32)
 
 
 def _run(left: int, right: int, feet: int) -> Image.Image:
@@ -129,3 +132,13 @@ def ashed(row: int) -> Image.Image:
 
 def snare_4() -> Image.Image:
     return _moved(dayone.snare(0), *SNARE_4)
+
+
+
+def hide_flap(n: int, bay: Image.Image) -> Image.Image:
+    """The nth hide hung over a bay's open side (the hide off the kit's stretched-hide frame), cut to `bay`'s own
+    drawing so it hangs inside the frame."""
+    out = canvas()
+    put(out, kit.resize(d4made.hide(), FLAP), *FLAPS[n - 1])
+    out.putalpha(ImageChops.multiply(out.getchannel("A"), bay.getchannel("A")))
+    return out

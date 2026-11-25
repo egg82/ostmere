@@ -46,7 +46,7 @@ def n1_shelter() -> Image.Image:
     return img
 
 
-def _firewood() -> list[Image.Image]:
+def firewood() -> list[Image.Image]:
     """Time Fantasy's two split-firewood stacks (the outside sheet's pyramid and its low pair)."""
     return [cut(OUTSIDE, (224, 193, 254, 223)), cut(OUTSIDE, (224, 229, 254, 256))]
 
@@ -68,7 +68,7 @@ def footing(width: int) -> Image.Image:
 def woodstack() -> Image.Image:
     """Split firewood stacked three wide on a stone footing against the wall stub. The stones keep the world's cool
     grey and only the wood takes the made things' warm grade, so the layer is not baked."""
-    pyramid, pair = _firewood()
+    pyramid, pair = firewood()
     wood = Image.new("RGBA", (pyramid.width * 2 + pair.width, pyramid.height))
     wood.alpha_composite(pyramid, (0, 0))
     wood.alpha_composite(pair, (pyramid.width - 2, wood.height - pair.height))

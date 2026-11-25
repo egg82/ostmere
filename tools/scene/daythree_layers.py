@@ -95,13 +95,16 @@ def ground_light_layers() -> list[Layer]:
 
 
 def made_layers() -> list[Layer]:
-    """The bay and the rack's roof, and the watch fire at the gap: the ring when its first stage is done, lit at the
-    second. The bay and the ring show their ghosts while they are being built."""
+    """The bay, the rack's roof, the wood stack on the larder floor and the pot shelf by the hearth, and the watch fire
+    at the gap: the ring when its first stage is done, lit at the second. The bay and the ring show their ghosts while
+    they are being built."""
     bay, ring = made.bay(), fire.watch_ring()
     return [
         Layer(id="bay", img=bay, when=BAY_BUILT),
         Layer(id="bay_ghost", img=dayone.ghost(bay), when="running:make_bay|running:n2_build_bay", until=BAY_BUILT),
         *_staged("rack_roof", [made.rack_roof(n) for n in (1, 2)], [1, 2]),
+        *_staged("wood_stack", [made.wood_stack(n) for n in (1, 2, 3)], [1, 2, 3]),
+        *_staged("pot_shelf", [made.pot_shelf(n) for n in (1, 2, 3)], [1, 2, 3]),
         Layer(id="watch_ring", img=ring, when=WATCH_RING, open_fire=True),
         Layer(id="watch_ring_ghost", img=dayone.ghost(ring), when="running:watch_fire|running:n1_build_watch",
               until=WATCH_RING, open_fire=True),
