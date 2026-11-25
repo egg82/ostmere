@@ -7,13 +7,15 @@ import { UI } from "../game/text";
 import { sample } from "../game/clock";
 import { el } from "./dom";
 
-/** The rows, or none until the dry run answers. `afterHead` names the second column ("after", "if run"). */
-export function storeRows(catalog: Catalog, view: View, after: View | null, afterHead: string): HTMLElement[] {
+/** The rows, or none until the dry run answers. `afterHead` names the second column ("after", "if run"). `touched`: the
+ * stores the edit's cards make or cost, for an edit StoreRow.mixed does not describe (a person's split, which is the town's
+ * mix, where mixed is the hands'). */
+export function storeRows(catalog: Catalog, view: View, after: View | null, afterHead: string, touched?: ReadonlySet<string>): HTMLElement[] {
   if (after === null) return [];
   const was = new Map(view.store_rows.map((r) => [r.store, r]));
   const shown = after.store_rows.flatMap((r) => {
     const before = was.get(r.store);
-    return r.store !== catalog.campStore && before && (r.mixed || before.per_hour !== r.per_hour || before.heading !== r.heading)
+    return r.store !== catalog.campStore && before && ((touched ? touched.has(r.store) : r.mixed) || before.per_hour !== r.per_hour || before.heading !== r.heading)
       ? [{ r, before }] : [];
   });
   if (shown.length === 0) return [];
@@ -30,8 +32,13 @@ export function storeRows(catalog: Catalog, view: View, after: View | null, afte
   })];
 }
 
+/** The stores these cards make or cost, for storeRows' `touched`. */
+export function touchedBy(catalog: Catalog, cards: Iterable<string>): Set<string> {
+  return new Set([...cards].flatMap((card) => [...(catalog.cards.get(card)?.makes ?? []), ...(catalog.cards.get(card)?.takes ?? [])]));
+}
+
 /** What the store holds of its cap at the view's time ("18 / 18"), as its ledger line reads; empty with no line. */
-function heldWords(catalog: Catalog, view: View, store: string): string {
+export function heldWords(catalog: Catalog, view: View, store: string): string {
   const line = view.ledger.find((l) => l.store === store);
   return line ? catalog.format.amount(sample(line.segment, view.at), line.cap) : "";
 }

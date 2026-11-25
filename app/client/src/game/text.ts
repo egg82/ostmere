@@ -6,6 +6,7 @@ import { GOAL_ROW_KEYS } from "./goalkeys";
 import { LESSON_KEYS } from "./lessonkeys";
 import { CHRONICLE_KEYS } from "./chronkeys";
 import { PRESTIGE_KEYS } from "./prestigekeys";
+import { TOWN_KEYS } from "./townkeys";
 import { REMINDER_KEYS } from "./reminderkeys";
 import { RULE_KEYS } from "./rulekeys";
 import { TIME_KEYS } from "./timewords";
@@ -86,6 +87,7 @@ export const UI = {
   ...TIME_KEYS,
   ...ASK_KEYS,
   ...PRESTIGE_KEYS,
+  ...TOWN_KEYS,
   ...REMINDER_KEYS,
   townTitle: "ui.town.title",   // the camp's shown name, one home: its tab, its view's and rules' heading, its mix's label
   townIdle: "ui.town.idle",   // "{person}": a person's unshared remainder

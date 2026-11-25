@@ -279,6 +279,7 @@ only_player = "station"
 lane = "smoke"
 presentation = "action"
 label_key = "c_smoke_catch"
+upside_key = "up_smoked"
 work_s = 80
 skill = "cooking"
 xp_per_hour = 18
@@ -294,6 +295,7 @@ only_player = "station"
 lane = "smoke"
 presentation = "action"
 label_key = "c_smoke_roots"
+upside_key = "up_smoked"
 work_s = 80
 skill = "cooking"
 xp_per_hour = 18
@@ -307,6 +309,7 @@ id = "cook_roots"
 only_player = "self"
 presentation = "action"
 label_key = "c_roast_roots"
+upside_key = "up_cook_roots"
 work_s = 4
 inputs = [{ store = "roots", items = 3 }]
 requires = [{ test = "at_least", subject_kind = "card_count", id = "strike_fire", value = 1 }]
@@ -870,6 +873,7 @@ cap_items = 24
 id = "weave_wattle"
 presentation = "action"
 label_key = "c_weave_wattle"
+upside_key = "up_weave_wattle"
 work_s = 180
 inputs = [{ store = "damp_wood", items = 18 }]
 outcome = { stores = [{ store = "wattle", items = 1 }] }
@@ -1137,6 +1141,7 @@ c_build_larder = "Build a larder"
 c_build_smoke_rack = "Build a smoking rack"
 c_look_over_camp = "Walk round the camp"
 c_smoke_catch = "Smoke the catch"
+up_smoked = "smoked stock for the stew and the hunts"
 c_smoke_roots = "Smoke roots"
 c_take_stock = "Take stock"
 up_lean_to = "{pct} energy drain"
@@ -1177,6 +1182,7 @@ l_camp_5 = "you cut the strips thinner. the same catch goes further."
 l_camp_6 = "the larder holds half more than it did. you'll need it."
 store_wattle = "wattle"
 c_weave_wattle = "Weave wattle"
+up_weave_wattle = "wattle for the fire screen"
 c_screen_fire = "Build a screen round the fire"
 up_screen_fire = "{pct} warmth lost to the cold"
 l_screen_1 = "a wattle hurdle staked beside the fire. the heat stops at it."

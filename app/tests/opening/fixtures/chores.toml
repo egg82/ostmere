@@ -25,6 +25,7 @@ makes = [{ store = "t_heap", items_per_hour = 1 }]
 id = "t_clear"
 presentation = "action"
 label_key = "t_c_clear"
+upside_key = "t_up"
 work_s = 60
 costs = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -32,6 +33,7 @@ costs = [{ store = "t_heap", items_per_hour = 30 }]
 id = "t_other"
 presentation = "action"
 label_key = "t_c_other"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "dry_wood", items_per_hour = 30 }]
 
@@ -62,6 +64,7 @@ when = { test = "after_time", value = 50400 }
 outcome = { unlocks = [{ unlock_kind = "feature", id = "t_next" }], retire_orders = ["t_clear"] }
 
 [text]
+t_up = "what it is for"
 t_s_pool = "Season stock"
 t_s_heap = "Heap"
 t_a_pile = "Piling up"

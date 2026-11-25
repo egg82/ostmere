@@ -287,7 +287,10 @@ jobs:
   # artifacts; test_weektwo_saved.py fails if a saved file is in no part. The jobs that read the saves fail, not replay,
   # when they are missing or stale (ASHFALL_REQUIRE_SAVED). Typical's rebased saves are the one exception: they replay
   # typical's decisions from its saved ends, so `chapter-saves-rebased` runs once typical's part has written them
-  # (replaying typical's play beside them would pay the play twice).
+  # (replaying typical's play beside them would pay the play twice). A route whose chain runs past one job's cap is
+  # written in links (chapter_saves.LINKS), each its own job after the one before: `chapter-saves-sharp-a` to `-c`, each
+  # starting from the ends the link before uploaded. They share these steps (the YAML anchor), set by PART, NAMES and
+  # AFTER (the part whose artifact a link starts from).
   chapter-saves:
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -299,8 +302,6 @@ jobs:
         include:
           - part: typical
             names: typical
-          - part: sharp
-            names: sharp
           - part: whenever
             names: whenever babysitter
           - part: readings-early
@@ -341,7 +342,10 @@ jobs:
             names: readings-twentythree
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
-    steps:
+      PART: ${{ matrix.part }}
+      NAMES: ${{ matrix.names }}
+      AFTER: ""
+    steps: &chapter-saves-steps
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -357,17 +361,57 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: chapter-saves-cache
-          key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ matrix.part }}
-      - name: Saves, from the cache or written (${{ matrix.names }})
+          key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ env.PART }}
+      - name: The ends this link starts from (${{ env.AFTER }})
+        if: env.AFTER != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: chapter-saves-${{ env.AFTER }}
+          path: chapter-saves
+      - name: Saves, from the cache or written (${{ env.NAMES }})
         working-directory: app
         run: |
-          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" ${{ matrix.names }}
+          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" $NAMES
           test -s "$ASHFALL_SAVES_ROOT"/*/manifest.json
       - uses: actions/upload-artifact@v4
         with:
-          name: chapter-saves-${{ matrix.part }}
+          name: chapter-saves-${{ env.PART }}
           path: chapter-saves/
           retention-days: 1
+
+  chapter-saves-sharp-a:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: sharp-a
+      NAMES: sharp-a
+      AFTER: ""
+    steps: *chapter-saves-steps
+
+  chapter-saves-sharp-b:
+    needs: chapter-saves-sharp-a
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: sharp-b
+      NAMES: sharp-b
+      AFTER: sharp-a
+    steps: *chapter-saves-steps
+
+  chapter-saves-sharp-c:
+    needs: chapter-saves-sharp-b
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: sharp-c
+      NAMES: sharp-c
+      AFTER: sharp-b
+    steps: *chapter-saves-steps
 
   chapter-saves-rebased:
     needs: chapter-saves
@@ -457,7 +501,7 @@ jobs:
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
-    needs: [chapter-saves, chapter-saves-rebased, playthrough-week-one]
+    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-rebased, playthrough-week-one]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -503,7 +547,7 @@ jobs:
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves, chapter-saves-rebased, shards-cover]
+    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-rebased, shards-cover]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -714,6 +758,9 @@ jobs:
       - playthrough-smoke
       - playthrough
       - chapter-saves
+      - chapter-saves-sharp-a
+      - chapter-saves-sharp-b
+      - chapter-saves-sharp-c
       - chapter-saves-rebased
       - playthrough-week-one
       - playthrough-week-one-saved
@@ -734,8 +781,9 @@ jobs:
           echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" '
             ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "pyright",
              "client", "app-image"] as $per_pr
-            | ["playthrough", "chapter-saves", "chapter-saves-rebased", "playthrough-week-one",
-               "playthrough-week-one-saved", "playthrough-week-two"] as $full_run
+            | ["playthrough", "chapter-saves", "chapter-saves-sharp-a", "chapter-saves-sharp-b", "chapter-saves-sharp-c",
+               "chapter-saves-rebased", "playthrough-week-one", "playthrough-week-one-saved",
+               "playthrough-week-two"] as $full_run
             | (["changes"] + (if $code == "true" then $per_pr else ["docs"] end)
                + (if $full == "true" then $full_run else [] end)) as $wanted
             | ($code == "true" or $code == "false")

@@ -124,6 +124,15 @@ up for failure with poor wording or duplicate cards or choices"). Every option i
 An option that fails one of these is left out, or reworded until it holds; leaving it in with a caveat beside it is
 not a fix.
 
+## Tools early, choices kept
+
+**Quality-of-life tools and near-perfect information arrive with the thing they serve** (owner, 2026-11-24): in a
+months-long story-driven idle game the player expects them almost at once, so a rule, queue option or info row is
+never held back until the chore was done by hand; that reads as a chore, not a reward. The fun is guarded by
+keeping the decision with the player, never by delaying the tool: a rule the player writes is their decision, the
+game picking for them is not, so automation never chooses or switches on its own. Anything locked anyway ships with
+a lead-in (a hint or a lesson) at the moment it opens, or the player misses it.
+
 ## No blind permanent choices
 
 **No option is perfect; every choice is a tradeoff**, down to which of two small things you build

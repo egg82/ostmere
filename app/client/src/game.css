@@ -450,6 +450,11 @@ p.catching-up[hidden] { display: none; }
 .totals-after.unknown { color: var(--ink-dim); }
 .totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
 .totals-runs { font-size: var(--t-meta); color: var(--ink); }
+.cond-watched { margin: 0 0 .3rem; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the watched store now, over the rule (ui/condstore.ts) */
+.cond-watched[hidden] { display: none; }
+.person-stores { margin-top: .6rem; }
+.person-stores.at-rest .totals-row { grid-template-columns: minmax(0, 1fr) 6.5rem; }   /* a person's split at rest: rates now, no after (ui/personmix.ts) */
+.person-stores.at-rest .totals-row > :nth-child(n+3) { display: none; }
 .goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
 .goal-binds.heading-turned { color: var(--ember-hot); }   /* a store whose heading the edit turns (ui/storetimes.ts) */
 .goal-binds.heading-turned.empties { color: var(--alarm); }
@@ -1038,6 +1043,7 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-face { grid-area: face; display: flex; }
 .person-row > .town-who { grid-area: who; }
 .person-row > .town-split-of { grid-area: split; }
+.town-split-of > .wasted-line { margin-top: .25rem; color: var(--ember-hot); }
 .person-row > .running-now { grid-area: now; }
 .person-row > .lane-change { grid-area: change; }
 .person-row > .lane-bar { grid-area: track; margin-top: .3rem; }
@@ -1069,6 +1075,23 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .town-key-item.stopped::before { filter: saturate(.15) brightness(.6); }
 .person-then { display: block; margin-top: .3rem; }   /* "then Forage 100%": the split a person goes back to once their one-off lands */
 .town-key-then { color: var(--ink); }
+/* A person with nothing to do (ui/stucknote.ts): it takes the place of the split that runs now, which would only grey
+   every card; what each held card is stopped on, then the tasks to put them on, each a 44 px control */
+.person-row > .stuck-note { grid-area: now; }
+.person-row.stuck > .running-now { display: none; }
+.stuck-note { display: grid; gap: .35rem; margin-top: .3rem; }
+.stuck-note[hidden] { display: none; }
+.stuck-why { display: grid; gap: .15rem; }
+.stuck-line { margin: 0; font-size: var(--t-meta); color: var(--ink); }
+.stuck-label { font-size: var(--t-meta); color: var(--ink-dim); }
+.stuck-label[hidden] { display: none; }
+.stuck-offers { display: flex; flex-wrap: wrap; gap: .4rem; }
+.stuck-offers button { min-height: 2.75rem; padding: 0 .8rem; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi); cursor: pointer; }
+.stuck-offers button:hover { background: var(--press); }
+.stuck-offers .stuck-offer { border-left: 3px solid var(--hue); }
+.stuck-offers .stuck-more { color: var(--ink); }
+.town-doing.stuck, .town-doing.wasted { color: var(--ember-hot); }
+.card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/wasted.ts) */
 .town-ident { display: flex; align-items: baseline; gap: .6rem; margin-right: auto; }
 .town-count { font-size: var(--t-meta); color: var(--ink); }   /* a group's head count, beside its label */
 .town-face.stack .ask-face + .ask-face { margin-left: -.45rem; }   /* a group's members' faces overlap into one stack */
