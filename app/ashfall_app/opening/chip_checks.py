@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from .refs import fail
 
 if TYPE_CHECKING:
-    from .entries import OrderCardEntry
+    from .order_entries import OrderCardEntry
     from .schema import Opening
 
 

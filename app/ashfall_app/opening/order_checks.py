@@ -8,7 +8,7 @@ from .offer_caps import Chain, offer_cap
 from .refs import fail, need
 
 if TYPE_CHECKING:
-    from .entries import OrderCardEntry
+    from .order_entries import OrderCardEntry
     from .schema import Opening
 
 

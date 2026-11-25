@@ -15,7 +15,7 @@ from ashfall_app.engine import (
     TapCard, next_event,
 )
 from ashfall_app.opening.convert import condition
-from ashfall_app.opening.entries import OrderCardEntry
+from ashfall_app.opening.order_entries import OrderCardEntry
 from tests.opening.playthrough import Player, opening
 
 END_READ_S = 20
