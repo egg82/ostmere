@@ -33,3 +33,6 @@ hands.update(withSpent(true));
 expect("spent, another card gains: still names the store", status(), "Dead wood is used up");
 hands.update(base);
 expect("refilled: the note goes", status(), "");
+const town = { ...base, cards: [...base.cards, { ...spent, card: "chop", run: "spent" as const, spent_store: "wood" }] };   // chop: the helper's
+hands.update(town);
+expect("a townsperson's spent card is not the hands' note", status(), "");
