@@ -1,0 +1,7 @@
+[
+  {"kind": "study", "id": "bracket", "required": true, "text": ["bracket, cut"]},
+  {"kind": "study", "id": "break", "text": ["top, snapped"]},
+  {"kind": "crossed", "text": []},
+  {"kind": "label", "anchor": [352, 398], "text": ["brackets"]},
+  {"kind": "label", "anchor": [300, 176], "text": ["bark gone"]}
+]
