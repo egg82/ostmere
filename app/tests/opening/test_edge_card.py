@@ -37,14 +37,21 @@ def shipped() -> list[str]:
     return carriers(CHAPTERS)
 
 
+@pytest.fixture(scope="module")
+def last_chapter_unshipped() -> list[str]:
+    """The card carriers with the last chapter that has an end_feature left out: the second full load the move test reads."""
+    last = max(i for i, p in enumerate(CHAPTERS) if with_end(p).end is not None)
+    return carriers((*CHAPTERS[:last], *CHAPTERS[last + 1:]))
+
+
 def test_one_feature_carries_the_card_the_last_shipped_chapters_end_feature(shipped: list[str]):
     assert shipped == [last_end(CHAPTERS)]
 
 
-def test_a_chapter_moving_into_shipped_takes_the_card_with_it(shipped: list[str]):
+def test_a_chapter_moving_into_shipped_takes_the_card_with_it(shipped: list[str], last_chapter_unshipped: list[str]):
     """Shipping the last chapter with an end_feature moved the card off the one before it, with no hand edit."""
     last = max(i for i, p in enumerate(CHAPTERS) if with_end(p).end is not None)
-    before = carriers((*CHAPTERS[:last], *CHAPTERS[last + 1:]))
+    before = last_chapter_unshipped
     after = shipped
     assert len(before) == 1 and len(after) == 1
     assert after == [with_end(CHAPTERS[last]).end] and after != before
