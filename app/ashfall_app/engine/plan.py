@@ -19,7 +19,8 @@ from .state import Save
 
 def is_dead(save: Save, rules: Rules, verb: OrderVerb) -> bool:
     """A switch to a greyed mix, a tap of a completed card, or an answer to an answered offer: a queue entry holding
-    one is passed over and kept (an answer's settles at once: schedule.settled_entries). An AnswerKind is never dead."""
+    one is passed over and kept, but for a tap's and an answer's, which pop at once (schedule.settled_entries). An
+    AnswerKind is never dead."""
     if isinstance(verb, AnswerKind):
         return False
     if isinstance(verb, SwitchMix):

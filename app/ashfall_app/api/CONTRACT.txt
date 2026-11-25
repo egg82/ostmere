@@ -1064,7 +1064,7 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
   Content.limits.max_queue entries; a town mix is 422 invalid_decision), and every rule below holds for any queue
   entry whose verb is a switch_mix, whatever its until.
   - Controlling: the first entry of view.queue whose verb is not dead (a switch_mix to a mix in view.greyed_mix_ids, a
-    tap_card of a completed card) controls. While a switch_mix entry controls and no order's mix runs (view.mix_order
+    tap_card of a completed card, which leaves view.queue at that instant) controls. While a switch_mix entry controls and no order's mix runs (view.mix_order
     null), view.running_mix_id is that entry's mix_id; view.active_mix_id, the player's own mix, is never written by
     the queue. An order whose mix runs takes the hands over the stint (view.mix_order set), and the stint's mix runs
     again when that order lets go.
@@ -1104,9 +1104,11 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
     (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
     store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
   - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed or a card would take
-    When ready): pressed, it lists first each step that When ready takes, ready now ones included (blocker null),
-    worded ui.queue.when_ready, whose pick sends exactly the entry When ready sends; a card's own When ready is offered
-    on these only while it cannot be tapped (unready, or ready on a lane whose running_card is another card). Then each
+    When ready): pressed, it lists first each card the queue takes (one not on a ruled lane, after the end, with room
+    under its cap for one more run than those planned): steps and action cards, ready now ones and a card a lane runs
+    included, worded ui.queue.when_ready, whose pick appends one run of it; a card's own When ready, which sends the
+    same entry, is offered on a step only (not an action card), not queued already and not the card its lane runs, while
+    it cannot be tapped (unready, or ready on a lane whose running_card is another card). Then each
     step that would take it but for its blocker (no ready time kept,
     or a store the view has not unlocked), not pickable, worded as the card draws its blocker's need (ui.card.needs,
     ui.card.opens, a skill level or step; a step whose card draws nothing for its blocker is left out); then the saved
@@ -1150,10 +1152,23 @@ A LANE RUN BY RULES
   - An answer may also put a one-off of the hands at the front of view.queue, as the page's own When ready entry
     (tap_card c until c's card_count reaches its next completion): drawn as Next like any entry, removable the same
     way, gone once c completes.
-  - In Next, a tap_card entry whose card is some view.lanes entry's running_card is drawn with ui.queue.running in
-    place of Remove: it stays in view.queue until that tap completes, and set_queue without it would not stop the work.
-  - The other Next entries may be reordered: one set_queue with the same entries (each verb and until unchanged) in the
-    new order, the entries a lane runs at their own indices.
+  - A tap_card entry is one run of its card: tap_card c until c's card_count reaches one past the runs planned before
+    it (c's completions, plus 1 while a lane's running_card is c, or the until of c's last entry in view.queue if
+    higher), so an entry for a card a lane runs now adds a run after that tap. More runs are more entries. An entry is
+    checked when its turn comes: one whose card cannot run then waits (engine DESIGN.txt, "Never ready"), and one whose
+    card reached its cap leaves view.queue at that instant. Each entry's runs are its until less the runs planned
+    before it, the tap under way included.
+  - In Next, a tap_card entry that adds no run after the tap a lane runs (its card some view.lanes entry's
+    running_card, its until at most that card's completions + 1) is drawn with ui.queue.running in place of Remove: it
+    stays in view.queue until that tap completes, and set_queue without it would not stop the work. Each other row of
+    one card is worded ui.queue.once {card}, or ui.queue.runs {card}{n} for n runs: entries of one card one after
+    another are one row, whose Remove (ui.queue.remove_one when the row holds more than one) sends the queue without
+    its last entry, and whose ≡ (aria ui.queue.move_one) moves that one entry before the row above or after the row
+    below.
+  - The other Next entries may be reordered: one set_queue with the same entries in the new order, the entries a lane
+    runs at their own indices; each card's tap_card untils are given back to its entries in the new order, least
+    first, and a Remove gives the card's entries left its untils less the highest, so the runs left still count from
+    the tap under way.
   THE CLIENT MAY, for each lane in view.lanes whose LaneInfo.ruled is true:
   - draw it as a row under the hands strip, the hands strip's shape: its label, what it does (the label of
     running_card, or ui.lane.idle while free), the running card's bar (its Card in view.cards, sampled as any bar),

@@ -1,6 +1,6 @@
 """Settled queue entries ("Greyed mix" in part "CARDS", invariant 40): a dead entry whose `until` holds for good (an
 AfterTime, or an AtLeast on a card count, a skill level or an unlock, once true) is popped, since a revival would pop
-it at once. So the page's "when ready" entry for a one-off, TapCard(c) until c's count reaches 1, pops at the instant
+it at once; and a tap of a completed card is popped whatever its `until` (one run per entry: none is left to plan). So the page's "when ready" entry for a one-off, TapCard(c) until c's count reaches 1, pops at the instant
 c completes, though c is dead from that instant; and a save written before that rule recovers when it is next
 resolved."""
 from dataclasses import replace
@@ -17,7 +17,7 @@ from ashfall_app.engine import (
 from ashfall_app.engine.gates import is_unlocked
 from ashfall_app.engine.schedule import events
 from cards_gen import Scenario, few, play, scenario_st, timeline, try_decide
-from cards_world import K, Q, done, rules, running_mix, with_mix
+from cards_world import K, Q, done, rules, running_mix, save_mix, with_mix
 
 Y = StoreId("y")
 C, D, M = CardId("c"), CardId("d"), CardId("m")
@@ -61,12 +61,13 @@ def test_a_switch_entry_that_dies_as_its_after_time_arrives_pops():
 
 
 def test_a_dead_entry_settles_when_its_after_time_arrives():
-    """A dead entry whose `until` cannot fall but does not hold yet is watched: its AfterTime(500) is an event, and it
+    """A dead switch whose `until` cannot fall but does not hold yet is watched: its AfterTime(500) is an event, and it
     pops then, while the live entry behind it keeps control."""
     r = world()
-    s = advance(decide(with_mix(new_save(r), r, 0, {M: 10_000}), r, 0, TapCard(C)), r, 200)
-    tail = QueueEntry(TapCard(D), AfterTime(10**9))
-    s = decide(s, r, 200, SetQueue((QueueEntry(TapCard(C), AfterTime(500)), tail)))
+    held = save_mix(with_mix(new_save(r), r, 0, {M: 10_000}), r, 0, {C: 10_000}, "mc")   # greyed once c completes
+    s = advance(decide(held, r, 0, TapCard(C)), r, 200)
+    tail = QueueEntry(TapCard(M), AfterTime(10**9))   # uncapped: it is still live at 500
+    s = decide(s, r, 200, SetQueue((QueueEntry(SwitchMix(MixId("mc")), AfterTime(500)), tail)))
     assert len(s.queue) == 2 and any(e.time == 500 and e.kind is EventKind.QUEUE_POP for e in events(s, r))
     assert len(advance(s, r, 499).queue) == 2
     assert advance(s, r, 500).queue == (tail,)
@@ -101,11 +102,12 @@ def test_a_stale_entry_in_a_save_pops_when_it_is_rebased():
 
 
 def _settled(s: Save, r: Rules, e: QueueEntry) -> bool:
-    """Read from the contract, not the engine's helper: the entry is dead (a tap of a completed card, a switch to a
-    greyed mix) and its `until` holds and is of a kind that cannot fall."""
+    """Read from the contract, not the engine's helper: the entry taps a completed card, or is a switch to a greyed mix
+    whose `until` holds and is of a kind that cannot fall."""
     v = view(s, r)
-    dead = (e.verb.mix in v.greyed_mixes) if isinstance(e.verb, SwitchMix) else \
-        isinstance(e.verb, TapCard) and e.verb.card in {c.card for c in v.completed}   # these worlds hold no offers
+    if isinstance(e.verb, TapCard):   # these worlds hold no offers
+        return e.verb.card in {c.card for c in v.completed}
+    dead = isinstance(e.verb, SwitchMix) and e.verb.mix in v.greyed_mixes
     u = e.until
     if isinstance(u, AfterTime):
         holds = s.time >= u.time
@@ -152,11 +154,10 @@ def test_a_dead_entry_whose_until_cannot_fall_settles_at_once(until: Condition):
 
 
 @pytest.mark.parametrize("until", CAN_FALL, ids=["store-least", "count-most", "store-most"])
-def test_a_dead_entry_whose_until_holds_but_can_fall_is_kept(until: Condition):
+def test_a_tap_of_a_completed_card_goes_though_its_until_can_fall(until: Condition):
     r = world()
-    queue = (QueueEntry(TapCard(C), until), QueueEntry(TapCard(D), AfterTime(10**9)))
-    s = decide(_done_c(r), r, 200, SetQueue(queue))
-    assert s.queue == queue and advance(s, r, 3000).queue == queue
+    tail = QueueEntry(TapCard(D), AfterTime(10**9))
+    assert decide(_done_c(r), r, 200, SetQueue((QueueEntry(TapCard(C), until), tail))).queue == (tail,)
 
 
 def test_a_players_switch_under_a_queue_mix_sets_only_the_mix_that_comes_back():
