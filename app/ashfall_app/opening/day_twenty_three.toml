@@ -70,9 +70,10 @@ n13 = [{ after = { unlock_kind = "feature", id = "sorrel_named" }, label_key = "
 
 # ---------- I5 and O-fiddle: a man and his wife ----------
 
-# The tier's count at 175 meals, B19 + 12 h, so SL31 has the return before it. Both join on either answer, their first work by the answer (the kind's
-# roles, day_eighteen.toml); what the answer keeps is D-147's size: the rack's smoke a tenth more, or all clearing a
-# tenth faster. The table feeds two more.
+# The tier's count at 175 meals, B19 + 12 h, so SL31 has the return before it. Both join on either answer, their first
+# work by the answer (the kind's roles, day_eighteen.toml) and all their everyday work with it (the pot, the stakes,
+# the road's bed, the walk, the fish and the wash), one moment; what the answer keeps is D-147's size: the rack's smoke
+# a tenth more, or all clearing a tenth faster. The table feeds two more.
 [[offers]]
 id = "o_fiddle"
 text_key = "o_fiddle"
@@ -89,7 +90,22 @@ role = "food"
 [offers.answers.outcome]
 line_keys = ["l_fiddle_food"]
 stores = [{ store = "arrivals", items = 2 }]
-unlocks = [{ unlock_kind = "card", id = "n14_fog_fish" }, { unlock_kind = "card", id = "n15_fungus_stew" }]
+unlocks = [
+  { unlock_kind = "action", id = "n14_eating" },
+  { unlock_kind = "action", id = "n15_eating" },
+  { unlock_kind = "card", id = "n14_fungus_stew" },
+  { unlock_kind = "card", id = "n14_stakes" },
+  { unlock_kind = "card", id = "n14_clear_road" },
+  { unlock_kind = "card", id = "n14_walk_ashwood" },
+  { unlock_kind = "card", id = "n14_fog_fish" },
+  { unlock_kind = "card", id = "n14_wash_meat" },
+  { unlock_kind = "card", id = "n15_fungus_stew" },
+  { unlock_kind = "card", id = "n15_stakes" },
+  { unlock_kind = "card", id = "n15_clear_road" },
+  { unlock_kind = "card", id = "n15_walk_ashwood" },
+  { unlock_kind = "card", id = "n15_fog_fish" },
+  { unlock_kind = "card", id = "n15_wash_meat" },
+]
 joins = [
   { lane = "n14", mix = "town:camp", card = "n14_fog_fish", own_split = true },
   { lane = "n15", mix = "town:camp", card = "n15_fungus_stew", own_split = true },
@@ -107,7 +123,22 @@ role = "build"
 [offers.answers.outcome]
 line_keys = ["l_fiddle_build"]
 stores = [{ store = "arrivals", items = 2 }]
-unlocks = [{ unlock_kind = "card", id = "n14_clear_road" }, { unlock_kind = "card", id = "n15_stakes" }]
+unlocks = [
+  { unlock_kind = "action", id = "n14_eating" },
+  { unlock_kind = "action", id = "n15_eating" },
+  { unlock_kind = "card", id = "n14_fungus_stew" },
+  { unlock_kind = "card", id = "n14_stakes" },
+  { unlock_kind = "card", id = "n14_clear_road" },
+  { unlock_kind = "card", id = "n14_walk_ashwood" },
+  { unlock_kind = "card", id = "n14_fog_fish" },
+  { unlock_kind = "card", id = "n14_wash_meat" },
+  { unlock_kind = "card", id = "n15_fungus_stew" },
+  { unlock_kind = "card", id = "n15_stakes" },
+  { unlock_kind = "card", id = "n15_clear_road" },
+  { unlock_kind = "card", id = "n15_walk_ashwood" },
+  { unlock_kind = "card", id = "n15_fog_fish" },
+  { unlock_kind = "card", id = "n15_wash_meat" },
+]
 joins = [
   { lane = "n14", mix = "town:camp", card = "n14_clear_road", own_split = true },
   { lane = "n15", mix = "town:camp", card = "n15_stakes", own_split = true },
@@ -146,29 +177,6 @@ told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_fiddle" }, label_key = "lane_n15_named" }]
 name_key = "name_n15"
 
-# Their everyday work from the join: the pot, the stakes, the road's bed, the walk, the fish and the wash.
-# Its own trigger, as the answers' outcomes are released.
-[[triggers]]
-id = "t_fiddle_settles"
-when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_fiddle", value = 1 }
-[triggers.outcome]
-unlocks = [
-  { unlock_kind = "action", id = "n14_eating" },
-  { unlock_kind = "action", id = "n15_eating" },
-  { unlock_kind = "card", id = "n14_fungus_stew" },
-  { unlock_kind = "card", id = "n14_stakes" },
-  { unlock_kind = "card", id = "n14_clear_road" },
-  { unlock_kind = "card", id = "n14_walk_ashwood" },
-  { unlock_kind = "card", id = "n14_fog_fish" },
-  { unlock_kind = "card", id = "n14_wash_meat" },
-  { unlock_kind = "card", id = "n15_fungus_stew" },
-  { unlock_kind = "card", id = "n15_stakes" },
-  { unlock_kind = "card", id = "n15_clear_road" },
-  { unlock_kind = "card", id = "n15_walk_ashwood" },
-  { unlock_kind = "card", id = "n15_fog_fish" },
-  { unlock_kind = "card", id = "n15_wash_meat" },
-]
-
 [[standing]]
 id = "n14_eating"
 label_key = "action_n14_eating"
@@ -183,9 +191,9 @@ while_running = [{ lane = "n15", amount_bp = 1500 }]
 
 # ---------- I6: the cache torn up, and the post ----------
 
-# Fourteen walks, B19 + 16 h, a return after O-fiddle's. The walks' cache is rooted out: six smoked over two hours on a drain of its own that
-# pauses at empty (the visitor's idiom), never a store a gate reads. The post (P4) shows with its order card, the warm
-# patch goes on the map, and the stretch's aim turns to it.
+# Fourteen walks, B19 + 16 h, a return after O-fiddle's. The walks' cache is rooted out: six smoked over two hours on
+# a drain of its own that pauses at empty (the visitor's idiom), never a store a gate reads. The post (P4) shows with
+# its order card, the warm patch goes on the map, and the stretch's aim turns to it.
 [[triggers]]
 id = "t_cache"
 when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 14 }
@@ -424,8 +432,8 @@ id = "t_dawn_25"
 when = { test = "after_time", value = 2070000 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_25" }] }
 
-# Lucy asks the room with SL33, the season's sixty-fourth hour, once the ring is up: A39 shown unready with its countdown,
-# queueable When ready. The card is the yes; the choice is when (D-159).
+# Lucy asks the room with SL33, the season's sixty-fourth hour, once the ring is up: A39 shown unready with its
+# countdown, queueable When ready. The card is the yes; the choice is when (D-159).
 [[triggers]]
 id = "t_go_ask"
 when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 64 }
