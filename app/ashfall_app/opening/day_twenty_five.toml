@@ -285,6 +285,7 @@ label_key = "c_post_door"
 upside_key = "up_post_door"
 work_s = 2400
 cap = 1
+glows = true
 inputs = [{ store = "pelt", items = 3 }, { store = "cord", items = 2 }]
 
 # Day nineteen's held marker filled in, lifted by the door.

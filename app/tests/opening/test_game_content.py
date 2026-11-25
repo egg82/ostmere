@@ -162,7 +162,7 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
         ["stand_up", "strike_fire", "give_stool", "walk_edge", "track_end", "bank_hearth"],
         (DAY_FOUR, ["sit_up_5"]), (DAY_FIVE, ["hand_on_stone"]), (B7, ["bank_fire_6", "b7_stand"]), (DAY_SIX, ["sit_fire_7"]), (DAY_ELEVEN, ["keep_vigil"]),
         (DAY_TWELVE, ["sit_last_night"]), (DAY_SIXTEEN, ["try_stone"]), (DAY_NINETEEN, ["sit_road_end"]),
-        (DAY_TWENTY_THREE, ["go_wallow"]))
+        (DAY_TWENTY_THREE, ["go_wallow"]), (DAY_TWENTY_FIVE, ["post_door"]))
     roots = next(c for c in content.order_cards if c.store == "roots")
     assert roots.offered_after is not None and (roots.offered_after.category, roots.offered_after.id) == ("action", "eating")
     assert next(c for c in content.order_cards if c.store == "dry_wood").offered_after is None
