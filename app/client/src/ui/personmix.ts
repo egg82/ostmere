@@ -11,7 +11,7 @@ import { UI } from "../game/text";
 import { crewOf, dropTownCard, given, joinTownCard, soloOf, townEdit, townSaveDecisions, withTownShares } from "../game/town";
 import { el, setText } from "./dom";
 import { MixPreview } from "./mixpreview";
-import { storeRows } from "./storetimes";
+import { storeRows, touchedBy } from "./storetimes";
 import { tapBar } from "./handsheld";
 import type { PartContext } from "./part";
 import { ShareBar, type SegmentSpec } from "./sharebar";
@@ -126,7 +126,7 @@ export class PersonMix {
     const view = this.view;
     if (!view) return;
     const { catalog } = this.ctx;
-    const touched = new Set([...this.shares().keys()].flatMap((card) => [...(catalog.cards.get(card)?.makes ?? []), ...(catalog.cards.get(card)?.takes ?? [])]));
+    const touched = touchedBy(catalog, this.shares().keys());
     this.stores.classList.toggle("at-rest", this.after === null);   // no edit under the finger: the now column alone
     this.stores.replaceChildren(...storeRows(catalog, view, this.after ?? view, catalog.text.get(UI.after), touched));
   }

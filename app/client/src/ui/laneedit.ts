@@ -2,7 +2,8 @@
 // opened by the lane row's Change or an always rule's words. It picks the task only, from the lane's own cards in
 // view.cards; the rule's condition stays as it is. Save sends set_orders with that rule's tap_card changed in place,
 // or a new always rule appended. Its parts are the condition editor's (condition.ts): the head, the Do row (condrows.ts)
-// and the pinned foot with the sentence and Save.
+// and the pinned foot with the sentence and Save. Under the tasks, the stores the chosen task makes or costs (the lane's
+// tasks, until one is chosen): held / cap, rate now and where it heads, the person page's rows (storetimes.ts).
 import type { Card, Order, View } from "../api/types";
 import { ALWAYS, alwaysWords, laneTask } from "../game/lanes";
 import { conditionWords } from "../game/orders";
@@ -12,6 +13,7 @@ import { sectionHead } from "./condrows";
 import { pickRow } from "./cardpick";
 import { sectioned } from "../game/cardsections";
 import { el, setText, tapFeedback } from "./dom";
+import { storeRows, touchedBy } from "./storetimes";
 import type { PartContext } from "./part";
 
 /** What the lane editor is on: the lane, and the rule it changes (null: a new always rule). */
@@ -21,6 +23,7 @@ export class LaneEditor {
   readonly root = el("div", "cond");
   private readonly heading = el("h2", "panel-heading cond-heading");
   private readonly does = el("div", "cond-mixes");
+  private readonly stores = el("div", "editor-totals person-stores at-rest");
   private readonly sentence = el("p", "rule-sentence cond-sentence");
   private readonly save = el("button", "primary");
   private view: View | null = null;
@@ -41,7 +44,7 @@ export class LaneEditor {
     const foot = el("div", "cond-foot");
     foot.append(this.sentence, actions);
     const body = el("div", "cond-body");
-    body.append(head, this.does);
+    body.append(head, this.does, this.stores);
     this.root.append(body, foot);
   }
 
@@ -84,6 +87,7 @@ export class LaneEditor {
       list.append(...g.items.map((c) => pickRow(this.ctx, c, view, () => this.pick(c.card))));
       return [...sectionHead(g.heading), list];
     }));
+    this.stores.replaceChildren(...storeRows(catalog, view, view, "", touchedBy(catalog, this.card === null ? tasks.map((c) => c.card) : [this.card])));
     for (const tap of this.does.querySelectorAll<HTMLButtonElement>(".card-tap")) tap.setAttribute("aria-pressed", String(tap.closest<HTMLElement>(".card")?.dataset.card === this.card));
     const order = this.order();
     const hue = this.card === null ? 5 : catalog.rank(this.card) % 6;
