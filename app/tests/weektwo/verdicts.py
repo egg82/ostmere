@@ -23,7 +23,7 @@ from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
 from tests.weektwo import counters, ends
 from tests.weektwo import weekfour as w4
-from tests.weektwo.routes import eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentythree, twentytwo, week2
+from tests.weektwo.routes import eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentyfive, twentythree, twentytwo, week2
 
 EIGHT = w2.day_eight("typical")
 """The chapter's span: its start and stop beats are the same on every route."""
@@ -36,10 +36,11 @@ EIGHTEEN = w2.day_eighteen("typical")
 NINETEEN = w2.day_nineteen("typical")
 TWENTYTWO = w4.day_twenty_two("typical")
 TWENTYTHREE = w4.day_twenty_three("typical")
+TWENTYFIVE = w4.day_twenty_five("typical")
 BEATS = {EIGHT.start: ("B8", "B9"), NINE.start: ("B10",), ELEVEN.start: ("B11",), TWELVE.start: ("B12",),
          FIFTEEN.start: ("B14",), SIXTEEN.start: ("B15",), EIGHTEEN.start: ("B16",),
          NINETEEN.start: ("B17",), TWENTYTWO.start: ("B18", "B19"),
-         TWENTYTHREE.start: ("B20",)}
+         TWENTYTHREE.start: ("B20",), TWENTYFIVE.start: ("B21",)}
 """The spine beats each chapter lands, by the beat it starts at, each held to its band."""
 BOOSTS = (*v1.BOOSTS, str(w2.HIDE_FLAPS))
 """What the babysitter taps the second it can: week one's and the chapter's comfort. The build is its order's in both."""
@@ -54,14 +55,14 @@ def days(p: DayTwoPlayer, chapter: Later = EIGHT) -> dict[str, float]:
 
 CHAPTERS = {"eight": EIGHT, "nine": NINE, "eleven": ELEVEN, "twelve": TWELVE, "fifteen": FIFTEEN, "sixteen": SIXTEEN,
             "eighteen": EIGHTEEN, "nineteen": NINETEEN, "twentytwo": TWENTYTWO,
-            "twentythree": TWENTYTHREE}
+            "twentythree": TWENTYTHREE, "twentyfive": TWENTYFIVE}
 PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fifteen": fifteen, "sixteen": sixteen,
          "eighteen": eighteen, "nineteen": nineteen, "twentytwo": twentytwo,
-         "twentythree": twentythree}
+         "twentythree": twentythree, "twentyfive": twentyfive}
 """Each chapter's typical play is the one its counting reads."""
 PART_STEPS = 1
 PARTS = {"eight": 14, "nine": 7, "eleven": 7, "twelve": 11, "fifteen": 12, "sixteen": 6, "eighteen": 6, "nineteen": 4, "twentytwo": 9,
-         "twentythree": 14}
+         "twentythree": 14, "twentyfive": 10}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
 each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
 than its parts hold fails `decided_in`."""

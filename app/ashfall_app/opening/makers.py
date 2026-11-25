@@ -46,6 +46,12 @@ def standing_makers(o: "Opening", store: str) -> list[str]:
     return [a.id for a in o.standing if any(f.store == store for f in a.makes)]
 
 
+def rises_in_steps(o: "Opening", store: str) -> bool:
+    """Nothing that runs raises the store: no card lands or flows it and no standing action flows it, so only an event
+    (a lost fight, a find, an answer) adds to it, a step at a time (StoreInfo.rises_in_steps)."""
+    return not card_makers(o, store) and not standing_makers(o, store)
+
+
 def granted_by(o: "Opening", store: str) -> list[str]:
     """Trigger ids in content order whose outcome lands the store, each at a level a skill's row shows (up to the
     prestige top level) when it waits on one: where a store nothing makes comes from (View Need.gate)."""

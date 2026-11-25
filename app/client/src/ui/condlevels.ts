@@ -144,7 +144,7 @@ export class Levels {
     const items = catalog.isLevel(rule.store);
     for (const [test, b] of this.tests) b.setAttribute("aria-pressed", String(test === rule.test));
     const m = rule.m ?? rule.n;
-    const can = (which: Which) => (l: Level) => tryRule({ ...rule, m, [which]: l }, cap) !== null;
+    const can = (which: Which) => (l: Level) => tryRule({ ...rule, m, [which]: l }, cap, catalog.risesInSteps(rule.store)) !== null;
     this.rows.n.draw(catalog, rule.n, cap, can("n"), () => switchForm(rule.n, rule.test, "on", cap), items);
     this.rows.m.draw(catalog, m, cap, can("m"), () => switchForm(m, rule.test, "off", cap), items);
     this.fold.state(levelWords(catalog, rule.n), levelWords(catalog, m));

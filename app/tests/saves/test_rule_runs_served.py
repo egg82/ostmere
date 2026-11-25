@@ -20,9 +20,15 @@ A = e.CardId("gather_wood")
 M0 = e.MixId("m0")
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def open_rs(rs: Ruleset) -> Ruleset:
     return replace(rs, rules=replace(rs.rules, opening=None))
+
+
+@pytest.fixture(scope="module")
+def open_game(open_rs: Ruleset) -> Game:
+    """The game serving the open rules, built once for the module: its content is the slow part."""
+    return Game(opening(), open_rs)
 
 
 @pytest.fixture
@@ -36,7 +42,7 @@ def decide(saves: PgSaves, account: int, played: Played, clock: FakeClock, verb:
 
 
 def test_a_rule_that_comes_on_is_kept_and_served_and_an_edit_drops_it(open_saves: PgSaves, open_rs: Ruleset,
-                                                                      account: int, clock: FakeClock):
+                                                                      open_game: Game, account: int, clock: FakeClock):
     store = open_rs.rules.stores[0].id
     always = e.Order(e.AtLeast(e.StoreValue(store), 0, 0), e.SwitchMix(M0))
     _, p = open_saves.create(account)
@@ -50,7 +56,7 @@ def test_a_rule_that_comes_on_is_kept_and_served_and_an_edit_drops_it(open_saves
     clock.tick(600)
     later = open_saves.advance(account, p.save_id)
     assert later.rule_runs == p.rule_runs   # read back off the row: nothing changed since
-    step = Game(opening(), open_rs).step(later)
+    step = open_game.step(later)
     assert step.rule_runs == [w.RuleRun(order=w.Order(when=convert.condition(always.when),
                                                       then=convert.order_verb(always.then)),
                                         starts=1, on_at=p.save.time, on_level=level, off_at=None, off_level=None,

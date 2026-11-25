@@ -67,19 +67,19 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
   expect("ready now on a free lane: the face leaves it to a tap", button.hidden, true);
 }
 
-// What Plan lists: every card it offers once, under its section's heading (the Tasks page's order, a section by name),
+// What Plan lists: every card the queue takes once, under its section's heading (the Tasks page's order, a section by name),
 // those it takes with When ready and the waiting ones off with their face's words; the mixes last.
 {
   const plan = planner(view);
   plan.rows()[0]?.click();
   const rows = plan.rows();
   const name = (r: HTMLElement) => r.querySelector(".selector-name")?.textContent ?? "";
-  const cardRows = rows.slice(1, -2);
+  const cardRows = rows.slice(1, -3);
   const heads = cardRows.filter((r) => !r.className.includes("plan-card")).map((r) => r.textContent);
-  expect("one heading per section, the craft section's", heads, ["Craft"]);
-  expect("the cards in the page's order, crafts under their heading by name; the mixes last",
-    [rows[0]!.textContent, ...cardRows.map((r) => r.className.includes("plan-card") ? name(r) : r.textContent), ...rows.slice(-2).map((r) => r.textContent)],
-    ["Plan✕", "Look around", "Craft", "Hatchet", "Larder", "Lean-to", "Stool", "a", "b"]);
+  expect("one heading per section", heads, ["Craft", "Bench"]);
+  expect("the cards in the page's order, work done again and again among them, crafts under their heading by name; the mixes last",
+    [rows[0]!.textContent, ...cardRows.map((r) => r.className.includes("plan-card") ? name(r) : r.textContent), ...rows.slice(-3).map((r) => r.textContent)],
+    ["Plan✕", "Gather by hand", "Look around", "Rest", "Tend the fire", "Craft", "Hatchet", "Larder", "Lean-to", "Stool", "Bench", "Lean-to of branches, lashed", "Run until…", "a", "b"]);
   const waits = cardRows.filter((r) => r.className.includes("plan-card") && (r.querySelector(".selector-note")?.textContent ?? "") !== "When ready") as HTMLButtonElement[];
   const faceSays = (card: Card): string => {
     const face = new CardNeeds(testContext().ctx, card.card);
@@ -100,13 +100,13 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
 {
   expect("a card to plan and no mix: offered", planner({ ...view, mixes: [] }).rows().map((r) => r.textContent), ["+ Plan"]);
   expect("only a card nothing makes ready and no mix: offered", planner({ ...view, mixes: [], cards: [lean] }).rows().map((r) => r.textContent), ["+ Plan"]);
-  expect("a card queued already is not offered again", planner({ ...view, mixes: [], cards: [larder], queue: [{ verb: { kind: "tap_card", card: "larder" },
+  expect("a card whose one run is queued already is not offered again (no room under its cap)", planner({ ...view, mixes: [], cards: [larder], queue: [{ verb: { kind: "tap_card", card: "larder" },
     until: { kind: "at_least", watched: { kind: "card_count", card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false } }] }).rows(), []);
 }
 
 // A step waiting on a clock with a part of the day reads as when it opens, and a gated need as its gate, as on its face.
 {
-  const night = { store: "night", label_key: "store.night", cap: 20 * Q, made_by: [], hidden: false, tally: false, clock: "night" as const, bonus_bp: null };
+  const night = { store: "night", label_key: "store.night", cap: 20 * Q, made_by: [], hidden: false, tally: false, clock: "night" as const, rises_in_steps: false, bonus_bp: null };
   const content = { ...fixtureContent, store_infos: [...fixtureContent.store_infos, night],
     text_entries: [...fixtureContent.text_entries, { key: "ui.card.opens", text: "Opens {when}" }, { key: "ui.when.night", text: "after dark" }, { key: "ui.when.night_end", text: "at first light" }, { key: "store.night", text: "night" }] };
   const clocked = new Catalog(content);

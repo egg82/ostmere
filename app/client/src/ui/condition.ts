@@ -204,7 +204,8 @@ export class ConditionEditor {
   }
 
   private setLevel(which: "n" | "m", level: Level): void {
-    const next = this.draft && tryRule({ ...this.draft.rule, [which]: level }, this.cap(this.draft.rule.store));
+    const store = this.draft?.rule.store ?? "";
+    const next = this.draft && tryRule({ ...this.draft.rule, [which]: level }, this.cap(store), this.ctx.catalog.risesInSteps(store));
     if (!next || !this.draft) return;
     this.draft.rule = next;
     this.draw();

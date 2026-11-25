@@ -30,7 +30,6 @@
   --hand-pencil: #645d52;
   --panel-w: clamp(28rem, 30vw, 38rem);
   --scene-vh: 38vh;   /* the pinned stage on a phone: ui/headseat.ts measures it */
-  --scene-h: 10.5rem;   /* the art's room in a phone's stage */
   --strip-rows: 3;   /* a phone's strip, in rows of the story's size (tests/opening/test_strip_rows.py reads it) */
   /* the failed tap's pulse (the Feedback system's effect, ui/cards.ts failed()): the card's red glow and the flash of
      what stopped the tap, transform and colour only, so nothing moves */
@@ -871,9 +870,8 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .stage { height: auto; display: flex; flex-direction: column; }
   .stage > .scene-head { min-height: 3.3rem; box-sizing: border-box; justify-content: flex-end; padding-inline: 1rem; }   /* the Camp bar grows to fill its row; a row it is not on packs to the right */   /* a chip and its cost line fit from the start, so one arriving never moves the art */
   .stage > .aim { padding-inline: 1rem; }
-  .scene-box { position: relative; inset: auto; flex: none; height: var(--scene-h); padding: 0; overflow: hidden; --cover: 1; }   /* the art covers a fixed room edge to edge (Scene.fit), held around what the view shows, so the stage never grows for it */
-  .scene-frame { position: absolute; inset: 0; border: 0; box-shadow: none; overflow: hidden; }   /* only the desktop's scene keeps a frame */
-  .scene-art { position: absolute; }
+  .scene-box { position: relative; inset: auto; flex: none; padding: 0; --by-width: 1; --fill: 1; }   /* the whole art across the screen's width (Scene.fit), the box as tall as the art: nothing of the town cut off */
+  .scene-frame { border: 0; box-shadow: none; }   /* only the desktop's scene keeps a frame */
   .stage > .strip { flex: none; padding: .35rem 1rem; }
   .strip > .strip-room { height: calc(var(--strip-rows) * 1.35em); }   /* rows of the story's size: every story line fits it (tests/opening/test_strip_rows.py) */
   .lines li + li { margin-top: 0; }   /* three rows hold three short lines; the older are dimmer */

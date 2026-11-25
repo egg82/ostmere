@@ -334,12 +334,24 @@ jobs:
             names: readings-nineteen-a
           - part: readings-nineteen-b
             names: readings-nineteen-b
-          - part: readings-twentytwo
-            names: readings-twentytwo
+          - part: readings-twentytwo-a
+            names: readings-twentytwo-a
+          - part: readings-twentytwo-b
+            names: readings-twentytwo-b
           - part: readings-twentythree-a
             names: readings-twentythree-a
           - part: readings-twentythree-b
             names: readings-twentythree-b
+          - part: readings-twentyfive-a
+            names: readings-twentyfive-a
+          - part: readings-twentyfive-b
+            names: readings-twentyfive-b
+          - part: readings-twentyfive-c
+            names: readings-twentyfive-c
+          - part: readings-twentyfive-d
+            names: readings-twentyfive-d
+          - part: readings-twentyfive-e
+            names: readings-twentyfive-e
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       PART: ${{ matrix.part }}
@@ -454,7 +466,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        part: [rebased-early, rebased-late]
+        part: [rebased-early, rebased-late, rebased-later]
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:

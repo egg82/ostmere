@@ -1,11 +1,12 @@
 // "Next", the queue in the Rules tab (docs/design/opening-screen.md, "The Rules tab"): what the queue will tap or run
-// (a goal stint, ui/stint.ts), in its order, one line each with Remove, or "under way" for a tap a lane already runs. Its
+// (a goal stint, ui/stint.ts), in its order, one line each with Remove, or "under way" for a tap a lane already runs.
+// Each tap is one run: runs of the same card one after another are one line, "×N", whose Remove and ≡ act on one. Its
 // heading is a row among the hands rules, moved as one (game/nextrow.ts): the rules above it outrank a ready head, the
 // rules under it wait for one (CONTRACT.txt, "Next's row"). It starts at the bottom, just above "Otherwise".
 import type { QueueEntry, View } from "../api/types";
 import { NEXT } from "../game/nextrow";
 import { actionWords } from "../game/orders";
-import { runsNow, unqueue } from "../game/queue";
+import { entryRuns, queueRows, runsNow, unqueue } from "../game/queue";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
 import { ruleMenu } from "./rulemenu";
@@ -22,16 +23,17 @@ export function nextRows(ctx: PartContext, view: View, plan: StintPlan, order: N
   const planning = plan.rows(view);
   if (view.queue.length === 0 && planning.length === 0 && !head.kept) return [];
   const { catalog } = ctx;
-  const rows = view.queue.map((entry, i) => {
+  const rows = queueRows(view).map((run) => {
+    const i = run[0]!, last = run[run.length - 1]!, entry = view.queue[i]!;
     const row = el("div", "rules-row next-row");
     row.dataset["next"] = String(i);
     const hue = entry.verb.kind === "tap_card" ? catalog.rank(entry.verb.card) % 6 : 5;
-    const end = runsNow(view, entry) ? el("span", "next-running", catalog.text.get(UI.queueRunning)) : removeButton(ctx, view, i);
-    const words = entry.verb.kind === "switch_mix" ? stintWords(catalog, view, entry) : actionWords(catalog, view, entry.verb);
-    const action = el("b", `rule-action hue-${hue}`, words);
+    const end = runsNow(view, i) ? el("span", "next-running", catalog.text.get(UI.queueRunning)) : removeButton(ctx, view, last, run.length > 1);
+    const runs = run.reduce((n, k) => n + (entryRuns(view, k) ?? 0), 0);
+    const action = el("b", `rule-action hue-${hue}`, entryWords(catalog, view, entry, runs));
     const facts = stintFacts(catalog, view, i);
     if (facts !== null) action.append(el("span", "next-facts", facts));
-    row.append(order.handle(view, i), action, end);
+    row.append(order.handle(view, last, run.length > 1), action, end);
     return row;
   });
   const heading = el("div", "rules-row next-head");
@@ -48,8 +50,16 @@ export interface NextHead {
   kept: boolean;
 }
 
-function removeButton(ctx: PartContext, view: View, i: number): HTMLElement {
-  const remove = el("button", "quiet", ctx.catalog.text.get(UI.orderRemove));
+/** An entry's words: a stint's mix and goal; a tap's card, "once" (the tap under way's too) or ×`runs`; an answer's. */
+function entryWords(catalog: Catalog, view: View, entry: QueueEntry, runs: number): string {
+  if (entry.verb.kind === "switch_mix") return stintWords(catalog, view, entry);
+  if (entry.verb.kind !== "tap_card") return actionWords(catalog, view, entry.verb);
+  const card = catalog.cardLabel(entry.verb.card);
+  return runs > 1 ? catalog.text.fill(UI.queueRuns, { card, n: catalog.format.count(runs) }) : catalog.text.fill(UI.queueOnce, { card });
+}
+
+function removeButton(ctx: PartContext, view: View, i: number, one: boolean): HTMLElement {
+  const remove = el("button", "quiet", ctx.catalog.text.get(one ? UI.queueRemoveOne : UI.orderRemove));
   remove.type = "button";
   remove.addEventListener("click", () => { tapFeedback(); ctx.actions.decide(unqueue(view, i)); });
   return remove;

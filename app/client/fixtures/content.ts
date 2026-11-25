@@ -272,7 +272,7 @@ const text: Record<string, string> = {
   "ui.town.title": "Camp", "ui.town.idle": "{person}, idle", "ui.town.count": "{n} people", "ui.town.each": "each of {n}", "ui.town.busy": "everyone is busy", "ui.town.tied": "With {name}",
   "ui.town.stuck": "nothing to do", "ui.town.stopped_spent": "{card} needs {store}, nothing makes it now", "ui.town.stopped_full": "{card} stopped: {store} is full",
   "ui.town.stopped_dry": "{card} is waiting for {store}", "ui.town.stopped_waiting": "{card} is waiting", "ui.town.can_do": "Could do now", "ui.town.more": "+{n} more",
-  "ui.card.spent_on": "Needs {store}, nothing makes it now", "ui.card.wasted": "{store} is full, so this work is wasted", "ui.town.wasted": "{card}: {store} is full, so the work is wasted",
+  "ui.card.spent_on": "Needs {store}, nothing makes it now", "ui.card.wasted": "{store} is full", "ui.town.wasted": "{card}: {store} is full",
   "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Drag a divider to change a share.",
   "ui.lesson.town_runs": "Each person shows what they are doing now.",
   "lane.mason": "Mason", "card.hew": "Hew stone", "card.carve": "Carve beams",
@@ -314,7 +314,7 @@ const text: Record<string, string> = {
   "ui.goal.in": "in {d}", "ui.goal.while": "pauses if out of {store}", "ui.goal.paused": "paused, out of {store}",
   "ui.ledger.starved": "ran dry",
   "ui.ledger.unfed": "ran dry · {pct} work speed off",
-  "ui.queue.when_ready": "When ready", "ui.queue.queued": "in Next", "ui.queue.until_done": "Until done", "ui.queue.running": "under way", "ui.queue.move": "Move up or down", "ui.queue.heading": "Next", "ui.queue.plan": "Plan", "ui.queue.full": "Next is full", "ui.hands.next": "next: {card}", "ui.hands.then": "then {mix}", "ui.hands.until_goal": "until {goal}",
+  "ui.queue.when_ready": "When ready", "ui.queue.queued": "in Next", "ui.queue.until_done": "Until done", "ui.queue.running": "under way", "ui.queue.move": "Move up or down", "ui.queue.move_one": "Move one up or down", "ui.queue.once": "{card} once", "ui.queue.runs": "{card} ×{n}", "ui.queue.remove_one": "Remove one", "ui.queue.heading": "Next", "ui.queue.plan": "Plan", "ui.queue.full": "Next is full", "ui.hands.next": "next: {card}", "ui.hands.then": "then {mix}", "ui.hands.until_goal": "until {goal}",
   "store.catch": "Catch", "store.smoked": "Smoked", "store.roots": "Roots", "store.clock": "Clock", "lane.smoke": "Smoke",
   "card.lean_to": "Lean-to", "card.lean_to.up": "Rest under cover", "card.larder": "Larder", "card.larder.up": "Food keeps",
   "card.smoke_catch": "Smoke the catch", "card.smoke_roots": "Smoke roots", "card.take_stock": "Take stock", "card.look_out": "Look out", "card.forage": "Forage",
@@ -411,17 +411,17 @@ export const fixtureContent: Content = {
   limits: { max_orders: 64, max_queue: 64, max_mixes: 64, max_unless: 3, max_or_else: 2, reserved_mix_prefix: "town:" },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
-    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, tally: false, clock: null, bonus_bp: null },   // no ledger line: a chip's store
-    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "hurt", label_key: "store.hurt", cap: 3 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },   // never unlocked: a fight's wound, drained by the poultice
-    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, bonus_bp: null },   // bookkeeping: never a ledger line
+    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },   // no ledger line: a chip's store
+    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },
+    { store: "hurt", label_key: "store.hurt", cap: 3 * Q, made_by: [], hidden: false, tally: false, clock: null, rises_in_steps: true, bonus_bp: null },   // never unlocked: a fight's wound, drained by the poultice
+    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, rises_in_steps: false, bonus_bp: null },   // bookkeeping: never a ledger line
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],

@@ -61,7 +61,7 @@ export function draftOrder(catalog: Catalog, view: View | null, draft: Draft | n
   const rest = { then, unless: draft.unless, or_else: orElse, below_next: false };   // setRule keeps an edited rule's side of Next
   if ((draft.chip || chip) && draft.opened) return { when: draft.opened.when, ...rest };
   if (draft.subject) return { when: buildSubject(catalog, draft.subject), ...rest };
-  if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store))) return null;
+  if (!valid(draft.rule, storeCap(catalog, view, draft.rule.store), catalog.risesInSteps(draft.rule.store))) return null;
   return { when: draftWhen(draft.rule, draft.opened, catalog.content.scales.quantity_per_item, catalog.isLevel(draft.rule.store)), ...rest };
 }
 
@@ -77,7 +77,7 @@ export function editDraft(catalog: Catalog, view: View, index: number): Draft | 
   const rule = storeRule(catalog, order);
   if (!rule) return null;
   const chip = chipOf(catalog, order.when) !== undefined;
-  const clamped = chip ? rule : clampRule(rule, storeCap(catalog, view, rule.store));
+  const clamped = chip ? rule : clampRule(rule, storeCap(catalog, view, rule.store), catalog.risesInSteps(rule.store));
   const opened = sameRule(clamped, rule) ? { rule, when: order.when } : undefined;
   return { index, then, rule: clamped, opened, chip, ...kept };
 }

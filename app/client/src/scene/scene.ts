@@ -8,7 +8,7 @@ import type { View } from "../api/types";
 import { SceneFacts } from "./conditions";
 import { drawLayers, soundAlphaOf, soundShownOf, type Drawn } from "./drawn";
 import { depthOrder, fadeStep, isGlow, pickGrade, gradeStep, pickView, GRADE_S, type SceneLayer, type SceneGrade, type SceneManifest } from "./manifest";
-import { COVER, place, type Crop } from "./crop";
+import { place, type Crop } from "./crop";
 import { focusOf } from "./focus";
 import { fetchManifest, roomAbove } from "./room";
 import { duskWash, lightFilter } from "./light";
@@ -40,7 +40,6 @@ export class Scene {
   /** Resolves once every layer's image has loaded (or failed): a still picture is drawn after it. */
   readonly loaded: Promise<void>;
   private crop: Pick<Crop, "hold" | "window"> | null = null;
-  private cover = false;   // the box asks to be covered (game.css's --cover: a phone's stage)
   private fixed: [number, number] | null = null;
   private day = 1;
   private view: [number, number];   // the part of the art shown, from its top-left: the canvases are this size (chooseView)
@@ -161,7 +160,7 @@ export class Scene {
       this.composeBase(baseCtx, frontBaseCtx);
       this.baseDirty = false;
       this.shownDirty = true;
-      if ((this.crop || this.cover) && !this.fixed) this.fit();
+      if (this.crop && !this.fixed) this.fit();
     }
     this.flicker(dt, reduced);
     this.chooseGrade(t);
@@ -264,11 +263,10 @@ export class Scene {
     if (!box) return;
     const dpr = window.devicePixelRatio || 1;
     const style = getComputedStyle(box);
-    this.cover = style.getPropertyValue("--cover").trim() === "1";
-    if (this.crop || this.cover) { this.fitCropped(box, dpr, this.crop ?? COVER); return; }
+    if (this.crop) { this.fitCropped(box, dpr, this.crop); return; }
     Object.assign(this.canvas.style, { left: "", top: "" });
     const bw = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - FRAME_PX;
-    // A box that takes the art's own height (the phone stage) sets only its width.
+    // A box that takes the art's own height (a tall desktop's column, capped by the room above; a phone's stage) sets only its width.
     const byWidth = style.getPropertyValue("--by-width").trim() === "1";
     const bh = byWidth ? roomAbove(box, FRAME_PX) : box.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - FRAME_PX;
     const fit = Math.min((bw * dpr) / w, (bh * dpr) / h);
@@ -285,8 +283,8 @@ export class Scene {
     Object.assign(this.front.style, { width, height, left: left || "0px", top: top || "0px" });
   }
 
-  /** Place the canvas so the box shows the cropped part of the art: at whole device pixels per art pixel, or covering it. */
-  private fitCropped(box: HTMLElement, dpr: number, crop: Pick<Crop, "hold" | "window" | "cover">): void {
+  /** Place the canvas so the box shows the cropped part of the art, at whole device pixels per art pixel. */
+  private fitCropped(box: HTMLElement, dpr: number, crop: Pick<Crop, "hold" | "window">): void {
     if (box.clientWidth === 0) return;
     const shown = this.layers.filter((d) => d.alpha > 0 && d.image.complete).map(({ layer, image }) => ({
       id: layer.id, x: layer.x, y: layer.y, w: image.naturalWidth, h: image.naturalHeight,

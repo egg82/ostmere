@@ -19,6 +19,7 @@ import depth
 import dayone_poses
 import dayeight_layers as d8
 import dayeleven_layers as d11
+import dayfifteen_layers as d15
 import daytwelve_layers as d12
 import dayfour_layers as d4
 import daythree_layers as d3
@@ -119,6 +120,7 @@ def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
         *d8.made_layers(),
         *d11.made_layers(),
         *d12.made_layers(),
+        *d15.made_layers(),
         *d4.hang_layers(dayone.meat_on_rack()),
     ]
 

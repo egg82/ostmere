@@ -14,6 +14,7 @@ import builds
 import depth
 import grades
 import kit
+import shown
 import views
 from drift import source_digest
 from place import H, W, canvas
@@ -108,6 +109,7 @@ def write_manifest(entries: list[Entry]) -> None:
     }
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1) + "\n")
     write_list(entries, grades.GRADES)
+    shown.write_list(entries)
 
 
 def composite(entries: list[Entry], state: State) -> Image.Image:

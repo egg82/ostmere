@@ -139,6 +139,10 @@ export const UI = {
   queueUntilDone: "ui.queue.until_done", // the same button on a staged card a tap runs: run it on to its cap
   queueRunning: "ui.queue.running", // a Next entry whose tap a lane already runs, in Remove's place
   queueMove: "ui.queue.move", // a Next entry's ≡, for screen readers: it drags, or moves by the arrow keys
+  queueMoveOne: "ui.queue.move_one", // the same on a Next row of several runs of a card: it moves one of them
+  queueOnce: "ui.queue.once", // "{card}": a Next row of one run of a card
+  queueRuns: "ui.queue.runs", // "{card}{n}": a Next row of n runs of a card one after another
+  queueRemoveOne: "ui.queue.remove_one", // Remove on a Next row of several runs: it takes one off
   queueHeading: "ui.queue.heading", // the Rules tab's list of what the queue taps next
   queuePlan: "ui.queue.plan", // Next's "+ Plan": a stint written from the list (ui/stintplan.ts)
   queueFull: "ui.queue.full", // the When ready button's place once the queue holds Content.limits.max_queue

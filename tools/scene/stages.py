@@ -162,6 +162,11 @@ STAGES["51_lamps"] = STAGES["50_cellar"].then(_built("tallow_lamps", 3) | {"proj
 STAGES["51_sitter"] = STAGES["51_lamps"].then({"feature:sitter"}, drift_clock=150)
 STAGES["52_night_fourteen"] = STAGES["51_sitter"].then({"action:night_14"}, drift_clock=163, night_14=20)
 STAGES["52_week_end"] = STAGES["52_night_fourteen"].then({"project:sit_last_night", "feature:week_two_end"})
+# Day fifteen (app/ashfall_app/opening/day_fifteen.toml; content/team/week-three.md, Art): the hall's states.
+STAGES["56_hall_raised"] = STAGES["52_week_end"].then({"running:hall"} | _built("hall", 2))
+STAGES["56_hall_walls"] = STAGES["56_hall_raised"].then(_built("hall", 4))
+STAGES["56_hall_roofing"] = STAGES["56_hall_walls"].then(_built("hall", 6))
+STAGES["57_hall_built"] = STAGES["56_hall_roofing"].then(_built("hall", 8) | {"project:hall"}, {"running:hall"})
 
 
 def holds(cond: str | None, state: State) -> bool:

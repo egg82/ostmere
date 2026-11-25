@@ -93,3 +93,20 @@ def test_each_plant_is_refused_with_its_message(tmp_path: Path, plant: tuple[str
     with pytest.raises(ValueError) as caught:
         load_with(edited(tmp_path, *edits))
     assert str(caught.value).startswith(message)
+
+
+def test_mention_lines_are_given_once_to_a_state_that_has_them():
+    """A state already given its mention lines (shipped content, merged on again with a test chapter) gains none twice."""
+    from ashfall_app.opening.people import with_mentions
+    o = load_with(FIXTURE)
+    again = with_mentions(o)
+    assert {t.id: t.outcome.line_keys for t in again.triggers} == {t.id: t.outcome.line_keys for t in o.triggers}
+
+
+def test_text_authored_for_a_mention_line_is_refused():
+    from ashfall_app.opening.people import with_mentions
+    o = load_with(FIXTURE)
+    bare = o.model_copy(update={"triggers": [t.model_copy(update={"outcome": t.outcome.model_copy(update={
+        "line_keys": [k for k in t.outcome.line_keys if not k.startswith("people.")]})}) for t in o.triggers]})
+    with pytest.raises(ValueError, match="keys a mention line takes"):
+        with_mentions(bare)

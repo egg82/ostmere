@@ -7054,6 +7054,10 @@
             ],
             "title": "Clock"
           },
+          "rises_in_steps": {
+            "type": "boolean",
+            "title": "Rises In Steps"
+          },
           "bonus_bp": {
             "anyOf": [
               {
@@ -7075,6 +7079,7 @@
           "hidden",
           "tally",
           "clock",
+          "rises_in_steps",
           "bonus_bp"
         ],
         "title": "StoreInfo"

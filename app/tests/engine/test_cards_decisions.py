@@ -110,7 +110,7 @@ def test_a_dead_queue_entry_stays_and_the_first_live_entry_pops():
     s = mix(r, new_save(r), 0, {S: BP})
     s = advance(s, r, 10)
     assert view(s, r).completed
-    wait = QueueEntry(TapCard(S), AtLeast(StoreValue(Z), 0, 0))  # holds, and could fall
+    wait = QueueEntry(SwitchMix(MixId("m")), AtLeast(StoreValue(Z), 0, 0))  # greyed; holds, and could fall
     s = decide(s, r, 10, SetQueue((wait, QueueEntry(TapCard(C), AfterTime(30)))))
     assert s.queue[0] == wait and s.lanes[0].card == C
     assert next_event(s, r) is not None
@@ -118,13 +118,21 @@ def test_a_dead_queue_entry_stays_and_the_first_live_entry_pops():
     assert a.queue == (wait,)
 
 
+def test_a_tap_of_a_completed_card_leaves_the_queue_and_the_first_live_entry_pops():
+    r = world([CardDef(S, 10, cap=1), CardDef(C, 10)])
+    s = advance(mix(r, new_save(r), 0, {S: BP}), r, 10)
+    s = decide(s, r, 10, SetQueue((QueueEntry(TapCard(S), AtLeast(StoreValue(Z), 0, 0)), QueueEntry(TapCard(C), AfterTime(30)))))
+    assert s.queue == (QueueEntry(TapCard(C), AfterTime(30)),) and s.lanes[0].card == C
+    assert advance(s, r, 30).queue == ()
+
+
 def test_a_revived_dead_entry_pops_at_once_when_its_until_holds():
     r = world([CardDef(S, 10, cap=1), CardDef(D, 5, cap=1, outcome=Outcome(raises=(CapRaise(S, 1),)))])
     s = advance(mix(r, new_save(r), 0, {S: BP}), r, 10)
-    s = decide(s, r, 10, SetQueue((QueueEntry(TapCard(S), AtLeast(StoreValue(Z), 0, 0)),)))
+    s = decide(s, r, 10, SetQueue((QueueEntry(SwitchMix(MixId("m")), AtLeast(StoreValue(Z), 0, 0)),)))
     assert len(s.queue) == 1
     a = advance(decide(s, r, 10, TapCard(D)), r, 15)
-    assert a.queue == () and a.lanes[0].card is None
+    assert a.queue == ()
 
 
 def test_a_greyed_card_reads_greyed_before_waiting_and_a_stopped_mix_card_explains_through_its_share():

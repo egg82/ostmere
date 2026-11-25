@@ -51,8 +51,8 @@ async function plan(view: View, after: View | null, seeRules = true) {
   const { rows, got } = await plan(view, after);
   expect("the button", rows().map((r) => r.textContent), ["+ Plan"]);
   rows()[0]?.click();
-  expect("the steps it takes (the stool, ready now) and the waiting ones saying on what, together under their sections, then the saved mixes", rows().map((r) => r.textContent),
-    ["Plan✕", "Look aroundFlint 3/4", "Craft", "HatchetForaging level 2/3", "StoolWhen ready", "a", "b"]);
+  expect("the cards it takes (the stool, ready now, and work done again and again) and the waiting ones saying on what, together under their sections, then the saved mixes", rows().map((r) => r.textContent),
+    ["Plan✕", "Gather by handWhen ready", "Look aroundFlint 3/4", "RestWhen ready", "Tend the fireWhen ready", "Craft", "HatchetForaging level 2/3", "StoolWhen ready", "Bench", "Lean-to of branches, lashedWhen ready", "Run until…", "a", "b"]);
   mixRow(rows(), "b")?.click();
   await Promise.resolve();
   await Promise.resolve();

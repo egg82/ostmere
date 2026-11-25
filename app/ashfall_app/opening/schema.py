@@ -57,11 +57,12 @@ DAY_EIGHTEEN = Path(__file__).resolve().parent / "day_eighteen.toml"
 DAY_NINETEEN = Path(__file__).resolve().parent / "day_nineteen.toml"
 DAY_TWENTY_TWO = Path(__file__).resolve().parent / "day_twenty_two.toml"
 DAY_TWENTY_THREE = Path(__file__).resolve().parent / "day_twenty_three.toml"
+DAY_TWENTY_FIVE = Path(__file__).resolve().parent / "day_twenty_five.toml"
 PRESTIGE = Path(__file__).resolve().parent / "prestige.toml"
 PHASE_PAYS = Path(__file__).resolve().parent / "phase_pays.toml"
 CHAPTERS = (DAY_ONE, DAY_TWO, DAY_THREE, DAY_FOUR, DAY_FIVE, B7, DAY_SIX, DAY_EIGHT, DAY_NINE, DAY_ELEVEN,
             DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN, DAY_TWENTY_TWO,
-            DAY_TWENTY_THREE, PRESTIGE, PHASE_PAYS)
+            DAY_TWENTY_THREE, DAY_TWENTY_FIVE, PRESTIGE, PHASE_PAYS)
 """The chapters after the opening, merged on in this order (Chapter): what ships. Prestige and its phase pays come
 last, since the phase pays expand over every skill row the chapters before them wrote."""
 IN_WRITING: tuple[Path, ...] = ()
@@ -225,8 +226,8 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
     if chapters:
         try:
             check_content(states[-1])
-        except ValueError:
-            _fail_naming_chapter(states, chapters)
+        except ValueError as e:
+            _fail_naming_chapter(states, chapters, e)
     return states[-1]
 
 
@@ -255,13 +256,19 @@ def _merged(opening: Opening, chapter: Path) -> tuple[Opening, str | None]:
     return merged, ch.end_feature
 
 
-def _fail_naming_chapter(states: list[Opening], chapters: tuple[Path, ...]) -> NoReturn:
+def _fail_naming_chapter(states: list[Opening], chapters: tuple[Path, ...], error: ValueError) -> NoReturn:
+    """Raise the full state's own error, naming the first chapter whose state fails with that same message. Early
+    states fail on their own as partial worlds, so a different message is not this error and is skipped; when no
+    prefix reproduces it (a later pass, such as the group unlocks, brought it) the last chapter is named."""
+    named = chapters[-1]
     for chapter, state in zip(chapters, states[1:]):
         try:
             check_content(state)
         except ValueError as e:
-            raise ValueError(f"{e} (in {chapter.name})") from e
-    raise AssertionError("the merged opening failed its content check but no chapter's state did")
+            if str(e) == str(error):
+                named = chapter
+                break
+    raise ValueError(f"{error} (in {named.name})") from error
 
 
 def to_rules(opening: Opening) -> Rules:

@@ -74,6 +74,9 @@ const woodGoal = (v: View): View => (!hash.has("goalrows") ? v : { ...v, goal_ro
 const larder = { kind: "at_least" as const, watched: { kind: "card_count" as const, card: "larder" }, value: 1, release: 1, value_of_cap: false, release_of_cap: false };
 const nextRow = (v: View): View => (!hash.has("nextrow") ? v : { ...v, orders: v.orders.map((o, i) => ({ ...o, below_next: i >= 2 })),
   queue: [{ verb: { kind: "tap_card", card: "larder" }, until: larder }], order_states: v.order_states.map((s, i) => (i === 2 && s === "on" ? "behind_next" : s)) });
+// #planned: Next shows the queue the page last sent (set_queue) over the phase's own, so picks from Plan stack up.
+let planned: View["queue"] | null = null;
+const plannedQueue = (v: View): View => (hash.has("planned") && planned !== null ? { ...v, queue: planned } : v);
 const founded = (v: View): View => (hash.has("founded") ? { ...v, unlocked: [...v.unlocked, { category: "feature", id: "founded" }] } : v);
 // #storerows: the stores' rows of the running mix, and of an edit's dry run (storerows.ts), for the editor's store section.
 const rows = (v: View, mix = runningMixOf(v)): View => (hash.has("storerows") ? { ...v, store_rows: storeRowsFor(v, mix) } : v);
@@ -88,9 +91,9 @@ const offered = (v: View): View => {
   const haul = v.cards.find((c) => c.card === "haul");
   return hash.has("newjob") && haul && stepsSeen++ > 0 ? { ...v, cards: [...v.cards, { ...haul, card: "mend", share_bp: 0, run: null }] } : v;
 };
-const asStep = (s: Step): Step => ({ ...s, view: offered(placed(rows(founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view)))))))) });
+const asStep = (s: Step): Step => ({ ...s, view: plannedQueue(offered(placed(rows(founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view))))))))) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
-const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const saved = ds.find((d) => d.kind === "save_mix"); if (saved?.kind === "save_mix") v = rows({ ...woodGoal(v), goal_rows: woodGoal(v).goal_rows.map((g) => ({ ...g, lands_at: g.lands_at === null || !hash.has("storerows") ? g.lands_at : g.lands_at - 1800 })) }, saved.mix); const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
+const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => { if (d.kind === "set_queue") planned = d.entries; return withKept.decide(id, d, after).then(asStep); }, dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const saved = ds.find((d) => d.kind === "save_mix"); if (saved?.kind === "save_mix") v = rows({ ...woodGoal(v), goal_rows: woodGoal(v).goal_rows.map((g) => ({ ...g, lands_at: g.lands_at === null || !hash.has("storerows") ? g.lands_at : g.lands_at - 1800 })) }, saved.mix); const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,
   hash.has("noscene") ? "/no-scene.json" : fixtureManifestUrl(), hash.get("join"));
 if (hash.has("play")) clickWhenShown("#begin");   // once the page has asked who this is: a Begin pressed sooner is undone by that answer
