@@ -1,4 +1,13 @@
 rebased golden ends: what the load and the time away open
+  f10/05-seed0-end525  1h: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/05-seed0-end525  8h: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/05-seed0-end525  3d: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/10-seed1-end526  1h: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/10-seed1-end526  8h: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/10-seed1-end526  3d: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/15-seed2-end525  1h: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/15-seed2-end525  8h: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
+  f10/15-seed2-end525  3d: the load opens 0 []; away 2 ['trigger t_h1', 'trigger t_morning']
   f4/05-seed0-end520  1h: the load opens 2 ['t_cook', 't_screen_open']; away 2 ['trigger t_h1', 'trigger t_morning']
   f4/05-seed0-end520  8h: the load opens 2 ['t_cook', 't_screen_open']; away 2 ['trigger t_h1', 'trigger t_morning']
   f4/05-seed0-end520  3d: the load opens 2 ['t_cook', 't_screen_open']; away 2 ['trigger t_h1', 'trigger t_morning']
