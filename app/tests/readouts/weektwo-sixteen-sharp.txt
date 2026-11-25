@@ -3,18 +3,18 @@ beats sharp (pace_scale 1): B15 day 16.08, target_day 18
   away V134->V135: 2 ['trigger t_rows_black', 'trigger offer_j_smoke_hole']
   away V135->V136: 1 ['trigger offer_j_wedged']
   away V136->V137: 1 ['trigger offer_j_snares']
-  away V137->V138: 2 ['trigger t_hall_hearth', 'trigger offer_j_ridge']
-  away V138->V139: 2 ['trigger offer_j_tally', 'trigger note_n_greycoat_1']
+  away V137->V138: 1 ['trigger t_hall_hearth']
+  away V138->V139: 1 ['trigger note_n_greycoat_1']
   away V139->V140: 0 []
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1       9       7       0       4       0      18       3     41
+  1       9       7       0       4       0      17       3     40
   2      30       5       2       2       0      12       2     53
   3      24       4       0       0       0      72       2    102
-  4      15       4       0       0       0       3       3     25
-  5       4       3       0       2       0       2       1     12
-  6       4       1       1       0       0      10       1     17
+  4      19       5       0       0       0       4       3     31
+  5       0       2       0       2       0       1       2      7
+  6       4       1       1       0       0       9       1     16
   7       1       0       0       0       0       0       2      3
-  8      10       3       0       2       0      10       2     27
-  9      13       1       2       4       0      37       3     60
- 10      22       3       0       1       0      15       2     43
+  8       9       3       0       2       0      10       1     25
+  9      14       1       0       4       0      36       2     57
+ 10      20       3       2       1       0      15       2     43

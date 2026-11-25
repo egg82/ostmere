@@ -511,7 +511,9 @@ gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 # ---------- Lucy's jobs ----------
 
 # From O-road's answer, one at a time on day nine's countdown (ask_wait): each shows once the last is answered and the
-# countdown has run out. Offers of no kind whose yes queues a short hands job (o_pelt's idiom) and whose no costs
+# countdown has run out, but for the last two, which wait on the season's clock instead: j_ridge for 477 h (the last
+# days of sun, after typical's B17) and j_tally for 522 h (the Still's eighteenth hour, before B19), stretches that
+# have no build to queue. Offers of no kind whose yes queues a short hands job (o_pelt's idiom) and whose no costs
 # nothing. Each job pays a one-off, never a lasting bonus, so a no is never beaten outright (principles.md, "No blind
 # permanent choices"): whether the hands' time is worth what it brings depends on what the town is short of.
 [[offers]]
@@ -663,7 +665,7 @@ line_keys = ["l_reset_snares"]
 id = "j_ridge"
 text_key = "o_j_ridge"
 askers = ["n1"]
-gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+gate = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 141 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_snares", value = 1 }]
 
 [[offers.answers]]
@@ -699,7 +701,7 @@ line_keys = ["l_take_child"]
 id = "j_tally"
 text_key = "o_j_tally"
 askers = ["n1"]
-gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+gate = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 186 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_ridge", value = 1 }]
 
 [[offers.answers]]
