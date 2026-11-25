@@ -70,6 +70,15 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
 }
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
+NO_SCENE: frozenset[str] = frozenset()
+"""Builds (craft cards with a cap, app/tests/test_scene_shown.py) the player makes that stand nowhere in the scene."""
+
+HELD_UNSHOWN: frozenset[str] = frozenset({
+    "bind_book", "cut_over", "cut_road", "hall_hearth", "hide_flaps", "n3_sow", "n6_posts", "post", "pot_shelf",
+    "road_cloths", "screen_fire", "wood_stack",
+})
+"""Builds with no scene state today, held so the check stays on for the rest: may only shrink."""
+
 HELD_CROWDED: frozenset[tuple[str, str]] = frozenset()
 """Pairs of builds (sorted) that share `MIN_SHARED` pixels today, held so the check stays on for the rest: may only shrink."""
 
