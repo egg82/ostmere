@@ -140,7 +140,7 @@ export class Screen {
     this.pinned.append(this.hands.root);
     const panel = el("section", "panel");
     this.foot.append(this.story.feedbackButton);
-    panel.append(this.banner.root, this.pinned, this.hands.rows, this.asks.root, this.ledger.asks, this.area);   // a phone's mix controls and the asks under the strip, unpinned; then a phone's red and full ledger lines
+    panel.append(this.banner.root, this.pinned, this.hands.rows, this.ledger.asks, this.asks.root, this.area);   // under the strip, unpinned: a phone's mix controls, then the red and full ledger lines beside the mix that feeds them, then the asks
     this.parts = [this.story, this.hands, this.asks, this.cards, ...this.bookPages, this.rules, this.skills, this.ledger,
       new FeatureCard(catalog, this.reveal, this.root), new MoreCue(panel, this.area), (this.lessons = new Lessons(ctx, this.root, () => this.redraw()))];
 

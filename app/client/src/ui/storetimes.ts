@@ -1,9 +1,10 @@
 // The editors' store rows (CONTRACT.txt, "Store rows"): each store a card of the edit makes or costs, or whose rate or
-// heading the dry run changes, net per minute now → after, and under it where it heads. Read off view.store_rows, the
-// same dry run as the goal rows; the page computes no rate or time.
+// heading the dry run changes, net per minute now → after, and under it what it holds of its cap now (the ledger's line)
+// and where it heads. Read off view.store_rows, the same dry run as the goal rows; the page computes no rate or time.
 import type { StoreRow, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { UI } from "../game/text";
+import { sample } from "../game/clock";
 import { el } from "./dom";
 
 /** The rows, or none until the dry run answers. `afterHead` names the second column ("after", "if run"). */
@@ -23,8 +24,16 @@ export function storeRows(catalog: Catalog, view: View, after: View | null, afte
     const row = el("div", "totals-row store-row");
     row.append(el("span", "totals-store", catalog.storeTitle(r.store)), el("span", "", format.perMinute(before.per_hour)),
       el("span", "totals-arrow", "→"), el("span", r.per_hour !== before.per_hour ? "totals-after changed" : "totals-after", format.perMinute(r.per_hour)));
-    return [row, el("div", r.heading === before.heading ? "goal-binds" : `goal-binds heading-turned ${r.heading}`, headingWords(catalog, r, after.at))];
+    const held = heldWords(catalog, view, r.store);
+    const where = headingWords(catalog, r, after.at);
+    return [row, el("div", r.heading === before.heading ? "goal-binds" : `goal-binds heading-turned ${r.heading}`, held ? `${held} · ${where}` : where)];
   })];
+}
+
+/** What the store holds of its cap at the view's time ("18 / 18"), as its ledger line reads; empty with no line. */
+function heldWords(catalog: Catalog, view: View, store: string): string {
+  const line = view.ledger.find((l) => l.store === store);
+  return line ? catalog.format.amount(sample(line.segment, view.at), line.cap) : "";
 }
 
 /** Where the store heads: empty in / full in the time left, or steady. */
