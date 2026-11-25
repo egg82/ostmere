@@ -33,6 +33,8 @@ HAZE_BAND = 26
 HAZE_SOLID = 6
 CREST_BASE = int(CREST + 8)
 """The row the haze steps from the floor's to the slope's."""
+SLOPE_TOP, SLOPE_CREST = 0.55, 0.2
+"""How much of the haze colour the far slope takes at the art's top and at the crest."""
 
 
 def _crest_y(x: float) -> float:
@@ -88,10 +90,15 @@ def veiled(img: Image.Image, foot_y: float) -> Image.Image:
     return out
 
 
+def on_slope(img: Image.Image) -> Image.Image:
+    """`img` as hazy as the far slope is at each row: what anything lying on the slope takes."""
+    return _fade(img, SLOPE_TOP, SLOPE_CREST, 0, CREST_BASE)
+
+
 def lowland(rng: random.Random, rim_y: list[int]) -> Image.Image:
     """Low floor from the rim up to the crest, the far slope over it, each hazier toward the top."""
     below = _fade(_floor(rng, FLOOR), FAR, NEAR, CREST_BASE, LIP)
-    above = _fade(_floor(rng, SLOPE), 0.55, 0.2, 0, CREST_BASE)
+    above = on_slope(_floor(rng, SLOPE))
     cut = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(cut)
     for x in range(W):
