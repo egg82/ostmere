@@ -2494,6 +2494,8 @@ export interface components {
             tally: boolean;
             /** Clock */
             clock: ("dawn" | "day" | "evening" | "night") | null;
+            /** Rises In Steps */
+            rises_in_steps: boolean;
             /** Bonus Bp */
             bonus_bp: number | null;
         };

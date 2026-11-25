@@ -19,7 +19,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 }
 
 const store = (id: string, cap: number, extra: { tally?: boolean; clock?: "night" | null }) =>
-  ({ store: id, label_key: `store.${id}`, cap, made_by: [], hidden: false, tally: extra.tally ?? false, clock: extra.clock ?? null, bonus_bp: null });
+  ({ store: id, label_key: `store.${id}`, cap, made_by: [], hidden: false, tally: extra.tally ?? false, clock: extra.clock ?? null, rises_in_steps: false, bonus_bp: null });
 const content: Content = {
   ...fixtureContent,
   store_infos: [...fixtureContent.store_infos, store("night", 20 * Q, { clock: "night" }), store("arrivals", 10 * Q, { tally: true }), store("tick", 20 * Q, {})],

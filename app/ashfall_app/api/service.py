@@ -8,7 +8,7 @@ from ..accounts import codes
 from ..opening import convert as authored
 from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
-from ..opening.makers import card_makes, card_takes, made_by
+from ..opening.makers import card_makes, card_takes, made_by, rises_in_steps
 from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
 from ..opening.refs import outcomes
 from ..opening.stake_checks import reach_modifiers, reach_stops
@@ -147,7 +147,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES, max_unless=MAX_UNLESS, max_or_else=MAX_OR_ELSE, reserved_mix_prefix=e.TOWN_PREFIX),
         text_entries=[cm.TextEntry(key=k, text=t) for k, t in o.text.items()],
         store_infos=[cm.StoreInfo(store=s.id, label_key=s.label_key, cap=e.units(s.cap_items), made_by=made_by(o, s.id),
-                                  hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))
+                                  rises_in_steps=rises_in_steps(o, s.id), hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))
                      for s in o.stores],
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
         threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key) for t in o.threats],
