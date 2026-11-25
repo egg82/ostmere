@@ -1,19 +1,19 @@
-beats whenever (pace_scale 1): B14 day 15.33, target_day 16
+beats whenever (pace_scale 1): B14 day 15.42, target_day 16
   away V53->V54: 2 ['trigger t_b13', 'trigger offer_o_sun_rack']
-  away V54->V55: 5 ['trigger t_sow', 'trigger t_beds', 'trigger t_town_barley_stew', 'trigger t_frost_beds', 'trigger t_town_covers']
+  away V54->V55: 5 ['trigger t_sow', 'trigger t_beds', 'trigger t_pot_barley', 'trigger t_frost_beds', 'trigger t_town_covers']
   away V55->V56: 1 ['trigger t_deer']
   away V56->V57: 0 []
   away V57->V58: 0 []
   away V58->V59: 0 []
-  away V59->V60: 3 ['trigger t_b14', 'trigger t_rows_black', 'trigger offer_o_road']
+  away V59->V60: 2 ['trigger t_b14', 'trigger offer_o_road']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      27      11       0       5       1      24       2     70
+  1      27      11       0       5       1      25       2     71
   2      19       4       2       3       0      15       2     45
   3       5       0       0       0       0       0       4      9
-  4      17       3       0       0       0       2       2     24
-  5      18       4       0       0       0      72       2     96
-  6      19       4       0       2       0       5       2     32
-  7       3       3       1       0       0       9       1     17
+  4      17       3       0       0       0       2       1     23
+  5      18       4       0       0       0      72       1     95
+  6      19       4       0       2       0       5       3     33
+  7       3       3       1       0       0      10       1     18
   8      10       4       0       2       0      10       3     29
-  9      14       1       0       4       0      36       2     57
+  9      14       1       0       4       0      37       3     59
