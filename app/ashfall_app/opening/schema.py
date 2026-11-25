@@ -56,11 +56,12 @@ DAY_SIXTEEN = Path(__file__).resolve().parent / "day_sixteen.toml"
 DAY_EIGHTEEN = Path(__file__).resolve().parent / "day_eighteen.toml"
 DAY_NINETEEN = Path(__file__).resolve().parent / "day_nineteen.toml"
 DAY_TWENTY_TWO = Path(__file__).resolve().parent / "day_twenty_two.toml"
+DAY_TWENTY_THREE = Path(__file__).resolve().parent / "day_twenty_three.toml"
 PRESTIGE = Path(__file__).resolve().parent / "prestige.toml"
 PHASE_PAYS = Path(__file__).resolve().parent / "phase_pays.toml"
 CHAPTERS = (DAY_ONE, DAY_TWO, DAY_THREE, DAY_FOUR, DAY_FIVE, B7, DAY_SIX, DAY_EIGHT, DAY_NINE, DAY_ELEVEN,
             DAY_TWELVE, DAY_FIFTEEN, DAY_SIXTEEN, DAY_EIGHTEEN, DAY_NINETEEN, DAY_TWENTY_TWO,
-            PRESTIGE, PHASE_PAYS)
+            DAY_TWENTY_THREE, PRESTIGE, PHASE_PAYS)
 """The chapters after the opening, merged on in this order (Chapter): what ships. Prestige and its phase pays come
 last, since the phase pays expand over every skill row the chapters before them wrote."""
 IN_WRITING: tuple[Path, ...] = ()
@@ -186,6 +187,8 @@ class Chapter(Entry):
     while_running: dict[str, list[WhileRunningEntry]] = {}
     """Entries held while an earlier card runs, by card id, after any it holds: a side this chapter declares raised by a
     card an earlier one shipped (the card pays more)."""
+    lane_labels: dict[str, list[LaneLabelEntry]] = {}
+    """Later labels for a lane an earlier file declares, by lane id, after any it has: a joined person named later."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
     beat_lines: dict[str, list[str]] = {}
