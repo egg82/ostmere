@@ -38,6 +38,7 @@ Code and docs cite a decision by its title, quoted after a mention of `decisions
 - [Cascades are the peak](decisions/principles.md): the best moment is a good build setting off a deterministic chain reaction.
 - [Progress is stated, never hinted](decisions/principles.md): every gate on progress, and the next step with how far along it is, is on screen in plain words.
 - [Every option offered works as worded](decisions/principles.md): no option that can't do what it says, no option offered twice, long lists in the game's own order.
+- [Tools early, choices kept](decisions/principles.md): QoL and exact information arrive with what they serve, never gated behind doing it by hand; automation never decides for the player; a lock ships with a lead-in.
 - [No blind permanent choices](decisions/principles.md): every choice is a tradeoff; a weight that can't be seen when chosen is free to change later.
 - [Built on habits](decisions/principles.md): what comes from habits and what is new code here.
 - [Never](decisions/principles.md): store-shaped mechanics, card framing, and the lines the story never crosses.
