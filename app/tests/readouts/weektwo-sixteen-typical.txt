@@ -3,8 +3,8 @@ beats typical (pace_scale 1): B15 day 17.82, target_day 18
   away V70->V71: 1 ['trigger offer_j_smoke_hole']
   away V71->V72: 3 ['trigger t_rime_ring', 'trigger offer_j_wedged', 'trigger note_n_ground_3']
   away V72->V73: 2 ['trigger t_covers_torn', 'trigger offer_j_snares']
-  away V73->V74: 1 ['trigger offer_j_ridge']
-  away V74->V75: 1 ['trigger offer_j_tally']
+  away V73->V74: 0 []
+  away V74->V75: 0 []
   away V75->V76: 0 []
   away V76->V77: 0 []
   away V77->V78: 0 []
@@ -20,4 +20,4 @@ day    line feature    chip   store   skill    card   level  total
   8       9       4       2       2       0      10       3     30
   9      14       1       0       3       0      28       1     47
  10      13       3       0       1       0      12       1     30
- 11      15       1       0       0       0       5       2     23
+ 11      13       1       0       0       0       4       2     20

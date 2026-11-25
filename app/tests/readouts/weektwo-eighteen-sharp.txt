@@ -1,7 +1,7 @@
 beats sharp (pace_scale 1): B16 day 17.92, target_day 19
   away V140->V141: 0 []
   away V141->V142: 0 []
-  away V142->V143: 1 ['trigger offer_o_choir']
+  away V142->V143: 0 []
   away V143->V144: 0 []
   away V144->V145: 1 ['trigger t_covers_torn']
   away V145->V146: 0 []
@@ -27,5 +27,5 @@ day    line feature    chip   store   skill    card   level  total
   7       1       0       0       0       0       0       2      3
   8       9       3       0       2       0      10       1     25
   9      14       1       0       4       0      36       2     57
- 10      21       3       2       1       0      15       2     44
- 11      24       2       1       0       0     119       2    148
+ 10      20       3       2       1       0      15       2     43
+ 11      22       2       1       0       0     118       2    145

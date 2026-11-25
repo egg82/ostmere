@@ -60,7 +60,7 @@ PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fift
          "twentythree": twentythree}
 """Each chapter's typical play is the one its counting reads."""
 PART_STEPS = 1
-PARTS = {"eight": 14, "nine": 7, "eleven": 7, "twelve": 11, "fifteen": 12, "sixteen": 10, "eighteen": 6, "nineteen": 6, "twentytwo": 12,
+PARTS = {"eight": 14, "nine": 7, "eleven": 7, "twelve": 11, "fifteen": 12, "sixteen": 6, "eighteen": 6, "nineteen": 4, "twentytwo": 9,
          "twentythree": 14}
 """How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
 each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
