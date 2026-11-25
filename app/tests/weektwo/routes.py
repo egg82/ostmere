@@ -80,9 +80,21 @@ def laters(chapter: str, name: str) -> tuple[Later, ...]:
     return (*w1.chapters(), *(DAYS[c](name) for c in own))
 
 
+hidden_play_in: str | None = None
+"""The id of the test whose body is running, set by tests/weektwo/conftest.py; None outside one, and for a test that names
+its shard. A play built then is one the shard routing (`play_of`) cannot see."""
+
+
+def refuse_hidden_play(chapter: str, name: str) -> None:
+    if hidden_play_in is not None:
+        raise AssertionError(f"{hidden_play_in} builds the play of {chapter} on {name} in its body; take the route's "
+                             f"fixture (tests/weektwo/conftest.py) so play_of places it in that chapter's shard")
+
+
 @cache
 def played(chapter: str, name: str, seed: int = 0) -> DayTwoPlayer:
     """A play through `chapter` from the start, reading no saved end: what tools/chapter_saves.py saves."""
+    refuse_hidden_play(chapter, name)
     if chapter == "week1":
         return week1(name, seed)
     return play_on(played(BEFORE[chapter], name, seed), laters(chapter, name))
@@ -106,6 +118,7 @@ def start(chapter: str, name: str, seed: int) -> DayTwoPlayer:
 
 @cache
 def from_saved(chapter: str, name: str, seed: int = 0) -> DayTwoPlayer:
+    refuse_hidden_play(chapter, name)
     return play_on(start(chapter, name, seed), laters(chapter, name))
 
 
