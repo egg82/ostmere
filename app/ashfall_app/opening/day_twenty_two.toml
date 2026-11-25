@@ -336,6 +336,19 @@ unlocks = [
   { unlock_kind = "card", id = "n12_walk_ashwood" },
 ]
 
+# The wood's page, on B18's condition (one moment with it).
+[[entries]]
+id = "e_ashwood"
+section = "places"
+hand = "ink"
+runners = []
+
+[[notes]]
+id = "n_ashwood_1"
+entry = "e_ashwood"
+gate = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "r2_open", value = 1 }]
+
 # ---------- SL29: the fish ----------
 
 [[triggers]]
@@ -684,6 +697,7 @@ l_b18_1 = "over the ridge the grey turns to trees, dead trunks standing as they 
 l_b18_2 = "by the old road a dead elk walks, very slowly, toward a warm patch."
 l_b18_3 = "{n3} looks along the back of the elk {n2} drags in, and it goes on the fire whole."
 l_map_ashwood = "the wood past the ridge goes on the map."
+n_ashwood_1 = "every trunk dead and still standing, grey to the top. fungus shelves up them like stairs. warm patches where the ash lies thin. the wood is dry right through"
 l_fish = "pale fish hang under the fog on the warm stream, close enough to lift out."
 l_film_1 = "ash settles out of the air onto anything left open."
 l_film_2 = "{n3} scrapes the meat on the racks with a thumbnail, looks, and sets it aside."
