@@ -1,0 +1,754 @@
+# Day twenty-five: from B20 (the wake at the stone) through I8 and the boar hunt, I9 and O-walkers, SL35, the
+# post's door and Camp 19, I10, O-widowers and Lucy's next jobs to B21, as data merged after day_twenty_three.toml
+# (schema.Chapter, chapters.merge). Story spoilers: never shown to the owner. Spec: content/team/week-four.md, "Day
+# twenty-five"; numbers: content/team/week-four-numbers.md.
+version = 1
+end_feature = "bedesman_home"
+
+# ---------- clocks ----------
+
+# Never drawn: game hours since B20, for I8, SL35, I10 and the post's door.
+[[stores]]
+id = "kept_clock"
+label_key = "store_kept_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "kept_clock"
+label_key = "action_kept_clock"
+makes = [{ store = "kept_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_kept_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "kept_clock" }] }
+
+# A latch, never drawn: started at B20 + 24 h, so the door can wait on it beside the post's count (a requirement reads
+# only an unlock; day_twenty_three.toml's sorrel_16h). Machinery, no moment of its own.
+[[stores]]
+id = "kept_24h"
+label_key = "store_kept_24h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "kept_24h"
+label_key = "action_kept_24h"
+makes = [{ store = "kept_24h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_kept_24h"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 24 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "kept_24h" }] }
+
+# ---------- I8: the bowl set out, and the boar hunt ----------
+
+# The evening after the wake. The hunt opens with it: a fight card of the player's own whose losses are told from pools
+# of its own (api/CONTRACT.txt, "LOSS LINES"), never before kept (loss_after).
+[[triggers]]
+id = "t_bowl_set"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }]
+outcome = { line_keys = ["l_bowl_set"], unlocks = [{ unlock_kind = "card", id = "hunt_boar" }, { unlock_kind = "feature", id = "combat" }] }
+
+[[stores]]
+id = "boar_lost"
+label_key = "store_boar_lost"
+cap_items = 20000
+
+[[threats]]
+id = "ash_boar"
+label_key = "threat_ash_boar"
+base = 14
+
+# The hands against the boar at the warm patch: a won hunt brings meat and a hide, a lost one is told as the player's
+# death and costs only the smoked carried out (no loses, no wounds).
+[[cards]]
+id = "hunt_boar"
+only_player = "self"
+presentation = "action"
+label_key = "c_hunt_boar"
+upside_key = "up_hunt_boar"
+work_s = 7200
+skill = "melee"
+xp_per_hour = 900
+inputs = [{ store = "smoked", items = 2 }]
+outcome = { stores = [{ store = "catch", items = 6 }, { store = "pelt", items = 1 }] }
+fight = { side = "hands", threat = "ash_boar", lost = "boar_lost", won_line_keys = ["l_fight_boar_won_1", "l_fight_boar_won_2", "l_fight_boar_won_3", "l_fight_boar_won_4", "l_fight_boar_won_5", "l_fight_boar_won_6"], loss_pool = ["l_fight_boar_death_1", "l_fight_boar_death_2", "l_fight_boar_death_3", "l_fight_boar_death_4", "l_fight_boar_death_5", "l_fight_boar_death_6"], loss_notes = ["n_forget_1", "n_forget_2", "n_forget_3", "n_forget_4", "n_forget_5", "n_forget_6", "n_forget_7", "n_forget_8", "n_forget_9", "n_forget_10", "n_forget_11", "n_forget_12"], on_loss_key = "on_loss_hunt_boar", loss_after = "kept" }
+
+[[entries]]
+id = "e_ash_boar"
+section = "creatures"
+hand = "ink"
+runners = ["hunt_boar"]
+
+[[notes]]
+id = "n_boar_1"
+entry = "e_ash_boar"
+gate = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 8 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }]
+hand = "ink"
+
+# R2's first ramp step (regions.md, days 6-12): six days in, the sounders come; the boar a quarter stronger.
+[[triggers]]
+id = "t_boar_sounders"
+when = { test = "at_least", subject_kind = "store", id = "r2_clock", value = 144 }
+outcome = { modifiers = [{ target = "threat", id = "ash_boar", kind = "add_bp", amount_bp = 2500, source = "t_boar_sounders" }] }
+
+# ---------- I9 and O-walkers: four at the gate ----------
+
+# The tier's count at 230 meals, once kept. All four join on either answer as one pooled group, its share the answer's
+# card (GROUPS: the group's cards come with the join); what the answer keeps is D-147's size, as O-fiddle's. The table
+# feeds four more.
+[[offers]]
+id = "o_walkers"
+text_key = "o_walkers"
+kind = "work"
+gate = { test = "at_least", subject_kind = "store", id = "meals", value = 230 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }]
+line_keys = ["l_walkers_1", "l_walkers_2"]
+
+[[offers.answers]]
+id = "o_walkers_food"
+label_key = "a_walkers_food"
+cost_key = "a_walkers_food_cost"
+role = "food"
+[offers.answers.outcome]
+line_keys = ["l_walkers_food"]
+stores = [{ store = "arrivals", items = 4 }]
+joins = [
+  { lane = "n16", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
+  { lane = "n17", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
+  { lane = "n18", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
+  { lane = "n19", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
+]
+modifiers = [
+  { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_food" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_walkers_food" },
+]
+
+[[offers.answers]]
+id = "o_walkers_build"
+label_key = "a_walkers_build"
+cost_key = "a_walkers_build_cost"
+role = "build"
+[offers.answers.outcome]
+line_keys = ["l_walkers_build"]
+stores = [{ store = "arrivals", items = 4 }]
+joins = [
+  { lane = "n16", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
+  { lane = "n17", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
+  { lane = "n18", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
+  { lane = "n19", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
+]
+modifiers = [
+  { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n1_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n2_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n3_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n4_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n5_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n6_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n7_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n8_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n9_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n10_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "g_walkers_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_walkers_build" },
+]
+
+[[lanes]]
+id = "g_walkers"
+label_key = "lane_g_walkers"
+ruled = true
+pooled = true
+
+[[lanes]]
+id = "n16"
+label_key = "lane_n16"
+ruled = true
+told = "line"
+group = "g_walkers"
+
+[[lanes]]
+id = "n17"
+label_key = "lane_n17"
+ruled = true
+told = "line"
+group = "g_walkers"
+
+[[lanes]]
+id = "n18"
+label_key = "lane_n18"
+ruled = true
+told = "line"
+group = "g_walkers"
+
+[[lanes]]
+id = "n19"
+label_key = "lane_n19"
+ruled = true
+told = "line"
+group = "g_walkers"
+
+# Hours since the four sat down, and a latch at six, for the widowers' offer (machinery).
+[[stores]]
+id = "walkers_clock"
+label_key = "store_walkers_clock"
+cap_items = 6
+hidden = true
+
+[[standing]]
+id = "walkers_clock"
+label_key = "action_walkers_clock"
+makes = [{ store = "walkers_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_walkers_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_walkers", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "walkers_clock" }] }
+
+[[stores]]
+id = "walkers_6h"
+label_key = "store_walkers_6h"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "walkers_6h"
+label_key = "action_walkers_6h"
+makes = [{ store = "walkers_6h", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_walkers_6h"
+when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 6 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "walkers_6h" }] }
+
+# ---------- SL35: the cutter's sister ----------
+
+[[triggers]]
+id = "t_sister_road"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 20 }
+outcome = { line_keys = ["l_sister_road"] }
+
+# ---------- the post's door, and Camp 19 ----------
+
+# From the post's sixth stage, a day after the wake: the door's hides, a one-off on the hands. Its finish lifts Camp 19.
+[[triggers]]
+id = "t_post_door"
+when = { test = "at_least", subject_kind = "card_count", id = "post", value = 6 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "kept_24h", value = 1 }]
+outcome = { line_keys = ["l_post_door"], unlocks = [{ unlock_kind = "card", id = "post_door" }] }
+
+[[cards]]
+id = "post_door"
+only_player = "project"
+presentation = "craft"
+label_key = "c_post_door"
+upside_key = "up_post_door"
+work_s = 2400
+cap = 1
+inputs = [{ store = "pelt", items = 3 }, { store = "cord", items = 2 }]
+
+# Day nineteen's held marker filled in, lifted by the door.
+[[camp_levels]]
+at_items = 5100000
+pays_key = "camp_pays_19"
+pays_from = 24
+pays_to = 36
+held = true
+lifted_by = ["post_door"]
+line_keys = ["l_camp_19"]
+modifiers = [{ target = "cap", id = "charwood", kind = "mul_bp", amount_bp = 15000, source = "camp_19" }]
+
+# Held at a "?" past the chapter, a goal on screen.
+[[camp_levels]]
+at_items = 5400000
+pays_key = "pays_unknown"
+held = true
+
+# ---------- I10: a thank-you ----------
+
+[[triggers]]
+id = "t_thanks"
+when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 30 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_walkers", value = 1 }]
+outcome = { line_keys = ["l_thanks"] }
+
+# ---------- O-widowers ----------
+
+# The tier's count at 285 meals, six hours after the four. Three join as a second pooled group, told by the day's
+# mention, no beat; the same lasting halves, the table three more.
+[[offers]]
+id = "o_widowers"
+text_key = "o_widowers"
+kind = "work"
+gate = { test = "at_least", subject_kind = "store", id = "meals", value = 285 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "walkers_6h", value = 1 }]
+
+[[offers.answers]]
+id = "o_widowers_food"
+label_key = "a_widowers_food"
+cost_key = "a_widowers_food_cost"
+role = "food"
+[offers.answers.outcome]
+stores = [{ store = "arrivals", items = 3 }]
+joins = [
+  { lane = "n20", mix = "town:camp", card = "g_widowers_fungus_stew", own_split = false },
+  { lane = "n21", mix = "town:camp", card = "g_widowers_fungus_stew", own_split = false },
+  { lane = "n22", mix = "town:camp", card = "g_widowers_fungus_stew", own_split = false },
+]
+modifiers = [
+  { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_food" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_widowers_food" },
+]
+
+[[offers.answers]]
+id = "o_widowers_build"
+label_key = "a_widowers_build"
+cost_key = "a_widowers_build_cost"
+role = "build"
+[offers.answers.outcome]
+stores = [{ store = "arrivals", items = 3 }]
+joins = [
+  { lane = "n20", mix = "town:camp", card = "g_widowers_stakes", own_split = false },
+  { lane = "n21", mix = "town:camp", card = "g_widowers_stakes", own_split = false },
+  { lane = "n22", mix = "town:camp", card = "g_widowers_stakes", own_split = false },
+]
+modifiers = [
+  { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n1_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n2_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n3_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n4_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n5_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n6_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n7_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n8_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n9_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n10_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "g_walkers_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "g_widowers_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_widowers_build" },
+]
+
+[[lanes]]
+id = "g_widowers"
+label_key = "lane_g_widowers"
+ruled = true
+pooled = true
+
+[[lanes]]
+id = "n20"
+label_key = "lane_n20"
+ruled = true
+told = "mention"
+group = "g_widowers"
+
+[[lanes]]
+id = "n21"
+label_key = "lane_n21"
+ruled = true
+told = "mention"
+group = "g_widowers"
+
+[[lanes]]
+id = "n22"
+label_key = "lane_n22"
+ruled = true
+told = "mention"
+group = "g_widowers"
+
+# ---------- Lucy's jobs ----------
+
+# From B20, the player's name first on her list: three more, one at a time on day nine's countdown after the last
+# answer, as day twenty-three's. Each yes queues a short hands job paying a one-off, each no costs nothing.
+[[offers]]
+id = "j_midden"
+text_key = "o_j_midden"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_show_fish", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 },
+]
+
+[[offers.answers]]
+id = "j_midden_yes"
+label_key = "a_j_midden_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_midden_yes"]
+unlocks = [{ unlock_kind = "card", id = "dig_midden" }]
+queues = ["dig_midden"]
+
+[[offers.answers]]
+id = "j_midden_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_midden_no"]
+
+[[cards]]
+id = "dig_midden"
+only_player = "story"
+presentation = "action"
+label_key = "c_dig_midden"
+upside_key = "up_dig_midden"
+work_s = 1200
+cap = 1
+outcome = { stores = [{ store = "ash", items = 4 }] }
+line_keys = ["l_dig_midden"]
+
+[[offers]]
+id = "j_leaning_wall"
+text_key = "o_j_leaning_wall"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_midden", value = 1 }]
+
+[[offers.answers]]
+id = "j_leaning_wall_yes"
+label_key = "a_j_leaning_wall_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_leaning_wall_yes"]
+unlocks = [{ unlock_kind = "card", id = "pull_wall" }]
+queues = ["pull_wall"]
+
+[[offers.answers]]
+id = "j_leaning_wall_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_leaning_wall_no"]
+
+[[cards]]
+id = "pull_wall"
+only_player = "story"
+presentation = "action"
+label_key = "c_pull_wall"
+upside_key = "up_pull_wall"
+work_s = 1200
+cap = 1
+outcome = { stores = [{ store = "stones", items = 3 }] }
+line_keys = ["l_pull_wall"]
+
+[[offers]]
+id = "j_steam_hole"
+text_key = "o_j_steam_hole"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_leaning_wall", value = 1 }]
+
+[[offers.answers]]
+id = "j_steam_hole_yes"
+label_key = "a_j_steam_hole_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_steam_hole_yes"]
+unlocks = [{ unlock_kind = "card", id = "steam_hole" }]
+queues = ["steam_hole"]
+
+[[offers.answers]]
+id = "j_steam_hole_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.outcome]
+stores = [{ store = "ask_wait", items = 3 }]
+line_keys = ["l_j_steam_hole_no"]
+
+[[cards]]
+id = "steam_hole"
+only_player = "story"
+presentation = "action"
+label_key = "c_steam_hole"
+upside_key = "up_steam_hole"
+work_s = 900
+cap = 1
+outcome = { stores = [{ store = "clay", items = 4 }] }
+line_keys = ["l_steam_hole"]
+
+# ---------- B21: the bedesman ----------
+
+# The twenty-fifth arrival starts the wait (day eighteen's B16 shape); eight hours on, N4 walks in. The widowers' answer
+# is that arrival on every route (15 at the turn, then one, two, four and three, each joining on either answer), and
+# the wait reads the answer, not the count: answers are no supply to the finite check (D-169), so a count read would be
+# a need nothing sure can meet.
+[[stores]]
+id = "bede_wait"
+label_key = "store_bede_wait"
+cap_items = 8
+hidden = true
+
+[[standing]]
+id = "bede_wait"
+label_key = "action_bede_wait"
+makes = [{ store = "bede_wait", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_bede_wait"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_widowers", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "bede_wait" }] }
+
+# B21: joins N4 with every everyday town card, their first work the post's stakes; no faith bonus (cast.md, N4's rule).
+[[triggers]]
+id = "t_b21"
+when = { test = "at_least", subject_kind = "store", id = "bede_wait", value = 8 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "belonging", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 },
+]
+[triggers.outcome]
+line_keys = ["l_b21_1", "l_b21_2", "l_b21_3", "l_b21_4"]
+stores = [{ store = "arrivals", items = 1 }]
+unlocks = [
+  { unlock_kind = "feature", id = "bedesman_home" },
+  { unlock_kind = "action", id = "n23_eating" },
+  { unlock_kind = "card", id = "n23_fungus_stew" },
+  { unlock_kind = "card", id = "n23_stakes" },
+  { unlock_kind = "card", id = "n23_clear_road" },
+  { unlock_kind = "card", id = "n23_walk_ashwood" },
+  { unlock_kind = "card", id = "n23_fog_fish" },
+  { unlock_kind = "card", id = "n23_wash_meat" },
+]
+joins = [{ lane = "n23", mix = "town:camp", card = "n23_stakes", own_split = true }]
+
+[[lanes]]
+id = "n23"
+label_key = "lane_n23"
+ruled = true
+told = "line"
+
+[[standing]]
+id = "n23_eating"
+label_key = "action_n23_eating"
+costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
+while_running = [{ lane = "n23", amount_bp = 1500 }]
+
+# ---------- the journal ----------
+
+# I8's day carries the first forgetting from the boar's own pool, so the hunt's notes count it as their first draw.
+[[subjects]]
+id = "s_i8"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_bowl_set" }
+first = { keys = ["n_forget_1"] }
+catchup = { keys = ["j_i8_catchup"] }
+
+[[subjects]]
+id = "s_b21"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b21" }
+first = { keys = ["n_day_b21"] }
+catchup = { keys = ["j_b21_catchup"] }
+late = { keys = ["j_b21_late"] }
+
+[[subjects]]
+id = "s_n16_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n16", way = "joined" }
+first = { keys = ["j_walkers_first"] }
+catchup = { keys = ["j_walkers_catchup"] }
+
+[[subjects]]
+id = "s_n17_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n17", way = "joined" }
+first = { keys = ["j_walkers_first"] }
+catchup = { keys = ["j_walkers_catchup"] }
+
+[[subjects]]
+id = "s_n18_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n18", way = "joined" }
+first = { keys = ["j_walkers_first"] }
+catchup = { keys = ["j_walkers_catchup"] }
+
+[[subjects]]
+id = "s_n19_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n19", way = "joined" }
+first = { keys = ["j_walkers_first"] }
+catchup = { keys = ["j_walkers_catchup"] }
+
+[[subjects]]
+id = "s_n23_joined"
+kind = "person"
+source = { source_kind = "lane", id = "n23", way = "joined" }
+first = { keys = ["j_n23_first"] }
+catchup = { keys = ["j_n23_catchup"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "bedesman_home"
+
+[[features]]
+id = "t_boar_sounders"
+label_key = "feature_t_boar_sounders"
+
+# ---------- text ----------
+
+[beat_lines]
+I8 = ["l_bowl_set"]
+I9 = ["l_walkers_1"]
+I10 = ["l_thanks"]
+B21 = ["l_b21_1"]
+
+[line_kinds]
+l_bowl_set = "story"
+l_fight_boar_won_1 = "fight"
+l_fight_boar_won_2 = "fight"
+l_fight_boar_won_3 = "fight"
+l_fight_boar_won_4 = "fight"
+l_fight_boar_won_5 = "fight"
+l_fight_boar_won_6 = "fight"
+l_fight_boar_death_1 = "fight"
+l_fight_boar_death_2 = "fight"
+l_fight_boar_death_3 = "fight"
+l_fight_boar_death_4 = "fight"
+l_fight_boar_death_5 = "fight"
+l_fight_boar_death_6 = "fight"
+l_walkers_1 = "story"
+l_walkers_2 = "story"
+l_walkers_food = "story"
+l_walkers_build = "story"
+l_sister_road = "story"
+l_post_door = "story"
+l_camp_19 = "level"
+l_thanks = "story"
+l_j_midden_yes = "story"
+l_j_midden_no = "story"
+l_dig_midden = "story"
+l_j_leaning_wall_yes = "story"
+l_j_leaning_wall_no = "story"
+l_pull_wall = "story"
+l_j_steam_hole_yes = "story"
+l_j_steam_hole_no = "story"
+l_steam_hole = "story"
+l_b21_1 = "story"
+l_b21_2 = "story"
+l_b21_3 = "story"
+l_b21_4 = "story"
+
+[text]
+store_kept_clock = "clock"
+action_kept_clock = "Clock"
+store_kept_24h = "clock"
+action_kept_24h = "Clock"
+l_bowl_set = "{n3} sets your bowl at your place. {n4} asks if you're going out after the pigs again."
+store_boar_lost = "boar hunts lost"
+threat_ash_boar = "Ash-boar"
+c_hunt_boar = "Hunt the boar"
+up_hunt_boar = "meat and a hide from the warm patch"
+on_loss_hunt_boar = "a loss: you die, and wake at the stone; what you carried is lost"
+l_fight_boar_won_1 = "you bring the boar back on a pole."
+l_fight_boar_won_2 = "a boar down at the warm patch. you carry the meat home."
+l_fight_boar_won_3 = "the boar comes from the side. you were ready for it."
+l_fight_boar_won_4 = "you drag a grey hide back through the fog."
+l_fight_boar_won_5 = "one boar, a long walk home with it."
+l_fight_boar_won_6 = "the hunt goes plainly, for once."
+l_fight_boar_death_1 = "the fog, the rooting all round. you wake at the stone."
+l_fight_boar_death_2 = "it comes from the side you weren't facing. first light, the stone."
+l_fight_boar_death_3 = "you wake on the warm stone with ash in your mouth."
+l_fight_boar_death_4 = "the trees, the fog, a grunt behind you. then the stone."
+l_fight_boar_death_5 = "you come up from the stone cold through. the smoked is gone."
+l_fight_boar_death_6 = "a pig in the fog. morning, the stone, the fire."
+n_boar_1 = "bigger than a pig has any right to be. caked grey. came from the side i wasn't facing"
+n_forget_1 = "couldn't think of the word for the pot hook. had it yesterday"
+n_forget_2 = "started a knot and stopped. which hand goes first"
+n_forget_3 = "stood at the hall door and had to look for the stream. left of the door, it was"
+n_forget_4 = "had a tune going and lost the next line of it"
+n_forget_5 = "tied the knot fine. couldn't say what it's called"
+n_forget_6 = "counted the steps down to the stream. had a number for it once"
+n_forget_7 = "the word for the dish we scrape the ash off. it came back at supper"
+n_forget_8 = "went to the woodpile for something. stood there"
+n_forget_9 = "couldn't think which side of the fire i sleep on. the blanket knew"
+n_forget_10 = "lost the word for the bit of the shovel you stand on"
+n_forget_11 = "a saying about rain. had the start of it, not the end"
+n_forget_12 = "which way round the cord goes on the rack. had to watch someone"
+feature_t_boar_sounders = "the sounders"
+o_walkers = "Four have come in out of the fog. Where do they work first?"
+l_walkers_1 = "four come in out of the fog at the gate. one asks why your coat is torn down the back."
+l_walkers_2 = "someone tells her. she shrugs: kept, then. where do they sleep?"
+a_walkers_food = "To the food"
+a_walkers_build = "To the building"
+a_walkers_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
+a_walkers_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
+l_walkers_food = "the four go to the pot together."
+l_walkers_build = "the four take the shovels between them."
+lane_g_walkers = "The four"
+lane_n16 = "One of the four"
+lane_n17 = "One of the four"
+lane_n18 = "One of the four"
+lane_n19 = "One of the four"
+store_walkers_clock = "clock"
+action_walkers_clock = "Clock"
+store_walkers_6h = "clock"
+action_walkers_6h = "Clock"
+l_sister_road = "{n12} watches you come up from the stone. she looks at the road, then goes back to the stakes."
+l_post_door = "the post wants a door on its store, a hide over a frame."
+c_post_door = "Hang the post's door"
+up_post_door = "a door that shuts on the post's store"
+camp_pays_19 = "charwood holds {to}, was {from}"
+l_camp_19 = "the charwood gets a stack of its own out at the post."
+l_thanks = "{n5} kneels at the camp stone, lays her hand flat on it, and says thank you to it."
+o_widowers = "Three men have come for the table. Where do they work first?"
+a_widowers_food = "To the food"
+a_widowers_build = "To the building"
+a_widowers_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
+a_widowers_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
+lane_g_widowers = "The three"
+lane_n20 = "One of the three"
+lane_n21 = "One of the three"
+lane_n22 = "One of the three"
+o_j_midden = "Lucy says somebody has to dig out the midden pit before it reaches the hall."
+a_j_midden_yes = "You dig it"
+l_j_midden_yes = "your name is first on her list. you take the shovel."
+l_j_midden_no = "lucy finds someone with a stronger stomach."
+c_dig_midden = "Dig out the midden"
+up_dig_midden = "ash for her ground"
+l_dig_midden = "the pit is dug out. what comes up goes on the ground."
+o_j_leaning_wall = "Lucy says somebody has to pull down the ruin's leaning wall that nobody will stand under."
+a_j_leaning_wall_yes = "You pull it down"
+l_j_leaning_wall_yes = "you take a rope to the ruin."
+l_j_leaning_wall_no = "lucy says she'll find two who will."
+c_pull_wall = "Pull down the wall"
+up_pull_wall = "stones from the ruin"
+l_pull_wall = "the wall comes down in one piece. you carry the good stones back."
+o_j_steam_hole = "Lucy says somebody has to go down the hole by the stream where the steam comes up."
+a_j_steam_hole_yes = "You go down"
+l_j_steam_hole_yes = "you tie a rope round your waist."
+l_j_steam_hole_no = "lucy nods and asks round the fire."
+c_steam_hole = "Go down the steam hole"
+up_steam_hole = "clay from the warm ground"
+l_steam_hole = "it goes down further than the rope. you come back up with clay."
+store_bede_wait = "clock"
+action_bede_wait = "Clock"
+l_b21_1 = "a stranger walks in along the road, kneeling at every warm stone, the camp stone last."
+l_b21_2 = "the bedesman looks at you a long time and says it's a blessing, and means it."
+l_b21_3 = "{n5} says she thanked the stone. they take her hands off it. never thank the warmth."
+l_b21_4 = "that night a ring at the fire, hands joined, the words said. {n13} stands outside it."
+lane_n23 = "The bedesman's hands"
+action_n23_eating = "The bedesman's share"
+j_i8_catchup = "supper as ever. nobody said anything about the morning"
+n_day_b21 = "a stranger came in kneeling at every warm stone. said i was a blessing. a ring at the fire that night. {n13} stood out of it"
+j_b21_catchup = "a stranger came in along the road, kneeling at the stones"
+j_b21_late = "the bedesman says the words at the fire most nights"
+j_walkers_first = "four came in out of the fog, walking toward the light"
+j_walkers_catchup = "four more at the table"
+j_n23_first = "the bedesman kneels at every warm stone in the valley"
+j_n23_catchup = "the bedesman came along the road"
