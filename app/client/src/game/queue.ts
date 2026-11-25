@@ -28,15 +28,17 @@ export function queueFull(catalog: Catalog, view: View): boolean {
 export function onFace(catalog: Catalog, view: View, card: Card): boolean {
   if (!queueable(catalog, view, card)) return false;
   if (card.blocker !== null) return keptReadyAt(view, card, catalog.content.scales.quantity_per_item) !== null;
-  const running = view.lanes.find((l) => l.lane === catalog.laneOf(card.card))?.running_card ?? null;
-  return running !== null && running !== card.card;
+  return (view.lanes.find((l) => l.lane === catalog.laneOf(card.card))?.running_card ?? null) !== null;
 }
 
 /** Whether "When ready" takes `card`, from Plan or its face: a step (not work done again and again, which is the mix's)
- * after the end, not at its cap and not already queued, whatever it waits on: an entry that cannot run yet waits. Not one
+ * after the end, not at its cap, not already queued and not running (its entry would pop at that landing and add
+ * nothing: Until done is the running card's own), whatever it waits on: an entry that cannot run yet waits. Not one on a
+ * ruled lane (the queue is the hands' plan: the server refuses it, CONTRACT.txt, "A LANE RUN BY RULES"). Not one
  * waiting on a store the player has never seen (a clock: what it opens must open in front of the player). */
 export function queueable(catalog: Catalog, view: View, card: Card): boolean {
-  return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action"
+  return view.ended_at !== null && catalog.cards.get(card.card)?.presentation !== "action" && !catalog.ruled(card.card)
+    && !view.lanes.some((l) => l.running_card === card.card)
     && (card.cap === null || card.completions < card.cap) && !queuedCards(view).includes(card.card)
     && (card.blocker === null || !waitsOnUnseen(view, card));
 }
