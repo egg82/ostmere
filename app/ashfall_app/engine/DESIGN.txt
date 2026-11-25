@@ -44,7 +44,9 @@ CHOICES (each with its reason)
 - Orders: latched conditions with an explicit release (hysteresis). Evaluation runs once at any instant where a
   latch changes, the queue pops, a project lands (every TAP_DONE: a push, a completion), a
   trigger fires or a READY event falls, and right after SetOrders or SetQueue; never after a player's SwitchMix,
-  SaveMix or TapCard. It applies the TapCard of the first order that is true and can act; else, when no order's mix
+  SaveMix or TapCard, except a SwitchMix or SaveMix that clears the Pause of a card a true order or the queue head
+  names (Running dry): that card turned ready at the decision's instant, which is READY's own instant, and waiting for
+  the next unrelated instant would let a player acting on every timer start it sooner (the 2 AM test). It applies the TapCard of the first order that is true and can act; else, when no order's mix
   runs (CARDS, "Order mix"), the queue head's verb; else nothing. A TapCard can act when its project is unlocked,
   not a spent one-off, ready, and its lane free. An order's SwitchMix is never applied as a verb: while its latch is
   true its mix runs over the player's (Order mix). An order that cannot act is passed over, as a gambit with no

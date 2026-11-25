@@ -32,3 +32,12 @@ def _moved(save: Save, rules: Rules) -> set[StoreId]:
     mixes = {plan.running_mix_id(save, rules), plan.running_town_mix_id(save, rules)}
     cards: set[CardId] = {s.card for m in mixes if m is not None for s in flatten_shares(save.mixes, m)}
     return {st for card in cards for st in makes(rules, card) | costs(rules, card)}
+
+
+def unpaused_candidate(before: Save, after: Save, rules: Rules) -> bool:
+    """A change of the running mix cleared the Pause of a card a true order or the queue head would tap (DESIGN.txt,
+    "Running dry"): that card turned ready at this instant, so READY falls here and evaluation runs, as it would at the
+    Pause's own resume. Without it the card waits for the next unrelated instant, which a player acting on every timer
+    reaches sooner (the 2 AM test)."""
+    cleared = {p.runner for p in before.pauses} - {p.runner for p in after.pauses}
+    return bool(cleared & set(plan.candidates(after, rules)))
