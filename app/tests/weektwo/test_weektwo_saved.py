@@ -16,7 +16,7 @@ from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weektwo import ends, rebased
-from tests.weektwo.routes import BEFORE, CHAPTERS, SAVED, laters, saved_end
+from tests.weektwo.routes import CHAPTERS, SAVED, laters, saved_end
 
 CHECKED = [(chapter, name) for chapter, names in SAVED.items() if chapter != "week1" for name in names]
 
