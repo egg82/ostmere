@@ -450,10 +450,16 @@ when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 
 outcome = { modifiers = [{ target = "threat", id = "ashrats", kind = "add_bp", amount_bp = 5000, source = "t_rats_drift" }] }
 
 # U3: seventy hours of combat's clock and twelve of the season's. requires reads only unlocks, so the first clock's
-# reach is a feature.
+# reach is a feature. Twenty-two hours of the season's clock reach it too, whichever comes first, so a late B7 does not
+# carry into U3 (the typical route's seventy hours land at 21.6).
 [[triggers]]
 id = "t_pack_near"
 when = { test = "at_least", subject_kind = "store", id = "r1_clock", value = 70 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
+
+[[triggers]]
+id = "t_pack_near_drift"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 22 }
 outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
 
 [[triggers]]
