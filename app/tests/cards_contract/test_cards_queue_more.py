@@ -3,8 +3,6 @@ than the runs planned before it (the tap under way and the earlier entries of c)
 add runs after that tap. Each is checked when its turn comes: an entry of a card that reached its cap is dropped at that
 instant (DESIGN.txt, "Greyed mix"), and one waiting on an input nothing makes is kept but passed over, so the hands go on
 with what can run (DESIGN.txt, "Never ready")."""
-import pytest
-
 from ashfall_app.engine import (
     HANDS, Amount, AtLeast, CardCount, CardDef, CardId, QueueEntry, SetQueue, StoreDef, StoreId, TapCard, advance,
     decide, new_save,
@@ -45,7 +43,6 @@ def test_the_old_entry_for_a_running_card_added_nothing():
     assert done(a, r, C) == 1 and a.queue == () and lane(a, HANDS).card is None
 
 
-@pytest.mark.xfail(strict=True, reason="#494: a tap of a completed card is kept in the queue")
 def test_more_runs_than_a_cap_allows_run_to_the_cap_and_leave_the_queue():
     """c has a cap of 2; five runs planned while the first runs: c lands twice, the three left are dropped at the cap,
     and d behind them runs."""

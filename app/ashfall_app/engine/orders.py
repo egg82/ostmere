@@ -170,9 +170,9 @@ type Latch = bool | GuardedLatch
 
 @dataclass(frozen=True)
 class QueueEntry:
-    """Apply `verb` when this entry is the controlling one: the first live entry. An entry whose verb is dead (a switch
-    to a greyed mix, a tap of a completed card) is passed over and kept, frozen: never popped while dead unless it
-    settles (its `until` holds and cannot fall), when it pops. The controlling entry pops once its `until` is true
+    """Apply `verb` when this entry is the controlling one: the first live entry. An entry whose verb is dead is passed
+    over: a tap of a completed card pops at once, and a switch to a greyed mix is kept, frozen: never popped while dead
+    unless it settles (its `until` holds and cannot fall), when it pops. The controlling entry pops once its `until` is true
     (checked at every instant, whoever controls), at once if it already is when it comes to control, a revived dead
     entry included (DESIGN.txt, "Greyed mix")."""
 
