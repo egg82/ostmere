@@ -340,6 +340,7 @@ unlocks = [
 [[entries]]
 id = "e_ashwood"
 section = "places"
+sketch = "ashwood"
 hand = "ink"
 runners = []
 
