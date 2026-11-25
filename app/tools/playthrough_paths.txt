@@ -284,6 +284,7 @@ app/ashfall_app/opening/tally_checks.py
 app/ashfall_app/opening/town.py
 app/ashfall_app/opening/ui_keys.py
 app/ashfall_app/opening/unlock_order_checks.py
+app/ashfall_app/opening/upside_checks.py
 app/ashfall_app/page_config.py
 app/ashfall_app/reminders/__init__.py
 app/ashfall_app/reminders/choices.json

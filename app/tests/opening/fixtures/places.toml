@@ -11,6 +11,7 @@ id = "m_road"
 id = "m_scout"
 presentation = "action"
 label_key = "m_c_scout"
+upside_key = "t_up"
 work_s = 60
 
 [[triggers]]
@@ -34,5 +35,6 @@ reveal = { unlock_kind = "card", id = "m_scout" }
 [line_kinds]
 
 [text]
+t_up = "what it is for"
 m_c_scout = "Scout"
 m_p_hamlet = "A hamlet"

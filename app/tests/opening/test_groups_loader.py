@@ -10,7 +10,7 @@ from ashfall_app.engine import CardId, LaneId, Mark, UnlockKind
 from ashfall_app.opening.schema import OPENING, Opening, load_opening, to_rules
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "groups.toml"
-CARD_CAP = ('[[cards]]\nid = "t_capped"\npresentation = "action"\nlabel_key = "t_c_work"\nwork_s = 60\ncap = 1\n'
+CARD_CAP = ('[[cards]]\nid = "t_capped"\npresentation = "action"\nlabel_key = "t_c_work"\nupside_key = "t_up"\nwork_s = 60\ncap = 1\n'
             'outcome = { marks = [{ lane = "t_m1", own_split = true }] }\n\n[line_kinds]')
 
 PLANTS = (

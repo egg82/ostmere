@@ -77,6 +77,7 @@ requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "actio
 outcome = { unlocks = [{ unlock_kind = "chip", id = "t_ashed" }, { unlock_kind = "card", id = "t_wash" }, { unlock_kind = "card", id = "t_helper_wash" }] }
 
 [text]
+t_up = "what it is for"
 t_s_left = "Season left"
 t_s_film = "Film"
 t_s_meal = "Meals"

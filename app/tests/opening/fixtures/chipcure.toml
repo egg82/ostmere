@@ -24,6 +24,7 @@ id = "t_stoke"
 lane = "t_helper"
 presentation = "action"
 label_key = "t_c_stoke"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heat", items_per_hour = 20 }]
 
@@ -45,6 +46,7 @@ when = { test = "at_least", subject_kind = "store", id = "t_heat", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "t_chill" }, { unlock_kind = "card", id = "t_stoke" }, { unlock_kind = "chip", id = "t_cold" }] }
 
 [text]
+t_up = "what it is for"
 t_s_heat = "Warmth"
 t_a_chill = "Chill"
 t_l_helper = "Helper"

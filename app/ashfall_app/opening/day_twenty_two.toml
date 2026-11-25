@@ -56,6 +56,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_22" }] }
 id = "walk_ashwood"
 presentation = "action"
 label_key = "c_walk_ashwood"
+upside_key = "up_walk_ashwood"
 work_s = 3600
 skill = "wayfinding"
 xp_per_hour = 360
@@ -70,6 +71,7 @@ twin_of = "walk_ashwood"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_walkers", "g_widowers"]
 presentation = "action"
 label_key = "c_walk_ashwood"
+upside_key = "up_walk_ashwood"
 work_s = 14400
 inputs = [{ store = "smoked", items = 2 }]
 outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", items = 1 }, { store = "ashwood_trips", items = 1 }] }
@@ -377,6 +379,7 @@ unlocks = [
 id = "fog_fish"
 presentation = "action"
 label_key = "c_fog_fish"
+upside_key = "up_catch"
 work_s = 1200
 skill = "foraging"
 xp_per_hour = 900
@@ -389,6 +392,7 @@ twin_of = "fog_fish"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_walkers", "g_widowers"]
 presentation = "action"
 label_key = "c_fog_fish"
+upside_key = "up_catch"
 work_s = 4800
 inputs = [{ store = "fish_rising", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 2 }] }
@@ -660,6 +664,7 @@ l_find_way_15 = "find"
 store_ashwood_trips = "walks out"
 store_charwood = "charwood"
 c_walk_ashwood = "Walk the Ashwood"
+up_walk_ashwood = "charwood for the post, fungus for the stew, and more of the wood with each walk"
 skill_wayfinding = "Wayfinding"
 pays_find_way_11 = "a find"
 pays_find_way_15 = "a find"

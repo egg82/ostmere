@@ -33,7 +33,7 @@ def test_a_planted_retirement_naming_a_card_that_cures_nothing_fails_the_loader_
 @kills(31)
 def test_a_cure_whose_store_something_else_also_makes_is_refused(tmp_path: Path):
     """A card that makes the pool outside any season's standing: "only a season's standing makes" no longer holds."""
-    filler = ('[[cards]]\nid = "t_fill"\npresentation = "action"\nlabel_key = "t_c_other"\nwork_s = 60\n'
+    filler = ('[[cards]]\nid = "t_fill"\npresentation = "action"\nlabel_key = "t_c_other"\nupside_key = "t_up"\nwork_s = 60\n'
               'makes = [{ store = "t_pool", items_per_hour = 1 }]\n')
     refused(tmp_path, "trigger t_close: retires the orders on t_scoop", CLOSE=retiring("t_scoop"), EXTRA=filler)
 

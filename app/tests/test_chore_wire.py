@@ -26,6 +26,6 @@ def test_a_chip_whose_store_another_card_makes_is_no_chore(tmp_path: Path):
     assert text.count(old) == 1
     path = tmp_path / FIXTURE.name
     path.write_text(text.replace(old, old.replace("[[chips]]", '[[cards]]\nid = "t_smear"\npresentation = "action"\n'
-                                                   'label_key = "t_c_wash"\nwork_s = 60\n'
+                                                   'label_key = "t_c_wash"\nupside_key = "t_up"\nwork_s = 60\n'
                                                    'makes = [{ store = "t_film", items_per_hour = 30 }]\n\n[[chips]]')))
     assert served(load_opening(OPENING, (path,)))["t_ashed"] is False

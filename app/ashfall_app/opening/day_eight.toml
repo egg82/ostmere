@@ -68,6 +68,7 @@ offered_after = { unlock_kind = "feature", id = "stakes_full" }
 id = "cut_stakes"
 presentation = "action"
 label_key = "c_cut_stakes"
+upside_key = "up_cut_stakes"
 work_s = 600
 skill = "woodcutting"
 xp_per_hour = 900
@@ -81,6 +82,7 @@ twin_of = "cut_stakes"
 lanes = ["n1", "n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "g_field", "n23", "g_walkers", "g_widowers"]
 presentation = "action"
 label_key = "c_lane_stakes"
+upside_key = "up_cut_stakes"
 work_s = 1200
 inputs = [{ store = "damp_wood", items = 4 }]
 outcome = { stores = [{ store = "stakes", items = 1 }] }
@@ -89,6 +91,7 @@ outcome = { stores = [{ store = "stakes", items = 1 }] }
 id = "twist_cord"
 presentation = "action"
 label_key = "c_twist_cord"
+upside_key = "up_twist_cord"
 work_s = 600
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
@@ -101,6 +104,7 @@ twin_of = "twist_cord"
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_cord"
+upside_key = "up_twist_cord"
 work_s = 900
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
@@ -112,6 +116,7 @@ twin_of = "twist_cord"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_twist_cord"
+upside_key = "up_twist_cord"
 work_s = 900
 inputs = [{ store = "damp_wood", items = 2 }]
 outcome = { stores = [{ store = "cord", items = 1 }] }
@@ -229,6 +234,7 @@ cap_items = 24
 id = "pick_fungus"
 presentation = "action"
 label_key = "c_pick_fungus"
+upside_key = "up_pick_fungus"
 work_s = 30
 skill = "foraging"
 xp_per_hour = 900
@@ -242,6 +248,7 @@ twin_of = "pick_fungus"
 lanes = ["n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_lane_pick"
+upside_key = "up_pick_fungus"
 work_s = 120
 inputs = [{ store = "bloom", items = 1 }]
 outcome = { stores = [{ store = "fungus", items = 1 }] }
@@ -339,6 +346,7 @@ cap_items = 24
 id = "clear_roofs"
 presentation = "action"
 label_key = "c_clear_roofs"
+upside_key = "up_ash"
 work_s = 120
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
@@ -349,6 +357,7 @@ twin_of = "clear_roofs"
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_clear_roofs"
+upside_key = "up_ash"
 work_s = 1200
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
@@ -360,6 +369,7 @@ twin_of = "clear_roofs"
 lanes = ["n1", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_clear_roofs"
+upside_key = "up_ash"
 work_s = 1200
 inputs = [{ store = "roof_ash", items = 16 }]
 outcome = { stores = [{ store = "ash", items = 4 }] }
@@ -404,6 +414,7 @@ id = "n3_ash_ground"
 lane = "n3"
 presentation = "action"
 label_key = "c_n3_ash_ground"
+upside_key = "up_n3_ash_ground"
 work_s = 7200
 inputs = [{ store = "ash", items = 4 }]
 outcome = { stores = [{ store = "ashed_ground", items = 1 }] }
@@ -782,8 +793,10 @@ l_stage_10 = "a slanted pole braces the weak stretch."
 l_stage_11 = "you trim the cord ends close."
 l_stage_12 = "the ring closes on itself."
 c_cut_stakes = "Cut stakes"
+up_cut_stakes = "stakes for the palisade and the huts"
 c_lane_stakes = "Cut stakes"
 c_twist_cord = "Twist cord"
+up_twist_cord = "cord for the palisade, the hall and the road"
 c_n4_cord = "Twist cord"
 c_hide_flaps = "Hang hide flaps"
 up_hide_flaps = "{pct} rest recovery"
@@ -804,6 +817,7 @@ store_bloom = "fungus on the stumps"
 store_fungus = "fungus"
 store_fungus_stews = "fungus stews"
 c_pick_fungus = "Pick fungus"
+up_pick_fungus = "fungus for the stew pot"
 c_lane_pick = "Pick fungus"
 c_fungus_stew = "Cook fungus stew"
 l_howls = "howls, answering each other. prints circle the rack, not the fire."
@@ -815,11 +829,13 @@ l_ash_laden = "the roof hangs low over where you sleep."
 l_ash_cleared = "the roof poles stop creaking."
 store_ash = "ash"
 c_clear_roofs = "Clear the roofs"
+up_ash = "ash for the barley ground"
 c_n2_clear_roofs = "Clear the roofs"
 l_roofs_first = "the roofs shed their ash in slabs under a shovel."
 l_ash_ground = "{n3} works ash in by hand, counts seed, and ties the cloth shut."
 store_ashed_ground = "ash dug in"
 c_n3_ash_ground = "Work ash into the bed"
+up_n3_ash_ground = "ground ready to sow a bed"
 l_cord = "{n4} rolls bark into cord over one knee. fast."
 side_gap = "Gap"
 threat_wolf_pack = "Pack"

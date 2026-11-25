@@ -212,7 +212,9 @@ engine `DESIGN.txt`, "NEXT'S ROW"), never read off a rule's card or wording; eve
 which is the queue as it always was, and the why-line names Next when it is what outranks a rule.
 One queue, two ways in (owner: planning what to build next is where Plan is most useful): Next's Plan adds
 either kind of entry, cards first. It lists the steps When ready takes, picked through the card's own path, ready now
-ones included (a build planned while the hands are busy runs after the task under way), then the steps it would take
+ones included (a build planned while the hands are busy runs after the task under way); a card already running is
+not listed (its entry would pop at that landing and add nothing; a staged card's face offers Until done), nor is a card
+on a ruled lane (the queue is the hands' plan, and the server refuses it), then the steps it would take
 but for what they wait on, off, each saying what in its card's face words, then the mixes. A card's When ready stays as
 a shortcut into the same queue, offered where a tap cannot do the job: on a step not ready yet, or ready while its lane
 runs another tap. While a staged card a tap started is running, its face offers Until done in When ready's place

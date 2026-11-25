@@ -132,6 +132,7 @@ twin_of = "weave_wattle"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_weave_wattle"
+upside_key = "up_weave_wattle"
 work_s = 180
 inputs = [{ store = "damp_wood", items = 18 }]
 outcome = { stores = [{ store = "wattle", items = 1 }] }
