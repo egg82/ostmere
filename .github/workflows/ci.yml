@@ -426,7 +426,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        part: [rebased-early, rebased-late]
+        part: [rebased-early, rebased-late, rebased-later]
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
