@@ -2002,6 +2002,12 @@ SPENT
   THE CLIENT MAY:
   - draw a spent card's state with ui.mix.spent {store} (spent_store's label).
   - keep the split panel and the mix editor on share_bp: what the player set is what they edit.
+  - while every card holding a share of a person's time is paused or spent and no tap holds their lane, say they have
+    nothing to do (ui.town.stuck) in place of idle, name what each card is stopped on (ui.town.stopped_spent,
+    ui.town.stopped_full, ui.town.stopped_dry, ui.town.stopped_waiting {card} {store}: the first need short now, else
+    none) and offer the person's open, uncapped tasks that hold no share and need nothing short (ui.town.can_do, a few
+    then ui.town.more {n}), each one save_mix joining it as a tap on its face does. It never picks one for the player.
+  - draw ui.card.spent_on {store} on a spent card's face where its needs sit, unless its need row on that store is drawn.
   THE CLIENT MAY NOT:
   - add gained into a share the player edits or the bar of the split set, or work out a gain itself.
   - draw a spent card as greyed or as a problem: the mix runs on.
@@ -2016,6 +2022,10 @@ SPENT
                                     ui.mix.running_now            the label of the split that runs now
                                     ui.mix.from {pct} {card}      a receiving card's gain, naming its source
                                     ui.mix.waiting {card}         a stopped card's part of the split that runs now
+                                    ui.town.stuck                 a person whose held cards are all stopped
+                                    ui.town.stopped_* {card} {store}  what each of their cards is stopped on
+                                    ui.town.can_do, ui.town.more {n}  the tasks offered them
+                                    ui.card.spent_on {store}      a spent card's face
 
 FULL OUTPUT
   A mix card drawing a store nothing refills stops when every store it fills is full, and keeps its inputs until one
