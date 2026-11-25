@@ -4,8 +4,8 @@ others thinning off behind. Run: bash render.sh entry_ashwood -> entry_ashwood_i
 A place, so the reference is the kind of thing rather than one drawing: a dead hardwood snag keeps its trunk taper
 (about 1:14 width to height over the part drawn), loses its crown to a jagged break and its branches to short stubs,
 and sheds bark in long strips that bare the grey wood. Hoof and shelf brackets (Fomes, Ganoderma) grow out of one
-side in a loose column, each about 0.8 trunk-widths across, projecting about half that, and spaced about 1 to 1.5
-of their own widths apart. The near trunk is about 46 wide at the root flare and 30 at the break, 360 tall; the far
+side in overlapping tiers of two to four, the tiers spaced irregularly up the trunk, each shelf a half-moon up to
+about a trunk-width out from the bark. The near trunk is about 46 wide at the root flare and 30 at the break, 360 tall; the far
 trunks shrink with distance and stand on a ground line that rises behind.
 """
 import os
@@ -43,32 +43,25 @@ trunk_polys.append(tube([edge(196, 1) + (-4, 0), edge(196, 1) + (20, -16)], [9, 
 trunk = mk("trunk", trunk_polys, 4, z=3, tone=0.15, lw=1.9)
 
 
-EYE = 380
-"""The sketcher's eye height on the near trunk: shelves above it show their undersides, so their lips bow up."""
+def bracket(name, y, side, proj, thick):
+    """A half-moon shelf on the trunk's edge at height y (side +1 right, -1 left), seen from a little below: a flat
+    top, a thick rounded lip proj out from the bark, and under it the pore face, which the lip line bounds. Its root
+    sits behind the trunk's edge; lower shelves sit nearer the eye, so they cover the ones above."""
+    s, e = side, edge(y, side) + (-side * 8, 0)
+    P, T = proj, thick
+    out = np.array([e + (0, 0), e + (s * 0.5 * P, 0.06 * T), e + (s * 0.88 * P, 0.3 * T), e + (s * (P + 1), 0.62 * T),
+                    e + (s * 0.9 * P, 0.95 * T), e + (s * 0.5 * P, 1.12 * T), e + (0, 1.0 * T)])
+    lip = catmull(np.array([e + (s * 0.95 * P, 0.5 * T), e + (s * 0.62 * P, 0.62 * T), e + (s * 0.2 * P, 0.6 * T)]),
+                  False, 6)
+    p = Part(name, out, z=1 + y / 1000, tone=0.1, lw=1.4, n=6)
+    p.hatch_angle, p.hatch_spacing = -s * 25, 3.2
+    return p, e, s, P, T, lip
 
 
-def bracket(name, y, side, proj, thick, wrap=70):
-    """A shelf fungus round the trunk at height y, on one side (+1 right, -1 left): its lip an arc about the trunk's
-    axis, from where it comes out from behind the trunk to wrap degrees past the trunk's edge across its front, proj
-    out from the bark."""
-    half = width(y) / 2
-    rx = half + proj
-    ry, c = rx * float(np.clip((y - EYE) / 260, -0.32, 0.32)), A(axis(y), y)
-    te = np.degrees(np.arccos(half / rx))
-    t = np.radians(np.linspace(-te, te + wrap, 18))
-    if side < 0:
-        t = np.pi - t
-    top = np.column_stack([c[0] + rx * np.cos(t), c[1] + ry * np.sin(t)])
-    u = np.linspace(0, 1, len(t))
-    th = thick * np.minimum(1.0, np.minimum(u, 1 - u) * 5 + 0.35)
-    lip = top + np.column_stack([np.zeros(len(t)), th])
-    p = Part(name, np.vstack([top, lip[::-1]]), z=5, tone=0.25, lw=1.3, n=4)
-    p.hatch_angle, p.hatch_spacing = 4, 3.2
-    return p, top, lip
-
-
-BR = [bracket("b0", 434, 1, 26, 13, 40), bracket("b1", 392, 1, 32, 15, 25), bracket("b2", 350, -1, 24, 12, 30),
-      bracket("b3", 304, 1, 28, 12, 20), bracket("b4", 262, 1, 20, 10, 35), bracket("b5", 226, -1, 15, 8, 15)]
+CLUSTERS = [[(446, 1, 36, 16), (430, 1, 48, 20), (414, 1, 28, 13)], [(356, 1, 54, 22), (338, 1, 34, 15)],
+            [(398, -1, 26, 12), (388, -1, 17, 8)], [(252, 1, 26, 12), (238, 1, 40, 17), (224, 1, 20, 10)]]
+"""Shelves grow in overlapping tiers of two to four with bare trunk between, nearly all on one side."""
+BR = [bracket(f"b{i}{j}", *spec) for i, cl in enumerate(CLUSTERS) for j, spec in enumerate(cl)]
 
 
 def far_trunk(name, x, base, h, w, lean, z=1):
@@ -97,8 +90,9 @@ with L.figure(pen, (300, 300)):
         pen.line([(axis(y), y) for y in np.linspace(BASE + 10, TOP - 30, 12)], w=0.45, wobble=0.6, overshoot=8)
         pen.line([(20, BASE + 4), (580, BASE - 2)], w=0.45, wobble=0.7, overshoot=6)
         pen.line([(30, 384), (580, 372)], w=0.4, wobble=0.8, overshoot=6)
-        for y in (430, 386, 300):
-            hand_ellipse(pen, (axis(y), y), width(y) / 2 + 20, (width(y) / 2 + 20) * 0.3, 0, w=0.4, passes=1)
+        for cl in CLUSTERS:
+            y, sd, P, T = max(cl, key=lambda c: c[2])
+            hand_ellipse(pen, edge(y, sd) + (sd * P / 2, T / 2), P / 2 + 4, T / 2 + 6, 0, w=0.4, passes=1)
     ink_figure(pen, FAR, SEED, hatch_t=0.64, contour_w=1.15)
     for x, w in ((60, 0.5), (392, 0.5), (560, 0.45), (482, 0.4)):   # trunks furthest off, clear of the near one
         h = rng.uniform(50, 90)
@@ -111,27 +105,38 @@ with L.figure(pen, (300, 300)):
     for y, wd in ((304, 15), (272, 12), (330, 10)):           # small shelves on the far trunk to the right too
         e = A(430 + 9 * (408 - y) / 220 + 12, y)
         pen.line(catmull(np.array([e, e + (wd, -2), e + (wd + 3, 3), e + (wd * 0.5, 6), e + (1, 6)]), False, 6),
-                 w=0.9, wobble=0.3)
-    ink_figure(pen, [trunk, *[b[0] for b in BR]], SEED, hatch_t=0.56, part_t={"trunk": 0.48}, contour_w=1.9)
-    for _, top, lip in BR:                                # growth bands round each lip, the shade under it
-        for k in (0.35, 0.65):
-            band = top + (lip - top) * k
-            pen.line(band[3:-3], w=0.5, wobble=0.3)
-        pen.line(lip[2:-2] + (0, 2.0), w=0.9, wobble=0.3)
-    shelf = np.any([b[0].mask for b in BR], axis=0)
+                 w=1.5, wobble=0.3)
+        pen.line([e + (wd * 0.2, 4), e + (wd * 0.8, 3)], w=0.8, wobble=0.2)
+    ink_figure(pen, [trunk, *[b[0] for b in BR]], SEED, hatch_t=0.56,
+               part_t={"trunk": 0.48, **{b[0].name: 0.9 for b in BR}}, contour_w=1.9)
 
-    def on_bark(pts):
-        """Split a stroke where it would run over a shelf, which sits in front of the bark."""
+    def clip(pts, hide):
+        """Split a stroke where it runs over the mask hide."""
         runs, cur = [], []
         for q in pts:
-            i, j = (int(np.clip(v * S, 0, n - 1)) for v, n in ((q[1], shelf.shape[0]), (q[0], shelf.shape[1])))
-            if shelf[i, j]:
+            i, j = (int(np.clip(v * S, 0, n - 1)) for v, n in ((q[1], hide.shape[0]), (q[0], hide.shape[1])))
+            if hide[i, j]:
                 if len(cur) > 1:
                     runs.append(cur)
                 cur = []
             else:
                 cur.append(q)
         return runs + ([cur] if len(cur) > 1 else [])
+
+    for p, e, sd, P, T, lip in BR:                        # the lip line, and the pore face under it hatched close
+        for run in clip(lip, ~p.vis):
+            pen.line(run, w=0.8, wobble=0.25)
+        for u in np.linspace(0.12, 0.85, max(4, int(P / 3.2))):
+            q = e + (sd * u * P, 0.6 * T + 0.04 * T * np.sin(u * 3))
+            for run in clip([q, q + (sd * 1.2, 0.42 * T * (1.2 - u * 0.5))], ~p.vis):
+                pen.line(run, w=0.5, wobble=0.2)
+        for run in clip([e + (sd * 0.3 * P, 0.15 * T), e + (sd * 0.7 * P, 0.25 * T)], ~p.vis):   # a ridge on the top
+            pen.line(run, w=0.5, wobble=0.3)
+    shelf = np.any([b[0].mask for b in BR], axis=0)
+
+    def on_bark(pts):
+        """Split a stroke where it would run over a shelf, which sits in front of the bark."""
+        return clip(pts, shelf)
 
     def across(y, f):
         return axis(y) + f * width(y) / 2
