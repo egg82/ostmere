@@ -46,6 +46,7 @@ function drawn(part: Ledger, store: string): { alarm: boolean; eta: string } {
 }
 
 const dryStone = line("stone", 0, [], { starved: true });
+const lookQueued: View["queue"][number] = { verb: { kind: "tap_card", card: "look" }, until: { kind: "after_time", at: 0 } };
 const fallingStone = line("stone", 3, [["tend", -1]]);
 
 {
@@ -66,7 +67,7 @@ const fallingStone = line("stone", 3, [["tend", -1]]);
 
 {
   const part = ledger(fixtureContent);
-  part.update(view([dryStone]), null);
+  part.update({ ...view([dryStone]), queue: [lookQueued] }, null);   // something the player has queued takes stone (game/dryneed.ts)
   part.tick(AT);
   expect("control: the same dry store without a bonus is an alarm", drawn(part, "stone").alarm, true);
   expect("and reads ran dry", drawn(part, "stone").eta, "ran dry");
