@@ -35,6 +35,7 @@ told = "mention"
 id = "t_scoop"
 presentation = "action"
 label_key = "t_c_scoop"
+upside_key = "t_up"
 work_s = 60
 drains = [{ store = "t_pool", items = 3 }]
 
@@ -42,6 +43,7 @@ drains = [{ store = "t_pool", items = 3 }]
 id = "t_other"
 presentation = "action"
 label_key = "t_c_other"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_y", items_per_hour = 3 }]
 @OTHER@
@@ -51,6 +53,7 @@ id = "t_aide"
 lane = "t_helper"
 presentation = "action"
 label_key = "t_c_aide"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_y", items_per_hour = 3 }]
 
@@ -84,6 +87,7 @@ at_least = 1
 keys = ["t_went"]
 
 [text]
+t_up = "what it is for"
 t_came = "One more."
 t_went = "One fewer."
 t_s_fuel = "Fuel"

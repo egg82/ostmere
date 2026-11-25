@@ -58,6 +58,7 @@ fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_raid", fought = "t
 id = "t_hunt"
 presentation = "action"
 label_key = "t_c_hunt"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "dry_wood", items_per_hour = 30 }]
 fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_hunt", loses = [{ store = "damp_wood", items = 1 }], wounds = [{ store = "t_bitten", items = 1 }] }
@@ -120,6 +121,7 @@ gate = { test = "after_time", value = 300 }
 [line_kinds]
 
 [text]
+t_up = "what it is for"
 j_note_a1 = "A first thing, set down in ink."
 j_note_a2 = "A later thing, in pencil, with a small drawing."
 j_note_b1 = "A page that is only words."

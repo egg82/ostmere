@@ -38,6 +38,7 @@ id = "t_job"
 only_player = "story"
 presentation = "action"
 label_key = "t_c_job"
+upside_key = "t_up"
 work_s = 60
 cap = 1
 [cards.finished]
@@ -49,6 +50,7 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 outcome = { stores = [{ store = "t_heap", items = 1 }] }
 
 [text]
+t_up = "what it is for"
 t_s_heap = "Heap"
 t_o_help = "A question"
 t_a_now = "Now"

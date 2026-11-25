@@ -52,7 +52,7 @@ def test_the_fixture_loads_with_the_fields_on_the_pooled_card_alone():
     ("card t_pool", (('[[cards]]\nid = "t_pool"', TOWN + '[[cards]]\nid = "t_pool"\nlane = "t_helper"'),
                      ('only_player = "self"\n', ''))),
     ("card t_pool", (('[[cards]]\nid = "t_pool"', TOWN + '[[cards]]\nid = "t_twin"\nlane = "t_helper"\n'
-                      'presentation = "action"\nlabel_key = "t_c_pool"\nwork_s = 60\ntwin_of = "t_pool"\n\n'
+                      'presentation = "action"\nlabel_key = "t_c_pool"\nupside_key = "t_up"\nwork_s = 60\ntwin_of = "t_pool"\n\n'
                       '[[cards]]\nid = "t_pool"'),)),
     ("card t_pool", (('only_player = "self"', 'only_player = "fight"'),)),
     ("card t_pool", (('only_player = "self"\n', ''),)),

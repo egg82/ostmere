@@ -28,6 +28,7 @@ id = "t_p2_work"
 lane = "t_p2"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 
 [[cards]]
@@ -35,6 +36,7 @@ id = "t_p3_work"
 lane = "t_p3"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 
 [[features]]
@@ -72,6 +74,7 @@ outcome = { unlocks = [{ unlock_kind = "feature", id = "t_two_here" }] }
 t_c_fail = "tap"
 
 [text]
+t_up = "what it is for"
 t_s_arrivals = "Arrivals"
 t_l_p2 = "Second"
 t_l_p3 = "Third"

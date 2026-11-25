@@ -72,7 +72,7 @@ def test_a_check_failure_names_the_chapter_that_broke_it_though_a_later_chapter_
     assert str(shipped_order.value).endswith(f" (in {DAY_ONE.name})")
 
 
-EARLY = '[[cards]]\nid = "t_early"\nlane = "t_late"\npresentation = "action"\nlabel_key = "t_c_early"\nwork_s = 60\ncap = 1\n\n[text]\nt_c_early = "Early"\n'
+EARLY = '[[cards]]\nid = "t_early"\nlane = "t_late"\npresentation = "action"\nlabel_key = "t_c_early"\nupside_key = "t_up"\nwork_s = 60\ncap = 1\n\n[text]\nt_up = "what it is for"\nt_c_early = "Early"\n'
 LATE = '[[lanes]]\nid = "t_late"\nlabel_key = "t_l_late"\nruled = true\ntold = "line"\n\n[text]\nt_l_late = "Late"\n'
 
 

@@ -52,6 +52,7 @@ told = "line"
 id = "t_flows"
 presentation = "action"
 label_key = "t_c_flows"
+upside_key = "t_up"
 work_s = 60
 skill = "t_k"
 xp_per_hour = 6
@@ -73,6 +74,7 @@ id = "t_stoke"
 lane = "t_helper"
 presentation = "action"
 label_key = "t_c_stoke"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heat", items_per_hour = 20 }]
 
@@ -100,6 +102,7 @@ when = @TRIGGER_WHEN@
 outcome = { unlocks = [{ unlock_kind = "action", id = "t_chill" }, { unlock_kind = "card", id = "t_stoke" }, { unlock_kind = "chip", id = "t_cold" }] }
 
 [text]
+t_up = "what it is for"
 t_skill_k = "Knack"
 t_s_x = "Stock"
 t_s_y = "Yield"

@@ -44,6 +44,7 @@ fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_raid", fought = "t
 id = "t_pool"
 presentation = "action"
 label_key = "t_c_pool"
+upside_key = "t_up"
 work_s = 60
 only_player = "self"
 makes = [{ store = "dry_wood", items_per_hour = 30 }]
@@ -53,6 +54,7 @@ fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_pool", loss_pool =
 id = "t_plain"
 presentation = "action"
 label_key = "t_c_plain"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "dry_wood", items_per_hour = 30 }]
 fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_plain", lost_line_keys = ["t_l_plain_1"] }
@@ -79,6 +81,7 @@ t_l_pool_2 = "fight"
 t_l_plain_1 = "fight"
 
 [text]
+t_up = "what it is for"
 t_side_hands = "The town"
 t_threat_rats = "Rats"
 t_s_lost_pool = "Pool hunts lost"

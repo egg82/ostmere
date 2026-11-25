@@ -193,6 +193,7 @@ id = "hunt_wolf"
 only_player = "fight"
 presentation = "action"
 label_key = "c_hunt_wolf"
+upside_key = "up_hunt_wolf"
 work_s = 1200
 skill = "melee"
 xp_per_hour = 900
@@ -259,6 +260,7 @@ id = "poultice"
 only_player = "self"
 presentation = "action"
 label_key = "c_poultice"
+upside_key = "up_poultice"
 work_s = 60
 inputs = [{ store = "clay", items = 2 }, { store = "roots", items = 6 }]
 # Takes up to a whole stack of hurt, forgiven past what is there: one tap clears any level, and it can be tapped
@@ -574,9 +576,11 @@ store_rats_lost = "rat fights lost"
 store_crows_fought = "crow fights"
 store_crows_lost = "crow fights lost"
 c_hunt_wolf = "Hunt wolves"
+up_hunt_wolf = "catch for the smoke and the broth, and a pelt for bedding"
 c_make_spear = "Make a spear"
 up_make_spear = "{pct} hunting strength"
 c_poultice = "Make a poultice"
+up_poultice = "the hurt drawn out"
 action_heal = "Healing"
 chip_hurt = "hurt"
 chip_hurt_cost = "{pct} hands speed, {pct_b} hunting strength"

@@ -59,6 +59,7 @@ id = "t_crew_food"
 lane = "t_crew"
 presentation = "action"
 label_key = "t_c_food"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_food", items_per_hour = 30 }]
 
@@ -67,6 +68,7 @@ id = "t_crew_build"
 lane = "t_crew"
 presentation = "action"
 label_key = "t_c_build"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_stone", items_per_hour = 60 }]
 
@@ -75,6 +77,7 @@ id = "t_other_work"
 lane = "t_other"
 presentation = "action"
 label_key = "t_c_other"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_food", items_per_hour = 30 }]
 
@@ -119,6 +122,7 @@ at_least = 1
 keys = ["t_went_one"]
 
 [text]
+t_up = "what it is for"
 t_s_food = "Food"
 t_s_stone = "Stone"
 t_l_crew = "Crew"

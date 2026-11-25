@@ -7,6 +7,7 @@ version = 1
 id = "k_hearth"
 presentation = "action"
 label_key = "k_c_hearth"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "damp_wood", items_per_hour = 30 }]
 
@@ -60,6 +61,7 @@ when = { test = "after_time", value = 50 }
 outcome = { unlocks = [{ unlock_kind = "card", id = "k_hearth" }] }
 
 [text]
+t_up = "what it is for"
 k_c_hearth = "Hearth"
 k_c_one_off = "Look"
 k_o_ask = "A question"

@@ -41,6 +41,7 @@ from .subject_checks import check_subjects
 from .tally_checks import check_tallies
 from .ui_keys import UI_KEYS
 from .unlock_order_checks import check_unlock_order
+from .upside_checks import check_upsides
 
 if TYPE_CHECKING:
     from .entries import CardEntry, OutcomeEntry
@@ -75,6 +76,7 @@ def check_structure(o: "Opening") -> None:
     check_fights(o)
     check_tallies(o)
     check_stakes(o)
+    check_upsides(o)
     check_clocks(o)
     check_season_turns(o)
     check_line_only(o)

@@ -50,6 +50,7 @@ lane = "n11"
 twin_of = "shovel_road"
 presentation = "action"
 label_key = "c_n11_first_over"
+upside_key = "up_shovel_road"
 work_s = 1800
 requires = [{ test = "at_most", subject_kind = "card_count", id = "cut_over", value = 5 }]
 outcome = { stores = [{ store = "cleared", items = 1 }, { store = "damp_wood", items = 1 }] }

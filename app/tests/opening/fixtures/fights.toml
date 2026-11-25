@@ -56,6 +56,7 @@ fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_raid", fought = "t
 id = "t_hunt"
 presentation = "action"
 label_key = "t_c_hunt"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "dry_wood", items_per_hour = 30 }]
 fight = { side = "t_hands", threat = "t_rats", lost = "t_lost_hunt", loses = [{ store = "damp_wood", items = 1 }], wounds = [{ store = "t_bitten", items = 1 }] }
@@ -73,6 +74,7 @@ inputs = [{ store = "t_bitten", items = 1 }]
 id = "t_signal"
 presentation = "action"
 label_key = "t_c_signal"
+upside_key = "t_up"
 work_s = 30
 cap = 1
 finished = { unlocks = [{ unlock_kind = "action", id = "t_dusk" }] }
@@ -93,6 +95,7 @@ outcome = { modifiers = [{ target = "threat", id = "t_rats", kind = "mul_bp", am
 [line_kinds]
 
 [text]
+t_up = "what it is for"
 t_side_hands = "The town"
 t_threat_rats = "Rats"
 t_s_lost_hunt = "Hunts lost"
