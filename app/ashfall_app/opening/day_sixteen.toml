@@ -104,6 +104,7 @@ unlocks = [
 [[entries]]
 id = "e_old_road"
 section = "places"
+sketch = "old_road"
 hand = "ink"
 runners = []
 
