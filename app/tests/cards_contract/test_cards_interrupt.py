@@ -302,7 +302,7 @@ def test_a_tap_whose_speed_falls_to_zero_is_interrupted(stop: Modifier):
     None)."""
     r = rules([StoreDef(Z, 100 * Q, 0)],
               cards=[CardDef(CD, 200, lane=RACK, lines=(LineKey("cd.tap"),)), CardDef(M, 100, makes=(Flow(Z, 1000),))],
-              lanes=[RACK], chips=[ChipDef(ChipId("halt"), AfterTime(50), (stop,), None, None)])
+              lanes=[RACK], chips=[ChipDef(ChipId("halt"), AfterTime(50), (stop,), None, ())])
     s = tap(with_mix(new_save(r), r, 0, {M: BP}), r, 0, CD)
     assert lane(advance(s, r, 49), RACK).card == CD
     step = advance_logged(s, r, 50)

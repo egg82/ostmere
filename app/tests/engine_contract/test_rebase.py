@@ -319,7 +319,7 @@ def rich_rules() -> Rules:
         ),
         chips=(ChipDef(COLD, AtLeast(StoreValue(Z), 2 * Q, Q),
                        (mod(LaneSpeed(HANDS), ModifierKind.MUL_BP, 5000, "cold"),),
-                       LineKey("cold.on"), LineKey("cold.off")),),
+                       LineKey("cold.on"), (LineKey("cold.off"),)),),
         triggers=(
             TriggerDef(T0, AtLeast(CardCount(P), 1, 1),
                        Outcome(unlocks=(Unlock(UnlockKind.CHIP, COLD),), lines=(LineKey("t0.fired"),))),

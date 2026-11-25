@@ -172,6 +172,7 @@ app/ashfall_app/engine/rebase.py
 app/ashfall_app/engine/rebuild.py
 app/ashfall_app/engine/requires.py
 app/ashfall_app/engine/retap.py
+app/ashfall_app/engine/rotation.py
 app/ashfall_app/engine/rulelog.py
 app/ashfall_app/engine/rules.py
 app/ashfall_app/engine/rules_check.py
@@ -265,6 +266,7 @@ app/ashfall_app/opening/people_checks.py
 app/ashfall_app/opening/phase_pays.py
 app/ashfall_app/opening/phase_pays.toml
 app/ashfall_app/opening/player_checks.py
+app/ashfall_app/opening/pool_checks.py
 app/ashfall_app/opening/prestige.py
 app/ashfall_app/opening/prestige.toml
 app/ashfall_app/opening/refs.py

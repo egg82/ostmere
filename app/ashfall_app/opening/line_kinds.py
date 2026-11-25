@@ -25,7 +25,7 @@ def line_keys(o: "Opening") -> list[str]:
     for x in o.offers:
         keys += [*x.line_keys, *(k for a in x.answers for k in a.outcome.line_keys)]
     for ch in o.chips:
-        keys += [k for k in (ch.on_line_key, ch.off_line_key) if k is not None]
+        keys += [*([] if ch.on_line_key is None else [ch.on_line_key]), *ch.off_line_keys]
     if o.camp is not None:
         keys += [k for lv in o.camp.levels for k in lv.line_keys]
     for _, f in fights(o):

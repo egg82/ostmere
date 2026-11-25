@@ -7,6 +7,8 @@ import { buildSubject, readSubject, subjectKey, type SubjectRule } from "../game
 import { UI } from "../game/text";
 import { ruleCards, whenChoices } from "../game/ruleoffers";
 import type { RuleSide } from "../game/ruleside";
+import { startRule } from "../game/levelrule";
+import { quickTest } from "./condquick";
 
 export interface Draft {
   /** The rule being changed, or null for a new one. */
@@ -88,11 +90,16 @@ export function headingWords(catalog: Catalog, view: View, draft: Draft): string
 }
 
 /** In the simple view, a condition the newly chosen task does not answer is cleared, so what shows chosen is offered.
- * `chip`: the chip the draft's condition is, if any. */
+ * A draft with no condition yet starts on the first store the task makes, as a tap on it starts, so the common rule
+ * ("make more as it runs low") is one tap from Save, every part still a choice in the sentence. `chip`: the chip the
+ * draft's condition is, if any. */
 export function keepOffered(catalog: Catalog, view: View, draft: Draft, chip: ChipInfo | undefined): void {
   const offer = whenChoices(catalog, view, false, ruleCards(view, draft.then), null);
   if (chip ? offer.chips.includes(chip) : offer.stores.includes(draft.rule.store)) return;
-  draft.rule = defaultRule("", "below", 0);
+  const fresh = !chip && draft.rule.store === "" && !draft.subject;
+  const store = fresh ? offer.relevant.makes.find((s) => offer.stores.includes(s)) : undefined;
+  draft.rule = store === undefined ? defaultRule("", "below", 0)
+    : startRule(catalog, view, draft.then, store, quickTest(catalog, view, draft.then, store), storeCap(catalog, view, store));
   draft.opened = undefined;
 }
 

@@ -254,7 +254,9 @@ class ChipEntry(Entry):
     cost_key: str | None = None
     """What `effects` cost the player, in two or three words drawn with the chip; set exactly when it has effects."""
     on_line_key: str | None = None
-    off_line_key: str | None = None
+    off_line_keys: list[str] = []
+    """Said in turn each time the chip stops showing, one a time (engine ChipDef.off_lines); a pool of at least
+    pool_checks.MIN_POOL lines, or none."""
     no_cure: bool = False
     """Shown with nothing the player can do about it, on purpose: the day-one gate that every chip shown has a cure
     (tests/dayone/cures.py) passes it over."""

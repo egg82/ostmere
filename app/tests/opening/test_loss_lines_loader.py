@@ -12,7 +12,7 @@ from ashfall_app.opening.schema import OPENING, Opening, load_opening
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "loss_lines.toml"
 TEXT = FIXTURE.read_text()
 POOL_FIGHT = 'lost = "t_lost_pool", loss_pool'
-FIELDS = ('loss_pool = ["t_l_pool_1", "t_l_pool_2"], loss_notes = ["t_n_pool_1", "t_n_pool_2", "t_n_pool_3"], '
+FIELDS = ('loss_pool = ["t_l_pool_1", "t_l_pool_2", "t_l_pool_3", "t_l_pool_4", "t_l_pool_5", "t_l_pool_6"], loss_notes = ["t_n_pool_1", "t_n_pool_2", "t_n_pool_3"], '
           'on_loss_key = "t_on_loss", loss_after = "t_kept"')
 TOWN = '''[[lanes]]
 id = "t_helper"
@@ -43,7 +43,7 @@ def test_the_fixture_loads_with_the_fields_on_the_pooled_card_alone():
     plain = next(c.fight for c in o.cards if c.id == "t_plain")
     assert pool is not None and plain is not None
     assert (pool.loss_pool, pool.loss_notes, pool.on_loss_key, pool.loss_after) == (
-        ["t_l_pool_1", "t_l_pool_2"], ["t_n_pool_1", "t_n_pool_2", "t_n_pool_3"], "t_on_loss", "t_kept")
+        ["t_l_pool_1", "t_l_pool_2", "t_l_pool_3", "t_l_pool_4", "t_l_pool_5", "t_l_pool_6"], ["t_n_pool_1", "t_n_pool_2", "t_n_pool_3"], "t_on_loss", "t_kept")
     assert (plain.loss_pool, plain.loss_notes, plain.on_loss_key, plain.loss_after) == (None, None, None, None)
 
 
@@ -61,7 +61,7 @@ def test_the_fixture_loads_with_the_fields_on_the_pooled_card_alone():
     ("card t_pool", ((POOL_FIGHT, 'lost = "t_lost_pool", loses = [{ store = "stones", items = 1 }], loss_pool'),)),
     ("card t_pool", ((POOL_FIGHT, 'lost = "t_lost_pool", lost_line_keys = ["t_l_plain_1"], loss_pool'),)),
     ("card t_pool", (('"t_n_pool_2", "t_n_pool_3"]', '"t_n_pool_2", "t_n_pool_2"]'),)),
-    ("card t_pool", (('loss_pool = ["t_l_pool_1", "t_l_pool_2"]', 'loss_pool = []'),)),
+    ("card t_pool", (('loss_pool = ["t_l_pool_1", "t_l_pool_2", "t_l_pool_3", "t_l_pool_4", "t_l_pool_5", "t_l_pool_6"]', 'loss_pool = []'),)),
     ("card t_pool", (('loss_after = "t_kept"', 'loss_after = "t_nothing"'),)),
     ("card t_pool", (('{ unlock_kind = "action", id = "t_raid" }] }',
                       '{ unlock_kind = "action", id = "t_raid" }, { unlock_kind = "card", id = "t_pool" }] }'),)),

@@ -28,7 +28,7 @@ def landed_at(s: Save, r: Rules, until: int) -> list[int]:
 
 
 def test_a_chip_showing_mid_tap_slows_the_mix_after_it_not_the_tap():
-    r = rules([StoreDef(Z, 1000 * Q, 0)], cards=tap_cards(), chips=[ChipDef(TIRED, AfterTime(50), (SLOW,), None, None)])
+    r = rules([StoreDef(Z, 1000 * Q, 0)], cards=tap_cards(), chips=[ChipDef(TIRED, AfterTime(50), (SLOW,), None, ())])
     s = tap(with_mix(new_save(r), r, 0, {M: BP}), r, 0, CD)
     assert landed_at(s, r, 400) == [100]
     mid = advance(s, r, 60)
@@ -44,7 +44,7 @@ def test_a_tap_started_under_a_chip_keeps_its_slower_speed_after_the_chip_clears
     started tired shows 200 s and takes 200 s; its explain still names the chip after it clears."""
     r = rules([StoreDef(Z, 1000 * Q, 0), StoreDef(E, 100 * Q, 0)], cards=tap_cards(),
               standing=[StandingDef(GEN, makes=(Flow(E, 360 * Q),))],
-              chips=[ChipDef(TIRED, AtMost(StoreValue(E), 3 * Q, 6 * Q), (SLOW,), None, None)])
+              chips=[ChipDef(TIRED, AtMost(StoreValue(E), 3 * Q, 6 * Q), (SLOW,), None, ())])
     s = new_save(r)
     assert view_of(s, r, CD).tap_s == 200 and engine_work.tap_seconds(s, r, CD) == 200
     s = tap(s, r, 0, CD)
@@ -73,7 +73,7 @@ def _tired_queue(rule: bool) -> tuple[Rules, Save]:
     r = rules([StoreDef(E, 10 * Q, 10 * Q), StoreDef(Z, 1000 * Q, 0)],
               cards=[*tap_cards(), CardDef(rest, 10, makes=(Flow(E, Q),))],
               standing=[StandingDef(GEN, costs=(Flow(E, 7 * Q // 100),))],
-              chips=[ChipDef(TIRED, cond, (SLOW,), None, None)])
+              chips=[ChipDef(TIRED, cond, (SLOW,), None, ())])
     s = new_save(r)
     if rule:
         s = save_mix(s, r, 0, {rest: BP}, "rest")

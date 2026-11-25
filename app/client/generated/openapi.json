@@ -2680,16 +2680,12 @@
             ],
             "title": "On Line Key"
           },
-          "off_line_key": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Off Line Key"
+          "off_line_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Off Line Keys"
           },
           "offered_after": {
             "anyOf": [
@@ -2715,7 +2711,7 @@
           "cost_key",
           "change_bp",
           "on_line_key",
-          "off_line_key",
+          "off_line_keys",
           "offered_after",
           "chore"
         ],

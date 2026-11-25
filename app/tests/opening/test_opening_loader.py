@@ -281,8 +281,8 @@ def test_a_chip_order_card_that_does_not_match_its_chip_fails_the_load(tmp_path:
 
 def test_a_chip_with_an_order_card_and_an_off_line_fails_the_load(tmp_path: Path):
     """The rule clears such a chip every cycle, so its off line would repeat each time; the first cure is a trigger."""
-    with pytest.raises(ValueError, match="chip tired.*off_line_key"):
-        load_opening(broken(tmp_path, 'on_line_key = "l_tired"\n', 'on_line_key = "l_tired"\noff_line_key = "l_tired"\n'))
+    with pytest.raises(ValueError, match="chip tired: has an order card and off_line_keys"):
+        load_opening(broken(tmp_path, 'on_line_key = "l_tired"\n', 'on_line_key = "l_tired"\noff_line_keys = ["l_tired"]\n'))
 
 
 def test_a_chip_order_card_without_after_end_still_loads(tmp_path: Path):

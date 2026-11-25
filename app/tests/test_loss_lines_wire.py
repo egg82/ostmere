@@ -25,7 +25,7 @@ def test_the_pooled_card_serves_its_fields_and_every_other_fight_null(game: Game
     fights = {c.card: c.fight for c in content.card_infos if c.fight is not None}
     pool, plain = fights["t_pool"], fights["t_plain"]
     assert (pool.loss_pool, pool.loss_notes, pool.on_loss_key, pool.lost_line_keys) == (
-        ["t_l_pool_1", "t_l_pool_2"], ["t_n_pool_1", "t_n_pool_2", "t_n_pool_3"], "t_on_loss", [])
+        ["t_l_pool_1", "t_l_pool_2", "t_l_pool_3", "t_l_pool_4", "t_l_pool_5", "t_l_pool_6"], ["t_n_pool_1", "t_n_pool_2", "t_n_pool_3"], "t_on_loss", [])
     assert (plain.loss_pool, plain.loss_notes, plain.on_loss_key) == (None, None, None)
     raids = [a.fight for a in content.standing_infos if a.fight is not None]
     assert raids and all((f.loss_pool, f.loss_notes, f.on_loss_key) == (None, None, None) for f in raids)

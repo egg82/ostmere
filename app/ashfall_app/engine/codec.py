@@ -36,7 +36,7 @@ from .state import FIRST_PHASE, ParkedRank, Pause, PhaseState, Save, SkillState,
 from .unlocks import Unlock, UnlockKind
 from .verbs import DeleteMix, SaveMix, SetOrders, SetQueue, Verb
 
-FORMAT = 9
+FORMAT = 10
 """Bumped whenever the encoding changes, with an UPGRADES entry from the old one (upgrade.py); decode raises
 StateFormatError for a string of another format, and rebase upgrades one from OLDEST_FORMAT on."""
 

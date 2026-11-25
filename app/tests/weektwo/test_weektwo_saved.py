@@ -41,10 +41,23 @@ def test_every_saved_file_is_written_by_a_part():
     """chapter_saves --write PART writes each file; a file in no part would exist only in a full local write."""
     in_parts = [c for chapters in chapter_saves.REBASED.values() for c in chapters]
     assert sorted(in_parts) == sorted(rebased.OLD), "each rebased save in exactly one part"
-    assert {n for names in SAVED.values() for n in names} <= chapter_saves.ROUTES
+    assert {n for names in SAVED.values() for n in names} <= chapter_saves.ROUTES | chapter_saves.LINKED
     assert set(ends.READINGS) <= chapter_saves.ALL and set(chapter_saves.REBASED) <= chapter_saves.ALL
     assert {c for c in rebased.OLD} <= {c for c, names in SAVED.items() if "typical" in names}, \
         "a rebased part reads typical's saved end at its chapter"
+
+
+def test_a_linked_routes_links_write_each_of_its_saved_ends_once_in_order():
+    """The links run from the route's first saved end with no gap and the last open, so a chapter added to SAVED is
+    written by the last link; each link after the first reads the end the link before wrote last."""
+    assert chapter_saves.LINKED and not chapter_saves.LINKED & chapter_saves.ROUTES
+    for route in chapter_saves.LINKED:
+        links = [n for n, (r, _, _) in chapter_saves.LINKS.items() if r == route]
+        written = [c for n in links for c in chapter_saves.link_chapters(n)]
+        assert written == [c for c, names in SAVED.items() if route in names], route
+        assert chapter_saves.LINKS[links[-1]][2] is None, route
+        for before, after in zip(links, links[1:]):
+            assert chapter_saves.LINKS[before][2] == chapter_saves.LINKS[after][1], (before, after)
 
 
 def test_each_chapters_readings_run_from_its_first_heavy_step_with_no_gap_and_the_last_open():

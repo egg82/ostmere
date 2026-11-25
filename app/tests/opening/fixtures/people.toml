@@ -74,15 +74,15 @@ outcome = { leaves = [{ lane = "t_q3" }] }
 
 [[people.came]]
 at_least = 1
-keys = ["t_came_one"]
+keys = ["t_came_one", "t_came_one_2", "t_came_one_3", "t_came_one_4", "t_came_one_5", "t_came_one_6"]
 
 [[people.came]]
 at_least = 2
-keys = ["t_came_some_a", "t_came_some_b"]
+keys = ["t_came_some_a", "t_came_some_b", "t_came_some_b_3", "t_came_some_b_4", "t_came_some_b_5", "t_came_some_b_6"]
 
 [[people.went]]
 at_least = 1
-keys = ["t_went_one"]
+keys = ["t_went_one", "t_went_one_2", "t_went_one_3", "t_went_one_4", "t_went_one_5", "t_went_one_6"]
 
 [[subjects]]
 id = "t_s_q1_joined"
@@ -105,6 +105,20 @@ t_l_q3 = "Third"
 t_c_work = "Work"
 t_l_comes = "One comes."
 t_came_one = "One more."
+t_came_one_2 = "One more, way two."
+t_came_one_3 = "One more, way three."
+t_came_one_4 = "One more, way four."
+t_came_one_5 = "One more, way five."
+t_came_one_6 = "One more, way six."
 t_came_some_a = "Some more."
 t_came_some_b = "More again."
+t_came_some_b_3 = "More again, way three."
+t_came_some_b_4 = "More again, way four."
+t_came_some_b_5 = "More again, way five."
+t_came_some_b_6 = "More again, way six."
 t_went_one = "One fewer."
+t_went_one_2 = "One fewer, way two."
+t_went_one_3 = "One fewer, way three."
+t_went_one_4 = "One fewer, way four."
+t_went_one_5 = "One fewer, way five."
+t_went_one_6 = "One fewer, way six."

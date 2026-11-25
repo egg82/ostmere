@@ -8,9 +8,9 @@ beats whenever (pace_scale 1): B12 day 12, target_day 13
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      27      11       0       5       1      24       2     70
-  2      19       4       2       3       0      15       2     45
-  3       5       0       0       0       0       0       4      9
-  4      17       3       0       0       0       2       2     24
-  5      18       4       0       0       0      72       2     96
-  6      19       4       0       2       0       5       2     32
-  7       3       3       1       0       0       9       1     17
+  2      23       7       2       3       0      15       2     52
+  3      13       0       0       0       0       2       4     19
+  4       5       0       0       0       0       0       3      8
+  5      18       4       0       0       0      72       1     95
+  6      15       3       1       2       0       4       2     27
+  7       7       4       1       0       0      10       1     23

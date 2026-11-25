@@ -68,7 +68,7 @@ def place(chips: Mapping[str, tuple[str, bool]], lines: Sequence[tuple[str, str 
 def band_lines(rules: Rules, lines: tuple[Line, ...], before: View, after: View, kinds: Mapping[str, str]) -> list[Line]:
     """The lines a return plays on the strip: placed on the band, and of a kind the strip plays (`kinds`: each line key's
     kind)."""
-    chips = {str(k): (str(c.id), k == c.on_line) for c in rules.chips for k in (c.on_line, c.off_line) if k is not None}
+    chips = {str(k): (str(c.id), k == c.on_line) for c in rules.chips for k in (c.on_line, *c.off_lines) if k is not None}
     repeats = {c.card for c in (*before.cards, *after.cards) if c.cap is None}
     where = place(chips, [(ln.key, ln.card) for ln in lines], set(after.chips), repeats)
     strip = ar.strip_kinds()

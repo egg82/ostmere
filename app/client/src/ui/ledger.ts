@@ -21,6 +21,7 @@ import type { LedgerLine, OrderCard, View } from "../api/types";
 import { sample } from "../game/clock";
 import { capStore } from "../game/caphint";
 import { dryCue, type DryCue } from "../game/dryhint";
+import { workNeeds } from "../game/dryneed";
 import { largestDrain, offeredCard, risingCard, risingLine } from "../game/cues";
 import { emptyAt, fullAt } from "../game/forecast";
 import { runningMix } from "../game/mix";
@@ -156,9 +157,11 @@ export class Ledger implements Part {
   }
 
   /** Red as game/shown.ts says, except a store that only feeds a bonus (StoreInfo.bonus_bp): running low on it misses
-   * the bonus and asks nothing, so it is never drawn as an alarm. */
+   * the bonus and asks nothing, so it is never drawn as an alarm; and a dry store only the townsfolk wait on (nothing the
+   * player runs or has queued takes from it, game/dryneed.ts) reads "ran dry" quietly, in its place, not at the top. */
   private red(line: LedgerLine, view = this.view): boolean {
-    return view !== null && redLine(line, view) && this.ctx.catalog.stores.get(line.store)?.bonus_bp == null;
+    if (view === null || this.ctx.catalog.stores.get(line.store)?.bonus_bp != null) return false;
+    return redLine(line.starved && !workNeeds(this.ctx.catalog, view, line.store) ? { ...line, starved: false } : line, view);
   }
 
   /** The label of what draws on a red line most (a card or a standing action), or "" (cues.largestDrain). */

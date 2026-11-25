@@ -25,7 +25,7 @@ def test_the_story_fight_the_chip_and_the_poultice_carry_their_lines(everything:
     assert cards["b7_stand"].finished.line_keys[-1] == "l_combat_first"
     assert next(t for t in o.triggers if t.id == "t_poultice_first").outcome.line_keys == ["l_poultice"]
     hurt = next(ch for ch in o.chips if ch.id == "hurt")
-    assert (hurt.on_line_key, hurt.off_line_key) == ("l_hurt", "l_healed")
+    assert hurt.on_line_key == "l_hurt" and "l_healed" in hurt.off_line_keys
 
 
 def test_every_fight_has_both_pools_and_they_are_lines(everything: Opening):
@@ -43,12 +43,12 @@ def test_the_content_serves_each_fights_pools(everything: Opening):
     content = Game(o, ruleset(o, "test", 1)).content()
     hunt = next(c for c in content.card_infos if c.card == "hunt_wolf").fight
     rats = next(a for a in content.standing_infos if a.action == "rats").fight
-    assert hunt is not None and hunt.won_line_keys == [f"l_fight_hunt_won_{i}" for i in (1, 2, 3)]
-    assert hunt.lost_line_keys == [f"l_fight_hunt_lost_{i}" for i in (1, 2, 3)]
-    assert rats is not None and rats.won_line_keys == [f"l_fight_rats_won_{i}" for i in (1, 2, 3)]
+    assert hunt is not None and hunt.won_line_keys == [f"l_fight_hunt_won_{i}" for i in range(1, 7)]
+    assert hunt.lost_line_keys == [f"l_fight_hunt_lost_{i}" for i in range(1, 7)]
+    assert rats is not None and rats.won_line_keys == [f"l_fight_rats_won_{i}" for i in range(1, 7)]
     pack = next(a for a in content.standing_infos if a.action == "pack").fight
-    assert pack is not None and pack.won_line_keys == [f"l_fight_pack_won_{i}" for i in (1, 2, 3)]
-    assert pack.lost_line_keys == [f"l_fight_pack_lost_{i}" for i in (1, 2, 3)]
+    assert pack is not None and pack.won_line_keys == [f"l_fight_pack_won_{i}" for i in range(1, 7)]
+    assert pack.lost_line_keys == [f"l_fight_pack_lost_{i}" for i in range(1, 7)]
 
 
 def test_a_pool_key_missing_from_text_fails(everything: Opening):

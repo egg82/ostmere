@@ -933,8 +933,8 @@ export interface components {
             change_bp: number[];
             /** On Line Key */
             on_line_key: string | null;
-            /** Off Line Key */
-            off_line_key: string | null;
+            /** Off Line Keys */
+            off_line_keys: string[];
             offered_after: components["schemas"]["Unlock"] | null;
             /** Chore */
             chore: boolean;

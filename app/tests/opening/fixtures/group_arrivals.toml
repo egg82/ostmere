@@ -111,15 +111,15 @@ joins = [{ lane = "t_m1", mix = "town:main", card = "t_crew_build", own_split = 
 
 [[people.came]]
 at_least = 1
-keys = ["t_came_one"]
+keys = ["t_came_one", "t_came_one_2", "t_came_one_3", "t_came_one_4", "t_came_one_5", "t_came_one_6"]
 
 [[people.came]]
 at_least = 2
-keys = ["t_came_some"]
+keys = ["t_came_some", "t_came_some_2", "t_came_some_3", "t_came_some_4", "t_came_some_5", "t_came_some_6"]
 
 [[people.went]]
 at_least = 1
-keys = ["t_went_one"]
+keys = ["t_went_one", "t_went_one_2", "t_went_one_3", "t_went_one_4", "t_went_one_5", "t_went_one_6"]
 
 [text]
 t_up = "what it is for"
@@ -141,5 +141,20 @@ t_a_food = "Food"
 t_a_build = "Build"
 t_a_cost = "takes nothing"
 t_came_one = "One more."
+t_came_one_2 = "One more, way two."
+t_came_one_3 = "One more, way three."
+t_came_one_4 = "One more, way four."
+t_came_one_5 = "One more, way five."
+t_came_one_6 = "One more, way six."
 t_came_some = "Some more."
+t_came_some_2 = "Some more, way two."
+t_came_some_3 = "Some more, way three."
+t_came_some_4 = "Some more, way four."
+t_came_some_5 = "Some more, way five."
+t_came_some_6 = "Some more, way six."
 t_went_one = "One fewer."
+t_went_one_2 = "One fewer, way two."
+t_went_one_3 = "One fewer, way three."
+t_went_one_4 = "One fewer, way four."
+t_went_one_5 = "One fewer, way five."
+t_went_one_6 = "One fewer, way six."

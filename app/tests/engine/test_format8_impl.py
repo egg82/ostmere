@@ -9,6 +9,7 @@ from ashfall_app.engine import (
     advance_logged, encode, new_save, rebase,
 )
 from tests.cards_contract.cards_world import lane, mul, rules, tap
+from tests.format8 import as_format_9
 
 CD = CardId("cd")
 
@@ -16,11 +17,11 @@ CD = CardId("cd")
 def world():
     slow = mul(LaneSpeed(HANDS), 5000, "tired")
     return rules([], cards=[CardDef(CD, 100, lines=(LineKey("cd.tap"),))],
-                 chips=[ChipDef(ChipId("tired"), AfterTime(50), (slow,), None, None)])
+                 chips=[ChipDef(ChipId("tired"), AfterTime(50), (slow,), None, ())])
 
 
 def as_format_7(text: str) -> str:
-    doc = json.loads(text)
+    doc = json.loads(as_format_9(text))
     for ls in doc["save"]["lanes"]:
         del ls["speed"]
     return json.dumps({**doc, "format": 7}, sort_keys=True, separators=(",", ":"))

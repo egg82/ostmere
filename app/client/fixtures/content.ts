@@ -270,6 +270,9 @@ const text: Record<string, string> = {
   "ui.lesson.cap_reaches": "Pick reaches. The rule comes on once {store} is full.",
   "ui.lesson.cap_do": "Pick what your hands do instead.",
   "ui.town.title": "Camp", "ui.town.idle": "{person}, idle", "ui.town.count": "{n} people", "ui.town.each": "each of {n}", "ui.town.busy": "everyone is busy", "ui.town.tied": "With {name}",
+  "ui.town.stuck": "nothing to do", "ui.town.stopped_spent": "{card} needs {store}, nothing makes it now", "ui.town.stopped_full": "{card} stopped: {store} is full",
+  "ui.town.stopped_dry": "{card} is waiting for {store}", "ui.town.stopped_waiting": "{card} is waiting", "ui.town.can_do": "Could do now", "ui.town.more": "+{n} more",
+  "ui.card.spent_on": "Needs {store}, nothing makes it now", "ui.card.wasted": "{store} is full, so this work is wasted", "ui.town.wasted": "{card}: {store} is full, so the work is wasted",
   "ui.lesson.town_change": "Your people work in shares too. Open their mix.", "ui.lesson.town_bar": "Each person has their own time to split. Drag a divider to change a share.",
   "ui.lesson.town_runs": "Each person shows what they are doing now.",
   "lane.mason": "Mason", "card.hew": "Hew stone", "card.carve": "Carve beams",
@@ -449,9 +452,9 @@ export const fixtureContent: Content = {
     card("chop", "helper", "action"), card("haul", "helper", "action"), card("fetch", "helper", "narrative"), card("hew", "mason", "action"), card("carve", "mason", "action"),   // the ruled lane's tasks
   ],
   chip_infos: [
-    { chip: "cold", label_key: "chip.cold", tone: "cold", when: low("warmth", 30, 50), cost_key: "chip.cold_cost", change_bp: [-2000], on_line_key: null, off_line_key: null, offered_after: null, chore: false },
-    { chip: "warm", label_key: "chip.warm", tone: "warm", when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 60 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false }, cost_key: null, change_bp: [], on_line_key: null, off_line_key: null, offered_after: null, chore: false },
-    { chip: "tired", label_key: "chip.tired", tone: "tired", when: TIRED, cost_key: "chip.tired_cost", change_bp: [-5000], on_line_key: null, off_line_key: null, offered_after: null, chore: false },
+    { chip: "cold", label_key: "chip.cold", tone: "cold", when: low("warmth", 30, 50), cost_key: "chip.cold_cost", change_bp: [-2000], on_line_key: null, off_line_keys: [], offered_after: null, chore: false },
+    { chip: "warm", label_key: "chip.warm", tone: "warm", when: { kind: "at_least", watched: { kind: "store_value", store: "warmth" }, value: 60 * Q, release: 40 * Q, value_of_cap: false, release_of_cap: false }, cost_key: null, change_bp: [], on_line_key: null, off_line_keys: [], offered_after: null, chore: false },
+    { chip: "tired", label_key: "chip.tired", tone: "tired", when: TIRED, cost_key: "chip.tired_cost", change_bp: [-5000], on_line_key: null, off_line_keys: [], offered_after: null, chore: false },
   ],
   feature_infos: [{ feature: "mix", hint_key: null, label_key: null, effect_key: null, change_bp: [], feature_card: null }, { feature: "combat", hint_key: null, label_key: null, effect_key: null, change_bp: [], feature_card: null }, { feature: "dusk_ramp", hint_key: null, label_key: "feature.dusk_ramp", effect_key: "feature.dusk_ramp.up", change_bp: [1000], feature_card: null }],
   order_cards: [{

@@ -9,6 +9,7 @@ from ashfall_app.engine import (
     new_save, rebase,
 )
 from tests.cards_contract.cards_world import Q, lane, mul, rules, tap, val, with_mix
+from tests.format8 import as_format_9
 
 E, BACK = StoreId("e"), StoreId("back")
 WALK, MIXED = CardId("walk"), CardId("mixed")
@@ -19,7 +20,7 @@ def world(walk_s: int, mixed_s: int = 100) -> Rules:
     """e starts at 2 items, so tired (at most 3) shows from the start and stays: nothing refills it. The walk pays
     one item of `back`, and a trigger waits on that whole item."""
     tired = ChipDef(ChipId("tired"), AtMost(StoreValue(E), 3 * Q, 6 * Q), (mul(LaneSpeed(HANDS), 5000, "tired"),),
-                    None, None)
+                    None, ())
     came_back = TriggerDef(TriggerId("came_back"), AtLeast(StoreValue(BACK), Q, Q),
                            Outcome(lines=(LineKey("came_back"),)))
     return rules([StoreDef(E, 10 * Q, 2 * Q), StoreDef(BACK, Q, 0)],
@@ -30,7 +31,7 @@ def world(walk_s: int, mixed_s: int = 100) -> Rules:
 
 
 def as_format_7(text: str) -> str:
-    doc = json.loads(text)
+    doc = json.loads(as_format_9(text))
     for ls in doc["save"]["lanes"]:
         del ls["speed"]
     return json.dumps({**doc, "format": 7}, sort_keys=True, separators=(",", ":"))

@@ -24,6 +24,7 @@ from .modifiers import Modifier, RunKind
 from .orders import AtLeast, Condition, DiscreteSubject, StoreValue
 from .rates import FULL, lane_state, running, store_value, work_line
 from .rebuild import rebuild
+from .rotation import bagged
 from .rules import Rules
 from .segments import Segment
 from .state import Save, StoreState
@@ -250,8 +251,18 @@ def first_shown(save: Save, rules: Rules) -> tuple[Save, tuple[LineKey, ...]]:
     first = {c.id for c, seen in zip(rules.chips, save.chips_seen) if c.id in now and not seen}
     if not first:
         return save, ()
-    seen = tuple(was or c.id in first for c, was in zip(rules.chips, save.chips_seen))
+    seen = tuple(1 if c.id in first else was for c, was in zip(rules.chips, save.chips_seen))
     return replace(save, chips_seen=seen), tuple(c.on_line for c in rules.chips if c.id in first and c.on_line is not None)
+
+
+def off_said(save: Save, rules: Rules, i: int) -> tuple[Save, tuple[LineKey, ...]]:
+    """Chip i stopped being shown: its off line, the next of off_lines in its bag (rotation.bagged, keyed by the chip),
+    counted in chips_seen (DESIGN.txt, "Chips"). None for a chip with no off lines."""
+    chip, seen = rules.chips[i], save.chips_seen[i]
+    if not chip.off_lines:
+        return save, ()
+    line = LineKey(bagged(f"{chip.id}|off", chip.off_lines, max(seen - 1, 0)))
+    return replace(save, chips_seen=save.chips_seen[:i] + (max(seen, 1) + 1,) + save.chips_seen[i + 1:]), (line,)
 
 
 def _end_retired_taps(save: Save, rules: Rules) -> Save:

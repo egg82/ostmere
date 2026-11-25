@@ -5,7 +5,8 @@
 // anywhere on it opens the sheet, so a season's asks never push the cards from under the thumb. A new ask arrives through the arrival queue after the last of its lines in this
 // Step, or at once when the Step holds none of them (it showed before the page's last view); one that arrives already
 // answered is never drawn. The shown ask holds the ember outline, and takes the one glow when it is free: a lesson's
-// step keeps it first, and the ask waits for it (GlowWhile) until answered.
+// step keeps it first, and the ask waits for it (GlowWhile) until answered. A story step the content marks takes the
+// glow from it (GlowRank), so an ask left waiting never keeps that step dark.
 import type { View } from "../api/types";
 import { openAsks } from "../game/asks";
 import { UI } from "../game/text";
@@ -94,7 +95,7 @@ export class Asks implements Part {
       if (offer !== null) {
         const ask = askNode(this.ctx, offer);
         this.slot.append(ask.node, this.opener);
-        this.front = { offer, ask, glow: new GlowWhile(this.ctx.glow, ask.node) };
+        this.front = { offer, ask, glow: new GlowWhile(this.ctx.glow, ask.node, { yields: true }) };
         this.front.glow.update(true);   // after the arrival has held the slot: the glow comes when it shows
       }
     }

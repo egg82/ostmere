@@ -184,7 +184,7 @@ skill = "melee"
 xp_per_hour = 900
 inputs = [{ store = "smoked", items = 2 }, { store = "bear_sign", items = 1 }]
 outcome = { stores = [{ store = "catch", items = 3 }, { store = "pelt", items = 1 }, { store = "tallow", items = 2 }] }
-fight = { side = "hands", threat = "ash_bear", lost = "bear_lost", wounds = [{ store = "hurt", items = 2 }], won_line_keys = ["l_fight_bear_won_1", "l_fight_bear_won_2"], lost_line_keys = ["l_fight_bear_lost_1", "l_fight_bear_lost_2"] }
+fight = { side = "hands", threat = "ash_bear", lost = "bear_lost", wounds = [{ store = "hurt", items = 2 }], won_line_keys = ["l_fight_bear_won_1", "l_fight_bear_won_2", "l_fight_bear_won_3", "l_fight_bear_won_4", "l_fight_bear_won_5", "l_fight_bear_won_6"], lost_line_keys = ["l_fight_bear_lost_1", "l_fight_bear_lost_2", "l_fight_bear_lost_3", "l_fight_bear_lost_4", "l_fight_bear_lost_5", "l_fight_bear_lost_6"] }
 
 # The bear's page, with its sign (t_bear_sign's condition, one moment): its odds read unknown until the first hunt.
 [[entries]]
@@ -746,8 +746,16 @@ l_b12_3 = "story"
 l_bear_sign = "story"
 l_fight_bear_won_1 = "fight"
 l_fight_bear_won_2 = "fight"
+l_fight_bear_won_3 = "fight"
+l_fight_bear_won_4 = "fight"
+l_fight_bear_won_5 = "fight"
+l_fight_bear_won_6 = "fight"
 l_fight_bear_lost_1 = "fight"
 l_fight_bear_lost_2 = "fight"
+l_fight_bear_lost_3 = "fight"
+l_fight_bear_lost_4 = "fight"
+l_fight_bear_lost_5 = "fight"
+l_fight_bear_lost_6 = "fight"
 l_lamps = "story"
 l_lamps_1 = "story"
 l_lamps_2 = "story"
@@ -798,8 +806,16 @@ c_hunt_bear = "Hunt the bear"
 up_hunt_bear = "catch, pelts, and tallow for the lamps"
 l_fight_bear_won_1 = "the bear falls. you take meat, fat and a pelt."
 l_fight_bear_won_2 = "the bear goes down in the trees. meat and fat come home."
+l_fight_bear_won_3 = "the bear charges once and doesn't get up."
+l_fight_bear_won_4 = "three trips bring the bear home."
+l_fight_bear_won_5 = "bear fat, rendered, fills a pot by the fire."
+l_fight_bear_won_6 = "you drag the bearskin home behind you."
 l_fight_bear_lost_1 = "the bear is bigger than its sign. you come back with nothing."
 l_fight_bear_lost_2 = "the bear keeps the trail. you walk home empty."
+l_fight_bear_lost_3 = "the bear swats you off your feet."
+l_fight_bear_lost_4 = "you limp home with a torn sleeve."
+l_fight_bear_lost_5 = "a paw catches your shoulder. you run."
+l_fight_bear_lost_6 = "you lose the bear in the brush. it finds you first."
 n_bear_1 = "fungus shelves torn off the dead birch and eaten. claw marks higher than i could reach. i guessed bear; nobody had seen it"
 n_gutter_1 = "found a knot drawn near the stitching"
 l_lamps = "bear fat melts in the stew pot. you split stakes into troughs to pour it in."

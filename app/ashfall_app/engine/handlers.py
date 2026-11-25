@@ -26,7 +26,7 @@ from .rules import Rules
 from .state import Pause, Save
 from .unlocks import Unlock, UnlockKind
 from .units import SECONDS_PER_HOUR
-from .work import apply_outcome, complete, first_shown, interrupt, land, ready, written_by
+from .work import apply_outcome, complete, first_shown, interrupt, land, off_said, ready, written_by
 
 type Emit = Callable[[int, LineKey, CardId | None], None]
 """Where a handler sends the log lines it emits, as (engine time, key, the card that wrote it or None) in emission
@@ -229,9 +229,10 @@ def _chip_changed(save: Save, rules: Rules, i: int, emit: Emit) -> Save:
     save = rebuild(replace(save, chips=save.chips[:i] + (on,) + save.chips[i + 1:]), rules)
     if on:
         save, lines = first_shown(save, rules)
+    elif is_unlocked(save, rules, Unlock(UnlockKind.CHIP, chip.id)):
+        save, lines = off_said(save, rules, i)
     else:
-        lines = () if chip.off_line is None or not is_unlocked(save, rules, Unlock(UnlockKind.CHIP, chip.id)) \
-            else (chip.off_line,)
+        lines = ()
     for line in lines:
         emit(save.time, line, None)
     return save

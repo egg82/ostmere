@@ -461,10 +461,18 @@ when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 
 outcome = { modifiers = [{ target = "threat", id = "ashrats", kind = "add_bp", amount_bp = 5000, source = "t_rats_drift" }] }
 
 # U3: seventy hours of combat's clock and twelve of the season's. requires reads only unlocks, so the first clock's
-# reach is a feature.
+# reach is a feature. Twenty-two hours of the season's clock reach it too, whichever comes first, so a late B7 does not
+# carry into U3 (the typical route's seventy hours land at 21.6).
 [[triggers]]
 id = "t_pack_near"
 when = { test = "at_least", subject_kind = "store", id = "r1_clock", value = 70 }
+requires = [{ test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_near", value = 0 }]
+outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
+
+[[triggers]]
+id = "t_pack_near_drift"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 22 }
+requires = [{ test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_near", value = 0 }]
 outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
 
 [[triggers]]
@@ -487,7 +495,7 @@ cap_items = 10000
 [[standing]]
 id = "pack"
 label_key = "action_pack"
-fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_pack_won_1", "l_fight_pack_won_2", "l_fight_pack_won_3"], lost_line_keys = ["l_fight_pack_lost_1", "l_fight_pack_lost_2", "l_fight_pack_lost_3"] }
+fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack_fought", fights_per_hour = 1, loses = [{ store = "smoked", items = 1 }], won_line_keys = ["l_fight_pack_won_1", "l_fight_pack_won_2", "l_fight_pack_won_3", "l_fight_pack_won_4", "l_fight_pack_won_5", "l_fight_pack_won_6"], lost_line_keys = ["l_fight_pack_lost_1", "l_fight_pack_lost_2", "l_fight_pack_lost_3", "l_fight_pack_lost_4", "l_fight_pack_lost_5", "l_fight_pack_lost_6"] }
 
 # ---------- B9: the book comes out ----------
 
@@ -744,9 +752,15 @@ l_pack_2 = "story"
 l_fight_pack_won_1 = "fight"
 l_fight_pack_won_2 = "fight"
 l_fight_pack_won_3 = "fight"
+l_fight_pack_won_4 = "fight"
+l_fight_pack_won_5 = "fight"
+l_fight_pack_won_6 = "fight"
 l_fight_pack_lost_1 = "fight"
 l_fight_pack_lost_2 = "fight"
 l_fight_pack_lost_3 = "fight"
+l_fight_pack_lost_4 = "fight"
+l_fight_pack_lost_5 = "fight"
+l_fight_pack_lost_6 = "fight"
 l_b9_1 = "story"
 l_b9_2 = "story"
 l_find_shelf = "find"
@@ -833,9 +847,15 @@ action_pack = "Pack"
 l_fight_pack_won_1 = "a brand swung low and the pack backs off."
 l_fight_pack_won_2 = "the wolves give the gap up and trot off."
 l_fight_pack_won_3 = "the pack noses up and finds you waiting."
+l_fight_pack_won_4 = "eyes at the gap. you stand, and they're gone."
+l_fight_pack_won_5 = "the wolves pace the gap and don't cross."
+l_fight_pack_won_6 = "the lead wolf takes a stone on the flank and turns tail."
 l_fight_pack_lost_1 = "the lowest strips on the rack are gone."
 l_fight_pack_lost_2 = "the bottom pegs of the rack hang empty."
 l_fight_pack_lost_3 = "the lower poles are picked clean."
+l_fight_pack_lost_4 = "wolf prints under the rack, and less meat on it."
+l_fight_pack_lost_5 = "one strip dropped in the gap. the rest are gone."
+l_fight_pack_lost_6 = "a wolf slips off with meat in its jaws."
 l_b9_1 = "you write in the book from the coat, by the fire. rats first, then crows."
 l_b9_2 = "the wolves' page is blank, but its margin holds a pencil note. your writing."
 pays_find_for_13 = "a fungus shelf, {pct} foraging speed"

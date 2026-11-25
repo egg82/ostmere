@@ -64,8 +64,8 @@ def no_offers() -> Rules:
     return unruled(replace(town(show_at=None, yes=Outcome(), no=Outcome()), offers=()))
 
 
-def test_format_is_9_with_upgrades_from_6_7_and_8():
-    assert FORMAT == 9 and 6 in UPGRADES and 7 in UPGRADES and 8 in UPGRADES
+def test_format_is_10_with_upgrades_from_6_to_9():
+    assert FORMAT == 10 and all(f in UPGRADES for f in (6, 7, 8, 9))
 
 
 def test_a_save_holding_answers_round_trips():
