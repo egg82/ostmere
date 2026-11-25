@@ -955,7 +955,9 @@ are engine decisions a save is replayed from, and a lesson is not game state.
   The Rules tab's label, once the page has seen a rule come on and let go (when `+ New rule` opens), until the tab is
   first opened (remembered in the browser, across new games); before that the label is there without it. A rule just
   added from an offer flies to that label. A glow that is due while another control holds it, or while the
-  reveal holds its control back, waits. Nothing else glows, and nothing pulses for urgency.
+  reveal holds its control back, waits, with one exception: a story step the content marks (`glows`) takes the glow
+  from the shown ask, which keeps its outline, so an ask left unanswered for days never keeps the step that moves the
+  story on from glowing. Nothing else glows, and nothing pulses for urgency.
 
 ## The feedback ladder
 
