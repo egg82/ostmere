@@ -450,6 +450,9 @@ p.catching-up[hidden] { display: none; }
 .totals-after.unknown { color: var(--ink-dim); }
 .totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
 .totals-runs { font-size: var(--t-meta); color: var(--ink); }
+.person-stores { margin-top: .6rem; }
+.person-stores.at-rest .totals-row { grid-template-columns: minmax(0, 1fr) 6.5rem; }   /* a person's split at rest: rates now, no after (ui/personmix.ts) */
+.person-stores.at-rest .totals-row > :nth-child(n+3) { display: none; }
 .goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
 .goal-binds.heading-turned { color: var(--ember-hot); }   /* a store whose heading the edit turns (ui/storetimes.ts) */
 .goal-binds.heading-turned.empties { color: var(--alarm); }
