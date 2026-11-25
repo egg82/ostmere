@@ -95,3 +95,9 @@ is the perfect-information layer in costume: skimmable for numbers, readable for
 trust their memory; whose handwriting is in it is decided in `content/`. It is also the lore's home, the second
 layer under the direct story (the piece-it-together reading of Idle Fantasy's item descriptions), full
 enough to reward a long bored read, with clues for whoever reads closely.
+
+**One Places page for each week of play**, for the place the player's own work reaches that week and keeps working
+(dug, walked, laid, worked from); a place only seen or named on the map gets none. Which place each week is decided
+in `content/`. A note that marks a beat copies the beat trigger's `when` and `requires` exactly: the absence readout
+counts triggers with one `when` as one moment (`one_per_moment` in `app/tests/dayone/checks.py`), so the page costs
+the absence nothing and lands as the place is reached.

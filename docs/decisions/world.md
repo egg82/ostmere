@@ -112,6 +112,10 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
 - Fights since the last view, exactly as many lost as the engine's count, which ones picked by a shuffle-bag draw keyed
   by save, fight and window, each worded from its runner's pool of lines when the content gives one
   (`app/client/src/game/fights.ts`; `app/ashfall_app/api/CONTRACT.txt`, "FIGHTS").
+- **A line said again and again comes from a pool said in turn** (owner, #465): any line that is necessarily
+  repeated (a chip going off, a fight won or lost, a people band) draws from at least six lines, in a shuffled turn,
+  never the same twice in a row; the content check counts the keys (`docs/engineering.md`, "Structural gates"). An
+  empty fight pool falls back to the page's stock fight line, which is UI words, not the journal's.
 - The visits record: each return after a long time away kept in the save's presentation, newest last and the oldest
   dropped past a limit (`app/client/src/game/keeps.ts`, `app/ashfall_app/accounts/presentation.py`), which the
   chronicle splits its stretches at, whatever the filter; beside it the newest return's figures, replaced only by a

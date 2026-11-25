@@ -215,7 +215,12 @@ either kind of entry, cards first. It lists the steps When ready takes, picked t
 ones included (a build planned while the hands are busy runs after the task under way), then the steps it would take
 but for what they wait on, off, each saying what in its card's face words, then the mixes. A card's When ready stays as
 a shortcut into the same queue, offered where a tap cannot do the job: on a step not ready yet, or ready while its lane
-runs another tap.
+runs another tap. While a staged card a tap started is running, its face offers Until done in When ready's place
+(owner, #464: the moment to decide is right after the first tap). It sends the plan the card would have had were it
+planned before the tap, its work kept: on a lane the queue takes, the entry tapping it to its cap (at Next's front, or
+a running When ready entry held on to the cap); on a person's lane, an always rule tapping it where a new lane rule
+goes, passed over at the cap (`app/ashfall_app/api/CONTRACT.txt`, "UNTIL DONE"). When ready's own default still
+never holds a staged card to its cap (engine DESIGN's REJECTED list).
 
 Modifiers: buildings, tools, spells, prestige, seasons, injuries and supply are all modifiers, and a cap only rises.
 Planned for combat: a side's and a threat's strength are targets too, a threat's raised only by its region's schedule
