@@ -1,13 +1,13 @@
 chapter nineteen: 9 visits on typical
    V84 gap   9.0 h  spend 155  decide  1
-   V85 gap   4.2 h  spend 73  decide  0
-   V86 gap   3.2 h  spend 140  decide  0  [wait, 2 lines]
+   V85 gap   4.2 h  spend 154  decide  0
+   V86 gap   3.2 h  spend 140  decide  0
    V87 gap   9.0 h  spend 143  decide  2
    V88 gap   4.0 h  spend 130  decide  1
-   V89 gap   3.0 h  spend 54  decide  0  [wait, 0 lines]
-   V90 gap   9.0 h  spend 130  decide  1
+   V89 gap   3.0 h  spend 55  decide  0  [wait, 0 lines]
+   V90 gap   9.1 h  spend 130  decide  1
    V91 gap   4.0 h  spend 143  decide  0
-   V92 gap   3.2 h  spend 131  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 671, decide 1; 8h+: 3 returns, spend 428, decide 4
+   V92 gap   3.2 h  spend 130  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 752, decide 1; 8h+: 3 returns, spend 428, decide 4
   cap loss at the end, away 8 h: cordwood 100%, damp_wood 28%, dry_wood 53%, roots 95%, stones 94%, wraps_sewn 100%
   cap loss at the end, away 24 h: cordwood 100%, damp_wood 27%, dry_wood 57%, roots 95%, stones 94%, wraps_sewn 100%
