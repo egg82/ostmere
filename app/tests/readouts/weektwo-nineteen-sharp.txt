@@ -22,7 +22,7 @@ beats sharp (pace_scale 1): B17 day 18.98, target_day 20
   away V177->V178: 0 []
   away V178->V179: 0 []
   away V179->V180: 0 []
-  away V180->V181: 1 ['trigger t_t13']
+  away V180->V181: 2 ['trigger t_t13', 'trigger t_walk_shown']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       9       7       0       4       0      17       3     40

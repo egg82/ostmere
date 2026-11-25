@@ -96,6 +96,8 @@
     top L22: not by the edge
   spellcraft: level 1 of 22 (0.00% of the phase)
     top L22: not by the edge
+  wayfinding: level 1 of 22 (0.00% of the phase)
+    top L22: not by the edge
   card share of the running mixes by day, percent (. none, ~ under 0.5)
     day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14
     build_windbreak          .   .   .   .  83  83 100  83  67  50 100  67  83 100

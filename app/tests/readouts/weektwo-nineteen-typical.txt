@@ -6,7 +6,7 @@ beats typical (pace_scale 1): B17 day 19.83, target_day 20
   away V88->V89: 0 []
   away V89->V90: 1 ['trigger offer_o_last_sun']
   away V90->V91: 0 []
-  away V91->V92: 1 ['trigger t_t13']
+  away V91->V92: 2 ['trigger t_t13', 'trigger t_walk_shown']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      12       5       0       5       0      22       3     47

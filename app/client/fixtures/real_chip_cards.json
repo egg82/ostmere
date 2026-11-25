@@ -260,6 +260,36 @@
       "wounds": []
     },
     {
+      "card": "n1_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n1_clear_road",
       "makes": [
         "cleared"
@@ -680,6 +710,36 @@
       "wounds": []
     },
     {
+      "card": "n2_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n2_clear_road",
       "makes": [
         "cleared"
@@ -960,6 +1020,36 @@
       "wounds": []
     },
     {
+      "card": "n3_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n3_clear_road",
       "makes": [
         "cleared"
@@ -1161,6 +1251,24 @@
       "makes": [],
       "takes": [
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n4_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n4_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
       ],
       "wounds": []
     },
@@ -1521,6 +1629,36 @@
       "wounds": []
     },
     {
+      "card": "n5_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n5_clear_road",
       "makes": [
         "cleared"
@@ -1785,6 +1923,36 @@
       "wounds": []
     },
     {
+      "card": "n7_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n7_clear_road",
       "makes": [
         "cleared"
@@ -2023,6 +2191,36 @@
       "makes": [],
       "takes": [
         "stakes"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
       ],
       "wounds": []
     },
@@ -2989,6 +3187,36 @@
       "wounds": []
     },
     {
+      "card": "n10_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n10_forage",
       "makes": [
         "roots"
@@ -3211,6 +3439,36 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
       ],
       "wounds": []
     },
@@ -3441,6 +3699,36 @@
       "wounds": []
     },
     {
+      "card": "n8_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n8_forage",
       "makes": [
         "roots"
@@ -3663,6 +3951,36 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
       ],
       "wounds": []
     },
@@ -3915,6 +4233,74 @@
       "makes": [],
       "takes": [],
       "wounds": []
+    },
+    {
+      "card": "walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_forage",
+      "makes": [
+        "roots"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "n13_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
     }
   ],
   "chips": [
@@ -4029,6 +4415,20 @@
         "value_of_cap": false,
         "release_of_cap": false
       }
+    },
+    {
+      "chip": "ashed",
+      "when": {
+        "kind": "at_least",
+        "watched": {
+          "kind": "store_value",
+          "store": "film"
+        },
+        "value": 43200000,
+        "release": 43200000,
+        "value_of_cap": false,
+        "release_of_cap": false
+      }
     }
   ],
   "stores": [
@@ -4115,7 +4515,8 @@
         "n10_forage",
         "n12_forage",
         "n8_forage",
-        "n9_forage"
+        "n9_forage",
+        "n13_forage"
       ]
     },
     {
@@ -4166,16 +4567,30 @@
         "forage",
         "dig_clay",
         "pick_fungus",
-        "reap"
+        "reap",
+        "fog_fish"
       ]
     },
     {
       "store": "catch",
       "made_by": [
+        "n1_fog_fish",
+        "n2_fog_fish",
+        "n3_fog_fish",
+        "n4_fog_fish",
         "hunt_wolf",
+        "n5_fog_fish",
+        "n7_fog_fish",
+        "n6_fog_fish",
         "hunt_bear",
         "hunt_deer",
-        "reset_snares"
+        "reset_snares",
+        "n10_fog_fish",
+        "n12_fog_fish",
+        "n8_fog_fish",
+        "n9_fog_fish",
+        "fog_fish",
+        "n13_fog_fish"
       ]
     },
     {
@@ -4613,17 +5028,29 @@
     {
       "store": "fungus",
       "made_by": [
+        "n1_walk_ashwood",
+        "n2_walk_ashwood",
+        "n3_walk_ashwood",
         "n3_pick",
         "pick_fungus",
+        "n5_walk_ashwood",
         "n5_pick",
+        "n7_walk_ashwood",
         "n7_pick",
+        "n6_walk_ashwood",
         "n6_pick",
         "g_hearth_pick",
         "n11_pick",
+        "n10_walk_ashwood",
         "n10_pick",
+        "n12_walk_ashwood",
         "n12_pick",
+        "n8_walk_ashwood",
         "n8_pick",
-        "n9_pick"
+        "n9_walk_ashwood",
+        "n9_pick",
+        "walk_ashwood",
+        "n13_walk_ashwood"
       ]
     },
     {
@@ -4960,6 +5387,76 @@
     },
     {
       "store": "night_21",
+      "made_by": []
+    },
+    {
+      "store": "ashwood_trips",
+      "made_by": [
+        "n1_walk_ashwood",
+        "n2_walk_ashwood",
+        "n3_walk_ashwood",
+        "n5_walk_ashwood",
+        "n7_walk_ashwood",
+        "n6_walk_ashwood",
+        "n10_walk_ashwood",
+        "n12_walk_ashwood",
+        "n8_walk_ashwood",
+        "n9_walk_ashwood",
+        "walk_ashwood",
+        "n13_walk_ashwood"
+      ]
+    },
+    {
+      "store": "charwood",
+      "made_by": [
+        "n1_walk_ashwood",
+        "n2_walk_ashwood",
+        "n3_walk_ashwood",
+        "n5_walk_ashwood",
+        "n7_walk_ashwood",
+        "n6_walk_ashwood",
+        "n10_walk_ashwood",
+        "n12_walk_ashwood",
+        "n8_walk_ashwood",
+        "n9_walk_ashwood",
+        "walk_ashwood",
+        "n13_walk_ashwood"
+      ]
+    },
+    {
+      "store": "dawn_22",
+      "made_by": []
+    },
+    {
+      "store": "still_left",
+      "made_by": []
+    },
+    {
+      "store": "thaw_left",
+      "made_by": []
+    },
+    {
+      "store": "film",
+      "made_by": []
+    },
+    {
+      "store": "fish_rising",
+      "made_by": []
+    },
+    {
+      "store": "still_clock",
+      "made_by": []
+    },
+    {
+      "store": "pace_clock",
+      "made_by": []
+    },
+    {
+      "store": "pace_3h",
+      "made_by": []
+    },
+    {
+      "store": "still_30",
       "made_by": []
     }
   ]
