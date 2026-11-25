@@ -26,6 +26,7 @@ import { PersonMix } from "./personmix";
 import { condButton } from "./rulecond";
 import { taskRow } from "./rulelanes";
 import { laneRulable } from "./rulewho";
+import { WhenReady } from "./whenready";
 
 /** A person's tasks: their cards in the view. */
 export function laneTasks(ctx: PartContext, view: View, lane: string): Card[] {
@@ -56,11 +57,14 @@ export class PersonPage {
   private faces: Row[] = [];
   /** The tasks whose upside line has its strength sheet open: a redraw keeps them open. */
   private readonly strengthOpen = new Set<string>();
+  /** A one-off the player tapped: Until done beside its tap (game/untildone.ts). */
+  private readonly untilDone: WhenReady;
 
   constructor(private readonly ctx: PartContext, private readonly closed: () => void) {
     this.root.hidden = true;
     this.mix = new PersonMix(ctx);
     this.members = new GroupMembers(ctx);
+    this.untilDone = new WhenReady(ctx);
     const close = el("button", "editor-close", "✕");
     close.type = "button";
     close.setAttribute("aria-label", ctx.catalog.text.get(UI.close));
@@ -133,6 +137,9 @@ export class PersonPage {
       face.classList.toggle("running", held?.card === card.card);
       row.tap.disabled = held !== null;   // as the card panel's: one tap at a time on the lane
       row.tap.setAttribute("aria-pressed", String(held?.card === card.card));
+      const until = this.untilDone.make(card.card, face);
+      face.append(until);
+      this.untilDone.sync(until, card, view);
       return face;
     }
     row.tap.setAttribute("aria-pressed", String(share !== undefined));

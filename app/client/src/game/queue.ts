@@ -55,12 +55,15 @@ export function planCards(catalog: Catalog, view: View): Card[] {
 
 /** The queue with one more tap of `card` at its end, held until that tap completes. */
 export function queueTap(view: View, card: Card): Decision {
-  const n = card.completions + 1;
-  const entry: QueueEntry = {
-    verb: { kind: "tap_card", card: card.card },
-    until: { kind: "at_least", watched: { kind: "card_count", card: card.card }, value: n, release: n, value_of_cap: false, release_of_cap: false },
+  return { kind: "set_queue", entries: [...view.queue, tapUntil(card.card, card.completions + 1)] };
+}
+
+/** A queue entry tapping `card` until its card_count reaches `n`. */
+export function tapUntil(card: string, n: number): QueueEntry {
+  return {
+    verb: { kind: "tap_card", card },
+    until: { kind: "at_least", watched: { kind: "card_count", card }, value: n, release: n, value_of_cap: false, release_of_cap: false },
   };
-  return { kind: "set_queue", entries: [...view.queue, entry] };
 }
 
 /** The queue less entry `index`. */
