@@ -32,6 +32,11 @@ export function storeRows(catalog: Catalog, view: View, after: View | null, afte
   })];
 }
 
+/** The stores these cards make or cost, for storeRows' `touched`. */
+export function touchedBy(catalog: Catalog, cards: Iterable<string>): Set<string> {
+  return new Set([...cards].flatMap((card) => [...(catalog.cards.get(card)?.makes ?? []), ...(catalog.cards.get(card)?.takes ?? [])]));
+}
+
 /** What the store holds of its cap at the view's time ("18 / 18"), as its ledger line reads; empty with no line. */
 export function heldWords(catalog: Catalog, view: View, store: string): string {
   const line = view.ledger.find((l) => l.store === store);
