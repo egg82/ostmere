@@ -34,9 +34,10 @@ Each part is tagged on the page with the competing design it came from.
 - **Desktop frame.** A left rail holds Tasks, Town, Rules and Book, then the skills. The scene and strip sit in
   the middle and the cards on the right. The rail never lists a person's jobs, and the town has a view of its own:
   Town takes the middle and the right, the town's people and lanes in one home.
-- **Phone frame.** The pinned stage is about 380px: the camp bar, the scene edge to edge, a strip three lines tall,
-  and the mix bar with its legend beneath it (no text inside a bar, ever) and the mix's name beside it (`Main ▾`);
-  the mix's other controls scroll just under it. Cards sit in the thumb's half, a bottom bar holds Tasks, Town,
+- **Phone frame.** Once the page scrolls, only about 145px stays pinned: a strip three lines tall, and the mix bar with
+  its legend beneath it (no text inside a bar, ever) and the mix's name beside it (`Main ▾`). The camp bar and its
+  goals and chips scroll away above the strip and come back at the top; the scene is on Town, not Tasks. The mix's
+  other controls scroll just under the pin, then the red and full ledger lines it feeds. Cards sit in the thumb's half, a bottom bar holds Tasks, Town,
   Rules and Book, and anything set up only sometimes opens as a sheet from the bottom. Under Town sit the town's
   people and lanes, then the ledger and skills.
 - **Book.** It holds the Chronicle, the Journal, Done (the finished cards) and, later, the Map, as pages with one
