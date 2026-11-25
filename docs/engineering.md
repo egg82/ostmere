@@ -204,7 +204,9 @@ suite still runs in seconds.
   (`chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`), starting from the saved end the link before uploaded; when a chapter pushes the
   last link past about 18 minutes on GitHub's runner, add a link: one `LINKS` entry and one job copying the last. Week two's job runs one shard per chapter, day
   twelve's typical play in one of its own and the makers readouts in another (a test's `weektwo_shard` marker names its
-  shard; `app/tools/weektwo_shards.py`), so a play's readers stay in one job;
+  shard; `app/tools/weektwo_shards.py`), so a play's readers stay in one job; a test takes its play from a route
+  fixture, since a play first built in a test's body fails it (`refuse_hidden_play` in `app/tests/weektwo/routes.py`,
+  unless the test's `weektwo_shard` marker names the shard that pays), and a new play fixture is named in the week-two conftest's `EIGHT_PLAYS` so the shards place its readers;
   `shards-cover` fails unless the shards select each week-two test exactly once, and hands their names to the job as
   its matrix. With no saves for today's key the plays run from the start, so a local run needs no step; CI sets
   `ASHFALL_REQUIRE_SAVED=1`, which makes a missing or stale save a failure. A saved end is held to today's play link
