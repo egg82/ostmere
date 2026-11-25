@@ -62,10 +62,15 @@ def test_a_store_threshold_after_automation_is_green():
     assert flagged(rules) == []
 
 
+LEVEL = AtLeast(SkillLevel(SkillId("scavenging")), 12, 12)
+
+
 def test_a_level_unlock_after_automation_is_green():
-    level = AtLeast(SkillLevel(SkillId("scavenging")), 12, 12)
-    assert flagged(planted(level, (AFTER_MIXES,))) == []
-    assert flagged(planted(level)) == []   # a level is never read as taps, before automation either
+    assert flagged(planted(LEVEL, (AFTER_MIXES,))) == []
+
+
+def test_a_level_unlock_before_automation_is_green():
+    assert flagged(planted(LEVEL)) == []   # a level is never read as taps, before automation either
 
 
 @pytest.mark.playthrough
