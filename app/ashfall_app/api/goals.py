@@ -90,6 +90,10 @@ def _goal(save: e.Save, rules: e.Rules, d: GoalDef) -> g.Goal:
         seg = convert.segment(e.segment(save, rules, e.StoreId(d.subject)))
         return g.Goal(kind=g.GoalKind.STORE, store=d.subject, card=None, skill=None, target=d.target, value=seg, at=None,
                       feeds=[])
+    if d.kind == "fight" and d.tally is not None:
+        seg = convert.segment(e.segment(save, rules, e.StoreId(d.tally)))
+        return g.Goal(kind=g.GoalKind.FIGHT, store=d.tally, card=d.subject, skill=None, target=d.target, value=seg, at=None,
+                      feeds=[])
     if d.kind == "level":
         return g.Goal(kind=g.GoalKind.LEVEL, store=None, card=None, skill=d.subject, target=d.target, value=None, at=None,
                       feeds=[])

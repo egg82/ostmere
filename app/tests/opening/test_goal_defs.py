@@ -5,8 +5,9 @@ to exist, a store cards fill by a row of its own in the Camp bar's box with thos
 game/story.ts). Trigger ids only."""
 from functools import cache
 
-from ashfall_app.engine import AtLeast, AtMost, Rules, StoreValue, TriggerDef, Unlock, UnlockKind
+from ashfall_app.engine import QUANTITY_SCALE, AtLeast, AtMost, Rules, StoreValue, TriggerDef, Unlock, UnlockKind
 from ashfall_app.opening.goals import GoalDef, goal_defs, moved_by, story
+from ashfall_app.opening.entries import ConditionEntry, OutcomeEntry, TriggerEntry
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening, to_rules
 
 
@@ -38,11 +39,14 @@ def on_unshown(o: Opening, r: Rules, defs: dict[str, GoalDef]) -> list[str]:
 
 def _carried(o: Opening, d: GoalDef | None, stores: set[str]) -> bool:
     """A clock is carried when a standing action moves each store it reads, so the wait line has a time to count down
-    to (or, with a store of fed_by dry, a stop to name); a store when cards make it."""
+    to (or, with a store of fed_by dry, a stop to name); a store when cards make it; a card fight's lost tally by its
+    card, the wait line naming it and the count."""
     if d is None:
         return False
     if d.kind == "clock":
         return stores <= {s for a in o.standing for s in moved_by(a)}
+    if d.kind == "fight":
+        return stores == {d.tally}
     return d.kind == "store" and stores == {d.subject} and bool(d.makers)
 
 
@@ -74,3 +78,28 @@ def test_the_check_fails_a_clock_nothing_moves():
 def test_h7s_wait_names_the_store_that_keeps_it_moving():
     o, r = merged()
     assert goal_defs(o, r)["t_prints"] == GoalDef("clock", None, 0, fed_by=("roots",))
+
+
+def with_lost_beat() -> tuple[Opening, Rules, str, str]:
+    """The content with a story beat added that waits on a card fight's lost tally: a fixture, no content of its own."""
+    o, _ = merged()
+    card = next(c for c in o.cards if c.fight is not None)
+    assert card.fight is not None
+    beat = TriggerEntry(id="t_fixture_lost", when=ConditionEntry(test="at_least", subject_kind="store", id=card.fight.lost, value=3),
+                        outcome=OutcomeEntry(unlocks=[next(t.outcome.unlocks[0] for t in o.triggers if t.outcome.unlocks)]))
+    o2 = o.model_copy(update={"triggers": [*o.triggers, beat]})
+    return o2, to_rules(o2), card.id, card.fight.lost
+
+
+def test_a_wait_on_a_card_fights_lost_tally_is_carried_by_its_card():
+    o, r, card, tally = with_lost_beat()
+    defs = goal_defs(o, r)
+    assert defs["t_fixture_lost"] == GoalDef("fight", card, 3 * QUANTITY_SCALE, tally=tally)
+    assert tally in never_shown(o, r), "the tally is never a shown store: the probe is blind"
+    assert on_unshown(o, r, defs) == []
+
+
+def test_the_check_fails_a_fight_wait_that_nothing_carries():
+    o, r, card, _ = with_lost_beat()
+    planted = {**goal_defs(o, r), "t_fixture_lost": GoalDef("card", card, 1)}
+    assert on_unshown(o, r, planted) == ["t_fixture_lost"]

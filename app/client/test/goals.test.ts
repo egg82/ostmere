@@ -68,4 +68,10 @@ function wait(view: View): { hidden: boolean; tag: string; line: string; tabbabl
     { hidden: false, tag: "p", line: `${head} · ${time} · ${t.fill(UI.goalWhile, { store: wood })}`, tabbable: 0 });
   expect("stopped on a dry store: that store alone", wait({ ...mid, goals: [{ ...clock, at: null }] }).line, `${head} · ${t.fill(UI.goalPaused, { store: wood })}`);
   expect("a clock nothing feeds: its time alone", wait({ ...mid, goals: [{ ...clock, feeds: [] }] }).line, `${head} · ${time}`);
+  const fight = goal({ kind: "fight", store: "lost", card: "far_hunt", target: 3 * Q, value: { start: AT, start_value: Q, rate: 0, limit: null } });
+  const lost = t.fill(UI.goalLost, { card: catalog.cardLabel("far_hunt"), n: f.amount(Q, 3 * Q) });
+  expect("a fight's lost tally: its card and the count so far, with no clock", wait({ ...mid, goals: [fight] }).line, `${head} · ${lost}`);
+  expect("beside a clock: the count, then its time", wait({ ...mid, goals: [fight, clock] }).line,
+    `${head} · ${lost} · ${time} · ${t.fill(UI.goalWhile, { store: wood })}`);
+  expect("the fight's card carries the story mark", [...storyMarks(catalog, { ...mid, goals: [fight] }).cards], ["far_hunt"]);
 }

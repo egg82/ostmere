@@ -11,22 +11,25 @@ if TYPE_CHECKING:
     from .entries import StandingEntry
     from .schema import Opening
 
-GoalKind = Literal["store", "card", "level", "clock"]
+GoalKind = Literal["store", "card", "level", "clock", "fight"]
 
 
 @dataclass(frozen=True)
 class GoalDef:
     kind: GoalKind
     """What a story beat waits on. store: a store's amount; card: a card's completions, or the card running (target
-    0); level: a skill's level; clock: a wait nothing the player does shortens."""
+    0); level: a skill's level; clock: a wait nothing the player does shortens; fight: a card's fight lost that many
+    times (its lost tally, which no screen draws as a store: the card carries it)."""
     subject: str | None
-    """The store, card or skill; None for a clock."""
+    """The store, card or skill; the fight's card; None for a clock."""
     target: int
-    """Quantity units (store), completions (card), a level (level); 0 for a clock or a card running."""
+    """Quantity units (store, fight), completions (card), a level (level); 0 for a clock or a card running."""
     makers: tuple[str, ...] = ()
     """A store's: the cards that make it (makers.made_by). It shows once its store is unlocked or one is in play."""
     fed_by: tuple[str, ...] = ()
     """A clock's: the stores whose running dry pauses it (the other costs of the standing actions that move it)."""
+    tally: str | None = None
+    """A fight's: the lost tally store the card's fight adds to."""
 
 
 def goal_defs(o: "Opening", rules: Rules) -> dict[str, GoalDef]:
@@ -34,8 +37,9 @@ def goal_defs(o: "Opening", rules: Rules) -> dict[str, GoalDef]:
     out: dict[str, GoalDef] = {}
     clocks = _clocks(o)
     camp = None if o.camp is None else o.camp.store
+    fights = {c.fight.lost: c.id for c in o.cards if c.fight is not None}
     for t in rules.triggers:
-        goal = _goal(o, t, clocks, camp) if story(t.outcome) else None
+        goal = _goal(o, t, clocks, camp, fights) if story(t.outcome) else None
         if goal is not None:
             out[str(t.id)] = goal
     return out
@@ -72,9 +76,10 @@ def _costs(a: "StandingEntry") -> list[str]:
     return [x.store for x in a.costs] + ([] if a.fight is None else [x.store for x in a.fight.loses])
 
 
-def _goal(o: "Opening", t: TriggerDef, clocks: frozenset[str], camp: str | None) -> GoalDef | None:
+def _goal(o: "Opening", t: TriggerDef, clocks: frozenset[str], camp: str | None,
+          fights: dict[str, str]) -> GoalDef | None:
     """None for an unlock (it waits on what gives it), a lane's rules (the lesson on screen is the step), and the Camp's
-    store (its bar states its levels)."""
+    store (its bar states its levels). `fights`: each card fight's lost tally store to its card."""
     w = t.when
     if isinstance(w, AfterTime):
         return GoalDef("clock", None, 0)
@@ -87,6 +92,8 @@ def _goal(o: "Opening", t: TriggerDef, clocks: frozenset[str], camp: str | None)
         return GoalDef("level", str(s.skill), w.value)
     if not isinstance(s, StoreValue) or s.store == camp:
         return None
+    if isinstance(w, AtLeast) and str(s.store) in fights:
+        return GoalDef("fight", fights[str(s.store)], w.value, tally=str(s.store))
     if isinstance(w, AtMost) or s.store in clocks:
         return GoalDef("clock", None, 0, fed_by=_fed_by(o, str(s.store)))
     return GoalDef("store", str(s.store), w.value, tuple(made_by(o, str(s.store))))
