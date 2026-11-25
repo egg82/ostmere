@@ -123,6 +123,7 @@ cap_items = 24
 id = "shovel_road"
 presentation = "action"
 label_key = "c_shovel_road"
+upside_key = "up_shovel_road"
 work_s = 450
 skill = "scavenging"
 xp_per_hour = 900
@@ -134,6 +135,7 @@ twin_of = "shovel_road"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15"]
 presentation = "action"
 label_key = "c_lane_clear_road"
+upside_key = "up_shovel_road"
 work_s = 1800
 outcome = { stores = [{ store = "cleared", items = 1 }] }
 
@@ -832,6 +834,7 @@ l_road_marked = "past the ridge, a dent wider than a cart runs straight over the
 n_road_found = "a dent in the ash past the ridge, wider than a cart, straight as a stretched cord, over the next hill. lucy calls it the old road. a yard of ash on it, at a guess"
 store_cleared = "road cleared"
 c_shovel_road = "Shovel the road"
+up_shovel_road = "the ash off a stretch of road, ready to lay"
 c_lane_clear_road = "Clear the road"
 c_cut_road = "Lay the road"
 up_cut_road = "a road over the ridge"
