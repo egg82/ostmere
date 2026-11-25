@@ -10,7 +10,7 @@ beats whenever (pace_scale 1): B17 day 18.61, target_day 20
   away V74->V75: 0 []
   away V75->V76: 0 []
   away V76->V77: 0 []
-  away V77->V78: 1 ['trigger t_t13']
+  away V77->V78: 3 ['trigger t_t13', 'trigger t_walk_shown', 'trigger t_i1']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      27      11       0       5       1      24       2     70
@@ -27,4 +27,4 @@ day    line feature    chip   store   skill    card   level  total
  12      23       1       1       0       0      51       2     78
  13      17       2       0       0       0       4       1     24
  14       2       0       0       0       0       0       1      3
- 15       5       1       0       0       0       0       3      9
+ 15       6       2       0       1       0       1       3     13
