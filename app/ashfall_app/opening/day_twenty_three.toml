@@ -351,6 +351,7 @@ id = "follow_marks"
 only_player = "story"
 presentation = "action"
 label_key = "c_follow_marks"
+upside_key = "up_follow_marks"
 work_s = 900
 cap = 1
 outcome = { stores = [{ store = "charwood", items = 3 }] }
@@ -386,6 +387,7 @@ id = "show_fish"
 only_player = "story"
 presentation = "action"
 label_key = "c_show_fish"
+upside_key = "up_catch"
 work_s = 600
 cap = 1
 outcome = { stores = [{ store = "catch", items = 3 }] }
@@ -609,6 +611,7 @@ a_j_drag_marks_yes = "You follow them"
 l_j_drag_marks_yes = "you are at the trees' edge before she has finished."
 l_j_drag_marks_no = "lucy nods and goes to find someone."
 c_follow_marks = "Follow the drag-marks"
+up_follow_marks = "charwood for the post"
 l_follow_marks = "the marks go from warm patch to warm patch. you bring back dead wood."
 o_j_show_fish = "Lucy says somebody has to show the newcomers where the fish rise under the fog."
 a_j_show_fish_yes = "You show them"

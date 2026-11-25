@@ -17,6 +17,7 @@ id = "t_help_gather"
 lane = "t_helper"
 presentation = "action"
 label_key = "t_c_help_gather"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "damp_wood", items_per_hour = 30 }]
 
@@ -25,6 +26,7 @@ id = "t_help_rest"
 lane = "t_helper"
 presentation = "action"
 label_key = "t_c_help_rest"
+upside_key = "t_up"
 work_s = 30
 
 [[cards]]
@@ -98,6 +100,7 @@ t_l_yes = "story"
 t_l_rule = "story"
 
 [text]
+t_up = "what it is for"
 t_l_helper = "Helper"
 t_l_helper_named = "The helper"
 t_c_help_gather = "Gather"

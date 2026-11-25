@@ -94,7 +94,7 @@ def test_the_control_loads(control: Opening):
     assert control.cards
 
 
-CARD = 'presentation = "action"\nlabel_key = "t_c_work"\nwork_s = 60\n'
+CARD = 'presentation = "action"\nlabel_key = "t_c_work"\nupside_key = "t_up"\nwork_s = 60\n'
 
 
 @pytest.mark.parametrize("old, new, match", [

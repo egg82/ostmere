@@ -35,6 +35,7 @@ id = "t_q1_work"
 lane = "t_q1"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -43,6 +44,7 @@ id = "t_q2_work"
 lane = "t_q2"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -51,6 +53,7 @@ id = "t_q3_work"
 lane = "t_q3"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -92,6 +95,7 @@ catchup = { keys = ["t_j_q1_came"] }
 t_l_comes = "story"
 
 [text]
+t_up = "what it is for"
 t_j_q1_came = "someone came."
 t_s_heap = "Heap"
 t_l_post = "Post"

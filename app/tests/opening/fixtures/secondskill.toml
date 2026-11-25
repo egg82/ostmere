@@ -19,6 +19,7 @@ costs = [{ store = "t_heat", items_per_hour = 4 }]
 id = "t_stoke"
 presentation = "action"
 label_key = "t_c_stoke"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heat", items_per_hour = 20 }]
 
@@ -26,6 +27,7 @@ makes = [{ store = "t_heat", items_per_hour = 20 }]
 id = "t_charm"
 presentation = "action"
 label_key = "t_c_charm"
+upside_key = "t_up"
 work_s = 90
 skill = "t_lore"
 xp_per_hour = 60
@@ -63,6 +65,7 @@ outcome = { unlocks = [{ unlock_kind = "skill", id = "t_lore" }, { unlock_kind =
 t_pays_lore = "find"
 
 [text]
+t_up = "what it is for"
 t_s_heat = "Warmth"
 t_a_chill = "Chill"
 t_k_lore = "Lore"
