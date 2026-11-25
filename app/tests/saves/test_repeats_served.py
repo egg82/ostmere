@@ -10,10 +10,10 @@ from ashfall_app import engine as e
 from ashfall_app.api import models as w
 from ashfall_app.api.service import Game
 from ashfall_app.db import saves as rows
+from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.opening.playthrough import opening
 
 A, B = e.CardId("gather_wood"), e.CardId("scavenge")
 M0, M1 = e.MixId("m0"), e.MixId("m1")
@@ -22,6 +22,12 @@ M0, M1 = e.MixId("m0"), e.MixId("m1")
 @pytest.fixture
 def open_rs(rs: Ruleset) -> Ruleset:
     return replace(rs, rules=replace(rs.rules, opening=None))
+
+
+@pytest.fixture(scope="module")
+def open_game(rs: Ruleset, shipped_opening: Opening) -> Game:
+    """Built once for the module's tests; they only read it."""
+    return Game(shipped_opening, replace(rs, rules=replace(rs.rules, opening=None)))
 
 
 @pytest.fixture
@@ -34,8 +40,8 @@ def decide(saves: PgSaves, account: int, played: Played, clock: FakeClock, verb:
     return saves.decide(account, played.save_id, verb, after=played.decisions)
 
 
-def test_the_nth_tap_outside_the_running_mix_is_served(open_saves: PgSaves, open_rs: Ruleset, account: int,
-                                                       clock: FakeClock, engine: Engine):
+def test_the_nth_tap_outside_the_running_mix_is_served(open_saves: PgSaves, open_rs: Ruleset, open_game: Game,
+                                                       account: int, clock: FakeClock, engine: Engine):
     r = open_rs.repeats
     assert r is not None and r.hand_taps >= 2
     _, p = open_saves.create(account)
@@ -47,7 +53,7 @@ def test_the_nth_tap_outside_the_running_mix_is_served(open_saves: PgSaves, open
     assert p.failed is None and p.repeats.taps == ()
     p = decide(open_saves, account, p, clock, e.TapCard(B))
     assert p.repeats.taps == ((B, r.hand_taps),)
-    step = Game(opening(), open_rs).step(p)
+    step = open_game.step(p)
     assert step.repeats == w.Repeats(taps=[w.RepeatedTap(card=B, count=r.hand_taps)], switches=[])
     with engine.connect() as conn:
         logged = rows.decisions_after(conn, p.save_id, 0)

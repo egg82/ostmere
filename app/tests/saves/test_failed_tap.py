@@ -5,10 +5,10 @@ import pytest
 
 from ashfall_app import engine as e
 from ashfall_app.api.service import Game
+from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.opening.playthrough import opening
 
 
 def to_first_unready(saves: PgSaves, account: int, save_id: int, played: Played, clock: FakeClock,
@@ -32,6 +32,12 @@ def to_first_unready(saves: PgSaves, account: int, save_id: int, played: Played,
     raise AssertionError("no card turned unready")
 
 
+@pytest.fixture(scope="module")
+def game(rs: Ruleset, shipped_opening: Opening) -> Game:
+    """Built once for the module's tests; they only read it."""
+    return Game(shipped_opening, rs)
+
+
 @pytest.fixture
 def at_first_unready(saves: PgSaves, account: int, clock: FakeClock, rs: Ruleset) -> tuple[int, Played, e.CardId]:
     """A new save played on until some card on a free lane is unready, in setup: the save id, the save, that card."""
@@ -41,7 +47,8 @@ def at_first_unready(saves: PgSaves, account: int, clock: FakeClock, rs: Ruleset
 
 
 def test_an_unready_tap_answers_at_once_with_no_line_and_names_the_card(
-        saves: PgSaves, account: int, clock: FakeClock, rs: Ruleset, at_first_unready: tuple[int, Played, e.CardId]):
+        saves: PgSaves, account: int, clock: FakeClock, rs: Ruleset, game: Game,
+        at_first_unready: tuple[int, Played, e.CardId]):
     save_id, played, card = at_first_unready
     clock.tick(1)
     failed = saves.decide(account, save_id, e.TapCard(card), after=played.decisions)
@@ -49,7 +56,7 @@ def test_an_unready_tap_answers_at_once_with_no_line_and_names_the_card(
     assert [ln for ln in failed.lines if ln.card == card] == []
     assert all(ls.card != card for ls in failed.save.lanes)
     assert failed.save == e.advance(played.save, rs.rules, failed.save.time)
-    step = Game(opening(), rs).step(failed)
+    step = game.step(failed)
     assert step.failed_tap == card
     clock.tick(1)
     assert saves.decide(account, save_id, e.TapCard(card), after=failed.decisions).failed == card
