@@ -320,7 +320,7 @@
     {
       "card": "n1_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -352,7 +352,7 @@
     {
       "card": "n1_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -383,7 +383,7 @@
     {
       "card": "n1_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -652,6 +652,14 @@
       "wounds": []
     },
     {
+      "card": "pot_stew",
+      "makes": [],
+      "takes": [
+        "stew"
+      ],
+      "wounds": []
+    },
+    {
       "card": "bank_hearth",
       "makes": [],
       "takes": [],
@@ -770,7 +778,7 @@
     {
       "card": "n2_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -802,7 +810,7 @@
     {
       "card": "n2_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -843,7 +851,7 @@
     {
       "card": "n2_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -1080,7 +1088,7 @@
     {
       "card": "n3_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -1101,7 +1109,7 @@
     {
       "card": "n3_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -1142,7 +1150,7 @@
     {
       "card": "n3_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -1293,7 +1301,7 @@
     {
       "card": "n4_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -1315,7 +1323,7 @@
     {
       "card": "n4_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -1336,7 +1344,7 @@
     {
       "card": "n4_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -1529,12 +1537,20 @@
     {
       "card": "fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
         "fungus",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "pot_fungus_stew",
+      "makes": [],
+      "takes": [
+        "stew_fungus"
       ],
       "wounds": []
     },
@@ -1689,7 +1705,7 @@
     {
       "card": "n5_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -1721,7 +1737,7 @@
     {
       "card": "n5_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -1855,7 +1871,7 @@
     {
       "card": "n5_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -1983,7 +1999,7 @@
     {
       "card": "n7_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -2015,7 +2031,7 @@
     {
       "card": "n7_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -2149,7 +2165,7 @@
     {
       "card": "n7_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -2255,7 +2271,7 @@
     {
       "card": "n6_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -2287,7 +2303,7 @@
     {
       "card": "n6_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -2421,7 +2437,7 @@
     {
       "card": "n6_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -2562,7 +2578,7 @@
     {
       "card": "g_hearth_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -2583,7 +2599,7 @@
     {
       "card": "g_hearth_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -2653,7 +2669,7 @@
     {
       "card": "g_hearth_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -2714,11 +2730,19 @@
     {
       "card": "catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "pot_catch_broth",
+      "makes": [],
+      "takes": [
+        "stew_catch"
       ],
       "wounds": []
     },
@@ -2781,11 +2805,19 @@
     {
       "card": "barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
         "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "pot_barley_stew",
+      "makes": [],
+      "takes": [
+        "stew_barley"
       ],
       "wounds": []
     },
@@ -3068,7 +3100,7 @@
     {
       "card": "n11_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -3108,7 +3140,7 @@
     {
       "card": "n11_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -3139,7 +3171,7 @@
     {
       "card": "n11_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -3324,7 +3356,7 @@
     {
       "card": "n10_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -3364,7 +3396,7 @@
     {
       "card": "n10_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -3395,7 +3427,7 @@
     {
       "card": "n10_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -3580,7 +3612,7 @@
     {
       "card": "n12_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -3620,7 +3652,7 @@
     {
       "card": "n12_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -3651,7 +3683,7 @@
     {
       "card": "n12_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -3836,7 +3868,7 @@
     {
       "card": "n8_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -3876,7 +3908,7 @@
     {
       "card": "n8_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -3907,7 +3939,7 @@
     {
       "card": "n8_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -4092,7 +4124,7 @@
     {
       "card": "n9_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -4132,7 +4164,7 @@
     {
       "card": "n9_catch_broth",
       "makes": [
-        "stew"
+        "stew_catch"
       ],
       "takes": [
         "catch",
@@ -4163,7 +4195,7 @@
     {
       "card": "n9_barley_stew",
       "makes": [
-        "stew"
+        "stew_barley"
       ],
       "takes": [
         "barley",
@@ -4370,7 +4402,7 @@
     {
       "card": "n14_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -4430,7 +4462,7 @@
     {
       "card": "n15_fungus_stew",
       "makes": [
-        "stew",
+        "stew_fungus",
         "fungus_stews"
       ],
       "takes": [
@@ -4916,65 +4948,21 @@
     {
       "store": "stew",
       "made_by": [
-        "n1_barley_stew",
-        "n1_catch_broth",
-        "n1_fungus_stew",
         "n1_stew",
         "stew",
-        "n2_barley_stew",
-        "n2_catch_broth",
-        "n2_fungus_stew",
         "n2_stew",
-        "n3_barley_stew",
-        "n3_catch_broth",
-        "n3_fungus_stew",
         "n3_stew",
-        "n4_barley_stew",
-        "n4_catch_broth",
-        "n4_fungus_stew",
         "n4_stew",
-        "fungus_stew",
-        "n5_barley_stew",
-        "n5_catch_broth",
         "n5_stew",
-        "n5_fungus_stew",
-        "n7_barley_stew",
-        "n7_catch_broth",
         "n7_stew",
-        "n7_fungus_stew",
-        "n6_barley_stew",
-        "n6_catch_broth",
         "n6_stew",
-        "n6_fungus_stew",
-        "g_hearth_barley_stew",
-        "g_hearth_catch_broth",
         "g_hearth_stew",
-        "g_hearth_fungus_stew",
-        "catch_broth",
-        "barley_stew",
         "keep_count",
         "n11_stew",
-        "n11_fungus_stew",
-        "n11_catch_broth",
-        "n11_barley_stew",
         "n10_stew",
-        "n10_fungus_stew",
-        "n10_catch_broth",
-        "n10_barley_stew",
         "n12_stew",
-        "n12_fungus_stew",
-        "n12_catch_broth",
-        "n12_barley_stew",
         "n8_stew",
-        "n8_fungus_stew",
-        "n8_catch_broth",
-        "n8_barley_stew",
-        "n9_stew",
-        "n9_fungus_stew",
-        "n9_catch_broth",
-        "n9_barley_stew",
-        "n14_fungus_stew",
-        "n15_fungus_stew"
+        "n9_stew"
       ]
     },
     {
@@ -5238,6 +5226,27 @@
       ]
     },
     {
+      "store": "stew_fungus",
+      "made_by": [
+        "n1_fungus_stew",
+        "n2_fungus_stew",
+        "n3_fungus_stew",
+        "n4_fungus_stew",
+        "fungus_stew",
+        "n5_fungus_stew",
+        "n7_fungus_stew",
+        "n6_fungus_stew",
+        "g_hearth_fungus_stew",
+        "n11_fungus_stew",
+        "n10_fungus_stew",
+        "n12_fungus_stew",
+        "n8_fungus_stew",
+        "n9_fungus_stew",
+        "n14_fungus_stew",
+        "n15_fungus_stew"
+      ]
+    },
+    {
       "store": "fungus_stews",
       "made_by": [
         "n1_fungus_stew",
@@ -5372,6 +5381,25 @@
       "made_by": []
     },
     {
+      "store": "stew_catch",
+      "made_by": [
+        "n1_catch_broth",
+        "n2_catch_broth",
+        "n3_catch_broth",
+        "n4_catch_broth",
+        "n5_catch_broth",
+        "n7_catch_broth",
+        "n6_catch_broth",
+        "g_hearth_catch_broth",
+        "catch_broth",
+        "n11_catch_broth",
+        "n10_catch_broth",
+        "n12_catch_broth",
+        "n8_catch_broth",
+        "n9_catch_broth"
+      ]
+    },
+    {
       "store": "ruin_beams",
       "made_by": [
         "sit_last_night"
@@ -5436,6 +5464,25 @@
         "n12_reap",
         "n8_reap",
         "n9_reap"
+      ]
+    },
+    {
+      "store": "stew_barley",
+      "made_by": [
+        "n1_barley_stew",
+        "n2_barley_stew",
+        "n3_barley_stew",
+        "n4_barley_stew",
+        "n5_barley_stew",
+        "n7_barley_stew",
+        "n6_barley_stew",
+        "g_hearth_barley_stew",
+        "barley_stew",
+        "n11_barley_stew",
+        "n10_barley_stew",
+        "n12_barley_stew",
+        "n8_barley_stew",
+        "n9_barley_stew"
       ]
     },
     {
