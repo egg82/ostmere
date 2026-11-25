@@ -35,7 +35,7 @@ expect("a tap is not a share's work", wastedOn(catalog, at([line("wood", 40, 40)
   const needs = new CardNeeds(testContext(undefined, catalog).ctx, "gather");
   needs.draw(gather, at([line("wood", 40, 40)]), false);
   const node = needs.root.querySelector(".card-need.wasted") as HTMLElement | null;
-  expect("the face says so", [node?.hidden, node?.textContent], [false, `${catalog.storeTitle("wood")} is full, so this work is wasted`]);
+  expect("the face says so", [node?.hidden, node?.textContent], [false, `${catalog.storeTitle("wood")} is full`]);
 }
 
 {  // the Town row of the mason, working Hew on shares into a full store
@@ -47,5 +47,5 @@ expect("a tap is not a share's work", wastedOn(catalog, at([line("wood", 40, 40)
   const plain = said();
   settle(full, []);
   const hew = new Catalog(content).cardLabel("hew");
-  expect("the row says the work is wasted", [plain, said()], [[], [`${hew}: ${new Catalog(content).storeLabel("stone")} is full, so the work is wasted`]]);
+  expect("the row says the work is wasted", [plain, said()], [[], [`${hew}: ${new Catalog(content).storeLabel("stone")} is full`]]);
 }
