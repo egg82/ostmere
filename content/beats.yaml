@@ -517,11 +517,11 @@ day_twenty_two:
 day_twenty_three_near_promise: C-promise-34
 day_twenty_three:
   - {id: B19,  kind: ref,    visit: 23c, target_hour: 0}
-  - {id: I5,   kind: beat,   region: R1, target_day: 23, weekly: false, visit: 23e, target_hour: 6, gate: {all: [{store_at_least: {store: meals, n: 175}}, {hours_after: {beat: B19, hours: 4}}]},
+  - {id: I5,   kind: beat,   region: R1, target_day: 23, weekly: false, visit: 23e, target_hour: 6, gate: {all: [{store_at_least: {store: meals, n: 175}}, {hours_after: {beat: B19, hours: 12}}]},
      turn: up, outcome: "yes", cost: people, moves: [PC], thread: {id: th-town, at: middle}, register: warm}
   - {id: O-fiddle, kind: offer, target_day: 23, visit: 23e, target_hour: 6, gate: {beat: I5},
      moves: [PC], thread: {id: th-town, at: middle}}
-  - {id: I6,   kind: beat,   region: R2, target_day: 24, weekly: false, visit: 24a, target_hour: 14, gate: {all: [{store_at_least: {store: ashwood_trips, n: 14}}, {hours_after: {beat: B19, hours: 12}}]},
+  - {id: I6,   kind: beat,   region: R2, target_day: 24, weekly: false, visit: 24a, target_hour: 14, gate: {all: [{store_at_least: {store: ashwood_trips, n: 14}}, {hours_after: {beat: B19, hours: 16}}]},
      turn: down, outcome: "no", cost: stores, opens: [C-promise-34], moves: [PC, N1], thread: {id: th-network, at: middle}, register: grim}
   - {id: O-book, kind: offer, target_day: 24, visit: 24b, target_hour: 24, gate: {hours_after: {beat: B19, hours: 24}},
      moves: [PC, N3], thread: {id: th-stranger, at: middle}}

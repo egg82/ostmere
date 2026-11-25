@@ -24,23 +24,23 @@ id = "t_sorrel_clock"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "stranger_home", value = 1 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_clock" }] }
 
-# Latches, never drawn: hidden clocks started at B19 + 4 h and + 12 h, so an offer or trigger can wait on them beside a
+# Latches, never drawn: hidden clocks started at B19 + 12 h and + 16 h, so an offer or trigger can wait on them beside a
 # store condition (a requirement reads only an unlock). Machinery, no moment of their own (day_eighteen.toml's).
 [[stores]]
-id = "sorrel_4h"
-label_key = "store_sorrel_4h"
+id = "sorrel_16h"
+label_key = "store_sorrel_16h"
 cap_items = 1
 hidden = true
 
 [[standing]]
-id = "sorrel_4h"
-label_key = "action_sorrel_4h"
-makes = [{ store = "sorrel_4h", items_per_hour = 1 }]
+id = "sorrel_16h"
+label_key = "action_sorrel_16h"
+makes = [{ store = "sorrel_16h", items_per_hour = 1 }]
 
 [[triggers]]
-id = "t_sorrel_4h"
-when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 4 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_4h" }] }
+id = "t_sorrel_16h"
+when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 16 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_16h" }] }
 
 [[stores]]
 id = "sorrel_12h"
@@ -70,7 +70,7 @@ n13 = [{ after = { unlock_kind = "feature", id = "sorrel_named" }, label_key = "
 
 # ---------- I5 and O-fiddle: a man and his wife ----------
 
-# The tier's count at 175 meals, B19 + 4 h. Both join on either answer, their first work by the answer (the kind's
+# The tier's count at 175 meals, B19 + 12 h, so SL31 has the return before it. Both join on either answer, their first work by the answer (the kind's
 # roles, day_eighteen.toml); what the answer keeps is D-147's size: the rack's smoke a tenth more, or all clearing a
 # tenth faster. The table feeds two more.
 [[offers]]
@@ -78,7 +78,7 @@ id = "o_fiddle"
 text_key = "o_fiddle"
 kind = "work"
 gate = { test = "at_least", subject_kind = "store", id = "meals", value = 175 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "sorrel_4h", value = 1 }]
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "sorrel_12h", value = 1 }]
 line_keys = ["l_fiddle_1", "l_fiddle_2"]
 
 [[offers.answers]]
@@ -183,13 +183,13 @@ while_running = [{ lane = "n15", amount_bp = 1500 }]
 
 # ---------- I6: the cache torn up, and the post ----------
 
-# Fourteen walks, B19 + 12 h. The walks' cache is rooted out: six smoked over two hours on a drain of its own that
+# Fourteen walks, B19 + 16 h, a return after O-fiddle's. The walks' cache is rooted out: six smoked over two hours on a drain of its own that
 # pauses at empty (the visitor's idiom), never a store a gate reads. The post (P4) shows with its order card, the warm
 # patch goes on the map, and the stretch's aim turns to it.
 [[triggers]]
 id = "t_cache"
 when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 14 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "sorrel_12h", value = 1 }]
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "sorrel_16h", value = 1 }]
 [triggers.outcome]
 line_keys = ["l_cache_1", "l_cache_2", "l_post_shown"]
 stores = [{ store = "cache_torn", items = 6 }]
@@ -311,14 +311,14 @@ outcome = { stores = [{ store = "ash", items = 2 }] }
 
 # ---------- Lucy's jobs ----------
 
-# From the ring on, one at a time on day nine's countdown (ask_wait), as day sixteen's: each yes queues a short hands
-# job paying a one-off, each no costs nothing.
+# From B19 + 28 h, the return after O-book's, then one at a time on day nine's countdown (ask_wait), as day sixteen's:
+# each yes queues a short hands job paying a one-off, each no costs nothing.
 [[offers]]
 id = "j_drag_marks"
 text_key = "o_j_drag_marks"
 askers = ["n1"]
-gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ring_up", value = 1 }]
+gate = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 28 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "post_shown", value = 1 }]
 
 [[offers.answers]]
 id = "j_drag_marks_yes"
@@ -424,11 +424,11 @@ id = "t_dawn_25"
 when = { test = "after_time", value = 2070000 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_25" }] }
 
-# Lucy asks the room, the season's sixty-sixth hour once the ring is up: A39 shown unready with its countdown,
+# Lucy asks the room with SL33, the season's sixty-fourth hour, once the ring is up: A39 shown unready with its countdown,
 # queueable When ready. The card is the yes; the choice is when (D-159).
 [[triggers]]
 id = "t_go_ask"
-when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 66 }
+when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 64 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ring_up", value = 1 }]
 outcome = { line_keys = ["l_go_ask"], unlocks = [{ unlock_kind = "card", id = "go_wallow" }] }
 
@@ -551,8 +551,8 @@ l_b20_5 = "story"
 [text]
 store_sorrel_clock = "clock"
 action_sorrel_clock = "Clock"
-store_sorrel_4h = "clock"
-action_sorrel_4h = "Clock"
+store_sorrel_16h = "clock"
+action_sorrel_16h = "Clock"
 store_sorrel_12h = "clock"
 action_sorrel_12h = "Clock"
 lane_n13_named = "{n13}'s hands"
