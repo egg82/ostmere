@@ -336,8 +336,10 @@ jobs:
             names: readings-nineteen-b
           - part: readings-twentytwo
             names: readings-twentytwo
-          - part: readings-twentythree
-            names: readings-twentythree
+          - part: readings-twentythree-a
+            names: readings-twentythree-a
+          - part: readings-twentythree-b
+            names: readings-twentythree-b
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       PART: ${{ matrix.part }}
