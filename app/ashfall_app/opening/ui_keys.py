@@ -70,6 +70,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.order.add",
     "ui.queue.when_ready",
     "ui.queue.queued",
+    "ui.queue.until_done",
     "ui.queue.heading",
     "ui.queue.plan",
     "ui.queue.full",

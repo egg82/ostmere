@@ -68,7 +68,7 @@ outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", ite
 [[town_cards]]
 id = "{lane}_walk_ashwood"
 twin_of = "walk_ashwood"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15"]
 presentation = "action"
 label_key = "c_walk_ashwood"
 upside_key = "up_walk_ashwood"
@@ -389,7 +389,7 @@ outcome = { stores = [{ store = "catch", items = 2 }] }
 [[town_cards]]
 id = "{lane}_fog_fish"
 twin_of = "fog_fish"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15"]
 presentation = "action"
 label_key = "c_fog_fish"
 upside_key = "up_catch"
@@ -449,7 +449,7 @@ inputs = [{ store = "film", items = 12 }]
 [[town_cards]]
 id = "{lane}_wash_meat"
 twin_of = "wash_meat"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15"]
 presentation = "action"
 label_key = "c_wash_meat"
 upside_key = "up_wash_meat"
@@ -551,6 +551,7 @@ id = "n13"
 label_key = "lane_n13"
 ruled = true
 told = "line"
+name_key = "name_n13"
 
 [[standing]]
 id = "n13_eating"
@@ -691,6 +692,7 @@ action_pace_3h = "Clock"
 store_still_30 = "clock"
 action_still_30 = "Clock"
 lane_n13 = "The stranger"
+name_n13 = "Sorrel"
 action_n13_eating = "the stranger's share"
 place_ashwood = "The Ashwood"
 feature_t_still_step = "Pack close in the fog"

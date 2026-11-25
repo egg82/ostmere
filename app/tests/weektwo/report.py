@@ -2,7 +2,7 @@
 1): the hours day eight's beats land, its visits with spend and decide (queuing a stage refused) per visit and per
 absence, the fights each runner fought and lost, the chapter's spine beats beside their target days, what each absence
 opens, and what the stores lose to their caps away from the chapter's end; the same for days nine, eleven, twelve,
-fifteen, sixteen, eighteen, nineteen and twenty-two.
+fifteen, sixteen, eighteen, nineteen, twenty-two and twenty-three.
 The readouts (NAMES: per chapter, one per route and one for typical's visits) are committed under tests/readouts/ and
 compared by test_weektwo_readouts.py; nothing in them is a threshold. Minutes, hours and ids only (CLAUDE.md, "Never
 spoil the owner").
@@ -18,6 +18,7 @@ spoil the owner").
     python -m tests.weektwo.report typical --eighteen  # through day eighteen to B16, the same
     python -m tests.weektwo.report typical --nineteen  # through day nineteen to T13, the same
     python -m tests.weektwo.report typical --twentytwo  # through day twenty-two to B19, the same
+    python -m tests.weektwo.report typical --twentythree  # through day twenty-three to B20, the same
 """
 import sys
 import time
@@ -39,7 +40,7 @@ from tests.weekone import verdicts as v1
 from tests.weekone.report import chapter_text, fought
 from tests.weektwo import verdicts
 from tests.weektwo.routes import (
-    NINE_PUSH_ROUTES, eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentytwo, week2,
+    NINE_PUSH_ROUTES, eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentythree, twentytwo, week2,
 )
 
 HOURS = ("G2", "B8", "U1", "U2", "SL15", "SL16", "U3", "B9")
@@ -51,6 +52,7 @@ SIXTEEN_HOURS = ("B14", "O-road", "A36", "T4", "SL24", "SL25", "T5", "T6", "SL26
 EIGHTEEN_HOURS = ("B15", "SL27", "T7", "T8", "T9", "arr15", "B16")
 NINETEEN_HOURS = ("B16", "T10", "T11", "SL28", "B17", "T12", "A38", "T13")
 TWENTYTWO_HOURS = ("T13", "I1", "B18", "SL29", "I2", "I3", "I4", "SL30", "B19")
+TWENTYTHREE_HOURS = ("B19", "SL31", "I5", "I6", "O-book", "SL32", "I7", "SL33", "A39", "B20")
 ROUTES = NINE_PUSH_ROUTES
 """The routes each chapter's readout lists."""
 NAMES = tuple(n for c in verdicts.CHAPTERS for n in (*(f"weektwo-{c}-{r}" for r in ROUTES), f"weektwo-{c}"))
@@ -96,7 +98,8 @@ def route_report(name: str, seed: int, p: DayTwoPlayer, chapter: Later = verdict
              verdicts.FIFTEEN.start: FIFTEEN_HOURS, verdicts.SIXTEEN.start: SIXTEEN_HOURS,
              verdicts.EIGHTEEN.start: EIGHTEEN_HOURS,
              verdicts.NINETEEN.start: NINETEEN_HOURS,
-             verdicts.TWENTYTWO.start: TWENTYTWO_HOURS}.get(chapter.start, TWELVE_HOURS)
+             verdicts.TWENTYTWO.start: TWENTYTWO_HOURS,
+             verdicts.TWENTYTHREE.start: TWENTYTHREE_HOURS}.get(chapter.start, TWELVE_HOURS)
     print(f"\n{name} seed {seed}: hours " + ", ".join(f"{b} {v1.hour(p, b)}" for b in hours))
     print(f"  fights: {fought(p)}")
     print(f"  {abs_band.summary(name, verdicts.days(p, chapter), abs_band.load_pace())}")
@@ -120,11 +123,13 @@ def main(argv: list[str]) -> int:
     names = [a for i, a in enumerate(argv) if not a.startswith("--") and (i == 0 or argv[i - 1] != "--seeds")]
     to_nine, to_eleven, to_twelve, to_fifteen = "--nine" in argv, "--eleven" in argv, "--twelve" in argv, "--fifteen" in argv
     to_sixteen, to_eighteen, to_nineteen = "--sixteen" in argv, "--eighteen" in argv, "--nineteen" in argv
-    to_twentytwo = "--twentytwo" in argv
+    to_twentytwo, to_twentythree = "--twentytwo" in argv, "--twentythree" in argv
     for seed in range(seeds):
         for name in names:
             t0 = time.process_time()
-            if to_twentytwo:
+            if to_twentythree:
+                route_report(name, seed, twentythree(name, seed), verdicts.TWENTYTHREE)
+            elif to_twentytwo:
                 route_report(name, seed, twentytwo(name, seed), verdicts.TWENTYTWO)
             elif to_nineteen:
                 route_report(name, seed, nineteen(name, seed), verdicts.NINETEEN)

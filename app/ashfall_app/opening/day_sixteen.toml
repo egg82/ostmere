@@ -132,7 +132,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 [[town_cards]]
 id = "{lane}_clear_road"
 twin_of = "shovel_road"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15"]
 presentation = "action"
 label_key = "c_lane_clear_road"
 upside_key = "up_shovel_road"
@@ -358,7 +358,7 @@ id = "warm_beds"
 only_player = "magic"
 presentation = "action"
 label_key = "c_warm_beds"
-upside_key = "up_cover_beds"
+upside_key = "up_warm_beds"
 # Slower than a cover (600), so covering is the fast trade and warming the pelt-free slow one; both count toward the tally.
 work_s = 900
 skill = "spellcraft"
@@ -883,6 +883,7 @@ pays_spell_faster = "{pct} spellcraft speed"
 pays_find_spell_3 = "ash worked into her ground"
 pays_spell_4 = "{pct} speed warming the beds"
 c_warm_beds = "Warm the beds"
+up_warm_beds = "the rime off the beds with no pelts spent, slower than a cover"
 l_find_spell_3 = "by morning, the ash off your hands is dug into {n3}'s ground."
 n_ground_3 = "rime on every stone in the valley but this one. it stops a hand short, all round"
 n_ground_4 = "a field stone goes cold if you take its heat. this one never has. ash on my hand both times"

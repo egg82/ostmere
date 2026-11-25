@@ -31,7 +31,7 @@ import type { GroupsPhase } from "./groups";
 import type { TownPhase } from "./town";
 
 export type Phase = "start" | "standing" | "mid" | "covered" | "firstmix" | "greyed" | "full" | "capfull" | "orderlist" | "rulemix" | "written" | "redrule" | "away"
-  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "fullpause" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | GroupsPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | GuardsPhase | FeelPhase;
+  | "restoffer" | "restrule" | "restaway" | "rulestab" | "ruleoffer" | "ruleon" | "repeattap" | "repeatswitch" | "alone" | "aloneDone" | "dry" | "drystore" | "fullpause" | "trip" | "tripmix" | "goals" | "goalsearly" | "held" | "heldstint" | "heldstaged" | DayOnePhase | DayTwoPhase | FightsPhase | JournalPhase | TownPhase | GroupsPhase | PrestigePhase | ChroniclePhase | SincePhase | AsksPhase | LedgerPhase | GuardsPhase | FeelPhase;
 
 export const PHASES: readonly Phase[] = ["start", "standing", "mid", "covered", "firstmix", "greyed", "full", "capfull", "orderlist", "rulemix", "written", "redrule", "away",
   "restoffer", "restrule", "restaway", "rulestab", "ruleoffer", "ruleon", "repeattap", "repeatswitch", "alone", "aloneDone", "dry", "drystore"];
@@ -250,7 +250,8 @@ function dryStore(view: View, at: number): View {
 const HELD_S = 8;
 
 /** held: a When ready step of stool runs on the hands over the player's Rest mix until HELD_S, then lands and the mix
- * returns; heldstint: a goal stint runs Gather by hand over the player's Rest mix until wood reaches 30. */
+ * returns; heldstint: a goal stint runs Gather by hand over the player's Rest mix until wood reaches 30; heldstaged: held
+ * after the end, with stool a build of three stages (its face offers Until done). */
 function heldVariant(phase: Phase, view: View, at: number): View {
   const solo = (c: Card, mix: Mix): Card => {
     const first = mix.components[0];
@@ -293,6 +294,10 @@ function variant(phase: Phase, view: View, at: number): View {
       : rest.includes(c) ? { ...c, gained: stop ? [{ card: stop.card, share_bp: gain(c) }] : [] } : c)) };
   }
   if (phase === "drystore") return dryStore(view, at);
+  if (phase === "heldstaged") {
+    const held = heldVariant(phase, view, at);
+    return { ...held, ended_at: at - 600, cards: held.cards.map((c) => (c.card === "stool" ? { ...c, cap: 3 } : c)) };
+  }
   if (phase === "held" || phase === "heldstint") return heldVariant(phase, view, at);
   if (phase === "full" || phase === "capfull") return { ...view, ledger: view.ledger.map((l) => (l.store === "wood" ? store(at, "wood", 40, 300, 40, false) : l)) };
   if (phase === "trip" || phase === "tripmix") return tripVariant(phase, view, at);
