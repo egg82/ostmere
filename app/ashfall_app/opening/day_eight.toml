@@ -455,11 +455,13 @@ outcome = { modifiers = [{ target = "threat", id = "ashrats", kind = "add_bp", a
 [[triggers]]
 id = "t_pack_near"
 when = { test = "at_least", subject_kind = "store", id = "r1_clock", value = 70 }
+requires = [{ test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_near", value = 0 }]
 outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
 
 [[triggers]]
 id = "t_pack_near_drift"
 when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 22 }
+requires = [{ test = "at_most", subject_kind = "unlocked", unlock_kind = "feature", id = "pack_near", value = 0 }]
 outcome = { unlocks = [{ unlock_kind = "feature", id = "pack_near" }] }
 
 [[triggers]]
