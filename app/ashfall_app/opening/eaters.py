@@ -12,7 +12,8 @@ def bonus_bp(o: "Opening", store: str) -> int | None:
     takes from it or nothing does."""
     stations = {x.id for x in o.lanes if x.station}
     fed = [c for c in o.cards if c.lane in stations and not c.makes and not c.outcome.stores]
-    takers = [c for c in o.cards if c not in fed and (any(a.store == store for a in (*c.inputs, *c.drains))
+    fed_ids = {c.id for c in fed}
+    takers = [c for c in o.cards if c.id not in fed_ids and (any(a.store == store for a in (*c.inputs, *c.drains))
               or any(f.store == store for f in c.costs) or (c.fight is not None and any(a.store == store for a in c.fight.loses)))]
     eaters = [a for a in (*o.standing, *fed) if any(f.store == store for f in a.costs)
               or (a.fight is not None and any(x.store == store for x in a.fight.loses))]
