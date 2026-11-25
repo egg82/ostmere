@@ -33,7 +33,7 @@ export function storeRows(catalog: Catalog, view: View, after: View | null, afte
 }
 
 /** What the store holds of its cap at the view's time ("18 / 18"), as its ledger line reads; empty with no line. */
-function heldWords(catalog: Catalog, view: View, store: string): string {
+export function heldWords(catalog: Catalog, view: View, store: string): string {
   const line = view.ledger.find((l) => l.store === store);
   return line ? catalog.format.amount(sample(line.segment, view.at), line.cap) : "";
 }
