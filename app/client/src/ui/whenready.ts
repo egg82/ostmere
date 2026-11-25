@@ -38,7 +38,7 @@ export class WhenReady {
     this.view = view;
     const { catalog } = this.ctx;
     const done = card !== undefined && untilDone(catalog, view, card.card) !== null;
-    const c = done || card === undefined || catalog.ruled(card.card) ? undefined : card;   // one When ready may take
+    const c = done || card === undefined ? undefined : card;   // one When ready may take
     const queued = c !== undefined && queuedCards(view).includes(c.card);
     const offered = c !== undefined && canQueue(catalog, view, c);
     const full = c !== undefined && !queued && queueFull(catalog, view) && onFace(catalog, view, c);
