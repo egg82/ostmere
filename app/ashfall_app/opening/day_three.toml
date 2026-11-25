@@ -225,10 +225,12 @@ outcome = { stores = [{ store = "shelf_ready", items = 3 }] }
 
 # The clay hearth: four courses, each laid on the hands and then cured on a lane of its own (the rack's shape), so the
 # mix runs on meanwhile. Each course takes the dry token the last one's cure leaves (K2 leaves the first), so the next
-# course waits, unready and queueable, until the last has cured. Laying one starts its cure with the wet token, so a
-# cure by hand with no course laid is a failed tap. A course takes 2 dry wood, the floor the dry wood rule keeps: a
-# larger take shows no ready time while the store falls (ready_at does not count the rule's refills), so When ready
-# could not wait on the next course. 10 stones, so the first course can be queued the return the clay comes in (D-105).
+# course waits, unready and queueable, until the last has cured. The player lays the first; each cure starts the next
+# course as it lands, the way an order runs a staged build (a start changes nothing on a busy lane or an unready card,
+# so hands mid-tap or a short store leave that course to a tap or When ready). Laying one starts its cure with the wet
+# token, so a cure by hand with no course laid is a failed tap. A course takes 2 dry wood, the floor the dry wood rule
+# keeps: a larger take shows no ready time while the store falls (ready_at does not count the rule's refills), so When
+# ready could not wait on the next course. 10 stones, so the first course can be queued the return the clay comes in (D-105).
 [[cards]]
 id = "clay_hearth"
 only_player = "project"
@@ -260,7 +262,7 @@ label_key = "c_cure_hearth"
 work_s = 38000
 cap = 4
 inputs = [{ store = "hearth_wet", items = 1 }]
-outcome = { stores = [{ store = "hearth_dry", items = 1 }] }
+outcome = { stores = [{ store = "hearth_dry", items = 1 }], starts = ["clay_hearth"] }
 
 # Never unlocked: a course laid and not yet cured.
 [[stores]]
