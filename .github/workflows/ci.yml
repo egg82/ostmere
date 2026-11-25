@@ -287,7 +287,8 @@ jobs:
   # artifacts; test_weektwo_saved.py fails if a saved file is in no part. The jobs that read the saves fail, not replay,
   # when they are missing or stale (ASHFALL_REQUIRE_SAVED). Typical's rebased saves are the one exception: they replay
   # typical's decisions from its saved ends, so `chapter-saves-rebased` runs once typical's part has written them
-  # (replaying typical's play beside them would pay the play twice).
+  # (replaying typical's play beside them would pay the play twice); so do a route's last ends when its chain would pass
+  # the job's timeout (chapter_saves.LATE), played on from the route's own part.
   chapter-saves:
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -376,7 +377,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        part: [rebased-early, rebased-late]
+        include:
+          - part: rebased-early
+            from: typical
+          - part: rebased-late
+            from: typical
+          - part: sharp-late
+            from: sharp
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
     steps:
@@ -398,9 +405,9 @@ jobs:
           key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ matrix.part }}
       - uses: actions/download-artifact@v4
         with:
-          name: chapter-saves-typical
+          name: chapter-saves-${{ matrix.from }}
           path: chapter-saves
-      - name: Typical's rebased saves, from the cache or written (${{ matrix.part }})
+      - name: Saves read off a route's part, from the cache or written (${{ matrix.part }})
         working-directory: app
         run: |
           PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" ${{ matrix.part }}

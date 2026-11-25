@@ -16,7 +16,7 @@ from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weektwo import ends, rebased
-from tests.weektwo.routes import CHAPTERS, SAVED, laters, saved_end
+from tests.weektwo.routes import BEFORE, CHAPTERS, SAVED, laters, saved_end
 
 CHECKED = [(chapter, name) for chapter, names in SAVED.items() if chapter != "week1" for name in names]
 
@@ -43,6 +43,9 @@ def test_every_saved_file_is_written_by_a_part():
     assert sorted(in_parts) == sorted(rebased.OLD), "each rebased save in exactly one part"
     assert {n for names in SAVED.values() for n in names} <= chapter_saves.ROUTES
     assert set(ends.READINGS) <= chapter_saves.ALL and set(chapter_saves.REBASED) <= chapter_saves.ALL
+    for route, chapters in chapter_saves.LATE.values():
+        assert all(route in SAVED[c] for c in chapters), "a late part writes ends the route saves"
+        assert route in SAVED[BEFORE[chapters[0]]], "a late part plays on from the route's own saved end"
     assert {c for c in rebased.OLD} <= {c for c, names in SAVED.items() if "typical" in names}, \
         "a rebased part reads typical's saved end at its chapter"
 
