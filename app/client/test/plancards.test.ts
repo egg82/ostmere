@@ -106,7 +106,7 @@ for (const [label, v, c] of [["a ready time", view, larder], ["ready now, its la
 
 // A step waiting on a clock with a part of the day reads as when it opens, and a gated need as its gate, as on its face.
 {
-  const night = { store: "night", label_key: "store.night", cap: 20 * Q, made_by: [], hidden: false, tally: false, clock: "night" as const, bonus_bp: null };
+  const night = { store: "night", label_key: "store.night", cap: 20 * Q, made_by: [], hidden: false, tally: false, clock: "night" as const, bonus_bp: null, group_key: null };
   const content = { ...fixtureContent, store_infos: [...fixtureContent.store_infos, night],
     text_entries: [...fixtureContent.text_entries, { key: "ui.card.opens", text: "Opens {when}" }, { key: "ui.when.night", text: "after dark" }, { key: "ui.when.night_end", text: "at first light" }, { key: "store.night", text: "night" }] };
   const clocked = new Catalog(content);

@@ -8,10 +8,12 @@
 // A group's page is this page for a pooled lane's id: the group's split as the one bar with the crew under it, its tasks as
 // faces, its members (groupmembers.ts) in place of rules (no rule names a pooled lane); a group of one is titled with the
 // member's name.
+// A station's page (the pot on the fire, LaneInfo.station) is a lane's that never joins: a tap on a task makes it the lane's
+// one task, its always rule changed in place (game/lanes.ts, laneTask), and the task it runs is drawn pressed.
 import type { Card, View } from "../api/types";
 import { sectioned } from "../game/cardsections";
 import { laneTap } from "../game/holder";
-import { ruledLaneOf } from "../game/lanes";
+import { isAlways, laneTask, ruledLaneOf } from "../game/lanes";
 import { rulesFull, taskRules } from "../game/orders";
 import { UI } from "../game/text";
 import { members, people, soloOf } from "../game/town";
@@ -127,6 +129,7 @@ export class PersonPage {
   /** A task's face: with the person in the town, a tap (see the top); the share it holds is on the face. */
   private face(card: Card, view: View, joined: boolean, share: number | undefined): HTMLElement {
     const { catalog, actions } = this.ctx;
+    if (!joined && catalog.lanes.get(this.lane)?.station === true) return this.station(card, view);
     if (!joined) return this.kept(pickFace(this.ctx, card, view, undefined, this.strengthOpen)).node;
     const capped = card.cap !== null;
     const tap = capped ? () => actions.decide({ kind: "tap_card", card: card.card }) : () => this.mix.toggle(card.card);
@@ -145,6 +148,17 @@ export class PersonPage {
     row.tap.setAttribute("aria-pressed", String(share !== undefined));
     if (share !== undefined) face.querySelector(".card-head")?.append(el("span", "card-share", catalog.format.share(share)));
     return face;
+  }
+
+  /** A station's task: tapped, it becomes the lane's one task. */
+  private station(card: Card, view: View): HTMLElement {
+    const { catalog, actions } = this.ctx;
+    const always = view.orders.findIndex((o) => isAlways(o) && ruledLaneOf(catalog, o) === this.lane);
+    const row = this.kept(pickFace(this.ctx, card, view, () => actions.decide(laneTask(view, always < 0 ? null : always, card.card)), this.strengthOpen));
+    const on = always >= 0 && view.orders[always]?.then.kind === "tap_card" && view.orders[always]?.then.card === card.card;
+    row.node.classList.toggle("running", on);
+    row.tap.setAttribute("aria-pressed", String(on));
+    return row.node;
   }
 
   private kept(row: Row): Row {

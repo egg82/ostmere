@@ -15,6 +15,12 @@ import { dotChange, hasNewTask, laneTasks, PersonPage } from "./personpage";
 import { drawBar, drawWho, personRow, type PersonRow } from "./personrow";
 import { TownStrip } from "./townstrip";
 
+/** A station with a choice of tasks (the pot with a second kind) marks its Change as the pot lesson's trigger. */
+function potLesson(ctx: PartContext, view: View, lane: string, change: HTMLElement): void {
+  if (ctx.catalog.lanes.get(lane)?.station === true && laneTasks(ctx, view, lane).length > 1) change.dataset.teach = "pot-change";
+  else delete change.dataset.teach;
+}
+
 export class LaneRows implements Part {
   readonly root = el("div", "lane-rows");
   readonly page: PersonPage;
@@ -84,6 +90,7 @@ export class LaneRows implements Part {
       drawWho(this.ctx, this.rows.get(bar.lane) ?? this.add(bar.lane), bar.lane, catalog.laneLabel(bar.lane, view), bar.running_card);
       const change = this.changes.get(bar.lane);
       if (change) dotChange(this.ctx, view, bar.lane, change);
+      if (change) potLesson(this.ctx, view, bar.lane, change);
     }
     this.tick(view.at);
   }

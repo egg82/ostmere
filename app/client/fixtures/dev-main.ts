@@ -20,6 +20,7 @@ import { fixtureContent, Q } from "./content";
 import { isFights, withHurtChip } from "./fights";
 import { isGroups, withGroups } from "./groups";
 import { isJournal, withJournal } from "./journal";
+import { kindsView, withKinds } from "./kinds";
 import { isPrestige, withPrestige } from "./prestige";
 import { placesView, withPlaces } from "./places";
 import { isSince, MANY, withSince } from "./since";
@@ -51,6 +52,7 @@ if (isGroups(phase)) Object.assign(fixtureContent, withGroups(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
 if (hash.has("places")) Object.assign(fixtureContent, withPlaces(fixtureContent));
+if (hash.has("kinds")) Object.assign(fixtureContent, withKinds(fixtureContent));   // #kinds: kinds of one card and store, and a station (kinds.ts)
 MANY.n = Number(hash.get("stores") ?? 0);
 if (isSince(phase)) Object.assign(fixtureContent, withSince(fixtureContent));
 const fixture = fixtureApi(phase, hash.has("stale"), hash.has("seen"), hash.has("limited"), hash.has("due"));
@@ -88,7 +90,8 @@ const offered = (v: View): View => {
   const haul = v.cards.find((c) => c.card === "haul");
   return hash.has("newjob") && haul && stepsSeen++ > 0 ? { ...v, cards: [...v.cards, { ...haul, card: "mend", share_bp: 0, run: null }] } : v;
 };
-const asStep = (s: Step): Step => ({ ...s, view: offered(placed(rows(founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view)))))))) });
+const kinded = (v: View): View => (hash.has("kinds") ? kindsView(v) : v);
+const asStep = (s: Step): Step => ({ ...s, view: kinded(offered(placed(rows(founded(nextRow(woodGoal(shared(manyDone(stuck ? dryOf(s.view, true) : s.view))))))))) });
 const withKept = { ...fixture, begin: () => fixture.begin().then((n) => { n.presentation.lessons.push(...kept); return n; }) };
 const api = { ...withKept, begin: () => withKept.begin().then((n) => ({ ...n, step: asStep(n.step) })), advance: (id: number) => withKept.advance(id).then(asStep), decide: (id: number, d: Decision, after: number) => withKept.decide(id, d, after).then(asStep), dryRun: (id: number, ds: Decision[]) => withKept.dryRun(id, ds).then((v) => { const saved = ds.find((d) => d.kind === "save_mix"); if (saved?.kind === "save_mix") v = rows({ ...woodGoal(v), goal_rows: woodGoal(v).goal_rows.map((g) => ({ ...g, lands_at: g.lands_at === null || !hash.has("storerows") ? g.lands_at : g.lands_at - 1800 })) }, saved.mix); const set = ds.find((d) => d.kind === "set_orders"); return stuck && set?.kind === "set_orders" ? dryOf({ ...v, orders: set.orders }, false) : v; }) };
 wireBegin(hash.has("catchup") ? catchingUpApi(api) : api,

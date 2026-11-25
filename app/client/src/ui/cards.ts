@@ -15,6 +15,7 @@ import { panelView } from "../game/lanes";
 import { keptReadyAt, waitsOnUnseen } from "../game/ready";
 import { UI } from "../game/text";
 import { CardGroups } from "./cardgroups";
+import { KindPicks } from "./kindpick";
 import { barFraction, footWords, makeRow, upsideWords, waitAt, type Row } from "./cardrow";
 import { el, pulse, setText } from "./dom";
 import { sing } from "../audio/cues";
@@ -39,6 +40,8 @@ export class Cards implements Part {
   readonly root = el("section", "deck");
   private readonly groups: CardGroups;
   private readonly whenReady: WhenReady;
+  /** Kinds of one card drawn as one, with a picker (kindpick.ts). */
+  private readonly kinds: KindPicks;
   private readonly rows = new Map<string, Row>();
   private view: View | null = null;
   private story: ReadonlySet<string> = new Set();
@@ -54,6 +57,7 @@ export class Cards implements Part {
     this.root.append(this.wait.root);
     this.groups = new CardGroups(this.root, ctx.catalog);
     this.whenReady = new WhenReady(ctx);
+    this.kinds = new KindPicks(ctx, marks, () => { if (this.view) this.kinds.apply(this.rows, this.view); });
     const press = (down: boolean): void => { this.pressed = down; this.lastPress = performance.now(); };
     document.addEventListener("pointerdown", () => press(true), true);
     for (const type of ["pointerup", "pointercancel"]) document.addEventListener(type, () => press(false), true);
@@ -105,6 +109,7 @@ export class Cards implements Part {
     }
     this.marks.sync(view);   // after placing: a card that arrives already at work never gets a dot
     this.groups.layout(this.rows);
+    this.kinds.apply(this.rows, view);
     this.bringIntoView();
     const busy = new Set(view.lanes.filter((l) => l.running_card !== null).map((l) => l.lane));
     const running = new Set(view.lanes.flatMap((l) => (l.running_card ? [l.running_card] : [])));
@@ -192,6 +197,7 @@ export class Cards implements Part {
     this.rows.set(card.card, row);
     if (inPlay && card.completions === 0) {   // a card done before is not new when it returns
       this.marks.add(card.card);
+      this.kinds.arrived(card.card);
       this.arrived();
       markNew(row.node, () => this.marks.clear(card.card));
     }

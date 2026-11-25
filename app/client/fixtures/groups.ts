@@ -35,7 +35,7 @@ export function withGroups(content: Content = fixtureContent): Content {
   return {
     ...content,
     text_entries: [...content.text_entries, ...Object.entries(LABELS).map(([key, text]) => ({ key, text }))],
-    lane_infos: [...content.lane_infos, ...LANES.map((l) => ({ lane: l.lane, label_key: `lane.${l.lane}`, ruled: true, later_labels: [], name_key: null, told: l.pooled ? null : ("mention" as const), pooled: l.pooled, group: l.group, tied: l.lane === "crew" ? "nan" : null }))],
+    lane_infos: [...content.lane_infos, ...LANES.map((l) => ({ lane: l.lane, label_key: `lane.${l.lane}`, ruled: true, station: false, later_labels: [], name_key: null, told: l.pooled ? null : ("mention" as const), pooled: l.pooled, group: l.group, tied: l.lane === "crew" ? "nan" : null }))],
     card_infos: [...content.card_infos, ...CARDS.map((c) => ({ ...chop, card: c.card, lane: c.lane, label_key: `card.${c.card}` }))],
   };
 }

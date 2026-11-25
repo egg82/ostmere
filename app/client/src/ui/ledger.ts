@@ -35,6 +35,8 @@ import { UI } from "../game/text";
 import { noteOrderShown } from "../telemetry";
 import { el, place, pulse, rekey, setText, tapFeedback } from "./dom";
 import { markNew, unmark } from "./fresh";
+import { type Item, LedgerGroups } from "./ledgergroups";
+import { capLine, dryLine } from "./lessonlines";
 import { ruleMark, setRuleMark } from "./linerule";
 import type { Part, PartContext } from "./part";
 import { Threats } from "./threats";
@@ -71,6 +73,8 @@ export class Ledger implements Part {
   readonly asks = el("div", "ledger-lines ledger-asks");
   private split = false;
   private readonly threats: Threats;
+  /** Kinds of one store folded into one row (ledgergroups.ts). */
+  private readonly folds: LedgerGroups;
   private readonly yours: HTMLElement;
   private readonly threatsLabel: HTMLElement;
   private rows = new Map<string, Row>();
@@ -82,6 +86,7 @@ export class Ledger implements Part {
   constructor(private readonly ctx: PartContext) {
     const { text } = ctx.catalog;
     this.threats = new Threats(ctx);
+    this.folds = new LedgerGroups(ctx);
     this.yours = el("h3", "ledger-group", text.get(UI.ledgerYours));
     this.threatsLabel = el("h3", "ledger-group", text.get(UI.ledgerThreats));
     this.root.append(el("h2", "panel-heading", text.get(UI.ledgerHeading)), this.yours, this.list, this.threatsLabel, this.threats.root);
@@ -127,6 +132,7 @@ export class Ledger implements Part {
       const eta = full ? text.get(UI.full) : this.eta(line, t);
       setText(row.eta, drain ? `${eta} · ${drain}` : eta);
     }
+    this.folds.tick(t);
   }
 
   /** Draw the red and full lines apart from the rest (`on`, a phone: they sit above the cards, the rest stay with the
@@ -139,10 +145,14 @@ export class Ledger implements Part {
   /** Seat each row in the list or, when split, in `asks` if its line is red or full at `t`; the ledger hides with no
    * line left in it and no threat, and each group's label with its group. */
   private arrange(t: number): void {
-    const rest: HTMLElement[] = [];
+    const rest: Item[] = [];
     const asks: HTMLElement[] = [];
-    for (const { line, node } of this.rows.values()) (this.split && (this.red(line) || fullAndFed(line, t)) ? asks : rest).push(node);
-    place(this.list, rest);
+    for (const { line, node } of this.rows.values()) {
+      if (this.split && (this.red(line) || fullAndFed(line, t))) asks.push(node);
+      else rest.push({ line, node });
+    }
+    place(this.list, this.folds.fold(rest));
+    this.folds.tick(t);
     place(this.asks, asks);
     this.yours.hidden = rest.length === 0;
     this.threatsLabel.hidden = this.threats.empty;
@@ -204,8 +214,8 @@ export class Ledger implements Part {
     row.rule = lineRule(view, line);
     setRuleMark(row.mark, this.ctx.catalog, view, row.rule);
     row.box.classList.toggle("ruled", row.rule >= 0);
-    this.capLine(row, capped);
-    this.dryLine(row, dry);
+    capLine(row.box, row.line.store, capped);
+    dryLine(row.box, dry);
     this.hint(row, (capped && [null, CAP_RULE].includes(this.ctx.lesson())) || (dry !== null && [null, DRY_STORE].includes(this.ctx.lesson())) || (shown && card !== undefined && rule < 0 && this.view !== null && !guidedRule(this.view, this.ctx.keeps, card)));
     row.offer?.classList.toggle("calm", !red);
     setText(row.rate, this.ctx.catalog.format.perMinute(line.net_per_hour));
@@ -223,18 +233,6 @@ export class Ledger implements Part {
     if (rule >= 0) this.kept.delete(line.store);
     const shown = card !== undefined && rule < 0 && (red || this.kept.has(line.store)) && !rulesFull(catalog, view);
     return { card, rule, shown };
-  }
-
-  /** The cap rule's lesson starts from this line while it is the subject: its trigger, with the store it is about. */
-  private capLine(row: Row, on: boolean): void {
-    if (on) Object.assign(row.box.dataset, { teach: "cap-line", store: row.line.store });
-    else if (row.box.dataset.teach === "cap-line") { delete row.box.dataset.teach; delete row.box.dataset.store; }
-  }
-
-  /** The dry store's lesson starts from this line while it is the subject: its trigger, with the stopped card and its maker. */
-  private dryLine(row: Row, cue: DryCue | null): void {
-    if (cue) Object.assign(row.box.dataset, { teach: "dry-line", store: cue.store, card: cue.card, maker: cue.maker });
-    else if (row.box.dataset.teach === "dry-line") { delete row.box.dataset.teach; delete row.box.dataset.store; delete row.box.dataset.card; delete row.box.dataset.maker; }
   }
 
   /** The quiet mark, until the player touches the line: on a red line a rule could answer once the first rule's lesson

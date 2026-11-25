@@ -397,7 +397,7 @@ export const TIRED = low("energy", 3, 6);
 const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woodcutting: ["damp_wood"], rest: ["energy"], smoke_catch: ["smoked"], smoke_roots: ["smoked"], forage: ["roots"] };
 
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
-  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, change_bp: [], kept: [], work_s: 5, inputs,
+  card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, variant_of: null, change_bp: [], kept: [], work_s: 5, inputs,
   makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), reach: null, skill_needs: [],
   step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
 });
@@ -408,17 +408,17 @@ export const fixtureContent: Content = {
   limits: { max_orders: 64, max_queue: 64, max_mixes: 64, max_unless: 3, max_or_else: 2, reserved_mix_prefix: "town:" },
   text_entries: Object.entries(text).map(([key, value]) => ({ key, text: value })),
   store_infos: [
-    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, tally: false, clock: null, bonus_bp: null },   // no ledger line: a chip's store
-    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, bonus_bp: null },
-    { store: "hurt", label_key: "store.hurt", cap: 3 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null },   // never unlocked: a fight's wound, drained by the poultice
-    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, bonus_bp: null },   // bookkeeping: never a ledger line
+    { store: "wood", label_key: "store.wood", cap: 40 * Q, made_by: ["gather"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "warmth", label_key: "store.warmth", cap: 100 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "stone", label_key: "store.stone", cap: 20 * Q, made_by: ["tend"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "camp", label_key: "store.camp", cap: 1000 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "damp_wood", label_key: "store.damp_wood", cap: 12 * Q, made_by: ["woodcutting"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "energy", label_key: "store.energy", cap: 20 * Q, made_by: ["rest"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },   // no ledger line: a chip's store
+    { store: "catch", label_key: "store.catch", cap: 6 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "smoked", label_key: "store.smoked", cap: 12 * Q, made_by: ["smoke_catch", "smoke_roots"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "roots", label_key: "store.roots", cap: 24 * Q, made_by: ["forage"], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },
+    { store: "hurt", label_key: "store.hurt", cap: 3 * Q, made_by: [], hidden: false, tally: false, clock: null, bonus_bp: null, group_key: null },   // never unlocked: a fight's wound, drained by the poultice
+    { store: "clock", label_key: "store.clock", cap: 12 * Q, made_by: [], hidden: true, tally: false, clock: null, bonus_bp: null, group_key: null },   // bookkeeping: never a ledger line
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],
@@ -495,11 +495,11 @@ export const fixtureContent: Content = {
     kind: "q", roles: [{ role: "yes", label_key: "kind.q.yes" }, { role: "no", label_key: "kind.q.no" }],
   }],
   lane_infos: [
-    { lane: "hands", label_key: "lane.hands", ruled: false, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null },
-    { lane: "bench", label_key: "lane.bench", ruled: false, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null },
-    { lane: "smoke", label_key: "lane.smoke", ruled: false, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null },
-    { lane: "helper", label_key: "lane.helper", ruled: true, later_labels: [{ after: { category: "feature", id: "yard" }, label_key: "lane.helper.later" }], name_key: null, told: "mention", pooled: false, group: null, tied: null },
-    { lane: "mason", label_key: "lane.mason", ruled: true, later_labels: [], name_key: null, told: "mention", pooled: false, group: null, tied: null },
+    { lane: "hands", label_key: "lane.hands", ruled: false, station: false, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null },
+    { lane: "bench", label_key: "lane.bench", ruled: false, station: false, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null },
+    { lane: "smoke", label_key: "lane.smoke", ruled: false, station: false, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null },
+    { lane: "helper", label_key: "lane.helper", ruled: true, station: false, later_labels: [{ after: { category: "feature", id: "yard" }, label_key: "lane.helper.later" }], name_key: null, told: "mention", pooled: false, group: null, tied: null },
+    { lane: "mason", label_key: "lane.mason", ruled: true, station: false, later_labels: [], name_key: null, told: "mention", pooled: false, group: null, tied: null },
   ],
   end_line_keys: ["line.end"],
   line_infos: [   // one cause of each kind (CONTRACT.txt, "Line causes")
