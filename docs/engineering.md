@@ -13,7 +13,7 @@ Markdown or `LICENSE` runs `docs` (the citation tests and the household-names gu
 per-PR set: `tests` (three shards, on a `postgres:18.6` container, production's version), `shards-cover`,
 `playthrough-smoke` (the opening's representative routes), `engine-bench`, strict `pyright` and
 `client`, while `app-image` builds `app/Containerfile` beside them. The whole-game playthroughs (`playthrough`,
-`chapter-saves`, `chapter-saves-rebased`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
+`chapter-saves`, `chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`, `chapter-saves-rebased`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
 nightly on `main`, on a manual dispatch, and on a pull request that touches a path the playthroughs depend on
 (`app/tools/playthrough_paths.txt`, generated) or carries the `playthroughs` label, which forces it. A pull request builds the
 image and pushes nothing. On `main` the image is pushed by
@@ -198,7 +198,10 @@ suite still runs in seconds.
   minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
   them. CI's `chapter-saves` job writes them in parts, one per route chain or readings part (typical's rebased saves come after, from
   `chapter-saves-rebased`, replaying typical's decisions from its saved ends), keeps each in the Actions
-  cache under that key and hands them to the week-one-saved and week-two jobs as artifacts the readers merge. Week two's job runs one shard per chapter, day
+  cache under that key and hands them to the week-one-saved and week-two jobs as artifacts the readers merge. A route
+  chain too long for one job is written in links (`LINKS` in `app/tools/chapter_saves.py`), each its own job after the one before
+  (`chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`), starting from the saved end the link before uploaded; when a chapter pushes the
+  last link past about 18 minutes on GitHub's runner, add a link: one `LINKS` entry and one job copying the last. Week two's job runs one shard per chapter, day
   twelve's typical play in one of its own and the makers readouts in another (a test's `weektwo_shard` marker names its
   shard; `app/tools/weektwo_shards.py`), so a play's readers stay in one job;
   `shards-cover` fails unless the shards select each week-two test exactly once, and hands their names to the job as
