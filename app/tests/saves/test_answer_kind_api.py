@@ -27,8 +27,14 @@ def opening() -> Opening:
     return load_opening(chapters=(*CHAPTERS, FIXTURE))
 
 
+@pytest.fixture(scope="module")
+def loaded() -> Opening:
+    """The load, timed as a shared fixture rather than inside whichever test comes first."""
+    return opening()
+
+
 @pytest.fixture
-def kinded(pg_url: str, monkeypatch: pytest.MonkeyPatch) -> Iterator[GameClient]:
+def kinded(pg_url: str, monkeypatch: pytest.MonkeyPatch, loaded: Opening) -> Iterator[GameClient]:
     monkeypatch.setattr(main, "load_opening", opening)
     with game_client(pg_url, monkeypatch) as found:
         yield found
