@@ -791,7 +791,6 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .plan-card:disabled .selector-name { color: var(--ink); }
 .plan-card:disabled .selector-note { color: var(--ink-dim); }
 /* a lane task's lane, beside its name, where a mix's bar sits */
-.selector-run > .plan-lane { grid-area: bar; font-size: var(--t-meta); color: var(--ink-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .plan-card + .selector-run:not(.plan-card) { margin-top: .6rem; }
 .rules-full { align-self: flex-start; margin: 0; color: var(--ink-dim); }
 .rules .rule-picker { margin-top: .4rem; }

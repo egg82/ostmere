@@ -24,6 +24,7 @@ told = "mention"
 id = "t_dig"
 presentation = "action"
 label_key = "t_c_dig"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 outcome = { line_keys = ["t_l_dug"] }
@@ -32,6 +33,7 @@ outcome = { line_keys = ["t_l_dug"] }
 id = "t_rest"
 presentation = "action"
 label_key = "t_c_rest"
+upside_key = "t_up"
 work_s = 60
 
 [[triggers]]
@@ -125,6 +127,7 @@ t_l_comes = "story"
 t_l_goes = "story"
 
 [text]
+t_up = "what it is for"
 t_s_heap = "Heap"
 t_l_q1 = "First"
 t_l_q2 = "Second"

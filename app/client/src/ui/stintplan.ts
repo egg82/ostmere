@@ -73,7 +73,7 @@ export class StintPlan {
     const { catalog } = this.ctx;
     const b = el("button", "selector-run plan-card");
     b.type = "button";
-    b.append(el("span", "selector-name", catalog.cardLabel(card.card)), ...(catalog.ruled(card.card) ? [el("span", "plan-lane", catalog.laneLabel(catalog.laneOf(card.card), view))] : []),
+    b.append(el("span", "selector-name", catalog.cardLabel(card.card)),
       el("span", "selector-note", waits ?? catalog.text.get(UI.queueWhenReady)));
     b.addEventListener("click", () => {
       const decision = whenReady(catalog, view, card.card);

@@ -21,7 +21,7 @@ def changed_opening() -> Opening:
     assert OPENING.read_text().partition("[text]")[0].count("work_s = 45") == 1
     o = edited(lambda d: _retuned(roots_renamed(d)))
     line = o.cards[0].line_keys[0]
-    card = CardEntry.model_validate({**o.cards[4].model_dump(), "id": "gather_more", "glows": False})
+    card = CardEntry.model_validate({**o.cards[4].model_dump(), "id": "gather_more", "glows": False, "upside_key": "up_dry_wood"})
     trigger = TriggerEntry.model_validate({
         "id": "t_gather_more", "when": {"test": "after_time", "value": 0},
         "outcome": {"unlocks": [{"unlock_kind": "card", "id": "gather_more"}], "line_keys": [line]}})

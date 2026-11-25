@@ -22,6 +22,7 @@ id = "hand_on_stone"
 only_player = "magic"
 presentation = "action"
 label_key = "c_hand_on_stone"
+upside_key = "up_stone_dry"
 work_s = 20
 skill = "arcana"
 xp_per_hour = 60
@@ -665,6 +666,7 @@ l_night_6 = "story"
 # pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
 # shipping release: replace each value, never the marker's spelling.
 c_hand_on_stone = "Dry damp wood at the stone"
+up_stone_dry = "a little dry wood out of the damp"
 l_stone_first = "a palm on the hearth's stone, a wet stick in the other. it dries."
 c_hearth_stones = "Heat stones for the pot"
 up_hearth_stones = "{pct} stew from the pot"

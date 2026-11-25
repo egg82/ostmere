@@ -23,7 +23,7 @@ PLANTS = (
      "standing action", ((LEAVES, 'leaves = [{ lane = "t_p1", stops = ["t_p1_work"] }]'),)),
     ("a card's outcome", "card t_once: only a trigger's or an answer's outcome has a person leave",
      (('[[triggers]]\nid = "t_arrive"', '[[cards]]\nid = "t_once"\nlane = "t_p2"\npresentation = "action"\n'
-       'label_key = "t_c_work"\nwork_s = 60\ncap = 1\noutcome = { leaves = [{ lane = "t_p2" }] }\n\n'
+       'label_key = "t_c_work"\nupside_key = "t_up"\nwork_s = 60\ncap = 1\noutcome = { leaves = [{ lane = "t_p2" }] }\n\n'
        '[[triggers]]\nid = "t_arrive"'),)),
 )
 

@@ -30,6 +30,7 @@ id = "t_p1_work"
 lane = "t_p1"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -38,6 +39,7 @@ id = "t_p2_work"
 lane = "t_p2"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -77,6 +79,7 @@ t_l_arrive = "story"
 t_l_depart = "story"
 
 [text]
+t_up = "what it is for"
 t_j_p1_came = "the first came."
 t_j_p2_came = "the second came."
 t_j_p1_went = "the first went."

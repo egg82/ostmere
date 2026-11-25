@@ -48,34 +48,25 @@ const laneCards = ruled.cards.filter((c) => c.card === "chop" || c.card === "hau
   expect("the open rule's task is pressed", root.querySelector(".pick[data-card=\"chop\"] .card-tap")?.getAttribute("aria-pressed"), "true");
 }
 
-{  // Plan: a lane task names its lane; the player's own task does not
+{  // Plan: a lane task is not offered (the queue is the hands' plan: the server refuses it); the player's own task is
   const { ctx: bare } = testContext();
   const ctx = { ...bare, keeps: keepsOf({ ...TAUGHT, rule_seen: true }) };
   const plan = new StintPlan(ctx, () => undefined);
   const info = ctx.catalog.cards.get("chop");
   if (!info) throw new Error("fixture has no chop");
   const was = info.presentation;
-  info.presentation = "craft";   // the fixture's lane tasks are actions, which Plan leaves to the mix; a craft is offered
+  info.presentation = "craft";   // the fixture's lane tasks are actions, which Plan leaves to the mix; a craft would be offered
   const view: View = { ...ruled, queue: [], ended_at: 1 };
-  const open = (): FakeEl => {
-    const closed = el("div");
-    closed.append(...plan.rows(view));
-    mounted(closed).querySelector(".stint-plan")?.click();   // + Plan
-    const box = el("div");
-    box.append(...plan.rows(view));
-    return mounted(box);
-  };
-  const rows = open().querySelectorAll(".plan-card");
-  const lane = (card: string): string | undefined => rows.find((r) => r.querySelector(".selector-name")?.textContent === ctx.catalog.cardLabel(card))?.querySelector(".plan-lane")?.textContent;
+  const closed = el("div");
+  closed.append(...plan.rows(view));
+  mounted(closed).querySelector(".stint-plan")?.click();   // + Plan
+  const box = el("div");
+  box.append(...plan.rows(view));
+  const shown = mounted(box).querySelectorAll(".plan-card").map((r) => r.querySelector(".selector-name")?.textContent);
   const laned = ruled.cards.filter((c) => ctx.catalog.ruled(c.card));
   const own = ruled.cards.filter((c) => !ctx.catalog.ruled(c.card));
-  const shown = rows.map((r) => r.querySelector(".selector-name")?.textContent);
-  const lanedShown = laned.filter((c) => shown.includes(ctx.catalog.cardLabel(c.card)));
-  const ownShown = own.filter((c) => shown.includes(ctx.catalog.cardLabel(c.card)));
-  expect("a lane task is offered in Plan (control)", lanedShown.length > 0, true);
-  expect("a lane task names its lane", lanedShown.map((c) => lane(c.card)), lanedShown.map((c) => ctx.catalog.laneLabel(ctx.catalog.laneOf(c.card), view)));
-  expect("a player task is offered too (control)", ownShown.length > 0, true);
-  expect("the player's own task names none", ownShown.map((c) => lane(c.card)), ownShown.map(() => undefined));
+  expect("a lane task is not offered in Plan", laned.filter((c) => shown.includes(ctx.catalog.cardLabel(c.card))).length, 0);
+  expect("a player task is offered (control)", own.filter((c) => shown.includes(ctx.catalog.cardLabel(c.card))).length > 0, true);
   info.presentation = was;
 }
 

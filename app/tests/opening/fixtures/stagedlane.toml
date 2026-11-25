@@ -36,6 +36,7 @@ id = "t_sweep"
 lane = "t_builder"
 presentation = "action"
 label_key = "t_c_sweep"
+upside_key = "t_up"
 work_s = 60
 
 [[cards]]
@@ -43,6 +44,7 @@ id = "t_haul"
 lane = "t_hauler"
 presentation = "action"
 label_key = "t_c_haul"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_logs", items_per_hour = 10 }]
 
@@ -59,6 +61,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "t_raise" }, { unlock_kind =
 [line_kinds]
 
 [text]
+t_up = "what it is for"
 t_s_logs = "Logs"
 t_l_builder = "Builder"
 t_l_hauler = "Hauler"

@@ -37,6 +37,7 @@ told = "line"
 id = "t_trip"
 presentation = "action"
 label_key = "t_c_trip"
+upside_key = "t_up"
 work_s = 600
 skill = "t_lore"
 xp_per_hour = 60
@@ -48,6 +49,7 @@ id = "t_scout_trip"
 lane = "t_scout"
 presentation = "action"
 label_key = "t_c_trip"
+upside_key = "t_up"
 work_s = 600
 inputs = [{ store = "t_pool", items = 1 }]
 outcome = { stores = [{ store = "t_ore", items = 1 }, { store = "t_trips", items = 1 }] }
@@ -78,6 +80,7 @@ t_l_find = "find"
 t_pays_lore = "find"
 
 [text]
+t_up = "what it is for"
 t_s_pool = "Supplies"
 t_s_ore = "Ore"
 t_s_trips = "Trips"

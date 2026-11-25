@@ -40,6 +40,7 @@ id = "t_crew_work"
 lane = "t_crew"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -48,6 +49,7 @@ id = "t_m1_work"
 lane = "t_m1"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -56,6 +58,7 @@ id = "t_m2_work"
 lane = "t_m2"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -64,6 +67,7 @@ id = "t_m3_work"
 lane = "t_m3"
 presentation = "action"
 label_key = "t_c_work"
+upside_key = "t_up"
 work_s = 60
 makes = [{ store = "t_heap", items_per_hour = 30 }]
 
@@ -88,6 +92,7 @@ t_l_m2_comes = "story"
 t_l_m3_comes = "story"
 
 [text]
+t_up = "what it is for"
 t_s_heap = "Heap"
 t_l_crew = "Crew"
 t_l_m1 = "First"

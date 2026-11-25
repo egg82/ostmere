@@ -87,7 +87,7 @@ def test_a_content_error_in_a_late_chapter_names_it_with_the_real_message(tmp_pa
     assert str(e.value).endswith(f" (in {last.name})")
 
 
-EARLY = '[[cards]]\nid = "t_early"\nlane = "t_late"\npresentation = "action"\nlabel_key = "t_c_early"\nwork_s = 60\ncap = 1\n\n[text]\nt_c_early = "Early"\n'
+EARLY = '[[cards]]\nid = "t_early"\nlane = "t_late"\npresentation = "action"\nlabel_key = "t_c_early"\nupside_key = "t_up"\nwork_s = 60\ncap = 1\n\n[text]\nt_up = "what it is for"\nt_c_early = "Early"\n'
 LATE = '[[lanes]]\nid = "t_late"\nlabel_key = "t_l_late"\nruled = true\ntold = "line"\n\n[text]\nt_l_late = "Late"\n'
 
 
