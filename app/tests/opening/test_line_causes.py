@@ -78,3 +78,22 @@ def test_a_key_written_by_two_cards_fails_the_load() -> None:
     o2: Opening = o.model_copy(update={"cards": [planted if c is b else c for c in o.cards]})
     with pytest.raises(ValueError, match="written in two places"):
         line_infos(o2)
+
+
+def test_a_key_both_answers_of_one_offer_write_names_the_offer(causes: dict[str, LineCause | None]) -> None:
+    """A mention person joining on either answer of a work offer: the loader ends both answers with their mention line."""
+    offer, key = next((x, k) for x in opening().offers for k in x.answers[0].outcome.line_keys
+                      if len(x.answers) > 1 and all(k in a.outcome.line_keys for a in x.answers))
+    assert causes[key] == AnswerCause(offer=offer.id)
+
+
+def test_a_key_written_by_answers_of_two_offers_fails_the_load() -> None:
+    o = opening()
+    a, b = [x for x in o.offers if x.answers and x.answers[0].outcome.line_keys][:2]
+    answer = b.answers[0]
+    planted = answer.model_copy(update={"outcome": answer.outcome.model_copy(
+        update={"line_keys": [*answer.outcome.line_keys, a.answers[0].outcome.line_keys[0]]})})
+    o2: Opening = o.model_copy(update={"offers": [
+        b.model_copy(update={"answers": [planted, *b.answers[1:]]}) if x is b else x for x in o.offers]})
+    with pytest.raises(ValueError, match="written in two places"):
+        line_infos(o2)
