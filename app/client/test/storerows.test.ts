@@ -1,6 +1,6 @@
 // The editors' store rows (ui/storetimes.ts; CONTRACT.txt, "Store rows"): a row per store the edit's cards touch or whose
-// rate or heading the dry run changes, net per minute now → after, with where it heads under it; the heading is marked
-// only when its direction turns.
+// rate or heading the dry run changes, net per minute now → after, with what it holds of its cap and where it heads under
+// it; the heading is marked only when its direction turns.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { Catalog } from "../src/game/catalog";
@@ -33,16 +33,18 @@ expect("nothing moved, nothing mixed", storeRows(catalog, at([row("wood", 60, "s
   const now = at([row("wood", 60, "fills", 100 + 3600), row("stone", 10, "steady", null), row("flint", 5, "steady", null)]);
   const then = at([row("wood", 60, "fills", 100 + 3600, true), row("stone", -20, "empties", 100 + 1800), row("flint", 5, "steady", null)]);
   const got = out(storeRows(catalog, now, then, "after"));
-  expect("head, wood, its heading, stone, its heading", got.text,
-    ["per minutenow→after", "Dead wood+1/min→+1/min", "full in 1 h", "Flint+0.16/min→-0.33/min", "30 m 0 s left"]);
-  expect("only the turned heading is marked", got.turned, ["30 m 0 s left"]);
+  expect("head, wood, what it holds and its heading, stone, the same", got.text,
+    ["per minutenow→after", "Dead wood+1/min→+1/min", "14 / 40 · full in 1 h", "Flint+0.16/min→-0.33/min", "3 / 20 · 30 m 0 s left"]);
+  expect("only the turned heading is marked", got.turned, ["3 / 20 · 30 m 0 s left"]);
+  const unlisted = { ...now, ledger: now.ledger.filter((l) => l.store !== "wood") };
+  expect("a store with no ledger line shows its heading alone", out(storeRows(catalog, unlisted, then, "after")).text[2], "full in 1 h");
 }
 
 // a store already at 0 and falling reads empty, and the camp's own store is never listed
 {
   const camp = catalog.campStore;
   if (camp === null) throw new Error("the fixture content has no camp store");
-  const now = at([row("wood", 0, "steady", null), row(camp, 0, "steady", null)]);
+  const now = { ...at([row("wood", 0, "steady", null), row(camp, 0, "steady", null)]), ledger: [] };
   const then = at([row("wood", -30, "empties", 100), row(camp, -5, "empties", 200)]);
   expect("empty now, no camp row", out(storeRows(catalog, now, then, "if run")).text, ["per minutenow→if run", "Dead wood0/min→-0.5/min", "empty"]);
 }
