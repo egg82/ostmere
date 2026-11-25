@@ -819,7 +819,8 @@ Remove                       [Copy rule] [Add rule] Remove and Copy rule only wh
   number stepped an item at a time, and switching keeps the level where it reads now. A share is reached at the share
   itself from either side, so `down to empty` and `until empty` both mean nothing shown. The band is at least one
   item and inside the store's cap, so a rule never flips at one level and is never always true (the conventions:
-  `api/CONTRACT.txt`). A store under two items is off.
+  `api/CONTRACT.txt`), except on a store nothing that runs raises (only a lost fight, a find or an answer adds to
+  it, as to hurt), which cannot flip on a flow: there the band may be none (`hurt reaches 1, until down to empty`). A store under two items is off.
 - The words put a number before the store and use no verb (`Under 3 stones, until 8`, `12 or more dry wood, until
   under 6`), so they read right whatever the store's name; a share follows the store (`Dry wood down to a quarter,
   until three quarters`, `Dry wood up to full, until down to empty`).
