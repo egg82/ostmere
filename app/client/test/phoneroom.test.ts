@@ -10,7 +10,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 const css = readFileSync("src/game.css", "utf8");
 const phone = css.slice(css.indexOf("/* The phone frame"), css.indexOf("/* desktop (and a phone in landscape)"));
 expect("the phone block was found", phone.length > 100, true);
-expect("the art leaves while an editor has the screen", /\.game\.scene-aside \.scene-box \{ display: none; \}/.test(phone), true);
+expect("the art and the head leave while an editor has the screen", /\.game\.scene-aside :is\(\.scene-box, \.stage > \.scene-head, \.stage > \.aim\) \{ display: none; \}/.test(phone), true);
 
 // offsetHeight rounds, so a panel laid on it left a fractional seam under the stage: the height must be the exact one.
 const seat = readFileSync("src/ui/headseat.ts", "utf8");

@@ -16,7 +16,7 @@ art's top, the aim just above it and the newest story line just under it; the ha
 beside them. Nothing the player needs during play sits in a far corner.
 
 - **The story strip, under the art.** The newest story line sits whole in a strip of its own, off the artwork, in the
-  panel's colours: in the pinned stage between the art and the hands strip on a phone, along the art's foot on a
+  panel's colours: the pinned foot of the stage, just above the hands strip, on a phone, along the art's foot on a
   desktop (between the art and the ledger). It shows the newest lines that fit whole, oldest first, the
   older ones dimmer; a new line pushes out the oldest that no longer fits, so a quick run can still be read. A line
   shows when the arrival queue releases it, held back for the reading time of the one before (`decisions.md`, "A story
@@ -24,7 +24,7 @@ beside them. Nothing the player needs during play sits in a far corner.
   strip's width, so no line is ever cut and none arriving moves anything: every story line the content can write (`Content.line_infos`,
   the kinds `game/chronicle.ts` routes to Story) is laid out unseen in the strip's one cell, the shown lines sit over
   them, and as many of the newest as fit that height show (at least the newest, so one where the room holds only one).
-  On a phone the strip is three rows of the story's size (`--strip-rows`), so the pinned stage never grows for the
+  On a phone the strip is three rows of the story's size (`--strip-rows`), so the pinned strip never grows for the
   longest line ever written: that is a content rule, every story line fitting three rows at a 360-wide phone's 328px
   (`tests/opening/test_strip_rows.py`, its wrap checked against Chrome's), and three short lines fit with no gap between.
   The strip shows story lines only: a story beat's, a tap's, the body's. A find, a level, a rule's start or let-go and a
@@ -58,12 +58,12 @@ beside them. Nothing the player needs during play sits in a far corner.
   (`ui/partseat.ts`): "Feedback" opens the tester's sheet (a field, what is sent along, Send, Not now).
   Nothing that must be seen sits with the chips for it.
 - **The aim, just above the art** (`decisions.md`, "Every stretch of play has a stated aim"): one line in the story's
-  voice, over the art's column on a desktop and between the Camp bar's row and the art in the pinned stage on a
-  phone. Its room is there from the first screen, so it never moves anything later;
+  voice, over the art's column on a desktop and between the Camp bar's row and the art in the stage on a
+  phone (scrolling away with the head). Its room is there from the first screen, so it never moves anything later;
   a new aim takes its turn in the arrival queue, after the lines that came with it. It is plain text, not a control: no
   dot, no glow.
-- **Chips at the art's top,** in one row with the Camp bar, just above the art in its stage (pinned
-  with it on a phone), never on it: the head grows a row for each goal, and laid on the art it hid the camp's top. An
+- **Chips at the art's top,** in one row with the Camp bar, just above the art in its stage (above the
+  pinned strip on a phone, scrolling away with the page), never on it: the head grows a row for each goal, and laid on the art it hid the camp's top. An
   icon plus the word (the word kept for screen
   readers and first sight), and under the word what the chip costs while it shows, two or three words from the
   content (`cost_key`, e.g. "hands slower"), in the meta ink. A chip is drawn once its cure is on screen (unlocked
@@ -149,9 +149,9 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 
 ```
 ┌────────────────────────────┐
-│ Camp 1 ▓▓░        ❄ cold   │  the head: Camp bar and chips
-│ the aim, one line          │
-│SCENE, edge to edge         │  the art covers a fixed room
+│ Camp 1 ▓▓░        ❄ cold   │  the head: Camp bar, goals, chips
+│ the aim, one line          │  (scroll away with the page)
+│SCENE, edge to edge         │  the art: on Town only
 ├────────────────────────────┤
 │ newest lines, three rows   │  the strip
 ├────────────────────────────┤
@@ -159,6 +159,7 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 │ ■ Gather 60% ■ Scav 40%    │  and its legend
 ├────────────────────────────┤  ── pinned above, scrolls below
 │ runs on  while …      Edit │  the mix's controls
+│ Wood  +2/min  18/18 full   │  the red and full lines it feeds
 │ [L][M] Bank the fire… 1 ›  │  the shown ask, one 56px row
 │ ┌──────────┐┌──────────┐   │
 │ │ card     ││ card     │   │  the open tab's panel
@@ -168,21 +169,27 @@ to the chronicle alone and its finds to the chronicle's Finds, as an uncapped ca
 └────────────────────────────┘
 ```
 
-Read in the top half, touch in the bottom. The head, the art, the strip and the mix's bar stay pinned while the panel
-scrolls under them, so the newest lines stay on screen while the thumb is on a card, and each has a fixed height: the art
-covers a room of `--scene-h` edge to edge, cut top and bottom around what the view shows (`scene/crop.ts`, the front
-page's placement at a cover scale), the strip is three rows (above), and the head keeps room for a chip and its cost
-line. Of the hands strip only the bar, its legend and the mix's name stay pinned; the name is the way to the Mixes list
-(`Main ▾`). The rest of its controls (runs, the rule's link, Edit) sit right under the pin and arrive with the strip; the
-lessons that point at them find them there. At 390 wide the pinned part ends at about 380px, a little lower when a
-legend takes two rows.
+Read in the top half, touch in the bottom. Only the strip and the mix's bar stay pinned while the panel scrolls under
+them, so the newest lines and what the hands run stay on screen while the thumb is on a card. The head and the aim sit
+above the strip in the stage and scroll away with the page, back at its top (`ui/headseat.ts` measures the stage and the
+strip, `--scene-vh` and `--stage-pin`; the stage is sticky at the strip's height less its own). The art is the Town tab's:
+on Tasks the cards get its room. It covers a room of `--scene-h` edge to edge, cut top and bottom around what the view
+shows (`scene/crop.ts`, the front page's placement at a cover scale); the strip is three rows (above), and the head keeps
+room for a chip and its cost line. Of the hands strip only the bar, its legend and the mix's name stay pinned; the name
+is the way to the Mixes list (`Main ▾`). The rest of its controls (runs, the rule's link, Edit) sit right under the pin
+and arrive with the strip, and under them the ledger's red and full lines, beside the mix that feeds them; the lessons
+that point at the controls find them there. At 390 wide the pinned part is about 145px once scrolled, a little more when
+a legend takes two rows. Rejected: the head, art and strip all pinned (at day 17 the head's goals, chip and Bonuses held
+it at about 540px of an 844px screen, and nothing capped it as content grew).
 
 The panel's tabs are the bottom bar (`ui/tabs.ts`): **Tasks**, **Town** (the town's people and lanes, then the ledger
 and skills), **Rules** and **Book**. Town and Rules keep their slots unseen until they arrive, so nothing moves; a tab
 chosen while the panel is scrolled starts at its top under the stage. Book opens the Book as a sheet (The Book).
 Anything opened only sometimes (an ask, the Mixes list, the Book, a prestige) rises from the bottom as a sheet across
-the screen's width; the Book's sheet takes the full height while its Journal page is open. The mix and rule editors fill the room under the pinned
-parts, with the bar hidden while the mix editor is open.
+the screen's width; the Book's sheet takes the full height while its Journal page is open. The mix and rule editors fill
+the room under the strip, over the mix's bar (the mix editor draws its own), and the head steps aside with the art while
+an editor or the Rules tab has the screen. The mix editor's store rows carry what each store holds of its cap beside
+its rate now → after and where it heads, the ledger's figures a desktop shows beside the editor.
 
 The shown ask is one row of fixed height (56px): who asks by face, the question cut to one line, and how many wait
 (`1 ›`). A tap anywhere on it opens the sheet of every open ask, whole, so a season's several asks never move the
