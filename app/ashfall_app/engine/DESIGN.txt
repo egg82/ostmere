@@ -543,13 +543,15 @@ CHOICES (cards)
 - Greyed mix: a saved mix whose flattened cards include a completed one. Derived, never stored. An order naming a
   greyed mix is passed over: its mix does not run, and the next order's mix or the player's own runs (Order mix);
   when a raise or a SaveMix un-greys it, it runs again at that instant if its latch is true. In the queue, an entry whose verb is dead (a switch to a greyed mix, a tap of a
-  completed card; both alike) is passed over and kept: the controlling entry is the first live one, QUEUE_POP watches
-  that entry's `until`, and a dead entry is frozen (never popped while dead) unless it settles. When a raise revives
-  it, it controls again at that instant, popping at once if its `until` already holds. A dead entry settles, and pops
-  at that instant, once its `until` holds and cannot fall (an AfterTime, or an AtLeast on a card count, a skill level
-  or an unlock): a revival would pop it at once, so keeping it would only list a finished step as the plan. This is
-  how the page's "when ready" entry for a one-off (tap c until c's count reaches 1) leaves the queue: c is dead from
-  the instant it completes, the instant its `until` holds. The player may still switch to a greyed mix
+  completed card) is passed over: the controlling entry is the first live one, and QUEUE_POP watches that entry's
+  `until`. A tap of a completed card leaves the queue at that instant, whatever its `until` (as an answer to an
+  answered offer does, "Dead"): the page queues one run of a card per entry, so runs planned past a cap are dropped at
+  the cap rather than kept for a raise that may never come (owner: "if I add beams 100 times... do they clear out once
+  the card goes away?"). A switch to a greyed mix is kept, frozen (never popped while dead) unless it settles; when a
+  SaveMix or a raise revives it, it controls again at that instant, popping at once if its `until` already holds. It
+  settles, and pops at that instant, once its `until` holds and cannot fall (an AfterTime, or an AtLeast on a card
+  count, a skill level or an unlock): a revival would pop it at once, so keeping it would only list a finished stint
+  as the plan. The player may still switch to a greyed mix
   (nothing runs). DeleteMix removes a saved mix not nested in another and not named by an order or queue entry;
   deleting the active one leaves no mix active, clears the pauses (Running dry) if the running mix changed, and evaluates at once.
   Why: the decision (docs/decisions.md, "The mix") that a saved mix never quietly runs something else, and the 2 AM
@@ -659,7 +661,8 @@ INVARIANTS (cards; numbered on from 33)
 39. Greyed: from the instant the running mix holds a completed card, every one of its cards contributes 0 to every
     rate and orders and the queue evaluate; a cap raise un-greys it with no player action.
 40. Dead queue heads: a queue whose head is dead behaves as the same queue with the head removed, and the head is
-    still there after unless it settled (its `until` holds and cannot fall), when it is gone from that instant.
+    still there after unless it settled (its `until` holds and cannot fall) or taps a completed card, when it is gone
+    from that instant.
 41. Starved: a line is starved iff its store is at 0 and a runner is paused on it or a candidate tap is blocked on it;
     all_covered is false while one is. A paused card's work does not move.
 42. DeleteMix: refused for a nested or named mix (the save unchanged); otherwise the mix is gone and, if it was active,
@@ -698,8 +701,10 @@ REJECTED, AND WHY (cards)
   until then the rack is driven by orders, as it is today.
 - A stored Completed set: a cap raise and the set would have to be kept in step; derived from counts it cannot drift.
 - Greying only the completed card's share: the saved mix would quietly run a different split (docs/decisions.md).
-- A dead queue head that waits: a greyed mix never ungreys by itself, so the hands would idle for good. Popping it:
-  the plan would lose the entry a cap raise could revive (unless it has settled: a revival would pop it at once).
+- A dead queue head that waits: a greyed mix never ungreys by itself, so the hands would idle for good. Popping a dead
+  switch: the plan would lose the entry a cap raise could revive (unless it has settled: a revival would pop it at
+  once). A dead tap is popped all the same: the page's entries are one run each, so runs planned past a cap would sit
+  in the queue for a raise that may never come.
 - Inputs once across a multi-step card: needs a per-card "first step" counter, the pushes machinery this part removes.
 - One id type for cards and standing actions: nothing would say which definition an id looks up; a union of two
   NewTypes keeps one namespace and two lookups.
@@ -707,8 +712,8 @@ REJECTED, AND WHY (cards)
 - A separate starved event or chip: starved is a fact of the read model, like covered; nothing in the engine acts on
   it.
 - A dead queue head that blocks the pop of the live entry behind it (the head's own `until` the only one watched):
-  the live entry would control forever, so a dead head would change what the queue does. Dropping a dead tap of a
-  completed card while keeping a dead switch: the two are one case (a raise revives either), so one rule.
+  the live entry would control forever, so a dead head would change what the queue does. Keeping a dead tap of a
+  completed card as a dead switch is kept: a tap is one run of a card, and a card at its cap has no run left to plan.
 - Interrupting a tap whose work reached its boundary at the instant its store ran dry: the count would stand without
   the landing, a completion half-registered by event order alone.
 - Passing over a mix card at its boundary as a tap is passed over: the mix card does not stop there, so it would run

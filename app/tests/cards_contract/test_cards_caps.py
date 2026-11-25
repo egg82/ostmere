@@ -8,7 +8,7 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import (
-    BP, HANDS, ActionId, AfterTime, AtLeast, CapRaise, CardDef, CardId, CardShare, CompletedCard, Event, EventKind,
+    BP, HANDS, ActionId, AfterTime, AtLeast, CapRaise, CardDef, CardId, CardShare, CompletedCard, Condition, Event, EventKind,
     Flow, InvalidVerbError, OrderVerb, LineKey, Mix, MixId, Order, Outcome, QueueEntry, Rules, RunKind, SaveMix, SetOrders,
     SetQueue, StandingBar, StandingDef, StoreDef, StoreId, StoreValue, SwitchMix, TapCard, advance,
     advance_logged, decide, new_save, next_event, view,
@@ -197,10 +197,10 @@ def test_an_order_cannot_switch_to_a_greyed_mix_and_is_passed_over():
     assert running_mix(a, r) == M1 and a.active == before.active
 
 
-@pytest.mark.parametrize("dead", [SwitchMix(M0), TapCard(C)], ids=["switch-to-greyed", "tap-of-completed"])
+@pytest.mark.parametrize("dead", [SwitchMix(M0)], ids=["switch-to-greyed"])
 def test_the_queue_passes_over_a_dead_head_and_keeps_it(dead: OrderVerb):
-    """QueueEntry, "Greyed mix": a head whose verb is dead (a switch to a greyed mix, a tap of a completed card) is
-    passed over, so the next entry runs, and kept."""
+    """QueueEntry, "Greyed mix": a head whose verb is dead (a switch to a greyed mix) is passed over, so the next entry
+    runs, and kept. A tap of a completed card is not kept (the test after these)."""
     r = world()
     queue = (QueueEntry(dead, NEVER), QueueEntry(SwitchMix(M1), NEVER))
     a = decide(completed(r), r, 400, SetQueue(queue))
@@ -208,7 +208,7 @@ def test_the_queue_passes_over_a_dead_head_and_keeps_it(dead: OrderVerb):
     assert advance(a, r, 3000).queue == queue
 
 
-@pytest.mark.parametrize("dead", [SwitchMix(M0), TapCard(C)], ids=["switch-to-greyed", "tap-of-completed"])
+@pytest.mark.parametrize("dead", [SwitchMix(M0)], ids=["switch-to-greyed"])
 def test_a_queue_with_a_dead_head_behaves_as_the_queue_without_it(dead: OrderVerb):
     """Invariant 40, "Greyed mix": a queue whose head is dead behaves as the same queue with the head removed (the
     first live entry controlling and popping on its own `until`) and the head is still there after."""
@@ -223,7 +223,7 @@ def test_a_queue_with_a_dead_head_behaves_as_the_queue_without_it(dead: OrderVer
     assert replace(a, queue=()) == replace(b, queue=())
 
 
-@pytest.mark.parametrize("dead", [SwitchMix(M0), TapCard(C)], ids=["switch-to-greyed", "tap-of-completed"])
+@pytest.mark.parametrize("dead", [SwitchMix(M0)], ids=["switch-to-greyed"])
 def test_a_dead_entry_is_frozen_while_it_is_dead_even_if_its_until_holds(dead: OrderVerb):
     """"Greyed mix": a dead entry is never popped while dead unless its `until` cannot fall. Its `until` (HOLDS) holds
     from the start, yet the queue keeps it; the live entry behind it controls. A dead entry behind a live one that pops is just as frozen: the
@@ -239,7 +239,7 @@ def test_a_dead_entry_is_frozen_while_it_is_dead_even_if_its_until_holds(dead: O
     assert running_mix(b, r) == MM2 and b.queue == (held, QueueEntry(SwitchMix(MM2), NEVER))
 
 
-@pytest.mark.parametrize("dead", [SwitchMix(M0), TapCard(C)], ids=["switch-to-greyed", "tap-of-completed"])
+@pytest.mark.parametrize("dead", [SwitchMix(M0)], ids=["switch-to-greyed"])
 def test_a_queue_of_only_dead_entries_acts_on_nothing_and_keeps_them(dead: OrderVerb):
     """"Greyed mix": with no live entry nothing controls, so no `until` is watched: a lone dead entry whose `until`
     already holds is neither acted on nor popped, now or later."""
@@ -248,6 +248,18 @@ def test_a_queue_of_only_dead_entries_acts_on_nothing_and_keeps_them(dead: Order
     a = decide(decide(completed(r), r, 400, SwitchMix(M1)), r, 400, SetQueue(queue))
     assert a.queue == queue and a.active == M1
     assert advance(a, r, 3000).queue == queue
+
+
+@pytest.mark.parametrize("until", [NEVER, HOLDS], ids=["never", "holds"])
+def test_a_tap_of_a_completed_card_leaves_the_queue_at_once(until: Condition):
+    """Invariant 40, "Greyed mix": a tap of a completed card is passed over and leaves the queue at that instant,
+    whatever its `until`: the queue then is the same queue without it, now and later."""
+    r = world()
+    base = completed(r)
+    rest = (QueueEntry(SwitchMix(M1), AtLeast(StoreValue(Z), Q, Q)), QueueEntry(SwitchMix(MM2), NEVER))
+    a = decide(base, r, 400, SetQueue((QueueEntry(TapCard(C), until),) + rest))
+    assert running_mix(a, r) == M1 and a.queue == rest
+    assert advance(a, r, 5400) == advance(decide(base, r, 400, SetQueue(rest)), r, 5400)
 
 
 def test_a_head_that_dies_at_the_instant_its_fallible_until_holds_is_not_popped_nor_is_the_next_entry():

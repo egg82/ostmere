@@ -7,6 +7,7 @@ from .events import Event, EventKind
 from .full import full_cards, has_room, is_full_pause, resume_time
 from .cardsides import outcome_stores
 from .ids import CardId
+from .lanes import TapCard
 from .index import index
 from .motion import store_segment
 from .memo import SaveMemo
@@ -56,25 +57,27 @@ def _events(save: Save, rules: Rules) -> list[Event]:
 
 def _pop_events(save: Save, rules: Rules) -> list[Event]:
     """The controlling entry's `until` rising, a dead entry's that cannot fall once it holds (it settles), and now for
-    an entry answering an answered offer (it settles whatever its `until`)."""
+    an entry answering an answered offer or tapping a completed card (it settles whatever its `until`)."""
     head = controlling_entry(save, rules)
     watched = [e.until for i, e in enumerate(save.queue)
                if i == head or (is_dead(save, rules, e.verb) and not can_fall(e.until))]
     times = [t for cond in watched if (t := rise_time(save, rules, cond)) is not None]
-    times += [save.time] if any(_answered(save, rules, e.verb) for e in save.queue) else []
+    times += [save.time] if any(_gone(save, rules, e.verb) for e in save.queue) else []
     return [Event(min(times), EventKind.QUEUE_POP, 0, "")] if times else []
 
 
 def settled_entries(save: Save, rules: Rules) -> tuple[int, ...]:
     """The indices of dead queue entries whose `until` holds and cannot fall: a revival would pop them at once, so
-    they pop now (DESIGN.txt, "Greyed mix"); and every entry answering an answered offer, dead for good, whatever its
-    `until` (DESIGN.txt, "Dead")."""
-    return tuple(i for i, e in enumerate(save.queue) if _answered(save, rules, e.verb) or (
+    they pop now (DESIGN.txt, "Greyed mix"); and every entry answering an answered offer or tapping a completed card,
+    whatever its `until` (DESIGN.txt, "Dead", "Greyed mix")."""
+    return tuple(i for i, e in enumerate(save.queue) if _gone(save, rules, e.verb) or (
         is_dead(save, rules, e.verb) and not can_fall(e.until) and is_true(save, rules, e.until)))
 
 
-def _answered(save: Save, rules: Rules, verb: OrderVerb) -> bool:
-    return isinstance(verb, AnswerOffer) and is_dead(save, rules, verb)
+def _gone(save: Save, rules: Rules, verb: OrderVerb) -> bool:
+    """A dead entry the queue drops now: an answered offer's, or a completed card's (one run each: an entry of a card
+    at its cap could only wait for a raise, and is not kept for one)."""
+    return isinstance(verb, (AnswerOffer, TapCard)) and is_dead(save, rules, verb)
 
 
 def pending(save: Save, rules: Rules) -> list[Event]:
