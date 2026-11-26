@@ -5,6 +5,10 @@ its play's chapter, else, reading no play, the one naming NO_PLAY. A test marked
 plays another's plays again. Kept out of tests/weektwo so a change here leaves the saved ends' key alone (ends.py).
 
 WEEKTWO_SHARD=<name> runs one shard; unset, every test runs.
+WEEKTWO_SLICE=<chapter>[,<chapter>...] runs a pull request's slice: the tests that play those chapters, each from the saved
+end of the chapter before (ASHFALL_BASE_KEYS, tests/weektwo/ends.py), less the ones that read a chapter's own saved end, readings
+or rebased save, which only the full run writes. WEEKTWO_SLICE=smoke runs the tests marked `smoke`, played from the start.
+WEEKTWO_FILES=<path>[,<path>...] adds every test of those week-two test files to a slice.
 Run from app/: python -m tools.weektwo_shards --check   exits 1 unless each week-two playthrough test is selected by
                                                         exactly one shard, so a chapter added to routes.CHAPTERS fails
                                                         CI until a shard names it; then prints `matrix=<json>`, the
@@ -37,6 +41,9 @@ SHARDS: dict[str, frozenset[str]] = {
     "makers": frozenset({"makers"}),
 }
 ENV = "WEEKTWO_SHARD"
+SLICE = "WEEKTWO_SLICE"
+FILES = "WEEKTWO_FILES"
+SMOKE = "smoke"
 WEEK_TWO = Path(__file__).resolve().parents[1] / "tests" / "weektwo"
 ARGS = ["tests/weektwo"]
 SELECT = ("-m", "playthrough")
@@ -61,6 +68,16 @@ def chosen() -> str | None:
     if name is not None and name not in SHARDS:
         raise pytest.UsageError(f"{ENV}={name!r} is not a week-two shard: {sorted(SHARDS)}")
     return name
+
+
+def sliced() -> frozenset[str] | None:
+    """The chapters of this session's slice (SLICE), {SMOKE} for the smoke, None for no slice."""
+    names = [n for n in os.environ.get(SLICE, "").split(",") if n]
+    return frozenset(names) if names else None
+
+
+def files() -> frozenset[Path]:
+    return frozenset(Path(f).resolve() for f in os.environ.get(FILES, "").split(",") if f)
 
 
 def in_week_two(item: pytest.Item) -> bool:

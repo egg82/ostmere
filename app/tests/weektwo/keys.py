@@ -24,6 +24,8 @@ ORDER = ("week1", "eight", "nine", "eleven", "twelve", "fifteen", "sixteen", "ei
 """Every chapter with a saved end, in the order their plays build on each other ("week1" is week one's)."""
 APP = Path(__file__).resolve().parents[2]
 OPENING = "ashfall_app/opening"
+BEATS = "content/beats.yaml"
+"""The one story file the plays read (the pace and the level gates); the rest of content/ is read by tests that play nothing."""
 WEEK_ONE_CODE = ("tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone")
 MOVES = {c: "tests/weektwo/content.py" for c in ORDER[1:ORDER.index("twentytwo")]} | \
         {c: "tests/weektwo/weekfour.py" for c in ORDER[ORDER.index("twentytwo"):]}
@@ -45,7 +47,7 @@ def code_files(entry: str) -> list[Path]:
 def digest(files: list[Path]) -> str:
     h = hashlib.sha256()
     for f in files:
-        h.update(str(f.relative_to(APP)).encode() + b"\0" + f.read_bytes())
+        h.update(str(f.relative_to(APP.parent)).encode() + b"\0" + f.read_bytes())
     return h.hexdigest()
 
 
@@ -77,7 +79,8 @@ def shared_files() -> list[Path]:
     opening = sorted(f for f in (APP / OPENING).iterdir() if f.suffix in (".py", ".toml") and str(f) not in own)
     moves = {APP / m for m in set(MOVES.values())}
     weektwo = [f for f in code_files("tests/weektwo") if f not in moves]
-    return [*sorted((APP / "ashfall_app/engine").rglob("*.py")), *opening, *weektwo, *code_files("tools/chapter_saves.py")]
+    return [*sorted((APP / "ashfall_app/engine").rglob("*.py")), *opening, *weektwo, *code_files("tools/chapter_saves.py"),
+            APP.parent / BEATS]
 
 
 @cache
@@ -118,3 +121,8 @@ def clear() -> None:
     """Forget what was hashed (a test that changes a file)."""
     for f in CACHED:
         f.cache_clear()
+
+
+if __name__ == "__main__":
+    import json
+    print(json.dumps({"shared": shared(), "own": {c: own(c) for c in ORDER}, "key": {c: key(c) for c in ORDER}}))

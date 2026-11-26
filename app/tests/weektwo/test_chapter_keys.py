@@ -21,15 +21,18 @@ COPIED = ("ashfall_app/engine", "ashfall_app/opening", "tests/dayone", "tests/da
 @pytest.fixture
 def tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Generator[Path, None, None]:
     """The files the keys read, copied; the keys are read from the copy, with SHAPE held fixed (its own test is below)."""
+    app = tmp_path / "app"
+    (tmp_path / "content").mkdir()
+    shutil.copy(keys.APP.parent / keys.BEATS, tmp_path / keys.BEATS)
     for entry in COPIED:
         src = keys.APP / entry
-        dst = tmp_path / entry
+        dst = app / entry
         dst.parent.mkdir(parents=True, exist_ok=True)
         if src.is_dir():
             shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__", "captured"))
         else:
             shutil.copy(src, dst)
-    monkeypatch.setattr(keys, "APP", tmp_path)
+    monkeypatch.setattr(keys, "APP", app)
     monkeypatch.setattr(keys, "shape_digest", lambda: "shape")
     keys.clear()
     yield tmp_path
@@ -43,7 +46,7 @@ def all_keys() -> dict[str, str]:
 
 def after_editing(tree: Path, entry: str) -> tuple[dict[str, str], dict[str, str]]:
     before = all_keys()
-    path = tree / entry
+    path = tree / entry if entry.startswith("content") else tree / "app" / entry
     path.write_text(path.read_text() + "\n# edited\n")
     return before, all_keys()
 
@@ -75,7 +78,7 @@ def test_a_chapters_moves_re_key_the_chapters_that_file_holds_and_those_after(tr
 
 @pytest.mark.parametrize("entry", ["ashfall_app/engine/api.py", "ashfall_app/opening/schema.py",
                                    "ashfall_app/opening/opening.toml", "ashfall_app/opening/prestige.toml",
-                                   "tests/weektwo/routes.py", "tools/chapter_saves.py"])
+                                   "tests/weektwo/routes.py", "tools/chapter_saves.py", "content/beats.yaml"])
 def test_what_every_chapter_reads_re_keys_every_chapter(tree: Path, entry: str):
     before, after = after_editing(tree, entry)
     assert changed(before, after) == list(ORDER), entry
