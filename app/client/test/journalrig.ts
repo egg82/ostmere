@@ -67,13 +67,13 @@ export function rig(opts: { read?: string[]; notes?: string[]; lessons?: string[
   const tabDot = (): boolean => tab().querySelector(".new-dot") != null;
   const sheet = (): HTMLElement => q(".book")!;
   const actions = (): HTMLButtonElement[] => [...sheet().querySelectorAll<HTMLButtonElement>(".sheet-actions button")];
-  const [prev, next] = [1, 2].map((i) => () => actions()[i]!);
+  const [contents, prev, next] = [1, 2, 3].map((i) => () => actions()[i]!);
   /** Out of the journal: the sheet's Close on a phone, the Tasks tab on a desktop. */
   const close = (): HTMLElement => (phone ? actions()[0]! : q('.tabs [data-tab="cards"]')!);
   const words = (): string[] => [...sheet().querySelectorAll<HTMLElement>(".journal-words")].map((n) => n.textContent ?? "");
   /** The open page's day headings and words, in page order. */
   const written = (): string[] => [...sheet().querySelectorAll<HTMLElement>(".journal-day, .journal-words")].map((n) => n.textContent ?? "");
   const numbers = (): HTMLElement => sheet().querySelector<HTMLElement>(".journal-numbers")!;
-  return { screen, keeps, sent, asked, show, q, tab, button, open, dotShows, tabDot, sheet, close, prev: prev!, next: next!, words, written, numbers };
+  return { screen, keeps, sent, asked, show, q, tab, button, open, dotShows, tabDot, sheet, close, contents: contents!, prev: prev!, next: next!, words, written, numbers };
 }
 

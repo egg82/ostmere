@@ -453,9 +453,9 @@ Fight parts show once the `combat` feature is unlocked (api `CONTRACT.txt`, "FIG
 The book the player carries, written in: one page per thing known, its notes in the hand and its learned numbers
 under them (api `CONTRACT.txt`, "JOURNAL"; `decisions.md`, "What you learn is written in a journal" and, under Art,
 the type and the sketches). Fits into: Unlocks (entries and notes), Knowledge (the numbers, read off `View.fights`),
-Lessons (its first use), the Book (a page of it). Not a system: one caller, nothing to swap. The page's code is two
-files: `game/journal.ts` (pure: which pages and notes show, what is unread, the numbers rows, the seeded draws) and
-`ui/journal.ts` (the Book's Journal page).
+Lessons (its first use), the Book (a page of it). Not a system: one caller, nothing to swap. The page's code is
+`game/journal.ts` (pure: which pages and notes show, what is unread, how a turn runs, the contents, the numbers rows, the
+seeded draws), `ui/journal.ts` (the Book's Journal page) and `ui/journalnav.ts` (its controls for finding a page).
 
 ```
 phone, portrait                        desktop, and a phone in landscape
@@ -481,12 +481,23 @@ phone, portrait                        desktop, and a phone in landscape
   Book), and the book leaves the chips. Its page button and the Book's tab carry the quiet dot (`.new-dot`) while
   something written is unread (a note, or a day after the save's newest day read) and at no other time, so a new
   entry dots them through its notes. The Book's tab glows only as its lesson's step.
-- **The page's frame** is the Book's: its head, then the Book's actions row with `Prev` and `Next` after the phone
-  sheet's Close (`ui.close`) at the right end, under the thumb (on a desktop, centred under the spread, after it and
-  never over it). All are `.quiet` at 44 px (no step here is the obvious next one, so none is `.primary`); `Prev` is off
-  on the first page and `Next` on the last, never hidden, so neither moves. ← and → turn pages while it is open. It
-  opens on the first page holding something unread, else the page last shown in this page session, else the first.
-  Pages run by section: the days pages (below), then creatures and places in content order, one per entry written.
+- **The page's frame** is the Book's: its head, then the Book's actions row with `Contents`, `Prev`, the open page's
+  place in its section ("3 / 9") and `Next` after the phone sheet's Close (`ui.close`) at the right end, under the thumb
+  (on a desktop, centred under the spread, after it and never over it). The buttons are `.quiet` at 44 px (no step here
+  is the obvious next one, so none is `.primary`); `Prev` is off on the first page and `Next` on the last, never
+  hidden, so neither moves. ← and → turn pages while it is open. It opens on the first page holding something unread,
+  else the page last shown in this page session, else the first. Pages run by section: the days pages (below), then
+  creatures and places in content order, one per entry written.
+- **Prev and Next stay in the section.** At a section's last page `Next` is worded by the next section's bookmark
+  (`Creatures ›`), and at its first page `Prev` by the one before (`‹ Days`): the one way across, and it says where it
+  goes. Nothing is skipped: the book still runs page by page from first to last.
+- **The contents** (`ui.journal.contents`, the button after Close) swaps the page for the open section's pages as rows
+  in the parchment, in book order: a number, a title and the quiet dot while the page holds something unread; the open
+  page's row is marked and scrolled to. A days page is titled by the day it begins on (`ui.journal.day`), an entry's
+  page by the words of its first note (the entries have no title of their own). A row turns to its page; the button
+  turns back; a bookmark lists its section while the list is open. Listing reads nothing: only pages turned to count as
+  read. The list scrolls inside its own box, so the head, the bookmarks and the actions stay put, and the bookmarks
+  row scrolls sideways, the open section kept in view, if the sections outgrow the width.
 - **The days pages** hold the written days (`docs/design/journal.md`, "What the page draws"): each day's notes under
   its heading (`ui.journal.day`, in the hand at the notes' size, in `--hand-pencil`), days running on down a page; a
   note that does not fit starts a new page, headed again by its day, so a day still being written runs on over the

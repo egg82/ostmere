@@ -93,6 +93,45 @@ export function bookmarkPage(pages: Page[], section: Section, read: Reading): nu
   return own.find((i) => isUnread(pages[i]!, read)) ?? own.at(-1) ?? -1;
 }
 
+/** Where Prev or Next goes from page `at`: the section's next page; past a section's end, the adjacent section's near end,
+ * with `crossing` naming it so the control can say where it goes. Null at the book's ends. */
+export function turnOf(pages: Page[], at: number, by: -1 | 1): { to: number; crossing: Section | null } | null {
+  const here = pages[at];
+  const there = pages[at + by];
+  if (!here || !there) return null;
+  return { to: at + by, crossing: there.section === here.section ? null : there.section };
+}
+
+/** Page `at`'s place in its section: 1-based, of how many pages the section has. */
+export function placeOf(pages: Page[], at: number): { n: number; of: number } {
+  const own = pages.flatMap((p, i) => (p.section === pages[at]?.section ? [i] : []));
+  return { n: own.indexOf(at) + 1, of: own.length };
+}
+
+/** One line of a section's contents: the page it turns to, its title, whether it holds something unread, and whether it is
+ * the open page. */
+export interface ContentsRow {
+  index: number;
+  title: string;
+  unread: boolean;
+  current: boolean;
+}
+
+/** A page's title: a days page is headed by the day it begins on, an entry page by the words its first note is written in. */
+function titleOf(catalog: Catalog, page: Page, section: string): string {
+  const first = page.notes[0];
+  if (!first) return section;
+  if (first.day !== null) return catalog.text.fill(UI.journalDay, { n: String(first.day + 1) });
+  return catalog.text.get(first.key);
+}
+
+/** The contents of `section`: one row for each of its pages, in book order. */
+export function contentsOf(catalog: Catalog, pages: Page[], section: Section, read: Reading, at: number): ContentsRow[] {
+  const word = catalog.text.get(SECTIONS.find((s) => s.section === section)?.key ?? UI.journalHeading);
+  return pages.flatMap((p, index) => (p.section === section
+    ? [{ index, title: titleOf(catalog, p, word), unread: isUnread(p, read), current: index === at }] : []));
+}
+
 /** The book is a button from its first page on; until then it is the plain text of any feature with a label. */
 export function isButton(catalog: Catalog, view: View, pages: Page[]): boolean {
   const journal = catalog.content.journal;

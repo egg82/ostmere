@@ -18,8 +18,10 @@ import type { Content, JournalDay, Step, View } from "../src/api/types";
 import { fightsStep } from "./fights";
 import type { Kept } from "./steps";
 
-export type JournalPhase = "journal" | "journallesson" | "journaldays" | "journalall" | "journalweeks" | "journaltoday";
-export const JOURNAL_PHASES: readonly JournalPhase[] = ["journal", "journallesson", "journaldays", "journalall", "journalweeks", "journaltoday"];
+//   journalbook:   a synthetic long book, far past anything shipped: LONG_DAYS days of placeholder notes (many days pages),
+//                  LONG_CREATURES creatures pages and LONG_PLACES places pages, some read: for the contents and the turns at length.
+export type JournalPhase = "journal" | "journallesson" | "journaldays" | "journalall" | "journalweeks" | "journaltoday" | "journalbook";
+export const JOURNAL_PHASES: readonly JournalPhase[] = ["journal", "journallesson", "journaldays", "journalall", "journalweeks", "journaltoday", "journalbook"];
 
 export function isJournal(phase: string): phase is JournalPhase {
   return (JOURNAL_PHASES as readonly string[]).includes(phase);
@@ -100,6 +102,7 @@ export function journalView(base: View, notes: string[] = [...NOTES_A, NOTE_B]):
 
 export function journalStep(phase: JournalPhase, at: number, kept: Kept = {}, decisions = 0): Step {
   const base = fightsStep("fight", at, kept, decisions);
+  if (phase === "journalbook") return { ...base, view: longView(journalView(base.view, [])), journal_days: LONG_DAYS };
   const notes = phase === "journaldays" || phase === "journalweeks" || phase === "journaltoday" ? [] : phase === "journalall" ? [...NOTES_A, NOTE_C, NOTE_B] : undefined;
   const days = phase === "journalweeks" ? WEEKS : phase === "journaltoday" ? [...WEEKS.slice(0, 5), TODAY] : phase === "journaldays" || phase === "journalall" ? [DAY_D] : [];
   return { ...base, view: journalView(base.view, notes), journal_days: days };
@@ -134,3 +137,45 @@ export const WEEKS: JournalDay[] = [
 
 /** journaltoday's day still being written: WEEKS' day 5 with its first note so far. */
 export const TODAY: JournalDay = { ...WEEKS[5]!, day_notes: WEEKS[5]!.day_notes.slice(0, 1), marks: ["blood"] };
+
+export const LONG_DAYS_N = 90;
+export const LONG_CREATURES = 18;
+export const LONG_PLACES = 13;
+const SEEN = ["by the water", "past the birches", "under the ridge", "at the far stones", "near the old wall", "in the long grass"];
+const ENTRY_SECTIONS = [["creatures", LONG_CREATURES], ["places", LONG_PLACES]] as const;
+const longId = (section: string, i: number): string => `long_${section}_${i}`;
+const longNotes = (section: string, i: number): string[] => [`${longId(section, i)}_n0`, `${longId(section, i)}_n1`];
+
+/** The synthetic long book's days: three placeholder notes of about a sentence each for every day (never shipped). */
+export const LONG_DAYS: JournalDay[] = Array.from({ length: LONG_DAYS_N }, (_, d) => ({
+  day: d, marks: [],
+  day_notes: [0, 1, 2].map((n) => ({ subject: `s_long_${d}_${n}`, slot: "first" as const, key: `long_day_${d}_${n}`, hand: n === 1 ? "pencil" as const : "ink" as const, sketch: null, count: null })),
+}));
+
+/** The account's book notes read in journalbook: the first two thirds of each section's pages. */
+export const LONG_READ: string[] = ENTRY_SECTIONS.flatMap(([section, n]) =>
+  Array.from({ length: Math.floor(n * 2 / 3) }, (_, i) => longNotes(section, i)).flat());
+
+/** The newest day turned to in journalbook: the last third of the days are unread. */
+export const LONG_READ_TO = Math.floor(LONG_DAYS_N * 2 / 3);
+
+/** The content with the synthetic long book's entries and words, beside withJournal's. */
+export function withLongBook(content: Content): Content {
+  const entries = ENTRY_SECTIONS.flatMap(([section, n]) => Array.from({ length: n }, (_, i) => ({
+    entry: longId(section, i), section, sketch: null, runners: [],
+    notes: longNotes(section, i).map((note, k) => ({ note, hand: k === 1 ? "pencil" as const : "ink" as const, sketch: null })) })));
+  const words = [
+    ...ENTRY_SECTIONS.flatMap(([section, n]) => Array.from({ length: n }, (_, i) => longNotes(section, i).map((key, k) =>
+      ({ key, text: k === 0 ? `Placeholder ${section} page ${i + 1}, ${SEEN[i % SEEN.length]}.` : `A second placeholder note on page ${i + 1}.` }))).flat()),
+    ...LONG_DAYS.flatMap((d) => d.day_notes.map((n) => ({ key: n.key, text: `Placeholder note for day ${d.day + 1}, written ${SEEN[d.day % SEEN.length]} and long enough to take a row or two of the page.` }))),
+  ];
+  const base = content.journal!;
+  return { ...content, text_entries: [...content.text_entries, ...words], journal: { ...base, entries: [...base.entries, ...entries] } };
+}
+
+/** `view` with the long book's entries and notes unlocked. */
+function longView(view: View): View {
+  const unlocked = ENTRY_SECTIONS.flatMap(([section, n]) => Array.from({ length: n }, (_, i) =>
+    [{ category: "entry" as const, id: longId(section, i) }, ...longNotes(section, i).map((id) => ({ category: "note" as const, id }))]).flat());
+  return { ...view, unlocked: [...view.unlocked, ...unlocked] };
+}

@@ -8,12 +8,13 @@
 import type { JournalDay, View } from "../api/types";
 import { sing } from "../audio/cues";
 import { joinDays } from "../game/days";
-import { bookmarkPage, bookmarksOf, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, type NumbersRow, type Page, type Reading, type Section } from "../game/journal";
+import { bookmarkPage, isButton, isUnread, layoutOf, numbersOf, openingPage, pagesOf, turnOf, type NumbersRow, type Page, type Reading, type Section } from "../game/journal";
 import { wantedOf } from "../game/pagemarks";
 import { UI } from "../game/text";
 import { reportError } from "../telemetry";
 import type { BookPage } from "./book";
 import { el, tapFeedback } from "./dom";
+import { JournalNav } from "./journalnav";
 import { PageMarks } from "./pagemarks";
 import type { PartContext } from "./part";
 
@@ -35,10 +36,7 @@ export class Journal implements BookPage {
   private readonly spread = el("div", "journal-spread");
   private readonly left = el("div", "journal-page journal-left");
   private readonly pageMarks = new PageMarks(this.spread);
-  /** One bookmark for each section that has a page written, in the book's order. */
-  private readonly marks = el("nav", "tabs journal-bookmarks");
-  private readonly prev = el("button", "quiet");
-  private readonly next = el("button", "quiet");
+  private readonly nav: JournalNav;
   private view: View | null = null;
   /** Every written day served so far, oldest first. */
   private days: JournalDay[] = [];
@@ -49,7 +47,7 @@ export class Journal implements BookPage {
   /** The book notes, and the newest day, of the pages turned to since the sheet opened: kept as read when it closes. */
   private readonly turned = new Set<string>();
   private turnedDay: number | null = null;
-  private drawn = { page: "", notes: 0, numbers: "", sections: "" };
+  private drawn = { page: "", notes: 0, numbers: "" };
   private isOpen = false;
   private readonly failed = new Set<string>();
 
@@ -58,18 +56,13 @@ export class Journal implements BookPage {
     const { catalog } = ctx;
     this.label = catalog.text.get(UI.journalHeading);
     for (const d of this.dots) d.setAttribute("aria-hidden", "true");
-    for (const [b, key, by] of [[this.prev, UI.journalPrev, -1], [this.next, UI.journalNext, 1]] as const) {
-      b.type = "button";
-      b.textContent = catalog.text.get(key);
-      b.addEventListener("click", () => { tapFeedback(); this.turn(by); });
-    }
-    this.actions = [this.prev, this.next];
+    this.nav = new JournalNav(catalog, { turn: (by) => this.turn(by), toggle: () => this.toggleContents(), pick: (i) => this.turnToIndex(i), mark: (s) => this.turnTo(s) });
+    this.actions = this.nav.actions;
     this.left.append(this.sketch);
-    this.marks.setAttribute("aria-label", catalog.text.get(UI.journalHeading));
     const right = el("div", "journal-page journal-right");
     right.append(this.notes, this.numbers, this.pageMarks.layer);
     this.spread.append(this.left, right);
-    this.root.append(this.marks, this.spread);
+    this.root.append(this.nav.marks, this.spread, this.nav.list);
   }
 
   /** Its button in the Book's row: hidden until the journal shows, and dotted with it. */
@@ -79,6 +72,7 @@ export class Journal implements BookPage {
   }
 
   key(e: KeyboardEvent): void {
+    if (this.nav.listed !== null) return;
     if (e.key === "ArrowLeft") this.turn(-1);
     else if (e.key === "ArrowRight") this.turn(1);
   }
@@ -111,6 +105,13 @@ export class Journal implements BookPage {
     return { note: (n) => keeps.journalRead(n), newestDay: keeps.newestDayRead() };
   }
 
+  /** What has been read, with the pages turned to since the sheet opened: the contents' dots go as a page is turned to,
+   * though the write waits for the close. */
+  private get readNow(): Reading {
+    const kept = this.reading;
+    return { note: (n) => this.turned.has(n) || kept.note(n), newestDay: this.turnedDay === null ? kept.newestDay : Math.max(this.turnedDay, kept.newestDay ?? -1) };
+  }
+
   /** Its button shows with the journal, the Book's tab is its lesson's mark, and the dots show while something written
    * is unread, at no other time. */
   private sync(): void {
@@ -130,6 +131,7 @@ export class Journal implements BookPage {
     this.turned.clear();
     this.turnedDay = null;
     this.isOpen = true;
+    this.nav.show(null);
     this.go(openingPage(this.pages, this.reading, this.last), 0);
   }
 
@@ -138,8 +140,21 @@ export class Journal implements BookPage {
   }
 
   private turn(by: -1 | 1): void {
-    const to = this.index() + by;
-    if (to >= 0 && to < this.pages.length) this.go(to, by);
+    const turn = turnOf(this.pages, this.index(), by);
+    if (turn) this.go(turn.to, by);
+  }
+
+  /** The contents button swaps the page for its section's list and back; nothing is read by listing. */
+  private toggleContents(): void {
+    this.nav.show(this.nav.listed === null ? this.pages[this.index()]?.section ?? null : null);
+    this.draw(false);
+  }
+
+  /** A contents row turns to its page. */
+  private turnToIndex(i: number): void {
+    const by = Math.sign(i - this.index());
+    this.nav.show(null);
+    this.go(i, by);
   }
 
   /** Turns to page `i`: what is written on it now counts as read when the sheet closes. `by` is the side turned toward. */
@@ -169,41 +184,24 @@ export class Journal implements BookPage {
     const page = this.pages[this.index()];
     if (!page || !this.view) return;
     const at = this.index();
-    this.prev.disabled = at === 0;
-    this.next.disabled = at === this.pages.length - 1;
+    this.nav.drawTurns(this.pages, at);
+    this.nav.drawList(this.pages, at, this.readNow);
+    this.spread.hidden = this.nav.listed !== null;
+    this.nav.drawMarks(this.pages, this.nav.listed ?? page.section);
+    if (this.nav.listed !== null) return;
     if (whole || this.drawn.page !== page.id) this.drawPage(page);
     else this.appendNotes(page);
     this.drawNumbers(page);
-    this.drawMarks(page);
     this.pageMarks.show(wantedOf(this.ctx.saveId(), page, this.days));
-  }
-
-  /** The bookmarks of the sections written, the open page's section marked as the current one. */
-  private drawMarks(page: Page): void {
-    const sections = bookmarksOf(this.pages);
-    const key = sections.map((m) => m.section).join();
-    if (key !== this.drawn.sections) {
-      this.drawn.sections = key;
-      this.marks.replaceChildren(...sections.map((m) => this.bookmark(m.section, m.key)));
-    }
-    for (const b of Array.from(this.marks.children) as HTMLElement[]) {
-      const on = b.dataset["section"] === page.section;
-      b.classList.toggle("on", on);
-      if (on) b.setAttribute("aria-current", "true");
-      else b.removeAttribute("aria-current");
-    }
-  }
-
-  private bookmark(section: Section, key: string): HTMLButtonElement {
-    const b = el("button", "tab", this.ctx.catalog.text.get(key));
-    b.type = "button";
-    b.dataset["section"] = section;
-    b.addEventListener("click", () => { tapFeedback(); this.turnTo(section); });
-    return b;
   }
 
   /** A bookmark's page: the section's first with an unread note, else its latest. */
   private turnTo(section: Section): void {
+    if (this.nav.listed !== null) {
+      this.nav.show(section);
+      this.draw(false);
+      return;
+    }
     const to = bookmarkPage(this.pages, section, this.reading);
     if (to >= 0) this.go(to, Math.sign(to - this.index()));
   }

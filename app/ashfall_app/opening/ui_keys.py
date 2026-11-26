@@ -182,7 +182,7 @@ UI_KEYS: tuple[str, ...] = (
     "ui.fight.since",
     "ui.fight.won",
     "ui.fight.lost",
-    "ui.journal.heading", "ui.journal.prev", "ui.journal.next", "ui.journal.days", "ui.journal.creatures", "ui.journal.places",
+    "ui.journal.heading", "ui.journal.prev", "ui.journal.next", "ui.journal.contents", "ui.journal.days", "ui.journal.creatures", "ui.journal.places",
     "ui.journal.day", "ui.journal.fold",
     "ui.lesson.journal_open", "ui.lesson.journal_notes", "ui.lesson.journal_numbers",
     "ui.book.map", "ui.map.heading", "ui.lesson.map_open", "ui.lesson.map_places",

@@ -11,7 +11,7 @@ import { dayOneStep, isDayOne } from "./dayone";
 import { dayTwoStep, isDayTwo } from "./daytwo";
 import { fightsStep, isFights } from "./fights";
 import { fixtureGames } from "./games";
-import { isJournal, journalStep, READ_TO } from "./journal";
+import { isJournal, journalStep, LONG_READ, LONG_READ_TO, READ_TO } from "./journal";
 import { isPrestige, prestigeStep } from "./prestige";
 import { isGroups, groupsStep } from "./groups";
 import { isTown, townStep } from "./town";
@@ -36,9 +36,9 @@ export function fixtureApi(first: Phase, unavailable = false, seen = false, limi
   let began = Date.now();
   const now = (): number => Math.floor((Date.now() - began) / 1000);
   const taught = first === "repeattap" || first === "repeatswitch" || isDayTwo(first) || isFights(first) || isJournal(first) || isTown(first) || isGroups(first) || isPrestige(first) || isChronicle(first) || isSince(first) || isAsks(first) || isLedgerRules(first) || isGuards(first) || isFeel(first);   // the repeat offers come only after the lessons
-  const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: [] };
+  const player: AccountPresentation = { rules_opened: false, devices_opened: false, reminder_mentioned: false, ledger_lines: [], mix_stopped: [], switch_offered: [], journal_read: first === "journalbook" ? LONG_READ : [] };
   const taughtSave: SavePresentation = { rule_seen: seen, mix_offered: [], lines_touched: [], lane_tasks_seen: [], lessons: taught ? [FIRST_MIX, FIRST_RULE, ...(first === "journal" ? [JOURNAL] : [])] : [], lesson_ends: [], visits: isChronicle(first) ? CHRONICLE_VISITS : isSince(first) ? SINCE_VISITS : [],
-    newest_day_read: first === "journalweeks" || first === "journaltoday" ? READ_TO : null };
+    newest_day_read: first === "journalbook" ? LONG_READ_TO : first === "journalweeks" || first === "journaltoday" ? READ_TO : null };
   const settings: AccountSettings = { lessons: true };
   const info = (): SaveInfo => ({
     save_id: 1, number: 1, decisions, game_time: now(), ended_at: null, started_at: new Date(began).toISOString(),
