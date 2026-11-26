@@ -227,7 +227,7 @@ def from_saved(chapter: str) -> Rebased:
     """The chapter's saved save (ends.py), decoded under its old rules, rebased onto today's and played on; where none
     is saved, the save written from typical's play from the start."""
     old = OLD[chapter]()
-    if not ends.available():
+    if not ends.available(chapter):
         return loaded_on(decode(written(chapter, played(chapter, "typical")).text, old), old)
     try:
         before = decode(ends.rebased_text(chapter).text, old)

@@ -12,10 +12,23 @@ and every push to `main`. Its `changes` job sorts the run: a pull request that c
 Markdown or `LICENSE` runs `docs` (the citation tests and the household-names guard), and anything else runs the
 per-PR set: `tests` (three shards, on a `postgres:18.6` container, production's version), `shards-cover`,
 `playthrough-smoke` (the opening's representative routes), `engine-bench`, strict `pyright` and
-`client`, while `app-image` builds `app/Containerfile` beside them. The whole-game playthroughs (`playthrough`,
-`chapter-saves`, `chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`, `chapter-saves-rebased`, `playthrough-week-one`, `playthrough-week-one-saved`, `playthrough-week-two`) are the full run:
-nightly on `main`, on a manual dispatch, and on a pull request that touches a path the playthroughs depend on
-(`app/tools/playthrough_paths.txt`, generated) or carries the `playthroughs` label, which forces it. A pull request builds the
+`client`, while `app-image` builds `app/Containerfile` beside them. A pull request also plays the chapters it touches (`slice` decides, `app/tools/pr_plan.py`;
+`playthrough-slice` plays): a chapter is touched when its own files changed from the base's (its day toml, the file its
+moves live in, week one's own code), and each touched chapter's tests play on from the last nightly's saved end of the
+chapter before it. `playthrough-slice` runs one job per week-two shard of a touched chapter
+(`weektwo_shards.shards_of_chapter`), with a 6-minute timeout: the 10-minute critical path in `test_ci_budget.py` less
+`changes`, `slice` and `ci-ok`. `slice` restores the last nightly's saves and plans the smoke instead when a shard's
+saved end of the chapter before is missing, saying why in the job summary. Shards whose slowest play, plus setup and
+10% margin, is over 6 minutes are named in `weektwo_shards.NIGHTLY_ONLY` and play only in the full run; a pull request
+touching only those plays nothing of week two. A shard leaves that set by being split or made cheaper, never by a
+longer timeout. A change to what every chapter reads (the engine, the
+opening's loader and shared data, the rules' ids and structure, `content/beats.yaml`, the shared play code), to week
+one, or a base without keys, gets the smoke instead: the day-eight plays of the push routes, from the start
+(`@pytest.mark.smoke`). The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,
+`playthrough-week-one-saved`, `playthrough-week-two`, `publish-ends`) are the full run: nightly on `main`, on a manual
+dispatch, and on a pull request labelled `playthroughs`, which is an opt-in and not part of any writer's routine. A red
+nightly holds the next release (`release` fails while the last completed nightly on `main` failed): dispatch Nightly on
+`main` once it is fixed, and re-run the held job when it is green. A pull request builds the
 image and pushes nothing. On `main` the image is pushed by
 digest alone, and once `ci-ok` is green `release` tags that digest `dev` and `main-<sha8>-<commit ts>`, so the deploy
 waits for green; commit timestamps may not go backwards, because the tags are ordered by string, and `release` refuses
@@ -56,6 +69,12 @@ calls a model.
 
 A job whose readout differs from its committed text fails after uploading what the code now renders;
 `python -m tools.readouts_pull <run-id>` (from `app/`) copies a red run's readouts into `app/tests/readouts/` to commit.
+Readouts are refreshed from CI, never replayed locally: push, let the pull request's run go red (each job whose readout
+differs leaves a `readouts-new-*` artifact and fails), pull, commit. A default pull request produces the readouts of the
+chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. To see
+every readout the change can move, including the chapters after the touched one, add the `playthroughs` label: the
+full run plays every chapter from the last nightly's saves and replays only the chapters whose key is new. A red
+nightly's readouts are pulled the same way from its run id.
 
 ## Patterns
 
@@ -139,7 +158,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/test_scene_people.py` (the field is `whereabouts` on an outcome, `entries.WhereaboutsEntry`; layer ids come from `layers` in the committed `tools/scene/shown.json`) | every outcome that joins or leaves a person names, per person, a scene layer that shows it or a `no_scene` reason; every named layer and person exists; fails when a held case gains its entry or names no outcome | `HELD_UNPLACED` in `tools/scene/people.py` (only shrinks) |
 | `app/tests/opening/test_pool_checks.py` (`app/ashfall_app/opening/pool_checks.py`) | a line a source says again and again (a chip's off lines, a fight's won and lost lines, a people band's lines) draws from at least `MIN_POOL` (6) different keys, and an uncapped card says no line; counts keys, never reads them | none |
 | `app/tests/test_canon_ids.py` | every `C-<area>-<n>` and `D-<n>` id cited in the repo's text is a row of `content/canon.jsonl` or `content/decisions.jsonl`; canon rows keep their fields, a status of canon or tentative, and a source (`file#heading`) that resolves; decision rows keep their fields, status, date and by | none |
-| `app/tests/test_playthrough_paths.py` | every path the playthrough-marked tests depend on (computed by `app/tools/playthrough_paths.py`) is covered by the committed `app/tools/playthrough_paths.txt`, which CI's `changes` job reads to make a pull request run the playthroughs; regenerate with `python -m tools.playthrough_paths --write` from `app/` | none (the list is generated) |
+| `app/tests/test_ci_budget.py` | every job in `ci.yml` is classed pull-request, full-run or main-only, and the longest chain of pull-request jobs at their `timeout-minutes` is at most 10 minutes | none |
 | `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
 The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.
@@ -150,11 +169,12 @@ and counts, never the names). Test fixtures use neutral site names (`site-a`, `s
 
 ## Scope and test budget
 
-A single-player web game with an API, played by its owner. **A pull request's CI takes about 5 minutes of wall clock**
+A single-player web game with an API, played by its owner. **A pull request's CI takes about 10 minutes of wall clock**
 (a docs-only one about a minute), and the nightly full run is where the whole-game simulations live. The yardstick is
 an outside one, never the suite's own history: a unit test costs milliseconds, 0.05 s at most. Each job's
 `timeout-minutes` in `ci.yml` is its budget, so a job that outgrows it goes red instead of quietly slowing every pull
-request. Locally, and in every subagent, run the tests a change touches plus the structural gates; CI runs the rest.
+request. The pull-request jobs' timeouts sum to at most 10 minutes on their longest chain, which `test_ci_budget.py`
+checks; a job that needs more is split or moves to the nightly, never given a longer timeout. Locally, and in every subagent, run the tests a change touches plus the structural gates; CI runs the rest.
 
 Test depth follows risk. The engine, saves, catch-up maths, the content loader and its checks, accounts and anything
 that can lose a player's progress get behaviour-level tests written first, blind where they are a contract. Routes,
@@ -201,14 +221,20 @@ suite still runs in seconds.
 - **Week two's chapters play on from saved ends, so its job grows by one chapter per chapter**
   (`app/tests/weektwo/ends.py`): each chapter starts from the saved end of the one before, and the rebased saves are
   read, not replayed from the start. The saves are not in git: `python tools/chapter_saves.py --write` (from `app/`,
-  with `PYTHONPATH=.`, about 11 minutes) writes them under `~/.cache/ashfall/chapter-saves/<key>/`, the key hashing
-  what they depend on (`ends.key()`: the rules, the engine's source, the play code). The typical route's heavy-step readings,
+  with `PYTHONPATH=.`, about 11 minutes) writes them under `~/.cache/ashfall/chapter-saves/`, one directory per chapter, named by that
+  chapter's key (`app/tests/weektwo/keys.py`): a hash of the shared inputs (the engine, the opening's loader and shared
+  data, the shape of the rules with its numbers masked, the code that plays every chapter), the chapter's own files and
+  the key of the chapter before, so a change to one chapter re-keys it and the ones after it and leaves the ones before
+  alone. The typical route's heavy-step readings,
   minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
   them. CI's `chapter-saves` jobs write them in parts: one per route chain, then, after typical's last link,
   `chapter-saves-rebased` (replaying typical's decisions from its saved ends) and `chapter-saves-readings`, whose parts
   start from typical's saved end (`chapter_saves.typical_through`) rather than replaying the play, so a part costs only
-  its own steps; a part near its limit is split by moving a span in `ends.READINGS` plus its matrix entry. Each keeps its saves in the Actions
-  cache under that key and hands them to the week-one-saved and week-two jobs as artifacts the readers merge. A route
+  its own steps; a part near its limit is split by moving a span in `ends.READINGS` plus its matrix entry. Each job restores the last nightly's
+  saves (`publish-ends` caches the merged saves on `main`), writes only the chapters whose key is new (`chapter_saves.py`
+  keeps a file present under today's key; `--prune` drops the directories of keys no chapter has), and hands what it
+  wrote to the readers as artifacts they merge over the restored saves. A local `--write` is incremental the same way:
+  after a change to one chapter, only it and the chapters after it replay. A route
   chain too long for one job is written in links (`LINKS` in `app/tools/chapter_saves.py`), each its own job after the one before
   (`chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`), starting from the saved end the link before uploaded; when a chapter pushes the
   last link past about 18 minutes on GitHub's runner, add a link: one `LINKS` entry and one job copying the last. Week two's job runs one shard per chapter, day
@@ -218,7 +244,10 @@ suite still runs in seconds.
   unless the test's `weektwo_shard` marker names the shard that pays), and a new play fixture is named in the week-two conftest's `EIGHT_PLAYS` so the shards place its readers;
   `shards-cover` fails unless the shards select each week-two test exactly once, and hands their names to the job as
   its matrix. With no saves for today's key the plays run from the start, so a local run needs no step; CI sets
-  `ASHFALL_REQUIRE_SAVED=1`, which makes a missing or stale save a failure. A saved end is held to today's play link
+  `ASHFALL_REQUIRE_SAVED=1`, which makes a missing save a failure (a stale one is a missing one: the key names
+  what it was played from). A chapter's saved end loads only under rules of the same shape, and a later chapter's
+  numbers reach an earlier play only where later content shows inside an earlier span; the nightly's chain from the
+  restored saves does not check that, so a full run with an empty cache is the check. A saved end is held to today's play link
   by link: a chapter played on must end at its own saved end. Week one's first link is `playthrough-week-one-saved`
   (`app/tests/weekone_saved`): week one's job exports its push routes' plays as an artifact and that job compares them
   with the saved ends, so week one's plays wait on nothing.

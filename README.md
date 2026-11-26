@@ -112,8 +112,8 @@ export ASHFALL_TEST_PG=postgresql://postgres@127.0.0.1:5433/postgres
 
 Before a pull request, run `app/tools/gates.sh` from anywhere (it needs the dev requirements installed and `npm ci`
 done). It runs the structural gates: file and function size, import boundaries and a time limit per test. GitHub
-Actions runs the full suite on every pull request, and the scripted playthroughs nightly, on pull requests that
-change a file they depend on (`app/tools/playthrough_paths.txt`), and on pull requests labelled `playthroughs`.
+Actions runs the full suite on every pull request, plus the playthroughs of the chapters it touches (or a smoke play
+for a shared change); the whole-game playthroughs run nightly and on pull requests labelled `playthroughs`.
 `docs/engineering.md` has the details.
 
 - `docs/decisions.md`: the design decisions, indexed, with one file per system in `docs/decisions/`.

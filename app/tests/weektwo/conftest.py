@@ -116,6 +116,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     mark_plays(items, EIGHT_PLAYS, PLAY_TIMEOUT_S)
     group_by_play(items)
     keep_shard(config, items)
+    keep_slice(config, items)
     items.sort(key=played_first)
 
 
@@ -126,6 +127,32 @@ def keep_shard(config: pytest.Config, items: list[pytest.Item]) -> None:
     if name is None:
         return
     dropped = [i for i in items if shards.in_week_two(i) and shards.shard_of(play_of(i), named_shard(i)) != name]
+    if dropped:
+        config.hook.pytest_deselected(items=dropped)
+        gone = set(map(id, dropped))
+        items[:] = [i for i in items if id(i) not in gone]
+
+
+FULL_RUN_ONLY = frozenset({f"{c}_counts" for c in CHAPTERS} | {"week_part", "chapter_end", "rebased_inputs"} | set(AFTER))
+"""The fixtures that read what only the full run writes: a chapter's own saved end, its heavy-step readings and its
+rebased save, all under keys a changed chapter does not have yet."""
+
+
+def keep_slice(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Under WEEKTWO_SLICE, keep of the week-two tests the slice's (tools/weektwo_shards.py); tests elsewhere are kept."""
+    chosen = shards.sliced()
+    if chosen is None:
+        return
+    named = shards.files()
+
+    def kept(item: pytest.Item) -> bool:
+        if shards.SMOKE in chosen:
+            return item.get_closest_marker(shards.SMOKE) is not None
+        play = play_of(item)
+        mine = (play is not None and play[0] in chosen) or item.path.resolve() in named
+        return mine and not FULL_RUN_ONLY & set(getattr(item, "fixturenames", ()))
+
+    dropped = [i for i in items if shards.in_week_two(i) and not kept(i)]
     if dropped:
         config.hook.pytest_deselected(items=dropped)
         gone = set(map(id, dropped))
@@ -297,7 +324,7 @@ def rebased_inputs(request: pytest.FixtureRequest) -> tuple[str, str]:
     chapter: str = request.param
     p = verdicts.PLAYS[chapter]("typical")
     now = rebased.inputs(p, rebased.ENDS[chapter](p))
-    return (ends.rebased_text(chapter).inputs if ends.available() else now), now
+    return (ends.rebased_text(chapter).inputs if ends.available(chapter) else now), now
 
 
 @pytest.fixture(scope="session")
