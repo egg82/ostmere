@@ -54,7 +54,7 @@ EIGHTEEN_HOURS = ("B15", "SL27", "T7", "T8", "T9", "arr15", "B16")
 NINETEEN_HOURS = ("B16", "T10", "T11", "SL28", "B17", "T12", "A38", "T13")
 TWENTYTWO_HOURS = ("T13", "I1", "B18", "SL29", "I2", "I3", "I4", "SL30", "B19")
 TWENTYTHREE_HOURS = ("B19", "SL31", "I5", "I6", "O-book", "SL32", "I7", "SL33", "A39", "B20")
-TWENTYFIVE_HOURS = ("B20", "I8", "I9", "SL35", "I10", "O-widowers", "B21")
+TWENTYFIVE_HOURS = ("B20", "I8", "I9", "SL34", "SL35", "I10", "O-widowers", "B21")
 ROUTES = NINE_PUSH_ROUTES
 """The routes each chapter's readout lists."""
 NAMES = tuple(n for c in verdicts.CHAPTERS for n in (*(f"weektwo-{c}-{r}" for r in ROUTES), f"weektwo-{c}"))
