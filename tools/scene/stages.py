@@ -199,7 +199,8 @@ STAGES["65_stone"] = _ALL.then(kept_clock=30)
 STAGES["65_stranger"] = _ALL.then({"feature:stranger_home"})
 STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
 STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_hearth_pick"})
-STAGES["65_singing"] = _ALL.then(still_clock=30, arrivals=3)
+STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
+STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
 
 
 def holds(cond: str | None, state: State) -> bool:
@@ -227,11 +228,15 @@ CONDITIONS = {
     "chip:<id>": "the chip is showing",
     "feature:<id>": "the feature is unlocked",
     "action:<id>": "the standing action is unlocked (it runs by itself from then on)",
+    "answered:<offer>": "the offer has been answered, by any answer",
+    "answer:<answer>": "that answer was the one given",
+    "joined:<lane>": "the lane's person has joined the town",
+    "left:<lane>": "the lane's person has left the town for good",
     "end:showing": "the end has happened: the end feature was unlocked with every ledger line covered (it never clears)",
     "<a>|<b>|...": "any of the conditions holds",
     "<a>&<b>&...": "all of the conditions hold; binds tighter than |, so a&b|c is (a and b) or c",
 }
 
 
-KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action"}
+KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left"}
 """The condition kinds the page knows (app/client/src/scene/conditions.ts)."""

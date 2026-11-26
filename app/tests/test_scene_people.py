@@ -2,6 +2,7 @@
 says why none does (`whereabouts`). The cases the scene shows nothing of today are held (`HELD_UNPLACED`, only shrinks);
 a field's layer must be one the committed shown.json lists."""
 import json
+import re
 import sys
 from collections.abc import Collection, Iterable
 from functools import cache
@@ -118,3 +119,27 @@ def test_the_audit_finds_outcomes_in_every_owner_kind():
     assert kinds == {"trigger", "card", "offer"}
     assert "trigger:t_joins" in found and any(o.joins for o in found.values())
 
+
+
+UNLOCK_ATOM = re.compile(r"\b(answered|answer|joined|left):([a-z][a-z0-9_]*)")
+
+
+def unknown_ids(source: str, known: dict[str, set[str]]) -> list[str]:
+    """`answered:`, `answer:`, `joined:` and `left:` atoms in `source` naming an id the content lacks."""
+    return sorted(f"{k}:{i}" for k, i in set(UNLOCK_ATOM.findall(source)) if i not in known[k])
+
+
+def known_ids() -> dict[str, set[str]]:
+    o = opening()
+    lanes = {lane.id for lane in o.lanes}
+    return {"answered": {x.id for x in o.offers}, "answer": {a.id for x in o.offers for a in x.answers},
+            "joined": lanes, "left": lanes}
+
+
+def test_the_answer_and_join_conditions_name_ids_the_content_has():
+    known = known_ids()
+    assert unknown_ids("when='answered:o_ok&answer:o_ok_no|joined:n1|left:nope'", {k: {"o_ok", "o_ok_no", "n1"} for k in known}) \
+        == ["left:nope"], "the check must be able to fail"
+    read = "\n".join(p.read_text() for p in sorted(SCENE.glob("*.py")))
+    assert UNLOCK_ATOM.search(read), "no scene module reads an answer or a join"
+    assert unknown_ids(read, known) == []

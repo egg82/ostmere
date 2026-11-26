@@ -98,7 +98,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE[0]), when=field),
         Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=field),
         Layer(id="figure_n7_at_pot", img=person(BROTHER, "left", POT_RIGHT), when=picking),
-        *[Layer(id=f"figure_n{n}_singing", img=person(who, "down", at), when=f"{sing}&store:arrivals@3", until=sing_out)
+        *[Layer(id=f"figure_n{n}_singing", img=person(who, "down", at), when=f"{sing}&answered:o_choir", until=sing_out)
           for n, who, at in zip((8, 9, 10), SINGERS, SINGING_AT)],
     ]
 

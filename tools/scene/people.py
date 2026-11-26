@@ -4,17 +4,6 @@ the scene layer that shows it or says why none does (`whereabouts`, entries.Wher
 app/tests/test_scene_people.py holds every join and leave to the field, and the cases in `HELD_UNPLACED` to the audit."""
 
 HELD_UNPLACED: frozenset[str] = frozenset({
-    "offer:j_drag_marks/j_drag_marks_no:n1",
-    "offer:j_leaning_wall/j_leaning_wall_no:n1",
-    "offer:j_midden/j_midden_no:n1",
-    "offer:j_ridge/j_ridge_no:n1",
-    "offer:j_show_fish/j_show_fish_no:n1",
-    "offer:j_smoke_hole/j_smoke_hole_no:n1",
-    "offer:j_snares/j_snares_no:n1",
-    "offer:j_steam_hole/j_steam_hole_no:n1",
-    "offer:j_steps/j_steps_no:n1",
-    "offer:j_tally/j_tally_no:n1",
-    "offer:j_wedged/j_wedged_no:n1",
     "offer:o_choir/o_choir_beds:n10",
     "offer:o_choir/o_choir_beds:n8",
     "offer:o_choir/o_choir_beds:n9",

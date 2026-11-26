@@ -433,6 +433,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_midden_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "dig_midden"
@@ -469,6 +470,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_leaning_wall_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "pull_wall"
@@ -505,6 +507,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_steam_hole_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "steam_hole"
