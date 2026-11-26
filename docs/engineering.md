@@ -197,8 +197,10 @@ suite still runs in seconds.
   with `PYTHONPATH=.`, about 11 minutes) writes them under `~/.cache/ashfall/chapter-saves/<key>/`, the key hashing
   what they depend on (`ends.key()`: the rules, the engine's source, the play code). The typical route's heavy-step readings,
   minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
-  them. CI's `chapter-saves` job writes them in parts, one per route chain or readings part (typical's rebased saves come after, from
-  `chapter-saves-rebased`, replaying typical's decisions from its saved ends), keeps each in the Actions
+  them. CI's `chapter-saves` jobs write them in parts: one per route chain, then, after typical's last link,
+  `chapter-saves-rebased` (replaying typical's decisions from its saved ends) and `chapter-saves-readings`, whose parts
+  start from typical's saved end (`chapter_saves.typical_through`) rather than replaying the play, so a part costs only
+  its own steps; a part near its limit is split by moving a span in `ends.READINGS` plus its matrix entry. Each keeps its saves in the Actions
   cache under that key and hands them to the week-one-saved and week-two jobs as artifacts the readers merge. A route
   chain too long for one job is written in links (`LINKS` in `app/tools/chapter_saves.py`), each its own job after the one before
   (`chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`), starting from the saved end the link before uploaded; when a chapter pushes the
