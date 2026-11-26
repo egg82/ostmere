@@ -2,7 +2,7 @@
 1): the hours day eight's beats land, its visits with spend and decide (queuing a stage refused) per visit and per
 absence, the fights each runner fought and lost, the chapter's spine beats beside their target days, what each absence
 opens, and what the stores lose to their caps away from the chapter's end; the same for days nine, eleven, twelve,
-fifteen, sixteen, eighteen, nineteen, twenty-two, twenty-three and twenty-five.
+fifteen, sixteen, eighteen, nineteen, twenty-two, twenty-three and twenty-five; and the whole game's pacing readout (pacing.py).
 The readouts (NAMES: per chapter, one per route and one for typical's visits) are committed under tests/readouts/ and
 compared by test_weektwo_readouts.py; nothing in them is a threshold. Minutes, hours and ids only (CLAUDE.md, "Never
 spoil the owner").
@@ -39,7 +39,7 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.dayone import daily
 from tests.weekone import verdicts as v1
 from tests.weekone.report import chapter_text, fought
-from tests.weektwo import verdicts
+from tests.weektwo import pacing, verdicts
 from tests.weektwo.routes import (
     NINE_PUSH_ROUTES, eighteen, eleven, fifteen, nine, nineteen, sixteen, twelve, twentyfive, twentythree, twentytwo, week2,
 )
@@ -57,7 +57,9 @@ TWENTYTHREE_HOURS = ("B19", "SL31", "I5", "I6", "O-book", "SL32", "I7", "SL33", 
 TWENTYFIVE_HOURS = ("B20", "I8", "I9", "SL34", "SL35", "I10", "O-widowers", "B21")
 ROUTES = NINE_PUSH_ROUTES
 """The routes each chapter's readout lists."""
-NAMES = tuple(n for c in verdicts.CHAPTERS for n in (*(f"weektwo-{c}-{r}" for r in ROUTES), f"weektwo-{c}"))
+PACING = tuple(f"weektwo-pacing-{r}" for r in ROUTES)
+"""The whole game's pacing readouts, one per route (pacing.py)."""
+NAMES = (*(n for c in verdicts.CHAPTERS for n in (*(f"weektwo-{c}-{r}" for r in ROUTES), f"weektwo-{c}")), *PACING)
 BLOOM = StoreId("bloom")
 
 
@@ -92,6 +94,9 @@ def readouts() -> dict[str, str]:
         found = verdicts.counts(p, verdicts.CHAPTERS[chapter], verdicts.typical_decided(chapter))
         texts[f"weektwo-{chapter}"] = chapter_text(chapter, found, checks2.marks(p, first=1),
                                                    v1.cap_lines(p, verdicts.CHAPTERS[chapter]))
+    for name in ROUTES:
+        p = twentyfive(name)
+        texts[f"weektwo-pacing-{name}"] = pacing.text(name, p, verdicts.calendar_days(p))
     return texts
 
 
