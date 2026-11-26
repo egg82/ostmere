@@ -12,7 +12,7 @@ from tests.dayone.policy import Move
 from tests.dayone.sinks import Chapter, Trip
 from tests.weekone import content as w1
 from tests.weektwo import policy as p8
-from tests.weektwo.policy import Split, WeekTwoKnobs, card, feature
+from tests.weektwo.policy import Split, WeekTwoKnobs, answer, card, feature
 
 PALISADE, HIDE_FLAPS = CardId("palisade"), CardId("hide_flaps")
 EIGHT = Landings(
@@ -123,16 +123,24 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        *(Split(n, ((f"{n}_reap", 5000), (f"{n}_forage", 5000)), feature("r2_open")) for n in ("n8", "n9", "n10")),
+        Split("g_field", (("g_field_clear_road", 6000), ("g_field_forage", 2000), ("g_field_watch", 2000)), answer("o_choir_road")),
+        Split("g_field", (("g_field_clear_road", 5714), ("g_field_reap", 1429), ("g_field_forage", 1429), ("g_field_watch", 1428)),
+              answer("o_cutter_beds")),
+        Split("g_field", (("g_field_reap", 4167), ("g_field_forage", 4166), ("g_field_watch", 1667)), feature("r2_open")),
         Split("n2", (("n2_watch", 5000), ("n2_forage", 5000)), feature("r2_open")),
-        Split("n9", (("n9_walk_ashwood", 2500), ("n9_forage", 7500)), feature("ashwood")),
+        Split("g_field", (("g_field_reap", 3333), ("g_field_forage", 5000), ("g_field_watch", 1667)), feature("ashwood")),
+        Split("n2", (("n2_walk_ashwood", 2500), ("n2_forage", 2500), ("n2_watch", 5000)), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_forage", 5000)), feature("sorrel_named")),
+        Split("g_road", (("g_road_fog_fish", 5000), ("g_road_fungus_stew", 5000)), answer("o_fiddle_food")),
+        Split("g_road", (("g_road_fog_fish", 1667), ("g_road_fungus_stew", 8333)), answer("o_walkers_food")),
+        Split("g_road", (("g_road_fog_fish", 1111), ("g_road_fungus_stew", 5556), ("g_road_stakes", 3333)), answer("o_widowers_build")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
 hands' roots rule then taps every few seconds). Once the pack has come in round the open side (E2) his foraging goes to
 the watch; once the ring is closed his stakes go back to foraging, until the hut is asked for (B10's offer answered by
-the hands) and done (Z1)."""
+the hands) and done (Z1). A group's split at each moment is the mean, over its members then, of the shares each had
+on their own split before groups (so each card keeps its person-time); a walk the field crew cannot take goes to n2."""
 SHARP = WeekTwoKnobs(
     splits=(
         Split("n2", (("n2_stakes", 10000),), card("palisade")),
@@ -143,13 +151,20 @@ SHARP = WeekTwoKnobs(
         Split("n2", (("n2_watch", 10000),), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        Split("n12", (("n12_reap", 5000), ("n12_forage", 5000)), feature("r2_open")),
+        Split("g_field", (("g_field_reap", 6000), ("g_field_forage", 2000), ("g_field_watch", 2000)), answer("o_choir_beds")),
+        Split("g_field", (("g_field_reap", 4286), ("g_field_clear_road", 2857), ("g_field_forage", 1429), ("g_field_watch", 1428)),
+              answer("o_cutter_road")),
+        Split("g_field", (("g_field_reap", 5833), ("g_field_forage", 2500), ("g_field_watch", 1667)), feature("r2_open")),
         Split("n2", (("n2_watch", 10000),), feature("r2_open")),
-        Split("n12", (("n12_walk_ashwood", 5000), ("n12_forage", 5000)), feature("ashwood")),
+        Split("g_field", (("g_field_reap", 5000), ("g_field_forage", 2500), ("g_field_watch", 2500)), feature("ashwood")),
+        Split("n2", (("n2_walk_ashwood", 5000), ("n2_watch", 5000)), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_fog_fish", 5000)), feature("sorrel_named")),
+        Split("g_road", (("g_road_clear_road", 5000), ("g_road_stakes", 5000)), answer("o_fiddle_build")),
+        Split("g_road", (("g_road_clear_road", 8333), ("g_road_stakes", 1667)), answer("o_walkers_build")),
+        Split("g_road", (("g_road_clear_road", 5556), ("g_road_stakes", 1111), ("g_road_fungus_stew", 3333)), answer("o_widowers_food")),
     ))
 """Once the road is over the top (B17) both routes take the lanes they had clearing it to the beds and the roots; once
-the town can walk the Ashwood (B18) each puts one of them on the walk beside the roots, the beds being over."""
+the town can walk the Ashwood (B18) n2 takes the walk one of them had, the beds being over. Group shares as typical's."""
 KNOBS = {"sharp": SHARP}
 """Each route's split; a route not named follows typical."""
 HANDS = {"typical": (1500, 0), "sharp": (3000, 0)}

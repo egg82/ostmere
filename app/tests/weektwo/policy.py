@@ -11,8 +11,8 @@ from tests.dayone.policy import Move
 
 @dataclass(frozen=True)
 class Split:
-    """One person's time in the town's mix once `after` is unlocked: each card at its share. Per lane the last split
-    whose `after` holds is the one kept."""
+    """One person's or one group's time in the town's mix once `after` is unlocked: each card at its share (a group's, of
+    each member's time). Per lane the last split whose `after` holds is the one kept."""
 
     lane: str
     shares: tuple[tuple[str, int], ...]
@@ -30,6 +30,10 @@ def feature(fid: str) -> Unlock:
 
 def card(cid: str) -> Unlock:
     return Unlock(UnlockKind.CARD, cid)
+
+
+def answer(aid: str) -> Unlock:
+    return Unlock(UnlockKind.ANSWER, aid)
 
 
 def lane_of(rules: Rules) -> dict[str, str]:
