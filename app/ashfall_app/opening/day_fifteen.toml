@@ -344,7 +344,7 @@ outcome = { modifiers = [{ target = "rate", id = "pot_barley_stew", flow = "cost
 [[town_cards]]
 id = "{lane}_barley_stew"
 twin_of = "barley_stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_barley_stew"
 upside_key = "up_barley_stew"
@@ -366,7 +366,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_barley_stew" },
   { unlock_kind = "card", id = "n6_barley_stew" },
   { unlock_kind = "card", id = "n7_barley_stew" },
-  { unlock_kind = "card", id = "g_hearth_barley_stew" },
+  { unlock_kind = "card", id = "g_field_barley_stew" },
 ]
 
 # ---------- T1: night 15, the frost ----------
@@ -696,7 +696,7 @@ outcome = { stores = [{ store = "cordwood", items = 1 }] }
 [[town_cards]]
 id = "{lane}_stack_cordwood"
 twin_of = "stack_cordwood"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
 label_key = "c_stack_cordwood"
 upside_key = "up_stack_cordwood"
@@ -717,7 +717,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_stack_cordwood" },
   { unlock_kind = "card", id = "n6_stack_cordwood" },
   { unlock_kind = "card", id = "n7_stack_cordwood" },
-  { unlock_kind = "card", id = "g_hearth_stack_cordwood" },
+  { unlock_kind = "card", id = "g_field_stack_cordwood" },
 ]
 
 # Its cap is the last reach.

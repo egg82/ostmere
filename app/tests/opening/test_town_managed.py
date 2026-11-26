@@ -36,7 +36,7 @@ def test_the_town_readout_is_reported():
 def test_the_shipped_town_keeps_its_notables_and_hands_the_rest_to_groups(shipped_opening: Opening):
     own, groups = town_managed(shipped_opening)
     assert own == ["n1", "n2", "n3", "n4", "n13", "n23"]
-    assert set(groups) == {"g_field", "g_hearth", "g_road"}
+    assert set(groups) == {"g_field", "g_road"}
     assert "n11" not in groups["g_field"]
 
 
