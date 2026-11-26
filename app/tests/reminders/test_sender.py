@@ -18,6 +18,12 @@ def test_201_is_delivered():
         assert seen.paths == ["/201"]
 
 
+def test_a_reminder_is_sent_at_high_urgency_so_a_sleeping_phone_takes_it_now():
+    with push_service() as (base, seen):
+        send(base + "/201")
+        assert seen.urgency == ["high"]
+
+
 @kills(9)
 def test_410_means_the_subscription_is_gone():
     with push_service() as (base, _):

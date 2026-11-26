@@ -16,6 +16,7 @@ import { KeptPart } from "./devicekept";
 import { JoinPart } from "./devicejoin";
 import { WordsPart } from "./devicewords";
 import { el } from "./dom";
+import { openSheet } from "./back";
 
 export interface DevicesContext {
   api: GameApi;
@@ -81,7 +82,7 @@ export class Devices {
     this.keeps.keepDevicesOpened();
     this.words.reset();
     this.list.open();
-    if (!this.root.open) this.root.showModal();
+    if (!this.root.open) openSheet(this.root);
     if (join === null) void this.code.make();
     else this.joining.fill(join);
   }

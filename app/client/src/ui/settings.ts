@@ -4,6 +4,7 @@
 import type { Straight } from "../app/straight";
 import { UI, type Text } from "../game/text";
 import { el } from "./dom";
+import { openSheet } from "./back";
 import type { ReminderRow } from "./reminders";
 import type { SoundControl } from "./soundcontrol";
 import { checkChoice, straightChoice } from "./straightchoice";
@@ -36,7 +37,7 @@ export class SettingsSheet {
   /** Shows the sheet; resolves once every part has drawn what it offers. */
   async open(): Promise<void> {
     const drawn = this.opens.map((show) => show());
-    if (!this.root.open) this.root.showModal();
+    if (!this.root.open) openSheet(this.root);
     await Promise.all(drawn);
   }
 

@@ -15,6 +15,9 @@ from .push_hosts import is_push_service
 TTL_SECONDS = 12 * 3600
 """A reminder the phone could not take by morning is not worth delivering."""
 
+URGENCY = "high"
+"""RFC 8030 Urgency. A reminder is due now: at the default (normal), Android holds it until the phone wakes."""
+
 type Kind = Literal["ok", "gone", "error"]
 
 
@@ -59,6 +62,7 @@ class WebPushSender:
                     vapid_private_key=Vapid01.from_raw(self._cfg.private_key.encode()),
                     vapid_claims={"sub": self._cfg.subject},
                     ttl=TTL_SECONDS,
+                    headers={"Urgency": URGENCY},
                     timeout=10,
                     requests_session=session,
                 )

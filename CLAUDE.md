@@ -4,7 +4,7 @@ A single-player idle game, *The Breaking of Ostmere* (`ostmere.yggdrasil.pub`), 
 The queue is the Ostmere: Work board (https://github.com/users/egg82/projects/2): issues, top first, and a PR that
 finishes one says `Closes #n`.
 How code is built and shipped, the rules carried over from habits' mistakes, and where the design canvas and tests
-live: `docs/engineering.md`.
+live: `docs/engineering.md`. Before changing a chapter's data, go through `docs/adding-content.md`.
 **Load the `agentic-engineering` skill before changing anything here**, and name it in every writer's brief.
 Every change reaches `main` through a pull request (`gh pr create`); GitHub Actions runs the full suite and the merge
 waits on its `ci-ok` check. Locally, run only the tests a change touches plus `app/tools/gates.sh` (every structural gate). A push to `main`
