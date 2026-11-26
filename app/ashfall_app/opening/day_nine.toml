@@ -616,6 +616,9 @@ label_key = "feature_t_pack_step"
 [beat_lines]
 B10 = ["l_b10_1"]
 
+[line_doings.l_posts]
+doings = ["n4"]
+
 [line_kinds]
 l_ring_1 = "story"
 l_ring_2 = "story"

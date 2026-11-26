@@ -38,6 +38,18 @@ def check_line_kinds(o: "Opening") -> None:
     for key in sorted(set(line_keys(o)) - o.line_kinds.keys()):
         fail(f"line {key}", "has no kind in [line_kinds]")
     check_beat_lines(o)
+    check_line_doings(o)
+
+
+def check_line_doings(o: "Opening") -> None:
+    """Fails for a `[line_doings]` key that is no story line of the content, or one naming a person with no lane."""
+    known, lanes = set(line_keys(o)), {x.id for x in o.lanes}
+    for key, entry in o.line_doings.items():
+        if key not in known or o.line_kinds.get(key) != "story":
+            fail(f"line_doings {key}", "is not a story line")
+        for who in (*entry.doings, *(w.person for w in entry.whereabouts)):
+            if who not in lanes:
+                fail(f"line_doings {key}", f"names {who}, who has no lane")
 
 
 def check_beat_lines(o: "Opening") -> None:

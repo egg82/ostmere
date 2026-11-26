@@ -362,6 +362,12 @@ id = "still_end"
 
 # ---------- text ----------
 
+[line_doings.l_bedding_4]
+doings = ["n2"]
+
+[line_doings.l_pelt_ask]
+doings = ["n3"]
+
 [line_kinds]
 l_morning_7 = "story"
 l_spear = "story"
