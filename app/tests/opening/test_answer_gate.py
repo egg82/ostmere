@@ -56,8 +56,8 @@ def with_outcomes(o: Opening, offer: str, outcome: OutcomeEntry) -> Opening:
 
 
 def test_answers_with_one_outcome_are_found_and_a_sourced_difference_is_not(content: Opening):
-    one = next(a.outcome for x in content.offers if x.id == "o_choir" for a in x.answers)
-    assert "o_choir" not in unlasting_offers(content) and "o_choir" in unlasting_offers(with_outcomes(content, "o_choir", one))
+    one = next(a.outcome for x in content.offers if x.id == "o_bank" for a in x.answers)
+    assert "o_bank" not in unlasting_offers(content) and "o_bank" in unlasting_offers(with_outcomes(content, "o_bank", one))
 
 
 def without_tally(o: Opening, kind: str) -> Opening:
