@@ -8,12 +8,14 @@ deleting and restoring a save also hold the account (games.py).
 A request advances under a time budget (BUDGET_S of wall time from when it began; stop_for makes each request's
 stop), so a long absence is caught up in bounded slices, each written and committed, the page asking again until one
 reaches now (Played.catching_up_to). A decision whose advance stops short is written as that slice and refused
-(Behind)."""
+(Behind). Each advance continues what the job kept ahead of the row while the player was away (ahead.py), so a return
+after a night is one short step."""
 
 import logging
 import time
 from collections.abc import Callable, Generator
 from contextlib import contextmanager
+from dataclasses import replace
 from datetime import datetime
 
 from sqlalchemy import Connection, Engine
@@ -27,8 +29,8 @@ from ..db import reminders as reminder_rows
 from ..db import saves as rows
 from ..db import unit
 from ..db.journal import Seen
+from . import ahead, journal_write, mixbest, write
 from . import games as held
-from . import journal_write, mixbest, write
 from .games import info
 from .interface import (
     MAX_SAVES, Behind, DecisionsLimited, Games, Info, Invalid, LastSave, NotFound, Opened, PastLine, Played, Ruleset,
@@ -122,7 +124,7 @@ class PgSaves:
                             for ln in (rows.last_lines(conn, save_id, HISTORY) if last is None else last)
                             if ln.key in known)
             days = journal_write.written(conn, save_id, seen)
-            played, now_row = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now)
+            played, now_row = self._write(conn, row, seen, self._advanced(conn, row, loaded, now, stop), now)
         logs.info(_log, "save.opened", account=account_id, save=save_id, game_at=played.save.time,
                   away_s=int((now - row.updated_at).total_seconds()), lines=len(played.lines),
                   rebased=loaded.rebased, behind_s=_behind_s(played), ms=_ms(t0))
@@ -133,7 +135,7 @@ class PgSaves:
         t0, now, stop = time.perf_counter(), self._clock(), self._stop_for()
         with self._locked(account_id, save_id, now, visited=True) as (conn, row, seen):
             loaded = load(row, self._rs)
-            played = self._write(conn, row, seen, self._advanced(row, loaded, now, stop), now).played
+            played = self._write(conn, row, seen, self._advanced(conn, row, loaded, now, stop), now).played
         behind = _behind_s(played)
         logs.emit(_log, logging.INFO if played.lines or behind is not None else logging.DEBUG, "save.advanced",
                   account=account_id, save=save_id, game_at=played.save.time, lines=len(played.lines),
@@ -146,7 +148,7 @@ class PgSaves:
                                      "target": _target(verb)}
         with self._locked(account_id, save_id, now) as (conn, row, seen):
             loaded = load(row, self._rs)
-            step = self._advanced(row, loaded, now, stop)
+            step = self._advanced(conn, row, loaded, now, stop)
             stale, behind = after != row.decisions, step.catching_up_to is not None
             if not stale and not behind:
                 self._counted(conn, save_id, now)
@@ -156,8 +158,9 @@ class PgSaves:
                     logs.info(_log, "save.decision", **fields, n=row.decisions, game_at=step.save.time,
                               result="invalid", lines=0, rebased=loaded.rebased, ms=_ms(t0))
                     raise Invalid(str(ex)) from ex
-                step = write.Step(done.save, write.numbered(step.lines, done.lines), verb, step.began, done.failed,
-                                  done.context, step.rule_changes + done.rule_changes)
+                step = replace(step, save=done.save, lines=write.numbered(step.lines, done.lines), verb=verb,
+                               failed=done.failed, context=done.context,
+                               rule_changes=step.rule_changes + done.rule_changes)
             played = self._write(conn, row, seen, step, now).played
         logs.info(_log, "save.decision", **fields, n=played.decisions, game_at=played.save.time,
                   result="stale" if stale else "behind" if behind else "ok", lines=len(played.lines),
@@ -242,12 +245,11 @@ class PgSaves:
                 raise NotFound(f"save {save_id}")
             yield conn, row, seen
 
-    def _advanced(self, row: rows.SaveRecord, loaded: Loaded, now: datetime, stop: Callable[[], bool]) -> write.Step:
+    def _advanced(self, conn: Connection, row: rows.SaveRecord, loaded: Loaded, now: datetime,
+                  stop: Callable[[], bool]) -> write.Step:
+        """The step towards now, continuing the advance kept ahead of the row (ahead.py) when there is one."""
         to = game_now(row.started_at, now, loaded.save.time)
-        done = e.advance_logged(loaded.save, self._rs.rules, to, stop)
-        return write.Step(done.save, write.numbered(loaded.lines, done.lines), None, loaded.save,
-                          rule_changes=loaded.rule_changes + done.rule_changes,
-                          catching_up_to=to if done.stopped_short else None)
+        return ahead.step(loaded, ahead.continuing(conn, row, loaded, self._rs), self._rs.rules, to, stop)
 
     def _write(self, conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: write.Step,
                now: datetime) -> write.Persisted:

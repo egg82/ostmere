@@ -17,7 +17,7 @@ from tests import pg
 
 HEAD = head()
 TABLES = {"accounts", "sessions", "saves", "save_lines", "save_decisions", "save_snapshots", "save_manifests",
-          "save_journal", "tries", "feedback", "transfer_codes", "reminder_devices", "writer_day"}
+          "save_journal", "tries", "feedback", "transfer_codes", "reminder_devices", "writer_day", "save_ahead"}
 
 
 def tables(url: str) -> set[str]:

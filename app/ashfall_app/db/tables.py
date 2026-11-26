@@ -140,6 +140,23 @@ save_manifests = Table(
     Column("manifest", Text, nullable=False),
 )
 
+# A save's catch-up computed ahead while its player is away (saves/ahead.py): the save as stored (`base`, a digest of the
+# row a step would load) advanced under `rules_digest` to `game_time`, with that advance's lines and the rule runs it
+# leaves. A step that loads the very row continues from it; any other row makes it stale. Rewritten by the job, never
+# history: it goes with its save.
+save_ahead = Table(
+    "save_ahead", metadata,
+    Column("save_id", BigInteger, ForeignKey("saves.id", ondelete="CASCADE"), primary_key=True),
+    Column("base", Text, nullable=False),
+    Column("rules_digest", Text, nullable=False),
+    Column("release", Integer, nullable=False),
+    Column("game_time", BigInteger, nullable=False),
+    Column("state", Text, nullable=False),
+    Column("lines", JSONB, nullable=False),
+    Column("rule_runs", JSONB, nullable=True),
+    _when("written_at"),
+)
+
 # The journal's composed days (saves/journal.py): one per game day the save has begun, written or not, by the steps that
 # carried the save through it. `notes` is the day's notes in page order, each {subject, slot, key}; `gap` is why the day
 # broke off, null for a day written through or blank; `marks` the kinds of mark its page carries, in the order drawn;
