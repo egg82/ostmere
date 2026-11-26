@@ -12,10 +12,9 @@ import type { View } from "../api/types";
 import { LESSONS, mayStart, outrankedBy, stepOnShow, stepsFor, type Lesson, type Subject } from "../game/lessons";
 import { UI } from "../game/text";
 import { ACTED, bringIntoView, el, setText, tapFeedback } from "./dom";
+import { pickSpot } from "./lessonspot";
 import type { Part, PartContext } from "./part";
 
-const GAP_PX = 8;
-const GUTTER_PX = 16;
 /** How long a lesson waits with nothing of it on show (its trigger, its last finished step's control, its next step's)
  * before it ends as skipped: a server round trip (Add rule's row arriving) is quicker, and a closed editor or a tab left
  * never comes back by itself. While the last finished step's control is on show (the Rules row), it waits without limit. */
@@ -46,8 +45,6 @@ function inSight(doc: Pick<Document, "elementsFromPoint">, node: Element, note: 
 function subjectOf(node: HTMLElement): Subject {
   return Object.fromEntries(Object.entries(node.dataset).filter((e): e is [string, string] => e[1] !== undefined));
 }
-
-interface Spot { left: number; top: number }
 
 /** `shown`: the last step brought into view, so a step scrolls the page once, not again when the player scrolls away. */
 interface Running { lesson: Lesson; at: number[]; subject: Subject; reached: number; step: number | null; since: number; target: HTMLElement | null; longest: number; heldSince: number | null; shown: number }
@@ -240,33 +237,13 @@ export class Lessons implements Part {
     this.changed();
   }
 
-  /** The note under its control; else beside it (left, then right); else above it: the first of those inside the
-   * window's gutters that covers no sibling of the control, not the card it sits in (then above or below that card), not the panel's tabs
-   * and not the next step's control when it is already on show. With none clear, the one that covers least. */
   private place(target: HTMLElement): void {
     if (!onShow(target)) { this.root.hidden = true; return; }
     this.root.hidden = false;
-    const r = target.getBoundingClientRect();
-    const w = this.root.offsetWidth;
-    const h = this.root.offsetHeight;
-    const vw = window.innerWidth;
-    const across = Math.max(GUTTER_PX, Math.min(r.left, vw - w - GUTTER_PX));
-    const middle = r.top + (r.height - h) / 2;
-    const spots: Spot[] = [
-      { left: across, top: r.bottom + GAP_PX },
-      { left: r.left - GAP_PX - w, top: middle },
-      { left: r.right + GAP_PX, top: middle },
-      { left: across, top: r.top - GAP_PX - h },
-    ];
     const card = target.closest<HTMLElement>(".card")?.getBoundingClientRect();   // a control in a card: its title stays in view
-    if (card) spots.push({ left: across, top: card.bottom + GAP_PX }, { left: across, top: card.top - GAP_PX - h });
-    const fits = (s: Spot): boolean => s.left >= GUTTER_PX && s.left + w <= vw - GUTTER_PX && s.top >= 0 && s.top + h <= window.innerHeight;
     const covered = this.neighbours(target).map((n) => n.getBoundingClientRect());
-    const hidden = (s: Spot): number => covered.reduce((sum, c) => sum + Math.max(0, Math.min(s.left + w, c.right) - Math.max(s.left, c.left)) * Math.max(0, Math.min(s.top + h, c.bottom) - Math.max(s.top, c.top)), 0);
     const taps = Array.from(this.doc.querySelectorAll("button, input, textarea, a, [tabindex]")).filter((n) => n !== target && !this.root.contains(n) && onShow(n) && inSight(this.doc, n, this.root)).map((n) => n.getBoundingClientRect());
-    const pressed = (s: Spot): number => taps.filter((c) => Math.min(s.left + w, c.right) > Math.max(s.left, c.left) && Math.min(s.top + h, c.bottom) > Math.max(s.top, c.top)).length;   // taps the note would take from the player
-    const room = spots.filter(fits);
-    const spot = room.find((s) => hidden(s) === 0) ?? room.sort((a, b) => pressed(a) - pressed(b) || hidden(a) - hidden(b))[0] ?? { left: across, top: Math.max(GUTTER_PX, r.top - GAP_PX - h) };
+    const spot = pickSpot({ target: target.getBoundingClientRect(), card, w: this.root.offsetWidth, h: this.root.offsetHeight, vw: window.innerWidth, vh: window.innerHeight, covered, taps });
     this.root.style.left = `${Math.round(spot.left)}px`;
     this.root.style.top = `${Math.round(spot.top)}px`;
   }
