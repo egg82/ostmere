@@ -3,7 +3,7 @@ chapter's saved end before it could be the base's."""
 from dataclasses import replace
 
 from tools.pr_plan import Snap, here, plan
-from tools.weektwo_shards import NIGHTLY_ONLY, SHARDS
+from tools.weektwo_shards import NIGHTLY_ONLY, SHARDS, WHOLE_GAME
 
 BASE = here()
 
@@ -39,9 +39,16 @@ def test_a_changed_week_two_test_file_is_sliced_with_no_chapter_touched():
 
 def test_week_one_a_changed_shared_input_and_a_base_without_keys_are_the_smoke():
     assert plan(changed(week1="x"), False, [])["mode"] == "smoke"
-    assert plan(changed(week1="x"), False, [])["shards"] == ["smoke"]
     assert plan(replace(BASE, shared="another"), False, [])["mode"] == "smoke"
     assert plan(None, False, [])["mode"] == "smoke"
+
+
+def test_a_change_every_chapter_reads_also_plays_the_whole_game_shards_from_the_start():
+    for got in (plan(replace(BASE, shared="another"), False, []), plan(changed(week1="x"), False, [])):
+        assert got["mode"] == "smoke" and got["shards"] == ["smoke", "makers"] and got["left"] == []
+    assert plan(None, False, [])["shards"] == ["smoke"]
+    assert plan(changed(fifteen="x"), False, [], lambda key: False)["shards"] == ["smoke"]
+    assert "makers" in WHOLE_GAME and WHOLE_GAME <= set(SHARDS) - NIGHTLY_ONLY
 
 
 def test_the_label_asks_for_everything():

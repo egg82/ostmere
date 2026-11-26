@@ -28,7 +28,7 @@ from .groups import group_crew
 from .mixruns import mix_entries, mix_gains, town_entries
 from .rates import Running, contributions, lane_state, running, unlocked_standing
 from .rules import Rules
-from .rules_check import features
+from .unlock_known import features
 from .segments import Segment, reach_time
 from .sharelevels import read_levels
 from .cardsides import card_costs, card_makes

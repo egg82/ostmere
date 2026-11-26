@@ -121,7 +121,7 @@ haptic, `navigator.vibrate(8)` in `tapFeedback()` (`ui/dom.ts:58`, called from `
 and it carries no information. Chromium logs a blocked-vibrate error when it fires before the first user tap (seen in
 the first-mix state). The "sound never carries information alone" rule is vacuous today.
 
-## 6. Pinned stage (3 failures and 1 overlap, all fixed but one residual)
+## 6. Pinned stage (3 failures and 1 overlap, all fixed)
 
 The stage is 382 px tall at 390 wide (set from the art's aspect by `ui/headseat.ts:19`, not from the viewport) and the
 hands strip pins under it at 96 px: **478 px pinned at every height**, 57% of 844. Measured (`stage.json`):
@@ -153,15 +153,30 @@ at 390 wide (`.cond-body` is the condition editor's choice area, which scrolls a
 | 500 | 244 px, name and Save in view | 147 | visible |
 | 420 | 164 px, name and Save in view | 67 | visible |
 
-Failures 1 to 3 are gone down to 420: the foot is on screen (it sits in the fixed editor, not below the fold), the mix
-editor's name field and Save stay in view, and the strip ends at 217 px, far above these bottom edges. Below that it
-returns: at 360 tall the choice area is 29 px and the condition editor's foot (to 382) is cut by the bottom edge. A
-desktop 1440 wide is unchanged.
+Failures 1 to 3 are gone down to 420 (the pin is now the strip alone, 85 px, so the editors start at 85 and the figures
+above are from before that). Re-measured on main in a fixture build (`.cond-body` is the condition editor's choice area;
+"choices on screen" is what shows above the pinned foot or action row):
 
-The overlap: at 844 the note for the bar step sat over the editor's Name, Save and close (the placement took the spot
-with the least covered area, and every spot hid something). It now takes the spot that covers fewest controls
-(`ui/lessons.ts`, `place`), which is below the bar. Still true at 500 tall: no spot below fits, so the note sits over
-the editor's head until the player taps Got it, which that step asks for first.
+| Viewport | Choices on screen before | after |
+|---|---|---|
+| 360x500, 320x568 | 266, 334 | unchanged |
+| 360x340 | 106 | 194 |
+| 360x260 | 29 (foot cut by 3 px) | 114 |
+| 360x200 | 29, Save below the fold | 54, Save in view |
+
+Below 360 tall the choices had shrunk to the editor's padding and the foot, which does not shrink, was cut. An editor
+under 16 rem tall now scrolls as one and only the Remove, Copy rule and Save row stays pinned (`.cond` is a size
+container in `game.css`); the foot's lines (the watched store, the rule's sentence, the dry run) scroll with the
+choices there. A desktop 1280 wide and a phone on its side (740x360, the desktop layout) are unchanged.
+
+The overlap, as a lesson note: the placement (`ui/lessonspot.ts`, `pickSpot`) takes the first spot near the control that
+covers no sibling and no tappable control. When every near spot covers one, it docks at a window corner that covers
+none, nearest the control (the band above an open editor on a phone), and a short window (640 px tall or less) draws the
+note compact so it fits there. Measured at 360x500, 360x340, 320x568, 667x375 and 740x360: the lesson steps of the first
+mix and the first rule cover no control at any of them (before: the bar step covered Run until, and the rule's When step
+covered More options, at 500 and 568 tall; the bar step also covered Run until at 340 tall, and Add at 740x360). The note's own corner
+is the cost: it can sit over the story strip for the length of a step. Residual: the note's tag wraps above its label
+at 740x360, where its width is held to the art's column.
 
 Corrections to the proposal's premise: the condition editor has **no text input** (only buttons), so it never raises a
 keyboard. Keyboard cases in this client are the mix editor's name field (`ui/editor.ts:27`), the feedback textarea

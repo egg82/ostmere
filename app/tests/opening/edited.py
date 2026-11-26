@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ashfall_app.opening.chapters import merge
 from ashfall_app.opening.checks import check_opening
+from ashfall_app.opening.clocks import with_moment_clocks
 from ashfall_app.opening.groups import with_group_unlocks
 from ashfall_app.opening.schema import CHAPTERS, OPENING, Chapter, Opening
 
@@ -21,13 +22,15 @@ def _parsed(path: Path, data: Edit, text: Edit) -> dict[str, object]:
     return tomllib.loads(data(head) + sep + text(words))
 
 
-def edited(data: Edit = same, text: Edit = same) -> Opening:
-    """Each file's data (above its [text] table) through `data` and its text through `text`, merged and checked."""
+def edited(data: Edit = same, text: Edit = same, check: bool = True) -> Opening:
+    """Each file's data (above its [text] table) through `data` and its text through `text`, merged and checked
+    (`check=False` for a caller that adds to the result and checks that, so the costly checks run once)."""
     o = Opening.model_validate(_parsed(OPENING, data, text))
     for chapter in CHAPTERS:
         o = merge(o, Chapter.model_validate(_parsed(chapter, data, text)))
-    o = with_group_unlocks(o)
-    check_opening(o)
+    o = with_moment_clocks(with_group_unlocks(o))
+    if check:
+        check_opening(o)
     return o
 
 

@@ -29,7 +29,7 @@ from .orders import (
     AfterTime, AtLeast, AtMost, CardCount, GuardedLatch, Order, QueueEntry, Running, SkillLevel, StoreValue, Unlocked,
 )
 from .rules import Rules
-from .rules_check import features
+from .unlock_known import features
 from .segments import Segment
 from .prestigeverbs import MovePick, Prestige, UndoPick
 from .state import FIRST_PHASE, ParkedRank, Pause, PhaseState, Save, SkillState, StoreState

@@ -96,3 +96,39 @@ expect("none clear: the least covered", placed(crowded, [{ cls: "tabs", rect: bo
   lessons.tick();
   expect("the next step's control under it: not below, and no room beside: above", [parseInt(lessons.root.style.left, 10), parseInt(lessons.root.style.top, 10)], [150, 232]);
 }
+
+{  // A short window under an open editor: every spot near the control covers something the player taps, so the note docks at a corner that covers none
+  Object.assign(window, { innerWidth: 360, innerHeight: 500 });
+  const bar = box(16, 150, 328, 50);
+  const rows = (...tops: number[]) => tops.map((t) => box(16, t, 328, 44));
+  /** The note's rect when the editor's controls stand at `taps`; `bar` is the step's control. */
+  const docked = (taps: ReturnType<typeof box>[]): ReturnType<typeof box> => {
+    fakeDocument.body.replaceChildren();
+    const lessons = new Lessons({ catalog: new Catalog(fixtureContent), glow: new Glow(), keeps: keepsOf(NEW_FLAT) }, document.body, () => undefined, document, () => 0);
+    const offer = document.createElement("button");
+    Object.assign(offer.dataset, { teach: "mix-offer", cards: "stand look" });
+    Object.assign(offer, { rect: bar });
+    const buttons = taps.map((rect) => [Object.assign(document.createElement("button"), { rect }), rect] as const);
+    document.body.append(offer, ...buttons.map(([b]) => b));
+    Object.assign(fakeDocument, { elementsFromPoint: (x: number, y: number) => buttons.filter(([, r]) => r.left <= x && x <= r.right && r.top <= y && y <= r.bottom).map(([b]) => b) });
+    Object.assign(lessons.root, { rect: box(0, 0, 200, 60) });
+    lessons.update(noMix);
+    lessons.tick();
+    delete (fakeDocument as { elementsFromPoint?: unknown }).elementsFromPoint;
+    const left = parseInt(lessons.root.style.left, 10);
+    const top = parseInt(lessons.root.style.top, 10);
+    return box(left, top, 200, 60);
+  };
+  const meets = (a: ReturnType<typeof box>, b: ReturnType<typeof box>): boolean => Math.min(a.right, b.right) > Math.max(a.left, b.left) && Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top);
+
+  const editor = rows(100, 215, 275, 330);   // the editor's name row above the bar, its rows below it
+  const note = docked(editor);
+  expect("below and above the control each cover a control: the note docks above the editor's first row", [note.left, note.top], [16, 8]);
+  expect("and covers none of the editor's controls", editor.some((t) => meets(note, t)), false);
+  const nearer = docked([...rows(8), ...rows(100, 215, 275)]);   // the top band holds a control now: the bottom corner is the one left
+  expect("the top band taken: the bottom corner", [nearer.left, nearer.top], [16, 432]);
+  expect("and covers none of the controls", [...rows(8), ...rows(100, 215, 275)].some((t) => meets(nearer, t)), false);
+  const free = docked(rows(100));   // below the bar is clear: the note stays beside its control, no dock
+  expect("a clear spot near the control: not docked", [free.left, free.top], [16, 208]);
+  Object.assign(window, { innerWidth: 400, innerHeight: 800 });
+}

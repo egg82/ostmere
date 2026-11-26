@@ -530,7 +530,9 @@ I7 = ["l_post_ring_1"]
 B20 = ["l_b20_1"]
 
 [line_doings.l_fiddle_2]
+clock = "fiddle_2_clock"
 doings = ["n14", "n15"]
+whereabouts = [{ person = "n14", layer = "figure_n14_at_the_gate" }, { person = "n15", layer = "figure_n15_at_the_gate" }]
 
 [line_doings.l_book_ask]
 doings = ["n13"]

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from .cards import Amount, CardDef, Outcome
 from .errors import InvalidRulesError
-from .ids import HANDS, TriggerId
+from .ids import HANDS, CardId, LaneId, TriggerId
 from .modifiers import (
     LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef, lowers_cap,
     lowers_threat,
@@ -14,11 +14,13 @@ from .orders import (
     AfterTime, AtLeast, CardCount, Condition, LaneRules, Running, SkillLevel, StoreValue, Subject, Unlocked, share_problem,
 )
 from .cardsides import card_costs, card_makes
+from .derived import derived
 from .drains import check_drains
 from .groupchecks import check_group_outcome, check_groups, join_problem
 from .fightcheck import check_fight, check_no_odds_source, check_tallies, check_while_running, standing_stores
 from .planchecks import check_leaves, check_one_leave_each, check_retire
-from .unlocks import PRESENT_ONLY, Unlock, UnlockKind
+from .unlock_known import features, unlock_known
+from .unlocks import PRESENT_ONLY
 
 if TYPE_CHECKING:
     from .rules import Rules
@@ -56,7 +58,7 @@ def subject_problem(rules: "Rules", subject: Subject) -> str | None:
     elif isinstance(subject, LaneRules):
         known = subject.lane in {d.id for d in rules.lanes if d.ruled}
     else:
-        known = _unlock_known(rules, subject.unlock)
+        known = unlock_known(rules, subject.unlock)
     return None if known else f"condition on an unknown {type(subject).__name__} subject"
 
 
@@ -86,7 +88,7 @@ def check_parts(rules: "Rules") -> None:
                      f"trigger {t.id}: a requirement must be on an unlock or a runner")
         _check_outcome(rules, t.outcome, f"trigger {t.id}", installs=True, trigger=t.id)
     for u in rules.opening or ():
-        _require(_unlock_known(rules, u), f"opening: unknown {u.kind.value} {u.id}")
+        _require(unlock_known(rules, u), f"opening: unknown {u.kind.value} {u.id}")
         _require(u.kind not in PRESENT_ONLY, f"opening: only an answer, a join or a leave adds a {u.kind.value} unlock")
     _require(rules.end is None or rules.end in features(rules), f"end: unknown feature {rules.end}")
     _check_offers(rules)
@@ -120,19 +122,6 @@ def _check_kinds(rules: "Rules") -> None:
         _require(len(set(have)) == len(have), f"offer {o.id}: two answers share a role")
         found = frozenset(str(r) for r in have)
         _require(roles.setdefault(o.kind, found) == found, f"offer {o.id}: its roles differ from the kind {o.kind}'s")
-
-
-def mentioned(rules: "Rules", kind: UnlockKind) -> set[str]:
-    """The ids of `kind` the rules mention (the opening, an outcome or a finished): a feature, an entry and a note have
-    no declaration, so they are known where they are written."""
-    outcomes = [o for c in rules.cards for o in (c.outcome, c.finished)] + [t.outcome for t in rules.triggers]
-    outcomes += [a.outcome for o in rules.offers for a in o.answers]
-    unlocks = [u for u in (*(rules.opening or ()), *(u for o in outcomes for u in o.unlocks))]
-    return {u.id for u in unlocks if u.kind is kind}
-
-
-def features(rules: "Rules") -> set[str]:
-    return mentioned(rules, UnlockKind.FEATURE)
 
 
 def _require(ok: bool, message: str) -> None:
@@ -215,9 +204,7 @@ def _check_outcome(
     """`installs`: a trigger's or an answer's outcome, which may install rules; `queues`: an answer's, which may also
     queue hands one-offs (DESIGN.txt, "Installs land once"); `trigger`: the trigger whose outcome it is, the only source
     that may raise a ThreatStrength (DESIGN.txt, "FIGHTS")."""
-    capped = {c.id for c in rules.cards if c.cap is not None}
-    ruled = {d.id for d in rules.lanes if d.ruled}
-    lanes = {c.id: c.lane for c in rules.cards}
+    capped, ruled, lanes = derived(rules, "_outcome_ground", _outcome_ground)
     _require(installs or not o.orders, f"{where}: only a trigger's or an answer's outcome installs a rule")
     _require(all(lanes.get(i.card) in ruled for i in o.orders), f"{where}: an installed rule taps a card on a ruled lane")
     _require(installs or not o.joins, f"{where}: only a trigger's or an answer's outcome joins a person")
@@ -227,7 +214,7 @@ def _check_outcome(
     _require(all(lanes.get(q) == HANDS and q in capped for q in o.queues),
              f"{where}: a queued one-off is a hands card with a cap")
     _check_amounts(rules, o.stores, where)
-    _require(all(_unlock_known(rules, u) for u in o.unlocks), f"{where}: outcome unlocks an unknown id")
+    _require(all(unlock_known(rules, u) for u in o.unlocks), f"{where}: outcome unlocks an unknown id")
     _require(not any(u.kind in PRESENT_ONLY for u in o.unlocks),
              f"{where}: only an answer, a join or a leave adds an answered, answer, joined or left unlock")
     _check_modifiers(rules, o.modifiers, where, trigger)
@@ -235,6 +222,12 @@ def _check_outcome(
     _require(all(q in {c.id for c in rules.cards} for q in o.starts), f"{where}: outcome starts an unknown card")
     check_retire(rules, o, where, trigger is not None)
     check_leaves(rules, o, where, installs)
+
+
+def _outcome_ground(rules: "Rules") -> tuple[set[CardId], set[LaneId], dict[CardId, LaneId]]:
+    """The capped cards, the ruled lanes and each card's lane: what every outcome is checked against."""
+    return ({c.id for c in rules.cards if c.cap is not None}, {d.id for d in rules.lanes if d.ruled},
+            {c.id: c.lane for c in rules.cards})
 
 
 def _check_modifiers(
@@ -275,17 +268,3 @@ def _rate_known(rules: "Rules", t: RateRef) -> bool:
             return False
         flows = set(standing_stores(standing))
     return t.store is None if t.kind.value == "xp" else t.store in flows
-
-
-def _unlock_known(rules: "Rules", u: Unlock) -> bool:
-    ids = {
-        UnlockKind.ACTION: [a.id for a in rules.standing], UnlockKind.CARD: [c.id for c in rules.cards],
-        UnlockKind.SKILL: [s.id for s in rules.skills], UnlockKind.STORE: [s.id for s in rules.stores],
-        UnlockKind.CHIP: [c.id for c in rules.chips], UnlockKind.RETIRED: [c.id for c in rules.cards],
-        UnlockKind.OFFER: [o.id for o in rules.offers], UnlockKind.ANSWERED: [o.id for o in rules.offers],
-        UnlockKind.ANSWER: [a.id for o in rules.offers for a in o.answers],
-        UnlockKind.JOINED: [d.id for d in rules.lanes if d.ruled], UnlockKind.LEFT: [d.id for d in rules.lanes if d.ruled],
-    }
-    if u.kind in (UnlockKind.FEATURE, UnlockKind.ENTRY, UnlockKind.NOTE):
-        return u.id in mentioned(rules, u.kind)
-    return u.id in ids[u.kind]

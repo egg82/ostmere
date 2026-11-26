@@ -201,6 +201,8 @@ class LineDoingsEntry(Entry):
 
     doings: list[str]
     whereabouts: list[WhereaboutsEntry] = []
+    clock: str | None = None
+    """A moment clock (clocks.py) that starts when the line is told: from the card or offer whose `line_keys` hold it."""
 
 
 class OutcomeEntry(Entry):
@@ -229,6 +231,8 @@ class OutcomeEntry(Entry):
     """People the lines show doing something besides joining or leaving: marked here, never read off the lines."""
     whereabouts: list[WhereaboutsEntry] = []
     """The scene's answer for each person the outcome joins, leaves or does something."""
+    clock: str | None = None
+    """A moment clock (clocks.py) that starts with this outcome, for the scene's window on it."""
 
 
 class CardEntry(Entry):

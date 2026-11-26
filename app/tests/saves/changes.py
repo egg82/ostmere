@@ -19,7 +19,7 @@ def changed_opening() -> Opening:
     """The test change: roots renamed tubers (a save's roots dropped, tubers new), lay_to_dry retuned 45 s -> 60 s, a new card unlocked by a new trigger
     that is true from time 0 (so it fires at every save's rebase) and lands a line."""
     assert OPENING.read_text().partition("[text]")[0].count("work_s = 45") == 1
-    o = edited(lambda d: _retuned(roots_renamed(d)))
+    o = edited(lambda d: _retuned(roots_renamed(d)), check=False)
     line = o.cards[0].line_keys[0]
     card = CardEntry.model_validate({**o.cards[4].model_dump(), "id": "gather_more", "glows": False, "upside_key": "up_dry_wood"})
     trigger = TriggerEntry.model_validate({

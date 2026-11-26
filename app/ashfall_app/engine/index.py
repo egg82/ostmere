@@ -3,10 +3,10 @@
 Rules is an immutable value, so derived data is kept on the object and found by identity: a cache keyed by value would
 hash the whole tree on every call. Callers never subclass or wrap Rules.
 """
-from collections.abc import Callable
 from dataclasses import dataclass
 
 from .cards import CardDef, Outcome
+from .derived import derived
 from .ids import HANDS, ActionId, AnswerId, CardId, ChipId, LaneId, MixId, OfferId, Runner, SkillId, StoreId
 from .offers import AnswerDef, OfferDef
 from .rules import Rules, StandingDef, StoreDef
@@ -38,15 +38,6 @@ class RulesIndex:
     """Each answer with the offer it answers."""
     town_mixes: frozenset[MixId]
     """The mixes a join of the rules makes: the game's town mixes, each one TOWN even while it holds no card."""
-
-
-def derived[T](rules: Rules, name: str, build: Callable[[Rules], T]) -> T:
-    """build(rules), computed once per rules object and kept on it under `name`."""
-    kept = vars(rules)
-    if name not in kept:
-        kept[name] = build(rules)
-    found: T = kept[name]
-    return found
 
 
 def index(rules: Rules) -> RulesIndex:
