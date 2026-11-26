@@ -72,6 +72,12 @@ def test_a_test_killed_by_the_timeout_and_a_failed_test_are_named():
     assert ci_health.failing_tests("all green") == []
 
 
+def test_a_teardown_error_names_its_test():
+    """pytest reports a teardown failure, the per-test time ceiling's among them, as ERROR, not FAILED."""
+    log = "ERROR tests/test_x.py::test_slow - tests/test_x.py::test_slow took 4.20s of wall clock\n"
+    assert ci_health.failing_tests(log) == ["tests/test_x.py::test_slow"]
+
+
 def test_a_rerun_opens_one_issue_and_over_the_budget_another(capsys: pytest.CaptureFixture[str]):
     stub = Stub()
     ci_health.run(ci_health.GitHub("o/r", stub), 10, 7, "CI", TESTS, False, NOW)

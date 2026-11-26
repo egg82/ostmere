@@ -103,9 +103,10 @@ class GitHub:
 
 
 def failing_tests(log: str) -> list[str]:
-    """The test ids a job's log names: pytest's `FAILED <id>` lines, else, for a test killed by pytest-timeout (which prints
-    no summary), the last test frame in the stack it dumps after its banner."""
-    found = list(dict.fromkeys(re.findall(r"\bFAILED (\S+::\S+)", log)))
+    """The test ids a job's log names: pytest's `FAILED <id>` and `ERROR <id>` lines (a teardown failure, the per-test
+    time ceiling's among them, is an ERROR), else, for a test killed by pytest-timeout (which prints no summary), the
+    last test frame in the stack it dumps after its banner."""
+    found = list(dict.fromkeys(re.findall(r"\b(?:FAILED|ERROR) (\S+::\S+)", log)))
     if found or "Timeout +" not in log:
         return found
     frames = re.findall(r'/(tests/[\w/.-]+\.py)", line \d+, in (test_\w+)', log.split("Timeout +", 1)[1])
