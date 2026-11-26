@@ -2489,12 +2489,30 @@
       "wounds": []
     },
     {
+      "card": "g_field_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
       "card": "g_field_pull_beams",
       "makes": [
         "beams"
       ],
       "takes": [
         "ruin_beams"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_reap",
+      "makes": [
+        "barley"
+      ],
+      "takes": [
+        "ripe"
       ],
       "wounds": []
     },
@@ -4390,6 +4408,66 @@
       "wounds": []
     },
     {
+      "card": "g_road_stakes",
+      "makes": [
+        "stakes"
+      ],
+      "takes": [
+        "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_fungus_stew",
+      "makes": [
+        "stew_fungus",
+        "fungus_stews"
+      ],
+      "takes": [
+        "fungus",
+        "dry_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_clear_road",
+      "makes": [
+        "cleared"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "g_road_walk_ashwood",
+      "makes": [
+        "charwood",
+        "fungus",
+        "ashwood_trips"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_fog_fish",
+      "makes": [
+        "catch"
+      ],
+      "takes": [
+        "fish_rising"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_wash_meat",
+      "makes": [],
+      "takes": [
+        "film"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n14_stakes",
       "makes": [
         "stakes"
@@ -4551,126 +4629,6 @@
         "clay"
       ],
       "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "g_walkers_stakes",
-      "makes": [
-        "stakes"
-      ],
-      "takes": [
-        "damp_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_walkers_fungus_stew",
-      "makes": [
-        "stew_fungus",
-        "fungus_stews"
-      ],
-      "takes": [
-        "fungus",
-        "dry_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_walkers_clear_road",
-      "makes": [
-        "cleared"
-      ],
-      "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "g_walkers_walk_ashwood",
-      "makes": [
-        "charwood",
-        "fungus",
-        "ashwood_trips"
-      ],
-      "takes": [
-        "smoked"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_walkers_fog_fish",
-      "makes": [
-        "catch"
-      ],
-      "takes": [
-        "fish_rising"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_walkers_wash_meat",
-      "makes": [],
-      "takes": [
-        "film"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_widowers_stakes",
-      "makes": [
-        "stakes"
-      ],
-      "takes": [
-        "damp_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_widowers_fungus_stew",
-      "makes": [
-        "stew_fungus",
-        "fungus_stews"
-      ],
-      "takes": [
-        "fungus",
-        "dry_wood"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_widowers_clear_road",
-      "makes": [
-        "cleared"
-      ],
-      "takes": [],
-      "wounds": []
-    },
-    {
-      "card": "g_widowers_walk_ashwood",
-      "makes": [
-        "charwood",
-        "fungus",
-        "ashwood_trips"
-      ],
-      "takes": [
-        "smoked"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_widowers_fog_fish",
-      "makes": [
-        "catch"
-      ],
-      "takes": [
-        "fish_rising"
-      ],
-      "wounds": []
-    },
-    {
-      "card": "g_widowers_wash_meat",
-      "makes": [],
-      "takes": [
-        "film"
-      ],
       "wounds": []
     },
     {
@@ -5024,11 +4982,10 @@
         "fog_fish",
         "n13_fog_fish",
         "show_fish",
+        "g_road_fog_fish",
         "n14_fog_fish",
         "n15_fog_fish",
         "hunt_boar",
-        "g_walkers_fog_fish",
-        "g_widowers_fog_fish",
         "n23_fog_fish"
       ]
     },
@@ -5386,10 +5343,9 @@
         "n12_stakes",
         "n8_stakes",
         "n9_stakes",
+        "g_road_stakes",
         "n14_stakes",
         "n15_stakes",
-        "g_walkers_stakes",
-        "g_widowers_stakes",
         "n23_stakes"
       ]
     },
@@ -5455,10 +5411,9 @@
         "n9_pick",
         "walk_ashwood",
         "n13_walk_ashwood",
+        "g_road_walk_ashwood",
         "n14_walk_ashwood",
         "n15_walk_ashwood",
-        "g_walkers_walk_ashwood",
-        "g_widowers_walk_ashwood",
         "n23_walk_ashwood"
       ]
     },
@@ -5479,10 +5434,9 @@
         "n12_fungus_stew",
         "n8_fungus_stew",
         "n9_fungus_stew",
+        "g_road_fungus_stew",
         "n14_fungus_stew",
         "n15_fungus_stew",
-        "g_walkers_fungus_stew",
-        "g_widowers_fungus_stew",
         "n23_fungus_stew"
       ]
     },
@@ -5503,10 +5457,9 @@
         "n12_fungus_stew",
         "n8_fungus_stew",
         "n9_fungus_stew",
+        "g_road_fungus_stew",
         "n14_fungus_stew",
         "n15_fungus_stew",
-        "g_walkers_fungus_stew",
-        "g_widowers_fungus_stew",
         "n23_fungus_stew"
       ]
     },
@@ -5702,6 +5655,7 @@
         "n5_reap",
         "n7_reap",
         "n6_reap",
+        "g_field_reap",
         "reap",
         "n11_reap",
         "n10_reap",
@@ -5797,6 +5751,7 @@
         "n5_clear_road",
         "n7_clear_road",
         "n6_clear_road",
+        "g_field_clear_road",
         "shovel_road",
         "n11_first_out",
         "n11_clear_road",
@@ -5805,10 +5760,9 @@
         "n8_clear_road",
         "n9_clear_road",
         "n11_first_over",
+        "g_road_clear_road",
         "n14_clear_road",
         "n15_clear_road",
-        "g_walkers_clear_road",
-        "g_widowers_clear_road",
         "n23_clear_road"
       ]
     },
@@ -5887,10 +5841,9 @@
         "n9_walk_ashwood",
         "walk_ashwood",
         "n13_walk_ashwood",
+        "g_road_walk_ashwood",
         "n14_walk_ashwood",
         "n15_walk_ashwood",
-        "g_walkers_walk_ashwood",
-        "g_widowers_walk_ashwood",
         "n23_walk_ashwood"
       ]
     },
@@ -5910,10 +5863,9 @@
         "walk_ashwood",
         "n13_walk_ashwood",
         "follow_marks",
+        "g_road_walk_ashwood",
         "n14_walk_ashwood",
         "n15_walk_ashwood",
-        "g_walkers_walk_ashwood",
-        "g_widowers_walk_ashwood",
         "n23_walk_ashwood"
       ]
     },
