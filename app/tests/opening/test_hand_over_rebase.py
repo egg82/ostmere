@@ -55,3 +55,14 @@ def test_the_next_load_hands_the_five_to_the_field_crew_once_and_leaves_nothing_
             assert max(by_lane.values()) <= BP, (mix.id, by_lane)
     again = rebase_logged(encode(loaded.save, rules), rules)
     assert hand_over_lines(again) == [] and own(again.save) == marks
+
+
+def test_the_save_written_with_a_hearth_crew_loads_with_n7_in_the_field_crew(shipped_ruleset: ShippedRuleset):
+    rules = shipped_ruleset.rs.rules
+    assert "g_hearth" in text()                                                          # the control: the save has the old crew
+    assert "g_hearth" not in {str(x.id) for x in rules.lanes}
+    loaded = rebase_logged(text(), rules)
+    known = {c.id for c in rules.cards}
+    groups = {str(x.id): str(x.group) for x in rules.lanes if x.group is not None}
+    assert groups["n7"] == "g_field" and not own(loaded.save)["n7"]
+    assert [c.card for m in loaded.save.mixes for c in m.components if isinstance(c, CardShare) and c.card not in known] == []

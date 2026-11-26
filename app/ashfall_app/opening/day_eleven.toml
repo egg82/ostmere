@@ -95,23 +95,16 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n7_named" }]
 name_key = "name_n7"
-group = "g_hearth"
+group = "g_field"
 
-# The two groups the three work in (decisions/people.md, "Groups"): each holds the jobs its people do and not the ones
-# they cannot, and is tied to the hand who looks after it (t_family_groups).
+# The group the three work in (decisions/people.md, "Groups"): it holds the jobs its people do and not the ones they
+# cannot, and is tied to the hand who looks after it (t_family_groups).
 [[lanes]]
 id = "g_field"
 label_key = "lane_g_field"
 ruled = true
 pooled = true
 tied = "n2"
-
-[[lanes]]
-id = "g_hearth"
-label_key = "lane_g_hearth"
-ruled = true
-pooled = true
-tied = "n3"
 
 # A34 on her lane, the same real time and stores as A33.
 [[cards]]
@@ -308,8 +301,7 @@ modifiers = [
 ]
 
 # The same moment, the family go to their groups: neither keeps a split of their own, and the story says why. Its own
-# trigger, as t_family_joins' outcome is released. Each group starts at one whole share: the field crew foraging, the
-# hearth at the picking.
+# trigger, as t_family_joins' outcome is released. The crew starts at one whole share, foraging.
 [[triggers]]
 id = "t_family_groups"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
@@ -324,7 +316,7 @@ line_keys = ["l_group_1", "l_group_2"]
 marks = [
   { lane = "n5", own_split = false, card = "g_field_forage" },
   { lane = "n6", own_split = false, card = "g_field_forage" },
-  { lane = "n7", own_split = false, card = "g_hearth_pick" },
+  { lane = "n7", own_split = false, card = "g_field_forage" },
 ]
 
 # Their track from the join (day_three.toml, the town's track card).
@@ -372,7 +364,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_cord" },
   { unlock_kind = "card", id = "n6_cord" },
   { unlock_kind = "card", id = "n7_cord" },
-  { unlock_kind = "card", id = "g_hearth_cord" },
+  { unlock_kind = "card", id = "g_field_cord" },
 ]
 
 [[triggers]]
@@ -384,7 +376,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_peg_flaps" },
   { unlock_kind = "card", id = "n6_peg_flaps" },
   { unlock_kind = "card", id = "n7_peg_flaps" },
-  { unlock_kind = "card", id = "g_hearth_peg_flaps" },
+  { unlock_kind = "card", id = "g_field_peg_flaps" },
 ]
 
 # The windbreak and the wraps on the family's lanes and their group, once the hands have each.
@@ -397,7 +389,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_build_windbreak" },
   { unlock_kind = "card", id = "n6_build_windbreak" },
   { unlock_kind = "card", id = "n7_build_windbreak" },
-  { unlock_kind = "card", id = "g_hearth_build_windbreak" },
+  { unlock_kind = "card", id = "g_field_build_windbreak" },
 ]
 
 [[triggers]]
@@ -409,7 +401,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_sew_wraps" },
   { unlock_kind = "card", id = "n6_sew_wraps" },
   { unlock_kind = "card", id = "n7_sew_wraps" },
-  { unlock_kind = "card", id = "g_hearth_sew_wraps" },
+  { unlock_kind = "card", id = "g_field_sew_wraps" },
 ]
 
 # Their everyday jobs from the join: the weaving, clay and both pots.
@@ -784,7 +776,6 @@ name_n6 = "Richard"
 lane_n7 = "Her brother's hands"
 lane_n7_named = "{n7}'s hands"
 lane_g_field = "The field crew"
-lane_g_hearth = "The hearth crew"
 name_n7 = "John"
 l_join3_1 = "the woman gives names: {n5}, {n6}, {n7}."
 l_join3_2 = "asked his name, the man who came with them looks at the fire."
