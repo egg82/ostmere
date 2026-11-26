@@ -24,6 +24,7 @@ PYTEST_GATES=(
   app/tests/test_scene_builds.py
   app/tests/test_scene_stores.py
   app/tests/test_scene_shown.py
+  app/tests/test_scene_people.py
   app/tests/test_playthrough_paths.py
 )
 CLIENT_GATES=(

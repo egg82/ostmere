@@ -25,6 +25,8 @@ class JournalEntry(Entry):
     declared in the order they are written."""
 
     id: str
+    title_key: str
+    """The page's name in the contents list."""
     section: Section
     sketch: str | None = None
     """None for a page laid out as text alone."""

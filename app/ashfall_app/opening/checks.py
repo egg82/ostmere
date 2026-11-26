@@ -251,6 +251,7 @@ def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
     yield from (("start_line_keys", k) for k in o.start_line_keys)
     yield from (("end_line_keys", k) for k in o.end_line_keys)
     yield from ((f"note {n.id}", n.id) for n in o.notes)
+    yield from ((f"entry {e.id}", e.title_key) for e in o.entries)
     yield "hands", o.hands_label_key
 
 

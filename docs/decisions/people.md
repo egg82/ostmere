@@ -49,8 +49,10 @@ may be offered, Claude only what it says; declining or ignoring one changes the 
 and has a real, bounded cost, as an undone chore does: the light tier, a store, a slower arrival, never a spiral; with Claude off, authored versions stand in.
 
 **Death is expected, and fairly frequent** (unlike habits): it makes impact land and lets people rotate through.
-- A death is a story event, never a penalty: the role refills as someone new arrives, so nothing compounds.
-- Nobody dies because you weren't watching. Deaths come from the world and the story, never from inattention.
+- A death is a story event, never a spiral: the role refills as someone new arrives, so nothing compounds.
+- Nobody dies because you weren't watching. Deaths come from the world, the story, and the player's own choices in a
+  dilemma they faced while present (`principles.md`, "The game doesn't pull its punches, and never cheats"), never
+  from inattention or time away.
 - **Groups arrive broken:** families, or parts of families, often missing a few or about to be. Preparation and
   healing can avert a few, on the light tier only; the rest are decided when they walk in, so they are never the
   player's fault, and they are strangers not yet loved. Healing matters elsewhere; it is not a promise the world keeps.
@@ -58,7 +60,18 @@ and has a real, bounded cost, as an undone chore does: the light tier, a store, 
   and those who have no idea; the dynamics they bring to a town of the bereaved are mini-story ground (specifics in
   `content/`).
 - Attachment is tiered: most townsfolk are light (a name, a trait, a line now and then) and carry the deaths; a few
-  become notable through what happens to them, stay, and somehow avoid dying, if narrowly.
+  become notable through what happens to them, stay, and somehow avoid dying, if narrowly. A narrow escape is fine
+  as long as it never becomes obvious that only those people keep escaping (owner, 2026-11-25): close calls are
+  marked in the content data and counted per person in a readout that someone reads, never a limit that fails a
+  build: how many is too many is a feel, "a couple narrow escapes per person" by the owner's reckoning. **A close call
+  changes the person, so the story never has to keep rescuing them**: scared, they make a safe place for themselves
+  or stop doing what nearly killed them (owner, 2026-11-25). The change shows in play: work they now refuse leaves
+  their lane, the time goes into the safe place, the fear stays in their lines. The danger they step away from
+  doesn't vanish; it passes to someone else, often the light tier, which is where deaths belong and where a choice of
+  whom to send gets its stakes. A second close call, if one comes, comes to them where they are (the town raided,
+  danger reaching the safe place), since they no longer go looking for it, and lands well after the first: around a
+  real month of play by the owner's feel, about where it stops reading as "wow, they're *extremely* lucky". The
+  readout shows the spacing at the owner's pace; the spacing is judged there, never enforced.
 - **Off-limits: heavy investment in anything that can be taken** (the line for everyone who plays). Your
   character, the town, the notables and the story are safe; losses land only on the light tier. Notables never die.
 - **Your own death may be a mechanic, never a punishment** (many games use death as progression, and it

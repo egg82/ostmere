@@ -32,6 +32,7 @@ SHARDS: dict[str, frozenset[str]] = {
     "nineteen": frozenset({"nineteen"}),
     "twentytwo": frozenset({"twentytwo"}),
     "twentythree": frozenset({"twentythree"}),
+    "twentyfive-sharp": frozenset({"twentyfive-sharp"}),
     "twentyfive": frozenset({"twentyfive"}),
     "makers": frozenset({"makers"}),
 }

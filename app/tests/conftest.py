@@ -1,6 +1,8 @@
 """The time gate (tests/time_gate.py: every test and shared fixture under a wall-clock ceiling), registered as a plugin,
 and the session's shared fixtures.
 
+`load_opening` is memoised for the whole test process (tests/content_cache.py), so no test file pays a load of content
+another has loaded.
 `create_app()` loads and checks every shipped chapter (~0.2 s, ~4x on the slow CI node), so a session builds that once
 (`shipped_opening`) and every test's `create_app()` reuses it; a test that wants other content still patches
 `main.load_opening` itself.
@@ -23,13 +25,14 @@ from ashfall_app.opening.schema import Opening
 from tests import pg
 from tests.game_client import GameClient, game_client
 from tests.shipped_ruleset import ShippedRuleset
-from tests import time_gate
+from tests import content_cache, time_gate
 
 
 def pytest_configure(config: pytest.Config) -> None:
     """The time gate is a plugin, not this conftest's hooks: a hook here never sees a session fixture's setup (its node
     is the session, above this directory)."""
     config.pluginmanager.register(time_gate, "time_gate")
+    content_cache.install()
 
 
 @pytest.fixture(scope="session")

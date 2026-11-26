@@ -180,6 +180,21 @@ class LeaveEntry(Entry):
     stops: list[str] = []
 
 
+class WhereaboutsEntry(Entry):
+    """Where an outcome puts a person, and what the scene shows of it (app/tests/test_scene_people.py): `layer` is the id of
+    the scene layer that shows it, `no_scene` the reason nothing does. Exactly one; words only to the engine."""
+
+    person: str
+    layer: str | None = None
+    no_scene: str | None = None
+
+    @model_validator(mode="after")
+    def _one_answer(self) -> "WhereaboutsEntry":
+        if (self.layer is None) == (self.no_scene is None):
+            raise ValueError("whereabouts: name exactly one of layer and no_scene")
+        return self
+
+
 class OutcomeEntry(Entry):
     stores: list[ItemAmount] = []
     unlocks: list[UnlockEntry] = []
@@ -202,6 +217,8 @@ class OutcomeEntry(Entry):
     """Only in a trigger's or an answer's outcome, one per lane across the content (leave_checks.py)."""
     marks: list[MarkEntry] = []
     """Only in a trigger's or an answer's outcome (group_checks.py)."""
+    whereabouts: list[WhereaboutsEntry] = []
+    """The scene's answer for each person the outcome joins, leaves or puts somewhere a scene could show."""
 
 
 class CardEntry(Entry):

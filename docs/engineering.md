@@ -136,6 +136,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/test_scene_builds.py` (and the scene build, `tools/scene/builds.py`, run by `output.check_builds`) | no two builds (a build's states, parts and what it carries) share 30 px at any stage; every layer belongs to a build, `NOT_BUILDS`, the figures or an overlay; fails too when no stage shows two builds | none (`HELD_CROWDED` in `builds.py` only shrinks) |
 | `app/tests/test_scene_stores.py` | a scene layer's `store:` condition names only a store the opening unlocks (the page reads it from the ledger, which lists only unlocked stores) | none (its held list is in the test and only shrinks) |
 | `app/tests/test_scene_shown.py` (and the scene build, `tools/scene/shown.py`, which rewrites the committed `tools/scene/shown.json`) | every build the player can finish (a craft card with a cap) has a scene state, or is named in `NO_SCENE` (made, but no standing thing in the scene); fails too when a held build has gained a state, and when `shown.json` lists nothing | `HELD_UNSHOWN` in `tools/scene/builds.py` (only shrinks) |
+| `app/tests/test_scene_people.py` (the field is `whereabouts` on an outcome, `entries.WhereaboutsEntry`; layer ids come from `layers` in the committed `tools/scene/shown.json`) | every outcome that joins or leaves a person names, per person, a scene layer that shows it or a `no_scene` reason; every named layer and person exists; fails when a held case gains its entry or names no outcome | `HELD_UNPLACED` in `tools/scene/people.py` (only shrinks) |
 | `app/tests/opening/test_pool_checks.py` (`app/ashfall_app/opening/pool_checks.py`) | a line a source says again and again (a chip's off lines, a fight's won and lost lines, a people band's lines) draws from at least `MIN_POOL` (6) different keys, and an uncapped card says no line; counts keys, never reads them | none |
 | `app/tests/test_canon_ids.py` | every `C-<area>-<n>` and `D-<n>` id cited in the repo's text is a row of `content/canon.jsonl` or `content/decisions.jsonl`; canon rows keep their fields, a status of canon or tentative, and a source (`file#heading`) that resolves; decision rows keep their fields, status, date and by | none |
 | `app/tests/test_playthrough_paths.py` | every path the playthrough-marked tests depend on (computed by `app/tools/playthrough_paths.py`) is covered by the committed `app/tools/playthrough_paths.txt`, which CI's `changes` job reads to make a pull request run the playthroughs; regenerate with `python -m tools.playthrough_paths --write` from `app/` | none (the list is generated) |
@@ -171,7 +172,13 @@ suite still runs in seconds.
   HELD_FIXTURES start and stay empty. Wall clock, because setup and waiting are what a person waits on: the CPU-only gate
   it replaced timed the call alone, and speed commits moved cost into fixtures where nothing measured it. Tests marked
   `playthrough`, and the plays they set up, are budgeted by their CI job's timeout instead. pytest.ini's `timeout = 6`
-  is the hang guard above the budget.
+  is the hang guard above the budget. A test over the 4 s ceiling is timed once more in the same worker
+  (`pytest_runtest_protocol` in `time_gate.py`); it fails only if over again, otherwise it passes and the summary
+  section "time gate: slow once" names it. Ceilings and held lists are unchanged; a first timing that trips the 6 s
+  hang guard still kills the worker.
+- **Content loads once per test process** (`app/tests/content_cache.py`, installed by `app/tests/conftest.py`):
+  `load_opening` is memoised on path, chapters and a digest of the files' bytes, and each caller gets a deep copy, so
+  a test pays one load per distinct set per process, never one per test. The production loader is untouched.
 - **Time never comes from the wall in a test**: a timeout, lease or retry takes an injected clock
   (`app/tests/fake_clock.py`) or a tiny timeout, and an unreachable dependency is a fake that fails at once. The one
   real wait kept is db/test_failover's silent-host smoke test (libpq times the connect itself), at a 1 s URL timeout.

@@ -149,6 +149,38 @@ permanent bonus for a one-off?"). Lasting goes against lasting: a rate on one st
 person's time, or a door the other answer opens. A one-off answer appears only where no answer lasts. **An answer that changes a percentage shows the one it changes**, as now → after ("Stew
 +15% → +20%"), so the player can see what they are adding to or giving up.
 
+**Every answer keeps a consequence** (owner, 2026-11-25: answering an arrival offer yourself changed nothing).
+Each answer to an offer leaves something the player can see and come back to: a lasting number (a modifier whose
+source names the answer), a door (a card, line set or feature that a later gate, trigger or line actually reads), or
+a count that a pattern of answers reads. Answers of one role are counted, so a habit is a fact too ("they expected
+you to do it and had the tools ready"); a rule's answers count as the player's own, and the game never answers for
+them. Good, bad, mixed and conditional are all allowed; no effect is not, and a decline gets a small named echo. The
+consequence lands a little later, a few game hours to a day, as a line that refers back and a number that moves: a
+consequence the player can't trace to its choice is wasted (the Witcher 3's Baron turns on an unmarked earlier
+choice that players found only on a wiki).
+
+**A promise is broken only by a choice, never by a clock** (owner, 2026-11-25: "it's expected and normal to come
+back to this after a night or even a couple days"). A promise is a thing the player can see from the moment it is
+made, named in the journal and still open there, as Ironsworn writes a vow down. It is tested by a later offer or
+beat that sets it against something else the player values (food, a person, another promise), and the player picks
+what to give up; "no good option" is allowed, as in the Witcher's quests. Breaking it is a legal choice whose price
+is shown and is higher than declining would have been. The dilemma waits for the player and resolves while they are
+there.
+
+**The game doesn't pull its punches, and never cheats** (owner: "not pull our punches. If there's no reason to").
+The reaction to aim for, in the owner's words: "oh, fuck, damnit, now what?" rather than "well that doesn't seem
+fair" (2026-11-25). A choice can cost a life, never a notable's, and the player lives with the bed they made, as in
+Frostpunk. What keeps it fair: the bind follows from what the player chose; the dilemma shows what each option costs,
+and every option is one a player could defend taking ("there cannot be an optimal play-through", The Walking Dead);
+when a choice's fit decides who lives (who goes on a dangerous job), the fit is shown, since the deaths players call
+unfair in Mass Effect 2 came from a fit it never signalled; and a loss is warned before it lands, with time to act
+while the player is there (Banished's starvation spirals, with no warning, are the counter-example). Stakes up to a
+life come only from such a choice, never from time away (`people.md`: nobody dies from inattention).
+
+**A dilemma left unanswered is allowed and is not a third, free option**: it holds back only its own thread, as any
+unmade progress does, and the people waiting on it are shown waiting; nothing else stalls and nothing decays while
+it waits.
+
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
 
