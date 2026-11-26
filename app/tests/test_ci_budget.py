@@ -9,7 +9,7 @@ import yaml
 
 CI = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "ci.yml"
 BUDGET_MIN = 10
-PULL_REQUEST = {"changes", "docs", "slice", "playthrough-slice", "playthrough-smoke", "tests", "shards-cover", "mutant-plants",
+PULL_REQUEST = {"changes", "docs", "slice", "playthrough-slice", "playthrough-whole-game", "playthrough-smoke", "tests", "shards-cover", "mutant-plants",
                 "engine-bench", "pyright", "client", "app-image", "ci-ok"}
 FULL_RUN = {"playthrough", "playthrough-week-one", "playthrough-week-one-saved", "playthrough-week-two", "chapter-saves",
             "chapter-saves-readings", "chapter-saves-rebased", "publish-ends"} | {

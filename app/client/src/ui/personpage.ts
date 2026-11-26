@@ -84,6 +84,11 @@ export class PersonPage {
     return !this.root.hidden;
   }
 
+  /** The lane whose page is open, or null. */
+  get shown(): string | null {
+    return this.open ? this.lane : null;
+  }
+
   /** Opens on `lane`'s person; their tasks are now in front of the player. */
   show(view: View, lane: string): void {
     this.lane = lane;

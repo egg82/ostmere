@@ -9,6 +9,7 @@ import { rulesUsing } from "../game/orders";
 import { isTownMix } from "../game/town";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
+import { openSheet } from "./back";
 import { goalLabel, goalLeft } from "./goaltimes";
 import { segmentSpecs } from "./hands";
 import { keyItem } from "./sharebar";
@@ -36,7 +37,7 @@ export class MixSelector {
     this.asking = null;
     this.numbers = null;
     this.draw();
-    if (!this.root.open) this.root.showModal();
+    if (!this.root.open) openSheet(this.root);
     void this.ctx.actions.mixRows().then((rows) => {
       if (rows === null || !this.root.open) return;
       this.numbers = rows;
