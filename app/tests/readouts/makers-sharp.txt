@@ -21,6 +21,9 @@
     d10+   made       3  at cap   0%  hunt_bear 100
   bear_season
     d10+   made      68  at cap   0%  bear_season 100
+  bedding_4_clock
+    d6-9   made    1840  at cap  75%  bedding_4_clock 100
+    d10+   made    2320  at cap 100%  bedding_4_clock 100
   camp
     d1-2   made  335005  at cap   0%  n1_forage 41, n1_cut 10, make_bay 9, n2_forage 5, weave_wattle 5, build_woodstack 4, walk_ridge 4, watch_fire 4, field_track 4, woodcutting 3, rest 3, scavenge 3, dig_clay 2
     d3-5   made 1057609  at cap  50%  n2_forage 30, n1_forage 29, n3_forage 8, n4_watch 8, field_track 7, woodcutting 3, rest 3, scavenge 3, woodshed 3, make_bay2 1, pot_shelf 1, wood_stack 1, other 1
@@ -153,6 +156,8 @@
     d3-5   made    1440  at cap 100%  n2_hour 100
     d6-9   made    1920  at cap 100%  n2_hour 100
     d10+   made    2320  at cap 100%  n2_hour 100
+  n6_posts_done_clock
+    d10+   made    2320  at cap  83%  n6_posts_done_clock 100
   night
     d1-2   made     880  at cap  92%  night 100
     d3-5   made    1440  at cap 100%  night 100
@@ -207,8 +212,14 @@
     d3-5   made      80  at cap   0%  pelt_6h 100
     d6-9   made    1920  at cap  96%  pelt_6h 100
     d10+   made    2320  at cap 100%  pelt_6h 100
+  pelt_ask_clock
+    d6-9   made    1920  at cap  79%  pelt_ask_clock 100
+    d10+   made    2320  at cap 100%  pelt_ask_clock 100
   posts_clock
     d10+   made    2320  at cap  83%  posts_clock 100
+  posts_cord_clock
+    d6-9   made     800  at cap  21%  posts_cord_clock 100
+    d10+   made    2320  at cap 100%  posts_cord_clock 100
   r1_clock
     d3-5   made       4  at cap   0%  r1_clock 100
     d6-9   made      96  at cap   0%  r1_clock 100
@@ -246,6 +257,9 @@
     d3-5   made      80  at cap   0%  spear_clock 100
     d6-9   made    1920  at cap  83%  spear_clock 100
     d10+   made    2320  at cap 100%  spear_clock 100
+  stage_7_clock
+    d6-9   made     480  at cap   4%  stage_7_clock 100
+    d10+   made    2320  at cap 100%  stage_7_clock 100
   stakes
     d6-9   made     251  at cap   4%  n2_stakes 71, cut_stakes 27, n6_stakes 2
     d10+   made      78  at cap   3%  n6_stakes 63, cut_stakes 37

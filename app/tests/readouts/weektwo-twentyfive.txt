@@ -1,16 +1,16 @@
 chapter twentyfive: 12 visits on typical
-  V106 gap   4.2 h  spend 53  decide  1
-  V107 gap   3.2 h  spend 109  decide  1  [wait, 1 lines]
-  V108 gap   9.2 h  spend 54  decide  3  [wait, 6 lines]
-  V109 gap   4.1 h  spend 97  decide  1  [wait, 2 lines]
-  V110 gap   3.2 h  spend 85  decide  0  [wait, 3 lines]
-  V111 gap   9.2 h  spend 58  decide  2  [wait, 3 lines]
-  V112 gap   4.2 h  spend 68  decide  0  [wait, 2 lines]
-  V113 gap   3.2 h  spend 97  decide  0  [wait, 3 lines]
-  V114 gap   9.2 h  spend 84  decide  2  [wait, 4 lines]
-  V115 gap   4.2 h  spend 40  decide  0  [wait, 0 lines]
-  V116 gap   3.2 h  spend 29  decide  0  [wait, 0 lines]
-  V117 gap   9.2 h  spend 41  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 578, decide 3; 8h+: 4 returns, spend 237, decide 7
-  cap loss at the end, away 8 h: damp_wood 0%, dry_wood 26%, roots 85%, stakes 96%, stones 29%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: damp_wood 0%, dry_wood 32%, roots 84%, stakes 99%, stones 29%, windbreak 100%, wraps_sewn 100%
+  V106 gap   4.2 h  spend 41  decide  1  [wait, 5 lines]
+  V107 gap   3.2 h  spend 55  decide  1  [wait, 2 lines]
+  V108 gap   9.2 h  spend 112  decide  3  [wait, 6 lines]
+  V109 gap   4.2 h  spend 55  decide  1  [wait, 2 lines]
+  V110 gap   3.2 h  spend 55  decide  0  [wait, 2 lines]
+  V111 gap   9.2 h  spend 42  decide  2  [wait, 4 lines]
+  V112 gap   4.2 h  spend 69  decide  0
+  V113 gap   3.2 h  spend 83  decide  0  [wait, 3 lines]
+  V114 gap   9.2 h  spend 54  decide  2  [wait, 7 lines]
+  V115 gap   4.2 h  spend 53  decide  0  [wait, 0 lines]
+  V116 gap   3.2 h  spend 41  decide  0
+  V117 gap   9.2 h  spend 53  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 452, decide 3; 8h+: 4 returns, spend 261, decide 7
+  cap loss at the end, away 8 h: dry_wood 12%, roots 85%, stakes 100%, stones 30%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: dry_wood 17%, roots 85%, stakes 100%, stones 30%, windbreak 100%, wraps_sewn 100%

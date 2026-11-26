@@ -20,6 +20,9 @@
     d10+   made       3  at cap   0%  hunt_bear 100
   bear_season
     d10+   made      76  at cap   0%  bear_season 100
+  bedding_4_clock
+    d6-9   made     800  at cap  21%  bedding_4_clock 100
+    d10+   made    2480  at cap 100%  bedding_4_clock 100
   camp
     d1-2   made  253414  at cap  42%  n1_forage 31, woodcutting 17, rest 17, scavenge 17, n1_walk_ridge 7, build_shelter 6, weave_wattle 6
     d3-5   made  758686  at cap  50%  n1_forage 41, n2_forage 25, field_track 10, woodcutting 4, rest 4, scavenge 4, make_bay 4, larder_floor 2, pot_shelf 2, watch_fire 2, wood_stack 2
@@ -143,6 +146,8 @@
     d3-5   made     880  at cap  61%  n2_hour 100
     d6-9   made    1920  at cap 100%  n2_hour 100
     d10+   made    2480  at cap 100%  n2_hour 100
+  n6_posts_done_clock
+    d10+   made    1600  at cap  48%  n6_posts_done_clock 100
   night
     d1-2   made     880  at cap  92%  night 100
     d3-5   made    1440  at cap 100%  night 100
@@ -192,8 +197,14 @@
   pelt_6h
     d6-9   made    1200  at cap  54%  pelt_6h 100
     d10+   made    2480  at cap 100%  pelt_6h 100
+  pelt_ask_clock
+    d6-9   made    1120  at cap  38%  pelt_ask_clock 100
+    d10+   made    2480  at cap 100%  pelt_ask_clock 100
   posts_clock
     d10+   made    1680  at cap  52%  posts_clock 100
+  posts_cord_clock
+    d6-9   made     720  at cap  17%  posts_cord_clock 100
+    d10+   made    2480  at cap 100%  posts_cord_clock 100
   r1_clock
     d6-9   made      60  at cap   0%  r1_clock 100
     d10+   made     124  at cap   0%  r1_clock 100
@@ -228,6 +239,8 @@
   spear_clock
     d6-9   made    1200  at cap  42%  spear_clock 100
     d10+   made    2480  at cap 100%  spear_clock 100
+  stage_7_clock
+    d10+   made    2480  at cap  84%  stage_7_clock 100
   stakes
     d6-9   made     122  at cap   0%  n2_stakes 75, cut_stakes 25
     d10+   made     185  at cap   0%  n6_stakes 43, n2_stakes 36, cut_stakes 21

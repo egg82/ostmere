@@ -9,5 +9,5 @@ chapter nineteen: 9 visits on typical
    V91 gap   4.1 h  spend 119  decide  0
    V92 gap   3.0 h  spend 119  decide  0  [edge]
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 588, decide 1; 8h+: 3 returns, spend 303, decide 5
-  cap loss at the end, away 8 h: barley 20%, cordwood 0%, damp_wood 50%, roots 93%, stones 92%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: barley 20%, cleared 5%, cordwood 67%, damp_wood 50%, dry_wood 9%, roots 93%, stones 92%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 8 h: barley 16%, cordwood 0%, damp_wood 50%, roots 93%, stones 92%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: barley 16%, cleared 49%, cordwood 67%, damp_wood 50%, roots 93%, stones 92%, windbreak 100%, wraps_sewn 100%
