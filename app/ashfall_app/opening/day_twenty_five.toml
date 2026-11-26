@@ -267,7 +267,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "walkers_6h" }] }
 [[triggers]]
 id = "t_sister_road"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 20 }
-outcome = { line_keys = ["l_sister_road"] }
+outcome = { line_keys = ["l_sister_road"], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # ---------- the post's door, and Camp 19 ----------
 
@@ -312,7 +312,7 @@ held = true
 id = "t_thanks"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 30 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_walkers", value = 1 }]
-outcome = { line_keys = ["l_thanks"] }
+outcome = { line_keys = ["l_thanks"], whereabouts = [{ person = "n5", layer = "figure_n5_at_stone" }] }
 
 # ---------- O-widowers ----------
 
@@ -548,6 +548,10 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 },
 ]
 [triggers.outcome]
+whereabouts = [
+  { person = "n13", layer = "figure_n13_outside_ring" },
+  { person = "n23", layer = "figure_n23_at_hall_door" },
+]
 line_keys = ["l_b21_1", "l_b21_2", "l_b21_3", "l_b21_4"]
 stores = [{ store = "arrivals", items = 1 }]
 unlocks = [

@@ -185,6 +185,21 @@ STAGES["63_over_top"] = STAGES["62_cloths"].then(_built("cut_over", 6) | {"proje
 STAGES["64_all_built"] = STAGES["63_over_top"].then(STAGES["31_stack_shelf"].facts - STAGES["31_warm_ground"].facts
                                                     | STAGES["42_flaps"].facts - STAGES["42_roofs_cleared"].facts
                                                     | {"project:n6_posts"})
+# The later people's moments (people_layers.py), each on the finished camp.
+_ALL = STAGES["64_all_built"]
+STAGES["65_sowing"] = _ALL.then({"running:n3_sow"})
+STAGES["65_pulled_rows"] = _ALL.then({"action:rows_black"}, rows_black_left=6)
+STAGES["65_sun"] = _ALL.then(torn_clock=3)
+STAGES["65_deer"] = _ALL.then(clear_clock=18)
+STAGES["65_table"] = _ALL.then({"action:table"})
+STAGES["65_pot"] = _ALL.then(choir_clock=3)
+STAGES["65_hauling"] = _ALL.then(ashwood_trips=1)
+STAGES["65_racks"] = _ALL.then({"running:n3_wash_meat"})
+STAGES["65_stone"] = _ALL.then(kept_clock=30)
+STAGES["65_stranger"] = _ALL.then({"feature:stranger_home"})
+STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
+STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_hearth_pick"})
+STAGES["65_singing"] = _ALL.then(still_clock=30, arrivals=3)
 
 
 def holds(cond: str | None, state: State) -> bool:

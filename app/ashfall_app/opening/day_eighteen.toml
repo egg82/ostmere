@@ -367,7 +367,7 @@ costs = [{ store = "roots", items_per_hour = 1 }]
 [[triggers]]
 id = "t_pot_out"
 when = { test = "at_least", subject_kind = "store", id = "choir_clock", value = 3 }
-outcome = { line_keys = ["l_pot_out_1", "l_pot_out_2"] }
+outcome = { line_keys = ["l_pot_out_1", "l_pot_out_2"], whereabouts = [{ person = "n3", layer = "figure_n3_at_pot" }] }
 
 # ---------- T9 and O-cutter: the man and his sister ----------
 

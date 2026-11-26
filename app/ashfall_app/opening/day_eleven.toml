@@ -314,6 +314,11 @@ modifiers = [
 id = "t_family_groups"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
 [triggers.outcome]
+whereabouts = [
+  { person = "n5", layer = "figure_n5_at_wood_edge" },
+  { person = "n6", layer = "figure_n6_at_wood_edge" },
+  { person = "n7", layer = "figure_n7_at_pot" },
+]
 line_keys = ["l_group_1", "l_group_2"]
 marks = [
   { lane = "n5", own_split = false, card = "g_field_forage" },
