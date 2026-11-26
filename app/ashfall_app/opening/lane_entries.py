@@ -18,6 +18,9 @@ class LaneEntry(Entry):
     id: str
     label_key: str
     ruled: bool = False
+    station: bool = False
+    """A ruled lane that is a thing, not a person (the pot on the fire): its one task is set by the player's rules, and
+    its cards do no work for the camp."""
     later_labels: list[LaneLabelEntry] = []
     name_key: str | None = None
     """The person's name, as a label writes it: the page fills a text's `{<lane id>}` slot with it (api/CONTRACT.txt,

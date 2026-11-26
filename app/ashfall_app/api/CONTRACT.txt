@@ -596,7 +596,8 @@ THE CLIENT MAY
   - draw a card in view.completed as retired, not done, when view.unlocked holds it as a `retired` unlock (a newer
     card replaced it); in the mix editor it is struck through until removed.
   - list a card's Card.needs on it, ready or not, each as ui.card.needs (what one completion takes, the same while
-    its bar runs), and draw one short (the ledger's red) while the card is unready (blocker not null) and its
+    its bar runs; for a card paused dry, also the store it ran out of at the level it resumes at, which a tap waits
+    for), and draw one short (the ledger's red) while the card is unready (blocker not null) and its
     segment's sample is below its quantity. A need whose Need.gate is set draws the gate in its place, never naming
     its store, whether or not the view has unlocked the store: a skill_level gate as ui.card.needs_skill and a
     card_count one as ui.card.needs_step, read as below. The server sets it while the need is short, nothing makes the
@@ -739,6 +740,13 @@ THE CLIENT MAY
     actions that take from it hold a lane speed while they run: engine DESIGN.txt, "HELD SPEED"), so its line is
     always white, names no drain, and once starved reads ui.ledger.unfed, {pct} from bonus_bp, in ui.ledger.starved's
     place: running low on it misses the bonus and asks nothing.
+  - fold the drawn lines of stores that share a StoreInfo.group_key into one row, once two or more are drawn: the
+    label of group_key and their total against their caps' sum, at the first one's place, which a tap opens to show
+    each line as it is drawn alone. A line drawn with the asks (red, or full while fed) is not folded.
+  - draw the cards in view.cards that share a CardInfo.variant_of as one card on the Tasks page, once two or more are
+    there: the kind the player picked (kept per device), else one a lane runs or a mix holds, else the first, with a
+    picker naming each kind by the label of the first store in its CardInfo.makes. Each kind is still its own card to
+    tap, mix, queue and rule.
   - mark what is new with a quiet dot (no number, no pulse), cleared once seen or tapped, and put the one glow on at
     most one control at a time: on a card whose CardInfo.glows is true, the first time it is ready with its lane
     free or Card.cuts_in true, and on the first-mix offer. Show a feature with a label_key, once unlocked, with the chips;
@@ -1186,6 +1194,9 @@ A LANE RUN BY RULES
     tap; the card on the page counts down and fills its bar as the card panel's does. The rule editor's simple view scoped to a lane picks the task: a card in
     view.cards on that lane. Saving sends set_orders with that rule's tap_card changed in place (or a new always rule
     appended).
+  - on the page of a lane whose LaneInfo.station is true (a thing, not a person: it never joins), send set_orders with
+    the lane's first always rule's tap_card changed to a task the player taps, or a new always rule appended when it
+    has none; draw the task that rule taps as pressed.
   - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that
     lane's tasks.
   - in the Rules tab, list the rules that tap a card on that lane under the lane's label, in their view.orders order;

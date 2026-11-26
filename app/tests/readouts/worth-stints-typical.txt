@@ -4,10 +4,10 @@
   set (soonest alone first: the upkeep and the goal's card, until the goal lands, then the player's mix);
   nothing is tapped after the exit. done: the share of the set's XP still to go at the exit that the play
   brought; landed: goals of the set that hold at its end
-  visits by which setup is ahead: same 3, stints ahead 2
+  visits by which setup is ahead: same 2, stints ahead 3
   visit   day  goals  keeper: done, landed  stints: done, landed
   V6     1.22     2    100%   2    100%   2   same
   V19    4.16     2    100%   2    100%   2   same
   V32    7.06     4     71%   3     99%   3   stints ahead
-  V45   10.21     4    100%   3    100%   3   same
-  V58   13.15     5     46%   3     72%   4   stints ahead
+  V45   10.21     5     67%   3    100%   4   stints ahead
+  V58   13.15     5     49%   3     75%   4   stints ahead

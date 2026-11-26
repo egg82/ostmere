@@ -18,7 +18,7 @@ from .index import index
 from .installs import requeued
 from .lanes import TapCard
 from .mixes import Mix, MixLayer, SwitchMix
-from .mixpauses import re_paused, with_running_mix
+from .mixpauses import re_paused, unpaused_candidate, with_running_mix
 from .offerstate import acting, refusal
 from .orders import AfterTime, Condition, Latch, Order, OrderVerb, initial_latch, latch_of, listed, rule_on
 from .orders import placed, unplaced
@@ -217,9 +217,11 @@ def apply_verb(save: Save, rules: Rules, verb: Verb) -> tuple[Save, bool, tuple[
 def _applied(save: Save, rules: Rules, verb: PlanVerb) -> tuple[Save, bool]:
     if isinstance(verb, SwitchMix):
         check_player_switch(rules, save.mixes, verb)
-        return switch(save, rules, verb), False
+        after = switch(save, rules, verb)
+        return after, unpaused_candidate(save, after, rules)
     if isinstance(verb, SaveMix):
-        return _save_mix(save, rules, verb.mix), False
+        after = _save_mix(save, rules, verb.mix)
+        return after, unpaused_candidate(save, after, rules)
     if isinstance(verb, TapCard):
         check_hand_tap(rules, verb)
         if cuts_in(save, rules, verb.card):

@@ -38,6 +38,7 @@ app/ashfall_app/api/goalrows.py
 app/ashfall_app/api/goals.py
 app/ashfall_app/api/journal_models.py
 app/ashfall_app/api/lane_infos.py
+app/ashfall_app/api/lane_models.py
 app/ashfall_app/api/lessonlog.py
 app/ashfall_app/api/levels.py
 app/ashfall_app/api/limits.py
@@ -262,6 +263,7 @@ app/ashfall_app/opening/offer_caps.py
 app/ashfall_app/opening/offer_entries.py
 app/ashfall_app/opening/opening.toml
 app/ashfall_app/opening/order_checks.py
+app/ashfall_app/opening/order_entries.py
 app/ashfall_app/opening/people.py
 app/ashfall_app/opening/people_checks.py
 app/ashfall_app/opening/phase_pays.py

@@ -8,7 +8,7 @@ import pytest
 from ashfall_app.engine import CardId, Order, Rules, SetOrders, StoreId, TapCard, advance, decide, new_save, units, value
 from ashfall_app.engine.rates import tapped_cards
 from ashfall_app.opening.convert import condition
-from ashfall_app.opening.entries import OrderCardEntry
+from ashfall_app.opening.order_entries import OrderCardEntry
 from ashfall_app.opening.schema import OPENING, Opening, load_opening, to_rules
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "chipcure.toml"

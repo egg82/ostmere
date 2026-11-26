@@ -288,7 +288,7 @@ jobs:
   # when they are missing or stale (ASHFALL_REQUIRE_SAVED). Typical's rebased saves are the one exception: they replay
   # typical's decisions from its saved ends, so `chapter-saves-rebased` runs once typical's part has written them
   # (replaying typical's play beside them would pay the play twice). A route whose chain runs past one job's cap is
-  # written in links (chapter_saves.LINKS), each its own job after the one before: `chapter-saves-sharp-a` to `-c` and
+  # written in links (chapter_saves.LINKS), each its own job after the one before: `chapter-saves-typical-a`, `chapter-saves-sharp-a` to `-c` and
   # `chapter-saves-whenever-a` to `-c`, each starting from the ends the link before uploaded. They share these steps
   # (the YAML anchor), set by PART, NAMES and AFTER (the part whose artifact a link starts from).
   chapter-saves:
@@ -300,8 +300,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - part: typical
-            names: typical
           - part: babysitter
             names: babysitter
           - part: readings-early
@@ -328,6 +326,8 @@ jobs:
             names: readings-sixteen-a
           - part: readings-sixteen-b
             names: readings-sixteen-b
+          - part: readings-sixteen-c
+            names: readings-sixteen-c
           - part: readings-eighteen
             names: readings-eighteen
           - part: readings-nineteen-a
@@ -338,6 +338,10 @@ jobs:
             names: readings-twentytwo-a
           - part: readings-twentytwo-b
             names: readings-twentytwo-b
+          - part: readings-twentytwo-c
+            names: readings-twentytwo-c
+          - part: readings-twentytwo-d
+            names: readings-twentytwo-d
           - part: readings-twentythree-a
             names: readings-twentythree-a
           - part: readings-twentythree-b
@@ -348,10 +352,6 @@ jobs:
             names: readings-twentyfive-b
           - part: readings-twentyfive-c
             names: readings-twentyfive-c
-          - part: readings-twentyfive-d
-            names: readings-twentyfive-d
-          - part: readings-twentyfive-e
-            names: readings-twentyfive-e
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       PART: ${{ matrix.part }}
@@ -390,6 +390,40 @@ jobs:
           name: chapter-saves-${{ env.PART }}
           path: chapter-saves/
           retention-days: 1
+
+  chapter-saves-typical-a:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: typical-a
+      NAMES: typical-a
+      AFTER: ""
+    steps: *chapter-saves-steps
+
+  chapter-saves-typical-b:
+    needs: chapter-saves-typical-a
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: typical-b
+      NAMES: typical-b
+      AFTER: "typical-a"
+    steps: *chapter-saves-steps
+
+  chapter-saves-typical-c:
+    needs: chapter-saves-typical-b
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+      PART: typical-c
+      NAMES: typical-c
+      AFTER: "typical-b"
+    steps: *chapter-saves-steps
 
   chapter-saves-sharp-a:
     needs: changes
@@ -460,7 +494,7 @@ jobs:
     steps: *chapter-saves-steps
 
   chapter-saves-rebased:
-    needs: chapter-saves
+    needs: chapter-saves-typical-c
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -488,7 +522,7 @@ jobs:
           key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ matrix.part }}
       - uses: actions/download-artifact@v4
         with:
-          name: chapter-saves-typical
+          name: chapter-saves-typical-c
           path: chapter-saves
       - name: Typical's rebased saves, from the cache or written (${{ matrix.part }})
         working-directory: app
@@ -547,7 +581,7 @@ jobs:
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
-    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, playthrough-week-one]
+    needs: [chapter-saves, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, playthrough-week-one]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -593,7 +627,7 @@ jobs:
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, shards-cover]
+    needs: [chapter-saves, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, shards-cover]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -804,6 +838,9 @@ jobs:
       - playthrough-smoke
       - playthrough
       - chapter-saves
+      - chapter-saves-typical-a
+      - chapter-saves-typical-b
+      - chapter-saves-typical-c
       - chapter-saves-sharp-a
       - chapter-saves-sharp-b
       - chapter-saves-sharp-c
@@ -830,7 +867,8 @@ jobs:
           echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" '
             ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "pyright",
              "client", "app-image"] as $per_pr
-            | ["playthrough", "chapter-saves", "chapter-saves-sharp-a", "chapter-saves-sharp-b", "chapter-saves-sharp-c",
+            | ["playthrough", "chapter-saves", "chapter-saves-typical-a", "chapter-saves-typical-b",
+               "chapter-saves-typical-c", "chapter-saves-sharp-a", "chapter-saves-sharp-b", "chapter-saves-sharp-c",
                "chapter-saves-whenever-a", "chapter-saves-whenever-b", "chapter-saves-whenever-c",
                "chapter-saves-rebased", "playthrough-week-one", "playthrough-week-one-saved",
                "playthrough-week-two"] as $full_run

@@ -296,13 +296,15 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "evening_4" }] }
 id = "stew"
 label_key = "store_stew"
 cap_items = 12
+group_key = "store_group_stew"
 
 [[cards]]
 id = "stew"
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_of = "pot_stew"
+variant_of = "stew"
 work_s = 20
 skill = "cooking"
 xp_per_hour = 36
@@ -314,6 +316,34 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 id = "t_stew_first"
 when = { test = "at_least", subject_kind = "card_count", id = "stew", value = 1 }
 outcome = { line_keys = ["l_stew_first"] }
+
+# The pot on the fire (#473): one kind at a time, its one task set by the player's rules as any ruled lane's is. The
+# camp eats what is on: a pot card's cost is the eating, one an hour for the first eater and as much again for each who
+# comes (the triggers on their eating), and it holds its kind's bonus while it runs. Run dry, it stops until more of
+# that kind is made; nothing switches it but a rule the player writes. A station does no work for the camp.
+[[lanes]]
+id = "pot"
+label_key = "lane_pot"
+ruled = true
+station = true
+
+[[cards]]
+id = "pot_stew"
+only_player = "station"
+lane = "pot"
+presentation = "action"
+label_key = "c_pot_stew"
+upside_key = "up_pot_stew"
+stake = "speed"
+work_s = 60
+costs = [{ store = "stew", items_per_hour = 1 }]
+while_running = [{ lane = "n2", amount_bp = 1500 }]
+
+# His eating opens the pot, on the one kind there is; the player's rules change it from here.
+[[triggers]]
+id = "t_pot_on"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n2_eating", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "card", id = "pot_stew" }], orders = [{ tap_card = "pot_stew" }] }
 
 # ---------- the evening, the third night, morning 4 ----------
 
@@ -693,7 +723,7 @@ lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n1
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_of = "pot_stew"
 work_s = 20
 requires = [{ test = "at_least", subject_kind = "card_count", id = "clay_hearth", value = 1 }]
 inputs = [{ store = "roots", items = 4 }, { store = "smoked", items = 1 }]
@@ -748,13 +778,12 @@ unlocks = [
   { unlock_kind = "card", id = "n2_stew" },
 ]
 
-# He eats what she eats (n1_eating) and the pot: the smoked line, made from the snares a little faster than she eats
-# it, has a second mouth once he joins.
+# He eats what she eats (n1_eating), and from the pot (t_pot_on): the smoked line, made from the snares a little faster
+# than she eats it, has a second mouth once he joins.
 [[standing]]
 id = "n2_eating"
 label_key = "action_n2_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n2", amount_bp = 1500 }]
+costs = [{ store = "smoked", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
 
 # Never unlocked: his first game hour, in twentieths. SL4 at its end.
 [[stores]]
@@ -1121,8 +1150,12 @@ up_cure_hearth = "the laid clay dry enough to build the hearth on"
 store_hearth_wet = "wet layer"
 store_hearth_dry = "dry layer"
 store_stew = "stew"
+store_group_stew = "stews"
 c_stew = "Cook stew"
-up_stew = "{pct} work speed for anyone who eats it"
+up_stew = "{pct} work speed for anyone who eats it, while it's in the pot"
+lane_pot = "The pot"
+c_pot_stew = "Stew"
+up_pot_stew = "{pct} work speed for anyone who eats"
 store_evening_3 = "evening"
 action_evening_3 = "Evening"
 store_night_3 = "night"

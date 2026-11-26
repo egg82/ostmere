@@ -9,7 +9,8 @@ from ..opening import convert as authored
 from ..opening.goals import goal_defs
 from ..opening.eaters import bonus_bp
 from ..opening.makers import card_makes, card_takes, made_by, rises_in_steps
-from ..opening.entries import CardEntry, FightEntry, ModifierEntry, OrderCardEntry
+from ..opening.entries import CardEntry, FightEntry, ModifierEntry
+from ..opening.order_entries import OrderCardEntry
 from ..opening.refs import outcomes
 from ..opening.stake_checks import reach_modifiers, reach_stops
 from ..opening.schema import Opening
@@ -147,7 +148,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         limits=cm.Limits(max_orders=MAX_ORDERS, max_queue=MAX_QUEUE, max_mixes=MAX_MIXES, max_unless=MAX_UNLESS, max_or_else=MAX_OR_ELSE, reserved_mix_prefix=e.TOWN_PREFIX),
         text_entries=[cm.TextEntry(key=k, text=t) for k, t in o.text.items()],
         store_infos=[cm.StoreInfo(store=s.id, label_key=s.label_key, cap=e.units(s.cap_items), made_by=made_by(o, s.id),
-                                  rises_in_steps=rises_in_steps(o, s.id), hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id))
+                                  rises_in_steps=rises_in_steps(o, s.id), hidden=s.hidden, tally=s.tally, clock=s.clock, bonus_bp=bonus_bp(o, s.id),
+                                  group_key=s.group_key)
                      for s in o.stores],
         side_infos=[cm.SideInfo(side=s.id, label_key=s.label_key) for s in o.sides],
         threat_infos=[cm.ThreatInfo(threat=t.id, label_key=t.label_key) for t in o.threats],
@@ -156,7 +158,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
                                         fight=_fight(standing_fights.get(e.ActionId(a.id)), a.fight)) for a in o.standing],
         card_infos=[cm.CardInfo(
             card=c.id, lane=c.lane, presentation=cm.CardPresentation(c.presentation), label_key=c.label_key,
-            upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s,
+            upside_key=c.upside_key, change_bp=[v for v, _ in _card_slots(c, o)], work_s=c.work_s, variant_of=c.variant_of,
             kept=_kept_infos(c, o),
             inputs=[cm.Amount(store=i.store, quantity=authored.amount(i).quantity) for i in c.inputs],
             makes=card_makes(c), takes=card_takes(c), reach=_reach(o, c),
@@ -238,7 +240,7 @@ def _card_slots(c: CardEntry, o: Opening) -> list[tuple[int, bool]]:
     at the full share, which the View scales by the card's share now), then those of the standing action it names as
     upside_of, each with whether it is held by the card itself, then, for a reach stake, those its reach pays. A
     distinct (value, held) pair appears once, so a held amount never shares a slot with a change that does not scale."""
-    eater = [w for a in o.standing if a.id == c.upside_of for w in a.while_running]
+    eater = [w for a in (*o.standing, *o.cards) if a.id == c.upside_of for w in a.while_running]
     reach = reach_modifiers(o, c) if c.stake == "reach" else []
     return list(dict.fromkeys([*((v, False) for v in _changes([*c.outcome.modifiers, *c.finished.modifiers])),
                                *((w.amount_bp, True) for w in c.while_running), *((w.amount_bp, False) for w in eater),

@@ -21,7 +21,10 @@ from tests.weektwo import counters, ends, rebased, verdicts
 from tests.daytwo.player import DayTwoPlayer
 from tests.weektwo.routes import BEFORE, SAVED, laters, play_on, played
 
-LINKS: dict[str, tuple[str, str, str | None]] = {"sharp-a": ("sharp", "week1", "eighteen"),
+LINKS: dict[str, tuple[str, str, str | None]] = {"typical-a": ("typical", "week1", "eighteen"),
+                                                 "typical-b": ("typical", "eighteen", "twentytwo"),
+                                                 "typical-c": ("typical", "twentytwo", None),
+                                                 "sharp-a": ("sharp", "week1", "eighteen"),
                                                  "sharp-b": ("sharp", "eighteen", "twentytwo"),
                                                  "sharp-c": ("sharp", "twentytwo", None),
                                                  "whenever-a": ("whenever", "week1", "eighteen"),

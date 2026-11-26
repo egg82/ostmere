@@ -844,6 +844,8 @@ export interface components {
             label_key: string;
             /** Upside Key */
             upside_key: string | null;
+            /** Variant Of */
+            variant_of: string | null;
             /** Change Bp */
             change_bp: number[];
             /** Kept */
@@ -1480,6 +1482,8 @@ export interface components {
             label_key: string;
             /** Ruled */
             ruled: boolean;
+            /** Station */
+            station: boolean;
             /** Later Labels */
             later_labels: components["schemas"]["LaneLabel"][];
             /** Name Key */
@@ -2499,6 +2503,8 @@ export interface components {
             rises_in_steps: boolean;
             /** Bonus Bp */
             bonus_bp: number | null;
+            /** Group Key */
+            group_key: string | null;
         };
         /**
          * StoreLevel

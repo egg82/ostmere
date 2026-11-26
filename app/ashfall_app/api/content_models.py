@@ -1,7 +1,6 @@
 """Wire models of the game's static content, fetched once (GET /api/content): text, the stores, cards, chips, skills,
 lanes, the Camp bar and the first mix. The conventions in models.py hold here."""
 from enum import StrEnum
-from typing import Literal
 
 from pydantic import BaseModel
 
@@ -10,6 +9,7 @@ from .feature_models import FeatureCard as FeatureCard, FeatureInfo
 from .find_models import FindInfo as FindInfo
 from .camp_models import CampInfo, CampLevel as CampLevel
 from .journal_models import EntryInfo as EntryInfo, Hand as Hand, JournalInfo, NoteInfo as NoteInfo, Section as Section
+from .lane_models import LaneInfo, LaneLabel as LaneLabel
 from .line_models import LineInfo, PeopleInfo
 from .map_models import PlaceInfo, Stamp as Stamp
 from .models import Condition, OrderVerb, Unlock
@@ -107,6 +107,9 @@ class CardInfo(BaseModel):
     label_key: str
     upside_key: str | None
     """CRAFT only: the one upside the card names; the cost is for the player to work out."""
+    variant_of: str | None
+    """The card this one is a kind of: cards of one variant_of are drawn as one card on the Tasks page, with a picker
+    of the kinds unlocked (CONTRACT.txt, "Cards"); null: a card of its own."""
     change_bp: list[int]
     """The modifiers of its outcome (at each completion, as a staged build's), of its finish and held while it runs (at
     its full share), then those its reach pays (triggers on the store it fills), as signed changes in basis points, as
@@ -153,33 +156,6 @@ class FirstMix(BaseModel):
 
     feature: str
     card_ids: list[str]
-
-
-class LaneLabel(BaseModel):
-    after: Unlock
-    label_key: str
-
-
-class LaneInfo(BaseModel):
-    """Every lane, "hands" included. Its label is the label_key of the last of later_labels whose `after`
-    view.unlocked holds, else label_key (CONTRACT.txt, "A lane run by rules")."""
-
-    lane: str
-    label_key: str
-    ruled: bool
-    """A townsperson who works: the player's rules set its task, never their tap."""
-    later_labels: list[LaneLabel]
-    name_key: str | None
-    """The person's name, filling every text's {<lane>} slot (CONTRACT.txt, "Text and numbers"); null: no name."""
-    told: Literal["line", "mention"] | None
-    """How a person's coming and going is written (CONTRACT.txt, "People"); null for a lane that is not a person."""
-    pooled: bool
-    """A group, not a person: the lane its members' shared cards sit on, labelled with the group's name (CONTRACT.txt,
-    "GROUPS"). Never joins, never taps."""
-    group: str | None
-    """On a person's lane, the pooled lane that is their group; null for every other lane."""
-    tied: str | None
-    """On a pooled lane, the lane of the one person tied to the group (CONTRACT.txt, "GROUPS"); null when none is."""
 
 
 class ChipInfo(BaseModel):

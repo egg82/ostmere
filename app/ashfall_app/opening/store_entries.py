@@ -12,6 +12,9 @@ class StoreEntry(Entry):
     cap_items: int = Field(ge=1)
     initial_items: int = Field(default=0, ge=0)
     tally: bool = False
+    group_key: str | None = None
+    """The label of a row this store shares with the others of the same key (kinds of one thing: the pot's stews): the
+    ledger draws them as one row that opens on a tap (api/CONTRACT.txt, StoreInfo.group_key)."""
     """A count the game keeps and no card spends (arrivals): only an outcome adds to it, a gate reads it, and no card
     takes it as a cost or an input (tally_checks.py)."""
     hidden: bool = False

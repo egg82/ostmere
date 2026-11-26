@@ -15,7 +15,7 @@ def check_groups(o: "Opening") -> None:
     names a ruled person; marks only in a trigger's or an
     answer's outcome, each of a ruled person's lane; an unmarked join or an unmarking needs a group on the lane."""
     pooled = {x.id for x in o.lanes if x.pooled}
-    people = {x.id: x for x in o.lanes if x.ruled and not x.pooled}
+    people = {x.id: x for x in o.lanes if x.ruled and not x.pooled and not x.station}
     cards = {c.id: c for c in o.cards}
     for x in o.lanes:
         if x.pooled and (not x.ruled or x.name_key is not None or x.group is not None or x.told is not None):

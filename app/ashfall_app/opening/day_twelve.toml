@@ -526,11 +526,11 @@ twin_of = "catch_broth"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_catch_broth"
-upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_key = "up_catch_broth"
+upside_of = "pot_catch_broth"
 work_s = 300
 inputs = [{ store = "catch", items = 2 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 2 }] }
+outcome = { stores = [{ store = "stew_catch", items = 2 }] }
 
 # With the hands' broth.
 [[triggers]]
@@ -563,13 +563,55 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "spar" }] }
 id = "catch_broth"
 presentation = "action"
 label_key = "c_catch_broth"
-upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_key = "up_catch_broth"
+upside_of = "pot_catch_broth"
+variant_of = "stew"
 work_s = 300
 skill = "cooking"
 xp_per_hour = 300
 inputs = [{ store = "catch", items = 2 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 2 }] }
+outcome = { stores = [{ store = "stew_catch", items = 2 }] }
+
+# Its own store, as the fungus stew's (day eight).
+[[stores]]
+id = "stew_catch"
+label_key = "store_stew_catch"
+cap_items = 36
+group_key = "store_group_stew"
+
+# The broth on the fire: a hunter fed on meat hits harder, and nobody works faster for it (day three's pot, t_pot_on).
+# Its eating counts the mouths already fed (t_pot_eat_family).
+[[cards]]
+id = "pot_catch_broth"
+only_player = "station"
+lane = "pot"
+presentation = "action"
+label_key = "c_pot_catch_broth"
+upside_key = "up_pot_catch_broth"
+stake = "side"
+work_s = 60
+costs = [{ store = "stew_catch", items_per_hour = 1 }]
+while_running = [{ side = "hands", amount_bp = 2500 }]
+
+[[triggers]]
+id = "t_pot_broth"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "catch_broth", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "pot_stew", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "pot_catch_broth" }] }
+
+# As day five's pair (t_pot_eat_pair).
+[[triggers]]
+id = "t_pot_broth_pair"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n3_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = 20000, source = "t_pot_broth_pair" },
+]
+
+[[triggers]]
+id = "t_pot_broth_family"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n5_eating", value = 1 }
+outcome = { modifiers = [{ target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = 30000, source = "t_pot_broth_family" }] }
 
 [[cards]]
 id = "stone_ring"
@@ -881,6 +923,10 @@ l_s4_3 = "the edge of the light is empty. no prints where it sat."
 pays_find_melee_7 = "a pelt, {pct} hunting speed, {pct_b} hunting strength"
 l_find_gap_wolf = "at the gap, an old wolf is dead. you skin it."
 c_catch_broth = "Stew the catch"
+up_catch_broth = "{pct} strength when you hunt, while it's in the pot"
+store_stew_catch = "broth"
+c_pot_catch_broth = "Broth"
+up_pot_catch_broth = "{pct} strength when you hunt"
 c_stone_ring = "Stack damp wood round the stone to dry"
 c_spar = "Practise with spears for the hunts"
 up_spar = "faster, stronger hunts as the skill grows"

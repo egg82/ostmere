@@ -172,6 +172,25 @@ a faster route.
   a completion for every share of work it gets, so such a rule is soon true and stays true; it read as a rule that
   waits for an end that never comes. "While a task is running" is the rule for a task that repeats.
 
+**One pot on the fire.** Where several cards make one kind of thing (the pot's stews), each kind does something of its own, and only one kind's
+effect applies at a time (owner, 2026-11-24: "what's the point of different stew if they're all stew, in the end?").
+
+- The camp eats from the one kind on the fire, which the player picks and can switch at any time. The other kinds keep
+  as a buffer to switch into; their effects never stack, so stocking every kind is a buffer, not a bonus to everything.
+- When the kind on runs out there is no bonus until more of it is made, however the player makes it. The game never
+  cooks on its own and never switches kinds by itself (owner: "Cooking more would mean guessing what the player
+  wants"). Keeping a stocked kind on needs no tap: the pot's choice is a rule, so it holds at 2 AM.
+- Choosing by rule is there from the moment there is a choice: "when X, put Y on" is an ordinary rule on the pot, and
+  a fallback ("or else") switches when the kind on runs out. The first time the pot has a second kind, a lesson walks
+  switching it and writing a rule for it, once.
+- No clutter: kinds of one card are one card with a kind picker on the Tasks page, and kinds of one store are one
+  ledger row that opens on a tap. Each kind is still its own card to tap, mix, queue and rule.
+- Shape: the pot is a station, a ruled lane that is not a person, so it runs one task, which its rules set ("A lane that
+  is not a person still runs one task", above). Each kind's card on it holds that kind's effect while it runs, and its
+  cost is the camp's eating, a portion an hour for each mouth. Rejected: an eater per person per kind (a card per person
+  per kind, and nothing switches a standing action off); stacking effects with upkeep as the trade-off (the owner chose
+  one at a time); switching to another stocked kind by itself (guessing what the player wants).
+
 ## Cards, mixes, lanes, orders and modifiers, as built
 
 How these engine parts behave today, moved from their rows in `systems.md`.

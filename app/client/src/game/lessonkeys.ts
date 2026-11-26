@@ -40,6 +40,9 @@ export const LESSON_KEYS = {
   lessonDrySave: "ui.lesson.dry_save",   // "{card} {task} {store}": where the stopped card's time goes
   lessonDryRule: "ui.lesson.dry_rule",   // the other answer, a rule, in one line
   lessonTownChange: "ui.lesson.town_change",
+  lessonPotChange: "ui.lesson.pot_change",
+  lessonPotPick: "ui.lesson.pot_pick",
+  lessonPotRule: "ui.lesson.pot_rule",
   lessonTownBar: "ui.lesson.town_bar",
   lessonTownRuns: "ui.lesson.town_runs",
   lessonStoppedEdit: "ui.lesson.stopped_edit",   // "{card}": the done card the greyed mix holds; points at Edit

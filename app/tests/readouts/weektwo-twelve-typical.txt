@@ -11,11 +11,11 @@ beats typical (pace_scale 1): B12 day 12.03, target_day 13
   away V60->V61: 3 ['trigger t_s4', 'trigger t_town_beams', 'trigger offer_o_sag']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1      12       5       0       5       0      22       3     47
+  1      12       5       0       5       0      23       3     48
   2      19       6       2       2       0      10       3     42
-  3      13       1       0       0       0       2       2     18
-  4       5       0       1       0       0       0       1      7
-  5      18       4       0       0       0      72       2     96
-  6      15       4       1       2       0       4       3     29
-  7       7       3       0       0       0      10       0     20
-bloom at the end of day eleven 1510.9, of day twelve 1315.0
+  3      12       1       1       0       0       2       2     18
+  4       6       0       0       0       0       0       1      7
+  5      18       4       1       0       0      72       2     97
+  6      15       4       0       2       0       4       3     28
+  7       7       3       0       0       0      11       0     21
+bloom at the end of day eleven 1495.7, of day twelve 1306.7

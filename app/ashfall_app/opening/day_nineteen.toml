@@ -341,6 +341,18 @@ l_t13_3 = "story"
 l_t13_4 = "story"
 l_camp_18 = "level"
 
+# One mouth fewer at the pot once he has gone (day eighteen, t_pot_eat_cutters).
+[[triggers]]
+id = "t_pot_eat_left"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "left", id = "n11", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = -10000, source = "t_pot_eat_left" },
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = -10000, source = "t_pot_eat_left" },
+  { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = -10000, source = "t_pot_eat_left" },
+  { target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = -10000, source = "t_pot_eat_left" },
+]
+
 [text]
 store_cut_night_clock = "clock"
 action_cut_night_clock = "Clock"

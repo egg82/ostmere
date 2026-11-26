@@ -1,20 +1,19 @@
-beats sharp (pace_scale 1): B12 day 9.95, target_day 13
-  away V84->V85: 1 ['trigger offer_o_spoil']
-  away V85->V86: 0 []
-  away V86->V87: 1 ['trigger t_ring_open']
-  away V87->V88: 1 ['trigger offer_o_cradle']
-  away V88->V89: 1 ['trigger t_b12']
-  away V89->V90: 1 ['trigger offer_o_shaft']
-  away V90->V91: 0 []
-  away V91->V92: 1 ['trigger offer_o_cold_air']
-  away V92->V93: 0 []
-  away V93->V94: 1 ['trigger offer_o_lean_to']
-  away V94->V95: 0 []
+beats sharp (pace_scale 1): B12 day 10.04, target_day 13
+  away V85->V86: 1 ['trigger offer_o_spoil']
+  away V86->V87: 0 []
+  away V87->V88: 1 ['trigger t_ring_open']
+  away V88->V89: 1 ['trigger offer_o_cradle']
+  away V89->V90: 1 ['trigger t_b12']
+  away V90->V91: 1 ['trigger offer_o_shaft']
+  away V91->V92: 0 []
+  away V92->V93: 1 ['trigger offer_o_cold_air']
+  away V93->V94: 0 []
+  away V94->V95: 1 ['trigger offer_o_lean_to']
   away V95->V96: 0 []
   away V96->V97: 2 ['trigger t_bear_sign', 'trigger offer_o_lye']
-  away V97->V98: 1 ['trigger offer_o_wet']
-  away V98->V99: 1 ['trigger offer_o_crows']
-  away V99->V100: 0 []
+  away V97->V98: 0 []
+  away V98->V99: 1 ['trigger offer_o_wet']
+  away V99->V100: 1 ['trigger offer_o_crows']
   away V100->V101: 0 []
   away V101->V102: 3 ['trigger t_lamps', 'trigger t_broth_open', 'trigger t_town_broth']
   away V102->V103: 0 []
@@ -38,10 +37,10 @@ beats sharp (pace_scale 1): B12 day 9.95, target_day 13
   away V120->V121: 2 ['trigger t_s4', 'trigger t_town_beams']
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
-  1       9       7       0       4       0      17       3     40
+  1       9       7       0       4       0      18       3     41
   2      30       5       2       2       0      12       2     53
   3      24       4       0       0       0      72       2    102
-  4      19       5       0       0       0       4       3     31
-  5       0       2       0       2       0       1       2      7
-  6       4       1       1       0       0       9       1     16
+  4      15       4       0       0       0       3       3     25
+  5       4       3       0       2       0       2       1     12
+  6       4       1       1       0       0      10       1     17
   7       1       0       0       0       0       0       2      3

@@ -450,26 +450,24 @@ id = "t_child_in"
 when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
 outcome = { stores = [{ store = "arrivals", items = 1 }] }
 
-# The three who work eat meat with the pot, as he does (n2_eating), and twice his, come in off the road thin: eight at
+# The pot feeds three more from their eating (t_pot_eat_family, the pot's held speed on their lanes), and the three
+# who work eat meat as he does (n2_eating), and twice his, come in off the road thin: eight at
 # the fire outrun the snares, and roots go over the smoke for what the catch cannot make (issue #102). At one an hour
 # each the snares still kept up on typical.
 [[standing]]
 id = "n5_eating"
 label_key = "action_n5_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n5", amount_bp = 1500 }]
+costs = [{ store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n6_eating"
 label_key = "action_n6_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n6", amount_bp = 1500 }]
+costs = [{ store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 
 [[standing]]
 id = "n7_eating"
 label_key = "action_n7_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n7", amount_bp = 1500 }]
+costs = [{ store = "smoked", items_per_hour = 2 }, { store = "roots", items_per_hour = 1 }]
 
 # Smoked kept up with roots once the family eats meat: the snares fall short of the eating (issue #102), so the rule
 # smokes roots under 15 until 24, past the day's need of 18 and under the larder's cap by then (offer_caps.py).
@@ -725,6 +723,21 @@ l_night_12 = "story"
 l_b11_1 = "story"
 l_b11_2 = "story"
 l_b11_3 = "story"
+
+# The pot's three more mouths: each pot card's eating rises by a whole first eater's for each (t_pot_on), and what the
+# pots hold reaches their lanes.
+[[triggers]]
+id = "t_pot_eat_family"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n5_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = 30000, source = "t_pot_eat_family" },
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = 30000, source = "t_pot_eat_family" },
+]
+
+[while_running]
+pot_stew = [{ lane = "n5", amount_bp = 1500 }, { lane = "n6", amount_bp = 1500 }, { lane = "n7", amount_bp = 1500 }]
+pot_fungus_stew = [{ lane = "n5", amount_bp = 1000 }, { lane = "n6", amount_bp = 1000 }, { lane = "n7", amount_bp = 1000 }]
 
 [text]
 # ---------- lines: [day two: line to write] ----------

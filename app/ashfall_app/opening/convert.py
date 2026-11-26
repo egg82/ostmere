@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 def build_rules(o: "Opening") -> Rules:
     cards = {c.id for c in o.cards}
-    ruled = {LaneId(x.id) for x in o.lanes if x.ruled}
+    ruled = {LaneId(x.id) for x in o.lanes if x.ruled and not x.station}
     return Rules(
         stores=tuple(StoreDef(StoreId(s.id), units(s.cap_items), units(s.initial_items)) for s in o.stores),
         skills=tuple(SkillDef(SkillId(s.id)) for s in o.skills),

@@ -102,6 +102,14 @@ POSTS_RULE = (Unlock(UnlockKind.CARD, POSTS), Order(AfterTime(0), TapCard(POSTS)
 """His posts on his lane are built by a rule of the player's (a capped card is never a share), as her bed was."""
 STEW_FUNGUS = Trip(CardId("fungus_stew"), StoreId("fungus"), share_bp=1000)
 """The pot in the mix on full fungus (8a)."""
+POT_FUNGUS = (Unlock(UnlockKind.CARD, CardId("pot_fungus_stew")),
+              Order(AfterTime(0), TapCard(CardId("pot_fungus_stew")), or_else=(TapCard(CardId("pot_stew")),)))
+"""The pot the route cooks for on the fire once there is a second kind, the first kind its fallback, so the camp eats
+whichever is stocked with no visit (#473)."""
+POT_BARLEY = (Unlock(UnlockKind.CARD, CardId("pot_barley_stew")),
+              Order(AfterTime(0), TapCard(CardId("pot_barley_stew")),
+                    or_else=(TapCard(CardId("pot_fungus_stew")), TapCard(CardId("pot_stew")))))
+"""The barley pot on, as the route cooks it on full barley (day fifteen), the others its fallbacks."""
 
 TYPICAL = WeekTwoKnobs(
     splits=(
@@ -174,7 +182,7 @@ def day_eight(route: str) -> Later:
         sinks=Chapter(trips=(w1.STONE_DAMP, w1.TRACK_STONES, STEW_FUNGUS),
                       comforts=(*c3.COMFORTS, w1.WOODSHED, w1.HEARTH_STONES, w1.SPEAR, w1.BEDDING),
                       arrivals=w1.ANSWERS),
-        steps=(), order_cards=order_cards((*c3.order_cards(c3.opening3()), w1.BED_RULE)), keeps=c3.keeps(),
+        steps=(), order_cards=order_cards((*c3.order_cards(c3.opening3()), w1.BED_RULE, POT_FUNGUS)), keeps=c3.keeps(),
         landed=EIGHT.of, news=("B8", "U1", "U2", "SL15", "SL16", "U3", "B9"), answers=ASKS_EIGHT,
         shares=(Share(w1.HUNT, 1500), Share(CardId("cut_stakes"), stakes),
                 *((Share(CardId("twist_cord"), cord),) if cord else ())),
@@ -238,7 +246,7 @@ def day_fifteen(route: str) -> Later:
         start="S4", stop="B14",
         sinks=Chapter(trips=(*twelve.sinks.trips, STEW_BARLEY), comforts=twelve.sinks.comforts,
                       arrivals=twelve.sinks.arrivals),
-        steps=(), order_cards=(*order_cards(twelve.order_cards, ORDER_STORES_FIFTEEN), *cordwood_rule()), keeps=twelve.keeps,
+        steps=(), order_cards=(*order_cards(twelve.order_cards, ORDER_STORES_FIFTEEN), *cordwood_rule(), POT_BARLEY), keeps=twelve.keeps,
         landed=FIFTEEN.of, news=("B13", "SL22", "T1", "T3", "T2", "SL23", "B14"),
         answers=(*twelve.answers, *ASKS_FIFTEEN),
         shares=(*twelve.shares, Share(PULL_BEAMS, BEAMS.get(route, BEAMS["typical"])), Share(HUNT_DEER, DEER_SHARE)),

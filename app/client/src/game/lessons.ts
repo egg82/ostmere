@@ -10,6 +10,7 @@ import type { Keeps } from "./keeps";
 import { anyReachesRule } from "./caphint";
 import { nightsBegun, townMixAsMade } from "./lessonfacts";
 import { rulesTabDrawn } from "./orders";
+import { POT_LESSON } from "./potlesson";
 import { SIDE_LESSON } from "./sidelesson";
 import { UI } from "./text";
 
@@ -59,6 +60,7 @@ export const MIX_STOPPED = "mix_stopped";
 export const SWITCH_MIX = "switch_mix";
 export const CLOCK = "clock";
 export const TOWN_MIX = "town_mix";
+export { POT } from "./potlesson";
 export const JOURNAL = "journal";
 export const JOURNAL_NUMBERS = "journal_numbers";
 export const MAP = "map";
@@ -162,6 +164,7 @@ export const LESSONS: readonly Lesson[] = [
       { target: () => `.town .town-people`, line: (c) => c.text.get(UI.lessonTownRuns), ends: "read" },
     ],
   },
+  POT_LESSON,
   {
     id: MIX_STOPPED,
     // the first running mix to grey over a done card (ui/hands.ts marks its Edit): taught on Edit and the editor's own add button

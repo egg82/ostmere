@@ -570,8 +570,7 @@ told = "line"
 [[standing]]
 id = "n23_eating"
 label_key = "action_n23_eating"
-costs = [{ store = "stew", items_per_hour = 1 }, { store = "roots", items_per_hour = 1 }]
-while_running = [{ lane = "n23", amount_bp = 1500 }]
+costs = [{ store = "roots", items_per_hour = 1 }]
 
 # ---------- the journal ----------
 
@@ -678,6 +677,22 @@ l_b21_1 = "story"
 l_b21_2 = "story"
 l_b21_3 = "story"
 l_b21_4 = "story"
+
+# One more mouth at the pot (day eleven, t_pot_eat_family).
+[[triggers]]
+id = "t_pot_eat_n23"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n23_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "add_bp", amount_bp = 10000, source = "t_pot_eat_n23" },
+  { target = "rate", id = "pot_fungus_stew", flow = "cost", store = "stew_fungus", kind = "add_bp", amount_bp = 10000, source = "t_pot_eat_n23" },
+  { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "add_bp", amount_bp = 10000, source = "t_pot_eat_n23" },
+  { target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = 10000, source = "t_pot_eat_n23" },
+]
+
+[while_running]
+pot_stew = [{ lane = "n23", amount_bp = 1500 }]
+pot_fungus_stew = [{ lane = "n23", amount_bp = 1000 }]
 
 [text]
 store_kept_clock = "clock"

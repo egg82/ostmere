@@ -289,13 +289,55 @@ offered_after = { unlock_kind = "card", id = "n3_reap" }
 id = "barley_stew"
 presentation = "action"
 label_key = "c_barley_stew"
-upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_key = "up_barley_stew"
+upside_of = "pot_barley_stew"
+variant_of = "stew"
 work_s = 600
 skill = "cooking"
 xp_per_hour = 900
 inputs = [{ store = "barley", items = 4 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 4 }] }
+outcome = { stores = [{ store = "stew_barley", items = 4 }] }
+
+# Its own store, as the fungus stew's (day eight).
+[[stores]]
+id = "stew_barley"
+label_key = "store_stew_barley"
+cap_items = 36
+group_key = "store_group_stew"
+
+# The barley pot on the fire: the field crew's work runs faster, on the group's own lane, which the stew's speed on each
+# eater's lane never reaches (day three's pot, t_pot_on). Its eating counts the mouths already fed (t_pot_eat_family).
+[[cards]]
+id = "pot_barley_stew"
+only_player = "station"
+lane = "pot"
+presentation = "action"
+label_key = "c_pot_barley_stew"
+upside_key = "up_pot_barley_stew"
+stake = "speed"
+work_s = 60
+costs = [{ store = "stew_barley", items_per_hour = 1 }]
+while_running = [{ lane = "g_field", amount_bp = 1500 }]
+
+[[triggers]]
+id = "t_pot_barley"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "barley_stew", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "card", id = "pot_stew", value = 1 }]
+outcome = { unlocks = [{ unlock_kind = "card", id = "pot_barley_stew" }] }
+
+# As day five's pair (t_pot_eat_pair).
+[[triggers]]
+id = "t_pot_barley_pair"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n3_eating", value = 1 }
+[triggers.outcome]
+modifiers = [
+  { target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = 20000, source = "t_pot_barley_pair" },
+]
+
+[[triggers]]
+id = "t_pot_barley_family"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "n5_eating", value = 1 }
+outcome = { modifiers = [{ target = "rate", id = "pot_barley_stew", flow = "cost", store = "stew_barley", kind = "add_bp", amount_bp = 30000, source = "t_pot_barley_family" }] }
 
 # The barley pot, an everyday job everyone takes (day three's pot).
 [[town_cards]]
@@ -304,11 +346,11 @@ twin_of = "barley_stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_barley_stew"
-upside_key = "up_stew"
-upside_of = "n2_eating"
+upside_key = "up_barley_stew"
+upside_of = "pot_barley_stew"
 work_s = 600
 inputs = [{ store = "barley", items = 4 }, { store = "dry_wood", items = 1 }]
-outcome = { stores = [{ store = "stew", items = 4 }] }
+outcome = { stores = [{ store = "stew_barley", items = 4 }] }
 
 [[triggers]]
 id = "t_town_barley_stew"
@@ -880,6 +922,10 @@ c_reap = "Reap"
 up_reap = "barley for the stew pot"
 c_lane_reap = "Reap"
 c_barley_stew = "Cook barley stew"
+up_barley_stew = "{pct} work speed for the field crew, while it's in the pot"
+store_stew_barley = "barley stew"
+c_pot_barley_stew = "Barley stew"
+up_pot_barley_stew = "{pct} work speed for the field crew"
 l_night_15 = "dusk, and the cold comes down after it."
 l_frost_1 = "rime on everything past the warm ground."
 l_frost_beds = "{n3}'s beds are white."

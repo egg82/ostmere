@@ -214,8 +214,11 @@ class CardEntry(Entry):
     label_key: str
     upside_key: str | None = None
     upside_of: str | None = None
-    """A standing action whose while_running entries the upside describes, served after the card's own changes: a
-    recipe whose make that action eats (api/CONTRACT.txt, {pct})."""
+    """A runner, a standing action or a card, whose while_running entries the upside describes, served after the card's
+    own changes: a recipe whose make that runner eats (api/CONTRACT.txt, {pct})."""
+    variant_of: str | None = None
+    """The card this one is a kind of (itself on the first): cards of one variant_of are one card on the Tasks page,
+    with a kind picker (api/CONTRACT.txt, CardInfo.variant_of)."""
     work_s: int = Field(ge=1)
     skill: str | None = None
     xp_per_hour: int = Field(default=0, ge=0)
@@ -231,9 +234,9 @@ class CardEntry(Entry):
     line_keys: list[str] = []
     fight: FightEntry | None = None
     while_running: list[WhileRunningEntry] = []
-    stake: Literal["side", "reach"] | None = None
+    stake: Literal["side", "speed", "reach"] | None = None
     """What a card that takes stores feeds: "side", a fight's side it holds an entry on while it runs (a later chapter
-    may add the entry); "reach", a store its completions fill whose amount triggers read, each paying a modifier (its
+    may add the entry); "speed", a lane's speed it holds while it runs; "reach", a store its completions fill whose amount triggers read, each paying a modifier (its
     upside's figures are theirs). Required, with an upside_key, on a card that takes stores and gives nothing by itself
     (stake_checks.py)."""
     glows: bool = False
@@ -277,23 +280,3 @@ class TriggerEntry(Entry):
     line_only: bool = False
     """It exists to say its line once and gates nothing: lines only, and no condition names it (line_only_checks.py).
     The goals walk leaves it out. Words only to the engine."""
-
-
-class OrderCardEntry(Entry):
-    """The prefilled rule for a store's line: `when` an at_most on that store, offered under its falling line, or an
-    at_least, offered under its full or rising line while the card it taps (one that takes that store) is idle; the
-    page words it from ui text. then: a card to tap, or a mix to switch to."""
-
-    store: str
-    when: ConditionEntry
-    tap_card: str | None = None
-    switch_mix: str | None = None
-    offered_after: UnlockEntry | None = None
-    """Offered only once this is unlocked: the drain the order answers has begun (a line falling for a moment before
-    then, a roast drawing roots, gets no order card)."""
-    chip: str | None = None
-    """The chip this card answers: offered in the hands strip while that chip shows, not under a ledger line, and
-    `when` is that chip's own (the rule reads as the chip)."""
-    after_end: bool = False
-    """Offered only after the end, once its lines have been read: a step taught past the opening. Needs `chip`."""
-
