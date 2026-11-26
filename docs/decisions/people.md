@@ -137,6 +137,18 @@ mark notables; the two fields stay separate. The Town view draws a row per marke
 (`docs/design/opening-screen.md`, "The Town view"); a group's page may name a person tied to it from an authored field when
 content has one.
 
+How many things the Town view asks the player to tune (a person keeping their own split, or a group with a joined member
+who does not; a station such as the pot is neither) is a feel, "five-ish" by the owner's reckoning (2026-11-25), so it is
+a readout and never a check: `app/tests/readouts/town.txt` lists, at each chapter's end, who keeps their own split and
+each group with its members, by id. Notables keep their own split: the story is written around them as individuals. A
+newcomer the story does not single out is handed to a group at the moment they join, by the join or by a trigger of
+their arrival's answer that clears the mark and writes the line that says why, so a save already past the join gets the
+same change at its next load.
+
+**Groups follow what people can do** (#337). A group holds the work its members can do and nothing more
+(`check_group_abilities` in `app/ashfall_app/opening/groups.py`); a newcomer goes to the group whose work fits their
+list, and two arriving parties whose lists match share a group rather than each getting a row.
+
 **Who can do which job.** Everyday work (cooking a stew, digging clay, weaving wattle) goes to most people by default,
 withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled
 or story-bound work goes to whoever the story fits (owner, 2026-11-14). Every card on a player's lane has a town copy

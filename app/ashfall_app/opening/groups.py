@@ -41,6 +41,23 @@ def check_groups(o: "Opening") -> None:
             need(where, "person's lane", m.lane, list(people))
             if not m.own_split and people[m.lane].group is None:
                 fail(where, f"unmarks {m.lane}, which has no group")
+    check_group_abilities(o)
+
+
+def check_group_abilities(o: "Opening") -> None:
+    """A group holds only work its members can do (docs/decisions/people.md, "The mark: who keeps their own split"): a
+    town card fanned out to a group is fanned out to each member whose lane any town card names. A member no town card
+    names has no list of their own, so the group's list is theirs."""
+    able = {lane for tc in o.town_cards for lane in tc.lanes}
+    members: dict[str, list[str]] = {}
+    for x in o.lanes:
+        if x.group is not None and x.id in able:
+            members.setdefault(x.group, []).append(x.id)
+    for tc in o.town_cards:
+        for g in tc.lanes:
+            missing = [m for m in members.get(g, []) if m not in tc.lanes]
+            if missing:
+                fail(f"town card {tc.id}", f"is on group {g}, and its members {', '.join(missing)} cannot do it")
 
 
 def with_group_unlocks(o: "Opening") -> "Opening":

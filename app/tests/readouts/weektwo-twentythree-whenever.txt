@@ -1,6 +1,6 @@
 beats whenever (pace_scale 1): B20 day 24.2, target_day 25
   away V84->V85: 0 []
-  away V85->V86: 5 ['trigger t_way_15', 'trigger t_named', 'trigger t_cache', 'trigger t_stir', 'trigger offer_o_fiddle']
+  away V85->V86: 4 ['trigger t_named', 'trigger t_cache', 'trigger t_stir', 'trigger offer_o_fiddle']
   away V86->V87: 2 ['trigger t_post_ring', 'trigger offer_o_book']
   away V87->V88: 3 ['trigger t_go_ask', 'trigger offer_j_drag_marks', 'card bind_book']
   away V88->V89: 1 ['trigger offer_j_show_fish']
@@ -16,13 +16,13 @@ day    line feature    chip   store   skill    card   level  total
   6      15       3       1       2       0       4       4     29
   7       7       4       1       0       0      11       0     23
   8       8       4       0       2       0      10       2     26
-  9      14       1       0       4       0      37       3     59
+  9      14       1       0       4       0      38       3     60
  10      10       2       0       0       0       0       3     15
- 11      18       3       2       1       0      84       2    110
- 12      20       0       0       0       0      49       1     70
- 13      11       1       0       0       0       3       1     16
+ 11      19       3       2       1       0      85       2    112
+ 12      19       0       0       0       0      49       1     69
+ 13      13       1       1       0       0       3       1     19
  14      11       2       0       0       0       2       2     17
- 15       6       2       0       1       0       1       2     12
+ 15       6       2       1       1       0       1       2     13
  16      12       1       1       2       1      35       2     54
- 17      18       6       2       0       0      18       3     47
- 18      10       1       0       0       0       4       4     19
+ 17      19       6       2       0       0      24       3     54
+ 18      10       1       0       0       0       4       2     17

@@ -1,4 +1,4 @@
-beats typical (pace_scale 1): B18 day 21.12, target_day 22, B19 day 22.25, target_day 23
+beats typical (pace_scale 1): B18 day 21.13, target_day 22, B19 day 22.25, target_day 23
   away V92->V93: 2 ['trigger t_i1', 'trigger t_b18']
   away V93->V94: 1 ['trigger t_fish']
   away V94->V95: 1 ['trigger t_film']
@@ -15,11 +15,11 @@ day    line feature    chip   store   skill    card   level  total
   6      15       4       0       2       0       4       3     28
   7       7       3       0       0       0      11       0     21
   8       9       4       2       2       0      10       3     30
-  9      14       1       0       3       0      29       1     48
- 10      13       3       0       1       0      12       1     30
+  9      14       1       0       3       0      30       1     49
+ 10      13       3       0       1       0      13       1     31
  11      13       1       0       1       0      12       1     28
- 12      11       1       0       0       0      70       4     86
- 13      15       1       0       0       0      49       2     67
+ 12      12       1       0       0       0      70       4     87
+ 13      16       1       0       0       0      49       2     68
  14      15       2       0       0       0       3       2     22
- 15       8       2       0       1       0       1       2     14
- 16      12       1       1       2       1      35       4     56
+ 15       8       2       0       1       0       1       3     15
+ 16      12       1       1       2       1      35       3     55

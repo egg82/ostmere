@@ -1,0 +1,21 @@
+chapter end      things  people keeping their own split | groups (members)
+  day_one             0  - | -
+  day_two             0  - | -
+  day_three           2  n1 n2 | -
+  day_four            2  n1 n2 | -
+  day_five            4  n1 n2 n3 n4 | -
+  b7                  4  n1 n2 n3 n4 | -
+  day_six             4  n1 n2 n3 n4 | -
+  day_eight           4  n1 n2 n3 n4 | -
+  day_nine            4  n1 n2 n3 n4 | -
+  day_eleven          6  n1 n2 n3 n4 | g_field(n5 n6) g_hearth(n7)
+  day_twelve          6  n1 n2 n3 n4 | g_field(n5 n6) g_hearth(n7)
+  day_fifteen         6  n1 n2 n3 n4 | g_field(n5 n6) g_hearth(n7)
+  day_sixteen         6  n1 n2 n3 n4 | g_field(n5 n6) g_hearth(n7)
+  day_eighteen        6  n1 n2 n3 n4 | g_field(n5 n6 n8 n9 n10 n11 n12) g_hearth(n7)
+  day_nineteen        6  n1 n2 n3 n4 | g_field(n5 n6 n8 n9 n10 n12) g_hearth(n7)
+  day_twenty_two      7  n1 n2 n3 n4 n13 | g_field(n5 n6 n8 n9 n10 n12) g_hearth(n7)
+  day_twenty_three    8  n1 n2 n3 n4 n13 | g_field(n5 n6 n8 n9 n10 n12) g_hearth(n7) g_road(n14 n15)
+  day_twenty_five     9  n1 n2 n3 n4 n13 n23 | g_field(n5 n6 n8 n9 n10 n12) g_hearth(n7) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22)
+  prestige            9  n1 n2 n3 n4 n13 n23 | g_field(n5 n6 n8 n9 n10 n12) g_hearth(n7) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22)
+  phase_pays          9  n1 n2 n3 n4 n13 n23 | g_field(n5 n6 n8 n9 n10 n12) g_hearth(n7) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22)
