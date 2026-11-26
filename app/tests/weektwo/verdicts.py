@@ -61,12 +61,19 @@ PLAYS = {"eight": week2, "nine": nine, "eleven": eleven, "twelve": twelve, "fift
          "twentythree": twentythree, "twentyfive": twentyfive}
 """Each chapter's typical play is the one its counting reads."""
 PART_STEPS = 1
-PARTS = {"eight": 14, "nine": 6, "eleven": 7, "twelve": 13, "fifteen": 13, "sixteen": 5, "eighteen": 7, "nineteen": 4, "twentytwo": 9,
-         "twentythree": 4, "twentyfive": 5}
-"""How many parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
-each part is its own test's setup and none passes the per-test timeout on a slow node. A chapter with more heavy steps
-than its parts hold fails `decided_in`."""
+ALL = -1
+"""The one part of a chapter whose readings are not saved: every heavy step, read by playing on (a run with no saved
+ends; CI's runs that read the parts restore them)."""
 Decided = dict[tuple[str, int], bool]
+
+
+def parts(chapter: str) -> tuple[int, ...]:
+    """The parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
+    each part is its own test's setup and none passes the per-test timeout on a slow node: as many as its saved readings
+    (ends.READINGS) hold, read at collection from files the run already has, never by playing. With none saved, the one
+    part ALL. A chapter with more heavy steps than its saved readings fails `decided_in`."""
+    n = len(ends.saved_readings(chapter))
+    return tuple(range(-(-n // PART_STEPS))) if n else (ALL,)
 
 
 def chapter_visits(p: DayTwoPlayer, chapter: Later) -> list[dc.Visit]:
@@ -81,13 +88,13 @@ def heavy_steps(p: DayTwoPlayer, chapter: Later) -> list[tuple[str, int]]:
 
 @cache
 def decided_in(chapter: str, part: int) -> Decided:
-    """Whether each of the part's heavy steps decides, kept once read: none (empty) when the chapter has fewer heavy
-    steps than the part starts at. Read from the saved readings (ends.READINGS) where the saves are present; a step with
-    none fails under ends.REQUIRE and is read here otherwise."""
+    """Whether each of the part's heavy steps decides, kept once read: every step for ALL. Read from the saved readings
+    (ends.READINGS) where the saves are present; a step with none fails under ends.REQUIRE and is read here otherwise."""
     p, later = PLAYS[chapter]("typical"), CHAPTERS[chapter]
     heavy = heavy_steps(p, later)
-    assert len(heavy) <= PARTS[chapter] * PART_STEPS, f"{chapter} has {len(heavy)} heavy steps, more than its parts hold"
-    mine = heavy[part * PART_STEPS:(part + 1) * PART_STEPS]
+    held = len(parts(chapter)) * PART_STEPS
+    assert part == ALL or len(heavy) <= held, f"{chapter} has {len(heavy)} heavy steps, more than its {held} saved readings"
+    mine = heavy if part == ALL else heavy[part * PART_STEPS:(part + 1) * PART_STEPS]
     saved = ends.saved_readings(chapter) if ends.available(chapter) else {}
     if os.environ.get(ends.REQUIRE):
         missing = [key for key in mine if key not in saved]
@@ -105,7 +112,7 @@ def read(p: DayTwoPlayer, later: Later, key: tuple[str, int]) -> bool:
 def typical_decided(chapter: str) -> Decided:
     """The typical route's heavy steps of a chapter, each read by its part."""
     found: Decided = {}
-    for part in range(PARTS[chapter]):
+    for part in parts(chapter):
         found |= decided_in(chapter, part)
     return found
 
