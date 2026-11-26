@@ -156,9 +156,13 @@ a count that a pattern of answers reads. Answers of one role are counted, so a h
 you to do it and had the tools ready"); a rule's answers count as the player's own, and the game never answers for
 them. Good, bad, mixed and conditional are all allowed; no effect is not, and a decline gets a small named echo. The
 consequence lands a little later, a few game hours to a day, as a line that refers back and a number that moves.
-Accepting and then failing to deliver costs more than declining would have, within `people.md`'s limits: an
-answer's cost is never a death, a notable or a spiral; a story beat may read a pattern and carry heavier stakes
-itself.
+**A promise is broken only by a choice, never by a clock** (owner, 2026-11-25: "it's expected and normal to come
+back to this after a night or even a couple days"). An answer that promises something is read by a later offer or
+beat that sets the promise against something else the player values (food, a person, another promise), and the
+player picks what to give up; "no good option" is allowed, as in the Witcher's quests. The dilemma waits for the
+player and resolves while they are there. Breaking a promise costs more than declining it would have. Stakes up to
+a life come only from such a choice, never from time away (`people.md`: nobody dies from inattention), and never
+take a notable.
 
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
