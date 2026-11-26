@@ -34,18 +34,7 @@ outcome = { line_keys = ["l_morning_7"], unlocks = [{ unlock_kind = "feature", i
 [[triggers]]
 id = "t_spear_made"
 when = { test = "at_least", subject_kind = "card_count", id = "make_spear", value = 1 }
-outcome = { doings = ["n2"], line_keys = ["l_spear"], unlocks = [{ unlock_kind = "action", id = "spear_clock" }], whereabouts = [{ person = "n2", layer = "figure_n2_hefts_the_spear" }] }
-
-[[stores]]
-id = "spear_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "spear_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "spear_clock", items_per_hour = 20 }]
+outcome = { doings = ["n2"], line_keys = ["l_spear"], clock = "spear_clock", whereabouts = [{ person = "n2", layer = "figure_n2_hefts_the_spear" }] }
 
 [[triggers]]
 id = "t_rats_first"
@@ -375,10 +364,14 @@ id = "still_end"
 # ---------- text ----------
 
 [line_doings.l_bedding_4]
+clock = "bedding_4_clock"
 doings = ["n2"]
+whereabouts = [{ person = "n2", layer = "figure_n2_takes_the_pelt" }]
 
 [line_doings.l_pelt_ask]
+clock = "pelt_ask_clock"
 doings = ["n3"]
+whereabouts = [{ person = "n3", layer = "figure_n3_holds_out_a_hand" }]
 
 [line_kinds]
 l_morning_7 = "story"

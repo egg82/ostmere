@@ -661,13 +661,18 @@ id = "place_empty"
 B16 = ["l_b16_1"]
 
 [line_doings.l_choir_2]
+clock = "choir_2_clock"
 doings = ["n8", "n9", "n10"]
+whereabouts = [{ person = "n8", layer = "figure_n8_at_the_gate" }, { person = "n9", layer = "figure_n9_at_the_gate" }, { person = "n10", layer = "figure_n10_at_the_gate" }]
 
 [line_doings.l_road_pair_2]
+clock = "road_pair_clock"
 doings = ["n11"]
+whereabouts = [{ person = "n11", layer = "figure_n11_at_the_gate" }]
 
 [line_doings.l_road_pair_3]
 doings = ["n11", "n12"]
+whereabouts = [{ person = "n11", layer = "figure_n11_at_the_gate" }, { person = "n12", layer = "figure_n12_at_the_gate" }]
 
 [line_kinds]
 l_first_working_1 = "story"

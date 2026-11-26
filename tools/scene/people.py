@@ -37,20 +37,6 @@ HELD_UNPLACED: frozenset[str] = frozenset({
 """Cases that join, leave or set a person doing something the scene shows nothing of today (the audit, one row each):
 may only shrink. A case leaves this list when its outcome gains a `whereabouts` entry for the person."""
 
-HELD_LINE_ONLY: frozenset[str] = frozenset({
-    "line:l_bedding_4:n2",
-    "line:l_choir_2:n10",
-    "line:l_choir_2:n8",
-    "line:l_choir_2:n9",
-    "line:l_fiddle_2:n14",
-    "line:l_fiddle_2:n15",
-    "line:l_n6_posts_done:n6",
-    "line:l_pelt_ask:n3",
-    "line:l_posts:n4",
-    "line:l_road_pair_2:n11",
-    "line:l_road_pair_3:n11",
-    "line:l_road_pair_3:n12",
-    "line:l_stage_7:n2",
-})
+HELD_LINE_ONLY: frozenset[str] = frozenset()
 """Cases of a line no outcome carries (`[line_doings]`, `line:<key>:<person>`) that the scene shows nothing of today: may
 only shrink. A case leaves this list when its line's `whereabouts` gains an entry for the person."""
