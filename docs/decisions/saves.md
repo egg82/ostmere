@@ -82,7 +82,11 @@ rows and deletes the manifests no row names (`app/ashfall_app/saves/strip.py`). 
 load and never written by an older build than last wrote it (`app/ashfall_app/saves/load.py`). A long absence is caught
 up in bounded slices (Game Loop's catch-up, bailing after a budget): each request advances for at most a few seconds of
 wall time, writes and commits that slice, and the page asks again until one reaches now
-(`app/ashfall_app/saves/service.py`; engine `DESIGN.txt`, "Bounded advance"; CONTRACT.txt, "Catching up"). Several
+(`app/ashfall_app/saves/service.py`; engine `DESIGN.txt`, "Bounded advance"; CONTRACT.txt, "Catching up"). So that a
+night away opens caught up, as an idle game does, the minutely job advances each recently played save that has fallen
+behind and keeps the result beside the row, keyed on the row it began from; a step loading that very row continues
+from it, and any other row makes it stale (`app/ashfall_app/saves/ahead.py`). A busy save's night can cost minutes of
+engine time, more than slices can hide, so the work is done before the player returns. Several
 per account (`app/ashfall_app/saves/games.py`): a capped count of live saves, new games under the shared limiter, a
 deleted save held and then deleted for good by a later write; the in-game Games sheet (`app/client/src/ui/games.ts`)
 lists, starts, switches, deletes and restores them, and the front page's list (`app/client/src/ui/places.ts`) selects,

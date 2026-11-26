@@ -47,6 +47,8 @@ class Step:
     rule_changes: tuple[e.RuleChange, ...] = ()
     catching_up_to: int | None = None
     """The game time the step was advancing to, when it stopped short of it (Played.catching_up_to)."""
+    runs_from: tuple[RuleRun, ...] | None = None
+    """The rule runs `rule_changes` apply to when not the row's: those an advance kept ahead left (ahead.py)."""
 
 
 class Persisted(NamedTuple):
@@ -98,7 +100,7 @@ def persist(conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: Ste
     """`seen`: what the save's locking statement read of its journal (db/journal.py `locked`), None for rules with
     none."""
     save_id, decisions = row.id, row.decisions + (step.verb is not None)
-    before = runs_from_json(row.rule_runs)
+    before = runs_from_json(row.rule_runs) if step.runs_from is None else step.runs_from
     best = _best(row, step, rs)
     if step.catching_up_to is None:
         runs = merged(before, step.rule_changes, standing(step.save.orders, step.save.queue))
