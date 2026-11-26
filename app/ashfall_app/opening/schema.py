@@ -22,10 +22,8 @@ from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
-from .clocks import with_moment_clocks
-from .echoes import with_answer_echoes
-from .groups import with_group_unlocks
-from .people import PeopleEntry, with_mentions
+from .people import PeopleEntry
+from .expansions import with_expansions
 from .close_call_entries import CloseCallEntry
 from .checks import check_content, check_opening, check_structure
 from .line_kinds import LineKind
@@ -239,12 +237,6 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         except ValueError as e:
             _fail_naming_chapter(states, chapters, e)
     return states[-1]
-
-
-def with_expansions(o: Opening) -> Opening:
-    """The merged content with every loader expansion applied, in order: the one pipeline the loader and a test's own
-    merge (tests/opening/edited.py) both run, so an expansion added here reaches both."""
-    return with_moment_clocks(with_answer_echoes(with_group_unlocks(with_mentions(o))))
 
 
 def chapter_ends(opening: Opening, chapters: tuple[Path, ...]) -> list[Opening]:

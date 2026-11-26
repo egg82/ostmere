@@ -6,7 +6,8 @@ from pathlib import Path
 
 from ashfall_app.opening.chapters import merge
 from ashfall_app.opening.checks import check_opening
-from ashfall_app.opening.schema import CHAPTERS, OPENING, Chapter, Opening, with_expansions
+from ashfall_app.opening.expansions import with_expansions
+from ashfall_app.opening.schema import CHAPTERS, OPENING, Chapter, Opening
 
 type Edit = Callable[[str], str]
 
