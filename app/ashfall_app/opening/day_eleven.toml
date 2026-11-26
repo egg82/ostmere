@@ -724,6 +724,9 @@ after = { unlock_kind = "feature", id = "family_joined" }
 [beat_lines]
 B11 = ["l_b11_1"]
 
+[line_doings.l_n6_posts_done]
+doings = ["n6"]
+
 [line_kinds]
 l_family_1 = "story"
 l_family_2 = "story"

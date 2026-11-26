@@ -195,6 +195,14 @@ class WhereaboutsEntry(Entry):
         return self
 
 
+class LineDoingsEntry(Entry):
+    """The people a line shows doing something, for a line no outcome carries (a card's stage line, an offer's ask line): the
+    same `doings` and `whereabouts` as an outcome's, authored under the line's key in `[line_doings]`."""
+
+    doings: list[str]
+    whereabouts: list[WhereaboutsEntry] = []
+
+
 class OutcomeEntry(Entry):
     stores: list[ItemAmount] = []
     unlocks: list[UnlockEntry] = []
