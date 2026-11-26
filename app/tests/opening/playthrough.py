@@ -22,7 +22,8 @@ from ashfall_app.engine import (
     SwitchMix, TapCard, Unlock, UnlockKind, Verb, View, advance_logged, decide_logged, new_save, next_event, segment,
     units, view,
 )
-from ashfall_app.opening.convert import camp_lands, camp_trigger_id, condition
+from ashfall_app.opening.camp_convert import camp_lands
+from ashfall_app.opening.convert import camp_trigger_id, condition
 from ashfall_app.opening.schema import DAY_ONE, Opening, load_opening, to_rules
 
 QUANTITY = units(1)

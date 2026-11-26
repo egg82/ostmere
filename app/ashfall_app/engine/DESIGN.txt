@@ -1096,8 +1096,8 @@ CHOICES (townsfolk, installed rules, offers)
   named card that is not the cure (cure_reading.cures_chip) of a chip whose store only a season's standing makes, a
   season's standing being a standing action some season's turn unlocks, and "only" meaning every card and standing
   action whose makes hold that store is one: "trigger {id}: retires the orders on {card}, which cures no chip whose
-  store only a season's standing makes" (opening/retire_checks.py). The cure check reads the built rules, so it runs
-  after the shape checks, and only when some outcome retires orders.
+  store only a season's standing makes" (opening/retire_checks.py). The cure check reads the built rules, so it is a content
+  check: it runs once, on the last state, with the others' errors naming the chapter.
 - Validation (InvalidRulesError): a RuleInstall's card is a declared card on a ruled lane; Outcome.orders is empty
   outside a trigger's and an answer's outcome; Outcome.queues is empty outside an answer's outcome, each card a
   declared HANDS card with a cap; no Outcome.unlocks and no Rules.opening holds an ANSWERED or ANSWER unlock (only an

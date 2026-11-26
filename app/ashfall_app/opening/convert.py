@@ -3,18 +3,19 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from ..engine import (
-    BP, HANDS, ActionId, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, SideStrength, ThreatDef, ThreatId, ThreatStrength, AfterTime, AnswerDef, AnswerId, KindId, OfferDef, OfferId, RoleId, Amount, AtLeast, AtMost, CapRaise, CardCount, CardDef, CardId, ChipDef, ChipId,
+    HANDS, ActionId, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, SideStrength, ThreatDef, ThreatId, ThreatStrength, AfterTime, AnswerDef, AnswerId, KindId, OfferDef, OfferId, RoleId, Amount, AtLeast, AtMost, CapRaise, CardCount, CardDef, CardId, ChipDef, ChipId,
     Condition, FeatureId, Flow, FlowKind, LaneDef, LaneId, LaneRules, LaneSpeed, LineKey, Modifier, ModifierKind, Outcome, PacingCurve,
     RateRef, RuleInstall, Rules, Runner, Running, SkillDef, SkillId, SkillLevel, SourceId, StandingDef, StoreCap, StoreDef,
-    StoreId, StoreValue, Subject, Target, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind, WorkRef, ceil_div,
+    StoreId, StoreValue, Subject, Target, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind, WorkRef,
     per_hour, units,
 )
 from ..engine.units import QUANTITY_SCALE
 from . import move_convert
+from .camp_convert import camp_chain, camp_raise, lifts_by_card, camp_lands, with_lifts
 from .prestige import node_def, prestige_def
 
 if TYPE_CHECKING:
-    from .camp_entries import CampEntry, CampLevelEntry
+    from .camp_entries import CampEntry
     from .chip_entries import ChipEntry
     from .entries import (
         CardEntry, ConditionEntry, FlowEntry, ItemAmount, ModifierEntry,
@@ -27,6 +28,7 @@ if TYPE_CHECKING:
 def build_rules(o: "Opening") -> Rules:
     cards = {c.id for c in o.cards}
     ruled = {LaneId(x.id) for x in o.lanes if x.ruled and not x.station}
+    lifts = lifts_by_card(o.camp)
     return Rules(
         stores=tuple(StoreDef(StoreId(s.id), units(s.cap_items), units(s.initial_items)) for s in o.stores),
         skills=tuple(SkillDef(SkillId(s.id)) for s in o.skills),
@@ -35,7 +37,7 @@ def build_rules(o: "Opening") -> Rules:
         threats=tuple(ThreatDef(ThreatId(t.id), t.base) for t in o.threats),
         curve=PacingCurve(tuple(units(n) for n in o.curve_items)),
         lanes=tuple(LaneDef(LaneId(x.id), x.ruled, x.pooled, None if x.group is None else LaneId(x.group)) for x in o.lanes),
-        cards=tuple(_with_camp(_with_lifts(_card(c, cards), o.camp), o.camp, ruled) for c in o.cards),
+        cards=tuple(_with_camp(with_lifts(_card(c, cards), lifts), o.camp, ruled) for c in o.cards),
         chips=tuple(_chip(c, cards) for c in o.chips),
         triggers=tuple(_trigger(t, cards) for t in o.triggers) + _camp_triggers(o.camp, cards)
         + tuple(_offer_trigger(x, cards) for x in o.offers) + _note_triggers(o, cards),
@@ -98,59 +100,9 @@ def _with_camp(card: CardDef, camp: "CampEntry | None", ruled: set[LaneId]) -> C
     return replace(card, makes=card.makes + (Flow(StoreId(camp.store), per_hour(camp.items_per_hour)),))
 
 
-def camp_lands(lv: "CampLevelEntry") -> bool:
-    """A level the loader makes a trigger for: every level but a held one nothing lifts."""
-    return not lv.held or bool(lv.lifted_by)
-
-
-def camp_cap(camp: "CampEntry") -> int:
-    """The camp store's cap in items: one under the first held level a step lifts (the bar holds just below its
-    marker), else the last level's at_items."""
-    lifted = [lv.at_items for lv in camp.levels if lv.held and lv.lifted_by]
-    return lifted[0] - 1 if lifted else camp.levels[-1].at_items
-
-
 def to_camp_id(n: int) -> TriggerId:
     """The trigger that raises the camp cap for Camp level n (1-based) once level n - 1 lands."""
     return TriggerId(f"to_camp_{n}")
-
-
-def camp_chain(camp: "CampEntry") -> list[tuple[int, str | None, int]]:
-    """The camp cap's steps in order (engine DESIGN.txt, "THE CAMP"): (level n, the lifting card or None for the step
-    to_camp_n, the raise in bp). Each step's target is exact, the least add that reaches a level or the greatest that
-    stays under a held one, and its raise is that target less the previous step's, so the raises telescope."""
-    first = next((i for i, lv in enumerate(camp.levels) if lv.held and lv.lifted_by), None)
-    if first is None:
-        return []
-    base = units(camp_cap(camp))
-    steps: list[tuple[int, str | None, int]] = []
-    prev = 0
-    for n, lv in enumerate(camp.levels[first:], start=first + 1):
-        reach = ceil_div(units(lv.at_items) * BP, base) - BP
-        if n > first + 1:
-            target = reach - 1 if lv.held else reach
-            steps.append((n, None, target - prev))
-            prev = target
-        if lv.held and lv.lifted_by:
-            steps += [(n, card, reach - prev) for card in lv.lifted_by]
-            prev = reach
-    return steps
-
-
-def _camp_raise(camp: "CampEntry", bp: int, source: str) -> Modifier:
-    return Modifier(StoreCap(StoreId(camp.store)), ModifierKind.ADD_BP, bp, SourceId(source))
-
-
-def camp_lifts(camp: "CampEntry") -> list[tuple[str, Modifier]]:
-    """(card, raise) for each card of each held level's lifted_by: the raise its finish lands (camp_chain)."""
-    return [(card, _camp_raise(camp, bp, card)) for _, card, bp in camp_chain(camp) if card is not None]
-
-
-def _with_lifts(card: CardDef, camp: "CampEntry | None") -> CardDef:
-    mods = tuple(m for c, m in camp_lifts(camp) if c == card.id) if camp is not None else ()
-    if not mods:
-        return card
-    return replace(card, finished=replace(card.finished, modifiers=card.finished.modifiers + mods))
 
 
 def _camp_triggers(camp: "CampEntry | None", cards: set[str]) -> tuple[TriggerDef, ...]:
@@ -162,7 +114,7 @@ def _camp_triggers(camp: "CampEntry | None", cards: set[str]) -> tuple[TriggerDe
                            lines=tuple(LineKey(k) for k in lv.line_keys)))
         for n, lv in enumerate(camp.levels, start=1) if camp_lands(lv)) + tuple(
         TriggerDef(to_camp_id(n), AtLeast(StoreValue(StoreId(camp.store)), units(below), units(below)),
-                   Outcome(modifiers=(_camp_raise(camp, bp, to_camp_id(n)),)))
+                   Outcome(modifiers=(camp_raise(camp, bp, to_camp_id(n)),)))
         for n, card, bp in camp_chain(camp) if card is None for below in [camp.levels[n - 2].at_items])
 
 

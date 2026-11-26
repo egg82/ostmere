@@ -3,7 +3,7 @@ levels filling the markers the content so far left past its end. Pure; raises Va
 overwrite rather than add. Ids are checked unique afterwards, by check_opening on the result."""
 from typing import TYPE_CHECKING
 
-from .convert import camp_cap
+from .camp_convert import camp_cap
 from .phase_pays import expanded
 from .town import expand
 

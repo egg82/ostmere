@@ -12,7 +12,7 @@ from ashfall_app.api.service import Game
 from ashfall_app.engine import new_save, units
 from ashfall_app.main import create_app
 from ashfall_app.opening.ui_keys import UI_KEYS
-from ashfall_app.opening.convert import camp_cap
+from ashfall_app.opening.camp_convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
 from ashfall_app.opening.schema import (
     B7, CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_NINETEEN, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,

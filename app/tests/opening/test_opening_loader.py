@@ -8,7 +8,8 @@ from ashfall_app.engine import (
     validate_rules,
 )
 from ashfall_app.opening.ui_keys import UI_KEYS
-from ashfall_app.opening.convert import camp_lands, camp_trigger_id
+from ashfall_app.opening.camp_convert import camp_lands
+from ashfall_app.opening.convert import camp_trigger_id
 from ashfall_app.opening.chip_entries import ChipEntry
 from ashfall_app.opening.schema import OPENING, load_opening, to_rules
 from tests.opening.playthrough import opening, opening_rules
