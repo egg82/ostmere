@@ -27,9 +27,18 @@ WINDOWS: dict[str, str] = {
     "caps": "store:caps_clock@1..14",
     "posts": "store:posts_clock@1..14",
     "seed": "store:pair_3h@20..32",
+    "sun": "store:torn_clock@3..6",
+    "deer": "store:clear_clock@18..21",
+    "pot": "store:choir_clock@3..6",
+    "stone": "store:kept_clock@30..33",
+    "singing": "store:still_clock@30..33",
+    "drift": "store:drift_clock@12..15",
+    "naming": "store:sorrel_clock@6..9",
+    "bowl": "store:kept_clock@8..11",
 }
-"""Each moment's window. The seed's is the pair's own three-hour count, which the trigger reads at 20; the rest are
-clocks of the moment's own, started by the outcome that tells it."""
+"""Each moment's window. The seed's is the pair's own three-hour count, which the trigger reads at 20; the first
+group are clocks of the moment's own, started by the outcome that tells it, and the last the chapters' own hours-since
+clocks (hours, not twentieths)."""
 
 SHED_AT = (SHED[0] - 10, SHED[1] + 44)
 THORN_AT = (WATCH[0] - 1.5 * T, WATCH[1] + 1.0 * T)
@@ -70,9 +79,11 @@ def moment_layers() -> list[Layer]:
 
 
 STEP_ASIDE: dict[str, tuple[str, ...]] = {
-    "figure_n2_by_fire": (WINDOWS["shed"], WINDOWS["his_watch"], WINDOWS["spear"], WINDOWS["thorn"]),
-    "figure_n3_by_fire": (WINDOWS["seed"], WINDOWS["caps"]),
-    "figure_n4_by_fire": (WINDOWS["old_watch"],),
+    "figure_n2_by_fire": (WINDOWS["shed"], WINDOWS["his_watch"], WINDOWS["spear"], WINDOWS["thorn"], WINDOWS["deer"]),
+    "figure_n3_by_fire": (WINDOWS["seed"], WINDOWS["caps"], WINDOWS["drift"], WINDOWS["pot"], WINDOWS["naming"],
+                          WINDOWS["bowl"]),
+    "figure_n4_by_fire": (WINDOWS["old_watch"], WINDOWS["drift"], WINDOWS["sun"]),
+    "figure_n5_by_fire": (WINDOWS["stone"],),
     "figure_n6_by_fire": (WINDOWS["posts"],),
 }
 """Each by-the-fire pose and the moment windows that take the person from it: it is back when the window is over."""
