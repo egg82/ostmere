@@ -228,7 +228,7 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         merged, end = _merged(states[-1], chapter)
         states.append(merged)
         ends.append(end)
-    states[-1] = with_moment_clocks(with_answer_echoes(with_group_unlocks(with_mentions(states[-1]))))
+    states[-1] = with_expansions(states[-1])
     last: list[str] = [e for e in ends if e is not None][-1:]
     if last and opening.end_card is not None:
         states[-1] = _with_end_card(states[-1], last[0], opening.end_card)
@@ -239,6 +239,12 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         except ValueError as e:
             _fail_naming_chapter(states, chapters, e)
     return states[-1]
+
+
+def with_expansions(o: Opening) -> Opening:
+    """The merged content with every loader expansion applied, in order: the one pipeline the loader and a test's own
+    merge (tests/opening/edited.py) both run, so an expansion added here reaches both."""
+    return with_moment_clocks(with_answer_echoes(with_group_unlocks(with_mentions(o))))
 
 
 def chapter_ends(opening: Opening, chapters: tuple[Path, ...]) -> list[Opening]:
