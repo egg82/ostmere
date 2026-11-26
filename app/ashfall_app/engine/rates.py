@@ -150,6 +150,14 @@ def contribution(save: Save, rules: Rules, runner: Runner, store: StoreId, share
     return 0
 
 
+def contributions(save: Save, rules: Rules, now: Running, store: StoreId) -> tuple[tuple[Runner, int], ...]:
+    """Each running runner's contribution to `store` that is not 0, in running order: only one that makes or costs it
+    can add any."""
+    touch = touching(rules, store)
+    return tuple((a, c) for a, share in now.shares.items()
+                 if a in touch and (c := contribution(save, rules, a, store, share, now.runs[a])) != 0)
+
+
 def flow_net(save: Save, rules: Rules, now: Running, store: StoreId) -> int:
     """The store's unclamped net over its flow lines: its lump lines move it by their cards' work (lumps.py)."""
     touch = derived(rules, "_flow_touch", _all_flow_touch).get(store, frozenset())
