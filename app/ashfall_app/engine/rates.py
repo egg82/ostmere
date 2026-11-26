@@ -9,7 +9,7 @@ from fractions import Fraction
 
 from .cards import LaneState
 from .counts import is_completed, unit
-from .gates import effective_stack, is_unlocked, stack_inputs
+from .gates import effective_stack, is_unlocked, keep_stack, stack_inputs
 from .gone import stopped
 from .ids import CardId, LaneId, Runner, StoreId
 from .index import derived, index
@@ -77,6 +77,7 @@ def _picked(save: Save, rules: Rules, own: list[RateRef], speed: list[LaneSpeed 
 
 
 _BY_TARGET: SaveMemo[dict[object, list[tuple[int, Modifier]]]] = SaveMemo()
+"""Callers never change what it returns."""
 
 
 def _by_target(save: Save, rules: Rules) -> dict[object, list[tuple[int, Modifier]]]:
@@ -197,10 +198,13 @@ def running(save: Save, rules: Rules) -> Running:
     return _RUNNING.get(save, rules, lambda: _running(save, rules))
 
 
-def keep_running(save: Save, rules: Rules, now: Running) -> None:
-    """`now` is running(save): a rebuilt save has the values and the discrete state of the save it was built from,
-    and running reads nothing else."""
+def keep_running(source: Save, save: Save, rules: Rules, now: Running) -> None:
+    """`now` is running(source), and `save` was rebuilt from `source`: it has the same values and discrete state, and
+    running reads nothing else; nor do the effective stack, its inputs and the running mixes' entries, which `source`'s
+    are kept for too."""
     _RUNNING.put(save, rules, now)
+    _BY_TARGET.carry(source, save, rules)
+    keep_stack(source, save, rules)
 
 
 _STANDING: PartsMemo[tuple[StandingDef, ...]] = PartsMemo()

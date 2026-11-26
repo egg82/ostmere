@@ -9,10 +9,10 @@ from .index import index
 from .memo import SaveMemo
 from .mixes import CardShare, Mix, SpentShare, flatten_shares
 from .modifiers import Run, RunKind
-from .plan import running_mix_id, running_town_mix_id
+from .plan import keep_mix_ids, running_mix_id, running_town_mix_id
 from .requires import first_unmet
 from .rules import Rules
-from .spent import spend, yielded
+from .spent import keep_spent, spend, yielded
 from .state import Save
 
 
@@ -40,6 +40,14 @@ type Gains = dict[CardId, tuple[SpentShare, ...]]
 _MIX: SaveMemo[tuple[Entries, Gains]] = SaveMemo(4)
 _TOWN: SaveMemo[tuple[Entries, Gains]] = SaveMemo(4)
 """A save's entries and gains, built once: running, the held entries and the view each read them of the same save."""
+
+
+def keep_entries(source: Save, target: Save, rules: Rules) -> None:
+    """`target` has the values and the discrete state of `source`, all the running mixes and their entries read."""
+    for memo in (_MIX, _TOWN):
+        memo.carry(source, target, rules)
+    keep_mix_ids(source, target, rules)
+    keep_spent(source, target, rules)
 
 
 def mix_entries(save: Save, rules: Rules) -> Entries:
