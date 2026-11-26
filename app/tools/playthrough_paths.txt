@@ -340,6 +340,7 @@ app/requirements.txt
 app/tests/banked/chapter.py
 app/tests/banked/play.py
 app/tests/conftest.py
+app/tests/content_cache.py
 app/tests/dayone/MUTANTS.txt
 app/tests/dayone/absence.py
 app/tests/dayone/arrival_rules.py
