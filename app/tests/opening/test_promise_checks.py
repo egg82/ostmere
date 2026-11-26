@@ -36,7 +36,9 @@ def test_every_shipped_dilemma_passes_and_names_a_promise(shipped_opening: Openi
 
 def test_each_malformed_dilemma_fails_by_name(shipped_opening: Opening):
     o = shipped_opening
-    keep = lambda a: a.model_copy(update={"breaks": []})  # noqa: E731
+
+    def keep(a: AnswerEntry) -> AnswerEntry:
+        return a.model_copy(update={"breaks": []})
     cases: list[tuple[str, Opening]] = [
         ("which is not an answer that queues work", edit_dilemma(o, lambda x: x.model_copy(update={"tests": ["o_pair_pot_pot"]}))),
         ("does not require it given", edit_dilemma(o, lambda x: x.model_copy(update={"requires": [r for r in x.requires if r.unlock_kind != "answer"]}))),

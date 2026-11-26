@@ -801,7 +801,7 @@ label_key = "a_family_gap_hut"
 cost_key = "a_family_gap_hut_cost"
 [offers.answers.outcome]
 line_keys = ["l_family_gap_hut"]
-modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = -500, source = "o_family_gap_hut" }]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 9500, source = "o_family_gap_hut" }]
 
 [[offers.answers]]
 id = "o_family_gap_gap"
@@ -885,10 +885,10 @@ o_family_gap = "The hut is half up, and the gap wants hands."
 l_family_gap_1 = "{n2} comes in from the gap with a split stake in each fist."
 l_family_gap_2 = "the hut's frame stands. the woman has not moved from it."
 a_family_gap_hut = "You finish the hut"
-a_family_gap_hut_cost = "{pct} gap strength"
+a_family_gap_hut_cost = "{pct} rest"
 a_family_gap_gap = "You go to the gap"
 a_family_gap_gap_cost = "{pct} work from her"
-l_family_gap_hut = "the gap holds on what it has. the hut roofs over before dark."
+l_family_gap_hut = "the hut roofs over before dark. the camp sleeps light, with the gap thin."
 l_family_gap_gap = "you leave the frame to her. she lifts the next pole alone."
 c_make_hut = "Build a hut"
 c_n5_build_hut = "Build a hut"
