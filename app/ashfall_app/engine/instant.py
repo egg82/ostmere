@@ -69,9 +69,13 @@ def resolve_instant(save: Save, rules: Rules, arrivals: list[Event], must_evalua
     repeats = _Repeats(emit)
     crossing = retap.crossing(save, rules) if arrivals else frozenset[LaneId]()
     """Repeating taps that reached a completion as time came to this instant: a task change here lands them now."""
+    asked: tuple[Save, list[Event]] | None = None
+    """The events pending at the save last asked about: an evaluation that applied no verb leaves the save as it was."""
     while True:
         firings += repeats.skipped((save, work, idle, must_evaluate), firings, rules.max_firings_per_instant)
-        for e in pending(save, rules):
+        if asked is None or asked[0] is not save:
+            asked = (save, pending(save, rules))
+        for e in asked[1]:
             if (e.kind, e.sequence) not in idle | held:
                 work[(e.kind, e.sequence)] = e
         if work:

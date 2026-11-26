@@ -22,8 +22,9 @@ STORY = ("H1", "H2", "H3", "H4", "H5", "H6", "H7", "B3")
 def landed(save: Save, rules: Rules) -> set[str]:
     """The story ids whose step has landed in this save."""
     fired = {t.id for t, f in zip(rules.triggers, save.fired) if f}
-    done = {c.card for c in save.cards if c.work.start_value >= _unit(rules, c.card)}
-    return {b for b, t in TRIGGERED.items() if t in fired} | {b for b, c in STEPS.items() if CardId(c) in done}
+    work = {c.card: c.work.start_value for c in save.cards}
+    done = {c for c in set(STEPS.values()) if CardId(c) in work and work[CardId(c)] >= _unit(rules, CardId(c))}
+    return {b for b, t in TRIGGERED.items() if t in fired} | {b for b, c in STEPS.items() if c in done}
 
 
 def _unit(rules: Rules, card: CardId) -> int:

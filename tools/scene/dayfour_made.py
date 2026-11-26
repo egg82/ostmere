@@ -97,6 +97,14 @@ def turned_pelt() -> Image.Image:
     return out
 
 
+def turned_sacking() -> Image.Image:
+    """Sacking laid over the same ground for the night: the hide's shape in plain linen."""
+    out = canvas()
+    cloth = kit.grade(_flat(hide()), sat=0.2, mul=(1.06, 1.0, 0.86), bright=1.12, contrast=0.85)
+    put(out, cloth, TURNED[0] + 48, TURNED[1] + 14)
+    return out
+
+
 def pegged(n: int) -> Image.Image:
     """The first pelt pegged out under the rack; the second beside it."""
     out = canvas()

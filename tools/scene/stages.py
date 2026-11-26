@@ -201,6 +201,27 @@ STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
 STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_hearth_pick"})
 STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
 STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
+STAGES["66_ash_and_cord"] = _ALL.then(drift_clock=12)
+STAGES["66_naming"] = STAGES["65_stranger"].then(drift_clock=16, choir_clock=7, sorrel_clock=6)
+STAGES["66_bowl"] = _ALL.then(drift_clock=16, choir_clock=7, sorrel_clock=10, kept_clock=8)
+STAGES["66_after_the_moments"] = _ALL.then(drift_clock=16, choir_clock=7, sorrel_clock=10, kept_clock=11)
+# The one-off moments of people_moments.py, each in its window, by day and by night.
+_NIGHT = _ALL.then({"action:night_14"}, night_14=20)
+_DAY = _ALL.then({"action:morning_13"}, {"action:night_12", "action:night_14"}, night_12=0, night_14=0)
+for _name, _clock in (("shed", "shed_stack_clock"), ("his_watch", "his_watch_clock"), ("old_watch", "old_watch_clock"),
+                      ("spear", "spear_clock"), ("thorn", "thorn_clock"), ("caps", "caps_clock"), ("posts", "posts_clock")):
+    STAGES[f"67_{_name}"] = State(_DAY.facts, (*_DAY.stores, (_clock, 4)))
+    STAGES[f"67_{_name}_night"] = State(_NIGHT.facts, (*_NIGHT.stores, (_clock, 4)))
+STAGES["67_seed"] = _DAY.then(pair_3h=24)
+STAGES["67_seed_night"] = _NIGHT.then(pair_3h=24)
+STAGES["67_sacking"] = _NIGHT.then({"answer:o_pelt_keep", "feature:night_7"})
+STAGES["67_none"] = _DAY
+for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clock"), ("stage_7", "stage_7_clock"),
+                      ("posts_cord", "posts_cord_clock"), ("n6_posts_done", "n6_posts_done_clock"), ("choir_2", "choir_2_clock"),
+                      ("road_pair", "road_pair_clock"), ("fiddle_2", "fiddle_2_clock")):
+    STAGES[f"68_{_name}"] = State(_DAY.facts, (*_DAY.stores, (_clock, 4)))
+    STAGES[f"68_{_name}_night"] = State(_NIGHT.facts, (*_NIGHT.stores, (_clock, 4)))
+STAGES["67_none_night"] = _NIGHT
 
 
 def holds(cond: str | None, state: State) -> bool:
@@ -213,7 +234,9 @@ def holds(cond: str | None, state: State) -> bool:
         return all(holds(c, state) for c in cond.split("&"))
     if cond.startswith("store:"):
         store, _, n = cond[len("store:"):].partition("@")
-        return dict(state.stores).get(store, 0) >= int(n or 1)
+        lo, _, hi = (n or "1").partition("..")
+        held = dict(state.stores).get(store, 0)
+        return held >= int(lo) and (not hi or held < int(hi))
     return cond in state.facts
 
 
@@ -225,6 +248,7 @@ CONDITIONS = {
     "mix:<id>": "the card runs in the active mix (a share above 0, not paused or yielded) and it is its turn at the figure: the mix's cards take turns, each for its share of a 30 s round",
     "store:<id>": "the store holds at least one item",
     "store:<id>@<n>": "the store holds at least n items",
+    "store:<id>@<a>..<b>": "the store holds at least a items and fewer than b: a window of a count-up clock",
     "chip:<id>": "the chip is showing",
     "feature:<id>": "the feature is unlocked",
     "action:<id>": "the standing action is unlocked (it runs by itself from then on)",

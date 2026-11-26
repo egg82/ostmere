@@ -1,7 +1,8 @@
-"""Where the people are: every outcome that joins or leaves a person, or puts one somewhere the scene could show, names
-the scene layer that shows it or says why none does (`whereabouts`, entries.WhereaboutsEntry). A case is
-`<owner>:<person>`, the owner being `trigger:<id>`, `card:<id>/outcome`, `card:<id>/finished` or `offer:<offer>/<answer>`.
-app/tests/test_scene_people.py holds every join and leave to the field, and the cases in `HELD_UNPLACED` to the audit."""
+"""Where the people are: every outcome that joins or leaves a person, or marks one as doing something the scene could show
+(`doings`), and every marked line no outcome carries (`[line_doings]`), names the scene layer that shows it or says why none
+does (`whereabouts`, entries.WhereaboutsEntry). A case is `<owner>:<person>`, the owner being `trigger:<id>`,
+`card:<id>/outcome`, `card:<id>/finished`, `offer:<offer>/<answer>` or `line:<key>`.
+app/tests/test_scene_people.py holds every join, leave and doing to the field, and the held cases to the audit."""
 
 HELD_UNPLACED: frozenset[str] = frozenset({
     "offer:o_choir/o_choir_beds:n10",
@@ -33,5 +34,9 @@ HELD_UNPLACED: frozenset[str] = frozenset({
     "offer:o_widowers/o_widowers_food:n21",
     "offer:o_widowers/o_widowers_food:n22",
 })
-"""Cases that put a person somewhere the scene shows nothing of today (the audit, one row each): may only shrink. A
-case leaves this list when its outcome gains a `whereabouts` entry for the person."""
+"""Cases that join, leave or set a person doing something the scene shows nothing of today (the audit, one row each):
+may only shrink. A case leaves this list when its outcome gains a `whereabouts` entry for the person."""
+
+HELD_LINE_ONLY: frozenset[str] = frozenset()
+"""Cases of a line no outcome carries (`[line_doings]`, `line:<key>:<person>`) that the scene shows nothing of today: may
+only shrink. A case leaves this list when its line's `whereabouts` gains an entry for the person."""

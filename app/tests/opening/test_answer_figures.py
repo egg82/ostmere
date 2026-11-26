@@ -9,6 +9,7 @@ import pytest
 from ashfall_app.api.content_models import AnswerInfo, Content
 from ashfall_app.api.service import Game
 from ashfall_app.engine import QUANTITY_SCALE
+from ashfall_app.opening.clocks import clock_ids
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, load_opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.shipped_ruleset import ShippedRuleset
@@ -88,9 +89,11 @@ HIDDEN = {
 
 
 def test_the_bookkeeping_stores_are_served_hidden_and_no_other(in_writing: Content):
+    clocks = set(clock_ids(load_opening()))
+    assert len(clocks) > 10, "the content marks its moment clocks"
     served_hidden = {s.store for s in in_writing.store_infos if s.hidden}
-    assert served_hidden == HIDDEN
-    assert {s.store for s in in_writing.store_infos} > HIDDEN
+    assert served_hidden == HIDDEN | clocks
+    assert {s.store for s in in_writing.store_infos} > HIDDEN | clocks
 
 
 def test_no_answer_gain_is_a_hidden_store(in_writing: Content):

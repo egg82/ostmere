@@ -40,7 +40,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "larder_floor": ("larder_floor_1", "larder_floor_2", "larder_floor_3", "wood_stack_1", "wood_stack_2", "wood_stack_3"),
     "raised_bed": ("raised_bed_1", "raised_bed_2", "raised_bed_3"),
     "watch_ring": ("watch_ring", "watch_laid", "watch_lit"),
-    "plot": ("turned_1", "turned_2", "turned_3", "turned_pelt", "ashed_1", "ashed_2", "ashed_3", "beds_1", "beds_2", "beds_3"),
+    "plot": ("turned_1", "turned_2", "turned_3", "turned_pelt", "turned_sacking", "ashed_1", "ashed_2", "ashed_3", "beds_1", "beds_2", "beds_3"),
     "pelt_pegged_1": ("pelt_pegged_1",),
     "pelt_pegged_2": ("pelt_pegged_2",),
     "gap_ring": ("gap_ring", "gap_laid", "gap_lit"),

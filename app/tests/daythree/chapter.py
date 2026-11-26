@@ -26,12 +26,25 @@ class Landings:
     """Story ids that land when the offer shows."""
 
     def of(self, save: Save, rules: Rules) -> set[str]:
-        fired = {t.id for t, f in zip(rules.triggers, save.fired) if f}
+        fired = fired_ids(save, rules)
         found = {b for b, ts in self.triggered.items() if fired & set(ts)}
         found |= {b for b, cs in self.steps.items() if any(completions(save, rules, CardId(c)) > 0 for c in cs)}
         found |= {b for b, (c, n) in self.stages.items() if completions(save, rules, CardId(c)) >= n}
         found |= {b for b, o in self.offers.items() if Unlock(UnlockKind.OFFER, o) in save.unlocked}
         return found
+
+
+_FIRED: list[tuple[object, Rules, frozenset[str]]] = []
+
+
+def fired_ids(save: Save, rules: Rules) -> frozenset[str]:
+    """The ids of the triggers fired in `save`, kept while its fired flags and the rules are the same objects: every
+    chapter's Landings reads them off each save of an absence."""
+    if _FIRED and _FIRED[0][0] is save.fired and _FIRED[0][1] is rules:
+        return _FIRED[0][2]
+    found = frozenset(t.id for t, f in zip(rules.triggers, save.fired) if f)
+    _FIRED[:] = [(save.fired, rules, found)]
+    return found
 
 
 @dataclass(frozen=True)

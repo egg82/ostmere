@@ -321,6 +321,7 @@ id = "t_b18"
 when = { test = "at_least", subject_kind = "store", id = "ashwood_trips", value = 1 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "r2_open", value = 1 }]
 [triggers.outcome]
+doings = ["n2"]
 whereabouts = [{ person = "n2", layer = "figure_n2_hauling_in" }]
 line_keys = ["l_b18_1", "l_b18_2", "l_b18_3", "l_map_ashwood"]
 unlocks = [
@@ -412,6 +413,7 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "table", value = 1 },
 ]
 [triggers.outcome]
+doings = ["n3"]
 whereabouts = [{ person = "n3", layer = "figure_n3_at_racks" }]
 line_keys = ["l_film_1", "l_film_2"]
 unlocks = [
@@ -523,7 +525,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "still_30" }] }
 id = "t_singing"
 when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 30 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_choir", value = 1 }]
-outcome = { line_keys = ["l_sing_1", "l_sing_2"], whereabouts = [{ person = "n8", layer = "figure_n8_singing" }, { person = "n9", layer = "figure_n9_singing" }, { person = "n10", layer = "figure_n10_singing" }] }
+outcome = { doings = ["n8", "n9", "n10"], line_keys = ["l_sing_1", "l_sing_2"], whereabouts = [{ person = "n8", layer = "figure_n8_singing" }, { person = "n9", layer = "figure_n9_singing" }, { person = "n10", layer = "figure_n10_singing" }] }
 
 # ---------- B19: the stranger home ----------
 

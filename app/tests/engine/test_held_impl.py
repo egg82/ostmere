@@ -184,12 +184,15 @@ def test_the_stack_inputs_follow_the_held_state_and_rules_without_it_keep_their_
 
 def test_a_save_differing_only_in_its_skills_reads_what_is_held_by_their_levels():
     """held_cards is kept across saves alike but for their skills (the menu's one-more-pick saves): a requires on a
-    skill level still reads the level of the save asked about."""
+    skill level still reads the level of the save asked about. `s` came out of a rebuild, which hands it the value
+    kept for the save it was built from (rates.keep_running), so the sharing is shown between two saves built here."""
     r = replace(world(), cards=tuple(replace(c, requires=(AtLeast(SkillLevel(K), 2, 2),)) if c.id == NEED else c
                                      for c in world().cards))
     s = mixed(r, (NEED, 5000), (GUARD, 5000))
     up = replace(s, skills=tuple(replace(k, xp=replace(k.xp, start_value=10**15)) for k in s.skills))
     alike = replace(s, skills=tuple(replace(k) for k in s.skills))
+    again = replace(s, skills=tuple(replace(k) for k in s.skills))
     assert held_cards(s, r) == {GUARD: 5000}
     assert held_cards(up, r) == {GUARD: 5000, NEED: 5000}
-    assert held_cards(alike, r) is held_cards(s, r)
+    assert held_cards(alike, r) == held_cards(s, r)
+    assert held_cards(again, r) is held_cards(alike, r)

@@ -2,7 +2,7 @@
 "Unlocks", "Chips" and "Store caps". work.py exposes the same functions to the rest of the engine."""
 from math import prod
 
-from .heldentries import held_entries, held_part, holders
+from .heldentries import held_entries, held_part, holders, keep_held
 from .ids import CardId, ChipId, StoreId
 from .index import index
 from .memo import PartsMemo, SaveMemo
@@ -19,6 +19,13 @@ from .units import BP
 _STACK: SaveMemo[tuple[Modifier, ...]] = SaveMemo()
 _INPUTS: SaveMemo[tuple[object, ...]] = SaveMemo(4)
 """stack_inputs by save: asked a dozen times of one save (every line, cap and term), and the lanes scan costs most."""
+
+
+def keep_stack(source: Save, target: Save, rules: Rules) -> None:
+    """`target` has the values and the discrete state of `source`, all the effective stack and its inputs read."""
+    _STACK.carry(source, target, rules)
+    _INPUTS.carry(source, target, rules)
+    keep_held(source, target, rules)
 _CAPS: PartsMemo[dict[StoreId, list[Modifier]]] = PartsMemo()
 _CAP_OF: PartsMemo[dict[StoreId, int]] = PartsMemo()
 

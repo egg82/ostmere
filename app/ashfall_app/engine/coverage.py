@@ -12,6 +12,7 @@ from .lanes import TapCard
 from .mixes import flatten_shares
 from .orders import OrderVerb
 from .plan import is_dead, live_queue_verb
+from .memo import SaveMemo
 from .rules import Rules
 from .state import Save
 from .unlocks import Unlock, UnlockKind
@@ -21,10 +22,17 @@ from .work import starved
 def covered(save: Save, rules: Rules, store: StoreId) -> bool:
     """Some order's verb (latched or not) or the queue's controlling entry makes this store, a dead verb covering
     nothing; or a card paused full pays it, and resumes as it falls (DESIGN.txt, "FULL OUTPUT", "Read model")."""
+    return store in _COVERING.get(save, rules, lambda: _covering(save, rules)) or _held_full(save, rules, store)
+
+
+_COVERING: SaveMemo[frozenset[StoreId]] = SaveMemo(2)
+"""The stores the live verbs make, read once per save: the ledger asks of every store."""
+
+
+def _covering(save: Save, rules: Rules) -> frozenset[StoreId]:
     queued = live_queue_verb(save, rules)
     verbs = [a for o in save.orders for a in o.actions] + ([] if queued is None else [queued])
-    made = any(_makes(save, rules, v, store) for v in verbs if not is_dead(save, rules, v))
-    return made or _held_full(save, rules, store)
+    return frozenset(st for v in dict.fromkeys(verbs) if not is_dead(save, rules, v) for st in _made(save, rules, v))
 
 
 def _held_full(save: Save, rules: Rules, store: StoreId) -> bool:
@@ -40,19 +48,19 @@ def all_covered(save: Save, rules: Rules) -> bool:
                    if is_unlocked(save, rules, Unlock(UnlockKind.STORE, d.id)))
 
 
-def _makes(save: Save, rules: Rules, verb: OrderVerb, store: StoreId) -> bool:
+def _made(save: Save, rules: Rules, verb: OrderVerb) -> frozenset[StoreId]:
     ix = index(rules)
     if isinstance(verb, TapCard):
-        return _card_makes(rules, verb.card, store, set())
+        return _card_made(rules, verb.card, set())
     if isinstance(verb, (AnswerOffer, AnswerKind)):
-        return False   # it acts once: covered is about what keeps a line fed
-    return any(store in card_makes(ix.cards[s.card]) for s in flatten_shares(save.mixes, verb.mix))
+        return frozenset()   # it acts once: covered is about what keeps a line fed
+    return frozenset(st for s in flatten_shares(save.mixes, verb.mix) for st in card_makes(ix.cards[s.card]))
 
 
-def _card_makes(rules: Rules, card: CardId, store: StoreId, seen: set[CardId]) -> bool:
-    """What the card's outcome adds, what its flows make, or what any card its outcome starts makes."""
+def _card_made(rules: Rules, card: CardId, seen: set[CardId]) -> frozenset[StoreId]:
+    """What the card's outcome adds, what its flows make, and what any card its outcome starts makes."""
     c = index(rules).cards.get(card)
     if c is None or card in seen:
-        return False
+        return frozenset()
     seen.add(card)
-    return store in card_makes(c) or any(_card_makes(rules, q, store, seen) for q in c.outcome.starts)
+    return card_makes(c).union(*(_card_made(rules, q, seen) for q in c.outcome.starts))

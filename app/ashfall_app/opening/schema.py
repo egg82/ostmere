@@ -22,6 +22,7 @@ from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
+from .clocks import with_moment_clocks
 from .groups import with_group_unlocks
 from .people import PeopleEntry, with_mentions
 from .close_call_entries import CloseCallEntry
@@ -30,10 +31,11 @@ from .line_kinds import LineKind
 from .journal_checks import check_first_notes
 from .convert import build_rules
 from .camp_entries import CampEntry, CampLevelEntry
+from .chip_entries import ChipEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, Entry, LevelPaysEntry, LineDoingsEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
 from .lane_entries import LaneEntry, LaneLabelEntry
@@ -131,6 +133,8 @@ class Opening(Entry):
     """Every line and label, by key. Input only: the API serves it as a list of TextEntry."""
     line_kinds: dict[str, LineKind]
     """The kind of each log line in this file's `text`, by key (line_kinds.py)."""
+    line_doings: dict[str, LineDoingsEntry] = {}
+    """The people a line shows doing something, by the line's key, for a line no outcome carries (line_kinds.check_line_doings)."""
     beat_lines: dict[str, list[str]] = {}
     """A story beat's id (content/beats.yaml) to the key of its first line, one per way it can be told."""
 
@@ -196,6 +200,7 @@ class Chapter(Entry):
     """Later labels for a lane an earlier file declares, by lane id, after any it has: a joined person named later."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
+    line_doings: dict[str, LineDoingsEntry] = {}
     beat_lines: dict[str, list[str]] = {}
 
 
@@ -222,7 +227,7 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         merged, end = _merged(states[-1], chapter)
         states.append(merged)
         ends.append(end)
-    states[-1] = with_group_unlocks(with_mentions(states[-1]))
+    states[-1] = with_moment_clocks(with_group_unlocks(with_mentions(states[-1])))
     last: list[str] = [e for e in ends if e is not None][-1:]
     if last and opening.end_card is not None:
         states[-1] = _with_end_card(states[-1], last[0], opening.end_card)

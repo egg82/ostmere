@@ -345,7 +345,7 @@ tally = true
 [[triggers]]
 id = "t_caps"
 when = { test = "at_least", subject_kind = "store", id = "fungus_stews", value = 1 }
-outcome = { line_keys = ["l_caps_1", "l_caps_2"] }
+outcome = { doings = ["n3"], line_keys = ["l_caps_1", "l_caps_2"], clock = "caps_clock", whereabouts = [{ person = "n3", layer = "figure_n3_sorts_the_caps" }] }
 
 # ---------- the roofs: a chip with a rule-run cure ----------
 
@@ -438,7 +438,7 @@ outcome = { line_keys = ["l_roofs_first"], unlocks = [{ unlock_kind = "feature",
 id = "t_ash_ground"
 when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 12 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "roofs_cleared", value = 1 }]
-outcome = { line_keys = ["l_ash_ground"], unlocks = [{ unlock_kind = "store", id = "ashed_ground" }, { unlock_kind = "card", id = "n3_ash_ground" }] }
+outcome = { doings = ["n3"], line_keys = ["l_ash_ground"], unlocks = [{ unlock_kind = "store", id = "ashed_ground" }, { unlock_kind = "card", id = "n3_ash_ground" }], whereabouts = [{ person = "n3", layer = "figure_n3_works_ash_in" }] }
 
 [[stores]]
 id = "ashed_ground"
@@ -469,7 +469,7 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "cord_made", value = 1 },
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "roofs_cleared", value = 1 },
 ]
-outcome = { line_keys = ["l_cord"], unlocks = [{ unlock_kind = "feature", id = "cord_seen" }] }
+outcome = { doings = ["n4"], line_keys = ["l_cord"], unlocks = [{ unlock_kind = "feature", id = "cord_seen" }], whereabouts = [{ person = "n4", layer = "figure_n4_rolls_cord" }] }
 
 # ---------- the gap and the pack ----------
 
@@ -756,6 +756,11 @@ after = { unlock_kind = "feature", id = "drift" }
 [beat_lines]
 B8 = ["l_b8_1"]
 B9 = ["l_b9_1"]
+
+[line_doings.l_stage_7]
+clock = "stage_7_clock"
+doings = ["n2"]
+whereabouts = [{ person = "n2", layer = "figure_n2_tests_a_post" }]
 
 [line_kinds]
 l_ring_scored = "story"

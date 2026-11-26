@@ -63,7 +63,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "sorrel_12h" }] }
 [[triggers]]
 id = "t_named"
 when = { test = "at_least", subject_kind = "store", id = "sorrel_clock", value = 6 }
-outcome = { line_keys = ["l_named"], unlocks = [{ unlock_kind = "feature", id = "sorrel_named" }] }
+outcome = { doings = ["n3"], line_keys = ["l_named"], unlocks = [{ unlock_kind = "feature", id = "sorrel_named" }], whereabouts = [{ person = "n3", layer = "figure_n3_names_the_stranger" }] }
 
 [lane_labels]
 n13 = [{ after = { unlock_kind = "feature", id = "sorrel_named" }, label_key = "lane_n13_named" }]
@@ -353,6 +353,7 @@ id = "j_drag_marks_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_drag_marks_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -390,6 +391,7 @@ id = "j_show_fish_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_show_fish_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -538,6 +540,19 @@ I5 = ["l_fiddle_1"]
 I6 = ["l_cache_1"]
 I7 = ["l_post_ring_1"]
 B20 = ["l_b20_1"]
+
+[line_doings.l_fiddle_2]
+clock = "fiddle_2_clock"
+doings = ["n14", "n15"]
+whereabouts = [{ person = "n14", layer = "figure_n14_at_the_gate" }, { person = "n15", layer = "figure_n15_at_the_gate" }]
+
+[line_doings.l_book_ask]
+doings = ["n13"]
+whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
+
+[line_doings.l_book_given]
+doings = ["n13"]
+whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
 
 [line_kinds]
 l_named = "story"

@@ -5960,6 +5960,66 @@
     {
       "store": "bede_wait",
       "made_by": []
+    },
+    {
+      "store": "his_watch_clock",
+      "made_by": []
+    },
+    {
+      "store": "shed_stack_clock",
+      "made_by": []
+    },
+    {
+      "store": "old_watch_clock",
+      "made_by": []
+    },
+    {
+      "store": "spear_clock",
+      "made_by": []
+    },
+    {
+      "store": "caps_clock",
+      "made_by": []
+    },
+    {
+      "store": "posts_clock",
+      "made_by": []
+    },
+    {
+      "store": "thorn_clock",
+      "made_by": []
+    },
+    {
+      "store": "bedding_4_clock",
+      "made_by": []
+    },
+    {
+      "store": "pelt_ask_clock",
+      "made_by": []
+    },
+    {
+      "store": "stage_7_clock",
+      "made_by": []
+    },
+    {
+      "store": "posts_cord_clock",
+      "made_by": []
+    },
+    {
+      "store": "n6_posts_done_clock",
+      "made_by": []
+    },
+    {
+      "store": "choir_2_clock",
+      "made_by": []
+    },
+    {
+      "store": "road_pair_clock",
+      "made_by": []
+    },
+    {
+      "store": "fiddle_2_clock",
+      "made_by": []
     }
   ]
 }
