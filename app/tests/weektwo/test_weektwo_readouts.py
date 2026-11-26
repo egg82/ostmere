@@ -12,8 +12,7 @@ from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weekone.report import chapter_text
 from tests.weekone.verdicts import cap_lines
-from tests.weektwo import verdicts
-from tests.weektwo import report
+from tests.weektwo import pacing, report, verdicts
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
@@ -89,6 +88,13 @@ def test_a_day_twenty_three_route_readout_is_reported(week_days: Days, name: str
                          ids=report.ROUTES)
 def test_a_day_twenty_five_route_readout_is_reported(week_days: Days, name: str):
     rs.check(f"weektwo-twentyfive-{name}", report.route_text("twentyfive", name, *week_days))
+
+
+@pytest.mark.parametrize("week_days, name", [(("twentyfive", r), r) for r in report.ROUTES], indirect=["week_days"],
+                         ids=report.ROUTES)
+def test_the_whole_games_pacing_readout_is_reported(week_days: Days, name: str):
+    p, later = week_days
+    rs.check(f"weektwo-pacing-{name}", pacing.text(name, p, later))
 
 
 def test_day_eights_visit_readout_is_reported(eight_counts: Counts, eight_marks: dict[str, str]):
