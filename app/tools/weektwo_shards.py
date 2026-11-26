@@ -47,6 +47,10 @@ test's call, under four workers) plus the slice job's 26 s of setup and 10% marg
 minutes, so the slowest play must be under 301 s. Last measured: day twenty-five's typical play 309 s; its sharp 283 s,
 a single run too close to the line to trust until a nightly repeats it (day eighteen's slowest, 139 s, fits). The nightly
 plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
+WHOLE_GAME = frozenset({"makers"})
+"""The shards whose readouts read the whole game, not one chapter: a pull request's smoke plan plays them from the start where
+the change is one every chapter reads (tools/pr_plan.py), since no chapter's slice does. Measured on the nightly 45833474339,
+makers' slowest play is 136 s with 4 s of setup from saved ends, (136 + 4 + 26) x 1.1 = 183 s of `playthrough-slice`'s 360 s."""
 ENV = "WEEKTWO_SHARD"
 SLICE = "WEEKTWO_SLICE"
 FILES = "WEEKTWO_FILES"
@@ -124,9 +128,9 @@ def check() -> int:
     for label, nodes in (("in no shard", missing), ("in more than one shard", twice), ("only in a shard", extra)):
         for node in nodes[:10]:
             print(f"{label}: {node} {seen.get(node, [])}")
-    unknown = sorted(NIGHTLY_ONLY - set(SHARDS))
+    unknown = sorted((NIGHTLY_ONLY | WHOLE_GAME) - set(SHARDS))
     for name in unknown:
-        print(f"NIGHTLY_ONLY names no shard: {name}")
+        print(f"NIGHTLY_ONLY or WHOLE_GAME names no shard: {name}")
     return 1 if missing or twice or extra or unknown else 0
 
 

@@ -298,7 +298,7 @@ jobs:
       WEEKTWO_FILES: ${{ needs.slice.outputs.files }}
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       ASHFALL_BASE_KEYS: ${{ github.workspace }}/base-keys.json
-      ASHFALL_REQUIRE_SAVED: ${{ matrix.shard != 'smoke' && '1' || '' }}
+      ASHFALL_REQUIRE_SAVED: ${{ needs.slice.outputs.slice != 'smoke' && '1' || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -309,7 +309,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - name: The base's saved ends
-        if: matrix.shard != 'smoke'
+        if: needs.slice.outputs.slice != 'smoke'
         uses: actions/cache/restore@v4
         with:
           path: chapter-saves
@@ -321,7 +321,13 @@ jobs:
         run: echo "$BASE_KEYS" > "$ASHFALL_BASE_KEYS"
       - name: Playthrough (${{ matrix.shard }})
         working-directory: app
-        run: python -m pytest -q -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=15 --durations-min=1
+        run: |
+          # In a smoke plan the saved ends are the base's, older than the change, so a shard besides `smoke` plays from the
+          # start and runs whole (WEEKTWO_SLICE=smoke would keep only the smoke-marked tests).
+          if [ "$WEEKTWO_SLICE" = smoke ] && [ "$MATRIX_SHARD" != smoke ]; then unset WEEKTWO_SLICE; fi
+          python -m pytest -q -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=15 --durations-min=1
+        env:
+          MATRIX_SHARD: ${{ matrix.shard }}
       - name: Upload changed readouts
         if: always()
         uses: actions/upload-artifact@v4
