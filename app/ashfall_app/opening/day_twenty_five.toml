@@ -83,7 +83,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "kept_24h" }] }
 id = "t_bowl_set"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 8 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 }]
-outcome = { line_keys = ["l_bowl_set"], unlocks = [{ unlock_kind = "card", id = "hunt_boar" }, { unlock_kind = "feature", id = "combat" }] }
+outcome = { doings = ["n3"], line_keys = ["l_bowl_set"], unlocks = [{ unlock_kind = "card", id = "hunt_boar" }, { unlock_kind = "feature", id = "combat" }], whereabouts = [{ person = "n3", layer = "figure_n3_sets_the_bowl" }] }
 
 [[stores]]
 id = "boar_lost"
@@ -267,7 +267,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "walkers_6h" }] }
 [[triggers]]
 id = "t_sister_road"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 20 }
-outcome = { line_keys = ["l_sister_road"], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
+outcome = { doings = ["n12"], line_keys = ["l_sister_road"], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # ---------- the post's door, and Camp 19 ----------
 
@@ -312,7 +312,7 @@ held = true
 id = "t_thanks"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 30 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_walkers", value = 1 }]
-outcome = { line_keys = ["l_thanks"], whereabouts = [{ person = "n5", layer = "figure_n5_at_stone" }] }
+outcome = { doings = ["n5"], line_keys = ["l_thanks"], whereabouts = [{ person = "n5", layer = "figure_n5_at_stone" }] }
 
 # ---------- O-widowers ----------
 
@@ -431,6 +431,7 @@ id = "j_midden_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_midden_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -468,6 +469,7 @@ id = "j_leaning_wall_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_leaning_wall_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -505,6 +507,7 @@ id = "j_steam_hole_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_steam_hole_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -551,6 +554,7 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 },
 ]
 [triggers.outcome]
+doings = ["n13"]
 whereabouts = [
   { person = "n13", layer = "figure_n13_outside_ring" },
   { person = "n23", layer = "figure_n23_at_hall_door" },

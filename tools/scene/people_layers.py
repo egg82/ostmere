@@ -10,13 +10,19 @@ from collections.abc import Iterable
 
 from PIL import Image, ImageDraw, ImageFilter
 
+import dayfour_poses
 import dayfour_world as world4
-from dayeight_poses import BROTHER, HUSBAND, WOMAN
+import kit
+from dayeight_poses import BROTHER, HUSBAND, WOMAN, n4_twisting
+from daythree_made import POTS
 from daythree_poses import N2
 from dayfour_poses import N3, N4, sack
+from daytwo import cut
 from daytwo_poses import Who, person
+from kit import FORT
 from output import Layer
-from place import BY_FIRE, canvas
+from place import BY_FIRE, SEAT, canvas
+from tints import WOOD
 
 SHEETS = "timefantasy_characters/timefantasy_characters/sheets/"
 SINGERS: tuple[Who, ...] = ((SHEETS + "npc2.png", 3), (SHEETS + "npc2.png", 4), (SHEETS + "npc2.png", 2))
@@ -38,6 +44,8 @@ RACKS: Spot = (218, 268)
 STONE: Spot = (BY_FIRE[0] - 10, BY_FIRE[1] + 8)
 WOOD_EDGE: tuple[Spot, Spot] = ((704, 266), (730, 262))
 STRANGER_IN: Spot = (372, 160)
+NAMING_AT: Spot = (STRANGER_IN[0] - 26, STRANGER_IN[1] + 6)
+BOWL_AT: Spot = (SEAT[0] + 22, SEAT[1] + 2)
 STRANGER_APART: Spot = (190, 300)
 HALL_DOOR: Spot = (700, 240)
 SINGING_AT: tuple[Spot, ...] = ((668, 240), (692, 246), (716, 240))
@@ -50,6 +58,9 @@ DEER: Window = ("store:clear_clock@18", "store:clear_clock@21")
 POT: Window = ("store:choir_clock@3", "store:choir_clock@6")
 STONE_KNEEL: Window = ("store:kept_clock@30", "store:kept_clock@33")
 SINGING: Window = ("store:still_clock@30", "store:still_clock@33")
+DRIFT: Window = ("store:drift_clock@12", "store:drift_clock@15")
+NAMING: Window = ("store:sorrel_clock@6", "store:sorrel_clock@9")
+BOWL_SET: Window = ("store:kept_clock@8", "store:kept_clock@11")
 """Where a clock-timed moment begins and ends, written out so the scene's store list (test_scene_stores.py) finds them."""
 
 
@@ -72,6 +83,12 @@ def _hauled(walls: Image.Image) -> Image.Image:
     return person(N2, "down", HAULED_AT, held=[(prey, 6, -prey.height + 4)])
 
 
+def _setting_bowl() -> Image.Image:
+    """The woman at the player's place by the fire, setting a wooden bowl down."""
+    bowl = kit.grade(cut(FORT, POTS[1]), **WOOD)
+    return person(N3, "left", BOWL_AT, held=[(bowl, -bowl.width - 6, -bowl.height - 2)])
+
+
 def _carrying(feet: Spot) -> Image.Image:
     bag = sack()
     return person(N3, "left", feet, held=[(bag, -bag.width - 4, -bag.height - 8)])
@@ -80,6 +97,7 @@ def _carrying(feet: Spot) -> Image.Image:
 def people_layers(walls: Image.Image) -> list[Layer]:
     (deer, deer_out), (sun, sun_out), (pot, pot_out) = DEER, SUN, POT
     (kneel, kneel_out), (sing, sing_out) = STONE_KNEEL, SINGING
+    (ash, ash_out), (naming, naming_out), (bowl, bowl_out) = DRIFT, NAMING, BOWL_SET
     field, picking = "running:g_field_forage|mix:g_field_forage", "running:g_hearth_pick|mix:g_hearth_pick"
     return [
         Layer(id="figure_n3_sowing", img=person(N3, "right", BEDS_EDGE, drop=9), when="running:n3_sow|mix:n3_sow"),
@@ -98,6 +116,10 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE[0]), when=field),
         Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=field),
         Layer(id="figure_n7_at_pot", img=person(BROTHER, "left", POT_RIGHT), when=picking),
+        Layer(id="figure_n3_works_ash_in", img=dayfour_poses.n3_digging(), when=ash, until=ash_out),
+        Layer(id="figure_n4_rolls_cord", img=n4_twisting(), when=ash, until=ash_out),
+        Layer(id="figure_n3_names_the_stranger", img=person(N3, "right", NAMING_AT), when=naming, until=naming_out),
+        Layer(id="figure_n3_sets_the_bowl", img=_setting_bowl(), when=bowl, until=bowl_out),
         *[Layer(id=f"figure_n{n}_singing", img=person(who, "down", at), when=f"{sing}&answered:o_choir", until=sing_out)
           for n, who, at in zip((8, 9, 10), SINGERS, SINGING_AT)],
     ]
@@ -111,13 +133,18 @@ STEP_ASIDE: dict[str, tuple[str, ...]] = {
 }
 """Each by-the-fire pose and the runs that take the person from it: it gives way to them."""
 MOMENTS: tuple[tuple[str, str, Window], ...] = (
-    ("figure_n4_by_fire", "figure_n4_by_fire_after_sun", SUN),
+    ("figure_n4_by_fire", "figure_n4_by_fire_after_cord", DRIFT),
+    ("figure_n4_by_fire_after_cord", "figure_n4_by_fire_after_sun", SUN),
     ("figure_n2_by_fire", "figure_n2_by_fire_after_deer", DEER),
-    ("figure_n3_by_fire", "figure_n3_by_fire_after_pot", POT),
+    ("figure_n3_by_fire", "figure_n3_by_fire_after_ash", DRIFT),
+    ("figure_n3_by_fire_after_ash", "figure_n3_by_fire_after_pot", POT),
+    ("figure_n3_by_fire_after_pot", "figure_n3_by_fire_after_naming", NAMING),
+    ("figure_n3_by_fire_after_naming", "figure_n3_by_fire_after_bowl", BOWL_SET),
     ("figure_n5_by_fire", "figure_n5_by_fire_after_stone", STONE_KNEEL),
 )
 """A clock-timed moment takes the person from the fire for its few hours (a condition cannot say "until"-and-back),
-so the by-the-fire pose ends at its start and a copy of it, ending where the original does, begins at its end."""
+so the by-the-fire pose ends at its start and a copy of it, ending where the original does, begins at its end. A
+person's moments are listed in the order they come, each taking the copy the one before made."""
 
 
 def _join(*terms: str | None) -> str:
@@ -139,5 +166,6 @@ def step_aside(layers: Iterable[Layer]) -> list[Layer]:
         if base.get("front"):
             copy["front"] = True
         copies.append(copy)
+        by_id[copy_id] = copy
         base["until"] = _join(base.get("until"), start)
     return [*out, *copies]

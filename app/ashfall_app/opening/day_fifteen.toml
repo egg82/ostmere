@@ -196,7 +196,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "clear_clock" }] }
 id = "t_sow"
 when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 2 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "store", id = "ashed_ground", value = 1 }]
-outcome = { line_keys = ["l_sow"], unlocks = [{ unlock_kind = "card", id = "n3_sow" }], orders = [{ tap_card = "n3_sow", first = true }], whereabouts = [{ person = "n3", layer = "figure_n3_sowing" }] }
+outcome = { doings = ["n3"], line_keys = ["l_sow"], unlocks = [{ unlock_kind = "card", id = "n3_sow" }], orders = [{ tap_card = "n3_sow", first = true }], whereabouts = [{ person = "n3", layer = "figure_n3_sowing" }] }
 
 # Six beds, each taking her dark ground. Every finished bed raises the beds' growing a full base's worth (item 9), so
 # six beds grow seven halves an hour; the ground she made all week two sows the first five.
@@ -478,7 +478,7 @@ offered_after = { unlock_kind = "card", id = "n3_cover_beds" }
 [[triggers]]
 id = "t_deer"
 when = { test = "at_least", subject_kind = "store", id = "clear_clock", value = 18 }
-outcome = { line_keys = ["l_deer"], unlocks = [{ unlock_kind = "store", id = "deer_down" }, { unlock_kind = "card", id = "hunt_deer" }, { unlock_kind = "feature", id = "combat" }], whereabouts = [{ person = "n2", layer = "figure_n2_at_warm_edge" }] }
+outcome = { doings = ["n2"], line_keys = ["l_deer"], unlocks = [{ unlock_kind = "store", id = "deer_down" }, { unlock_kind = "card", id = "hunt_deer" }, { unlock_kind = "feature", id = "combat" }], whereabouts = [{ person = "n2", layer = "figure_n2_at_warm_edge" }] }
 
 # The hunts left this season: a pool nothing refills.
 [[stores]]
@@ -543,7 +543,7 @@ outcome = { line_keys = ["l_walls_1", "l_walls_2"], modifiers = [{ target = "rat
 [[triggers]]
 id = "t_b14"
 when = { test = "at_least", subject_kind = "card_count", id = "hall", value = 8 }
-outcome = { line_keys = ["l_b14_1", "l_b14_2", "l_b14_3"], unlocks = [{ unlock_kind = "feature", id = "belonging" }, { unlock_kind = "action", id = "table" }], whereabouts = [{ person = "n3", layer = "hall_lit" }] }
+outcome = { doings = ["n3"], line_keys = ["l_b14_1", "l_b14_2", "l_b14_3"], unlocks = [{ unlock_kind = "feature", id = "belonging" }, { unlock_kind = "action", id = "table" }], whereabouts = [{ person = "n3", layer = "hall_lit" }] }
 
 # The shared meal: meat on top of the everyday eating, so from B14 smoked has a sink while it runs. Dry, it pauses and
 # meals stop. Meals is a count nothing draws.
