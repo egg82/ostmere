@@ -553,6 +553,24 @@ line_keys = ["l_bay_his"]
 unlocks = [{ unlock_kind = "card", id = "n2_build_bay" }]
 orders = [{ tap_card = "n2_build_bay", first = true }]
 
+# Each answer to an arrival offer lands a number when the build is done, named for the answer (the ledger shows its
+# source): built by hand, that person's lane +10%; left to them, the camp's rest +5%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_stay_room"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_room"]
+modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 11000, source = "o_stay_room" }]
+
+[[triggers]]
+id = "t_kept_o_stay_his"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_his", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_his"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_stay_his" }]
+
 # The words of the rule that answers every arrival, for whoever comes next.
 [[offer_kinds]]
 kind = "arrival"
@@ -1089,6 +1107,8 @@ keys = ["mention_went_many_1", "mention_went_many_2", "mention_went_many_3", "me
 B5 = ["l_b5_1"]
 
 [line_kinds]
+l_kept_o_stay_room = "story"
+l_kept_o_stay_his = "story"
 l_edge_1 = "story"
 l_edge_2 = "story"
 l_track_first = "story"
@@ -1144,6 +1164,8 @@ l_shelf_2 = "story"
 l_shelf_3 = "story"
 
 [text]
+l_kept_o_stay_room = "he knows every knot in that bay, because you showed him. he works the quicker for it."
+l_kept_o_stay_his = "the bay he built himself stands square, and the camp sleeps a little deeper beside it."
 e_warm_ground_title = "warm ground"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-three routes give each line its states and the writers'

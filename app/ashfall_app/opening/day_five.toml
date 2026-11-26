@@ -634,7 +634,27 @@ after = { unlock_kind = "feature", id = "pair_offer" }
 
 # ---------- text ----------
 
+# Each answer to an arrival offer lands a number when the build is done, named for the answer (the ledger shows its
+# source): built by hand, that person's lane +10%; left to them, the camp's rest +5%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_pair_room"
+when = { test = "at_least", subject_kind = "store", id = "bay2", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_room", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_pair_room"]
+modifiers = [{ target = "lane", id = "n3", kind = "mul_bp", amount_bp = 11000, source = "o_pair_room" }]
+
+[[triggers]]
+id = "t_kept_o_pair_hers"
+when = { test = "at_least", subject_kind = "store", id = "bay2", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_hers", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_pair_hers"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_pair_hers" }]
+
 [line_kinds]
+l_kept_o_pair_room = "story"
+l_kept_o_pair_hers = "story"
 l_stone_first = "story"
 l_stones_1 = "story"
 l_stones_2 = "story"
@@ -671,6 +691,8 @@ modifiers = [
 pot_stew = [{ lane = "n3", amount_bp = 1500 }, { lane = "n4", amount_bp = 1500 }]
 
 [text]
+l_kept_o_pair_room = "you built the second bay, and she kept near you at it, learning where things go. she works the quicker for it."
+l_kept_o_pair_hers = "the second bay is theirs, put up by their own hands, and the camp rests a little easier for it."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-five routes give each line its states and the writers'
 # pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any
