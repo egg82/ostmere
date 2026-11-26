@@ -80,6 +80,7 @@ work_s = 20
 cap = 1
 glows = true
 [cards.finished]
+doings = ["n2"]
 line_keys = ["l_stand_1", "l_stand_2", "l_stand_3", "l_combat_first"]
 unlocks = [
   { unlock_kind = "feature", id = "combat" },
