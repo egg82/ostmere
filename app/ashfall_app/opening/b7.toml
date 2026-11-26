@@ -81,6 +81,7 @@ cap = 1
 glows = true
 [cards.finished]
 doings = ["n2"]
+whereabouts = [{ person = "n2", layer = "figure_n2_looks_to_the_thorn" }]
 line_keys = ["l_stand_1", "l_stand_2", "l_stand_3", "l_combat_first"]
 unlocks = [
   { unlock_kind = "feature", id = "combat" },
@@ -94,7 +95,19 @@ unlocks = [
   { unlock_kind = "action", id = "crows" },
   { unlock_kind = "action", id = "heal" },
   { unlock_kind = "action", id = "r1_clock" },
+  { unlock_kind = "action", id = "thorn_clock" },
 ]
+
+[[stores]]
+id = "thorn_clock"
+label_key = "store_moment_clock"
+cap_items = 400
+hidden = true
+
+[[standing]]
+id = "thorn_clock"
+label_key = "action_moment_clock"
+makes = [{ store = "thorn_clock", items_per_hour = 20 }]
 
 # ---------- sides and threats ----------
 

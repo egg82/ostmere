@@ -345,7 +345,18 @@ tally = true
 [[triggers]]
 id = "t_caps"
 when = { test = "at_least", subject_kind = "store", id = "fungus_stews", value = 1 }
-outcome = { doings = ["n3"], line_keys = ["l_caps_1", "l_caps_2"] }
+outcome = { doings = ["n3"], line_keys = ["l_caps_1", "l_caps_2"], unlocks = [{ unlock_kind = "action", id = "caps_clock" }], whereabouts = [{ person = "n3", layer = "figure_n3_sorts_the_caps" }] }
+
+[[stores]]
+id = "caps_clock"
+label_key = "store_moment_clock"
+cap_items = 400
+hidden = true
+
+[[standing]]
+id = "caps_clock"
+label_key = "action_moment_clock"
+makes = [{ store = "caps_clock", items_per_hour = 20 }]
 
 # ---------- the roofs: a chip with a rule-run cure ----------
 

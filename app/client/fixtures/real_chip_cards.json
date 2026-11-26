@@ -5260,6 +5260,14 @@
       "made_by": []
     },
     {
+      "store": "his_watch_clock",
+      "made_by": []
+    },
+    {
+      "store": "shed_stack_clock",
+      "made_by": []
+    },
+    {
       "store": "night_5",
       "made_by": []
     },
@@ -5301,11 +5309,19 @@
       "made_by": []
     },
     {
+      "store": "old_watch_clock",
+      "made_by": []
+    },
+    {
       "store": "night_6",
       "made_by": []
     },
     {
       "store": "b7_clock",
+      "made_by": []
+    },
+    {
+      "store": "thorn_clock",
       "made_by": []
     },
     {
@@ -5346,6 +5362,10 @@
     },
     {
       "store": "dawn_7",
+      "made_by": []
+    },
+    {
+      "store": "spear_clock",
       "made_by": []
     },
     {
@@ -5519,6 +5539,10 @@
       ]
     },
     {
+      "store": "caps_clock",
+      "made_by": []
+    },
+    {
       "store": "ash",
       "made_by": [
         "n1_clear_roofs",
@@ -5597,6 +5621,10 @@
         "arm_n2",
         "arm_n7"
       ]
+    },
+    {
+      "store": "posts_clock",
+      "made_by": []
     },
     {
       "store": "night_12",
