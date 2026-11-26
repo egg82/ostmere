@@ -88,9 +88,14 @@ def test_the_rows_name_each_expanded_level(shipped_opening: Opening):
     assert made and made <= rows
 
 
+def by_id(o: Opening) -> Opening:
+    """`o` with its triggers in id order: the loader's later passes (moment clocks) add triggers after the phase pays'."""
+    return o.model_copy(update={"triggers": sorted(o.triggers, key=lambda t: t.id)})
+
+
 def test_the_expansion_is_a_function_of_the_table(shipped_opening: Opening):
     assert stripped(shipped_opening) != shipped_opening
-    assert expanded(stripped(shipped_opening)) == shipped_opening
+    assert by_id(expanded(stripped(shipped_opening))) == by_id(shipped_opening)
 
 
 def test_expanding_twice_adds_nothing(shipped_opening: Opening):

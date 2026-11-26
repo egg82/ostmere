@@ -617,7 +617,9 @@ label_key = "feature_t_pack_step"
 B10 = ["l_b10_1"]
 
 [line_doings.l_posts]
+clock = "posts_cord_clock"
 doings = ["n4"]
+whereabouts = [{ person = "n4", layer = "figure_n4_lashes_the_stretch" }]
 
 [line_kinds]
 l_ring_1 = "story"

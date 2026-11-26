@@ -601,18 +601,7 @@ outcome = { doings = ["n7"], whereabouts = [{ person = "n7", layer = "figure_n7_
 [[triggers]]
 id = "t_posts"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_guard", value = 1 }
-outcome = { doings = ["n6"], line_keys = ["l_leaning_posts"], unlocks = [{ unlock_kind = "card", id = "n6_posts" }, { unlock_kind = "action", id = "posts_clock" }], whereabouts = [{ person = "n6", layer = "figure_n6_tries_the_posts" }] }
-
-[[stores]]
-id = "posts_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "posts_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "posts_clock", items_per_hour = 20 }]
+outcome = { doings = ["n6"], line_keys = ["l_leaning_posts"], unlocks = [{ unlock_kind = "card", id = "n6_posts" }], clock = "posts_clock", whereabouts = [{ person = "n6", layer = "figure_n6_tries_the_posts" }] }
 
 [[cards]]
 id = "n6_posts"
@@ -725,7 +714,9 @@ after = { unlock_kind = "feature", id = "family_joined" }
 B11 = ["l_b11_1"]
 
 [line_doings.l_n6_posts_done]
+clock = "n6_posts_done_clock"
 doings = ["n6"]
+whereabouts = [{ person = "n6", layer = "figure_n6_braces_the_posts" }]
 
 [line_kinds]
 l_family_1 = "story"

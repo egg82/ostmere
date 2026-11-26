@@ -140,18 +140,7 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 },
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "retired", id = "watch_fire", value = 1 },
 ]
-outcome = { doings = ["n2"], line_keys = ["l_his_watch"], unlocks = [{ unlock_kind = "card", id = "n2_watch" }, { unlock_kind = "action", id = "his_watch_clock" }], whereabouts = [{ person = "n2", layer = "figure_n2_his_watch" }] }
-
-[[stores]]
-id = "his_watch_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "his_watch_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "his_watch_clock", items_per_hour = 20 }]
+outcome = { doings = ["n2"], line_keys = ["l_his_watch"], unlocks = [{ unlock_kind = "card", id = "n2_watch" }], clock = "his_watch_clock", whereabouts = [{ person = "n2", layer = "figure_n2_his_watch" }] }
 
 # His share at the watch fire against his woodcutting, as hers, feeding the same sides.
 [[cards]]
@@ -184,20 +173,7 @@ modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 150
 [[triggers]]
 id = "t_shed_stack"
 when = { test = "at_least", subject_kind = "card_count", id = "woodshed", value = 2 }
-outcome = { doings = ["n2"], line_keys = ["l_stack4_1", "l_stack4_2"], unlocks = [{ unlock_kind = "action", id = "shed_stack_clock" }], whereabouts = [{ person = "n2", layer = "figure_n2_stacks_the_logs" }] }
-
-# Never drawn: twentieths of a game hour since the trigger above, for the scene's window on it. Every moment clock is this
-# shape: its own trigger's outcome unlocks the action, so it counts up from the moment and no store's cap ends it.
-[[stores]]
-id = "shed_stack_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "shed_stack_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "shed_stack_clock", items_per_hour = 20 }]
+outcome = { doings = ["n2"], line_keys = ["l_stack4_1", "l_stack4_2"], clock = "shed_stack_clock", whereabouts = [{ person = "n2", layer = "figure_n2_stacks_the_logs" }] }
 
 # ---------- dusk 5, night 5, A21 and B6 ----------
 
