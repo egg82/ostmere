@@ -1,13 +1,13 @@
-beats sharp (pace_scale 1): B17 day 18.66, target_day 20
+beats sharp (pace_scale 1): B17 day 18.68, target_day 20
   away V157->V158: 0 []
   away V158->V159: 0 []
   away V159->V160: 1 ['trigger t_cloth']
   away V160->V161: 0 []
   away V161->V162: 0 []
-  away V162->V163: 1 ['trigger t_b17']
-  away V163->V164: 0 []
-  away V164->V165: 1 ['trigger t_lamp_out']
-  away V165->V166: 0 []
+  away V162->V163: 0 []
+  away V163->V164: 1 ['trigger t_b17']
+  away V164->V165: 0 []
+  away V165->V166: 1 ['trigger t_lamp_out']
   away V166->V167: 1 ['trigger offer_o_last_sun']
   away V167->V168: 0 []
   away V168->V169: 0 []
@@ -33,9 +33,9 @@ day    line feature    chip   store   skill    card   level  total
   6       3       1       1       0       0      10       1     16
   7       2       0       0       0       0       0       2      4
   8       9       3       0       2       0      10       0     24
-  9      14       1       0       3       0      30       4     52
+  9      14       1       0       3       0      30       3     51
  10      21       3       0       2       0      24       1     51
- 11      23       2       1       0       0     118       2    146
+ 11      23       2       2       0       0     118       2    147
  12      11       1       0       0       0       2       3     17
- 13      11       2       0       0       0       2       1     16
- 14       2       0       1       0       0       0       3      6
+ 13      11       2       0       0       0       2       2     17
+ 14       2       0       0       0       0       0       3      5

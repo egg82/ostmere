@@ -121,14 +121,14 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("ring_closed")),
         Split("n2", (("n2_stakes", 5000), ("n2_watch", 5000)), card("make_hut")),
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
-        Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
+        Split("g_field", (("g_field_forage", 3333), ("g_field_watch", 3333), ("g_field_pick", 3334)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        Split("g_field", (("g_field_clear_road", 6000), ("g_field_forage", 2000), ("g_field_watch", 2000)), answer("o_choir_road")),
-        Split("g_field", (("g_field_clear_road", 5714), ("g_field_reap", 1429), ("g_field_forage", 1429), ("g_field_watch", 1428)),
+        Split("g_field", (("g_field_clear_road", 5000), ("g_field_forage", 1666), ("g_field_watch", 1666), ("g_field_pick", 1668)), answer("o_choir_road")),
+        Split("g_field", (("g_field_clear_road", 4999), ("g_field_reap", 1250), ("g_field_forage", 1250), ("g_field_watch", 1249), ("g_field_pick", 1252)),
               answer("o_cutter_beds")),
-        Split("g_field", (("g_field_reap", 4167), ("g_field_forage", 4166), ("g_field_watch", 1667)), feature("r2_open")),
+        Split("g_field", (("g_field_reap", 3571), ("g_field_forage", 3570), ("g_field_watch", 1428), ("g_field_pick", 1431)), feature("r2_open")),
         Split("n2", (("n2_watch", 5000), ("n2_forage", 5000)), feature("r2_open")),
-        Split("g_field", (("g_field_reap", 3333), ("g_field_forage", 5000), ("g_field_watch", 1667)), feature("ashwood")),
+        Split("g_field", (("g_field_reap", 2856), ("g_field_forage", 4285), ("g_field_watch", 1428), ("g_field_pick", 1431)), feature("ashwood")),
         Split("n2", (("n2_walk_ashwood", 2500), ("n2_forage", 2500), ("n2_watch", 5000)), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_forage", 5000)), feature("sorrel_named")),
         Split("g_road", (("g_road_fog_fish", 5000), ("g_road_fungus_stew", 5000)), answer("o_fiddle_food")),
@@ -140,7 +140,7 @@ its rules: she is the town's forager, and the track's roots need her (moving her
 hands' roots rule then taps every few seconds). Once the pack has come in round the open side (E2) his foraging goes to
 the watch; once the ring is closed his stakes go back to foraging, until the hut is asked for (B10's offer answered by
 the hands) and done (Z1). A group's split at each moment is the mean, over its members then, of the shares each had
-on their own split before groups (so each card keeps its person-time); a walk the field crew cannot take goes to n2."""
+on their own split before groups (so each card keeps its person-time; n7's was all picking); a walk the field crew cannot take goes to n2."""
 SHARP = WeekTwoKnobs(
     splits=(
         Split("n2", (("n2_stakes", 10000),), card("palisade")),
@@ -149,14 +149,14 @@ SHARP = WeekTwoKnobs(
         Split("n2", (("n2_forage", 10000),), feature("ring_closed")),
         Split("n2", (("n2_stakes", 10000),), card("make_hut")),
         Split("n2", (("n2_watch", 10000),), feature("family_joined")),
-        Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
+        Split("g_field", (("g_field_forage", 3333), ("g_field_watch", 3333), ("g_field_pick", 3334)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        Split("g_field", (("g_field_reap", 6000), ("g_field_forage", 2000), ("g_field_watch", 2000)), answer("o_choir_beds")),
-        Split("g_field", (("g_field_reap", 4286), ("g_field_clear_road", 2857), ("g_field_forage", 1429), ("g_field_watch", 1428)),
+        Split("g_field", (("g_field_reap", 5000), ("g_field_forage", 1666), ("g_field_watch", 1666), ("g_field_pick", 1668)), answer("o_choir_beds")),
+        Split("g_field", (("g_field_reap", 3750), ("g_field_clear_road", 2499), ("g_field_forage", 1250), ("g_field_watch", 1249), ("g_field_pick", 1252)),
               answer("o_cutter_road")),
-        Split("g_field", (("g_field_reap", 5833), ("g_field_forage", 2500), ("g_field_watch", 1667)), feature("r2_open")),
+        Split("g_field", (("g_field_reap", 4999), ("g_field_forage", 2142), ("g_field_watch", 1428), ("g_field_pick", 1431)), feature("r2_open")),
         Split("n2", (("n2_watch", 10000),), feature("r2_open")),
-        Split("g_field", (("g_field_reap", 5000), ("g_field_forage", 2500), ("g_field_watch", 2500)), feature("ashwood")),
+        Split("g_field", (("g_field_reap", 4285), ("g_field_forage", 2142), ("g_field_watch", 2142), ("g_field_pick", 1431)), feature("ashwood")),
         Split("n2", (("n2_walk_ashwood", 5000), ("n2_watch", 5000)), feature("ashwood")),
         Split("n13", (("n13_walk_ashwood", 5000), ("n13_fog_fish", 5000)), feature("sorrel_named")),
         Split("g_road", (("g_road_clear_road", 5000), ("g_road_stakes", 5000)), answer("o_fiddle_build")),
