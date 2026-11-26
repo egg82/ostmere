@@ -1,6 +1,9 @@
 # The nightly run on main, the lane the whole-game simulations live in. Two jobs:
-# - `full`: ci.yml with full, so the playthroughs and the chapter saves run beside the per-PR set. Pull requests run
-#   only the smoke route (ci.yml, `playthrough-smoke`), unless labelled `playthroughs`.
+# - `full`: ci.yml with full, so the playthroughs and the chapter saves run beside the per-PR set. Each chapter is played
+#   from the saved end of the one before it, the saves restored from the last nightly's cache and written where a chapter's
+#   key is new (tests/weektwo/keys.py); the run caches its saves for the pull requests' slices (ci.yml, `publish-ends`).
+#   Pull requests play only the chapters they touch (ci.yml, `slice`), unless labelled `playthroughs`. A red nightly holds
+#   the next release (ci.yml, `release`): dispatch this workflow on main once it is fixed, then re-run the held job.
 # - `tests-deep`: the deep Hypothesis profile (HYPOTHESIS_PROFILE=ci) over every engine contract suite, while pull
 #   requests and pushes run the fast default profile in ci.yml's `tests`. A new engine part's suite is added here when it
 #   lands. The same variable makes tests/opening play every route at seeds 0-2 and both kinds of player past the end
@@ -23,6 +26,7 @@ jobs:
       full: true
     secrets: inherit
     permissions:
+      actions: read
       contents: read
       packages: write
 
@@ -54,3 +58,18 @@ jobs:
         run: >
           python -m pytest -q --timeout=600 tests/engine_contract tests/cards_contract tests/journal_contract tests/opening
           tests/saves tests/dayone tests/daytwo
+
+  # The last week of pull-request CI against its budget, and the runs that failed a test job and passed on a rerun
+  # (app/tools/ci_health.py): one open issue per problem, updated each night, or one log line.
+  ci-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 app/tools/ci_health.py --repo "$GITHUB_REPOSITORY" --budget-min 10

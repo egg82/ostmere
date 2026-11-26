@@ -19,7 +19,7 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.weekone import content as w1
 from tests.weekone.routes import week1
 from tests.weektwo import content as w2
-from tests.weektwo import ends
+from tests.weektwo import ends, keys
 from tests.weektwo import weekfour as w4
 
 PUSH_ROUTES = ("typical", "sharp", "babysitter", "whenever")
@@ -57,8 +57,7 @@ def play_on(p: DayTwoPlayer, laters: tuple[Later, ...]) -> DayTwoPlayer:
     return q
 
 
-CHAPTERS = ("eight", "nine", "eleven", "twelve", "fifteen", "sixteen", "eighteen", "nineteen", "twentytwo",
-            "twentythree", "twentyfive")
+CHAPTERS = keys.ORDER[1:]
 """Week two's chapters, week three's four and week four's first three, in the order their plays build on each other."""
 BEFORE = {"eight": "week1", "nine": "eight", "eleven": "nine", "twelve": "eleven", "fifteen": "twelve",
           "sixteen": "fifteen", "eighteen": "sixteen", "nineteen": "eighteen", "twentytwo": "nineteen",
@@ -104,7 +103,7 @@ def played(chapter: str, name: str, seed: int = 0) -> DayTwoPlayer:
 def saved_end(chapter: str, name: str) -> DayTwoPlayer:
     """The saved play through `chapter` on route `name`, seed 0 (ends.py); where none is saved, that play from the
     start."""
-    return ends.load(chapter, name, laters(chapter, name)) if ends.available() else played(chapter, name)
+    return ends.load(chapter, name, laters(chapter, name)) if ends.available(chapter) else played(chapter, name)
 
 
 def start(chapter: str, name: str, seed: int) -> DayTwoPlayer:

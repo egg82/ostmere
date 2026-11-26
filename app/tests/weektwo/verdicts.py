@@ -88,7 +88,7 @@ def decided_in(chapter: str, part: int) -> Decided:
     heavy = heavy_steps(p, later)
     assert len(heavy) <= PARTS[chapter] * PART_STEPS, f"{chapter} has {len(heavy)} heavy steps, more than its parts hold"
     mine = heavy[part * PART_STEPS:(part + 1) * PART_STEPS]
-    saved = ends.saved_readings(chapter) if ends.available() else {}
+    saved = ends.saved_readings(chapter) if ends.available(chapter) else {}
     if os.environ.get(ends.REQUIRE):
         missing = [key for key in mine if key not in saved]
         assert not missing, f"{chapter}'s heavy steps {missing} have no saved reading: {ends.REWRITE}"
