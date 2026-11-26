@@ -1,5 +1,5 @@
 """A push service on localhost for tests: answers each path with the status its name gives (`/201`, `/410`, `/500`),
-`/redirect` with a 302 to another server, and remembers which paths it was asked for."""
+`/redirect` with a 302 to another server, and remembers which paths it was asked for and at what Urgency."""
 import base64
 import os
 import threading
@@ -37,6 +37,7 @@ def subscription_keys() -> tuple[str, str]:
 class Seen:
     def __init__(self) -> None:
         self.paths: list[str] = []
+        self.urgency: list[str | None] = []
 
 
 @contextmanager
@@ -48,6 +49,7 @@ def push_service(redirect_to: str = "") -> Generator[tuple[str, Seen], None, Non
         def do_POST(self) -> None:
             self.rfile.read(int(self.headers.get("Content-Length", 0)))
             seen.paths.append(self.path)
+            seen.urgency.append(self.headers.get("Urgency"))
             if self.path.startswith("/redirect"):
                 self.send_response(302)
                 self.send_header("Location", redirect_to)

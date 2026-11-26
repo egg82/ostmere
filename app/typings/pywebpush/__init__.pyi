@@ -13,5 +13,6 @@ def webpush(
     vapid_claims: dict[str, Any] | None = ...,
     ttl: int = ...,
     timeout: float | None = ...,
+    headers: dict[str, str | int | float] | None = ...,
     requests_session: requests.Session | None = ...,
 ) -> requests.Response: ...
