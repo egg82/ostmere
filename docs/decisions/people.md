@@ -62,7 +62,8 @@ and has a real, bounded cost, as an undone chore does: the light tier, a store, 
 - Attachment is tiered: most townsfolk are light (a name, a trait, a line now and then) and carry the deaths; a few
   become notable through what happens to them, stay, and somehow avoid dying, if narrowly. A narrow escape is fine
   as long as it never becomes obvious that only those people keep escaping (owner, 2026-11-25): close calls are
-  counted per person in the content data, and the loader holds them to a limit.
+  marked in the content data and counted per person in a readout that someone reads, never a limit that fails a
+  build: how many is too many is a feel.
 - **Off-limits: heavy investment in anything that can be taken** (the line for everyone who plays). Your
   character, the town, the notables and the story are safe; losses land only on the light tier. Notables never die.
 - **Your own death may be a mechanic, never a punishment** (many games use death as progression, and it
