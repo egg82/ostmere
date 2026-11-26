@@ -14,21 +14,28 @@ import { ValueSlider } from "./valueslider";
 
 /** The Levels and Tasks heads and their buttons; each button carries data-subject, read back to mark the one chosen. */
 export function subjectRows(catalog: Catalog, view: View, choices: { levels: SubjectRule[]; tasks: SubjectRule[]; running?: SubjectRule[] }, pick: (r: SubjectRule) => void): HTMLElement[] {
-  const button = (rule: SubjectRule): HTMLElement => {
-    const b = el("button", "quiet cond-subject");
-    b.type = "button";
-    b.dataset.subject = subjectKey(rule);
-    b.append(el("span", "", subjectName(catalog, rule)));
-    if (rule.kind === "level" || rule.kind === "camp") b.append(el("span", "cond-amount", catalog.text.fill(UI.level, { n: catalog.format.count(subjectNow(catalog, view, rule)) })));
-    b.addEventListener("click", () => pick(defaultSubject(catalog, view, rule)));
-    return b;
-  };
+  const button = (rule: SubjectRule) => subjectButton(catalog, view, rule, pick);
   const head = (key: string, rules: SubjectRule[]) => (rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rules.map(button)]);
   const cards = (key: string, rules: SubjectRule[]) => {   // under its head, by section as the Tasks page has them, each by name
     const rows = sectioned(catalog, rules, (r) => (r.kind === "count" || r.kind === "running" ? r.card : null), view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map(button)]);
     return rows.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(key)), ...rows];
   };
   return [...head(UI.ruleLevels, choices.levels), ...cards(UI.ruleTasks, choices.tasks), ...cards(UI.ruleRunning, choices.running ?? [])];
+}
+
+function subjectButton(catalog: Catalog, view: View, rule: SubjectRule, pick: (r: SubjectRule) => void): HTMLElement {
+  const b = el("button", "quiet cond-subject");
+  b.type = "button";
+  b.dataset.subject = subjectKey(rule);
+  b.append(el("span", "", subjectName(catalog, rule)));
+  if (rule.kind === "level" || rule.kind === "camp") b.append(el("span", "cond-amount", catalog.text.fill(UI.level, { n: catalog.format.count(subjectNow(catalog, view, rule)) })));
+  b.addEventListener("click", () => pick(defaultSubject(catalog, view, rule)));
+  return b;
+}
+
+/** The simple view's Running head and its few cards in the order given (ruleoffers.quickRunning), none by section. */
+export function quickRunningRows(catalog: Catalog, view: View, rules: SubjectRule[], pick: (r: SubjectRule) => void): HTMLElement[] {
+  return rules.length === 0 ? [] : [el("span", "rules-label cond-subhead", catalog.text.get(UI.ruleRunning)), ...rules.map((r) => subjectButton(catalog, view, r, pick))];
 }
 
 /** Pressed on the subject button that is `rule`'s. */

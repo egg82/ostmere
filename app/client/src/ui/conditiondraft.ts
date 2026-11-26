@@ -5,7 +5,7 @@ import { actionWords, chipOf, conditionWords, handsTap, savedVerb, storeRule } f
 import { buildRule, clampRule, defaultRule, sameLevel, valid, type StoreRule } from "../game/storerule";
 import { buildSubject, readSubject, subjectKey, type SubjectRule } from "../game/subjectrule";
 import { UI } from "../game/text";
-import { ruleCards, whenChoices } from "../game/ruleoffers";
+import { ruleCards, subjectChoices, whenChoices } from "../game/ruleoffers";
 import type { RuleSide } from "../game/ruleside";
 import { startRule } from "../game/levelrule";
 import { quickTest } from "./condquick";
@@ -101,6 +101,12 @@ export function keepOffered(catalog: Catalog, view: View, draft: Draft, chip: Ch
   draft.rule = store === undefined ? defaultRule("", "below", 0)
     : startRule(catalog, view, draft.then, store, quickTest(catalog, view, draft.then, store), storeCap(catalog, view, store));
   draft.opened = undefined;
+}
+
+/** After the action changed: a running subject the new action no longer offers (it is on the action's own lane) goes. */
+export function dropStaleRunning(catalog: Catalog, view: View, draft: Draft): void {
+  const watched = draft.subject;
+  if (watched?.kind === "running" && !subjectChoices(catalog, view, [draft.then, ...draft.orElse]).running.some((r) => subjectKey(r) === subjectKey(watched))) draft.subject = undefined;
 }
 
 /** The number the rule being changed holds on the draft's subject, kept reachable on its slider though already reached;

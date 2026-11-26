@@ -1,6 +1,6 @@
 // What the condition editor offers (docs/design/opening-screen.md, "The condition editor"), read off the view and the
 // content only. Its simple view offers the tasks a rule can do and, once one is chosen, what that task answers: the
-// chips whose store it makes and the stores relevant to it (game/relevant.ts). More options adds the saved mixes and
+// chips whose store it makes, the stores relevant to it and the few running cards (game/relevant.ts). More options adds the saved mixes and
 // every chip and store a rule may watch, the relevant stores first: every chip from its first showing on, every store
 // with a line. A saved mix of one task alone is offered as that task, so nothing is offered twice. And the mix switch
 // the player keeps making by hand, which gets a mark.
@@ -11,7 +11,7 @@ import { rulesFull, sameCondition, soloCard } from "./orders";
 import { sample } from "./clock";
 import { seenChips } from "./shown";
 import { buildSubject, subjectOpen, type SubjectRule } from "./subjectrule";
-import { relevantStores, type Relevant } from "./relevant";
+import { relevantCards, relevantStores, type Relevant } from "./relevant";
 import type { RuleSide } from "./ruleside";
 import { flatCards, isTownMix } from "./town";
 
@@ -130,6 +130,16 @@ export function subjectChoices(catalog: Catalog, view: View, actions: readonly (
   const running = lane === "hands" ? [] : inSectionOrder(catalog, view.cards.map((c) => c.card).filter((c) => catalog.laneOf(c) !== lane), (c) => c)
     .map((card): SubjectRule => ({ kind: "running", card, n: 1 }));
   return { levels, tasks, running };
+}
+
+/** How many running cards the simple view offers: the few most relevant, the rest being More options'. */
+export const QUICK_RUNNING = 4;
+
+/** The simple view's running cards: the best of subjectChoices's, ranked by relevantCards for a rule doing `cards`. */
+export function quickRunning(catalog: Catalog, view: View, actions: readonly (OrderVerb | null)[], cards: readonly string[]): SubjectRule[] {
+  const offered = subjectChoices(catalog, view, actions).running;
+  return relevantCards(catalog, cards, view.cards.map((c) => c.card))
+    .flatMap((card) => offered.filter((r) => r.kind === "running" && r.card === card)).slice(0, QUICK_RUNNING);
 }
 
 /** Every subject a rule may watch in the full editor (the wire's Subject union): the stores the When row offers, then
