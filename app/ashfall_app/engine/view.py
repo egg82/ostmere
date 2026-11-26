@@ -26,7 +26,7 @@ from .plan import (
 )
 from .groups import group_crew
 from .mixruns import mix_entries, mix_gains, town_entries
-from .rates import Running, contribution, lane_state, running, unlocked_standing
+from .rates import Running, contributions, lane_state, running, unlocked_standing
 from .rules import Rules
 from .rules_check import features
 from .segments import Segment, reach_time
@@ -155,8 +155,7 @@ def _ledger(save: Save, rules: Rules, now: Running) -> tuple[LedgerLine, ...]:
     for d in rules.stores:
         if not is_unlocked(save, rules, Unlock(UnlockKind.STORE, d.id)):
             continue
-        parts = tuple(Contribution(a, c) for a, share in now.shares.items()
-                      if (c := contribution(save, rules, a, d.id, share, now.runs[a])) != 0)
+        parts = tuple(Contribution(a, c) for a, c in contributions(save, rules, now, d.id))
         seg = store_segment(save, rules, d.id)
         cap = store_cap(save, rules, d.id)
         lines.append(LedgerLine(

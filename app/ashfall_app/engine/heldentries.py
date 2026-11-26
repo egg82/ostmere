@@ -10,7 +10,7 @@ from .gone import stopped
 from .ids import CardId, Runner, SourceId
 from .index import derived
 from .memo import PartsMemo, SaveMemo
-from .mixruns import mix_entries, town_entries
+from .mixruns import keep_entries, mix_entries, town_entries
 from .modifiers import LaneSpeed, Modifier, ModifierKind, RunKind, SideStrength
 from .rules import Rules, StandingDef
 from .state import Save
@@ -40,6 +40,12 @@ def held_cards(save: Save, rules: Rules) -> dict[Runner, int]:
 
 _SHARES: SaveMemo[dict[Runner, int]] = SaveMemo(4)
 """Callers never change what it returns."""
+
+
+def keep_held(source: Save, target: Save, rules: Rules) -> None:
+    """`target` has the values and the discrete state of `source`, all held_cards reads."""
+    _SHARES.carry(source, target, rules)
+    keep_entries(source, target, rules)
 _KEYED = tuple(f.name for f in fields(Save) if f.name not in ("time", "skills"))
 _BY_STATE: PartsMemo[dict[Runner, int]] = PartsMemo(4)
 """Kept across saves that differ only in their skills' picks: what is held reads the skills only through the levels a

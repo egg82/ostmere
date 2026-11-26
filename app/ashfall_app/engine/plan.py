@@ -185,6 +185,12 @@ _RUNNING_MIX: SaveMemo[MixId | None] = SaveMemo(4)
 _RUNNING_TOWN_MIX: SaveMemo[MixId | None] = SaveMemo(4)
 
 
+def keep_mix_ids(source: Save, target: Save, rules: Rules) -> None:
+    """`target` has the discrete state of `source`, all the running mixes' ids read."""
+    _RUNNING_MIX.carry(source, target, rules)
+    _RUNNING_TOWN_MIX.carry(source, target, rules)
+
+
 def running_mix_id(save: Save, rules: Rules) -> MixId | None:
     """The mix the hands run now: the mix of mix_order's order, else queue_mix_id, else the player's own (save.active).
     An order under Next runs its mix only while the queue runs none (_hands_rule)."""
