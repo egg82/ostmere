@@ -63,7 +63,12 @@ and has a real, bounded cost, as an undone chore does: the light tier, a store, 
   become notable through what happens to them, stay, and somehow avoid dying, if narrowly. A narrow escape is fine
   as long as it never becomes obvious that only those people keep escaping (owner, 2026-11-25): close calls are
   marked in the content data and counted per person in a readout that someone reads, never a limit that fails a
-  build: how many is too many is a feel.
+  build: how many is too many is a feel, "a couple narrow escapes per person" by the owner's reckoning. **A close call
+  changes the person, so the story never has to keep rescuing them**: scared, they make a safe place for themselves
+  or stop doing what nearly killed them (owner, 2026-11-25). The change shows in play: work they now refuse leaves
+  their lane, the time goes into the safe place, the fear stays in their lines. The danger they step away from
+  doesn't vanish; it passes to someone else, often the light tier, which is where deaths belong and where a choice of
+  whom to send gets its stakes.
 - **Off-limits: heavy investment in anything that can be taken** (the line for everyone who plays). Your
   character, the town, the notables and the story are safe; losses land only on the light tier. Notables never die.
 - **Your own death may be a mechanic, never a punishment** (many games use death as progression, and it
