@@ -15,7 +15,13 @@ per-PR set: `tests` (three shards, on a `postgres:18.6` container, production's 
 `client`, while `app-image` builds `app/Containerfile` beside them. A pull request also plays the chapters it touches (`slice` decides, `app/tools/pr_plan.py`;
 `playthrough-slice` plays): a chapter is touched when its own files changed from the base's (its day toml, the file its
 moves live in, week one's own code), and each touched chapter's tests play on from the last nightly's saved end of the
-chapter before it, which fails, not replays, when it is missing. A change to what every chapter reads (the engine, the
+chapter before it. `playthrough-slice` runs one job per week-two shard of a touched chapter
+(`weektwo_shards.shards_of_chapter`), with a 6-minute timeout: the 10-minute critical path in `test_ci_budget.py` less
+`changes`, `slice` and `ci-ok`. `slice` restores the last nightly's saves and plans the smoke instead when a shard's
+saved end of the chapter before is missing, saying why in the job summary. Shards whose slowest play, plus setup and
+10% margin, is over 6 minutes are named in `weektwo_shards.NIGHTLY_ONLY` and play only in the full run; a pull request
+touching only those plays nothing of week two. A shard leaves that set by being split or made cheaper, never by a
+longer timeout. A change to what every chapter reads (the engine, the
 opening's loader and shared data, the rules' ids and structure, `content/beats.yaml`, the shared play code), to week
 one, or a base without keys, gets the smoke instead: the day-eight plays of the push routes, from the start
 (`@pytest.mark.smoke`). The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,
