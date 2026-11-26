@@ -157,6 +157,12 @@ joins = [
   { lane = "n18", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
   { lane = "n19", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
 ]
+whereabouts = [
+  { person = "n16", layer = "figure_n16_at_the_pot" },
+  { person = "n17", layer = "figure_n17_at_the_pot" },
+  { person = "n18", layer = "figure_n18_at_the_pot" },
+  { person = "n19", layer = "figure_n19_at_the_pot" },
+]
 modifiers = [
   { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_food" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_walkers_food" },
@@ -175,6 +181,12 @@ joins = [
   { lane = "n17", mix = "town:camp", card = "g_road_clear_road", own_split = false },
   { lane = "n18", mix = "town:camp", card = "g_road_clear_road", own_split = false },
   { lane = "n19", mix = "town:camp", card = "g_road_clear_road", own_split = false },
+]
+whereabouts = [
+  { person = "n16", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n17", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n18", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n19", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
@@ -339,6 +351,11 @@ joins = [
   { lane = "n21", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
   { lane = "n22", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
 ]
+whereabouts = [
+  { person = "n20", layer = "figure_n20_at_the_pot" },
+  { person = "n21", layer = "figure_n21_at_the_pot" },
+  { person = "n22", layer = "figure_n22_at_the_pot" },
+]
 modifiers = [
   { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_food" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_widowers_food" },
@@ -355,6 +372,11 @@ joins = [
   { lane = "n20", mix = "town:camp", card = "g_road_stakes", own_split = false },
   { lane = "n21", mix = "town:camp", card = "g_road_stakes", own_split = false },
   { lane = "n22", mix = "town:camp", card = "g_road_stakes", own_split = false },
+]
+whereabouts = [
+  { person = "n20", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
+  { person = "n21", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
+  { person = "n22", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },

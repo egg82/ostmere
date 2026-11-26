@@ -165,6 +165,11 @@ joins = [
   { lane = "n9", mix = "town:camp", card = "n9_reap", own_split = true },
   { lane = "n10", mix = "town:camp", card = "n10_reap", own_split = true },
 ]
+whereabouts = [
+  { person = "n8", layer = "figure_n8_reaping" },
+  { person = "n9", layer = "figure_n9_reaping" },
+  { person = "n10", layer = "figure_n10_reaping" },
+]
 modifiers = [
   { target = "rate", id = "beds", flow = "make", store = "ripe", kind = "mul_bp", amount_bp = 12500, source = "o_choir_beds" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_choir_beds" },
@@ -187,6 +192,11 @@ joins = [
   { lane = "n8", mix = "town:camp", card = "n8_clear_road", own_split = true },
   { lane = "n9", mix = "town:camp", card = "n9_clear_road", own_split = true },
   { lane = "n10", mix = "town:camp", card = "n10_clear_road", own_split = true },
+]
+whereabouts = [
+  { person = "n8", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n9", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n10", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 12500, source = "o_choir_road" },
@@ -438,6 +448,10 @@ joins = [
   { lane = "n11", mix = "town:camp", card = "n11_clear_road", own_split = true },
   { lane = "n12", mix = "town:camp", card = "n12_reap", own_split = true },
 ]
+whereabouts = [
+  { person = "n11", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n12", layer = "figure_n12_reaping" },
+]
 modifiers = [
   { target = "rate", id = "beds", flow = "make", store = "ripe", kind = "mul_bp", amount_bp = 11000, source = "o_cutter_beds" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_cutter_beds" },
@@ -460,6 +474,10 @@ orders = [{ tap_card = "n11_first_out", first = true }]
 joins = [
   { lane = "n11", mix = "town:camp", card = "n11_clear_road", own_split = true },
   { lane = "n12", mix = "town:camp", card = "n12_clear_road", own_split = true },
+]
+whereabouts = [
+  { person = "n11", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n12", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_cutter_road" },
