@@ -585,6 +585,10 @@ modifiers = [
 id = "o_door_ice_hide"
 label_key = "a_door_ice_hide"
 cost_key = "a_door_ice_hide_cost"
+[offers.answers.echo]
+after_h = 10
+line_key = "l_echo_o_door_ice_hide"
+modifier = { target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9700, source = "o_door_ice_hide" }
 
 [[offers]]
 id = "o_sun_rack"
@@ -843,6 +847,7 @@ B13 = ["l_b13_1"]
 B14 = ["l_b14_1"]
 
 [line_kinds]
+l_echo_o_door_ice_hide = "story"
 l_floor_paced = "story"
 l_stage_hall_1 = "story"
 l_stage_hall_2 = "story"
@@ -887,6 +892,7 @@ l_find_antler = "find"
 l_camp_17 = "level"
 
 [text]
+l_echo_o_door_ice_hide = "the hide in the door gap has frozen stiff, and the draught has stopped."
 e_deer_title = "deer"
 l_floor_paced = "Lucy paces out a floor in the dark beside the bays, counting low. at nine she stops."
 store_ruin_beams = "beams in the ruin"

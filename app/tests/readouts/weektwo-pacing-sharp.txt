@@ -4,15 +4,15 @@ pacing sharp: 27 whole days played
   B7 day  4.70 week 0.67
   B8 day  7.00 week 1.00
   B9 day  7.65 week 1.09
- B10 day  8.59 week 1.23
+ B10 day  8.60 week 1.23
  B11 day  9.55 week 1.36
  B12 day  9.88 week 1.41
  B13 day 14.00 week 2.00
  B14 day 15.24 week 2.18
  B15 day 16.08 week 2.30
  B16 day 17.90 week 2.56
- B17 day 18.68 week 2.67
- B18 day 21.08 week 3.01
+ B17 day 18.69 week 2.67
+ B18 day 21.07 week 3.01
  B19 day 22.25 week 3.18
  B20 day 24.14 week 3.45
  B21 day 27.66 week 3.95
@@ -50,6 +50,6 @@ pacing sharp: 27 whole days played
  B53 not reached
 week days     line feature    chip   store   skill    card   level  things
    1   1-7     191      59       4      23       6     121      19     232
-   2  8-14      89      20       3       6       0     109      11     149
-   3 15-21      89      11       2       6       0     177      16     212
-   4 22-27      59       9       3       2       1      66      10      91
+   2  8-14      93      20       3       6       0     109      11     149
+   3 15-21      90      11       2       6       0     177      16     212
+   4 22-27      61       9       3       2       1      66      10      91

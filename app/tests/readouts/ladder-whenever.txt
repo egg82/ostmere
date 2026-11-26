@@ -1,5 +1,5 @@
-== whenever: the edge at game day 14.07
-  scavenging: level 21 of 22 (72.47% of the phase)
+== whenever: the edge at game day 13.79
+  scavenging: level 21 of 22 (71.95% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.00 d  gap   0.00 d
     L4    0.01 d  gap   0.01 d
@@ -19,9 +19,9 @@
     L18   3.49 d  gap   0.99 d
     L19   4.79 d  gap   1.30 d
     L20   6.76 d  gap   1.98 d
-    L21  12.45 d  gap   5.69 d
+    L21  12.33 d  gap   5.57 d
     top L22: not by the edge
-  woodcutting: level 33 of 43 (2.21% of the phase)
+  woodcutting: level 33 of 43 (2.39% of the phase)
     L2    0.00 d  gap   0.00 d
     L3    0.01 d  gap   0.00 d
     L4    0.01 d  gap   0.00 d
@@ -42,8 +42,8 @@
     L19   3.44 d  gap   1.64 d
     L20   6.08 d  gap   2.63 d
     L21   8.79 d  gap   2.71 d
-    L22  13.63 d  gap   4.84 d
-    L23  13.79 d  gap   0.16 d
+    L22  13.33 d  gap   4.54 d
+    L23  13.79 d  gap   0.46 d
     L24  13.79 d  gap   0.00 d
     L25  13.79 d  gap   0.00 d
     L26  13.79 d  gap   0.00 d
@@ -52,10 +52,10 @@
     L29  13.79 d  gap   0.00 d
     L30  13.79 d  gap   0.00 d
     L31  13.79 d  gap   0.00 d
-    L32  13.84 d  gap   0.05 d
-    L33  13.96 d  gap   0.11 d
+    L32  13.79 d  gap   0.00 d
+    L33  13.79 d  gap   0.00 d
     top L43: not by the edge
-  foraging: level 8 of 22 (0.34% of the phase)
+  foraging: level 8 of 22 (0.33% of the phase)
     L2    0.05 d  gap   0.05 d
     L3    0.10 d  gap   0.05 d
     L4    0.29 d  gap   0.19 d
@@ -64,16 +64,15 @@
     L7    4.03 d  gap   1.89 d
     L8    9.75 d  gap   5.72 d
     top L22: not by the edge
-  cooking: level 8 of 22 (0.35% of the phase)
+  cooking: level 7 of 22 (0.26% of the phase)
     L2    1.19 d  gap   1.19 d
     L3    1.74 d  gap   0.56 d
     L4    3.24 d  gap   1.50 d
     L5    5.51 d  gap   2.27 d
     L6    8.36 d  gap   2.85 d
-    L7   11.26 d  gap   2.90 d
-    L8   13.10 d  gap   1.84 d
+    L7   11.38 d  gap   3.02 d
     top L22: not by the edge
-  arcana: level 12 of 22 (2.45% of the phase)
+  arcana: level 12 of 22 (2.44% of the phase)
     L2    5.41 d  gap   5.41 d
     L3    5.42 d  gap   0.01 d
     L4    5.45 d  gap   0.03 d
@@ -84,9 +83,9 @@
     L9    7.84 d  gap   0.39 d
     L10   8.43 d  gap   0.60 d
     L11   9.49 d  gap   1.06 d
-    L12  11.12 d  gap   1.62 d
+    L12  11.11 d  gap   1.62 d
     top L22: not by the edge
-  melee: level 19 of 22 (34.07% of the phase)
+  melee: level 19 of 22 (32.84% of the phase)
     L2    6.41 d  gap   6.41 d
     L3    6.41 d  gap   0.00 d
     L4    6.42 d  gap   0.00 d
@@ -102,80 +101,79 @@
     L14   7.27 d  gap   0.37 d
     L15   7.86 d  gap   0.59 d
     L16   8.73 d  gap   0.86 d
-    L17   9.90 d  gap   1.17 d
-    L18  11.69 d  gap   1.79 d
-    L19  12.96 d  gap   1.27 d
+    L17   9.89 d  gap   1.17 d
+    L18  11.74 d  gap   1.85 d
+    L19  13.00 d  gap   1.25 d
     top L22: not by the edge
   spellcraft: level 1 of 22 (0.00% of the phase)
     top L22: not by the edge
   wayfinding: level 1 of 22 (0.00% of the phase)
     top L22: not by the edge
   card share of the running mixes by day, percent (. none, ~ under 0.5)
-    day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
-    build_shelter            .  17   .   .   .   .   .   .   .   .   .   .   .   .   .
-    build_windbreak          .   .   .   .   .  17  83  83  50 100  50  67  83  83 100
-    cure_hearth              .   .  33 100  50   .   .   .   .   .   .   .   .   .   .
-    cut_stakes               .   .   .   .   .   .   .  11   8  13  11   7   .   .   .
-    dig_cellar               .   .   .   .   .   .   .   .   .   .   .  17   .   .   .
-    field_track              .   .  31  31  39  43  24  15  12  18  15  10  13  15  15
-    fungus_stew              .   .   .   .   .   .   .   1   1   1   1   4   6   6   7
-    g_field_forage           .   .   .   .   .   .   .   .   .   .  17  53  89  83 100
-    g_field_pick             .   .   .   .   .   .   .   .   .   .  11  44  67  67  67
-    g_field_watch            .   .   .   .   .   .   .   .   .   .  17  53  89  83 100
-    gap_fire                 .   .   .   .   .   .   .   .  17   .   .   .   .   .   .
-    hand_on_stone            .   .   .   .   .   7   1  13  11  16  13  12  13  15  15
-    hunt_bear                .   .   .   .   .   .   .   .   .   .   .   5  15   5   .
-    hunt_wolf                .   .   .   .   .   .   5   9   7  11   9   9  11  13  13
-    larder_floor             .   .  17   .   .   .   .   .   .   .   .   .   .   .   .
-    make_bay                 .   .  17  17   .   .   .   .   .   .   .   .   .   .   .
-    make_hut                 .   .   .   .   .   .   .   .   .   .  17   .   .   .   .
-    n1_forage                .  83 100 100 100 100 100 100 100 100 100 100 100 100 100
-    n1_peg_flaps             .   .   .   .   .   .   .   .  17   .   .   .   .   .   .
-    n1_walk_ridge            .  17   .   .   .   .   .   .   .   .   .   .   .   .   .
-    n2_clear_roofs           .   .   .   .   .   .   .  17  50  50  50  50  50  50   .
-    n2_forage                .   .   .  83 100 100  92  50  21   .  17  50  50  50  50
-    n2_stakes                .   .   .   .   .   .   8  50  50  50  33   .   .   .   .
-    n2_watch                 .   .   .   .   .   .   .   .  29  50  50  50  50  50  50
-    n3_ash_ground            .   .   .   .   .   .   .   6  27  22  27  22  22  22  20
-    n3_dig_bed               .   .   .   .   .  17   .   .   .   .   .   .   .   .   .
-    n3_forage                .   .   .   .   .  33 100  94  63  56  63  58  49  49 100
-    n3_pick                  .   .   .   .   .   .   .  40  40  42  40  43  45  45  40
-    n4_cord                  .   .   .   .   .   .  17   .  17  17   .   .   .   .   .
-    n4_watch                 .   .   .   .   .  33 100 100 100 100 100 100 100 100 100
-    n6_stakes                .   .   .   .   .   .   .   .   .   .  33  67   .   .   .
-    n7_guard                 .   .   .   .   .   .   .   .   .   .  33 100 100 100 100
-    palisade                 .   .   .   .   .   .   .  17  17   .   .   .   .   .   .
-    pelt_bedding             .   .   .   .   .   .  17   .   .   .   .   .   .   .   .
-    pot_fungus_stew          .   .   .   .   .   .   .  67  67 100  33  67 100 100 100
-    pot_shelf                .   .   .   .  17   .   .   .   .   .   .   .   .   .   .
-    pot_stew                 .   .   .  50  50  17   .  17  33   .  33  17   .   .   .
-    rest                    22  33  34  45  31  17  23  28  42  14  28  29  14  16  17
-    scavenge                22  33  17  12  15  17  23  12   9  14  12  12  14  16  17
-    sew_wraps                .   .   .   .   .   .   .   .  17   .   .   .   .  17 100
-    smoke_catch              .   .   .   .   .   .  17  17   .   .   .   .   .  17   .
-    tallow_lamps             .   .   .   .   .   .   .   .   .   .   .   .  17   .   .
-    watch_fire               .   .   .   .  17   .   .   .   .   .   .   .   .   .   .
-    weave_wattle            17   .   .   .   .   .   .   .   .   .   .   .   .   .   .
-    wood_stack               .   .   .  17   .   .   .   .   .   .   .   .   .   .   .
-    woodcutting             22  33  17  12  15  17  23  12   9  14  12  12  14  16  17
-  quiet since: build_shelter day 3, cure_hearth day 6, cut_stakes day 13, dig_cellar day 13, gap_fire day 10, hunt_bear day 15, larder_floor day 4, make_bay day 5, make_hut day 12, n1_peg_flaps day 10, n1_walk_ridge day 3, n2_clear_roofs day 15, n2_stakes day 12, n3_dig_bed day 7, n4_cord day 11, n6_stakes day 13, palisade day 10, pelt_bedding day 8, pot_shelf day 6, pot_stew day 13, smoke_catch day 15, tallow_lamps day 14, watch_fire day 6, weave_wattle day 2, wood_stack day 5
+    day:   1   2   3   4   5   6   7   8   9  10  11  12  13  14
+    build_shelter            .  17   .   .   .   .   .   .   .   .   .   .   .   .
+    build_windbreak          .   .   .   .   .  17  83  83  50 100  50  33 100  80
+    cure_hearth              .   .  33 100  50   .   .   .   .   .   .   .   .   .
+    cut_stakes               .   .   .   .   .   .   .  11   8  13  11   8   2   .
+    dig_cellar               .   .   .   .   .   .   .   .   .   .   .  33   .   .
+    field_track              .   .  31  31  39  43  24  15  12  18  15  11  13  15
+    fungus_stew              .   .   .   .   .   .   .   1   1   1   1   1   1   1
+    g_field_forage           .   .   .   .   .   .   .   .   .   . 100  50 100 100
+    g_field_pick             .   .   .   .   .   .   .   .   .   .   .  39  67  67
+    g_field_watch            .   .   .   .   .   .   .   .   .   .   .  50 100 100
+    gap_fire                 .   .   .   .   .   .   .   .  17   .   .   .   .   .
+    hand_on_stone            .   .   .   .   .   7   1  13  11  16  13  10  14  17
+    hunt_bear                .   .   .   .   .   .   .   .   .   .   .   2  16   6
+    hunt_wolf                .   .   .   .   .   .   5   9   7  11   9   7  11  13
+    larder_floor             .   .  17   .   .   .   .   .   .   .   .   .   .   .
+    make_bay                 .   .  17  17   .   .   .   .   .   .   .   .   .   .
+    make_hut                 .   .   .   .   .   .   .   .   .   .  17   .   .   .
+    n1_forage                .  83 100 100 100 100 100 100 100 100 100 100 100 100
+    n1_peg_flaps             .   .   .   .   .   .   .   .  17   .   .   .   .   .
+    n1_walk_ridge            .  17   .   .   .   .   .   .   .   .   .   .   .   .
+    n2_clear_roofs           .   .   .   .   .   .   .  17  50  50  50  50  50  60
+    n2_forage                .   .   .  83 100 100  92  50  21   .   .  50  50  50
+    n2_stakes                .   .   .   .   .   .   8  50  50  50  50   .   .   .
+    n2_watch                 .   .   .   .   .   .   .   .  29  50  50  50  50  50
+    n3_ash_ground            .   .   .   .   .   .   .   6  27  22  24  24  27  25
+    n3_dig_bed               .   .   .   .   .  17   .   .   .   .   .   .   .   .
+    n3_forage                .   .   .   .   .  33 100  94  63  56  59  71  83  87
+    n3_pick                  .   .   .   .   .   .   .  40  40  42  40  42  40  40
+    n4_cord                  .   .   .   .   .   .  17   .  17  17   .   .   .   .
+    n4_watch                 .   .   .   .   .  33 100 100 100 100 100 100 100 100
+    n6_stakes                .   .   .   .   .   .   .   .   .   .   .  83   .   .
+    n7_guard                 .   .   .   .   .   .   .   .   .   .   . 100 100 100
+    palisade                 .   .   .   .   .   .   .  17  17   .   .   .   .   .
+    pelt_bedding             .   .   .   .   .   .  17   .   .   .   .   .   .   .
+    pot_fungus_stew          .   .   .   .   .   .   .  67  67 100  33  67  33 100
+    pot_shelf                .   .   .   .  17   .   .   .   .   .   .   .   .   .
+    pot_stew                 .   .   .  50  50  17   .  17  33   .  33   .  33   .
+    rest                    22  33  34  45  31  17  23  28  42  14  28  42  14  17
+    scavenge                22  33  17  12  15  17  23  12   9  14  12   9  14  17
+    sew_wraps                .   .   .   .   .   .   .   .  17   .   .   .   .  20
+    smoke_catch              .   .   .   .   .   .  17  17   .   .   .   .   .   .
+    watch_fire               .   .   .   .  17   .   .   .   .   .   .   .   .   .
+    weave_wattle            17   .   .   .   .   .   .   .   .   .   .   .   .   .
+    wood_stack               .   .   .  17   .   .   .   .   .   .   .   .   .   .
+    woodcutting             22  33  17  12  15  17  23  12   9  14  12   9  14  17
+  quiet since: build_shelter day 3, cure_hearth day 6, cut_stakes day 14, dig_cellar day 13, gap_fire day 10, larder_floor day 4, make_bay day 5, make_hut day 12, n1_peg_flaps day 10, n1_walk_ridge day 3, n2_stakes day 12, n3_dig_bed day 7, n4_cord day 11, n6_stakes day 13, palisade day 10, pelt_bedding day 8, pot_shelf day 6, pot_stew day 14, smoke_catch day 9, watch_fire day 6, weave_wattle day 2, wood_stack day 5
   XP by source per band of game days, percent of the skill's XP
     scavenging     d1-2   scavenge 100
     scavenging     d3-5   field_track 69, scavenge 31
     scavenging     d6-9   field_track 63, scavenge 37
-    scavenging     d10+   field_track 52, scavenge 48
+    scavenging     d10+   field_track 54, scavenge 46
     woodcutting    d1-2   woodcutting 100
     woodcutting    d3-5   woodcutting 100
     woodcutting    d6-9   woodcutting 76, cut_stakes 24
-    woodcutting    d10+   woodcutting 66, cut_stakes 34
+    woodcutting    d10+   woodcutting 63, cut_stakes 37
     cooking        d6-9   smoke_catch 97, fungus_stew 3
-    cooking        d10+   smoke_catch 56, fungus_stew 44
+    cooking        d10+   fungus_stew 100
     arcana         d6-9   hand_on_stone 100
     arcana         d10+   hand_on_stone 100
     melee          d6-9   hunt_wolf 100
-    melee          d10+   hunt_wolf 73, hunt_bear 27
+    melee          d10+   hunt_wolf 71, hunt_bear 29
   saved mix shapes, scored alone as the running mix by levels gained per game hour
-    85 instants sampled: 84 compared, 1 with fewer than two shapes saved, 0 left out (a tie or no XP)
+    83 instants sampled: 82 compared, 1 with fewer than two shapes saved, 0 left out (a tie or no XP)
     shape 1, wins 16: rest 33, scavenge 33, woodcutting 33
     shape 2, wins 0: rest 17, scavenge 17, weave_wattle 50, woodcutting 17
     shape 3, wins 16: field_track 50, rest 17, scavenge 17, woodcutting 17
@@ -187,6 +185,7 @@
     shape 9, wins 2: field_track 26, hand_on_stone 1, hunt_wolf 15, rest 19, scavenge 19, woodcutting 19
     shape 10, wins 0: cut_stakes 15, field_track 22, hand_on_stone 1, hunt_wolf 13, rest 16, scavenge 16, woodcutting 16
     shape 11, wins 27: cut_stakes 12, field_track 17, fungus_stew 1, hand_on_stone 22, hunt_wolf 10, rest 13, scavenge 13, woodcutting 13
-    shape 12, wins 0: field_track 15, fungus_stew 7, hand_on_stone 15, hunt_wolf 13, rest 17, scavenge 17, woodcutting 17
-    shape 13, wins 15: field_track 13, fungus_stew 6, hand_on_stone 13, hunt_bear 15, hunt_wolf 11, rest 14, scavenge 14, woodcutting 14
-  one shape always wins: no, shape 1 wins 16, shape 3 wins 16, shape 5 wins 1, shape 6 wins 7, shape 9 wins 2, shape 11 wins 27, shape 13 wins 15
+    shape 12, wins 3: cut_stakes 12, field_track 12, fungus_stew 1, hand_on_stone 12, hunt_bear 14, hunt_wolf 10, rest 13, scavenge 13, woodcutting 13
+    shape 13, wins 10: field_track 14, fungus_stew 1, hand_on_stone 13, hunt_bear 16, hunt_wolf 11, rest 15, scavenge 15, woodcutting 15
+    shape 14, wins 0: field_track 16, fungus_stew 1, hand_on_stone 18, hunt_wolf 13, rest 17, scavenge 17, woodcutting 17
+  one shape always wins: no, shape 1 wins 16, shape 3 wins 16, shape 5 wins 1, shape 6 wins 7, shape 9 wins 2, shape 11 wins 27, shape 12 wins 3, shape 13 wins 10

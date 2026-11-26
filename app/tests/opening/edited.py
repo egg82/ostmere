@@ -6,8 +6,7 @@ from pathlib import Path
 
 from ashfall_app.opening.chapters import merge
 from ashfall_app.opening.checks import check_opening
-from ashfall_app.opening.clocks import with_moment_clocks
-from ashfall_app.opening.groups import with_group_unlocks
+from ashfall_app.opening.expansions import with_expansions
 from ashfall_app.opening.schema import CHAPTERS, OPENING, Chapter, Opening
 
 type Edit = Callable[[str], str]
@@ -28,7 +27,7 @@ def edited(data: Edit = same, text: Edit = same, check: bool = True) -> Opening:
     o = Opening.model_validate(_parsed(OPENING, data, text))
     for chapter in CHAPTERS:
         o = merge(o, Chapter.model_validate(_parsed(chapter, data, text)))
-    o = with_moment_clocks(with_group_unlocks(o))
+    o = with_expansions(o)
     if check:
         check_opening(o)
     return o

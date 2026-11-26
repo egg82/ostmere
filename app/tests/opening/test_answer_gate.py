@@ -44,7 +44,7 @@ def test_every_answer_differs_by_a_lasting_part_and_every_role_is_counted(conten
 def test_the_arrival_offers_pass_and_the_held_ones_fail(content: Opening):
     failing = set(unlasting_offers(content))
     assert not failing & {"o_stay", "o_pair", "o_family", "o_cart"}
-    assert {"o_pelt", "j_steps"} <= failing
+    assert failing == {"o_book"}, "an offer left on the held list, or a new one: an echo or a difference is missing"
     assert untallied_kinds(content) == ["work"]
 
 
@@ -58,6 +58,13 @@ def with_outcomes(o: Opening, offer: str, outcome: OutcomeEntry) -> Opening:
 def test_answers_with_one_outcome_are_found_and_a_sourced_difference_is_not(content: Opening):
     one = next(a.outcome for x in content.offers if x.id == "o_bank" for a in x.answers)
     assert "o_bank" not in unlasting_offers(content) and "o_bank" in unlasting_offers(with_outcomes(content, "o_bank", one))
+
+
+def test_an_echo_is_what_keeps_a_plain_answer_off_the_held_list(content: Opening):
+    bare = [x.model_copy(update={"answers": [a.model_copy(update={"echo": None}) for a in x.answers]}) for x in content.offers]
+    stripped = content.model_copy(update={"offers": bare, "triggers": [t for t in content.triggers if not t.id.startswith("t_echo_")]})
+    assert {"j_steps", "o_pelt", "j_steam_hole"} <= set(unlasting_offers(stripped))
+    assert not {"j_steps", "o_pelt", "j_steam_hole"} & set(unlasting_offers(content))
 
 
 def without_tally(o: Opening, kind: str) -> Opening:

@@ -360,6 +360,10 @@ queues = ["follow_marks"]
 id = "j_drag_marks_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 6
+line_key = "l_echo_j_drag_marks_no"
+modifier = { target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 10300, source = "j_drag_marks_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -398,6 +402,10 @@ queues = ["show_fish"]
 id = "j_show_fish_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 9
+line_key = "l_echo_j_show_fish_no"
+modifier = { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "mul_bp", amount_bp = 9700, source = "j_show_fish_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -563,6 +571,8 @@ doings = ["n13"]
 whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
 
 [line_kinds]
+l_echo_j_show_fish_no = "story"
+l_echo_j_drag_marks_no = "story"
 l_named = "story"
 l_fiddle_1 = "story"
 l_fiddle_2 = "story"
@@ -612,6 +622,8 @@ pot_stew = [{ lane = "n14", amount_bp = 1500 }, { lane = "n15", amount_bp = 1500
 pot_fungus_stew = [{ lane = "n14", amount_bp = 1000 }, { lane = "n15", amount_bp = 1000 }]
 
 [text]
+l_echo_j_show_fish_no = "lucy took the newcomers down to the stream herself. they came back wet and knowing where to stand."
+l_echo_j_drag_marks_no = "someone followed the drag-marks and came back late and cold."
 store_sorrel_clock = "clock"
 action_sorrel_clock = "Clock"
 store_sorrel_16h = "clock"

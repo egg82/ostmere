@@ -366,6 +366,10 @@ modifiers = [
 id = "o_deep_pace"
 label_key = "a_deep_pace"
 cost_key = "a_deep_pace_cost"
+[offers.answers.echo]
+after_h = 8
+line_key = "l_echo_o_deep_pace"
+modifier = { target = "rate", id = "n2_stakes", flow = "make", store = "stakes", kind = "mul_bp", amount_bp = 9700, source = "o_deep_pace" }
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 3 }]
 
@@ -436,6 +440,10 @@ modifiers = [
 id = "o_fed_pot"
 label_key = "a_fed_pot"
 cost_key = "a_fed_pot_cost"
+[offers.answers.echo]
+after_h = 6
+line_key = "l_echo_o_fed_pot"
+modifier = { target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 10300, source = "o_fed_pot" }
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 3 }]
 
@@ -462,6 +470,10 @@ modifiers = [
 id = "o_lookout_wall"
 label_key = "a_lookout_wall"
 cost_key = "a_lookout_wall_cost"
+[offers.answers.echo]
+after_h = 9
+line_key = "l_echo_o_lookout_wall"
+modifier = { target = "rate", id = "n2_stakes", flow = "make", store = "stakes", kind = "mul_bp", amount_bp = 10300, source = "o_lookout_wall" }
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 3 }]
 
@@ -476,6 +488,10 @@ requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answe
 id = "o_gate_road"
 label_key = "a_gate_road"
 cost_key = "a_gate_road_cost"
+[offers.answers.echo]
+after_h = 12
+line_key = "l_echo_o_gate_road"
+modifier = { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_gate_road" }
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_gate_road"]
@@ -622,6 +638,10 @@ doings = ["n4"]
 whereabouts = [{ person = "n4", layer = "figure_n4_lashes_the_stretch" }]
 
 [line_kinds]
+l_echo_o_gate_road = "story"
+l_echo_o_lookout_wall = "story"
+l_echo_o_fed_pot = "story"
+l_echo_o_deep_pace = "story"
 l_ring_1 = "story"
 l_ring_2 = "story"
 l_gap_fire_1 = "story"
@@ -644,6 +664,10 @@ l_posts = "story"
 l_gate_road = "story"
 
 [text]
+l_echo_o_gate_road = "whoever stands at the gate sees the road a long way off, and the camp sleeps easier for it."
+l_echo_o_lookout_wall = "{n2} sits at the foot of the stakes and watches the road from there."
+l_echo_o_fed_pot = "the pot stays on the fire, and the stew is thick for it."
+l_echo_o_deep_pace = "{n2} has gone back to reset two posts on the low side."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-nine routes give each line its states and the writers'
 # pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping

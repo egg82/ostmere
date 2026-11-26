@@ -448,6 +448,10 @@ queues = ["dig_midden"]
 id = "j_midden_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 7
+line_key = "l_echo_j_midden_no"
+modifier = { target = "rate", id = "pick_fungus", flow = "cost", store = "bloom", kind = "mul_bp", amount_bp = 10300, source = "j_midden_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 24 }]
@@ -486,6 +490,10 @@ queues = ["pull_wall"]
 id = "j_leaning_wall_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 12
+line_key = "l_echo_j_leaning_wall_no"
+modifier = { target = "rate", id = "lay_to_dry", flow = "make", store = "dry_wood", kind = "mul_bp", amount_bp = 10300, source = "j_leaning_wall_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 24 }]
@@ -524,6 +532,10 @@ queues = ["steam_hole"]
 id = "j_steam_hole_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 8
+line_key = "l_echo_j_steam_hole_no"
+modifier = { target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 9700, source = "j_steam_hole_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 24 }]
@@ -673,6 +685,9 @@ I10 = ["l_thanks"]
 B21 = ["l_b21_1"]
 
 [line_kinds]
+l_echo_j_steam_hole_no = "story"
+l_echo_j_leaning_wall_no = "story"
+l_echo_j_midden_no = "story"
 l_bowl_set = "story"
 l_fight_boar_won_1 = "fight"
 l_fight_boar_won_2 = "fight"
@@ -727,6 +742,9 @@ pot_stew = [{ lane = "n23", amount_bp = 1500 }]
 pot_fungus_stew = [{ lane = "n23", amount_bp = 1000 }]
 
 [text]
+l_echo_j_steam_hole_no = "someone went down the hole by the stream and came up warm to the elbows."
+l_echo_j_leaning_wall_no = "two of them pulled the wall down. the wood is stacked off the stones."
+l_echo_j_midden_no = "the midden pit is dug, and the ground beside it has gone soft and sour."
 e_ash_boar_title = "boar"
 store_kept_clock = "clock"
 action_kept_clock = "Clock"

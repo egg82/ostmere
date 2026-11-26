@@ -122,6 +122,10 @@ queues = ["give_pelt"]
 id = "o_pelt_keep"
 label_key = "a_pelt_keep"
 cost_key = "a_pelt_keep_cost"
+[offers.answers.echo]
+after_h = 10
+line_key = "l_echo_o_pelt_keep"
+modifier = { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "o_pelt_keep" }
 [offers.answers.outcome]
 doings = ["n3"]
 whereabouts = [{ person = "n3", layer = "turned_sacking" }]
@@ -374,6 +378,7 @@ doings = ["n3"]
 whereabouts = [{ person = "n3", layer = "figure_n3_holds_out_a_hand" }]
 
 [line_kinds]
+l_echo_o_pelt_keep = "story"
 l_morning_7 = "story"
 l_spear = "story"
 l_rats_first = "story"
@@ -396,6 +401,7 @@ l_g2_3 = "story"
 l_camp_12 = "level"
 
 [text]
+l_echo_o_pelt_keep = "the sacking has taken the damp, and the ground under it is dry."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-six routes give each line its states and the writers'
 # pick lands (content/team/days-four-to-seven-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any

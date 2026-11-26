@@ -1,13 +1,13 @@
 chapter twentythree: 9 visits on typical
-   V98 gap   3.2 h  spend 42  decide  0
-   V99 gap   9.1 h  spend 41  decide  0  [wait, 3 lines]
-  V100 gap   4.2 h  spend 104  decide  1  [wait, 7 lines]
-  V101 gap   3.1 h  spend 85  decide  1
-  V102 gap   9.2 h  spend 107  decide  1
-  V103 gap   4.2 h  spend 107  decide  1
-  V104 gap   3.2 h  spend 41  decide  1  [wait, 3 lines]
-  V105 gap   9.2 h  spend 120  decide  1  [wait, 5 lines]
-  V106 gap   4.2 h  spend 120  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 499, decide 5; 8h+: 3 returns, spend 268, decide 2
-  cap loss at the end, away 8 h: damp_wood 2%, dry_wood 56%, roots 91%, stones 68%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: cord 4%, damp_wood 2%, dry_wood 55%, roots 91%, stones 69%, windbreak 100%, wraps_sewn 100%
+   V98 gap   3.2 h  spend 117  decide  0  [wait, 6 lines]
+   V99 gap   9.1 h  spend 81  decide  0  [wait, 3 lines]
+  V100 gap   4.1 h  spend 53  decide  1  [wait, 6 lines]
+  V101 gap   3.2 h  spend 121  decide  1  [wait, 3 lines]
+  V102 gap   9.1 h  spend 40  decide  1  [wait, 6 lines]
+  V103 gap   4.2 h  spend 40  decide  1
+  V104 gap   3.2 h  spend 41  decide  1
+  V105 gap   9.2 h  spend 120  decide  1
+  V106 gap   4.1 h  spend 107  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 479, decide 4; 8h+: 3 returns, spend 241, decide 2
+  cap loss at the end, away 8 h: damp_wood 0%, dry_wood 61%, roots 97%, stones 78%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: cord 4%, damp_wood 0%, dry_wood 61%, roots 97%, stones 78%, windbreak 100%, wraps_sewn 100%

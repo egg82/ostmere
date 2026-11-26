@@ -1,12 +1,11 @@
-chapter eighteen: 8 visits on typical
-   V73 gap   4.1 h  spend 49  decide  3  [wait, 8 lines]
-   V74 gap   3.2 h  spend 48  decide  2  [wait, 5 lines]
-   V75 gap   9.1 h  spend 77  decide  2  [wait, 14 lines]
-   V76 gap   4.2 h  spend 115  decide  0  [wait, 2 lines]
-   V77 gap   3.2 h  spend 115  decide  0  [wait, 0 lines]
-   V78 gap   9.2 h  spend 115  decide  3  [wait, 7 lines]
-   V79 gap   4.2 h  spend 60  decide  0  [wait, 1 lines]
-   V80 gap   3.2 h  spend 116  decide  1  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 6 returns, spend 503, decide 6; 8h+: 2 returns, spend 192, decide 5
-  cap loss at the end, away 8 h: barley 65%, cord 2%, damp_wood 1%, dry_wood 9%, roots 86%, stones 43%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: barley 59%, cleared 15%, cord 1%, damp_wood 2%, dry_wood 28%, roots 83%, stones 44%, windbreak 100%, wraps_sewn 100%
+chapter eighteen: 7 visits on typical
+   V78 gap   9.2 h  spend 39  decide  2
+   V79 gap   4.2 h  spend 75  decide  2
+   V80 gap   3.2 h  spend 42  decide  0  [wait, 5 lines]
+   V81 gap   9.2 h  spend 90  decide  2
+   V82 gap   4.2 h  spend 60  decide  0  [wait, 0 lines]
+   V83 gap   3.2 h  spend 85  decide  0  [wait, 2 lines]
+   V84 gap   9.2 h  spend 140  decide  1  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 4 returns, spend 262, decide 2; 8h+: 3 returns, spend 269, decide 5
+  cap loss at the end, away 8 h: barley 66%, damp_wood 8%, dry_wood 23%, roots 94%, stones 85%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: barley 56%, cleared 11%, damp_wood 7%, dry_wood 31%, roots 93%, stones 87%, windbreak 100%, wraps_sewn 100%

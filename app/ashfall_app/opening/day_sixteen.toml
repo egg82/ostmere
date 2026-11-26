@@ -540,6 +540,10 @@ queues = ["cut_steps"]
 id = "j_steps_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 7
+line_key = "l_echo_j_steps_no"
+modifier = { target = "rate", id = "weariness", flow = "cost", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "j_steps_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -579,6 +583,10 @@ queues = ["smoke_hole"]
 id = "j_smoke_hole_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 9
+line_key = "l_echo_j_smoke_hole_no"
+modifier = { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 10300, source = "j_smoke_hole_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -617,6 +625,10 @@ queues = ["dig_beam"]
 id = "j_wedged_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 11
+line_key = "l_echo_j_wedged_no"
+modifier = { target = "rate", id = "chill", flow = "cost", store = "warmth", kind = "mul_bp", amount_bp = 10300, source = "j_wedged_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -655,6 +667,10 @@ queues = ["reset_snares"]
 id = "j_snares_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 8
+line_key = "l_echo_j_snares_no"
+modifier = { target = "rate", id = "pot_catch_broth", flow = "cost", store = "stew_catch", kind = "mul_bp", amount_bp = 9700, source = "j_snares_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -693,6 +709,10 @@ queues = ["take_child"]
 id = "j_ridge_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 10
+line_key = "l_echo_j_ridge_no"
+modifier = { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10300, source = "j_ridge_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -731,6 +751,10 @@ queues = ["keep_count"]
 id = "j_tally_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 12
+line_key = "l_echo_j_tally_no"
+modifier = { target = "rate", id = "pot_stew", flow = "cost", store = "stew", kind = "mul_bp", amount_bp = 10300, source = "j_tally_no" }
 [offers.answers.outcome]
 doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
@@ -799,6 +823,12 @@ after = { unlock_kind = "feature", id = "road_marked" }
 B15 = ["l_b15_1"]
 
 [line_kinds]
+l_echo_j_tally_no = "story"
+l_echo_j_ridge_no = "story"
+l_echo_j_snares_no = "story"
+l_echo_j_wedged_no = "story"
+l_echo_j_smoke_hole_no = "story"
+l_echo_j_steps_no = "story"
 l_road_ask = "story"
 l_road_marked = "story"
 l_road_1 = "story"
@@ -843,6 +873,12 @@ l_take_child = "story"
 l_keep_count = "story"
 
 [text]
+l_echo_j_tally_no = "the count of the bowls is kept in somebody's head, and runs short at the bottom of the pot."
+l_echo_j_ridge_no = "the child came down the ridge talking about the sun, and slept through the cold."
+l_echo_j_snares_no = "the snares were set before light, by someone who knew the runs."
+l_echo_j_wedged_no = "the beam is out from under the wall. the wall sits crooked where it was dug."
+l_echo_j_smoke_hole_no = "someone has been up on the ridge, and the smoke draws out through the hole."
+l_echo_j_steps_no = "somebody has cut the steps down the bank, and not evenly."
 e_old_road_title = "the old road"
 e_greycoat_title = "at the gap"
 store_table_clock = "clock"
