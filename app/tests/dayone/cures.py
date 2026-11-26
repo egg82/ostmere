@@ -1,11 +1,11 @@
 """Every status chip shown in day one has a cure the player can reach. At each checked sample, the opening's own
-session included, where a chip shows on the page (on in the view, and its offered_after unlocked: entries.ChipEntry;
+session included, where a chip shows on the page (on in the view, and its offered_after unlocked: chip_entries.ChipEntry;
 its first sample, each visit's return, and at least every CHECK_EVERY_S while it stays), a fork of
 the save must see the chip clear within CURE_S, either with nobody acting (a rule the player set, or a standing action)
 or by one card on the panel that puts the chip's store up (its completion adds to it, its lines make it, or it unlocks
 a standing action that makes it): tapped whenever it is ready, with whatever ready card makes a store it is short of
 tapped while it is not. A capped card whose own completion count a trigger adds the store at cures by its stages
-instead: the fork starts its next stage within CURE_S and the chip is off by the completion that trigger counts. A chip whose content marks it no_cure (entries.ChipEntry) is not checked.
+instead: the fork starts its next stage within CURE_S and the chip is off by the completion that trigger counts. A chip whose content marks it no_cure (chip_entries.ChipEntry) is not checked.
 
 Problems name the chip, the minute of play and ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Callable, Iterator

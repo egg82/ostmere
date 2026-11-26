@@ -30,10 +30,11 @@ from .line_kinds import LineKind
 from .journal_checks import check_first_notes
 from .convert import build_rules
 from .camp_entries import CampEntry, CampLevelEntry
+from .chip_entries import ChipEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
 from .lane_entries import LaneEntry, LaneLabelEntry

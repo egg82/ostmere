@@ -201,6 +201,10 @@ STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
 STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_hearth_pick"})
 STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
 STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
+STAGES["66_ash_and_cord"] = _ALL.then(drift_clock=12)
+STAGES["66_naming"] = STAGES["65_stranger"].then(drift_clock=16, choir_clock=7, sorrel_clock=6)
+STAGES["66_bowl"] = _ALL.then(drift_clock=16, choir_clock=7, sorrel_clock=10, kept_clock=8)
+STAGES["66_after_the_moments"] = _ALL.then(drift_clock=16, choir_clock=7, sorrel_clock=10, kept_clock=11)
 
 
 def holds(cond: str | None, state: State) -> bool:

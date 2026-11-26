@@ -176,7 +176,7 @@ offered_after = { unlock_kind = "card", id = "cut_road" }
 id = "t_rows_black"
 when = { test = "at_least", subject_kind = "store", id = "table_clock", value = 4 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
-outcome = { line_keys = ["l_rows_black_1", "l_rows_black_2"], stores = [{ store = "rows_black_left", items = 6 }], unlocks = [{ unlock_kind = "feature", id = "rows_lost" }, { unlock_kind = "action", id = "rows_black" }], whereabouts = [{ person = "n3", layer = "figure_n3_pulled_rows" }] }
+outcome = { doings = ["n3"], line_keys = ["l_rows_black_1", "l_rows_black_2"], stores = [{ store = "rows_black_left", items = 6 }], unlocks = [{ unlock_kind = "feature", id = "rows_lost" }, { unlock_kind = "action", id = "rows_black" }], whereabouts = [{ person = "n3", layer = "figure_n3_pulled_rows" }] }
 
 [[stores]]
 id = "rows_black_left"
@@ -276,7 +276,7 @@ makes = [{ store = "torn_clock", items_per_hour = 1 }]
 [[triggers]]
 id = "t_sun_back"
 when = { test = "at_least", subject_kind = "store", id = "torn_clock", value = 3 }
-outcome = { line_keys = ["l_sun_back"], whereabouts = [{ person = "n4", layer = "figure_n4_in_the_sun" }] }
+outcome = { doings = ["n4"], line_keys = ["l_sun_back"], whereabouts = [{ person = "n4", layer = "figure_n4_in_the_sun" }] }
 
 # ---------- the season's threat step ----------
 
@@ -540,6 +540,7 @@ id = "j_steps_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_steps_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -578,6 +579,7 @@ id = "j_smoke_hole_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_smoke_hole_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -615,6 +617,7 @@ id = "j_wedged_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_wedged_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -652,6 +655,7 @@ id = "j_snares_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_snares_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -689,6 +693,7 @@ id = "j_ridge_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_ridge_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
@@ -726,6 +731,7 @@ id = "j_tally_no"
 label_key = "a_job_no"
 cost_key = "a_job_no_cost"
 [offers.answers.outcome]
+doings = ["n1"]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_tally_no"]
 whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
