@@ -262,6 +262,13 @@ id = "t_walkers_6h"
 when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 6 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "walkers_6h" }] }
 
+# ---------- SL34: the second wake ----------
+
+[[triggers]]
+id = "t_second_wake"
+when = { test = "at_least", subject_kind = "store", id = "boar_lost", value = 1 }
+outcome = { line_keys = ["l_second_wake"] }
+
 # ---------- SL35: the cutter's sister ----------
 
 [[triggers]]
@@ -661,6 +668,7 @@ l_walkers_1 = "story"
 l_walkers_2 = "story"
 l_walkers_food = "story"
 l_walkers_build = "story"
+l_second_wake = "story"
 l_sister_road = "story"
 l_post_door = "story"
 l_camp_19 = "level"
@@ -755,6 +763,7 @@ store_walkers_clock = "clock"
 action_walkers_clock = "Clock"
 store_walkers_6h = "clock"
 action_walkers_6h = "Clock"
+l_second_wake = "the second time, you know the fog is coming before it does. it makes no difference. you wake at the stone. Lucy has left a blanket on it."
 l_sister_road = "{n12} watches you come up from the stone. she looks at the road, then goes back to the stakes."
 l_post_door = "the post wants a door on its store, a hide over a frame."
 c_post_door = "Hang the post's door"

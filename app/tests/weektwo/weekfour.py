@@ -97,7 +97,7 @@ def day_twenty_three(route: str) -> Later:
 
 
 TWENTY_FIVE = Landings(
-    {"I8": ("t_bowl_set",), "SL35": ("t_sister_road",), "I10": ("t_thanks",), "B21": ("t_b21",)},
+    {"I8": ("t_bowl_set",), "SL34": ("t_second_wake",), "SL35": ("t_sister_road",), "I10": ("t_thanks",), "B21": ("t_b21",)},
     {}, {}, {"I9": OfferId("o_walkers"), "O-walkers": OfferId("o_walkers"), "O-widowers": OfferId("o_widowers")})
 """I9 is its offer's showing (the offer carries the beat's lines)."""
 HUNT_BOAR, POST_DOOR = CardId("hunt_boar"), CardId("post_door")
@@ -127,7 +127,7 @@ def day_twenty_five(route: str) -> Later:
         sinks=Chapter(trips=twentythree.sinks.trips, comforts=twentythree.sinks.comforts,
                       arrivals=(*twentythree.sinks.arrivals, *groups)),
         steps=(POST_DOOR,), order_cards=twentythree.order_cards, keeps=twentythree.keeps, landed=TWENTY_FIVE.of,
-        news=("I8", "I9", "O-walkers", "SL35", "I10", "O-widowers", "B21"),
+        news=("I8", "I9", "O-walkers", "SL34", "SL35", "I10", "O-widowers", "B21"),
         answers=(*twentythree.answers, *jobs),
         shares=(*twentythree.shares, Share(HUNT_BOAR, BOAR_SHARE.get(route, BOAR_SHARE["typical"]))),
         cures=twentythree.cures, own=twentythree.own, chip_rules=twentythree.chip_rules)
