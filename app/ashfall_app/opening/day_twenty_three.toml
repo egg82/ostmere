@@ -343,6 +343,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_drag_marks_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "follow_marks"
@@ -379,6 +380,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 3 }]
 line_keys = ["l_j_show_fish_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "show_fish"
