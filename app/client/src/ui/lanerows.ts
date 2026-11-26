@@ -50,6 +50,16 @@ export class LaneRows implements Part {
     return this.page.open;
   }
 
+  /** The lane whose person page is open, or null. */
+  get openLane(): string | null {
+    return this.page.shown;
+  }
+
+  /** A person's page opened again, as their Change does. */
+  reopen(lane: string): void {
+    this.open(lane);
+  }
+
   closeEditors(): void {
     this.page.close();
   }

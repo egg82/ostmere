@@ -6,6 +6,7 @@
 import type { Catalog } from "../game/catalog";
 import { UI } from "../game/text";
 import { el } from "./dom";
+import { openSheet } from "./back";
 
 /** A page of the Book. */
 export interface BookPage {
@@ -87,7 +88,7 @@ export class Book {
   /** Opened from its tab, on the chronicle: as the sheet on a phone; the view's panel is the screen's to show. */
   opened(): void {
     this.turnTo(this.pages[0]!.page);
-    if (!this.asView && !this.sheet.open) this.sheet.showModal();
+    if (!this.asView && !this.sheet.open) openSheet(this.sheet);
   }
 
   /** The view was left for another tab. */

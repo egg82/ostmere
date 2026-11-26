@@ -6,6 +6,7 @@ import type { Content, SaveInfo } from "../api/types";
 import type { Straight } from "../app/straight";
 import { Text, UI } from "../game/text";
 import { el } from "./dom";
+import { openSheet } from "./back";
 import { emptyView } from "./camp-views";
 import { DELETE_WORDS, START_OVER_WORDS, deleteParts } from "./gamedelete";
 import { savedLine } from "./gamenames";
@@ -135,6 +136,6 @@ function gamesSheet(text: Text): GamesSheet {
   document.body.append(dialog);
   const opener = el("button", "front-quiet phone-only", text.get(UI.gamesOpen));
   opener.type = "button";
-  opener.addEventListener("click", () => dialog.showModal());
+  opener.addEventListener("click", () => openSheet(dialog));
   return { dialog, slot, opener };
 }

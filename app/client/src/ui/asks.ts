@@ -13,6 +13,7 @@ import { UI } from "../game/text";
 import { askNode, type AskNode } from "./asknode";
 import { AskRuns } from "./askruns";
 import { bringIntoView, el, setText, tapFeedback } from "./dom";
+import { openSheet } from "./back";
 import { GlowWhile } from "./fresh";
 import { PHONE } from "./layout";
 import type { Part, PartContext } from "./part";
@@ -105,7 +106,7 @@ export class Asks implements Part {
   private openList(): void {
     if (!this.view) return;
     this.drawList(this.view, openAsks(this.view));
-    this.sheet.showModal();
+    openSheet(this.sheet);
   }
 
   private drawList(view: View, open: string[]): void {

@@ -168,7 +168,7 @@ export class FakeEl {
   readonly scrollMargins: string[] = [];
   scrollIntoView(options?: unknown): void { this.scrolls.push(options ?? null); this.scrollMargins.push(this.style["scrollMarginTop"] ?? ""); }
   showModal(): void { this.open = true; }
-  close(): void { this.open = false; }
+  close(): void { if (!this.open) return; this.open = false; this.dispatchEvent(new FakeEvent("close")); }
 
   matches(selector: string): boolean { return selector.split(",").some((s) => matchComplex(this, s.trim())); }
   closest(selector: string): FakeEl | null {
@@ -258,9 +258,24 @@ export function install(): void {
     removeItem: (k: string) => { store.delete(k); }, clear: () => store.clear(),
   };
   const location = { pathname: "/", search: "", hash: "" };
-  const history = { state: null, replaceState: (_s: unknown, _t: string, url: string) => { location.hash = url.includes("#") ? url.slice(url.indexOf("#")) : ""; } };
+  // A session history: back() lands on the entry before, popstate arrives a tick later, as a traversal does.
+  const entries: unknown[] = [null];
+  let at = 0;
+  const popstate: Listener[] = [];
+  const history = {
+    state: null as unknown,
+    replaceState: (s: unknown, _t: string, url?: string) => { history.state = entries[at] = s; if (url !== undefined) location.hash = url.includes("#") ? url.slice(url.indexOf("#")) : ""; },
+    pushState: (s: unknown) => { entries.length = at + 1; entries.push(s); history.state = s; at++; },
+    back: () => {
+      if (at === 0) return;
+      at--;
+      history.state = entries[at];
+      const state = history.state;
+      void Promise.resolve().then(() => { for (const f of popstate) f({ state } as never); });
+    },
+  };
   // getComputedStyle answers a node's own inline overflow-y: nothing cascades here
-  const win = { addEventListener: () => {}, matchMedia: () => ({ matches: false, addEventListener: () => {} }), setTimeout, clearTimeout,
+  const win = { addEventListener: (type: string, f: Listener) => { if (type === "popstate") popstate.push(f); }, matchMedia: () => ({ matches: false, addEventListener: () => {} }), setTimeout, clearTimeout,
     getComputedStyle: (n: FakeEl) => ({ overflowY: n.style["overflowY"] ?? "" }) };
   Object.assign(globalThis, { document: fakeDocument, sessionStorage, location, history, window: win, Event: FakeEvent });   // a part's own events (dom.acted) go through the fake tree
 }

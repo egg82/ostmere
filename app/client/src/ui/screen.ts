@@ -5,7 +5,7 @@
 // samples it every frame. The one glow on a card is placed here (CardInfo.glows, the first time it is ready with its lane
 // free); the strip places its offers' glows, the Rules tab's label takes it once a rule has come on and let go until the
 // tab is opened, and a running lesson's step takes it (lessons.ts).
-import type { Condition, Decision, JournalDay, MixRows, Step, View } from "../api/types";
+import type { Decision, JournalDay, MixRows, Step, View } from "../api/types";
 import type { Catalog } from "../game/catalog";
 import { NewMarks } from "../game/marks";
 import type { Keeps } from "../game/keeps";
@@ -17,7 +17,7 @@ import { Banner } from "./banner";
 import { CardGlow } from "./cardglow";
 import { Cards } from "./cards";
 import { bookPages } from "./bookpages";
-import { el, revealBelow } from "./dom";
+import { el } from "./dom";
 import { MixEditor } from "./editor";
 import { TheEnd } from "./end";
 import { FeatureCard } from "./featurecard";
@@ -32,7 +32,7 @@ import { seatHead } from "./headseat";
 import { PHONE } from "./layout";
 import { seatParts } from "./partseat";
 import { Ledger } from "./ledger";
-import type { Actions, Part, RuleTarget } from "./part";
+import type { Actions, Part } from "./part";
 import type { Moment } from "./remindermention";
 import { Reveal } from "./reveal";
 import { RulesTab } from "./rules";
@@ -41,7 +41,8 @@ import { Skills } from "./skills";
 import { Story } from "./story";
 import { StripGlow } from "./stripglow";
 import { MoreCue } from "./morecue";
-import { PanelTabs, type Tab } from "./tabs";
+import { PanelNav } from "./panelnav";
+import { PanelTabs } from "./tabs";
 import { TownView } from "./townview";
 
 export class Screen {
@@ -84,6 +85,7 @@ export class Screen {
   private readonly rulesGlow: GlowWhile;
   /** The Rules tab has been shown this page session: it stays, even with every rule removed. */
   private rulesShown = false;
+  private readonly nav: PanelNav;
   private view: View | null = null;
   private latest: Pick<Step, "repeats" | "rule_runs" | "lines" | "save_id"> = { repeats: { taps: [], switches: [] }, rule_runs: [], lines: [], save_id: 0 };
   private lessons: Lessons | null = null;
@@ -105,10 +107,10 @@ export class Screen {
       },
       dryRun,
       mixRows,
-      editMix: (id) => this.openEditor(id),
-      newMix: (rule) => this.openEditor(null, true, rule),
+      editMix: (id) => this.nav.openEditor(id),
+      newMix: (rule) => this.nav.openEditor(null, true, rule),
       openSelector: () => { if (this.view) this.selector.show(this.view); },
-      openRules: (rule, offered) => this.openRules(rule, offered),
+      openRules: (rule, offered) => this.nav.openRules(rule, offered),
       orderSent: (card) => this.flight.launch(card),
       highlight: (cards) => this.ledger.highlight(cards),
       sendFeedback,
@@ -118,22 +120,22 @@ export class Screen {
       endBehind: () => this.end.behind, keeps, repeats: () => this.latest.repeats, ruleRuns: () => this.latest.rule_runs,
       lines: () => this.latest.lines, saveId: () => this.latest.save_id, lesson: () => this.lessons?.holding ?? null, lessonSubject: () => this.lessons?.subject ?? null,
     };
-    this.story = new Story(ctx, () => this.asks.show(), () => this.pick("cards"));
+    this.story = new Story(ctx, () => this.asks.show(), () => this.nav.pick("cards"));
     this.stripGlow = new StripGlow(this.story.root);
-    this.tabs = new PanelTabs(catalog, this.story.book.tab, (tab) => this.pick(tab));
+    this.tabs = new PanelTabs(catalog, this.story.book.tab, (tab) => this.nav.pick(tab));
     const marks = new NewMarks();
     this.cardGlow = new CardGlow(catalog, this.glow, (card) => this.cards.node(card));
     this.cards = new Cards(ctx, marks, () => { if (this.tabs.on !== "cards" || this.editor.open) markNew(this.tabs.cards, () => undefined); });
     this.bookPages = bookPages(ctx, this.story.book);
     this.ledger = new Ledger(ctx);
-    this.editor = new MixEditor(ctx, () => this.showTab(), marks);
+    this.editor = new MixEditor(ctx, () => this.nav.showTab(), marks);
     this.selector = new MixSelector(ctx);
     this.banner = new Banner(catalog, this.reveal);
     this.end = new TheEnd(catalog, (keys) => this.endLines(keys), () => this.redraw());
-    this.hands = new Hands(ctx, () => this.showTab());
+    this.hands = new Hands(ctx, () => this.nav.showTab());
     this.asks = new Asks(ctx);
     this.skills = new Skills(ctx);
-    this.rules = new RulesTab(ctx);
+    this.rules = new RulesTab(ctx, undefined, () => this.nav.returnToOpener());
     this.rulesGlow = new GlowWhile(this.glow, this.tabs.rules);
     this.town = new TownView(catalog, this.hands.lanes, this.tabs.town);
     this.area.append(this.cards.root, this.town.root, this.rules.root, this.story.book.view, this.editor.root, this.hands.lanes.page.root);
@@ -158,7 +160,12 @@ export class Screen {
     this.root.append(this.rail, this.left, panel, this.selector.root);
     seatParts({ tabs: this.tabs.root, ledger: this.ledger.root, skills: this.skills.root, foot: this.foot, book: this.story.book },
       { low: this.low, rail: this.rail, panel, area: this.area, town: this.town.root }, (wide) => this.ledger.setSplit(!wide));
-    this.showTab();
+    this.nav = new PanelNav({
+      tabs: this.tabs, rules: this.rules, editor: this.editor, hands: this.hands, book: this.story.book, keeps, rulesGlow: this.rulesGlow,
+      panels: { cards: this.cards.root, town: this.town.root }, root: this.root, panel, area: this.area, pinned: this.pinned,
+      view: () => this.view, rulesShown: () => { this.rulesShown = true; },
+    });
+    this.nav.showTab();
   }
 
   /** The story's last lines and written days, drawn at once before the first view (a save opened, a screen redrawn). */
@@ -247,54 +254,7 @@ export class Screen {
     if (prev && (view.orders.length > prev.orders.length || view.queue.length > prev.queue.length)) this.flight.landed(this.tabs.rules, this.tabs.on === "rules");
     this.low.hidden = this.ledger.root.hidden;   // nothing under the strip until the ledger has something to show
     const more = window.matchMedia(PHONE).matches && !(this.ledger.root.hidden && this.skills.root.hidden);
-    if (!this.town.draw(view, more, prev !== null && this.tabs.on !== "town") && this.tabs.on === "town") this.pick("cards");
+    if (!this.town.draw(view, more, prev !== null && this.tabs.on !== "town") && this.tabs.on === "town") this.nav.pick("cards");
     this.cardGlow.place(view);
-  }
-
-  /** The Rules tab, on rule `rule`'s editor when given (the shortcuts from the strip and the ledger). */
-  private openRules(rule: RuleTarget, offered?: Condition): void {
-    const view = this.view;
-    if (!view) return;
-    this.closeEditors();
-    this.keeps.keepRulesOpened();
-    this.rulesGlow.used();
-    this.rulesShown = true;
-    this.tabs.rules.style.visibility = "";
-    this.tabs.on = "rules";
-    this.rules.open(view, rule, offered);
-    this.showTab();
-    revealBelow(this.tabs.root.parentElement === this.panel && !window.matchMedia(PHONE).matches ? this.tabs.root : this.area, this.pinned, [this.root, this.panel]);
-  }
-
-  private openEditor(mixId: string | null, fresh = false, forRule: number | null = null): void {
-    if (!this.view) return;
-    if (fresh) this.editor.showNew(this.view, forRule);
-    else this.editor.show(this.view, mixId);
-    this.hands.editorOpened();
-    this.showTab();
-  }
-
-  private closeEditors(): void {
-    if (this.editor.open) this.editor.close();
-    this.hands.lanes.closeEditors();
-  }
-
-  private showTab(): void {
-    const editing = this.editor.open || this.hands.lanes.editing;
-    this.root.classList.toggle("editing", editing);
-    if (this.tabs.on !== "book") this.story.book.closed();
-    this.tabs.show(editing, { cards: this.cards.root, town: this.town.root, rules: this.rules.root, book: this.story.book.view }, this.root);
-  }
-
-  /** The tab a tap chose (Rules opens on its own way in). On a phone a panel scrolled under the pinned stage starts at
-   * its top again. */
-  private pick(tab: Tab): void {
-    if (tab === "rules") { this.openRules(null); return; }
-    if (tab === "book" && !this.story.book.inView) { this.story.book.opened(); return; }   // a phone's sheet: the tab on stays
-    this.closeEditors();   // an editor is its tab's: it does not follow a tap to another
-    this.tabs.on = tab;
-    this.showTab();
-    if (tab === "book") this.story.book.opened();
-    if (window.matchMedia(PHONE).matches) revealBelow(this.area, this.pinned, [this.root, this.panel]);
   }
 }
