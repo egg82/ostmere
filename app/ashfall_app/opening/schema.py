@@ -23,6 +23,7 @@ from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
 from .clocks import with_moment_clocks
+from .echoes import with_answer_echoes
 from .groups import with_group_unlocks
 from .people import PeopleEntry, with_mentions
 from .close_call_entries import CloseCallEntry
@@ -227,7 +228,7 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
         merged, end = _merged(states[-1], chapter)
         states.append(merged)
         ends.append(end)
-    states[-1] = with_moment_clocks(with_group_unlocks(with_mentions(states[-1])))
+    states[-1] = with_moment_clocks(with_answer_echoes(with_group_unlocks(with_mentions(states[-1]))))
     last: list[str] = [e for e in ends if e is not None][-1:]
     if last and opening.end_card is not None:
         states[-1] = _with_end_card(states[-1], last[0], opening.end_card)

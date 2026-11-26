@@ -2,7 +2,17 @@
 entries.py, whose shapes they reuse."""
 from pydantic import Field
 
-from .entries import ConditionEntry, Entry, OutcomeEntry
+from .entries import ConditionEntry, Entry, ModifierEntry, OutcomeEntry
+
+
+class EchoEntry(Entry):
+    """What an answer that keeps nothing else leaves behind, `after_h` game hours after it is given: a line that refers
+    back to the offer and one lasting modifier (its `source` names the answer). The loader makes the triggers and the
+    clock (echoes.py), so an answer given before the echo existed echoes at rebase."""
+
+    after_h: int = Field(ge=6, le=12)
+    line_key: str
+    modifier: ModifierEntry
 
 
 class AnswerEntry(Entry):
@@ -15,6 +25,8 @@ class AnswerEntry(Entry):
     role: str | None = None
     """What this answer means in its offer's kind: set exactly when the offer has a `kind`, and the same set of roles
     in every offer of the kind (engine DESIGN.txt, "OFFER KINDS")."""
+    echo: EchoEntry | None = None
+    """A lasting part for an answer with none of its own (echoes.py)."""
 
 
 class KindRoleEntry(Entry):
