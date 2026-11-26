@@ -16,7 +16,7 @@ import { subjectKey, type SubjectRule } from "../game/subjectrule";
 import { defaultRule, readRule, tryRule, type Level, type Test } from "../game/storerule";
 import { UI } from "../game/text";
 import { noteOrderRemoved, noteOrderSet, noteRuleChanged } from "../telemetry";
-import { draftOrder, editDraft, headingWords, keepOffered, keptSubject, sameRule, storeCap, type Draft } from "./conditiondraft";
+import { draftOrder, dropStaleRunning, editDraft, headingWords, keepOffered, keptSubject, sameRule, storeCap, type Draft } from "./conditiondraft";
 import { Levels } from "./condlevels";
 import { RuleFact } from "./condfact";
 import { CondFoot } from "./condfoot";
@@ -141,6 +141,7 @@ export class ConditionEditor {
     if (!draft || !this.view || sameChoice(chosen(this.ctx.catalog, this.view, draft.then), c)) return;
     tapFeedback();
     draft.then = choiceVerb(c);
+    dropStaleRunning(this.ctx.catalog, this.view, draft);
     this.fact.reset();
     if (!this.full) keepOffered(this.ctx.catalog, this.view, draft, this.chipNow());
     this.redraw();

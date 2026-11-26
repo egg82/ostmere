@@ -10,7 +10,7 @@ export function withKinds(c: Content): Content {
     ...c,
     card_infos: [
       ...c.card_infos.map((x) => (x.card === "smoke_catch" || x.card === "smoke_roots" ? { ...x, variant_of: "smoke_catch" } : x)),
-      ...(pot ? ["pot_a", "pot_b"].map((id) => ({ ...pot, card: id, lane: "pot", label_key: `card.${id}`, upside_key: `card.${id}.up`, makes: [], takes: ["roots"], replaced_by: null, glows: false })) : []),
+      ...(pot ? ["pot_a", "pot_b"].map((id) => ({ ...pot, card: id, lane: "pot", label_key: `card.${id}`, upside_key: `card.${id}.up`, makes: [], takes: ["roots"], replaced_by: null, glows: false, kept: [{ lane: id === "pot_a" ? "helper" : "mason", side: null, amount_bp: 1000, slot: 0 }] })) : []),
     ],
     store_infos: c.store_infos.map((s) => (s.store === "catch" || s.store === "smoked" ? { ...s, group_key: "store.larder" } : s)),
     lane_infos: [...c.lane_infos, { lane: "pot", label_key: "lane.pot", ruled: true, station: true, later_labels: [], name_key: null, told: null, pooled: false, group: null, tied: null }],
