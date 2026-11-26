@@ -34,7 +34,7 @@ outcome = { line_keys = ["l_morning_7"], unlocks = [{ unlock_kind = "feature", i
 [[triggers]]
 id = "t_spear_made"
 when = { test = "at_least", subject_kind = "card_count", id = "make_spear", value = 1 }
-outcome = { line_keys = ["l_spear"] }
+outcome = { doings = ["n2"], line_keys = ["l_spear"] }
 
 [[triggers]]
 id = "t_rats_first"
@@ -123,6 +123,7 @@ id = "o_pelt_keep"
 label_key = "a_pelt_keep"
 cost_key = "a_pelt_keep_cost"
 [offers.answers.outcome]
+doings = ["n3"]
 line_keys = ["l_pelt_kept"]
 
 [[cards]]

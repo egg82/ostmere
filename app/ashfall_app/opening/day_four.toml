@@ -140,7 +140,7 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n2_joined", value = 1 },
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "retired", id = "watch_fire", value = 1 },
 ]
-outcome = { line_keys = ["l_his_watch"], unlocks = [{ unlock_kind = "card", id = "n2_watch" }] }
+outcome = { doings = ["n2"], line_keys = ["l_his_watch"], unlocks = [{ unlock_kind = "card", id = "n2_watch" }] }
 
 # His share at the watch fire against his woodcutting, as hers, feeding the same sides.
 [[cards]]
@@ -173,7 +173,7 @@ modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 150
 [[triggers]]
 id = "t_shed_stack"
 when = { test = "at_least", subject_kind = "card_count", id = "woodshed", value = 2 }
-outcome = { line_keys = ["l_stack4_1", "l_stack4_2"] }
+outcome = { doings = ["n2"], line_keys = ["l_stack4_1", "l_stack4_2"] }
 
 # ---------- dusk 5, night 5, A21 and B6 ----------
 

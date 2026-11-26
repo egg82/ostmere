@@ -217,8 +217,10 @@ class OutcomeEntry(Entry):
     """Only in a trigger's or an answer's outcome, one per lane across the content (leave_checks.py)."""
     marks: list[MarkEntry] = []
     """Only in a trigger's or an answer's outcome (group_checks.py)."""
+    doings: list[str] = []
+    """People the lines show doing something besides joining or leaving: marked here, never read off the lines."""
     whereabouts: list[WhereaboutsEntry] = []
-    """The scene's answer for each person the outcome joins, leaves or puts somewhere a scene could show."""
+    """The scene's answer for each person the outcome joins, leaves or does something."""
 
 
 class CardEntry(Entry):
@@ -263,27 +265,6 @@ class CardEntry(Entry):
     """On a townsperson's lane: the player's card this one is the town's version of (player_checks.py)."""
     only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None
     """On a player's lane: why no townsperson has this card, as a tag (player_checks.py)."""
-
-
-class ChipEntry(Entry):
-    id: str
-    label_key: str
-    tone: str
-    when: ConditionEntry
-    effects: list[ModifierEntry] = []
-    cost_key: str | None = None
-    """What `effects` cost the player, in two or three words drawn with the chip; set exactly when it has effects."""
-    on_line_key: str | None = None
-    off_line_keys: list[str] = []
-    """Said in turn each time the chip stops showing, one a time (engine ChipDef.off_lines); a pool of at least
-    pool_checks.MIN_POOL lines, or none."""
-    no_cure: bool = False
-    """Shown with nothing the player can do about it, on purpose: the day-one gate that every chip shown has a cure
-    (tests/dayone/cures.py) passes it over."""
-    offered_after: UnlockEntry | None = None
-    """Drawn on the page only once this is unlocked, as an order card's is offered: the chip's cure is on screen. The
-    engine's latch is the same either way, so a chip with effects has none (its cost would run unseen); unlock such a
-    chip with its cure instead."""
 
 
 class TriggerEntry(Entry):

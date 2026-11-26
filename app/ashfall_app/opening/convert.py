@@ -16,8 +16,9 @@ from .prestige import node_def, prestige_def
 
 if TYPE_CHECKING:
     from .camp_entries import CampEntry, CampLevelEntry
+    from .chip_entries import ChipEntry
     from .entries import (
-        CardEntry, ChipEntry, ConditionEntry, FlowEntry, ItemAmount, ModifierEntry,
+        CardEntry, ConditionEntry, FlowEntry, ItemAmount, ModifierEntry,
         FightEntry, OutcomeEntry, StandingEntry, TriggerEntry, UnlockEntry, WhileRunningEntry,
     )
     from .offer_entries import OfferEntry

@@ -24,15 +24,17 @@ from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
 from .groups import with_group_unlocks
 from .people import PeopleEntry, with_mentions
+from .close_call_entries import CloseCallEntry
 from .checks import check_content, check_opening, check_structure
 from .line_kinds import LineKind
 from .journal_checks import check_first_notes
 from .convert import build_rules
 from .camp_entries import CampEntry, CampLevelEntry
+from .chip_entries import ChipEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, ChipEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
 from .lane_entries import LaneEntry, LaneLabelEntry
@@ -108,6 +110,7 @@ class Opening(Entry):
     camp: CampEntry | None = None
     prestige: PrestigeEntry | None = None
     people: PeopleEntry | None = None
+    close_calls: list[CloseCallEntry] = []
     nodes: list[NodeEntry] = []
     phase_pays: list[PhasePaysEntry] = []
     """Only what chapters.merge carries, each entry kept so a later chapter's ranks expand their phases."""
@@ -175,6 +178,7 @@ class Chapter(Entry):
     """Declared once in the content: here only if no earlier file has it."""
     people: PeopleEntry | None = None
     """Declared once in the content, as prestige."""
+    close_calls: list[CloseCallEntry] = []
     nodes: list[NodeEntry] = []
     """Appended after the content's so far, so each skill's track continues in file order."""
     phase_pays: list[PhasePaysEntry] = []

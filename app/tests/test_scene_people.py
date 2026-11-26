@@ -1,6 +1,7 @@
-"""tools/scene/people.py: every outcome that joins or leaves a person names, per person, the scene layer that shows it or
-says why none does (`whereabouts`). The cases the scene shows nothing of today are held (`HELD_UNPLACED`, only shrinks);
-a field's layer must be one the committed shown.json lists."""
+"""tools/scene/people.py: every outcome that joins or leaves a person, or marks one as doing something a scene could show
+(`doings`, authored beside the lines), names per person the scene layer that shows it or says why none does
+(`whereabouts`). The cases the scene shows nothing of today are held (`HELD_UNPLACED`, only shrinks); a field's layer must
+be one the committed shown.json lists."""
 import json
 import re
 import sys
@@ -29,8 +30,8 @@ def outcomes(o: Opening) -> Outcomes:
 
 
 def moved(out: OutcomeEntry) -> set[str]:
-    """The people the outcome joins or leaves."""
-    return {j.lane for j in out.joins} | {x.lane for x in out.leaves}
+    """The people the outcome joins or leaves, or marks as doing something."""
+    return {j.lane for j in out.joins} | {x.lane for x in out.leaves} | set(out.doings)
 
 
 def placed(out: OutcomeEntry) -> set[str]:
@@ -38,7 +39,7 @@ def placed(out: OutcomeEntry) -> set[str]:
 
 
 def unplaced(found: Outcomes, held: Collection[str]) -> list[str]:
-    """Joins and leaves with no whereabouts entry for the person and not held."""
+    """Joins, leaves and doings with no whereabouts entry for the person and not held."""
     return sorted(f"{owner}:{p}" for owner, out in found.items() for p in moved(out) - placed(out) if f"{owner}:{p}" not in held)
 
 
@@ -72,7 +73,7 @@ def lane_ids() -> set[str]:
     return {lane.id for lane in opening().lanes if lane.told is not None}
 
 
-def test_every_join_and_leave_places_the_person_or_is_held():
+def test_every_join_leave_and_doing_places_the_person_or_is_held():
     assert unplaced(outcomes(opening()), people.HELD_UNPLACED) == []
 
 
@@ -97,6 +98,8 @@ def test_a_join_without_an_entry_and_a_stale_or_unresolved_one_are_reported():
     does not load."""
     join = {"lane": "n9", "mix": "town:camp", "own_split": True}
     bare = out(joins=[join])
+    assert unplaced({"trigger:d": out(doings=["n9"]), "trigger:e": out(doings=["n9"], whereabouts=[{"person": "n9", "no_scene": "x"}])},
+                    set()) == ["trigger:d:n9"], "a marked doing needs an entry like a join"
     shown = out(joins=[join], whereabouts=[{"person": "n9", "layer": "figure_n9"}])
     found = {"trigger:a": bare, "trigger:b": shown, "trigger:c": out(leaves=[{"lane": "n9"}])}
     assert unplaced(found, set()) == ["trigger:a:n9", "trigger:c:n9"]

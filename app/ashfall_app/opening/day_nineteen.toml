@@ -60,7 +60,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }, { store = "damp_wood", i
 [[triggers]]
 id = "t_far_hills"
 when = { test = "at_least", subject_kind = "card_count", id = "cut_over", value = 1 }
-outcome = { line_keys = ["l_far_hills_1", "l_far_hills_2"], whereabouts = [{ person = "n11", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
+outcome = { doings = ["n11"], line_keys = ["l_far_hills_1", "l_far_hills_2"], whereabouts = [{ person = "n11", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # ---------- T11 and SL28: a stretch a day ----------
 
@@ -79,14 +79,14 @@ makes = [{ store = "cut_night_clock", items_per_hour = 1 }]
 [[triggers]]
 id = "t_cut_night"
 when = { test = "at_least", subject_kind = "card_count", id = "cut_over", value = 3 }
-outcome = { line_keys = ["l_cut_night_1", "l_cut_night_2"], unlocks = [{ unlock_kind = "action", id = "cut_night_clock" }], whereabouts = [{ person = "n11", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
+outcome = { doings = ["n11"], line_keys = ["l_cut_night_1", "l_cut_night_2"], unlocks = [{ unlock_kind = "action", id = "cut_night_clock" }], whereabouts = [{ person = "n11", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # SL28, four hours on: his sister's cloth on his marker stakes. A one-off on her lane, two pelts, the stretches still to
 # lay a quarter quicker for the hands.
 [[triggers]]
 id = "t_cloth"
 when = { test = "at_least", subject_kind = "store", id = "cut_night_clock", value = 4 }
-outcome = { line_keys = ["l_cloth_1", "l_cloth_2"], unlocks = [{ unlock_kind = "card", id = "road_cloths" }], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
+outcome = { doings = ["n12"], line_keys = ["l_cloth_1", "l_cloth_2"], unlocks = [{ unlock_kind = "card", id = "road_cloths" }], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 [[cards]]
 id = "road_cloths"
@@ -168,7 +168,7 @@ leaves = [{ lane = "n11", stops = ["n11_eating"] }]
 id = "t_lamp_out"
 when = { test = "at_least", subject_kind = "store", id = "b17_clock", value = 4 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "clear_clock", value = 1 }]
-outcome = { line_keys = ["l_lamp_out_1", "l_lamp_out_2"], unlocks = [{ unlock_kind = "feature", id = "lamp_out" }, { unlock_kind = "card", id = "sit_road_end" }], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
+outcome = { doings = ["n12"], line_keys = ["l_lamp_out_1", "l_lamp_out_2"], unlocks = [{ unlock_kind = "feature", id = "lamp_out" }, { unlock_kind = "card", id = "sit_road_end" }], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # ---------- the last of the sun ----------
 
@@ -235,7 +235,7 @@ requires = [{ test = "at_least", subject_kind = "store", id = "clear_clock", val
 [[triggers]]
 id = "t_t13"
 when = { test = "at_least", subject_kind = "card_count", id = "sit_road_end", value = 1 }
-outcome = { line_keys = ["l_t13_1", "l_t13_2", "l_t13_3", "l_t13_4"], unlocks = [{ unlock_kind = "feature", id = "week_three_end" }], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
+outcome = { doings = ["n12"], line_keys = ["l_t13_1", "l_t13_2", "l_t13_3", "l_t13_4"], unlocks = [{ unlock_kind = "feature", id = "week_three_end" }], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # ---------- the Camp ----------
 
