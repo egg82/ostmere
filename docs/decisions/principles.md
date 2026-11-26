@@ -149,6 +149,17 @@ permanent bonus for a one-off?"). Lasting goes against lasting: a rate on one st
 person's time, or a door the other answer opens. A one-off answer appears only where no answer lasts. **An answer that changes a percentage shows the one it changes**, as now → after ("Stew
 +15% → +20%"), so the player can see what they are adding to or giving up.
 
+**Every answer keeps a consequence** (owner, 2026-11-25: answering an arrival offer yourself changed nothing).
+Each answer to an offer leaves something the player can see and come back to: a lasting number (a modifier whose
+source names the answer), a door (a card, line set or feature that a later gate, trigger or line actually reads), or
+a count that a pattern of answers reads. Answers of one role are counted, so a habit is a fact too ("they expected
+you to do it and had the tools ready"); a rule's answers count as the player's own, and the game never answers for
+them. Good, bad, mixed and conditional are all allowed; no effect is not, and a decline gets a small named echo. The
+consequence lands a little later, a few game hours to a day, as a line that refers back and a number that moves.
+Accepting and then failing to deliver costs more than declining would have, within `people.md`'s limits: an
+answer's cost is never a death, a notable or a spiral; a story beat may read a pattern and carry heavier stakes
+itself.
+
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
 
