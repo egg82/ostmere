@@ -242,3 +242,4 @@ def numbered(found: list[tuple[int, LineKey, CardId | None]]) -> tuple[Line, ...
     """Emission order is time order; seq counts the lines already emitted at the same instant."""
     return tuple(Line(time, sum(1 for t, _, _ in found[:i] if t == time), key, card)
                  for i, (time, key, card) in enumerate(found))
+# plant
