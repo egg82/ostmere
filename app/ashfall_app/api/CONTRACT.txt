@@ -1409,7 +1409,9 @@ JOURNAL
   In the chapter files:
     [journal]           feature: a FeatureId with a label_key (the book the player carries). Declared once, in the
                         chapter that holds the first entry or an earlier one; Content.journal is null until then.
-    [[entries]]         id (an EntryId), section, sketch, hand, runners
+    [[entries]]         id (an EntryId), title_key, section, sketch, hand, runners
+      title_key         a text key naming the page in the contents list, short and in the book's hand; required on every
+                        entry. It names only what the page itself shows. Days pages have none: they are headed by their day.
       section           "creatures" or "places"
       sketch            optional: the entry's drawing, an id matching [a-z0-9_]+, the image
                         /assets/journal/<sketch>.png. A page with none is laid out as text alone, which is valid.
@@ -1430,6 +1432,7 @@ JOURNAL
   The opening's checks (each naming ids, never text):
     - a note whose entry is not declared in its chapter or an earlier one: refused, naming the note and the entry.
     - an entry no [[notes]] in its own chapter names (no first note): refused, naming the entry.
+    - an entry with no title_key, or whose title_key is not in text: refused, naming the entry.
     - a runner that is neither a card with a fight nor a standing action with a fight: refused, naming the entry and
       the runner.
     - a sketch id outside [a-z0-9_]+ (it is a path): refused, naming the entry or note.
@@ -1447,7 +1450,7 @@ JOURNAL
   them as any unlock (subject "unlocked" with unlock_kind entry or note), so a gate on several entries is one Unlocked
   condition each, and no count store mirrors them.
 
-  Content.journal: JournalInfo {feature, entries: [EntryInfo {entry, section, sketch, runners: [str], notes:
+  Content.journal: JournalInfo {feature, entries: [EntryInfo {entry, title_key, section, sketch, runners: [str], notes:
   [NoteInfo {note, hand, sketch}]}]} | null. entries in content order (chapters in load order), each entry's notes in
   content order; within one section, content order is writing order. Section is a closed enum, "creatures" |
   "places". EntryInfo.sketch is null for a page with no drawing.

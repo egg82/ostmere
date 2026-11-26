@@ -1101,6 +1101,8 @@ export interface components {
         EntryInfo: {
             /** Entry */
             entry: string;
+            /** Title Key */
+            title_key: string;
             section: components["schemas"]["Section"];
             /** Sketch */
             sketch: string | null;

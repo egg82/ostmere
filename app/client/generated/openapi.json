@@ -3261,6 +3261,10 @@
             "type": "string",
             "title": "Entry"
           },
+          "title_key": {
+            "type": "string",
+            "title": "Title Key"
+          },
           "section": {
             "$ref": "#/components/schemas/Section"
           },
@@ -3293,6 +3297,7 @@
         "type": "object",
         "required": [
           "entry",
+          "title_key",
           "section",
           "sketch",
           "runners",

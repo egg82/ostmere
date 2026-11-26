@@ -16,7 +16,7 @@ const ART: MarkManifest = {
 };
 const PAGE = { w: 540, h: 700 };
 const day = (n: number, marks: JournalDay["marks"]): JournalDay => ({ day: n, day_notes: [], marks });
-const page = (days: number[]): Page => ({ id: `days:${days[0]}`, section: "days", sketch: null, runners: [],
+const page = (days: number[]): Page => ({ id: `days:${days[0]}`, section: "days", title: null, sketch: null, runners: [],
   notes: days.map((d) => ({ id: `${d}.0`, key: "k", hand: "ink", sketch: null, day: d, count: null })) });
 
 {  // over many pages of random lines, no placed mark's core crosses a line, and some marks are placed

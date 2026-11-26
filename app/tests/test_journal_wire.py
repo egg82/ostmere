@@ -34,10 +34,10 @@ def test_content_has_no_journal_without_a_book():
 
 def test_content_serves_the_book_its_pages_and_notes_in_content_order_with_hands_resolved():
     assert journal_game().content().journal == cm.JournalInfo(feature="book", entries=[
-        cm.EntryInfo(entry="j_page_a", section=cm.Section.CREATURES, sketch="j_sketch_a", runners=["t_hunt", "t_raid"], notes=[
+        cm.EntryInfo(entry="j_page_a", title_key="j_page_a_title", section=cm.Section.CREATURES, sketch="j_sketch_a", runners=["t_hunt", "t_raid"], notes=[
             cm.NoteInfo(note="j_note_a1", hand=cm.Hand.INK, sketch=None),
             cm.NoteInfo(note="j_note_a2", hand=cm.Hand.PENCIL, sketch="j_note_sketch")]),
-        cm.EntryInfo(entry="j_page_b", section=cm.Section.PLACES, sketch="j_sketch_b", runners=[], notes=[
+        cm.EntryInfo(entry="j_page_b", title_key="j_page_b_title", section=cm.Section.PLACES, sketch="j_sketch_b", runners=[], notes=[
             cm.NoteInfo(note="j_note_b1", hand=cm.Hand.PENCIL, sketch=None)])])
 
 

@@ -37,6 +37,8 @@ class EntryInfo(BaseModel):
     """A page: a thing known, in content order. Written when view.unlocked holds `entry`."""
 
     entry: str
+    title_key: str
+    """The text key of the page's name in the contents list."""
     section: Section
     sketch: str | None
     """The page's drawing, /assets/journal/<sketch>.png; null for a page laid out as text alone."""

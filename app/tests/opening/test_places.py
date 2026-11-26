@@ -86,10 +86,10 @@ def test_two_places_on_one_cell_across_two_chapters_fail_naming_both(tmp_path: P
 
 
 def test_a_reveal_by_a_journal_entry_loads(tmp_path: Path):
-    second = later(tmp_path, '[[entries]]\nid = "m_page"\nsection = "places"\nhand = "ink"\nrunners = []\n'
+    second = later(tmp_path, '[[entries]]\nid = "m_page"\ntitle_key = "m_page_title"\nsection = "places"\nhand = "ink"\nrunners = []\n'
                    '[[notes]]\nid = "m_page_note"\nentry = "m_page"\ngate = { test = "after_time", value = 5 }\n'
                    '[[places]]\nid = "m_ford"\nstamp = "crossing"\nat = [1, 1]\nreveal = { unlock_kind = "entry", id = "m_page" }\n'
-                   '[text]\nm_page_note = "A ford."\n')
+                   '[text]\nm_page_title = "A page"\nm_page_note = "A ford."\n')
     assert [p.id for p in load_opening(OPENING, (FIXTURE, second)).places] == ["m_hamlet", "m_woods", "m_ford"]
 
 

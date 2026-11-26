@@ -17,7 +17,7 @@ const rowButtons = (r: Rig): HTMLElement[] => [...r.sheet().querySelectorAll<HTM
 const bookmarks = (r: Rig): HTMLElement[] => [...r.sheet().querySelectorAll<HTMLElement>(".journal-bookmarks button")];
 const place = (r: Rig): string => r.sheet().querySelector(".journal-place")!.textContent ?? "";
 
-const page = (id: string, section: string): Page => ({ id, section: section as Section, sketch: null, runners: [], notes: [{ id: `${id}.n`, key: `${id}.k`, hand: "ink", sketch: null, day: null, count: null }] });
+const page = (id: string, section: string): Page => ({ id, section: section as Section, title: `${id}.t`, sketch: null, runners: [], notes: [{ id: `${id}.n`, key: `${id}.k`, hand: "ink", sketch: null, day: null, count: null }] });
 const unreadAll: Reading = { note: () => false, newestDay: null };
 
 {  // a turn stays in the section; past its end it names the section it crosses into; the book's ends turn nowhere
@@ -49,7 +49,7 @@ const unreadAll: Reading = { note: () => false, newestDay: null };
   const pages = pagesOf(cat, { ...step.view, unlocked: [...step.view.unlocked, { category: "entry", id: "page_c" }, { category: "note", id: NOTE_C }] }, step.journal_days);
   const seen: Reading = { note: (n) => NOTES_A.includes(n), newestDay: null };
   const creatures = contentsOf(cat, pages, "creatures", seen, 0);   // no days written: page 0 is the first creatures page
-  expect("an entry's title is its first note's words", creatures.map((r) => r.title), [cat.text.get(NOTES_A[0]!), cat.text.get(NOTE_C)]);
+  expect("an entry's title is its own, not its first note's words", creatures.map((r) => r.title), [cat.text.get("title_page_a"), cat.text.get("title_page_c")]);
   expect("unread is per page; the open page is marked", creatures.map((r) => [r.unread, r.current]), [[false, true], [true, false]]);
 }
 
@@ -85,7 +85,7 @@ const unreadAll: Reading = { note: () => false, newestDay: null };
   r.next().click();
   expect("on the first creatures page", r.words(), NOTES_A.map(text));
   r.contents().click();
-  expect("the list: both creatures pages, their first notes' words", rows(r), [text(NOTES_A[0]!), text(NOTE_C)]);
+  expect("the list: both creatures pages, by title", rows(r), [text("title_page_a"), text("title_page_c")]);
   expect("the open page's row is marked", rowButtons(r).map((b) => b.getAttribute("aria-current")), ["page", null]);
   expect("the spread is out of the way", [r.sheet().querySelector<HTMLElement>(".journal-spread")!.hidden, r.contents().getAttribute("aria-pressed")], [true, "true"]);
   expect("the page not yet turned to is dotted", rowButtons(r).map((b) => b.querySelector(".new-dot") !== null), [false, true]);
@@ -102,10 +102,10 @@ const unreadAll: Reading = { note: () => false, newestDay: null };
   r.contents().click();
   expect("the days list, one page", rows(r), ["Day 1"]);
   bookmarks(r)[2]!.click();
-  expect("the places bookmark lists places", [rows(r), bookmarks(r).map((b) => b.getAttribute("aria-current") === "true")], [[text(NOTE_B)], [false, false, true]]);
+  expect("the places bookmark lists places", [rows(r), bookmarks(r).map((b) => b.getAttribute("aria-current") === "true")], [[text("title_page_b")], [false, false, true]]);
   fire(r.sheet(), "keydown");
   r.screen.root.dispatchEvent(Object.assign(new Event("keydown"), { key: "ArrowRight" }));
-  expect("still the list", rows(r), [text(NOTE_B)].map((x) => x));
+  expect("still the list", rows(r), [text("title_page_b")]);
   r.close().click();
   expect("only the page opened on is read: the day, and no book note", [r.sent.flatMap((s) => [...(s.journal_read ?? [])]), r.sent.at(-1)?.newest_day_read], [[], 0]);
 }

@@ -60,6 +60,9 @@ const WEEK_WORDS: Record<string, string> = {
 
 const WORDS: Record<string, string> = {
   "feature.book": "Journal",
+  title_page_a: "The water thing",
+  title_page_b: "The night noise",
+  title_page_c: "The shy one",
   note_a1: "Seen at the water just after dusk. Quick, and it does not like noise.",
   note_a2: "Might be hurt on the left side. Not sure yet.",
   note_a3: "Leaves the stores alone when the fire is high.",
@@ -79,10 +82,10 @@ export function withJournal(content: Content): Content {
     journal: {
       feature: BOOK,
       entries: [
-        { entry: PAGE_B, section: "places", sketch: "sketch_b", runners: ["raiders"], notes: [{ note: NOTE_B, hand: "pencil", sketch: null }] },
-        { entry: PAGE_A, section: "creatures", sketch: "sketch_a", runners: ["hunt"], notes: [
+        { entry: PAGE_B, title_key: "title_page_b", section: "places", sketch: "sketch_b", runners: ["raiders"], notes: [{ note: NOTE_B, hand: "pencil", sketch: null }] },
+        { entry: PAGE_A, title_key: "title_page_a", section: "creatures", sketch: "sketch_a", runners: ["hunt"], notes: [
           { note: "note_a1", hand: "ink", sketch: null }, { note: "note_a2", hand: "pencil", sketch: "note_sketch" }, { note: "note_a3", hand: "ink", sketch: null }] },
-        { entry: PAGE_C, section: "creatures", sketch: "sketch_c", runners: [], notes: [{ note: NOTE_C, hand: "ink", sketch: null }] },
+        { entry: PAGE_C, title_key: "title_page_c", section: "creatures", sketch: "sketch_c", runners: [], notes: [{ note: NOTE_C, hand: "ink", sketch: null }] },
       ],
     },
   };
@@ -162,9 +165,10 @@ export const LONG_READ_TO = Math.floor(LONG_DAYS_N * 2 / 3);
 /** The content with the synthetic long book's entries and words, beside withJournal's. */
 export function withLongBook(content: Content): Content {
   const entries = ENTRY_SECTIONS.flatMap(([section, n]) => Array.from({ length: n }, (_, i) => ({
-    entry: longId(section, i), section, sketch: null, runners: [],
+    entry: longId(section, i), title_key: `${longId(section, i)}.title`, section, sketch: null, runners: [],
     notes: longNotes(section, i).map((note, k) => ({ note, hand: k === 1 ? "pencil" as const : "ink" as const, sketch: null })) })));
   const words = [
+    ...ENTRY_SECTIONS.flatMap(([section, n]) => Array.from({ length: n }, (_, i) => ({ key: `${longId(section, i)}.title`, text: `Placeholder ${section} title ${i + 1}` }))),
     ...ENTRY_SECTIONS.flatMap(([section, n]) => Array.from({ length: n }, (_, i) => longNotes(section, i).map((key, k) =>
       ({ key, text: k === 0 ? `Placeholder ${section} page ${i + 1}, ${SEEN[i % SEEN.length]}.` : `A second placeholder note on page ${i + 1}.` }))).flat()),
     ...LONG_DAYS.flatMap((d) => d.day_notes.map((n) => ({ key: n.key, text: `Placeholder note for day ${d.day + 1}, written ${SEEN[d.day % SEEN.length]} and long enough to take a row or two of the page.` }))),

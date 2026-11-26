@@ -225,7 +225,7 @@ def _journal(o: Opening) -> cm.JournalInfo | None:
     if o.journal is None:
         return None
     return cm.JournalInfo(feature=o.journal.feature, entries=[
-        cm.EntryInfo(entry=x.id, section=cm.Section(x.section), sketch=x.sketch, runners=list(x.runners), notes=[
+        cm.EntryInfo(entry=x.id, title_key=x.title_key, section=cm.Section(x.section), sketch=x.sketch, runners=list(x.runners), notes=[
             cm.NoteInfo(note=n.id, hand=cm.Hand(n.hand or x.hand), sketch=n.sketch) for n in o.notes if n.entry == x.id])
         for x in o.entries])
 

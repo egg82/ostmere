@@ -976,6 +976,7 @@ outcome = { modifiers = [{ target = "work", id = "smoke_catch", kind = "mul_bp",
 # The ground at the camp, from B5 on.
 [[entries]]
 id = "e_warm_ground"
+title_key = "e_warm_ground_title"
 section = "places"
 sketch = "warm_ground"
 hand = "ink"
@@ -1124,6 +1125,7 @@ l_shelf_2 = "story"
 l_shelf_3 = "story"
 
 [text]
+e_warm_ground_title = "warm ground"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-three routes give each line its states and the writers'
 # pick lands (content/team/day-three-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping

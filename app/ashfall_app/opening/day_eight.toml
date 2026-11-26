@@ -539,6 +539,7 @@ fight = { side = "gap", threat = "wolf_pack", lost = "pack_lost", fought = "pack
 # Each note is a trigger the loader makes; B9 waits on the three pages.
 [[entries]]
 id = "e_wolf"
+title_key = "e_wolf_title"
 section = "creatures"
 sketch = "wolf"
 hand = "ink"
@@ -546,6 +547,7 @@ runners = ["hunt_wolf", "pack"]
 
 [[entries]]
 id = "e_ashrat"
+title_key = "e_ashrat_title"
 section = "creatures"
 sketch = "ashrat"
 hand = "ink"
@@ -553,6 +555,7 @@ runners = ["rats"]
 
 [[entries]]
 id = "e_crow"
+title_key = "e_crow_title"
 section = "creatures"
 sketch = "crow"
 hand = "ink"
@@ -807,6 +810,9 @@ l_find_fine_ash = "find"
 l_camp_13 = "level"
 
 [text]
+e_wolf_title = "wolves"
+e_ashrat_title = "rats"
+e_crow_title = "crows"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-eight routes give each line its states and the writers'
 # pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping

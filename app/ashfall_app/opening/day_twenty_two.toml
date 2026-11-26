@@ -341,6 +341,7 @@ unlocks = [
 # The wood's page, on B18's condition (one moment with it).
 [[entries]]
 id = "e_ashwood"
+title_key = "e_ashwood_title"
 section = "places"
 sketch = "ashwood"
 hand = "ink"
@@ -676,6 +677,7 @@ pot_stew = [{ lane = "n13", amount_bp = 1500 }]
 pot_fungus_stew = [{ lane = "n13", amount_bp = 1000 }]
 
 [text]
+e_ashwood_title = "the wood"
 store_ashwood_trips = "walks out"
 store_charwood = "charwood"
 c_walk_ashwood = "Walk the Ashwood"
