@@ -2948,8 +2948,8 @@ KNOWN GAPS (drains and fractions)
   only drains the store is refused as that rule's card. Interim: as that; a chip whose `when` has `every` has no order
   card anyway. Decided by: content's first order card meant to tap a draining cure.
 - "Every loader reader of a store threshold" names makers.py, which reads only skill levels (granted_by); it reads no
-  store threshold, so it is unchanged. The readers are convert.condition, refs.py's band check and its count of makers
-  (_counted), and checks.py's order-card comparisons with a cap, all through convert.levels.
+  store threshold, so it is unchanged. The readers are condition_convert.condition, refs.py's band check and its count
+  of makers (_counted), and checks.py's order-card comparisons with a cap, all through condition_convert.levels.
 
 SPENT (a paused mix card's share yields to the rest of its mix until its Pause lifts, whether or not anything can
 make its store again: docs/design/week-three-plan.md, item 1, and docs/decisions.md, "A mix keeps going without a dry

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from ..engine import QUANTITY_SCALE, units
 from .chip_checks import check_chip_card
-from .convert import levels
+from .condition_convert import levels
 from .offer_caps import Chain, offer_cap
 from .refs import fail, need
 

@@ -4,7 +4,8 @@ card lifts). A rule offered then may let go above the store's first cap, never a
 from collections.abc import Iterator, Mapping
 from typing import TYPE_CHECKING
 
-from .convert import amount, levels
+from .condition_convert import levels
+from .convert import amount
 from .refs import outcomes
 
 if TYPE_CHECKING:
