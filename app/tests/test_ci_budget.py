@@ -2,7 +2,7 @@
 pull request waits on, each at its `timeout-minutes`, is at most BUDGET_MIN. A job added to ci.yml must say which set it is
 in, so a new job cannot join the pull-request path unseen; a timeout is the job's budget, and a job that outgrows it goes red."""
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import yaml
 
@@ -18,7 +18,8 @@ Jobs = dict[str, dict[str, Any]]
 
 
 def jobs() -> Jobs:
-    return cast(Jobs, yaml.safe_load(CI.read_text())["jobs"])
+    loaded: dict[str, Any] = yaml.safe_load(CI.read_text())
+    return loaded["jobs"]
 
 
 def needs(job: dict[str, Any]) -> list[str]:

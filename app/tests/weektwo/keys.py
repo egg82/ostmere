@@ -17,7 +17,7 @@ from dataclasses import fields, is_dataclass
 from enum import Enum
 from functools import cache
 from pathlib import Path
-from typing import cast
+from typing import Any
 
 ORDER = ("week1", "eight", "nine", "eleven", "twelve", "fifteen", "sixteen", "eighteen", "nineteen", "twentytwo",
          "twentythree", "twentyfive")
@@ -51,7 +51,11 @@ def digest(files: list[Path]) -> str:
     return h.hexdigest()
 
 
-def masked(obj: object) -> object:
+def listed(items: Any) -> list[Any]:
+    return list(items)
+
+
+def masked(obj: Any) -> Any:
     """`obj` as nested lists with every number and flag replaced by its type's name: the rules' structure and ids."""
     if isinstance(obj, (bool, int, float)):
         return type(obj).__name__
@@ -60,11 +64,10 @@ def masked(obj: object) -> object:
     if is_dataclass(obj) and not isinstance(obj, type):
         return [type(obj).__name__, [[f.name, masked(getattr(obj, f.name))] for f in fields(obj)]]
     if isinstance(obj, dict):
-        return sorted(([repr(k), masked(v)] for k, v in cast(dict[object, object], obj).items()), key=repr)
-    if isinstance(obj, (set, frozenset)):
-        return sorted((masked(x) for x in cast(frozenset[object], obj)), key=repr)
-    if isinstance(obj, (tuple, list)):
-        return [masked(x) for x in cast(tuple[object, ...], obj)]
+        return sorted(([repr(k), masked(v)] for k, v in listed(obj.items())), key=repr)
+    if isinstance(obj, (set, frozenset, tuple, list)):
+        found = [masked(x) for x in listed(obj)]
+        return found if isinstance(obj, (tuple, list)) else sorted(found, key=repr)
     return obj if obj is None or isinstance(obj, str) else repr(obj)
 
 
