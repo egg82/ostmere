@@ -29,7 +29,7 @@ from .phase_pays import check_phase_pays
 from .prestige import check_phase_spans
 from .order_checks import check_order_cards
 from .refs import check_refs, fail, ids_by_kind, need, outcomes
-from .groups import check_groups
+from .groups import check_groups, check_town_managed
 from .leave_checks import check_leaves
 from .line_only_checks import check_line_only
 from .people_checks import check_people
@@ -88,6 +88,7 @@ def check_structure(o: "Opening") -> None:
     check_loss_lines(o)
     check_leaves(o)
     check_groups(o)
+    check_town_managed(o)
     check_people(o)
     check_pools(o)
     check_aims(o)

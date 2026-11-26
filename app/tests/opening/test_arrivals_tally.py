@@ -103,7 +103,7 @@ CARD = 'presentation = "action"\nlabel_key = "t_c_work"\nupside_key = "t_up"\nwo
     (CARD + "\n[[features]]", CARD + 'inputs = [{ store = "t_arrivals", items = 1 }]\n\n[[features]]', "t_p3_work: takes a tally store"),
     ('outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }]',
      'outcome = { unlocks = [{ unlock_kind = "card", id = "t_p2_work" }]', "joins 1 not yet counted but adds 0"),
-    ('card = "t_p2_work", own_split = true }', 'card = "t_p2_work", counted = true, own_split = true }', "joins 0 not yet counted but adds 1"),
+    ('lane = "t_p2", mix = "town:main", card = "g_field_forage", own_split = false }', 'lane = "t_p2", mix = "town:main", card = "g_field_forage", counted = true, own_split = false }', "joins 0 not yet counted but adds 1"),
 ])
 def test_the_content_check_refuses_a_taken_tally_and_a_join_that_does_not_count(tmp_path: Path, old: str, new: str, match: str):
     with pytest.raises(ValueError, match=match):
@@ -111,7 +111,7 @@ def test_the_content_check_refuses_a_taken_tally_and_a_join_that_does_not_count(
 
 
 def test_a_join_of_someone_counted_on_arrival_adds_nothing(tmp_path: Path):
-    old = 'outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "t_p2_work", own_split = true }] }'
-    new = 'outcome = { unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "t_p2_work", counted = true, own_split = true }] }'
+    old = 'outcome = { stores = [{ store = "t_arrivals", items = 1 }], unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "g_field_forage", own_split = false }] }'
+    new = 'outcome = { unlocks = [{ unlock_kind = "card", id = "t_p2_work" }], joins = [{ lane = "t_p2", mix = "town:main", card = "g_field_forage", counted = true, own_split = false }] }'
     assert load_opening(OPENING, (*CHAPTERS, broken(tmp_path, old, new))).cards
 

@@ -123,10 +123,11 @@ TYPICAL = WeekTwoKnobs(
         Split("n2", (("n2_forage", 5000), ("n2_watch", 5000)), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        *(Split(n, ((f"{n}_reap", 5000), (f"{n}_forage", 5000)), feature("r2_open")) for n in ("n8", "n9", "n10")),
+        Split("g_field", (("g_field_clear_road", 5000), ("g_field_reap", 1500), ("g_field_forage", 2000), ("g_field_watch", 1500)),
+              Unlock(UnlockKind.ANSWER, "o_choir_road")),
+        Split("g_field", (("g_field_reap", 2500), ("g_field_forage", 5800), ("g_field_watch", 1700)), feature("r2_open")),
         Split("n2", (("n2_watch", 5000), ("n2_forage", 5000)), feature("r2_open")),
-        Split("n9", (("n9_walk_ashwood", 2500), ("n9_forage", 7500)), feature("ashwood")),
-        Split("n13", (("n13_walk_ashwood", 5000), ("n13_forage", 5000)), feature("sorrel_named")),
+        Split("g_field", (("g_field_walk_ashwood", 1000), ("g_field_forage", 7300), ("g_field_watch", 1700)), feature("ashwood")),
     ))
 """The town's split, moment by moment (week-two-numbers.md, "The bigger thing in each typical visit"). Her lane stays on
 its rules: she is the town's forager, and the track's roots need her (moving her to stakes starves roots, and the
@@ -143,10 +144,12 @@ SHARP = WeekTwoKnobs(
         Split("n2", (("n2_watch", 10000),), feature("family_joined")),
         Split("g_field", (("g_field_forage", 5000), ("g_field_watch", 5000)), feature("family_joined")),
         Split("n2", (("n2_watch", 5000), ("n2_clear_road", 5000)), feature("road_marked")),
-        Split("n12", (("n12_reap", 5000), ("n12_forage", 5000)), feature("r2_open")),
+        Split("g_field", (("g_field_reap", 4000), ("g_field_clear_road", 3000), ("g_field_forage", 1500), ("g_field_watch", 1500)),
+              Unlock(UnlockKind.ANSWER, "o_choir_beds")),
+        Split("g_field", (("g_field_reap", 800), ("g_field_forage", 7500), ("g_field_watch", 1700)), feature("r2_open")),
         Split("n2", (("n2_watch", 10000),), feature("r2_open")),
-        Split("n12", (("n12_walk_ashwood", 5000), ("n12_forage", 5000)), feature("ashwood")),
-        Split("n13", (("n13_walk_ashwood", 5000), ("n13_fog_fish", 5000)), feature("sorrel_named")),
+        Split("g_field", (("g_field_walk_ashwood", 800), ("g_field_forage", 7500), ("g_field_watch", 1700)), feature("ashwood")),
+        Split("g_field", (("g_field_walk_ashwood", 800), ("g_field_fog_fish", 700), ("g_field_forage", 6800), ("g_field_watch", 1700)), feature("sorrel_named")),
     ))
 """Once the road is over the top (B17) both routes take the lanes they had clearing it to the beds and the roots; once
 the town can walk the Ashwood (B18) each puts one of them on the walk beside the roots, the beds being over."""

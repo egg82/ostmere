@@ -152,10 +152,10 @@ role = "food"
 line_keys = ["l_walkers_food"]
 stores = [{ store = "arrivals", items = 4 }]
 joins = [
-  { lane = "n16", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
-  { lane = "n17", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
-  { lane = "n18", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
-  { lane = "n19", mix = "town:camp", card = "g_walkers_fungus_stew", own_split = false },
+  { lane = "n16", mix = "town:camp", card = "g_field_fungus_stew", own_split = false },
+  { lane = "n17", mix = "town:camp", card = "g_field_fungus_stew", own_split = false },
+  { lane = "n18", mix = "town:camp", card = "g_field_fungus_stew", own_split = false },
+  { lane = "n19", mix = "town:camp", card = "g_field_fungus_stew", own_split = false },
 ]
 modifiers = [
   { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_food" },
@@ -171,10 +171,10 @@ role = "build"
 line_keys = ["l_walkers_build"]
 stores = [{ store = "arrivals", items = 4 }]
 joins = [
-  { lane = "n16", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
-  { lane = "n17", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
-  { lane = "n18", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
-  { lane = "n19", mix = "town:camp", card = "g_walkers_clear_road", own_split = false },
+  { lane = "n16", mix = "town:camp", card = "g_field_clear_road", own_split = false },
+  { lane = "n17", mix = "town:camp", card = "g_field_clear_road", own_split = false },
+  { lane = "n18", mix = "town:camp", card = "g_field_clear_road", own_split = false },
+  { lane = "n19", mix = "town:camp", card = "g_field_clear_road", own_split = false },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
@@ -191,43 +191,37 @@ modifiers = [
   { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
-  { target = "work", id = "g_walkers_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_walkers_build" },
 ]
-
-[[lanes]]
-id = "g_walkers"
-label_key = "lane_g_walkers"
-ruled = true
-pooled = true
 
 [[lanes]]
 id = "n16"
 label_key = "lane_n16"
 ruled = true
 told = "line"
-group = "g_walkers"
+group = "g_field"
 
 [[lanes]]
 id = "n17"
 label_key = "lane_n17"
 ruled = true
 told = "line"
-group = "g_walkers"
+group = "g_field"
 
 [[lanes]]
 id = "n18"
 label_key = "lane_n18"
 ruled = true
 told = "line"
-group = "g_walkers"
+group = "g_field"
 
 [[lanes]]
 id = "n19"
 label_key = "lane_n19"
 ruled = true
 told = "line"
-group = "g_walkers"
+group = "g_field"
 
 # Hours since the four sat down, and a latch at six, for the widowers' offer (machinery).
 [[stores]]
@@ -340,9 +334,9 @@ role = "food"
 [offers.answers.outcome]
 stores = [{ store = "arrivals", items = 3 }]
 joins = [
-  { lane = "n20", mix = "town:camp", card = "g_widowers_fungus_stew", own_split = false },
-  { lane = "n21", mix = "town:camp", card = "g_widowers_fungus_stew", own_split = false },
-  { lane = "n22", mix = "town:camp", card = "g_widowers_fungus_stew", own_split = false },
+  { lane = "n20", mix = "town:camp", card = "g_hearth_fungus_stew", own_split = false },
+  { lane = "n21", mix = "town:camp", card = "g_hearth_fungus_stew", own_split = false },
+  { lane = "n22", mix = "town:camp", card = "g_hearth_fungus_stew", own_split = false },
 ]
 modifiers = [
   { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_food" },
@@ -357,9 +351,9 @@ role = "build"
 [offers.answers.outcome]
 stores = [{ store = "arrivals", items = 3 }]
 joins = [
-  { lane = "n20", mix = "town:camp", card = "g_widowers_stakes", own_split = false },
-  { lane = "n21", mix = "town:camp", card = "g_widowers_stakes", own_split = false },
-  { lane = "n22", mix = "town:camp", card = "g_widowers_stakes", own_split = false },
+  { lane = "n20", mix = "town:camp", card = "g_hearth_stakes", own_split = false },
+  { lane = "n21", mix = "town:camp", card = "g_hearth_stakes", own_split = false },
+  { lane = "n22", mix = "town:camp", card = "g_hearth_stakes", own_split = false },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
@@ -376,37 +370,30 @@ modifiers = [
   { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
-  { target = "work", id = "g_walkers_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
-  { target = "work", id = "g_widowers_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_widowers_build" },
 ]
-
-[[lanes]]
-id = "g_widowers"
-label_key = "lane_g_widowers"
-ruled = true
-pooled = true
 
 [[lanes]]
 id = "n20"
 label_key = "lane_n20"
 ruled = true
 told = "mention"
-group = "g_widowers"
+group = "g_hearth"
 
 [[lanes]]
 id = "n21"
 label_key = "lane_n21"
 ruled = true
 told = "mention"
-group = "g_widowers"
+group = "g_hearth"
 
 [[lanes]]
 id = "n22"
 label_key = "lane_n22"
 ruled = true
 told = "mention"
-group = "g_widowers"
+group = "g_hearth"
 
 # ---------- Lucy's jobs ----------
 
@@ -562,7 +549,7 @@ whereabouts = [
   { person = "n13", layer = "figure_n13_outside_ring" },
   { person = "n23", layer = "figure_n23_at_hall_door" },
 ]
-line_keys = ["l_b21_1", "l_b21_2", "l_b21_3", "l_b21_4"]
+line_keys = ["l_b21_1", "l_b21_2", "l_b21_3", "l_b21_4", "l_b21_group"]
 stores = [{ store = "arrivals", items = 1 }]
 unlocks = [
   { unlock_kind = "feature", id = "bedesman_home" },
@@ -574,13 +561,14 @@ unlocks = [
   { unlock_kind = "card", id = "n23_fog_fish" },
   { unlock_kind = "card", id = "n23_wash_meat" },
 ]
-joins = [{ lane = "n23", mix = "town:camp", card = "n23_stakes", own_split = true }]
+joins = [{ lane = "n23", mix = "town:camp", card = "g_field_stakes", own_split = false }]
 
 [[lanes]]
 id = "n23"
 label_key = "lane_n23"
 ruled = true
 told = "line"
+group = "g_field"
 
 [[standing]]
 id = "n23_eating"
@@ -693,6 +681,7 @@ l_b21_1 = "story"
 l_b21_2 = "story"
 l_b21_3 = "story"
 l_b21_4 = "story"
+l_b21_group = "story"
 
 # One more mouth at the pot (day eleven, t_pot_eat_family).
 [[triggers]]
@@ -761,7 +750,6 @@ a_walkers_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
 a_walkers_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
 l_walkers_food = "the four go to the pot together."
 l_walkers_build = "the four take the shovels between them."
-lane_g_walkers = "The four"
 lane_n16 = "One of the four"
 lane_n17 = "One of the four"
 lane_n18 = "One of the four"
@@ -783,7 +771,6 @@ a_widowers_food = "To the food"
 a_widowers_build = "To the building"
 a_widowers_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
 a_widowers_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
-lane_g_widowers = "The three"
 lane_n20 = "One of the three"
 lane_n21 = "One of the three"
 lane_n22 = "One of the three"
@@ -814,6 +801,7 @@ l_b21_1 = "a stranger walks in along the road, kneeling at every warm stone, the
 l_b21_2 = "the bedesman looks at you a long time and says it's a blessing, and means it."
 l_b21_3 = "{n5} says she thanked the stone. they take her hands off it. never thank the warmth."
 l_b21_4 = "that night a ring at the fire, hands joined, the words said. {n13} stands outside it."
+l_b21_group = "he is given no split. {n2} puts him down with the field crew, and he goes where it goes, saying the names."
 lane_n23 = "The bedesman's hands"
 action_n23_eating = "The bedesman's share"
 j_i8_catchup = "supper as ever. nobody said anything about the morning"

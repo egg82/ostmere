@@ -11,7 +11,7 @@ from tests.dayone.policy import Move
 
 @dataclass(frozen=True)
 class Split:
-    """One person's time in the town's mix once `after` is unlocked: each card at its share. Per lane the last split
+    """One person's or one group's time in the town's mix once `after` is unlocked: each card at its share. Per lane the last split
     whose `after` holds is the one kept."""
 
     lane: str
