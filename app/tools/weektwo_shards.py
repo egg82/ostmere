@@ -42,15 +42,21 @@ SHARDS: dict[str, frozenset[str]] = {
     "makers": frozenset({"makers"}),
 }
 NIGHTLY_ONLY = frozenset({"twentyfive-sharp", "twentyfive"})
-"""The shards a pull request's slice does not play: the slowest play in each, as the last nightly measured it (a build or a
-test's call, under four workers) plus the slice job's 26 s of setup and 10% margin, is over `playthrough-slice`'s 6
-minutes, so the slowest play must be under 301 s. Last measured: day twenty-five's typical play 309 s; its sharp 283 s,
-a single run too close to the line to trust until a nightly repeats it (day eighteen's slowest, 139 s, fits). The nightly
-plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
+"""The shards a pull request's slice does not play: the shard's wall time, as the last nightly measured it, plus the slice
+job's 26 s of setup and 10% margin, is over `playthrough-slice`'s 6 minutes. A shard's wall time is the SUM of the builds
+and heavy calls of its longest xdist loadgroup (`--dist loadgroup` puts every test of one play in one worker, one after
+another), not its slowest play or test, and with more loadgroups than the job's four workers the groups queue. Last
+measured (#540): day twenty-five's typical shard 490 s and its sharp 612 s, against the ~334 s a slice job has after
+setup. The nightly plays these. A shard leaves the set by being split or sped up, never by a longer timeout; the 6 minutes
+is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 WHOLE_GAME = frozenset({"makers"})
 """The shards whose readouts read the whole game, not one chapter: a pull request's smoke plan plays them from the start where
-the change is one every chapter reads (tools/pr_plan.py), since no chapter's slice does. Measured on the nightly 45833474339,
-makers' slowest play is 136 s with 4 s of setup from saved ends, (136 + 4 + 26) x 1.1 = 183 s of `playthrough-slice`'s 360 s."""
+the change is one every chapter reads (tools/pr_plan.py `whole_game`, CI's `playthrough-whole-game`), since no chapter's
+slice does. They play from the start because the base's saved ends are older than the change, so a play is its whole chain
+(week one to day twelve) plus its readout, and the job's wall time is its longest play's sum, not the saved-ends 136 s the
+nightly measures. Measured on main's pushes, a route's test call under three parallel plays: typical 265 s, sharp 256 s,
+whenever 181 s, a 306 s job when it passed and cut off at 6 minutes on half the runs. The job waits on `changes` alone,
+which leaves it 8 minutes in the 10-minute chain, where a `playthrough-slice` job after `slice` has 6."""
 ENV = "WEEKTWO_SHARD"
 SLICE = "WEEKTWO_SLICE"
 FILES = "WEEKTWO_FILES"

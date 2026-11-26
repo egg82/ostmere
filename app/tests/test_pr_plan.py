@@ -45,7 +45,10 @@ def test_week_one_a_changed_shared_input_and_a_base_without_keys_are_the_smoke()
 
 def test_a_change_every_chapter_reads_also_plays_the_whole_game_shards_from_the_start():
     for got in (plan(replace(BASE, shared="another"), False, []), plan(changed(week1="x"), False, [])):
-        assert got["mode"] == "smoke" and got["shards"] == ["smoke", "makers"] and got["left"] == []
+        assert got["mode"] == "smoke" and got["shards"] == ["smoke"] and got["left"] == []
+        assert got["whole_game"] == ["makers"]
+    for got in (plan(None, False, []), plan(changed(fifteen="x"), False, [], lambda key: False), plan(changed(twelve="x"), False, [])):
+        assert got["whole_game"] == []
     assert plan(None, False, [])["shards"] == ["smoke"]
     assert plan(changed(fifteen="x"), False, [], lambda key: False)["shards"] == ["smoke"]
     assert "makers" in WHOLE_GAME and WHOLE_GAME <= set(SHARDS) - NIGHTLY_ONLY
