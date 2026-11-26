@@ -15,6 +15,22 @@ label_key = "store_arrivals"
 cap_items = 10
 tally = true
 
+# How many arrivals the player built for (own_hands) and how many they left to the newcomers (left_to_them): hidden
+# counts the loader adds to from each answer of that role (offer_kinds' tally), read by the pattern's triggers.
+[[stores]]
+id = "own_hands"
+label_key = "store_own_hands"
+cap_items = 10
+tally = true
+hidden = true
+
+[[stores]]
+id = "left_to_them"
+label_key = "store_left_to_them"
+cap_items = 10
+tally = true
+hidden = true
+
 [[triggers]]
 id = "t_first_arrival"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "n1", value = 1 }
@@ -537,10 +553,31 @@ line_keys = ["l_bay_his"]
 unlocks = [{ unlock_kind = "card", id = "n2_build_bay" }]
 orders = [{ tap_card = "n2_build_bay", first = true }]
 
+# Each answer to an arrival offer lands a number when the build is done, named for the answer (the ledger shows its
+# source): built by hand, that person's lane +10%; left to them, the camp's rest +5%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_stay_room"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_room"]
+modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 11000, source = "o_stay_room" }]
+
+[[triggers]]
+id = "t_kept_o_stay_his"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_his", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_his"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_stay_his" }]
+
 # The words of the rule that answers every arrival, for whoever comes next.
 [[offer_kinds]]
 kind = "arrival"
-roles = [{ role = "self", label_key = "k_arrival_self" }, { role = "other", label_key = "k_arrival_other" }]
+roles = [
+  { role = "self", label_key = "k_arrival_self", tally = "own_hands" },
+  { role = "other", label_key = "k_arrival_other", tally = "left_to_them" },
+]
 
 # A23 on the hands. Its work divides one item's quantity units at speeds 1 and a half (a tap keeps its start speed).
 [[cards]]
@@ -1071,6 +1108,8 @@ keys = ["mention_went_many_1", "mention_went_many_2", "mention_went_many_3", "me
 B5 = ["l_b5_1"]
 
 [line_kinds]
+l_kept_o_stay_room = "story"
+l_kept_o_stay_his = "story"
 l_edge_1 = "story"
 l_edge_2 = "story"
 l_track_first = "story"
@@ -1126,12 +1165,16 @@ l_shelf_2 = "story"
 l_shelf_3 = "story"
 
 [text]
+l_kept_o_stay_room = "he knows every knot in that bay, because you showed him. he works the quicker for it."
+l_kept_o_stay_his = "the bay he built himself stands square, and the camp sleeps a little deeper beside it."
 e_warm_ground_title = "warm ground"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-three routes give each line its states and the writers'
 # pick lands (content/team/day-three-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
 # release: replace each value, never the marker's spelling.
 store_arrivals = "arrivals"
+store_own_hands = "built by hand"
+store_left_to_them = "left to them"
 c_walk_edge = "Scout past the firelight"
 c_field_track = "Lay the track further out"
 up_field_track = "{pct} hunting speed at each reach of track laid"

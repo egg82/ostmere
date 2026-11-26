@@ -189,9 +189,10 @@ def eight_marks() -> dict[str, str]:
 
 
 @pytest.fixture(scope="session")
-def week_part(request: pytest.FixtureRequest) -> verdicts.Decided:
+def week_part(request: pytest.FixtureRequest) -> tuple[int, verdicts.Decided]:
+    """(the part, what its heavy steps decide)."""
     chapter, part = request.param
-    return verdicts.decided_in(chapter, part)
+    return part, verdicts.decided_in(chapter, part)
 
 
 @pytest.fixture(scope="session")

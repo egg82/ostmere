@@ -22,6 +22,9 @@ class KindRoleEntry(Entry):
 
     role: str
     label_key: str
+    tally: str | None = None
+    """The hidden tally store that counts this role's answers across the kind's offers: the loader makes a trigger for
+    each such answer that adds one when it is given, so the count holds for a save that answered before (answer_checks.py)."""
 
 
 class OfferKindEntry(Entry):

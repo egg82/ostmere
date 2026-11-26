@@ -4,7 +4,7 @@ its first completion is a bare sink: it declares its `stake`, what it feeds, and
 whole content bears the stake out. Ids and fields only, never text. Raises ValueError naming the cards (refs.fail)."""
 from typing import TYPE_CHECKING
 
-from .convert import levels
+from .condition_convert import levels
 from .fight_refs import fights
 from .refs import conditions, fail
 

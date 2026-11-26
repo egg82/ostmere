@@ -26,14 +26,16 @@ def test_the_route_plays_day_eight_to_b9(eight_route: Route):
     assert {"B8", "U1", "U2", "U3"} <= set(p.landed_at)   # side beats wait on a route's choices
 
 
-PARTS = [(chapter, part) for chapter, n in verdicts.PARTS.items() for part in range(n)]
+PARTS = [(chapter, part) for chapter in verdicts.CHAPTERS for part in verdicts.parts(chapter)]
 
 
-@pytest.mark.parametrize("week_part", PARTS, indirect=True, ids=[f"{c}-{n}" for c, n in PARTS])
-def test_a_part_of_a_chapters_counting_is_read(week_part: verdicts.Decided):
-    """Each part of a chapter's heavy steps is read in a setup of its own (verdicts.PARTS), so the tests below pay for
+@pytest.mark.parametrize("week_part", PARTS, indirect=True,
+                         ids=[f"{c}-{'all' if n == verdicts.ALL else n}" for c, n in PARTS])
+def test_a_part_of_a_chapters_counting_is_read(week_part: tuple[int, verdicts.Decided]):
+    """Each part of a chapter's heavy steps is read in a setup of its own (verdicts.parts), so the tests below pay for
     none of them."""
-    assert 0 < len(week_part) <= verdicts.PART_STEPS
+    part, decided = week_part
+    assert 0 < len(decided) and (part == verdicts.ALL or len(decided) <= verdicts.PART_STEPS)
 
 
 @pytest.mark.xfail(strict=True, reason="week one's bedding lead carries in (weekone's strict xfail: a staged build takes one "
