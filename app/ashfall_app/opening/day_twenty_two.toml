@@ -68,7 +68,7 @@ outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", ite
 [[town_cards]]
 id = "{lane}_walk_ashwood"
 twin_of = "walk_ashwood"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
 presentation = "action"
 label_key = "c_walk_ashwood"
 upside_key = "up_walk_ashwood"
@@ -337,7 +337,6 @@ unlocks = [
   { unlock_kind = "card", id = "n9_walk_ashwood" },
   { unlock_kind = "card", id = "n10_walk_ashwood" },
   { unlock_kind = "card", id = "n12_walk_ashwood" },
-  { unlock_kind = "card", id = "g_field_walk_ashwood" },
 ]
 
 # The wood's page, on B18's condition (one moment with it).
@@ -373,7 +372,6 @@ unlocks = [
   { unlock_kind = "card", id = "n6_fog_fish" },
   { unlock_kind = "card", id = "n7_fog_fish" },
   { unlock_kind = "card", id = "n8_fog_fish" },
-  { unlock_kind = "card", id = "g_field_fog_fish" },
   { unlock_kind = "card", id = "n9_fog_fish" },
   { unlock_kind = "card", id = "n10_fog_fish" },
   { unlock_kind = "card", id = "n12_fog_fish" },
@@ -393,7 +391,7 @@ outcome = { stores = [{ store = "catch", items = 2 }] }
 [[town_cards]]
 id = "{lane}_fog_fish"
 twin_of = "fog_fish"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
 presentation = "action"
 label_key = "c_fog_fish"
 upside_key = "up_catch"
@@ -427,7 +425,6 @@ unlocks = [
   { unlock_kind = "card", id = "n6_wash_meat" },
   { unlock_kind = "card", id = "n7_wash_meat" },
   { unlock_kind = "card", id = "n8_wash_meat" },
-  { unlock_kind = "card", id = "g_field_wash_meat" },
   { unlock_kind = "card", id = "n9_wash_meat" },
   { unlock_kind = "card", id = "n10_wash_meat" },
   { unlock_kind = "card", id = "n12_wash_meat" },
@@ -455,7 +452,7 @@ inputs = [{ store = "film", items = 12 }]
 [[town_cards]]
 id = "{lane}_wash_meat"
 twin_of = "wash_meat"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
 presentation = "action"
 label_key = "c_wash_meat"
 upside_key = "up_wash_meat"
@@ -541,7 +538,7 @@ requires = [
 ]
 [triggers.outcome]
 whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
-line_keys = ["l_b19_1", "l_b19_2", "l_b19_3", "l_b19_group"]
+line_keys = ["l_b19_1", "l_b19_2", "l_b19_3"]
 stores = [{ store = "arrivals", items = 1 }]
 unlocks = [
   { unlock_kind = "feature", id = "stranger_home" },
@@ -551,7 +548,7 @@ unlocks = [
   { unlock_kind = "card", id = "n13_fog_fish" },
   { unlock_kind = "card", id = "n13_wash_meat" },
 ]
-joins = [{ lane = "n13", mix = "town:camp", card = "g_field_forage", own_split = false }]
+joins = [{ lane = "n13", mix = "town:camp", card = "n13_forage", own_split = true }]
 
 [[lanes]]
 id = "n13"
@@ -559,7 +556,6 @@ label_key = "lane_n13"
 ruled = true
 told = "line"
 name_key = "name_n13"
-group = "g_field"
 
 [[standing]]
 id = "n13_eating"
@@ -664,7 +660,6 @@ l_sing_2 = "story"
 l_b19_1 = "story"
 l_b19_2 = "story"
 l_b19_3 = "story"
-l_b19_group = "story"
 l_find_way_11 = "find"
 l_find_way_15 = "find"
 
@@ -742,7 +737,6 @@ l_sing_2 = "Lucy puts a hand on the nearest one's arm. they stop."
 l_b19_1 = "at dusk someone walks in behind you, sleeves pulled down over their hands."
 l_b19_2 = "they take {n3}'s bowl and a blanket, and sleep by the fire outside the hall."
 l_b19_3 = "asked their name, they say they don't have one to give."
-l_b19_group = "{n2} offers a place at the field crew's fire. they take the work and not the place, and go down with the crew"
 l_find_way_11 = "half-buried by the old road, a carved stone, its face worn blank."
 l_find_way_15 = "from a dead tree on a rise: far off, a hill with something square on top."
 n_day_b18 = "over the ridge, a dead wood. an elk walking that shouldn't be. the one they brought in went on the fire"

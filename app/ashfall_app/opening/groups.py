@@ -41,40 +41,23 @@ def check_groups(o: "Opening") -> None:
             need(where, "person's lane", m.lane, list(people))
             if not m.own_split and people[m.lane].group is None:
                 fail(where, f"unmarks {m.lane}, which has no group")
+    check_group_abilities(o)
 
 
-TOWN_MANAGED_MAX = 6
-"""Owner, 2026-11-25: "five-ish 'things' to manage at the town at once", a thing being a person who keeps their own split
-or a group with a member; the ceiling sits one above the target of five."""
-
-
-def town_managed(o: "Opening") -> tuple[list[str], list[str]]:
-    """The people holding their own split and the groups with a member, at the end of `o`'s content: a person's mark is
-    their last mark's, else their joins'; a left person is in neither."""
-    people = {x.id: x for x in o.lanes if x.ruled and not x.pooled and not x.station}
-    joined: dict[str, bool] = {}
-    marked: dict[str, bool] = {}
-    left: set[str] = set()
-    for _, out in outcomes(o):
-        for j in out.joins:
-            joined[j.lane] = joined.get(j.lane, False) or j.own_split
-        for m in out.marks:
-            marked[m.lane] = m.own_split
-        left |= {x.lane for x in out.leaves}
-    here = [x for x in sorted(people) if x in joined and x not in left]
-    own = [x for x in here if marked.get(x, joined[x])]
-    groups = sorted({g for x in here if x not in own and (g := people[x].group) is not None})
-    return own, groups
-
-
-def check_town_managed(o: "Opening") -> None:
-    """At the end of every chapter (the merge checks each prefix), people keeping their own split plus groups with a member
-    come to at most TOWN_MANAGED_MAX: what the Town view asks the player to tune."""
-    own, groups = town_managed(o)
-    if len(own) + len(groups) > TOWN_MANAGED_MAX:
-        fail("the town", f"{len(own) + len(groups)} things to manage, above the ceiling of {TOWN_MANAGED_MAX}: people keeping "
-                         f"their own split ({', '.join(own)}) and groups with a member ({', '.join(groups)}); fold someone "
-                         f"into a group, or send the newcomer to one that exists")
+def check_group_abilities(o: "Opening") -> None:
+    """A group holds only work its members can do (docs/decisions/people.md, "The mark: who keeps their own split"): a
+    town card fanned out to a group is fanned out to each member whose lane any town card names. A member no town card
+    names has no list of their own, so the group's list is theirs."""
+    able = {lane for tc in o.town_cards for lane in tc.lanes}
+    members: dict[str, list[str]] = {}
+    for x in o.lanes:
+        if x.group is not None and x.id in able:
+            members.setdefault(x.group, []).append(x.id)
+    for tc in o.town_cards:
+        for g in tc.lanes:
+            missing = [m for m in members.get(g, []) if m not in tc.lanes]
+            if missing:
+                fail(f"town card {tc.id}", f"is on group {g}, and its members {', '.join(missing)} cannot do it")
 
 
 def with_group_unlocks(o: "Opening") -> "Opening":

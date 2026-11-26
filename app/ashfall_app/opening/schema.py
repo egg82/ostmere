@@ -232,6 +232,14 @@ def merge_chapters(opening: Opening, chapters: tuple[Path, ...]) -> Opening:
     return states[-1]
 
 
+def chapter_ends(opening: Opening, chapters: tuple[Path, ...]) -> list[Opening]:
+    """The state at each chapter's end as merge_chapters builds it, each checked for structure only."""
+    states = [opening]
+    for chapter in chapters:
+        states.append(_merged(states[-1], chapter)[0])
+    return states[1:]
+
+
 def _with_end_card(o: Opening, feature: str, card: FeatureCardEntry) -> Opening:
     return o.model_copy(update={"features": [f.model_copy(update={"card": card}) if f.id == feature else f
                                              for f in o.features]})
