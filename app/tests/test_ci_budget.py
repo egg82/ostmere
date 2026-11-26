@@ -1,6 +1,7 @@
 """A pull request's CI stays inside its budget (docs/engineering.md, "Scope and test budget"): the longest chain of jobs a
 pull request waits on, each at its `timeout-minutes`, is at most BUDGET_MIN. A job added to ci.yml must say which set it is
 in, so a new job cannot join the pull-request path unseen; a timeout is the job's budget, and a job that outgrows it goes red."""
+import re
 from pathlib import Path
 from typing import Any
 
@@ -65,3 +66,8 @@ def test_the_check_sees_a_chain_over_budget_and_a_job_with_no_timeout():
     bare = {**found, "pyright": {"needs": "changes"}}
     assert critical_path(bare, PULL_REQUEST)[0] > BUDGET_MIN
     assert critical_path(found, set()) == (0, [])
+
+
+def test_the_nightly_reports_against_the_same_budget():
+    nightly = CI.with_name("nightly.yml").read_text()
+    assert re.findall(r"ci_health\.py .*--budget-min (\d+)", nightly) == [str(BUDGET_MIN)]

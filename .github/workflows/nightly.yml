@@ -58,3 +58,18 @@ jobs:
         run: >
           python -m pytest -q --timeout=600 tests/engine_contract tests/cards_contract tests/journal_contract tests/opening
           tests/saves tests/dayone tests/daytwo
+
+  # The last week of pull-request CI against its budget, and the runs that failed a test job and passed on a rerun
+  # (app/tools/ci_health.py): one open issue per problem, updated each night, or one log line.
+  ci-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 app/tools/ci_health.py --repo "$GITHUB_REPOSITORY" --budget-min 10
