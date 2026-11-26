@@ -253,6 +253,12 @@ jobs:
           cache-dependency-path: app/requirements*.txt
       - name: Install dependencies
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: The last nightly's saved ends, to see which of them are there
+        uses: actions/cache/restore@v4
+        with:
+          path: chapter-saves
+          key: chapter-ends-v1-none
+          restore-keys: chapter-ends-v1-
       - id: plan
         env:
           BASE_REF: ${{ github.base_ref }}
@@ -263,8 +269,9 @@ jobs:
           else BASE=$(git rev-parse HEAD~1); fi
           git worktree add -q "$RUNNER_TEMP/base" "$BASE"
           cd app
-          python -m tools.pr_plan --base-tree "$RUNNER_TEMP/base" > "$RUNNER_TEMP/plan.json"
+          python -m tools.pr_plan --base-tree "$RUNNER_TEMP/base" --saves "$GITHUB_WORKSPACE/chapter-saves" > "$RUNNER_TEMP/plan.json"
           cat "$RUNNER_TEMP/plan.json"
+          jq -r '"Plan: \(.mode)" + (if .why then " (\(.why))" else "" end) + (if (.left | length) > 0 then "; left to the nightly: \(.left | join(", "))" else "" end)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_STEP_SUMMARY"
           jq -r '"matrix=" + (.shards | tojson)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
           jq -r '"slice=" + (if .mode == "smoke" then "smoke" elif (.chapters | length) > 0 then (.chapters | join(",")) else "files" end)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
           jq -r '"files=" + (.files | join(","))' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"

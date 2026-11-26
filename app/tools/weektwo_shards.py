@@ -75,6 +75,11 @@ def shards_of_chapter(chapter: str) -> list[str]:
     return [name for name, held in SHARDS.items() if any(k == chapter or k.startswith(chapter + "-") for k in held)]
 
 
+def chapters_of(shard: str) -> set[str]:
+    """The chapters whose plays `shard` holds (its keys are a chapter or "chapter-route"); NO_PLAY is none."""
+    return {k.split("-")[0] for k in SHARDS[shard] if k != NO_PLAY}
+
+
 def slice_shards(chapters: list[str], all_shards: bool) -> tuple[list[str], list[str]]:
     """(the shards a slice plays, the ones it leaves to the nightly): those of each touched chapter, or every shard when a
     week-two test file changed, since which shard a file's tests are in is known only by collecting."""

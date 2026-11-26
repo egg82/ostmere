@@ -46,3 +46,12 @@ def test_week_one_a_changed_shared_input_and_a_base_without_keys_are_the_smoke()
 
 def test_the_label_asks_for_everything():
     assert plan(changed(twelve="x"), True, [])["mode"] == "full"
+
+
+def test_a_slice_whose_chapter_before_has_no_saved_end_in_the_last_nightly_plays_the_smoke():
+    got = plan(changed(fifteen="x"), False, [], lambda key: False)
+    assert (got["mode"], got["shards"], got["why"]) == (
+        "smoke", ["smoke"], "the last nightly holds no saved end of the chapter before fifteen")
+    held = {BASE.key["twelve"], BASE.key["eleven"]}
+    assert plan(changed(fifteen="x", twelve="y"), False, [], lambda key: key in held)["mode"] == "slice"
+    assert plan(changed(eighteen="x"), False, [], lambda key: False)["mode"] == "slice"   # nothing of it plays, so nothing is needed
