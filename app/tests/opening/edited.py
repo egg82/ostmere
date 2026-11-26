@@ -22,13 +22,15 @@ def _parsed(path: Path, data: Edit, text: Edit) -> dict[str, object]:
     return tomllib.loads(data(head) + sep + text(words))
 
 
-def edited(data: Edit = same, text: Edit = same) -> Opening:
-    """Each file's data (above its [text] table) through `data` and its text through `text`, merged and checked."""
+def edited(data: Edit = same, text: Edit = same, check: bool = True) -> Opening:
+    """Each file's data (above its [text] table) through `data` and its text through `text`, merged and checked
+    (`check=False` for a caller that adds to the result and checks that, so the costly checks run once)."""
     o = Opening.model_validate(_parsed(OPENING, data, text))
     for chapter in CHAPTERS:
         o = merge(o, Chapter.model_validate(_parsed(chapter, data, text)))
     o = with_moment_clocks(with_group_unlocks(o))
-    check_opening(o)
+    if check:
+        check_opening(o)
     return o
 
 
