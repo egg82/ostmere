@@ -68,7 +68,10 @@ and has a real, bounded cost, as an undone chore does: the light tier, a store, 
   or stop doing what nearly killed them (owner, 2026-11-25). The change shows in play: work they now refuse leaves
   their lane, the time goes into the safe place, the fear stays in their lines. The danger they step away from
   doesn't vanish; it passes to someone else, often the light tier, which is where deaths belong and where a choice of
-  whom to send gets its stakes.
+  whom to send gets its stakes. A second close call, if one comes, comes to them where they are (the town raided,
+  danger reaching the safe place), since they no longer go looking for it, and lands well after the first: around a
+  real month of play by the owner's feel, about where it stops reading as "wow, they're *extremely* lucky". The
+  readout shows the spacing at the owner's pace; the spacing is judged there, never enforced.
 - **Off-limits: heavy investment in anything that can be taken** (the line for everyone who plays). Your
   character, the town, the notables and the story are safe; losses land only on the light tier. Notables never die.
 - **Your own death may be a mechanic, never a punishment** (many games use death as progression, and it
