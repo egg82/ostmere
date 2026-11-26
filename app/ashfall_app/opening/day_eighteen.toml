@@ -660,47 +660,13 @@ id = "place_empty"
 [beat_lines]
 B16 = ["l_b16_1"]
 
-# Never drawn: twentieths of a game hour since a marked line is said, for the scene's window on it (people_moments.py). The
-# trigger holds the line's owner's own condition, so the clock starts the moment the line is told.
-[[stores]]
-id = "choir_2_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "choir_2_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "choir_2_clock", items_per_hour = 20 }]
-
-[[triggers]]
-id = "t_choir_2_clock"
-when = { test = "at_least", subject_kind = "store", id = "meals", value = 24 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "b15_2h", value = 1 }, { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "road_marked", value = 1 }, { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
-outcome = { unlocks = [{ unlock_kind = "action", id = "choir_2_clock" }] }
-
-[[stores]]
-id = "road_pair_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "road_pair_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "road_pair_clock", items_per_hour = 20 }]
-
-[[triggers]]
-id = "t_road_pair_clock"
-when = { test = "at_least", subject_kind = "store", id = "meals", value = 40 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "choir_6h", value = 1 }, { test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
-outcome = { unlocks = [{ unlock_kind = "action", id = "road_pair_clock" }] }
-
 [line_doings.l_choir_2]
+clock = "choir_2_clock"
 doings = ["n8", "n9", "n10"]
 whereabouts = [{ person = "n8", layer = "figure_n8_at_the_gate" }, { person = "n9", layer = "figure_n9_at_the_gate" }, { person = "n10", layer = "figure_n10_at_the_gate" }]
 
 [line_doings.l_road_pair_2]
+clock = "road_pair_clock"
 doings = ["n11"]
 whereabouts = [{ person = "n11", layer = "figure_n11_at_the_gate" }]
 

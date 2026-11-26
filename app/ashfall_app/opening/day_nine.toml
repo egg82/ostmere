@@ -616,25 +616,8 @@ label_key = "feature_t_pack_step"
 [beat_lines]
 B10 = ["l_b10_1"]
 
-# Never drawn: twentieths of a game hour since a marked line is said, for the scene's window on it (people_moments.py). The
-# trigger holds the line's owner's own condition, so the clock starts the moment the line is told.
-[[stores]]
-id = "posts_cord_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "posts_cord_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "posts_cord_clock", items_per_hour = 20 }]
-
-[[triggers]]
-id = "t_posts_cord_clock"
-when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 2 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "posts_cord_clock" }] }
-
 [line_doings.l_posts]
+clock = "posts_cord_clock"
 doings = ["n4"]
 whereabouts = [{ person = "n4", layer = "figure_n4_lashes_the_stretch" }]
 

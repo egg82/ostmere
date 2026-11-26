@@ -34,18 +34,7 @@ outcome = { line_keys = ["l_morning_7"], unlocks = [{ unlock_kind = "feature", i
 [[triggers]]
 id = "t_spear_made"
 when = { test = "at_least", subject_kind = "card_count", id = "make_spear", value = 1 }
-outcome = { doings = ["n2"], line_keys = ["l_spear"], unlocks = [{ unlock_kind = "action", id = "spear_clock" }], whereabouts = [{ person = "n2", layer = "figure_n2_hefts_the_spear" }] }
-
-[[stores]]
-id = "spear_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "spear_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "spear_clock", items_per_hour = 20 }]
+outcome = { doings = ["n2"], line_keys = ["l_spear"], clock = "spear_clock", whereabouts = [{ person = "n2", layer = "figure_n2_hefts_the_spear" }] }
 
 [[triggers]]
 id = "t_rats_first"
@@ -374,45 +363,13 @@ id = "still_end"
 
 # ---------- text ----------
 
-# Never drawn: twentieths of a game hour since a marked line is said, for the scene's window on it (people_moments.py). The
-# trigger holds the line's owner's own condition, so the clock starts the moment the line is told.
-[[stores]]
-id = "bedding_4_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "bedding_4_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "bedding_4_clock", items_per_hour = 20 }]
-
-[[triggers]]
-id = "t_bedding_4_clock"
-when = { test = "at_least", subject_kind = "card_count", id = "pelt_bedding", value = 4 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "bedding_4_clock" }] }
-
-[[stores]]
-id = "pelt_ask_clock"
-label_key = "store_moment_clock"
-cap_items = 400
-hidden = true
-
-[[standing]]
-id = "pelt_ask_clock"
-label_key = "action_moment_clock"
-makes = [{ store = "pelt_ask_clock", items_per_hour = 20 }]
-
-[[triggers]]
-id = "t_pelt_ask_clock"
-when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pelt_ask", value = 1 }
-outcome = { unlocks = [{ unlock_kind = "action", id = "pelt_ask_clock" }] }
-
 [line_doings.l_bedding_4]
+clock = "bedding_4_clock"
 doings = ["n2"]
 whereabouts = [{ person = "n2", layer = "figure_n2_takes_the_pelt" }]
 
 [line_doings.l_pelt_ask]
+clock = "pelt_ask_clock"
 doings = ["n3"]
 whereabouts = [{ person = "n3", layer = "figure_n3_holds_out_a_hand" }]
 
