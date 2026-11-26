@@ -1,6 +1,6 @@
-beats whenever (pace_scale 1): B17 day 19.05, target_day 20
+beats whenever (pace_scale 1): B17 day 19.13, target_day 20
   away V68->V69: 0 []
-  away V69->V70: 3 ['trigger t_cloth', 'trigger t_b17', 'trigger t_lamp_out']
+  away V69->V70: 2 ['trigger t_cloth', 'trigger t_b17']
   away V70->V71: 0 []
   away V71->V72: 1 ['trigger offer_o_last_sun']
   away V72->V73: 1 ['trigger offer_j_ridge']
@@ -19,10 +19,10 @@ day    line feature    chip   store   skill    card   level  total
   6      15       3       1       2       0       4       4     29
   7       7       4       1       0       0      11       0     23
   8       8       4       0       2       0      10       2     26
-  9      14       1       0       4       0      37       3     59
+  9      14       1       0       4       0      38       3     60
  10      10       2       0       0       0       0       3     15
- 11      18       3       2       1       0      84       2    110
- 12      20       0       0       0       0      49       1     70
- 13      11       1       0       0       0       3       1     16
+ 11      19       3       2       1       0      85       2    112
+ 12      19       0       0       0       0      49       1     69
+ 13      13       1       1       0       0       3       1     19
  14      11       2       0       0       0       2       2     17
- 15       6       2       0       1       0       1       2     12
+ 15       6       2       1       1       0       1       2     13

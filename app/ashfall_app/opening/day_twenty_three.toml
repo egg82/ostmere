@@ -88,7 +88,7 @@ label_key = "a_fiddle_food"
 cost_key = "a_fiddle_food_cost"
 role = "food"
 [offers.answers.outcome]
-line_keys = ["l_fiddle_food"]
+line_keys = ["l_fiddle_food", "l_fiddle_group_food"]
 stores = [{ store = "arrivals", items = 2 }]
 unlocks = [
   { unlock_kind = "action", id = "n14_eating" },
@@ -107,8 +107,8 @@ unlocks = [
   { unlock_kind = "card", id = "n15_wash_meat" },
 ]
 joins = [
-  { lane = "n14", mix = "town:camp", card = "n14_fog_fish", own_split = true },
-  { lane = "n15", mix = "town:camp", card = "n15_fungus_stew", own_split = true },
+  { lane = "n14", mix = "town:camp", card = "g_road_fog_fish", own_split = false },
+  { lane = "n15", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
 ]
 modifiers = [
   { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_food" },
@@ -121,7 +121,7 @@ label_key = "a_fiddle_build"
 cost_key = "a_fiddle_build_cost"
 role = "build"
 [offers.answers.outcome]
-line_keys = ["l_fiddle_build"]
+line_keys = ["l_fiddle_build", "l_fiddle_group_build"]
 stores = [{ store = "arrivals", items = 2 }]
 unlocks = [
   { unlock_kind = "action", id = "n14_eating" },
@@ -140,8 +140,8 @@ unlocks = [
   { unlock_kind = "card", id = "n15_wash_meat" },
 ]
 joins = [
-  { lane = "n14", mix = "town:camp", card = "n14_clear_road", own_split = true },
-  { lane = "n15", mix = "town:camp", card = "n15_stakes", own_split = true },
+  { lane = "n14", mix = "town:camp", card = "g_road_clear_road", own_split = false },
+  { lane = "n15", mix = "town:camp", card = "g_road_stakes", own_split = false },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
@@ -158,6 +158,8 @@ modifiers = [
   { target = "work", id = "n12_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "g_road_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_fiddle_build" },
 ]
 
@@ -168,6 +170,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_fiddle" }, label_key = "lane_n14_named" }]
 name_key = "name_n14"
+group = "g_road"
 
 [[lanes]]
 id = "n15"
@@ -176,6 +179,15 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_fiddle" }, label_key = "lane_n15_named" }]
 name_key = "name_n15"
+group = "g_road"
+
+# The crew of the work outside the beds and the hearth: the road, the wood, the water, stakes and the pot. Its members
+# are the people whose own lists hold only that work (the day-twenty-three pair) and the day-twenty-five groups.
+[[lanes]]
+id = "g_road"
+label_key = "lane_g_road"
+ruled = true
+pooled = true
 
 [[standing]]
 id = "n14_eating"
@@ -548,6 +560,8 @@ l_fiddle_1 = "story"
 l_fiddle_2 = "story"
 l_fiddle_food = "story"
 l_fiddle_build = "story"
+l_fiddle_group_food = "story"
+l_fiddle_group_build = "story"
 l_cache_1 = "story"
 l_cache_2 = "story"
 l_post_shown = "story"
@@ -607,9 +621,12 @@ a_fiddle_food_cost = "{pct} smoked from the rack, {pct_b} smoked at the table"
 a_fiddle_build_cost = "{pct} all road clearing, {pct_b} smoked at the table"
 l_fiddle_food = "{n15} is at the racks before her bundle is down."
 l_fiddle_build = "{n14} takes a shovel and asks where the bed runs."
+l_fiddle_group_food = "{n14} and {n15} will not be split at the racks. {n2} sets them with the road crew, one share between them"
+l_fiddle_group_build = "{n14} and {n15} will not be split on the road. {n2} sets them with the road crew, one share between them"
 lane_n14 = "The man's hands"
 lane_n14_named = "{n14}'s hands"
 name_n14 = "Walter"
+lane_g_road = "The road crew"
 lane_n15 = "His wife's hands"
 lane_n15_named = "{n15}'s hands"
 name_n15 = "Edith"

@@ -76,7 +76,7 @@ def test_every_lane_a_town_card_names_is_declared(everything: Opening):
     o = everything
     assert o.town_cards
     assert undeclared_lanes(o.town_cards, {x.id for x in o.lanes}) == []
-    assert undeclared_lanes(o.town_cards, set()) == ["g_field", "g_hearth", "g_walkers", "g_widowers", "n1", "n10", "n11", "n12", "n13", "n14", "n15", "n2", "n23", "n3", "n4", "n5", "n6", "n7",
+    assert undeclared_lanes(o.town_cards, set()) == ["g_field", "g_hearth", "g_road", "n1", "n10", "n11", "n12", "n13", "n14", "n15", "n2", "n23", "n3", "n4", "n5", "n6", "n7",
                                                                  "n8", "n9"]
 
 
