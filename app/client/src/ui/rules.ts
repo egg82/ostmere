@@ -15,6 +15,7 @@ import { actionsOf, ruleActions } from "../game/guardwords";
 import { Slider } from "./ruleslide";
 import { noteOrderRemoved, noteRuleChanged } from "../telemetry";
 import { ConditionEditor } from "./condition";
+import { Layer } from "./back";
 import { el, tapFeedback } from "./dom";
 import { LaneEditor } from "./laneedit";
 import type { RuleSide } from "../game/ruleside";
@@ -49,6 +50,7 @@ export class RulesTab implements Part {
   private readonly plan: StintPlan;
   private view: View | null = null;
   private mode: Mode = { kind: "list" };
+  private readonly layer = new Layer(() => this.back());   // the back gesture closes whatever the tab is on but its list
   private drawn = "";
   /** The rule whose ≡ menu is open. */
   private menu: number | null = null;
@@ -61,7 +63,8 @@ export class RulesTab implements Part {
   /** A press is down inside the tab: a redraw waits for it, so the node under the finger stays. */
   private pressing = false;
 
-  constructor(private readonly ctx: PartContext, kept: SideKept = browserSide()) {
+  /** `leftEditor`: a rule's editor was closed, by Save, a cancel or back: the screen that opened it takes the player back. */
+  constructor(private readonly ctx: PartContext, kept: SideKept = browserSide(), private readonly leftEditor: () => void = () => undefined) {
     this.sides = new RuleSides(ctx.catalog, kept);
     const editing = { ...ctx, actions: { ...ctx.actions, decide: (d: Decision) => { if (this.view) this.sides.land(this.view, d); ctx.actions.decide(d); } } };   // a saved rule lands on its own side
     this.cond = new ConditionEditor(editing, () => this.back());
@@ -81,7 +84,7 @@ export class RulesTab implements Part {
   update(view: View): void {
     this.view = view;
     if (this.menu !== null && this.itemsOf(view, this.menu).length === 0) this.menu = null;
-    if (this.mode.kind === "pick" && this.mode.slot !== "otherwise" && !mixRules(view).includes(this.mode.slot)) this.mode = { kind: "list" };
+    if (this.mode.kind === "pick" && this.mode.slot !== "otherwise" && !mixRules(view).includes(this.mode.slot)) this.setMode({ kind: "list" });
     if (this.mode.kind === "edit") { this.cond.update(view); return; }
     if (this.mode.kind === "lane") { this.laneEdit.update(view); return; }
     if (this.pressing || this.drag.active) return;   // drawn on release
@@ -102,7 +105,7 @@ export class RulesTab implements Part {
     if (rule !== null && typeof rule === "object") { this.openLane(view, rule.lane, rule.rule); return; }
     if (typeof rule === "number") this.sides.follow(view, rule);
     if (rule === "new") this.cond.openNew(view, offered);
-    this.mode = rule === "new" || (rule !== null && this.cond.openEdit(view, rule)) ? { kind: "edit" } : { kind: "list" };
+    this.setMode(rule === "new" || (rule !== null && this.cond.openEdit(view, rule)) ? { kind: "edit" } : { kind: "list" });
     this.draw();
   }
 
@@ -113,7 +116,7 @@ export class RulesTab implements Part {
     if (rule !== null && held && (held.unless.length > 0 || held.or_else.length > 0)) { this.open(view, rule); return; }
     this.sides.follow(view, "camp");
     this.laneEdit.open(view, { lane, rule });
-    this.mode = { kind: "lane" };
+    this.setMode({ kind: "lane" });
     this.draw();
   }
 
@@ -139,10 +142,17 @@ export class RulesTab implements Part {
     return shape(view, this.ctx.fires.fresh, this.ctx.keeps.ruleSeen(), this.ctx.ruleRuns(), this.plan.shape(view), this.sides.now(view));
   }
 
-  private back(): void {
-    this.mode = { kind: "list" };
+  private back(handBack = true): void {
+    const editor = this.mode.kind === "edit" || this.mode.kind === "lane";
+    this.setMode({ kind: "list" });
     this.draw();
+    if (editor && handBack) this.leftEditor();
   }
+
+  private setMode(mode: Mode): void { this.mode = mode; this.layer.set(mode.kind !== "list"); }
+
+  /** Closes an open editor or picker without handing the player back (another tab was chosen). */
+  leave(): void { if (this.mode.kind !== "list") this.back(false); }
 
   private send(decision: Decision | null, shift?: Map<number, number>): void {
     if (decision === null) return;
@@ -222,7 +232,7 @@ export class RulesTab implements Part {
   private condButton(view: View, index: number): HTMLElement {
     return condButton(this.ctx, view, index, {
       lane: (lane, i) => this.openLane(view, lane, i),
-      edit: (i) => { if (this.cond.openEdit(view, i)) { this.mode = { kind: "edit" }; this.draw(); } },
+      edit: (i) => { if (this.cond.openEdit(view, i)) { this.setMode({ kind: "edit" }); this.draw(); } },
     });
   }
 
@@ -237,7 +247,7 @@ export class RulesTab implements Part {
     b.addEventListener("click", () => {
       tapFeedback();
       this.menu = null;
-      this.mode = { kind: "pick", slot };
+      this.setMode({ kind: "pick", slot });
       this.draw();
     });
     return b;
@@ -251,7 +261,7 @@ export class RulesTab implements Part {
         if (d) this.ctx.actions.decide(d);
         this.back();
       },
-      fresh: () => { this.mode = { kind: "list" }; this.ctx.actions.newMix(slot === "otherwise" ? null : slot); },
+      fresh: () => { this.setMode({ kind: "list" }); this.ctx.actions.newMix(slot === "otherwise" ? null : slot); },
       close: () => this.back(),
     });
   }
@@ -275,14 +285,14 @@ export class RulesTab implements Part {
     b.addEventListener("click", () => {
       tapFeedback();
       const who = scope === "camp" ? whoChoices(this.ctx, view) : [];
-      if (who.length > 1) { this.mode = { kind: "who" }; this.draw(); } else this.openNew(view, scope, who[0]);
+      if (who.length > 1) { this.setMode({ kind: "who" }); this.draw(); } else this.openNew(view, scope, who[0]);
     });
     return b;
   }
 
   private openNew(view: View, scope: RuleSide | undefined, who?: Who): void {
     this.cond.openNew(view, undefined, scope, who?.lane);
-    this.mode = { kind: "edit" };
+    this.setMode({ kind: "edit" });
     this.draw();
   }
 }

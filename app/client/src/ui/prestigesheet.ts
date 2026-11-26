@@ -8,6 +8,7 @@ import type { MenuNode, SkillPrestige, View } from "../api/types";
 import { changeText, liftedTop } from "../game/prestige";
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
+import { openSheet } from "./back";
 import { moveLines, type Moving } from "./movepicks";
 import type { PartContext } from "./part";
 
@@ -34,7 +35,7 @@ export class PrestigeSheet {
     this.skill = skill;
     this.moving = null;
     this.draw();
-    if (!this.root.open) this.root.showModal();
+    if (!this.root.open) openSheet(this.root);
   }
 
   update(view: View): void {

@@ -3,6 +3,7 @@
 // later and keeps the words. Not now keeps a draft too: it is cleared only by a send.
 import { UI } from "../game/text";
 import { el, tapFeedback } from "./dom";
+import { openSheet } from "./back";
 import type { PartContext } from "./part";
 
 /** The server's limit on a text (CONTRACT.txt, POST /api/feedback). */
@@ -44,7 +45,7 @@ export class FeedbackSheet {
   private show(): void {
     this.result.textContent = "";
     this.sync();
-    this.root.showModal();
+    openSheet(this.root);
   }
 
   private sync(): void {

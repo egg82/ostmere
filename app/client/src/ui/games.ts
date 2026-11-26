@@ -9,6 +9,7 @@ import { DELETE_WORDS, START_OVER_WORDS, deleteParts, startOver } from "./gamede
 import { UI, type Text } from "../game/text";
 import { noteGame } from "../telemetry";
 import { el } from "./dom";
+import { openSheet } from "./back";
 
 export interface GamesActions {
   /** The save this page plays now. */
@@ -50,7 +51,7 @@ export class GamesSheet {
   open(): void {
     this.asking = null;
     this.note.textContent = "";
-    if (!this.root.open) this.root.showModal();
+    if (!this.root.open) openSheet(this.root);
     void this.run(() => this.api.games());
   }
 
