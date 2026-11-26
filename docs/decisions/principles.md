@@ -164,7 +164,11 @@ player and resolves while they are there. Breaking a promise costs more than dec
 a life come only from such a choice, never from time away (`people.md`: nobody dies from inattention), and never
 take a notable. The reaction to aim for, in the owner's words: "oh, fuck, damnit, now what?" rather than "well that
 doesn't seem fair" (2026-11-25). So the bind follows from what the player chose: the promise read as a promise when it was made, the
-dilemma shows what each option costs, and every option is one a player could defend taking.
+dilemma shows what each option costs, and every option is one a player could defend taking. Within those limits the
+game doesn't pull its punches (owner: "not pull our punches. If there's no reason to"): a choice can cost a life, and
+the player lives with the bed they made, as in Frostpunk. A dilemma left unanswered is allowed and is not a third,
+free option: it holds back only its own thread, as any unmade progress does, and the people waiting on it are shown
+waiting; nothing else stalls and nothing decays while it waits.
 
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
