@@ -110,6 +110,10 @@ joins = [
   { lane = "n14", mix = "town:camp", card = "g_road_fog_fish", own_split = false },
   { lane = "n15", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
 ]
+whereabouts = [
+  { person = "n14", layer = "figure_n14_at_the_pot" },
+  { person = "n15", layer = "figure_n15_at_the_pot" },
+]
 modifiers = [
   { target = "rate", id = "smoke_catch", flow = "make", store = "smoked", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_food" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_fiddle_food" },
@@ -142,6 +146,10 @@ unlocks = [
 joins = [
   { lane = "n14", mix = "town:camp", card = "g_road_clear_road", own_split = false },
   { lane = "n15", mix = "town:camp", card = "g_road_stakes", own_split = false },
+]
+whereabouts = [
+  { person = "n14", no_scene = "clears the cut road, out past the palisade above the story strip's clearance, where no figure's head may sit" },
+  { person = "n15", no_scene = "works the stakes, which the scene draws as the stack growing and never as anyone at it" },
 ]
 modifiers = [
   { target = "work", id = "shovel_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },

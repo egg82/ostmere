@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFilter
 import dayfour_poses
 import dayfour_world as world4
 import kit
+import people_crews
 import people_moments
 from people_moments import SINGERS
 from dayeight_poses import BROTHER, HUSBAND, WOMAN, n4_twisting
@@ -86,7 +87,7 @@ def _carrying(feet: Spot) -> Image.Image:
 
 def people_layers(walls: Image.Image) -> list[Layer]:
     w = people_moments.WINDOWS
-    field, picking = "running:g_field_forage|mix:g_field_forage", "running:g_hearth_pick|mix:g_hearth_pick"
+    field, picking = "running:g_field_forage|mix:g_field_forage", "running:g_field_pick|mix:g_field_pick"
     return [
         Layer(id="figure_n3_sowing", img=person(N3, "right", BEDS_EDGE, drop=9), when="running:n3_sow|mix:n3_sow"),
         Layer(id="figure_n3_pulled_rows", img=_carrying(BEDS_PATH), when="store:rows_black_left"),
@@ -111,6 +112,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         *[Layer(id=f"figure_n{n}_singing", img=person(who, "down", at), when=f"{w['singing']}&answered:o_choir")
           for n, who, at in zip((8, 9, 10), SINGERS, SINGING_AT)],
         *people_moments.moment_layers(),
+        *people_crews.crew_layers(),
     ]
 
 
@@ -118,7 +120,7 @@ STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n3_by_fire": ("running:n3_sow|mix:n3_sow", "store:rows_black_left", "running:n3_wash_meat|mix:n3_wash_meat"),
     "figure_n5_by_fire": ("running:g_field_forage|mix:g_field_forage",),
     "figure_n6_by_fire": ("running:g_field_forage|mix:g_field_forage",),
-    "figure_n7_by_fire": ("running:g_hearth_pick|mix:g_hearth_pick",),
+    "figure_n7_by_fire": ("running:g_field_pick|mix:g_field_pick",),
 }
 """Each by-the-fire pose and the runs that take the person from it: it gives way to them."""
 
