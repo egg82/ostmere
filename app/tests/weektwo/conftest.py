@@ -2,7 +2,7 @@
 tests, which their CI job's timeout budgets): `eight_route` takes its route by indirect parametrization, `eight_counts` the typical
 route's per-visit counts (its heavy steps read first, a part to a setup, `week_part`), `eight_marks` its visits marked for the readout, `two_am_eight_run` the 2 AM replay pair;
 the `nine_`, `eleven_`, `twelve_`, `fifteen_`, `sixteen_`, `eighteen_`, `nineteen_`, `twentytwo_`, `twentythree_` and
-`twentyfive_` fixtures the same for days nine, eleven, twelve, fifteen, sixteen, eighteen, nineteen, twenty-two, twenty-three and twenty-five, `twelve_cures`, `fifteen_cures`, `sixteen_cures`, `eighteen_cures`, `nineteen_cures`, `twentytwo_cures`, `twentythree_cures` and `twentyfive_cures` the cures gate over typical's days twelve to twenty-five, `twelve_ladder` a route's ladder readout, `fifteen_worth` typical's worth readout, and `rebased_eight`, `rebased_nine`, `rebased_eleven`, `rebased_twelve`, `rebased_fifteen`, `rebased_sixteen`, `rebased_eighteen`, `rebased_nineteen`, `rebased_twentytwo` and `rebased_twentythree` typical's
+`twentyfive_` fixtures the same for days nine, eleven, twelve, fifteen, sixteen, eighteen, nineteen, twenty-two, twenty-three and twenty-five, `twelve_cures`, `fifteen_cures`, `sixteen_cures`, `eighteen_cures`, `nineteen_cures`, `twentytwo_cures`, `twentythree_cures` and `twentyfive_cures` the cures gate over typical's days twelve to twenty-five, `twelve_ladder` a route's ladder readout, `fifteen_worth` and `fifteen_stints` typical's worth readouts, and `rebased_eight`, `rebased_nine`, `rebased_eleven`, `rebased_twelve`, `rebased_fifteen`, `rebased_sixteen`, `rebased_eighteen`, `rebased_nineteen`, `rebased_twentytwo` and `rebased_twentythree` typical's
 saved day-eight end loaded under day nine, its day-nine end under day eleven, its day-eleven end under day twelve, its
 day-twelve end under day fifteen, its day-fifteen end under day sixteen, its day-sixteen end under day eighteen, its
 day-eighteen end under day nineteen, its day-nineteen end under day twenty-two, its day-twenty-two end under day
@@ -11,6 +11,7 @@ twenty-three and its day-twenty-three end under day twenty-five;
 beside its saved end and `rebased_inputs` a saved rebased save's stamped inputs beside today's (ends.py). A test reading
 one is marked playthrough."""
 from collections import Counter
+from collections.abc import Generator
 
 import pytest
 
@@ -25,6 +26,8 @@ from tools import weektwo_shards as shards
 from tests.dayone import cures
 from tests.ladder import readout
 from tests.worth import readout as worth
+from tests.worth import stints
+from tests.weektwo import routes
 from tests.weektwo.rebased import Rebased
 from tests.weektwo.routes import (
     CHAPTERS, eighteen, eleven, fifteen, nine, nineteen, saved_end, sixteen, twelve, twentyfive, twentythree, twentytwo, week2,
@@ -36,7 +39,7 @@ EIGHT_PLAYS = frozenset({"eight_route", "eight_counts", "week_part", "two_am_eig
                          "twelve_counts", "two_am_twelve_run", "rebased_eleven", "rebased_twelve",
                          "twelve_cures", "twelve_ladder", "eleven_marks", "twelve_marks", "chapter_end", "rebased_inputs",
                          "fifteen_route", "fifteen_counts", "two_am_fifteen_run", "fifteen_cures",
-                         "fifteen_marks", "fifteen_worth", "sixteen_route", "sixteen_counts", "two_am_sixteen_run",
+                         "fifteen_marks", "fifteen_worth", "fifteen_stints", "sixteen_route", "sixteen_counts", "two_am_sixteen_run",
                          "sixteen_cures", "sixteen_marks", "rebased_fifteen", "eighteen_route", "eighteen_counts",
                          "two_am_eighteen_run", "eighteen_cures", "eighteen_marks", "rebased_sixteen", "nineteen_route",
                          "nineteen_counts", "two_am_nineteen_run", "nineteen_cures", "nineteen_marks", "rebased_eighteen",
@@ -127,6 +130,17 @@ def keep_shard(config: pytest.Config, items: list[pytest.Item]) -> None:
         config.hook.pytest_deselected(items=dropped)
         gone = set(map(id, dropped))
         items[:] = [i for i in items if id(i) not in gone]
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_call(item: pytest.Item) -> Generator[None, None, None]:
+    """A play first built while a test's body runs is one `play_of` never placed: it was paid in whichever shard the test
+    fell into. Fixture setup, which runs before this, is where plays are built; a test marked `weektwo_shard` names its shard."""
+    routes.hidden_play_in = None if named_shard(item) else item.nodeid
+    try:
+        return (yield)
+    finally:
+        routes.hidden_play_in = None
 
 
 @pytest.fixture(scope="session")
@@ -320,6 +334,12 @@ def fifteen_cures() -> list[str]:
 def fifteen_worth() -> str:
     """Typical's worth readout through day fifteen (tests/worth/readout.py), read in setup."""
     return worth.text(fifteen(worth.ROUTE))
+
+
+@pytest.fixture(scope="session")
+def fifteen_stints() -> str:
+    """The worth readout's route with its own rules (tests/worth/stints.py), read in setup."""
+    return stints.text(fifteen(worth.ROUTE), worth.ROUTE)
 
 
 @pytest.fixture(scope="session")

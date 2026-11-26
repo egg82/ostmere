@@ -5,8 +5,7 @@ import pytest
 
 from tests import readout_snapshot as rs
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
-from tests.weektwo.routes import fifteen
-from tests.worth import readout, stints
+from tests.worth import readout
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 
@@ -19,5 +18,5 @@ def test_the_worth_readout_is_reported(fifteen_worth: str):
     rs.check(f"worth-{readout.ROUTE}", fifteen_worth)
 
 
-def test_the_route_with_its_own_rules_is_reported():
-    rs.check(f"worth-stints-{readout.ROUTE}", stints.text(fifteen(readout.ROUTE), readout.ROUTE))
+def test_the_route_with_its_own_rules_is_reported(fifteen_stints: str):
+    rs.check(f"worth-stints-{readout.ROUTE}", fifteen_stints)
