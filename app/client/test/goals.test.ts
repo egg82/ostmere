@@ -48,6 +48,14 @@ function campRows(view: View): { hidden: boolean; rows: string[] } {
   expect("no goals: the box is hidden", campRows({ ...start, goals: [] }).hidden, true);
   expect("a store with no line yet is a row of its own", campRows({ ...start, goals: [stone] }),
     { hidden: false, rows: [`${catalog.storeLabel("stone")} ${catalog.format.amount(Q, 3 * Q)}`] });
+  const markersOf = (view: View): number => {
+    const { ctx } = testContext(undefined, catalog);
+    const b = new CampBar(ctx);
+    b.update(view);
+    return b.root.querySelectorAll(".goal .camp-next").length;
+  };
+  expect("a store goal's row is marked something new while no wait line is up", markersOf({ ...start, goals: [stone] }), 1);
+  expect("with a wait line up its something new is the story's step: the row carries none", markersOf({ ...start, goals: [stone, clock] }), 0);
 }
 
 function wait(view: View): { hidden: boolean; tag: string; line: string; tabbable: number } {
