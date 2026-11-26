@@ -660,6 +660,15 @@ id = "place_empty"
 [beat_lines]
 B16 = ["l_b16_1"]
 
+[line_doings.l_choir_2]
+doings = ["n8", "n9", "n10"]
+
+[line_doings.l_road_pair_2]
+doings = ["n11"]
+
+[line_doings.l_road_pair_3]
+doings = ["n11", "n12"]
+
 [line_kinds]
 l_first_working_1 = "story"
 l_first_working_2 = "story"

@@ -1,6 +1,6 @@
 """tools/scene/people.py: every outcome that joins or leaves a person, or marks one as doing something a scene could show
-(`doings`, authored beside the lines), names per person the scene layer that shows it or says why none does
-(`whereabouts`). The cases the scene shows nothing of today are held (`HELD_UNPLACED`, only shrinks); a field's layer must
+(`doings`, authored beside the lines), and every line no outcome carries that is marked the same way (`[line_doings]`), names per person the scene layer that shows it or says why none does
+(`whereabouts`). The cases the scene shows nothing of today are held (`HELD_UNPLACED`, `HELD_LINE_ONLY`, only shrink); a field's layer must
 be one the committed shown.json lists."""
 import json
 import re
@@ -20,12 +20,14 @@ Outcomes = dict[str, OutcomeEntry]
 
 
 def outcomes(o: Opening) -> Outcomes:
-    """Every outcome the content has, by its owner: a trigger, a card's outcome and finish, an offer's answer."""
+    """Every outcome the content has, by its owner: a trigger, a card's outcome and finish, an offer's answer; and each
+    marked line (`line:<key>`) as an outcome of only its `doings` and `whereabouts`."""
     found: Outcomes = {f"trigger:{t.id}": t.outcome for t in o.triggers}
     for c in o.cards:
         found[f"card:{c.id}/outcome"], found[f"card:{c.id}/finished"] = c.outcome, c.finished
     for x in o.offers:
         found.update({f"offer:{x.id}/{a.id}": a.outcome for a in x.answers})
+    found.update({f"line:{k}": OutcomeEntry(doings=e.doings, whereabouts=e.whereabouts) for k, e in o.line_doings.items()})
     return found
 
 
@@ -73,13 +75,18 @@ def lane_ids() -> set[str]:
     return {lane.id for lane in opening().lanes if lane.told is not None}
 
 
+HELD = people.HELD_UNPLACED | people.HELD_LINE_ONLY
+
+
 def test_every_join_leave_and_doing_places_the_person_or_is_held():
-    assert unplaced(outcomes(opening()), people.HELD_UNPLACED) == []
+    assert unplaced(outcomes(opening()), HELD) == []
 
 
 def test_the_held_cases_are_outcomes_still_without_the_entry():
-    """Fails when a held case gains its entry (take it off the list) or names an outcome the content lacks."""
-    assert stale(outcomes(opening()), people.HELD_UNPLACED) == []
+    """Fails when a held case gains its entry (take it off the list) or names an outcome or line the content lacks."""
+    assert stale(outcomes(opening()), HELD) == []
+    assert all(c.startswith("line:") for c in people.HELD_LINE_ONLY)
+    assert not any(c.startswith("line:") for c in people.HELD_UNPLACED)
 
 
 def test_every_entry_names_a_person_and_a_layer_the_scene_has():
@@ -98,6 +105,9 @@ def test_a_join_without_an_entry_and_a_stale_or_unresolved_one_are_reported():
     does not load."""
     join = {"lane": "n9", "mix": "town:camp", "own_split": True}
     bare = out(joins=[join])
+    marked = {"line:l_x": out(doings=["n9"])}
+    assert unplaced(marked, set()) == ["line:l_x:n9"], "a marked line is held to the rule an outcome is"
+    assert unplaced(marked, {"line:l_x:n9"}) == [] and stale(marked, {"line:l_y:n9"}) == ["line:l_y:n9"]
     assert unplaced({"trigger:d": out(doings=["n9"]), "trigger:e": out(doings=["n9"], whereabouts=[{"person": "n9", "no_scene": "x"}])},
                     set()) == ["trigger:d:n9"], "a marked doing needs an entry like a join"
     shown = out(joins=[join], whereabouts=[{"person": "n9", "layer": "figure_n9"}])
@@ -119,8 +129,9 @@ def test_a_join_without_an_entry_and_a_stale_or_unresolved_one_are_reported():
 def test_the_audit_finds_outcomes_in_every_owner_kind():
     found = outcomes(opening())
     kinds = {owner.partition(":")[0] for owner in found}
-    assert kinds == {"trigger", "card", "offer"}
+    assert kinds == {"trigger", "card", "offer", "line"}
     assert "trigger:t_joins" in found and any(o.joins for o in found.values())
+    assert any(owner.startswith("line:") for owner in found), "no line is marked"
 
 
 

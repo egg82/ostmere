@@ -34,7 +34,7 @@ from .chip_entries import ChipEntry
 from .setting_entries import FirstMixEntry, JournalHabitsEntry, RepeatOffersEntry
 from .subject_entries import SubjectEntry
 from .entries import (
-    CardEntry, Entry, LevelPaysEntry, SkillEntry, StandingEntry, TriggerEntry,
+    CardEntry, Entry, LevelPaysEntry, LineDoingsEntry, SkillEntry, StandingEntry, TriggerEntry,
     UnlockEntry, WhileRunningEntry,
 )
 from .lane_entries import LaneEntry, LaneLabelEntry
@@ -132,6 +132,8 @@ class Opening(Entry):
     """Every line and label, by key. Input only: the API serves it as a list of TextEntry."""
     line_kinds: dict[str, LineKind]
     """The kind of each log line in this file's `text`, by key (line_kinds.py)."""
+    line_doings: dict[str, LineDoingsEntry] = {}
+    """The people a line shows doing something, by the line's key, for a line no outcome carries (line_kinds.check_line_doings)."""
     beat_lines: dict[str, list[str]] = {}
     """A story beat's id (content/beats.yaml) to the key of its first line, one per way it can be told."""
 
@@ -197,6 +199,7 @@ class Chapter(Entry):
     """Later labels for a lane an earlier file declares, by lane id, after any it has: a joined person named later."""
     text: dict[str, str] = {}
     line_kinds: dict[str, LineKind] = {}
+    line_doings: dict[str, LineDoingsEntry] = {}
     beat_lines: dict[str, list[str]] = {}
 
 

@@ -529,6 +529,17 @@ I6 = ["l_cache_1"]
 I7 = ["l_post_ring_1"]
 B20 = ["l_b20_1"]
 
+[line_doings.l_fiddle_2]
+doings = ["n14", "n15"]
+
+[line_doings.l_book_ask]
+doings = ["n13"]
+whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
+
+[line_doings.l_book_given]
+doings = ["n13"]
+whereabouts = [{ person = "n13", layer = "figure_n13_arrived" }]
+
 [line_kinds]
 l_named = "story"
 l_fiddle_1 = "story"
