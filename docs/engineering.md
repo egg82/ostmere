@@ -171,7 +171,13 @@ suite still runs in seconds.
   HELD_FIXTURES start and stay empty. Wall clock, because setup and waiting are what a person waits on: the CPU-only gate
   it replaced timed the call alone, and speed commits moved cost into fixtures where nothing measured it. Tests marked
   `playthrough`, and the plays they set up, are budgeted by their CI job's timeout instead. pytest.ini's `timeout = 6`
-  is the hang guard above the budget.
+  is the hang guard above the budget. A test over the 4 s ceiling is timed once more in the same worker
+  (`pytest_runtest_protocol` in `time_gate.py`); it fails only if over again, otherwise it passes and the summary
+  section "time gate: slow once" names it. Ceilings and held lists are unchanged; a first timing that trips the 6 s
+  hang guard still kills the worker.
+- **Content loads once per test process** (`app/tests/content_cache.py`, installed by `app/tests/conftest.py`):
+  `load_opening` is memoised on path, chapters and a digest of the files' bytes, and each caller gets a deep copy, so
+  a test pays one load per distinct set per process, never one per test. The production loader is untouched.
 - **Time never comes from the wall in a test**: a timeout, lease or retry takes an injected clock
   (`app/tests/fake_clock.py`) or a tiny timeout, and an unreachable dependency is a fake that fails at once. The one
   real wait kept is db/test_failover's silent-host smoke test (libpq times the connect itself), at a 1 s URL timeout.
