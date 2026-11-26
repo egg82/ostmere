@@ -63,7 +63,7 @@ def town_managed(o: "Opening") -> tuple[list[str], list[str]]:
         left |= {x.lane for x in out.leaves}
     here = [x for x in sorted(people) if x in joined and x not in left]
     own = [x for x in here if marked.get(x, joined[x])]
-    groups = sorted({people[x].group for x in here if x not in own and people[x].group is not None})
+    groups = sorted({g for x in here if x not in own and (g := people[x].group) is not None})
     return own, groups
 
 

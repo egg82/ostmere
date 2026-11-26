@@ -17,11 +17,10 @@ def without_marks(o: Opening, *triggers: str) -> Opening:
 def marked_join(o: Opening, trigger: str) -> Opening:
     """`trigger`'s joins, each on the person's own forage card and keeping their own split."""
     assert trigger in {t.id for t in o.triggers}, trigger
-    def own(t):
-        joins = [j.model_copy(update={"own_split": True, "card": f"{j.lane}_forage"}) for j in t.outcome.joins]
-        assert joins
-        return t.model_copy(update={"outcome": t.outcome.model_copy(update={"joins": joins})})
-    return o.model_copy(update={"triggers": [own(t) if t.id == trigger else t for t in o.triggers]})
+    return o.model_copy(update={"triggers": [
+        t.model_copy(update={"outcome": t.outcome.model_copy(update={"joins": [
+            j.model_copy(update={"own_split": True, "card": f"{j.lane}_forage"}) for j in t.outcome.joins]})})
+        if t.id == trigger else t for t in o.triggers]})
 
 
 def test_the_shipped_content_holds_at_most_the_ceiling(shipped_opening: Opening):
@@ -30,13 +29,15 @@ def test_the_shipped_content_holds_at_most_the_ceiling(shipped_opening: Opening)
     assert own and groups and len(own) + len(groups) <= TOWN_MANAGED_MAX
 
 
-@pytest.mark.parametrize(("plant", "named"), [
-    (lambda o: without_marks(o, "t_family_groups"), ["n5", "n6", "n7"]),
-    (lambda o: without_marks(o, "t_choir_groups_beds", "t_choir_groups_road"), ["n8", "n9", "n10"]),
-    (lambda o: without_marks(o, "t_cutter_groups_beds", "t_cutter_groups_road"), ["n12"]),
-    (lambda o: marked_join(o, "t_b19"), ["n13"]),
+@pytest.mark.parametrize(("withheld", "owned", "named"), [
+    (("t_family_groups",), None, ["n5", "n6", "n7"]),
+    (("t_choir_groups_beds", "t_choir_groups_road"), None, ["n8", "n9", "n10"]),
+    (("t_cutter_groups_beds", "t_cutter_groups_road"), None, ["n12"]),
+    ((), "t_b19", ["n13"]),
 ], ids=["day eleven's family", "day eighteen's three", "day eighteen's sister", "day twenty-two's stranger"])
-def test_a_newcomer_left_with_a_bar_goes_over_the_ceiling_and_is_named(shipped_opening: Opening, plant, named: list[str]):
+def test_a_newcomer_left_with_a_bar_goes_over_the_ceiling_and_is_named(shipped_opening: Opening, withheld: tuple[str, ...],
+                                                                       owned: str | None, named: list[str]):
+    planted = without_marks(shipped_opening, *withheld) if withheld else marked_join(shipped_opening, owned or "")
     with pytest.raises(ValueError, match=r"the town: \d+ things to manage") as e:
-        check_structure(plant(shipped_opening))
+        check_structure(planted)
     assert all(lane in str(e.value) for lane in named)
