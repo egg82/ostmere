@@ -5,10 +5,10 @@ chapter nine: 11 visits on typical
    V39 gap   9.2 h  spend 42  decide  2  [wait, 4 lines]
    V40 gap   4.2 h  spend 42  decide  1
    V41 gap   3.2 h  spend 42  decide  0
-   V42 gap   9.2 h  spend 42  decide  2  [wait, 5 lines]
+   V42 gap   9.2 h  spend 42  decide  2  [wait, 6 lines]
    V43 gap   4.2 h  spend 42  decide  0  [wait, 0 lines]
    V44 gap   3.2 h  spend 42  decide  2  [wait, 1 lines]
-   V45 gap   9.2 h  spend 42  decide  1  [wait, 3 lines]
+   V45 gap   9.2 h  spend 42  decide  1  [wait, 5 lines]
    V46 gap   4.2 h  spend 42  decide  1  [edge]
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 7 returns, spend 296, decide 6; 8h+: 4 returns, spend 146, decide 6
   cap loss at the end, away 8 h: damp_wood 47%, dry_wood 10%, roots 62%, smoked 49%, stones 40%

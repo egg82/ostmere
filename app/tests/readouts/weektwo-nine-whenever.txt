@@ -1,4 +1,4 @@
-beats whenever (pace_scale 1): B10 day 10.21, target_day 11
+beats whenever (pace_scale 1): B10 day 10.23, target_day 11
   away V32->V33: 2 ['trigger t_gap_fire', 'trigger t_old_wire']
   away V33->V34: 2 ['trigger t_open_side', 'card set_snare_4']
   away V34->V35: 1 ['trigger offer_o_deep']
@@ -14,4 +14,4 @@ day    line feature    chip   store   skill    card   level  total
   1      27      11       0       5       1      25       2     71
   2      24       7       2       3       0      15       2     53
   3      12       0       0       0       0       2       4     18
-  4       6       0       0       0       0       0       3      9
+  4       7       0       0       0       0       0       3     10
