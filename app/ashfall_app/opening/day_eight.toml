@@ -768,8 +768,27 @@ after = { unlock_kind = "feature", id = "drift" }
 B8 = ["l_b8_1"]
 B9 = ["l_b9_1"]
 
+# Never drawn: twentieths of a game hour since a marked line is said, for the scene's window on it (people_moments.py). The
+# trigger holds the line's owner's own condition, so the clock starts the moment the line is told.
+[[stores]]
+id = "stage_7_clock"
+label_key = "store_moment_clock"
+cap_items = 400
+hidden = true
+
+[[standing]]
+id = "stage_7_clock"
+label_key = "action_moment_clock"
+makes = [{ store = "stage_7_clock", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_stage_7_clock"
+when = { test = "at_least", subject_kind = "card_count", id = "palisade", value = 7 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "stage_7_clock" }] }
+
 [line_doings.l_stage_7]
 doings = ["n2"]
+whereabouts = [{ person = "n2", layer = "figure_n2_tests_a_post" }]
 
 [line_kinds]
 l_ring_scored = "story"

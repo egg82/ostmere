@@ -85,6 +85,8 @@ HIDDEN = {
     "sorrel_clock", "sorrel_12h", "sorrel_16h", "cache_torn", "night_24",
     "kept_clock", "kept_4h", "kept_12h", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait",
     "shed_stack_clock", "his_watch_clock", "old_watch_clock", "spear_clock", "thorn_clock", "caps_clock", "posts_clock",
+    "bedding_4_clock", "pelt_ask_clock", "stage_7_clock", "posts_cord_clock", "n6_posts_done_clock", "choir_2_clock",
+    "road_pair_clock", "fiddle_2_clock",
 }
 
 

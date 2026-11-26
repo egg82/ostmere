@@ -14,6 +14,7 @@ import dayfour_poses
 import dayfour_world as world4
 import kit
 import people_moments
+from people_moments import SINGERS
 from dayeight_poses import BROTHER, HUSBAND, WOMAN, n4_twisting
 from daythree_made import POTS
 from daythree_poses import N2
@@ -26,8 +27,6 @@ from place import BY_FIRE, SEAT, canvas
 from tints import WOOD
 
 SHEETS = "timefantasy_characters/timefantasy_characters/sheets/"
-SINGERS: tuple[Who, ...] = ((SHEETS + "npc2.png", 3), (SHEETS + "npc2.png", 4), (SHEETS + "npc2.png", 2))
-"""Three women in a red dress, a blue one and a purple hood: n8, n9, n10."""
 N13: Who = (SHEETS + "npc1.png", 6)
 """A dark-haired man in a grey coat."""
 N23: Who = (SHEETS + "chara3.png", 6)

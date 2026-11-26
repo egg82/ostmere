@@ -724,8 +724,27 @@ after = { unlock_kind = "feature", id = "family_joined" }
 [beat_lines]
 B11 = ["l_b11_1"]
 
+# Never drawn: twentieths of a game hour since a marked line is said, for the scene's window on it (people_moments.py). The
+# trigger holds the line's owner's own condition, so the clock starts the moment the line is told.
+[[stores]]
+id = "n6_posts_done_clock"
+label_key = "store_moment_clock"
+cap_items = 400
+hidden = true
+
+[[standing]]
+id = "n6_posts_done_clock"
+label_key = "action_moment_clock"
+makes = [{ store = "n6_posts_done_clock", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_n6_posts_done_clock"
+when = { test = "at_least", subject_kind = "card_count", id = "n6_posts", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "n6_posts_done_clock" }] }
+
 [line_doings.l_n6_posts_done]
 doings = ["n6"]
+whereabouts = [{ person = "n6", layer = "figure_n6_braces_the_posts" }]
 
 [line_kinds]
 l_family_1 = "story"

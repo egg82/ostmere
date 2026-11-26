@@ -5392,6 +5392,14 @@
       "made_by": []
     },
     {
+      "store": "bedding_4_clock",
+      "made_by": []
+    },
+    {
+      "store": "pelt_ask_clock",
+      "made_by": []
+    },
+    {
       "store": "stakes",
       "made_by": [
         "n1_stakes",
@@ -5571,6 +5579,10 @@
       "made_by": []
     },
     {
+      "store": "stage_7_clock",
+      "made_by": []
+    },
+    {
       "store": "b9_clock",
       "made_by": []
     },
@@ -5590,6 +5602,10 @@
     },
     {
       "store": "ask_wait",
+      "made_by": []
+    },
+    {
+      "store": "posts_cord_clock",
       "made_by": []
     },
     {
@@ -5620,6 +5636,10 @@
     },
     {
       "store": "night_12",
+      "made_by": []
+    },
+    {
+      "store": "n6_posts_done_clock",
       "made_by": []
     },
     {
@@ -5881,6 +5901,14 @@
       "made_by": []
     },
     {
+      "store": "choir_2_clock",
+      "made_by": []
+    },
+    {
+      "store": "road_pair_clock",
+      "made_by": []
+    },
+    {
       "store": "cut_night_clock",
       "made_by": []
     },
@@ -6003,6 +6031,10 @@
     },
     {
       "store": "dawn_25",
+      "made_by": []
+    },
+    {
+      "store": "fiddle_2_clock",
       "made_by": []
     },
     {
