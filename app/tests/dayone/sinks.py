@@ -385,9 +385,21 @@ def tuned_share(rules: Rules, save: Save, trip: Trip, edited: Mix | None = None,
     return max(lo, 1) * TUNE_STEP_BP
 
 
+_PREVIEWED: list[tuple[Save, Rules, Save]] = []
+
+
 def preview_base(rules: Rules, save: Save) -> Save:
     """`save` as the preview shows it: the hands' mix rule, tap orders on the hands and queue entries left out, and
-    advanced to when a tap holding the hands, or a store rule's tap on a town lane, lands."""
+    advanced to when a tap holding the hands, or a store rule's tap on a town lane, lands. Built once per save: a
+    player tuning two trips reads the one preview."""
+    if _PREVIEWED and _PREVIEWED[0][0] is save and _PREVIEWED[0][1] is rules:
+        return _PREVIEWED[0][2]
+    bare = _preview_base(rules, save)
+    _PREVIEWED[:] = [(save, rules, bare)]
+    return bare
+
+
+def _preview_base(rules: Rules, save: Save) -> Save:
     hands = {c.id for c in rules.cards if c.lane == HANDS}
     town = {m.id for m in save.mixes if str(m.id).startswith(TOWN_PREFIX)}
     by_rule = {o.then.card for o in save.orders if isinstance(o.then, TapCard) and not isinstance(o.when, AfterTime)}
