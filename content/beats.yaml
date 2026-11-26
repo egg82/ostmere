@@ -584,7 +584,7 @@ side_layer:
   - {id: SL31, kind: arc,     chapter: day_twenty_three, thread: th-stranger, offers: decision, gate: {hours_after: {beat: B19, hours: 6}}}
   - {id: SL32, kind: thread,  chapter: day_twenty_three, thread: th-magic, offers: decision, gate: {all: [{hours_after: {beat: I1, hours: 44}}, {beat: I2}]}}
   - {id: SL33, kind: thread,  chapter: day_twenty_three, thread: th-network, offers: decision, gate: {hours_after: {beat: I1, hours: 64}}}
-  - {id: SL34, kind: texture, chapter: day_twenty_five, thread: th-self, offers: decision, gate: {all: [{beat: I8}, {store_at_least: {store: boar_lost, n: 1}}]}}
+  - {id: SL34, kind: comfort, chapter: day_twenty_five, thread: th-self, offers: decision, gate: {all: [{beat: I8}, {store_at_least: {store: boar_lost, n: 1}}]}}
   - {id: SL35, kind: arc,     chapter: day_twenty_five, thread: th-town, offers: decision, gate: {hours_after: {beat: B20, hours: 20}}}
 
 # Side beats: building falls (a maxed building's prestige) and season-gated set pieces. Not on the critical path;
