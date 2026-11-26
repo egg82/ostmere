@@ -112,10 +112,19 @@ def write_rebased(name: str) -> None:
               f"cpu_s={time.process_time() - started:.1f}", flush=True)
 
 
+def typical_through(chapter: str) -> DayTwoPlayer:
+    """typical's play through `chapter` from its saved end, else (the last chapter's end is saved by no route) on from the
+    saved end of the chapter before: the play without replaying the chapters before."""
+    if "typical" in SAVED.get(chapter, ()):
+        return ends.load(chapter, "typical", laters(chapter, "typical"))
+    before = ends.load(BEFORE[chapter], "typical", laters(BEFORE[chapter], "typical"))
+    return play_on(before, laters(chapter, "typical"))
+
+
 def write_readings(name: str) -> None:
     """The readings part `name`: each span's heavy steps of typical's play through its chapter, read one by one."""
     for chapter, first, after in ends.READINGS[name]:
-        p, later = played(chapter, "typical"), verdicts.CHAPTERS[chapter]
+        p, later = typical_through(chapter), verdicts.CHAPTERS[chapter]
         steps = {v.label: v.steps for v in verdicts.chapter_visits(p, later)}
         found: dict[tuple[str, int], bool] = {}
         for label, i in verdicts.heavy_steps(p, later)[first:after]:

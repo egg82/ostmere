@@ -285,9 +285,9 @@ jobs:
   # in seconds. No route's chain reads another's and no heavy-step reading needs another, so each part writes its routes'
   # ends or a readings part (ends.READINGS), and the readers merge the parts'
   # artifacts; test_weektwo_saved.py fails if a saved file is in no part. The jobs that read the saves fail, not replay,
-  # when they are missing or stale (ASHFALL_REQUIRE_SAVED). Typical's rebased saves are the one exception: they replay
-  # typical's decisions from its saved ends, so `chapter-saves-rebased` runs once typical's part has written them
-  # (replaying typical's play beside them would pay the play twice). A route whose chain runs past one job's cap is
+  # when they are missing or stale (ASHFALL_REQUIRE_SAVED). Typical's rebased saves and its readings are the exception:
+  # they start from typical's saved ends, so `chapter-saves-rebased` and `chapter-saves-readings` run once typical's last
+  # link has written them (replaying typical's play beside them would pay the play twice). A route whose chain runs past one job's cap is
   # written in links (chapter_saves.LINKS), each its own job after the one before: `chapter-saves-typical-a`, `chapter-saves-sharp-a` to `-c` and
   # `chapter-saves-whenever-a` to `-c`, each starting from the ends the link before uploaded. They share these steps
   # (the YAML anchor), set by PART, NAMES and AFTER (the part whose artifact a link starts from).
@@ -302,56 +302,6 @@ jobs:
         include:
           - part: babysitter
             names: babysitter
-          - part: readings-early
-            names: readings-early
-          - part: readings-twelve-a
-            names: readings-twelve-a
-          - part: readings-twelve-b
-            names: readings-twelve-b
-          - part: readings-twelve-c
-            names: readings-twelve-c
-          - part: readings-twelve-d
-            names: readings-twelve-d
-          - part: readings-twelve-e
-            names: readings-twelve-e
-          - part: readings-twelve-f
-            names: readings-twelve-f
-          - part: readings-fifteen-a
-            names: readings-fifteen-a
-          - part: readings-fifteen-b
-            names: readings-fifteen-b
-          - part: readings-fifteen-c
-            names: readings-fifteen-c
-          - part: readings-sixteen-a
-            names: readings-sixteen-a
-          - part: readings-sixteen-b
-            names: readings-sixteen-b
-          - part: readings-sixteen-c
-            names: readings-sixteen-c
-          - part: readings-eighteen
-            names: readings-eighteen
-          - part: readings-nineteen-a
-            names: readings-nineteen-a
-          - part: readings-nineteen-b
-            names: readings-nineteen-b
-          - part: readings-twentytwo-a
-            names: readings-twentytwo-a
-          - part: readings-twentytwo-b
-            names: readings-twentytwo-b
-          - part: readings-twentytwo-c
-            names: readings-twentytwo-c
-          - part: readings-twentytwo-d
-            names: readings-twentytwo-d
-          - part: readings-twentythree-a
-            names: readings-twentythree-a
-          - part: readings-twentythree-b
-            names: readings-twentythree-b
-          - part: readings-twentyfive-a
-            names: readings-twentyfive-a
-          - part: readings-twentyfive-b
-            names: readings-twentyfive-b
-          - part: readings-twentyfive-c
-            names: readings-twentyfive-c
     env:
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       PART: ${{ matrix.part }}
@@ -535,6 +485,55 @@ jobs:
           path: chapter-saves/
           retention-days: 1
 
+  # The typical route's heavy-step readings (ends.READINGS), each part read from typical's saved end, so a part pays for
+  # its own steps and not for replaying typical's play to reach them.
+  chapter-saves-readings:
+    needs: chapter-saves-typical-c
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        part: [readings-early, readings-twelve-a, readings-twelve-b, readings-twelve-c, readings-twelve-d, readings-twelve-e,
+               readings-twelve-f, readings-fifteen-a, readings-fifteen-b, readings-fifteen-c, readings-sixteen-a,
+               readings-sixteen-b, readings-sixteen-c, readings-eighteen, readings-nineteen-a, readings-nineteen-b,
+               readings-twentytwo-a, readings-twentytwo-b, readings-twentytwo-c, readings-twentytwo-d,
+               readings-twentythree-a, readings-twentythree-b, readings-twentyfive-a, readings-twentyfive-b,
+               readings-twentyfive-c]
+    env:
+      ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt -r app/requirements-dev.txt
+      - name: Key
+        id: key
+        working-directory: app
+        run: echo "key=$(PYTHONPATH=. python -c 'from tests.weektwo import ends; print(ends.key())')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: chapter-saves-cache
+          key: chapter-saves-v2-${{ steps.key.outputs.key }}-${{ matrix.part }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: chapter-saves-typical-c
+          path: chapter-saves
+      - name: Readings, from the cache or written (${{ matrix.part }})
+        working-directory: app
+        run: |
+          PYTHONPATH=. python -m tools.saves_cache "$GITHUB_WORKSPACE/chapter-saves-cache" ${{ matrix.part }}
+          test -s "$ASHFALL_SAVES_ROOT"/*/manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chapter-saves-${{ matrix.part }}
+          path: chapter-saves/
+          retention-days: 1
+
   # Full run only, like the jobs below that read the chapter saves (they are skipped with it). Week one's plays
   # (tests/weekone/routes.py, days three to six on one player) and the tests that read them. The push routes' plays are
   # left as an artifact (tests/weekone/test_weekone_export.py) for `playthrough-week-one-saved`.
@@ -581,7 +580,8 @@ jobs:
   # The saved chain's first link (tests/weekone_saved): week one's saved ends equal the plays week one's job made,
   # compared on the same play, not a replay; plays nothing, so it runs the moment both jobs are done.
   playthrough-week-one-saved:
-    needs: [chapter-saves, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, playthrough-week-one]
+    needs: [chapter-saves, chapter-saves-readings, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c,
+            chapter-saves-rebased, playthrough-week-one]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -627,7 +627,8 @@ jobs:
   # (tests/weektwo/ends.py), one job per shard (tools/weektwo_shards.py, the names from `shards-cover`): a play and its
   # readers are in one shard, and within it share one xdist worker (tests/weektwo/conftest.py, `group_by_play`).
   playthrough-week-two:
-    needs: [chapter-saves, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c, chapter-saves-rebased, shards-cover]
+    needs: [chapter-saves, chapter-saves-readings, chapter-saves-typical-c, chapter-saves-sharp-c, chapter-saves-whenever-c,
+            chapter-saves-rebased, shards-cover]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -838,6 +839,7 @@ jobs:
       - playthrough-smoke
       - playthrough
       - chapter-saves
+      - chapter-saves-readings
       - chapter-saves-typical-a
       - chapter-saves-typical-b
       - chapter-saves-typical-c
@@ -867,7 +869,7 @@ jobs:
           echo "$NEEDS" | jq -e --arg code "$CODE" --arg full "$FULL" '
             ["tests", "shards-cover", "mutant-plants", "playthrough-smoke", "engine-bench", "pyright",
              "client", "app-image"] as $per_pr
-            | ["playthrough", "chapter-saves", "chapter-saves-typical-a", "chapter-saves-typical-b",
+            | ["playthrough", "chapter-saves", "chapter-saves-readings", "chapter-saves-typical-a", "chapter-saves-typical-b",
                "chapter-saves-typical-c", "chapter-saves-sharp-a", "chapter-saves-sharp-b", "chapter-saves-sharp-c",
                "chapter-saves-whenever-a", "chapter-saves-whenever-b", "chapter-saves-whenever-c",
                "chapter-saves-rebased", "playthrough-week-one", "playthrough-week-one-saved",
