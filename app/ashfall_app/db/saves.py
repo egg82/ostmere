@@ -13,7 +13,7 @@ from sqlalchemy import (
 )
 
 from .manifests import held_for, whole
-from .tables import save_decisions, save_lines, save_snapshots, saves
+from .tables import save_ahead, save_decisions, save_lines, save_snapshots, saves
 
 
 @dataclass(frozen=True)
@@ -39,6 +39,8 @@ class SaveRecord:
     """The earlier best per goal (saves/mixbest.py), as JSONB reads back."""
     presentation: Any = None
     """What the page keeps about the save's teaching (api/CONTRACT.txt, SavePresentation), as JSONB reads back."""
+    ahead_at: int | None = None
+    """How far the advance kept ahead of the save reached (db/ahead.py), whatever row it began from; None for none."""
 
 
 @dataclass(frozen=True)
@@ -106,7 +108,8 @@ class SnapshotRecord:
 _COLUMNS = (saves.c.id, saves.c.account_id, saves.c.started_at, saves.c.updated_at, saves.c.state, saves.c.format,
             saves.c.rules_digest, saves.c.decisions, saves.c.game_time, saves.c.ended_at, saves.c.build,
             saves.c.release, saves.c.number, saves.c.camp_level, saves.c.deleted_at, saves.c.rule_runs,
-            saves.c.mix_best, saves.c.presentation, held_for(saves.c.state, saves.c.rules_digest).label("manifest"))
+            saves.c.mix_best, saves.c.presentation, held_for(saves.c.state, saves.c.rules_digest).label("manifest"),
+            select(save_ahead.c.game_time).where(save_ahead.c.save_id == saves.c.id).scalar_subquery().label("ahead_at"))
 
 
 LISTED = (saves.c.id, saves.c.started_at, saves.c.updated_at, saves.c.decisions, saves.c.game_time, saves.c.ended_at,
@@ -124,7 +127,8 @@ def _record(r: Row[Any]) -> SaveRecord:
                       state=whole(r.state, r.manifest),
                       format=r.format, rules_digest=r.rules_digest, decisions=r.decisions, game_time=r.game_time,
                       ended_at=r.ended_at, build=r.build, release=r.release, number=r.number, camp_level=r.camp_level,
-                      deleted_at=r.deleted_at, rule_runs=r.rule_runs, mix_best=r.mix_best, presentation=r.presentation)
+                      deleted_at=r.deleted_at, rule_runs=r.rule_runs, mix_best=r.mix_best, presentation=r.presentation,
+                      ahead_at=r.ahead_at)
 
 
 def next_number(account_id: int | ColumnElement[int]) -> ScalarSelect[Any]:
