@@ -58,7 +58,7 @@ def rebuild(save: Save, rules: Rules) -> Save:
     skills = tuple(SkillState(st.skill, _xp_segment(save, rules, st, rates.xp.get(st.skill, 0)), st.phase)
                    for st in save.skills)
     rebuilt = replace(save, stores=stores, skills=skills, cards=cards)
-    keep_running(rebuilt, rules, now)
+    keep_running(save, rebuilt, rules, now)
     keep_segments(rebuilt, rules, motions)
     return rebuilt
 

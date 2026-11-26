@@ -67,6 +67,8 @@ def _advance(save: Save, rules: Rules, t: int, emit: Emit, seen: list[RuleChange
     rule changes."""
     if t < save.time:
         raise TimeOrderError(f"t={t} is before the save's time {save.time}")
+    if t == save.time:
+        return save, False   # every event still to come is later than now
     stopping = False
     while True:
         upcoming = [e for e in events(save, rules) if e.time > save.time]

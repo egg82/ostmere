@@ -36,9 +36,24 @@ def spent_stores(save: Save, rules: Rules) -> frozenset[StoreId]:
 _SPENT: SaveMemo[frozenset[StoreId]] = SaveMemo(4)
 
 
+def keep_spent(source: Save, target: Save, rules: Rules) -> None:
+    """`target` has the values and the discrete state of `source`, all spent_stores reads."""
+    _SPENT.carry(source, target, rules)
+
+
 def _spent(save: Save, rules: Rules) -> frozenset[StoreId]:
-    empty = {st.store for st in save.stores if st.segment.start_value == 0}
+    empty = frozenset(st.store for st in save.stores if st.segment.start_value == 0)
     live = _live(save, rules)
+    return _BY_EMPTY.get((live,), lambda: _fixed_point(rules, empty, live), empty)
+
+
+_BY_EMPTY: PartsMemo[frozenset[StoreId]] = PartsMemo(8)
+"""Kept while the makers in play are the same object (_LIVE, keyed on the rules) and the same stores are empty: all
+that the fixed point reads."""
+
+
+def _fixed_point(rules: Rules, empty: frozenset[StoreId], live: dict[StoreId, list[frozenset[StoreId]]]
+                 ) -> frozenset[StoreId]:
     spent = {d.id for d in rules.stores}
     changed = True
     while changed:

@@ -27,7 +27,7 @@ def test_a_chapter_with_two_routes_plays_one_job_per_shard_and_a_long_shard_is_l
     got = plan(changed(twentyfive="x"), False, [])
     assert (got["shards"], got["left"]) == (["twentyfive-whenever"], ["twentyfive-sharp", "twentyfive"])
     assert NIGHTLY_ONLY >= {"twentyfive-sharp", "twentyfive"}
-    assert plan(changed(eighteen="x"), False, [])["shards"] == []
+    assert plan(changed(eighteen="x"), False, [])["shards"] == ["eighteen"]
     assert plan(changed(fifteen="x"), False, [])["shards"] == ["fifteen"]
 
 
@@ -54,4 +54,4 @@ def test_a_slice_whose_chapter_before_has_no_saved_end_in_the_last_nightly_plays
         "smoke", ["smoke"], "the last nightly holds no saved end of the chapter before fifteen")
     held = {BASE.key["twelve"], BASE.key["eleven"]}
     assert plan(changed(fifteen="x", twelve="y"), False, [], lambda key: key in held)["mode"] == "slice"
-    assert plan(changed(eighteen="x"), False, [], lambda key: False)["mode"] == "slice"   # nothing of it plays, so nothing is needed
+    assert plan(changed(eighteen="x"), False, [], lambda key: False)["mode"] == "smoke"
