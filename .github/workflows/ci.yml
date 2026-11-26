@@ -429,7 +429,7 @@ jobs:
           touch "$RUNNER_TEMP/stamp"
           PYTHONPATH=. python tools/chapter_saves.py --write $NAMES
           PYTHONPATH=. python tools/chapter_saves.py --prune
-          test -s "$ASHFALL_SAVES_ROOT"/*/manifest.json
+          test -n "$(find "$ASHFALL_SAVES_ROOT" -name manifest.json -newer "$RUNNER_TEMP/stamp")"
           echo "$PART" > "$ASHFALL_SAVES_ROOT/part-$PART.txt"
           { echo "files<<EOF"; find "$ASHFALL_SAVES_ROOT" -type f -newer "$RUNNER_TEMP/stamp"; echo EOF; } >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
