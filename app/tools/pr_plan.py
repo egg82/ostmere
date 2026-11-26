@@ -11,6 +11,8 @@ in that tree and in this one: a chapter whose own inputs differ is touched.
   mode `slice`  only chapters' own files changed: each touched chapter's tests, from the base's saved end of the one before
   mode `none`   no chapter's inputs changed: nothing of week two plays
 `chapters` are the touched chapters, `files` the week-two test files changed, `base_keys` the keys the base's saves are under.
+`shards` are the week-two shards the slice plays, one job each (a touched chapter's, or all of them when a test file changed),
+and `left` the ones in tools/weektwo_shards.py NIGHTLY_ONLY, which the nightly plays; `smoke` has the one entry "smoke".
 """
 import json
 import os
@@ -20,6 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from tests.weektwo import keys
+from tools.weektwo_shards import slice_shards
 
 TESTS = "app/tests/weektwo/"
 
@@ -57,19 +60,21 @@ def changed_files(base_tree: Path) -> list[str]:
 def plan(base: Snap | None, full: bool, changed: list[str]) -> dict[str, object]:
     now = here()
     files = sorted(f for f in changed if f.startswith(TESTS) and (Path(f).name.startswith("test_") or Path(f).name == "conftest.py"))
-    out: dict[str, object] = {"mode": "none", "chapters": [], "files": files, "base_keys": {}}
+    out: dict[str, object] = {"mode": "none", "chapters": [], "files": files, "base_keys": {},
+                             "shards": [], "left": []}
     if full:
         return out | {"mode": "full"}
     if base is None:
-        return out | {"mode": "smoke", "why": "the base has no chapter keys"}
+        return out | {"mode": "smoke", "shards": ["smoke"], "why": "the base has no chapter keys"}
     out["base_keys"] = base.key
     if base.shared != now.shared:
-        return out | {"mode": "smoke", "why": "what every chapter reads changed"}
+        return out | {"mode": "smoke", "shards": ["smoke"], "why": "what every chapter reads changed"}
     touched = [c for c in keys.ORDER if base.own.get(c) != now.own[c]]
     if "week1" in touched:
-        return out | {"mode": "smoke", "why": "week one changed"}
+        return out | {"mode": "smoke", "shards": ["smoke"], "why": "week one changed"}
     if touched or files:
-        return out | {"mode": "slice", "chapters": touched}
+        played, left = slice_shards(touched, bool(files))
+        return out | {"mode": "slice", "chapters": touched, "shards": played, "left": left}
     return out
 
 

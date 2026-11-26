@@ -40,6 +40,11 @@ SHARDS: dict[str, frozenset[str]] = {
     "twentyfive": frozenset({"twentyfive"}),
     "makers": frozenset({"makers"}),
 }
+NIGHTLY_ONLY = frozenset({"eight", "eighteen", "nineteen", "twentytwo", "twentythree", "twentyfive-sharp", "twentyfive"})
+"""The shards a pull request's slice does not play: each took over 300 s in the last nightly (a slice job's `timeout-minutes`,
+which setup takes about 35 s of), or in a slice, for day twenty-five (typical about 390 s, whenever about 280 s, sharp about
+590 s to build). The nightly plays them. A shard moves out of this set when it is split or sped up to fit, never by raising
+a timeout; a shard not named plays in its chapter's slice."""
 ENV = "WEEKTWO_SHARD"
 SLICE = "WEEKTWO_SLICE"
 FILES = "WEEKTWO_FILES"
@@ -61,6 +66,18 @@ def shard_of(play: tuple[str, str] | None, named: str | None = None) -> str | No
         if found:
             return found[0]
     return None
+
+
+def shards_of_chapter(chapter: str) -> list[str]:
+    """The shards that play `chapter`: those holding the chapter itself or one of its routes."""
+    return [name for name, held in SHARDS.items() if any(k == chapter or k.startswith(chapter + "-") for k in held)]
+
+
+def slice_shards(chapters: list[str], all_shards: bool) -> tuple[list[str], list[str]]:
+    """(the shards a slice plays, the ones it leaves to the nightly): those of each touched chapter, or every shard when a
+    week-two test file changed, since which shard a file's tests are in is known only by collecting."""
+    wanted = list(SHARDS) if all_shards else [n for c in chapters for n in shards_of_chapter(c)]
+    return [n for n in wanted if n not in NIGHTLY_ONLY], [n for n in wanted if n in NIGHTLY_ONLY]
 
 
 def chosen() -> str | None:
@@ -100,7 +117,10 @@ def check() -> int:
     for label, nodes in (("in no shard", missing), ("in more than one shard", twice), ("only in a shard", extra)):
         for node in nodes[:10]:
             print(f"{label}: {node} {seen.get(node, [])}")
-    return 1 if missing or twice or extra else 0
+    unknown = sorted(NIGHTLY_ONLY - set(SHARDS))
+    for name in unknown:
+        print(f"NIGHTLY_ONLY names no shard: {name}")
+    return 1 if missing or twice or extra or unknown else 0
 
 
 if __name__ == "__main__":

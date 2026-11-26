@@ -239,6 +239,7 @@ jobs:
     timeout-minutes: 3
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
+      slice: ${{ steps.plan.outputs.slice }}
       files: ${{ steps.plan.outputs.files }}
       base_keys: ${{ steps.plan.outputs.base_keys }}
     steps:
@@ -264,12 +265,14 @@ jobs:
           cd app
           python -m tools.pr_plan --base-tree "$RUNNER_TEMP/base" > "$RUNNER_TEMP/plan.json"
           cat "$RUNNER_TEMP/plan.json"
-          jq -r '"matrix=" + (if .mode == "smoke" then ["smoke"] elif .mode == "slice" then (if (.chapters | length) > 0 then .chapters else ["files"] end) else [] end | tojson)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
+          jq -r '"matrix=" + (.shards | tojson)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
+          jq -r '"slice=" + (if .mode == "smoke" then "smoke" elif (.chapters | length) > 0 then (.chapters | join(",")) else "files" end)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
           jq -r '"files=" + (.files | join(","))' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
           jq -r '"base_keys=" + (.base_keys | tojson)' "$RUNNER_TEMP/plan.json" >> "$GITHUB_OUTPUT"
 
-  # The slice's plays, one job per chapter it names (tools/weektwo_shards.py, WEEKTWO_SLICE): the tests of that chapter,
-  # each play on from the base's saved end of the chapter before, which fails, not replays, when it is missing. `smoke`
+  # The slice's plays, one job per week-two shard of a touched chapter (tools/weektwo_shards.py, WEEKTWO_SLICE and
+  # WEEKTWO_SHARD): that shard's tests of the chapter, each play on from the base's saved end of the chapter before, which
+  # fails, not replays, when it is missing. A shard too long for the job's timeout is left to the nightly (NIGHTLY_ONLY). `smoke`
   # plays the push routes from the start through day eight, no saves read. A readout that differs leaves its new text as
   # an artifact, like the full run's.
   playthrough-slice:
@@ -280,14 +283,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        chapter: ${{ fromJSON(needs.slice.outputs.matrix) }}
+        shard: ${{ fromJSON(needs.slice.outputs.matrix) }}
     env:
       READOUTS_OUT: ${{ github.workspace }}/readouts-new
-      WEEKTWO_SLICE: ${{ matrix.chapter }}
+      WEEKTWO_SLICE: ${{ needs.slice.outputs.slice }}
+      WEEKTWO_SHARD: ${{ matrix.shard != 'smoke' && matrix.shard || '' }}
       WEEKTWO_FILES: ${{ needs.slice.outputs.files }}
       ASHFALL_SAVES_ROOT: ${{ github.workspace }}/chapter-saves
       ASHFALL_BASE_KEYS: ${{ github.workspace }}/base-keys.json
-      ASHFALL_REQUIRE_SAVED: ${{ matrix.chapter != 'smoke' && '1' || '' }}
+      ASHFALL_REQUIRE_SAVED: ${{ matrix.shard != 'smoke' && '1' || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -298,7 +302,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - name: The base's saved ends
-        if: matrix.chapter != 'smoke'
+        if: matrix.shard != 'smoke'
         uses: actions/cache/restore@v4
         with:
           path: chapter-saves
@@ -308,7 +312,7 @@ jobs:
         env:
           BASE_KEYS: ${{ needs.slice.outputs.base_keys }}
         run: echo "$BASE_KEYS" > "$ASHFALL_BASE_KEYS"
-      - name: Playthrough (${{ matrix.chapter }})
+      - name: Playthrough (${{ matrix.shard }})
         working-directory: app
         run: python -m pytest -q -m playthrough tests/weektwo -n 4 --dist loadgroup --durations=15 --durations-min=1
       - name: Upload changed readouts
