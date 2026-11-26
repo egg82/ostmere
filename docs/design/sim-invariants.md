@@ -151,6 +151,7 @@ One row stands for its siblings in `weektwo/test_weektwo_routes.py` (day eight),
 | K8-K9 | a save from the chapter before loads and plays on; every chip has a cure | | softlock | fails |
 | K10 | typical's late store at the ends of days eleven and twelve | | taste | readout |
 | K11-K12 | calendar, a fight pool ending its card, a join's tally, notes, line keys | | correct: story order (calendar) and contract (the rest) | fails |
+| K13 | `weektwo/pacing.py` | the day and week each spine beat from B5 on lands, and the arrivals by kind of each calendar week to the end, per push route (`weektwo-pacing-*`; played with day twenty-five's, so the nightly's and a `playthroughs` pull request's) | taste | readout |
 
 ### Chains, ladder and fixtures
 
