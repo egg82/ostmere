@@ -1,6 +1,9 @@
 """The per-test time gate (time_gate.py): its verdicts can fail, a slow function fixture fails the test it serves, a slow
 shared fixture fails by name and is not charged to the tests that use it (a slow test after its first user still
-fails), a playthrough is not timed, and the held lists stay empty."""
+fails), a playthrough is not timed, the held lists stay empty, and a test over the ceiling once is timed again: slow
+both times fails, slow only the first passes and is named in the summary."""
+from pathlib import Path
+
 import pytest
 
 from tests import time_gate as gate
@@ -84,3 +87,54 @@ def test_the_gate_fails_slow_fixtures_and_spares_a_playthrough(pytester: pytest.
                                  "*test_slow_after_the_shared_fixture took *s of wall clock*",
                                  "*test_slow_in_its_body_after_a_shared_fixture_it_set_up took *s of wall clock*",
                                  "PASSED test_control.py::test_uses_tree_again"], consecutive=False)
+
+
+RETIME = """
+import time
+
+timings = []
+
+def test_slow_every_time():
+    time.sleep(0.15)
+
+def test_slow_only_the_first_time():
+    timings.append(1)
+    if len(timings) == 1:
+        time.sleep(0.15)
+
+def test_fast():
+    pass
+"""
+
+
+def retime_control(pytester: pytest.Pytester) -> None:
+    pytester.makeini("[pytest]\nmarkers =\n    playthrough: a whole-game simulation\n")
+    pytester.makeconftest("from tests import time_gate\n\n"
+                          "def pytest_configure(config):\n    config.pluginmanager.register(time_gate, 'time_gate')\n")
+    pytester.makepyfile(test_retime=RETIME)
+
+
+def test_a_test_slow_only_on_its_first_timing_passes_and_is_named(pytester: pytest.Pytester,
+                                                                 monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(gate, "CEILING_S", 0.08)
+    retime_control(pytester)
+    result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
+    result.assert_outcomes(passed=3, errors=1)   # the always-slow one still fails, its teardown error counted as passed too
+    result.stdout.fnmatch_lines(["*test_slow_every_time took *s of wall clock*",
+                                 "*time gate: slow once, passed on a second timing*",
+                                 "test_retime.py::test_slow_only_the_first_time: 0.1*s the first time*",
+                                 "PASSED test_retime.py::test_slow_only_the_first_time"])
+    assert "test_slow_only_the_first_time took" not in result.stdout.str()
+    assert "test_slow_every_time: " not in result.stdout.str().split("slow once")[-1]
+
+
+def test_the_retime_reaches_the_controller_under_xdist(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
+    """Each worker retimes its own test and reports the second timing, so the controller sees the same verdicts."""
+    monkeypatch.setenv("TEST_CEILING_S", "0.08")
+    monkeypatch.setenv("PYTHONPATH", str(Path(__file__).resolve().parent.parent))
+    retime_control(pytester)
+    result = pytester.runpytest_subprocess("-p", "no:cacheprovider", "-p", "no:randomly", "-n", "2", "-rA")
+    result.assert_outcomes(passed=3, errors=1)
+    result.stdout.fnmatch_lines(["*test_slow_every_time took *s of wall clock*",
+                                 "*time gate: slow once, passed on a second timing*",
+                                 "test_retime.py::test_slow_only_the_first_time: 0.1*s the first time*"])
