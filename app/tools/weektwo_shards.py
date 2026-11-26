@@ -8,7 +8,7 @@ WEEKTWO_SHARD=<name> runs one shard; unset, every test runs.
 WEEKTWO_SLICE=<chapter>[,<chapter>...] runs a pull request's slice: the tests that play those chapters, each from the saved
 end of the chapter before (ASHFALL_BASE_KEYS, tests/weektwo/ends.py), less the ones that read a chapter's own saved end, readings
 or rebased save, which only the full run writes. WEEKTWO_SLICE=smoke runs the tests marked `smoke`, played from the start.
-WEEKTWO_FILES=<path>[,<path>...] adds every test of those week-two test files to a slice.
+WEEKTWO_FILES=<repo-relative path>[,...] adds every test of those week-two test files to a slice.
 Run from app/: python -m tools.weektwo_shards --check   exits 1 unless each week-two playthrough test is selected by
                                                         exactly one shard, so a chapter added to routes.CHAPTERS fails
                                                         CI until a shard names it; then prints `matrix=<json>`, the
@@ -45,6 +45,7 @@ SLICE = "WEEKTWO_SLICE"
 FILES = "WEEKTWO_FILES"
 SMOKE = "smoke"
 WEEK_TWO = Path(__file__).resolve().parents[1] / "tests" / "weektwo"
+REPO = WEEK_TWO.parents[2]
 ARGS = ["tests/weektwo"]
 SELECT = ("-m", "playthrough")
 
@@ -77,7 +78,7 @@ def sliced() -> frozenset[str] | None:
 
 
 def files() -> frozenset[Path]:
-    return frozenset(Path(f).resolve() for f in os.environ.get(FILES, "").split(",") if f)
+    return frozenset((REPO / f).resolve() for f in os.environ.get(FILES, "").split(",") if f)
 
 
 def in_week_two(item: pytest.Item) -> bool:
