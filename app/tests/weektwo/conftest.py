@@ -297,7 +297,7 @@ def rebased_inputs(request: pytest.FixtureRequest) -> tuple[str, str]:
     chapter: str = request.param
     p = verdicts.PLAYS[chapter]("typical")
     now = rebased.inputs(p, rebased.ENDS[chapter](p))
-    return (ends.rebased_text(chapter).inputs if ends.available() else now), now
+    return (ends.rebased_text(chapter).inputs if ends.available(chapter) else now), now
 
 
 @pytest.fixture(scope="session")
