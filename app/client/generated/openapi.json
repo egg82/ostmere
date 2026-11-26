@@ -1753,13 +1753,24 @@
                 "type": "null"
               }
             ]
+          },
+          "until": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
         "required": [
           "aim",
           "text_key",
-          "after"
+          "after",
+          "until"
         ],
         "title": "AimInfo",
         "description": "What a stretch of play is for: one line at the band's top, in content order (CONTRACT.txt, \"The client may\")."
@@ -3915,7 +3926,7 @@
           "feeds"
         ],
         "title": "Goal",
-        "description": "One thing an open story beat waits on: a store's amount reaching `target` (store, value), a card's completions\nreaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), a card's fight\nlost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock alone landing at\n`at`. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the\nclock, it states as a line of their own, the clock's naming what keeps it moving."
+        "description": "One thing an open story beat waits on: a store's amount reaching `target` (store, value), a card's completions\nreaching `target` or the card running at target 0 (card), a skill's level reaching `target` (skill), a card's fight\nlost `target` times (fight: card, and its lost tally as store and value), or a wait on the clock landing at\n`at`, which states a store's amount against `target` (store, value) when the content says to. The page marks the store's line, the card or the skill's row; a store with no line yet, the fight and the\nclock, it states as a line of their own, the clock's naming what keeps it moving."
       },
       "GoalKind": {
         "type": "string",

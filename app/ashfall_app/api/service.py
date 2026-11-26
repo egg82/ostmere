@@ -193,7 +193,8 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
         line_infos=line_infos(o),
         journal=_journal(o), places=place_infos(o),
         aim_infos=[cm.AimInfo(aim=a.id, text_key=a.text_key,
-                              after=None if a.after is None else convert.unlock(authored.unlock(a.after)))
+                              after=None if a.after is None else convert.unlock(authored.unlock(a.after)),
+                              until=None if a.until is None else convert.unlock(authored.unlock(a.until)))
                    for a in o.aims],
         camp=None if o.camp is None else cm.CampInfo(
             store=o.camp.store, camp_levels=[cm.CampLevel(at=e.units(lv.at_items), pays_key=lv.pays_key, held=lv.held,

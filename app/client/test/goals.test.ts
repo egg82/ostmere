@@ -73,5 +73,9 @@ function wait(view: View): { hidden: boolean; tag: string; line: string; tabbabl
   expect("a fight's lost tally: its card and the count so far, with no clock", wait({ ...mid, goals: [fight] }).line, `${head} · ${lost}`);
   expect("beside a clock: the count, then its time", wait({ ...mid, goals: [fight, clock] }).line,
     `${head} · ${lost} · ${time} · ${t.fill(UI.goalWhile, { store: wood })}`);
+  const counted = goal({ kind: "clock", store: "wood", target: 3 * Q, value: { start: AT, start_value: Q, rate: 0, limit: null }, at: AT + 2 * 3600, feeds: ["wood"] });
+  const said = t.fill(UI.goalCount, { store: wood, n: f.amount(Q, 3 * Q) });
+  expect("a clock on a stated store: the count, then its time and what keeps it moving", wait({ ...mid, goals: [counted] }).line,
+    `${head} · ${said} · ${time} · ${t.fill(UI.goalWhile, { store: wood })}`);
   expect("the fight's card carries the story mark", [...storyMarks(catalog, { ...mid, goals: [fight] }).cards], ["far_hunt"]);
 }
