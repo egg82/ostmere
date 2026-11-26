@@ -10,7 +10,7 @@ from .codec import Json
 from .errors import StateFormatError
 from .ids import IdKind
 from .rules import Rules
-from .rules_check import features
+from .unlock_known import features
 
 
 @dataclass(frozen=True)
