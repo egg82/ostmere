@@ -103,6 +103,7 @@ unlocks = [
 # The road's page, on SL24's condition (one moment with it), whoever walked it.
 [[entries]]
 id = "e_old_road"
+title_key = "e_old_road_title"
 section = "places"
 sketch = "old_road"
 hand = "ink"
@@ -288,6 +289,7 @@ outcome = { modifiers = [{ target = "threat", id = "wolf_pack", kind = "add_bp",
 
 [[entries]]
 id = "e_greycoat"
+title_key = "e_greycoat_title"
 section = "creatures"
 sketch = "greycoat"
 hand = "ink"
@@ -828,6 +830,8 @@ l_take_child = "story"
 l_keep_count = "story"
 
 [text]
+e_old_road_title = "the old road"
+e_greycoat_title = "at the gap"
 store_table_clock = "clock"
 action_table_clock = "Clock"
 o_road = "The old road past the ridge needs walking and marking."

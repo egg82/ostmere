@@ -105,6 +105,7 @@ outcome = { line_keys = ["l_b12_1", "l_b12_2", "l_b12_3"], unlocks = [{ unlock_k
 # The cellar's page, on B12's condition (one moment with it).
 [[entries]]
 id = "e_cellar"
+title_key = "e_cellar_title"
 section = "places"
 sketch = "cellar"
 hand = "ink"
@@ -189,6 +190,7 @@ fight = { side = "hands", threat = "ash_bear", lost = "bear_lost", wounds = [{ s
 # The bear's page, with its sign (t_bear_sign's condition, one moment): its odds read unknown until the first hunt.
 [[entries]]
 id = "e_bear"
+title_key = "e_bear_title"
 section = "creatures"
 sketch = "ash_bear"
 hand = "ink"
@@ -813,6 +815,8 @@ l_camp_15 = "level"
 l_camp_16 = "level"
 
 [text]
+e_cellar_title = "the cellar"
+e_bear_title = "bear"
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-twelve routes give each line its states and the writers'
 # pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping

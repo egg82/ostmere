@@ -89,6 +89,7 @@ feature = "book"
 
 [[entries]]
 id = "j_page_a"
+title_key = "j_page_a_title"
 section = "creatures"
 sketch = "j_sketch_a"
 hand = "ink"
@@ -96,6 +97,7 @@ runners = ["t_hunt", "t_raid"]
 
 [[entries]]
 id = "j_page_b"
+title_key = "j_page_b_title"
 section = "places"
 sketch = "j_sketch_b"
 hand = "pencil"
@@ -122,6 +124,8 @@ gate = { test = "after_time", value = 300 }
 
 [text]
 t_up = "what it is for"
+j_page_a_title = "The first page"
+j_page_b_title = "The second page"
 j_note_a1 = "A first thing, set down in ink."
 j_note_a2 = "A later thing, in pencil, with a small drawing."
 j_note_b1 = "A page that is only words."

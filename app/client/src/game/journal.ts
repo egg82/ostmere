@@ -26,6 +26,7 @@ export interface PageNote {
 export interface Page {
   id: string;
   section: Section;
+  title: string | null;
   sketch: string | null;
   runners: string[];
   notes: PageNote[];
@@ -53,7 +54,7 @@ export function pagesOf(catalog: Catalog, view: View, days: readonly JournalDay[
   if (!journal) return [];
   const written: Page[] = journal.entries
     .filter((e) => catalog.unlocked(view, "entry", e.entry))
-    .map((e) => ({ id: e.entry, section: e.section, sketch: e.sketch, runners: e.runners, notes: e.notes
+    .map((e) => ({ id: e.entry, section: e.section, title: catalog.text.get(e.title_key), sketch: e.sketch, runners: e.runners, notes: e.notes
       .filter((n) => catalog.unlocked(view, "note", n.note))
       .map((n) => ({ id: n.note, key: n.note, hand: n.hand, sketch: n.sketch, day: null, count: null })) }));
   return [...daysPages(catalog, days), ...SECTIONS.flatMap(({ section }) => written.filter((p) => p.section === section))];
@@ -72,7 +73,7 @@ function daysPages(catalog: Catalog, days: readonly JournalDay[]): Page[] {
       return d.day_notes.map((n, i) => ({ id: `${d.day}.${start + i}`, key: n.key, hand: n.hand, sketch: n.sketch, day: d.day,
         count: n.count ?? null }));
     });
-    return { id: from === 0 ? `days:${first.day}` : `days:${first.day}.${from}`, section: "days", sketch: null, runners: [], notes };
+    return { id: from === 0 ? `days:${first.day}` : `days:${first.day}.${from}`, section: "days", title: null, sketch: null, runners: [], notes };
   });
 }
 
@@ -117,12 +118,11 @@ export interface ContentsRow {
   current: boolean;
 }
 
-/** A page's title: a days page is headed by the day it begins on, an entry page by the words its first note is written in. */
+/** A page's title: a days page is headed by the day it begins on, an entry page by its own title. */
 function titleOf(catalog: Catalog, page: Page, section: string): string {
-  const first = page.notes[0];
-  if (!first) return section;
-  if (first.day !== null) return catalog.text.fill(UI.journalDay, { n: String(first.day + 1) });
-  return catalog.text.get(first.key);
+  if (page.title !== null) return page.title;
+  const day = page.notes[0]?.day;
+  return day === null || day === undefined ? section : catalog.text.fill(UI.journalDay, { n: String(day + 1) });
 }
 
 /** The contents of `section`: one row for each of its pages, in book order. */

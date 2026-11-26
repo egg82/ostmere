@@ -512,6 +512,7 @@ fight = { side = "hands", threat = "ash_deer", lost = "deer_lost", won_line_keys
 
 [[entries]]
 id = "e_deer"
+title_key = "e_deer_title"
 section = "creatures"
 sketch = "ash_deer"
 hand = "ink"
@@ -885,6 +886,7 @@ l_find_antler = "find"
 l_camp_17 = "level"
 
 [text]
+e_deer_title = "deer"
 l_floor_paced = "Lucy paces out a floor in the dark beside the bays, counting low. at nine she stops."
 store_ruin_beams = "beams in the ruin"
 store_beams = "beams"

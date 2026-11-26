@@ -112,6 +112,7 @@ fight = { side = "hands", threat = "ash_boar", lost = "boar_lost", won_line_keys
 
 [[entries]]
 id = "e_ash_boar"
+title_key = "e_ash_boar_title"
 section = "creatures"
 hand = "ink"
 runners = ["hunt_boar"]
@@ -695,6 +696,7 @@ pot_stew = [{ lane = "n23", amount_bp = 1500 }]
 pot_fungus_stew = [{ lane = "n23", amount_bp = 1000 }]
 
 [text]
+e_ash_boar_title = "boar"
 store_kept_clock = "clock"
 action_kept_clock = "Clock"
 store_kept_4h = "clock"

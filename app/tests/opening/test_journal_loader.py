@@ -85,14 +85,15 @@ def stray_note(tmp_path: Path) -> tuple[Path, ...]:
 def note_before_its_entry(tmp_path: Path) -> tuple[Path, ...]:
     early = appended(tmp_path, '[[notes]]\nid = "j_early"\nentry = "j_late"\ngate = { test = "after_time", value = 5 }',
                      'j_early = "Too soon."\n')
-    late = second_chapter(tmp_path, '[[entries]]\nid = "j_late"\nsection = "places"\nsketch = "j_sketch_c"\nhand = "ink"\nrunners = []\n'
+    late = second_chapter(tmp_path, '[[entries]]\nid = "j_late"\ntitle_key = "j_late_title"\nsection = "places"\nsketch = "j_sketch_c"\nhand = "ink"\nrunners = []\n'
                           '[[notes]]\nid = "j_late_note"\nentry = "j_late"\ngate = { test = "after_time", value = 6 }\n'
-                          '[text]\nj_late_note = "On time."\n')
+                          '[text]\nj_late_title = "Late"\nj_late_note = "On time."\n')
     return early, late
 
 
 def entry_without_note(tmp_path: Path) -> tuple[Path, ...]:
-    return (appended(tmp_path, '[[entries]]\nid = "j_bare"\nsection = "places"\nsketch = "j_sketch_c"\nhand = "ink"\nrunners = []'),)
+    return (appended(tmp_path, '[[entries]]\nid = "j_bare"\ntitle_key = "j_bare_title"\nsection = "places"\nsketch = "j_sketch_c"\nhand = "ink"\nrunners = []',
+                              'j_bare_title = "Bare"\n'),)
 
 
 def runner_without_fight(tmp_path: Path) -> tuple[Path, ...]:
@@ -123,6 +124,14 @@ def sketch_of_a_note_with_slash(tmp_path: Path) -> tuple[Path, ...]:
     return (edited(tmp_path, ('sketch = "j_note_sketch"', 'sketch = "n/s"')),)
 
 
+def entry_without_title(tmp_path: Path) -> tuple[Path, ...]:
+    return (edited(tmp_path, ('title_key = "j_page_b_title"\n', "")),)
+
+
+def title_not_in_text(tmp_path: Path) -> tuple[Path, ...]:
+    return (edited(tmp_path, ('j_page_b_title = "The second page"\n', "")),)
+
+
 def days_page(tmp_path: Path) -> tuple[Path, ...]:
     """The days pages are the written days the save composes (docs/design/journal.md), never an entry."""
     return (edited(tmp_path, ('section = "places"', 'section = "days"')),)
@@ -143,6 +152,8 @@ PLANTS = [
     (book_twice, ["[journal]", "twice"]),
     (book_without_label, ["mix", "label_key"]),
     (note_text_with_digit, ["j_note_b1", "digit"]),
+    (entry_without_title, ["j_page_b", "title_key"]),
+    (title_not_in_text, ["j_page_b", "j_page_b_title"]),
     (days_page, ["section", "'days'"]),
     (unknown_section, ["section"]),
 ]
