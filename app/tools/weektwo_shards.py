@@ -37,14 +37,16 @@ SHARDS: dict[str, frozenset[str]] = {
     "twentytwo": frozenset({"twentytwo"}),
     "twentythree": frozenset({"twentythree"}),
     "twentyfive-sharp": frozenset({"twentyfive-sharp"}),
+    "twentyfive-whenever": frozenset({"twentyfive-whenever"}),
     "twentyfive": frozenset({"twentyfive"}),
     "makers": frozenset({"makers"}),
 }
-NIGHTLY_ONLY = frozenset({"eight", "eighteen", "nineteen", "twentytwo", "twentythree", "twentyfive-sharp", "twentyfive"})
-"""The shards a pull request's slice does not play: each took over 300 s in the last nightly (a slice job's `timeout-minutes`,
-which setup takes about 35 s of), or in a slice, for day twenty-five (typical about 390 s, whenever about 280 s, sharp about
-590 s to build). The nightly plays them. A shard moves out of this set when it is split or sped up to fit, never by raising
-a timeout; a shard not named plays in its chapter's slice."""
+NIGHTLY_ONLY = frozenset({"eighteen", "twentyfive-sharp", "twentyfive"})
+"""The shards a pull request's slice does not play: the slowest play in each, as the last nightly measured it (a build or a
+test's call, under four workers) plus the slice job's 26 s of setup and 10% margin, is over `playthrough-slice`'s 6
+minutes. Day eighteen's sharp play built in 332 s; day twenty-five's typical play in 371-401 s and its sharp in 572-600 s
+(its whenever play, 286 s, fits). The nightly plays these. A shard leaves the set by being split or sped up, never by a longer
+timeout; the 6 minutes is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 ENV = "WEEKTWO_SHARD"
 SLICE = "WEEKTWO_SLICE"
 FILES = "WEEKTWO_FILES"

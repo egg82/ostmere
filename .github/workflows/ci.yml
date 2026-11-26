@@ -236,7 +236,7 @@ jobs:
     needs: changes
     if: needs.changes.outputs.code == 'true' && needs.changes.outputs.full != 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 2
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
       slice: ${{ steps.plan.outputs.slice }}
@@ -279,7 +279,7 @@ jobs:
     needs: slice
     if: needs.slice.outputs.matrix != '[]' && needs.slice.outputs.matrix != ''
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     strategy:
       fail-fast: false
       matrix:

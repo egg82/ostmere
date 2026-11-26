@@ -20,13 +20,14 @@ def test_a_touched_chapter_is_sliced_and_one_before_it_is_not_touched():
     got = plan(changed(twelve="x", nineteen="y"), False, [])
     assert (got["mode"], got["chapters"]) == ("slice", ["twelve", "nineteen"])
     assert got["base_keys"] == BASE.key
-    assert got["shards"] == ["twelve-typical", "twelve"] and got["left"] == ["nineteen"]
+    assert got["shards"] == ["twelve-typical", "twelve", "nineteen"] and got["left"] == []
 
 
 def test_a_chapter_with_two_routes_plays_one_job_per_shard_and_a_long_shard_is_left_to_the_nightly():
     got = plan(changed(twentyfive="x"), False, [])
-    assert (got["shards"], got["left"]) == ([], ["twentyfive-sharp", "twentyfive"])
+    assert (got["shards"], got["left"]) == (["twentyfive-whenever"], ["twentyfive-sharp", "twentyfive"])
     assert NIGHTLY_ONLY >= {"twentyfive-sharp", "twentyfive"}
+    assert plan(changed(eighteen="x"), False, [])["shards"] == []
     assert plan(changed(fifteen="x"), False, [])["shards"] == ["fifteen"]
 
 
