@@ -149,6 +149,21 @@ permanent bonus for a one-off?"). Lasting goes against lasting: a rate on one st
 person's time, or a door the other answer opens. A one-off answer appears only where no answer lasts. **An answer that changes a percentage shows the one it changes**, as now → after ("Stew
 +15% → +20%"), so the player can see what they are adding to or giving up.
 
+**Every answer keeps a consequence** (owner, 2026-11-25: answering an arrival offer yourself changed nothing).
+Each answer to an offer leaves something the player can see and come back to: a lasting number (a modifier whose
+source names the answer), a door (a card, line set or feature that a later gate, trigger or line actually reads), or
+a count that a pattern of answers reads. Answers of one role are counted, so a habit is a fact too ("they expected
+you to do it and had the tools ready"); a rule's answers count as the player's own, and the game never answers for
+them. Good, bad, mixed and conditional are all allowed; no effect is not, and a decline gets a small named echo. The
+consequence lands a little later, a few game hours to a day, as a line that refers back and a number that moves.
+**A promise is broken only by a choice, never by a clock** (owner, 2026-11-25: "it's expected and normal to come
+back to this after a night or even a couple days"). An answer that promises something is read by a later offer or
+beat that sets the promise against something else the player values (food, a person, another promise), and the
+player picks what to give up; "no good option" is allowed, as in the Witcher's quests. The dilemma waits for the
+player and resolves while they are there. Breaking a promise costs more than declining it would have. Stakes up to
+a life come only from such a choice, never from time away (`people.md`: nobody dies from inattention), and never
+take a notable.
+
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
 
