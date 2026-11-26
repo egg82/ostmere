@@ -90,6 +90,7 @@ def made_layers() -> list[Layer]:
         Layer(id="bay2_ghost", img=dayone.ghost(bay2), when="running:make_bay2|running:n3_build_bay", until=d8.BAY2_BUILT),
         *[Layer(id=f"turned_{n}", img=made.turned(n), when=f"pushes:n3_dig_bed@{n}") for n in (1, 2, 3)],
         Layer(id="turned_pelt", img=made.turned_pelt(), when="project:give_pelt&feature:night_7"),
+        Layer(id="turned_sacking", img=made.turned_sacking(), when="answer:o_pelt_keep&feature:night_7"),
         Layer(id="pelt_pegged_1", img=made.pegged(1), when="store:pelt"),
         Layer(id="pelt_pegged_2", img=made.pegged(2), when="store:pelt@3"),
         *[Layer(id=f"pelt_in_bay_{n}", img=made.pelt_in_bay(n), when=f"pushes:pelt_bedding@{n}") for n in (1, 2, 3)],

@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFilter
 import dayfour_poses
 import dayfour_world as world4
 import kit
+import people_moments
 from dayeight_poses import BROTHER, HUSBAND, WOMAN, n4_twisting
 from daythree_made import POTS
 from daythree_poses import N2
@@ -122,6 +123,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         Layer(id="figure_n3_sets_the_bowl", img=_setting_bowl(), when=bowl, until=bowl_out),
         *[Layer(id=f"figure_n{n}_singing", img=person(who, "down", at), when=f"{sing}&answered:o_choir", until=sing_out)
           for n, who, at in zip((8, 9, 10), SINGERS, SINGING_AT)],
+        *people_moments.moment_layers(),
     ]
 
 
@@ -156,7 +158,8 @@ def step_aside(layers: Iterable[Layer]) -> list[Layer]:
     out = list(layers)
     by_id = {layer["id"]: layer for layer in out}
     copies: list[Layer] = []
-    for layer_id, runs in STEP_ASIDE.items():
+    for layer_id in STEP_ASIDE.keys() | people_moments.STEP_ASIDE.keys():
+        runs = (*STEP_ASIDE.get(layer_id, ()), *people_moments.STEP_ASIDE.get(layer_id, ()))
         by_id[layer_id]["until"] = _join(by_id[layer_id].get("until"), *runs)
     for base_id, copy_id, (start, end) in MOMENTS:
         base = by_id[base_id]

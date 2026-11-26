@@ -34,7 +34,18 @@ outcome = { line_keys = ["l_morning_7"], unlocks = [{ unlock_kind = "feature", i
 [[triggers]]
 id = "t_spear_made"
 when = { test = "at_least", subject_kind = "card_count", id = "make_spear", value = 1 }
-outcome = { doings = ["n2"], line_keys = ["l_spear"] }
+outcome = { doings = ["n2"], line_keys = ["l_spear"], unlocks = [{ unlock_kind = "action", id = "spear_clock" }], whereabouts = [{ person = "n2", layer = "figure_n2_hefts_the_spear" }] }
+
+[[stores]]
+id = "spear_clock"
+label_key = "store_moment_clock"
+cap_items = 400
+hidden = true
+
+[[standing]]
+id = "spear_clock"
+label_key = "action_moment_clock"
+makes = [{ store = "spear_clock", items_per_hour = 20 }]
 
 [[triggers]]
 id = "t_rats_first"
@@ -124,6 +135,7 @@ label_key = "a_pelt_keep"
 cost_key = "a_pelt_keep_cost"
 [offers.answers.outcome]
 doings = ["n3"]
+whereabouts = [{ person = "n3", layer = "turned_sacking" }]
 line_keys = ["l_pelt_kept"]
 
 [[cards]]
