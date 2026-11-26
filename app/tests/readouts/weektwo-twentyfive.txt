@@ -1,16 +1,16 @@
 chapter twentyfive: 12 visits on typical
-  V106 gap   4.2 h  spend 55  decide  0
-  V107 gap   3.2 h  spend 84  decide  1  [wait, 1 lines]
-  V108 gap   9.2 h  spend 84  decide  2  [wait, 6 lines]
-  V109 gap   4.2 h  spend 84  decide  1  [wait, 1 lines]
-  V110 gap   3.2 h  spend 54  decide  0  [wait, 2 lines]
-  V111 gap   9.2 h  spend 55  decide  2  [wait, 3 lines]
-  V112 gap   4.2 h  spend 106  decide  1
-  V113 gap   3.1 h  spend 55  decide  0  [wait, 2 lines]
-  V114 gap   9.2 h  spend 53  decide  1  [wait, 6 lines]
-  V115 gap   4.2 h  spend 53  decide  0  [wait, 0 lines]
-  V116 gap   3.2 h  spend 85  decide  0  [wait, 0 lines]
-  V117 gap   9.2 h  spend 54  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 576, decide 3; 8h+: 4 returns, spend 246, decide 5
-  cap loss at the end, away 8 h: cordwood 100%, damp_wood 1%, dry_wood 40%, roots 91%, stakes 100%, stones 59%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: cordwood 100%, damp_wood 1%, dry_wood 40%, roots 91%, stakes 100%, stones 59%, windbreak 100%, wraps_sewn 100%
+  V106 gap   4.2 h  spend 53  decide  1
+  V107 gap   3.2 h  spend 109  decide  1  [wait, 1 lines]
+  V108 gap   9.2 h  spend 54  decide  3  [wait, 6 lines]
+  V109 gap   4.1 h  spend 97  decide  1  [wait, 2 lines]
+  V110 gap   3.2 h  spend 85  decide  0  [wait, 3 lines]
+  V111 gap   9.2 h  spend 58  decide  2  [wait, 3 lines]
+  V112 gap   4.2 h  spend 68  decide  0  [wait, 2 lines]
+  V113 gap   3.2 h  spend 97  decide  0  [wait, 3 lines]
+  V114 gap   9.2 h  spend 84  decide  2  [wait, 4 lines]
+  V115 gap   4.2 h  spend 40  decide  0  [wait, 0 lines]
+  V116 gap   3.2 h  spend 29  decide  0  [wait, 0 lines]
+  V117 gap   9.2 h  spend 41  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 578, decide 3; 8h+: 4 returns, spend 237, decide 7
+  cap loss at the end, away 8 h: damp_wood 0%, dry_wood 26%, roots 85%, stakes 96%, stones 29%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: damp_wood 0%, dry_wood 32%, roots 84%, stakes 99%, stones 29%, windbreak 100%, wraps_sewn 100%
