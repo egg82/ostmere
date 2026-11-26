@@ -24,7 +24,7 @@ touching only those plays nothing of week two. A shard leaves that set by being 
 longer timeout. A change to what every chapter reads (the engine, the
 opening's loader and shared data, the rules' ids and structure, `content/beats.yaml`, the shared play code), to week
 one, or a base without keys, gets the smoke instead: the day-eight plays of the push routes, from the start
-(`@pytest.mark.smoke`). The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,
+(`@pytest.mark.smoke`); a change every chapter reads, or week one's, also plays the `makers` shard from the start (`WHOLE_GAME` in `tools/weektwo_shards.py`), so its readouts are read before merge. The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,
 `playthrough-week-one-saved`, `playthrough-week-two`, `publish-ends`) are the full run: nightly on `main`, on a manual
 dispatch, and on a pull request labelled `playthroughs`, which is an opt-in and not part of any writer's routine. A red
 nightly holds the next release (`release` fails while the last completed nightly on `main` failed): dispatch Nightly on
