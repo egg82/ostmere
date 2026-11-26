@@ -42,6 +42,24 @@ class SaveMemo[T]:
                 return
 
 
+class FieldMemo[T]:
+    """A SaveMemo for what is built from one of a save's fields alone, kept across saves that carry the very same
+    object in it (a save made by replacing other fields)."""
+
+    def __init__(self, size: int = 2) -> None:
+        self._entries: tuple[tuple[object, T], ...] = ()
+        self._size = size
+
+    def get(self, field: object, build: Callable[[], T]) -> T:
+        entries = self._entries
+        for entry in entries:
+            if entry[0] is field:
+                return entry[1]
+        value = build()
+        self._entries = ((field, value), *entries[:self._size - 1])
+        return value
+
+
 class PartsMemo[T]:
     """A SaveMemo for what is built from a few of a save's fields alone, kept across saves: an entry holds while each
     part is the very object it was built from (fields a save carries over unchanged stay the same object), and `same`,

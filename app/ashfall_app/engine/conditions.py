@@ -8,7 +8,7 @@ from .counts import completions, unit, work_segment
 from .discrete import discrete_value
 from .index import index
 from .motion import store_segment
-from .memo import PartsMemo
+from .memo import FieldMemo
 from .orders import (
     AfterTime, AtLeast, CardCount, Condition, LaneRules, Running, SkillLevel, StoreValue, Subject, Unlocked,
 )
@@ -142,7 +142,7 @@ def _level_time(save: Save, rules: Rules, subject: SkillLevel, level: int) -> in
     return None if x is None else reach_time(st.xp, x)
 
 
-_VALUES: PartsMemo[dict[str, int]] = PartsMemo()
+_VALUES: FieldMemo[dict[str, int]] = FieldMemo()
 """Kept while the save's stores are the same object."""
 
 
@@ -157,10 +157,10 @@ def _stored_values(save: Save) -> dict[str, int]:
         for st in save.stores:
             found.setdefault(st.store, st.segment.start_value)
         return found
-    return _VALUES.get((save.stores,), build)
+    return _VALUES.get(save.stores, build)
 
 
-_SKILLS: PartsMemo[dict[str, SkillState]] = PartsMemo()
+_SKILLS: FieldMemo[dict[str, SkillState]] = FieldMemo()
 """Kept while the save's skills are the same object."""
 
 
@@ -171,7 +171,7 @@ def _skill(save: Save, subject: SkillLevel) -> SkillState:
         for k in save.skills:
             skills.setdefault(k.skill, k)
         return skills
-    return _SKILLS.get((save.skills,), build)[subject.skill]
+    return _SKILLS.get(save.skills, build)[subject.skill]
 
 
 def _level(save: Save, rules: Rules, subject: SkillLevel) -> int:

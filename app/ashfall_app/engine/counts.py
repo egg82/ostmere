@@ -6,7 +6,7 @@ from .cards import CardDef, CardState
 from .gone import left_cards
 from .ids import HANDS, CardId, MixId
 from .index import derived, index
-from .memo import PartsMemo
+from .memo import FieldMemo, PartsMemo
 from .mixes import flatten_shares
 from .rules import Rules
 from .segments import Segment
@@ -20,12 +20,12 @@ def unit(card: CardDef) -> int:
     return card.work_s * BP
 
 
-_CARDS: PartsMemo[dict[CardId, CardState]] = PartsMemo()
+_CARDS: FieldMemo[dict[CardId, CardState]] = FieldMemo()
 """Each card's state by id, kept while the save's cards are the same object."""
 
 
 def card_state(save: Save, card: CardId) -> CardState | None:
-    return _CARDS.get((save.cards,), lambda: {cs.card: cs for cs in save.cards}).get(card)
+    return _CARDS.get(save.cards, lambda: {cs.card: cs for cs in save.cards}).get(card)
 
 
 def work_segment(save: Save, card: CardId) -> Segment:
@@ -87,7 +87,7 @@ def completed_cards(save: Save, rules: Rules) -> frozenset[CardId]:
     """Every card of the rules is_completed holds for, read in one pass over the capped cards."""
     cards = index(rules).cards
     retired = _RETIRED.get((save.unlocked, rules), lambda: _retired(save, rules))
-    states = _CARDS.get((save.cards,), lambda: {cs.card: cs for cs in save.cards})
+    states = _CARDS.get(save.cards, lambda: {cs.card: cs for cs in save.cards})
     out = {CardId(c) for c in retired if c in cards}
     for card, cap, per in derived(rules, "_capped_cards", _capped):
         cs = states.get(card)
