@@ -757,6 +757,9 @@ after = { unlock_kind = "feature", id = "drift" }
 B8 = ["l_b8_1"]
 B9 = ["l_b9_1"]
 
+[line_doings.l_stage_7]
+doings = ["n2"]
+
 [line_kinds]
 l_ring_scored = "story"
 l_stage_1 = "story"

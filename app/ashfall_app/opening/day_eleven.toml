@@ -765,6 +765,9 @@ modifiers = [
 [beat_lines]
 B11 = ["l_b11_1"]
 
+[line_doings.l_n6_posts_done]
+doings = ["n6"]
+
 [line_kinds]
 l_kept_o_family_room = "story"
 l_kept_o_family_theirs = "story"

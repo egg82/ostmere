@@ -1,7 +1,8 @@
 """Where the people are: every outcome that joins or leaves a person, or marks one as doing something the scene could show
-(`doings`), names the scene layer that shows it or says why none does (`whereabouts`, entries.WhereaboutsEntry). A case is
-`<owner>:<person>`, the owner being `trigger:<id>`, `card:<id>/outcome`, `card:<id>/finished` or `offer:<offer>/<answer>`.
-app/tests/test_scene_people.py holds every join and leave to the field, and the cases in `HELD_UNPLACED` to the audit."""
+(`doings`), and every marked line no outcome carries (`[line_doings]`), names the scene layer that shows it or says why none
+does (`whereabouts`, entries.WhereaboutsEntry). A case is `<owner>:<person>`, the owner being `trigger:<id>`,
+`card:<id>/outcome`, `card:<id>/finished`, `offer:<offer>/<answer>` or `line:<key>`.
+app/tests/test_scene_people.py holds every join, leave and doing to the field, and the held cases to the audit."""
 
 HELD_UNPLACED: frozenset[str] = frozenset({
     "card:b7_stand/finished:n2",
@@ -46,3 +47,21 @@ HELD_UNPLACED: frozenset[str] = frozenset({
 })
 """Cases that join, leave or set a person doing something the scene shows nothing of today (the audit, one row each):
 may only shrink. A case leaves this list when its outcome gains a `whereabouts` entry for the person."""
+
+HELD_LINE_ONLY: frozenset[str] = frozenset({
+    "line:l_bedding_4:n2",
+    "line:l_choir_2:n10",
+    "line:l_choir_2:n8",
+    "line:l_choir_2:n9",
+    "line:l_fiddle_2:n14",
+    "line:l_fiddle_2:n15",
+    "line:l_n6_posts_done:n6",
+    "line:l_pelt_ask:n3",
+    "line:l_posts:n4",
+    "line:l_road_pair_2:n11",
+    "line:l_road_pair_3:n11",
+    "line:l_road_pair_3:n12",
+    "line:l_stage_7:n2",
+})
+"""Cases of a line no outcome carries (`[line_doings]`, `line:<key>:<person>`) that the scene shows nothing of today: may
+only shrink. A case leaves this list when its line's `whereabouts` gains an entry for the person."""
