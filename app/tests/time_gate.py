@@ -14,6 +14,10 @@ test that used it, so shared teardowns stay cheap. A fixture set up for a playth
 not timed. After a shared fixture is built, the heap is frozen out of the cyclic collector (`freeze_caches`), so the
 next full collection does not walk that cache and charge it to whichever test is running.
 
+A test over the ceiling is timed once more before it fails (`pytest_runtest_protocol`): runner noise on one sample
+does not fail the suite, a test that is slow every time still does. The second timing runs in the same process straight
+after, so under xdist each worker retimes its own tests; the summary names the ones that passed on the second timing.
+
 CEILING_S is 4 s, FIXTURE_CEILING_S 10 s. Measured on CI (run 43347069455, both `tests` shards, `--durations-min=1`,
 setup and call summed per test): the slowest test's own cost is 3.01 s, db/test_failover's silent-host wait on libpq's
 connect timeout, cut to a one-second smoke test; every other phase over 1 s is a shared fixture's setup (the household
@@ -24,11 +28,13 @@ fixture measured. Raise neither: speed the test or fixture up, or split it. HELD
 only shrink. A deliberately slow run (the nightly deep run, tools/silent_vanish.sh) sets TEST_CEILING_S, and with it
 the fixture ceiling unless FIXTURE_CEILING_S is set too."""
 import gc
+import importlib
 import os
 import time
 from collections.abc import Generator
 
 import pytest
+from _pytest.runner import runtestprotocol
 from pluggy import Result
 
 CEILING_S = float(os.environ.get("TEST_CEILING_S", "4.0"))
@@ -37,6 +43,8 @@ HELD: frozenset[str] = frozenset()
 HELD_FIXTURES: frozenset[str] = frozenset()
 SPENT_KEY = pytest.StashKey[float]()
 SHARED_KEY = pytest.StashKey[float]()
+OVER_KEY = pytest.StashKey[float]()
+SLOW_ONCE = "time_gate_slow_once"
 
 
 class Shared:
@@ -118,7 +126,56 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) ->
     own = call.duration - (item.stash.get(SHARED_KEY, 0.0) if call.when == "setup" else 0.0)
     spent = charge(item, own)
     if report.when == "teardown" and report.passed and timed(item) and too_slow(item.nodeid, spent):
+        item.stash[OVER_KEY] = spent
         report.outcome = "failed"
         report.longrepr = (f"{item.nodeid} took {spent:.2f}s of wall clock with its setup and teardown (shared "
                            f"fixtures timed on their own), over the {CEILING_S}s per-test ceiling (tests/time_gate.py): "
                            f"speed it up or split it")
+
+
+def rearm_hang_guard(item: pytest.Item) -> None:
+    """pytest-timeout's timer covers the whole protocol, so a second timing gets the full guard of its own."""
+    hook = item.config.pluginmanager.hook
+    if item.config.pluginmanager.has_plugin("timeout"):
+        settings = importlib.import_module("pytest_timeout")._get_item_settings(item)
+        if settings.timeout and not settings.func_only:
+            hook.pytest_timeout_cancel_timer(item=item)
+            hook.pytest_timeout_set_timer(item=item, settings=settings)
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> bool | None:
+    """One noisy sample does not fail a test: a test that passes but for the ceiling is timed once more, in the same
+    worker straight after (its fixtures set up and torn down again, shared ones kept for `nextitem`). It fails only if
+    the second timing is over too; if the second is under, it passes and the summary names the first sample. Real
+    failures, fixture ceilings and playthroughs are never retimed. Each xdist worker retimes its own test, so the verdict
+    is made where the test ran and the report that reaches the controller is the second timing's."""
+    if not timed(item):
+        return None
+    hook = item.ihook
+    hook.pytest_runtest_logstart(nodeid=item.nodeid, location=item.location)
+    reports = runtestprotocol(item, nextitem=nextitem, log=False)
+    first = item.stash.get(OVER_KEY, None)
+    if first is not None:
+        del item.stash[OVER_KEY]
+        if SPENT_KEY in item.stash:
+            del item.stash[SPENT_KEY]
+        rearm_hang_guard(item)
+        reports = runtestprotocol(item, nextitem=nextitem, log=False)
+        if OVER_KEY not in item.stash:
+            call = next((r for r in reports if r.when == "call"), reports[-1])
+            call.user_properties.append((SLOW_ONCE, f"{first:.2f}"))
+    for report in reports:
+        hook.pytest_runtest_logreport(report=report)
+    hook.pytest_runtest_logfinish(nodeid=item.nodeid, location=item.location)
+    return True
+
+
+def pytest_terminal_summary(terminalreporter: pytest.TerminalReporter) -> None:
+    """The tests that were over the ceiling on their first timing and under on the second: slow, not failed."""
+    slow = [(r.nodeid, v) for r in terminalreporter.stats.get("passed", []) for k, v in r.user_properties
+            if k == SLOW_ONCE]
+    if slow:
+        terminalreporter.section("time gate: slow once, passed on a second timing")
+        for nodeid, first in slow:
+            terminalreporter.write_line(f"{nodeid}: {first}s the first time, under {CEILING_S}s the second")

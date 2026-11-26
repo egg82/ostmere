@@ -185,6 +185,22 @@ STAGES["63_over_top"] = STAGES["62_cloths"].then(_built("cut_over", 6) | {"proje
 STAGES["64_all_built"] = STAGES["63_over_top"].then(STAGES["31_stack_shelf"].facts - STAGES["31_warm_ground"].facts
                                                     | STAGES["42_flaps"].facts - STAGES["42_roofs_cleared"].facts
                                                     | {"project:n6_posts"})
+# The later people's moments (people_layers.py), each on the finished camp.
+_ALL = STAGES["64_all_built"]
+STAGES["65_sowing"] = _ALL.then({"running:n3_sow"})
+STAGES["65_pulled_rows"] = _ALL.then({"action:rows_black"}, rows_black_left=6)
+STAGES["65_sun"] = _ALL.then(torn_clock=3)
+STAGES["65_deer"] = _ALL.then(clear_clock=18)
+STAGES["65_table"] = _ALL.then({"action:table"})
+STAGES["65_pot"] = _ALL.then(choir_clock=3)
+STAGES["65_hauling"] = _ALL.then(ashwood_trips=1)
+STAGES["65_racks"] = _ALL.then({"running:n3_wash_meat"})
+STAGES["65_stone"] = _ALL.then(kept_clock=30)
+STAGES["65_stranger"] = _ALL.then({"feature:stranger_home"})
+STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
+STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_hearth_pick"})
+STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
+STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
 
 
 def holds(cond: str | None, state: State) -> bool:
@@ -212,11 +228,15 @@ CONDITIONS = {
     "chip:<id>": "the chip is showing",
     "feature:<id>": "the feature is unlocked",
     "action:<id>": "the standing action is unlocked (it runs by itself from then on)",
+    "answered:<offer>": "the offer has been answered, by any answer",
+    "answer:<answer>": "that answer was the one given",
+    "joined:<lane>": "the lane's person has joined the town",
+    "left:<lane>": "the lane's person has left the town for good",
     "end:showing": "the end has happened: the end feature was unlocked with every ledger line covered (it never clears)",
     "<a>|<b>|...": "any of the conditions holds",
     "<a>&<b>&...": "all of the conditions hold; binds tighter than |, so a&b|c is (a and b) or c",
 }
 
 
-KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action"}
+KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left"}
 """The condition kinds the page knows (app/client/src/scene/conditions.ts)."""

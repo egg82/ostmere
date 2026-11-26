@@ -1,12 +1,12 @@
-"""The saved ends week two's chapters play on from (written by tools/chapter_saves.py and nothing else, into a directory
-named by key(), outside the source tree; CI builds and caches it, tools/saves_cache.py): each
-push route's player at the end of week one and of days eight, nine and eleven, pickled, and typical's save at each of
+"""The saved ends week two's chapters play on from (written by tools/chapter_saves.py and nothing else, outside the source
+tree, one directory per chapter named by that chapter's key, keys.py; CI builds them and caches the lot, ci.yml `publish-ends`):
+each push route's player at the end of week one and of every chapter after it, pickled, and typical's save at each of
 those chapters' ends written under the rules without the chapters after it (rebased.py), as encoded text.
 
-Where no saved end is present, the plays start from the start (`available`); ASHFALL_REQUIRE_SAVED=1, which CI sets,
-makes a missing or stale one a failure instead. A saved end is stale when today's content or code plays it differently.
-Three checks say so, each failing with the command that rewrites them (REWRITE):
-- the manifest's rules digest is today's (fast, before any play);
+Where a chapter's saved end is absent, its play starts from the start (`available`); ASHFALL_REQUIRE_SAVED=1, which CI
+sets, makes a missing one a failure instead. A key that is today's means today's inputs to that chapter's play are the ones
+it was written from, so a stale end is a missing one; two checks look past the key, each failing with the command that
+rewrites them (REWRITE):
 - a chapter played on from the saved end before it ends where its own saved end says (test_weektwo_saved.py, and
   tests/weekone_saved for week one's ends, compared with the plays week one's job exports): the chain is checked link by
   link, each link at the cost of the chapter it plays;
@@ -20,17 +20,14 @@ import os
 import pickle
 import random
 from dataclasses import dataclass
-from functools import cache
 from pathlib import Path
 
-from ashfall_app.engine import Rules, rules_digest
 from tests.daythree.chapter import Later
 from tests.daythree.content import rules3
 from tests.daytwo.player import DayTwoPlayer
+from tests.weektwo import keys
 
 APP = Path(__file__).resolve().parents[2]
-PLAY_CODE = ("tests/dayone", "tests/daytwo", "tests/daythree", "tests/weekone", "tests/weektwo", "tools/chapter_saves.py")
-"""What plays besides the engine and the rules: the players, policies and chapters' moves, and the writer."""
 REWRITE = "PYTHONPATH=. python tools/chapter_saves.py --write   # from app/"
 REQUIRE = "ASHFALL_REQUIRE_SAVED"
 CONFIG = frozenset({"laters"})
@@ -46,58 +43,50 @@ def engine_digest() -> str:
     return code.hexdigest()
 
 
-def play_digest() -> str:
-    """A hex sha256 of PLAY_CODE's source, tests excluded: a test file reads a play, it does not make one."""
-    code = hashlib.sha256()
-    for entry in PLAY_CODE:
-        found = [APP / entry] if entry.endswith(".py") else sorted((APP / entry).rglob("*.py"))
-        for f in found:
-            if not (f.name.startswith("test_") or f.name == "conftest.py"):
-                code.update(str(f.relative_to(APP)).encode() + b"\0" + f.read_bytes())
-    return code.hexdigest()
+BASE_KEYS = "ASHFALL_BASE_KEYS"
+"""A JSON file of chapter -> key: the keys the saves present were written under, for a run that plays a chapter on from
+a base's saved end of the one before it (CI's pull-request slice, docs/engineering.md, "Scope and test budget"). The
+chapters it lists are read from those keys, never checked against today's inputs; unset, every chapter's key is today's."""
 
 
-@cache
-def key() -> str:
-    """The inputs the saved ends depend on, as 16 hex: today's rules (the manifest's stamp), the engine and the play
-    code. Equal keys, equal bytes (the writer runs under one hash seed), so the saves are cached under it."""
-    parts = (rules_digest(rules3()), engine_digest(), play_digest())
-    return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:16]
+def key(chapter: str) -> str:
+    """The key `chapter`'s saved end is stored under (keys.py), or the base's where BASE_KEYS lists it."""
+    named = os.environ.get(BASE_KEYS)
+    if named:
+        found = json.loads(Path(named).read_text()).get(chapter)
+        if found:
+            return str(found)
+    return keys.key(chapter)
 
 
 def root() -> Path:
     return Path(os.environ.get("ASHFALL_SAVES_ROOT") or Path.home() / ".cache" / "ashfall" / "chapter-saves")
 
 
-def golden() -> Path:
-    """The directory holding today's saved ends."""
-    return root() / key()
+def golden(chapter: str) -> Path:
+    """The directory holding `chapter`'s saved ends."""
+    return root() / key(chapter)
 
 
-def manifest() -> Path:
-    return golden() / "manifest.json"
+def manifest(chapter: str) -> Path:
+    return golden(chapter) / "manifest.json"
 
 
-def available() -> bool:
-    """Whether today's saved ends are present and stamped with today's rules. When not, False, so a caller plays from
-    the start; under REQUIRE, an AssertionError instead."""
-    if not manifest().exists():
-        found, why = False, f"no saved ends in {golden()}"
-    elif manifest_rules() != rules_digest(rules3()):
-        found, why = False, f"the saved ends in {golden()} were written under other rules"
-    else:
-        found, why = True, ""
+def available(chapter: str) -> bool:
+    """Whether `chapter`'s saved ends are present. When not, False, so a caller plays from the start; under REQUIRE, an
+    AssertionError instead."""
+    found = manifest(chapter).exists()
     if not found and os.environ.get(REQUIRE):
-        raise AssertionError(f"{why}: {REWRITE}")
+        raise AssertionError(f"no saved ends for {chapter} in {golden(chapter)}: {REWRITE}")
     return found
 
 
 def player_path(chapter: str, name: str) -> Path:
-    return golden() / f"{chapter}-{name}.pickle.xz"
+    return golden(chapter) / f"{chapter}-{name}.pickle.xz"
 
 
 def rebased_path(chapter: str) -> Path:
-    return golden() / f"rebased-{chapter}.json"
+    return golden(chapter) / f"rebased-{chapter}.json"
 
 
 Span = tuple[str, int, int | None]
@@ -135,13 +124,13 @@ the last open, so a step added by content is read by its chapter's last span."""
 
 
 def readings_path(chapter: str, start: int) -> Path:
-    return golden() / f"readings-{chapter}-{start}.json"
+    return golden(chapter) / f"readings-{chapter}-{start}.json"
 
 
 def saved_readings(chapter: str) -> dict[tuple[str, int], bool]:
     """Every saved reading of `chapter`'s heavy steps, by (visit label, step index)."""
     found: dict[tuple[str, int], bool] = {}
-    for f in sorted(golden().glob(f"readings-{chapter}-*.json")):
+    for f in sorted(golden(chapter).glob(f"readings-{chapter}-*.json")):
         for label, i, decides in json.loads(f.read_text())["readings"]:
             found[str(label), int(i)] = bool(decides)
     return found
@@ -196,9 +185,9 @@ def load(chapter: str, name: str, laters: tuple[Later, ...]) -> DayTwoPlayer:
 
 def exported_path(name: str) -> Path:
     """Where week one's job leaves route `name`'s play (tests/weekone/test_weekone_export.py), for the job that holds the
-    saved week one to it (tests/weekone_saved). Under the key, so a play of other code is never read."""
+    saved week one to it (tests/weekone_saved). Under week one's key, so a play of other code is never read."""
     base = Path(os.environ.get("ASHFALL_WEEKONE_PLAYS") or Path.home() / ".cache" / "ashfall" / "week-one-plays")
-    return base / key() / f"week1-{name}.pickle.xz"
+    return base / key("week1") / f"week1-{name}.pickle.xz"
 
 
 def differs(a: DayTwoPlayer, b: DayTwoPlayer, skip: frozenset[str] = frozenset()) -> list[str]:
@@ -231,9 +220,5 @@ def rebased_json(saved: SavedRebased) -> str:
     return json.dumps({"inputs": saved.inputs, "text": saved.text}, indent=1) + "\n"
 
 
-def manifest_json(rules: Rules) -> str:
-    return json.dumps({"rules": rules_digest(rules), "rewrite": REWRITE}, indent=1) + "\n"
-
-
-def manifest_rules() -> str:
-    return str(json.loads(manifest().read_text())["rules"])
+def manifest_json(chapter: str) -> str:
+    return json.dumps({"chapter": chapter, "key": key(chapter), "rewrite": REWRITE}, indent=1) + "\n"

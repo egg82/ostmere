@@ -267,6 +267,11 @@ joins = [
   { lane = "n6", mix = "town:camp", card = "n6_watch", own_split = true },
   { lane = "n7", mix = "town:camp", card = "n7_pick", own_split = true },
 ]
+whereabouts = [
+  { person = "n5", layer = "figure_n5_by_fire" },
+  { person = "n6", layer = "figure_n6_by_fire" },
+  { person = "n7", layer = "figure_n7_by_fire" },
+]
 
 # Their cutting takes the place of their gathering by hand from the join, as the first two's does (choice_checks.py).
 # Its own trigger, as t_family_joins' outcome is released.
@@ -309,6 +314,11 @@ modifiers = [
 id = "t_family_groups"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
 [triggers.outcome]
+whereabouts = [
+  { person = "n5", layer = "figure_n5_at_wood_edge" },
+  { person = "n6", layer = "figure_n6_at_wood_edge" },
+  { person = "n7", layer = "figure_n7_at_pot" },
+]
 line_keys = ["l_group_1", "l_group_2"]
 marks = [
   { lane = "n5", own_split = false, card = "g_field_forage" },

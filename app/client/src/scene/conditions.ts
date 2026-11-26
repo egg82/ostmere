@@ -25,6 +25,10 @@ export class SceneFacts {
    * chip:<id>              the chip is showing
    * feature:<id>           the feature is unlocked
    * action:<id>            the standing action is unlocked (view.standing)
+   * answered:<offer>      the offer has been answered, by any answer (view.unlocked, category "answered")
+   * answer:<answer>        that answer was the one given (category "answer")
+   * joined:<lane>         the lane's person has joined the town (category "joined")
+   * left:<lane>           the lane's person has left the town for good (category "left")
    * <a>|<b>|...            any of them holds
    * <a>&<b>&...            all of them hold; binds tighter than |, so a&b|c is (a and b) or c
    */
@@ -51,6 +55,10 @@ export class SceneFacts {
       case "end": return rest === "showing" && view.ended_at !== null;
       case "chip": return view.chips.includes(rest);
       case "feature": return view.unlocked.some((u) => u.category === "feature" && u.id === rest);
+      case "answered":
+      case "answer":
+      case "joined":
+      case "left": return view.unlocked.some((u) => u.category === kind && u.id === rest);
       case "action": return view.standing.some((a) => a.action === rest);
       default: return unknown(condition);
     }

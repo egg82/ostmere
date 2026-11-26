@@ -5,6 +5,10 @@ its play's chapter, else, reading no play, the one naming NO_PLAY. A test marked
 plays another's plays again. Kept out of tests/weektwo so a change here leaves the saved ends' key alone (ends.py).
 
 WEEKTWO_SHARD=<name> runs one shard; unset, every test runs.
+WEEKTWO_SLICE=<chapter>[,<chapter>...] runs a pull request's slice: the tests that play those chapters, each from the saved
+end of the chapter before (ASHFALL_BASE_KEYS, tests/weektwo/ends.py), less the ones that read a chapter's own saved end, readings
+or rebased save, which only the full run writes. WEEKTWO_SLICE=smoke runs the tests marked `smoke`, played from the start.
+WEEKTWO_FILES=<repo-relative path>[,...] adds every test of those week-two test files to a slice.
 Run from app/: python -m tools.weektwo_shards --check   exits 1 unless each week-two playthrough test is selected by
                                                         exactly one shard, so a chapter added to routes.CHAPTERS fails
                                                         CI until a shard names it; then prints `matrix=<json>`, the
@@ -32,11 +36,23 @@ SHARDS: dict[str, frozenset[str]] = {
     "nineteen": frozenset({"nineteen"}),
     "twentytwo": frozenset({"twentytwo"}),
     "twentythree": frozenset({"twentythree"}),
+    "twentyfive-sharp": frozenset({"twentyfive-sharp"}),
+    "twentyfive-whenever": frozenset({"twentyfive-whenever"}),
     "twentyfive": frozenset({"twentyfive"}),
     "makers": frozenset({"makers"}),
 }
+NIGHTLY_ONLY = frozenset({"eighteen", "twentyfive-sharp", "twentyfive"})
+"""The shards a pull request's slice does not play: the slowest play in each, as the last nightly measured it (a build or a
+test's call, under four workers) plus the slice job's 26 s of setup and 10% margin, is over `playthrough-slice`'s 6
+minutes. Day eighteen's sharp play built in 332 s; day twenty-five's typical play in 371-401 s and its sharp in 572-600 s
+(its whenever play, 286 s, fits). The nightly plays these. A shard leaves the set by being split or sped up, never by a longer
+timeout; the 6 minutes is what tests/test_ci_budget.py's 10 leaves after `changes`, `slice` and `ci-ok`."""
 ENV = "WEEKTWO_SHARD"
+SLICE = "WEEKTWO_SLICE"
+FILES = "WEEKTWO_FILES"
+SMOKE = "smoke"
 WEEK_TWO = Path(__file__).resolve().parents[1] / "tests" / "weektwo"
+REPO = WEEK_TWO.parents[2]
 ARGS = ["tests/weektwo"]
 SELECT = ("-m", "playthrough")
 
@@ -54,12 +70,39 @@ def shard_of(play: tuple[str, str] | None, named: str | None = None) -> str | No
     return None
 
 
+def shards_of_chapter(chapter: str) -> list[str]:
+    """The shards that play `chapter`: those holding the chapter itself or one of its routes."""
+    return [name for name, held in SHARDS.items() if any(k == chapter or k.startswith(chapter + "-") for k in held)]
+
+
+def chapters_of(shard: str) -> set[str]:
+    """The chapters whose plays `shard` holds (its keys are a chapter or "chapter-route"); NO_PLAY is none."""
+    return {k.split("-")[0] for k in SHARDS[shard] if k != NO_PLAY}
+
+
+def slice_shards(chapters: list[str], all_shards: bool) -> tuple[list[str], list[str]]:
+    """(the shards a slice plays, the ones it leaves to the nightly): those of each touched chapter, or every shard when a
+    week-two test file changed, since which shard a file's tests are in is known only by collecting."""
+    wanted = list(SHARDS) if all_shards else [n for c in chapters for n in shards_of_chapter(c)]
+    return [n for n in wanted if n not in NIGHTLY_ONLY], [n for n in wanted if n in NIGHTLY_ONLY]
+
+
 def chosen() -> str | None:
     """The shard this session runs (ENV), None for all of them."""
     name = os.environ.get(ENV) or None
     if name is not None and name not in SHARDS:
         raise pytest.UsageError(f"{ENV}={name!r} is not a week-two shard: {sorted(SHARDS)}")
     return name
+
+
+def sliced() -> frozenset[str] | None:
+    """The chapters of this session's slice (SLICE), {SMOKE} for the smoke, None for no slice."""
+    names = [n for n in os.environ.get(SLICE, "").split(",") if n]
+    return frozenset(names) if names else None
+
+
+def files() -> frozenset[Path]:
+    return frozenset((REPO / f).resolve() for f in os.environ.get(FILES, "").split(",") if f)
 
 
 def in_week_two(item: pytest.Item) -> bool:
@@ -81,7 +124,10 @@ def check() -> int:
     for label, nodes in (("in no shard", missing), ("in more than one shard", twice), ("only in a shard", extra)):
         for node in nodes[:10]:
             print(f"{label}: {node} {seen.get(node, [])}")
-    return 1 if missing or twice or extra else 0
+    unknown = sorted(NIGHTLY_ONLY - set(SHARDS))
+    for name in unknown:
+        print(f"NIGHTLY_ONLY names no shard: {name}")
+    return 1 if missing or twice or extra or unknown else 0
 
 
 if __name__ == "__main__":

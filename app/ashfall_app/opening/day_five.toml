@@ -509,6 +509,7 @@ unlocks = [
   { unlock_kind = "action", id = "pair_3h" },
 ]
 joins = [{ lane = "n3", mix = "town:camp", card = "n3_forage", own_split = true }, { lane = "n4", mix = "town:camp", card = "n4_watch", own_split = true }]
+whereabouts = [{ person = "n3", layer = "figure_n3_by_fire" }, { person = "n4", layer = "figure_n4_by_fire" }]
 
 [[subjects]]
 id = "s_n3_joined"

@@ -18,6 +18,7 @@ Route = tuple[str, DayTwoPlayer]
 Counts = tuple[DayTwoPlayer, list[counters.Counts]]
 
 
+@pytest.mark.smoke
 @pytest.mark.parametrize("eight_route", PUSH_ROUTES, indirect=True)
 def test_the_route_plays_day_eight_to_b9(eight_route: Route):
     name, p = eight_route

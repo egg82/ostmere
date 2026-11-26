@@ -135,3 +135,35 @@ expect("running:shelter&feature:stool|chip:cold", AT, true);     // (a and b) or
 expect("feature:stool&running:shelter|chip:warm", AT, false);
 expect("feature:stool|running:shelter&feature:mix", AT, true);   // a or (b and c), not (a or b) and c
 expect("store:wood@15&running:shelter", AT, false);
+
+// `answered:`, `answer:`, `joined:` and `left:` read the unlocked entry of that category and id, and no other category's:
+// an answer is not its offer, and a lane's join is not its leaving.
+{
+  const base = fixtureStep("mid", AT).view;
+  const entries = [
+    { category: "answered" as const, id: "o_x" },
+    { category: "answer" as const, id: "o_x_no" },
+    { category: "joined" as const, id: "n8" },
+    { category: "left" as const, id: "n9" },
+  ];
+  const f = new SceneFacts();
+  f.observe({ ...base, unlocked: [...base.unlocked, ...entries] });
+  const want = (condition: string, ok: boolean): void => {
+    const got = f.holds(condition, AT, Q);
+    if (got !== ok) throw new Error(`unlock kinds: holds("${condition}") = ${got}, want ${ok}`);
+  };
+  want("answered:o_x", true);
+  want("answered:o_x_no", false);
+  want("answer:o_x_no", true);
+  want("answer:o_x", false);
+  want("answer:o_x_yes", false);
+  want("joined:n8", true);
+  want("left:n8", false);
+  want("left:n9", true);
+  want("joined:n9", false);
+  want("answered:o_x&joined:n8", true);
+  want("answered:o_x&left:n8", false);
+  const none = new SceneFacts();
+  none.observe(base);
+  if (none.holds("answered:o_x", AT, Q)) throw new Error("answered holds with no such entry");
+}

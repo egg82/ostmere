@@ -262,12 +262,19 @@ id = "t_walkers_6h"
 when = { test = "at_least", subject_kind = "store", id = "walkers_clock", value = 6 }
 outcome = { unlocks = [{ unlock_kind = "action", id = "walkers_6h" }] }
 
+# ---------- SL34: the second wake ----------
+
+[[triggers]]
+id = "t_second_wake"
+when = { test = "at_least", subject_kind = "store", id = "boar_lost", value = 1 }
+outcome = { line_keys = ["l_second_wake"] }
+
 # ---------- SL35: the cutter's sister ----------
 
 [[triggers]]
 id = "t_sister_road"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 20 }
-outcome = { line_keys = ["l_sister_road"] }
+outcome = { line_keys = ["l_sister_road"], whereabouts = [{ person = "n12", no_scene = "out on the cut road past the palisade, above the story strip's clearance, where no figure's head may sit" }] }
 
 # ---------- the post's door, and Camp 19 ----------
 
@@ -312,7 +319,7 @@ held = true
 id = "t_thanks"
 when = { test = "at_least", subject_kind = "store", id = "kept_clock", value = 30 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "o_walkers", value = 1 }]
-outcome = { line_keys = ["l_thanks"] }
+outcome = { line_keys = ["l_thanks"], whereabouts = [{ person = "n5", layer = "figure_n5_at_stone" }] }
 
 # ---------- O-widowers ----------
 
@@ -433,6 +440,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_midden_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "dig_midden"
@@ -469,6 +477,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_leaning_wall_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "pull_wall"
@@ -505,6 +514,7 @@ cost_key = "a_job_no_cost"
 [offers.answers.outcome]
 stores = [{ store = "ask_wait", items = 24 }]
 line_keys = ["l_j_steam_hole_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
 
 [[cards]]
 id = "steam_hole"
@@ -548,6 +558,10 @@ requires = [
   { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "kept", value = 1 },
 ]
 [triggers.outcome]
+whereabouts = [
+  { person = "n13", layer = "figure_n13_outside_ring" },
+  { person = "n23", layer = "figure_n23_at_hall_door" },
+]
 line_keys = ["l_b21_1", "l_b21_2", "l_b21_3", "l_b21_4"]
 stores = [{ store = "arrivals", items = 1 }]
 unlocks = [
@@ -661,6 +675,7 @@ l_walkers_1 = "story"
 l_walkers_2 = "story"
 l_walkers_food = "story"
 l_walkers_build = "story"
+l_second_wake = "story"
 l_sister_road = "story"
 l_post_door = "story"
 l_camp_19 = "level"
@@ -755,6 +770,7 @@ store_walkers_clock = "clock"
 action_walkers_clock = "Clock"
 store_walkers_6h = "clock"
 action_walkers_6h = "Clock"
+l_second_wake = "the second time, you know the fog is coming before it does. it makes no difference. you wake at the stone. Lucy has left a blanket on it."
 l_sister_road = "{n12} watches you come up from the stone. she looks at the road, then goes back to the stakes."
 l_post_door = "the post wants a door on its store, a hide over a frame."
 c_post_door = "Hang the post's door"
