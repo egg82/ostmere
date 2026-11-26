@@ -890,6 +890,16 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
   .cond { position: fixed; z-index: 6; left: 0; right: 0; bottom: 0; top: var(--scene-vh); gap: 0; padding: 0 1rem; background: var(--bg); }   /* a rule's editor, as the mix editor: the choices scroll above the foot, never under it */
   .cond-body { flex: 1 1 0; min-height: 0; overflow-y: auto; padding: .9rem 0; }
   .cond-foot { position: static; }
+  /* An editor shorter than the choices and the whole foot need (a short window): it scrolls as one, and only the row of
+     Remove, Copy rule and Save stays pinned to its bottom, so the buttons are on screen at any height and the choices
+     keep the room the foot's sentence and notes would take. */
+  .cond { container-type: size; overflow-y: auto; }
+  @container (max-height: 16rem) {
+    .cond-body { flex: none; overflow-y: visible; }
+    .cond-foot { display: contents; }
+    .cond-foot > :not(.cond-actions) { margin: .6rem 0 0; }
+    .cond-actions { position: sticky; bottom: 0; z-index: 2; margin: .6rem -1rem 0; padding: .5rem 1rem calc(.5rem + env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--rule); }
+  }
   .game[data-tab="cards"] .scene-box { display: none; }   /* the art is the Town tab's on a phone: Tasks gives its room to the cards (the head and the strip stay) */
   .game.scene-aside :is(.scene-box, .stage > .scene-head, .stage > .aim) { display: none; }   /* an editor has the screen (ui/tabs.ts: the Rules tab, the mix editor, the town editor, a person's page): the art and the head give their height to it, back with Tasks or Town; the line and the hands strip stay pinned */
   .card-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two cards a row, so the ledger sits nearer the tasks */
@@ -1038,6 +1048,14 @@ details[open] > summary .v-title, .chron-stretch.newest .v-title { color: var(--
 .lesson-next[hidden] { display: none; }
 .lesson-note.reads { cursor: pointer; }
 .lesson-go.lesson-go { background: var(--press); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi) !important; font-weight: 500; }
+/* a short window: the note is small enough to dock in the band above an open editor (ui/lessons.ts, place), so it
+   covers no control: the tag, Skip and Got it share one row over the line */
+@media (max-height: 640px) {
+  .lesson-note { grid-template-columns: 1fr auto auto; padding: .1rem .6rem .4rem; column-gap: .5rem; row-gap: 0; }
+  .lesson-skip { min-height: 1.6rem; }
+  .lesson-next { grid-column: 3; grid-row: 1; min-height: 1.6rem; }
+}
+@media (max-height: 640px) and (min-width: 640px) { .lesson-note { max-width: 16rem; } }   /* a phone on its side: narrow enough for the art's column, which holds no control */
 
 /* The town (ui/townstrip.ts): under the hands strip one block per person present: their time as a bar of
    the cards that hold a share and the idle remainder, and the card they are on with its bar. Shared with the lane rows:
