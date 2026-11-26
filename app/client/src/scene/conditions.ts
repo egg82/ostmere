@@ -21,6 +21,8 @@ export class SceneFacts {
    * store:<id>             the store holds at least one item, sampled at t: read off its ledger line, else off
    *                        view.levels (a store the page never lists: the hidden clocks)
    * store:<id>@<n>         the store holds at least n items, sampled at t
+   * store:<id>@<a>..<b>    the store holds at least a items and fewer than b: a window of a count-up clock, so a moment
+   *                        can start and end on one condition, whatever else is happening to the same person
    * end:showing            the end has happened (view.ended_at, which the end lines key on too; it never clears)
    * chip:<id>              the chip is showing
    * feature:<id>           the feature is unlocked
@@ -49,8 +51,11 @@ export class SceneFacts {
       case "running": return view.lanes.some((l) => l.running_card === rest);
       case "store": {
         const [store, n = "1"] = rest.split("@", 2);
+        const [lo = "1", hi] = n.split("..", 2);
         const segment = (view.ledger.find((l) => l.store === store) ?? view.levels.find((l) => l.store === store))?.segment;
-        return segment !== undefined && sample(segment, t) >= Number(n) * quantityPerItem;
+        if (segment === undefined) return false;
+        const held = sample(segment, t);
+        return held >= Number(lo) * quantityPerItem && (hi === undefined || held < Number(hi) * quantityPerItem);
       }
       case "end": return rest === "showing" && view.ended_at !== null;
       case "chip": return view.chips.includes(rest);

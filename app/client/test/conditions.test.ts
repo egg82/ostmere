@@ -21,6 +21,12 @@ expect("store:stone@4", AT, false);
 expect("store:nothing@1", AT, false);
 expect("store:wood@14", AT + 60, false);   // sampled at t: a minute on, two items have gone
 expect("store:wood@12", AT + 60, true);
+expect("store:wood@10..15", AT, true);        // a window: at least 10 and fewer than 15
+expect("store:wood@14..15", AT, true);
+expect("store:wood@10..14", AT, false);       // 14 is not fewer than 14
+expect("store:wood@10..14", AT + 60, true);
+expect("store:wood@15..20", AT, false);
+expect("store:nothing@0..9", AT, false);
 
 expect("store:stone@4|running:shelter", AT, true);
 expect("running:shelter|store:stone@4", AT, true);
