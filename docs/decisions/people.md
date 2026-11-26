@@ -49,8 +49,10 @@ may be offered, Claude only what it says; declining or ignoring one changes the 
 and has a real, bounded cost, as an undone chore does: the light tier, a store, a slower arrival, never a spiral; with Claude off, authored versions stand in.
 
 **Death is expected, and fairly frequent** (unlike habits): it makes impact land and lets people rotate through.
-- A death is a story event, never a penalty: the role refills as someone new arrives, so nothing compounds.
-- Nobody dies because you weren't watching. Deaths come from the world and the story, never from inattention.
+- A death is a story event, never a spiral: the role refills as someone new arrives, so nothing compounds.
+- Nobody dies because you weren't watching. Deaths come from the world, the story, and the player's own choices in a
+  dilemma they faced while present (`principles.md`, "The game doesn't pull its punches, and never cheats"), never
+  from inattention or time away.
 - **Groups arrive broken:** families, or parts of families, often missing a few or about to be. Preparation and
   healing can avert a few, on the light tier only; the rest are decided when they walk in, so they are never the
   player's fault, and they are strangers not yet loved. Healing matters elsewhere; it is not a promise the world keeps.
@@ -58,7 +60,9 @@ and has a real, bounded cost, as an undone chore does: the light tier, a store, 
   and those who have no idea; the dynamics they bring to a town of the bereaved are mini-story ground (specifics in
   `content/`).
 - Attachment is tiered: most townsfolk are light (a name, a trait, a line now and then) and carry the deaths; a few
-  become notable through what happens to them, stay, and somehow avoid dying, if narrowly.
+  become notable through what happens to them, stay, and somehow avoid dying, if narrowly. A narrow escape is fine
+  as long as it never becomes obvious that only those people keep escaping (owner, 2026-11-25): close calls are
+  counted per person in the content data, and the loader holds them to a limit.
 - **Off-limits: heavy investment in anything that can be taken** (the line for everyone who plays). Your
   character, the town, the notables and the story are safe; losses land only on the light tier. Notables never die.
 - **Your own death may be a mechanic, never a punishment** (many games use death as progression, and it
