@@ -3,7 +3,7 @@
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
-from .convert import camp_cap, camp_chain
+from .camp_convert import camp_cap, camp_chain
 from .refs import fail, need, outcomes
 
 if TYPE_CHECKING:

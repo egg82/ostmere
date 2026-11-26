@@ -36,7 +36,7 @@ from .leave_checks import check_leaves
 from .line_only_checks import check_line_only
 from .people_checks import check_people
 from .replace_checks import check_replacements
-from .retire_checks import check_retired_chores
+from .retire_checks import check_retired_chores, check_retired_cures
 from .season_checks import check_season_turns
 from .slot_checks import check_slots
 from .stake_checks import check_stakes, check_stakes_hold
@@ -114,6 +114,7 @@ def check_content(o: "Opening") -> None:
     check_unlock_order(o)
     check_loss_order(o)
     rules = build_rules(o)
+    check_retired_cures(o, rules)
     check_finite_supply(rules, frozenset(StoreId(s.id) for s in o.stores if s.tally))
     if o.prestige is not None:
         check_phase_spans(rules)

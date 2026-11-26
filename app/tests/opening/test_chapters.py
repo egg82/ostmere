@@ -7,7 +7,8 @@ import pytest
 
 from ashfall_app.engine import BP, CardId, ModifierKind, StoreCap, StoreId, new_save, units
 from ashfall_app.engine.gates import store_cap
-from ashfall_app.opening.convert import camp_cap, camp_lifts, camp_trigger_id
+from ashfall_app.opening.camp_convert import camp_cap, camp_lifts
+from ashfall_app.opening.convert import camp_trigger_id
 from ashfall_app.opening.schema import CHAPTERS, OPENING, Opening, load_opening, to_rules
 from tests.opening.playthrough import opening
 
