@@ -206,6 +206,7 @@ app/ashfall_app/main.py
 app/ashfall_app/old_host.py
 app/ashfall_app/opening/__init__.py
 app/ashfall_app/opening/aims.py
+app/ashfall_app/opening/answer_checks.py
 app/ashfall_app/opening/ask_checks.py
 app/ashfall_app/opening/b7.toml
 app/ashfall_app/opening/band_checks.py
@@ -230,6 +231,7 @@ app/ashfall_app/opening/day_six.toml
 app/ashfall_app/opening/day_sixteen.toml
 app/ashfall_app/opening/day_three.toml
 app/ashfall_app/opening/day_twelve.toml
+app/ashfall_app/opening/day_twenty_five.toml
 app/ashfall_app/opening/day_twenty_three.toml
 app/ashfall_app/opening/day_twenty_two.toml
 app/ashfall_app/opening/day_two.toml
@@ -284,6 +286,7 @@ app/ashfall_app/opening/store_entries.py
 app/ashfall_app/opening/subject_checks.py
 app/ashfall_app/opening/subject_entries.py
 app/ashfall_app/opening/tally_checks.py
+app/ashfall_app/opening/tally_convert.py
 app/ashfall_app/opening/town.py
 app/ashfall_app/opening/ui_keys.py
 app/ashfall_app/opening/unlock_order_checks.py
@@ -511,9 +514,8 @@ app/tests/weektwo/test_weektwo_rule_subjects.py
 app/tests/weektwo/test_weektwo_saved.py
 app/tests/weektwo/test_weektwo_sixteen.py
 app/tests/weektwo/test_weektwo_twelve.py
-app/tests/weektwo/test_weektwo_twentythree.py
-app/ashfall_app/opening/day_twenty_five.toml
 app/tests/weektwo/test_weektwo_twentyfive.py
+app/tests/weektwo/test_weektwo_twentythree.py
 app/tests/weektwo/test_weektwo_twentytwo.py
 app/tests/weektwo/test_worth_readouts.py
 app/tests/weektwo/verdicts.py

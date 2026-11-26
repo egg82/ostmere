@@ -11,6 +11,7 @@ from ..engine import (
 )
 from ..engine.units import QUANTITY_SCALE
 from . import move_convert
+from .tally_convert import tally_triggers
 from .prestige import node_def, prestige_def
 
 if TYPE_CHECKING:
@@ -37,7 +38,7 @@ def build_rules(o: "Opening") -> Rules:
         cards=tuple(_with_camp(_with_lifts(_card(c, cards), o.camp), o.camp, ruled) for c in o.cards),
         chips=tuple(_chip(c, cards) for c in o.chips),
         triggers=tuple(_trigger(t, cards) for t in o.triggers) + _camp_triggers(o.camp, cards)
-        + tuple(_offer_trigger(x, cards) for x in o.offers) + _note_triggers(o, cards),
+        + tuple(_offer_trigger(x, cards) for x in o.offers) + _note_triggers(o, cards) + tally_triggers(o),
         opening=tuple(unlock(u) for u in o.start),
         end=FeatureId(o.end_feature),
         offers=tuple(_offer(x, cards) for x in o.offers),

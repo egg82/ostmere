@@ -699,10 +699,102 @@ after = { unlock_kind = "feature", id = "family_joined" }
 
 # The first line of each story beat, by its id in content/beats.yaml: the page hears a beat open from these, by no
 # key's name (api/CONTRACT.txt, "Beat lines"). One id lists a key per way the beat can be told.
+# ---------- what each arrival answer keeps ----------
+
+# Each answer to an arrival offer lands a number when the build is done, named for the answer (the ledger shows its
+# source): built by hand, that person's lane +10%; left to them, the camp's rest +5%. Starting values, not tuned.
+[[triggers]]
+id = "t_kept_o_stay_room"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_room"]
+modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 11000, source = "o_stay_room" }]
+
+[[triggers]]
+id = "t_kept_o_stay_his"
+when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_his", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_stay_his"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_stay_his" }]
+
+[[triggers]]
+id = "t_kept_o_pair_room"
+when = { test = "at_least", subject_kind = "store", id = "bay2", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_room", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_pair_room"]
+modifiers = [{ target = "lane", id = "n3", kind = "mul_bp", amount_bp = 11000, source = "o_pair_room" }]
+
+[[triggers]]
+id = "t_kept_o_pair_hers"
+when = { test = "at_least", subject_kind = "store", id = "bay2", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_hers", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_pair_hers"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_pair_hers" }]
+
+[[triggers]]
+id = "t_kept_o_family_room"
+when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_family_room", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_family_room"]
+modifiers = [{ target = "lane", id = "n5", kind = "mul_bp", amount_bp = 11000, source = "o_family_room" }]
+
+[[triggers]]
+id = "t_kept_o_family_theirs"
+when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_family_theirs", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_kept_o_family_theirs"]
+modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_family_theirs" }]
+
+# The pattern: of the three arrival offers one role is answered at least twice, the other at most once, so exactly one
+# pattern lands, at the last build's join (the family's), whichever answers made it.
+# Built by hand twice or more: the town's seven ruled lanes +5%, the player's hands -4%. Starting values.
+[[triggers]]
+id = "t_pattern_by_hand"
+when = { test = "at_least", subject_kind = "store", id = "own_hands", value = 2 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_pattern_by_hand"]
+modifiers = [
+  { target = "lane", id = "n1", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "n2", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "n3", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "n4", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "n5", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "n6", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "n7", kind = "mul_bp", amount_bp = 10500, source = "own_hands" },
+  { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 9600, source = "own_hands" },
+]
+
+# Left to them twice or more: the player's hands +6%, the camp's rest -5%. Starting values.
+[[triggers]]
+id = "t_pattern_left_to_them"
+when = { test = "at_least", subject_kind = "store", id = "left_to_them", value = 2 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_pattern_left_to_them"]
+modifiers = [
+  { target = "lane", id = "hands", kind = "mul_bp", amount_bp = 10600, source = "left_to_them" },
+  { target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 9500, source = "left_to_them" },
+]
+
 [beat_lines]
 B11 = ["l_b11_1"]
 
 [line_kinds]
+l_kept_o_stay_room = "story"
+l_kept_o_stay_his = "story"
+l_kept_o_pair_room = "story"
+l_kept_o_pair_hers = "story"
+l_kept_o_family_room = "story"
+l_kept_o_family_theirs = "story"
+l_pattern_by_hand = "story"
+l_pattern_left_to_them = "story"
 l_family_1 = "story"
 l_family_2 = "story"
 l_hut_go = "story"
@@ -740,6 +832,14 @@ pot_stew = [{ lane = "n5", amount_bp = 1500 }, { lane = "n6", amount_bp = 1500 }
 pot_fungus_stew = [{ lane = "n5", amount_bp = 1000 }, { lane = "n6", amount_bp = 1000 }, { lane = "n7", amount_bp = 1000 }]
 
 [text]
+l_kept_o_stay_room = "he knows every knot in that bay, because you showed him. he works the quicker for it."
+l_kept_o_stay_his = "the bay he built himself stands square, and the camp sleeps a little deeper beside it."
+l_kept_o_pair_room = "you built the second bay, and she kept near you at it, learning where things go. she works the quicker for it."
+l_kept_o_pair_hers = "the second bay is theirs, put up by their own hands, and the camp rests a little easier for it."
+l_kept_o_family_room = "the hut is yours, and the woman watched every board go on. she works the quicker for it."
+l_kept_o_family_theirs = "the family built their own hut. nobody in it needs telling how it is done, and the camp rests a little easier."
+l_pattern_by_hand = "you have built it with your own hands more than once. everyone works a little better for it, and you a little less."
+l_pattern_left_to_them = "you have left it to them more than once. your hands are freer, and the beds are tended a little less well."
 # ---------- lines: [day two: line to write] ----------
 # Every key below is a placeholder until the simulator's day-eleven routes give each line its states and the writers'
 # pick lands (content/team/week-two-lines-brief.md). tests/opening/test_day_two.py keeps this text out of any shipping
