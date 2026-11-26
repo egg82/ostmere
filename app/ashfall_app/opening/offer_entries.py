@@ -27,6 +27,8 @@ class AnswerEntry(Entry):
     in every offer of the kind (engine DESIGN.txt, "OFFER KINDS")."""
     echo: EchoEntry | None = None
     """A lasting part for an answer with none of its own (echoes.py)."""
+    breaks: list[str] = []
+    """On a dilemma offer's answer (`tests`): the promises, answers that queued work, this answer gives up (promise_checks.py)."""
 
 
 class KindRoleEntry(Entry):
@@ -70,5 +72,8 @@ class OfferEntry(Entry):
     gates_read_feature: list[str] = []
     """Features that later gates read in place of this offer's answers: each is unlocked by the finish of a card every
     answer unlocks, and no condition anywhere reads this offer as answered or one of its answers (ask_checks.py)."""
+    tests: list[str] = []
+    """The promises, answers that queued the player's own work, this offer sets against something else the player values:
+    a dilemma that waits for the player, shown while the promised work runs (promise_checks.py)."""
     permanence_key: str | None = None
     """What the answer settles for good, for an offer whose permanence the player should weigh; None says nothing."""

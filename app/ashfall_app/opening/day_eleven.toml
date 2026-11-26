@@ -707,7 +707,10 @@ after = { unlock_kind = "feature", id = "family_joined" }
 [[triggers]]
 id = "t_kept_o_family_room"
 when = { test = "at_least", subject_kind = "store", id = "hut", value = 1 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_family_room", value = 1 }]
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_family_room", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "answer", id = "o_family_gap_gap", value = 0 },
+]
 [triggers.outcome]
 line_keys = ["l_kept_o_family_room"]
 modifiers = [{ target = "lane", id = "n5", kind = "mul_bp", amount_bp = 11000, source = "o_family_room" }]
@@ -762,7 +765,60 @@ clock = "n6_posts_done_clock"
 doings = ["n6"]
 whereabouts = [{ person = "n6", layer = "figure_n6_braces_the_posts" }]
 
+# O-family-gap: the promise to build their hut, tested an hour and a half into the build against the gap, as O-pair-pot
+# tests the second bay's (day_five.toml).
+[[stores]]
+id = "hut_mid"
+label_key = "store_hut_mid"
+cap_items = 40
+hidden = true
+
+[[standing]]
+id = "hut_mid"
+label_key = "action_hut_mid"
+makes = [{ store = "hut_mid", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_hut_mid"
+when = { test = "at_least", subject_kind = "running", id = "make_hut", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "hut_mid" }] }
+
+[[offers]]
+id = "o_family_gap"
+text_key = "o_family_gap"
+askers = ["n2"]
+gate = { test = "at_least", subject_kind = "store", id = "hut_mid", value = 30 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_family_room", value = 1 },
+  { test = "at_least", subject_kind = "running", id = "make_hut", value = 1 },
+]
+line_keys = ["l_family_gap_1", "l_family_gap_2"]
+tests = ["o_family_room"]
+
+[[offers.answers]]
+id = "o_family_gap_hut"
+label_key = "a_family_gap_hut"
+cost_key = "a_family_gap_hut_cost"
+[offers.answers.outcome]
+line_keys = ["l_family_gap_hut"]
+modifiers = [{ target = "side", id = "gap", kind = "add_bp", amount_bp = -500, source = "o_family_gap_hut" }]
+
+[[offers.answers]]
+id = "o_family_gap_gap"
+label_key = "a_family_gap_gap"
+cost_key = "a_family_gap_gap_cost"
+breaks = ["o_family_room"]
+[offers.answers.outcome]
+line_keys = ["l_family_gap_gap"]
+unlocks = [{ unlock_kind = "retired", id = "make_hut" }, { unlock_kind = "card", id = "n5_build_hut" }]
+orders = [{ tap_card = "n5_build_hut", first = true }]
+modifiers = [{ target = "lane", id = "n5", kind = "mul_bp", amount_bp = 9200, source = "o_family_gap_gap" }]
+
 [line_kinds]
+l_family_gap_1 = "story"
+l_family_gap_2 = "story"
+l_family_gap_hut = "story"
+l_family_gap_gap = "story"
 l_kept_o_family_room = "story"
 l_kept_o_family_theirs = "story"
 l_pattern_by_hand = "story"
@@ -823,6 +879,17 @@ a_family_theirs = "She builds a hut herself"
 a_family_theirs_cost = "{d} of her time"
 l_hut_go = "the hut goes up under your hands."
 l_hut_theirs = "the hut goes up under her hands."
+store_hut_mid = "clock"
+action_hut_mid = "Hut"
+o_family_gap = "The hut is half up, and the gap wants hands."
+l_family_gap_1 = "{n2} comes in from the gap with a split stake in each fist."
+l_family_gap_2 = "the hut's frame stands. the woman has not moved from it."
+a_family_gap_hut = "You finish the hut"
+a_family_gap_hut_cost = "{pct} gap strength"
+a_family_gap_gap = "You go to the gap"
+a_family_gap_gap_cost = "{pct} work from her"
+l_family_gap_hut = "the gap holds on what it has. the hut roofs over before dark."
+l_family_gap_gap = "you leave the frame to her. she lifts the next pole alone."
 c_make_hut = "Build a hut"
 c_n5_build_hut = "Build a hut"
 store_hut = "hut"

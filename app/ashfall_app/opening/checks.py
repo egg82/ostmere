@@ -13,6 +13,7 @@ from .chip_checks import check_chips
 from .choice_checks import check_choices
 from .close_call_checks import check_close_calls
 from .player_checks import check_player_only
+from .promise_checks import check_promises
 from .pool_checks import check_pools
 from .face_checks import check_clocks
 from .convert import build_rules
@@ -77,6 +78,7 @@ def check_structure(o: "Opening") -> None:
     check_kinds(o)
     check_asks(o)
     check_tally_stores(o)
+    check_promises(o)
     check_fights(o)
     check_tallies(o)
     check_stakes(o)

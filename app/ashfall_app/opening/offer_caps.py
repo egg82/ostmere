@@ -44,6 +44,10 @@ class Chain:
         for w, out in self.out.items():
             for u in out.unlocks:
                 self.unlocked_by.setdefault((u.unlock_kind, u.id), []).append(w)
+        for x in o.offers:
+            for a in x.answers:
+                self.unlocked_by.setdefault(("answer", a.id), []).append(f"answer {a.id}")
+                self.unlocked_by.setdefault(("answered", x.id), []).append(f"answer {a.id}")
         self.waits = {w: self._wait_ways(w) for w in self.out}
         self.before = self._solve()
 
