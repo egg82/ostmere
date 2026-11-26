@@ -8,9 +8,9 @@ chapter twelve: 12 visits on typical
    V56 gap   3.2 h  spend 65  decide  1
    V57 gap   9.2 h  spend 65  decide  2
    V58 gap   4.2 h  spend 65  decide  0
-   V59 gap   3.2 h  spend 65  decide  1
+   V59 gap   3.2 h  spend 64  decide  1
    V60 gap   9.1 h  spend 30  decide  2
-   V61 gap   4.1 h  spend 89  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 502, decide 6; 8h+: 4 returns, spend 203, decide 9
-  cap loss at the end, away 8 h: damp_wood 24%, dry_wood 20%, roots 91%, stones 65%
-  cap loss at the end, away 24 h: damp_wood 24%, dry_wood 30%, roots 92%, smoked 13%, stones 65%, wraps_sewn 20%
+   V61 gap   4.1 h  spend 73  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 485, decide 6; 8h+: 4 returns, spend 203, decide 9
+  cap loss at the end, away 8 h: damp_wood 53%, roots 97%, smoked 1%, stones 75%
+  cap loss at the end, away 24 h: damp_wood 53%, roots 97%, smoked 16%, stones 75%, wraps_sewn 26%

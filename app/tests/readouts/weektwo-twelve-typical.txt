@@ -19,4 +19,4 @@ day    line feature    chip   store   skill    card   level  total
   5      19       5       0       0       0      72       2     98
   6      19       5       0       2       0       5       2     33
   7       4       2       0       0       0      10       1     17
-bloom at the end of day eleven 1551.6, of day twelve 1334.3
+bloom at the end of day eleven 1551.6, of day twelve 1331.8
