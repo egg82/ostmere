@@ -9,14 +9,15 @@ in that tree and in this one: a chapter whose own inputs differ is touched.
   mode `smoke`  a change every chapter reads (the engine, the loader, shared data, a rules' id, beats.yaml), week one's, or one
                 the base cannot be compared with: no chapter's saved end before it is the base's, so the day-eight plays of
                 the push routes from the start (tests marked `smoke`) stand for the engine. Where the change is one every
-                chapter reads or week one's, the `makers` shard plays too, from the start: its readouts read the whole
-                game through day twelve and no other job of the pull request reads them
+                chapter reads or week one's, `whole_game` names the shards that play too, from the start, in the job of
+                their own: their readouts read the whole game through day twelve and no other job of the pull request
+                reads them
   mode `slice`  only chapters' own files changed: each touched chapter's tests, from the base's saved end of the one before;
                 the smoke instead where the last nightly holds no saved end of the chapter before one it would play (`why`)
   mode `none`   no chapter's inputs changed: nothing of week two plays
 `chapters` are the touched chapters, `files` the week-two test files changed, `base_keys` the keys the base's saves are under.
 `shards` are the week-two shards the slice plays, one job each (a touched chapter's, or all of them when a test file changed),
-and `left` the ones in tools/weektwo_shards.py NIGHTLY_ONLY, which the nightly plays; `smoke` has "smoke", and `makers` where the change is one every chapter reads or week one's.
+and `left` the ones in tools/weektwo_shards.py NIGHTLY_ONLY, which the nightly plays; `smoke` has "smoke", and `whole_game` the WHOLE_GAME shards where the change is one every chapter reads or week one's.
 """
 import json
 import os
@@ -70,17 +71,17 @@ def plan(base: Snap | None, full: bool, changed: list[str], saved: Saved = lambd
     now = here()
     files = sorted(f for f in changed if f.startswith(TESTS) and (Path(f).name.startswith("test_") or Path(f).name == "conftest.py"))
     out: dict[str, object] = {"mode": "none", "chapters": [], "files": files, "base_keys": {},
-                             "shards": [], "left": []}
+                             "shards": [], "left": [], "whole_game": []}
     if full:
         return out | {"mode": "full"}
     if base is None:
         return out | {"mode": "smoke", "shards": ["smoke"], "why": "the base has no chapter keys"}
     out["base_keys"] = base.key
     if base.shared != now.shared:
-        return out | {"mode": "smoke", "shards": [SMOKE, *sorted(WHOLE_GAME)], "why": "what every chapter reads changed"}
+        return out | {"mode": "smoke", "shards": [SMOKE], "whole_game": sorted(WHOLE_GAME), "why": "what every chapter reads changed"}
     touched = [c for c in keys.ORDER if base.own.get(c) != now.own[c]]
     if "week1" in touched:
-        return out | {"mode": "smoke", "shards": [SMOKE, *sorted(WHOLE_GAME)], "why": "week one changed"}
+        return out | {"mode": "smoke", "shards": [SMOKE], "whole_game": sorted(WHOLE_GAME), "why": "week one changed"}
     if touched or files:
         played, left = slice_shards(touched, bool(files))
         absent = sorted({c for n in played for c in chapters_of(n) if c in keys.ORDER and (b := keys.before(c)) and not saved(base.key[b])})
