@@ -162,7 +162,9 @@ beat that sets the promise against something else the player values (food, a per
 player picks what to give up; "no good option" is allowed, as in the Witcher's quests. The dilemma waits for the
 player and resolves while they are there. Breaking a promise costs more than declining it would have. Stakes up to
 a life come only from such a choice, never from time away (`people.md`: nobody dies from inattention), and never
-take a notable.
+take a notable. The reaction to aim for, in the owner's words: "oh, fuck, damnit, now what?" rather than "well that
+doesn't seem fair" (2026-11-25). So the bind follows from what the player chose: the promise read as a promise when it was made, the
+dilemma shows what each option costs, and every option is one a player could defend taking.
 
 A choice whose weight can't be seen when it is made is free to change later, or every option stays viable. (Idle Fantasy
 let players pick a race when race was cosmetic; an update gave races weight in a combat-led game, and the elf lost out.)
