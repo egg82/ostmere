@@ -72,6 +72,12 @@ def test_a_test_killed_by_the_timeout_and_a_failed_test_are_named():
     assert ci_health.failing_tests("all green") == []
 
 
+def test_a_teardown_error_names_its_test():
+    """pytest reports a teardown failure, the per-test time ceiling's among them, as ERROR, not FAILED."""
+    log = "ERROR tests/test_x.py::test_slow - tests/test_x.py::test_slow took 4.20s of wall clock\n"
+    assert ci_health.failing_tests(log) == ["tests/test_x.py::test_slow"]
+
+
 def test_a_rerun_opens_one_issue_and_over_the_budget_another(capsys: pytest.CaptureFixture[str]):
     stub = Stub()
     ci_health.run(ci_health.GitHub("o/r", stub), 10, 7, "CI", TESTS, False, NOW)
@@ -94,3 +100,17 @@ def test_within_budget_with_no_rerun_prints_one_line_and_opens_nothing(capsys: p
     assert stub.issued == []
     assert capsys.readouterr().out.strip() == ("event=ci_health days=7 pr_runs=6 median_min=36.8 worst_min=129.6 budget_min=100 "
                                                "reruns_passed=0 issues=none")
+
+
+def test_a_clean_night_closes_each_open_issue(capsys: pytest.CaptureFixture[str]):
+    stub = Stub(existing=41)
+    ci_health.run(ci_health.GitHub("o/r", stub), 100, 7, "CI", re.compile("^no test job$"), False, NOW)
+    assert [a[:3] for a in stub.issued] == [["issue", "close", "41"]] * 2
+    assert "issues=budget closed #41;reruns closed #41" in capsys.readouterr().out
+
+
+def test_a_window_with_no_passing_run_closes_nothing():
+    """No passing run means the median is unknown, not back under budget, and no run at all is no evidence of no rerun."""
+    stub = Stub(existing=41)
+    ci_health.run(ci_health.GitHub("o/r", stub), 100, 7, "no such workflow", TESTS, False, NOW)
+    assert stub.issued == []
