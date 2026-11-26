@@ -1,0 +1,55 @@
+pacing typical: 26 whole days played
+  B5 day  3.29 week 0.47
+  B6 day  4.16 week 0.59
+  B7 day  4.98 week 0.71
+  B8 day  7.00 week 1.00
+  B9 day  7.94 week 1.13
+ B10 day 10.42 week 1.49
+ B11 day 11.59 week 1.66
+ B12 day 12.03 week 1.72
+ B13 day 14.00 week 2.00
+ B14 day 15.47 week 2.21
+ B15 day 17.82 week 2.55
+ B16 day 18.84 week 2.69
+ B17 day 19.83 week 2.83
+ B18 day 21.12 week 3.02
+ B19 day 22.25 week 3.18
+ B20 day 24.09 week 3.44
+ B21 day 26.45 week 3.78
+ B22 not reached
+ B23 not reached
+ B24 not reached
+ B25 not reached
+ B26 not reached
+ B27 not reached
+ B28 not reached
+ B29 not reached
+ B30 not reached
+ B31 not reached
+ B32 not reached
+ B33 not reached
+ B34 not reached
+ B35 not reached
+ B36 not reached
+ B37 not reached
+ B38 not reached
+ B39 not reached
+ B40 not reached
+ B41 not reached
+ B42 not reached
+ B43 not reached
+ B44 not reached
+ B45 not reached
+ B46 not reached
+ B47 not reached
+ B48 not reached
+ B49 not reached
+ B50 not reached
+ B51 not reached
+ B52 not reached
+ B53 not reached
+week days     line feature    chip   store   skill    card   level  things
+   1   1-7     189      57       3      23       6     121      19     229
+   2  8-14      86      22       6       6       0     109      14     157
+   3 15-21      89      11       0       6       0     176      13     206
+   4 22-26      58       9       3       2       1      68      10      93
