@@ -1484,6 +1484,9 @@ JOURNAL
     ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark. Turning to a bookmark
     opens that section's first page holding something unread, else its latest page. The bookmark of the open page's
     section is marked as the current one.
+  - turn Prev and Next within the open page's section, worded by the neighbouring section's bookmark where the turn
+    crosses into it, and list a section's pages by title on request (ui.journal.contents): a days page by its first
+    day, an entry's page by its first note's words.
   - on a page, draw the entry's sketch and each of its notes view.unlocked holds, in content order and in its hand,
     with the note's sketch beside it. A note not unlocked is not drawn and keeps no room. A page whose sketch is null
     is laid out as text alone: no empty room is kept for a drawing, nothing is loaded and nothing is reported.
@@ -1549,6 +1552,7 @@ JOURNAL
 
   New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
                                     and its page turns
+                                    ui.journal.contents   the button that lists the open section's pages
                                     ui.journal.day {n}   a day's heading on a days page
                                     ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
                                     the journal's lesson (opening-screen.md, "Lessons")

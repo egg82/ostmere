@@ -19,7 +19,7 @@ import { wireBegin } from "../src/begin";
 import { fixtureContent, Q } from "./content";
 import { isFights, withHurtChip } from "./fights";
 import { isGroups, withGroups } from "./groups";
-import { isJournal, withJournal } from "./journal";
+import { isJournal, withJournal, withLongBook } from "./journal";
 import { kindsView, withKinds } from "./kinds";
 import { isPrestige, withPrestige } from "./prestige";
 import { placesView, withPlaces } from "./places";
@@ -50,6 +50,7 @@ if (hash.has("townname")) {
 if (isFights(phase)) Object.assign(fixtureContent, withHurtChip(fixtureContent));
 if (isGroups(phase)) Object.assign(fixtureContent, withGroups(fixtureContent));
 if (isJournal(phase)) Object.assign(fixtureContent, withJournal(fixtureContent));
+if (phase === "journalbook") Object.assign(fixtureContent, withLongBook(fixtureContent));
 if (isPrestige(phase)) Object.assign(fixtureContent, withPrestige(fixtureContent));
 if (hash.has("places")) Object.assign(fixtureContent, withPlaces(fixtureContent));
 if (hash.has("kinds")) Object.assign(fixtureContent, withKinds(fixtureContent));   // #kinds: kinds of one card and store, and a station (kinds.ts)

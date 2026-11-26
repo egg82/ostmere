@@ -60,6 +60,7 @@ export const LESSON_KEYS = {
   journalHeading: "ui.journal.heading",
   journalPrev: "ui.journal.prev",
   journalNext: "ui.journal.next",
+  journalContents: "ui.journal.contents", // the button that swaps the page for its section's list of pages
   journalDays: "ui.journal.days",
   journalCreatures: "ui.journal.creatures",
   journalPlaces: "ui.journal.places",
