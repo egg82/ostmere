@@ -420,6 +420,15 @@ told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n3_named" }]
 name_key = "name_n3"
 
+# The hearth crew: the fire and the pot, the weaving and the beds. Its first member is the old man at the watch, who
+# looks after it.
+[[lanes]]
+id = "g_hearth"
+label_key = "lane_g_hearth"
+ruled = true
+pooled = true
+tied = "n4"
+
 [[lanes]]
 id = "n4"
 label_key = "lane_n4"
@@ -427,6 +436,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n4_named" }]
 name_key = "name_n4"
+crews = ["g_hearth"]
 
 # Her track from the join (day_three.toml, the town's track card); his leg rules it out.
 [[triggers]]
@@ -736,6 +746,7 @@ lane_n3 = "The woman's hands"
 lane_n3_named = "{n3}'s hands"
 name_n3 = "Mary"
 lane_n4 = "The old man's hands"
+lane_g_hearth = "The hearth crew"
 lane_n4_named = "{n4}'s hands"
 name_n4 = "Edward"
 c_n3_build_bay = "Build a second sleeping bay"

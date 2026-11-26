@@ -77,7 +77,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n5_named" }]
 name_key = "name_n5"
-group = "g_field"
+crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n6"
@@ -86,7 +86,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n6_named" }]
 name_key = "name_n6"
-group = "g_field"
+crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n7"
@@ -95,16 +95,7 @@ ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "family_joined" }, label_key = "lane_n7_named" }]
 name_key = "name_n7"
-group = "g_field"
-
-# The group the three work in (decisions/people.md, "Groups"): it holds the jobs its people do and not the ones they
-# cannot, and is tied to the hand who looks after it (t_family_groups).
-[[lanes]]
-id = "g_field"
-label_key = "lane_g_field"
-ruled = true
-pooled = true
-tied = "n2"
+crews = ["g_field", "g_hearth"]
 
 # A34 on her lane, the same real time and stores as A33.
 [[cards]]
@@ -132,7 +123,8 @@ cap_items = 1
 # split).
 [[town_cards]]
 id = "{lane}_watch"
-lanes = ["n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field", "g_hearth"]
+own = ["n2", "n4"]
 presentation = "action"
 label_key = "c_lane_watch"
 upside_key = "up_watch"
@@ -315,8 +307,22 @@ whereabouts = [
 line_keys = ["l_group_1", "l_group_2"]
 marks = [
   { lane = "n5", own_split = false, card = "g_field_forage" },
-  { lane = "n6", own_split = false, card = "g_field_forage" },
+  { lane = "n6", own_split = false, card = "g_hearth_forage" },
   { lane = "n7", own_split = false, card = "g_field_forage" },
+]
+
+# The two who came before them go to the crews as well, one to each, and the hand-over's line says so. Its own trigger,
+# as t_family_groups is released: a save past the join gets the same change at its next load. The hearth crew starts
+# at one whole share, foraging, as the field crew does.
+[[triggers]]
+id = "t_pair_crews"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "family_joined", value = 1 }
+[triggers.outcome]
+line_keys = ["l_pair_crews"]
+unlocks = [{ unlock_kind = "card", id = "n2_pick" }, { unlock_kind = "card", id = "n4_forage" }]
+marks = [
+  { lane = "n2", own_split = false, card = "g_field_forage" },
+  { lane = "n4", own_split = false, card = "g_hearth_forage" },
 ]
 
 # Their track from the join (day_three.toml, the town's track card).
@@ -376,7 +382,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_peg_flaps" },
   { unlock_kind = "card", id = "n6_peg_flaps" },
   { unlock_kind = "card", id = "n7_peg_flaps" },
-  { unlock_kind = "card", id = "g_field_peg_flaps" },
+  { unlock_kind = "card", id = "g_hearth_peg_flaps" },
 ]
 
 # The windbreak and the wraps on the family's lanes and their group, once the hands have each.
@@ -401,7 +407,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_sew_wraps" },
   { unlock_kind = "card", id = "n6_sew_wraps" },
   { unlock_kind = "card", id = "n7_sew_wraps" },
-  { unlock_kind = "card", id = "g_field_sew_wraps" },
+  { unlock_kind = "card", id = "g_hearth_sew_wraps" },
 ]
 
 # Their everyday jobs from the join: the weaving, clay and both pots.
@@ -775,6 +781,7 @@ l_join3_1 = "story"
 l_join3_2 = "story"
 l_group_1 = "story"
 l_group_2 = "story"
+l_pair_crews = "story"
 l_guard_ask = "story"
 l_guard_n2_1 = "story"
 l_guard_n2_2 = "story"
@@ -835,11 +842,11 @@ lane_n6_named = "{n6}'s hands"
 name_n6 = "Richard"
 lane_n7 = "Her brother's hands"
 lane_n7_named = "{n7}'s hands"
-lane_g_field = "The field crew"
 name_n7 = "John"
 l_join3_1 = "the woman gives names: {n5}, {n6}, {n7}."
 l_join3_2 = "asked his name, the man who came with them looks at the fire."
-l_group_1 = "{n2} takes {n5} and {n6} out to the wood's edge. they are to work to his word, not to a split each, until they know the ground"
+l_group_1 = "{n2} takes {n5} to the wood's edge and {n4} sits {n6} at the fire. each crew works to its leader's word until they know the ground"
+l_pair_crews = "the field crew is two now. {n2} stays with the field and {n4} keeps the hearth, and neither works to a split of their own"
 l_group_2 = "{n3} sets {n7} beside her at the pot and the picking. he is to do as she does, and she will tell him when it is enough"
 action_n5_eating = "{n5}'s share"
 action_n6_eating = "{n6}'s share"
