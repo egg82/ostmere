@@ -5,16 +5,16 @@ typical route's heavy-step readings (ends.READINGS).
     python tools/chapter_saves.py --write typical rebased-early readings-early   # only those parts, by name: a route's
                                                        # ends, typical's rebased saves (they read typical's saved ends) or readings
     python tools/chapter_saves.py --write sharp-b      # a link of a route's chain (LINKS): reads the link before's ends
-    python tools/chapter_saves.py --key PART...   # print the key the parts' saves are cached under
+    python tools/chapter_saves.py --prune    # delete the directories of keys no chapter has today
 
 A chapter's directory is named by its key (tests/weektwo/keys.py), so a change to what the chapter's play depends on is a
 new directory and no save outlives it, while a chapter before the change keeps its own.
-CI builds each part once per key (tools/saves_cache.py), each part in a job of its own, since no route's plays and no reading
+CI builds each part in a job of its own (it starts from the saves the last nightly cached, and writes only the chapters whose key is new), since no route's plays and no reading
 need another; the rebased parts read typical's saved ends, so they run once typical's part has, and a chain too long for
 one job is written in links, each after the one before. Locally, run it to make week two's job fast.
 """
-import hashlib
 import os
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -56,9 +56,20 @@ def chapters_of(parts: frozenset[str]) -> list[str]:
     return [c for c in keys.ORDER if c in found]
 
 
-def parts_key(parts: frozenset[str]) -> str:
-    """What the parts' cached saves are stored under: their chapters' keys, so a change to any of them is a miss."""
-    return hashlib.sha256("\n".join(ends.key(c) for c in chapters_of(parts)).encode()).hexdigest()[:16]
+def present(path: Path) -> bool:
+    """Whether `path` was written under today's key (its directory is named by it) and need not be written again."""
+    if path.exists():
+        print(f"event=chapter_saves.kept file={path.name}", flush=True)
+    return path.exists()
+
+
+def prune(root: Path) -> list[str]:
+    """Delete the directories under `root` that no chapter's key names today; the names removed."""
+    wanted = {ends.key(c) for c in keys.ORDER}
+    gone = sorted(d.name for d in root.iterdir() if d.is_dir() and d.name not in wanted) if root.is_dir() else []
+    for name in gone:
+        shutil.rmtree(root / name)
+    return gone
 
 
 def put(path: Path, data: bytes | str) -> None:
@@ -87,7 +98,7 @@ def write(parts: frozenset[str] = ALL) -> int:
 
 def write_ends(routes: frozenset[str]) -> None:
     for chapter, names in SAVED.items():
-        for name in (n for n in names if n in routes):
+        for name in (n for n in names if n in routes and not present(ends.player_path(chapter, n))):
             started = time.process_time()
             write_end(chapter, name, played(chapter, name), started)
 
@@ -107,11 +118,15 @@ def link_chapters(name: str) -> list[str]:
 
 
 def write_link(name: str) -> None:
-    """Link `name`'s ends: played from the start for the first link, else on from the saved end before its first."""
+    """Link `name`'s ends: played from the start for the first link, else on from the saved end before its first. An end
+    already saved under today's key is loaded, not played, so only the chapters after a change replay."""
     route = LINKS[name][0]
     p: DayTwoPlayer | None = None
     for chapter in link_chapters(name):
         started = time.process_time()
+        if present(ends.player_path(chapter, route)):
+            p = ends.load(chapter, route, laters(chapter, route))
+            continue
         if chapter == "week1":
             p = played(chapter, route)
         else:
@@ -122,7 +137,7 @@ def write_link(name: str) -> None:
 
 
 def write_rebased(name: str) -> None:
-    for chapter in REBASED[name]:
+    for chapter in (c for c in REBASED[name] if not present(ends.rebased_path(c))):
         started = time.process_time()
         saved = ends.load(chapter, "typical", laters(chapter, "typical"))
         text = ends.rebased_json(rebased.written(chapter, saved))
@@ -142,7 +157,7 @@ def typical_through(chapter: str) -> DayTwoPlayer:
 
 def write_readings(name: str) -> None:
     """The readings part `name`: each span's heavy steps of typical's play through its chapter, read one by one."""
-    for chapter, first, after in ends.READINGS[name]:
+    for chapter, first, after in (s for s in ends.READINGS[name] if not present(ends.readings_path(s[0], s[1]))):
         p, later = typical_through(chapter), verdicts.CHAPTERS[chapter]
         steps = {v.label: v.steps for v in verdicts.chapter_visits(p, later)}
         found: dict[tuple[str, int], bool] = {}
@@ -162,8 +177,8 @@ unchanged play is rewritten byte for byte, so a rewrite changes only the ends wh
 def main(argv: list[str]) -> int:
     if argv[:1] == ["--write"] and os.environ.get("PYTHONHASHSEED") != HASH_SEED:
         os.execve(sys.executable, [sys.executable, *sys.argv], {**os.environ, "PYTHONHASHSEED": HASH_SEED})
-    if argv[:1] == ["--key"] and argv[1:]:
-        print(parts_key(frozenset(argv[1:])))
+    if argv == ["--prune"]:
+        print(f"event=chapter_saves.prune removed={','.join(prune(ends.root())) or 'none'}")
         return 0
     if argv[:1] == ["--write"]:
         return write(frozenset(argv[1:]) or ALL)

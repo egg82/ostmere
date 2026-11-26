@@ -1,5 +1,5 @@
 """The saved ends week two's chapters play on from (written by tools/chapter_saves.py and nothing else, outside the source
-tree, one directory per chapter named by that chapter's key, keys.py; CI builds and caches them, tools/saves_cache.py):
+tree, one directory per chapter named by that chapter's key, keys.py; CI builds them and caches the lot, ci.yml `publish-ends`):
 each push route's player at the end of week one and of every chapter after it, pickled, and typical's save at each of
 those chapters' ends written under the rules without the chapters after it (rebased.py), as encoded text.
 
