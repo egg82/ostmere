@@ -31,7 +31,9 @@ def check_choices(o: "Opening") -> None:
 def beaten_pairs(o: "Opening") -> list[tuple["CardEntry", "CardEntry"]]:
     """(beater, beaten) for each pair that check_choices refuses."""
     replaced = {(u.id, u.replaced_by) for _, out in outcomes(o) for u in out.unlocks if u.unlock_kind == "retired"}
-    return [(a, b) for a, b in compared_pairs(o) if beats(a, b) and (b.id, a.id) not in replaced]
+    profiles = {id(c): _Profile(c) for c in o.cards}
+    return [(a, b) for a, b in compared_pairs(o)
+            if _beats(profiles[id(a)], profiles[id(b)]) and (b.id, a.id) not in replaced]
 
 
 def compared_pairs(o: "Opening") -> list[tuple["CardEntry", "CardEntry"]]:
@@ -44,14 +46,31 @@ def compared_pairs(o: "Opening") -> list[tuple["CardEntry", "CardEntry"]]:
     return [(a, b) for cards in by_lane.values() for a in cards for b in cards if a is not b]
 
 
+class _Profile:
+    """What `beats` reads of a card, summed once so a pair costs only the comparison."""
+
+    def __init__(self, c: "CardEntry") -> None:
+        self.card = c
+        self.lumps = _lumps(c.outcome.stores)
+        self.makes = _flows(c.makes)
+        self.inputs = _lumps(c.inputs)
+        self.drains = _lumps(c.drains)
+        self.costs = _flows(c.costs)
+
+
 def beats(a: "CardEntry", b: "CardEntry") -> bool:
+    return _beats(_Profile(a), _Profile(b))
+
+
+def _beats(pa: _Profile, pb: _Profile) -> bool:
+    a, b = pa.card, pb.card
     return (a.work_s <= b.work_s
-            and _at_least(_lumps(a.outcome.stores), _lumps(b.outcome.stores))
-            and _at_least(_flows(a.makes), _flows(b.makes))
+            and _at_least(pa.lumps, pb.lumps)
+            and _at_least(pa.makes, pb.makes)
             and (b.xp_per_hour == 0 or (a.skill == b.skill and a.xp_per_hour >= b.xp_per_hour))
-            and _at_least(_lumps(b.inputs), _lumps(a.inputs))
-            and _at_least(_lumps(b.drains), _lumps(a.drains))
-            and _at_least(_flows(b.costs), _flows(a.costs))
+            and _at_least(pb.inputs, pa.inputs)
+            and _at_least(pb.drains, pa.drains)
+            and _at_least(pb.costs, pa.costs)
             and all(r in b.requires for r in a.requires))
 
 

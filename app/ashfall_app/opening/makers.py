@@ -7,11 +7,11 @@ if TYPE_CHECKING:
     from .schema import Opening
 
 
-def made_by(o: "Opening", store: str) -> list[str]:
+def made_by(o: "Opening", store: str, index: "dict[str, list[str]] | None" = None) -> list[str]:
     """Card ids in card order: each card whose completion lands the store or whose make flow fills it; for a store no
     card makes that way, each card that trains a skill whose level pays the store, or whose completion count a find
     waits on (a trigger's stores). A one-off find beside a card that makes the store is no way to make more of it."""
-    makers = card_makers(o, store)
+    makers = card_makers(o, store, index)
     if makers:
         return makers
     finds = [t for t in o.triggers if any(a.store == store for a in t.outcome.stores) and t.when.id is not None]
@@ -35,9 +35,20 @@ def card_made(o: "Opening", store: str) -> bool:
     return any(store in card_makes(c) for c in o.cards)
 
 
-def card_makers(o: "Opening", store: str) -> list[str]:
+def makers_by_store(o: "Opening") -> dict[str, list[str]]:
+    """card_makers of every store at once, for a caller that asks for many (`index` below)."""
+    found: dict[str, list[str]] = {}
+    for c in o.cards:
+        for store in card_makes(c):
+            found.setdefault(store, []).append(c.id)
+    return found
+
+
+def card_makers(o: "Opening", store: str, index: "dict[str, list[str]] | None" = None) -> list[str]:
     """Card ids in card order whose completion lands the store or whose make flow fills it: the cards a short need on
-    it lights (View Need.makers)."""
+    it lights (View Need.makers). `index` is makers_by_store(o), passed when many stores are asked for."""
+    if index is not None:
+        return list(index.get(store, ()))
     return [c.id for c in o.cards if store in card_makes(c)]
 
 
@@ -46,10 +57,10 @@ def standing_makers(o: "Opening", store: str) -> list[str]:
     return [a.id for a in o.standing if any(f.store == store for f in a.makes)]
 
 
-def rises_in_steps(o: "Opening", store: str) -> bool:
+def rises_in_steps(o: "Opening", store: str, index: "dict[str, list[str]] | None" = None) -> bool:
     """Nothing that runs raises the store: no card lands or flows it and no standing action flows it, so only an event
     (a lost fight, a find, an answer) adds to it, a step at a time (StoreInfo.rises_in_steps)."""
-    return not card_makers(o, store) and not standing_makers(o, store)
+    return not card_makers(o, store, index) and not standing_makers(o, store)
 
 
 def granted_by(o: "Opening", store: str) -> list[str]:

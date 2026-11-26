@@ -3,8 +3,8 @@ against the [bracketed] tests. All must go red. Results as of the commit that ad
 
 The schema and the engine questions
 chapter_replaces_unheld  chapters.py: a chapter's Camp level replaces a level that is not held   [opening/test_chapters]   killed
-camp_cap_ignores_lift    convert.camp_cap: the last level's at_items despite a lifted level       [test_chapters, loader]   killed
-lift_one_short           convert.camp_lifts: the raise one basis point short of the lifted level  [test_chapters]           killed
+camp_cap_ignores_lift    camp_convert.camp_cap: the last level's at_items despite a lifted level       [test_chapters, loader]   killed
+lift_one_short           camp_convert.camp_lifts: the raise one basis point short of the lifted level  [test_chapters]           killed
 rising_card_any_tap      checks: an at_least order card may tap a card that does not take its store [test_chapters, loader] killed
 lift_by_uncapped         checks: lifted_by may name a card with no cap                            [test_chapters]           killed
 trigger_no_eval          engine handlers: a trigger firing does not make orders and the queue evaluate [engine/test_dayone_questions] killed

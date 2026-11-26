@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from .. import engine as e
-from ..opening.makers import card_makers, granted_by, standing_makers
+from ..opening.makers import card_makers, granted_by, makers_by_store, standing_makers
 from ..opening.schema import Opening
 
 
@@ -35,7 +35,8 @@ Sources = Mapping[tuple[str, str], Source]
 
 def store_sources(o: Opening) -> dict[str, StoreSources]:
     """Every store's makers and grants, from the content."""
-    return {s.id: StoreSources((*card_makers(o, s.id), *standing_makers(o, s.id)), tuple(granted_by(o, s.id)))
+    makers = makers_by_store(o)
+    return {s.id: StoreSources((*card_makers(o, s.id, makers), *standing_makers(o, s.id)), tuple(granted_by(o, s.id)))
             for s in o.stores}
 
 
