@@ -51,6 +51,7 @@ class Forge(Protocol):
     def open_issue(self, kind: str) -> int | None: ...
     def create_issue(self, kind: str, title: str, body: str) -> int: ...
     def update_issue(self, number: int, title: str, body: str) -> None: ...
+    def close_issue(self, number: int, comment: str) -> None: ...
 
 
 Gh = Callable[[list[str]], str]
@@ -100,6 +101,9 @@ class GitHub:
 
     def update_issue(self, number: int, title: str, body: str) -> None:
         self.gh(["issue", "edit", str(number), "-R", self.repo, "--title", title, "--body", body])
+
+    def close_issue(self, number: int, comment: str) -> None:
+        self.gh(["issue", "close", str(number), "-R", self.repo, "--comment", comment])
 
 
 def failing_tests(log: str) -> list[str]:
@@ -151,14 +155,27 @@ def upsert(forge: Forge, kind: str, body: str, dry: bool) -> str:
     return f"updated #{number}"
 
 
+def settle(forge: Forge, kind: str, comment: str, dry: bool) -> str:
+    """Close the kind's open issue once tonight shows no problem, so a cleared problem's body never reads as current."""
+    number = None if dry else forge.open_issue(kind)
+    if number is None:
+        return ""
+    forge.close_issue(number, comment)
+    return f"closed #{number}"
+
+
 def run(forge: Forge, budget: float, days: int, workflow: str, test_jobs: re.Pattern[str], dry: bool, now: datetime) -> int:
     runs = forge.pr_runs(now - timedelta(days=days), workflow)
     stats, found = median_worst(runs), reruns(forge, runs, test_jobs)
     actions: list[str] = []
     if stats is not None and stats[0] > budget:
         actions.append("budget " + upsert(forge, "budget", budget_body(stats, budget, days, runs), dry))
+    elif stats is not None and (done := settle(forge, "budget", f"Median back to {stats[0]:.1f} min, within the {budget:g} min budget.", dry)):
+        actions.append("budget " + done)
     if found:
         actions.append("reruns " + upsert(forge, "reruns", rerun_body(found, days), dry))
+    elif runs and (done := settle(forge, "reruns", f"No pull-request run of the last {days} days passed only on a rerun.", dry)):
+        actions.append("reruns " + done)
     median, worst = (f"{stats[0]:.1f}", f"{stats[1]:.1f}") if stats else ("unknown", "unknown")
     print(f"event=ci_health days={days} pr_runs={sum(r.conclusion == 'success' for r in runs)} median_min={median} worst_min={worst} "
           f"budget_min={budget:g} reruns_passed={len(found)} issues={';'.join(actions) or 'none'}")
