@@ -23,6 +23,7 @@ DIR = Path(__file__).resolve().parent / "readouts"
 PACKAGES = {
     "opening": "tests.opening.report",
     "tracks": "tests.opening.tracks_readout",
+    "closecalls": "tests.opening.close_calls_readout",
     "dayone": "tests.dayone.report",
     "daytwo": "tests.daytwo.report",
     "daythree": "tests.daythree.report",

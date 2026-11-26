@@ -43,7 +43,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "journal": _once("journal", o.journal, ch.journal), "entries": [*o.entries, *ch.entries], "notes": [*o.notes, *ch.notes],
         "subjects": [*o.subjects, *ch.subjects], "places": [*o.places, *ch.places],
         "prestige": _once("prestige", o.prestige, ch.prestige), "nodes": [*o.nodes, *ch.nodes],
-        "people": _once("people", o.people, ch.people),
+        "people": _once("people", o.people, ch.people), "close_calls": [*o.close_calls, *ch.close_calls],
         "camp": camp, "curve_items": [*o.curve_items, *ch.curve_items], "aims": [*o.aims, *ch.aims],
         "phase_pays": [*o.phase_pays, *ch.phase_pays],
         "text": {**o.text, **ch.text}, "line_kinds": {**o.line_kinds, **ch.line_kinds},

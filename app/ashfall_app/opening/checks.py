@@ -10,6 +10,7 @@ from .band_checks import check_bands
 from .camp_checks import check_camp
 from .chip_checks import check_chips
 from .choice_checks import check_choices
+from .close_call_checks import check_close_calls
 from .player_checks import check_player_only
 from .pool_checks import check_pools
 from .face_checks import check_clocks
@@ -89,6 +90,7 @@ def check_structure(o: "Opening") -> None:
     check_leaves(o)
     check_groups(o)
     check_people(o)
+    check_close_calls(o)
     check_pools(o)
     check_aims(o)
     check_journal(o)

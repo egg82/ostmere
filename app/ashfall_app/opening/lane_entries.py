@@ -30,6 +30,8 @@ class LaneEntry(Entry):
     pooled: bool = False
     """A group, not a person: a ruled lane its members' shared cards sit on. `label_key` is the group's name on screen; it
     has no `name_key` and no `told` (engine DESIGN.txt, "GROUPS (pooled lanes)")."""
+    notable: bool = False
+    """A person the story keeps: the only kind a close call (close_call_entries.py) is about. Authored, never inferred."""
     group: str | None = None
     """On a person's ruled lane, the pooled lane that is their group."""
     tied: str | None = None
