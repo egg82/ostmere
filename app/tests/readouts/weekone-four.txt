@@ -5,5 +5,5 @@ chapter four: 5 visits on typical
    V18 gap   9.2 h  spend 13  decide  1
    V19 gap   4.2 h  spend 12  decide  2
   per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 3 returns, spend 39, decide 4; 8h+: 2 returns, spend 27, decide 3
-  cap loss at the end, away 8 h: damp_wood 1%, roots 13%, smoked 12%, stones 32%
-  cap loss at the end, away 24 h: damp_wood 1%, dry_wood 38%, roots 7%, smoked 26%, stones 36%
+  cap loss at the end, away 8 h: damp_wood 1%, roots 17%, smoked 12%, stones 32%
+  cap loss at the end, away 24 h: damp_wood 1%, dry_wood 38%, roots 11%, smoked 26%, stones 36%

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from ..engine import HANDS, TOWN_PREFIX, StoreId
 from .aims import check_aims
+from .answer_checks import check_tally_stores
 from .ask_checks import check_asks
 from .band_checks import check_bands
 from .camp_checks import check_camp
@@ -75,6 +76,7 @@ def check_structure(o: "Opening") -> None:
     check_refs(o)
     check_kinds(o)
     check_asks(o)
+    check_tally_stores(o)
     check_fights(o)
     check_tallies(o)
     check_stakes(o)

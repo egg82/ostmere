@@ -3,14 +3,16 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 from ..engine import (
-    HANDS, ActionId, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, SideStrength, ThreatDef, ThreatId, ThreatStrength, AfterTime, AnswerDef, AnswerId, KindId, OfferDef, OfferId, RoleId, Amount, AtLeast, AtMost, CapRaise, CardCount, CardDef, CardId, ChipDef, ChipId,
-    Condition, FeatureId, Flow, FlowKind, LaneDef, LaneId, LaneRules, LaneSpeed, LineKey, Modifier, ModifierKind, Outcome, PacingCurve,
-    RateRef, RuleInstall, Rules, Runner, Running, SkillDef, SkillId, SkillLevel, SourceId, StandingDef, StoreCap, StoreDef,
-    StoreId, StoreValue, Subject, Target, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind, WorkRef,
+    HANDS, ActionId, FightDef, WhileRunning, HeldSpeed, SideDef, SideId, ThreatDef, ThreatId, AnswerDef, AnswerId,
+    KindId, OfferDef, OfferId, RoleId, Amount, AtLeast, CapRaise, CardDef, CardId, ChipDef, ChipId, FeatureId, Flow,
+    LaneDef, LaneId, LineKey, Outcome, PacingCurve, RuleInstall, Rules, SkillDef, SkillId, StandingDef, StoreDef,
+    StoreId, StoreValue, TriggerDef, TriggerId, Unlock, Unlocked, UnlockKind,
     per_hour, units,
 )
 from ..engine.units import QUANTITY_SCALE
 from . import move_convert
+from .condition_convert import condition, modifier
+from .tally_convert import tally_triggers
 from .camp_convert import camp_chain, camp_raise, lifts_by_card, camp_lands, with_lifts
 from .prestige import node_def, prestige_def
 
@@ -18,8 +20,8 @@ if TYPE_CHECKING:
     from .camp_entries import CampEntry
     from .chip_entries import ChipEntry
     from .entries import (
-        CardEntry, ConditionEntry, FlowEntry, ItemAmount, ModifierEntry,
-        FightEntry, OutcomeEntry, StandingEntry, TriggerEntry, UnlockEntry, WhileRunningEntry,
+        CardEntry, FlowEntry, ItemAmount, FightEntry, OutcomeEntry, StandingEntry, TriggerEntry, UnlockEntry,
+        WhileRunningEntry,
     )
     from .offer_entries import OfferEntry
     from .schema import Opening
@@ -40,7 +42,7 @@ def build_rules(o: "Opening") -> Rules:
         cards=tuple(_with_camp(with_lifts(_card(c, cards), lifts), o.camp, ruled) for c in o.cards),
         chips=tuple(_chip(c, cards) for c in o.chips),
         triggers=tuple(_trigger(t, cards) for t in o.triggers) + _camp_triggers(o.camp, cards)
-        + tuple(_offer_trigger(x, cards) for x in o.offers) + _note_triggers(o, cards),
+        + tuple(_offer_trigger(x, cards) for x in o.offers) + _note_triggers(o, cards) + tally_triggers(o),
         opening=tuple(unlock(u) for u in o.start),
         end=FeatureId(o.end_feature),
         offers=tuple(_offer(x, cards) for x in o.offers),
@@ -183,11 +185,6 @@ def _outcome(o: "OutcomeEntry", cards: set[str]) -> Outcome:
         retire_orders=tuple(CardId(c) for c in o.retire_orders), leaves=move_convert.leaves(o.leaves))
 
 
-def _runner(id_: str, cards: set[str]) -> Runner:
-    """Standing actions and cards share one id namespace; the opening's card list says which this is."""
-    return CardId(id_) if id_ in cards else ActionId(id_)
-
-
 def _chip(c: "ChipEntry", cards: set[str]) -> ChipDef:
     return ChipDef(
         ChipId(c.id), condition(c.when, cards), tuple(modifier(m, cards) for m in c.effects),
@@ -198,55 +195,3 @@ def _chip(c: "ChipEntry", cards: set[str]) -> ChipDef:
 def _trigger(t: "TriggerEntry", cards: set[str]) -> TriggerDef:
     return TriggerDef(TriggerId(t.id), condition(t.when, cards), _outcome(t.outcome, cards),
                       tuple(condition(x, cards) for x in t.requires))
-
-
-def modifier(m: "ModifierEntry", cards: set[str]) -> Modifier:
-    target: Target
-    if m.target == "rate":
-        assert m.flow is not None
-        target = RateRef(_runner(m.id, cards), FlowKind(m.flow), None if m.store is None else StoreId(m.store))
-    elif m.target == "work":
-        target = WorkRef(CardId(m.id))
-    elif m.target == "cap":
-        target = StoreCap(StoreId(m.id))
-    elif m.target == "side":
-        target = SideStrength(SideId(m.id))
-    elif m.target == "threat":
-        target = ThreatStrength(ThreatId(m.id))
-    else:
-        target = LaneSpeed(LaneId(HANDS if m.id == HANDS else m.id))
-    return Modifier(target, ModifierKind(m.kind), m.amount_bp, SourceId(m.source))
-
-
-def levels(c: "ConditionEntry") -> tuple[int, int]:
-    """(value, release) as the engine reads them: on a store, whole items over `every` in quantity units; on a level,
-    count or 0/1, as written. Release defaults to value. Every loader reader of a threshold reads it here; the loader
-    has checked a store's divides exactly (refs.py)."""
-    release = c.value if c.release is None else c.release
-    if c.subject_kind != "store":
-        return c.value, release
-    return units(c.value) // c.every, units(release) // c.every
-
-
-def condition(c: "ConditionEntry", cards: set[str]) -> Condition:
-    if c.test == "after_time":
-        return AfterTime(c.value)
-    value, release = levels(c)
-    subject = _subject(c, cards)
-    return AtLeast(subject, value, release) if c.test == "at_least" else AtMost(subject, value, release)
-
-
-def _subject(c: "ConditionEntry", cards: set[str]) -> Subject:
-    assert c.id is not None
-    if c.subject_kind == "store":
-        return StoreValue(StoreId(c.id))
-    if c.subject_kind == "skill_level":
-        return SkillLevel(SkillId(c.id))
-    if c.subject_kind == "card_count":
-        return CardCount(CardId(c.id))
-    if c.subject_kind == "running":
-        return Running(_runner(c.id, cards))
-    if c.subject_kind == "lane_rules":
-        return LaneRules(LaneId(c.id))
-    assert c.unlock_kind is not None
-    return Unlocked(Unlock(UnlockKind(c.unlock_kind), c.id))

@@ -5065,6 +5065,14 @@
       ]
     },
     {
+      "store": "own_hands",
+      "made_by": []
+    },
+    {
+      "store": "left_to_them",
+      "made_by": []
+    },
+    {
       "store": "track_laid",
       "made_by": [
         "n1_field_track",

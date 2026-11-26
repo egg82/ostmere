@@ -85,6 +85,7 @@ HIDDEN = {
     "still_left", "thaw_left", "film", "still_clock", "pace_clock", "pace_3h", "still_30",
     "sorrel_clock", "sorrel_12h", "sorrel_16h", "cache_torn", "night_24",
     "kept_clock", "kept_4h", "kept_12h", "kept_24h", "walkers_clock", "walkers_6h", "bede_wait",
+    "own_hands", "left_to_them",
 }
 
 

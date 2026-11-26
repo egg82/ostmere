@@ -1,4 +1,4 @@
-beats sharp (pace_scale 1): B17 day 18.67, target_day 20
+beats sharp (pace_scale 1): B17 day 18.66, target_day 20
   away V157->V158: 0 []
   away V158->V159: 0 []
   away V159->V160: 1 ['trigger t_cloth']
@@ -6,7 +6,7 @@ beats sharp (pace_scale 1): B17 day 18.67, target_day 20
   away V161->V162: 0 []
   away V162->V163: 1 ['trigger t_b17']
   away V163->V164: 0 []
-  away V164->V165: 0 []
+  away V164->V165: 1 ['trigger t_lamp_out']
   away V165->V166: 0 []
   away V166->V167: 1 ['trigger offer_o_last_sun']
   away V167->V168: 0 []
@@ -27,15 +27,15 @@ days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       9       7       0       4       0      18       3     41
   2      30       5       2       2       0      12       2     53
-  3      24       4       0       0       0      72       2    102
-  4      15       4       0       0       0       3       3     25
-  5       4       3       0       2       0       2       1     12
-  6       4       1       1       0       0      10       1     17
-  7       1       0       0       0       0       0       2      3
-  8      10       3       0       2       0      10       2     27
-  9      13       1       2       4       0      38       3     61
- 10      21       3       0       1       0      16       2     43
- 11      23       2       3       0       0     118       3    149
- 12      11       1       0       0       0       2       1     15
- 13      11       2       0       0       0       2       3     18
- 14       2       0       0       0       0       0       2      4
+  3      27       4       0       0       0      72       2    105
+  4      18       5       0       0       0       4       3     30
+  5       0       2       0       2       0       1       1      6
+  6       3       1       1       0       0      10       1     16
+  7       2       0       0       0       0       0       2      4
+  8       9       3       0       2       0      10       0     24
+  9      14       1       0       3       0      30       4     52
+ 10      21       3       0       2       0      24       1     51
+ 11      23       2       1       0       0     118       2    146
+ 12      11       1       0       0       0       2       3     17
+ 13      11       2       0       0       0       2       1     16
+ 14       2       0       1       0       0       0       3      6

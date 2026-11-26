@@ -20,7 +20,11 @@ from multiprocessing import get_context
 from ashfall_app.engine import (
     AtLeast, CardId, InvalidVerbError, Rules, Save, SetOrders, SetQueue, TapCard, Verb, advance, decide, next_event,
 )
+from ashfall_app.engine import plan
+from ashfall_app.engine.counts import unit, work_value
 from ashfall_app.engine.gates import store_cap
+from ashfall_app.engine.ids import HANDS
+from ashfall_app.engine.index import index
 from ashfall_app.engine.rates import exact_net, running
 from ashfall_app.engine.work import blocker, completions, tappable
 from tests.dayone import policy
@@ -129,9 +133,18 @@ def _glanced(now: int, present: Present | None) -> set[CardId]:
 
 def _babysit(s: Save, rules: Rules, glanced: set[CardId], boosts: tuple[str, ...]) -> Save:
     for card in (*(CardId(c) for c in boosts), SMOKE):
-        if card not in glanced and tappable(s, rules, card) and blocker(s, rules, card) is None:
+        if card not in glanced and tappable(s, rules, card) and blocker(s, rules, card) is None \
+                and not _cure_runs(s, rules, card):
             s = _try(s, rules, TapCard(card))
     return s
+
+
+def _cure_runs(s: Save, rules: Rules, card: CardId) -> bool:
+    """A rule's mix has the hands (a chip's cure) and `card` would start fresh on them: the queue's head waits for the
+    cure there (engine decisions._queue_verb), so the babysitter waits too rather than tap at the uncured speed, which
+    a tap keeps to its end. A hands card stopped mid-completion takes the hands back, as the queue's does."""
+    c = index(rules).cards[card]
+    return c.lane == HANDS and plan.mix_order(s, rules) is not None and work_value(s, card) % unit(c) == 0
 
 
 def _next(s: Save, rules: Rules, babysit: bool, boosts: tuple[str, ...]) -> int | None:

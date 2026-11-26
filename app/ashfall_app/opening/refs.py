@@ -5,7 +5,8 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, NoReturn
 
 from ..engine import HANDS, QUANTITY_SCALE, per_hour, units
-from .convert import levels, note_trigger_id, offer_trigger_id
+from .condition_convert import levels
+from .convert import note_trigger_id, offer_trigger_id
 
 if TYPE_CHECKING:
     from .entries import ConditionEntry, FlowEntry, ItemAmount, ModifierEntry, OutcomeEntry, UnlockEntry
