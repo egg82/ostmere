@@ -671,6 +671,7 @@ unlocks = [
   { unlock_kind = "action", id = "n2_hour" },
 ]
 joins = [{ lane = "n2", mix = "town:camp", card = "n2_forage", own_split = true }]
+whereabouts = [{ person = "n2", layer = "figure_n2_by_fire" }]
 
 [[subjects]]
 id = "s_n2_joined"
@@ -702,7 +703,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "n2_cut" }, { unlock_kind = 
 [[triggers]]
 id = "t_n1_joins"
 when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
-outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split = true }] }
+outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split = true }], whereabouts = [{ person = "n1", layer = "figure_n1_by_fire_day_3" }] }
 
 # Clay and the pot, the hands' everyday jobs a person also takes (day two's weaving). The old man's leg rules out the
 # digging, so his lane has no clay card.

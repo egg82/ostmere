@@ -69,6 +69,6 @@ def test_a_build_with_no_state_is_reported_and_one_shown_is_not():
 
 
 def test_shown_reads_completions_and_features_from_every_condition():
-    layers = [{"when": "always"}, {"when": "pushes:hall@2&running:x", "until": "pushes:hall@4"},
-              {"when": "store:a|project:make_hut", "until": "feature:roofed"}]
-    assert facts_shown(layers) == {"cards": ["hall", "make_hut"], "features": ["roofed"]}
+    layers = [{"id": "sky", "when": "always"}, {"id": "hall", "when": "pushes:hall@2&running:x", "until": "pushes:hall@4"},
+              {"id": "hut", "when": "store:a|project:make_hut", "until": "feature:roofed"}]
+    assert facts_shown(layers) == {"cards": ["hall", "make_hut"], "features": ["roofed"], "layers": ["hall", "hut", "sky"]}

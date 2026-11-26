@@ -267,6 +267,11 @@ joins = [
   { lane = "n6", mix = "town:camp", card = "n6_watch", own_split = true },
   { lane = "n7", mix = "town:camp", card = "n7_pick", own_split = true },
 ]
+whereabouts = [
+  { person = "n5", layer = "figure_n5_by_fire" },
+  { person = "n6", layer = "figure_n6_by_fire" },
+  { person = "n7", layer = "figure_n7_by_fire" },
+]
 
 # Their cutting takes the place of their gathering by hand from the join, as the first two's does (choice_checks.py).
 # Its own trigger, as t_family_joins' outcome is released.
