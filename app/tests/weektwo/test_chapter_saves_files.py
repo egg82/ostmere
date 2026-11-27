@@ -46,11 +46,18 @@ def test_a_readings_part_writes_one_file_per_heavy_step_and_a_rerun_reads_nothin
         read.append(next(key for key in heavy if step == f"{key}"))
         return True
 
-    monkeypatch.setattr(chapter_saves, "typical_through", lambda chapter: type("P", (), {"rules": None})())
-    monkeypatch.setattr(chapter_saves.verdicts, "chapter_visits",
-                        lambda p, later: [type("V", (), {"label": label, "steps": [f"{(label, i)}" for i in range(3)]})()
-                                          for label in ("V1", "V2", "V3")])
-    monkeypatch.setattr(chapter_saves.verdicts, "heavy_steps", lambda p, later: heavy)
+    def through(chapter: str) -> object:
+        return type("P", (), {"rules": None})()
+
+    def visits(p: object, later: object) -> list[object]:
+        return [type("V", (), {"label": label, "steps": [f"{(label, i)}" for i in range(3)]})() for label in ("V1", "V2", "V3")]
+
+    def steps(p: object, later: object) -> list[tuple[str, int]]:
+        return heavy
+
+    monkeypatch.setattr(chapter_saves, "typical_through", through)
+    monkeypatch.setattr(chapter_saves.verdicts, "chapter_visits", visits)
+    monkeypatch.setattr(chapter_saves.verdicts, "heavy_steps", steps)
     monkeypatch.setattr(chapter_saves.counters, "decides", decides)
     monkeypatch.setitem(chapter_saves.READINGS, "readings-test", (("eight", 1, 3), ("eight", 3, None)))
     chapter_saves.write_readings("readings-test")

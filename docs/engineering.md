@@ -167,6 +167,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/opening/test_pool_checks.py` (`app/ashfall_app/opening/pool_checks.py`) | a line a source says again and again (a chip's off lines, a fight's won and lost lines, a people band's lines) draws from at least `MIN_POOL` (6) different keys, and an uncapped card says no line; counts keys, never reads them | none |
 | `app/tests/test_canon_ids.py` | every `C-<area>-<n>` and `D-<n>` id cited in the repo's text is a row of `content/canon/` or `content/decisions.jsonl`; canon rows keep their fields, a status of canon or tentative, and a source (`file#heading`) that resolves; decision rows keep their fields, status, date and by | none |
 | `app/tests/test_ci_budget.py` | every job in `ci.yml` is classed pull-request, full-run or main-only, and the longest chain of pull-request jobs at their `timeout-minutes` is at most 10 minutes | none |
+| `app/tests/test_saves_plan.py` | every planned `chapter-saves` job is predicted within its cap less the margin; a planted chapter re-splits the plan; the workflow has the jobs and caps the plan assumes | none |
 | `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
 The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.
@@ -233,19 +234,22 @@ suite still runs in seconds.
   chapter's key (`app/tests/weektwo/keys.py`): a hash of the shared inputs (the engine, the opening's loader and shared
   data, the shape of the rules with its numbers masked, the code that plays every chapter), the chapter's own files and
   the key of the chapter before, so a change to one chapter re-keys it and the ones after it and leaves the ones before
-  alone. The typical route's heavy-step readings,
-  minutes each on day twelve, are saved beside them (`ends.READINGS`), so the counting tests read and do not compute
-  them. CI's `chapter-saves` jobs write them in parts: one per route chain, then, after typical's last link,
-  `chapter-saves-rebased` (replaying typical's decisions from its saved ends) and `chapter-saves-readings`, whose parts
-  start from typical's saved end (`chapter_saves.typical_through`) rather than replaying the play, so a part costs only
-  its own steps; a part near its limit is split by moving a span in `ends.READINGS` plus its matrix entry. Each job restores the last nightly's
+  alone. The typical route's heavy-step readings, minutes each on day twelve, are saved beside them, one file per heavy
+  step (`ends.readings_path`), so the counting tests read and do not compute them. CI's `chapter-saves` jobs write them in
+  parts that `saves-plan` (`app/tools/saves_plan.py`) plans from each chapter's measured cost (`app/tools/ci_costs.json`):
+  a route's chain is cut into links (link k of every route runs in `chapter-saves-link-k`, after link k-1, from the ends
+  it uploaded), then `chapter-saves-rebased` (typical's rebased saves, grouped) and `chapter-saves-readings` (spans of
+  heavy steps) start from typical's saved ends (`chapter_saves.typical_through`). Chapters pack in order into a job until
+  its predicted time would pass the 30-minute cap less 18 minutes of margin (`CAP_MIN`, `MARGIN_MIN`), so a new chapter
+  re-splits the parts with no list to edit; a chapter with no row in the table is planned at its `unmeasured` figure and
+  named in the plan's `estimated`. A plan needing more links than the workflow has ranks (`RANKS`) fails `saves-plan`
+  and `tests/test_saves_plan.py` until a `chapter-saves-link-k` job is copied from the last. The table holds the worst
+  of three full runs' `cpu_s` per route and chapter, rebased chapter and reading step; a stale row makes a prediction
+  wrong, not a cap larger. Each job restores the last nightly's
   saves (`publish-ends` caches the merged saves on `main`), writes only the chapters whose key is new (`chapter_saves.py`
   keeps a file present under today's key; `--prune` drops the directories of keys no chapter has), and hands what it
   wrote to the readers as artifacts they merge over the restored saves. A local `--write` is incremental the same way:
-  after a change to one chapter, only it and the chapters after it replay. A route
-  chain too long for one job is written in links (`LINKS` in `app/tools/chapter_saves.py`), each its own job after the one before
-  (`chapter-saves-sharp-a` to `-c`, `chapter-saves-whenever-a` to `-c`), starting from the saved end the link before uploaded; when a chapter pushes the
-  last link past about 18 minutes on GitHub's runner, add a link: one `LINKS` entry and one job copying the last. Week two's job runs one shard per chapter, day
+  after a change to one chapter, only it and the chapters after it replay. Week two's job runs one shard per chapter, day
   twelve's typical play in one of its own and the makers readouts in another (a test's `weektwo_shard` marker names its
   shard; `app/tools/weektwo_shards.py`), so a play's readers stay in one job; a test takes its play from a route
   fixture, since a play first built in a test's body fails it (`refuse_hidden_play` in `app/tests/weektwo/routes.py`,
