@@ -136,7 +136,14 @@ def merge(table: dict[str, Any], measured: dict[Key, int], runs: list[int]) -> t
     new["measured"] = MEASURED
     new["source_runs"] = sorted(runs)
     new["unmeasured"] = unmeasured_row(new, table["unmeasured"]["basis"])
-    return new, [k for k in table_keys(table) if k not in measured], unplaced
+    still = [k for k in table_keys(table) if k not in measured]
+    if "estimated" in new:  # rows a chapter's PR wrote by hand ("ends:typical:twentyfive"): kept until all measured
+        rows = [r for r in new["estimated"]["rows"] if any(k[:len(r.split(":"))] == tuple(r.split(":")) for k in still)]
+        if rows:
+            new["estimated"]["rows"] = rows
+        else:
+            del new["estimated"]
+    return new, still, unplaced
 
 
 class GitHub:

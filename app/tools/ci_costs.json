@@ -18,7 +18,8 @@
    "eighteen": 180,
    "nineteen": 300,
    "twentytwo": 137,
-   "twentythree": 239
+   "twentythree": 239,
+   "twentyfive": 384
   },
   "typical": {
    "week1": 49,
@@ -31,7 +32,8 @@
    "eighteen": 88,
    "nineteen": 88,
    "twentytwo": 234,
-   "twentythree": 170
+   "twentythree": 170,
+   "twentyfive": 273
   },
   "whenever": {
    "week1": 38,
@@ -44,7 +46,8 @@
    "eighteen": 88,
    "nineteen": 206,
    "twentytwo": 191,
-   "twentythree": 104
+   "twentythree": 104,
+   "twentyfive": 168
   }
  },
  "rebased": {
@@ -57,7 +60,8 @@
   "eighteen": 243,
   "nineteen": 307,
   "twentytwo": 298,
-  "twentythree": 369
+  "twentythree": 369,
+  "twentyfive": 462
  },
  "readings": {
   "eight": {
@@ -224,15 +228,29 @@
     232,
     210
    ]
+  },
+  "twentyseven": {
+   "setup_s": 273,
+   "steps_s": [
+    79,
+    79,
+    78,
+    73,
+    62,
+    170,
+    172,
+    232,
+    210
+   ]
   }
  },
  "unmeasured": {
   "ends": {
-   "sharp": 375,
-   "typical": 293,
+   "sharp": 480,
+   "typical": 342,
    "whenever": 258
   },
-  "rebased": 462,
+  "rebased": 578,
   "readings": {
    "setup_s": 342,
    "steps_s": [
@@ -258,5 +276,15 @@
    ]
   },
   "basis": "a chapter with no row is planned at the costliest measured one plus a quarter: per route, its dearest end; the dearest rebased save; the dearest setup and heavy step, at the step count of the chapter with the most reading time"
+ },
+ "estimated": {
+  "rows": [
+   "ends:typical:twentyfive",
+   "ends:sharp:twentyfive",
+   "ends:whenever:twentyfive",
+   "rebased:twentyfive",
+   "readings:twentyseven"
+  ],
+  "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block."
  }
 }

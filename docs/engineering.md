@@ -21,7 +21,8 @@ chapter before it. `playthrough-slice` runs one job per week-two shard of a touc
 saved end of the chapter before is missing, saying why in the job summary. Shards whose wall time (the sum of the builds and heavy calls of their longest xdist
 loadgroup, not their slowest play), plus setup and 10% margin, is over 6 minutes are named in `weektwo_shards.NIGHTLY_ONLY` and play only in the full run; a pull request
 touching only those plays nothing of week two. A shard leaves that set by being split or made cheaper, never by a
-longer timeout. A change to what every chapter reads (the engine, the
+longer timeout. A new chapter's shards may be placed there by an earlier chapter's measured shape before any run has
+measured them; `weektwo_shards.py` says which, and the first nightly gives their wall time. A change to what every chapter reads (the engine, the
 opening's loader and shared data, the rules' ids and structure, `content/beats.yaml`, the shared play code), to week
 one, or a base without keys, gets the smoke instead: the day-eight plays of the push routes, from the start
 (`@pytest.mark.smoke`); a change every chapter reads, or week one's, also plays the `WHOLE_GAME` shards (`makers`, `tools/weektwo_shards.py`) from the start, so their readouts are read before merge, in `playthrough-whole-game`: a job of its own that waits on `changes` alone and decides for itself (`whole_game` in `tools/pr_plan.py`), with 8 minutes, the 10-minute chain less `changes` and `ci-ok`, since played from the start a route's chain plus readout runs ~265 s and overran the 6 minutes of a job after `slice`. The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,

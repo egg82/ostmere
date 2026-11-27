@@ -115,6 +115,15 @@ def test_a_chapter_no_run_measured_keeps_its_old_cost_and_is_listed_not_zeroed_o
     assert new["job_overhead_s"] == table["job_overhead_s"]
 
 
+def test_hand_written_estimates_stay_marked_until_a_run_measures_them():
+    table = json.loads(saves_plan.TABLE.read_text())
+    table["estimated"] = {"rows": ["ends:sharp:eight", "ends:sharp:nine"], "basis": "by hand"}
+    new, _, _ = ci_costs.merge(table, {("ends", "sharp", "eight"): 777}, [1])
+    assert new["estimated"] == {"rows": ["ends:sharp:nine"], "basis": "by hand"}
+    every = {k: 1 for k in ci_costs.table_keys(table)}
+    assert "estimated" not in ci_costs.merge(table, every, [1])[0]
+
+
 def test_a_new_chapter_is_added_and_a_reading_with_no_step_in_the_table_is_reported_not_added():
     table = json.loads(saves_plan.TABLE.read_text())
     steps = len(table["readings"]["eight"]["steps_s"])

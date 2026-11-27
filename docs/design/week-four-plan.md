@@ -12,7 +12,7 @@ Week 4's chapter beats are I1-I13 (one letter a week, as week 3's T).
 | `day_twenty_two.toml` | I1 → B19 | B19, a find on the week's trip held to the season's clock | an addition keyed on week 3's last feature (the trip shown unready), the season's turn and its content, the last season's chores retired (week 3's retirement part, unchanged), a chip with cures and no order card (item 4), a gift card on a finite pool, a raised cap on the arrivals' count (item 9), the first expeditions: a trip, its town twin, a shared count store, a new skill (item 5), I1-I4, SL29-SL30 |
 | `day_twenty_three.toml` | B19 → B20 | B20, a glowing story step held to the season's clock | a fixed notable joining as a lane with a later label, a two-answer offer whose second answer unlocks the one-off the first queues (item 3), an arrival offer of the work kind, the week's joint project and its order card, a story drain, asks whose yes queues a one-off, a second card for the second magic skill, a story night, I5-I7, SL31-SL33 |
 | `day_twenty_five.toml` | B20 → B21 | B21, a clock after an arrival | a player-only fight trip whose losses are told from pools of its own (item 1), the next region's first threat step on its clock store, two arrival offers forming pooled groups (item 6), a fixed notable joining, I8-I10, SL34-SL35, Camp 19 |
-| `day_twenty_seven.toml` | B21 → night 28 | night 28, held to the calendar | a story night and its glowing step, I11-I13, SL36, the map's places (item 8), Camp 20, the end card at the edge of week 4's content |
+| `day_twenty_seven.toml` | B21 → night 28 | night 28, held to the calendar | a story night and its glowing step, I11-I13, SL36, three of the map's four places (item 8; the fourth waits, D-175), no Camp level (Camp 20's marker shipped with day 25), the end card at the edge of week 4's content |
 
 Each is merged after the one before it (new ids only, the release lock's additive rules). Landing bands are D-93's: B18
 typical 504-528 h, B19 528-552, B20 576-600, B21 624-648; every sharp floor falls before the turn or the season's clock
@@ -109,7 +109,8 @@ first chapter.
    test; a planted visit whose only change is a queued stage fails the decide counter.
 8. **The map's places** (**S**, content). Four `[[places]]` across the chapters, revealed by unlocks (a beat's feature, the
    project's card, two skill finds), one unlabelled. Accept: the map checks pass; composites at 390×844 and 3840×2160,
-   light and dark, looked at, with the earlier places.
+   light and dark, looked at, with the earlier places. Three shipped with `day_twenty_seven.toml`; `p_marker` waits for a
+   marker stamp kind, which the pack lacks (D-175).
 9. **A raised cap on a count store** (**S**, opening, tests). The turn's outcome carries a cap entry on the arrivals' count
    (×2, sourced). Check the arrival checks and People read the effective cap, not the store's base, and nothing on the
    page draws the count. Accept: a fixture past the base cap counts the next arrival; a planted check reading the base cap
