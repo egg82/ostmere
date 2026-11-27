@@ -1,13 +1,13 @@
 // What every part of the game screen is: redrawn from each new View, and sampled every frame in between.
 import type { Condition, Decision, LogLine, MixRows, Repeats, RuleRun, View } from "../api/types";
-import type { Catalog } from "../game/catalog";
-import type { Keeps } from "../game/keeps";
-import type { Subject } from "../game/lessons";
-import type { HandStreak } from "../game/stall";
-import type { OrderFires } from "./fires";
-import type { Glow } from "./fresh";
-import type { LaneTarget } from "./laneedit";
-import type { Arrivals } from "./reveal";
+import type { Catalog } from "../game/page/catalog";
+import type { Keeps } from "../game/account/keeps";
+import type { Subject } from "../game/lessons/lessons";
+import type { HandStreak } from "../game/cards/stall";
+import type { OrderFires } from "./cards/fires";
+import type { Glow } from "./feedback/fresh";
+import type { LaneTarget } from "./condition/laneedit";
+import type { Arrivals } from "./feedback/reveal";
 
 /** What the Rules tab opens on: its list (null), a rule's condition editor, a new rule's (for one person's lane, `newFor`),
  * or a lane's task editor. */
@@ -65,7 +65,7 @@ export interface PartContext {
   lines(): LogLine[];
   /** The save being played: what the log's fight labels are drawn from. */
   saveId(): number;
-  /** The lesson under way (ui/lessons.ts), or null: offers that would crowd it wait. */
+  /** The lesson under way (ui/lessons/lessons.ts), or null: offers that would crowd it wait. */
   lesson(): string | null;
   /** What the lesson under way started on (its trigger's data attributes), or null: another offer like it waits. */
   lessonSubject(): Subject | null;

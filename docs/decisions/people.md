@@ -120,7 +120,7 @@ aside, since that person came earlier and was told then (`app/ashfall_app/openin
 person writes no line of their own: the loader gives each outcome that moves one a mention line with no text, so it
 lands in the save's log at the second it happened, and the page words each game day's mentions of a way as one line,
 from the `[people]` bands for how many came or went, drawn by a shuffle bag keyed by the save, the way and the band
-(`app/ashfall_app/opening/people.py`, `app/client/src/game/people.ts`; contract/people.txt, "PEOPLE"). The bands are words,
+(`app/ashfall_app/opening/people.py`, `app/client/src/game/town/people.ts`; contract/people.txt, "PEOPLE"). The bands are words,
 never a count, after A Dark Room, whose arrivals read as a stranger, a family, a group or a convoy by their size. The
 mention is decided in code and written by authored lines: no frequency word anywhere. Every person in the shipped
 chapters is `line`, since each joining so far is a beat with lines of its own. Rejected: a per-person line for everyone, which
@@ -140,14 +140,23 @@ content has one.
 How many things the Town view asks the player to tune (a person keeping their own split, or a group with a joined member
 who does not; a station such as the pot is neither) is a feel, "five-ish" by the owner's reckoning (2026-11-25), with six already "a bit much" (2026-11-26), so it is
 a readout and never a check: `app/tests/readouts/town.txt` lists, at each chapter's end, who keeps their own split and
-each group with its members, by id. Notables keep their own split: the story is written around them as individuals. A
+each group with its members, by id, and beside each crew its size, its multiplier and the spread between the
+largest and the smallest, a readout like the rows, never a check. Notables keep their own split: the story is written around them as individuals. A
 newcomer the story does not single out is handed to a group at the moment they join, by the join or by a trigger of
 their arrival's answer that clears the mark and writes the line that says why, so a save already past the join gets the
 same change at its next load.
 
-**Groups follow what people can do** (#337). A group holds the work its members can do and nothing more
-(`check_group_abilities` in `app/ashfall_app/opening/groups.py`); a newcomer goes to the group whose work fits their
-list, and two arriving parties whose lists match share a group rather than each getting a row.
+**Groups follow what people can do** (#337, #569). A group holds the work its members can do and nothing more
+(`check_group_abilities` in `app/ashfall_app/opening/groups.py`). There are two crews from the first family's day,
+split by kind of work so two different jobs run at once, each under its own split: the field crew and the hearth crew,
+which share the staples. The early companions join the crew whose work suits them; where a person already has a
+hand-written card for a job the crew's list names, a town card's `own` lanes say so rather than expand a second one. A
+newcomer goes to the smallest crew they can join: a lane lists `crews`, and the loader sets its group to the smallest
+of them by arrival order, a tie to the first listed; a person only one crew can take lists that one, and a person the
+story places in a crew names `group`. Never by names.
+
+**A crew's size is its multiplier.** A group card runs at its share times the crew's free members, linear and uncapped
+(engine `crewed`), so the spread between crews is a balance readout, kept even by the smallest-crew rule.
 
 **Who can do which job.** Everyday work (cooking a stew, digging clay, weaving wattle) goes to most people by default,
 withheld only where the story gives a reason someone could not (a child, an injury, a role that rules it out); skilled

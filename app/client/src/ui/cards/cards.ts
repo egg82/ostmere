@@ -1,0 +1,244 @@
+// The card panel (docs/design/opening-screen/asks-and-cards.md, "Cards"): view.cards in lane groups, each lane a stripe colour, crafts
+// together under one heading; a ruled lane's cards are left out (they are that lane's tasks, game/town/lanes.ts). Every card is drawn the same whether tapped, mixed or idle: title, completions against its
+// cap, its needs as have/need (short ones in the ledger's red), its one bar (Card.bar modulo bar_total, whoever runs it),
+// Ready iff blocker is null; a card whose lane is busy can't be
+// tapped and looks flat, unless it cuts in (Card.cuts_in); an unready one is muted but still answers a tap: a failed tap, which takes no time, pulses the
+// card red and marks what stopped it, with no text.
+// Slots don't move: a card that leaves view.cards stays in its slot, done, until a new card needs one (the new card takes
+// the slot of the card whose completion opened it, so the next step lands under the finger) or until it has been held
+// DONE_HOLD_MS and nothing is being touched, when it goes to the Completed tab and the cards after it close up.
+// A new card given a new slot at its group's end (below the mix's cards, out of sight on a phone) is scrolled into
+// view once, unless a finger is on the page or just left it.
+import type { Card, View } from "../../api/types";
+import { sample } from "../../game/page/clock";
+import { panelView } from "../../game/town/lanes";
+import { keptReadyAt, waitsOnUnseen } from "../../game/cards/ready";
+import { UI } from "../../game/page/text";
+import { CardGroups } from "./cardgroups";
+import { KindPicks } from "./kindpick";
+import { barFraction, footWords, makeRow, upsideWords, waitAt, type Row } from "./cardrow";
+import { el, pulse, setText } from "../dom";
+import { sing } from "../../audio/cues";
+import { completionRung, play } from "../feedback/ladder";
+import { cardHintsNow, hintCard } from "./cardhint";
+import type { NewMarks } from "../../game/lessons/marks";
+import { markNew } from "../feedback/fresh";
+import type { Part, PartContext } from "../part";
+import { sideStrength } from "../ledger/strength";
+import { WaitLine } from "../story/waitline";
+import { WhenReady } from "./whenready";
+import { storyMarks } from "../../game/story/story";
+import { speedups } from "../../game/cards/levelled";
+import { levelShown, showLevel } from "./cardlevel";
+
+/** How long a finished card stays in its slot, so the player sees it finish, before it goes to Completed. */
+const DONE_HOLD_MS = 5000;
+/** A finished card is not removed within this long of the last press or while one is down: nothing reflows under a finger. */
+const QUIET_MS = 1500;
+
+export class Cards implements Part {
+  readonly root = el("section", "deck");
+  private readonly groups: CardGroups;
+  private readonly whenReady: WhenReady;
+  /** Kinds of one card drawn as one, with a picker (kindpick.ts). */
+  private readonly kinds: KindPicks;
+  private readonly rows = new Map<string, Row>();
+  private view: View | null = null;
+  private story: ReadonlySet<string> = new Set();
+  /** The wait line, first in the deck (ui/story/waitline.ts). */
+  private readonly wait: WaitLine;
+  private pressed = false;
+  /** The first card this update gave a new slot at its group's end. */
+  private atEnd: HTMLElement | null = null;
+  private lastPress = -Infinity;
+
+  constructor(private readonly ctx: PartContext, private readonly marks: NewMarks, private readonly arrived: () => void = () => undefined) {
+    this.wait = new WaitLine(ctx);
+    this.root.append(this.wait.root);
+    this.groups = new CardGroups(this.root, ctx.catalog);
+    this.whenReady = new WhenReady(ctx);
+    this.kinds = new KindPicks(ctx, marks, () => { if (this.view) this.kinds.apply(this.rows, this.view); });
+    const press = (down: boolean): void => { this.pressed = down; this.lastPress = performance.now(); };
+    document.addEventListener("pointerdown", () => press(true), true);
+    for (const type of ["pointerup", "pointercancel"]) document.addEventListener(type, () => press(false), true);
+  }
+
+  /** A failed tap of this card (Step.failed_tap): the card pulses red, and so does what its blocker names (the need
+   * row that shows it, else the countdown); with neither on the card, the card alone. A second tap restarts both. */
+  failed(card: string, view: View): void {
+    const row = this.rows.get(card);
+    if (!row || row.done) return;
+    pulse(row.node, "tap-failed");
+    sing("failed");
+    const blocker = row.card.blocker;
+    if (!blocker) return;
+    const mark = row.needs.shows(blocker.condition) ?? (keptReadyAt(view, row.card, this.ctx.catalog.content.scales.quantity_per_item) !== null ? row.foot : null);
+    if (mark) pulse(mark, "fail-mark");
+  }
+
+  /** A card's node, for the glow. */
+  node(card: string): HTMLButtonElement | undefined {
+    const row = this.rows.get(card);
+    return row && !row.done ? row.tap : undefined;
+  }
+
+  update(full: View, before: View | null): void {
+    const view = panelView(this.ctx.catalog, full);   // a ruled lane's cards are its tasks, never cards here
+    const prev = before && panelView(this.ctx.catalog, before);
+    this.view = view;
+    this.story = storyMarks(this.ctx.catalog, full).cards;
+    this.wait.update(full);
+    const live = new Map(view.cards.map((c) => [c.card, c]));
+    const landed = new Set<string>();
+    for (const [id, row] of this.rows) {
+      const now = live.get(id)?.completions ?? view.completed.find((c) => c.card === id)?.completions ?? row.card.completions;
+      if (now > row.card.completions) landed.add(id);
+      if (!live.has(id) && !row.done) {
+        row.done = true;
+        row.doneAt = performance.now();
+        if (prev) {   // finished looks are a change too: at their turn
+          row.doneShown = false;
+          this.ctx.arrivals.effect(row.node, "card", () => { row.doneShown = true; row.node.classList.toggle("done", row.done); }, "finish");
+        }
+      }
+    }
+    for (const card of view.cards) {
+      const row = this.rows.get(card.card);
+      if (row) row.done = false;
+      else this.place(card, landed, prev !== null);
+    }
+    this.marks.sync(view);   // after placing: a card that arrives already at work never gets a dot
+    this.groups.layout(this.rows);
+    this.kinds.apply(this.rows, view);
+    this.bringIntoView();
+    const busy = new Set(view.lanes.filter((l) => l.running_card !== null).map((l) => l.lane));
+    const running = new Set(view.lanes.flatMap((l) => (l.running_card ? [l.running_card] : [])));
+    const single = this.rows.size === 1;
+    const hints = cardHintsNow(this.ctx.catalog, view, this.ctx.keeps, this.ctx.lesson(), this.ctx.repeats().taps);
+    for (const row of this.rows.values()) {
+      const card = live.get(row.id);
+      if (card) {
+        const before = row.card;
+        row.card = card;
+        if (card.completions > before.completions && prev) {
+          const rung = completionRung(before.by, row.byOrder === true);   // as it ran until now: the restyle below moves it on
+          this.ctx.arrivals.effect(row.node, "card", (quiet) => play(row.node, rung, quiet), "finish", rung);
+        }
+      } else {
+        const done = view.completed.find((c) => c.card === row.id);
+        if (done) row.card = { ...row.card, completions: done.completions };
+      }
+      hintCard(row.node, row.id, hints, () => this.ctx.keeps.keepMixOffered(row.id), this.marks.has(row.id));   // a quiet mark, once: the mix could take it
+      this.restyle(row, view, { busy, running, single });
+    }
+    for (const s of before ? speedups(this.ctx.catalog, before, full) : []) {
+      const row = this.rows.get(s.card);
+      if (row && !row.done) this.ctx.arrivals.effect(row.node, "skill", () => showLevel(this.ctx.catalog, row, s, performance.now()), "level");
+    }
+  }
+
+  tick(t: number): void {
+    this.wait.tick(t);
+    this.sweep();
+    for (const row of this.rows.values()) {
+      const { card } = row;
+      if (row.done) continue;
+      row.fill.style.transform = `scaleX(${barFraction(card, t)})`;
+      const wait = waitAt(this.ctx, this.view, card);
+      if (!levelShown(row, performance.now())) setText(row.foot, footWords(this.ctx, wait, card, t));
+      this.markClock(row, wait !== null && this.view !== null && waitsOnUnseen(this.view, card));
+      row.needs.tick(card, this.view, t);
+    }
+  }
+
+  /** The countdown of a card that waits on a store the player was never shown (the night) is the clock's lesson's mark. */
+  private markClock(row: Row, clock: boolean): void {
+    if (clock) row.foot.dataset["teach"] = "clock";
+    else delete row.foot.dataset["teach"];
+  }
+
+  /** Finished cards past their hold leave for the Completed tab (the view already lists them there), when no finger is near. */
+  private sweep(): void {
+    const now = performance.now();
+    if (this.pressed || now - this.lastPress < QUIET_MS) return;
+    if (this.ctx.arrivals.busy) return;   // a card leaving is a change too: not while something waits its turn
+    let left = false;
+    for (const [id, row] of this.rows) {
+      if (!row.done || now - row.doneAt < DONE_HOLD_MS) continue;
+      row.node.remove();
+      this.rows.delete(id);
+      left = true;
+    }
+    if (left) this.groups.layout(this.rows);
+  }
+
+  private bringIntoView(): void {
+    const node = this.atEnd;
+    this.atEnd = null;
+    if (node && !this.pressed && performance.now() - this.lastPress >= QUIET_MS) node.scrollIntoView?.({ block: "nearest" });
+  }
+
+  /** A new card's slot: the done slot of the card that just completed in its group, else any done slot, else a new one. */
+  private place(card: Card, landed: Set<string>, inPlay: boolean): void {
+    const newGroup = this.groups.isNew(card.card);
+    const group = this.groups.of(card.card);
+    const done = group.slots.filter((id) => this.rows.get(id)?.done);
+    const target = done.find((id) => landed.has(id)) ?? done[0];
+    const row = makeRow(this.ctx, this.whenReady, card);
+    if (target) {
+      const old = this.rows.get(target);
+      old?.node.remove();
+      this.rows.delete(target);
+      group.slots[group.slots.indexOf(target)] = card.card;
+    } else {
+      group.slots.push(card.card);
+      if (inPlay) this.atEnd ??= row.node;
+    }
+    this.rows.set(card.card, row);
+    if (inPlay && card.completions === 0) {   // a card done before is not new when it returns
+      this.marks.add(card.card);
+      this.kinds.arrived(card.card);
+      this.arrived();
+      markNew(row.node, () => this.marks.clear(card.card));
+    }
+    if (inPlay) {
+      this.ctx.arrivals.arrive(row.node, "card", card.card);
+      const tag = newGroup ? group.node.querySelector<HTMLElement>(":scope > .lane-tag") : null;
+      if (tag) this.ctx.arrivals.arrive(tag, "card", card.card);   // a new group's heading comes with its first card
+    }
+  }
+
+  private restyle(row: Row, view: View, s: { busy: Set<string>; running: Set<string>; single: boolean }): void {
+    const { catalog } = this.ctx;
+    const { card } = row;
+    const info = catalog.cards.get(row.id);
+    const lane = info?.lane ?? "hands";
+    const isRunning = s.running.has(row.id);
+    const laneBusy = s.busy.has(lane) && !card.cuts_in;   // a glowing step or a cure cuts in (Card.cuts_in)
+    const retired = row.done && catalog.retired(view, row.id);
+    const cl = row.node.classList;
+    cl.toggle("story", this.story.has(row.id));   // the story mark (game/story/story.ts)
+    cl.toggle("done", row.done && row.doneShown !== false);
+    cl.toggle("retired", retired);
+    cl.toggle("ready", !row.done && card.blocker === null);
+    cl.toggle("unready", !row.done && card.blocker !== null);
+    cl.toggle("busy", !row.done && laneBusy && !isRunning);
+    cl.toggle("running", !row.done && isRunning);
+    cl.toggle("by-mix", !row.done && card.by === "mix");
+    row.byOrder = this.ctx.fires.running.has(row.id);
+    cl.toggle("by-order", row.byOrder);
+    cl.toggle("first", s.single && !row.done);
+    cl.toggle("untapped", s.single && !row.done && card.completions === 0 && card.by === null);
+    row.tap.disabled = row.done || laneBusy;
+    setText(row.count, retired ? catalog.text.get(UI.retired) : card.cap !== null || card.completions > 0 ? catalog.format.completions(card.completions, card.cap) : "");
+    row.needs.draw(row.card, view, row.done);
+    row.fight?.sync(view, row.id);
+    const side = info?.kept.find((k) => k.side !== null)?.side;
+    const words = upsideWords(catalog, card);
+    if (words !== null) {
+      if (row.bonus && side) row.bonus.draw(words, sideStrength(catalog, view, side));
+      else if (row.upside) setText(row.upside, words);
+    }
+    this.whenReady.sync(row.ready, row.done ? undefined : card, view);
+  }
+}

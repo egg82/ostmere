@@ -34,6 +34,10 @@ class LaneEntry(Entry):
     """A person the story keeps: the only kind a close call (close_call_entries.py) is about. Authored, never inferred."""
     group: str | None = None
     """On a person's ruled lane, the pooled lane that is their group."""
+    crews: list[str] = []
+    """The pooled lanes this person can join, in preference order: the loader sets `group` to the smallest of them
+    (most members among the lanes declared before this one; a tie goes to the first listed). A person only one crew can
+    take lists that one. Never set beside `group`."""
     tied: str | None = None
     """On a pooled lane, the person's lane the group is tied to: one townsperson who looks after it (api/contract/groups.txt,
     "GROUPS"). Authored, never inferred."""

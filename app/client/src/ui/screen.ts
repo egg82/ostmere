@@ -1,49 +1,49 @@
 // The game screen (docs/design/opening-screen/index.md): on a desktop the left rail, the scene with the story strip under it,
 // and the panel beside it (under it on a phone): the hands strip, the asks, then the open tab's panel, Tasks, Town
-// (ui/townview.ts) or Rules once the first rule exists (ui/tabs.ts; each part's seat by frame: ui/partseat.ts). The mix
+// (ui/town/townview.ts) or Rules once the first rule exists (ui/tabs.ts; each part's seat by frame: ui/partseat.ts). The mix
 // and town editors take the card area's place while open. It owns no game state: it draws each View it is handed and
 // samples it every frame. The one glow on a card is placed here (CardInfo.glows, the first time it is ready with its lane
 // free); the strip places its offers' glows, the Rules tab's label takes it once a rule has come on and let go until the
 // tab is opened, and a running lesson's step takes it (lessons.ts).
 import type { Decision, JournalDay, MixRows, Step, View } from "../api/types";
-import type { Catalog } from "../game/catalog";
-import { NewMarks } from "../game/marks";
-import type { Keeps } from "../game/keeps";
-import type { Past } from "../game/chronicle";
-import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/orders";
-import { readingMs } from "../game/reading";
-import { HandStreak } from "../game/stall";
-import { Banner } from "./banner";
-import { CardGlow } from "./cardglow";
-import { Cards } from "./cards";
-import { bookPages } from "./bookpages";
+import type { Catalog } from "../game/page/catalog";
+import { NewMarks } from "../game/lessons/marks";
+import type { Keeps } from "../game/account/keeps";
+import type { Past } from "../game/book/chronicle";
+import { mixRules, ruleLetGo, ruleRunLetGo, rulesTabDrawn, taskRules } from "../game/rules/orders";
+import { readingMs } from "../game/story/reading";
+import { HandStreak } from "../game/cards/stall";
+import { Banner } from "./story/banner";
+import { CardGlow } from "./cards/cardglow";
+import { Cards } from "./cards/cards";
+import { bookPages } from "./book/bookpages";
 import { el } from "./dom";
-import { MixEditor } from "./editor";
-import { TheEnd } from "./end";
-import { FeatureCard } from "./featurecard";
-import { OrderFires } from "./fires";
-import { Flight } from "./flight";
-import { Glow, GlowWhile, markNew } from "./fresh";
-import { IdleNudge, nudgeNode } from "./nudge";
-import { Lessons } from "./lessons";
-import { Hands } from "./hands";
-import { Asks } from "./asks";
-import { seatHead } from "./headseat";
+import { MixEditor } from "./mixes/editor";
+import { TheEnd } from "./story/end";
+import { FeatureCard } from "./story/featurecard";
+import { OrderFires } from "./cards/fires";
+import { Flight } from "./asks/flight";
+import { Glow, GlowWhile, markNew } from "./feedback/fresh";
+import { IdleNudge, nudgeNode } from "./story/nudge";
+import { Lessons } from "./lessons/lessons";
+import { Hands } from "./hands/hands";
+import { Asks } from "./asks/asks";
+import { seatHead } from "./story/headseat";
 import { PHONE } from "./layout";
 import { seatParts } from "./partseat";
-import { Ledger } from "./ledger";
+import { Ledger } from "./ledger/ledger";
 import type { Actions, Part } from "./part";
-import type { Moment } from "./remindermention";
-import { Reveal } from "./reveal";
-import { RulesTab } from "./rules";
-import { MixSelector } from "./selector";
-import { Skills } from "./skills";
-import { Story } from "./story";
-import { StripGlow } from "./stripglow";
+import type { Moment } from "./settings/remindermention";
+import { Reveal } from "./feedback/reveal";
+import { RulesTab } from "./rules/rules";
+import { MixSelector } from "./mixes/selector";
+import { Skills } from "./skills/skills";
+import { Story } from "./story/story";
+import { StripGlow } from "./story/stripglow";
 import { MoreCue } from "./morecue";
 import { PanelNav } from "./panelnav";
 import { PanelTabs } from "./tabs";
-import { TownView } from "./townview";
+import { TownView } from "./town/townview";
 
 export class Screen {
   readonly root = el("div", "game");

@@ -9,8 +9,8 @@ import { testContext } from "./context";
 import { asksStep } from "../fixtures/asks";
 import { dayTwoStep } from "../fixtures/daytwo";
 import type { Decision, LogLine, View } from "../src/api/types";
-import { Asks } from "../src/ui/asks";
-import { Reveal } from "../src/ui/reveal";
+import { Asks } from "../src/ui/asks/asks";
+import { Reveal } from "../src/ui/feedback/reveal";
 
 install();
 Object.assign(window, { innerWidth: 1440, innerHeight: 900 });

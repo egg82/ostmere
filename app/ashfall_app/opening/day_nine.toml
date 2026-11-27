@@ -49,6 +49,7 @@ outcome = { line_keys = ["l_gap_fire_1"], unlocks = [{ unlock_kind = "card", id 
 
 [[cards]]
 id = "gap_fire"
+site = { layer = "gap_ring" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_gap_fire"
@@ -223,7 +224,7 @@ inputs = [{ store = "wind_torn", items = 12 }, { store = "pelt", items = 3 }, { 
 [[town_cards]]
 id = "{lane}_peg_flaps"
 twin_of = "peg_flaps"
-lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_peg_flaps"
 upside_key = "up_peg_flaps"

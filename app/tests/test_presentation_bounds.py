@@ -5,7 +5,7 @@ from typing import Any
 import pytest
 from pydantic import BaseModel, ValidationError
 
-from ashfall_app.api.saves_models import AccountPresentation, SavePresentation
+from ashfall_app.api.player.saves_models import AccountPresentation, SavePresentation
 from tests.game_client import GameClient
 
 END: dict[str, Any] = {"lesson": "l", "skipped": False, "step": 0, "longest_wait_s": 0}

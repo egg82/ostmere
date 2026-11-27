@@ -1,8 +1,8 @@
 // A save keeps the newest MAX_VISITS returns: the oldest go as new ones are kept, and a merge with the server's answer trims too.
-import { MAX_VISITS } from "../src/game/chronicle";
-import { Keeps } from "../src/game/keeps";
-import { mergeSavePresentation } from "../src/game/presentation";
-import { NEW_SAVE } from "../src/game/keeps";
+import { MAX_VISITS } from "../src/game/book/chronicle";
+import { Keeps } from "../src/game/account/keeps";
+import { mergeSavePresentation } from "../src/game/account/presentation";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

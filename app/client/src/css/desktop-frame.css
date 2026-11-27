@@ -15,7 +15,7 @@
   .panel { height: 100vh; overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; padding: 0 1.2rem 1.6rem; border-left: 1px solid var(--rule); }
   .panel-top { top: 0; margin: 0 -1.2rem; padding: .7rem 1.2rem; }
   .panel.more { -webkit-mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); mask-image: linear-gradient(#000 calc(100% - 3rem), transparent); }   /* content runs past the foot (ui/morecue.ts): it fades out there, still under reduced motion */
-  /* the Town and Book views (ui/townview.ts, ui/book.ts): they take the scene's room and the panel's */
+  /* the Town and Book views (ui/town/townview.ts, ui/book/book.ts): they take the scene's room and the panel's */
   .game:is([data-tab="town"], [data-tab="book"]) .left { display: none; }
   .game:is([data-tab="town"], [data-tab="book"]) .panel { grid-column: 1 / -1; padding: 1.4rem 2rem 1.6rem; }
   .game:is([data-tab="town"], [data-tab="book"]) .panel > :not(.card-area, .tabs, .panel-foot, .banners) { display: none; }
@@ -78,11 +78,11 @@
   }
   .stage { flex: none; height: auto; }   /* the stage takes the art's height; the art fills the column's width (Scene.fit caps it) */
   .scene-box { position: relative; inset: auto; flex: none; --by-width: 1; --fill: 1; }
-  .low { flex: 1 1 auto; height: auto; min-height: max(8rem, min(22rem, 42vh) - var(--head-h, 0px)); }   /* the head above the art takes its room from here (ui/headseat.ts), so the art keeps its size */
+  .low { flex: 1 1 auto; height: auto; min-height: max(8rem, min(22rem, 42vh) - var(--head-h, 0px)); }   /* the head above the art takes its room from here (ui/story/headseat.ts), so the art keeps its size */
   .low .ledger-lines { display: grid; column-gap: 2.4rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); grid-auto-flow: row dense; align-items: start; }
   /* a rule offer spans the whole grid row under its line; dense flow lets the line's neighbour keep the cell beside it */
   .low .ledger-item { display: contents; }
-  .low .ledger-fold { display: flex; flex-direction: column; }   /* a folded row keeps its kinds under it, one grid cell (ui/ledgergroups.ts) */
+  .low .ledger-fold { display: flex; flex-direction: column; }   /* a folded row keeps its kinds under it, one grid cell (ui/ledger/ledgergroups.ts) */
   .low .line-order { grid-column: 1 / -1; flex-wrap: nowrap; justify-content: space-between; margin-left: 0; }
   .low .rule-sentence { flex: 1 1 auto; }
   .low .line-order button { flex: none; }

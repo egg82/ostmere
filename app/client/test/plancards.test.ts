@@ -1,4 +1,4 @@
-// Plan adds a card too (ui/stintplan.ts, game/queue.ts; docs/design/opening-screen/rules-tab.md, "The Rules tab"): one queue, two
+// Plan adds a card too (ui/next/stintplan.ts, game/mixes/queue.ts; docs/design/opening-screen/rules-tab.md, "The Rules tab"): one queue, two
 // ways in. A card's When ready and Plan's pick of the same card send the same entry; Plan lists the cards it could take
 // now, one that waits saying what in its face's words, then the mixes.
 import { install } from "./fake-dom";
@@ -7,12 +7,12 @@ import { keepsOf } from "./kept";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Mix, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { planCards, whenReady } from "../src/game/queue";
-import { waitWords } from "../src/game/needwords";
-import { CardNeeds } from "../src/ui/cardneeds";
-import { StintPlan } from "../src/ui/stintplan";
-import { WhenReady } from "../src/ui/whenready";
+import { Catalog } from "../src/game/page/catalog";
+import { planCards, whenReady } from "../src/game/mixes/queue";
+import { waitWords } from "../src/game/cards/needwords";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
+import { StintPlan } from "../src/ui/next/stintplan";
+import { WhenReady } from "../src/ui/cards/whenready";
 
 install();
 

@@ -88,6 +88,7 @@ def _carrying(feet: Spot) -> Image.Image:
 def people_layers(walls: Image.Image) -> list[Layer]:
     w = people_moments.WINDOWS
     field, picking = "running:g_field_forage|mix:g_field_forage", "running:g_field_pick|mix:g_field_pick"
+    watching = "running:g_hearth_watch|mix:g_hearth_watch"
     return [
         Layer(id="figure_n3_sowing", img=person(N3, "right", BEDS_EDGE, drop=9), when="running:n3_sow|mix:n3_sow"),
         Layer(id="figure_n3_pulled_rows", img=_carrying(BEDS_PATH), when="store:rows_black_left"),
@@ -103,7 +104,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         Layer(id="figure_n13_outside_ring", img=person(N13, "right", STRANGER_APART), when="feature:bedesman_home"),
         Layer(id="figure_n23_at_hall_door", img=person(N23, "down", HALL_DOOR), when="feature:bedesman_home"),
         Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE[0]), when=field),
-        Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=field),
+        Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=watching),
         Layer(id="figure_n7_at_pot", img=person(BROTHER, "left", POT_RIGHT), when=picking),
         Layer(id="figure_n3_works_ash_in", img=dayfour_poses.n3_digging(), when=w["drift"]),
         Layer(id="figure_n4_rolls_cord", img=n4_twisting(), when=w["drift"]),
@@ -119,7 +120,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
 STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n3_by_fire": ("running:n3_sow|mix:n3_sow", "store:rows_black_left", "running:n3_wash_meat|mix:n3_wash_meat"),
     "figure_n5_by_fire": ("running:g_field_forage|mix:g_field_forage",),
-    "figure_n6_by_fire": ("running:g_field_forage|mix:g_field_forage",),
+    "figure_n6_by_fire": ("running:g_hearth_watch|mix:g_hearth_watch",),
     "figure_n7_by_fire": ("running:g_field_pick|mix:g_field_pick",),
 }
 """Each by-the-fire pose and the runs that take the person from it: it gives way to them."""

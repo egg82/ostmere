@@ -198,7 +198,7 @@ STAGES["65_racks"] = _ALL.then({"running:n3_wash_meat"})
 STAGES["65_stone"] = _ALL.then(kept_clock=30)
 STAGES["65_stranger"] = _ALL.then({"feature:stranger_home"})
 STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
-STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_field_pick"})
+STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_field_pick", "running:g_hearth_watch"})
 STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
 STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
 STAGES["66_ash_and_cord"] = _ALL.then(drift_clock=12)
@@ -224,9 +224,9 @@ for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clo
 STAGES["67_none_night"] = _NIGHT
 # The crews' work (people_crews.py): the beds reaped, and the pot and fish worked, by everyone who could be there.
 _JOINED = {"joined:" + f"n{n}" for n in (8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)}
-STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap"})
+STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap", "running:g_hearth_reap"})
 STAGES["69_cooking"] = _ALL.then(_JOINED | {"running:g_road_fungus_stew", "running:g_road_fog_fish"})
-STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_road_fungus_stew"})
+STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_hearth_reap", "running:g_road_fungus_stew"})
 
 
 def holds(cond: str | None, state: State) -> bool:

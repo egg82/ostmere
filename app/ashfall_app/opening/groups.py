@@ -7,7 +7,31 @@ from .entries import OutcomeEntry, UnlockEntry
 from .refs import fail, need, outcomes
 
 if TYPE_CHECKING:
+    from .lane_entries import LaneEntry
     from .schema import Opening
+
+
+def with_crews(lanes: "list[LaneEntry]") -> "list[LaneEntry]":
+    """`lanes` with each lane that lists `crews` and has no group set to its smallest crew: the one with the most members
+    among the lanes before it, a tie going to the first listed (docs/decisions/people.md, "Groups follow what people
+    can do"). A lane is placed once, in the chapter that declares it."""
+    pooled: set[str] = set()
+    size: dict[str, int] = {}
+    out: list[LaneEntry] = []
+    for x in lanes:
+        if x.pooled:
+            pooled.add(x.id)
+        if x.crews and x.group is None:
+            unknown = [c for c in x.crews if c not in pooled]
+            if unknown:
+                fail(f"lane {x.id}", f"crews {', '.join(unknown)} are not pooled lanes declared before it")
+            x = x.model_copy(update={"group": min(x.crews, key=lambda c: size.get(c, 0)), "crews": []})
+        elif x.crews:
+            fail(f"lane {x.id}", "sets both group and crews")
+        if x.group is not None:
+            size[x.group] = size.get(x.group, 0) + 1
+        out.append(x)
+    return out
 
 
 def check_groups(o: "Opening") -> None:
@@ -42,6 +66,19 @@ def check_groups(o: "Opening") -> None:
             if not m.own_split and people[m.lane].group is None:
                 fail(where, f"unmarks {m.lane}, which has no group")
     check_group_abilities(o)
+    check_own_town_cards(o)
+
+
+def check_own_town_cards(o: "Opening") -> None:
+    """A town card's `own` lanes are on its `lanes`, and each has the hand-written card of the pattern's id."""
+    cards = {c.id: c.lane for c in o.cards}
+    for tc in o.town_cards:
+        for lane in tc.own:
+            card = tc.id.replace("{lane}", lane)
+            if lane not in tc.lanes:
+                fail(f"town card {tc.id}", f"own lane {lane} is not in its lanes")
+            if cards.get(card) != lane:
+                fail(f"town card {tc.id}", f"own lane {lane} has no hand-written card {card} on it")
 
 
 def check_group_abilities(o: "Opening") -> None:

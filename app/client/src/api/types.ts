@@ -103,6 +103,6 @@ export type SubMix = S["SubMix"];
 export type Unlock = S["Unlock"];
 export type Forecast = S["Forecast"];
 export type ForecastAnswer = S["ForecastAnswer"];
-/** The wire View, and on the page's side the forecast it holds for it (game/session.ts; contract/forecast.txt, "Forecast"):
+/** The wire View, and on the page's side the forecast it holds for it (game/page/session.ts; contract/forecast.txt, "Forecast"):
  * the server sends that by its own call, never inside a View. */
 export type View = S["View"] & { forecast?: Forecast | null };

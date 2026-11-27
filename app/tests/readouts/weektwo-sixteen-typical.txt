@@ -1,4 +1,4 @@
-beats typical (pace_scale 1): B15 day 17.82, target_day 18
+beats typical (pace_scale 1): B15 day 17.43, target_day 18
   away V69->V70: 4 ['trigger t_marked_you', 'trigger t_road_marked', 'trigger t_hall_hearth', 'trigger offer_j_steps']
   away V70->V71: 1 ['trigger offer_j_smoke_hole']
   away V71->V72: 3 ['trigger t_rime_ring', 'trigger offer_j_wedged', 'trigger note_n_ground_3']
@@ -7,17 +7,16 @@ beats typical (pace_scale 1): B15 day 17.82, target_day 18
   away V74->V75: 0 []
   away V75->V76: 0 []
   away V76->V77: 0 []
-  away V77->V78: 0 []
 days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      11       5       0       5       0      23       3     47
   2      20       6       2       2       0      10       3     43
   3      13       1       0       0       0       2       1     17
   4       7       0       1       0       0       0       1      9
-  5      24       5       0       0       0      72       2    103
+  5      23       5       0       0       0      76       2    106
   6      19       5       0       2       0       5       2     33
   7       4       2       0       0       0      10       1     17
-  8       8       3       1       2       0      10       3     27
-  9      15       1       0       3       0      30       1     50
- 10      12       3       0       1       0      13       1     30
+  8       9       3       0       2       0      10       3     27
+  9      14       1       0       3       0      31       1     50
+ 10      12       3       0       1       0      14       1     31
  11      13       1       0       0       0       4       1     19

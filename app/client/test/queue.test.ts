@@ -1,4 +1,4 @@
-// When ready and Next (game/queue.ts; ui/whenready.ts, ui/nextlist.ts, the strip's note in ui/hands.ts): offered on a
+// When ready and Next (game/mixes/queue.ts; ui/cards/whenready.ts, ui/next/nextlist.ts, the strip's note in ui/hands/hands.ts): offered on a
 // step after the end while it waits on something with a ready time, never on work done again and again; one tap of it
 // appended to the queue, held until that tap completes; the button stays as "in Next" once queued, takes the one glow
 // the first time only; Next lists the queue between the hands rules and Otherwise with Remove; the strip names the head.
@@ -7,15 +7,15 @@ import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, QueueEntry, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { canQueue, nextCard, queuedCards, queueTap, unqueue } from "../src/game/queue";
-import { Hands } from "../src/ui/hands";
-import { nextRows } from "../src/ui/nextlist";
-import { NextOrder } from "../src/ui/nextorder";
+import { Catalog } from "../src/game/page/catalog";
+import { canQueue, nextCard, queuedCards, queueTap, unqueue } from "../src/game/mixes/queue";
+import { Hands } from "../src/ui/hands/hands";
+import { nextRows } from "../src/ui/next/nextlist";
+import { NextOrder } from "../src/ui/next/nextorder";
 import type { PartContext } from "../src/ui/part";
-import { StintPlan } from "../src/ui/stintplan";
-import { RulesTab } from "../src/ui/rules";
-import { WhenReady } from "../src/ui/whenready";
+import { StintPlan } from "../src/ui/next/stintplan";
+import { RulesTab } from "../src/ui/rules/rules";
+import { WhenReady } from "../src/ui/cards/whenready";
 
 install();
 const idle = (ctx: PartContext): NextOrder => new NextOrder(ctx, document.createElement("div"), () => null, () => {});

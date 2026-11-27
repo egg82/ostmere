@@ -1,12 +1,12 @@
-// A job first offered to a person of the town is said once in the story (game/newjobs.ts): one line for a person's one
+// A job first offered to a person of the town is said once in the story (game/town/newjobs.ts): one line for a person's one
 // card, one naming the job when it fans out over several people, one for a person's several jobs, one for the town's
 // several; never one per lane; none for a card that arrives at work,
 // for a person who joins in the same step, or on the first view.
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { jobLine, newJobs } from "../src/game/newjobs";
+import { Catalog } from "../src/game/page/catalog";
+import { jobLine, newJobs } from "../src/game/town/newjobs";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

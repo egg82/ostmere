@@ -4,7 +4,7 @@ import { ApiFailure, type GameApi } from "../src/api/api";
 import type { Content } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
+import { Session, type SessionEvents } from "../src/game/page/session";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

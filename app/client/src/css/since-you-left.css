@@ -1,4 +1,4 @@
-/* the "Since you left" chapter (ui/chapter.ts): yours and moving, so its spine is ember; its figures as label and value rows */
+/* the "Since you left" chapter (ui/book/chapter.ts): yours and moving, so its spine is ember; its figures as label and value rows */
 .chron-stretch.chapter { margin-bottom: 1rem; padding: .2rem 0 .6rem .8rem; border-left: 2px solid var(--ember); }
 .chron-stretch.chapter::before { content: none; }
 .chapter-head { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; min-height: 2.5rem; padding-right: .3rem; }
@@ -32,7 +32,7 @@
 .selector-run > .selector-name { grid-area: name; }
 .selector-run > .mini-bar { grid-area: bar; }
 .selector-run > .selector-note { grid-area: note; }
-.selector-run > .share-key { grid-area: key; margin-top: 0; }   /* the legend: no text inside the bar (ui/selector.ts) */
+.selector-run > .share-key { grid-area: key; margin-top: 0; }   /* the legend: no text inside the bar (ui/mixes/selector.ts) */
 .selector-run { align-content: center; }
 :is(.sheet, .rules) :is(.quiet, .primary):disabled { opacity: .35; cursor: default; }
 .selector-name { color: var(--ink-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

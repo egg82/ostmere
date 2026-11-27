@@ -102,7 +102,7 @@ reminding is the point. Ostmere's carries no task and no miss.
 
 ## What the player sees
 
-- **The section** sits in the Settings sheet (`app/client/src/ui/settings.ts`, under "This device"): "Notifications", off at
+- **The section** sits in the Settings sheet (`app/client/src/ui/settings/settings.ts`, under "This device"): "Notifications", off at
   first. First the kinds, each its own checkbox, in any combination: **When you've been away** (with the line "One
   notification when you've been away that long. None after it until you're back." and, while it is on, the choices **12
   hours, a day, 3 days, a week**, data, one file) and **When your hands are free** (below). Then one **Notification

@@ -1,12 +1,12 @@
 // On a phone the ledger sits after every task card, so the lines that ask for something (red) or say the extra is lost
 // (full) are drawn apart, in `Ledger.asks` above the cards; the other lines stay in the ledger. On a desktop nothing is
-// split. The same rows move, so the story mark and the line's state come from the one drawing (ui/ledger.ts).
+// split. The same rows move, so the story mark and the line's state come from the one drawing (ui/ledger/ledger.ts).
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { Q, R } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

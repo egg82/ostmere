@@ -1,4 +1,4 @@
-beats typical (pace_scale 1): B14 day 15.39, target_day 16
+beats typical (pace_scale 1): B14 day 15.38, target_day 16
   away V61->V62: 0 []
   away V62->V63: 5 ['trigger t_b13', 'trigger t_sow', 'trigger t_beds', 'trigger t_pot_barley', 'trigger offer_o_sun_rack']
   away V63->V64: 2 ['trigger t_frost_beds', 'trigger t_town_covers']
@@ -13,8 +13,8 @@ day    line feature    chip   store   skill    card   level  total
   2      20       6       2       2       0      10       3     43
   3      13       1       0       0       0       2       1     17
   4       7       0       1       0       0       0       1      9
-  5      24       5       0       0       0      72       2    103
+  5      23       5       0       0       0      76       2    106
   6      19       5       0       2       0       5       2     33
   7       4       2       0       0       0      10       1     17
-  8       8       3       1       2       0      10       3     27
-  9      15       1       0       3       0      30       1     50
+  8       9       3       0       2       0      10       3     27
+  9      14       1       0       3       0      31       1     50

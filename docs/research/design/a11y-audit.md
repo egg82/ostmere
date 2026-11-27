@@ -21,7 +21,7 @@ timing and real lesson sequencing are not.
 The `@media (prefers-reduced-motion)` block (`game.css:692-699`) zeroes CSS animation and transition inside `.game`
 and keeps colour or still forms for the failed tap, the ladder ring, the burst and the fired rule. Confirmed by
 computed style under emulation (`pw/rm.mjs`): `arrive`, `press`, `pop` become `none`; `landed`, `burst`, `fail-mark`
-become their still forms. `Flight` (`ui/flight.ts:19`), the reveal queue (`ui/reveal.ts:83`) and the self-update fade
+become their still forms. `Flight` (`ui/asks/flight.ts:19`), the reveal queue (`ui/feedback/reveal.ts:83`) and the self-update fade
 (`app/selfupdate.ts:128`) read the preference themselves. A tap under reduce changes only the card's progress and the
 log line; nothing else says "your tap landed" (weak, not a failure: the state change is visible).
 
@@ -32,7 +32,7 @@ Failures:
    still fade in over seconds. Not a motion-alone failure (the end state is the information), but the preference is
    not honoured.
 2. **The front page's glimpse ignores it.** `ui/glimpse-scene.ts:56` cycles canned views with fades every `TURN_MS`;
-   `ui/glimpse.ts:56` ticks the amount each second. Both run under reduce.
+   `ui/front/glimpse.ts:56` ticks the amount each second. Both run under reduce.
 3. **The glimpse's `+N` cue has no still form.** `.g-pop` is `opacity: 0` with its animation as the only thing that
    shows it (`game.css:106`); the reduce block sets `animation: none` (`:693`) and does not replace it, so it never
    shows (computed: `animation none`, `opacity 0`). The cue relies on motion alone.
@@ -94,7 +94,7 @@ Does not read:
 
 ## 4. Hover-only (0 strict; 1 weak; 2 affordances)
 
-Grep of `src/` and `game.css`: one `title=` (`ui/hands.ts:158`, the running mix's full name), no `mouseenter`,
+Grep of `src/` and `game.css`: one `title=` (`ui/hands/hands.ts:158`, the running mix's full name), no `mouseenter`,
 `mouseover`, `pointerenter` or tooltip code, 14 `:hover` rule lines in `game.css`, all cosmetic.
 
 - Weak: `.hands-mix-name` truncates with an ellipsis (`game.css:223`) and `title` carries the full name; on touch the
@@ -117,13 +117,13 @@ render: `.share-divider` and `.sound-button` did not appear in the fixture page 
 ## 5. Sound alone (0)
 
 No audio exists in the client: no `AudioContext`, `new Audio`, `<audio>` or `.play(`. The only non-visual channel is
-haptic, `navigator.vibrate(8)` in `tapFeedback()` (`ui/dom.ts:58`, called from `ui/editor.ts:138`, `ui/chipoffer.ts:60`),
+haptic, `navigator.vibrate(8)` in `tapFeedback()` (`ui/dom.ts:58`, called from `ui/mixes/editor.ts:138`, `ui/story/chipoffer.ts:60`),
 and it carries no information. Chromium logs a blocked-vibrate error when it fires before the first user tap (seen in
 the first-mix state). The "sound never carries information alone" rule is vacuous today.
 
 ## 6. Pinned stage (3 failures and 1 overlap, all fixed)
 
-The stage is 382 px tall at 390 wide (set from the art's aspect by `ui/headseat.ts:19`, not from the viewport) and the
+The stage is 382 px tall at 390 wide (set from the art's aspect by `ui/story/headseat.ts:19`, not from the viewport) and the
 hands strip pins under it at 96 px: **478 px pinned at every height**, 57% of 844. Measured (`stage.json`):
 
 | Viewport height | Scrolling room under the pin | Condition editor choice area |
@@ -169,7 +169,7 @@ under 16 rem tall now scrolls as one and only the Remove, Copy rule and Save row
 container in `game.css`); the foot's lines (the watched store, the rule's sentence, the dry run) scroll with the
 choices there. A desktop 1280 wide and a phone on its side (740x360, the desktop layout) are unchanged.
 
-The overlap, as a lesson note: the placement (`ui/lessonspot.ts`, `pickSpot`) takes the first spot near the control that
+The overlap, as a lesson note: the placement (`ui/lessons/lessonspot.ts`, `pickSpot`) takes the first spot near the control that
 covers no sibling and no tappable control. When every near spot covers one, it docks at a window corner that covers
 none, nearest the control (the band above an open editor on a phone), and a short window (640 px tall or less) draws the
 note compact so it fits there. Measured at 360x500, 360x340, 320x568, 667x375 and 740x360: the lesson steps of the first
@@ -179,8 +179,8 @@ is the cost: it can sit over the story strip for the length of a step. Residual:
 at 740x360, where its width is held to the art's column.
 
 Corrections to the proposal's premise: the condition editor has **no text input** (only buttons), so it never raises a
-keyboard. Keyboard cases in this client are the mix editor's name field (`ui/editor.ts:27`), the feedback textarea
-(`ui/feedback.ts:15`) and the device code fields. The viewport meta (`index.html:5`) has no `interactive-widget`, so
+keyboard. Keyboard cases in this client are the mix editor's name field (`ui/mixes/editor.ts:27`), the feedback textarea
+(`ui/settings/feedback.ts:15`) and the device code fields. The viewport meta (`index.html:5`) has no `interactive-widget`, so
 Chromium on Android resizes only the visual viewport and the layout above would not shrink; iOS likewise. The shrink
 test is the worst case for browsers that do resize the layout, not what Chrome or Safari do by default.
 
@@ -191,7 +191,7 @@ at a control the editor has hidden, so whether the real lesson reaches this stat
 ## 7. Flashes (0)
 
 No animation above 3 Hz. Infinite animations exist only in the glimpse (`.g-fill`, `.g-pop`, periods 8 s and 12 s,
-`ui/glimpse.ts:15`), one brief fade-in per period, small area. Everything else is one-shot: the failed-tap glow and
+`ui/front/glimpse.ts:15`), one brief fade-in per period, small area. Everything else is one-shot: the failed-tap glow and
 mark flash (`--fail-ms` 400 ms), `fired` 1.2 s, `landed` 0.7 s, `burst` 0.9 s. A failed tap restarts its 400 ms
 flash on each tap, so repeated taps above 3 per second would repeat it, but the lit area is a single card's glow, far
 under the general-flash area threshold. `document.getAnimations()` was empty at idle under reduce in every state.
