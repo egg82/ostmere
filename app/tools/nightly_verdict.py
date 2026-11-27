@@ -18,9 +18,11 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 VERDICT_FILE = "nightly-verdict.json"
 RED = {"failure", "cancelled", "timed_out"}
+Record = dict[str, Any]
 
 
 def write_verdict(job: str, index: int, total: int, status: str, readouts: Path, out: Path) -> Path:
@@ -31,22 +33,22 @@ def write_verdict(job: str, index: int, total: int, status: str, readouts: Path,
     return target
 
 
-def load_verdicts(directory: Path) -> dict[str, list[dict]]:
-    found: dict[str, list[dict]] = {}
+def load_verdicts(directory: Path) -> dict[str, list[Record]]:
+    found: dict[str, list[Record]] = {}
     for f in sorted(directory.rglob("*.json")) if directory.is_dir() else []:
         v = json.loads(f.read_text())
         found.setdefault(v["job"], []).append(v)
     return found
 
 
-def drift_only(legs: list[dict]) -> bool:
+def drift_only(legs: list[Record]) -> bool:
     """True when `legs` are every leg of one job, all with passing tests, and some readout changed."""
     if not legs or len({v["index"] for v in legs}) != len(legs) or len(legs) != legs[0]["total"]:
         return False
     return all(v["tests_ok"] for v in legs) and any(v["changed"] for v in legs)
 
 
-def readouts_only(needs: dict[str, dict], verdicts: dict[str, list[dict]]) -> bool:
+def readouts_only(needs: dict[str, Record], verdicts: dict[str, list[Record]]) -> bool:
     red = [job for job, n in needs.items() if n["result"] in RED]
     return bool(red) and all(drift_only(verdicts.get(job, [])) for job in red)
 
