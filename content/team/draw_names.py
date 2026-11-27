@@ -35,13 +35,20 @@ CAST = {"Lucy", "Margaret", "Sorrel"}
 PEOPLE = (("n2", MEN), ("n3", WOMEN), ("n4", MEN), ("n5", WOMEN), ("n6", MEN), ("n7", MEN),
           ("n8", WOMEN), ("n9", WOMEN), ("n10", WOMEN), ("n11", MEN), ("n12", WOMEN))
 """Each light-tier person with a name_key, in the order they join, and the table their name comes from."""
+NAMED_ELSEWHERE = {"Walter", "Edith"}
+"""Names the chapters gave n14 and n15 without this draw; never drawn for anyone after them."""
+LATER = (("n24", WOMEN), ("n25", MEN))
+"""People named after NAMED_ELSEWHERE, drawn on after PEOPLE from the same stream, so PEOPLE's names never change
+(team/week-five.md, "The burners")."""
 
 
 def draw() -> list[tuple[str, str]]:
     rng = random.Random(SEED)
     taken = set(REJECTED | CAST)
     out = []
-    for person, table in PEOPLE:
+    for i, (person, table) in enumerate(PEOPLE + LATER):
+        if i == len(PEOPLE):
+            taken |= NAMED_ELSEWHERE
         pool = [(n, c) for n, c in table.items() if n not in taken]
         name = rng.choices([n for n, _ in pool], weights=[c for _, c in pool])[0]
         taken.add(name)
