@@ -5694,6 +5694,16 @@
               }
             ]
           },
+          "offered_until": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "chip": {
             "anyOf": [
               {
@@ -5716,6 +5726,7 @@
           "when",
           "then",
           "offered_after",
+          "offered_until",
           "chip",
           "after_end"
         ],

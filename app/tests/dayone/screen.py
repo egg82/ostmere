@@ -8,7 +8,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from ashfall_app.engine import Save, View
 from ashfall_app.opening.feature_entries import AimEntry
 from tests.dayone.human import HumanPlayer
-from tests.opening.playthrough import opening
+from tests.opening.playthrough import offering, opening
 
 Key = tuple[str, str]
 FIRST_S = 300
@@ -57,8 +57,7 @@ def drawn(save: Save, v: View, chip_after: Mapping[str, Key]) -> set[str]:
     if ("feature", o.first_mix.feature) in have or save.mixes or save.orders:
         out.add("mix")
     red = {str(ln.store) for ln in v.ledger if ln.starved or (ln.falling and not ln.covered)}
-    offers = [c for c in o.order_cards if c.chip is None and c.store in red
-              and (c.offered_after is None or (c.offered_after.unlock_kind, c.offered_after.id) in have)]
+    offers = [c for c in o.order_cards if c.chip is None and c.store in red and offering(c, lambda k, i: (k, i) in have)]
     if save.orders or (("feature", "ledger") in have and offers):
         out.add("rules")
     cards = {c.id: c for c in o.cards}

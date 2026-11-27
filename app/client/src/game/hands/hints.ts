@@ -5,7 +5,7 @@
 // (game/lessons/lessons.ts).
 import type { RepeatedSwitch, RepeatedTap, View } from "../../api/types";
 import type { Catalog } from "../page/catalog";
-import { chipCards } from "../ledger/cues";
+import { cardOver, chipCards } from "../ledger/cues";
 import { FIRST_MIX, FIRST_RULE, guided, guidedRule, SECOND_MIX } from "../lessons/lessons";
 import type { Keeps } from "../account/keeps";
 import { holdsCard, mixesFull } from "../mixes/mix";
@@ -46,12 +46,13 @@ export interface ChipHint { chip: string; switch: RepeatedSwitch | null }
 
 /** The chores with no order card in the content (ChipInfo.chore) that the band draws now, while no rule is set on their
  * store and test and a rule can be added: the rule is the player's to write, so the mark on the chip is all the page
- * offers (docs/decisions/clock.md, "Each season brings its own chores"). */
+ * offers (docs/decisions/clock.md, "Each season brings its own chores"). A chip whose only cards are over (offered_until)
+ * is that kind of chore. */
 export function choreChips(catalog: Catalog, view: View): string[] {
   if (rulesFull(catalog, view)) return [];
   return shownChips(catalog, view).filter((id) => {
     const info = catalog.chips.get(id);
-    return info?.chore === true && !catalog.chipCards.some((c) => c.chip === id) && ruleFor(view, info) < 0;
+    return info?.chore === true && !catalog.chipCards.some((c) => c.chip === id && !cardOver(catalog, view, c)) && ruleFor(view, info) < 0;
   });
 }
 

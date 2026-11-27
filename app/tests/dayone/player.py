@@ -22,7 +22,7 @@ from tests.dayone import policy, sinks
 from tests.dayone.beats import STORY, landed
 from tests.dayone.schedules import Schedule
 from tests.opening.afterend import END_READ_S, AfterEnd, AfterEndPlayer
-from tests.opening.playthrough import Kind, News, opening, opening_rules
+from tests.opening.playthrough import Kind, News, offering, opening, opening_rules
 
 LOOK_S = 15
 WEAVE_TRIP = sinks.Trip(CardId(policy.WEAVE), StoreId("damp_wood"))
@@ -241,11 +241,13 @@ class DayOnePlayer(AfterEndPlayer):
         """The weave out of the mix once the screen stands, when nothing else is left to do."""
         return sinks.drop_trip(v, self.save, WEAVE_TRIP, CardId(policy.SCREEN)) if self.knobs.mix_weave else None
 
+    def _held(self, kind: str, id_: str) -> bool:
+        return self.has(UnlockKind(kind), id_)
+
     def _screen_order(self) -> Order | None:
         """The screen's order card as the page fills it in, or None before it is offered."""
         card = next((c for c in opening().order_cards if c.tap_card == policy.SCREEN), None)
-        after = None if card is None else card.offered_after
-        if card is None or (after is not None and not self.has(UnlockKind(after.unlock_kind), after.id)):
+        if card is None or not offering(card, self._held):
             return None
         release = card.when.release if card.when.release is not None else card.when.value
         return Order(AtLeast(StoreValue(StoreId(card.store)), units(card.when.value), units(release)),
@@ -255,8 +257,7 @@ class DayOnePlayer(AfterEndPlayer):
         """Accepting hunger's chip card, or None before its offered_after or once a rule is on its condition (the page's
         chipCard and ruleFor)."""
         card = next(c for c in opening().order_cards if c.chip == policy.HUNGRY)
-        after = card.offered_after
-        if after is not None and not self.has(UnlockKind(after.unlock_kind), after.id):
+        if not offering(card, self._held):
             return None
         assert card.tap_card is not None
         rule = Order(condition(card.when, set(opening_cards()) | {card.tap_card}), TapCard(CardId(card.tap_card)))
@@ -270,8 +271,7 @@ class DayOnePlayer(AfterEndPlayer):
         """The roots rule re-tuned to Take stock's need, once its order card is offered (its offered_after unlocked)."""
         card = next((c for c in opening().order_cards if c.store == policy.ROOTS and c.when.test == "at_most"
                      and c.offered_after is not None and c.offered_after.unlock_kind == "feature"), None)
-        if card is None or card.tap_card is None or card.offered_after is None \
-                or not self.has(UnlockKind.FEATURE, card.offered_after.id):
+        if card is None or card.tap_card is None or not offering(card, self._held):
             return None
         release = card.when.release if card.when.release is not None else card.when.value
         return Order(AtMost(StoreValue(StoreId(card.store)), units(card.when.value), units(release)),

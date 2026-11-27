@@ -460,19 +460,19 @@ export const fixtureContent: Content = {
   order_cards: [{
     store: "wood",
     when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 20 * Q, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card", card: "gather" }, offered_after: null, chip: null, after_end: false,
+    then: { kind: "tap_card", card: "gather" }, offered_after: null, offered_until: null, chip: null, after_end: false,
   }, {
     store: "stone",
     when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: 6 * Q, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card", card: "shelter" }, offered_after: null, chip: null, after_end: false,
+    then: { kind: "tap_card", card: "shelter" }, offered_after: null, offered_until: null, chip: null, after_end: false,
   }, {
-    store: "energy", when: TIRED, then: { kind: "tap_card", card: "rest" }, offered_after: null, chip: "tired", after_end: true,
+    store: "energy", when: TIRED, then: { kind: "tap_card", card: "rest" }, offered_after: null, offered_until: null, chip: "tired", after_end: true,
   }, {   // a rising line's card: four or more catch, smoke it
     store: "catch", when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card", card: "smoke_catch" }, offered_after: { category: "card", id: "smoke_catch" }, chip: null, after_end: false,
+    then: { kind: "tap_card", card: "smoke_catch" }, offered_after: { category: "card", id: "smoke_catch" }, offered_until: null, chip: null, after_end: false,
   }, {   // the wood rule re-tuned for a later need, once that need is shown
     store: "wood", when: low("wood", 15, 30), then: { kind: "tap_card", card: "gather" },
-    offered_after: { category: "feature", id: "stock" }, chip: null, after_end: false,
+    offered_after: { category: "feature", id: "stock" }, offered_until: null, chip: null, after_end: false,
   }],
   skill_infos: [
     { skill: "foraging", label_key: "skill.foraging", levels: [{ level: 3, pays_key: "pays.more", change_bp: [1000], speeds: ["gather"] }, { level: 4, pays_key: "pays.unknown", change_bp: [], speeds: [] }] },
