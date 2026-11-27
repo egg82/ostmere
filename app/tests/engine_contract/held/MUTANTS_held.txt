@@ -52,7 +52,7 @@ the rules. Record each run below the list as MUTANTS.txt does (planted, red, sur
                    (StateFormatError), or returns a save whose modifiers differ from s's.  [117, 114]
 
 RUNS
-- Suite tests/engine_contract/test_held_*.py (blind, written from engine/design/ and contract/ alone). Run: python -m tools.mutate_suite held --run
+- Suite tests/engine_contract/held/test_held_*.py (blind, written from engine/design/ and contract/ alone). Run: python -m tools.mutate_suite held --run
   (specs tools/held_mutants/mNN.py, each a list of (path, old, new) edits against the implementation, one per row).
   `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against a reference model written from engine/design/ in a scratch copy (not the implementation): rows 1-22 all red, and 16 single-clause

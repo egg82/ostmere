@@ -1,4 +1,4 @@
-# A test chapter, merged onto the opening alone (tests/engine_contract/test_drains_loader_contract.py): the loader's
+# A test chapter, merged onto the opening alone (tests/engine_contract/drains/test_drains_loader_contract.py): the loader's
 # every_hours, every and drains. The slots written between two @ signs are filled by the test (its default is the plain shape that loads);
 # each refusal is the fixture with one slot edited. Not story: the ids and words are the tests' own.
 version = 1

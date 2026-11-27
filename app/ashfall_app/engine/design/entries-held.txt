@@ -1,5 +1,5 @@
 ENTRIES HELD WHILE A CARD RUNS (a watch or a guard raising a side while it works: docs/design/week-two-plan.md, item 2;
-blind tests from this part and api/contract/ alone, item 3, against app/tests/engine_contract/MUTANTS_held.txt).
+blind tests from this part and api/contract/ alone, item 3, against app/tests/engine_contract/held/MUTANTS_held.txt).
 Where this part and an entry above disagree, this part holds. Examples name ids only; which cards, sides and amounts
 is content's.
 

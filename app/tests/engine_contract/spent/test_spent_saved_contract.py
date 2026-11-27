@@ -13,7 +13,7 @@ from spent_world import (
 )
 
 
-FIELDS = Path(__file__).resolve().parents[1] / "held/save_fields.json"
+FIELDS = Path(__file__).resolve().parents[2] / "held/save_fields.json"
 
 
 @kills(7)
