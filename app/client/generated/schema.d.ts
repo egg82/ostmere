@@ -2027,6 +2027,9 @@ export interface components {
             reveal: components["schemas"]["Unlock"];
             /** Label Key */
             label_key: string | null;
+            labelled_after: components["schemas"]["Unlock"] | null;
+            /** Over */
+            over: string | null;
         };
         /**
          * Prestige
