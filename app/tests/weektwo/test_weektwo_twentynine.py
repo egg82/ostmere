@@ -23,7 +23,8 @@ from tests.weektwo.routes import TWENTYNINE_PUSH_ROUTES
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]
 TURN_S, HOUR_S = 2419200, 3600
-"""t_y1's instant: the Drift's second turn on the calendar."""
+"""t_y1's instant: the season's second turn on the calendar. A beat's landed_at is the save it is first read in, which on
+a return can be hours later."""
 
 
 def test_a_save_from_day_twenty_sevens_end_loads_under_day_twenty_nine_and_plays_on(rebased_twentyseven: Rebased):
@@ -38,7 +39,9 @@ def test_the_route_plays_day_twenty_nine_to_b22(twentynine_route: Route):
     name, p = twentynine_route
     assert p.stop_beat() == "B22" and "B22" in p.seen_at, f"{name} saw B22"
     assert {"Y1", "SL37", "Y2", "Y3", "O-first-run"} <= set(p.landed_at), name
-    assert p.landed_at["Y1"] == TURN_S, f"{name}: Y1 at {p.landed_at['Y1'] / 3600:.1f} h"
+    assert p.landed_at["Y1"] >= TURN_S, f"{name}: Y1 at {p.landed_at['Y1'] / 3600:.1f} h, before the turn"
+    assert all(fired(s, p.rules, "t_y1") == (s.time >= TURN_S) for s, _ in p.history if s.time >= TURN_S - 24 * HOUR_S), \
+        f"{name}: the turn fired off its instant"
 
 
 @pytest.mark.parametrize("twentynine_route", TWENTYNINE_PUSH_ROUTES, indirect=True)

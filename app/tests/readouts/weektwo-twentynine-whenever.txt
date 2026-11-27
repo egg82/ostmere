@@ -1,0 +1,30 @@
+beats whenever (pace_scale 1): B22 day 28.71, target_day 29
+  away V105->V106: 0 []
+  away V106->V107: 1 ['trigger t_post_prints']
+  away V107->V108: 0 []
+  away V108->V109: 2 ['trigger t_pin', 'trigger offer_o_first_run']
+  away V109->V110: 2 ['trigger t_first_run', 'trigger t_b22']
+days after week one's 6 with no arrival but lines: []
+day    line feature    chip   store   skill    card   level  total
+  1      27      11       0       5       1      25       2     71
+  2      24       7       2       3       0      15       2     53
+  3      12       0       0       0       0       2       4     18
+  4       7       0       0       0       0       0       3     10
+  5      25       5       0       0       0      76       0    106
+  6      19       4       1       2       0       5       3     34
+  7       4       2       0       0       0      10       2     18
+  8       7       5       0       2       0      10       1     25
+  9      15       1       0       4       0      39       3     62
+ 10       9       2       0       0       0       0       2     13
+ 11      19       3       2       1       0      86       3    114
+ 12      22       1       1       0       0      49       1     74
+ 13      17       2       0       0       0       3       3     25
+ 14       6       1       0       0       0       2       0      9
+ 15       6       2       0       1       0       1       5     15
+ 16      12       1       1       2       1      36       2     55
+ 17      20       6       2       0       0      24       2     54
+ 18      11       1       0       0       0       4       3     19
+ 19      13       1       0       0       0       2       2     18
+ 20       7       2       0       0       0       3       0     12
+ 21      15       2       0       0       0       7       2     26
+ 22       6       2       1       0       0       1       3     13

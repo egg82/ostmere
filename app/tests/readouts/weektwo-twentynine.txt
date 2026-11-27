@@ -1,0 +1,9 @@
+chapter twentynine: 5 visits on typical
+  V122 gap   3.2 h  spend 109  decide  1
+  V123 gap   9.0 h  spend 43  decide  1
+  V124 gap   4.2 h  spend 149  decide  2
+  V125 gap   3.1 h  spend 55  decide  2
+  V126 gap   9.2 h  spend 55  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 3 returns, spend 313, decide 5; 8h+: 2 returns, spend 98, decide 1
+  cap loss at the end, away 8 h: charwood 100%, cleared 100%, roots 93%, stakes 100%, stones 39%, tallow 2%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: charwood 100%, cleared 100%, roots 93%, stakes 100%, stones 40%, tallow 57%, windbreak 100%, wraps_sewn 100%

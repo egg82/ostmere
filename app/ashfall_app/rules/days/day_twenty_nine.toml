@@ -17,9 +17,10 @@ outcome = { unlocks = [{ unlock_kind = "feature", id = "roofs_offered" }] }
 # ---------- Y1: the Drift's second turn ----------
 
 # Y1 at 672 h. The Drift reads drift_clock, offset by 504 (D-201): no new clock. The roofs' ash comes back on week two's
-# ashfall, which drift_left now feeds again; the bloom and the bear's sign are week two's sizes. Each of the Still's two
-# leftovers drains on its own one-item pool, so one running dry never leaves the other standing (D-221). No rule is
-# retired (D-202).
+# ashfall, which drift_left now feeds again. The bloom and the bear's sign come back at week two's sizes within the hour,
+# on a standing that draws a one-item pool rather than as a grant, so until the turn they read as used up, as they did
+# through weeks three and four (D-224). Each of the Still's two leftovers drains on its own one-item pool, so one running
+# dry never leaves the other standing (D-221). No rule is retired (D-202).
 [[triggers]]
 id = "t_y1"
 season = true
@@ -30,16 +31,29 @@ whereabouts = [{ person = "n2", no_scene = "up on the hall roof with a shovel, a
 line_keys = ["l_y1_1", "l_y1_2", "l_y1_3"]
 stores = [
   { store = "drift_left", items = 336 },
-  { store = "bloom", items = 2000 },
-  { store = "bear_sign", items = 6 },
+  { store = "gifts_left", items = 1 },
   { store = "still_end_left", items = 1 },
   { store = "fish_end_left", items = 1 },
 ]
 unlocks = [
   { unlock_kind = "feature", id = "drift_two" },
+  { unlock_kind = "action", id = "gifts_back" },
   { unlock_kind = "action", id = "still_ends" },
   { unlock_kind = "action", id = "fish_ends" },
 ]
+
+# Never drawn: the hour in which the bloom and the bear's sign come back.
+[[stores]]
+id = "gifts_left"
+label_key = "store_gifts_left"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "gifts_back"
+label_key = "action_gifts_back"
+costs = [{ store = "gifts_left", items_per_hour = 1 }]
+makes = [{ store = "bloom", items_per_hour = 2000 }, { store = "bear_sign", items_per_hour = 6 }]
 
 # Never drawn: the hour in which the wind takes the film off the open meat.
 [[stores]]
@@ -370,6 +384,8 @@ l_b22_3o = "story"
 l_b22_4 = "story"
 
 [text]
+store_gifts_left = "the season's hour"
+action_gifts_back = "The scrub coming back"
 store_still_end_left = "the wind's hour"
 store_fish_end_left = "the fog's last hour"
 action_still_ends = "Wind on the water"
