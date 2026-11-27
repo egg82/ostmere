@@ -210,5 +210,5 @@ Pacing curve: an A/B target, the simulator running two curves side by side. One 
 shrinking past the shipped ones; a level's pay speeds its skill's work (more made, the same XP), so time per level
 grows with the curve and the loop stays tame (`app/tests/dayone/pacing/growth.py`).
 
-Forecast: `app/ashfall_app/engine/forecast.py`, sent when the page asks (a new or opened save, an advance after its plan
+Forecast: `app/ashfall_app/engine/lookahead/forecast.py`, sent when the page asks (a new or opened save, an advance after its plan
 changed) and kept across plain advances, so the page draws only times that come true (contract/forecast.txt, "Forecast").

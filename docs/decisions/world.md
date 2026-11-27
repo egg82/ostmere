@@ -118,7 +118,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   history's sake.
 - The page's arrival queue (`app/client/src/game/story/arrivals.ts`) reveals what a return brings in turn and, live, each
   story line before what it announces.
-- What the rules did lately: the engine's rule changes (`app/ashfall_app/engine/rulelog.py`) kept per rule on the
+- What the rules did lately: the engine's rule changes (`app/ashfall_app/engine/orders/rulelog.py`) kept per rule on the
   save's row (`app/ashfall_app/saves/ruleruns.py`), a goal stint's start and landing among them, with what the save
   gained in its mix's stores between the two, drawn at the foot of the Rules tab (`app/client/src/ui/rules/rulelately.ts`)
   and as the chronicle's Rules entries (`app/client/src/game/rules/rulerows.ts`). The record is a summary, so a start a later

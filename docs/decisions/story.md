@@ -149,7 +149,7 @@ lane, and only a trigger's `when` or an offer's gate may read it.
 Triggers: deterministic, so what a level or a count earns shows the moment it is earned. Gates is the vocabulary;
 triggers are the engine firing it. The end is one too, with its time kept (`Save.ended_at`; `engine/design/`, "The
 end"). What the next beat waits on is a query over them: the pending triggers with when each lands
-(`app/ashfall_app/engine/pending.py`), read against the content's goals (`app/ashfall_app/rules/goals.py`) into the
+(`app/ashfall_app/engine/cards/pending.py`), read against the content's goals (`app/ashfall_app/rules/goals.py`) into the
 view's goals (`app/ashfall_app/api/goals/goals.py`), which the page marks (`app/client/src/game/story/story.ts`, the wait line
 `app/client/src/ui/story/waitline.ts`). Each store and level goal, and each skill's next level, also gets when it lands at
 the rates as set, a tap of the hands set aside, and the dry store that binds it (`app/ashfall_app/api/goals/goalrows.py`,
@@ -159,9 +159,9 @@ the decision that sets it (`engine/design/`, "Lane rules"). A later prestige pha
 skill, keyed by the level within the phase, which the merge expands into ordinary triggers
 (`app/ashfall_app/rules/expand/phase_pays.py`).
 
-Unlocks: the client never decides what exists. A person joining the town is one (`app/ashfall_app/engine/joins.py`: an
+Unlocks: the client never decides what exists. A person joining the town is one (`app/ashfall_app/engine/people/joins.py`: an
 outcome part that adds the joined unlock and turns the lane's always task into its share), and a person leaving
-another (`app/ashfall_app/engine/leaves.py`: the left unlock, from which `app/ashfall_app/engine/gone.py` derives the
+another (`app/ashfall_app/engine/people/leaves.py`: the left unlock, from which `app/ashfall_app/engine/people/gone.py` derives the
 lane's cards out of play and the standings it stops). The page decides when an unlocked part is first drawn, from the
 view, the content and what the account keeps (`app/client/src/game/page/shown.ts`; `decisions.md`, "The screen arrives
 when it means something"). Features (the ledger, the craft list) are page parts the engine only switches on. Facts
@@ -172,12 +172,12 @@ shows the last one that holds (`app/ashfall_app/rules/checks/cards/aims.py`).
 Offers and quests: authored or Claude-proposed, timing decided in code; state is three only-growing unlocks (shown,
 answered, which answer). Answering is a Command, an order verb like a tap, so a rule or the queue can answer, and an
 offer's optional kind lets one rule answer every offer of it by role (`engine/design/`, "OFFER KINDS";
-`app/ashfall_app/engine/answers.py`, `AnswerKind`). Never expires in its first piece. Declining costs no progress.
+`app/ashfall_app/engine/offers/answers.py`, `AnswerKind`). Never expires in its first piece. Declining costs no progress.
 An offer may name who asks (`askers`, ruled lanes) and carry three texts for where it differs from the usual
 (`waiting_key`, `expiry_key`, `permanence_key`), each optional and drawn only when given; the content refuses an
 `expiry_key` until offers can expire (`engine/design/`, KNOWN GAPS). What led to an offer is served with it, its
 gate, none where the page cannot word it; an earlier answer it requires only sequences it and is no cause (`app/ashfall_app/api/world/line_causes.py`). The page
 draws open offers as one list (`docs/design/opening-screen/asks-and-cards.md`, "Asks").
 Interface: `engine/design/`, "Offers", and `app/ashfall_app/api/contract/offers.txt`, "OFFERS". Built:
-`app/ashfall_app/engine/offerstate.py` (where an offer stands), `app/ashfall_app/engine/answering.py` (an answer
+`app/ashfall_app/engine/offers/offerstate.py` (where an offer stands), `app/ashfall_app/engine/offers/answering.py` (an answer
 landing); the loader makes each offer's trigger (`app/ashfall_app/rules/expand/convert.py`).
