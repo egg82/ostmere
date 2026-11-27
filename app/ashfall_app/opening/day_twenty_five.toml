@@ -478,7 +478,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "dig_midden"
-site = { no_site = "the midden pit lies near the hall and the scene draws no pit" }
+site = { layer = "midden_pit" }
 only_player = "story"
 presentation = "action"
 label_key = "c_dig_midden"

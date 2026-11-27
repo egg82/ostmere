@@ -22,6 +22,7 @@ import dayeight_layers as d8
 import dayeleven_layers as d11
 import dayfifteen_layers as d15
 import daysixteen_layers as d16
+import daytwentyfive_layers as d25
 import daytwelve_layers as d12
 import dayfour_layers as d4
 import daythree_layers as d3
@@ -93,6 +94,7 @@ def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
         *d4.world_layers(walls),
         *d8.world_layers(walls),
         *d16.world_layers(walls),
+        *d25.world_layers(),
         Layer(id="roof_posts", img=dayone.roof_posts(EAVE_Y, int(LIP) + 2 + EAVE, (ROOF_X[0] + 24, ROOF_X[1] - 14)),
               when="always"),
         Layer(id="cleared", img=cleared(rng), when="pushes:clear_spot@2"),
