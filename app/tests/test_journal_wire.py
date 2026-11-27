@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api.service import Game
 from ashfall_app.main import create_app
 from ashfall_app.opening.schema import load_opening

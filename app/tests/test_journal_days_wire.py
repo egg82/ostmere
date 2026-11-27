@@ -8,7 +8,7 @@ from typing import Any
 import psycopg
 import pytest
 
-from ashfall_app.api import journal_models as jm
+from ashfall_app.api.player import journal_models as jm
 from ashfall_app.api.service import Game
 from ashfall_app.main import create_app
 from ashfall_app.opening.schema import Opening

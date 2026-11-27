@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from ashfall_app.api.content_models import ChipInfo
+from ashfall_app.api.world.content_models import ChipInfo
 from ashfall_app.engine import HANDS, ActionId, FlowKind, LaneSpeed, Modifier, ModifierKind, RateRef, SourceId, StoreId
 from ashfall_app.opening.checks import check_opening
 from ashfall_app.opening.schema import Opening, load_opening, to_rules

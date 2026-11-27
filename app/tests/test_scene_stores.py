@@ -1,12 +1,12 @@
 """tools/scene: a layer's `store:` condition reads the page's ledger, which holds only stores the opening unlocks
-(engine/view.py `_ledger`), else View.levels, which serves the rest the scene names (api/levels.py, from the committed
-api/scene_stores.json). Judged here: that list is the stores the scene names, and each is one the opening defines. What a built thing shows on is a card's completions."""
+(engine/view.py `_ledger`), else View.levels, which serves the rest the scene names (api/goals/levels.py, from the committed
+api/world/scene_stores.json). Judged here: that list is the stores the scene names, and each is one the opening defines. What a built thing shows on is a card's completions."""
 import json
 import re
 import sys
 from pathlib import Path
 
-from ashfall_app.api import scenestores
+from ashfall_app.api.world import scenestores
 from ashfall_app.opening.refs import outcomes
 from ashfall_app.opening.schema import load_opening, to_rules
 
@@ -29,7 +29,7 @@ def test_the_scene_names_stores_and_the_opening_unlocks_some():
 
 
 def test_every_store_a_layer_reads_is_one_the_opening_defines():
-    """A store no card unlocks is read off View.levels instead (api/levels.py), which serves every store the scene names
+    """A store no card unlocks is read off View.levels instead (api/goals/levels.py), which serves every store the scene names
     that the opening defines: one it does not define would never hold."""
     defined = {s.id for s in to_rules(load_opening()).stores}
     assert named_in_the_scene() <= defined, sorted(named_in_the_scene() - defined)

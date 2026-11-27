@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.api.line_causes import line_infos
-from ashfall_app.api.line_models import Mention
+from ashfall_app.api.world.line_causes import line_infos
+from ashfall_app.api.world.line_models import Mention
 from ashfall_app.engine import advance_logged, new_save
 from ashfall_app.opening.schema import OPENING, Opening, load_opening, to_rules
 

@@ -1,4 +1,4 @@
-STORE ROWS (the same dry run as GOAL ROWS; api/storerows.py)
+STORE ROWS (the same dry run as GOAL ROWS; api/world/storerows.py)
   view.store_rows is one row per view.ledger store, in ledger order, read at the rates as set exactly as goal_rows are
   (a tap of the hands set aside, every runner counted): one simulation, two readouts.
   - per_hour: the store's net, unclamped; it can differ from its LedgerLine.net_per_hour while a tap holds the hands.
