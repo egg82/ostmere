@@ -22,6 +22,7 @@ from .offer_entries import OfferEntry, OfferKindEntry
 from .phase_pays import PhasePaysEntry
 from .prestige import NodeEntry, PrestigeEntry
 from .town import TownCardEntry
+from .workings import WorkingEntry
 from .people import PeopleEntry
 from .expansions import with_expansions
 from .close_call_entries import CloseCallEntry
@@ -164,6 +165,8 @@ class Chapter(Entry):
     cards: list[CardEntry] = []
     town_cards: list[TownCardEntry] = []
     """Cards expanded once per lane at the merge (town.py)."""
+    workings: list[WorkingEntry] = []
+    """Each expanded to one card at the merge (workings.py)."""
     chips: list[ChipEntry] = []
     triggers: list[TriggerEntry] = []
     features: list[FeatureEntry] = []

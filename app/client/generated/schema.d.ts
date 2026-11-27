@@ -888,6 +888,24 @@ export interface components {
             /** Share Bp */
             share_bp: number;
         };
+        /**
+         * CastInfo
+         * @description A role some outcome casts: the lanes it may go to, in join order (contract/casting.txt, "CASTING"). A text's
+         *     {<role>} slot is the name of the lane whose feature view.unlocked holds.
+         */
+        CastInfo: {
+            /** Role */
+            role: string;
+            /** Lanes */
+            lanes: components["schemas"]["CastLane"][];
+        };
+        /** CastLane */
+        CastLane: {
+            /** Lane */
+            lane: string;
+            /** Feature */
+            feature: string;
+        };
         /** Change */
         Change: {
             /** Date */
@@ -985,6 +1003,8 @@ export interface components {
             node_infos: components["schemas"]["NodeInfo"][];
             /** Lane Infos */
             lane_infos: components["schemas"]["LaneInfo"][];
+            /** Cast Infos */
+            cast_infos: components["schemas"]["CastInfo"][];
             /** Offer Infos */
             offer_infos: components["schemas"]["OfferInfo"][];
             /** Offer Kinds */

@@ -95,11 +95,27 @@ _MAX_LINES = 4096
 """Lines kept under one stack before they are dropped."""
 
 
+_last_lines: tuple[object, object, dict[tuple[RateRef | CardId, int, Run], Explanation]] = (None, None, {})
+"""The dict the last _kept_line used, by the identity of its inputs tuple and chips: most lines of an advance ask the
+same stack, and the memo's entry scan costs more than the line."""
+
+
+def _set_last(parts: object, chips: object, lines: dict[tuple[RateRef | CardId, int, Run], Explanation]) -> None:
+    global _last_lines
+    _last_lines = (parts, chips, lines)
+
+
 def _kept_line(save: Save, rules: Rules, key: tuple[RateRef | CardId, int, Run],
                build: Callable[[], Explanation]) -> Explanation:
     """A line is a function of its ref, share and run and of the effective stack alone, so it is kept while the stack's
     inputs are the same objects, across saves, as the instants of an advance mostly leave them."""
-    lines = _LINES.get(stack_inputs(save, rules), dict, save.chips)
+    parts = stack_inputs(save, rules)
+    last = _last_lines
+    if last[0] is parts and last[1] is save.chips:
+        lines = last[2]
+    else:
+        lines = _LINES.get(parts, dict, save.chips)
+        _set_last(parts, save.chips, lines)
     found = lines.get(key)
     if found is None:
         if len(lines) >= _MAX_LINES:

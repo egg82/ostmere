@@ -42,7 +42,9 @@ check them.
    check the hand-over fires once and nothing goes negative (`app/tests/opening/test_hand_over_rebase.py`).
 8. **Every tapped card has its own upside text.** A missing `upside_key` is gated; two cards sharing one is not.
 9. **Nothing is named before it exists.** A line, chip or offer must not mention a thing the player can't have yet on
-   some route (stores and actions are gated by `unlock_order_checks`; text is not).
+   some route (stores and actions are gated by `unlock_order_checks`; text is not). A `{<role>}` slot is gated:
+   `cast_checks.py` refuses it in any text that is not the casting outcome's own lines, a later label, or an owner gated
+   on a feature of that role.
 10. **Spoilers.** Commit messages, PR text, test names and readout text name beats, lines and offers by id, never by
     what happens. Nothing checks this.
 
@@ -54,6 +56,8 @@ check them.
   (`app/tests/test_rule_chip_cases_wire.py`) runs in CI, not in `gates.sh`, so run it.
 - A new chapter goes in `CHAPTERS` (or `IN_WRITING`) in `opening/schema.py`, with its `content/beats.yaml` ids and
   `content/decisions.jsonl` rows.
+- A new working is a `[[workings]]` row in its chapter (its axes; a declared cost must equal the computed one); a new
+  kind pair or link is a row in `app/ashfall_app/opening/working_rules.toml`, never a hand-priced card.
 - A new gate goes in `app/tools/gates.sh` **and** the "Structural gates" table in `docs/engineering.md` (via
   `doc-delta.txt`).
 - A held-list entry that gains its field leaves the list in the same change; a count is never raised.

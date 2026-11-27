@@ -1,0 +1,6 @@
+2026-11-27T04:21:29.5666428Z event=chapter_saves.rebased chapter=eight bytes=131398 cpu_s=16.7
+2026-11-27T04:21:57.5555742Z event=chapter_saves.rebased chapter=nine bytes=147921 cpu_s=28.0
+2026-11-27T04:22:29.8992512Z event=chapter_saves.rebased chapter=eleven bytes=172221 cpu_s=32.3
+2026-11-27T04:23:24.2516360Z event=chapter_saves.rebased chapter=twelve bytes=193385 cpu_s=54.3
+2026-11-27T04:24:39.3872694Z event=chapter_saves.rebased chapter=fifteen bytes=217342 cpu_s=75.1
+2026-11-27T04:26:21.9385150Z event=chapter_saves.rebased chapter=sixteen bytes=233002 cpu_s=102.5

@@ -32,6 +32,7 @@ SUITES = {
                     ("tests/engine_contract/leaves/test_retire_*.py", *LEAVES_ALSO), home=f"{CONTRACT}/leaves"),
     "retire": Suite("MUTANTS_leaves.txt", "test_retire_*.py", "retire_mutants", 21, 33,
                     ("tests/engine_contract/leaves/test_leaves_*.py", *LEAVES_ALSO), home=f"{CONTRACT}/leaves"),
+    "casting": Suite("MUTANTS.txt", "test_casting_*_contract.py", "casting_mutants", home=f"{CONTRACT}/casting"),
     "clocks": Suite("MUTANTS_clocks.txt", "test_failover.py", "clocks_mutants", also=(
         "tests/db/test_prune_race.py", "tests/db/test_reminders.py", "tests/db/test_hands_free.py",
         "tests/reminders/test_sender.py", "tests/dayone/test_dayone_forecast.py"), home="tests/db"),

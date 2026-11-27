@@ -1,0 +1,2 @@
+2026-11-27T03:53:32.0937815Z event=chapter_saves.player chapter=nineteen route=sharp bytes=4427756 cpu_s=202.7
+2026-11-27T03:54:58.3443757Z event=chapter_saves.player chapter=twentytwo route=sharp bytes=5173724 cpu_s=86.2
