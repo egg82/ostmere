@@ -138,3 +138,36 @@ def test_the_retime_reaches_the_controller_under_xdist(pytester: pytest.Pytester
     result.stdout.fnmatch_lines(["*test_slow_every_time took *s of wall clock*",
                                  "*time gate: slow once, passed on a second timing*",
                                  "test_retime.py::test_slow_only_the_first_time: 0.1*s the first time*"])
+
+
+GUARDED = """
+import time
+import pytest
+
+@pytest.fixture(scope="session")
+def tree():
+    time.sleep(0.7)
+
+@pytest.fixture(scope="session")
+def bush(tree):
+    time.sleep(0.7)
+
+def test_first_user_of_shared_fixtures(bush):
+    pass
+
+def test_slow_in_its_body():
+    time.sleep(1.5)
+"""
+
+
+def test_shared_fixtures_are_not_charged_to_the_hang_guard(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
+    """Under a 1 s hang guard, a test whose shared fixtures take 1.4 s between them passes (they run under their own
+    guard of FIXTURE_CEILING_S), and a test slow in its own body is still stopped."""
+    monkeypatch.setattr(gate, "FIXTURE_CEILING_S", 5.0)
+    pytester.makeini("[pytest]\ntimeout = 1\ntimeout_method = signal\n")
+    pytester.makeconftest("from tests import time_gate\n\n"
+                          "def pytest_configure(config):\n    config.pluginmanager.register(time_gate, 'time_gate')\n")
+    pytester.makepyfile(test_guarded=GUARDED)
+    result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
+    result.stdout.fnmatch_lines(["PASSED test_guarded.py::test_first_user_of_shared_fixtures",
+                                 "FAILED test_guarded.py::test_slow_in_its_body*Timeout*"])
