@@ -16,6 +16,7 @@ import "../src/slider.css";
 import "../src/map.css";
 import "../src/reminders.css";
 import { wireBegin } from "../src/begin";
+import { walkOffStale } from "../src/ui/back";
 import { fixtureContent, Q } from "./content";
 import { isFights, withHurtChip } from "./fights";
 import { isGroups, withGroups } from "./groups";
@@ -31,6 +32,7 @@ import { fixtureManifestUrl } from "./scene-manifest";
 import type { Decision, Order, Step, View } from "../src/api/types";
 import type { Phase } from "./steps";
 
+walkOffStale();
 const hash = new URLSearchParams(location.hash.slice(1));
 if (hash.has("kinded")) {
   for (const o of fixtureContent.offer_infos.filter((x) => x.offer === "ask")) {
