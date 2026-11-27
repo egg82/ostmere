@@ -1,16 +1,16 @@
 chapter twentyfive: 12 visits on typical
-  V106 gap   4.2 h  spend 42  decide  0
-  V107 gap   3.2 h  spend 42  decide  1  [wait, 1 lines]
-  V108 gap   9.2 h  spend 54  decide  2  [wait, 6 lines]
-  V109 gap   4.2 h  spend 85  decide  1  [wait, 2 lines]
-  V110 gap   3.2 h  spend 87  decide  0  [wait, 3 lines]
-  V111 gap   9.2 h  spend 84  decide  2
-  V112 gap   4.2 h  spend 54  decide  0
-  V113 gap   3.2 h  spend 84  decide  0  [wait, 3 lines]
-  V114 gap   9.2 h  spend 30  decide  2  [wait, 4 lines]
-  V115 gap   4.2 h  spend 55  decide  0
-  V116 gap   3.2 h  spend 55  decide  0  [wait, 0 lines]
-  V117 gap   9.2 h  spend 55  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 504, decide 2; 8h+: 4 returns, spend 223, decide 6
-  cap loss at the end, away 8 h: dry_wood 49%, roots 96%, stakes 100%, stones 63%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: charwood 39%, dry_wood 49%, roots 96%, stakes 100%, stones 63%, windbreak 100%, wraps_sewn 100%
+  V106 gap   4.2 h  spend 55  decide  1
+  V107 gap   3.2 h  spend 121  decide  1  [wait, 1 lines]
+  V108 gap   9.1 h  spend 73  decide  2
+  V109 gap   4.2 h  spend 85  decide  1
+  V110 gap   3.2 h  spend 98  decide  0  [wait, 2 lines]
+  V111 gap   9.2 h  spend 88  decide  2
+  V112 gap   4.2 h  spend 55  decide  0
+  V113 gap   3.2 h  spend 85  decide  0
+  V114 gap   9.2 h  spend 121  decide  2
+  V115 gap   4.2 h  spend 31  decide  0  [wait, 0 lines]
+  V116 gap   3.2 h  spend 42  decide  0
+  V117 gap   9.2 h  spend 41  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 572, decide 3; 8h+: 4 returns, spend 323, decide 6
+  cap loss at the end, away 8 h: cleared 100%, cordwood 100%, damp_wood 0%, dry_wood 15%, roots 70%, stakes 100%, stones 0%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: cleared 100%, cordwood 100%, damp_wood 0%, dry_wood 18%, roots 70%, stakes 100%, stones 0%, windbreak 100%, wraps_sewn 100%

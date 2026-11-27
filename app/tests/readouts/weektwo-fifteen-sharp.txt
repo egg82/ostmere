@@ -15,7 +15,7 @@ days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       9       7       0       4       0      18       3     41
   2      30       5       2       2       0      12       2     53
-  3      31       4       0       0       0      76       2    113
+  3      33       4       0       0       0      76       2    115
   4      19       5       0       0       0       4       3     31
   5       0       2       1       2       0       1       1      7
   6       3       1       0       0       0      10       1     15
