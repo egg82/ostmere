@@ -29,7 +29,7 @@ file per system or group of systems (the systems are `systems.md`). Read this in
 change touches; `principles.md` binds every change. A new decision goes in the file for its system, with a line here.
 Code and docs cite a decision by its title, quoted after a mention of `decisions.md`: the title is an entry below, or a
 `###` heading or bold lead inside one of the files, found with `grep -rn "Title" docs/decisions/`.
-`app/tests/test_decision_citations.py` fails when a cited title resolves to nothing.
+`app/tests/gates/test_decision_citations.py` fails when a cited title resolves to nothing.
 
 ## Principles
 
