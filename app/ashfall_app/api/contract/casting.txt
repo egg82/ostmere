@@ -66,11 +66,12 @@ CASTING (docs/design/week-five-plan.md, item 3; blind tests from this section al
 
   Loader refusals (ValueError, `where` as the other refusals name it: "trigger {id}", "answer {id}"):
     "{where}: only a trigger's or an answer's outcome casts a role"
+    "{where}: casts {role}, which is not a word of letters, digits and underscores"
     "{where}: casts {role}, which names a lane or a slot the page fills elsewhere"
     "{where}: casts {role}, which another outcome already casts"   (also for a role named twice in one outcome)
     "{where}: casts {role} by {pattern}, which is no town card's id pattern"
     "{where}: casts {role} by {pattern} twice"
-    "text {key}: holds the slot {{role}}, which can show before {role} is cast"
+    "text {key}: holds the slot {<role>}, which can show before <role> is cast (in {owner})"   ({owner}: the entry that names the key)
   A cast with no patterns is refused at the entry. An unknown feature `<role>_<lane>` where the lane is no candidate (not a
   single person) fails as an unknown feature does.
   Engine validation (InvalidRulesError), for rules built by hand: only a trigger's or an answer's outcome casts; a role

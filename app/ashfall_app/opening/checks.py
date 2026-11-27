@@ -1,6 +1,5 @@
 """What makes a parsed Opening valid beyond its shape: unique ids, every reference known, every `*_key` in `text`,
 every fraction exact. Raises ValueError naming the entry. Imports the schema for types only (schema.py calls this)."""
-from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
 from ..engine import HANDS, TOWN_PREFIX, StoreId
@@ -26,6 +25,7 @@ from .kind_checks import check_kinds
 from .line_kinds import check_line_kinds
 from .loss_checks import check_loss_lines, check_loss_order
 from .find_checks import check_finds
+from .key_fields import key_fields
 from .finite_checks import check_finite_supply
 from .name_checks import check_names, without_slots
 from .phase_pays import check_phase_pays
@@ -33,6 +33,7 @@ from .prestige import check_phase_spans
 from .order_checks import check_order_cards
 from .refs import check_refs, fail, ids_by_kind, need, outcomes
 from .groups import check_groups
+from .cast_checks import check_cast_text, check_casts
 from .leave_checks import check_leaves
 from .line_only_checks import check_line_only
 from .people_checks import check_people
@@ -92,6 +93,7 @@ def check_structure(o: "Opening") -> None:
     check_player_only(o)
     check_loss_lines(o)
     check_leaves(o)
+    check_casts(o)
     check_groups(o)
     check_people(o)
     check_close_calls(o)
@@ -217,53 +219,8 @@ def _check_joins(cards: dict[str, "CardEntry"], ruled: set[str], where: str, out
 
 # ---------- text keys ----------
 
-def _key_fields(o: "Opening") -> Iterator[tuple[str, str]]:
-    for s in o.stores:
-        yield f"store {s.id}", s.label_key
-    for k in o.skills:
-        yield f"skill {k.id}", k.label_key
-        yield from ((f"skill {k.id}", lv.pays_key) for lv in k.levels)
-    for a in o.standing:
-        yield f"action {a.id}", a.label_key
-    yield from ((f"side {s.id}", s.label_key) for s in o.sides)
-    yield from ((f"threat {t.id}", t.label_key) for t in o.threats)
-    yield from ((f"node {n.id}", n.label_key) for n in o.nodes)
-    for x in o.lanes:
-        yield f"lane {x.id}", x.label_key
-        yield from ((f"lane {x.id}", lb.label_key) for lb in x.later_labels)
-        yield from ((f"lane {x.id}", k) for k in (x.name_key,) if k is not None)
-    yield from (("town title", lb.label_key) for lb in o.town_later_labels)
-    for c in o.cards:
-        singles = (c.label_key, c.upside_key)
-        yield from ((f"card {c.id}", k) for k in (*singles, *c.line_keys) if k is not None)
-    for ch in o.chips:
-        yield from ((f"chip {ch.id}", k) for k in (ch.label_key, ch.cost_key, ch.on_line_key, *ch.off_line_keys)
-                    if k is not None)
-    for f in o.features:
-        yield from ((f"feature {f.id}", k) for k in (f.hint_key, f.label_key) if k is not None)
-        if f.card is not None:
-            yield from ((f"feature {f.id} card", k) for k in (f.card.title_key, *f.card.line_keys, f.card.button_key))
-    for where, out in outcomes(o):
-        yield from ((where, k) for k in out.line_keys)
-    if o.camp is not None:
-        for n, lv in enumerate(o.camp.levels, start=1):
-            yield from ((f"camp level {n}", k) for k in (lv.pays_key, *lv.line_keys))
-    yield from ((f"aim {a.id}", a.text_key) for a in o.aims)
-    yield from ((f"place {p.id}", p.label_key) for p in o.places if p.label_key is not None)
-    for x in o.offers:
-        yield from ((f"offer {x.id}", k) for k in (x.text_key, *x.line_keys, x.waiting_key, x.expiry_key, x.permanence_key)
-                    if k is not None)
-        yield from ((f"answer {a.id}", k) for a in x.answers for k in (a.label_key, a.cost_key))
-    yield from ((f"offer kind {x.kind}", r.label_key) for x in o.offer_kinds for r in x.roles)
-    yield from (("start_line_keys", k) for k in o.start_line_keys)
-    yield from (("end_line_keys", k) for k in o.end_line_keys)
-    yield from ((f"note {n.id}", n.id) for n in o.notes)
-    yield from ((f"entry {e.id}", e.title_key) for e in o.entries)
-    yield "hands", o.hands_label_key
-
-
 def _check_keys(o: "Opening") -> None:
-    for where, key in _key_fields(o):
+    for where, key in key_fields(o):
         if key not in o.text:
             fail(where, f"key {key!r} is not in text")
 
@@ -277,7 +234,9 @@ def _check_text(o: "Opening") -> None:
     for key in UI_KEYS:
         if key not in o.text:
             fail("text", f"missing the fixed key {key!r}")
-    check_slots(o, _key_fields(o))
+    fields = list(key_fields(o))
+    check_slots(o, fields)
+    check_cast_text(o, fields)
 
 
 def _check_end(o: "Opening") -> None:

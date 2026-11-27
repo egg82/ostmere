@@ -34,3 +34,17 @@ class LaneInfo(BaseModel):
     """On a person's lane, the pooled lane that is their group; null for every other lane."""
     tied: str | None
     """On a pooled lane, the lane of the one person tied to the group (contract/groups.txt, "GROUPS"); null when none is."""
+
+
+class CastLane(BaseModel):
+    lane: str
+    feature: str
+    """The feature a cast unlocks for this lane: the lane is the role's person when view.unlocked holds it."""
+
+
+class CastInfo(BaseModel):
+    """A role some outcome casts: the lanes it may go to, in join order (contract/casting.txt, "CASTING"). A text's
+    {<role>} slot is the name of the lane whose feature view.unlocked holds."""
+
+    role: str
+    lanes: list[CastLane]

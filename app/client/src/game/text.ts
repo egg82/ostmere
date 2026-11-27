@@ -1,5 +1,7 @@
 // Every visible word comes from Content's text table (contract/). The page names keys, never text: a key
 // the content lacks renders as nothing and is reported once on the console, so the gap is found, not papered over.
+import { named } from "./names";
+import { Roles } from "./roles";
 import type { Content } from "../api/types";
 import { ASK_KEYS } from "./askkeys";
 import { GOAL_ROW_KEYS } from "./goalkeys";
@@ -251,29 +253,20 @@ export const UI = {
 
 export type Slots = Record<string, string>;
 
-/** The text table with every person's name slot and each find's `{found}` slot filled (contract/text-and-numbers.txt, "Text and
- * numbers", {<lane>}, {found}): the lane's name_key text, lowercased in a line as the lines' voice writes it; the
- * amount a find found, in whole items. Any other slot is left for fill(). */
-function named(content: Content): Map<string, string> {
-  const raw = new Map(content.text_entries.map((e) => [e.key, e.text]));
-  const names = new Map(content.lane_infos.flatMap((l) => (l.name_key ? [[l.lane, raw.get(l.name_key) ?? ""] as const] : [])));
-  const lines = new Set(content.line_infos.map((l) => l.key));
-  const found = new Map(content.find_infos.map((f) => [f.line_key, String(Math.floor(f.quantity / content.scales.quantity_per_item))]));
-  const fillNames = (key: string, text: string): string => text.replace(/\{(\w+)\}/g, (slot, lane: string) => {
-    if (lane === "found") return found.get(key) ?? slot;
-    const name = names.get(lane);
-    if (name === undefined) return slot;
-    return lines.has(key) ? name.toLowerCase() : name;
-  });
-  return new Map([...raw].map(([key, text]) => [key, fillNames(key, text)]));
-}
-
 export class Text {
   private readonly table: Map<string, string>;
+  private readonly roles: Roles;
   private readonly reported = new Set<string>();
 
   constructor(content: Content) {
-    this.table = named(content);
+    const t = named(content);
+    this.table = t.table;
+    this.roles = new Roles(content, t.names, t.lines);
+  }
+
+  /** The roles cast in this view (contract/casting.txt, "CASTING"): each role's slot reads its person's name from now on. */
+  cast(unlocked: readonly { category: string; id: string }[]): void {
+    this.roles.cast(unlocked);
   }
 
   has(key: string): boolean {
@@ -282,7 +275,7 @@ export class Text {
 
   get(key: string): string {
     const text = this.table.get(key);
-    if (text !== undefined) return text;
+    if (text !== undefined) return this.roles.fill(key, text);
     if (!this.reported.has(key)) {
       this.reported.add(key);
       console.warn(`ashfall: the content has no text for key "${key}"`);
