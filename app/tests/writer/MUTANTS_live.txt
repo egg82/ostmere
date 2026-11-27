@@ -1,5 +1,5 @@
 Wrong implementations of the writer's live client (writer/live.py), each planted alone in a scratch copy by
-tools/mutate_suite.py's `live` suite (specs tools/live_mutants/): tests/writer/test_live.py. Each must go red.
+tools/mutate_suite.py's `live` suite (specs tools/mutants/live/): tests/writer/test_live.py. Each must go red.
 
  1 swallowed API error   live.py: an API error status answers the stand-in from inside the client instead of raising
  2 swallowed timeout     live.py: a timeout answers the stand-in from inside the client instead of raising

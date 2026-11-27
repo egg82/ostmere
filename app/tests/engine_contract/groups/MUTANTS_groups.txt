@@ -18,6 +18,6 @@ MUTANTS_drains.txt does. `@kills(row)` on a test claims the row.
 14 member speed      a group card runs at its members' lane speed as well as the group's.          ["Speed"]
 15 marked in crew    a marked person counts in their group's crew.                                  [179]
 
-Run against the engine with S3: rows 1-15, 15 plants (tools/groups_mutants/mNN.py), all KILLED by the blind suite.
+Run against the engine with S3: rows 1-15, 15 plants (tools/mutants/groups/mNN.py), all KILLED by the blind suite.
 Rows 11-15 (crew, tap, mark, speed) were anchored by the implementer after the suite was written.
   python -m tools.mutate_suite groups --run
