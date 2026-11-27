@@ -7,7 +7,7 @@ from ashfall_app.engine import (
 )
 from ashfall_app.engine.rates import store_value
 from tests.daythree import content as c3
-from tests.daythree.chapter import Landings, Later, Share
+from tests.daythree.chapter import Landings, Later, Offer, Share
 from tests.dayone.policy import Move
 from tests.dayone.sinks import Chapter, Trip
 from tests.weekone import content as w1
@@ -199,14 +199,14 @@ HANDS = {"typical": (1500, 0), "sharp": (3000, 0)}
 """The hands' shares of cut_stakes and twist_cord a route adds at G2's visit; a route not named follows typical."""
 
 
-def order_cards(rules_cards: tuple[tuple[Unlock, Order], ...] = (),
-                stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order], ...]:
+def order_cards(rules_cards: tuple[tuple[Unlock, Order] | Offer, ...] = (),
+                stores: tuple[str, ...] = ORDER_STORES) -> tuple[tuple[Unlock, Order] | Offer, ...]:
     """`rules_cards`, and the content's order cards on `stores`, each as the page fills it in, offered after its
     unlock."""
     return (*rules_cards, *c3.order_cards(c3.opening3(), stores))
 
 
-def cordwood_rule() -> tuple[tuple[Unlock, Order], ...]:
+def cordwood_rule() -> tuple[tuple[Unlock, Order] | Offer, ...]:
     """Damp wood's sink's order card (day_fifteen.toml, stack_cordwood), offered once woodcutting's first top opens it.
     Of damp wood's order cards only this one: n1_cut's is her first rule, taught on day two."""
     return tuple(x for x in c3.order_cards(c3.opening3(), ("damp_wood",)) if x[1].then == TapCard(CORDWOOD))
