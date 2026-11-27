@@ -1,7 +1,7 @@
 """The hall lived in: once it is roofed, the people the content lodges there (`lodging` on a lane,
 app/ashfall_app/opening/lane_entries.py) leave the camp fire at dusk and night, and a few of them are seen at its door
 going in and out, the windows lit (`hall_lit`) and the chimney smoking (`hall_smoke`). By day they are as they were:
-at the fire or at their work. app/tests/test_scene_lodging.py holds this table to the content.
+at the fire or at their work. app/tests/scene/test_scene_lodging.py holds this table to the content.
 
 Story spoilers: never shown to the owner."""
 from __future__ import annotations

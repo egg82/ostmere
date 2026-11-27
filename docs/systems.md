@@ -58,7 +58,7 @@ number showing its source, odds before you commit) is a property of one determin
 - **The client samples; it never simulates.** The server serves the current segment and the next events; the page
   interpolates against the clock. No rule exists twice.
 - **A new engine part adds its own state type, never fields on `Save`.** Today's fields are the held list in
-  `app/tests/held/save_fields.json`; `app/tests/test_save_fields.py` fails on a new field and on a removed one listed.
+  `app/tests/held/save_fields.json`; `app/tests/gates/test_save_fields.py` fails on a new field and on a removed one listed.
 - **The pacing simulator drives this engine** with scripted players (babysitter, whenever, sharp and typical, held;
   `by_hand`, `lazy` and `keeper`, reported), and a deliberately weakened order language must turn the 2 AM test red.
 

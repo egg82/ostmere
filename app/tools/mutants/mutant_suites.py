@@ -39,7 +39,7 @@ SUITES = {
         "tests/reminders/test_sender.py", "tests/dayone/engine/test_dayone_forecast.py"), home="tests/db"),
     "journal_days": Suite("MUTANTS_journal_days.txt", "test_journal_days.py", "mutants/journal_days", also=(
         "tests/saves/journal/test_journal_*.py", "tests/db/stored/test_journal_*.py", "tests/db/stored/test_decision_lock_span.py",
-        "tests/db/stored/test_save_journal_migrate.py", "tests/test_journal_days_wire.py"), home="tests/saves/journal"),
+        "tests/db/stored/test_save_journal_migrate.py", "tests/api/test_journal_days_wire.py"), home="tests/saves/journal"),
     "queue": Suite("MUTANTS_queue.txt", "test_queue.py", "mutants/queue", home="tests/writer"),
     "live": Suite("MUTANTS_live.txt", "test_live.py", "mutants/live", home="tests/writer"),
 }

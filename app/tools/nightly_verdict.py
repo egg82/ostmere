@@ -97,7 +97,7 @@ def body(paths: list[str]) -> str:
         text = "Readouts that differ from their committed text, pulled from the nightly's `readouts-new-*` artifacts:\n\n" + "".join(f"- `{i}`\n" for i in ids)
     if COSTS in paths:
         text += ("\n" if text else "") + ("The chapter-save cost table, refreshed from the last runs' logs (`python -m tools.ci_costs`); "
-                                         "`tests/test_saves_plan.py` fails here when a planned job's predicted time is over its cap.\n")
+                                         "`tests/tools/test_saves_plan.py` fails here when a planned job's predicted time is over its cap.\n")
     return text
 
 

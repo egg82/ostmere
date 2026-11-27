@@ -1,7 +1,7 @@
 """People at their work by day: a person the content sends to a card's site (`by_day` on a lane,
 app/ashfall_app/opening/lane_entries.py) is drawn there, not at the camp fire, while nothing of theirs runs; at dusk and
 night they are where they were (the fire, or the hall once it is roofed). The people `by_day` seats at the fire keep their
-fire pose. A person with no idle pose at the fire (a crew's member) stands, by day, where their crew's pose has them at work. app/tests/test_scene_day.py holds this table to the content.
+fire pose. A person with no idle pose at the fire (a crew's member) stands, by day, where their crew's pose has them at work. app/tests/scene/test_scene_day.py holds this table to the content.
 
 Story spoilers: never shown to the owner."""
 from __future__ import annotations

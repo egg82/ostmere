@@ -1,7 +1,7 @@
 """The completions the scene's layers show: each card a `project:` or `pushes:` atom of a layer's `when`/`until` names,
 and each feature a `feature:` atom names; `layers` is every layer id, which a person's `whereabouts` names.
 build.py writes them beside the generator as shown.json, which
-app/tests/test_scene_shown.py reads to judge that every build the player can finish has a scene state."""
+app/tests/scene/test_scene_shown.py reads to judge that every build the player can finish has a scene state."""
 import json
 from collections.abc import Iterable, Mapping
 from pathlib import Path

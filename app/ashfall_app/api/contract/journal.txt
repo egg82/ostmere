@@ -227,6 +227,6 @@ JOURNAL
   12. Renders at 390x844 (portrait page) and 3840x2160 and 1280x800 (spread), with one entry fought and one not, a
       pencil note and a note sketch, looked at (headless-render); the page is the game's one dark theme
       (color-scheme: dark), so the renders are repeated with the browser set to prefer light and must not differ.
-      tests/test_client_contrast.py passes with the hand's colours on the parchment.
+      tests/client/test_client_contrast.py passes with the hand's colours on the parchment.
   13. Each sketch is looked at, by process.md's method, before its entry ships.
 
