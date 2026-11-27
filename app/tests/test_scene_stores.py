@@ -15,7 +15,7 @@ sys.path.insert(0, str(SCENE))
 
 
 def named_in_the_scene() -> set[str]:
-    return {m for p in SCENE.glob("*.py") if p.name != "stages.py"
+    return {m for p in SCENE.rglob("*.py") if p.name != "stages.py"
             for m in re.findall(r"\bstore:([a-z][a-z0-9_]*)", p.read_text())}
 
 
@@ -43,6 +43,6 @@ def test_the_committed_list_is_the_stores_the_scene_names():
 
 
 def test_storeset_reads_every_condition_of_layers_and_grades():
-    from storeset import stores_read
+    from frame.storeset import stores_read
     layers = [{"when": "always"}, {"when": "store:a@3&running:x"}, {"when": "pushes:p@1|store:b", "until": "store:z"}]
     assert stores_read(layers, {"night": {"when": "store:c@20|chip:cold"}}) == ["a", "b", "c", "z"]

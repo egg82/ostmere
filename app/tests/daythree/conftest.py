@@ -7,7 +7,7 @@ from tests.daythree import counters, plumbing, report, verdicts
 from tests.daythree.routes import day3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured
+from tests.dayone.pacing.parity import Measured
 from tests.plays import mark_plays
 
 DAY_PLAYS = frozenset({"day3_route", "day3_counts", "day3_readout", "day3_plumbed", "two_am3_run"})

@@ -12,7 +12,7 @@ from tests.daythree import counters
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured, compare
+from tests.dayone.pacing.parity import Measured, compare
 from tests.weektwo import verdicts
 from tests.weektwo.rebased import Rebased, fired, rules9
 from tests.weektwo.routes import ELEVEN_PUSH_ROUTES

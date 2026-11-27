@@ -1,4 +1,4 @@
-"""A scripted player of day two: day one's player (tests/dayone/player.py) on the rules with day two merged, kept going
+"""A scripted player of day two: day one's player (tests/dayone/player/player.py) on the rules with day two merged, kept going
 past B3 to the visit B4 is seen in, or on through a later chapter (daythree/chapter.Later) to the visit its last beat
 is seen in, making that chapter's moves first (daythree/moves.py) once its first beat has landed. Inside a visit it makes day two's moves first (policy.py), then day one's; away, time
 runs event by event as day one's. What it adds to day one's records: day two's story ids as they land and are seen
@@ -13,9 +13,9 @@ from tests.daythree import moves as m3
 from tests.daythree.chapter import Later
 from tests.daytwo import content as c
 from tests.daytwo import policy as p2
-from tests.dayone import policy, sinks
-from tests.dayone.human import lands_within, thresholds
-from tests.dayone.player import DayOnePlayer, VisitRecord
+from tests.dayone.player import policy, sinks
+from tests.dayone.human.human import lands_within, thresholds
+from tests.dayone.player.player import DayOnePlayer, VisitRecord
 from tests.opening.playthrough import News
 
 LINGER_S = 10 * 60

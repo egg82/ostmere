@@ -35,7 +35,7 @@
  "app/tools/engine_bench.py": {
   "noqa": 2
  },
- "tools/scene/kit.py": {
+ "tools/scene/draw/kit.py": {
   "pyright-ignore": 2
  }
 }

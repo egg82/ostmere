@@ -4,7 +4,7 @@ Proposal 8 of `design-101.md` §3, measured. No change to the game. Beats by id 
 
 ## Method
 
-`python -m tests.dayone.report --absence` (`app/tests/dayone/absence.py`). The human-paced player plays day one on the
+`python -m tests.dayone.pacing.report --absence` (`app/tests/dayone/absence/absence.py`). The human-paced player plays day one on the
 real engine; at the exit of each of its four visits the player is gone for 1 h, 8 h, 24 h, 3 days and 7 days and the
 engine runs on with the mix as left. Each return is counted from served data: the unlock set, chips, skill levels
 and the lines the step emitted, before and after. Lines are placed as the page places them (`awaylines.ts`, ported as `absence.place`): a chip's line never plays on

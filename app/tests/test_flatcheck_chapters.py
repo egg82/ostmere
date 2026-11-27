@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from tests.dayone.beats import BEATS_YAML
-from tests.dayone.story import FLATCHECK
+from tests.dayone.player.beats import BEATS_YAML
+from tests.dayone.player.story import FLATCHECK
 
 SHIPPED = BEATS_YAML.read_text()
 L3_TURN = "turn: up, cost: none, advances: [C-promise-20], moves: [N1, PC]"

@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
-from tests.dayone.beats import BEATS_YAML
+from tests.dayone.player.beats import BEATS_YAML
 
 FIRST = 5
 """The first spine beat the readout lists by day: B4 is read in hours after B3 (daytwo/checks.py, b4_hours)."""

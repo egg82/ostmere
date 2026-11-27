@@ -11,7 +11,7 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.report import route_text
 from tests.daytwo.routes import day2
 from tests.daytwo.verdicts import verdicts
-from tests.dayone.parity import Measured
+from tests.dayone.pacing.parity import Measured
 from tests.plays import mark_plays
 
 DAY_PLAYS = frozenset({"day2_route", "day2_verdicts", "day2_readout", "two_am2_run"})

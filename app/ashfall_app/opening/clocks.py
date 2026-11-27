@@ -1,5 +1,5 @@
 """Moment clocks: a hidden count-up store, in twentieths of a game hour, that the scene reads as a window
-(`store:<id>@<a>..<b>`, tools/scene/people_moments.py) on a moment. A moment is authored as `clock = "<id>"` on an outcome,
+(`store:<id>@<a>..<b>`, tools/scene/cast/people_moments.py) on a moment. A moment is authored as `clock = "<id>"` on an outcome,
 which starts it, or on a `[line_doings.<key>]` entry, which starts it when the line is told: the loader then makes the
 store, the standing action that counts it and, for a line, the trigger that unlocks the action. That trigger's `when`
 and `requires` are the owner's own (the offer's gate and requires; for a card, its completion number for the line),

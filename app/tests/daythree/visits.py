@@ -4,7 +4,7 @@ from dataclasses import replace
 
 from ashfall_app.engine import Rules, Save, advance
 from tests.daythree.counters import Step, Visit
-from tests.dayone.player import DayOnePlayer, VisitRecord
+from tests.dayone.player.player import DayOnePlayer, VisitRecord
 
 
 def steps_of(p: DayOnePlayer) -> list[Step]:

@@ -1,4 +1,4 @@
-"""tools/scene/depth.py: the generator marks which layers the page depth-sorts and gives each its ground-contact `base`,
+"""tools/scene/audits/depth.py: the generator marks which layers the page depth-sorts and gives each its ground-contact `base`,
 and draw_order is the page's rule (scene/manifest.ts depthOrder), so the previews match the page."""
 import sys
 from collections.abc import Callable
@@ -8,8 +8,8 @@ import pytest
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import depth   # tools/scene, on the path from the line above
-from output import Entry
+from audits import depth   # tools/scene, on the path from the line above
+from frame.output import Entry
 
 
 def entry(layer_id: str, blend: str = "") -> Entry:

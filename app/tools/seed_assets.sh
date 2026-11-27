@@ -24,7 +24,7 @@
 # pod is the volume's only writer (the app mounts it read-only). Reseeding overwrites and never deletes, so a file left
 # on the target that the source lacks makes the check fail. The Job is deleted on the way out.
 # Env, required: SITES (kubeconfig context names, space-separated) or KUBE_CONTEXT (one site); ASHFALL_ASSETS (the
-# local tree, as tools/scene/output.py) unless FROM_CONTEXT is set; JOB_MANIFEST (the cluster repo's seed Job).
+# local tree, as tools/scene/frame/output.py) unless FROM_CONTEXT is set; JOB_MANIFEST (the cluster repo's seed Job).
 # Optional: NAMESPACE (ashfall), FROM_CONTEXT (unset: local), FROM_NAMESPACE (NAMESPACE).
 set -euo pipefail
 

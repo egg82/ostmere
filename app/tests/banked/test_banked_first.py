@@ -10,8 +10,8 @@ from ashfall_app.engine import (
 from tests.banked.chapter import CHAPTER, COMFORT, FOUND, GATHER, HOUR, RATE, TRIP, WOOD, rules
 from tests.daythree import moves
 from tests.daythree.chapter import Later
-from tests.dayone import sinks
-from tests.dayone.policy import Move
+from tests.dayone.player import sinks
+from tests.dayone.player.policy import Move
 
 SLOW, STEP = CardId("slow_comfort"), CardId("step")
 

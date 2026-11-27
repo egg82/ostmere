@@ -1,4 +1,4 @@
-"""tools/scene/crowd.py and the build's crowding check (output.check_crowd): no two figures a stage shows have boxes that
+"""tools/scene/audits/crowd.py and the build's crowding check (output.check_crowd): no two figures a stage shows have boxes that
 meet, bar the held pairs, and a check that compared nothing fails."""
 import sys
 from pathlib import Path
@@ -8,10 +8,10 @@ from PIL import Image
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import crowd  # tools/scene, on the path from the line above
-import output
-from output import Entry
-from stages import STAGES
+from audits import crowd  # tools/scene, on the path from the line above
+from frame import output
+from frame.output import Entry
+from frame.stages import STAGES
 
 
 def entry(layer_id: str, x: int) -> Entry:

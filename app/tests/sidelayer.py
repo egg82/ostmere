@@ -6,7 +6,7 @@ from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 
-from tests.dayone.beats import BEATS_YAML
+from tests.dayone.player.beats import BEATS_YAML
 from tests.opening.playthrough import News
 
 ENTRY = re.compile(r"^\s+- \{id:\s*([\w.-]+)(.*)$", re.M)

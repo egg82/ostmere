@@ -24,9 +24,9 @@ MATCH, DRIFT, UNREADABLE = 0, 42, 43
 def source_digest(scene: Path = HERE) -> str:
     """The generator's inputs: every module beside this one except this one, so editing the check reseeds nothing."""
     h = hashlib.sha256()
-    for path in sorted(scene.glob("*.py")):
+    for path in sorted(scene.rglob("*.py")):
         if path.name != Path(__file__).name:
-            h.update(path.name.encode() + b"\0" + path.read_bytes() + b"\0")
+            h.update(path.relative_to(scene).as_posix().encode() + b"\0" + path.read_bytes() + b"\0")
     return h.hexdigest()[:16]
 
 

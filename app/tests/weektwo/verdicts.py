@@ -17,8 +17,9 @@ from tests.daythree.chapter import Later
 from tests.daytwo import abs_band
 from tests.daytwo.checks import returns
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import checks, daily
-from tests.dayone.parity import Measured, Present, replay_pair
+from tests.dayone.checks import checks
+from tests.dayone.absence import daily
+from tests.dayone.pacing.parity import Measured, Present, replay_pair
 from tests.weekone import verdicts as v1
 from tests.weektwo import content as w2
 from tests.weektwo import counters, ends

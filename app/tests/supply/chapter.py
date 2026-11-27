@@ -11,7 +11,7 @@ from ashfall_app.engine import (
     PacingCurve, Rules, SideDef, SideId, SkillDef, SkillId, StandingDef, StoreDef, StoreId, StoreValue, ThreatDef, ThreatId,
     TriggerDef, TriggerId, Unlock, UnlockKind, WhileRunning, per_hour,
 )
-from tests.dayone.sinks import Chapter, Trip
+from tests.dayone.player.sinks import Chapter, Trip
 
 HOUR = 3600
 BIG = 10**9 * Q

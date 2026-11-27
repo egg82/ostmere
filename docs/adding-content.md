@@ -17,7 +17,7 @@ check them.
    - A card carries `site`: the scene layer its work is done at, or `no_site` and why (gated, none held, so a card without one fails at once:
      `app/tests/test_scene_sites.py`). A card and its `twin_of` name the same one.
    - A person's lane carries `by_day`: the card of theirs or their crew's whose site they stand at while idle by day,
-     or `at_fire` or `off_scene` and why (gated: `app/tests/test_scene_day.py`; a lane with none fails). A card named there needs a layer `site`, and the scene's table (`tools/scene/people_day.py`) names the same
+     or `at_fire` or `off_scene` and why (gated: `app/tests/test_scene_day.py`; a lane with none fails). A card named there needs a layer `site`, and the scene's table (`tools/scene/cast/people_day.py`) names the same
      layer.
    - **Not gated:** when you remove or rename a card, store or group id, grep `tools/scene/` (poses, layers,
      conditions), lessons, journal subjects and aims for it. A folded crew's card stayed in a pose condition once.

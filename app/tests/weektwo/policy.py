@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from ashfall_app.engine import (
     BP, CardId, CardShare, Mix, Rules, Save, SaveMix, Unlock, UnlockKind, View,
 )
-from tests.dayone.policy import Move
+from tests.dayone.player.policy import Move
 
 
 @dataclass(frozen=True)

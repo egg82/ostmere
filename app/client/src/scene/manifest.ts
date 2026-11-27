@@ -34,7 +34,7 @@ export interface SceneGrade {
 }
 
 /** How much of the art shows, from its top-left corner: the first is the default and a later one whose `when` holds
- * replaces it, so the frame only grows (tools/scene/views.py). */
+ * replaces it, so the frame only grows (tools/scene/frame/views.py). */
 export interface SceneView {
   id: string;
   size: [number, number];
@@ -95,7 +95,7 @@ export function gradeStep(to: SceneGrade | null, dt: number, reduced = false): n
   return fadeStep(dt, to?.ease_s ?? GRADE_S, reduced);
 }
 
-/** The grade shown: the first, unless a later one's `when` holds, and the last of those wins (tools/scene/grades.py,
+/** The grade shown: the first, unless a later one's `when` holds, and the last of those wins (tools/scene/frame/grades.py,
  * pick): the end's dusk stays on its own record (ended_at), so the night and then the day are later grades. */
 export function pickGrade(grades: Record<string, SceneGrade>, holds: (when: string) => boolean): [string, SceneGrade] | undefined {
   const entries = Object.entries(grades);

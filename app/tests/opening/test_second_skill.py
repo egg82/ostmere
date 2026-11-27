@@ -1,7 +1,7 @@
 """A second magic skill opening on its first card (week-three-plan item 10), on fixtures/secondskill.toml merged after the
 shipped chapters with a level marker and its paying trigger per level added here. The skill arrives with a trigger's outcome
 and its first card is a hands card that cures a chip; the per-skill checks (tests/opening/test_level_pays.py,
-tests/dayone/growth.py) read the new row without any change to them, and two order cards on one chip load."""
+tests/dayone/pacing/growth.py) read the new row without any change to them, and two order cards on one chip load."""
 import tempfile
 from pathlib import Path
 
@@ -9,7 +9,7 @@ import pytest
 
 from ashfall_app.engine import Rules, UnlockKind
 from ashfall_app.opening.schema import Opening, merge_chapters, to_rules
-from tests.dayone.growth import runaway
+from tests.dayone.pacing.growth import runaway
 from tests.opening.blank_levels import blank_lines, mixed_skills, top_level, unmarked_levels
 from tests.opening.test_level_pays import unpaid_markers
 

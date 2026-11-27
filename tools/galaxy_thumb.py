@@ -25,9 +25,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools" / "scene"))  # not a package; its modules import each other by bare name
 
 import build
-import grades
-import kit
-from place import FIRE, H, W
+from frame import grades
+from draw import kit
+from draw.place import FIRE, H, W
 
 ASSETS = Path(os.environ.get("ASHFALL_ASSETS", "~/.local/share/ostmere/assets")).expanduser()
 OUT = ASSETS / "research" / "galaxy-thumb"

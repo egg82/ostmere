@@ -100,7 +100,7 @@ REJECTED, AND WHY (full output)
 - A new RunKind for a full pause: the page and the yield treat it as every paused card; a new kind is wire, client and
   contract for one word. The store a Pause names says which.
 - Pausing taps too (a full pause as a blocker, AtMost on its store): the card face words each need of a tappable card
-  and has no words for "no room", so the card would show every need met and not move (tests/dayone/sinkchecks.py's
+  and has no words for "no room", so the card would show every need met and not move (tests/dayone/checks/sinkchecks.py's
   invariant); whether a card overflows also reads the rates (a consumer may keep up), and a tap's preconditions read
   values only.
 

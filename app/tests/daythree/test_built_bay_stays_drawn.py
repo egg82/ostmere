@@ -10,8 +10,8 @@ from ashfall_app.engine.work import completions
 from tests.daytwo.player import DayTwoPlayer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools" / "scene"))
-import daythree_layers as d3   # tools/scene, on the path from the line above
-from stages import State, holds
+from day_three import daythree_layers as d3   # tools/scene, on the path from the line above
+from frame.stages import State, holds
 
 pytestmark = pytest.mark.playthrough
 

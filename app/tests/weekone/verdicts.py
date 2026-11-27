@@ -12,8 +12,8 @@ from tests.daythree import counters, plumbing, visits
 from tests.daythree.chapter import Later
 from tests.daytwo import abs_band
 from tests.daytwo.player import QUEUEABLE, DayTwoPlayer, visit_seen
-from tests.dayone import capcheck, daily
-from tests.dayone.parity import Measured, Present, babysat, replay
+from tests.dayone.absence import capcheck, daily
+from tests.dayone.pacing.parity import Measured, Present, babysat, replay
 from tests.weekone import content as w1
 from tests.weekone.routes import week1
 

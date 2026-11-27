@@ -10,10 +10,10 @@ from PIL import Image
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import dayone_world as world   # tools/scene, on the path from the line above
-from daythree_poses import ON_TRACK
-from daythree_world import CAIRNS
-from parts import FALLEN
+from day_one import dayone_world as world   # tools/scene, on the path from the line above
+from day_three.daythree_poses import ON_TRACK
+from day_three.daythree_world import CAIRNS
+from draw.parts import FALLEN
 
 Box = tuple[float, float, float, float]
 
@@ -80,7 +80,7 @@ def test_the_check_sees_an_overlap_when_there_is_one():
 
 def test_the_hunt_shows_the_figure_where_laying_track_does(monkeypatch: pytest.MonkeyPatch):
     """The hunt's figure is the away figure out on the track, spear in hand, not one standing at the gap's mouth."""
-    import dayfour_poses as poses
+    from day_four import dayfour_poses as poses
     spear, away = Image.new("RGBA", (2, 9)), Image.new("RGBA", (3, 3))
     seen: list[Image.Image | None] = []
 

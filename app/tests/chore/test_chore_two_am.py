@@ -11,8 +11,8 @@ from tests.chore.chapter import HELPER_WASH, HOUR, SHOWS_AT, WASH, WHEN, rules
 from tests.chore.play import Played, play
 from tests.daythree import moves
 from tests.daythree.chapter import Later
-from tests.dayone.policy import Move
-from tests.dayone.parity import Measured, Present, babysat, compare, replay
+from tests.dayone.player.policy import Move
+from tests.dayone.pacing.parity import Measured, Present, babysat, compare, replay
 from tests.daytwo.routes import ROUTES
 
 VISITS = ((10 * HOUR, 14 * HOUR), (34 * HOUR, 38 * HOUR))
