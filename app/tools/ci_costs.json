@@ -68,7 +68,8 @@
   "twentytwo": 298,
   "twentythree": 369,
   "twentyfive": 462,
-  "twentyseven": 578
+  "twentyseven": 578,
+  "twentynine": 116
  },
  "readings": {
   "eight": {
@@ -327,8 +328,9 @@
    "ends:typical:twentynine",
    "ends:sharp:twentynine",
    "ends:whenever:twentynine",
-   "readings:thirty"
+   "readings:thirty",
+   "rebased:twentynine"
   ],
-  "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block. Day twenty-nine's rows, written with it the same way: day twenty-seven's ends copy day twenty-five's (typical's is day twenty-seven's readings setup), its rebased save is day twenty-five's plus a quarter, and day twenty-nine's readings row copies day twenty-seven's. Day thirty's rows, written with it the same way: day twenty-nine's ends copy day twenty-seven's, and day thirty's readings row copies day twenty-nine's."
+  "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block. Day twenty-nine's rows, written with it the same way: day twenty-seven's ends copy day twenty-five's (typical's is day twenty-seven's readings setup), its rebased save is day twenty-five's plus a quarter, and day twenty-nine's readings row copies day twenty-seven's. Day thirty's rows, written with it the same way: day twenty-nine's ends copy day twenty-seven's, and day thirty's readings row copies day twenty-nine's. Day twenty-nine's rebased save replays from day twenty-seven's end (a checkpoint), so it is one chapter's increment of the from-start rows: day twenty-seven's less day twenty-five's."
  }
 }

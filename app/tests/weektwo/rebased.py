@@ -34,7 +34,7 @@ from tests.weekone import verdicts as v1
 from tests.weektwo import ends, keys
 from tests.weektwo.routes import played
 from tests.weektwo.verdicts import (
-    EIGHT, EIGHTEEN, ELEVEN, FIFTEEN, NINE, NINETEEN, SIXTEEN, TWELVE, TWENTYFIVE, TWENTYSEVEN, TWENTYTHREE, TWENTYTWO,
+    EIGHT, EIGHTEEN, ELEVEN, FIFTEEN, NINE, NINETEEN, SIXTEEN, TWELVE, TWENTYFIVE, TWENTYNINE, TWENTYSEVEN, TWENTYTHREE, TWENTYTWO,
 )
 
 PLAYED_ON_S = 24 * 3600
@@ -232,15 +232,27 @@ def twentyseven_end(p: DayTwoPlayer) -> int:
     return v1.exit_save(p, TWENTYSEVEN).time
 
 
+@cache
+def rules29() -> Rules:
+    """The rules through day twenty-nine: the shipped chapters without day thirty, day twenty-nine the last of them."""
+    return build_rules(load_opening(OPENING, tuple(c for c in CHAPTERS if c != DAY_THIRTY)))
+
+
+def twentynine_end(p: DayTwoPlayer) -> int:
+    """The end of the visit B22 is seen in."""
+    return v1.exit_save(p, TWENTYNINE).time
+
+
 ENDS: dict[str, Callable[[DayTwoPlayer], int]] = {"eight": eight_end, "nine": nine_end, "eleven": eleven_end,
                                                   "twelve": twelve_end, "fifteen": fifteen_end, "sixteen": sixteen_end,
                                                   "eighteen": eighteen_end, "nineteen": nineteen_end,
                                                   "twentytwo": twentytwo_end, "twentythree": twentythree_end,
-                                                  "twentyfive": twentyfive_end, "twentyseven": twentyseven_end}
+                                                  "twentyfive": twentyfive_end, "twentyseven": twentyseven_end,
+                                                  "twentynine": twentynine_end}
 OLD: dict[str, Callable[[], Rules]] = {"eight": rules8, "nine": rules9, "eleven": rules11, "twelve": rules12,
                                        "fifteen": rules15, "sixteen": rules16, "eighteen": rules18,
                                        "nineteen": rules19, "twentytwo": rules22, "twentythree": rules23,
-                                       "twentyfive": rules25, "twentyseven": rules27}
+                                       "twentyfive": rules25, "twentyseven": rules27, "twentynine": rules29}
 """Each saved chapter's end and the rules its save is written under: the shipped chapters without the ones after it."""
 _order = [c for c in keys.ORDER if c in OLD]
 CHECKPOINT: dict[str, str | None] = dict(zip(_order, [None, *_order]))
