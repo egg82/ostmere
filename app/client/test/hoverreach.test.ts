@@ -1,4 +1,4 @@
-// A control whose only sign of life is a hover look is reachable by tap and by keyboard (docs/research/a11y-audit.md, §4):
+// A control whose only sign of life is a hover look is reachable by tap and by keyboard (docs/research/design/a11y-audit.md, §4):
 // the panel foot's words read as buttons at rest, and every control whose focus look was a colour alone or nothing gets
 // the ring the other controls use. The look is CSS, so this reads the rules.
 import { readGameCss } from "./gamecss";

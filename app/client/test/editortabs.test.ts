@@ -2,8 +2,8 @@
 // live (a phone's bottom bar), so a tap on another tab leaves it closed (a person's page from Camp, the mix's from Tasks).
 import { FakeEl, fakeDocument, install } from "./fake-dom";
 import { townStep } from "../fixtures/town";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { fixtureContent } from "../fixtures/content";
 import { PHONE } from "../src/ui/layout";
 import { Screen } from "../src/ui/screen";

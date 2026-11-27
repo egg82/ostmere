@@ -1,0 +1,15 @@
+name: Readout differs
+description: >-
+  List the readouts that differ from their committed text in the job log and summary. Fails the job except on a pull
+  request, where the readouts are read from the uploaded artifact and the nightly commits them (app/tools/nightly_verdict.py
+  `report`). Put it after `readout-verdict`, with `if: always()`.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        EVENT: ${{ github.event_name }}
+        RUN_ID: ${{ github.run_id }}
+      run: >
+        python3 app/tools/nightly_verdict.py report --event "$EVENT" --run "$RUN_ID"
+        --readouts "$GITHUB_WORKSPACE/readouts-new" --summary "$GITHUB_STEP_SUMMARY"

@@ -1,10 +1,10 @@
-"""View.goals for a story beat waiting on a store a standing action moves (api/goals.py; contract/goals.txt, "Goals"): the
+"""View.goals for a story beat waiting on a store a standing action moves (api/goals/goals.py; contract/goals.txt, "Goals"): the
 clock carries the store and its amount when the content states it (GoalDef.count), and nothing else when it does not."""
 from dataclasses import replace
 
 from ashfall_app import engine as e
-from ashfall_app.api import goal_models as g
-from ashfall_app.api.goals import goals
+from ashfall_app.api.goals import goal_models as g
+from ashfall_app.api.goals.goals import goals
 from ashfall_app.opening.goals import GoalDef
 from tests.engine.held_impl_world import Q, X, world
 

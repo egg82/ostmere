@@ -70,7 +70,7 @@ Decided = dict[tuple[str, int], bool]
 def parts(chapter: str) -> tuple[int, ...]:
     """The parts a chapter's counting is split into, each the next PART_STEPS heavy steps (counters.heavy) in order, so
     each part is its own test's setup and none passes the per-test timeout on a slow node: as many as its saved readings
-    (ends.READINGS) hold, read at collection from files the run already has, never by playing. With none saved, the one
+    (ends.saved_readings) hold, read at collection from files the run already has, never by playing. With none saved, the one
     part ALL. A chapter with more heavy steps than its saved readings fails `decided_in`."""
     n = len(ends.saved_readings(chapter))
     return tuple(range(-(-n // PART_STEPS))) if n else (ALL,)
@@ -89,7 +89,7 @@ def heavy_steps(p: DayTwoPlayer, chapter: Later) -> list[tuple[str, int]]:
 @cache
 def decided_in(chapter: str, part: int) -> Decided:
     """Whether each of the part's heavy steps decides, kept once read: every step for ALL. Read from the saved readings
-    (ends.READINGS) where the saves are present; a step with none fails under ends.REQUIRE and is read here otherwise."""
+    (ends.saved_readings) where the saves are present; a step with none fails under ends.REQUIRE and is read here otherwise."""
     p, later = PLAYS[chapter]("typical"), CHAPTERS[chapter]
     heavy = heavy_steps(p, later)
     held = len(parts(chapter)) * PART_STEPS

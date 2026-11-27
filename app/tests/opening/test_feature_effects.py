@@ -2,7 +2,7 @@
 of the answer whose outcome unlocks it, never from text typed per bonus."""
 import pytest
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.opening.schema import Opening
 from tests.shipped_ruleset import ShippedRuleset
 

@@ -6,8 +6,8 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import type { Decision } from "../src/api/types";
-import { LaneRows } from "../src/ui/lanerows";
-import { RulesTab } from "../src/ui/rules";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

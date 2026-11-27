@@ -2,8 +2,8 @@
 // kind's shuffle bag, walked over every place of the kind, so it is stable as places are revealed and repeats only once
 // the pool is used; on every fixed sheet no two stamps cross, every stamp lies inside the sheet, and no label crosses a
 // stamp, another label or the edge, a label with no clear spot being left off.
-import { crosses, frameOf, placeLabels, stampBoxes, type Box } from "../src/game/maplayout";
-import { HOME, stampPicks, type Place, type StampManifest } from "../src/game/mapsheet";
+import { crosses, frameOf, placeLabels, stampBoxes, type Box } from "../src/game/book/maplayout";
+import { HOME, stampPicks, type Place, type StampManifest } from "../src/game/book/mapsheet";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

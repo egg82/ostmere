@@ -1,11 +1,11 @@
-// A reordered rule slides to its new place (ui/ruleslide.ts): the rows that change place start at their old tops and are
+// A reordered rule slides to its new place (ui/rules/ruleslide.ts): the rows that change place start at their old tops and are
 // released onto the .slide transition (--settle-ms, --settle-ease in game.css); a reduced-motion move only lands.
 import { fakeDocument, FakeEl, FakeEvent, install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
-import { shiftOf } from "../src/ui/ruleslide";
+import { RulesTab } from "../src/ui/rules/rules";
+import { shiftOf } from "../src/ui/rules/ruleslide";
 
 install();
 

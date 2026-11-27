@@ -13,7 +13,7 @@ from ashfall_app.saves.ruleset import ruleset
 from ashfall_app.saves.service import PgSaves
 from ashfall_app.services import Services
 from tests.game_client import GameClient
-from tests.saves.chunks import every, golden, never, todays_rules
+from tests.saves.catching_up.chunks import every, golden, never, todays_rules
 
 HOURS_6 = 6 * 3600
 

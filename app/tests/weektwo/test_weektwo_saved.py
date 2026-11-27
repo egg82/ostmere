@@ -18,10 +18,10 @@ CHECKED = [(chapter, name) for chapter, names in SAVED.items() if chapter != "we
 
 
 def wanted(chapter: str) -> set[Path]:
-    """Every file `chapter`'s directory holds."""
+    """Every file `chapter`'s directory holds: one reading to a file, numbered from its first heavy step with no gap."""
     found = {ends.player_path(chapter, n) for n in SAVED.get(chapter, ())} | {ends.manifest(chapter)}
     found |= {ends.rebased_path(c) for c in rebased.OLD if c == chapter}
-    found |= {ends.readings_path(c, first) for spans in ends.READINGS.values() for c, first, _ in spans if c == chapter}
+    found |= {ends.readings_path(chapter, i) for i in range(len(ends.saved_readings(chapter)))}
     return found
 
 
@@ -38,7 +38,7 @@ def test_every_saved_file_is_written_by_a_part():
     in_parts = [c for chapters in chapter_saves.REBASED.values() for c in chapters]
     assert sorted(in_parts) == sorted(rebased.OLD), "each rebased save in exactly one part"
     assert {n for names in SAVED.values() for n in names} <= chapter_saves.ROUTES | chapter_saves.LINKED
-    assert set(ends.READINGS) <= chapter_saves.ALL and set(chapter_saves.REBASED) <= chapter_saves.ALL
+    assert set(chapter_saves.READINGS) <= chapter_saves.ALL and set(chapter_saves.REBASED) <= chapter_saves.ALL
     assert {c for c in rebased.OLD} <= {c for c, names in SAVED.items() if "typical" in names}, \
         "a rebased part reads typical's saved end at its chapter"
 
@@ -48,17 +48,15 @@ def test_a_linked_routes_links_write_each_of_its_saved_ends_once_in_order():
     written by the last link; each link after the first reads the end the link before wrote last."""
     assert chapter_saves.LINKED and not chapter_saves.LINKED & chapter_saves.ROUTES
     for route in chapter_saves.LINKED:
-        links = [n for n, (r, _, _) in chapter_saves.LINKS.items() if r == route]
-        written = [c for n in links for c in chapter_saves.link_chapters(n)]
+        links = [link for link in chapter_saves.LINKS.values() if link.route == route]
+        written = [c for link in links for c in chapter_saves.link_chapters(link.part)]
         assert written == [c for c, names in SAVED.items() if route in names], route
-        assert chapter_saves.LINKS[links[-1]][2] is None, route
-        for before, after in zip(links, links[1:]):
-            assert chapter_saves.LINKS[before][2] == chapter_saves.LINKS[after][1], (before, after)
+        assert [link.after for link in links] == ["", *(link.part for link in links[:-1])], route
 
 
 def test_each_chapters_readings_run_from_its_first_heavy_step_with_no_gap_and_the_last_open():
     spans: dict[str, list[tuple[int, int | None]]] = {}
-    for part in ends.READINGS.values():
+    for part in chapter_saves.READINGS.values():
         for chapter, first, after in part:
             spans.setdefault(chapter, []).append((first, after))
     assert set(spans) == set(CHAPTERS)

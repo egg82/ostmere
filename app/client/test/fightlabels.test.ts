@@ -2,7 +2,7 @@
 // engine design/fights.txt, "FIGHTS"): the same on every call, and exactly the served lost count. The checker runs on the real
 // labeller and on two planted ones, which it must reject: a draw that rolls fresh each call, and one that ignores the count.
 import { readFileSync } from "node:fs";
-import { bagged, entries, labels, oddsOf, poolLine, windows, type Window } from "../src/game/fights";
+import { bagged, entries, labels, oddsOf, poolLine, windows, type Window } from "../src/game/ledger/fights";
 import { fightsStep } from "../fixtures/fights";
 
 function expect(label: string, got: unknown, want: unknown): void {

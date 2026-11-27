@@ -5,8 +5,8 @@ import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { goalLabel } from "../src/ui/goaltimes";
-import { Hands } from "../src/ui/hands";
+import { goalLabel } from "../src/ui/mixes/goaltimes";
+import { Hands } from "../src/ui/hands/hands";
 
 install();
 

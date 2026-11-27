@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { LogLine, View } from "../src/api/types";
-import { ArrivalQueue } from "../src/game/arrivals";
-import { awayLines } from "../src/game/awaylines";
-import { Catalog } from "../src/game/catalog";
+import { ArrivalQueue } from "../src/game/story/arrivals";
+import { awayLines } from "../src/game/book/awaylines";
+import { Catalog } from "../src/game/page/catalog";
 
 interface CardCase { card: string; cap: number | null }
 interface AwayCase {

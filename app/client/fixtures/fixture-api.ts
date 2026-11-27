@@ -1,7 +1,7 @@
 // FIXTURE, never shipped: a GameApi that answers from fixtures/steps.ts, moving between phases on the decisions the
 // page sends, and logging each request so a screenshot run can see what the page asked for. Game time is the wall
 // seconds since Begin, as the server's is.
-import { FIRST_MIX, FIRST_RULE, JOURNAL } from "../src/game/lessons";
+import { FIRST_MIX, FIRST_RULE, JOURNAL } from "../src/game/lessons/lessons";
 import { FIXTURE_CODE, fixtureDevices } from "./devices";
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { AccountPresentation, AccountSettings, Decision, GoalRow, Mix, SaveInfo, SavePresentation, Step } from "../src/api/types";

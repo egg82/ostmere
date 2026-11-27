@@ -1,5 +1,5 @@
 // A rule's guards and fallbacks on the page (docs/design/rule-guards.md, "How the page words it", statements 25 and
-// 26; game/guardwords.ts): the rule reads as one sentence ("…, unless {guard}, and unless {guard}"; "{first}, or else
+// 26; game/condition/guardwords.ts): the rule reads as one sentence ("…, unless {guard}, and unless {guard}"; "{first}, or else
 // {next}"), each guard worded as a state; a paused rule's line names where its held guards let go, from
 // order_guards[i][j].lets_go, and the store's amount now; a rule with fallbacks says which one it runs, or that none can
 // start, and is passed over only when every one is dead.
@@ -7,8 +7,8 @@ import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { BP, Q, TIRED } from "../fixtures/content";
 import type { Condition, LedgerLine, Order, OrderGuard, OrderState, View } from "../src/api/types";
-import { guardWords, ruleActions, ruleCondition } from "../src/game/guardwords";
-import { RulesTab } from "../src/ui/rules";
+import { guardWords, ruleActions, ruleCondition } from "../src/game/condition/guardwords";
+import { RulesTab } from "../src/ui/rules/rules";
 import { testContext } from "./context";
 
 install();

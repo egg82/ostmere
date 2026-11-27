@@ -1,6 +1,6 @@
 ## One thing at a time
 
-A live step's story lines come first, each alone: the arrival queue (`app/client/src/game/arrivals.ts`) shows a line (strip and card
+A live step's story lines come first, each alone: the arrival queue (`app/client/src/game/story/arrivals.ts`) shows a line (strip and card
 together), then holds the next turn for the line's reading time, and only then the card, chip, skill row or ledger
 line that came with it (at the usual 400–700 ms pace). A ledger line is read before the cards: the ledger's new lines
 keep the pace among themselves, then hold the next kind (skills, cards) for the longest one's reading time, its rule

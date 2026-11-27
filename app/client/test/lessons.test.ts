@@ -1,4 +1,4 @@
-// Lessons (game/lessons.ts as data, ui/lessons.ts the runner), from the interface: a lesson starts when its trigger is
+// Lessons (game/lessons/lessons.ts as data, ui/lessons/lessons.ts the runner), from the interface: a lesson starts when its trigger is
 // on show and it may; each step's control takes the one glow with its line beside it; a tap on that control, or a read
 // step's reading time, moves on; a step whose control is not on show waits; never more than one step ahead; Skip ends
 // it at any step; done or skipped, it is kept in the save and never comes back, and its offer is one tap again.
@@ -6,10 +6,10 @@ import { fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { CLOCK, FIRST_MIX, FIRST_RULE, guided } from "../src/game/lessons";
-import { Glow } from "../src/ui/fresh";
-import { Lessons } from "../src/ui/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { CLOCK, FIRST_MIX, FIRST_RULE, guided } from "../src/game/lessons/lessons";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 install();

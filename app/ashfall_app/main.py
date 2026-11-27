@@ -27,9 +27,9 @@ from .feedback.routes import routes as feedback_routes
 from .feedback.service import PgFeedback
 from .old_host import OldHostRedirect
 from .opening.schema import load_opening
-from .saves.check import check
+from .saves.builds.check import check
 from .saves.interface import MAX_SAVES, Ruleset
-from .saves.manifest import registered
+from .saves.builds.manifest import registered
 from .saves.ruleset import build_release, ruleset
 from .saves.service import PgSaves
 from .services import Services

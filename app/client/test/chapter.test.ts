@@ -1,18 +1,18 @@
-// A return's figures (game/chapter.ts) and their words (game/chronwords.ts, chapterRows): what the return found
+// A return's figures (game/book/chapter.ts) and their words (game/book/chronwords.ts, chapterRows): what the return found
 // against what the player left, kept with the visit in one write and joined by the later return; and the session takes
 // them as a return lands.
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { GameApi } from "../src/api/api";
 import type { Chapter, LedgerLine, NewSave, RuleRun, SavePresentation, Step, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { chapterOf } from "../src/game/chapter";
-import { chapterRows } from "../src/game/chronwords";
-import { Keeps, NEW_SAVE } from "../src/game/keeps";
-import { mergeSavePresentation, sendableSave } from "../src/game/presentation";
-import { ruleText } from "../src/game/rulerows";
-import { Session } from "../src/game/session";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { chapterOf } from "../src/game/book/chapter";
+import { chapterRows } from "../src/game/book/chronwords";
+import { Keeps, NEW_SAVE } from "../src/game/account/keeps";
+import { mergeSavePresentation, sendableSave } from "../src/game/account/presentation";
+import { ruleText } from "../src/game/rules/rulerows";
+import { Session } from "../src/game/page/session";
+import { UI } from "../src/game/page/text";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

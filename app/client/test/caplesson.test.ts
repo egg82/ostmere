@@ -1,4 +1,4 @@
-// The cap rule's lesson (game/lessons.ts, CAP_RULE; docs/design/opening-screen/hands-strip.md, "Hint: the first full store"), on the
+// The cap rule's lesson (game/lessons/lessons.ts, CAP_RULE; docs/design/opening-screen/hands-strip.md, "Hint: the first full store"), on the
 // whole screen: a new save has no cap rule, so the first full store the hands fill carries the quiet dot and the lesson
 // starts from it, once writing rules is open (a rule of this save seen on and off). It walks the Rules tab's own New rule with nothing filled in, and the rule
 // the player adds is theirs: a "reaches" rule on that store doing the task they picked. Before writing rules is open,
@@ -7,9 +7,9 @@ import { install } from "./fake-dom";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { CAP_RULE, FIRST_MIX, FIRST_RULE } from "../src/game/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { CAP_RULE, FIRST_MIX, FIRST_RULE } from "../src/game/lessons/lessons";
 import { Screen } from "../src/ui/screen";
 import { keepsOf, NEW_FLAT } from "./kept";
 
