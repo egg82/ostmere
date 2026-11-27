@@ -117,7 +117,7 @@ is why something still works, that is a fact of the world with its own rules, ne
 
 **Creatures follow from biology**: how a thing lives, reproduces, evolved or was made, what it eats and what
 eats it, and its anatomy follows from those answers, the same honesty as the sunless world. Principles in
-`docs/research/creature-design.md`; the creatures themselves are in `content/`.
+`docs/research/art/creature-design.md`; the creatures themselves are in `content/`.
 
 **Magic has rules; the eldritch is never fully explained** (cosmic horror rarely is). Magic is the science you
 rediscover and can master; what lies past it (the wrongness, anything god-sized) stays partly unknowable on purpose.

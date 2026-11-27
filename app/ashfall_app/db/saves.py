@@ -1,6 +1,6 @@
 """Saves and what hangs off them (lines, the decision log, day snapshots): the rows, as typed records, read and written
 in the caller's transaction. The save's truth is `state`, the engine's canonical text, which a record always holds
-whole (a stripped column is read with its digest's manifest: db/manifests.py); the other columns describe it for
+whole (a stripped column is read with its digest's manifest: db/stored/manifests.py); the other columns describe it for
 queries. What is written when, and what is pruned, is saves/; this module only reads and writes."""
 
 from collections.abc import Iterator, Sequence
@@ -40,7 +40,7 @@ class SaveRecord:
     presentation: Any = None
     """What the page keeps about the save's teaching (api/contract/endpoints.txt, SavePresentation), as JSONB reads back."""
     ahead_at: int | None = None
-    """How far the advance kept ahead of the save reached (db/ahead.py), whatever row it began from; None for none."""
+    """How far the advance kept ahead of the save reached (db/stored/ahead.py), whatever row it began from; None for none."""
 
 
 @dataclass(frozen=True)

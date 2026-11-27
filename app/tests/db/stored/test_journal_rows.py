@@ -1,4 +1,4 @@
-"""The journal's rows (db/journal.py, db/step.py): a step's statement stores its days beside its lines, a day still being
+"""The journal's rows (db/stored/journal.py, db/stored/step.py): a step's statement stores its days beside its lines, a day still being
 written is appended to and never rewritten, a closed day is left as stored, the save's locking
 statement reads every stored day and the lines asked; it says when its snapshot is older than the row it locked; and
 deleting a save for good takes its days with it."""

@@ -97,7 +97,7 @@ def camp_level(save: e.Save, rs: Ruleset) -> int:
 
 def persist(conn: Connection, row: rows.SaveRecord, seen: Seen | None, step: Step, rs: Ruleset,
             now: datetime) -> Persisted:
-    """`seen`: what the save's locking statement read of its journal (db/journal.py `locked`), None for rules with
+    """`seen`: what the save's locking statement read of its journal (db/stored/journal.py `locked`), None for rules with
     none."""
     save_id, decisions = row.id, row.decisions + (step.verb is not None)
     before = runs_from_json(row.rule_runs) if step.runs_from is None else step.runs_from

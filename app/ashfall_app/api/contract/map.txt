@@ -34,7 +34,7 @@ MAP
 
   The stamps: /assets/art/map/manifest.json, {stamp: [{src, w, h}]}, each image ink on transparent at
   /assets/art/map/<src>, w by h pixels at the sheet's base scale. Made by
-  tools/mapstamps.py from the Widman 2.1 PNG pack (docs/research/art-sourcing.md, CC0, outside the repo) and seeded
+  tools/mapstamps.py from the Widman 2.1 PNG pack (docs/research/art/art-sourcing.md, CC0, outside the repo) and seeded
   with the art kind (engineering.md, bulk assets); never in git or the image.
 
   THE CLIENT MAY:

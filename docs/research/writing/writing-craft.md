@@ -1,7 +1,7 @@
 # Writing craft: rules for the game's player-facing text, by voice
 
 What a writer (human or model) and a human editor check when writing or revising any line a player reads. It answers
-galaxy.click's complaint (`galaxy-review.md`): samey vocabulary, florid text that obscures meaning, and notation like
+galaxy.click's complaint (`design/galaxy-review.md`): samey vocabulary, florid text that obscures meaning, and notation like
 "Camp level 2 → the wall takes more 5 → 7". Runtime generation (facts per call, pools, which model) is
 `llm-writing.md`; this doc does not repeat it. The general method grew into a cross-project `writing-craft` skill,
 with measured tells, the knowing-narrator and appended-beat findings, and blind

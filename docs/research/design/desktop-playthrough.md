@@ -52,7 +52,7 @@ too (not run here). The phone pass predates this lesson (2026-10-22).
 On the first screen the art is centred in the left column with black bands above and below. The aim sits in the top
 left corner, 16px italic, and the first card is at the top right. The story strip is the left column's foot: the first
 line lands at y≈847, about 950px left of the card and 650px below it. While tapping, the eyes stay on the card, and the
-tap's own line on the card is the only text read near it (`docs/research/story-to-the-eyes.md`, finding 1). Lines
+tap's own line on the card is the only text read near it (`docs/research/design/story-to-the-eyes.md`, finding 1). Lines
 written by time or by the mix land only in the strip, which is out of the way for these first minutes. At 3:25 the
 skills band arrives, the art shrinks from 916px to 620px wide, and the strip jumps up to y≈467 (`d03`), so it moves
 once, a long way. The strip-under-the-art layout landed today (30baf2f), so this is its first desktop look.

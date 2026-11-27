@@ -1,7 +1,7 @@
 """The journal's days composed in a step's transaction (docs/design/journal.md, "Written as the day goes"): the day still
 being written and each day the step begins are composed from the stored days and the save's lines up to the step's
 save time, so a page is the same however the steps fell, and only what the stored row lacks is added to it. A save with
-no days stored composes every day it has begun. The step's statement stores them (db/step.py)."""
+no days stored composes every day it has begun. The step's statement stores them (db/stored/step.py)."""
 import logging
 from bisect import bisect_right
 from collections.abc import Sequence
@@ -32,7 +32,7 @@ def keys(rs: Ruleset) -> list[str]:
 def composed(conn: Connection, row: SaveRecord, seen: rows.Seen | None, lines: Sequence[e.Line], began: e.Save,
              after: e.Save, rs: Ruleset) -> tuple[tuple[ComposedDay, ...], list[JournalDay]]:
     """The days a step from `began` to `after` (game time `time`) adds notes to, as they now stand, oldest first; and
-    what it stores. `seen` is what the save's locking statement read of its journal (db/journal.py `locked`); `lines`
+    what it stores. `seen` is what the save's locking statement read of its journal (db/stored/journal.py `locked`); `lines`
     are the step's own, not yet stored; the loss runners' tallies at each day's end are read between the two saves. When that read was not fresh (the lock waited on another write), the days and lines are
     read again here under the lock, so a step that waited on another, or runs again after a failover, extends what that
     one stored."""

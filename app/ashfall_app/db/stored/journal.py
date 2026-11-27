@@ -1,6 +1,6 @@
 """The journal's composed days (tables.save_journal) and the lines they are composed from, read in the caller's
 transaction. A step reads them in its save's locking statement (`locked`), so a decision still holds the row over the
-round trips db/test_decision_lock_span.py counts; its days are written by its one statement (db/step.py). What is
+round trips tests/db/stored/test_decision_lock_span.py counts; its days are written by its one statement (db/stored/step.py). What is
 composed when is saves/ (journal_write.py); this module only reads."""
 
 from collections.abc import Sequence

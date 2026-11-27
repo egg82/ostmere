@@ -231,7 +231,7 @@ class PgSaves:
     @contextmanager
     def _locked(self, account_id: int, save_id: int, now: datetime,
                 visited: bool = False, history: int | None = None) -> Generator[tuple[Connection, rows.SaveRecord, Seen | None]]:
-        """The save's row locked, and what its journal holds for a step at `now` (db/journal.py `locked`), read in one
+        """The save's row locked, and what its journal holds for a step at `now` (db/stored/journal.py `locked`), read in one
         statement. `visited`: the player is here at `now`, stamped for reminders in the same statement. `history`: its last
         that many lines too, read in the statement (`seen.history`; None when it could not be, the caller reads them)."""
         visit = reminder_rows.visit(account_id, now) if visited else None

@@ -34,5 +34,5 @@ def writing(save_id: int, now: datetime, w: Written) -> dict[str, Any]:
 
 
 def write(conn: Connection, save_id: int, now: datetime, w: Written) -> Listed:
-    """Writes the save, alone (a step's write is db/step.py). The row as written."""
+    """Writes the save, alone (a step's write is db/stored/step.py). The row as written."""
     return as_listed(conn.execute(_WRITE, writing(save_id, now, w)).one())

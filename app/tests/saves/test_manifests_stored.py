@@ -1,4 +1,4 @@
-"""Manifests stored once per rules digest (db/manifests.py, saves/manifest.py). This build writes every save whole, so
+"""Manifests stored once per rules digest (db/stored/manifests.py, saves/manifest.py). This build writes every save whole, so
 the build before it reads them; it reads a row stripped of its manifest with its digest's, under its own rules and
 across a rebase, golden texts of the oldest format a rebase reads included; a stripped row whose digest has none held
 is unavailable and fails the start check, never decoded wrong."""
