@@ -17,6 +17,10 @@ export const MAX_SCALE = 2.2;
 export const FILL = 0.9;
 /** The most cells a stamp's longer side spans where it crosses no other stamp. */
 export const ROOMY = 1.8;
+/** The share of a cell a stamp drawn over another's takes along its longer side, and how far toward the cell's upper right
+ * it sits, in cells: small, so it reads as a mark on the stamp beneath. */
+export const OVER_SPAN = 0.55;
+export const OVER_LIFT = 0.17;
 
 /** A cell's side in pixels and the pixel centre of cell (0, 0), the town's. */
 export interface Frame { cell: number; x0: number; y0: number }
@@ -31,20 +35,31 @@ export function frameOf(cells: readonly Cell[], w: number, h: number, maxCell: n
   return { cell, x0: w / 2 - ((e0 + e1) / 2) * cell, y0: h / 2 + ((n0 + n1) / 2) * cell };
 }
 
-/** Each stamp's box, by id: at its roomy size where that crosses no other's box, else inside its cell. Shrinking only
- * ever turns a roomy box into its cell's, so this ends, and two cell boxes never cross. */
-export function stampBoxes(stamps: ReadonlyMap<string, { art: StampArt; at: Cell }>, f: Frame): Map<string, Box> {
-  const boxes = new Map([...stamps].map(([id, s]) => [id, stampBox(s.art, s.at, f, ROOMY)]));
+/** A stamp to box: its art, its cell, and, for a stamp drawn on another's, that other's id (the one pair allowed to cross). */
+export interface Stamped { art: StampArt; at: Cell; over?: string | null }
+
+/** Each stamp's box, by id: at its roomy size where that crosses no other's box, else inside its cell; a stamp over another
+ * is always the small box on its cell's upper right and crosses only the one it is over. Shrinking only ever turns a roomy
+ * box into its cell's, so this ends, and two cell boxes never cross. */
+export function stampBoxes(stamps: ReadonlyMap<string, Stamped>, f: Frame): Map<string, Box> {
+  const boxes = new Map([...stamps].map(([id, s]) => [id, s.over ? overBox(s.art, s.at, f) : stampBox(s.art, s.at, f, ROOMY)]));
+  const paired = (a: string, b: string): boolean => stamps.get(a)?.over === b || stamps.get(b)?.over === a;
   for (let changed = true; changed;) {
     changed = false;
     for (const [id, s] of stamps) {
       const box = boxes.get(id)!;
-      if (![...boxes].some(([other, b]) => other !== id && crosses(box, b))) continue;
+      if (s.over || ![...boxes].some(([other, b]) => other !== id && !paired(id, other) && crosses(box, b))) continue;
       const tight = stampBox(s.art, s.at, f, FILL);
       if (tight.w < box.w) { boxes.set(id, tight); changed = true; }
     }
   }
   return boxes;
+}
+
+/** The box of a stamp drawn over another: OVER_SPAN of a cell, lifted toward the cell's upper right. */
+export function overBox(art: StampArt, at: Cell, f: Frame): Box {
+  const b = stampBox(art, at, f, OVER_SPAN);
+  return { ...b, x: b.x + OVER_LIFT * f.cell, y: b.y - OVER_LIFT * f.cell };
 }
 
 /** The box `art` is drawn in at `at`: its base size scaled with the cell (at most MAX_SCALE), its longer side at most

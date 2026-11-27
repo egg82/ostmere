@@ -34,3 +34,7 @@ class PlaceInfo(BaseModel):
     reveal: Unlock
     label_key: str | None
     """The place's name; null for a place drawn unnamed."""
+    labelled_after: Unlock | None
+    """When set, the name is shown only once view.unlocked holds this; null for a name shown as soon as the place is."""
+    over: str | None
+    """The place whose cell this one shares, drawn as a stamp on that place's stamp; null for a place alone on its cell."""

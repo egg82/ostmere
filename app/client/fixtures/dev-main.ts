@@ -83,8 +83,9 @@ const plannedQueue = (v: View): View => (hash.has("planned") && planned !== null
 const founded = (v: View): View => (hash.has("founded") ? { ...v, unlocked: [...v.unlocked, { category: "feature", id: "founded" }] } : v);
 // #storerows: the stores' rows of the running mix, and of an edit's dry run (storerows.ts), for the editor's store section.
 const rows = (v: View, mix = runningMixOf(v)): View => (hash.has("storerows") ? { ...v, store_rows: storeRowsFor(v, mix) } : v);
-// #places[=N]: the map's fixture places, the first N revealed (places.ts)
-const placed = (v: View): View => (hash.has("places") ? placesView(v, hash.get("places") ? Number(hash.get("places")) : undefined) : v);
+// #places[=N]: the map's fixture places, the first N revealed (places.ts); #bridge also holds the feature a place is
+// named after
+const placed = (v: View): View => (hash.has("places") ? placesView(v, hash.get("places") ? Number(hash.get("places")) : undefined, hash.has("bridge") ? ["pl_bridge"] : []) : v);
 // #newjob (with phase town): the helper is offered a new card (a copy of Haul) from the second Step on, for the story's
 // line about it and the quiet dot on Town and the helper's Change (game/town/newjobs.ts).
 const haulInfo = fixtureContent.card_infos.find((c) => c.card === "haul");
