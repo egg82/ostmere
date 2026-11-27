@@ -6,7 +6,9 @@ Standard library only: the workflow runs it without installing anything. Subcomm
   verdict      a readout job's own record (.github/actions/readout-verdict): did every step before the drift step
                succeed, and which readouts changed. Written as JSON under --out.
   report       a readout job's last step (.github/actions/readout-differs): list the readouts that differ in the job log and
-               summary with the pull command; exit 1 unless the event is `pull_request`, where they are read, not gated.
+               summary with the pull command; exit 1 only in the nightly (`schedule`, `workflow_dispatch`), whose red
+               starts the refresh pull request. On a pull request or a push to main they are read, not gated: a push
+               that failed on one would hold the release until the nightly's refresh merged.
   readouts-only  ci-ok's decision from `toJSON(needs)` and the downloaded verdicts: prints `only=true` or `only=false`.
   decide       the nightly's decision from the called workflow's `only` and the other nightly jobs' results: prints
                `refresh=true|false`, and writes the nightly's verdict file when true.
@@ -82,7 +84,7 @@ def report(event: str, run_id: str, readouts: Path, summary: Path | None) -> int
         with summary.open("a") as f:
             f.write("### Readouts that differ from their committed text\n\n" + "".join(f"- `{n}`\n" for n in names)
                     + f"\nPull them with `cd app && python -m tools.readouts_pull {run_id}`.\n")
-    return 0 if event == "pull_request" else 1
+    return 0 if event in ("pull_request", "push") else 1
 
 
 COSTS = "app/tools/ci_costs.json"
