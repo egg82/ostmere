@@ -21,7 +21,7 @@ def test_a_role_that_is_a_lane_id_or_a_slot_the_page_fills_is_refused(tmp_path: 
             casts=f'{{ role = "{role}", patterns = ["{{lane}}_chop"] }}')
 
 
-@pytest.mark.xfail(strict=True, reason="implementation finding: role `hands` (a lane in Content.lane_infos) is accepted")
+@kills(15)
 def test_a_role_named_for_the_hands_lane_is_refused(tmp_path: Path):
     refused(tmp_path, r"casts hands, which names a lane or a slot the page fills elsewhere",
             casts='{ role = "hands", patterns = ["{lane}_chop"] }')
