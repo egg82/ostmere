@@ -11,7 +11,7 @@ curve_items = [60, 100, 160, 250, 385, 590, 900, 1370, 2080, 3150, 4760, 7180, 1
 # The opening's "?" rows pay their finds now; the rest of each row, to the curve's top, is the taper's (below): each
 # level its skill's work a tenth faster. Among the levels day one reaches, at least every third also pays a thing (a
 # find: "the named pays", below), so no row pays speed alone three levels running
-# (tests/dayone/test_dayone_level_pays.py).
+# (tests/dayone/pacing/test_dayone_level_pays.py).
 [[skill_levels]]
 skill = "scavenging"
 levels = [{ level = 4, pays_key = "pays_find" }, { level = 5, pays_key = "pays_find" }, { level = 6, pays_key = "pays_find" }, { level = 7, pays_key = "pays_scav_faster" }, { level = 8, pays_key = "pays_scav_faster" }, { level = 9, pays_key = "pays_roof_beam" }, { level = 10, pays_key = "pays_scav_faster" }, { level = 11, pays_key = "pays_lintel" }, { level = 12, pays_key = "pays_doorway" }, { level = 13, pays_key = "pays_scav_faster" }, { level = 14, pays_key = "pays_cut_stones" }, { level = 15, pays_key = "pays_chimney" }, { level = 16, pays_key = "pays_scav_faster" }, { level = 17, pays_key = "pays_scav_faster" }, { level = 18, pays_key = "pays_scav_faster" }, { level = 19, pays_key = "pays_scav_faster" }, { level = 20, pays_key = "pays_scav_faster" }]
@@ -513,7 +513,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "look_out" }] }
 # XP), to the curve's top for the skills a hands card trains, so the mix always has a next level it drives and the
 # order the rows arrive in is the player's weighting (docs/decisions.md); Cooking, trained on the smoke lane, to 6,
 # then "no more yet". A level's step grows by half again each level (curve_items) while its pay is a tenth: time
-# per level never shrinks (tests/dayone/growth.py). Numbers provisional (tests/dayone, "goals").
+# per level never shrinks (tests/dayone/pacing/growth.py). Numbers provisional (tests/dayone, "goals").
 
 [[triggers]]
 id = "t_wc_4"

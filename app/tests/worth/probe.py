@@ -12,7 +12,7 @@ and a queue of stints score alike."""
 from collections.abc import Sequence
 
 from ashfall_app.engine import BP, Rules
-from tests.dayone.goals import CHOICE_S
+from tests.dayone.pacing.goals import CHOICE_S
 from tests.worth.goaltime import Board, Goal, Shares, rates
 
 

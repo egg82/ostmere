@@ -12,7 +12,7 @@ from itertools import groupby
 from ashfall_app.engine import Rules, advance_logged
 from ashfall_app.opening.phase_pays import longest_speed_only
 from ashfall_app.opening.schema import Opening
-from tests.dayone.growth import climb_hours
+from tests.dayone.pacing.growth import climb_hours
 from tests.opening.afterend import AfterEnd
 from tests.opening.blank_levels import blank_lines
 from tests.opening.playthrough import CRAFTS, News, Player, opening, opening_rules

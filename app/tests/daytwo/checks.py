@@ -1,6 +1,6 @@
 """Day two's counters and checks on one played route (content/team/day-two.md, "Per visit", "Per absence"), each a
 pure function of the player's records. Day two's visits run from the one B3 is seen in (its V1, measured from B3's
-showing) to the one B4 is seen in; the readout prints each with day one's counters (tests/dayone/checks.py), marks
+showing) to the one B4 is seen in; the readout prints each with day one's counters (tests/dayone/checks/checks.py), marks
 the visit at the edge of written content and each return during a long wait the player chose (long_waits), and lists
 what each absence between two of them opens, counted between the saves the play itself passed through (no extra run).
 The one check: a tool user's B4 no later than the babysitter's plus one of its day-two gaps for each step on B4's way
@@ -14,10 +14,10 @@ from ashfall_app.engine import LaneBar, Rules, Save, view
 from ashfall_app.opening.schema import DAY_ONE, load_opening
 from tests.daytwo.content import STORY, rules2
 from tests.daytwo.player import DayTwoPlayer, visit_seen
-from tests.dayone import checks
-from tests.dayone.bands import presence_steps
-from tests.dayone.human import thresholds
-from tests.dayone.player import VisitRecord
+from tests.dayone.checks import checks
+from tests.dayone.checks.bands import presence_steps
+from tests.dayone.human.human import thresholds
+from tests.dayone.player.player import VisitRecord
 
 B4_WAY = "build_shelter"
 """The card the offer's gate waits on: B4's way back runs through it, then the offer and the walk."""

@@ -13,7 +13,7 @@ from tests.daythree import counters, plumbing
 from tests.daytwo import checks as checks2
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured
+from tests.dayone.pacing.parity import Measured
 from tests.saves.catching_up.absence import advanced_counted
 from tests.weekone import fights, verdicts
 from tests.weekone.routes import week1

@@ -10,8 +10,8 @@ from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.routes import plays
 from tests.daytwo.verdicts import CHECKS
-from tests.dayone.human import lands_within, thresholds
-from tests.dayone.repeats import repeated
+from tests.dayone.human.human import lands_within, thresholds
+from tests.dayone.checks.repeats import repeated
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Verdicts = tuple[str, int, dict[str, list[str]]]

@@ -1,4 +1,4 @@
-"""What a day-two player does when it looks at the screen, before day one's moves (tests/dayone/policy.py): answer the
+"""What a day-two player does when it looks at the screen, before day one's moves (tests/dayone/player/policy.py): answer the
 offer (and set the kind's rule once one of its offers is answered), the one-off steps (A15, A16, the builds in the knob's order, When ready on an
 unready build), her task changed to what the next build is short of, her first rule when its line goes red. Each is
 one decision of a kind, as day one's: "tap" or "decision" (a rule, her task, the queue, the answer, the choice between
@@ -9,8 +9,8 @@ from ashfall_app.engine import (
     AfterTime, AnswerId, AtMost, CardId, OfferId, Order, Rules, SetOrders, StoreId, StoreValue, TapCard, View, units,
 )
 from tests.daytwo import content as c
-from tests.dayone import sinks
-from tests.dayone.policy import Move, cards, lane_free
+from tests.dayone.player import sinks
+from tests.dayone.player.policy import Move, cards, lane_free
 
 ONE_OFFS = ("give_stool", "make_room")
 """The day's one-off story steps, tapped the moment they are ready."""

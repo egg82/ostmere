@@ -8,7 +8,7 @@ from ashfall_app.engine import AfterTime, CardId, Order, SetOrders, SetQueue, Ta
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.parity import BOOSTS, log_from, start, task_change, until
 from tests.daytwo.routes import day2
-from tests.dayone.parity import Measured, compare, replay
+from tests.dayone.pacing.parity import Measured, compare, replay
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Pair = tuple[Measured, Measured]

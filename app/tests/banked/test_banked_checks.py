@@ -10,8 +10,8 @@ from ashfall_app.engine import (
     StoreDef, SwitchMix, TapCard, Verb, advance, decide, new_save, view,
 )
 from tests.banked.chapter import CAP, COMFORT, GATHER, TRIP, WOOD, rules
-from tests.dayone import sinkchecks
-from tests.dayone.sinkchecks import dry_unreached, landing_kept, needs_met_blocked, tap_fails, tapped_landings
+from tests.dayone.checks import sinkchecks
+from tests.dayone.checks.sinkchecks import dry_unreached, landing_kept, needs_met_blocked, tap_fails, tapped_landings
 
 H = 3600
 

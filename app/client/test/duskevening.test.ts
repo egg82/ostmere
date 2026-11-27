@@ -1,4 +1,4 @@
-// The light goes over the evening (tools/scene/grades.py, dusk; scene/conditions.ts, action:; scene/scene.ts,
+// The light goes over the evening (tools/scene/frame/grades.py, dusk; scene/conditions.ts, action:; scene/scene.ts,
 // gradeStep): `action:<id>` holds while the standing action is in view.standing; a grade whose `when` names the
 // evening's action is picked from when the evening starts, before the end; and a grade with ease_s takes that many
 // seconds to come on, one without it GRADE_S (2.5).

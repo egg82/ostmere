@@ -1,4 +1,4 @@
-"""tools/scene/builds.py and the build's overlap check (output.check_builds): no two builds share 30 pixels at any
+"""tools/scene/audits/builds.py and the build's overlap check (output.check_builds): no two builds share 30 pixels at any
 stage but the held pairs, every layer is classified, and a check that compared nothing fails."""
 import sys
 from collections.abc import Sequence
@@ -9,10 +9,10 @@ from PIL import Image
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import builds   # tools/scene, on the path from the line above
-import output
-from output import Entry
-from stages import STAGES
+from audits import builds   # tools/scene, on the path from the line above
+from frame import output
+from frame.output import Entry
+from frame.stages import STAGES
 
 
 def entry(layer_id: str, x: int = 0, blend: str = "") -> Entry:
@@ -97,7 +97,7 @@ def test_every_build_is_retired_kept_or_held_and_a_gap_is_reported(monkeypatch: 
 
 
 def test_a_retired_build_loses_every_layer_to_what_supersedes_it():
-    from output import Layer
+    from frame.output import Layer
     hut = Image.new("RGBA", (1, 1))
     shown = builds.retire([Layer(id="hut", img=hut, when="x", until="y"), Layer(id="hide_flaps_1", img=hut, when="x"),
                            Layer(id="larder", img=hut, when="x")])

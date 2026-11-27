@@ -89,7 +89,7 @@ fades a layer in over `FADE_S` (0.8 s, `app/client/src/scene/scene.ts`), so the 
 0.8 s it catches in light, and the two cannot disagree. The flicker (`app/client/src/scene/flicker.ts`) does not move
 the gain: the crackle is the flicker, and under reduced motion the light holds steady while the sound stays as it is.
 
-The grades (`tools/scene/grades.py`) do not move the bed. Dusk and night dim the picture and leave the fire's light
+The grades (`tools/scene/frame/grades.py`) do not move the bed. Dusk and night dim the picture and leave the fire's light
 alone, since a light that is the player's is never dimmed; the same holds for its sound.
 
 Each loop is seamless as a file: where a recording's loop point steps in level or clicks, a crossfade is baked into

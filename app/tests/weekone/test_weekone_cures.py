@@ -5,7 +5,7 @@ import pytest
 from ashfall_app.engine import Save
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import cures
+from tests.dayone.fights import cures
 from tests.weekone.routes import week1
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]

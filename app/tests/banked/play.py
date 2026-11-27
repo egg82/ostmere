@@ -1,5 +1,5 @@
 """A route on the fixture chapter: the visits it makes, the moves it makes in each (the gatherer first, then its sinks:
-tests/dayone/sinks.py), and the log of every verb it sent, for the 2 AM replay (dayone/parity.py)."""
+tests/dayone/player/sinks.py), and the log of every verb it sent, for the 2 AM replay (dayone/parity.py)."""
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Unpack
@@ -9,7 +9,7 @@ from ashfall_app.engine import (
 )
 from ashfall_app.engine.work import completions
 from tests.banked.chapter import CHAPTER, COMFORT, FIGHTING, GATHER, Times, rules
-from tests.dayone import sinks
+from tests.dayone.player import sinks
 
 Visit = tuple[int, int]
 MOVES_PER_VISIT = 20

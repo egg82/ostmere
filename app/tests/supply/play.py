@@ -4,7 +4,7 @@ from typing import Unpack
 
 from ashfall_app.engine import AtLeast, CardCount, QueueEntry, Save, SetQueue, TapCard, Verb, View
 from tests.banked.play import Played, Visit, route
-from tests.dayone import sinks
+from tests.dayone.player import sinks
 from tests.supply.chapter import BUILD, CHAPTER, GATHER, STAGES, Knobs, rules
 
 __all__ = ["Played", "play"]

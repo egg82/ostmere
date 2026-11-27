@@ -21,8 +21,8 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.routes import PUSH_ROUTES, ROUTES, day2
 from tests.daytwo.story import flatcheck2, play_day
 from tests.daytwo.verdicts import verdicts
-from tests.dayone.parity import compare
-from tests.dayone.report import row
+from tests.dayone.pacing.parity import compare
+from tests.dayone.pacing.report import row
 
 NAMES = tuple(f"daytwo-{name}" for name in PUSH_ROUTES)
 

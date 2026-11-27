@@ -8,9 +8,9 @@ from tests.daythree import content as c3
 from tests.daythree.chapter import Later
 from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.routes import ROUTES
-from tests.dayone.routes import ROUTES as DAY_ONE
-from tests.dayone.schedules import HOUR, schedule
-from tests.dayone.sinks import SINKS, SinkKnobs
+from tests.dayone.player.routes import ROUTES as DAY_ONE
+from tests.dayone.player.schedules import HOUR, schedule
+from tests.dayone.player.sinks import SINKS, SinkKnobs
 from tests.weekone import content as w1
 
 HORIZON_S = 30 * 24 * HOUR

@@ -160,13 +160,13 @@ the player both, and the policies then use only what the page offers.
     player picks. On a ledger line whose store a card of the player's own running mix costs, a Hold control picks
     that card and a level (the line's cap by default) and saves the mix with the hold; one hold per store, so a line
     already held offers a change of card or level, not a second hold. The simulator's sink policies
-    (`app/tests/dayone/sinks.py`) set only holds this control offers at that view. Fits into: the ledger line and the
+    (`app/tests/dayone/player/sinks.py`) set only holds this control offers at that view. Fits into: the ledger line and the
     mix editor (`save_mix` already carries holds), the engine's Hold unchanged. Accept: a client test that the
     control's `save_mix` carries the hold for a card that costs the store and offers none for a card that does not;
     a planted policy holding a store with no ledger line fails the policy's own check; a render at 390×844 and in dark
     mode, looked at; day three's cap-loss check rerun with the restricted policies.
 14. **The cure reading through a completion count** (**S**, `app/ashfall_app/engine/cure_reading.py` and
-    `app/tests/dayone/cures.py`). `puts_up` also returns the stores added by a trigger whose `when` is an at-least on
+    `app/tests/dayone/fights/cures.py`). `puts_up` also returns the stores added by a trigger whose `when` is an at-least on
     the card's own completion count (the fight checks share the reading and get it too). For a cure card with a cap,
     the gate passes when the fork has started the card's next stage within `CURE_S` and the chip is off by the landing
     of the completion that trigger counts; a card without a cap keeps today's `CURE_S`. Accept: on fixture rules, a

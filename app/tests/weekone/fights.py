@@ -7,7 +7,7 @@ from dataclasses import dataclass, fields
 
 from ashfall_app.engine import InvalidVerbError, Rules, Save, SetQueue, TapCard, Verb, advance, decide, view
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.schedules import schedule
+from tests.dayone.player.schedules import schedule
 from tests.weekone import content as w1
 from tests.weekone import verdicts
 from tests.weekone.routes import HORIZON_S, week1

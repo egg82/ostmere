@@ -7,8 +7,8 @@ from collections import Counter
 import pytest
 
 from tests import sidelayer
-from tests.dayone.beats import BEATS_YAML
-from tests.dayone.story import FLATCHECK
+from tests.dayone.player.beats import BEATS_YAML
+from tests.dayone.player.story import FLATCHECK
 from tests.opening.playthrough import News
 
 SHIPPED = BEATS_YAML.read_text()

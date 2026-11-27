@@ -10,8 +10,8 @@ from ashfall_app.engine import (
     units, value_at,
 )
 from tests.daythree.chapter import Later, Offer
-from tests.dayone import sinks
-from tests.dayone.policy import Move, cards, lane_free, queued
+from tests.dayone.player import sinks
+from tests.dayone.player.policy import Move, cards, lane_free, queued
 
 
 def step(v: View, later: Later) -> Move | None:

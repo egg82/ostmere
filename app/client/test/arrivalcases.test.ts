@@ -1,5 +1,5 @@
 // The page's return rules against the cases shared with the simulator (fixtures/arrival_cases.json; the Python side is
-// tests/dayone/test_dayone_absence.py): where each line of a return goes, and when a batch's reveal is over.
+// tests/dayone/absence/test_dayone_absence.py): where each line of a return goes, and when a batch's reveal is over.
 import { readFileSync } from "node:fs";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";

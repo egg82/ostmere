@@ -49,10 +49,10 @@ into another store, a separate expedition runner, a hands tap rule to re-send tr
 Each item merges on its own, in this order. Items 1–4 must land before day three's content is sized; item 5 is day
 three's content; items 6–9 can follow it.
 
-1. **Lost to caps in the simulator** (**S**, tests). A shared module (`app/tests/dayone/caploss.py`) that, from a
+1. **Lost to caps in the simulator** (**S**, tests). A shared module (`app/tests/dayone/absence/caploss.py`) that, from a
    save and its rules, reads each unlocked store's ledger line event to event over a span with nobody
    deciding and over a played route's history between decisions, and sums made (the positive contributions) and
-   lost (the net while at the cap), per store. `python -m tests.dayone.report --absence` and the day-two report gain
+   lost (the net while at the cap), per store. `python -m tests.dayone.pacing.report --absence` and the day-two report gain
    the column for 8, 24 and 72 h. Store ids only. Accept: a fixture with a maker into a full store reports lost equal
    to its rate times the span, a store below its cap reports 0, and the module asserts it sampled a non-empty set
    of stores; day two's typical reproduces the table above within a point.

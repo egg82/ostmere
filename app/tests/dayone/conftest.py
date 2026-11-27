@@ -8,15 +8,16 @@ which a fixture's setup counts against."""
 import pytest
 
 from ashfall_app.engine import Unlock
-from tests.dayone import absence, cures
-from tests.dayone import human_flags as hf
-from tests.dayone.human import HumanPlayer, human_day, thresholds
-from tests.dayone.levelpays import LeavePoint, leave_points
-from tests.dayone.parity import Measured
-from tests.dayone.player import DayOnePlayer
-from tests.dayone.report import route_text
-from tests.dayone.routes import day, two_am
-from tests.dayone.verdicts import verdicts
+from tests.dayone.absence import absence
+from tests.dayone.fights import cures
+from tests.dayone.human import human_flags as hf
+from tests.dayone.human.human import HumanPlayer, human_day, thresholds
+from tests.dayone.pacing.levelpays import LeavePoint, leave_points
+from tests.dayone.pacing.parity import Measured
+from tests.dayone.player.player import DayOnePlayer
+from tests.dayone.pacing.report import route_text
+from tests.dayone.player.routes import day, two_am
+from tests.dayone.checks.verdicts import verdicts
 from tests.plays import mark_plays
 
 DAY_PLAYS = frozenset({"day_route", "day_verdicts", "day_uncured", "day_leaves", "day_readout", "two_am_run", "human_run",

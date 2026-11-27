@@ -138,7 +138,7 @@ Built in `app/tests/worth/` on the visits of a played route (the typical route t
 visit's exit, the setup left running for the absence.
 
 - **The set:** the open goals that are a choice (a skill's next level whose fastest ready card alone lands it at least
-  `CHOICE_S` out, as `tests/dayone/goals.py` counts a choice) on the skills the player's own mix trains now. The
+  `CHOICE_S` out, as `tests/dayone/pacing/goals.py` counts a choice) on the skills the player's own mix trains now. The
   player's mix says what they are pursuing; the readout asks how well a setup pursues it, not what to pursue.
 - **A setup's score:** the time until every goal of the set has landed. A setup that leaves a goal of the set
   unserved never lands it, and reads `never`.

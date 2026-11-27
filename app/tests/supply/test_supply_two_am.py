@@ -6,8 +6,8 @@ which nothing could queue, leaves the babysitter ahead, as does the same player 
 from typing import Unpack
 
 from ashfall_app.engine import CardShare, SetQueue, Verb, advance, new_save, view
-from tests.dayone.parity import Measured, babysat, compare, replay
-from tests.dayone.sinks import SINKS
+from tests.dayone.pacing.parity import Measured, babysat, compare, replay
+from tests.dayone.player.sinks import SINKS
 from tests.supply.chapter import BUILD, HAUL, HOUR, STAGES, Knobs, rules
 from tests.supply.play import Played, play
 

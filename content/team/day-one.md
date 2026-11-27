@@ -161,12 +161,12 @@ Once the screen stands the weave has no use, and the player takes it out of the 
 
 The opening's "?" markers each pay a find, never an opening. The curve (`curve_items`) gains levels by appending only:
 to level 20, each step half again the last (60, 100, 160 … 24 400 items of XP), so no row tops out in day one on any
-route and time per level never shrinks (`tests/dayone/growth.py`). Every level past the finds pays its own skill's
+route and time per level never shrinks (`tests/dayone/pacing/growth.py`). Every level past the finds pays its own skill's
 work a tenth faster (`target = "work"`: more made an hour, the same XP), so after the end every row has a next level
-the mix drives, and the player's weighting decides which comes first (the taper; `tests/dayone/goals.py`). A "?" that
+the mix drives, and the player's weighting decides which comes first (the taper; `tests/dayone/pacing/goals.py`). A "?" that
 paid nothing is gone: every marker pays when its level lands (`tests/opening/test_level_pays.py`). Among the levels
 day one reaches (measured on every route at B3 seen: Scavenging to 17, Woodcutting to 19, Foraging to 7, Cooking to 2),
-at least every third pays a find beside its speed-up (`tests/dayone/test_dayone_level_pays.py`).
+at least every third pays a find beside its speed-up (`tests/dayone/pacing/test_dayone_level_pays.py`).
 
 | Skill | Level | Pays |
 |---|---|---|
@@ -243,7 +243,7 @@ work, housing (drop 2). B4 (day 3) is the first offer, so the next drop needs Of
 Written by blind proposers scored on `rubric.md`, picked line by line by the lead, then a voice pass; the brief is
 `day-one-lines-brief.md`. Each line must be true in every state on its list.
 
-**How the lists were made.** `python -m tests.dayone.report --lines` (from `app/`, in the CI image) plays the ten
+**How the lists were made.** `python -m tests.dayone.pacing.report --lines` (from `app/`, in the CI image) plays the ten
 routes (typical, sharp, lazy, by_hand, larder_first, evenings, lunch, return_22h, babysitter, whenever) and prints, per
 line key, the visit each fired in and whether the player was there ("present") or it landed while they were away
 and plays on return ("on return"). The babysitter is one long visit, so it is always present. The game-state facts

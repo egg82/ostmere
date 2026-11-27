@@ -19,11 +19,11 @@ from tests.daythree import counters
 from tests.daytwo import checks as checks2
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured
+from tests.dayone.pacing.parity import Measured
 from tests.weektwo import ends, rebased, verdicts
 from tests.plays import mark_plays
 from tools import weektwo_shards as shards
-from tests.dayone import cures
+from tests.dayone.fights import cures
 from tests.ladder import readout
 from tests.worth import readout as worth
 from tests.worth import stints
