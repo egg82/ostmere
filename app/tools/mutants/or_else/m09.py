@@ -1,0 +1,6 @@
+"""Row 09 of MUTANTS_or_else.txt: an un-greyed first mix does not take the layer back from a fallback until that greys (the last chosen mix is remembered, reset when time runs back)."""
+EDITS: list[tuple[str, str, str]] = [
+    ('ashfall_app/engine/orders/plan.py',
+     'def _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | None:\n',
+     "_STUCK: dict[object, object] = {'t': -1}\n\n\ndef _mix_rule(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | None:\n    if save.time < _STUCK['t']:\n        _STUCK.clear()\n    _STUCK['t'] = save.time\n    saved = {m.id for m in save.mixes}\n    prev = _STUCK.get(layer)\n    if prev is not None:\n        for i, a, latch in listed(save.orders, save.latches):\n            if (i, a) == prev and rule_on(latch) and isinstance(a, SwitchMix) and a.mix in saved and not greyed(save, rules, a.mix):\n                return i, a.mix\n    found = _mix_rule0(save, rules, layer)\n    if found is None:\n        _STUCK.pop(layer, None)\n    else:\n        _STUCK[layer] = next((j, a) for j, a, _ in listed(save.orders, save.latches) if j == found[0] and isinstance(a, SwitchMix) and a.mix == found[1])\n    return found\n\n\ndef _mix_rule0(save: Save, rules: Rules, layer: MixLayer) -> tuple[int, MixId] | None:\n"),
+]

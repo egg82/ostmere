@@ -1,4 +1,4 @@
-# A test chapter merged onto the shipped opening (tests/test_groups_wire.py): a pooled lane t_crew with one card and
+# A test chapter merged onto the shipped opening (tests/api/test_groups_wire.py): a pooled lane t_crew with one card and
 # three people in that group, t_m1 and t_m3 joining without their own split and t_m2 joining marked. Not story: the ids and words are the tests' own. The planted variants are edits of this file.
 version = 1
 

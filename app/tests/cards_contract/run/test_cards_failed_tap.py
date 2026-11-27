@@ -10,7 +10,7 @@ from ashfall_app.engine import (
     MixId, Outcome, QueueEntry, RunKind, SetOrders, SetQueue, StandingDef, StoreDef, Step, StoreId, StoreValue, SwitchMix,
     TapCard, WorkRef, ActionId, advance, advance_logged, decide, decide_logged, new_save, next_event,
 )
-from ashfall_app.engine import work as engine_work
+from ashfall_app.engine.loop import work as engine_work
 from cards_world import Q, RACK, add, lane, make, rules, running_mix, save_mix, tap, view_of, with_mix
 
 X, Y, Z = StoreId("x"), StoreId("y"), StoreId("z")

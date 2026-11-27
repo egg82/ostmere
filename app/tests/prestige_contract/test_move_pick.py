@@ -7,9 +7,9 @@ from ashfall_app.engine import (
     MovePick, NodeId, ParkedRank, PhaseState, PrestigeRefusal, PrestigeRefused, Save, UndoPick, advance, decide,
     decode, encode,
 )
-from ashfall_app.engine.pickentries import pick_entries
-from ashfall_app.engine.phases import phase_state
-from ashfall_app.engine.prestige import menu, refusal
+from ashfall_app.engine.prestige.pickentries import pick_entries
+from ashfall_app.engine.prestige.phases import phase_state
+from ashfall_app.engine.prestige.prestige import menu, refusal
 from prestige_world import J1, K, N1, N2, N3, N4, at_second, click, rules, undo
 
 R = rules()

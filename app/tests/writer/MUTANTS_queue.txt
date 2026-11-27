@@ -1,5 +1,5 @@
 Wrong implementations of the writer's queue and budget (writer/queue.py, writer/budget.py), each planted alone in a
-scratch copy by tools/mutate_suite.py's `queue` suite (specs tools/queue_mutants/): tests/writer/test_queue.py. Each
+scratch copy by tools/mutate_suite.py's `queue` suite (specs tools/mutants/queue/): tests/writer/test_queue.py. Each
 must go red.
 
  1 no save cap     queue.py: a world's own allowance is never checked

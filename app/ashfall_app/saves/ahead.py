@@ -25,7 +25,7 @@ from ..clock import Clock
 from ..db.stored import ahead as kept_rows
 from ..db import saves as rows
 from ..db import unit
-from ..engine.codec import Json
+from ..engine.savefile.codec import Json
 from .interface import Ruleset, Unavailable
 from .builds.load import Loaded, load, newer
 from .ruleruns import RuleRun, gathered, runs_from_json, runs_to_json

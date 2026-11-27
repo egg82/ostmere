@@ -35,7 +35,7 @@ on a declared lane; "worker" is a card on that lane. Record each run below the l
 
 RUNS
 - Suite tests/engine_contract/heldspeed/test_heldspeed_*.py (blind, written from engine/design/ and contract/ alone). Run:
-  python -m tools.mutate_suite heldspeed --run (specs tools/heldspeed_mutants/mNN.py).
-- Against the implementation (engine/heldentries.py and its callers): rows 1-14 all KILLED, each with a test that
+  python -m tools.mutate_suite heldspeed --run (specs tools/mutants/heldspeed/mNN.py).
+- Against the implementation (engine/modifiers/heldentries.py and its callers): rows 1-14 all KILLED, each with a test that
   claims it red. Rows 7 and 8 first survived and got directed tests in test_heldspeed_rebuilt.py; row 7's first plant
   (the next pick's draws read before the pause) is recorded as equivalent in its row.

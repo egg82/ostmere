@@ -7,7 +7,7 @@ deciding. The rhythm is the readouts' (test_weektwo_readouts.py). Ids only (CLAU
 import pytest
 
 from ashfall_app.engine import StoreId, units
-from ashfall_app.engine.rates import store_value
+from ashfall_app.engine.loop.rates import store_value
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

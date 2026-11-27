@@ -120,7 +120,7 @@ the player both, and the policies then use only what the page offers.
 - **G5, a chip whose cure works through a count store.** Intended: the cure is an existing build, so a cure is in
   reach by construction. The chip has to read a count store (it must turn off at a story moment as well as at the
   build, and a chip reads one condition), which the build adds to through a trigger on its completion count. The cure
-  reading (`app/ashfall_app/engine/cure_reading.py`) sees only what a card's own outcome puts up, and the cures gate
+  reading (`app/ashfall_app/engine/cards/cure_reading.py`) sees only what a card's own outcome puts up, and the cures gate
   gives a cure 600 s, less than one stage. Options: content (put the count in the build's own outcome: day three's
   build would then name a day-four store, and the 600 s still fails); mark the chip `no_cure` (false: it has a cure);
   teach the reading the trigger. Decided: the reading, item 14. It reads more, and checks no less.
@@ -165,7 +165,7 @@ the player both, and the policies then use only what the page offers.
     control's `save_mix` carries the hold for a card that costs the store and offers none for a card that does not;
     a planted policy holding a store with no ledger line fails the policy's own check; a render at 390×844 and in dark
     mode, looked at; day three's cap-loss check rerun with the restricted policies.
-14. **The cure reading through a completion count** (**S**, `app/ashfall_app/engine/cure_reading.py` and
+14. **The cure reading through a completion count** (**S**, `app/ashfall_app/engine/cards/cure_reading.py` and
     `app/tests/dayone/fights/cures.py`). `puts_up` also returns the stores added by a trigger whose `when` is an at-least on
     the card's own completion count (the fight checks share the reading and get it too). For a cure card with a cap,
     the gate passes when the fork has started the card's next stage within `CURE_S` and the chip is off by the landing

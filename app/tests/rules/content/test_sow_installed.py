@@ -2,9 +2,9 @@
 open (and with them the barley the frost and the reaping are about) whether or not the player ever offers her the
 order card. A play where nobody sets that rule would otherwise never open them."""
 from ashfall_app.engine import CardId, new_save
-from ashfall_app.engine.installs import installed
-from ashfall_app.engine.orders import AfterTime
-from ashfall_app.engine.lanes import TapCard
+from ashfall_app.engine.orders.installs import installed
+from ashfall_app.engine.orders.orders import AfterTime
+from ashfall_app.engine.orders.lanes import TapCard
 from tests.rules.play.playthrough import opening_rules
 
 

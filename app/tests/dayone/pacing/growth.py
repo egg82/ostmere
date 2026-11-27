@@ -10,8 +10,8 @@ share of its fastest runner takes to climb the curve."""
 from math import prod
 
 from ashfall_app.engine import FlowKind, LaneSpeed, ModifierKind, RateRef, Rules
-from ashfall_app.engine.orders import AtLeast, SkillLevel
-from ashfall_app.engine.units import BP, SECONDS_PER_HOUR
+from ashfall_app.engine.orders.orders import AtLeast, SkillLevel
+from ashfall_app.engine.core.units import BP, SECONDS_PER_HOUR
 
 RELEASED_DIPS = frozenset({3})
 """Levels whose step is shorter than the one before on the shipped curve (6 items of XP to level 2, then 4 to 3).

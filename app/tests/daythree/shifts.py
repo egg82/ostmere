@@ -5,7 +5,7 @@ into a yes or no with the thresholds in counters.py. Numbers and ids only (CLAUD
 from dataclasses import dataclass
 
 from ashfall_app.engine import CardId, Rules, Save, advance, value_at, view
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from tests.daythree.landings import HORIZON_S, goals
 
 GRID_S = 1800

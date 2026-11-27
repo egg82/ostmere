@@ -3,9 +3,9 @@ another line leaves it as it was, without working it out again; one aimed at the
 import pytest
 
 from ashfall_app.engine import Modifier, ModifierKind, SourceId, new_save
-from ashfall_app.engine import lumps
-from ashfall_app.engine.modifiers import Explanation, FlowKind, RateRef, Run, WorkRef
-from ashfall_app.engine.units import BP, QUANTITY_SCALE as Q
+from ashfall_app.engine.cards import lumps
+from ashfall_app.engine.modifiers.modifiers import Explanation, FlowKind, RateRef, Run, WorkRef
+from ashfall_app.engine.core.units import BP, QUANTITY_SCALE as Q
 from tests.engine_contract.cards.test_lumps_by_work_contract import A, Y, lump, world
 
 LINE = RateRef(A, FlowKind.MAKE, Y)

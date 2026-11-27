@@ -2,22 +2,22 @@
  "app/ashfall_app/api/requestlog.py": {
   "cast": 1
  },
- "app/ashfall_app/engine/codec.py": {
+ "app/ashfall_app/engine/savefile/codec.py": {
   "cast": 1
  },
- "app/client/test/arrivals.test.ts": {
+ "app/client/test/ui/feedback/arrivals.test.ts": {
   "as-unknown-as": 1
  },
- "app/client/test/chipoffer.test.ts": {
+ "app/client/test/ui/story/chipoffer.test.ts": {
   "as-unknown-as": 2
  },
- "app/client/test/glows.test.ts": {
+ "app/client/test/ui/feedback/glows.test.ts": {
   "as-unknown-as": 2
  },
- "app/client/test/lines.test.ts": {
+ "app/client/test/ui/feedback/lines.test.ts": {
   "as-unknown-as": 2
  },
- "app/client/test/rulestab.test.ts": {
+ "app/client/test/ui/feedback/rulestab.test.ts": {
   "as-unknown-as": 14
  },
  "app/tests/cards_contract/conftest.py": {

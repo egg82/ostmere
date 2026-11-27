@@ -8,16 +8,16 @@ from typing import Protocol
 from functools import cache
 
 from ashfall_app.engine import Rules, Save, flatten_shares
-from ashfall_app.engine.cards import LaneState
-from ashfall_app.engine.ids import ActionId, CardId, Runner, SkillId
-from ashfall_app.engine.index import index
-from ashfall_app.engine.mixes import MixLayer
-from ashfall_app.engine.modifiers import FlowKind, RateRef
-from ashfall_app.engine.phases import level_counted, phase_state, phase_top
-from ashfall_app.engine.plan import mix_layer
-from ashfall_app.engine.prestige import track
-from ashfall_app.engine.rates import line, running
-from ashfall_app.engine.skills import level_for
+from ashfall_app.engine.cards.cards import LaneState
+from ashfall_app.engine.core.ids import ActionId, CardId, Runner, SkillId
+from ashfall_app.engine.core.index import index
+from ashfall_app.engine.mixes.mixes import MixLayer
+from ashfall_app.engine.modifiers.modifiers import FlowKind, RateRef
+from ashfall_app.engine.prestige.phases import level_counted, phase_state, phase_top
+from ashfall_app.engine.orders.plan import mix_layer
+from ashfall_app.engine.prestige.prestige import track
+from ashfall_app.engine.loop.rates import line, running
+from ashfall_app.engine.core.skills import level_for
 
 
 class Timed(Protocol):
@@ -66,7 +66,7 @@ def phase_top_level(rules: Rules, save: Save, skill: SkillId) -> int:
 def max_level(rules: Rules, skill: SkillId) -> int:
     """The highest counted level the skill can ever reach: one click per rank of its track (prestige.track), each
     lifting the top by a span, then every click refused TRACK_DONE and the skill rests at the last phase's top
-    (engine/prestigeverbs.py, "mastered"). The curve's last level without prestige."""
+    (engine/prestige/prestigeverbs.py, "mastered"). The curve's last level without prestige."""
     if rules.prestige is None:
         return level_for(rules.curve, rules.curve.thresholds[-1])
     clicks = sum(n.ranks for n in track(rules, skill))

@@ -8,7 +8,7 @@ from ashfall_app.engine import (
     LaneSpeed, Need, Outcome, RateRef, StandingDef, StoreDef, StoreId, StoreValue, TriggerDef, TriggerId, Unlock,
     UnlockKind, WorkRef, advance, new_save, segment, view,
 )
-from ashfall_app.engine import work as engine_work
+from ashfall_app.engine.loop import work as engine_work
 from cards_world import K, Q, RACK, add, card_view, mul, rules, tap, val, view_of, with_mix
 
 X, Z = StoreId("x"), StoreId("z")

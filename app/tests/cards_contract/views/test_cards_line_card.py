@@ -5,7 +5,7 @@ from ashfall_app.engine import (
     AtLeast, CardCount, CardDef, CardId, ChipDef, ChipId, Line, LineKey, Outcome, StoreDef, StoreId, StoreValue, TriggerDef,
     TapCard, TriggerId, Unlock, UnlockKind, Amount, advance_logged, decide_logged, new_save,
 )
-from ashfall_app.engine.rules import Rules
+from ashfall_app.engine.core.rules import Rules
 from cards_world import Q, rules, tap, with_mix
 
 X, Y = StoreId("x"), StoreId("y")

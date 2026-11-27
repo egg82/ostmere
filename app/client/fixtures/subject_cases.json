@@ -1,5 +1,5 @@
 {
-  "about": "The condition each subject control writes, shared by the page's round trip (test/subjectrules.test.ts: the editor writes it and reads it back) and the engine's (tests/test_subject_rules_wire.py: a set_orders holding it is accepted). Ids are the fixture content's; the Python side swaps in shipped ids of the same kind, and a Camp level's `at` by camp_level.",
+  "about": "The condition each subject control writes, shared by the page's round trip (test/ui/rules/subjectrules.test.ts: the editor writes it and reads it back) and the engine's (tests/api/test_subject_rules_wire.py: a set_orders holding it is accepted). Ids are the fixture content's; the Python side swaps in shipped ids of the same kind, and a Camp level's `at` by camp_level.",
   "cases": [
     {"name": "a task done n times", "pick": "task:shelter", "steps": 1,
      "when": {"kind": "at_least", "watched": {"kind": "card_count", "card": "shelter"}, "value": 3, "release": 3, "value_of_cap": false, "release_of_cap": false},

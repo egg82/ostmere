@@ -7,7 +7,7 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import Outcome, UnlockKind
-from ashfall_app.engine.orders import AtLeast, SkillLevel
+from ashfall_app.engine.orders.orders import AtLeast, SkillLevel
 from tests.dayone.conftest import PLAY_TIMEOUT_S
 from tests.dayone.pacing.levelpays import LeavePoint, reached, runs, speed_only_leaves
 from tests.dayone.player.player import DayOnePlayer

@@ -1,0 +1,147 @@
+"""The yield and spent stores: a running mix's card holding a Pause gives its share to the rest of its mix on its lane,
+in proportion to their saved shares, and a card paused on a store nothing in play can make again reads SPENT. Derived
+from the save at one instant, never stored (design/spent.txt, "SPENT")."""
+from collections.abc import Callable
+
+from ..loop.cardsides import card_makes
+from ..cards.counts import completed_cards, is_completed
+from ..combat.fightlines import fight_costs
+from ..people.gone import stopped
+from ..core.ids import CardId, LaneId, Runner, StoreId
+from ..core.index import derived, index
+from ..core.memo import PartsMemo, SaveMemo
+from .mixes import SpentShare
+from ..modifiers.modifiers import Run, RunKind
+from ..core.rules import Rules
+from ..loop.sides import costs, makes
+from ..core.state import Save
+from ..unlocks.unlocked import is_unlocked
+from ..unlocks.unlocks import Unlock, UnlockKind
+
+type Maker = tuple[Runner, Unlock, frozenset[StoreId]]
+"""A runner that can make a store: its id, the unlock that puts it in play, and the stores it takes (costs, inputs)."""
+
+type Entry = tuple[CardId, int, Run]
+
+GIVES = frozenset({RunKind.SPENT, RunKind.PAUSED})
+"""The Runs of a mix card holding a Pause: a giver (design/spent.txt, "SPENT", "Giver")."""
+
+
+def spent_stores(save: Save, rules: Rules) -> frozenset[StoreId]:
+    """The largest S such that every maker in play of each store in S takes from a store of S at 0 (design/spent.txt,
+    "SPENT", "Spent stores"): found by removing, until nothing changes, each store with a maker taking from none."""
+    return _SPENT.get(save, rules, lambda: _spent(save, rules))
+
+
+_SPENT: SaveMemo[frozenset[StoreId]] = SaveMemo(4)
+
+
+def keep_spent(source: Save, target: Save, rules: Rules) -> None:
+    """`target` has the values and the discrete state of `source`, all spent_stores reads."""
+    _SPENT.carry(source, target, rules)
+
+
+def _spent(save: Save, rules: Rules) -> frozenset[StoreId]:
+    empty = frozenset(st.store for st in save.stores if st.segment.start_value == 0)
+    live = _live(save, rules)
+    return _BY_EMPTY.get((live,), lambda: _fixed_point(rules, empty, live), empty)
+
+
+_BY_EMPTY: PartsMemo[frozenset[StoreId]] = PartsMemo(8)
+"""Kept while the makers in play are the same object (_LIVE, keyed on the rules) and the same stores are empty: all
+that the fixed point reads."""
+
+
+def _fixed_point(rules: Rules, empty: frozenset[StoreId], live: dict[StoreId, list[frozenset[StoreId]]]
+                 ) -> frozenset[StoreId]:
+    spent = {d.id for d in rules.stores}
+    changed = True
+    while changed:
+        changed = False
+        blocked = spent & empty
+        for x in list(spent):
+            if any(not (takes & blocked) for takes in live.get(x, ())):
+                spent.discard(x)
+                changed = True
+    return frozenset(spent)
+
+
+def unmade(save: Save, rules: Rules, store: StoreId) -> bool:
+    """No maker in play can make the store (Makers): a pool, which only outcomes fill (design/full-output.txt, "FULL OUTPUT")."""
+    return not any(_in_play(save, rules, runner, u) for runner, u, _ in _makers(rules).get(store, ()))
+
+
+_LIVE: PartsMemo[dict[StoreId, list[frozenset[StoreId]]]] = PartsMemo(4)
+"""Kept while the unlock set and the rules are the same objects and the same cards are completed: all that _in_play
+reads."""
+
+
+def _live(save: Save, rules: Rules) -> dict[StoreId, list[frozenset[StoreId]]]:
+    """Each store's makers in play, as the stores each takes."""
+    completed = completed_cards(save, rules)
+    return _LIVE.get((save.unlocked, rules), lambda: {
+        x: [takes for runner, u, takes in found if _in_play(save, rules, runner, u)]
+        for x, found in _makers(rules).items()}, completed)
+
+
+def _in_play(save: Save, rules: Rules, runner: Runner, u: Unlock) -> bool:
+    """Unlocked, and neither a card completed (or out of play) nor a standing a Leave stopped (LEAVES, "Stops")."""
+    if not is_unlocked(save, rules, u):
+        return False
+    if u.kind is UnlockKind.ACTION:
+        return runner not in stopped(save, rules)
+    return u.kind is not UnlockKind.CARD or not is_completed(save, rules, CardId(runner))
+
+
+def _makers(rules: Rules) -> dict[StoreId, list[Maker]]:
+    return derived(rules, "_spent_makers", _all_makers)
+
+
+def _all_makers(rules: Rules) -> dict[StoreId, list[Maker]]:
+    """Every standing action and card by the stores it can make; triggers and answers are never makers."""
+    out: dict[StoreId, list[Maker]] = {}
+    for a in rules.standing:
+        for x in makes(rules, a.id):
+            out.setdefault(x, []).append((a.id, Unlock(UnlockKind.ACTION, a.id), costs(rules, a.id)))
+    for c in rules.cards:
+        takes = frozenset(f.store for f in c.costs) | frozenset(
+            x.store for x in (*c.inputs, *(fight_costs(c.fight) if c.fight else ())))
+        for x in card_makes(c) | frozenset(a.store for a in c.finished.stores):
+            out.setdefault(x, []).append((c.id, Unlock(UnlockKind.CARD, c.id), takes))
+    return out
+
+
+def spend(save: Save, rules: Rules, entries: tuple[Entry, ...]) -> tuple[Entry, ...]:
+    """`entries` with each PAUSED run on a spent store made SPENT, a full pause never (design/full-output.txt, "FULL OUTPUT", "Run");
+    the store set is read only when a run is paused dry."""
+    cards = index(rules).cards
+    dry = {card for card, _, run in entries if run.kind is RunKind.PAUSED and run.store not in card_makes(cards[card])}
+    if not dry:
+        return entries
+    spent = spent_stores(save, rules)
+    return tuple((card, share, Run(RunKind.SPENT, 0, 1, run.store)) if card in dry and run.store in spent
+                 else (card, share, run)
+                 for card, share, run in entries)
+
+
+def yielded(entries: tuple[Entry, ...], lane_of: Callable[[CardId], LaneId]
+            ) -> tuple[tuple[Entry, ...], dict[CardId, tuple[SpentShare, ...]]]:
+    """The entries at their effective shares, and each receiver's gains in the mix order of the givers: on each lane,
+    every card r that is no giver gains floor(s_k * s_r / Rsum) from each giver k, Rsum those cards' saved shares
+    summed; nothing moves while Rsum is 0 (design/spent.txt, "SPENT", "The yield")."""
+    if not any(run.kind in GIVES for _, _, run in entries):
+        return entries, {}
+    gains: dict[CardId, tuple[SpentShare, ...]] = {}
+    for lane in dict.fromkeys(lane_of(card) for card, _, _ in entries):
+        on = [e for e in entries if lane_of(e[0]) == lane]
+        given = [(card, share) for card, share, run in on if run.kind in GIVES]
+        rest = [(card, share) for card, share, run in on if run.kind not in GIVES]
+        total = sum(share for _, share in rest)
+        if total == 0:
+            continue
+        for card, share in rest:
+            got = tuple(SpentShare(k, g) for k, s_k in given if (g := s_k * share // total) > 0)
+            if got:
+                gains[card] = got
+    return tuple((card, share + sum(g.share_bp for g in gains.get(card, ())), run)
+                 for card, share, run in entries), gains

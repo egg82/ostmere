@@ -1,20 +1,20 @@
 """Mutation run of a blind contract suite against the rows of its MUTANTS_<suite>.txt:
-  held    tests/engine_contract/held/test_held_*.py    MUTANTS_held.txt    specs tools/held_mutants/
-  drains  tests/engine_contract/drains/test_drains_*.py  MUTANTS_drains.txt  specs tools/drains_mutants/
-  spent   tests/engine_contract/spent/test_spent_*.py   MUTANTS_spent.txt   specs tools/spent_mutants/
-  heldspeed  tests/engine_contract/heldspeed/test_heldspeed_*.py  MUTANTS_heldspeed.txt  specs tools/heldspeed_mutants/
-  share   tests/engine_contract/leaves/test_share_levels_*.py  MUTANTS_share.txt  specs tools/share_mutants/
-  guards  tests/engine_contract/guards/test_guards_*.py  MUTANTS_guards.txt  specs tools/guards_mutants/
-  or_else tests/engine_contract/guards/test_or_else_*_contract.py  MUTANTS_or_else.txt  specs tools/or_else_mutants/
-  groups  tests/engine_contract/groups/test_groups_*_contract.py  MUTANTS_groups.txt  specs tools/groups_mutants/
-  leaves  tests/engine_contract/leaves/test_leaves_*.py  MUTANTS_leaves.txt  rows 1-20   specs tools/leaves_mutants/
-  retire  tests/engine_contract/leaves/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
-  clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/
+  held    tests/engine_contract/held/test_held_*.py    MUTANTS_held.txt    specs tools/mutants/held/
+  drains  tests/engine_contract/drains/test_drains_*.py  MUTANTS_drains.txt  specs tools/mutants/drains/
+  spent   tests/engine_contract/spent/test_spent_*.py   MUTANTS_spent.txt   specs tools/mutants/spent/
+  heldspeed  tests/engine_contract/heldspeed/test_heldspeed_*.py  MUTANTS_heldspeed.txt  specs tools/mutants/heldspeed/
+  share   tests/engine_contract/leaves/test_share_levels_*.py  MUTANTS_share.txt  specs tools/mutants/share/
+  guards  tests/engine_contract/guards/test_guards_*.py  MUTANTS_guards.txt  specs tools/mutants/guards/
+  or_else tests/engine_contract/guards/test_or_else_*_contract.py  MUTANTS_or_else.txt  specs tools/mutants/or_else/
+  groups  tests/engine_contract/groups/test_groups_*_contract.py  MUTANTS_groups.txt  specs tools/mutants/groups/
+  leaves  tests/engine_contract/leaves/test_leaves_*.py  MUTANTS_leaves.txt  rows 1-20   specs tools/mutants/leaves/
+  retire  tests/engine_contract/leaves/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/mutants/retire/
+  clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/mutants/clocks/
           the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
   journal_days  tests/saves/journal/test_journal_days.py (and the tests in `also`)  tests/saves/journal/MUTANTS_journal_days.txt
-          specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
-  queue   tests/writer/test_queue.py  tests/writer/MUTANTS_queue.txt  specs tools/queue_mutants/
-  live    tests/writer/test_live.py  tests/writer/MUTANTS_live.txt  specs tools/live_mutants/
+          specs tools/mutants/journal_days/: the journal's write path; needs ASHFALL_TEST_PG
+  queue   tests/writer/test_queue.py  tests/writer/MUTANTS_queue.txt  specs tools/mutants/queue/
+  live    tests/writer/test_live.py  tests/writer/MUTANTS_live.txt  specs tools/mutants/live/
 A suite may also run other test files beside its own (`also`: the implementation's tests, and the sibling suite sharing
 its MUTANTS file); a claim is read from either, and a claim of a row outside the suite's rows is the sibling's.
 
@@ -52,7 +52,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
 
-from tools.mutant_suites import SUITES, Suite
+from tools.mutants.mutant_suites import SUITES, Suite
 
 APP = Path(__file__).resolve().parents[1]
 ROW = re.compile(r"^ ?(\d+) \S")

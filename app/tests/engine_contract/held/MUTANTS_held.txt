@@ -40,7 +40,7 @@ the rules. Record each run below the list as MUTANTS.txt does (planted, red, sur
                    Modifier sourced "held:x".                                                       [116]
 20 digest          the rules encoding writes `while_running: []` for every card, so rules without the field
                    change digest and every live save's text changes (compare encode under a released opening
-                   with the text a pinned fixture holds, as tests/engine/test_pre_fights_save.py does).  [114]
+                   with the text a pinned fixture holds, as tests/engine/savefile/test_pre_fights_save.py does).  [114]
 21 stale dry       the dry rule reads the stack from before its first pause at the instant: a guard paused on a
                    store that the fight's loses also drain does not raise the drain for the next pause decision
                    (world: one store s at 0, the guard costs s, the fight loses s; with the stale stack the
@@ -53,8 +53,8 @@ the rules. Record each run below the list as MUTANTS.txt does (planted, red, sur
 
 RUNS
 - Suite tests/engine_contract/held/test_held_*.py (blind, written from engine/design/ and contract/ alone). Run: python -m tools.mutate_suite held --run
-  (specs tools/held_mutants/mNN.py, each a list of (path, old, new) edits against the implementation, one per row).
+  (specs tools/mutants/held/mNN.py, each a list of (path, old, new) edits against the implementation, one per row).
   `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against a reference model written from engine/design/ in a scratch copy (not the implementation): rows 1-22 all red, and 16 single-clause
-  variants of rows 12, 16, 17, 18, 19 and 20 red; no survivors, no equivalent mutants. Against the implementation (engine/heldentries.py and its callers): rows 1-22 and 24 all KILLED, each with a test that claims it
+  variants of rows 12, 16, 17, 18, 19 and 20 red; no survivors, no equivalent mutants. Against the implementation (engine/modifiers/heldentries.py and its callers): rows 1-22 and 24 all KILLED, each with a test that claims it
   red; no survivors, no equivalent mutants.

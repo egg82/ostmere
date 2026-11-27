@@ -1,6 +1,6 @@
 LEAVES (a person leaves the town: docs/design/week-three-plan.md, item 4; blind tests from this part and
 api/contract/ alone, item 5, against app/tests/engine_contract/leaves/MUTANTS_leaves.txt). The inverse of THE TOWN'S MIX's
-Join (engine/joins.py). Where this part and an entry above disagree, this part holds. Examples name ids only; who
+Join (engine/people/joins.py). Where this part and an entry above disagree, this part holds. Examples name ids only; who
 leaves, when and why is content's.
 
 FIT PASS
@@ -72,7 +72,7 @@ CHOICES (leaves)
   outcome's unlocks and the opening as "joined" is. Combat's gap for people lost by a fight's tally stays open
   (FIGHTS, KNOWN GAPS): this is an outcome, not a fight.
 - Answers to the blind tests' questions (leaves):
-  - Leave(lane, stops=()), those two fields in that order, a frozen dataclass in engine/cards.py exported from
+  - Leave(lane, stops=()), those two fields in that order, a frozen dataclass in engine/cards/cards.py exported from
     ashfall_app.engine beside Join.
   - A SaveMix naming a card of a left lane raises InvalidVerbError (the mix checks' "card {c} is completed": the one
     out-of-play predicate), as for any retired card. A player's TapCard of one raises InvalidVerbError too (a ruled

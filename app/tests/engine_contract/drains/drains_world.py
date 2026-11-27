@@ -17,7 +17,7 @@ from ashfall_app.engine import (
     PacingCurve, Rules, Save, SaveMix, SideDef, SkillDef, SkillId, StandingDef, StoreDef, StoreId, SwitchMix, TapCard,
     ThreatDef, TriggerDef, advance, decide, new_save, per_hour, validate_rules, value, view,
 )
-from ashfall_app.engine.viewparts import CardView
+from ashfall_app.engine.read.viewparts import CardView
 
 X, X2, Y, I, F = (StoreId(n) for n in ("xstore", "x2store", "ystore", "istore", "fstore"))
 K = SkillId("k")

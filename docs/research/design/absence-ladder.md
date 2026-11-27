@@ -10,7 +10,7 @@ engine runs on with the mix as left. Each return is counted from served data: th
 and the lines the step emitted, before and after. Lines are placed as the page places them (`awaylines.ts`, ported as `absence.place`): a chip's line never plays on
 the band (an on-line, and a chip's last off-line while it is not shown, go to the Log; its other off-lines go nowhere),
 and a repeat task's line goes to the Log. The port and the page are held to one table of cases
-(`app/client/fixtures/arrival_cases.json`), run by `client/test/arrivalcases.test.ts` and `test_dayone_absence.py`,
+(`app/client/fixtures/arrival_cases.json`), run by `client/test/game/book/arrivalcases.test.ts` and `test_dayone_absence.py`,
 along with the queue's schedule. No chip line landed in any of these windows, so the placement did not change a count.
 The reveal time is
 `ArrivalQueue.start`'s schedule without reduced motion; the pace, the cap and the reading time are read out of

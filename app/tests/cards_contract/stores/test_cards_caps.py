@@ -13,7 +13,7 @@ from ashfall_app.engine import (
     SetQueue, StandingBar, StandingDef, StoreDef, StoreId, StoreValue, SwitchMix, TapCard, advance,
     advance_logged, decide, new_save, next_event, view,
 )
-from ashfall_app.engine.schedule import events
+from ashfall_app.engine.loop.schedule import events
 from cards_world import (
     Q, RACK, card_view, done, keys, lane, ledger, make, raised, rules, running_mix, save_mix, tap, val, with_mix, work,
 )

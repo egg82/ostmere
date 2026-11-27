@@ -54,7 +54,7 @@ kept (the second mix's), no rule watching any store reach a level (the cap rule'
 store's), no skill pushed past (Push past's),
 and for the story's three, what the game carries of the moment: no night beyond the first begun (the clock's), no
 second journal page written (the journal's), the town's mix still each person's whole time on one card as the game made
-it (the town's) (`test/persave.test.ts`).
+it (the town's) (`test/ui/feedback/persave.test.ts`).
 
 **Lessons on or off.** The Games sheet holds the account's setting as a checkbox under the front-page one: `Skip
 lessons in every game`, unticked on a new account (AccountSettings.lessons). Ticked, no lesson starts in any game of the

@@ -8,7 +8,7 @@ from ashfall_app.engine import (
     AtLeast, Order, Prestige, PrestigeRefusal, PrestigeRefused, QueueEntry, SetOrders, SetQueue, StoreValue, TapCard,
     MovePick, UndoPick, decide,
 )
-from ashfall_app.engine.prestigeverbs import refuse_by_hand
+from ashfall_app.engine.prestige.prestigeverbs import refuse_by_hand
 from prestige_world import K, N1, N2, OTHER, SPAN, WOOD, at_second, rules
 
 R = rules()

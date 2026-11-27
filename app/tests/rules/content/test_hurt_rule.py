@@ -1,8 +1,8 @@
 """A rule waits on hurt (issue #171): `hurt` has no ledger line and is never unlocked as a store, yet the engine reads a
 store_value condition on it as on any store, so "when hurt, make a poultice" is a rule the engine runs."""
 from ashfall_app.engine import AtLeast, Order, SetOrders, StoreValue, TapCard
-from ashfall_app.engine.api import decide_logged
-from ashfall_app.engine.rates import tapped_cards
+from ashfall_app.engine.core.api import decide_logged
+from ashfall_app.engine.loop.rates import tapped_cards
 from tests.rules.content.test_poultice_tap import HURT, POULTICE, in_hand, rules
 from ashfall_app.engine import QUANTITY_SCALE as Q
 

@@ -4,7 +4,7 @@ ids, read off a save. The simulator names story moments by these ids only (CLAUD
 from functools import cache
 
 from ashfall_app.engine import CardId, OfferId, Rules, Save, Unlock, UnlockKind
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from ashfall_app.rules.schema import DAY_ONE, DAY_TWO, OPENING, Opening, load_opening, to_rules
 from tests.dayone.player.beats import STORY as DAY_ONE_STORY, landed as day_one_landed
 from tests.dayone.player.sinks import Chapter

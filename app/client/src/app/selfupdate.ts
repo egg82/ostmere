@@ -1,7 +1,7 @@
 // The page updates itself: each Step names the server's build, and /page-config.json is asked again every few minutes
 // while nothing is sent. When the build is not the one this page booted with, the page reloads at a quiet moment
 // behind a short fade to its background, and the kept game resumes (the server rebases it: engine design/,
-// "Rebase"). Ported from habits' app/src/app/selfupdate.js: the pure decide() first (test/selfupdate.test.ts), then
+// "Rebase"). Ported from habits' app/src/app/selfupdate.js: the pure decide() first (test/app/selfupdate.test.ts), then
 // the browser wiring.
 import { reducedMotion } from "../ui/dom";
 

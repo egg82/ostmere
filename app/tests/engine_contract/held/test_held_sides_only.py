@@ -9,7 +9,7 @@ from ashfall_app.engine import (
     CardDef, Explanation, FlowKind, Modifier, RateRef, Rules, Save, TapCard, ThreatStrength, advance, decide, decode, encode, explain,
     explain_strength, explain_work, new_save, rules_digest, view,
 )
-from ashfall_app.engine.codec import manifest
+from ashfall_app.engine.savefile.codec import manifest
 from fight_world import world as fight_world
 from held_world import GA, GA2, GAC, GH, GH2, HELD, HF, WOLF, hands, held_mods, ja, kills, plain, town, world
 from town_mix_world import A1, B1, LA, LB, TM, TOWN_RULE, always, joiner, orders, start, world as town_world

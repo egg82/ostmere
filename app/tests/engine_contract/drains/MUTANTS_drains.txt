@@ -25,7 +25,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
                    share a digest.                                                                 [128]
 13 digest moves    the rules encoding writes `drains: []` for every card, so rules without a drain change digest
                    and every live save's text changes (compare with a pinned fixture, as
-                   tests/engine/test_pre_fights_save.py does).                                     [128]
+                   tests/engine/savefile/test_pre_fights_save.py does).                                     [128]
 14 cure blind      cure_reading.takes ignores drains: a card that only drains x is not a cure for an at_least
                    chip on x, and its tap does not cut in.                                         [129]
 15 repeats         a drain card on a declared lane is repeat-eligible: its landings are skipped while x is 0.  [130]
@@ -46,7 +46,7 @@ of x. Record each run below the list as MUTANTS_held.txt does (planted, red, sur
 
 RUNS
 - Suite tests/engine_contract/drains/test_drains_*.py (blind, written from the engine design's DRAINS part alone). Run: python -m
-  tools.mutate_suite drains --run (specs tools/drains_mutants/mNN.py, each a list of (path, old, new) edits against the
+  tools.mutate_suite drains --run (specs tools/mutants/drains/mNN.py, each a list of (path, old, new) edits against the
   implementation, one per row). `--check` fails unless every row is claimed by a test marked @kills(row).
 - Against the implementation: rows 1-24 all KILLED, each with a test that claims it red; no survivors, no equivalent
   mutants. Row 13 moves every rules digest, so the pinned pre-drains fixture's test goes red alone.

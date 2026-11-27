@@ -7,8 +7,8 @@ The rhythm is the readouts' (test_weektwo_readouts.py)."""
 import pytest
 
 from ashfall_app.engine import StoreId, units
-from ashfall_app.engine.rates import store_value
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.rates import store_value
+from ashfall_app.engine.loop.work import completions
 from tests.daythree import counters
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S

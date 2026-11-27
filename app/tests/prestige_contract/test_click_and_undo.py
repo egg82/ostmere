@@ -3,9 +3,9 @@ stack) and what does not (XP, unlocks, the stack's other entries), the undo wind
 from hypothesis import given, strategies as st
 
 from ashfall_app.engine import BP, ModifierKind, NodeId, PhaseState, Save, advance, explain
-from ashfall_app.engine.nodes import NODE_PREFIX
-from ashfall_app.engine.phases import at_top, level_shown, phase_state
-from ashfall_app.engine.prestige import menu, undo_open
+from ashfall_app.engine.prestige.nodes import NODE_PREFIX
+from ashfall_app.engine.prestige.phases import at_top, level_shown, phase_state
+from ashfall_app.engine.prestige.prestige import menu, undo_open
 from prestige_world import (
     CURVE, K, MAKE_OTHER, P, N1, N2, N3, SPAN, at_second, click, rules, undo, xp_now,
 )

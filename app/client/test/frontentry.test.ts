@@ -1,6 +1,6 @@
 // Where a page load goes (src/begin.ts entry): a browser with no saves sees the front page and Begin; with saves it
 // sees Continue unless the address names a live save, a join link came, or the device's choice is on. The choice
-// (src/app/straight.ts) is off when storage throws, and the Settings sheet's checkbox (settings.test.ts) sets it.
+// (src/app/straight.ts) is off when storage throws, and the Settings sheet's checkbox (ui/settings/settings.test.ts) sets it.
 import type { SaveInfo } from "../src/api/types";
 import { browserStraight } from "../src/app/straight";
 import { entry } from "../src/begin";

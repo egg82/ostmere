@@ -8,7 +8,7 @@ from ashfall_app.engine import (
     Amount, AtMost, CardDef, CardId, ChipDef, ChipId, Flow, LineKey, Outcome, Save, StandingDef, StoreDef, StoreId,
     StoreValue, ActionId, Unlock, UnlockKind, advance, advance_logged, encode, new_save, rebase, view,
 )
-from ashfall_app.engine.rules import Rules
+from ashfall_app.engine.core.rules import Rules
 from cards_world import Q, rules, tap
 
 E, R, U, TIRED, DRAIN = StoreId("e"), CardId("rest"), CardId("notice"), ChipId("tired"), ActionId("drain")

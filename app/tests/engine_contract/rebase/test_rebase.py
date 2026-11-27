@@ -16,7 +16,7 @@ from hypothesis import given, strategies as st
 from hypothesis.strategies import DrawFn
 
 import ashfall_app.engine as engine
-from ashfall_app.engine.codec import to_json
+from ashfall_app.engine.savefile.codec import to_json
 from ashfall_app.engine import (
     BP, FORMAT, HANDS, OLDEST_FORMAT, UPGRADES, ActionId, AfterTime, Amount, AnswerDef, AnswerId, AnswerOffer, AtLeast,
     AtMost, CapRaise, CardCount, OfferDef, OfferId,

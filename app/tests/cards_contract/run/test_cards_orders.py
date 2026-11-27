@@ -11,7 +11,7 @@ from ashfall_app.engine import (
     OrderVerb, StoreValue, SwitchMix, TriggerDef, TriggerId, Unlock, UnlockKind, advance, advance_logged, decide, new_save,
     next_event, segment, view,
 )
-from ashfall_app.engine.schedule import events
+from ashfall_app.engine.loop.schedule import events
 from ashfall_app.engine import TapCard
 from cards_world import K, Q, RACK, done, keys, lane, ledger, rules, running_mix, save_mix, tap, val
 

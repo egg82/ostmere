@@ -59,7 +59,7 @@ RETIRED CHORES (retire_orders; "Installed rule" / "Retired chores")
 
 RUNS
 - Suites test_leaves_*.py (rows 1-20) and test_retire_*.py (rows 21-33), written blind from engine/design/ and contract/
-  alone. Run: python -m tools.mutate_suite leaves|retire --run (specs tools/leaves_mutants/, tools/retire_mutants/:
+  alone. Run: python -m tools.mutate_suite leaves|retire --run (specs tools/mutants/leaves/, tools/mutants/retire/:
   mNN.py is a row's mutant, mNNa.py ... its further variants, each planted alone). Each run also runs the other suite
   and the implementation's own tests (engine/test_leaves_impl.py, engine/test_retired_chores_impl.py,
   rules/loaders/test_leaves_loader.py, rules/loaders/test_retired_chores_loader.py); only the suite's own tests make claims.

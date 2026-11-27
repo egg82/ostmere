@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class SiteEntry(BaseModel):
-    """Where a card's work is done, as the scene shows it (app/tests/test_scene_sites.py): `layer` is the id of the scene
+    """Where a card's work is done, as the scene shows it (app/tests/scene/test_scene_sites.py): `layer` is the id of the scene
     layer a person working the card stands at, `no_site` the reason there is no one place. Exactly one; words only to the
     engine."""
 

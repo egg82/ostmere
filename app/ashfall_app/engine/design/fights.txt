@@ -90,7 +90,7 @@ CHOICES (fights)
   odds entries. No live save holds either before this part ships, so decoding old saves is unchanged and FORMAT
   stays. Confirmed against codec.py: a Target tag is one entry in its class table, and rules_digest leaves sides and
   threats out of the rules' encoding while empty, so rules that declare none keep their digest and old saves decode as
-  they were (tests/engine/test_pre_fights_save.py).
+  they were (tests/engine/savefile/test_pre_fights_save.py).
 - Rebase: a release that adds a FightDef to a released card changes what its lines pay; a
   ramp step is always a new trigger.
 - Held entries: a card's while_running entries join the stack the odds are read from, scaled by the card's share of

@@ -9,7 +9,7 @@ it runs, the levels its start reported, and once it lands or lets go, what the s
 from dataclasses import dataclass, replace
 
 from .. import engine as e
-from ..engine.codec import Json
+from ..engine.savefile.codec import Json
 
 KEPT = 8
 MADE_KEPT = 2

@@ -56,7 +56,7 @@ def _named(src: "SourceEntry") -> str:
 
 def _writes(o: "Opening", src: "SourceEntry") -> bool:
     """Whether the content writes a line the save keeps for this cause: an authored trigger or a card with lines of its
-    own (`engine.work.written_by`: not its fight's won and lost lines, which the page draws), a `line` person moved that
+    own (`engine.loop.work.written_by`: not its fight's won and lost lines, which the page draws), a `line` person moved that
     way, a mention person moved that way."""
     if src.source_kind == "trigger":
         return any(t.id == src.id and t.outcome.line_keys for t in o.triggers)

@@ -7,7 +7,7 @@ from collections import Counter
 from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
 
 from ashfall_app.engine import CardId, Line, Rules, Save, SetQueue, TapCard, Unlock, UnlockKind, Verb
-from ashfall_app.engine.castparts import cast_features
+from ashfall_app.engine.people.castparts import cast_features
 from tests.daythree.counters import Counts, Visit, spendable
 from tests.weektwo.counters import decides
 from tests.weekone import fights

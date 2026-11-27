@@ -68,7 +68,7 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
    ambiguities logged and answered in `engine/design/` before item 1 merges.
 3. **A season's end retires its chores** (**S**, engine and loader; interface first in `engine/design/`, beside "Installed
    rule"). An outcome part `retire_orders = [card ids]` removes every order, the player's own included, whose task taps
-   one of the named cards; each removal is logged by the rule log (`engine/rulelog.py`), so the Rules tab's Lately
+   one of the named cards; each removal is logged by the rule log (`engine/orders/rulelog.py`), so the Rules tab's Lately
    block says the rule ended with its season. The loader refuses a named card that is not the cure of a chip whose
    store only a season's standing makes, and an outcome that is not a season's turn. The order cards need nothing: they
    are offered again while their chip shows uncovered. The chore's leftover state is emptied by content (a standing
@@ -79,7 +79,7 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
    order card is offered again at the chip's next showing; a planted retirement naming a non-chore card fails the
    loader, naming it.
 4. **A person leaves the town** (**M**, engine; interface first in `engine/design/`, a new section "LEAVES", beside
-   `engine/joins.py`). An outcome part `leaves = [{lane, stops = [standing ids]}]`: the lane's person leaves at that
+   `engine/people/joins.py`). An outcome part `leaves = [{lane, stops = [standing ids]}]`: the lane's person leaves at that
    instant. Their lane stops (its tap or task ends; work in progress is dropped, never paid), the orders on that lane
    are removed and logged, their shares leave the town's mix (nobody else's shares change: each person's shares are
    their own time), the lane's cards retire without greying any mix (a card retired by a leave drops out of the mixes

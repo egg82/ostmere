@@ -75,7 +75,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
 """Each build and the layers that are it: its states, its parts, what it carries."""
 
 NO_SCENE: frozenset[str] = frozenset({"post_door", "post", "bind_book"})
-"""Builds (craft cards with a cap, app/tests/test_scene_shown.py) the player makes that stand nowhere in the scene:
+"""Builds (craft cards with a cap, app/tests/scene/test_scene_shown.py) the player makes that stand nowhere in the scene:
 `post` and `post_door` are out in the wood, a map stamp and not a scene stamp (content/team/week-four.md, Art);
 `bind_book` is a book handed to a person, which the journal shows, not the camp."""
 

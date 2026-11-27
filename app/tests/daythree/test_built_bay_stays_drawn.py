@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from ashfall_app.engine import CardId
-from ashfall_app.engine.work import completions
+from ashfall_app.engine.loop.work import completions
 from tests.daytwo.player import DayTwoPlayer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools" / "scene"))

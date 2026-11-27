@@ -62,7 +62,7 @@ phone, portrait                        desktop, and a phone in landscape
 - **The page** is parchment, written in the hand's ink: three tokens added to `:root`, the only new ones, since no
   sibling draws ink on paper. Their values are the ones the sketch method draws with
   (`docs/research/sketch-test/process.md`): `--parchment: #e6dcc6`, `--hand-ink: #2b241c`, and `--hand-pencil:
-  #645d52`, the ink lightened only as far as 4.5:1 on the parchment holds (`tests/test_client_contrast.py` checks
+  #645d52`, the ink lightened only as far as 4.5:1 on the parchment holds (`tests/client/test_client_contrast.py` checks
   all three). Round the page is the sheet's raised surface and shadow.
   - **The sketch:** the entry's drawing (`/assets/journal/<sketch>.png`), `aria-hidden`, since its labels are art and
     the notes carry the page's words. One that fails to load leaves its room empty. A page with none (a days page) is

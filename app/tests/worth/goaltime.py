@@ -3,15 +3,15 @@ measures"). A goal is a skill's next level, for a skill on screen, below its pha
 trains it and could run now; every level carries a marker, so the next level is the next marker (tests/dayone/pacing/goals.py).
 A card's cap is not a goal here: a capped card is a tap, not a mix.
 
-A mix's XP rate into a skill is the engine's own rate formula (engine/modifiers.py: base, modifiers, share) summed over
+A mix's XP rate into a skill is the engine's own rate formula (engine/modifiers/modifiers.py: base, modifiers, share) summed over
 the mix's ready cards that train it, a card that could not run now giving its share to the rest of its mix as SPENT
 does (engine design/spent.txt, "SPENT"). It is read at the visit's instant, so it leaves out what an order or a tap takes
 from the mix later and an input running dry; the readout prints how far the kept mix's rates came true over each absence."""
 from dataclasses import dataclass
 
 from ashfall_app.engine import BP, HANDS, CardId, FlowKind, RateRef, Rules, Save, SkillId, View, explain, flatten_shares
-from ashfall_app.engine.phases import at_top, next_level_xp
-from ashfall_app.engine.segments import value_at
+from ashfall_app.engine.prestige.phases import at_top, next_level_xp
+from ashfall_app.engine.core.segments import value_at
 
 Shares = tuple[tuple[str, int], ...]
 """A mix as (card, share_bp) pairs, sorted by card, so equal mixes compare equal."""
@@ -45,7 +45,7 @@ class Board:
 
 
 def full_rate(save: Save, rules: Rules, card: str) -> int:
-    """The card's XP rate at a full share, modifiers applied (XP per second in quantity units: engine/units.py)."""
+    """The card's XP rate at a full share, modifiers applied (XP per second in quantity units: engine/core/units.py)."""
     ex = explain(save, rules, RateRef(CardId(card), FlowKind.XP, None))
     rate = ex.base_per_hour * max(0, BP + sum(m.amount_bp for m in ex.adds)) // BP
     for m in ex.muls:
