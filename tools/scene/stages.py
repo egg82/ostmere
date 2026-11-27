@@ -237,12 +237,20 @@ def holds(cond: str | None, state: State) -> bool:
         return any(holds(c, state) for c in cond.split("|"))
     if "&" in cond:
         return all(holds(c, state) for c in cond.split("&"))
+    if cond == "dark":
+        from grades import GRADES, pick
+        return bool(GRADES[pick(lambda when: holds(when, state))].get("dark"))
     if cond.startswith("store:"):
         store, _, n = cond[len("store:"):].partition("@")
         lo, _, hi = (n or "1").partition("..")
         held = dict(state.stores).get(store, 0)
         return held >= int(lo) and (not hi or held < int(hi))
     return cond in state.facts
+
+
+def in_dark(cond: str) -> str:
+    """`cond` while it is dusk or night: each of its alternatives and the dark."""
+    return "|".join(f"{term}&dark" for term in cond.split("|"))
 
 
 CONDITIONS = {
@@ -262,10 +270,11 @@ CONDITIONS = {
     "joined:<lane>": "the lane's person has joined the town",
     "left:<lane>": "the lane's person has left the town for good",
     "end:showing": "the end has happened: the end feature was unlocked with every ledger line covered (it never clears)",
+    "dark": "the grade the page shows is a dusk or a night one (the manifest's grades say which, `dark`): the light going, or gone",
     "<a>|<b>|...": "any of the conditions holds",
     "<a>&<b>&...": "all of the conditions hold; binds tighter than |, so a&b|c is (a and b) or c",
 }
 
 
-KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left"}
+KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left", "dark"}
 """The condition kinds the page knows (app/client/src/scene/conditions.ts)."""

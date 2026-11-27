@@ -588,6 +588,7 @@ roles = [
 # A23 on the hands. Its work divides one item's quantity units at speeds 1 and a half (a tap keeps its start speed).
 [[cards]]
 id = "make_bay"
+site = { layer = "bay" }
 presentation = "craft"
 label_key = "c_make_bay"
 work_s = 18000
@@ -642,6 +643,7 @@ tied = "n2"
 # His lane: a townsperson the player's rules set, as hers.
 [[lanes]]
 id = "n2"
+lodging = { build = "hall" }
 label_key = "lane_n2"
 ruled = true
 told = "line"
@@ -652,6 +654,7 @@ crews = ["g_field"]
 # A24 on his lane, the same real time and stores as A23.
 [[cards]]
 id = "n2_build_bay"
+site = { layer = "bay" }
 twin_of = "make_bay"
 lane = "n2"
 presentation = "craft"

@@ -555,6 +555,7 @@ joins = [{ lane = "n13", mix = "town:camp", card = "n13_forage", own_split = tru
 
 [[lanes]]
 id = "n13"
+lodging = { elsewhere = "sleeps by the fire outside the hall, having declined a place in it (C-cast-33)" }
 label_key = "lane_n13"
 ruled = true
 told = "line"

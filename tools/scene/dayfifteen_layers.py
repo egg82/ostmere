@@ -24,6 +24,7 @@ def made_layers() -> list[Layer]:
           for n, (at, until) in enumerate(zip(STATES, STATES[1:]), start=1)],
         Layer(id=f"hall_{last}", img=made.hall(last), when=f"pushes:hall@{STATES[-1]}"),
         Layer(id="hall_hearth", img=made.hall_hearth(), when=f"project:hall_hearth&pushes:hall@{STATES[-1]}"),
+        Layer(id="hall_smoke", img=made.hall_smoke(), when=f"project:hall_hearth&pushes:hall@{STATES[-1]}"),
         *[Layer(id=f"beds_{n}", img=made.beds(n), when=f"pushes:n3_sow@{at}", until=f"pushes:n3_sow@{until}")
           for n, (at, until) in enumerate(zip(SOWN, SOWN[1:]), start=1)],
         Layer(id=f"beds_{len(SOWN)}", img=made.beds(len(SOWN)), when=f"pushes:n3_sow@{SOWN[-1]}"),

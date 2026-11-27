@@ -68,6 +68,13 @@ seeded layouts), judged good enough on 2026-10-11. Each new entry is looked at b
 commissioned art replaces whatever keeps slipping (chunky bodies and comic shapes did), and swaps in without
 touching the page around it.
 
+The scene shows the camp as it is lived in, not as it was added to. By day the watch fire and the gap fire are banked
+(kindling laid, smoke cut from the pack's smoke sheet) and they light at dusk and night; the camp fire burns as before.
+A person's lane says where they sleep (`lodging`: a build, or `elsewhere` and why); once the hall is roofed, the idle
+poses of those it lodges give way at dusk and night, its windows light and a few are seen at its door, while by day
+they are at the fire or their work as before. A build the camp outgrows is retired by an authored row naming what
+supersedes it and its fate (taken down, or indoors); one kept says why. Props stand where their purpose puts them.
+
 ## The chronicle and unwrap, as built
 
 How the chronicle stands today, moved from its row in `systems.md`. The unwrap cursor lives in the presentation store.

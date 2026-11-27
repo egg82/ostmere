@@ -12,7 +12,7 @@ from PIL import Image, ImageChops
 
 import kit
 
-GRADES: dict[str, dict[str, str | float | None]] = {
+GRADES: dict[str, dict[str, str | float | bool | None]] = {
     "dark": {"when": None, "filter": "brightness(0.5) saturate(0.6) contrast(1.1)",
              "overlay": "rgba(12,16,30,0.24)"},
     "cold": {"when": "project:look_around", "filter": "brightness(0.95) saturate(1.0) contrast(1.18)",
@@ -20,9 +20,9 @@ GRADES: dict[str, dict[str, str | float | None]] = {
     "warm": {"when": "project:strike_fire", "filter": "brightness(1.04) saturate(1.1) contrast(1.2)",
              "overlay": "rgba(255,140,60,0.06)"},
     "dusk": {"when": "action:evening|end:showing", "filter": "brightness(0.66) saturate(0.7) contrast(1.22)",
-             "overlay": "rgba(34,38,84,0.34)", "ease_s": 40},
+             "overlay": "rgba(34,38,84,0.34)", "ease_s": 40, "dark": True},
     "night": {"when": "feature:night", "filter": "brightness(0.64) saturate(0.65) contrast(1.12)",
-              "overlay": "rgba(14,18,40,0.28)"},
+              "overlay": "rgba(14,18,40,0.28)", "dark": True},
 }
 """The first is the default (the dark the player wakes in); a later grade whose `when` holds replaces it, so look_around
 lifts it to cold, the fire to warm, the evening to dusk (dusk wins over warm; `ease_s` is how many seconds the page
