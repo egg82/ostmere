@@ -13,7 +13,7 @@ import pytest
 
 from ashfall_app.api.goals.sources import Source, StoreSources, sources, store_sources
 from ashfall_app.engine import Rules, Save, View, value_at
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weektwo.routes import TWENTYSEVEN_PUSH_ROUTES

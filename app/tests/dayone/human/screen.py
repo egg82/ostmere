@@ -6,9 +6,9 @@ when they fire in play. Aims and mechanics are named by id or kind, never by tex
 from collections.abc import Iterable, Mapping, Sequence
 
 from ashfall_app.engine import Save, View
-from ashfall_app.opening.feature_entries import AimEntry
+from ashfall_app.rules.entries.feature_entries import AimEntry
 from tests.dayone.human.human import HumanPlayer
-from tests.opening.playthrough import offering, opening
+from tests.rules.play.playthrough import offering, opening
 
 Key = tuple[str, str]
 FIRST_S = 300

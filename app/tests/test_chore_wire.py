@@ -1,13 +1,13 @@
-"""ChipInfo.chore on the wire (week-four-plan item 4), on tests/opening/fixtures/chorechip.toml merged onto the opening
+"""ChipInfo.chore on the wire (week-four-plan item 4), on tests/rules/fixtures/chorechip.toml merged onto the opening
 alone: the season's chip is served as a chore, the opening's own chips are not, and the same chip stops being one once
 a card that is no season's standing also makes its store."""
 from pathlib import Path
 
 from ashfall_app.api.service import Game
-from ashfall_app.opening.schema import OPENING, Opening, load_opening
+from ashfall_app.rules.schema import OPENING, Opening, load_opening
 from ashfall_app.saves.ruleset import ruleset
 
-FIXTURE = Path(__file__).resolve().parent / "opening" / "fixtures" / "chorechip.toml"
+FIXTURE = Path(__file__).resolve().parent / "rules" / "fixtures" / "chorechip.toml"
 
 
 def served(o: Opening) -> dict[str, bool]:

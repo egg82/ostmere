@@ -30,7 +30,7 @@ from typing import Any
 from ashfall_app import engine as e
 from ashfall_app.db.stored.manifests import whole
 from ashfall_app.db.saves import DecisionRecord, SaveRecord, SnapshotRecord
-from ashfall_app.opening.schema import load_opening
+from ashfall_app.rules.schema import load_opening
 from ashfall_app.saves.interface import Ruleset, Unavailable
 from ashfall_app.saves.builds.load import load
 from ashfall_app.saves.ruleset import build_release, ruleset

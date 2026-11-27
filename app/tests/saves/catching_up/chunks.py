@@ -7,7 +7,7 @@ from functools import cache
 from pathlib import Path
 
 from ashfall_app import engine as e
-from ashfall_app.opening.schema import load_opening, to_rules
+from ashfall_app.rules.schema import load_opening, to_rules
 
 GOLDEN = Path(__file__).resolve().parent.parent / "golden"
 DAY_S = 86_400

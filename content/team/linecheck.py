@@ -14,7 +14,7 @@ from pathlib import Path
 
 APP = Path(__file__).resolve().parents[2] / "app"
 sys.path.insert(0, str(APP))
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, UNWRITTEN  # noqa: E402
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, UNWRITTEN  # noqa: E402
 
 MUST_NOT = {
     "again": r"\bagain\b",

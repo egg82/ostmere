@@ -1,6 +1,6 @@
 """The prestige verbs are wired into decide() as typed refusals, by hand only, and the codec carries a skill's phase
 without changing any save that has none (engine prestigeverbs.py, state.PhaseState). Nodes refused at validation and
-at the loader: engine nodechecks.py, opening/prestige.py."""
+at the loader: engine nodechecks.py, rules/prestige.py."""
 from dataclasses import replace
 from typing import get_args
 
@@ -14,7 +14,7 @@ from ashfall_app.engine import (
     TapCard, Verb, WorkRef, decide, decode, encode, new_save, units, validate_rules, verb_from_json, verb_to_json,
 )
 from ashfall_app.engine.nodes import NodeTarget
-from ashfall_app.opening.prestige import NodeChangeEntry
+from ashfall_app.rules.prestige import NodeChangeEntry
 
 CRAFT, GATHER = SkillId("craft"), SkillId("gather")
 WOOD = StoreId("wood")

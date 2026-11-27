@@ -2,7 +2,7 @@
 condition of the first unfired trigger that grants it, while the need is short and only when a need row can show it (a
 skill's level, a card's completions); the makers served are the ones in play; a short store nothing in play can make
 again, every grant of it fired, is spent. The table is read off the content
-(opening/makers.py)."""
+(rules/makers.py)."""
 from dataclasses import replace
 
 from ashfall_app import engine as e
@@ -10,7 +10,7 @@ from ashfall_app.api import convert
 from ashfall_app.api import models as w
 from ashfall_app.api.goals.sources import StoreSources, sources, store_sources
 from ashfall_app.engine import QUANTITY_SCALE as Q
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from tests.engine.test_cards_impl import CHOP, CRAFT, WOOD, rules
 
 LEVEL = e.AtLeast(e.SkillLevel(e.SkillId("k")), 2, 2)

@@ -1,5 +1,5 @@
 """What makes the rules' prestige and nodes valid (nodechecks.check_nodes, called by validate_rules), and what the
-content loader lets a node say (opening/prestige.py). Each refusal is one change to rules that pass first."""
+content loader lets a node say (rules/prestige.py). Each refusal is one change to rules that pass first."""
 from dataclasses import replace
 
 import pytest
@@ -12,7 +12,7 @@ from ashfall_app.engine import (
 from ashfall_app.engine.ids import SideId, ThreatId
 from ashfall_app.engine.nodes import NodeTarget
 from ashfall_app.engine.nodechecks import check_nodes
-from ashfall_app.opening.prestige import NodeChangeEntry, NodeEntry, PrestigeEntry, node_def, prestige_def
+from ashfall_app.rules.prestige import NodeChangeEntry, NodeEntry, PrestigeEntry, node_def, prestige_def
 from prestige_world import HONE, J, K, N1, OTHER, TRAIN, WOOD, rules
 
 

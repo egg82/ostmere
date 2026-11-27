@@ -5,8 +5,8 @@ import pytest
 
 from tests.daythree import content as c3
 from tests.daythree import lines
-from ashfall_app.opening.fight_refs import fights
-from ashfall_app.opening.schema import DAY_TWO
+from ashfall_app.rules.checks.world.fight_refs import fights
+from ashfall_app.rules.schema import DAY_TWO
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weekone import report

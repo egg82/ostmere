@@ -3,9 +3,9 @@ trigger unlocks), shared by the golden saves and the saves service's rebase test
 from functools import cache
 
 from ashfall_app.engine import CardId
-from ashfall_app.opening.checks import check_opening
-from ashfall_app.opening.schema import OPENING, CardEntry, Opening, TriggerEntry
-from tests.opening.edited import edited, roots_renamed
+from ashfall_app.rules.checks.run import check_opening
+from ashfall_app.rules.schema import OPENING, CardEntry, Opening, TriggerEntry
+from tests.rules.play.edited import edited, roots_renamed
 
 RETUNED = CardId("lay_to_dry")
 

@@ -6,7 +6,7 @@ from tests.dayone.conftest import PLAY_TIMEOUT_S
 from tests.dayone.player.player import DayOnePlayer
 from tests.dayone.checks.repeats import repeated
 from tests.dayone.player.routes import plays
-from tests.opening.playthrough import opening_rules
+from tests.rules.play.playthrough import opening_rules
 
 
 @pytest.mark.playthrough

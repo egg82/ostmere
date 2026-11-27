@@ -8,7 +8,7 @@ from sqlalchemy import Engine
 from ashfall_app import engine as e
 from ashfall_app import main
 from ashfall_app.api.service import Game
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 from ashfall_app.saves.service import PgSaves
 from ashfall_app.services import Services

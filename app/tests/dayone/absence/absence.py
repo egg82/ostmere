@@ -9,14 +9,14 @@ from collections.abc import Mapping, Sequence, Set as AbstractSet
 from dataclasses import dataclass
 
 from ashfall_app.engine import Line, Rules, Save, UnlockKind, View, advance_logged, view
-from ashfall_app.opening.entries import ConditionEntry
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.entries.entries import ConditionEntry
+from ashfall_app.rules.schema import Opening
 from tests.dayone.player import arrival_rules as ar
 from tests.dayone.absence import capcheck, caploss
 from tests.dayone.player.beats import STORY
 from tests.dayone.human.human import HumanPlayer, human_day
 from tests.dayone.player.schedules import HOUR
-from tests.opening.playthrough import offering, opening
+from tests.rules.play.playthrough import offering, opening
 
 ABSENCES_H = (1, 8, 24, 72, 168)
 KINDS = ("line", "feature", "chip", "store", "skill", "card", "level")

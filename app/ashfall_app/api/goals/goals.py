@@ -1,9 +1,9 @@
 """View.goals: what the open story beats wait on, read off the engine's pending triggers and the content's goals
-(opening/goals.py; contract/goals.txt, "Goals")."""
+(rules/goals.py; contract/goals.txt, "Goals")."""
 from collections.abc import Mapping
 
 from ... import engine as e
-from ...opening.goals import GoalDef
+from ...rules.goals import GoalDef
 from .. import convert
 from . import goal_models as g
 

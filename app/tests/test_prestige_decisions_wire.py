@@ -12,8 +12,8 @@ from ashfall_app.api.error_models import ErrorCode
 from ashfall_app.api.errors import GameError
 from ashfall_app.api.player.save_routes import answered
 from ashfall_app.api.service import Game
-from ashfall_app.opening.prestige import NodeChangeEntry, NodeEntry
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.prestige import NodeChangeEntry, NodeEntry
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.ruleset import ruleset
 from tests.engine.test_prestige_impl import A, GATHER, H, RULES, START
 

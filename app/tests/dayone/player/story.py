@@ -13,7 +13,7 @@ from ashfall_app.engine import Line, Rules, Save, advance_logged, next_event, re
 from tests.dayone.player.beats import BEATS_YAML, STORY, landed
 from tests.dayone.checks.checks import absence_unlocks, one_per_moment, opens
 from tests.dayone.player.player import DayOnePlayer
-from tests.opening.playthrough import opening_rules
+from tests.rules.play.playthrough import opening_rules
 
 FLATCHECK = BEATS_YAML.parent / "team" / "flatcheck.py"
 GOLDEN = Path(__file__).resolve().parents[2] / "saves" / "golden"

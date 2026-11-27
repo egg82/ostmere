@@ -14,7 +14,7 @@ from ashfall_app.saves.interface import Played, Ruleset
 from ashfall_app.saves.ruleruns import RuleRun
 from ashfall_app.saves.service import PgSaves
 from tests.fake_clock import FakeClock
-from tests.opening.playthrough import opening
+from tests.rules.play.playthrough import opening
 
 A = e.CardId("gather_wood")
 M0 = e.MixId("m0")

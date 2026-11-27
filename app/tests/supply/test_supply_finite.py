@@ -1,4 +1,4 @@
-"""The finite-supply check (opening/finite_checks.py, issue #438) on the fixture outpost (chapter.py): the outpost's
+"""The finite-supply check (rules/checks/world/finite_checks.py, issue #438) on the fixture outpost (chapter.py): the outpost's
 store is made by a card that stops on the town's store, which an uncapped gatherer makes, so no progress gate reading
 the outpost's store is flagged. The control makes the town's store a finite pool instead, and the same gates are."""
 from dataclasses import replace
@@ -6,7 +6,7 @@ from dataclasses import replace
 import pytest
 
 from ashfall_app.engine import QUANTITY_SCALE as Q, Amount, AfterTime, Outcome, Rules, TriggerDef, TriggerId
-from ashfall_app.opening.finite_checks import check_finite_supply
+from ashfall_app.rules.checks.world.finite_checks import check_finite_supply
 from tests.supply.chapter import GATHER, HAUL, HOLD_A, HOLD_B, KEEP, POST, RAID, TOWN, TRIP, TWIN, rules, without
 
 PER = Q

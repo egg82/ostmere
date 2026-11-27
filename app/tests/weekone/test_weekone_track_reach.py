@@ -4,7 +4,7 @@ hunt's work exactly when the track laid has passed it."""
 import pytest
 
 from ashfall_app.engine import QUANTITY_SCALE as Q, CardId, CardShare, Mix, SaveMix, StoreId, explain_work, segment
-from ashfall_app.opening.schema import load_opening
+from ashfall_app.rules.schema import load_opening
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.weekone.routes import week1

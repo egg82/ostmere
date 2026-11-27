@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from ashfall_app.opening.lane_entries import ByDayEntry
-from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
+from ashfall_app.rules.entries.lane_entries import ByDayEntry
+from ashfall_app.rules.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from tests.test_scene_lodging import person_lanes
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"

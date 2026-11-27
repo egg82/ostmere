@@ -11,7 +11,7 @@ from ashfall_app.engine import (
     AtLeast, AtMost, CardCount, CardId, CardView, Order, Prestige, QueueEntry, SetOrders, SetQueue, StoreId, StoreValue,
     TapCard, Verb, View, units,
 )
-from tests.opening.playthrough import Kind
+from tests.rules.play.playthrough import Kind
 
 Move = tuple[Kind, tuple[Verb, ...]]
 BUILDS = ("build_lean_to", "build_larder")

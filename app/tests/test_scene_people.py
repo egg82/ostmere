@@ -9,8 +9,8 @@ from collections.abc import Collection, Iterable
 from functools import cache
 from pathlib import Path
 
-from ashfall_app.opening.entries import OutcomeEntry, WhereaboutsEntry
-from ashfall_app.opening.schema import Opening, load_opening
+from ashfall_app.rules.entries.entries import OutcomeEntry, WhereaboutsEntry
+from ashfall_app.rules.schema import Opening, load_opening
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))

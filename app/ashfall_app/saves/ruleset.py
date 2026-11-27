@@ -3,9 +3,9 @@
 import os
 
 from .. import engine as e
-from ..opening.convert import camp_trigger_id
-from ..opening.line_kinds import line_keys
-from ..opening.schema import Opening, to_rules
+from ..rules.expand.convert import camp_trigger_id
+from ..rules.line_kinds import line_keys
+from ..rules.schema import Opening, to_rules
 from .interface import Ruleset
 from .journal_rules import journal_rules
 from .repeats import RepeatRules

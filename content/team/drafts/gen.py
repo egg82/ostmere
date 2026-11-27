@@ -11,7 +11,7 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-OPEN = ROOT / "app/ashfall_app/opening"
+OPEN = ROOT / "app/ashfall_app/rules"
 TEAM = ROOT / "content/team"
 UNW = "[day two: line to write]"
 WEEK_TWO = "--week-two" in sys.argv
@@ -139,7 +139,7 @@ From day one's and day three's voice passes and the lead's picks. Each cost a li
   woman" or "the old man". Write the slot exactly (`{n2}`, no spaces, no other braces); never invent a name; Lucy stays
   the one name written out. The line-length limit counts a slot as the name it shows (about six letters), and a line
   holds no digit.
-- **Hard limit: no line is over 75 characters** (`app/tests/opening/test_line_length.py`, applied to every `l_` line;
+- **Hard limit: no line is over 75 characters** (`app/tests/rules/content/test_line_length.py`, applied to every `l_` line;
   a line over fails CI and goes back). The set's median should stay at 45 or under. Count characters before sending;
   most lines should be well under.
 - **Voice notes (day one's pass):** a line that echoes its own level label or another line shown in the same instant is
@@ -372,7 +372,7 @@ def main() -> None:
         body = f"""# {ch.replace('-', ' ').capitalize()}'s lines: the writers' brief
 
 Spoilers: under `content/`, never shown to the owner. The spec is `{SPEC}`; the data is
-`app/ashfall_app/opening/{cfg['file']}.toml`, where every key below reads "[day two: line to write]" (the marker's spelling is
+`app/ashfall_app/rules/{cfg['file']}.toml`, where every key below reads "[day two: line to write]" (the marker's spelling is
 the data file's; ignore it). The brief's design states are an expectation; the generated states below replace them.
 
 ## How the lines get written
@@ -454,7 +454,7 @@ H keys (alt required): {', '.join(h)}
         rows = [f"# {ch.capitalize()} keys manifest: every key in {cfg['file']}.toml still at the UNWRITTEN marker, in file order.",
                 "# kind: line (a proposer writes it) | fail (failed-card line, a proposer writes it) | label (the voice pass writes it)"
                 + (" | journal note (its own batch, after this one)." if WEEK_TWO else "."),
-                "# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/opening/test_line_length.py). Labels: none set.",
+                "# limit: lines share a set limit: median <= 45 chars, p90 <= 75 across the chapter's l_ keys, and no line over 75 (app/tests/rules/content/test_line_length.py). Labels: none set.",
                 "# alt: H = a proposer also writes key_alt. brief: the design brief's name where it differs (-: same).",
                 f"# keys: {len(unw) + len(extra)}" + (f" ({len(extra)} of them are pool entries not yet in the data file; the lead adds them)" if extra else ""),
                 "key\tkind\tlimit\talt\tbrief"]

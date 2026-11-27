@@ -104,7 +104,7 @@ jobs:
       - working-directory: app
         run: python -m pytest -q tests/test_doc_citations.py tests/test_decision_citations.py tests/test_gates_command.py tests/test_household_names.py
 
-  # Three shards (app/tools/shards.py): a is tests/saves, accounts and api_contract; c is tests/opening; b is everything
+  # Three shards (app/tools/shards.py): a is tests/saves, accounts and api_contract; c is tests/rules; b is everything
   # else, so a new test directory runs in b. `shards-cover` fails if the three together are not the whole suite.
   tests:
     needs: changes
@@ -195,7 +195,7 @@ jobs:
       - working-directory: app
         run: python tests/journal_contract/plant_mutants.py --plants
 
-  # The per-PR smoke route: the opening's representative routes (tests/opening/routes.py, PUSH_ROUTES) and the tests
+  # The per-PR smoke route: the opening's representative routes (tests/rules/play/routes.py, PUSH_ROUTES) and the tests
   # that read them, so a change that breaks play itself goes red before it merges. The rest of the playthroughs are the
   # full run below.
   playthrough-smoke:
@@ -216,7 +216,7 @@ jobs:
         run: pip install -r app/requirements.txt -r app/requirements-dev.txt
       - name: Playthrough (the opening)
         working-directory: app
-        run: python -m pytest -q -m playthrough tests/opening --durations=10 --durations-min=1
+        run: python -m pytest -q -m playthrough tests/rules --durations=10 --durations-min=1
       - name: Upload changed readouts
         if: always()
         uses: actions/upload-artifact@v4
@@ -414,7 +414,7 @@ jobs:
         if: always() && hashFiles('readouts-new/**') != ''
         uses: ./.github/actions/readout-differs
 
-  # Full run only. The tests that read a whole scripted playthrough (marked playthrough; tests/opening/routes.py plays
+  # Full run only. The tests that read a whole scripted playthrough (marked playthrough; tests/rules/play/routes.py plays
   # each representative route once per session and they share it). Split by which session-scoped plays a test shares,
   # so no job plays another's plays again; a directory added later runs in `everything-else` until it gets a job of its
   # own. A readout whose text changed (app/tests/readout_snapshot.py) leaves its new text in readouts-new/, uploaded as

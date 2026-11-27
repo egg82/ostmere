@@ -16,7 +16,7 @@ from tests.daytwo import policy as p2
 from tests.dayone.player import policy, sinks
 from tests.dayone.human.human import lands_within, thresholds
 from tests.dayone.player.player import DayOnePlayer, VisitRecord
-from tests.opening.playthrough import News
+from tests.rules.play.playthrough import News
 
 LINGER_S = 10 * 60
 QUEUEABLE = (*policy.QUEUEABLE, *c.BUILDS)

@@ -6,7 +6,7 @@
 #   the next release (ci.yml, `release`), unless it is red only for readouts (`refresh-readouts`): dispatch this workflow on main once it is fixed, then re-run the held job.
 # - `tests-deep`: the deep Hypothesis profile (HYPOTHESIS_PROFILE=ci) over every engine contract suite, while pull
 #   requests and pushes run the fast default profile in ci.yml's `tests`. A new engine part's suite is added here when it
-#   lands. The same variable makes tests/opening play every route at seeds 0-2 and both kinds of player past the end
+#   lands. The same variable makes tests/rules play every route at seeds 0-2 and both kinds of player past the end
 #   (routes.py, DEEP).
 
 name: Nightly
@@ -56,7 +56,7 @@ jobs:
         run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
       - working-directory: app
         run: >
-          python -m pytest -q --timeout=600 tests/engine_contract tests/cards_contract tests/journal_contract tests/opening
+          python -m pytest -q --timeout=600 tests/engine_contract tests/cards_contract tests/journal_contract tests/rules
           tests/saves tests/dayone tests/daytwo
 
   # A nightly red only because readouts differ from their committed text (ci.yml's ci-ok decides, tools/nightly_verdict.py)

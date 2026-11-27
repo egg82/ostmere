@@ -11,7 +11,7 @@ from tests.daytwo.player import DayTwoPlayer
 from tests.dayone.player.routes import ROUTES as DAY_ONE
 from tests.dayone.player.schedules import HOUR, schedule
 from tests.dayone.player.sinks import SINKS, SinkKnobs
-from tests.opening.routes import DEEP
+from tests.rules.play.routes import DEEP
 
 HORIZON_S = 10 * 24 * HOUR
 """Long enough for the lazy route, which sees B3 on its fourth day and returns once a day."""

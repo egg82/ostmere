@@ -9,8 +9,8 @@ import hashlib
 import sys
 from pathlib import Path
 
-from ashfall_app.opening import schema
-from ashfall_app.opening.schema import CHAPTERS, OPENING, Opening
+from ashfall_app.rules import schema
+from ashfall_app.rules.schema import CHAPTERS, OPENING, Opening
 
 real_load_opening = schema.load_opening
 Key = tuple[Path, tuple[Path, ...], str]

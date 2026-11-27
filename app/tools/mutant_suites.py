@@ -18,7 +18,7 @@ class Suite:
 
 
 LEAVES_ALSO = ("tests/engine/test_leaves_impl.py", "tests/engine/test_retired_chores_impl.py",
-               "tests/opening/test_leaves_loader.py", "tests/opening/test_retired_chores_loader.py")
+               "tests/rules/loaders/test_leaves_loader.py", "tests/rules/loaders/test_retired_chores_loader.py")
 SUITES = {
     "held": Suite("MUTANTS_held.txt", "test_held_*.py", "held_mutants", home=f"{CONTRACT}/held"),
     "drains": Suite("MUTANTS_drains.txt", "test_drains_*.py", "drains_mutants", home=f"{CONTRACT}/drains"),

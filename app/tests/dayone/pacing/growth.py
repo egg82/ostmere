@@ -5,7 +5,7 @@ level's speed-up goes to its card's work (more made per hour, engine WorkRef), w
 aims at XP itself (a RateRef on XP, a lane's speed) shortens a level. Read off the rules: the curve's steps and the XP
 modifiers the skill's own levels land, card by card.
 
-Each skill's climb is read the same way and reported (tests/opening/report.py), never held to a band: the hours a full
+Each skill's climb is read the same way and reported (tests/rules/play/report.py), never held to a band: the hours a full
 share of its fastest runner takes to climb the curve."""
 from math import prod
 

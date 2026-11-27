@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 
 from ashfall_app.api.world import scenestores
-from ashfall_app.opening.refs import outcomes
-from ashfall_app.opening.schema import load_opening, to_rules
+from ashfall_app.rules.refs import outcomes
+from ashfall_app.rules.schema import load_opening, to_rules
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))

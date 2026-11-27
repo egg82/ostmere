@@ -8,7 +8,7 @@ from collections.abc import Iterator
 import pytest
 
 from ashfall_app import main
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from tests import pg
 from tests.api_contract.site import SET_NO_ORDERS, Browser, Pod, begun, ok, pod
 from tests.shipped_ruleset import ShippedRuleset

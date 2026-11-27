@@ -1,10 +1,10 @@
 """The content's lanes and the town's later names, whose labels change with the unlocks (contract/, "A lane run by
 rules", "The town's mix")."""
 from ... import engine as e
-from ...opening import convert as authored
-from ...opening.casts import casts
-from ...opening.lane_entries import LaneLabelEntry
-from ...opening.schema import Opening
+from ...rules.expand import convert as authored
+from ...rules.casts import casts
+from ...rules.entries.lane_entries import LaneLabelEntry
+from ...rules.schema import Opening
 from ..world import content_models as cm
 from .. import convert
 

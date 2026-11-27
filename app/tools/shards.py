@@ -3,7 +3,7 @@
 Run from app/: python -m tools.shards a|b|c [pytest args]  runs one shard (what CI does);
                python -m tools.shards --check             exits 1 unless the shards together collect what one
                                                           unsharded run does (CI's `shards-cover` job).
-Shard A is the three heaviest directories and shard C is tests/opening; shard B is everything else, as an --ignore of
+Shard A is the three heaviest directories and shard C is tests/rules; shard B is everything else, as an --ignore of
 those same paths, so a new test directory lands in B and nothing falls between the shards.
 """
 import os
@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 A_PATHS = ("tests/saves", "tests/accounts", "tests/api_contract")
-C_PATHS = ("tests/opening",)
+C_PATHS = ("tests/rules",)
 # What `tests` runs: the playthrough-marked tests have their own jobs.
 SELECT = ("-m", "not playthrough")
 

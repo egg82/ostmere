@@ -11,7 +11,7 @@ from pathlib import Path
 
 from ashfall_app.engine import Save, Unlock, UnlockKind, View
 from ashfall_app.engine.work import completions
-from ashfall_app.opening.schema import DAY_TWO, Opening
+from ashfall_app.rules.schema import DAY_TWO, Opening
 from tests.dayone.player.player import DayOnePlayer
 
 DAY_THREE = DAY_TWO.parent / "day_three.toml"

@@ -8,7 +8,7 @@ import pytest
 from sqlalchemy import Engine
 
 from ashfall_app.db import saves as rows
-from ashfall_app.opening.schema import Opening
+from ashfall_app.rules.schema import Opening
 from ashfall_app.saves.interface import Ruleset
 from ashfall_app.saves.ruleset import ruleset
 from ashfall_app.saves.service import PgSaves

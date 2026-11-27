@@ -1,4 +1,4 @@
-"""The wire's answer_kind order verb on a test chapter with a kind (tests/opening/fixtures/askkinds.toml; contract/offers.txt,
+"""The wire's answer_kind order verb on a test chapter with a kind (tests/rules/fixtures/askkinds.toml; contract/offers.txt,
 "Offers"): an order naming a declared kind and role is stored and served back as sent; one naming a role the kind
 does not have, or a kind no offer declares, is a 422 that writes nothing; the player cannot send it as a decision;
 Content.offer_infos carries each offer's kind and each answer's role."""
@@ -9,11 +9,11 @@ import pytest
 
 from ashfall_app import main
 from ashfall_app.db import saves as rows
-from ashfall_app.opening.schema import CHAPTERS, load_opening
+from ashfall_app.rules.schema import CHAPTERS, load_opening
 from tests.game_client import GameClient, game_client
 from tests.shipped_ruleset import ShippedRuleset
 
-FIXTURE = Path(__file__).resolve().parents[2] / "opening" / "fixtures" / "askkinds.toml"
+FIXTURE = Path(__file__).resolve().parents[2] / "rules" / "fixtures" / "askkinds.toml"
 
 
 def order(kind: str, role: str) -> dict[str, object]:

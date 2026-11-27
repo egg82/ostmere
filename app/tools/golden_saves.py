@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 
 from ashfall_app.engine import Rules, Save, encode, new_save
-from ashfall_app.opening.schema import load_opening, to_rules
-from tests.opening.playthrough import Player
+from ashfall_app.rules.schema import load_opening, to_rules
+from tests.rules.play.playthrough import Player
 
 SEEDS = (0, 1, 2)
 STOPS = (45, 120, 240, 400)

@@ -1,5 +1,5 @@
 """Drains, part six: the loader's fractions and drains (engine design/drains.txt, "FRACTIONS AT THE LOADER", invariant 132).
-Written blind from that part, the entry types (opening/entries.py) and the loader's public functions; the `kills`
+Written blind from that part, the entry types (rules/entries/entries.py) and the loader's public functions; the `kills`
 marker names the rows of MUTANTS_drains.txt each test must turn red for.
 
 fixtures/drains_chapter.toml is merged onto the opening alone; its @SLOTS@ are filled here, each default the plain shape
@@ -13,7 +13,7 @@ from ashfall_app.engine import (
     QUANTITY_SCALE as Q, RATE_SCALE, Amount, AtLeast, AtMost, CardDef, Flow, InvalidRulesError, Rules, StoreId,
     StoreValue, per_hour,
 )
-from ashfall_app.opening.schema import OPENING, load_opening, to_rules
+from ashfall_app.rules.schema import OPENING, load_opening, to_rules
 from drains_world import kills
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "drains_chapter.toml"
