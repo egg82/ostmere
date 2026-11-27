@@ -53,7 +53,7 @@ second.
   median 46, 90th percentile 74 (38 lines in `opening.toml`).
 - **A line never lands off-screen.** A Dark Room holds a location's lines until the player is there
   ([notifications.js][adr-notify]). Ashfall's arrival queue already does this for what a return brings
-  (`opening-screen.md`, "Coming back"), but it deliberately leaves story lines out.
+  (`opening-screen/one-thing-at-a-time.md`, "Coming back"), but it deliberately leaves story lines out.
 - **The line comes before its consequence.** Spaceplan tells its story "in sync with your unlocks and actions"
   ([PocketGamer][sp-pg]). The line explains the card, so it should be read first. Two simultaneous onsets compete for
   attention, and the one in the task wins (Land 2006).

@@ -1,4 +1,4 @@
-// The lesson note keeps its own box inside the gutters ui/lessons.ts places it by (docs/design/opening-screen.md,
+// The lesson note keeps its own box inside the gutters ui/lessons.ts places it by (docs/design/opening-screen/lessons.md,
 // "Lessons"): the placement code measures the note's offsetWidth, so a width cap that excludes padding and border (the
 // content box) lets the box pass the window's edge at a narrow width or a larger text size, where no spot fits and
 // the fallback lays the note over the content it teaches. The layout is CSS, so this reads the rule.

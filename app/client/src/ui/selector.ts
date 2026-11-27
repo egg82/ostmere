@@ -1,4 +1,4 @@
-// The Mixes list (docs/design/opening-screen.md, "The Mixes list"), opened from the strip: the player's saved mixes, the
+// The Mixes list (docs/design/opening-screen/mixes.md, "The Mixes list"), opened from the strip: the player's saved mixes, the
 // player's own first, never a town mix (it runs by rules and is changed in the town's editor). Tapping one makes it the default (what runs when no rule's mix does): each such row says Run;
 // ● and "running" (or how long it runs) mark the one running now. A mix rules run says how many ("used by 2 rules") where Delete would be: a rule's mix can't be deleted. A
 // greyed mix (it holds a retired or completed card) can't be run, only edited or deleted. New mix last. The rules

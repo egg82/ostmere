@@ -177,7 +177,7 @@ An offer may name who asks (`askers`, ruled lanes) and carry three texts for whe
 (`waiting_key`, `expiry_key`, `permanence_key`), each optional and drawn only when given; the content refuses an
 `expiry_key` until offers can expire (engine `DESIGN.txt`, KNOWN GAPS). What led to an offer is served with it, its
 gate, none where the page cannot word it; an earlier answer it requires only sequences it and is no cause (`app/ashfall_app/api/line_causes.py`). The page
-draws open offers as one list (`docs/design/opening-screen.md`, "Asks").
+draws open offers as one list (`docs/design/opening-screen/asks-and-cards.md`, "Asks").
 Interface: engine `DESIGN.txt`, "Offers", and `app/ashfall_app/api/CONTRACT.txt`, "OFFERS". Built:
 `app/ashfall_app/engine/offerstate.py` (where an offer stands), `app/ashfall_app/engine/answering.py` (an answer
 landing); the loader makes each offer's trigger (`app/ashfall_app/opening/convert.py`).

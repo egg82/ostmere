@@ -1,4 +1,4 @@
-// The story strip's line (docs/design/opening-screen.md, "One column of attention"): it shows the newest line that has
+// The story strip's line (docs/design/opening-screen/attention.md, "One column of attention"): it shows the newest line that has
 // shown, on a phone and wider alike; a line that leaves the strip with no touch from the player since it showed dots the
 // Chronicle button, which clears when the Chronicle is touched. Restored lines never dot it, nor do lines leaving while it is open.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";

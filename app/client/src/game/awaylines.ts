@@ -1,4 +1,4 @@
-// Where each line a return brings goes (docs/design/opening-screen.md, "Coming back"): every story line that landed
+// Where each line a return brings goes (docs/design/opening-screen/one-thing-at-a-time.md, "Coming back"): every story line that landed
 // while the player was away plays on the band; a chip's on-line, which comes once per save, goes to the chronicle only; its
 // off-lines, which can come every cycle while away, collapse to the chip's last change, and that one and a repeat
 // task's lines go to the chronicle only too. Which line is which is read from explicit data, never the text: a chip's line

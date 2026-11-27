@@ -1,4 +1,4 @@
-// The Rules tab's side lanes (docs/design/opening-screen.md, "The Rules tab"): each side lane's task rules under the
+// The Rules tab's side lanes (docs/design/opening-screen/rules-tab.md, "The Rules tab"): each side lane's task rules under the
 // lane's label, one line each: ●, the condition (a button that opens the condition editor), → the task, and Remove. A
 // ruled lane's always rule reads as its words alone (ui.rule.always: the task is in them); a passed-over one-off stays
 // until removed. The rules that answer an offer come last, under their own heading.

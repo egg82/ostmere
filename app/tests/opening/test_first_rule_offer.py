@@ -1,4 +1,4 @@
-"""Every route meets the rule's lesson in the opening (docs/design/opening-screen.md, "Lessons"): a rule offer shows
+"""Every route meets the rule's lesson in the opening (docs/design/opening-screen/lessons.md, "Lessons"): a rule offer shows
 before the end, after the first mix and before any rule, which is when the lesson may start. The ledger's inline
 offers carry it, so the strip's rest offer, which a player who mixed rest never meets, is not the only way in."""
 import pytest

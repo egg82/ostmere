@@ -1,4 +1,4 @@
-// The dry store's lesson (game/lessons.ts, DRY_STORE; game/dryhint.ts; docs/design/opening-screen.md, "Hint: the first dry
+// The dry store's lesson (game/lessons.ts, DRY_STORE; game/dryhint.ts; docs/design/opening-screen/hands-strip.md, "Hint: the first dry
 // store"): a card of the running mix stopped on a store that ran dry, nothing covers it, and a card in play that makes it
 // is outside the mix. The line carries the quiet dot and the lesson walks the running mix's own Edit, the maker's add
 // button and Save; the mix saved is the player's, with the maker in it. Each fact of the cue taken away clears the mark.

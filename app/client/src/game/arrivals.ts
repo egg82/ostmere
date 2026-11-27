@@ -1,6 +1,6 @@
 // What is new on screen, shown one thing at a time: an Event Queue (Nystrom, Game Programming Patterns). The parts that
 // draw a new thing send it here as they draw; the reveal pulls them off over the next few seconds, so sending is
-// decoupled from showing in time. Two uses (docs/design/opening-screen.md): what arrived while the player was away
+// decoupled from showing in time. Two uses (docs/design/opening-screen/index.md): what arrived while the player was away
 // ("Coming back"), and a live step's story lines, each shown before what it announces ("One thing at a time"); a
 // second queue at LINK_PACE sets off a live step's cascade link by link (docs/design/redesign.md, "Feel"). It is
 // the first piece of the planned chronicle (docs/systems.md, "Chronicle and unwrap"), whose events will carry times.

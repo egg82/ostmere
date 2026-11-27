@@ -1,4 +1,4 @@
-// The hands strip's offer rows on a phone sit under the pinned strip, not in it (docs/design/opening-screen.md, "The
+// The hands strip's offer rows on a phone sit under the pinned strip, not in it (docs/design/opening-screen/hands-strip.md, "The
 // hands strip"): a prompt such as "this mix stopped" must not cost the cards their room, so on a phone Hands seats the
 // mix offer, the asked-offer rows and the rule offer in `rows`, which the screen places after the pinned strip; wider
 // screens keep them in the strip's body.

@@ -1,4 +1,4 @@
-// The panel's scroll cue (docs/design/opening-screen.md, "Desktop"): on a desktop the panel is its own scroller, and
+// The panel's scroll cue (docs/design/opening-screen/layout.md, "Desktop"): on a desktop the panel is its own scroller, and
 // nothing said that more lay below the fold. The panel wears `more` while its content runs past the bottom and it is
 // not scrolled to the end; game.css fades its foot then. A still fade, so reduced motion keeps it.
 import type { Part } from "./part";

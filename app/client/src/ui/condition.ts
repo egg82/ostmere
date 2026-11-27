@@ -1,4 +1,4 @@
-// The condition editor (docs/design/opening-screen.md, "The condition editor"), in the Rules tab. A new rule opens
+// The condition editor (docs/design/opening-screen/rules-tab.md, "The condition editor"), in the Rules tab. A new rule opens
 // simple: Do, then When for what the chosen task answers, so the common rule is two taps; More options opens the full
 // editor in place (the saved mixes, every chip and store, the levels in condlevels.ts, the Camp's and skills' levels
 // and the tasks in condsubject.ts, the rate and goal rows in condfact.ts), and a

@@ -1,4 +1,4 @@
-/* fights (docs/design/opening-screen.md, "Fights"): the odds under a fight card's tap, and the ledger's threats group.
+/* fights (docs/design/opening-screen/ledger-and-fights.md, "Fights"): the odds under a fight card's tap, and the ledger's threats group.
    Colours are the page's own tokens (game.css :root); nothing here is an alarm hue, a loss is a number not a red. */
 .card.fighting { flex-direction: column; }
 .card-body { position: relative; display: flex; flex: 1; min-width: 0; }   /* the tap and When ready: the button stays in the foot's band, above the odds */

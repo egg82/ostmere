@@ -1,4 +1,4 @@
-// A person's row in the Town view (docs/design/opening-screen.md, "The Town view"), the one form for everyone there: their
+// A person's row in the Town view (docs/design/opening-screen/town-and-book.md, "The Town view"), the one form for everyone there: their
 // face and who they are, what they work now and the bar of that card. A person who has joined adds their split
 // (ui/townstrip.ts); a lane run by rules adds its Change (ui/lanerows.ts), each before the bar.
 import type { View } from "../api/types";

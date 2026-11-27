@@ -1,4 +1,4 @@
-// What the condition editor offers (docs/design/opening-screen.md, "The condition editor"), read off the view and the
+// What the condition editor offers (docs/design/opening-screen/rules-tab.md, "The condition editor"), read off the view and the
 // content only. Its simple view offers the tasks a rule can do and, once one is chosen, what that task answers: the
 // chips whose store it makes, the stores relevant to it and the few running cards (game/relevant.ts). More options adds the saved mixes and
 // every chip and store a rule may watch, the relevant stores first: every chip from its first showing on, every store

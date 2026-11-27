@@ -1,4 +1,4 @@
-// The feedback ladder (docs/design/opening-screen.md, "The feedback ladder"): one fixed effect per kind of event, sized
+// The feedback ladder (docs/design/opening-screen/feedback.md, "The feedback ladder"): one fixed effect per kind of event, sized
 // by how much it matters and never grown by repeats. The sizes are keyframes in game.css; the Big rung (the end, a
 // feature's card) is drawn by its own parts and has no one-shot effect here.
 import type { Card } from "../api/types";

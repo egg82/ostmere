@@ -1,4 +1,4 @@
-// The lane rows (docs/design/opening-screen.md, the hands strip, "A lane run by rules"): in the Town view under the town's
+// The lane rows (docs/design/opening-screen/hands-strip.md, the hands strip, "A lane run by rules"): in the Town view under the town's
 // people, one row per lane whose task the player's rules set (CONTRACT.txt, "A lane run by rules"), in the people's own
 // row form (ui/personrow.ts): the face and the lane's label, what it does (the running card, or idle), the running
 // card's bar, and Change, which opens the person's page (personpage.ts). A row arrives through the arrival queue the first time its lane is in view, then stays. A lane whose

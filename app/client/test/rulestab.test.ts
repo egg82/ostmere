@@ -1,4 +1,4 @@
-// The Rules tab (docs/design/opening-screen.md, "The Rules tab"; ui/rules.ts, ui/condition.ts): one line per rule;
+// The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"; ui/rules.ts, ui/condition.ts): one line per rule;
 // changing a rule's levels never gated, writing a new one gated by the taught step; a chip's rule edited with no level
 // and no number; ≡ dragged or moved by key or menu sending the permuted set_orders (task rules keep their places); a
 // mix dropped on a slot, or tapped then a slot, or picked, re-pointing the rule; Otherwise setting the default; the

@@ -1,4 +1,4 @@
-"""Teaching the second mix after the end (docs/design/opening-screen.md, the hands strip and "Dots and the one glow"),
+"""Teaching the second mix after the end (docs/design/opening-screen/feedback.md, the hands strip and "Dots and the one glow"),
 played by the scripted player kept going past the end (afterend.py) on the session's shared runs (routes.py). The
 rest offer never shows before the end lines are read; a player who rests by hand meets it, takes it, and never taps
 rest again while the rule's mix does the resting; the Mixes list's door glows when that rule first comes on by itself,

@@ -1,4 +1,4 @@
-// The page's fights (docs/design/opening-screen.md, "Fights"): a fight card's odds, strengths and on-loss line; a
+// The page's fights (docs/design/opening-screen/ledger-and-fights.md, "Fights"): a fight card's odds, strengths and on-loss line; a
 // strength's entries opened by a tap (never by hover); a standing fight in the ledger with its tally; the arrival
 // fight entries in the chronicle, never the strip. All of it off while the `combat` feature is.
 import { install } from "./fake-dom";

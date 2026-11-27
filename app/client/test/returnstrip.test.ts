@@ -1,4 +1,4 @@
-// Coming back (docs/design/opening-screen.md, "Coming back"): the replay's first line takes the story strip at its
+// Coming back (docs/design/opening-screen/one-thing-at-a-time.md, "Coming back"): the replay's first line takes the story strip at its
 // first turn, in place of the line the player left on, and the page opens at its top, so no card row hides under the
 // pinned strip.
 import { install } from "./fake-dom";

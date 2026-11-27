@@ -1,4 +1,4 @@
-// Where the story's parts sit around the art (docs/design/opening-screen.md, "Desktop" and "Phone"). The head (the Camp
+// Where the story's parts sit around the art (docs/design/opening-screen/layout.md, "Desktop" and "Phone"). The head (the Camp
 // bar and chips): in the stage just above the art, so the art is never under it however many rows it grows. The aim, just above the art: under the head in the stage on a phone, over the art's column on a
 // desktop. The story strip, under
 // the art: at the stage's foot on a phone (the stage's pinned part), between the stage and the skills and ledger on a desktop.

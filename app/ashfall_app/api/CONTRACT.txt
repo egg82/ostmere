@@ -236,7 +236,7 @@ REPEATS
   Each decision's context (the mix the hands ran, whether a tap's card was in it, the chips shown) is kept in the log
   as it is made, so the counts need no replay and a save rebuilt from its log counts the same. Decisions logged by a
   build before this field count for nothing. The page offers each repeat once (AccountPresentation.mix_offered,
-  switch_offered); what it offers is the page's (docs/design/opening-screen.md, the hands strip).
+  switch_offered); what it offers is the page's (docs/design/opening-screen/hands-strip.md, the hands strip).
 
 RULE RUNS
   Step.rule_runs [RuleRun {order, starts, on_at, on_level, off_at, off_level, ended}]: what the rules did lately, one
@@ -1394,7 +1394,7 @@ JOURNAL
   perfect once known"). It is a reading of what the wire already carries: an entry and each of its notes are unlocks,
   and the numbers are View.fights. View gains nothing. The page draws the journal from Content.journal,
   view.unlocked and view.fights, and keeps what the player has read in AccountPresentation. Page design:
-  docs/design/opening-screen.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
+  docs/design/opening-screen/journal.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
   page shell; not a system (one caller, nothing to swap). The daily journal's written days are the one part the wire
   carries anew, on Step and Opened (below, "The written days").
 
@@ -1560,7 +1560,7 @@ JOURNAL
                                     ui.journal.contents   the button that lists the open section's pages
                                     ui.journal.day {n}   a day's heading on a days page
                                     ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
-                                    the journal's lesson (opening-screen.md, "Lessons")
+                                    the journal's lesson (opening-screen/lessons.md, "Lessons")
                                     ui.journal.days | ui.journal.creatures | ui.journal.places   the sections'
                                     bookmarks
 
