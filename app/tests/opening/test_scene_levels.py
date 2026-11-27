@@ -1,7 +1,7 @@
 """View.levels carries the stores the scene reads that the ledger does not list (contract/fights.txt, "FIGHTS", "read a
 level"), so a layer on a hidden clock holds in play. Judged on the opening's own rules through the Game's view, with
-no assets volume anywhere: the store set ships with the code (api/scene_stores.json)."""
-from ashfall_app.api.scenestores import scene_stores
+no assets volume anywhere: the store set ships with the code (api/world/scene_stores.json)."""
+from ashfall_app.api.world.scenestores import scene_stores
 from ashfall_app.api.service import Game
 from ashfall_app.engine import QUANTITY_SCALE as Q
 from ashfall_app.engine import new_save

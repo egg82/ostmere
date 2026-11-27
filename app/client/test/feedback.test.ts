@@ -1,13 +1,13 @@
-// The Feedback sheet (src/ui/feedback.ts): Send waits for words, a kept send thanks and closes, one that is not kept says
+// The Feedback sheet (src/ui/settings/feedback.ts): Send waits for words, a kept send thanks and closes, one that is not kept says
 // to try later and keeps the words, Not now keeps a draft, and the screen puts the button in the panel's foot and sends what
 // the player wrote.
 import { FakeEvent, fakeDocument, install, type FakeEl } from "./fake-dom";
 import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
-import { FeedbackSheet } from "../src/ui/feedback";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
+import { FeedbackSheet } from "../src/ui/settings/feedback";
 import { Screen } from "../src/ui/screen";
 
 install();

@@ -2,7 +2,7 @@
 // condition is a field of the view. The manifest's `project:` and `pushes:` names predate cards and are kept as its
 // spelling: both read a card's completions, from the card panel or the Completed tab.
 import type { View } from "../api/types";
-import { sample } from "../game/clock";
+import { sample } from "../game/page/clock";
 
 export class SceneFacts {
   private view: View | null = null;

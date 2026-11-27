@@ -89,45 +89,10 @@ def rebased_path(chapter: str) -> Path:
     return golden(chapter) / f"rebased-{chapter}.json"
 
 
-Span = tuple[str, int, int | None]
-"""(chapter, first heavy step, the one after the last or None for all the rest): a slice of verdicts.heavy_steps."""
-READINGS: dict[str, tuple[Span, ...]] = {
-    "readings-early": (("eight", 0, None), ("nine", 0, None), ("eleven", 0, None)),
-    "readings-twelve-a": (("twelve", 0, 3), ("twelve", 8, 9)),
-    "readings-twelve-b": (("twelve", 3, 5),),
-    "readings-twelve-c": (("twelve", 5, 6),),
-    "readings-twelve-d": (("twelve", 6, 7),),
-    "readings-twelve-e": (("twelve", 7, 8), ("twelve", 10, None)),
-    "readings-twelve-f": (("twelve", 9, 10),),
-    "readings-fifteen-a": (("fifteen", 0, 12),),
-    "readings-fifteen-b": (("fifteen", 12, 13),),
-    "readings-fifteen-c": (("fifteen", 13, None),),
-    "readings-sixteen-a": (("sixteen", 0, 4),),
-    "readings-sixteen-b": (("sixteen", 4, 9),),
-    "readings-sixteen-c": (("sixteen", 9, None),),
-    "readings-eighteen": (("eighteen", 0, None),),
-    "readings-nineteen-a": (("nineteen", 0, 5),),
-    "readings-nineteen-b": (("nineteen", 5, None),),
-    "readings-twentytwo-a": (("twentytwo", 0, 4),),
-    "readings-twentytwo-b": (("twentytwo", 4, 8),),
-    "readings-twentytwo-c": (("twentytwo", 8, 12),),
-    "readings-twentytwo-d": (("twentytwo", 12, None),),
-    "readings-twentythree-a": (("twentythree", 0, 7),),
-    "readings-twentythree-b": (("twentythree", 7, None),),
-    "readings-twentyfive-a": (("twentyfive", 0, 2),),
-    "readings-twentyfive-b": (("twentyfive", 2, 4),),
-    "readings-twentyfive-c": (("twentyfive", 4, None),),
-    "readings-twentyseven-a": (("twentyseven", 0, 2),),
-    "readings-twentyseven-b": (("twentyseven", 2, 4),),
-    "readings-twentyseven-c": (("twentyseven", 4, None),),
-}
-"""The typical route's heavy-step readings (verdicts.decided_in) saved beside the ends, in parts CI writes in jobs of
-their own: no reading needs another, and day twelve's take minutes each. Each chapter's spans run from 0 with no gap and
-the last open, so a step added by content is read by its chapter's last span."""
-
-
-def readings_path(chapter: str, start: int) -> Path:
-    return golden(chapter) / f"readings-{chapter}-{start}.json"
+def readings_path(chapter: str, step: int) -> Path:
+    """The reading of `chapter`'s heavy step number `step` (verdicts.heavy_steps), a file of its own so that how the steps
+    are grouped into jobs (tools/saves_plan.py) never changes which files exist."""
+    return golden(chapter) / f"readings-{chapter}-{step}.json"
 
 
 def saved_readings(chapter: str) -> dict[tuple[str, int], bool]:

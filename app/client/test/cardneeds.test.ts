@@ -1,12 +1,12 @@
-// A card's needs (ui/cardneeds.ts): a step or skill level once met is not drawn (completions and levels never fall); one
+// A card's needs (ui/cards/cardneeds.ts): a step or skill level once met is not drawn (completions and levels never fall); one
 // not yet met is; a store need stays, as a store can fall.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { Catalog } from "../src/game/page/catalog";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();
 

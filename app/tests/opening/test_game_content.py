@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from ashfall_app.api.content_models import CardPresentation, Content
+from ashfall_app.api.world.content_models import CardPresentation, Content
 from ashfall_app.api.models import AtLeast, AtMost, StoreValue, View
 from ashfall_app.api.service import Game
 from ashfall_app.engine import new_save, units

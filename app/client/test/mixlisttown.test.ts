@@ -6,7 +6,7 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { townStep } from "../fixtures/town";
 import type { PartContext } from "../src/ui/part";
-import { MixSelector } from "../src/ui/selector";
+import { MixSelector } from "../src/ui/mixes/selector";
 
 install();
 

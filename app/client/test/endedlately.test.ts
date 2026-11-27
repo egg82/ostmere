@@ -5,7 +5,7 @@ import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";
 import { Q } from "../fixtures/content";
 import type { Order, RuleRun } from "../src/api/types";
-import { RulesTab } from "../src/ui/rules";
+import { RulesTab } from "../src/ui/rules/rules";
 import { testContext } from "./context";
 
 install();

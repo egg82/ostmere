@@ -4,12 +4,12 @@
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, LedgerLine } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { CardNeeds } from "../src/ui/cardneeds";
-import { whenRow } from "../src/ui/condrows";
-import { entryRows } from "../src/ui/editorrows";
-import { Glow } from "../src/ui/fresh";
-import { Ledger } from "../src/ui/ledger";
+import { Catalog } from "../src/game/page/catalog";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
+import { whenRow } from "../src/ui/condition/condrows";
+import { entryRows } from "../src/ui/mixes/editorrows";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { keepsOf, NEW_FLAT } from "./kept";

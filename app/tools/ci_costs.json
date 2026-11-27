@@ -1,0 +1,276 @@
+{
+ "measured": "max over three full runs of the per-chapter cpu_s the chapter_saves jobs log; see tools/ci_costs.py",
+ "source_runs": [
+  45871053343,
+  45889036860,
+  45913754216
+ ],
+ "job_overhead_s": 45,
+ "ends": {
+  "sharp": {
+   "week1": 51,
+   "eight": 20,
+   "nine": 17,
+   "eleven": 20,
+   "twelve": 119,
+   "fifteen": 65,
+   "sixteen": 71,
+   "eighteen": 180,
+   "nineteen": 300,
+   "twentytwo": 137,
+   "twentythree": 239,
+   "twentyfive": 384
+  },
+  "typical": {
+   "week1": 49,
+   "eight": 18,
+   "nine": 36,
+   "eleven": 15,
+   "twelve": 75,
+   "fifteen": 65,
+   "sixteen": 67,
+   "eighteen": 88,
+   "nineteen": 88,
+   "twentytwo": 234,
+   "twentythree": 170,
+   "twentyfive": 273
+  },
+  "whenever": {
+   "week1": 38,
+   "eight": 20,
+   "nine": 39,
+   "eleven": 19,
+   "twelve": 86,
+   "fifteen": 131,
+   "sixteen": 51,
+   "eighteen": 88,
+   "nineteen": 206,
+   "twentytwo": 191,
+   "twentythree": 104,
+   "twentyfive": 168
+  }
+ },
+ "rebased": {
+  "eight": 32,
+  "nine": 52,
+  "eleven": 62,
+  "twelve": 97,
+  "fifteen": 139,
+  "sixteen": 179,
+  "eighteen": 243,
+  "nineteen": 307,
+  "twentytwo": 298,
+  "twentythree": 369,
+  "twentyfive": 462
+ },
+ "readings": {
+  "eight": {
+   "setup_s": 10,
+   "steps_s": [
+    14,
+    28,
+    29,
+    15,
+    15,
+    15,
+    16,
+    17,
+    19,
+    19,
+    19,
+    20,
+    22,
+    25
+   ]
+  },
+  "nine": {
+   "setup_s": 10,
+   "steps_s": [
+    22,
+    25,
+    27,
+    51,
+    47,
+    20
+   ]
+  },
+  "eleven": {
+   "setup_s": 10,
+   "steps_s": [
+    20,
+    16,
+    20,
+    24,
+    24,
+    25,
+    27
+   ]
+  },
+  "twelve": {
+   "setup_s": 12,
+   "steps_s": [
+    26,
+    25,
+    24,
+    23,
+    32,
+    27,
+    25,
+    80,
+    72,
+    90,
+    105,
+    101,
+    33
+   ]
+  },
+  "fifteen": {
+   "setup_s": 10,
+   "steps_s": [
+    34,
+    34,
+    38,
+    42,
+    44,
+    43,
+    42,
+    42,
+    43,
+    45,
+    44,
+    50,
+    50
+   ]
+  },
+  "sixteen": {
+   "setup_s": 10,
+   "steps_s": [
+    88,
+    89,
+    86,
+    40,
+    41
+   ]
+  },
+  "eighteen": {
+   "setup_s": 10,
+   "steps_s": [
+    44,
+    34,
+    59,
+    93,
+    94,
+    89,
+    91,
+    74,
+    61,
+    79,
+    60
+   ]
+  },
+  "nineteen": {
+   "setup_s": 11,
+   "steps_s": [
+    82,
+    88,
+    98,
+    74,
+    66,
+    74,
+    77,
+    104
+   ]
+  },
+  "twentytwo": {
+   "setup_s": 17,
+   "steps_s": [
+    145,
+    144,
+    134,
+    135,
+    129,
+    122,
+    125,
+    125,
+    127,
+    125,
+    103,
+    75
+   ]
+  },
+  "twentythree": {
+   "setup_s": 13,
+   "steps_s": [
+    71,
+    73,
+    75,
+    86,
+    72
+   ]
+  },
+  "twentyfive": {
+   "setup_s": 273,
+   "steps_s": [
+    79,
+    79,
+    78,
+    73,
+    62,
+    170,
+    172,
+    232,
+    210
+   ]
+  },
+  "twentyseven": {
+   "setup_s": 273,
+   "steps_s": [
+    79,
+    79,
+    78,
+    73,
+    62,
+    170,
+    172,
+    232,
+    210
+   ]
+  }
+ },
+ "unmeasured": {
+  "ends": {
+   "sharp": 480,
+   "typical": 342,
+   "whenever": 258
+  },
+  "rebased": 578,
+  "readings": {
+   "setup_s": 342,
+   "steps_s": [
+    290,
+    290,
+    290,
+    290,
+    290,
+    290,
+    290,
+    290,
+    290,
+    290,
+    290,
+    290
+   ]
+  },
+  "basis": "a chapter with no row is planned at the costliest measured one plus a quarter: per route, its dearest end; the dearest rebased save; the dearest setup and heavy step, at the step count of the chapter with the most reading time",
+  "estimated": {
+   "rows": [
+    "ends:typical:twentyfive",
+    "ends:sharp:twentyfive",
+    "ends:whenever:twentyfive",
+    "rebased:twentyfive",
+    "readings:twentyseven"
+   ],
+   "basis": "not measured: written with day twenty-seven, from day twenty-five's shape. typical's end is day twenty-five's readings setup (typical played through day twenty-five from day twenty-three's end); sharp's and whenever's scale it by their day-twenty-three ends against typical's; the rebased save is day twenty-three's plus a quarter; day twenty-seven's readings row copies day twenty-five's. The nightly's refresh replaces each with its measurement and drops this block."
+  }
+ }
+}

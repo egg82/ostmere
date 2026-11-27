@@ -139,7 +139,7 @@ Totals (rows 1-37): 236 planted, 202 red at once, 34 survived a pass: 21 killed,
         test_cards_view.py::test_a_need_is_one_whole_completion_and_readiness_asks_for_the_rest_rounded_up
  6 one side       planted 5, red 5
  7 failed tap     planted 12 (one pass, when the failed tap stopped taking time; the suites above plus
-                  tests/saves/test_failed_attempt_saves.py, test_failed_tap.py and tests/test_request_log.py), red 11,
+                  tests/saves/builds/test_failed_attempt_saves.py, tests/saves/writes/test_failed_tap.py and tests/test_request_log.py), red 11,
                   survived 1
       j (a failed tap makes orders and the queue evaluate): killed by
         test_cards_failed_tap.py::test_a_failed_tap_does_not_make_orders_and_the_queue_evaluate

@@ -15,7 +15,7 @@ PKG = ROOT / "ashfall_app"
 # Top-level module or subpackage -> those it may import. Seed with --write, then
 # cut edges deliberately.
 # The engine has no entry: it imports nothing of the app. What else it may import (the stdlib only, no I/O or clock)
-# is engine_contract/test_purity.py, which this gate does not repeat.
+# is engine_contract/invariants/test_purity.py, which this gate does not repeat.
 ALLOWED: dict[str, set[str]] = {
     "accounts": {"clock", "db", "logs"},
     "api": {"accounts", "db", "engine", "logs", "opening", "reminders", "saves", "services"},

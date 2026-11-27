@@ -1,4 +1,4 @@
-"""The rebase's implementation choices beside the blind contract suite (engine_contract/test_rebase.py): the manifest,
+"""The rebase's implementation choices beside the blind contract suite (engine_contract/rebase/test_rebase.py): the manifest,
 the format chain, dropping what the new rules lack wherever the save names it, and the steps that keep what a save
 earned (engine/design/, part SAVES ACROSS RELEASES)."""
 import json

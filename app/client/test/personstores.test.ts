@@ -1,4 +1,4 @@
-// A person's split shows its stores (issue 467; ui/personmix.ts, ui/storetimes.ts), as the hands' mix editor does: under the
+// A person's split shows its stores (issue 467; ui/town/personmix.ts, ui/mixes/storetimes.ts), as the hands' mix editor does: under the
 // bar, each store the person's cards make or cost, with what it holds of its cap, its rate and where it heads. At rest the
 // rate now alone; while a divider is held, now → after from a dry run of the split under the finger. A store none of
 // their cards touch, whose rate holds, is not listed.
@@ -7,8 +7,8 @@ import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, Decision, StoreRow, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { LaneRows } from "../src/ui/lanerows";
+import { Catalog } from "../src/game/page/catalog";
+import { LaneRows } from "../src/ui/town/lanerows";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

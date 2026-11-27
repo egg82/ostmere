@@ -7,8 +7,8 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayTwoStep, LANE_RULES } from "../fixtures/daytwo";
 import type { Decision, Order, View } from "../src/api/types";
-import { LaneRows } from "../src/ui/lanerows";
-import { RulesTab } from "../src/ui/rules";
+import { LaneRows } from "../src/ui/town/lanerows";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

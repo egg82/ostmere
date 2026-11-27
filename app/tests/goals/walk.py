@@ -4,7 +4,7 @@ each trigger that fires between two moments, reads the earlier one. Beats are na
 "Never spoil the owner").
 
 A beat is a trigger whose outcome is story (opening/goals.py, `story`), unless the trigger is marked `line_only`: it
-only says its line once and gates nothing, so it is no beat. Shown means View.goals (api/goals.py) marked
+only says its line once and gates nothing, so it is no beat. Shown means View.goals (api/goals/goals.py) marked
 the store, card or skill it waits on, or, for a wait on the clock, served the wait line with a time no later than the
 beat (or stopped, naming the dry store) and naming every store whose running dry pauses that clock. Not beats here: a
 beat on an unlock (it lands with what gives it), on a lane's rules (the lesson is the step), on the Camp's store (its
@@ -22,8 +22,8 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from functools import cache
 
-from ashfall_app.api import goal_models as g
-from ashfall_app.api.goals import goals, stopped
+from ashfall_app.api.goals import goal_models as g
+from ashfall_app.api.goals.goals import goals, stopped
 from ashfall_app.engine import (
     ActionId, AfterTime, AtLeast, CardCount, CardId, CardView, LaneRules, Pending, Rules, RunBy, Running, Save, SkillLevel,
     StoreValue, TapCard, TriggerDef, Unlock, Unlocked, UnlockKind, Verb, View, pending,

@@ -1,4 +1,4 @@
-// The desktop frame (docs/design/redesign.md, "Desktop frame"; ui/tabs.ts, ui/partseat.ts, ui/townview.ts): a left rail
+// The desktop frame (docs/design/redesign.md, "Desktop frame"; ui/tabs.ts, ui/partseat.ts, ui/town/townview.ts): a left rail
 // holds the tabs, Tasks · Town · Rules · Book, then the skills, and the panel's foot; the ledger sits under the art. The
 // town's people and lanes are the Town tab's alone, never the main screen's, and each is drawn in the one row form: a
 // person who has joined and a lane run by rules alike. Town keeps its slot unseen until it has a
@@ -7,8 +7,8 @@ import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { LOW_UNDER_SCENE, RAIL } from "../src/ui/layout";
 import { Screen } from "../src/ui/screen";
 

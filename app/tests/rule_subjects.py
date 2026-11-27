@@ -13,7 +13,7 @@ Problems name the subject and the minute of play only (CLAUDE.md, "Never spoil t
 from collections.abc import Iterable
 from functools import cache
 
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api import convert
 from ashfall_app.api import models as w
 from ashfall_app.engine import Save, View
@@ -40,7 +40,7 @@ def _unlocked(view: w.View, category: str, id_: str) -> bool:
 
 
 def drawn_chips(content: cm.Content, view: w.View) -> set[str]:
-    """The chips the band draws: on in the view, with their offered_after (if any) held (game/shown.ts shownChips)."""
+    """The chips the band draws: on in the view, with their offered_after (if any) held (game/page/shown.ts shownChips)."""
     after = {c.chip: c.offered_after for c in content.chip_infos}
     return {c for c in view.chips if (a := after.get(c)) is None or _unlocked(view, a.category, a.id)}
 
@@ -50,7 +50,7 @@ def _band_fits(content: cm.Content, line: w.LedgerLine) -> bool:
 
 
 def drawable_lines(content: cm.Content, view: w.View) -> set[str]:
-    """The stores whose ledger line the page may draw (ui/ledger.ts): the ledger open, not the Camp's, not hidden, and
+    """The stores whose ledger line the page may draw (ui/ledger/ledger.ts): the ledger open, not the Camp's, not hidden, and
     with room for a band."""
     if not _unlocked(view, "feature", LEDGER_FEATURE):
         return set()
@@ -70,7 +70,7 @@ def shown_now(content: cm.Content, view: w.View) -> set[str]:
 
 
 def offered(content: cm.Content, view: w.View) -> set[str]:
-    """Every subject the full editor offers in `view` (game/ruleoffers.ts: whenChoices(full) and offeredSubjects)."""
+    """Every subject the full editor offers in `view` (game/condition/ruleoffers.ts: whenChoices(full) and offeredSubjects)."""
     camp = content.camp.store if content.camp is not None else None
     stores = {l.store for l in view.ledger if l.store != camp and _unlocked(view, "store", l.store) and _band_fits(content, l)}
     found = {f"store:{s}" for s in stores} | {f"chip:{c}" for c in _offered_chips(content, view)}

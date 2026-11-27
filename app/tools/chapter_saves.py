@@ -1,17 +1,18 @@
 """The saved ends week two's chapters play on from (tests/weektwo/ends.py), written from plays from the start, and the
-typical route's heavy-step readings (ends.READINGS).
+typical route's heavy-step readings (tools/saves_plan.py plans their parts).
 
     python tools/chapter_saves.py --write    # from app/, with PYTHONPATH=.: write all of them, each chapter's under its key
-    python tools/chapter_saves.py --write typical rebased-early readings-early   # only those parts, by name: a route's
+    python tools/chapter_saves.py --write babysitter rebased-eight readings-eight-0   # only those parts, by name: a route's
                                                        # ends, typical's rebased saves (they read typical's saved ends) or readings
-    python tools/chapter_saves.py --write sharp-b      # a link of a route's chain (LINKS): reads the link before's ends
+    python tools/chapter_saves.py --write sharp-2      # a link of a route's chain: reads the link before's ends
     python tools/chapter_saves.py --prune    # delete the directories of keys no chapter has today
 
 A chapter's directory is named by its key (tests/weektwo/keys.py), so a change to what the chapter's play depends on is a
 new directory and no save outlives it, while a chapter before the change keeps its own.
 CI builds each part in a job of its own (it starts from the saves the last nightly cached, and writes only the chapters whose key is new), since no route's plays and no reading
 need another; the rebased parts read typical's saved ends, so they run once typical's part has, and a chain too long for
-one job is written in links, each after the one before. Locally, run it to make week two's job fast.
+one job is written in links, each after the one before. Which chapters make a link, a rebased group or a readings part is
+planned from each chapter's measured cost (tools/saves_plan.py). Locally, run it to make week two's job fast.
 """
 import os
 import shutil
@@ -20,31 +21,21 @@ import time
 from pathlib import Path
 
 from tests.weektwo import counters, ends, keys, rebased, verdicts
+from tools import saves_plan
 from tests.daytwo.player import DayTwoPlayer
 from tests.weektwo.routes import BEFORE, SAVED, laters, play_on, played
 
-LINKS: dict[str, tuple[str, str, str | None]] = {"typical-a": ("typical", "week1", "eighteen"),
-                                                 "typical-b": ("typical", "eighteen", "twentytwo"),
-                                                 "typical-c": ("typical", "twentytwo", None),
-                                                 "sharp-a": ("sharp", "week1", "eighteen"),
-                                                 "sharp-b": ("sharp", "eighteen", "twentytwo"),
-                                                 "sharp-c": ("sharp", "twentytwo", None),
-                                                 "whenever-a": ("whenever", "week1", "eighteen"),
-                                                 "whenever-b": ("whenever", "eighteen", "twentytwo"),
-                                                 "whenever-c": ("whenever", "twentytwo", None)}
-"""A route's chain in links, by part: (route, the link's first chapter, the next link's first or None for all the rest),
-in SAVED's order. CI writes each in a job after the one before, since the whole chain runs past one job's cap; a link
-after the first plays on from the saved end before its first chapter, which the link before wrote."""
-LINKED = frozenset(route for route, _, _ in LINKS.values())
+PLAN = saves_plan.today()
+LINKS = {link.part: link for link in PLAN.links}
+"""A route's chain in links, by part (`typical-1`): each after the one before, which a link plays on from the saved end of."""
+LINKED = frozenset(link.route for link in PLAN.links)
 ROUTES = frozenset(name for names in SAVED.values() for name in names) - LINKED
 """Every route with a saved end written whole, in one part named for it."""
-REBASED: dict[str, tuple[str, ...]] = {"rebased-early": ("eight", "nine", "eleven", "twelve"),
-                                       "rebased-late": ("fifteen", "sixteen", "eighteen", "nineteen"),
-                                       "rebased-later": ("twentytwo", "twentythree"),
-                                       "rebased-latest": ("twentyfive",)}
+REBASED = {g.part: g.chapters for g in PLAN.rebased}
 """typical's rebased saves (ends.rebased_path), by part: each chapter's save, replayed from the decisions of typical's
 saved end at it, so a part needs typical's ends and not typical's play from the start."""
-ALL = ROUTES | frozenset(ends.READINGS) | frozenset(REBASED) | frozenset(LINKS)
+READINGS = {r.part: r.spans for r in PLAN.readings}
+ALL = ROUTES | frozenset(READINGS) | frozenset(REBASED) | frozenset(LINKS)
 """Every part `--write` takes by name."""
 
 
@@ -53,7 +44,7 @@ def chapters_of(parts: frozenset[str]) -> list[str]:
     found = {c for c, names in SAVED.items() for n in names if n in parts & ROUTES}
     found |= {c for n in parts & frozenset(LINKS) for c in link_chapters(n)}
     found |= {c for n in parts & frozenset(REBASED) for c in REBASED[n]}
-    found |= {c for n in parts & frozenset(ends.READINGS) for c, _, _ in ends.READINGS[n]}
+    found |= {c for n in parts & frozenset(READINGS) for c, _, _ in READINGS[n]}
     return [c for c in keys.ORDER if c in found]
 
 
@@ -89,7 +80,7 @@ def write(parts: frozenset[str] = ALL) -> int:
         write_link(name)
     for name in sorted(parts & frozenset(REBASED)):
         write_rebased(name)
-    for name in sorted(parts & frozenset(ends.READINGS)):
+    for name in sorted(parts & frozenset(READINGS)):
         write_readings(name)
     for chapter in chapters_of(parts):
         put(ends.manifest(chapter), ends.manifest_json(chapter))
@@ -113,15 +104,13 @@ def write_end(chapter: str, name: str, p: DayTwoPlayer, started: float) -> None:
 
 def link_chapters(name: str) -> list[str]:
     """The chapters link `name` writes the route's ends of, in order."""
-    route, first, after = LINKS[name]
-    chapters = [c for c, names in SAVED.items() if route in names]
-    return chapters[chapters.index(first):chapters.index(after) if after else None]
+    return list(LINKS[name].chapters)
 
 
 def write_link(name: str) -> None:
     """Link `name`'s ends: played from the start for the first link, else on from the saved end before its first. An end
     already saved under today's key is loaded, not played, so only the chapters after a change replay."""
-    route = LINKS[name][0]
+    route = LINKS[name].route
     p: DayTwoPlayer | None = None
     for chapter in link_chapters(name):
         started = time.process_time()
@@ -157,17 +146,23 @@ def typical_through(chapter: str) -> DayTwoPlayer:
 
 
 def write_readings(name: str) -> None:
-    """The readings part `name`: each span's heavy steps of typical's play through its chapter, read one by one."""
-    for chapter, first, after in (s for s in ends.READINGS[name] if not present(ends.readings_path(s[0], s[1]))):
+    """The readings part `name`: each span's heavy steps of typical's play through its chapter, read one by one, each
+    reading in a file of its own, so a part split differently later leaves no file behind."""
+    table = saves_plan.load()
+    for chapter, first, after in READINGS[name]:
+        wanted = range(first, after if after is not None else saves_plan.heavy_count(table, chapter))
+        if all(present(ends.readings_path(chapter, i)) for i in wanted):
+            continue
         p, later = typical_through(chapter), verdicts.CHAPTERS[chapter]
         steps = {v.label: v.steps for v in verdicts.chapter_visits(p, later)}
-        found: dict[tuple[str, int], bool] = {}
-        for label, i in verdicts.heavy_steps(p, later)[first:after]:
+        for i, (label, k) in enumerate(verdicts.heavy_steps(p, later)[first:after], first):
+            if ends.readings_path(chapter, i).exists():
+                continue
             started = time.process_time()
-            found[label, i] = counters.decides(steps[label][i], p.rules)
-            print(f"event=chapter_saves.reading part={name} chapter={chapter} step={label}:{i} "
+            decides = counters.decides(steps[label][k], p.rules)
+            put(ends.readings_path(chapter, i), ends.readings_json({(label, k): decides}))
+            print(f"event=chapter_saves.reading part={name} chapter={chapter} step={label}:{k} "
                   f"cpu_s={time.process_time() - started:.1f}", flush=True)
-        put(ends.readings_path(chapter, first), ends.readings_json(found))
 
 
 HASH_SEED = "0"

@@ -2,7 +2,7 @@
 on each push route's play from the start through day twenty-seven, the edge of written content, at every moment the player
 saw, each input short on a card waiting on its blocker, not running, and on the card panel (not a ruled lane's task)
 has its gate drawn in its place, a maker in play, or is drawn used up: nothing in play can make it again and every
-grant of it has fired (View Need.gate, makers and spent, api/sources.py). A store the player never sees
+grant of it has fired (View Need.gate, makers and spent, api/goals/sources.py). A store the player never sees
 (StoreInfo.hidden) shows as its countdown, so it is not judged. Walked in a fixture's setup; ids only
 (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Callable, Mapping, Sequence
@@ -11,7 +11,7 @@ from functools import cache
 
 import pytest
 
-from ashfall_app.api.sources import Source, StoreSources, sources, store_sources
+from ashfall_app.api.goals.sources import Source, StoreSources, sources, store_sources
 from ashfall_app.engine import Rules, Save, View, value_at
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening
 from tests.daytwo.conftest import PLAY_TIMEOUT_S

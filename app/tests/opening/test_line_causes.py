@@ -3,9 +3,9 @@ where the content authors the key. One case per place a key can be authored, on 
 planted in a second place fails the load."""
 import pytest
 
-from ashfall_app.api.decision_models import AtLeast, SkillLevel, StoreValue
-from ashfall_app.api.line_causes import line_infos, worded_stores
-from ashfall_app.api.line_models import AnswerCause, CampCause, LineCause, RunnerCause, SkillCause, WhenCause
+from ashfall_app.api.goals.decision_models import AtLeast, SkillLevel, StoreValue
+from ashfall_app.api.world.line_causes import line_infos, worded_stores
+from ashfall_app.api.world.line_models import AnswerCause, CampCause, LineCause, RunnerCause, SkillCause, WhenCause
 from ashfall_app.opening.schema import Opening
 from tests.opening.playthrough import opening
 

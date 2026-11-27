@@ -1,11 +1,11 @@
 // A deploy between the slices of a long absence's open (contract/catching-up.txt, "CATCHING UP"): the Step the open lands on carries
-// the new rules digest, so the page fetches the new content as it does for any Step (src/game/session.ts).
+// the new rules digest, so the page fetches the new content as it does for any Step (src/game/page/session.ts).
 import type { GameApi } from "../src/api/api";
 import type { Step } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
-import { Session, type SessionEvents } from "../src/game/session";
-import { NEW_SAVE } from "../src/game/keeps";
+import { Session, type SessionEvents } from "../src/game/page/session";
+import { NEW_SAVE } from "../src/game/account/keeps";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

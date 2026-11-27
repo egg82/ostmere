@@ -2,7 +2,7 @@
 // "Phone"). On a desktop the tabs, the skills and the foot are the left rail's, and the ledger fills the room under the
 // art when the window is tall enough, else the panel's foot. On a phone the tabs are the bottom bar (the panel's, fixed
 // by game.css) and the ledger and skills are the Town tab's. A landscape phone keeps them all in the panel. The Book
-// opens as a sheet on a phone and as a view elsewhere (ui/book.ts). `laid` hears each placing (a tall desktop).
+// opens as a sheet on a phone and as a view elsewhere (ui/book/book.ts). `laid` hears each placing (a tall desktop).
 import { LOW_UNDER_SCENE, PHONE, RAIL } from "./layout";
 
 export interface Parts {

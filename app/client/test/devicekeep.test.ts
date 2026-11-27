@@ -1,4 +1,4 @@
-// Joining without moving, on the Another device sheet (src/ui/devicejoin.ts, devicekept.ts, devices.ts): the ask a device
+// Joining without moving, on the Another device sheet (src/ui/devices/devicejoin.ts, devicekept.ts, devices.ts): the ask a device
 // with games of its own gets has three buttons (Move my games the primary one, Join without moving, Cancel), each
 // sending its own request; a join that kept the games shows their words (or what to do when the account had some),
 // and the sheet cannot be closed until Continue.
@@ -6,9 +6,9 @@ import { fakeDocument, FakeEvent, install, type FakeEl } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { JoinWay, Joined, KeptGames } from "../src/api/types";
-import type { Keeps } from "../src/game/keeps";
-import { Text, UI } from "../src/game/text";
-import { Devices } from "../src/ui/devices";
+import type { Keeps } from "../src/game/account/keeps";
+import { Text, UI } from "../src/game/page/text";
+import { Devices } from "../src/ui/devices/devices";
 
 install();
 

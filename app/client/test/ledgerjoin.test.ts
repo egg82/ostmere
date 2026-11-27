@@ -1,4 +1,4 @@
-// Ledger lines join one at a time (ui/ledger.ts, game/shown.ts; docs/design/opening-screen/ledger-and-fights.md, "Ledger and rules"):
+// Ledger lines join one at a time (ui/ledger/ledger.ts, game/page/shown.ts; docs/design/opening-screen/ledger-and-fights.md, "Ledger and rules"):
 // when the ledger arrives it draws only the lines that ask something (red, starved, or carrying an offer); any other
 // line joins the first time it is falling (not just from the hands' passing tap), full while something feeds it, or
 // covered by a rule. Once drawn a line stays, kept for the account, so a reload keeps it; with nothing kept, the
@@ -8,7 +8,7 @@ import { testContext } from "./context";
 import { Q, R } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { keepsOf, NEW_FLAT, type Flat } from "./kept";
 
 install();
