@@ -214,7 +214,6 @@ def test_hangs():
 """
 
 
-@pytest.mark.xfail(strict=True, reason="the hang guard's dump names no test")
 def test_a_test_killed_by_the_hang_guard_is_named(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
     """pytest-timeout's thread method kills the process with only a stack dump, and a `-q` log has no test ids: the
     kill must name the test it interrupted."""

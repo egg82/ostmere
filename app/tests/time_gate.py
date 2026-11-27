@@ -86,6 +86,23 @@ def freeze_caches() -> None:
     gc.freeze()
 
 
+def pytest_configure(config: pytest.Config) -> None:
+    """pytest-timeout's thread method kills the process with a stack dump that names no test, and a `-q` log lists none,
+    so the kill says which test it interrupted first."""
+    if not config.pluginmanager.has_plugin("timeout"):
+        return
+    timeout = importlib.import_module("pytest_timeout")
+    kill = getattr(timeout, "timeout_timer")
+
+    def named(item: pytest.Item, settings: object) -> None:
+        writer = item.config.get_terminal_writer()
+        writer.line(f"hang guard: {item.nodeid} ran past {getattr(settings, 'timeout', '?')}s")
+        writer.flush()
+        kill(item, settings)
+
+    setattr(timeout, "timeout_timer", named)
+
+
 def pytest_collection_finish(session: pytest.Session) -> None:
     """Park what collection built out of the cyclic collector's reach, so a test's collections cost what its own
     objects cost, not the whole suite's heap."""
