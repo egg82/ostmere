@@ -11,7 +11,8 @@ A shared fixture (class, module, package or session scope) is timed on its own a
 its setup is taken out of the test's charge: which test meets it first changes with ordering and sharding, so charging
 it there would make the gate's verdict land on a different test from run to run. The same holds for pytest.ini's hang
 guard: a shared fixture's setup runs under a guard of FIXTURE_CEILING_S, then the test gets a fresh one, so the first
-test in a process is not killed for fixtures it shares with the rest. Its teardown still lands on the last
+test in a process is not killed for fixtures it shares with the rest. A playthrough's shared fixture is its play and keeps the
+test's own guard. Its teardown still lands on the last
 test that used it, so shared teardowns stay cheap. A fixture set up for a playthrough test is the play itself, and is
 not timed. After a shared fixture is built, the heap is frozen out of the cyclic collector (`freeze_caches`), so the
 next full collection does not walk that cache and charge it to whichever test is running.
@@ -96,7 +97,7 @@ def pytest_fixture_setup(fixturedef: pytest.FixtureDef[object]) -> Generator[Non
     if fixturedef.scope == "function":
         yield
         return
-    guarded = Shared.item if Shared.depth == 0 else None
+    guarded = Shared.item if Shared.depth == 0 and timed(Shared.item) else None
     if guarded:
         rearm_hang_guard(guarded, FIXTURE_CEILING_S)
     Shared.depth += 1
