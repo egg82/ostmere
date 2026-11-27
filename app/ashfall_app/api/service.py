@@ -159,6 +159,7 @@ def _content(o: Opening, rules: e.Rules, digest: str) -> cm.Content:
             store=c.store, when=convert.condition(authored.condition(c.when, cards)),
             then=_card_verb(c),
             offered_after=None if c.offered_after is None else convert.unlock(authored.unlock(c.offered_after)),
+            offered_until=None if c.offered_until is None else convert.unlock(authored.unlock(c.offered_until)),
             chip=c.chip, after_end=c.after_end)
             for c in o.order_cards],
         skill_infos=[cm.SkillInfo(skill=s.id, label_key=s.label_key,

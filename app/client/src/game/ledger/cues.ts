@@ -8,10 +8,18 @@ import { sample } from "../page/clock";
 import { inUse } from "../lessons/marks";
 import { ruleFor, rulesFull } from "../rules/orders";
 
+/** An order card whose offering is over: its offered_until, if any, is in view.unlocked (offered once, the season's
+ * turn that retired its rule unlocked it). */
+export function cardOver(catalog: Catalog, view: View, card: OrderCard): boolean {
+  return !!card.offered_until && catalog.unlocked(view, card.offered_until.category, card.offered_until.id);
+}
+
 /** The store's order card on offer: the last in content order whose offered_after view.unlocked holds (or that names
- * none), so a later card (a re-tune of a rule, a rule for a new need) supersedes an earlier one once it is offered. */
+ * none) and whose offering is not over, so a later card (a re-tune of a rule, a rule for a new need) supersedes an
+ * earlier one once it is offered. */
 export function offeredCard(catalog: Catalog, view: View, store: string): OrderCard | undefined {
-  return catalog.orderCardsFor(store).filter((c) => !c.offered_after || catalog.unlocked(view, c.offered_after.category, c.offered_after.id)).pop();
+  return catalog.orderCardsFor(store)
+    .filter((c) => (!c.offered_after || catalog.unlocked(view, c.offered_after.category, c.offered_after.id)) && !cardOver(catalog, view, c)).pop();
 }
 
 /** A card for a rising line: its `when` is an at_least and its task takes from the store. It is offered
@@ -34,12 +42,13 @@ export function chipCardOpen(view: View, card: OrderCard, endBehind: boolean): b
 }
 
 /** The chip's cards the hands strip offers now: those of the first chip in view.chips that has any open, in content
- * order, each one that may be on show whose offered_after, if any, view.unlocked holds (its task is open to run). Cards
+ * order, each one that may be on show whose offered_after, if any, view.unlocked holds (its task is open to run) and
+ * whose offering is not over (cardOver). Cards
  * of one chip share its store and test, so a rule set on either closes them all. */
 export function chipCards(catalog: Catalog, view: View, endBehind: boolean): OrderCard[] {
   if (rulesFull(catalog, view)) return [];
   const due = catalog.chipCards.filter((c) => c.chip !== null && view.chips.includes(c.chip) && chipCardOpen(view, c, endBehind)
-    && (!c.offered_after || catalog.unlocked(view, c.offered_after.category, c.offered_after.id)));
+    && (!c.offered_after || catalog.unlocked(view, c.offered_after.category, c.offered_after.id)) && !cardOver(catalog, view, c));
   return due.filter((c) => c.chip === due[0]?.chip);
 }
 

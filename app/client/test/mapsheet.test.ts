@@ -10,7 +10,7 @@ function expect(label: string, got: unknown, want: unknown): void {
 }
 
 const place = (id: string, stamp: Place["stamp"], east: number, north: number, label = true): Place =>
-  ({ place: id, stamp, east, north, reveal: { category: "feature", id }, label_key: label ? `k.${id}` : null });
+  ({ place: id, stamp, east, north, reveal: { category: "feature", id }, label_key: label ? `k.${id}` : null, labelled_after: null, over: null });
 const arts = (kind: string, n: number, w: number, h: number) => Array.from({ length: n }, (_, i) => ({ src: `${kind}-${i + 1}.png`, w, h }));
 const MANIFEST: StampManifest = { village: arts("village", 5, 46, 43), fort: arts("fort", 3, 51, 44), range: arts("range", 4, 273, 133),
   forest: arts("forest", 4, 64, 82) };
@@ -41,18 +41,28 @@ const LAYOUTS: Record<string, Place[]> = {
     place("e", "village", 2, 1), place("f", "village", 2, 0)],
   reach: [place("n", "fort", 0, 8), place("s", "village", 0, -8), place("e", "range", 8, 0), place("w", "forest", -8, -8)],
   lone: [place("only", "village", 1, 1)],
+  stacked: [place("base", "village", 1, 1), { ...place("on", "fort", 1, 1, false), over: "base" }, place("next", "fort", 2, 1), place("far", "range", -2, 2, false),
+    place("wide", "range", -3, -2, false), { ...place("mark", "fort", -3, -2, false), over: "wide" }],
 };
 const LONG = "A very long name for a place that runs on";
 let dropped = 0;
 for (const [name, places] of Object.entries(LAYOUTS)) {
   for (const s of SHEETS) {
-    const spots = [{ id: HOME, east: 0, north: 0 }, ...places.map((p) => ({ id: p.place, east: p.east, north: p.north }))];
+    const spots = [{ id: HOME, east: 0, north: 0, over: null as string | null }, ...places.map((p) => ({ id: p.place, east: p.east, north: p.north, over: p.over }))];
     const frame = frameOf(spots, s.w, s.h, 160);
     const chosen = stampPicks(1, places, MANIFEST);
-    const boxes = stampBoxes(new Map(spots.map((p) => [p.id, { art: chosen.get(p.id)!, at: p }])), frame);
+    const boxes = stampBoxes(new Map(spots.map((p) => [p.id, { art: chosen.get(p.id)!, at: p, over: p.over }])), frame);
     const stamps = [...boxes.values()];
     const at = `${name} at ${s.w}x${s.h}`;
-    expect(`${at}: no two stamps cross`, stamps.some((a, i) => stamps.some((b, j) => i < j && crosses(a, b))), false);
+    const ids = [...boxes.keys()];
+    expect(`${at}: no two stamps cross, but a stamp over another's and that one`,
+      stamps.some((a, i) => stamps.some((b, j) => i < j && crosses(a, b) && !spots.some((p) => p.over !== null && [ids[i], ids[j]].sort().join() === [p.id, p.over].sort().join()))), false);
+    for (const p of spots.filter((x) => x.over !== null)) {
+      expect(`${at}: ${p.id} lies on ${p.over}'s stamp`, crosses(boxes.get(p.id)!, boxes.get(p.over!)!), true);
+      expect(`${at}: ${p.id} is the smaller`, boxes.get(p.id)!.w < boxes.get(p.over!)!.w, true);
+      const alone = stampBoxes(new Map(spots.filter((x) => x.id !== p.id).map((x) => [x.id, { art: chosen.get(x.id)!, at: x, over: x.over }])), frame);
+      expect(`${at}: the stamp beneath is no smaller for having one on it`, boxes.get(p.over!), alone.get(p.over!));
+    }
     expect(`${at}: every stamp is inside the sheet`, stamps.every((b) => b.x >= 0 && b.y >= 0 && b.x + b.w <= s.w && b.y + b.h <= s.h), true);
     const wanted = spots.map((p, i) => ({ id: p.id, beside: boxes.get(p.id)!, w: (i % 2 ? LONG.length : 8) * 8, h: 18 }));
     const labels = placeLabels(wanted, stamps, s.w, s.h, [4, 14, 30]);

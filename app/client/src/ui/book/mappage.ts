@@ -5,7 +5,7 @@
 // when the sheet's size changes. Nothing here sends anything.
 import type { View } from "../../api/types";
 import { frameOf, placeLabels, stampBoxes, type Box, type Cell, type Frame } from "../../game/book/maplayout";
-import { HOME, revealed, stampPicks, type StampArt, type StampManifest } from "../../game/book/mapsheet";
+import { HOME, labelKey, revealed, stampPicks, type StampArt, type StampManifest } from "../../game/book/mapsheet";
 import { UI } from "../../game/page/text";
 import { reportError } from "../../telemetry";
 import type { Book } from "./book";
@@ -22,7 +22,7 @@ const UNDRAWN: StampArt = { src: "", w: 24, h: 24 };
 const GAPS_EM = [0.3, 1, 2];
 
 /** One spot on the sheet: the town (id HOME) or a revealed place. */
-interface Spot { id: string; at: Cell; label: string }
+interface Spot { id: string; at: Cell; label: string; over: string | null }
 
 export class MapPage implements Part {
   readonly id = "map";
@@ -64,8 +64,8 @@ export class MapPage implements Part {
     this.button.dataset["teach"] = "map";   // the map's lesson starts on it (game/lessons/lessons.ts)
     if (!this.loading) this.load();
     if (prev !== null && revealed(catalog, prev).length < shown.length) markNew(this.book.tab, () => undefined);
-    const spots = [{ id: HOME, at: { east: 0, north: 0 }, label: catalog.townTitle(view) },
-      ...shown.map((p) => ({ id: p.place, at: { east: p.east, north: p.north }, label: p.label_key ? catalog.text.get(p.label_key) : "" }))];
+    const spots = [{ id: HOME, at: { east: 0, north: 0 }, label: catalog.townTitle(view), over: null },
+      ...shown.map((p) => { const key = labelKey(catalog, view, p); return { id: p.place, at: { east: p.east, north: p.north }, label: key ? catalog.text.get(key) : "", over: p.over }; })];
     if (JSON.stringify(spots) === JSON.stringify(this.spots)) return;
     this.spots = spots;
     this.fillList();
@@ -140,12 +140,18 @@ export class MapPage implements Part {
   private drawStamps(frame: Frame): Map<string, Box> {
     const places = this.ctx.catalog.content.places;
     const picks = this.manifest ? stampPicks(this.ctx.saveId(), places, this.manifest) : new Map();
-    const boxes = stampBoxes(new Map(this.spots.map((s) => [s.id, { art: picks.get(s.id) ?? UNDRAWN, at: s.at }])), frame);
+    const boxes = stampBoxes(new Map(this.spots.map((s) => [s.id, { art: picks.get(s.id) ?? UNDRAWN, at: s.at, over: s.over }])), frame);
     const nodes: HTMLElement[] = [];
-    for (const s of this.spots) {
+    for (const s of [...this.spots].sort((a, b) => Number(a.over !== null) - Number(b.over !== null))) {
       const art = picks.get(s.id), box = boxes.get(s.id)!;
       if (!art) continue;
       this.preload(art.src);
+      if (s.over !== null) {   // a stamp on a stamp: its own patch of the ground beneath it keeps the two engravings apart
+        const knock = el("i", "map-knock");
+        const pad = Math.max(box.w, box.h) * 0.12;
+        knock.style.cssText = `left:${box.x - pad}px;top:${box.y - pad}px;width:${box.w + 2 * pad}px;height:${box.h + 2 * pad}px`;
+        nodes.push(knock);
+      }
       const node = el("i", s.id === HOME ? "map-stamp home" : "map-stamp");
       node.dataset["place"] = s.id;
       node.style.cssText = `left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px;--art:url("${STAMPS}${art.src}")`;

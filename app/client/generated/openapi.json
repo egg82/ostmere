@@ -5694,6 +5694,16 @@
               }
             ]
           },
+          "offered_until": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "chip": {
             "anyOf": [
               {
@@ -5716,6 +5726,7 @@
           "when",
           "then",
           "offered_after",
+          "offered_until",
           "chip",
           "after_end"
         ],
@@ -5904,6 +5915,27 @@
               }
             ],
             "title": "Label Key"
+          },
+          "labelled_after": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Unlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "over": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Over"
           }
         },
         "type": "object",
@@ -5913,7 +5945,9 @@
           "east",
           "north",
           "reveal",
-          "label_key"
+          "label_key",
+          "labelled_after",
+          "over"
         ],
         "title": "PlaceInfo",
         "description": "A place on the world map, in content order: drawn once view.unlocked holds `reveal`, at whole cells east and north\nof the town (which stands at 0, 0)."
