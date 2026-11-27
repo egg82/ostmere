@@ -7,7 +7,7 @@ from ashfall_app.engine import (
     AfterTime, AnswerId, CardId, CardShare, ChipId, OfferId, Order, Rules, Save, SaveMix, StoreId, TapCard, Unlock, UnlockKind, view,
 )
 from tests.daythree.chapter import ChipRule, Keep, Later
-from tests.dayone.policy import Move
+from tests.dayone.player.policy import Move
 from tests.weekfive import fixtures, policy
 from tests.weekfive.policy import CastCard, RouteShare, TwoAnswer, Week
 from tests.weektwo import weekfour as w4
