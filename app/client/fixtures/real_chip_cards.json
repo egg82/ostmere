@@ -4754,6 +4754,20 @@
         "film"
       ],
       "wounds": []
+    },
+    {
+      "card": "far_snares",
+      "makes": [
+        "catch"
+      ],
+      "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "sit_names",
+      "makes": [],
+      "takes": [],
+      "wounds": []
     }
   ],
   "chips": [
@@ -5052,7 +5066,8 @@
         "n14_fog_fish",
         "n15_fog_fish",
         "hunt_boar",
-        "n23_fog_fish"
+        "n23_fog_fish",
+        "far_snares"
       ]
     },
     {
@@ -6050,6 +6065,14 @@
       "made_by": []
     },
     {
+      "store": "bede_clock",
+      "made_by": []
+    },
+    {
+      "store": "night_28",
+      "made_by": []
+    },
+    {
       "store": "his_watch_clock",
       "made_by": []
     },
@@ -6139,6 +6162,10 @@
     },
     {
       "store": "echo_j_steam_hole_no_clock",
+      "made_by": []
+    },
+    {
+      "store": "echo_j_far_snares_no_clock",
       "made_by": []
     },
     {

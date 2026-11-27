@@ -1,0 +1,197 @@
+# Day twenty-seven: from B21 (the bedesman home) through I11, SL36, I12 and Lucy's last job to night 28, A40 and I13,
+# week four's last beat, as data merged after day_twenty_five.toml (schema.Chapter, chapters.merge). Story spoilers:
+# never shown to the owner. Spec: content/team/week-four.md, "Day twenty-seven"; numbers:
+# content/team/week-four-numbers.md.
+version = 1
+end_feature = "week_four_end"
+
+# ---------- the clock ----------
+
+# Never drawn: game hours since B21, for I11, SL36 and I12 (day_twenty_five.toml's kept_clock).
+[[stores]]
+id = "bede_clock"
+label_key = "store_bede_clock"
+cap_items = 8760
+hidden = true
+
+[[standing]]
+id = "bede_clock"
+label_key = "action_bede_clock"
+makes = [{ store = "bede_clock", items_per_hour = 1 }]
+
+[[triggers]]
+id = "t_bede_clock"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "bedesman_home", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "bede_clock" }] }
+
+# ---------- I11: the board read ----------
+
+[[triggers]]
+id = "t_board"
+when = { test = "at_least", subject_kind = "store", id = "bede_clock", value = 4 }
+outcome = { doings = ["n23"], line_keys = ["l_board_1", "l_board_2"], unlocks = [{ unlock_kind = "feature", id = "board_read" }], whereabouts = [{ person = "n23", layer = "figure_n23_at_board" }] }
+
+# ---------- SL36: hands on the stones ----------
+
+[[triggers]]
+id = "t_hands"
+when = { test = "at_least", subject_kind = "store", id = "bede_clock", value = 10 }
+outcome = { doings = ["n23"], line_keys = ["l_hands"], whereabouts = [{ person = "n23", layer = "figure_n23_at_stone" }] }
+
+# ---------- I12: names given, and A40 shown ----------
+
+# Door to door; A40 shown with it, unready with its countdown to the season's hundred-and-sixty-third hour, queueable
+# When ready (day_nineteen.toml's A38): the card is the sitting, the choice is when.
+[[triggers]]
+id = "t_names_given"
+when = { test = "at_least", subject_kind = "store", id = "bede_clock", value = 20 }
+outcome = { doings = ["n23"], line_keys = ["l_names_given_1", "l_names_given_2"], unlocks = [{ unlock_kind = "card", id = "sit_names" }], whereabouts = [{ person = "n23", layer = "figure_n23_at_hall_door" }] }
+
+# ---------- Lucy's last job ----------
+
+# After the steam hole and once the bedesman is home, on day nine's countdown after the last answer (day_twenty_five.toml's).
+# Its yes shows the job on the tasks rather than queuing it: a queued job is a promise, and no dilemma tests this one
+# (D-176).
+[[offers]]
+id = "j_far_snares"
+text_key = "o_j_far_snares"
+askers = ["n1"]
+gate = { test = "at_most", subject_kind = "store", id = "ask_wait", value = 0 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answered", id = "j_steam_hole", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "bedesman_home", value = 1 },
+]
+
+[[offers.answers]]
+id = "j_far_snares_yes"
+label_key = "a_j_far_snares_yes"
+cost_key = "a_job_yes_cost"
+[offers.answers.outcome]
+line_keys = ["l_j_far_snares_yes"]
+unlocks = [{ unlock_kind = "card", id = "far_snares" }]
+
+[[offers.answers]]
+id = "j_far_snares_no"
+label_key = "a_job_no"
+cost_key = "a_job_no_cost"
+[offers.answers.echo]
+after_h = 9
+line_key = "l_echo_j_far_snares_no"
+modifier = { target = "rate", id = "snare_4", flow = "make", store = "catch", kind = "mul_bp", amount_bp = 10300, source = "j_far_snares_no" }
+[offers.answers.outcome]
+doings = ["n1"]
+line_keys = ["l_j_far_snares_no"]
+whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no stated time and to no stated place: the only clock is the ask countdown, which a yes fills too, so no fact of the page ends it" }]
+
+[[cards]]
+id = "far_snares"
+site = { no_site = "the far snares lie out past the gate in the fog, off the scene" }
+only_player = "story"
+presentation = "action"
+label_key = "c_far_snares"
+upside_key = "up_far_snares"
+work_s = 900
+cap = 1
+outcome = { stores = [{ store = "catch", items = 3 }] }
+line_keys = ["l_far_snares"]
+
+# ---------- night 28, A40 and I13 ----------
+
+# Dusk 28 at 666 h on the calendar, a hidden clock the scene's night grade reads (day_nineteen.toml's night_21).
+[[stores]]
+id = "night_28"
+label_key = "store_night_28"
+cap_items = 20
+hidden = true
+clock = "night"
+
+[[standing]]
+id = "night_28"
+label_key = "action_night_28"
+makes = [{ store = "night_28", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_night_28"
+when = { test = "after_time", value = 2397600 }
+outcome = { line_keys = ["l_night_28"], unlocks = [{ unlock_kind = "action", id = "night_28" }] }
+
+# A40, an hour into night 28 on the season's clock (I1 at 504 h on every route); I12 opens it, and its require reads
+# the clock itself, so its countdown shows from I12. A route whose I12 lands later taps it at once.
+[[cards]]
+id = "sit_names"
+site = { no_site = "the sitting is at the fire, which the scene draws with the town at it at night; the card itself is no work at a place" }
+only_player = "story"
+presentation = "narrative"
+label_key = "c_sit_names"
+work_s = 5
+cap = 1
+glows = true
+requires = [{ test = "at_least", subject_kind = "store", id = "still_clock", value = 163 }]
+
+# I13: the names said; week four's last beat, the chapter's end feature and the edge of written content.
+[[triggers]]
+id = "t_i13"
+when = { test = "at_least", subject_kind = "card_count", id = "sit_names", value = 1 }
+outcome = { doings = ["n23"], line_keys = ["l_i13_1", "l_i13_2", "l_i13_3"], unlocks = [{ unlock_kind = "feature", id = "week_four_end" }], whereabouts = [{ person = "n23", layer = "figure_n23_says_the_names" }] }
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_names"
+text_key = "aim_names"
+after = { unlock_kind = "feature", id = "board_read" }
+
+# ---------- features ----------
+
+[[features]]
+id = "board_read"
+
+[[features]]
+id = "week_four_end"
+
+# ---------- text ----------
+
+[beat_lines]
+I11 = ["l_board_1"]
+I12 = ["l_names_given_1"]
+I13 = ["l_i13_1"]
+
+[line_kinds]
+l_board_1 = "story"
+l_board_2 = "story"
+l_hands = "story"
+l_names_given_1 = "story"
+l_names_given_2 = "story"
+l_j_far_snares_yes = "story"
+l_j_far_snares_no = "story"
+l_echo_j_far_snares_no = "story"
+l_far_snares = "story"
+l_night_28 = "story"
+l_i13_1 = "story"
+l_i13_2 = "story"
+l_i13_3 = "story"
+
+[text]
+store_bede_clock = "clock"
+action_bede_clock = "Clock"
+l_board_1 = "the bedesman reads the board with one finger, and at the second mark says {n11}'s name."
+l_board_2 = "the first has nothing by it. Lucy sat up with him. she thinks, and says he had a cough."
+l_hands = "the bedesman kneels at each warm stone in the valley. at the camp stone, longer."
+l_names_given_1 = "the bedesman goes door to door: who have you lost, and what were they called?"
+l_names_given_2 = "the newcomers count theirs on their fingers. Lucy gives hers, and stops. that's all."
+o_j_far_snares = "Lucy says somebody has to walk out to the far snares past the gate, in the fog."
+a_j_far_snares_yes = "You walk out"
+l_j_far_snares_yes = "you take a sack and go out past the gate."
+l_j_far_snares_no = "Lucy sends somebody else out with a sack."
+l_echo_j_far_snares_no = "someone walked the far line and set the sprung snares right."
+c_far_snares = "Walk the far snares"
+up_far_snares = "catch from the far line"
+l_far_snares = "two in the far snares, grey with ash. you carry them home."
+store_night_28 = "night"
+action_night_28 = "Night"
+l_night_28 = "the light goes. the fog lies pale under the hall's light, and everyone comes to the fire."
+c_sit_names = "Sit at the fire"
+l_i13_1 = "the bedesman stands at the fire and says every name they were given."
+l_i13_2 = "the names go down the valley and come back off the far side. {n11}'s, twice."
+l_i13_3 = "at the end they stop, and say nothing, as long as a name would take. then they sit."
+aim_names = "hear the names the town can give."

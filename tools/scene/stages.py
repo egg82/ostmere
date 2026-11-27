@@ -218,6 +218,12 @@ STAGES["67_sacking"] = _NIGHT.then({"answer:o_pelt_keep", "feature:night_7"})
 STAGES["67_none"] = _DAY
 STAGES["70_midden"] = _DAY.then({"project:dig_midden"})
 STAGES["70_midden_night"] = _NIGHT.then({"project:dig_midden"})
+# Day twenty-seven's moments (people_layers.py): the bedesman at the board, at the camp stone, and at the fire on night 28.
+_HOME = {"feature:stranger_home", "feature:bedesman_home"}
+STAGES["71_board"] = _DAY.then(_HOME, bede_clock=5)
+STAGES["71_hands"] = _DAY.then(_HOME, bede_clock=11)
+STAGES["71_names_given"] = _DAY.then(_HOME, bede_clock=21)
+STAGES["71_names_night"] = _NIGHT.then(_HOME | {"project:sit_names"}, bede_clock=38)
 for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clock"), ("stage_7", "stage_7_clock"),
                       ("posts_cord", "posts_cord_clock"), ("n6_posts_done", "n6_posts_done_clock"), ("choir_2", "choir_2_clock"),
                       ("road_pair", "road_pair_clock"), ("fiddle_2", "fiddle_2_clock")):

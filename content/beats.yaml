@@ -549,6 +549,21 @@ day_twenty_five:
      moves: [PC], thread: {id: th-town, at: middle}}
   - {id: B21,  kind: ref,    visit: 27a, target_hour: 50}
 
+# Day twenty-seven: from B21 through I11 (the board read), I12 (A40 shown) and night 28 to A40 and I13, week four's last
+# beat, which pays its own near promise (no closing ref, as day_nineteen_night:). Spec: content/team/week-four.md, "Day
+# twenty-seven". Ids only. Kinds as day_two:. target_hour: game hours after B21 lands, typical route, measured by the
+# week-two simulator (tests/weektwo/report.py --twentyseven).
+day_twenty_seven_near_promise: C-promise-36
+day_twenty_seven:
+  - {id: B21,  kind: ref,    visit: 27a, target_hour: 0}
+  - {id: I11,  kind: beat,   region: R1, target_day: 27, weekly: false, visit: 27b, target_hour: 4, gate: {hours_after: {beat: B21, hours: 4}},
+     turn: down, outcome: "no", cost: none, opens: [C-promise-36], moves: [PC, N1, N4], thread: {id: th-faith, at: middle}, register: grim}
+  - {id: I12,  kind: beat,   region: R1, target_day: 27, weekly: false, visit: 27d, target_hour: 20, gate: {hours_after: {beat: B21, hours: 20}},
+     turn: down, cost: none, advances: [C-promise-36], moves: [N4, N1], thread: {id: th-faith, at: middle}, register: grim}
+  - {id: A40,  kind: action, visit: 28d, target_hour: 37, gate: {all: [{save_hours: 667}, {beat: I12}]}}   # sit at the fire, night 28
+  - {id: I13,  kind: beat,   region: R1, target_day: 28, weekly: false, visit: 28d, target_hour: 37, gate: {all: [{project: A40}, {beat: I12}]},
+     turn: up, outcome: "yes_but", cost: none, pays: [C-promise-36], moves: [PC, N4], thread: {id: th-faith, at: middle}, register: warm}
+
 # The side layer: minor beats between spine beats, each with its own decision or spend (content/team/day-three.md,
 # "Side layer"). No turn fields: the flat check reads the spine and the chapters only. Never a gate for a beat.
 #   kind: find | trip | arc | comfort | thread;  offers: decision | spend | both
@@ -586,6 +601,7 @@ side_layer:
   - {id: SL33, kind: thread,  chapter: day_twenty_three, thread: th-network, offers: decision, gate: {hours_after: {beat: I1, hours: 64}}}
   - {id: SL34, kind: comfort, chapter: day_twenty_five, thread: th-self, offers: decision, gate: {all: [{beat: I8}, {store_at_least: {store: boar_lost, n: 1}}]}}
   - {id: SL35, kind: arc,     chapter: day_twenty_five, thread: th-town, offers: decision, gate: {hours_after: {beat: B20, hours: 20}}}
+  - {id: SL36, kind: thread,  chapter: day_twenty_seven, thread: th-faith, offers: decision, gate: {hours_after: {beat: B21, hours: 10}}}
 
 # Side beats: building falls (a maxed building's prestige) and season-gated set pieces. Not on the critical path;
 # each fires once when eligible. The simulator counts them toward "new things per week".
