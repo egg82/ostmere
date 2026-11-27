@@ -34,7 +34,9 @@ check them.
    check the hand-over fires once and nothing goes negative (`app/tests/opening/test_hand_over_rebase.py`).
 8. **Every tapped card has its own upside text.** A missing `upside_key` is gated; two cards sharing one is not.
 9. **Nothing is named before it exists.** A line, chip or offer must not mention a thing the player can't have yet on
-   some route (stores and actions are gated by `unlock_order_checks`; text is not).
+   some route (stores and actions are gated by `unlock_order_checks`; text is not). A `{<role>}` slot is gated:
+   `cast_checks.py` refuses it in any text that is not the casting outcome's own lines, a later label, or an owner gated
+   on a feature of that role.
 10. **Spoilers.** Commit messages, PR text, test names and readout text name beats, lines and offers by id, never by
     what happens. Nothing checks this.
 
