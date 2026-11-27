@@ -768,7 +768,7 @@ All picked from the packs by `sprite-catalog` first; drawn only where the kit la
   `fire:names`, I13's visit).
 - **Journal sketches:** the pilgrim (a walking elk, fungus along its spine) and the ash-boar, each by the sketch-test
   method, looked at before it ships.
-- **The map:** four places, by the Widman stamps (`docs/research/art-sourcing.md`): `p_ashwood` (forest, at B18),
+- **The map:** four places, by the Widman stamps (`docs/research/art/art-sourcing.md`): `p_ashwood` (forest, at B18),
   `p_warm_patch` (the post's site, at I6), `p_marker` (a small marker, Wayfinding 3), `p_square_hill` (a hill, far,
   unlabelled, Wayfinding 5).
 - **Stages:** 67_still, 68_ashwood, 69_walked_elk, 70_film, 71_bowl, 72_keeping_pace, 73_stranger_home, 74_fiddle,

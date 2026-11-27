@@ -1,5 +1,5 @@
 // report.mjs <seen.json>...: the "was it seen" runs side by side (run.sh writes them), against the targets in
-// docs/research/story-to-the-eyes.md: at least 80% of tap-written lines seen, at least 90% of lines with their reading
+// docs/research/design/story-to-the-eyes.md: at least 80% of tap-written lines seen, at least 90% of lines with their reading
 // window to themselves. Lines are named by key; a failed line lists the conditions it failed.
 // Before a server names the card that wrote a line, a run classes lines by the tap landing alone; a key that a later
 // run's server attributes to no card or another card is reclassed by that run (content is the same across builds).

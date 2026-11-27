@@ -93,7 +93,7 @@ def test_a_trip_whose_supply_line_is_not_drawn_yet_is_not_mixed():
 
 
 def test_a_comfort_showing_no_ready_time_is_not_queued_and_one_that_will_be_ready_is():
-    """The page offers When ready only with a ready time (client game/queue.ts); queued without one, the comfort would
+    """The page offers When ready only with a ready time (client game/mixes/queue.ts); queued without one, the comfort would
     hold the queue's head forever. With nothing making wood the comfort shows no ready time; with the gatherer, one."""
     r = rules()
     bare = advance(new_save(r), r, H)

@@ -1,4 +1,4 @@
-/* A feature's card (ui/featurecard.ts) sits off the art, so the scene stays in view while it is up: it is not modal
+/* A feature's card (ui/story/featurecard.ts) sits off the art, so the scene stays in view while it is up: it is not modal
    (no backdrop dimming the page) and docks along the bottom edge on a phone, at the panel's foot on a desktop. */
 .end-dock { position: fixed; z-index: 20; margin: 0; left: 0; right: 0; bottom: 0; width: 100%; max-width: none; padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)); box-shadow: 0 -.5rem 2rem rgba(0, 0, 0, .55); }
 .end-card .sheet-actions { justify-content: center; }
@@ -7,7 +7,7 @@
 
 /* juice: none of it moves the layout */
 .arrive { animation: arrive .5s ease-out backwards; }
-.held { visibility: hidden; }   /* arrived while away, waiting its turn (ui/reveal.ts): its room is already taken */
+.held { visibility: hidden; }   /* arrived while away, waiting its turn (ui/feedback/reveal.ts): its room is already taken */
 .landed { animation: landed .7s ease; }
 @keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes line-in { from { opacity: 0; transform: translate(var(--line-from-x, .6rem), var(--line-from-y, 0)); } }

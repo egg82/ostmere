@@ -1,4 +1,4 @@
-// The Town tab wears the quiet dot while any person's Change does (ui/townview.ts, ui/personpage.ts): it comes when a
+// The Town tab wears the quiet dot while any person's Change does (ui/town/townview.ts, ui/town/personpage.ts): it comes when a
 // task the player has not had in front of them arrives, as a row's arrival dots it, never on the first view; it goes once
 // the page of the person it is for has been opened, which keeps their tasks.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
@@ -6,10 +6,10 @@ import { testContext } from "./context";
 import { townStep } from "../fixtures/town";
 import { fixtureContent } from "../fixtures/content";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { LaneRows } from "../src/ui/lanerows";
+import { Catalog } from "../src/game/page/catalog";
+import { LaneRows } from "../src/ui/town/lanerows";
 import { PanelTabs } from "../src/ui/tabs";
-import { TownView } from "../src/ui/townview";
+import { TownView } from "../src/ui/town/townview";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

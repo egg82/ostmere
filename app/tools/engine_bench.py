@@ -25,7 +25,9 @@ from ashfall_app.api.convert import condition, mix, order_verb
 from ashfall_app.engine import SaveMix, SetOrders, SetQueue, SwitchMix, TapCard, Verb
 from ashfall_app.main import create_app
 from tests.opening.playthrough import Player, opening_rules
-sys.path.insert(0, str(Path(__file__).parent.parent / "tests" / "cards_contract"))  # the contract tests' own imports
+CARDS = Path(__file__).parent.parent / "tests" / "cards_contract"
+sys.path.insert(0, str(CARDS))  # the contract tests' own imports
+sys.path.insert(0, str(CARDS / "views"))
 from cards_world import rich_rules, rich_saves  # noqa: E402 -- sys.path is set on the line above
 from test_cards_reading import read_everything  # noqa: E402 -- sys.path is set on the line above
 

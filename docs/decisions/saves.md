@@ -56,7 +56,7 @@ connection: inside the write's, a failed renewal would abort the applied write, 
 the save's, could deadlock against the empty-account prune, which locks accounts and then deletes their saves. A
 forecast or dry run gives its connection back before its replay. A decision holds its save's row lock over four round
 trips: the lock, the tries count (`db/tries.py` `take`, trim, count and insert as one statement), the step's write
-(`db/step.py`: the row, lines, decision log, day snapshot and the repeats' read as one statement) and the COMMIT. The
+(`db/stored/step.py`: the row, lines, decision log, day snapshot and the repeats' read as one statement) and the COMMIT. The
 lock serialises the save's read-modify-write, its tries count and its lines' numbering, so nothing moves out from under it
 and the count stays before the decision is run (a refusal wins over an invalid verb). Rejected: psycopg's pipeline mode
 (SQLAlchemy reads each statement's result as it is sent, so a statement inside a pipeline raises `ResourceClosedError`). Rejected: one transaction for every block of a
@@ -75,7 +75,7 @@ forward-only with no per-change flags. Content may rename or remove any id; a sa
 went, and never fails to load for it. A change that should carry a save across (a rename worth keeping progress for,
 a retroactive change) is a step on the upgrade chain (`app/ashfall_app/engine/upgrade.py`). Stored in Postgres (`app/ashfall_app/db/tables.py`): the save's state
 with its decision log, lines and day snapshots, and each rules digest's manifest once, put back into a row stored
-without it when it is read (`app/ashfall_app/db/manifests.py`). A build writes rows without its manifest once its
+without it when it is read (`app/ashfall_app/db/stored/manifests.py`). A build writes rows without its manifest once its
 start finds it held (`app/ashfall_app/saves/manifest.py`); `python -m ashfall_app.saves strip` does the same for older
 rows and deletes the manifests no row names (`app/ashfall_app/saves/strip.py`). Built:
 `app/ashfall_app/saves/interface.py` (null: no database), one transaction per write holding the row, rebased forward at
@@ -88,20 +88,20 @@ behind and keeps the result beside the row, keyed on the row it began from; a st
 from it, and any other row makes it stale (`app/ashfall_app/saves/ahead.py`). A busy save's night can cost minutes of
 engine time, more than slices can hide, so the work is done before the player returns. Several
 per account (`app/ashfall_app/saves/games.py`): a capped count of live saves, new games under the shared limiter, a
-deleted save held and then deleted for good by a later write; the in-game Games sheet (`app/client/src/ui/games.ts`)
-lists, starts, switches, deletes and restores them, and the front page's list (`app/client/src/ui/places.ts`) selects,
-opens, starts and deletes them through the same delete flow (`app/client/src/ui/gamedelete.ts`). A save's stored view
+deleted save held and then deleted for good by a later write; the in-game Games sheet (`app/client/src/ui/front/games.ts`)
+lists, starts, switches, deletes and restores them, and the front page's list (`app/client/src/ui/front/places.ts`) selects,
+opens, starts and deletes them through the same delete flow (`app/client/src/ui/front/gamedelete.ts`). A save's stored view
 is read without opening it (the Saves interface's stored read, `GET /api/saves/{save_id}/view`): not advanced, nothing
 written, so a page can draw every save before any is opened.
 
 Page shell: TypeScript, bundled, served at /build/<build>/ so a page only ever runs its own build's bundle. What a load
 opens is `entry` in `app/client/src/begin.ts`: the front page, or the game at once when the address names a live save,
 a join link came, or the device's "skip the front page" choice (`app/client/src/app/straight.ts`, local storage, off
-when it throws) is on. The front page (`app/client/src/ui/frontdress.ts`) draws the game's own Scene on its stage:
+when it throws) is on. The front page (`app/client/src/ui/front/frontdress.ts`) draws the game's own Scene on its stage:
 cropped around the fire at a whole-number scale (`app/client/src/scene/crop.ts`, `app/client/src/scene/focus.ts`), lit
 by the visitor's hour (`app/client/src/scene/light.ts`), a canned moment of the camp working for a first visit or New
-game (`app/client/src/ui/glimpse.ts`) and the selected save's own stored view otherwise; each save in the list is a
-still of its own view (`app/client/src/ui/places.ts`). A boot that fails (the bundle asked of another build
+game (`app/client/src/ui/front/glimpse.ts`) and the selected save's own stored view otherwise; each save in the list is a
+still of its own view (`app/client/src/ui/front/places.ts`). A boot that fails (the bundle asked of another build
 mid-deploy) reloads once after two seconds, then every thirty while visible (`app/ashfall_app/static/index.html`). A
 request with no answer in `REQUEST_TIMEOUT_MS` (ten seconds, `app/client/src/api/api.ts`) is given up as a network
 failure, so the session asks again behind the reconnecting state whatever holds the connection. The self-update

@@ -3,7 +3,7 @@
 // Chronicle button, which clears when the Chronicle is touched. Restored lines never dot it, nor do lines leaving while it is open.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { testContext } from "./context";
-import { Story } from "../src/ui/story";
+import { Story } from "../src/ui/story/story";
 
 install();
 

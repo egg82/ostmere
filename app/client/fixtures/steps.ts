@@ -301,7 +301,7 @@ function variant(phase: Phase, view: View, at: number): View {
   if (phase === "held" || phase === "heldstint") return heldVariant(phase, view, at);
   if (phase === "full" || phase === "capfull") return { ...view, ledger: view.ledger.map((l) => (l.store === "wood" ? store(at, "wood", 40, 300, 40, false) : l)) };
   if (phase === "trip" || phase === "tripmix") return tripVariant(phase, view, at);
-  if (phase === "goals") return { ...view, goals: [   // a story beat's marks: a card, a line, a skill row; and the wait line (game/story.ts)
+  if (phase === "goals") return { ...view, goals: [   // a story beat's marks: a card, a line, a skill row; and the wait line (game/story/story.ts)
     { kind: "card", store: null, card: "look", skill: null, target: 1, value: null, at: null, feeds: [] },
     { kind: "store", store: "wood", card: null, skill: null, target: 30 * Q, value: { start: at, start_value: 14 * Q, rate: 0, limit: null }, at: null, feeds: [] },
     { kind: "level", store: null, card: null, skill: "foraging", target: 3, value: null, at: null, feeds: [] },

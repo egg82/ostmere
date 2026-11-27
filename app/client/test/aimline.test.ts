@@ -1,4 +1,4 @@
-// The aim (ui/aim.ts, game/shown.ts currentAim; contract/the-client-may.txt, "The client may"): the aim's line states the text of
+// The aim (ui/story/aim.ts, game/page/shown.ts currentAim; contract/the-client-may.txt, "The client may"): the aim's line states the text of
 // the last of Content.aim_infos whose `after` view.unlocked holds, from the first view on; a later aim takes its turn
 // in the arrival queue; content with no aims leaves the line empty.
 import { install } from "./fake-dom";
@@ -6,11 +6,11 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import type { ArrivalKind } from "../src/game/arrivals";
+import { Catalog } from "../src/game/page/catalog";
+import type { ArrivalKind } from "../src/game/story/arrivals";
 import { el } from "../src/ui/dom";
-import { seatHead } from "../src/ui/headseat";
-import { Story } from "../src/ui/story";
+import { seatHead } from "../src/ui/story/headseat";
+import { Story } from "../src/ui/story/story";
 
 install();
 

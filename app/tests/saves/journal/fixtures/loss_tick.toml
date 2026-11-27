@@ -1,0 +1,27 @@
+# A test chapter, merged onto the opening alone (tests/saves/journal/test_loss_steps.py): a store that grows by one an hour
+# from the first minute with nobody deciding, which the test's journal reads as a loss runner's tally. Not story: the
+# ids and words are the tests' own.
+version = 1
+end_feature = "t_ticked"
+
+[[stores]]
+id = "t_tick"
+label_key = "t_s_tick"
+cap_items = 100000
+
+[[standing]]
+id = "t_ticker"
+label_key = "t_a_ticker"
+makes = [{ store = "t_tick", items_per_hour = 1 }]
+
+[[features]]
+id = "t_ticked"
+
+[[triggers]]
+id = "t_tick_on"
+when = { test = "after_time", value = 60 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "t_ticker" }, { unlock_kind = "feature", id = "t_ticked" }] }
+
+[text]
+t_s_tick = "Ticks"
+t_a_ticker = "Ticking"

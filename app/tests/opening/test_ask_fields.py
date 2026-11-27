@@ -3,9 +3,9 @@ offer has only where it differs from the usual. Served as authored, its cause sh
 refuses an asker that is no person and an expiry the engine cannot keep."""
 import pytest
 
-from ashfall_app.api.content_models import Content, OfferInfo
-from ashfall_app.api.line_causes import line_infos
-from ashfall_app.api.line_models import WhenCause
+from ashfall_app.api.world.content_models import Content, OfferInfo
+from ashfall_app.api.world.line_causes import line_infos
+from ashfall_app.api.world.line_models import WhenCause
 from ashfall_app.api.service import Game
 from ashfall_app.engine import new_save
 from ashfall_app.engine.answershifts import answer_shifts

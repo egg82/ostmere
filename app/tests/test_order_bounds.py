@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from ashfall_app.api.saves_models import DecisionRequest
+from ashfall_app.api.player.saves_models import DecisionRequest
 from tests.game_client import GameClient
 
 Json = dict[str, Any]

@@ -6,9 +6,9 @@ import type { JoinWay, Joined } from "../src/api/types";
 import { boot } from "../src/app/boot";
 import { takeJoinLink } from "../src/app/joinlink";
 import { fixtureContent } from "../fixtures/content";
-import { askLine, joinWith, refusal, refusalLine } from "../src/game/joining";
-import { Text, UI } from "../src/game/text";
-import { qrSvg } from "../src/ui/qr";
+import { askLine, joinWith, refusal, refusalLine } from "../src/game/account/joining";
+import { Text, UI } from "../src/game/page/text";
+import { qrSvg } from "../src/ui/devices/qr";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

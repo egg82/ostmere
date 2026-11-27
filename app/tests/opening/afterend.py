@@ -19,7 +19,7 @@ from ashfall_app.opening.order_entries import OrderCardEntry
 from tests.opening.playthrough import Player, opening
 
 END_READ_S = 20
-"""What waits on the end comes this long after it: the end lines' reading time (ui/end.ts, READ_MS)."""
+"""What waits on the end comes this long after it: the end lines' reading time (ui/story/end.ts, READ_MS)."""
 
 
 def rest_card() -> OrderCardEntry:
@@ -32,7 +32,7 @@ def rest_when() -> Condition:
 
 
 def offer_shows(after_end: bool, ended: bool, read: bool, wanted: bool) -> bool:
-    """The page's gate on a chip's card (game/cues.ts, chipCard): one with after_end waits for the end and its lines
+    """The page's gate on a chip's card (game/ledger/cues.ts, chipCard): one with after_end waits for the end and its lines
     read; `wanted` is the rest of its test (the chip on, no rule on its store and test)."""
     return wanted and (not after_end or (ended and read))
 

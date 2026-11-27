@@ -3,8 +3,8 @@
 import { install } from "./fake-dom";
 import { dayTwoStep } from "../fixtures/daytwo";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { openSheet } from "../src/ui/back";
 import { Screen } from "../src/ui/screen";
 

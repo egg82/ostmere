@@ -5,7 +5,7 @@ import { testContext, TAUGHT } from "./context";
 import { Q, R } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { LedgerLine, View } from "../src/api/types";
-import { Ledger } from "../src/ui/ledger";
+import { Ledger } from "../src/ui/ledger/ledger";
 import { keepsOf, type Flat } from "./kept";
 
 install();

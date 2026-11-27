@@ -13,7 +13,7 @@ from .repeats import RepeatRules
 
 def build_release() -> int:
     """This build's place in deploy order: CI numbers each image build (BUILD_RELEASE), later builds higher. A save
-    written by a later release than a pod's own is left to the later pod (saves/load.py `newer`). 0 for a local run."""
+    written by a later release than a pod's own is left to the later pod (saves/builds/load.py `newer`). 0 for a local run."""
     return int(os.environ.get("BUILD_RELEASE", "0"))
 
 

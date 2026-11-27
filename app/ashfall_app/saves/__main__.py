@@ -12,9 +12,9 @@ from .. import logs
 from ..clock import system
 from ..db.engine import open_database
 from ..opening.schema import load_opening
-from .check import check
+from .builds.check import check
 from .ruleset import build_release, ruleset
-from .strip import strip
+from .builds.strip import strip
 from .support import replay, restore
 
 

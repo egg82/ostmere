@@ -7,10 +7,10 @@ import { testContext } from "./context";
 import { fixtureContent, TIRED } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, View } from "../src/api/types";
-import { doChoices, whenChoices } from "../src/game/ruleoffers";
-import { Hands } from "../src/ui/hands";
-import { RulesTab } from "../src/ui/rules";
-import { MixSelector } from "../src/ui/selector";
+import { doChoices, whenChoices } from "../src/game/condition/ruleoffers";
+import { Hands } from "../src/ui/hands/hands";
+import { RulesTab } from "../src/ui/rules/rules";
+import { MixSelector } from "../src/ui/mixes/selector";
 
 install();
 

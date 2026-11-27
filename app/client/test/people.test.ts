@@ -1,4 +1,4 @@
-// People's coming and going in the story (contract/people.txt, "PEOPLE"; game/people.ts, ui/story.ts, ui/chapter.ts): a day's
+// People's coming and going in the story (contract/people.txt, "PEOPLE"; game/town/people.ts, ui/story/story.ts, ui/book/chapter.ts): a day's
 // mention lines are one line, worded from the band for how many they count and drawn by a seeded shuffle bag; a later
 // Step on the same day rewords it rather than adding a second; the "Since you left" chapter gathers the lines telling a
 // person's joining and the day's mentions into its people section, and has none when nobody came or went.
@@ -6,10 +6,10 @@ import { install } from "./fake-dom";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { LogLine } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps, NEW_SAVE } from "../src/game/keeps";
-import { counted, DAY_S, mentionId, mentionKey } from "../src/game/people";
-import { UI } from "../src/game/text";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps, NEW_SAVE } from "../src/game/account/keeps";
+import { counted, DAY_S, mentionId, mentionKey } from "../src/game/town/people";
+import { UI } from "../src/game/page/text";
 import { Screen } from "../src/ui/screen";
 
 install();

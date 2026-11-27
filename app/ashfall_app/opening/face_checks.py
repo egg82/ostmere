@@ -9,7 +9,7 @@ when it is:
 A reach stake's store (CardInfo.reach) is a require too: the track laid is a line that joins the ledger only once full,
 so the face draws it against the next reach, and must have a store it may draw.
 A ruled lane's cards are its tasks, run by the player's rules and never tapped, so they are not checked. The same
-stores are the ones a cause may name (api/line_causes.py). Raises ValueError naming the store (refs.fail); ids only,
+stores are the ones a cause may name (api/world/line_causes.py). Raises ValueError naming the store (refs.fail); ids only,
 since the owner reads CI."""
 from collections.abc import Iterable
 from functools import reduce

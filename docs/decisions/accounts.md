@@ -28,7 +28,7 @@ Accounts and sign-in: an anonymous account per browser; a transfer code (or QR) 
 external sign-in (`decisions.md`, "A plain browser game"). Several saves per account. Tests sign in through sessions.
 Built: `app/ashfall_app/accounts/interface.py` (null: no database), the session cookie, the limits
 (`app/ashfall_app/accounts/limits.py`), moving to another device (`app/ashfall_app/accounts/moving.py`), and the list
-of an account's devices, one per session, whose removal signs that browser out (`app/ashfall_app/api/device_routes.py`):
+of an account's devices, one per session, whose removal signs that browser out (`app/ashfall_app/api/player/device_routes.py`):
 a transfer code with its link and QR, recovery words, and the join made with either one, which folds an empty device's
 account into the other; a join moves every save of the account. A device with games of its own is asked first, then
 merges: its saves move into the other account, numbered after that account's, in one transaction, refused when the two

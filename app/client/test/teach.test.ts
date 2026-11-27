@@ -1,4 +1,4 @@
-// Day one's teaching cues (game/teach.ts, ui/cardneeds.ts): a build waiting on a store nothing at work
+// Day one's teaching cues (game/story/teach.ts, ui/cards/cardneeds.ts): a build waiting on a store nothing at work
 // makes the switch-mix lesson's subject (a saved mix that makes it, or the card that Edit adds; switchlesson.test.ts); a build that will be ready by
 // itself gets no cue; and a tap of a short need two cards in play make lights both, the choice of what to smoke.
 import { install } from "./fake-dom";
@@ -6,9 +6,9 @@ import { testContext } from "./context";
 import { dayOneStep } from "../fixtures/dayone";
 import { fixtureContent } from "../fixtures/content";
 import type { Card, Mix, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { switchCue } from "../src/game/teach";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { Catalog } from "../src/game/page/catalog";
+import { switchCue } from "../src/game/story/teach";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();
 

@@ -1,6 +1,6 @@
 {
   "include": ["ashfall_app", "tests", "tools", "../tools/scene", "../tools/favicon.py", "../tools/ogcard.py", "../tools/pagemarks.py","../tools/galaxy_thumb.py"],
-  "extraPaths": ["tests/cards_contract", "../tools/scene"],
+  "extraPaths": ["tests/cards_contract", "tests/cards_contract/views", "tests/engine_contract", "tests/journal_contract", "../tools/scene"],
   "pythonVersion": "3.12",
   "typeCheckingMode": "strict",
   "reportUnnecessaryTypeIgnoreComment": "error"

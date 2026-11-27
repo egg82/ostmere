@@ -26,7 +26,7 @@ export function pulse(node: Element, className: string): void {
   node.addEventListener("animationend", done);
 }
 
-/** "+1" rising off a card when a completion lands, over the card so nothing moves (ui/ladder.ts says when). */
+/** "+1" rising off a card when a completion lands, over the card so nothing moves (ui/feedback/ladder.ts says when). */
 export function popOne(node: HTMLElement): void {
   const pop = el("span", "pop", "+1");
   pop.setAttribute("aria-hidden", "true");
@@ -35,7 +35,7 @@ export function popOne(node: HTMLElement): void {
   window.setTimeout(() => pop.remove(), 1500);
 }
 
-/** A cascade's lit link on `node` (ui/reveal.ts): an ember tick and wash laid over it that fade by themselves. Its own
+/** A cascade's lit link on `node` (ui/feedback/reveal.ts): an ember tick and wash laid over it that fade by themselves. Its own
  * span, as the "+1" is, so its animation never ends one playing on the node. */
 export function markLink(node: HTMLElement): void {
   node.querySelector(":scope > .link-mark")?.remove();
@@ -79,7 +79,7 @@ export function place(parent: Element, nodes: HTMLElement[]): void {
 }
 
 /** The event a control sends when it did what it is for, however it was pressed: one that acts on pointerup is redrawn
- * before a click could follow. The lesson runner (ui/lessons.ts) hears it as it hears a click. */
+ * before a click could follow. The lesson runner (ui/lessons/lessons.ts) hears it as it hears a click. */
 export const ACTED = "acted";
 
 /** Says `node` acted: sent while it is still in the page, so it reaches the document before a redraw replaces it. */

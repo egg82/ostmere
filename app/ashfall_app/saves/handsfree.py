@@ -17,7 +17,7 @@ from ..db import saves as save_rows
 from ..db import unit
 from ..db.saves import DecisionRecord
 from .interface import Ruleset, Unavailable
-from .load import load
+from .builds.load import load
 from .repeats import hands_cards
 
 HORIZON_S = 6 * 3600

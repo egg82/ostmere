@@ -27,13 +27,13 @@
 .totals-after.unknown { color: var(--ink-dim); }
 .totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
 .totals-runs { font-size: var(--t-meta); color: var(--ink); }
-.cond-watched { margin: 0 0 .3rem; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the watched store now, over the rule (ui/condstore.ts) */
+.cond-watched { margin: 0 0 .3rem; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the watched store now, over the rule (ui/condition/condstore.ts) */
 .cond-watched[hidden] { display: none; }
 .person-stores { margin-top: .6rem; }
-.person-stores.at-rest .totals-row { grid-template-columns: minmax(0, 1fr) 6.5rem; }   /* a person's split at rest: rates now, no after (ui/personmix.ts) */
+.person-stores.at-rest .totals-row { grid-template-columns: minmax(0, 1fr) 6.5rem; }   /* a person's split at rest: rates now, no after (ui/town/personmix.ts) */
 .person-stores.at-rest .totals-row > :nth-child(n+3) { display: none; }
 .goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
-.goal-binds.heading-turned { color: var(--ember-hot); }   /* a store whose heading the edit turns (ui/storetimes.ts) */
+.goal-binds.heading-turned { color: var(--ember-hot); }   /* a store whose heading the edit turns (ui/mixes/storetimes.ts) */
 .goal-binds.heading-turned.empties { color: var(--alarm); }
 .editor-adds { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 .editor-add-label { font-size: var(--t-meta); color: var(--ink); }
@@ -46,7 +46,7 @@
 .add-list[hidden] { display: none; }
 .add-card { min-height: 2.6rem; padding: 0 .8rem; cursor: grab; touch-action: none; background: linear-gradient(var(--hue), var(--hue)) 0 0 / 4px 100% no-repeat var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi) !important; position: relative; }
 .add-card::before { content: "+ "; color: var(--ink); }
-/* goal stints (ui/stint.ts): "Run until…" under the totals, its goals as a column of taps with the time if run */
+/* goal stints (ui/next/stint.ts): "Run until…" under the totals, its goals as a column of taps with the time if run */
 .editor-stint { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
 .editor-stint[hidden] { display: none; }
 .editor-stint > .quiet { min-height: 2.4rem; padding: 0 .9rem; }
