@@ -558,7 +558,10 @@ orders = [{ tap_card = "n2_build_bay", first = true }]
 [[triggers]]
 id = "t_kept_o_stay_room"
 when = { test = "at_least", subject_kind = "store", id = "bay", value = 1 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 }]
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_fire_fire", value = 0 },
+]
 [triggers.outcome]
 line_keys = ["l_kept_o_stay_room"]
 modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 11000, source = "o_stay_room" }]
@@ -1117,7 +1120,42 @@ keys = ["mention_went_many_1", "mention_went_many_2", "mention_went_many_3", "me
 [beat_lines]
 B5 = ["l_b5_1"]
 
+# O-stay-fire: the promise to build his bay, tested two hours into the build (the bay's clock) against the fire's wood.
+[[offers]]
+id = "o_stay_fire"
+text_key = "o_stay_fire"
+gate = { test = "at_least", subject_kind = "store", id = "bay_clock", value = 40 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_stay_room", value = 1 },
+  { test = "at_least", subject_kind = "running", id = "make_bay", value = 1 },
+]
+line_keys = ["l_stay_fire_1", "l_stay_fire_2"]
+tests = ["o_stay_room"]
+
+[[offers.answers]]
+id = "o_stay_fire_bay"
+label_key = "a_stay_fire_bay"
+cost_key = "a_stay_fire_bay_cost"
+[offers.answers.outcome]
+line_keys = ["l_stay_fire_bay"]
+modifiers = [{ target = "rate", id = "fire", flow = "cost", store = "dry_wood", kind = "mul_bp", amount_bp = 10500, source = "o_stay_fire_bay" }]
+
+[[offers.answers]]
+id = "o_stay_fire_fire"
+label_key = "a_stay_fire_fire"
+cost_key = "a_stay_fire_fire_cost"
+breaks = ["o_stay_room"]
+[offers.answers.outcome]
+line_keys = ["l_stay_fire_fire"]
+unlocks = [{ unlock_kind = "retired", id = "make_bay" }, { unlock_kind = "card", id = "n2_build_bay" }]
+orders = [{ tap_card = "n2_build_bay", first = true }]
+modifiers = [{ target = "lane", id = "n2", kind = "mul_bp", amount_bp = 9200, source = "o_stay_fire_fire" }]
+
 [line_kinds]
+l_stay_fire_1 = "story"
+l_stay_fire_2 = "story"
+l_stay_fire_bay = "story"
+l_stay_fire_fire = "story"
 l_kept_o_stay_room = "story"
 l_kept_o_stay_his = "story"
 l_edge_1 = "story"
@@ -1300,6 +1338,15 @@ l_bay_go = "you start him a sleeping bay against the lean-to."
 l_bay_his = "he starts the bay himself. he doesn't ask where."
 l_bay_help = "he holds the poles steady while you tie them."
 l_bay_mid = "the bay stands framed. half its roof is still sky."
+o_stay_fire = "The poles for his bay, or the fire?"
+l_stay_fire_1 = "the fire has sunk to coals while your back was turned."
+l_stay_fire_2 = "he stands holding a pole, looking from the coals to you."
+a_stay_fire_bay = "You finish the bay"
+a_stay_fire_bay_cost = "{pct} wood on the fire"
+a_stay_fire_fire = "You see to the fire"
+a_stay_fire_fire_cost = "{pct} work from him"
+l_stay_fire_bay = "the coals go grey. he ties off the last pole and does not look at them."
+l_stay_fire_fire = "you leave him the poles. he ties them off alone."
 l_join_1 = "he sits. lucy looks at him once, then works on."
 l_join_2 = "he says his name. the stores go three ways now."
 l_his_first = "he's at work before anyone tells him."
