@@ -1,9 +1,10 @@
 """Week five's chapters as the routes play them (daythree/chapter.Later), played on from week four's end by the same
 players (tests/weekfive/policy.py `later`): which content step is which story id, read off a save, and what each
 chapter's Week names for the policies. Ids only (CLAUDE.md, "Never spoil the owner")."""
-from ashfall_app.engine import AnswerId, CardId, OfferId
-from tests.daythree.chapter import Landings, Later
-from tests.weekfive.policy import RouteShare, TwoAnswer, Week, chip_cure, later
+from ashfall_app.engine import AnswerId, CardId, OfferId, StoreId
+from tests.daythree.chapter import Keep, Landings, Later
+from tests.weekfive.policy import CastCard, RouteShare, TwoAnswer, Week, chip_cure, later
+from tests.dayone.player.sinks import SINKS
 from tests.weektwo import weekfour as w4
 
 TWENTY_NINE = Landings(
@@ -32,3 +33,40 @@ def day_twenty_nine(route: str) -> Later:
     rule written once the chip is seen, O-first-run answered by the route, the run tapped once shown, and the cart and
     the hill's walk in the hands' mix from B22."""
     return later(w4.day_twenty_seven(route), WEEK_TWENTY_NINE, route)
+
+
+THIRTY = Landings(
+    {"Y4": ("t_y4",), "SL38": ("t_line_walked",), "Y5": ("t_moths",), "Y6": ("t_pack_yard",), "SL39": ("t_elk_words",),
+     "Y7": ("t_hair_warm",), "B23": ("t_b23",)},
+    {"A42": ("call_pack",)}, {}, {})
+CALL_PACK, COMB_PELTS = CardId("call_pack"), CardId("comb_pelts")
+NET_MOTHS, DUST_LINE, WARD_GATE, JUMP_PACK = CardId("net_moths"), CardId("dust_line"), CardId("ward_gate"), CardId("jump_pack")
+TRACK = CastCard("tracker", "{lane}_track", {"typical": 3000, "sharp": 5000})
+"""The tracker's share of their own time on the line once cast; the rest stays on their old work (the week's people
+decision; a route not named follows typical)."""
+MOTHS_SHARE = {"typical": 500, "sharp": 800}
+DUST_SHARE = {"typical": 500, "sharp": 800}
+WARD_SHARE = {"typical": 1000, "sharp": 1000}
+JUMP_SHARE = {"typical": 500, "sharp": 500}
+"""The hands' shares of the moths, the dust, the ward and the jump from the visit each is shown (a route not named
+follows typical); the moths' share yields once their pool is netted out (D-125)."""
+HAIR = Keep(COMB_PELTS, StoreId("hair"), 3)
+"""Hair combed by hand while under A42's three: every route makes the new input store."""
+TRACK_CHIP = chip_cure("drifted", "clear_track")
+"""The rule a route that takes rules writes on the track's chip, which has no order card (D-155)."""
+WEEK_THIRTY = Week(
+    start="B22", stop="B23", landed=THIRTY.of, news=("Y4", "SL38", "Y5", "Y6", "SL39", "Y7", "A42", "B23"),
+    chips=(TRACK_CHIP,),
+    shares=(RouteShare(NET_MOTHS, MOTHS_SHARE), RouteShare(DUST_LINE, DUST_SHARE), RouteShare(WARD_GATE, WARD_SHARE),
+            RouteShare(JUMP_PACK, JUMP_SHARE)),
+    casts=(TRACK,),
+    steps=(CALL_PACK,), queued=(CALL_PACK,),
+    keeps=((HAIR, frozenset(SINKS)),))
+
+
+def day_thirty(route: str) -> Later:
+    """B22's visit to B23's, week five's second: day twenty-nine's moves carried on, the track's rule written once its
+    chip is seen, the tracker on the line at the route's share, hair combed while short of three, the moths, the dust,
+    the ward and the jump in the hands' mix once shown, and A42 queued When ready once shown, or tapped when ready."""
+    return later(day_twenty_nine(route), WEEK_THIRTY, route)
+

@@ -8,7 +8,9 @@ from pathlib import Path
 
 from pydantic import Field, model_validator
 
-from ..entries.entries import CardEntry, Entry, ItemAmount, OutcomeEntry
+from ..entries.chain_entries import ChainEntry
+from ..entries.site_entries import SiteEntry
+from ..entries.entries import CardEntry, Entry, ItemAmount, OutcomeEntry, WhileRunningEntry
 
 RULES = Path(__file__).resolve().parents[1] / "working_rules.toml"
 
@@ -74,6 +76,12 @@ class WorkingEntry(Entry):
     distance: int = Field(ge=0)
     link: str = "none"
     tithe: int | None = None
+    chain: ChainEntry | None = None
+    """A working that resolves a chain of a group threat's due fights at each completion (engine design/spells.txt)."""
+    while_running: list[WhileRunningEntry] = []
+    """Sides the working holds while it runs, as a card's."""
+    site: SiteEntry | None = None
+    """The scene layer its work is done at, or no_site and why, as a card's."""
 
     def card(self, rules: WorkingRules) -> CardEntry:
         paid = tithe(rules, self.from_kind, self.to_kind, self.distance, self.link)
@@ -83,7 +91,8 @@ class WorkingEntry(Entry):
             id=self.id, only_player="magic", presentation="action", label_key=self.label_key,
             upside_key=self.upside_key, work_s=self.work_s, skill=self.skill, xp_per_hour=self.xp_per_hour,
             inputs=[self.input] if self.input else [],
-            outcome=OutcomeEntry(stores=[ItemAmount(store=rules.tithe_store, items=paid)]),
+            outcome=OutcomeEntry(stores=[ItemAmount(store=rules.tithe_store, items=paid)]), chain=self.chain,
+            while_running=self.while_running, site=self.site,
         )
 
 

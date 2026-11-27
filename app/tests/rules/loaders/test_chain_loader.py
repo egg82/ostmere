@@ -42,17 +42,19 @@ def test_the_fixture_loads_a_group_a_chained_tally_a_chain_and_a_reach_pay() -> 
         ChainReach(CardId("t_jump")), ModifierKind.ADD_BP, 5000, SourceId("t_reach_pay"))
 
 
-def test_shipped_threats_are_single_creatures_and_no_card_has_a_chain() -> None:
+def test_the_shipped_wolf_pack_is_the_one_group_and_jump_pack_the_one_chain() -> None:
     r = to_rules(load_opening())
-    assert all(t.members == 1 for t in r.threats)
-    assert all(c.chain is None for c in r.cards) and all(a.fight is None or a.fight.chained is None for a in r.standing)
+    assert {t.id: t.members for t in r.threats if t.members != 1} == {ThreatId("wolf_pack"): 6}
+    assert [(c.id, c.chain.runner) for c in r.cards if c.chain is not None] == [(CardId("jump_pack"), ActionId("pack"))]
+    assert [(a.id, a.fight.chained) for a in r.standing if a.fight is not None and a.fight.chained is not None] == \
+        [(ActionId("pack"), StoreId("pack_chained"))]
 
 
 @pytest.mark.parametrize("edit,message", [
     (('members = 4', 'members = 1'), "card t_jump: chain names t_prowl, whose threat t_pack is not a group"),
     (('runner = "t_prowl"', 'runner = "t_nobody"'), "card t_jump: chain names t_nobody, which is not a standing fight"),
     ((', chained = "t_chained"', ''), "card t_jump: chain names t_prowl, which has no fought or chained tally"),
-    (('"t_link_next"]', '"t_link_missing"]'), "card t_jump: key 't_link_missing' is not in text"),
+    (('t_link_next = "and the next"\n', ''), "card t_jump: key 't_link_next' is not in text"),
     (('chained = "t_chained"', 'chained = "t_unknown"'), "action t_prowl: unknown store t_unknown"),
 ])
 def test_a_chain_that_cannot_be_exact_is_refused_naming_the_card(tmp_path: Path, edit: tuple[str, str], message: str) -> None:

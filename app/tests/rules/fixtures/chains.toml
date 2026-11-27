@@ -61,6 +61,8 @@ when = { test = "at_least", subject_kind = "store", id = "t_chained", value = 4 
 outcome = { modifiers = [{ target = "chain", id = "t_jump", kind = "add_bp", amount_bp = 5000, source = "t_reach_pay" }] }
 
 [line_kinds]
+t_link_1 = "fight"
+t_link_next = "fight"
 
 [text]
 t_up = "what it is for"
