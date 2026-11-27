@@ -27,7 +27,12 @@ one, or a base without keys, gets the smoke instead: the day-eight plays of the 
 (`@pytest.mark.smoke`); a change every chapter reads, or week one's, also plays the `WHOLE_GAME` shards (`makers`, `tools/weektwo_shards.py`) from the start, so their readouts are read before merge, in `playthrough-whole-game`: a job of its own that waits on `changes` alone and decides for itself (`whole_game` in `tools/pr_plan.py`), with 8 minutes, the 10-minute chain less `changes` and `ci-ok`, since played from the start a route's chain plus readout runs ~265 s and overran the 6 minutes of a job after `slice`. The whole-game playthroughs (`playthrough`, `chapter-saves*`, `playthrough-week-one`,
 `playthrough-week-one-saved`, `playthrough-week-two`, `publish-ends`) are the full run: nightly on `main`, on a manual
 dispatch, and on a pull request labelled `playthroughs`, which is an opt-in and not part of any writer's routine. A red
-nightly holds the next release (`release` fails while the last completed nightly on `main` failed): dispatch Nightly on
+nightly holds the next release (`release` fails while the last completed nightly on `main` failed), unless it is red
+only because readouts differ: each readout job records whether its tests passed and which readouts changed
+(`.github/actions/readout-verdict`), `ci-ok` turns those into `readouts_only` (`app/tools/nightly_verdict.py`; a job with
+no verdict or a failed test is a real failure), and the nightly's `refresh-readouts` job uploads the `nightly-verdict`
+`release` reads and opens or updates one pull request from `bot/readout-refresh` with the pulled files. That pull
+request is made with GITHUB_TOKEN, so it runs no CI until the orchestrator closes and reopens it. Otherwise dispatch Nightly on
 `main` once it is fixed, and re-run the held job when it is green. A pull request builds the
 image and pushes nothing. On `main` the image is pushed by
 digest alone, and once `ci-ok` is green `release` tags that digest `dev` and `main-<sha8>-<commit ts>`, so the deploy
@@ -71,10 +76,10 @@ A job whose readout differs from its committed text fails after uploading what t
 `python -m tools.readouts_pull <run-id>` (from `app/`) copies a red run's readouts into `app/tests/readouts/` to commit.
 Readouts are refreshed from CI, never replayed locally: push, let the pull request's run go red (each job whose readout
 differs leaves a `readouts-new-*` artifact and fails), pull, commit. A default pull request produces the readouts of the
-chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. To see
-every readout the change can move, including the chapters after the touched one, add the `playthroughs` label: the
-full run plays every chapter from the last nightly's saves and replays only the chapters whose key is new. A red
-nightly's readouts are pulled the same way from its run id.
+chapters it touches; tests that read a chapter's own readings, rebased save or saved end are the full run's. The nightly
+refreshes the rest in its own pull request, so the `playthroughs` label (the full run: every chapter from the last
+nightly's saves, replaying only the chapters whose key is new) is for a change whose wider effect must be read before
+merge, not a routine step.
 
 ## Patterns
 
