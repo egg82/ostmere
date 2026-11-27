@@ -1,4 +1,4 @@
-"""This build's manifest stored under its rules digest (db/manifests.py) before it writes a save, so every save it
+"""This build's manifest stored under its rules digest (db/stored/manifests.py) before it writes a save, so every save it
 writes can be read by any build with the manifest kept apart from the row."""
 
 import logging
@@ -7,7 +7,7 @@ from dataclasses import replace
 from sqlalchemy import Engine
 
 from ... import logs
-from ...db import manifests
+from ...db.stored import manifests
 from ...engine.codec import canonical, manifest
 from ..interface import Ruleset
 

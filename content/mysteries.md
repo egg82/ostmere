@@ -1,7 +1,7 @@
 # Mysteries: the clue trail
 
 What a close reader can piece together **before** the spine says it, where each clue lives, and what stays
-unanswered on purpose. Clues are short, hooked, and leave the last step to the reader (`docs/research/llm-writing.md`).
+unanswered on purpose. Clues are short, hooked, and leave the last step to the reader (`docs/research/writing/llm-writing.md`).
 Where the clue lives: **J** journal (margin, entry, crossed-out guess), **I** item lore, **C** chronicle line,
 **B** a beat, **T** townsfolk chatter.
 

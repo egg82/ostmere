@@ -1,4 +1,4 @@
-// play.mjs <name> [WxH] [maxMin]: the play bot with the "was it seen" pass (probe.js beside it; docs/research/
+// play.mjs <name> [WxH] [maxMin]: the play bot with the "was it seen" pass (probe.js beside it; docs/research/design/
 // story-to-the-eyes.md). A newcomer plays the opening in real time against the server on 127.0.0.1:18771 (run.sh
 // starts one), at WxH (default 1280x800): taps what glows, the obvious one-off steps, the Set and Both offers;
 // gathers/scavenges by need before the mix; adds new mixable cards to the mix; edits the greyed mix; adds the ledger's

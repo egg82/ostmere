@@ -10,7 +10,7 @@ from typing import Any
 from sqlalchemy import Connection, Engine, func, or_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from .tables import save_ahead, saves
+from ..tables import save_ahead, saves
 
 _CLAIM = 0x0A4EAD
 """The first key of the advisory lock a job claims a save's advance with (the second is the save's id)."""

@@ -12,12 +12,12 @@ The juice is per visit; the progress is per hour.
 - **Juice is everywhere, not only in rewards:** every interaction feels good to touch. Dragging a share, a ledger
   line snapping to its target, saving a block, handing a guard their spear, turning a journal page each get a small
   tactile response (a click, a settle, a bounce); big moments get more, nothing touched feels dead.
-- **Juice has a ceiling, written as a ladder** (from `research/design-101.md`): each kind of event
+- **Juice has a ceiling, written as a ladder** (from `research/design/design-101.md`): each kind of event
   has one fixed effect sized by how much it matters, and an effect never grows on repeats. A completion by the mix or a
   rule sits one step below the same completion from a tap, so a tap stays special and a mix running alone still shows
   what it did. The evidence: medium juice beat none and extreme, and making the same feedback bigger lowered players'
   sense of competence, while feedback that said whether their action worked raised it.
-- **Motion, flash, sound and reach rule** (from `research/a11y-audit.md`):
+- **Motion, flash, sound and reach rule** (from `research/design/a11y-audit.md`):
   motion honours the OS reduced-motion preference everywhere, and every effect has a still form that says the same
   thing (the OS preference is the switch; the game has no motion toggle of its own). Nothing flashes more than 3 times
   a second. Sound never carries information alone (the game has no sound today). No meaning is reachable only by hover.

@@ -1,4 +1,4 @@
-"""A save's text with and without its manifest (db/manifests.py): stripping and putting back is exact on every golden
+"""A save's text with and without its manifest (db/stored/manifests.py): stripping and putting back is exact on every golden
 save of every format a rebase reads, and putting back leaves a whole text, or a text with no manifest given, alone;
 leaving a given manifest out touches only a whole text carrying exactly that one."""
 import json
@@ -7,10 +7,10 @@ from pathlib import Path
 import pytest
 
 from ashfall_app import engine as e
-from ashfall_app.db.manifests import stripped, whole, without
+from ashfall_app.db.stored.manifests import stripped, whole, without
 from tests.shipped_ruleset import ShippedRuleset
 
-GOLDEN = Path(__file__).resolve().parents[1] / "saves" / "golden"
+GOLDEN = Path(__file__).resolve().parents[2] / "saves" / "golden"
 TEXTS = sorted(p for f in range(e.OLDEST_FORMAT, e.FORMAT + 1) for p in (GOLDEN / f"f{f}").glob("*.json"))
 
 

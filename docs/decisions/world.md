@@ -23,7 +23,7 @@ and numbers.
 
 A Tolkien front-of-the-book map: where you are and where things are relative to you (Melvor's geography, wanted
 here). Two scales: the world map reveals as you expand and explore, names appearing as you reach them; the town map
-fills in as you build. Built from engraved stamps (Widman, `docs/research/art-sourcing.md`) placed by code: stamps
+fills in as you build. Built from engraved stamps (Widman, `docs/research/art/art-sourcing.md`) placed by code: stamps
 never overlap and never repeat until the pool is used, and labels go in clear space beside their place with a dark
 halo, never over another stamp.
 
@@ -50,7 +50,7 @@ Type: IM Fell English SC for the camp level and view titles only, Alegreya Sans 
 than Caveat but looks like a real hand, and the journal's handwriting is flavour: its numbers sit in Alegreya Sans.
 
 Map stamps, journal sketches and icons are sourced art, never drawn by Claude: the hand-drawn placeholders in the
-design canvas "you can definitely tell". Candidates: `docs/research/art-sourcing.md`. **The journal sketches
+design canvas "you can definitely tell". Candidates: `docs/research/art/art-sourcing.md`. **The journal sketches
 are make-or-break**: dozens of entries in one hand and one pen, invented creatures included, found or
 commissioned and drawn very well; a mixed or mediocre set sinks the journal. The style is a field sketch, not a
 finished plate (an engraving reads "too pristine and careful"; Gravity Falls' Journal 3 got it right): quick,

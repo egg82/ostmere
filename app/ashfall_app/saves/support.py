@@ -15,7 +15,7 @@ from sqlalchemy import Engine
 from .. import engine as e
 from ..clock import Clock
 from ..db import saves as rows
-from ..db import savewrite
+from ..db.stored import savewrite
 from . import write
 from .interface import NotFound, Ruleset
 from .builds.load import load
