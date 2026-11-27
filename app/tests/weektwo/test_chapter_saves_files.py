@@ -32,3 +32,30 @@ def test_a_file_under_todays_key_is_present_and_one_under_another_key_is_not(tmp
 def test_each_part_names_chapters_and_together_the_parts_name_every_chapter():
     named = {c for part in chapter_saves.ALL for c in chapter_saves.chapters_of(frozenset({part}))}
     assert named == set(keys.ORDER) and chapter_saves.chapters_of(frozenset()) == []
+
+
+def test_a_readings_part_writes_one_file_per_heavy_step_and_a_rerun_reads_nothing(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Whatever way the steps are grouped into parts, each reading is the file for its step number, so a part split
+    differently later finds the readings already there."""
+    monkeypatch.setenv("ASHFALL_SAVES_ROOT", str(tmp_path))
+    heavy = [("V1", 0), ("V1", 2), ("V2", 1), ("V3", 0)]
+    read: list[tuple[str, int]] = []
+
+    def decides(step: object, rules: object) -> bool:
+        read.append(next(key for key in heavy if step == f"{key}"))
+        return True
+
+    monkeypatch.setattr(chapter_saves, "typical_through", lambda chapter: type("P", (), {"rules": None})())
+    monkeypatch.setattr(chapter_saves.verdicts, "chapter_visits",
+                        lambda p, later: [type("V", (), {"label": label, "steps": [f"{(label, i)}" for i in range(3)]})()
+                                          for label in ("V1", "V2", "V3")])
+    monkeypatch.setattr(chapter_saves.verdicts, "heavy_steps", lambda p, later: heavy)
+    monkeypatch.setattr(chapter_saves.counters, "decides", decides)
+    monkeypatch.setitem(chapter_saves.READINGS, "readings-test", (("eight", 1, 3), ("eight", 3, None)))
+    chapter_saves.write_readings("readings-test")
+    assert read == heavy[1:] and ends.saved_readings("eight") == {key: True for key in heavy[1:]}
+    assert sorted(f.name for f in ends.golden("eight").iterdir()) == [f"readings-eight-{i}.json" for i in (1, 2, 3)]
+    read.clear()
+    chapter_saves.write_readings("readings-test")
+    assert read == []
