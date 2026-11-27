@@ -20,6 +20,21 @@ class LodgingEntry(Entry):
         return self
 
 
+class ByDayEntry(Entry):
+    """Where a person is by day when no card of theirs is running (app/tests/test_scene_day.py): `card` the card of their
+    lane whose work they stand at (its `site` names the scene layer), `at_fire` why the content seats them at the camp fire
+    instead. Exactly one; words only to the engine."""
+
+    card: str | None = None
+    at_fire: str | None = None
+
+    @model_validator(mode="after")
+    def _one_answer(self) -> "ByDayEntry":
+        if (self.card is None) == (self.at_fire is None):
+            raise ValueError("by_day: name exactly one of card and at_fire")
+        return self
+
+
 class LaneLabelEntry(Entry):
     """The lane row's label once `after` is unlocked (the last one held wins, as aims do)."""
 
@@ -56,6 +71,9 @@ class LaneEntry(Entry):
     take lists that one. Never set beside `group`."""
     lodging: LodgingEntry | None = None
     """On a person's ruled lane, where they sleep (the scene shows who is at home at night). Authored on every person."""
+    by_day: ByDayEntry | None = None
+    """On a person's ruled lane, where they stand by day when idle: at the site of one of their cards, or at the fire for a
+    reason the content gives (the scene's idle poses follow it). Authored on every person."""
     tied: str | None = None
     """On a pooled lane, the person's lane the group is tied to: one townsperson who looks after it (api/contract/groups.txt,
     "GROUPS"). Authored, never inferred."""

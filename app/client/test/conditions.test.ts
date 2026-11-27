@@ -189,4 +189,9 @@ expect("store:wood@15&running:shelter", AT, false);
   want("dark&chip:warm", false);
   f.setDark(false);
   want("dark|chip:warm", false);
+  want("day", true);
+  want("day&chip:cold", true);
+  f.setDark(true);
+  want("day", false);
+  want("day|dark", true);
 }

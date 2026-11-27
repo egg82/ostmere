@@ -30,6 +30,7 @@ export class SceneFacts {
    * store:<id>@<a>..<b>    the store holds at least a items and fewer than b: a window of a count-up clock, so a moment
    *                        can start and end on one condition, whatever else is happening to the same person
    * dark                   the grade shown is a dusk or a night one (a manifest grade's `dark`), set by the scene
+   * day                    the grade shown is not (`dark`'s opposite: a layer that gives way by day only)
    * end:showing            the end has happened (view.ended_at, which the end lines key on too; it never clears)
    * chip:<id>              the chip is showing
    * feature:<id>           the feature is unlocked
@@ -47,6 +48,7 @@ export class SceneFacts {
     if (condition.includes("|")) return condition.split("|").some((c) => this.holds(c, t, quantityPerItem));
     if (condition.includes("&")) return condition.split("&").every((c) => this.holds(c, t, quantityPerItem));
     if (condition === "dark") return this.dark;
+    if (condition === "day") return !this.dark;
     if (!view) return false;
     const [kind, rest = ""] = condition.split(":", 2);
     switch (kind) {
