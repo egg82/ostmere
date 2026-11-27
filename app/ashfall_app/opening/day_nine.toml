@@ -49,6 +49,7 @@ outcome = { line_keys = ["l_gap_fire_1"], unlocks = [{ unlock_kind = "card", id 
 
 [[cards]]
 id = "gap_fire"
+site = { layer = "gap_ring" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_gap_fire"

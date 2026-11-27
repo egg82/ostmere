@@ -259,6 +259,7 @@ makes = [{ store = "ripe", items_per_hour = 1, every_hours = 2 }]
 
 [[cards]]
 id = "reap"
+site = { layer = "beds_3" }
 presentation = "action"
 label_key = "c_reap"
 upside_key = "up_reap"
@@ -271,6 +272,7 @@ outcome = { stores = [{ store = "barley", items = 2 }] }
 [[town_cards]]
 id = "{lane}_reap"
 twin_of = "reap"
+site = { layer = "beds_3" }
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field", "g_hearth"]
 presentation = "action"
 label_key = "c_lane_reap"

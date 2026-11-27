@@ -145,6 +145,7 @@ outcome = { doings = ["n2"], line_keys = ["l_his_watch"], unlocks = [{ unlock_ki
 # His share at the watch fire against his woodcutting, as hers, feeding the same sides.
 [[cards]]
 id = "n2_watch"
+site = { layer = "watch_lit" }
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_watch"
