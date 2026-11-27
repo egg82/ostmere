@@ -83,11 +83,11 @@ def test_every_lane_a_town_card_names_is_declared(everything: Opening):
 def test_a_lane_gets_its_cards_together_in_the_entries_order():
     ids = [c.id for c in load_opening().cards]
     at = ids.index("n2_build_bay")
-    assert ids[at + 1:at + 25] == ["n2_walk_ashwood", "n2_fog_fish", "n2_wash_meat", "n2_clear_road", "n2_pull_beams", "n2_reap", "n2_barley_stew", "n2_cover_beds",
+    assert ids[at + 1:at + 27] == ["n2_run_cart", "n2_walk_hill", "n2_walk_ashwood", "n2_fog_fish", "n2_wash_meat", "n2_clear_road", "n2_pull_beams", "n2_reap", "n2_barley_stew", "n2_cover_beds",
                                    "n2_stack_cordwood", "n2_catch_broth", "n2_peg_flaps", "n2_stakes", "n2_cord", "n2_pick",
                                    "n2_fungus_stew", "n2_sew_wraps", "n2_build_windbreak", "n2_weave_wattle",
                                    *(f"n2_{g}" for g in GATHERED), "n2_dig_clay", "n2_stew"]
-    assert ids[ids.index("n3_build_bay") + 1:][:21] == ["n3_walk_ashwood", "n3_fog_fish", "n3_wash_meat", "n3_clear_road", "n3_pull_beams", "n3_reap", "n3_barley_stew",
+    assert ids[ids.index("n3_build_bay") + 1:][:23] == ["n3_run_cart", "n3_walk_hill", "n3_walk_ashwood", "n3_fog_fish", "n3_wash_meat", "n3_clear_road", "n3_pull_beams", "n3_reap", "n3_barley_stew",
                                                         "n3_stack_cordwood", "n3_catch_broth", "n3_peg_flaps", "n3_cord",
                                                         "n3_pick", "n3_fungus_stew", "n3_clear_roofs", "n3_sew_wraps",
                                                         "n3_weave_wattle", "n3_forage", "n3_gather", "n3_scavenge",

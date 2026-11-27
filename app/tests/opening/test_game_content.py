@@ -16,7 +16,7 @@ from ashfall_app.opening.camp_convert import camp_cap
 from ashfall_app.opening.name_checks import without_slots
 from ashfall_app.opening.schema import (
     B7, CHAPTERS, DAY_EIGHTEEN, DAY_ELEVEN, DAY_FIFTEEN, DAY_FIVE, DAY_FOUR, DAY_NINETEEN, DAY_SIX, DAY_SIXTEEN, DAY_TWELVE,
-    DAY_TWENTY_FIVE, DAY_TWENTY_SEVEN, DAY_TWENTY_THREE, DAY_TWENTY_TWO,
+    DAY_TWENTY_FIVE, DAY_TWENTY_NINE, DAY_TWENTY_SEVEN, DAY_TWENTY_THREE, DAY_TWENTY_TWO,
 )
 from ashfall_app.saves.ruleset import ruleset
 from tests.opening.playthrough import Player, opening, opening_rules
@@ -118,7 +118,10 @@ def test_a_short_need_can_name_the_card_that_makes_it(content: Content):
     beside a card that makes the store (Woodcutting's stones); nothing for a store only a standing action fills
     (warmth)."""
     made = {s.store: s.made_by for s in content.store_infos}
-    assert made["stones"] == shipped(["scavenge", "n1_scavenge", "n2_scavenge", "g_field_scavenge"], (DAY_FIVE, ["n3_scavenge"]),
+    hill = [c for c in made["stones"] if c.endswith("walk_hill")]   # a town card's copies sit beside each lane's own cards
+    assert hill == shipped([], (DAY_TWENTY_NINE, [*(f"{x}_walk_hill" for x in ("n1", "n2", "g_field", "n3", "n5", "n7", "n6",
+                                                 "n10", "n12", "n8", "n9", "n13", "g_road", "n14", "n15", "n23")), "walk_hill"]))
+    assert [c for c in made["stones"] if c not in hill] == shipped(["scavenge", "n1_scavenge", "n2_scavenge", "g_field_scavenge"], (DAY_FIVE, ["n3_scavenge"]),
                                      (DAY_ELEVEN, ["n5_scavenge", "n7_scavenge", "n6_scavenge"]),
                                      (DAY_EIGHTEEN, ["n11_scavenge", "n10_scavenge", "n12_scavenge", "n8_scavenge", "n9_scavenge"]),
                                      (DAY_TWENTY_FIVE, ["pull_wall"]))
@@ -163,7 +166,7 @@ def test_step_needs_glows_order_offers_and_carried_things_are_served(content: Co
         ["stand_up", "strike_fire", "give_stool", "walk_edge", "track_end", "bank_hearth"],
         (DAY_FOUR, ["sit_up_5"]), (DAY_FIVE, ["hand_on_stone"]), (B7, ["bank_fire_6", "b7_stand"]), (DAY_SIX, ["sit_fire_7"]), (DAY_ELEVEN, ["keep_vigil"]),
         (DAY_TWELVE, ["sit_last_night"]), (DAY_SIXTEEN, ["try_stone"]), (DAY_NINETEEN, ["sit_road_end"]),
-        (DAY_TWENTY_THREE, ["go_wallow"]), (DAY_TWENTY_FIVE, ["post_door"]), (DAY_TWENTY_SEVEN, ["sit_names"]))
+        (DAY_TWENTY_THREE, ["go_wallow"]), (DAY_TWENTY_FIVE, ["post_door"]), (DAY_TWENTY_SEVEN, ["sit_names"]), (DAY_TWENTY_NINE, ["first_run"]))
     roots = next(c for c in content.order_cards if c.store == "roots")
     assert roots.offered_after is not None and (roots.offered_after.category, roots.offered_after.id) == ("action", "eating")
     assert next(c for c in content.order_cards if c.store == "dry_wood").offered_after is None

@@ -260,6 +260,27 @@
       "wounds": []
     },
     {
+      "card": "n1_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n1_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n1_walk_ashwood",
       "makes": [
         "charwood",
@@ -718,6 +739,27 @@
       "wounds": []
     },
     {
+      "card": "n2_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n2_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n2_walk_ashwood",
       "makes": [
         "charwood",
@@ -972,6 +1014,27 @@
       "wounds": []
     },
     {
+      "card": "g_field_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_field_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_field_walk_ashwood",
       "makes": [
         "charwood",
@@ -1186,6 +1249,27 @@
       "takes": [
         "damp_wood",
         "stones"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n3_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
       ],
       "wounds": []
     },
@@ -1935,6 +2019,27 @@
       "wounds": []
     },
     {
+      "card": "n5_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n5_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n5_walk_ashwood",
       "makes": [
         "charwood",
@@ -2229,6 +2334,27 @@
       "wounds": []
     },
     {
+      "card": "n7_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n7_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n7_walk_ashwood",
       "makes": [
         "charwood",
@@ -2497,6 +2623,27 @@
       "makes": [],
       "takes": [
         "stakes"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n6_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
       ],
       "wounds": []
     },
@@ -3301,6 +3448,27 @@
       "wounds": []
     },
     {
+      "card": "n10_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n10_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n10_walk_ashwood",
       "makes": [
         "charwood",
@@ -3553,6 +3721,27 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n12_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
       ],
       "wounds": []
     },
@@ -3813,6 +4002,27 @@
       "wounds": []
     },
     {
+      "card": "n8_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n8_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n8_walk_ashwood",
       "makes": [
         "charwood",
@@ -4065,6 +4275,27 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n9_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
       ],
       "wounds": []
     },
@@ -4387,6 +4618,27 @@
       "wounds": []
     },
     {
+      "card": "n13_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n13_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n13_walk_ashwood",
       "makes": [
         "charwood",
@@ -4482,6 +4734,27 @@
       "wounds": []
     },
     {
+      "card": "g_road_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "g_road_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "g_road_fungus_stew",
       "makes": [
         "stew_fungus",
@@ -4542,6 +4815,27 @@
       "wounds": []
     },
     {
+      "card": "n14_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n14_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n14_fungus_stew",
       "makes": [
         "stew_fungus",
@@ -4598,6 +4892,27 @@
       ],
       "takes": [
         "damp_wood"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n15_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n15_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
       ],
       "wounds": []
     },
@@ -4706,6 +5021,27 @@
       "wounds": []
     },
     {
+      "card": "n23_run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "n23_walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
+      "wounds": []
+    },
+    {
       "card": "n23_fungus_stew",
       "makes": [
         "stew_fungus",
@@ -4767,6 +5103,35 @@
       "card": "sit_names",
       "makes": [],
       "takes": [],
+      "wounds": []
+    },
+    {
+      "card": "first_run",
+      "makes": [],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "run_cart",
+      "makes": [
+        "post_stores"
+      ],
+      "takes": [
+        "smoked"
+      ],
+      "wounds": []
+    },
+    {
+      "card": "walk_hill",
+      "makes": [
+        "stones",
+        "hill_trips"
+      ],
+      "takes": [
+        "post_stores"
+      ],
       "wounds": []
     }
   ],
@@ -4938,19 +5303,36 @@
       "store": "stones",
       "made_by": [
         "scavenge",
+        "n1_walk_hill",
         "n1_scavenge",
+        "n2_walk_hill",
         "n2_scavenge",
+        "g_field_walk_hill",
         "g_field_scavenge",
+        "n3_walk_hill",
         "n3_scavenge",
+        "n5_walk_hill",
         "n5_scavenge",
+        "n7_walk_hill",
         "n7_scavenge",
+        "n6_walk_hill",
         "n6_scavenge",
         "n11_scavenge",
+        "n10_walk_hill",
         "n10_scavenge",
+        "n12_walk_hill",
         "n12_scavenge",
+        "n8_walk_hill",
         "n8_scavenge",
+        "n9_walk_hill",
         "n9_scavenge",
-        "pull_wall"
+        "n13_walk_hill",
+        "g_road_walk_hill",
+        "n14_walk_hill",
+        "n15_walk_hill",
+        "pull_wall",
+        "n23_walk_hill",
+        "walk_hill"
       ]
     },
     {
@@ -6079,6 +6461,66 @@
     {
       "store": "night_28",
       "made_by": []
+    },
+    {
+      "store": "still_end_left",
+      "made_by": []
+    },
+    {
+      "store": "fish_end_left",
+      "made_by": []
+    },
+    {
+      "store": "run_town_left",
+      "made_by": []
+    },
+    {
+      "store": "run_town",
+      "made_by": []
+    },
+    {
+      "store": "post_stores",
+      "made_by": [
+        "n1_run_cart",
+        "n2_run_cart",
+        "g_field_run_cart",
+        "n3_run_cart",
+        "n5_run_cart",
+        "n7_run_cart",
+        "n6_run_cart",
+        "n10_run_cart",
+        "n12_run_cart",
+        "n8_run_cart",
+        "n9_run_cart",
+        "n13_run_cart",
+        "g_road_run_cart",
+        "n14_run_cart",
+        "n15_run_cart",
+        "n23_run_cart",
+        "run_cart"
+      ]
+    },
+    {
+      "store": "hill_trips",
+      "made_by": [
+        "n1_walk_hill",
+        "n2_walk_hill",
+        "g_field_walk_hill",
+        "n3_walk_hill",
+        "n5_walk_hill",
+        "n7_walk_hill",
+        "n6_walk_hill",
+        "n10_walk_hill",
+        "n12_walk_hill",
+        "n8_walk_hill",
+        "n9_walk_hill",
+        "n13_walk_hill",
+        "g_road_walk_hill",
+        "n14_walk_hill",
+        "n15_walk_hill",
+        "n23_walk_hill",
+        "walk_hill"
+      ]
     },
     {
       "store": "his_watch_clock",

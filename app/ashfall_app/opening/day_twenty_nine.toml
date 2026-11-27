@@ -1,0 +1,413 @@
+# Day twenty-nine: from Y1 (the Drift's second turn) through SL37, Y2, Y3 and O-first-run to the first run and B22,
+# week five's first chapter, as data merged after day_twenty_seven.toml (schema.Chapter, chapters.merge). Story
+# spoilers: never shown to the owner. Spec: content/team/week-five.md, "Day twenty-nine"; numbers:
+# content/team/week-five-numbers.md.
+version = 1
+end_feature = "outpost"
+
+# ---------- the roofs' order card, offered once ----------
+
+# Week two's roofs order card is offered until the Clear has turned (its rule retired then), so the Drift's roofs come
+# back with the chip's hint dot alone (D-203). A trigger of its own, so a save already past the Clear gets it at once.
+[[triggers]]
+id = "t_roofs_offered"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "clear", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "roofs_offered" }] }
+
+# ---------- Y1: the Drift's second turn ----------
+
+# Y1 at 672 h. The Drift reads drift_clock, offset by 504 (D-201): no new clock. The roofs' ash comes back on week two's
+# ashfall, which drift_left now feeds again; the bloom and the bear's sign are week two's sizes. Each of the Still's two
+# leftovers drains on its own one-item pool, so one running dry never leaves the other standing (D-221). No rule is
+# retired (D-202).
+[[triggers]]
+id = "t_y1"
+season = true
+when = { test = "after_time", value = 2419200 }
+[triggers.outcome]
+doings = ["n2"]
+whereabouts = [{ person = "n2", no_scene = "up on the hall roof with a shovel, a pose the week's art adds; until then the line tells it" }]
+line_keys = ["l_y1_1", "l_y1_2", "l_y1_3"]
+stores = [
+  { store = "drift_left", items = 336 },
+  { store = "bloom", items = 2000 },
+  { store = "bear_sign", items = 6 },
+  { store = "still_end_left", items = 1 },
+  { store = "fish_end_left", items = 1 },
+]
+unlocks = [
+  { unlock_kind = "feature", id = "drift_two" },
+  { unlock_kind = "action", id = "still_ends" },
+  { unlock_kind = "action", id = "fish_ends" },
+]
+
+# Never drawn: the hour in which the wind takes the film off the open meat.
+[[stores]]
+id = "still_end_left"
+label_key = "store_still_end_left"
+cap_items = 1
+hidden = true
+
+# Never drawn: the hour in which the pale fish go with the fog.
+[[stores]]
+id = "fish_end_left"
+label_key = "store_fish_end_left"
+cap_items = 1
+hidden = true
+
+[[standing]]
+id = "still_ends"
+label_key = "action_still_ends"
+costs = [{ store = "still_end_left", items_per_hour = 1 }, { store = "film", items_per_hour = 24 }]
+
+[[standing]]
+id = "fish_ends"
+label_key = "action_fish_ends"
+costs = [{ store = "fish_end_left", items_per_hour = 1 }, { store = "fish_rising", items_per_hour = 24 }]
+
+# ---------- SL37: the fiddle ----------
+
+# The first evening of wind, four hours into the season.
+[[triggers]]
+id = "t_fiddle_plays"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 508 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 }]
+outcome = { doings = ["n14"], line_keys = ["l_fiddle_plays"], whereabouts = [{ person = "n14", no_scene = "plays at the fire in the evening, a figure the week's art adds; until then the line tells it" }] }
+
+# ---------- Y2: prints at the post's door ----------
+
+# The post's door hung and its last stage built, each a fact a requirement can read (a requirement reads only an
+# unlock). Machinery, no moment of their own: on every route both are done before the turn.
+[[triggers]]
+id = "t_door_hung"
+when = { test = "at_least", subject_kind = "card_count", id = "post_door", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "door_hung" }] }
+
+[[triggers]]
+id = "t_post_built"
+when = { test = "at_least", subject_kind = "card_count", id = "post", value = 12 }
+outcome = { unlocks = [{ unlock_kind = "feature", id = "post_built" }] }
+
+[[triggers]]
+id = "t_post_prints"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 510 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 },
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "door_hung", value = 1 },
+]
+outcome = { line_keys = ["l_post_prints_1", "l_post_prints_2"], unlocks = [{ unlock_kind = "feature", id = "prints_seen" }] }
+
+# ---------- Y3: the pin, and O-first-run ----------
+
+# The next morning, once the prints are seen.
+[[triggers]]
+id = "t_pin"
+when = { test = "at_least", subject_kind = "store", id = "drift_clock", value = 516 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "prints_seen", value = 1 }]
+outcome = { line_keys = ["l_pin"], unlocks = [{ unlock_kind = "feature", id = "pin_laid" }] }
+
+# Lucy asks the room with Y3, once the post's last stage is built. Either answer runs the load out and lands B22 at its
+# end (D-207). The yes shows the run on the tasks rather than queuing it: a queued run is a promise, and no dilemma tests
+# this one (D-176's shape, D-222).
+[[offers]]
+id = "o_first_run"
+text_key = "o_first_run"
+askers = ["n1"]
+gate = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "pin_laid", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "post_built", value = 1 }]
+line_keys = ["l_first_run_ask"]
+
+[[offers.answers]]
+id = "o_first_run_yes"
+label_key = "a_first_run_yes"
+cost_key = "a_first_run_yes_cost"
+[offers.answers.outcome]
+line_keys = ["l_first_run_yes"]
+unlocks = [{ unlock_kind = "card", id = "first_run" }]
+
+[[offers.answers]]
+id = "o_first_run_other"
+label_key = "a_job_no"
+cost_key = "a_first_run_other_cost"
+[offers.answers.outcome]
+doings = ["n1"]
+whereabouts = [{ person = "n1", no_scene = "finds someone to take the load out, never named; the run is two hidden hours off the scene" }]
+line_keys = ["l_first_run_other"]
+stores = [{ store = "run_town_left", items = 2 }]
+unlocks = [{ unlock_kind = "action", id = "run_town" }]
+
+# A41: the load out to the post, a story step on the hands. Ready from the season's morning (684 h): the offer that
+# shows it waits on Y3, which waits on that hour.
+[[cards]]
+id = "first_run"
+site = { no_site = "the run goes out under the trees to the post, past the wall, off the scene" }
+only_player = "story"
+presentation = "action"
+label_key = "c_first_run"
+upside_key = "up_first_run"
+work_s = 3600
+cap = 1
+glows = true
+inputs = [{ store = "smoked", items = 6 }]
+
+# The other answer: two hidden hours of someone else's run, drawing the same load as it goes.
+[[stores]]
+id = "run_town_left"
+label_key = "store_run_town_left"
+cap_items = 2
+hidden = true
+
+[[stores]]
+id = "run_town"
+label_key = "store_run_town"
+cap_items = 2
+hidden = true
+
+[[standing]]
+id = "run_town"
+label_key = "action_run_town"
+costs = [{ store = "run_town_left", items_per_hour = 1 }, { store = "smoked", items_per_hour = 3 }]
+makes = [{ store = "run_town", items_per_hour = 1 }]
+
+# The run's end by either answer: each says it its own way, then B22.
+[[triggers]]
+id = "t_first_run"
+when = { test = "at_least", subject_kind = "card_count", id = "first_run", value = 1 }
+outcome = { line_keys = ["l_b22_1y", "l_b22_2y", "l_b22_3y"], unlocks = [{ unlock_kind = "feature", id = "run_done" }] }
+
+[[triggers]]
+id = "t_run_town"
+when = { test = "at_least", subject_kind = "store", id = "run_town", value = 2 }
+outcome = { line_keys = ["l_b22_1o", "l_b22_2o", "l_b22_3o"], unlocks = [{ unlock_kind = "feature", id = "run_done" }] }
+
+# ---------- B22: the post an outpost, and the tracker ----------
+
+# The tracker is cast from who walked the Ashwood most, then who foraged most, then the earliest to join (D-208). From
+# here the post has a store the carts fill and its crew draws (D-205), and the hill is walked from it (D-214).
+[[triggers]]
+id = "t_b22"
+when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "run_done", value = 1 }
+requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "drift_two", value = 1 }]
+[triggers.outcome]
+line_keys = ["l_b22_4"]
+casts = [{ role = "tracker", patterns = ["{lane}_walk_ashwood", "{lane}_forage"] }]
+unlocks = [
+  { unlock_kind = "feature", id = "outpost" },
+  { unlock_kind = "store", id = "post_stores" },
+  { unlock_kind = "store", id = "hill_trips" },
+  { unlock_kind = "action", id = "post_upkeep" },
+  { unlock_kind = "card", id = "run_cart" },
+  { unlock_kind = "card", id = "walk_hill" },
+  { unlock_kind = "card", id = "n1_run_cart" },
+  { unlock_kind = "card", id = "n2_run_cart" },
+  { unlock_kind = "card", id = "n3_run_cart" },
+  { unlock_kind = "card", id = "n5_run_cart" },
+  { unlock_kind = "card", id = "n6_run_cart" },
+  { unlock_kind = "card", id = "n7_run_cart" },
+  { unlock_kind = "card", id = "n8_run_cart" },
+  { unlock_kind = "card", id = "n9_run_cart" },
+  { unlock_kind = "card", id = "n10_run_cart" },
+  { unlock_kind = "card", id = "n12_run_cart" },
+  { unlock_kind = "card", id = "n13_run_cart" },
+  { unlock_kind = "card", id = "n14_run_cart" },
+  { unlock_kind = "card", id = "n15_run_cart" },
+  { unlock_kind = "card", id = "n23_run_cart" },
+  { unlock_kind = "card", id = "g_field_run_cart" },
+  { unlock_kind = "card", id = "g_road_run_cart" },
+  { unlock_kind = "card", id = "n1_walk_hill" },
+  { unlock_kind = "card", id = "n2_walk_hill" },
+  { unlock_kind = "card", id = "n3_walk_hill" },
+  { unlock_kind = "card", id = "n5_walk_hill" },
+  { unlock_kind = "card", id = "n6_walk_hill" },
+  { unlock_kind = "card", id = "n7_walk_hill" },
+  { unlock_kind = "card", id = "n8_walk_hill" },
+  { unlock_kind = "card", id = "n9_walk_hill" },
+  { unlock_kind = "card", id = "n10_walk_hill" },
+  { unlock_kind = "card", id = "n12_walk_hill" },
+  { unlock_kind = "card", id = "n13_walk_hill" },
+  { unlock_kind = "card", id = "n14_walk_hill" },
+  { unlock_kind = "card", id = "n15_walk_hill" },
+  { unlock_kind = "card", id = "n23_walk_hill" },
+  { unlock_kind = "card", id = "g_field_walk_hill" },
+  { unlock_kind = "card", id = "g_road_walk_hill" },
+]
+
+# What is in the post's shut store: the carts fill it; the crew out there, the hill's walks and later chapters draw it.
+[[stores]]
+id = "post_stores"
+label_key = "store_post_stores"
+cap_items = 24
+
+# Never drawn: walks to the far hill, a count the house's chapter reads.
+[[stores]]
+id = "hill_trips"
+label_key = "store_hill_trips"
+cap_items = 8760
+tally = true
+
+# The cart out to the post: smoked in, the same out at the post; its haul is its bar, so the line costs only time and
+# food (the table's against the post's).
+[[cards]]
+id = "run_cart"
+site = { no_site = "the cart goes out the track to the post, past the wall, off the scene" }
+presentation = "action"
+label_key = "c_run_cart"
+upside_key = "up_run_cart"
+work_s = 2400
+inputs = [{ store = "smoked", items = 4 }]
+outcome = { stores = [{ store = "post_stores", items = 4 }] }
+
+# Anyone the walk takes can push the cart: his leg rules him out.
+[[town_cards]]
+id = "{lane}_run_cart"
+site = { no_site = "the cart goes out the track to the post, past the wall, off the scene" }
+twin_of = "run_cart"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+presentation = "action"
+label_key = "c_run_cart"
+upside_key = "up_run_cart"
+work_s = 9600
+inputs = [{ store = "smoked", items = 4 }]
+outcome = { stores = [{ store = "post_stores", items = 4 }] }
+
+# The crew out at the trees eats from the post's store and cuts charwood while it lasts; dry, they wait for the next cart.
+[[standing]]
+id = "post_upkeep"
+label_key = "action_post_upkeep"
+costs = [{ store = "post_stores", items_per_hour = 1 }]
+makes = [{ store = "charwood", items_per_hour = 1 }]
+
+# The far hill, walked from the post alone: the post's store out, stones back.
+[[cards]]
+id = "walk_hill"
+site = { no_site = "a walk from the post to the far hill, off the scene" }
+presentation = "action"
+label_key = "c_walk_hill"
+upside_key = "up_walk_hill"
+work_s = 7200
+skill = "wayfinding"
+xp_per_hour = 360
+inputs = [{ store = "post_stores", items = 2 }]
+outcome = { stores = [{ store = "stones", items = 2 }, { store = "hill_trips", items = 1 }] }
+
+[[town_cards]]
+id = "{lane}_walk_hill"
+site = { no_site = "a walk from the post to the far hill, off the scene" }
+twin_of = "walk_hill"
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
+presentation = "action"
+label_key = "c_walk_hill"
+upside_key = "up_walk_hill"
+work_s = 28800
+inputs = [{ store = "post_stores", items = 2 }]
+outcome = { stores = [{ store = "stones", items = 2 }, { store = "hill_trips", items = 1 }] }
+
+# ---------- aims ----------
+
+[[aims]]
+id = "aim_line"
+text_key = "aim_line"
+after = { unlock_kind = "feature", id = "outpost" }
+
+# ---------- the journal ----------
+
+[[subjects]]
+id = "s_b22"
+kind = "beat"
+source = { source_kind = "trigger", id = "t_b22" }
+first = { keys = ["n_day_b22"] }
+catchup = { keys = ["j_b22_catchup"] }
+late = { keys = ["j_b22_late"] }
+
+# ---------- features ----------
+
+[[features]]
+id = "drift_two"
+
+[[features]]
+id = "door_hung"
+
+[[features]]
+id = "post_built"
+
+[[features]]
+id = "prints_seen"
+
+[[features]]
+id = "pin_laid"
+
+[[features]]
+id = "run_done"
+
+[[features]]
+id = "outpost"
+
+# ---------- text ----------
+
+[beat_lines]
+Y1 = ["l_y1_1"]
+Y2 = ["l_post_prints_1"]
+Y3 = ["l_pin"]
+B22 = ["l_b22_1y", "l_b22_1o"]
+
+[line_kinds]
+l_y1_1 = "story"
+l_y1_2 = "story"
+l_y1_3 = "story"
+l_fiddle_plays = "story"
+l_post_prints_1 = "story"
+l_post_prints_2 = "story"
+l_pin = "story"
+l_first_run_ask = "story"
+l_first_run_yes = "story"
+l_first_run_other = "story"
+l_b22_1y = "story"
+l_b22_2y = "story"
+l_b22_3y = "story"
+l_b22_1o = "story"
+l_b22_2o = "story"
+l_b22_3o = "story"
+l_b22_4 = "story"
+
+[text]
+store_still_end_left = "the wind's hour"
+store_fish_end_left = "the fog's last hour"
+action_still_ends = "Wind on the water"
+action_fish_ends = "Fog going"
+store_run_town_left = "someone's run"
+store_run_town = "someone's run"
+action_run_town = "Someone takes the load"
+store_post_stores = "the post's store"
+store_hill_trips = "walks to the hill"
+action_post_upkeep = "The post's crew"
+l_y1_1 = "in the night the wind comes back. warm, out of the east, all at once."
+l_y1_2 = "by morning the ash comes down so thick the noon is brown. the fog is off the stream."
+l_y1_3 = "the roofs sag. {n2} is up on the hall roof with a shovel before anyone asks."
+l_fiddle_plays = "{n14} unties the cloth, tunes with his ear on the wood, and plays. the three women know it. Lucy lets it go on."
+l_post_prints_1 = "out at the post the fresh ash is printed all round the shut store."
+l_post_prints_2 = "a big cat's tracks, the front toes long and spread. round the hasp the wood is scratched pale."
+l_pin = "next morning the pin is out of the hasp, laid on the step, square to the door. nothing inside is touched."
+o_first_run = "Lucy says the post needs its first load taken out. Somebody has to."
+l_first_run_ask = "Lucy says it to the room: somebody takes the post its first load."
+a_first_run_yes = "I'll take it"
+a_first_run_yes_cost = "the load, and an hour of your time"
+a_first_run_other_cost = "the load"
+l_first_run_yes = "you said you would. you load the cart."
+l_first_run_other = "Lucy finds someone to take it."
+c_first_run = "Take the cart out"
+up_first_run = "the post's first load"
+l_b22_1y = "under the trees in the brown noon the cart is pulled backward out of your hands."
+l_b22_2y = "the tail-pins are drawn and dropped one by one in the ash. the load goes off into the dark in pieces."
+l_b22_3y = "you walk on to the post with nothing."
+l_b22_1o = "under the trees in the brown noon the cart is pulled backward out of their hands."
+l_b22_2o = "the tail-pins are drawn and dropped one by one in the ash. the load goes off into the dark in pieces."
+l_b22_3o = "they come back to the post with nothing."
+l_b22_4 = "next morning {tracker} kneels over the tracks: cats, that know how a pin comes out. they have the road now."
+c_run_cart = "Run a cart to the post"
+up_run_cart = "smoked out to the post's store"
+c_walk_hill = "Walk to the far hill"
+up_walk_hill = "stones from the hill, a walk from the post"
+aim_line = "keep the post fed."
+n_day_b22 = "took the first load out. lost it under the trees, pins and all. the tracks were cats. they know the road now"
+j_b22_catchup = "the first load went out to the post and never got there"
+j_b22_late = "the carts go out to the post most days now"
