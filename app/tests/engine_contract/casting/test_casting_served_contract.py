@@ -21,7 +21,7 @@ def test_one_cast_info_per_role_lists_the_single_person_lanes_in_declared_order_
     assert [(x.lane, x.feature) for x in lead.lanes] == [(p, f"lead_{p}") for p in PEOPLE]
 
 
-@kills(21)
+@kills(8, 21)
 def test_the_pooled_lane_the_station_and_the_hands_are_no_candidates(tmp_path: Path):
     [lead] = infos(tmp_path)
     assert {"t_p", "t_pot", "hands"}.isdisjoint(x.lane for x in lead.lanes)
