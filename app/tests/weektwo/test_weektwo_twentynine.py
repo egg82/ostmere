@@ -14,7 +14,7 @@ from ashfall_app.engine.work import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured, compare
+from tests.dayone.pacing.parity import Measured, compare
 from tests.weekfive.reads import cast_lane
 from tests.weektwo import weekfive as w5
 from tests.weektwo.rebased import Rebased, fired, rules27
