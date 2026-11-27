@@ -62,6 +62,7 @@ CHANGES = {
     "a person's own split": (lambda s: s, lambda s: lane(s, P1, own_split=True)),
     "the unlock set": (lambda s: s, unjoined),
     "a pause": (lambda s: s, first_paused),
+    "the store a pause is on": (first_paused, lambda s: replace(s, pauses=(Pause(A3, Z, Q),))),
     "a require turning true": (lambda s: s, lambda s: stored(s, w=Q)),
     "the spent stores, under a pause": (first_paused, lambda s: stored(first_paused(s), z=Q)),
 }
