@@ -1,5 +1,5 @@
 """An order card at_least on the store a staged build takes, tapping that build, loads: one order covers every stage
-(engine DESIGN.txt, "ORDER CARD ON A STAGED BUILD"). The build is day four's three-stage shed, edited in a copy; the
+(engine design/order-card-staged-build.txt, "ORDER CARD ON A STAGED BUILD"). The build is day four's three-stage shed, edited in a copy; the
 control that must fail taps a card that does not take the store."""
 from pathlib import Path
 

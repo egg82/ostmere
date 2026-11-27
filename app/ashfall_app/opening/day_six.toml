@@ -49,7 +49,7 @@ outcome = { line_keys = ["l_crows_first"] }
 # ---------- G1, the bedding, SL14 ----------
 
 # G1: the first hunt home. The bedding opens with it, one moment, and SL13's clock starts. It counts the hunt, not its
-# pelt: a fight pays by the share won, so a pelt can take more than one hunt (engine DESIGN.txt, a fighting trip's finds
+# pelt: a fight pays by the share won, so a pelt can take more than one hunt (engine design/, a fighting trip's finds
 # read CardCount, won or lost).
 [[triggers]]
 id = "t_first_pelt"

@@ -1,5 +1,5 @@
 """The segment a store moves along from save.time: its saved Segment, plus the work of the cards whose lumps move it
-(DESIGN.txt, "Rate form"). Above rates in the import order: the flow part is read from the rates, never from the
+(design/cards.txt, "Rate form"). Above rates in the import order: the flow part is read from the rates, never from the
 saved rate, which a save written before lumps were paid by work rounded with its lumps in."""
 from .counts import work_segment
 from .ids import StoreId

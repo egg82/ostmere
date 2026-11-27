@@ -1,5 +1,5 @@
 """A tap of `poultice` with its inputs in hand starts at any hurt, none included: its drain on `hurt` asks nothing
-(engine DESIGN.txt, "DRAINS"), read through the engine's decide path (issue #237)."""
+(engine design/drains.txt, "DRAINS"), read through the engine's decide path (issue #237)."""
 from dataclasses import replace
 from functools import cache
 

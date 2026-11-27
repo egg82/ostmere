@@ -1,4 +1,4 @@
-"""A trigger whose `requires` names an unlock (engine DESIGN.txt, "Triggers"): it waits while the unlock is missing,
+"""A trigger whose `requires` names an unlock (engine design/core.txt, "Triggers"): it waits while the unlock is missing,
 however long its `when` has held, and fires at the instant the unlock lands, whether a trigger's outcome or an answer
 adds it."""
 from ashfall_app.engine import (

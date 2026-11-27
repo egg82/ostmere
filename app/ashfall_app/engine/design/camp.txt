@@ -1,0 +1,76 @@
+THE CAMP: HELD LEVELS AND LIFTS (the loader's use of Store caps, app/ashfall_app/opening/convert.py). Where this part
+and an entry above disagree, this part holds. Examples name ids only.
+
+FIT PASS
+- An instance of Store caps (CHOICES, above): the camp store's cap is its StoreDef.cap under ADD_BP raises on
+  StoreCap(camp) that outcomes land, the mechanism day one already uses; this part fixes which outcomes carry them
+  and how big each is, and adds no engine type, field or system.
+
+CHOICES (the Camp)
+- Terms. L1..Lk are the camp's levels after every chapter is merged, at(m) their at_items, strictly increasing. H is
+  the first held level whose lifted_by is not empty. B = at(H) - 1 items is the camp store's StoreDef.cap (with no such
+  level, at(Lk) and nothing below applies). S is the sum of the ADD_BP entries aimed at StoreCap(camp) in a save's
+  stack, so the cap is units(B) * (BP + S) // BP (Store caps). For a level m: R(m) = ceil_div(units(at(m)) * BP,
+  units(B)) - BP, the least S at which the cap reaches at(m) (the level can land); Hd(m) = R(m) - 1, the greatest S at
+  which it stays below (the level cannot land). Both are exact: nothing is rounded past a level.
+- The chain. The cap climbs by steps, each one raise landed by one outcome, each target an exact R or Hd:
+  lift H, on the finish of any card in H's lifted_by, to R(H);
+  then for each level m above H, in order: to m, when level m-1 lands, to Hd(m) if m is held, else R(m); and if m
+  is held with a lifted_by, lift m, on the finish of any of its cards, to R(m).
+  A step's raise is its target less the previous step's: lift H is R(H); to m is Hd(m) or R(m), less R(m-1); lift m
+  above H is exactly 1 bp. "to m" is a trigger the loader makes, id "to_camp_" + m (1-based, as camp_m), condition
+  AtLeast(StoreValue(camp), units(at(m-1))) (camp_(m-1)'s own), outcome that one raise, source its id. A lift is the
+  raise appended to the `finished` of each card in the level's lifted_by, source the card's id. Nothing else in the
+  content aims at StoreCap(camp).
+- The cap at each moment: with the landed steps a prefix of the chain, S is the last landed step's target (raises
+  are adds, so they telescope). So the bar holds one item under H until H is lifted, then climbs a level at a time,
+  each landing opening the next, and holds just below each held level until one of its cards finishes.
+- lifted_by is a list of capped card ids (`lifted_by = ["take_stock"]`); empty, the level is not lifted (and must be
+  the last level, landing nothing: a later chapter fills it in at the same at_items). Two or more are alternatives:
+  each is unlocked by no start and no outcome but answers' outcomes, those answers belong to one offer, and no answer
+  unlocks two of them. An offer is answered once (invariant 61), so at most one of them ever finishes, and whichever
+  it is lands the same raise.
+- Rebase: nothing new. A release that only appends levels above the last released one (or fills in a released
+  unlifted last marker at its at_items) leaves H, B and every released step's raise as they were, and only adds
+  steps after them; so a save's stack, kept by rebase (invariant 49), holds a prefix of the new chain, and each new
+  to_camp trigger already true fires at the rebase instant (invariant 50) and lands the rest. A save that landed the
+  released last level gets the next level's room at its load.
+- Codec: none. to_camp_m is a TriggerDef like any other, carried by the manifest and Save.fired; no Save field and no
+  FORMAT change.
+
+INVARIANTS (the Camp; numbered on from 67. o an opening from load_opening, with any chapters, whose camp has H)
+68. Chain: the rules' entries aimed at StoreCap(camp) are exactly the chain's: lift H and each lift m in the
+    finished of each card of that level's lifted_by, each to m in trigger to_camp_m with the condition above, with
+    the amounts above; to_camp_m exists for each level above H and for no other.
+69. Held and reached (lifts in level order, KNOWN GAPS): in any save reached by play, while no card of a held level
+    m's lifted_by has finished, the cap is below units(at(m)) and camp_m has not fired; for each level m from H up,
+    once level m-1 has landed (H: none needed) and, if m is held, one of its cards has finished, the cap is at least
+    units(at(m)). Exact: with S = R(m) the cap reaches units(at(m)), and with S = R(m) - 1 it does not.
+70. Every step at least 1 bp: the loader refuses a camp whose chain has a raise below 1 bp (levels closer than the
+    cap's resolution, about B / BP items).
+71. Either card: for a level with two or more lifted_by cards, the loader refuses them unless they meet the
+    alternatives rule above; for each, the save in which it finishes has the same cap as the save in which another
+    does.
+72. Rebase reaches the new levels: for o and o2 where o2's levels are o's with levels appended above the last (or o's
+    unlifted last marker filled in), each raise of o's chain is in o2's at the same place with the same amount; for s
+    under o that landed o's last level, rebase(encode(s, r), r2, R) has fired to_camp of the next level and S = its
+    target; a released to_camp_m's outcome changes only if a released at_items, or B, does.
+
+REJECTED, AND WHY (the Camp)
+- Recomputing a released lift to the new top (one raise to one under the next held level): a save that already
+  finished the card keeps the old raise in its stack (rebase keeps modifiers; `finished` lands once), so it stays
+  stuck at the old top.
+- One raise straight to one under the next held level: a basis point of B is about five items, so the raise rounds
+  either past that held level (it lands with no lift) or short of it.
+- The next level's raise in camp_m's own outcome: a released trigger's outcome is locked, so day one's camp levels
+  could never carry it; a separate trigger keeps every release additive.
+- A lift recomputed from the rules at load, or a "lifted" flag in the save: a new system and a Save field for what a
+  trigger and the stack already express.
+- An "any of" condition for alternative cards: the condition vocabulary has none, and the raise on each card's
+  finish needs none once the offer makes the cards exclusive.
+
+KNOWN GAPS (the Camp)
+- Lift order: a lift is 1 bp landed whenever its card finishes, so a card of a higher held level finishing while a
+  lower held level is still unlifted would lift the lower one. Content keeps lifts in level order. Decided by: the
+  first chapter whose lifting cards can finish out of level order.
+

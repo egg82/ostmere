@@ -472,7 +472,7 @@ when = { test = "at_least", subject_kind = "store", id = "still_clock", value = 
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", id = "ring_up", value = 1 }]
 outcome = { line_keys = ["l_go_ask"], unlocks = [{ unlock_kind = "card", id = "go_wallow" }] }
 
-# A story step, no FightDef and no roll (DESIGN "FIGHTS": a beat's outcome never carries odds); its supplies are spent.
+# A story step, no FightDef and no roll (design/fights.txt "FIGHTS": a beat's outcome never carries odds); its supplies are spent.
 [[cards]]
 id = "go_wallow"
 only_player = "story"

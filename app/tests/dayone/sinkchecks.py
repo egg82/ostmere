@@ -31,7 +31,7 @@ def needs_met_blocked(views: Iterable[View]) -> tuple[int, list[str]]:
 
 def tap_fails(save: Save, rules: Rules) -> list[str]:
     """Each card showing every need met and no blocker, on a free lane, that the player taps (not an uncapped card of a
-    ruled lane, which rules set: engine DESIGN.txt, "Ruled lane"), whose tap does not start it: the verb is refused, or
+    ruled lane, which rules set: engine design/townsfolk.txt, "Ruled lane"), whose tap does not start it: the verb is refused, or
     the lane does not hold the card with a landing time."""
     v = view(save, rules)
     ruled = {lane.id for lane in rules.lanes if lane.ruled}

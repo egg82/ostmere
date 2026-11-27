@@ -149,7 +149,7 @@ def test_xp_segment_rate_is_the_sum_of_its_explanations(sc: Scenario):
 @given(kind=st.sampled_from([FlowKind.MAKE, FlowKind.COST]), lump=st.integers(1, 50_000_000), work_s=st.integers(1, 100_000),
        share=st.integers(0, BP), stack=_stack)
 def test_a_lump_line_divides_by_its_work_time_once(kind: FlowKind, lump: int, work_s: int, share: int, stack: tuple[Modifier, ...]):
-    """Invariants 10, 11 (explain, rounding; DESIGN.txt "Rate form"): a card's lump line (quantity per completion
+    """Invariants 10, 11 (explain, rounding; design/cards.txt "Rate form"): a card's lump line (quantity per completion
     `lump`, base_den = work_s) runs at lump / work_s per hour at a full share, through the same formula and a single
     rounding (down for outcome stores, up for inputs); the Explanation echoes base_den."""
     ref = RateRef(_ref.runner, kind, _ref.store)

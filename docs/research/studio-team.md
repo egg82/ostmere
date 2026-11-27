@@ -26,7 +26,7 @@ landing an implied turn, cost.
 
 ## What it means here
 
-- **The story bible gets a small team.** One lead (Opus) owns the canon (`content/canon.jsonl`, a fact per line with
+- **The story bible gets a small team.** One lead (Opus) owns the canon (`content/canon/`, a fact per line with
   an id, its source and status) and a decision log; only the lead writes canon. Four to six proposers (Sonnet) work
   alone, each through a lens chosen by code, never seeing each other's drafts. Blind critics score other proposers'
   first drafts on a narrow rubric (turn implied or stated, on the nose, repeating a shape the bible already used);

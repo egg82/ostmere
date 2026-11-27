@@ -1,4 +1,4 @@
-GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine DESIGN.txt, "Queue mix")
+GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine design/cards.txt, "Queue mix")
   A goal stint is a queue entry {verb: switch_mix {mix_id}, until: a GoalRow's until}: "run {mix} until {goal}". The
   server holds no stint type: set_queue takes it as any entry (a hands mix the save holds, at most
   Content.limits.max_queue entries; a town mix is 422 invalid_decision), and every rule below holds for any queue
@@ -25,7 +25,7 @@ GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine 
     does not hold before the click. A stint whose mix greys is dead: passed over, the entry behind it controlling, and
     kept, except that it leaves view.queue at the instant its until holds and cannot fall (an at_least on a skill_level,
     as every level row's until is); a dead stint on a store until is kept even while that until holds (engine
-    DESIGN.txt, "Greyed mix").
+    design/cards.txt, "Greyed mix").
   THE CLIENT MAY:
   - in the mix editor, offer ui.stint.run under the goal rows, never while Save is unavailable, the queue is at
     max_queue, or the editor makes a mix for a rule. Pressed, it lists each row of the edit's dry run whose lands_at

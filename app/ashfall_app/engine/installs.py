@@ -1,6 +1,6 @@
 """What an outcome adds to the player's plan, installed rules (Outcome.orders) and queued one-offs (Outcome.queues),
 and what it takes away, the orders tapping retired chores (Outcome.retire_orders). Afterwards nothing tells either from
-what the player set. Semantics: DESIGN.txt, "Installed rule", "Queued one-off", "Retired chores"."""
+what the player set. Semantics: design/townsfolk.txt, "Installed rule", "Queued one-off", "Retired chores"."""
 from collections.abc import Callable, Collection
 from dataclasses import replace
 
@@ -47,7 +47,7 @@ def without_taps(save: Save, cards: Collection[CardId]) -> Save:
 
 def without_actions(save: Save, drop: Callable[[Order, OrderVerb], bool]) -> Save:
     """Each order with the actions `drop` names taken out of its list (orders.pruned), keeping its place and its latch;
-    an order left with none is removed with its latch (DESIGN.txt, "OR ELSE")."""
+    an order left with none is removed with its latch (design/or-else.txt, "OR ELSE")."""
     kept: list[tuple[Order, Latch]] = []
     for o, on in zip(save.orders, save.latches):
         p = pruned(o, lambda a, o=o: drop(o, a))
@@ -66,7 +66,7 @@ def when_ready(save: Save, rules: Rules, card: CardId) -> QueueEntry:
 
 def queued(save: Save, rules: Rules, cards: tuple[CardId, ...]) -> Save:
     """Each card's When ready entry at the queue's front, several in tuple order, unless an equal entry is already
-    queued (DESIGN.txt, "Queued one-off")."""
+    queued (design/townsfolk.txt, "Queued one-off")."""
     entries: list[QueueEntry] = []
     for card in cards:
         e = when_ready(save, rules, card)
@@ -77,7 +77,7 @@ def queued(save: Save, rules: Rules, cards: tuple[CardId, ...]) -> Save:
 
 def requeued(save: Save, rules: Rules, card: CardId) -> Save:
     """`card`'s When ready entry at the queue's front unless a true order or a queue entry already taps it: the way an
-    interrupted hands task is taken up again (DESIGN.txt, "CURE CUT-IN", "Inputs against a dry store")."""
+    interrupted hands task is taken up again (engine/design/, "CURE CUT-IN", "Inputs against a dry store")."""
     verb = TapCard(card)
     planned = any(rule_on(on) and verb in o.actions for o, on in zip(save.orders, save.latches)) \
         or any(e.verb == verb for e in save.queue)

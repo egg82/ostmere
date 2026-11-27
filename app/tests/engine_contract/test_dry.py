@@ -33,7 +33,7 @@ def test_a_pause_resumes_at_the_cap_when_an_hour_of_its_cost_is_more_than_the_st
 def test_no_store_is_ever_negative_and_paused_cards_contribute_nothing(sc: Scenario):
     """Invariants 16, 41 (dry, starved): no store is negative at any probe time, and a card in save.pauses has Run
     PAUSED (SPENT on a spent store) and contributes 0 to every rate (makes, costs and XP) and to its work: its bar (explain_work and its
-    CardState segment) does not move (DESIGN.txt, "Rate form")."""
+    CardState segment) does not move (design/cards.txt, "Rate form")."""
     s = play(sc)
     for t in probe_times(s, sc.rules, sc.offsets):
         a = advance(s, sc.rules, t)

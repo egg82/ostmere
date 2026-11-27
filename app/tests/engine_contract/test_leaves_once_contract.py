@@ -1,4 +1,4 @@
-"""A person leaves the town, part two: once and for good, and the codec and validation (engine DESIGN.txt, "LEAVES",
+"""A person leaves the town, part two: once and for good, and the codec and validation (engine design/leaves.txt, "LEAVES",
 invariants 153 and 155). Written blind from that part and the public interface; the `kills` marker names the rows of
 MUTANTS_leaves.txt each test must turn red for. ld never joins: a lane with LEFT held is gone, joined or not."""
 from dataclasses import replace

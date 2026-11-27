@@ -1,0 +1,120 @@
+REPEATING TAPS (a lane's task run as a rate, engine/retap.py). Where this part and an entry above disagree, this part
+holds.
+
+FIT PASS
+- Fits into: Lanes and Cards (docs/systems.md), reusing the mix's rate machinery (CARDS, "One bar", "Rate form"): a
+  card's work is one cumulative segment, its completions are counted off it, and its lumps already run as rates while
+  it is tapped. A mix card's work has no limit, so its completions cost no instant; a tap's work is limited at its
+  next completion, so every landing is one (TAP_DONE), and an always rule re-taps the card there. A repeating tap is a
+  tap whose work, like a mix card's, has no limit. No new type, field, verb, event kind or system.
+- The cost it removes: a lane's always rule turns every completion into an instant that changes nothing (the lane
+  lands, evaluation taps the same card at the same second, every rate as it was). After B3 a forecast spent most of its
+  MAX_INSTANTS on her re-taps, and an hour away cost an instant per completion.
+- How games do it: Factorio's and RimWorld's workers are given a job and keep doing it until a priority changes; the
+  simulation re-plans when something it reads changes, not on every unit of work. Here "something it reads" is the
+  event set: every input of evaluation's choice already changes only at an instant.
+
+CHOICES (repeating taps)
+- The same card again: at a landing on lane L of card c, the controlling verb (Orders, "Evaluation applies every
+  verb") with L free is TapCard(c). Then the per-landing engine's landing changes nothing but the work's limit: by
+  invariant 57 no other verb can act at that instant, the stores and XP run at the same rates from the same second,
+  and the one remaining effect is the limit moving to the next completion. A repeating tap skips that landing.
+- Who may repeat: a tap of a card that is uncapped, takes no inputs and has no tap line, on a declared lane (never
+  HANDS). A capped card's completions are events anyway (COMPLETION); an input's whole completion is checked at each
+  landing (its Blocker reads the store there), a threshold a rate would cross unseen; a tap line is said at each
+  landing. On the hands a landing lets the mix run for that instant, which re-runs the dry rule. The lane need not be
+  ruled: the rule is evaluation's, and the same rules with ruled False still give the same saves (invariant 58).
+  Day one's rack card takes inputs, so it keeps its landings.
+- The state: a tap's mode is its work segment's limit. A bounded tap's limit is its next completion (as before); a
+  repeating tap's work has none, as a mix card's has none. CardState.work already carries it, so the codec, FORMAT,
+  the manifest and Save's fields do not change. rebuild keeps a repeating tap's work unlimited and every other tap's
+  limited at its next completion; a fresh tap (work.tap) always starts bounded.
+- When it repeats (the settle, at the end of every instant once no event is pending and evaluation has ended): a
+  bounded tap that may repeat and whose task holds (the same card again, above, read at that instant) loses its limit.
+  This creates no event at the instant (a work segment's limit is read only by TAP_DONE), so the instant ends.
+- When it stops: a repeating tap whose task no longer holds is bounded at its next completion, and lands there
+  (TAP_DONE), where evaluation picks the lane's next task as before; the card runs to its completion, as a task change
+  always has (Ruled lane, "a task change takes effect at the lane's next landing"). One exception keeps it exact: at
+  an instant reached by time passing (one with arrivals, so not a decision's), a tap that was repeating when the
+  instant began and whose work stands exactly on a completion lands at that instant. The per-landing engine had a
+  TAP_DONE there in the same instant, and evaluation ran after it, so the switch landed then. At a decision's instant
+  it never lands: the per-landing engine landed and re-tapped inside the advance to that time, before the verb. The
+  settle bounds or lands every lane whose task no longer holds before it lets any tap repeat, so a tap started at an
+  instant is never landed at it.
+- What can end a task, each an instant: a latch changing (LATCH), the orders changing (SetOrders, an install), a card
+  unlocked, completed or retired, a speed changing (an outcome, a chip), a pause or an interrupt (the tapped card's
+  own: dry, requires, speed 0, as for any tap), the queue popping, and a card that a true order earlier than the lane's
+  own would tap there turning ready. That last is the one change no event marked while the lane was busy (READY falls
+  only for a card on a free lane), so while a lane repeats, READY also falls at the ready_at of each such card that is
+  unlocked, not completed and blocked (sequence and subject as a candidate's). Its handler finds the lane busy and
+  asks for nothing; the settle at that instant bounds the tap. A change the other way (that earlier card turning
+  unready) needs no event: the bounded tap lands, evaluation taps the same card, and it repeats again.
+- Outcomes over time: flows and XP run per second at the rates the per-landing engine ran, from the same seconds, so
+  they are equal. CardCount, landing times and the stores its lumps move are equal when the card's work speed divides
+  its work_s * BP, which day two's content keeps (work_s a multiple of 6 under the shelter's 1.2). Otherwise each
+  per-landing landing drops the last partial second's overshoot (under one second's work, clamped at its limit) and a
+  repeating tap keeps it, as a mix card does: its count, and the lumps paid by its work, run ahead by at most that
+  overshoot summed over the landings it skipped, a fraction of a completion per landing, and a switch lands no
+  later. One effect of the per-landing engine is not kept: at a landing,
+  the card stopped for that instant, so a store it feeds standing at exactly 0 that second could go dry and pause a
+  consumer for an hour; a repeating card never stops, so that store does not go dry.
+- What the view shows: CardView.bar is the work segment with no limit, sampled and drawn modulo bar_total as a mix
+  card's bar is (its completes_at is the next completion, as for any running card); LaneBar.completes_at is None while
+  the lane repeats ("the tap does not end by itself") and the next completion once it is bounded; LaneBar.order and
+  card are as before. next_event_at moves past her completions, so the page samples her bar for as long as nothing
+  changes and asks again only when something does. The client draws the lane row from Card.bar modulo bar_total
+  already (app/client/src/ui/lanerows.ts) and does not read LaneBar.completes_at, so it needs no change.
+- Lines, rule changes and decision context are unchanged: an eligible card has no tap line, and latches change at the
+  same instants.
+- Live saves: a save written with a bounded tap that may repeat decodes as before and repeats from its next resolved
+  instant; nothing is rewritten and the release does not move (no rules change). Replays from older snapshots rebuild
+  the same values (stores and XP above); the decoded save differs in that segment's limit, so `replay` may report a
+  mismatch until those snapshots age out (the evaluation change's note above).
+
+INVARIANTS (repeating taps; numbered on from 74. "The per-landing engine" is this engine with the settle removed.)
+75. Same outcomes: from any save the engine returned, advancing with and without the settle to the same times gives
+    equal store values, XP, unlock sets, fired triggers, latches, orders, queue, lanes' cards and lines, whenever every
+    eligible card's work speed divides its work_s * BP and no store a repeating card makes stands at 0 at one of its
+    completions; CardCount equal too. Otherwise flows and XP are equal while no switch lands, and CardCount, and each
+    store the card's lumps move, are at least the per-landing engine's.
+76. O(1) while the task holds: advancing a save whose only running lane repeats over any span in which nothing else
+    falls resolves no instant at the card's completions (no TAP_DONE among the events); invariant 1 holds across it.
+77. Switch on time: a task change at T on a lane repeating card c lands c at the first completion at or after T
+    (at T itself when T was reached by time passing and c's work stands on a completion; never at T for a decision),
+    and the next task starts at that landing.
+78. Eligible only: a tap of a capped card, a card with inputs or with a tap line, or any tap on HANDS, keeps its limit
+    and lands at each completion as before.
+79. View: while a lane repeats, its LaneBar.completes_at is None and its card's bar has no limit; once bounded, they
+    are the next completion's time and work.
+Invariant 24 reads "p starts again at each landing, or repeats, until the latch releases"; invariant 34 holds for a
+bounded tap; a repeating tap lands only once bounded.
+
+REJECTED, AND WHY (repeating taps)
+- Coarser cards (perf2's first fix, shipped as her 12-120 s cards): it cut the cost tenfold and still left a p95
+  forecast ratio of 2.25 against 2.4, and it bends content (lumps against caps, work_s multiples) to pay an engine
+  cost that day three's lanes would raise again.
+- A one-share mix on her lane (the town's mix early): a mix per lane is the town's mix, with its own questions (who
+  owns a share, what greys; CARDS, "Mixes on every lane now"), and with one person a share is always all of her. It
+  would change the wire and the page for a cost the engine can drop alone. The town's mix, when it comes, may
+  subsume this part; that fit pass decides.
+- A forecast-only shortcut (skipping or extrapolating her landings inside forecast.py): the forecast must be the
+  save's own future, so that an earlier forecast lists the same times; a second resolver could drift from advance, and
+  absences (Bounded advance) and the simulator would still pay per landing.
+- Ending the babysitter's visit after B3 in the test harness: it narrows what the tests play and leaves the cost every
+  absence pays.
+- A repeat flag on LaneState (or a new state type): a codec change, FORMAT 8 and a rebase of every live save at load,
+  for what the work segment's limit already says.
+- No state, the mode derived at each rebuild: at the instant a task change meets a completion, the engine must tell a
+  tap that ran through that completion (it lands now) from one that began there (it runs one more), and only the
+  state says which.
+- Any tap on any lane: on the hands a landing lets the mix run for the instant and so re-runs the dry rule, and hands
+  cards carry lines; a card with inputs is checked against a whole completion at each landing.
+- Ruled lanes only: the condition is evaluation's choice, which does not read `ruled`; restricting it would make
+  invariant 58 false for no gain.
+- Bounding a repeating tap at the task change's instant without the land-now exception: a change that coincides with
+  a completion (a latch on a store crossing at that second) would run one completion more than the per-landing engine.
+
+KNOWN GAPS (repeating taps)
+- A card with inputs keeps its landings. A rate would need the whole-completion check at each completion as an event.
+  Decided by: the first lane task that takes inputs and repeats often enough to cost.
+

@@ -850,7 +850,7 @@ outcome = { stores = [{ store = "roots", items = 4 }], line_keys = ["l_furrow"] 
 # ---------- the screen: somewhere for what the hands make while away ----------
 
 # From the end the hands make far more damp wood than its cap holds (docs/design/banked-time-plan.md). Weaving takes
-# it in the mix, held against the damp wood line like a trip (engine DESIGN.txt, "BANKED TIME"); the screen is a
+# it in the mix, held against the damp wood line like a trip (engine design/banked-time.txt, "BANKED TIME"); the screen is a
 # comfort built from the weave by its order card, a stage whenever a stage's wattle is in, so a day away brings more
 # of it than a night away. Both are on the cards from the end, while the player is there: the screen shows unready,
 # with its wattle at 0, before it can be afforded (the 2 AM test).

@@ -1,7 +1,7 @@
 FIGHTS
   A fight is a card the player runs (a hunt) or a standing action that runs on its own (a threat at the stores), with
   odds on it: what a won fight brings, what a lost one costs, and the share lost, set by the side's strength against
-  the threat's (engine DESIGN.txt, "FIGHTS"). Nothing on the wire is chance: the odds are exact and every pay is a
+  the threat's (engine design/fights.txt, "FIGHTS"). Nothing on the wire is chance: the odds are exact and every pay is a
   rate. Content.side_infos: [SideInfo {side, label_key}]; Content.threat_infos: [ThreatInfo {threat, label_key}];
   CardInfo and StandingInfo gain fight: FightInfo {side, threat, loses: [Amount], wounds: [Amount], won_line_keys,
   lost_line_keys} or null; the two lists are the runner's pools of lines for one fight won and one lost (keys of
@@ -10,12 +10,12 @@ FIGHTS
   per unlocked fight card or standing action, cards first, each in content order. Strength {value, sources:
   [StrengthEntry {source, form, amount_bp, share_bp}]}: value is what the engine uses; sources are every source behind
   it, the base first as {source: null, form: "base", amount_bp: the base}, then the sums (add_bp), then the factors
-  (mul_bp), each in stack order. share_bp is set only on an entry a card holds while it runs (engine DESIGN.txt,
+  (mul_bp), each in stack order. share_bp is set only on an entry a card holds while it runs (engine design/entries-held.txt,
   "ENTRIES HELD WHILE A CARD RUNS"): source is that card's id, share_bp its share of its lane's time now (10000 for a
   tap, its town or hands mix share otherwise), amount_bp what that share gives (the card's whole amount times
   share_bp / 10000, rounded down); null on every other entry, so a held entry and a permanent one from the same card
   are told apart by it. The page draws a held entry's source label and its share from these fields alone and never
-  multiplies a share itself. A standing action may hold one too (engine DESIGN.txt, "HELD SPEED"): its source is the
+  multiplies a share itself. A standing action may hold one too (engine design/held-speed.txt, "HELD SPEED"): its source is the
   action's id (cards and standing actions share one namespace) and its share_bp 10000 while the action runs, the
   entry absent while it is paused. loss_bp is the share of fights
   lost now, 1 to 10000; for a running tap, the share it was started at and pays to its end. fought and lost count since

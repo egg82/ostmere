@@ -100,17 +100,17 @@ forbids one). So the bands, the cap-loss check and the 2 AM test measured a play
 the player both, and the policies then use only what the page offers.
 
 - **G1, answering a later offer by rule.** Intended: the answer rule set at day three's arrival offer answers day
-  five's arrival offer, so the town grows while the player is away (`DESIGN.txt`, "BANKED TIME", "Arrival";
+  five's arrival offer, so the town grows while the player is away (`engine/design/`, "BANKED TIME", "Arrival";
   `docs/systems.md`, Offers, "by kind once there is a second kind of offer"). `AnswerOffer` names one offer, so it
   cannot. Options: content (an answer installing the next offer's answer: the first answer would silently decide the
   second, and installs are tap rules only); per-offer rules on the page (the player cannot name an offer not yet
-  shown); offer kinds in the engine (the shape `DESIGN.txt` already deferred to this moment). Decided: offer kinds,
+  shown); offer kinds in the engine (the shape `engine/design/` already deferred to this moment). Decided: offer kinds,
   items 10-12. Without them an arrival shown while away waits for a visit, which is something lost *because* the
   player was away (`decisions.md`, "The town").
 - **G2, two holds on one store.** Intended: the Arcana card and the trip both drink the store past a level, the
   shares setting which gets more. The engine allows one hold per store per mix (`mixes.Hold`). Options: several holds
   per store (two consumers at one level have no defined split: the passes resolve them in declaration order, not by
-  share, and the joint solve is deferred in `DESIGN.txt`, "Hold"); content. Decided: content. The
+  share, and the joint solve is deferred in `engine/design/`, "Hold"); content. Decided: content. The
   Arcana card takes the hold on the shared store when it joins the mix and the trip's hold moves to another of its
   supplies (`team/days-four-to-seven.md`, "Arcana"); the shares still cap each card's draw. One hold per store stays,
   as `decisions.md`'s one target control per resource line has it. The page's hold is item 13.
@@ -125,7 +125,7 @@ the player both, and the policies then use only what the page offers.
   build would then name a day-four store, and the 600 s still fails); mark the chip `no_cure` (false: it has a cure);
   teach the reading the trigger. Decided: the reading, item 14. It reads more, and checks no less.
 
-10. **Offer kinds** (**M**, engine and loader; interface first, in `DESIGN.txt`, "Offers", where the rejected entry
+10. **Offer kinds** (**M**, engine and loader; interface first, in `engine/design/`, "Offers", where the rejected entry
     "AnswerOffer by offer kind" gains a dated note that this supersedes it). `OfferDef` gains an optional kind and
     each answer of a kinded offer a role; every offer of one kind has the same roles. A new order verb, the kind's
     answer (kind, role): it can act while an offer of that kind is open, and applies `AnswerOffer` to the first open
@@ -141,9 +141,9 @@ the player both, and the policies then use only what the page offers.
     equals the same save given `AnswerOffer` with that answer at each instant (invariant 62's shape); a planted kind
     whose second offer lacks a role fails the loader.
 11. **Blind contract tests for offer kinds** (**S**, tests), by an agent that never reads item 10's code: from
-    `DESIGN.txt` and the contract alone, with a `MUTANTS.txt` of planted wrong engines (the rule goes dead after its
+    `engine/design/` and the contract alone, with a `MUTANTS.txt` of planted wrong engines (the rule goes dead after its
     first offer; it answers with the first offer's answer id; it matches roles by position; it acts on an offer not
-    yet shown; a player may send it). Accept: each mutant goes red; ambiguities logged and answered in `DESIGN.txt`
+    yet shown; a player may send it). Accept: each mutant goes red; ambiguities logged and answered in `engine/design/`
     before item 10 merges.
 12. **The answer rule on the page** (**M**, api, client and simulator). The wire's order verb and
     `Content.offer_infos` gain kind and role; `contract/offers.txt`, "OFFERS", lets the page build one answer rule per kind,

@@ -1,6 +1,6 @@
 """Saves written while a timed failed attempt ran (format 5; captured/ holds the engine's own encodings from then, one
 on the rack, one on the hands with a mix yielded to it) load under today's engine: the attempt is gone, its lane free
-and the mix running again; every other lane, store, skill and card is as the save had it (engine DESIGN.txt,
+and the mix running again; every other lane, store, skill and card is as the save had it (engine design/,
 "Rebase", UPGRADES[5])."""
 import json
 from functools import cache

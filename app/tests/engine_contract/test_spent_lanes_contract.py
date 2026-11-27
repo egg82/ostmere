@@ -1,4 +1,4 @@
-"""SPENT, whose share moves (engine DESIGN.txt, "SPENT", invariant 134's lane and mix clauses). Written blind from that
+"""SPENT, whose share moves (engine design/spent.txt, "SPENT", invariant 134's lane and mix clauses). Written blind from that
 part; MUTANTS_spent.txt names the wrong implementations each test must turn red for. Shares move among the cards of one
 running mix on one lane: the hands for a hands mix, one person's lane for the town's mix. The town world is two joined
 lanes: la (EATA, spent from the first instant, and RA) and lb (RB)."""

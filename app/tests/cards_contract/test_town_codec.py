@@ -1,4 +1,4 @@
-"""The codec for day two (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Codec"; invariant 65).
+"""The codec for day two (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Codec"; invariant 65).
 FORMAT is 7; the manifest gains `offers`, [{"id", "answers"}] in rules order; UPGRADES[6] adds "offers": [] to a format
 6 manifest and changes nothing else; AnswerOffer round-trips in saves' orders and queue and in the decision log; the
 rules digest covers a lane's `ruled` and the offers."""
@@ -52,7 +52,7 @@ def format_7(text: str) -> str:
 
 def format_6(text: str) -> str:
     """A format 8 text of rules with no offers, as format 6 wrote it: format 7's (format_7) with format 6 and no
-    manifest `offers` (DESIGN.txt: a format 6 save predates offers)."""
+    manifest `offers` (engine/design/: a format 6 save predates offers)."""
     env = envelope(format_7(text))
     manifest = as_obj(env["manifest"])
     assert manifest["offers"] == []

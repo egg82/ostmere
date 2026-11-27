@@ -1,4 +1,4 @@
-"""Applying the prestige verbs, and the reads the prestige sheet needs (DESIGN.txt, "PRESTIGE PHASES"). The verbs and
+"""Applying the prestige verbs, and the reads the prestige sheet needs (design/prestige-phases.txt, "PRESTIGE PHASES"). The verbs and
 their refusals: prestigeverbs.py."""
 from dataclasses import replace
 

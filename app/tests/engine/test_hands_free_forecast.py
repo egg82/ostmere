@@ -1,4 +1,4 @@
-"""Forecast.hands_free_at (engine DESIGN.txt, "Hands free"): the first instant the player's work stops holding the
+"""Forecast.hands_free_at (engine design/, "Hands free"): the first instant the player's work stops holding the
 hands, after a forecast that began with it holding them. Behaviour-level: each case is a save the player set up, read
 through the public forecast."""
 from ashfall_app.engine import (

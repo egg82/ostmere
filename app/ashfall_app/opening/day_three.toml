@@ -269,7 +269,7 @@ label_key = "lane_hearth"
 
 # One cure a course, four in all (the cap night 4 reads). The bar is the lever on B5's band (day-three-numbers.md,
 # "Sizing the chain"): 38 000 s since the first course comes a visit earlier (D-105), which holds B5, B6 and B7 where
-# they stood. A card's lump lands whole at any bar (engine DESIGN.txt, "Rate form").
+# they stood. A card's lump lands whole at any bar (engine design/cards.txt, "Rate form").
 [[cards]]
 id = "cure_hearth"
 only_player = "project"

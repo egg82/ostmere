@@ -1,0 +1,21 @@
+BOUNDED ADVANCE (a long absence resolved in slices, saves/service.py). Where this part and an entry above disagree,
+this part holds.
+
+FIT PASS
+- Nystrom's Game Loop "catch up", with the inner loop that bails after a maximum number of iterations: the game
+  slows down instead of locking up. It is advance_logged given a stop, no new type and no Save field; the caller owns
+  the budget (the engine reads no clock), and invariant 1 already makes a stop between instants cost nothing.
+
+CHOICES (bounded advance)
+- advance_logged(s, r, t, stop) asks stop() after each instant resolves. True while an instant at or before t
+  remains ends the call at that instant: Step.save.time is its time (not shifted to t) and Step.stopped_short is
+  True. A stop that says True after the last instant at or before t changes nothing: the save is shifted to t as
+  without one. advance, decide and decide_logged take no stop.
+
+INVARIANTS (bounded advance; numbered on from 72)
+73. Slices: for any stop, repeating advance_logged(s_i, r, t, stop) from each Step's save (encoded and decoded
+    between calls or not) until one does not stop short ends at the save of advance_logged(s, r, t); its lines and
+    rule_changes, each Step's in turn, are that call's. Each stopped Step resolved at least one instant.
+74. Lane rules change only at a decision: advancing any length of time with no verb never fires a trigger on a LaneRules
+    condition, and an install of a lane's always rule leaves the count unchanged.
+

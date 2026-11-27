@@ -1,4 +1,4 @@
-"""Invariant 115 (engine DESIGN.txt, "ENTRIES HELD WHILE A CARD RUNS": "A tap keeps its odds"; FIGHTS): a HANDS fight tap
+"""Invariant 115 (engine design/entries-held.txt, "ENTRIES HELD WHILE A CARD RUNS": "A tap keeps its odds"; FIGHTS): a HANDS fight tap
 started at T pays loss_bp as read on the save just before T until it lands, whatever held entries come or go
 meanwhile, the entries the tap itself yields included; mixed fights, fights on a repeating or declared-lane tap, and
 standing fights read the live stack and move at the instant."""

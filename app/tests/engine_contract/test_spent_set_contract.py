@@ -1,4 +1,4 @@
-"""SPENT, the spent set (engine DESIGN.txt, "SPENT", invariant 133 and the plan's "a store whose only maker is spent is
+"""SPENT, the spent set (engine design/spent.txt, "SPENT", invariant 133 and the plan's "a store whose only maker is spent is
 spent"). Written blind from that part; MUTANTS_spent.txt names the wrong implementations each test must turn red for.
 Each scenario of spent_world.scenarios() has EAT dry on one store from the first instant of its mix, beside R1: the
 test reads whether the store is spent through EAT's Run, so a scenario cannot pass by EAT not being dry at all."""

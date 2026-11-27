@@ -1,4 +1,4 @@
-"""Installed rules (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Installed rule", "Installs land
+"""Installed rules (engine design/townsfolk.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS", "Installed rule", "Installs land
 once", invariants 59 and 60): a trigger's outcome sets a ruled lane's always rule as an ordinary rule, at the top or the
 end, once, and a rule the player removed never comes back."""
 from collections.abc import Callable

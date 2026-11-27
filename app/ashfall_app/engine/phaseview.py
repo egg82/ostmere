@@ -1,4 +1,4 @@
-"""A skill's row in the read model, read through its prestige phase (DESIGN.txt, "Read model", "PRESTIGE PHASES").
+"""A skill's row in the read model, read through its prestige phase (design/prestige-phases.txt, "Read model", "PRESTIGE PHASES").
 With rules.prestige None the row is the curve's, as before phases."""
 from dataclasses import replace
 

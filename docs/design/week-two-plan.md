@@ -50,7 +50,7 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    state lists. Fits into: Simulator. Accept: every band inside on typical and above its floor on sharp; a planted
    fixture with a floor removed lands sharp under it (the floor is read, not copied); a planted visit whose only change
    is a queued stage fails the decide counter.
-2. **Entries held while a card runs** (**M**, engine; interface first in `DESIGN.txt`, "FIGHTS", a new CHOICES entry and
+2. **Entries held while a card runs** (**M**, engine; interface first in `engine/design/`, "FIGHTS", a new CHOICES entry and
    its REJECTED list). A card gains optional `while_running` entries aimed at a side's strength. While the card runs on a
    lane, the effective stack holds each entry scaled by the card's share of that lane's time (a tap or a ruled lane's
    repeating task: the whole; a town mix share s: amount × s, rounded down once), sourced by the card. Entries change only
@@ -64,10 +64,10 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    stack exactly while its card runs, scaled by share; a share change moves the odds at that instant and nowhere else;
    timing does not matter (invariant 81's shape) with a watching card in a town mix; a planted engine that holds the
    entry after the task changes goes red.
-3. **Blind contract tests for item 2** (**S**, tests), by an agent that never reads item 2's code: from `DESIGN.txt` and
+3. **Blind contract tests for item 2** (**S**, tests), by an agent that never reads item 2's code: from `engine/design/` and
    the contract alone, with a `MUTANTS.txt` (the entry ignores share; it stays after the task ends; it applies to a
    threat; it applies to a card unlocked but not running; it rounds up). Accept: each mutant goes red; ambiguities
-   logged and answered in `DESIGN.txt` before item 2 merges.
+   logged and answered in `engine/design/` before item 2 merges.
 4. **Town cards defined once** (**S**, loader). A `[[town_cards]]` entry (a card's fields plus `lanes = [...]` and an id
    pattern) expands to one card per lane at load. Week 1's per-lane gathering copies move into it with their released
    ids unchanged; week 2's new lanes join by appending to `lanes`. Fits into: Catalogue (the loader), Cards. Accept: the
@@ -111,7 +111,7 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    at; nothing reachable only by hover.
 10. **Lost-fight state with a draining cure** (**S**, engine and content; closes week 1's G7 and G8). Quarters were
     tried and reverted: with a fixed take no cure is tappable at every shown level and clears in one tap while hurts
-    stack (engine `DESIGN.txt`, "DRAINS", FIT PASS). The self-heal runs at the designed rate through the loader's
+    stack (`engine/design/`, "DRAINS", FIT PASS). The self-heal runs at the designed rate through the loader's
     `every_hours`, the chip reads at a quarter through `every`, and the cure drains the store rather than taking a whole
     input; the store is never drawn: the chip is its face. Numbers: `content/team/week-two-numbers.md`. Retunes of
     released ids, Safe under the lock. Fits into: Cards (a drain is an input forgiven at 0), Chips. Accept: the chip

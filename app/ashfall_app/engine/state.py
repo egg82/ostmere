@@ -77,7 +77,7 @@ class SkillState:
 @dataclass(frozen=True)
 class Pause:
     """`runner` is paused because `store` ran dry; it resumes when the store reaches `resume_at`. A paused card's work
-    stops with it (its bar and its lump lines both stop: DESIGN.txt, "Rate form")."""
+    stops with it (its bar and its lump lines both stop: design/cards.txt, "Rate form")."""
 
     runner: Runner
     store: StoreId
@@ -90,8 +90,8 @@ class Save:
 
     latches[i] belongs to orders[i]: a bool, or a GuardedLatch for an order with guards. active is the player's own
     mix, written only by the player's and the queue's SwitchMix and by DeleteMix: None until the first switch, and
-    after DeleteMix of it. An order's mix runs over it while the order is on (the running mix, derived: DESIGN.txt, "Order mix"). An active mix may be greyed
-    (derived, never stored: DESIGN.txt, "Greyed mix").
+    after DeleteMix of it. An order's mix runs over it while the order is on (the running mix, derived: design/cards.txt, "Order mix"). An active mix may be greyed
+    (derived, never stored: design/cards.txt, "Greyed mix").
     """
 
     time: int
@@ -109,18 +109,18 @@ class Save:
     last_cascade: CascadeLimit | None = None
     """The most recent instant that hit the firing cap (events.CascadeLimit), or None."""
     lanes: tuple[LaneState, ...] = ()
-    """One per lane, HANDS first, then rules.lanes order (DESIGN.txt, "Lanes")."""
+    """One per lane, HANDS first, then rules.lanes order (design/core.txt, "Lanes")."""
     cards: tuple[CardState, ...] = ()
     """Each card with a tap count, mix work or a raised cap, in rules.cards order; absent means all zero. The
-    Completed set is derived from these and the caps, never stored (DESIGN.txt, "Caps")."""
+    Completed set is derived from these and the caps, never stored (design/cards.txt, "Caps")."""
     unlocked: tuple[Unlock, ...] = ()
     """The unlock set, sorted by unlocks.unlock_key; only grows. Ignored when rules.opening is None."""
     chips: tuple[bool, ...] = ()
     """chips[i] is the latch of rules.chips[i]."""
     chips_seen: tuple[int, ...] = ()
     """chips_seen[i] is 0 until rules.chips[i] first shows (time 0 included), then 1 plus the times it has said an off
-    line; it never falls, so the chip's on_line plays once per save and its off lines take turns (DESIGN.txt, "Chips")."""
+    line; it never falls, so the chip's on_line plays once per save and its off lines take turns (design/core.txt, "Chips")."""
     fired: tuple[bool, ...] = ()
     """fired[i] is True once rules.triggers[i] has fired; it never resets."""
     ended_at: int | None = None
-    """The first instant rules.end held (DESIGN.txt, "The end"), or None; once set it never changes."""
+    """The first instant rules.end held (design/end.txt, "The end"), or None; once set it never changes."""

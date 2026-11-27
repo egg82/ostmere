@@ -1,6 +1,6 @@
 """Goal stints (contract/goal-stints.txt, "Goal stints"): a queue entry switching to a mix until a goal row's `until`. The row's
 `until` holds from the instant its lands_at names while the rates hold, and the entry pops there, giving the player's
-own mix back (engine DESIGN.txt, "Queue mix")."""
+own mix back (engine design/cards.txt, "Queue mix")."""
 from ashfall_app import engine as e
 from ashfall_app.api import decision_models as w
 from ashfall_app.api import goal_models as g
@@ -77,7 +77,7 @@ def test_a_level_rows_until_is_the_counted_level_past_the_first_phase() -> None:
 
 
 def test_a_dead_stint_pops_once_its_goal_settles_and_is_kept_while_its_goal_could_fall() -> None:
-    """Engine DESIGN.txt, "Greyed mix": the stint's mix greys when nap reaches its cap of 5 (3000 s), so the entry is
+    """Engine design/cards.txt, "Greyed mix": the stint's mix greys when nap reaches its cap of 5 (3000 s), so the entry is
     dead and the player's mix runs. A dead entry whose until holds and cannot fall (a level) pops; one whose until
     could fall (a store) is kept although it holds."""
     r, s = world(logs=40)

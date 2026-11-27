@@ -51,7 +51,7 @@ It is an instance of things the engine already does, so it adds no system.
 
 | Part | Extends | How |
 |---|---|---|
-| The phase's top | Engine: "XP is a segment capped at the curve's last threshold"; the camp's held levels (`DESIGN.txt`, "THE CAMP") | The XP cap becomes the current phase's top. The click lifts it, as a card's finish lifts a held camp level |
+| The phase's top | Engine: "XP is a segment capped at the curve's last threshold"; the camp's held levels (`engine/design/`, "THE CAMP") | The XP cap becomes the current phase's top. The click lifts it, as a card's finish lifts a held camp level |
 | Phase levels | Pacing curve (one curve for every skill) | Every phase reads the same curve from level 1. Its level triggers count levels across phases, so a released trigger stays true |
 | A node's ranks | Modifiers | Entries derived from the skill's picks wherever the stack is read, never stored, like `heldentries.py`. That makes an undo exact |
 | The click | Commands | `Prestige(skill, node)` is an ordinary verb, but the one verb with no order (below) |

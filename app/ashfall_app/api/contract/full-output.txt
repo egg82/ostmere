@@ -1,6 +1,6 @@
 FULL OUTPUT
   A mix card drawing a store nothing refills stops when every store it fills is full, and keeps its inputs until one
-  of them has room for a whole completion (engine DESIGN.txt, "FULL OUTPUT"). It is a pause like a dry one: Card.run
+  of them has room for a whole completion (engine design/full-output.txt, "FULL OUTPUT"). It is a pause like a dry one: Card.run
   is paused, its share goes to the rest of its mix (SPENT), and the split that runs now shows it waiting. Its blocker
   stays null: a tap runs its one completion at the full store.
   View: Card gains full_store, the store a full pause stopped the card on (its first full store; null on any other

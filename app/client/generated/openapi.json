@@ -2028,7 +2028,7 @@
           "release"
         ],
         "title": "AtLeast",
-        "description": "value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a\nquantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, \"a store rule\"; engine DESIGN.txt,\n\"SHARE LEVELS\")."
+        "description": "value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a\nquantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, \"a store rule\"; engine design/share-levels.txt,\n\"SHARE LEVELS\")."
       },
       "AtMost": {
         "properties": {
@@ -3716,7 +3716,7 @@
           "empties"
         ],
         "title": "Forecast",
-        "description": "Everything that lands by `horizon_at` if the player changes nothing: orders, the queue and everything running\nplayed out (engine DESIGN.txt, \"Forecast\"). It holds for every later view of the save until its next decision.\nA time past horizon_at is unknown: draw none, never a guess."
+        "description": "Everything that lands by `horizon_at` if the player changes nothing: orders, the queue and everything running\nplayed out (engine design/, \"Forecast\"). It holds for every later view of the save until its next decision.\nA time past horizon_at is unknown: draw none, never a guess."
       },
       "ForecastAnswer": {
         "properties": {

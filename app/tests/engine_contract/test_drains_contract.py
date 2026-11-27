@@ -1,4 +1,4 @@
-"""Drains, part one: a take forgiven at 0 (engine DESIGN.txt, "DRAINS", invariants 121-124). Written blind from that part
+"""Drains, part one: a take forgiven at 0 (engine design/drains.txt, "DRAINS", invariants 121-124). Written blind from that part
 and the public interface; MUTANTS_drains.txt names the wrong implementations each test must turn red for (the `kills`
 marker). The default cure is drains_world's: 10 items of x per completion of 100 s, 360_000 units a second at full
 speed, so every expected number is exact."""

@@ -1,4 +1,4 @@
-"""Fixture rules for the retired-chores contract tests (engine DESIGN.txt, "Installed rule" / "Retired chores",
+"""Fixture rules for the retired-chores contract tests (engine design/townsfolk.txt, "Installed rule" / "Retired chores",
 invariants 142-147), built from the engine's public names and the stated interface only; Outcome.retire_orders is
 reached through `turn`, at call time, so a module that tests it collects before it exists.
 

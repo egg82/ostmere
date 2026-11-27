@@ -105,7 +105,7 @@ def test_a_trip_paused_dry_whose_unlocked_maker_raises_nothing_is_caught():
 
 
 def test_a_trip_on_a_spent_store_is_not_judged_by_dry_unreached():
-    """With no maker of the wood in play the store is spent and the trip is SPENT (DESIGN.txt, SPENT): its share goes to
+    """With no maker of the wood in play the store is spent and the trip is SPENT (engine/design/, SPENT): its share goes to
     its mix by design, so a spent pool is not an unreached cure."""
     r = rules(trip_cost=1)
     s, planted = dry(replace(r, cards=tuple(replace(c, makes=()) if c.id == GATHER else c for c in r.cards)))

@@ -1,5 +1,5 @@
 """Repeating taps: a lane whose rules would start the same card again at each of its completions runs that card as a
-rate, its work with no limit, so its completions cost no instant (DESIGN.txt, part "REPEATING TAPS").
+rate, its work with no limit, so its completions cost no instant (design/repeating-taps.txt, part "REPEATING TAPS").
 
 The settle, run at the end of every instant, decides which taps repeat; the watch events mark the one change of a
 lane's task that nothing else would (an earlier rule's card turning ready while the lane is busy)."""
@@ -75,7 +75,7 @@ def _limited(save: Save, card: CardId, limit: int | None) -> Save:
 
 def watch_events(save: Save, rules: Rules) -> list[Event]:
     """While a lane repeats, a READY at the ready_at of each card a true order earlier than the first one tapping the
-    lane's card would tap on that lane, unlocked, not completed and blocked (DESIGN.txt, "What can end a task")."""
+    lane's card would tap on that lane, unlocked, not completed and blocked (design/repeating-taps.txt, "What can end a task")."""
     found: list[Event] = []
     ix = index(rules)
     for ls in save.lanes:

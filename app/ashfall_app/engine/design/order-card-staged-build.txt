@@ -1,0 +1,31 @@
+ORDER CARD ON A STAGED BUILD (an at_least order on the store a staged build takes, tapping that build). Where this part
+and an entry above disagree, this part holds.
+
+FIT PASS
+- An instance of Orders (a content order card is an offer the player accepts; the loader's at_least check already asks
+  that the card takes the store) over a capped card. No new state, verb or event: one order covers every stage because a
+  stage is a tap and the order taps again whenever the store allows.
+- What was already true: at the build's cap the tap is dead (is_dead), so the order is passed over and served as
+  PASSED_OVER; the order never greys the player's mix, because the build is not in it. Only the cut-in needed a change.
+
+CHOICES
+- A stage drinks the store its own order watches, so by mid-stage the order's latch has fallen and the running stage
+  looks like a hand tap. The glowing step's cut-in therefore also cuts into a task any order names, true or not
+  (decisions._ordered); cut_in then queues the stage at the queue's front (it is planned by no true order), and the
+  queue takes it up again from its kept work once the step lands. The cure cut-in already did so for any task not
+  planned by a true order or queue entry. Either way the order resumes for the next stage.
+- A task that is a hand tap and is also named by an order is cut into by a glowing step; it is then queued, so it is
+  not lost. That is the one case a hand tap is cut into.
+
+INVARIANTS (order on a staged build; numbered on from 119)
+119. With one at_least order on the store a staged build takes, tapping it, and the player's own mix running, every
+    stage lands with no further decision; the hands return to the player's mix between stages and after the last,
+    the order's state is PASSED_OVER at the cap, and no mix is greyed.
+
+REJECTED, AND WHY (order on a staged build)
+- "When ready to cap" as one queue entry for every remaining stage was rejected (Orders, above): it held the queue's
+  head, and the next stage's When ready had been a visit's decision, so played on the routes the builds landed a visit
+  later and visits were left with nothing to decide. An order card is not the queue: it is a rule beside the player's
+  plan, offered and accepted like any, that taps a stage whenever its store allows and otherwise lets the hands run the
+  queue and the player's mix, so the player still decides every visit; at the cap it is passed over, having held nothing.
+

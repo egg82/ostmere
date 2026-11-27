@@ -1,4 +1,4 @@
-"""Drains: a card's take paid as an input is and forgiven at 0 (DESIGN.txt, "DRAINS"). A leaf of rules_check: the
+"""Drains: a card's take paid as an input is and forgiven at 0 (design/drains.txt, "DRAINS"). A leaf of rules_check: the
 rules arrive as an argument and are never imported."""
 from typing import TYPE_CHECKING
 

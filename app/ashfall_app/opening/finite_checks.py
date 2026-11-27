@@ -15,7 +15,7 @@ Rules, ids and fields only, base amounts (finite_runners.py). Raises ValueError 
   limit: so a pool a card's town twins also draw fails while the trigger counts that card alone. A converter also stockpiles up to its
   target's cap, which counts when the pool has another use.
 - Caps: a card converting a pool into a store whose cap is below what progress needs of it can lose the pool at that
-  cap: the engine's full rule stops a mix card whose every outcome store is full (engine DESIGN.txt, "FULL OUTPUT"), but
+  cap: the engine's full rule stops a mix card whose every outcome store is full (engine design/full-output.txt, "FULL OUTPUT"), but
   not a tap, nor a card a by-product keeps running. A standing action converting a pool is the world's clock, not the
   player's choice: what it loses at a cap passes.
 

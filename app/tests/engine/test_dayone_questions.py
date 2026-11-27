@@ -1,12 +1,12 @@
-"""Two engine questions day one's content rests on, answered by test (content/team/day-one.md, "Open" 4; DESIGN.txt,
+"""Two engine questions day one's content rests on, answered by test (content/team/day-one.md, "Open" 4; engine/design/,
 KNOWN GAPS, "READY solves only StoreValue and SkillLevel").
 
 1. A card on a lane other than HANDS trains its skill: tapped by the player, by an order or by the queue, its XP line
-   runs at a full share for its bar's time, exactly as a hands tap's does (DESIGN.txt, "Projects": its flows and XP are
+   runs at a full share for its bar's time, exactly as a hands tap's does (design/core.txt, "Projects": its flows and XP are
    ordinary rates). Day one's Smoke lane trains Cooking.
 2. A queued card waiting on a discrete requires (Unlocked, CardCount) starts at the instant the last of its
    requires turns true, whichever kind that is and whatever turned it: a trigger, a capped card's completion in the
-   mix, an uncapped card's count, a lane tap's landing. The gap the DESIGN entry names is a discrete subject turning
+   mix, an uncapped card's count, a lane tap's landing. The gap the engine/design/ entry names is a discrete subject turning
    true at an instant that does not evaluate; every outcome lands at one that does (a COMPLETION, a TAP_DONE, a
    TRIGGER), and CardCount is solved off the work segment, so READY sees it. Planted mutants: tests/dayone/MUTANTS.txt."""
 import pytest

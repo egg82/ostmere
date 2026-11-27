@@ -1,4 +1,4 @@
-"""Drains, part three: what other parts read of a drain (engine DESIGN.txt, "DRAINS", invariants 129-131, and the fight
+"""Drains, part three: what other parts read of a drain (engine design/drains.txt, "DRAINS", invariants 129-131, and the fight
 odds). Written blind from that part and the public interface; the `kills` marker names the rows of MUTANTS_drains.txt
 each test must turn red for."""
 import pytest

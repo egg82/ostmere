@@ -337,7 +337,7 @@ one, against "alone" and a camp of two. Pick: Ch y · FW n (food) · BR n · TS 
 - 3-gram echoes, within a sentence: none against `opening.toml`'s text, none among the picks. Runs across a full stop
   against the opening: none. The first pass did catch three (wire_1 and lean_to_fail, and wire_2 across a stop),
   which is why those keys went to other writers.
-- Against content prose (`canon.jsonl`, `content/**/*.md`), 26 of 39 picks share a 3-gram, nearly all a beat fact's
+- Against content prose (`canon/`, `content/**/*.md`), 26 of 39 picks share a 3-gram, nearly all a beat fact's
   own nouns ("dark and square", "the gap to the larder", "eats from the larder") that every candidate carried. Not a
   pick-time fix without rewriting; for the voice pass.
 - flatcheck: beats=53, day_one=17, flags=0 (lines don't feed it; confirms nothing else moved).

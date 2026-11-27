@@ -15,7 +15,7 @@ second one a tap. Both lists sit in the full editor behind `More options`, open 
 - **A guard is an instance of Conditions**, the Specification the engine already has (`docs/systems.md`, Gates and
   Standing orders). A conjunction is an explicit list on the thing that needs one, never a new condition kind: a
   trigger's and a card's `requires` are that list already, and the engine turned down a conjunction type for the end
-  (engine `DESIGN.txt`, "Triggers", and its first "REJECTED, AND WHY"). The order vocabulary stays `AtLeast`,
+  (`engine/design/`, "Triggers", and its first "REJECTED, AND WHY"). The order vocabulary stays `AtLeast`,
   `AtMost`, `AfterTime`.
 - **A guard is latched as every order condition is**, with its own release, so the engine solves its change times the
   way it solves a `when` and nothing polls. The contract in `docs/systems.md` asks for it: "a boundary-chasing order
@@ -38,7 +38,7 @@ second one a tap. Both lists sit in the full editor behind `More options`, open 
 
 `when` and `then` are today's. The rule's **actions** are `then` followed by `or_else`, in that order. Each guard in
 `unless` is a `Condition`, read exactly as a `when` is read: it comes on at its value, lets go past its release, and
-a share level is read against the store's cap at that instant (engine `DESIGN.txt`, "SHARE LEVELS").
+a share level is read against the store's cap at that instant (`engine/design/`, "SHARE LEVELS").
 
 A guard is stored as the condition that **blocks**. "And smoked is under 10" is the guard "unless smoked is 10 or
 more"; an at-least and an at-most level are each other's opposite, so one form covers both and the page has one word
@@ -126,7 +126,7 @@ order's latch is true" (which mix runs, which tap starts, which lane a rule hold
 
 ## Evaluation, determinism and replay
 
-Evaluation already applies every verb that can act (engine `DESIGN.txt`, "Evaluation applies every verb"; the loop in
+Evaluation already applies every verb that can act (`engine/design/`, "Evaluation applies every verb"; the loop in
 `app/ashfall_app/engine/instant.py`). That loop is unchanged. Two of its sources read differently:
 
 - the tap source walks the rules in order and takes, from each rule that is on, its first listed tap that can act;

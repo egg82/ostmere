@@ -171,7 +171,7 @@ def test_a_tap_whose_store_empties_as_it_lands_has_landed(capped: bool):
 
 @pytest.mark.parametrize("capped", [False, True], ids=["uncapped", "capped"])
 def test_a_mix_card_whose_store_runs_dry_at_its_boundary_is_paused_with_one_completion(capped: bool):
-    """DESIGN.txt, "Inputs against a dry store" (the last decision): work that reaches a completion boundary at the
+    """design/cards.txt, "Inputs against a dry store" (the last decision): work that reaches a completion boundary at the
     second its store runs dry has finished that completion, and counts; a mix card carries on into the next, which
     nothing has paid for, so the dry rule pauses it, capped or not. The rejected reading passed it over and ran it on
     with x at 0 (10 completions by t = 1_000). The same world tapped lands instead: the card stops there."""
