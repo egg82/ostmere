@@ -246,8 +246,12 @@ suite still runs in seconds.
   re-splits the parts with no list to edit; a chapter with no row in the table is planned at its `unmeasured` figure and
   named in the plan's `estimated`. A plan needing more links than the workflow has ranks (`RANKS`) fails `saves-plan`
   and `tests/test_saves_plan.py` until a `chapter-saves-link-k` job is copied from the last. The table holds the worst
-  of three full runs' `cpu_s` per route and chapter, rebased chapter and reading step; a stale row makes a prediction
-  wrong, not a cap larger. Each job restores the last nightly's
+  of the last three full runs' `cpu_s` per route and chapter, rebased chapter and reading step (a full run: every save
+  job `saves-plan` planned succeeded, judged by the job list, so a slice run is never read). The nightly refreshes it
+  (`app/tools/ci_costs.py` in `refresh-readouts`) and its refresh pull request runs `tests/test_saves_plan.py`, so a
+  cost that puts a planned job over its cap is a red pull request. A key only some of the three measured takes their
+  max and is named `partial=`; a key none measured keeps its old value and is listed unmeasured; fewer than three full
+  runs leave the table alone. A stale row makes a prediction wrong, not a cap larger. Each job restores the last nightly's
   saves (`publish-ends` caches the merged saves on `main`), writes only the chapters whose key is new (`chapter_saves.py`
   keeps a file present under today's key; `--prune` drops the directories of keys no chapter has), and hands what it
   wrote to the readers as artifacts they merge over the restored saves. A local `--write` is incremental the same way:
