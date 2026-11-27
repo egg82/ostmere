@@ -2,8 +2,8 @@
 // name (a later label's unlock), the person's name after. The fixture's helper lane takes its later label with `yard`.
 import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { sectioned } from "../src/game/cardsections";
+import { Catalog } from "../src/game/page/catalog";
+import { sectioned } from "../src/game/cards/cardsections";
 import type { View } from "../src/api/types";
 
 function expect(label: string, got: unknown, want: unknown): void {

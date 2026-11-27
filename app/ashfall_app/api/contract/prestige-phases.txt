@@ -31,5 +31,5 @@ PRESTIGE PHASES (engine design/prestige-phases.txt, "PRESTIGE PHASES")
                                     ui.lesson.prestige {skill}   the Push past control's lesson
                                     ui.job.new {person}{card} | ui.job.new_many {person} | ui.job.new_town {card} | ui.job.new_all   the
                                     story line when a job (cards sharing a label_key) is first offered townspeople nobody has set
-                                    to it: one line per step (game/newjobs.ts)
+                                    to it: one line per step (game/town/newjobs.ts)
 

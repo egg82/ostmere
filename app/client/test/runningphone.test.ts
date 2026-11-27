@@ -1,4 +1,4 @@
-// On a phone the running-now row is part of the pinned strip, whose measured height (ui/headseat.ts, a ResizeObserver
+// On a phone the running-now row is part of the pinned strip, whose measured height (ui/story/headseat.ts, a ResizeObserver
 // on the stage) is the room the cards scroll in: a row that only hides (visibility) keeps its height and the cards keep
 // less room. While the splits match the row must leave layout there; a desktop keeps it (nothing under a finger moves).
 // Layout cannot be drawn by fake-dom, so this reads the rules; the measured result is in the branch's renders.

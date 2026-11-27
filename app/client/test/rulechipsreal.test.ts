@@ -4,8 +4,8 @@
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { CardInfo, ChipInfo, Content, StoreInfo } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { chipStore, whenChoices } from "../src/game/ruleoffers";
+import { Catalog } from "../src/game/page/catalog";
+import { chipStore, whenChoices } from "../src/game/condition/ruleoffers";
 import { readFileSync } from "node:fs";
 
 const real = JSON.parse(readFileSync("fixtures/real_chip_cards.json", "utf8")) as {

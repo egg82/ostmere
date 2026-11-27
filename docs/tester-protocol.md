@@ -2,7 +2,7 @@
 
 How a cold tester judges issue #22's "Teach the mix system where it is first needed", and any later lesson. One
 tester at a time, fix between testers, stop by a rule written before the first one. The why, with sources, is
-`docs/research/design-101.md` §1 ("watch newcomers in small rounds") and §3 proposals 1 and 4. Never the owner, who knows the
+`docs/research/design/design-101.md` §1 ("watch newcomers in small rounds") and §3 proposals 1 and 4. Never the owner, who knows the
 design, and a genre-literate player hides the gaps a newcomer hits.
 
 ## Before the first session

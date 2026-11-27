@@ -7,13 +7,15 @@ from typing import Any
 
 import yaml
 
+from tools import saves_plan
+
 CI = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "ci.yml"
 BUDGET_MIN = 10
 PULL_REQUEST = {"changes", "docs", "slice", "playthrough-slice", "playthrough-whole-game", "playthrough-smoke", "tests", "shards-cover", "mutant-plants",
                 "engine-bench", "pyright", "client", "app-image", "ci-ok"}
-FULL_RUN = {"playthrough", "playthrough-week-one", "playthrough-week-one-saved", "playthrough-week-two", "chapter-saves",
-            "chapter-saves-readings", "chapter-saves-rebased", "publish-ends"} | {
-    f"chapter-saves-{route}-{link}" for route in ("typical", "sharp", "whenever") for link in "abc"}
+FULL_RUN = {"playthrough", "playthrough-week-one", "playthrough-week-one-saved", "playthrough-week-two", "saves-plan",
+            "chapter-saves", "chapter-saves-readings", "chapter-saves-rebased", "publish-ends"} | {
+    f"chapter-saves-link-{rank}" for rank in range(1, saves_plan.RANKS + 1)}
 MAIN_ONLY = {"release", "scene-art-drift"}
 Jobs = dict[str, dict[str, Any]]
 

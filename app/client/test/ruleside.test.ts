@@ -1,4 +1,4 @@
-// The Rules page's Mine | Camp switch (docs/decisions/mixes.md, "Mine and Camp"; ui/ruleswitch.ts, game/ruleside.ts):
+// The Rules page's Mine | Camp switch (docs/decisions/mixes.md, "Mine and Camp"; ui/rules/ruleswitch.ts, game/rules/ruleside.ts):
 // a rule is on the side of the lane its action runs on, the switch shows only once a second person has hands and keeps
 // its side per device, a new rule offers its side's tasks alone, and a rule the player saves lands on its own side.
 // The views are the engine's own town (fixtures/town.ts) over the day-two page.
@@ -8,9 +8,9 @@ import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { View } from "../src/api/types";
 import type { SideKept } from "../src/app/ruleside";
-import { landedSide, ruleSideOf, type RuleSide } from "../src/game/ruleside";
-import { people } from "../src/game/town";
-import { RulesTab } from "../src/ui/rules";
+import { landedSide, ruleSideOf, type RuleSide } from "../src/game/rules/ruleside";
+import { people } from "../src/game/town/town";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

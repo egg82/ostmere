@@ -1,4 +1,4 @@
-// The chronicle, the Book's first page (ui/chroniclesheet.ts, ui/chapter.ts): newest first, the newest return's "Since you left" chapter
+// The chronicle, the Book's first page (ui/book/chroniclesheet.ts, ui/book/chapter.ts): newest first, the newest return's "Since you left" chapter
 // at the top, never folded, then one stretch per earlier return folded to its counts; a row of filters once two kinds
 // have entries, Story first; under Story, the chapter's figures as rows and a stretch's counts of the other filters, each
 // opening its filter; each line over its cause.
@@ -7,11 +7,11 @@ import { dayOneStep } from "../fixtures/dayone";
 import { fixtureStep } from "../fixtures/steps";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Chapter, LogLine, Offer } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps, NEW_SAVE } from "../src/game/keeps";
-import { ruleEntries } from "../src/game/rulerows";
-import { UI } from "../src/game/text";
-import { STORES_SHOWN } from "../src/ui/chapter";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps, NEW_SAVE } from "../src/game/account/keeps";
+import { ruleEntries } from "../src/game/rules/rulerows";
+import { UI } from "../src/game/page/text";
+import { STORES_SHOWN } from "../src/ui/book/chapter";
 import { Screen } from "../src/ui/screen";
 
 install();

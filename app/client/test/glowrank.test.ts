@@ -1,11 +1,11 @@
-// The one glow's rank (ui/fresh.ts, GlowRank): a story step the content marks (ui/cardglow.ts) takes the glow from the
+// The one glow's rank (ui/feedback/fresh.ts, GlowRank): a story step the content marks (ui/cards/cardglow.ts) takes the glow from the
 // shown ask, which keeps its outline; the ask waiting unanswered page session after page session no longer keeps the
 // step that moves the story on from ever glowing.
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Offer, Step } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Keeps } from "../src/game/keeps";
+import { Catalog } from "../src/game/page/catalog";
+import { Keeps } from "../src/game/account/keeps";
 import { Screen } from "../src/ui/screen";
 import { install } from "./fake-dom";
 

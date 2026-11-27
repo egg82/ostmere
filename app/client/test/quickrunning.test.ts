@@ -1,4 +1,4 @@
-// The simple view's When row offers the few running cards a rule is about (ruleoffers.quickRunning, game/relevant.ts), read
+// The simple view's When row offers the few running cards a rule is about (ruleoffers.quickRunning, game/condition/relevant.ts), read
 // off the cards' kept lane or side, then what feeds the rule's inputs; More options keeps every running card. A rule
 // changed to another action drops a running subject that action no longer offers.
 import { install } from "./fake-dom";
@@ -6,12 +6,12 @@ import { fixtureContent } from "../fixtures/content";
 import { kindsView, withKinds } from "../fixtures/kinds";
 import { townStep } from "../fixtures/town";
 import type { CardInfo, Content, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { QUICK_RUNNING, quickRunning, subjectChoices } from "../src/game/ruleoffers";
-import { defaultRule } from "../src/game/storerule";
-import { subjectKey } from "../src/game/subjectrule";
-import { draftWhenRow } from "../src/ui/condwhen";
-import { dropStaleRunning, type Draft } from "../src/ui/conditiondraft";
+import { Catalog } from "../src/game/page/catalog";
+import { QUICK_RUNNING, quickRunning, subjectChoices } from "../src/game/condition/ruleoffers";
+import { defaultRule } from "../src/game/condition/storerule";
+import { subjectKey } from "../src/game/condition/subjectrule";
+import { draftWhenRow } from "../src/ui/condition/condwhen";
+import { dropStaleRunning, type Draft } from "../src/ui/condition/conditiondraft";
 
 install();
 const failures: string[] = [];

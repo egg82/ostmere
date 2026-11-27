@@ -5,7 +5,7 @@ import re
 
 import pytest
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.api.service import Game
 from ashfall_app.opening.entries import ModifierEntry
 from ashfall_app.opening.schema import Opening, load_opening

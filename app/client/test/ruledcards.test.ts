@@ -3,10 +3,10 @@
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { dayTwoStep } from "../fixtures/daytwo";
-import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { Completed } from "../src/ui/completed";
-import { Story } from "../src/ui/story";
+import { NewMarks } from "../src/game/lessons/marks";
+import { Cards } from "../src/ui/cards/cards";
+import { Completed } from "../src/ui/book/completed";
+import { Story } from "../src/ui/story/story";
 
 install();
 Object.assign(globalThis, { ResizeObserver: class { observe(): void { /* no layout here */ } } });

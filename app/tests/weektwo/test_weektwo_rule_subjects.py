@@ -3,7 +3,7 @@
 the save it starts on, so a chapter costs its own play alone. Ids only (CLAUDE.md, "Never spoil the owner")."""
 import pytest
 
-from ashfall_app.api import content_models as cm
+from ashfall_app.api.world import content_models as cm
 from ashfall_app.api import models as w
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer

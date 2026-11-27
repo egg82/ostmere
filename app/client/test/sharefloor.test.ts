@@ -1,8 +1,8 @@
 // The smallest share is 1%: the hands' share bar (the slim ShareBar) reaches 99/1 by dragging a divider and by its
 // arrow-key steps, and a card never goes lower (a card at 0% is the remove control's job).
 import { FakeEl, FakeEvent, fakeDocument, install } from "./fake-dom";
-import { MIN_SHARE_BP } from "../src/game/mix";
-import { ShareBar } from "../src/ui/sharebar";
+import { MIN_SHARE_BP } from "../src/game/mixes/mix";
+import { ShareBar } from "../src/ui/mixes/sharebar";
 
 install();
 

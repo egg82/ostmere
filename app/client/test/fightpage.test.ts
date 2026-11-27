@@ -5,11 +5,11 @@ import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fightsStep } from "../fixtures/fights";
 import type { View } from "../src/api/types";
-import { NewMarks } from "../src/game/marks";
-import { Cards } from "../src/ui/cards";
-import { Ledger } from "../src/ui/ledger";
-import { Story } from "../src/ui/story";
-import { Catalog } from "../src/game/catalog";
+import { NewMarks } from "../src/game/lessons/marks";
+import { Cards } from "../src/ui/cards/cards";
+import { Ledger } from "../src/ui/ledger/ledger";
+import { Story } from "../src/ui/story/story";
+import { Catalog } from "../src/game/page/catalog";
 import { fixtureContent } from "../fixtures/content";
 
 install();

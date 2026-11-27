@@ -2,16 +2,16 @@
 // back.ts turns the back gesture into closing the top layer). A rule's editor returns to what opened it: the person's
 // page, or the tab the player was on; opened from the Rules list, it returns to the list.
 import type { Condition, View } from "../api/types";
-import type { Keeps } from "../game/keeps";
+import type { Keeps } from "../game/account/keeps";
 import { Layer } from "./back";
-import type { Book } from "./book";
+import type { Book } from "./book/book";
 import { revealBelow } from "./dom";
-import type { MixEditor } from "./editor";
-import type { GlowWhile } from "./fresh";
-import type { Hands } from "./hands";
+import type { MixEditor } from "./mixes/editor";
+import type { GlowWhile } from "./feedback/fresh";
+import type { Hands } from "./hands/hands";
 import { PHONE } from "./layout";
 import type { RuleTarget } from "./part";
-import type { RulesTab } from "./rules";
+import type { RulesTab } from "./rules/rules";
 import type { PanelTabs, Tab } from "./tabs";
 
 /** What the navigation drives: the screen's parts and the nodes it seats. */

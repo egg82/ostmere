@@ -33,9 +33,9 @@ Nothing here is a new system.
 |---|---|---|
 | Goal stints | Standing orders and the queue (`systems.md`) | A queue entry whose verb is a mix switch and whose `until` is a goal row's condition (`GoalRow.until`). Its mix runs over the player's while it controls, as an order's mix does (`engine/design/`, "Queue mix"); the engine pops it when the goal lands, and the next entry, or the player's own mix, takes over |
 | Goal conditions | The order vocabulary: `CardCount`, `SkillLevel`, `Unlocked`, `StoreValue` (`engine/conditions.py`) | The condition editor offers the subjects the engine already solves for. A card's count, a skill's level and an unlock only grow, so a stint on one cannot come back on |
-| Goal times in editors | View.goals and the readout's rate measure, over the editors' dry run | One dry run per edit; the server reads each open goal's time and binding line off the engine's own rates as set (`api/goalrows.py`) |
+| Goal times in editors | View.goals and the readout's rate measure, over the editors' dry run | One dry run per edit; the server reads each open goal's time and binding line off the engine's own rates as set (`api/goals/goalrows.py`) |
 | Lately for stints | Chronicle and unwrap, via `engine/rulelog.py` | A stint's entry records its start, its goal landing and what its mix made while it ran |
-| Offers that step back | Offers and quests; the repeat offers (`opening-screen/hands-strip.md`, the hands strip); the lessons (`game/lessons.ts`) | The same detection, a quiet dot in place of the build, below |
+| Offers that step back | Offers and quests; the repeat offers (`opening-screen/hands-strip.md`, the hands strip); the lessons (`game/lessons/lessons.ts`) | The same detection, a quiet dot in place of the build, below |
 | The moments | Cards, goals, prestige, seasons and chores, trips, offers: all content on existing systems | Content supplies them; the simulator counts them |
 | The readout | Simulator, issue #27, "What a re-mix is worth" | This note specifies that item |
 
@@ -104,7 +104,7 @@ Woodcutting 15    6h    →   9h 30m
   out what orders and dry inputs take later, so it is the time at today's rates, not a promise.
 - Under each row, the line that binds it, as a fact the server reads off the runs: the dry store a card moving the
   goal waits on and what comes into it (`limited by rope, 0.5/min`), else the goal's own rate (research
-  `fun-from-choice.md`, proposal 1).
+  `design/fun-from-choice.md`, proposal 1).
 - The condition editor shows the same rows for running the rule's mix, beside its existing `while … runs` fact.
 
 After, in the Rules tab's `Lately`: a stint's entry reads `ran 2d 3h · goal landed 4h ago · made 140 dry wood`, a

@@ -13,7 +13,7 @@ from ashfall_app.db import accounts as a
 from ashfall_app.db import handsfree as hf
 from ashfall_app.db import reminders as r
 from ashfall_app.db import saves as s
-from ashfall_app.db import savewrite as sw
+from ashfall_app.db.stored import savewrite as sw
 from ashfall_app.db.engine import open_database
 from tests.db.test_reminders import waiting_on_a_lock
 from tests.kills import kills

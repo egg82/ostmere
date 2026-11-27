@@ -22,20 +22,20 @@
 .task-rule .rule-action { flex: 0 1 auto; min-width: 0; margin-right: .3rem; }
 /* Next: the queue's taps, between the hands rules and Otherwise (nextlist.ts) */
 .rules-next { margin: .3rem 0 0 2.1rem; font-size: var(--t-meta); font-weight: 500; color: var(--ink); }
-.next-head .rules-next { margin: 0 0 0 .3rem; }   /* Next's row heads its lines and moves like a rule (ui/nextlist.ts) */
+.next-head .rules-next { margin: 0 0 0 .3rem; }   /* Next's row heads its lines and moves like a rule (ui/next/nextlist.ts) */
 .next-row .rule-action { flex: 1 1 auto; min-width: 0; margin-right: .3rem; }
 .next-row .quiet { flex: none; min-height: 2.4rem; padding: 0 .8rem; }
 .next-running { flex: none; min-height: 2.4rem; padding: 0 .8rem; display: flex; align-items: center; font-size: var(--t-meta); color: var(--ink); }
 .rules-row.drop-before { box-shadow: 0 -2px 0 var(--ink-hi); }
 .rules-row.drop-after { box-shadow: 0 2px 0 var(--ink-hi); }
 .rules-row.lifted { opacity: .35; }
-.rules-row.slide, .rule-why.slide, .rule-menu.slide { transition: transform var(--settle-ms) var(--settle-ease); }   /* a reordered rule slides home (ui/ruleslide.ts) */
+.rules-row.slide, .rule-why.slide, .rule-menu.slide { transition: transform var(--settle-ms) var(--settle-ease); }   /* a reordered rule slides home (ui/rules/ruleslide.ts) */
 .rules.dragging, .rules.dragging * { user-select: none; cursor: grabbing; }
 .drag-ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; color: var(--ink); opacity: .92; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
 .rule-menu { display: flex; flex-wrap: wrap; gap: .5rem; padding: .3rem .4rem .3rem 2.1rem; }
 .rules-row:has(+ .rule-why) { border-bottom: 0; box-shadow: none; }   /* the row and why it is off read as one line */
 .rule-why { padding: 0 .4rem .4rem 2.1rem; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--rule); }
-/* Lately (ui/rulelately.ts): the rule in plain ink, its facts quiet under it, as a rule's why line */
+/* Lately (ui/rules/rulelately.ts): the rule in plain ink, its facts quiet under it, as a rule's why line */
 .rules-lately { display: flex; flex-direction: column; }
 .rules-lately:empty { display: none; }
 .lately-rule { padding: .35rem .4rem 0 2.1rem; color: var(--ink); }
@@ -43,7 +43,7 @@
 .rules-new { align-self: flex-start; }
 .rules-side { display: flex; gap: 6px; padding: 0 0 .5rem; }   /* Mine | Camp: the editor's choice buttons (.cond-test), the chosen one pressed */
 .stint-plan { align-self: flex-start; }
-/* Plan's cards (ui/stintplan.ts): one still waiting is off, outlined like a card's "in Next"; the mixes start after a gap */
+/* Plan's cards (ui/next/stintplan.ts): one still waiting is off, outlined like a card's "in Next"; the mixes start after a gap */
 .plan-card:disabled { background: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
 .plan-card:disabled .selector-name { color: var(--ink); }
 .plan-card:disabled .selector-note { color: var(--ink-dim); }

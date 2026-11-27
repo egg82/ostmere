@@ -1,12 +1,12 @@
-// What an ask says of itself (game/asks.ts; contract/offers.txt, "OFFERS"): who asks by name (a lane's name text, else its
+// What an ask says of itself (game/asks/asks.ts; contract/offers.txt, "OFFERS"): who asks by name (a lane's name text, else its
 // label as it reads now), what led to it (a line's cause), and the figures an answer
 // moves, read off a dry run against the view (rates, then caps, then card times, never the Camp's store).
 import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { asksStep } from "../fixtures/asks";
 import type { Content, OfferInfo, View } from "../src/api/types";
-import { answerFigures, answerPcts, askCause, askedBy, openAsks } from "../src/game/asks";
-import { Catalog } from "../src/game/catalog";
+import { answerFigures, answerPcts, askCause, askedBy, openAsks } from "../src/game/asks/asks";
+import { Catalog } from "../src/game/page/catalog";
 
 install();
 

@@ -2,10 +2,10 @@
 `until` holds from the instant its lands_at names while the rates hold, and the entry pops there, giving the player's
 own mix back (engine design/cards.txt, "Queue mix")."""
 from ashfall_app import engine as e
-from ashfall_app.api import decision_models as w
-from ashfall_app.api import goal_models as g
+from ashfall_app.api.goals import decision_models as w
+from ashfall_app.api.goals import goal_models as g
 from ashfall_app.api.convert import from_condition
-from ashfall_app.api.goalrows import goal_rows
+from ashfall_app.api.goals.goalrows import goal_rows
 from ashfall_app.engine import BP, CardId, CardShare, Mix, MixId, QueueEntry, SaveMix, SetQueue, SwitchMix
 from ashfall_app.engine.conditions import is_true
 from ashfall_app.engine.plan import running_mix_id

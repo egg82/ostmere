@@ -1,14 +1,14 @@
-// The Another device sheet's list of browsers (src/ui/devicelist.ts): one row per served device with its label and last
+// The Another device sheet's list of browsers (src/ui/devices/devicelist.ts): one row per served device with its label and last
 // use, the asking browser marked, Remove sending DELETE for that row's id and redrawing from the answer, and removing
 // this browser asking first and then starting the page again.
 import { fakeDocument, install, type FakeEl } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureDevices } from "../fixtures/devices";
 import { ApiFailure, type GameApi } from "../src/api/api";
-import { dateOf } from "../src/game/format";
-import { Text } from "../src/game/text";
-import { DeviceList } from "../src/ui/devicelist";
-import type { DevicesContext } from "../src/ui/devices";
+import { dateOf } from "../src/game/page/format";
+import { Text } from "../src/game/page/text";
+import { DeviceList } from "../src/ui/devices/devicelist";
+import type { DevicesContext } from "../src/ui/devices/devices";
 
 install();
 

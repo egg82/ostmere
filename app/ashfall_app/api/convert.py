@@ -7,7 +7,7 @@ from collections.abc import Iterable, Mapping, Sequence
 
 from .. import engine as e
 from . import models as w
-from .sources import Source
+from .goals.sources import Source
 
 
 def segment(s: e.Segment) -> w.Segment:
@@ -130,7 +130,7 @@ def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | No
          goals: Sequence[w.Goal] = (), goal_rows: Sequence[w.GoalRow] = (),
          order_dry: Sequence[w.RuleDry | None] = (), store_rows: Sequence[w.StoreRow] = (), levels: Sequence[w.StoreLevel] = ()) -> w.View:
     """The wire View of an engine View; the player's plan (mixes, orders, queue) is read off the save, where each
-    card's needs come from (api/sources.py), the goals (api/goals.py) and their rows (api/goalrows.py) passed in."""
+    card's needs come from (api/goals/sources.py), the goals (api/goals/goals.py) and their rows (api/goals/goalrows.py) passed in."""
     return w.View(
         at=v.time, next_event_at=None if v.next_event is None else v.next_event.time, ledger=_ledger(v.ledger),
         skills=[w.SkillBar(skill=s.skill, xp=segment(s.xp), level=s.level, level_xp=s.level_xp,

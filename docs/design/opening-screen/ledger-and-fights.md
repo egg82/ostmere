@@ -54,7 +54,7 @@ Fight parts show once the `combat` feature is unlocked (api `contract/fights.txt
   calm and never red: its name, the same odds and strengths, and `fought, lost` as served.
 - **The arrival queue** writes each window of fights since the last view as the chronicle's Fights entries, never the strip: k entries
   of which exactly j read as lost, which ones picked by a shuffle-bag draw seeded by save, runner and the fought count
-  the window starts at (`app/client/src/game/fights.ts`), so the same window reads the same on every device. Past three
+  the window starts at (`app/client/src/game/ledger/fights.ts`), so the same window reads the same on every device. Past three
   in one window, one summary line of the exact counts. The draw changes no number.
 - A threat's strength is never worded as answering what the player built: it rises with the region's clock alone.
 

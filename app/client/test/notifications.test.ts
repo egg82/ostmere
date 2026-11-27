@@ -1,12 +1,12 @@
-// The Notifications section of Settings (src/ui/reminders.ts): the kinds off at first and on in any combination, the
+// The Notifications section of Settings (src/ui/settings/reminders.ts): the kinds off at first and on in any combination, the
 // subscription made when the first goes on and dropped only when none is on, one window for all of them shown once
 // any kind is on, and what the server holds shown on open.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import type { Reminder } from "../src/api/reminders";
 import type { Subscribed } from "../src/app/push";
-import { Text } from "../src/game/text";
-import { ReminderRow, type ReminderDeps } from "../src/ui/reminders";
+import { Text } from "../src/game/page/text";
+import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
 
 install();
 

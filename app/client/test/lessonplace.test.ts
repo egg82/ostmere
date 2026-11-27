@@ -1,12 +1,12 @@
-// Where the lesson's note stands (ui/lessons.ts, place): below its control, else beside it, else above it, and never
+// Where the lesson's note stands (ui/lessons/lessons.ts, place): below its control, else beside it, else above it, and never
 // over a sibling of the control, the panel's tabs or the next step's control.
 import { fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { Glow } from "../src/ui/fresh";
-import { Lessons } from "../src/ui/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();
