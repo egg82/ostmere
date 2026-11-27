@@ -7,8 +7,8 @@ from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Rules, Save, S
 from ashfall_app.engine.rates import store_value
 from ashfall_app.engine.work import completions
 from tests.daythree.chapter import ChipRule, Landings, Later, Share
-from tests.dayone.policy import Move, lane_free
-from tests.dayone.sinks import Chapter
+from tests.dayone.player.policy import Move, lane_free
+from tests.dayone.player.sinks import Chapter
 from tests.weektwo import content as w2
 
 TWENTY_TWO = Landings(

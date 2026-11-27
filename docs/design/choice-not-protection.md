@@ -48,7 +48,7 @@ are done.
 | 7 | Watching earns nothing extra | dec:128 | A | | nothing | keep |
 | 8 | Chance decides how nice, never how far | dec:150; `docs/systems.md`:61 | A | | flatter risk, but this is taste, not a protection | keep |
 | 9 | The game never judges | dec:335 | A | | nothing; it is the anti-D rule | keep |
-| 10 | Idle time pays mostly in the old; one or two unlocks a day away | dec:509; `app/tests/dayone/checks.py`, `absences` | taste | | nothing | keep as a design aim; what each absence opens is printed, never held to a number (`sim-invariants.md`) |
+| 10 | Idle time pays mostly in the old; one or two unlocks a day away | dec:509; `app/tests/dayone/checks/checks.py`, `absences` | taste | | nothing | keep as a design aim; what each absence opens is printed, never held to a number (`sim-invariants.md`) |
 | 11 | Dry store hands its share to the rest of the mix | dec:516; `engine/design/core.txt`:35 | A | D | small: where the freed share goes | keep: a store can't go negative, and the share goes to the player's own mix, the answer that decides least |
 | 12 | A greyed mix falls through to the queue and rules | dec:740 | A | | nothing; it is the player's own plan | keep |
 | 13 | Carry window; an ordinary absence loses no prestige XP | dec:566; pp:9-14 | A | | a cap on XP about two days past a top | keep: the click is by hand, so no tool can cover it; the window is that tool's stand-in |
@@ -75,12 +75,12 @@ are done.
 | 34 | A cure or a glowing step cuts in on the plan | dec:918 and above | A | | nothing; the player's tap wins | keep |
 | 35 | Leaving and coming back always pays | dec:894 | A | | nothing | keep |
 | 36 | No calendar day is dead | dec:941; `app/tests/weekone/test_weekone_routes.py`:68 | A | | nothing; held on typical, sharp and whenever | keep |
-| 37 | Day one's checks run on `by_hand` (no rules, no queue) every push and on `lazy` nightly | `app/tests/dayone/routes.py`:45, 50; `verdicts.py` | C | | content is tuned so a player who writes no rules meets every per-visit, absence and goals bar | hold typical, whenever and sharp; report `by_hand` and `lazy`, plus one check that they land measurably behind (`human_flags.classify` already wants that gap) |
+| 37 | Day one's checks run on `by_hand` (no rules, no queue) every push and on `lazy` nightly | `app/tests/dayone/player/routes.py`:45, 50; `verdicts.py` | C | | content is tuned so a player who writes no rules meets every per-visit, absence and goals bar | hold typical, whenever and sharp; report `by_hand` and `lazy`, plus one check that they land measurably behind (`human_flags.classify` already wants that gap) |
 | 38 | Day two holds per-visit misses for `by_hand` and `lazy` | `app/tests/daytwo/verdicts.py`:61-66 | C | | the same, as held debt | delete those entries once 37 lands; those routes stop being checked |
-| 39 | Babysitter floors; routes lag the babysitter only by their gaps | `app/tests/dayone/bands.py`, `b3_relative`; `daytwo/checks.py`, `b4_relative` | A (the lag); taste (the floors) | | nothing | keep the lag bound on players who use the tools; the floors go, and each beat's day is printed beside its target day (`sim-invariants.md`) |
+| 39 | Babysitter floors; routes lag the babysitter only by their gaps | `app/tests/dayone/checks/bands.py`, `b3_relative`; `daytwo/checks.py`, `b4_relative` | A (the lag); taste (the floors) | | nothing | keep the lag bound on players who use the tools; the floors go, and each beat's day is printed beside its target day (`sim-invariants.md`) |
 | 40 | Every verb has an order | `docs/systems.md`:53 | A | | nothing; it is what makes the 2 AM guarantee possible | keep |
-| 41 | Cap loss at most half over 8 h and 24 h, on typical | `banked-time-plan.md`:28; `app/tests/dayone/capcheck.py` | A | | nothing; measured on typical with its sinks | keep |
-| 42 | A rate-raising step is shown queueable before it is due | `app/tests/dayone/checks.py`:259 | A | | nothing; tool availability | keep |
+| 41 | Cap loss at most half over 8 h and 24 h, on typical | `banked-time-plan.md`:28; `app/tests/dayone/absence/capcheck.py` | A | | nothing; measured on typical with its sinks | keep |
+| 42 | A rate-raising step is shown queueable before it is due | `app/tests/dayone/checks/checks.py`:259 | A | | nothing; tool availability | keep |
 | 43 | Each chore comes with a suggested rule | dec:1019; wac:59 | B | D | the chore's answer is offered ready-made, against "no offer builds a rule" | the chore arrives with its problem and a hint mark; the rule is the player's to write |
 | 44 | Nothing is missable in a season | dec:1015 | A | | nothing; no schedule to keep | keep |
 | 45 | Every re-mix reason (cap, dry store, starved input) is automated and stays so | wac:11 | B | D | removes the reasons to open the mix editor, so `wac` must invent new ones | caps and starved inputs are answered by rules the player writes; only the dry handover (11) stays engine mechanics |

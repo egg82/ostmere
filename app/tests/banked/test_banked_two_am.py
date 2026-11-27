@@ -7,8 +7,8 @@ from typing import Unpack
 from ashfall_app.engine import SetQueue, Verb, advance, new_save, view
 from tests.banked.chapter import COMFORT, Times, rules
 from tests.banked.play import Played, play
-from tests.dayone.parity import Measured, babysat, compare, replay
-from tests.dayone.sinks import SINKS
+from tests.dayone.pacing.parity import Measured, babysat, compare, replay
+from tests.dayone.player.sinks import SINKS
 
 H = 3600
 VISITS = ((0, H),)

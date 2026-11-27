@@ -6,9 +6,9 @@ from functools import cache
 from tests.daythree import content as c3
 from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.routes import HORIZON_S, ROUTES
-from tests.dayone.routes import ROUTES as DAY_ONE
-from tests.dayone.schedules import schedule
-from tests.dayone.sinks import SINKS, SinkKnobs
+from tests.dayone.player.routes import ROUTES as DAY_ONE
+from tests.dayone.player.schedules import schedule
+from tests.dayone.player.sinks import SINKS, SinkKnobs
 
 PUSH_ROUTES = ("typical", "sharp", "babysitter", "whenever")
 """typical carries the density and cap-loss verdicts, typical and sharp the band, babysitter and whenever the 2 AM

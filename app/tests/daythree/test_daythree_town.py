@@ -5,7 +5,7 @@ idle the re-splitter ends ahead. Worth is the stores' total, each store counted 
 from ashfall_app.engine import BP, QUANTITY_SCALE as Q, CardShare, SaveMix, Unlock, UnlockKind, new_save
 from tests.daythree import town, townfix
 from tests.daythree.townfix import H, Played
-from tests.dayone.parity import Measured, replay
+from tests.dayone.pacing.parity import Measured, replay
 
 VISITS = (0, 2 * H, 5 * H, 9 * H)
 """The first sets the people's rules; the joins land at 1 h and 3 h, between the visits."""

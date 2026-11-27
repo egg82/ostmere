@@ -50,7 +50,7 @@ empty only once its `until` holds (its step is done), when the wait line or a go
 keyed to the unlock that starts it, and the next aim's start, or its own `until` unlock, ends it;
 nothing reads it from the prose. A plain objective line is genre-standard, so it is not one of the first five minutes'
 Ashfall-specific mechanics ("The screen arrives when it means something"). Held by
-`tests/dayone/test_dayone_aims.py` and the content check in `app/ashfall_app/opening/aims.py`.
+`tests/dayone/human/test_dayone_aims.py` and the content check in `app/ashfall_app/opening/aims.py`.
 
 **Unlocks mostly come from play.** A story moment on a clock may open a task, and that keeps the pace known, but
 only interspersed with unlocks the player's own loops earn toward a goal they can see; lean on clocks too much and
@@ -142,11 +142,11 @@ the opening"; it names beats by number only.
 
 It fails only on an invariant (softlock, spiral, a tool user forced to babysit, a shown number not coming true;
 `docs/design/sim-invariants.md`): the 2 AM test as a replay, the lag bound on tool users
-(`app/tests/dayone/routes.py`, `TOOL_USERS`), drawn times coming true, and players who skip the
-tools landing behind (`app/tests/dayone/human_flags.py`, `lands_behind`). The rhythm (per-visit and per-absence
+(`app/tests/dayone/player/routes.py`, `TOOL_USERS`), drawn times coming true, and players who skip the
+tools landing behind (`app/tests/dayone/human/human_flags.py`, `lands_behind`). The rhythm (per-visit and per-absence
 counters, beats beside their target days, calendar days, the human-paced model, each skill's ladder, what a re-mix is
 worth) is printed by each package's `report.py` and committed under `app/tests/readouts/`;
 `app/tests/readout_snapshot.py` reports a readout whose text changed, and
 `python -m tests.readout_snapshot --write` commits every package's at once. Week two plays on from week one's plays at
 G2 (`app/tests/weektwo/routes.py`), its decide counter refusing a queued stage (`app/tests/weektwo/counters.py`).
-Production lost to caps per store over a route and an absence: `app/tests/dayone/caploss.py`.
+Production lost to caps per store over a route and an absence: `app/tests/dayone/absence/caploss.py`.

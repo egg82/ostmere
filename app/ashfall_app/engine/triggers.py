@@ -114,7 +114,7 @@ def _subject_times(save: Save, rules: Rules, subject: Subject, pairs: Sequence[t
 
 def trigger_events(save: Save, rules: Rules) -> list[Event]:
     """Each unfired trigger whose requires hold, at its condition's rise time, in trigger order (a skill's level and
-    each other subject read once for all the triggers on it, which are many: tests/dayone/test_dayone_forecast.py holds
+    each other subject read once for all the triggers on it, which are many: tests/dayone/engine/test_dayone_forecast.py holds
     the levels equal to rise_time)."""
     unfired = _UNFIRED.get((rules, save.fired, save.unlocked), lambda: _unfired(save, rules))
     times: list[tuple[int, int | None]] = []

@@ -6,11 +6,11 @@ from pathlib import Path
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import dayone   # tools/scene, on the path from the line above
-import depth
-from output import Entry
-from parts import EAVE, EAVE_Y, ROOF_X
-from place import LIP
+from day_one import dayone   # tools/scene, on the path from the line above
+from audits import depth
+from frame.output import Entry
+from draw.parts import EAVE, EAVE_Y, ROOF_X
+from draw.place import LIP
 
 WALL_FOOT = int(LIP) + 2
 

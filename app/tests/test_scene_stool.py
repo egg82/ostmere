@@ -5,7 +5,7 @@ from pathlib import Path
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
 import build   # tools/scene, on the path from the line above
-from stages import State, holds
+from frame.stages import State, holds
 
 
 def test_a_seated_pose_needs_the_stool_for_each_of_its_cards():

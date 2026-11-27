@@ -1,6 +1,6 @@
 """The open goals on a save and how fast a mix moves each (docs/design/worth-a-change.md, "What the simulator
 measures"). A goal is a skill's next level, for a skill on screen, below its phase's top, with a hands card in view that
-trains it and could run now; every level carries a marker, so the next level is the next marker (tests/dayone/goals.py).
+trains it and could run now; every level carries a marker, so the next level is the next marker (tests/dayone/pacing/goals.py).
 A card's cap is not a goal here: a capped card is a tap, not a mix.
 
 A mix's XP rate into a skill is the engine's own rate formula (engine/modifiers.py: base, modifiers, share) summed over

@@ -6,8 +6,8 @@ comfort comes later than the babysitter's by what the trip drinks, which is the 
 from ashfall_app.engine import new_save, value_at
 from tests.banked.chapter import COMFORT, HOUR, RATE, RELICS, TRIP, rules
 from tests.banked.play import Played, play
-from tests.dayone.parity import Measured, babysat, replay
-from tests.dayone.sinks import SINKS
+from tests.dayone.pacing.parity import Measured, babysat, replay
+from tests.dayone.player.sinks import SINKS
 
 VISITS = ((0, 3 * HOUR),)
 UNTIL = 20 * HOUR

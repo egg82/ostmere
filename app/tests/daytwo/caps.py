@@ -1,11 +1,11 @@
-"""What day two's stores lose to their caps (tests/dayone/caploss.py) over a played route and over absences from its
+"""What day two's stores lose to their caps (tests/dayone/absence/caploss.py) over a played route and over absences from its
 last decision, nobody deciding, on day two's rules alone. Store ids only (CLAUDE.md, "Never spoil the owner")."""
 from dataclasses import dataclass
 
 from tests.daytwo import checks
 from tests.daytwo import content as c
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import caploss
+from tests.dayone.absence import caploss
 
 
 @dataclass(frozen=True)

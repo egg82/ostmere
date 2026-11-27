@@ -7,8 +7,8 @@ import pytest
 
 from ashfall_app.engine import Save, view
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
-from tests.dayone import fightchecks
-from tests.dayone.parity import Measured
+from tests.dayone.fights import fightchecks
+from tests.dayone.pacing.parity import Measured
 from tests.weekone import fights
 from tests.weekone.routes import PUSH_ROUTES, week1
 

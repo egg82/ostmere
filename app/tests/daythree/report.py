@@ -20,9 +20,10 @@ from tests.daytwo import abs_band
 from tests.daytwo import checks as checks2
 from tests.daytwo.player import DayTwoPlayer, visit_seen
 from tests.daytwo.routes import ROUTES
-from tests.dayone import capcheck, caploss, checks
-from tests.dayone.player import DayOnePlayer
-from tests.dayone.report import row
+from tests.dayone.absence import capcheck, caploss
+from tests.dayone.checks import checks
+from tests.dayone.player.player import DayOnePlayer
+from tests.dayone.pacing.report import row
 
 NAMES = ("daythree-typical", "daythree-sharp")
 

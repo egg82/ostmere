@@ -11,7 +11,7 @@ from tests import readout_snapshot as rs
 from tests.daythree import counters, plumbing
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured, compare
+from tests.dayone.pacing.parity import Measured, compare
 from tests.weekone import content as w1
 from tests.weekone import report, verdicts
 from tests.weekone.routes import PUSH_ROUTES

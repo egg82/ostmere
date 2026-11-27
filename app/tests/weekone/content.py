@@ -4,7 +4,7 @@ merged). Ids only (CLAUDE.md, "Never spoil the owner")."""
 from ashfall_app.engine import AfterTime, AnswerId, CardId, OfferId, Order, StoreId, TapCard, Unlock, UnlockKind
 from tests.daythree import content as c3
 from tests.daythree.chapter import Cure, Landings, Later, Offer, Share
-from tests.dayone.sinks import Chapter, Trip
+from tests.dayone.player.sinks import Chapter, Trip
 
 HAND_ON_STONE, STONES, HURT = CardId("hand_on_stone"), StoreId("stones"), StoreId("hurt")
 WOODSHED, HEARTH_STONES = CardId("woodshed"), CardId("hearth_stones")

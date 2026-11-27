@@ -49,10 +49,10 @@ def test_the_digest_follows_the_generators_sources_and_not_the_check(tmp_path: P
     assert before == drift.source_digest()                       # the copy is read the way the checkout is
     (copy / "drift.py").write_text("# edited\n")
     assert drift.source_digest(copy) == before                   # the check is not an input
-    (copy / "place.py").write_text((copy / "place.py").read_text() + "\n# edited\n")
+    (copy / "draw" / "place.py").write_text((copy / "draw" / "place.py").read_text() + "\n# edited\n")
     assert drift.source_digest(copy) != before                   # a generator module is
 
 
 def test_the_manifest_the_generator_writes_carries_the_digest():
     """The generator needs Pillow, so read its writer as source: the digest is a key of the manifest it dumps."""
-    assert '"source": source_digest()' in (SCENE / "output.py").read_text()
+    assert '"source": source_digest()' in (SCENE / "frame" / "output.py").read_text()

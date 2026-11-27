@@ -20,7 +20,7 @@ from ashfall_app.engine import (
     view,
 )
 from ashfall_app.engine.conditions import is_true
-from tests.dayone.player import DayOnePlayer
+from tests.dayone.player.player import DayOnePlayer
 from tests.worth import goaltime as gt
 from tests.worth import probe as pr
 from tests.worth import summary as sm

@@ -64,7 +64,7 @@ def test_a_changed_chapter_file_re_keys_it_and_every_chapter_after_and_none_befo
 
 
 def test_week_ones_chapter_files_and_players_re_key_everything(tree: Path):
-    for entry in ("ashfall_app/opening/day_three.toml", "tests/dayone/player.py", "tests/weekone/routes.py"):
+    for entry in ("ashfall_app/opening/day_three.toml", "tests/dayone/player/player.py", "tests/weekone/routes.py"):
         before, after = after_editing(tree, entry)
         assert changed(before, after) == list(ORDER), entry
 

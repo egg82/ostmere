@@ -12,7 +12,7 @@ from ashfall_app.engine.counts import completions
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured, compare
+from tests.dayone.pacing.parity import Measured, compare
 from tests.weektwo.content import LAST_SUN
 from tests.weektwo.rebased import Rebased, fired, rules18
 from tests.weektwo.routes import NINETEEN_PUSH_ROUTES

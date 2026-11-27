@@ -20,7 +20,7 @@ from dataclasses import dataclass
 
 from ashfall_app.engine import Rules, Save, Unlock, UnlockKind, view
 from ashfall_app.engine.phases import at_top
-from tests.dayone.player import DayOnePlayer
+from tests.dayone.player.player import DayOnePlayer
 from tests.worth import goaltime as gt
 from tests.worth import probe as pr
 from tests.worth.summary import VisitWorth, is_moment

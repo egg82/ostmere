@@ -6,8 +6,8 @@ from functools import cache
 from ashfall_app.engine import CardId, OfferId, Rules, Save, Unlock, UnlockKind
 from ashfall_app.engine.work import completions
 from ashfall_app.opening.schema import DAY_ONE, DAY_TWO, OPENING, Opening, load_opening, to_rules
-from tests.dayone.beats import STORY as DAY_ONE_STORY, landed as day_one_landed
-from tests.dayone.sinks import Chapter
+from tests.dayone.player.beats import STORY as DAY_ONE_STORY, landed as day_one_landed
+from tests.dayone.player.sinks import Chapter
 
 TRIGGERED = {"J2": ("t_night_2",), "J3": ("t_morning_3",), "B4": ("t_b4_went", "t_b4_she_went")}
 """Story ids that land when one of these triggers fires."""

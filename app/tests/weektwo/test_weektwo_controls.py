@@ -18,7 +18,8 @@ from tests.daythree.content import rules3
 from tests.daythree.counters import Step
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import absence, daily, sinks
+from tests.dayone.absence import absence, daily
+from tests.dayone.player import sinks
 from tests.weekone import verdicts as v1
 from tests.weektwo import counters
 from tests.weektwo import verdicts as v2

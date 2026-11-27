@@ -1,4 +1,4 @@
-"""tools/scene/trips.py: a trip card hides the seated figure by its id, tapped (`running:`) and mixed (`mix:`), in
+"""tools/scene/frame/trips.py: a trip card hides the seated figure by its id, tapped (`running:`) and mixed (`mix:`), in
 conditions the manifest check accepts."""
 import importlib
 import sys
@@ -8,8 +8,8 @@ import pytest
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import output   # tools/scene, on the path from the line above
-import trips
+from frame import output   # tools/scene, on the path from the line above
+from frame import trips
 
 
 def entry(until: str) -> output.Entry:

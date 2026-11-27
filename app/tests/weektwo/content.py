@@ -8,8 +8,8 @@ from ashfall_app.engine import (
 from ashfall_app.engine.rates import store_value
 from tests.daythree import content as c3
 from tests.daythree.chapter import Landings, Later, Offer, Share
-from tests.dayone.policy import Move
-from tests.dayone.sinks import Chapter, Trip
+from tests.dayone.player.policy import Move
+from tests.dayone.player.sinks import Chapter, Trip
 from tests.weekone import content as w1
 from tests.weektwo import policy as p8
 from tests.weektwo.policy import Split, WeekTwoKnobs, answer, card, feature

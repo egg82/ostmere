@@ -9,8 +9,8 @@ from typing import NamedTuple
 
 from ashfall_app.engine import AnswerId, CardId, ChipId, OfferId, Order, Rules, Save, StoreId, Unlock, UnlockKind, View
 from ashfall_app.engine.work import completions
-from tests.dayone.policy import Move
-from tests.dayone.sinks import Chapter
+from tests.dayone.player.policy import Move
+from tests.dayone.player.sinks import Chapter
 
 
 @dataclass(frozen=True)

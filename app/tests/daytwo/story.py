@@ -11,9 +11,9 @@ from pathlib import Path
 from tests.daytwo.checks import b3_at, day_visits
 from tests.daytwo.content import DAY_TWO_IDS, OFFERS, STORY
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.beats import BEATS_YAML
-from tests.dayone.schedules import HOUR, OPENING_CLOCK
-from tests.dayone.story import FLATCHECK
+from tests.dayone.player.beats import BEATS_YAML
+from tests.dayone.player.schedules import HOUR, OPENING_CLOCK
+from tests.dayone.player.story import FLATCHECK
 
 DAY_S = 24 * HOUR
 DAYS = "day_one,day_two"

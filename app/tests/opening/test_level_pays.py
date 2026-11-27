@@ -1,5 +1,5 @@
 """Every marker pays when its level lands (docs/decisions.md: a promise shown is kept; a level with no marker is the
-readout's, blank_levels.py); and the loop between a level's pay and the next level stays tame (tests/dayone/growth.py). Static: read off the merged content and its rules, no play."""
+readout's, blank_levels.py); and the loop between a level's pay and the next level stays tame (tests/dayone/pacing/growth.py). Static: read off the merged content and its rules, no play."""
 from dataclasses import replace
 from functools import cache
 
@@ -9,7 +9,7 @@ from ashfall_app.engine import (
 )
 from ashfall_app.engine.orders import AtLeast, SkillLevel
 from ashfall_app.opening.schema import Opening, load_opening, to_rules
-from tests.dayone.growth import climb_hours, fastest_rates, level_times, runaway
+from tests.dayone.pacing.growth import climb_hours, fastest_rates, level_times, runaway
 from tests.opening.blank_levels import top_level
 
 

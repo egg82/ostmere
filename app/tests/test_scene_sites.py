@@ -1,5 +1,5 @@
 """Every card says where its work is shown: a `site` (entries.SiteEntry) naming a scene layer, or why it has none. A card and its
-`twin_of` name the same site, and a site's layer is one the committed tools/scene/shown.json lists. The cards without a
+`twin_of` name the same site, and a site's layer is one the committed tools/scene/audits/shown.json lists. The cards without a
 site are held per chapter file in tests/held/card_sites.json, and the count only shrinks:
 `python -m tests.test_scene_sites --write` (from app/) lowers it once one is authored; never run it to let a new one through."""
 import json
@@ -17,7 +17,7 @@ from tests.held_ledger import Ledger, dump, load, problems, tally, total
 
 APP = Path(__file__).resolve().parents[1]
 HELD = APP / "tests/held/card_sites.json"
-SHOWN = APP.parent / "tools/scene/shown.json"
+SHOWN = APP.parent / "tools/scene/audits/shown.json"
 FILES = (OPENING, *CHAPTERS, *IN_WRITING)
 
 

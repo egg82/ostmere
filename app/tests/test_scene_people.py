@@ -1,4 +1,4 @@
-"""tools/scene/people.py: every outcome that joins or leaves a person, or marks one as doing something a scene could show
+"""tools/scene/cast/people.py: every outcome that joins or leaves a person, or marks one as doing something a scene could show
 (`doings`, authored beside the lines), and every line no outcome carries that is marked the same way (`[line_doings]`), names per person the scene layer that shows it or says why none does
 (`whereabouts`). The cases the scene shows nothing of today are held (`HELD_UNPLACED`, `HELD_LINE_ONLY`, only shrink); a field's layer must
 be one the committed shown.json lists."""
@@ -14,7 +14,7 @@ from ashfall_app.opening.schema import Opening, load_opening
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import people   # tools/scene, on the path from the line above
+from cast import people   # tools/scene, on the path from the line above
 
 Outcomes = dict[str, OutcomeEntry]
 
@@ -68,7 +68,7 @@ def opening() -> Opening:
 
 
 def committed_layers() -> set[str]:
-    return set(json.loads((SCENE / "shown.json").read_text())["layers"])
+    return set(json.loads((SCENE / "audits" / "shown.json").read_text())["layers"])
 
 
 def lane_ids() -> set[str]:
@@ -154,6 +154,6 @@ def test_the_answer_and_join_conditions_name_ids_the_content_has():
     known = known_ids()
     assert unknown_ids("when='answered:o_ok&answer:o_ok_no|joined:n1|left:nope'", {k: {"o_ok", "o_ok_no", "n1"} for k in known}) \
         == ["left:nope"], "the check must be able to fail"
-    read = "\n".join(p.read_text() for p in sorted(SCENE.glob("*.py")))
+    read = "\n".join(p.read_text() for p in sorted(SCENE.rglob("*.py")))
     assert UNLOCK_ATOM.search(read), "no scene module reads an answer or a join"
     assert unknown_ids(read, known) == []

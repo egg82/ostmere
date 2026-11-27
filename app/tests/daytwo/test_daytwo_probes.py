@@ -9,8 +9,8 @@ from tests.daytwo import checks, content as c, lines
 from tests.daytwo.later import LevelAt
 from tests.daytwo.player import visit_seen
 from tests.daytwo.policy import her_rule_index
-from tests.dayone.bands import presence_steps
-from tests.dayone.player import VisitRecord
+from tests.dayone.checks.bands import presence_steps
+from tests.dayone.player.player import VisitRecord
 
 
 def test_a_new_save_has_landed_none_of_day_two():

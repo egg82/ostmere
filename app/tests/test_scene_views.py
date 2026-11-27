@@ -4,8 +4,8 @@ from pathlib import Path
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import views   # tools/scene, on the path from the line above
-from stages import State
+from frame import views   # tools/scene, on the path from the line above
+from frame.stages import State
 
 
 def test_the_authored_views_are_well_formed():

@@ -510,7 +510,7 @@ modifiers = [
 
 # The rack's yield from the catch, trimmed from the first Take stock to B5 (day_four.toml, t_rack_lean_off): the store
 # sits full through days two and three, and a tap landing 4 on it dropped two thirds of its making
-# (tests/dayone/caploss.py). Lifted at B5 because G2's smoked gate is paced by the rack's full rate
+# (tests/dayone/absence/caploss.py). Lifted at B5 because G2's smoked gate is paced by the rack's full rate
 # (days-four-to-seven-numbers.md, "Why the hunt's bar is long"); 6250 and 16000 cancel exactly.
 [[triggers]]
 id = "t_rack_lean"

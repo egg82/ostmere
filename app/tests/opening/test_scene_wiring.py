@@ -1,7 +1,7 @@
 """The scene's layer and grade conditions (tools/scene/build.py, the table `layers()` builds the manifest from, the
 day-two, day-three, day-four-to-seven, day-eight-and-nine, day-eleven and day-twelve groups it splices in from
-tools/scene/daytwo_layers.py, daythree_layers.py, dayfour_layers.py, dayeight_layers.py, dayeleven_layers.py and
-daytwelve_layers.py, and tools/scene/grades.py's GRADES) name only ids the opening has. The page treats an unknown id as never true, so a renamed card would silently hide its layer.
+tools/scene/day_two/daytwo_layers.py, daythree_layers.py, dayfour_layers.py, dayeight_layers.py, dayeleven_layers.py and
+daytwelve_layers.py, and tools/scene/frame/grades.py's GRADES) name only ids the opening has. The page treats an unknown id as never true, so a renamed card would silently hide its layer.
 
 The generator needs Pillow and the art packs, so the table is read as source: every `kind:id` atom in a string of
 build.py. The manifest itself lives outside the repo (the assets volume) and is not read."""
@@ -15,9 +15,10 @@ from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, load_opening
 
 SCENE = Path(__file__).resolve().parents[3] / "tools" / "scene"
 BUILD = SCENE / "build.py"
-LAYERS = [BUILD, SCENE / "daytwo_layers.py", SCENE / "daythree_layers.py", SCENE / "dayfour_layers.py",
-          SCENE / "dayeight_layers.py", SCENE / "dayeleven_layers.py", SCENE / "daytwelve_layers.py"]
-GRADES = SCENE / "grades.py"
+LAYERS = [BUILD, SCENE / "day_two" / "daytwo_layers.py", SCENE / "day_three" / "daythree_layers.py",
+          SCENE / "day_four" / "dayfour_layers.py", SCENE / "day_eight" / "dayeight_layers.py",
+          SCENE / "day_eleven" / "dayeleven_layers.py", SCENE / "day_twelve" / "daytwelve_layers.py"]
+GRADES = SCENE / "frame" / "grades.py"
 ATOM = re.compile(r"\b(project|pushes|running|mix|store|feature|chip|action):([A-Za-z0-9_]+)")
 
 

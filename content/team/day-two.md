@@ -236,7 +236,7 @@ with shares, the journal's wolf entry, B5.
 
 Written by blind proposers scored on `rubric.md`, picked by the lead, then a voice pass; the brief will be
 `day-two-lines-brief.md`, after the simulator's routes exist. **The state lists below are the design's expectation;
-the shipped lists are generated** by `python -m tests.dayone.report --lines` once `day_two.toml` exists, and replace
+the shipped lists are generated** by `python -m tests.dayone.pacing.report --lines` once `day_two.toml` exists, and replace
 these. Each line must be true in every state on its list.
 
 | Id | Fires when | Expected states |

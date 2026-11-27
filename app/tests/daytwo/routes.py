@@ -1,4 +1,4 @@
-"""Day two's routes: day one's (tests/dayone/routes.py) but daily, each with its schedule, knobs, reaction and look kept and
+"""Day two's routes: day one's (tests/dayone/player/routes.py) but daily, each with its schedule, knobs, reaction and look kept and
 played on past B3 to the visit B4 is seen in, with day two's knobs (policy.Knobs2) on top. Played once per pytest
 session, in a fixture's setup (docs/engineering.md, "Fast from the start"). Her lane lands every few seconds, each
 landing an engine event, so a game hour of day two costs far more than one of day one's (report.py prints each play's
@@ -8,9 +8,9 @@ from functools import cache
 from tests.daytwo import content as c
 from tests.daytwo.policy import Knobs2
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.routes import ROUTES as DAY_ONE
-from tests.dayone.schedules import HOUR, schedule
-from tests.dayone.sinks import SINKS, SinkKnobs
+from tests.dayone.player.routes import ROUTES as DAY_ONE
+from tests.dayone.player.schedules import HOUR, schedule
+from tests.dayone.player.sinks import SINKS, SinkKnobs
 from tests.opening.routes import DEEP
 
 HORIZON_S = 10 * 24 * HOUR

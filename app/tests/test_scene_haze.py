@@ -10,13 +10,13 @@ from PIL import Image
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import dayone_world as world   # tools/scene, on the path from the line above
-import depth
-import kit
-import valley
-from daythree_world import TRACK
-from output import Entry
-from place import H, LIP, W
+from day_one import dayone_world as world   # tools/scene, on the path from the line above
+from audits import depth
+from draw import kit
+from draw import valley
+from day_three.daythree_world import TRACK
+from frame.output import Entry
+from draw.place import H, LIP, W
 
 PROBE = "figure_away_track"
 AMBIGUOUS = 6

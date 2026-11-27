@@ -126,7 +126,7 @@ cap_items = 3
 
 # Never unlocked: the light going, filled by the evening action once the camp is settled. Dusk waits for it, so the
 # last step's lines get a quiet stretch to themselves before the end lines come; the scene's dusk grade comes on over
-# it (tools/scene/grades.py), keyed on the action.
+# it (tools/scene/frame/grades.py), keyed on the action.
 [[stores]]
 id = "evening"
 label_key = "store_evening"

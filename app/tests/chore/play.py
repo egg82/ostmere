@@ -7,7 +7,7 @@ from ashfall_app.engine import CardId, Save, Verb, advance, decide, new_save, vi
 from tests.chore.chapter import ASHED, rules
 from tests.daythree import moves
 from tests.daythree.chapter import ChipRule, Later
-from tests.dayone.sinks import Chapter, SinkKnobs
+from tests.dayone.player.sinks import Chapter, SinkKnobs
 
 Visit = tuple[int, int]
 MOVES_PER_VISIT = 10

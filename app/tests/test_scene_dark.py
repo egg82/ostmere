@@ -1,11 +1,11 @@
-"""The `dark` condition (tools/scene/stages.py `holds`, the page's conditions.ts): it holds while the grade the scene shows
+"""The `dark` condition (tools/scene/frame/stages.py `holds`, the page's conditions.ts): it holds while the grade the scene shows
 is a dusk or a night one, and `in_dark` puts it on each alternative of a condition."""
 import sys
 from pathlib import Path
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-from stages import STAGES, holds, in_dark   # tools/scene, on the path from the line above
+from frame.stages import STAGES, holds, in_dark   # tools/scene, on the path from the line above
 
 
 def test_dark_holds_at_dusk_and_night_and_not_by_day():

@@ -1,4 +1,4 @@
-"""The 2 AM test on day two (tests/dayone/parity.py's replay, with day two's builds and comfort among the boosts): the whenever
+"""The 2 AM test on day two (tests/dayone/pacing/parity.py's replay, with day two's builds and comfort among the boosts): the whenever
 player's decisions from the exit of the visit before the one B3 is seen in are replayed twice, as they were and as a
 babysitter given the same reveals, to an hour past the later B4. Her lane runs in both (her default rule needs nobody),
 the answer is the whenever player's (its answer order), and the babysitter taps each build the second it can.
@@ -12,7 +12,7 @@ from ashfall_app.engine import AfterTime, Order, SetOrders, TapCard, Verb
 from tests.daytwo import content as c
 from tests.daytwo.player import QUEUEABLE, DayTwoPlayer
 from tests.daytwo.routes import day2
-from tests.dayone.parity import Measured, Present, babysat, replay
+from tests.dayone.pacing.parity import Measured, Present, babysat, replay
 
 BOOSTS = (*QUEUEABLE, c.BED)
 """The queueable steps and the comfort: the babysitter builds each of its stages the second it can."""
