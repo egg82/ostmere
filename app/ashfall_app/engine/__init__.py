@@ -1,5 +1,10 @@
 """The economy engine: a pure, deterministic discrete-event simulation. Imports only the stdlib and itself.
-Semantics and the invariants tests check: engine/design/ beside this file."""
+Semantics and the invariants tests check: engine/design/ beside this file.
+
+Subpackages, one per system or close family: core (state, ids, units, segments, events, the entry points), loop (instants,
+scheduling, rates, work), cards, orders (orders, the queue, plan, lanes), mixes (mixes, spent, groups), modifiers, unlocks,
+people (joins, leaves, casts), offers, combat, prestige, read (the read model), lookahead (forecast), savefile (codec,
+upgrade, rebase) and validate (what makes rules and verbs valid). tests/engine mirrors them."""
 from .core.api import (
     Line, Step, advance, advance_logged, decide, decide_logged, explain, explain_work, level, new_save, next_event,
     segment, value, xp,
