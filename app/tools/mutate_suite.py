@@ -11,7 +11,7 @@
   retire  tests/engine_contract/leaves/test_retire_*.py  MUTANTS_leaves.txt  rows 21-33  specs tools/retire_mutants/
   clocks  tests/db/test_failover.py (and the tests beside it in `also`)  tests/db/MUTANTS_clocks.txt  specs tools/clocks_mutants/
           the production code behind the tests that once waited on the wall clock; needs ASHFALL_TEST_PG
-  journal_days  tests/saves/test_journal_days.py (and the tests in `also`)  tests/saves/MUTANTS_journal_days.txt
+  journal_days  tests/saves/journal/test_journal_days.py (and the tests in `also`)  tests/saves/journal/MUTANTS_journal_days.txt
           specs tools/journal_days_mutants/: the journal's write path; needs ASHFALL_TEST_PG
   queue   tests/writer/test_queue.py  tests/writer/MUTANTS_queue.txt  specs tools/queue_mutants/
   live    tests/writer/test_live.py  tests/writer/MUTANTS_live.txt  specs tools/live_mutants/

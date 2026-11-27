@@ -18,8 +18,8 @@ from ..db import saves as rows
 from ..db import savewrite
 from . import write
 from .interface import NotFound, Ruleset
-from .load import load
-from .manifest import registered
+from .builds.load import load
+from .builds.manifest import registered
 
 
 class SupportError(Exception):

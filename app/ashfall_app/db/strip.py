@@ -1,4 +1,4 @@
-"""The rows the strip backfill (saves/strip.py) reads and writes: save and snapshot states that still carry their own
+"""The rows the strip backfill (saves/builds/strip.py) reads and writes: save and snapshot states that still carry their own
 manifest, read a batch at a time in key order; each written back stripped only while it is still the text read; and
 the manifests no row names."""
 
