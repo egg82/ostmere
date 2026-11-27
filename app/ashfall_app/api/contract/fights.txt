@@ -1,0 +1,80 @@
+FIGHTS
+  A fight is a card the player runs (a hunt) or a standing action that runs on its own (a threat at the stores), with
+  odds on it: what a won fight brings, what a lost one costs, and the share lost, set by the side's strength against
+  the threat's (engine DESIGN.txt, "FIGHTS"). Nothing on the wire is chance: the odds are exact and every pay is a
+  rate. Content.side_infos: [SideInfo {side, label_key}]; Content.threat_infos: [ThreatInfo {threat, label_key}];
+  CardInfo and StandingInfo gain fight: FightInfo {side, threat, loses: [Amount], wounds: [Amount], won_line_keys,
+  lost_line_keys} or null; the two lists are the runner's pools of lines for one fight won and one lost (keys of
+  Content.line_infos), words only.
+  View.fights: [Fight {runner, side, threat, power: Strength, threat_strength: Strength, loss_bp, fought, lost}], one
+  per unlocked fight card or standing action, cards first, each in content order. Strength {value, sources:
+  [StrengthEntry {source, form, amount_bp, share_bp}]}: value is what the engine uses; sources are every source behind
+  it, the base first as {source: null, form: "base", amount_bp: the base}, then the sums (add_bp), then the factors
+  (mul_bp), each in stack order. share_bp is set only on an entry a card holds while it runs (engine DESIGN.txt,
+  "ENTRIES HELD WHILE A CARD RUNS"): source is that card's id, share_bp its share of its lane's time now (10000 for a
+  tap, its town or hands mix share otherwise), amount_bp what that share gives (the card's whole amount times
+  share_bp / 10000, rounded down); null on every other entry, so a held entry and a permanent one from the same card
+  are told apart by it. The page draws a held entry's source label and its share from these fields alone and never
+  multiplies a share itself. A standing action may hold one too (engine DESIGN.txt, "HELD SPEED"): its source is the
+  action's id (cards and standing actions share one namespace) and its share_bp 10000 while the action runs, the
+  entry absent while it is paused. loss_bp is the share of fights
+  lost now, 1 to 10000; for a running tap, the share it was started at and pays to its end. fought and lost count since
+  the runner first ran; lost <= fought.
+  A fight's pay is in the ledger like any line: its makes already scaled by the share won, its loses and wounds by the
+  share lost, so the ledger's numbers are the fight's numbers. A card's Card.needs and takes_s are as for any card.
+  Content.side_infos and threat_infos carry only the words (the strengths are View.fights). CardInfo.fight and
+  StandingInfo.fight name the side and threat and what one lost fight takes (loses) and adds (wounds).
+  The feature `combat` (FeatureInfo, a FEATURE unlock) switches the page's fight parts on; a fight runner is only ever
+  unlocked with or after it.
+  THE CLIENT MAY:
+  - on a fight card, under its makes, draw its odds as ui.fight.odds {lost}{of} with the smallest whole pair for which
+    loss_bp * of == 10000 * lost and of <= 20 ("1 in 5" for 2000), else as ui.fight.odds_pct {pct} (loss_bp / 100, one
+    decimal below 10%), with the side's and the threat's values beside it as ui.fight.vs {side_name}{power}{threat_name}{threat}; and, under the
+    card's makes, what a lost fight costs (its loses) as one ui.fight.on_loss {costs}, the list "3 wood, 1 energy" (each a whole number and the store's label), then each of its wounds as ui.fight.on_wound {store}{n} ("lose, and you're hurt +1"), joined by "; ". A wound is never worded as a cost: a store a fight wounds is a level (next).
+  - read a level: a store some fight wounds (FightInfo.wounds, in CardInfo or StandingInfo) is read in whole items rounded up, so any amount at all reads at least 1. A chip whose `when` watches such a store draws that level beside its word ("hurt 2"), sampled from its View.levels segment (the store has no ledger line: one entry per such store, in content order) as it heals; a card's need on it draws its have as that level (ui.card.needs).
+  - View.levels also carries each store the scene reads in a `store:` condition of a layer's or grade's `when`/`until` (the list ships with the code, api/scene_stores.json, which tools/scene/build.py writes from the layers it seeds) that the ledger does not list and the rules define, after the wounded ones, by store id. Its segment is the raw amount, never rounded: a scene condition compares it as it does a ledger line's (`store:<id>@<n>` is n items), reading the ledger line when there is one and View.levels otherwise. The page draws such a store nowhere else; it needs no assets volume.
+  - open a strength's entries, from a tap on its number, as the ledger opens a line's: each entry's source label and
+    amount, the base first. Reachable without hover.
+  - draw a threat that runs on its own (a standing fight) in the ledger's threats group, under the feature: its label,
+    its odds as above, and fought and lost as ui.fight.tally {fought}{lost}.
+  - tell what fights happened since its last view in the arrival queue (the Chronicle): for each fight runner whose
+    fought rose by k with lost rising by j, k entries of which exactly j read as lost, which ones picked by its own
+    shuffle-bag draw (a seeded draw keyed by the save, the runner and the fought count the window starts at), so the
+    same window always reads the same; past three entries in one window, one summary line
+    ui.fight.since {fought}{won}{lost}{runner} instead. Live, each fight is its own window as fought rises. An entry
+    is ui.fight.won {runner} (ui.fight.lost) when the runner's won_line_keys (lost_line_keys) is empty; otherwise the
+    k-th fight the runner has won since it first ran (counted from 0: fought - lost before the window, then the
+    window's wins in order) reads pool[bag[k mod n]], n the pool's size and bag the pool's indices shuffled by a
+    seeded draw keyed by the save, the runner, "won" (or "lost") and floor(k / n): each line once before any repeats,
+    the same on every device. A round's first is swapped with its second when it would repeat the round before's last,
+    so no line comes twice in a row; a pool of two keeps its first round's order (game/fights.ts, bagged; the engine
+    draws a chip's off lines with the same bag, engine/rotation.py).
+  THE CLIENT MAY NOT:
+  - show odds for a fight whose fought is 0; it draws ui.fight.odds_unknown there, whatever loss_bp holds, and the threat's strength as ui.fight.threat_unknown
+    with no entries to open (the two strengths would give the odds away); the side's own strength shows as always.
+  - roll anything that changes a number, or show a loss the engine's lost count does not hold.
+  - show a threat's strength as reacting to the player's side: no wording ties a threat's rise to what the player
+    built (it rises with the region's clock alone).
+  New text keys (Content.text_entries): ui.fight.odds {lost}{of} | ui.fight.odds_pct {pct}   a fight's odds
+                                    ui.fight.odds_unknown   the odds of a fight whose fought is 0
+                                    ui.fight.threat_unknown   the threat's strength in ui.fight.vs, likewise
+                                    ui.fight.vs {side_name}{power}{threat_name}{threat}   the two strengths, each with the label of
+                                    its side (side_infos) or threat (threat_infos)
+                                    ui.fight.on_loss {costs}   what one lost fight costs, once
+                                    ui.fight.on_wound {store}{n}   what one lost fight adds to a level, once per wound
+                                    ui.fight.base   the base row of a strength's entries
+                                    ui.fight.tally {fought}{lost} | ui.fight.since {fought}{won}{lost}{runner}   counts,
+                                    and the arrival queue's summary line
+                                    ui.fight.won {runner} | ui.fight.lost {runner}   one fight in the arrival queue
+
+  Rejected, and why (fights on the wire):
+  - A per-fight event list from the server (each fight with its result): the engine has no per-fight results (they are
+    flows), so the server would invent them; the page's labels are presentation over exact counts, which is what the
+    server can honestly serve.
+  - The odds as a percentage only: "1 in 5" reads as the shuffle bag it is; a percentage is the fallback when no small
+    pair is exact.
+  - Serving the shuffle-bag labels from the server: they change nothing the server keeps, and the page already owns
+    the arrival queue's order and pacing; keyed by save, runner and window, they are the same on every device.
+  - A combat tab: fights are cards and ledger lines; a tab would be a second place for the same numbers. Revisited
+    when guards and walls bring a town-side view.
+

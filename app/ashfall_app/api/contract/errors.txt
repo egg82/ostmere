@@ -1,0 +1,36 @@
+ERRORS: body ApiError {code, message, step, merge}. The message is for the console, never the player, and never
+holds a code, words or a session. step is null except on stale and catching_up; merge is null except on confirm_merge and on a
+join's too_many_saves.
+  401 no_account        no live session: the browser has no account (start one with POST /api/saves).
+  403 cross_site | 415 not_json   a write from another site, or a body that is not JSON (above).
+  413 too_large         a request body over 262144 bytes (above). Nothing was read past the limit or applied.
+  404 not_found         no such save on this account; no such device (Your devices).
+  404 no_such_code      POST /api/join: the code or words name no account (above).
+  409 stale             `after` is not the save's decisions: another page decided since. Nothing of the decision
+                        was applied; `step` is the save advanced to now (written as an advance): draw it.
+  409 catching_up       the save is still catching up on time away (CATCHING UP): nothing of the decision was applied
+                        (a forecast and a dry run write nothing); `step` is the save as this request left it.
+  409 confirm_merge     POST /api/join from a browser whose account holds a decision on a save (above).
+  409 too_many_saves    POST /api/saves or a restore on an account holding max_saves live saves (Games on one account);
+                        POST /api/join whose two accounts' live saves together would pass it (above).
+  409 last_save         deleting the account's only live save.
+  422 invalid_decision  a busy lane (unless Card.cuts_in), a locked, completed or retired card, a tap_card of a card on a ruled lane (A LANE
+                        RUN BY RULES), an answer_offer the offer cannot take (OFFERS), a bad mix, deleting a mix something
+                        still names, an order or queue condition watching `running` outside the one shape Decisions takes, a feedback text empty or over 2000 characters, or a request that does not
+                        fit the models.
+  429 rate_limited      too many new accounts just now: at most 10 an hour from one client address (an IPv6
+                        address counts by its /64, and its /48 is held to 30 an hour) and 200 an hour in all; a limit that cannot be counted refuses. On POST /api/saves only when it would make an
+                        account; the page shows one plain line and leaves Begin to be tried later.
+                        POST /api/feedback answers it too, past its own limits (above); the page says to try later.
+                        Also the limits of "Moving to another device", and new games on an account (Games on one
+                        account), with Retry-After; and POST /api/saves/{save_id}/decisions past the decisions a
+                        save takes (Request limits), with Retry-After.
+  503 save_unavailable  retryable (Retry-After, seconds): no database (any endpoint that needs to know the account or
+                        a save, Begin included), a save of a later release, a save whose text cannot be read, or the
+                        database switching over (its writable member changed or is unreachable). A request that meets the
+                        switchover runs once more on a fresh connection, unless a write of its own may already have
+                        committed; one not run again, or that meets it again, answers 503 with Retry-After 3. A 503
+                        from a lost COMMIT may have taken effect: asking again then answers 409 stale for a decision.
+                        The page retries with backoff and a quiet "reconnecting" state, keeping its view.
+                        Also the three routes of "Moving to another device" without the join key.
+

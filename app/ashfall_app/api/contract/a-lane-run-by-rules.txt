@@ -1,0 +1,68 @@
+A LANE RUN BY RULES
+  A townsperson who works is a lane whose LaneInfo.ruled is true: its task is set by the player's rules, never by
+  their tap (engine DESIGN.txt, "Ruled lane"). Content: LaneInfo {lane, label_key, ruled, later_labels: [LaneLabel
+  {after: Unlock, label_key}], name_key}, name_key the person's name or null (Text and numbers, {<lane>}); the lane's label is the label_key of the last of later_labels whose `after`
+  view.unlocked holds, else label_key (for every lane, ruled or not). View: LaneBar {lane, running_card,
+  completes_at, order}, `order` the index into view.orders of the rule whose task the lane runs now: the first i
+  with view.orders_on[i] true, view.order_states[i] not passed_over, and a tap_card of running_card; null while the
+  lane is free or no rule taps what it runs. completes_at is when the running tap ends; null while the lane is free
+  and while it repeats its task (a rule that would start the same card again at each completion: engine DESIGN.txt,
+  "REPEATING TAPS"), when the running card's Card.bar has no limit and is sampled modulo bar_total as a mix bar is.
+  - tap_card from the player of an uncapped card whose CardInfo.lane is a ruled lane: 422 invalid_decision, nothing
+    written. Rules may tap it; a queue entry may not (set_queue with one is 422: the queue is the hands' plan). A
+    capped card there (a one-off) the player taps as on the hands: one completion, the lane's LaneBar holding it
+    (order null, completes_at its landing) and the person's shares yielded until it lands, no rule made; refused
+    while the lane is busy, as any tap.
+  - The lane's always rule: an order {when: after_time {time: 0}, then: tap_card c}, c a card on that lane. It is on
+    from the moment it is set and never lets go. Rules on a lane act first match: at each of the lane's landings the
+    first rule that is on and whose card is ready starts it, so a rule below the always rule acts only while the
+    always rule's card cannot.
+  - A story moment may set a rule (an installed rule, engine DESIGN.txt, "Installed rule"), and only one shape: an
+    always rule on a ruled lane, which the page draws and edits as below. It arrives in view.orders at the top or
+    the end, like a rule the player set, and is theirs to edit, move or remove; once removed that moment never sets
+    it again. rule_runs lists it from the moment it arrives, on at once (also when it arrives at a load that carried
+    the save to new content). A rule whose one-off task has completed stays in view.orders as passed_over until the
+    player removes it.
+  - An answer may also put a one-off of the hands at the front of view.queue, as the page's own When ready entry
+    (tap_card c until c's card_count reaches its next completion): drawn as Next like any entry, removable the same
+    way, gone once c completes.
+  - A tap_card entry is one run of its card: tap_card c until c's card_count reaches one past the runs planned before
+    it (c's completions, plus 1 while a lane's running_card is c, or the until of c's last entry in view.queue if
+    higher), so an entry for a card a lane runs now adds a run after that tap. More runs are more entries. An entry is
+    checked when its turn comes: one whose card cannot run then waits (engine DESIGN.txt, "Never ready"), and one whose
+    card reached its cap leaves view.queue at that instant. Each entry's runs are its until less the runs planned
+    before it, the tap under way included.
+  - In Next, a tap_card entry that adds no run after the tap a lane runs (its card some view.lanes entry's
+    running_card, its until at most that card's completions + 1) is drawn with ui.queue.running in place of Remove: it
+    stays in view.queue until that tap completes, and set_queue without it would not stop the work. Each other row of
+    one card is worded ui.queue.once {card}, or ui.queue.runs {card}{n} for n runs: entries of one card one after
+    another are one row, whose Remove (ui.queue.remove_one when the row holds more than one) sends the queue without
+    its last entry, and whose ≡ (aria ui.queue.move_one) moves that one entry before the row above or after the row
+    below.
+  - The other Next entries may be reordered: one set_queue with the same entries in the new order, the entries a lane
+    runs at their own indices; each card's tap_card untils are given back to its entries in the new order, least
+    first, and a Remove gives the card's entries left its untils less the highest, so the runs left still count from
+    the tap under way.
+  THE CLIENT MAY, for each lane in view.lanes whose LaneInfo.ruled is true:
+  - draw it as a row under the hands strip, the hands strip's shape: its label, what it does (the label of
+    running_card, or ui.lane.idle while free), the running card's bar (its Card in view.cards, sampled as any bar),
+    and ui.lane.change, which opens the person's page: their cards in view.cards on that lane drawn as the card panel
+    draws a card, the rules that tap them (each opening the rule editor), and, once they have joined the town, their
+    part of the town's mix as a share bar, a tap on an uncapped card joining it to the mix or taking it out and a tap on a
+    capped one sending tap_card for its next completion. While a one-off holds the lane (its LaneBar's
+    running_card a capped card, whoever started it), the share bar, on the page and on the person's Town row, is that
+    card alone with its time left and ui.hands.then {mix} naming the split they go back to, as the hands strip draws a
+    tap; the card on the page counts down and fills its bar as the card panel's does. The rule editor's simple view scoped to a lane picks the task: a card in
+    view.cards on that lane. Saving sends set_orders with that rule's tap_card changed in place (or a new always rule
+    appended).
+  - on the page of a lane whose LaneInfo.station is true (a thing, not a person: it never joins), send set_orders with
+    the lane's first always rule's tap_card changed to a task the player taps, or a new always rule appended when it
+    has none; draw the task that rule taps as pressed.
+  - never draw a card on a ruled lane in the card panel or the Completed tab; such cards are offered only as that
+    lane's tasks.
+  - in the Rules tab, list the rules that tap a card on that lane under the lane's label, in their view.orders order;
+    word an always rule as ui.rule.always {card}. A new rule on that lane (from the editor or an order card's
+    Accept) goes immediately before the lane's first always rule, or at the end when it has none, so it can act.
+  - say a lane rule is outranked with ui.rule.outranked, {rule} the words of orders[LaneBar.order]'s condition, or,
+    when that rule is an always rule, its ui.rule.always words.
+

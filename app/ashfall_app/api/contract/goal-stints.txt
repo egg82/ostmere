@@ -1,0 +1,58 @@
+GOAL STINTS (docs/design/worth-a-change.md, "What to add first", item 1; engine DESIGN.txt, "Queue mix")
+  A goal stint is a queue entry {verb: switch_mix {mix_id}, until: a GoalRow's until}: "run {mix} until {goal}". The
+  server holds no stint type: set_queue takes it as any entry (a hands mix the save holds, at most
+  Content.limits.max_queue entries; a town mix is 422 invalid_decision), and every rule below holds for any queue
+  entry whose verb is a switch_mix, whatever its until.
+  - Controlling: the first entry of view.queue whose verb is not dead (a switch_mix to a mix in view.greyed_mix_ids, a
+    tap_card of a completed card, which leaves view.queue at that instant) controls. While a switch_mix entry controls and no order's mix runs (view.mix_order
+    null), view.running_mix_id is that entry's mix_id; view.active_mix_id, the player's own mix, is never written by
+    the queue. An order whose mix runs takes the hands over the stint (view.mix_order set), and the stint's mix runs
+    again when that order lets go.
+  - Popping: the controlling entry leaves view.queue at the first instant its until holds, also while an order's mix
+    runs, and at once when it already holds as the entry comes to control (a set_queue whose stint's goal is already
+    met pops it in that same decision). The next live entry then controls: its mix runs if it is a switch_mix; else
+    view.running_mix_id is view.active_mix_id again (the order's mix aside) and a tap_card entry taps when it can.
+    A goal stint on a GoalRow whose lands_at is t, set while the rates as set stay unchanged until t, pops at exactly
+    t.
+  - The player's switch_mix while a stint's mix runs changes view.active_mix_id alone: the stint's mix keeps running
+    and the switched-to mix runs once the queue gives the hands back. delete_mix of the active mix leaves
+    active_mix_id null and the stint's mix running; delete_mix of a mix a queue entry names is 422 (as before).
+  - Unreachable: an until that never holds (its goal row's lands_at null: nothing moves the goal at the rates as set,
+    the store falls, or a store target over its cap) is not an error, and nothing in the server passes the entry over,
+    pops it or removes it: it controls and its mix runs until the until holds (the rates change and the goal lands)
+    or the player sends set_queue without it, and every entry behind it waits. A skill that has reached its phase's
+    top cannot reach a higher counted level until the player's prestige click, so a skill_level until above that level
+    does not hold before the click. A stint whose mix greys is dead: passed over, the entry behind it controlling, and
+    kept, except that it leaves view.queue at the instant its until holds and cannot fall (an at_least on a skill_level,
+    as every level row's until is); a dead stint on a store until is kept even while that until holds (engine
+    DESIGN.txt, "Greyed mix").
+  THE CLIENT MAY:
+  - in the mix editor, offer ui.stint.run under the goal rows, never while Save is unavailable, the queue is at
+    max_queue, or the editor makes a mix for a rule. Pressed, it lists each row of the edit's dry run whose lands_at
+    is neither null (an Unreachable stint would never pop, and would hold every entry behind it) nor the dry run's
+    `at` (a met goal would pop at once): the goal (ui.goal.store, ui.goal.level) and its time left in the dry run,
+    never sorted or marked as better; under a store's row (one that lands: the store rises), after
+    ui.stint.or_until, the named shares of that store's cap (a quarter, half, three quarters, full) its whole items
+    have not reached, each an until at_least {store_value, value = release = b, both flags true} with no time (none
+    is served for it). Picking one sends save_mix (with saveDecisions' renames) when the edit differs from the saved
+    mix, then set_queue with view.queue and the stint {switch_mix {mix id}, until: the row's until or the share's} at
+    its end, and closes the editor.
+  - in Next (the Rules tab's queue), word a switch_mix entry ui.stint.entry {mix} {goal}: the goal from the row of
+    view.goal_rows whose until equals the entry's (kind, subject, value, release), else from the until itself (a store
+    at value, a share by ui.goal.store_share {store}{n}, a skill at the counted level). A share until never matches a
+    row. On the controlling entry while its mix runs, add the row's time left
+    (ui.goal.in, or ui.goal.never for a null lands_at) and its line, as the editors' rows word it (ui.goal.limited, the
+    store's label or ui.goal.xp). Nothing else: no warning, offer or removal for a goal that never lands.
+  - in Next, offer ui.queue.plan (while the queue has room and a saved hands mix is not greyed or a card would take
+    When ready): pressed, it lists first each card the queue takes (one not on a ruled lane, after the end, with room
+    under its cap for one more run than those planned): steps and action cards, ready now ones and a card a lane runs
+    included, worded ui.queue.when_ready, whose pick appends one run of it; a card's own When ready, which sends the
+    same entry, is offered on a step only (not an action card), not queued already and not the card its lane runs, while
+    it cannot be tapped (unready, or ready on a lane whose running_card is another card). Then each
+    step that would take it but for its blocker (no ready time kept,
+    or a store the view has not unlocked), not pickable, worded as the card draws its blocker's need (ui.card.needs,
+    ui.card.opens, a skill level or step; a step whose card draws nothing for its blocker is left out); then the saved
+    mixes. A mix picked is worded ui.stint.which {mix}, with the goals of the dry run of switch_mix to it (the live
+    view's when it already runs) listed as the mix editor lists them. Picking a goal sends set_queue with view.queue
+    and the stint at its end. New text keys: ui.queue.plan | ui.stint.which {mix}.
+

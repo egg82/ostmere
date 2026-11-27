@@ -1,0 +1,12 @@
+CUT-IN
+  A glowing step the hands have not done yet (CardInfo.glows, completions 0) is tappable while the hands run a task
+  that the queue or a rule would start again once the step lands: Card.cuts_in is true, and a tap_card of it pauses
+  that task where it stands (its work is kept) and runs the step; when the step lands the queue or the rule takes the
+  task up again. A glowing step never cuts into a task the player tapped by hand (Card.cuts_in false, the tap 422s as
+  on any busy lane).
+  A cure for a chip shown now (a card that puts up the store the chip watches) cuts in on any task of the hands that
+  is not itself a cure: Card.cuts_in is true and a tap_card of it pauses the task the same way (a rule on the cure
+  waits for the task to land). A task no rule or queue entry would start again (one the player tapped by hand) goes to the front of view.queue as a When ready entry for its current completion, so it is taken up
+  again once the cure lands.
+  THE CLIENT MAY draw such a card ready and tappable while its lane is busy, and give a glowing step the glow.
+

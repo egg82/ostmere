@@ -1,0 +1,21 @@
+REQUEST LIMITS
+  A request body is at most 262144 bytes (413 too_large, ERRORS). Within it, a request past a bound below does not fit
+  the models: 422 invalid_decision, and nothing is applied.
+  A dry run takes at most 8 decisions.
+  A string a request stores (a feedback text, a mix's id or name) holds no U+0000: 422 invalid_decision, before any
+  limit is counted.
+  A save takes at most 120 decisions a minute and 3600 an hour (each is a stored row), counted across pods: past
+  either, POST /api/saves/{save_id}/decisions is 429 rate_limited with Retry-After (seconds), and nothing is applied or
+  written. Only a decision that would be applied counts: a stale, catching_up or invalid one does not, and neither does
+  a refused one. The hardest legitimate play is repeated taps on the shortest card, 20 a minute. The page treats it as
+  any refused decision: redraws the save as it has it and goes on advancing it.
+  PUT /api/me/presentation and PUT /api/saves/{save_id}/presentation: each list at most 512 items, each string in it (a lesson, a chip, a card) 1 to 64 ASCII
+  letters, digits and `_ . : -`, except an offered switch's mix_id, a mix's own name, at most 64 characters. What an
+  account (or a save) keeps weighs at most 262144 bytes of JSON: past that a PUT adds nothing more to the lists (answered 200,
+  as at 512 entries).
+  save_mix: at most 64 components; a save holds at most Content.limits.max_mixes (64) mixes, and a save_mix
+  of a new id past that is 422 invalid_decision (replacing a saved mix is always allowed).
+  set_orders: at most Content.limits.max_orders (64) orders, each with at most Content.limits.max_unless (3) guards and Content.limits.max_or_else (2) fallbacks; the rule editor stops offering another of either at that. set_queue: at most Content.limits.max_queue (64) entries.
+  The page's rules editor and "When ready" stop offering another at those, and say so in one plain line (ui.rule.full,
+  ui.queue.full); the mix lists and the mix editor stop offering a new mix at max_mixes, the same way (ui.mix.full); its ledger, chip and repeated-switch rule offers stop at the rules' bound, quietly.
+

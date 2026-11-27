@@ -1,0 +1,31 @@
+GAMES ON ONE ACCOUNT
+  An account holds several saves, each its own game; the page plays one at a time and keeps the others.
+  GET /api/saves -> Games {saves, deleted, max_saves, kept_days}
+    saves          the live saves, the most recently played first (as GET /api/me).
+    deleted        DeletedSave {save: SaveInfo, deleted_at, purge_at}: the deleted saves still held, the most recently
+                   deleted first. purge_at is deleted_at + kept_days; from then on the save may be gone for good.
+    max_saves      5: the most live saves an account holds. Deleted saves do not count. GET /api/me carries it too.
+    kept_days      30: how long a deleted save is held. GET /api/me carries it too.
+  SaveInfo's fields beyond the save's clock:
+    number         the account's count of its games: 1 for the first begun, and for each later one the highest number
+                   the account holds (deleted saves included) plus one. Null for a save begun by the build before
+                   numbers, until it is next written.
+    started_at     the wall time it was begun; played_at the wall time it was last written (ISO 8601, UTC).
+    camp_level     how many Camp levels (Content.camp.camp_levels) the save had landed when last written; null for one
+                   not written since the build before this field.
+  POST /api/saves on an account makes another save and changes no other. 409 too_many_saves when the account already
+    holds max_saves live saves; at most 10 a day (24 hours) per account beyond its first save (which the limit on
+    new accounts counts), past which 429 rate_limited with Retry-After; a limit that cannot be counted refuses. Either refusal makes nothing.
+  POST /api/saves/{save_id}/delete -> Games. The save is deleted at once: gone from GET /api/me and Games.saves, held in
+    Games.deleted, and every call on it (open, advance, decisions, forecast, dry-run, feedback's save_id) answers as
+    for a save that does not exist until it is restored. 409 last_save when it is the account's only live save; 404
+    not_found when the account has no live save of that id. A page that has it open learns on its next call.
+  POST /api/saves/{save_id}/restore -> Games. A held deleted save is live again, as it was; its clock never stopped, so
+    opening it brings the time away since. 409 too_many_saves at max_saves; 404 not_found when the account holds no
+    deleted save of that id (never deleted, or gone for good).
+  A deleted save is deleted for good, with its lines, decision log and snapshots, only after purge_at, a small batch
+  at a time by the next delete or new game on any account; never by the request that deleted it. Making, deleting and
+  restoring saves of one account run one after another on any pod (each holds the account), so max_saves and the last
+  live save hold under any race; a delete waits for a call already running on that save. A join moves an account with
+  all its saves, deleted ones included, and a merge holds both accounts, so max_saves holds across it too.
+
