@@ -1,0 +1,110 @@
+{
+ "app/ashfall_app/api": {
+  "files": 61
+ },
+ "app/ashfall_app/api/contract": {
+  "files": 42
+ },
+ "app/ashfall_app/db": {
+  "files": 23
+ },
+ "app/ashfall_app/engine": {
+  "files": 102
+ },
+ "app/ashfall_app/engine/design": {
+  "files": 27
+ },
+ "app/ashfall_app/opening": {
+  "files": 95
+ },
+ "app/ashfall_app/saves": {
+  "files": 21
+ },
+ "app/client/fixtures": {
+  "files": 30
+ },
+ "app/client/src/game": {
+  "files": 83
+ },
+ "app/client/src/ui": {
+  "files": 149
+ },
+ "app/client/test": {
+  "files": 280
+ },
+ "app/tests": {
+  "files": 122
+ },
+ "app/tests/cards_contract": {
+  "files": 47
+ },
+ "app/tests/dayone": {
+  "files": 55
+ },
+ "app/tests/daythree": {
+  "files": 25
+ },
+ "app/tests/daytwo": {
+  "files": 21
+ },
+ "app/tests/db": {
+  "files": 24
+ },
+ "app/tests/engine": {
+  "files": 62
+ },
+ "app/tests/engine_contract": {
+  "files": 117
+ },
+ "app/tests/journal_contract": {
+  "files": 28
+ },
+ "app/tests/opening": {
+  "files": 122
+ },
+ "app/tests/opening/fixtures": {
+  "files": 26
+ },
+ "app/tests/readouts": {
+  "files": 78
+ },
+ "app/tests/saves": {
+  "files": 46
+ },
+ "app/tests/weektwo": {
+  "files": 37
+ },
+ "app/tools/drains_mutants": {
+  "files": 24
+ },
+ "app/tools/guards_mutants": {
+  "files": 50
+ },
+ "app/tools/held_mutants": {
+  "files": 22
+ },
+ "app/tools/leaves_mutants": {
+  "files": 37
+ },
+ "app/tools/or_else_mutants": {
+  "files": 28
+ },
+ "app/tools/retire_mutants": {
+  "files": 23
+ },
+ "app/tools/spent_mutants": {
+  "files": 24
+ },
+ "content/team": {
+  "files": 38
+ },
+ "docs/research": {
+  "files": 21
+ },
+ "docs/research/sketch-test": {
+  "files": 41
+ },
+ "tools/scene": {
+  "files": 56
+ }
+}

@@ -10,6 +10,7 @@ APP=$(cd "$(dirname "$0")/.." && pwd)
 
 PYTEST_GATES=(
   app/tests/test_file_size.py
+  app/tests/test_dir_width.py
   app/tests/test_text_size.py
   app/tests/test_function_size.py
   app/tests/test_suppressions.py
