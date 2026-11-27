@@ -36,7 +36,7 @@ jobs:
     env:
       HYPOTHESIS_PROFILE: ci
       TEST_CEILING_S: "120"   # the per-test ceiling is for pushes (tests/conftest.py); this run is meant to be deep
-      SAVES_DAYS: "30"   # golden saves run on 30 game days here, one on a push (tests/saves/test_golden.py)
+      SAVES_DAYS: "30"   # golden saves run on 30 game days here, one on a push (tests/saves/builds/test_golden.py)
       ASHFALL_TEST_PG: postgresql://postgres@127.0.0.1/postgres
     steps:
       - uses: actions/checkout@v4

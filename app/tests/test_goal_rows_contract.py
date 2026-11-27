@@ -2,7 +2,7 @@
 surface only). Written from the contract, never the implementation, and checked against real engine saves: a row's
 `lands_at` is judged by advancing the engine itself, its `per_hour` by the engine's own ledger line.
 
-Worlds are tests/engine_contract/spent_world.py's: every card runs one item a second at a full share, a store is
+Worlds are tests/engine_contract/spent/spent_world.py's: every card runs one item a second at a full share, a store is
 Q units to an item, and `standard()` is an eating card (costs pool p, makes y) beside makers of z and w."""
 from dataclasses import replace
 
@@ -12,7 +12,7 @@ from ashfall_app.engine import (
     QUANTITY_SCALE as Q, CardId, PacingCurve, Rules, Save, SkillId, StoreId, TapCard, View, advance, decide, new_save,
     value, view, xp,
 )
-from tests.engine_contract.spent_world import (
+from tests.engine_contract.spent.spent_world import (
     BIG, EAT, P, P2, PS, R1, R2, Y, Z, eater, maker, mixed, plain, standard, world,
 )
 

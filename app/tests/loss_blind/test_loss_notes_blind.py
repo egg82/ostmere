@@ -5,7 +5,7 @@ from collections.abc import Sequence
 from dataclasses import replace
 
 from ashfall_app.saves.journal import ComposedDay, Habits, Line, Loss, Note, Source, Subject, compose_day
-from tests.saves.journal_fixture import BEAT, HABITS, JOURNAL
+from tests.saves.journal.journal_fixture import BEAT, HABITS, JOURNAL
 
 SAVE = 7
 POOL = ("loss.a", "loss.b", "loss.c")

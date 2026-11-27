@@ -336,7 +336,7 @@ page whose last day runs on to the next page can still gain that day's marks whi
   that skips is no record, and the player would lose facts to a habit.
 - **An LLM writing entries freely at runtime.** A stateless call cannot keep a rate, so thinning, gaps and the rare
   misremembering would come out at whatever rate the model drifts to; it cannot see what it wrote before without the
-  whole journal in every call; its output repeats in shape at volume (`docs/research/llm-writing.md`); and a
+  whole journal in every call; its output repeats in shape at volume (`docs/research/writing/llm-writing.md`); and a
   misremembering it invents is not canon, so the correction could contradict the story. The Writer may later draft
   slot lines offline, as content that is reviewed like any other.
 - **A fixed thinning schedule by day number.** The game's length is set by play, so a day number lands on different

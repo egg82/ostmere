@@ -104,7 +104,7 @@ Woodcutting 15    6h    →   9h 30m
   out what orders and dry inputs take later, so it is the time at today's rates, not a promise.
 - Under each row, the line that binds it, as a fact the server reads off the runs: the dry store a card moving the
   goal waits on and what comes into it (`limited by rope, 0.5/min`), else the goal's own rate (research
-  `fun-from-choice.md`, proposal 1).
+  `design/fun-from-choice.md`, proposal 1).
 - The condition editor shows the same rows for running the rule's mix, beside its existing `while … runs` fact.
 
 After, in the Rules tab's `Lately`: a stint's entry reads `ran 2d 3h · goal landed 4h ago · made 140 dry wood`, a

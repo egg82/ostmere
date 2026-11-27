@@ -1,6 +1,6 @@
 """Fights on the wire (api/contract/fights.txt, "FIGHTS"), on the real opening given one fight card and one standing fight:
 the content's side, threat and fight infos, and the view's fights after a tap and an advance, each a plain copy of
-the engine's FightView (the odds themselves are the engine's: tests/engine_contract/test_fight_view.py)."""
+the engine's FightView (the odds themselves are the engine's: tests/engine_contract/fight/test_fight_view.py)."""
 from dataclasses import replace
 from functools import cache
 

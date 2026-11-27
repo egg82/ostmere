@@ -1,6 +1,6 @@
 DRAINS (a take forgiven at 0) AND FRACTIONS AT THE LOADER (week one's lost-fight chip, issue #33). Where this
 part and an entry above disagree, this part holds. Examples name ids only; which stores, chips, cards and numbers is
-content's. Blind tests are written from this part alone, against app/tests/engine_contract/MUTANTS_drains.txt.
+content's. Blind tests are written from this part alone, against app/tests/engine_contract/drains/MUTANTS_drains.txt.
 
 FIT PASS
 - The need: a chip on a store x that shows at x >= θ, a cure that takes from x, a cap C, and three wants: the cure is

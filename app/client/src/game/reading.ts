@@ -2,7 +2,7 @@
 // holds the next line for it, and the band keeps a line that long before a newer one pushes it out.
 
 /** `wpm`: 150, below the slow end of adult silent reading (Brysbaert 2019) and the BBC's 160-180 for text read beside a
- * picture (docs/research/human-player.md#### 1. Reading speed and decision latency), since a story line is read while
+ * picture (docs/research/pacing/human-player.md#### 1. Reading speed and decision latency), since a story line is read while
  * the eye also takes in the art. `floorMs`: no line is held for less, however short, since the eye has to get there
  * first: a design choice. `returnFirst`: the multiple of its reading time that the first story line of a return is
  * held for, since the player is still arriving. */

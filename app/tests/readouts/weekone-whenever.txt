@@ -3,7 +3,7 @@ days with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1      63      22       0      12       4      37       0    138
   2      16       3       0       0       0       4       3     26
-  3      21       5       2       4       0      17       2     51
+  3      23       5       2       4       0      17       2     53
   4      14       2       0       0       0       9       3     28
   5      18       7       0       0       0       4       2     31
-  6      26       7       0       1       1      20       1     56
+  6      28       7       0       1       1      20       1     58

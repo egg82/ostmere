@@ -1,4 +1,4 @@
-GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/fun-from-choice.md, proposal 1)
+GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/design/fun-from-choice.md, proposal 1)
   view.goal_rows is each goal a mix can move: every store and level goal of view.goals, in that order, then each skill
   in view.skills whose next_level_xp is set, at its next shown level (level + 1), skipping one a story level goal
   already holds. A card's count and the clock are never rows, nor is a skill at its top: no next level, and a story
