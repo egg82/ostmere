@@ -138,7 +138,7 @@ jobs:
         run: for _ in $(seq 60); do python -c "import psycopg; psycopg.connect('$ASHFALL_TEST_PG').close()" 2>/dev/null && break; sleep 1; done
       - name: Test (shard ${{ matrix.shard }})
         working-directory: app
-        run: python -m tools.shards "${{ matrix.shard }}" -q -m "not playthrough" --durations=25 --durations-min=1
+        run: python -m tools.shards "${{ matrix.shard }}" -q --durations=25 --durations-min=1
 
   # Collection only (no database): the three shards of `tests` together collect exactly what one unsharded run does, and
   # week two's shards (app/tools/weektwo_shards.py) select each week-two test exactly once; their names are handed to
