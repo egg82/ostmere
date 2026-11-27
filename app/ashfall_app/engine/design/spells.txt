@@ -46,7 +46,9 @@ CHOICES (spells)
   rounded down once, base = ChainDef.reach. Entries aimed at a ChainReach only raise (add_bp >= 0, mul_bp >= BP), so
   reach >= base >= 1. explain over it is a StrengthExplanation whose target is the ChainReach. Read live, at the
   instant it is used, as a standing fight's odds are: it only rises, so the reach a completion runs is never below the
-  reach the card showed when the tap started, and at the completion's instant the reach shown is the reach run.
+  reach the card showed when the tap started, and at the completion's instant the reach shown is the reach run. "At
+  the completion's instant" is the completion's (kind, sequence) place: a raise from an event sorting after it at the
+  same t (a TRIGGER) is read from the next completion on.
 - Completion. A card with a chain has a COMPLETION event at every completion, tapped or mixed, capped or not (CardDef:
   "a completion is an event when it has a discrete effect"; the chain is one). For a capped card the completion's own
   parts land first as before (its line, outcome and, at the cap, finished); an uncapped card has none (its tap line is
@@ -65,8 +67,9 @@ CHOICES (spells)
   k = 0 (R not fighting, or the cap already reached) emits nothing and changes nothing; the completion is as without a
   chain.
 - Same instant. A chain resolves at its card's COMPLETION, in that event's (kind, sequence) place; a second chain
-  card completing at the same instant reads the tallies as the first left them. Two chains on one runner at one
-  instant therefore never resolve more than the group's due members between them.
+  card completing at the same instant reads the tallies as the first left them, exactly as a completion a moment
+  later would: if the first left members due, the second's due is what is left; if the first ended the group, the
+  next group is under way and the second finds it whole (m due). No chain alone crosses into the next group.
 - Repeating taps. A card with a chain never repeats as a rate (retap.may_repeat is false for it): each landing is an
   event.
 - Determinism. k is a function of the save at t and the instant's firing count alone. No draw of any kind: the link
