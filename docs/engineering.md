@@ -147,6 +147,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | Gate | Limit | Ledger |
 |---|---|---|
 | `app/tests/test_file_size.py` (Python and client source) | 300 lines | `file_size.json` |
+| `app/tests/test_text_size.py` (hand-written `.md`, `.txt`, `.css`, and `.jsonl` under `content/`; generated files, fixtures and readouts excluded by path) | 100,000 bytes, not lines, since a prose or CSS line has no length bound; a file past it splits by subject into a directory with an `index.md` (`docs/design/opening-screen/`) | `text_size.json` |
 | `app/tests/test_function_size.py` (Python) | 80 lines per function | none (its held list is empty and stays empty) |
 | `app/client/gates/function-size.mjs` (client, run by `npm test`) | 80 lines | `function_size.json` |
 | `app/tests/test_suppressions.py` | counts of `# pyright: ignore`, `# type: ignore`, `# noqa`, `cast(`, `@ts-ignore`, `@ts-expect-error`, `as unknown as`; each names its rule and a ` -- reason` on its line | `suppressions.json` |
