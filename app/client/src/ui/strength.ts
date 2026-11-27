@@ -1,4 +1,4 @@
-// A side's strength sheet (docs/design/opening-screen.md, "Fights"): the owner's label, then its entries one row each,
+// A side's strength sheet (docs/design/opening-screen/ledger-and-fights.md, "Fights"): the owner's label, then its entries one row each,
 // the base first. A fight panel opens it from a strength figure (fightpanel.ts); a kept bonus's line opens the same sheet
 // for its side (bonus.ts).
 import type { Strength, View } from "../api/types";

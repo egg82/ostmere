@@ -495,7 +495,7 @@ p.catching-up[hidden] { display: none; }
 .sheet:not(:has(> .panel-heading, > .book)) { padding-top: 1.1rem; }
 .book-sheet { max-width: min(40rem, calc(100vw - 2rem)); }
 .book-sheet .book-head { position: sticky; top: 0; z-index: 1; background: var(--raise); padding-top: .6rem; }
-/* the Journal, a page of the Book (ui/journal.ts; docs/design/opening-screen.md, "The journal"). The page is parchment
+/* the Journal, a page of the Book (ui/journal.ts; docs/design/opening-screen/journal.md, "The journal"). The page is parchment
    written in the hand's ink, whatever the browser prefers: the game is one dark theme. Phone: one portrait page, the
    sketch, the notes and the numbers top to bottom, the Book's sheet full height while it is open. Desktop: an open spread
    of two 600:780 pages, the sketch alone on the left, the notes then the numbers on the right. */

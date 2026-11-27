@@ -1,4 +1,4 @@
-// The feedback ladder (docs/design/opening-screen.md, "The feedback ladder"): a card's completion by the mix or by a
+// The feedback ladder (docs/design/opening-screen/feedback.md, "The feedback ladder"): a card's completion by the mix or by a
 // rule plays a rung below the same completion from the player's tap, and a completion's effect never grows on repeats.
 // Driven through the real card panel: what lands on a card's node when its completions go up.
 import { install } from "./fake-dom";

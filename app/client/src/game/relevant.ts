@@ -1,5 +1,5 @@
 // The stores and cards a rule is about, read off the cards' served CardInfo (makes, takes, kept, fight) and nothing else
-// (never words in a name): the condition editor offers these first (docs/design/opening-screen.md, "The condition editor").
+// (never words in a name): the condition editor offers these first (docs/design/opening-screen/rules-tab.md, "The condition editor").
 import type { Catalog } from "./catalog";
 
 /** The stores a rule doing some cards is about, in three tiers, each store once, in its first tier. */

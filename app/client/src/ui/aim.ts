@@ -1,4 +1,4 @@
-// The aim (docs/design/opening-screen.md, "One column of attention"): one line just above the art saying what this
+// The aim (docs/design/opening-screen/attention.md, "One column of attention"): one line just above the art saying what this
 // stretch of play is for, in the story's voice (game/shown.ts, currentAim). Its room is there from the start, so it
 // never moves the layout; when the story moves on, the new aim takes its turn after the lines that came with it
 // (ui/reveal.ts).

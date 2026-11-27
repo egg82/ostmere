@@ -1,4 +1,4 @@
-// A person's page, or a group's (docs/design/opening-screen.md, "The Town view"): opened by Change on their Town row, laid out as the
+// A person's page, or a group's (docs/design/opening-screen/town-and-book.md, "The Town view"): opened by Change on their Town row, laid out as the
 // Tasks page is: once they have joined the town their split as a share bar (personmix.ts), then every task of theirs
 // in full, as the Tasks panel draws a card (cardpick.ts), its bar and countdown moving with the clock, then the rules
 // that run them (rulelanes.ts), each a button into the Rules tab. A tap on a task joins it to their time or takes it

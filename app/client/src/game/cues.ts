@@ -15,7 +15,7 @@ export function offeredCard(catalog: Catalog, view: View, store: string): OrderC
 }
 
 /** A card for a rising line: its `when` is an at_least and its task takes from the store. It is offered
- * while the line is full or rising, never once a rule on its store and test is set (docs/design/opening-screen.md,
+ * while the line is full or rising, never once a rule on its store and test is set (docs/design/opening-screen/ledger-and-fights.md,
  * "Ledger and rules"). */
 export function risingCard(catalog: Catalog, card: OrderCard): boolean {
   const info = card.then.kind === "tap_card" ? catalog.cards.get(card.then.card) : undefined;

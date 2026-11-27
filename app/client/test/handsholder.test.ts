@@ -1,4 +1,4 @@
-// The mix bar shows what the hands are doing (docs/design/opening-screen.md, "The hands strip"; issue 104): while a
+// The mix bar shows what the hands are doing (docs/design/opening-screen/hands-strip.md, "The hands strip"; issue 104): while a
 // queued step runs on the hands over the player's mix, the bar is that card, one full segment in its hue, its legend
 // naming it with its time left, and the mix's name slot says what the hands go back to. When it lands, the mix returns.
 import { install } from "./fake-dom";

@@ -1,5 +1,5 @@
 // A planned moment that lands while the player is away plays in full on return (decisions.md, "Day and night run on
-// the story's clock"; docs/design/opening-screen.md, "Coming back"): the return's lines lead as a live step's do, each
+// the story's clock"; docs/design/opening-screen/one-thing-at-a-time.md, "Coming back"): the return's lines lead as a live step's do, each
 // alone in the story strip for its reading time before what came with it.
 import { install } from "./fake-dom";
 import { dayOneStep } from "../fixtures/dayone";

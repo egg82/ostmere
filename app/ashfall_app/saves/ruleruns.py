@@ -1,4 +1,4 @@
-"""What the rules did lately (docs/design/opening-screen.md, "Lately"): one entry per rule, built from the engine's
+"""What the rules did lately (docs/design/opening-screen/rules-tab.md, "Lately"): one entry per rule, built from the engine's
 rule changes (engine DESIGN.txt, "Rule changes") and kept on the save's row. A rule is known by what it says, its
 condition and verb, since rules have no id: a reorder keeps its entry, an edit makes another rule. The write that adds
 to it prunes it: an entry whose rule the save no longer has goes, unless the game ended the rule (it stays, `ended`

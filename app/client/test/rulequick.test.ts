@@ -1,4 +1,4 @@
-// The condition editor's quick add (docs/design/opening-screen.md, "The condition editor"): with a task chosen, When
+// The condition editor's quick add (docs/design/opening-screen/rules-tab.md, "The condition editor"): with a task chosen, When
 // offers the stores relevant to it (game/relevant.ts), what it makes then what it takes, and More options every store
 // with those first.
 import { install } from "./fake-dom";

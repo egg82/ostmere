@@ -1,4 +1,4 @@
-// The second mix's lesson (game/lessons.ts, SECOND_MIX; docs/design/opening-screen.md, "Lessons"), on the whole screen: a
+// The second mix's lesson (game/lessons.ts, SECOND_MIX; docs/design/opening-screen/lessons.md, "Lessons"), on the whole screen: a
 // card the player keeps tapping by hand that their running mix could take is the trigger, once the first rule's lesson is
 // behind. It walks the Mixes list's own New mix with nothing in it: the tasks and the shares are the player's, Save only
 // saves, and the last step shows where switching is. It starts on an account that touched that card's dot in an old save.

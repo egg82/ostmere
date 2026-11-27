@@ -1,4 +1,4 @@
-// The card panel (docs/design/opening-screen.md, "Cards"): view.cards in lane groups, each lane a stripe colour, crafts
+// The card panel (docs/design/opening-screen/asks-and-cards.md, "Cards"): view.cards in lane groups, each lane a stripe colour, crafts
 // together under one heading; a ruled lane's cards are left out (they are that lane's tasks, game/lanes.ts). Every card is drawn the same whether tapped, mixed or idle: title, completions against its
 // cap, its needs as have/need (short ones in the ledger's red), its one bar (Card.bar modulo bar_total, whoever runs it),
 // Ready iff blocker is null; a card whose lane is busy can't be

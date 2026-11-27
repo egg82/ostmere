@@ -272,7 +272,7 @@ class CardEntry(Entry):
     (stake_checks.py)."""
     glows: bool = False
     """The one glow lands here the first time the card is ready while its lane is free: the opening's obvious next
-    steps (docs/design/opening-screen.md, "Dots and the one glow"), said where the card is authored."""
+    steps (docs/design/opening-screen/feedback.md, "Dots and the one glow"), said where the card is authored."""
     twin_of: str | None = None
     """On a townsperson's lane: the player's card this one is the town's version of (player_checks.py)."""
     only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None

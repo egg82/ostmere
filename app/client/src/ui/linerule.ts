@@ -1,4 +1,4 @@
-// A ledger row a rule watches (ui/ledger.ts; docs/design/opening-screen.md, "Ledger and rules"): the quiet mark, a
+// A ledger row a rule watches (ui/ledger.ts; docs/design/opening-screen/ledger-and-fights.md, "Ledger and rules"): the quiet mark, a
 // small button to that rule in the Rules tab (the whole row taps through to it).
 import type { View } from "../api/types";
 import type { Catalog } from "../game/catalog";

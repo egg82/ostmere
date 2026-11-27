@@ -1,6 +1,6 @@
 """The check on a need a rule keeps: a store that drains and is kept by an "under x, until y" order card sits between
 x and y, reaching y only for the moment the rule lets go. A card that requires y or more of it is ready only at that
-moment, with no ready time to queue on while the store drains (docs/design/opening-screen.md, "When ready"), so a
+moment, with no ready time to queue on while the store drains (docs/design/opening-screen/rules-tab.md, "When ready"), so a
 player the rules carry finds it unready at every return. Raises ValueError naming the entry (refs.fail)."""
 from typing import TYPE_CHECKING
 

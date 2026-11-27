@@ -1,5 +1,5 @@
 // What of the view the page draws yet (decisions.md, "The screen arrives when it means something";
-// docs/design/opening-screen.md). The view says what exists; these say when its part of the screen first means
+// docs/design/opening-screen/index.md). The view says what exists; these say when its part of the screen first means
 // something to the player, read off the view and the content only, so a reload draws the same.
 import type { AimInfo, LedgerLine, View } from "../api/types";
 import type { Catalog } from "./catalog";

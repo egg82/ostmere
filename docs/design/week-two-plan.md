@@ -84,7 +84,7 @@ Order: 4, 2-3 and 9 first (they change no content); 6-8 and 10 with `day_eight.t
    method for the first entries (issue #30, `docs/research/sketch-test/process.md`), each looked at before it
    ships. Fits into: Unlocks (the entry kind), Knowledge (its first real use, as a page reading), Lessons (first use),
    the page shell (a sheet). Not a system: one caller, nothing to swap. Interface: api `CONTRACT.txt`, "JOURNAL", and
-   `opening-screen.md`, "The journal". Accept: that section's numbered acceptance tests.
+   `opening-screen/journal.md`, "The journal". Accept: that section's numbered acceptance tests.
 6. **The season's turn in content** (**S**, content and a loader check). The turn is an `after_time` trigger; what only
    the season brings is cards drawing a pool the turn fills and standing actions drawing a pool that empties at the next
    turn (the visitor's pause), plus a clock store for season-keyed ramp steps. No season state, no rate modifier (a raise

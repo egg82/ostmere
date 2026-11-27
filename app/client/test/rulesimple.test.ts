@@ -1,4 +1,4 @@
-// The condition editor's simple view and the mixes' door (docs/design/opening-screen.md, "The condition editor", "The
+// The condition editor's simple view and the mixes' door (docs/design/opening-screen/, "The condition editor", "The
 // hands strip", "The Mixes list"): a chip's rule written in two taps from the task that answers it; a task chosen
 // clears a condition it does not answer; More options keeps the full editor's choices one tap away; the strip's way
 // into the mixes reads "Mixes", the name beside it as text; the Mixes list says which mix runs and which it would run.

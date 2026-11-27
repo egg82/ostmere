@@ -95,7 +95,7 @@ Blow's and Subset's talks) were unreachable or paywalled, so those games are cov
 # Part B. What it means for Ostmere
 
 Read: `decisions.md` ("Fun, but never vying for attention", "Automation is designed, not clicked"),
-`design/opening-screen.md` ("Lessons", "Dots and the one glow", "One thing at a time", "A feature's card").
+`design/opening-screen/` ("Lessons", "Dots and the one glow", "One thing at a time", "A feature's card").
 
 ## B1. Agreements
 

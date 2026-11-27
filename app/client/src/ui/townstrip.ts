@@ -1,4 +1,4 @@
-// The town's people (docs/design/opening-screen.md, "The Town view"): first in the Town tab, once a person has joined,
+// The town's people (docs/design/opening-screen/town-and-book.md, "The Town view"): first in the Town tab, once a person has joined,
 // one row per person who runs their own split (the marked) and one per group with a member (a group of one draws as its
 // member, and the row's key is the group's, so a second member joining changes the row's name and adds the count, nothing else):
 // their face and who, their time split into the cards that hold a share (each with its

@@ -1,4 +1,4 @@
-// The hands strip: one row that says what the hands are doing (docs/design/opening-screen.md, "The hands strip"). It
+// The hands strip: one row that says what the hands are doing (docs/design/opening-screen/hands-strip.md, "The hands strip"). It
 // takes no room until the first mix's offer (game/shown.ts), then comes in through the arrival queue; until then each
 // card's own bar says what the hands do. Once drawn it stays. The mix row opens
 // bare, its bar and name; Edit, Mixes ▾ and "runs …" each come when they first mean something, then stay. On a phone only

@@ -1,4 +1,4 @@
-// The mix editor (docs/design/opening-screen.md, "The mix editor"): a name, Save, the split bar, then what the edit
+// The mix editor (docs/design/opening-screen/mixes.md, "The mix editor"): a name, Save, the split bar, then what the edit
 // does: live totals for what it changes (editortotals.ts) and the goals it moves (goaltimes.ts), so a drag of the bar
 // shows its effect without scrolling; one row per entry with what it does at its share; the cards that can join, folded
 // behind one "+ Add" that stays open until tapped again, as cards to tap or drag in; Save as new and Delete at the foot. Save commits and never changes which mix runs (game/mix.ts); ✕ leaves without a

@@ -4,7 +4,7 @@ Where a newcomer at a desktop browser would likely drift in the first session, r
 covers the queue item "a desktop playthrough in a browser, for what the model can't see". It is a model's read of
 the screen, not tester data: what it predicts about people still needs `docs/tester-protocol.md`'s cold testers. The
 phone pass left no written report, so the comparison below is against the phone layout in
-`docs/design/opening-screen.md` and the phone fixes in the log.
+`docs/design/opening-screen/index.md` and the phone fixes in the log.
 
 Lines, beats and cards are named by key or card id (`c_gather_wood` → `gather_wood`), never by what a story line says.
 Times are game time from the first tap. The player taps promptly, so a slower person reaches each point later.

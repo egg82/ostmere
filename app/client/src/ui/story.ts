@@ -1,4 +1,4 @@
-// The story at the seam between the art and the controls (docs/design/opening-screen.md, "One column of attention").
+// The story at the seam between the art and the controls (docs/design/opening-screen/attention.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
 // costs; each once its cure is on screen, game/shown.ts), the permanent bonuses the player carries (a feature with a
 // label) behind one count (ui/keptbonuses.ts), and the book, dotted when it arrives, until the journal's first entry moves it into the Book. The Book (ui/book.ts) holds the chronicle and

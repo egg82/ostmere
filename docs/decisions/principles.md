@@ -5,16 +5,16 @@ Product-wide decisions: the words used, attention, progress on screen, choices, 
 ## Words used here
 
 - **Card:** one kind of work the player can do, shown with its bar and what it makes and takes; tapped or mixed alike
-  (`docs/design/opening-screen.md`, "Cards"; below, "The mix").
+  (`docs/design/opening-screen/asks-and-cards.md`, "Cards"; below, "The mix").
 - **Mix:** several cards run at once, each with a share of the hands' time (below, "The mix").
 - **Hands strip:** the one row showing what the hands are doing, the mix's slim view
-  (`docs/design/opening-screen.md`, "The hands strip").
+  (`docs/design/opening-screen/hands-strip.md`, "The hands strip").
 - **Ledger:** the lines of per-hour rates for each store, with when it empties or fills; a falling line no rule covers
-  is red (`docs/design/opening-screen.md`, "Ledger and rules").
+  is red (`docs/design/opening-screen/ledger-and-fights.md`, "Ledger and rules").
 - **Rule / standing order:** a "when X, do Y" line that runs a mix while its condition holds; the docs call it a
   standing order here and in `docs/systems.md`, and a rule in the Rules tab (below, "The mix").
 - **Camp bar:** the bar of the camp's level, filled by work done, with a next marker stating what the next level
-  pays (`docs/design/opening-screen.md`, "One column of attention").
+  pays (`docs/design/opening-screen/attention.md`, "One column of attention").
 - **Unwrap:** what happened since the last visit, shown in order on opening the app (`docs/systems.md`,
   "Chronicle and unwrap").
 
