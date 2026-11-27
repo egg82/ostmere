@@ -11,7 +11,7 @@ from ashfall_app.opening.schema import Opening
 from ashfall_app.saves.journal import DAY_S
 from tests.db.stored.test_save_lessons_migrate import ACCOUNT_COLUMNS, SAVE_COLUMNS, SESSION_COLUMNS, copy_rows
 from tests.game_client import game_client
-from tests.saves.journal_fixture import a_beat_line
+from tests.saves.journal.journal_fixture import a_beat_line
 
 
 def test_a_save_from_before_the_journal_was_stored_composes_its_days_on_its_next_step(

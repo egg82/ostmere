@@ -17,7 +17,7 @@ from ashfall_app.db.engine import open_database
 from ashfall_app.db.tables import save_journal
 from tests.db.test_records import DAY, T0, written
 from tests.kills import kills
-from tests.saves.journal_fixture import lock_waiters
+from tests.saves.journal.journal_fixture import lock_waiters
 
 NOTES_A = [{"subject": "s_a", "slot": "first", "key": "k.a"}]
 NOTES_B = [{"subject": "s_b", "slot": "first", "key": "k.b"}]

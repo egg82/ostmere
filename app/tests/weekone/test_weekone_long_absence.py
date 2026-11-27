@@ -1,5 +1,5 @@
 """A long absence on a save past the opening: the first heavy step of week one's fifth chapter on the typical route,
-advanced one game day with its instants counted (tests/saves/test_long_absence.py is the opening's end). Rules installed
+advanced one game day with its instants counted (tests/saves/catching_up/test_long_absence.py is the opening's end). Rules installed
 by then (a store's rule that turns on and off as the store drains) cost an instant a turn, which the opening's end save
 does not carry."""
 import pytest
