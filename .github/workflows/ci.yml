@@ -27,6 +27,10 @@ on:
         description: run the whole-game playthroughs too
         type: boolean
         default: false
+    outputs:
+      readouts_only:
+        description: "true when every red job failed only because readouts differ (ci-ok, tools/nightly_verdict.py)"
+        value: ${{ jobs.ci-ok.outputs.readouts_only }}
 
 permissions:
   contents: read
@@ -221,6 +225,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -331,6 +342,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -391,6 +409,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -438,6 +463,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -744,6 +776,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -796,6 +835,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -850,6 +896,13 @@ jobs:
           path: readouts-new/
           if-no-files-found: ignore
           retention-days: 7
+      - name: Record whether the tests passed
+        if: always()
+        uses: ./.github/actions/readout-verdict
+        with:
+          status: ${{ job.status }}
+          index: ${{ strategy.job-index }}
+          total: ${{ strategy.job-total }}
       - name: Fail when a readout differs from its committed text
         if: always() && hashFiles('readouts-new/**') != ''
         run: |
@@ -1056,6 +1109,8 @@ jobs:
   ci-ok:
     if: always()
     timeout-minutes: 1
+    outputs:
+      readouts_only: ${{ steps.readouts.outputs.only }}
     needs:
       - changes
       - docs
@@ -1089,6 +1144,24 @@ jobs:
       - app-image
     runs-on: ubuntu-latest
     steps:
+      # The full run's verdict for the nightly: red only where a readout job's tests passed and a readout differs.
+      - if: always() && inputs.full == true
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: app/tools
+      - if: always() && inputs.full == true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: readout-verdict-*
+          path: ${{ runner.temp }}/verdicts
+          merge-multiple: true
+      - id: readouts
+        if: always() && inputs.full == true
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS" > "$RUNNER_TEMP/needs.json"
+          python3 app/tools/nightly_verdict.py readouts-only --needs "$RUNNER_TEMP/needs.json" --verdicts "$RUNNER_TEMP/verdicts" | tee -a "$GITHUB_OUTPUT"
       - env:
           NEEDS: ${{ toJSON(needs) }}
           CODE: ${{ needs.changes.outputs.code }}
@@ -1136,6 +1209,9 @@ jobs:
       # The whole-game plays are the nightly's, so a red nightly means the game on main is broken somewhere this push's
       # slice did not play. The release holds until a nightly passes: dispatch Nightly on main once it is fixed, then re-run
       # this job.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - name: Hold for a red nightly
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -1143,12 +1219,10 @@ jobs:
           last=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow nightly.yml --branch main --status completed --limit 10 \
             --json conclusion,databaseId,createdAt --jq '[.[] | select(.conclusion == "success" or .conclusion == "failure")][0] // empty | "\(.conclusion) \(.databaseId) \(.createdAt)"')
           echo "last nightly: ${last:-none}"
-          case "$last" in
-            failure*) echo "HOLDING: the last nightly on main failed (${last#* }). Fix it, dispatch Nightly on main, and re-run this job once it is green." >&2; exit 1 ;;
-          esac
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+          set -- $last
+          # A nightly red only because readouts differ leaves a verdict artifact (nightly.yml, refresh-readouts) and holds nothing.
+          gh run download "${2:-0}" --repo "$GITHUB_REPOSITORY" -n nightly-verdict -D "$RUNNER_TEMP/nightly-verdict" 2>/dev/null || true
+          python3 app/tools/nightly_verdict.py held --conclusion "${1:-}" --run "${2:-}" --verdict "$RUNNER_TEMP/nightly-verdict"
 
       # Flux's ImagePolicy sorts tag strings, so the commit timestamp must not go backwards.
       - name: Name the tag

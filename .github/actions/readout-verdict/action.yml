@@ -1,0 +1,31 @@
+name: Readout verdict
+description: >-
+  Record whether this job's tests passed (every step before this one succeeded) and which readouts changed, as the
+  artifact `readout-verdict-<job>-<index>`. ci.yml's ci-ok reads these to tell a readouts-only red from a real one.
+  Put it after the upload of `readouts-new/` and before the step that fails on a difference, with `if: always()`.
+inputs:
+  status:
+    description: the calling job's `job.status`
+    required: true
+  index:
+    description: strategy.job-index, empty outside a matrix
+    default: ""
+  total:
+    description: strategy.job-total, empty outside a matrix
+    default: ""
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        STATUS: ${{ inputs.status }}
+        INDEX: ${{ inputs.index }}
+        TOTAL: ${{ inputs.total }}
+      run: >
+        python3 app/tools/nightly_verdict.py verdict --job "$GITHUB_JOB" --index "${INDEX:-0}" --total "${TOTAL:-1}"
+        --status "$STATUS" --readouts "$GITHUB_WORKSPACE/readouts-new" --out "$RUNNER_TEMP/readout-verdict"
+    - uses: actions/upload-artifact@v4
+      with:
+        name: readout-verdict-${{ github.job }}-${{ inputs.index || '0' }}
+        path: ${{ runner.temp }}/readout-verdict
+        retention-days: 7
