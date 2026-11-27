@@ -1,5 +1,5 @@
 // The text keys of the editors' goal rows (ui/mixes/goaltimes.ts; contract/goal-rows.txt, "Goal rows") and of goal stints (ui/next/stint.ts;
-// "Goal stints"), merged into `UI`, game/text.ts.
+// "Goal stints"), merged into `UI`, game/page/text.ts.
 export const GOAL_ROW_KEYS = {
   goalHead: "ui.goal.head",   // the rows' first column
   goalStore: "ui.goal.store",   // "{store} {n}": a store goal, the store's title and its target

@@ -1,7 +1,7 @@
 // One skill's row (ui/skills/skills.ts lists them): its label, level, an XP bar between the level's own bounds (level_xp to
 // next_level_xp, sampled; full at the last level), and what the next level pays, shown before it is reached
 // (SkillInfo.levels, the first entry above the level; a story unlock's words are the content's own), with the time to
-// it when the view's forecast has one (game/forecast.ts: so a change of mix shows at once in the time, and the time
+// it when the view's forecast has one (game/page/forecast.ts: so a change of mix shows at once in the time, and the time
 // comes true). A row with nothing ahead says so ("no more yet") and its bar is drawn muted, so it never reads as
 // progress toward something.
 // Under prestige (SkillBar.prestige; docs/design/prestige-phases.md, "What the page shows") the level is the one counted

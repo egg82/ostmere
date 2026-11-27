@@ -1,4 +1,4 @@
-// A rule's entries in the chronicle (game/rulerows.ts): from Step.rule_runs, each run's last start and last let-go at
+// A rule's entries in the chronicle (game/rules/rulerows.ts): from Step.rule_runs, each run's last start and last let-go at
 // their game seconds, the rule in the player's words, the store's level then as the cause (none for a chip's rule), and
 // an id that stays the same while later Steps repeat the run.
 import { fixtureContent } from "../fixtures/content";

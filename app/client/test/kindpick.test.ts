@@ -1,4 +1,4 @@
-// Kinds of one card drawn as one (game/variants.ts, ui/cards/kindpick.ts; contract/, "Cards"): a lead with two kinds in view
+// Kinds of one card drawn as one (game/cards/variants.ts, ui/cards/kindpick.ts; contract/, "Cards"): a lead with two kinds in view
 // shows one, a picker of both on it, and a pick changes which; one kind alone draws plainly.
 import { install } from "./fake-dom";
 import { fixtureStep } from "../fixtures/steps";

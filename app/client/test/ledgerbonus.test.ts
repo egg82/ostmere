@@ -67,7 +67,7 @@ const fallingStone = line("stone", 3, [["tend", -1]]);
 
 {
   const part = ledger(fixtureContent);
-  part.update({ ...view([dryStone]), queue: [lookQueued] }, null);   // something the player has queued takes stone (game/dryneed.ts)
+  part.update({ ...view([dryStone]), queue: [lookQueued] }, null);   // something the player has queued takes stone (game/cards/dryneed.ts)
   part.tick(AT);
   expect("control: the same dry store without a bonus is an alarm", drawn(part, "stone").alarm, true);
   expect("and reads ran dry", drawn(part, "stone").eta, "ran dry");

@@ -1,4 +1,4 @@
-// What a lesson's `may` reads off a view (game/lessons.ts).
+// What a lesson's `may` reads off a view (game/lessons/lessons.ts).
 import type { View } from "../../api/types";
 
 const WHOLE_BP = 10000;

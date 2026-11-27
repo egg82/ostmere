@@ -1,5 +1,5 @@
 // The card panel (docs/design/opening-screen/asks-and-cards.md, "Cards"): view.cards in lane groups, each lane a stripe colour, crafts
-// together under one heading; a ruled lane's cards are left out (they are that lane's tasks, game/lanes.ts). Every card is drawn the same whether tapped, mixed or idle: title, completions against its
+// together under one heading; a ruled lane's cards are left out (they are that lane's tasks, game/town/lanes.ts). Every card is drawn the same whether tapped, mixed or idle: title, completions against its
 // cap, its needs as have/need (short ones in the ledger's red), its one bar (Card.bar modulo bar_total, whoever runs it),
 // Ready iff blocker is null; a card whose lane is busy can't be
 // tapped and looks flat, unless it cuts in (Card.cuts_in); an unready one is muted but still answers a tap: a failed tap, which takes no time, pulses the
@@ -217,7 +217,7 @@ export class Cards implements Part {
     const laneBusy = s.busy.has(lane) && !card.cuts_in;   // a glowing step or a cure cuts in (Card.cuts_in)
     const retired = row.done && catalog.retired(view, row.id);
     const cl = row.node.classList;
-    cl.toggle("story", this.story.has(row.id));   // the story mark (game/story.ts)
+    cl.toggle("story", this.story.has(row.id));   // the story mark (game/story/story.ts)
     cl.toggle("done", row.done && row.doneShown !== false);
     cl.toggle("retired", retired);
     cl.toggle("ready", !row.done && card.blocker === null);

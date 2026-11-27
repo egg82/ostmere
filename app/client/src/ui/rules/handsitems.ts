@@ -1,5 +1,5 @@
 // The Rules tab's rows that move together (ui/rules/rules.ts): the hands' rules with Next's row among them while it is drawn
-// (game/nextrow.ts). A move of those rows becomes the set_orders, its slide and where the moved row lands.
+// (game/rules/nextrow.ts). A move of those rows becomes the set_orders, its slide and where the moved row lands.
 import type { Decision, View } from "../../api/types";
 import { NEXT, itemShift, nextItems, placeItems } from "../../game/rules/nextrow";
 import { mixRules } from "../../game/rules/orders";

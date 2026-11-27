@@ -1,4 +1,4 @@
-// A return's figures (game/chapter.ts) and their words (game/chronwords.ts, chapterRows): what the return found
+// A return's figures (game/book/chapter.ts) and their words (game/book/chronwords.ts, chapterRows): what the return found
 // against what the player left, kept with the visit in one write and joined by the later return; and the session takes
 // them as a return lands.
 import { fixtureContent, Q } from "../fixtures/content";

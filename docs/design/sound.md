@@ -139,10 +139,10 @@ and picture are not seen to be apart (ITU-R BT.1359). Durations are the code's o
 | Sound | Starts on | Its animation | Longest it may be heard |
 |---|---|---|---|
 | Tap | the `landed` class going on the card | `landed`, 0.7 s (`app/client/src/game.css`) | 0.3 s |
-| Chain tick | the link's turn in the cascade | link pace 90 ms (`LINK_GAP_MS`, `app/client/src/game/arrivals.ts`); the mark fades over 0.4 s (`--link-ms`) | 0.12 s, so ticks stay apart |
+| Chain tick | the link's turn in the cascade | link pace 90 ms (`LINK_GAP_MS`, `app/client/src/game/story/arrivals.ts`); the mark fades over 0.4 s (`--link-ms`) | 0.12 s, so ticks stay apart |
 | First | the `arrive` class going on the thing | `arrive`, 0.5 s | 0.5 s |
 | Level | the `burst` class going on the row | `burst`, 0.9 s; the card's line stays 2 s (`LEVEL_MS`, `app/client/src/ui/cards/cardlevel.ts`) | 0.9 s |
-| Story cue | the beat's first line showing | `line-in`, 0.2 s; the line is then held 3.5 s or more (`READING.floorMs`, `app/client/src/game/reading.ts`) | 2.5 s, over before anything else can show |
+| Story cue | the beat's first line showing | `line-in`, 0.2 s; the line is then held 3.5 s or more (`READING.floorMs`, `app/client/src/game/story/reading.ts`) | 2.5 s, over before anything else can show |
 | Opening's end | the end's first line showing | the evening firelight, 0.8 s; the lines' 20 s | 4 s |
 | Failed tap | the `tap-failed` class going on the card | 0.4 s (`--fail-ms`), reddest at 0.14 s | 0.3 s |
 | Page turn | the page's slide starting | `journal-turn`, 0.15 s | 0.5 s, with its peak inside the first 0.27 s |

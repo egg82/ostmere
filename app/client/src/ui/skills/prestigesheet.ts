@@ -1,7 +1,7 @@
 // The prestige sheet (docs/design/prestige-phases.md, "The click and the menu"), opened from a skill row's Push past or
 // Choose: the levels the top lifts from and to, and the level the carried XP takes the skill to, then the menu's nodes
 // in track order, each with its rank ("2/5"), what one more rank changes as plain numbers before and after
-// (game/prestige.ts), and its own button. The sheet stays open after the click: it says the skill is past its top and
+// (game/skills/prestige.ts), and its own button. The sheet stays open after the click: it says the skill is past its top and
 // offers Undo while undo_open; an undo brings the same menu back to choose again; it also lists the picks, each with Move
 // (ui/skills/movepicks.ts). Every number is the view's.
 import type { MenuNode, SkillPrestige, View } from "../../api/types";

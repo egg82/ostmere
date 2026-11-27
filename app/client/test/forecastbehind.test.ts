@@ -1,5 +1,5 @@
 // A forecast refused as catching_up (the save is behind: contract/catching-up.txt, "CATCHING UP") is a read that wrote nothing, so the
-// page asks a plain advance, which catches the save up (src/game/session.ts).
+// page asks a plain advance, which catches the save up (src/game/page/session.ts).
 import { ApiFailure, type GameApi } from "../src/api/api";
 import type { Step } from "../src/api/types";
 import { fixtureContent } from "../fixtures/content";

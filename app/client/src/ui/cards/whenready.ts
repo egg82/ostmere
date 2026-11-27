@@ -3,7 +3,7 @@
 // target, never inside it. It adds one tap of the card to the queue, and the card flies to the Rules tab, where Next lists it. Once queued it stays as a quiet
 // "in Next" mark, so the card does not change size under the finger. The first time it is on show it takes the one
 // glow (once a page session), the queue's taught step. On a staged card a tap runs it is "Until done" instead
-// (game/untildone.ts), the hands' card panel and a person's page alike.
+// (game/cards/untildone.ts), the hands' card panel and a person's page alike.
 import type { Card, View } from "../../api/types";
 import { canQueue, onFace, queuedCards, queueFull, whenReady } from "../../game/mixes/queue";
 import { UI } from "../../game/page/text";

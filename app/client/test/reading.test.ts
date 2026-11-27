@@ -1,4 +1,4 @@
-// How long a story line is held (game/reading.ts): the floor, the words rate, and the first line of a return's multiple.
+// How long a story line is held (game/story/reading.ts): the floor, the words rate, and the first line of a return's multiple.
 import { READING, readingMs } from "../src/game/story/reading";
 
 function expect(label: string, got: unknown, want: unknown): void {

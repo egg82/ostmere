@@ -1,4 +1,4 @@
-// People's coming and going in the story (contract/people.txt, "PEOPLE"; game/people.ts, ui/story/story.ts, ui/book/chapter.ts): a day's
+// People's coming and going in the story (contract/people.txt, "PEOPLE"; game/town/people.ts, ui/story/story.ts, ui/book/chapter.ts): a day's
 // mention lines are one line, worded from the band for how many they count and drawn by a seeded shuffle bag; a later
 // Step on the same day rewords it rather than adding a second; the "Since you left" chapter gathers the lines telling a
 // person's joining and the day's mentions into its people section, and has none when nobody came or went.

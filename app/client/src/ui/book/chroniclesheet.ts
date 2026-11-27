@@ -1,5 +1,5 @@
 // The chronicle, newest first, the Book's first page (docs/design/opening-screen/attention.md, "The chronicle"; ui/book/book.ts): a
-// row of filters once more than one kind has an entry (game/chronicle.ts routes each kind to one), then the newest
+// row of filters once more than one kind has an entry (game/book/chronicle.ts routes each kind to one), then the newest
 // return's "Since you left" chapter (ui/book/chapter.ts) and one stretch per earlier visit, folded to a line of counts (the
 // newest open when there is no chapter). Lines run oldest first within each. Each line carries its cause beneath it.
 // Under Story, a stretch ends with how many entries it holds of each other filter, and each count opens that filter.
@@ -61,7 +61,7 @@ export class ChronicleSheet implements BookPage {
     this.redraw();
   }
 
-  /** `entry` in the place of `old`: a day's mention reworded as it counts more (game/people.ts). */
+  /** `entry` in the place of `old`: a day's mention reworded as it counts more (game/town/people.ts). */
   replace(old: Entry, entry: Entry): void {
     this.entries = this.entries.map((e) => (e === old ? entry : e));
     this.redraw();

@@ -33,7 +33,7 @@ export class Skills implements Part {
     for (const bar of bars) {
       const row = this.rows.get(bar.skill);
       if (!row) continue;
-      row.node.classList.toggle("story", story.has(bar.skill));   // the story mark (game/story.ts)
+      row.node.classList.toggle("story", story.has(bar.skill));   // the story mark (game/story/story.ts)
       const before = shownLevel(row.bar);
       row.draw(bar);
       if (prev && known.has(bar.skill) && shownLevel(bar) > before) this.ctx.arrivals.effect(row.node, "skill", (quiet) => play(row.node, "level", quiet), "level", "level");

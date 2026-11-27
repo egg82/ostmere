@@ -60,7 +60,7 @@
 .stuck-offers .stuck-offer { border-left: 3px solid var(--hue); }
 .stuck-offers .stuck-more { color: var(--ink); }
 .town-doing.stuck, .town-doing.wasted { color: var(--ember-hot); }
-.card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/wasted.ts) */
+.card-need.wasted { color: var(--ember-hot); }   /* a running card's work thrown away: its stores are full (game/cards/wasted.ts) */
 .town-ident { display: flex; align-items: baseline; gap: .6rem; margin-right: auto; }
 .town-count { font-size: var(--t-meta); color: var(--ink); }   /* a group's head count, beside its label */
 .town-face.stack .ask-face + .ask-face { margin-left: -.45rem; }   /* a group's members' faces overlap into one stack */

@@ -1,4 +1,4 @@
-// Goal stints (ui/next/stint.ts, game/queue.ts; contract/goal-stints.txt, "Goal stints"): the editor lists the dry run's unmet goals
+// Goal stints (ui/next/stint.ts, game/mixes/queue.ts; contract/goal-stints.txt, "Goal stints"): the editor lists the dry run's unmet goals
 // and queues the mix until the picked row's `until`; Next names a stint by mix and goal, and the running one states
 // when its goal lands, or never, with the line that binds it.
 import { install } from "./fake-dom";

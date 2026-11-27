@@ -121,7 +121,7 @@ export function withTownShare(catalog: Catalog, mix: Mix, card: string, bp: numb
 
 /** A card joining a person's time: all of it when they have no other card (time left free is time idle), else half of
  * what is free, or all of it when that is less; with under the smallest share free, an equal slice from their cards, as
- * a card joins the hands' mix (game/mix.ts joinCard). */
+ * a card joins the hands' mix (game/mixes/mix.ts joinCard). */
 export function joinTownCard(catalog: Catalog, mix: Mix, card: string): Mix | null {
   const lane = catalog.laneOf(card);
   const bp = catalog.content.scales.bp;

@@ -1,4 +1,4 @@
-// What a story beat waits on, on screen (contract/goals.txt, "Goals"; game/story.ts): the card, the ledger line and the skill
+// What a story beat waits on, on screen (contract/goals.txt, "Goals"; game/story/story.ts): the card, the ledger line and the skill
 // row it waits on carry the story mark and nothing else does; a store with no line yet is a row of its own in the Camp
 // bar's box; a wait on the clock is a plain line under them, with its time and the store that keeps it moving, or that
 // store alone while it is dry.

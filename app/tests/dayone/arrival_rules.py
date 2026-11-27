@@ -1,6 +1,6 @@
 """The arrival queue's timing rules, read from the page's own source so the simulator and the page share one home:
-the pace and cap from client/src/game/arrivals.ts, the reading time from client/src/game/reading.ts, and the line kinds
-the story strip plays from client/src/game/chronicle.ts. `reveal_ms` is
+the pace and cap from client/src/game/story/arrivals.ts, the reading time from client/src/game/story/reading.ts, and the line kinds
+the story strip plays from client/src/game/book/chronicle.ts. `reveal_ms` is
 ArrivalQueue.start's schedule for one batch without reduced motion: lines first, each holding the next turn for its
 reading time, then the rest evenly within the cap, the ledger's lines holding the kinds behind them (skills, cards) for
 their longest reading time."""

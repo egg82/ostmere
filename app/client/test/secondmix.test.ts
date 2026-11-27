@@ -1,4 +1,4 @@
-// The second mix's lesson (game/lessons.ts, SECOND_MIX; docs/design/opening-screen/lessons.md, "Lessons"), on the whole screen: a
+// The second mix's lesson (game/lessons/lessons.ts, SECOND_MIX; docs/design/opening-screen/lessons.md, "Lessons"), on the whole screen: a
 // card the player keeps tapping by hand that their running mix could take is the trigger, once the first rule's lesson is
 // behind. It walks the Mixes list's own New mix with nothing in it: the tasks and the shares are the player's, Save only
 // saves, and the last step shows where switching is. It starts on an account that touched that card's dot in an old save.
@@ -88,7 +88,7 @@ for (const [who, account] of [["a new account", TAUGHT], ["a returning account",
   expect(`${who}: the next view takes the trigger off the card`, r.trigger() !== null, false);
 }
 
-{  // before the first rule's lesson is behind: the dot only (game/hints.ts), no lesson
+{  // before the first rule's lesson is behind: the dot only (game/hands/hints.ts), no lesson
   const r = rig(step.view, { ...TAUGHT, lessons: [FIRST_MIX] });
   r.frame(); r.frame();
   expect("no trigger", r.trigger() !== null, false);

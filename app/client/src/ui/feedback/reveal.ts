@@ -1,6 +1,6 @@
 // One thing at a time (docs/design/opening-screen/one-thing-at-a-time.md, "One thing at a time" and "Coming back"). What a return brings,
 // and a live step's story lines with what they announce, are drawn at once, so the layout moves only then, but each new
-// thing stays invisible until its turn in the arrival queue (game/arrivals.ts): a line first, holding the next turn for
+// thing stays invisible until its turn in the arrival queue (game/story/arrivals.ts): a line first, holding the next turn for
 // its reading time, then the rest, each with the usual arrive pulse. Outside those, a new thing shows at once unless
 // something is still waiting, when it takes the next turn. Out of sight (below the fold on a phone), it shows at once.
 // While story lines wait their turn, a tap or key moves on to the next at once; Escape, or a tap on the story strip,

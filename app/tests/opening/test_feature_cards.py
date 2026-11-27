@@ -1,5 +1,5 @@
 """Feature cards: the dusk has none, since the night's real-time wait is taught by the clock lesson on the countdown it
-explains (client game/lessons.ts, CLOCK). The edge's card is test_edge_card.py's."""
+explains (client game/lessons/lessons.ts, CLOCK). The edge's card is test_edge_card.py's."""
 import pytest
 
 from ashfall_app.opening.schema import Opening

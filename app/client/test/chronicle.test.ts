@@ -1,5 +1,5 @@
-// The chronicle's routing (game/chronicle.ts): one filter per kind, the strip holding the story filter's kinds alone,
-// entries placed by time and capped per filter; which stretch an entry belongs to; and the words (game/chronwords.ts).
+// The chronicle's routing (game/book/chronicle.ts): one filter per kind, the strip holding the story filter's kinds alone,
+// entries placed by time and capped per filter; which stretch an entry belongs to; and the words (game/book/chronwords.ts).
 import { fixtureContent } from "../fixtures/content";
 import { Catalog } from "../src/game/page/catalog";
 import { KEEP, ROUTES, added, filtersOf, held, inStrip, stretches, tally, type Entry, type EntryKind } from "../src/game/book/chronicle";

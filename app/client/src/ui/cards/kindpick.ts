@@ -1,4 +1,4 @@
-// The kind picker on a card that stands for several kinds (game/variants.ts): the other kinds' rows are hidden, and the
+// The kind picker on a card that stands for several kinds (game/cards/variants.ts): the other kinds' rows are hidden, and the
 // shown one carries a row of buttons, one per kind in view, the shown kind pressed and a kind at work marked. A kind not
 // yet in front of the player carries the quiet dot on its button. Which kind is picked is kept per device.
 import type { View } from "../../api/types";

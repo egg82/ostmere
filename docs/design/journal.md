@@ -30,7 +30,7 @@ log whose thresholds live in `opening.toml`'s `[repeat_offers]`. The journal is 
 | The pages, the notes and their hands and sketches | The Journal sheet and its notes as data (`api/contract/journal.txt`, "JOURNAL") | The `days` section's notes come from the composed days instead of beat unlocks; creatures and places are untouched |
 | Who is written up and who is a mention | People (`decisions.md`, "People, as built"): `line` or `mention`, authored per lane | A `line` person is a subject the journal always writes; a day's mentions are one crowd subject worded by band |
 | Seeded draws | Chance (`systems.md`): draws hashed from (seed, stream, key), never a running counter | Its first server-side use. Keys use the save id, as the page's draws do |
-| Variety among a slot's lines | The shuffle bag (`app/client/src/game/fights.ts`, `bagged`; the people's bands) | The same rule in the composer, keyed by save, subject and slot |
+| Variety among a slot's lines | The shuffle bag (`app/client/src/game/ledger/fights.ts`, `bagged`; the people's bands) | The same rule in the composer, keyed by save, subject and slot |
 | When it is written | The save writer (`app/ashfall_app/saves/write.py`), which already stores each step's lines and reads repeats in the step's transaction | Composes the day in progress, and each day the step closed, in the same transaction |
 
 **Patterns.** *Type Object* (Nystrom, read): a subject kind is data carrying its habit numbers, and a subject is an

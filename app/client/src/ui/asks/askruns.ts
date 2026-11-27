@@ -1,4 +1,4 @@
-// The figures each answer of an ask moves (game/asks.ts, answerFigures): one dry run per answer that installs a
+// The figures each answer of an ask moves (game/asks/asks.ts, answerFigures): one dry run per answer that installs a
 // modifier (AnswerInfo.change_bp; an answer that starts a card or puts in stores says so in its cost text), never kept.
 // Asked again only when what the figures are read against moves (the view's rates, caps and card times); until the
 // new runs answer, the last ones stand.

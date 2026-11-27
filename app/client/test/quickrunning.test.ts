@@ -1,4 +1,4 @@
-// The simple view's When row offers the few running cards a rule is about (ruleoffers.quickRunning, game/relevant.ts), read
+// The simple view's When row offers the few running cards a rule is about (ruleoffers.quickRunning, game/condition/relevant.ts), read
 // off the cards' kept lane or side, then what feeds the rule's inputs; More options keeps every running card. A rule
 // changed to another action drops a running subject that action no longer offers.
 import { install } from "./fake-dom";

@@ -74,7 +74,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
 
 - **One record, one home per kind.** Every line the game writes, each rule's start and let-go and each fight goes to
   the chronicle, the Book's first page (`app/client/src/ui/book/chroniclesheet.ts`, in `app/client/src/ui/book/book.ts`). Each kind
-  has one filter (`app/client/src/game/chronicle.ts`, `ROUTES`): story, taps and the body's lines
+  has one filter (`app/client/src/game/book/chronicle.ts`, `ROUTES`): story, taps and the body's lines
   under Story; finds, levels, rules and fights each under their own; town talk under its own, ready for the living
   world. The story strip on the main screen holds the Story filter's kinds and nothing else, so a find, a level, a
   rule or a fight never lands there, and town talk never will. A filter is offered once it has an entry, Story first
@@ -84,7 +84,7 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   left" (`app/client/src/ui/book/chapter.ts`): never folded, its lines with their causes, then under Story its figures as
   rows, each only when it has something: stores gained and lost, levels old → new (the Camp's first), the rules that
   ran, and how many asks wait now, linked to the Asks list (the sheet of all of them when several wait). Figures, not sentences: a death or a fall stays a story line in the
-  chapter, never a count in a row. The figures are taken once, as the return lands (`app/client/src/game/chapter.ts`),
+  chapter, never a count in a row. The figures are taken once, as the return lands (`app/client/src/game/book/chapter.ts`),
   against the view the player left, and kept with the visit (`SavePresentation.chapter`), so a reload keeps them; a
   return from before they were kept shows its lines and claims no figures. When anyone came or went while away, a
   people section follows the rows: the lines telling a person's joining or leaving and each day's mention, taken out
@@ -102,21 +102,21 @@ How the chronicle stands today, moved from its row in `systems.md`. The unwrap c
   runner's pool takes the runner, while ui.fight.* lines already name it. Rejected: putting the trigger's id on each
   engine line, which would say exactly which level wrote a pool line but needs a new column on stored lines for a
   history's sake.
-- The page's arrival queue (`app/client/src/game/arrivals.ts`) reveals what a return brings in turn and, live, each
+- The page's arrival queue (`app/client/src/game/story/arrivals.ts`) reveals what a return brings in turn and, live, each
   story line before what it announces.
 - What the rules did lately: the engine's rule changes (`app/ashfall_app/engine/rulelog.py`) kept per rule on the
   save's row (`app/ashfall_app/saves/ruleruns.py`), a goal stint's start and landing among them, with what the save
   gained in its mix's stores between the two, drawn at the foot of the Rules tab (`app/client/src/ui/rules/rulelately.ts`)
-  and as the chronicle's Rules entries (`app/client/src/game/rulerows.ts`). The record is a summary, so a start a later
+  and as the chronicle's Rules entries (`app/client/src/game/rules/rulerows.ts`). The record is a summary, so a start a later
   start replaced before any page saw it is not an entry.
 - Fights since the last view, exactly as many lost as the engine's count, which ones picked by a shuffle-bag draw keyed
   by save, fight and window, each worded from its runner's pool of lines when the content gives one
-  (`app/client/src/game/fights.ts`; `app/ashfall_app/api/contract/fights.txt`, "FIGHTS").
+  (`app/client/src/game/ledger/fights.ts`; `app/ashfall_app/api/contract/fights.txt`, "FIGHTS").
 - **A line said again and again comes from a pool said in turn** (owner, #465): any line that is necessarily
   repeated (a chip going off, a fight won or lost, a people band) draws from at least six lines, in a shuffled turn,
   never the same twice in a row; the content check counts the keys (`docs/engineering.md`, "Structural gates"). An
   empty fight pool falls back to the page's stock fight line, which is UI words, not the journal's.
 - The visits record: each return after a long time away kept in the save's presentation, newest last and the oldest
-  dropped past a limit (`app/client/src/game/keeps.ts`, `app/ashfall_app/accounts/presentation.py`), which the
+  dropped past a limit (`app/client/src/game/account/keeps.ts`, `app/ashfall_app/accounts/presentation.py`), which the
   chronicle splits its stretches at, whatever the filter; beside it the newest return's figures, replaced only by a
   later return's.

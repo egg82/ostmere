@@ -99,7 +99,7 @@ and you tune it, then hit go.
   a rule that needs exactly 12. A new rule starts with shares, a rule already written keeps its numbers until either
   level is switched, and a goal stint can also run until a store is half, three quarters or full. The engine reads a
   share against the cap at that moment (`engine/design/`, "SHARE LEVELS"). The editor builds only a rule that
-  starts and stops at least one whole item apart (`valid` in `app/client/src/game/storerule.ts`), so on a small store a
+  starts and stops at least one whole item apart (`valid` in `app/client/src/game/condition/storerule.ts`), so on a small store a
   share can sit no nearer full than that allows: "down to 95%, until full" works on 54 roots but stops at 90% on 18 wood.
   Kept as it is, with nothing on screen saying why (owner, 2026-11-16: "we can leave it as is"): a rule one item from
   full would restart on every item.
@@ -129,7 +129,7 @@ and you tune it, then hit go.
   list shows one side at a time, the player's own rules or everyone else's, with the same editor and controls; the camp's
   rules are as first-class as the player's. A rule's side is the lane its action runs on (a task on a person's lane),
   never its wording; a new rule offers its side's tasks, a person's by name on Camp. The
-  side is kept per device and follows a rule the player adds or opens (`app/client/src/game/ruleside.ts`).
+  side is kept per device and follows a rule the player adds or opens (`app/client/src/game/rules/ruleside.ts`).
 - **Lessons are kept per save, and a player who knows the game can turn them off**. A new game
   teaches everything again from each lesson's own moment, whatever another game kept; one account-wide setting, on by
   default, turns every lesson and the hints only a lesson gives off, and back on from where each game stands.
@@ -221,7 +221,7 @@ order stands (on, waiting, outranked, passed over, behind Next) is served on the
 and the Rules tab says why a rule is off under it (`app/client/src/ui/rules/rulewhy.ts`). The page queues one run of a card
 (held until its count is one past the runs planned before it), and a mix until a goal row lands (a goal
 stint: a queued switch runs over the player's mix until it pops, `engine/design/`, "Queue mix";
-`app/client/src/ui/next/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/queue.ts`).
+`app/client/src/ui/next/stint.ts`), and lists the queue as Next in the Rules tab (`app/client/src/game/mixes/queue.ts`).
 Next is a row among the hands' rules, moved like one (owner: not taking the next planned thing when it is ready feels
 off, but Plan should not jump every rule: a rule that cures tiredness still comes first). Rules above it outrank a ready
 entry; rules under it wait while one has the hands and pick up again after it pops. A ready entry takes the hands when

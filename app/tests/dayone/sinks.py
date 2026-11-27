@@ -106,7 +106,7 @@ def in_mix(save: Save, trip: Trip) -> bool:
 
 def line_drawn(v: View, line: LedgerLine, kept: frozenset[str] = frozenset()) -> bool:
     """Whether the page draws the store's ledger line at this view: one it has kept (`kept`: a line drawn once stays,
-    kept for the account, client ui/ledger/ledger.ts), or one joining now (client game/shown.ts, lineJoins): starved, drawn
+    kept for the account, client ui/ledger/ledger.ts), or one joining now (client game/page/shown.ts, lineJoins): starved, drawn
     down by something other than the hands' tap, full while fed, or covered. A line joining by an order card's offer
     is not modelled, so this errs toward refusing."""
     if str(line.store) in kept:
@@ -432,7 +432,7 @@ def reserve_mix_id(trip: Trip) -> MixId:
 
 
 def reserve_rule(v: View, rules: Rules, save: Save, trip: Trip) -> Order | None:
-    """The rule the page builds for "Under n {supply}, until m" (client game/storerule.ts, buildRule), running the
+    """The rule the page builds for "Under n {supply}, until m" (client game/condition/storerule.ts, buildRule), running the
     trip's reserve mix. n is the most one of `reserve_for` takes of the supply a completion, in whole items rounded up,
     or an item over the highest level another rule of the player's comes on under the store, if higher: the reserve
     keeps the store above it, so the two never fight over the store. m is the page's default, halfway from n to the
@@ -480,7 +480,7 @@ def queue_comforts(v: View, save: Save, chapter: Chapter) -> Move | None:
     """When ready on each comfort that shows, whether or not its inputs are in yet: the queue carries it across an
     absence (design/banked-time.txt, "BANKED TIME", "Comfort"). The queue's head is never passed over, so its comfort entries are
     kept soonest ready first (ready now, then by ready time), and one showing no ready time is not queued (the page
-    offers When ready only with one, client game/queue.ts) and goes last if it already is: either would hold back a
+    offers When ready only with one, client game/mixes/queue.ts) and goes last if it already is: either would hold back a
     comfort that is ready. The order is set as each new comfort is queued (one SetQueue), never re-sorted on its own,
     so a visit's ready times shifting do not churn the queue."""
     order = by_readiness(v, chapter)

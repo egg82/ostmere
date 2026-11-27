@@ -1,4 +1,4 @@
-// A rate shows the fewest digits that still tell it apart (game/format.ts, perMinute): whole when it is whole, trailing
+// A rate shows the fewest digits that still tell it apart (game/page/format.ts, perMinute): whole when it is whole, trailing
 // zeros never, and a rate that is not zero never reads as zero; a flat line carries no sign.
 import { fixtureContent, R } from "../fixtures/content";
 import { Format } from "../src/game/page/format";

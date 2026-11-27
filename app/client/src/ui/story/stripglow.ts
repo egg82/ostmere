@@ -9,7 +9,7 @@ export class StripGlow {
   constructor(private readonly strip: HTMLElement) {}
 
   /** Each of `nodes` first in the queue, in the strip, held for its reading time (a null, or a node not in the strip, is
-   * skipped: a return's chip or task line, game/awaylines.ts). `id` gives each a queue id. On a return the first is held
+   * skipped: a return's chip or task line, game/book/awaylines.ts). `id` gives each a queue id. On a return the first is held
    * READING.returnFirst times longer and the strip glows for that hold. */
   lead(arrivals: Arrivals, nodes: Array<HTMLElement | null>, returned: boolean, id: () => string, opens: readonly boolean[] = []): void {
     let first = returned;

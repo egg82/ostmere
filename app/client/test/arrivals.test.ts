@@ -1,4 +1,4 @@
-// What arrived while away is revealed in turn (game/arrivals.ts, ui/feedback/reveal.ts): kind order unless times are known, the
+// What arrived while away is revealed in turn (game/story/arrivals.ts, ui/feedback/reveal.ts): kind order unless times are known, the
 // first at once and the rest 400–700 ms apart within a 4 s cap, a tap or key showing the rest, everything at once under
 // reduced motion, and nothing held back outside a return.
 import { ArrivalQueue, CAP_MS, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/story/arrivals";

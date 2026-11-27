@@ -99,7 +99,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: SECOND_MIX,
-    // a card the player keeps tapping by hand that their running mix could take (game/hints.ts, secondMixCard; ui/cards/cards.ts
+    // a card the player keeps tapping by hand that their running mix could take (game/hands/hints.ts, secondMixCard; ui/cards/cards.ts
     // marks it), once the first rule's lesson is behind: walked on the Mixes list's own New mix with nothing in it, so the
     // tasks and their shares are the player's pick; saving runs nothing, so it ends on how to switch
     may: (view, keeps) => view.mixes.length > 0 && keeps.lessonKept(FIRST_RULE),
@@ -117,7 +117,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: CAP_RULE,
-    // the first full store the hands fill (game/caphint.ts; ui/ledger/ledger.ts marks its line), once writing rules is open (the
+    // the first full store the hands fill (game/hands/caphint.ts; ui/ledger/ledger.ts marks its line), once writing rules is open (the
     // Rules tab is drawn then, with its New rule): walked
     // on the Rules tab's own New rule with nothing filled in; what the hands do instead is the player's pick, so that step
     // points at the whole row
@@ -139,7 +139,7 @@ export const LESSONS: readonly Lesson[] = [
   SIDE_LESSON,
   {
     id: DRY_STORE,
-    // the first dry store a mix card stopped on that a card in play could refill (game/dryhint.ts; ui/ledger/ledger.ts marks its
+    // the first dry store a mix card stopped on that a card in play could refill (game/hands/dryhint.ts; ui/ledger/ledger.ts marks its
     // line), once rules are taught: walked on the running mix's own Edit, adding the maker; a rule is the other answer, in
     // one line. A save with a hands mix that already feeds itself has done what this teaches (dryCue reads that)
     may: (view, keeps) => keeps.lessonKept(FIRST_RULE) || view.orders.some((o) => o.then.kind === "switch_mix"),
@@ -180,7 +180,7 @@ export const LESSONS: readonly Lesson[] = [
   },
   {
     id: SWITCH_MIX,
-    // after the end, a build waits on a store nothing at work makes (game/teach.ts, switchCue; ui/hands/hands.ts marks the way to the
+    // after the end, a build waits on a store nothing at work makes (game/story/teach.ts, switchCue; ui/hands/hands.ts marks the way to the
     // list, or Edit): taught on the real controls, to the saved mix that makes the store, or to adding the card that does
     may: () => true,
     trigger: `[data-switch]`,

@@ -1,7 +1,7 @@
 // The Book's Map page (contract/map.txt, "MAP"; docs/decisions.md, "A world map"): the town and the places found so far on
 // one sheet, north up, each an engraved stamp (the town's warm, the rest cool) with its name in clear space beside it, and
 // the named places listed beside the sheet (under it on a phone), so no name needs a hover. Offered only once a place is
-// revealed. The stamps' manifest is fetched when the page is first offered; the layout is game/maplayout.ts's, redrawn
+// revealed. The stamps' manifest is fetched when the page is first offered; the layout is game/book/maplayout.ts's, redrawn
 // when the sheet's size changes. Nothing here sends anything.
 import type { View } from "../../api/types";
 import { frameOf, placeLabels, stampBoxes, type Box, type Cell, type Frame } from "../../game/book/maplayout";
@@ -61,7 +61,7 @@ export class MapPage implements Part {
     const shown = revealed(catalog, view);
     this.button.hidden = shown.length === 0;
     if (shown.length === 0) { delete this.button.dataset["teach"]; return; }
-    this.button.dataset["teach"] = "map";   // the map's lesson starts on it (game/lessons.ts)
+    this.button.dataset["teach"] = "map";   // the map's lesson starts on it (game/lessons/lessons.ts)
     if (!this.loading) this.load();
     if (prev !== null && revealed(catalog, prev).length < shown.length) markNew(this.book.tab, () => undefined);
     const spots = [{ id: HOME, at: { east: 0, north: 0 }, label: catalog.townTitle(view) },

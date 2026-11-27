@@ -1,6 +1,6 @@
 // The full editor's "Unless" (docs/design/rule-guards.md, "How the page words it"; behind More options): the rule's
 // guards as words, each with a remove, and an add that picks what to watch. A chip, a level or a task's count is one
-// tap; a store then takes one test and one level, in either form (game/guarddraft.ts builds the condition and keeps
+// tap; a store then takes one test and one level, in either form (game/condition/guarddraft.ts builds the condition and keeps
 // its release one item past the value). Up to Content.limits.max_unless guards, none twice.
 import type { Condition, View } from "../../api/types";
 import type { Catalog } from "../../game/page/catalog";

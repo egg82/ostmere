@@ -32,7 +32,7 @@ def rest_when() -> Condition:
 
 
 def offer_shows(after_end: bool, ended: bool, read: bool, wanted: bool) -> bool:
-    """The page's gate on a chip's card (game/cues.ts, chipCard): one with after_end waits for the end and its lines
+    """The page's gate on a chip's card (game/ledger/cues.ts, chipCard): one with after_end waits for the end and its lines
     read; `wanted` is the rest of its test (the chip on, no rule on its store and test)."""
     return wanted and (not after_end or (ended and read))
 

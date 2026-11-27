@@ -1,7 +1,7 @@
 // "Next", the queue in the Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"): what the queue will tap or run
 // (a goal stint, ui/next/stint.ts), in its order, one line each with Remove, or "under way" for a tap a lane already runs.
 // Each tap is one run: runs of the same card one after another are one line, "×N", whose Remove and ≡ act on one. Its
-// heading is a row among the hands rules, moved as one (game/nextrow.ts): the rules above it outrank a ready head, the
+// heading is a row among the hands rules, moved as one (game/rules/nextrow.ts): the rules above it outrank a ready head, the
 // rules under it wait for one (contract/endpoints.txt, "Next's row"). It starts at the bottom, just above "Otherwise".
 import type { QueueEntry, View } from "../../api/types";
 import { NEXT } from "../../game/rules/nextrow";
@@ -16,7 +16,7 @@ import type { NextOrder } from "./nextorder";
 import type { PartContext } from "../part";
 import type { StintPlan } from "./stintplan";
 
-/** Next's row (`head`: its ≡ and the lines hanging under it, game/nextrow.ts), one line per queue entry and the Plan
+/** Next's row (`head`: its ≡ and the lines hanging under it, game/rules/nextrow.ts), one line per queue entry and the Plan
  * control; nothing for an empty queue Plan does not offer, unless the row is kept off the bottom (head.kept: it stays
  * where the player can move it back). */
 export function nextRows(ctx: PartContext, view: View, plan: StintPlan, order: NextOrder, head: NextHead = { handle: el("span", "rule-handle-gap"), under: [], kept: false }): HTMLElement[] {

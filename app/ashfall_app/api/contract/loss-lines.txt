@@ -104,7 +104,7 @@ LOSS LINES
     losses=()), losses a tuple of saves.journal.Loss(runner: str, keys: tuple[str, ...], lost: int); Note and
     ComposedDay as statement 1's, Note gaining count: int | None = None (set on a fold note only); SlotName gains
     "loss" and "fold". The day's lines and subjects may be empty: loss notes need neither.
-  - The page: game/fights.ts lostPool(fight: FightInfo | null): readonly string[], the pool a runner's lost entries
+  - The page: game/ledger/fights.ts lostPool(fight: FightInfo | null): readonly string[], the pool a runner's lost entries
     are worded from (loss_pool when set, else lost_line_keys, [] for null), which the chronicle's poolLine draws
     from; ui/ledger/fightpanel.ts FightPanel(catalog, info), whose .fight-loss node holds the on-loss line.
 

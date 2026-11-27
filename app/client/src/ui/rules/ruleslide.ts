@@ -6,7 +6,7 @@ import type { Decision, View } from "../../api/types";
 import { reducedMotion } from "../dom";
 
 /** Where each rule that changes place lands: new index -> old index, for rule `index` moved to where rule `to` stands
- * in `group` (the rules drawn together, in order), the ones between shifting one place (game/orders.ts reorderRule). */
+ * in `group` (the rules drawn together, in order), the ones between shifting one place (game/rules/orders.ts reorderRule). */
 export function shiftOf(group: readonly number[], index: number, to: number): Map<number, number> {
   const from = group.indexOf(index), at = group.indexOf(to);
   const moved = new Map<number, number>();

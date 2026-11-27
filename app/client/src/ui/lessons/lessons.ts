@@ -1,4 +1,4 @@
-// The lesson runner (game/lessons.ts holds the lessons as data). A lesson starts when its trigger is on show and it
+// The lesson runner (game/lessons/lessons.ts holds the lessons as data). A lesson starts when its trigger is on show and it
 // may; then each step's control takes the one glow, with its line in a small note beside it, fixed to the viewport so
 // nothing in the layout moves. When a step starts and its control, or what it keeps `clear`, is out of sight (off the
 // window on a phone's long page, under a pinned strip, past a scrolling sheet's edge), the control is scrolled to the
@@ -84,7 +84,7 @@ export class Lessons implements Part {
     return this.run?.lesson.id ?? null;
   }
 
-  /** The lesson under way that holds a guided rule offer back (game/lessons.ts, ruleWaits): `current`, but not one that
+  /** The lesson under way that holds a guided rule offer back (game/lessons/lessons.ts, ruleWaits): `current`, but not one that
    * yields and has not been touched. */
   get holding(): string | null {
     const run = this.run;
@@ -105,7 +105,7 @@ export class Lessons implements Part {
     if (this.run && this.run.reached < 0 && outrankedBy(this.run.lesson, view, this.ctx.keeps, (sel) => find(this.doc, sel) !== null)) this.abandon(this.run);
     if (!this.run) {
       this.run = this.start(view, t);
-      if (this.run) this.changed();   // another guided offer now waits (game/lessons.ts, ruleWaits)
+      if (this.run) this.changed();   // another guided offer now waits (game/lessons/lessons.ts, ruleWaits)
     }
     const run = this.run;
     if (!run) return;
@@ -130,7 +130,7 @@ export class Lessons implements Part {
     if (run.target) this.ctx.glow.clear(run.target);
     this.run = null;
     this.root.hidden = true;
-    this.changed();   // an offer that waited on this one comes back (game/lessons.ts, ruleWaits)
+    this.changed();   // an offer that waited on this one comes back (game/lessons/lessons.ts, ruleWaits)
   }
 
   /** The step on show now, drawn when it changed or when its control was redrawn under it (the editor redraws its rows

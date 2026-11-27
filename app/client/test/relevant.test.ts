@@ -1,4 +1,4 @@
-// The stores a rule is about (game/relevant.ts): read off the cards' served makes and takes alone, never their names.
+// The stores a rule is about (game/condition/relevant.ts): read off the cards' served makes and takes alone, never their names.
 // The planted content gives smoking the catch a card one step out on each side, a card that only shares its input,
 // a maker it does not know yet, and a card whose name shares a word with a store it has nothing to do with.
 import { fixtureContent } from "../fixtures/content";

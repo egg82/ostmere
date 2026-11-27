@@ -1,4 +1,4 @@
-// The stopped mix's lesson (game/lessons.ts, MIX_STOPPED), on the whole screen: the first running mix to grey over a done
+// The stopped mix's lesson (game/lessons/lessons.ts, MIX_STOPPED), on the whole screen: the first running mix to grey over a done
 // card marks Edit, and the lesson walks Edit, the add button of the card the content says takes its place (when it names
 // one), the editor's ✕ on the done card and Save. Without a replacement, a mix with no other card left to run is not
 // marked (its ✕ is off); a mix that is not greyed never is; kept or skipped, it never comes again.

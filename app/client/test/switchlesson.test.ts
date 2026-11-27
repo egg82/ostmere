@@ -1,4 +1,4 @@
-// The switch-mix lesson (game/lessons.ts, SWITCH_MIX), on the whole screen: after the end, a build waits on a store nothing at
+// The switch-mix lesson (game/lessons/lessons.ts, SWITCH_MIX), on the whole screen: after the end, a build waits on a store nothing at
 // work makes, and the strip marks the way to the saved mix that makes it (Mixes ▾, or the mix's name) or Edit. Taught on the real
 // controls: the list's Run on that mix, or Edit, the add button of the card that makes the store, and Save. Kept or skipped, it
 // never comes again; lessons off, it never starts.

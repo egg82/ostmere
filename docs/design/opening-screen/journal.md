@@ -4,7 +4,7 @@ The book the player carries, written in: one page per thing known, its notes in 
 under them (api `contract/journal.txt`, "JOURNAL"; `decisions.md`, "What you learn is written in a journal" and, under Art,
 the type and the sketches). Fits into: Unlocks (entries and notes), Knowledge (the numbers, read off `View.fights`),
 Lessons (its first use), the Book (a page of it). Not a system: one caller, nothing to swap. The page's code is
-`game/journal.ts` (pure: which pages and notes show, what is unread, how a turn runs, the contents, the numbers rows, the
+`game/book/journal.ts` (pure: which pages and notes show, what is unread, how a turn runs, the contents, the numbers rows, the
 seeded draws), `ui/book/journal.ts` (the Book's Journal page) and `ui/book/journalnav.ts` (its controls for finding a page).
 
 ```
@@ -51,7 +51,7 @@ phone, portrait                        desktop, and a phone in landscape
 - **The days pages** hold the written days (`docs/design/journal.md`, "What the page draws"): each day's notes under
   its heading (`ui.journal.day`, in the hand at the notes' size, in `--hand-pencil`), days running on down a page; a
   note that does not fit starts a new page, headed again by its day, so a day still being written runs on over the
-  page instead of leaving it. Whether a note fits is counted in rows of the hand at the desktop page's width (`game/days.ts`: a page holds 22 rows of about 46 characters, a note's drawing
+  page instead of leaving it. Whether a note fits is counted in rows of the hand at the desktop page's width (`game/book/days.ts`: a page holds 22 rows of about 46 characters, a note's drawing
   five), never measured from the window, so the same days are the same pages on a phone and a desktop. The measure is
   a little under what the desktop page holds at 1440×900, so a full page fits it unscrolled; elsewhere the page
   scrolls as any long page does. A days page has no sketch and no numbers, and is seeded by its first day.
@@ -87,7 +87,7 @@ phone, portrait                        desktop, and a phone in landscape
   actions (and in 96% of its width), so the spread and its Prev and Next fit at 1280×720 and grow on a 4K screen with
   the rem-sized text. A right page whose notes run past its
   height scrolls inside itself, the numbers staying at its foot.
-- **Seeded per entry.** The page's draws come from the seeded draw `game/fights.ts` uses, keyed by "journal", the
+- **Seeded per entry.** The page's draws come from the seeded draw `game/ledger/fights.ts` uses, keyed by "journal", the
   entry id (a days page's first day) and the part, never the save, so a page looks the same in every game and on every device and differs from
   its neighbours. The seed sets the sketch's width (86–100% of its box) and its offset in the space left over (on the
   left page, its height too); on a phone, whether the first note sits above the sketch (35%, the method's "caption on

@@ -1,4 +1,4 @@
-// A long absence comes back in slices (src/game/session.ts; contract/catching-up.txt, Step.catching_up_to): a Step still catching up
+// A long absence comes back in slices (src/game/page/session.ts; contract/catching-up.txt, Step.catching_up_to): a Step still catching up
 // is announced with catchingUp(at, to) and asked past at once, never drawn; once one arrives that is not, exactly one
 // stepped() follows with every slice's lines. A decision made meanwhile is held and sent after, a catching_up 409 on a
 // decision goes on catching up, and no forecast is asked on the way. Written from the contract; the api is scripted.

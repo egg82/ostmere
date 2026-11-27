@@ -1,4 +1,4 @@
-// A card working into full stores (issue 467; game/wasted.ts): while it runs on a share and every store it makes sits at
+// A card working into full stores (issue 467; game/cards/wasted.ts): while it runs on a share and every store it makes sits at
 // its cap, its face says the work is wasted, in a need's place, and so does the Town row of the person working it. A
 // store with no ledger line is not known full; a tapped card, or one with room, says nothing.
 import { install, type FakeEl } from "./fake-dom";

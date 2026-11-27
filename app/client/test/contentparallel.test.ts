@@ -1,4 +1,4 @@
-// The content is asked for alongside /open, not after it (src/game/session.ts): a resume's two calls overlap.
+// The content is asked for alongside /open, not after it (src/game/page/session.ts): a resume's two calls overlap.
 import type { GameApi } from "../src/api/api";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";

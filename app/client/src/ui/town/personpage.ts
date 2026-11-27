@@ -10,7 +10,7 @@
 // member's name. While every card holding their time is stopped, the note under the split says so
 // and offers the tasks they could run now (stucknote.ts).
 // A station's page (the pot on the fire, LaneInfo.station) is a lane's that never joins: a tap on a task makes it the lane's
-// one task, its always rule changed in place (game/lanes.ts, laneTask), and the task it runs is drawn pressed.
+// one task, its always rule changed in place (game/town/lanes.ts, laneTask), and the task it runs is drawn pressed.
 import type { Card, View } from "../../api/types";
 import { sectioned } from "../../game/cards/cardsections";
 import { laneTap } from "../../game/hands/holder";
@@ -62,7 +62,7 @@ export class PersonPage {
   private faces: Row[] = [];
   /** The tasks whose upside line has its strength sheet open: a redraw keeps them open. */
   private readonly strengthOpen = new Set<string>();
-  /** A one-off the player tapped: Until done beside its tap (game/untildone.ts). */
+  /** A one-off the player tapped: Until done beside its tap (game/cards/untildone.ts). */
   private readonly untilDone: WhenReady;
 
   constructor(private readonly ctx: PartContext, private readonly closed: () => void) {

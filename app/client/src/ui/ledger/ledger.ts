@@ -1,8 +1,8 @@
 // The ledger (docs/design/redesign.md, "Ledger"): grouped, each group's label drawn while it has a row: the player's
 // stores (Yours), then the threats at them (ui/ledger/threats.ts). A line per store the view lists, the Camp store excepted
-// (it is the Camp bar), each from when it first means something (game/shown.ts): one that asks something (red, starved
+// (it is the Camp bar), each from when it first means something (game/page/shown.ts): one that asks something (red, starved
 // or carrying an offer), or is falling, full while fed, or covered by a rule. Once drawn a line stays, kept for the
-// account (game/keeps.ts). A line is white unless it is falling with nothing covering it (game/cover.ts: a rule drawing
+// account (game/account/keeps.ts). A line is white unless it is falling with nothing covering it (game/ledger/cover.ts: a rule drawing
 // its store down as it means to covers it), or starved (dry while something waits on it, covered or not); then it is
 // red, with its answer right beside it. The store's order card is never built from the line: the first time (the rule's
 // lesson may start) its rule shows inline under the line with Show me, which opens the editor and walks it; after that
@@ -11,10 +11,10 @@
 // kept until a rule is set. Nothing stands under a line once a rule watches its store: the row carries that rule's mark
 // and taps through to it (ui/ledger/linerule.ts), A full store that
 // something still feeds says so and that the extra is lost, never in an alarm's colour; a red line with no order card
-// to answer it names what draws on it most, with Edit mix. The first full store the hands fill (game/caphint.ts)
+// to answer it names what draws on it most, with Edit mix. The first full store the hands fill (game/hands/caphint.ts)
 // carries the quiet mark and starts the cap rule's lesson, once writing rules is open; nothing is built from it. The
-// first dry store a mix card stopped on (game/dryhint.ts) carries it too and starts the dry store's lesson. A line's
-// "full in" and "empty in" are the forecast's (game/forecast.ts), so a rule that takes from the store, tops it up or
+// first dry store a mix card stopped on (game/hands/dryhint.ts) carries it too and starts the dry store's lesson. A line's
+// "full in" and "empty in" are the forecast's (game/page/forecast.ts), so a rule that takes from the store, tops it up or
 // stops it short first leaves no time drawn.
 // While a mix share is dragged, the lines its cards feed or draw on light up.
 import type { LedgerLine, OrderCard, View } from "../../api/types";
@@ -54,7 +54,7 @@ interface Row {
   rate: HTMLElement;
   eta: HTMLElement;
   edit: HTMLButtonElement;
-  /** The rule the row's mark opens (game/cover.ts, lineRule), or -1. */
+  /** The rule the row's mark opens (game/ledger/cover.ts, lineRule), or -1. */
   rule: number;
   mark: HTMLButtonElement;
 }
@@ -112,7 +112,7 @@ export class Ledger implements Part {
       const offer = offers.get(line.store);
       if (!row || !offer) continue;
       row.line = line;
-      row.box.classList.toggle("story", story.has(line.store));   // the story mark (game/story.ts)
+      row.box.classList.toggle("story", story.has(line.store));   // the story mark (game/story/story.ts)
       this.restyle(row, view, offer, was.get(line.store), prev !== null && fresh.has(line.store), cap === line.store, dry?.store === line.store ? dry : null);
     }
     this.arrange(view.at);
@@ -166,9 +166,9 @@ export class Ledger implements Part {
     for (const row of this.rows.values()) row.box.classList.toggle("lit", row.line.contributions.some((c) => lit.has(c.runner)));
   }
 
-  /** Red as game/shown.ts says, except a store that only feeds a bonus (StoreInfo.bonus_bp): running low on it misses
+  /** Red as game/page/shown.ts says, except a store that only feeds a bonus (StoreInfo.bonus_bp): running low on it misses
    * the bonus and asks nothing, so it is never drawn as an alarm; and a dry store only the townsfolk wait on (nothing the
-   * player runs or has queued takes from it, game/dryneed.ts) reads "ran dry" quietly, in its place, not at the top. */
+   * player runs or has queued takes from it, game/cards/dryneed.ts) reads "ran dry" quietly, in its place, not at the top. */
   private red(line: LedgerLine, view = this.view): boolean {
     if (view === null || this.ctx.catalog.stores.get(line.store)?.bonus_bp != null) return false;
     return redLine(line.starved && !workNeeds(this.ctx.catalog, view, line.store) ? { ...line, starved: false } : line, view);
@@ -195,7 +195,7 @@ export class Ledger implements Part {
     return "";
   }
 
-  /** A line is drawn once it joins (game/shown.ts) or a story beat waits on it (`story`), and stays: kept for the
+  /** A line is drawn once it joins (game/page/shown.ts) or a story beat waits on it (`story`), and stays: kept for the
    * account, so a reload keeps it too. */
   private drawn(line: LedgerLine, view: View, offered: boolean, story: boolean): boolean {
     const { keeps } = this.ctx;
@@ -206,7 +206,7 @@ export class Ledger implements Part {
   }
 
   /** `arriving`: the line joins the ledger with this view, so it takes its turn in the reveal. `capped`: the line is the
-   * cap rule's lesson's subject (game/caphint.ts); `dry`, the dry store's lesson's (game/dryhint.ts). */
+   * cap rule's lesson's subject (game/hands/caphint.ts); `dry`, the dry store's lesson's (game/hands/dryhint.ts). */
   private restyle(row: Row, view: View, offer: Offer, before: LedgerLine | undefined, arriving: boolean, capped: boolean, dry: DryCue | null): void {
     const { line } = row;
     const red = this.red(line);

@@ -1,4 +1,4 @@
-// The text keys of the lessons and the journal (merged into `UI`, game/text.ts).
+// The text keys of the lessons and the journal (merged into `UI`, game/page/text.ts).
 export const LESSON_KEYS = {
   lessonTag: "ui.lesson.tag",   // the note's label: the guide is talking
   lessonNext: "ui.lesson.next",   // the note's tap target on a read step

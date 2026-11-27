@@ -12,7 +12,7 @@ one first. `goal_summary` counts both over the samples.
 Promises. Sampled through day one and on past its end card (AFTER_CARD_S of the play after B3 is seen, then the last
 visit's exit with nobody deciding), since nothing past the card may be drawn as a wait that will pay. What the page
 draws as a time must come true by itself: advanced from the sample with nobody deciding to that time, the card is ready or done, the store holds its cap or is empty, the level has landed. A card's countdown is
-drawn under game/ready.ts's rule; a "full in", an "empty in" and a skill row's time come from the forecast (api
+drawn under game/cards/ready.ts's rule; a "full in", an "empty in" and a skill row's time come from the forecast (api
 contract/forecast.txt, "Forecast"), the first it lists after now, as the page draws them. Problems name minutes and ids only (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -195,7 +195,7 @@ def goal_summary(found: list[GoalSample]) -> GoalSummary:
 # ---------- promises ----------
 
 def stops_short(save: Save, store: str, need: int) -> bool:
-    """game/ready.ts: an under-x-until-y rule on the store that is on lets go below the need."""
+    """game/cards/ready.ts: an under-x-until-y rule on the store that is on lets go below the need."""
     watched = StoreValue(StoreId(store))
     return any(on and isinstance(o.when, AtMost) and o.when.subject == watched and o.when.release + 1 < need
                for o, on in zip(save.orders, save.latches))
@@ -209,7 +209,7 @@ def page_forecast(save: Save, rules: Rules) -> Forecast:
 
 def drawn(save: Save, v: View, rules: Rules) -> list[tuple[str, str, int]]:
     """(kind, id, time) for every time the page draws: card countdowns, a ledger line's "full in" or "empty in", a
-    skill row's next level, each the first the forecast lists after now (game/forecast.ts). The Camp store has no ledger
+    skill row's next level, each the first the forecast lists after now (game/page/forecast.ts). The Camp store has no ledger
     line (ui/ledger/ledger.ts draws it as the Camp bar, which shows no time), so no fill or emptying of it is drawn."""
     out: list[tuple[str, str, int]] = []
     f = page_forecast(save, rules)
@@ -235,7 +235,7 @@ def drawn(save: Save, v: View, rules: Rules) -> list[tuple[str, str, int]]:
 
 
 def full_ready_at(v: View, f: Forecast, w: AtLeast, ready_at: int) -> int | None:
-    """game/ready.ts: a card waiting on its store's whole cap is drawn at the forecast's fill (None past its horizon);
+    """game/cards/ready.ts: a card waiting on its store's whole cap is drawn at the forecast's fill (None past its horizon);
     any other wait at the blocker's ready_at."""
     if not isinstance(w.subject, StoreValue):
         return ready_at

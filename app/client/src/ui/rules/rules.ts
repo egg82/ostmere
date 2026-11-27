@@ -1,13 +1,13 @@
 // The Rules tab (docs/design/opening-screen/rules-tab.md, "The Rules tab"): every rule the player has, one line each, beside
 // Tasks and Completed. The hands rules, top priority first: ≡ (drag to reorder; tap for Move up · Move down · Remove; arrow keys move it), the condition as a
 // button that opens the condition editor (condition.ts) in the tab, → and the mix slot, which opens a picker. Among
-// them Next, what the queue will tap (nextlist.ts, ordered by nextorder.ts), a row moved like a rule (game/nextrow.ts:
+// them Next, what the queue will tap (nextlist.ts, ordered by nextorder.ts), a row moved like a rule (game/rules/nextrow.ts:
 // the rules under it wait for a ready head), at the bottom until moved. Then "Otherwise", the player's own mix, whose
 // slot sets the default. "+ New rule" once writing rules is open (Keeps.ruleSeen, the taught step); changing a rule is
 // never gated. Under it, each side lane's task rules under the lane's label; a ruled lane's always rule, and its row's
 // Change, open that lane's task editor (laneedit.ts). Every change sends the whole list (set_orders) in its new order.
 // Once a second person has hands, a switch at the top, Mine | Camp (ruleswitch.ts), shows one side at a time
-// (game/ruleside.ts), kept per device (app/ruleside.ts); it follows a rule the player adds or opens.
+// (game/rules/ruleside.ts), kept per device (app/ruleside.ts); it follows a rule the player adds or opens.
 import type { Condition, Decision, View } from "../../api/types";
 import { mixRules, pointSlot, removeRule, rulesFull, type RuleSlot as Slot } from "../../game/rules/orders";
 import { UI } from "../../game/page/text";

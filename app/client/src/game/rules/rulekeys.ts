@@ -1,5 +1,5 @@
 // The text keys of the Rules tab and the condition editor (ui/rules/rules.ts, ui/condition/condition.ts, ui/rules/rulewhy.ts; contract/dry-rules.txt, "Dry rules"),
-// merged into `UI`, game/text.ts.
+// merged into `UI`, game/page/text.ts.
 export const RULE_KEYS = {
   ruleFull: "ui.rule.full", // in the place of the New rule button once the rules hold Content.limits.max_orders
   ruleSideMine: "ui.rule.side_mine", // the Rules page's switch: the player's own rules (Camp is ui.town.title)
@@ -61,7 +61,7 @@ export const RULE_KEYS = {
   ruleStuck: "ui.rule.stuck", // "{n}{store}": a rule holding the hands whose release cannot be reached for want of a store
   ruleUnfed: "ui.rule.unfed", // "{store}{n}": a rule's mix consumes a store none of its cards makes, so it may stop short
   rulePassedOverAll: "ui.rule.passed_over_all", // a rule with fallbacks every one of whose actions is dead
-  ruleOrElse: "ui.rule.or_else", // "{a}{b}": a rule's actions, one fallback at a time (game/guardwords.ts)
+  ruleOrElse: "ui.rule.or_else", // "{a}{b}": a rule's actions, one fallback at a time (game/condition/guardwords.ts)
   ruleUnless: "ui.rule.unless", // "{rule}{when}": a rule's condition and its first guard
   ruleAndUnless: "ui.rule.and_unless", // "{rule}{when}": each further guard
   guardFull: "ui.guard.full", // "{store}": a guard on a store, worded as a state, by its level's form

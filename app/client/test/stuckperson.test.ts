@@ -1,4 +1,4 @@
-// A person with nothing to do (issue 467; game/stuck.ts, ui/town/stucknote.ts): when every card holding a share of their time is
+// A person with nothing to do (issue 467; game/town/stuck.ts, ui/town/stucknote.ts): when every card holding a share of their time is
 // paused or spent and no tap holds their lane, their Town row reads "nothing to do" in place of "idle", says what each
 // card is stopped on, and offers the tasks they could run now, each one tap that joins it to their time (their set
 // shares kept); their page says the same with every offer. A spent card's face says which store nothing makes now.

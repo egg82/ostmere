@@ -40,7 +40,7 @@ def _unlocked(view: w.View, category: str, id_: str) -> bool:
 
 
 def drawn_chips(content: cm.Content, view: w.View) -> set[str]:
-    """The chips the band draws: on in the view, with their offered_after (if any) held (game/shown.ts shownChips)."""
+    """The chips the band draws: on in the view, with their offered_after (if any) held (game/page/shown.ts shownChips)."""
     after = {c.chip: c.offered_after for c in content.chip_infos}
     return {c for c in view.chips if (a := after.get(c)) is None or _unlocked(view, a.category, a.id)}
 
@@ -70,7 +70,7 @@ def shown_now(content: cm.Content, view: w.View) -> set[str]:
 
 
 def offered(content: cm.Content, view: w.View) -> set[str]:
-    """Every subject the full editor offers in `view` (game/ruleoffers.ts: whenChoices(full) and offeredSubjects)."""
+    """Every subject the full editor offers in `view` (game/condition/ruleoffers.ts: whenChoices(full) and offeredSubjects)."""
     camp = content.camp.store if content.camp is not None else None
     stores = {l.store for l in view.ledger if l.store != camp and _unlocked(view, "store", l.store) and _band_fits(content, l)}
     found = {f"store:{s}" for s in stores} | {f"chip:{c}" for c in _offered_chips(content, view)}

@@ -1,5 +1,5 @@
-// A card's hint marks (game/hints.ts): the quiet dot where the player's mix could take a card they keep tapping, and the
-// second mix's lesson's trigger on the card it starts from (game/lessons.ts, SECOND_MIX), which stays once the dot is
+// A card's hint marks (game/hands/hints.ts): the quiet dot where the player's mix could take a card they keep tapping, and the
+// second mix's lesson's trigger on the card it starts from (game/lessons/lessons.ts, SECOND_MIX), which stays once the dot is
 // touched, while the detection holds.
 import type { Catalog } from "../../game/page/catalog";
 import { cardHints, secondMixCard, sideMixCue } from "../../game/hands/hints";

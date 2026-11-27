@@ -1,4 +1,4 @@
-// A person with nothing to do (game/stuck.ts), on their Town row and their page: a line per held card saying what it is
+// A person with nothing to do (game/town/stuck.ts), on their Town row and their page: a line per held card saying what it is
 // stopped on, then the tasks they could run now, each one tap that joins it to their time as a tap on its face does.
 // It shows the first few and a way to the rest: the page from the strip, the task faces below on the page. Hidden while
 // they have work.

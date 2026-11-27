@@ -1,4 +1,4 @@
-// What a card waits on is on its face before a tap (ui/cards/cardneeds.ts, game/timewords.ts; docs/decisions/principles.md,
+// What a card waits on is on its face before a tap (ui/cards/cardneeds.ts, game/condition/timewords.ts; docs/decisions/principles.md,
 // "Progress is stated, never hinted"): a need on a clock with a part of the day reads as when it opens until it is met,
 // and a failed tap marks that row; a tally reads as have/need though it has no ledger line; a need on any other store
 // the player was never shown draws no row (the countdown is all of it). A chronicle cause on such a clock reads as the

@@ -1,4 +1,4 @@
-// A story beat's store with no ledger line yet (contract/goals.txt, "Goals"; game/story.ts, unlined): nothing on screen to
+// A story beat's store with no ledger line yet (contract/goals.txt, "Goals"; game/story/story.ts, unlined): nothing on screen to
 // mark, so the Camp bar's box states it under its level as the store's label, how far along against its target, and a
 // bar, with the bar's "▸ something new", never what. While the wait line is up its "something new" is the story's next
 // step, so these rows carry no marker of their own: two of them would read as the same step.

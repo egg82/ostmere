@@ -1,5 +1,5 @@
 // The forecast the page holds for its save (contract/forecast.txt, "Forecast"), with the Step.decisions it came with: it holds
-// until the save's next decision. Also when a new one is due, so a run of taps costs one ask (game/session.ts).
+// until the save's next decision. Also when a new one is due, so a run of taps costs one ask (game/page/session.ts).
 import type { Forecast, Step } from "../../api/types";
 
 /** A held forecast within this of its horizon, or within half of its span if that is less, is asked for afresh. */

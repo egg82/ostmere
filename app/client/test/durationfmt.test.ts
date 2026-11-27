@@ -1,4 +1,4 @@
-// A span of game seconds (game/format.ts, duration): rounded up, so a countdown never reads zero before its moment;
+// A span of game seconds (game/page/format.ts, duration): rounded up, so a countdown never reads zero before its moment;
 // under DAYS_FROM_H hours in hours, minutes and seconds, from it in days and hours, rounded up to the hour.
 import { fixtureContent } from "../fixtures/content";
 import { DAYS_FROM_H, Format } from "../src/game/page/format";

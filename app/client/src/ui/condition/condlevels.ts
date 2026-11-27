@@ -123,7 +123,7 @@ export class Levels {
     for (const [test, key] of [["below", UI.ruleFallsBelow], ["reaches", UI.ruleReachesLabel]] as const) {
       const b = el("button", "quiet cond-test", text.get(key));
       b.type = "button";
-      b.dataset.test = test;   // a lesson's mark of the test (game/lessons.ts, CAP_RULE)
+      b.dataset.test = test;   // a lesson's mark of the test (game/lessons/lessons.ts, CAP_RULE)
       b.addEventListener("click", () => onTest(test));
       this.tests.set(test, b);
       tests.append(b);

@@ -1,4 +1,4 @@
-// The town's lesson (game/lessons.ts, TOWN_MIX), as lessons-as-data on the strip's and a person's page's own controls:
+// The town's lesson (game/lessons/lessons.ts, TOWN_MIX), as lessons-as-data on the strip's and a person's page's own controls:
 // it starts when a person's Change shows, walks Change, the person's bar, and the strip once more, and is kept on
 // the account when done or skipped, never again. Run against the rendered strip and page, not stand-in controls.
 import { fakeDocument, install } from "./fake-dom";

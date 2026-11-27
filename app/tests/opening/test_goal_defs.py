@@ -3,7 +3,7 @@ or the condition of a trigger that feeds its gate (the one giving an unlock it n
 player is never shown is carried on screen, a wait on the clock by the wait line's countdown
 (ui/story/waitline.ts) naming the shown stores that keep it moving, which a standing action's lines must move for a countdown
 to exist, a store cards fill by a row of its own in the Camp bar's box with those cards marked (ui/story/goals.ts,
-game/story.ts). Trigger ids only."""
+game/story/story.ts). Trigger ids only."""
 from collections.abc import Callable
 from functools import cache
 

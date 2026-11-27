@@ -1,4 +1,4 @@
-// Ledger offers beyond a red line (game/cues.ts; ui/ledger/ledger.ts): a later order card for a store supersedes the earlier
+// Ledger offers beyond a red line (game/ledger/cues.ts; ui/ledger/ledger.ts): a later order card for a store supersedes the earlier
 // once offered (the earlier stays on offer until then); a rising line's card (an at_least on a task's input) is
 // marked once its line is full or rising, kept through a dip until a rule is set. A line is marked, never offered a build.
 import { install } from "./fake-dom";

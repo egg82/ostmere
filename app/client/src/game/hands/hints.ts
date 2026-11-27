@@ -2,7 +2,7 @@
 // mix could answer something, read off the view, the content and what was kept. The game decides nothing and builds
 // nothing: the mark sits on the thing itself, a card, a chip or a ledger line, and the player uses the tools the lessons
 // taught. The page walks the player through only the first mix, the first rule, a second mix and the cap rule
-// (game/lessons.ts).
+// (game/lessons/lessons.ts).
 import type { RepeatedSwitch, RepeatedTap, View } from "../../api/types";
 import type { Catalog } from "../page/catalog";
 import { chipCards } from "../ledger/cues";

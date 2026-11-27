@@ -14,7 +14,7 @@ import { el, setText } from "../dom";
 export const sectionHead = (heading: string): HTMLElement[] => (heading === "" ? [] : [el("span", "rules-label cond-subhead", heading)]);
 
 /** A button per choice with its label and its choice in data-card or data-mix (a greyed mix is off), under the
- * Tasks page's section headings with the mixes last (game/cardsections.ts); `click` goes on each. */
+ * Tasks page's section headings with the mixes last (game/cards/cardsections.ts); `click` goes on each. */
 export function choiceButtons(catalog: Catalog, view: View, choices: DoChoice[], cls: (c: DoChoice) => string, click: (c: DoChoice) => void): HTMLElement[] {
   return sectioned(catalog, choices, (c) => (c.kind === "task" ? c.card : null), view).flatMap((g) => [...sectionHead(g.heading), ...g.items.map((c) => {
     const b = el("button", cls(c), c.kind === "task" ? catalog.cardLabel(c.card) : mixLabel(catalog, view, c.mix));

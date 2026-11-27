@@ -1,4 +1,4 @@
-// A long absence comes back in slices (src/game/session.ts; contract/catching-up.txt, "Catching up"): the page asks advance at once
+// A long absence comes back in slices (src/game/page/session.ts; contract/catching-up.txt, "Catching up"): the page asks advance at once
 // until a Step reaches now, says how far each slice got, draws the slices as one return from the view the player was
 // looking at, and holds a decision until then; a decision refused as catching_up carries on and is sent once caught up.
 import { ApiFailure, type GameApi } from "../src/api/api";

@@ -1,6 +1,6 @@
 // The full editor's "Or else" (docs/design/rule-guards.md, "How the page words it"; behind More options): the rule's
 // fallbacks as words, each with a remove, and an add that picks what to do instead. Only what the first action's lane
-// or layer allows is offered (game/elsechoices.ts), up to Content.limits.max_or_else, none twice.
+// or layer allows is offered (game/condition/elsechoices.ts), up to Content.limits.max_or_else, none twice.
 import type { OrderVerb, View } from "../../api/types";
 import { choiceVerb, elseChoices, keepElse } from "../../game/condition/elsechoices";
 import { actionWords } from "../../game/rules/orders";

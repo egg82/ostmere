@@ -1,4 +1,4 @@
-// game/orders.ts and the editor's save decisions against the fixture's views: an order card on a hands task becomes a
+// game/rules/orders.ts and the editor's save decisions against the fixture's views: an order card on a hands task becomes a
 // rule running a one-task mix (reused when saved), a side-lane task stays a task rule, reordering moves only hands
 // rules, and a renamed mix takes its rules with it.
 import { fixtureContent, Q } from "../fixtures/content";

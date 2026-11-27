@@ -41,11 +41,11 @@ card red and the need that stopped it (`app/client/src/ui/cards/cards.ts`); the 
 refusal lines. A story line has one home on screen, the strip (and the chronicle and the journal), never under a card or anywhere
 else beside the cards: a line under its card, and later the newest line atop the card column, were each tried and
 were too much (owner). A card sinks on a press and settles on release (`app/client/src/ui/cards/cardrow.ts`); a level shows on the
-card it speeds up, old → new (`app/client/src/ui/cards/cardlevel.ts`, from `app/client/src/game/levelled.ts`); and a live
+card it speeds up, old → new (`app/client/src/ui/cards/cardlevel.ts`, from `app/client/src/game/cards/levelled.ts`); and a live
 step's chain lights link by link at the link pace of the arrival queue that also paces returns and story lines
 (`app/client/src/ui/feedback/reveal.ts`).
 
 Lessons: lessons as data (id, when it may start, trigger, steps naming a control and a line) and one runner, the glow
-as its highlight (`app/client/src/game/lessons.ts`, `app/client/src/ui/lessons/lessons.ts`). Done or skipped is kept in the
+as its highlight (`app/client/src/game/lessons/lessons.ts`, `app/client/src/ui/lessons/lessons.ts`). Done or skipped is kept in the
 save (SavePresentation); the account's setting turns lessons off (AccountSettings). Not a system: one caller, nothing
 to swap.

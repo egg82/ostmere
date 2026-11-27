@@ -1,4 +1,4 @@
-// Next's entries are put in the player's order (ui/next/nextorder.ts, game/queue.ts "moveQueued"): the ≡ in a row's
+// Next's entries are put in the player's order (ui/next/nextorder.ts, game/mixes/queue.ts "moveQueued"): the ≡ in a row's
 // handle gap, dragged or moved by the arrow keys, sends one set_queue holding the same entries in the new order.
 // An entry a lane already runs has no ≡, is not a drop place, and keeps its index.
 import { fakeDocument, type FakeEl, FakeEvent, install, pointer } from "./fake-dom";

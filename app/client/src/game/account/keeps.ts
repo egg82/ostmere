@@ -153,7 +153,7 @@ export class Keeps {
     this.sink.settings?.(this.settings);
   }
 
-  /** The lesson has been done or skipped in this save: it never comes again in it (game/lessons.ts). */
+  /** The lesson has been done or skipped in this save: it never comes again in it (game/lessons/lessons.ts). */
   lessonKept(id: string): boolean {
     return (this.save.lessons ?? []).includes(id);
   }
@@ -176,7 +176,7 @@ export class Keeps {
   }
 
   /** A return from `left` to `back`, kept once per `left` when it was long enough to be a visit, with its figures
-   * (game/chapter.ts) as the save's chapter in the same write. */
+   * (game/book/chapter.ts) as the save's chapter in the same write. */
   keepReturn(left: number, back: number, chapter: Chapter | null = null): void {
     if (back - left < AWAY_MIN_S || this.visits().some((v) => v.left === left)) return;
     this.keepSave({ ...this.save, visits: [...this.visits(), { left, back }].slice(-MAX_VISITS), ...(chapter ? { chapter } : {}) });

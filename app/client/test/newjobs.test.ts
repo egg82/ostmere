@@ -1,4 +1,4 @@
-// A job first offered to a person of the town is said once in the story (game/newjobs.ts): one line for a person's one
+// A job first offered to a person of the town is said once in the story (game/town/newjobs.ts): one line for a person's one
 // card, one naming the job when it fans out over several people, one for a person's several jobs, one for the town's
 // several; never one per lane; none for a card that arrives at work,
 // for a person who joins in the same step, or on the first view.

@@ -1,8 +1,8 @@
 // The story at the seam between the art and the controls (docs/design/opening-screen/attention.md, "One column of attention").
 // The head, at the art's top: the Camp bar, the chips (an icon from the tone, the word, and under it what the chip
-// costs; each once its cure is on screen, game/shown.ts), the permanent bonuses the player carries (a feature with a
+// costs; each once its cure is on screen, game/page/shown.ts), the permanent bonuses the player carries (a feature with a
 // label) behind one count (ui/story/keptbonuses.ts), and the book, dotted when it arrives, until the journal's first entry moves it into the Book. The Book (ui/book/book.ts) holds the chronicle and
-// the journal; its tab is dotted when a line left the strip before the player touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/chronicle.ts, inStrip), whole and oldest
+// the journal; its tab is dotted when a line left the strip before the player touched anything after it showed. The story strip, off the art: the newest story lines that fit (game/book/chronicle.ts, inStrip), whole and oldest
 // first, the older dimmer, in room kept for the tallest story line the content can write (Content.line_infos, laid out
 // unseen in the strip's one cell; ui/story/stripfit.ts counts how many fit, at least the newest). The Feedback button
 // (feedback.ts) opens the tester's sheet from the panel's foot. Every line, every rule's start and let-go and every fight
@@ -53,7 +53,7 @@ export class Story implements Part {
   readonly feedbackButton: HTMLButtonElement;
   private readonly camp: CampBar;
   private readonly chronicle: ChronicleSheet;
-  /** The rule entries already in the chronicle, by id (game/rulerows.ts). */
+  /** The rule entries already in the chronicle, by id (game/rules/rulerows.ts). */
   private readonly ruled = new Set<string>();
   private readonly journal: Journal;
   /** The Book: the chronicle, the journal and the pages Screen adds (Done). */
@@ -136,7 +136,7 @@ export class Story implements Part {
     this.ruleLines(view);
   }
 
-  /** Each rule's latest start and let-go the chronicle does not hold yet (game/rulerows.ts). */
+  /** Each rule's latest start and let-go the chronicle does not hold yet (game/rules/rulerows.ts). */
   private ruleLines(view: View): void {
     for (const { id, entry } of ruleEntries(this.ctx.catalog, view, this.ctx.ruleRuns())) {
       if (this.ruled.has(id)) continue;
@@ -145,7 +145,7 @@ export class Story implements Part {
     }
   }
 
-  /** A job first offered to a person of the town since the last view: one line for the step, never a count (game/newjobs.ts). */
+  /** A job first offered to a person of the town since the last view: one line for the step, never a count (game/town/newjobs.ts). */
   private jobLines(view: View, prev: View | null): void {
     const said = jobLine(this.ctx.catalog, view, newJobs(this.ctx.catalog, prev, view));
     if (said !== null) this.say(said, `job:${view.at}`, "story", null);
@@ -164,7 +164,7 @@ export class Story implements Part {
 
   /** What fights happened since the last view, as chronicle entries under their runner: each fight of a window its own entry
    * (the shuffle-bag labels, each worded from its runner's pool when it has one), a long window one summary line
-   * (game/fights.ts). They take their turns in the arrival queue with the step's other lines. */
+   * (game/ledger/fights.ts). They take their turns in the arrival queue with the step's other lines. */
   private fightLines(view: View, prev: View | null): void {
     const { catalog } = this.ctx;
     const { text } = catalog;
@@ -210,7 +210,7 @@ export class Story implements Part {
   }
 
   /** Each line's node in the strip, in order (null: a key with no text, or a line not for the strip). `queued`: the
-   * arrival queue paces them. `away`: a return's lines, placed by game/awaylines.ts. */
+   * arrival queue paces them. `away`: a return's lines, placed by game/book/awaylines.ts. */
   append(lines: LogLine[], queued = false, away: { view: View; prev: View | null } | null = null): Array<HTMLElement | null> {
     const where = away ? awayLines(this.ctx.catalog, lines, away.view, away.prev) : lines.map((): Placement => "band");
     return this.place(lines.map((l) => l.key), true, queued, where, lines.map((l) => l.at));
@@ -221,7 +221,7 @@ export class Story implements Part {
   }
 
   /** Lines drawn still before the first view, each at the second it landed at (a kept return's placed as it was,
-   * game/awaylines.ts pastLines), and the written days a redrawn screen carries (a save opened, a screen redrawn). */
+   * game/book/awaylines.ts pastLines), and the written days a redrawn screen carries (a save opened, a screen redrawn). */
   restore(past: Past[], days: readonly JournalDay[]): void {
     this.journal.written(days);
     this.place(past.map((p) => p.key), false, false, pastLines(this.ctx.catalog, past, this.ctx.keeps.visits()), past.map((p) => p.at));
@@ -282,7 +282,7 @@ export class Story implements Part {
     }
   }
 
-  /** A quiet mark on the chip a rule could answer (game/hints.ts), until it is touched: a switch's, once for the account; a
+  /** A quiet mark on the chip a rule could answer (game/hands/hints.ts), until it is touched: a switch's, once for the account; a
    * chip card's, once a page session. */
   private hintChips(view: View): void {
     const { catalog, keeps } = this.ctx;

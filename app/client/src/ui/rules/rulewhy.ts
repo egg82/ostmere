@@ -1,7 +1,7 @@
 // Why a rule is off (docs/design/opening-screen/rules-tab.md, "The Rules tab"): a quiet line under its row, from the view's
 // order_states (contract/), in the ledger's grammar. A waiting store rule names what it waits for and what the store
 // holds now, sampled from its ledger line as the ledger samples it; a paused rule names where its guards let go
-// (game/guardwords.ts), a rule waiting under Next names what the queue runs, and a rule with fallbacks that is on names
+// (game/condition/guardwords.ts), a rule waiting under Next names what the queue runs, and a rule with fallbacks that is on names
 // the one it runs past its first.
 import type { Order, RuleDry, View } from "../../api/types";
 import type { Catalog } from "../../game/page/catalog";

@@ -1,4 +1,4 @@
-// The text keys of the chronicle (merged into `UI`, game/text.ts): its button, a stretch's title, the filters, a
+// The text keys of the chronicle (merged into `UI`, game/page/text.ts): its button, a stretch's title, the filters, a
 // rule's entries, and the words of a cause (contract/endpoints.txt, "Line causes").
 export const CHRONICLE_KEYS = {
   chronicle: "ui.chronicle.open",

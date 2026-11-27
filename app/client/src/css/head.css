@@ -58,7 +58,7 @@
 .camp-head:not([hidden]) ~ .goals .goal:first-child { margin-top: .4rem; }
 .goal-what { white-space: nowrap; }
 .goal .camp-track { height: 2px; }
-/* The story mark (game/story.ts): the Camp bar's next marker, before the name of what a story beat waits on. */
+/* The story mark (game/story/story.ts): the Camp bar's next marker, before the name of what a story beat waits on. */
 .card.story .card-title::before, .line.story .line-name::before, .skill.story .skill-name::before { content: "▸ " / ""; color: var(--ink-dim); }
 .wait-line { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the wait (ui/story/waitline.ts): plain text, no card */
 

@@ -1,4 +1,4 @@
-// A game lost right after Begin inside another site's frame (src/game.ts, src/game/session.ts): the forecast asked
+// A game lost right after Begin inside another site's frame (src/game.ts, src/game/page/session.ts): the forecast asked
 // after Begin is the first request to find the session gone and says so; any other forecast failure only waits for the
 // next ask; and the page takes the game's screen down so the front page's message, not a dead screen, is in view.
 import { ApiFailure, type GameApi } from "../src/api/api";

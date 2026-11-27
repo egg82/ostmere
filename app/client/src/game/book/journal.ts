@@ -1,6 +1,6 @@
 // The journal as the page reads it (docs/design/opening-screen/journal.md, "The journal"; contract/journal.txt, "JOURNAL"): which pages
 // and notes are written, what is unread, which page the sheet opens on, the numbers rows and the seeded layout. Pure:
-// the days pages are the written days the save served (game/days.ts), every other page is Content.journal and
+// the days pages are the written days the save served (game/book/days.ts), every other page is Content.journal and
 // view.unlocked, the numbers are view.fights, and what has been read is the account's notes and the save's newest day
 // (Keeps).
 import type { EntryInfo, Fight, Hand, JournalDay, View } from "../../api/types";

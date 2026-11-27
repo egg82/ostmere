@@ -1,5 +1,5 @@
 // The hands strip: one row that says what the hands are doing (docs/design/opening-screen/hands-strip.md, "The hands strip"). It
-// takes no room until the first mix's offer (game/shown.ts), then comes in through the arrival queue; until then each
+// takes no room until the first mix's offer (game/page/shown.ts), then comes in through the arrival queue; until then each
 // card's own bar says what the hands do. Once drawn it stays. The mix row opens
 // bare, its bar and name; Edit, Mixes ▾ and "runs …" each come when they first mean something, then stay. On a phone only
 // the bar and the name ("Main ▾", the way to the Mixes list) stay pinned; the row of controls under them scrolls with the
@@ -7,7 +7,7 @@
 // Tapping: the card's name (its bar stays on the card). Idle: "idle". The first-mix offer: its cards and one button.
 // A running mix: its split bar (under it, while a card of the mix is stopped, the split that runs now: runningnow.ts), name, how long it runs, Edit; grey when it holds a
 // retired or completed card, shown as the grey bar, "stopped · {card} done" naming that card, and Edit. The bar shows what the hands do now
-// (game/holder.ts, ui/hands/handsheld.ts): while a tap holds them, that card as the whole bar with its time left, the name slot
+// (game/hands/holder.ts, ui/hands/handsheld.ts): while a tap holds them, that card as the whole bar with its time left, the name slot
 // saying "then {mix}"; else a rule's mix while its condition holds, or a goal stint's mix, either with "until …", where it
 // lets go, where "runs …" would be, and "then {mix}" after it; else the player's own. "until …" (or
 // "while …") is a button: it opens the Rules tab, where Lately says what the rules did. Once a mix exists "Mixes ▾" opens the Mixes list, the

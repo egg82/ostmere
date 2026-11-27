@@ -5,7 +5,7 @@
 // the store; a tap of a short store need's row lights its makers (Need.makers, ui/cards/makerlight.ts) and does not tap the
 // card. A spent one (Need.spent: nothing in play makes it and nothing is left to grant it) says so on its row.
 // A need on a clock with a part of the day (StoreInfo.clock) draws when it opens until it is met ("Opens after dark",
-// game/timewords.ts); a tally (StoreInfo.tally) draws as have/need though it has no ledger line; a need on any other store the player has
+// game/condition/timewords.ts); a tally (StoreInfo.tally) draws as have/need though it has no ledger line; a need on any other store the player has
 // never been shown draws no row, unless it has a gate: the card's countdown is all of it. A skill
 // level or a step once met stays met (levels and completions never fall), so its row goes; a store can fall, so its row stays.
 // While the card works (Card.run full or held) its needs are not drawn: its inputs are drawn as it runs, so the store
@@ -18,7 +18,7 @@
 // A card a full pause stopped (Card.full_store: every store it fills is full) says which store has no room, in a need's
 // place and quiet: it starts again by itself as the store is drawn down (contract/full-output.txt, "FULL OUTPUT"). A spent card
 // (Card.spent_store) says in the same place which store nothing makes now, unless that store's need row is drawn; and a
-// card running on a share while every store it makes is full says its work is wasted (game/wasted.ts).
+// card running on a share while every store it makes is full says its work is wasted (game/cards/wasted.ts).
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows
 // what its blocker names (shows()).
 import type { Card, Condition, LedgerLine, Need, View } from "../../api/types";

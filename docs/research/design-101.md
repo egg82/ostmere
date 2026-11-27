@@ -177,7 +177,7 @@ evidence, then by cost.
 6. **Thin out the rule lesson after the mix lesson.** Change: when the mix lesson was completed, the rule lesson drops
    the steps that repeat the editor pattern (the save step, the "where it lives" reading step) and keeps the when/do
    pair. Test: inside proposal 1's rounds, not by rate (too few testers to count), by whether players who see the
-   shorter version still build a working rule unaided. Fits into: Lessons (`game/lessons.ts`; a lesson's steps are
+   shorter version still build a working rule unaided. Fits into: Lessons (`game/lessons/lessons.ts`; a lesson's steps are
    data).
 7. **One motion and sound rule, plus a mechanical phone check.** Change: in the decision, an in-game motion toggle
    beside the OS preference already honoured, a flash cap, "sound never carries information alone", "nothing is

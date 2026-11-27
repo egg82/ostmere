@@ -1,6 +1,6 @@
 // What the condition editor offers (docs/design/opening-screen/rules-tab.md, "The condition editor"), read off the view and the
 // content only. Its simple view offers the tasks a rule can do and, once one is chosen, what that task answers: the
-// chips whose store it makes, the stores relevant to it and the few running cards (game/relevant.ts). More options adds the saved mixes and
+// chips whose store it makes, the stores relevant to it and the few running cards (game/condition/relevant.ts). More options adds the saved mixes and
 // every chip and store a rule may watch, the relevant stores first: every chip from its first showing on, every store
 // with a line. A saved mix of one task alone is offered as that task, so nothing is offered twice. And the mix switch
 // the player keeps making by hand, which gets a mark.
@@ -65,7 +65,7 @@ export function ruleCards(view: View, then: OrderVerb | null): string[] {
   return mix ? flatCards(view, mix) : [];
 }
 
-/** What the Do row offers: the tasks in the Tasks page's sections, each by name (game/cardsections.ts), then (with
+/** What the Do row offers: the tasks in the Tasks page's sections, each by name (game/cards/cardsections.ts), then (with
  * More options) the saved mixes that are not a task offered, never a town mix. A new rule
  * made on one side of the Rules page (`scope`) offers that side's tasks alone (one person's, given their `lane`), and on Camp no
  * saved mix (they are the hands'). */
@@ -91,7 +91,7 @@ export function chipStore(chip: ChipInfo): string | null {
 }
 
 /** What the When row offers for a rule doing `cards` (ruleCards). Simple: the chips on a store they make, or rising on a store they take, and the
- * stores relevant to them (game/relevant.ts), in its order; nothing before a task is chosen. Full: every chip the band
+ * stores relevant to them (game/condition/relevant.ts), in its order; nothing before a task is chosen. Full: every chip the band
  * has drawn in the save, whether it shows now and whatever task answers it, and every store a rule may watch, the
  * relevant ones first, with `editing`'s store last when it has no ledger line. Only stores with a ledger line of two
  * items or more (a band fits). A store a fight wounds (Catalog.isLevel) is offered as the store alone, never as its chip:

@@ -1,6 +1,6 @@
 // Whether a dry store holds back the player's own work (issue 467): a card the hands' running mix holds, or one a rule
 // or the queue would run (its tap, or a card of the mix it switches to), takes from the store. A town mix is the
-// townsfolk's: a person stopped on it says so on their Town row (game/stuck.ts), so their need alone does not make the
+// townsfolk's: a person stopped on it says so on their Town row (game/town/stuck.ts), so their need alone does not make the
 // ledger's "ran dry" an alarm at the top of Tasks. Read off the view and the content's CardInfo.takes.
 import type { Mix, OrderVerb, View } from "../../api/types";
 import type { Catalog } from "../page/catalog";

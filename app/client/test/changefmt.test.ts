@@ -1,5 +1,5 @@
 // A modifier's change shows as a signed percent, toward zero, with the fewest digits that tell it apart
-// (game/format.ts, change and figures): a change that is not zero never reads as zero, and a text's slots are
+// (game/page/format.ts, change and figures): a change that is not zero never reads as zero, and a text's slots are
 // {pct} then {pct_b} in the order served.
 import { fixtureContent } from "../fixtures/content";
 import { Format } from "../src/game/page/format";

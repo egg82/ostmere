@@ -1,4 +1,4 @@
-// The journal's page marks (game/pagemarks.ts; docs/design/journal.md, "Marks on the page"): a mark is never placed over
+// The journal's page marks (game/book/pagemarks.ts; docs/design/journal.md, "Marks on the page"): a mark is never placed over
 // a blocked box, a page asks for its wear and at most three of its days' marks, and every draw is seeded.
 import type { JournalDay } from "../src/api/types";
 import { seeded } from "../src/game/ledger/fights";

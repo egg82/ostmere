@@ -1,4 +1,4 @@
-// Hints (game/hints.ts): the detection behind today's marks, from the view alone. A card the player keeps tapping by hand that
+// Hints (game/hands/hints.ts): the detection behind today's marks, from the view alone. A card the player keeps tapping by hand that
 // the mix could take is marked until it is touched (once, kept); nothing is marked during a lesson or before the first mix's
 // is behind; a chip is marked for a switch the player keeps making and for the order card the strip would have offered.
 import { fixtureContent } from "../fixtures/content";

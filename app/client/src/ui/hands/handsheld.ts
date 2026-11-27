@@ -1,4 +1,4 @@
-// The hands strip's words and bar for what holds the hands (game/holder.ts; docs/design/opening-screen/hands-strip.md, "The hands
+// The hands strip's words and bar for what holds the hands (game/hands/holder.ts; docs/design/opening-screen/hands-strip.md, "The hands
 // strip"): a tap is drawn as one full segment in its card's hue, its legend naming the card and its time left; a rule
 // and a goal stint each say where they let go, and every holder names the mix the hands go back to.
 import type { View } from "../../api/types";

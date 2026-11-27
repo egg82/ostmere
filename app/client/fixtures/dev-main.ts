@@ -86,7 +86,7 @@ const rows = (v: View, mix = runningMixOf(v)): View => (hash.has("storerows") ? 
 // #places[=N]: the map's fixture places, the first N revealed (places.ts)
 const placed = (v: View): View => (hash.has("places") ? placesView(v, hash.get("places") ? Number(hash.get("places")) : undefined) : v);
 // #newjob (with phase town): the helper is offered a new card (a copy of Haul) from the second Step on, for the story's
-// line about it and the quiet dot on Town and the helper's Change (game/newjobs.ts).
+// line about it and the quiet dot on Town and the helper's Change (game/town/newjobs.ts).
 const haulInfo = fixtureContent.card_infos.find((c) => c.card === "haul");
 if (hash.has("newjob") && haulInfo) fixtureContent.card_infos.push({ ...haulInfo, card: "mend", label_key: "card.chop" });
 let stepsSeen = 0;

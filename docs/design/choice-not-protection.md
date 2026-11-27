@@ -89,7 +89,7 @@ are done.
 | 48 | Ceiling of about one worthwhile change per ordinary absence | wac:198 | B | | caps the opportunities a keen player gets, to spare one who feels compelled | drop the ceiling and the floor; changes per absence are a readout (`sim-invariants.md`) |
 | 49 | An arrival's first task is an installed rule | `day-two-plan.md`:13, 31; `engine/design/` "TOWNSFOLK" | A | D | small | keep: no rule could name a person before they existed, so an idle arrival would fail a tool user; it is an ordinary, editable rule |
 | 50 | A townsperson's card can't be tapped by hand | `engine/design/saves-across-releases.txt`:108 | B | | removes the choice to micromanage | low priority: a hand tap on a ruled lane runs once, then the rules resume |
-| 51 | Teaching cues: idle nudge, hint dots, Show me lessons, first-mix lesson, the switch-mix lesson | `app/client/src/ui/story/nudge.ts`, `game/teach.ts`, `game/hints.ts`, `ui/story/chipoffer.ts` (`offers-step-back`) | A | (D) | the switch-mix lesson names one saved mix, once per save | keep: they point and never build; the nudge stops at the first mix |
+| 51 | Teaching cues: idle nudge, hint dots, Show me lessons, first-mix lesson, the switch-mix lesson | `app/client/src/ui/story/nudge.ts`, `game/story/teach.ts`, `game/hands/hints.ts`, `ui/story/chipoffer.ts` (`offers-step-back`) | A | (D) | the switch-mix lesson names one saved mix, once per save | keep: they point and never build; the nudge stops at the first mix |
 
 **Counts.** A: 32. B: 12. C: 5. Row 10 is taste (`sim-invariants.md`, which sorted the simulator's checks after this
 audit). Row 29 is D with no other class. D is flagged on 11 rows. Six of them change

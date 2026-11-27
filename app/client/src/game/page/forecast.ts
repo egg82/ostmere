@@ -1,6 +1,6 @@
 // The forecast the page holds (contract/forecast.txt, "Forecast"): every level-up, fill and emptying that lands if the player
 // changes nothing, orders and the queue played out. It holds until the save's next decision, so a plain advance that
-// brings none keeps the one before (game/session.ts). The page draws those times only from here, the first after
+// brings none keeps the one before (game/page/session.ts). The page draws those times only from here, the first after
 // now, so each comes true by itself; nothing listed by the horizon gets no time, never an estimate.
 import type { View } from "../../api/types";
 

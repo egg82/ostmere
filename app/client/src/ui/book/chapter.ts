@@ -1,6 +1,6 @@
 // The "Since you left" chapter at the top of the chronicle (docs/design/opening-screen/attention.md, "The chronicle"): the newest
 // return's stretch, never folded, under an ember spine, titled with how long the player was away. Its lines are drawn as
-// any stretch's; under Story its figures follow as rows (game/chronwords.ts, chapterRows), the levels and rules rows'
+// any stretch's; under Story its figures follow as rows (game/book/chronwords.ts, chapterRows), the levels and rules rows'
 // labels opening their filters, the waiting row's count showing what waits, then the people section when anyone came
 // or went (the lines that tell it, taken out of the lines above), then the counts of the filters no row opens. With figures kept and nothing at all to show, one line says so; with none kept (a return from before they
 // were), it says nothing, since nothing is known.

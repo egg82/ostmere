@@ -1,4 +1,4 @@
-// The town's mix on the page (contract/the-towns-mix.txt, "The town's mix"; game/town.ts, ui/town/townstrip.ts, ui/town/personpage.ts): in the Town
+// The town's mix on the page (contract/the-towns-mix.txt, "The town's mix"; game/town/town.ts, ui/town/townstrip.ts, ui/town/personpage.ts): in the Town
 // tab, once people have joined, one block per person: their face and who, their shares and the idle rest, the card they are on;
 // each person's Change opens their page, where their tasks join or leave their split; before the join the page is day two's lane row. The views are the
 // engine's own (fixtures/townwire.ts: helper tapping Haul by a rule, shares yielded; mason on shares).

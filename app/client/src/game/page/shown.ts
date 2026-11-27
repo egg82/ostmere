@@ -62,7 +62,7 @@ export function fullAndFed(line: LedgerLine, t: number): boolean {
   return line.cap > 0 && sample(line.segment, t) >= line.cap && fed > 0;
 }
 
-/** The line is red: starved, or falling with nothing covering it (game/cover.ts). */
+/** The line is red: starved, or falling with nothing covering it (game/ledger/cover.ts). */
 export function redLine(line: LedgerLine, view: View): boolean {
   return line.starved || (line.falling && !coveredLine(line, view));
 }

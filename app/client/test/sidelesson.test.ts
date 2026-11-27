@@ -1,4 +1,4 @@
-// The side-holder's lesson (game/sidelesson.ts, SIDE_MIX; docs/design/opening-screen/lessons.md, "Lessons"): the first time a fight
+// The side-holder's lesson (game/lessons/sidelesson.ts, SIDE_MIX; docs/design/opening-screen/lessons.md, "Lessons"): the first time a fight
 // of a side is served while a card that holds that side is in play, the holder's face is the trigger. Two steps: the face, then
 // the Mixes control, whose line says both in one mix run together. Never again once done or skipped, and it starts from
 // nothing else.

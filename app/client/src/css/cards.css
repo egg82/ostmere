@@ -66,7 +66,7 @@
 
 /* new: a quiet dot until touched; the glow: one steady ring on the one obvious next step */
 .new-dot { position: absolute; top: .45rem; left: .45rem; width: 6px; height: 6px; box-shadow: 0 0 0 2px var(--bg); pointer-events: none; background: var(--ink-hi); z-index: 1; }
-.chip, .line { position: relative; }   /* the hint dot (game/hints.ts) sits at a chip's or a ledger line's end, still, so reduced motion changes nothing */
+.chip, .line { position: relative; }   /* the hint dot (game/hands/hints.ts) sits at a chip's or a ledger line's end, still, so reduced motion changes nothing */
 .chip .new-dot { top: .35rem; left: auto; right: -.6rem; }
 .line .new-dot { top: .55rem; left: auto; right: .3rem; }   /* inside .line, which clips its overflow, in the right gutter its padding keeps for it, so it never covers the amount and nothing moves when it comes */
 .glow { position: relative; z-index: 1; }

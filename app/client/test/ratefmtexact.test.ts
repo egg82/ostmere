@@ -1,4 +1,4 @@
-// A rate per minute is cut toward zero exactly (game/format.ts, perMinute): every whole item/h from 1 to 6000 shows the
+// A rate per minute is cut toward zero exactly (game/page/format.ts, perMinute): every whole item/h from 1 to 6000 shows the
 // hundredths of its exact quotient, not the hundredth a floating-point product lands under. Reference: integer cents,
 // floor(items * 100 / 60), shown by the same number format.
 import { fixtureContent, R } from "../fixtures/content";

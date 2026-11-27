@@ -1,6 +1,6 @@
 // Next's "+ Plan" (contract/goal-stints.txt, "Goal stints"; docs/design/opening-screen/rules-tab.md, "The Rules tab"): the two kinds of entry
 // the queue holds. Every card "When ready" takes, each picked through the card's own path (game/queue.whenReady); one
-// the page cannot promise a ready time for says what it waits on in its face's words (game/needwords.ts, which the
+// the page cannot promise a ready time for says what it waits on in its face's words (game/cards/needwords.ts, which the
 // face draws from too), under the Tasks page's section headings; then the saved hands mixes, under "Run until…": a mix picked lists the
 // goals it would run to (the dry run of switching to it, or the live view's when it already runs), and a goal picked
 // queues the stint at the end of Next.

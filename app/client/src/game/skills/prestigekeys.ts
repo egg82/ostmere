@@ -1,4 +1,4 @@
-// The text keys of a skill's prestige: its row, its sheet and the line a return brings (merged into `UI`, game/text.ts).
+// The text keys of a skill's prestige: its row, its sheet and the line a return brings (merged into `UI`, game/page/text.ts).
 export const PRESTIGE_KEYS = {
   prestigeTopsOut: "ui.prestige.tops_out",   // "{d}": the forecast's time to the phase's top
   prestigeTop: "ui.prestige.top",   // the row's next slot at the top
