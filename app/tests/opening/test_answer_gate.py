@@ -1,6 +1,7 @@
 """Every answer keeps a consequence (opening/answer_checks.py): the answers of an offer differ by a lasting part, and
-each role of a kinded offer names a tally. What fails in the shipped content is held in tests/held/answers.json, per
-offer or kind, and the list only shrinks: `python -m tests.opening.test_answer_gate --write` (from app/) lowers it
+each role of a kinded offer names a tally; and every promise, an answer that queues the player's own work, is tested by
+a dilemma offer (opening/promise_checks.py). What fails in the shipped content is held in tests/held/answers.json, per
+offer, kind or promise, and the list only shrinks: `python -m tests.opening.test_answer_gate --write` (from app/) lowers it
 once one is fixed; never run it to let a new one through."""
 import sys
 from dataclasses import replace
@@ -14,6 +15,7 @@ from ashfall_app.engine import (
 from ashfall_app.opening.answer_checks import check_tally_stores, unlasting_offers, untallied_kinds
 from ashfall_app.opening.entries import OutcomeEntry
 from ashfall_app.opening.offer_entries import KindRoleEntry
+from ashfall_app.opening.promise_checks import unread_promises
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_opening, to_rules
 from tests.held_ledger import Ledger, dump, load, problems, tally, total
 
@@ -26,7 +28,8 @@ def full() -> Opening:
 
 def ledger(o: Opening) -> Ledger:
     return tally([*((x, "answers do not differ") for x in unlasting_offers(o)),
-                  *((k, "role names no tally") for k in untallied_kinds(o))])
+                  *((k, "role names no tally") for k in untallied_kinds(o)),
+                  *((p, "no dilemma tests the promise") for p in unread_promises(o))])
 
 
 @pytest.fixture(scope="module")
@@ -37,7 +40,8 @@ def content() -> Opening:
 def test_every_answer_differs_by_a_lasting_part_and_every_role_is_counted(content: Opening):
     assert len(content.offers) > 40 and content.offer_kinds, "checked almost no offers: the check is blind"
     found = problems(ledger(content), load(HELD), "give the answers a sourced modifier, an unlock something reads, "
-                     "or a role tally (opening/answer_checks.py)", "python -m tests.opening.test_answer_gate --write")
+                     "or a role tally (opening/answer_checks.py); set a promise against something else in a dilemma "
+                     "offer that `tests` it (opening/promise_checks.py)", "python -m tests.opening.test_answer_gate --write")
     assert not found, "\n".join(found)
 
 
@@ -74,7 +78,8 @@ def without_tally(o: Opening, kind: str) -> Opening:
 
 
 def test_a_role_with_no_tally_is_found_and_the_tally_alone_separates_the_answers(content: Opening):
-    unread = content.model_copy(update={"triggers": [t for t in content.triggers if not t.id.startswith("t_kept_")]})
+    unread = content.model_copy(update={"triggers": [t for t in content.triggers if not t.id.startswith("t_kept_") and t.id not in {"t_bay2_mid", "t_hut_mid"}],
+                                        "offers": [x for x in content.offers if not x.tests]})
     assert not {"o_pair", "o_family"} & set(unlasting_offers(unread))
     bare = without_tally(unread, "arrival")
     assert untallied_kinds(bare) == ["arrival", "work"]

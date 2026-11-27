@@ -2,7 +2,7 @@ typical: 10 visits from V6
   V6       gap   9.2h  active  0.2m  new  15  bigger  6  first    0s  decisions  3  actions   4  idle    4s  run 1  effort  2  |  spend  6  decide  2
   V7       gap   4.2h  active  1.4m  new  17  bigger 10  first    0s  decisions  4  actions   4  idle   64s  run 0  effort  4  |  spend  2  decide  3
   V8       gap   3.2h  active  1.7m  new   5  bigger  2  first    0s  decisions  2  actions   7  idle   24s  run 5  effort  5  |  spend 10  decide  2
-  V9       gap   9.2h  active  0.1m  new  15  bigger 12  first    0s  decisions  2  actions   2  idle    4s  run 0  effort  2  |  spend 10  decide  1  [wait, 8 lines]
+  V9       gap   9.2h  active  0.1m  new  16  bigger 13  first    0s  decisions  2  actions   2  idle    4s  run 0  effort  2  |  spend 10  decide  1  [wait, 10 lines]
   V10      gap   4.2h  active  1.4m  new   4  bigger  3  first    0s  decisions  0  actions   5  idle   24s  run 4  effort  4  |  spend 17  decide  1
   V11      gap   3.2h  active  0.5m  new   1  bigger  0  first    0s  decisions  0  actions   2  idle   24s  run 2  effort  2  |  spend 17  decide  0
   V12      gap   9.2h  active  1.1m  new   3  bigger  2  first    0s  decisions  2  actions   5  idle   24s  run 3  effort  5  |  spend 18  decide  2
