@@ -651,7 +651,10 @@ after = { unlock_kind = "feature", id = "pair_offer" }
 [[triggers]]
 id = "t_kept_o_pair_room"
 when = { test = "at_least", subject_kind = "store", id = "bay2", value = 1 }
-requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_room", value = 1 }]
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_room", value = 1 },
+  { test = "at_most", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_pot_pot", value = 0 },
+]
 [triggers.outcome]
 line_keys = ["l_kept_o_pair_room"]
 modifiers = [{ target = "lane", id = "n3", kind = "mul_bp", amount_bp = 11000, source = "o_pair_room" }]
@@ -664,7 +667,60 @@ requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "answe
 line_keys = ["l_kept_o_pair_hers"]
 modifiers = [{ target = "rate", id = "rest", flow = "make", store = "energy", kind = "mul_bp", amount_bp = 10500, source = "o_pair_hers" }]
 
+# O-pair-pot: the promise to build her bay, tested half way through the build against the stew (a promise is broken only by
+# a choice, principles.md). Breaking it hands the build to her lane and retires the hands' card; keeping it leaves the pot.
+# Never unlocked but by the build's start: its clock, in twentieths of an hour; the offer comes an hour and a half in.
+[[stores]]
+id = "bay2_mid"
+label_key = "store_bay2_mid"
+cap_items = 40
+hidden = true
+
+[[standing]]
+id = "bay2_mid"
+label_key = "action_bay2_mid"
+makes = [{ store = "bay2_mid", items_per_hour = 20 }]
+
+[[triggers]]
+id = "t_bay2_mid"
+when = { test = "at_least", subject_kind = "running", id = "make_bay2", value = 1 }
+outcome = { unlocks = [{ unlock_kind = "action", id = "bay2_mid" }] }
+
+[[offers]]
+id = "o_pair_pot"
+text_key = "o_pair_pot"
+gate = { test = "at_least", subject_kind = "store", id = "bay2_mid", value = 30 }
+requires = [
+  { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_pair_room", value = 1 },
+  { test = "at_least", subject_kind = "running", id = "make_bay2", value = 1 },
+]
+line_keys = ["l_pair_pot_1", "l_pair_pot_2"]
+tests = ["o_pair_room"]
+
+[[offers.answers]]
+id = "o_pair_pot_bay"
+label_key = "a_pair_pot_bay"
+cost_key = "a_pair_pot_bay_cost"
+[offers.answers.outcome]
+line_keys = ["l_pair_pot_bay"]
+modifiers = [{ target = "rate", id = "stew", flow = "make", store = "stew", kind = "mul_bp", amount_bp = 9500, source = "o_pair_pot_bay" }]
+
+[[offers.answers]]
+id = "o_pair_pot_pot"
+label_key = "a_pair_pot_pot"
+cost_key = "a_pair_pot_pot_cost"
+breaks = ["o_pair_room"]
+[offers.answers.outcome]
+line_keys = ["l_pair_pot_pot"]
+unlocks = [{ unlock_kind = "retired", id = "make_bay2" }, { unlock_kind = "card", id = "n3_build_bay" }]
+orders = [{ tap_card = "n3_build_bay", first = true }]
+modifiers = [{ target = "lane", id = "n3", kind = "mul_bp", amount_bp = 9200, source = "o_pair_pot_pot" }]
+
 [line_kinds]
+l_pair_pot_1 = "story"
+l_pair_pot_2 = "story"
+l_pair_pot_bay = "story"
+l_pair_pot_pot = "story"
 l_kept_o_pair_room = "story"
 l_kept_o_pair_hers = "story"
 l_stone_first = "story"
@@ -742,6 +798,17 @@ a_pair_hers = "She builds it"
 a_pair_hers_cost = "{d} of her time"
 l_bay2_go = "you raise poles for a second bay, then stones."
 l_bay2_hers = "she raises the poles. the old man passes stones."
+store_bay2_mid = "clock"
+action_bay2_mid = "Bay"
+o_pair_pot = "The poles for her bay, or the pot?"
+l_pair_pot_1 = "the stew has caught on the bottom. you smell it before anyone says."
+l_pair_pot_2 = "the second bay is half roofed. the woman looks at the poles, then at you."
+a_pair_pot_bay = "You finish the bay"
+a_pair_pot_bay_cost = "{pct} stew"
+a_pair_pot_pot = "You go to the pot"
+a_pair_pot_pot_cost = "{pct} work from her"
+l_pair_pot_bay = "the pot scorches. the poles go up straight, and the woman stays at your elbow."
+l_pair_pot_pot = "you put the poles down. she takes them up where you left them, and says nothing."
 c_make_bay2 = "Build a second sleeping bay"
 lane_n3 = "The woman's hands"
 lane_n3_named = "{n3}'s hands"
