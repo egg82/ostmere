@@ -171,7 +171,7 @@ for the Python-run gates, `app/client/gates/held/` for the client's. `app/tools/
 | `app/tests/test_ci_budget.py` | every job in `ci.yml` is classed pull-request, full-run or main-only, and the longest chain of pull-request jobs at their `timeout-minutes` is at most 10 minutes | none |
 | `app/tools/mutate_suite.py` `--plants` and `--check`, and `app/tests/journal_contract/plant_mutants.py` `--plants` for the journal plants (CI job `mutant-plants`) | every planted mutant's anchor occurs exactly once in the code it mutates, so no mutant is silently skipped, and every mutant row is claimed by a test marked `@kills` | none |
 
-The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/test_purity.py`.
+The engine's own import rules (stdlib only, no clock or I/O) stay in `tests/engine_contract/invariants/test_purity.py`.
 `app/tests/test_household_names.py` fails when any tracked file names the household that runs the game (its people,
 pets, network, towns, hosts); the names are the CI secret `OSTMERE_HOUSEHOLD_NAMES`, so it skips everywhere but CI.
 Moving a held string to another file moves its `KEPT` entry with it, read from CI's "stale" and "over" output (paths
