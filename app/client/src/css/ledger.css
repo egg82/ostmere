@@ -1,0 +1,21 @@
+/* the ledger: groups on hairlines, each a label over aligned rows of name, rate, and stock with its time */
+.ledger-group { margin: .5rem 0 0; padding: .5rem 0 .15rem; border-top: 1px solid var(--rule); font-size: var(--t-meta); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.ledger-lines { display: flex; flex-direction: column; }   /* a list: aligned rows, not boxes (a line taps through only to the rule that watches it, ui/linerule.ts) */
+.ledger-item { display: flex; flex-direction: column; gap: .4rem; }
+.ledger-asks:empty { display: none; }   /* a phone's red and full lines above the cards (ui/ledger.ts, `asks`); none, no room */
+.line {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name rate amount" "eta eta eta" "edit edit edit";
+  align-items: baseline; gap: 0 1rem; min-height: 2rem; padding: .3rem 1rem .3rem 0; overflow: hidden;
+  color: var(--ink-hi); transition: color .3s, background .3s;
+}
+.line-name { grid-area: name; color: var(--ink); overflow-wrap: break-word; }
+.line-rule { display: inline-block; width: .85rem; height: .85rem; margin-left: .45rem; padding: 0; border: 0; vertical-align: -.1em; background: var(--ink-dim); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; cursor: pointer; }   /* a rule watches this store: the Rules tab's own icon, small and dim */
+.line-rule[hidden] { display: none; }
+.line.ruled { cursor: pointer; }
+.line.ruled:hover .line-rule, .line-rule:focus-visible { background: var(--ink-hi); }
+.line-rate { grid-area: rate; color: var(--ink-hi); font-variant-numeric: tabular-nums; text-align: right; }
+.line-amount, .line-eta { font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; text-align: right; }
+.line-amount { grid-area: amount; }
+.line-eta { grid-area: eta; }
+.line-eta:empty { display: none; }
+.line-edit { grid-area: edit; justify-self: end; margin-top: .3rem; min-height: 2rem !important; font-size: var(--t-meta); }

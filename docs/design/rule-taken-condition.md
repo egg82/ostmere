@@ -17,7 +17,7 @@ It is a content gate: Triggers firing a condition from Gates' one vocabulary (`d
 can express it:
 
 - **`unlocked`**: taking a rule writes no unlock. Accepting an order card sends `set_orders` with one order added
-  (`api/CONTRACT.txt`, order cards), the same verb the editor sends; only outcomes grow the unlock set.
+  (`api/contract/`, order cards), the same verb the editor sends; only outcomes grow the unlock set.
 - **`running` / `card_count` on the rule's card**: `Change` can make that card her always task, which is a task
   change, not a rule, so it fires falsely. It also lags: the rule may wait hours for its store to fall.
 - **An offer**: the order card is not an offer, and a rule the player writes in the editor answers the same line.

@@ -1,0 +1,71 @@
+MOVING TO ANOTHER DEVICE
+  An account moves to another browser by a transfer code (or its QR code) made on a browser that has it, or by its
+  recovery words, typed on the other browser (or the code's link opened there). Every answer of the three routes
+  below, errors included, carries Cache-Control: no-store. Without a database, or without the server's join key
+  (ASHFALL_JOIN_KEY: 32 bytes written as 64 hex characters), all three answer 503 save_unavailable and change nothing.
+  POST /api/me/transfer-code -> TransferCode {transfer_code, expires_in_s, join_url, qr}
+    transfer_code  eight characters of ABCDEFGHJKLMNPQRSTUVWXYZ23456789, shown as two groups of four joined by a dash
+                   ("ABCD-EFGH"). It joins one browser, once, within expires_in_s of being made.
+    expires_in_s   600, as Content.transfer_code_s says. A code past it finds nothing, as if it had never been made.
+    join_url       ASHFALL_PUBLIC_URL (default https://ostmere.yggdrasil.pub) + "/#join=" + transfer_code, never built
+                   from the request's Host. The code rides in the fragment, which no request carries.
+    qr             join_url as a QR code: one string per row of modules, top row first, each character "1" (dark) or
+                   "0" (light), every row as long as there are rows (21 + 4k for some k >= 0), with no quiet zone
+                   (the page draws one around it, dark on light).
+    Making a code ends the account's previous one, used or not: an account has at most one live code. At most 10
+    codes an hour per account (429 rate_limited).
+  POST /api/me/words -> RecoveryWords {words, label}
+    words          four words of the BIP-39 English word list, lowercase, joined by single dashes. The server keeps
+                   only a slow hash and never answers them again. New words replace the old at once: from this answer
+                   on the old words find nothing. Words never expire and are not used up by a join.
+    label          "Ostmere": the name a browser's password manager files the words under.
+    At most 5 sets of words a day per account (429 rate_limited).
+  A browser already joined keeps its session: a new code or new words stop the old ones joining anything more, and
+  sign no browser out. Ending a browser's session is "Your devices", below.
+  POST /api/join  JoinRequest {typed, merge, keep} -> Joined {moved, account, kept}
+    typed          at most 200 characters: a transfer code in any case, with or without spaces and dashes, or a whole
+                   join_url; or recovery words in any case, separated by any run of spaces, dashes, dots, commas or
+                   underscores. Space before and after is ignored.
+    merge          false by default; true moves this browser's own games into the other account (below), after the
+                   page has asked the player (confirm_merge).
+    keep           false by default; true joins T and leaves this browser's own games where they are, on D (below),
+                   after the same question. merge and keep together are 422 invalid_decision.
+    With T the account `typed` names and D the account of this browser's live session, if it has one:
+      - nothing named: no such code (never made, used, expired, or ended by a newer one), no such words (never made,
+        or replaced), or `typed` is neither shape -> 404 no_such_code. Nothing changes.
+      - no live session: the browser joins T: a new session of T and its cookie (T keeps its 20 sessions used most
+        recently). moved 0.
+      - D is T: nothing changes, except that a code is used up. moved 0.
+      - D holds no decision on any save: D folds into T (below) and D's saves are deleted. moved 0.
+      - D holds a decision on a save, and D's live saves and T's together pass max_saves -> 409 too_many_saves, with
+        ApiError.merge, `merge` true or false. Nothing changes, and a code is not used up.
+      - D holds a decision on a save, merge false -> 409 confirm_merge, with ApiError.merge. Nothing changes, and a
+        code is not used up.
+      - D holds a decision on a save, merge true: every save of D, deleted ones included, becomes T's, and D folds into
+        T. A moved save keeps its id, clock and everything in it but takes a new number: on from the highest number
+        T holds (deleted saves included), in D's own order of numbers (unnumbered first). moved: D's saves.
+      - D holds a decision on a save, keep true: only the session that asked becomes T's (T keeps its 20 sessions used
+        most recently). D, its saves, its other sessions and T's saves are as they were, so D's games are still there
+        for any browser that holds a session of D, and for D's recovery words. D is not deleted, and a pruning of
+        empty accounts never takes it, since it holds a decision. The cap does not apply, as nothing moves. moved 0.
+        D's words: when D has none, the join makes them as POST /api/me/words would (this browser can no longer ask
+        for them) and answers them once, in `kept.words`; when D has some, they are left alone and `kept.words` is
+        null, since they cannot be shown again. `kept` is null for any other join, and for a keep from a browser
+        whose D holds no decision (that D folds into T as above).
+    ApiError.merge is a MergeSummary {here, there, there_newest_game_time, max_saves, words_replaced}: D's live saves,
+    T's live saves, the game_time of T's most recently played save (null when T has none), Games.max_saves, and
+    whether D and T both have recovery words (a merge then ends D's: the page says so in its question).
+    D folding into T: every session of D becomes T's (this browser keeps its cookie, which now names T; T keeps its 20
+    sessions used most recently), D's recovery words become T's when T has none (else they find nothing from then on),
+    T's presentation is kept, and D is deleted, with its code. All of a join is one transaction: everything moves or
+    nothing does. Only D's own saves move, D being the account of the session that asked; T's never move to D.
+    Kept {saves, words, label}: D's live saves left on D, D's new recovery words or null, and RecoveryWords.label.
+    `moved` is how many saves became T's. `account` is T's Account, as GET /api/me now answers it. A code is used up
+    only by a 200, never by a refusal.
+    Limits, each answered 429 rate_limited with Retry-After (seconds) and changing nothing: at most 10 joins per 15
+    minutes from one client address, every join the limit lets through counting, right or wrong (an IPv6 address
+    counts by its /64, and its /48 is held to 30 in the same 15 minutes); and at most 300 joins an hour, from every address together, whose code or words (of either
+    shape) found nothing: past that, every join is refused until the hour moves on. A limit that cannot be counted
+    refuses. Recovery words are slow to check: when the server has been unable to start on them for 3 seconds, 429
+    with Retry-After 3.
+

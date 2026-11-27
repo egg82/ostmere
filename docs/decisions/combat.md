@@ -35,7 +35,7 @@ coming. Nobody starves because you were at work; thin rations are flavour, never
 How these parts stand today, moved from their rows in `systems.md`.
 
 Combat: planned in `docs/design/combat-plan.md`; interface in engine `DESIGN.txt`, "FIGHTS", and
-`app/ashfall_app/api/CONTRACT.txt`, "FIGHTS". A fight (side, threat, what a loss costs) sits on a card the player runs
+`app/ashfall_app/api/contract/fights.txt`, "FIGHTS". A fight (side, threat, what a loss costs) sits on a card the player runs
 or a standing action that runs alone; odds are Modifiers entries from the two strengths, losses are flows, and the
 region's ramp is triggers on a clock store. No Save field, event kind or verb: a fight is never an event, and the
 engine keeps exact counts of fights and losses in tally stores. Only the schedule is a policy worth A/B; preparation
@@ -43,7 +43,7 @@ decides, chance shows (which fight the chronicle calls lost is the chronicle's).
 (a watch, a guard) says so on its face, where its share is set, and is listed with its share in that side's strength;
 a later chapter may add another side to the entries a card already holds (`pacing.md`, "A sink shows what it buys").
 A wounded store (one a lost fight adds to, like hurt) is a level the player sees, in whole items rounded up, never a
-cost in units; the server serves it as `View.levels`, off the ledger (`CONTRACT.txt`, "FIGHTS").
+cost in units; the server serves it as `View.levels`, off the ledger (`contract/fights.txt`, "FIGHTS").
 
 Expeditions: planned in `docs/design/banked-time-plan.md`; interface in engine `DESIGN.txt`, "BANKED TIME". The first
 slice: a trip is an uncapped card with inputs, run in the mix on its supply store; finds are triggers on its completion

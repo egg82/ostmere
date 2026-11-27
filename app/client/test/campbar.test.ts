@@ -1,4 +1,4 @@
-// The Camp bar past a held level (ui/camp.ts; CONTRACT.txt, the Camp bar): a held level a step lifts counts as
+// The Camp bar past a held level (ui/camp.ts; contract/, the Camp bar): a held level a step lifts counts as
 // reached once that step has finished and the bar has filled to it; one nothing lifts never counts.
 import { install } from "./fake-dom";
 import { testContext } from "./context";

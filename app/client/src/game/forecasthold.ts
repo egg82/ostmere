@@ -1,4 +1,4 @@
-// The forecast the page holds for its save (CONTRACT.txt, "Forecast"), with the Step.decisions it came with: it holds
+// The forecast the page holds for its save (contract/forecast.txt, "Forecast"), with the Step.decisions it came with: it holds
 // until the save's next decision. Also when a new one is due, so a run of taps costs one ask (game/session.ts).
 import type { Forecast, Step } from "../api/types";
 

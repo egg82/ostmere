@@ -1,4 +1,4 @@
-"""What the Asks list reads of an offer (api/CONTRACT.txt, "OFFERS"): who asks, what led to it, and the three texts an
+"""What the Asks list reads of an offer (api/contract/offers.txt, "OFFERS"): who asks, what led to it, and the three texts an
 offer has only where it differs from the usual. Served as authored, its cause shared with its lines, and the content
 refuses an asker that is no person and an expiry the engine cannot keep."""
 import pytest

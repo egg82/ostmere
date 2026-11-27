@@ -1,6 +1,6 @@
 """Two builds mid-deploy, through HTTP, on one database: the older serves today's opening, the newer the release after it, a numbers-only retune of it
 (tests/saves/changes.py, retuned_opening) that the older could rebase back from without an error. Once the newer has
-written a save, the older answers 503 save_unavailable for it and writes nothing (CONTRACT.txt, "Saves across releases
+written a save, the older answers 503 save_unavailable for it and writes nothing (contract/saves-across-releases-and-pods.txt, "Saves across releases
 and pods"): builds are ordered by release, never by digest alone."""
 from collections.abc import Callable, Generator
 from contextlib import contextmanager

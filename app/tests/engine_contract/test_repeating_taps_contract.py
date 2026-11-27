@@ -1,4 +1,4 @@
-"""Repeating taps (engine DESIGN.txt, part "REPEATING TAPS", invariants 75-79; api CONTRACT.txt, "A LANE RUN BY RULES").
+"""Repeating taps (engine DESIGN.txt, part "REPEATING TAPS", invariants 75-79; api/contract/a-lane-run-by-rules.txt, "A LANE RUN BY RULES").
 Written from the contract and the public interface only. A ruled side lane `L` runs an always rule on an uncapped
 card with no inputs; every expected number below is derived from the documented arithmetic (a completion every
 work_s seconds at full speed, a make of w whole items per second moves a store by w * Q per second)."""

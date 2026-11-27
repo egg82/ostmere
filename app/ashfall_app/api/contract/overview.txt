@@ -1,0 +1,23 @@
+GAME API: the contract for the page. Models: models.py, saves_models.py, devices_models.py and error_models.py
+(generate the client's types from openapi.json). Every path is under /api.
+
+The server holds the game. An account is a browser (a session cookie); it owns saves; a save is one game, written by
+the server on every decision and advance, so the page never holds the only copy and keeps nothing itself. The
+server's clock decides game time: a save's game time is the wall seconds since it began (never before the time it was
+last written at), so the time away runs whether or not a page is open.
+
+Every answer that moves a game is a Step:
+  save_id        the save it belongs to.
+  decisions      how many decisions the save holds after this Step: send it as `after` with the next decision.
+  rules_digest   the rules the save is now under; equal to Content.rules_digest.
+  build          the server's build (/page-config.json's version).
+  view           what to draw now (View), read off the engine at view.at, the server's game time for the save.
+  lines          log lines the game wrote since the last time it was written, in (at, seq) order; (at, seq) is
+                 unique within one Step, and a later Step's lines follow an earlier one's. Text: Content.text_entries.
+  repeats        what the player keeps doing by hand, counted from the save's decision log (REPEATS below).
+  rule_runs      what the rules did lately (RULE RUNS below).
+  catching_up_to null, or the game time this request was advancing to when its time ran out short of it: view.at is
+                 behind now; ask advance again (CATCHING UP below).
+Every response, errors included, carries the header X-Ashfall-Build: the build that answered it. While a deploy
+rolls, two builds answer at once. X-Ashfall-Server says which server answered (app, or web for the page's files).
+

@@ -1,4 +1,4 @@
-// The Book's Map page on a real Screen (CONTRACT.txt, "MAP", acceptance 4 and 7): no button and nothing fetched until a
+// The Book's Map page on a real Screen (contract/map.txt, "MAP", acceptance 4 and 7): no button and nothing fetched until a
 // place is revealed; then the button, last in the Book's row, the stamps' manifest asked for, the Book's tab dotted for a
 // place revealed later, the named places listed with the town first, and a row's tap sending nothing. And the map's
 // lesson: on the Map button's first showing, two steps, kept, never again.

@@ -1,4 +1,4 @@
-"""A request body over the limit is refused before it is parsed (api/CONTRACT.txt, ERRORS: 413 too_large), by its
+"""A request body over the limit is refused before it is parsed (api/contract/errors.txt, ERRORS: 413 too_large), by its
 declared length or, for a streamed body, by the bytes counted as they arrive; the refusal is logged by route and size
 only."""
 import asyncio

@@ -1,4 +1,4 @@
-// A rule the game removed, in the Rules tab's Lately block (CONTRACT.txt, "RULE RUNS"): an entry with `ended` set is
+// A rule the game removed, in the Rules tab's Lately block (contract/rule-runs.txt, "RULE RUNS"): an entry with `ended` set is
 // drawn, in the server's order, as one line wording the rule and why it ended: the season's turn, or its person leaving
 // (the name of the lane of the card the rule taps). It matches no rule in the view and offers nothing to edit.
 import { install } from "./fake-dom";

@@ -1,4 +1,4 @@
-"""The wire's full_store (api CONTRACT.txt, "FULL OUTPUT"): a card a full pause stopped is served paused with no blocker
+"""The wire's full_store (api/contract/full-output.txt, "FULL OUTPUT"): a card a full pause stopped is served paused with no blocker
 and the store that has no room; a running card, a dry-paused one and the card once its pause lifts serve null."""
 from ashfall_app import engine as e
 from ashfall_app.api import convert

@@ -3,12 +3,13 @@
 // Both are layout, which fake-dom cannot draw, so this reads the rule and the call; the measured result is in the
 // branch's before/after renders.
 import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
 }
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const low = [...css.matchAll(/^ {2}\.low \{([^}]*)\}/gm)].map((m) => m[1] ?? "");
 expect("the panel under the art has rules", low.length > 0, true);
 expect("its floor gives up the head's height", low.some((r) => /min-height: [^;]*- var\(--head-h/.test(r)), true);

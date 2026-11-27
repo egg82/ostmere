@@ -21,7 +21,7 @@ Beats are named by id. Sizes: **S** under a day of agent work, **M** a few days,
 
 ## Work, by system
 
-Items 1–4's interface: engine `DESIGN.txt`, "TOWNSFOLK, INSTALLED RULES AND OFFERS", and `api/CONTRACT.txt`, "A LANE
+Items 1–4's interface: engine `DESIGN.txt`, "TOWNSFOLK, INSTALLED RULES AND OFFERS", and `api/contract/a-lane-run-by-rules.txt`, "A LANE
 RUN BY RULES" and "OFFERS".
 
 1. **Lanes and orders for a townsperson** (**L**). A declared lane that the page draws as a row under the hands strip:

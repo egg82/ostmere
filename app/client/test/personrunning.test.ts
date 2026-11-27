@@ -1,7 +1,7 @@
 // From a person's page, the way to a rule that watches another lane's task running: "+ New rule" on the page opens the
 // condition editor for that person (the Rules tab's New rule, scoped to their lane), whose full view's When row offers
 // "while <task> is running" for a person's task, and offers none for a hands rule or when the rule's task is on the
-// watched card's own lane (CONTRACT.txt, "Decisions": the one Running shape set_orders takes).
+// watched card's own lane (contract/endpoints.txt, "Decisions": the one Running shape set_orders takes).
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";
 import { townStep } from "../fixtures/town";

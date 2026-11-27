@@ -47,7 +47,7 @@ from .forecast_models import (
 # ---------- the view (what the client draws) ----------
 
 class OrderState(StrEnum):
-    """Where a rule stands now, so the page can say why one is off (CONTRACT.txt, "THE CLIENT MAY")."""
+    """Where a rule stands now, so the page can say why one is off (contract/the-client-may.txt, "THE CLIENT MAY")."""
 
     ON = "on"
     """A mix rule whose mix runs (it is View.mix_order), or a task rule whose condition holds."""
@@ -61,7 +61,7 @@ class OrderState(StrEnum):
     PASSED_OVER = "passed_over"
     """It cannot act whatever its condition: its mix is greyed (in greyed_mix_ids), or its task is completed."""
     BEHIND_NEXT = "behind_next"
-    """A hands rule under Next whose condition holds while the queue has the hands (CONTRACT.txt, "Next's row")."""
+    """A hands rule under Next whose condition holds while the queue has the hands (contract/endpoints.txt, "Next's row")."""
 
 
 class Contribution(BaseModel):
@@ -117,7 +117,7 @@ class LaneBar(BaseModel):
     order: int | None
     """Index into orders of the rule whose task the lane runs now; null while free or no rule taps what it runs."""
     own_split: bool | None
-    """A person's mark: true runs their own split, false hands them to their group (CONTRACT.txt, "GROUPS"); null on
+    """A person's mark: true runs their own split, false hands them to their group (contract/groups.txt, "GROUPS"); null on
     hands, on a pooled lane and on any lane that is no person."""
 
 
@@ -129,7 +129,7 @@ class LogLine(BaseModel):
     """The card whose completion, tap or failed tap wrote the line, however it was run (a tap, the mix, a rule);
     null for a chip's line, a trigger's and the opening's first lines."""
     opens_beat: bool
-    """The line is a story beat's first line (CONTRACT.txt, "Beat lines"); false for side layers, mini-stories and every
+    """The line is a story beat's first line (contract/endpoints.txt, "Beat lines"); false for side layers, mini-stories and every
     other line."""
 
 
@@ -149,24 +149,24 @@ class View(BaseModel):
     """Saved mixes holding a completed card: drawn grey, offered only edit and delete."""
     chips: list[str]
     chips_seen: list[str]
-    """Every chip the save has shown, now included, in content order: a rule may watch any of them (CONTRACT.txt,
+    """Every chip the save has shown, now included, in content order: a rule may watch any of them (contract/,
     "The condition editor")."""
     unlocked: list[Unlock]
     all_covered: bool
     """No ledger line falling uncovered and none starved (true at time 0). Live: not the end on its own."""
     ended_at: int | None
-    """Game time the end happened (CONTRACT.txt, "The end"), or null. Once set it never clears."""
+    """Game time the end happened (contract/the-end.txt, "The end"), or null. Once set it never clears."""
     mixes: list[Mix]
     active_mix_id: str | None
     """The player's own mix: what runs when no rule's or queue entry's mix does. Only the player's switch_mix sets it."""
     running_mix_id: str | None
     """The mix the hands run now: the first rule that is on with a mix that isn't greyed, else the controlling queue
-    entry's mix when it is a switch_mix (CONTRACT.txt, "Goal stints"), else active_mix_id."""
+    entry's mix when it is a switch_mix (contract/goal-stints.txt, "Goal stints"), else active_mix_id."""
     mix_order: int | None
     """Index into orders of the rule whose mix runs; null when the queue's or the player's own mix runs."""
     running_town_mix_id: str | None
     """The town mix running now: the first rule that is on with a switch_mix of a town mix that isn't greyed; null when
-    none runs (CONTRACT.txt, "The town's mix"). running_mix_id reads hands mixes alone."""
+    none runs (contract/the-towns-mix.txt, "The town's mix"). running_mix_id reads hands mixes alone."""
     town_mix_order: int | None
     """Index into orders of the rule whose town mix runs; null when none does."""
     orders_on: list[bool]
@@ -179,7 +179,7 @@ class View(BaseModel):
     """order_doing[i]: the index in the rule's actions (then, then or_else) of the one it runs now: its lane runs
     that card for this rule, or the running mix is that mix by this rule; else null."""
     order_dry: list[RuleDry | None]
-    """order_dry[i]: a store rule whose mix is, or may be, short of an input (CONTRACT.txt, "Dry rules"); else null."""
+    """order_dry[i]: a store rule whose mix is, or may be, short of an input (contract/dry-rules.txt, "Dry rules"); else null."""
     runs_out_at: int | None
     """When the running mix first runs a store it costs to empty: the earliest empties_at among falling ledger lines
     that a card of the flattened running mix costs. null: no running mix, or it runs indefinitely as set."""
@@ -187,18 +187,18 @@ class View(BaseModel):
     queue: list[QueueEntry]
     """The player's plan as it stands: edit it and send the whole list back (set_orders, set_queue replace)."""
     offers: list[Offer]
-    """Every offer shown so far, in content order (CONTRACT.txt, "Offers")."""
+    """Every offer shown so far, in content order (contract/offers.txt, "Offers")."""
     fights: list[Fight]
-    """One per unlocked fight card, then standing fight, each in content order (CONTRACT.txt, "FIGHTS")."""
+    """One per unlocked fight card, then standing fight, each in content order (contract/fights.txt, "FIGHTS")."""
     goals: list[Goal]
-    """What the next beat waits on, unmet: at most one step of work, then at most one clock (CONTRACT.txt, "Goals")."""
+    """What the next beat waits on, unmet: at most one step of work, then at most one clock (contract/goals.txt, "Goals")."""
     goal_rows: list[GoalRow]
-    """Each goal a mix can move, when it lands at the rates as set and what binds it (CONTRACT.txt, "Goal rows")."""
+    """Each goal a mix can move, when it lands at the rates as set and what binds it (contract/goal-rows.txt, "Goal rows")."""
     store_rows: list[StoreRow]
-    """Each ledger store's net as set and where it heads (CONTRACT.txt, "Store rows")."""
+    """Each ledger store's net as set and where it heads (contract/store-rows.txt, "Store rows")."""
     levels: list[StoreLevel]
     """Each store a lost fight adds to, then each store the scene reads that the ledger does not list, as its segment
-    (CONTRACT.txt, "FIGHTS", "read a level")."""
+    (contract/fights.txt, "FIGHTS", "read a level")."""
 
 
 class Step(BaseModel):
@@ -216,12 +216,12 @@ class Step(BaseModel):
     """The card, when this answers the player's tap of it and it was not ready: a failed tap, which took no time and
     changed nothing and emitted no line; the card's blocker in view is what stopped it."""
     repeats: Repeats
-    """What the player keeps doing by hand, as of view.at (CONTRACT.txt, "Repeats")."""
+    """What the player keeps doing by hand, as of view.at (contract/repeats.txt, "Repeats")."""
     rule_runs: list[RuleRun]
-    """What the rules did lately, the most recent change first (CONTRACT.txt, "Rule runs")."""
+    """What the rules did lately, the most recent change first (contract/rule-runs.txt, "Rule runs")."""
     catching_up_to: int | None
     """Set when this request's time ran out before the save reached now: the game time it was advancing to (view.at
-    is short of it). Ask advance again at once until it is null (CONTRACT.txt, "Catching up")."""
+    is short of it). Ask advance again at once until it is null (contract/catching-up.txt, "Catching up")."""
     journal_days: list[JournalDay]
     """The written journal days this step composed, oldest first: those whose end it carried the save past
-    (CONTRACT.txt, "JOURNAL")."""
+    (contract/journal.txt, "JOURNAL")."""

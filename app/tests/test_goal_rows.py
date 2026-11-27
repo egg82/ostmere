@@ -1,4 +1,4 @@
-"""View.goal_rows on a fixture world (api/goalrows.py; CONTRACT.txt, "Goal rows"): when each goal lands at the rates as
+"""View.goal_rows on a fixture world (api/goalrows.py; contract/goal-rows.txt, "Goal rows"): when each goal lands at the rates as
 set, a tap of the hands set aside, and the dry store that binds it.
 
 Skill k is trained by `chop` (an hour per level at a full share) and `saw`, which turns plank input `log` into `plank`

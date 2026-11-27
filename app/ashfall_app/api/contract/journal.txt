@@ -1,0 +1,232 @@
+JOURNAL
+  The book the player carries, written in: one page per thing known, holding the notes written about it and, for a
+  thing fought, its learned numbers (decisions.md, "What you learn is written in a journal", "Blind until learned,
+  perfect once known"). It is a reading of what the wire already carries: an entry and each of its notes are unlocks,
+  and the numbers are View.fights. View gains nothing. The page draws the journal from Content.journal,
+  view.unlocked and view.fights, and keeps what the player has read in AccountPresentation. Page design:
+  docs/design/opening-screen/journal.md, "The journal". Fits into Unlocks, Knowledge (as a page reading), Lessons and the
+  page shell; not a system (one caller, nothing to swap). The daily journal's written days are the one part the wire
+  carries anew, on Step and Opened (below, "The written days").
+
+  The book is in sections, a closed set, and each page is in one:
+    days                the daily journal: the written days the server composes from the save (below, "The written
+                        days"), never entries. Its pages are the page's own: days run on down a page until the next
+                        would not fit.
+    creatures           the things fought, with their numbers.
+    places              places, events and expeditions.
+  Within creatures and places, pages run in the order they are written. The content keeps that order: a section's
+  pages are declared (chapters in load order) in the order their first notes are written on every route, so content
+  order is writing order and nothing on the wire carries a time.
+
+  In the chapter files:
+    [journal]           feature: a FeatureId with a label_key (the book the player carries). Declared once, in the
+                        chapter that holds the first entry or an earlier one; Content.journal is null until then.
+    [[entries]]         id (an EntryId), title_key, section, sketch, hand, runners
+      title_key         a text key naming the page in the contents list, short and in the book's hand; required on every
+                        entry. It names only what the page itself shows. Days pages have none: they are headed by their day.
+      section           "creatures" or "places"
+      sketch            optional: the entry's drawing, an id matching [a-z0-9_]+, the image
+                        /assets/journal/<sketch>.png. A page with none is laid out as text alone, which is valid.
+      hand              "ink" or "pencil": how the entry's notes are written where a note does not say
+      runners           the fight cards and standing fights whose numbers the page shows, in this order; [] for none
+    [[notes]]           id (a NoteId), entry, gate, requires, hand, sketch
+      entry             the entry the note is written on, declared in this chapter or an earlier one
+      gate, requires    when it is written, as an offer's: the loader makes the trigger "note_" + id, whose outcome
+                        unlocks the note and, for the entry's first note, the entry. Every other note's trigger also
+                        requires the entry unlocked, so a later note is a later outcome (or the first's own instant),
+                        never a note on a page that is not there.
+      hand              optional: the entry's hand when absent
+      sketch            optional: a small drawing beside the note, an id as for an entry
+    [text] <note id>    the note's words: a note's id is its text key (there is no text_key field)
+  An entry's first note is the first [[notes]] naming it in the chapter that declares the entry. A note's outcome is
+  only those unlocks: it writes no line and adds to no store.
+
+  The opening's checks (each naming ids, never text):
+    - a note whose entry is not declared in its chapter or an earlier one: refused, naming the note and the entry.
+    - an entry no [[notes]] in its own chapter names (no first note): refused, naming the entry.
+    - an entry with no title_key, or whose title_key is not in text: refused, naming the entry.
+    - a runner that is neither a card with a fight nor a standing action with a fight: refused, naming the entry and
+      the runner.
+    - a sketch id outside [a-z0-9_]+ (it is a path): refused, naming the entry or note.
+    - an entry whose section is "days": refused, naming the section (the days pages are the written days).
+    - an entry or a note while no chapter so far declares [journal]; [journal] declared twice; its feature unknown or
+      without a label_key: refused.
+    - a note with no [text] entry, or whose text holds a digit: refused by the existing text checks (Text and
+      numbers). A note writes its numbers as words ("two dozen"); the exact numbers are served and drawn below it.
+    - entry and note ids are content ids like any other, and content may rename or remove one: a save keeps the unlock
+      it had (no manifest declares them), and the trigger the loader made for a removed note is dropped with it (engine
+      DESIGN.txt, "Rebase").
+
+  Engine: UnlockKind gains entry (its id an EntryId) and note (a NoteId), ordinary kinds (not PRESENT_ONLY); engine
+  DESIGN.txt, "Unlocks", lists them. The engine never reads them. Gates read
+  them as any unlock (subject "unlocked" with unlock_kind entry or note), so a gate on several entries is one Unlocked
+  condition each, and no count store mirrors them.
+
+  Content.journal: JournalInfo {feature, entries: [EntryInfo {entry, title_key, section, sketch, runners: [str], notes:
+  [NoteInfo {note, hand, sketch}]}]} | null. entries in content order (chapters in load order), each entry's notes in
+  content order; within one section, content order is writing order. Section is a closed enum, "creatures" |
+  "places". EntryInfo.sketch is null for a page with no drawing.
+  NoteInfo.hand is resolved (the entry's where the note names none), so EntryInfo carries no hand and the page applies
+  no default. NoteInfo.sketch is null for a note with none. A note's words are Content.text_entries[note]. Hand is a
+  closed enum, "ink" | "pencil": each hand is a style the page owns, so adding one is page work as well as content.
+  The sketch images live on the assets volume (engineering.md, bulk assets) at /assets/journal/<sketch>.png: ink on
+  transparent, drawn by docs/research/sketch-test/process.md. An entry's sketch is 1200 by 1200 (the method's 600 by
+  600 page at twice), holding the figure, its studies, a crossed-out try and the labels pointing into it, and no
+  caption or free notes: those are the entry's notes. A note's sketch is at most 600 by 600. The words drawn in a
+  sketch are art: no text entry holds them and no check reads them.
+
+  AccountPresentation gains journal_read: [Name] (at most MAX_LIST): the notes on pages the player has turned to.
+  Empty on a new account. A note is unread while view.unlocked holds it and journal_read does not; read is kept for
+  the account, as ledger_lines is, so a note read in one game is read in the next.
+
+  THE CLIENT MAY:
+  - draw Content.journal.feature as the Journal button, in the book's place with the chips, once view.unlocked holds
+    that feature and the book has a page (a written day, or an entry view.unlocked holds); until then the book is
+    plain text, as any feature with a label_key. The button's word is the book's label_key. It carries the quiet dot
+    while anything written is unread (a note, or a written day after newest_day_read), and at no other time.
+  - open the Journal sheet from it: the days pages, then one page per entry view.unlocked holds, creatures then
+    places, each section's entry pages in Content.journal.entries order. It opens on the first page holding something
+    unread, else the page last shown in this page session, else the first. Prev and Next turn one page at a time,
+    across sections.
+  - fill the days pages with the written days in day order: each day's notes in page order under its day's heading
+    (ui.journal.day {n}, n the game day plus one), in the note's hand and with its sketch beside it, days running on
+    down a page; a day begins on the page in hand if its heading and first note fit, and a note that does not fit
+    begins a new page, headed again by its day. Whether a note fits is a fixed measure of its words (rows of the hand
+    at the desktop page's width), never the window, so the same days are the same pages on every device and width,
+    and a page, once a later one is begun, never changes. A day served while its page is open joins it, or grows on
+    it, and stays unread.
+  - draw one bookmark per section that has a page, in the same order, worded by its text key (ui.journal.days,
+    ui.journal.creatures, ui.journal.places); a section with no page written has no bookmark. Turning to a bookmark
+    opens that section's first page holding something unread, else its latest page. The bookmark of the open page's
+    section is marked as the current one.
+  - turn Prev and Next within the open page's section, worded by the neighbouring section's bookmark where the turn
+    crosses into it, and list a section's pages by title on request (ui.journal.contents): a days page by its first
+    day, an entry's page by its first note's words.
+  - on a page, draw the entry's sketch and each of its notes view.unlocked holds, in content order and in its hand,
+    with the note's sketch beside it. A note not unlocked is not drawn and keeps no room. A page whose sketch is null
+    is laid out as text alone: no empty room is kept for a drawing, nothing is loaded and nothing is reported.
+  - run the journal's lesson's numbers step only on a page that shows numbers: on a page with none, the lesson ends
+    (kept) after its notes step, and the numbers step runs as a lesson of its own the first time a page with numbers
+    is open. A step that waits on numbers never holds the lessons after it.
+  - under the notes, draw for each of EntryInfo.runners that view.fights holds, in runners order, the runner's label
+    (its card's label_key, or its standing action's) and its numbers exactly as the fight card words them (FIGHTS):
+    with fought 0, ui.fight.odds_unknown and ui.fight.vs with ui.fight.threat_unknown, and no tally; with fought
+    above 0, the odds (ui.fight.odds, else ui.fight.odds_pct), ui.fight.vs with both values, and ui.fight.tally
+    {fought}{lost}. Known means fought above 0, read off the view and stored nowhere (systems.md, Knowledge). A runner
+    view.fights does not hold (not unlocked) draws nothing. The numbers are redrawn at each view while the sheet is
+    open; a strength's entries do not open here (the fight card's do).
+  - count the notes of each page the player turns to (opening counts as turning to the page it opens on) as read,
+    and send them once, as the sheet closes: one PUT /api/me/presentation whose journal_read gains exactly those
+    notes, every other field as kept, and, when the newest day on the days pages turned to is later than
+    newest_day_read, one PUT /api/saves/{id}/presentation with that day. A note unlocked while its page is open stays
+    unread until the page is turned to again.
+  - load a sketch when its page is drawn; one that fails to load leaves its room empty (no broken-image mark, no
+    stand-in drawing) and is reported to /api/client-errors with the sketch id.
+  - mark the pages (docs/design/journal.md, "Marks on the page"): on every page, one or two wear marks chosen and
+    placed by draws keyed by the save and the page's id; on a days page, each of its days' marks, at most two a
+    page, a variant chosen and placed by draws keyed by the save, the day and the kind. The art is
+    /assets/journal/marks/ and its manifest.json; a mark is kept only where its box crosses no line of words, no day
+    heading and no drawing, else the next draw is tried, and one that finds no room is not drawn. A manifest or
+    image that fails to load draws no marks and is reported to /api/client-errors once.
+  THE CLIENT MAY NOT:
+  - send anything because of the sheet before it closes: opening it and turning its pages cause no decision,
+    advance, dry run, forecast or presentation write (the session's own advances at view.next_event_at go on as
+    ever). The read marks wait for the close.
+  - draw a figure for a runner whose fought is 0, take an entry's numbers from anywhere but view.fights, or draw an
+    entry or note view.unlocked does not hold.
+  - write a note's words anywhere but its page: the story strip and the chronicle carry lines, not notes.
+  - draw a mark over the words, or a mark a served day does not carry (wear aside).
+
+  The written days (docs/design/journal.md): the main character's daily journal, which the server composes from the
+  save's history, never the page. Game day d is game seconds [d * 86400, (d + 1) * 86400). A day's page fills as the
+  day goes: each step composes the day still being written and each day it begins, oldest first, in its transaction,
+  and a save that has none stored (one begun before the journal was kept) composes every day it has begun on its next
+  step. A note is decided from the lines up to it, so a day comes out the same however the steps fell. A note once
+  stored never changes or goes: a step only adds notes and marks after those a day has, and a later change to the
+  habits or the slots applies from the next note composed.
+    Step.journal_days    [JournalDay]: each written day this step added notes to, whole (every note it has), oldest
+                         first. Empty on most steps.
+    Opened.journal_days  [JournalDay]: every written day stored before the open, oldest first, the day in progress with
+                         the notes it had then. The open's step carries the days it added to, so the two together,
+                         each day taken as the copy with more notes, are every written day.
+    JournalDay {day, day_notes: [DayNote {subject, slot, key, hand, sketch}], marks}: a day the journal wrote, its notes in
+                         page order (at least one); a later copy of the same day begins with the notes and marks of an
+                         earlier one. A day not written (a gap or a blank) is stored and never served.
+                         key is the note's text key (Content.text_entries); slot is a closed enum, "first" | "repeat" |
+                         "catchup" | "mention" | "late" | "misremember" | "correction"; hand is the slot's own, else
+                         "ink"; sketch the slot's, else null (/assets/journal/<sketch>.png). subject is the content's
+                         subject id. marks: the marks the day leaves on its page, each a closed enum, "blood" | "soot"
+                         | "water" | "mud" | "smudge", each at most once, in the order drawn, stored with the day
+                         (saves/journal.py, statement 21); empty for none.
+  SavePresentation gains newest_day_read: int | null, the newest written day whose page the player has turned to,
+  null on a new save; a written day after it is unread. It only grows: a PUT whose value is lower, or null, leaves the
+  kept one. The days are the save's own diary, so how far into them the player has read is kept per save, where the
+  book's notes, which every game shares, are read per account (journal_read).
+  THE CLIENT MAY NOT:
+  - compose a day, or draw a written day neither Opened nor a Step carried.
+
+  New text keys (Content.text_entries): ui.journal.heading | ui.journal.prev | ui.journal.next   the sheet's heading
+                                    and its page turns
+                                    ui.journal.contents   the button that lists the open section's pages
+                                    ui.journal.day {n}   a day's heading on a days page
+                                    ui.lesson.journal_open | ui.lesson.journal_notes | ui.lesson.journal_numbers
+                                    the journal's lesson (opening-screen/lessons.md, "Lessons")
+                                    ui.journal.days | ui.journal.creatures | ui.journal.places   the sections'
+                                    bookmarks
+
+  Rejected, and why (the journal on the wire):
+  - A journal object or a known set on the View: each fact is already there (view.unlocked, view.fights), and the
+    engine has no use for a known set until a fork reads one (systems.md, Knowledge). A second home would drift.
+  - A `journal` feature beside the book: the page draws the journal from its first entry ("The screen arrives when it
+    means something"); a feature would be a second switch for what the entry unlock already says.
+  - A count store of entries for gates: one Unlocked condition per entry says the same with nothing to keep in step.
+  - Notes inside [[entries]]: a later chapter writes notes on an earlier chapter's entry, and chapters merge on with
+    new ids only, so a note is its own table naming its entry.
+  - Read marks per save, or in the browser: what the player has read is theirs across games, and a browser store is
+    lost on another device. Written at the close rather than per page so reading sends nothing.
+  - Every word in the sketch (process.md's notes files): notes grow as the player learns and pass the content's text
+    checks, so they are text; the sketch keeps only the words that point into the drawing.
+  - A note that strikes an earlier one, and a contents page: nothing in the first entries needs either.
+  - A written-at time on the wire to order a section's entry pages: content order is writing order, which the played
+    routes hold, so a time would be a second home for the same fact.
+  - The days pages' breaks on the wire, or paged by the window: the page's measure is fixed, so the pages follow from
+    the days alone, and a break the window chose would differ between a phone and a desktop.
+  - The days not written on the wire, with why: the page draws nothing for them, and a gap's cause is the composer's.
+  - Every written day on every Step: Opened carries the stored ones once, and a step carries only those it composed.
+  - A day's hand left for the page to default: as NoteInfo.hand, the server resolves it and the page applies none.
+
+  Acceptance (the first slice is done when each passes; server tests under app/tests, client tests under
+  app/client/test, as their neighbours):
+  1. A fixture chapter with [journal], one entry and two notes loads: Content.journal holds the entry with both
+     notes in order and each hand resolved; the loader made note_<id> for each; the first's outcome unlocks the
+     entry and the note, and the second's requires the entry unlocked.
+  2. Planted, each fails the load and names its ids: a note on an entry no chapter declares; a note on an entry a
+     later chapter declares; an entry with no note in its chapter; a runner with no fight; a sketch id holding "/";
+     an entry with no [journal]; [journal] twice; [journal] on a feature with no label_key; a note text holding a
+     digit. Control: the same fixture without the plant loads.
+  3. On fixture rules, a save reaching a first note's gate holds the entry and note unlocks from that instant; a
+     later note whose gate holds first is not unlocked until the entry is, then lands at that instant.
+  4. A changed journal: a save keeps the entry and note unlocks it had across a rebase into rules that rename them.
+  5. Wire: Content.journal is null for rules with no [journal] and served in content order otherwise; openapi.json
+     names JournalInfo, EntryInfo, NoteInfo and the Hand enum as components; the field-names test holds; journal_read
+     round-trips through PUT /api/me/presentation, refused past MAX_LIST or with a name a Name refuses.
+  6. The Journal button is absent with no entry unlocked (the book drawn as plain text) and present with one.
+  7. A runner with fought 0 draws ui.fight.odds_unknown and ui.fight.threat_unknown and no digit in its odds, threat
+     or tally; one with fought above 0 draws the served odds as oddsOf words them, both values and the tally; a
+     runner not in view.fights draws nothing.
+  8. With the clock held (no next_event_at passes), opening the sheet and turning to every page sends no request;
+     closing sends exactly one PUT /api/me/presentation, whose body equals the kept presentation but for
+     journal_read gaining exactly the shown pages' notes; no request under /api/saves/ is sent from open to close.
+  9. The button's dot shows while a note is unread and not otherwise; the sheet opens on the first entry with an
+     unread note; after a close with every unread page shown the dot is gone; a note unlocked while its page is open
+     keeps the dot after the close.
+  10. The layout's draws for an entry are equal across two saves and two page loads; over a fixed list of ids at
+      least two pages differ; adding a later note leaves every earlier note's draws unchanged.
+  11. The journal's lesson starts on the button's first showing, walks its steps, and is kept in the save; it
+      never returns once kept.
+  12. Renders at 390x844 (portrait page) and 3840x2160 and 1280x800 (spread), with one entry fought and one not, a
+      pencil note and a note sketch, looked at (headless-render); the page is the game's one dark theme
+      (color-scheme: dark), so the renders are repeated with the browser set to prefer light and must not differ.
+      tests/test_client_contrast.py passes with the hand's colours on the parchment.
+  13. Each sketch is looked at, by process.md's method, before its entry ships.
+

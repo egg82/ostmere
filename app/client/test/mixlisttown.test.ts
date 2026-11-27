@@ -1,4 +1,4 @@
-// The Mixes list holds the player's own mixes and never the town's (CONTRACT.txt, "The town's mix"): a town mix can't be
+// The Mixes list holds the player's own mixes and never the town's (contract/the-towns-mix.txt, "The town's mix"): a town mix can't be
 // run by the player, and it is changed in the town's own editor, never the mix editor. The view is the engine's own
 // (fixtures/townwire.ts) over the day-two page, whose hands mixes stay listed.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";

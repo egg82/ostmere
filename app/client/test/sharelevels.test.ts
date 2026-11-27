@@ -1,4 +1,4 @@
-// Share levels in a store rule (CONTRACT.txt, "Share levels"; game/storerule.ts): each condition the editor writes
+// Share levels in a store rule (contract/endpoints.txt, "Share levels"; game/storerule.ts): each condition the editor writes
 // (fixtures/share_cases.json, which tests/test_share_levels_wire.py sends through the engine) built from its rule and
 // read back to it; the words for each form on the rule's line, the strip and the why line; and the levels a store of
 // a given cap allows, read as the engine reads a share (the store's whole items against the exact share).

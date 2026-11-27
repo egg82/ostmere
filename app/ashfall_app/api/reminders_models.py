@@ -1,4 +1,4 @@
-"""Wire models of reminders (CONTRACT.txt, "Reminders"). The conventions of models.py hold here."""
+"""Wire models of reminders (contract/reminders.txt, "Reminders"). The conventions of models.py hold here."""
 from typing import Annotated
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 

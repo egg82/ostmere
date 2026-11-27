@@ -13,7 +13,7 @@ export type Holder =
   | { kind: "stint"; entry: number; then: string | null };
 
 /** The tap holding `lane` (whoever started it), or null while the lane is free: a person's one-off holds their lane as a
- * hands tap holds the hands (CONTRACT.txt, "A lane run by rules"). */
+ * hands tap holds the hands (contract/a-lane-run-by-rules.txt, "A lane run by rules"). */
 export function laneTap(view: View, lane: string): { card: string; endsAt: number | null; order: number | null } | null {
   const bar = view.lanes.find((l) => l.lane === lane);
   return bar?.running_card ? { card: bar.running_card, endsAt: bar.completes_at, order: bar.order } : null;

@@ -2,7 +2,7 @@
 written by the story lines of the outcome that joins or leaves them, which the content authors and people_checks.py
 requires. A `mention` person is written by no line of their own: the loader gives each outcome that joins or leaves
 one a mention line, keyed by the lane and the way, with no text and kind story, and the page counts a day's mentions
-into one line worded from the `[people]` bands (api/CONTRACT.txt, "People"). A mention is in the save's log like any
+into one line worded from the `[people]` bands (api/contract/people.txt, "People"). A mention is in the save's log like any
 line, so the chronicle places it at the second it happened."""
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Literal

@@ -1,4 +1,4 @@
-"""What a rule's mix made while the rule was on (CONTRACT.txt, "RULE RUNS", "Made"): the engine reports the levels of the
+"""What a rule's mix made while the rule was on (contract/rule-runs.txt, "RULE RUNS", "Made"): the engine reports the levels of the
 stores its mix makes when the rule comes on and lets go, and the saves layer turns the pair into `made`, as it does for
 an ended goal stint (test_stint_made)."""
 from ashfall_app import engine as e

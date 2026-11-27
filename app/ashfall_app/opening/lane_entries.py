@@ -23,7 +23,7 @@ class LaneEntry(Entry):
     its cards do no work for the camp."""
     later_labels: list[LaneLabelEntry] = []
     name_key: str | None = None
-    """The person's name, as a label writes it: the page fills a text's `{<lane id>}` slot with it (api/CONTRACT.txt,
+    """The person's name, as a label writes it: the page fills a text's `{<lane id>}` slot with it (api/contract/text-and-numbers.txt,
     "Text and numbers")."""
     told: Literal["line", "mention"] | None = None
     """How a ruled lane's person coming and going is written: in its outcome's story line, or a day's mention (people.py)."""
@@ -35,5 +35,5 @@ class LaneEntry(Entry):
     group: str | None = None
     """On a person's ruled lane, the pooled lane that is their group."""
     tied: str | None = None
-    """On a pooled lane, the person's lane the group is tied to: one townsperson who looks after it (api/CONTRACT.txt,
+    """On a pooled lane, the person's lane the group is tied to: one townsperson who looks after it (api/contract/groups.txt,
     "GROUPS"). Authored, never inferred."""

@@ -1,0 +1,17 @@
+FORECAST
+  POST /api/saves/{save_id}/forecast answers ForecastAnswer {decisions, forecast}: the save advanced to now in memory (it
+  writes nothing, so it carries no lines; a later advance brings them), and every level-up of every skill and every fill (reaching its cap from below) and emptying of
+  each unlocked store that happens if the player changes nothing, by forecast.horizon_at (six game hours on, or less
+  where the replay stopped: after 400 instants, or once the request has spent the time an advance may, as a long absence's
+  catch-up is cut): orders, the queue and everything running are played out instant by instant as the engine
+  would (engine DESIGN.txt, "Forecast"). So a time drawn from it comes true by itself. Nothing past horizon_at is
+  known: the page draws no time for it, never an estimate. It is the save's own future while nobody decides, so it
+  holds for every later view of the save while Step.decisions is still its `decisions`. It costs hours of replay, so
+  it has its own call, kept off every View: the page asks when it holds none that holds (an open, a decision since,
+  new rules) or its horizon is under an hour away (or, for one cut short, half its span), and only after a few quiet seconds with no decision of its own and
+  at most once a minute, so a run of taps costs one forecast, not one each.
+  forecast.tops_out lists, for each skill below its phase's top and not mastered, the instant it reaches that top
+  ("tops out in"), by horizon_at; level_ups stop at a phase's top (PRESTIGE PHASES). Empty without prestige.
+  The page's forecast does not carry when the hands come free (engine DESIGN.txt, "Forecast", Hands free): the
+  reminders job forecasts the save itself for the hands-free notice (REMINDERS), so this call stays a read.
+

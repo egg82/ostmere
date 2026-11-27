@@ -1,0 +1,25 @@
+/* a link to a rule: words underlined, never a box */
+.hands-rule { text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; }
+.hands-rule:hover, .hands-rule:focus-visible { color: var(--ink-hi); text-decoration-color: var(--ink-hi); }
+.line.alarm, .line.alarm :is(.line-name, .line-rate) { color: var(--alarm); }
+.line.alarm .line-name { font-weight: 700; }
+.line.alarm .line-name::before { content: "▲ " / ""; }   /* red is not the only cue: bold name and a mark, as the chips carry a glyph */
+.line.alarm.story .line-name::before { content: "▲ ▸ " / ""; }   /* a red line a story beat waits on keeps both marks */
+.line.alarm :is(.line-amount, .line-eta) { color: #d08a7c; }
+.line.lit { box-shadow: inset 0 0 0 1px var(--ink-hi); }
+.line.settle { animation: settle .5s ease; }
+.line-order { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: .5rem .75rem; padding: .3rem 0 .5rem .75rem; margin-left: .3rem; border-left: 1px solid var(--alarm); }   /* under its line, set off by a rule at its edge, not a box */
+:is(.line-order, .skill-foot) .primary, :is(.line-order, .skill-foot) .quiet { min-height: 2.4rem; padding: 0 .9rem; cursor: pointer; }
+.offer-both, .editor .primary, :is(.sheet, .rules) .primary, :is(.line-order, .skill-foot) .primary { min-height: 2.75rem; }   /* Show me and Save are primary taps: 44 px (decisions.md, motion and reach rule) */
+.line-order.calm { border-left-color: var(--rule); }   /* a rising line's or a re-tune's offer: no alarm */
+.line-order .quiet, .skill-foot .quiet { background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; }
+.rule-sentence { flex: 1 1 12rem; margin: 0; min-width: 0; overflow-wrap: anywhere; color: var(--ink); }
+.rule-action { font-weight: 500; color: var(--ink-hi); }
+.rule-action::before { content: ""; display: inline-block; width: .6rem; height: .6rem; margin-right: .3rem; background: var(--hue); }
+
+/* a rule that just fired (the Rules tab's side-lane rows); the offer's copy flying to the Rules tab */
+.rules-row.fired { animation: fired 1.2s ease-out; }
+@keyframes fired { 0% { background: var(--press); color: var(--ink-hi); } }
+.order-flight { position: fixed; z-index: 30; margin: 0; box-sizing: border-box; pointer-events: none; transform-origin: top left; background: var(--raise); border-radius: 2px; box-shadow: var(--drop); }
+.order-flight .primary { visibility: hidden; }
+

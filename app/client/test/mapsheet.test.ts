@@ -1,4 +1,4 @@
-// The map's stamp choices and layout (CONTRACT.txt, "MAP", acceptance 5 and 6): a place's variant is the save's and its
+// The map's stamp choices and layout (contract/map.txt, "MAP", acceptance 5 and 6): a place's variant is the save's and its
 // kind's shuffle bag, walked over every place of the kind, so it is stable as places are revealed and repeats only once
 // the pool is used; on every fixed sheet no two stamps cross, every stamp lies inside the sheet, and no label crosses a
 // stamp, another label or the edge, a label with no clear spot being left off.

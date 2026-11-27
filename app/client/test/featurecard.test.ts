@@ -1,4 +1,4 @@
-// A feature's card (CONTRACT.txt, "A feature's card"): shown once when the page first sees its feature unlocked, after
+// A feature's card (contract/a-features-card.txt, "A feature's card"): shown once when the page first sees its feature unlocked, after
 // what arrived with it; never by a page whose first view already holds the feature; its one button puts it away.
 import { Catalog } from "../src/game/catalog";
 import { fixtureContent } from "../fixtures/content";

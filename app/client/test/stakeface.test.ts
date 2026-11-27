@@ -1,4 +1,4 @@
-// A card shows what it is for where its share is set (CONTRACT.txt, the card panel and {pct}): on a person's page a
+// A card shows what it is for where its share is set (contract/, the card panel and {pct}): on a person's page a
 // card's upside sits on its face, filled from its change_bp, and a card with none shows none.
 import { install } from "./fake-dom";
 import { pageRig } from "./personrig";

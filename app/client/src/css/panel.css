@@ -1,0 +1,105 @@
+/* ---------- the panel ---------- */
+.panel { padding: 0 1rem calc(1.5rem + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 1rem; }
+.panel-top { position: sticky; top: var(--stage-pin, var(--scene-vh)); z-index: 3; margin: 0 -1rem; padding: .5rem 1rem; background: var(--bg); border-bottom: 1px solid var(--rule); }
+.panel-heading { margin: 0 0 .4rem; font-size: var(--t-meta); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }   /* a group's label */
+.sheet .panel-heading, .cond-heading { font: 400 var(--t-display)/1.2 "IM Fell English SC", Georgia, serif; letter-spacing: .02em; text-transform: none; color: var(--ink-hi); }   /* a view's title */
+.banners:empty { display: none; }
+.banners { position: sticky; top: .5rem; z-index: 5; height: 0; overflow: visible; }
+.banner { width: 100%; text-align: left; padding: .6rem .75rem; cursor: pointer; background: var(--raise); border: 1px dashed var(--ink-dim); color: var(--ink-hi); }
+
+/* the hands strip: takes no room until it arrives (ui/hands.ts) */
+.hands { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: .75rem; min-height: 4.6rem; }   /* the running mix's height, so it never grows */
+.hands-label { font-size: var(--t-meta); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+.hands-body { min-width: 0; }
+.hands-text { color: var(--ink-hi); }
+.hands-text.idle { color: var(--ink-dim); }
+.hands-offer { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.rule-pick { display: inline-flex; align-items: center; gap: .6rem; flex-wrap: wrap; }   /* one chip card's rule and its button, a pair beside the chip's other cards */
+.hands-rule-offer, .hands-mix-offer { margin-top: .4rem; }   /* a chip's rule offer, its own row under the mix */
+.offer-names { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+.offer-name { padding: .15rem .5rem; border-left: 4px solid var(--hue); background: var(--raise); color: var(--ink-hi); }
+.offer-plus { color: var(--ink); }
+.offer-both, .hands-edit, .hands-name, .line-edit, .editor .primary, .editor .quiet, :is(.sheet, .rules) .primary, :is(.sheet, .rules) .quiet {
+  min-height: 2.4rem; padding: 0 .9rem; cursor: pointer;
+}
+.offer-both, .editor .primary, :is(.sheet, .rules) .primary, :is(.line-order, .skill-foot) .primary { background: var(--ember); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--on-ember) !important; font-weight: 500; }
+.hands-edit, .line-edit, .editor .quiet, :is(.sheet, .rules) .quiet { background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; }
+.lane-change { position: relative; }   /* its quiet dot (new-dot) */
+.hands-edit:hover, .line-edit:hover, .editor .quiet:hover, :is(.sheet, .rules) .quiet:hover { color: var(--ink-hi) !important; background: var(--press); }
+.hands-name { flex: none; background: transparent; border: 0; color: var(--ink-hi) !important; font-weight: 500; padding: 0 .3rem; display: inline-flex; align-items: center; white-space: nowrap; }   /* "Mixes ▾": never squeezed; the name beside it gives way */
+.hands-mix-name { flex: 0 1 auto; min-width: 0; max-width: 12rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-hi); font-weight: 500; }   /* the running mix's name, plain text; a long one truncates */
+.hands-row { display: flex; align-items: center; gap: .6rem; }
+.hands-plan { flex: none; margin-left: auto; font-size: var(--t-meta); }
+/* three roles on the strip: the name ▾ is a picker (a sunk field), the rule a link to it, Edit the one raised button */
+.hands-name:not(:disabled) { gap: .5rem; padding: 0 .55rem 0 .65rem; border-radius: 2px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--rule); cursor: pointer; }
+.hands-name:not(:disabled):hover { box-shadow: inset 0 0 0 1px var(--ink-dim); }
+.hands-name:disabled { cursor: default; }
+.hands-meta { display: flex; align-items: center; gap: .6rem; margin-top: calc(.3rem + 4px); font-size: var(--t-meta); }
+.hands-bar-row { display: flex; align-items: center; gap: .6rem; }
+.hands-bar-row > :first-child { flex: 1 1 auto; min-width: 0; }   /* the bar and its legend; a phone's mix name beside them */
+.hands-next { flex: 0 1000000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-meta); color: var(--ink); }   /* the queue's head: the first to give way */
+.hands-runs { flex: none; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* "runs 1 h 29 m" never breaks mid-value */
+.hands-rule { flex: 0 1 auto; min-width: 0; min-height: 2.2rem; padding: 0 .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: inherit; font-size: var(--t-meta); color: var(--ink); background: transparent; border: 0; cursor: pointer; }   /* where the running rule lets go: a link to it in the Rules tab */
+.hands-status { flex: 1 1000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-dim); }   /* one line; the queue's head (.hands-next) shrinks before it, and it before the mix's name: shrink factors far apart in size, so the name, last to give way, loses not even a sub-pixel (that alone draws its ellipsis); hidden while covered, the status still holds its width */
+.hands-then { flex: 0 1000000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--t-meta); color: var(--ink); }   /* "then Main": what the hands go back to; it gives way with the status, after the queue's head, so the name and where the holder lets go lose not even a sub-pixel */
+.hands.tapped .hands-mix-name, .hands.tapped .hands-bar-row .hands-name { color: var(--ink); font-weight: 400; }   /* a tap holds the hands: the name slot says "then Main", quieter than the tap's own bar */
+.hands.greyed .share-track, .hands.greyed .share-key-item::before { filter: saturate(.15) brightness(.6); }   /* the hues, never the legend's words */
+.hands.greyed .hands-mix-name { color: var(--ink-dim); }
+:is(.hands, .hands-rows).greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
+/* the Asks list (ui/asks.ts, ui/asknode.ts): one ask in a slot of fixed height, the rest counted; someone asking, set
+   apart from the routine by the ember outline on its warm ground, the question in the story's size; no Dismiss */
+.asks { padding: .6rem 0 .75rem; border-bottom: 1px solid var(--rule); }
+.asks-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; min-height: 2.4rem; }
+.asks-head .panel-heading { margin: 0; }
+.asks-more { min-height: 2.4rem; padding: 0 .3rem; cursor: pointer; font: inherit; font-size: var(--t-meta); color: var(--ink); background: transparent; border: 0; text-decoration: underline; text-underline-offset: 3px; }
+.asks-more:hover, .asks-more:focus-visible { color: var(--ink-hi); }
+.asks-slot { display: grid; min-height: 11rem; }   /* the shown ask's room, which the ask fills: a second ask arriving moves nothing under it */
+.ask { padding: .85rem 1rem; border-radius: 2px; outline: 1px solid var(--ember-hot); outline-offset: -1px; background: var(--ask-ground); }
+.ask-who { display: flex; align-items: center; gap: .4rem; margin: 0; font-size: var(--t-meta); color: var(--ink-dim); }
+.ask-face { display: inline-grid; place-items: center; width: 1.375rem; height: 1.375rem; border-radius: 2px; font-size: .75rem; font-weight: 700; color: var(--ink-hi); background: var(--raise); box-shadow: inset 0 0 0 2px var(--hue); }   /* the hue as a ring: dark ink on every hue would not hold 4.5:1 */
+.ask-text { margin: .35rem 0 .1rem; font-size: var(--t-story); font-style: italic; line-height: 1.3; color: var(--ink-hi); }
+.ask-cause { margin: 0; font-size: var(--t-meta); color: var(--ink-dim); }
+.ask-cause::before { content: "↳"; margin-right: .3em; }   /* as a chronicle line's cause */
+.ask-answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .5rem; margin-top: .6rem; }
+.ask-answer { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: .1rem; min-height: 2.75rem; padding: .55rem .7rem; text-align: left; line-height: 1.25; cursor: pointer; font: inherit; color: var(--ink); background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); }
+.ask-answer:hover, .ask-answer:focus-visible { background: var(--press); outline: none; }
+.ask-label { color: var(--ink-hi); font-weight: 500; }
+.ask-cost { font-size: var(--t-meta); }
+.ask-figures { display: flex; flex-direction: column; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.ask-facts { display: flex; flex-wrap: wrap; gap: .2rem 1rem; margin: .6rem 0 0; font-size: var(--t-meta); color: var(--ink); }
+.asks-all { display: flex; flex-direction: column; gap: .75rem; padding-top: .4rem; }
+.asks-all .ask { outline-color: var(--rule); }   /* the whole list: the outline stays the shown ask's alone */
+.kind-rule { flex-wrap: wrap; }
+.kind-rule .kind-asked, .kind-rule .kind-answered, .kind-rule .kind-lead { flex-basis: 100%; margin: 0; }
+.kind-rule .kind-asked { color: var(--ink); font-size: var(--t-meta); }
+.kind-rule .kind-lead { color: var(--ink-dim); font-size: var(--t-meta); }
+/* a phone's chip rule offer (ui/hands.ts seats it): under the pinned strip, scrolling with the cards, so a prompt does not cost the cards their room */
+.hands-rows:not(:has(> :not([hidden], :empty))) { display: none; }
+.hands-rows { padding: 0 0 .5rem; border-bottom: 1px solid var(--rule); }
+.hands-rows > * { margin-top: .5rem; }
+
+/* a mix as one split bar, its legend beneath: no text inside the bar. Neighbouring hues sit apart on a 2px gap of the page,
+   each hue 3:1 against it (tests/test_client_contrast.py). The legend's look is shared with the town's (.town-key). */
+.share-bar { position: relative; }
+.share-track { position: relative; height: .5rem; background: var(--track); touch-action: none; }
+.share-bar.large .share-track { height: 1.25rem; }
+.share-bar.large .share-key { padding: 0 .5rem; }   /* the editor's bar runs to the sheet's edges; its legend does not */
+.share-seg { position: absolute; top: 0; bottom: 0; box-sizing: border-box; background: var(--hue); border-right: 2px solid var(--bg); transition: left .2s ease, width .2s ease; }
+.share-seg:nth-last-child(1 of .share-seg) { border-right: 0; }
+.share-seg.struck { background: repeating-linear-gradient(135deg, #3a3236 0 6px, #2a2427 6px 12px); }
+.share-key-item { white-space: nowrap; }
+.share-key-item.struck { color: var(--ink-dim); text-decoration: line-through; }
+.share-key-item.struck::before { background: repeating-linear-gradient(135deg, #3a3236 0 3px, #2a2427 3px 6px); }
+.share-pct { font-weight: 500; color: var(--ink-hi); font-variant-numeric: tabular-nums; }
+.share-bar.large .share-seg { cursor: grab; }
+.share-seg.leaving { opacity: .4; }
+.share-bar.dragging .share-seg { transition: none; }
+/* the divider's reach is 2.75rem tall (44 px, decisions.md, motion and reach rule) whatever the bar's height; its mark spans the bar */
+.share-divider { position: absolute; top: -1.125rem; bottom: -1.125rem; width: 1.8rem; transform: translateX(-50%); z-index: 2; cursor: ew-resize; touch-action: none; display: flex; align-items: center; justify-content: center; }
+.share-bar.large .share-divider { top: -.75rem; bottom: -.75rem; }
+.share-divider::before { content: ""; width: 4px; height: calc(100% - 2.05rem); background: var(--ink-hi); box-shadow: 0 0 0 2px var(--bg); transition: transform .15s, background .15s; }
+.share-bar.large .share-divider::before { height: calc(100% - 1.3rem); }
+.share-divider:hover::before, .share-divider:focus-visible::before { background: #fff; }
+.share-divider.held::before { background: #fff; transform: scaleX(1.4); }
+.share-divider.settle::before { animation: settle .35s ease; }
+

@@ -1,4 +1,4 @@
-// The Another device sheet's last part: the account's browsers (CONTRACT.txt, "Your devices"), asked for afresh each
+// The Another device sheet's last part: the account's browsers (contract/your-devices.txt, "Your devices"), asked for afresh each
 // time the sheet opens. One row each: its label, a mark on the one asking, when it was last used, and Remove. Removing
 // another browser redraws from the answer; removing this one asks first, and once it is done the page starts again
 // from GET /api/me (the session is gone, so it lands on the front page).

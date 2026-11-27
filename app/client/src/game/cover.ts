@@ -1,4 +1,4 @@
-// What covers a ledger line (docs/design/redesign.md, "Ledger"; CONTRACT.txt, the ledger's white and red): something
+// What covers a ledger line (docs/design/redesign.md, "Ledger"; contract/, the ledger's white and red): something
 // that keeps its store fed (LedgerLine.covered, the server's), or one of the player's rules drawing the store down as it
 // means to. Read off the view only.
 import type { LedgerLine, Order, View } from "../api/types";

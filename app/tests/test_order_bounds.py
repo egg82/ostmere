@@ -1,4 +1,4 @@
-"""Rules (orders) and the queue are bounded per save (api/CONTRACT.txt, "Request limits"), and the page is served the
+"""Rules (orders) and the queue are bounded per save (api/contract/request-limits.txt, "Request limits"), and the page is served the
 two bounds its editors stop at. A request past a bound does not fit the models: 422 invalid_decision."""
 from typing import Any
 

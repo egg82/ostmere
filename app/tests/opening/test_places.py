@@ -1,4 +1,4 @@
-"""The world map's places (api/CONTRACT.txt, "MAP", acceptance 1 to 3), on fixtures/places.toml merged onto the opening
+"""The world map's places (api/contract/map.txt, "MAP", acceptance 1 to 3), on fixtures/places.toml merged onto the opening
 alone. Each refusal is the fixture edited to break it, beside the unedited control that loads."""
 from dataclasses import replace
 from pathlib import Path

@@ -1,4 +1,4 @@
-// A person who leaves (CONTRACT.txt, "LEAVES"): the Step that holds the left unlock has already dropped their lane, cards
+// A person who leaves (contract/leaves.txt, "LEAVES"): the Step that holds the left unlock has already dropped their lane, cards
 // and shares, but the page keeps them in its lists until the moment's lines have been shown and dismissed, then drops
 // them. A moment with no line drops them at once.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";

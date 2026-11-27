@@ -1,4 +1,4 @@
-// The answer rule (CONTRACT.txt, "Offers"): one rule per offer kind, "answer this way whenever someone asks it again".
+// The answer rule (contract/offers.txt, "Offers"): one rule per offer kind, "answer this way whenever someone asks it again".
 // The page offers to build it only once an offer of the kind has been answered, and only while an offer of the kind is
 // still to be answered (after the last, the rule would wait for an ask that never comes), and names each role by the kind's own
 // label for it, written for whoever asks. Reads the view and the content only.

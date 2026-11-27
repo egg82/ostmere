@@ -1,4 +1,4 @@
-"""Recovery words (api/CONTRACT.txt, "Moving to another device"; habits' signin/keys.py): four words of the BIP-39
+"""Recovery words (api/contract/moving-to-another-device.txt, "Moving to another device"; habits' signin/keys.py): four words of the BIP-39
 English list (words.txt, 2048 words, so 44 bits), shown once and stored only as "s1$" + scrypt, salted with
 ASHFALL_JOIN_KEY so a copied database is no shortcut without the key. Deterministic (one salt), since the words alone
 find their account: there is no name to type. scrypt at these costs holds 16 MiB while it runs, so a pod hashes at

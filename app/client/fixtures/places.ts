@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: places on the world map (CONTRACT.txt, "MAP") with placeholder ids and names, for the Map page's
+// FIXTURE, never shipped: places on the world map (contract/map.txt, "MAP") with placeholder ids and names, for the Map page's
 // screenshots (the shipped game has no places yet). #places=N reveals the first N (all with a bare #places); #map opens
 // the Book on its Map. Each place is revealed by a feature of its own id. The stamps are served from /assets/art/map/
 // by a screenshot run that made them with tools/mapstamps.py; without them the sheet draws its labels alone.

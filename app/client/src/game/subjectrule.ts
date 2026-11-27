@@ -1,4 +1,4 @@
-// A rule's condition on a count or a level, as the page builds, reads and words it (CONTRACT.txt, "a subject rule"): a
+// A rule's condition on a count or a level, as the page builds, reads and words it (contract/the-client-may.txt, "a subject rule"): a
 // task's count of times done, a skill's level, the Camp's level. Counts and levels only ever go up, so each is one
 // threshold with no band, the plain AtLeast the engine already validates for its subject:
 //   done n times       at_least(card_count(card), n, n)
@@ -6,7 +6,7 @@
 //   Camp level n       at_least(store_value(camp), at, at), `at` the level's Content.camp.camp_levels entry; only the
 //                      levels below the first held one still waiting to be lifted, which the bar would not count yet
 //   while card runs    at_least(running(card), 1, 1), only on a rule tapping a person's lane, watching a card of another
-//                      lane (ruleoffers.subjectChoices); set_orders refuses every other Running (CONTRACT.txt, "Decisions")
+//                      lane (ruleoffers.subjectChoices); set_orders refuses every other Running (contract/endpoints.txt, "Decisions")
 import type { CampLevel, Condition, View } from "../api/types";
 import { sample } from "./clock";
 import type { Catalog } from "./catalog";
@@ -74,7 +74,7 @@ export function subjectNow(catalog: Catalog, view: View, rule: SubjectRule): num
 
 const campLevels = (catalog: Catalog): CampLevel[] => catalog.content.camp?.camp_levels ?? [];
 
-/** A held Camp level counts once one of its lifted_by cards is done (CONTRACT.txt, the Camp bar). */
+/** A held Camp level counts once one of its lifted_by cards is done (contract/, the Camp bar). */
 const lifted = (view: View, level: CampLevel): boolean => level.lifted_by.some((card) => view.completed.some((c) => c.card === card));
 
 /** The Camp levels a rule can name exactly: those before the first held level not yet lifted. The store passes a held

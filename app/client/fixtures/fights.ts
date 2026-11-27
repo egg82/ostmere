@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: the fights shapes (CONTRACT.txt, "FIGHTS"), with placeholder ids, built on the fire's `mid`
+// FIXTURE, never shipped: the fights shapes (contract/fights.txt, "FIGHTS"), with placeholder ids, built on the fire's `mid`
 // phase (the shipped game has no fights yet).
 //   fight:   the `combat` feature on; one fight card (Hunt the ridge, 2 in 5 lost; yours 8 against 9, with gear and
 //            a skill behind the 8) and one standing fight (raiders at the stores, 7.5% lost, 31 fought and 2 lost).

@@ -1,4 +1,4 @@
-Blind tests for LOSS LINES (api/CONTRACT.txt; docs/design/week-four-plan.md, item 2).
+Blind tests for LOSS LINES (api/contract/; docs/design/week-four-plan.md, item 2).
 Tests: app/tests/loss_blind/test_loss_notes_blind.py (composer, L1-L6), app/client/test/losslinesblind.test.ts (lostPool,
 the chronicle's wording, FightPanel's on-loss line). Each mutant is a one-site throwaway edit; the tests were run, the
 edit reverted. KILLED = at least one test went red.

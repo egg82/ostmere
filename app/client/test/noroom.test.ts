@@ -1,4 +1,4 @@
-// A card a full pause stopped (Card.full_store; CONTRACT.txt, "FULL OUTPUT") says on its face which store has no room,
+// A card a full pause stopped (Card.full_store; contract/full-output.txt, "FULL OUTPUT") says on its face which store has no room,
 // quiet, not short; it has no blocker, so nothing else on the face says why it stopped. Any other card draws no such row.
 import { install } from "./fake-dom";
 import { testContext } from "./context";

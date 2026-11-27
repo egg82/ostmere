@@ -1,0 +1,76 @@
+OFFERS
+  Someone asks the player something, with two or more answers; it waits until answered and never expires (engine
+  DESIGN.txt, "Offers"). Content.offer_infos: [OfferInfo {offer, text_key, kind, line_keys, answers: [AnswerInfo {answer,
+  label_key, cost_key, change_bp, gains: [AnswerGain {store, quantity}], role}], askers, cause, waiting_key, expiry_key,
+  permanence_key}] in content order, kind the group of offers that ask the same question and role what
+  an answer means in it (both null on an offer outside any kind; a kinded offer has a role on every answer, and every
+  offer of a kind has the same roles), line_keys the lines written when the offer shows. Content.offer_kinds:
+  [OfferKindInfo {kind, roles: [KindRole {role, label_key}]}], one per kind in content order, a label for each role
+  written for whoever asks: the words of the rule that answers the kind (the content refuses a kind without one for
+  each of its roles). askers: the ruled lanes whose
+  people ask (empty when no one person does). cause: what led to the offer, a LineCause (Line causes): its gate;
+  null for a gate the page cannot word (Line causes: a store never shown, a lane's rules), and an earlier answer the
+  offer requires is never its cause. The offer's lines carry the same cause. The three *_key fields are text the content
+  writes only where this offer differs from the usual, null otherwise: waiting_key, what waiting costs (usually
+  nothing: an open offer pauses only itself); expiry_key, when it goes (usually never; the content refuses one while
+  the engine has no offer expiry); permanence_key, what the answer settles for good, for a choice to weigh. View: offers [Offer
+  {offer, answer, answers: [OfferAnswer {answer, card, takes_s, shifts}]}], every offer shown so far, in content order:
+  answer null while it is open, else the answer given; per answer, the card it sets running (null for none) and
+  takes_s, the seconds one completion of that card would take started now (null without a card), and shifts: one entry
+  per AnswerInfo.change_bp, in its order, AnswerShift {now_bp, after_bp}, the total change on that change's target now
+  and once the answer is given (signed basis points, so +15% is 1500); null where the entries of one change aim at
+  targets standing differently; empty once answered. The page fills a cost text's {pct} and {pct_b} with "now → after"
+  (ui.ask.shift {before}{after}) where a shift is given, else with the change itself, and computes no total.
+  AnswerInfo.change_bp is the answer's modifiers as signed changes in basis points, each distinct value once in
+  authored order, as LevelPays.change_bp; AnswerInfo.gains the stores its outcome puts in, one entry per authored
+  store line in authored order, quantity in quantity units. Both are empty for an answer without any.
+  Unlock categories gain offer (shown), answered (answered, by any answer; its id is the offer's) and answer (its id
+  is the answer given); gates read them as any unlock.
+  POST /api/saves/{save_id}/decisions with answer_offer {offer, answer}: advance to now, then answer. The answer's
+  lines are in Step.lines at once; what it starts or sets is in the view. 422 invalid_decision, nothing written, when
+  the answer is not one of the offer's, the offer is not shown, or it is already answered (a rule may have answered it
+  since the page's last view: the page then asks advance and draws that). An order or queue entry may hold
+  answer_offer: an order answers at the first instant its `when` holds while the offer is open, a queue entry when it
+  is the controlling entry while the offer is open (it is gone once the offer is answered), so an offer can arrive
+  already answered on a return; set_orders or set_queue with an answer not of its offer is 422.
+  An order may also hold answer_kind {offer_kind, role} (never a decision, never a queue entry's: both 422): at each
+  instant its `when` holds it answers the first open offer of the kind with that offer's answer of the role, so one
+  rule answers every offer of the kind as each shows. It is never passed over. set_orders with a kind no offer
+  declares, or a role the kind does not have, is 422 invalid_decision and writes nothing. The wire's field is
+  offer_kind because `kind` is the verb's tag.
+  THE CLIENT MAY:
+  - draw the open offers (view.offers entries whose answer is null) as one Asks list: the first open one in content
+    order shown at a fixed height with a count of the rest, which opens the whole list. An offer is revealed as an
+    arrival: after the last of the Step's lines whose key is in its OfferInfo.line_keys, or at once when this Step
+    holds none of them (it showed before the page's last view). An ask holds its askers' lane labels,
+    OfferInfo.text_key, its cause worded as a line's, the *_key texts it has, and one control per answer: its label_key
+    and its cost_key with {d} filled from takes_s (a cost text with {d} left out while takes_s is null; one without it,
+    the effect of an answer that starts nothing and installs a modifier, drawn as it stands), {pct} and {pct_b} from
+    AnswerInfo.change_bp and {gain} and {gain_b} from AnswerInfo.gains. An answer with change_bp also shows each figure
+    it moves, before → after, read from a dry run of that answer_offer against the view (a store's net rate or cap, a
+    card's time), never computed by the page. A tap sends answer_offer. An ask has no dismiss and stays until
+    answered.
+  - draw no row for an offer that arrives already answered: its lines say what happened.
+  - list the answer order in the Rules tab: every always rule (after_time 0) that answers an offer, in list order, under
+    ui.rule.answers, each as ui.rule.answer with no arrow.
+  - build one answer rule per offer kind, in the Rules tab's answers section, once an offer of that kind has been
+    answered in the view (an open offer is not enough) and while one of the kind is still to answer (an offer of
+    Content.offer_infos the view does not hold answered, open or not yet shown): a row with that offer's question (set
+    apart from an open offer's), ui.rule.answered {answer} with the label of the answer that offer was given, the line
+    ui.rule.answer_next (the buttons answer the kind's later offers), and one button per role,
+    each worded by the kind's own label for the role (Content.offer_kinds). A tap sets the kind's rule to that role
+    (an always rule, appended; a rule already set for the kind is changed in place), and Remove takes it away. The
+    rule reads as ui.rule.answer with the kind's label for the role; an answer_offer rule reads with that answer's own
+    label, which was written for that one ask.
+  THE CLIENT MAY NOT build an answer_offer rule (no editor offers one; the order is set by a story moment or a tool),
+  nor offer the answer rule for a kind before an offer of it has been answered, or once every offer of it has been (the
+  rule would wait for an ask that never comes).
+
+  New text keys (Content.text_entries): ui.lane.idle | ui.lane.change   a lane row's free state and its Change
+                                    ui.rule.always {card}   a lane's always rule
+                                    ui.rule.answer {answer} | ui.rule.answers | ui.rule.answer_next   a rule or queue entry that answers an
+                                    offer (the answer's label), and the Rules tab's heading over such rules
+                                    ui.rule.answered {answer}   the answer rule builder's word of the answer given
+                                    ui.queue.running   a Next entry whose tap a lane already runs
+                                    ui.queue.move   a Next entry's ≡, for screen readers: it drags, or moves by the arrow keys
+

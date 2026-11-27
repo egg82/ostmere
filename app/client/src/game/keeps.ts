@@ -1,4 +1,4 @@
-// What the server keeps for the page that is not game state (CONTRACT.txt): about the player across saves
+// What the server keeps for the page that is not game state (contract/): about the player across saves
 // (AccountPresentation: the Rules tab opened, the "Another device" sheet opened, the ledger lines shown, the journal
 // notes read, the repeated-switch rules answered), about this save's teaching (SavePresentation: the lessons done or
 // skipped, a rule seen on then off, the mix-hint dots touched), and the player's settings (AccountSettings: lessons on

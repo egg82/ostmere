@@ -1,0 +1,30 @@
+GOAL ROWS (docs/design/worth-a-change.md, "The payoff, shown before and after"; docs/research/fun-from-choice.md, proposal 1)
+  view.goal_rows is each goal a mix can move: every store and level goal of view.goals, in that order, then each skill
+  in view.skills whose next_level_xp is set, at its next shown level (level + 1), skipping one a story level goal
+  already holds. A card's count and the clock are never rows, nor is a skill at its top: no next level, and a story
+  level goal no XP in the skill's phase reaches. Each row is read at the rates as set: the engine's own
+  shares and lines with a tap of the hands set aside, so the hands' mix runs at its shares and a card that yielded to
+  the tap runs in full (app/ashfall_app/api/setrates.py). Rates are read at view.at; nothing projects an input running
+  dry later, an order taking the hands, or a level speeding the work.
+  - lands_at: view.at plus what is left over per_hour, rounded up; view.at when already met; null when per_hour is not
+    above 0 or a store goal's target is over its LedgerLine.cap.
+  - per_hour: the store's net (unclamped, and a tap of the hands set aside, so it can differ from its LedgerLine), or
+    the XP per hour every runner training the skill gives. Each runner runs at its effective share: a paused or spent
+    card's share is already handed to the rest of its mix (engine DESIGN.txt, "SPENT"), as is in_per_hour's.
+  - limit: the first store, in running order, that a runner moving the goal (a maker of the store, a runner training
+    the skill) is paused or spent on, among the stores view.ledger draws, with in_per_hour, its makers' lines alone;
+    null when none is, and the goal's own line binds it, and null for a goal already met. Running order is the
+    engine's: standing actions in rules order, then the hands' mix in its flattened card order, then the town's mix;
+    never ledger order. A fact read off the runs, never a guess at what to change.
+  - until: at_least {watched, value, release}, value == release, the condition that holds once the goal lands. A store
+    row: watched store_value {store: row.store}, value row.target. A level row: watched skill_level {skill: row.skill},
+    value the level counted across prestige phases, (phase - 1) * (top_level - 1) + row.target for the skill's phase
+    (row.target in phase 1 and when the rules have no prestige), which is what a skill_level condition reads (engine
+    DESIGN.txt, "PRESTIGE PHASES"). While the rates as set hold, the condition is false before lands_at and true from
+    lands_at on; it is the `until` of a goal stint (GOAL STINTS below).
+  THE CLIENT MAY, in the mix editor and the condition editor, compare a dry run's goal_rows with the live view's by
+  (kind, store, skill, target) and list each row whose shown time or limit the edit changes: the goal (ui.goal.store,
+  ui.goal.level), the time left now and after (each from its own view's `at`; ui.goal.never for null), and under it
+  the after row's line: ui.goal.limited with the limit's store and in_per_hour per minute, else the store's label or
+  ui.goal.xp with per_hour per minute. Never better, best, faster or any other verdict.
+

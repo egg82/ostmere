@@ -1,0 +1,64 @@
+THE TOWN'S MIX
+  Once people join, the townsfolk's lanes are run by one mix whose shares are people's time: each share is a part of
+  one person's time, the person being the lane its card is on (engine DESIGN.txt, "THE TOWN'S MIX"). It is an
+  ordinary saved mix in view.mixes; which one runs is set by a rule, never by the player's switch.
+  Content: game_mix_ids, the mix ids the content's joins make: the game's own mixes, worded by the town's name and
+  changed on a person's page; every other saved mix is the player's. limits.reserved_mix_prefix ("town:"): a new
+  mix id beginning so is the game's. Nothing new on LaneInfo or CardInfo. Unlock categories gain joined (id a lane):
+  that lane's person has joined. The people present are the lanes in content order whose LaneInfo.ruled is true and whose joined unlock
+  view.unlocked holds, and whose left unlock it does not (LEAVES).
+  View: running_town_mix_id (the town mix running now: the first rule that is on with a switch_mix of a town mix that
+  isn't greyed; null when none runs) and town_mix_order (the index into orders of that rule; null when none).
+  A mix is a town mix when every card it holds, nested mixes flattened, has a CardInfo.lane that is ruled; a hands
+  mix when every card is on hands; a mix with no card is a town mix when a join makes it or it was a town mix before it emptied, else a hands mix. running_mix_id and mix_order read only hands
+  mixes, as before. A card of the running town mix has its Card.share_bp and Card.run as a hands mix card has, and
+  Card.by is mix, or yielded while a rule's tap on its lane runs (its LaneBar.running_card is then that tap's card;
+  while the lane runs only shares, running_card is null and completes_at null). A share of a card whose lane has not
+  joined, or that is locked, idles.
+  Decisions:
+  - save_mix of a town mix: 422 invalid_decision, nothing written, when it holds cards of both kinds of mix, a card
+    whose lane has not joined, a card with a cap, or one person's shares summing above 10000; for a new mix id
+    beginning "town:" (those are the game's; the one it made may be edited); and, for any mix, under the id of a saved
+    mix of the other kind (a hands mix's cards under a town mix's id, or the reverse).
+  - switch_mix from the player of a town mix: 422 (set by rules). set_queue with a switch_mix of a town mix: 422 (the
+    queue is the hands' plan). set_orders accepts one: that is the town's rule.
+  - The town's always rule: an order {when: after_time {time: 0}, then: switch_mix m}, m a town mix. When the first
+    person joins, the game makes the town's mix and appends this rule (rule_runs lists it, on at once), and each
+    joining person's current always task becomes their whole share in it (their always rules on uncapped cards leave
+    view.orders; their other rules stay where they were and still act, as taps that take the whole of that person
+    while they run). The rule and the mix are the player's to edit from then on.
+  THE CLIENT MAY:
+  - draw the town as one strip under the hands strip, in place of the joined lanes' rows (a ruled lane not joined
+    keeps its row, A LANE RUN BY RULES): one row per person present, their lane's label, and per card of
+    running_town_mix_id on that lane its label, share and bar (sampled as any mix bar), with the person's idle
+    remainder shown as idle; a person tapping by a rule shows that tap as their lane row does, shares yielded.
+  - set a person's split on that person's page, on running_town_mix_id (else on the mix of the town's first always rule
+    not passed_over, else on a new always rule's new mix): one split per person, each a part of 100%, a tap on a card in
+    view.cards on that person's lane without a cap joining it to the split or taking it out, a capped one never held by
+    the mix. Each change sends save_mix of that mix; a new mix sends save_mix then set_orders with the town's always
+    rule pointed at it.
+  - teach it once, the first time the strip shows, with a lesson on the strip and the person's page
+    (decisions.md, "Lessons"), skippable and never repeated in a save, kept in the save as other lessons are.
+  - draw no town rule in the Rules tab and offer no new one: the town's always rule runs the container and is listed
+    nowhere. A greyed town mix is drawn as the hands' greyed mix is: the strip says it stopped and which card retired.
+  - name the town everywhere by one name: its tab, its view's title, the Rules page's switch and heading, and a mix in
+    Content.game_mix_ids. The name is the text of the label_key of the last of Content.town_later_labels
+    ([LaneLabel], as a lane's later_labels) whose `after` view.unlocked holds, else ui.town.title.
+  THE CLIENT MAY NOT:
+  - list a town mix in the Mixes list or open it in the mix editor, offer switch_mix of one there, or put one in the
+    queue. A name typed in the mix editor that begins limits.reserved_mix_prefix, or is another saved mix's, is
+    refused where it is typed.
+  - build an always rule (after_time 0, tap_card) on a joined lane: it would take that person whole for good.
+  - add shares across people, move a share from one person to another, or show the split as anything but each
+    person's own parts of 100% (the game never redistributes a share).
+
+  Rejected, and why (the town's mix on the wire):
+  - A town object on the view (people, shares, running state) beside view.mixes and view.cards: a second home for
+    facts the mix, the cards and the unlocks already carry.
+  - A `person` flag on LaneInfo: who has joined changes with the story, which is what the unlock set says.
+
+  New text keys (Content.text_entries): ui.town.title   the strip's heading
+                                    ui.town.idle {person}   a person's unshared remainder
+                                    ui.mix.name_reserved {prefix} | ui.mix.name_taken   the mix editor's name refused
+  The lesson's lines are content text keys like the other lessons'.
+

@@ -89,7 +89,7 @@ saves = Table(
     Column("rule_runs", JSONB, nullable=True),
     # The player's own earlier best per goal, set when a mix is saved (saves/mixbest.py): null until one is.
     Column("mix_best", JSONB, nullable=True),
-    # What the page keeps about this save's teaching (api/CONTRACT.txt, SavePresentation): it only grows.
+    # What the page keeps about this save's teaching (api/contract/endpoints.txt, SavePresentation): it only grows.
     Column("presentation", JSONB, nullable=False, server_default=_EMPTY),
     # The hands-free notice (saves/handsfree.py): the kept forecast's hands-free instant (game seconds, and the wall
     # time it maps to), the game time that forecast reached (null: none kept since the last decision), and the instant

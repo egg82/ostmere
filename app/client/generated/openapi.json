@@ -581,7 +581,7 @@
           "game"
         ],
         "summary": "Forecast",
-        "description": "What lands from now if the player changes nothing (CONTRACT.txt, \"Forecast\"). Nothing is written; 409\ncatching_up while the save is still behind.",
+        "description": "What lands from now if the player changes nothing (contract/forecast.txt, \"Forecast\"). Nothing is written; 409\ncatching_up while the save is still behind.",
         "operationId": "forecast",
         "parameters": [
           {
@@ -666,7 +666,7 @@
           "game"
         ],
         "summary": "Mix Rows",
-        "description": "The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal\n(CONTRACT.txt, \"Mix rows\"). Nothing is written; 409 catching_up while the save is still behind.",
+        "description": "The player's saved mixes on separate numbers as if each ran from now, and the earlier best per goal\n(contract/mix-rows.txt, \"Mix rows\"). Nothing is written; 409 catching_up while the save is still behind.",
         "operationId": "mix_rows",
         "parameters": [
           {
@@ -1773,7 +1773,7 @@
           "ends_after"
         ],
         "title": "AimInfo",
-        "description": "What a stretch of play is for: one line at the band's top, in content order (CONTRACT.txt, \"The client may\")."
+        "description": "What a stretch of play is for: one line at the band's top, in content order (contract/the-client-may.txt, \"The client may\")."
       },
       "Amount": {
         "properties": {
@@ -1906,7 +1906,7 @@
           "role"
         ],
         "title": "AnswerKind",
-        "description": "Order verb only (never a Decision): answer the first open offer of `offer_kind` with its answer of `role`\n(CONTRACT.txt, \"Offers\"). 422 when no offer declares that kind and role."
+        "description": "Order verb only (never a Decision): answer the first open offer of `offer_kind` with its answer of `role`\n(contract/offers.txt, \"Offers\"). 422 when no offer declares that kind and role."
       },
       "AnswerOffer": {
         "properties": {
@@ -1932,7 +1932,7 @@
           "answer"
         ],
         "title": "AnswerOffer",
-        "description": "Answer a shown, open offer (CONTRACT.txt, \"Offers\"): 422 when the answer is not one of the offer's, or the\noffer is not shown or already answered."
+        "description": "Answer a shown, open offer (contract/offers.txt, \"Offers\"): 422 when the answer is not one of the offer's, or the\noffer is not shown or already answered."
       },
       "AnswerShift": {
         "properties": {
@@ -1989,7 +1989,7 @@
           "message"
         ],
         "title": "ApiError",
-        "description": "Every error's body (CONTRACT.txt, ERRORS)."
+        "description": "Every error's body (contract/errors.txt, ERRORS)."
       },
       "AtLeast": {
         "properties": {
@@ -2028,7 +2028,7 @@
           "release"
         ],
         "title": "AtLeast",
-        "description": "value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a\nquantity; on a store_value, in orders and queue entries only (CONTRACT.txt, \"a store rule\"; engine DESIGN.txt,\n\"SHARE LEVELS\")."
+        "description": "value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a\nquantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, \"a store rule\"; engine DESIGN.txt,\n\"SHARE LEVELS\")."
       },
       "AtMost": {
         "properties": {
@@ -2134,7 +2134,7 @@
           "camp_levels"
         ],
         "title": "CampInfo",
-        "description": "The bar to work toward: drawn from the ledger line of `store` (never drawn as a ledger line); its level is how\nmany of `camp_levels`' `at` the sample has reached (CONTRACT.txt)."
+        "description": "The bar to work toward: drawn from the ledger line of `store` (never drawn as a ledger line); its level is how\nmany of `camp_levels`' `at` the sample has reached (contract/)."
       },
       "CampLevel": {
         "properties": {
@@ -2550,7 +2550,7 @@
           "craft"
         ],
         "title": "CardPresentation",
-        "description": "How the page dresses a card; one mechanic under all three (CONTRACT.txt, \"Cards\")."
+        "description": "How the page dresses a card; one mechanic under all three (contract/, \"Cards\")."
       },
       "CardShare": {
         "properties": {
@@ -3503,7 +3503,7 @@
           "lost"
         ],
         "title": "Fight",
-        "description": "One unlocked fight card or standing action, now (CONTRACT.txt, \"FIGHTS\")."
+        "description": "One unlocked fight card or standing action, now (contract/fights.txt, \"FIGHTS\")."
       },
       "FightInfo": {
         "properties": {
@@ -3596,7 +3596,7 @@
           "on_loss_key"
         ],
         "title": "FightInfo",
-        "description": "The odds a fight card or standing action runs under (CONTRACT.txt, \"FIGHTS\"): the strengths' ids, and what one lost\nfight costs. The strengths themselves are View.fights."
+        "description": "The odds a fight card or standing action runs under (contract/fights.txt, \"FIGHTS\"): the strengths' ids, and what one lost\nfight costs. The strengths themselves are View.fights."
       },
       "Figure": {
         "properties": {
@@ -3670,7 +3670,7 @@
           "card_ids"
         ],
         "title": "FirstMix",
-        "description": "The first mix the page offers once `feature` is unlocked and no mix exists: `card_ids` at an even split, saved\nby the player's tap (CONTRACT.txt)."
+        "description": "The first mix the page offers once `feature` is unlocked and no mix exists: `card_ids` at an even split, saved\nby the player's tap (contract/)."
       },
       "Forecast": {
         "properties": {
@@ -3841,7 +3841,7 @@
           "kept_days"
         ],
         "title": "Games",
-        "description": "The account's saves (CONTRACT.txt, \"Games on one account\")."
+        "description": "The account's saves (contract/games-on-one-account.txt, \"Games on one account\")."
       },
       "Goal": {
         "properties": {
@@ -4030,7 +4030,7 @@
           "until"
         ],
         "title": "GoalRow",
-        "description": "How the setup as set moves one goal (CONTRACT.txt, \"Goal rows\"): a store reaching `target` (store) or a skill\nreaching level `target` (skill), when it lands at today's rates, and the line that binds it."
+        "description": "How the setup as set moves one goal (contract/goal-rows.txt, \"Goal rows\"): a store reaching `target` (store) or a skill\nreaching level `target` (skill), when it lands at today's rates, and the line that binds it."
       },
       "HTTPValidationError": {
         "properties": {
@@ -4268,7 +4268,7 @@
           "slot"
         ],
         "title": "KeptInfo",
-        "description": "One entry a card holds while it runs (CONTRACT.txt, {pct}): on a side's strength or a lane's speed, never both."
+        "description": "One entry a card holds while it runs (contract/, {pct}): on a side's strength or a lane's speed, never both."
       },
       "Key": {
         "type": "string",
@@ -4448,7 +4448,7 @@
           "tied"
         ],
         "title": "LaneInfo",
-        "description": "Every lane, \"hands\" included. Its label is the label_key of the last of later_labels whose `after`\nview.unlocked holds, else label_key (CONTRACT.txt, \"A lane run by rules\")."
+        "description": "Every lane, \"hands\" included. Its label is the label_key of the last of later_labels whose `after`\nview.unlocked holds, else label_key (contract/a-lane-run-by-rules.txt, \"A lane run by rules\")."
       },
       "LaneLabel": {
         "properties": {
@@ -4646,7 +4646,7 @@
           "reserved_mix_prefix"
         ],
         "title": "Limits",
-        "description": "What the page's editors stop at (CONTRACT.txt, \"Request limits\"): a request past one is a 422."
+        "description": "What the page's editors stop at (contract/request-limits.txt, \"Request limits\"): a request past one is a 422."
       },
       "LineCause": {
         "oneOf": [
@@ -4840,7 +4840,7 @@
           "way"
         ],
         "title": "Mention",
-        "description": "A mention line: `lane`'s person joined or left, counted into the day's one line the page words (CONTRACT.txt,\n\"People\")."
+        "description": "A mention line: `lane`'s person joined or left, counted into the day's one line the page words (contract/people.txt,\n\"People\")."
       },
       "MenuNode": {
         "properties": {
@@ -4915,7 +4915,7 @@
           "words_replaced"
         ],
         "title": "MergeSummary",
-        "description": "What joining would bring together (CONTRACT.txt, \"Moving to another device\")."
+        "description": "What joining would bring together (contract/moving-to-another-device.txt, \"Moving to another device\")."
       },
       "Mix": {
         "properties": {
@@ -5025,7 +5025,7 @@
           "runs_out_at"
         ],
         "title": "MixRow",
-        "description": "One saved mix of the player's own as if it ran from now (CONTRACT.txt, \"Mix rows\")."
+        "description": "One saved mix of the player's own as if it ran from now (contract/mix-rows.txt, \"Mix rows\")."
       },
       "MixRows": {
         "properties": {
@@ -5137,7 +5137,7 @@
           "spent"
         ],
         "title": "Need",
-        "description": "A store a tap of the card needs. quantity: the most its input or any requirement on that store's value asks;\nsegment: how much there is, sampled like a ledger line's (served for a locked store too).\nDrawn short while the sample is below quantity; whether the card is ready is still its blocker's to say. gate: drawn\nin its place while set, the store unnamed (CONTRACT.txt, \"Cards\"); makers: the cards and standing actions in play\nthat make the store; spent: drawn as used up, set while short, nothing in play can make the store again and every\ntrigger that grants it has fired."
+        "description": "A store a tap of the card needs. quantity: the most its input or any requirement on that store's value asks;\nsegment: how much there is, sampled like a ledger line's (served for a locked store too).\nDrawn short while the sample is below quantity; whether the card is ready is still its blocker's to say. gate: drawn\nin its place while set, the store unnamed (contract/, \"Cards\"); makers: the cards and standing actions in play\nthat make the store; spent: drawn as used up, set while short, nothing in play can make the store again and every\ntrigger that grants it has fired."
       },
       "NewSave": {
         "properties": {
@@ -5215,7 +5215,7 @@
           "change"
         ],
         "title": "NodeInfo",
-        "description": "One node of `skill`'s prestige track (CONTRACT.txt, \"PRESTIGE PHASES\"); SkillPrestige.menu_nodes names it."
+        "description": "One node of `skill`'s prestige track (contract/prestige-phases.txt, \"PRESTIGE PHASES\"); SkillPrestige.menu_nodes names it."
       },
       "NodeTarget": {
         "type": "string",
@@ -5561,7 +5561,7 @@
           "then"
         ],
         "title": "Order",
-        "description": "A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any\nguard in `unless` holds, the rule is paused. Both lists are left out when empty (CONTRACT.txt, \"Rule guards\")."
+        "description": "A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any\nguard in `unless` holds, the rule is paused. Both lists are left out when empty (contract/endpoints.txt, \"Rule guards\")."
       },
       "OrderCard": {
         "properties": {
@@ -5611,7 +5611,7 @@
           "after_end"
         ],
         "title": "OrderCard",
-        "description": "The prefilled rule offered when a store's line is falling and uncovered: `when` is an at_most on `store`, which\nthe page words from ui text (CONTRACT.txt, \"Text and numbers\"); `then` taps a card."
+        "description": "The prefilled rule offered when a store's line is falling and uncovered: `when` is an at_most on `store`, which\nthe page words from ui text (contract/text-and-numbers.txt, \"Text and numbers\"); `then` taps a card."
       },
       "OrderGuard": {
         "properties": {
@@ -5650,7 +5650,7 @@
           "behind_next"
         ],
         "title": "OrderState",
-        "description": "Where a rule stands now, so the page can say why one is off (CONTRACT.txt, \"THE CLIENT MAY\")."
+        "description": "Where a rule stands now, so the page can say why one is off (contract/the-client-may.txt, \"THE CLIENT MAY\")."
       },
       "OrderVerb": {
         "oneOf": [
@@ -5833,7 +5833,7 @@
           "node"
         ],
         "title": "Prestige",
-        "description": "By hand only, never an order's or a queue entry's verb (CONTRACT.txt, \"PRESTIGE PHASES\"): one rank into `node`\non `skill`'s track. At the skill's top it is the click into the next phase; with SkillPrestige.pick_owed it fills\nthat pick. A refusal is 422 invalid_decision, its message naming why."
+        "description": "By hand only, never an order's or a queue entry's verb (contract/prestige-phases.txt, \"PRESTIGE PHASES\"): one rank into `node`\non `skill`'s track. At the skill's top it is the click into the next phase; with SkillPrestige.pick_owed it fills\nthat pick. A refusal is 422 invalid_decision, its message naming why."
       },
       "QueueEntry": {
         "properties": {
@@ -5871,7 +5871,7 @@
           "stops"
         ],
         "title": "ReachInfo",
-        "description": "What a card with the stake reach fills: its face draws the store against the next stop (CONTRACT.txt, \"Cards\")."
+        "description": "What a card with the stake reach fills: its face draws the store against the next stop (contract/, \"Cards\")."
       },
       "RecoveryWords": {
         "properties": {
@@ -6036,7 +6036,7 @@
           "count"
         ],
         "title": "RepeatedSwitch",
-        "description": "The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (CONTRACT.txt,\n\"Repeats\")."
+        "description": "The player's own mix switched to `mix_id` `count` times in the window while `chip` showed (contract/repeats.txt,\n\"Repeats\")."
       },
       "RepeatedTap": {
         "properties": {
@@ -6055,7 +6055,7 @@
           "count"
         ],
         "title": "RepeatedTap",
-        "description": "A hands card tapped `count` times in the window while the hands ran a mix without it (CONTRACT.txt,\n\"Repeats\")."
+        "description": "A hands card tapped `count` times in the window while the hands ran a mix without it (contract/repeats.txt,\n\"Repeats\")."
       },
       "Repeats": {
         "properties": {
@@ -6125,7 +6125,7 @@
           "holding"
         ],
         "title": "RuleDry",
-        "description": "A store rule's mix that cannot reach the rule's release for want of a store (CONTRACT.txt, \"Dry rules\"): the rule\nholds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short."
+        "description": "A store rule's mix that cannot reach the rule's release for want of a store (contract/dry-rules.txt, \"Dry rules\"): the rule\nholds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short."
       },
       "RuleRun": {
         "properties": {
@@ -6217,7 +6217,7 @@
           "made"
         ],
         "title": "RuleRun",
-        "description": "One rule's entry: how many times it came on since its entry began, its last start and its last let-go (null\nuntil it has let go), each with the amount of the store its condition reads (null for a condition on no store).\n`order` is the rule as the save has it now: equal to one of View.orders, unless `ended` is set: the game removed\nthe rule, at a season's turn or when its person left, at off_at. on_at is null only on an ended rule that never\ncame on. `ended` \"stint\" is a goal stint that popped at its goal (CONTRACT.txt, \"Rule runs\"): `order` is\n{when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to\ncontrol), off_at when its goal landed; \"dry\" is one the game handed back because its card ran out of input: the same,\noff_at when it did. `made`, on an ended stint and on a rule whose `then` switches a mix, once it\nhas let go: what the save gained, from on_at to off_at, in the stores its mix's cards make, the goal's store\nfirst, then the largest, at most two; [] otherwise."
+        "description": "One rule's entry: how many times it came on since its entry began, its last start and its last let-go (null\nuntil it has let go), each with the amount of the store its condition reads (null for a condition on no store).\n`order` is the rule as the save has it now: equal to one of View.orders, unless `ended` is set: the game removed\nthe rule, at a season's turn or when its person left, at off_at. on_at is null only on an ended rule that never\ncame on. `ended` \"stint\" is a goal stint that popped at its goal (contract/rule-runs.txt, \"Rule runs\"): `order` is\n{when: its until, then: its switch_mix}, on_at when its mix began to run (null if the goal held as it came to\ncontrol), off_at when its goal landed; \"dry\" is one the game handed back because its card ran out of input: the same,\noff_at when it did. `made`, on an ended stint and on a rule whose `then` switches a mix, once it\nhas let go: what the save gained, from on_at to off_at, in the stores its mix's cards make, the goal's store\nfirst, then the largest, at most two; [] otherwise."
       },
       "RunBy": {
         "type": "string",
@@ -6278,7 +6278,7 @@
           "runner"
         ],
         "title": "Running",
-        "description": "1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card\non one lane other than the hands, watching a card of another lane (the hands' or another person's); every other\norder's, and every queue entry's, is 422 invalid_decision (CONTRACT.txt, \"Decisions\")."
+        "description": "1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card\non one lane other than the hands, watching a card of another lane (the hands' or another person's); every other\norder's, and every queue entry's, is 422 invalid_decision (contract/endpoints.txt, \"Decisions\")."
       },
       "SaveId": {
         "type": "integer",
@@ -7146,7 +7146,7 @@
           "segment"
         ],
         "title": "StoreLevel",
-        "description": "A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole\nitems rounded up, as a level (CONTRACT.txt, \"FIGHTS\")."
+        "description": "A store a lost fight adds to (FightDef.wounds), served though it has no ledger line: the page reads it in whole\nitems rounded up, as a level (contract/fights.txt, \"FIGHTS\")."
       },
       "StoreNet": {
         "properties": {
@@ -7245,7 +7245,7 @@
           "sources"
         ],
         "title": "Strength",
-        "description": "A side's power or a threat's strength: `value` is what the engine uses; `sources` are every source behind it, the\nbase first, then the sum entries, then the factors, each in stack order (CONTRACT.txt, \"FIGHTS\")."
+        "description": "A side's power or a threat's strength: `value` is what the engine uses; `sources` are every source behind it, the\nbase first, then the sum entries, then the factors, each in stack order (contract/fights.txt, \"FIGHTS\")."
       },
       "StrengthEntry": {
         "properties": {

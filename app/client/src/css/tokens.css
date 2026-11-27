@@ -1,0 +1,57 @@
+/* The front page and the game screen (docs/design/redesign.md, "Look"; the design is docs/design/redesign/merge.html).
+   Only the scene has a frame: every other group sits on hairlines, and a control lifts onto --raise with --drop under it.
+   Ember has two jobs: filled is yours and moving (a running bar, the primary button); an outline needs you now, and only
+   one thing on screen has it (.glow, or a waiting ask). */
+:root {
+  --bg: #0f0f14;
+  --raise: #16161d;   /* a control, a sheet */
+  --press: #1e1d26;   /* a control held down or chosen */
+  --rule: #24232b;    /* the hairline between groups */
+  --track: #0b0b0f;
+  --stage: #0b0a0b;
+  --ink-hi: #e8dfd2;  /* names, numbers, story */
+  --ink: #cfc7ba;
+  --ink-dim: #8f877d; /* meta, old lines */
+  --ember: #c8743a;
+  --ember-hot: #e0954f;
+  --on-ember: #1a0f08;
+  --alarm: #e0614a;
+  --drop: 0 2px 0 #050407;
+  --ask-ground: #17130f;   /* a waiting ask's warm ground, under its outline */
+  /* four sizes, rem off the root below */
+  --t-meta: .8125rem;
+  --t-body: .9375rem;
+  --t-story: 1.125rem;
+  --t-display: 1.375rem;
+  /* the journal's page and its hand (ui/journal.ts): the ink and parchment the sketch method draws with (docs/research/sketch-test/process.md);
+     the pencil is the ink lightened only as far as 4.5:1 on the parchment holds */
+  --parchment: #e6dcc6;
+  --hand-ink: #2b241c;
+  --hand-pencil: #645d52;
+  --panel-w: clamp(28rem, 30vw, 38rem);
+  --scene-vh: 38vh;   /* the pinned stage on a phone: ui/headseat.ts measures it */
+  --strip-rows: 3;   /* a phone's strip, in rows of the story's size (tests/opening/test_strip_rows.py reads it) */
+  /* the failed tap's pulse (the Feedback system's effect, ui/cards.ts failed()): the card's red glow and the flash of
+     what stopped the tap, transform and colour only, so nothing moves */
+  --fail-ms: 400ms;
+  --fail-scale: 1.12;
+  --fail-glow: 0 0 0 2px var(--alarm), 0 0 1rem rgba(224, 97, 74, .55);
+  /* the feel (merge.html's tokens): a press sinks at --press-ms, the release settles at --settle-ms with a slight overshoot */
+  --press-ms: 60ms;
+  --settle-ms: 160ms;
+  --settle-ease: cubic-bezier(.3, 1.5, .5, 1);
+  --link-ms: 400ms;   /* a cascade's lit link fades over this, so the one lit last reads brightest */
+  color-scheme: dark;
+}
+/* The root grows with the viewport (16px on a phone, ~20px at 1920, ~29px at 3840), so a 4K screen gets a larger page,
+   not a wider one with tiny type. */
+html { font-size: clamp(16px, calc(0.5vw + 10px), 30px); }
+
+/* the mix hues (merge.html's palette): none is ember, so ember keeps its two jobs */
+.hue-0 { --hue: #b8865a; } .hue-1 { --hue: #8f9a6a; } .hue-2 { --hue: #6f8aa3; }
+.hue-3 { --hue: #c9a35c; } .hue-4 { --hue: #b0604c; } .hue-5 { --hue: #9a7aa0; }
+
+body.reconnecting .game, body.catching-up .game { opacity: .72; cursor: progress; transition: opacity .6s; }   /* asking the server again, or catching up: quiet */
+p.catching-up { position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100vw - 32px); pointer-events: none; margin: 0; padding: .4rem .8rem; background: var(--raise); color: var(--ink-hi); border: 0; border-radius: 2px; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+p.catching-up[hidden] { display: none; }
+

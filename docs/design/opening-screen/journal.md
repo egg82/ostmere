@@ -1,7 +1,7 @@
 ## The journal
 
 The book the player carries, written in: one page per thing known, its notes in the hand and its learned numbers
-under them (api `CONTRACT.txt`, "JOURNAL"; `decisions.md`, "What you learn is written in a journal" and, under Art,
+under them (api `contract/journal.txt`, "JOURNAL"; `decisions.md`, "What you learn is written in a journal" and, under Art,
 the type and the sketches). Fits into: Unlocks (entries and notes), Knowledge (the numbers, read off `View.fights`),
 Lessons (its first use), the Book (a page of it). Not a system: one caller, nothing to swap. The page's code is
 `game/journal.ts` (pure: which pages and notes show, what is unread, how a turn runs, the contents, the numbers rows, the
@@ -98,7 +98,7 @@ phone, portrait                        desktop, and a phone in landscape
 - **Turning a page** is an answer to a touch, below the ladder: the new page slides 0.5rem in from the side turned
   toward and fades in over 150 ms; under reduced motion it is swapped at once.
 - **Reading writes nothing.** Opening the sheet and turning pages send no request. The notes of every page the player
-  turned to (the page it opened on counts) go as read in one presentation write when it closes (`CONTRACT.txt`,
+  turned to (the page it opened on counts) go as read in one presentation write when it closes (`contract/journal.txt`,
   "JOURNAL"), so the dot clears by the player's taps, never by time.
 - **Its first use is its lesson** (Lessons): the button is the trigger and the first step.
 

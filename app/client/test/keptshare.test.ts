@@ -1,4 +1,4 @@
-// A kept bonus shows what its share gives (CONTRACT.txt, {pct}; CardInfo.kept): on a person's page a card that holds
+// A kept bonus shows what its share gives (contract/, {pct}; CardInfo.kept): on a person's page a card that holds
 // an entry while it runs words that entry at the person's share, rounded down once as the engine rounds it, and the
 // figure follows the share as it is dragged; a change the card does not hold stays as served.
 import { type FakeEl, install, pointer } from "./fake-dom";

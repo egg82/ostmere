@@ -1,4 +1,4 @@
-"""View.order_dry on the goal-rows world (api/ruledry.py; CONTRACT.txt, "Dry rules"): "Under 6 plank, until 15 ->
+"""View.order_dry on the goal-rows world (api/ruledry.py; contract/dry-rules.txt, "Dry rules"): "Under 6 plank, until 15 ->
 saw", a mix of one card that turns the input `log` into `plank`."""
 from ashfall_app import engine as e
 from ashfall_app.api import goal_models as g

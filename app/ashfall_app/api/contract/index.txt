@@ -1,0 +1,43 @@
+GAME API contract, one file per section, in reading order (concatenated in this order they are the whole contract). Read overview.txt first.
+
+overview.txt                         GAME API (overview)
+accounts-and-sessions.txt            ACCOUNTS AND SESSIONS
+endpoints.txt                        ENDPOINTS
+catching-up.txt                      CATCHING UP
+repeats.txt                          REPEATS
+rule-runs.txt                        RULE RUNS
+games-on-one-account.txt             GAMES ON ONE ACCOUNT
+moving-to-another-device.txt         MOVING TO ANOTHER DEVICE
+your-devices.txt                     YOUR DEVICES
+reminders.txt                        REMINDERS
+saves-across-releases-and-pods.txt   SAVES ACROSS RELEASES AND PODS
+request-limits.txt                   REQUEST LIMITS
+errors.txt                           ERRORS
+the-client-may.txt                   THE CLIENT MAY
+the-client-may-not.txt               THE CLIENT MAY NOT
+text-and-numbers.txt                 TEXT AND NUMBERS
+forecast.txt                         FORECAST
+prestige-phases.txt                  PRESTIGE PHASES
+the-end.txt                          THE END
+goals.txt                            GOALS
+goal-rows.txt                        GOAL ROWS
+store-rows.txt                       STORE ROWS
+dry-rules.txt                        DRY RULES
+goal-stints.txt                      GOAL STINTS
+a-features-card.txt                  A FEATURE'S CARD
+a-lane-run-by-rules.txt              A LANE RUN BY RULES
+offers.txt                           OFFERS
+until-done.txt                       UNTIL DONE
+cut-in.txt                           CUT-IN
+fights.txt                           FIGHTS
+journal.txt                          JOURNAL
+loss-lines.txt                       LOSS LINES
+map.txt                              MAP
+banked-time.txt                      BANKED TIME
+the-towns-mix.txt                    THE TOWN'S MIX
+groups.txt                           GROUPS
+leaves.txt                           LEAVES
+people.txt                           PEOPLE
+spent.txt                            SPENT
+full-output.txt                      FULL OUTPUT
+mix-rows.txt                         MIX ROWS

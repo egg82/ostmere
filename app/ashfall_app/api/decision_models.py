@@ -50,17 +50,17 @@ class UnlockKind(StrEnum):
     RETIRED = "retired"
     """A card a newer one replaced: it is in View.completed, drawn as retired."""
     OFFER = "offer"
-    """An offer shown (CONTRACT.txt, "Offers")."""
+    """An offer shown (contract/offers.txt, "Offers")."""
     ANSWERED = "answered"
     """An offer answered, by any answer; the id is the offer's."""
     ANSWER = "answer"
     """The answer given; the id is the answer's."""
     JOINED = "joined"
-    """A ruled lane's person has joined the town; the id is the lane (CONTRACT.txt, "The town's mix")."""
+    """A ruled lane's person has joined the town; the id is the lane (contract/the-towns-mix.txt, "The town's mix")."""
     LEFT = "left"
-    """A ruled lane's person has left the town for good; the id is the lane (CONTRACT.txt, "LEAVES")."""
+    """A ruled lane's person has left the town for good; the id is the lane (contract/leaves.txt, "LEAVES")."""
     ENTRY = "entry"
-    """A journal page written; the id is the entry's (CONTRACT.txt, "JOURNAL")."""
+    """A journal page written; the id is the entry's (contract/journal.txt, "JOURNAL")."""
     NOTE = "note"
     """A note written on a page; the id is the note's."""
 
@@ -80,7 +80,7 @@ class Unlocked(BaseModel):
 class Running(BaseModel):
     """1 while the runner runs, else 0. In set_orders, taken only on an order whose every action is a tap_card of a card
     on one lane other than the hands, watching a card of another lane (the hands' or another person's); every other
-    order's, and every queue entry's, is 422 invalid_decision (CONTRACT.txt, "Decisions")."""
+    order's, and every queue entry's, is 422 invalid_decision (contract/endpoints.txt, "Decisions")."""
 
     kind: Literal["running"] = "running"
     runner: str
@@ -93,7 +93,7 @@ type Subject = Annotated[
 
 class AtLeast(BaseModel):
     """value_of_cap, release_of_cap: that level is basis points (0..10000) of the watched store's cap now, not a
-    quantity; on a store_value, in orders and queue entries only (CONTRACT.txt, "a store rule"; engine DESIGN.txt,
+    quantity; on a store_value, in orders and queue entries only (contract/the-client-may.txt, "a store rule"; engine DESIGN.txt,
     "SHARE LEVELS")."""
 
     kind: Literal["at_least"] = "at_least"
@@ -157,7 +157,7 @@ class TapCard(Request):
 
 
 class AnswerOffer(Request):
-    """Answer a shown, open offer (CONTRACT.txt, "Offers"): 422 when the answer is not one of the offer's, or the
+    """Answer a shown, open offer (contract/offers.txt, "Offers"): 422 when the answer is not one of the offer's, or the
     offer is not shown or already answered."""
 
     kind: Literal["answer_offer"] = "answer_offer"
@@ -167,7 +167,7 @@ class AnswerOffer(Request):
 
 class AnswerKind(Request):
     """Order verb only (never a Decision): answer the first open offer of `offer_kind` with its answer of `role`
-    (CONTRACT.txt, "Offers"). 422 when no offer declares that kind and role."""
+    (contract/offers.txt, "Offers"). 422 when no offer declares that kind and role."""
 
     kind: Literal["answer_kind"] = "answer_kind"
     offer_kind: str
@@ -179,7 +179,7 @@ type OrderVerb = Annotated[SwitchMix | TapCard | AnswerOffer | AnswerKind, Field
 
 class Order(BaseModel):
     """A rule. Its actions are `then` followed by `or_else`: the first that can act is the one it runs. While any
-    guard in `unless` holds, the rule is paused. Both lists are left out when empty (CONTRACT.txt, "Rule guards")."""
+    guard in `unless` holds, the rule is paused. Both lists are left out when empty (contract/endpoints.txt, "Rule guards")."""
 
     when: Condition
     then: OrderVerb
@@ -188,7 +188,7 @@ class Order(BaseModel):
     or_else: list[OrderVerb] = Field(default=[], max_length=MAX_OR_ELSE)
     """Fallback actions, tried after `then` in this order."""
     below_next: bool = False
-    """The rule sits under Next, the queue's row: a ready queue entry outranks it (CONTRACT.txt, "Next's row")."""
+    """The rule sits under Next, the queue's row: a ready queue entry outranks it (contract/endpoints.txt, "Next's row")."""
 
 
 class OrderGuard(BaseModel):
@@ -228,7 +228,7 @@ class SetQueue(Request):
 
 
 class Prestige(Request):
-    """By hand only, never an order's or a queue entry's verb (CONTRACT.txt, "PRESTIGE PHASES"): one rank into `node`
+    """By hand only, never an order's or a queue entry's verb (contract/prestige-phases.txt, "PRESTIGE PHASES"): one rank into `node`
     on `skill`'s track. At the skill's top it is the click into the next phase; with SkillPrestige.pick_owed it fills
     that pick. A refusal is 422 invalid_decision, its message naming why."""
 

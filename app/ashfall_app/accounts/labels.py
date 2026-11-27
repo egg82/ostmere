@@ -1,4 +1,4 @@
-"""A device's label in the list of an account's devices (api/CONTRACT.txt, "Your devices"): browser and system read from
+"""A device's label in the list of an account's devices (api/contract/your-devices.txt, "Your devices"): browser and system read from
 the user agent when its session is made, nothing more. The user agent itself is not kept. (habits' push/devices.py.)"""
 
 import re

@@ -1,4 +1,4 @@
-"""Pods and browsers for the blind saves-API contract tests (api/CONTRACT.txt), which reach the app through HTTP only.
+"""Pods and browsers for the blind saves-API contract tests (api/contract/), which reach the app through HTTP only.
 
 A pod is `create_app()` on a test database under a BUILD_VERSION of its own; two pods on one database are two replicas
 mid-deploy. A browser is a TestClient on https (the session cookie is Secure, so plain http would never send it back)

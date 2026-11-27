@@ -5,6 +5,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 CSS = Path(__file__).resolve().parents[1] / "client" / "src" / "game.css"
+
+
+def game_css() -> str:
+    """game.css with each `@import` replaced by the file it names, in order: the whole stylesheet as one text."""
+    return re.sub(r'^@import "\./([^"]+)";\n', lambda m: (CSS.parent / m[1]).read_text(), CSS.read_text(), flags=re.M)
 RGB = tuple[float, float, float]
 _COLOR = re.compile(r"#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b|rgba?\([^)]*\)|var\(\s*--[\w-]+\s*(?:,[^)]*)?\)|\btransparent\b")
 

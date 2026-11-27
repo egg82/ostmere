@@ -117,7 +117,7 @@ export function whenChoices(catalog: Catalog, view: View, full: boolean, cards: 
  * good; "while it is running" is the rule for it. */
 /** The levels and tasks a rule may watch; and, for a rule whose every action (`actions`: its verb and fallbacks) taps a
  * card of one person's lane, the cards of every other lane, the hands' included, it may watch running: the one Running
- * shape set_orders takes (CONTRACT.txt, "Decisions"). */
+ * shape set_orders takes (contract/endpoints.txt, "Decisions"). */
 export function subjectChoices(catalog: Catalog, view: View, actions: readonly (OrderVerb | null)[] = []): { levels: SubjectRule[]; tasks: SubjectRule[]; running: SubjectRule[] } {
   const camp = catalog.campStore;
   const hasCamp = camp !== null && view.ledger.some((l) => l.store === camp) && catalog.unlocked(view, "store", camp);
@@ -150,7 +150,7 @@ export function offeredSubjects(catalog: Catalog, view: View): Subject[] {
   return [...stores, ...[...levels, ...tasks].flatMap((rule): Subject[] => { const c = buildSubject(catalog, rule); return c.kind === "after_time" ? [] : [c.watched]; })];
 }
 
-/** The first switch the player keeps making by hand (Step.repeats.switches, CONTRACT.txt "Repeats") that is worth a mark:
+/** The first switch the player keeps making by hand (Step.repeats.switches, contract/repeats.txt "Repeats") that is worth a mark:
  * its chip is in the content, its mix is saved and not greyed, no rule already makes it on the chip's condition, and it
  * is not yet marked once (`answered`); else null. The mark sits on the chip. */
 export function hintedSwitch(catalog: Catalog, view: View, switches: readonly RepeatedSwitch[], answered: (s: RepeatedSwitch) => boolean): RepeatedSwitch | null {

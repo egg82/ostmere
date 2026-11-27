@@ -36,7 +36,7 @@ export function onFace(catalog: Catalog, view: View, card: Card): boolean {
 
 /** Whether the queue takes a run of `card`, from Plan or its face: after the end, with room under its cap for one more
  * run than those planned (a run past it could never happen), whatever it waits on (an entry is checked when its turn
- * comes: one that cannot run then waits, and one whose card reached its cap is dropped). Not one on a ruled lane (the queue is the hands' plan: the server refuses it, CONTRACT.txt, "A LANE RUN BY
+ * comes: one that cannot run then waits, and one whose card reached its cap is dropped). Not one on a ruled lane (the queue is the hands' plan: the server refuses it, contract/a-lane-run-by-rules.txt, "A LANE RUN BY
  * RULES"). Not one waiting on a store the player has never seen (a clock: what it opens must open in front of the
  * player). */
 export function queueable(catalog: Catalog, view: View, card: Card): boolean {
@@ -182,7 +182,7 @@ export function nextCard(view: View): string | null {
 }
 
 /** The queue with a goal stint at its end: `mix` runs over the player's own until `until` holds, a goal row's or a
- * share of a store's cap (CONTRACT.txt, "Goal stints"). */
+ * share of a store's cap (contract/goal-stints.txt, "Goal stints"). */
 export function queueStint(view: View, mix: string, until: Condition): Decision {
   return { kind: "set_queue", entries: [...view.queue, { verb: { kind: "switch_mix", mix_id: mix }, until }] };
 }

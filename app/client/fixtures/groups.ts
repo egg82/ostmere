@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: a camp with groups (CONTRACT.txt, "GROUPS"), as the engine serves it (no content uses groups yet).
+// FIXTURE, never shipped: a camp with groups (contract/groups.txt, "GROUPS"), as the engine serves it (no content uses groups yet).
 // On day three's town (townwire.ts: helper and mason, split in town:main) four people run their own split, helper, mason, smith
 // and scribe, and a pooled lane, crew ("Workers"), holds the split of its two members, nan and ole, whose marks are off:
 // dig 60% and sweep 30% of each member's time, served as totals over the crew of two. Each member also has a one-off of their own.

@@ -1,5 +1,5 @@
 """The checks on a find's amount (OutcomeEntry.found_line_key): the slot `{found}` is filled by the page from
-Content.find_infos (api/CONTRACT.txt, "Text and numbers"). Raises ValueError naming the entry (refs.fail)."""
+Content.find_infos (api/contract/text-and-numbers.txt, "Text and numbers"). Raises ValueError naming the entry (refs.fail)."""
 from typing import TYPE_CHECKING
 
 from .name_checks import SLOT

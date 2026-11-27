@@ -1,4 +1,4 @@
-// The Rules tab's mix-slot picker offers only the mixes a player rule may switch to (CONTRACT.txt, "The town's mix"; docs/decisions/principles.md,
+// The Rules tab's mix-slot picker offers only the mixes a player rule may switch to (contract/the-towns-mix.txt, "The town's mix"; docs/decisions/principles.md,
 // "Every option offered works as worded"): a town mix is set by a rule on the town, so the server refuses a player's switch to one.
 import { fakeDocument, type FakeEl, install } from "./fake-dom";
 import { testContext } from "./context";

@@ -1,0 +1,13 @@
+CATCHING UP
+  A request advances a save for at most a few seconds of the server's time, so a long absence comes back in slices:
+  open, advance and decisions each advance one slice, write it, and answer it. A Step whose
+  catching_up_to is set stopped short (view.at is the last instant it resolved, before catching_up_to); its lines
+  are that slice's, and the next advance's lines follow them, so the slices' lines in order are what one advance to
+  now would have brought, and the save they end at is the same. A decision whose advance stops short is not applied:
+  409 catching_up, with the slice written as an advance in `step`. 
+  While a recently played save is away, the server keeps its catch-up ahead of it, so a return after a night usually
+  needs no slices; they remain for a long absence, or a return just after a deploy changed the rules.
+  A forecast or a dry run that would stop short replays for the whole request budget, keeps none of it and writes
+  nothing (holding no database connection while it replays): 409 catching_up, whose `step` is the save as last written
+  (no lines); the page asks an advance, which is behind.
+

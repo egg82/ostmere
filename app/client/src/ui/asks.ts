@@ -1,4 +1,4 @@
-// The Asks list (CONTRACT.txt, "OFFERS"; docs/design/redesign.md, "Asks"): every open offer, and their one home on the
+// The Asks list (contract/offers.txt, "OFFERS"; docs/design/redesign.md, "Asks"): every open offer, and their one home on the
 // page. It takes no room until an ask is open. Under its heading the first open ask in content order is drawn
 // (ui/asknode.ts) in a slot of fixed height, so a season bringing several moves nothing under it, and "{n} more"
 // opens the whole list in a sheet. On a phone the slot is one row (who, the question, how many wait), and a tap

@@ -1,4 +1,4 @@
-"""Wire models of a prestige node (CONTRACT.txt, "PRESTIGE PHASES"); the conventions in models.py hold here."""
+"""Wire models of a prestige node (contract/prestige-phases.txt, "PRESTIGE PHASES"); the conventions in models.py hold here."""
 from enum import StrEnum
 
 from pydantic import BaseModel
@@ -20,7 +20,7 @@ class NodeChange(BaseModel):
 
 
 class NodeInfo(BaseModel):
-    """One node of `skill`'s prestige track (CONTRACT.txt, "PRESTIGE PHASES"); SkillPrestige.menu_nodes names it."""
+    """One node of `skill`'s prestige track (contract/prestige-phases.txt, "PRESTIGE PHASES"); SkillPrestige.menu_nodes names it."""
 
     node: str
     skill: str

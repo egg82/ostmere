@@ -1,4 +1,4 @@
-// FIXTURE, never shipped: day three's town (CONTRACT.txt, "The town's mix") over the day-two page. The lanes, cards, mixes,
+// FIXTURE, never shipped: day three's town (contract/the-towns-mix.txt, "The town's mix") over the day-two page. The lanes, cards, mixes,
 // rules and joins are the engine's own (townwire.ts, served over the wire); the content is fixtures/content.ts's, whose
 // helper and mason lanes and chop, haul, hew and carve cards the wire names.
 //   town:     both people joined: the helper tapping Haul by a rule (their shares yielded), the mason on shares;

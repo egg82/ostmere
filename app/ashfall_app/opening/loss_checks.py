@@ -1,4 +1,4 @@
-"""A fight card that tells its losses from pools of its own (api/CONTRACT.txt, "LOSS LINES"): the four authored fields
+"""A fight card that tells its losses from pools of its own (api/contract/loss-lines.txt, "LOSS LINES"): the four authored fields
 come together, only on a card of the player's own (`only_player = "self"`, no town lane, no town twin) whose lost
 fight costs nothing but the attempt, and never on a card that can be unlocked before the feature `loss_after` names.
 Structural fields only. Raises ValueError naming the card (refs.fail)."""

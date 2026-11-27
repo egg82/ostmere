@@ -1,5 +1,5 @@
 """The hands' queued one-off (engine DESIGN.txt, part "TOWNSFOLK, INSTALLED RULES AND OFFERS": "Queued one-off";
-invariant 66; api CONTRACT.txt, "A LANE RUN BY RULES", the answer's one-off of the hands). Outcome.queues (c) puts
+invariant 66; api/contract/a-lane-run-by-rules.txt, "A LANE RUN BY RULES", the answer's one-off of the hands). Outcome.queues (c) puts
 QueueEntry(TapCard(c), AtLeast(CardCount(c), n, n)), n = c's completions at that instant + 1, at the front of the queue
 unless an equal entry is queued; c starts at the first instant that evaluates with the hands free, no order's mix
 running, no true order tapping the hands first and c ready; the entry is gone once c's completions reach n."""

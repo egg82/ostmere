@@ -1,4 +1,4 @@
-"""The Camp bar on the wire (CONTRACT.txt; re-exported from content_models.py)."""
+"""The Camp bar on the wire (contract/; re-exported from content_models.py)."""
 from pydantic import BaseModel
 
 from .models import Unlock
@@ -27,7 +27,7 @@ class CampLevel(BaseModel):
 
 class CampInfo(BaseModel):
     """The bar to work toward: drawn from the ledger line of `store` (never drawn as a ledger line); its level is how
-    many of `camp_levels`' `at` the sample has reached (CONTRACT.txt)."""
+    many of `camp_levels`' `at` the sample has reached (contract/)."""
 
     store: str
     camp_levels: list[CampLevel]

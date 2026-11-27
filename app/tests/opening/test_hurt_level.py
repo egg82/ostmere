@@ -1,4 +1,4 @@
-"""View.levels (CONTRACT.txt, "FIGHTS", "read a level"): each store a lost fight adds to, as its segment, so the page
+"""View.levels (contract/fights.txt, "FIGHTS", "read a level"): each store a lost fight adds to, as its segment, so the page
 can draw its level though the store has no ledger line. Judged on the opening's own rules and a save holding hurt."""
 from ashfall_app.api.levels import levels
 from ashfall_app.api.scenestores import scene_stores

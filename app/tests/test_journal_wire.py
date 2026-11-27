@@ -1,4 +1,4 @@
-"""The journal on the wire (api/CONTRACT.txt, "JOURNAL", acceptance 5): Content.journal null without [journal] and served
+"""The journal on the wire (api/contract/journal.txt, "JOURNAL", acceptance 5): Content.journal null without [journal] and served
 in content order with hands resolved otherwise, its components in the spec, and journal_read kept on the account."""
 from dataclasses import replace
 from functools import cache

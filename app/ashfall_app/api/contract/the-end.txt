@@ -1,0 +1,12 @@
+THE END
+  view.ended_at is the game time the end happened: the first instant the content's end feature was unlocked, as the
+  engine recorded it (engine DESIGN.txt, "The end"). Null before; once
+  set it never clears, so the page never decides the end from live fields. The scene is at dusk while it is set. When
+  the page first sees it, it appends Content.end_line_keys to the log as ordinary lines, and play goes on: nothing
+  covers the screen. What waits on the end (an order card with after_end) comes once those lines have had twenty
+  seconds to be read. A page reopened on a game whose end it had already shown (Opened.was carries ended_at) replays
+  the lines only if the end was under thirty game seconds ago; an older end replays nothing, and what waits on it
+  comes at once. An end that happened while the page was shut was never shown, so it plays in full. The content
+  unlocks the feature a quiet stretch after its last step, so the end lines never land on that step's own; that step
+  is a goal the page states (view.goals). all_covered is no part of the end.
+

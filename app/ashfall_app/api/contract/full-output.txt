@@ -1,0 +1,15 @@
+FULL OUTPUT
+  A mix card drawing a store nothing refills stops when every store it fills is full, and keeps its inputs until one
+  of them has room for a whole completion (engine DESIGN.txt, "FULL OUTPUT"). It is a pause like a dry one: Card.run
+  is paused, its share goes to the rest of its mix (SPENT), and the split that runs now shows it waiting. Its blocker
+  stays null: a tap runs its one completion at the full store.
+  View: Card gains full_store, the store a full pause stopped the card on (its first full store; null on any other
+  card).
+  THE CLIENT MUST:
+  - while full_store is set, draw ui.card.no_room {store} (full_store's label) on the card's face where its needs
+    sit: a paused card with no blocker otherwise draws nothing that says why it stopped.
+  THE CLIENT MAY NOT:
+  - mark the row short or as a problem: the card starts again by itself as the store is drawn down.
+
+  Text keys (Content.text_entries): ui.card.no_room {store}       why a full-paused card stopped
+

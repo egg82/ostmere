@@ -1,4 +1,4 @@
-"""Prestige phases on the wire (api/CONTRACT.txt, "PRESTIGE PHASES"): SkillBar.prestige and Forecast.tops_out, each a
+"""Prestige phases on the wire (api/contract/prestige-phases.txt, "PRESTIGE PHASES"): SkillBar.prestige and Forecast.tops_out, each a
 plain copy of the engine's, and null or empty for rules with no prestige."""
 from dataclasses import replace
 

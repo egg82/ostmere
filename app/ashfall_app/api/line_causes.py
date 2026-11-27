@@ -1,4 +1,4 @@
-"""Content.line_infos: every key a log line can carry, with its kind and what writes it (CONTRACT.txt, "Line causes"),
+"""Content.line_infos: every key a log line can carry, with its kind and what writes it (contract/endpoints.txt, "Line causes"),
 read from where the content authors the key. A key is written in one place, or by several levels of one skill (a
 phase's pool of lines); any other sharing fails the content's load, since its cause would be unknown."""
 from collections.abc import Iterable

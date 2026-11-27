@@ -1,4 +1,4 @@
-// The text keys of the editors' goal rows (ui/goaltimes.ts; CONTRACT.txt, "Goal rows") and of goal stints (ui/stint.ts;
+// The text keys of the editors' goal rows (ui/goaltimes.ts; contract/goal-rows.txt, "Goal rows") and of goal stints (ui/stint.ts;
 // "Goal stints"), merged into `UI`, game/text.ts.
 export const GOAL_ROW_KEYS = {
   goalHead: "ui.goal.head",   // the rows' first column

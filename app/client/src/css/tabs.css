@@ -1,0 +1,24 @@
+/* tabs: Tasks · Town · Rules · Book (no count); a row over the cards here, the rail on a desktop, a bottom bar with an icon each on a phone */
+.tabs { display: flex; gap: .3rem; margin-bottom: -.4rem; }
+.tab { background: transparent; border: 0; border-bottom: 2px solid transparent; padding: .3rem .5rem; min-height: 2.2rem; color: var(--ink) !important; cursor: pointer; position: relative; }
+.tab.on { color: var(--ink-hi) !important; border-bottom-color: var(--ink-hi); }
+.tab .new-dot { top: .3rem; left: auto; right: .15rem; }   /* Tasks, when a card arrived while another tab was open */
+.asks-open { display: none; }
+.game.editing .panel > .tabs { visibility: hidden; }   /* the row keeps its room while an editor has the card area */
+.view-title { margin: 0; font: 400 var(--t-display)/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); }   /* the Town view's */
+/* the Book (ui/book.ts): its title and its row of pages on one line over a hairline, then the page open. The row shows
+   only while a second page is offered; the Map joins it last once it exists. */
+.book-head { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 1.75rem; border-bottom: 1px solid var(--rule); }
+.book-pages { display: flex; gap: 1.25rem; }
+.book-pages:not(:has(> .book-page + .book-page:not([hidden]))) { display: none; }
+.book-page { position: relative; min-height: 2.75rem; padding: 0; background: none; border: 0; border-radius: 0; cursor: pointer; color: var(--ink-dim); }
+.book-page[aria-pressed="true"] { color: var(--ink-hi); box-shadow: inset 0 -2px 0 var(--ink-hi); }
+.book-page .new-dot { top: .55rem; left: auto; right: -.5rem; }   /* the Journal's, while a note is unread */
+.book > .chronicle { padding-top: .8rem; }
+.book > .completed { padding: .9rem 0; }
+.book .sheet-actions .quiet { min-height: 2.75rem; }
+.tab[data-tab="cards"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Crect x='3' y='3' width='6' height='6'/%3E%3Crect x='11' y='3' width='6' height='6'/%3E%3Crect x='3' y='11' width='6' height='6'/%3E%3Crect x='11' y='11' width='6' height='6'/%3E%3C/svg%3E"); }
+.tab[data-tab="town"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 17 L10 4 L17 17 Z M10 17 L10 12'/%3E%3C/svg%3E"); }
+.tab[data-tab="rules"], .line-rule { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M3 5h9M3 10h9M3 15h6M14 13l3 2-3 2'/%3E%3C/svg%3E"); }
+.tab[data-tab="book"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M10 5 C7 3 4 3 2 4 V16 C4 15 7 15 10 17 C13 15 16 15 18 16 V4 C16 3 13 3 10 5 Z M10 5 V17'/%3E%3C/svg%3E"); }
+

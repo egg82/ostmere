@@ -1,4 +1,4 @@
-"""A chip's cost, as a contract (api/CONTRACT.txt). Written blind: a chip has a cost_key exactly when it has effects;
+"""A chip's cost, as a contract (api/contract/). Written blind: a chip has a cost_key exactly when it has effects;
 a chip with effects and an offered_after fails the load; ChipInfo.cost_key is a nullable string; the shipped opening's
 cold, hungry and tired chips carry the stated effects."""
 from typing import Any

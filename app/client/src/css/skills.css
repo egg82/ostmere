@@ -1,0 +1,24 @@
+/* skills */
+.skills { display: flex; flex-direction: column; gap: .5rem; }
+.skill-head { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .2rem; flex-wrap: wrap; }
+.skill-name { color: var(--ink-hi); }
+.skill-level { color: var(--ink); font-size: var(--t-meta); font-variant-numeric: tabular-nums; }
+.skill-next { color: var(--ink); font-size: var(--t-meta); flex: 1; text-align: right; font-variant-numeric: tabular-nums; }
+.skill-next::before { content: "▸ "; color: var(--ink-dim); }
+/* a row with nothing ahead: no arrow, a grey bar, so it never reads as progress toward something */
+.skill.done-for-now .skill-next { color: var(--ink-dim); }
+.skill.done-for-now .skill-next::before { content: none; }
+.skill.done-for-now .bar-fill { background: var(--ink-dim); }
+/* prestige (ui/skillrow.ts): at the top the bar is full and marked, and the foot holds what waits and the controls, set
+   off as a ledger line's order card (.line-order) is */
+.skill.at-top .skill-next { color: var(--ink-hi); }
+.skill.at-top .skill-next::before { content: "▲ "; }
+.skill-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: .5rem .75rem; padding: .4rem 0 .2rem .75rem; margin: .3rem 0 0 .3rem; border-left: 1px solid var(--rule); }
+.skill-foot[hidden], .skill-foot > [hidden] { display: none; }
+.skill-note { flex: 1 1 8rem; min-width: 0; overflow-wrap: anywhere; color: var(--ink); font-size: var(--t-meta); font-variant-numeric: tabular-nums; }
+.skill.at-top .skill-note { color: var(--ink); }
+.bar-track { height: 3px; background: var(--track); overflow: hidden; }
+.bar-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: var(--ember); }
+.skill.burst, .camp.burst { animation: burst .9s ease-out; }   /* the ladder's level rung (ui/ladder.ts) */
+@keyframes burst { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .8); background: rgba(42, 27, 20, .8); } 100% { box-shadow: 0 0 0 .9rem rgba(240, 178, 122, 0); } }
+
