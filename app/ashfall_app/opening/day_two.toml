@@ -32,6 +32,7 @@ name_key = "name_n1"
 # and her first forage done within V1's 60 s.
 [[cards]]
 id = "n1_forage"
+site = { no_site = "foraged out in the ruin and past its walls, no one place in the scene" }
 twin_of = "forage"
 lane = "n1"
 presentation = "action"
@@ -41,6 +42,7 @@ outcome = { stores = [{ store = "roots", items = 24 }, { store = "n1_worked", it
 
 [[cards]]
 id = "n1_gather"
+site = { no_site = "dead wood is picked up all over the ruin and beyond the wall, no one place in the scene" }
 twin_of = "gather_wood"
 lane = "n1"
 presentation = "action"
@@ -50,6 +52,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }, { store = "n1_worked",
 
 [[cards]]
 id = "n1_cut"
+site = { layer = "birch_log" }
 twin_of = "woodcutting"
 lane = "n1"
 presentation = "action"
@@ -59,6 +62,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }, { store = "n1_worked",
 
 [[cards]]
 id = "n1_scavenge"
+site = { no_site = "stones are picked from the rubble under the far wall stub, part of the ruin's backdrop and not a layer of its own" }
 twin_of = "scavenge"
 lane = "n1"
 presentation = "action"

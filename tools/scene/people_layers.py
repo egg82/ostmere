@@ -23,11 +23,11 @@ from daythree_poses import N2
 from dayfour_poses import N3, N4, sack
 from daytwo import cut
 from daytwo_poses import Who, person
-from kit import FORT
+from kit import FORT, T
 from builds import ROOFED
 from output import Layer
 from people_hall import INDOORS
-from place import BY_FIRE, SEAT, canvas
+from place import BY_FIRE, SEAT, WATCH, canvas
 from tints import WOOD
 
 SHEETS = "timefantasy_characters/timefantasy_characters/sheets/"
@@ -46,7 +46,9 @@ POT_RIGHT: Spot = (372, 232)
 HAULED_AT: Spot = (410, 222)
 RACKS: Spot = (218, 268)
 STONE: Spot = (BY_FIRE[0] - 10, BY_FIRE[1] + 8)
-WOOD_EDGE: tuple[Spot, Spot] = ((704, 266), (730, 262))
+WOOD_EDGE: Spot = (704, 266)
+HEARTH_WATCH: Spot = (WATCH[0] - 0.65 * T, WATCH[1] + 3.2 * T)
+"""Where the hearth crew's watcher keeps the watch fire: its west side, below the others' seats (`dayfour_poses.N2_WATCH`)."""
 STRANGER_IN: Spot = (372, 160)
 NAMING_AT: Spot = (STRANGER_IN[0] - 26, STRANGER_IN[1] + 6)
 BOWL_AT: Spot = (SEAT[0] + 22, SEAT[1] + 2)
@@ -106,8 +108,8 @@ def people_layers(walls: Image.Image) -> list[Layer]:
               until="feature:bedesman_home"),
         Layer(id="figure_n13_outside_ring", img=person(N13, "right", STRANGER_APART), when="feature:bedesman_home"),
         Layer(id="figure_n23_at_hall_door", img=person(N23, "down", HALL_DOOR), when="feature:bedesman_home"),
-        Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE[0]), when=field),
-        Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=watching),
+        Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE), when=field),
+        Layer(id="figure_n6_at_the_watch_fire", img=person(HUSBAND, "up", HEARTH_WATCH), when=watching),
         Layer(id="figure_n7_at_pot", img=person(BROTHER, "left", POT_RIGHT), when=picking),
         Layer(id="figure_n3_works_ash_in", img=dayfour_poses.n3_digging(), when=w["drift"]),
         Layer(id="figure_n4_rolls_cord", img=n4_twisting(), when=w["drift"]),
@@ -126,8 +128,11 @@ STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n5_by_fire": ("running:g_field_forage|mix:g_field_forage",),
     "figure_n6_by_fire": ("running:g_hearth_watch|mix:g_hearth_watch",),
     "figure_n7_by_fire": ("running:g_field_pick|mix:g_field_pick",),
+    "figure_n5_at_hall_door_dark": ("running:g_field_forage|mix:g_field_forage",),
+    "figure_n6_at_hall_door_dark": ("running:g_hearth_watch|mix:g_hearth_watch",),
 }
-"""Each by-the-fire pose and the runs that take the person from it: it gives way to them."""
+"""Each by-the-fire pose, and each lodger seen at the hall's door, with the runs that take the person from it: it gives
+way to them (a person is drawn in one place)."""
 
 
 def _join(*terms: str | None) -> str:

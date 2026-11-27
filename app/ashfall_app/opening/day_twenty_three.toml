@@ -111,7 +111,7 @@ joins = [
   { lane = "n15", mix = "town:camp", card = "g_road_fungus_stew", own_split = false },
 ]
 whereabouts = [
-  { person = "n14", layer = "figure_n14_at_the_pot" },
+  { person = "n14", layer = "figure_n14_fishing" },
   { person = "n15", layer = "figure_n15_at_the_pot" },
 ]
 modifiers = [

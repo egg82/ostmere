@@ -26,6 +26,7 @@ PYTEST_GATES=(
   app/tests/test_canon_ids.py
   app/tests/test_scene_depth.py
   app/tests/test_scene_builds.py
+  app/tests/test_scene_crowd.py
   app/tests/test_scene_stores.py
   app/tests/test_scene_shown.py
   app/tests/test_scene_people.py

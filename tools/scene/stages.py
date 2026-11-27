@@ -222,6 +222,15 @@ for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clo
     STAGES[f"68_{_name}"] = State(_DAY.facts, (*_DAY.stores, (_clock, 4)))
     STAGES[f"68_{_name}_night"] = State(_NIGHT.facts, (*_NIGHT.stores, (_clock, 4)))
 STAGES["67_none_night"] = _NIGHT
+# Everyone who can be at the watch fire at once (people_layers.py, dayfour_poses.py): the newcomer on his turn or on
+# guard (one lane, so one of the two), the old man, Lucy, the spear-bearer and the hearth crew's watcher; the camp before
+# the hall (the raised bed still stands) and after it, by day and night.
+_AT_WATCH = {"running:n1_watch", "running:n4_watch", "running:n7_guard", "running:g_hearth_watch"}
+STAGES["48_watch"] = STAGES["48_count"].then(_AT_WATCH | {"running:n2_watch"}, {"running:n2_guard"})
+STAGES["48_watch_guard"] = STAGES["48_count"].then(_AT_WATCH)
+STAGES["69_watch"] = _DAY.then(_AT_WATCH | {"running:n2_watch"}, {"running:n2_guard"})
+STAGES["69_watch_guard"] = _DAY.then(_AT_WATCH | {"running:n2_guard"})
+STAGES["69_watch_night"] = _NIGHT.then(_AT_WATCH | {"running:n2_guard"})
 # The crews' work (people_crews.py): the beds reaped, and the pot and fish worked, by everyone who could be there.
 _JOINED = {"joined:" + f"n{n}" for n in (8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)}
 STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap", "running:g_hearth_reap"})

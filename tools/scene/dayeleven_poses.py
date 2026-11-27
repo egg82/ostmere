@@ -10,14 +10,15 @@ from PIL import Image
 
 import kit
 import props
-from daythree_poses import AT_GAP, laying
+from daythree_poses import laying
 from dayeight_poses import BROTHER, HUSBAND, STRANGER, WOMAN
 from dayfour_poses import spear
 from dayone_poses import build_at, drab, outlined
 from daytwo import bedroll
 from daytwo_poses import Who, person
 from figures import stand
-from place import canvas, put
+from kit import T
+from place import WATCH, canvas, put
 
 CHILDREN = "elements_core_pack_2.14.24/premade/100/with_shadow/e_childrenA_shadow.png"
 CHILD = 4
@@ -35,8 +36,9 @@ BY_FIRE = {"woman": (262, 311), "husband": (384, 310), "brother": (410, 308)}
 CHILD_BY_FIRE = (281, 311)
 LIES = (108, 158)
 """His bedroll's top-left: the far side of the camp from them, under the rack, above the larder."""
-GUARD = (AT_GAP[0] - 4, AT_GAP[1] + 10)
-"""The guard: in the gap's mouth beside the gap fire, facing out, low enough that the spear clears the story strip."""
+N7_GUARD = (WATCH[0] - 3.3 * T, WATCH[1] + 1.4 * T)
+"""The guard n7 takes: the watch fire's far west, beside the old man's seat. The other guard stands in the newcomer's
+watch seat (`dayfour_poses.N2_WATCH`)."""
 RING_WALK = (403, 156)
 """The husband at the palisade's first stretch, a hand on its posts."""
 SPEAR = kit.Grade(sat=0.3, mul=(1.0, 1.0, 1.0), bright=1.6, contrast=1.2)
@@ -117,13 +119,13 @@ def covered() -> Image.Image:
     return img
 
 
-def guarding(who: Who) -> Image.Image:
-    """At the gap with the spear upright at his side, head up, his back to the camp."""
+def guarding(who: Who, at: tuple[float, float]) -> Image.Image:
+    """At the watch fire with the spear upright at his side, head up, his back to the camp."""
     tool = spear().rotate(150, expand=True, resample=Image.Resampling.NEAREST)
     box = tool.getchannel("A").getbbox()
     assert box is not None
     tool = kit.grade(tool.crop(box), **SPEAR)
-    return person(who, "up", GUARD, held=[(tool, 7, -tool.height - 18)])
+    return person(who, "up", at, held=[(tool, 7, -tool.height - 18)])
 
 
 def walking_ring() -> Image.Image:

@@ -307,7 +307,7 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 doings = ["n5", "n6", "n7"]
 whereabouts = [
   { person = "n5", layer = "figure_n5_at_wood_edge" },
-  { person = "n6", layer = "figure_n6_at_wood_edge" },
+  { person = "n6", layer = "figure_n6_at_the_watch_fire" },
   { person = "n7", layer = "figure_n7_at_pot" },
 ]
 line_keys = ["l_group_1", "l_group_2"]
