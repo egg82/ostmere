@@ -14,6 +14,7 @@ import dayfour_poses
 import dayfour_world as world4
 import kit
 import people_crews
+import people_hall
 import people_moments
 from people_moments import SINGERS
 from dayeight_poses import BROTHER, HUSBAND, WOMAN, n4_twisting
@@ -23,7 +24,9 @@ from dayfour_poses import N3, N4, sack
 from daytwo import cut
 from daytwo_poses import Who, person
 from kit import FORT
+from builds import ROOFED
 from output import Layer
+from people_hall import INDOORS
 from place import BY_FIRE, SEAT, canvas
 from tints import WOOD
 
@@ -88,12 +91,13 @@ def _carrying(feet: Spot) -> Image.Image:
 def people_layers(walls: Image.Image) -> list[Layer]:
     w = people_moments.WINDOWS
     field, picking = "running:g_field_forage|mix:g_field_forage", "running:g_field_pick|mix:g_field_pick"
+    watching = "running:g_hearth_watch|mix:g_hearth_watch"
     return [
         Layer(id="figure_n3_sowing", img=person(N3, "right", BEDS_EDGE, drop=9), when="running:n3_sow|mix:n3_sow"),
         Layer(id="figure_n3_pulled_rows", img=_carrying(BEDS_PATH), when="store:rows_black_left"),
         Layer(id="figure_n4_in_the_sun", img=person(N4, "up", SUN_EDGE), when=w["sun"]),
         Layer(id="figure_n2_at_warm_edge", img=person(N2, "right", WARM_EDGE), when=w["deer"]),
-        Layer(id="hall_lit", img=_glow(), when="action:table&pushes:hall@8", blend="screen", ungraded=True),
+        Layer(id="hall_lit", img=_glow(), when=f"action:table&{ROOFED}|{INDOORS}", blend="screen", ungraded=True),
         Layer(id="figure_n3_at_pot", img=person(N3, "left", POT_LEFT), when=w["pot"]),
         Layer(id="figure_n2_hauling_in", img=_hauled(walls), when="store:ashwood_trips", until="store:ashwood_trips@2"),
         Layer(id="figure_n3_at_racks", img=person(N3, "left", RACKS), when="running:n3_wash_meat|mix:n3_wash_meat"),
@@ -103,7 +107,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         Layer(id="figure_n13_outside_ring", img=person(N13, "right", STRANGER_APART), when="feature:bedesman_home"),
         Layer(id="figure_n23_at_hall_door", img=person(N23, "down", HALL_DOOR), when="feature:bedesman_home"),
         Layer(id="figure_n5_at_wood_edge", img=person(WOMAN, "left", WOOD_EDGE[0]), when=field),
-        Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=field),
+        Layer(id="figure_n6_at_wood_edge", img=person(HUSBAND, "left", WOOD_EDGE[1]), when=watching),
         Layer(id="figure_n7_at_pot", img=person(BROTHER, "left", POT_RIGHT), when=picking),
         Layer(id="figure_n3_works_ash_in", img=dayfour_poses.n3_digging(), when=w["drift"]),
         Layer(id="figure_n4_rolls_cord", img=n4_twisting(), when=w["drift"]),
@@ -111,6 +115,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
         Layer(id="figure_n3_sets_the_bowl", img=_setting_bowl(), when=w["bowl"]),
         *[Layer(id=f"figure_n{n}_singing", img=person(who, "down", at), when=f"{w['singing']}&answered:o_choir")
           for n, who, at in zip((8, 9, 10), SINGERS, SINGING_AT)],
+        *people_hall.door_layers(),
         *people_moments.moment_layers(),
         *people_crews.crew_layers(),
     ]
@@ -119,7 +124,7 @@ def people_layers(walls: Image.Image) -> list[Layer]:
 STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n3_by_fire": ("running:n3_sow|mix:n3_sow", "store:rows_black_left", "running:n3_wash_meat|mix:n3_wash_meat"),
     "figure_n5_by_fire": ("running:g_field_forage|mix:g_field_forage",),
-    "figure_n6_by_fire": ("running:g_field_forage|mix:g_field_forage",),
+    "figure_n6_by_fire": ("running:g_hearth_watch|mix:g_hearth_watch",),
     "figure_n7_by_fire": ("running:g_field_pick|mix:g_field_pick",),
 }
 """Each by-the-fire pose and the runs that take the person from it: it gives way to them."""

@@ -1,0 +1,49 @@
+# The rules a working's tithe follows (workings.py): the tithe, in ash, is
+#   max(floor, kind(from -> to) + distance * distance_step - link discount).
+# A new working is a row in a chapter's [[workings]]; a new kind pair or link is a row here.
+version = 1
+tithe_store = "ash"
+floor = 1
+distance_step = 1
+
+# What moving one kind into another costs before distance and link: like into like is cheapest.
+[[kinds]]
+from = "heat"
+to = "heat"
+tithe = 1
+
+[[kinds]]
+from = "motion"
+to = "motion"
+tithe = 1
+
+[[kinds]]
+from = "heat"
+to = "light"
+tithe = 2
+
+[[kinds]]
+from = "motion"
+to = "quick"
+tithe = 4
+
+# What a link takes off: the same material, a piece of the target, a name, a shared history.
+[[links]]
+id = "none"
+discount = 0
+
+[[links]]
+id = "material"
+discount = 1
+
+[[links]]
+id = "piece"
+discount = 1
+
+[[links]]
+id = "name"
+discount = 1
+
+[[links]]
+id = "history"
+discount = 1

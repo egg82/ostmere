@@ -12,12 +12,14 @@ from .chip_checks import check_chips
 from .choice_checks import check_choices
 from .close_call_checks import check_close_calls
 from .player_checks import check_player_only
+from .site_checks import check_sites
 from .promise_checks import check_promises
 from .pool_checks import check_pools
 from .face_checks import check_clocks
 from .convert import build_rules
 from .fight_checks import check_fight_content
 from .journal_checks import check_journal
+from .key_checks import check_keys, key_fields
 from .map_checks import check_places
 from .keep_checks import check_kept_needs
 from .fight_refs import check_fights, fights
@@ -25,7 +27,6 @@ from .kind_checks import check_kinds
 from .line_kinds import check_line_kinds
 from .loss_checks import check_loss_lines, check_loss_order
 from .find_checks import check_finds
-from .key_fields import key_fields
 from .finite_checks import check_finite_supply
 from .name_checks import check_names, without_slots
 from .phase_pays import check_phase_pays
@@ -68,7 +69,7 @@ def check_structure(o: "Opening") -> None:
     _check_unique(o)
     _check_parts(o)
     check_chips(o)
-    _check_keys(o)
+    check_keys(o)
     check_line_kinds(o)
     check_names(o)
     check_finds(o)
@@ -91,6 +92,7 @@ def check_structure(o: "Opening") -> None:
     check_replacements(o)
     check_choices(o)
     check_player_only(o)
+    check_sites(o)
     check_loss_lines(o)
     check_leaves(o)
     check_casts(o)
@@ -218,12 +220,6 @@ def _check_joins(cards: dict[str, "CardEntry"], ruled: set[str], where: str, out
 
 
 # ---------- text keys ----------
-
-def _check_keys(o: "Opening") -> None:
-    for where, key in key_fields(o):
-        if key not in o.text:
-            fail(where, f"key {key!r} is not in text")
-
 
 def _check_text(o: "Opening") -> None:
     """Text holds words and named slots, never a digit (api/contract/text-and-numbers.txt, "Text and numbers"); every fixed ui key

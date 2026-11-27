@@ -17,6 +17,7 @@ import dayone
 from dayone_poses import build_at
 from kit import T
 from output import Layer
+from stages import in_dark
 from parts import FLICKER, firelight
 from place import FIRE, WATCH
 
@@ -109,7 +110,8 @@ def made_layers() -> list[Layer]:
         Layer(id="watch_ring_ghost", img=dayone.ghost(ring), when="running:watch_fire|running:n1_build_watch",
               until=WATCH_RING, open_fire=True),
         Layer(id="watch_laid", img=fire.watch_laid(), when=WATCH_RING, until=WATCH_LIT, open_fire=True),
-        Layer(id="watch_lit", img=fire.watch_lit(), when=WATCH_LIT, ungraded=True, open_fire=True),
+        Layer(id="watch_banked", img=fire.watch_banked(), when=WATCH_LIT, until="dark", open_fire=True),
+        Layer(id="watch_lit", img=fire.watch_lit(), when=in_dark(WATCH_LIT), ungraded=True, open_fire=True),
     ]
 
 
@@ -138,5 +140,5 @@ def light_layers() -> list[Layer]:
               ungraded=True),
         Layer(id="firelight_dusk_4", flicker=FLICKER, sound="evening", img=firelight(0.7), when="action:evening_4", until="feature:morning_5",
               blend="screen", ungraded=True),
-        Layer(id="watch_light", img=fire.watch_light(), when=WATCH_LIT, blend="screen", ungraded=True),
+        Layer(id="watch_light", img=fire.watch_light(), when=in_dark(WATCH_LIT), blend="screen", ungraded=True),
     ]

@@ -1,7 +1,23 @@
 """The lane entries: a lane besides the hands, and the label it takes once something is unlocked."""
 from typing import Literal
 
+from pydantic import model_validator
+
 from .entries import Entry, UnlockEntry
+
+
+class LodgingEntry(Entry):
+    """Where a person sleeps, as the content has it (app/tests/test_scene_lodging.py): `build` the card whose build houses
+    them, `elsewhere` the reason no build does. Exactly one; words only to the engine."""
+
+    build: str | None = None
+    elsewhere: str | None = None
+
+    @model_validator(mode="after")
+    def _one_answer(self) -> "LodgingEntry":
+        if (self.build is None) == (self.elsewhere is None):
+            raise ValueError("lodging: name exactly one of build and elsewhere")
+        return self
 
 
 class LaneLabelEntry(Entry):
@@ -34,6 +50,12 @@ class LaneEntry(Entry):
     """A person the story keeps: the only kind a close call (close_call_entries.py) is about. Authored, never inferred."""
     group: str | None = None
     """On a person's ruled lane, the pooled lane that is their group."""
+    crews: list[str] = []
+    """The pooled lanes this person can join, in preference order: the loader sets `group` to the smallest of them
+    (most members among the lanes declared before this one; a tie goes to the first listed). A person only one crew can
+    take lists that one. Never set beside `group`."""
+    lodging: LodgingEntry | None = None
+    """On a person's ruled lane, where they sleep (the scene shows who is at home at night). Authored on every person."""
     tied: str | None = None
     """On a pooled lane, the person's lane the group is tied to: one townsperson who looks after it (api/contract/groups.txt,
     "GROUPS"). Authored, never inferred."""

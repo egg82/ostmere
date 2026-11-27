@@ -6,6 +6,7 @@ from pydantic import Field, model_validator
 
 from .entry_base import Entry
 from .move_entries import CastEntry, JoinEntry, LeaveEntry, MarkEntry
+from .site_entries import SiteEntry
 
 
 class ItemAmount(Entry):
@@ -244,6 +245,9 @@ class CardEntry(Entry):
     """On a townsperson's lane: the player's card this one is the town's version of (player_checks.py)."""
     only_player: Literal["alone", "story", "self", "fight", "magic", "station", "project"] | None = None
     """On a player's lane: why no townsperson has this card, as a tag (player_checks.py)."""
+    site: SiteEntry | None = None
+    """Where the scene shows this card's work done: a layer, or why there is none (site_checks.py, app/tests/test_scene_sites.py).
+    A card and its `twin_of` name the same site."""
 
 
 class TriggerEntry(Entry):

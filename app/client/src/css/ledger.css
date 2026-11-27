@@ -1,8 +1,8 @@
 /* the ledger: groups on hairlines, each a label over aligned rows of name, rate, and stock with its time */
 .ledger-group { margin: .5rem 0 0; padding: .5rem 0 .15rem; border-top: 1px solid var(--rule); font-size: var(--t-meta); font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
-.ledger-lines { display: flex; flex-direction: column; }   /* a list: aligned rows, not boxes (a line taps through only to the rule that watches it, ui/linerule.ts) */
+.ledger-lines { display: flex; flex-direction: column; }   /* a list: aligned rows, not boxes (a line taps through only to the rule that watches it, ui/ledger/linerule.ts) */
 .ledger-item { display: flex; flex-direction: column; gap: .4rem; }
-.ledger-asks:empty { display: none; }   /* a phone's red and full lines above the cards (ui/ledger.ts, `asks`); none, no room */
+.ledger-asks:empty { display: none; }   /* a phone's red and full lines above the cards (ui/ledger/ledger.ts, `asks`); none, no room */
 .line {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name rate amount" "eta eta eta" "edit edit edit";
   align-items: baseline; gap: 0 1rem; min-height: 2rem; padding: .3rem 1rem .3rem 0; overflow: hidden;

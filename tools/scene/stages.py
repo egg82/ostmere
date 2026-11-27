@@ -198,7 +198,7 @@ STAGES["65_racks"] = _ALL.then({"running:n3_wash_meat"})
 STAGES["65_stone"] = _ALL.then(kept_clock=30)
 STAGES["65_stranger"] = _ALL.then({"feature:stranger_home"})
 STAGES["65_bedesman"] = STAGES["65_stranger"].then({"feature:bedesman_home"})
-STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_field_pick"})
+STAGES["65_groups"] = _ALL.then({"running:g_field_forage", "running:g_field_pick", "running:g_hearth_watch"})
 STAGES["65_singing"] = _ALL.then({"answered:o_choir"}, still_clock=30)
 STAGES["65_singing_unanswered"] = _ALL.then(still_clock=30)
 STAGES["66_ash_and_cord"] = _ALL.then(drift_clock=12)
@@ -224,9 +224,9 @@ for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clo
 STAGES["67_none_night"] = _NIGHT
 # The crews' work (people_crews.py): the beds reaped, and the pot and fish worked, by everyone who could be there.
 _JOINED = {"joined:" + f"n{n}" for n in (8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)}
-STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap"})
+STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap", "running:g_hearth_reap"})
 STAGES["69_cooking"] = _ALL.then(_JOINED | {"running:g_road_fungus_stew", "running:g_road_fog_fish"})
-STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_road_fungus_stew"})
+STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_hearth_reap", "running:g_road_fungus_stew"})
 
 
 def holds(cond: str | None, state: State) -> bool:
@@ -237,12 +237,20 @@ def holds(cond: str | None, state: State) -> bool:
         return any(holds(c, state) for c in cond.split("|"))
     if "&" in cond:
         return all(holds(c, state) for c in cond.split("&"))
+    if cond == "dark":
+        from grades import GRADES, pick
+        return bool(GRADES[pick(lambda when: holds(when, state))].get("dark"))
     if cond.startswith("store:"):
         store, _, n = cond[len("store:"):].partition("@")
         lo, _, hi = (n or "1").partition("..")
         held = dict(state.stores).get(store, 0)
         return held >= int(lo) and (not hi or held < int(hi))
     return cond in state.facts
+
+
+def in_dark(cond: str) -> str:
+    """`cond` while it is dusk or night: each of its alternatives and the dark."""
+    return "|".join(f"{term}&dark" for term in cond.split("|"))
 
 
 CONDITIONS = {
@@ -262,10 +270,11 @@ CONDITIONS = {
     "joined:<lane>": "the lane's person has joined the town",
     "left:<lane>": "the lane's person has left the town for good",
     "end:showing": "the end has happened: the end feature was unlocked with every ledger line covered (it never clears)",
+    "dark": "the grade the page shows is a dusk or a night one (the manifest's grades say which, `dark`): the light going, or gone",
     "<a>|<b>|...": "any of the conditions holds",
     "<a>&<b>&...": "all of the conditions hold; binds tighter than |, so a&b|c is (a and b) or c",
 }
 
 
-KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left"}
+KINDS = {"always", "project", "pushes", "running", "mix", "store", "end", "chip", "feature", "action", "answered", "answer", "joined", "left", "dark"}
 """The condition kinds the page knows (app/client/src/scene/conditions.ts)."""

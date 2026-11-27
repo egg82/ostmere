@@ -1,4 +1,4 @@
-// A lane run by rules shows its stores in the task editor (issue 483; ui/laneedit.ts, ui/storetimes.ts), as a person's
+// A lane run by rules shows its stores in the task editor (issue 483; ui/condition/laneedit.ts, ui/mixes/storetimes.ts), as a person's
 // split does: under the tasks, each store the chosen task makes or costs with what it holds of its cap, its rate and
 // where it heads; the lane's tasks' stores until one is chosen. A store the task does not touch, whose rate holds, is
 // not listed.
@@ -7,8 +7,8 @@ import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
 import { dayTwoStep } from "../fixtures/daytwo";
 import type { Content, StoreRow, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { RulesTab } from "../src/ui/rules";
+import { Catalog } from "../src/game/page/catalog";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

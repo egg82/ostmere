@@ -404,6 +404,7 @@ orders = [{ tap_card = "n3_build_bay", first = true }]
 # is the store's full cap (18), not the design's 24, which no save can hold.
 [[cards]]
 id = "make_bay2"
+site = { layer = "bay2" }
 presentation = "craft"
 label_key = "c_make_bay2"
 work_s = 10800
@@ -414,19 +415,31 @@ outcome = { stores = [{ store = "bay2", items = 1 }] }
 # Her lane and his: townsfolk the player's rules set, as the first two.
 [[lanes]]
 id = "n3"
+lodging = { build = "hall" }
 label_key = "lane_n3"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n3_named" }]
 name_key = "name_n3"
 
+# The hearth crew: the fire and the pot, the weaving and the beds. Its first member is the old man at the watch, who
+# looks after it.
+[[lanes]]
+id = "g_hearth"
+label_key = "lane_g_hearth"
+ruled = true
+pooled = true
+tied = "n4"
+
 [[lanes]]
 id = "n4"
+lodging = { build = "hall" }
 label_key = "lane_n4"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "feature", id = "pair_joined" }, label_key = "lane_n4_named" }]
 name_key = "name_n4"
+crews = ["g_hearth"]
 
 # Her track from the join (day_three.toml, the town's track card); his leg rules it out.
 [[triggers]]
@@ -452,6 +465,7 @@ unlocks = [
 # A26 on her lane, the same real time and stores as A25.
 [[cards]]
 id = "n3_build_bay"
+site = { layer = "bay2" }
 twin_of = "make_bay2"
 lane = "n3"
 presentation = "craft"
@@ -473,6 +487,7 @@ cap_items = 1
 # runs (b7.toml's while_running, where the side is declared).
 [[cards]]
 id = "n4_watch"
+site = { layer = "watch_lit" }
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_watch"
@@ -803,6 +818,7 @@ lane_n3 = "The woman's hands"
 lane_n3_named = "{n3}'s hands"
 name_n3 = "Mary"
 lane_n4 = "The old man's hands"
+lane_g_hearth = "The hearth crew"
 lane_n4_named = "{n4}'s hands"
 name_n4 = "Edward"
 c_n3_build_bay = "Build a second sleeping bay"

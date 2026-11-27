@@ -1,7 +1,7 @@
 // A role's slot ({<role>}, contract/casting.txt "CASTING") is the cast lane's name, read from the view's unlocked features at each
 // draw: it stays as written while no feature of the role is held, follows the one held, and is lowercased in a line.
 import { fixtureContent } from "../fixtures/content";
-import { Text } from "../src/game/text";
+import { Text } from "../src/game/page/text";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (got !== want) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

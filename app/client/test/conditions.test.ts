@@ -98,8 +98,8 @@ expect("chip:warm|chip:cold", AT, true);
 
 // A card's skill-level need, through the fixture's own text table.
 {
-  const { Format } = await import("../src/game/format");
-  const { Text } = await import("../src/game/text");
+  const { Format } = await import("../src/game/page/format");
+  const { Text } = await import("../src/game/page/text");
   const { fixtureContent } = await import("../fixtures/content");
   const text = new Text(fixtureContent);
   const got = new Format(text, fixtureContent.scales).needSkill("Foraging", 2, 3);
@@ -172,4 +172,21 @@ expect("store:wood@15&running:shelter", AT, false);
   const none = new SceneFacts();
   none.observe(base);
   if (none.holds("answered:o_x", AT, Q)) throw new Error("answered holds with no such entry");
+}
+
+// `dark` is what the scene says the shown grade is: false until it is told, and it composes with the other kinds.
+{
+  const f = new SceneFacts();
+  f.observe(fixtureStep("mid", AT).view);
+  const want = (condition: string, ok: boolean): void => {
+    const got = f.holds(condition, AT, Q);
+    if (got !== ok) throw new Error(`dark: holds("${condition}") = ${got}, want ${ok}`);
+  };
+  want("dark", false);
+  f.setDark(true);
+  want("dark", true);
+  want("dark&chip:cold", true);
+  want("dark&chip:warm", false);
+  f.setDark(false);
+  want("dark|chip:warm", false);
 }

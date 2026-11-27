@@ -4,8 +4,10 @@ overwrite rather than add. Ids are checked unique afterwards, by check_opening o
 from typing import TYPE_CHECKING
 
 from .camp_convert import camp_cap
+from .groups import with_crews
 from .phase_pays import expanded
 from .town import expand
+from .workings import expand as expand_workings
 
 if TYPE_CHECKING:
     from .camp_entries import CampEntry, CampLevelEntry
@@ -28,7 +30,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
     if beats:
         raise ValueError(f"chapter beat_lines: beats already have a first line: {beats}")
     camp = _camp(o.camp, ch.camp_levels)
-    town, lanes = [*o.town_cards, *ch.town_cards], [*_labelled(o.lanes, ch.lane_labels), *ch.lanes]
+    town, lanes = [*o.town_cards, *ch.town_cards], with_crews([*_labelled(o.lanes, ch.lane_labels), *ch.lanes])
     stores = [*o.stores, *ch.stores]
     if camp is not None:
         stores = [s.model_copy(update={"cap_items": camp_cap(camp)}) if s.id == camp.store else s for s in stores]
@@ -38,7 +40,7 @@ def merge(o: "Opening", ch: "Chapter") -> "Opening":
         "standing": [*o.standing, *ch.standing],
         "sides": [*o.sides, *ch.sides], "threats": [*o.threats, *ch.threats], "lanes": lanes,
         "town_later_labels": [*o.town_later_labels, *ch.town_later_labels],
-        "cards": expand([*_held(o.cards, ch.while_running), *ch.cards], town, {x.id for x in lanes}, {x.id for x in ch.lanes}, len(ch.town_cards)),
+        "cards": expand([*_held(o.cards, ch.while_running), *ch.cards, *expand_workings(ch.workings)], town, {x.id for x in lanes}, {x.id for x in ch.lanes}, len(ch.town_cards)),
         "town_cards": town,
         "chips": [*o.chips, *ch.chips], "triggers": [*o.triggers, *ch.triggers],
         "features": [*o.features, *ch.features], "order_cards": [*o.order_cards, *ch.order_cards],

@@ -1,7 +1,10 @@
 """The Town view's readout: at each chapter's end, the things the Town view asks the player to tune, by id. A thing is a
 person keeping their own split or a group with a joined member who does not; a station (the pot) is neither, and a
 person who left is gone. How many is a feel ("five-ish", owner, 2026-11-25), so this reports and fails nothing
-(docs/decisions/people.md, "The mark: who keeps their own split"). Ids only (CLAUDE.md, "Never spoil the owner").
+(docs/decisions/people.md, "The mark: who keeps their own split"). Beside each crew goes its size, its multiplier and how
+far apart the crews are: a crew card runs at its share times the crew's members, so with no member busy the multiplier is
+the size ("relatively even, within some percentage", owner, 2026-11-26; the spread is the largest crew's lead over the
+smallest, as a share of the largest). Ids only (CLAUDE.md, "Never spoil the owner").
 
     python -m tests.opening.town_readout     # from app/: print it
 """
@@ -35,15 +38,24 @@ def town_managed(o: Opening) -> tuple[list[str], dict[str, list[str]]]:
     return own, groups
 
 
+def sizes(groups: dict[str, list[str]]) -> str:
+    """Each crew's size and multiplier, in the groups' order, then the spread between the largest and the smallest."""
+    if not groups:
+        return "-"
+    n = [len(m) for _, m in sorted(groups.items())]
+    return f"{' '.join(map(str, n))} | {' '.join(f'x{k}' for k in n)} | spread {(max(n) - min(n)) * 100 // max(n)}%"
+
+
 def line(chapter: str, o: Opening) -> str:
     own, groups = town_managed(o)
     crews = " ".join(f"{g}({' '.join(m)})" for g, m in sorted(groups.items()))
-    return f"  {chapter:18s} {len(own) + len(groups):2d}  {' '.join(own) or '-'} | {crews or '-'}"
+    return f"  {chapter:18s} {len(own) + len(groups):2d}  {' '.join(own) or '-'} | {crews or '-'} | {sizes(groups)}"
 
 
 def render(prefixes: list[tuple[str, Opening]]) -> str:
-    """One line per chapter end: how many things, the people keeping their own split, then each group and its members."""
-    head = "chapter end      things  people keeping their own split | groups (members)"
+    """One line per chapter end: how many things, the people keeping their own split, each group and its members, then
+    the groups' sizes, multipliers and spread."""
+    head = "chapter end      things  people keeping their own split | groups (members) | sizes | multipliers | spread"
     return "\n".join([head, *(line(name, o) for name, o in prefixes)])
 
 

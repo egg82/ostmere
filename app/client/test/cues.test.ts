@@ -1,9 +1,9 @@
-// What the page points at (game/cues.ts): the glow on a marked card once ready with its lane free, once each; an
+// What the page points at (game/ledger/cues.ts): the glow on a marked card once ready with its lane free, once each; an
 // order card held back until its offered_after; the largest drain unless it is the hands' tap; the maker in play.
 import type { Card, LedgerLine, OrderCard, View } from "../src/api/types";
 import { BP, fixtureContent, Q } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { completionsOf, glowTarget, largestDrain, nudgeTarget, offeredCard } from "../src/game/cues";
+import { Catalog } from "../src/game/page/catalog";
+import { completionsOf, glowTarget, largestDrain, nudgeTarget, offeredCard } from "../src/game/ledger/cues";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (got !== want) throw new Error(`${label}: got ${String(got)}, want ${String(want)}`);

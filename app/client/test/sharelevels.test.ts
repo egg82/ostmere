@@ -1,12 +1,12 @@
-// Share levels in a store rule (contract/endpoints.txt, "Share levels"; game/storerule.ts): each condition the editor writes
+// Share levels in a store rule (contract/endpoints.txt, "Share levels"; game/condition/storerule.ts): each condition the editor writes
 // (fixtures/share_cases.json, which tests/test_share_levels_wire.py sends through the engine) built from its rule and
 // read back to it; the words for each form on the rule's line, the strip and the why line; and the levels a store of
 // a given cap allows, read as the engine reads a share (the store's whole items against the exact share).
 import { readFileSync } from "node:fs";
 import { fixtureContent, Q } from "../fixtures/content";
 import type { Condition } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { buildRule, levelWords, needsKey, readRule, ruleUntil, ruleWhen, switchForm, valid, type StoreRule } from "../src/game/storerule";
+import { Catalog } from "../src/game/page/catalog";
+import { buildRule, levelWords, needsKey, readRule, ruleUntil, ruleWhen, switchForm, valid, type StoreRule } from "../src/game/condition/storerule";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

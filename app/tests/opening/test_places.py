@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from ashfall_app.api.map_models import PlaceInfo, Stamp
+from ashfall_app.api.world.map_models import PlaceInfo, Stamp
 from ashfall_app.api.models import Unlock, UnlockKind
 from ashfall_app.api.service import Game
 from ashfall_app.main import create_app

@@ -9,7 +9,7 @@ import pytest
 import segno
 
 from ashfall_app.accounts import limits, sessions
-from ashfall_app.api import qr
+from ashfall_app.api.player import qr
 from ashfall_app.main import join_key
 from tests.accounts.devices import JOIN_KEY, Browser, Site, code_of, site
 

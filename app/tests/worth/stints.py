@@ -12,9 +12,9 @@ from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from ashfall_app.api import goal_models as gm
+from ashfall_app.api.goals import goal_models as gm
 from ashfall_app.api.convert import from_condition
-from ashfall_app.api.goalrows import goal_rows
+from ashfall_app.api.goals.goalrows import goal_rows
 from ashfall_app.engine import (
     BP, CardId, CardShare, Condition, Mix, MixId, QueueEntry, Rules, Save, SaveMix, SetQueue, SwitchMix, advance, decide,
     view,

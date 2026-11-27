@@ -167,12 +167,14 @@ modifiers = [
   { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
+  { target = "work", id = "g_hearth_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "work", id = "g_road_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_fiddle_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_fiddle_build" },
 ]
 
 [[lanes]]
 id = "n14"
+lodging = { build = "hall" }
 label_key = "lane_n14"
 ruled = true
 told = "line"
@@ -182,6 +184,7 @@ group = "g_road"
 
 [[lanes]]
 id = "n15"
+lodging = { build = "hall" }
 label_key = "lane_n15"
 ruled = true
 told = "line"

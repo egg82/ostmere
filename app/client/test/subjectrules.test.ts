@@ -8,8 +8,8 @@ import { testContext } from "./context";
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Condition, Content, Decision, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { RulesTab } from "../src/ui/rules";
+import { Catalog } from "../src/game/page/catalog";
+import { RulesTab } from "../src/ui/rules/rules";
 
 install();
 

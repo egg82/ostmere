@@ -68,7 +68,7 @@ outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", ite
 [[town_cards]]
 id = "{lane}_walk_ashwood"
 twin_of = "walk_ashwood"
-lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
+lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
 presentation = "action"
 label_key = "c_walk_ashwood"
 upside_key = "up_walk_ashwood"
@@ -338,6 +338,7 @@ unlocks = [
   { unlock_kind = "card", id = "n9_walk_ashwood" },
   { unlock_kind = "card", id = "n10_walk_ashwood" },
   { unlock_kind = "card", id = "n12_walk_ashwood" },
+  { unlock_kind = "card", id = "g_field_walk_ashwood" },
 ]
 
 # The wood's page, on B18's condition (one moment with it).
@@ -554,6 +555,7 @@ joins = [{ lane = "n13", mix = "town:camp", card = "n13_forage", own_split = tru
 
 [[lanes]]
 id = "n13"
+lodging = { elsewhere = "sleeps by the fire outside the hall, having declined a place in it (C-cast-33)" }
 label_key = "lane_n13"
 ruled = true
 told = "line"

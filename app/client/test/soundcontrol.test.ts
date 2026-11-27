@@ -1,14 +1,14 @@
-// The speaker button and the Settings row (src/ui/soundcontrol.ts): drawn only once a sound is registered, one switch
+// The speaker button and the Settings row (src/ui/settings/soundcontrol.ts): drawn only once a sound is registered, one switch
 // behind both, and the cut taken at once.
 import { FakeEvent, fakeDocument, install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { registerSound, resetSound } from "../src/audio/locator";
 import { browserSoundSwitch } from "../src/audio/mute";
 import { browserStraight } from "../src/app/straight";
-import { Text, UI } from "../src/game/text";
-import { ReminderRow, type ReminderDeps } from "../src/ui/reminders";
-import { SettingsSheet } from "../src/ui/settings";
-import { soundControl } from "../src/ui/soundcontrol";
+import { Text, UI } from "../src/game/page/text";
+import { ReminderRow, type ReminderDeps } from "../src/ui/settings/reminders";
+import { SettingsSheet } from "../src/ui/settings/settings";
+import { soundControl } from "../src/ui/settings/soundcontrol";
 
 install();
 

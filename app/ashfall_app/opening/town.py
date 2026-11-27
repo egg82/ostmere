@@ -16,6 +16,9 @@ class TownCardEntry(CardEntry):
     """A CardEntry whose `id` is a pattern and whose `lane` is each of `lanes`."""
 
     lanes: list[str] = Field(min_length=1)
+    own: list[str] = []
+    """Lanes of `lanes` whose copy of this card is written by hand (a card of the same id on that lane): nothing is
+    expanded for them, and a group holding the card counts them able."""
 
     @model_validator(mode="after")
     def _pattern(self) -> "TownCardEntry":
@@ -26,7 +29,7 @@ class TownCardEntry(CardEntry):
         return self
 
     def card(self, lane: str) -> CardEntry:
-        fields = self.model_dump(exclude={"lanes"})
+        fields = self.model_dump(exclude={"lanes", "own"})
         fields["requires"] = [{**r, "id": r["id"].replace(LANE_TOKEN, lane)} if r["id"] is not None else r
                               for r in fields["requires"]]
         return CardEntry.model_validate({**fields, "id": self.id.replace(LANE_TOKEN, lane), "lane": lane})
@@ -41,7 +44,8 @@ def expand(
     out = list(cards)
     first_new = len(entries) - fresh
     for lane in sorted(declared | {HANDS}):
-        due = [e for i, e in enumerate(entries) if lane in e.lanes and (lane in fresh_lanes or i >= first_new)]
+        due = [e for i, e in enumerate(entries)
+               if lane in e.lanes and lane not in e.own and (lane in fresh_lanes or i >= first_new)]
         made = [e.card(lane) for e in due]
         if made:
             at = next((i + 1 for i, c in enumerate(out) if c.lane == lane), len(out))

@@ -82,7 +82,7 @@ sections are in `design/opening-screen/index.md`.
   - **The lessons never thin out.** The rule lesson re-teaches the editor pattern (pick, save, find the row) that the
     mix lesson has just taught, at the same density (Kalyuga).
   - **Nothing records where a lesson was abandoned.** The code keeps only that a lesson ended (`keepLesson(id)` in
-    `ui/lessons.ts`), not which step it was skipped on or where a player waited. That is the very signal Valve
+    `ui/lessons/lessons.ts`), not which step it was skipped on or where a player waited. That is the very signal Valve
     patches from.
 
   "Never repeated" is not contradicted: on-demand help did nothing or harm in Andersen's simpler games, and the repeat
@@ -177,7 +177,7 @@ evidence, then by cost.
 6. **Thin out the rule lesson after the mix lesson.** Change: when the mix lesson was completed, the rule lesson drops
    the steps that repeat the editor pattern (the save step, the "where it lives" reading step) and keeps the when/do
    pair. Test: inside proposal 1's rounds, not by rate (too few testers to count), by whether players who see the
-   shorter version still build a working rule unaided. Fits into: Lessons (`game/lessons.ts`; a lesson's steps are
+   shorter version still build a working rule unaided. Fits into: Lessons (`game/lessons/lessons.ts`; a lesson's steps are
    data).
 7. **One motion and sound rule, plus a mechanical phone check.** Change: in the decision, an in-game motion toggle
    beside the OS preference already honoured, a flash cap, "sound never carries information alone", "nothing is

@@ -99,6 +99,7 @@ unlocks = [
   { unlock_kind = "card", id = "n6_clear_road" },
   { unlock_kind = "card", id = "n7_clear_road" },
   { unlock_kind = "card", id = "g_field_clear_road" },
+  { unlock_kind = "card", id = "g_hearth_clear_road" },
 ]
 
 # The road's page, on SL24's condition (one moment with it), whoever walked it.
@@ -134,7 +135,7 @@ outcome = { stores = [{ store = "cleared", items = 1 }] }
 [[town_cards]]
 id = "{lane}_clear_road"
 twin_of = "shovel_road"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "n23", "g_field", "g_road"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n14", "n15", "n23", "g_field", "g_hearth", "g_road"]
 presentation = "action"
 label_key = "c_lane_clear_road"
 upside_key = "up_shovel_road"
@@ -207,6 +208,7 @@ outcome = { line_keys = ["l_hall_hearth"], unlocks = [{ unlock_kind = "card", id
 
 [[cards]]
 id = "hall_hearth"
+site = { layer = "hall_hearth" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_hall_hearth"

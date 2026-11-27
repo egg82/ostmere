@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from ashfall_app.api.saves_models import DryRunRequest
+from ashfall_app.api.player.saves_models import DryRunRequest
 
 TAP: dict[str, Any] = {"kind": "tap_card", "card": "stand_up"}
 

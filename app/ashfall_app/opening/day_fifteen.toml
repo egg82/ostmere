@@ -79,6 +79,7 @@ unlocks = [
 # no stage is queued: stage 4 T3, stage 8 B14. No floor: the hall shows at S4 (331 h), past sharp's 308.8 h.
 [[cards]]
 id = "hall"
+site = { layer = "hall_4" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_hall"
@@ -236,6 +237,7 @@ unlocks = [
   { unlock_kind = "card", id = "n6_reap" },
   { unlock_kind = "card", id = "n7_reap" },
   { unlock_kind = "card", id = "g_field_reap" },
+  { unlock_kind = "card", id = "g_hearth_reap" },
   { unlock_kind = "card", id = "barley_stew" },
 ]
 
@@ -258,6 +260,7 @@ makes = [{ store = "ripe", items_per_hour = 1, every_hours = 2 }]
 
 [[cards]]
 id = "reap"
+site = { layer = "beds_3" }
 presentation = "action"
 label_key = "c_reap"
 upside_key = "up_reap"
@@ -270,7 +273,8 @@ outcome = { stores = [{ store = "barley", items = 2 }] }
 [[town_cards]]
 id = "{lane}_reap"
 twin_of = "reap"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+site = { layer = "beds_3" }
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field", "g_hearth"]
 presentation = "action"
 label_key = "c_lane_reap"
 upside_key = "up_reap"
@@ -306,7 +310,7 @@ label_key = "store_stew_barley"
 cap_items = 36
 group_key = "store_group_stew"
 
-# The barley pot on the fire: the field crew's work runs faster, on the group's own lane, which the stew's speed on each
+# The barley pot on the fire: both crews' work runs faster, on each group's own lane, which the stew's speed on each
 # eater's lane never reaches (day three's pot, t_pot_on). Its eating counts the mouths already fed (t_pot_eat_family).
 [[cards]]
 id = "pot_barley_stew"
@@ -318,7 +322,7 @@ upside_key = "up_pot_barley_stew"
 stake = "speed"
 work_s = 60
 costs = [{ store = "stew_barley", items_per_hour = 1 }]
-while_running = [{ lane = "g_field", amount_bp = 1500 }]
+while_running = [{ lane = "g_field", amount_bp = 1500 }, { lane = "g_hearth", amount_bp = 1500 }]
 
 [[triggers]]
 id = "t_pot_barley"
@@ -344,7 +348,7 @@ outcome = { modifiers = [{ target = "rate", id = "pot_barley_stew", flow = "cost
 [[town_cards]]
 id = "{lane}_barley_stew"
 twin_of = "barley_stew"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_barley_stew"
 upside_key = "up_barley_stew"
@@ -366,7 +370,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_barley_stew" },
   { unlock_kind = "card", id = "n6_barley_stew" },
   { unlock_kind = "card", id = "n7_barley_stew" },
-  { unlock_kind = "card", id = "g_field_barley_stew" },
+  { unlock_kind = "card", id = "g_hearth_barley_stew" },
 ]
 
 # ---------- T1: night 15, the frost ----------
@@ -441,7 +445,7 @@ tally = true
 [[town_cards]]
 id = "{lane}_cover_beds"
 twin_of = "cover_beds"
-lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_cover_beds"
 upside_key = "up_cover_beds"
@@ -461,7 +465,7 @@ unlocks = [
   { unlock_kind = "card", id = "n5_cover_beds" },
   { unlock_kind = "card", id = "n6_cover_beds" },
   { unlock_kind = "card", id = "n7_cover_beds" },
-  { unlock_kind = "card", id = "g_field_cover_beds" },
+  { unlock_kind = "card", id = "g_hearth_cover_beds" },
 ]
 
 # "When frosted, {n3} covers the beds": its `when` the chip's.
@@ -932,10 +936,10 @@ c_reap = "Reap"
 up_reap = "barley for the stew pot"
 c_lane_reap = "Reap"
 c_barley_stew = "Cook barley stew"
-up_barley_stew = "{pct} work speed for the field crew, while it's in the pot"
+up_barley_stew = "{pct} work speed for the crews, while it's in the pot"
 store_stew_barley = "barley stew"
 c_pot_barley_stew = "Barley stew"
-up_pot_barley_stew = "{pct} work speed for the field crew"
+up_pot_barley_stew = "{pct} work speed for the crews"
 l_night_15 = "dusk, and the cold comes down after it."
 l_frost_1 = "rime on everything past the warm ground."
 l_frost_beds = "{n3}'s beds are white."

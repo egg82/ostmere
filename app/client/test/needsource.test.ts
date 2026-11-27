@@ -1,4 +1,4 @@
-// Where a short store need comes from (ui/cardneeds.ts, ui/makerlight.ts; docs/design/opening-screen/asks-and-cards.md, "Cards"): a
+// Where a short store need comes from (ui/cards/cardneeds.ts, ui/cards/makerlight.ts; docs/design/opening-screen/asks-and-cards.md, "Cards"): a
 // need with a gate (Need.gate) draws the gate in its place as a skill-level or step row and never names its store, even
 // one the player has not been shown; with no gate it draws the store as have/need and nothing else. A tap of a short
 // row lights its makers (Need.makers): Actions.highlight and their cards on the panel, until the next press, without
@@ -9,8 +9,8 @@ import { testContext } from "./context";
 import { Q, fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, Condition, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { CardNeeds } from "../src/ui/cardneeds";
+import { Catalog } from "../src/game/page/catalog";
+import { CardNeeds } from "../src/ui/cards/cardneeds";
 
 install();
 

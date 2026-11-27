@@ -32,9 +32,9 @@ The mix offer arrives at 5:40 with its glowing Show me. Show me opens the editor
 ("A mix works two tasks at once…") and the glow returns to Show me in the hands strip, which is still on screen
 above the open editor. Tapping `scavenge` changes nothing, and Save starts the mix with the note just gone.
 
-**Cause, verified in Chromium:** an Add-row chip joins the mix on `pointerup` (`app/client/src/ui/editordrag.ts`), and
+**Cause, verified in Chromium:** an Add-row chip joins the mix on `pointerup` (`app/client/src/ui/mixes/editordrag.ts`), and
 `drawAdds` replaces the chip before the browser fires `click`. So no `click` reaches the document at all: a capture
-listener logged none. The lesson runner ends a "touch" step only on `click` (`app/client/src/ui/lessons.ts`,
+listener logged none. The lesson runner ends a "touch" step only on `click` (`app/client/src/ui/lessons/lessons.ts`,
 `touched`). Step two never counts, `stepOnShow` falls back to the only target still on show (step one's offer
 button), and the lesson never ends. A keyboard press still works, because it takes the `click` path.
 
@@ -127,7 +127,7 @@ recorded here because a person at a desk is likely to leave at this point.
 
 1. Make an Add-row chip's `pointerup` join count as the lesson step's touch (the editor tells the runner, or the runner
    listens for `pointerup`), and drive it in a client test with a real pointer sequence, not a synthetic `click`.
-   Fits into: the lesson runner (`app/client/src/ui/lessons.ts`). Covers the first-mix and changing-the-mix lessons.
+   Fits into: the lesson runner (`app/client/src/ui/lessons/lessons.ts`). Covers the first-mix and changing-the-mix lessons.
 2. Let a held lesson end when its trigger has gone and none of its remaining steps can show, so one stuck lesson
    never blocks the rule lesson for the rest of the page's life. Fits into: `Lessons.tick`.
 3. On a desktop, put the story strip directly under the art from the first screen (art top-aligned, spare height below

@@ -59,6 +59,7 @@ PART_OF: Mapping[str, str] = {
     "lamp_1": "palisade_9", "lamp_2": "palisade_9", "lamps_lit": "palisade_9", "gap_laid": "gap_ring", "gap_lit": "gap_ring",
     "watch_laid": "watch_ring", "watch_lit": "watch_ring", "clay_hearth_2_front": "clay_hearth_1_front",
     "clay_hearth_3_front": "clay_hearth_2_front", "hide_flaps_1": "bay", "hide_flaps_2": "bay2", "hall_hearth": "hall_4",
+    "hall_smoke": "hall_hearth", "watch_banked": "watch_ring", "gap_banked": "gap_ring",
 }
 """Layers drawn as part of another layer's art, to the layer they belong to."""
 

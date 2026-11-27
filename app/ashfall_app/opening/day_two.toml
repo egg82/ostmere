@@ -16,6 +16,7 @@ curve_items = [36630, 54980, 82510, 123810, 185760]
 # until she gives her name at the stool (J1).
 [[lanes]]
 id = "n1"
+lodging = { build = "hall" }
 label_key = "lane_n1"
 ruled = true
 told = "line"
@@ -129,7 +130,7 @@ offered_after = { unlock_kind = "feature", id = "n1" }
 [[town_cards]]
 id = "{lane}_weave_wattle"
 twin_of = "weave_wattle"
-lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
+lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
 label_key = "c_weave_wattle"
 upside_key = "up_weave_wattle"
@@ -241,6 +242,7 @@ unlocks = [{ unlock_kind = "card", id = "build_shelter" }, { unlock_kind = "card
 # the need is a mix switch for the player and a task switch for her. The shelter opens the offer.
 [[cards]]
 id = "build_shelter"
+site = { layer = "n1_shelter" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_build_shelter"
@@ -271,6 +273,7 @@ modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 200
 # opens before them. Opened with the player there, so it turns ready in a visit, never in an absence (the 2 AM test).
 [[cards]]
 id = "raised_bed"
+site = { layer = "raised_bed_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_raised_bed"

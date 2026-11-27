@@ -1,12 +1,12 @@
-"""View.goal_rows on a fixture world (api/goalrows.py; contract/goal-rows.txt, "Goal rows"): when each goal lands at the rates as
+"""View.goal_rows on a fixture world (api/goals/goalrows.py; contract/goal-rows.txt, "Goal rows"): when each goal lands at the rates as
 set, a tap of the hands set aside, and the dry store that binds it.
 
 Skill k is trained by `chop` (an hour per level at a full share) and `saw`, which turns plank input `log` into `plank`
 and trains k at half chop's rate; `fell` makes `log`; `press` turns `glue` into `plank`. `nap` is a capped tap, so a
 tap can hold the hands."""
 from ashfall_app import engine as e
-from ashfall_app.api import goal_models as g
-from ashfall_app.api.goalrows import goal_rows
+from ashfall_app.api.goals import goal_models as g
+from ashfall_app.api.goals.goalrows import goal_rows
 from ashfall_app.engine import BP, CardDef, CardId, CardShare, MixId, PacingCurve, Rules, Save, SkillDef, SkillId
 from ashfall_app.engine.flows import Flow
 from ashfall_app.engine.lanes import TapCard

@@ -6,7 +6,7 @@
 .asks-open { display: none; }
 .game.editing .panel > .tabs { visibility: hidden; }   /* the row keeps its room while an editor has the card area */
 .view-title { margin: 0; font: 400 var(--t-display)/1.2 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); }   /* the Town view's */
-/* the Book (ui/book.ts): its title and its row of pages on one line over a hairline, then the page open. The row shows
+/* the Book (ui/book/book.ts): its title and its row of pages on one line over a hairline, then the page open. The row shows
    only while a second page is offered; the Map joins it last once it exists. */
 .book-head { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 1.75rem; border-bottom: 1px solid var(--rule); }
 .book-pages { display: flex; gap: 1.25rem; }

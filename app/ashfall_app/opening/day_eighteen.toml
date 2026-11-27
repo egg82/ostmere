@@ -218,32 +218,35 @@ modifiers = [
 # Townsfolk the player's rules set, as the family.
 [[lanes]]
 id = "n8"
+lodging = { build = "hall" }
 label_key = "lane_n8"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_choir" }, label_key = "lane_n8_named" }]
 name_key = "name_n8"
-group = "g_field"
+crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n9"
+lodging = { build = "hall" }
 label_key = "lane_n9"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_choir" }, label_key = "lane_n9_named" }]
 name_key = "name_n9"
-group = "g_field"
+crews = ["g_field", "g_hearth"]
 
 [[lanes]]
 id = "n10"
+lodging = { build = "hall" }
 label_key = "lane_n10"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_choir" }, label_key = "lane_n10_named" }]
 name_key = "name_n10"
-group = "g_field"
+crews = ["g_field", "g_hearth"]
 
-# The same moment, the three go to the field crew: none keeps a split of their own, and the story says why. Its own
+# The same moment, the three go to the crews, one to the field and two to the hearth: none keeps a split of their own, and the story says why. Its own
 # triggers, one a way, as the answers' outcomes are released: the crew's split is the crew's, so a first task is the
 # answer's lasting quarter and a share the player gives the crew (the road's quarter is the crew card's as it was each
 # person's). The crew's beds and road cards come here, once the beds are.
@@ -253,11 +256,16 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", i
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
 [triggers.outcome]
 line_keys = ["l_choir_group_beds"]
-unlocks = [{ unlock_kind = "card", id = "g_field_reap" }, { unlock_kind = "card", id = "g_field_clear_road" }]
+unlocks = [
+  { unlock_kind = "card", id = "g_field_reap" },
+  { unlock_kind = "card", id = "g_field_clear_road" },
+  { unlock_kind = "card", id = "g_hearth_reap" },
+  { unlock_kind = "card", id = "g_hearth_clear_road" },
+]
 marks = [
-  { lane = "n8", own_split = false, card = "g_field_reap" },
+  { lane = "n8", own_split = false, card = "g_hearth_reap" },
   { lane = "n9", own_split = false, card = "g_field_reap" },
-  { lane = "n10", own_split = false, card = "g_field_reap" },
+  { lane = "n10", own_split = false, card = "g_hearth_reap" },
 ]
 
 [[triggers]]
@@ -266,13 +274,21 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", i
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
 [triggers.outcome]
 line_keys = ["l_choir_group_road"]
-unlocks = [{ unlock_kind = "card", id = "g_field_reap" }, { unlock_kind = "card", id = "g_field_clear_road" }]
-marks = [
-  { lane = "n8", own_split = false, card = "g_field_clear_road" },
-  { lane = "n9", own_split = false, card = "g_field_clear_road" },
-  { lane = "n10", own_split = false, card = "g_field_clear_road" },
+unlocks = [
+  { unlock_kind = "card", id = "g_field_reap" },
+  { unlock_kind = "card", id = "g_field_clear_road" },
+  { unlock_kind = "card", id = "g_hearth_reap" },
+  { unlock_kind = "card", id = "g_hearth_clear_road" },
 ]
-modifiers = [{ target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 12500, source = "o_choir_road" }]
+marks = [
+  { lane = "n8", own_split = false, card = "g_hearth_clear_road" },
+  { lane = "n9", own_split = false, card = "g_field_clear_road" },
+  { lane = "n10", own_split = false, card = "g_hearth_clear_road" },
+]
+modifiers = [
+  { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 12500, source = "o_choir_road" },
+  { target = "work", id = "g_hearth_clear_road", kind = "mul_bp", amount_bp = 12500, source = "o_choir_road" },
+]
 
 # Their everyday work from the join (decisions/people.md, "Who can do which job"): every town card the family has, but
 # gathering by hand, which their cutting beats outright (choice_checks.py). Each eats roots, and from the pot
@@ -512,32 +528,39 @@ outcome = { stores = [{ store = "cleared", items = 1 }, { store = "damp_wood", i
 
 [[lanes]]
 id = "n11"
+lodging = { build = "hall" }
 label_key = "lane_n11"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_cutter" }, label_key = "lane_n11_named" }]
 name_key = "name_n11"
-group = "g_field"
+crews = ["g_hearth"]
 
 [[lanes]]
 id = "n12"
+lodging = { build = "hall" }
 label_key = "lane_n12"
 ruled = true
 told = "line"
 later_labels = [{ after = { unlock_kind = "answered", id = "o_cutter" }, label_key = "lane_n12_named" }]
 name_key = "name_n12"
-group = "g_field"
+crews = ["g_field", "g_hearth"]
 
-# The same moment, both go to the field crew, and the story says why (t_choir_groups_beds).
+# The same moment, both go to a crew, one to each, and the story says why (t_choir_groups_beds).
 [[triggers]]
 id = "t_cutter_groups_beds"
 when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", id = "o_cutter_beds", value = 1 }
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
 [triggers.outcome]
 line_keys = ["l_cutter_group_beds"]
-unlocks = [{ unlock_kind = "card", id = "g_field_reap" }, { unlock_kind = "card", id = "g_field_clear_road" }]
+unlocks = [
+  { unlock_kind = "card", id = "g_field_reap" },
+  { unlock_kind = "card", id = "g_field_clear_road" },
+  { unlock_kind = "card", id = "g_hearth_reap" },
+  { unlock_kind = "card", id = "g_hearth_clear_road" },
+]
 marks = [
-  { lane = "n11", own_split = false, card = "g_field_clear_road" },
+  { lane = "n11", own_split = false, card = "g_hearth_clear_road" },
   { lane = "n12", own_split = false, card = "g_field_reap" },
 ]
 
@@ -547,12 +570,20 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "answer", i
 requires = [{ test = "at_least", subject_kind = "unlocked", unlock_kind = "action", id = "beds", value = 1 }]
 [triggers.outcome]
 line_keys = ["l_cutter_group_road"]
-unlocks = [{ unlock_kind = "card", id = "g_field_reap" }, { unlock_kind = "card", id = "g_field_clear_road" }]
+unlocks = [
+  { unlock_kind = "card", id = "g_field_reap" },
+  { unlock_kind = "card", id = "g_field_clear_road" },
+  { unlock_kind = "card", id = "g_hearth_reap" },
+  { unlock_kind = "card", id = "g_hearth_clear_road" },
+]
 marks = [
-  { lane = "n11", own_split = false, card = "g_field_clear_road" },
+  { lane = "n11", own_split = false, card = "g_hearth_clear_road" },
   { lane = "n12", own_split = false, card = "g_field_clear_road" },
 ]
-modifiers = [{ target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_cutter_road" }]
+modifiers = [
+  { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_cutter_road" },
+  { target = "work", id = "g_hearth_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_cutter_road" },
+]
 
 # Their everyday work from the join, as the three's.
 [[triggers]]
@@ -834,10 +865,10 @@ a_pair_road_cost = "{pct} all road clearing, {pct_b} smoked at the table"
 c_n11_first_out = "Out first on the road"
 l_choir_beds = "by morning the three are out among the beds."
 l_choir_road = "by morning the three are shovelling ash off the road."
-l_choir_group_beds = "{n2} sets the three with {n5} and {n6} in the beds: one crew, one split, and he says when it is enough"
-l_choir_group_road = "{n2} sets the three with {n5} and {n6} on the road: one crew, one split, and he says when it is enough"
-l_cutter_group_beds = "{n11} works as he pleases. {n2} stops handing him a share and counts him and {n12} with the field crew"
-l_cutter_group_road = "{n11} works as he pleases. {n2} stops handing him a share and counts him and {n12} with the field crew"
+l_choir_group_beds = "{n2} and {n4} divide the three between the crews and set them in the beds: one split to a crew, and each says when it is enough"
+l_choir_group_road = "{n2} and {n4} divide the three between the crews and set them on the road: one split to a crew, and each says when it is enough"
+l_cutter_group_beds = "{n11} works as he pleases. {n2} stops handing him a share and counts him with the hearth crew and {n12} with the field crew"
+l_cutter_group_road = "{n11} works as he pleases. {n2} stops handing him a share and counts him with the hearth crew and {n12} with the field crew"
 lane_n8 = "The first woman's hands"
 lane_n8_named = "{n8}'s hands"
 name_n8 = "Alice"

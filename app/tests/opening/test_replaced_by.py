@@ -3,7 +3,7 @@ unlocks that card; it is served on the retired card's CardInfo, and only on that
 import pytest
 from fastapi.testclient import TestClient
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.main import create_app
 from tests.opening.edited import edited
 

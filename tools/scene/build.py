@@ -14,6 +14,7 @@ import random
 
 from PIL import Image, ImageChops
 
+import builds
 import dayone
 import depth
 import dayone_poses
@@ -27,6 +28,7 @@ import daythree_layers as d3
 import daytwo_layers as d2
 import dayone_world as world
 import night
+import people_hall
 import people_layers
 import props
 import trips
@@ -67,8 +69,9 @@ BIRCH = "project:woodcutting|running:n1_cut"
 def layers(rng: random.Random) -> list[Layer]:
     """Every layer in draw order. `when` shows it, `until` hides it again (see the manifest's `conditions`)."""
     walls = ruin().getchannel("A")
-    return people_layers.step_aside([*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls),
-                                    *people_layers.people_layers(walls), *light_layers()])
+    every = people_layers.step_aside([*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls),
+                                      *people_layers.people_layers(walls), *light_layers()])
+    return builds.retire(people_hall.at_home(every))
 
 
 def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:

@@ -2,7 +2,7 @@
 standing action flows it) rises only by events, a step at a time, so a rule on it cannot flip at one level on a flow
 (contract/the-client-may.txt, "a store rule"). Hurt, which only a lost fight adds to, is one; a store a card or a standing action makes
 is not."""
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.opening.makers import card_makers, standing_makers
 from ashfall_app.opening.schema import Opening
 from tests.shipped_ruleset import ShippedRuleset

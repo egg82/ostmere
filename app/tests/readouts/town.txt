@@ -1,21 +1,21 @@
-chapter end      things  people keeping their own split | groups (members)
-  day_one             0  - | -
-  day_two             0  - | -
-  day_three           2  n1 n2 | -
-  day_four            2  n1 n2 | -
-  day_five            4  n1 n2 n3 n4 | -
-  b7                  4  n1 n2 n3 n4 | -
-  day_six             4  n1 n2 n3 n4 | -
-  day_eight           4  n1 n2 n3 n4 | -
-  day_nine            4  n1 n2 n3 n4 | -
-  day_eleven          5  n1 n2 n3 n4 | g_field(n5 n6 n7)
-  day_twelve          5  n1 n2 n3 n4 | g_field(n5 n6 n7)
-  day_fifteen         5  n1 n2 n3 n4 | g_field(n5 n6 n7)
-  day_sixteen         5  n1 n2 n3 n4 | g_field(n5 n6 n7)
-  day_eighteen        5  n1 n2 n3 n4 | g_field(n5 n6 n7 n8 n9 n10 n11 n12)
-  day_nineteen        5  n1 n2 n3 n4 | g_field(n5 n6 n7 n8 n9 n10 n12)
-  day_twenty_two      6  n1 n2 n3 n4 n13 | g_field(n5 n6 n7 n8 n9 n10 n12)
-  day_twenty_three    7  n1 n2 n3 n4 n13 | g_field(n5 n6 n7 n8 n9 n10 n12) g_road(n14 n15)
-  day_twenty_five     8  n1 n2 n3 n4 n13 n23 | g_field(n5 n6 n7 n8 n9 n10 n12) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22)
-  prestige            8  n1 n2 n3 n4 n13 n23 | g_field(n5 n6 n7 n8 n9 n10 n12) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22)
-  phase_pays          8  n1 n2 n3 n4 n13 n23 | g_field(n5 n6 n7 n8 n9 n10 n12) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22)
+chapter end      things  people keeping their own split | groups (members) | sizes | multipliers | spread
+  day_one             0  - | - | -
+  day_two             0  - | - | -
+  day_three           2  n1 n2 | - | -
+  day_four            2  n1 n2 | - | -
+  day_five            4  n1 n2 n3 n4 | - | -
+  b7                  4  n1 n2 n3 n4 | - | -
+  day_six             4  n1 n2 n3 n4 | - | -
+  day_eight           4  n1 n2 n3 n4 | - | -
+  day_nine            4  n1 n2 n3 n4 | - | -
+  day_eleven          4  n1 n3 | g_field(n2 n5 n7) g_hearth(n4 n6) | 3 2 | x3 x2 | spread 33%
+  day_twelve          4  n1 n3 | g_field(n2 n5 n7) g_hearth(n4 n6) | 3 2 | x3 x2 | spread 33%
+  day_fifteen         4  n1 n3 | g_field(n2 n5 n7) g_hearth(n4 n6) | 3 2 | x3 x2 | spread 33%
+  day_sixteen         4  n1 n3 | g_field(n2 n5 n7) g_hearth(n4 n6) | 3 2 | x3 x2 | spread 33%
+  day_eighteen        4  n1 n3 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10 n11) | 5 5 | x5 x5 | spread 0%
+  day_nineteen        4  n1 n3 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) | 5 4 | x5 x4 | spread 20%
+  day_twenty_two      5  n1 n3 n13 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) | 5 4 | x5 x4 | spread 20%
+  day_twenty_three    6  n1 n3 n13 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15) | 5 4 2 | x5 x4 x2 | spread 60%
+  day_twenty_five     7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22) | 5 4 9 | x5 x4 x9 | spread 55%
+  prestige            7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22) | 5 4 9 | x5 x4 x9 | spread 55%
+  phase_pays          7  n1 n3 n13 n23 | g_field(n2 n5 n7 n9 n12) g_hearth(n4 n6 n8 n10) g_road(n14 n15 n16 n17 n18 n19 n20 n21 n22) | 5 4 9 | x5 x4 x9 | spread 55%

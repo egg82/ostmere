@@ -6,7 +6,7 @@
 import { catalog, expect, rig, text } from "./journalrig";
 import { WEEKS } from "../fixtures/journal";
 import type { JournalDay } from "../src/api/types";
-import { DAY_GAP, dayPages, dayRows, joinDays, noteRows, PAGE_ROWS, ROW_CHARS } from "../src/game/days";
+import { DAY_GAP, dayPages, dayRows, joinDays, noteRows, PAGE_ROWS, ROW_CHARS } from "../src/game/book/days";
 
 const words = (key: string): string => catalog.text.get(key);
 const KEY = "wk_rain";   // a one-row note

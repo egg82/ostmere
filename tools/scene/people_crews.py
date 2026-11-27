@@ -17,6 +17,8 @@ COOKS: dict[str, Who] = {
     "n20": (SHEETS + "npc4.png", 0), "n21": (SHEETS + "npc4.png", 1), "n22": (SHEETS + "npc4.png", 6),
 }
 """Who stands at the fire for the road crew's pot and fish: the pair, the four and the three."""
+HEARTH_REAPERS = {"n8", "n10"}
+"""The two of the reapers who work in the hearth crew; the others reap with the field crew."""
 FISH = "n14"
 """The one of them whose first job there is the fish (the answer's card); the rest are on the stew."""
 REAP_AT = {n: (628.0 + 30 * i, 418.0) for i, n in enumerate(REAPERS)}
@@ -33,7 +35,8 @@ def _while(person_id: str, card: str) -> str:
 
 
 def crew_layers() -> list[Layer]:
-    reaping = [Layer(id=f"figure_{n}_reaping", img=person(who, "down", REAP_AT[n]), when=_while(n, "g_field_reap"))
+    reaping = [Layer(id=f"figure_{n}_reaping", img=person(who, "down", REAP_AT[n]),
+                     when=_while(n, "g_hearth_reap" if n in HEARTH_REAPERS else "g_field_reap"))
                for n, who in REAPERS.items()]
     cooking = [Layer(id=f"figure_{n}_at_the_pot", img=person(who, COOK_AT[n][2], COOK_AT[n][:2]),
                      when=_while(n, "g_road_fog_fish" if n == FISH else "g_road_fungus_stew"))

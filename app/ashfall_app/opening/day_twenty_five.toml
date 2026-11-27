@@ -204,12 +204,14 @@ modifiers = [
   { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
+  { target = "work", id = "g_hearth_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "work", id = "g_road_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_walkers_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_walkers_build" },
 ]
 
 [[lanes]]
 id = "n16"
+lodging = { build = "hall" }
 label_key = "lane_n16"
 ruled = true
 told = "line"
@@ -217,6 +219,7 @@ group = "g_road"
 
 [[lanes]]
 id = "n17"
+lodging = { build = "hall" }
 label_key = "lane_n17"
 ruled = true
 told = "line"
@@ -224,6 +227,7 @@ group = "g_road"
 
 [[lanes]]
 id = "n18"
+lodging = { build = "hall" }
 label_key = "lane_n18"
 ruled = true
 told = "line"
@@ -231,6 +235,7 @@ group = "g_road"
 
 [[lanes]]
 id = "n19"
+lodging = { build = "hall" }
 label_key = "lane_n19"
 ruled = true
 told = "line"
@@ -394,12 +399,14 @@ modifiers = [
   { target = "work", id = "n14_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "work", id = "n15_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "work", id = "g_field_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
+  { target = "work", id = "g_hearth_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "work", id = "g_road_clear_road", kind = "mul_bp", amount_bp = 11000, source = "o_widowers_build" },
   { target = "rate", id = "table", flow = "cost", store = "smoked", kind = "add_bp", amount_bp = 5000, source = "o_widowers_build" },
 ]
 
 [[lanes]]
 id = "n20"
+lodging = { build = "hall" }
 label_key = "lane_n20"
 ruled = true
 told = "mention"
@@ -407,6 +414,7 @@ group = "g_road"
 
 [[lanes]]
 id = "n21"
+lodging = { build = "hall" }
 label_key = "lane_n21"
 ruled = true
 told = "mention"
@@ -414,6 +422,7 @@ group = "g_road"
 
 [[lanes]]
 id = "n22"
+lodging = { build = "hall" }
 label_key = "lane_n22"
 ruled = true
 told = "mention"
@@ -605,6 +614,7 @@ joins = [{ lane = "n23", mix = "town:camp", card = "n23_stakes", own_split = tru
 
 [[lanes]]
 id = "n23"
+lodging = { elsewhere = "no bed is named for the bedesman, who goes from door to door; stands at the hall door" }
 label_key = "lane_n23"
 ruled = true
 told = "line"
