@@ -1,16 +1,16 @@
 chapter twelve: 12 visits on typical
    V50 gap   3.2 h  spend 63  decide  1
    V51 gap   9.2 h  spend 51  decide  2  [wait, 9 lines]
-   V52 gap   4.2 h  spend 66  decide  1  [wait, 5 lines]
+   V52 gap   4.2 h  spend 58  decide  1  [wait, 5 lines]
    V53 gap   3.2 h  spend 31  decide  2  [wait, 1 lines]
-   V54 gap   9.2 h  spend 65  decide  3
-   V55 gap   4.2 h  spend 65  decide  0  [wait, 1 lines]
-   V56 gap   3.2 h  spend 65  decide  1
-   V57 gap   9.2 h  spend 65  decide  2
-   V58 gap   4.2 h  spend 65  decide  0
-   V59 gap   3.2 h  spend 65  decide  1
-   V60 gap   9.1 h  spend 29  decide  2
+   V54 gap   9.2 h  spend 74  decide  3  [wait, 2 lines]
+   V55 gap   4.2 h  spend 58  decide  0
+   V56 gap   3.2 h  spend 58  decide  1  [wait, 1 lines]
+   V57 gap   9.2 h  spend 82  decide  2
+   V58 gap   4.2 h  spend 81  decide  0
+   V59 gap   3.2 h  spend 82  decide  1
+   V60 gap   9.1 h  spend 37  decide  2
    V61 gap   4.2 h  spend 81  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 501, decide 6; 8h+: 4 returns, spend 210, decide 9
-  cap loss at the end, away 8 h: damp_wood 24%, dry_wood 20%, roots 91%, stones 65%
-  cap loss at the end, away 24 h: damp_wood 24%, dry_wood 30%, roots 92%, smoked 12%, stones 65%, wraps_sewn 20%
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 8 returns, spend 512, decide 6; 8h+: 4 returns, spend 244, decide 9
+  cap loss at the end, away 8 h: damp_wood 24%, dry_wood 57%, roots 91%, stones 65%
+  cap loss at the end, away 24 h: damp_wood 24%, dry_wood 57%, roots 91%, smoked 12%, stones 65%, wraps_sewn 17%

@@ -9,4 +9,4 @@ day    line feature    chip   store   skill    card   level  total
   2      20       6       2       2       0      10       3     43
   3      13       1       0       0       0       2       1     17
   4       7       0       1       0       0       0       1      9
-  5      22       5       0       0       0      72       2    101
+  5      23       5       0       0       0      76       2    106

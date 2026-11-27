@@ -1,11 +1,11 @@
 chapter twentytwo: 7 visits on typical
-   V92 gap   3.2 h  spend 54  decide  0  [wait, 5 lines]
-   V93 gap   9.1 h  spend 53  decide  1  [wait, 8 lines]
-   V94 gap   4.2 h  spend 66  decide  0
-   V95 gap   3.1 h  spend 105  decide  0  [wait, 3 lines]
-   V96 gap   9.1 h  spend 106  decide  1  [wait, 3 lines]
-   V97 gap   4.2 h  spend 105  decide  0
-   V98 gap   3.2 h  spend 117  decide  0  [edge]
-  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 5 returns, spend 447, decide 0; 8h+: 2 returns, spend 159, decide 2
-  cap loss at the end, away 8 h: charwood 100%, damp_wood 4%, dry_wood 43%, roots 98%, stones 75%, windbreak 100%, wraps_sewn 100%
-  cap loss at the end, away 24 h: charwood 100%, damp_wood 4%, dry_wood 47%, roots 98%, stones 76%, windbreak 100%, wraps_sewn 100%
+   V92 gap   3.0 h  spend 131  decide  0
+   V93 gap   9.0 h  spend 118  decide  1  [wait, 8 lines]
+   V94 gap   4.2 h  spend 80  decide  0  [wait, 1 lines]
+   V95 gap   3.1 h  spend 80  decide  0  [wait, 3 lines]
+   V96 gap   9.2 h  spend 80  decide  1
+   V97 gap   4.2 h  spend 130  decide  0  [wait, 4 lines]
+   V98 gap   3.1 h  spend 82  decide  0  [edge]
+  per absence  <2h: 0 returns, spend 0, decide 0; 2-8h: 5 returns, spend 503, decide 0; 8h+: 2 returns, spend 198, decide 2
+  cap loss at the end, away 8 h: charwood 100%, cleared 100%, damp_wood 1%, dry_wood 62%, roots 98%, stones 78%, windbreak 100%, wraps_sewn 100%
+  cap loss at the end, away 24 h: charwood 100%, cleared 100%, cordwood 49%, damp_wood 2%, dry_wood 64%, roots 98%, stones 79%, windbreak 100%, wraps_sewn 100%
