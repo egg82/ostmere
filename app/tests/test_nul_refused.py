@@ -6,7 +6,7 @@ import pytest
 from pydantic import ValidationError
 from sqlalchemy import text
 
-from ashfall_app.api.saves_models import AccountPresentation, DecisionRequest
+from ashfall_app.api.player.saves_models import AccountPresentation, DecisionRequest
 from ashfall_app.feedback.routes import FeedbackRequest
 from tests.game_client import GameClient
 

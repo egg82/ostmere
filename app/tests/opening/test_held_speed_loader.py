@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
-from ashfall_app.api.content_models import Content
+from ashfall_app.api.world.content_models import Content
 from ashfall_app.engine import CardId, HeldSpeed, LaneId
 from ashfall_app.main import create_app
 from ashfall_app.opening.entries import WhileRunningEntry

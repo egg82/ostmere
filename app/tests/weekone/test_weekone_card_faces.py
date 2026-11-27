@@ -5,7 +5,7 @@ step as its row, a clock with a part of the day as when it opens, and anything e
 The content-wide check is tests/opening/test_requires_shown.py; this one reads real saves."""
 import pytest
 
-from ashfall_app.api.content_models import StoreInfo
+from ashfall_app.api.world.content_models import StoreInfo
 from ashfall_app.api.service import Game
 from ashfall_app.engine import AtLeast, CardCount, Condition, SkillLevel, StoreValue, UnlockKind, view
 from ashfall_app.engine.index import index

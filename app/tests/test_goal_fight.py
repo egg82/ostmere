@@ -1,10 +1,10 @@
-"""View.goals for a story beat waiting on a card fight's lost tally (api/goals.py; contract/goals.txt, "Goals"): the goal names
+"""View.goals for a story beat waiting on a card fight's lost tally (api/goals/goals.py; contract/goals.txt, "Goals"): the goal names
 the fight's card and states the tally, in play once the card is, at the lowest target of the beats waiting on it."""
 from dataclasses import replace
 
 from ashfall_app import engine as e
-from ashfall_app.api import goal_models as g
-from ashfall_app.api.goals import goals
+from ashfall_app.api.goals import goal_models as g
+from ashfall_app.api.goals.goals import goals
 from ashfall_app.opening.goals import GoalDef
 from tests.engine.held_impl_world import HUNT, LOST, Q, world
 
