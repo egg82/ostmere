@@ -1,0 +1,98 @@
+CASTING (docs/design/week-five-plan.md, item 3; blind tests from this section alone, item 4)
+  A story moment may give a role to one person, chosen by what each did: the lane whose person did most of one kind of
+  work holds the role from then on, and a text may name them as {<role>}. A role is cast once, by an outcome, at that
+  outcome's instant, from counts the save holds then. What the cast is: one more feature unlock (the unlock set only
+  grows), so the cast lasts, replays on a rebase and is read by everything that reads a feature. No Save field, no
+  decision, no endpoint.
+
+  Content. An outcome part `casts`, in a trigger's or an answer's outcome only (as joins and leaves are): a list of
+  { role, patterns }.
+    role      a word of letters, digits and underscores that starts with a letter, authored. It is not a lane id, and not a
+              slot the page fills elsewhere ({n}, {card}, {pct} ...). One outcome casts a role: two parts naming the same
+              role, in one outcome or two, are refused.
+    patterns  one or more town-card id patterns, in priority order, each written exactly as a `[[town_cards]]` entry's
+              `id` is, with its {lane} (such as "<word>_{lane}"). Each is the id of a town-card entry the content holds;
+              none twice.
+  A role's candidates are the lanes that are a single person: ruled, with a name_key, not pooled (never a group) and not a
+  station. Their order is the order the content declares the lanes in (the order of Content.lane_infos), the only order the
+  casting calls "join order": a save keeps no join times, so "earliest join" is the earliest declared.
+  The cast unlocks the feature `<role>_<lane>`: the role's id, an underscore, the cast lane's id. The part declares those
+  features, one per candidate lane, and nothing else does: the loader accepts such an id wherever it reads a feature id (an
+  `unlocked` condition, a lane's later_labels, an aim's or an offer's gate), whether or not the lane has joined yet.
+
+  The pick. When the outcome lands, in the order of an outcome's parts: stores, unlocks, modifiers, raises, retire_orders,
+  leaves, orders, joins, marks, casts, queues, starts, then lines (a lane that joins in the same outcome is eligible, with
+  no completions). A cast of a role already cast changes nothing (so no outcome recasts, and a replayed outcome does not).
+  Casts in one outcome land in list order; a lane the first cast takes is no longer eligible for the second.
+  1. The eligible lanes are the role's candidates whose person has joined, has not left, and holds no cast feature of any
+     role (a lane holds at most one role).
+  2. None eligible: the part changes nothing and the role is never cast. (An authoring mistake the content avoids; the
+     loader cannot see who has joined on a route.)
+  3. For each pattern in order, over the lanes still in the running (at first, every eligible lane): read each lane's
+     count, the completions in the save at this instant of the card the pattern names on that lane (the pattern's {lane}
+     the lane's id; a lane the pattern's town card was never expanded on counts 0), as the card's count ("card_count") reads
+     them. The lanes with the highest count stay in the running, and the rest are out for good, whatever the next patterns
+     say. Exactly one lane in the running is the cast: stop. Several (a tie at the highest count, which is 0 when nobody
+     has any: "none") go to the next pattern with just those.
+  4. Past the last pattern, several still in the running: the earliest declared of them.
+  The count is each lane's own, read per lane. A pooled lane's cards are never counted for anyone, and a lane's count is
+  never the total over lanes, over its group, or over the role's patterns together. The count that wins gives no extra:
+  the cast reads only which lane. A card completed after the instant changes nothing, and nothing else reads the
+  counts for the role again.
+  The cast is for good. Later counts, a later lane's joining, the cast lane leaving the town: none moves it, unlocks only
+  grow. A person who left still holds the role and is still its name. A rebase of a save that holds the feature keeps it
+  exactly; a rebase that lands the outcome (a save past the moment, rules that add its trigger) casts at the rebase
+  instant from the counts the save holds then, the same pick as live play at that instant.
+  A cast changes no Card, rule or rate: a role is a fact other content reads, nothing more.
+
+  Served. Content.cast_infos: one CastInfo { role, lanes } per role cast by any outcome, in content order; lanes is the role's
+  candidates in join order, each CastLane { lane, feature }: the lane id and the feature id its cast unlocks. The cast
+  lane is the one whose `feature` view.unlocked holds (category feature), none until the cast. Nothing else is served.
+
+  Text. A slot {<role>} is the cast lane's person's name: the text of that lane's LaneInfo.name_key, lowercased in a line
+  (a key of Content.line_infos) as {<lane>} is (contract/text-and-numbers.txt, "Text and numbers"). The page resolves a slot
+  only from view.unlocked at the moment it draws the text: of the role's CastInfo.lanes, the one whose feature the view
+  holds. When none is held it leaves the slot as written: it never draws a guess (the leading lane so far, the first
+  candidate, a lane that has the most completions). The loader holds the content to that: a text that holds {<role>} must
+  be one that cannot show before the cast. A text with the slot is allowed only where it belongs to
+    (a) the outcome that casts the role: the lines of that outcome (they come after its parts);
+    (b) a label a lane's or the town's later_labels gives once a feature of that role is unlocked;
+    (c) an owner gated on a feature of that role: a card, trigger, offer (and its answers) or aim whose requires, `when`,
+        gate or `after` is an `unlocked` condition on a feature of that role (at_least, a value of 1 or more), such as
+        a town card whose requires holds {lane}: "<role>_{lane}".
+  Any other text that holds the slot fails the opening's checks, naming the key and the slot.
+  A town card's `requires` conditions may name an id that holds {lane}, replaced by each lane the card is expanded on as
+  its own id is: how a card reads the feature of its own lane.
+
+  Loader refusals (ValueError, `where` as the other refusals name it: "trigger {id}", "answer {id}"):
+    "{where}: only a trigger's or an answer's outcome casts a role"
+    "{where}: casts {role}, which names a lane or a slot the page fills elsewhere"
+    "{where}: casts {role}, which another outcome already casts"   (also for a role named twice in one outcome)
+    "{where}: casts {role} by {pattern}, which is no town card's id pattern"
+    "{where}: casts {role} by {pattern} twice"
+    "text {key}: holds the slot {{role}}, which can show before {role} is cast"
+  A cast with no patterns is refused at the entry. An unknown feature `<role>_<lane>` where the lane is no candidate (not a
+  single person) fails as an unknown feature does.
+  Engine validation (InvalidRulesError), for rules built by hand: only a trigger's or an answer's outcome casts; a role
+  is cast by one outcome across the rules; a cast has at least one lane, each a declared ruled lane that is not pooled;
+  each lane names, for every pattern, a card on that lane or none. Rules with no cast keep their digest.
+
+  THE CLIENT MAY:
+  - fill {<role>} in any text from the CastInfo whose lane's feature view.unlocked holds, at each draw.
+  THE CLIENT MAY NOT:
+  - choose or compute the cast: count a card, rank lanes, or break a tie.
+  - name a feature `<role>_<lane>` itself: it reads each CastLane.feature as served.
+  - resolve a slot with no cast feature held.
+
+  Rejected, and why (casting):
+  - A fixed person for the role: the role's words would be false on a route where that lane never did the work.
+  - A model choosing the person: behaviour is never a model's.
+  - The page choosing: the client never decides what exists.
+  - A Save field or a verb for the cast: one more feature in the unlock set carries it, replays on a rebase and is read
+    wherever a feature is.
+  - Counting a group's cards for a member, or the sum over lanes: a role is one person's.
+  - Recasting when counts move: a text that named a person would name another one.
+
+  Known gaps (casting):
+  - The earliest join is the earliest declared lane, not the earliest joined on the route.
+  - A cast where no candidate has joined casts no one, and its outcome's own lines would show the slot as written.
