@@ -1,6 +1,57 @@
 {
+ "j_drag_marks_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_leaning_wall_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_midden_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_ridge_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_show_fish_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_smoke_hole_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_snares_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_steam_hole_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_steps_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_tally_yes": {
+  "no dilemma tests the promise": 1
+ },
+ "j_wedged_yes": {
+  "no dilemma tests the promise": 1
+ },
  "o_book": {
   "answers do not differ": 1
+ },
+ "o_book_make": {
+  "no dilemma tests the promise": 1
+ },
+ "o_cart_go": {
+  "no dilemma tests the promise": 1
+ },
+ "o_guard_n2": {
+  "no dilemma tests the promise": 1
+ },
+ "o_guard_n7": {
+  "no dilemma tests the promise": 1
+ },
+ "o_pelt_give": {
+  "no dilemma tests the promise": 1
+ },
+ "o_road_you": {
+  "no dilemma tests the promise": 1
  },
  "work": {
   "role names no tally": 1

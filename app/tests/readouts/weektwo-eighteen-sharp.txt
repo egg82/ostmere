@@ -8,7 +8,7 @@ beats sharp (pace_scale 1): B16 day 17.9, target_day 19
   away V146->V147: 0 []
   away V147->V148: 1 ['trigger offer_o_cutter']
   away V148->V149: 0 []
-  away V149->V150: 0 []
+  away V149->V150: 1 ['trigger t_road_laid']
   away V150->V151: 0 []
   away V151->V152: 0 []
   away V152->V153: 0 []
@@ -20,7 +20,7 @@ days after week one's 6 with no arrival but lines: []
 day    line feature    chip   store   skill    card   level  total
   1       9       7       0       4       0      18       3     41
   2      30       5       2       2       0      12       2     53
-  3      30       4       0       0       0      72       2    108
+  3      32       4       0       0       0      72       2    110
   4      19       5       0       0       0       4       3     31
   5       0       2       0       2       0       1       1      6
   6       3       1       1       0       0      10       1     16
