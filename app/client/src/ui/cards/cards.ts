@@ -233,6 +233,7 @@ export class Cards implements Part {
     setText(row.count, retired ? catalog.text.get(UI.retired) : card.cap !== null || card.completions > 0 ? catalog.format.completions(card.completions, card.cap) : "");
     row.needs.draw(row.card, view, row.done);
     row.fight?.sync(view, row.id);
+    row.chain?.sync(view);
     const side = info?.kept.find((k) => k.side !== null)?.side;
     const words = upsideWords(catalog, card);
     if (words !== null) {

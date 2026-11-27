@@ -14,7 +14,10 @@ class SideDef:
 
 @dataclass(frozen=True)
 class ThreatDef:
-    """A Type Object for one entry of a roster: base > 0 before any entry aimed at its ThreatStrength."""
+    """A Type Object for one entry of a roster: base > 0 before any entry aimed at its ThreatStrength. members (>= 1):
+    2 or more marks a group, fought one after another, whose due members a chain resolves (design/spells.txt, "SPELLS";
+    the codec leaves it out at 1)."""
 
     id: ThreatId
     base: int
+    members: int = 1

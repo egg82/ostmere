@@ -7,13 +7,14 @@ from .cards import Amount, CardDef, Outcome
 from .errors import InvalidRulesError
 from .ids import HANDS, CardId, LaneId, TriggerId
 from .modifiers import (
-    LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef, lowers_cap,
-    lowers_threat,
+    ChainReach, LaneSpeed, Modifier, ModifierKind, RateRef, SideStrength, StoreCap, ThreatStrength, WorkRef, lowers_cap,
+    lowers_reach, lowers_threat,
 )
 from .orders import (
     AfterTime, AtLeast, CardCount, Condition, LaneRules, Running, SkillLevel, StoreValue, Subject, Unlocked, share_problem,
 )
 from .cardsides import card_costs, card_makes
+from .chaincheck import check_chains
 from .derived import derived
 from .drains import check_drains
 from .groupchecks import check_group_outcome, check_groups, join_problem
@@ -74,6 +75,7 @@ def check_parts(rules: "Rules") -> None:
             check_fight(rules, f"action {a.id}", a.fight, [f.store for f in a.makes + a.costs], None)
         check_while_running(rules, f"action {a.id}", a.while_running)
     check_tallies(rules)
+    check_chains(rules)
     for c in rules.chips:
         _require(condition_problem(rules, c.when, in_rules=True) is None, f"chip {c.id}: bad condition")
         _require(not is_lane_rules(c.when), f"chip {c.id}: a chip cannot read LaneRules")
@@ -242,6 +244,7 @@ def _check_modifiers(
     _require(not any(lowers_cap(m) for m in modifiers), f"{where}: a store cap modifier may only raise the cap")
     threat = [m for m in modifiers if isinstance(m.target, ThreatStrength)]
     _require(not any(lowers_threat(m) for m in threat), f"{where}: a threat's strength only rises")
+    _require(not any(lowers_reach(m) for m in modifiers), f"{where}: a chain's reach only rises")
     _require(all(m.source == trigger for m in threat), f"{where}: only a trigger's outcome aims at a threat, sourced by that trigger")
 
 
@@ -255,6 +258,8 @@ def _target_known(rules: "Rules", m: Modifier) -> bool:
         return t.side in {s.id for s in rules.sides}
     if isinstance(t, ThreatStrength):
         return t.threat in {s.id for s in rules.threats}
+    if isinstance(t, ChainReach):
+        return any(c.id == t.card and c.chain is not None for c in rules.cards)
     if isinstance(t, LaneSpeed):
         return t.lane == HANDS or t.lane in {d.id for d in rules.lanes}
     return _rate_known(rules, t)

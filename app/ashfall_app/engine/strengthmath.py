@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from math import prod
 
-from .modifiers import Modifier, ModifierKind, SideStrength, ThreatStrength
+from .modifiers import ChainReach, Modifier, ModifierKind, SideStrength, ThreatStrength
 from .rules import Rules
 from .units import BP
 
@@ -12,7 +12,7 @@ class StrengthExplanation:
     """Why a strength is this number: the formula's inputs, so a reader recomputes `value` exactly. adds and muls hold
     every entry aimed at `target` in stack order with its source kept (chips' effects included)."""
 
-    target: SideStrength | ThreatStrength
+    target: SideStrength | ThreatStrength | ChainReach
     base: int
     adds: tuple[Modifier, ...]
     muls: tuple[Modifier, ...]
@@ -20,8 +20,11 @@ class StrengthExplanation:
     """base * max(0, BP + sum(add_bp)) * prod(mul_bp) // BP ** (1 + len(muls)), rounded down once."""
 
 
-def explain_over(stack: tuple[Modifier, ...], rules: Rules, target: SideStrength | ThreatStrength) -> StrengthExplanation:
-    """The strength of an id the rules declare, under the entries of `stack` aimed at it."""
+def explain_over(
+    stack: tuple[Modifier, ...], rules: Rules, target: SideStrength | ThreatStrength | ChainReach,
+) -> StrengthExplanation:
+    """The strength (or a chain's reach: design/spells.txt, "SPELLS") of an id the rules declare, under the entries of
+    `stack` aimed at it."""
     base = _base(rules, target)
     aimed = [m for m in stack if m.target == target]
     adds = tuple(m for m in aimed if m.kind is ModifierKind.ADD_BP)
@@ -50,7 +53,11 @@ def values_over(stack: tuple[Modifier, ...], rules: Rules, targets: frozenset[St
     return {t: _base(rules, t) * max(0, BP + adds[t]) * muls[t] // BP ** (1 + count[t]) for t in targets}
 
 
-def _base(rules: Rules, target: Strength) -> int:
+def _base(rules: Rules, target: Strength | ChainReach) -> int:
+    if isinstance(target, ChainReach):
+        chain = next(c.chain for c in rules.cards if c.id == target.card)
+        assert chain is not None
+        return chain.reach
     if isinstance(target, SideStrength):
         return next(s.base for s in rules.sides if s.id == target.side)
     return next(t.base for t in rules.threats if t.id == target.threat)
