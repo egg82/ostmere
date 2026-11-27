@@ -35,10 +35,16 @@ export class Layer {
   }
 }
 
+/** At boot: the entries a reload's last run left, with no layer to close, are walked off, so back is the player's. */
+export function walkOffStale(): void {
+  catchUp();
+}
+
 function catchUp(): void {
   if (typeof history === "undefined" || typeof history.pushState !== "function") return;
   if (!listening) {
     listening = true;
+    depth = (history.state as State | null)?.ostmere ?? 0;   // a reload keeps the entries its last run pushed
     window.addEventListener("popstate", (e) => popped((e as PopStateEvent).state as State | null));
   }
   if (backing) return;
