@@ -33,7 +33,7 @@ function rig(lessons: string[]) {
   const screen = new Screen(catalog, () => { throw new Error("the map decided something"); }, () => Promise.resolve(null), keeps);
   document.body.replaceChildren(screen.root);
   let at = 100;
-  const show = (revealed: number): void => { at += 10; const s = fixtureStep("town", at); screen.show({ ...s, view: placesView(s.view, revealed) }); };
+  const show = (revealed: number, also: string[] = []): void => { at += 10; const s = fixtureStep("town", at); screen.show({ ...s, view: placesView(s.view, revealed, also) }); };
   const q = (sel: string): HTMLElement | null => screen.root.querySelector<HTMLElement>(sel);
   const pages = (): string[] => [...screen.root.querySelectorAll<HTMLElement>(".book-page")].filter((b) => !b.hidden).map((b) => b.dataset["page"] ?? "");
   return { screen, keeps, sent, show, q, pages };
@@ -53,7 +53,15 @@ function rig(lessons: string[]) {
   r.show(3);
   expect("a place revealed later dots the Book's tab", tabDot(), true);
   const rows = (): string[] => [...r.screen.root.querySelectorAll<HTMLElement>(".map-row")].map((n) => n.textContent ?? "");
-  expect("the named places listed, the town first", rows(), [catalog.townTitle(placesView(fixtureStep("town", 0).view, 0)), "The Old Mill", "Ford of the Long Shallows"]);
+  const town = catalog.townTitle(placesView(fixtureStep("town", 0).view, 0));
+  expect("a place named after a later unlock is not named before it; the field-less one is", rows(), [town, "The Old Mill"]);
+  r.show(3, ["pl_bridge"]);
+  expect("the place takes its name when that unlock is held", rows(), [town, "The Old Mill", "Ford of the Long Shallows"]);
+  r.show(3);
+  expect("and is unnamed again where the unlock is not held (the name follows the view)", rows(), [town, "The Old Mill"]);
+  r.show(3, ["pl_dusk"]);
+  expect("places revealed together: the named one is listed, the unnamed one over a stamp is not", rows(), [town, "The Old Mill", "The Beacon"]);
+  r.show(3, ["pl_bridge"]);
   r.q('.book [data-page="map"]')!.click();
   const before = [requests.length, r.sent.length];
   r.q('.map-row[data-place="pl_ford"]')!.click();

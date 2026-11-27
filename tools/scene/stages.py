@@ -216,6 +216,8 @@ STAGES["67_seed"] = _DAY.then(pair_3h=24)
 STAGES["67_seed_night"] = _NIGHT.then(pair_3h=24)
 STAGES["67_sacking"] = _NIGHT.then({"answer:o_pelt_keep", "feature:night_7"})
 STAGES["67_none"] = _DAY
+STAGES["70_midden"] = _DAY.then({"project:dig_midden"})
+STAGES["70_midden_night"] = _NIGHT.then({"project:dig_midden"})
 for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clock"), ("stage_7", "stage_7_clock"),
                       ("posts_cord", "posts_cord_clock"), ("n6_posts_done", "n6_posts_done_clock"), ("choir_2", "choir_2_clock"),
                       ("road_pair", "road_pair_clock"), ("fiddle_2", "fiddle_2_clock")):
@@ -235,6 +237,7 @@ STAGES["69_watch_night"] = _NIGHT.then(_AT_WATCH | {"running:n2_guard"})
 _JOINED = {"joined:" + f"n{n}" for n in (8, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22)}
 STAGES["69_reaping"] = _ALL.then(_JOINED | {"running:g_field_reap", "running:g_hearth_reap"})
 STAGES["69_cooking"] = _ALL.then(_JOINED | {"running:g_road_fungus_stew", "running:g_road_fog_fish"})
+STAGES["69_crews_idle"] = _DAY.then(_JOINED | {"feature:bedesman_home"})
 STAGES["69_before_the_join"] = _ALL.then({"running:g_field_reap", "running:g_hearth_reap", "running:g_road_fungus_stew"})
 
 

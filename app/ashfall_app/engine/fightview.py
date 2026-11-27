@@ -1,5 +1,5 @@
 """The read model's fights: one FightView per unlocked fight runner (design/fights.txt, "FIGHTS", "View")."""
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .counts import completions
 from .gates import base_stack, is_unlocked
@@ -30,6 +30,9 @@ class FightView:
     loss_bp: int
     fought: int
     lost: int
+    chained: int = field(default=0, repr=False)
+    """Whole links chains resolved for this runner (design/spells.txt, "SPELLS"); out of the repr, so the recorded
+    fingerprints stay those of a game with none."""
 
 
 def fight_views(save: Save, rules: Rules) -> tuple[FightView, ...]:
@@ -56,4 +59,5 @@ def _fight_view(save: Save, rules: Rules, runner: Runner, f: FightDef, fought: i
     kept = kept_loss_bp(save, runner, f)
     return FightView(runner, f.side, f.threat, explain_over(stack, rules, SideStrength(f.side)),
                      explain_over(stack, rules, ThreatStrength(f.threat)),
-                     kept if kept is not None else loss_bp(f, stack, rules), fought, _count(save, rules, f.lost))
+                     kept if kept is not None else loss_bp(f, stack, rules), fought, _count(save, rules, f.lost),
+                     0 if f.chained is None else _count(save, rules, f.chained))

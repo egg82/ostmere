@@ -14,6 +14,9 @@ class OrderCardEntry(Entry):
     offered_after: UnlockEntry | None = None
     """Offered only once this is unlocked: the drain the order answers has begun (a line falling for a moment before
     then, a roast drawing roots, gets no order card)."""
+    offered_until: UnlockEntry | None = None
+    """Not offered once this is unlocked: the card is offered once, and the season's turn that retires its rule unlocks
+    this, so the chore comes back with its hint dot alone (docs/decisions/clock.md, "Each season brings its own chores")."""
     chip: str | None = None
     """The chip this card answers: offered in the hands strip while that chip shows, not under a ledger line, and
     `when` is that chip's own (the rule reads as the chip)."""

@@ -24,9 +24,17 @@ from ashfall_app.engine import (
 )
 from ashfall_app.opening.camp_convert import camp_lands
 from ashfall_app.opening.convert import camp_trigger_id, condition
+from ashfall_app.opening.order_entries import OrderCardEntry
 from ashfall_app.opening.schema import DAY_ONE, Opening, load_opening, to_rules
 
 QUANTITY = units(1)
+
+
+def offering(card: OrderCardEntry, held: Callable[[str, str], bool]) -> bool:
+    """The page offers this order card: its offered_after, if any, is held and its offered_until, if any, is not
+    (game/ledger/cues.ts offeredCard, chipCards). `held(kind, id)` reads the unlocks of whoever is asking."""
+    after, until = card.offered_after, card.offered_until
+    return (after is None or held(after.unlock_kind, after.id)) and not (until is not None and held(until.unlock_kind, until.id))
 STUCK = "the player has nothing to do and nothing is coming"
 STORY = ("stand_up", "look_around", "search_coat")
 TOO_EARLY = ("ring_it", "strike_fire")

@@ -99,6 +99,7 @@ base = 5
 # death and costs only the smoked carried out (no loses, no wounds).
 [[cards]]
 id = "hunt_boar"
+site = { no_site = "the hunt goes out past the wall and the meat is carried in; the hunt is not in the camp" }
 only_player = "self"
 presentation = "action"
 label_key = "c_hunt_boar"
@@ -212,6 +213,7 @@ modifiers = [
 [[lanes]]
 id = "n16"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n16"
 ruled = true
 told = "line"
@@ -220,6 +222,7 @@ group = "g_road"
 [[lanes]]
 id = "n17"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n17"
 ruled = true
 told = "line"
@@ -228,6 +231,7 @@ group = "g_road"
 [[lanes]]
 id = "n18"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n18"
 ruled = true
 told = "line"
@@ -236,6 +240,7 @@ group = "g_road"
 [[lanes]]
 id = "n19"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n19"
 ruled = true
 told = "line"
@@ -299,6 +304,7 @@ outcome = { line_keys = ["l_post_door"], unlocks = [{ unlock_kind = "card", id =
 
 [[cards]]
 id = "post_door"
+site = { no_site = "the post stands at the warm patch, out past the wall, which the scene does not draw" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_post_door"
@@ -407,6 +413,7 @@ modifiers = [
 [[lanes]]
 id = "n20"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n20"
 ruled = true
 told = "mention"
@@ -415,6 +422,7 @@ group = "g_road"
 [[lanes]]
 id = "n21"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n21"
 ruled = true
 told = "mention"
@@ -423,6 +431,7 @@ group = "g_road"
 [[lanes]]
 id = "n22"
 lodging = { build = "hall" }
+by_day = { card = "g_road_fungus_stew" }
 label_key = "lane_n22"
 ruled = true
 told = "mention"
@@ -469,6 +478,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "dig_midden"
+site = { layer = "midden_pit" }
 only_player = "story"
 presentation = "action"
 label_key = "c_dig_midden"
@@ -511,6 +521,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "pull_wall"
+site = { no_site = "the ruin's leaning wall is backdrop and not a layer of its own" }
 only_player = "story"
 presentation = "action"
 label_key = "c_pull_wall"
@@ -553,6 +564,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "steam_hole"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 only_player = "story"
 presentation = "action"
 label_key = "c_steam_hole"
@@ -615,6 +627,7 @@ joins = [{ lane = "n23", mix = "town:camp", card = "n23_stakes", own_split = tru
 [[lanes]]
 id = "n23"
 lodging = { elsewhere = "no bed is named for the bedesman, who goes from door to door; stands at the hall door" }
+by_day = { off_scene = "goes from door to door, which no card's site shows; the scene draws one fixed place for them already" }
 label_key = "lane_n23"
 ruled = true
 told = "line"

@@ -19,6 +19,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "hand_on_stone" }, { unlock_
 # sized for its small share (Arcana 4 about M1).
 [[cards]]
 id = "hand_on_stone"
+site = { layer = "rack" }
 only_player = "magic"
 presentation = "action"
 label_key = "c_hand_on_stone"
@@ -80,6 +81,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "build_windbreak" }, { unloc
 
 [[cards]]
 id = "build_windbreak"
+site = { no_site = "the stones are stacked into a windbreak that no layer shows: the scene draws nothing for what they make" }
 lane = "hearth"
 presentation = "action"
 label_key = "c_build_windbreak"
@@ -94,6 +96,7 @@ outcome = { stores = [{ store = "windbreak", items = 6 }] }
 # unlock in day eleven.
 [[town_cards]]
 id = "{lane}_build_windbreak"
+site = { no_site = "the stones are stacked into a windbreak that no layer shows: the scene draws nothing for what they make" }
 twin_of = "build_windbreak"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
@@ -160,6 +163,7 @@ outcome = { modifiers = [{ target = "rate", id = "chill", flow = "cost", store =
 # level's marker says so). The last stage makes a pot four stew, after the clay hearth's three.
 [[cards]]
 id = "hearth_stones"
+site = { layer = "hearth_stones_3" }
 only_player = "magic"
 presentation = "craft"
 label_key = "c_hearth_stones"
@@ -501,6 +505,7 @@ inputs = [{ store = "dry_wood", items = 1 }]
 
 [[cards]]
 id = "n4_mend"
+site = { no_site = "no place is named for the mending and the scene draws no pose for it" }
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_mend"
@@ -582,6 +587,7 @@ outcome = { doings = ["n3"], line_keys = ["l_seed"], unlocks = [{ unlock_kind = 
 
 [[cards]]
 id = "n3_dig_bed"
+site = { layer = "turned_3" }
 lane = "n3"
 presentation = "craft"
 label_key = "c_n3_dig_bed"

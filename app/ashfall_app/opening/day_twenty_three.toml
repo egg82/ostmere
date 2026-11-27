@@ -175,6 +175,7 @@ modifiers = [
 [[lanes]]
 id = "n14"
 lodging = { build = "hall" }
+by_day = { card = "n14_fungus_stew" }
 label_key = "lane_n14"
 ruled = true
 told = "line"
@@ -185,6 +186,7 @@ group = "g_road"
 [[lanes]]
 id = "n15"
 lodging = { build = "hall" }
+by_day = { card = "n15_wash_meat" }
 label_key = "lane_n15"
 ruled = true
 told = "line"
@@ -244,6 +246,7 @@ costs = [{ store = "cache_torn", items_per_hour = 3 }, { store = "smoked", items
 # stage 1 is I7. Run by its order card, so no stage is queued (D-119).
 [[cards]]
 id = "post"
+site = { no_site = "the post stands at the warm patch, out past the wall, which the scene does not draw" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_post"
@@ -305,6 +308,7 @@ unlocks = [{ unlock_kind = "card", id = "bind_book" }]
 
 [[cards]]
 id = "bind_book"
+site = { no_site = "a book is bound seated from pelts and cord; the scene draws none for the work" }
 only_player = "story"
 presentation = "craft"
 label_key = "c_bind_book"
@@ -328,6 +332,7 @@ outcome = { line_keys = ["l_stir_air"], unlocks = [{ unlock_kind = "card", id = 
 
 [[cards]]
 id = "stir_air"
+site = { layer = "smoke_rack" }
 only_player = "magic"
 presentation = "action"
 label_key = "c_stir_air"
@@ -375,6 +380,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "follow_marks"
+site = { no_site = "followed out past the wall across the ruin, no one place in the scene" }
 only_player = "story"
 presentation = "action"
 label_key = "c_follow_marks"
@@ -417,6 +423,7 @@ whereabouts = [{ person = "n1", no_scene = "goes off to ask someone else, for no
 
 [[cards]]
 id = "show_fish"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 only_player = "story"
 presentation = "action"
 label_key = "c_show_fish"
@@ -478,6 +485,7 @@ outcome = { line_keys = ["l_go_ask"], unlocks = [{ unlock_kind = "card", id = "g
 # A story step, no FightDef and no roll (design/fights.txt "FIGHTS": a beat's outcome never carries odds); its supplies are spent.
 [[cards]]
 id = "go_wallow"
+site = { no_site = "the wallow lies out past the wall, off the scene" }
 only_player = "story"
 presentation = "action"
 label_key = "c_go_wallow"

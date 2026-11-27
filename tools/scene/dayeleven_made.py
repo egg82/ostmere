@@ -1,7 +1,7 @@
-"""Day eleven's built things, warm because the camp made them: the family's hut and the board by the fire with its one
+"""Day eleven's built things, warm because the camp made them: the family's hut and the stump by the fire with its one
 mark. The hut's walls are Farm and Fort's low pointed logs on a course of the Ashlands' stones, its roof brush drawn
-as the woodshed's is (the kit's huts are four and five tiles wide, three times the camp's builds); the board is Time
-Fantasy's wooden signboard, its carving planed off. What is drawn is the roof, the doorway's dark and the one mark.
+as the woodshed's is (the kit's huts are four and five tiles wide, three times the camp's builds); the tally stump is Time
+Fantasy's cut tree stump. What is drawn is the roof, the doorway's dark and the one mark.
 Story spoilers (content/team/week-two.md, Art): never shown to the owner."""
 from __future__ import annotations
 
@@ -27,12 +27,12 @@ STONES_H = 16
 """The stone course's height (the footing's), which the walls sit half into."""
 DOOR = (18, 18)
 """The doorway in the wall: its left x from the wall's left, and its height."""
-BOARD = "TimeFantasy_TILES_6.24.17/TILESETS/desert.png"
-SIGN = (16, 16, 32, 32)
-"""The desert sheet's wooden signboard on its post (1x): a face of three planks, the middle one carved."""
-CARVED, PLAIN = (4, 5, 6), 3
-"""The face's grained and carved middle rows, and the plain row each is planed to."""
-CUT = (108, 60, 74, 255)
+STUMP = "TimeFantasy_TILES_6.24.17/RPGMAKER/RMVX/tileB_outside.png"
+STUMP_BOX = (450, 150, 506, 190)
+"""The outside sheet's first cut tree stump, at the scene's grain."""
+MARK = (7, 14)
+"""The rows of the stump's top face the mark is cut across, two pixels wide."""
+CUT = (44, 26, 28, 255)
 """The carving's own dark, for the mark."""
 BOARD_AT = (352, 292)
 """The board's post foot: by the fire, on the open ground between the stool and the people at the fire (week-two.md: "the board by the fire")."""
@@ -88,15 +88,14 @@ def hut(building: bool = False) -> Image.Image:
 
 
 def tally_board() -> Image.Image:
-    """The signboard with its face planed smooth, and one mark cut in it."""
-    sign = cut(BOARD, SIGN)
-    for row in CARVED:
-        sign.paste(sign.crop((0, PLAIN, sign.width, PLAIN + 1)), (0, row))
-    px = sign.load()
+    """The tally stump: a cut tree stump with one mark cut across its top face."""
+    stump = cut(STUMP, STUMP_BOX)
+    px = stump.load()
     assert px is not None
-    for y in range(3, 8):
-        px[sign.width // 2, y] = CUT
-    board = outlined(kit.up(sign))
+    for y in range(MARK[0], MARK[1]):
+        for x in (stump.width // 2 - 1, stump.width // 2):
+            px[x, y] = CUT
+    board = outlined(stump)
     out = canvas()
     put(out, board, BOARD_AT[0] - board.width / 2, BOARD_AT[1] - board.height)
     return out

@@ -122,13 +122,14 @@ def _fights(fights: Iterable[e.FightView], held: Iterable[e.HeldView]) -> list[w
     shares = {str(h.card): h.share_bp for h in held}
     return [w.Fight(runner=f.runner, side=f.side, threat=f.threat, power=_strength(f.power, shares),
                     threat_strength=_strength(f.threat_strength, shares), loss_bp=f.loss_bp, fought=f.fought,
-                    lost=f.lost)
+                    lost=f.lost, chained=f.chained)
             for f in fights]
 
 
 def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | None = None,
          goals: Sequence[w.Goal] = (), goal_rows: Sequence[w.GoalRow] = (),
-         order_dry: Sequence[w.RuleDry | None] = (), store_rows: Sequence[w.StoreRow] = (), levels: Sequence[w.StoreLevel] = ()) -> w.View:
+         order_dry: Sequence[w.RuleDry | None] = (), store_rows: Sequence[w.StoreRow] = (), levels: Sequence[w.StoreLevel] = (),
+         chains: Iterable[e.ChainView] = ()) -> w.View:
     """The wire View of an engine View; the player's plan (mixes, orders, queue) is read off the save, where each
     card's needs come from (api/goals/sources.py), the goals (api/goals/goals.py) and their rows (api/goals/goalrows.py) passed in."""
     return w.View(
@@ -157,7 +158,8 @@ def view(save: e.Save, v: e.View, sources: Mapping[tuple[str, str], Source] | No
                                  for a in o.answers])
                 for o in v.offers],
         fights=_fights(v.fights, v.held), goals=list(goals), goal_rows=list(goal_rows),
-        store_rows=list(store_rows), levels=list(levels))
+        store_rows=list(store_rows), levels=list(levels),
+        chains=[w.Chain(card=c.card, runner=c.runner, up_to=_strength(c.reach, {})) for c in chains])
 
 
 def _prestige(p: e.SkillPhase) -> w.SkillPrestige:

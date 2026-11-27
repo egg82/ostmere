@@ -168,6 +168,7 @@ label_key = "lane_smoke"
 # A11: on offer through the night, retired at morning if untapped.
 [[cards]]
 id = "sit_up"
+site = { layer = "fire_lit" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_sit_up"
@@ -178,6 +179,7 @@ line_keys = ["l_sit_up"]
 # A12: H3.
 [[cards]]
 id = "look_out"
+site = { no_site = "looked out through the gap in the ruin's wall, which is backdrop at this point and not a layer of its own" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_look_out"
@@ -190,6 +192,7 @@ finished = { line_keys = ["l_look_out_2"], unlocks = [{ unlock_kind = "card", id
 # A13 and the two later snares: a wire each (Scavenging 4, 5, 6). The first is H4.
 [[cards]]
 id = "set_snare"
+site = { layer = "snare_3" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_set_snare"
@@ -201,6 +204,7 @@ line_keys = ["l_snare_1", "l_snare_2", "l_snare_3"]
 # A14, H5: the camp by daylight, after the first snare; it brings the two builds and the rack into view.
 [[cards]]
 id = "look_over_camp"
+site = { no_site = "a walk round the whole camp, no one place" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_look_over_camp"
@@ -232,6 +236,7 @@ modifiers = [
 
 [[cards]]
 id = "build_larder"
+site = { layer = "larder" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_build_larder"
@@ -256,6 +261,7 @@ modifiers = [
 # rule's card.
 [[cards]]
 id = "build_smoke_rack"
+site = { layer = "smoke_rack" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_build_smoke_rack"
@@ -276,6 +282,7 @@ unlocks = [
 
 [[cards]]
 id = "smoke_catch"
+site = { layer = "smoke_rack" }
 only_player = "station"
 lane = "smoke"
 presentation = "action"
@@ -292,6 +299,7 @@ outcome = { stores = [{ store = "smoked", items = 2 }] }
 # roots can always smoke some.
 [[cards]]
 id = "smoke_roots"
+site = { layer = "smoke_rack" }
 only_player = "station"
 lane = "smoke"
 presentation = "action"
@@ -307,6 +315,7 @@ outcome = { stores = [{ store = "smoked", items = 2 }] }
 # step the player took once is the one they take again. Opened by t_cook.
 [[cards]]
 id = "cook_roots"
+site = { layer = "fire_lit" }
 only_player = "self"
 presentation = "action"
 label_key = "c_roast_roots"
@@ -321,6 +330,7 @@ outcome = { stores = [{ store = "fullness", items = 7 }] }
 # is its blocker) and When ready has a time to wait for.
 [[cards]]
 id = "take_stock"
+site = { no_site = "the camp's stores are counted where they lie, no one place in the scene" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_take_stock"
@@ -872,6 +882,7 @@ cap_items = 24
 
 [[cards]]
 id = "weave_wattle"
+site = { no_site = "wattle is woven seated, from damp wood anywhere in the camp; no layer shows it" }
 presentation = "action"
 label_key = "c_weave_wattle"
 upside_key = "up_weave_wattle"
@@ -882,6 +893,7 @@ outcome = { stores = [{ store = "wattle", items = 1 }] }
 # One stage a completion, each a full store of wattle, so its countdown is the wattle line's fill; the last pays. Tapped by its order card, so no stage is queued.
 [[cards]]
 id = "screen_fire"
+site = { no_site = "the screen is built beside the fire, and the scene draws none for it" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_screen_fire"

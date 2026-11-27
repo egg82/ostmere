@@ -22,7 +22,7 @@ function campView(running: string | null, done: [string, number][], stores: [str
       fills_at: null, falling: false, covered: true, starved: false, cap: 12 * quantityPerItem,
     })),
     unlocked: done.length > 0 ? [{ category: "feature", id: "stool" }] : [], all_covered: true, ended_at: null, mixes: [], active_mix_id: null, runs_out_at: null,
-    running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], store_rows: [], levels: [], forecast: { horizon_at: 0, level_ups: [], tops_out: [], fills: [], empties: [] },
+    running_mix_id: null, mix_order: null, running_town_mix_id: null, town_mix_order: null, orders_on: [], order_states: [], order_guards: [], order_doing: [], order_dry: [], orders: [], queue: [], offers: [], fights: [], goals: [], goal_rows: [], store_rows: [], levels: [], chains: [], forecast: { horizon_at: 0, level_ups: [], tops_out: [], fills: [], empties: [] },
   };
 }
 

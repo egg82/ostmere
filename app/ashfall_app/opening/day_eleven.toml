@@ -545,6 +545,7 @@ queues = ["arm_n7"]
 
 [[cards]]
 id = "arm_n2"
+site = { no_site = "a spear is made seated from scrap and a stake; the scene draws none for the work" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_arm_n2"
@@ -554,6 +555,7 @@ inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
 
 [[cards]]
 id = "arm_n7"
+site = { no_site = "a spear is made seated from scrap and a stake; the scene draws none for the work" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_arm_n7"
@@ -564,6 +566,7 @@ inputs = [{ store = "scrap", items = 6 }, { store = "stakes", items = 1 }]
 # The guard at the gap: makes nothing, and holds the gap's entry while it runs, at its share of the lane's time.
 [[cards]]
 id = "n2_guard"
+site = { layer = "watch_lit" }
 lane = "n2"
 presentation = "action"
 label_key = "c_n2_guard"
@@ -573,6 +576,7 @@ while_running = [{ side = "gap", amount_bp = 15000 }]
 
 [[cards]]
 id = "n7_guard"
+site = { layer = "watch_lit" }
 lane = "n7"
 presentation = "action"
 label_key = "c_n7_guard"
@@ -612,6 +616,7 @@ outcome = { doings = ["n6"], line_keys = ["l_leaning_posts"], unlocks = [{ unloc
 
 [[cards]]
 id = "n6_posts"
+site = { layer = "n6_posts" }
 lane = "n6"
 presentation = "craft"
 label_key = "c_n6_posts"
@@ -656,6 +661,7 @@ outcome = { line_keys = ["l_night_12"], unlocks = [{ unlock_kind = "action", id 
 # B10's floor (210 h) keeps it past B11's sharp floor.
 [[cards]]
 id = "keep_vigil"
+site = { layer = "vigil_body" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_keep_vigil"

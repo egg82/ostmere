@@ -65,6 +65,7 @@ unlocks = [
 # Staged on the hands, queued When ready, a pelt a stage; its last stage (SL14) makes rest a fifth faster.
 [[cards]]
 id = "pelt_bedding"
+site = { layer = "pelt_in_bay_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_pelt_bedding"
@@ -133,6 +134,7 @@ line_keys = ["l_pelt_kept"]
 
 [[cards]]
 id = "give_pelt"
+site = { layer = "turned_pelt" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_give_pelt"
@@ -155,6 +157,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "sew_wraps" }, { unlock_kind
 
 [[cards]]
 id = "sew_wraps"
+site = { no_site = "wraps are sewn seated, by the fire in the scene, from pelts anywhere in the camp; no layer of its own" }
 presentation = "action"
 label_key = "c_sew_wraps"
 upside_key = "up_sew_wraps"
@@ -167,6 +170,7 @@ outcome = { stores = [{ store = "wraps_sewn", items = 1 }] }
 # copies unlock in day eleven.
 [[town_cards]]
 id = "{lane}_sew_wraps"
+site = { no_site = "wraps are sewn seated, by the fire in the scene, from pelts anywhere in the camp; no layer of its own" }
 twin_of = "sew_wraps"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
@@ -317,6 +321,7 @@ outcome = { line_keys = ["l_night_7"], unlocks = [{ unlock_kind = "feature", id 
 # with B6; its first hunt keeps G2 after G1. Its finish lifts Camp 12 and lands the chapter's end feature.
 [[cards]]
 id = "sit_fire_7"
+site = { layer = "fire_lit" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_fire_7"

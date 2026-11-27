@@ -42,3 +42,4 @@ casting.txt                          CASTING
 spent.txt                            SPENT
 full-output.txt                      FULL OUTPUT
 mix-rows.txt                         MIX ROWS
+spells.txt                           SPELLS

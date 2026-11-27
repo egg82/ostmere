@@ -6,7 +6,7 @@ stand and what they hold.
 Story spoilers (content/team/days-four-to-seven.md, Art): never shown to the owner."""
 from __future__ import annotations
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageEnhance, ImageOps
 
 import kit
 from daythree_poses import N2, away_on_the_track, laying, shovel, staff
@@ -33,6 +33,7 @@ PAIR_SITS = (9.35 * T, 9.5 * T)
 N3_BY_FIRE = (7.1 * T, 9.65 * T)
 N4_BY_FIRE = (10.0 * T, 9.65 * T)
 """Where each of them keeps once joined, below the hearth's two ends: her standing, him seated."""
+FOG_DARKEN = 0.45
 N1_FAR = (7.8 * T, 5.4 * T)
 """Lucy's far mark: seated behind the hearth's far wall and the fireback, above their tops, looking at the fire."""
 N2_WATCH = (WATCH[0] - 0.65 * T, WATCH[1] + 0.65 * T)
@@ -67,9 +68,14 @@ def hunting() -> Image.Image:
     return away_on_the_track(spear())
 
 
+def _against_fog(img: Image.Image) -> Image.Image:
+    """Darker, so the fog laid over the back of the camp does not wash her to a pale shape against the wall."""
+    return kit.keep_alpha(img, ImageEnhance.Brightness(img.convert("RGB")).enhance(FOG_DARKEN))
+
+
 def n1_far_side() -> Image.Image:
     """Lucy seated behind the hearth, as day two's rocking pose is seated, looking down at the fire."""
-    return person(N1, "down", N1_FAR, drop=7)
+    return person(N1, "down", N1_FAR, drop=7, tweak=_against_fog)
 
 
 def n2_watching() -> Image.Image:

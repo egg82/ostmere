@@ -31,8 +31,8 @@ const raiders: Strength = { value: 40, sources: [{ source: null, form: "base", a
 function fights(extra: number, lostExtra: number, only?: number): Fight[] {
   if (only !== undefined) return fights(0, 0).map((f) => ({ ...f, fought: only, lost: 0 }));
   return [
-    { runner: "hunt", side: "hands", threat: "wolves", power, threat_strength: wolves, loss_bp: 4000, fought: 4 + extra, lost: 1 + lostExtra },
-    { runner: "raiders", side: "hands", threat: "raiders", power, threat_strength: raiders, loss_bp: 750, fought: 31 + extra, lost: 2 + lostExtra },
+    { runner: "hunt", side: "hands", threat: "wolves", power, threat_strength: wolves, loss_bp: 4000, fought: 4 + extra, lost: 1 + lostExtra, chained: 0 },
+    { runner: "raiders", side: "hands", threat: "raiders", power, threat_strength: raiders, loss_bp: 750, fought: 31 + extra, lost: 2 + lostExtra, chained: 0 },
   ];
 }
 

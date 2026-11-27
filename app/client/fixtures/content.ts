@@ -402,7 +402,7 @@ const MAKES: Record<string, string[]> = { gather: ["wood"], tend: ["stone"], woo
 const card = (id: string, lane: string, presentation: "narrative" | "action" | "craft", inputs: Content["card_infos"][number]["inputs"] = []) => ({
   card: id, lane, presentation, label_key: `card.${id}`, upside_key: presentation === "craft" ? `card.${id}.up` : null, variant_of: null, change_bp: [], kept: [], work_s: 5, inputs,
   makes: MAKES[id] ?? [], takes: inputs.map((i) => i.store), reach: null, skill_needs: [],
-  step_needs: [], glows: id === "stand", fight: null, replaced_by: id === "tend" ? "look" : null,
+  step_needs: [], glows: id === "stand", fight: null, chain: null, replaced_by: id === "tend" ? "look" : null,
 });
 
 export const fixtureContent: Content = {
@@ -425,7 +425,7 @@ export const fixtureContent: Content = {
   ],
   side_infos: [{ side: "hands", label_key: "side.hands" }],
   find_infos: [{ line_key: "line.find", store: "wood", quantity: 12 * Q }],
-  threat_infos: [{ threat: "wolves", label_key: "threat.wolves" }, { threat: "raiders", label_key: "threat.raiders" }],
+  threat_infos: [{ threat: "wolves", label_key: "threat.wolves", members: 1 }, { threat: "raiders", label_key: "threat.raiders", members: 1 }],
   standing_infos: [{ action: "raiders", label_key: "standing.raiders", skill: null, fight: { side: "hands", threat: "raiders", loses: [{ store: "stone", quantity: 2 * Q }], wounds: [], won_line_keys: [], lost_line_keys: [], loss_pool: null, loss_notes: null, on_loss_key: null } }],
   card_infos: [
     card("stand", "hands", "narrative"),
@@ -460,19 +460,19 @@ export const fixtureContent: Content = {
   order_cards: [{
     store: "wood",
     when: { kind: "at_most", watched: { kind: "store_value", store: "wood" }, value: 10 * Q, release: 20 * Q, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card", card: "gather" }, offered_after: null, chip: null, after_end: false,
+    then: { kind: "tap_card", card: "gather" }, offered_after: null, offered_until: null, chip: null, after_end: false,
   }, {
     store: "stone",
     when: { kind: "at_most", watched: { kind: "store_value", store: "stone" }, value: 2 * Q, release: 6 * Q, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card", card: "shelter" }, offered_after: null, chip: null, after_end: false,
+    then: { kind: "tap_card", card: "shelter" }, offered_after: null, offered_until: null, chip: null, after_end: false,
   }, {
-    store: "energy", when: TIRED, then: { kind: "tap_card", card: "rest" }, offered_after: null, chip: "tired", after_end: true,
+    store: "energy", when: TIRED, then: { kind: "tap_card", card: "rest" }, offered_after: null, offered_until: null, chip: "tired", after_end: true,
   }, {   // a rising line's card: four or more catch, smoke it
     store: "catch", when: { kind: "at_least", watched: { kind: "store_value", store: "catch" }, value: 4 * Q, release: 4 * Q, value_of_cap: false, release_of_cap: false },
-    then: { kind: "tap_card", card: "smoke_catch" }, offered_after: { category: "card", id: "smoke_catch" }, chip: null, after_end: false,
+    then: { kind: "tap_card", card: "smoke_catch" }, offered_after: { category: "card", id: "smoke_catch" }, offered_until: null, chip: null, after_end: false,
   }, {   // the wood rule re-tuned for a later need, once that need is shown
     store: "wood", when: low("wood", 15, 30), then: { kind: "tap_card", card: "gather" },
-    offered_after: { category: "feature", id: "stock" }, chip: null, after_end: false,
+    offered_after: { category: "feature", id: "stock" }, offered_until: null, chip: null, after_end: false,
   }],
   skill_infos: [
     { skill: "foraging", label_key: "skill.foraging", levels: [{ level: 3, pays_key: "pays.more", change_bp: [1000], speeds: ["gather"] }, { level: 4, pays_key: "pays.unknown", change_bp: [], speeds: [] }] },

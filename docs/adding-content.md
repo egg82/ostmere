@@ -14,11 +14,10 @@ check them.
    - An outcome that joins, leaves or sets a person doing something carries `whereabouts` (gated:
      `app/tests/test_scene_people.py`).
    - A finishable build has a scene state or a `NO_SCENE` entry (gated: `app/tests/test_scene_shown.py`).
-   - A card carries `site`: the scene layer its work is done at, or `no_site` and why (gated, new cards cannot be held:
+   - A card carries `site`: the scene layer its work is done at, or `no_site` and why (gated, none held, so a card without one fails at once:
      `app/tests/test_scene_sites.py`). A card and its `twin_of` name the same one.
-   - A person's lane carries `by_day`: the card of theirs whose site they stand at while idle by day, or `at_fire` and
-     why (gated: `app/tests/test_scene_day.py`; lanes with none are held in `people_day.HELD_UNDECIDED`, which only
-     shrinks). A card named there needs a layer `site`, and the scene's table (`tools/scene/people_day.py`) names the same
+   - A person's lane carries `by_day`: the card of theirs or their crew's whose site they stand at while idle by day,
+     or `at_fire` or `off_scene` and why (gated: `app/tests/test_scene_day.py`; a lane with none fails). A card named there needs a layer `site`, and the scene's table (`tools/scene/people_day.py`) names the same
      layer.
    - **Not gated:** when you remove or rename a card, store or group id, grep `tools/scene/` (poses, layers,
      conditions), lessons, journal subjects and aims for it. A folded crew's card stayed in a pose condition once.

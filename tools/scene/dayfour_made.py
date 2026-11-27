@@ -29,7 +29,7 @@ TURNED = (628, 348)
 """The turned ground's top-left: open ground below the camp."""
 POT_STONES = (312, 229)
 """Where the hearth stones ring the pot: its base on the hearth's rim."""
-PEGGED = [(440, 378), (472, 379)]
+PEGGED = [(140, 276), (172, 277)]
 """Where pelts are pegged out flat on the ground: the open ground below the camp."""
 BAY_FLOORS = [(22, 266), (BAY2[0] + 9, BAY2[1] + 19), (24, 228)]
 """A pelt's place on each floor, in the order pelts are laid: the first bay, the second, the lean-to."""
@@ -106,7 +106,7 @@ def turned_sacking() -> Image.Image:
 
 
 def pegged(n: int) -> Image.Image:
-    """The first pelt pegged out under the rack; the second beside it."""
+    """The first pelt pegged out on the ground below the smoke rack; the second beside it."""
     out = canvas()
     put(out, _flat(hide()), *PEGGED[n - 1])
     return out

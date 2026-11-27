@@ -7,6 +7,7 @@
 .map-stamps, .map-labels { position: absolute; inset: 0; }
 .map-stamp { position: absolute; background: var(--map-found);
   -webkit-mask: var(--art) center / 100% 100% no-repeat; mask: var(--art) center / 100% 100% no-repeat; }
+.map-knock { position: absolute; border-radius: 50%; background: var(--map-ground); }
 .map-stamp.home { background: var(--map-home); }
 .map-ring { position: absolute; box-sizing: border-box; border: 1px dashed var(--ink-hi); border-radius: 50%; pointer-events: none; }
 .map-label { position: absolute; white-space: nowrap; font-size: var(--t-body); line-height: 1.25; color: var(--ink-hi);

@@ -217,6 +217,7 @@ label_key = "lane_rack"
 # The story steps by hand: stand (three pushes, each moving the figure), look, the coat.
 [[cards]]
 id = "stand_up"
+site = { no_site = "the player stands up, looks round and searches a coat where they lay in the ruin, before any camp is built; no layer marks the spot" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_stand_up"
@@ -228,6 +229,7 @@ finished = { unlocks = [{ unlock_kind = "card", id = "look_around" }] }
 
 [[cards]]
 id = "look_around"
+site = { no_site = "the player stands up, looks round and searches a coat where they lay in the ruin, before any camp is built; no layer marks the spot" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_look_around"
@@ -239,6 +241,7 @@ finished = { unlocks = [{ unlock_kind = "card", id = "search_coat" }] }
 # Coat before wood: the book is always found, so later lines can rely on it.
 [[cards]]
 id = "search_coat"
+site = { no_site = "the player stands up, looks round and searches a coat where they lay in the ruin, before any camp is built; no layer marks the spot" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_search_coat"
@@ -294,6 +297,7 @@ outcome = { stores = [{ store = "roots", items = 1 }] }
 
 [[cards]]
 id = "rest"
+site = { no_site = "rested against the wall of the ruin, which is backdrop and not a layer of its own" }
 only_player = "self"
 presentation = "action"
 label_key = "c_rest"
@@ -303,6 +307,7 @@ makes = [{ store = "energy", items_per_hour = 2400 }]
 
 [[cards]]
 id = "lay_to_dry"
+site = { layer = "rack" }
 lane = "rack"
 only_player = "station"
 presentation = "action"
@@ -315,6 +320,7 @@ outcome = { stores = [{ store = "dry_wood", items = 3 }] }
 # The fire plan, shown at the wall's first batch: clear, ring, strike. Ring and strike can be tried too early.
 [[cards]]
 id = "clear_spot"
+site = { layer = "cleared" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_clear_spot"
@@ -325,6 +331,7 @@ finished = { unlocks = [{ unlock_kind = "feature", id = "mix" }] }
 
 [[cards]]
 id = "ring_it"
+site = { layer = "ring" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_ring_it"
@@ -337,6 +344,7 @@ finished = { unlocks = [{ unlock_kind = "feature", id = "ring" }] }
 
 [[cards]]
 id = "strike_fire"
+site = { layer = "fire_lit" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_strike_fire"
@@ -363,6 +371,7 @@ unlocks = [
 # The edge retires gathering by hand and brings woodcutting and the choice of two crafts, both in view at once.
 [[cards]]
 id = "knap_edge"
+site = { layer = "fire_lit" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_knap_edge"
@@ -383,6 +392,7 @@ unlocks = [
 
 [[cards]]
 id = "roast_roots"
+site = { layer = "fire_lit" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_roast_roots"
@@ -400,6 +410,7 @@ modifiers = [{ target = "rate", id = "hunger", flow = "cost", store = "fullness"
 # end; the order is the choice. The first built opens reading by the fire.
 [[cards]]
 id = "make_stool"
+site = { layer = "stool" }
 only_player = "alone"
 presentation = "craft"
 label_key = "c_make_stool"
@@ -418,6 +429,7 @@ modifiers = [
 
 [[cards]]
 id = "build_fireback"
+site = { layer = "fireback" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_build_fireback"
@@ -436,6 +448,7 @@ modifiers = [
 
 [[cards]]
 id = "read_by_fire"
+site = { layer = "fire_lit" }
 only_player = "alone"
 presentation = "narrative"
 label_key = "c_read_by_fire"
@@ -1000,6 +1013,8 @@ feature_book = "book"
 "ui.fight.on_loss" = "a loss costs {costs}"
 "ui.fight.on_wound" = "lose, and you're {store} +{n}"
 "ui.fight.base" = "base strength"
+"ui.chain.up_to" = "reaches up to {n}"
+"ui.chain.base" = "base reach"
 "ui.fight.tally" = "{fought} fought, {lost} lost"
 "ui.fight.since" = "{runner}: {won} won, {lost} lost"
 "ui.fight.won" = "{runner}: won"

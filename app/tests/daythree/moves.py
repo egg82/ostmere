@@ -9,7 +9,7 @@ from ashfall_app.engine import (
     BP, AtLeast, CardShare, Mix, MixId, Order, Rules, Save, SaveMix, SetOrders, StoreId, StoreValue, SwitchMix, TapCard, View,
     units, value_at,
 )
-from tests.daythree.chapter import Later
+from tests.daythree.chapter import Later, Offer
 from tests.dayone import sinks
 from tests.dayone.policy import Move, cards, lane_free, queued
 
@@ -31,8 +31,9 @@ def queue_step(v: View, save: Save, later: Later) -> Move | None:
 
 def order_card(save: Save, later: Later) -> Move | None:
     held = set(save.unlocked)
-    for after, order in later.order_cards:
-        if after in held and order not in save.orders:
+    for x in later.order_cards:
+        after, order, until = (x.after, x.order, x.until) if isinstance(x, Offer) else (*x, None)
+        if after in held and until not in held and order not in save.orders:
             return "decision", (SetOrders((order, *save.orders)),)
     return None
 

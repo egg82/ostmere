@@ -137,7 +137,9 @@ THE CLIENT MAY
   - an order_card with a `chip` is never shown under a ledger line: it is offered in the hands strip once that chip
     is in view.chips and no rule is set on the card's store and test, and then stays until such a rule is set (not
     when the chip clears). One with after_end waits for view.ended_at and for the end lines to have been read in that
-    page (below, "The end"). Accepting it is the same as above. A chip with several order_cards offers each, side by
+    page (below, "The end"). One with offered_until is offered no more (in the strip or under a line) once view.unlocked
+    holds it: offered once, the season's turn that retired its rule unlocks it, and the chip returns as a chore with its
+    hint dot alone (ChipInfo.chore). Accepting it is the same as above. A chip with several order_cards offers each, side by
     side, in content order; a rule set on the chip's store and test answers them all.
   - offer, in the condition editor's When list for a rule doing some cards (a task, or a mix's cards), first the
     stores those cards make (CardInfo.makes), then the stores they take (CardInfo.takes), then the stores of each
