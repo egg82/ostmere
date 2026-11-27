@@ -14,7 +14,7 @@ import time
 from collections import Counter
 from collections.abc import Callable
 
-from tests.dayone.player import DayOnePlayer
+from tests.dayone.player.player import DayOnePlayer
 from tests.weektwo.routes import fifteen
 from tests.worth import stints
 from tests.worth import summary as sm

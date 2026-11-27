@@ -13,7 +13,7 @@ from tests.daythree.routes import PUSH_ROUTES
 from tests.daytwo import checks as checks2
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured, compare
+from tests.dayone.pacing.parity import Measured, compare
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 Route = tuple[str, DayTwoPlayer]

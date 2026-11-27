@@ -6,7 +6,7 @@ passed in (CLAUDE.md, "Never spoil the owner")."""
 from collections.abc import Callable
 
 from ashfall_app.engine import BP, CardDef, CardShare, Mix, Rules, Save, SaveMix, UnlockKind
-from tests.dayone.policy import Move
+from tests.dayone.player.policy import Move
 
 
 Policy = Callable[[Save, Rules], Move | None]

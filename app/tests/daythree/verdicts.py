@@ -9,7 +9,7 @@ from tests.daythree import content as c3
 from tests.daythree import counters, plumbing, visits
 from tests.daythree.routes import day3
 from tests.daytwo.player import QUEUEABLE, DayTwoPlayer, visit_seen
-from tests.dayone.parity import Measured, Present, babysat, replay
+from tests.dayone.pacing.parity import Measured, Present, babysat, replay
 
 BOOSTS = (*QUEUEABLE, *c3.COMFORTS)
 """What the babysitter taps the second it can: day two's queueable steps and day three's comforts."""

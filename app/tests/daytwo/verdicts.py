@@ -6,7 +6,7 @@ from functools import cache
 from tests.daytwo import checks
 from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.routes import day2
-from tests.dayone.routes import TOOL_USERS
+from tests.dayone.player.routes import TOOL_USERS
 
 
 def _relative(name: str, p: DayTwoPlayer) -> list[str]:

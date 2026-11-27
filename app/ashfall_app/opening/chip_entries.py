@@ -16,7 +16,7 @@ class ChipEntry(Entry):
     pool_checks.MIN_POOL lines, or none."""
     no_cure: bool = False
     """Shown with nothing the player can do about it, on purpose: the day-one gate that every chip shown has a cure
-    (tests/dayone/cures.py) passes it over."""
+    (tests/dayone/fights/cures.py) passes it over."""
     offered_after: UnlockEntry | None = None
     """Drawn on the page only once this is unlocked, as an order card's is offered: the chip's cure is on screen. The
     engine's latch is the same either way, so a chip with effects has none (its cost would run unseen); unlock such a

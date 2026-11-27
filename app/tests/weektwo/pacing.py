@@ -8,7 +8,7 @@ from collections.abc import Sequence
 from tests.daythree import content as c3
 from tests.daytwo import abs_band
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import absence, daily
+from tests.dayone.absence import absence, daily
 from tests.weektwo import verdicts
 
 WEEK = 7

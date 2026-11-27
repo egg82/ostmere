@@ -16,7 +16,7 @@ from ashfall_app.engine.work import completions
 from ashfall_app.opening.checks import check_opening
 from ashfall_app.opening.player_checks import check_player_only
 from ashfall_app.opening.schema import Opening, merge_chapters, to_rules
-from tests.dayone.growth import runaway
+from tests.dayone.pacing.growth import runaway
 from tests.opening.blank_levels import mixed_skills, top_level, unmarked_levels
 from tests.opening.test_level_pays import unpaid_markers
 from tests.opening.test_second_skill import rows

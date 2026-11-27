@@ -12,7 +12,7 @@ from tests.daytwo import content as c
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
 from tests.daytwo.routes import play2
-from tests.dayone.sinks import SinkKnobs
+from tests.dayone.player.sinks import SinkKnobs
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 BED = CardId(c.BED)

@@ -7,8 +7,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ashfall_app.engine import RunBy, RunKind, Rules, Save, view
-from tests.dayone import sinkchecks
-from tests.dayone.player import DayOnePlayer
+from tests.dayone.checks import sinkchecks
+from tests.dayone.player.player import DayOnePlayer
 
 SAMPLE_S = 1800
 

@@ -21,7 +21,7 @@ from tests.daythree.report import absence_line
 from tests.daytwo import abs_band
 from tests.daytwo import checks as checks2
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import daily
+from tests.dayone.absence import daily
 from tests.weekone import verdicts
 from tests.weekone.routes import week1
 

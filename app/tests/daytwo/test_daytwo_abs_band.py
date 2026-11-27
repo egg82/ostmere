@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from tests.daytwo import abs_band
-from tests.dayone.beats import BEATS_YAML
+from tests.dayone.player.beats import BEATS_YAML
 
 PACE = abs_band.load_pace()
 BEAT = "B5"

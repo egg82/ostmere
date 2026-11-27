@@ -1,4 +1,4 @@
-"""The simulator's offer policy on a kinded test chapter (fixtures/askkinds.toml; tests/dayone/sinks.py, answer_offers):
+"""The simulator's offer policy on a kinded test chapter (fixtures/askkinds.toml; tests/dayone/player/sinks.py, answer_offers):
 it answers the kind's first offer by hand, and only then sets the kind's rule, with the role of the answer it gave; the
 rule answers the second offer; before the first offer is answered nothing is set ahead."""
 from functools import cache
@@ -11,7 +11,7 @@ from ashfall_app.engine import (
     decide, new_save, view,
 )
 from ashfall_app.opening.schema import CHAPTERS, OPENING, load_opening, to_rules
-from tests.dayone.sinks import answer_offers
+from tests.dayone.player.sinks import answer_offers
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "askkinds.toml"
 ANSWERS = ((OfferId("q_first"), AnswerId("q_first_no")), (OfferId("q_second"), AnswerId("q_second_no")))

@@ -36,7 +36,7 @@ from tests.daythree.chapter import Later
 from tests.daytwo import abs_band
 from tests.daytwo import checks as checks2
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import daily
+from tests.dayone.absence import daily
 from tests.weekone import verdicts as v1
 from tests.weekone.report import chapter_text, fought
 from tests.weektwo import pacing, verdicts

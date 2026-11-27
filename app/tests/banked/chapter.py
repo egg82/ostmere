@@ -1,4 +1,4 @@
-"""A fixture chapter for the sink policies (tests/dayone/sinks.py) and the 2 AM test, until a real chapter with sinks
+"""A fixture chapter for the sink policies (tests/dayone/player/sinks.py) and the 2 AM test, until a real chapter with sinks
 exists: a gatherer into a wood store, a trip that takes wood and brings finds, a comfort that takes most of the store
 once, and an arrival offer. Each sink shows at a time the caller sets (a trigger on the clock), so a test can show it
 while the player is there or only in the night. Never a shipped chapter (CLAUDE.md, "Never spoil the owner")."""
@@ -10,7 +10,7 @@ from ashfall_app.engine import (
     OfferId, Outcome, PacingCurve, Rules, SideDef, SideId, SkillDef, SkillId, StandingDef, StoreDef, StoreId,
     ThreatDef, ThreatId, TriggerDef, TriggerId, Unlock, UnlockKind,
 )
-from tests.dayone.sinks import Chapter, Trip
+from tests.dayone.player.sinks import Chapter, Trip
 
 RATE, HOUR = 3600, 3600
 CAP = 4 * RATE * HOUR

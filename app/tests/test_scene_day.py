@@ -1,4 +1,4 @@
-"""Where each person stands by day (`by_day` on a lane, lane_entries.ByDayEntry) and the scene that draws it (tools/scene/people_day.py):
+"""Where each person stands by day (`by_day` on a lane, lane_entries.ByDayEntry) and the scene that draws it (tools/scene/cast/people_day.py):
 a `card` names a card of the person's own lane (or of their crew's) whose `site` is a scene layer, `at_fire` the reason the content seats them at the
 camp fire, `off_scene` why their work or place is outside what the scene draws. The scene moves only the people the content sends to a site, to that card's layer; the lanes with no `by_day` are held
 (`people_day.HELD_UNDECIDED`, only shrinks)."""
@@ -14,7 +14,7 @@ from tests.test_scene_lodging import person_lanes
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import people_day   # tools/scene, on the path from the line above
+from cast import people_day   # tools/scene, on the path from the line above
 
 
 def undecided(o: Opening) -> set[str]:
@@ -82,7 +82,7 @@ def test_the_scene_stands_people_at_the_site_the_content_names(content: Opening)
 
 
 def test_the_scene_layers_it_names_exist():
-    layers = set(json.loads((SCENE / "shown.json").read_text())["layers"])
+    layers = set(json.loads((SCENE / "audits" / "shown.json").read_text())["layers"])
     names = [i for w in people_day.AT_WORK.values() for i in (w.layer, w.by_fire or w.crew)]
     names += [people_day.layer_id(p) for p in people_day.AT_WORK]
     assert [i for i in names if i not in layers] == []

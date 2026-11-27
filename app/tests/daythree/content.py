@@ -10,7 +10,7 @@ from ashfall_app.engine import (
 from ashfall_app.opening.convert import condition
 from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, OPENING, Opening, load_opening, to_rules
 from tests.daythree.chapter import Keep, Landings, Later
-from tests.dayone.sinks import Chapter, Trip
+from tests.dayone.player.sinks import Chapter, Trip
 
 TRIGGERED = {"K2": ("t_stream",), "K3": ("t_night_3",), "K5": ("t_joins",),
              "SL1": ("t_morning_4",), "SL3": ("t_watch_lit",), "SL4": ("t_scrap_ask",)}

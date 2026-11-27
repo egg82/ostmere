@@ -13,8 +13,8 @@ from ashfall_app.opening.schema import load_opening
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import builds   # tools/scene, on the path from the line above
-from shown import facts_shown
+from audits import builds   # tools/scene, on the path from the line above
+from audits.shown import facts_shown
 
 
 def is_build(card: CardEntry) -> bool:
@@ -37,7 +37,7 @@ def opening_cards() -> tuple[CardEntry, ...]:
 
 
 def committed() -> dict[str, list[str]]:
-    return json.loads((SCENE / "shown.json").read_text())
+    return json.loads((SCENE / "audits" / "shown.json").read_text())
 
 
 def card(card_id: str, **fields: object) -> CardEntry:

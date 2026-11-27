@@ -25,7 +25,7 @@ PACKAGES = {
     "tracks": "tests.opening.tracks_readout",
     "town": "tests.opening.town_readout",
     "closecalls": "tests.opening.close_calls_readout",
-    "dayone": "tests.dayone.report",
+    "dayone": "tests.dayone.pacing.report",
     "daytwo": "tests.daytwo.report",
     "daythree": "tests.daythree.report",
     "weekone": "tests.weekone.report",

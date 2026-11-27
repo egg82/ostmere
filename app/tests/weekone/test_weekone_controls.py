@@ -10,7 +10,7 @@ from ashfall_app.engine import AtLeast, Rules, Save, StoreId, StoreValue, view
 from tests.daythree import counters
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone import absence, daily
+from tests.dayone.absence import absence, daily
 
 pytestmark = [pytest.mark.playthrough, pytest.mark.timeout(PLAY_TIMEOUT_S)]
 

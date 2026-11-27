@@ -19,10 +19,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 import build
-import kit
-from output import ASSETS, composite
-from place import FIRE, H, W
-from stages import STAGES
+from draw import kit
+from frame.output import ASSETS, composite
+from draw.place import FIRE, H, W
+from frame.stages import STAGES
 
 ROOT = Path(__file__).resolve().parent.parent
 FONT = ROOT / "app" / "ashfall_app" / "static" / "fonts" / "im-fell-english-sc-latin.woff2"

@@ -1,4 +1,4 @@
-"""The sink policies (tests/dayone/sinks.py) on the fixture chapter, by route: typical and sharp mix the trip and queue
+"""The sink policies (tests/dayone/player/sinks.py) on the fixture chapter, by route: typical and sharp mix the trip and queue
 the comfort, lazy does neither, and no route sets an order for the arrival offer (it is of no kind, and the page builds
 no per-offer rule), so it waits for a visit. The cap-loss readout (dayone/capcheck.py) tells the two apart."""
 import pytest
@@ -10,8 +10,8 @@ from ashfall_app.engine import (
 from ashfall_app.engine.offerstate import answer_given
 from tests.banked.chapter import CHAPTER, COMFORT, FOUND, GATHER, NEWCOMER, STAY, TRIP, WOOD, rules
 from tests.banked.play import Played, built, play
-from tests.dayone import capcheck
-from tests.dayone.sinks import SINKS, queue_comforts
+from tests.dayone.absence import capcheck
+from tests.dayone.player.sinks import SINKS, queue_comforts
 
 H = 3600
 VISITS = ((0, 3 * H), (30 * H, 31 * H))

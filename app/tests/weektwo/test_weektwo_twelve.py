@@ -13,7 +13,7 @@ from tests.daythree import counters
 from tests.daythree.content import rules3
 from tests.daytwo.conftest import PLAY_TIMEOUT_S
 from tests.daytwo.player import DayTwoPlayer
-from tests.dayone.parity import Measured, compare
+from tests.dayone.pacing.parity import Measured, compare
 from tests.weektwo import content as w2
 from tests.weektwo import verdicts
 from tests.weektwo.rebased import PLAYED_ON_S, Rebased, fired, rules11

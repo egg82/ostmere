@@ -14,32 +14,32 @@ import random
 
 from PIL import Image, ImageChops
 
-import builds
-import dayone
-import depth
-import dayone_poses
-import dayeight_layers as d8
-import dayeleven_layers as d11
-import dayfifteen_layers as d15
-import daysixteen_layers as d16
-import daytwentyfive_layers as d25
-import daytwelve_layers as d12
-import dayfour_layers as d4
-import daythree_layers as d3
-import daytwo_layers as d2
-import dayone_world as world
-import night
-import people_day
-import people_hall
-import people_layers
-import props
-import trips
-from figures import figure
-from output import OUT, Entry, Layer, bake, check_builds, check_conditions, check_crowd, check_depth, check_footing, write_manifest, write_previews
-from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, FLICKER, firelight,
+from audits import builds
+from day_one import dayone
+from audits import depth
+from day_one import dayone_poses
+from day_eight import dayeight_layers as d8
+from day_eleven import dayeleven_layers as d11
+from day_fifteen import dayfifteen_layers as d15
+from day_sixteen import daysixteen_layers as d16
+from day_twenty_five import daytwentyfive_layers as d25
+from day_twelve import daytwelve_layers as d12
+from day_four import dayfour_layers as d4
+from day_three import daythree_layers as d3
+from day_two import daytwo_layers as d2
+from day_one import dayone_world as world
+from draw import night
+from cast import people_day
+from cast import people_hall
+from cast import people_layers
+from draw import props
+from frame import trips
+from draw.figures import figure
+from frame.output import OUT, Entry, Layer, bake, check_builds, check_conditions, check_crowd, check_depth, check_footing, write_manifest, write_previews
+from draw.parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, FLICKER, firelight,
                    rack, ruin, seated_at_work, stones_heap, stool, wood_drying)
-from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST, specks
-from tints import WOOD
+from draw.place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST, specks
+from draw.tints import WOOD
 
 SEED = 7
 

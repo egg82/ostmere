@@ -1,5 +1,5 @@
 """Where each person sleeps (`lodging` on a lane, lane_entries.LodgingEntry) and the scene that shows the hall lived in
-(tools/scene/people_hall.py): every person's lane says, a `build` names a card, and the scene retires at night only the
+(tools/scene/cast/people_hall.py): every person's lane says, a `build` names a card, and the scene retires at night only the
 idle poses of people the content lodges in that build."""
 import sys
 from pathlib import Path
@@ -11,7 +11,7 @@ from ashfall_app.opening.schema import CHAPTERS, IN_WRITING, Opening, load_openi
 
 SCENE = Path(__file__).resolve().parents[2] / "tools" / "scene"
 sys.path.insert(0, str(SCENE))
-import people_hall   # tools/scene, on the path from the line above
+from cast import people_hall   # tools/scene, on the path from the line above
 
 
 def person_lanes(o: Opening) -> list[LaneEntry]:
@@ -56,7 +56,7 @@ def test_the_scene_sends_home_only_people_the_hall_lodges(content: Opening):
 
 def test_the_idle_poses_it_retires_are_scene_layers():
     import json
-    layers = set(json.loads((SCENE / "shown.json").read_text())["layers"])
+    layers = set(json.loads((SCENE / "audits" / "shown.json").read_text())["layers"])
     assert [i for ids in people_hall.IDLE.values() for i in ids if i not in layers] == []
 
 
