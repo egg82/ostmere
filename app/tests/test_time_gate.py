@@ -171,3 +171,36 @@ def test_shared_fixtures_are_not_charged_to_the_hang_guard(pytester: pytest.Pyte
     result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
     result.stdout.fnmatch_lines(["PASSED test_guarded.py::test_first_user_of_shared_fixtures",
                                  "FAILED test_guarded.py::test_slow_in_its_body*Timeout*"])
+
+
+PLAYED = """
+import time
+import pytest
+
+@pytest.fixture(scope="session")
+def play():
+    time.sleep(0.7)
+
+@pytest.mark.playthrough
+def test_reads_the_play(play):
+    pass
+
+def test_reads_a_slow_fixture(slow):
+    pass
+
+@pytest.fixture(scope="module")
+def slow():
+    time.sleep(0.7)
+"""
+
+
+def test_a_playthroughs_shared_fixture_keeps_the_tests_own_guard(pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch):
+    """A playthrough's shared fixture is the play itself: it runs under the test's guard, never the shared-fixture one;
+    the same fixture time on an ordinary test still trips the shared-fixture guard (the control)."""
+    monkeypatch.setattr(gate, "FIXTURE_CEILING_S", 0.3)
+    pytester.makeini("[pytest]\ntimeout = 5\ntimeout_method = signal\nmarkers =\n    playthrough: a whole play\n")
+    pytester.makeconftest("from tests import time_gate\n\n"
+                          "def pytest_configure(config):\n    config.pluginmanager.register(time_gate, 'time_gate')\n")
+    pytester.makepyfile(test_played=PLAYED)
+    result = pytester.runpytest_inprocess("-p", "no:cacheprovider", "-p", "no:xdist", "-p", "no:randomly", "-rA")
+    result.stdout.fnmatch_lines(["PASSED test_played.py::test_reads_the_play", "ERROR test_played.py::test_reads_a_slow_fixture*"])
