@@ -54,6 +54,8 @@ check them.
   (`app/tests/test_rule_chip_cases_wire.py`) runs in CI, not in `gates.sh`, so run it.
 - A new chapter goes in `CHAPTERS` (or `IN_WRITING`) in `opening/schema.py`, with its `content/beats.yaml` ids and
   `content/decisions.jsonl` rows.
+- A new working is a `[[workings]]` row in its chapter (its axes; a declared cost must equal the computed one); a new
+  kind pair or link is a row in `app/ashfall_app/opening/working_rules.toml`, never a hand-priced card.
 - A new gate goes in `app/tools/gates.sh` **and** the "Structural gates" table in `docs/engineering.md` (via
   `doc-delta.txt`).
 - A held-list entry that gains its field leaves the list in the same change; a count is never raised.
