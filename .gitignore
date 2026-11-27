@@ -8,6 +8,8 @@ app/client/build-dev/
 # Research by-products: a `pip install --target lib fonttools`, and intermediate renders.
 docs/research/sketch-test/lib/
 docs/research/sketch-test/rounds/
+docs/research/sketch-test/*.svg
+docs/research/sketch-test/*.png
 # Written by CI at build time (.github/workflows/ci.yml); never hand-edited.
 app/ashfall_app/build/
 # The saved ends CI builds and caches (.github/workflows/ci.yml, chapter-saves); locally they are written outside the tree.

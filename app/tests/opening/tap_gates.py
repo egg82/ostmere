@@ -3,7 +3,7 @@ gate the player can meet only by tapping one card many times, before anything ca
 
 **Before automation** is structural: what the player can reach from a new save's unlock set without the features that
 open mixes (the content's `first_mix.feature`) and rules (`LEDGER`, which opens the Rules tab: client
-`game/orders.ts`, `rulesTabDrawn`). An outcome that unlocks either of them is never followed, and a count of the card
+`game/rules/orders.ts`, `rulesTabDrawn`). An outcome that unlocks either of them is never followed, and a count of the card
 whose completion lands it is never met, so what arrives with mixes counts as after them. The reach follows the player's
 own steps: a condition only the clock makes true (a time, a store falling, a store or level nothing but a standing
 action fills) is not one, since mixes open within the opening's first steps. On the shipped opening the reach is

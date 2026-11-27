@@ -5,10 +5,10 @@ import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
 import type { View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { runningNow } from "../src/game/spent";
+import { Catalog } from "../src/game/page/catalog";
+import { runningNow } from "../src/game/mixes/spent";
 import { fixtureContent } from "../fixtures/content";
-import { Hands } from "../src/ui/hands";
+import { Hands } from "../src/ui/hands/hands";
 
 install();
 

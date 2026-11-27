@@ -4,15 +4,15 @@
 import { install, FakeEvent, fakeDocument } from "./fake-dom";
 import type { AccountPresentation } from "../src/api/types";
 import { pushCap, type PushEnv } from "../src/app/push";
-import { awayKey } from "../src/game/reminderkeys";
-import { Keeps, NEW_ACCOUNT } from "../src/game/keeps";
-import { sendable } from "../src/game/presentation";
-import { Text } from "../src/game/text";
+import { awayKey } from "../src/game/account/reminderkeys";
+import { Keeps, NEW_ACCOUNT } from "../src/game/account/keeps";
+import { sendable } from "../src/game/account/presentation";
+import { Text } from "../src/game/page/text";
 import { fixtureContent } from "../fixtures/content";
 import { el } from "../src/ui/dom";
-import { clock12, clock24, HourSlider, keyed, shaded } from "../src/ui/hourslider";
-import { mentionDue, ReminderMention } from "../src/ui/remindermention";
-import { rowState, windowPhrase } from "../src/ui/reminders";
+import { clock12, clock24, HourSlider, keyed, shaded } from "../src/ui/settings/hourslider";
+import { mentionDue, ReminderMention } from "../src/ui/settings/remindermention";
+import { rowState, windowPhrase } from "../src/ui/settings/reminders";
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(what);

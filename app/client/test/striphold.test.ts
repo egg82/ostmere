@@ -1,13 +1,13 @@
 // The story strip holds the newest line whole (docs/design/opening-screen/attention.md, "One column of attention"): a line waiting
 // its turn in the arrival queue (held) leaves the shown one in place; once it shows, it replaces it, in order. The strip
-// keeps room for every story line the content can write (Content.line_infos, game/chronicle.ts inStrip), each once,
+// keeps room for every story line the content can write (Content.line_infos, game/book/chronicle.ts inStrip), each once,
 // unseen and out of the screen reader's way, so the tallest sets its height; a line's arrival touches nothing outside
 // the strip's own list. A find's or a level's line is the chronicle's alone: it gets no room and never shows here.
 import { install } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureContent } from "../fixtures/content";
-import { Catalog } from "../src/game/catalog";
-import { Story } from "../src/ui/story";
+import { Catalog } from "../src/game/page/catalog";
+import { Story } from "../src/ui/story/story";
 
 install();
 
@@ -53,7 +53,7 @@ const shown = (): string[] => list().filter((n) => !n.classList.contains("held")
   story.tick(0);
   expect("a line shows", shown(), [text("line.1")]);
   const [waiting] = story.appendKeys(["line.2"], true, true);
-  waiting?.classList.add("held");   // as the arrival queue holds it (ui/reveal.ts)
+  waiting?.classList.add("held");   // as the arrival queue holds it (ui/feedback/reveal.ts)
   now = 100;
   story.tick(0);
   expect("a held line leaves the shown one in place", shown(), [text("line.1")]);

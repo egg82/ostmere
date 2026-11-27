@@ -1,8 +1,8 @@
 /* the tutorial's look: everything the guide adds (the note, its Show me buttons) wears the "?" badge, which no game
-   control does; the control a step points at carries the glow. The note (ui/lessons.ts): a tag row (the label, and Skip as a small link at its far corner),
+   control does; the control a step points at carries the glow. The note (ui/lessons/lessons.ts): a tag row (the label, and Skip as a small link at its far corner),
    then one short line beside the control its step points at; fixed to the viewport so the layout never moves. Not
    modal: only the note itself takes taps. */
-.lesson-note { position: fixed; z-index: 30; box-sizing: border-box; max-width: min(calc(22rem + 1.4rem), calc(100vw - 32px));   /* the line's 22rem plus the padding, so the note's own box never passes the gutters (ui/lessons.ts keeps 16px from the screen's edge) */ display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: .6rem; row-gap: .1rem; padding: .3rem .7rem .55rem; background: var(--raise); color: var(--ink-hi); border-radius: 2px; box-shadow: 0 .4rem 1.2rem rgba(0, 0, 0, .5); }
+.lesson-note { position: fixed; z-index: 30; box-sizing: border-box; max-width: min(calc(22rem + 1.4rem), calc(100vw - 32px));   /* the line's 22rem plus the padding, so the note's own box never passes the gutters (ui/lessons/lessons.ts keeps 16px from the screen's edge) */ display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: .6rem; row-gap: .1rem; padding: .3rem .7rem .55rem; background: var(--raise); color: var(--ink-hi); border-radius: 2px; box-shadow: 0 .4rem 1.2rem rgba(0, 0, 0, .5); }
 .lesson-note[hidden] { display: none; }
 .lesson-tag { font-size: var(--t-meta); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
 .lesson-tag::before, .lesson-go::before { content: "?"; display: inline-block; width: 1.25em; margin-right: .45em; text-align: center; background: var(--ink-hi); color: var(--bg); font-weight: 700; letter-spacing: 0; }
@@ -13,7 +13,7 @@
 .lesson-next[hidden] { display: none; }
 .lesson-note.reads { cursor: pointer; }
 .lesson-go.lesson-go { background: var(--press); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi) !important; font-weight: 500; }
-/* a short window: the note is small enough to dock in the band above an open editor (ui/lessons.ts, place), so it
+/* a short window: the note is small enough to dock in the band above an open editor (ui/lessons/lessons.ts, place), so it
    covers no control: the tag, Skip and Got it share one row over the line */
 @media (max-height: 640px) {
   .lesson-note { grid-template-columns: 1fr auto auto; padding: .1rem .6rem .4rem; column-gap: .5rem; row-gap: 0; }

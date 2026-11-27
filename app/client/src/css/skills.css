@@ -9,7 +9,7 @@
 .skill.done-for-now .skill-next { color: var(--ink-dim); }
 .skill.done-for-now .skill-next::before { content: none; }
 .skill.done-for-now .bar-fill { background: var(--ink-dim); }
-/* prestige (ui/skillrow.ts): at the top the bar is full and marked, and the foot holds what waits and the controls, set
+/* prestige (ui/skills/skillrow.ts): at the top the bar is full and marked, and the foot holds what waits and the controls, set
    off as a ledger line's order card (.line-order) is */
 .skill.at-top .skill-next { color: var(--ink-hi); }
 .skill.at-top .skill-next::before { content: "▲ "; }
@@ -19,6 +19,6 @@
 .skill.at-top .skill-note { color: var(--ink); }
 .bar-track { height: 3px; background: var(--track); overflow: hidden; }
 .bar-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: var(--ember); }
-.skill.burst, .camp.burst { animation: burst .9s ease-out; }   /* the ladder's level rung (ui/ladder.ts) */
+.skill.burst, .camp.burst { animation: burst .9s ease-out; }   /* the ladder's level rung (ui/feedback/ladder.ts) */
 @keyframes burst { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .8); background: rgba(42, 27, 20, .8); } 100% { box-shadow: 0 0 0 .9rem rgba(240, 178, 122, 0); } }
 

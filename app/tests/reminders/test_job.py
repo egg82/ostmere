@@ -7,7 +7,7 @@ from sqlalchemy import update
 from ashfall_app import engine as e
 from ashfall_app import logs
 from ashfall_app.db import accounts
-from ashfall_app.db import ahead as kept_rows
+from ashfall_app.db.stored import ahead as kept_rows
 from ashfall_app.db import saves as rows
 from ashfall_app.db.engine import open_database
 from ashfall_app.db.tables import saves

@@ -24,11 +24,11 @@ from .. import engine as e
 from .. import logs
 from ..accounts import limits
 from ..clock import Clock
-from ..db import journal as journal_rows
+from ..db.stored import journal as journal_rows
 from ..db import reminders as reminder_rows
 from ..db import saves as rows
 from ..db import unit
-from ..db.journal import Seen
+from ..db.stored.journal import Seen
 from . import ahead, journal_write, mixbest, write
 from . import games as held
 from .games import info
@@ -37,7 +37,7 @@ from .interface import (
     Stale,
     TooManySaves,
 )
-from .load import Loaded, load
+from .builds.load import Loaded, load
 
 HISTORY = 200
 BUDGET_S = 3.0
@@ -231,7 +231,7 @@ class PgSaves:
     @contextmanager
     def _locked(self, account_id: int, save_id: int, now: datetime,
                 visited: bool = False, history: int | None = None) -> Generator[tuple[Connection, rows.SaveRecord, Seen | None]]:
-        """The save's row locked, and what its journal holds for a step at `now` (db/journal.py `locked`), read in one
+        """The save's row locked, and what its journal holds for a step at `now` (db/stored/journal.py `locked`), read in one
         statement. `visited`: the player is here at `now`, stamped for reminders in the same statement. `history`: its last
         that many lines too, read in the statement (`seen.history`; None when it could not be, the caller reads them)."""
         visit = reminder_rows.visit(account_id, now) if visited else None

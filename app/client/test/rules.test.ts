@@ -1,12 +1,12 @@
-// game/orders.ts and the editor's save decisions against the fixture's views: an order card on a hands task becomes a
+// game/rules/orders.ts and the editor's save decisions against the fixture's views: an order card on a hands task becomes a
 // rule running a one-task mix (reused when saved), a side-lane task stays a task rule, reordering moves only hands
 // rules, and a renamed mix takes its rules with it.
 import { fixtureContent, Q } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Decision, Mix, Order, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { saveDecisions } from "../src/game/mix";
-import { addRule, chipOf, handsRule, mixRules, moveRule, removeRule, repointRule, ruleFor, ruleRunning, ruleWords, taskRules } from "../src/game/orders";
+import { Catalog } from "../src/game/page/catalog";
+import { saveDecisions } from "../src/game/mixes/mix";
+import { addRule, chipOf, handsRule, mixRules, moveRule, removeRule, repointRule, ruleFor, ruleRunning, ruleWords, taskRules } from "../src/game/rules/orders";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);

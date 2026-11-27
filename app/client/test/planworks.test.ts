@@ -5,8 +5,8 @@ import { install } from "./fake-dom";
 import { fixtureContent } from "../fixtures/content";
 import { fixtureStep } from "../fixtures/steps";
 import type { Card, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { planCards, tapUntil, whenReady } from "../src/game/queue";
+import { Catalog } from "../src/game/page/catalog";
+import { planCards, tapUntil, whenReady } from "../src/game/mixes/queue";
 
 install();
 

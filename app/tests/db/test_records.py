@@ -8,8 +8,8 @@ from sqlalchemy.exc import OperationalError
 
 from ashfall_app.db import accounts as a
 from ashfall_app.db import saves as s
-from ashfall_app.db import savewrite as sw
-from ashfall_app.db import step
+from ashfall_app.db.stored import savewrite as sw
+from ashfall_app.db.stored import step
 from ashfall_app.db import tries as t
 from ashfall_app.db.engine import open_database
 from ashfall_app.db.tables import accounts, save_lines, saves, sessions

@@ -10,12 +10,12 @@ import { fixtureStep } from "../fixtures/steps";
 import { townStep } from "../fixtures/town";
 import type { GameApi } from "../src/api/api";
 import type { NewSave, Opened, SavePresentation, View } from "../src/api/types";
-import { Catalog } from "../src/game/catalog";
-import { NEW_ACCOUNT, NEW_SAVE, NEW_SETTINGS, type Keeps } from "../src/game/keeps";
-import { CAP_RULE, CLOCK, FIRST_MIX, FIRST_RULE, guided, JOURNAL, LESSONS, mayStart, PRESTIGE, TOWN_MIX } from "../src/game/lessons";
-import { Session } from "../src/game/session";
-import { Glow } from "../src/ui/fresh";
-import { Lessons } from "../src/ui/lessons";
+import { Catalog } from "../src/game/page/catalog";
+import { NEW_ACCOUNT, NEW_SAVE, NEW_SETTINGS, type Keeps } from "../src/game/account/keeps";
+import { CAP_RULE, CLOCK, FIRST_MIX, FIRST_RULE, guided, JOURNAL, LESSONS, mayStart, PRESTIGE, TOWN_MIX } from "../src/game/lessons/lessons";
+import { Session } from "../src/game/page/session";
+import { Glow } from "../src/ui/feedback/fresh";
+import { Lessons } from "../src/ui/lessons/lessons";
 import { keepsOf, NEW_FLAT } from "./kept";
 
 install();

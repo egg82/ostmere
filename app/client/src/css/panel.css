@@ -7,7 +7,7 @@
 .banners { position: sticky; top: .5rem; z-index: 5; height: 0; overflow: visible; }
 .banner { width: 100%; text-align: left; padding: .6rem .75rem; cursor: pointer; background: var(--raise); border: 1px dashed var(--ink-dim); color: var(--ink-hi); }
 
-/* the hands strip: takes no room until it arrives (ui/hands.ts) */
+/* the hands strip: takes no room until it arrives (ui/hands/hands.ts) */
 .hands { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: .75rem; min-height: 4.6rem; }   /* the running mix's height, so it never grows */
 .hands-label { font-size: var(--t-meta); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
 .hands-body { min-width: 0; }
@@ -46,7 +46,7 @@
 .hands.greyed .share-track, .hands.greyed .share-key-item::before { filter: saturate(.15) brightness(.6); }   /* the hues, never the legend's words */
 .hands.greyed .hands-mix-name { color: var(--ink-dim); }
 :is(.hands, .hands-rows).greyed .hands-status { color: var(--ink-hi); }   /* why the mix stopped: plain, not dimmed with it */
-/* the Asks list (ui/asks.ts, ui/asknode.ts): one ask in a slot of fixed height, the rest counted; someone asking, set
+/* the Asks list (ui/asks/asks.ts, ui/asks/asknode.ts): one ask in a slot of fixed height, the rest counted; someone asking, set
    apart from the routine by the ember outline on its warm ground, the question in the story's size; no Dismiss */
 .asks { padding: .6rem 0 .75rem; border-bottom: 1px solid var(--rule); }
 .asks-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; min-height: 2.4rem; }
@@ -73,7 +73,7 @@
 .kind-rule .kind-asked, .kind-rule .kind-answered, .kind-rule .kind-lead { flex-basis: 100%; margin: 0; }
 .kind-rule .kind-asked { color: var(--ink); font-size: var(--t-meta); }
 .kind-rule .kind-lead { color: var(--ink-dim); font-size: var(--t-meta); }
-/* a phone's chip rule offer (ui/hands.ts seats it): under the pinned strip, scrolling with the cards, so a prompt does not cost the cards their room */
+/* a phone's chip rule offer (ui/hands/hands.ts seats it): under the pinned strip, scrolling with the cards, so a prompt does not cost the cards their room */
 .hands-rows:not(:has(> :not([hidden], :empty))) { display: none; }
 .hands-rows { padding: 0 0 .5rem; border-bottom: 1px solid var(--rule); }
 .hands-rows > * { margin-top: .5rem; }

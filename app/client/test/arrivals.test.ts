@@ -1,7 +1,7 @@
-// What arrived while away is revealed in turn (game/arrivals.ts, ui/reveal.ts): kind order unless times are known, the
+// What arrived while away is revealed in turn (game/story/arrivals.ts, ui/feedback/reveal.ts): kind order unless times are known, the
 // first at once and the rest 400–700 ms apart within a 4 s cap, a tap or key showing the rest, everything at once under
 // reduced motion, and nothing held back outside a return.
-import { ArrivalQueue, CAP_MS, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/arrivals";
+import { ArrivalQueue, CAP_MS, MAX_GAP_MS, MIN_GAP_MS } from "../src/game/story/arrivals";
 
 function expect(label: string, got: unknown, want: unknown): void {
   if (JSON.stringify(got) !== JSON.stringify(want)) throw new Error(`${label}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
@@ -116,7 +116,7 @@ for (const n of [2, 3, 6, 7, 11, 20]) {
   expect("empty: nothing due", q.due(1e9), []);
 }
 
-// The reveal on the page (ui/reveal.ts), against a stand-in DOM: what each node shows, and the input listeners.
+// The reveal on the page (ui/feedback/reveal.ts), against a stand-in DOM: what each node shows, and the input listeners.
 {
   const listeners = new Map<string, () => void>();
   let reduced = false;
@@ -129,7 +129,7 @@ for (const n of [2, 3, 6, 7, 11, 20]) {
       removeEventListener: (t: string, f: () => void) => { if (listeners.get(t) === f) listeners.delete(t); },
     },
   });
-  const { Reveal } = await import("../src/ui/reveal");
+  const { Reveal } = await import("../src/ui/feedback/reveal");
   const node = (top = 100) => {
     const cls = new Set<string>();
     return {

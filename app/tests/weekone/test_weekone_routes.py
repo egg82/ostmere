@@ -75,7 +75,7 @@ def test_the_checks_past_the_sinks_hold_over_the_week(week_checks: plumbing.Plum
     assert week_checks.judged > 0 and week_checks.problems == ()
 
 
-@pytest.mark.xfail(strict=True, reason="a staged build takes one queue entry a stage (client game/queue.ts: a card queued is "
+@pytest.mark.xfail(strict=True, reason="a staged build takes one queue entry a stage (client game/mixes/queue.ts: a card queued is "
                    "not offered again), so the whenever player queues its next stage at a later visit and the babysitter "
                    "taps it at once: woodshed#3 129.31 h vs 113.92 h, hearth_stones#3 152.97 h vs 140.97 h; and "
                    "woodshed and pelt_bedding show, ready, while the whenever player is away (t_morning_5, t_first_pelt): "

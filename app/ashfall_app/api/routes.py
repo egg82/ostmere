@@ -6,11 +6,11 @@ route class, so each request is logged once and every error is an ApiError."""
 from fastapi import APIRouter, Request, Response
 
 from .route import ErrorRoute
-from .content_models import Content
-from .device_routes import add_device_routes
-from .games_routes import add_games_routes
-from .reminder_routes import add_reminder_routes
-from .save_routes import add_save_routes
+from .world.content_models import Content
+from .player.device_routes import add_device_routes
+from .player.games_routes import add_games_routes
+from .player.reminder_routes import add_reminder_routes
+from .player.save_routes import add_save_routes
 from .service import Game
 
 PUBLIC_URL = "https://ostmere.yggdrasil.pub"

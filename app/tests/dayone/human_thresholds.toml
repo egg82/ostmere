@@ -12,43 +12,43 @@ note = "An observed habit (issue #32): a few minutes of play with nothing notabl
 [threshold.dead_gap_research_s]
 value = 10
 unit = "s"
-source = "docs/research/human-player.md#### 3. Time without a meaningful event"
+source = "docs/research/pacing/human-player.md#### 3. Time without a meaningful event"
 note = "the research gives seconds, not minutes, and about waiting on a system; recorded, not used"
 
 [threshold.reading_wpm]
 value = 238
 unit = "words/min"
-source = "docs/research/human-player.md#### 1. Reading speed and decision latency"
+source = "docs/research/pacing/human-player.md#### 1. Reading speed and decision latency"
 note = "Brysbaert 2019"
 
 [threshold.reaction_practised_s]
 value = 2.65
 unit = "s"
-source = "docs/research/human-player.md#### 1. Reading speed and decision latency"
+source = "docs/research/pacing/human-player.md#### 1. Reading speed and decision latency"
 note = "Card, Moran & Newell 1980; M + P + 2B; the low end of the seeded reaction before a tap"
 
 [threshold.reaction_first_time_s]
 value = 3.73
 unit = "s"
-source = "docs/research/human-player.md#### 1. Reading speed and decision latency"
+source = "docs/research/pacing/human-player.md#### 1. Reading speed and decision latency"
 note = "Sauro 2009; the high end of the seeded reaction before a tap"
 
 [threshold.first_session_s]
 value = 540
 unit = "s"
-source = "docs/research/human-player.md#### 2. Sessions, visit cadence, retention"
+source = "docs/research/pacing/human-player.md#### 2. Sessions, visit cadence, retention"
 note = "deltaDNA; the opening's session is held beside it in the report; the model does not cut it"
 
 [threshold.session_s]
 value = 480
 unit = "s"
-source = "docs/research/human-player.md#### 2. Sessions, visit cadence, retention"
+source = "docs/research/pacing/human-player.md#### 2. Sessions, visit cadence, retention"
 note = "GameAnalytics blog; the longest a visit after the opening lasts: the player leaves sooner once nothing is left to act on and nothing is unread"
 
 [threshold.visits_per_day]
 value = 5.3
 unit = "visits/day"
-source = "docs/research/human-player.md#### 2. Sessions, visit cadence, retention"
+source = "docs/research/pacing/human-player.md#### 2. Sessions, visit cadence, retention"
 note = "GameAnalytics blog"
 
 [threshold.waking_h]

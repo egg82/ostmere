@@ -1,5 +1,5 @@
 """The world map's stamps (app/ashfall_app/api/contract/map.txt, "MAP"): the Widman 2.1 PNG pack's engraved map symbols
-(K.M. Alexander, CC0; docs/research/art-sourcing.md), one folder per stamp kind, cropped to their ink, with a manifest
+(K.M. Alexander, CC0; docs/research/art/art-sourcing.md), one folder per stamp kind, cropped to their ink, with a manifest
 of each kind's variants.
 
     python tools/mapstamps.py [SOURCE_DIR]   # writes $ASHFALL_ASSETS/art/map/
@@ -35,7 +35,7 @@ FOLDERS = {
     "forest": "Trees/Forest",
     "tree": "Trees/Individual Trees",
 }
-"""Each stamp kind (api/map_models.py, Stamp) and the pack's folder its variants come from."""
+"""Each stamp kind (api/world/map_models.py, Stamp) and the pack's folder its variants come from."""
 
 
 def made(src: Path) -> Image.Image:
