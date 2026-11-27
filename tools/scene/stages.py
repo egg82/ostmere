@@ -216,6 +216,8 @@ STAGES["67_seed"] = _DAY.then(pair_3h=24)
 STAGES["67_seed_night"] = _NIGHT.then(pair_3h=24)
 STAGES["67_sacking"] = _NIGHT.then({"answer:o_pelt_keep", "feature:night_7"})
 STAGES["67_none"] = _DAY
+STAGES["70_midden"] = _DAY.then({"project:dig_midden"})
+STAGES["70_midden_night"] = _NIGHT.then({"project:dig_midden"})
 for _name, _clock in (("bedding", "bedding_4_clock"), ("pelt_ask", "pelt_ask_clock"), ("stage_7", "stage_7_clock"),
                       ("posts_cord", "posts_cord_clock"), ("n6_posts_done", "n6_posts_done_clock"), ("choir_2", "choir_2_clock"),
                       ("road_pair", "road_pair_clock"), ("fiddle_2", "fiddle_2_clock")):
