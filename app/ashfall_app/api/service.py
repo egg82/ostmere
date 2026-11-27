@@ -80,7 +80,7 @@ class Game:
                             levels(save, rules, v, scene_stores()))
 
     def forecast(self, played: Played, stop: Callable[[], bool]) -> w.ForecastAnswer:
-        """The save's forecast from now (it replays hours of the save, so it has its own call: CONTRACT.txt,
+        """The save's forecast from now (it replays hours of the save, so it has its own call: contract/forecast.txt,
         "Forecast")."""
         save, rules = played.save, self._rs.rules
         shown = tuple(e.StoreId(u.id) for u in save.unlocked if u.kind is e.UnlockKind.STORE)

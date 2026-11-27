@@ -1,4 +1,4 @@
-"""The merge (CONTRACT.txt, "Moving to another device", POST /api/join with merge): a browser whose account holds
+"""The merge (contract/moving-to-another-device.txt, "Moving to another device", POST /api/join with merge): a browser whose account holds
 games of its own moves them into the account a code or words name, through the app on a database of the test's own
 (devices.py). Each refusal moves nothing; only the requesting session's own games ever move, and only one way."""
 from collections.abc import Iterator

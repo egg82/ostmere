@@ -1,4 +1,4 @@
-"""What the rules did lately through the saves service and the API's Step (CONTRACT.txt, "Rule runs"): a write keeps
+"""What the rules did lately through the saves service and the API's Step (contract/rule-runs.txt, "Rule runs"): a write keeps
 the record on the save's row, built from the engine's rule changes and pruned by the save's rules, and every written
 Step serves it. Rules: the opening's with everything unlocked."""
 from dataclasses import replace

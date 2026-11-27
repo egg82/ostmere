@@ -1,4 +1,4 @@
-"""Names the build that answered on every response, errors included (api/CONTRACT.txt): while a deploy rolls, two
+"""Names the build that answered on every response, errors included (api/contract/): while a deploy rolls, two
 builds serve at once, and a reply is only read right knowing which one sent it. Both servers use it, the app (main.py)
 and the web pods (web/app.py), and each names itself in X-Ashfall-Server, so a check of the edge's routing can say
 which Service answered a path."""

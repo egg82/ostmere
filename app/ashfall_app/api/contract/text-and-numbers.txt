@@ -1,0 +1,168 @@
+TEXT AND NUMBERS (one rule)
+  A number lives once, in the rules or the view; text never repeats it. Text entries hold words and named slots
+  ({name}), never a digit (the opening's checks fail one). The page fills a slot only from the served value named
+  below, formatted this way and no other:
+    {n} as an amount   whole items: floor(quantity / Scales.quantity_per_item)
+    {n} as a rate      items per minute: rate / Scales.rate_per_item_hour / 60, toward zero, no trailing zeros, two decimals at most (more only under 0.01, down to the first digit), sign unless zero
+    {have}             a store's amount now in whole items, sampled from the segment beside it
+    {cap}              a store's cap in whole items
+    {h} {m} {s}        a duration in seconds, rounded up to the second: ui.duration.h on a whole hour, ui.duration.hm
+                       from 1 h, ui.duration.ms from 1 min, else ui.duration.s; {d} is a whole duration formatted that way
+    {m}                a rule's other level, in whole items (as {n})
+    {store} {card} {skill} {chip}   the label of that store, card, skill or chip
+    {<lane>}           a person's name: the text of that lane's LaneInfo.name_key (the slot is the lane id, "{n2}"),
+                       filled in every text entry, labels and lines alike; in a line (a key of Content.line_infos) it is
+                       lowercased, as the lines' voice writes every word. A slot naming a lane with no name_key fails
+                       the opening's checks; a slot's name may hold a digit, the text around it may not
+    {found}            the amount a find found, in whole items (as {n} as an amount), filled in the one line its FindInfo
+                       {line_key, store, quantity} (Content.find_infos) names; the opening's checks hold that line to
+                       exactly one {found} and no other text to any
+    {mix}              a mix's id, as it is; for a rule that taps a card, that card's label
+    {pct} {pct_b}      the first and second of a served change_bp (LevelPays, CampLevel, CardInfo, ChipInfo: a modifier's
+                       signed change in basis points, +1000 for a tenth more; a CardInfo's include the entries it holds
+                       while it runs, at its full share, then those of the standing action its content names as
+                       upside_of, the runner whose held entries its upside describes: a recipe whose make another
+                       runner eats names that eater, and the page draws the eater's change on the recipe; then, for a
+                       card whose content gives it a reach, those of the triggers on the store it fills; where a
+                       person's share of the card is chosen, the page draws each change at a CardInfo.kept slot as
+                       floor(amount_bp * share / Scales.bp), the engine's rounding, and the rest as served; a card's face
+                       draws them at its Card.share_bp in the running mix, and all at the full share while that is 0) as a signed
+                       percent: change / Scales.bp * 100
+                       toward zero, no trailing zeros, two decimals at most (a change that is not zero never reads as
+                       zero), sign unless zero ("+10%", "-33.33%"). The text names what changes and carries no direction
+                       word the sign already says; a text holds exactly as many of these slots as its change_bp has values
+    {gain} {gain_b}    the first and second of an AnswerInfo's gains, each in whole items (as {n} as an amount), in an
+                       answer's cost_key text only. {found} is a find line's alone, so an answer's amount has no
+                       slot there; the text names the store itself
+    {minutes}          how long a transfer code works, in whole minutes: floor(Content.transfer_code_s / 60)
+    {number} {level}   a save's SaveInfo.number and camp_level, as they are
+    {max} {days}       Games.max_saves (on a join's refusal, MergeSummary.max_saves) and Games.kept_days, as they are
+    {started} {played} {until} {seen}   SaveInfo.started_at, played_at, DeletedSave.purge_at and Device.last_seen_at as a date in the browser's
+                       own locale and zone: Intl.DateTimeFormat with day numeric and month short
+  A text holds only the slots above that its key's kind is filled with (a person's, {found} on a find line, {pct} where a
+  change is served, a ui key's own); any other fails the opening's checks, naming the key and the slot.
+  Fixed UI text, all in Content.text_entries (a missing key fails the opening's checks):
+    ui.duration.h {h} | ui.duration.hm {h}{m} | ui.duration.ms {m}{s} | ui.duration.s {s}    a duration
+    ui.rate.per_minute {n}          a ledger line's or contribution's rate
+    ui.store.amount {n}{cap}        a store's amount
+    ui.ledger.empties {d} | ui.ledger.fills {d}   until a falling line empties / a rising one fills
+    ui.ledger.yours | ui.ledger.threats   the ledger's group labels: the player's stores, the threats at them
+    ui.skill.level {n}              a skill's level (a plain count)
+    ui.card.needs {store}{have}{n}  a card's need: its store, what there is, its quantity (amounts; {n} rounded up,
+                                    so a need never reads as less than it takes)
+    ui.card.needs_spent {store}{have}{n}  the same, for a Need.spent need: nothing will bring the store again
+    ui.card.needs_step {card}{have}{n}   a card's step need: the other card, its completions, the count wanted
+    ui.card.needs_skill {skill}{have}{n}  a card's skill-level need: the skill's label, its level, the level wanted
+    ui.card.reach {store}{have}{n}  a reach stake's store: what there is, the next reach's amount
+    ui.card.opens {when}            a card's need on a clock with a part of the day: when it opens
+    ui.card.opens_in {d}            the foot of a card waiting on a ready time (Blocker.ready_at): when it opens, as a duration; a
+                                    running tap (Card.by "tap") keeps its bare timer
+    ui.card.takes_nothing           a card whose CardInfo.takes is empty, in a need's place (its face, a Camp person's rows)
+    ui.when.dawn | dawn_end | day | day_end | evening | evening_end | night | night_end   a condition on a clock with
+                                    that part of the day (StoreInfo.clock) as a time: the part itself while the value
+                                    is short of the clock's cap (StoreInfo.cap), the part's end at the cap. A card's
+                                    ui.card.opens and a cause both word it so
+    ui.mix.runs {d} | ui.mix.runs_indefinitely   the running mix's header (view.runs_out_at)
+    ui.mix.idle                     the unassigned share
+    ui.mix.default                  the id of the first mix the player makes (save_mix, then switch_mix)
+    ui.heading.ledger | ui.heading.craft | ui.heading.orders | ui.heading.mixes | ui.order.remove | ui.close
+    ui.order.add                    a new rule's Add
+    ui.rule.below {store}{n} | ui.rule.below_until {store}{n}{m} | ui.rule.reaches {store}{n} |
+    ui.rule.reaches_until {store}{n}{m}   a store rule's condition, with no band and with one
+    ui.rule.down_to_until {store}{n}{m} | ui.rule.up_to_until {store}{n}{m} | ui.rule.up_to_until_under {store}{n}{m} |
+    ui.rule.reaches_until_down {store}{n}{m}   the same with a share level, by which level is one ("a store rule")
+    ui.level.empty | ui.level.quarter | ui.level.half | ui.level.three_quarters | ui.level.full | ui.level.pct {pct}
+                                    a share level's words; ui.level.mark_quarter | ui.level.mark_half |
+                                    ui.level.mark_three_quarters the editor's short marks for three of them
+    ui.rule.of_full | ui.rule.exact   a level's two forms in the condition editor: a share of the cap, or items
+    ui.rule.quick_down {store}{test}{n}{task}{m} | ui.rule.quick_up {store}{test}{n}{task}{m} | ui.rule.falls_to |
+    ui.rule.reaches_to   the quick add's sentence, by its test, each slot a control; its two tests' words
+    ui.rule.copy                     a rule being changed: a new rule from it, to change before adding
+    ui.rule.side_mine   the Rules tab's switch, Mine | Camp (Camp is the town's name)
+    ui.rule.new | ui.rule.heading {mix} | ui.rule.falls_below | ui.rule.reaches_label | ui.rule.when |
+    ui.rule.until | ui.rule.less | ui.rule.more | ui.rule.while_runs {mix} | ui.rule.exists   writing a rule
+    ui.rule.needs_below {store}{n}{have} | ui.rule.needs_reaches {store}{n}{have}   why a store rule is off: it waits
+                                    for under n / n or more, and the store holds `have` now (amounts, sampled)
+    ui.rule.needs_down_to {store}{n}{have} | ui.rule.needs_up_to {store}{n}{have}   the same for a share level
+    ui.rule.stuck {n}{store} | ui.rule.unfed {store}{n}   a store rule that cannot let go, or whose mix may stop short
+                                    (DRY RULES)
+    ui.rule.outranked {rule} | ui.rule.passed_over   why a rule is off: an earlier rule has the hands (its condition's
+                                    words), or what it runs is done
+    ui.rule.behind_next {task}       why a rule under Next is off: the queue has the hands ({task}: what it runs, a
+                                    task's or a goal stint's words)
+    ui.rule.next_handle              the accessible name of Next's row's handle in the Rules tab (it moves the row)
+    ui.rule.otherwise | ui.rule.on | ui.rule.up | ui.rule.down | ui.rule.handle   the Rules tab's default row, a rule on
+                                    now, reordering (ui.rule.handle: the accessible name of a rule's drag handle)
+    ui.mix.used_by {n} | ui.mix.used_by_one   the Mixes list's note on a mix rules run (several, one)
+    ui.hands.by_rule {store}{n} | ui.hands.until_up {store}{m} | ui.hands.until_down {store}{m}   the hands strip while
+                                    a rule's mix or task runs: with no band, until a "below" rule lets go, until a
+                                    "reaches" one does
+    ui.hands.until_up_to {store}{m} | ui.hands.until_down_to {store}{m}   the same two, the until a share level
+    ui.rule.chip {chip} | ui.hands.while_chip {chip}   a rule whose `when` is a chip's, in its condition and on the strip
+    ui.rule.done {card}{n} | ui.rule.done_once {card} | ui.rule.reaches_level {name}{n}   a subject rule's condition
+    ui.rule.while_running {card} | ui.rule.running   a person's rule on another lane's task running, and its When head
+    ui.rule.lane_card {card}{person}   a ruled lane's card as a subject rule or guard names it, its lane's label beside it
+    ui.rule.levels | ui.rule.tasks | ui.rule.times | ui.rule.level   writing one: the When heads and the steppers
+    ui.chronicle.open | ui.tab.cards | ui.tab.book   the chronicle's sheet, and the tabs: Tasks and Book (the
+                                    chronicle's sheet); the town's tab (its people and lanes, and on a phone the ledger
+                                    and skills) is named by ui.town.title
+    ui.book.done                    the Book's page of finished cards
+    ui.chronicle.away_m {m} | away_h {h} | away_hm {h} {m} | away_d {d}   the title of a chronicle stretch that began with a return: how long the player was away
+    ui.chronicle.earlier | ui.chronicle.now     the title of the stretch before the first return kept, and of the newest when no return is kept
+    ui.chronicle.story | finds | levels | rules | fights | talk | all   the chronicle's filters
+    ui.chronicle.count {name}{n}   how many entries of a filter a stretch holds
+    ui.chronicle.rule_on {rule} | ui.chronicle.rule_off {rule}   a rule's entry: it came on, it let go
+    ui.cause.store {store}{n} | ui.cause.below {store}{n} | ui.cause.level {skill}{n} | ui.cause.skill {skill} |
+    ui.cause.count {card}{n} | ui.cause.camp {n} | ui.cause.time | ui.cause.answer   a line's cause (Line causes):
+                                    a store reached or fallen to, a skill's level, one of a skill's levels, a card's
+                                    count, a Camp level, the clock, the player's answer
+    ui.feedback.open | ui.feedback.prompt | ui.feedback.note | ui.feedback.send | ui.feedback.cancel |
+    ui.feedback.thanks | ui.feedback.later   the Feedback button and its sheet: the button, the field's placeholder, the
+                                    line saying what is sent along, Send, Not now, the thank-you, and the line when a send
+                                    was not kept (limited, or no answer)
+    ui.hands.idle | ui.hands.then {mix} | ui.hands.until_goal {goal}   the hands strip's states: idle; the mix the hands
+                                    go back to while a tap, a rule's mix or a goal stint holds them; where a goal stint's
+                                    mix lets go
+    ui.games.open | ui.games.heading | ui.games.name {number} | ui.games.unnumbered | ui.games.camp {level} |
+    ui.games.dates {started}{played} | ui.games.playing | ui.games.switch | ui.games.delete |
+    ui.games.delete_ask {days} | ui.games.start_over | ui.games.start_over_ask {days} | ui.games.cancel | ui.games.new | ui.games.full {max} | ui.games.limited | ui.games.credits_stains |
+    ui.games.deleted_heading | ui.games.kept {until} | ui.games.restore |
+                                    the Games button and its sheet: a save's name (and one with no number), how far,
+                                    its dates, the open one's mark, Open, Delete and its confirmation, New game, the
+                                    lines for the cap, the new-game limit and the last live save, and the deleted saves
+                                    with Restore
+    ui.settings.open | ui.settings.heading | ui.settings.device | ui.settings.every |
+    ui.games.straight | ui.games.skip_lessons
+                                    the Settings button and its sheet, in groups headed by what a choice is bound to
+                                    (this device, every game): the checkbox that skips the front page on this device
+                                    (shown in this sheet and on the front page), and the checkbox that turns lessons off
+                                    in every game of the account (AccountSettings.lessons, checked when it is false)
+    ui.sound.on | ui.sound.off | ui.sound.row
+                                    the speaker button's name in each state (it mutes, then unmutes), and the Sound
+                                    checkbox in Settings' this-device group; both are drawn only once sound exists
+    ui.games.played {when}          the front page's list of games: a row's last-played line, {when} one of the ui.time.*
+                                    words (the list's heading is ui.games.heading, the phone's button ui.games.open)
+    ui.front.continue               the front page's button, in Begin's place, on a browser that has games
+    ui.front.begin                  the front page's button on a first visit, and while New game is the one selected
+    ui.front.first                  the front page's line under the title on a first visit, and while New game is selected
+    ui.time.now | ui.time.minutes {n} | ui.time.hour | ui.time.hours {n} | ui.time.yesterday |
+    ui.time.days {n}                how long ago a game was last played, as a time after "Last played"
+    ui.devices.list_heading | ui.devices.list_lead | ui.devices.list_this | ui.devices.list_seen {seen} |
+    ui.devices.list_remove | ui.devices.list_remove_ask | ui.devices.list_remove_yes | ui.devices.list_remove_no
+                                    the Another device sheet's list of the account's browsers: its heading and lead, the
+                                    mark on the asking browser's row, a row's last use, Remove, and the question before
+                                    this browser is signed out with its yes and no
+    ui.frame.kept_out | ui.frame.open
+                                    the front page's note when a browser keeps no game inside the page that frames it,
+                                    and the link that plays it in its own tab
+    ui.mix.both | ui.mix.edit | ui.mix.edit_mix | ui.mix.save | ui.mix.save_new | ui.mix.new | ui.mix.full | ui.mix.name |
+    ui.mix.add | ui.mix.per_minute | ui.mix.now | ui.mix.after | ui.mix.delete | ui.mix.delete_ask | ui.yes | ui.no
+                                    the mix's controls and editor
+    ui.mix.named_by_order | ui.mix.nested   why a mix cannot be deleted
+    ui.card.count {n}{cap} | ui.card.retired   a capped card's count; a retired card
+    ui.ledger.full | ui.ledger.covered | ui.ledger.starved | ui.ledger.unfed {pct}   a ledger line's states
+  A content order card marked `default` is not served: the loader makes it a trigger that installs its order, on a ruled
+  lane's card, once its offered_after (and, with after_end, the end) is unlocked (RuleInstall.when); the player edits or
+  removes it as any rule. Order cards carry no text: `when` is an at_most on the card's store, worded as a store rule (above) or, for a
+  card with a `chip`, as that chip, and `then` taps a card, worded by its label. Content order cards only tap cards; a mix is the player's, so no order card names one.
+

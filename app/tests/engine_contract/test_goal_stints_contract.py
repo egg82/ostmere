@@ -1,4 +1,4 @@
-"""Goal stints (api/CONTRACT.txt "GOAL STINTS", engine DESIGN.txt "Queue mix"), blind: written from those two sections and
+"""Goal stints (api/contract/goal-stints.txt "GOAL STINTS", engine DESIGN.txt "Queue mix"), blind: written from those two sections and
 the public engine surface alone. A stint is QueueEntry(SwitchMix(m), until) with the until of a goal row: a store at an
 amount, or a skill at a level counted across prestige phases ((phase - 1) * (top_level - 1) + level).
 

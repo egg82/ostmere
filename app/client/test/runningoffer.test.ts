@@ -1,4 +1,4 @@
-// The When row offers "while {card} is running" exactly where set_orders takes it (CONTRACT.txt, "Decisions"): on a
+// The When row offers "while {card} is running" exactly where set_orders takes it (contract/endpoints.txt, "Decisions"): on a
 // rule tapping a person's lane, every card of another lane in play, the hands' included, and none of its own lane; on a
 // hands tap, a mix switch or no action yet, none. Each offer builds the one Running shape and reads back as itself.
 import { fixtureContent } from "../fixtures/content";

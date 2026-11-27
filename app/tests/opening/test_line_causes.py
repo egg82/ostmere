@@ -1,4 +1,4 @@
-"""Content.line_infos' causes (api/CONTRACT.txt, "Line causes"): each line key is served with what writes it, read from
+"""Content.line_infos' causes (api/contract/endpoints.txt, "Line causes"): each line key is served with what writes it, read from
 where the content authors the key. One case per place a key can be authored, on the shipped content, and a key
 planted in a second place fails the load."""
 import pytest

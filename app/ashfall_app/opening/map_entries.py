@@ -1,4 +1,4 @@
-"""The content file's places on the world map (api/CONTRACT.txt, "MAP"), as Type Objects."""
+"""The content file's places on the world map (api/contract/map.txt, "MAP"), as Type Objects."""
 from typing import Literal
 
 from .entries import Entry, UnlockEntry

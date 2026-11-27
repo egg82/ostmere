@@ -258,7 +258,7 @@ held = true
 
 # ---------- the map ----------
 
-# The map's first sheet (api/CONTRACT.txt, "MAP"), drawn from B17: the ridge the road goes over, north of the town, and
+# The map's first sheet (api/contract/map.txt, "MAP"), drawn from B17: the ridge the road goes over, north of the town, and
 # the hills past it, unnamed.
 [[places]]
 id = "p_ridge"

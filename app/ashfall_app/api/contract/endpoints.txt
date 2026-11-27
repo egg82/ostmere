@@ -1,0 +1,172 @@
+ENDPOINTS
+  GET  /api/content                   Content. Static: text, labels, cards, Scales, limits. Fetch once per rules_digest. ETag names the build and the
+                                      rules; If-None-Match with it is a 304.
+  GET  /api/me                        Me {account: Account | null, saves: [SaveInfo]}: who this browser is, with its
+                                      live saves, the most recently played first. Never makes an account.
+  POST /api/saves                     NewSave {save: SaveInfo, presentation: SavePresentation, step: Step}: a new
+                                      save at game time 0, its first view and lines, and nothing kept about its
+                                      teaching. Makes the account (and sets the cookie) when the browser has none,
+                                      under a limit (429 rate_limited). On an account, under the limits of "Games on
+                                      one account" (409 too_many_saves, 429 rate_limited); the other saves are kept.
+  GET  /api/saves                     Games: the account's saves, live and deleted (GAMES ON ONE ACCOUNT). 401
+                                      no_account without an account.
+  A {save_id} below is 1 to 2^53; anything else is 422 invalid_decision before any lookup. In range but not this
+  account's is 404 not_found.
+  POST /api/saves/{save_id}/delete    Games: the save deleted (GAMES ON ONE ACCOUNT).
+  POST /api/saves/{save_id}/restore   Games: a deleted save live again (GAMES ON ONE ACCOUNT).
+  POST /api/saves/{save_id}/open      Opened {save, was, history, presentation, journal_days, step}: the save as the
+                                      player last saw it (`was`, the View at the time it was last written), its last
+                                      200 lines before this call (`history`, PastLine {n, at, key}, oldest first), what
+                                      the page keeps about its teaching (`presentation`, SavePresentation below), its
+                                      journal's written days stored before this call (`journal_days`, JOURNAL, "The
+                                      written days"), and `step`, the save advanced to now with the lines that arrived
+                                      while away. Writes like an advance.
+  POST /api/saves/{save_id}/advance   Step: a plain advance to now. Call it when the clock passes
+                                      view.next_event_at, and on the page being shown again.
+  POST /api/saves/{save_id}/decisions DecisionRequest {decision, after} -> Step: advance to now, then apply the
+                                      decision. `after` is the Step.decisions the page last saw (409 stale if the
+                                      save has had another decision since). A tap_card of a card that is not ready
+                                      is a failed tap: it takes no time, changes nothing and emits no line, and
+                                      Step.failed_tap names the card (null on every other Step).
+  POST /api/saves/{save_id}/mix-rows  MixRows {at, rows, best} (MIX ROWS below): each of the player's own saved mixes
+                                      as if it ran from now, and the earlier best per goal. Writes nothing; 409
+                                      catching_up while the save is still behind.
+  POST /api/saves/{save_id}/forecast  ForecastAnswer {decisions, forecast}: the save advanced to now and what lands
+                                      from there if the player changes nothing (FORECAST below).
+  POST /api/saves/{save_id}/dry-run   DryRunRequest {decisions} -> View: what the save would show after these
+                                      decisions, applied in order at the save's time as last written: the instant
+                                      the page's view shows, so a figure read before -> after compares one moment.
+                                      Nothing is written (the mix editor's "after"); 409 catching_up while the save is
+                                      still behind.
+  GET  /api/saves/{save_id}/view      View: the save as last written, at its own time (rebased in memory if the rules
+                                      changed since), not advanced to now. Nothing is written: no played_at change, no
+                                      decision counted. Never 409 catching_up. 404 for a save the account does not
+                                      own; 503 save_unavailable for one this build cannot read. The front page's
+                                      picture of each save's camp, before any game is opened.
+  PUT  /api/me/presentation           AccountPresentation -> Account: what the page keeps about the player across
+                                      saves (the Rules tab opened, the ledger lines shown). Adds to what is kept,
+                                      never takes away (below); the answer's presentation is what is kept now. 401
+                                      without an account.
+  PUT  /api/me/settings               AccountSettings -> Account: the player's choices for every game of the account,
+                                      replaced whole (below). 401 without an account.
+  PUT  /api/saves/{save_id}/presentation  SavePresentation -> SavePresentation: what the page keeps about one save's
+                                      teaching (below). Adds to what the save keeps, never takes away, exactly as
+                                      the account's presentation does; the answer is what is kept now. 404 for a save
+                                      the account does not own or has deleted.
+  POST /api/feedback                  FeedbackRequest {text, save_id?} -> 204: a tester's words. `text` is trimmed and
+                                      must then be 1 to 2000 characters (422 invalid_decision). `save_id` is 1 to 2^53
+                                      (past that, 422 invalid_decision) and is kept only
+                                      when this browser's account owns that save; with it the server also records the
+                                      save's game time when last written and the key of its newest log line, beside the
+                                      build and release that answered and the account id. No account is needed (the
+                                      browser's client address is what is counted either way). At most 5 an hour
+                                      from one client address, 5 from one account, 15 from one IPv6 /48 and 50 an hour
+                                      in all, counted across pods; a limit that cannot be counted refuses (429
+                                      rate_limited).
+                                      Rows older than 180 days are deleted as new ones come in. The text is stored
+                                      and never logged. The owner reads them with `python -m ashfall_app.feedback list`.
+  POST /api/me/transfer-code          TransferCode: a code that joins another browser to this account (below,
+                                      "Moving to another device"). 401 no_account without an account.
+  POST /api/me/words                  RecoveryWords: new recovery words for this account. 401 no_account without
+                                      an account.
+  POST /api/join                      JoinRequest {typed, merge, keep} -> Joined {moved, account, kept}: this browser
+                                      joins the account a code or recovery words name.
+  GET /api/me/devices                 Devices: the account's browsers (below, "Your devices"). 401 no_account.
+  DELETE /api/me/devices/{device_id}  Devices: signs that browser out. 401 no_account; 404 not_found.
+  PUT /api/reminders                  ReminderOn -> Reminder: reminders on for this browser, or its keys refreshed
+                                      (below, "Reminders"). 401 no_account; 404 not_found; 422 invalid_decision.
+  DELETE /api/reminders               ReminderOff -> 204: reminders off for this browser. 401 no_account.
+  Decisions (discriminated by `kind`): tap_card (a tap, a craft, a story step), switch_mix, save_mix, delete_mix,
+  set_orders, set_queue, answer_offer (OFFERS below), prestige, undo_pick and move_pick (PRESTIGE PHASES). Orders and queue
+  entries take switch_mix, tap_card and answer_offer. A `running` subject is taken in exactly one shape: an order (in
+  `when` or `unless`) whose every action is a tap_card of a card on one lane other than the hands, watching a card
+  of a different lane (the hands' or another person's). Its verb cannot start or stop the card it watches, and its tap
+  runs on when it lets go, so the instant settles. Every other `running` condition is 422 invalid_decision: a queue
+  entry's, a mix switch's or an answer's, a hands tap's, a rule tapping on two lanes, a watched card on the rule's own
+  lane, or a standing action watched. Why: two mix orders on a running card flip each other forever within one instant
+  (engine DESIGN.txt, "Order mix"). A view carries `running` subjects, in blockers, rules and saves.
+  Share levels: at_least and at_most carry value_of_cap and release_of_cap (bool, false when left out, always
+  served). True says that level is basis points, 0..10000, of the watched store's cap at the moment the condition is
+  read, not a quantity, so the rule keeps up as the cap grows (engine DESIGN.txt, "SHARE LEVELS": the store's whole
+  items are compared with the exact share of the cap's whole items, and a band of one item is kept). Only an order's
+  `when` and a queue entry's `until` on a store_value hold one; set_orders or set_queue with a share level on any
+  other subject, outside 0..10000, or with two share levels on the wrong side of each other is 422 invalid_decision.
+  A share level and a quantity are never compared for which side the release is on. Content's conditions (chips,
+  goals, blockers, order cards, goal rows) are always quantities.
+  Rule guards and fallbacks: an Order is {when, then, unless, or_else}; `unless` (conditions, at most
+  3) and `or_else` (order verbs, at most 2) may be left out of a request and read as empty, and are
+  always served. The rule's actions are `then` followed by `or_else`: it runs the first that can act. Each `unless` entry
+  is the condition that blocks the rule, read as a `when` is (the same refusals, share levels included): while any holds, the rule is paused, and it resumes when the
+  last lets go. All actions are one kind (tap_card or switch_mix), taps on one lane, mixes of one layer; a rule that
+  answers an offer takes no or_else; a guard or an action listed twice is refused. Every refusal is 422
+  invalid_decision, a list past its limit included. A rule with neither list is the rule it always was,
+  in a request, in a save and in a rule_run's `order`, which equals its rule in View.orders.
+  View carries, beside orders_on (still the `when` latch alone): order_states[i] may be `paused`;
+  order_guards[i][j] {on, lets_go} for guard j of orders[i], `on` its latch and `lets_go` the quantity of the watched
+  store it lets go at as the engine reads it now (a share level read against the cap now), null off a store;
+  order_doing[i], the index in the rule's actions (then, then or_else) of the one it runs now, else null.
+  Next's row: an Order may carry below_next (false when left out, always served). The rules with it are the ones under
+  Next, the queue's row in the hands' list; set_orders makes every rule after the first with it carry it too, so the
+  rules under Next are a run to the end and a rule appended lands there. A rule's latch is kept when only below_next
+  changes, and a rule_run's `order` never carries it. Rules above Next outrank a ready queue entry as every rule does
+  with none set (Next at the bottom, as in every save from before it); rules under it wait while the controlling
+  entry can act or its goal stint runs, and act again when it pops. An entry that cannot act holds nothing, so the
+  rules under Next run, while the entries behind it in the queue still wait. order_states[i] is `behind_next` for a
+  hands rule under Next whose condition holds while the queue has the hands (engine DESIGN.txt, "NEXT'S ROW").
+  SaveInfo {save_id, number, decisions, game_time, ended_at, started_at, played_at, camp_level}: game_time is the
+  save's game time when last written; the rest are in GAMES ON ONE ACCOUNT. A save id is the account's own: any other
+  answers 404 not_found, exactly as a save that does not exist, and so does a deleted save.
+  AccountPresentation {rules_opened: bool, devices_opened: bool, reminder_mentioned: bool, ledger_lines: [str], mix_stopped: [str], switch_offered: [OfferedSwitch {chip, mix_id}], journal_read: [str]}, all false
+  and empty on a new account (devices_opened: the "Another device" sheet has been opened; reminder_mentioned: the one
+  row pointing at the reminders setting has been drawn, so it is never drawn again; ledger_lines: the stores whose
+  ledger line the page has shown; mix_stopped: kept for old accounts, no longer written (the stopped mix's fix
+  is gone); switch_offered: the repeated switches (a RepeatedSwitch's chip and mix_id) whose chip mark was touched;
+  journal_read: the notes on journal pages the player has turned to). An account's stored presentation may still hold
+  the lesson fields it kept before lessons were per save; they are not served, and a PUT from a page of the build
+  before (carrying rule_seen, mix_offered, lessons or lesson_ends) is accepted with those fields dropped, never stored.
+  SavePresentation {rule_seen: bool, mix_offered: [str], lines_touched: [str], lane_tasks_seen: [str], lessons: [str], lesson_ends: [LessonEnd {lesson, skipped, step, longest_wait_s}], visits: [Visit {left, back}], chapter: Chapter | null, newest_day_read: int | null},
+  all false and empty on a new save and on every save made before this field: what gates a lesson or a lesson's hint
+  is kept per save, so a new game teaches everything again from each lesson's own moment (rule_seen: a rule has been
+  seen on and then off in this save, which opens writing rules; mix_offered: the cards whose "your mix could take it"
+  dot was touched; lines_touched: the stores whose ledger line's quiet dot was touched; lane_tasks_seen: the tasks of lanes run by rules the player has had in front of them on the person's page (a person with a task not listed has a quiet dot on Change in their Town row); lessons: the lessons done or skipped; lesson_ends: how each ended (skipped or done, the step index it
+  ended on, the longest the player stayed on one step in seconds), logged once as a lesson.end line with the save's id,
+  when a PUT first adds it to what the save keeps; visits: each return after at least half an hour away, the game
+  second the player last saw the save (`left`, one entry per value) and the one the return came to (`back`): the
+  chronicle's stretches begin at each `left`; chapter: the newest visit's figures, Chapter {left, back, stores: [Figure
+  {id, was, now}], levels: [Figure], camp: Figure | null, rules: [RuleChange {order, came_on, times}]}, what the return
+  found against what the player left: each store whose whole items moved (quantities), each skill that rose and the
+  Camp's level, each rule that came on (times: how often, 1 where the page could not count) or only let go while away;
+  the page takes it once, as the visit is kept, and draws it as the chronicle's "Since you left" chapter;
+  newest_day_read: JOURNAL, "The written days"). A PUT from a page of the build before, which carries no visits or
+  chapter, leaves them as stored; a chapter replaces the stored one only when its `left` is later, and never past the
+  byte limit below.
+  Content.line_infos names each log line's kind, authored in the content's `[line_kinds]` beside its text and
+  checked for every key a line can carry: story, tap, find, level, body or fight (opening/line_kinds.py). The page sets
+  a line by its kind and never by its key or words.
+  Line causes: each LineInfo also carries cause, what writes the line, read from where the content authors its key
+  (api/line_causes.py): runner {runner}, a card's line, outcome or finish, or a fight's pool on a card or standing
+  action; when {when: Condition}, what a beat, an offer's arrival or a chip waited on; skill {skill}, a line several
+  levels of one skill share (a phase's pool), so which level is not known; camp {level}, a Camp level from 1; answer
+  {offer}, the player's answer to that offer (an offer's own lines take the offer's cause: OFFERS). Null for the end's
+  lines, a beat waiting on a lane's rules, and a `when` on a store the player is never shown (neither unlocked by any
+  outcome nor a tally, or hidden) unless it is a clock with a part of the day (StoreInfo.clock), which the page words
+  as that time (ui.when.*), never as an amount. A key is written in one place or by one skill's levels; any other
+  sharing fails the content's load. The page words a cause under its line in the chronicle and never parses a line's
+  words for one.
+  Beat lines: LogLine.opens_beat is true on a story beat's first line (a beat of content/beats.yaml, weekly and season
+  turns included) and false on every other line: side layers, mini-stories, people's and daily lines. The content authors
+  it in `[beat_lines]`, a beat's id to the first-line key of each way it can be told, each a story line opening one beat
+  only; the page never takes a beat from a key or a line's words. The end's first line is Content.end_line_keys[0].
+  AccountSettings {lessons: bool}, true on a new account: lessons is false once the player turns lessons off in every
+  game of the account; the page then starts no lesson and shows no hint that only a lesson gives (a guided offer is its
+  one tap), and on again, each save's lessons go on from what it keeps. A PUT replaces the settings whole.
+  Account {presentation: AccountPresentation, settings: AccountSettings, has_words: bool, words_due: bool}: has_words,
+  the account has recovery words; words_due, it has none, holds a decision on a save, and was made at least 3 days ago
+  (the page marks the way to make them with a dot).
+  A presentation only grows, so a PUT is merged into what the account (or the save) keeps, in one write under its row lock:
+  a flag is set if either has it, a growing number (newest_day_read) is the higher of the two, a list is the kept
+  entries then the sent ones not yet there (a lesson_end is the same entry as another naming the same lesson; the kept
+  one stays), and a list stops growing at 512 entries, and every list at the byte limit (REQUEST LIMITS). A page
+  whose copy is older than what is kept (a second tab or device) so takes nothing away, and takes the answer as its
+  new copy. The lesson id in a lesson.end line is the page's own id for a lesson, logged as sent like a card id.
+

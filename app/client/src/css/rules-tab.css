@@ -1,0 +1,60 @@
+/* the Rules tab: one line per rule (≡ ● condition → mix), Otherwise last */
+.rules { display: flex; flex-direction: column; gap: .8rem; padding-top: .7rem; }
+.rules-label { margin-right: .2rem; font-size: var(--t-meta); color: var(--ink); }
+.rules-list, .rules-lane { display: flex; flex-direction: column; gap: 2px; }
+.rules-lane .panel-heading { margin: .3rem 0 .1rem; }
+.rules-row { display: flex; align-items: center; gap: .3rem; min-height: 2.9rem; padding: .3rem .4rem .3rem .1rem; border-bottom: 1px solid var(--rule); }
+.rules-row.greyed .rule-slot, .rules-row.greyed .rule-slot-name, .rules-row.greyed .rule-when { opacity: .55; }
+.rules-row .selector-dot { flex: none; width: .8rem; }
+.rules-row .selector-dot:empty { display: none; }   /* only the rule on now carries it */
+.rule-handle { flex: none; width: 1.8rem; height: 2.75rem; padding: 0; font: inherit; font-size: var(--t-display); line-height: 1; color: var(--ink); background: transparent; border: 0; cursor: grab; touch-action: none; }
+.rule-handle:hover, .rule-handle:focus-visible, .rule-handle[aria-expanded="true"] { color: var(--ink-hi); background: var(--press); }
+.rule-handle-gap { flex: none; width: 1.8rem; }
+.rule-cond { flex: 1 1 auto; min-width: 0; min-height: 2.4rem; display: inline-flex; align-items: center; gap: .4rem; padding: .2rem .65rem; font: inherit; font-size: var(--t-meta); text-align: left; overflow-wrap: anywhere; color: var(--ink-hi); background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); cursor: pointer; }   /* the condition: tap to edit */
+.rule-cond-text { flex: 1 1 auto; min-width: 0; }
+.rule-cond:hover { background: var(--press); }
+.rule-edit-mark { flex: none; font-size: var(--t-meta); opacity: .85; }
+.rule-arrow { flex: none; margin-left: auto; padding: 0 .1rem; color: var(--ink); }
+.rules-row > .rule-when { flex: 0 1 auto; padding-left: .8rem; font-size: var(--t-body); }
+.rule-slot { flex: none; max-width: 9.5rem; min-height: 2.4rem; display: inline-flex; align-items: center; gap: .2rem; padding: 0 .55rem; font: inherit; font-size: var(--t-meta); color: var(--ink-hi); background: transparent; border: 1px dashed var(--ink-dim); border-radius: 2px; cursor: pointer; }   /* the mix slot: tap to pick, or drop a mix on it */
+.rule-slot-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rule-slot-name.has-else { white-space: normal; text-align: left; overflow-wrap: anywhere; }   /* a rule's mixes with "or else": wrapped, never cut */
+.task-rule .rule-action { flex: 0 1 auto; min-width: 0; margin-right: .3rem; }
+/* Next: the queue's taps, between the hands rules and Otherwise (nextlist.ts) */
+.rules-next { margin: .3rem 0 0 2.1rem; font-size: var(--t-meta); font-weight: 500; color: var(--ink); }
+.next-head .rules-next { margin: 0 0 0 .3rem; }   /* Next's row heads its lines and moves like a rule (ui/nextlist.ts) */
+.next-row .rule-action { flex: 1 1 auto; min-width: 0; margin-right: .3rem; }
+.next-row .quiet { flex: none; min-height: 2.4rem; padding: 0 .8rem; }
+.next-running { flex: none; min-height: 2.4rem; padding: 0 .8rem; display: flex; align-items: center; font-size: var(--t-meta); color: var(--ink); }
+.rules-row.drop-before { box-shadow: 0 -2px 0 var(--ink-hi); }
+.rules-row.drop-after { box-shadow: 0 2px 0 var(--ink-hi); }
+.rules-row.lifted { opacity: .35; }
+.rules-row.slide, .rule-why.slide, .rule-menu.slide { transition: transform var(--settle-ms) var(--settle-ease); }   /* a reordered rule slides home (ui/ruleslide.ts) */
+.rules.dragging, .rules.dragging * { user-select: none; cursor: grabbing; }
+.drag-ghost { position: fixed; z-index: 50; margin: 0; pointer-events: none; font: 400 var(--t-body)/1.35 "Alegreya Sans", system-ui, sans-serif; color: var(--ink); opacity: .92; box-shadow: 0 .6rem 2rem rgba(0, 0, 0, .6); }
+.rule-menu { display: flex; flex-wrap: wrap; gap: .5rem; padding: .3rem .4rem .3rem 2.1rem; }
+.rules-row:has(+ .rule-why) { border-bottom: 0; box-shadow: none; }   /* the row and why it is off read as one line */
+.rule-why { padding: 0 .4rem .4rem 2.1rem; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--rule); }
+/* Lately (ui/rulelately.ts): the rule in plain ink, its facts quiet under it, as a rule's why line */
+.rules-lately { display: flex; flex-direction: column; }
+.rules-lately:empty { display: none; }
+.lately-rule { padding: .35rem .4rem 0 2.1rem; color: var(--ink); }
+.lately-facts { padding: 0 .4rem .35rem 2.1rem; font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.rules-new { align-self: flex-start; }
+.rules-side { display: flex; gap: 6px; padding: 0 0 .5rem; }   /* Mine | Camp: the editor's choice buttons (.cond-test), the chosen one pressed */
+.stint-plan { align-self: flex-start; }
+/* Plan's cards (ui/stintplan.ts): one still waiting is off, outlined like a card's "in Next"; the mixes start after a gap */
+.plan-card:disabled { background: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
+.plan-card:disabled .selector-name { color: var(--ink); }
+.plan-card:disabled .selector-note { color: var(--ink-dim); }
+/* a lane task's lane, beside its name, where a mix's bar sits */
+.plan-card + .selector-run:not(.plan-card) { margin-top: .6rem; }
+.rules-full { align-self: flex-start; margin: 0; color: var(--ink-dim); }
+.rules .rule-picker { margin-top: .4rem; }
+@media (max-width: 639px) {
+  .rules-row { gap: .25rem; }
+  .rule-slot { max-width: 7.5rem; padding: 0 .45rem; }
+  .rule-cond { padding-inline: .55rem; }
+  .goal-row, .goal-head { grid-template-columns: minmax(0, 1fr) 4.5rem 1rem 4.5rem; }   /* a goal and its level on one line: times stay under "47h 59m" (format.duration) */
+}
+.end-card { text-align: center; padding: 1.6rem 1.4rem 1.4rem; }

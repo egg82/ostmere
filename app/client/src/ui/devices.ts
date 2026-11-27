@@ -1,4 +1,4 @@
-// "Another device" (CONTRACT.txt, "Moving to another device"): a quiet text button at the panel's foot opening a sheet
+// "Another device" (contract/moving-to-another-device.txt, "Moving to another device"): a quiet text button at the panel's foot opening a sheet
 // of four parts, a code to join another device to this game (devicecode.ts), recovery words for when every device is
 // gone (devicewords.ts), joining this device to another (devicejoin.ts), and the account's browsers with a Remove on
 // each (devicelist.ts); this device's own choices, reminders among them, are the Settings sheet's (settings.ts). A join that left this device's games behind replaces the four with the step that shows their

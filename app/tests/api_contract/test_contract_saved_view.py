@@ -1,4 +1,4 @@
-"""GET /api/saves/{id}/view (CONTRACT.txt, ENDPOINTS): the save as last written, at its own time, with nothing written:
+"""GET /api/saves/{id}/view (contract/endpoints.txt, ENDPOINTS): the save as last written, at its own time, with nothing written:
 the front page draws each save's camp from it before any game is opened."""
 from tests.api_contract import rows
 from tests.api_contract.site import Browser, Pod, begun, ok, ready_tap, refused

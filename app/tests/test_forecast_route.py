@@ -1,4 +1,4 @@
-"""The forecast has its own call, kept off every View (CONTRACT.txt, "Forecast"): it reads the save at now, writing nothing,
+"""The forecast has its own call, kept off every View (contract/forecast.txt, "Forecast"): it reads the save at now, writing nothing,
 and answers the decision count it holds for and what lands by its horizon; no Step carries one."""
 from ashfall_app.db import saves as rows
 from tests.game_client import GameClient

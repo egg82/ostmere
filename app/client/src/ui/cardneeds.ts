@@ -16,7 +16,7 @@
 // A card that shows an upside (CardInfo.upside_key) and takes from no store (CardInfo.takes empty: no inputs, costs or
 // drains) says so in a need's place, while it works too: a benefit with no cost beside it reads as a cost not shown (takesNothing).
 // A card a full pause stopped (Card.full_store: every store it fills is full) says which store has no room, in a need's
-// place and quiet: it starts again by itself as the store is drawn down (CONTRACT.txt, "FULL OUTPUT"). A spent card
+// place and quiet: it starts again by itself as the store is drawn down (contract/full-output.txt, "FULL OUTPUT"). A spent card
 // (Card.spent_store) says in the same place which store nothing makes now, unless that store's need row is drawn; and a
 // card running on a share while every store it makes is full says its work is wasted (game/wasted.ts).
 // Rebuilt only when what is needed changes; store needs are sampled every frame. A failed tap marks the row that shows

@@ -1,5 +1,5 @@
 """The API's route class: every answer goes through it. FastAPI's own `{"detail": ...}` body is not the contract
-(CONTRACT.txt), so a GameError becomes its ApiError body and status, and a request the models reject (an unknown
+(contract/), so a GameError becomes its ApiError body and status, and a request the models reject (an unknown
 field, a share past 100%) is a decision that does not fit: invalid_decision. A write (POST, PUT) that succeeded renews
 its session (session.py), so a refused request writes nothing. A request runs on one pool checkout (db/unit.py). A
 database failover under a request is replayed or answered 503 (replay.py). Every answer is logged once

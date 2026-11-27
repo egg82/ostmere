@@ -6,7 +6,7 @@ Their content is in `content/` (`team/banked-time-open.md`, questions BT1–BT6,
 only what the code needs. Beats are named by id. Sizes: **S** under a day of agent work, **M** a few days, **L** a
 week or more.
 
-Interface: engine `DESIGN.txt`, "BANKED TIME", and `api/CONTRACT.txt`, "BANKED TIME". An implementer gets one item,
+Interface: engine `DESIGN.txt`, "BANKED TIME", and `api/contract/banked-time.txt`, "BANKED TIME". An implementer gets one item,
 those two sections and this file.
 
 ## Measured

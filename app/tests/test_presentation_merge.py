@@ -1,5 +1,5 @@
 """Two pages of one account keep what the account's presentation, and each save's, has grown to, however stale the
-second one's copy is (api/CONTRACT.txt, AccountPresentation and SavePresentation): a PUT adds to what is stored, never
+second one's copy is (api/contract/endpoints.txt, AccountPresentation and SavePresentation): a PUT adds to what is stored, never
 takes away, and each lesson end is logged once for its save."""
 from typing import Any
 

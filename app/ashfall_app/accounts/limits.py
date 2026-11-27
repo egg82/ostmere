@@ -1,4 +1,4 @@
-"""The limits of api/CONTRACT.txt (429 rate_limited): on making accounts, PER_ADDRESS from one client address and
+"""The limits of api/contract/ (429 rate_limited): on making accounts, PER_ADDRESS from one client address and
 OVERALL in all, per WINDOW; and on moving to another device, joins per client address, joins that found nothing across
 everyone, and codes and words made per account; new games per account, and decisions per save (saves/). Each is a Limit: at most `n` tries of `kind` within `window`, counted
 per `who` (a client, an IPv6 client's /48 prefix, an account, or all). Counted in the tries table, so every pod shares one count and a deploy

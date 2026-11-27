@@ -204,7 +204,7 @@ Each step is one MR; each ships with its test, proven able to fail.
    `reminders`, the logfmt lines. Tests: a fake push service returns 201, 410 and 500 (row kept or deleted, one line
    each); the allow-list refuses a non-push host and a redirect; no endpoint appears in captured logs.
 4. **API.** `PUT` and `DELETE /api/reminders` (endpoint in the body, never a URL), `visited_at` stamp, merge handling,
-   `reminder_mentioned` in `AccountPresentation` and `CONTRACT.txt`. Tests: the stamp writes at most once per ten
+   `reminder_mentioned` in `AccountPresentation` and `contract/`. Tests: the stamp writes at most once per ten
    minutes; a merge moves the rows; the flag ORs across two sessions; the round-trip count on open does not rise.
 5. **Page.** `sw.js`, manifest, the Devices row, `pushCap` states, the single mention. Tests: a headless render of the
    row in each state and the iOS-not-installed sentence; the mention draws once, then not after a reload, a second

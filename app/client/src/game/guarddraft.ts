@@ -1,7 +1,7 @@
 // A store guard as the editor builds it (docs/design/rule-guards.md, "Guards"): one level and one test, stored as the
 // condition that blocks the rule. "Unless smoked is 10 or more" blocks from 10 and lets go one item past, under 9;
 // "unless smoked is under 10" blocks under 10 and lets go from 11. A share keeps the same share for both levels, which
-// the engine widens to a band of one item (CONTRACT.txt, "Share levels"). The page words a guard in guardwords.ts.
+// the engine widens to a band of one item (contract/endpoints.txt, "Share levels"). The page words a guard in guardwords.ts.
 import type { Condition } from "../api/types";
 import { BP, crossing, isShare, SHARE_STEP, type Level, type Test } from "./storerule";
 

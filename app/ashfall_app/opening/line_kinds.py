@@ -1,4 +1,4 @@
-"""The kind of every log line, authored beside its text in a `[line_kinds]` table (api/CONTRACT.txt, "Line kinds"): the page
+"""The kind of every log line, authored beside its text in a `[line_kinds]` table (api/contract/, "Line kinds"): the page
 sets a line by its kind and reads nothing from its key or words."""
 from typing import TYPE_CHECKING, Literal
 

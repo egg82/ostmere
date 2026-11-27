@@ -18,7 +18,7 @@ const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.str
 const canon = (x: unknown): string => JSON.stringify(x, (_, v: unknown) => (v !== null && typeof v === "object" && !Array.isArray(v)
   ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) : v));
 
-/** A condition with its share flags written out: one left out is false (CONTRACT.txt, "Share levels"). */
+/** A condition with its share flags written out: one left out is false (contract/endpoints.txt, "Share levels"). */
 const filled = (c: Condition): Condition => (c.kind === "after_time" ? c
   : { ...c, value_of_cap: c.value_of_cap ?? false, release_of_cap: c.release_of_cap ?? false });
 
@@ -131,7 +131,7 @@ export function freeName(view: View, base: string): string {
 /**
  * Accepting an order card: the orders as they stand plus one rule on the card's condition. On the hands a rule runs a
  * mix, so a hands task becomes a mix of that card alone (reused when one is saved, else saved under the card's label);
- * a task on another lane is the rule's own task (CONTRACT.txt).
+ * a task on another lane is the rule's own task (contract/).
  */
 export function addRule(view: View, catalog: Catalog, card: OrderCard): Decision[] {
   return ruleDecisions(view, catalog, null, { when: card.when, then: card.then, unless: [], or_else: [], below_next: false });

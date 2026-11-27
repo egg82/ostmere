@@ -1,4 +1,4 @@
-"""A person's rule watching another lane's card running (api/CONTRACT.txt, "Decisions"): set_orders takes a Running
+"""A person's rule watching another lane's card running (api/contract/endpoints.txt, "Decisions"): set_orders takes a Running
 condition only on a rule whose every action taps a card on one lane other than the hands, watching a card of another
 lane. Such a rule taps while the card runs, lets go when it stops, and the instant settles: its verb cannot start or
 stop what it watches. Every other Running condition is refused, a pair of mix rules that would flip above all; the

@@ -1,4 +1,4 @@
-// A person's name slot ({<lane>}, CONTRACT.txt "Text and numbers") is filled in every text from the lane's name_key:
+// A person's name slot ({<lane>}, contract/text-and-numbers.txt "Text and numbers") is filled in every text from the lane's name_key:
 // as written in a label, lowercased in a line; a slot naming no named lane is left for fill().
 import { fixtureContent } from "../fixtures/content";
 import { Text } from "../src/game/text";

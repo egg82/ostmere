@@ -6,7 +6,7 @@ losses. Its design is in `content/` (`team/combat-open.md`, questions C1–C9, n
 what the code needs. Beats are named by id. Sizes: **S** under a day of agent work, **M** a few days, **L** a week or
 more.
 
-Interface for items 1–5: engine `DESIGN.txt`, "FIGHTS", and `api/CONTRACT.txt`, "FIGHTS". An implementer gets one
+Interface for items 1–5: engine `DESIGN.txt`, "FIGHTS", and `api/contract/fights.txt`, "FIGHTS". An implementer gets one
 item, those two sections and this file.
 
 ## The new kinds of things, and what they fit into

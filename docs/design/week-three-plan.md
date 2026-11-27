@@ -107,7 +107,7 @@ last chapter needs 7; 13-15 follow the content; 11 with the last chapter.
    spent cards goes once item 1 ships. Fits into: Simulator. Accept: every band inside on typical and above its floor
    on sharp; a planted fixture with a floor removed lands sharp under it; a planted visit whose only change is a
    queued stage fails the decide counter.
-7. **The map's first slice** (**L**, opening, api, client, art; interface first: a section "MAP" in `CONTRACT.txt`).
+7. **The map's first slice** (**L**, opening, api, client, art; interface first: a section "MAP" in `contract/`).
    (a) Content: a chapter's `[[places]]` (id, stamp kind, a coarse position, the unlock that reveals it, a label key
    or none), served on `Content`; the loader refuses a place with no reveal and two places on one position. (b) The
    page: the Book's Map page, offered in its row of pages with its first place (the screen arrives when it means something);

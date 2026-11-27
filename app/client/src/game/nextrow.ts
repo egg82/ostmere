@@ -1,4 +1,4 @@
-// Next as a row among the hands' rules (CONTRACT.txt, "Next's row"): the rules under it carry below_next, a run to the end
+// Next as a row among the hands' rules (contract/endpoints.txt, "Next's row"): the rules under it carry below_next, a run to the end
 // of the orders. The hands' list is moved as items, each rule's index and NEXT for the row, so a rule moved past Next
 // changes side and Next moved past a rule moves the line; every set_orders keeps the line where the player put it.
 import type { Decision, Order, View } from "../api/types";

@@ -221,12 +221,12 @@ class Note:
     slot: SlotName
     key: str
     count: int | None = None
-    """A fold note's lost fights (api/CONTRACT.txt, "LOSS LINES"); None on every other."""
+    """A fold note's lost fights (api/contract/loss-lines.txt, "LOSS LINES"); None on every other."""
 
 
 @dataclass(frozen=True)
 class Loss:
-    """A card whose lost fights the journal tells (api/CONTRACT.txt, "LOSS LINES"): its pool, and its lost tally floored
+    """A card whose lost fights the journal tells (api/contract/loss-lines.txt, "LOSS LINES"): its pool, and its lost tally floored
     to whole fights at the end of the day composed."""
 
     runner: str
@@ -268,7 +268,7 @@ def compose_day(
     `lines`: the save's lines known so far with `at < (day + 1) * DAY_S`, in the order stored. `composed`: the stored
     rows for days 0 .. day - 1, oldest first. `subjects`: the content's, ids distinct and no two with one source.
     `ended`: every line of the day is known, so its end is composed. `losses`: the loss runners, whose notes a day's end
-    writes by api/CONTRACT.txt, "LOSS LINES", L1-L6 (journal_composer/losses.py).
+    writes by api/contract/loss-lines.txt, "LOSS LINES", L1-L6 (journal_composer/losses.py).
     Raises ValueError when a line is at or past the day's end, or `composed` is not exactly days 0 .. day - 1 in order.
     """
     from .journal_composer.day import compose  # the implementation imports this module's types

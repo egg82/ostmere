@@ -1,4 +1,4 @@
-"""Who asks an offer and what it says of itself (api/CONTRACT.txt, "OFFERS"): askers are ruled lanes, each once, no
+"""Who asks an offer and what it says of itself (api/contract/offers.txt, "OFFERS"): askers are ruled lanes, each once, no
 offer says it expires while the engine cannot make it go, and what an offer's `gates_read_feature` promises holds."""
 from typing import TYPE_CHECKING
 

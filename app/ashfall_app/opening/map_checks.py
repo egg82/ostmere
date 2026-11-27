@@ -1,4 +1,4 @@
-"""The loader's checks on the world map's places (api/CONTRACT.txt, "MAP"), each naming the place: its reveal is an unlock
+"""The loader's checks on the world map's places (api/contract/map.txt, "MAP"), each naming the place: its reveal is an unlock
 something in the content adds, and no two places share a cell, the town's included. A label's key is the text checks'.
 Raises ValueError naming the place."""
 from typing import TYPE_CHECKING

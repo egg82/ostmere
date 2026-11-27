@@ -1,4 +1,4 @@
-"""Until done (api/CONTRACT.txt, "UNTIL DONE"), from that section alone: a staged card a tap started, switched mid-run to
+"""Until done (api/contract/until-done.txt, "UNTIL DONE"), from that section alone: a staged card a tap started, switched mid-run to
 the plan the page sends, ends exactly as the same plan made before the tap: the same completions, lane and save at the
 same times. Decisions go through the wire models and api/convert, as the page's would.
 

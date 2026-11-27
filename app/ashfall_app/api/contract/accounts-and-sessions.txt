@@ -1,0 +1,17 @@
+ACCOUNTS AND SESSIONS
+  The session is the cookie __Host-ashfall_session (Secure, HttpOnly, SameSite=None, Partitioned, Path=/, Max-Age 400
+  days). The page never reads it; the browser sends it. Partitioned keeps one cookie per top-level site, so the game
+  embedded in another site's page has an account of its own there, apart from the one at this site; a browser that
+  refuses cookies in a cross-site frame (Safari) keeps no session there at all. Writes are held to this site by the
+  Origin check below, not by SameSite. It is renewed (cookie and last use) at most once a day, by a POST or PUT
+  that succeeds (never by a GET, nor by a refused write), so a browser that plays at least once in 400 days keeps
+  its account. A renewal that fails is logged (session.renew_failed) and never changes the answer to the write. An account keeps at most 20 sessions; making
+  another drops the one unused longest. An account is made only by POST /api/saves from a browser with no live
+  session; no GET makes or changes one. An account with no decision on any save, unused for 30 days, is deleted.
+  Every POST and PUT under /api must come from this site: an https Origin naming the request's Host (the gateway and
+  the tunnel keep the browser's), or, with no Origin, a Sec-Fetch-Site of same-origin or none; a write with neither
+  header, or with any other, is refused (403 cross_site). A body, when there is one, must be application/json (415
+  not_json), and at most 262144 bytes (413 too_large, refused before it is parsed, whether the length is declared or
+  the body streamed). The client address the account limit counts is the connection's as uvicorn's --proxy-headers leaves it
+  (X-Forwarded-For from a trusted proxy).
+

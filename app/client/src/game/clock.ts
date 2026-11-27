@@ -1,4 +1,4 @@
-// The page's clock and the one sampling rule CONTRACT.txt allows. Nothing here knows a game rule: a segment is read
+// The page's clock and the one sampling rule contract/ allows. Nothing here knows a game rule: a segment is read
 // at a time, and never past view.next_event_at, where the server has to be asked again.
 import type { Segment, View } from "../api/types";
 

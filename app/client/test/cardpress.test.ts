@@ -1,7 +1,7 @@
 // The press (docs/design/redesign.md, "Feel"): on pointer-down a card takes the pressed class and on release it drops it.
 // A refused card goes down too: a control that does not move reads as a bug. A card that cannot be tapped (its lane
 // busy, or done) stays put. Reduced motion keeps the colour and drops the sink, which is CSS, so this reads that rule.
-import { readFileSync } from "node:fs";
+import { readGameCss } from "./gamecss";
 import { fakeDocument, install, pointer } from "./fake-dom";
 import { testContext } from "./context";
 import { fixtureStep } from "../fixtures/steps";
@@ -41,7 +41,7 @@ row.tap.disabled = true;
 tap.dispatchEvent(pointer("pointerdown", 5, 5));
 expect("a card that cannot be tapped stays put", held(), false);
 
-const css = readFileSync("src/game.css", "utf8");
+const css = readGameCss();
 const rule = (selector: string, from = 0): string => {
   const start = css.indexOf(`${selector} {`, from);
   if (start < 0) throw new Error(`no rule for ${selector}`);

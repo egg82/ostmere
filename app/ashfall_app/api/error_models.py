@@ -1,4 +1,4 @@
-"""The API's typed errors (CONTRACT.txt, ERRORS): every error answers an ApiError with one of these codes."""
+"""The API's typed errors (contract/errors.txt, ERRORS): every error answers an ApiError with one of these codes."""
 from enum import StrEnum
 
 from pydantic import BaseModel
@@ -42,7 +42,7 @@ class ErrorCode(StrEnum):
 
 
 class MergeSummary(BaseModel):
-    """What joining would bring together (CONTRACT.txt, "Moving to another device")."""
+    """What joining would bring together (contract/moving-to-another-device.txt, "Moving to another device")."""
 
     here: int
     """This browser's account's live saves."""
@@ -58,7 +58,7 @@ class MergeSummary(BaseModel):
 
 
 class ApiError(BaseModel):
-    """Every error's body (CONTRACT.txt, ERRORS)."""
+    """Every error's body (contract/errors.txt, ERRORS)."""
 
     code: ErrorCode
     message: str

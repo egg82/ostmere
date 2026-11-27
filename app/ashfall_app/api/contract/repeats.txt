@@ -1,0 +1,15 @@
+REPEATS
+  Step.repeats {taps: [RepeatedTap {card, count}], switches: [RepeatedSwitch {chip, mix_id, count}]}: what the player
+  keeps doing by hand, counted by the server from the save's decision log as of view.at; each entry is there only once
+  its count reaches opening.toml's [repeat_offers], in the order its first counted decision was made.
+    taps       a tap_card of a hands-lane card while the hands ran a mix (View.running_mix_id) that did not hold it,
+               nested mixes flattened, counted per card over the last hand_taps_within_s game seconds; listed from
+               hand_taps.
+    switches   a switch_mix the player made while one or more chips showed (View.chips), unless the hands already ran
+               that mix, counted once per (chip, mix_id) over the last switches_within_s game seconds; listed from
+               switches.
+  Each decision's context (the mix the hands ran, whether a tap's card was in it, the chips shown) is kept in the log
+  as it is made, so the counts need no replay and a save rebuilt from its log counts the same. Decisions logged by a
+  build before this field count for nothing. The page offers each repeat once (AccountPresentation.mix_offered,
+  switch_offered); what it offers is the page's (docs/design/opening-screen/hands-strip.md, the hands strip).
+

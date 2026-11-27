@@ -1,4 +1,4 @@
-// The bounds the server serves (Content.limits; api/CONTRACT.txt, "Request limits"): at the most rules the Rules tab
+// The bounds the server serves (Content.limits; api/contract/request-limits.txt, "Request limits"): at the most rules the Rules tab
 // stops offering a new one and says so in one line; at the most queued taps "When ready" stops, reading as full.
 import { install } from "./fake-dom";
 import { TAUGHT, testContext } from "./context";

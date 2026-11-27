@@ -57,9 +57,9 @@ export interface PartContext {
   endBehind(): boolean;
   /** What the server keeps for the page that is not game state (a rule seen, the Rules tab opened). */
   keeps: Keeps;
-  /** What the player keeps doing by hand, from the latest Step (CONTRACT.txt, "Repeats"). */
+  /** What the player keeps doing by hand, from the latest Step (contract/repeats.txt, "Repeats"). */
   repeats(): Repeats;
-  /** What the rules did lately, from the latest Step (CONTRACT.txt, "Rule runs"). */
+  /** What the rules did lately, from the latest Step (contract/rule-runs.txt, "Rule runs"). */
   ruleRuns(): RuleRun[];
   /** The latest Step's lines: what an arrival announced by one of them waits behind (an offer's row). */
   lines(): LogLine[];

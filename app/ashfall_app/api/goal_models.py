@@ -1,4 +1,4 @@
-"""Wire model of what the next story beats wait on (View.goals; CONTRACT.txt, "Goals"); the conventions in models.py
+"""Wire model of what the next story beats wait on (View.goals; contract/goals.txt, "Goals"); the conventions in models.py
 hold here."""
 from enum import StrEnum
 
@@ -48,7 +48,7 @@ class GoalLimit(BaseModel):
 
 
 class RuleDry(BaseModel):
-    """A store rule's mix that cannot reach the rule's release for want of a store (CONTRACT.txt, "Dry rules"): the rule
+    """A store rule's mix that cannot reach the rule's release for want of a store (contract/dry-rules.txt, "Dry rules"): the rule
     holds the hands and the store is dry (`holding`), or no card of the mix makes the store, so the mix may stop short."""
 
     store: str
@@ -58,7 +58,7 @@ class RuleDry(BaseModel):
 
 
 class GoalRow(BaseModel):
-    """How the setup as set moves one goal (CONTRACT.txt, "Goal rows"): a store reaching `target` (store) or a skill
+    """How the setup as set moves one goal (contract/goal-rows.txt, "Goal rows"): a store reaching `target` (store) or a skill
     reaching level `target` (skill), when it lands at today's rates, and the line that binds it."""
 
     kind: GoalKind
@@ -79,4 +79,4 @@ class GoalRow(BaseModel):
     until: AtLeast
     """The condition that holds once the goal lands: at_least store_value `target` (store), or at_least skill_level at
     the counted level `target` is in the skill's phase (level), value and release equal. A goal stint's queue entry
-    takes it as its `until` (CONTRACT.txt, "Goal stints")."""
+    takes it as its `until` (contract/goal-stints.txt, "Goal stints")."""

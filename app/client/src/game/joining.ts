@@ -1,4 +1,4 @@
-// A join, as the page tells it (CONTRACT.txt, "Moving to another device"): what to say when the server refuses, and a
+// A join, as the page tells it (contract/moving-to-another-device.txt, "Moving to another device"): what to say when the server refuses, and a
 // reload into GET /api/me when it does not. Shared by the game's sheet and the front page.
 import { ApiFailure, type GameApi } from "../api/api";
 import type { JoinWay, KeptGames } from "../api/types";

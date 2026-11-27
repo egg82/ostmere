@@ -1,4 +1,4 @@
-"""The wire's answer_kind order verb on a test chapter with a kind (tests/opening/fixtures/askkinds.toml; CONTRACT.txt,
+"""The wire's answer_kind order verb on a test chapter with a kind (tests/opening/fixtures/askkinds.toml; contract/offers.txt,
 "Offers"): an order naming a declared kind and role is stored and served back as sent; one naming a role the kind
 does not have, or a kind no offer declares, is a 422 that writes nothing; the player cannot send it as a decision;
 Content.offer_infos carries each offer's kind and each answer's role."""

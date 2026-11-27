@@ -2,7 +2,7 @@
 // (a goal stint, ui/stint.ts), in its order, one line each with Remove, or "under way" for a tap a lane already runs.
 // Each tap is one run: runs of the same card one after another are one line, "×N", whose Remove and ≡ act on one. Its
 // heading is a row among the hands rules, moved as one (game/nextrow.ts): the rules above it outrank a ready head, the
-// rules under it wait for one (CONTRACT.txt, "Next's row"). It starts at the bottom, just above "Otherwise".
+// rules under it wait for one (contract/endpoints.txt, "Next's row"). It starts at the bottom, just above "Otherwise".
 import type { QueueEntry, View } from "../api/types";
 import { NEXT } from "../game/nextrow";
 import { actionWords } from "../game/orders";

@@ -1,4 +1,4 @@
-"""The forecast on the wire (CONTRACT.txt, "Forecast"; re-exported from models.py)."""
+"""The forecast on the wire (contract/forecast.txt, "Forecast"; re-exported from models.py)."""
 from pydantic import BaseModel
 
 

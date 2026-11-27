@@ -1,5 +1,5 @@
 """The checks on people's names (LaneEntry.name_key): a text's `{<lane id>}` slot is that lane's person's name, which
-the page fills (api/CONTRACT.txt, "Text and numbers"). Raises ValueError naming the entry (refs.fail)."""
+the page fills (api/contract/text-and-numbers.txt, "Text and numbers"). Raises ValueError naming the entry (refs.fail)."""
 import re
 from typing import TYPE_CHECKING
 

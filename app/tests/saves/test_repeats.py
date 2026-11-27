@@ -1,4 +1,4 @@
-"""Repeats counted from the decision log (CONTRACT.txt, "Repeats"; saves/repeats.py): what counts, the window and the
+"""Repeats counted from the decision log (contract/repeats.txt, "Repeats"; saves/repeats.py): what counts, the window and the
 count, and that a log rebuilt by replaying its decisions counts the same. Rules: the opening's, everything unlocked,
 so hands cards are tappable and chips show from the start."""
 from dataclasses import replace

@@ -1,6 +1,6 @@
 // A person's split on their page (personpage.ts): the hands' ShareBar over the cards that hold a share of their time, the
 // last divider against the idle rest. The town's mix holds every person's shares; this edits one person's and sends the
-// mix as it is made, with no Save (CONTRACT.txt, "The town's mix"; game/town.ts). A card joins or leaves by a tap on its
+// mix as it is made, with no Save (contract/the-towns-mix.txt, "The town's mix"; game/town.ts). A card joins or leaves by a tap on its
 // face on the page, `toggle`; nothing moves a share from one person to another. While a one-off holds the person's lane the
 // bar is that card alone with its time left and "then {split}" under it, as the hands strip draws a tap (handsheld.ts).
 // Under it, the stores the person's cards make or cost (storetimes.ts): what each holds of its cap, its rate now and where

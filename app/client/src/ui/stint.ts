@@ -1,4 +1,4 @@
-// Goal stints (CONTRACT.txt, "Goal stints"): "run {mix} until {goal}" as a queue entry. The mix editor's "Run until…"
+// Goal stints (contract/goal-stints.txt, "Goal stints"): "run {mix} until {goal}" as a queue entry. The mix editor's "Run until…"
 // lists the goals the edit's dry run shows that land (one that never does would hold the queue for good), each with its
 // time if run, and under a store's goal that store's named shares not yet reached (a share of its cap, which keeps up as the cap grows; no time is served for those); Next names
 // a stint by its mix and goal, and the one that runs says when its goal lands or that it never does at today's rates,

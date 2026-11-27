@@ -1,4 +1,4 @@
-"""Games on one account (CONTRACT.txt, "Games on one account"): the account's saves, live and deleted, and deleting and
+"""Games on one account (contract/games-on-one-account.txt, "Games on one account"): the account's saves, live and deleted, and deleting and
 restoring one. Each asks the Saves system (services.py); what it raises becomes the contract's error (answered)."""
 from fastapi import APIRouter, Request
 

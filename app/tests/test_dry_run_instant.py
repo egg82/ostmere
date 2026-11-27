@@ -1,4 +1,4 @@
-"""A dry run answers at the instant of the save as last written, the instant the page's view shows (CONTRACT.txt,
+"""A dry run answers at the instant of the save as last written, the instant the page's view shows (contract/endpoints.txt,
 dry-run), so every figure the page reads as before → after compares two views of one moment. Answered at the
 server's now instead, a card's tap_s (the rest of its current completion) had counted down by the seconds between the
 two, and a preview listed every running card as moved, or nothing, by when its request landed (#380)."""

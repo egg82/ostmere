@@ -1,4 +1,4 @@
-// The town's mix (CONTRACT.txt, "The town's mix"): once people join, the townsfolk's lanes are run by one saved mix whose
+// The town's mix (contract/the-towns-mix.txt, "The town's mix"): once people join, the townsfolk's lanes are run by one saved mix whose
 // shares are parts of one person's time. These are the page's questions about it, all read off the view: who is present,
 // each person's shares and what they are doing, which mix Change opens, and the decisions that save an edit. The split
 // is each person's own parts of 100%; nothing here adds shares across people or moves one between them.
@@ -37,7 +37,7 @@ export function marked(catalog: Catalog, view: View): string[] {
 }
 
 /** A group's members: the people present whose mark is off and whose LaneInfo.group is `group`. A marked person who names
- * the group is not one (CONTRACT.txt, "GROUPS"). */
+ * the group is not one (contract/groups.txt, "GROUPS"). */
 export function members(catalog: Catalog, view: View, group: string): string[] {
   return people(catalog, view).filter((lane) => unmarked(view, lane) && catalog.lanes.get(lane)?.group === group);
 }
@@ -84,7 +84,7 @@ export function flatCards(view: View, mix: Mix, seen: Set<string> = new Set()): 
   });
 }
 
-/** A town mix: every card it holds is on a ruled lane; holding none, it is one the game made (CONTRACT.txt). */
+/** A town mix: every card it holds is on a ruled lane; holding none, it is one the game made (contract/). */
 export function isTownMix(catalog: Catalog, view: View, mix: Mix): boolean {
   const cards = flatCards(view, mix);
   return cards.length > 0 ? cards.every((c) => catalog.ruled(c)) : catalog.content.game_mix_ids.includes(mix.id);

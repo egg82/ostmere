@@ -1,4 +1,4 @@
-// The journal's sections and bookmarks (CONTRACT.txt, "JOURNAL", THE CLIENT MAY), run against the rendered sheet on the
+// The journal's sections and bookmarks (contract/journal.txt, "JOURNAL", THE CLIENT MAY), run against the rendered sheet on the
 // fixture pages: D is a days page (no sketch), A and C are creatures pages, B is a places page; content order is B, A, C, D.
 import { catalog, expect, fire, requests, rig, text } from "./journalrig";
 import { NOTE_B, NOTE_C, NOTES_A, NOTES_D } from "../fixtures/journal";

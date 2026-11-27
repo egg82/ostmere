@@ -1,0 +1,10 @@
+THE CLIENT MAY NOT
+  - simulate: no rule, rate, cap, completion or unlock is computed on the page (a mix bar's modulo is sampling, not
+    a completion: the count is Card.completions). Past next_event_at, ask again.
+  - decide what exists, readiness, chip state or what a line says: all of it is in the view or the content. When
+    something that exists is first drawn follows the rules above (a chip's offered_after, the Camp bar's first level,
+    a ledger line's first meaning).
+  - write a number or an id into text other than through a slot: no text entry holds one. A mix's id is the
+    player's name for it and is shown as it is.
+  - send a decision it thinks will fail to save a request; the server's 422 is the answer.
+

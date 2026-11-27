@@ -1,4 +1,4 @@
-"""Repeats through the saves service and the API's Step (CONTRACT.txt, "Repeats"): each decision's context is logged
+"""Repeats through the saves service and the API's Step (contract/repeats.txt, "Repeats"): each decision's context is logged
 as it is made, and every written Step serves the counts read back from the log. Rules: the opening's with everything
 unlocked, and its own [repeat_offers]."""
 from dataclasses import replace

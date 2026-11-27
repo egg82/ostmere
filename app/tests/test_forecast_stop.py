@@ -1,5 +1,5 @@
 """A forecast is cut by the same per-request stop an advance is (saves/service.py `stop_for`) and ends at the horizon it
-reached, which the answer names (api/CONTRACT.txt, "Forecast"); a stop that never fires changes nothing."""
+reached, which the answer names (api/contract/forecast.txt, "Forecast"); a stop that never fires changes nothing."""
 from collections.abc import Callable
 
 import pytest

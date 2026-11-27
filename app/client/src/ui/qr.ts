@@ -1,4 +1,4 @@
-// A transfer code's QR code (CONTRACT.txt, TransferCode.qr), drawn as SVG: one rect per run of dark modules in a row,
+// A transfer code's QR code (contract/moving-to-another-device.txt, TransferCode.qr), drawn as SVG: one rect per run of dark modules in a row,
 // dark on a light tile with a quiet zone of four modules, so a camera reads it whatever the page's colours.
 const SVG = "http://www.w3.org/2000/svg";
 const QUIET = 4;

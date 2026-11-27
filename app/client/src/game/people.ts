@@ -1,4 +1,4 @@
-// A day's mention (CONTRACT.txt, "PEOPLE"): the mention lines of one game day and one way, joined or left, are one
+// A day's mention (contract/people.txt, "PEOPLE"): the mention lines of one game day and one way, joined or left, are one
 // line, worded by the band for how many lanes they count and drawn from it by a shuffle bag keyed by the save, the way
 // and the band, so the same day reads the same on every device and the band's lines take turns. DayMentions keeps the
 // days counted so far for the story strip and the chronicle (ui/story.ts); the rest is pure.

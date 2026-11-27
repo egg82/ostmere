@@ -1,0 +1,35 @@
+PRESTIGE PHASES (engine DESIGN.txt, "PRESTIGE PHASES")
+  SkillBar.prestige is null when the content has no prestige, and SkillBar is then the curve's alone. Otherwise a
+  skill climbs one XP segment through phases; SkillBar.level is its shown level, counting from 1 in each phase and
+  stopping at the phase's top, level_xp and next_level_xp the bar's ends within the phase (next_level_xp null at the
+  top), and SkillPrestige says, at view.at: the phase; level_counted, the level a skill-level condition reads, which
+  never falls at a click; at_top, when the skill waits for the player's click and its XP still accrues for the carry
+  window; waiting_levels, the levels a click now would land above the new phase's level 1 (it rises while the carry
+  runs, so read it again at the next view); menu_nodes, the nodes the next pick may go into, in track order and the
+  same all phase, each with ranks_taken of ranks and its target's before_value and after_value one more rank (at a
+  full share: a make per hour, a card's work per second, or a cap, in the engine's units); undo_open, the last pick
+  can be taken back; mastered, every node finished, so no click ever waits at its top; pick_owed, an undo took the
+  last pick back and the next prestige fills it; topped_at, when the skill reached its current phase's top; picked, the
+  nodes its picks hold in click order; and parked, the ranks a move parked, each {node, due}: out of play until phase
+  `due` begins.
+  Content.node_infos names every node: its skill, its label_key and what it changes (make, work or cap, with the ids
+  the page labels it by).
+  Two decisions act on it, by hand only (never an order's or a queue entry's verb): prestige {skill, node}, the click
+  at the top (or the owed pick), undo_pick {skill} while undo_open, and move_pick {skill, node, to}, which moves the rank a picked node holds to a node
+  on menu_nodes and parks it until the phase after next (not while a pick is owed). A refused one is 422 invalid_decision, its
+  message naming why (engine PrestigeRefusal); the page redraws the save as it has it.
+  Text keys (Content.text_entries): ui.prestige.tops_out {d} | ui.prestige.top | ui.prestige.mastered   the row's state
+                                    ui.prestige.waiting {n} | ui.prestige.waiting_one {n}   levels waiting at the top
+                                    ui.prestige.button | ui.prestige.choose | ui.prestige.undo   the controls
+                                    ui.prestige.heading {skill} | ui.prestige.starts {before}{after}{n} | ui.prestige.owed |
+                                    ui.prestige.picks | ui.prestige.move | ui.prestige.move_to {node} | ui.prestige.move_here |
+                                    ui.prestige.parked {node}{n} | ui.prestige.parked_one {node}   moving a pick |
+                                    ui.prestige.begun {n}   the sheet's heading and its line
+                                    ui.prestige.make {store}{runner}{before}{after} | ui.prestige.work {card}{before}{after}
+                                    | ui.prestige.cap {store}{before}{after}   a node's change, before and after one rank
+                                    ui.prestige.reached {skill}{d} | ui.prestige.reached_now {skill}   a return's line
+                                    ui.lesson.prestige {skill}   the Push past control's lesson
+                                    ui.job.new {person}{card} | ui.job.new_many {person} | ui.job.new_town {card} | ui.job.new_all   the
+                                    story line when a job (cards sharing a label_key) is first offered townspeople nobody has set
+                                    to it: one line per step (game/newjobs.ts)
+

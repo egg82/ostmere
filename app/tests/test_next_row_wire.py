@@ -1,4 +1,4 @@
-"""Next's row over the wire (CONTRACT.txt, "Next's row"): an Order may carry below_next; an old page sends none and the
+"""Next's row over the wire (contract/endpoints.txt, "Next's row"): an Order may carry below_next; an old page sends none and the
 save is as it was; set_orders makes the rules after the first under Next a run to the end; the view serves the flag and
 a rule_run's order without it. Run through the wire models and the engine on the shipped rules."""
 from typing import Any

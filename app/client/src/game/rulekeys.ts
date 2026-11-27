@@ -1,4 +1,4 @@
-// The text keys of the Rules tab and the condition editor (ui/rules.ts, ui/condition.ts, ui/rulewhy.ts; CONTRACT.txt, "Dry rules"),
+// The text keys of the Rules tab and the condition editor (ui/rules.ts, ui/condition.ts, ui/rulewhy.ts; contract/dry-rules.txt, "Dry rules"),
 // merged into `UI`, game/text.ts.
 export const RULE_KEYS = {
   ruleFull: "ui.rule.full", // in the place of the New rule button once the rules hold Content.limits.max_orders

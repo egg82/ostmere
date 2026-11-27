@@ -1,4 +1,4 @@
-// A lane run by rules (CONTRACT.txt, "A lane run by rules"): a townsperson's lane, whose task is set by the player's
+// A lane run by rules (contract/a-lane-run-by-rules.txt, "A lane run by rules"): a townsperson's lane, whose task is set by the player's
 // rules, never by their tap. Its default task is an always rule (after_time 0, tap_card), which never lets go, so a
 // rule below it acts only while its card cannot: a new rule on the lane goes before the lane's first always rule.
 import type { Condition, Decision, Order, View } from "../api/types";

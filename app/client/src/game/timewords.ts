@@ -1,4 +1,4 @@
-// A condition on a clock the player is never shown, worded as a time of day (StoreInfo.clock; CONTRACT.txt, "Cards",
+// A condition on a clock the player is never shown, worded as a time of day (StoreInfo.clock; contract/, "Cards",
 // "Line causes"): short of the clock's cap it reads as the part of the day ("after dark"), at the cap as that part's
 // end ("at first light"). One home for a card's "Opens after dark" and a chronicle line's "↳ after dark". Pure.
 import type { Condition, StoreInfo } from "../api/types";

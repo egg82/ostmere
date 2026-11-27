@@ -1,5 +1,5 @@
 """A figure in a level's, upside's or chip's text is a slot fed by the served change_bp, never typed into the text
-(api/CONTRACT.txt, "Text and numbers", {pct}): every served text holds exactly as many pct slots as its entry serves
+(api/contract/text-and-numbers.txt, "Text and numbers", {pct}): every served text holds exactly as many pct slots as its entry serves
 changes, and the changes are the rules' own numbers."""
 import re
 

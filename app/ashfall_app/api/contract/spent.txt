@@ -1,0 +1,49 @@
+SPENT
+  A mix card stopped on a dry store gives its share to the other cards of the same running mix on the same lane, in
+  proportion to their own shares, until it starts again (engine DESIGN.txt, "SPENT"): a store something in play can
+  refill takes it back when the store reaches an hour of the card's cost, and a store nothing in play can make again
+  (a pool after its season) when an outcome refills it. Both are the same yield; they differ in what brings the card
+  back. The share the player set never changes on its own.
+  View: Card.run is paused for a card stopped on a store something can refill, and spent (its store will not refill
+  by itself) for one stopped on a store nothing can make again; either runs nothing. Card gains spent_store, the
+  store a spent card is stopped on (null unless run is spent), and gained: [SpentShare {card, share_bp}], the part
+  of its share each stopped card of its mix on its lane gives it now, in mix order (empty when none). Card.share_bp
+  stays the share the player set; the card runs at share_bp plus the sum of gained, and a card that gains while it
+  is waiting runs its gain as it runs its own share. The split that runs now is each card's share_bp plus
+  its gained, a paused or spent card's 0; it differs from the split set exactly while some card of the running mix
+  is paused or spent. A ledger line is not starved by a spent card alone (LedgerLine.starved), so a used-up pool does not show as
+  a problem.
+  Nothing on Content changes and no decision changes: save_mix and the split panel set share_bp only.
+  THE CLIENT MUST:
+  - while the running mix's split that runs differs from the one set, show it under the mix as a separate "running
+    now" split (ui.mix.running_now): each card at share_bp plus gained, a receiving card naming each source with
+    ui.mix.from {pct} {card}, a stopped card's part greyed with ui.mix.waiting {card}; and show nothing of it once
+    no card of the mix is paused or spent.
+  THE CLIENT MAY:
+  - draw a spent card's state with ui.mix.spent {store} (spent_store's label).
+  - keep the split panel and the mix editor on share_bp: what the player set is what they edit.
+  - while every card holding a share of a person's time is paused or spent and no tap holds their lane, say they have
+    nothing to do (ui.town.stuck) in place of idle, name what each card is stopped on (ui.town.stopped_spent,
+    ui.town.stopped_full, ui.town.stopped_dry, ui.town.stopped_waiting {card} {store}: the first need short now, else
+    none) and offer the person's open, uncapped tasks that hold no share and need nothing short (ui.town.can_do, a few
+    then ui.town.more {n}), each one save_mix joining it as a tap on its face does. It never picks one for the player.
+  - draw ui.card.spent_on {store} on a spent card's face where its needs sit, unless its need row on that store is drawn.
+  THE CLIENT MAY NOT:
+  - add gained into a share the player edits or the bar of the split set, or work out a gain itself.
+  - draw a spent card as greyed or as a problem: the mix runs on.
+
+  Rejected, and why (spent on the wire):
+  - share_bp served as the effective share: the split panel would show, and save back, a split the player never set.
+  - The page finding the spent store from the card's needs and the ledger: a second home for what the engine knows.
+  - Marking a card whose share moved only when its store is seasonal: a card that behaves like the others but looks
+    different, or the reverse (docs/decisions.md, "A mix keeps going without a dry store").
+
+  Text keys (Content.text_entries): ui.mix.spent {store}          a spent card's state
+                                    ui.mix.running_now            the label of the split that runs now
+                                    ui.mix.from {pct} {card}      a receiving card's gain, naming its source
+                                    ui.mix.waiting {card}         a stopped card's part of the split that runs now
+                                    ui.town.stuck                 a person whose held cards are all stopped
+                                    ui.town.stopped_* {card} {store}  what each of their cards is stopped on
+                                    ui.town.can_do, ui.town.more {n}  the tasks offered them
+                                    ui.card.spent_on {store}      a spent card's face
+

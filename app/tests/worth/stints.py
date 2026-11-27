@@ -5,7 +5,7 @@ and reads how far the set got in two days.
 
 Keeper writes no rule for a goal (route.py). The stints route queues, ahead of whatever keeper's queue holds, one entry
 per goal of the set, soonest alone first: a mix of the player's upkeep cards (probe.fixed) and the goal's card on the
-hands that leave, run until the goal row's `until` holds (api goalrows, CONTRACT.txt "Goal stints"); the engine pops it
+hands that leave, run until the goal row's `until` holds (api goalrows, contract/goal-stints.txt "Goal stints"); the engine pops it
 there and the player's own mix runs on. Both plays leave the world as it is: nothing is tapped after the exit. Ids and
 kinds only (CLAUDE.md, "Never spoil the owner")."""
 from collections import Counter

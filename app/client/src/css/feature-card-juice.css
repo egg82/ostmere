@@ -1,0 +1,29 @@
+/* A feature's card (ui/featurecard.ts) sits off the art, so the scene stays in view while it is up: it is not modal
+   (no backdrop dimming the page) and docks along the bottom edge on a phone, at the panel's foot on a desktop. */
+.end-dock { position: fixed; z-index: 20; margin: 0; left: 0; right: 0; bottom: 0; width: 100%; max-width: none; padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)); box-shadow: 0 -.5rem 2rem rgba(0, 0, 0, .55); }
+.end-card .sheet-actions { justify-content: center; }
+.end-title { margin: 0 0 .6rem; font: 400 var(--t-display)/1.15 "IM Fell English SC", Georgia, serif; color: var(--ink-hi); }
+.end-body { margin: 0 0 .4rem; color: var(--ink); font-size: var(--t-story); font-style: italic; }
+
+/* juice: none of it moves the layout */
+.arrive { animation: arrive .5s ease-out backwards; }
+.held { visibility: hidden; }   /* arrived while away, waiting its turn (ui/reveal.ts): its room is already taken */
+.landed { animation: landed .7s ease; }
+@keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes line-in { from { opacity: 0; transform: translate(var(--line-from-x, .6rem), var(--line-from-y, 0)); } }
+@keyframes landed { 0% { box-shadow: 0 0 0 0 rgba(240, 178, 122, .7); } 100% { box-shadow: 0 0 0 .8rem rgba(240, 178, 122, 0); } }
+/* a cascade's lit link (dom.markLink): a 3px ember tick and a warm wash, never the outline, which belongs to the ask */
+:is(.skill, .camp, .rules-row):has(> .link-mark) { position: relative; }   /* .card and .line already are */
+.link-mark { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 3px 0 0 var(--ember-hot); background: linear-gradient(90deg, rgba(224, 149, 79, .16), transparent 60%); animation: link-lit var(--link-ms) ease-out forwards; }
+@keyframes link-lit { 0%, 20% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes settle { 0% { transform: scale(1); } 35% { transform: scale(1.02); } 100% { transform: none; } }
+/* the tap and level rungs' calm forms (reduced motion): the same ring held still, fading, with no spread */
+@keyframes ring-still { 0%, 50% { box-shadow: 0 0 0 2px var(--ember-hot); } 100% { box-shadow: 0 0 0 2px transparent; } }
+@keyframes burst-still { 0%, 50% { box-shadow: 0 0 0 2px var(--ember-hot); background: rgba(42, 27, 20, .8); } 100% { box-shadow: 0 0 0 2px transparent; } }
+.card.tap-failed { animation: tap-failed var(--fail-ms) ease-out; }
+.fail-mark { transform-origin: left center; animation: fail-mark var(--fail-ms) ease-out; }
+.fail-mark .need-have { animation: fail-flash var(--fail-ms) ease-out; }
+@keyframes tap-failed { 35% { box-shadow: var(--fail-glow); } }
+@keyframes fail-mark { 35% { color: var(--alarm); transform: scale(var(--fail-scale)); } }
+@keyframes fail-flash { 35% { color: var(--alarm); } }
+

@@ -1,4 +1,4 @@
-"""What a goal stint's save gained while it ran (CONTRACT.txt, "RULE RUNS", "Made"; "GOAL STINTS"): the engine reports
+"""What a goal stint's save gained while it ran (contract/rule-runs.txt, "RULE RUNS", "Made"; "GOAL STINTS"): the engine reports
 the levels of the stores the stint's mix makes when the stint starts and when it lands, and the saves layer carries the
 start levels on the entry, turns the pair into `made` at the landing, and stores both."""
 import dataclasses
@@ -161,7 +161,7 @@ def test_made_is_empty_for_a_stint_with_no_start_and_for_an_end_that_is_not_a_st
 
 
 def test_levels_on_an_end_that_is_not_a_stints_still_make_nothing() -> None:
-    """CONTRACT.txt: made is [] on every entry but an ended stint's, whatever the change carried."""
+    """contract/: made is [] on every entry but an ended stint's, whatever the change carried."""
     rule = e.Order(e.AtMost(e.StoreValue(e.StoreId("s0")), 4, 9), e.SwitchMix(e.MixId("m")))
     [season] = merged((), (_on(10, rule, ON), _landed(30, rule, OFF, e.Ended.SEASON)), ())
     assert (season.ended, season.made) == (e.Ended.SEASON, ())

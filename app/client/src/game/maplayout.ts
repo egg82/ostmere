@@ -1,4 +1,4 @@
-// Where the world map's stamps and labels go on a sheet (CONTRACT.txt, "MAP"): the frame fitted to the cells shown, each
+// Where the world map's stamps and labels go on a sheet (contract/map.txt, "MAP"): the frame fitted to the cells shown, each
 // stamp as large as it may be without crossing another (inside its own cell at worst, where none can cross), and each
 // label at the first spot beside its place that crosses no stamp, no other label and not the sheet's edge. Pure: the page
 // measures the labels and hands their sizes in.

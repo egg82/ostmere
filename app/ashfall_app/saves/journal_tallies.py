@@ -1,4 +1,4 @@
-"""The loss runners' lost tallies at each day's end a step passes (api/CONTRACT.txt, "LOSS LINES"): read off the save the
+"""The loss runners' lost tallies at each day's end a step passes (api/contract/loss-lines.txt, "LOSS LINES"): read off the save the
 step began from, advanced to that second. Engine invariant 81 makes that the save however the steps fell, so a day's
 loss notes do not depend on when the player looked. A tally only grows, so when it holds the same whole number at the
 step's start and end, no advance is needed."""

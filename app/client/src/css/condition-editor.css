@@ -1,0 +1,80 @@
+/* the condition editor (in the Rules tab) */
+.cond { display: flex; flex-direction: column; gap: .9rem; }
+.cond-body { display: flex; flex-direction: column; gap: .9rem; }
+.cond .rules-label { flex: 0 0 100%; margin: 0; font-size: var(--t-meta); color: var(--ink); }   /* "Mixes", "Tasks": a row's head, above its tiles */
+.cond .cond-subhead { margin-top: .5rem; }   /* Levels and Tasks under When: a head inside the group, a little apart from the tiles above */
+.cond-stores { padding-top: .9rem; border-top: 1px solid var(--rule); }   /* a hairline between the groups */
+.cond-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-heading { margin: 0 !important; overflow-wrap: anywhere; }
+.cond-mixes > .card-list { flex: 1 1 100%; }   /* the lane editor's tasks, drawn as cards (ui/cardpick.ts) */
+.card.pick:has(> .card-tap[aria-pressed="true"]) { box-shadow: inset 0 0 0 1px var(--ink-dim); }   /* the whole card, its bonus line under the tap included */
+.card.pick { flex-direction: column; }   /* a kept bonus's line sits under the tap, as .card.fighting seats it */
+.card.pick .card-head { padding-right: 0; }
+.cond-mixes, .cond-stores, .cond-tests { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+:is(.sheet, .rules) .cond-store, :is(.sheet, .rules) .cond-subject, :is(.sheet, .rules) .cond-mix, :is(.sheet, .rules) .cond-task, :is(.sheet, .rules) .cond-test, :is(.sheet, .rules) :is(.cond-form, .cond-preset) { min-height: 2.75rem; padding: 0 .8rem; display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--raise); border: 0; box-shadow: var(--drop); }   /* .quiet buttons, drawn as unframed tiles */
+:is(.sheet, .rules) :is(.cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test, .cond-form, .cond-preset):hover { background-color: var(--press); }
+.sheet :is(.quiet, .selector-run, .cond-store, .cond-subject, .cond-mix, .cond-task, .cond-test, .cond-form, .cond-preset) { background-color: var(--press); }   /* a sheet is raised already */
+:is(.sheet, .rules) .cond-store[aria-pressed="true"], :is(.sheet, .rules) .cond-subject[aria-pressed="true"], :is(.sheet, .rules) .cond-mix[aria-pressed="true"], :is(.sheet, .rules) .cond-task[aria-pressed="true"], :is(.sheet, .rules) .cond-test[aria-pressed="true"], :is(.sheet, .rules) :is(.cond-form, .cond-preset)[aria-pressed="true"] { color: var(--ink-hi) !important; background: var(--press); box-shadow: inset 0 0 0 1px var(--ink-dim); }
+.cond-amount { font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
+.cond-steppers { display: flex; flex-direction: column; gap: .9rem; }   /* When, then Until, each a level of its own (condlevels.ts) */
+/* a level: its label, its value and two forms (a share of the cap, or exact) on one row; its slider, then the named shares under them */
+.cond-level { display: flex; flex-direction: column; gap: .4rem; }
+.cond-level-head { display: flex; align-items: center; gap: .5rem; }
+.cond-level-head .cond-forms { margin-left: auto; }
+.cond-level-head .cond-value { min-width: 0; text-align: left; }
+.cond-forms, .cond-presets, .stint-shares { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+:is(.sheet, .rules) .cond-form { min-height: 2.2rem; font-size: var(--t-meta); }
+:is(.sheet, .rules, .stint-shares) .cond-preset { min-width: 2.75rem; padding: 0 .6rem; }
+:is(.sheet, .rules) :is(.cond-form, .cond-preset):disabled { opacity: .35; cursor: default; }
+.stint-shares { justify-content: flex-end; }
+.stint-or { margin-right: .3rem; font-size: var(--t-meta); color: var(--ink); }
+.cond-label { min-width: 3rem; font-size: var(--t-meta); color: var(--ink); }
+.cond-value { min-width: 2.2rem; text-align: center; font-size: var(--t-story); font-weight: 700; color: var(--ink-hi); font-variant-numeric: tabular-nums; }
+.cond-band { position: relative; height: 3px; background: var(--track); pointer-events: none; }   /* drawn, not a control */
+.cond-span { position: absolute; top: 0; bottom: 0; background: var(--ember); }
+.cond-now { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink-hi); box-shadow: 0 0 0 2px var(--bg); }
+.cond-sentence { flex: none; }   /* .rule-sentence's 12rem basis would be its height in this column */
+/* the quick add's sentence (condquick.ts): each part reads as its words, a native select laid over them takes the tap;
+   story size and a tall line make each part a thumb's target */
+.cond-sentence:has(.quick-part) { font-size: var(--t-story); line-height: 2.2; }
+.quick-part { position: relative; display: inline-block; line-height: 1.4; white-space: nowrap; }
+.quick-word { color: var(--ink-hi); font-weight: 500; text-decoration: underline 1px var(--ink-dim); text-underline-offset: .25em; }
+.quick-mark { margin-left: .15rem; font-size: var(--t-meta); color: var(--ink-dim); }
+.quick-select { position: absolute; top: -.5rem; bottom: -.5rem; left: -.2rem; right: -.2rem; width: calc(100% + .4rem); opacity: 0; cursor: pointer; font-size: 16px; }
+.quick-part:hover .quick-word, .quick-part:focus-within .quick-word { text-decoration-color: var(--ink-hi); }
+.quick-part:has(.quick-select:focus-visible) { outline: 1px solid var(--ink-hi); outline-offset: 3px; }
+.cond-more { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }   /* the way to the full editor */
+.cond-guards, .cond-guard-pick { display: flex; flex-direction: column; gap: .6rem; }   /* Unless (condguards.ts): the guards, an add, and the picker of what a new one watches */
+.cond-guards { padding-top: .9rem; border-top: 1px solid var(--rule); }
+.cond-guards-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; }
+.cond .cond-guards-head .rules-label { flex: none; }
+.cond-guards-hint, .cond-guard-store { font-size: var(--t-meta); color: var(--ink); }
+.cond-guard { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-guard-words { color: var(--ink-hi); overflow-wrap: anywhere; }
+.cond-guard-what { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.cond-guard-add, .cond-guard-drop { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }
+.cond-guard-done { align-self: flex-start; min-height: 2.75rem; }
+.cond-else { display: flex; flex-direction: column; gap: .6rem; }   /* Or else (condelse.ts): the fallbacks, an add, and the picker of what a new one does */
+.cond-else-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; }
+.cond .cond-else-head .rules-label { flex: none; }
+.cond-else-hint { font-size: var(--t-meta); color: var(--ink); }
+.cond-else-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.cond-else-words { color: var(--ink-hi); overflow-wrap: anywhere; }
+.cond-else-pick { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.cond-else-add, .cond-else-drop { align-self: flex-start; min-height: 2.75rem; padding: 0 .8rem; }
+.cond-fact { margin: 0; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
+.cond-fact:empty, .cond-note:empty { display: none; }
+.cond-note { margin: 0; }
+.cond-actions { margin-top: 0; }
+.cond-actions .primary:disabled { opacity: .45; cursor: not-allowed; }
+.cond-actions .danger { margin-right: auto; }
+/* the levels' fold (condlevels.ts): one row stating When and Until, which opens the levels in place */
+.cond-levels, .cond-fold-body { display: flex; flex-direction: column; gap: .9rem; }
+.cond-fold { display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: 0 .8rem; text-align: left; cursor: pointer; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink); }
+.cond-fold:hover { background: var(--press); }
+.cond-fold-value { margin-right: .8rem; color: var(--ink-hi); font-variant-numeric: tabular-nums; }
+.cond-fold-mark { margin-left: auto; color: var(--ink); }
+/* the foot: the rule as it reads and Save, pinned to the bottom of the scroll while the choices above it move */
+.cond-foot { position: sticky; bottom: 0; z-index: 2; display: flex; flex-direction: column; gap: .6rem; margin: 0 -1rem; padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--rule); }
+

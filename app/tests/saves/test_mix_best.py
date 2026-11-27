@@ -1,4 +1,4 @@
-"""The Mixes list's numbers and the player's own earlier best per goal (CONTRACT.txt, "Mix rows"; saves/mixbest.py):
+"""The Mixes list's numbers and the player's own earlier best per goal (contract/mix-rows.txt, "Mix rows"; saves/mixbest.py):
 each saved mix on separate numbers, the kept best per goal naming the mix that set it, a later mix that does worse
 leaving it be, and the best read back from the row by a fresh service. Rules: the opening's with everything unlocked."""
 from dataclasses import replace

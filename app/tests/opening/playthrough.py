@@ -8,7 +8,7 @@ and rest into the mix when hunger and tiredness come; the roast; the edge; the g
 gathering was); the two crafts in the order `first_craft` picks; reading by the fire. Once the mix runs it taps no
 mixed card, since a tap only stands in for its share. Every decision is recorded with its kind (a tap or another
 decision), and every new thing on screen with the effort spent since the one before. It stops at the end moment:
-the end feature unlocked (api/CONTRACT.txt, "The end").
+the end feature unlocked (api/contract/the-end.txt, "The end").
 """
 import copy
 import random

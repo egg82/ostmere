@@ -118,9 +118,9 @@ class Opening(Entry):
     repeat_offers: RepeatOffersEntry
     journal_habits: JournalHabitsEntry
     end_line_keys: list[str] = []
-    """Lines the page appends at the end moment (api/CONTRACT.txt, "The end"): no engine event marks it."""
+    """Lines the page appends at the end moment (api/contract/the-end.txt, "The end"): no engine event marks it."""
     end_feature: str
-    """The feature the end is (api/CONTRACT.txt, "The end"): some trigger unlocks it, a milestone the page states as a
+    """The feature the end is (api/contract/the-end.txt, "The end"): some trigger unlocks it, a milestone the page states as a
     goal before it is met."""
     start_line_keys: list[str] = []
     """Lines shown before the first decision (the new game's lines)."""

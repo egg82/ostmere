@@ -1,4 +1,4 @@
-"""The content file's journal (api/CONTRACT.txt, "JOURNAL"): the book, its pages and the notes written on them, as Type
+"""The content file's journal (api/contract/journal.txt, "JOURNAL"): the book, its pages and the notes written on them, as Type
 Objects. Beside entries.py, whose shapes they reuse."""
 from typing import Literal
 

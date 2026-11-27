@@ -1,4 +1,4 @@
-"""The notes a day's end writes from the loss runners' lost tallies (api/CONTRACT.txt, "LOSS LINES", L1-L6): what each
+"""The notes a day's end writes from the loss runners' lost tallies (api/contract/loss-lines.txt, "LOSS LINES", L1-L6): what each
 runner still owes the journal, one loss note drawn from its pool, and a fold note counting the rest."""
 import hashlib
 from collections.abc import Iterable, Sequence

@@ -1,4 +1,4 @@
-// A stint that popped at its goal, in Lately (CONTRACT.txt, "Rule runs", "Ended stint"): its mix and goal as Next words
+// A stint that popped at its goal, in Lately (contract/rule-runs.txt, "Rule runs", "Ended stint"): its mix and goal as Next words
 // them, then how long it ran, when its goal landed and what the save gained while it ran. Facts the save recorded.
 import type { RuleRun, View } from "../api/types";
 import type { Catalog } from "../game/catalog";

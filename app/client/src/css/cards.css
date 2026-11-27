@@ -1,0 +1,77 @@
+/* cards */
+.deck { display: flex; flex-direction: column; gap: .9rem; }
+.lane-tag { margin: 0 0 .35rem; font-size: var(--t-meta); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+.card-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr)); gap: .6rem; }
+.card {
+  --foot-h: 2rem;   /* the foot's band: tall enough for When ready, so the button sits under the bar, never over it */
+  position: relative; display: flex; min-height: 5.6rem;
+  background: var(--raise); border-radius: 2px; box-shadow: var(--drop); color: var(--ink);
+  transition: transform var(--settle-ms) var(--settle-ease), background-color var(--settle-ms), box-shadow var(--settle-ms), opacity .3s;
+}
+.card-tap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; padding: .6rem .8rem .55rem .9rem; text-align: left; background: none; border: 0; border-radius: inherit; cursor: pointer; }
+.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; padding-right: 3.2rem; }
+.card-title { font-size: var(--t-body); font-weight: 500; color: var(--ink-hi); min-width: 0; overflow-wrap: break-word; }
+.card-count { font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.card-upside { font-size: var(--t-meta); color: var(--ink); }
+.card-needs { display: flex; flex-wrap: wrap; gap: .1rem .7rem; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }
+.need-have { font-weight: 700; color: var(--ink-hi); }   /* a short need: only the number it is short of stands out; red is the ledger's alarm */
+.card-track { display: block; height: 2px; margin-top: auto; background: var(--track); overflow: hidden; }
+.card-fill { display: block; height: 100%; transform-origin: left; transform: scaleX(0); background: var(--ink-dim); }
+.card.running .card-track { height: 3px; }
+.card.running .card-fill { background: var(--ember); }
+.card.by-mix .card-fill { background: var(--hue, var(--ember)); }
+.card-foot { display: flex; align-items: center; min-height: var(--foot-h); font-size: var(--t-meta); color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+/* ready: raised; unready: a hairline outline, its short number marked; busy: faded; done: dimmed, stays in its slot */
+.card.ready .card-title { color: var(--ink-hi); }
+.card.ready:not(.busy):hover { background-color: var(--press); }
+.card.unready { background-color: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
+.card.unready .card-title { color: var(--ink); }
+.card.busy { opacity: .62; }
+.card.busy .card-title { color: var(--ink-dim); }
+.card.busy .card-tap, .card.running .card-tap { cursor: not-allowed; }
+.card.done { opacity: .42; background-color: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
+.card.done .card-title { color: var(--ink-dim); }
+.card.retired .card-title { text-decoration: line-through; }
+.card.lit { box-shadow: inset 0 0 0 1px var(--ink-hi); }   /* a short need's makers (makerlight.ts), as the ledger's .line.lit */
+.card-need.short { cursor: pointer; }
+.card.done .card-tap { cursor: default; }
+.card.done .card-track, .card.done .card-foot { visibility: hidden; }   /* the slot keeps its size */
+/* When ready (whenready.ts): beside the tap target, filling the foot band's right end (the card's padding above the border),
+   so the card keeps its size and the button never reaches the bar (two classes: the glow's position must not win) */
+.card .card-ready { position: absolute; right: .5rem; bottom: .55rem; z-index: 1; box-sizing: border-box; height: var(--foot-h); padding: 0 .7rem; font: inherit; font-size: var(--t-meta); color: var(--ink-hi); background: var(--press); border: 0; border-radius: 2px; cursor: pointer; }
+.card-ready.queued { color: var(--ink-dim); background: transparent; box-shadow: inset 0 0 0 1px var(--rule); cursor: default; }
+.card-tap:focus-visible { outline: 2px solid var(--ink-hi); outline-offset: 2px; }
+/* held down (cardrow.ts): 2px onto its shadow, a step lighter; a refused card goes down too */
+.card.pressed { transform: translateY(2px); background-color: var(--press); transition-duration: var(--press-ms); }
+.card.ready.pressed { box-shadow: 0 0 0 #050407; }
+/* the first card: stand-alone, double width and about 1.5x height, the most obvious thing to tap at every size */
+.card.first { grid-column: span 2; min-height: 8.4rem; }
+.card.first .card-tap { padding: 1rem 1.2rem; justify-content: center; }
+.card.first .card-head { justify-content: center; padding-right: 0; }
+.card.first .card-title { font-size: var(--t-story); }
+.card.first .card-track { margin-top: .8rem; }
+/* until its first tap it is only its verb: no count, bar or time that would read as something already under way */
+.card.first.untapped :is(.card-count, .card-track, .card-foot) { visibility: hidden; }
+/* a level on the card it speeds up (cardlevel.ts): an ember wash, and the foot's line with the old time set apart */
+.card.levelled { background-image: linear-gradient(90deg, rgba(224, 149, 79, .22), rgba(224, 149, 79, .04)); }
+.card-level { color: var(--ember-hot); line-height: 1.2; }   /* two lines still fit the foot's band */
+.card-level s { color: var(--ink-dim); text-decoration: none; }
+.card-level > * { white-space: nowrap; }
+.card.by-order::after { content: ""; position: absolute; bottom: .5rem; right: .6rem; width: 6px; height: 6px; background: var(--ember); }
+/* in the room the head keeps clear at its right, so it never covers the title or the needs */
+.pop { position: absolute; right: .8rem; top: .5rem; pointer-events: none; font-weight: 700; color: var(--ink-hi); animation: pop 1.1s ease-out forwards; }
+@keyframes pop { 0% { opacity: 0; transform: translateY(.3rem) scale(.8); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-.75rem); } }
+.completed .card { min-height: 3.2rem; padding: .6rem .9rem; }
+.completed .card-head { padding-right: 0; }
+
+/* new: a quiet dot until touched; the glow: one steady ring on the one obvious next step */
+.new-dot { position: absolute; top: .45rem; left: .45rem; width: 6px; height: 6px; box-shadow: 0 0 0 2px var(--bg); pointer-events: none; background: var(--ink-hi); z-index: 1; }
+.chip, .line { position: relative; }   /* the hint dot (game/hints.ts) sits at a chip's or a ledger line's end, still, so reduced motion changes nothing */
+.chip .new-dot { top: .35rem; left: auto; right: -.6rem; }
+.line .new-dot { top: .55rem; left: auto; right: .3rem; }   /* inside .line, which clips its overflow, in the right gutter its padding keeps for it, so it never covers the amount and nothing moves when it comes */
+.glow { position: relative; z-index: 1; }
+.glow::after { content: ""; position: absolute; inset: -4px; pointer-events: none; border: 1px solid var(--ember-hot); border-radius: 2px; }
+.game:has(.asks:not([hidden])) .glow:not(.strip)::after { display: none; }   /* a waiting ask holds the one outline; the strip's, lit for a return's first line (ui/stripglow.ts), is brief and stays */
+.card-tap.glow::after { inset: -4px; }
+.strip.glow::after { inset: 0; }   /* the strip runs to the screen's edges on a phone: its ring is drawn inside it */
+

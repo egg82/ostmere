@@ -11,7 +11,7 @@ while its group has a row (on a phone, the lines moved above the cards take no l
 and stock, with its time under the stock.
 
 Lines are store rates per hour, with when a store empties or fills; the "full in" time is the view's forecast
-(api `CONTRACT.txt`, "Forecast"), so no time is drawn when a rule will take from the store, or stop it, first.
+(api `contract/forecast.txt`, "Forecast"), so no time is drawn when a rule will take from the store, or stop it, first.
 A **falling line with no rule covering it is red**, with its answer right beside it: an **inline rule offer** under
 the line, the card's condition and task (`Under 2 dry wood, until 6 → Lay to dry`), pre-filled, and `Show me` beside
 the sentence, while the first rule's lesson may start. After it, no row: the red line is the signal and carries the hint
@@ -44,7 +44,7 @@ never order or card.
 
 ## Fights
 
-Fight parts show once the `combat` feature is unlocked (api `CONTRACT.txt`, "FIGHTS"); every number is the engine's, served.
+Fight parts show once the `combat` feature is unlocked (api `contract/fights.txt`, "FIGHTS"); every number is the engine's, served.
 
 - **A fight card** draws under its tap, never inside it: the odds as the smallest exact "1 in 5 lost" (a percentage when
   no whole pair up to 20 is exact), the two strengths beside it (`yours 12, theirs 9`), and what one lost fight costs or

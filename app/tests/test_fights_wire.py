@@ -1,4 +1,4 @@
-"""Fights on the wire (api/CONTRACT.txt, "FIGHTS"), on the real opening given one fight card and one standing fight:
+"""Fights on the wire (api/contract/fights.txt, "FIGHTS"), on the real opening given one fight card and one standing fight:
 the content's side, threat and fight infos, and the view's fights after a tap and an advance, each a plain copy of
 the engine's FightView (the odds themselves are the engine's: tests/engine_contract/test_fight_view.py)."""
 from dataclasses import replace
@@ -90,7 +90,7 @@ def test_a_tap_and_an_advance_serve_the_fights_with_their_strengths_and_the_kept
 
 
 def test_a_held_entry_is_served_under_its_card_with_the_share_and_a_permanent_one_of_that_card_without():
-    """CONTRACT.txt, "FIGHTS": source the bare card id and share_bp set for what the card holds while it runs; null on
+    """contract/fights.txt, "FIGHTS": source the bare card id and share_bp set for what the card holds while it runs; null on
     every other entry, so the page tells a card's held entry from a permanent one it landed."""
     r = rules()
     held = replace(r, cards=tuple(replace(c, while_running=(e.WhileRunning(HAND, 5000),)) if c.id == HUNT else c

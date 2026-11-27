@@ -1,4 +1,4 @@
-// Times the page draws come true by themselves (CONTRACT.txt, "Forecast"; docs/decisions.md, "Leaving and coming
+// Times the page draws come true by themselves (contract/forecast.txt, "Forecast"; docs/decisions.md, "Leaving and coming
 // back always pays"):
 // a skill row's time to its next level and a ledger line's "full in" are the view's forecast, never the segment's own
 // next_level_at or fills_at; a row with nothing ahead says so; a card waiting on a store the player has never been

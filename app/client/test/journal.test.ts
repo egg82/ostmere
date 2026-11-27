@@ -1,4 +1,4 @@
-// The Journal (CONTRACT.txt, "JOURNAL", acceptance 6 to 11), run against the Book's journal page on the fixture
+// The Journal (contract/journal.txt, "JOURNAL", acceptance 6 to 11), run against the Book's journal page on the fixture
 // journal (fixtures/journal.ts): its button in the Book and the dots, the numbers in the fight card's words, nothing sent until the
 // sheet closes and then one presentation write, the seeded layout, and the journal's lesson.
 import { ALL, catalog, expect, fire, KEPT, requests, rig, stepWith, text } from "./journalrig";

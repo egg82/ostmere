@@ -1,4 +1,4 @@
-"""View.order_dry: a store rule's mix that is, or may be, short of an input it cannot release without (CONTRACT.txt,
+"""View.order_dry: a store rule's mix that is, or may be, short of an input it cannot release without (contract/dry-rules.txt,
 "Dry rules"). The line a goal row names (goalrows.limit) and the rates as set (setrates.py) answer it."""
 from .. import engine as e
 from ..engine.rates import Running

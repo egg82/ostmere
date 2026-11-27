@@ -21,7 +21,7 @@ from .load import load
 from .repeats import hands_cards
 
 HORIZON_S = 6 * 3600
-"""How far ahead a forecast looks, the forecast route's (api/CONTRACT.txt, "Forecast": past it the page draws no time)
+"""How far ahead a forecast looks, the forecast route's (api/contract/forecast.txt, "Forecast": past it the page draws no time)
 and the job's alike."""
 _log = logging.getLogger("ashfall.saves")
 

@@ -1,5 +1,5 @@
 """View.goal_rows: each open goal a mix can move, with when it lands at the rates as set and the line that binds it
-(CONTRACT.txt, "Goal rows"). The goals are the stores and levels the story waits on (View.goals) and each skill's next
+(contract/goal-rows.txt, "Goal rows"). The goals are the stores and levels the story waits on (View.goals) and each skill's next
 level; the rates are setrates.py's."""
 from collections.abc import Sequence
 

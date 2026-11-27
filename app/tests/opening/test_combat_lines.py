@@ -34,7 +34,7 @@ def test_every_fight_has_both_pools_and_they_are_lines(everything: Opening):
     assert len(fights) >= 3   # week one's three, and every later chapter's
     keys = set(line_keys(o))
     for f in fights:
-        lost = f.loss_pool or f.lost_line_keys   # loss_pool words a told card's lost fights (CONTRACT.txt, "LOSS LINES")
+        lost = f.loss_pool or f.lost_line_keys   # loss_pool words a told card's lost fights (contract/loss-lines.txt, "LOSS LINES")
         assert f.won_line_keys and lost
         assert {*f.won_line_keys, *lost} <= keys
 

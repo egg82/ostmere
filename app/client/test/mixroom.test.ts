@@ -1,4 +1,4 @@
-// A new mix is not offered once the saves holds Content.limits.max_mixes (api/CONTRACT.txt, "Request limits"): the
+// A new mix is not offered once the saves holds Content.limits.max_mixes (api/contract/request-limits.txt, "Request limits"): the
 // Mixes list and the rule picker say so in one plain line, and the editor will not save a mix under a new name.
 import { fakeDocument, FakeEl, FakeEvent, install } from "./fake-dom";
 import { testContext } from "./context";

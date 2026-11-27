@@ -14,7 +14,7 @@ from .journal import Band, Fade, Habits, MarkRates, Press, Source, Subject
 DIARY_HAND = "ink"
 """The hand of a note whose slot names none: the `days` pages' own."""
 LOSS_LOOK_HAND = "pencil"
-"""The hand of a loss or fold note (api/CONTRACT.txt, "LOSS LINES"): a jotting beside the day's own notes."""
+"""The hand of a loss or fold note (api/contract/loss-lines.txt, "LOSS LINES"): a jotting beside the day's own notes."""
 
 
 @dataclass(frozen=True)

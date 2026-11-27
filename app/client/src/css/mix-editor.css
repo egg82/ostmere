@@ -1,0 +1,63 @@
+/* the mix editor: in the card area's place (desktop), a full-height sheet under the pinned strip (phone) */
+.editor { display: flex; flex-direction: column; gap: .9rem; padding: .9rem 0; background: var(--bg); border-top: 1px solid var(--rule); }
+.editor-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.editor-buttons { display: flex; align-items: center; gap: .5rem; flex: none; }   /* Save, Save as new and ✕ stay together: on a phone the group wraps as one */
+.editor-label { flex: 1 1 0; min-width: 8rem; display: flex; align-items: center; gap: .5rem; color: var(--ink); font-size: var(--t-meta); }
+.editor-name { flex: 1; min-width: 0; }
+.editor-refuse { flex-basis: 100%; margin: 0; font-size: var(--t-meta); color: #d08a7c; }   /* why Save refuses the name: the .danger red */
+.editor-close { min-width: 2.4rem; min-height: 2.4rem; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; cursor: pointer; }
+.editor button:disabled { opacity: .45; cursor: not-allowed; }
+.editor-entries { display: flex; flex-direction: column; gap: .3rem; }
+.editor-entry { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-areas: "sw name share x" ". does does does"; gap: .1rem .6rem; align-items: center; padding: .35rem 0; border-bottom: 1px solid var(--rule); }
+.editor-entry .swatch { grid-area: sw; width: .5rem; height: .5rem; border-radius: 1px; background: var(--hue); }
+.entry-name { grid-area: name; color: var(--ink-hi); }
+.editor-entry.struck .entry-name { text-decoration: line-through; color: var(--ink-dim); }
+.entry-note { font-size: var(--t-meta); }
+.entry-share { grid-area: share; font-weight: 700; font-variant-numeric: tabular-nums; }
+.entry-does { grid-area: does; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; min-height: 1.2em; }
+.entry-remove { grid-area: x; min-width: 2.2rem; min-height: 2.2rem; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink) !important; cursor: pointer; }
+.editor-totals:empty { display: none; }   /* nothing the edit changes yet */
+.editor-totals { display: flex; flex-direction: column; gap: .15rem; font-variant-numeric: tabular-nums; }
+.totals-row { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem 1.2rem 6.5rem; gap: .5rem; align-items: baseline; padding: .15rem .5rem; }
+.totals-row > :nth-child(n+2) { text-align: right; }
+.totals-head { font-size: var(--t-meta); color: var(--ink); border-bottom: 1px solid var(--rule); }
+.totals-store { color: var(--ink-hi); }
+.totals-arrow { color: var(--ink-dim); text-align: center !important; }
+.totals-after.changed { color: var(--ink-hi); font-weight: 700; }
+.totals-after.unknown { color: var(--ink-dim); }
+.totals-unknown { margin: .15rem .5rem; color: var(--ink-dim); font-size: var(--t-meta); }
+.totals-runs { font-size: var(--t-meta); color: var(--ink); }
+.cond-watched { margin: 0 0 .3rem; font-size: var(--t-meta); color: var(--ink); font-variant-numeric: tabular-nums; }   /* the watched store now, over the rule (ui/condstore.ts) */
+.cond-watched[hidden] { display: none; }
+.person-stores { margin-top: .6rem; }
+.person-stores.at-rest .totals-row { grid-template-columns: minmax(0, 1fr) 6.5rem; }   /* a person's split at rest: rates now, no after (ui/personmix.ts) */
+.person-stores.at-rest .totals-row > :nth-child(n+3) { display: none; }
+.goal-binds { padding: 0 .5rem .2rem; font-size: var(--t-meta); color: var(--ink); }   /* the line that binds the goal row above */
+.goal-binds.heading-turned { color: var(--ember-hot); }   /* a store whose heading the edit turns (ui/storetimes.ts) */
+.goal-binds.heading-turned.empties { color: var(--alarm); }
+.editor-adds { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.editor-add-label { font-size: var(--t-meta); color: var(--ink); }
+.editor > .editor-adds { flex-direction: column; align-items: flex-start; }
+.editor-adds[hidden] { display: none; }
+.add-fold { min-height: 2.4rem; padding: 0 .9rem; position: relative; }
+.add-fold::before { content: "+ "; }
+.add-fold[aria-expanded="true"]::before { content: "− "; }
+.add-list { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.add-list[hidden] { display: none; }
+.add-card { min-height: 2.6rem; padding: 0 .8rem; cursor: grab; touch-action: none; background: linear-gradient(var(--hue), var(--hue)) 0 0 / 4px 100% no-repeat var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi) !important; position: relative; }
+.add-card::before { content: "+ "; color: var(--ink); }
+/* goal stints (ui/stint.ts): "Run until…" under the totals, its goals as a column of taps with the time if run */
+.editor-stint { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+.editor-stint[hidden] { display: none; }
+.editor-stint > .quiet { min-height: 2.4rem; padding: 0 .9rem; }
+.stint-goals { display: flex; flex-direction: column; gap: .3rem; align-self: stretch; }
+.stint-goal { display: flex; justify-content: space-between; gap: .75rem; min-height: 2.6rem; padding: 0 .8rem; cursor: pointer; font-variant-numeric: tabular-nums; background: var(--raise); border: 0; border-radius: 2px; box-shadow: var(--drop); color: var(--ink-hi); align-items: center; }
+.stint-goal:hover { background: var(--press); }
+.stint-time { color: var(--ink); }
+.next-facts { display: block; font-size: var(--t-meta); font-weight: 400; color: var(--ink); }
+.editor-foot { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.editor-foot > .quiet { margin-right: auto; }   /* Save as new at the left, Delete at the right */
+.editor-delete { display: flex; justify-content: flex-end; align-items: center; gap: .5rem; min-height: 2.4rem; margin-left: auto; }
+.editor-note { font-size: var(--t-meta); color: var(--ink-dim); }
+.danger { color: #d08a7c !important; }
+

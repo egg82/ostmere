@@ -8,7 +8,7 @@ check them.
 ## Before you push
 
 1. **Docs in the same change.** If you add or change a system, put its `docs/systems.md` row change, its decision-file
-   paragraph and any `app/ashfall_app/api/CONTRACT.txt` text in your `doc-delta.txt`; the orchestrator applies it
+   paragraph and any `app/ashfall_app/api/contract/` text in your `doc-delta.txt`; the orchestrator applies it
    before merge. No gate requires the row, and this was the most-missed item (14 follow-up PRs).
 2. **The scene shows it.**
    - An outcome that joins, leaves or sets a person doing something carries `whereabouts` (gated:

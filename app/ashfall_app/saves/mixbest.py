@@ -1,4 +1,4 @@
-"""The player's own earlier best per goal (api/CONTRACT.txt, "Mix rows"): when a mix is saved, when each open goal
+"""The player's own earlier best per goal (api/contract/mix-rows.txt, "Mix rows"): when a mix is saved, when each open goal
 would land under it at the rates as set then, kept per goal with the mix that set it. A goal is kept as the api's goal
 key (an opaque string here); a later save replaces a goal's entry only with a strictly earlier landing, so a tie stays
 with the earlier mix. Kept on the save's row; a mix edited or deleted later does not change what it set."""

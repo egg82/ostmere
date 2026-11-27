@@ -43,7 +43,7 @@ class KindRoleEntry(Entry):
 
 class OfferKindEntry(Entry):
     """An offer kind's own words: a label for each role its offers' answers carry, written for every future ask of the
-    kind, which is what an AnswerKind rule answers (CONTRACT.txt, "Offers"). An offer's own answer labels are written
+    kind, which is what an AnswerKind rule answers (contract/offers.txt, "Offers"). An offer's own answer labels are written
     for that one ask."""
 
     kind: str

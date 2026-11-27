@@ -1,4 +1,4 @@
-"""Reminders (CONTRACT.txt, "Reminders"): this browser's push subscription turned on, refreshed or off. The endpoint
+"""Reminders (contract/reminders.txt, "Reminders"): this browser's push subscription turned on, refreshed or off. The endpoint
 travels only in a body, never a URL, so no access log holds it. Each asks the Accounts system (services.py)."""
 from fastapi import APIRouter, Request, Response
 

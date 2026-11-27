@@ -1,0 +1,18 @@
+DRY RULES (docs/decisions.md, "A rule that cannot let go says so"; api/ruledry.py)
+  view.order_dry[i] is null or {store, holding} for orders[i]; the server decides, the client only words it. It is set
+  only for a rule whose `when` is at_most on a store_value and whose `then` is a switch_mix (a rule releases when the
+  store rises above `release`), by the rates as set (GOAL ROWS above):
+  - holding true, "can't reach": order_states[i] is on (the rule has the hands with its mix) AND the watched store's
+    per_hour as set is not above 0 (the net the goal row of a store reads: GoalRow.per_hour) AND a runner making the
+    watched store is paused or spent on a shown store: `store` is the first such, in running order (GoalRow.limit's
+    computation, the same function). Nothing releases the rule: no auto-release, no change to a rule's defaults.
+  - holding false, "may stop short": the rule's mix, flattened, has a card that makes the watched store and a card that
+    costs a shown store that no card of the mix makes; `store` is the first such, in card order. It is read off the mix
+    and the rule alone, so a rule that is off, outranked or not yet saved has it, and it never says the rule is stuck.
+  - null otherwise, a falling-toward-release (at_least) rule and a skill or count subject included: unproven, not "fine".
+  THE CLIENT MAY: on the Rules tab, under a rule with order_dry[i].holding true, one quiet line ui.rule.stuck {n}{store}
+  (n the rule's release as the rule's own words give it, store the label); in the condition editor, beside Save, one line
+  from a dry run of the decisions Save would send, read at the rule's index in that view's order_dry: ui.rule.stuck when
+  holding, else ui.rule.unfed {store}{n}. Save is never blocked and no default changes. The line states a fact; it names
+  no fix.
+

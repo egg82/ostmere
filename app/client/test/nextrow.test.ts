@@ -1,4 +1,4 @@
-// Next as a row among the hands' rules (game/nextrow.ts, ui/rules.ts; CONTRACT.txt, "Next's row"): the row is drawn
+// Next as a row among the hands' rules (game/nextrow.ts, ui/rules.ts; contract/endpoints.txt, "Next's row"): the row is drawn
 // where the rules' below_next puts it, moves like a rule (its ≡ menu, arrow keys), and a rule moved past it changes
 // side; every set_orders keeps the rules under Next a run to the end. A rule under Next that waits says so.
 import { install } from "./fake-dom";
