@@ -77,6 +77,7 @@ outcome = { stores = [{ store = "stones", items = 8 }, { store = "n1_worked", it
 # as a rate rounded down, so any other length lands the walk short of one and B4 never fires.
 [[cards]]
 id = "n1_walk_ridge"
+site = { no_site = "a walk out to the ridge, which is far backdrop and past the camp; nothing in the scene stands there" }
 twin_of = "walk_ridge"
 lane = "n1"
 presentation = "narrative"
@@ -160,6 +161,7 @@ unlocks = [
 # night's clock starts before it, so a B3 landed while away never brings the night with it.
 [[cards]]
 id = "give_stool"
+site = { layer = "stool" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_give_stool"
@@ -233,6 +235,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "raised_bed" }] }
 # A16, J4: the two builds in view, unready, so either can be queued before it can be afforded (the 2 AM test).
 [[cards]]
 id = "make_room"
+site = { layer = "fire_lit" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_make_room"
@@ -263,6 +266,7 @@ modifiers = [{ target = "lane", id = "n1", kind = "mul_bp", amount_bp = 12000, s
 
 [[cards]]
 id = "build_woodstack"
+site = { layer = "woodstack" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_build_woodstack"
@@ -323,6 +327,7 @@ orders = [{ tap_card = "n1_walk_ridge", first = true }]
 # A19 on the hands (Go): the mix pauses while the hands walk, as for any tap.
 [[cards]]
 id = "walk_ridge"
+site = { no_site = "a walk out to the ridge, which is far backdrop and past the camp; nothing in the scene stands there" }
 presentation = "narrative"
 label_key = "c_walk_ridge"
 work_s = 14400

@@ -224,7 +224,7 @@ def test_a_fraction_that_divides_exactly_loads(fraction_rules: Rules):
 
 
 @pytest.mark.parametrize("old,new,match", [
-    ('id = "lay_to_dry"\nlane = "rack"', 'id = "lay_to_dry"\nlane = "nowhere"', "unknown lane"),
+    ('lane = "rack"\nonly_player = "station"', 'lane = "nowhere"\nonly_player = "station"', "unknown lane"),
     ('skill = "scavenging"\nxp_per_hour = 360', 'skill = "nothing"\nxp_per_hour = 360', "unknown skill"),
     ('outcome = { stores = [{ store = "roots", items = 1 }] }', 'outcome = { stores = [{ store = "mud", items = 1 }] }',
      "unknown store"),

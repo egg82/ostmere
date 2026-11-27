@@ -35,6 +35,7 @@ makes = [{ store = "dig_clock", items_per_hour = 1 }]
 # typical leaves some bloom at night 14 (week-two.md, "Fungus as food").
 [[cards]]
 id = "dig_cellar"
+site = { layer = "cellar_4" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_dig_cellar"
@@ -176,6 +177,7 @@ base = 16
 # A fight card on the hands whose pool ends it, as everything has a cap: the player's to seek, never a raid.
 [[cards]]
 id = "hunt_bear"
+site = { no_site = "the hunt goes out past the wall and the meat is carried in; the hunt is not in the camp" }
 only_player = "fight"
 presentation = "action"
 label_key = "c_hunt_bear"
@@ -224,6 +226,7 @@ outcome = { line_keys = ["l_lamps"], unlocks = [{ unlock_kind = "card", id = "ta
 # Three stages, the last holding the gap; run by its order card, as hide_flaps is.
 [[cards]]
 id = "tallow_lamps"
+site = { layer = "lamps_lit" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_tallow_lamps"
@@ -492,6 +495,7 @@ outcome = { line_keys = ["l_night_14"], unlocks = [{ unlock_kind = "action", id 
 # the clock itself, so its countdown shows from S3.
 [[cards]]
 id = "sit_last_night"
+site = { layer = "fire_lit" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_sit_last_night"
@@ -620,6 +624,7 @@ outcome = { modifiers = [{ target = "rate", id = "pot_catch_broth", flow = "cost
 
 [[cards]]
 id = "stone_ring"
+site = { layer = "rack" }
 only_player = "magic"
 presentation = "action"
 label_key = "c_stone_ring"
@@ -632,6 +637,7 @@ outcome = { stores = [{ store = "dry_wood", items = 1 }] }
 
 [[cards]]
 id = "spar"
+site = { no_site = "practised with spears, with no place named and no layer for it" }
 only_player = "self"
 presentation = "action"
 label_key = "c_spar"
