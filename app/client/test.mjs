@@ -1,9 +1,9 @@
-// Runs the client's tests: each test/*.test.ts is bundled for node in memory and imported; a failed expectation
+// Runs the client's tests: each test/**/*.test.ts (grouped like src/) is bundled for node in memory and imported; a failed expectation
 // throws, which fails the run (an xfail one must throw). Usage: node test.mjs
 import { build } from 'esbuild';
 import { readdirSync } from 'node:fs';
 
-const files = readdirSync('test').filter((f) => f.endsWith('.test.ts'));
+const files = readdirSync('test', { recursive: true }).filter((f) => f.endsWith('.test.ts')).sort();
 if (files.length === 0) throw new Error('no tests found in test/');
 // A crash names its test and keeps the bundle out of the stack: node prints a data: URL whole, and CI's log cuts the
 // line, error and all.

@@ -1,5 +1,5 @@
 """The store rules with share levels the page's rule editor writes (client/fixtures/share_cases.json, which
-client/test/sharelevels.test.ts proves the editor builds and reads back) are orders the engine accepts: each, in a
+client/test/game/condition/sharelevels.test.ts proves the editor builds and reads back) are orders the engine accepts: each, in a
 set_orders and a set_queue through the wire models and the engine's decide on the shipped rules, becomes the save's,
 and the view serves it back unchanged, flags included. A share level on a skill, one over 10000 and a share band on
 the wrong side are refused, so the check can fail."""

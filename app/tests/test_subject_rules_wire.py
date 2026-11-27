@@ -1,5 +1,5 @@
 """The conditions the page's rule editor writes on a count and a level (client/fixtures/
-subject_cases.json, which client/test/subjectrules.test.ts proves the editor writes and reads back) are rules the engine
+subject_cases.json, which client/test/ui/rules/subjectrules.test.ts proves the editor writes and reads back) are rules the engine
 accepts: each, in a set_orders through the wire models and the engine's decide on the shipped rules, becomes the save's
 order, and the view serves it back unchanged. Ids are swapped for shipped ones of the same kind, a Camp level's `at` for
 the shipped level's. A release on the wrong side and an unknown card are refused, so the check can fail; so is a
