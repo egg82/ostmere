@@ -11,6 +11,7 @@ from typing import Literal, NotRequired, TypedDict
 from PIL import Image, ImageChops
 
 import builds
+import crowd
 import depth
 import grades
 import kit
@@ -87,7 +88,7 @@ def _check_condition(label: str, cond: str | None) -> None:
     for term in (cond or "always").split("|"):
         for atom in term.split("&"):
             kind = atom.partition(":")[0]
-            if kind not in KINDS or (kind not in ("always", "dark") and ":" not in atom):
+            if kind not in KINDS or (kind not in ("always", "dark", "day") and ":" not in atom):
                 raise ValueError(f"{label}: unknown condition {atom!r}")
 
 
@@ -205,6 +206,31 @@ def check_builds(entries: list[Entry]) -> None:
         raise ValueError("builds drawn over each other: " + "; ".join(f"{a} and {b} ({at})" for (a, b), at in new.items()))
     if stale := builds.HELD_CROWDED - faults.keys():
         raise ValueError(f"builds.HELD_CROWDED holds pairs that no longer overlap, drop them: {sorted(stale)}")
+
+
+def check_crowd(entries: list[Entry]) -> None:
+    """No two figures a stage shows have boxes that meet (`crowd.overlapping`), bar the pairs `crowd.HELD` holds. Fails too
+    when a held pair no longer meets, and when no stage shows two figures: nothing was compared."""
+    sizes: dict[str, tuple[int, int]] = {}
+
+    def size(e: Entry) -> tuple[int, int]:
+        if e["src"] not in sizes:
+            sizes[e["src"]] = Image.open(OUT / e["src"].split("?")[0]).size
+        return sizes[e["src"]]
+
+    faults: dict[tuple[str, str], str] = {}
+    compared = 0
+    for stage, state in STAGES.items():
+        shown = [e for e in entries if holds(e["when"], state) and not ("until" in e and holds(e["until"], state))]
+        compared += sum(map(crowd.is_figure, shown)) > 1
+        for pair in crowd.overlapping(shown, size):
+            faults.setdefault(pair, stage)
+    if not compared:
+        raise ValueError("no stage shows two figures together: the crowding check looked at nothing")
+    if new := {pair: at for pair, at in faults.items() if pair not in crowd.HELD}:
+        raise ValueError("figures drawn on top of each other: " + "; ".join(f"{a} and {b} ({at})" for (a, b), at in new.items()))
+    if stale := crowd.HELD - faults.keys():
+        raise ValueError(f"crowd.HELD holds pairs that no longer meet, drop them: {sorted(stale)}")
 
 
 def _meets(a: tuple[int, int, int, int], b: tuple[int, int, int, int] | None) -> bool:

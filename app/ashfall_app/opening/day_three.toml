@@ -48,6 +48,7 @@ outcome = { unlocks = [{ unlock_kind = "card", id = "walk_edge" }] }
 # store's worth away), and starts the evening's clock.
 [[cards]]
 id = "walk_edge"
+site = { no_site = "a scouting step past the firelight, taken off the scene" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_walk_edge"
@@ -76,6 +77,7 @@ unlocks = [
 # half their roots (D-105).
 [[cards]]
 id = "field_track"
+site = { layer = "track" }
 presentation = "action"
 label_key = "c_field_track"
 upside_key = "up_field_track"
@@ -122,6 +124,7 @@ unlocks = [
 # with the track; the level is the simulator's, day-three-numbers.md). The first scrap, so the scrap line shows here.
 [[cards]]
 id = "track_end"
+site = { layer = "track" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_track_end"
@@ -143,6 +146,7 @@ cap_items = 12
 
 [[cards]]
 id = "dig_clay"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 presentation = "action"
 label_key = "c_dig_clay"
 upside_key = "up_dig_clay"
@@ -162,6 +166,7 @@ offered_after = { unlock_kind = "store", id = "clay" }
 # Staged crafts on the hands, queued When ready; each stage up to a full store. Each names only its upside.
 [[cards]]
 id = "larder_floor"
+site = { layer = "larder_floor_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_larder_floor"
@@ -176,6 +181,7 @@ modifiers = [{ target = "cap", id = "roots", kind = "mul_bp", amount_bp = 15000,
 
 [[cards]]
 id = "rack_roof"
+site = { layer = "rack_roof_2" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_rack_roof"
@@ -195,6 +201,7 @@ modifiers = [{ target = "lane", id = "rack", kind = "mul_bp", amount_bp = 12500,
 # hearth's idiom), not a requires, so the card's needs show it.
 [[cards]]
 id = "wood_stack"
+site = { layer = "wood_stack_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_wood_stack"
@@ -208,6 +215,7 @@ modifiers = [{ target = "cap", id = "dry_wood", kind = "mul_bp", amount_bp = 150
 
 [[cards]]
 id = "pot_shelf"
+site = { layer = "pot_shelf_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_pot_shelf"
@@ -250,6 +258,7 @@ outcome = { stores = [{ store = "shelf_ready", items = 3 }] }
 # ready could not wait on the next course. 10 stones, so the first course can be queued the return the clay comes in (D-105).
 [[cards]]
 id = "clay_hearth"
+site = { layer = "clay_hearth_3" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_clay_hearth"
@@ -272,6 +281,7 @@ label_key = "lane_hearth"
 # they stood. A card's lump lands whole at any bar (engine design/cards.txt, "Rate form").
 [[cards]]
 id = "cure_hearth"
+site = { layer = "clay_hearth_3" }
 only_player = "project"
 lane = "hearth"
 presentation = "action"
@@ -316,6 +326,7 @@ group_key = "store_group_stew"
 
 [[cards]]
 id = "stew"
+site = { layer = "fire_lit" }
 presentation = "action"
 label_key = "c_stew"
 upside_key = "up_stew"
@@ -345,6 +356,7 @@ station = true
 
 [[cards]]
 id = "pot_stew"
+site = { layer = "stew_pot" }
 only_player = "station"
 lane = "pot"
 presentation = "action"
@@ -450,6 +462,7 @@ outcome = { line_keys = ["l_night_4"], unlocks = [{ unlock_kind = "feature", id 
 # A20, B5: bank the hearth in night 4, at B5's Foraging level (beats.yaml). Its finish lifts Camp 10.
 [[cards]]
 id = "bank_hearth"
+site = { layer = "fire_lit" }
 only_player = "story"
 presentation = "narrative"
 label_key = "c_bank_hearth"
@@ -674,6 +687,7 @@ cap_items = 1
 # XP. Defined once; a lane joins by appending to `lanes`, and expands where its lane is declared (town.py).
 [[town_cards]]
 id = "{lane}_forage"
+site = { no_site = "foraged out in the ruin and past its walls, no one place in the scene" }
 twin_of = "forage"
 lanes = ["n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "g_field", "g_hearth"]
 presentation = "action"
@@ -683,6 +697,7 @@ outcome = { stores = [{ store = "roots", items = 24 }] }
 
 [[town_cards]]
 id = "{lane}_gather"
+site = { no_site = "dead wood is picked up all over the ruin and beyond the wall, no one place in the scene" }
 twin_of = "gather_wood"
 lanes = ["n2", "n3", "n5", "n6", "n7"]
 presentation = "action"
@@ -692,6 +707,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 
 [[town_cards]]
 id = "{lane}_cut"
+site = { layer = "birch_log" }
 twin_of = "woodcutting"
 lanes = ["n2", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
@@ -701,6 +717,7 @@ outcome = { stores = [{ store = "damp_wood", items = 6 }] }
 
 [[town_cards]]
 id = "{lane}_scavenge"
+site = { no_site = "stones are picked from the rubble under the far wall stub, part of the ruin's backdrop and not a layer of its own" }
 twin_of = "scavenge"
 lanes = ["n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
@@ -765,6 +782,7 @@ outcome = { joins = [{ lane = "n1", mix = "town:camp", counted = true, own_split
 # digging, so his lane has no clay card.
 [[town_cards]]
 id = "{lane}_dig_clay"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 twin_of = "dig_clay"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"
@@ -775,6 +793,7 @@ outcome = { stores = [{ store = "clay", items = 1 }] }
 
 [[town_cards]]
 id = "{lane}_stew"
+site = { layer = "fire_lit" }
 twin_of = "stew"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_hearth"]
 presentation = "action"
@@ -790,6 +809,7 @@ outcome = { stores = [{ store = "stew", items = 2 }] }
 # and makes, with no skill, filling the same store. The old man's leg rules out the walk, as it does the digging.
 [[town_cards]]
 id = "{lane}_field_track"
+site = { layer = "track" }
 twin_of = "field_track"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "g_field"]
 presentation = "action"

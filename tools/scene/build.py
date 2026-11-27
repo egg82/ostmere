@@ -28,12 +28,13 @@ import daythree_layers as d3
 import daytwo_layers as d2
 import dayone_world as world
 import night
+import people_day
 import people_hall
 import people_layers
 import props
 import trips
 from figures import figure
-from output import OUT, Entry, Layer, bake, check_builds, check_conditions, check_depth, check_footing, write_manifest, write_previews
+from output import OUT, Entry, Layer, bake, check_builds, check_conditions, check_crowd, check_depth, check_footing, write_manifest, write_previews
 from parts import (EAVE, EAVE_Y, ROOF_X, at_fire, base, birch, campfire_split, carrying, cleared, damp_heap, dry_stack, fireback, FLICKER, firelight,
                    rack, ruin, seated_at_work, stones_heap, stool, wood_drying)
 from place import BY_FIRE, GAP, H, LIE, LIP, LOWEST_HEAD, RIDGE, RUBBLE, SEAT, SLAB, W, WALL_REST, specks
@@ -71,7 +72,7 @@ def layers(rng: random.Random) -> list[Layer]:
     walls = ruin().getchannel("A")
     every = people_layers.step_aside([*_ground_layers(rng, walls), *_player_layers(), *_people_layers(walls),
                                       *people_layers.people_layers(walls), *light_layers()])
-    return builds.retire(people_hall.at_home(every))
+    return builds.retire(people_hall.at_home(people_day.at_work(every)))
 
 
 def _ground_layers(rng: random.Random, walls: Image.Image) -> list[Layer]:
@@ -246,6 +247,7 @@ def main() -> None:
     check_depth(entries)
     check_footing(entries)
     check_builds(entries)
+    check_crowd(entries)
     write_manifest(entries)
     write_previews(entries)
     total = sum(p.stat().st_size for p in OUT.iterdir())

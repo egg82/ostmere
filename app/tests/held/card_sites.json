@@ -1,21 +1,15 @@
 {
  "?": {
-  "no site": 304
+  "no site": 81
  },
  "ashfall_app/opening/b7.toml": {
   "no site": 5
- },
- "ashfall_app/opening/day_eight.toml": {
-  "no site": 10
  },
  "ashfall_app/opening/day_eighteen.toml": {
   "no site": 1
  },
  "ashfall_app/opening/day_eleven.toml": {
   "no site": 6
- },
- "ashfall_app/opening/day_fifteen.toml": {
-  "no site": 8
  },
  "ashfall_app/opening/day_five.toml": {
   "no site": 5
@@ -38,9 +32,6 @@
  "ashfall_app/opening/day_sixteen.toml": {
   "no site": 12
  },
- "ashfall_app/opening/day_three.toml": {
-  "no site": 13
- },
  "ashfall_app/opening/day_twelve.toml": {
   "no site": 8
  },
@@ -50,13 +41,10 @@
  "ashfall_app/opening/day_twenty_three.toml": {
   "no site": 6
  },
- "ashfall_app/opening/day_twenty_two.toml": {
-  "no site": 3
- },
  "ashfall_app/opening/day_two.toml": {
-  "no site": 9
+  "no site": 5
  },
  "ashfall_app/opening/opening.toml": {
-  "no site": 17
+  "no site": 13
  }
 }

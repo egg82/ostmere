@@ -74,6 +74,7 @@ outcome = { stores = [{ store = "hut", items = 1 }] }
 [[lanes]]
 id = "n5"
 lodging = { build = "hall" }
+by_day = { at_fire = "her child has no lane and keeps close to her (t_child_in), so she stays with it at the fire" }
 label_key = "lane_n5"
 ruled = true
 told = "line"
@@ -84,6 +85,7 @@ crews = ["g_field", "g_hearth"]
 [[lanes]]
 id = "n6"
 lodging = { build = "hall" }
+by_day = { card = "n6_watch" }
 label_key = "lane_n6"
 ruled = true
 told = "line"
@@ -94,6 +96,7 @@ crews = ["g_field", "g_hearth"]
 [[lanes]]
 id = "n7"
 lodging = { build = "hall" }
+by_day = { card = "n7_pick" }
 label_key = "lane_n7"
 ruled = true
 told = "line"
@@ -307,7 +310,7 @@ when = { test = "at_least", subject_kind = "unlocked", unlock_kind = "feature", 
 doings = ["n5", "n6", "n7"]
 whereabouts = [
   { person = "n5", layer = "figure_n5_at_wood_edge" },
-  { person = "n6", layer = "figure_n6_at_wood_edge" },
+  { person = "n6", layer = "figure_n6_at_the_watch_fire" },
   { person = "n7", layer = "figure_n7_at_pot" },
 ]
 line_keys = ["l_group_1", "l_group_2"]

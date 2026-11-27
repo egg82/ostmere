@@ -54,6 +54,7 @@ outcome = { unlocks = [{ unlock_kind = "action", id = "dawn_22" }] }
 # the turn (D-156).
 [[cards]]
 id = "walk_ashwood"
+site = { no_site = "a walk out to the ashwood, past the camp and off the scene" }
 presentation = "action"
 label_key = "c_walk_ashwood"
 upside_key = "up_walk_ashwood"
@@ -67,6 +68,7 @@ outcome = { stores = [{ store = "charwood", items = 2 }, { store = "fungus", ite
 # Anyone with two good legs can walk it; his leg rules him out.
 [[town_cards]]
 id = "{lane}_walk_ashwood"
+site = { no_site = "a walk out to the ashwood, past the camp and off the scene" }
 twin_of = "walk_ashwood"
 lanes = ["n1", "n2", "n3", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_field", "g_road"]
 presentation = "action"
@@ -381,6 +383,7 @@ unlocks = [
 
 [[cards]]
 id = "fog_fish"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 presentation = "action"
 label_key = "c_fog_fish"
 upside_key = "up_catch"
@@ -392,6 +395,7 @@ outcome = { stores = [{ store = "catch", items = 2 }] }
 
 [[town_cards]]
 id = "{lane}_fog_fish"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 twin_of = "fog_fish"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
 presentation = "action"
@@ -443,6 +447,7 @@ cost_key = "chip_ashed_cost"
 
 [[cards]]
 id = "wash_meat"
+site = { layer = "smoke_rack" }
 presentation = "action"
 label_key = "c_wash_meat"
 upside_key = "up_wash_meat"
@@ -454,6 +459,7 @@ inputs = [{ store = "film", items = 12 }]
 # Washing the meat is everyday work, everyone's.
 [[town_cards]]
 id = "{lane}_wash_meat"
+site = { layer = "smoke_rack" }
 twin_of = "wash_meat"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
 presentation = "action"

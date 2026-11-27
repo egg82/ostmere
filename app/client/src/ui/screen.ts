@@ -183,6 +183,7 @@ export class Screen {
   show(step: Step, away = false): void {
     const first = this.view === null;
     this.latest = step;
+    this.catalog.text.cast(step.view.unlocked);   // before any line of the step is set: a role's slot reads the view they arrive with
     const lines = step.lines;
     const lead = lines.length > 0;   // live, first or on a return alike: each line in turn, a planned moment in full
     if ((away && !first) || lead) this.reveal.collect();

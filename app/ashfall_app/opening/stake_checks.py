@@ -87,4 +87,4 @@ def _takes(c: "CardEntry") -> set[str]:
 
 def _gives(out: "OutcomeEntry") -> bool:
     return any((out.stores, out.unlocks, out.modifiers, out.raises, out.starts, out.line_keys, out.orders, out.queues,
-                out.joins, out.retire_orders, out.leaves))
+                out.joins, out.retire_orders, out.leaves, out.casts))

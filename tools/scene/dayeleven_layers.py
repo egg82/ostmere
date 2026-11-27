@@ -10,6 +10,7 @@ import daytwelve_layers as d12
 import dayeleven_poses as poses
 import daythree_world as day3_world
 from dayeight_poses import BROTHER
+from dayfour_poses import N2_WATCH
 from daythree_poses import N2
 from output import Layer
 from parts import FLICKER, firelight
@@ -68,6 +69,6 @@ def figure_layers(away: str) -> list[Layer]:
         Layer(id="figure_n6_by_fire", img=poses.by_fire("husband"), when=JOINED, until=N6_POSTS),
         Layer(id="figure_n7_by_fire", img=poses.by_fire("brother"), when=JOINED, until=N7_GUARD),
         Layer(id="figure_n6_walking_ring", img=poses.walking_ring(), when=N6_POSTS),
-        Layer(id="figure_n2_guarding", img=poses.guarding(N2), when=N2_GUARD),
-        Layer(id="figure_n7_guarding", img=poses.guarding(BROTHER), when=N7_GUARD),
+        Layer(id="figure_n2_guarding", img=poses.guarding(N2, N2_WATCH), when=N2_GUARD),
+        Layer(id="figure_n7_guarding", img=poses.guarding(BROTHER, poses.N7_GUARD), when=N7_GUARD),
     ]
