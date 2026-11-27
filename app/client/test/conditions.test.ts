@@ -173,3 +173,20 @@ expect("store:wood@15&running:shelter", AT, false);
   none.observe(base);
   if (none.holds("answered:o_x", AT, Q)) throw new Error("answered holds with no such entry");
 }
+
+// `dark` is what the scene says the shown grade is: false until it is told, and it composes with the other kinds.
+{
+  const f = new SceneFacts();
+  f.observe(fixtureStep("mid", AT).view);
+  const want = (condition: string, ok: boolean): void => {
+    const got = f.holds(condition, AT, Q);
+    if (got !== ok) throw new Error(`dark: holds("${condition}") = ${got}, want ${ok}`);
+  };
+  want("dark", false);
+  f.setDark(true);
+  want("dark", true);
+  want("dark&chip:cold", true);
+  want("dark&chip:warm", false);
+  f.setDark(false);
+  want("dark|chip:warm", false);
+}

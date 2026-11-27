@@ -83,3 +83,22 @@ def test_the_check_fails_when_no_stage_shows_two_builds(tmp_path: Path, monkeypa
         e["when"] = "feature:never_held"
     with pytest.raises(ValueError, match="looked at nothing"):
         output.check_builds(entries)
+
+
+def test_every_build_is_retired_kept_or_held_and_a_gap_is_reported(monkeypatch: pytest.MonkeyPatch):
+    assert builds.undecided() == []
+    assert builds.RETIRED and builds.KEPT and builds.HELD_UNDECIDED, "a table is empty: the check is blind"
+    monkeypatch.setattr(builds, "HELD_UNDECIDED", builds.HELD_UNDECIDED - {"larder"})
+    assert builds.undecided() == ["larder: no row in RETIRED or KEPT, and not held"]
+    monkeypatch.setattr(builds, "HELD_UNDECIDED", builds.HELD_UNDECIDED | {"hut", "larder"})
+    assert builds.undecided() == ["hut: in more than one of RETIRED, KEPT and HELD_UNDECIDED"]
+    monkeypatch.setattr(builds, "RETIRED", {**builds.RETIRED, "hut": (builds.ROOFED, "burnt")})
+    assert any("fate 'burnt'" in f for f in builds.undecided())
+
+
+def test_a_retired_build_loses_every_layer_to_what_supersedes_it():
+    from output import Layer
+    hut = Image.new("RGBA", (1, 1))
+    shown = builds.retire([Layer(id="hut", img=hut, when="x", until="y"), Layer(id="hide_flaps_1", img=hut, when="x"),
+                           Layer(id="larder", img=hut, when="x")])
+    assert [layer.get("until") for layer in shown] == [f"y|{builds.ROOFED}", builds.ROOFED, None]

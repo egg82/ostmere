@@ -20,6 +20,7 @@ import dayfour_poses as day4_poses
 import dayone
 import daytwo
 from output import Layer
+from stages import in_dark
 
 PALISADE = "running:palisade|mix:palisade"
 HANDS_AWAY = [PALISADE]
@@ -64,7 +65,8 @@ def made_layers() -> list[Layer]:
         Layer(id="gap_ring_ghost", img=dayone.ghost(ring), when="running:gap_fire", until="pushes:gap_fire@1",
               open_fire=True),
         Layer(id="gap_laid", img=made.gap_laid(), when="pushes:gap_fire@1", until="pushes:gap_fire@2", open_fire=True),
-        Layer(id="gap_lit", img=made.gap_lit(), when="pushes:gap_fire@2", ungraded=True, open_fire=True),
+        Layer(id="gap_banked", img=made.gap_banked(), when="pushes:gap_fire@2", until="dark", open_fire=True),
+        Layer(id="gap_lit", img=made.gap_lit(), when=in_dark("pushes:gap_fire@2"), ungraded=True, open_fire=True),
         Layer(id="ash_heap", img=made.ash_heap(), when="store:ash"),
         *[Layer(id=f"ashed_{n}", img=made.ashed(n), when=f"store:ashed_ground&pushes:n3_dig_bed@{n}") for n in (1, 2, 3)],
         Layer(id="snare_4", img=made.snare_4(), when="action:snare_4"),
@@ -93,6 +95,6 @@ def figure_layers(away: str) -> list[Layer]:
 
 def light_layers() -> list[Layer]:
     return [
-        Layer(id="gap_light", img=made.gap_light(), when="pushes:gap_fire@2", blend="screen", ungraded=True),
+        Layer(id="gap_light", img=made.gap_light(), when=in_dark("pushes:gap_fire@2"), blend="screen", ungraded=True),
         Layer(id="ash_drift", img=world.drift_ash(), when="store:drift_left"),
     ]

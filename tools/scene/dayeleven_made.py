@@ -34,8 +34,8 @@ CARVED, PLAIN = (4, 5, 6), 3
 """The face's grained and carved middle rows, and the plain row each is planed to."""
 CUT = (108, 60, 74, 255)
 """The carving's own dark, for the mark."""
-BOARD_AT = (190, 405)
-"""The board's post foot: on the bare ground below the camp's left."""
+BOARD_AT = (352, 292)
+"""The board's post foot: by the fire, on the open ground between the stool and the people at the fire (week-two.md: "the board by the fire")."""
 POSTS = [(500, 152), (516, 151), (532, 152)]
 """Each new post's foot: on the ash before the palisade, right of the hut, where the three posts leaned."""
 FRESH = kit.Grade(sat=WOOD["sat"], mul=WOOD["mul"], bright=1.15, contrast=WOOD["contrast"])

@@ -214,6 +214,7 @@ finished = { unlocks = [{ unlock_kind = "card", id = "build_lean_to" }, { unlock
 # toward stock_ready, the roots rule's offer.
 [[cards]]
 id = "build_lean_to"
+site = { layer = "lean_to" }
 only_player = "project"
 presentation = "craft"
 label_key = "c_build_lean_to"

@@ -87,7 +87,7 @@ def _check_condition(label: str, cond: str | None) -> None:
     for term in (cond or "always").split("|"):
         for atom in term.split("&"):
             kind = atom.partition(":")[0]
-            if kind not in KINDS or (kind != "always" and ":" not in atom):
+            if kind not in KINDS or (kind not in ("always", "dark") and ":" not in atom):
                 raise ValueError(f"{label}: unknown condition {atom!r}")
 
 
@@ -171,6 +171,8 @@ def check_footing(entries: list[Entry]) -> None:
 def check_builds(entries: list[Entry]) -> None:
     """No two builds share `builds.MIN_SHARED` pixels at any stage, bar the pairs `builds.HELD_CROWDED` holds, and every
     layer is classified (`builds.unsorted`). Fails too when no stage showed two builds together: nothing was compared."""
+    if unjudged := builds.undecided():
+        raise ValueError("builds not judged against the content: " + "; ".join(unjudged))
     if bad := builds.unsorted(entries):
         raise ValueError(f"layers in no build and not in builds.NOT_BUILDS, or named there and gone: {bad}")
     masks: dict[tuple[str, ...], Image.Image] = {}
