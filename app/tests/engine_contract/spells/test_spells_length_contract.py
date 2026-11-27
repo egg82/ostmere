@@ -121,6 +121,18 @@ def test_two_chains_at_one_instant_share_one_due_the_second_reads_what_the_first
     assert value(step.save, r, CHAINED, 20) == 5 * Q
 
 
+def test_two_chains_at_one_instant_the_second_finds_the_next_group_whole_when_the_first_ended_it():
+    """As above, but the first (reach 5) takes all 5 due and ends the group; the second (reach 5) reads what it left,
+    the next group under way, and resolves all 5 of it, as a completion a moment later would."""
+    cards = (spell(10, 5, LINK_KEYS[:1]), spell(10, 5, LINK_KEYS[1:2], card_id=SPELL2))
+    r = world(5, cards=cards, per=PER)
+    s = mixed(r, {SPELL: 5000, SPELL2: 5000})
+    step = advance_logged(s, r, 20)
+    first, second = links(step.lines, SPELL, LINK_KEYS[:1]), links(step.lines, SPELL2, LINK_KEYS[1:2])
+    assert (len(first), len(second)) == (5, 5)
+    assert value(step.save, r, CHAINED, 20) == 10 * Q
+
+
 @kills(17)
 def test_a_mixed_completion_chains_each_time_and_a_long_stretch_equals_its_slices():
     """The mix runs the spell at its whole share; each completion (every 10 s) resolves its chain, one advance or many."""
