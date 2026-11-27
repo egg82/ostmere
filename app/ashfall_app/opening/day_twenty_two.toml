@@ -381,6 +381,7 @@ unlocks = [
 
 [[cards]]
 id = "fog_fish"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 presentation = "action"
 label_key = "c_fog_fish"
 upside_key = "up_catch"
@@ -392,6 +393,7 @@ outcome = { stores = [{ store = "catch", items = 2 }] }
 
 [[town_cards]]
 id = "{lane}_fog_fish"
+site = { no_site = "worked at the warm stream, which lies on the low ground behind the wall stub, off the scene; the scene poses its work at the gap's mouth, the way down to it" }
 twin_of = "fog_fish"
 lanes = ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n12", "n13", "n14", "n15", "n23", "g_road"]
 presentation = "action"
@@ -555,6 +557,7 @@ joins = [{ lane = "n13", mix = "town:camp", card = "n13_forage", own_split = tru
 
 [[lanes]]
 id = "n13"
+lodging = { elsewhere = "sleeps by the fire outside the hall, having declined a place in it (C-cast-33)" }
 label_key = "lane_n13"
 ruled = true
 told = "line"

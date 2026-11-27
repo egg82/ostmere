@@ -126,6 +126,7 @@ def moment_layers() -> list[Layer]:
 
 STEP_ASIDE: dict[str, tuple[str, ...]] = {
     "figure_n2_by_fire": (WINDOWS["bedding"], WINDOWS["stage_7"], WINDOWS["shed"], WINDOWS["his_watch"], WINDOWS["spear"], WINDOWS["thorn"], WINDOWS["deer"]),
+    "figure_n2_guarding": (WINDOWS["bedding"], WINDOWS["stage_7"], WINDOWS["shed"], WINDOWS["his_watch"], WINDOWS["spear"], WINDOWS["thorn"], WINDOWS["deer"]),
     "figure_n3_by_fire": (WINDOWS["pelt_ask"], WINDOWS["seed"], WINDOWS["caps"], WINDOWS["drift"], WINDOWS["pot"], WINDOWS["naming"],
                           WINDOWS["bowl"]),
     "figure_n4_by_fire": (WINDOWS["posts_cord"], WINDOWS["old_watch"], WINDOWS["drift"], WINDOWS["sun"]),

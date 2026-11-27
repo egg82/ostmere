@@ -9,6 +9,7 @@ import math
 from PIL import Image, ImageDraw
 
 import kit
+import smoke
 from dayone import CAMP, art
 from kit import T
 from parts import campfire_split
@@ -22,6 +23,7 @@ HEARTH_R = (22, 12)
 COURSE = 3
 """One course's height in 1x pixels; a stage lays one more (the last two, with the rim)."""
 WATCH_SCALE = 0.7
+BANKED_CURLS = 1
 POT_AT = (FIRE[0] + 0.85 * T, FIRE[1] - 0.45 * T)
 """The pot's top-left: on the hearth's rim at the fire's right, clear of the stool."""
 
@@ -132,6 +134,14 @@ def watch_lit() -> Image.Image:
     """The same, burning."""
     _, lit = campfire_split("camp_campfire_lit")
     return _at_watch(_watch_piece(lit))
+
+
+def watch_banked() -> Image.Image:
+    """The fire laid and not burning, smoke curling off it: how a fire is kept through the day."""
+    _, laid = campfire_split("camp_campfire_unlit")
+    out = _at_watch(_watch_piece(laid))
+    out.alpha_composite(smoke.plume((WATCH[0], WATCH[1] - 6), BANKED_CURLS))
+    return out
 
 
 def watch_light() -> Image.Image:

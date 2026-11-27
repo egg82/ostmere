@@ -404,6 +404,7 @@ orders = [{ tap_card = "n3_build_bay", first = true }]
 # is the store's full cap (18), not the design's 24, which no save can hold.
 [[cards]]
 id = "make_bay2"
+site = { layer = "bay2" }
 presentation = "craft"
 label_key = "c_make_bay2"
 work_s = 10800
@@ -414,6 +415,7 @@ outcome = { stores = [{ store = "bay2", items = 1 }] }
 # Her lane and his: townsfolk the player's rules set, as the first two.
 [[lanes]]
 id = "n3"
+lodging = { build = "hall" }
 label_key = "lane_n3"
 ruled = true
 told = "line"
@@ -431,6 +433,7 @@ tied = "n4"
 
 [[lanes]]
 id = "n4"
+lodging = { build = "hall" }
 label_key = "lane_n4"
 ruled = true
 told = "line"
@@ -462,6 +465,7 @@ unlocks = [
 # A26 on her lane, the same real time and stores as A25.
 [[cards]]
 id = "n3_build_bay"
+site = { layer = "bay2" }
 twin_of = "make_bay2"
 lane = "n3"
 presentation = "craft"
@@ -483,6 +487,7 @@ cap_items = 1
 # runs (b7.toml's while_running, where the side is declared).
 [[cards]]
 id = "n4_watch"
+site = { layer = "watch_lit" }
 lane = "n4"
 presentation = "action"
 label_key = "c_n4_watch"

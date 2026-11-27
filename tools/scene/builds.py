@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 import depth
 
 if TYPE_CHECKING:
-    from output import Entry
+    from output import Entry, Layer
 
 MIN_SHARED = 30
 """Pixels two builds may share before they read as one drawing laid over the other."""
@@ -39,11 +39,11 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     ),
     "larder_floor": ("larder_floor_1", "larder_floor_2", "larder_floor_3", "wood_stack_1", "wood_stack_2", "wood_stack_3"),
     "raised_bed": ("raised_bed_1", "raised_bed_2", "raised_bed_3"),
-    "watch_ring": ("watch_ring", "watch_laid", "watch_lit"),
+    "watch_ring": ("watch_ring", "watch_laid", "watch_banked", "watch_lit"),
     "plot": ("turned_1", "turned_2", "turned_3", "turned_pelt", "turned_sacking", "ashed_1", "ashed_2", "ashed_3", "beds_1", "beds_2", "beds_3"),
     "pelt_pegged_1": ("pelt_pegged_1",),
     "pelt_pegged_2": ("pelt_pegged_2",),
-    "gap_ring": ("gap_ring", "gap_laid", "gap_lit"),
+    "gap_ring": ("gap_ring", "gap_laid", "gap_banked", "gap_lit"),
     "cellar": ("cellar_1", "cellar_2", "cellar_3", "cellar_4"),
     "damp_wood_1": ("damp_wood_1", "damp_wood_2", "damp_wood_3"),
     "dry_wood_1": ("dry_wood_1", "dry_wood_2"),
@@ -67,7 +67,7 @@ BUILDS: Mapping[str, tuple[str, ...]] = {
     "snare_2": ("snare_2",),
     "snare_3": ("snare_3",),
     "pyre": ("pyre",),
-    "hall": ("hall_1", "hall_2", "hall_3", "hall_4", "hall_hearth"),
+    "hall": ("hall_1", "hall_2", "hall_3", "hall_4", "hall_hearth", "hall_smoke"),
     "n6_posts": ("n6_posts",),
     "road": ("road_1", "road_2", "road_3", "road_4", "road_over_1", "road_over_2", "road_cloths"),
 }
@@ -84,7 +84,63 @@ HELD_UNSHOWN: frozenset[str] = frozenset({"screen_fire"})
 HELD_CROWDED: frozenset[tuple[str, str]] = frozenset()
 """Pairs of builds (sorted) that share `MIN_SHARED` pixels today, held so the check stays on for the rest: may only shrink."""
 
+ROOFED = "pushes:hall@8"
+"""The hall's last stage: the roof on and the door hung, with everyone under it (week-three.md, "will they all fit under one
+roof")."""
+
+FATES = ("taken_down", "indoors")
+"""What becomes of an outgrown build: its poles and hides go to the hall, or what it was for (a bed, a shelter) moves
+inside and the scene shows the hall's lit window and nothing of it."""
+
+RETIRED: Mapping[str, tuple[str, str]] = {
+    "lean_to": (ROOFED, "taken_down"), "bay2": (ROOFED, "taken_down"), "hut": (ROOFED, "taken_down"),
+    "n1_shelter": (ROOFED, "indoors"), "raised_bed": (ROOFED, "indoors"),
+}
+"""Builds the camp outgrows: the condition that supersedes each, and the fate. Every layer of the build gets it as an
+`until` (`retire`). Authored, never read off an id."""
+
+PELTS = "the layer is the pelt store's stock (`store:pelt`), shown while the store holds pelts and the hall's roof takes pelts"
+SNARES = "the snare line is worked all game: day sixteen's `reset_snares` sets it again"
+KEPT: Mapping[str, str] = {
+    "pelt_pegged_1": PELTS,
+    "pelt_pegged_2": PELTS,
+    "snare_1": SNARES,
+    "snare_2": SNARES,
+    "snare_3": SNARES,
+    "snare_4": SNARES,
+}
+"""Builds that stay up, and why."""
+
+HELD_UNDECIDED: frozenset[str] = frozenset({
+    "campfire", "larder_floor", "watch_ring", "plot", "gap_ring", "cellar", "damp_wood_1", "dry_wood_1", "wood_drying",
+    "larder", "smoke_rack", "woodstack", "woodshed_1", "stakes", "ash_heap", "tally_board", "birch_log", "pyre", "hall",
+    "n6_posts", "road",
+})
+"""Builds not yet judged against the content as outgrown or kept: may only shrink. A build leaves it by gaining a row in
+`RETIRED` or `KEPT`; a new build is in neither and fails the check."""
+
 MEMBER_OF = {layer: build for build, layers in BUILDS.items() for layer in layers}
+
+
+def undecided() -> list[str]:
+    """Faults in the tables above: a build in none of `RETIRED`, `KEPT` and `HELD_UNDECIDED` or in more than one, a row
+    naming no build, an unknown fate, and a held build that now has a row."""
+    named = [*RETIRED, *KEPT, *HELD_UNDECIDED]
+    faults = [f"{b}: in more than one of RETIRED, KEPT and HELD_UNDECIDED" for b in sorted({b for b in named if named.count(b) > 1})]
+    faults += [f"{b}: not a build" for b in sorted(set(named) - BUILDS.keys())]
+    faults += [f"{b}: no row in RETIRED or KEPT, and not held" for b in sorted(BUILDS.keys() - set(named))]
+    faults += [f"{b}: fate {fate!r} is not one of {FATES}" for b, (_, fate) in RETIRED.items() if fate not in FATES]
+    return faults
+
+
+def retire(layers: Sequence[Layer]) -> list[Layer]:
+    """`layers` with every layer of a retired build hidden by what supersedes it."""
+    out = list(layers)
+    for layer in out:
+        row = RETIRED.get(MEMBER_OF.get(layer["id"], ""))
+        if row is not None:
+            layer["until"] = "|".join(t for t in (layer.get("until"), row[0]) if t)
+    return out
 
 
 def is_thing(entry: Entry) -> bool:

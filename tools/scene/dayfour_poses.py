@@ -35,9 +35,11 @@ N4_BY_FIRE = (10.0 * T, 9.65 * T)
 """Where each of them keeps once joined, below the hearth's two ends: her standing, him seated."""
 N1_FAR = (7.8 * T, 5.4 * T)
 """Lucy's far mark: seated behind the hearth's far wall and the fireback, above their tops, looking at the fire."""
-N2_WATCH = (WATCH[0] + 1.1 * T, WATCH[1] + 0.85 * T)
-N4_WATCH = (WATCH[0] - 1.7 * T, WATCH[1] + 1.1 * T)
-"""Where each sits a watch at the watch fire, facing the track (Lucy's is `daythree_poses.WATCHING`)."""
+N2_WATCH = (WATCH[0] - 0.65 * T, WATCH[1] + 0.8 * T)
+N4_WATCH = (WATCH[0] - 2.1 * T, WATCH[1] + 1.4 * T)
+"""Where each sits a watch at the watch fire, facing the track: the fire's west side, clear of the raised bed on its south
+and of each other (Lucy's seat is `daythree_poses.WATCHING`, on its east; the spear-bearer's and the hearth crew's are
+`dayeleven_poses.N7_GUARD` and `people_layers.HEARTH_WATCH`)."""
 BAY2_WORK = (BAY2[0] + 68, BAY2[1] + 39)
 """Where a townsperson stands to lay the second bay's poles."""
 TURNED_WORK = (TURNED[0] + 0.6 * T, TURNED[1] + 1.5 * T)

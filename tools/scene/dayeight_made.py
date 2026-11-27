@@ -112,6 +112,10 @@ def gap_lit() -> Image.Image:
     return _moved(fire.watch_lit(), *GAP_FIRE)
 
 
+def gap_banked() -> Image.Image:
+    return _moved(fire.watch_banked(), *GAP_FIRE)
+
+
 def gap_light() -> Image.Image:
     return _moved(fire.watch_light(), *GAP_FIRE)
 

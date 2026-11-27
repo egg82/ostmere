@@ -161,7 +161,7 @@ def write_readings(name: str) -> None:
             started = time.process_time()
             decides = counters.decides(steps[label][k], p.rules)
             put(ends.readings_path(chapter, i), ends.readings_json({(label, k): decides}))
-            print(f"event=chapter_saves.reading part={name} chapter={chapter} step={label}:{k} "
+            print(f"event=chapter_saves.reading part={name} chapter={chapter} index={i} step={label}:{k} "
                   f"cpu_s={time.process_time() - started:.1f}", flush=True)
 
 
