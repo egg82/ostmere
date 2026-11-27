@@ -14,8 +14,8 @@ from ashfall_app.saves.ruleset import ruleset
 from ashfall_app.saves.service import PgSaves
 from ashfall_app.services import Services
 from tests.game_client import GameClient
-from tests.saves.behind import AWAY_S, seed
-from tests.saves.chunks import MakeStop, Stop, every
+from tests.saves.catching_up.behind import AWAY_S, seed
+from tests.saves.catching_up.chunks import MakeStop, Stop, every
 
 Json = dict[str, Any]
 SET_NO_ORDERS: Json = {"kind": "set_orders", "orders": []}

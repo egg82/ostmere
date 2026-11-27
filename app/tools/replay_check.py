@@ -32,7 +32,7 @@ from ashfall_app.db.manifests import whole
 from ashfall_app.db.saves import DecisionRecord, SaveRecord, SnapshotRecord
 from ashfall_app.opening.schema import load_opening
 from ashfall_app.saves.interface import Ruleset, Unavailable
-from ashfall_app.saves.load import load
+from ashfall_app.saves.builds.load import load
 from ashfall_app.saves.ruleset import build_release, ruleset
 from ashfall_app.saves.support import SupportError, check_gapless, snapshot_save
 from ashfall_app.saves.write import SNAPSHOT_DAYS

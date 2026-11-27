@@ -16,7 +16,7 @@ from ashfall_app.saves.journal import DAY_S, ComposedDay, Note
 from ashfall_app.saves.journal_rules import Look, journal_rules
 from tests.game_client import GameClient
 from tests.kills import kills
-from tests.saves.journal_fixture import JOURNAL, a_beat_line
+from tests.saves.journal.journal_fixture import JOURNAL, a_beat_line
 from tests.shipped_ruleset import ShippedRuleset
 
 
